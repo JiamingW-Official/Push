@@ -81,9 +81,21 @@ export default function Header() {
           aria-expanded={menuOpen}
           onClick={() => setMenuOpen((v) => !v)}
         >
-          <span className={menuOpen ? styles.barTop : ""} />
-          <span className={menuOpen ? styles.barMid : ""} />
-          <span className={menuOpen ? styles.barBot : ""} />
+          <span
+            className={[styles.bar, menuOpen ? styles.barTop : ""]
+              .filter(Boolean)
+              .join(" ")}
+          />
+          <span
+            className={[styles.bar, menuOpen ? styles.barMid : ""]
+              .filter(Boolean)
+              .join(" ")}
+          />
+          <span
+            className={[styles.bar, menuOpen ? styles.barBot : ""]
+              .filter(Boolean)
+              .join(" ")}
+          />
         </button>
       </div>
 
