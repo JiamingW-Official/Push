@@ -5,17 +5,10 @@ import Link from "next/link";
 import styles from "./Header.module.css";
 
 const NAV_LINKS = [
-  { label: "Home", href: "/" },
-  { label: "For Merchants", href: "/#merchants" },
-  { label: "For Creators", href: "/#creators" },
+  { label: "Product", href: "/#merchants" },
+  { label: "Creators", href: "/#creators" },
   { label: "Pricing", href: "/#pricing" },
 ];
-
-// Extract section id from hash href, e.g. "/#merchants" → "merchants"
-function hrefToSectionId(href: string): string | null {
-  const match = href.match(/^\/#(.+)$/);
-  return match ? match[1] : null;
-}
 
 export default function Header() {
   const headerRef = useRef<HTMLElement>(null);
@@ -23,22 +16,13 @@ export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const lastY = useRef(0);
   const [hidden, setHidden] = useState(false);
-  const [activeSection, setActiveSection] = useState("");
-  const [scrollProgress, setScrollProgress] = useState(0);
 
   useEffect(() => {
     const onScroll = () => {
       const y = window.scrollY;
       setScrolled(y > 30);
-      // Only hide after 400px and a meaningful downward delta — prevents
-      // micro-scroll jitter hiding the header while still in the hero.
       setHidden(y > 400 && y - lastY.current > 3);
       lastY.current = y;
-
-      // Calculate scroll progress (0–100)
-      const { scrollHeight, clientHeight } = document.documentElement;
-      const maxScroll = scrollHeight - clientHeight;
-      setScrollProgress(maxScroll > 0 ? (y / maxScroll) * 100 : 0);
     };
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
@@ -51,28 +35,6 @@ export default function Header() {
     };
     window.addEventListener("resize", onResize);
     return () => window.removeEventListener("resize", onResize);
-  }, []);
-
-  // Track active section via IntersectionObserver
-  useEffect(() => {
-    const sectionIds = ["merchants", "creators", "how-it-works", "pricing"];
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setActiveSection(entry.target.id);
-          }
-        });
-      },
-      { threshold: 0.3, rootMargin: "-80px 0px -60% 0px" },
-    );
-
-    sectionIds.forEach((id) => {
-      const el = document.getElementById(id);
-      if (el) observer.observe(el);
-    });
-
-    return () => observer.disconnect();
   }, []);
 
   return (
@@ -94,32 +56,16 @@ export default function Header() {
 
         {/* Desktop nav */}
         <nav className={styles.nav} aria-label="Main navigation">
-          {NAV_LINKS.map(({ label, href }) => {
-            const sectionId = hrefToSectionId(href);
-            const isActive = sectionId !== null && activeSection === sectionId;
-            return (
-              <Link
-                key={href}
-                href={href}
-                className={[
-                  styles.navLink,
-                  isActive ? styles.navLinkActive : "",
-                ]
-                  .filter(Boolean)
-                  .join(" ")}
-              >
-                {label}
-              </Link>
-            );
-          })}
+          {NAV_LINKS.map(({ label, href }) => (
+            <Link key={href} href={href} className={styles.navLink}>
+              {label}
+            </Link>
+          ))}
         </nav>
 
-        {/* CTA buttons */}
+        {/* CTA — single compact button */}
         <div className={styles.ctaGroup}>
-          <Link href="/creator/signup" className="btn btn-ghost">
-            Join as Creator
-          </Link>
-          <Link href="/merchant/signup" className="btn btn-primary">
+          <Link href="/merchant/signup" className={styles.ctaBtn}>
             Get Started
           </Link>
         </div>
@@ -149,13 +95,6 @@ export default function Header() {
         </button>
       </div>
 
-      {/* Scroll progress bar */}
-      <div
-        className={styles.scrollProgress}
-        style={{ width: `${scrollProgress}%` }}
-        aria-hidden="true"
-      />
-
       {/* Mobile nav dropdown */}
       <nav
         className={[styles.mobileNav, menuOpen ? styles.mobileNavOpen : ""]
@@ -164,36 +103,27 @@ export default function Header() {
         aria-label="Mobile navigation"
         aria-hidden={!menuOpen}
       >
-        {NAV_LINKS.map(({ label, href }) => {
-          const sectionId = hrefToSectionId(href);
-          const isActive = sectionId !== null && activeSection === sectionId;
-          return (
-            <Link
-              key={href}
-              href={href}
-              className={[
-                styles.mobileNavLink,
-                isActive ? styles.mobileNavLinkActive : "",
-              ]
-                .filter(Boolean)
-                .join(" ")}
-              onClick={() => setMenuOpen(false)}
-            >
-              {label}
-            </Link>
-          );
-        })}
+        {NAV_LINKS.map(({ label, href }) => (
+          <Link
+            key={href}
+            href={href}
+            className={styles.mobileNavLink}
+            onClick={() => setMenuOpen(false)}
+          >
+            {label}
+          </Link>
+        ))}
         <div className={styles.mobileCta}>
           <Link
             href="/creator/signup"
-            className="btn btn-ghost"
+            className={styles.mobileCtaLink}
             onClick={() => setMenuOpen(false)}
           >
             Join as Creator
           </Link>
           <Link
             href="/merchant/signup"
-            className="btn btn-primary"
+            className={styles.mobileCtaBtn}
             onClick={() => setMenuOpen(false)}
           >
             Get Started

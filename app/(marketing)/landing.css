@@ -3541,24 +3541,25 @@ section#faq {
 /* 1. HERO — extreme typographic drama                             */
 /* ─────────────────────────────────────────────────────────────── */
 
-/* Bigger headline scale */
+/* Hero headline: editorial scale with breathing room */
 .hero-headline {
-  font-size: clamp(76px, 14vw, 200px);
-  letter-spacing: -0.07em;
-  line-height: 0.84;
+  font-size: clamp(64px, 12vw, 160px);
+  letter-spacing: -0.06em;
+  line-height: 0.88;
   margin-bottom: var(--space-8);
+  margin-top: var(--space-6);
 }
 
 /* "Turn creators" — ultra-black 900 */
 .hero-headline .line-black { font-weight: 900; }
 
-/* "into" — gossamer thin 100, champagne-gold tint */
+/* "into" — gossamer thin, Steel Blue tint */
 .hero-headline .line-light {
   font-weight: 100;
-  color: rgba(201, 169, 110, 0.5);
+  color: rgba(102, 155, 188, 0.4);
 }
 
-/* "results." — solid Flag Red, no gradient */
+/* "results." — solid Flag Red */
 .hero-headline em {
   font-weight: 900;
   font-style: italic;
@@ -3610,7 +3611,7 @@ section#faq {
 /* 2. SECTION RHYTHM — dramatic vertical breathing                 */
 /* ─────────────────────────────────────────────────────────────── */
 .section                { padding-block: 140px; }
-.hero                   { min-height: 100svh; padding-top: 80px; padding-bottom: var(--space-8); padding-block: unset; }
+.hero                   { min-height: 100svh; padding-top: 100px; padding-bottom: var(--space-8); padding-block: unset; }
 .testimonials-section   { padding-block: 120px; }
 .cta-section            { padding-block: 140px; }
 section#faq             { padding-block: 120px; }
