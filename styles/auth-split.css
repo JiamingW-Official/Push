@@ -1,0 +1,365 @@
+/* ============================================================
+   Creator Signup — Split-panel layout (Design.md: Login Page)
+   ============================================================ */
+
+.page {
+  min-height: 100svh;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+/* ------------------------------------------------------------
+   Left panel — brand (dark)
+   ------------------------------------------------------------ */
+.brand-panel {
+  background: linear-gradient(160deg, #003049 0%, #001d2e 55%, #00111a 100%);
+  padding: var(--space-10) var(--space-8);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  overflow: hidden;
+}
+
+/* Radial ambient highlight top-right */
+.brand-panel::before {
+  content: '';
+  position: absolute;
+  top: -5%;
+  right: -10%;
+  width: 70%;
+  height: 60%;
+  background: radial-gradient(ellipse at top right, rgba(102,155,188,0.09) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Ghost "PUSH" watermark */
+.brand-panel::after {
+  content: 'PUSH';
+  position: absolute;
+  bottom: -24px;
+  right: -12px;
+  font-family: var(--font-display);
+  font-size: clamp(110px, 16vw, 200px);
+  font-weight: 900;
+  color: rgba(255,255,255,0.025);
+  letter-spacing: -0.06em;
+  line-height: 1;
+  pointer-events: none;
+  z-index: 0;
+  white-space: nowrap;
+}
+
+/* Ensure content sits above pseudo-elements */
+.brand-top,
+.brand-back {
+  position: relative;
+  z-index: 1;
+}
+
+.brand-top {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+}
+
+.brand-logo {
+  font-family: var(--font-display);
+  font-size: 2.5rem;
+  font-weight: 900;
+  font-style: italic;
+  letter-spacing: -0.06em;
+  color: var(--surface);
+  text-decoration: none;
+  position: relative;
+  width: fit-content;
+}
+
+.brand-logo::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 32px;
+  height: 3px;
+  background: var(--primary);
+  animation: logoLine 800ms cubic-bezier(0.22,1,0.36,1) 400ms both;
+  transform-origin: left;
+}
+
+@keyframes logoLine {
+  from { transform: scaleX(0); }
+  to   { transform: scaleX(1); }
+}
+
+.brand-headline {
+  font-family: var(--font-display);
+  font-size: clamp(36px, 4vw, 56px);
+  font-weight: 900;
+  letter-spacing: -0.05em;
+  line-height: 1;
+  color: var(--surface);
+}
+
+.brand-headline em {
+  color: var(--primary);
+  font-style: italic;
+}
+
+.brand-tagline {
+  font-size: var(--text-small);
+  color: rgba(245, 242, 236, 0.70); /* A11y: was 0.55 — raised for contrast */
+  line-height: 1.7;
+  max-width: 300px;
+}
+
+/* Testimonial quote */
+.brand-quote {
+  border-left: 2px solid var(--primary);
+  padding-left: var(--space-2);
+  margin-top: var(--space-3);
+  font-size: 12px;
+  color: rgba(245, 242, 236, 0.55);
+  line-height: 1.6;
+  font-style: normal;
+}
+
+.brand-quote cite {
+  display: block;
+  margin-top: 4px;
+  font-style: normal;
+  color: rgba(245, 242, 236, 0.40);
+  font-size: 11px;
+}
+
+/* Stat bars */
+.brand-stats {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.stat-bar {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.stat-bar-label {
+  font-size: var(--text-eyebrow);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(245, 242, 236, 0.60); /* A11y: raised from 0.40 */
+}
+
+.stat-bar-track {
+  height: 3px;
+  background: rgba(245, 242, 236, 0.1);
+  position: relative;
+}
+
+.stat-bar-fill {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  background: var(--primary);
+}
+
+.stat-bar-value {
+  font-family: var(--font-display);
+  font-size: var(--text-small);
+  font-weight: 700;
+  color: var(--surface);
+}
+
+/* Bottom back-link */
+.brand-back {
+  font-size: var(--text-caption);
+  color: rgba(245, 242, 236, 0.60); /* A11y: raised from 0.35 */
+  text-decoration: none;
+  transition: color var(--t-base);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.brand-back:hover {
+  color: rgba(245, 242, 236, 0.8);
+}
+
+/* ------------------------------------------------------------
+   Right panel — form (surface)
+   ------------------------------------------------------------ */
+.form-panel {
+  background: var(--surface);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-10) var(--space-8);
+  overflow-y: auto;
+}
+
+.form-wrap {
+  width: 100%;
+  max-width: 440px;
+}
+
+.form-header {
+  margin-bottom: var(--space-8);
+}
+
+.form-eyebrow {
+  font-size: var(--text-eyebrow);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--primary);
+  display: block;
+  margin-bottom: var(--space-2);
+}
+
+.form-title {
+  font-family: var(--font-display);
+  font-size: var(--text-h2);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: var(--dark);
+  margin-bottom: var(--space-1);
+}
+
+.form-subtitle {
+  font-size: var(--text-small);
+  color: var(--text-muted);
+}
+
+/* Form grid */
+.form-grid {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-3);
+}
+
+/* Divider */
+.form-divider {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-block: var(--space-2);
+}
+
+.form-divider-line {
+  flex: 1;
+  height: 1px;
+  background: var(--line);
+}
+
+.form-divider-label {
+  font-size: var(--text-caption);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+/* Submit button */
+.submit-btn {
+  width: 100%;
+  justify-content: center;
+  margin-top: var(--space-2);
+  padding-block: var(--space-2);
+  font-size: var(--text-body);
+}
+
+/* Error / success banners */
+.form-error {
+  background: rgba(193, 18, 31, 0.06);
+  border: 1px solid rgba(193, 18, 31, 0.2);
+  border-left: 4px solid var(--primary);
+  padding: var(--space-2) var(--space-3);
+  font-size: var(--text-small);
+  color: var(--primary);
+  line-height: 1.5;
+}
+
+.form-success {
+  background: rgba(102, 155, 188, 0.08);
+  border: 1px solid rgba(102, 155, 188, 0.25);
+  border-left: 4px solid var(--tertiary);
+  padding: var(--space-2) var(--space-3);
+  font-size: var(--text-small);
+  color: var(--dark);
+  line-height: 1.5;
+}
+
+/* Footer link */
+.form-footer {
+  margin-top: var(--space-6);
+  text-align: center;
+  font-size: var(--text-small);
+  color: var(--text-muted);
+}
+
+.form-footer a {
+  color: var(--dark);
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* ------------------------------------------------------------
+   Responsive
+   ------------------------------------------------------------ */
+@media (max-width: 768px) {
+  .page {
+    grid-template-columns: 1fr;
+  }
+
+  .brand-panel {
+    position: static;
+    height: auto;
+    padding: var(--space-6) var(--space-3);
+    min-height: auto;
+  }
+
+  .brand-stats { display: none; }
+
+  .form-panel {
+    padding: var(--space-6) var(--space-3);
+    align-items: flex-start;
+  }
+
+  .brand-tagline {
+    max-width: 100%;
+  }
+}
+
+/* Phone — compact brand header, full form focus */
+@media (max-width: 480px) {
+  .brand-panel {
+    padding: var(--space-3) var(--space-2);
+  }
+
+  .brand-headline {
+    display: none; /* remove tall headline — tagline + logo enough */
+  }
+
+  .brand-tagline {
+    font-size: var(--text-caption);
+    color: rgba(245, 242, 236, 0.5);
+  }
+
+  .form-panel {
+    padding: var(--space-5) var(--space-2);
+  }
+}

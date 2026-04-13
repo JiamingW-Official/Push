@@ -1,0 +1,326 @@
+/* ==========================================================================
+   creator-shared.css
+   Shared CSS module for creator dashboard, profile, and campaign pages.
+   Import this file in any creator page that needs these common patterns.
+   ========================================================================== */
+
+
+/* --------------------------------------------------------------------------
+   1. Tier color system
+   Applied as border-left or background tints via CSS custom properties.
+   -------------------------------------------------------------------------- */
+
+.tier-seed     { --tier-color: #b8a99a; --tier-bg: rgba(184,169,154,0.10); }
+.tier-explorer { --tier-color: #8c6239; --tier-bg: rgba(140,98,57,0.10); }
+.tier-operator { --tier-color: #4a5568; --tier-bg: rgba(74,85,104,0.10); }
+.tier-proven   { --tier-color: #c9a96e; --tier-bg: rgba(201,169,110,0.12); }
+.tier-closer   { --tier-color: #9b111e; --tier-bg: rgba(155,17,30,0.08); }
+.tier-partner  { --tier-color: #1a1a2e; --tier-bg: rgba(26,26,46,0.10); }
+
+
+/* --------------------------------------------------------------------------
+   2. Milestone progress bar
+   7 segments total — one per milestone.
+   -------------------------------------------------------------------------- */
+
+.milestone-track {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  height: 4px;
+  margin: var(--space-1) 0;
+}
+
+.milestone-segment {
+  flex: 1;
+  height: 4px;
+  background: rgba(0,48,73,0.10);
+  transition: background 300ms ease;
+}
+
+.milestone-segment--done   { background: #669bbc; }
+.milestone-segment--active { background: #c1121f; }
+
+
+/* --------------------------------------------------------------------------
+   3. Score ring (shared SVG ring styles)
+   -------------------------------------------------------------------------- */
+
+.score-ring-track {
+  fill: none;
+  stroke: rgba(0,48,73,0.10);
+}
+
+.score-ring-fill {
+  fill: none;
+  stroke-linecap: butt;
+  transition: stroke-dashoffset 1.2s cubic-bezier(0.22,1,0.36,1);
+}
+
+/* Tier colors for ring fill */
+.score-ring-fill--seed     { stroke: #b8a99a; }
+.score-ring-fill--explorer { stroke: #8c6239; }
+.score-ring-fill--operator { stroke: #4a5568; }
+.score-ring-fill--proven   { stroke: #c9a96e; }
+.score-ring-fill--closer   { stroke: #9b111e; }
+.score-ring-fill--partner  { stroke: #1a1a2e; }
+
+
+/* --------------------------------------------------------------------------
+   4. Status badge pills
+   border-radius: 50vh is an allowed pill exception per Design.md.
+   -------------------------------------------------------------------------- */
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 10px;
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  border-radius: 50vh; /* ALLOWED pill exception */
+  white-space: nowrap;
+}
+
+.status-badge--active     { background: rgba(42,157,143,0.12); color: #1a7a6e; }
+.status-badge--pending    { background: rgba(244,162,97,0.15);  color: #b06b0a; }
+.status-badge--accepted   { background: rgba(102,155,188,0.15); color: #2a6a8a; }
+.status-badge--completed  { background: rgba(42,157,143,0.12);  color: #1a7a6e; }
+.status-badge--rejected   { background: rgba(193,18,31,0.10);   color: #c1121f; }
+.status-badge--processing { background: rgba(102,155,188,0.15); color: #2a6a8a; }
+.status-badge--settled    { background: rgba(0,48,73,0.08);     color: #003049; }
+
+
+/* --------------------------------------------------------------------------
+   5. Skeleton shimmer animation
+   -------------------------------------------------------------------------- */
+
+@keyframes creator-shimmer {
+  from { background-position: -400px 0; }
+  to   { background-position:  400px 0; }
+}
+
+.creator-skeleton {
+  background: linear-gradient(
+    90deg,
+    rgba(0,48,73,0.04) 25%,
+    rgba(0,48,73,0.08) 50%,
+    rgba(0,48,73,0.04) 75%
+  );
+  background-size: 800px 100%;
+  animation: creator-shimmer 1.5s ease-in-out infinite;
+}
+
+
+/* --------------------------------------------------------------------------
+   6. Page entry animations
+   -------------------------------------------------------------------------- */
+
+@keyframes cr-fade-up {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes cr-fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.cr-animate-1 { animation: cr-fade-up 400ms cubic-bezier(0.22,1,0.36,1)   0ms both; }
+.cr-animate-2 { animation: cr-fade-up 400ms cubic-bezier(0.22,1,0.36,1)  80ms both; }
+.cr-animate-3 { animation: cr-fade-up 400ms cubic-bezier(0.22,1,0.36,1) 160ms both; }
+.cr-animate-4 { animation: cr-fade-up 400ms cubic-bezier(0.22,1,0.36,1) 240ms both; }
+
+
+/* --------------------------------------------------------------------------
+   7. Creator stat card
+   -------------------------------------------------------------------------- */
+
+.cr-stat-card {
+  background: white;
+  border: 1px solid rgba(0,48,73,0.08);
+  padding: var(--space-2) var(--space-3);
+}
+
+.cr-stat-value {
+  font-family: var(--font-display);
+  font-size: clamp(24px, 3vw, 36px);
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  color: var(--dark);
+  line-height: 1;
+  margin-bottom: 4px;
+}
+
+.cr-stat-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(0,48,73,0.5);
+}
+
+
+/* --------------------------------------------------------------------------
+   8. Back navigation
+   -------------------------------------------------------------------------- */
+
+.cr-back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-size: var(--text-caption);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(0,48,73,0.5);
+  text-decoration: none;
+  margin-bottom: var(--space-3);
+  transition: color 150ms;
+}
+
+.cr-back-link:hover { color: var(--dark); }
+
+
+/* --------------------------------------------------------------------------
+   9. Payout speed indicator
+   -------------------------------------------------------------------------- */
+
+.payout-speed {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.payout-speed--instant  { color: #2a9d8f; }
+.payout-speed--same-day { color: #c1121f; }
+.payout-speed--t1,
+.payout-speed--t2       { color: #003049; }
+.payout-speed--t3       { color: #669bbc; }
+
+
+/* --------------------------------------------------------------------------
+   10. prefers-reduced-motion
+   -------------------------------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .cr-animate-1,
+  .cr-animate-2,
+  .cr-animate-3,
+  .cr-animate-4    { animation: none; }
+  .creator-skeleton { animation: none; }
+  .score-ring-fill  { transition: none; }
+  .milestone-segment { transition: none; }
+}
+
+
+/* --------------------------------------------------------------------------
+   11. Creator UI shared patterns
+   -------------------------------------------------------------------------- */
+
+/* Base card — panel with left tier accent stripe */
+.creator-card {
+  padding: 24px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-left: 4px solid var(--tier-color, var(--tertiary));
+  border-radius: 0;
+}
+
+/* Stat display — vertical value + label stack */
+.creator-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+/* Stat value — Darky bold headline number */
+.creator-stat-value {
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  color: var(--dark);
+  line-height: 1;
+}
+
+/* Stat label — mono eyebrow */
+.creator-stat-label {
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted, rgba(0,48,73,0.55));
+}
+
+/* Section header — numbered tag pattern matching landing page section-tag */
+.creator-section-header {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.creator-section-header__tag {
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted, rgba(0,48,73,0.55));
+}
+
+.creator-section-header__title {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: var(--dark);
+}
+
+/* Horizontal divider */
+.creator-divider {
+  height: 1px;
+  background: var(--line);
+  margin: 32px 0;
+  border: none;
+}
+
+/* Empty state — centered icon + message */
+.creator-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 48px 24px;
+  text-align: center;
+}
+
+.creator-empty-state__icon {
+  font-size: 32px;
+  opacity: 0.4;
+}
+
+.creator-empty-state__message {
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-muted, rgba(0,48,73,0.55));
+}
+
+.creator-empty-state__sub {
+  font-family: var(--font-body);
+  font-size: 12px;
+  color: var(--text-muted, rgba(0,48,73,0.55));
+  max-width: 280px;
+}

@@ -1,0 +1,1061 @@
+/* =============================================================
+   Push Creator — Campaign Detail Page — campaign.css
+   Design system: border-radius 0 everywhere
+   Colors: #c1121f / #780000 / #003049 / #669bbc / #f5f2ec
+   Fonts: var(--font-display) Darky, var(--font-body) CS Genio Mono
+   Grid: 8px base (--space-1 … --space-10)
+   ============================================================= */
+
+/* ─────────────────────────────────────────
+   1. PAGE SHELL
+   ───────────────────────────────────────── */
+.campaign-page {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: var(--space-4, 32px) var(--space-4, 32px) var(--space-10, 80px);
+}
+
+/* ─────────────────────────────────────────
+   2. BACK LINK
+   ───────────────────────────────────────── */
+.campaign-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-body, "CS Genio Mono", monospace);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(0, 48, 73, 0.5);
+  text-decoration: none;
+  margin-bottom: var(--space-3, 24px);
+  transition: color 150ms;
+}
+
+.campaign-back:hover {
+  color: #003049;
+}
+
+/* ─────────────────────────────────────────
+   3. HERO
+   ───────────────────────────────────────── */
+.campaign-hero {
+  width: 100%;
+  height: 280px;
+  position: relative;
+  overflow: hidden;
+  border-radius: 0;
+}
+
+.campaign-hero-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  border-radius: 0;
+}
+
+.campaign-hero-placeholder {
+  width: 100%;
+  height: 100%;
+  opacity: 0.12;
+  background-image: repeating-linear-gradient(
+    45deg,
+    rgba(245, 242, 236, 0.15) 0px,
+    rgba(245, 242, 236, 0.15) 1px,
+    transparent 1px,
+    transparent 12px
+  );
+}
+
+/* ─────────────────────────────────────────
+   4. CATEGORY / TIER CHIPS
+   ───────────────────────────────────────── */
+.campaign-chips {
+  position: absolute;
+  bottom: var(--space-2, 16px);
+  left: var(--space-3, 24px);
+  display: flex;
+  gap: var(--space-1, 8px);
+}
+
+.campaign-chip {
+  padding: 3px 10px;
+  background: rgba(0, 48, 73, 0.75);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  color: #f5f2ec;
+  font-family: var(--font-body, "CS Genio Mono", monospace);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  border-radius: 0;
+  line-height: 1.6;
+}
+
+.campaign-chip--tier {
+  background: rgba(193, 18, 31, 0.8);
+}
+
+/* ─────────────────────────────────────────
+   5. CAMPAIGN HEADER (Premium dark header)
+   ───────────────────────────────────────── */
+.cp-header {
+  background: var(--dark, #003049);
+  color: #f5f2ec;
+  padding: 48px var(--space-5, 40px);
+  margin-bottom: var(--space-4, 32px);
+  border-radius: 0;
+  position: relative;
+  overflow: hidden;
+}
+
+/* subtle diagonal grid texture */
+.cp-header::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: repeating-linear-gradient(
+    45deg,
+    rgba(245, 242, 236, 0.03) 0px,
+    rgba(245, 242, 236, 0.03) 1px,
+    transparent 1px,
+    transparent 16px
+  );
+  pointer-events: none;
+}
+
+.cp-header-inner {
+  position: relative;
+  z-index: 1;
+}
+
+.cp-title {
+  font-family: var(--font-display, "Darky", serif);
+  font-size: clamp(28px, 4vw, 36px);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: #f5f2ec;
+  margin: 0 0 var(--space-1, 8px) 0;
+  line-height: 1.1;
+}
+
+.cp-business {
+  font-family: var(--font-body, "CS Genio Mono", monospace);
+  font-size: 13px;
+  font-weight: 600;
+  color: rgba(245, 242, 236, 0.6);
+  margin: 0 0 var(--space-3, 24px) 0;
+}
+
+.cp-business-addr {
+  font-size: 11px;
+  color: rgba(245, 242, 236, 0.4);
+  margin-left: 8px;
+}
+
+.cp-meta {
+  font-family: var(--font-body, "CS Genio Mono", monospace);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-1, 8px);
+  margin-bottom: var(--space-4, 32px);
+}
+
+.cp-meta-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  background: rgba(245, 242, 236, 0.08);
+  border: 1px solid rgba(245, 242, 236, 0.15);
+  color: rgba(245, 242, 236, 0.85);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  border-radius: 0;
+}
+
+.cp-meta-badge--category {
+  background: rgba(102, 155, 188, 0.18);
+  border-color: rgba(102, 155, 188, 0.35);
+  color: #669bbc;
+}
+
+.cp-meta-badge--payout {
+  background: rgba(193, 18, 31, 0.18);
+  border-color: rgba(193, 18, 31, 0.35);
+  color: #f5f2ec;
+}
+
+.cp-meta-badge--free {
+  background: rgba(102, 155, 188, 0.18);
+  border-color: rgba(102, 155, 188, 0.35);
+  color: #669bbc;
+}
+
+.cp-meta-divider {
+  width: 1px;
+  height: 16px;
+  background: rgba(245, 242, 236, 0.15);
+  flex-shrink: 0;
+}
+
+/* Bottom row: countdown + spots */
+.cp-header-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4, 32px);
+  flex-wrap: wrap;
+}
+
+/* ─────────────────────────────────────────
+   6. COUNTDOWN
+   ───────────────────────────────────────── */
+.cp-countdown {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  font-family: var(--font-body, "CS Genio Mono", monospace);
+}
+
+.cp-countdown-number {
+  font-family: var(--font-display, "Darky", serif);
+  font-size: 32px;
+  font-weight: 900;
+  color: #f5f2ec;
+  line-height: 1;
+  letter-spacing: -0.04em;
+}
+
+.cp-countdown-number--urgent {
+  color: #c1121f;
+}
+
+.cp-countdown-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: rgba(245, 242, 236, 0.5);
+}
+
+/* ─────────────────────────────────────────
+   7. HEADER SPOTS INDICATOR
+   ───────────────────────────────────────── */
+.cp-spots-indicator {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 200px;
+}
+
+.cp-spots-text {
+  font-family: var(--font-body, "CS Genio Mono", monospace);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: rgba(245, 242, 236, 0.5);
+  display: flex;
+  justify-content: space-between;
+}
+
+.cp-spots-text span:last-child {
+  color: rgba(245, 242, 236, 0.85);
+}
+
+.cp-spots-bar {
+  height: 4px;
+  background: rgba(245, 242, 236, 0.1);
+  border-radius: 0;
+  overflow: hidden;
+}
+
+.cp-spots-fill {
+  height: 100%;
+  background: #c1121f;
+  border-radius: 0;
+  transition: width 400ms ease;
+}
+
+.cp-spots-fill--low {
+  background: #c1121f;
+}
+
+.cp-spots-fill--mid {
+  background: #669bbc;
+}
+
+/* ─────────────────────────────────────────
+   8. BODY GRID (main + sidebar)
+   ───────────────────────────────────────── */
+.campaign-body {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: var(--space-5, 40px);
+  margin-top: var(--space-4, 32px);
+  align-items: start;
+}
+
+/* ─────────────────────────────────────────
+   9. MAIN COLUMN
+   ───────────────────────────────────────── */
+.campaign-main {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4, 32px);
+}
+
+.campaign-business {
+  font-family: var(--font-body, "CS Genio Mono", monospace);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #669bbc;
+  margin: 0 0 var(--space-1, 8px) 0;
+}
+
+.campaign-title {
+  font-family: var(--font-display, "Darky", serif);
+  font-size: clamp(24px, 4vw, 36px);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: #003049;
+  margin: 0;
+  line-height: 1.1;
+}
+
+.campaign-desc {
+  font-family: var(--font-body, "CS Genio Mono", monospace);
+  font-size: 15px;
+  line-height: 1.7;
+  color: rgba(0, 48, 73, 0.75);
+  margin: 0;
+}
+
+/* Section label */
+.campaign-section-label {
+  font-family: var(--font-body, "CS Genio Mono", monospace);
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: rgba(0, 48, 73, 0.4);
+  margin: 0 0 var(--space-1, 8px) 0;
+}
+
+/* ─────────────────────────────────────────
+   10. MILESTONE PROGRESS TRACKER
+   ───────────────────────────────────────── */
+.cp-milestone-track {
+  background: #ffffff;
+  border: 1px solid rgba(0, 48, 73, 0.08);
+  padding: var(--space-4, 32px) var(--space-3, 24px) var(--space-3, 24px);
+  border-radius: 0;
+  overflow: hidden;
+}
+
+.cp-milestone-header {
+  font-family: var(--font-body, "CS Genio Mono", monospace);
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: rgba(0, 48, 73, 0.4);
+  margin-bottom: var(--space-3, 24px);
+}
+
+.cp-milestone-steps {
+  display: flex;
+  align-items: flex-start;
+  gap: 0;
+}
+
+.cp-milestone-step-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+  min-width: 0;
+  position: relative;
+}
+
+/* Connecting line between steps */
+.cp-milestone-line {
+  position: absolute;
+  top: 10px;
+  left: calc(50% + 10px);
+  right: calc(-50% + 10px);
+  height: 2px;
+  background: rgba(0, 48, 73, 0.12);
+  border-radius: 0;
+  z-index: 0;
+}
+
+.cp-milestone-line--done {
+  background: #003049;
+}
+
+.cp-milestone-line--dashed {
+  background: none;
+  border-top: 2px dashed rgba(0, 48, 73, 0.18);
+}
+
+/* Step dot */
+.cp-milestone-step {
+  width: 20px;
+  height: 20px;
+  border-radius: 0;
+  border: 2px solid rgba(0, 48, 73, 0.2);
+  background: var(--surface);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 1;
+  margin-bottom: 8px;
+  transition: border-color 200ms, background 200ms;
+}
+
+.cp-milestone-step--done {
+  background: #003049;
+  border-color: #003049;
+}
+
+.cp-milestone-step--done::after {
+  content: "";
+  width: 6px;
+  height: 4px;
+  border-left: 1.5px solid #f5f2ec;
+  border-bottom: 1.5px solid #f5f2ec;
+  transform: rotate(-45deg) translateY(-1px);
+  display: block;
+}
+
+.cp-milestone-step--active {
+  background: #c1121f;
+  border-color: #c1121f;
+  animation: cp-pulse 2s ease-in-out infinite;
+}
+
+.cp-milestone-step--active::after {
+  content: "";
+  width: 6px;
+  height: 6px;
+  background: #f5f2ec;
+  border-radius: 0;
+  display: block;
+}
+
+@keyframes cp-pulse {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(193, 18, 31, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 0 6px rgba(193, 18, 31, 0);
+  }
+}
+
+/* Step label */
+.cp-milestone-label {
+  font-family: var(--font-body, "CS Genio Mono", monospace);
+  font-size: 9px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  text-align: center;
+  color: rgba(0, 48, 73, 0.35);
+  line-height: 1.3;
+  padding: 0 2px;
+  word-break: break-word;
+}
+
+.cp-milestone-label--done {
+  color: rgba(0, 48, 73, 0.7);
+}
+
+.cp-milestone-label--active {
+  color: #c1121f;
+  font-weight: 700;
+}
+
+/* ─────────────────────────────────────────
+   11. REQUIREMENTS SECTION
+   ───────────────────────────────────────── */
+.cp-requirements {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.cp-req-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2, 16px);
+  padding: 14px 16px;
+  background: #ffffff;
+  border: 1px solid rgba(0, 48, 73, 0.07);
+  border-bottom: none;
+  font-family: var(--font-body, "CS Genio Mono", monospace);
+  font-size: 14px;
+  color: rgba(0, 48, 73, 0.85);
+  line-height: 1.5;
+  transition: background 150ms;
+}
+
+.cp-req-item:last-child {
+  border-bottom: 1px solid rgba(0, 48, 73, 0.07);
+}
+
+.cp-req-item:hover {
+  background: rgba(245, 242, 236, 0.6);
+}
+
+/* Square checkbox-style icon */
+.cp-req-icon {
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  border: 1.5px solid #c1121f;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0;
+}
+
+.cp-req-icon--check::after {
+  content: "";
+  width: 7px;
+  height: 4px;
+  border-left: 1.5px solid #c1121f;
+  border-bottom: 1.5px solid #c1121f;
+  transform: rotate(-45deg) translateY(-1px);
+  display: block;
+}
+
+.cp-req-number {
+  flex-shrink: 0;
+  font-family: var(--font-body, "CS Genio Mono", monospace);
+  font-size: 10px;
+  font-weight: 700;
+  color: rgba(0, 48, 73, 0.3);
+  width: 16px;
+  text-align: center;
+}
+
+/* ─────────────────────────────────────────
+   12. ACTION AREA
+   ───────────────────────────────────────── */
+.cp-action-area {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2, 16px);
+  padding: var(--space-3, 24px);
+  background: #003049;
+  border-radius: 0;
+  margin-top: var(--space-2, 16px);
+}
+
+.cp-action-label {
+  font-family: var(--font-body, "CS Genio Mono", monospace);
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: rgba(245, 242, 236, 0.45);
+}
+
+.cp-action-btn {
+  width: 100%;
+  height: 52px;
+  font-family: var(--font-body, "CS Genio Mono", monospace);
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  border: none;
+  border-radius: 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: background 150ms, color 150ms, opacity 150ms;
+  line-height: 1;
+}
+
+.cp-action-btn--primary {
+  background: #c1121f;
+  color: #f5f2ec;
+}
+
+.cp-action-btn--primary:hover {
+  background: #780000;
+}
+
+.cp-action-btn--secondary {
+  background: rgba(245, 242, 236, 0.08);
+  color: rgba(245, 242, 236, 0.6);
+  border: 1px solid rgba(245, 242, 236, 0.12);
+}
+
+.cp-action-btn--secondary:hover {
+  background: rgba(245, 242, 236, 0.15);
+}
+
+/* ─────────────────────────────────────────
+   13. REQUIREMENTS LIST (existing, kept)
+   ───────────────────────────────────────── */
+.campaign-reqs {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.campaign-req-item {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-1, 8px);
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(0, 48, 73, 0.08);
+  font-family: var(--font-body, "CS Genio Mono", monospace);
+  font-size: 14px;
+  color: rgba(0, 48, 73, 0.8);
+  line-height: 1.5;
+}
+
+.campaign-req-item:first-child {
+  border-top: 1px solid rgba(0, 48, 73, 0.08);
+}
+
+/* 6×6 Flag Red square bullet — no border-radius */
+.campaign-req-bullet {
+  display: inline-block;
+  flex-shrink: 0;
+  width: 6px;
+  height: 6px;
+  background: #c1121f;
+  border-radius: 0;
+  margin-top: 5px;
+}
+
+/* ─────────────────────────────────────────
+   14. BUSINESS INFO
+   ───────────────────────────────────────── */
+.campaign-biz-info {
+  /* wrapper */
+}
+
+.campaign-biz-dl {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.campaign-biz-row {
+  display: flex;
+  gap: var(--space-2, 16px);
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(0, 48, 73, 0.06);
+  font-family: var(--font-body, "CS Genio Mono", monospace);
+  font-size: 13px;
+}
+
+.campaign-biz-row:first-child {
+  border-top: 1px solid rgba(0, 48, 73, 0.06);
+}
+
+.campaign-biz-row dt {
+  width: 80px;
+  flex-shrink: 0;
+  font-weight: 700;
+  color: rgba(0, 48, 73, 0.45);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-size: 10px;
+  padding-top: 2px;
+}
+
+.campaign-biz-row dd {
+  margin: 0;
+  color: #003049;
+  line-height: 1.5;
+}
+
+/* Map placeholder */
+.cp-map-placeholder {
+  width: 100%;
+  height: 80px;
+  background: rgba(0, 48, 73, 0.04);
+  border: 1px solid rgba(0, 48, 73, 0.08);
+  border-radius: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-body, "CS Genio Mono", monospace);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: rgba(0, 48, 73, 0.25);
+  margin-top: 12px;
+  gap: 8px;
+}
+
+/* ─────────────────────────────────────────
+   15. QR ATTRIBUTION NOTE
+   ───────────────────────────────────────── */
+.campaign-qr-note {
+  display: flex;
+  gap: var(--space-2, 16px);
+  background: rgba(102, 155, 188, 0.08);
+  border-left: 3px solid #669bbc;
+  padding: var(--space-2, 16px) var(--space-3, 24px);
+  border-radius: 0;
+}
+
+.campaign-qr-icon {
+  font-size: 20px;
+  line-height: 1.2;
+  flex-shrink: 0;
+}
+
+.campaign-qr-note strong {
+  display: block;
+  font-family: var(--font-body, "CS Genio Mono", monospace);
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #669bbc;
+  margin-bottom: 4px;
+}
+
+.campaign-qr-note p {
+  font-family: var(--font-body, "CS Genio Mono", monospace);
+  font-size: 13px;
+  line-height: 1.6;
+  color: rgba(0, 48, 73, 0.7);
+  margin: 0;
+}
+
+/* ─────────────────────────────────────────
+   16. SIDEBAR CARD
+   ───────────────────────────────────────── */
+.campaign-sidebar-card {
+  position: sticky;
+  top: var(--space-4, 32px);
+  background: #ffffff;
+  border: 1px solid rgba(0, 48, 73, 0.08);
+  padding: var(--space-4, 32px);
+  border-radius: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2, 16px);
+}
+
+/* ─────────────────────────────────────────
+   17. PAYOUT
+   ───────────────────────────────────────── */
+.campaign-payout {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.campaign-payout-amount {
+  font-family: var(--font-display, "Darky", serif);
+  font-size: 40px;
+  font-weight: 900;
+  color: #003049;
+  line-height: 1;
+  letter-spacing: -0.04em;
+}
+
+/* Free product payout — Steel Blue */
+.campaign-payout-amount--free {
+  color: #669bbc;
+}
+
+.campaign-payout-label {
+  font-family: var(--font-body, "CS Genio Mono", monospace);
+  font-size: 12px;
+  color: rgba(0, 48, 73, 0.45);
+}
+
+/* Commission row */
+.campaign-commission-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-body, "CS Genio Mono", monospace);
+  font-size: 12px;
+  color: rgba(0, 48, 73, 0.5);
+  margin-top: -8px;
+}
+
+.campaign-commission-pct {
+  font-weight: 700;
+  color: #669bbc;
+}
+
+/* ─────────────────────────────────────────
+   18. SPOTS BAR
+   ───────────────────────────────────────── */
+.campaign-spots {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.campaign-spots-meta {
+  font-family: var(--font-body, "CS Genio Mono", monospace);
+  font-size: 12px;
+  color: rgba(0, 48, 73, 0.6);
+}
+
+.campaign-spots-bar {
+  height: 3px;
+  background: rgba(0, 48, 73, 0.1);
+  border-radius: 0;
+  overflow: hidden;
+}
+
+.campaign-spots-fill {
+  height: 100%;
+  background: #c1121f;
+  border-radius: 0;
+  transition: width 400ms ease;
+}
+
+/* ─────────────────────────────────────────
+   19. DEADLINE
+   ───────────────────────────────────────── */
+.campaign-deadline {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: var(--font-body, "CS Genio Mono", monospace);
+  font-size: 13px;
+  padding: var(--space-1, 8px) 0;
+  border-top: 1px solid rgba(0, 48, 73, 0.08);
+}
+
+.campaign-deadline-label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: rgba(0, 48, 73, 0.4);
+}
+
+.campaign-deadline-value {
+  font-weight: 600;
+  color: #003049;
+}
+
+/* ─────────────────────────────────────────
+   20. ELIGIBILITY
+   ───────────────────────────────────────── */
+.campaign-eligibility {
+  font-family: var(--font-body, "CS Genio Mono", monospace);
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: var(--space-2, 16px) 0;
+  border-top: 1px solid rgba(0, 48, 73, 0.08);
+  color: rgba(0, 48, 73, 0.75);
+  font-weight: 500;
+}
+
+.campaign-elig-icon--ok {
+  color: #22a06b;
+  font-weight: 700;
+  font-size: 15px;
+}
+
+.campaign-elig-icon--lock {
+  font-size: 14px;
+  line-height: 1;
+}
+
+/* ─────────────────────────────────────────
+   21. APPLY BUTTON
+   ───────────────────────────────────────── */
+.apply-btn {
+  width: 100%;
+  height: 52px;
+  font-family: var(--font-body, "CS Genio Mono", monospace);
+  font-weight: 700;
+  font-size: 15px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  border: none;
+  border-radius: 0;
+  cursor: pointer;
+  transition: background 150ms, color 150ms, opacity 150ms;
+  line-height: 1;
+}
+
+/* Default — Flag Red */
+.apply-btn--default {
+  background: #c1121f;
+  color: #f5f2ec;
+}
+
+.apply-btn--default:hover:not(:disabled) {
+  background: #780000;
+}
+
+/* Applied — Steel Blue */
+.apply-btn--applied {
+  background: #669bbc;
+  color: #f5f2ec;
+  cursor: default;
+}
+
+/* Locked — muted */
+.apply-btn--locked {
+  background: rgba(0, 48, 73, 0.08);
+  color: rgba(0, 48, 73, 0.35);
+  cursor: not-allowed;
+  font-size: 12px;
+}
+
+/* ─────────────────────────────────────────
+   22. COMMISSION NOTE
+   ───────────────────────────────────────── */
+.commission-note {
+  font-family: var(--font-body, "CS Genio Mono", monospace);
+  font-size: 12px;
+  color: rgba(0, 48, 73, 0.5);
+  margin: var(--space-2, 16px) 0 0 0;
+  text-align: center;
+  line-height: 1.6;
+}
+
+/* ─────────────────────────────────────────
+   23. LOADING / ERROR
+   ───────────────────────────────────────── */
+.campaign-loading,
+.campaign-error {
+  font-family: var(--font-body, "CS Genio Mono", monospace);
+  font-size: 14px;
+  color: rgba(0, 48, 73, 0.5);
+  padding: var(--space-6, 48px) 0;
+  text-align: center;
+}
+
+.campaign-error {
+  color: #c1121f;
+}
+
+/* ─────────────────────────────────────────
+   24. MOBILE — 768px breakpoint
+   ───────────────────────────────────────── */
+@media (max-width: 768px) {
+  .campaign-page {
+    padding: var(--space-3, 24px) var(--space-2, 16px) 120px;
+  }
+
+  .campaign-hero {
+    height: 200px;
+    margin: 0 calc(-1 * var(--space-2, 16px));
+    width: calc(100% + 2 * var(--space-2, 16px));
+  }
+
+  /* Single column on mobile */
+  .campaign-body {
+    grid-template-columns: 1fr;
+    gap: var(--space-4, 32px);
+    margin-top: var(--space-3, 24px);
+  }
+
+  /* Sidebar becomes bottom-sticky action bar */
+  .campaign-sidebar-card {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    top: auto;
+    z-index: 50;
+    padding: var(--space-2, 16px) var(--space-3, 24px);
+    border-top: 1px solid rgba(0, 48, 73, 0.1);
+    border-left: none;
+    border-right: none;
+    border-bottom: none;
+    box-shadow: 0 -4px 20px rgba(0, 48, 73, 0.08);
+    /* Collapse to action strip */
+    flex-direction: row;
+    align-items: center;
+    gap: var(--space-2, 16px);
+    background: #ffffff;
+  }
+
+  /* On mobile, hide non-essential sidebar items to keep the bar slim */
+  .campaign-sidebar-card .campaign-spots,
+  .campaign-sidebar-card .campaign-deadline,
+  .campaign-sidebar-card .campaign-eligibility,
+  .campaign-sidebar-card .commission-note {
+    display: none;
+  }
+
+  .campaign-payout {
+    flex-shrink: 0;
+  }
+
+  .campaign-payout-amount {
+    font-size: 28px;
+  }
+
+  .apply-btn {
+    flex: 1;
+    height: 44px;
+    font-size: 13px;
+  }
+
+  /* Header responsive */
+  .cp-header {
+    padding: 32px var(--space-3, 24px);
+  }
+
+  .cp-title {
+    font-size: 24px;
+  }
+
+  .cp-header-footer {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-2, 16px);
+  }
+
+  .cp-spots-indicator {
+    min-width: 0;
+    width: 100%;
+  }
+
+  /* Milestone: scroll horizontally on small screens */
+  .cp-milestone-steps {
+    overflow-x: auto;
+    padding-bottom: 8px;
+  }
+
+  .cp-milestone-step-wrap {
+    min-width: 72px;
+  }
+
+  .cp-milestone-label {
+    font-size: 8px;
+  }
+}

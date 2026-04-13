@@ -1,0 +1,519 @@
+/* ============================================================
+   Campaign New — single-column centered layout
+   Design.md: border-radius:0, 5 brand colors, Darky + CS Genio Mono
+   ============================================================ */
+
+/* ── Page shell ────────────────────────────────────────────── */
+.cn-page {
+  min-height: 100svh;
+  background: var(--surface);
+  font-family: var(--font-mono, "CS Genio Mono", monospace);
+  color: #003049;
+}
+
+.cn-inner {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 40px 24px 80px;
+}
+
+/* ── Back link ─────────────────────────────────────────────── */
+.cn-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-mono, "CS Genio Mono", monospace);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: #669bbc;
+  text-decoration: none;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  margin-bottom: 32px;
+  transition: color 0.15s;
+}
+
+.cn-back:hover {
+  color: #003049;
+}
+
+/* ── Page title ────────────────────────────────────────────── */
+.cn-title {
+  font-family: var(--font-display, "Darky", serif);
+  font-size: clamp(2rem, 5vw, 2.75rem);
+  font-weight: 900;
+  font-style: italic;
+  letter-spacing: -0.04em;
+  color: #003049;
+  line-height: 1;
+  margin: 0 0 8px;
+}
+
+.cn-subtitle {
+  font-size: 0.875rem;
+  color: #669bbc;
+  margin: 0 0 36px;
+}
+
+/* ── Step indicator ────────────────────────────────────────── */
+.cn-steps {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  margin-bottom: 36px;
+  border: 1.5px solid #003049;
+  overflow: hidden;
+}
+
+.cn-step {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  font-family: var(--font-mono, "CS Genio Mono", monospace);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #669bbc;
+  background: transparent;
+  border: none;
+  border-right: 1.5px solid #003049;
+  cursor: default;
+  position: relative;
+  transition: background 0.2s, color 0.2s;
+}
+
+.cn-step:last-child {
+  border-right: none;
+}
+
+.cn-step--active {
+  background: #003049;
+  color: #f5f2ec;
+}
+
+.cn-step--done {
+  background: #669bbc;
+  color: #f5f2ec;
+}
+
+.cn-step__num {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  border: 1.5px solid currentColor;
+  flex-shrink: 0;
+}
+
+.cn-step--done .cn-step__num {
+  border-color: #f5f2ec;
+}
+
+.cn-step--active .cn-step__num {
+  background: #c1121f;
+  border-color: #c1121f;
+  color: #f5f2ec;
+}
+
+.cn-step__label {
+  white-space: nowrap;
+}
+
+/* ── Form panel (shared card shell) ───────────────────────── */
+.cn-panel {
+  background: #fff;
+  border: 1.5px solid #003049;
+  box-shadow: 4px 4px 0 #003049;
+  padding: 36px 36px 32px;
+  position: relative;
+}
+
+@media (max-width: 500px) {
+  .cn-panel {
+    padding: 24px 20px;
+  }
+}
+
+/* ── Step transition ───────────────────────────────────────── */
+.cn-step-section {
+  display: none;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.22s ease, transform 0.22s ease;
+}
+
+.cn-step-section--visible {
+  display: block;
+  opacity: 1;
+  transform: translateY(0);
+  animation: cnFadeIn 0.22s ease both;
+}
+
+@keyframes cnFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ── Section heading inside panel ─────────────────────────── */
+.cn-section-heading {
+  font-family: var(--font-display, "Darky", serif);
+  font-size: 1.25rem;
+  font-weight: 900;
+  font-style: italic;
+  color: #003049;
+  margin: 0 0 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid rgba(0, 48, 73, 0.12);
+}
+
+/* ── Field layout ──────────────────────────────────────────── */
+.cn-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 20px;
+}
+
+.cn-field:last-child {
+  margin-bottom: 0;
+}
+
+.cn-field label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #003049;
+}
+
+.cn-field input,
+.cn-field textarea,
+.cn-field select {
+  width: 100%;
+  padding: 11px 14px;
+  font-family: var(--font-mono, "CS Genio Mono", monospace);
+  font-size: 0.9375rem;
+  color: #003049;
+  background: var(--surface);
+  border: 1.5px solid #003049;
+  border-radius: 0;
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  box-sizing: border-box;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.cn-field input:focus,
+.cn-field textarea:focus,
+.cn-field select:focus {
+  border-color: #c1121f;
+  box-shadow: 0 0 0 3px rgba(193, 18, 31, 0.12);
+}
+
+.cn-field input.cn-input--error,
+.cn-field textarea.cn-input--error,
+.cn-field select.cn-input--error {
+  border-color: #c1121f;
+}
+
+.cn-field textarea {
+  resize: vertical;
+  min-height: 96px;
+}
+
+.cn-field select {
+  cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23003049' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  padding-right: 36px;
+}
+
+/* ── Char counter ──────────────────────────────────────────── */
+.cn-char-counter {
+  align-self: flex-end;
+  font-size: 0.6875rem;
+  font-weight: 500;
+  color: #669bbc;
+  letter-spacing: 0.03em;
+  margin-top: -2px;
+}
+
+.cn-char-counter--warn {
+  color: #c1121f;
+}
+
+/* ── Field hint / helper ───────────────────────────────────── */
+.cn-field-hint {
+  font-size: 0.75rem;
+  color: #669bbc;
+  line-height: 1.5;
+}
+
+/* ── Error message ─────────────────────────────────────────── */
+.cn-error-msg {
+  font-size: 0.75rem;
+  color: #c1121f;
+  font-weight: 500;
+}
+
+/* ── Two-column row ────────────────────────────────────────── */
+.cn-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+@media (max-width: 500px) {
+  .cn-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ── Divider inside panel ──────────────────────────────────── */
+.cn-divider {
+  border: none;
+  border-top: 1px solid rgba(0, 48, 73, 0.1);
+  margin: 28px 0;
+}
+
+/* ── Navigation buttons (next/back) ───────────────────────── */
+.cn-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 28px;
+  padding-top: 24px;
+  border-top: 1px solid rgba(0, 48, 73, 0.1);
+}
+
+.cn-nav--end {
+  justify-content: flex-end;
+}
+
+.cn-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  font-family: var(--font-mono, "CS Genio Mono", monospace);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border: 1.5px solid #003049;
+  border-radius: 0;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, box-shadow 0.15s;
+  text-decoration: none;
+}
+
+.cn-btn--ghost {
+  background: transparent;
+  color: #003049;
+}
+
+.cn-btn--ghost:hover {
+  background: #003049;
+  color: #f5f2ec;
+}
+
+.cn-btn--primary {
+  background: #003049;
+  color: #f5f2ec;
+  box-shadow: 3px 3px 0 #c1121f;
+}
+
+.cn-btn--primary:hover {
+  background: #c1121f;
+  border-color: #c1121f;
+  box-shadow: 3px 3px 0 #780000;
+}
+
+.cn-btn--primary:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* ── Step 3 dual-button row ────────────────────────────────── */
+.cn-publish-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 28px;
+  padding-top: 24px;
+  border-top: 1px solid rgba(0, 48, 73, 0.1);
+}
+
+@media (max-width: 480px) {
+  .cn-publish-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+.cn-btn--draft {
+  background: transparent;
+  color: #003049;
+  border-color: #003049;
+}
+
+.cn-btn--draft:hover {
+  background: #003049;
+  color: #f5f2ec;
+}
+
+.cn-btn--publish {
+  background: #c1121f;
+  color: #f5f2ec;
+  border-color: #c1121f;
+  box-shadow: 3px 3px 0 #780000;
+}
+
+.cn-btn--publish:hover {
+  background: #780000;
+  border-color: #780000;
+  box-shadow: 3px 3px 0 #003049;
+}
+
+.cn-btn--publish:disabled,
+.cn-btn--draft:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* ── Summary card (Step 3) ─────────────────────────────────── */
+.cn-summary {
+  background: #003049;
+  color: #f5f2ec;
+  border: none;
+  padding: 28px;
+}
+
+.cn-summary-heading {
+  font-family: var(--font-display, "Darky", serif);
+  font-size: 1rem;
+  font-weight: 900;
+  font-style: italic;
+  letter-spacing: -0.02em;
+  color: #f5f2ec;
+  margin: 0 0 20px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(245, 242, 236, 0.2);
+}
+
+.cn-summary-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px 24px;
+}
+
+@media (max-width: 480px) {
+  .cn-summary-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.cn-summary-item {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.cn-summary-item--full {
+  grid-column: 1 / -1;
+}
+
+.cn-summary-label {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #669bbc;
+}
+
+.cn-summary-value {
+  font-size: 0.9375rem;
+  color: #f5f2ec;
+  line-height: 1.45;
+  word-break: break-word;
+}
+
+/* ── Global form error banner ──────────────────────────────── */
+.cn-form-error {
+  background: rgba(193, 18, 31, 0.08);
+  border: 1.5px solid #c1121f;
+  padding: 12px 16px;
+  margin-bottom: 20px;
+  font-size: 0.875rem;
+  color: #c1121f;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.cn-form-error button {
+  background: none;
+  border: none;
+  font-family: var(--font-mono, "CS Genio Mono", monospace);
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #c1121f;
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 0;
+  text-decoration: underline;
+  flex-shrink: 0;
+}
+
+/* ── Spinner dots (loading state) ──────────────────────────── */
+.cn-dots {
+  display: inline-flex;
+  gap: 4px;
+  align-items: center;
+}
+
+.cn-dot {
+  width: 5px;
+  height: 5px;
+  background: currentColor;
+  border-radius: 0;
+  animation: cnDotBounce 0.9s ease-in-out infinite;
+}
+
+.cn-dot:nth-child(2) { animation-delay: 0.15s; }
+.cn-dot:nth-child(3) { animation-delay: 0.3s; }
+
+@keyframes cnDotBounce {
+  0%, 80%, 100% { transform: scaleY(1); }
+  40%            { transform: scaleY(1.6); }
+}
+
+/* ── Screen reader only ────────────────────────────────────── */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}

@@ -1,0 +1,704 @@
+/* ============================================================
+   Creator Signup — Component Styles
+   Mirrors merchant signup patterns; creator-specific additions:
+   bio counter, tier preview strip, success CTA
+   ============================================================ */
+
+/* ── Page load entrance animations ───────────────────────── */
+
+.brand-panel {
+  animation: slideInLeft 600ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.form-panel {
+  animation: fadeUpPanel 600ms cubic-bezier(0.22, 1, 0.36, 1) 150ms both;
+}
+
+@keyframes slideInLeft {
+  from { transform: translateX(-20px); opacity: 0; }
+  to   { transform: translateX(0);     opacity: 1; }
+}
+
+@keyframes fadeUpPanel {
+  from { transform: translateY(16px); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+
+/* ── Form sections stagger in ─────────────────────────────── */
+
+.form-header                              { animation: fadeUp 500ms cubic-bezier(0.22,1,0.36,1) 200ms both; }
+.form-grid > .form-divider:nth-of-type(1) { animation: fadeUp 500ms cubic-bezier(0.22,1,0.36,1) 280ms both; }
+.form-grid > .form-row:nth-of-type(1)     { animation: fadeUp 500ms cubic-bezier(0.22,1,0.36,1) 340ms both; }
+.form-grid > .form-divider:nth-of-type(2) { animation: fadeUp 500ms cubic-bezier(0.22,1,0.36,1) 390ms both; }
+.form-grid > .form-field:nth-child(4)     { animation: fadeUp 500ms cubic-bezier(0.22,1,0.36,1) 430ms both; }
+.form-grid > .form-row:nth-of-type(2)     { animation: fadeUp 500ms cubic-bezier(0.22,1,0.36,1) 470ms both; }
+.form-grid > .form-divider:nth-of-type(3) { animation: fadeUp 500ms cubic-bezier(0.22,1,0.36,1) 510ms both; }
+.form-grid > .form-field:nth-child(7)     { animation: fadeUp 500ms cubic-bezier(0.22,1,0.36,1) 550ms both; }
+.form-grid > .form-field:nth-child(8)     { animation: fadeUp 500ms cubic-bezier(0.22,1,0.36,1) 590ms both; }
+.trust-line                               { animation: fadeUp 500ms cubic-bezier(0.22,1,0.36,1) 630ms both; }
+.submit-btn                               { animation: fadeUp 500ms cubic-bezier(0.22,1,0.36,1) 670ms both; }
+
+@keyframes fadeUp {
+  from { transform: translateY(12px); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+
+/* ── Divider lines grow from center ──────────────────────── */
+
+.form-divider-line {
+  transform: scaleX(0);
+  transform-origin: center;
+  animation: dividerGrow 600ms cubic-bezier(0.22,1,0.36,1) 350ms both;
+}
+
+@keyframes dividerGrow {
+  from { transform: scaleX(0); }
+  to   { transform: scaleX(1); }
+}
+
+/* ── Error shake ──────────────────────────────────────────── */
+
+.form-error {
+  animation: errorShake 450ms ease-in-out;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+@keyframes errorShake {
+  0%   { transform: translateX(0);    }
+  20%  { transform: translateX(-7px); }
+  40%  { transform: translateX(7px);  }
+  60%  { transform: translateX(-4px); }
+  80%  { transform: translateX(4px);  }
+  100% { transform: translateX(0);    }
+}
+
+.error-retry-btn {
+  background: none;
+  border: none;
+  color: var(--primary);
+  font-size: var(--text-caption);
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  cursor: pointer;
+  flex-shrink: 0;
+  padding: 0;
+  transition: opacity var(--t-fast);
+}
+
+.error-retry-btn:hover { opacity: 0.7; }
+.error-retry-btn:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
+
+/* ── Error message inline ─────────────────────────────────── */
+
+.error-msg {
+  display: block;
+  font-size: 12px;
+  color: var(--primary);
+  margin-top: 4px;
+}
+
+/* ── Success state ────────────────────────────────────────── */
+
+.form-success {
+  animation: scaleIn 600ms cubic-bezier(0.22,1,0.36,1) both;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+  text-align: center;
+  padding: var(--space-6) var(--space-4);
+  background: rgba(102,155,188,0.07);
+  border: 1px solid rgba(102,155,188,0.25);
+  border-left: 4px solid var(--tertiary);
+}
+
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to   { opacity: 1; transform: scale(1);    }
+}
+
+.success-check {
+  width: 64px;
+  height: 64px;
+  flex-shrink: 0;
+}
+
+.success-check svg { width: 100%; height: 100%; }
+
+.check-path {
+  stroke-dasharray: 40;
+  stroke-dashoffset: 40;
+  animation: drawCheck 600ms cubic-bezier(0.22,1,0.36,1) 300ms forwards;
+}
+
+@keyframes drawCheck {
+  to { stroke-dashoffset: 0; }
+}
+
+.success-heading {
+  font-family: var(--font-display);
+  font-size: var(--text-h3);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--dark);
+  margin: 0;
+}
+
+.success-body {
+  font-size: var(--text-small);
+  color: var(--dark);
+  line-height: 1.6;
+  max-width: 380px;
+  margin: 0;
+}
+
+.success-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: var(--space-1);
+  padding: var(--space-2) var(--space-5);
+  font-size: var(--text-small);
+  text-decoration: none;
+}
+
+/* ── Form loading state ───────────────────────────────────── */
+
+form.form-loading {
+  opacity: 0.55;
+  pointer-events: none;
+}
+
+/* ── Field wrapper + valid dot ────────────────────────────── */
+
+.field-wrap {
+  position: relative;
+  display: flex;
+  align-items: stretch;
+}
+
+.field-wrap input {
+  flex: 1;
+}
+
+.field-dot {
+  position: absolute;
+  right: var(--space-2);
+  top: 50%;
+  transform: translateY(-50%);
+  width: 5px;
+  height: 5px;
+  background: var(--tertiary);
+  border-radius: 50%;
+  pointer-events: none;
+  animation: dotPop 200ms cubic-bezier(0.22,1,0.36,1) both;
+}
+
+@keyframes dotPop {
+  from { transform: translateY(-50%) scale(0); }
+  to   { transform: translateY(-50%) scale(1); }
+}
+
+/* ── Input enhancements ───────────────────────────────────── */
+
+.form-field input::placeholder,
+.form-field textarea::placeholder {
+  color: rgba(0, 48, 73, 0.30);
+  font-weight: 400;
+}
+
+.form-field input {
+  min-height: 44px;
+  transition: border-color var(--t-base), box-shadow var(--t-base);
+}
+
+.form-field input:focus {
+  border-color: var(--primary);
+  box-shadow: inset 2px 0 0 var(--primary);
+  outline: none;
+}
+
+.form-field input:not(:placeholder-shown) {
+  border-color: rgba(0, 48, 73, 0.35);
+}
+
+.form-field input:not(:placeholder-shown):focus {
+  border-color: var(--primary);
+  box-shadow: inset 2px 0 0 var(--primary);
+}
+
+.form-field:has(.error-msg) input,
+.form-field:has(.error-msg) textarea {
+  border-color: var(--primary);
+  box-shadow: inset 2px 0 0 var(--primary);
+}
+
+/* ── Label optional tag ───────────────────────────────────── */
+
+.label-optional {
+  color: var(--text-muted);
+  font-weight: 400;
+}
+
+/* ── Field hint ───────────────────────────────────────────── */
+
+.field-hint {
+  font-size: 11px;
+  color: var(--text-muted);
+  line-height: 1.4;
+  margin-top: 4px;
+  display: block;
+}
+
+/* ── Password + show/hide ─────────────────────────────────── */
+
+.input-with-action {
+  display: flex;
+  align-items: stretch;
+  border: 1px solid var(--line);
+  transition: border-color var(--t-base), box-shadow var(--t-base);
+}
+
+.input-with-action:focus-within {
+  border-color: var(--primary);
+  box-shadow: inset 2px 0 0 var(--primary);
+}
+
+.input-with-action input {
+  flex: 1;
+  border: none !important;
+  box-shadow: none !important;
+  outline: none !important;
+  background: var(--surface);
+  padding: var(--space-2);
+  min-height: 44px;
+}
+
+.input-action-btn {
+  padding-inline: var(--space-2);
+  font-family: var(--font-body);
+  font-size: var(--text-caption);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  background: var(--surface);
+  border: none;
+  border-left: 1px solid var(--line);
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: color var(--t-fast);
+}
+
+.input-action-btn:hover { color: var(--dark); }
+.input-action-btn:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
+
+/* ── Password strength ────────────────────────────────────── */
+
+.pw-strength {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-top: 6px;
+}
+
+.pw-bar {
+  flex: 1;
+  height: 3px;
+  background: var(--line);
+  position: relative;
+}
+
+.pw-fill {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  transition: width 300ms ease, background 300ms ease;
+}
+
+.pw-fill--weak   { width: 33%;  background: var(--primary); }
+.pw-fill--fair   { width: 66%;  background: #e07b00; }
+.pw-fill--strong { width: 100%; background: var(--tertiary); }
+
+.pw-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.pw-label--weak   { color: var(--primary); }
+.pw-label--fair   { color: #e07b00; }
+.pw-label--strong { color: var(--tertiary); }
+
+/* ── Bio textarea ─────────────────────────────────────────── */
+
+.bio-wrap {
+  position: relative;
+}
+
+.bio-wrap textarea {
+  width: 100%;
+  resize: vertical;
+  min-height: 88px;
+  padding: var(--space-2);
+  font-family: var(--font-body);
+  font-size: var(--text-small);
+  color: var(--dark);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  transition: border-color var(--t-base), box-shadow var(--t-base);
+  line-height: 1.5;
+  box-sizing: border-box;
+}
+
+.bio-wrap textarea:focus {
+  border-color: var(--primary);
+  box-shadow: inset 2px 0 0 var(--primary);
+  outline: none;
+}
+
+.bio-counter {
+  position: absolute;
+  bottom: var(--space-1);
+  right: var(--space-2);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--text-muted);
+  pointer-events: none;
+  transition: color var(--t-fast);
+}
+
+.bio-counter--warn {
+  color: var(--primary);
+}
+
+/* ── Trust line ───────────────────────────────────────────── */
+
+.trust-line {
+  font-size: 11px;
+  color: var(--text-muted);
+  text-align: center;
+  border-top: 1px solid var(--line);
+  padding-top: var(--space-2);
+  letter-spacing: 0.02em;
+}
+
+/* ── Submit button ────────────────────────────────────────── */
+
+.submit-btn {
+  width: 100%;
+  justify-content: center;
+  padding-block: var(--space-3);
+  min-height: 52px;
+  font-size: var(--text-body);
+  transition: background var(--t-base), box-shadow 200ms ease, transform 150ms ease;
+}
+
+.submit-btn:hover {
+  box-shadow: 6px 6px 0 var(--dark);
+  transform: translateX(2px);
+}
+
+.submit-btn:active,
+.submit-btn[data-pressed="true"] {
+  transform: scale(0.98);
+  opacity: 0.9;
+}
+
+/* ── Loading dots ─────────────────────────────────────────── */
+
+.loader-dots {
+  display: inline-flex;
+  gap: 5px;
+  align-items: center;
+}
+
+.loader-dots .dot {
+  width: 4px;
+  height: 4px;
+  background: currentColor;
+  border-radius: 50%;
+  animation: pulseDot 1.2s ease-in-out infinite;
+}
+
+.loader-dots .dot:nth-child(2) { animation-delay: 0.2s; }
+.loader-dots .dot:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes pulseDot {
+  0%, 80%, 100% { opacity: 0.3; transform: scale(1);    }
+  40%            { opacity: 1;   transform: scale(1.25); }
+}
+
+/* ── Auth demo link ───────────────────────────────────────── */
+
+.auth-demo-link {
+  display: block;
+  text-align: center;
+  margin-top: var(--space-3);
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  text-decoration: none;
+  border: 1px solid var(--line);
+  padding: var(--space-2) var(--space-3);
+  transition: color var(--t-fast), border-color var(--t-fast), background var(--t-fast);
+}
+
+.auth-demo-link:hover {
+  color: var(--dark);
+  border-color: var(--dark);
+  background: rgba(0, 48, 73, 0.04);
+}
+
+/* ── Tier preview (brand panel) ───────────────────────────── */
+
+.auth-tier-preview {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.auth-tier-preview-label {
+  display: block;
+  font-family: var(--font-body);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(245, 242, 236, 0.40);
+  margin-bottom: var(--space-2);
+}
+
+.auth-tier-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(245, 242, 236, 0.08);
+}
+
+.signup-tier-item:last-of-type {
+  border-bottom: none;
+}
+
+.auth-tier-icon {
+  font-size: 20px;
+  line-height: 1;
+  width: 28px;
+  flex-shrink: 0;
+  text-align: center;
+}
+
+.auth-tier-info {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  flex: 1;
+  min-width: 0;
+}
+
+.auth-tier-name {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: rgba(245, 242, 236, 0.95);
+  text-transform: uppercase;
+}
+
+.auth-tier-benefit {
+  font-family: var(--font-body);
+  font-size: 11px;
+  color: rgba(245, 242, 236, 0.55);
+  line-height: 1.4;
+}
+
+.auth-tier-rate {
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 700;
+  color: rgba(245, 242, 236, 0.75);
+  white-space: nowrap;
+  flex-shrink: 0;
+  letter-spacing: 0.02em;
+}
+
+.auth-motivation {
+  margin-top: var(--space-3);
+  font-size: 11px;
+  font-style: italic;
+  color: rgba(245, 242, 236, 0.45);
+  line-height: 1.5;
+  text-align: center;
+  padding: var(--space-2) 0 0;
+  border-top: 1px solid rgba(245, 242, 236, 0.10);
+}
+
+/* Signup brand panel — warm red accent top border */
+.signup-brand-panel {
+  border-top: 3px solid var(--primary);
+}
+
+/* ── Tier preview teaser ──────────────────────────────────── */
+
+.tier-preview {
+  margin-top: var(--space-6);
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--line);
+}
+
+.tier-preview-title {
+  display: block;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: var(--space-2);
+  text-align: center;
+}
+
+.tier-list {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-1);
+}
+
+.tier-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  flex: 1;
+  opacity: 0.40;
+  transition: opacity var(--t-fast);
+}
+
+/* First tier (Spark) is unlocked / active */
+.tier-item[data-index="0"] {
+  opacity: 1;
+}
+
+.tier-item:hover {
+  opacity: 1;
+}
+
+.tier-icon {
+  font-size: 16px;
+  line-height: 1;
+  color: var(--dark);
+}
+
+.tier-item[data-index="0"] .tier-icon {
+  color: var(--primary);
+}
+
+.tier-label {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--dark);
+  white-space: nowrap;
+}
+
+/* ── Skip link (a11y) ─────────────────────────────────────── */
+
+.skip-link {
+  position: absolute;
+  top: -48px;
+  left: var(--space-3);
+  background: var(--primary);
+  color: #fff;
+  padding: var(--space-1) var(--space-3);
+  font-size: var(--text-small);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  z-index: 999;
+  transition: top var(--t-fast);
+}
+
+.skip-link:focus {
+  top: var(--space-2);
+}
+
+/* ── Screen-reader only ───────────────────────────────────── */
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0,0,0,0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ── Responsive ───────────────────────────────────────────── */
+
+@media (max-width: 600px) {
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .form-field input,
+  .input-with-action input,
+  .bio-wrap textarea {
+    font-size: 16px !important;
+  }
+
+  .tier-label {
+    display: none;
+  }
+
+  .tier-icon {
+    font-size: 18px;
+  }
+}
+
+@media (max-width: 480px) {
+  .tier-list {
+    gap: 2px;
+  }
+}
+
+/* ── Reduced motion ───────────────────────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  .brand-panel,
+  .form-panel,
+  .form-header,
+  .form-grid > *,
+  .trust-line,
+  .submit-btn,
+  .form-divider-line,
+  .form-success,
+  .check-path,
+  .field-dot,
+  .loader-dots .dot {
+    animation: none !important;
+    transition: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+    stroke-dashoffset: 0 !important;
+  }
+}

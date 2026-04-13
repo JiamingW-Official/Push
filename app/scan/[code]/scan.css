@@ -1,0 +1,364 @@
+/* ============================================================
+   Push — QR Scan / Visit Confirmation Styles
+   ============================================================ */
+
+/* ------------------------------------------------------------
+   Shell
+   ------------------------------------------------------------ */
+.scan-shell {
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: #f5f2ec;
+  padding: 40px 20px;
+  font-family: var(--font-body, 'CS Genio Mono', monospace);
+}
+
+/* ------------------------------------------------------------
+   Brand mark
+   ------------------------------------------------------------ */
+.scan-brand {
+  font-family: var(--font-display, 'Darky', sans-serif);
+  font-size: 28px;
+  font-weight: 900;
+  font-style: italic;
+  letter-spacing: -0.05em;
+  color: #003049;
+  margin-bottom: 36px;
+  line-height: 1;
+}
+
+/* ------------------------------------------------------------
+   Boarding-Pass Card
+   ------------------------------------------------------------ */
+.scan-card {
+  width: 100%;
+  max-width: 380px;
+  background: #003049;
+  border-left: 4px solid #c9a96e;
+  margin-bottom: 24px;
+  animation: scanCardIn 560ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: 80ms;
+}
+
+@keyframes scanCardIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.scan-card__top {
+  padding: 28px 24px 20px;
+}
+
+.scan-card__eyebrow {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(245, 242, 236, 0.38);
+  margin-bottom: 10px;
+}
+
+.scan-card__biz {
+  font-family: var(--font-display, 'Darky', sans-serif);
+  font-size: clamp(26px, 7vw, 38px);
+  font-weight: 900;
+  font-style: italic;
+  letter-spacing: -0.04em;
+  color: #f5f2ec;
+  line-height: 1.05;
+  margin-bottom: 6px;
+}
+
+.scan-card__address {
+  font-size: 11px;
+  color: rgba(245, 242, 236, 0.42);
+  letter-spacing: 0.03em;
+  line-height: 1.4;
+}
+
+/* Perforated tear divider */
+.scan-card__tear {
+  height: 1px;
+  margin: 0 24px;
+  background: repeating-linear-gradient(
+    to right,
+    rgba(245, 242, 236, 0.14) 0px,
+    rgba(245, 242, 236, 0.14) 6px,
+    transparent 6px,
+    transparent 12px
+  );
+}
+
+.scan-card__bottom {
+  padding: 20px 24px 24px;
+}
+
+.scan-card__campaign-label {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(245, 242, 236, 0.38);
+  margin-bottom: 8px;
+}
+
+.scan-card__campaign {
+  font-size: 13px;
+  font-weight: 700;
+  color: #f5f2ec;
+  line-height: 1.4;
+  margin-bottom: 14px;
+}
+
+.scan-card__offer {
+  display: inline-block;
+  background: rgba(201, 169, 110, 0.15);
+  border: 1px solid rgba(201, 169, 110, 0.45);
+  color: #c9a96e;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 5px 12px;
+}
+
+/* ------------------------------------------------------------
+   Attribution Note
+   ------------------------------------------------------------ */
+.scan-attribution {
+  font-size: 11px;
+  color: rgba(0, 48, 73, 0.45);
+  text-align: center;
+  max-width: 300px;
+  line-height: 1.7;
+  margin-bottom: 28px;
+  animation: scanCardIn 560ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: 160ms;
+}
+
+.scan-attribution strong {
+  font-weight: 800;
+  color: #003049;
+}
+
+/* ------------------------------------------------------------
+   CTA Button
+   ------------------------------------------------------------ */
+.scan-cta {
+  width: 100%;
+  max-width: 380px;
+  padding: 20px;
+  background: #c1121f;
+  color: #f5f2ec;
+  border: none;
+  font-family: var(--font-display, 'Darky', sans-serif);
+  font-size: clamp(20px, 5vw, 26px);
+  font-weight: 900;
+  font-style: italic;
+  letter-spacing: -0.03em;
+  cursor: pointer;
+  box-shadow: 4px 4px 0 #780000;
+  transition:
+    background 200ms ease,
+    transform 200ms ease,
+    box-shadow 200ms ease;
+  animation: scanCardIn 560ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: 230ms;
+}
+
+.scan-cta:hover:not(:disabled) {
+  background: #780000;
+  transform: translateY(-3px);
+  box-shadow: 7px 7px 0 #4d0000;
+}
+
+.scan-cta:disabled {
+  background: #667788;
+  cursor: wait;
+  box-shadow: none;
+}
+
+/* ------------------------------------------------------------
+   Footer note
+   ------------------------------------------------------------ */
+.scan-footer-note {
+  margin-top: 20px;
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(0, 48, 73, 0.28);
+  text-align: center;
+}
+
+/* ------------------------------------------------------------
+   Success State
+   ------------------------------------------------------------ */
+.scan-success {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  animation: scanSuccessIn 640ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes scanSuccessIn {
+  from {
+    opacity: 0;
+    transform: scale(0.94);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.scan-success__check {
+  width: 72px;
+  height: 72px;
+  background: #1e6b42;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 32px;
+}
+
+.scan-success__headline {
+  font-family: var(--font-display, 'Darky', sans-serif);
+  font-size: clamp(48px, 12vw, 80px);
+  font-weight: 900;
+  font-style: italic;
+  letter-spacing: -0.06em;
+  color: #003049;
+  line-height: 0.9;
+  margin-bottom: 20px;
+}
+
+.scan-success__sub {
+  font-size: 13px;
+  color: rgba(0, 48, 73, 0.55);
+  max-width: 280px;
+  line-height: 1.7;
+  margin-bottom: 32px;
+}
+
+/* Offer redemption card with REDEEMED ghost stamp */
+.scan-success__offer-card {
+  width: 100%;
+  max-width: 360px;
+  background: #003049;
+  padding: 24px 28px;
+  margin-bottom: 32px;
+  position: relative;
+  overflow: hidden;
+}
+
+.scan-success__offer-card::before {
+  content: 'REDEEMED';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(-18deg);
+  font-family: var(--font-display, 'Darky', sans-serif);
+  font-size: 52px;
+  font-weight: 900;
+  font-style: italic;
+  letter-spacing: -0.04em;
+  color: rgba(201, 169, 110, 0.12);
+  white-space: nowrap;
+  pointer-events: none;
+  user-select: none;
+}
+
+.scan-success__offer-label {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(245, 242, 236, 0.4);
+  margin-bottom: 10px;
+}
+
+.scan-success__offer-text {
+  font-family: var(--font-display, 'Darky', sans-serif);
+  font-size: clamp(20px, 5vw, 28px);
+  font-weight: 900;
+  font-style: italic;
+  letter-spacing: -0.03em;
+  color: #f5f2ec;
+  line-height: 1.1;
+}
+
+.scan-success__powered {
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(0, 48, 73, 0.28);
+}
+
+/* ------------------------------------------------------------
+   Error State
+   ------------------------------------------------------------ */
+.scan-error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  animation: scanCardIn 480ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.scan-error__brand {
+  font-family: var(--font-display, 'Darky', sans-serif);
+  font-size: clamp(36px, 9vw, 56px);
+  font-weight: 900;
+  font-style: italic;
+  letter-spacing: -0.04em;
+  color: #003049;
+  margin-bottom: 20px;
+}
+
+.scan-error__code {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #c1121f;
+  margin-bottom: 10px;
+}
+
+.scan-error__body {
+  font-size: 13px;
+  color: rgba(0, 48, 73, 0.5);
+  max-width: 280px;
+  line-height: 1.7;
+}
+
+/* ------------------------------------------------------------
+   Loading Spinner
+   ------------------------------------------------------------ */
+.scan-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.scan-spinner {
+  width: 32px;
+  height: 32px;
+  border: 2px solid #003049;
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}

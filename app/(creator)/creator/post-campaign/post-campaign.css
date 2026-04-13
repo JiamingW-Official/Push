@@ -1,0 +1,995 @@
+/* ============================================================
+   Post-Campaign Summary — post-campaign.css
+   Design System: border-radius: 0, Push brand colors
+   ============================================================ */
+
+/* ── Page shell ──────────────────────────────────────────── */
+
+.pc-page {
+  min-height: 100svh;
+  background: #fafaf7;
+  display: flex;
+  flex-direction: column;
+  font-family: var(--font-body, "CS Genio Mono", monospace);
+}
+
+/* ── Hero panel ──────────────────────────────────────────── */
+
+.pc-hero {
+  background: linear-gradient(160deg, #003049 0%, #780000 100%);
+  padding: var(--space-8, 64px) var(--space-4, 32px) var(--space-6, 48px);
+  text-align: center;
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Warm shimmer overlay on hero */
+.pc-hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse 80% 60% at 50% 0%,
+    rgba(245, 242, 236, 0.08) 0%,
+    transparent 70%
+  );
+  pointer-events: none;
+}
+
+.pc-check-svg {
+  width: 64px;
+  height: 64px;
+  margin: 0 auto var(--space-3, 24px);
+  display: block;
+  animation: pc-icon-drop 600ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.pc-check-path {
+  stroke-dasharray: 100;
+  stroke-dashoffset: 100;
+  animation: drawCheck 600ms ease 400ms forwards;
+}
+
+@keyframes drawCheck {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes pc-icon-drop {
+  from {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.pc-hero-eyebrow {
+  color: #669bbc;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-weight: 700;
+  margin-bottom: 8px;
+  font-family: var(--font-body, "CS Genio Mono", monospace);
+  animation: pc-fade-up 500ms ease 200ms both;
+}
+
+.pc-hero-title {
+  font-family: var(--font-display, "Darky", serif);
+  font-weight: 800;
+  font-size: clamp(32px, 7vw, 52px);
+  color: #f5f2ec;
+  letter-spacing: -0.04em;
+  margin: 0 0 12px;
+  line-height: 1.0;
+  animation: pc-fade-up 500ms ease 300ms both;
+}
+
+.pc-hero-meta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+  animation: pc-fade-up 500ms ease 400ms both;
+}
+
+.pc-merchant-name {
+  color: #f5f2ec;
+  font-size: 14px;
+  opacity: 0.8;
+  font-family: var(--font-body, "CS Genio Mono", monospace);
+}
+
+.pc-category-chip {
+  background: rgba(102, 155, 188, 0.2);
+  border: 1px solid rgba(102, 155, 188, 0.4);
+  color: #669bbc;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 3px 8px;
+  font-family: var(--font-body, "CS Genio Mono", monospace);
+  font-weight: 700;
+  border-radius: 0;
+}
+
+/* Hero payout callout — large celebratory number */
+.pc-hero-payout {
+  margin-top: 24px;
+  animation: pc-fade-up 500ms ease 500ms both;
+}
+
+.pc-hero-payout-label {
+  font-family: var(--font-body, "CS Genio Mono", monospace);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: rgba(245, 242, 236, 0.55);
+  margin-bottom: 4px;
+  display: block;
+}
+
+.pc-hero-payout-amount {
+  font-family: var(--font-display, "Darky", serif);
+  font-weight: 900;
+  font-size: clamp(48px, 10vw, 80px);
+  color: #f5f2ec;
+  letter-spacing: -0.06em;
+  line-height: 1;
+  display: block;
+  text-shadow: 0 0 40px rgba(245, 242, 236, 0.25);
+}
+
+/* Glow pulse on amount in hero */
+.pc-hero-payout-amount.pc-glow-pulse {
+  animation: pc-amount-glow 2.5s ease-in-out 1s infinite;
+}
+
+@keyframes pc-amount-glow {
+  0%, 100% { text-shadow: 0 0 40px rgba(245, 242, 236, 0.25); }
+  50%       { text-shadow: 0 0 60px rgba(245, 242, 236, 0.5), 0 0 20px rgba(193, 18, 31, 0.3); }
+}
+
+/* ── Stagger fade-up animation for body sections ─────────── */
+
+@keyframes pc-fade-up {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* ── Body container ──────────────────────────────────────── */
+
+.pc-body {
+  max-width: 600px;
+  width: 100%;
+  margin: 0 auto;
+  padding: var(--space-5, 40px) var(--space-4, 32px) var(--space-10, 80px);
+  flex: 1;
+}
+
+/* ── Section card ────────────────────────────────────────── */
+
+.pc-section {
+  margin-bottom: var(--space-5, 40px);
+  background: white;
+  border: 1px solid rgba(0, 48, 73, 0.08);
+  padding: var(--space-4, 32px);
+}
+
+/* Staggered entrance for body sections */
+.pc-section:nth-child(1) { animation: pc-fade-up 500ms ease 100ms both; }
+.pc-section:nth-child(2) { animation: pc-fade-up 500ms ease 200ms both; }
+.pc-section:nth-child(3) { animation: pc-fade-up 500ms ease 300ms both; }
+.pc-section:nth-child(4) { animation: pc-fade-up 500ms ease 400ms both; }
+.pc-section:nth-child(5) { animation: pc-fade-up 500ms ease 500ms both; }
+
+.pc-section-eyebrow {
+  color: #669bbc;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-weight: 700;
+  margin-bottom: 16px;
+  font-family: var(--font-body, "CS Genio Mono", monospace);
+}
+
+/* ── Results grid ────────────────────────────────────────── */
+
+.pc-results-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.pc-result-cell {
+  background: rgba(0, 48, 73, 0.03);
+  border: 1px solid rgba(0, 48, 73, 0.08);
+  padding: 16px;
+}
+
+.pc-result-cell-label {
+  font-family: var(--font-body, "CS Genio Mono", monospace);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: rgba(0, 48, 73, 0.45);
+  margin-bottom: 6px;
+  display: block;
+}
+
+.pc-result-cell-value {
+  font-family: var(--font-display, "Darky", serif);
+  font-weight: 800;
+  font-size: 28px;
+  color: #003049;
+  letter-spacing: -0.04em;
+  line-height: 1;
+  display: block;
+}
+
+.pc-result-cell-sub {
+  font-family: var(--font-body, "CS Genio Mono", monospace);
+  font-size: 10px;
+  color: rgba(0, 48, 73, 0.4);
+  margin-top: 4px;
+  display: block;
+}
+
+/* Content images row */
+.pc-content-row {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+  flex-wrap: wrap;
+}
+
+.pc-content-thumb {
+  width: 72px;
+  height: 72px;
+  background: rgba(0, 48, 73, 0.06);
+  border: 1px dashed rgba(0, 48, 73, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.pc-content-thumb-icon {
+  font-size: 20px;
+  opacity: 0.3;
+}
+
+.pc-content-label {
+  font-family: var(--font-body, "CS Genio Mono", monospace);
+  font-size: 11px;
+  color: rgba(0, 48, 73, 0.45);
+  margin-top: 8px;
+}
+
+/* ── Timeline ────────────────────────────────────────────── */
+
+.pc-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.pc-timeline-item {
+  display: flex;
+  gap: 16px;
+  position: relative;
+  padding-bottom: 20px;
+}
+
+.pc-timeline-item:last-child {
+  padding-bottom: 0;
+}
+
+.pc-timeline-item:last-child .pc-timeline-line {
+  display: none;
+}
+
+.pc-timeline-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 0;
+  flex-shrink: 0;
+  margin-top: 3px;
+}
+
+.pc-timeline-dot--done {
+  background: #c1121f;
+}
+
+.pc-timeline-dot--current {
+  background: #c1121f;
+  box-shadow: 0 0 0 4px rgba(193, 18, 31, 0.15);
+  animation: pulse-dot 2s infinite;
+}
+
+.pc-timeline-dot--pending {
+  background: transparent;
+  border: 2px solid rgba(0, 48, 73, 0.2);
+}
+
+.pc-timeline-line {
+  position: absolute;
+  left: 5px;
+  top: 16px;
+  width: 2px;
+  height: calc(100% - 16px);
+  background: rgba(0, 48, 73, 0.1);
+}
+
+@keyframes pulse-dot {
+  0%,
+  100% {
+    box-shadow: 0 0 0 4px rgba(193, 18, 31, 0.15);
+  }
+  50% {
+    box-shadow: 0 0 0 8px rgba(193, 18, 31, 0.08);
+  }
+}
+
+.pc-timeline-content {
+  flex: 1;
+}
+
+.pc-timeline-label {
+  font-size: 14px;
+  font-weight: 700;
+  color: #003049;
+  margin-bottom: 2px;
+  font-family: var(--font-body, "CS Genio Mono", monospace);
+}
+
+.pc-timeline-label--done {
+  color: #c1121f;
+}
+
+.pc-timeline-label--pending {
+  color: rgba(0, 48, 73, 0.4);
+}
+
+.pc-timeline-desc {
+  font-size: 12px;
+  color: rgba(0, 48, 73, 0.5);
+  font-family: var(--font-body, "CS Genio Mono", monospace);
+}
+
+/* ── Score Impact section ────────────────────────────────── */
+
+.pc-score-impact {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 20px;
+  padding: 16px;
+  background: rgba(42, 157, 143, 0.06);
+  border: 1px solid rgba(42, 157, 143, 0.2);
+}
+
+.pc-score-impact-number {
+  font-family: var(--font-display, "Darky", serif);
+  font-weight: 900;
+  font-size: 40px;
+  color: #2a9d8f;
+  letter-spacing: -0.04em;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.pc-score-impact-info {
+  flex: 1;
+}
+
+.pc-score-impact-label {
+  font-family: var(--font-body, "CS Genio Mono", monospace);
+  font-size: 13px;
+  font-weight: 700;
+  color: #003049;
+  display: block;
+  margin-bottom: 2px;
+}
+
+.pc-score-impact-sub {
+  font-family: var(--font-body, "CS Genio Mono", monospace);
+  font-size: 11px;
+  color: rgba(0, 48, 73, 0.5);
+}
+
+/* Before → After score transition */
+.pc-score-transition {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+  font-family: var(--font-body, "CS Genio Mono", monospace);
+  font-size: 13px;
+}
+
+.pc-score-before {
+  color: rgba(0, 48, 73, 0.5);
+}
+
+.pc-score-arrow {
+  color: #2a9d8f;
+  font-size: 16px;
+}
+
+.pc-score-after {
+  font-weight: 700;
+  color: #003049;
+  font-size: 15px;
+}
+
+/* ── Score bar ───────────────────────────────────────────── */
+
+.pc-score-bar {
+  height: 6px;
+  background: rgba(0, 48, 73, 0.1);
+  position: relative;
+  margin: 12px 0;
+}
+
+.pc-score-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #c1121f, #780000);
+  transition: width 1.2s cubic-bezier(0.22, 1, 0.36, 1) 500ms;
+}
+
+.pc-score-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  color: rgba(0, 48, 73, 0.5);
+  font-family: var(--font-body, "CS Genio Mono", monospace);
+  margin-bottom: 4px;
+}
+
+.pc-score-delta {
+  font-family: var(--font-display, "Darky", serif);
+  font-weight: 900;
+  font-size: 32px;
+  color: #2a9d8f;
+  letter-spacing: -0.04em;
+  line-height: 1;
+  margin: 4px 0 8px;
+}
+
+.pc-score-disclaimer {
+  font-size: 11px;
+  color: rgba(0, 48, 73, 0.45);
+  font-family: var(--font-body, "CS Genio Mono", monospace);
+}
+
+/* ── Tier Progress ───────────────────────────────────────── */
+
+.pc-tier-progress {
+  margin-top: 12px;
+  font-size: 13px;
+  color: #003049;
+  font-family: var(--font-body, "CS Genio Mono", monospace);
+  background: rgba(0, 48, 73, 0.04);
+  padding: 10px 12px;
+  border-left: 3px solid #c1121f;
+}
+
+/* Mini tier journey */
+.pc-tier-journey {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  margin-top: 16px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+}
+
+.pc-tier-node {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  min-width: 56px;
+  flex-shrink: 0;
+}
+
+.pc-tier-node-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 0;
+  background: rgba(0, 48, 73, 0.12);
+  border: 2px solid transparent;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 1;
+}
+
+.pc-tier-node-dot--done {
+  background: #c1121f;
+  border-color: #c1121f;
+}
+
+.pc-tier-node-dot--current {
+  background: #003049;
+  border-color: #003049;
+  box-shadow: 0 0 0 3px rgba(0, 48, 73, 0.2);
+  animation: pulse-dot 2s infinite;
+}
+
+.pc-tier-node-dot--next {
+  background: transparent;
+  border-color: #c1121f;
+  animation: pc-border-pulse 2s ease-in-out infinite;
+}
+
+@keyframes pc-border-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(193, 18, 31, 0.3); }
+  50%       { box-shadow: 0 0 0 5px rgba(193, 18, 31, 0.1); }
+}
+
+.pc-tier-node-label {
+  font-family: var(--font-body, "CS Genio Mono", monospace);
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: rgba(0, 48, 73, 0.4);
+  text-align: center;
+}
+
+.pc-tier-node-label--current {
+  color: #003049;
+  font-weight: 700;
+}
+
+.pc-tier-node-label--next {
+  color: #c1121f;
+  font-weight: 700;
+}
+
+.pc-tier-connector {
+  flex: 1;
+  height: 2px;
+  background: rgba(0, 48, 73, 0.1);
+  min-width: 16px;
+  margin-bottom: 18px;
+}
+
+.pc-tier-connector--done {
+  background: #c1121f;
+}
+
+.pc-tier-urgency {
+  margin-top: 12px;
+  font-family: var(--font-body, "CS Genio Mono", monospace);
+  font-size: 12px;
+  color: #c1121f;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.pc-tier-urgency::before {
+  content: "";
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  background: #c1121f;
+  flex-shrink: 0;
+  animation: pulse-dot 1.5s infinite;
+}
+
+/* Tier upgrade celebration overlay */
+.pc-celebration {
+  position: fixed;
+  inset: 0;
+  z-index: 9000;
+  background: rgba(0, 48, 73, 0.95);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 32px;
+  animation: pc-fade-up 400ms ease both;
+}
+
+.pc-celebration-confetti {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.pc-celebration-confetti::before,
+.pc-celebration-confetti::after {
+  content: "";
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  box-shadow:
+    10vw 5vh 0 0 #c1121f,
+    20vw 8vh 0 0 #f5f2ec,
+    35vw 3vh 0 0 #669bbc,
+    50vw 12vh 0 0 #c1121f,
+    65vw 6vh 0 0 #f5f2ec,
+    80vw 10vh 0 0 #669bbc,
+    90vw 4vh 0 0 #c1121f,
+    15vw 15vh 0 0 #f5f2ec,
+    45vw 18vh 0 0 #c1121f,
+    75vw 7vh 0 0 #f5f2ec;
+  animation: pc-cele-fall 2.5s linear infinite;
+}
+
+.pc-celebration-confetti::after {
+  width: 5px;
+  height: 5px;
+  box-shadow:
+    5vw 10vh 0 0 #f5f2ec,
+    25vw 20vh 0 0 #c1121f,
+    55vw 5vh 0 0 #669bbc,
+    70vw 15vh 0 0 #f5f2ec,
+    85vw 9vh 0 0 #c1121f,
+    40vw 22vh 0 0 #669bbc,
+    60vw 3vh 0 0 #f5f2ec;
+  animation: pc-cele-fall 3.5s linear 0.8s infinite;
+}
+
+@keyframes pc-cele-fall {
+  0%   { transform: translateY(-20px) rotate(0deg);    opacity: 1; }
+  100% { transform: translateY(110vh) rotate(540deg);  opacity: 0; }
+}
+
+.pc-celebration-eyebrow {
+  font-family: var(--font-body, "CS Genio Mono", monospace);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: #669bbc;
+  margin-bottom: 16px;
+  position: relative;
+  z-index: 1;
+}
+
+.pc-celebration-title {
+  font-family: var(--font-display, "Darky", serif);
+  font-weight: 900;
+  font-size: clamp(36px, 8vw, 64px);
+  color: #f5f2ec;
+  letter-spacing: -0.04em;
+  line-height: 1.0;
+  margin-bottom: 8px;
+  position: relative;
+  z-index: 1;
+}
+
+.pc-celebration-tier {
+  font-family: var(--font-display, "Darky", serif);
+  font-weight: 900;
+  font-size: clamp(28px, 6vw, 48px);
+  color: #c1121f;
+  letter-spacing: -0.02em;
+  margin-bottom: 24px;
+  position: relative;
+  z-index: 1;
+}
+
+.pc-celebration-desc {
+  font-family: var(--font-body, "CS Genio Mono", monospace);
+  font-size: 13px;
+  color: rgba(245, 242, 236, 0.6);
+  max-width: 360px;
+  line-height: 1.6;
+  margin-bottom: 32px;
+  position: relative;
+  z-index: 1;
+}
+
+.pc-celebration-dismiss {
+  font-family: var(--font-body, "CS Genio Mono", monospace);
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #f5f2ec;
+  background: #c1121f;
+  border: none;
+  padding: 14px 28px;
+  cursor: pointer;
+  border-radius: 0;
+  position: relative;
+  z-index: 1;
+  transition: background 150ms ease;
+}
+
+.pc-celebration-dismiss:hover {
+  background: #780000;
+}
+
+/* ── Payout ──────────────────────────────────────────────── */
+
+.pc-payout-amount {
+  font-family: var(--font-display, "Darky", serif);
+  font-weight: 900;
+  font-size: 48px;
+  color: #003049;
+  letter-spacing: -0.06em;
+  line-height: 1;
+  margin-bottom: 8px;
+}
+
+.pc-payout-commission {
+  font-size: 13px;
+  color: rgba(0, 48, 73, 0.6);
+  font-family: var(--font-body, "CS Genio Mono", monospace);
+  margin-bottom: 12px;
+}
+
+.pc-payout-badge {
+  display: inline-block;
+  background: rgba(0, 48, 73, 0.06);
+  border: 1px solid rgba(0, 48, 73, 0.12);
+  color: #003049;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 4px 10px;
+  font-family: var(--font-body, "CS Genio Mono", monospace);
+  border-radius: 0;
+}
+
+/* ── Next Steps CTA grid ─────────────────────────────────── */
+
+.pc-next-steps-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.pc-next-step-card {
+  background: rgba(0, 48, 73, 0.03);
+  border: 1px solid rgba(0, 48, 73, 0.1);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  text-decoration: none;
+  transition: background 150ms ease, border-color 150ms ease;
+  cursor: pointer;
+}
+
+.pc-next-step-card:hover {
+  background: rgba(0, 48, 73, 0.06);
+  border-color: rgba(0, 48, 73, 0.2);
+}
+
+.pc-next-step-card--primary {
+  grid-column: 1 / -1;
+  background: #003049;
+  border-color: #003049;
+}
+
+.pc-next-step-card--primary:hover {
+  background: #780000;
+  border-color: #780000;
+}
+
+.pc-next-step-icon {
+  font-size: 18px;
+  line-height: 1;
+}
+
+.pc-next-step-title {
+  font-family: var(--font-body, "CS Genio Mono", monospace);
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #003049;
+}
+
+.pc-next-step-card--primary .pc-next-step-title {
+  color: #f5f2ec;
+  font-size: 13px;
+}
+
+.pc-next-step-desc {
+  font-family: var(--font-body, "CS Genio Mono", monospace);
+  font-size: 10px;
+  color: rgba(0, 48, 73, 0.5);
+  line-height: 1.4;
+}
+
+.pc-next-step-card--primary .pc-next-step-desc {
+  color: rgba(245, 242, 236, 0.55);
+}
+
+/* ── Actions ─────────────────────────────────────────────── */
+
+.pc-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: var(--space-5, 40px);
+}
+
+.pc-primary-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 52px;
+  background: #c1121f;
+  color: white;
+  font-family: var(--font-body, "CS Genio Mono", monospace);
+  font-weight: 700;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  text-decoration: none;
+  border-radius: 0;
+  border: none;
+  cursor: pointer;
+  transition: background 150ms ease;
+}
+
+.pc-primary-btn:hover {
+  background: #780000;
+}
+
+.pc-secondary-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 44px;
+  border: 2px solid rgba(0, 48, 73, 0.2);
+  background: transparent;
+  color: #003049;
+  font-family: var(--font-body, "CS Genio Mono", monospace);
+  font-weight: 700;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  text-decoration: none;
+  border-radius: 0;
+  cursor: pointer;
+  transition: border-color 150ms ease, background 150ms ease;
+}
+
+.pc-secondary-btn:hover {
+  border-color: rgba(0, 48, 73, 0.4);
+  background: rgba(0, 48, 73, 0.03);
+}
+
+.pc-share-note {
+  font-size: 12px;
+  color: rgba(0, 48, 73, 0.5);
+  text-align: center;
+  font-family: var(--font-body, "CS Genio Mono", monospace);
+  padding: 4px 0;
+}
+
+/* ── Merchant Feedback ───────────────────────────────────── */
+
+.pc-feedback-waiting {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  background: rgba(0, 48, 73, 0.03);
+  border: 1px dashed rgba(0, 48, 73, 0.18);
+}
+
+.pc-feedback-waiting-dot {
+  width: 8px;
+  height: 8px;
+  background: #669bbc;
+  flex-shrink: 0;
+  animation: pulse-dot 2s infinite;
+}
+
+.pc-feedback-waiting-text {
+  font-family: var(--font-body, "CS Genio Mono", monospace);
+  font-size: 12px;
+  color: rgba(0, 48, 73, 0.55);
+}
+
+/* Star rating display */
+.pc-feedback-stars {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 8px;
+}
+
+.pc-feedback-star {
+  font-size: 18px;
+  color: rgba(0, 48, 73, 0.15);
+}
+
+.pc-feedback-star--filled {
+  color: #c1121f;
+}
+
+.pc-feedback-comment {
+  font-family: var(--font-body, "CS Genio Mono", monospace);
+  font-size: 13px;
+  color: #003049;
+  line-height: 1.6;
+  border-left: 3px solid rgba(0, 48, 73, 0.12);
+  padding-left: 12px;
+  margin-top: 8px;
+  font-style: italic;
+}
+
+/* ── Bottom motivation ───────────────────────────────────── */
+
+.pc-motivation {
+  text-align: center;
+  font-family: var(--font-body, "CS Genio Mono", monospace);
+  font-size: 14px;
+  color: rgba(0, 48, 73, 0.6);
+  padding: var(--space-4, 32px) var(--space-4, 32px) var(--space-8, 64px);
+}
+
+.pc-motivation-count {
+  font-weight: 700;
+  color: #003049;
+  margin-bottom: 6px;
+}
+
+.pc-motivation-tagline {
+  font-style: italic;
+  color: rgba(0, 48, 73, 0.5);
+}
+
+/* ── Reduced motion ──────────────────────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  .pc-check-path {
+    animation: none;
+    stroke-dashoffset: 0;
+  }
+
+  .pc-timeline-dot--current,
+  .pc-tier-node-dot--current,
+  .pc-tier-node-dot--next,
+  .pc-feedback-waiting-dot {
+    animation: none;
+  }
+
+  .pc-score-fill {
+    transition: none;
+  }
+
+  .pc-hero-payout-amount.pc-glow-pulse,
+  .pc-check-svg,
+  .pc-hero-eyebrow,
+  .pc-hero-title,
+  .pc-hero-meta,
+  .pc-hero-payout,
+  .pc-section,
+  .pc-celebration-confetti::before,
+  .pc-celebration-confetti::after {
+    animation: none;
+  }
+}

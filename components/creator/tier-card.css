@@ -1,0 +1,226 @@
+/* ============================================================
+   TierCard — Shareable Tier Achievement Card
+   Spotify Wrapped-style, portrait 360×640, Instagram Stories
+   ============================================================ */
+
+/* Overlay backdrop */
+.tier-card-wrapper {
+  position: fixed;
+  inset: 0;
+  z-index: 9998;
+  background: rgba(0, 0, 0, 0.85);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+}
+
+/* ── Card shell ─────────────────────────────────────────── */
+.tier-card {
+  width: 360px;
+  aspect-ratio: 9 / 16;
+  max-height: 640px;
+  display: flex;
+  flex-direction: column;
+  padding: 32px 28px;
+  position: relative;
+  overflow: hidden;
+  border-radius: 0;
+  /* background & color set via inline style per tier */
+  animation: tc-appear 400ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes tc-appear {
+  from {
+    transform: scale(0.9) translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+  }
+}
+
+/* ── Header row ─────────────────────────────────────────── */
+.tc-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.tc-logo {
+  font-family: "Darky", serif;
+  font-style: italic;
+  font-weight: 900;
+  font-size: 20px;
+  letter-spacing: -0.06em;
+  line-height: 1;
+}
+
+.tc-month {
+  font-family: "CS Genio Mono", monospace;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  opacity: 0.5;
+}
+
+/* ── Tier symbol ─────────────────────────────────────────── */
+.tc-symbol {
+  font-size: 64px;
+  line-height: 1;
+  margin-bottom: 16px;
+}
+
+/* ── Tier name ──────────────────────────────────────────── */
+.tc-tier-name {
+  font-family: "Darky", serif;
+  font-weight: 900;
+  font-size: 40px;
+  letter-spacing: -0.05em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+/* ── Red accent line ─────────────────────────────────────── */
+.tc-accent-line {
+  width: 48px;
+  height: 3px;
+  margin: 12px 0;
+  /* background-color set via inline style */
+}
+
+/* ── Push Score ─────────────────────────────────────────── */
+.tc-score-label {
+  font-family: "CS Genio Mono", monospace;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  opacity: 0.6;
+  margin-bottom: 4px;
+}
+
+.tc-score-value {
+  font-family: "Darky", serif;
+  font-weight: 900;
+  font-size: 48px;
+  line-height: 1;
+  letter-spacing: -0.06em;
+}
+
+/* ── Stat cards grid ─────────────────────────────────────── */
+.tc-stats-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin: 20px 0;
+}
+
+.tc-stat {
+  padding: 12px;
+  border-radius: 0;
+  /* border set via inline style (accent at 0.25 opacity) */
+}
+
+.tc-stat-value {
+  font-family: "Darky", serif;
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+
+.tc-stat-label {
+  font-family: "CS Genio Mono", monospace;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  opacity: 0.5;
+}
+
+/* ── Location ────────────────────────────────────────────── */
+.tc-location {
+  font-family: "CS Genio Mono", monospace;
+  font-size: 13px;
+  opacity: 0.6;
+  margin-bottom: 16px;
+  letter-spacing: 0.02em;
+}
+
+/* ── Local Expert badge ──────────────────────────────────── */
+.tc-local-expert {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 10px;
+  border-radius: 0;
+  font-family: "CS Genio Mono", monospace;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 16px;
+  /* border & color set via inline style */
+}
+
+/* ── Footer ──────────────────────────────────────────────── */
+.tc-footer {
+  margin-top: auto;
+  font-family: "CS Genio Mono", monospace;
+  font-size: 11px;
+  opacity: 0.4;
+  letter-spacing: 0.06em;
+}
+
+.tc-footer-domain {
+  text-transform: small-caps;
+  font-weight: 600;
+}
+
+.tc-footer-tagline {
+  margin-top: 2px;
+  font-size: 10px;
+}
+
+/* ── Controls outside the card ───────────────────────────── */
+.tc-controls {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.tc-share-btn {
+  font-family: "CS Genio Mono", monospace;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  background: #c1121f;
+  color: #f5f2ec;
+  border: none;
+  border-radius: 0;
+  padding: 12px 28px;
+  cursor: pointer;
+  transition: background 150ms ease, opacity 150ms ease;
+}
+
+.tc-share-btn:hover {
+  background: #780000;
+}
+
+.tc-close-btn {
+  font-family: "CS Genio Mono", monospace;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  background: transparent;
+  color: #f5f2ec;
+  border: 1px solid rgba(245, 242, 236, 0.35);
+  border-radius: 0;
+  padding: 12px 20px;
+  cursor: pointer;
+  transition: border-color 150ms ease, opacity 150ms ease;
+}
+
+.tc-close-btn:hover {
+  border-color: rgba(245, 242, 236, 0.7);
+}

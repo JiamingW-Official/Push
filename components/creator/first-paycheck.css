@@ -1,0 +1,500 @@
+/* =========================================================
+   FirstPaycheck — Celebration Overlay Styles
+   Design system: Push (border-radius: 0 except .fp-stamp)
+   ========================================================= */
+
+/* ---------- Overlay ---------- */
+.fp-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  /* Warm golden tint over deep blue — celebrates the first payout */
+  background: linear-gradient(160deg, #003049 0%, #1a0a00 60%, #2d1200 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  overflow: hidden;
+  animation: fp-appear 500ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* Warm radial glow from center */
+.fp-overlay::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse 70% 50% at 50% 60%,
+    rgba(193, 18, 31, 0.12) 0%,
+    transparent 70%
+  );
+  pointer-events: none;
+}
+
+/* ---------- Confetti layer — CSS-only falling squares ---------- */
+.fp-confetti {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+/* Wave 1: large squares — Flag Red + Steel Blue + Papaya Whip */
+.fp-confetti::before {
+  content: "";
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  box-shadow:
+    /* Flag Red */
+    8vw   -10px 0 0 #c1121f,
+    22vw  -10px 0 0 #c1121f,
+    38vw  -10px 0 0 #c1121f,
+    53vw  -10px 0 0 #c1121f,
+    67vw  -10px 0 0 #c1121f,
+    81vw  -10px 0 0 #c1121f,
+    94vw  -10px 0 0 #c1121f,
+    /* Steel Blue */
+    14vw  -10px 0 0 #669bbc,
+    30vw  -10px 0 0 #669bbc,
+    46vw  -10px 0 0 #669bbc,
+    62vw  -10px 0 0 #669bbc,
+    75vw  -10px 0 0 #669bbc,
+    88vw  -10px 0 0 #669bbc,
+    /* Papaya Whip */
+    4vw   -10px 0 0 #f5f2ec,
+    18vw  -10px 0 0 #f5f2ec,
+    34vw  -10px 0 0 #f5f2ec,
+    58vw  -10px 0 0 #f5f2ec,
+    72vw  -10px 0 0 #f5f2ec,
+    90vw  -10px 0 0 #f5f2ec;
+  animation: fp-fall-1 2.8s linear infinite;
+}
+
+/* Wave 2: small squares — staggered start + different positions */
+.fp-confetti::after {
+  content: "";
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  box-shadow:
+    /* Flag Red */
+    11vw  -10px 0 0 #c1121f,
+    27vw  -10px 0 0 #c1121f,
+    43vw  -10px 0 0 #c1121f,
+    59vw  -10px 0 0 #c1121f,
+    77vw  -10px 0 0 #c1121f,
+    93vw  -10px 0 0 #c1121f,
+    /* Steel Blue */
+    5vw   -10px 0 0 #669bbc,
+    20vw  -10px 0 0 #669bbc,
+    36vw  -10px 0 0 #669bbc,
+    50vw  -10px 0 0 #669bbc,
+    65vw  -10px 0 0 #669bbc,
+    84vw  -10px 0 0 #669bbc,
+    /* Papaya Whip */
+    16vw  -10px 0 0 #f5f2ec,
+    32vw  -10px 0 0 #f5f2ec,
+    48vw  -10px 0 0 #f5f2ec,
+    70vw  -10px 0 0 #f5f2ec,
+    87vw  -10px 0 0 #f5f2ec;
+  animation: fp-fall-2 3.8s linear 1.1s infinite;
+}
+
+/* Wave 3: extra medium squares via a third element on the amount-wrap */
+.fp-confetti-extra {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.fp-confetti-extra::before {
+  content: "";
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  box-shadow:
+    3vw   -10px 0 0 #c1121f,
+    25vw  -10px 0 0 #f5f2ec,
+    40vw  -10px 0 0 #669bbc,
+    55vw  -10px 0 0 #c1121f,
+    68vw  -10px 0 0 #f5f2ec,
+    82vw  -10px 0 0 #669bbc,
+    96vw  -10px 0 0 #c1121f;
+  animation: fp-fall-1 4.4s linear 0.5s infinite;
+}
+
+@keyframes fp-fall-1 {
+  0%   { transform: translateY(0)      rotate(0deg);   opacity: 0.9; }
+  10%  { opacity: 1; }
+  90%  { opacity: 0.6; }
+  100% { transform: translateY(110vh)  rotate(480deg); opacity: 0; }
+}
+
+@keyframes fp-fall-2 {
+  0%   { transform: translateY(0)      rotate(0deg);   opacity: 0.85; }
+  10%  { opacity: 1; }
+  90%  { opacity: 0.5; }
+  100% { transform: translateY(110vh)  rotate(-360deg); opacity: 0; }
+}
+
+/* ---------- Headline ---------- */
+.fp-headline {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  margin-bottom: 4px;
+  animation: fp-rise 600ms cubic-bezier(0.22, 1, 0.36, 1) 100ms both;
+}
+
+.fp-headline-text {
+  font-family: "CS Genio Mono", monospace;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #f5f2ec;
+  display: block;
+}
+
+/* ---------- Amount counter ---------- */
+.fp-amount-wrap {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  margin-bottom: 12px;
+  animation: fp-rise 600ms cubic-bezier(0.22, 1, 0.36, 1) 200ms both;
+}
+
+.fp-label {
+  font-family: "CS Genio Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(245, 242, 236, 0.5);
+  margin-bottom: 8px;
+  display: block;
+}
+
+.fp-amount {
+  font-family: "Darky", serif;
+  font-weight: 900;
+  font-size: clamp(64px, 14vw, 112px);
+  color: #f5f2ec;
+  letter-spacing: -0.06em;
+  line-height: 1;
+  display: block;
+  /* Pulsing golden glow on the amount number */
+  animation: fp-amount-glow 2s ease-in-out 1.5s infinite;
+}
+
+@keyframes fp-amount-glow {
+  0%, 100% {
+    text-shadow:
+      0 0 40px rgba(245, 242, 236, 0.2),
+      0 0 80px rgba(193, 18, 31, 0.1);
+  }
+  50% {
+    text-shadow:
+      0 0 60px rgba(245, 242, 236, 0.45),
+      0 0 120px rgba(193, 18, 31, 0.2),
+      0 0 180px rgba(245, 242, 236, 0.1);
+  }
+}
+
+/* ---------- Tier badge ---------- */
+.fp-tier-badge {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  border: 1px solid rgba(245, 242, 236, 0.25);
+  margin-bottom: 16px;
+  animation: fp-rise 600ms cubic-bezier(0.22, 1, 0.36, 1) 300ms both;
+}
+
+.fp-tier-badge-dot {
+  width: 6px;
+  height: 6px;
+  background: #c1121f;
+  flex-shrink: 0;
+}
+
+.fp-tier-badge-label {
+  font-family: "CS Genio Mono", monospace;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(245, 242, 236, 0.7);
+}
+
+.fp-tier-badge-tier {
+  font-family: "CS Genio Mono", monospace;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #f5f2ec;
+}
+
+/* ---------- Motivation line ---------- */
+.fp-motivation {
+  position: relative;
+  z-index: 1;
+  font-family: "CS Genio Mono", monospace;
+  font-size: 12px;
+  color: rgba(245, 242, 236, 0.45);
+  text-align: center;
+  max-width: 320px;
+  line-height: 1.5;
+  margin-bottom: 24px;
+  animation: fp-rise 600ms cubic-bezier(0.22, 1, 0.36, 1) 350ms both;
+}
+
+/* ---------- Paycheck card ---------- */
+.fp-card {
+  position: relative;
+  z-index: 1;
+  max-width: 400px;
+  width: 100%;
+  background: #f5f2ec;
+  border: 3px solid #003049;
+  padding: 32px;
+  margin: 8px 0 20px;
+  animation: fp-card-rise 600ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* Vintage double-rule header line */
+.fp-card::before {
+  content: "";
+  display: block;
+  border-top: 4px double #003049;
+  margin-bottom: 20px;
+}
+
+/* Vintage double-rule footer line */
+.fp-card::after {
+  content: "";
+  display: block;
+  border-top: 4px double #003049;
+  margin-top: 20px;
+}
+
+.fp-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 20px;
+}
+
+.fp-card-brand {
+  font-family: "Darky", serif;
+  font-weight: 900;
+  font-size: 18px;
+  color: #003049;
+  letter-spacing: 0.04em;
+}
+
+.fp-card-date {
+  font-family: "CS Genio Mono", monospace;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  color: #003049;
+  opacity: 0.6;
+  text-transform: uppercase;
+}
+
+.fp-card-row {
+  margin-bottom: 16px;
+}
+
+.fp-card-payto,
+.fp-card-for {
+  font-family: "CS Genio Mono", monospace;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #003049;
+  opacity: 0.5;
+  display: block;
+  margin-bottom: 4px;
+}
+
+.fp-card-name {
+  font-family: "Darky", serif;
+  font-weight: 700;
+  font-size: 22px;
+  color: #003049;
+  display: block;
+}
+
+.fp-card-amount-words {
+  font-family: "CS Genio Mono", monospace;
+  font-size: 12px;
+  color: #003049;
+  letter-spacing: 0.04em;
+  display: block;
+  border-bottom: 1px solid rgba(0, 48, 73, 0.3);
+  padding-bottom: 4px;
+}
+
+.fp-card-campaign {
+  font-family: "Darky", serif;
+  font-weight: 700;
+  font-size: 14px;
+  color: #003049;
+  display: block;
+}
+
+.fp-card-merchant {
+  font-family: "CS Genio Mono", monospace;
+  font-size: 11px;
+  color: #003049;
+  opacity: 0.6;
+  display: block;
+  margin-top: 2px;
+}
+
+/* ---------- Stamp ---------- */
+.fp-stamp {
+  /* border-radius 50% is allowed per Design.md: circle exception */
+  border-radius: 50%;
+  width: 80px;
+  height: 80px;
+  border: 3px solid rgba(193, 18, 31, 0.4);
+  color: rgba(193, 18, 31, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Darky", serif;
+  font-size: 14px;
+  font-weight: 900;
+  transform: rotate(-15deg);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  position: absolute;
+  bottom: 28px;
+  right: 28px;
+  user-select: none;
+}
+
+/* ---------- Autodismiss progress bar ---------- */
+.fp-timer-bar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 3px;
+  background: rgba(245, 242, 236, 0.25);
+  width: 100%;
+  z-index: 2;
+}
+
+.fp-timer-fill {
+  height: 100%;
+  background: #c1121f;
+  /* Width animated via inline style + CSS transition */
+  transition: width 5000ms linear;
+}
+
+/* ---------- Actions ---------- */
+.fp-actions {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: row;
+  gap: 12px;
+  margin-top: 8px;
+  animation: fp-rise 600ms cubic-bezier(0.22, 1, 0.36, 1) 400ms both;
+}
+
+.fp-share-btn,
+.fp-continue-btn {
+  font-family: "CS Genio Mono", monospace;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 12px 20px;
+  border-radius: 0; /* strict: no rounding */
+  cursor: pointer;
+  transition: opacity 150ms ease;
+}
+
+.fp-share-btn:hover,
+.fp-continue-btn:hover {
+  opacity: 0.85;
+}
+
+.fp-share-btn {
+  background: #c1121f;
+  color: #f5f2ec;
+  border: 2px solid #c1121f;
+}
+
+.fp-continue-btn {
+  background: transparent;
+  color: #f5f2ec;
+  border: 2px solid rgba(245, 242, 236, 0.5);
+}
+
+/* ---------- Keyframes ---------- */
+@keyframes fp-appear {
+  from {
+    opacity: 0;
+    transform: scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes fp-rise {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fp-card-rise {
+  from {
+    transform: translateY(40px) rotate(-1deg);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0) rotate(0deg);
+    opacity: 1;
+  }
+}
+
+/* ---------- Reduced motion ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .fp-overlay,
+  .fp-card,
+  .fp-headline,
+  .fp-amount-wrap,
+  .fp-tier-badge,
+  .fp-motivation,
+  .fp-actions {
+    animation: none;
+  }
+
+  .fp-amount {
+    animation: none;
+    text-shadow: none;
+  }
+
+  .fp-confetti::before,
+  .fp-confetti::after,
+  .fp-confetti-extra::before {
+    animation: none;
+    display: none;
+  }
+}

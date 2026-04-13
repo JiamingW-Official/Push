@@ -1,0 +1,236 @@
+/* ============================================================
+   Header — Push Design System
+   - Sticky top, transparent over hero, frosted on scroll
+   - Darky logo, CS Genio Mono nav links
+   - border-radius: 0 everywhere
+   ============================================================ */
+
+.header {
+  position: sticky;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  height: 64px;
+  background: transparent;
+  border-bottom: 1px solid transparent;
+  transition:
+    background 300ms ease,
+    border-bottom-color 300ms ease,
+    box-shadow 300ms ease,
+    transform 400ms ease;
+}
+
+/* Scrolled state: frosted papaya background */
+.headerScrolled {
+  background: rgba(245, 242, 236, 0.95);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-bottom-color: rgba(0, 48, 73, 0.08);
+  box-shadow: 0 2px 16px rgba(0, 48, 73, 0.06);
+}
+
+/* Auto-hide on scroll down */
+.hidden {
+  transform: translateY(-100%);
+}
+
+/* Inner flex row */
+.inner {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  gap: 32px;
+}
+
+/* ---- Logo ---- */
+.logo {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 900;
+  font-style: italic;
+  letter-spacing: -0.06em;
+  color: #fff;
+  flex-shrink: 0;
+  transition: color 300ms ease;
+  text-decoration: none;
+}
+
+.headerScrolled .logo {
+  color: var(--dark);
+}
+
+/* ---- Desktop Nav ---- */
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  margin-left: auto;
+}
+
+.navLink {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.65);
+  text-decoration: none;
+  padding-bottom: 2px;
+  border-bottom: 2px solid transparent;
+  transition:
+    color 200ms ease,
+    border-bottom-color 200ms ease;
+}
+
+.navLink:hover {
+  color: #fff;
+}
+
+/* Scrolled: dark links */
+.headerScrolled .navLink {
+  color: rgba(0, 48, 73, 0.65);
+}
+
+.headerScrolled .navLink:hover {
+  color: var(--primary);
+}
+
+/* Active state (add navLinkActive class manually if needed) */
+.navLinkActive {
+  color: var(--primary) !important;
+  border-bottom-color: var(--primary);
+  text-underline-offset: 4px;
+}
+
+/* ---- CTA Group ---- */
+.ctaGroup {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-left: 32px;
+  border-left: 1px solid rgba(255, 255, 255, 0.12);
+  transition: border-color 300ms ease;
+}
+
+.headerScrolled .ctaGroup {
+  border-left-color: rgba(0, 48, 73, 0.12);
+}
+
+/* ---- Hamburger (mobile only) ---- */
+.hamburger {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  padding: 8px;
+  margin-left: auto;
+  cursor: pointer;
+  background: none;
+  border: none;
+  border-radius: 0;
+}
+
+.hamburger span {
+  display: block;
+  width: 22px;
+  height: 2px;
+  background: #fff;
+  border-radius: 0;
+  transition:
+    transform 250ms ease,
+    opacity 250ms ease,
+    background 300ms ease;
+}
+
+.headerScrolled .hamburger span {
+  background: var(--dark);
+}
+
+/* Animated bar states when open */
+.barTop {
+  transform: translateY(7px) rotate(45deg);
+}
+
+.barMid {
+  opacity: 0;
+  transform: scaleX(0);
+}
+
+.barBot {
+  transform: translateY(-7px) rotate(-45deg);
+}
+
+/* ---- Mobile Full-Screen Nav ---- */
+.mobileNav {
+  display: none;
+  position: fixed;
+  top: 64px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--dark);
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 32px 24px;
+  gap: 0;
+  overflow-y: auto;
+  /* Hidden by default */
+  transform: translateX(100%);
+  opacity: 0;
+  transition:
+    transform 350ms cubic-bezier(0.4, 0, 0.2, 1),
+    opacity 350ms ease;
+  pointer-events: none;
+}
+
+.mobileNavOpen {
+  transform: translateX(0);
+  opacity: 1;
+  pointer-events: all;
+}
+
+.mobileNavLink {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(245, 242, 236, 0.65);
+  text-decoration: none;
+  width: 100%;
+  padding: 16px 0;
+  border-bottom: 1px solid rgba(245, 242, 236, 0.08);
+  transition: color 200ms ease;
+}
+
+.mobileNavLink:hover {
+  color: var(--surface);
+}
+
+.mobileCta {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  margin-top: 32px;
+}
+
+/* ---- Responsive ---- */
+@media (max-width: 768px) {
+  .hamburger {
+    display: flex;
+  }
+
+  .nav {
+    display: none;
+  }
+
+  .ctaGroup {
+    display: none;
+  }
+
+  .mobileNav {
+    display: flex;
+  }
+}

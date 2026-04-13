@@ -1,0 +1,151 @@
+/* ============================================================
+   Footer — Push Design System
+   - Dark background (Deep Space Blue)
+   - 3-column grid: brand / platform / company
+   - CS Genio Mono for all text, Darky for logo
+   - border-radius: 0 everywhere
+   ============================================================ */
+
+.footer {
+  background: var(--dark);
+  color: rgba(255, 255, 255, 0.6);
+  padding: 64px 0 24px;
+}
+
+/* Top decorative border */
+.topBorder {
+  width: 100%;
+  height: 1px;
+  background: rgba(245, 242, 236, 0.12);
+  margin-bottom: 48px;
+}
+
+/* ---- 3-column grid ---- */
+.footerGrid {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 1fr;
+  gap: 48px;
+  padding-bottom: 48px;
+}
+
+/* ---- Brand column ---- */
+.brandCol {
+  max-width: 320px;
+}
+
+.footerLogo {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-weight: 900;
+  font-style: italic;
+  letter-spacing: -0.06em;
+  color: #fff;
+  margin-bottom: 16px;
+  position: relative;
+}
+
+.footerLogo::after {
+  content: "";
+  position: absolute;
+  bottom: -6px;
+  left: 0;
+  width: 28px;
+  height: 2px;
+  background: var(--primary);
+}
+
+.footerTagline {
+  font-family: var(--font-body);
+  font-size: 13px;
+  line-height: 1.65;
+  color: rgba(255, 255, 255, 0.5);
+  letter-spacing: 0.01em;
+}
+
+/* ---- Link columns ---- */
+.colLabel {
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.3);
+  margin-bottom: 16px;
+}
+
+.footerLinks {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.footerLink {
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.7);
+  text-decoration: none;
+  letter-spacing: 0.01em;
+  transition: color 200ms ease;
+}
+
+.footerLink:hover {
+  color: #fff;
+}
+
+/* ---- Bottom bar ---- */
+.footerBottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding-top: 24px;
+  margin-top: 0;
+  gap: 16px;
+}
+
+.footerCopy {
+  font-family: var(--font-body);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+/* ---- Social links (placeholder) ---- */
+.socialLinks {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.socialLink {
+  font-family: var(--font-body);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.35);
+  cursor: pointer;
+  transition: color 200ms ease;
+}
+
+.socialLink:hover {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* ---- Responsive ---- */
+@media (max-width: 768px) {
+  .footerGrid {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+
+  .brandCol {
+    max-width: 100%;
+  }
+
+  .footerBottom {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+}
