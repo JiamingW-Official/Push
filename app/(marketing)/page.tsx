@@ -716,8 +716,8 @@ export default function LandingPage() {
               </div>
 
               <h2 className="split-headline">
-                <span className="wt-900">Stop guessing</span>
-                <span className="wt-300">which creators work.</span>
+                <span className="wt-900">Know exactly</span>
+                <span className="wt-300">which creators drive customers.</span>
               </h2>
 
               <p className="split-body">
@@ -739,6 +739,100 @@ export default function LandingPage() {
                   </li>
                 ))}
               </ul>
+
+              {/* QR attribution flow — 3-step inline visualization */}
+              <div
+                className="qr-flow"
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "var(--space-2)",
+                  flexWrap: "wrap",
+                  marginTop: "var(--space-5)",
+                  marginBottom: "var(--space-5)",
+                  fontFamily: "var(--font-body)",
+                  fontSize: "12px",
+                }}
+              >
+                <div
+                  className="qr-flow-step"
+                  style={{ display: "flex", alignItems: "center", gap: "6px" }}
+                >
+                  <span
+                    className="qr-flow-num"
+                    style={{
+                      color: "var(--primary)",
+                      fontWeight: 700,
+                      fontSize: "13px",
+                      lineHeight: 1,
+                    }}
+                  >
+                    1
+                  </span>
+                  <span
+                    className="qr-flow-text"
+                    style={{ color: "var(--text-muted)" }}
+                  >
+                    Creator posts to their audience
+                  </span>
+                </div>
+                <span
+                  className="qr-flow-arrow"
+                  style={{ color: "var(--text-muted)", fontWeight: 300 }}
+                >
+                  →
+                </span>
+                <div
+                  className="qr-flow-step"
+                  style={{ display: "flex", alignItems: "center", gap: "6px" }}
+                >
+                  <span
+                    className="qr-flow-num"
+                    style={{
+                      color: "var(--primary)",
+                      fontWeight: 700,
+                      fontSize: "13px",
+                      lineHeight: 1,
+                    }}
+                  >
+                    2
+                  </span>
+                  <span
+                    className="qr-flow-text"
+                    style={{ color: "var(--text-muted)" }}
+                  >
+                    Customer scans QR at your door
+                  </span>
+                </div>
+                <span
+                  className="qr-flow-arrow"
+                  style={{ color: "var(--text-muted)", fontWeight: 300 }}
+                >
+                  →
+                </span>
+                <div
+                  className="qr-flow-step"
+                  style={{ display: "flex", alignItems: "center", gap: "6px" }}
+                >
+                  <span
+                    className="qr-flow-num"
+                    style={{
+                      color: "var(--primary)",
+                      fontWeight: 700,
+                      fontSize: "13px",
+                      lineHeight: 1,
+                    }}
+                  >
+                    3
+                  </span>
+                  <span
+                    className="qr-flow-text"
+                    style={{ color: "var(--text-muted)" }}
+                  >
+                    You see verified attribution data
+                  </span>
+                </div>
+              </div>
 
               <Link href="/merchant/signup" className="btn btn-primary">
                 Get Started

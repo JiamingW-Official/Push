@@ -1903,3 +1903,116 @@ a:not(.btn):not([class*="btn"]):hover::after {
 }
 
 /* #38 — Popular pricing card: see .pricing-card-featured above */
+
+/* ------------------------------------------------------------
+   Pricing — Creator free banner
+   ------------------------------------------------------------ */
+.pricing-creator-banner {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-top: 3px solid var(--primary);
+  padding: 20px 24px;
+  margin-top: var(--space-6);
+  font-family: var(--font-body);
+}
+
+.pricing-creator-banner .pcb-icon {
+  font-size: 24px;
+  color: var(--champagne);
+  flex-shrink: 0;
+}
+
+.pricing-creator-banner strong {
+  font-weight: 700;
+  color: var(--dark);
+  font-size: var(--text-base);
+}
+
+.pricing-creator-banner span {
+  font-size: var(--text-small);
+  color: var(--text-muted);
+}
+
+/* ------------------------------------------------------------
+   Trust signals strip
+   ------------------------------------------------------------ */
+.trust-signals {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  justify-content: center;
+  margin-top: var(--space-5);
+  padding: var(--space-4) 0;
+  border-top: 1px solid var(--line);
+}
+
+.trust-signals span {
+  font-family: var(--font-body);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+}
+
+/* ------------------------------------------------------------
+   QR Attribution Flow
+   ------------------------------------------------------------ */
+.qr-flow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: var(--space-5);
+  flex-wrap: wrap;
+}
+
+.qr-flow-step {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--surface-elevated);
+  border: 1px solid var(--line);
+  padding: 8px 12px;
+}
+
+.qr-flow-num {
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--primary);
+  background: rgba(193, 18, 31, 0.08);
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.qr-flow-text {
+  font-family: var(--font-body);
+  font-size: 11px;
+  color: var(--dark);
+}
+
+.qr-flow-arrow {
+  font-size: 16px;
+  color: var(--primary);
+  opacity: 0.5;
+}
+
+@media (max-width: 768px) {
+  .pricing-creator-banner {
+    flex-direction: column;
+    text-align: center;
+  }
+  .qr-flow {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .qr-flow-arrow {
+    transform: rotate(90deg);
+  }
+}
