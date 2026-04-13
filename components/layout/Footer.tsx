@@ -1,7 +1,6 @@
 import Link from "next/link";
 import WaitlistForm from "./WaitlistForm";
 import styles from "./Footer.module.css";
-import WaitlistForm from "./WaitlistForm";
 
 const IconTwitterX = () => (
   <svg
