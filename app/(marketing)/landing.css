@@ -972,6 +972,28 @@
   .section          { padding-block: var(--space-8); }
   .cta-section      { padding-block: 0; }
 
+  /* Hero: tighter padding, no full-viewport lock on mobile */
+  .hero {
+    padding-top: 100px;
+    padding-bottom: 60px;
+    min-height: 90vh;
+  }
+
+  /* Hero CTAs: stack vertically */
+  .hero-cta-group,
+  .hero-ctas {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  /* Hero buttons: full-width */
+  .hero .btn-primary,
+  .hero .btn-ghost {
+    width: 100%;
+    justify-content: center;
+    text-align: center;
+  }
+
   /* Stats: vertical stack — #42: prevents 3rd item full-width on 375px */
   .hero-stats {
     display: flex;
@@ -1058,6 +1080,11 @@
 
 /* ── Phone (≤ 640px) ───────────────────────────────────────── */
 @media (max-width: 640px) {
+  /* Section vertical rhythm: tighter on small phones */
+  .section {
+    padding: 60px 0;
+  }
+
   /* Hero — #41: tighter clamp prevents 3-line break on 375px */
   .hero-headline {
     font-size: clamp(44px, 13vw, 68px);
@@ -1077,6 +1104,17 @@
     width: 100%;
   }
 
+  /* Split headline: larger clamp range on small phones */
+  .split-headline {
+    font-size: clamp(28px, 8vw, 48px);
+  }
+
+  /* Split layout: force single column stack */
+  .split-layout {
+    flex-direction: column;
+    gap: var(--space-8);
+  }
+
   /* How-it-works ghost numbers */
   .how-step-num { font-size: 48px; }
 
@@ -1085,6 +1123,15 @@
 
   /* Pricing card padding */
   .pricing-card { padding: var(--space-5) var(--space-4); }
+}
+
+/* ── Very small phones (≤ 480px) — proof stats grid ────────── */
+@media (max-width: 480px) {
+  .proof-stats {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-4);
+  }
 }
 
 /* ── Very small phones (≤ 400px) ──────────────────────────── */
