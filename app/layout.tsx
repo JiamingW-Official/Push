@@ -5,22 +5,41 @@ import SmoothScroll from "@/components/layout/SmoothScroll";
 import BackToTop from "@/components/layout/BackToTop";
 
 export const metadata: Metadata = {
-  title: "Push — Turn Creators into Results",
+  title: "Push — Pay Per Verified Visit | Creator Marketing for NYC Businesses",
   description:
-    "NYC's local creator marketplace. Creators post. Customers show up. You only pay when it works — verified by QR attribution.",
+    "Push connects NYC businesses with local creators. You only pay when a creator drives a verified visit — tracked by QR code. No followers minimum. No upfront fees.",
+  keywords:
+    "creator marketing, local marketing NYC, foot traffic, QR attribution, pay per visit, influencer marketing NYC",
+  metadataBase: new URL("https://pushnyc.co"),
+  alternates: {
+    canonical: "/",
+  },
   openGraph: {
-    title: "Push — Turn Creators into Results",
+    title:
+      "Push — Pay Per Verified Visit | Creator Marketing for NYC Businesses",
     description:
-      "NYC's local creator marketplace connecting businesses with creators who drive verified foot traffic.",
+      "Push connects NYC businesses with local creators. You only pay when a creator drives a verified visit — tracked by QR code.",
     siteName: "Push",
     locale: "en_US",
     type: "website",
+    url: "https://pushnyc.co",
+    images: [
+      {
+        url: "/opengraph-image",
+        width: 1200,
+        height: 630,
+        alt: "Push — Pay Per Verified Visit",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Push — Turn Creators into Results",
+    title:
+      "Push — Pay Per Verified Visit | Creator Marketing for NYC Businesses",
     description:
-      "NYC's local creator marketplace. Creators post. Customers show up.",
+      "Push connects NYC businesses with local creators. You only pay when a creator drives a verified visit.",
+    creator: "@pushnyc",
+    images: ["/opengraph-image"],
   },
 };
 

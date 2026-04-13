@@ -1261,7 +1261,7 @@ export default function LandingPage() {
                 int: "$19",
                 dec: ".99",
                 period: "/mo",
-                desc: "Launch your first campaigns and see real attribution in action.",
+                desc: "Pay per visit, keep full control.",
                 features: [
                   "2 active campaigns",
                   "3 creator slots",
@@ -1278,7 +1278,7 @@ export default function LandingPage() {
                 int: "$69",
                 dec: "",
                 period: "/mo",
-                desc: "Scale what works. More campaigns, deeper insights, faster matching.",
+                desc: "Best for growing restaurants, gyms, retail.",
                 features: [
                   "4 active campaigns",
                   "5 creator slots",
@@ -1295,7 +1295,7 @@ export default function LandingPage() {
                 int: "$199",
                 dec: "",
                 period: "/mo",
-                desc: "Unlimited campaigns. Dedicated support. Full platform access.",
+                desc: "Unlimited campaigns, priority matching.",
                 features: [
                   "Unlimited campaigns",
                   "8 creator slots",
