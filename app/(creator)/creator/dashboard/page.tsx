@@ -421,7 +421,7 @@ const DEMO_CAMPAIGNS: Campaign[] = [
     deadline: "2026-04-27",
     category: "Retail",
     image:
-      "https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=400&h=300&fit=crop",
+      "https://images.unsplash.com/photo-1582552938357-32b906df40cb?w=400&h=300&fit=crop",
     tier_required: "seed",
     description:
       "Style 3 vintage denim looks in-store. Lo-fi, authentic streetwear content preferred.",
@@ -582,7 +582,7 @@ const DEMO_CAMPAIGNS: Campaign[] = [
     deadline: "2026-05-09",
     category: "Retail",
     image:
-      "https://images.unsplash.com/photo-1552346154-21d32810aba3?w=400&h=300&fit=crop",
+      "https://images.unsplash.com/photo-1460353581641-37baddab0fa2?w=400&h=300&fit=crop",
     tier_required: "operator",
     description:
       "Cover the exclusive sneaker release event. Streetwear culture, lineup energy, unboxing content.",
@@ -605,7 +605,7 @@ const DEMO_CAMPAIGNS: Campaign[] = [
     deadline: "2026-05-20",
     category: "Food",
     image:
-      "https://images.unsplash.com/photo-1466978913421-dad2ebd01d17?w=400&h=300&fit=crop",
+      "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=400&h=280&fit=crop&crop=center",
     tier_required: "closer",
     description:
       "Full tasting menu experience at Blue Hill. Ultra-premium food storytelling. Only for top-tier creators.",
