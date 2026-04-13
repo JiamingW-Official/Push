@@ -961,6 +961,52 @@ export default function LandingPage() {
         </div>
       </section>
 
+      {/* ── Attribution Explainer ────────────────────────────── */}
+      <section className="section section-bright">
+        <div className="container">
+          <div className="attr-explainer reveal">
+            <h3 className="attr-explainer-title">How verification works</h3>
+            <div className="attr-steps">
+              <div className="attr-step">
+                <div className="attr-step-num">1</div>
+                <div className="attr-step-content">
+                  <strong>Creator posts</strong>
+                  <span>Content goes live with your unique campaign link</span>
+                </div>
+              </div>
+              <div className="attr-connector" aria-hidden="true">
+                →
+              </div>
+              <div className="attr-step">
+                <div className="attr-step-num">2</div>
+                <div className="attr-step-content">
+                  <strong>Customer visits</strong>
+                  <span>
+                    They show up and scan the QR code at your location
+                  </span>
+                </div>
+              </div>
+              <div className="attr-connector" aria-hidden="true">
+                →
+              </div>
+              <div className="attr-step">
+                <div className="attr-step-num">3</div>
+                <div className="attr-step-content">
+                  <strong>You pay</strong>
+                  <span>
+                    Only for confirmed, QR-verified visits — nothing else
+                  </span>
+                </div>
+              </div>
+            </div>
+            <p className="attr-note">
+              Average verified visit costs $4–$12. Traditional ads: $15–$50 per
+              click with no visit guarantee.
+            </p>
+          </div>
+        </div>
+      </section>
+
       {/* ── 02 · For Creators ────────────────────────────────── */}
       <section id="creators" className="section section-warm">
         <div className="container">

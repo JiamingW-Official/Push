@@ -51,6 +51,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
+        <meta name="theme-color" content="#003049" />
+        <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1, viewport-fit=cover"
+        />
+        <link rel="dns-prefetch" href="//fonts.googleapis.com" />
         <link
           rel="preload"
           href="/fonts/Darky-Black.ttf"
