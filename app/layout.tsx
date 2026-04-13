@@ -41,6 +41,10 @@ export const metadata: Metadata = {
     creator: "@pushnyc",
     images: ["/opengraph-image"],
   },
+  icons: {
+    icon: [{ url: "/favicon.svg", type: "image/svg+xml" }],
+    apple: [{ url: "/favicon.svg" }],
+  },
 };
 
 export default function RootLayout({
@@ -80,6 +84,9 @@ export default function RootLayout({
         />
       </head>
       <body>
+        <a href="#main-content" className="skip-nav">
+          Skip to main content
+        </a>
         <CustomCursor />
         <SmoothScroll>
           {children}
