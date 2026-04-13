@@ -3530,93 +3530,205 @@ section#faq {
 }
 
 /* ============================================================
-   20× DESIGN UPGRADE — v3
-   Goals: fix reveals, editorial typography, tier card overhaul,
-   interactive depth, rhythm, premium dark testimonials.
-   Constraints: Design.md 6-color palette, border-radius: 0.
+   20× EDITORIAL REDESIGN — v4
+   High-contrast editorial × luxury gradients × interactive depth.
+   Avant-garde typography with extreme weight contrast (900 vs 100).
+   Gradient text, atmospheric sections, physical hover feedback.
+   Palette: Design.md 6 colors only. border-radius: 0.
    ============================================================ */
 
-/* ── SECTION RHYTHM: generous vertical breathing ─────────────── */
-.section            { padding-block: 120px; }
-/* Restore overrides for sections with their own rhythm */
-.hero               { min-height: 100svh; padding-top: 80px; padding-bottom: var(--space-8); padding-block: unset; }
-.testimonials-section { padding-block: 100px; }
-.cta-section        { padding-block: 120px; }
-section#faq         { padding-block: 100px; }
+/* ─────────────────────────────────────────────────────────────── */
+/* 1. HERO — extreme typographic drama                             */
+/* ─────────────────────────────────────────────────────────────── */
 
-/* ── SPLIT HEADLINE: push to editorial scale ─────────────────── */
+/* Bigger headline scale */
+.hero-headline {
+  font-size: clamp(76px, 14vw, 200px);
+  letter-spacing: -0.07em;
+  line-height: 0.84;
+  margin-bottom: var(--space-8);
+}
+
+/* "Turn creators" — ultra-black 900 */
+.hero-headline .line-black { font-weight: 900; }
+
+/* "into" — gossamer thin 100, champagne-gold tint */
+.hero-headline .line-light {
+  font-weight: 100;
+  color: rgba(201, 169, 110, 0.5);
+}
+
+/* "results." — gradient text: Flag Red → Champagne Gold */
+.hero-headline em {
+  font-weight: 900;
+  font-style: italic;
+  background: linear-gradient(135deg, #c1121f 15%, #c9a96e 85%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: var(--primary); /* fallback for browsers without gradient-text */
+}
+
+/* Hero sub: larger, more breathing */
+.hero-sub {
+  font-size: 17px;
+  line-height: 1.7;
+  max-width: 520px;
+  letter-spacing: 0.005em;
+  color: rgba(245, 242, 236, 0.78);
+}
+
+/* Hero CTAs: row layout for desktop */
+.hero-ctas {
+  flex-direction: row;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: var(--space-8);
+}
+
+/* Hero eyebrow: red accent dot before text */
+.hero-eyebrow::before {
+  content: '';
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  background: var(--primary);
+  margin-right: 10px;
+  vertical-align: middle;
+}
+
+/* Hero stats: champagne gold numbers, thinner weight */
+.stat-num {
+  font-size: clamp(48px, 5.5vw, 76px) !important;
+  font-weight: 100 !important;
+  color: var(--champagne) !important;
+  letter-spacing: -0.06em;
+}
+.stat-label {
+  color: rgba(255, 255, 255, 0.35) !important;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+}
+
+/* ─────────────────────────────────────────────────────────────── */
+/* 2. SECTION RHYTHM — dramatic vertical breathing                 */
+/* ─────────────────────────────────────────────────────────────── */
+.section                { padding-block: 140px; }
+.hero                   { min-height: 100svh; padding-top: 80px; padding-bottom: var(--space-8); padding-block: unset; }
+.testimonials-section   { padding-block: 120px; }
+.cta-section            { padding-block: 140px; }
+section#faq             { padding-block: 120px; }
+
+/* Ghost numbers: massive, barely-there watermarks */
+.section-ghost-num {
+  font-size: clamp(140px, 24vw, 320px);
+  font-weight: 900;
+  opacity: 0.025;
+  letter-spacing: -0.11em;
+}
+.section-warm .section-ghost-num { opacity: 0.05; }
+
+/* Section tag line: gradient from red to gold */
+.section-tag-line {
+  width: 48px;
+  height: 2px;
+  background: linear-gradient(to right, var(--primary), var(--champagne));
+}
+
+/* Section separators: premium gradient hairline */
+.section + .section-bright::before,
+.section-bright + .section::before {
+  content: '';
+  display: block;
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    transparent 5%,
+    rgba(201, 169, 110, 0.18) 30%,
+    rgba(193, 18, 31, 0.12) 50%,
+    rgba(201, 169, 110, 0.18) 70%,
+    transparent 95%
+  );
+}
+
+/* ─────────────────────────────────────────────────────────────── */
+/* 3. SPLIT HEADLINES — extreme editorial weight contrast          */
+/*    wt-900 = massive black display                               */
+/*    wt-300 = overridden to weight 100, barely-there thin         */
+/* ─────────────────────────────────────────────────────────────── */
 .split-headline {
-  font-size: clamp(52px, 7vw, 96px);
-  letter-spacing: -0.065em;
-  line-height: 0.9;
+  font-size: clamp(56px, 8vw, 120px);
+  letter-spacing: -0.07em;
+  line-height: 0.88;
   margin-bottom: var(--space-5);
 }
+.split-headline .wt-900 { font-weight: 900; }
 .split-headline .wt-300 {
-  color: rgba(0, 48, 73, 0.32);
+  font-weight: 100;
+  color: rgba(0, 48, 73, 0.2);
   display: block;
 }
 .section-warm .split-headline .wt-300 {
-  color: rgba(255, 255, 255, 0.28);
+  font-weight: 100;
+  color: rgba(255, 255, 255, 0.18);
 }
 
-/* ── SECTION TAG: thicker accent line ───────────────────────── */
-.section-tag-line { width: 40px; height: 3px; }
-
-/* ── SPLIT BODY: slightly larger for readability ──────────────── */
+/* Split body */
 .split-body {
   font-size: 15px;
-  line-height: 1.75;
-  max-width: 460px;
-  color: rgba(0, 48, 73, 0.58);
+  line-height: 1.8;
+  max-width: 480px;
+  color: rgba(0, 48, 73, 0.55);
 }
 .section-warm .split-body {
-  color: rgba(245, 242, 236, 0.75);
+  color: rgba(245, 242, 236, 0.7);
 }
 
-/* ── FEATURE LIST: better line rhythm ─────────────────────────── */
+/* Feature list */
 .feature-text { font-size: 13px; line-height: 1.7; }
-.section-warm .feature-text { color: rgba(255, 255, 255, 0.6); }
+.section-warm .feature-text { color: rgba(255, 255, 255, 0.55); }
 
 /* ─────────────────────────────────────────────────────────────── */
-/* TIER CARDS — full editorial redesign                            */
-/* From: tiny flat cards with 4px swatch                          */
-/* To:   tall material cards — swatch 52px, Darky display name    */
+/* 4. TIER CARDS — glass material design with glow hover           */
 /* ─────────────────────────────────────────────────────────────── */
 .tier-showcase-card {
   border-left: none;
-  border-top: 4px solid var(--tier-color, rgba(255, 255, 255, 0.15));
+  border-top: 4px solid var(--tier-color, rgba(255, 255, 255, 0.12));
   padding: 0;
   overflow: hidden;
-  background: rgba(255, 255, 255, 0.04);
-  min-height: 228px;
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  min-height: 244px;
   display: flex;
   flex-direction: column;
   gap: 0;
   position: relative;
   transition:
-    transform 280ms cubic-bezier(0.22, 1, 0.36, 1),
-    box-shadow 280ms ease,
-    background 240ms ease;
+    transform 320ms cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 320ms ease,
+    background 260ms ease;
 }
 
 .tier-showcase-swatch {
   width: 100%;
-  height: 52px;
+  height: 60px;
   flex-shrink: 0;
   display: block;
   margin-bottom: 0;
+  opacity: 0.88;
 }
 
 .tier-showcase-material {
   font-family: var(--font-display);
-  font-size: clamp(16px, 2.2vw, 24px);
+  font-size: clamp(20px, 2.8vw, 30px);
   font-weight: 900;
-  letter-spacing: -0.045em;
+  letter-spacing: -0.05em;
   line-height: 1;
   color: #fff;
   opacity: 1;
   text-transform: none;
-  padding: 12px 14px 2px;
+  padding: 14px 16px 3px;
   display: block;
 }
 
@@ -3626,27 +3738,27 @@ section#faq         { padding-block: 100px; }
   font-weight: 400;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.38);
-  padding: 0 14px 8px;
+  color: rgba(255, 255, 255, 0.32);
+  padding: 0 16px 10px;
   display: block;
   font-style: normal;
 }
 
 .tier-showcase-earning {
   font-family: var(--font-display);
-  font-size: clamp(15px, 1.9vw, 20px);
+  font-size: clamp(17px, 2.2vw, 24px);
   font-weight: 900;
-  letter-spacing: -0.03em;
+  letter-spacing: -0.04em;
   color: var(--champagne);
-  padding: 0 14px 3px;
+  padding: 0 16px 3px;
   display: block;
 }
 
 .tier-earn-range {
   font-family: var(--font-body);
   font-size: 10px;
-  color: rgba(255, 255, 255, 0.3);
-  padding: 0 14px 6px;
+  color: rgba(255, 255, 255, 0.25);
+  padding: 0 16px 6px;
   display: block;
 }
 
@@ -3654,42 +3766,43 @@ section#faq         { padding-block: 100px; }
   font-family: var(--font-body);
   font-size: 10px;
   line-height: 1.55;
-  color: rgba(255, 255, 255, 0.4);
-  padding: 0 14px 14px;
+  color: rgba(255, 255, 255, 0.35);
+  padding: 0 16px 16px;
   margin-top: auto;
   display: block;
 }
 
-/* Clay tier: uses dark text on light swatch */
+/* Clay: dark text on warm base */
 .tier-card--clay {
-  background: rgba(184, 169, 154, 0.12);
+  background: rgba(184, 169, 154, 0.14);
   border-top-color: #b8a99a;
 }
 .tier-card--clay .tier-showcase-material { color: var(--dark); }
-.tier-card--clay .tier-showcase-name     { color: rgba(0, 48, 73, 0.45); }
+.tier-card--clay .tier-showcase-name     { color: rgba(0, 48, 73, 0.4); }
 .tier-card--clay .tier-showcase-earning  { color: var(--accent); }
-.tier-card--clay .tier-earn-range        { color: rgba(0, 48, 73, 0.38); }
-.tier-card--clay .tier-showcase-desc     { color: rgba(0, 48, 73, 0.5); }
+.tier-card--clay .tier-earn-range        { color: rgba(0, 48, 73, 0.35); }
+.tier-card--clay .tier-showcase-desc     { color: rgba(0, 48, 73, 0.48); }
 
-/* Gold tier: champagne tones */
+/* Gold: champagne warmth */
 .tier-card--gold {
   background: rgba(201, 169, 110, 0.1);
   border-top-color: #c9a96e;
 }
 .tier-card--gold .tier-showcase-material { color: var(--champagne); }
 
-/* Obsidian tier: near-black depth */
+/* Obsidian: void depth */
 .tier-card--obsidian {
-  background: rgba(26, 26, 46, 0.6);
+  background: rgba(26, 26, 46, 0.65);
   border-top-color: #4a4a6e;
 }
 
-/* Hover: lift + subtle glow from tier color */
+/* Hover: lift + tier-colored atmospheric glow */
 .reveal.visible .tier-showcase .tier-showcase-card:hover {
-  transform: translateY(-10px);
+  transform: translateY(-14px);
   box-shadow:
-    0 16px 40px rgba(0, 0, 0, 0.25),
-    0 0 0 1px var(--tier-color, rgba(255, 255, 255, 0.1));
+    0 24px 56px rgba(0, 0, 0, 0.32),
+    0 0 48px -12px var(--tier-color, rgba(102, 155, 188, 0.25));
+  background: rgba(255, 255, 255, 0.06);
 }
 
 /* Entry badge */
@@ -3703,179 +3816,205 @@ section#faq         { padding-block: 100px; }
   letter-spacing: 0.1em;
   color: var(--dark);
   background: var(--champagne);
-  padding: 3px 7px;
+  padding: 3px 8px;
   z-index: 2;
   font-weight: 700;
 }
 
-/* Featured Operator card: highlighted */
+/* Current tier: steel-blue ambient glow */
 .tier-showcase-card--current {
-  background: rgba(102, 155, 188, 0.12);
+  background: rgba(102, 155, 188, 0.1);
   border-top-width: 5px;
   border-top-color: var(--tertiary);
+  box-shadow: 0 0 64px -18px rgba(102, 155, 188, 0.22);
 }
 
 /* ─────────────────────────────────────────────────────────────── */
-/* HOW IT WORKS — oversized watermark step numbers                 */
+/* 5. HOW IT WORKS — oversized watermark step numbers              */
 /* ─────────────────────────────────────────────────────────────── */
 .how-step { overflow: hidden; }
 
 .how-step-num {
-  font-size: clamp(140px, 20vw, 220px);
+  font-size: clamp(180px, 26vw, 300px);
   font-weight: 900;
-  opacity: 0.04;
+  opacity: 0.03;
   position: absolute;
-  top: -28px;
-  right: -12px;
-  line-height: 0.8;
-  letter-spacing: -0.1em;
+  top: -40px;
+  right: -20px;
+  line-height: 0.76;
+  letter-spacing: -0.12em;
   z-index: 0;
   pointer-events: none;
   user-select: none;
   color: var(--dark);
 }
 
-/* Ensure step content sits above giant watermark */
 .how-step-index,
 .how-step-title,
 .how-step-body,
 .how-step-bullets { position: relative; z-index: 1; }
 
-/* Richer hover: lift + shadow + accent bar */
+/* Hover: dramatic lift + depth shadow */
 .how-step:hover {
   background: var(--surface-elevated);
-  transform: translateY(-10px);
-  box-shadow: 0 20px 48px rgba(0, 48, 73, 0.09);
+  transform: translateY(-14px);
+  box-shadow:
+    0 28px 64px rgba(0, 48, 73, 0.1),
+    0 0 0 1px rgba(0, 48, 73, 0.03);
 }
 
 /* ─────────────────────────────────────────────────────────────── */
-/* PRICING — featured card scale lift + gold border                */
+/* 6. PRICING — featured card gold glow + scale lift               */
 /* ─────────────────────────────────────────────────────────────── */
-/* Featured card: elevated above siblings */
 .pricing-card-featured {
-  border: 2px solid rgba(201, 169, 110, 0.35);
+  border: 2px solid rgba(201, 169, 110, 0.3);
   border-top: 4px solid var(--champagne);
   box-shadow:
-    0 16px 48px rgba(0, 48, 73, 0.1),
-    0 0 0 0 transparent;
+    0 24px 64px rgba(0, 48, 73, 0.12),
+    0 0 80px -20px rgba(201, 169, 110, 0.18);
 }
 .pricing-card-featured.visible {
-  transform: translateY(-8px) !important;
+  transform: translateY(-12px) scale(1.02) !important;
 }
 .pricing-card-featured:hover {
-  box-shadow: 0 24px 64px rgba(0, 48, 73, 0.14);
-  transform: translateY(-12px) !important;
+  box-shadow:
+    0 32px 80px rgba(0, 48, 73, 0.16),
+    0 0 120px -24px rgba(201, 169, 110, 0.25);
+  transform: translateY(-16px) scale(1.02) !important;
 }
 
-/* Non-featured cards: subtle red top border */
 .pricing-card:not(.pricing-card-featured) {
-  border-top: 3px solid rgba(193, 18, 31, 0.2);
+  border-top: 3px solid rgba(193, 18, 31, 0.15);
 }
 .pricing-card:not(.pricing-card-featured):hover {
   border-top-color: var(--primary);
+  transform: translateY(-10px);
+  box-shadow: 0 20px 48px rgba(0, 48, 73, 0.1);
+}
+
+/* Price numbers: oversized display */
+.price-int {
+  font-size: clamp(52px, 6.5vw, 72px);
+  font-weight: 900;
+  letter-spacing: -0.06em;
 }
 
 /* ─────────────────────────────────────────────────────────────── */
-/* TESTIMONIALS — dark section treatment, editorial quotes         */
+/* 7. TESTIMONIALS — dark editorial with decorative quotemarks     */
 /* ─────────────────────────────────────────────────────────────── */
 .testimonials-section {
   background: var(--dark);
   position: relative;
 }
 
-/* Atmospheric depth gradient */
 .testimonials-section::before {
   content: '';
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(ellipse 60% 80% at 0% 50%, rgba(102, 155, 188, 0.07) 0%, transparent 60%),
-    radial-gradient(ellipse 50% 60% at 100% 30%, rgba(193, 18, 31, 0.06) 0%, transparent 55%);
+    radial-gradient(ellipse 65% 85% at 0% 50%, rgba(102, 155, 188, 0.09) 0%, transparent 60%),
+    radial-gradient(ellipse 55% 65% at 100% 25%, rgba(193, 18, 31, 0.07) 0%, transparent 55%);
   pointer-events: none;
   z-index: 0;
 }
 .testimonials-section > .container { position: relative; z-index: 1; }
 
 .testimonial-card {
-  background: rgba(255, 255, 255, 0.04);
-  border-top: 3px solid rgba(255, 255, 255, 0.06);
-  padding: var(--space-6);
-  transition: background 240ms ease, transform 280ms cubic-bezier(0.22, 1, 0.36, 1);
+  background: rgba(255, 255, 255, 0.035);
+  border-top: 3px solid rgba(255, 255, 255, 0.04);
+  padding: var(--space-8) var(--space-6);
+  position: relative;
+  transition:
+    background 260ms ease,
+    transform 300ms cubic-bezier(0.22, 1, 0.36, 1);
 }
+
+/* Decorative oversized open-quotemark */
+.testimonial-card::before {
+  content: '\201C';
+  position: absolute;
+  top: 16px;
+  left: 14px;
+  font-family: var(--font-display);
+  font-size: 88px;
+  font-weight: 100;
+  line-height: 1;
+  color: rgba(255, 255, 255, 0.05);
+  pointer-events: none;
+}
+
 .testimonial-card:hover {
   background: rgba(255, 255, 255, 0.07);
-  transform: translateY(-6px);
+  transform: translateY(-8px);
 }
 .testimonial-card--merchant { border-top-color: var(--primary); }
 .testimonial-card--creator  { border-top-color: var(--champagne); }
 
 .testimonial-quote {
   font-family: var(--font-display);
-  font-size: clamp(16px, 2.2vw, 22px);
+  font-size: clamp(18px, 2.6vw, 28px);
   font-weight: 300;
-  letter-spacing: -0.025em;
-  line-height: 1.45;
-  color: rgba(255, 255, 255, 0.82);
+  letter-spacing: -0.03em;
+  line-height: 1.38;
+  color: rgba(255, 255, 255, 0.88);
   font-style: normal;
-  margin-bottom: var(--space-4);
+  margin-bottom: var(--space-5);
 }
 
-.testimonial-name { color: #fff; font-weight: 700; }
-.testimonial-role { color: rgba(255, 255, 255, 0.38); }
+.testimonial-name { color: #fff; font-weight: 700; font-size: 13px; }
+.testimonial-role { color: rgba(255, 255, 255, 0.32); font-size: 11px; }
 
 /* ─────────────────────────────────────────────────────────────── */
-/* PROOF STRIP — remove internal VC metrics from public page       */
+/* 8. PROOF STRIP — gold accent, champagne stat numbers            */
 /* ─────────────────────────────────────────────────────────────── */
 .vc-metrics-bar { display: none; }
 .market-hint    { display: none; }
 
-/* Proof stat numbers: bigger and more prominent */
+.proof-strip { border-left-color: var(--champagne); border-left-width: 4px; }
+
 .proof-stat-num {
-  font-size: 44px !important;
-  letter-spacing: -0.05em;
+  font-size: 52px !important;
+  font-weight: 100 !important;
+  color: var(--champagne) !important;
+  letter-spacing: -0.04em;
 }
 
 /* ─────────────────────────────────────────────────────────────── */
-/* HERO STATS: Champagne Gold accent dividers                      */
+/* 9. HERO STATS — Champagne Gold gradient dividers                */
 /* ─────────────────────────────────────────────────────────────── */
-.stat-item { position: relative; padding-left: var(--space-4); }
+.stat-item { position: relative; padding-left: var(--space-4); border-right: none; }
 .stat-item:first-child { padding-left: 0; }
+.stat-item:last-child  { border-right: none; padding-right: 0; }
 
-/* Replace hard border-right with a gradient line */
 .stat-item:not(:last-child)::after {
   content: '';
   position: absolute;
   right: 0;
-  top: 12%;
-  height: 76%;
+  top: 8%;
+  height: 84%;
   width: 1px;
   background: linear-gradient(
     to bottom,
     transparent 0%,
-    rgba(201, 169, 110, 0.35) 35%,
-    rgba(201, 169, 110, 0.35) 65%,
+    rgba(201, 169, 110, 0.45) 28%,
+    rgba(201, 169, 110, 0.45) 72%,
     transparent 100%
   );
 }
-/* Remove the old border-right */
-.stat-item { border-right: none; }
-.stat-item:last-child { border-right: none; padding-right: 0; }
 
 /* ─────────────────────────────────────────────────────────────── */
-/* REVEAL ANIMATIONS: more choreographed section entrances         */
+/* 10. REVEAL ANIMATIONS — cinematic entrance choreography         */
 /* ─────────────────────────────────────────────────────────────── */
-/* Dark sections: bigger translateY for more drama */
 .section-warm .reveal,
 .cta-section .reveal {
-  transform: translateY(48px);
+  transform: translateY(56px);
 }
 
-/* How-step cards: slide in from slightly left */
 .how-step.reveal {
-  transform: translateX(-28px) translateY(0);
+  transform: translateX(-36px) translateY(0);
   transition:
-    opacity 0.65s cubic-bezier(0.22, 1, 0.36, 1),
-    transform 0.65s cubic-bezier(0.22, 1, 0.36, 1);
+    opacity 0.75s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.75s cubic-bezier(0.22, 1, 0.36, 1);
 }
 .how-step.reveal.visible {
   transform: translateX(0) translateY(0) !important;
@@ -3883,19 +4022,16 @@ section#faq         { padding-block: 100px; }
 }
 
 /* ─────────────────────────────────────────────────────────────── */
-/* GLOBAL INTERACTIONS: button + link micro-feedback               */
+/* 11. INTERACTIONS — physical feedback + glow effects             */
 /* ─────────────────────────────────────────────────────────────── */
-/* Button: instant scale press */
 .btn:active { transform: scale(0.97); }
 
-/* Primary CTA: glow on hover */
 .btn-primary:hover {
   box-shadow:
     var(--btn-shadow-hover),
-    0 0 24px rgba(193, 18, 31, 0.22);
+    0 0 36px rgba(193, 18, 31, 0.28);
 }
 
-/* Ghost button in dark sections: brighter border */
 .section-warm .btn-ghost:hover,
 .cta-panel-merchant .btn:hover {
   border-color: rgba(255, 255, 255, 0.55);
@@ -3903,24 +4039,57 @@ section#faq         { padding-block: 100px; }
 }
 
 /* ─────────────────────────────────────────────────────────────── */
-/* CTA SECTION: full-width dark impact                             */
+/* 12. CTA SECTION — atmosphere + gradient text                    */
 /* ─────────────────────────────────────────────────────────────── */
-.cta-section {
-  background: var(--dark);
+.cta-section { background: var(--dark); }
+.cta-inner   { align-items: stretch; }
+.cta-panel   { padding: var(--space-15) var(--space-8); }
+
+/* Merchant CTA headline: white → champagne gold gradient text */
+.cta-panel-merchant .cta-headline .wt-900 {
+  background: linear-gradient(135deg, #fff 25%, var(--champagne) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: #fff;
 }
 
-/* Panels: equal height full stretch */
-.cta-inner { align-items: stretch; }
-.cta-panel { padding: var(--space-12) var(--space-8); }
+/* ─────────────────────────────────────────────────────────────── */
+/* 13. TICKER — premium treatment                                  */
+/* ─────────────────────────────────────────────────────────────── */
+.ticker-dot {
+  background: var(--champagne);
+  opacity: 0.7;
+}
 
 /* ─────────────────────────────────────────────────────────────── */
-/* MOBILE: responsive adjustments for upgraded layout              */
+/* 14. FAQ — refined on dark                                       */
+/* ─────────────────────────────────────────────────────────────── */
+section#faq {
+  background: var(--surface);
+}
+.faq-q {
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+}
+.faq-a {
+  color: rgba(0, 48, 73, 0.6);
+}
+
+/* ─────────────────────────────────────────────────────────────── */
+/* MOBILE — responsive breakpoints                                 */
 /* ─────────────────────────────────────────────────────────────── */
 @media (max-width: 768px) {
-  .section { padding-block: 80px; }
-  .split-headline { font-size: clamp(40px, 10vw, 64px); }
-  .tier-showcase-card { min-height: 180px; }
-  .how-step-num { font-size: clamp(90px, 22vw, 140px); }
-  .cta-panel { padding: var(--space-8) var(--space-4); }
-  .testimonial-quote { font-size: 16px; }
+  .section             { padding-block: 88px; }
+  .hero-headline       { font-size: clamp(56px, 14vw, 120px); }
+  .hero-ctas           { flex-direction: column; }
+  .split-headline      { font-size: clamp(44px, 11vw, 72px); }
+  .tier-showcase-card  { min-height: 195px; }
+  .how-step-num        { font-size: clamp(110px, 30vw, 180px); }
+  .cta-panel           { padding: var(--space-8) var(--space-4); }
+  .testimonial-quote   { font-size: 17px; }
+  .testimonial-card::before { font-size: 64px; }
+  .proof-stat-num      { font-size: 38px !important; }
+  .stat-num            { font-size: clamp(36px, 8vw, 52px) !important; }
 }
