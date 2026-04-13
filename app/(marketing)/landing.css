@@ -2709,3 +2709,161 @@ a:not(.btn):not([class*="btn"]):hover::after {
 .hero .btn-primary:hover {
   animation: none;
 }
+
+/* ============================================================
+   Staggered scroll-reveal delays
+   Each group uses --stagger CSS variable consumed by .reveal
+   ============================================================ */
+
+/* --- How It Works steps (3 steps, 100ms apart) --- */
+.how-step:nth-child(1) { --stagger: 0ms; }
+.how-step:nth-child(2) { --stagger: 100ms; }
+.how-step:nth-child(3) { --stagger: 200ms; }
+
+/* --- Pricing cards (3 cards, 80ms apart)
+     Aligns with the existing pricingCardIn animation-delay above --- */
+.pricing-card:nth-child(1) { --stagger: 0ms; }
+.pricing-card:nth-child(2) { --stagger: 80ms; }
+.pricing-card:nth-child(3) { --stagger: 160ms; }
+
+.pricing-card.reveal {
+  transition-delay: var(--stagger, 0ms);
+}
+
+/* --- Tier showcase cards (6 tiers, 60ms apart) ---
+     tier-showcase-card doesn't use .reveal; apply opacity/transform
+     fade-up directly, triggered when parent .tier-showcase gets .visible */
+.tier-showcase-card {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.55s cubic-bezier(0.22, 1, 0.36, 1),
+              transform 0.55s cubic-bezier(0.22, 1, 0.36, 1),
+              box-shadow 240ms ease;
+  transition-delay: var(--stagger, 0ms);
+}
+
+.tier-showcase.visible .tier-showcase-card {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.tier-showcase .tier-showcase-card:nth-child(1) { --stagger: 0ms; }
+.tier-showcase .tier-showcase-card:nth-child(2) { --stagger: 60ms; }
+.tier-showcase .tier-showcase-card:nth-child(3) { --stagger: 120ms; }
+.tier-showcase .tier-showcase-card:nth-child(4) { --stagger: 180ms; }
+.tier-showcase .tier-showcase-card:nth-child(5) { --stagger: 240ms; }
+.tier-showcase .tier-showcase-card:nth-child(6) { --stagger: 300ms; }
+
+/* Restore hover lift after reveal completes */
+.tier-showcase.visible .tier-showcase-card:hover {
+  transform: translateY(-8px);
+}
+
+/* --- Proof stats (3 stats, 60ms apart) ---
+     proof-stat also lacks .reveal; same pattern as tier-showcase-card */
+.proof-stats .proof-stat {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.55s cubic-bezier(0.22, 1, 0.36, 1),
+              transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: var(--stagger, 0ms);
+}
+
+.proof-stats.visible .proof-stat {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.proof-stats .proof-stat:nth-child(1) { --stagger: 0ms; }
+.proof-stats .proof-stat:nth-child(2) { --stagger: 60ms; }
+.proof-stats .proof-stat:nth-child(3) { --stagger: 120ms; }
+.proof-stats .proof-stat:nth-child(4) { --stagger: 180ms; }
+
+/* --- Hero headline lines & sub copy ---
+     Override animation-delay on existing heroFadeUp keyframes */
+.hero-headline .line-black { --stagger: 0ms; }
+.hero-headline .line-light { --stagger: 120ms; }
+.hero-sub  { --stagger: 240ms; }
+.hero-ctas { --stagger: 360ms; }
+
+.hero-headline .line-black,
+.hero-headline .line-light,
+.hero-sub,
+.hero-ctas {
+  animation: heroFadeUp 0.7s cubic-bezier(0.22, 1, 0.36, 1) var(--stagger, 0ms) both;
+}
+
+/* ------------------------------------------------------------
+   Hero scroll hint — animated down indicator
+   ------------------------------------------------------------ */
+.hero-scroll-hint {
+  position: absolute;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  opacity: 0.4;
+  animation: scrollHintBounce 2s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.hero-scroll-hint-line {
+  width: 1px;
+  height: 32px;
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.6), transparent);
+}
+
+@keyframes scrollHintBounce {
+  0%, 100% { transform: translateX(-50%) translateY(0); opacity: 0.4; }
+  50% { transform: translateX(-50%) translateY(6px); opacity: 0.6; }
+}
+
+/* ------------------------------------------------------------
+   Tier earn range — per-visit earnings on tier showcase cards
+   ------------------------------------------------------------ */
+.tier-earn-range {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--champagne, #c9a96e);
+  letter-spacing: 0.04em;
+  margin-top: var(--space-2);
+}
+
+/* Override for obsidian (dark bg) — champagne reads fine */
+.tier-card--obsidian .tier-earn-range {
+  color: var(--champagne, #c9a96e);
+}
+
+/* ------------------------------------------------------------
+   Tier progression path — Start free to Top 1%
+   ------------------------------------------------------------ */
+.tier-progression {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+  padding: var(--space-4) 0;
+  border-top: 1px solid rgba(0, 48, 73, 0.1);
+  margin-top: var(--space-6);
+}
+
+.tp-step {
+  font-family: var(--font-body);
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  color: rgba(0, 48, 73, 0.55);
+}
+
+.tp-step--highlight {
+  color: var(--champagne, #c9a96e);
+  font-weight: 700;
+}
+
+.tp-arrow {
+  color: rgba(0, 48, 73, 0.2);
+  font-size: 12px;
+}
