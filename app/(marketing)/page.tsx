@@ -386,9 +386,9 @@ export default function LandingPage() {
               className="stat-item reveal"
               style={{ transitionDelay: "200ms" }}
             >
-              <span className="stat-num">35%</span>
+              <span className="stat-num">24h</span>
               <span className="stat-label">
-                Platform margin target per campaign
+                Campaign live — from signup to first creator
               </span>
             </div>
           </div>

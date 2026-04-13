@@ -1,0 +1,401 @@
+/* ============================================================
+   For Merchants — Page-specific styles
+   Extends landing.css; no new design tokens introduced.
+   ============================================================ */
+
+/* ── Hero ─────────────────────────────────────────────────── */
+.merch-hero {
+  min-height: 100svh;
+  background: var(--dark);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding-top: 64px;
+  padding-bottom: var(--space-10);
+  position: relative;
+  overflow: hidden;
+}
+
+.merch-hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+      ellipse 60% 50% at 80% 20%,
+      rgba(193, 18, 31, 0.06) 0%,
+      transparent 65%
+    ),
+    radial-gradient(
+      ellipse 40% 30% at 10% 90%,
+      rgba(102, 155, 188, 0.05) 0%,
+      transparent 60%
+    );
+  pointer-events: none;
+  z-index: 0;
+}
+
+.merch-hero-inner {
+  position: relative;
+  z-index: 1;
+  padding-top: var(--space-10);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-10);
+  align-items: start;
+}
+
+.merch-hero-content {
+  max-width: 560px;
+}
+
+.merch-eyebrow {
+  color: var(--primary);
+  margin-bottom: var(--space-4);
+}
+
+.merch-headline {
+  font-family: var(--font-display);
+  font-size: clamp(56px, 9vw, 128px);
+  letter-spacing: -0.06em;
+  line-height: 0.9;
+  color: #fff;
+  margin-bottom: var(--space-5);
+}
+
+.mh-black {
+  font-weight: 900;
+  display: block;
+}
+
+.mh-light {
+  font-weight: 200;
+  display: block;
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.merch-sub {
+  font-size: var(--text-body);
+  color: rgba(255, 255, 255, 0.45);
+  max-width: 460px;
+  line-height: 1.8;
+  margin-bottom: var(--space-5);
+}
+
+.merch-ctas {
+  display: flex;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+  margin-bottom: var(--space-3);
+}
+
+.merch-ghost {
+  color: rgba(255, 255, 255, 0.55);
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+.merch-ghost:hover {
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+.merch-reassure {
+  font-size: var(--text-caption);
+  color: rgba(255, 255, 255, 0.25);
+  letter-spacing: 0.02em;
+}
+
+/* ── Proof stat cards ──────────────────────────────────────── */
+.merch-hero-proof {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-2);
+  align-content: start;
+  padding-top: var(--space-5);
+}
+
+.merch-proof-card {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  padding: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  transition: background var(--t-base);
+}
+
+.merch-proof-card:hover {
+  background: rgba(255, 255, 255, 0.07);
+}
+
+.merch-proof-num {
+  font-family: var(--font-display);
+  font-size: clamp(36px, 4vw, 52px);
+  font-weight: 200;
+  letter-spacing: -0.05em;
+  line-height: 1;
+  color: #fff;
+}
+
+.merch-proof-label {
+  font-size: var(--text-small);
+  color: rgba(255, 255, 255, 0.6);
+  line-height: 1.4;
+}
+
+.merch-proof-sub {
+  font-size: var(--text-caption);
+  color: rgba(255, 255, 255, 0.25);
+  letter-spacing: 0.02em;
+}
+
+/* ── ROI Visual ────────────────────────────────────────────── */
+.roi-visual {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--space-3);
+  padding: var(--space-6) var(--space-4) 0;
+  height: 100%;
+  min-height: 280px;
+  border-bottom: 1px solid var(--line);
+  position: relative;
+}
+
+.roi-bar-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  flex: 1;
+}
+
+.roi-bar-cost {
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--text-muted);
+  letter-spacing: 0.02em;
+  text-align: center;
+}
+
+.roi-bar {
+  width: 100%;
+  transition: transform var(--t-slow);
+}
+
+.roi-bar-wrap:last-child .roi-bar-cost {
+  color: var(--primary);
+  font-weight: 700;
+}
+
+.roi-bar-label {
+  font-family: var(--font-body);
+  font-size: var(--text-caption);
+  color: var(--text-muted);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+.roi-bar-wrap:last-child .roi-bar-label {
+  color: var(--primary);
+}
+
+/* ── Attribution flow ──────────────────────────────────────── */
+.attr-flow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin: var(--space-8) 0;
+  flex-wrap: wrap;
+  row-gap: var(--space-3);
+}
+
+.attr-step {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.attr-step-num {
+  width: 28px;
+  height: 28px;
+  background: var(--primary);
+  color: #fff;
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.attr-step-label {
+  font-family: var(--font-body);
+  font-size: var(--text-small);
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.75);
+  letter-spacing: 0.02em;
+}
+
+.attr-step-arrow {
+  font-size: 16px;
+  color: rgba(255, 255, 255, 0.2);
+  margin-left: var(--space-2);
+}
+
+/* ── How-it-works steps grid ───────────────────────────────── */
+.merch-steps-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-4);
+  margin-top: var(--space-8);
+}
+
+.merch-step {
+  border-top: 2px solid rgba(255, 255, 255, 0.12);
+  padding-top: var(--space-4);
+}
+
+.merch-step-n {
+  font-family: var(--font-body);
+  font-size: var(--text-eyebrow);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--primary);
+  display: block;
+  margin-bottom: var(--space-3);
+}
+
+.merch-step-title {
+  font-family: var(--font-display);
+  font-size: var(--text-h4);
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: -0.02em;
+  margin-bottom: var(--space-2);
+}
+
+.merch-step-body {
+  font-size: var(--text-small);
+  color: rgba(255, 255, 255, 0.45);
+  line-height: 1.7;
+}
+
+/* ── Comparison table ──────────────────────────────────────── */
+.merch-compare {
+  border: 1px solid var(--line);
+  background: var(--surface-elevated);
+  overflow-x: auto;
+}
+
+.compare-header,
+.compare-row {
+  display: grid;
+  grid-template-columns: 1fr 110px 110px 110px 110px;
+  gap: 0;
+  border-bottom: 1px solid var(--line);
+  min-width: 560px;
+}
+
+.compare-header:last-child,
+.compare-row:last-child {
+  border-bottom: none;
+}
+
+.compare-header {
+  background: var(--surface-muted);
+}
+
+.compare-feature-col {
+  padding: var(--space-3) var(--space-4);
+  font-size: var(--text-small);
+  color: var(--dark);
+  display: flex;
+  align-items: center;
+  border-right: 1px solid var(--line);
+}
+
+.compare-col {
+  padding: var(--space-3) var(--space-3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-right: 1px solid var(--line);
+  font-size: var(--text-eyebrow);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.compare-col:last-child {
+  border-right: none;
+}
+
+.compare-col--push {
+  background: rgba(193, 18, 31, 0.04);
+  color: var(--primary);
+  border-right: 1px solid rgba(193, 18, 31, 0.15);
+}
+
+.compare-header .compare-col--push {
+  background: rgba(193, 18, 31, 0.08);
+}
+
+/* ── Plan ROI note ─────────────────────────────────────────── */
+.merch-plan-roi {
+  font-size: var(--text-caption);
+  color: var(--primary);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  margin-bottom: var(--space-3);
+  padding: var(--space-1) var(--space-2);
+  background: rgba(193, 18, 31, 0.06);
+  border-left: 2px solid var(--primary);
+}
+
+/* ── Final CTA ─────────────────────────────────────────────── */
+.merch-final-cta {
+  padding-block: var(--space-15);
+}
+
+.merch-cta-inner {
+  max-width: 640px;
+}
+
+/* ── Responsive ────────────────────────────────────────────── */
+@media (max-width: 900px) {
+  .merch-hero-inner {
+    grid-template-columns: 1fr;
+    gap: var(--space-8);
+  }
+
+  .merch-hero-proof {
+    grid-template-columns: repeat(4, 1fr);
+    padding-top: 0;
+  }
+
+  .merch-steps-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .merch-hero-proof {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .merch-steps-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .attr-flow {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .attr-step-arrow {
+    display: none;
+  }
+}

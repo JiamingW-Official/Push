@@ -6,9 +6,9 @@ import styles from "./Header.module.css";
 
 const NAV_LINKS = [
   { label: "Home", href: "/" },
-  { label: "For Merchants", href: "#merchants" },
-  { label: "For Creators", href: "#creators" },
-  { label: "Pricing", href: "#pricing" },
+  { label: "For Merchants", href: "/for-merchants" },
+  { label: "For Creators", href: "/creator/signup" },
+  { label: "Pricing", href: "/#pricing" },
 ];
 
 export default function Header() {
@@ -21,7 +21,7 @@ export default function Header() {
   useEffect(() => {
     const onScroll = () => {
       const y = window.scrollY;
-      setScrolled(y > 50);
+      setScrolled(y > 30);
       setHidden(y > 500 && y > lastY.current);
       lastY.current = y;
     };

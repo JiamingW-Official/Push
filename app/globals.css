@@ -349,18 +349,20 @@ p  { font-size: var(--text-body); line-height: 1.7; }
 }
 
 /* ------------------------------------------------------------
-   8. Scroll reveal (CSS-driven, GSAP enhances)
+   8. Scroll reveal (CSS-driven, IntersectionObserver adds .visible)
    ------------------------------------------------------------ */
 .reveal {
   opacity: 0;
-  transform: translateY(40px);
+  transform: translateY(32px);
   transition:
-    opacity var(--t-reveal),
-    transform var(--t-reveal);
+    opacity 0.65s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.65s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: opacity, transform;
 }
+/* !important prevents cascade conflicts from page-specific CSS */
 .reveal.visible {
-  opacity: 1;
-  transform: translateY(0);
+  opacity: 1 !important;
+  transform: translateY(0) !important;
 }
 
 /* ------------------------------------------------------------

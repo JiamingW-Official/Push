@@ -83,6 +83,8 @@ export default function CreatorSignupPage() {
 
   const [fields, setFields] = useState<Field>(EMPTY);
   const [errors, setErrors] = useState<Partial<Field>>({});
+  const [termsAgreed, setTermsAgreed] = useState(false);
+  const [termsError, setTermsError] = useState("");
   const [touched, setTouched] = useState<Partial<Record<keyof Field, boolean>>>(
     {},
   );
@@ -134,6 +136,11 @@ export default function CreatorSignupPage() {
     if (fields.confirm !== fields.password)
       errs.confirm = "Passwords don't match — double-check and try again.";
     setErrors(errs);
+    if (!termsAgreed) {
+      setTermsError("Please agree to the Terms & Privacy Policy to continue.");
+    } else {
+      setTermsError("");
+    }
     // Mark all required fields as touched
     setTouched({
       name: true,
@@ -142,7 +149,7 @@ export default function CreatorSignupPage() {
       password: true,
       confirm: true,
     });
-    return Object.keys(errs).length === 0;
+    return Object.keys(errs).length === 0 && termsAgreed;
   }
 
   function handleRetry() {
@@ -296,12 +303,14 @@ export default function CreatorSignupPage() {
                     <div className="field-wrap">
                       <input
                         id="name"
+                        name="name"
                         type="text"
                         value={fields.name}
                         onChange={set("name")}
                         onBlur={() => handleBlur("name")}
                         placeholder="Your full name"
                         autoComplete="name"
+                        required
                         aria-describedby={errors.name ? "err-name" : undefined}
                       />
                       {fieldStatus.name === "valid" && (
@@ -320,12 +329,14 @@ export default function CreatorSignupPage() {
                     <div className="field-wrap">
                       <input
                         id="location"
+                        name="location"
                         type="text"
                         value={fields.location}
                         onChange={set("location")}
                         onBlur={() => handleBlur("location")}
                         placeholder="e.g. Williamsburg, NYC"
                         autoComplete="address-level2"
+                        required
                         aria-describedby={
                           errors.location ? "err-location" : undefined
                         }
@@ -354,12 +365,14 @@ export default function CreatorSignupPage() {
                   <div className="field-wrap">
                     <input
                       id="email"
+                      name="email"
                       type="email"
                       value={fields.email}
                       onChange={set("email")}
                       onBlur={() => handleBlur("email")}
                       placeholder="you@example.com"
                       autoComplete="email"
+                      required
                       aria-describedby={errors.email ? "err-email" : undefined}
                     />
                     {fieldStatus.email === "valid" && (
@@ -379,12 +392,14 @@ export default function CreatorSignupPage() {
                     <div className="input-with-action">
                       <input
                         id="password"
+                        name="password"
                         type={showPw ? "text" : "password"}
                         value={fields.password}
                         onChange={set("password")}
                         onBlur={() => handleBlur("password")}
                         placeholder="Min 8 characters"
                         autoComplete="new-password"
+                        required
                         aria-describedby={
                           errors.password
                             ? "err-password"
@@ -432,12 +447,14 @@ export default function CreatorSignupPage() {
                     <div className="input-with-action">
                       <input
                         id="confirm"
+                        name="confirm"
                         type={showConfirm ? "text" : "password"}
                         value={fields.confirm}
                         onChange={set("confirm")}
                         onBlur={() => handleBlur("confirm")}
                         placeholder="Repeat password"
                         autoComplete="new-password"
+                        required
                         aria-describedby={
                           errors.confirm ? "err-confirm" : undefined
                         }
@@ -478,6 +495,7 @@ export default function CreatorSignupPage() {
                   <div className="field-wrap">
                     <input
                       id="instagram"
+                      name="instagram"
                       type="text"
                       value={fields.instagram}
                       onChange={set("instagram")}
@@ -523,6 +541,36 @@ export default function CreatorSignupPage() {
                 <p className="trust-line">
                   Free to join · No follower minimum · 200+ local campaigns
                 </p>
+
+                {/* Terms consent — required before signup */}
+                <div className="form-field terms-field">
+                  <label className="terms-label">
+                    <input
+                      id="terms"
+                      name="terms"
+                      type="checkbox"
+                      checked={termsAgreed}
+                      onChange={(e) => {
+                        setTermsAgreed(e.target.checked);
+                        if (e.target.checked) setTermsError("");
+                      }}
+                      required
+                    />
+                    <span>
+                      I agree to the{" "}
+                      <Link href="/terms" target="_blank">
+                        Terms of Service
+                      </Link>{" "}
+                      and{" "}
+                      <Link href="/privacy" target="_blank">
+                        Privacy Policy
+                      </Link>
+                    </span>
+                  </label>
+                  {termsError && (
+                    <span className="error-msg">{termsError}</span>
+                  )}
+                </div>
 
                 <button
                   ref={submitBtnRef}

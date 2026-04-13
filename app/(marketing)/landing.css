@@ -968,20 +968,6 @@
 }
 
 /* ============================================================
-   Scroll reveal — .reveal / .reveal.visible
-   ============================================================ */
-.reveal {
-  opacity: 0;
-  transform: translateY(24px);
-  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
-}
-
-.reveal.visible {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-/* ============================================================
    Visual — Creator section enhancements
    ============================================================ */
 .visual-creator {
