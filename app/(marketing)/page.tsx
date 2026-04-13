@@ -1020,6 +1020,14 @@ export default function LandingPage() {
                   </div>
                 </div>
 
+                <blockquote className="creator-testimonial">
+                  <p>
+                    &ldquo;I earned $320 last month just visiting restaurants
+                    I&apos;d go to anyway.&rdquo;
+                  </p>
+                  <cite>— @maya.eats.nyc · Operator Tier</cite>
+                </blockquote>
+
                 <Link href="/creator/signup" className="btn btn-secondary">
                   Join as Creator — Start Free
                 </Link>
