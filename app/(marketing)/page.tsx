@@ -374,9 +374,13 @@ function TierShowcaseGrid() {
       {TIER_SHOWCASE_DATA.map((tier) => (
         <div
           key={tier.name}
-          className={`tier-showcase-card${tier.highlight ? " tier-showcase-card--current" : ""}${tier.material === "Obsidian" ? " tier-obsidian" : ""}`}
+          className={`tier-showcase-card tier-card--${tier.material.toLowerCase()}${tier.highlight ? " tier-showcase-card--current" : ""}`}
           style={{ "--tier-color": tier.color } as React.CSSProperties}
         >
+          {/* "Start here" badge for Clay (entry) tier */}
+          {tier.material === "Clay" && (
+            <span className="tier-entry-badge">Start here</span>
+          )}
           {/* Material color swatch — replaces emoji */}
           <span
             className="tier-showcase-swatch"
@@ -566,7 +570,7 @@ export default function LandingPage() {
             <h1 className="hero-headline">
               <span className="line-black">Turn creators</span>
               <span className="line-light">
-                into <em>results.</em>
+                into <em data-text="results.">results.</em>
               </span>
             </h1>
 
