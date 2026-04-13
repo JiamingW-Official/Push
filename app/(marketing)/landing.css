@@ -937,20 +937,6 @@
   .hero-headline {
     font-size: clamp(38px, 11vw, 52px);
   }
-
-  /* Stats: single column */
-  .hero-stats { grid-template-columns: 1fr; }
-
-  .stat-item {
-    border-right: none;
-    padding-right: 0;
-    padding-left: 0 !important;
-    border-top: 1px solid rgba(255, 255, 255, 0.08);
-    padding-top: var(--space-3);
-  }
-
-  .stat-item:first-child { border-top: none; padding-top: 0; }
-  .stat-item:last-child  { grid-column: 1; }
 }
 
 /* ============================================================
@@ -1872,3 +1858,33 @@
 .btn-ghost:hover {
   box-shadow: 3px 3px 0 rgba(0, 48, 73, 0.22);
 }
+
+/* ============================================================
+   Audit fixes #33-#35 #38
+   ============================================================ */
+
+/* #33 — Button press feedback
+   Note: .btn:active is defined in globals.css; no duplicate needed here */
+
+/* #34 — Card hover lift: see .pricing-card:hover and .tier-showcase-card:hover above */
+
+/* #35 — Link underline slide-in animation */
+a:not(.btn):not([class*="btn"]) {
+  position: relative;
+  text-decoration: none;
+}
+a:not(.btn):not([class*="btn"])::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: currentColor;
+  transition: width 300ms ease;
+}
+a:not(.btn):not([class*="btn"]):hover::after {
+  width: 100%;
+}
+
+/* #38 — Popular pricing card: see .pricing-card-featured above */
