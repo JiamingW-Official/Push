@@ -484,7 +484,11 @@ export default function LandingPage() {
                 Join as Creator — Free
               </Link>
             </div>
-            <a href="/demo/creator" className="hero-demo-link link-underline">
+            <a
+              href="/demo/creator"
+              className="hero-demo-link link-underline"
+              style={{ color: "var(--tertiary)" }}
+            >
               or try the demo — no account needed →
             </a>
           </div>
@@ -587,10 +591,10 @@ export default function LandingPage() {
 
               <ul className="feature-list">
                 {[
-                  "Creators matched by performance score, location, and tier",
-                  "QR-code attribution — zero ops burden on your side",
-                  "Campaign live in under 24 hours",
-                  "Starter at $19.99/mo, Growth at $69, Pro at $199",
+                  "87% creator match rate within 2 miles of your business",
+                  "QR attribution — zero ops burden, every scan logged",
+                  "Campaign live in under 24 hours, from signup to first creator",
+                  "From $19.99/mo — no setup fees, no agency markup",
                 ].map((f) => (
                   <li key={f} className="feature-item">
                     <span className="feature-dot" />
@@ -602,6 +606,26 @@ export default function LandingPage() {
               <Link href="/merchant/signup" className="btn btn-primary">
                 Get Started
               </Link>
+              <p
+                style={{
+                  marginTop: "var(--space-3)",
+                  fontSize: "12px",
+                  color: "var(--text-muted)",
+                  fontFamily: "var(--font-body)",
+                }}
+              >
+                Curious what creators see?{" "}
+                <Link
+                  href="/creator/signup"
+                  style={{
+                    color: "var(--tertiary)",
+                    textDecoration: "underline",
+                    textUnderlineOffset: "3px",
+                  }}
+                >
+                  Preview the creator experience →
+                </Link>
+              </p>
             </div>
 
             <div
@@ -712,6 +736,26 @@ export default function LandingPage() {
                 <Link href="/creator/signup" className="btn btn-secondary">
                   Join as Creator — Start Free
                 </Link>
+                <p
+                  style={{
+                    marginTop: "var(--space-3)",
+                    fontSize: "12px",
+                    color: "rgba(255,255,255,0.3)",
+                    fontFamily: "var(--font-body)",
+                  }}
+                >
+                  Own a business?{" "}
+                  <Link
+                    href="/for-merchants"
+                    style={{
+                      color: "var(--tertiary)",
+                      textDecoration: "underline",
+                      textUnderlineOffset: "3px",
+                    }}
+                  >
+                    See what merchants offer →
+                  </Link>
+                </p>
               </div>
             </div>
           </div>
@@ -905,8 +949,8 @@ export default function LandingPage() {
                 <span className="wt-300">is already on Instagram.</span>
               </h2>
               <p className="cta-body">
-                Launch a campaign in under 24 hours. Pay only for verified
-                results. No agency fees. No guesswork.
+                NYC founding cohort — limited spots. Launch in under 24 hours.
+                Pay only for verified results. No agency fees.
               </p>
               <Link href="/merchant/signup" className="btn btn-cta-merchant">
                 Start for $19.99 / mo
@@ -923,8 +967,8 @@ export default function LandingPage() {
                 <span className="wt-300">is your edge.</span>
               </h2>
               <p className="cta-body">
-                From free product to $100/campaign — your performance score is
-                your currency. Build it, and better campaigns come to you.
+                First 50 creators get priority campaign access. Your performance
+                score is your currency — build it from zero.
               </p>
               <Link href="/creator/signup" className="btn btn-cta-creator">
                 Join Free — Start Earning

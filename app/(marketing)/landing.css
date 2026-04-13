@@ -149,7 +149,10 @@
 }
 
 .section-warm {
-  background: var(--dark);
+  background:
+    radial-gradient(ellipse 70% 55% at 15% 50%, rgba(102, 155, 188, 0.06) 0%, transparent 65%),
+    radial-gradient(ellipse 50% 40% at 85% 20%, rgba(193, 18, 31, 0.04) 0%, transparent 60%),
+    var(--dark);
   color: var(--surface);
 }
 
@@ -446,7 +449,7 @@
 }
 
 .how-step {
-  background: #fff;
+  background: var(--surface-elevated);
   padding: var(--space-8) var(--space-6);
   position: relative;
   overflow: hidden;
@@ -455,8 +458,8 @@
 }
 
 .how-step:hover {
-  background: rgba(0, 48, 73, 0.012);
-  transform: translateY(-3px);
+  background: rgba(0, 48, 73, 0.025);
+  transform: translateY(-6px);
 }
 
 /* Left accent bar — grows on hover */
@@ -682,7 +685,7 @@
    ------------------------------------------------------------ */
 .cta-section {
   padding-block: var(--space-15);
-  background: #fff;
+  background: var(--surface-bright);
   position: relative;
   overflow: hidden;
 }
@@ -886,7 +889,7 @@
 @media (max-width: 640px) {
   /* Hero */
   .hero-headline {
-    font-size: clamp(44px, 13vw, 72px);
+    font-size: clamp(44px, 12vw, 64px);
   }
 
   .hero-sub { font-size: 14px; }
@@ -894,6 +897,7 @@
   .hero-ctas {
     flex-direction: column;
     align-items: stretch;
+    gap: 12px;
   }
 
   .hero-ctas .btn {
@@ -1082,7 +1086,7 @@
 }
 
 .tier-showcase-card:hover {
-  transform: translateY(-4px);
+  transform: translateY(-6px);
   box-shadow: 0 8px 24px rgba(0, 48, 73, 0.1);
 }
 
