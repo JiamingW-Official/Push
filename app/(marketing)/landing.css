@@ -2049,6 +2049,14 @@
 }
 
 /* ============================================================
+   Stagger support: apply --stagger CSS variable to .reveal
+   transition-delay so nth-child rules can sequence animations
+   ============================================================ */
+.reveal {
+  transition-delay: var(--stagger, 0ms);
+}
+
+/* ============================================================
    Failsafe: ensure .reveal elements become visible after 2.5s
    even if IntersectionObserver JS fails to fire (#01 #02)
    ============================================================ */
@@ -2644,6 +2652,54 @@ a:not(.btn):not([class*="btn"]):hover::after {
 @keyframes ctaGlow {
   0%, 100% { box-shadow: 0 0 0 0 rgba(193, 18, 31, 0); }
   50%       { box-shadow: 0 0 20px 4px rgba(193, 18, 31, 0.18); }
+}
+
+/* ------------------------------------------------------------
+   Merchant ROI math + guarantee badge
+   ------------------------------------------------------------ */
+.roi-math {
+  padding: var(--space-3) var(--space-4);
+  background: rgba(201, 169, 110, 0.06);
+  border-left: 3px solid var(--champagne, #c9a96e);
+  margin-top: var(--space-4);
+}
+
+.roi-example {
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: rgba(0, 48, 73, 0.7);
+  line-height: 1.5;
+}
+
+.roi-example strong {
+  color: var(--champagne, #c9a96e);
+  font-weight: 700;
+}
+
+.guarantee-badge {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid rgba(193, 18, 31, 0.15);
+  background: rgba(193, 18, 31, 0.04);
+  margin-top: var(--space-5);
+}
+
+.guarantee-icon {
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: var(--primary);
+  font-weight: 700;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.guarantee-badge span:last-child {
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: rgba(0, 48, 73, 0.75);
+  line-height: 1.5;
 }
 
 .hero .btn-primary {

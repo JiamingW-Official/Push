@@ -1463,6 +1463,13 @@ export default function LandingPage() {
               >
                 ⚡ NYC Founding Cohort — Limited spots
               </span>
+              <div className="guarantee-badge">
+                <span className="guarantee-icon">✓</span>
+                <span>
+                  Only pay for verified, QR-confirmed visits. Zero spend on
+                  reach alone.
+                </span>
+              </div>
               <Link href="/merchant/signup" className="btn btn-cta-merchant">
                 Start for $19.99 / mo
               </Link>
