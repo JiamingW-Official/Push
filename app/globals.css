@@ -698,8 +698,8 @@ p  { font-size: var(--text-body); line-height: 1.6; }
    Skip navigation link (accessibility)
    ------------------------------------------------------------ */
 .skip-nav {
-  position: absolute;
-  top: -40px;
+  position: fixed;
+  top: -60px;
   left: 16px;
   background: var(--primary);
   color: #fff;
