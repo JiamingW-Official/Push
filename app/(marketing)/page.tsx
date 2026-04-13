@@ -374,9 +374,13 @@ function TierShowcaseGrid() {
       {TIER_SHOWCASE_DATA.map((tier) => (
         <div
           key={tier.name}
-          className={`tier-showcase-card${tier.highlight ? " tier-showcase-card--current" : ""}${tier.material === "Obsidian" ? " tier-obsidian" : ""}`}
+          className={`tier-showcase-card tier-card--${tier.material.toLowerCase()}${tier.highlight ? " tier-showcase-card--current" : ""}`}
           style={{ "--tier-color": tier.color } as React.CSSProperties}
         >
+          {/* "Start here" badge for Clay (entry) tier */}
+          {tier.material === "Clay" && (
+            <span className="tier-entry-badge">Start here</span>
+          )}
           {/* Material color swatch — replaces emoji */}
           <span
             className="tier-showcase-swatch"

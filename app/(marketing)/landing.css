@@ -1196,6 +1196,43 @@
   letter-spacing: 0.01em;
 }
 
+/* Tier-specific top border accents + progression opacity */
+.tier-card--clay    { border-top: 3px solid #b8a99a; opacity: 0.85; }
+.tier-card--bronze  { border-top: 3px solid #8c6239; opacity: 0.9; }
+.tier-card--steel   { border-top: 3px solid #4a5568; opacity: 0.95; }
+.tier-card--gold    { border-top: 3px solid var(--champagne); opacity: 1; }
+.tier-card--ruby    { border-top: 3px solid #9b1b30; opacity: 1; }
+.tier-card--obsidian {
+  border-top: 3px solid #1a1a2e;
+  background: #1a1a2e;
+  color: #f5f2ec;
+  opacity: 1;
+}
+.tier-card--obsidian .tier-showcase-material,
+.tier-card--obsidian .tier-showcase-name,
+.tier-card--obsidian .tier-showcase-earn,
+.tier-card--obsidian .tier-showcase-desc {
+  color: #f5f2ec;
+}
+.tier-card--obsidian .tier-showcase-desc {
+  color: rgba(245, 242, 236, 0.6);
+}
+
+/* "Start here" badge on Clay tier */
+.tier-entry-badge {
+  display: inline-block;
+  background: rgba(184, 169, 154, 0.15);
+  border: 1px solid rgba(184, 169, 154, 0.4);
+  font-family: var(--font-body);
+  font-size: 9px;
+  font-weight: 700;
+  padding: 2px 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #8c7a6b;
+  margin-bottom: 4px;
+}
+
 /* ============================================================
    Earning Preview — earning potential rows
    ============================================================ */
