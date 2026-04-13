@@ -287,6 +287,7 @@ function TierShowcaseGrid() {
         <div
           key={tier.name}
           className={`tier-showcase-card${tier.highlight ? " tier-showcase-card--current" : ""}`}
+          style={{ "--tier-color": tier.color } as React.CSSProperties}
         >
           {/* Material color swatch — replaces emoji */}
           <span
@@ -370,6 +371,40 @@ function HeroCampaignPreview() {
   );
 }
 
+function FAQSection() {
+  return (
+    <section className="section section-bright faq-section">
+      <div className="container">
+        <div className="reveal">
+          <div className="section-tag">
+            <span className="section-ghost-num" aria-hidden="true">
+              05
+            </span>
+            <span className="section-tag-num">05</span>
+            <span className="section-tag-line" />
+            <span className="section-tag-label">FAQ</span>
+          </div>
+          <h2>
+            Common questions.
+            <br />
+            <span style={{ fontWeight: 300, opacity: 0.45 }}>
+              Straight answers.
+            </span>
+          </h2>
+        </div>
+        <div className="faq-grid reveal" style={{ transitionDelay: "100ms" }}>
+          {FAQ_ITEMS.map((item, i) => (
+            <div key={i} className="faq-item">
+              <p className="faq-q">{item.q}</p>
+              <p className="faq-a">{item.a}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 /* ── Ticker items ─────────────────────────────────────────── */
 const TICKER_ITEMS = [
   "QR Attribution",
@@ -386,6 +421,33 @@ const TICKER_ITEMS = [
   "$100 / Campaign Potential",
 ];
 
+const FAQ_ITEMS = [
+  {
+    q: "How does the QR code attribution work?",
+    a: "Each creator gets a unique QR code linked to their campaign. When a customer scans it at the point of purchase, that transaction is attributed directly to that creator. Push logs every scan — no manual tracking needed.",
+  },
+  {
+    q: "Do creators need a large following to join?",
+    a: "No. Push is performance-based, not follower-based. Seed tier requires zero followers. Your performance score (built through completed campaigns and verified transactions) determines your tier and earning potential.",
+  },
+  {
+    q: "How are payouts calculated and released?",
+    a: "Payouts = flat campaign fee + transaction commission + optional milestone bonus. Funds are released automatically after verification — typically within 48 hours of campaign end.",
+  },
+  {
+    q: "What does it cost to launch a campaign as a merchant?",
+    a: "Starter at $19.99/mo (2 campaigns, 3 creator slots), Growth at $69/mo (4 campaigns, 5 slots), Pro at $199/mo (unlimited). No setup fees. No agency markup. Cancel anytime.",
+  },
+  {
+    q: "How do you prevent fraud or fake QR scans?",
+    a: "Push uses transaction-level verification — a scan only counts when it's accompanied by a real purchase. We cross-reference scan timestamps, device fingerprints, and purchase data to flag anomalies.",
+  },
+  {
+    q: "How fast can I launch a campaign?",
+    a: "From signup to live campaign: under 24 hours. Push handles creator matching — you set the goal, budget, and payout. We surface qualified creators based on score, tier, and proximity.",
+  },
+];
+
 export default function LandingPage() {
   return (
     <>
@@ -398,7 +460,7 @@ export default function LandingPage() {
           {/* Left: content */}
           <div className="hero-content">
             <p className="eyebrow hero-eyebrow">
-              NYC&apos;s Creator Acquisition Engine
+              NYC&apos;s Local Creator Marketplace
             </p>
 
             {/* Weight contrast: Black 900 / Thin 200 */}
@@ -410,9 +472,8 @@ export default function LandingPage() {
             </h1>
 
             <p className="hero-sub">
-              Push matches local businesses with creators who drive real foot
-              traffic — verified by QR code attribution at the transaction
-              level.
+              Creators post. Customers show up. You only pay when it works —
+              verified by QR code attribution at every transaction.
             </p>
 
             <div className="hero-ctas">
@@ -423,7 +484,7 @@ export default function LandingPage() {
                 Join as Creator — Free
               </Link>
             </div>
-            <a href="/demo/creator" className="hero-demo-link">
+            <a href="/demo/creator" className="hero-demo-link link-underline">
               or try the demo — no account needed →
             </a>
           </div>
@@ -474,6 +535,28 @@ export default function LandingPage() {
               ))}
             </div>
           ))}
+        </div>
+      </div>
+
+      {/* ── Social Proof ────────────────────────────────────────── */}
+      <div className="proof-strip">
+        <div className="container proof-strip-inner">
+          <span className="proof-strip-label">TRUSTED BY NYC BUSINESSES</span>
+          <div className="proof-logos">
+            {[
+              "Ramen & Co.",
+              "Bloom Florals",
+              "The Roast Room",
+              "Bodega Azul",
+            ].map((name) => (
+              <span key={name} className="proof-logo-pill">
+                {name}
+              </span>
+            ))}
+          </div>
+          <span className="proof-strip-note">
+            Early access cohort · NYC-first
+          </span>
         </div>
       </div>
 
@@ -808,6 +891,8 @@ export default function LandingPage() {
           </div>
         </div>
       </section>
+
+      <FAQSection />
 
       {/* ── Final CTA ────────────────────────────────────────── */}
       <section className="cta-section">
