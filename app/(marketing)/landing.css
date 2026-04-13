@@ -747,13 +747,24 @@
 
 .cta-panel-merchant {
   background: var(--dark);
-  color: var(--surface);
+  color: var(--pearl);
+  padding: var(--space-8);
+  position: relative;
+  overflow: hidden;
+}
+
+.cta-panel-merchant::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 60% 50% at 100% 50%, rgba(193,18,31,0.08), transparent 70%);
+  pointer-events: none;
 }
 
 .cta-panel-creator {
-  background: var(--surface);
-  border: 1px solid var(--line);
-  border-left: none;
+  background: var(--surface-bright);
+  border-left: 1px solid var(--line);
+  padding: var(--space-8);
 }
 
 .cta-tag {
@@ -1643,9 +1654,15 @@
    Social Proof Strip
    ============================================================ */
 .proof-strip {
-  background: var(--surface);
-  border-bottom: 1px solid var(--line);
-  padding-block: var(--space-3);
+  background: var(--surface-elevated);
+  border: 1px solid var(--line);
+  border-left: 4px solid var(--primary);
+  padding: var(--space-5) var(--space-6);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-6);
+  flex-wrap: wrap;
 }
 
 .proof-strip-inner {
@@ -1685,12 +1702,13 @@
 }
 
 .proof-strip-note {
-  font-family: var(--font-body);
   font-size: 10px;
-  color: var(--tertiary);
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  flex-shrink: 0;
+  color: var(--text-muted);
+  opacity: 0.6;
+  text-align: center;
+  display: block;
+  margin-top: var(--space-2);
+  letter-spacing: 0.04em;
 }
 
 /* Traction stats row */
@@ -1708,36 +1726,37 @@
 .proof-stat {
   display: flex;
   flex-direction: column;
+  align-items: center;
+  text-align: center;
   gap: 2px;
 }
 
 .proof-stat-num {
-  font-family: var(--font-display);
-  font-size: 22px;
-  font-weight: 900;
-  color: var(--flag-red);
-  line-height: 1;
+  font-family: var(--font-display) !important;
+  font-size: 36px !important;
+  font-weight: 900 !important;
+  color: var(--primary) !important;
+  line-height: 1 !important;
   letter-spacing: -0.02em;
 }
 
 .proof-stat-label {
-  font-family: var(--font-body);
-  font-size: 10px;
-  font-weight: 700;
-  color: var(--tertiary);
+  font-size: 11px;
   text-transform: uppercase;
-  letter-spacing: 0.07em;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  margin-top: 4px;
 }
 
 /* NYC market scale hint */
 .market-hint {
   font-family: var(--font-body);
   font-size: 11px;
-  font-weight: 500;
-  color: var(--tertiary);
+  color: var(--text-muted);
+  text-align: center;
   letter-spacing: 0.04em;
-  margin: 0;
-  width: 100%;
+  margin-top: var(--space-3);
+  opacity: 0.7;
 }
 
 /* ============================================================
@@ -2151,3 +2170,137 @@ a:not(.btn):not([class*="btn"]):hover::after {
     transform: rotate(90deg);
   }
 }
+
+/* ============================================================
+   Section depth enhancements — texture, transitions, dividers
+   ============================================================ */
+
+/* Fix 1 — How it Works section subtle diagonal texture */
+#how-it-works {
+  background:
+    repeating-linear-gradient(
+      -45deg,
+      transparent,
+      transparent 40px,
+      rgba(0, 48, 73, 0.015) 40px,
+      rgba(0, 48, 73, 0.015) 41px
+    ),
+    var(--surface-bright);
+}
+
+/* Fix 2 — Hero bottom gradient overlay for smooth dark-to-light transition */
+.hero::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 120px;
+  background: linear-gradient(to bottom, transparent, rgba(0, 48, 73, 0.3));
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Fix 3 — Subtle top-border dividers between light sections */
+.section + .section {
+  border-top: 1px solid rgba(0, 48, 73, 0.06);
+}
+.section-warm + .section,
+.section + .section-warm {
+  border-top: none;
+}
+
+/* Fix 4 — Creator (dark) section ambient glow via pseudo-element */
+.section-warm {
+  position: relative;
+}
+.section-warm::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background:
+    radial-gradient(ellipse 50% 40% at 90% 10%, rgba(193, 18, 31, 0.06) 0%, transparent 60%),
+    radial-gradient(ellipse 40% 30% at 5% 90%, rgba(102, 155, 188, 0.05) 0%, transparent 55%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ============================================================
+   Hero — premium micro-interactions
+   ============================================================ */
+
+/* Fix 1: "results." word shimmer on hover
+   Target: .hero-headline em (italic "results." word, color: var(--primary))
+   Requires data-text attribute on the <em> element for pseudo-content.
+   Falls back gracefully if attribute absent (overlay still animates). */
+.hero-headline em {
+  position: relative;
+  display: inline-block;
+  cursor: default;
+}
+
+.hero-headline em::after {
+  content: attr(data-text);
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    105deg,
+    transparent 30%,
+    rgba(201, 169, 110, 0.6) 50%,
+    transparent 70%
+  );
+  background-size: 200% 100%;
+  background-position: -100% 0;
+  -webkit-background-clip: text;
+  background-clip: text;
+  opacity: 0;
+  transition: opacity 300ms ease;
+  pointer-events: none;
+}
+
+.hero-headline em:hover::after {
+  opacity: 1;
+  background-position: 200% 0;
+  transition: opacity 300ms ease, background-position 600ms ease;
+}
+
+/* Fix 2: Hero eyebrow letter-spacing reveal animation */
+@keyframes eyebrowReveal {
+  from {
+    opacity: 0;
+    letter-spacing: 0.2em;
+  }
+  to {
+    opacity: 1;
+    letter-spacing: 0.08em;
+  }
+}
+
+.hero .section-tag-label,
+.hero-eyebrow {
+  animation: eyebrowReveal 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.3s both;
+}
+
+/* Fix 3: Hero content load animation stagger
+   Applies to direct children of .hero-content.
+   Existing per-element animations (line-black, line-light, hero-sub, hero-ctas)
+   take precedence via specificity; these delays align with the existing sequence. */
+@keyframes heroFadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.hero-content > * {
+  animation: heroFadeUp 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.hero-content > *:nth-child(1) { animation-delay: 0.1s; }
+.hero-content > *:nth-child(2) { animation-delay: 0.2s; }
+.hero-content > *:nth-child(3) { animation-delay: 0.35s; }
+.hero-content > *:nth-child(4) { animation-delay: 0.5s; }
