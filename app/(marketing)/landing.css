@@ -1376,14 +1376,14 @@
 .tier-card--obsidian {
   border-top: 3px solid #1a1a2e;
   background: #1a1a2e;
-  color: #f5f2ec;
+  color: var(--surface);
   opacity: 1;
 }
 .tier-card--obsidian .tier-showcase-material,
 .tier-card--obsidian .tier-showcase-name,
 .tier-card--obsidian .tier-showcase-earn,
 .tier-card--obsidian .tier-showcase-desc {
-  color: #f5f2ec;
+  color: var(--surface);
 }
 .tier-card--obsidian .tier-showcase-desc {
   color: rgba(245, 242, 236, 0.6);
@@ -3051,6 +3051,13 @@ button:focus-visible,
 a:focus-visible {
   outline: 2px solid var(--primary);
   outline-offset: 3px;
+}
+
+/* Stronger focus rings for primary CTA buttons */
+.btn-primary:focus-visible,
+.btn-ghost:focus-visible {
+  outline: 3px solid var(--primary);
+  outline-offset: 4px;
 }
 
 /* Image hover subtle zoom for cards */
