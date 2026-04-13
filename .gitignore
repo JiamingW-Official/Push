@@ -12,6 +12,7 @@ out/
 
 # Build artifacts
 tsconfig.tsbuildinfo
+.open-next/
 
 # OS
 .DS_Store
