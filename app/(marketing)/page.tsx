@@ -4,7 +4,94 @@ import LandingInteractivity from "@/components/layout/LandingInteractivity";
 import StatCounter from "@/components/layout/StatCounter";
 import "./landing.css";
 
-/* ── QR attribution wireframe ─────────────────────────────── */
+/* ── Merchant attribution dashboard visual ────────────────── */
+const ATTR_ROWS = [
+  {
+    handle: "@maya.eats.nyc",
+    qr: "QR-4821",
+    amount: "+$32",
+    verified: true,
+    delay: "0s",
+  },
+  {
+    handle: "@brooklyn_bites",
+    qr: "QR-4822",
+    amount: "+$32",
+    verified: true,
+    delay: "0.15s",
+  },
+  {
+    handle: "@nycfoodie_",
+    qr: "QR-4823",
+    amount: "+$32",
+    verified: false,
+    delay: "0.3s",
+  },
+  {
+    handle: "@williamsburg.e",
+    qr: "QR-4824",
+    amount: "+$32",
+    verified: true,
+    delay: "0.45s",
+  },
+];
+
+function MerchantAttributionVisual() {
+  return (
+    <div className="merch-attr-visual">
+      {/* Header */}
+      <div className="mav-header">
+        <div className="mav-header-left">
+          <span className="mav-live-dot" />
+          <span className="mav-title">Attribution Dashboard</span>
+        </div>
+        <span className="mav-campaign">Ramen &amp; Co. · Tonight</span>
+      </div>
+
+      {/* Attribution rows */}
+      <div className="mav-rows">
+        {ATTR_ROWS.map((row) => (
+          <div
+            key={row.handle}
+            className="mav-row"
+            style={{ animationDelay: row.delay }}
+          >
+            <span className="mav-handle">{row.handle}</span>
+            <span className="mav-qr">{row.qr}</span>
+            <span
+              className={`mav-status ${row.verified ? "mav-status--ok" : "mav-status--pending"}`}
+            >
+              {row.verified ? "✓" : "···"}
+            </span>
+            <span
+              className={`mav-amount ${row.verified ? "mav-amount--ok" : ""}`}
+            >
+              {row.verified ? row.amount : "—"}
+            </span>
+          </div>
+        ))}
+      </div>
+
+      {/* Summary strip */}
+      <div className="mav-summary">
+        <div className="mav-sum-item">
+          <span className="mav-sum-num">47</span>
+          <span className="mav-sum-label">QR scans</span>
+        </div>
+        <div className="mav-sum-item">
+          <span className="mav-sum-num">$1,504</span>
+          <span className="mav-sum-label">Attributed revenue</span>
+        </div>
+        <div className="mav-sum-item">
+          <span className="mav-sum-num">3.2×</span>
+          <span className="mav-sum-label">ROI vs spend</span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ── QR attribution wireframe (kept for reference) ────────── */
 function QRVisual() {
   const dataCells: [number, number][] = [
     [76, 76],
@@ -644,7 +731,7 @@ export default function LandingPage() {
               className="split-visual visual-merchant reveal"
               style={{ transitionDelay: "150ms" }}
             >
-              <QRVisual />
+              <MerchantAttributionVisual />
             </div>
           </div>
         </div>
