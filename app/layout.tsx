@@ -41,6 +41,13 @@ export const metadata: Metadata = {
     creator: "@pushnyc",
     images: ["/opengraph-image"],
   },
+  robots: {
+    index: true,
+    follow: true,
+  },
+  other: {
+    "format-detection": "telephone=no",
+  },
   icons: {
     icon: [{ url: "/favicon.svg", type: "image/svg+xml" }],
     apple: [{ url: "/favicon.svg" }],

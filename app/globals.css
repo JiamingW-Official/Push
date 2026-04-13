@@ -716,3 +716,41 @@ p  { font-size: var(--text-body); line-height: 1.6; }
 .skip-nav:focus {
   top: 16px;
 }
+
+/* ------------------------------------------------------------
+   Tap highlight — remove default mobile highlight on links/buttons
+   ------------------------------------------------------------ */
+a, button {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* ------------------------------------------------------------
+   Cursor fix — Safari does not show pointer cursor on role=button
+   or summary elements without explicit declaration
+   ------------------------------------------------------------ */
+[role="button"], summary {
+  cursor: pointer;
+}
+
+/* ------------------------------------------------------------
+   12. Print styles
+   ------------------------------------------------------------ */
+@media print {
+  .header,
+  .back-to-top,
+  .mobile-sticky-bar,
+  .hero-scroll-hint,
+  [data-lenis-prevent] {
+    display: none !important;
+  }
+
+  body {
+    background: white;
+    color: black;
+  }
+
+  a[href]:after {
+    content: " (" attr(href) ")";
+    font-size: 10px;
+  }
+}

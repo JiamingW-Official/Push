@@ -812,7 +812,7 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 0;
-  min-height: 400px;
+  min-height: 480px;
   position: relative;
   z-index: 1;
 }
@@ -857,33 +857,22 @@
   display: inline-block;
   font-family: var(--font-body);
   font-size: 10px;
+  font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.1em;
   padding: 4px 10px;
   border: 1px solid rgba(193,18,31,0.35);
   background: rgba(193,18,31,0.08);
   color: var(--primary);
-  margin-bottom: var(--space-3);
+  margin-bottom: var(--space-4);
 }
 
 .cta-tag-merchant { color: var(--primary); }
 .cta-tag-creator  { color: var(--tertiary); }
 
-.cta-urgency-badge {
-  display: inline-block;
-  font-family: var(--font-body);
-  font-size: 10px;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  padding: 4px 10px;
-  border: 1px solid rgba(193,18,31,0.35);
-  background: rgba(193,18,31,0.08);
-  color: var(--primary);
-  margin-bottom: var(--space-3);
-}
-
 .cta-headline {
   font-family: var(--font-display);
+  font-size: clamp(28px, 4vw, 48px);
   letter-spacing: -0.04em;
   line-height: 1.0;
   margin-bottom: var(--space-4);
@@ -917,13 +906,16 @@
 }
 
 .cta-body {
-  font-size: var(--text-small);
-  line-height: 1.6;
-  margin-bottom: var(--space-6);
+  font-family: var(--font-body);
+  font-size: 14px;
+  line-height: 1.65;
+  opacity: 0.75;
+  margin: var(--space-4) 0 var(--space-6);
 }
 
 .cta-panel-merchant .cta-body {
-  color: rgba(245,242,236,0.65);
+  color: rgba(245, 242, 236, 0.72);
+  opacity: 1;
 }
 
 .cta-panel-creator .cta-body {
@@ -3342,4 +3334,26 @@ a {
 .faq-a,
 .testimonial-quote {
   line-height: 1.7;
+}
+
+/* ------------------------------------------------------------
+   Cross-browser polish
+   ------------------------------------------------------------ */
+
+/* Safari font rendering fix */
+.hero-headline,
+.split-headline {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Prevent tap highlight on mobile */
+a, button {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Better text selection color */
+::selection {
+  background: rgba(193, 18, 31, 0.2);
+  color: var(--dark);
 }
