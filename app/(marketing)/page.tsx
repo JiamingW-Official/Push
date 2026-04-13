@@ -1191,7 +1191,10 @@ export default function LandingPage() {
       <section className="cta-section">
         <div className="container">
           <div className="cta-inner">
-            <div className="cta-panel cta-panel-merchant reveal">
+            <div
+              className="cta-panel cta-panel-merchant reveal"
+              style={{ borderTop: "3px solid var(--primary)" }}
+            >
               <span className="cta-tag cta-tag-merchant">For Merchants</span>
               <h2 className="cta-headline">
                 <span className="wt-900">Your next customer</span>
@@ -1203,21 +1206,22 @@ export default function LandingPage() {
                 results.
               </p>
               <span
-                className="cta-badge"
+                className="cta-urgency-badge"
                 style={{
                   display: "inline-block",
-                  marginBottom: "var(--space-4)",
-                  fontSize: "11px",
-                  fontWeight: 700,
-                  letterSpacing: "0.08em",
-                  textTransform: "uppercase",
-                  fontFamily: "var(--font-body)",
-                  color: "var(--champagne)",
-                  border: "1px solid var(--champagne-border)",
+                  background: "rgba(193,18,31,0.1)",
+                  border: "1px solid rgba(193,18,31,0.3)",
+                  color: "var(--primary)",
                   padding: "4px 10px",
+                  fontSize: "11px",
+                  letterSpacing: "0.06em",
+                  textTransform: "uppercase",
+                  marginBottom: "var(--space-4)",
+                  fontFamily: "var(--font-body)",
+                  fontWeight: 700,
                 }}
               >
-                Founding Cohort · Limited Spots
+                ⚡ NYC Founding Cohort — Limited spots
               </span>
               <Link href="/merchant/signup" className="btn btn-cta-merchant">
                 Start for $19.99 / mo
@@ -1240,6 +1244,16 @@ export default function LandingPage() {
               <Link href="/creator/signup" className="btn btn-cta-creator">
                 Join Free — Start Earning
               </Link>
+              <p
+                style={{
+                  fontSize: "11px",
+                  opacity: 0.5,
+                  marginTop: "6px",
+                  fontFamily: "var(--font-body)",
+                }}
+              >
+                No credit card · 30-second signup
+              </p>
             </div>
           </div>
         </div>
