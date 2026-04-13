@@ -64,6 +64,26 @@ export default function LandingInteractivity() {
         });
       });
 
+      // ── Hero headline parallax ──────────────────────────────
+      const headline = document.querySelector<HTMLElement>(".hero-headline");
+      if (headline) {
+        const onScroll = () => {
+          const scrollY = window.scrollY;
+          const scale = Math.max(0.92, 1 - scrollY * 0.00008);
+          const opacity = Math.max(0.3, 1 - scrollY * 0.001);
+          headline.style.transform = `scale(${scale})`;
+          headline.style.opacity = String(opacity);
+          headline.style.transformOrigin = "left center";
+        };
+        window.addEventListener("scroll", onScroll, { passive: true });
+        cleanups.push(() => {
+          window.removeEventListener("scroll", onScroll);
+          headline.style.transform = "";
+          headline.style.opacity = "";
+          headline.style.transformOrigin = "";
+        });
+      }
+
       return () => cleanups.forEach((fn) => fn());
     }
   }, []);
