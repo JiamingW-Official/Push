@@ -1026,6 +1026,8 @@ export default function LandingPage() {
               <span className="wt-300">required.</span>
             </h2>
 
+            <p className="creator-sub-message">Earn on results, not reach.</p>
+
             <p className="split-body">
               Your performance score is your currency. Build it from day one —
               regardless of your current audience size — and access
