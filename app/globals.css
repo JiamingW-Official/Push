@@ -167,6 +167,7 @@ html {
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
   scroll-behavior: auto; /* Lenis handles smooth scroll */
+  scroll-padding-top: 80px; /* Account for sticky 64px header on anchor jumps */
 }
 body {
   font-family: var(--font-body);

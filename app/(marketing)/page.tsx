@@ -1138,6 +1138,31 @@ export default function LandingPage() {
                   </div>
                 </div>
 
+                <div className="platform-compare reveal">
+                  <div className="pc-col pc-col--push">
+                    <div className="pc-header">Push</div>
+                    <ul className="pc-list">
+                      <li>✓ Paid per verified visit</li>
+                      <li>✓ No minimum followers</li>
+                      <li>✓ Weekly payouts</li>
+                      <li>✓ NYC-focused campaigns</li>
+                      <li>✓ Build a verified track record</li>
+                    </ul>
+                  </div>
+                  <div className="pc-col pc-col--others">
+                    <div className="pc-header">
+                      Traditional Influencer Platforms
+                    </div>
+                    <ul className="pc-list pc-list--others">
+                      <li>✗ Pay per post, not per result</li>
+                      <li>✗ Need 10K+ followers to qualify</li>
+                      <li>✗ 30-90 day payment delays</li>
+                      <li>✗ National brands, not local</li>
+                      <li>✗ No performance history</li>
+                    </ul>
+                  </div>
+                </div>
+
                 <blockquote className="creator-testimonial">
                   <p>
                     &ldquo;I earned $320 last month just visiting restaurants
@@ -1176,7 +1201,7 @@ export default function LandingPage() {
       </section>
 
       {/* ── 03 · How it Works ────────────────────────────────── */}
-      <section className="section section-bright">
+      <section id="how-it-works" className="section section-bright">
         <div className="container">
           <div className="reveal">
             <div className="section-tag">
