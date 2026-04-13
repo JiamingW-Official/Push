@@ -3357,3 +3357,177 @@ a, button {
   background: rgba(193, 18, 31, 0.2);
   color: var(--dark);
 }
+
+/* ============================================================
+   PREMIUM VISUAL UPGRADE — gradients, depth, texture, perf
+   All overrides use later-cascade priority.
+   Colors: Design.md 6-color palette only. No border-radius.
+   ============================================================ */
+
+/* ── 1. Hero: replace weak ambient with cinematic mesh gradient ─ */
+.hero::after {
+  background:
+    radial-gradient(ellipse 90% 70% at 88%  -5%, rgba(102, 155, 188, 0.22) 0%, transparent 55%),
+    radial-gradient(ellipse 75% 65% at -8%  108%, rgba(193,  18,  31, 0.18) 0%, transparent 55%),
+    radial-gradient(ellipse 55% 45% at 50%  108%, rgba(  0,  20,  35, 0.38) 0%, transparent 58%),
+    radial-gradient(ellipse 35% 28% at 50%   50%, rgba(201, 169, 110, 0.03) 0%, transparent 50%);
+  will-change: transform;
+}
+
+/* ── 2. Hero: film-grain noise overlay — depth + premium texture ─ */
+/* Pseudo-element layered above gradient, below content          */
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
+  background-size: 256px 256px;
+  opacity: 0.038;
+  mix-blend-mode: overlay;
+  pointer-events: none;
+  z-index: 1;
+}
+/* Raise hero content above grain overlay */
+.hero-inner { z-index: 2; }
+
+/* ── 3. Hero typography: raise elements that are too faint ──── */
+/* Stat labels were 30% white — nearly invisible */
+.stat-label { color: rgba(255, 255, 255, 0.42); }
+/* Light headline word was 45% — marginal readability */
+.hero-headline .line-light { color: rgba(255, 255, 255, 0.56); }
+
+/* ── 4. Ghost numbers: make them a real design element ──────── */
+/* Was 4% — invisible. 6.5% = visible watermark, not distracting */
+.section-ghost-num              { opacity: 0.065; }
+.section-warm .section-ghost-num { opacity: 0.08;  }
+/* How-it-works step ghost numbers */
+.how-step-num                   { opacity: 0.065; }
+
+/* ── 5. Section warm: stronger atmospheric depth ──────────── */
+/* Three light sources: steel blue from left, red from right,   */
+/* champagne gold warmth from below — creates depth and warmth  */
+.section-warm {
+  background:
+    radial-gradient(ellipse 115% 55% at  -5%  50%, rgba(102, 155, 188, 0.14) 0%, transparent 50%),
+    radial-gradient(ellipse  85% 60% at 108%  72%, rgba(193,  18,  31, 0.12) 0%, transparent 50%),
+    radial-gradient(ellipse  60% 45% at  50% 108%, rgba(201, 169, 110, 0.07) 0%, transparent 50%),
+    var(--dark);
+}
+
+/* ── 6. Visual panels: gradient atmosphere ──────────────────── */
+/* Merchant panel: subtle depth gradient (light + dark surfaces) */
+.visual-merchant {
+  background:
+    radial-gradient(ellipse 100% 65% at 100%   0%, rgba(  0,  48,  73, 0.05) 0%, transparent 58%),
+    radial-gradient(ellipse  60% 45% at   0% 100%, rgba(193,  18,  31, 0.04) 0%, transparent 52%),
+    var(--surface);
+}
+/* Creator panel: steel blue base + champagne warmth */
+.visual-creator {
+  background:
+    radial-gradient(ellipse  90% 60% at  50% 100%, rgba(102, 155, 188, 0.13) 0%, transparent 65%),
+    radial-gradient(ellipse  70% 50% at 100%   0%, rgba(201, 169, 110, 0.06) 0%, transparent 55%),
+    rgba(0, 48, 73, 0.06);
+}
+
+/* ── 7. CTA merchant: volcanic urgency — red glow from corner ── */
+/* The conversion moment must have fire. Red glow bottom-right,  */
+/* cool blue top-left creates tension. Dark diagonal depth.      */
+.cta-panel-merchant {
+  background:
+    radial-gradient(ellipse 100% 90% at 115% 118%, rgba(193,  18,  31, 0.32) 0%, transparent 52%),
+    radial-gradient(ellipse  70% 50% at  -8%  28%, rgba(102, 155, 188, 0.10) 0%, transparent 50%),
+    linear-gradient(148deg, rgba(  0,  24,  38, 0.55) 0%, transparent 60%),
+    var(--dark);
+}
+/* Remove old faint pseudo-element radial (superseded by above) */
+.cta-panel-merchant::before { display: none; }
+
+/* ── 8. CTA creator: warm pearl with opportunity depth ──────── */
+/* Steel blue top-right (professional), champagne gold           */
+/* bottom-left (premium earnings) on white base                  */
+.cta-panel-creator {
+  background:
+    radial-gradient(ellipse  72% 60% at 108%  -5%, rgba(102, 155, 188, 0.09) 0%, transparent 55%),
+    radial-gradient(ellipse  62% 52% at  -8% 105%, rgba(201, 169, 110, 0.08) 0%, transparent 55%),
+    var(--surface-elevated);
+}
+
+/* ── 9. Pricing featured card: champagne warmth from above ──── */
+/* Gold glow at top reinforces "premium tier" identity           */
+.pricing-card-featured {
+  background:
+    radial-gradient(ellipse 95% 45% at 50% 0%, rgba(201, 169, 110, 0.10) 0%, transparent 55%),
+    #fff;
+}
+
+/* ── 10. Proof strip: elevated with gradient depth ──────────── */
+.proof-strip {
+  background:
+    radial-gradient(ellipse 80% 100% at 0% 50%, rgba(  0,  48,  73, 0.03) 0%, transparent 60%),
+    var(--surface-elevated);
+}
+
+/* ── 11. Ticker: fade edges for premium marquee feel ─────────── */
+/* Soft gradient fade-out masks the hard clip at container edges */
+.ticker::before,
+.ticker::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 120px;
+  z-index: 3;
+  pointer-events: none;
+}
+.ticker::before {
+  left: 0;
+  background: linear-gradient(to right, var(--surface), transparent);
+}
+.ticker::after {
+  right: 0;
+  background: linear-gradient(to left, var(--surface), transparent);
+}
+
+/* ── 12. How-step hover: richer ambient on interaction ──────── */
+.how-step:hover {
+  background:
+    radial-gradient(ellipse 80% 55% at 0% 50%, rgba(193, 18, 31, 0.04) 0%, transparent 60%),
+    rgba(0, 48, 73, 0.025);
+}
+
+/* ── 13. Section separator: gradient line replaces hard line ── */
+/* Light gradient separator between same-tone sections          */
+.section + .section-bright::before,
+.section-bright + .section::before {
+  content: '';
+  display: block;
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    transparent 0%,
+    rgba(0, 48, 73, 0.09) 25%,
+    rgba(0, 48, 73, 0.09) 75%,
+    transparent 100%
+  );
+}
+
+/* ── 14. Typography: antialiasing on all display elements ───── */
+.cta-headline,
+.section-warm .split-headline,
+h1, h2, h3 {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ── 15. Performance: defer painting of deep below-fold sections */
+/* content-visibility skips layout/paint until near viewport     */
+.testimonials-section {
+  content-visibility: auto;
+  contain-intrinsic-block-size: 700px;
+}
+/* FAQ: smaller containment estimate to avoid scroll jump        */
+section#faq {
+  content-visibility: auto;
+  contain-intrinsic-block-size: 500px;
+}
