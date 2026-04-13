@@ -198,6 +198,8 @@ const DEMO_CAMPAIGNS: Campaign[] = [
     spots_total: 20,
     deadline: "2026-04-30",
     category: "Coffee",
+    image:
+      "https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=400&h=300&fit=crop",
     tier_required: "seed",
     description:
       "Visit any Blank Street location, enjoy a drink, and share your experience. Perfect for building your portfolio.",
@@ -218,6 +220,8 @@ const DEMO_CAMPAIGNS: Campaign[] = [
     spots_total: 8,
     deadline: "2026-04-25",
     category: "Food",
+    image:
+      "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400&h=300&fit=crop",
     tier_required: "explorer",
     description:
       "Feature our award-winning veggie burgers in an authentic review.",
@@ -239,6 +243,8 @@ const DEMO_CAMPAIGNS: Campaign[] = [
     spots_total: 6,
     deadline: "2026-05-05",
     category: "Lifestyle",
+    image:
+      "https://images.unsplash.com/photo-1487530811176-3780de880c2d?w=400&h=300&fit=crop",
     tier_required: "operator",
     description:
       "Capture the Flamingo Estate aesthetic at our NYC pop-up. Moody, editorial, nature-forward content.",
@@ -260,6 +266,8 @@ const DEMO_CAMPAIGNS: Campaign[] = [
     spots_total: 10,
     deadline: "2026-04-28",
     category: "Beauty",
+    image:
+      "https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=400&h=300&fit=crop",
     tier_required: "explorer",
     description:
       "Document your brow transformation at Brow Theory. Before/after content preferred.",
@@ -281,6 +289,8 @@ const DEMO_CAMPAIGNS: Campaign[] = [
     spots_total: 5,
     deadline: "2026-05-10",
     category: "Beauty",
+    image:
+      "https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=400&h=300&fit=crop",
     tier_required: "proven",
     description:
       "Create editorial beauty content at the Glossier flagship. High production value expected.",
@@ -302,6 +312,8 @@ const DEMO_CAMPAIGNS: Campaign[] = [
     spots_total: 15,
     deadline: "2026-04-22",
     category: "Food",
+    image:
+      "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=400&h=300&fit=crop",
     tier_required: "seed",
     description:
       "Try the NYC pop-up of the legendary Philadelphia institution. Share an honest review.",
@@ -319,6 +331,8 @@ const DEMO_CAMPAIGNS: Campaign[] = [
     spots_total: 3,
     deadline: "2026-05-15",
     category: "Retail",
+    image:
+      "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=400&h=300&fit=crop",
     tier_required: "proven",
     description:
       "Exclusive creator collab at KITH SoHo. Style editorial campaign for Spring 2026 collection.",
@@ -341,12 +355,291 @@ const DEMO_CAMPAIGNS: Campaign[] = [
     spots_total: 12,
     deadline: "2026-04-29",
     category: "Coffee",
+    image:
+      "https://images.unsplash.com/photo-1536256263959-770b48d82b0a?w=400&h=300&fit=crop",
     tier_required: "seed",
     description:
       "Share your morning matcha ritual at Cha Cha Matcha. Aesthetic, cozy content welcome.",
     requirements: ["2 Instagram stories", "Tag @chachamatcha"],
     lat: 40.7178,
     lng: -74.003,
+  },
+  {
+    id: "camp-009",
+    title: "Rooftop Sunset Session",
+    business_name: "Westlight",
+    business_address: "111 N 12th St, Brooklyn, NY 11249",
+    payout: 85,
+    spots_remaining: 3,
+    spots_total: 6,
+    deadline: "2026-05-08",
+    category: "Food",
+    image:
+      "https://images.unsplash.com/photo-1470337458703-46ad1756a187?w=400&h=300&fit=crop",
+    tier_required: "operator",
+    description:
+      "Capture the golden hour vibe at Westlight rooftop bar. Cocktails, skyline views, editorial mood.",
+    requirements: [
+      "1 Reel featuring the skyline view",
+      "2 stories minimum",
+      "Tag @westlightnyc",
+    ],
+    lat: 40.7223,
+    lng: -73.9573,
+  },
+  {
+    id: "camp-010",
+    title: "Pilates Studio Grand Opening",
+    business_name: "Forma Pilates",
+    business_address: "67 Greenwich Ave, New York, NY 10014",
+    payout: 40,
+    spots_remaining: 7,
+    spots_total: 12,
+    deadline: "2026-05-01",
+    category: "Fitness",
+    image:
+      "https://images.unsplash.com/photo-1518611012118-696072aa579a?w=400&h=300&fit=crop",
+    tier_required: "explorer",
+    description:
+      "Attend a complimentary reformer class and share your experience. Wellness-focused content.",
+    requirements: [
+      "Attend 1 class",
+      "1 feed post or Reel",
+      "Before/after energy or outfit shot",
+    ],
+    lat: 40.7346,
+    lng: -74.0015,
+  },
+  {
+    id: "camp-011",
+    title: "Vintage Denim Try-On",
+    business_name: "Procell",
+    business_address: "95 Stanton St, New York, NY 10002",
+    payout: 30,
+    spots_remaining: 5,
+    spots_total: 8,
+    deadline: "2026-04-27",
+    category: "Retail",
+    image:
+      "https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=400&h=300&fit=crop",
+    tier_required: "seed",
+    description:
+      "Style 3 vintage denim looks in-store. Lo-fi, authentic streetwear content preferred.",
+    requirements: [
+      "3 outfit photos or 1 Reel",
+      "Tag @procellvintage",
+      "Mention LES location",
+    ],
+    lat: 40.7205,
+    lng: -73.9884,
+  },
+  {
+    id: "camp-012",
+    title: "Omakase Experience Feature",
+    business_name: "Shuko",
+    business_address: "47 E 12th St, New York, NY 10003",
+    payout: 150,
+    spots_remaining: 2,
+    spots_total: 4,
+    deadline: "2026-05-12",
+    category: "Food",
+    image:
+      "https://images.unsplash.com/photo-1579871494447-9811cf80d66c?w=400&h=300&fit=crop",
+    tier_required: "proven",
+    description:
+      "Full omakase dinner documented course-by-course. Premium food photography expected.",
+    requirements: [
+      "5+ course-by-course feed posts",
+      "1 long-form Reel (2+ min)",
+      "Must tag @shukonyc",
+      "No flash photography during service",
+    ],
+    lat: 40.7322,
+    lng: -73.9923,
+  },
+  {
+    id: "camp-013",
+    title: "Brooklyn Pottery Workshop",
+    business_name: "Choplet",
+    business_address: "309 Suydam St, Brooklyn, NY 11237",
+    payout: 0,
+    spots_remaining: 10,
+    spots_total: 15,
+    deadline: "2026-05-03",
+    category: "Lifestyle",
+    image:
+      "https://images.unsplash.com/photo-1565193566173-7a0ee3dbe261?w=400&h=300&fit=crop",
+    tier_required: "seed",
+    description:
+      "Free pottery class in exchange for content. Hands-on, messy, authentic vibes.",
+    requirements: [
+      "2 Instagram stories during class",
+      "1 photo of your finished piece",
+    ],
+    lat: 40.7036,
+    lng: -73.9212,
+  },
+  {
+    id: "camp-014",
+    title: "Spring Facial Treatment",
+    business_name: "Heyday",
+    business_address: "1410 Broadway, New York, NY 10018",
+    payout: 45,
+    spots_remaining: 4,
+    spots_total: 8,
+    deadline: "2026-04-26",
+    category: "Beauty",
+    image:
+      "https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?w=400&h=300&fit=crop",
+    tier_required: "explorer",
+    description:
+      "Complimentary facial + skincare consultation. Share your glow-up journey.",
+    requirements: [
+      "Before/after selfie",
+      "1 story series (min 3 frames)",
+      "Tag @heaborday",
+    ],
+    lat: 40.7527,
+    lng: -73.9867,
+  },
+  {
+    id: "camp-015",
+    title: "Speakeasy Cocktail Series",
+    business_name: "Angel's Share",
+    business_address: "8 Stuyvesant St, New York, NY 10003",
+    payout: 60,
+    spots_remaining: 3,
+    spots_total: 5,
+    deadline: "2026-05-07",
+    category: "Food",
+    image:
+      "https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?w=400&h=300&fit=crop",
+    tier_required: "operator",
+    description:
+      "Document the hidden bar experience. Moody lighting, craft cocktails, intimate atmosphere.",
+    requirements: [
+      "1 Reel capturing the vibe",
+      "3+ stories",
+      "No direct flash — ambient light only",
+    ],
+    lat: 40.73,
+    lng: -73.9897,
+  },
+  {
+    id: "camp-016",
+    title: "SoulCycle Community Ride",
+    business_name: "SoulCycle",
+    business_address: "12 E 18th St, New York, NY 10003",
+    payout: 35,
+    spots_remaining: 8,
+    spots_total: 15,
+    deadline: "2026-05-02",
+    category: "Fitness",
+    image:
+      "https://images.unsplash.com/photo-1534258936925-c58bed479fcb?w=400&h=300&fit=crop",
+    tier_required: "seed",
+    description:
+      "Join a themed community ride and share the energy. High-energy, motivational content.",
+    requirements: [
+      "1 post or Reel post-ride",
+      "Tag @soulcycle",
+      "Use #SoulCycleNYC",
+    ],
+    lat: 40.7381,
+    lng: -73.9907,
+  },
+  {
+    id: "camp-017",
+    title: "Bookstore Hidden Gems",
+    business_name: "McNally Jackson",
+    business_address: "52 Prince St, New York, NY 10012",
+    payout: 15,
+    spots_remaining: 10,
+    spots_total: 20,
+    deadline: "2026-04-30",
+    category: "Lifestyle",
+    image:
+      "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=300&fit=crop",
+    tier_required: "seed",
+    description:
+      "Pick 3 books, create a cozy reading flat-lay or shelf tour. Literary aesthetic content.",
+    requirements: [
+      "1 feed post or carousel",
+      "Tag @mcnallyjackson",
+      "Include at least 3 book titles",
+    ],
+    lat: 40.7236,
+    lng: -73.9961,
+  },
+  {
+    id: "camp-018",
+    title: "Sneaker Drop Coverage",
+    business_name: "Extra Butter",
+    business_address: "125 Orchard St, New York, NY 10002",
+    payout: 90,
+    spots_remaining: 2,
+    spots_total: 4,
+    deadline: "2026-05-09",
+    category: "Retail",
+    image:
+      "https://images.unsplash.com/photo-1552346154-21d32810aba3?w=400&h=300&fit=crop",
+    tier_required: "operator",
+    description:
+      "Cover the exclusive sneaker release event. Streetwear culture, lineup energy, unboxing content.",
+    requirements: [
+      "2 Reels (event + unboxing)",
+      "5+ stories on release day",
+      "Tag @extrabutterny",
+    ],
+    lat: 40.7202,
+    lng: -73.9892,
+  },
+  {
+    id: "camp-019",
+    title: "Farm-to-Table Dinner Series",
+    business_name: "Blue Hill",
+    business_address: "75 Washington Pl, New York, NY 10011",
+    payout: 250,
+    spots_remaining: 1,
+    spots_total: 2,
+    deadline: "2026-05-20",
+    category: "Food",
+    image:
+      "https://images.unsplash.com/photo-1466978913421-dad2ebd01d17?w=400&h=300&fit=crop",
+    tier_required: "closer",
+    description:
+      "Full tasting menu experience at Blue Hill. Ultra-premium food storytelling. Only for top-tier creators.",
+    requirements: [
+      "10+ course photos",
+      "1 long-form video (5+ min)",
+      "Written review for cross-posting",
+      "25k+ followers required",
+    ],
+    lat: 40.7317,
+    lng: -74.0002,
+  },
+  {
+    id: "camp-020",
+    title: "Nail Art Studio Feature",
+    business_name: "Paintbucket",
+    business_address: "79 Rivington St, New York, NY 10002",
+    payout: 30,
+    spots_remaining: 6,
+    spots_total: 10,
+    deadline: "2026-04-29",
+    category: "Beauty",
+    image:
+      "https://images.unsplash.com/photo-1604654894610-df63bc536371?w=400&h=300&fit=crop",
+    tier_required: "seed",
+    description:
+      "Get a complimentary nail art set and share the process. Close-up detail shots are key.",
+    requirements: [
+      "1 carousel or Reel of the process",
+      "Close-up hand shots",
+      "Tag @paintbucketnyc",
+    ],
+    lat: 40.7196,
+    lng: -73.9886,
   },
 ];
 
@@ -986,9 +1279,13 @@ export default function CreatorDashboard() {
                       onMouseLeave={() => setHoveredId(undefined)}
                     >
                       <div className="dash-card-thumb">
-                        <span style={{ fontSize: 20 }}>
-                          {c.business_name[0]}
-                        </span>
+                        {c.image ? (
+                          <img src={c.image} alt={c.title} loading="lazy" />
+                        ) : (
+                          <span style={{ fontSize: 20 }}>
+                            {c.business_name[0]}
+                          </span>
+                        )}
                       </div>
                       <div className="dash-card-info">
                         <span className="dash-card-business">
