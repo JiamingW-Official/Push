@@ -398,6 +398,17 @@ function HeroCampaignPreview() {
   return (
     <div className="hero-preview" aria-hidden="true">
       <div className="hcp-card">
+        <span
+          className="hcp-example-tag"
+          style={{
+            fontSize: 10,
+            opacity: 0.55,
+            textTransform: "uppercase" as const,
+            letterSpacing: "0.08em",
+          }}
+        >
+          Live campaign preview
+        </span>
         <div className="hcp-live-row">
           <span className="hcp-live-dot" />
           <span className="hcp-live-text">LIVE</span>
@@ -564,6 +575,16 @@ export default function LandingPage() {
               verified by QR code attribution at every transaction.
             </p>
 
+            <p
+              className="hero-sub hero-sub--micro"
+              style={{
+                fontSize: "var(--text-small)",
+                opacity: 0.6,
+              }}
+            >
+              Creators: zero followers required to start earning.
+            </p>
+
             <div className="hero-ctas">
               <Link href="/merchant/signup" className="btn btn-primary">
                 Start for $19.99 / mo
@@ -572,6 +593,18 @@ export default function LandingPage() {
                 Join as Creator — Free
               </Link>
             </div>
+            <p
+              className="hero-reassurance"
+              style={{
+                fontSize: "11px",
+                opacity: 0.5,
+                marginTop: "8px",
+                fontFamily: "var(--font-body)",
+                letterSpacing: "0.04em",
+              }}
+            >
+              No contracts · Cancel anytime · Free for creators
+            </p>
             <a
               href="/demo/creator"
               className="hero-demo-link link-underline"
