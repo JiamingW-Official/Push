@@ -76,9 +76,9 @@
 
 .hero-ctas {
   display: flex;
-  gap: var(--space-2);
-  flex-wrap: wrap;
-  align-items: center;
+  flex-direction: column;
+  gap: 16px;
+  align-items: flex-start;
   margin-bottom: var(--space-12);
 }
 
@@ -104,7 +104,7 @@
 
 .stat-item {
   padding-right: var(--space-6);
-  border-right: 1px solid rgba(255, 255, 255, 0.08);
+  border-right: 1px solid rgba(245, 242, 236, 0.15);
 }
 
 .stat-item:last-child {
@@ -453,7 +453,7 @@
   background: var(--surface-elevated);
   padding: var(--space-8) var(--space-6);
   position: relative;
-  overflow: hidden;
+  overflow: visible;
   transition: background 240ms ease, transform 240ms ease;
   cursor: default;
 }
@@ -479,6 +479,21 @@
 
 .how-step:hover::before {
   transform: scaleY(1);
+}
+
+/* Arrow connector between steps (horizontal 3-column grid) */
+.how-step:not(:last-child)::after {
+  content: '→';
+  position: absolute;
+  right: -14px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 18px;
+  line-height: 1;
+  color: var(--primary);
+  opacity: 0.4;
+  z-index: 2;
+  pointer-events: none;
 }
 
 .how-step-num {
