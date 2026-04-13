@@ -729,9 +729,34 @@ export default function LandingPage() {
             </div>
           </div>
 
+          <div className="vc-metrics-bar reveal">
+            <span className="vcm-item">
+              <span className="vcm-label">Market</span>
+              <span className="vcm-value">$47B local ad spend</span>
+            </span>
+            <span className="vcm-divider" aria-hidden="true">
+              —
+            </span>
+            <span className="vcm-item">
+              <span className="vcm-label">Moat</span>
+              <span className="vcm-value">
+                QR attribution + creator network effects
+              </span>
+            </span>
+            <span className="vcm-divider" aria-hidden="true">
+              —
+            </span>
+            <span className="vcm-item">
+              <span className="vcm-label">Model</span>
+              <span className="vcm-value">
+                Performance-based, zero upfront risk
+              </span>
+            </span>
+          </div>
+
           <p className="market-hint">
-            NYC: 230,000+ local businesses. 50,000+ food &amp; lifestyle
-            creators. One platform.
+            NYC&apos;s $2B+ local advertising market — 230,000+ local
+            businesses, 50,000+ food &amp; lifestyle creators. One platform.
           </p>
 
           <span className="proof-strip-note">
@@ -1292,6 +1317,14 @@ export default function LandingPage() {
                 )}
               </div>
             ))}
+          </div>
+
+          {/* ROI math example */}
+          <div className="roi-math reveal">
+            <span className="roi-example">
+              Example: Pay $150 for verified foot traffic → avg customer LTV $85
+              × 3 visits = <strong>$255 return</strong>
+            </span>
           </div>
 
           {/* Creator free banner — audit #25 */}
