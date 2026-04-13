@@ -520,6 +520,7 @@
   margin-bottom: var(--space-3);
   display: block;
   user-select: none;
+  position: relative;
 }
 
 .how-step-index {
@@ -574,6 +575,66 @@
   left: 0;
   color: var(--primary);
   opacity: 0.5;
+}
+
+/* Bullet list item hover accent */
+.how-step-bullets li {
+  transition: opacity 200ms ease, transform 200ms ease;
+}
+.how-step:hover .how-step-bullets li {
+  opacity: 1;
+}
+
+/* ------------------------------------------------------------
+   How-it-works: step number pulse on reveal + stagger
+   ------------------------------------------------------------ */
+
+/* Step num pulse — fires once when .visible is added by IntersectionObserver */
+.how-step-num::after {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border: 1px solid rgba(193, 18, 31, 0);
+  pointer-events: none;
+  transition: border-color 400ms ease;
+}
+.how-step.visible .how-step-num::after {
+  border-color: rgba(193, 18, 31, 0.15);
+  animation: stepNumPulse 2s ease-out 0.5s both;
+}
+@keyframes stepNumPulse {
+  0%   { border-color: rgba(193, 18, 31, 0.4); transform: scale(1.1); }
+  100% { border-color: rgba(193, 18, 31, 0.15); transform: scale(1); }
+}
+
+/* Step reveal stagger — CSS variable fallback when inline style is absent */
+.how-step:nth-child(1) { --stagger: 0ms; }
+.how-step:nth-child(2) { --stagger: 120ms; }
+.how-step:nth-child(3) { --stagger: 240ms; }
+.how-step:nth-child(4) { --stagger: 360ms; }
+
+/* Mobile single-column: vertical timeline connector on .how-grid */
+@media (max-width: 1024px) {
+  .how-grid {
+    position: relative;
+  }
+  .how-grid::before {
+    content: '';
+    position: absolute;
+    left: 20px;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background: linear-gradient(
+      to bottom,
+      transparent,
+      rgba(0, 48, 73, 0.15) 10%,
+      rgba(0, 48, 73, 0.15) 90%,
+      transparent
+    );
+    pointer-events: none;
+    z-index: 0;
+  }
 }
 
 /* ------------------------------------------------------------
@@ -2009,6 +2070,13 @@
 }
 
 /* ============================================================
+   Stagger support: --stagger variable applied to .reveal
+   ============================================================ */
+.reveal {
+  transition-delay: var(--stagger, 0ms);
+}
+
+/* ============================================================
    Failsafe: ensure .reveal elements become visible after 2.5s
    even if IntersectionObserver JS fails to fire (#01 #02)
    ============================================================ */
@@ -2588,3 +2656,94 @@ a:not(.btn):not([class*="btn"]):hover::after {
 .hero-content > *:nth-child(2) { animation-delay: 0.2s; }
 .hero-content > *:nth-child(3) { animation-delay: 0.35s; }
 .hero-content > *:nth-child(4) { animation-delay: 0.5s; }
+
+/* ============================================================
+   Staggered scroll-reveal delays
+   Each group uses --stagger CSS variable consumed by .reveal
+   ============================================================ */
+
+/* --- How It Works steps (3 steps, 100ms apart) --- */
+.how-step:nth-child(1) { --stagger: 0ms; }
+.how-step:nth-child(2) { --stagger: 100ms; }
+.how-step:nth-child(3) { --stagger: 200ms; }
+
+/* --- Pricing cards (3 cards, 80ms apart)
+     transition-delay consumed by the .reveal transition in globals.css */
+.pricing-card:nth-child(1) { --stagger: 0ms; }
+.pricing-card:nth-child(2) { --stagger: 80ms; }
+.pricing-card:nth-child(3) { --stagger: 160ms; }
+
+.pricing-card.reveal {
+  transition-delay: var(--stagger, 0ms);
+}
+
+/* --- Tier showcase cards (6 tiers, 60ms apart) ---
+     Uses CSS scroll-driven animation so no JS observer is needed.
+     @supports fallback keeps cards visible in older browsers. */
+@keyframes tierCardIn {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.tier-showcase-card {
+  animation: tierCardIn 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: var(--stagger, 0ms);
+  animation-timeline: view();
+  animation-range: entry 0% entry 35%;
+}
+
+.tier-showcase .tier-showcase-card:nth-child(1) { --stagger: 0ms; }
+.tier-showcase .tier-showcase-card:nth-child(2) { --stagger: 60ms; }
+.tier-showcase .tier-showcase-card:nth-child(3) { --stagger: 120ms; }
+.tier-showcase .tier-showcase-card:nth-child(4) { --stagger: 180ms; }
+.tier-showcase .tier-showcase-card:nth-child(5) { --stagger: 240ms; }
+.tier-showcase .tier-showcase-card:nth-child(6) { --stagger: 300ms; }
+
+@supports not (animation-timeline: view()) {
+  .tier-showcase-card {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* --- Proof stats (3 stats, 60ms apart) --- */
+@keyframes proofStatIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.proof-stats .proof-stat {
+  animation: proofStatIn 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: var(--stagger, 0ms);
+  animation-timeline: view();
+  animation-range: entry 0% entry 35%;
+}
+
+.proof-stats .proof-stat:nth-child(1) { --stagger: 0ms; }
+.proof-stats .proof-stat:nth-child(2) { --stagger: 60ms; }
+.proof-stats .proof-stat:nth-child(3) { --stagger: 120ms; }
+.proof-stats .proof-stat:nth-child(4) { --stagger: 180ms; }
+
+@supports not (animation-timeline: view()) {
+  .proof-stats .proof-stat {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* --- Hero headline lines & sub copy ---
+     Override animation-delay on existing heroFadeUp keyframes.
+     These elements live inside .hero and animate on page load. */
+.hero-headline .line-black { --stagger: 0ms; }
+.hero-headline .line-light { --stagger: 120ms; }
+.hero-sub  { --stagger: 240ms; }
+.hero-ctas { --stagger: 360ms; }
+
+.hero-headline .line-black,
+.hero-headline .line-light,
+.hero-sub,
+.hero-ctas {
+  animation: heroFadeUp 0.7s cubic-bezier(0.22, 1, 0.36, 1) var(--stagger, 0ms) both;
+}
