@@ -570,7 +570,7 @@ export default function LandingPage() {
             <h1 className="hero-headline">
               <span className="line-black">Turn creators</span>
               <span className="line-light">
-                into <em>results.</em>
+                into <em data-text="results.">results.</em>
               </span>
             </h1>
 
