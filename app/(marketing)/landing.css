@@ -2225,11 +2225,11 @@
 /* #34 — Card hover lift: see .pricing-card:hover and .tier-showcase-card:hover above */
 
 /* #35 — Link underline slide-in animation */
-a:not(.btn):not([class*="btn"]) {
+a:not(.btn):not([class*="btn"]):not(.skip-nav) {
   position: relative;
   text-decoration: none;
 }
-a:not(.btn):not([class*="btn"])::after {
+a:not(.btn):not([class*="btn"]):not(.skip-nav)::after {
   content: '';
   position: absolute;
   bottom: -1px;
@@ -2239,7 +2239,7 @@ a:not(.btn):not([class*="btn"])::after {
   background: currentColor;
   transition: width 300ms ease;
 }
-a:not(.btn):not([class*="btn"]):hover::after {
+a:not(.btn):not([class*="btn"]):not(.skip-nav):hover::after {
   width: 100%;
 }
 
@@ -2455,9 +2455,9 @@ a:not(.btn):not([class*="btn"]):hover::after {
    Performance Score Explainer — mini dashboard widget
    ------------------------------------------------------------ */
 .perf-score-explainer {
-  background: var(--surface);
-  border: 1px solid var(--line);
-  border-left: 3px solid var(--champagne, #c9a96e);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-left: 3px solid rgba(201, 169, 110, 0.4);
   padding: var(--space-4);
   margin-top: var(--space-5);
 }
@@ -3558,15 +3558,11 @@ section#faq {
   color: rgba(201, 169, 110, 0.5);
 }
 
-/* "results." — gradient text: Flag Red → Champagne Gold */
+/* "results." — solid Flag Red, no gradient */
 .hero-headline em {
   font-weight: 900;
   font-style: italic;
-  background: linear-gradient(135deg, #c1121f 15%, #c9a96e 85%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  color: var(--primary); /* fallback for browsers without gradient-text */
+  color: var(--primary);
 }
 
 /* Hero sub: larger, more breathing */
@@ -3597,12 +3593,12 @@ section#faq {
   vertical-align: middle;
 }
 
-/* Hero stats: champagne gold numbers, thinner weight */
+/* Hero stats: subtle weight, clean color */
 .stat-num {
-  font-size: clamp(48px, 5.5vw, 76px) !important;
-  font-weight: 100 !important;
-  color: var(--champagne) !important;
-  letter-spacing: -0.06em;
+  font-size: clamp(40px, 4.5vw, 64px) !important;
+  font-weight: 300 !important;
+  color: rgba(245, 242, 236, 0.9) !important;
+  letter-spacing: -0.04em;
 }
 .stat-label {
   color: rgba(255, 255, 255, 0.35) !important;
@@ -3619,36 +3615,30 @@ section#faq {
 .cta-section            { padding-block: 140px; }
 section#faq             { padding-block: 120px; }
 
-/* Ghost numbers: massive, barely-there watermarks */
+/* Ghost numbers: barely-there watermarks */
 .section-ghost-num {
-  font-size: clamp(140px, 24vw, 320px);
+  font-size: clamp(120px, 18vw, 240px);
   font-weight: 900;
-  opacity: 0.025;
+  opacity: 0.02;
   letter-spacing: -0.11em;
 }
-.section-warm .section-ghost-num { opacity: 0.05; }
+.section-warm .section-ghost-num { opacity: 0.03; }
 
-/* Section tag line: gradient from red to gold */
+/* Section tag line: subtle solid */
 .section-tag-line {
   width: 48px;
   height: 2px;
-  background: linear-gradient(to right, var(--primary), var(--champagne));
+  background: var(--primary);
+  opacity: 0.6;
 }
 
-/* Section separators: premium gradient hairline */
+/* Section separators: clean subtle hairline */
 .section + .section-bright::before,
 .section-bright + .section::before {
   content: '';
   display: block;
   height: 1px;
-  background: linear-gradient(
-    to right,
-    transparent 5%,
-    rgba(201, 169, 110, 0.18) 30%,
-    rgba(193, 18, 31, 0.12) 50%,
-    rgba(201, 169, 110, 0.18) 70%,
-    transparent 95%
-  );
+  background: rgba(0, 48, 73, 0.06);
 }
 
 /* ─────────────────────────────────────────────────────────────── */
@@ -3796,13 +3786,11 @@ section#faq             { padding-block: 120px; }
   border-top-color: #4a4a6e;
 }
 
-/* Hover: lift + tier-colored atmospheric glow */
+/* Hover: subtle lift */
 .reveal.visible .tier-showcase .tier-showcase-card:hover {
-  transform: translateY(-14px);
-  box-shadow:
-    0 24px 56px rgba(0, 0, 0, 0.32),
-    0 0 48px -12px var(--tier-color, rgba(102, 155, 188, 0.25));
-  background: rgba(255, 255, 255, 0.06);
+  transform: translateY(-8px);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.2);
+  background: rgba(255, 255, 255, 0.05);
 }
 
 /* Entry badge */
@@ -3835,9 +3823,9 @@ section#faq             { padding-block: 120px; }
 .how-step { overflow: hidden; }
 
 .how-step-num {
-  font-size: clamp(180px, 26vw, 300px);
+  font-size: clamp(140px, 20vw, 220px);
   font-weight: 900;
-  opacity: 0.03;
+  opacity: 0.025;
   position: absolute;
   top: -40px;
   right: -20px;
@@ -3854,42 +3842,36 @@ section#faq             { padding-block: 120px; }
 .how-step-body,
 .how-step-bullets { position: relative; z-index: 1; }
 
-/* Hover: dramatic lift + depth shadow */
+/* Hover: subtle lift */
 .how-step:hover {
   background: var(--surface-elevated);
-  transform: translateY(-14px);
-  box-shadow:
-    0 28px 64px rgba(0, 48, 73, 0.1),
-    0 0 0 1px rgba(0, 48, 73, 0.03);
+  transform: translateY(-6px);
+  box-shadow: 0 16px 40px rgba(0, 48, 73, 0.06);
 }
 
 /* ─────────────────────────────────────────────────────────────── */
 /* 6. PRICING — featured card gold glow + scale lift               */
 /* ─────────────────────────────────────────────────────────────── */
 .pricing-card-featured {
-  border: 2px solid rgba(201, 169, 110, 0.3);
-  border-top: 4px solid var(--champagne);
-  box-shadow:
-    0 24px 64px rgba(0, 48, 73, 0.12),
-    0 0 80px -20px rgba(201, 169, 110, 0.18);
+  border: 1px solid rgba(0, 48, 73, 0.08);
+  border-top: 3px solid var(--dark);
+  box-shadow: 0 16px 48px rgba(0, 48, 73, 0.08);
 }
 .pricing-card-featured.visible {
-  transform: translateY(-12px) scale(1.02) !important;
+  transform: translateY(-8px) !important;
 }
 .pricing-card-featured:hover {
-  box-shadow:
-    0 32px 80px rgba(0, 48, 73, 0.16),
-    0 0 120px -24px rgba(201, 169, 110, 0.25);
-  transform: translateY(-16px) scale(1.02) !important;
+  box-shadow: 0 24px 56px rgba(0, 48, 73, 0.12);
+  transform: translateY(-12px) !important;
 }
 
 .pricing-card:not(.pricing-card-featured) {
-  border-top: 3px solid rgba(193, 18, 31, 0.15);
+  border-top: 2px solid rgba(0, 48, 73, 0.06);
 }
 .pricing-card:not(.pricing-card-featured):hover {
-  border-top-color: var(--primary);
-  transform: translateY(-10px);
-  box-shadow: 0 20px 48px rgba(0, 48, 73, 0.1);
+  border-top-color: rgba(0, 48, 73, 0.2);
+  transform: translateY(-6px);
+  box-shadow: 0 12px 36px rgba(0, 48, 73, 0.06);
 }
 
 /* Price numbers: oversized display */
@@ -3907,16 +3889,7 @@ section#faq             { padding-block: 120px; }
   position: relative;
 }
 
-.testimonials-section::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background:
-    radial-gradient(ellipse 65% 85% at 0% 50%, rgba(102, 155, 188, 0.09) 0%, transparent 60%),
-    radial-gradient(ellipse 55% 65% at 100% 25%, rgba(193, 18, 31, 0.07) 0%, transparent 55%);
-  pointer-events: none;
-  z-index: 0;
-}
+.testimonials-section::before { display: none; }
 .testimonials-section > .container { position: relative; z-index: 1; }
 
 .testimonial-card {
@@ -3970,12 +3943,12 @@ section#faq             { padding-block: 120px; }
 .vc-metrics-bar { display: none; }
 .market-hint    { display: none; }
 
-.proof-strip { border-left-color: var(--champagne); border-left-width: 4px; }
+.proof-strip { border-left-color: rgba(0, 48, 73, 0.12); border-left-width: 3px; }
 
 .proof-stat-num {
-  font-size: 52px !important;
-  font-weight: 100 !important;
-  color: var(--champagne) !important;
+  font-size: 44px !important;
+  font-weight: 300 !important;
+  color: var(--dark) !important;
   letter-spacing: -0.04em;
 }
 
@@ -3990,16 +3963,10 @@ section#faq             { padding-block: 120px; }
   content: '';
   position: absolute;
   right: 0;
-  top: 8%;
-  height: 84%;
+  top: 15%;
+  height: 70%;
   width: 1px;
-  background: linear-gradient(
-    to bottom,
-    transparent 0%,
-    rgba(201, 169, 110, 0.45) 28%,
-    rgba(201, 169, 110, 0.45) 72%,
-    transparent 100%
-  );
+  background: rgba(255, 255, 255, 0.1);
 }
 
 /* ─────────────────────────────────────────────────────────────── */
@@ -4027,9 +3994,7 @@ section#faq             { padding-block: 120px; }
 .btn:active { transform: scale(0.97); }
 
 .btn-primary:hover {
-  box-shadow:
-    var(--btn-shadow-hover),
-    0 0 36px rgba(193, 18, 31, 0.28);
+  box-shadow: var(--btn-shadow-hover);
 }
 
 .section-warm .btn-ghost:hover,
@@ -4045,12 +4010,8 @@ section#faq             { padding-block: 120px; }
 .cta-inner   { align-items: stretch; }
 .cta-panel   { padding: var(--space-15) var(--space-8); }
 
-/* Merchant CTA headline: white → champagne gold gradient text */
+/* Merchant CTA headline: clean white */
 .cta-panel-merchant .cta-headline .wt-900 {
-  background: linear-gradient(135deg, #fff 25%, var(--champagne) 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
   color: #fff;
 }
 
