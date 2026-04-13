@@ -49,12 +49,25 @@ export default function CustomCursor() {
       setHover(!!el.closest("a, button, [data-cursor-hover]"));
     };
 
+    const onDown = () => {
+      dot.classList.add("cursor-dot--pressed");
+      ring.classList.add("cursor-ring--pressed");
+    };
+    const onUp = () => {
+      dot.classList.remove("cursor-dot--pressed");
+      ring.classList.remove("cursor-ring--pressed");
+    };
+
     document.addEventListener("mousemove", onMove, { passive: true });
     document.addEventListener("mouseover", onOver, { passive: true });
+    document.addEventListener("mousedown", onDown, { passive: true });
+    document.addEventListener("mouseup", onUp, { passive: true });
 
     return () => {
       document.removeEventListener("mousemove", onMove);
       document.removeEventListener("mouseover", onOver);
+      document.removeEventListener("mousedown", onDown);
+      document.removeEventListener("mouseup", onUp);
       cancelAnimationFrame(rafId);
     };
   }, []);

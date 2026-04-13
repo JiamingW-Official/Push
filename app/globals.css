@@ -238,6 +238,25 @@ body {
     margin: -4px 0 0 -4px;
     background: var(--dark);
   }
+
+  /* Pressed / click state — compress dot, shrink ring */
+  .cursor-dot--pressed {
+    width: 4px;
+    height: 4px;
+    margin: -2px 0 0 -2px;
+    background: var(--accent);
+    transition: width 80ms ease, height 80ms ease,
+      margin 80ms ease, background 80ms ease;
+  }
+
+  .cursor-ring--pressed {
+    width: 26px;
+    height: 26px;
+    margin: -13px 0 0 -13px;
+    border-color: rgba(120, 0, 0, 0.7);
+    transition: width 80ms ease, height 80ms ease,
+      margin 80ms ease, border-color 80ms ease;
+  }
 }
 
 /* No border-radius (Push design rule) */
