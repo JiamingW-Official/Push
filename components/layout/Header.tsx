@@ -30,7 +30,9 @@ export default function Header() {
     const onScroll = () => {
       const y = window.scrollY;
       setScrolled(y > 30);
-      setHidden(y > 120 && y > lastY.current);
+      // Only hide after 400px and a meaningful downward delta — prevents
+      // micro-scroll jitter hiding the header while still in the hero.
+      setHidden(y > 400 && y - lastY.current > 3);
       lastY.current = y;
 
       // Calculate scroll progress (0–100)

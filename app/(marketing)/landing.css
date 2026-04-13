@@ -2872,7 +2872,9 @@ a:not(.btn):not([class*="btn"]):hover::after {
   transition-delay: var(--stagger, 0ms);
 }
 
-.tier-showcase.visible .tier-showcase-card {
+/* BUG FIX: ScrollRevealInit adds .visible to the .reveal WRAPPER div,
+   not to .tier-showcase itself. Use descendant selector from .reveal. */
+.reveal.visible .tier-showcase .tier-showcase-card {
   opacity: 1;
   transform: translateY(0);
 }
@@ -2885,23 +2887,18 @@ a:not(.btn):not([class*="btn"]):hover::after {
 .tier-showcase .tier-showcase-card:nth-child(6) { --stagger: 300ms; }
 
 /* Restore hover lift after reveal completes */
-.tier-showcase.visible .tier-showcase-card:hover {
+.reveal.visible .tier-showcase .tier-showcase-card:hover {
   transform: translateY(-8px);
 }
 
 /* --- Proof stats (3 stats, 60ms apart) ---
-     proof-stat also lacks .reveal; same pattern as tier-showcase-card */
+     .proof-stats has no .reveal ancestor so .visible never fires.
+     Use CSS animation fallback that fires from page-load time. */
 .proof-stats .proof-stat {
   opacity: 0;
   transform: translateY(20px);
-  transition: opacity 0.55s cubic-bezier(0.22, 1, 0.36, 1),
-              transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
-  transition-delay: var(--stagger, 0ms);
-}
-
-.proof-stats.visible .proof-stat {
-  opacity: 1;
-  transform: translateY(0);
+  animation: revealFallback 0.55s cubic-bezier(0.22, 1, 0.36, 1)
+    calc(1.4s + var(--stagger, 0ms)) both;
 }
 
 .proof-stats .proof-stat:nth-child(1) { --stagger: 0ms; }
@@ -3530,4 +3527,400 @@ h1, h2, h3 {
 section#faq {
   content-visibility: auto;
   contain-intrinsic-block-size: 500px;
+}
+
+/* ============================================================
+   20× DESIGN UPGRADE — v3
+   Goals: fix reveals, editorial typography, tier card overhaul,
+   interactive depth, rhythm, premium dark testimonials.
+   Constraints: Design.md 6-color palette, border-radius: 0.
+   ============================================================ */
+
+/* ── SECTION RHYTHM: generous vertical breathing ─────────────── */
+.section            { padding-block: 120px; }
+/* Restore overrides for sections with their own rhythm */
+.hero               { min-height: 100svh; padding-top: 80px; padding-bottom: var(--space-8); padding-block: unset; }
+.testimonials-section { padding-block: 100px; }
+.cta-section        { padding-block: 120px; }
+section#faq         { padding-block: 100px; }
+
+/* ── SPLIT HEADLINE: push to editorial scale ─────────────────── */
+.split-headline {
+  font-size: clamp(52px, 7vw, 96px);
+  letter-spacing: -0.065em;
+  line-height: 0.9;
+  margin-bottom: var(--space-5);
+}
+.split-headline .wt-300 {
+  color: rgba(0, 48, 73, 0.32);
+  display: block;
+}
+.section-warm .split-headline .wt-300 {
+  color: rgba(255, 255, 255, 0.28);
+}
+
+/* ── SECTION TAG: thicker accent line ───────────────────────── */
+.section-tag-line { width: 40px; height: 3px; }
+
+/* ── SPLIT BODY: slightly larger for readability ──────────────── */
+.split-body {
+  font-size: 15px;
+  line-height: 1.75;
+  max-width: 460px;
+  color: rgba(0, 48, 73, 0.58);
+}
+.section-warm .split-body {
+  color: rgba(245, 242, 236, 0.75);
+}
+
+/* ── FEATURE LIST: better line rhythm ─────────────────────────── */
+.feature-text { font-size: 13px; line-height: 1.7; }
+.section-warm .feature-text { color: rgba(255, 255, 255, 0.6); }
+
+/* ─────────────────────────────────────────────────────────────── */
+/* TIER CARDS — full editorial redesign                            */
+/* From: tiny flat cards with 4px swatch                          */
+/* To:   tall material cards — swatch 52px, Darky display name    */
+/* ─────────────────────────────────────────────────────────────── */
+.tier-showcase-card {
+  border-left: none;
+  border-top: 4px solid var(--tier-color, rgba(255, 255, 255, 0.15));
+  padding: 0;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.04);
+  min-height: 228px;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  position: relative;
+  transition:
+    transform 280ms cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 280ms ease,
+    background 240ms ease;
+}
+
+.tier-showcase-swatch {
+  width: 100%;
+  height: 52px;
+  flex-shrink: 0;
+  display: block;
+  margin-bottom: 0;
+}
+
+.tier-showcase-material {
+  font-family: var(--font-display);
+  font-size: clamp(16px, 2.2vw, 24px);
+  font-weight: 900;
+  letter-spacing: -0.045em;
+  line-height: 1;
+  color: #fff;
+  opacity: 1;
+  text-transform: none;
+  padding: 12px 14px 2px;
+  display: block;
+}
+
+.tier-showcase-name {
+  font-family: var(--font-body);
+  font-size: 9px;
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.38);
+  padding: 0 14px 8px;
+  display: block;
+  font-style: normal;
+}
+
+.tier-showcase-earning {
+  font-family: var(--font-display);
+  font-size: clamp(15px, 1.9vw, 20px);
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  color: var(--champagne);
+  padding: 0 14px 3px;
+  display: block;
+}
+
+.tier-earn-range {
+  font-family: var(--font-body);
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.3);
+  padding: 0 14px 6px;
+  display: block;
+}
+
+.tier-showcase-desc {
+  font-family: var(--font-body);
+  font-size: 10px;
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.4);
+  padding: 0 14px 14px;
+  margin-top: auto;
+  display: block;
+}
+
+/* Clay tier: uses dark text on light swatch */
+.tier-card--clay {
+  background: rgba(184, 169, 154, 0.12);
+  border-top-color: #b8a99a;
+}
+.tier-card--clay .tier-showcase-material { color: var(--dark); }
+.tier-card--clay .tier-showcase-name     { color: rgba(0, 48, 73, 0.45); }
+.tier-card--clay .tier-showcase-earning  { color: var(--accent); }
+.tier-card--clay .tier-earn-range        { color: rgba(0, 48, 73, 0.38); }
+.tier-card--clay .tier-showcase-desc     { color: rgba(0, 48, 73, 0.5); }
+
+/* Gold tier: champagne tones */
+.tier-card--gold {
+  background: rgba(201, 169, 110, 0.1);
+  border-top-color: #c9a96e;
+}
+.tier-card--gold .tier-showcase-material { color: var(--champagne); }
+
+/* Obsidian tier: near-black depth */
+.tier-card--obsidian {
+  background: rgba(26, 26, 46, 0.6);
+  border-top-color: #4a4a6e;
+}
+
+/* Hover: lift + subtle glow from tier color */
+.reveal.visible .tier-showcase .tier-showcase-card:hover {
+  transform: translateY(-10px);
+  box-shadow:
+    0 16px 40px rgba(0, 0, 0, 0.25),
+    0 0 0 1px var(--tier-color, rgba(255, 255, 255, 0.1));
+}
+
+/* Entry badge */
+.tier-entry-badge {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  font-family: var(--font-body);
+  font-size: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--dark);
+  background: var(--champagne);
+  padding: 3px 7px;
+  z-index: 2;
+  font-weight: 700;
+}
+
+/* Featured Operator card: highlighted */
+.tier-showcase-card--current {
+  background: rgba(102, 155, 188, 0.12);
+  border-top-width: 5px;
+  border-top-color: var(--tertiary);
+}
+
+/* ─────────────────────────────────────────────────────────────── */
+/* HOW IT WORKS — oversized watermark step numbers                 */
+/* ─────────────────────────────────────────────────────────────── */
+.how-step { overflow: hidden; }
+
+.how-step-num {
+  font-size: clamp(140px, 20vw, 220px);
+  font-weight: 900;
+  opacity: 0.04;
+  position: absolute;
+  top: -28px;
+  right: -12px;
+  line-height: 0.8;
+  letter-spacing: -0.1em;
+  z-index: 0;
+  pointer-events: none;
+  user-select: none;
+  color: var(--dark);
+}
+
+/* Ensure step content sits above giant watermark */
+.how-step-index,
+.how-step-title,
+.how-step-body,
+.how-step-bullets { position: relative; z-index: 1; }
+
+/* Richer hover: lift + shadow + accent bar */
+.how-step:hover {
+  background: var(--surface-elevated);
+  transform: translateY(-10px);
+  box-shadow: 0 20px 48px rgba(0, 48, 73, 0.09);
+}
+
+/* ─────────────────────────────────────────────────────────────── */
+/* PRICING — featured card scale lift + gold border                */
+/* ─────────────────────────────────────────────────────────────── */
+/* Featured card: elevated above siblings */
+.pricing-card-featured {
+  border: 2px solid rgba(201, 169, 110, 0.35);
+  border-top: 4px solid var(--champagne);
+  box-shadow:
+    0 16px 48px rgba(0, 48, 73, 0.1),
+    0 0 0 0 transparent;
+}
+.pricing-card-featured.visible {
+  transform: translateY(-8px) !important;
+}
+.pricing-card-featured:hover {
+  box-shadow: 0 24px 64px rgba(0, 48, 73, 0.14);
+  transform: translateY(-12px) !important;
+}
+
+/* Non-featured cards: subtle red top border */
+.pricing-card:not(.pricing-card-featured) {
+  border-top: 3px solid rgba(193, 18, 31, 0.2);
+}
+.pricing-card:not(.pricing-card-featured):hover {
+  border-top-color: var(--primary);
+}
+
+/* ─────────────────────────────────────────────────────────────── */
+/* TESTIMONIALS — dark section treatment, editorial quotes         */
+/* ─────────────────────────────────────────────────────────────── */
+.testimonials-section {
+  background: var(--dark);
+  position: relative;
+}
+
+/* Atmospheric depth gradient */
+.testimonials-section::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 60% 80% at 0% 50%, rgba(102, 155, 188, 0.07) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 60% at 100% 30%, rgba(193, 18, 31, 0.06) 0%, transparent 55%);
+  pointer-events: none;
+  z-index: 0;
+}
+.testimonials-section > .container { position: relative; z-index: 1; }
+
+.testimonial-card {
+  background: rgba(255, 255, 255, 0.04);
+  border-top: 3px solid rgba(255, 255, 255, 0.06);
+  padding: var(--space-6);
+  transition: background 240ms ease, transform 280ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.testimonial-card:hover {
+  background: rgba(255, 255, 255, 0.07);
+  transform: translateY(-6px);
+}
+.testimonial-card--merchant { border-top-color: var(--primary); }
+.testimonial-card--creator  { border-top-color: var(--champagne); }
+
+.testimonial-quote {
+  font-family: var(--font-display);
+  font-size: clamp(16px, 2.2vw, 22px);
+  font-weight: 300;
+  letter-spacing: -0.025em;
+  line-height: 1.45;
+  color: rgba(255, 255, 255, 0.82);
+  font-style: normal;
+  margin-bottom: var(--space-4);
+}
+
+.testimonial-name { color: #fff; font-weight: 700; }
+.testimonial-role { color: rgba(255, 255, 255, 0.38); }
+
+/* ─────────────────────────────────────────────────────────────── */
+/* PROOF STRIP — remove internal VC metrics from public page       */
+/* ─────────────────────────────────────────────────────────────── */
+.vc-metrics-bar { display: none; }
+.market-hint    { display: none; }
+
+/* Proof stat numbers: bigger and more prominent */
+.proof-stat-num {
+  font-size: 44px !important;
+  letter-spacing: -0.05em;
+}
+
+/* ─────────────────────────────────────────────────────────────── */
+/* HERO STATS: Champagne Gold accent dividers                      */
+/* ─────────────────────────────────────────────────────────────── */
+.stat-item { position: relative; padding-left: var(--space-4); }
+.stat-item:first-child { padding-left: 0; }
+
+/* Replace hard border-right with a gradient line */
+.stat-item:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 12%;
+  height: 76%;
+  width: 1px;
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(201, 169, 110, 0.35) 35%,
+    rgba(201, 169, 110, 0.35) 65%,
+    transparent 100%
+  );
+}
+/* Remove the old border-right */
+.stat-item { border-right: none; }
+.stat-item:last-child { border-right: none; padding-right: 0; }
+
+/* ─────────────────────────────────────────────────────────────── */
+/* REVEAL ANIMATIONS: more choreographed section entrances         */
+/* ─────────────────────────────────────────────────────────────── */
+/* Dark sections: bigger translateY for more drama */
+.section-warm .reveal,
+.cta-section .reveal {
+  transform: translateY(48px);
+}
+
+/* How-step cards: slide in from slightly left */
+.how-step.reveal {
+  transform: translateX(-28px) translateY(0);
+  transition:
+    opacity 0.65s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.65s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.how-step.reveal.visible {
+  transform: translateX(0) translateY(0) !important;
+  opacity: 1 !important;
+}
+
+/* ─────────────────────────────────────────────────────────────── */
+/* GLOBAL INTERACTIONS: button + link micro-feedback               */
+/* ─────────────────────────────────────────────────────────────── */
+/* Button: instant scale press */
+.btn:active { transform: scale(0.97); }
+
+/* Primary CTA: glow on hover */
+.btn-primary:hover {
+  box-shadow:
+    var(--btn-shadow-hover),
+    0 0 24px rgba(193, 18, 31, 0.22);
+}
+
+/* Ghost button in dark sections: brighter border */
+.section-warm .btn-ghost:hover,
+.cta-panel-merchant .btn:hover {
+  border-color: rgba(255, 255, 255, 0.55);
+  color: #fff;
+}
+
+/* ─────────────────────────────────────────────────────────────── */
+/* CTA SECTION: full-width dark impact                             */
+/* ─────────────────────────────────────────────────────────────── */
+.cta-section {
+  background: var(--dark);
+}
+
+/* Panels: equal height full stretch */
+.cta-inner { align-items: stretch; }
+.cta-panel { padding: var(--space-12) var(--space-8); }
+
+/* ─────────────────────────────────────────────────────────────── */
+/* MOBILE: responsive adjustments for upgraded layout              */
+/* ─────────────────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .section { padding-block: 80px; }
+  .split-headline { font-size: clamp(40px, 10vw, 64px); }
+  .tier-showcase-card { min-height: 180px; }
+  .how-step-num { font-size: clamp(90px, 22vw, 140px); }
+  .cta-panel { padding: var(--space-8) var(--space-4); }
+  .testimonial-quote { font-size: 16px; }
 }

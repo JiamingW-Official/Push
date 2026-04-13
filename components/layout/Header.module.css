@@ -12,7 +12,10 @@
   right: 0;
   z-index: 100;
   height: 64px;
-  background: transparent;
+  /* Dark gradient ensures white text is readable over any background —
+     subtle enough to be invisible over the dark hero, but prevents
+     white-on-white flash during hydration or light-section reveal */
+  background: linear-gradient(to bottom, rgba(0, 48, 73, 0.55) 0%, rgba(0, 48, 73, 0.1) 60%, transparent 100%);
   border-bottom: 1px solid transparent;
   overflow: visible;
   transition:
