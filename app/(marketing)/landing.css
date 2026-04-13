@@ -924,12 +924,14 @@
   }
 
   /* Final CTA: stacked panels */
-  .cta-inner {
+  .cta-inner,
+  .cta-panels {
     grid-template-columns: 1fr;
   }
 
   .cta-panel-creator {
-    border-left: 1px solid var(--line);
+    border-left: none;
+    border-top: 1px solid var(--line);
   }
 
   .cta-panel {
@@ -2345,3 +2347,83 @@ a:not(.btn):not([class*="btn"]):hover::after {
     font-size: 10px;
   }
 }
+
+/* ============================================================
+   Hero — premium micro-interactions
+   ============================================================ */
+
+/* Fix 1: "results." word shimmer on hover
+   Target: .hero-headline em (italic "results." word, color: var(--primary))
+   Requires data-text attribute on the <em> element for pseudo-content.
+   Falls back gracefully if attribute absent (overlay still animates). */
+.hero-headline em {
+  position: relative;
+  display: inline-block;
+  cursor: default;
+}
+
+.hero-headline em::after {
+  content: attr(data-text);
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    105deg,
+    transparent 30%,
+    rgba(201, 169, 110, 0.6) 50%,
+    transparent 70%
+  );
+  background-size: 200% 100%;
+  background-position: -100% 0;
+  -webkit-background-clip: text;
+  background-clip: text;
+  opacity: 0;
+  transition: opacity 300ms ease;
+  pointer-events: none;
+}
+
+.hero-headline em:hover::after {
+  opacity: 1;
+  background-position: 200% 0;
+  transition: opacity 300ms ease, background-position 600ms ease;
+}
+
+/* Fix 2: Hero eyebrow letter-spacing reveal animation */
+@keyframes eyebrowReveal {
+  from {
+    opacity: 0;
+    letter-spacing: 0.2em;
+  }
+  to {
+    opacity: 1;
+    letter-spacing: 0.08em;
+  }
+}
+
+.hero .section-tag-label,
+.hero-eyebrow {
+  animation: eyebrowReveal 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.3s both;
+}
+
+/* Fix 3: Hero content load animation stagger
+   Applies to direct children of .hero-content.
+   Existing per-element animations (line-black, line-light, hero-sub, hero-ctas)
+   take precedence via specificity; these delays align with the existing sequence. */
+@keyframes heroFadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.hero-content > * {
+  animation: heroFadeUp 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.hero-content > *:nth-child(1) { animation-delay: 0.1s; }
+.hero-content > *:nth-child(2) { animation-delay: 0.2s; }
+.hero-content > *:nth-child(3) { animation-delay: 0.35s; }
+.hero-content > *:nth-child(4) { animation-delay: 0.5s; }
