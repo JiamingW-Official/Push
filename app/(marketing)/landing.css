@@ -3031,6 +3031,81 @@ a {
 }
 
 /* ============================================================
+   Creator sub-message — "Earn on results, not reach"
+   ============================================================ */
+.creator-sub-message {
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--primary);
+  margin-top: var(--space-3);
+  margin-bottom: 0;
+}
+
+/* ============================================================
+   Platform Comparison — Push vs traditional
+   ============================================================ */
+.platform-compare {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px;
+  background: rgba(245, 242, 236, 0.07);
+  margin-top: var(--space-7);
+}
+
+.pc-col {
+  padding: var(--space-5);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.pc-col--push {
+  background: rgba(193, 18, 31, 0.06);
+  border-left: 3px solid var(--primary);
+}
+
+.pc-header {
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(245, 242, 236, 0.5);
+  margin-bottom: var(--space-4);
+}
+
+.pc-col--push .pc-header {
+  color: rgba(245, 242, 236, 0.85);
+}
+
+.pc-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.pc-list li {
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: rgba(245, 242, 236, 0.75);
+  line-height: 1.4;
+}
+
+.pc-list--others li {
+  color: rgba(245, 242, 236, 0.35);
+}
+
+@media (max-width: 640px) {
+  .platform-compare {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ============================================================
    Testimonials Section
    ============================================================ */
 .testimonials-section {
