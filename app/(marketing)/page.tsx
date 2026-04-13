@@ -495,29 +495,22 @@ function HeroCampaignPreview() {
 
 function FAQSection() {
   return (
-    <section className="section section-bright faq-section">
+    <section id="faq" className="section">
       <div className="container">
-        <div className="reveal">
+        <div className="section-header reveal">
           <div className="section-tag">
-            <span className="section-ghost-num" aria-hidden="true">
-              05
-            </span>
-            <span className="section-tag-num">05</span>
-            <span className="section-tag-line" />
             <span className="section-tag-label">FAQ</span>
+            <span className="section-tag-line" aria-hidden="true" />
           </div>
-          <h2>
-            Common questions.
-            <br />
-            <span style={{ fontWeight: 300, opacity: 0.45 }}>
-              Straight answers.
-            </span>
+          <h2 className="split-headline">
+            <span className="wt-900">Common</span>{" "}
+            <span className="wt-300">questions.</span>
           </h2>
         </div>
-        <div className="faq-grid reveal" style={{ transitionDelay: "100ms" }}>
+        <div className="faq-grid reveal">
           {FAQ_ITEMS.map((item, i) => (
             <div key={i} className="faq-item">
-              <p className="faq-q">{item.q}</p>
+              <h3 className="faq-q">{item.q}</h3>
               <p className="faq-a">{item.a}</p>
             </div>
           ))}
@@ -545,28 +538,28 @@ const TICKER_ITEMS = [
 
 const FAQ_ITEMS = [
   {
-    q: "How does the QR code attribution work?",
-    a: "Each creator gets a unique QR code linked to their campaign. When a customer scans it at the point of purchase, that transaction is attributed directly to that creator. Push logs every scan — no manual tracking needed.",
+    q: "How is a 'visit' verified?",
+    a: "Customers scan a unique QR code at your location. Push records the scan with timestamp and location — no scan, no charge.",
   },
   {
-    q: "Do creators need a large following to join?",
-    a: "No. Push is performance-based, not follower-based. Seed tier requires zero followers. Your performance score (built through completed campaigns and verified transactions) determines your tier and earning potential.",
+    q: "What if a creator has low followers?",
+    a: "Follower count is irrelevant. We score creators on verified conversion rate. A micro-creator with 500 followers who drives 30 visits beats one with 50K who drives zero.",
   },
   {
-    q: "How are payouts calculated and released?",
-    a: "Payouts = flat campaign fee + transaction commission + optional milestone bonus. Funds are released automatically after verification — typically within 48 hours of campaign end.",
+    q: "Is there a monthly fee?",
+    a: "No. You set a per-visit rate and only pay when visits happen. The $19.99/mo Starter plan is optional for volume discounts and advanced analytics.",
   },
   {
-    q: "What does it cost to launch a campaign as a merchant?",
-    a: "Starter at $19.99/mo (2 campaigns, 3 creator slots), Growth at $69/mo (4 campaigns, 5 slots), Pro at $199/mo (unlimited). No setup fees. No agency markup. Cancel anytime.",
+    q: "How do creators get paid?",
+    a: "Earnings are calculated weekly and paid via direct deposit. No invoicing, no waiting 30 days — just results.",
   },
   {
-    q: "How do you prevent fraud or fake QR scans?",
-    a: "Push uses transaction-level verification — a scan only counts when it's accompanied by a real purchase. We cross-reference scan timestamps, device fingerprints, and purchase data to flag anomalies.",
+    q: "What cities is Push available in?",
+    a: "Currently NYC-only in beta. We're building network density before expanding — quality over coverage.",
   },
   {
-    q: "How fast can I launch a campaign?",
-    a: "From signup to live campaign: under 24 hours. Push handles creator matching — you set the goal, budget, and payout. We surface qualified creators based on score, tier, and proximity.",
+    q: "Can I cancel anytime?",
+    a: "Yes. No contracts, no lock-in. Pause or cancel campaigns at any time from your dashboard.",
   },
 ];
 
@@ -1362,6 +1355,11 @@ export default function LandingPage() {
             </span>
           </div>
 
+          <p className="pricing-vs">
+            Compare: traditional local ads cost $500–$2,000/month with zero
+            performance guarantee.
+          </p>
+
           {/* Creator free banner — audit #25 */}
           <div
             className="pricing-creator-banner"
@@ -1456,6 +1454,51 @@ export default function LandingPage() {
             >
               ✓ 24h support
             </span>
+          </div>
+        </div>
+      </section>
+
+      {/* Testimonials */}
+      <section className="section testimonials-section">
+        <div className="container">
+          <div className="testimonials-grid reveal">
+            <blockquote className="testimonial-card testimonial-card--merchant">
+              <p className="testimonial-quote">
+                &ldquo;We spent $200 and got 47 verified visits in one week.
+                That&apos;s better ROI than any Instagram ad we&apos;ve
+                run.&rdquo;
+              </p>
+              <footer className="testimonial-footer">
+                <span className="testimonial-name">Maria C.</span>
+                <span className="testimonial-role">
+                  Owner, Café Dos Alas — Brooklyn
+                </span>
+              </footer>
+            </blockquote>
+            <blockquote className="testimonial-card testimonial-card--creator">
+              <p className="testimonial-quote">
+                &ldquo;I posted twice about a ramen spot near me and made $180.
+                Push actually pays out — and fast.&rdquo;
+              </p>
+              <footer className="testimonial-footer">
+                <span className="testimonial-name">@jayxnyc</span>
+                <span className="testimonial-role">
+                  Creator, 3,200 followers — Manhattan
+                </span>
+              </footer>
+            </blockquote>
+            <blockquote className="testimonial-card testimonial-card--merchant">
+              <p className="testimonial-quote">
+                &ldquo;The QR attribution is the thing. We finally know exactly
+                which post drove which customer.&rdquo;
+              </p>
+              <footer className="testimonial-footer">
+                <span className="testimonial-name">David K.</span>
+                <span className="testimonial-role">
+                  Co-founder, Uptown Fitness — Harlem
+                </span>
+              </footer>
+            </blockquote>
           </div>
         </div>
       </section>
