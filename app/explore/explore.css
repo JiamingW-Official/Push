@@ -1125,6 +1125,102 @@
   outline-offset: 2px;
 }
 
+/* ── Sign-up nudge banner ─────────────────────────────────── */
+.exp-signup-nudge {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: 10px 24px;
+  background: var(--dark);
+  border-bottom: 1px solid rgba(0, 48, 73, 0.12);
+}
+
+.exp-nudge-text {
+  font-size: var(--text-caption);
+  color: rgba(255, 255, 255, 0.55);
+  letter-spacing: 0.02em;
+  line-height: 1.4;
+}
+
+.exp-nudge-btn {
+  font-family: var(--font-body);
+  font-size: var(--text-caption);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #fff;
+  background: var(--primary);
+  padding: 5px 14px;
+  white-space: nowrap;
+  text-decoration: none;
+  transition: background var(--t-fast);
+  flex-shrink: 0;
+}
+
+.exp-nudge-btn:hover {
+  background: var(--accent);
+  color: #fff;
+}
+
+/* ── Card description snippet ─────────────────────────────── */
+.card-desc {
+  font-size: 11px;
+  color: rgba(0, 48, 73, 0.4);
+  line-height: 1.45;
+  margin: 2px 0 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* ── Card apply row ───────────────────────────────────────── */
+.card-apply-row {
+  margin-top: 8px;
+  display: flex;
+  align-items: center;
+  opacity: 0;
+  transform: translateY(4px);
+  transition:
+    opacity 180ms ease,
+    transform 180ms ease;
+  pointer-events: none;
+}
+
+.explore-card:hover .card-apply-row,
+.explore-card--active .card-apply-row,
+.explore-card--hovered .card-apply-row {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.card-apply-btn {
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--dark);
+  text-decoration: none;
+  padding: 5px 12px;
+  background: var(--surface);
+  border: 1px solid rgba(0, 48, 73, 0.18);
+  transition:
+    background var(--t-fast),
+    color var(--t-fast),
+    border-color var(--t-fast);
+  display: inline-block;
+}
+
+.card-apply-btn:hover {
+  background: var(--dark);
+  color: #fff;
+  border-color: var(--dark);
+}
+
 /* ── Nav demo link ────────────────────────────────────────── */
 .nav-link--demo {
   color: var(--tertiary);

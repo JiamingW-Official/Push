@@ -662,16 +662,23 @@
   align-self: flex-start;
 }
 
-/* Tier lock overlay */
+/* Tier lock badge — small corner tag, not a full-card overlay */
 .dash-card-tier-lock {
   position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(245, 242, 236, 0.7);
-  font-size: 20px;
+  bottom: 8px;
+  right: 8px;
+  background: rgba(0, 48, 73, 0.08);
+  border: 1px solid rgba(0, 48, 73, 0.18);
+  padding: 2px 7px;
+  font-family: var(--font-body);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--text-muted);
   pointer-events: none;
+  border-radius: 0;
+  white-space: nowrap;
 }
 
 /* ── 8. Right Slide Panel ─────────────────────────────────── */
@@ -1033,6 +1040,7 @@
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
+  border-radius: 0;
 }
 
 .dash-payout-status--completed {

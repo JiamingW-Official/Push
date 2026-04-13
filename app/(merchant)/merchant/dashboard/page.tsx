@@ -571,7 +571,9 @@ function CampaignsTab({
           </a>
         </div>
       ) : (
-        <div className="db-campaign-list">
+        <div
+          className={`db-campaign-list${isDemo ? " db-campaign-list--demo" : ""}`}
+        >
           <div className="db-table-header">
             <div className="db-table-header__cell">Campaign</div>
             <div className="db-table-header__cell">Status</div>

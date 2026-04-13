@@ -182,7 +182,7 @@ const DEMO_CREATOR: Creator = {
   push_score: 71,
   campaigns_completed: 12,
   campaigns_accepted: 14,
-  earnings_total: 340,
+  earnings_total: 130,
   earnings_pending: 75,
   instagram_followers: 4200,
 };
@@ -900,8 +900,8 @@ export default function CreatorDashboard() {
             activeId={displayId}
             onPinClick={handlePinClick}
             onPopupClose={handlePopupClose}
-            showPricePills
-            showPopups
+            showPricePills={view === "discover"}
+            showPopups={view === "discover"}
             mono
           />
         </div>

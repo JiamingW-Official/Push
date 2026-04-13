@@ -501,6 +501,16 @@ export default function ExplorePage() {
             </div>
           </div>
 
+          {/* ── Sign-up nudge ─────────────────────────────── */}
+          <div className="exp-signup-nudge">
+            <span className="exp-nudge-text">
+              Join free to apply — no followers required
+            </span>
+            <Link href="/creator/signup" className="exp-nudge-btn">
+              Get started →
+            </Link>
+          </div>
+
           {/* ── Card list ─────────────────────────────────── */}
           <div className="panel-list-wrap">
             <div className="panel-list">
@@ -674,6 +684,9 @@ function ExploreCard({
 
         <h3 className="card-title">{c.title}</h3>
 
+        {/* Description snippet */}
+        {c.description && <p className="card-desc">{c.description}</p>}
+
         <div className="card-row-meta">
           {/* Spots with urgency */}
           <span
@@ -696,6 +709,17 @@ function ExploreCard({
               {deadlineLabel}
             </span>
           )}
+        </div>
+
+        {/* Apply CTA — shown on active/hover */}
+        <div className="card-apply-row">
+          <Link
+            href="/creator/signup"
+            className="card-apply-btn"
+            onClick={(e) => e.stopPropagation()}
+          >
+            Apply →
+          </Link>
         </div>
       </div>
     </div>
