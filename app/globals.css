@@ -69,7 +69,7 @@
   src: url('/fonts/Darky-Black.ttf') format('truetype');
   font-weight: 900;
   font-style: normal;
-  font-display: swap;
+  font-display: optional;
 }
 @font-face {
   font-family: 'CSGenioMono';
@@ -165,7 +165,9 @@
 html {
   font-size: 16px;
   -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
   scroll-behavior: auto; /* Lenis handles smooth scroll */
+  scroll-padding-top: 80px; /* Account for sticky 64px header on anchor jumps */
 }
 body {
   font-family: var(--font-body);

@@ -495,29 +495,22 @@ function HeroCampaignPreview() {
 
 function FAQSection() {
   return (
-    <section className="section section-bright faq-section">
+    <section id="faq" className="section">
       <div className="container">
-        <div className="reveal">
+        <div className="section-header reveal">
           <div className="section-tag">
-            <span className="section-ghost-num" aria-hidden="true">
-              05
-            </span>
-            <span className="section-tag-num">05</span>
-            <span className="section-tag-line" />
             <span className="section-tag-label">FAQ</span>
+            <span className="section-tag-line" aria-hidden="true" />
           </div>
-          <h2>
-            Common questions.
-            <br />
-            <span style={{ fontWeight: 300, opacity: 0.45 }}>
-              Straight answers.
-            </span>
+          <h2 className="split-headline">
+            <span className="wt-900">Common</span>{" "}
+            <span className="wt-300">questions.</span>
           </h2>
         </div>
-        <div className="faq-grid reveal" style={{ transitionDelay: "100ms" }}>
+        <div className="faq-grid reveal">
           {FAQ_ITEMS.map((item, i) => (
             <div key={i} className="faq-item">
-              <p className="faq-q">{item.q}</p>
+              <h3 className="faq-q">{item.q}</h3>
               <p className="faq-a">{item.a}</p>
             </div>
           ))}
@@ -545,34 +538,60 @@ const TICKER_ITEMS = [
 
 const FAQ_ITEMS = [
   {
-    q: "How does the QR code attribution work?",
-    a: "Each creator gets a unique QR code linked to their campaign. When a customer scans it at the point of purchase, that transaction is attributed directly to that creator. Push logs every scan — no manual tracking needed.",
+    q: "How is a 'visit' verified?",
+    a: "Customers scan a unique QR code at your location. Push records the scan with timestamp and location — no scan, no charge.",
   },
   {
-    q: "Do creators need a large following to join?",
-    a: "No. Push is performance-based, not follower-based. Seed tier requires zero followers. Your performance score (built through completed campaigns and verified transactions) determines your tier and earning potential.",
+    q: "What if a creator has low followers?",
+    a: "Follower count is irrelevant. We score creators on verified conversion rate. A micro-creator with 500 followers who drives 30 visits beats one with 50K who drives zero.",
   },
   {
-    q: "How are payouts calculated and released?",
-    a: "Payouts = flat campaign fee + transaction commission + optional milestone bonus. Funds are released automatically after verification — typically within 48 hours of campaign end.",
+    q: "Is there a monthly fee?",
+    a: "No. You set a per-visit rate and only pay when visits happen. The $19.99/mo Starter plan is optional for volume discounts and advanced analytics.",
   },
   {
-    q: "What does it cost to launch a campaign as a merchant?",
-    a: "Starter at $19.99/mo (2 campaigns, 3 creator slots), Growth at $69/mo (4 campaigns, 5 slots), Pro at $199/mo (unlimited). No setup fees. No agency markup. Cancel anytime.",
+    q: "How do creators get paid?",
+    a: "Earnings are calculated weekly and paid via direct deposit. No invoicing, no waiting 30 days — just results.",
   },
   {
-    q: "How do you prevent fraud or fake QR scans?",
-    a: "Push uses transaction-level verification — a scan only counts when it's accompanied by a real purchase. We cross-reference scan timestamps, device fingerprints, and purchase data to flag anomalies.",
+    q: "What cities is Push available in?",
+    a: "Currently NYC-only in beta. We're building network density before expanding — quality over coverage.",
   },
   {
-    q: "How fast can I launch a campaign?",
-    a: "From signup to live campaign: under 24 hours. Push handles creator matching — you set the goal, budget, and payout. We surface qualified creators based on score, tier, and proximity.",
+    q: "Can I cancel anytime?",
+    a: "Yes. No contracts, no lock-in. Pause or cancel campaigns at any time from your dashboard.",
   },
 ];
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  name: "Push",
+  description:
+    "Creator marketplace for NYC businesses. Pay per verified visit.",
+  applicationCategory: "BusinessApplication",
+  operatingSystem: "Web",
+  url: "https://pushnyc.co",
+  offers: {
+    "@type": "Offer",
+    price: "19.99",
+    priceCurrency: "USD",
+    description: "Merchant subscription starting at $19.99/month",
+  },
+  provider: {
+    "@type": "Organization",
+    name: "Push",
+    url: "https://pushnyc.co",
+  },
+};
 
 export default function LandingPage() {
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <ScrollRevealInit />
       <LandingInteractivity />
 
@@ -582,7 +601,7 @@ export default function LandingPage() {
           {/* Left: content */}
           <div className="hero-content">
             <p className="eyebrow hero-eyebrow">
-              NYC&apos;s Local Creator Marketplace
+              PERFORMANCE-BASED CREATOR MARKETING · NYC BETA
             </p>
 
             {/* Weight contrast: Black 900 / Thin 200 */}
@@ -594,39 +613,25 @@ export default function LandingPage() {
             </h1>
 
             <p className="hero-sub">
-              Creators post. Customers show up. You only pay when it works —
-              verified by QR code attribution at every transaction.
+              Pay only when a creator drives a verified visit — tracked by QR
+              code. Every transaction attributed. Zero guesswork.
             </p>
 
-            <p
-              className="hero-sub hero-sub--micro"
-              style={{
-                fontSize: "var(--text-small)",
-                opacity: 0.6,
-              }}
-            >
-              Creators: zero followers required to start earning.
+            <p className="hero-audience-line">
+              For businesses that want foot traffic. For creators who want to
+              earn.
             </p>
 
             <div className="hero-ctas">
-              <Link href="/merchant/signup" className="btn btn-primary">
-                Start for $19.99 / mo
+              <Link href="#pricing" className="btn btn-primary">
+                Start Free
               </Link>
-              <Link href="/creator/signup" className="btn btn-ghost">
-                Join as Creator — Free
+              <Link href="#how-it-works" className="btn btn-ghost">
+                See How It Works
               </Link>
             </div>
-            <p
-              className="hero-reassurance"
-              style={{
-                fontSize: "11px",
-                opacity: 0.5,
-                marginTop: "8px",
-                fontFamily: "var(--font-body)",
-                letterSpacing: "0.04em",
-              }}
-            >
-              No contracts · Cancel anytime · Free for creators
+            <p className="hero-reassurance">
+              No followers minimum. No upfront fees. No contracts.
             </p>
             <a
               href="/demo/creator"
@@ -956,6 +961,52 @@ export default function LandingPage() {
         </div>
       </section>
 
+      {/* ── Attribution Explainer ────────────────────────────── */}
+      <section className="section section-bright">
+        <div className="container">
+          <div className="attr-explainer reveal">
+            <h3 className="attr-explainer-title">How verification works</h3>
+            <div className="attr-steps">
+              <div className="attr-step">
+                <div className="attr-step-num">1</div>
+                <div className="attr-step-content">
+                  <strong>Creator posts</strong>
+                  <span>Content goes live with your unique campaign link</span>
+                </div>
+              </div>
+              <div className="attr-connector" aria-hidden="true">
+                →
+              </div>
+              <div className="attr-step">
+                <div className="attr-step-num">2</div>
+                <div className="attr-step-content">
+                  <strong>Customer visits</strong>
+                  <span>
+                    They show up and scan the QR code at your location
+                  </span>
+                </div>
+              </div>
+              <div className="attr-connector" aria-hidden="true">
+                →
+              </div>
+              <div className="attr-step">
+                <div className="attr-step-num">3</div>
+                <div className="attr-step-content">
+                  <strong>You pay</strong>
+                  <span>
+                    Only for confirmed, QR-verified visits — nothing else
+                  </span>
+                </div>
+              </div>
+            </div>
+            <p className="attr-note">
+              Average verified visit costs $4–$12. Traditional ads: $15–$50 per
+              click with no visit guarantee.
+            </p>
+          </div>
+        </div>
+      </section>
+
       {/* ── 02 · For Creators ────────────────────────────────── */}
       <section id="creators" className="section section-warm">
         <div className="container">
@@ -974,6 +1025,8 @@ export default function LandingPage() {
               <span className="wt-900">No followers</span>
               <span className="wt-300">required.</span>
             </h2>
+
+            <p className="creator-sub-message">Earn on results, not reach.</p>
 
             <p className="split-body">
               Your performance score is your currency. Build it from day one —
@@ -1085,6 +1138,31 @@ export default function LandingPage() {
                   </div>
                 </div>
 
+                <div className="platform-compare reveal">
+                  <div className="pc-col pc-col--push">
+                    <div className="pc-header">Push</div>
+                    <ul className="pc-list">
+                      <li>✓ Paid per verified visit</li>
+                      <li>✓ No minimum followers</li>
+                      <li>✓ Weekly payouts</li>
+                      <li>✓ NYC-focused campaigns</li>
+                      <li>✓ Build a verified track record</li>
+                    </ul>
+                  </div>
+                  <div className="pc-col pc-col--others">
+                    <div className="pc-header">
+                      Traditional Influencer Platforms
+                    </div>
+                    <ul className="pc-list pc-list--others">
+                      <li>✗ Pay per post, not per result</li>
+                      <li>✗ Need 10K+ followers to qualify</li>
+                      <li>✗ 30-90 day payment delays</li>
+                      <li>✗ National brands, not local</li>
+                      <li>✗ No performance history</li>
+                    </ul>
+                  </div>
+                </div>
+
                 <blockquote className="creator-testimonial">
                   <p>
                     &ldquo;I earned $320 last month just visiting restaurants
@@ -1123,7 +1201,7 @@ export default function LandingPage() {
       </section>
 
       {/* ── 03 · How it Works ────────────────────────────────── */}
-      <section className="section section-bright">
+      <section id="how-it-works" className="section section-bright">
         <div className="container">
           <div className="reveal">
             <div className="section-tag">
@@ -1225,13 +1303,13 @@ export default function LandingPage() {
                 </span>
                 <span className="section-tag-num">04</span>
                 <span className="section-tag-line" />
-                <span className="section-tag-label">Pricing</span>
+                <span className="section-tag-label">Transparent Pricing</span>
               </div>
               <h2>
-                Three plans, flat pricing
+                Pricing that scales
                 <br />
                 <span style={{ fontWeight: 300, opacity: 0.45 }}>
-                  merchant pricing.
+                  with results.
                 </span>
               </h2>
             </div>
@@ -1249,7 +1327,7 @@ export default function LandingPage() {
                 int: "$19",
                 dec: ".99",
                 period: "/mo",
-                desc: "Launch your first campaigns and see real attribution in action.",
+                desc: "Pay per visit, keep full control.",
                 features: [
                   "2 active campaigns",
                   "3 creator slots",
@@ -1266,7 +1344,7 @@ export default function LandingPage() {
                 int: "$69",
                 dec: "",
                 period: "/mo",
-                desc: "Scale what works. More campaigns, deeper insights, faster matching.",
+                desc: "Best for growing restaurants, gyms, retail.",
                 features: [
                   "4 active campaigns",
                   "5 creator slots",
@@ -1283,7 +1361,7 @@ export default function LandingPage() {
                 int: "$199",
                 dec: "",
                 period: "/mo",
-                desc: "Unlimited campaigns. Dedicated support. Full platform access.",
+                desc: "Unlimited campaigns, priority matching.",
                 features: [
                   "Unlimited campaigns",
                   "8 creator slots",
@@ -1349,6 +1427,11 @@ export default function LandingPage() {
               × 3 visits = <strong>$255 return</strong>
             </span>
           </div>
+
+          <p className="pricing-vs">
+            Compare: traditional local ads cost $500–$2,000/month with zero
+            performance guarantee.
+          </p>
 
           {/* Creator free banner — audit #25 */}
           <div
@@ -1444,6 +1527,51 @@ export default function LandingPage() {
             >
               ✓ 24h support
             </span>
+          </div>
+        </div>
+      </section>
+
+      {/* Testimonials */}
+      <section className="section testimonials-section">
+        <div className="container">
+          <div className="testimonials-grid reveal">
+            <blockquote className="testimonial-card testimonial-card--merchant">
+              <p className="testimonial-quote">
+                &ldquo;We spent $200 and got 47 verified visits in one week.
+                That&apos;s better ROI than any Instagram ad we&apos;ve
+                run.&rdquo;
+              </p>
+              <footer className="testimonial-footer">
+                <span className="testimonial-name">Maria C.</span>
+                <span className="testimonial-role">
+                  Owner, Café Dos Alas — Brooklyn
+                </span>
+              </footer>
+            </blockquote>
+            <blockquote className="testimonial-card testimonial-card--creator">
+              <p className="testimonial-quote">
+                &ldquo;I posted twice about a ramen spot near me and made $180.
+                Push actually pays out — and fast.&rdquo;
+              </p>
+              <footer className="testimonial-footer">
+                <span className="testimonial-name">@jayxnyc</span>
+                <span className="testimonial-role">
+                  Creator, 3,200 followers — Manhattan
+                </span>
+              </footer>
+            </blockquote>
+            <blockquote className="testimonial-card testimonial-card--merchant">
+              <p className="testimonial-quote">
+                &ldquo;The QR attribution is the thing. We finally know exactly
+                which post drove which customer.&rdquo;
+              </p>
+              <footer className="testimonial-footer">
+                <span className="testimonial-name">David K.</span>
+                <span className="testimonial-role">
+                  Co-founder, Uptown Fitness — Harlem
+                </span>
+              </footer>
+            </blockquote>
           </div>
         </div>
       </section>

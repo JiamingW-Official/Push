@@ -135,6 +135,77 @@
   color: #c1121f;
 }
 
+/* ---- Waitlist row ---- */
+.waitlistRow {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding: 24px 0;
+  border-bottom: 1px solid rgba(245, 242, 236, 0.08);
+  margin-bottom: 40px;
+  flex-wrap: wrap;
+}
+
+.waitlistLabel {
+  font-family: var(--font-body);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(245, 242, 236, 0.5);
+  flex-shrink: 0;
+  margin: 0;
+}
+
+.waitlistForm {
+  display: flex;
+  gap: 0;
+  flex: 1;
+  max-width: 360px;
+}
+
+.waitlistInput {
+  flex: 1;
+  height: 40px;
+  padding: 0 12px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-right: none;
+  color: rgba(245, 242, 236, 0.9);
+  font-family: var(--font-body);
+  font-size: 12px;
+  border-radius: 0;
+  outline: none;
+}
+
+.waitlistInput::placeholder {
+  color: rgba(245, 242, 236, 0.3);
+}
+
+.waitlistInput:focus {
+  border-color: rgba(193, 18, 31, 0.5);
+}
+
+.waitlistBtn {
+  height: 40px;
+  padding: 0 16px;
+  background: var(--primary);
+  color: #fff;
+  font-family: var(--font-body);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-weight: 700;
+  border: none;
+  border-radius: 0;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background 200ms ease;
+}
+
+.waitlistBtn:hover {
+  background: var(--accent);
+}
+
 /* ---- Responsive ---- */
 @media (max-width: 768px) {
   .footerGrid {

@@ -1,7 +1,7 @@
 import { ImageResponse } from "next/og";
 
 export const runtime = "edge";
-export const alt = "Push — Turn Creators into Results";
+export const alt = "Push — Pay Per Verified Visit";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -42,7 +42,7 @@ export default function OGImage() {
       >
         <div
           style={{
-            fontSize: 18,
+            fontSize: 22,
             fontWeight: 900,
             color: "#ffffff",
             letterSpacing: "-0.04em",
@@ -54,7 +54,7 @@ export default function OGImage() {
         <div
           style={{
             width: 1,
-            height: 16,
+            height: 18,
             background: "rgba(255,255,255,0.2)",
           }}
         />
@@ -63,49 +63,91 @@ export default function OGImage() {
             fontSize: 11,
             fontWeight: 700,
             color: "rgba(255,255,255,0.4)",
-            letterSpacing: "0.1em",
+            letterSpacing: "0.12em",
             textTransform: "uppercase",
             fontFamily: "monospace",
           }}
         >
-          NYC&apos;s Local Creator Marketplace
+          NYC Creator Marketplace
         </div>
       </div>
+
+      {/* Red accent bar */}
+      <div
+        style={{
+          position: "absolute",
+          top: 0,
+          right: 0,
+          width: 6,
+          height: "100%",
+          background: "#c1121f",
+        }}
+      />
 
       {/* Headline */}
       <div
         style={{
           display: "flex",
           flexDirection: "column",
-          gap: 0,
+          gap: 8,
           position: "relative",
           zIndex: 1,
         }}
       >
+        {/* Big wordmark */}
         <div
           style={{
-            fontSize: 96,
+            fontSize: 120,
             fontWeight: 900,
             color: "#ffffff",
-            lineHeight: 0.9,
-            letterSpacing: "-0.05em",
+            lineHeight: 0.85,
+            letterSpacing: "-0.06em",
             fontFamily: "serif",
           }}
         >
-          Turn creators
+          Push
         </div>
+        {/* Tagline */}
         <div
           style={{
-            fontSize: 96,
-            fontWeight: 200,
-            color: "rgba(255,255,255,0.35)",
-            lineHeight: 0.9,
-            letterSpacing: "-0.05em",
-            fontFamily: "serif",
+            display: "flex",
+            alignItems: "center",
+            gap: 16,
+            marginTop: 16,
           }}
         >
-          into{" "}
-          <span style={{ color: "#c1121f", fontWeight: 900 }}>results.</span>
+          <div
+            style={{
+              width: 40,
+              height: 3,
+              background: "#c1121f",
+            }}
+          />
+          <div
+            style={{
+              fontSize: 28,
+              fontWeight: 700,
+              color: "rgba(255,255,255,0.85)",
+              letterSpacing: "-0.02em",
+              fontFamily: "monospace",
+              textTransform: "uppercase",
+            }}
+          >
+            Pay Per Verified Visit
+          </div>
+        </div>
+        {/* Sub-tagline */}
+        <div
+          style={{
+            fontSize: 18,
+            fontWeight: 400,
+            color: "rgba(255,255,255,0.45)",
+            letterSpacing: "0.01em",
+            fontFamily: "monospace",
+            marginTop: 8,
+          }}
+        >
+          QR-tracked attribution · No followers minimum · No upfront fees
         </div>
       </div>
 
