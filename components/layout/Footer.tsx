@@ -44,10 +44,10 @@ const IconLinkedIn = () => (
 );
 
 const PLATFORM_LINKS = [
-  { label: "For Merchants", href: "/merchant/signup" },
+  { label: "For Merchants", href: "/for-merchants" },
   { label: "For Creators", href: "/creator/signup" },
-  { label: "Pricing", href: "#pricing" },
-  { label: "Demo", href: "#demo" },
+  { label: "Pricing", href: "/#pricing" },
+  { label: "Demo", href: "/demo/creator" },
 ];
 
 const COMPANY_LINKS = [
@@ -70,11 +70,8 @@ export default function Footer() {
           <div className={styles.brandCol}>
             <span className={styles.footerLogo}>Push</span>
             <p className={styles.footerTagline}>
-              NYC-first creator acquisition.
-            </p>
-            <p className={styles.footerTagline} style={{ marginTop: 8 }}>
-              The AI engine that turns creators into measurable customer
-              acquisition for local businesses.
+              NYC-first marketplace connecting businesses with creators who
+              drive verified foot traffic.
             </p>
           </div>
 
@@ -111,21 +108,21 @@ export default function Footer() {
           {/* Social links */}
           <div className={styles.socialLinks}>
             <a
-              href="https://twitter.com"
+              href="https://twitter.com/pushnyc"
               className={styles.socialLink}
               aria-label="Twitter / X"
             >
               <IconTwitterX />
             </a>
             <a
-              href="https://instagram.com"
+              href="https://instagram.com/pushnyc"
               className={styles.socialLink}
               aria-label="Instagram"
             >
               <IconInstagram />
             </a>
             <a
-              href="https://linkedin.com"
+              href="https://linkedin.com/company/pushnyc"
               className={styles.socialLink}
               aria-label="LinkedIn"
             >
