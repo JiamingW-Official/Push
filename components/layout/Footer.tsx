@@ -1,5 +1,6 @@
 import Link from "next/link";
 import styles from "./Footer.module.css";
+import WaitlistForm from "./WaitlistForm";
 
 const IconTwitterX = () => (
   <svg
@@ -64,20 +65,7 @@ export default function Footer() {
         {/* Waitlist email capture */}
         <div className={styles.waitlistRow}>
           <p className={styles.waitlistLabel}>Get early access</p>
-          <form
-            className={styles.waitlistForm}
-            onSubmit={(e) => e.preventDefault()}
-          >
-            <input
-              type="email"
-              placeholder="your@email.com"
-              className={styles.waitlistInput}
-              aria-label="Email for early access"
-            />
-            <button type="submit" className={styles.waitlistBtn}>
-              Join Waitlist
-            </button>
-          </form>
+          <WaitlistForm />
         </div>
 
         {/* Top border */}

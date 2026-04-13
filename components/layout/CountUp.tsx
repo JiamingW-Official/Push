@@ -79,7 +79,7 @@ export default function CountUp({
   }, [target, duration, suffix, prefix, decimals]);
 
   return (
-    <span ref={spanRef}>
+    <span ref={spanRef} aria-live="polite">
       {prefix}
       {decimals > 0 ? (0).toFixed(decimals) : "0"}
       {suffix}
