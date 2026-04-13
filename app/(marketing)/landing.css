@@ -819,15 +819,30 @@
   .section          { padding-block: var(--space-8); }
   .cta-section      { padding-block: 0; }
 
-  /* Stats: 2-col */
-  .hero-stats { grid-template-columns: 1fr 1fr; }
+  /* Stats: vertical stack — #42: prevents 3rd item full-width on 375px */
+  .hero-stats {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+
+  .stat-item {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: var(--space-3);
+    border-right: none;
+    border-bottom: 1px solid rgba(245, 242, 236, 0.12);
+    padding-bottom: var(--space-3);
+    padding-right: 0;
+    padding-left: 0 !important;
+  }
 
   .stat-item:last-child {
-    grid-column: span 2;
+    border-bottom: none;
     border-right: none;
     padding-left: 0;
-    border-top: 1px solid rgba(255, 255, 255, 0.08);
-    padding-top: var(--space-3);
+    padding-bottom: 0;
   }
 
   /* Split layout: single column, tighter gap */
@@ -888,9 +903,9 @@
 
 /* ── Phone (≤ 640px) ───────────────────────────────────────── */
 @media (max-width: 640px) {
-  /* Hero */
+  /* Hero — #41: tighter clamp prevents 3-line break on 375px */
   .hero-headline {
-    font-size: clamp(44px, 12vw, 64px);
+    font-size: clamp(44px, 13vw, 68px);
   }
 
   .hero-sub { font-size: 14px; }
@@ -922,20 +937,6 @@
   .hero-headline {
     font-size: clamp(38px, 11vw, 52px);
   }
-
-  /* Stats: single column */
-  .hero-stats { grid-template-columns: 1fr; }
-
-  .stat-item {
-    border-right: none;
-    padding-right: 0;
-    padding-left: 0 !important;
-    border-top: 1px solid rgba(255, 255, 255, 0.08);
-    padding-top: var(--space-3);
-  }
-
-  .stat-item:first-child { border-top: none; padding-top: 0; }
-  .stat-item:last-child  { grid-column: 1; }
 }
 
 /* ============================================================
@@ -990,25 +991,36 @@
    ============================================================ */
 .pricing-card:hover {
   background: #fff;
-  transform: translateY(-6px);
+  transform: translateY(-8px);
   box-shadow: 0 20px 48px rgba(0, 48, 73, 0.1);
   z-index: 2;
 }
 
 .pricing-card-featured {
+  border: 2px solid var(--primary);
+  box-shadow: 0 8px 32px rgba(0, 48, 73, 0.12), 4px 4px 0 var(--champagne, #c9a96e);
+  transform: translateY(-4px);
   animation: featured-pulse 3s ease-in-out infinite;
 }
 
 @keyframes featured-pulse {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(193, 18, 31, 0); }
-  50%       { box-shadow: 0 0 0 4px rgba(193, 18, 31, 0.12); }
+  0%, 100% { box-shadow: 0 8px 32px rgba(0, 48, 73, 0.12), 4px 4px 0 var(--champagne, #c9a96e); }
+  50%       { box-shadow: 0 8px 32px rgba(0, 48, 73, 0.18), 4px 4px 0 var(--champagne, #c9a96e), 0 0 0 4px rgba(193, 18, 31, 0.08); }
 }
 
 .pricing-card-featured:hover {
+  transform: translateY(-12px);
   box-shadow:
-    0 20px 48px rgba(0, 48, 73, 0.12),
+    0 24px 56px rgba(0, 48, 73, 0.14),
+    4px 4px 0 var(--champagne, #c9a96e),
     0 0 0 2px var(--primary);
   animation: none;
+}
+
+.pricing-card-featured .pricing-badge {
+  color: var(--champagne, #c9a96e);
+  font-size: var(--text-small);
+  letter-spacing: 0.1em;
 }
 
 /* ============================================================
@@ -1087,7 +1099,7 @@
 }
 
 .tier-showcase-card:hover {
-  transform: translateY(-6px);
+  transform: translateY(-8px);
   box-shadow: 0 8px 24px rgba(0, 48, 73, 0.1);
 }
 
@@ -1810,3 +1822,69 @@
   animation: revealFallback 0.6s cubic-bezier(0.22, 1, 0.36, 1) 2.5s forwards;
 }
 
+
+/* ============================================================
+   Audit fixes #19-#23
+   ============================================================ */
+
+/* #19 — Pricing section Pearl Stone background to break the
+   consecutive light-section run after How It Works (surface-bright) */
+#pricing {
+  background: var(--surface, #f5f2ec);
+}
+
+/* #20 — Champagne Gold on hero stat numbers */
+.stat-num {
+  color: var(--champagne, #c9a96e);
+}
+
+/* #21 — Steel Blue on feature-list bullet dots in light sections */
+.feature-dot {
+  background: var(--tertiary, #669bbc);
+}
+
+/* #22 — Ambient radial depth on all .section-warm dark sections */
+.section-warm {
+  background:
+    radial-gradient(ellipse 60% 50% at 80% 20%, rgba(102, 155, 188, 0.07) 0%, transparent 65%),
+    radial-gradient(ellipse 40% 35% at 10% 80%, rgba(193, 18, 31, 0.04) 0%, transparent 55%),
+    var(--dark);
+}
+
+/* #23 — Hard-edge print shadow on ghost / outlined buttons */
+.btn-ghost {
+  box-shadow: 2px 2px 0 rgba(0, 48, 73, 0.18);
+}
+.btn-ghost:hover {
+  box-shadow: 3px 3px 0 rgba(0, 48, 73, 0.22);
+}
+
+/* ============================================================
+   Audit fixes #33-#35 #38
+   ============================================================ */
+
+/* #33 — Button press feedback
+   Note: .btn:active is defined in globals.css; no duplicate needed here */
+
+/* #34 — Card hover lift: see .pricing-card:hover and .tier-showcase-card:hover above */
+
+/* #35 — Link underline slide-in animation */
+a:not(.btn):not([class*="btn"]) {
+  position: relative;
+  text-decoration: none;
+}
+a:not(.btn):not([class*="btn"])::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: currentColor;
+  transition: width 300ms ease;
+}
+a:not(.btn):not([class*="btn"]):hover::after {
+  width: 100%;
+}
+
+/* #38 — Popular pricing card: see .pricing-card-featured above */
