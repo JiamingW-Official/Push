@@ -374,7 +374,7 @@ function TierShowcaseGrid() {
       {TIER_SHOWCASE_DATA.map((tier) => (
         <div
           key={tier.name}
-          className={`tier-showcase-card${tier.highlight ? " tier-showcase-card--current" : ""}`}
+          className={`tier-showcase-card${tier.highlight ? " tier-showcase-card--current" : ""}${tier.material === "Obsidian" ? " tier-obsidian" : ""}`}
           style={{ "--tier-color": tier.color } as React.CSSProperties}
         >
           {/* Material color swatch — replaces emoji */}
@@ -575,7 +575,12 @@ export default function LandingPage() {
             <a
               href="/demo/creator"
               className="hero-demo-link link-underline"
-              style={{ color: "var(--tertiary)" }}
+              style={{
+                color: "var(--tertiary)",
+                fontWeight: 600,
+                textDecoration: "underline",
+                textUnderlineOffset: "3px",
+              }}
             >
               or try the demo — no account needed →
             </a>
@@ -912,6 +917,24 @@ export default function LandingPage() {
               </div>
             ))}
           </div>
+          <div
+            className="reveal"
+            style={{ transitionDelay: "300ms", marginTop: "var(--space-5)" }}
+          >
+            <Link
+              href="/demo/creator"
+              style={{
+                color: "var(--tertiary)",
+                fontWeight: 600,
+                textDecoration: "underline",
+                textUnderlineOffset: "3px",
+                fontFamily: "var(--font-body)",
+                fontSize: "14px",
+              }}
+            >
+              See it live →
+            </Link>
+          </div>
         </div>
       </section>
 
@@ -1048,9 +1071,27 @@ export default function LandingPage() {
                 <span className="wt-300">is already on Instagram.</span>
               </h2>
               <p className="cta-body">
-                NYC founding cohort — limited spots. Launch in under 24 hours.
-                Pay only for verified results. No agency fees.
+                NYC founding cohort — first 50 merchants get priority creator
+                matching. Launch in under 24 hours. Pay only for verified
+                results.
               </p>
+              <span
+                className="cta-badge"
+                style={{
+                  display: "inline-block",
+                  marginBottom: "var(--space-4)",
+                  fontSize: "11px",
+                  fontWeight: 700,
+                  letterSpacing: "0.08em",
+                  textTransform: "uppercase",
+                  fontFamily: "var(--font-body)",
+                  color: "var(--champagne)",
+                  border: "1px solid var(--champagne-border)",
+                  padding: "4px 10px",
+                }}
+              >
+                Founding Cohort · Limited Spots
+              </span>
               <Link href="/merchant/signup" className="btn btn-cta-merchant">
                 Start for $19.99 / mo
               </Link>
