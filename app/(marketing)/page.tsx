@@ -1,6 +1,7 @@
 import Link from "next/link";
 import ScrollRevealInit from "@/components/layout/ScrollRevealInit";
 import LandingInteractivity from "@/components/layout/LandingInteractivity";
+import StatCounter from "@/components/layout/StatCounter";
 import "./landing.css";
 
 /* ── QR attribution wireframe ─────────────────────────────── */
@@ -501,14 +502,23 @@ export default function LandingPage() {
           {/* Stats: full-width bottom row */}
           <div className="hero-stats">
             <div className="stat-item reveal">
-              <span className="stat-num">$19.99</span>
+              <span className="stat-num">
+                <StatCounter
+                  value={19.99}
+                  prefix="$"
+                  decimals={2}
+                  duration={1200}
+                />
+              </span>
               <span className="stat-label">Merchant entry price / mo</span>
             </div>
             <div
               className="stat-item reveal"
               style={{ transitionDelay: "100ms" }}
             >
-              <span className="stat-num">6</span>
+              <span className="stat-num">
+                <StatCounter value={6} duration={800} />
+              </span>
               <span className="stat-label">
                 Creator tiers — zero followers to start
               </span>
@@ -517,7 +527,9 @@ export default function LandingPage() {
               className="stat-item reveal"
               style={{ transitionDelay: "200ms" }}
             >
-              <span className="stat-num">24h</span>
+              <span className="stat-num">
+                <StatCounter value={24} suffix="h" duration={1000} />
+              </span>
               <span className="stat-label">
                 Campaign live — from signup to first creator
               </span>

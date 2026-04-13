@@ -31,6 +31,29 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+      <head>
+        <link
+          rel="preload"
+          href="/fonts/Darky-Black.ttf"
+          as="font"
+          type="font/truetype"
+          crossOrigin="anonymous"
+        />
+        <link
+          rel="preload"
+          href="/fonts/Darky-ExtraLight.ttf"
+          as="font"
+          type="font/truetype"
+          crossOrigin="anonymous"
+        />
+        <link
+          rel="preload"
+          href="/fonts/CSGenioMono-Regular.ttf"
+          as="font"
+          type="font/truetype"
+          crossOrigin="anonymous"
+        />
+      </head>
       <body>
         <CustomCursor />
         <SmoothScroll>
