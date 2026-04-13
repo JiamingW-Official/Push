@@ -1139,26 +1139,16 @@
 }
 
 /* ============================================================
-   CTA panels — dramatic gradient tints + hover lift
+   CTA panels — hover lift transition
+   (backgrounds defined in base styles above)
    ============================================================ */
 .cta-panel-creator {
-  background:
-    linear-gradient(
-      135deg,
-      rgba(245, 242, 236, 1) 0%,
-      rgba(245, 242, 236, 0.85) 60%,
-      rgba(102, 155, 188, 0.12) 100%
-    );
+  /* background: var(--surface-bright) — defined in base */
   transition: transform 320ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .cta-panel-merchant {
-  background:
-    linear-gradient(
-      135deg,
-      rgba(0, 48, 73, 1) 0%,
-      rgba(120, 0, 0, 0.35) 100%
-    );
+  /* background: var(--dark) + radial pseudo-element — defined in base */
   transition: transform 320ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
