@@ -44,23 +44,42 @@ const IconLinkedIn = () => (
 );
 
 const PLATFORM_LINKS = [
-  { label: "For Merchants", href: "/for-merchants" },
-  { label: "For Creators", href: "/creator/signup" },
+  { label: "For Businesses", href: "/#for-businesses" },
+  { label: "For Creators", href: "/#for-creators" },
+  { label: "How It Works", href: "/#how-it-works" },
   { label: "Pricing", href: "/#pricing" },
-  { label: "Demo", href: "/demo/creator" },
 ];
 
 const COMPANY_LINKS = [
   { label: "About", href: "#" },
   { label: "Contact", href: "#" },
-  { label: "Terms", href: "#" },
-  { label: "Privacy", href: "#" },
+  { label: "Privacy Policy", href: "#" },
+  { label: "Terms of Service", href: "#" },
 ];
 
 export default function Footer() {
   return (
     <footer className={styles.footer}>
       <div className="container">
+        {/* Waitlist email capture */}
+        <div className={styles.waitlistRow}>
+          <p className={styles.waitlistLabel}>Get early access</p>
+          <form
+            className={styles.waitlistForm}
+            onSubmit={(e) => e.preventDefault()}
+          >
+            <input
+              type="email"
+              placeholder="your@email.com"
+              className={styles.waitlistInput}
+              aria-label="Email for early access"
+            />
+            <button type="submit" className={styles.waitlistBtn}>
+              Join Waitlist
+            </button>
+          </form>
+        </div>
+
         {/* Top border */}
         <div className={styles.topBorder} />
 
@@ -103,7 +122,7 @@ export default function Footer() {
         {/* Bottom bar */}
         <div className={styles.footerBottom}>
           <p className={styles.footerCopy}>
-            &copy; 2026 Push. All rights reserved.
+            &copy; 2026 Push NYC, Inc. All rights reserved.
           </p>
           {/* Social links */}
           <div className={styles.socialLinks}>
