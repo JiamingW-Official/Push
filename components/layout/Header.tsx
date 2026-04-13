@@ -24,6 +24,7 @@ export default function Header() {
   const lastY = useRef(0);
   const [hidden, setHidden] = useState(false);
   const [activeSection, setActiveSection] = useState("");
+  const [scrollProgress, setScrollProgress] = useState(0);
 
   useEffect(() => {
     const onScroll = () => {
@@ -31,6 +32,11 @@ export default function Header() {
       setScrolled(y > 30);
       setHidden(y > 120 && y > lastY.current);
       lastY.current = y;
+
+      // Calculate scroll progress (0–100)
+      const { scrollHeight, clientHeight } = document.documentElement;
+      const maxScroll = scrollHeight - clientHeight;
+      setScrollProgress(maxScroll > 0 ? (y / maxScroll) * 100 : 0);
     };
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
@@ -140,6 +146,13 @@ export default function Header() {
           />
         </button>
       </div>
+
+      {/* Scroll progress bar */}
+      <div
+        className={styles.scrollProgress}
+        style={{ width: `${scrollProgress}%` }}
+        aria-hidden="true"
+      />
 
       {/* Mobile nav dropdown */}
       <nav
