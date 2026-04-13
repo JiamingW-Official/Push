@@ -177,6 +177,65 @@ body {
   overflow-x: hidden;
 }
 
+/* ── Custom Cursor ─────────────────────────────────────────── */
+@media (hover: hover) and (pointer: fine) {
+  body,
+  a,
+  button,
+  [data-cursor-hover] {
+    cursor: none !important;
+  }
+
+  .cursor-dot {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 6px;
+    height: 6px;
+    margin: -3px 0 0 -3px;
+    background: var(--primary);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    will-change: transform;
+    transition: width 200ms ease, height 200ms ease,
+      margin 200ms ease, background 200ms ease;
+  }
+
+  .cursor-ring {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 36px;
+    height: 36px;
+    margin: -18px 0 0 -18px;
+    border: 1.5px solid rgba(193, 18, 31, 0.45);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9998;
+    will-change: transform;
+    transition: width 280ms cubic-bezier(0.22, 1, 0.36, 1),
+      height 280ms cubic-bezier(0.22, 1, 0.36, 1),
+      margin 280ms cubic-bezier(0.22, 1, 0.36, 1),
+      background 280ms ease, border-color 280ms ease;
+  }
+
+  .cursor-ring--active {
+    width: 52px;
+    height: 52px;
+    margin: -26px 0 0 -26px;
+    background: rgba(193, 18, 31, 0.07);
+    border-color: rgba(193, 18, 31, 0.65);
+  }
+
+  .cursor-dot--active {
+    width: 8px;
+    height: 8px;
+    margin: -4px 0 0 -4px;
+    background: var(--dark);
+  }
+}
+
 /* No border-radius (Push design rule) */
 button, input, textarea, select,
 .leaflet-container, .leaflet-control,

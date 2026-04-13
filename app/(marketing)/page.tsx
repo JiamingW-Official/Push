@@ -1,5 +1,6 @@
 import Link from "next/link";
 import ScrollRevealInit from "@/components/layout/ScrollRevealInit";
+import LandingInteractivity from "@/components/layout/LandingInteractivity";
 import "./landing.css";
 
 /* ── QR attribution wireframe ─────────────────────────────── */
@@ -303,6 +304,72 @@ function TierShowcaseGrid() {
   );
 }
 
+/* ── Hero campaign preview (right column) ─────────────────── */
+function HeroCampaignPreview() {
+  return (
+    <div className="hero-preview" aria-hidden="true">
+      <div className="hcp-card">
+        <div className="hcp-live-row">
+          <span className="hcp-live-dot" />
+          <span className="hcp-live-text">LIVE</span>
+          <span className="hcp-live-sep">·</span>
+          <span className="hcp-live-title">Campaign Active</span>
+        </div>
+
+        <div className="hcp-biz-name">Ramen &amp; Co.</div>
+        <div className="hcp-biz-loc">Williamsburg, Brooklyn</div>
+
+        <div className="hcp-divider" />
+
+        <div className="hcp-payout-row">
+          <div className="hcp-payout-num">$32</div>
+          <div className="hcp-payout-label">
+            per verified visit
+            <br />
+            <span>Operator tier</span>
+          </div>
+        </div>
+
+        <div className="hcp-progress-wrap">
+          <div className="hcp-progress-bar">
+            <div className="hcp-progress-fill" />
+          </div>
+          <div className="hcp-progress-meta">
+            <span>14 / 20 slots filled</span>
+            <span className="hcp-progress-pct">70%</span>
+          </div>
+        </div>
+      </div>
+
+      <div className="hcp-stats-row">
+        <div className="hcp-stat">
+          <span className="hcp-stat-num">47</span>
+          <span className="hcp-stat-label">QR scans today</span>
+        </div>
+        <div className="hcp-stat">
+          <span className="hcp-stat-num">$1,504</span>
+          <span className="hcp-stat-label">Attributed revenue</span>
+        </div>
+        <div className="hcp-stat">
+          <span className="hcp-stat-num">3</span>
+          <span className="hcp-stat-label">Creators matched</span>
+        </div>
+      </div>
+
+      <div className="hcp-match-card">
+        <span className="hcp-match-check">✓</span>
+        <div className="hcp-match-info">
+          <span className="hcp-match-name">@maya.eats.nyc</span>
+          <span className="hcp-match-meta">
+            Score 94 · Operator · Williamsburg
+          </span>
+        </div>
+        <span className="hcp-match-earn">+$32</span>
+      </div>
+    </div>
+  );
+}
+
 /* ── Ticker items ─────────────────────────────────────────── */
 const TICKER_ITEMS = [
   "QR Attribution",
@@ -323,51 +390,50 @@ export default function LandingPage() {
   return (
     <>
       <ScrollRevealInit />
+      <LandingInteractivity />
 
       {/* ── Hero ─────────────────────────────────────────────── */}
       <section className="hero">
         <div className="container hero-inner">
-          <p className="eyebrow hero-eyebrow">
-            NYC&apos;s Creator Acquisition Engine
-          </p>
+          {/* Left: content */}
+          <div className="hero-content">
+            <p className="eyebrow hero-eyebrow">
+              NYC&apos;s Creator Acquisition Engine
+            </p>
 
-          {/* Weight contrast: Black 900 / Thin 200 */}
-          <h1 className="hero-headline">
-            <span className="line-black">Turn creators</span>
-            <span className="line-light">
-              into <em>results.</em>
-            </span>
-          </h1>
+            {/* Weight contrast: Black 900 / Thin 200 */}
+            <h1 className="hero-headline">
+              <span className="line-black">Turn creators</span>
+              <span className="line-light">
+                into <em>results.</em>
+              </span>
+            </h1>
 
-          <p className="hero-sub">
-            Push matches local businesses with creators who drive real foot
-            traffic — verified by QR code attribution at the transaction level.
-          </p>
+            <p className="hero-sub">
+              Push matches local businesses with creators who drive real foot
+              traffic — verified by QR code attribution at the transaction
+              level.
+            </p>
 
-          <div className="hero-ctas">
-            <Link href="/merchant/signup" className="btn btn-primary">
-              Start for $19.99 / mo
-            </Link>
-            <Link href="/creator/signup" className="btn btn-ghost">
-              Join as Creator — Start Free
-            </Link>
+            <div className="hero-ctas">
+              <Link href="/merchant/signup" className="btn btn-primary">
+                Start for $19.99 / mo
+              </Link>
+              <Link href="/creator/signup" className="btn btn-ghost">
+                Join as Creator — Free
+              </Link>
+            </div>
+            <a href="/demo/creator" className="hero-demo-link">
+              or try the demo — no account needed →
+            </a>
           </div>
-          <a
-            href="/demo/creator"
-            style={{
-              display: "block",
-              marginTop: "12px",
-              fontSize: "13px",
-              color: "rgba(0,48,73,0.55)",
-              textDecoration: "underline",
-              textUnderlineOffset: "3px",
-              fontFamily: "var(--font-body)",
-            }}
-          >
-            or try the demo — no account needed →
-          </a>
 
-          {/* Thin editorial stat numbers */}
+          {/* Right: live campaign preview */}
+          <div className="hero-visual">
+            <HeroCampaignPreview />
+          </div>
+
+          {/* Stats: full-width bottom row */}
           <div className="hero-stats">
             <div className="stat-item reveal">
               <span className="stat-num">$19.99</span>
@@ -417,6 +483,9 @@ export default function LandingPage() {
           <div className="split">
             <div className="reveal">
               <div className="section-tag">
+                <span className="section-ghost-num" aria-hidden="true">
+                  01
+                </span>
                 <span className="section-tag-num">01</span>
                 <span className="section-tag-line" />
                 <span className="section-tag-label">For Merchants</span>
@@ -468,6 +537,9 @@ export default function LandingPage() {
           {/* Section header + tier showcase span full width */}
           <div className="reveal">
             <div className="section-tag">
+              <span className="section-ghost-num" aria-hidden="true">
+                02
+              </span>
               <span className="section-tag-num">02</span>
               <span className="section-tag-line" />
               <span className="section-tag-label">For Creators</span>
@@ -568,6 +640,9 @@ export default function LandingPage() {
         <div className="container">
           <div className="reveal">
             <div className="section-tag">
+              <span className="section-ghost-num" aria-hidden="true">
+                03
+              </span>
               <span className="section-tag-num">03</span>
               <span className="section-tag-line" />
               <span className="section-tag-label">How it Works</span>
@@ -623,6 +698,9 @@ export default function LandingPage() {
                 className="section-tag"
                 style={{ marginBottom: "var(--space-3)" }}
               >
+                <span className="section-ghost-num" aria-hidden="true">
+                  04
+                </span>
                 <span className="section-tag-num">04</span>
                 <span className="section-tag-line" />
                 <span className="section-tag-label">Pricing</span>
