@@ -2392,6 +2392,15 @@ a:not(.btn):not([class*="btn"]):hover::after {
   line-height: 1.5;
 }
 
+.hero-audience-line {
+  font-family: var(--font-body);
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  color: rgba(245, 242, 236, 0.5);
+  margin-top: var(--space-3);
+  text-transform: uppercase;
+}
+
 /* ------------------------------------------------------------
    Performance Score Explainer — mini dashboard widget
    ------------------------------------------------------------ */

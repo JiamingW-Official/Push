@@ -570,9 +570,35 @@ const FAQ_ITEMS = [
   },
 ];
 
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  name: "Push",
+  description:
+    "Creator marketplace for NYC businesses. Pay per verified visit.",
+  applicationCategory: "BusinessApplication",
+  operatingSystem: "Web",
+  url: "https://pushnyc.co",
+  offers: {
+    "@type": "Offer",
+    price: "19.99",
+    priceCurrency: "USD",
+    description: "Merchant subscription starting at $19.99/month",
+  },
+  provider: {
+    "@type": "Organization",
+    name: "Push",
+    url: "https://pushnyc.co",
+  },
+};
+
 export default function LandingPage() {
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <ScrollRevealInit />
       <LandingInteractivity />
 
@@ -582,7 +608,7 @@ export default function LandingPage() {
           {/* Left: content */}
           <div className="hero-content">
             <p className="eyebrow hero-eyebrow">
-              NYC&apos;s Local Creator Marketplace
+              PERFORMANCE-BASED CREATOR MARKETING · NYC BETA
             </p>
 
             {/* Weight contrast: Black 900 / Thin 200 */}
@@ -594,39 +620,25 @@ export default function LandingPage() {
             </h1>
 
             <p className="hero-sub">
-              Creators post. Customers show up. You only pay when it works —
-              verified by QR code attribution at every transaction.
+              Pay only when a creator drives a verified visit — tracked by QR
+              code. Every transaction attributed. Zero guesswork.
             </p>
 
-            <p
-              className="hero-sub hero-sub--micro"
-              style={{
-                fontSize: "var(--text-small)",
-                opacity: 0.6,
-              }}
-            >
-              Creators: zero followers required to start earning.
+            <p className="hero-audience-line">
+              For businesses that want foot traffic. For creators who want to
+              earn.
             </p>
 
             <div className="hero-ctas">
-              <Link href="/merchant/signup" className="btn btn-primary">
-                Start for $19.99 / mo
+              <Link href="#pricing" className="btn btn-primary">
+                Start Free
               </Link>
-              <Link href="/creator/signup" className="btn btn-ghost">
-                Join as Creator — Free
+              <Link href="#how-it-works" className="btn btn-ghost">
+                See How It Works
               </Link>
             </div>
-            <p
-              className="hero-reassurance"
-              style={{
-                fontSize: "11px",
-                opacity: 0.5,
-                marginTop: "8px",
-                fontFamily: "var(--font-body)",
-                letterSpacing: "0.04em",
-              }}
-            >
-              No contracts · Cancel anytime · Free for creators
+            <p className="hero-reassurance">
+              No followers minimum. No upfront fees. No contracts.
             </p>
             <a
               href="/demo/creator"
@@ -1225,13 +1237,13 @@ export default function LandingPage() {
                 </span>
                 <span className="section-tag-num">04</span>
                 <span className="section-tag-line" />
-                <span className="section-tag-label">Pricing</span>
+                <span className="section-tag-label">Transparent Pricing</span>
               </div>
               <h2>
-                Three plans, flat pricing
+                Pricing that scales
                 <br />
                 <span style={{ fontWeight: 300, opacity: 0.45 }}>
-                  merchant pricing.
+                  with results.
                 </span>
               </h2>
             </div>
