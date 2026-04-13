@@ -2,6 +2,7 @@ import Link from "next/link";
 import ScrollRevealInit from "@/components/layout/ScrollRevealInit";
 import LandingInteractivity from "@/components/layout/LandingInteractivity";
 import StatCounter from "@/components/layout/StatCounter";
+import CountUp from "@/components/layout/CountUp";
 import "./landing.css";
 
 /* ── Merchant attribution dashboard visual ────────────────── */
@@ -703,15 +704,27 @@ export default function LandingPage() {
           {/* Traction numbers — pilot data */}
           <div className="proof-stats">
             <div className="proof-stat">
-              <span className="proof-stat-num">12+</span>
+              <span className="proof-stat-num">
+                <CountUp target={12} suffix="+" duration={1400} />
+              </span>
               <span className="proof-stat-label">NYC businesses</span>
             </div>
             <div className="proof-stat">
-              <span className="proof-stat-num">47+</span>
+              <span className="proof-stat-num">
+                <CountUp target={47} suffix="+" duration={1600} />
+              </span>
               <span className="proof-stat-label">active creators</span>
             </div>
             <div className="proof-stat">
-              <span className="proof-stat-num">$8.2K</span>
+              <span className="proof-stat-num">
+                <CountUp
+                  target={8.2}
+                  prefix="$"
+                  suffix="K"
+                  decimals={1}
+                  duration={1800}
+                />
+              </span>
               <span className="proof-stat-label">attributed revenue</span>
             </div>
           </div>
