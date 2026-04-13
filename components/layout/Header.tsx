@@ -22,7 +22,7 @@ export default function Header() {
     const onScroll = () => {
       const y = window.scrollY;
       setScrolled(y > 30);
-      setHidden(y > 500 && y > lastY.current);
+      setHidden(y > 120 && y > lastY.current);
       lastY.current = y;
     };
     window.addEventListener("scroll", onScroll, { passive: true });
