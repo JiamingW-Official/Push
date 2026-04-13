@@ -695,8 +695,30 @@ export default function LandingPage() {
               </span>
             ))}
           </div>
+
+          {/* Traction numbers — pilot data */}
+          <div className="proof-stats">
+            <div className="proof-stat">
+              <span className="proof-stat-num">12+</span>
+              <span className="proof-stat-label">NYC businesses</span>
+            </div>
+            <div className="proof-stat">
+              <span className="proof-stat-num">47+</span>
+              <span className="proof-stat-label">active creators</span>
+            </div>
+            <div className="proof-stat">
+              <span className="proof-stat-num">$8.2K</span>
+              <span className="proof-stat-label">attributed revenue</span>
+            </div>
+          </div>
+
+          <p className="market-hint">
+            NYC: 230,000+ local businesses. 50,000+ food &amp; lifestyle
+            creators. One platform.
+          </p>
+
           <span className="proof-strip-note">
-            Early access cohort · NYC-first
+            *Based on pilot data · Early access cohort · NYC-first
           </span>
         </div>
       </div>
@@ -900,6 +922,30 @@ export default function LandingPage() {
             <TierShowcaseGrid />
           </div>
 
+          {/* Performance score explainer */}
+          <div className="reveal" style={{ transitionDelay: "150ms" }}>
+            <div className="perf-score-explainer">
+              <h4>How your score works</h4>
+              <div className="pse-items">
+                <div className="pse-item">
+                  <span className="pse-metric">Verified visits</span>
+                  <span className="pse-weight">50%</span>
+                </div>
+                <div className="pse-item">
+                  <span className="pse-metric">Content quality</span>
+                  <span className="pse-weight">30%</span>
+                </div>
+                <div className="pse-item">
+                  <span className="pse-metric">Consistency</span>
+                  <span className="pse-weight">20%</span>
+                </div>
+              </div>
+              <p className="pse-note">
+                Higher score = better campaigns + higher pay rates.
+              </p>
+            </div>
+          </div>
+
           {/* Feature list + earning preview + CTA below the grid */}
           <div
             className="creator-bottom reveal"
@@ -937,6 +983,16 @@ export default function LandingPage() {
                     </li>
                   ))}
                 </ul>
+
+                <div className="creator-workflow">
+                  <h4>What you&apos;ll do</h4>
+                  <ol className="creator-workflow-steps">
+                    <li>Accept a campaign from a nearby business</li>
+                    <li>Visit &amp; experience it authentically</li>
+                    <li>Post your content to your audience</li>
+                    <li>Earn when your followers show up</li>
+                  </ol>
+                </div>
 
                 <div className="earning-preview">
                   <p className="earning-preview-label">
@@ -1179,8 +1235,117 @@ export default function LandingPage() {
                 >
                   {plan.cta}
                 </Link>
+                {plan.name === "Starter" && (
+                  <p
+                    style={{
+                      fontSize: "11px",
+                      opacity: 0.55,
+                      marginTop: "6px",
+                      fontFamily: "var(--font-body)",
+                      textAlign: "center",
+                    }}
+                  >
+                    2-minute setup · First campaign live in 24 hours
+                  </p>
+                )}
               </div>
             ))}
+          </div>
+
+          {/* Creator free banner — audit #25 */}
+          <div
+            className="pricing-creator-banner"
+            style={{
+              background: "#f5f2ec",
+              borderTop: "2px solid #c1121f",
+              display: "flex",
+              alignItems: "center",
+              gap: "16px",
+              padding: "20px 24px",
+              marginTop: "32px",
+            }}
+          >
+            <span
+              className="pcb-icon"
+              style={{ fontSize: "20px", color: "#c1121f", flexShrink: 0 }}
+            >
+              ★
+            </span>
+            <div style={{ flex: 1 }}>
+              <strong style={{ fontFamily: "var(--font-body)" }}>
+                Creators always join free.
+              </strong>
+              <span style={{ fontFamily: "var(--font-body)", opacity: 0.7 }}>
+                {" "}
+                Start building your performance score today — no credit card, no
+                commitment.
+              </span>
+            </div>
+            <a
+              href="/demo/creator"
+              className="btn btn--ghost"
+              style={{
+                fontFamily: "var(--font-body)",
+                border: "1px solid #c1121f",
+                color: "#c1121f",
+                padding: "8px 16px",
+                textDecoration: "none",
+                flexShrink: 0,
+                fontSize: "13px",
+              }}
+            >
+              Start Free →
+            </a>
+          </div>
+
+          {/* Trust signals — audit #63 */}
+          <div
+            className="trust-signals"
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              gap: "24px",
+              flexWrap: "wrap",
+              marginTop: "16px",
+              padding: "12px 0",
+            }}
+          >
+            <span
+              style={{
+                fontSize: "11px",
+                fontFamily: "var(--font-body)",
+                opacity: 0.55,
+              }}
+            >
+              🔒 Secure payments
+            </span>
+            <span
+              style={{
+                fontSize: "11px",
+                fontFamily: "var(--font-body)",
+                opacity: 0.55,
+              }}
+            >
+              ✓ No hidden fees
+            </span>
+            <span
+              style={{
+                fontSize: "11px",
+                fontFamily: "var(--font-body)",
+                opacity: 0.55,
+              }}
+            >
+              ✓ Cancel anytime
+            </span>
+            <span
+              style={{
+                fontSize: "11px",
+                fontFamily: "var(--font-body)",
+                opacity: 0.55,
+              }}
+            >
+              ✓ 24h support
+            </span>
           </div>
         </div>
       </section>
@@ -1191,7 +1356,10 @@ export default function LandingPage() {
       <section className="cta-section">
         <div className="container">
           <div className="cta-inner">
-            <div className="cta-panel cta-panel-merchant reveal">
+            <div
+              className="cta-panel cta-panel-merchant reveal"
+              style={{ borderTop: "3px solid var(--primary)" }}
+            >
               <span className="cta-tag cta-tag-merchant">For Merchants</span>
               <h2 className="cta-headline">
                 <span className="wt-900">Your next customer</span>
@@ -1203,21 +1371,22 @@ export default function LandingPage() {
                 results.
               </p>
               <span
-                className="cta-badge"
+                className="cta-urgency-badge"
                 style={{
                   display: "inline-block",
-                  marginBottom: "var(--space-4)",
-                  fontSize: "11px",
-                  fontWeight: 700,
-                  letterSpacing: "0.08em",
-                  textTransform: "uppercase",
-                  fontFamily: "var(--font-body)",
-                  color: "var(--champagne)",
-                  border: "1px solid var(--champagne-border)",
+                  background: "rgba(193,18,31,0.1)",
+                  border: "1px solid rgba(193,18,31,0.3)",
+                  color: "var(--primary)",
                   padding: "4px 10px",
+                  fontSize: "11px",
+                  letterSpacing: "0.06em",
+                  textTransform: "uppercase",
+                  marginBottom: "var(--space-4)",
+                  fontFamily: "var(--font-body)",
+                  fontWeight: 700,
                 }}
               >
-                Founding Cohort · Limited Spots
+                ⚡ NYC Founding Cohort — Limited spots
               </span>
               <Link href="/merchant/signup" className="btn btn-cta-merchant">
                 Start for $19.99 / mo
@@ -1240,6 +1409,16 @@ export default function LandingPage() {
               <Link href="/creator/signup" className="btn btn-cta-creator">
                 Join Free — Start Earning
               </Link>
+              <p
+                style={{
+                  fontSize: "11px",
+                  opacity: 0.5,
+                  marginTop: "6px",
+                  fontFamily: "var(--font-body)",
+                }}
+              >
+                No credit card · 30-second signup
+              </p>
             </div>
           </div>
         </div>
