@@ -2,6 +2,7 @@ import Link from "next/link";
 import ScrollRevealInit from "@/components/layout/ScrollRevealInit";
 import LandingInteractivity from "@/components/layout/LandingInteractivity";
 import StatCounter from "@/components/layout/StatCounter";
+import CountUp from "@/components/layout/CountUp";
 import "./landing.css";
 
 /* ── Merchant attribution dashboard visual ────────────────── */
@@ -323,6 +324,7 @@ const TIER_SHOWCASE_DATA = [
     material: "Clay",
     name: "Seed",
     earning: "Free product",
+    earnRange: "Earn free product per visit",
     desc: "Zero followers needed. Get your first campaign.",
     highlight: false,
   },
@@ -331,6 +333,7 @@ const TIER_SHOWCASE_DATA = [
     material: "Bronze",
     name: "Explorer",
     earning: "$12/campaign",
+    earnRange: "Earn $12\u201318 per visit",
     desc: "Prove consistency. Build your performance score.",
     highlight: false,
   },
@@ -339,6 +342,7 @@ const TIER_SHOWCASE_DATA = [
     material: "Steel",
     name: "Operator",
     earning: "$20 + 3%",
+    earnRange: "Earn $20\u201335 per visit",
     desc: "Commission kicks in. Bonuses at 30 transactions.",
     highlight: true,
   },
@@ -347,6 +351,7 @@ const TIER_SHOWCASE_DATA = [
     material: "Gold",
     name: "Proven",
     earning: "$32 + 5%",
+    earnRange: "Earn $32\u201355 per visit",
     desc: "Trusted track record. Higher-value campaigns.",
     highlight: false,
   },
@@ -355,6 +360,7 @@ const TIER_SHOWCASE_DATA = [
     material: "Ruby",
     name: "Closer",
     earning: "$55 + 7%",
+    earnRange: "Earn $55\u201380 per visit",
     desc: "Top performers. Priority campaign access.",
     highlight: false,
   },
@@ -363,6 +369,7 @@ const TIER_SHOWCASE_DATA = [
     material: "Obsidian",
     name: "Partner",
     earning: "$100 + 10%",
+    earnRange: "Earn $100\u2013200 per visit",
     desc: "Elite tier. Up to $80/month milestone bonus.",
     highlight: false,
   },
@@ -370,30 +377,42 @@ const TIER_SHOWCASE_DATA = [
 
 function TierShowcaseGrid() {
   return (
-    <div className="tier-showcase">
-      {TIER_SHOWCASE_DATA.map((tier) => (
-        <div
-          key={tier.name}
-          className={`tier-showcase-card tier-card--${tier.material.toLowerCase()}${tier.highlight ? " tier-showcase-card--current" : ""}`}
-          style={{ "--tier-color": tier.color } as React.CSSProperties}
-        >
-          {/* "Start here" badge for Clay (entry) tier */}
-          {tier.material === "Clay" && (
-            <span className="tier-entry-badge">Start here</span>
-          )}
-          {/* Material color swatch — replaces emoji */}
-          <span
-            className="tier-showcase-swatch"
-            style={{ background: tier.color }}
-            aria-hidden="true"
-          />
-          <span className="tier-showcase-material">{tier.material}</span>
-          <span className="tier-showcase-name">{tier.name}</span>
-          <span className="tier-showcase-earning">{tier.earning}</span>
-          <span className="tier-showcase-desc">{tier.desc}</span>
-        </div>
-      ))}
-    </div>
+    <>
+      <div className="tier-showcase">
+        {TIER_SHOWCASE_DATA.map((tier) => (
+          <div
+            key={tier.name}
+            className={`tier-showcase-card tier-card--${tier.material.toLowerCase()}${tier.highlight ? " tier-showcase-card--current" : ""}`}
+            style={{ "--tier-color": tier.color } as React.CSSProperties}
+          >
+            {/* "Start here" badge for Clay (entry) tier */}
+            {tier.material === "Clay" && (
+              <span className="tier-entry-badge">Start here</span>
+            )}
+            {/* Material color swatch — replaces emoji */}
+            <span
+              className="tier-showcase-swatch"
+              style={{ background: tier.color }}
+              aria-hidden="true"
+            />
+            <span className="tier-showcase-material">{tier.material}</span>
+            <span className="tier-showcase-name">{tier.name}</span>
+            <span className="tier-showcase-earning">{tier.earning}</span>
+            <div className="tier-earn-range">{tier.earnRange}</div>
+            <span className="tier-showcase-desc">{tier.desc}</span>
+          </div>
+        ))}
+      </div>
+      <div className="tier-progression reveal">
+        <span className="tp-step">Start free</span>
+        <span className="tp-arrow">&#8594;</span>
+        <span className="tp-step">Build track record</span>
+        <span className="tp-arrow">&#8594;</span>
+        <span className="tp-step">Unlock higher rates</span>
+        <span className="tp-arrow">&#8594;</span>
+        <span className="tp-step tp-step--highlight">Top 1%: $200/visit</span>
+      </div>
+    </>
   );
 }
 
@@ -664,6 +683,11 @@ export default function LandingPage() {
               </span>
             </div>
           </div>
+
+          {/* Scroll hint — bouncing indicator */}
+          <div className="hero-scroll-hint" aria-hidden="true">
+            <div className="hero-scroll-hint-line"></div>
+          </div>
         </div>
       </section>
 
@@ -703,22 +727,59 @@ export default function LandingPage() {
           {/* Traction numbers — pilot data */}
           <div className="proof-stats">
             <div className="proof-stat">
-              <span className="proof-stat-num">12+</span>
+              <span className="proof-stat-num">
+                <CountUp target={12} suffix="+" duration={1400} />
+              </span>
               <span className="proof-stat-label">NYC businesses</span>
             </div>
             <div className="proof-stat">
-              <span className="proof-stat-num">47+</span>
+              <span className="proof-stat-num">
+                <CountUp target={47} suffix="+" duration={1600} />
+              </span>
               <span className="proof-stat-label">active creators</span>
             </div>
             <div className="proof-stat">
-              <span className="proof-stat-num">$8.2K</span>
+              <span className="proof-stat-num">
+                <CountUp
+                  target={8.2}
+                  prefix="$"
+                  suffix="K"
+                  decimals={1}
+                  duration={1800}
+                />
+              </span>
               <span className="proof-stat-label">attributed revenue</span>
             </div>
           </div>
 
+          <div className="vc-metrics-bar reveal">
+            <span className="vcm-item">
+              <span className="vcm-label">Market</span>
+              <span className="vcm-value">$47B local ad spend</span>
+            </span>
+            <span className="vcm-divider" aria-hidden="true">
+              —
+            </span>
+            <span className="vcm-item">
+              <span className="vcm-label">Moat</span>
+              <span className="vcm-value">
+                QR attribution + creator network effects
+              </span>
+            </span>
+            <span className="vcm-divider" aria-hidden="true">
+              —
+            </span>
+            <span className="vcm-item">
+              <span className="vcm-label">Model</span>
+              <span className="vcm-value">
+                Performance-based, zero upfront risk
+              </span>
+            </span>
+          </div>
+
           <p className="market-hint">
-            NYC: 230,000+ local businesses. 50,000+ food &amp; lifestyle
-            creators. One platform.
+            NYC&apos;s $2B+ local advertising market — 230,000+ local
+            businesses, 50,000+ food &amp; lifestyle creators. One platform.
           </p>
 
           <span className="proof-strip-note">
@@ -1281,6 +1342,14 @@ export default function LandingPage() {
             ))}
           </div>
 
+          {/* ROI math example */}
+          <div className="roi-math reveal">
+            <span className="roi-example">
+              Example: Pay $150 for verified foot traffic → avg customer LTV $85
+              × 3 visits = <strong>$255 return</strong>
+            </span>
+          </div>
+
           {/* Creator free banner — audit #25 */}
           <div
             className="pricing-creator-banner"
@@ -1417,6 +1486,13 @@ export default function LandingPage() {
               >
                 ⚡ NYC Founding Cohort — Limited spots
               </span>
+              <div className="guarantee-badge">
+                <span className="guarantee-icon">✓</span>
+                <span>
+                  Only pay for verified, QR-confirmed visits. Zero spend on
+                  reach alone.
+                </span>
+              </div>
               <Link href="/merchant/signup" className="btn btn-cta-merchant">
                 Start for $19.99 / mo
               </Link>
