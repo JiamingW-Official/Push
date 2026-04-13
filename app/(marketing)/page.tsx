@@ -1020,6 +1020,14 @@ export default function LandingPage() {
                   </div>
                 </div>
 
+                <blockquote className="creator-testimonial">
+                  <p>
+                    &ldquo;I earned $320 last month just visiting restaurants
+                    I&apos;d go to anyway.&rdquo;
+                  </p>
+                  <cite>— @maya.eats.nyc · Operator Tier</cite>
+                </blockquote>
+
                 <Link href="/creator/signup" className="btn btn-secondary">
                   Join as Creator — Start Free
                 </Link>
@@ -1076,16 +1084,28 @@ export default function LandingPage() {
                 n: "01",
                 title: "Merchant posts a campaign",
                 body: "Set your goal, budget, and payout. Push matches creators by score, tier, and proximity — no manual outreach.",
+                bullets: [
+                  "Choose your target neighborhood and budget",
+                  "Go live in under 24 hours — no agency needed",
+                ],
               },
               {
                 n: "02",
                 title: "Creator visits & creates content",
                 body: "The creator gets a unique QR code matched to their campaign — assigned based on performance score, tier, and location. Customers scan it at the point of purchase, attributing the visit directly to that creator.",
+                bullets: [
+                  "Matched by proximity, tier, and performance score",
+                  "Creator posts authentic content to their audience",
+                ],
               },
               {
                 n: "03",
                 title: "Push verifies, merchant pays",
                 body: "Every scan is logged. Payouts are released automatically after verification. No disputes, no manual tracking.",
+                bullets: [
+                  "Customer scans QR code at your door",
+                  "Transaction logged — you only pay for verified visits",
+                ],
               },
             ].map((step, i) => (
               <div
@@ -1097,6 +1117,11 @@ export default function LandingPage() {
                 <span className="how-step-index">{step.n} /</span>
                 <h3 className="how-step-title">{step.title}</h3>
                 <p className="how-step-body">{step.body}</p>
+                <ul className="how-step-bullets">
+                  {step.bullets.map((b) => (
+                    <li key={b}>{b}</li>
+                  ))}
+                </ul>
               </div>
             ))}
           </div>
