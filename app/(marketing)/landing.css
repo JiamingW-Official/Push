@@ -2588,3 +2588,28 @@ a:not(.btn):not([class*="btn"]):hover::after {
 .hero-content > *:nth-child(2) { animation-delay: 0.2s; }
 .hero-content > *:nth-child(3) { animation-delay: 0.35s; }
 .hero-content > *:nth-child(4) { animation-delay: 0.5s; }
+
+/* ------------------------------------------------------------
+   Magnetic button — smooth transform base + CTA glow pulse
+   ------------------------------------------------------------ */
+.btn-primary,
+.btn-ghost {
+  transition: transform 300ms cubic-bezier(0.22, 1, 0.36, 1),
+              background 200ms ease,
+              color 200ms ease,
+              box-shadow 200ms ease;
+  will-change: transform;
+}
+
+@keyframes ctaGlow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(193, 18, 31, 0); }
+  50%       { box-shadow: 0 0 20px 4px rgba(193, 18, 31, 0.18); }
+}
+
+.hero .btn-primary {
+  animation: ctaGlow 3s ease-in-out infinite;
+}
+
+.hero .btn-primary:hover {
+  animation: none;
+}

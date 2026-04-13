@@ -36,32 +36,55 @@ export default function LandingInteractivity() {
       };
 
       // ── Magnetic buttons ────────────────────────────────────
-      const magnets = document.querySelectorAll<HTMLElement>(
+      // Hero CTAs use existing .btn selector; global .btn-primary / .btn-ghost
+      // get the proximity-based 60px magnetic zone at strength 0.3
+      const heroMagnets = document.querySelectorAll<HTMLElement>(
         ".hero-ctas .btn, [data-magnetic]",
+      );
+      const globalMagnets = document.querySelectorAll<HTMLElement>(
+        ".btn-primary, .btn-ghost",
       );
       const cleanups: (() => void)[] = [cleanup1];
 
-      magnets.forEach((btn) => {
+      const attachMagnetic = (
+        btn: HTMLElement,
+        strength: number,
+        radius: number,
+      ) => {
         const onBtnMove = (e: MouseEvent) => {
           const r = btn.getBoundingClientRect();
-          const dx = (e.clientX - (r.left + r.width / 2)) * 0.28;
-          const dy = (e.clientY - (r.top + r.height / 2)) * 0.28;
+          const cx = r.left + r.width / 2;
+          const cy = r.top + r.height / 2;
+          const dist = Math.hypot(e.clientX - cx, e.clientY - cy);
+          if (dist > radius) return;
+          const dx = (e.clientX - cx) * strength;
+          const dy = (e.clientY - cy) * strength;
           btn.style.transition = "transform 100ms ease";
           btn.style.transform = `translate(${dx}px, ${dy}px)`;
         };
         const onBtnLeave = () => {
           btn.style.transition =
-            "transform 600ms cubic-bezier(0.22, 1, 0.36, 1)";
-          btn.style.transform = "";
+            "transform 400ms cubic-bezier(0.22, 1, 0.36, 1)";
+          btn.style.transform = "translate(0,0)";
         };
         btn.addEventListener("mousemove", onBtnMove);
         btn.addEventListener("mouseleave", onBtnLeave);
-        cleanups.push(() => {
+        return () => {
           btn.removeEventListener("mousemove", onBtnMove);
           btn.removeEventListener("mouseleave", onBtnLeave);
           btn.style.transform = "";
           btn.style.transition = "";
-        });
+        };
+      };
+
+      heroMagnets.forEach((btn) => {
+        cleanups.push(attachMagnetic(btn, 0.28, 80));
+      });
+
+      globalMagnets.forEach((btn) => {
+        // Skip buttons already handled by heroMagnets to avoid duplicate listeners
+        if (btn.closest(".hero-ctas")) return;
+        cleanups.push(attachMagnetic(btn, 0.3, 60));
       });
 
       // ── Hero headline parallax ──────────────────────────────
