@@ -177,8 +177,8 @@
 
 .section-tag-line {
   width: 32px;
-  height: 1px;
-  background: var(--line-strong);
+  height: 2px;
+  background: var(--primary);
 }
 
 .section-warm .section-tag-line {
@@ -253,6 +253,19 @@
 .section-warm .split-body {
   color: rgba(255, 255, 255, 0.45);
 }
+
+/* Font smoothing — premium mono rendering */
+.split-body,
+.feature-item,
+.how-step-body,
+.how-step-bullets li,
+.pricing-badge,
+.pricing-desc,
+.pricing-feature {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
 
 .feature-list {
   display: flex;
@@ -625,7 +638,7 @@
 .pricing-badge {
   font-size: var(--text-eyebrow);
   font-weight: 700;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--champagne, #c9a96e);
   display: block;
@@ -777,6 +790,19 @@
   display: block;
 }
 
+.cta-urgency-badge {
+  display: inline-block;
+  font-family: var(--font-body);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  padding: 4px 10px;
+  border: 1px solid rgba(193,18,31,0.35);
+  background: rgba(193,18,31,0.08);
+  color: var(--primary);
+  margin-bottom: var(--space-3);
+}
+
 .cta-tag-merchant { color: var(--primary); }
 .cta-tag-creator  { color: var(--tertiary); }
 
@@ -821,7 +847,7 @@
 }
 
 .cta-panel-merchant .cta-body {
-  color: rgba(255, 255, 255, 0.45);
+  color: rgba(245,242,236,0.65);
 }
 
 .cta-panel-creator .cta-body {
