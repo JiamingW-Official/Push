@@ -3,9 +3,9 @@ import "./globals.css";
 import CustomCursor from "@/components/layout/CustomCursor";
 
 export const metadata: Metadata = {
-  title: "Push — Local Creator Acquisition",
+  title: "Push — Turn Creators into Results",
   description:
-    "The AI engine that turns creators into measurable customer acquisition for local businesses.",
+    "NYC's local creator marketplace. Creators post. Customers show up. You only pay when it works — verified by QR attribution.",
 };
 
 export default function RootLayout({

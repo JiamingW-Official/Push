@@ -261,11 +261,11 @@ h1, h2, h3, h4, h5, h6 {
   color: var(--dark);
   line-height: 1.05;
 }
-h1 { font-size: var(--text-h1);  font-weight: 800; letter-spacing: -0.05em; }
+h1 { font-size: var(--text-h1);  font-weight: 900; letter-spacing: -0.05em; }
 h2 { font-size: var(--text-h2);  font-weight: 700; letter-spacing: -0.03em; }
 h3 { font-size: var(--text-h3);  font-weight: 600; letter-spacing: -0.02em; }
 h4 { font-size: var(--text-h4);  font-weight: 600; letter-spacing: -0.02em; }
-p  { font-size: var(--text-body); line-height: 1.7; }
+p  { font-size: var(--text-body); line-height: 1.6; }
 
 /* Display — editorial Black */
 .display-text {
@@ -293,7 +293,7 @@ p  { font-size: var(--text-body); line-height: 1.7; }
 }
 .eyebrow {
   font-family: var(--font-body);
-  font-size: var(--text-eyebrow);
+  font-size: 13px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -370,6 +370,7 @@ p  { font-size: var(--text-body); line-height: 1.7; }
 .btn-ghost:hover {
   border-color: var(--dark);
 }
+.btn:active { transform: scale(0.97); transition: transform 80ms ease; }
 
 /* ------------------------------------------------------------
    7. Form primitives
@@ -579,6 +580,23 @@ p  { font-size: var(--text-body); line-height: 1.7; }
 /* ------------------------------------------------------------
    11h. Animated link underline utility
    ------------------------------------------------------------ */
+/* Animated underline — apply with class .link-underline */
+.link-underline {
+  position: relative;
+}
+.link-underline::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: currentColor;
+  transition: width 280ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.link-underline:hover::after {
+  width: 100%;
+}
 
 /* ------------------------------------------------------------
    11i. Typography utility classes
