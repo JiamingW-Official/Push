@@ -596,7 +596,11 @@ export default function LandingPage() {
       <LandingInteractivity />
 
       {/* ── Hero ─────────────────────────────────────────────── */}
-      <section className="hero">
+      <section
+        id="main-content"
+        className="hero"
+        aria-labelledby="hero-heading"
+      >
         <div className="container hero-inner">
           {/* Left: content */}
           <div className="hero-content">
@@ -605,7 +609,7 @@ export default function LandingPage() {
             </p>
 
             {/* Weight contrast: Black 900 / Thin 200 */}
-            <h1 className="hero-headline">
+            <h1 id="hero-heading" className="hero-headline">
               <span className="line-black">Turn creators</span>
               <span className="line-light">
                 into <em data-text="results.">results.</em>
@@ -794,7 +798,11 @@ export default function LandingPage() {
       </div>
 
       {/* ── 01 · For Merchants ───────────────────────────────── */}
-      <section id="merchants" className="section section-bright">
+      <section
+        id="merchants"
+        className="section section-bright"
+        aria-labelledby="merchants-heading"
+      >
         <div className="container">
           <div className="split">
             <div className="reveal">
@@ -807,7 +815,7 @@ export default function LandingPage() {
                 <span className="section-tag-label">For Merchants</span>
               </div>
 
-              <h2 className="split-headline">
+              <h2 id="merchants-heading" className="split-headline">
                 <span className="wt-900">Know exactly</span>
                 <span className="wt-300">which creators drive customers.</span>
               </h2>
@@ -1008,7 +1016,11 @@ export default function LandingPage() {
       </section>
 
       {/* ── 02 · For Creators ────────────────────────────────── */}
-      <section id="creators" className="section section-warm">
+      <section
+        id="creators"
+        className="section section-warm"
+        aria-labelledby="creators-heading"
+      >
         <div className="container">
           {/* Section header + tier showcase span full width */}
           <div className="reveal">
@@ -1021,7 +1033,7 @@ export default function LandingPage() {
               <span className="section-tag-label">For Creators</span>
             </div>
 
-            <h2 className="split-headline">
+            <h2 id="creators-heading" className="split-headline">
               <span className="wt-900">No followers</span>
               <span className="wt-300">required.</span>
             </h2>
@@ -1201,7 +1213,11 @@ export default function LandingPage() {
       </section>
 
       {/* ── 03 · How it Works ────────────────────────────────── */}
-      <section id="how-it-works" className="section section-bright">
+      <section
+        id="how-it-works"
+        className="section section-bright"
+        aria-labelledby="how-it-works-heading"
+      >
         <div className="container">
           <div className="reveal">
             <div className="section-tag">
@@ -1212,7 +1228,7 @@ export default function LandingPage() {
               <span className="section-tag-line" />
               <span className="section-tag-label">How it Works</span>
             </div>
-            <h2>
+            <h2 id="how-it-works-heading">
               Three steps.
               <br />
               <span style={{ fontWeight: 300, opacity: 0.45 }}>
@@ -1290,7 +1306,11 @@ export default function LandingPage() {
       </section>
 
       {/* ── Pricing ──────────────────────────────────────────── */}
-      <section id="pricing" className="section section-bright">
+      <section
+        id="pricing"
+        className="section section-bright"
+        aria-labelledby="pricing-heading"
+      >
         <div className="container">
           <div className="pricing-header reveal">
             <div>
@@ -1305,7 +1325,7 @@ export default function LandingPage() {
                 <span className="section-tag-line" />
                 <span className="section-tag-label">Transparent Pricing</span>
               </div>
-              <h2>
+              <h2 id="pricing-heading">
                 Pricing that scales
                 <br />
                 <span style={{ fontWeight: 300, opacity: 0.45 }}>
