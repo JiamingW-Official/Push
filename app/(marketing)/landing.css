@@ -746,10 +746,12 @@
   overflow: hidden;
 }
 
-.cta-inner {
+.cta-inner,
+.cta-panels {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 0;
+  min-height: 400px;
   position: relative;
   z-index: 1;
 }
@@ -805,6 +807,19 @@
 
 .cta-tag-merchant { color: var(--primary); }
 .cta-tag-creator  { color: var(--tertiary); }
+
+.cta-urgency-badge {
+  display: inline-block;
+  font-family: var(--font-body);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  padding: 4px 10px;
+  border: 1px solid rgba(193,18,31,0.35);
+  background: rgba(193,18,31,0.08);
+  color: var(--primary);
+  margin-bottom: var(--space-3);
+}
 
 .cta-headline {
   font-family: var(--font-display);
