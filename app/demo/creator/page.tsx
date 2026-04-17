@@ -1,17 +1,16 @@
 "use client";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { enterDemoMode } from "@/lib/demo";
 
 export default function DemoCreatorEntry() {
   const router = useRouter();
 
   useEffect(() => {
-    // Set demo cookie (2 hours)
-    document.cookie = "push-demo-role=creator; path=/; max-age=7200";
-    // Brief branded moment then redirect
+    enterDemoMode("creator");
     const t = setTimeout(() => {
       router.replace("/creator/dashboard");
-    }, 1200);
+    }, 1000);
     return () => clearTimeout(t);
   }, [router]);
 
@@ -24,43 +23,42 @@ export default function DemoCreatorEntry() {
         alignItems: "center",
         justifyContent: "center",
         background: "#003049",
-        gap: "24px",
       }}
     >
-      {/* Push wordmark */}
-      <div
+      <span
         style={{
           fontFamily: "var(--font-display, 'Darky', sans-serif)",
-          fontSize: "clamp(48px, 8vw, 80px)",
+          fontSize: "clamp(72px, 14vw, 180px)",
           fontWeight: 900,
           fontStyle: "italic",
           letterSpacing: "-0.06em",
           color: "#f5f2ec",
-          lineHeight: 1,
+          lineHeight: 0.9,
+          userSelect: "none",
         }}
       >
-        Push
-      </div>
-      {/* Red accent line */}
+        Loading...
+      </span>
       <div
         style={{
-          width: "48px",
+          width: "64px",
           height: "3px",
           background: "#c1121f",
+          marginTop: "32px",
         }}
       />
-      {/* Loading label */}
       <p
         style={{
           fontFamily: "var(--font-body, 'CS Genio Mono', monospace)",
           fontSize: "11px",
           fontWeight: 700,
-          letterSpacing: "0.12em",
+          letterSpacing: "0.14em",
           textTransform: "uppercase",
-          color: "rgba(245,242,236,0.5)",
+          color: "rgba(245,242,236,0.4)",
+          marginTop: "24px",
         }}
       >
-        Loading creator preview&hellip;
+        Creator Preview
       </p>
     </div>
   );

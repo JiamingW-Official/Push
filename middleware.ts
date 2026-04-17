@@ -1,100 +1,122 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextRequest, NextResponse } from "next/server";
 
-// Routes that require creator auth
-const CREATOR_PROTECTED = ["/creator/dashboard", "/creator/profile"];
-const CREATOR_PROTECTED_PREFIXES = ["/creator/campaigns"];
+// Static/public prefixes that always pass through
+const PUBLIC_PREFIXES = [
+  "/_next",
+  "/favicon",
+  "/fonts",
+  "/images",
+  "/api",
+  "/demo",
+  "/scan",
+  "/explore",
+];
 
-// Routes that require merchant auth
+// Creator-protected route patterns
+const CREATOR_PROTECTED = ["/creator/dashboard", "/creator/profile"];
+const CREATOR_PROTECTED_PREFIXES = ["/creator/campaigns", "/creator/earnings"];
+
+// Merchant-protected route patterns
 const MERCHANT_PROTECTED = ["/merchant/dashboard"];
-const MERCHANT_PROTECTED_PREFIXES = ["/merchant/campaigns"];
+const MERCHANT_PROTECTED_PREFIXES = [
+  "/merchant/campaigns",
+  "/merchant/payments",
+];
+
+function isPublic(pathname: string): boolean {
+  return PUBLIC_PREFIXES.some((p) => pathname.startsWith(p));
+}
 
 function getDemoRole(request: NextRequest): "creator" | "merchant" | null {
-  const cookie = request.cookies.get("push-demo-role")?.value;
-  if (cookie === "creator" || cookie === "merchant") return cookie;
+  const value = request.cookies.get("push-demo-role")?.value;
+  if (value === "creator" || value === "merchant") return value;
   return null;
 }
 
 function isCreatorProtected(pathname: string): boolean {
-  if (CREATOR_PROTECTED.includes(pathname)) return true;
-  return CREATOR_PROTECTED_PREFIXES.some((p) => pathname.startsWith(p));
+  return (
+    CREATOR_PROTECTED.includes(pathname) ||
+    CREATOR_PROTECTED_PREFIXES.some((p) => pathname.startsWith(p))
+  );
 }
 
 function isMerchantProtected(pathname: string): boolean {
-  if (MERCHANT_PROTECTED.includes(pathname)) return true;
-  return MERCHANT_PROTECTED_PREFIXES.some((p) => pathname.startsWith(p));
+  return (
+    MERCHANT_PROTECTED.includes(pathname) ||
+    MERCHANT_PROTECTED_PREFIXES.some((p) => pathname.startsWith(p))
+  );
 }
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // ── Demo mode bypass ──────────────────────────────────────────
-  // If demo cookie is present, skip auth check for matching protected routes.
-  // This lets investors/stakeholders preview the app without an account.
+  // Pass static/public routes immediately
+  if (isPublic(pathname)) {
+    return NextResponse.next({ request: { headers: request.headers } });
+  }
+
+  const needsCreator = isCreatorProtected(pathname);
+  const needsMerchant = isMerchantProtected(pathname);
+
+  // Neither protected — pass through
+  if (!needsCreator && !needsMerchant) {
+    return NextResponse.next({ request: { headers: request.headers } });
+  }
+
+  // Demo cookie bypass: matching role skips real auth
   const demoRole = getDemoRole(request);
-  if (demoRole === "creator" && isCreatorProtected(pathname)) {
+  if (demoRole === "creator" && needsCreator) {
     return NextResponse.next({ request: { headers: request.headers } });
   }
-  if (demoRole === "merchant" && isMerchantProtected(pathname)) {
+  if (demoRole === "merchant" && needsMerchant) {
     return NextResponse.next({ request: { headers: request.headers } });
   }
 
-  // ── Real auth check ───────────────────────────────────────────
-  let response = NextResponse.next({
-    request: { headers: request.headers },
-  });
+  // Real auth check via Supabase
+  let response = NextResponse.next({ request: { headers: request.headers } });
 
-  const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!,
-    {
-      cookies: {
-        getAll() {
-          return request.cookies.getAll();
-        },
-        setAll(cookiesToSet) {
-          cookiesToSet.forEach(({ name, value }) =>
-            request.cookies.set(name, value),
-          );
-          response = NextResponse.next({
-            request: { headers: request.headers },
-          });
-          cookiesToSet.forEach(({ name, value, options }) =>
-            response.cookies.set(name, value, options),
-          );
-        },
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
+
+  // If Supabase is not configured (mock/dev mode), redirect to demo
+  if (!supabaseUrl || !supabaseKey) {
+    return NextResponse.redirect(new URL("/demo", request.url));
+  }
+
+  const supabase = createServerClient(supabaseUrl, supabaseKey, {
+    cookies: {
+      getAll() {
+        return request.cookies.getAll();
+      },
+      setAll(cookiesToSet) {
+        cookiesToSet.forEach(({ name, value }) =>
+          request.cookies.set(name, value),
+        );
+        response = NextResponse.next({ request: { headers: request.headers } });
+        cookiesToSet.forEach(({ name, value, options }) =>
+          response.cookies.set(name, value, options),
+        );
       },
     },
-  );
+  });
 
   const {
     data: { session },
   } = await supabase.auth.getSession();
 
-  // ── Creator protected routes ──────────────────────────────────
-  if (isCreatorProtected(pathname) && !session) {
-    const loginUrl = new URL("/creator/signup", request.url);
-    loginUrl.searchParams.set("redirectedFrom", pathname);
-    return NextResponse.redirect(loginUrl);
+  if (needsCreator && !session) {
+    // No real session and no demo cookie → send to demo role picker
+    return NextResponse.redirect(new URL("/demo", request.url));
   }
 
-  // ── Merchant protected routes ─────────────────────────────────
-  if (isMerchantProtected(pathname) && !session) {
-    const loginUrl = new URL("/merchant/login", request.url);
-    loginUrl.searchParams.set("redirectedFrom", pathname);
-    return NextResponse.redirect(loginUrl);
+  if (needsMerchant && !session) {
+    return NextResponse.redirect(new URL("/demo", request.url));
   }
 
   return response;
 }
 
 export const config = {
-  matcher: [
-    "/creator/dashboard",
-    "/creator/profile",
-    "/creator/campaigns/:path*",
-    "/merchant/dashboard",
-    "/merchant/campaigns/:path*",
-    "/creator/dashboard",
-  ],
+  matcher: ["/creator/:path*", "/merchant/:path*"],
 };
