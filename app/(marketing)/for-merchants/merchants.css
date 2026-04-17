@@ -1,401 +1,843 @@
 /* ============================================================
-   For Merchants — Page-specific styles
-   Extends landing.css; no new design tokens introduced.
+   For Merchants — v8.2 Premium Editorial
+   Extends landing.css. No new design tokens.
    ============================================================ */
 
-/* ── Hero ─────────────────────────────────────────────────── */
-.merch-hero {
+/* ------------------------------------------------------------
+   Hero
+   ------------------------------------------------------------ */
+.fm-hero {
   min-height: 100svh;
   background: var(--dark);
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  padding-top: 64px;
-  padding-bottom: var(--space-10);
+  padding-top: 80px;
+  padding-bottom: 160px;
   position: relative;
   overflow: hidden;
 }
 
-.merch-hero::after {
-  content: "";
+.fm-hero-ambient {
   position: absolute;
   inset: 0;
-  background: radial-gradient(
-      ellipse 60% 50% at 80% 20%,
-      rgba(193, 18, 31, 0.06) 0%,
-      transparent 65%
-    ),
-    radial-gradient(
-      ellipse 40% 30% at 10% 90%,
-      rgba(102, 155, 188, 0.05) 0%,
-      transparent 60%
-    );
+  background:
+    radial-gradient(ellipse 65% 50% at 85% 25%, rgba(193, 18, 31, 0.07) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 40% at 10% 80%, rgba(102, 155, 188, 0.05) 0%, transparent 65%);
   pointer-events: none;
   z-index: 0;
 }
 
-.merch-hero-inner {
+.fm-hero-inner {
   position: relative;
   z-index: 1;
-  padding-top: var(--space-10);
+  max-width: 820px;
+}
+
+.fm-eyebrow {
+  color: var(--tertiary);
+  margin-bottom: var(--space-5);
+}
+
+/* Asymmetric display headline */
+.fm-headline {
+  font-family: var(--font-display);
+  font-size: clamp(56px, 10vw, 144px);
+  letter-spacing: -0.06em;
+  line-height: 0.88;
+  color: #fff;
+  margin-bottom: var(--space-7);
+  position: relative;
+}
+
+.fm-headline-black {
+  font-weight: 900;
+  display: block;
+  position: relative;
+}
+
+/* Ghost text — the "echo" effect behind the heavy line */
+.fm-headline-ghost {
+  font-weight: 900;
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  color: rgba(255, 255, 255, 0.04);
+  user-select: none;
+  pointer-events: none;
+  transform: translateY(0.06em) translateX(0.02em);
+}
+
+.fm-headline-em {
+  font-style: italic;
+  font-weight: 900;
+  color: var(--primary);
+  display: inline-block;
+  margin-right: 0.12em;
+}
+
+.fm-headline-light {
+  font-weight: 200;
+  display: block;
+  color: rgba(255, 255, 255, 0.35);
+}
+
+.fm-sub {
+  font-size: var(--text-body);
+  color: rgba(245, 242, 236, 0.75);
+  max-width: 480px;
+  line-height: 1.7;
+  margin-bottom: var(--space-6);
+}
+
+.fm-ctas {
+  display: flex;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+  margin-bottom: var(--space-4);
+  align-items: center;
+}
+
+.fm-outline-btn {
+  background: transparent;
+  color: rgba(255, 255, 255, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow: none;
+}
+
+.fm-outline-btn:hover {
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.45);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.fm-reassure {
+  font-size: var(--text-caption);
+  color: rgba(255, 255, 255, 0.22);
+  letter-spacing: 0.02em;
+}
+
+/* ------------------------------------------------------------
+   Problem / Solution split
+   ------------------------------------------------------------ */
+.fm-ps-section {
+  padding-block: 160px;
+}
+
+.fm-ps-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: var(--space-10);
+  grid-template-columns: 1fr 1px 1fr;
+  gap: var(--space-12);
   align-items: start;
 }
 
-.merch-hero-content {
-  max-width: 560px;
-}
-
-.merch-eyebrow {
-  color: var(--primary);
-  margin-bottom: var(--space-4);
-}
-
-.merch-headline {
-  font-family: var(--font-display);
-  font-size: clamp(56px, 9vw, 128px);
-  letter-spacing: -0.06em;
-  line-height: 0.9;
-  color: #fff;
-  margin-bottom: var(--space-5);
-}
-
-.mh-black {
-  font-weight: 900;
-  display: block;
-}
-
-.mh-light {
-  font-weight: 200;
-  display: block;
-  color: rgba(255, 255, 255, 0.3);
-}
-
-.merch-sub {
-  font-size: var(--text-body);
-  color: rgba(255, 255, 255, 0.45);
-  max-width: 460px;
-  line-height: 1.8;
-  margin-bottom: var(--space-5);
-}
-
-.merch-ctas {
-  display: flex;
-  gap: var(--space-2);
-  flex-wrap: wrap;
-  margin-bottom: var(--space-3);
-}
-
-.merch-ghost {
-  color: rgba(255, 255, 255, 0.55);
-  border-color: rgba(255, 255, 255, 0.15);
-}
-
-.merch-ghost:hover {
-  color: #fff;
-  border-color: rgba(255, 255, 255, 0.4);
-}
-
-.merch-reassure {
-  font-size: var(--text-caption);
-  color: rgba(255, 255, 255, 0.25);
-  letter-spacing: 0.02em;
-}
-
-/* ── Proof stat cards ──────────────────────────────────────── */
-.merch-hero-proof {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: var(--space-2);
-  align-content: start;
-  padding-top: var(--space-5);
-}
-
-.merch-proof-card {
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.07);
-  padding: var(--space-4);
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  transition: background var(--t-base);
-}
-
-.merch-proof-card:hover {
-  background: rgba(255, 255, 255, 0.07);
-}
-
-.merch-proof-num {
-  font-family: var(--font-display);
-  font-size: clamp(36px, 4vw, 52px);
-  font-weight: 200;
-  letter-spacing: -0.05em;
-  line-height: 1;
-  color: #fff;
-}
-
-.merch-proof-label {
-  font-size: var(--text-small);
-  color: rgba(255, 255, 255, 0.6);
-  line-height: 1.4;
-}
-
-.merch-proof-sub {
-  font-size: var(--text-caption);
-  color: rgba(255, 255, 255, 0.25);
-  letter-spacing: 0.02em;
-}
-
-/* ── ROI Visual ────────────────────────────────────────────── */
-.roi-visual {
-  display: flex;
-  align-items: flex-end;
-  gap: var(--space-3);
-  padding: var(--space-6) var(--space-4) 0;
-  height: 100%;
+.fm-ps-divider {
+  background: var(--line);
+  align-self: stretch;
   min-height: 280px;
-  border-bottom: 1px solid var(--line);
+}
+
+.fm-ps-col {
+  padding: var(--space-2) 0;
+}
+
+.fm-ps-label {
+  font-family: var(--font-body);
+  font-size: var(--text-eyebrow);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: var(--space-5);
+}
+
+.fm-ps-label--problem {
+  color: rgba(0, 48, 73, 0.35);
+}
+
+.fm-ps-label--solution {
+  color: var(--primary);
+}
+
+/* Editorial statement with ghost text underneath */
+.fm-ps-statement {
+  font-family: var(--font-display);
+  font-size: clamp(28px, 4vw, 48px);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 1.05;
+  color: var(--dark);
+  margin-bottom: var(--space-6);
   position: relative;
 }
 
-.roi-bar-wrap {
+.fm-ps-statement strong {
+  font-weight: 900;
+  display: block;
+  position: relative;
+}
+
+.fm-ps-ghost {
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  font-weight: 900;
+  color: rgba(0, 48, 73, 0.06);
+  user-select: none;
+  pointer-events: none;
+  transform: translateY(0.08em) translateX(0.015em);
+  font-size: inherit;
+  letter-spacing: inherit;
+  line-height: inherit;
+}
+
+.fm-ps-statement--solution strong {
+  color: var(--primary);
+}
+
+.fm-ps-ghost--solution {
+  color: rgba(193, 18, 31, 0.06);
+}
+
+.fm-ps-list {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: var(--space-2);
-  flex: 1;
+  gap: var(--space-3);
+  list-style: none;
+  padding: 0;
+  margin: 0;
 }
 
-.roi-bar-cost {
-  font-family: var(--font-body);
-  font-size: 10px;
-  font-weight: 700;
-  color: var(--text-muted);
-  letter-spacing: 0.02em;
-  text-align: center;
-}
-
-.roi-bar {
-  width: 100%;
-  transition: transform var(--t-slow);
-}
-
-.roi-bar-wrap:last-child .roi-bar-cost {
-  color: var(--primary);
-  font-weight: 700;
-}
-
-.roi-bar-label {
-  font-family: var(--font-body);
-  font-size: var(--text-caption);
-  color: var(--text-muted);
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  font-weight: 600;
-}
-
-.roi-bar-wrap:last-child .roi-bar-label {
-  color: var(--primary);
-}
-
-/* ── Attribution flow ──────────────────────────────────────── */
-.attr-flow {
+.fm-ps-list li {
   display: flex;
-  align-items: center;
-  gap: var(--space-2);
-  margin: var(--space-8) 0;
-  flex-wrap: wrap;
-  row-gap: var(--space-3);
+  align-items: flex-start;
+  gap: var(--space-3);
+  font-size: var(--text-small);
+  color: var(--graphite);
+  line-height: 1.65;
 }
 
-.attr-step {
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
+.fm-ps-bullet {
+  width: 4px;
+  height: 4px;
+  background: rgba(0, 48, 73, 0.25);
+  flex-shrink: 0;
+  margin-top: 7px;
 }
 
-.attr-step-num {
-  width: 28px;
-  height: 28px;
+.fm-ps-list--solution li {
+  color: var(--dark);
+}
+
+.fm-ps-bullet--solution {
   background: var(--primary);
-  color: #fff;
-  font-family: var(--font-body);
-  font-size: 11px;
-  font-weight: 700;
+}
+
+/* ------------------------------------------------------------
+   How it Works — editorial numbered list
+   ------------------------------------------------------------ */
+.fm-how-section {
+  background: var(--surface);
+  padding-block: 160px;
+}
+
+.fm-how-headline {
+  font-family: var(--font-display);
+  font-size: clamp(36px, 5vw, 64px);
+  font-weight: 800;
+  letter-spacing: -0.05em;
+  line-height: 1;
+  color: var(--dark);
+  margin-bottom: var(--space-10);
+}
+
+.fm-how-headline-light {
+  font-weight: 300;
+  color: var(--text-muted);
+  display: block;
+}
+
+.fm-how-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
   display: flex;
-  align-items: center;
-  justify-content: center;
+  flex-direction: column;
+  gap: 0;
+}
+
+.fm-how-item {
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  gap: var(--space-8);
+  align-items: start;
+  padding: var(--space-8) 0;
+  border-top: 1px solid var(--line);
+  transition: background 200ms ease;
+}
+
+.fm-how-item:last-child {
+  border-bottom: 1px solid var(--line);
+}
+
+.fm-how-num {
+  font-family: var(--font-display);
+  font-size: clamp(64px, 8vw, 104px);
+  font-weight: 100;
+  letter-spacing: -0.06em;
+  line-height: 1;
+  color: var(--dark);
+  opacity: 0.06;
+  display: block;
+  user-select: none;
+}
+
+.fm-how-content {
+  padding-top: var(--space-1);
+}
+
+.fm-how-title {
+  font-family: var(--font-display);
+  font-size: clamp(22px, 2.5vw, 32px);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: var(--dark);
+  margin-bottom: var(--space-3);
+  line-height: 1.1;
+}
+
+.fm-how-body {
+  font-size: var(--text-body);
+  color: var(--graphite);
+  line-height: 1.7;
+  max-width: 560px;
+}
+
+/* Left accent bar on hover */
+.fm-how-item {
+  position: relative;
+  padding-left: var(--space-3);
+}
+
+.fm-how-item::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--primary);
+  transform: scaleY(0);
+  transform-origin: bottom center;
+  transition: transform 300ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.fm-how-item:hover::before {
+  transform: scaleY(1);
+}
+
+/* ------------------------------------------------------------
+   Creator Tier Showcase
+   ------------------------------------------------------------ */
+.fm-tiers-section {
+  padding-block: 160px;
+}
+
+.fm-tiers-headline {
+  font-family: var(--font-display);
+  font-size: clamp(36px, 5vw, 64px);
+  font-weight: 800;
+  letter-spacing: -0.05em;
+  line-height: 1;
+  color: var(--dark);
+  margin-bottom: var(--space-4);
+}
+
+.fm-tiers-headline-light {
+  font-weight: 300;
+  color: var(--text-muted);
+  display: block;
+}
+
+.fm-tiers-sub {
+  font-size: var(--text-body);
+  color: var(--graphite);
+  max-width: 520px;
+  line-height: 1.65;
+  margin-bottom: var(--space-10);
+}
+
+.fm-tier-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 1px;
+  background: var(--line);
+  border: 1px solid var(--line);
+}
+
+.fm-tier-card {
+  background: var(--surface-elevated);
+  padding: var(--space-6) var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  transition: background 220ms ease, transform 220ms ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.fm-tier-card:hover {
+  background: #fff;
+  transform: translateY(-4px);
+  z-index: 2;
+}
+
+.fm-tier-swatch {
+  display: block;
+  width: 100%;
+  height: 3px;
+  margin-bottom: var(--space-3);
   flex-shrink: 0;
 }
 
-.attr-step-label {
-  font-family: var(--font-body);
-  font-size: var(--text-small);
-  font-weight: 600;
-  color: rgba(255, 255, 255, 0.75);
-  letter-spacing: 0.02em;
-}
-
-.attr-step-arrow {
-  font-size: 16px;
-  color: rgba(255, 255, 255, 0.2);
-  margin-left: var(--space-2);
-}
-
-/* ── How-it-works steps grid ───────────────────────────────── */
-.merch-steps-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: var(--space-4);
-  margin-top: var(--space-8);
-}
-
-.merch-step {
-  border-top: 2px solid rgba(255, 255, 255, 0.12);
-  padding-top: var(--space-4);
-}
-
-.merch-step-n {
-  font-family: var(--font-body);
-  font-size: var(--text-eyebrow);
+.fm-tier-name {
+  font-family: var(--font-display);
+  font-size: var(--text-h3);
   font-weight: 700;
-  letter-spacing: 0.08em;
-  color: var(--primary);
-  display: block;
+  letter-spacing: -0.02em;
+  color: var(--dark);
+  line-height: 1;
   margin-bottom: var(--space-3);
 }
 
-.merch-step-title {
-  font-family: var(--font-display);
-  font-size: var(--text-h4);
-  font-weight: 700;
-  color: #fff;
-  letter-spacing: -0.02em;
-  margin-bottom: var(--space-2);
-}
-
-.merch-step-body {
-  font-size: var(--text-small);
-  color: rgba(255, 255, 255, 0.45);
-  line-height: 1.7;
-}
-
-/* ── Comparison table ──────────────────────────────────────── */
-.merch-compare {
-  border: 1px solid var(--line);
-  background: var(--surface-elevated);
-  overflow-x: auto;
-}
-
-.compare-header,
-.compare-row {
-  display: grid;
-  grid-template-columns: 1fr 110px 110px 110px 110px;
-  gap: 0;
-  border-bottom: 1px solid var(--line);
-  min-width: 560px;
-}
-
-.compare-header:last-child,
-.compare-row:last-child {
-  border-bottom: none;
-}
-
-.compare-header {
-  background: var(--surface-muted);
-}
-
-.compare-feature-col {
-  padding: var(--space-3) var(--space-4);
-  font-size: var(--text-small);
-  color: var(--dark);
+.fm-tier-row {
   display: flex;
-  align-items: center;
-  border-right: 1px solid var(--line);
+  flex-direction: column;
+  gap: 2px;
 }
 
-.compare-col {
-  padding: var(--space-3) var(--space-3);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-right: 1px solid var(--line);
-  font-size: var(--text-eyebrow);
+.fm-tier-meta-label {
+  font-family: var(--font-body);
+  font-size: 10px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--text-muted);
 }
 
-.compare-col:last-child {
-  border-right: none;
+.fm-tier-meta-val {
+  font-family: var(--font-body);
+  font-size: var(--text-small);
+  color: var(--dark);
+  line-height: 1.4;
 }
 
-.compare-col--push {
-  background: rgba(193, 18, 31, 0.04);
+.fm-tier-meta-val--price {
+  font-weight: 600;
   color: var(--primary);
-  border-right: 1px solid rgba(193, 18, 31, 0.15);
 }
 
-.compare-header .compare-col--push {
-  background: rgba(193, 18, 31, 0.08);
+.fm-tier-note {
+  font-size: var(--text-caption);
+  color: var(--graphite);
+  line-height: 1.5;
+  margin-top: var(--space-2);
+  padding-top: var(--space-2);
+  border-top: 1px solid var(--line);
 }
 
-/* ── Plan ROI note ─────────────────────────────────────────── */
-.merch-plan-roi {
+/* ------------------------------------------------------------
+   Pricing — editorial vertical-rule layout
+   ------------------------------------------------------------ */
+.fm-pricing-section {
+  background: var(--surface-bright);
+  padding-block: 160px;
+}
+
+.fm-pricing-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: var(--space-10);
+  flex-wrap: wrap;
+  gap: var(--space-6);
+}
+
+.fm-pricing-headline {
+  font-family: var(--font-display);
+  font-size: clamp(36px, 5vw, 64px);
+  font-weight: 800;
+  letter-spacing: -0.05em;
+  line-height: 1;
+  color: var(--dark);
+}
+
+.fm-pricing-headline-light {
+  font-weight: 300;
+  color: var(--text-muted);
+  display: block;
+}
+
+.fm-pricing-note {
+  font-size: var(--text-small);
+  color: var(--graphite);
+  line-height: 1.7;
+  text-align: right;
+}
+
+/* Horizontal three-column plan layout with vertical rules */
+.fm-plans {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  position: relative;
+}
+
+.fm-plan {
+  padding: var(--space-8) var(--space-8);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  position: relative;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  transition: background 220ms ease;
+}
+
+.fm-plan:hover {
+  background: rgba(0, 48, 73, 0.02);
+}
+
+/* Vertical rule between columns */
+.fm-plan-rule {
+  position: absolute;
+  right: 0;
+  top: var(--space-6);
+  bottom: var(--space-6);
+  width: 1px;
+  background: var(--line);
+}
+
+.fm-plan--featured {
+  background: var(--surface-elevated);
+  border-top: 3px solid var(--champagne, #c9a96e);
+  box-shadow: 0 0 0 1px rgba(201, 169, 110, 0.2), 0 8px 32px rgba(0, 48, 73, 0.08);
+  z-index: 1;
+}
+
+.fm-plan--featured:hover {
+  background: #fff;
+}
+
+.fm-plan-badge {
+  font-family: var(--font-body);
+  font-size: var(--text-eyebrow);
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--champagne, #c9a96e);
+  display: block;
+}
+
+.fm-plan-name {
+  font-family: var(--font-display);
+  font-size: var(--text-h3);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: var(--dark);
+}
+
+.fm-plan-price {
+  display: flex;
+  align-items: baseline;
+  gap: 2px;
+  margin: var(--space-1) 0;
+}
+
+.fm-plan-price-int {
+  font-family: var(--font-display);
+  font-size: clamp(40px, 4vw, 52px);
+  font-weight: 200;
+  letter-spacing: -0.05em;
+  line-height: 1;
+  color: var(--dark);
+}
+
+.fm-plan-price-period {
+  font-family: var(--font-body);
+  font-size: var(--text-caption);
+  color: var(--graphite);
+  letter-spacing: 0.04em;
+  margin-left: 2px;
+}
+
+.fm-plan-desc {
+  font-size: var(--text-small);
+  color: var(--graphite);
+  line-height: 1.65;
+  padding-bottom: var(--space-4);
+  border-bottom: 1px solid var(--line);
+}
+
+.fm-plan-features {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  list-style: none;
+  padding: 0;
+  margin: 0 0 var(--space-2) 0;
+  flex: 1;
+}
+
+.fm-plan-feature {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--text-small);
+  color: var(--dark);
+  line-height: 1.5;
+}
+
+.fm-plan-feature::before {
+  content: "";
+  width: 4px;
+  height: 4px;
+  background: var(--primary);
+  flex-shrink: 0;
+}
+
+.fm-plan-roi {
+  font-family: var(--font-body);
   font-size: var(--text-caption);
   color: var(--primary);
   font-weight: 700;
   letter-spacing: 0.02em;
-  margin-bottom: var(--space-3);
   padding: var(--space-1) var(--space-2);
-  background: rgba(193, 18, 31, 0.06);
+  background: rgba(193, 18, 31, 0.05);
   border-left: 2px solid var(--primary);
+  margin-bottom: var(--space-2);
 }
 
-/* ── Final CTA ─────────────────────────────────────────────── */
-.merch-final-cta {
-  padding-block: var(--space-15);
+.fm-plan-cta {
+  width: 100%;
+  justify-content: center;
+  margin-top: auto;
 }
 
-.merch-cta-inner {
-  max-width: 640px;
+.fm-pricing-full-link {
+  margin-top: var(--space-6);
+  text-align: right;
 }
 
-/* ── Responsive ────────────────────────────────────────────── */
-@media (max-width: 900px) {
-  .merch-hero-inner {
+.fm-link-underline {
+  font-family: var(--font-body);
+  font-size: var(--text-small);
+  color: var(--tertiary);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  font-weight: 600;
+  transition: color 200ms ease;
+}
+
+.fm-link-underline:hover {
+  color: var(--dark);
+}
+
+/* ------------------------------------------------------------
+   Case Study Pull-Quote
+   ------------------------------------------------------------ */
+.fm-quote-section {
+  padding-block: 160px;
+}
+
+.fm-quote-wrap {
+  display: grid;
+  grid-template-columns: 3px 1fr;
+  gap: var(--space-8);
+  align-items: start;
+  max-width: 800px;
+}
+
+.fm-quote-rule {
+  display: block;
+  background: var(--primary);
+  align-self: stretch;
+  min-height: 120px;
+}
+
+.fm-pull-quote {
+  margin: 0;
+}
+
+.fm-pull-quote-text {
+  font-family: var(--font-display);
+  font-size: clamp(28px, 4vw, 52px);
+  font-weight: 300;
+  font-style: italic;
+  letter-spacing: -0.04em;
+  line-height: 1.15;
+  color: var(--dark);
+  margin-bottom: var(--space-6);
+}
+
+.fm-pull-quote-footer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.fm-pull-quote-cite {
+  font-family: var(--font-body);
+  font-size: var(--text-small);
+  font-style: normal;
+  font-weight: 600;
+  color: var(--dark);
+  letter-spacing: 0.01em;
+}
+
+.fm-pull-quote-meta {
+  font-family: var(--font-body);
+  font-size: var(--text-caption);
+  color: var(--text-muted);
+  letter-spacing: 0.02em;
+}
+
+/* ------------------------------------------------------------
+   Final CTA — deep space blue, left-aligned
+   ------------------------------------------------------------ */
+.fm-final-cta {
+  background: var(--dark);
+  padding-block: 180px;
+  position: relative;
+  overflow: hidden;
+}
+
+.fm-final-cta::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 60% 50% at 90% 50%, rgba(102, 155, 188, 0.06) 0%, transparent 65%),
+    radial-gradient(ellipse 40% 35% at 5% 80%, rgba(193, 18, 31, 0.05) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+.fm-final-inner {
+  position: relative;
+  max-width: 720px;
+}
+
+.fm-final-eyebrow {
+  color: var(--tertiary);
+  margin-bottom: var(--space-5);
+}
+
+.fm-final-headline {
+  font-family: var(--font-display);
+  font-size: clamp(48px, 8vw, 112px);
+  font-weight: 900;
+  letter-spacing: -0.06em;
+  line-height: 0.9;
+  color: #fff;
+  margin-bottom: var(--space-6);
+}
+
+.fm-final-headline-light {
+  font-weight: 200;
+  color: rgba(255, 255, 255, 0.3);
+  display: block;
+}
+
+.fm-final-sub {
+  font-size: var(--text-body);
+  color: rgba(245, 242, 236, 0.65);
+  max-width: 460px;
+  line-height: 1.7;
+  margin-bottom: var(--space-8);
+}
+
+.fm-final-btn {
+  min-width: 200px;
+}
+
+/* ------------------------------------------------------------
+   Responsive
+   ------------------------------------------------------------ */
+@media (max-width: 1100px) {
+  .fm-tier-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .fm-plans {
     grid-template-columns: 1fr;
-    gap: var(--space-8);
   }
 
-  .merch-hero-proof {
-    grid-template-columns: repeat(4, 1fr);
-    padding-top: 0;
+  .fm-plan-rule {
+    display: none;
   }
 
-  .merch-steps-grid {
-    grid-template-columns: 1fr 1fr;
+  .fm-plan {
+    border-top: 1px solid var(--line);
+    border-bottom: none;
+  }
+
+  .fm-plan:last-child {
+    border-bottom: 1px solid var(--line);
+  }
+
+  .fm-pricing-note {
+    text-align: left;
+  }
+}
+
+@media (max-width: 900px) {
+  .fm-hero {
+    padding-bottom: 100px;
+  }
+
+  .fm-ps-grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-10);
+  }
+
+  .fm-ps-divider {
+    display: none;
+  }
+
+  .fm-how-item {
+    grid-template-columns: 72px 1fr;
+    gap: var(--space-5);
+  }
+
+  .fm-tier-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .fm-quote-wrap {
+    gap: var(--space-5);
   }
 }
 
 @media (max-width: 600px) {
-  .merch-hero-proof {
-    grid-template-columns: 1fr 1fr;
+  .fm-hero {
+    padding-bottom: 72px;
   }
 
-  .merch-steps-grid {
+  .fm-how-item {
+    grid-template-columns: 1fr;
+    gap: var(--space-3);
+  }
+
+  .fm-how-num {
+    display: none;
+  }
+
+  .fm-tier-grid {
     grid-template-columns: 1fr;
   }
 
-  .attr-flow {
+  .fm-ctas {
     flex-direction: column;
     align-items: flex-start;
-  }
-
-  .attr-step-arrow {
-    display: none;
   }
 }
