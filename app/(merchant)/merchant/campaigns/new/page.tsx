@@ -1,71 +1,73 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { createClient } from "@/lib/supabase";
+import { CategoryPicker } from "@/components/merchant/campaign-wizard/CategoryPicker";
+import { TierSelector } from "@/components/merchant/campaign-wizard/TierSelector";
+import type { CreatorTier } from "@/components/merchant/campaign-wizard/TierSelector";
 import "./campaign-new.css";
 
-// ── Types ────────────────────────────────────────────────────
-type Step = 1 | 2 | 3;
+// ── Types ─────────────────────────────────────────────────────
+type Step = 1 | 2 | 3 | 4;
 
 type FormData = {
-  title: string;
-  description: string;
+  // Step 1 — Basics
+  name: string;
   category: string;
-  payout: string;
-  spots: string;
-  deadline: string;
+  description: string;
+  // Step 2 — Budget & Tier
+  budget: string;
+  tier: string;
+  commissionSplit: string;
+  // Step 3 — Deliverables
+  contentType: string;
+  platform: string;
+  dueDate: string;
 };
 
 type FormErrors = Partial<Record<keyof FormData, string>>;
 
-const CATEGORIES = [
-  "Food",
-  "Coffee",
-  "Beauty",
-  "Retail",
-  "Fitness",
-  "Other",
-] as const;
-
 const EMPTY: FormData = {
-  title: "",
-  description: "",
+  name: "",
   category: "",
-  payout: "",
-  spots: "",
-  deadline: "",
+  description: "",
+  budget: "",
+  tier: "",
+  commissionSplit: "70",
+  contentType: "",
+  platform: "",
+  dueDate: "",
 };
 
-// ── Helpers ──────────────────────────────────────────────────
+const STEP_LABELS: Record<Step, string> = {
+  1: "Basics",
+  2: "Budget",
+  3: "Deliverables",
+  4: "Review",
+};
+
+const CONTENT_TYPES = ["post", "video", "story"] as const;
+const PLATFORMS = ["Instagram", "TikTok", "Red"] as const;
+
+// ── Helpers ───────────────────────────────────────────────────
 function todayISO(): string {
   return new Date().toISOString().split("T")[0];
 }
 
-function formatPayout(val: string): string {
-  const n = parseFloat(val);
-  if (isNaN(n)) return "—";
-  return n === 0 ? "Free / Trade" : `$${n.toFixed(2)}`;
+function genId(): string {
+  return `demo-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
 }
 
-function formatDeadline(val: string): string {
-  if (!val) return "—";
-  const [y, m, d] = val.split("-");
-  return `${m}/${d}/${y}`;
+function capitalize(s: string) {
+  return s.charAt(0).toUpperCase() + s.slice(1);
 }
 
-// ── Step indicator ───────────────────────────────────────────
-const STEP_LABELS: Record<Step, string> = {
-  1: "Basics",
-  2: "Offer",
-  3: "Publish",
-};
-
+// ── Step Indicator ────────────────────────────────────────────
 function StepIndicator({ current }: { current: Step }) {
   return (
     <nav className="cn-steps" aria-label="Form steps">
-      {([1, 2, 3] as Step[]).map((n) => {
+      {([1, 2, 3, 4] as Step[]).map((n) => {
         const done = n < current;
         const active = n === current;
         return (
@@ -109,98 +111,69 @@ function StepIndicator({ current }: { current: Step }) {
   );
 }
 
-// ── Main page ────────────────────────────────────────────────
+// ── Main Page ─────────────────────────────────────────────────
 export default function CampaignNewPage() {
   const router = useRouter();
-
   const [step, setStep] = useState<Step>(1);
   const [form, setForm] = useState<FormData>(EMPTY);
   const [errors, setErrors] = useState<FormErrors>({});
   const [formError, setFormError] = useState("");
   const [loading, setLoading] = useState(false);
-  const [authReady, setAuthReady] = useState(false);
-  const [merchantId, setMerchantId] = useState<string | null>(null);
 
-  // ── Auth check on mount ──────────────────────────────────
-  useEffect(() => {
-    async function checkAuth() {
-      const supabase = createClient();
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
+  function setField<K extends keyof FormData>(k: K, val: string) {
+    setForm((f) => ({ ...f, [k]: val }));
+    if (errors[k]) setErrors((e) => ({ ...e, [k]: undefined }));
+  }
 
-      if (!user) {
-        router.replace("/merchant/login");
-        return;
-      }
-
-      const { data: merchant } = await supabase
-        .from("merchants")
-        .select("id")
-        .eq("user_id", user.id)
-        .single();
-
-      if (!merchant) {
-        router.replace("/merchant/signup");
-        return;
-      }
-
-      setMerchantId(merchant.id);
-      setAuthReady(true);
-    }
-    checkAuth();
-  }, [router]);
-
-  // ── Field helpers ────────────────────────────────────────
-  function set(k: keyof FormData) {
-    return (
-      e: React.ChangeEvent<
-        HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-      >,
-    ) => {
-      setForm((f) => ({ ...f, [k]: e.target.value }));
-      if (errors[k]) setErrors((prev) => ({ ...prev, [k]: undefined }));
+  function fieldProps<K extends keyof FormData>(k: K) {
+    return {
+      value: form[k],
+      onChange: (
+        e: React.ChangeEvent<
+          HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+        >,
+      ) => setField(k, e.target.value),
+      className: errors[k] ? "cn-input--error" : undefined,
     };
   }
 
-  // ── Validation per step ──────────────────────────────────
+  // ── Validation ───────────────────────────────────────────────
   function validateStep(s: Step): FormErrors {
     const errs: FormErrors = {};
 
     if (s === 1) {
-      if (!form.title.trim()) errs.title = "Campaign title is required.";
-      else if (form.title.length > 80)
-        errs.title = "Title must be 80 characters or fewer.";
-
+      if (!form.name.trim()) errs.name = "Campaign name is required.";
+      else if (form.name.length > 80)
+        errs.name = "Name must be 80 characters or fewer.";
+      if (!form.category) errs.category = "Please select a category.";
       if (!form.description.trim())
         errs.description = "Description is required.";
-      else if (form.description.length > 280)
-        errs.description = "Description must be 280 characters or fewer.";
-
-      if (!form.category) errs.category = "Please select a category.";
+      else if (form.description.length > 400)
+        errs.description = "Description must be 400 characters or fewer.";
     }
 
     if (s === 2) {
-      const payout = parseFloat(form.payout);
-      if (form.payout === "" || isNaN(payout))
-        errs.payout = "Enter a payout amount (use 0 for free/trade).";
-      else if (payout < 0) errs.payout = "Payout cannot be negative.";
+      const budget = parseFloat(form.budget);
+      if (!form.budget || isNaN(budget)) errs.budget = "Enter a budget amount.";
+      else if (budget < 50) errs.budget = "Minimum budget is $50.";
+      else if (budget > 50000) errs.budget = "Maximum budget is $50,000.";
+      if (!form.tier) errs.tier = "Please select a creator tier.";
+      const split = parseInt(form.commissionSplit, 10);
+      if (isNaN(split) || split < 0 || split > 100)
+        errs.commissionSplit = "Commission split must be 0–100%.";
+    }
 
-      const spots = parseInt(form.spots, 10);
-      if (form.spots === "" || isNaN(spots))
-        errs.spots = "Enter the number of available spots.";
-      else if (spots < 1 || spots > 50)
-        errs.spots = "Spots must be between 1 and 50.";
-
-      if (!form.deadline) errs.deadline = "Please set a deadline.";
-      else if (form.deadline < todayISO())
-        errs.deadline = "Deadline must be today or later.";
+    if (s === 3) {
+      if (!form.contentType) errs.contentType = "Select a content type.";
+      if (!form.platform) errs.platform = "Select a platform.";
+      if (!form.dueDate) errs.dueDate = "Set a due date.";
+      else if (form.dueDate < todayISO())
+        errs.dueDate = "Due date must be today or later.";
     }
 
     return errs;
   }
 
-  // ── Navigation ───────────────────────────────────────────
   function handleNext() {
     const errs = validateStep(step);
     if (Object.keys(errs).length > 0) {
@@ -208,7 +181,7 @@ export default function CampaignNewPage() {
       return;
     }
     setErrors({});
-    setStep((s) => (s < 3 ? ((s + 1) as Step) : s));
+    setStep((s) => (s < 4 ? ((s + 1) as Step) : s));
   }
 
   function handleBack() {
@@ -216,20 +189,16 @@ export default function CampaignNewPage() {
     setStep((s) => (s > 1 ? ((s - 1) as Step) : s));
   }
 
-  // ── Submit ───────────────────────────────────────────────
-  async function handleSubmit(status: "draft" | "active") {
-    // Re-validate steps 1 & 2 before publish
-    const e1 = validateStep(1);
-    const e2 = validateStep(2);
-    const allErrs = { ...e1, ...e2 };
+  // ── Submit ────────────────────────────────────────────────────
+  async function handlePublish() {
+    const allErrs = {
+      ...validateStep(1),
+      ...validateStep(2),
+      ...validateStep(3),
+    };
     if (Object.keys(allErrs).length > 0) {
       setErrors(allErrs);
       setFormError("Some fields need attention. Please review previous steps.");
-      return;
-    }
-
-    if (!merchantId) {
-      setFormError("Session error. Please refresh and try again.");
       return;
     }
 
@@ -237,63 +206,55 @@ export default function CampaignNewPage() {
     setFormError("");
 
     try {
-      const supabase = createClient();
-      const spotsTotal = parseInt(form.spots, 10);
-      const payout = parseFloat(form.payout);
-
-      const { error } = await supabase.from("campaigns").insert({
-        merchant_id: merchantId,
-        title: form.title.trim(),
+      // Mock submit — write to localStorage
+      const id = genId();
+      const campaign = {
+        id,
+        title: form.name.trim(),
+        category: form.category,
         description: form.description.trim(),
-        payout,
-        spots_total: spotsTotal,
-        spots_remaining: spotsTotal,
-        deadline: form.deadline || null,
-        status,
-      });
+        budget: parseFloat(form.budget),
+        tier: form.tier as CreatorTier,
+        commissionSplit: parseInt(form.commissionSplit, 10),
+        contentType: form.contentType,
+        platform: form.platform,
+        dueDate: form.dueDate,
+        status: "active",
+        createdAt: new Date().toISOString(),
+        applications: 0,
+        qrScans: 0,
+      };
 
-      if (error) throw error;
+      const stored = localStorage.getItem("push-demo-campaigns");
+      const list = stored ? JSON.parse(stored) : [];
+      list.unshift(campaign);
+      localStorage.setItem("push-demo-campaigns", JSON.stringify(list));
 
-      router.push("/merchant/dashboard");
-    } catch (err: unknown) {
-      const msg =
-        err instanceof Error ? err.message : "Something went wrong. Try again.";
-      setFormError(msg);
+      // TODO: wire to Supabase via POST /api/merchant/campaigns
+
+      router.push(`/merchant/campaigns/${id}`);
+    } catch {
+      setFormError("Something went wrong. Try again.");
     } finally {
       setLoading(false);
     }
   }
 
-  // ── Loading skeleton ─────────────────────────────────────
-  if (!authReady) {
-    return (
-      <div className="cn-page">
-        <div className="cn-inner">
-          <div style={{ color: "#669bbc", fontSize: "0.875rem" }}>Loading…</div>
-        </div>
-      </div>
-    );
-  }
-
-  // ── Render ───────────────────────────────────────────────
+  // ── Render ────────────────────────────────────────────────────
   return (
     <div className="cn-page">
-      <div className="cn-inner">
-        {/* Back link */}
+      <div className="cn-inner cn-inner--wide">
         <Link href="/merchant/dashboard" className="cn-back">
           ← Back to dashboard
         </Link>
 
-        {/* Page title */}
-        <h1 className="cn-title">Create Campaign</h1>
+        <h1 className="cn-title">New Campaign</h1>
         <p className="cn-subtitle">
-          Fill in the details below to attract creators near you.
+          Four steps to launch your creator campaign.
         </p>
 
-        {/* Step indicator */}
         <StepIndicator current={step} />
 
-        {/* Global error */}
         {formError && (
           <div className="cn-form-error" role="alert">
             <span>{formError}</span>
@@ -303,325 +264,442 @@ export default function CampaignNewPage() {
           </div>
         )}
 
-        {/* Form panel */}
-        <div className="cn-panel">
-          {/* ── Step 1: Campaign Basics ───────────────── */}
-          <section
-            className={`cn-step-section${step === 1 ? " cn-step-section--visible" : ""}`}
-            aria-label="Step 1: Campaign Basics"
-          >
-            <h2 className="cn-section-heading">Campaign Basics</h2>
-
-            {/* Title */}
-            <div className="cn-field">
-              <label htmlFor="cn-title">Campaign Title</label>
-              <input
-                id="cn-title"
-                type="text"
-                value={form.title}
-                onChange={set("title")}
-                maxLength={80}
-                placeholder="e.g. Free Latte for Your First Post"
-                className={errors.title ? "cn-input--error" : ""}
-                aria-describedby={errors.title ? "err-title" : "counter-title"}
-                autoComplete="off"
-              />
-              <div style={{ display: "flex", justifyContent: "space-between" }}>
-                {errors.title ? (
-                  <span className="cn-error-msg" id="err-title" role="alert">
-                    {errors.title}
-                  </span>
-                ) : (
-                  <span />
-                )}
-                <span
-                  id="counter-title"
-                  className={`cn-char-counter${form.title.length > 72 ? " cn-char-counter--warn" : ""}`}
-                  aria-live="polite"
-                >
-                  {form.title.length}/80
-                </span>
-              </div>
-            </div>
-
-            {/* Description */}
-            <div className="cn-field">
-              <label htmlFor="cn-description">Description</label>
-              <textarea
-                id="cn-description"
-                value={form.description}
-                onChange={set("description")}
-                maxLength={280}
-                rows={4}
-                placeholder="What are you offering? What should creators post about?"
-                className={errors.description ? "cn-input--error" : ""}
-                aria-describedby={
-                  errors.description ? "err-desc" : "counter-desc"
-                }
-              />
-              <div style={{ display: "flex", justifyContent: "space-between" }}>
-                {errors.description ? (
-                  <span className="cn-error-msg" id="err-desc" role="alert">
-                    {errors.description}
-                  </span>
-                ) : (
-                  <span />
-                )}
-                <span
-                  id="counter-desc"
-                  className={`cn-char-counter${form.description.length > 252 ? " cn-char-counter--warn" : ""}`}
-                  aria-live="polite"
-                >
-                  {form.description.length}/280
-                </span>
-              </div>
-            </div>
-
-            {/* Category */}
-            <div className="cn-field">
-              <label htmlFor="cn-category">Category</label>
-              <select
-                id="cn-category"
-                value={form.category}
-                onChange={set("category")}
-                className={errors.category ? "cn-input--error" : ""}
-                aria-describedby={errors.category ? "err-category" : undefined}
-              >
-                <option value="">Select a category…</option>
-                {CATEGORIES.map((c) => (
-                  <option key={c} value={c}>
-                    {c}
-                  </option>
+        {/* ── Layout: left progress + right form ─────────── */}
+        <div className="cn-wizard-layout">
+          {/* Left rail — step context */}
+          <aside className="cn-wizard-rail">
+            <div className="cn-rail-inner">
+              <p className="cn-rail-step-label">Step {step} of 4</p>
+              <h2 className="cn-rail-heading">{STEP_LABELS[step]}</h2>
+              <div className="cn-rail-lines">
+                {([1, 2, 3, 4] as Step[]).map((n) => (
+                  <div
+                    key={n}
+                    className={[
+                      "cn-rail-line",
+                      n === step ? "cn-rail-line--active" : "",
+                      n < step ? "cn-rail-line--done" : "",
+                    ]
+                      .filter(Boolean)
+                      .join(" ")}
+                  />
                 ))}
-              </select>
-              {errors.category && (
-                <span className="cn-error-msg" id="err-category" role="alert">
-                  {errors.category}
-                </span>
-              )}
-            </div>
-
-            <div className="cn-nav cn-nav--end">
-              <button
-                type="button"
-                className="cn-btn cn-btn--primary"
-                onClick={handleNext}
-              >
-                Next: Offer Details →
-              </button>
-            </div>
-          </section>
-
-          {/* ── Step 2: Offer Details ─────────────────── */}
-          <section
-            className={`cn-step-section${step === 2 ? " cn-step-section--visible" : ""}`}
-            aria-label="Step 2: Offer Details"
-          >
-            <h2 className="cn-section-heading">Offer Details</h2>
-
-            <div className="cn-row">
-              {/* Payout */}
-              <div className="cn-field">
-                <label htmlFor="cn-payout">Payout ($)</label>
-                <input
-                  id="cn-payout"
-                  type="number"
-                  min="0"
-                  step="0.01"
-                  value={form.payout}
-                  onChange={set("payout")}
-                  placeholder="0.00"
-                  className={errors.payout ? "cn-input--error" : ""}
-                  aria-describedby={
-                    errors.payout ? "err-payout" : "hint-payout"
-                  }
-                />
-                {errors.payout ? (
-                  <span className="cn-error-msg" id="err-payout" role="alert">
-                    {errors.payout}
-                  </span>
-                ) : (
-                  <span className="cn-field-hint" id="hint-payout">
-                    Set to $0 for product/experience trade (e.g. free coffee)
-                  </span>
-                )}
               </div>
-
-              {/* Spots */}
-              <div className="cn-field">
-                <label htmlFor="cn-spots">Spots Available</label>
-                <input
-                  id="cn-spots"
-                  type="number"
-                  min="1"
-                  max="50"
-                  step="1"
-                  value={form.spots}
-                  onChange={set("spots")}
-                  placeholder="e.g. 5"
-                  className={errors.spots ? "cn-input--error" : ""}
-                  aria-describedby={errors.spots ? "err-spots" : "hint-spots"}
-                />
-                {errors.spots ? (
-                  <span className="cn-error-msg" id="err-spots" role="alert">
-                    {errors.spots}
-                  </span>
-                ) : (
-                  <span className="cn-field-hint" id="hint-spots">
-                    Max 50 creators per campaign
-                  </span>
-                )}
+              <div className="cn-rail-desc">
+                {step === 1 &&
+                  "Name your campaign, pick a category, and describe what creators should do."}
+                {step === 2 &&
+                  "Set your budget, target creator tier, and commission structure."}
+                {step === 3 &&
+                  "Define content type, platform, and when it's due."}
+                {step === 4 && "Review everything before going live."}
               </div>
             </div>
+          </aside>
 
-            {/* Deadline */}
-            <div className="cn-field">
-              <label htmlFor="cn-deadline">Deadline</label>
-              <input
-                id="cn-deadline"
-                type="date"
-                min={todayISO()}
-                value={form.deadline}
-                onChange={set("deadline")}
-                className={errors.deadline ? "cn-input--error" : ""}
-                aria-describedby={errors.deadline ? "err-deadline" : undefined}
-              />
-              {errors.deadline && (
-                <span className="cn-error-msg" id="err-deadline" role="alert">
-                  {errors.deadline}
-                </span>
-              )}
-            </div>
-
-            <div className="cn-nav">
-              <button
-                type="button"
-                className="cn-btn cn-btn--ghost"
-                onClick={handleBack}
-              >
-                ← Back
-              </button>
-              <button
-                type="button"
-                className="cn-btn cn-btn--primary"
-                onClick={handleNext}
-              >
-                Next: Review →
-              </button>
-            </div>
-          </section>
-
-          {/* ── Step 3: Review & Publish ──────────────── */}
-          <section
-            className={`cn-step-section${step === 3 ? " cn-step-section--visible" : ""}`}
-            aria-label="Step 3: Review and Publish"
-          >
-            <h2 className="cn-section-heading">Review & Publish</h2>
-
-            {/* Summary card */}
-            <div className="cn-summary">
-              <p className="cn-summary-heading">Campaign Summary</p>
-              <div className="cn-summary-grid">
-                <div className="cn-summary-item cn-summary-item--full">
-                  <span className="cn-summary-label">Title</span>
-                  <span className="cn-summary-value">{form.title || "—"}</span>
-                </div>
-
-                <div className="cn-summary-item cn-summary-item--full">
-                  <span className="cn-summary-label">Description</span>
-                  <span className="cn-summary-value">
-                    {form.description || "—"}
-                  </span>
-                </div>
-
-                <div className="cn-summary-item">
-                  <span className="cn-summary-label">Category</span>
-                  <span className="cn-summary-value">
-                    {form.category || "—"}
-                  </span>
-                </div>
-
-                <div className="cn-summary-item">
-                  <span className="cn-summary-label">Payout</span>
-                  <span className="cn-summary-value">
-                    {form.payout !== "" ? formatPayout(form.payout) : "—"}
-                  </span>
-                </div>
-
-                <div className="cn-summary-item">
-                  <span className="cn-summary-label">Spots Available</span>
-                  <span className="cn-summary-value">{form.spots || "—"}</span>
-                </div>
-
-                <div className="cn-summary-item">
-                  <span className="cn-summary-label">Deadline</span>
-                  <span className="cn-summary-value">
-                    {formatDeadline(form.deadline)}
-                  </span>
-                </div>
-              </div>
-            </div>
-
-            {/* Action buttons */}
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "flex-start",
-                marginTop: "28px",
-                marginBottom: "16px",
-              }}
+          {/* Right — form panel */}
+          <div className="cn-panel">
+            {/* ── Step 1: Basics ─────────────────────────── */}
+            <section
+              className={`cn-step-section${step === 1 ? " cn-step-section--visible" : ""}`}
+              aria-label="Step 1: Basics"
             >
-              <button
-                type="button"
-                className="cn-btn cn-btn--ghost"
-                onClick={handleBack}
-                disabled={loading}
-              >
-                ← Back
-              </button>
-            </div>
+              <h2 className="cn-section-heading">Campaign Basics</h2>
 
-            <div className="cn-publish-row">
-              <button
-                type="button"
-                className="cn-btn cn-btn--draft"
-                onClick={() => handleSubmit("draft")}
-                disabled={loading}
-              >
-                {loading ? (
-                  <>
-                    <span className="cn-dots" aria-hidden="true">
-                      <span className="cn-dot" />
-                      <span className="cn-dot" />
-                      <span className="cn-dot" />
+              {/* Campaign Name */}
+              <div className="cn-field">
+                <label htmlFor="cw-name">Campaign Name</label>
+                <input
+                  id="cw-name"
+                  type="text"
+                  maxLength={80}
+                  placeholder="e.g. Free Latte for Your First Post"
+                  autoComplete="off"
+                  {...fieldProps("name")}
+                />
+                <div className="cn-field-footer">
+                  {errors.name ? (
+                    <span className="cn-error-msg" role="alert">
+                      {errors.name}
                     </span>
-                    <span className="sr-only">Saving…</span>
-                  </>
-                ) : (
-                  "Save as Draft"
-                )}
-              </button>
-              <button
-                type="button"
-                className="cn-btn cn-btn--publish"
-                onClick={() => handleSubmit("active")}
-                disabled={loading}
-              >
-                {loading ? (
-                  <>
-                    <span className="cn-dots" aria-hidden="true">
-                      <span className="cn-dot" />
-                      <span className="cn-dot" />
-                      <span className="cn-dot" />
+                  ) : (
+                    <span />
+                  )}
+                  <span
+                    className={`cn-char-counter${form.name.length > 72 ? " cn-char-counter--warn" : ""}`}
+                  >
+                    {form.name.length}/80
+                  </span>
+                </div>
+              </div>
+
+              {/* Category */}
+              <div className="cn-field">
+                <label>Category</label>
+                <CategoryPicker
+                  value={form.category}
+                  onChange={(v) => setField("category", v)}
+                  error={errors.category}
+                />
+              </div>
+
+              {/* Description */}
+              <div className="cn-field">
+                <label htmlFor="cw-desc">Description</label>
+                <textarea
+                  id="cw-desc"
+                  maxLength={400}
+                  rows={4}
+                  placeholder="What are you offering? What should creators post about?"
+                  {...fieldProps("description")}
+                />
+                <div className="cn-field-footer">
+                  {errors.description ? (
+                    <span className="cn-error-msg" role="alert">
+                      {errors.description}
                     </span>
-                    <span className="sr-only">Publishing…</span>
-                  </>
+                  ) : (
+                    <span />
+                  )}
+                  <span
+                    className={`cn-char-counter${form.description.length > 360 ? " cn-char-counter--warn" : ""}`}
+                  >
+                    {form.description.length}/400
+                  </span>
+                </div>
+              </div>
+
+              <div className="cn-nav cn-nav--end">
+                <button
+                  type="button"
+                  className="cn-btn cn-btn--primary"
+                  onClick={handleNext}
+                >
+                  Next: Budget &amp; Tier →
+                </button>
+              </div>
+            </section>
+
+            {/* ── Step 2: Budget & Tier ───────────────────── */}
+            <section
+              className={`cn-step-section${step === 2 ? " cn-step-section--visible" : ""}`}
+              aria-label="Step 2: Budget and Tier"
+            >
+              <h2 className="cn-section-heading">Budget &amp; Tier</h2>
+
+              {/* Budget */}
+              <div className="cn-field">
+                <label htmlFor="cw-budget">Campaign Budget ($)</label>
+                <div className="cn-input-prefix-wrap">
+                  <span className="cn-input-prefix">$</span>
+                  <input
+                    id="cw-budget"
+                    type="number"
+                    min="50"
+                    max="50000"
+                    step="1"
+                    placeholder="500"
+                    style={{ paddingLeft: "32px" }}
+                    {...fieldProps("budget")}
+                  />
+                </div>
+                {errors.budget ? (
+                  <span className="cn-error-msg" role="alert">
+                    {errors.budget}
+                  </span>
                 ) : (
-                  "Publish Campaign"
+                  <span className="cn-field-hint">
+                    Min $50 · Max $50,000 per campaign
+                  </span>
                 )}
-              </button>
-            </div>
-          </section>
+              </div>
+
+              {/* Commission Split */}
+              <div className="cn-field">
+                <label htmlFor="cw-split">
+                  Creator Commission Split (% of budget to creators)
+                </label>
+                <div className="cn-split-row">
+                  <input
+                    id="cw-split"
+                    type="range"
+                    min="0"
+                    max="100"
+                    step="5"
+                    value={form.commissionSplit}
+                    onChange={(e) =>
+                      setField("commissionSplit", e.target.value)
+                    }
+                    className="cn-range"
+                  />
+                  <span className="cn-split-value">
+                    {form.commissionSplit}%
+                  </span>
+                </div>
+                {errors.commissionSplit ? (
+                  <span className="cn-error-msg" role="alert">
+                    {errors.commissionSplit}
+                  </span>
+                ) : (
+                  <span className="cn-field-hint">
+                    Creators receive{" "}
+                    <strong>
+                      $
+                      {form.budget
+                        ? (
+                            (parseFloat(form.budget) *
+                              parseInt(form.commissionSplit, 10)) /
+                            100
+                          ).toFixed(0)
+                        : "—"}
+                    </strong>{" "}
+                    · Platform retains{" "}
+                    <strong>
+                      $
+                      {form.budget
+                        ? (
+                            (parseFloat(form.budget) *
+                              (100 - parseInt(form.commissionSplit, 10))) /
+                            100
+                          ).toFixed(0)
+                        : "—"}
+                    </strong>
+                  </span>
+                )}
+              </div>
+
+              {/* Creator Tier */}
+              <div className="cn-field">
+                <label>Target Creator Tier</label>
+                <TierSelector
+                  value={form.tier}
+                  onChange={(v) => setField("tier", v)}
+                  error={errors.tier}
+                />
+              </div>
+
+              <div className="cn-nav">
+                <button
+                  type="button"
+                  className="cn-btn cn-btn--ghost"
+                  onClick={handleBack}
+                >
+                  ← Back
+                </button>
+                <button
+                  type="button"
+                  className="cn-btn cn-btn--primary"
+                  onClick={handleNext}
+                >
+                  Next: Deliverables →
+                </button>
+              </div>
+            </section>
+
+            {/* ── Step 3: Deliverables ────────────────────── */}
+            <section
+              className={`cn-step-section${step === 3 ? " cn-step-section--visible" : ""}`}
+              aria-label="Step 3: Deliverables"
+            >
+              <h2 className="cn-section-heading">Deliverables</h2>
+
+              {/* Content Type */}
+              <div className="cn-field">
+                <label>Content Type</label>
+                <div className="cn-toggle-group">
+                  {CONTENT_TYPES.map((ct) => (
+                    <button
+                      key={ct}
+                      type="button"
+                      className={[
+                        "cn-toggle",
+                        form.contentType === ct ? "cn-toggle--active" : "",
+                      ]
+                        .filter(Boolean)
+                        .join(" ")}
+                      onClick={() => setField("contentType", ct)}
+                      aria-pressed={form.contentType === ct}
+                    >
+                      {capitalize(ct)}
+                    </button>
+                  ))}
+                </div>
+                {errors.contentType && (
+                  <span className="cn-error-msg" role="alert">
+                    {errors.contentType}
+                  </span>
+                )}
+              </div>
+
+              {/* Platform */}
+              <div className="cn-field">
+                <label>Platform</label>
+                <div className="cn-toggle-group">
+                  {PLATFORMS.map((p) => (
+                    <button
+                      key={p}
+                      type="button"
+                      className={[
+                        "cn-toggle",
+                        form.platform === p ? "cn-toggle--active" : "",
+                      ]
+                        .filter(Boolean)
+                        .join(" ")}
+                      onClick={() => setField("platform", p)}
+                      aria-pressed={form.platform === p}
+                    >
+                      {p}
+                    </button>
+                  ))}
+                </div>
+                {errors.platform && (
+                  <span className="cn-error-msg" role="alert">
+                    {errors.platform}
+                  </span>
+                )}
+              </div>
+
+              {/* Due Date */}
+              <div className="cn-field">
+                <label htmlFor="cw-due">Content Due Date</label>
+                <input
+                  id="cw-due"
+                  type="date"
+                  min={todayISO()}
+                  {...fieldProps("dueDate")}
+                />
+                {errors.dueDate && (
+                  <span className="cn-error-msg" role="alert">
+                    {errors.dueDate}
+                  </span>
+                )}
+              </div>
+
+              <div className="cn-nav">
+                <button
+                  type="button"
+                  className="cn-btn cn-btn--ghost"
+                  onClick={handleBack}
+                >
+                  ← Back
+                </button>
+                <button
+                  type="button"
+                  className="cn-btn cn-btn--primary"
+                  onClick={handleNext}
+                >
+                  Next: Review →
+                </button>
+              </div>
+            </section>
+
+            {/* ── Step 4: Review & Launch ──────────────────── */}
+            <section
+              className={`cn-step-section${step === 4 ? " cn-step-section--visible" : ""}`}
+              aria-label="Step 4: Review and Launch"
+            >
+              <h2 className="cn-section-heading">Review &amp; Launch</h2>
+
+              <div className="cn-summary">
+                <p className="cn-summary-heading">Campaign Summary</p>
+
+                <div className="cn-summary-grid">
+                  <div className="cn-summary-item cn-summary-item--full">
+                    <span className="cn-summary-label">Campaign Name</span>
+                    <span className="cn-summary-value">{form.name || "—"}</span>
+                  </div>
+
+                  <div className="cn-summary-item cn-summary-item--full">
+                    <span className="cn-summary-label">Description</span>
+                    <span className="cn-summary-value">
+                      {form.description || "—"}
+                    </span>
+                  </div>
+
+                  <div className="cn-summary-item">
+                    <span className="cn-summary-label">Category</span>
+                    <span className="cn-summary-value">
+                      {form.category ? capitalize(form.category) : "—"}
+                    </span>
+                  </div>
+
+                  <div className="cn-summary-item">
+                    <span className="cn-summary-label">Budget</span>
+                    <span className="cn-summary-value">
+                      {form.budget
+                        ? `$${parseFloat(form.budget).toLocaleString()}`
+                        : "—"}
+                    </span>
+                  </div>
+
+                  <div className="cn-summary-item">
+                    <span className="cn-summary-label">Creator Tier</span>
+                    <span className="cn-summary-value">
+                      {form.tier ? capitalize(form.tier) : "—"}
+                    </span>
+                  </div>
+
+                  <div className="cn-summary-item">
+                    <span className="cn-summary-label">Commission Split</span>
+                    <span className="cn-summary-value">
+                      {form.commissionSplit}% to creators
+                    </span>
+                  </div>
+
+                  <div className="cn-summary-item">
+                    <span className="cn-summary-label">Content Type</span>
+                    <span className="cn-summary-value">
+                      {form.contentType ? capitalize(form.contentType) : "—"}
+                    </span>
+                  </div>
+
+                  <div className="cn-summary-item">
+                    <span className="cn-summary-label">Platform</span>
+                    <span className="cn-summary-value">
+                      {form.platform || "—"}
+                    </span>
+                  </div>
+
+                  <div className="cn-summary-item cn-summary-item--full">
+                    <span className="cn-summary-label">Content Due</span>
+                    <span className="cn-summary-value">
+                      {form.dueDate || "—"}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="cn-nav">
+                <button
+                  type="button"
+                  className="cn-btn cn-btn--ghost"
+                  onClick={handleBack}
+                  disabled={loading}
+                >
+                  ← Edit
+                </button>
+                <button
+                  type="button"
+                  className="cn-btn cn-btn--publish"
+                  onClick={handlePublish}
+                  disabled={loading}
+                >
+                  {loading ? (
+                    <>
+                      <span className="cn-dots" aria-hidden="true">
+                        <span className="cn-dot" />
+                        <span className="cn-dot" />
+                        <span className="cn-dot" />
+                      </span>
+                      <span className="sr-only">Launching…</span>
+                    </>
+                  ) : (
+                    "Launch Campaign →"
+                  )}
+                </button>
+              </div>
+            </section>
+          </div>
         </div>
       </div>
     </div>

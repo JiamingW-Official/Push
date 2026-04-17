@@ -1,0 +1,634 @@
+/* ============================================================
+   Campaign Detail Panel — Right slide-out drawer
+   Apple spring easing + Design System tokens
+   ============================================================ */
+
+/* ── Backdrop ─────────────────────────────────────────────── */
+
+.cdp-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 70;
+  background: rgba(0, 48, 73, 0.6);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 400ms cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+.cdp-backdrop--visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* ── Panel shell ──────────────────────────────────────────── */
+
+.cdp-panel {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 520px;
+  z-index: 80;
+  background: var(--surface-elevated, #fff);
+  border-left: 1px solid var(--line, rgba(0, 48, 73, 0.12));
+  display: flex;
+  flex-direction: column;
+  transform: translateX(100%);
+  transition: transform 400ms cubic-bezier(0.32, 0.72, 0, 1);
+  box-shadow: -8px 0 40px rgba(0, 48, 73, 0.14);
+  border-radius: 0;
+  overflow: hidden;
+}
+
+.cdp-panel--open {
+  transform: translateX(0);
+}
+
+/* ── Hero image header ────────────────────────────────────── */
+
+.cdp-hero {
+  position: relative;
+  width: 100%;
+  height: 200px;
+  flex-shrink: 0;
+  background: rgba(0, 48, 73, 0.06);
+  overflow: hidden;
+}
+
+.cdp-hero-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.cdp-hero-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(
+    135deg,
+    rgba(0, 48, 73, 0.08) 0%,
+    rgba(0, 48, 73, 0.04) 100%
+  );
+}
+
+.cdp-hero-initial {
+  font-family: var(--font-display, "Darky", sans-serif);
+  font-size: 72px;
+  font-weight: 900;
+  color: rgba(0, 48, 73, 0.15);
+  letter-spacing: -0.06em;
+  line-height: 1;
+  user-select: none;
+}
+
+/* Hero overlay bar — back button + tier badge */
+.cdp-hero-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 48, 73, 0.55) 0%,
+    transparent 100%
+  );
+}
+
+.cdp-back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: rgba(255, 255, 255, 0.18);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  color: #fff;
+  font-family: var(--font-body, "CS Genio Mono", monospace);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  cursor: pointer;
+  border-radius: 0;
+  transition:
+    background 200ms ease,
+    border-color 200ms ease,
+    transform 150ms cubic-bezier(0.32, 0.72, 0, 1);
+  backdrop-filter: blur(4px);
+}
+
+.cdp-back-btn:hover {
+  background: rgba(255, 255, 255, 0.28);
+  border-color: rgba(255, 255, 255, 0.55);
+}
+
+.cdp-back-btn:active {
+  transform: scale(0.97);
+}
+
+.cdp-back-btn:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+}
+
+.cdp-tier-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  font-family: var(--font-body, "CS Genio Mono", monospace);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #fff;
+  border-radius: 0;
+}
+
+/* ── Scrollable body ──────────────────────────────────────── */
+
+.cdp-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0;
+  scroll-behavior: smooth;
+}
+
+.cdp-body::-webkit-scrollbar {
+  width: 3px;
+}
+
+.cdp-body::-webkit-scrollbar-thumb {
+  background: rgba(0, 48, 73, 0.15);
+}
+
+.cdp-body::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* ── Title block ──────────────────────────────────────────── */
+
+.cdp-title-block {
+  padding: 24px 24px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.cdp-merchant {
+  font-family: var(--font-body, "CS Genio Mono", monospace);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted, rgba(0, 48, 73, 0.55));
+}
+
+.cdp-neighborhood {
+  font-family: var(--font-body, "CS Genio Mono", monospace);
+  font-size: 11px;
+  color: var(--graphite, #4a5568);
+  letter-spacing: 0.02em;
+}
+
+.cdp-title {
+  font-family: var(--font-display, "Darky", sans-serif);
+  font-size: 28px;
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  color: var(--dark, #003049);
+  line-height: 1.15;
+  margin: 8px 0 0;
+}
+
+/* ── Stats row ────────────────────────────────────────────── */
+
+.cdp-stats-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+  margin: 20px 24px;
+  border: 1px solid var(--line, rgba(0, 48, 73, 0.12));
+}
+
+.cdp-stat {
+  padding: 14px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  border-right: 1px solid var(--line, rgba(0, 48, 73, 0.12));
+}
+
+.cdp-stat:last-child {
+  border-right: none;
+}
+
+.cdp-stat-value {
+  font-family: var(--font-display, "Darky", sans-serif);
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: var(--dark, #003049);
+  line-height: 1;
+}
+
+.cdp-stat-value--urgent {
+  color: var(--primary, #c1121f);
+}
+
+.cdp-stat-label {
+  font-family: var(--font-body, "CS Genio Mono", monospace);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-muted, rgba(0, 48, 73, 0.55));
+}
+
+/* ── Progress bar ─────────────────────────────────────────── */
+
+.cdp-progress-wrap {
+  padding: 0 24px 20px;
+}
+
+.cdp-progress-labels {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--font-body, "CS Genio Mono", monospace);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--text-muted, rgba(0, 48, 73, 0.55));
+  margin-bottom: 6px;
+}
+
+.cdp-progress-bar {
+  height: 4px;
+  background: rgba(0, 48, 73, 0.08);
+  border-radius: 0;
+  overflow: hidden;
+}
+
+.cdp-progress-fill {
+  height: 100%;
+  background: var(--primary, #c1121f);
+  transition: width 0.5s cubic-bezier(0.32, 0.72, 0, 1);
+  border-radius: 0;
+}
+
+/* ── Sections ─────────────────────────────────────────────── */
+
+.cdp-section {
+  padding: 0 24px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  border-top: 1px solid var(--line, rgba(0, 48, 73, 0.12));
+  padding-top: 20px;
+  margin: 0 0 0;
+}
+
+.cdp-section-label {
+  font-family: var(--font-body, "CS Genio Mono", monospace);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted, rgba(0, 48, 73, 0.55));
+  display: block;
+}
+
+.cdp-desc {
+  font-family: var(--font-body, "CS Genio Mono", monospace);
+  font-size: 14px;
+  line-height: 1.75;
+  color: var(--graphite, #4a5568);
+  margin: 0;
+}
+
+/* ── Deliverables checklist ───────────────────────────────── */
+
+.cdp-checklist {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.cdp-checklist-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px 12px;
+  background: rgba(0, 48, 73, 0.03);
+  border-left: 2px solid var(--tertiary, #669bbc);
+}
+
+.cdp-check-icon {
+  color: var(--tertiary, #669bbc);
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.cdp-check-text {
+  font-family: var(--font-body, "CS Genio Mono", monospace);
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--dark, #003049);
+}
+
+/* ── Merchant card ────────────────────────────────────────── */
+
+.cdp-merchant-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 14px;
+  border: 1px solid var(--line, rgba(0, 48, 73, 0.12));
+  background: var(--surface, #f5f2ec);
+}
+
+.cdp-merchant-logo {
+  width: 48px;
+  height: 48px;
+  background: rgba(0, 48, 73, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-family: var(--font-display, "Darky", sans-serif);
+  font-size: 22px;
+  font-weight: 800;
+  color: rgba(0, 48, 73, 0.35);
+  letter-spacing: -0.03em;
+}
+
+.cdp-merchant-info {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.cdp-merchant-name {
+  font-family: var(--font-display, "Darky", sans-serif);
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--dark, #003049);
+}
+
+.cdp-merchant-addr {
+  font-family: var(--font-body, "CS Genio Mono", monospace);
+  font-size: 12px;
+  color: var(--graphite, #4a5568);
+  line-height: 1.4;
+}
+
+.cdp-merchant-cat {
+  font-family: var(--font-body, "CS Genio Mono", monospace);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-muted, rgba(0, 48, 73, 0.55));
+  margin-top: 2px;
+}
+
+/* ── Queue info (post-apply) ──────────────────────────────── */
+
+.cdp-queue-info {
+  margin: 0 24px 24px;
+  padding: 16px;
+  background: rgba(0, 48, 73, 0.04);
+  border-left: 3px solid var(--tertiary, #669bbc);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.cdp-queue-label {
+  font-family: var(--font-body, "CS Genio Mono", monospace);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-muted, rgba(0, 48, 73, 0.55));
+}
+
+.cdp-queue-num {
+  font-family: var(--font-display, "Darky", sans-serif);
+  font-size: 32px;
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  color: var(--dark, #003049);
+  line-height: 1;
+}
+
+.cdp-queue-sub {
+  font-family: var(--font-body, "CS Genio Mono", monospace);
+  font-size: 12px;
+  color: var(--graphite, #4a5568);
+  line-height: 1.5;
+  margin-top: 4px;
+}
+
+/* ── Sticky CTA bar ───────────────────────────────────────── */
+
+.cdp-cta-bar {
+  padding: 16px 24px;
+  border-top: 1px solid var(--line, rgba(0, 48, 73, 0.12));
+  background: var(--surface-elevated, #fff);
+  flex-shrink: 0;
+}
+
+.cdp-cta-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 8px;
+}
+
+/* Base button */
+.cdp-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 13px 20px;
+  font-family: var(--font-body, "CS Genio Mono", monospace);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  border: none;
+  cursor: pointer;
+  border-radius: 0;
+  transition:
+    background 200ms ease,
+    color 200ms ease,
+    transform 150ms cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+.cdp-btn:focus-visible {
+  outline: 2px solid var(--dark, #003049);
+  outline-offset: 2px;
+}
+
+.cdp-btn:active:not(:disabled) {
+  transform: scale(0.97);
+}
+
+/* Primary — Flag Red fill */
+.cdp-btn--primary {
+  background: var(--primary, #c1121f);
+  color: #fff;
+}
+
+.cdp-btn--primary:hover {
+  background: var(--accent, #780000);
+}
+
+/* Outline — Save button */
+.cdp-btn--outline {
+  background: transparent;
+  color: var(--dark, #003049);
+  border: 1px solid var(--line, rgba(0, 48, 73, 0.12));
+  padding: 13px 16px;
+  white-space: nowrap;
+}
+
+.cdp-btn--outline:hover {
+  background: rgba(0, 48, 73, 0.04);
+  border-color: rgba(0, 48, 73, 0.25);
+}
+
+/* Locked */
+.cdp-btn--locked {
+  background: rgba(0, 48, 73, 0.08);
+  color: var(--text-muted, rgba(0, 48, 73, 0.55));
+  cursor: not-allowed;
+  width: 100%;
+}
+
+/* Applied */
+.cdp-btn--applied {
+  background: var(--dark, #003049);
+  color: #fff;
+  cursor: default;
+  width: 100%;
+}
+
+/* ── Toast ────────────────────────────────────────────────── */
+
+@keyframes cdp-toast-in {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes cdp-toast-out {
+  from {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+}
+
+.cdp-toast {
+  position: fixed;
+  bottom: 32px;
+  left: 50%;
+  transform: translateX(-50%) translateY(120%);
+  z-index: 200;
+  padding: 12px 24px;
+  background: var(--dark, #003049);
+  color: #fff;
+  font-family: var(--font-body, "CS Genio Mono", monospace);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  border-radius: 0;
+  border-left: 3px solid var(--primary, #c1121f);
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transition:
+    transform 300ms cubic-bezier(0.32, 0.72, 0, 1),
+    opacity 300ms ease;
+}
+
+.cdp-toast--visible {
+  transform: translateX(-50%) translateY(0);
+  opacity: 1;
+}
+
+/* ── Responsive ───────────────────────────────────────────── */
+
+@media (max-width: 768px) {
+  .cdp-panel {
+    width: 100%;
+    top: 0;
+    border-left: none;
+    border-top: none;
+  }
+
+  .cdp-hero {
+    height: 180px;
+  }
+
+  .cdp-stats-row {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .cdp-stat:nth-child(2) {
+    border-right: none;
+  }
+
+  .cdp-stat:nth-child(1),
+  .cdp-stat:nth-child(2) {
+    border-bottom: 1px solid var(--line, rgba(0, 48, 73, 0.12));
+  }
+
+  .cdp-toast {
+    width: calc(100% - 48px);
+    white-space: normal;
+    text-align: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .cdp-title {
+    font-size: 24px;
+  }
+
+  .cdp-cta-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ── Reduced motion ───────────────────────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  .cdp-panel,
+  .cdp-backdrop,
+  .cdp-toast {
+    transition-duration: 0.01ms !important;
+  }
+
+  .cdp-progress-fill {
+    transition: none;
+  }
+}

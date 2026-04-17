@@ -19,3 +19,7 @@ tsconfig.tsbuildinfo
 
 # Misc
 *.log
+.vercel
+
+# Claude Code worktrees
+.claude/worktrees/
