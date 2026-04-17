@@ -1,12 +1,12 @@
 /* ============================================================
-   Campaign New — single-column centered layout
-   Design.md: border-radius:0, 5 brand colors, Darky + CS Genio Mono
+   Campaign Wizard — 4-step layout
+   Design.md: border-radius:0, 6 brand colors, Darky + CS Genio Mono
    ============================================================ */
 
-/* ── Page shell ────────────────────────────────────────────── */
+/* ── Page shell ─────────────────────────────────────────────── */
 .cn-page {
   min-height: 100svh;
-  background: var(--surface);
+  background: var(--surface, #f5f2ec);
   font-family: var(--font-mono, "CS Genio Mono", monospace);
   color: #003049;
 }
@@ -17,7 +17,11 @@
   padding: 40px 24px 80px;
 }
 
-/* ── Back link ─────────────────────────────────────────────── */
+.cn-inner--wide {
+  max-width: 1040px;
+}
+
+/* ── Back link ──────────────────────────────────────────────── */
 .cn-back {
   display: inline-flex;
   align-items: center;
@@ -37,10 +41,10 @@
   color: #003049;
 }
 
-/* ── Page title ────────────────────────────────────────────── */
+/* ── Page title ─────────────────────────────────────────────── */
 .cn-title {
   font-family: var(--font-display, "Darky", serif);
-  font-size: clamp(2rem, 5vw, 2.75rem);
+  font-size: clamp(2rem, 5vw, 3.25rem);
   font-weight: 900;
   font-style: italic;
   letter-spacing: -0.04em;
@@ -52,15 +56,15 @@
 .cn-subtitle {
   font-size: 0.875rem;
   color: #669bbc;
-  margin: 0 0 36px;
+  margin: 0 0 32px;
 }
 
-/* ── Step indicator ────────────────────────────────────────── */
+/* ── Step indicator (top horizontal bar) ───────────────────── */
 .cn-steps {
   display: flex;
   align-items: center;
   gap: 0;
-  margin-bottom: 36px;
+  margin-bottom: 40px;
   border: 1.5px solid #003049;
   overflow: hidden;
 }
@@ -70,9 +74,9 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 12px 16px;
+  padding: 11px 14px;
   font-family: var(--font-mono, "CS Genio Mono", monospace);
-  font-size: 0.75rem;
+  font-size: 0.6875rem;
   font-weight: 600;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -81,7 +85,6 @@
   border: none;
   border-right: 1.5px solid #003049;
   cursor: default;
-  position: relative;
   transition: background 0.2s, color 0.2s;
 }
 
@@ -125,12 +128,94 @@
   white-space: nowrap;
 }
 
-/* ── Form panel (shared card shell) ───────────────────────── */
+/* ── Wizard layout: rail + panel ────────────────────────────── */
+.cn-wizard-layout {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: 0;
+  align-items: start;
+  border: 1.5px solid #003049;
+  box-shadow: 5px 5px 0 #003049;
+}
+
+@media (max-width: 720px) {
+  .cn-wizard-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ── Left rail ──────────────────────────────────────────────── */
+.cn-wizard-rail {
+  background: #003049;
+  color: #f5f2ec;
+  border-right: 1.5px solid #003049;
+  min-height: 480px;
+}
+
+@media (max-width: 720px) {
+  .cn-wizard-rail {
+    min-height: auto;
+    border-right: none;
+    border-bottom: 1.5px solid rgba(245, 242, 236, 0.2);
+  }
+}
+
+.cn-rail-inner {
+  padding: 36px 28px 40px;
+}
+
+.cn-rail-step-label {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #669bbc;
+  margin: 0 0 8px;
+}
+
+.cn-rail-heading {
+  font-family: var(--font-display, "Darky", serif);
+  font-size: 1.75rem;
+  font-weight: 900;
+  font-style: italic;
+  letter-spacing: -0.03em;
+  color: #f5f2ec;
+  margin: 0 0 28px;
+  line-height: 1.05;
+}
+
+.cn-rail-lines {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 28px;
+}
+
+.cn-rail-line {
+  height: 3px;
+  background: rgba(245, 242, 236, 0.15);
+  width: 100%;
+  transition: background 0.2s;
+}
+
+.cn-rail-line--done {
+  background: #669bbc;
+}
+
+.cn-rail-line--active {
+  background: #c1121f;
+}
+
+.cn-rail-desc {
+  font-size: 0.8125rem;
+  line-height: 1.6;
+  color: rgba(245, 242, 236, 0.65);
+}
+
+/* ── Form panel ─────────────────────────────────────────────── */
 .cn-panel {
   background: #fff;
-  border: 1.5px solid #003049;
-  box-shadow: 4px 4px 0 #003049;
-  padding: 36px 36px 32px;
+  padding: 40px 40px 36px;
   position: relative;
 }
 
@@ -140,18 +225,13 @@
   }
 }
 
-/* ── Step transition ───────────────────────────────────────── */
+/* ── Step transitions ───────────────────────────────────────── */
 .cn-step-section {
   display: none;
-  opacity: 0;
-  transform: translateY(8px);
-  transition: opacity 0.22s ease, transform 0.22s ease;
 }
 
 .cn-step-section--visible {
   display: block;
-  opacity: 1;
-  transform: translateY(0);
   animation: cnFadeIn 0.22s ease both;
 }
 
@@ -166,34 +246,34 @@
   }
 }
 
-/* ── Section heading inside panel ─────────────────────────── */
+/* ── Section heading ────────────────────────────────────────── */
 .cn-section-heading {
   font-family: var(--font-display, "Darky", serif);
-  font-size: 1.25rem;
+  font-size: 1.375rem;
   font-weight: 900;
   font-style: italic;
   color: #003049;
-  margin: 0 0 24px;
+  margin: 0 0 28px;
   padding-bottom: 16px;
   border-bottom: 1px solid rgba(0, 48, 73, 0.12);
 }
 
-/* ── Field layout ──────────────────────────────────────────── */
+/* ── Field layout ───────────────────────────────────────────── */
 .cn-field {
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  margin-bottom: 20px;
+  gap: 8px;
+  margin-bottom: 24px;
 }
 
-.cn-field:last-child {
+.cn-field:last-of-type {
   margin-bottom: 0;
 }
 
 .cn-field label {
-  font-size: 0.75rem;
-  font-weight: 600;
-  letter-spacing: 0.06em;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
   color: #003049;
 }
@@ -202,11 +282,11 @@
 .cn-field textarea,
 .cn-field select {
   width: 100%;
-  padding: 11px 14px;
+  padding: 12px 14px;
   font-family: var(--font-mono, "CS Genio Mono", monospace);
   font-size: 0.9375rem;
   color: #003049;
-  background: var(--surface);
+  background: var(--surface, #f5f2ec);
   border: 1.5px solid #003049;
   border-radius: 0;
   outline: none;
@@ -220,82 +300,290 @@
 .cn-field textarea:focus,
 .cn-field select:focus {
   border-color: #c1121f;
-  box-shadow: 0 0 0 3px rgba(193, 18, 31, 0.12);
+  box-shadow: 0 0 0 3px rgba(193, 18, 31, 0.1);
 }
 
 .cn-field input.cn-input--error,
 .cn-field textarea.cn-input--error,
 .cn-field select.cn-input--error {
   border-color: #c1121f;
+  box-shadow: 0 0 0 2px rgba(193, 18, 31, 0.12);
 }
 
 .cn-field textarea {
   resize: vertical;
-  min-height: 96px;
+  min-height: 100px;
 }
 
-.cn-field select {
-  cursor: pointer;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23003049' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 14px center;
-  padding-right: 36px;
+/* ── Field footer (counter row) ─────────────────────────────── */
+.cn-field-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-top: -4px;
 }
 
-/* ── Char counter ──────────────────────────────────────────── */
 .cn-char-counter {
-  align-self: flex-end;
   font-size: 0.6875rem;
   font-weight: 500;
   color: #669bbc;
   letter-spacing: 0.03em;
-  margin-top: -2px;
 }
 
 .cn-char-counter--warn {
   color: #c1121f;
 }
 
-/* ── Field hint / helper ───────────────────────────────────── */
 .cn-field-hint {
   font-size: 0.75rem;
   color: #669bbc;
   line-height: 1.5;
 }
 
-/* ── Error message ─────────────────────────────────────────── */
 .cn-error-msg {
   font-size: 0.75rem;
   color: #c1121f;
-  font-weight: 500;
+  font-weight: 600;
 }
 
-/* ── Two-column row ────────────────────────────────────────── */
-.cn-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+/* ── Dollar prefix input ────────────────────────────────────── */
+.cn-input-prefix-wrap {
+  position: relative;
+}
+
+.cn-input-prefix {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-family: var(--font-mono, "CS Genio Mono", monospace);
+  font-size: 0.9375rem;
+  color: #669bbc;
+  pointer-events: none;
+}
+
+/* ── Commission split slider ────────────────────────────────── */
+.cn-split-row {
+  display: flex;
+  align-items: center;
   gap: 16px;
 }
 
-@media (max-width: 500px) {
-  .cn-row {
-    grid-template-columns: 1fr;
+.cn-range {
+  flex: 1;
+  -webkit-appearance: none;
+  appearance: none;
+  height: 4px;
+  background: rgba(0, 48, 73, 0.15);
+  border: none !important;
+  border-radius: 0 !important;
+  outline: none;
+  padding: 0 !important;
+  cursor: pointer;
+}
+
+.cn-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 18px;
+  height: 18px;
+  background: #c1121f;
+  border: 2px solid #003049;
+  border-radius: 0;
+  cursor: pointer;
+  margin-top: -7px;
+}
+
+.cn-range::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  background: #c1121f;
+  border: 2px solid #003049;
+  border-radius: 0;
+  cursor: pointer;
+}
+
+.cn-range::-webkit-slider-runnable-track {
+  height: 4px;
+  background: rgba(0, 48, 73, 0.15);
+  border-radius: 0;
+}
+
+.cn-split-value {
+  font-family: var(--font-display, "Darky", serif);
+  font-size: 1.5rem;
+  font-weight: 900;
+  font-style: italic;
+  color: #c1121f;
+  min-width: 52px;
+  text-align: right;
+}
+
+/* ── Toggle group (content type / platform) ─────────────────── */
+.cn-toggle-group {
+  display: flex;
+  gap: 0;
+  border: 1.5px solid #003049;
+  overflow: hidden;
+}
+
+.cn-toggle {
+  flex: 1;
+  padding: 11px 16px;
+  font-family: var(--font-mono, "CS Genio Mono", monospace);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #669bbc;
+  background: transparent;
+  border: none;
+  border-right: 1.5px solid #003049;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+
+.cn-toggle:last-child {
+  border-right: none;
+}
+
+.cn-toggle--active {
+  background: #003049;
+  color: #f5f2ec;
+}
+
+.cn-toggle:hover:not(.cn-toggle--active) {
+  background: rgba(0, 48, 73, 0.06);
+  color: #003049;
+}
+
+/* ── Category picker grid ───────────────────────────────────── */
+.cw-cat-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+@media (max-width: 480px) {
+  .cw-cat-grid {
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 
-/* ── Divider inside panel ──────────────────────────────────── */
-.cn-divider {
-  border: none;
-  border-top: 1px solid rgba(0, 48, 73, 0.1);
-  margin: 28px 0;
+.cw-cat-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 16px 8px;
+  background: var(--surface, #f5f2ec);
+  border: 1.5px solid rgba(0, 48, 73, 0.2);
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+  font-family: var(--font-mono, "CS Genio Mono", monospace);
 }
 
-/* ── Navigation buttons (next/back) ───────────────────────── */
+.cw-cat-card:hover {
+  border-color: #003049;
+  background: rgba(0, 48, 73, 0.04);
+}
+
+.cw-cat-card--active {
+  border-color: #c1121f;
+  background: rgba(193, 18, 31, 0.06);
+  box-shadow: inset 0 0 0 1px #c1121f;
+}
+
+.cw-cat-icon {
+  font-size: 1.375rem;
+  line-height: 1;
+}
+
+.cw-cat-label {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #003049;
+}
+
+/* ── Tier selector grid ─────────────────────────────────────── */
+.cw-tier-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+@media (max-width: 600px) {
+  .cw-tier-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.cw-tier-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  padding: 14px 14px 12px;
+  background: var(--surface, #f5f2ec);
+  border: 1.5px solid rgba(0, 48, 73, 0.2);
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+  font-family: var(--font-mono, "CS Genio Mono", monospace);
+  text-align: left;
+  position: relative;
+}
+
+.cw-tier-card:hover {
+  border-color: #003049;
+}
+
+.cw-tier-card--partner {
+  border-color: rgba(201, 169, 110, 0.4);
+}
+
+.cw-tier-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 0;
+  flex-shrink: 0;
+  margin-bottom: 4px;
+}
+
+.cw-tier-name {
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #003049;
+}
+
+.cw-tier-meta {
+  font-size: 0.6875rem;
+  color: #669bbc;
+  letter-spacing: 0.02em;
+}
+
+.cw-tier-score {
+  font-size: 0.625rem;
+  color: rgba(0, 48, 73, 0.45);
+  letter-spacing: 0.03em;
+}
+
+.cw-error-msg {
+  font-size: 0.75rem;
+  color: #c1121f;
+  font-weight: 600;
+  margin-top: 6px;
+  display: block;
+}
+
+/* ── Nav buttons ────────────────────────────────────────────── */
 .cn-nav {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 28px;
+  margin-top: 32px;
   padding-top: 24px;
   border-top: 1px solid rgba(0, 48, 73, 0.1);
 }
@@ -326,7 +614,7 @@
   color: #003049;
 }
 
-.cn-btn--ghost:hover {
+.cn-btn--ghost:hover:not(:disabled) {
   background: #003049;
   color: #f5f2ec;
 }
@@ -337,43 +625,10 @@
   box-shadow: 3px 3px 0 #c1121f;
 }
 
-.cn-btn--primary:hover {
+.cn-btn--primary:hover:not(:disabled) {
   background: #c1121f;
   border-color: #c1121f;
   box-shadow: 3px 3px 0 #780000;
-}
-
-.cn-btn--primary:disabled {
-  opacity: 0.55;
-  cursor: not-allowed;
-  box-shadow: none;
-}
-
-/* ── Step 3 dual-button row ────────────────────────────────── */
-.cn-publish-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-  margin-top: 28px;
-  padding-top: 24px;
-  border-top: 1px solid rgba(0, 48, 73, 0.1);
-}
-
-@media (max-width: 480px) {
-  .cn-publish-row {
-    grid-template-columns: 1fr;
-  }
-}
-
-.cn-btn--draft {
-  background: transparent;
-  color: #003049;
-  border-color: #003049;
-}
-
-.cn-btn--draft:hover {
-  background: #003049;
-  color: #f5f2ec;
 }
 
 .cn-btn--publish {
@@ -383,24 +638,22 @@
   box-shadow: 3px 3px 0 #780000;
 }
 
-.cn-btn--publish:hover {
+.cn-btn--publish:hover:not(:disabled) {
   background: #780000;
   border-color: #780000;
   box-shadow: 3px 3px 0 #003049;
 }
 
-.cn-btn--publish:disabled,
-.cn-btn--draft:disabled {
+.cn-btn:disabled {
   opacity: 0.5;
   cursor: not-allowed;
   box-shadow: none;
 }
 
-/* ── Summary card (Step 3) ─────────────────────────────────── */
+/* ── Summary card (Step 4) ──────────────────────────────────── */
 .cn-summary {
   background: #003049;
   color: #f5f2ec;
-  border: none;
   padding: 28px;
 }
 
@@ -413,7 +666,7 @@
   color: #f5f2ec;
   margin: 0 0 20px;
   padding-bottom: 12px;
-  border-bottom: 1px solid rgba(245, 242, 236, 0.2);
+  border-bottom: 1px solid rgba(245, 242, 236, 0.15);
 }
 
 .cn-summary-grid {
@@ -439,9 +692,9 @@
 }
 
 .cn-summary-label {
-  font-size: 0.6875rem;
-  font-weight: 600;
-  letter-spacing: 0.08em;
+  font-size: 0.625rem;
+  font-weight: 700;
+  letter-spacing: 0.09em;
   text-transform: uppercase;
   color: #669bbc;
 }
@@ -453,9 +706,9 @@
   word-break: break-word;
 }
 
-/* ── Global form error banner ──────────────────────────────── */
+/* ── Global form error banner ───────────────────────────────── */
 .cn-form-error {
-  background: rgba(193, 18, 31, 0.08);
+  background: rgba(193, 18, 31, 0.07);
   border: 1.5px solid #c1121f;
   padding: 12px 16px;
   margin-bottom: 20px;
@@ -482,7 +735,7 @@
   flex-shrink: 0;
 }
 
-/* ── Spinner dots (loading state) ──────────────────────────── */
+/* ── Loading dots ───────────────────────────────────────────── */
 .cn-dots {
   display: inline-flex;
   gap: 4px;
@@ -497,15 +750,26 @@
   animation: cnDotBounce 0.9s ease-in-out infinite;
 }
 
-.cn-dot:nth-child(2) { animation-delay: 0.15s; }
-.cn-dot:nth-child(3) { animation-delay: 0.3s; }
-
-@keyframes cnDotBounce {
-  0%, 80%, 100% { transform: scaleY(1); }
-  40%            { transform: scaleY(1.6); }
+.cn-dot:nth-child(2) {
+  animation-delay: 0.15s;
 }
 
-/* ── Screen reader only ────────────────────────────────────── */
+.cn-dot:nth-child(3) {
+  animation-delay: 0.3s;
+}
+
+@keyframes cnDotBounce {
+  0%,
+  80%,
+  100% {
+    transform: scaleY(1);
+  }
+  40% {
+    transform: scaleY(1.6);
+  }
+}
+
+/* ── Utilities ──────────────────────────────────────────────── */
 .sr-only {
   position: absolute;
   width: 1px;
