@@ -1,8 +1,11 @@
-// Merchant route group layout — no shared header/footer
-export default function MerchantLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  return <>{children}</>;
+import type { ReactNode } from "react";
+import { DemoBanner } from "@/components/layout/DemoBanner";
+
+export default function MerchantLayout({ children }: { children: ReactNode }) {
+  return (
+    <>
+      <DemoBanner />
+      {children}
+    </>
+  );
 }

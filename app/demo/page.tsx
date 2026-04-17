@@ -1,262 +1,302 @@
 "use client";
-import Link from "next/link";
 
-export default function DemoLanding() {
+import { useRouter } from "next/navigation";
+import { enterDemoMode, exitDemoMode } from "@/lib/demo";
+
+export default function DemoRolePicker() {
+  const router = useRouter();
+
+  function handleSelect(role: "creator" | "merchant") {
+    const dest = role === "creator" ? "/demo/creator" : "/demo/merchant";
+    enterDemoMode(role, dest);
+  }
+
   return (
     <div
       style={{
         minHeight: "100svh",
+        background: "#f5f2ec",
         display: "flex",
         flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        background: "#003049",
-        padding: "40px 24px",
-        gap: "0",
       }}
     >
-      {/* Push wordmark */}
-      <div
-        style={{
-          fontFamily: "var(--font-display, 'Darky', sans-serif)",
-          fontSize: "clamp(48px, 8vw, 80px)",
-          fontWeight: 900,
-          fontStyle: "italic",
-          letterSpacing: "-0.06em",
-          color: "#f5f2ec",
-          lineHeight: 1,
-          marginBottom: "16px",
-        }}
-      >
-        Push
-      </div>
-
-      {/* Red accent line */}
-      <div
-        style={{
-          width: "48px",
-          height: "3px",
-          background: "#c1121f",
-          marginBottom: "32px",
-        }}
-      />
-
-      {/* Demo environment badge */}
-      <div
-        style={{
-          fontFamily: "var(--font-body, 'CS Genio Mono', monospace)",
-          fontSize: "10px",
-          fontWeight: 700,
-          letterSpacing: "0.18em",
-          textTransform: "uppercase",
-          color: "#c1121f",
-          border: "1px solid #c1121f",
-          padding: "4px 12px",
-          marginBottom: "40px",
-        }}
-      >
-        Demo Environment
-      </div>
-
-      {/* Headline */}
-      <h1
-        style={{
-          fontFamily: "var(--font-display, 'Darky', sans-serif)",
-          fontSize: "clamp(24px, 4vw, 36px)",
-          fontWeight: 900,
-          fontStyle: "italic",
-          letterSpacing: "-0.04em",
-          color: "#f5f2ec",
-          textAlign: "center",
-          marginBottom: "16px",
-          lineHeight: 1.1,
-        }}
-      >
-        Choose your perspective
-      </h1>
-
-      {/* Subtext */}
-      <p
-        style={{
-          fontFamily: "var(--font-body, 'CS Genio Mono', monospace)",
-          fontSize: "13px",
-          color: "rgba(245,242,236,0.55)",
-          textAlign: "center",
-          maxWidth: "380px",
-          lineHeight: 1.6,
-          marginBottom: "48px",
-          letterSpacing: "0.02em",
-        }}
-      >
-        Explore the Push platform without an account. Select a role to enter a
-        live preview — no signup required.
-      </p>
-
-      {/* Role buttons */}
+      {/* Top bar */}
       <div
         style={{
           display: "flex",
-          flexDirection: "column",
-          gap: "16px",
-          width: "100%",
-          maxWidth: "320px",
+          alignItems: "center",
+          justifyContent: "space-between",
+          padding: "24px 40px",
+          borderBottom: "1px solid rgba(0,48,73,0.12)",
         }}
       >
-        <Link href="/demo/creator" style={{ textDecoration: "none" }}>
-          <div
+        <span
+          style={{
+            fontFamily: "var(--font-display, 'Darky', sans-serif)",
+            fontSize: "28px",
+            fontWeight: 900,
+            fontStyle: "italic",
+            letterSpacing: "-0.06em",
+            color: "#003049",
+          }}
+        >
+          Push
+        </span>
+        <span
+          style={{
+            fontFamily: "var(--font-body, 'CS Genio Mono', monospace)",
+            fontSize: "10px",
+            fontWeight: 700,
+            letterSpacing: "0.14em",
+            textTransform: "uppercase",
+            color: "#c1121f",
+            border: "1px solid #c1121f",
+            padding: "4px 10px",
+          }}
+        >
+          Demo
+        </span>
+      </div>
+
+      {/* Main content */}
+      <div
+        style={{
+          flex: 1,
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          padding: "64px 40px",
+          maxWidth: "1200px",
+          margin: "0 auto",
+          width: "100%",
+        }}
+      >
+        {/* Eyebrow */}
+        <p
+          style={{
+            fontFamily: "var(--font-body, 'CS Genio Mono', monospace)",
+            fontSize: "11px",
+            fontWeight: 700,
+            letterSpacing: "0.12em",
+            textTransform: "uppercase",
+            color: "rgba(0,48,73,0.45)",
+            marginBottom: "24px",
+          }}
+        >
+          Interactive Preview
+        </p>
+
+        {/* Editorial headline */}
+        <h1
+          style={{
+            fontFamily: "var(--font-display, 'Darky', sans-serif)",
+            fontSize: "clamp(64px, 10vw, 140px)",
+            fontWeight: 900,
+            fontStyle: "italic",
+            letterSpacing: "-0.06em",
+            color: "#003049",
+            lineHeight: 0.9,
+            marginBottom: "56px",
+          }}
+        >
+          Who are
+          <br />
+          you today?
+        </h1>
+
+        {/* Role cards */}
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
+            gap: "2px",
+            background: "rgba(0,48,73,0.12)",
+          }}
+        >
+          {/* Creator card */}
+          <button
+            onClick={() => handleSelect("creator")}
             style={{
-              background: "#c1121f",
-              color: "#f5f2ec",
-              padding: "20px 32px",
+              background: "#003049",
+              border: "none",
+              padding: "56px 48px",
+              cursor: "pointer",
+              textAlign: "left",
               display: "flex",
               flexDirection: "column",
-              gap: "4px",
-              cursor: "pointer",
+              gap: "16px",
               transition: "background 0.15s ease",
             }}
-            onMouseEnter={(e) => (e.currentTarget.style.background = "#780000")}
-            onMouseLeave={(e) => (e.currentTarget.style.background = "#c1121f")}
+            onMouseEnter={(e) => (e.currentTarget.style.background = "#c1121f")}
+            onMouseLeave={(e) => (e.currentTarget.style.background = "#003049")}
           >
-            <span
-              style={{
-                fontFamily: "var(--font-display, 'Darky', sans-serif)",
-                fontSize: "20px",
-                fontWeight: 900,
-                fontStyle: "italic",
-                letterSpacing: "-0.04em",
-                lineHeight: 1,
-              }}
-            >
-              Preview as Creator
-            </span>
             <span
               style={{
                 fontFamily: "var(--font-body, 'CS Genio Mono', monospace)",
                 fontSize: "10px",
-                letterSpacing: "0.12em",
-                textTransform: "uppercase",
-                color: "rgba(245,242,236,0.65)",
-              }}
-            >
-              Campaigns, earnings, analytics
-            </span>
-          </div>
-        </Link>
-
-        <Link href="/demo/merchant" style={{ textDecoration: "none" }}>
-          <div
-            style={{
-              background: "transparent",
-              color: "#f5f2ec",
-              padding: "20px 32px",
-              border: "1px solid rgba(245,242,236,0.25)",
-              display: "flex",
-              flexDirection: "column",
-              gap: "4px",
-              cursor: "pointer",
-              transition: "border-color 0.15s ease, background 0.15s ease",
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.borderColor = "rgba(245,242,236,0.6)";
-              e.currentTarget.style.background = "rgba(245,242,236,0.05)";
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.borderColor = "rgba(245,242,236,0.25)";
-              e.currentTarget.style.background = "transparent";
-            }}
-          >
-            <span
-              style={{
-                fontFamily: "var(--font-display, 'Darky', sans-serif)",
-                fontSize: "20px",
-                fontWeight: 900,
-                fontStyle: "italic",
-                letterSpacing: "-0.04em",
-                lineHeight: 1,
-              }}
-            >
-              Preview as Merchant
-            </span>
-            <span
-              style={{
-                fontFamily: "var(--font-body, 'CS Genio Mono', monospace)",
-                fontSize: "10px",
-                letterSpacing: "0.12em",
+                fontWeight: 700,
+                letterSpacing: "0.14em",
                 textTransform: "uppercase",
                 color: "rgba(245,242,236,0.45)",
               }}
             >
-              Campaigns, applications, ROI
+              01 — Creator
             </span>
-          </div>
-        </Link>
-
-        <Link
-          href="/scan/demo-blank-street-001"
-          style={{ textDecoration: "none" }}
-        >
-          <div
-            style={{
-              background: "transparent",
-              color: "#f5f2ec",
-              padding: "20px 32px",
-              border: "1px solid rgba(245,242,236,0.15)",
-              display: "flex",
-              flexDirection: "column",
-              gap: "4px",
-              cursor: "pointer",
-              transition: "border-color 0.15s ease, background 0.15s ease",
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.borderColor = "rgba(245,242,236,0.45)";
-              e.currentTarget.style.background = "rgba(245,242,236,0.04)";
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.borderColor = "rgba(245,242,236,0.15)";
-              e.currentTarget.style.background = "transparent";
-            }}
-          >
             <span
               style={{
                 fontFamily: "var(--font-display, 'Darky', sans-serif)",
-                fontSize: "20px",
+                fontSize: "clamp(48px, 6vw, 80px)",
                 fontWeight: 900,
                 fontStyle: "italic",
-                letterSpacing: "-0.04em",
-                lineHeight: 1,
+                letterSpacing: "-0.05em",
+                color: "#f5f2ec",
+                lineHeight: 0.95,
+                display: "block",
               }}
             >
-              Preview as Customer
+              I am a
+              <br />
+              Creator
             </span>
             <span
               style={{
                 fontFamily: "var(--font-body, 'CS Genio Mono', monospace)",
-                fontSize: "10px",
-                letterSpacing: "0.12em",
-                textTransform: "uppercase",
-                color: "rgba(245,242,236,0.35)",
+                fontSize: "13px",
+                color: "rgba(245,242,236,0.55)",
+                lineHeight: 1.5,
+                maxWidth: "280px",
               }}
             >
-              QR scan &rarr; visit confirmation
+              Browse campaigns, apply, earn — see your dashboard, earnings, and
+              analytics.
             </span>
-          </div>
-        </Link>
-      </div>
+            <span
+              style={{
+                fontFamily: "var(--font-body, 'CS Genio Mono', monospace)",
+                fontSize: "12px",
+                fontWeight: 700,
+                letterSpacing: "0.08em",
+                textTransform: "uppercase",
+                color: "#f5f2ec",
+                marginTop: "8px",
+              }}
+            >
+              Enter &rarr;
+            </span>
+          </button>
 
-      {/* Footer note */}
-      <p
-        style={{
-          fontFamily: "var(--font-body, 'CS Genio Mono', monospace)",
-          fontSize: "10px",
-          letterSpacing: "0.1em",
-          textTransform: "uppercase",
-          color: "rgba(245,242,236,0.25)",
-          marginTop: "48px",
-          textAlign: "center",
-        }}
-      >
-        Demo data only &mdash; no real transactions
-      </p>
+          {/* Merchant card */}
+          <button
+            onClick={() => handleSelect("merchant")}
+            style={{
+              background: "#f5f2ec",
+              border: "none",
+              padding: "56px 48px",
+              cursor: "pointer",
+              textAlign: "left",
+              display: "flex",
+              flexDirection: "column",
+              gap: "16px",
+              transition: "background 0.15s ease",
+            }}
+            onMouseEnter={(e) => (e.currentTarget.style.background = "#c9a96e")}
+            onMouseLeave={(e) => (e.currentTarget.style.background = "#f5f2ec")}
+          >
+            <span
+              style={{
+                fontFamily: "var(--font-body, 'CS Genio Mono', monospace)",
+                fontSize: "10px",
+                fontWeight: 700,
+                letterSpacing: "0.14em",
+                textTransform: "uppercase",
+                color: "rgba(0,48,73,0.4)",
+              }}
+            >
+              02 — Merchant
+            </span>
+            <span
+              style={{
+                fontFamily: "var(--font-display, 'Darky', sans-serif)",
+                fontSize: "clamp(48px, 6vw, 80px)",
+                fontWeight: 900,
+                fontStyle: "italic",
+                letterSpacing: "-0.05em",
+                color: "#003049",
+                lineHeight: 0.95,
+                display: "block",
+              }}
+            >
+              I am a
+              <br />
+              Merchant
+            </span>
+            <span
+              style={{
+                fontFamily: "var(--font-body, 'CS Genio Mono', monospace)",
+                fontSize: "13px",
+                color: "rgba(0,48,73,0.55)",
+                lineHeight: 1.5,
+                maxWidth: "280px",
+              }}
+            >
+              Post campaigns, review creator applications, track ROI and
+              attribution.
+            </span>
+            <span
+              style={{
+                fontFamily: "var(--font-body, 'CS Genio Mono', monospace)",
+                fontSize: "12px",
+                fontWeight: 700,
+                letterSpacing: "0.08em",
+                textTransform: "uppercase",
+                color: "#003049",
+                marginTop: "8px",
+              }}
+            >
+              Enter &rarr;
+            </span>
+          </button>
+        </div>
+
+        {/* Exit demo */}
+        <div
+          style={{
+            marginTop: "40px",
+            display: "flex",
+            alignItems: "center",
+            gap: "24px",
+          }}
+        >
+          <button
+            onClick={() => exitDemoMode()}
+            style={{
+              background: "none",
+              border: "none",
+              cursor: "pointer",
+              fontFamily: "var(--font-body, 'CS Genio Mono', monospace)",
+              fontSize: "12px",
+              color: "rgba(0,48,73,0.4)",
+              letterSpacing: "0.04em",
+              padding: 0,
+              textDecoration: "underline",
+              textDecorationColor: "rgba(0,48,73,0.2)",
+              textUnderlineOffset: "3px",
+            }}
+          >
+            Exit demo
+          </button>
+          <span
+            style={{
+              fontFamily: "var(--font-body, 'CS Genio Mono', monospace)",
+              fontSize: "11px",
+              color: "rgba(0,48,73,0.3)",
+              letterSpacing: "0.02em",
+            }}
+          >
+            Sample data only — no real transactions
+          </span>
+        </div>
+      </div>
     </div>
   );
 }
