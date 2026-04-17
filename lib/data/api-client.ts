@@ -71,7 +71,7 @@ function mockOk<T>(data: T): ApiResult<T> {
 const creatorMock = {
   getCampaigns(): ApiResult<Campaign[]> {
     // Adapt existing demo fixtures to Campaign shape
-    const campaigns = (DEMO_CAMPAIGNS as Campaign[]).slice(0, 10);
+    const campaigns = (DEMO_CAMPAIGNS as unknown as Campaign[]).slice(0, 10);
     return mockOk(campaigns);
   },
 
@@ -108,7 +108,7 @@ const merchantMock = {
     const stored = mockStore.read<Campaign[]>("merchant-campaigns", []);
     if (stored.length) return mockOk(stored);
     // Return a slice of demo campaigns attributed to demo merchant
-    const campaigns = (DEMO_CAMPAIGNS as Campaign[]).slice(0, 5);
+    const campaigns = (DEMO_CAMPAIGNS as unknown as Campaign[]).slice(0, 5);
     return mockOk(campaigns);
   },
 

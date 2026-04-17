@@ -6,7 +6,7 @@ import React, { useRef, useState, useEffect } from "react";
 interface GhostTextProps {
   bold: React.ReactNode;
   ghost: React.ReactNode;
-  as?: keyof JSX.IntrinsicElements;
+  as?: keyof React.JSX.IntrinsicElements;
   style?: React.CSSProperties;
 }
 
