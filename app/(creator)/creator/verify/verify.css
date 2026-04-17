@@ -1,0 +1,1086 @@
+/* ── KYC Verify — verify.css ────────────────────────────────── */
+/* Design tokens: Pearl Stone #f5f2ec | Deep Space Blue #003049  */
+/* Flag Red #c1121f | Steel Blue #669bbc | Champagne Gold #c9a96e */
+/* Molten Lava #780000 | Surface Bright #fafaf8 | Elevated #fff   */
+/* Fonts: Darky (display) + CS Genio Mono (body/UI)              */
+/* 8px grid | border-radius: 0 everywhere                        */
+/* Spring easing: cubic-bezier(0.32, 0.72, 0, 1)                 */
+
+/* ── Page shell ──────────────────────────────────────────── */
+.kv-page {
+  min-height: 100vh;
+  background: #f5f2ec;
+  padding: 0 0 96px;
+}
+
+.kv-inner {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 40px 24px 0;
+}
+
+/* ── Back link ───────────────────────────────────────────── */
+.kv-back {
+  display: inline-block;
+  font-family: "CS Genio Mono", monospace;
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #669bbc;
+  text-decoration: none;
+  margin-bottom: 40px;
+}
+
+.kv-back:hover {
+  color: #003049;
+}
+
+/* ── Editorial hero ──────────────────────────────────────── */
+.kv-hero {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 48px;
+}
+
+.kv-hero__text {
+  flex: 1;
+}
+
+.kv-hero__headline {
+  font-family: "Darky", sans-serif;
+  font-size: clamp(3rem, 7vw, 5.5rem);
+  font-weight: 700;
+  color: #003049;
+  line-height: 0.95;
+  margin: 0 0 16px;
+  letter-spacing: -0.02em;
+}
+
+.kv-hero__sub {
+  font-family: "CS Genio Mono", monospace;
+  font-size: 0.875rem;
+  color: #669bbc;
+  margin: 0;
+  max-width: 440px;
+  line-height: 1.6;
+}
+
+/* ── Status badge ────────────────────────────────────────── */
+.kv-status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: "CS Genio Mono", monospace;
+  font-size: 0.6875rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 6px 12px;
+  border-radius: 0;
+  flex-shrink: 0;
+  margin-top: 8px;
+}
+
+.kv-status-badge--unverified {
+  background: #f5f2ec;
+  color: #669bbc;
+  border: 1px solid #d0ccc3;
+}
+
+.kv-status-badge--in_review {
+  background: #003049;
+  color: #f5f2ec;
+}
+
+.kv-status-badge--verified {
+  background: #c9a96e;
+  color: #003049;
+  font-weight: 700;
+}
+
+.kv-status-badge--rejected {
+  background: #c1121f;
+  color: #f5f2ec;
+}
+
+/* ── Progress rail ───────────────────────────────────────── */
+.kv-progress {
+  display: flex;
+  align-items: center;
+  margin-bottom: 40px;
+}
+
+.kv-progress__step {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+}
+
+.kv-progress__step:last-child {
+  flex: none;
+}
+
+.kv-progress__indicator {
+  width: 32px;
+  height: 32px;
+  border: 1.5px solid #d0ccc3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border-radius: 0;
+  background: #f5f2ec;
+  transition: background 0.3s cubic-bezier(0.32, 0.72, 0, 1),
+              border-color 0.3s cubic-bezier(0.32, 0.72, 0, 1),
+              color 0.3s;
+}
+
+.kv-progress__num {
+  font-family: "Darky", sans-serif;
+  font-size: 0.875rem;
+  color: #003049;
+  line-height: 1;
+}
+
+.kv-progress__label {
+  font-family: "CS Genio Mono", monospace;
+  font-size: 0.6875rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #d0ccc3;
+  white-space: nowrap;
+  transition: color 0.3s;
+}
+
+.kv-progress__connector {
+  flex: 1;
+  height: 1px;
+  background: #d0ccc3;
+  margin: 0 8px;
+}
+
+/* Active step */
+.kv-progress__step--active .kv-progress__indicator {
+  background: #003049;
+  border-color: #003049;
+}
+
+.kv-progress__step--active .kv-progress__num {
+  color: #f5f2ec;
+}
+
+.kv-progress__step--active .kv-progress__label {
+  color: #003049;
+}
+
+/* Done step */
+.kv-progress__step--done .kv-progress__indicator {
+  background: #c9a96e;
+  border-color: #c9a96e;
+}
+
+.kv-progress__step--done .kv-progress__num {
+  color: #003049;
+}
+
+.kv-progress__step--done .kv-progress__label {
+  color: #669bbc;
+}
+
+/* ── Wizard panel ────────────────────────────────────────── */
+.kv-panel {
+  background: #ffffff;
+  border: 1px solid #e8e4dc;
+  padding: 40px;
+  min-height: 400px;
+  border-radius: 0;
+  transition: transform 0.4s cubic-bezier(0.32, 0.72, 0, 1),
+              opacity 0.4s cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+.kv-panel--exit-right {
+  transform: translateX(-24px);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.kv-panel--exit-left {
+  transform: translateX(24px);
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* ── Step internals ──────────────────────────────────────── */
+.kv-step-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.kv-step-heading {
+  font-family: "Darky", sans-serif;
+  font-size: clamp(1.75rem, 3.5vw, 2.5rem);
+  font-weight: 700;
+  color: #003049;
+  margin: 0 0 8px;
+  letter-spacing: -0.02em;
+}
+
+.kv-step-sub {
+  font-family: "CS Genio Mono", monospace;
+  font-size: 0.8125rem;
+  color: #669bbc;
+  margin: 0 0 32px;
+  line-height: 1.6;
+}
+
+/* ── Field primitives ────────────────────────────────────── */
+.kv-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 20px;
+}
+
+.kv-label {
+  font-family: "CS Genio Mono", monospace;
+  font-size: 0.6875rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #003049;
+}
+
+.kv-optional {
+  font-family: "CS Genio Mono", monospace;
+  font-size: 0.6875rem;
+  color: #669bbc;
+  text-transform: none;
+  letter-spacing: 0;
+  font-style: italic;
+}
+
+.kv-field-hint {
+  font-family: "CS Genio Mono", monospace;
+  font-size: 0.75rem;
+  color: #669bbc;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.kv-input {
+  font-family: "CS Genio Mono", monospace;
+  font-size: 0.875rem;
+  color: #003049;
+  background: #fafaf8;
+  border: 1px solid #d0ccc3;
+  border-radius: 0;
+  padding: 10px 12px;
+  width: 100%;
+  box-sizing: border-box;
+  outline: none;
+  transition: border-color 0.2s;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.kv-input:focus {
+  border-color: #003049;
+}
+
+.kv-input--warn {
+  border-color: #c1121f;
+}
+
+.kv-select {
+  cursor: pointer;
+}
+
+.kv-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.kv-field--state {
+  min-width: 0;
+  flex: 1;
+}
+
+.kv-field--zip {
+  min-width: 0;
+  flex: 0 0 90px;
+}
+
+/* ── Fieldset / radio ────────────────────────────────────── */
+.kv-fieldset {
+  border: none;
+  padding: 0;
+  margin: 0 0 20px;
+}
+
+.kv-radio-group {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.kv-radio {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: "CS Genio Mono", monospace;
+  font-size: 0.8125rem;
+  color: #003049;
+  cursor: pointer;
+  padding: 8px 14px;
+  border: 1px solid #d0ccc3;
+  border-radius: 0;
+  background: #fafaf8;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.kv-radio:has(input:checked) {
+  border-color: #003049;
+  background: #003049;
+  color: #f5f2ec;
+}
+
+.kv-radio input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+/* ── Drop zones ──────────────────────────────────────────── */
+.kv-dropzones {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.kv-dropzone {
+  border: 1px dashed #d0ccc3;
+  border-radius: 0;
+  min-height: 120px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fafaf8;
+  transition: border-color 0.2s, background 0.2s;
+  outline: none;
+}
+
+.kv-dropzone:hover,
+.kv-dropzone:focus-visible {
+  border-color: #669bbc;
+  background: #f5f2ec;
+}
+
+.kv-dropzone--sm {
+  min-height: 80px;
+}
+
+.kv-dropzone__empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 16px;
+}
+
+.kv-dropzone__label {
+  font-family: "CS Genio Mono", monospace;
+  font-size: 0.75rem;
+  color: #003049;
+  letter-spacing: 0.05em;
+}
+
+.kv-dropzone__hint {
+  font-family: "CS Genio Mono", monospace;
+  font-size: 0.625rem;
+  color: #669bbc;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.kv-dropzone__preview {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 8px;
+  width: 100%;
+}
+
+.kv-dropzone__img {
+  width: 100%;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 0;
+}
+
+.kv-dropzone__filename {
+  font-family: "CS Genio Mono", monospace;
+  font-size: 0.6875rem;
+  color: #003049;
+  word-break: break-all;
+  text-align: center;
+}
+
+.kv-dropzone__replace {
+  font-family: "CS Genio Mono", monospace;
+  font-size: 0.625rem;
+  color: #669bbc;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* ── Security note ───────────────────────────────────────── */
+.kv-security-note {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: "CS Genio Mono", monospace;
+  font-size: 0.6875rem;
+  color: #669bbc;
+  margin-top: 8px;
+}
+
+/* ── Social cards ────────────────────────────────────────── */
+.kv-social-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.kv-social-card {
+  border: 1px solid #e8e4dc;
+  border-radius: 0;
+  padding: 16px;
+  background: #fafaf8;
+  transition: border-color 0.2s;
+}
+
+.kv-social-card--connected {
+  border-color: #c9a96e;
+  background: #ffffff;
+}
+
+.kv-social-card__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.kv-social-card__name {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.kv-social-card__status {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.kv-connected-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #c9a96e;
+  flex-shrink: 0;
+}
+
+.kv-social-handle {
+  font-family: "CS Genio Mono", monospace;
+  font-size: 0.8125rem;
+  color: #003049;
+}
+
+.kv-social-followers {
+  font-family: "CS Genio Mono", monospace;
+  font-size: 0.75rem;
+  color: #669bbc;
+}
+
+.kv-badge {
+  font-family: "CS Genio Mono", monospace;
+  font-size: 0.5625rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 2px 6px;
+  border-radius: 0;
+}
+
+.kv-badge--muted {
+  background: #e8e4dc;
+  color: #669bbc;
+}
+
+.kv-oauth-btn {
+  font-family: "CS Genio Mono", monospace;
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  color: #003049;
+  background: transparent;
+  border: 1px solid #003049;
+  border-radius: 0;
+  padding: 8px 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: background 0.2s, color 0.2s;
+  white-space: nowrap;
+}
+
+.kv-oauth-btn:hover:not(:disabled) {
+  background: #003049;
+  color: #f5f2ec;
+}
+
+.kv-oauth-btn--loading {
+  opacity: 0.7;
+  cursor: wait;
+}
+
+.kv-optional-divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 8px 0 16px;
+}
+
+.kv-optional-divider::before,
+.kv-optional-divider::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: #e8e4dc;
+}
+
+.kv-optional-divider span {
+  font-family: "CS Genio Mono", monospace;
+  font-size: 0.6875rem;
+  color: #669bbc;
+  letter-spacing: 0.08em;
+  white-space: nowrap;
+}
+
+.kv-social-posts {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+  overflow-x: auto;
+}
+
+.kv-post-thumb {
+  width: 56px;
+  height: 56px;
+  object-fit: cover;
+  border-radius: 0;
+  flex-shrink: 0;
+}
+
+/* ── Address layout ──────────────────────────────────────── */
+.kv-addr-layout {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 32px;
+  align-items: start;
+}
+
+.kv-addr-form {
+  min-width: 0;
+}
+
+.kv-map-wrap {
+  width: 160px;
+  flex-shrink: 0;
+}
+
+.kv-map-svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* ── Proof upload ─────────────────────────────────────────── */
+.kv-proof-uploaded {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border: 1px solid #c9a96e;
+  background: #fafaf8;
+}
+
+.kv-proof-name {
+  font-family: "CS Genio Mono", monospace;
+  font-size: 0.8125rem;
+  color: #003049;
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.kv-proof-replace {
+  font-family: "CS Genio Mono", monospace;
+  font-size: 0.6875rem;
+  color: #669bbc;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* ── Warn states ─────────────────────────────────────────── */
+.kv-warn-banner {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  border: 1px solid #c1121f;
+  background: rgba(193, 18, 31, 0.04);
+  font-family: "CS Genio Mono", monospace;
+  font-size: 0.8125rem;
+  color: #c1121f;
+  margin-top: 4px;
+}
+
+.kv-warn-inline {
+  font-family: "CS Genio Mono", monospace;
+  font-size: 0.8125rem;
+  color: #c1121f;
+  margin-top: 8px;
+}
+
+/* ── Review section ──────────────────────────────────────── */
+.kv-review-section {
+  border-bottom: 1px solid #e8e4dc;
+  padding-bottom: 24px;
+  margin-bottom: 24px;
+}
+
+.kv-review-section:last-of-type {
+  border-bottom: none;
+}
+
+.kv-review-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.kv-review-section-label {
+  font-family: "Darky", sans-serif;
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: #003049;
+  letter-spacing: -0.01em;
+}
+
+.kv-edit-link {
+  font-family: "CS Genio Mono", monospace;
+  font-size: 0.6875rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #669bbc;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  transition: color 0.2s;
+}
+
+.kv-edit-link:hover {
+  color: #003049;
+}
+
+.kv-review-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px 24px;
+}
+
+.kv-review-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.kv-review-item--full {
+  grid-column: 1 / -1;
+}
+
+.kv-review-key {
+  font-family: "CS Genio Mono", monospace;
+  font-size: 0.625rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #669bbc;
+}
+
+.kv-review-val {
+  font-family: "CS Genio Mono", monospace;
+  font-size: 0.875rem;
+  color: #003049;
+}
+
+.kv-review-socials {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.kv-review-social-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.kv-review-empty {
+  font-family: "CS Genio Mono", monospace;
+  font-size: 0.8125rem;
+  color: #669bbc;
+}
+
+/* ── Submit ──────────────────────────────────────────────── */
+.kv-review-submit {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.kv-submit-btn {
+  font-family: "CS Genio Mono", monospace;
+  font-size: 0.8125rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  background: #003049;
+  color: #f5f2ec;
+  border: none;
+  border-radius: 0;
+  padding: 14px 32px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: background 0.2s cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+.kv-submit-btn:hover:not(:disabled) {
+  background: #780000;
+}
+
+.kv-submit-btn:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+.kv-submit-note {
+  font-family: "CS Genio Mono", monospace;
+  font-size: 0.6875rem;
+  color: #669bbc;
+  margin: 0;
+  line-height: 1.6;
+}
+
+/* ── Navigation footer ───────────────────────────────────── */
+.kv-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 24px;
+}
+
+.kv-btn {
+  font-family: "CS Genio Mono", monospace;
+  font-size: 0.8125rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  border-radius: 0;
+  padding: 12px 28px;
+  cursor: pointer;
+  border: none;
+  transition: background 0.2s cubic-bezier(0.32, 0.72, 0, 1),
+              color 0.2s,
+              opacity 0.2s;
+}
+
+.kv-btn--primary {
+  background: #003049;
+  color: #f5f2ec;
+}
+
+.kv-btn--primary:hover:not(:disabled) {
+  background: #780000;
+}
+
+.kv-btn--ghost {
+  background: transparent;
+  color: #669bbc;
+  border: 1px solid #d0ccc3;
+}
+
+.kv-btn--ghost:hover:not(:disabled) {
+  color: #003049;
+  border-color: #003049;
+}
+
+.kv-btn--disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* ── Dot loader ──────────────────────────────────────────── */
+.kv-dots {
+  display: inline-flex;
+  gap: 4px;
+  align-items: center;
+}
+
+.kv-dot {
+  display: inline-block;
+  width: 5px;
+  height: 5px;
+  background: currentColor;
+  border-radius: 50%;
+  animation: kv-dot-bounce 1.2s infinite ease-in-out;
+}
+
+.kv-dot:nth-child(1) { animation-delay: 0s; }
+.kv-dot:nth-child(2) { animation-delay: 0.2s; }
+.kv-dot:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes kv-dot-bounce {
+  0%, 80%, 100% { transform: scale(0.7); opacity: 0.5; }
+  40% { transform: scale(1); opacity: 1; }
+}
+
+/* ── Verified state ──────────────────────────────────────── */
+.kv-verified {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 80px 0 40px;
+}
+
+.kv-verified__mark {
+  width: 72px;
+  height: 72px;
+  background: #003049;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 32px;
+  border-radius: 0;
+}
+
+.kv-verified__headline {
+  font-family: "Darky", sans-serif;
+  font-size: clamp(4rem, 10vw, 8rem);
+  font-weight: 700;
+  color: #003049;
+  margin: 0 0 16px;
+  line-height: 0.9;
+  letter-spacing: -0.03em;
+}
+
+.kv-verified__sub {
+  font-family: "CS Genio Mono", monospace;
+  font-size: 0.9375rem;
+  color: #669bbc;
+  margin: 0 0 32px;
+  max-width: 440px;
+  line-height: 1.7;
+}
+
+.kv-verified__badge {
+  display: inline-block;
+  font-family: "CS Genio Mono", monospace;
+  font-size: 0.6875rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding: 8px 16px;
+  background: #c9a96e;
+  color: #003049;
+  font-weight: 700;
+  margin-bottom: 32px;
+  border-radius: 0;
+}
+
+.kv-verified__cta {
+  font-family: "CS Genio Mono", monospace;
+  font-size: 0.875rem;
+  letter-spacing: 0.06em;
+  color: #f5f2ec;
+  background: #003049;
+  padding: 14px 32px;
+  text-decoration: none;
+  display: inline-block;
+  margin-bottom: 24px;
+  border-radius: 0;
+  transition: background 0.2s;
+}
+
+.kv-verified__cta:hover {
+  background: #780000;
+}
+
+.kv-verified__reset {
+  font-family: "CS Genio Mono", monospace;
+  font-size: 0.6875rem;
+  color: #669bbc;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  letter-spacing: 0.06em;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* ── Rejected state ──────────────────────────────────────── */
+.kv-rejected {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 80px 0 40px;
+  gap: 16px;
+}
+
+.kv-rejected__icon {
+  margin-bottom: 8px;
+}
+
+.kv-rejected__headline {
+  font-family: "Darky", sans-serif;
+  font-size: clamp(2.5rem, 6vw, 4rem);
+  font-weight: 700;
+  color: #c1121f;
+  margin: 0;
+  letter-spacing: -0.02em;
+}
+
+.kv-rejected__reason {
+  font-family: "CS Genio Mono", monospace;
+  font-size: 0.875rem;
+  color: #669bbc;
+  margin: 0 0 16px;
+  line-height: 1.6;
+  max-width: 440px;
+}
+
+/* ── In-review state ─────────────────────────────────────── */
+.kv-in-review {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 80px 0 40px;
+  gap: 16px;
+}
+
+.kv-in-review__pulse {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #003049;
+  position: relative;
+  margin-bottom: 24px;
+}
+
+.kv-in-review__pulse::after {
+  content: "";
+  position: absolute;
+  inset: -8px;
+  border-radius: 50%;
+  border: 1.5px solid #003049;
+  animation: kv-pulse-ring 2s cubic-bezier(0.32, 0.72, 0, 1) infinite;
+}
+
+@keyframes kv-pulse-ring {
+  0% { transform: scale(0.6); opacity: 1; }
+  100% { transform: scale(1.8); opacity: 0; }
+}
+
+.kv-in-review__headline {
+  font-family: "Darky", sans-serif;
+  font-size: clamp(2.5rem, 6vw, 4.5rem);
+  font-weight: 700;
+  color: #003049;
+  margin: 0;
+  letter-spacing: -0.02em;
+}
+
+.kv-in-review__sub {
+  font-family: "CS Genio Mono", monospace;
+  font-size: 0.875rem;
+  color: #669bbc;
+  margin: 0;
+  line-height: 1.7;
+  max-width: 440px;
+}
+
+.kv-in-review__demo-note {
+  color: #c9a96e;
+  font-style: italic;
+}
+
+/* ── Responsive ──────────────────────────────────────────── */
+@media (max-width: 600px) {
+  .kv-inner {
+    padding: 24px 16px 0;
+  }
+
+  .kv-panel {
+    padding: 24px 20px;
+  }
+
+  .kv-hero {
+    flex-direction: column;
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+
+  .kv-progress__label {
+    display: none;
+  }
+
+  .kv-row {
+    grid-template-columns: 1fr;
+  }
+
+  .kv-review-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .kv-addr-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .kv-map-wrap {
+    display: none;
+  }
+
+  .kv-dropzones {
+    grid-template-columns: 1fr;
+  }
+}
