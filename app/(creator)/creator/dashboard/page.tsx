@@ -1,12 +1,13 @@
 "use client";
 
 import { createClient } from "@/lib/supabase";
-import { useRouter } from "next/navigation";
-import { useEffect, useState, useCallback, useMemo } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useState, useCallback, useMemo, Suspense } from "react";
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import "./dashboard.css";
 import { FirstPaycheck } from "@/components/creator/FirstPaycheck";
+import { CampaignDetailPanel } from "@/components/creator/CampaignDetailPanel";
 
 const MapView = dynamic(() => import("@/components/layout/MapView"), {
   ssr: false,
@@ -516,7 +517,22 @@ function getRecReason(c: Campaign, creatorTier: CreatorTier): string {
 /* ── Main component ──────────────────────────────────────── */
 
 export default function CreatorDashboard() {
+  return (
+    <Suspense
+      fallback={
+        <div className="dash-loading">
+          <span>Loading...</span>
+        </div>
+      }
+    >
+      <DashboardContent />
+    </Suspense>
+  );
+}
+
+function DashboardContent() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [demo, setDemo] = useState(false);
   const [creator, setCreator] = useState<Creator | null>(null);
   const [campaigns, setCampaigns] = useState<Campaign[]>([]);
@@ -744,11 +760,24 @@ export default function CreatorDashboard() {
     return { pct, nextTier, nextMin };
   }, [creator]);
 
+  /* ── URL sync: restore panel from ?campaign= on mount ─── */
+
+  useEffect(() => {
+    if (!campaigns.length) return;
+    const id = searchParams.get("campaign");
+    if (!id) return;
+    const found = campaigns.find((c) => c.id === id);
+    if (found) {
+      setSelectedCampaign(found);
+      setActiveId(found.id);
+      setSlideOpen(true);
+    }
+  }, [campaigns, searchParams]);
+
   /* ── Handlers ─────────────────────────────────────────── */
 
   function handlePinClick(id: string) {
     setActiveId((prev) => (prev === id ? undefined : id));
-    // Scroll card into view in panel
     const card = document.querySelector(`[data-campaign-id="${id}"]`);
     card?.scrollIntoView({ behavior: "smooth", block: "nearest" });
   }
@@ -757,6 +786,10 @@ export default function CreatorDashboard() {
     setActiveId(campaign.id);
     setSelectedCampaign(campaign);
     setSlideOpen(true);
+    // Shallow URL update — preserves existing params
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("campaign", campaign.id);
+    router.push(`?${params.toString()}`, { scroll: false });
   }
 
   function handlePopupClose() {
@@ -786,6 +819,11 @@ export default function CreatorDashboard() {
   function closeSlide() {
     setSlideOpen(false);
     setSelectedCampaign(null);
+    // Remove campaign param from URL
+    const params = new URLSearchParams(searchParams.toString());
+    params.delete("campaign");
+    const qs = params.toString();
+    router.push(qs ? `?${qs}` : "?", { scroll: false });
   }
 
   /* ── Map data ─────────────────────────────────────────── */
