@@ -1350,3 +1350,449 @@
     transition-duration: 0.01ms !important;
   }
 }
+
+/* ============================================================
+   v8.2 PREMIUM EDITORIAL POLISH — Part A: Micro-typography
+   & rhythm refinements
+   ============================================================ */
+
+/* ── A1. Letter-spacing & line-height audit fixes ────────────
+   Hero headline: -0.06em was correct for 160px. Confirmed.
+   Split headline: -0.07em fine for display. Add breathing below. */
+
+/* Long body copy: bump line-height to 1.8 for legibility */
+.split-body,
+.how-step-body,
+.faq-a {
+  line-height: 1.82;
+}
+
+/* Hero sub: comfortably loose for onboarding copy */
+.hero-sub {
+  line-height: 1.75;
+  letter-spacing: 0.008em;
+}
+
+/* Section eyebrow labels: tighten slightly for crispness */
+.section-tag-label {
+  letter-spacing: 0.072em;
+}
+
+/* ── A2. Ghost text opacity standardisation ──────────────────
+   Light sections: 0.12 / Dark sections: 0.16 per spec */
+.section-ghost-num {
+  opacity: 0.12;
+}
+.section-warm .section-ghost-num {
+  opacity: 0.16;
+}
+/* How-step watermarks: same dark-section rule */
+.how-step-num {
+  opacity: 0.12;
+}
+
+/* ── A3. Section padding rhythm ──────────────────────────────
+   160px light / 180px dark / 120px compact / 200px CTA */
+.section                { padding-block: 160px; }
+.section-bright         { padding-block: 160px; }
+.section-warm           { padding-block: 180px; }
+.testimonials-section   { padding-block: 120px; }
+section#faq             { padding-block: 120px; }
+.cta-section            { padding-block: 200px; }
+
+/* Hero preserves its own min-height logic */
+.hero {
+  padding-block: unset;
+  padding-top: 100px;
+  padding-bottom: var(--space-8);
+}
+
+/* ── A4. Hero → first section transition softener ────────────
+   Increase hero's bottom gradient height for smoother dark→light */
+.hero::before {
+  height: 160px;
+  background: linear-gradient(to bottom, transparent 0%, rgba(0, 48, 73, 0.45) 100%);
+}
+
+/* ── A5. Button consistency ──────────────────────────────────
+   Apple spring cubic-bezier on all btn variants */
+.btn-primary,
+.btn-ghost,
+.btn-secondary,
+.btn-cta-merchant,
+.btn-cta-creator,
+.btn-outline,
+.btn-outline-light {
+  transition:
+    transform 360ms cubic-bezier(0.32, 0.72, 0, 1),
+    background 200ms ease,
+    color 200ms ease,
+    border-color 200ms ease,
+    box-shadow 200ms ease;
+}
+
+/* .btn-outline on light bg */
+.btn-outline {
+  background: transparent;
+  color: var(--dark);
+  border: 1.5px solid rgba(0, 48, 73, 0.28);
+  box-shadow: 2px 2px 0 rgba(0, 48, 73, 0.1);
+}
+.btn-outline:hover {
+  border-color: var(--dark);
+  box-shadow: 3px 3px 0 rgba(0, 48, 73, 0.16);
+}
+
+/* .btn-outline-light on dark bg */
+.btn-outline-light {
+  background: transparent;
+  color: rgba(255, 255, 255, 0.72);
+  border: 1.5px solid rgba(255, 255, 255, 0.18);
+  box-shadow: 2px 2px 0 rgba(255, 255, 255, 0.06);
+}
+.btn-outline-light:hover {
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.5);
+  box-shadow: 3px 3px 0 rgba(255, 255, 255, 0.1);
+}
+
+/* Active press: Apple spring snap */
+.btn:active {
+  transform: scale(0.965) translateY(1px);
+  transition-duration: 80ms;
+}
+
+/* ── A6. Micro-interactions: stat number colour sweep ─────────
+   Stats scroll into view grey→champagne via CSS animation.
+   Triggered by .visible class added by IntersectionObserver. */
+@keyframes statColorIn {
+  from { color: rgba(245, 242, 236, 0.25); }
+  to   { color: rgba(245, 242, 236, 0.9); }
+}
+
+.stat-item.visible .stat-num {
+  animation: statColorIn 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* ── A7. Divider / section-rule reveal animation ─────────────
+   .section-tag-line grows left→right on parent .reveal.visible */
+.section-tag-line {
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.6s cubic-bezier(0.32, 0.72, 0, 1) 0.15s;
+}
+.reveal.visible .section-tag-line {
+  transform: scaleX(1);
+}
+
+/* ── A8. Pull-quote / testimonial fade-in ────────────────────
+   Testimonials already have transform in reveal; add opacity ramp */
+.testimonial-card {
+  transition:
+    opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+    background 260ms ease;
+}
+
+/* ── A9. Copy sharpening: creator testimonial voice ──────────
+   Pull-quote gets slightly larger italic weight for impact */
+.creator-testimonial p {
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 1.72;
+  color: rgba(245, 242, 236, 0.82);
+}
+
+/* ── A10. Hero stat labels — consistent uppercase tracking ───  */
+.stat-label {
+  letter-spacing: 0.055em;
+  line-height: 1.45;
+}
+
+/* ── A11. Section tag number — subtle breathing ──────────────  */
+.section-tag-num {
+  letter-spacing: 0.04em;
+}
+
+/* ============================================================
+   v8.2 MOBILE RESPONSIVE — Part B: breakpoint fixes
+   ============================================================ */
+
+/* ── B1. Spotlight / cursor: disable on touch devices ────────
+   Hero spotlight + magnetic buttons are pointer-only effects */
+@media (hover: none) {
+  .hero-spotlight { display: none !important; }
+}
+
+/* ── B2. Hero CTA stack: ensure vertical below 640px ─────────
+   Already handled at 768px; tighten button width at 640px */
+@media (max-width: 640px) {
+  .hero-ctas {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+    width: 100%;
+  }
+  .hero-ctas .btn {
+    width: 100%;
+    justify-content: center;
+    text-align: center;
+  }
+}
+
+/* ── B3. Section padding: 80px at 640px, 60px at 400px ──────  */
+@media (max-width: 640px) {
+  .section,
+  .section-bright,
+  .section-warm,
+  .testimonials-section,
+  section#faq {
+    padding-block: 80px;
+  }
+  .cta-section  { padding-block: 80px; }
+}
+@media (max-width: 400px) {
+  .section,
+  .section-bright,
+  .section-warm,
+  .testimonials-section,
+  section#faq {
+    padding-block: 60px;
+  }
+  .cta-section  { padding-block: 60px; }
+}
+
+/* ── B4. Split layout: single column at 768px ────────────────
+   Already set; ensure visual comes second (below text) */
+@media (max-width: 768px) {
+  .split,
+  .split-reverse {
+    grid-template-columns: 1fr;
+    direction: ltr;
+    gap: var(--space-6);
+  }
+  /* Visual block after text column */
+  .split-visual {
+    order: 2;
+    aspect-ratio: auto;
+    height: 200px;
+    max-height: 220px;
+  }
+  /* Merchant attribution visual: cap height */
+  .visual-merchant {
+    max-height: 260px;
+    overflow: hidden;
+  }
+}
+
+/* ── B5. Hero responsive: headline folding ───────────────────  */
+@media (max-width: 1024px) {
+  .hero-headline {
+    font-size: clamp(52px, 11vw, 110px);
+    line-height: 0.9;
+  }
+  .split-headline {
+    font-size: clamp(40px, 9vw, 88px);
+  }
+}
+
+/* ── B6. Navigation: mobile hamburger ─────────────────────────
+   If a mobile nav toggle exists (.nav-toggle), show it.
+   Landing page relies on the global nav component; add
+   fallback visibility so the toggle is never hidden at mobile. */
+@media (max-width: 768px) {
+  .nav-toggle { display: flex !important; }
+  .nav-links  { display: none; }
+  .nav-links.open { display: flex; flex-direction: column; }
+}
+
+/* ── B7. How-grid: single column timeline on tablet+ ─────────
+   Already set at 1024px. At 640px tighten padding. */
+@media (max-width: 640px) {
+  .how-grid {
+    grid-template-columns: 1fr;
+    gap: 1px;
+  }
+  .how-step {
+    padding: var(--space-6) var(--space-4);
+  }
+  /* Arrow connectors: not applicable in single-col */
+  .how-step:not(:last-child)::after {
+    display: none;
+  }
+}
+
+/* ── B8. Tier showcase: 2-col at 640px, 1-col at 400px ──────  */
+@media (max-width: 640px) {
+  .tier-showcase {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    overflow-x: visible;
+    gap: 8px;
+  }
+  .tier-showcase-card {
+    min-width: unset;
+    min-height: 180px;
+  }
+}
+@media (max-width: 400px) {
+  .tier-showcase {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ── B9. Dashboard preview / merchant attribution: mobile ─────
+   MerchantAttributionVisual shown inside .visual-merchant,
+   hidden at 860px hero collapse. In merchants section ensure
+   it adapts cleanly. */
+@media (max-width: 768px) {
+  .merch-attr-visual {
+    max-height: 280px;
+    overflow: hidden;
+  }
+  /* Truncate row table to 3 rows on small screens */
+  .mav-rows .mav-row:nth-child(n+4) {
+    display: none;
+  }
+}
+
+/* ── B10. Pricing grid: single col at 1024px (already done).
+   At 640px: remove featured card scale lift (confusing in stack) */
+@media (max-width: 640px) {
+  .pricing-card-featured,
+  .pricing-card-featured.visible {
+    transform: translateY(0) !important;
+  }
+  .pricing-card {
+    padding: var(--space-5) var(--space-4);
+  }
+  .pricing-header {
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+}
+
+/* ── B11. CTA section: left-align preserved on mobile ────────
+   Headings stay left-aligned; buttons go full-width */
+@media (max-width: 640px) {
+  .cta-inner,
+  .cta-panels {
+    grid-template-columns: 1fr;
+  }
+  .cta-panel {
+    padding: var(--space-6) var(--space-4);
+    text-align: left;
+  }
+  .cta-panel .btn {
+    width: 100%;
+    justify-content: center;
+  }
+  .cta-panel-creator {
+    border-left: none;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+  }
+  .cta-headline {
+    font-size: clamp(26px, 9vw, 44px);
+  }
+}
+
+/* ── B12. Hero stats: left-align row layout on small mobile ──
+   At 400px collapse number+label to stacked, no row layout */
+@media (max-width: 400px) {
+  .hero-stats {
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+  .stat-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+    border-right: none;
+    border-bottom: 1px solid rgba(245, 242, 236, 0.1);
+    padding: 0 0 var(--space-3);
+  }
+  .stat-item:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+}
+
+/* ── B13. Testimonials: single column at 640px ───────────────
+   Already set at 768px, keep. Add padding tightening. */
+@media (max-width: 640px) {
+  .testimonials-grid {
+    grid-template-columns: 1fr;
+  }
+  .testimonial-card {
+    padding: var(--space-5) var(--space-4);
+  }
+}
+
+/* ── B14. FAQ grid: single column at 640px (already set).
+   Tighten item padding on 400px. */
+@media (max-width: 400px) {
+  .faq-item {
+    padding: var(--space-4) var(--space-3);
+  }
+}
+
+/* ── B15. Proof strip: vertical stack at 640px ───────────────  */
+@media (max-width: 640px) {
+  .proof-strip {
+    padding: var(--space-4) var(--space-3);
+  }
+  .proof-stats {
+    gap: var(--space-3);
+  }
+  .proof-stat-num {
+    font-size: 32px !important;
+  }
+}
+
+/* ── B16. Ticker: reduce padding on mobile ───────────────────  */
+@media (max-width: 640px) {
+  .ticker-item {
+    padding-inline: 12px;
+    font-size: 10px;
+  }
+}
+
+/* ── B17. Hero scroll hint: hide on very small screens ──────  */
+@media (max-width: 480px) {
+  .hero-scroll-hint { display: none; }
+}
+
+/* ── B18. Hero eyebrow: smaller letter-spacing on mobile ─────  */
+@media (max-width: 640px) {
+  .hero-eyebrow {
+    font-size: 10px;
+    letter-spacing: 0.06em;
+  }
+}
+
+/* ── B19. Prevent horizontal overflow on mobile ──────────────  */
+@media (max-width: 768px) {
+  .hero-inner,
+  .split,
+  .how-grid,
+  .pricing-grid {
+    min-width: 0;
+  }
+  /* Ghost section numbers: prevent bleed */
+  .section-ghost-num {
+    display: none;
+  }
+}
+
+/* ── B20. Attribution explainer: stack on mobile ─────────────  */
+@media (max-width: 640px) {
+  .attr-explainer {
+    padding: var(--space-4) var(--space-3);
+  }
+  .attr-steps {
+    gap: 12px;
+  }
+  .attr-step {
+    min-width: unset;
+  }
+}
