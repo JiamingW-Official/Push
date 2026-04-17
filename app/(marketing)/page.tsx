@@ -617,13 +617,13 @@ export default function LandingPage() {
             </h1>
 
             <p className="hero-sub">
-              Pay only when a creator drives a verified visit — tracked by QR
-              code. Every transaction attributed. Zero guesswork.
+              No impressions. No estimates. A QR scan at your door — or it
+              didn&apos;t happen. Every dollar tied to a real body in your
+              space.
             </p>
 
             <p className="hero-audience-line">
-              For businesses that want foot traffic. For creators who want to
-              earn.
+              Merchants pay per visit. Creators earn per result.
             </p>
 
             <div className="hero-ctas">
@@ -821,9 +821,9 @@ export default function LandingPage() {
               </h2>
 
               <p className="split-body">
-                Push gives you transaction-level attribution via QR codes. Know
-                exactly which creator drove which customer — and pay for
-                verified results.
+                QR code at your door. Creator posts go live. Customer walks in,
+                scans, pays. You get the name, the scan time, and the revenue
+                line — then you pay. Not before.
               </p>
 
               <ul className="feature-list">
@@ -1615,9 +1615,9 @@ export default function LandingPage() {
                 <span className="wt-300">for results?</span>
               </h2>
               <p className="cta-body">
-                NYC founding cohort — first 50 merchants get priority creator
-                matching. Launch in under 24 hours. Pay only for verified
-                results.
+                First 50 spots. Priority creator matching, same-day launch, zero
+                upfront. The only campaign spend that only activates when
+                someone actually shows up.
               </p>
               <div className="guarantee-badge">
                 <span className="guarantee-icon">&#10003;</span>
