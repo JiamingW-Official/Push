@@ -57,6 +57,142 @@ import {
   type WalletBalance,
 } from "@/lib/wallet/mock-wallet";
 
+import {
+  DEMO_CAMPAIGNS_WITH_GEO,
+  type CampaignGeo,
+} from "@/lib/data/demo-campaigns-geo";
+
+export type ExploreFilters = {
+  categories?: string[];
+  tierMax?: string;
+  budgetMin?: number;
+  budgetMax?: number;
+  distanceKm?: number;
+  deadline?: "today" | "week" | "month" | "";
+  sort?: "newest" | "highest-pay" | "ending-soon" | "most-spots";
+  page?: number;
+  limit?: number;
+};
+
+export type ExploreResult = {
+  campaigns: CampaignGeo[];
+  total: number;
+  page: number;
+  limit: number;
+  hasMore: boolean;
+};
+
+const TIER_ORDER = [
+  "seed",
+  "explorer",
+  "operator",
+  "proven",
+  "closer",
+  "partner",
+] as const;
+
+const NYC_LAT = 40.7218;
+const NYC_LNG = -74.001;
+
+function haversineKm(
+  lat1: number,
+  lng1: number,
+  lat2: number,
+  lng2: number,
+): number {
+  const R = 6371;
+  const dLat = ((lat2 - lat1) * Math.PI) / 180;
+  const dLng = ((lng2 - lng1) * Math.PI) / 180;
+  const a =
+    Math.sin(dLat / 2) ** 2 +
+    Math.cos((lat1 * Math.PI) / 180) *
+      Math.cos((lat2 * Math.PI) / 180) *
+      Math.sin(dLng / 2) ** 2;
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+}
+
+async function exploreFn(filters: ExploreFilters = {}): Promise<ExploreResult> {
+  const {
+    categories = [],
+    tierMax = "",
+    budgetMin = 0,
+    budgetMax = 5000,
+    distanceKm = 0,
+    deadline = "",
+    sort = "newest",
+    page = 1,
+    limit = 12,
+  } = filters;
+
+  const now = new Date();
+
+  let results = DEMO_CAMPAIGNS_WITH_GEO.filter((c) => {
+    if (categories.length > 0 && !categories.includes(c.category)) return false;
+    if (tierMax) {
+      const maxIdx = TIER_ORDER.indexOf(tierMax as (typeof TIER_ORDER)[number]);
+      if (maxIdx >= 0 && TIER_ORDER.indexOf(c.tier_required) > maxIdx)
+        return false;
+    }
+    if (c.payout < budgetMin || c.payout > budgetMax) return false;
+    if (distanceKm > 0) {
+      const km = haversineKm(NYC_LAT, NYC_LNG, c.lat, c.lng);
+      if (km > distanceKm) return false;
+    }
+    if (deadline === "today") {
+      if (!c.deadline) return false;
+      const d = new Date(c.deadline);
+      return (
+        d.getFullYear() === now.getFullYear() &&
+        d.getMonth() === now.getMonth() &&
+        d.getDate() === now.getDate()
+      );
+    }
+    if (deadline === "week") {
+      if (!c.deadline) return false;
+      const w = new Date(now);
+      w.setDate(w.getDate() + 7);
+      return new Date(c.deadline) <= w;
+    }
+    if (deadline === "month") {
+      if (!c.deadline) return false;
+      const m = new Date(now);
+      m.setMonth(m.getMonth() + 1);
+      return new Date(c.deadline) <= m;
+    }
+    return true;
+  });
+
+  switch (sort) {
+    case "highest-pay":
+      results = [...results].sort((a, b) => b.payout - a.payout);
+      break;
+    case "ending-soon":
+      results = [...results].sort((a, b) => {
+        const da = a.deadline ? new Date(a.deadline).getTime() : Infinity;
+        const db = b.deadline ? new Date(b.deadline).getTime() : Infinity;
+        return da - db;
+      });
+      break;
+    case "most-spots":
+      results = [...results].sort(
+        (a, b) => b.spots_remaining - a.spots_remaining,
+      );
+      break;
+  }
+
+  const total = results.length;
+  const offset = (page - 1) * limit;
+  const paged = results.slice(offset, offset + limit);
+  await new Promise((r) => setTimeout(r, 0));
+  return {
+    campaigns: paged,
+    total,
+    page,
+    limit,
+    hasMore: offset + limit < total,
+  };
+}
+
 const USE_MOCK =
   typeof process !== "undefined"
     ? process.env.NEXT_PUBLIC_USE_MOCK === "1"
@@ -188,6 +324,8 @@ const creatorMock = {
     const json = await res.json();
     return json.updated as MockSubmission;
   },
+
+  explore: exploreFn,
 
   wallet: {
     getBalance(): Promise<WalletBalance> {
