@@ -26,10 +26,11 @@ Every mutable table has a `trigger_set_updated_at` trigger. `scans` is append-on
 
 ## Local development
 
-```bash
-# One-time: install Supabase CLI
-brew install supabase/tap/supabase
+**Prerequisites:**
+- Docker Desktop running (`supabase start` spins up containers). Install: `brew install --cask docker`, then open Docker Desktop from Applications, accept the license, give it disk access.
+- Supabase CLI installed (`brew install supabase/tap/supabase`).
 
+```bash
 # Start local Postgres + studio + storage on :54322 / :54323
 supabase start
 
