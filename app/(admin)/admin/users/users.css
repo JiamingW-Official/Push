@@ -1356,3 +1356,70 @@
     grid-template-columns: repeat(2, 1fr);
   }
 }
+
+/* ─────────────────────────────────────────────────────────────
+   MICRO-INTERACTIONS — users
+   Appended polish pass; existing rules are NOT modified.
+───────────────────────────────────────────────────────────── */
+
+/* Row hover tint */
+.user-row {
+  transition: background 140ms ease;
+}
+.user-row:hover {
+  background: rgba(0, 48, 73, 0.03);
+}
+
+/* Avatar hover fade */
+.user-avatar {
+  transition: opacity 160ms ease;
+}
+.user-avatar:hover {
+  opacity: 0.85;
+}
+
+/* Tier badge color transitions */
+.user-tier-badge {
+  transition: background 200ms ease, color 200ms ease;
+}
+
+/* Row entrance animation */
+@keyframes user-row-in {
+  from {
+    opacity: 0;
+    transform: translateX(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+.user-row {
+  animation: user-row-in 200ms ease both;
+}
+
+/* Stagger delays 1-8 at 30ms increments */
+.user-row:nth-child(1) { animation-delay: 30ms; }
+.user-row:nth-child(2) { animation-delay: 60ms; }
+.user-row:nth-child(3) { animation-delay: 90ms; }
+.user-row:nth-child(4) { animation-delay: 120ms; }
+.user-row:nth-child(5) { animation-delay: 150ms; }
+.user-row:nth-child(6) { animation-delay: 180ms; }
+.user-row:nth-child(7) { animation-delay: 210ms; }
+.user-row:nth-child(8) { animation-delay: 240ms; }
+
+/* Respect reduced-motion preference */
+@media (prefers-reduced-motion: reduce) {
+  .user-row,
+  .user-avatar,
+  .user-tier-badge {
+    animation: none;
+    transition: none;
+  }
+  .user-row:hover {
+    background: rgba(0, 48, 73, 0.03);
+  }
+  .user-avatar:hover {
+    opacity: 1;
+  }
+}

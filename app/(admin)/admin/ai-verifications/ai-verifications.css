@@ -488,3 +488,91 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* ============================================================
+   Micro-interaction polish — ai-verifications.css
+   Append-only block; do NOT modify rules above.
+   ============================================================ */
+
+/* AI card hover lift + primary border accent */
+.aiv-detail-card {
+  transition: transform 200ms cubic-bezier(0.22, 1, 0.36, 1),
+              border-color 200ms cubic-bezier(0.22, 1, 0.36, 1),
+              box-shadow 200ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.aiv-detail-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--primary);
+  box-shadow: 0 6px 20px rgba(0, 48, 73, 0.10);
+}
+
+.aiv-row {
+  transition: background 200ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Scan line animation for AI processing visual */
+@keyframes ai-scan-line {
+  from { top: 0%; }
+  to   { top: 100%; }
+}
+
+.aiv-scan-line {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--primary), transparent);
+  animation: ai-scan-line 1.2s ease-in-out infinite alternate;
+  pointer-events: none;
+}
+
+/* Confidence bar width transition */
+.aiv-confidence-bar,
+.aiv-progress-bar {
+  transition: width 800ms cubic-bezier(0.22, 1, 0.36, 1) 200ms;
+}
+
+/* Processing dot pulse (3-dot stagger) */
+@keyframes ai-dot-pulse {
+  0%, 100% { opacity: 0.3; }
+  50%       { opacity: 1; }
+}
+
+.aiv-badge--pending::after {
+  content: " ...";
+  display: inline-block;
+  letter-spacing: 0.1em;
+  animation: ai-dot-pulse 1s ease-in-out infinite;
+}
+
+/* AI status processing dots */
+.ai-status--processing .ai-dot:nth-child(1) {
+  animation: ai-dot-pulse 1s ease-in-out infinite;
+  animation-delay: 0ms;
+}
+
+.ai-status--processing .ai-dot:nth-child(2) {
+  animation: ai-dot-pulse 1s ease-in-out infinite;
+  animation-delay: 167ms;
+}
+
+.ai-status--processing .ai-dot:nth-child(3) {
+  animation: ai-dot-pulse 1s ease-in-out infinite;
+  animation-delay: 334ms;
+}
+
+/* Reduced-motion guard */
+@media (prefers-reduced-motion: reduce) {
+  .aiv-detail-card,
+  .aiv-row,
+  .aiv-scan-line,
+  .aiv-confidence-bar,
+  .aiv-progress-bar,
+  .aiv-badge--pending::after,
+  .ai-dot {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

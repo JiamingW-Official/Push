@@ -1,0 +1,90 @@
+/* StickySubNav — sticky section navigation for long investor/marketing pages */
+
+.sticky-subnav {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  border-bottom: 1px solid var(--line, rgba(0, 48, 73, 0.12));
+  background: rgba(245, 242, 236, 0.92);
+  backdrop-filter: blur(8px);
+}
+
+.sticky-subnav__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 44px;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 0 clamp(16px, 4vw, 48px);
+}
+
+.sticky-subnav__links {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  overflow-x: auto;
+}
+
+.subnav-link {
+  height: 44px;
+  padding: 0 14px;
+  font-family: var(--font-body);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(0, 48, 73, 0.65);
+  white-space: nowrap;
+  cursor: pointer;
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  border-radius: 0;
+  transition: color 150ms ease, border-color 150ms ease;
+}
+
+.subnav-link:hover {
+  color: var(--dark, #003049);
+}
+
+.subnav-link--active {
+  color: var(--primary, #c1121f);
+  border-bottom-color: var(--primary, #c1121f);
+}
+
+.subnav-cta {
+  flex-shrink: 0;
+  padding: 8px 16px;
+  font-family: var(--font-body);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--surface, #f5f2ec);
+  background: var(--dark, #003049);
+  border-radius: 0;
+  text-decoration: none;
+  transition: background 160ms ease;
+}
+
+.subnav-cta:hover {
+  background: var(--primary, #c1121f);
+}
+
+/* Mobile */
+@media (max-width: 640px) {
+  .sticky-subnav__links {
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .sticky-subnav__links::-webkit-scrollbar {
+    display: none;
+  }
+
+  .subnav-cta {
+    display: none;
+  }
+}

@@ -36,8 +36,29 @@ export interface VisionOutput {
 
 const DEFAULT_MODEL = process.env.ANTHROPIC_MODEL_VISION ?? "claude-sonnet-4-6";
 
+const MAX_RETRIES = 3;
+const BASE_DELAY_MS = 500;
+
+// Exponential backoff with ±20% jitter. Respects retry-after header when present.
+async function withRetry<T>(fn: () => Promise<T>, attempt = 0): Promise<T> {
+  try {
+    return await fn();
+  } catch (err) {
+    if (attempt < MAX_RETRIES && err instanceof Anthropic.RateLimitError) {
+      const retryAfterSec = err.headers?.get?.("retry-after");
+      const retryAfterMs = retryAfterSec ? Number(retryAfterSec) * 1000 : null;
+      const exponential = BASE_DELAY_MS * 2 ** attempt;
+      const delay = retryAfterMs ?? exponential * (0.8 + Math.random() * 0.4);
+      await new Promise((r) => setTimeout(r, delay));
+      return withRetry(fn, attempt + 1);
+    }
+    throw err;
+  }
+}
+
 /**
  * Verify a receipt image. Returns structured OCR output + metadata.
+ * Retries up to 3× on 429 with exponential backoff + jitter.
  *
  * In mock mode (no ANTHROPIC_API_KEY) this returns a fixed response
  * that passes verification if expectedMerchantName is provided, and
@@ -53,33 +74,35 @@ export async function verifyReceipt(input: VisionInput): Promise<VisionOutput> {
   const client = new Anthropic({ apiKey });
   const start = Date.now();
 
-  const response = await client.messages.create({
-    model: DEFAULT_MODEL,
-    max_tokens: 400,
-    system: VERIFICATION_SYSTEM_PROMPT,
-    messages: [
-      {
-        role: "user",
-        content: [
-          {
-            type: "image",
-            source: {
-              type: "base64",
-              media_type: input.mediaType,
-              data: input.receiptBase64,
+  const response = await withRetry(() =>
+    client.messages.create({
+      model: DEFAULT_MODEL,
+      max_tokens: 400,
+      system: VERIFICATION_SYSTEM_PROMPT,
+      messages: [
+        {
+          role: "user",
+          content: [
+            {
+              type: "image",
+              source: {
+                type: "base64",
+                media_type: input.mediaType,
+                data: input.receiptBase64,
+              },
             },
-          },
-          {
-            type: "text",
-            text:
-              (input.expectedMerchantName
-                ? `Expected merchant: "${input.expectedMerchantName}". `
-                : "") + "Extract the receipt fields now.",
-          },
-        ],
-      },
-    ],
-  });
+            {
+              type: "text",
+              text:
+                (input.expectedMerchantName
+                  ? `Expected merchant: "${input.expectedMerchantName}". `
+                  : "") + "Extract the receipt fields now.",
+            },
+          ],
+        },
+      ],
+    }),
+  );
 
   const textBlock = response.content.find((b) => b.type === "text");
   if (!textBlock || textBlock.type !== "text") {

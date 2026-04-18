@@ -605,3 +605,47 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* ── Premium micro-interactions ───────────────────────────── */
+
+.pf-avatar {
+  transition: opacity 180ms ease;
+}
+
+.pf-avatar:hover {
+  opacity: 0.85;
+}
+
+@keyframes avatar-pop {
+  from { transform: scale(0.95); }
+  to   { transform: scale(1); }
+}
+
+.pf-stat-card:hover .pf-stat-value {
+  color: #c1121f;
+  transition: color 150ms ease;
+}
+
+@keyframes profile-section-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.pf-hero            { animation: profile-section-in 260ms ease both; animation-delay:   0ms; }
+.pf-stats-grid      { animation: profile-section-in 260ms ease both; animation-delay:  70ms; }
+.pf-earnings-section{ animation: profile-section-in 260ms ease both; animation-delay: 140ms; }
+.pf-tier-section    { animation: profile-section-in 260ms ease both; animation-delay: 210ms; }
+.pf-edit-section    { animation: profile-section-in 260ms ease both; animation-delay: 280ms; }
+
+@media (prefers-reduced-motion: reduce) {
+  .pf-avatar,
+  .pf-stat-card .pf-stat-value,
+  .pf-hero,
+  .pf-stats-grid,
+  .pf-earnings-section,
+  .pf-tier-section,
+  .pf-edit-section {
+    animation: none !important;
+    transition: none !important;
+  }
+}

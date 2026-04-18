@@ -2493,3 +2493,123 @@ section#faq             { padding-block: 120px; }
     display: none;
   }
 }
+
+/* ── Reveal stagger delays (cascade siblings) ──────────────── */
+/* Add .reveal-d1 through .reveal-d5 for stagger timing */
+.reveal-d1 { transition-delay: 60ms; }
+.reveal-d2 { transition-delay: 120ms; }
+.reveal-d3 { transition-delay: 180ms; }
+.reveal-d4 { transition-delay: 240ms; }
+.reveal-d5 { transition-delay: 300ms; }
+
+/* Auto-stagger for grids using :nth-child on direct .reveal children */
+/* Apply .reveal-stagger class to the grid container */
+.reveal-stagger > .reveal:nth-child(1) { transition-delay: 0ms; }
+.reveal-stagger > .reveal:nth-child(2) { transition-delay: 70ms; }
+.reveal-stagger > .reveal:nth-child(3) { transition-delay: 140ms; }
+.reveal-stagger > .reveal:nth-child(4) { transition-delay: 210ms; }
+.reveal-stagger > .reveal:nth-child(5) { transition-delay: 280ms; }
+.reveal-stagger > .reveal:nth-child(6) { transition-delay: 350ms; }
+
+/* ── Hero display text: clip reveal on load ─────────────────── */
+@keyframes hero-clip-in {
+  from {
+    clip-path: inset(0 100% 0 0);
+    opacity: 0;
+  }
+  to {
+    clip-path: inset(0 0% 0 0);
+    opacity: 1;
+  }
+}
+
+/* Apply to the hero heading when .visible is added by ScrollReveal */
+.hero-h.visible,
+.hero-title.visible,
+[class*="hero-h"].visible {
+  animation: hero-clip-in 700ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* ── Card hover: inset border light sweep ───────────────────── */
+/* Any element with .card-hover-sweep gets a subtle inset highlight on hover */
+.card-hover-sweep {
+  position: relative;
+  transition: border-color 200ms ease, background 200ms ease;
+}
+.card-hover-sweep::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border: 1px solid transparent;
+  pointer-events: none;
+  transition: border-color 280ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.card-hover-sweep:hover::after {
+  border-color: rgba(0, 48, 73, 0.28);
+}
+
+/* ── CTA primary link: underline draw-in ────────────────────── */
+.cta-underline {
+  position: relative;
+  display: inline-block;
+}
+.cta-underline::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: var(--primary, #c1121f);
+  transition: width 300ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.cta-underline:hover::after {
+  width: 100%;
+}
+
+/* ── Section separator: animated rule on reveal ─────────────── */
+@keyframes rule-expand {
+  from { width: 0; }
+  to   { width: var(--rule-w, 40px); }
+}
+.rule.visible {
+  animation: rule-expand 400ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* ── Landing demo (MerchantDashboard / dash-row): stagger in ── */
+@keyframes dash-row-in {
+  from {
+    opacity: 0;
+    transform: translateX(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.dash-rows .dash-row {
+  animation: dash-row-in 380ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+/* dash-row already uses animationDelay inline — this adds the keyframe */
+
+/* ── Reduced motion overrides ───────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .reveal-d1, .reveal-d2, .reveal-d3, .reveal-d4, .reveal-d5,
+  .reveal-stagger > .reveal {
+    transition-delay: 0ms !important;
+  }
+  .hero-h.visible,
+  .hero-title.visible,
+  [class*="hero-h"].visible {
+    animation: none;
+  }
+  .rule.visible {
+    animation: none;
+  }
+  .dash-rows .dash-row {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+}

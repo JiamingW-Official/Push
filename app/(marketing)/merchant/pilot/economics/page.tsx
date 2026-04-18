@@ -109,6 +109,18 @@ const V2_RATE = 0.4; // Share of first-visit customers that return (visit 2)
 const V3_RATE = 0.2; // Share that complete visit 3
 const LOYALTY_OPT_IN = 0.3; // Share that opt into loyalty list on visit 1
 
+// Sensible slider defaults per vertical — high-AOV verticals run fewer customers/mo
+const VERTICAL_DEFAULTS: Record<
+  VerticalKey,
+  { monthly: number; months: number; retention: number }
+> = {
+  coffee: { monthly: 30, months: 6, retention: 55 },
+  coffee_plus: { monthly: 18, months: 6, retention: 60 },
+  dessert: { monthly: 15, months: 6, retention: 50 },
+  fitness: { monthly: 10, months: 6, retention: 65 },
+  beauty: { monthly: 8, months: 6, retention: 70 },
+};
+
 /* ── Number formatters ───────────────────────────────────── */
 const fmt$ = (n: number) => `$${Math.round(n).toLocaleString("en-US")}`;
 const fmt$2 = (n: number) =>
@@ -132,6 +144,19 @@ export default function PilotEconomicsPage() {
   const [openBlock, setOpenBlock] = useState<string | null>(null);
   const toggleBlock = (id: string) =>
     setOpenBlock((prev) => (prev === id ? null : id));
+
+  /* ── Auto-adjust slider defaults when vertical changes ─── */
+  const isFirstRender = useRef(true);
+  useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
+    const d = VERTICAL_DEFAULTS[verticalKey];
+    setMonthlyVerified(d.monthly);
+    setMonths(d.months);
+    setRetentionPct(d.retention);
+  }, [verticalKey]);
 
   /* ── GSAP parallax on hero lines (v5.1 polish) ─────────── */
   const heroRef = useRef<HTMLElement | null>(null);
@@ -758,8 +783,13 @@ export default function PilotEconomicsPage() {
               preview within 48 hours of approval.
             </p>
             <div className="pe-footer-ctas">
-              <Link href="/merchant/pilot#apply" className="btn-fill">
-                Apply for pilot
+              <Link
+                href={`/merchant/pilot?seed=${encodeURIComponent(
+                  `${verticalKey}|${monthlyVerified}|${months}|${retentionPct}`,
+                )}#apply`}
+                className="btn-fill"
+              >
+                Apply with these numbers
               </Link>
               <Link href="/merchant/pilot" className="btn-outline-light">
                 Back to pilot overview

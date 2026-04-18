@@ -1,0 +1,415 @@
+/* JustAppliedPanel — post-application welcome state */
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  padding: 0 0 48px;
+}
+
+/* ── Header ── */
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--line, #e8e2d9);
+}
+
+.headerLeft { flex: 1; }
+
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--primary, #c1121f);
+  margin: 0 0 10px;
+}
+
+.pilotId {
+  color: var(--text-muted, #8a8070);
+  font-size: 10px;
+}
+
+.title {
+  font-family: var(--font-display);
+  font-size: clamp(22px, 2.2vw, 30px);
+  font-weight: 900;
+  color: var(--text, #1a1613);
+  margin: 0 0 10px;
+  line-height: 1.15;
+}
+
+.titleLight { color: var(--text-muted, #8a8070); font-weight: 400; }
+
+.sub {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--text-secondary, #5a5248);
+  margin: 0;
+  max-width: 520px;
+}
+
+.headerRight { flex-shrink: 0; padding-top: 4px; }
+
+.prumCta {
+  display: inline-block;
+  padding: 9px 18px;
+  background: var(--navy, #003049);
+  color: #fff;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  text-decoration: none;
+  transition: background 0.15s;
+}
+.prumCta:hover { background: #00253a; }
+
+/* ── Progress bar ── */
+.progress { display: flex; flex-direction: column; gap: 8px; }
+
+.progressMeta {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.progressLabel {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--text-secondary, #5a5248);
+}
+
+.progressPct {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--primary, #c1121f);
+}
+
+.progressBar {
+  height: 4px;
+  background: var(--line, #e8e2d9);
+  overflow: hidden;
+}
+
+.progressFill {
+  height: 100%;
+  background: var(--primary, #c1121f);
+  transition: width 0.4s ease;
+}
+
+.progressFillDone { background: #2d9e5f; }
+
+/* ── Two-col body ── */
+.body {
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  gap: 40px;
+  align-items: start;
+}
+
+.sectionTitle {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted, #8a8070);
+  margin: 0 0 20px;
+}
+
+/* ── Checklist ── */
+.items {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.item {
+  display: flex;
+  gap: 14px;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--line, #e8e2d9);
+  transition: opacity 0.2s;
+}
+
+.item:last-child { border-bottom: none; }
+.itemDone { opacity: 0.45; }
+
+.checkbox {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  border: 1.5px solid var(--line, #e8e2d9);
+  background: transparent;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 2px;
+  transition: border-color 0.15s, background 0.15s;
+  padding: 0;
+}
+
+.checkbox:hover { border-color: var(--primary, #c1121f); }
+
+.item:not(.itemDone) .checkbox:hover { background: rgba(193, 18, 31, 0.04); }
+
+.itemDone .checkbox {
+  background: var(--primary, #c1121f);
+  border-color: var(--primary, #c1121f);
+  color: #fff;
+}
+
+.itemDone .checkbox svg { width: 12px; height: 12px; }
+
+.itemContent { flex: 1; }
+
+.itemHead {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.itemDay {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--primary, #c1121f);
+  flex-shrink: 0;
+}
+
+.itemTitle {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text, #1a1613);
+}
+
+.itemDone .itemTitle { text-decoration: line-through; }
+
+.itemBody {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  line-height: 1.55;
+  color: var(--text-secondary, #5a5248);
+  margin: 0 0 6px;
+}
+
+.itemLink {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--primary, #c1121f);
+  text-decoration: none;
+  letter-spacing: 0.02em;
+}
+.itemLink:hover { text-decoration: underline; }
+
+.itemLinkPlain {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-muted, #8a8070);
+}
+
+/* ── Timeline ── */
+.timeline {
+  position: sticky;
+  top: 24px;
+}
+
+.timelineItems {
+  list-style: none;
+  margin: 0 0 28px;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.timelineItem {
+  display: grid;
+  grid-template-columns: 10px 1fr;
+  grid-template-rows: auto 1fr;
+  column-gap: 14px;
+  padding-bottom: 20px;
+  position: relative;
+}
+
+.timelineItem:last-child { padding-bottom: 0; }
+
+.timelineDot {
+  grid-row: 1;
+  grid-column: 1;
+  width: 10px;
+  height: 10px;
+  background: var(--primary, #c1121f);
+  border-radius: 50%;
+  margin-top: 3px;
+}
+
+.timelineLine {
+  grid-row: 2;
+  grid-column: 1;
+  width: 1px;
+  background: var(--line, #e8e2d9);
+  margin: 4px auto 0;
+  min-height: 16px;
+  justify-self: center;
+}
+
+.timelineContent {
+  grid-row: 1 / 3;
+  grid-column: 2;
+  padding-bottom: 4px;
+}
+
+.timelineLabel {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text, #1a1613);
+  margin-bottom: 2px;
+}
+
+.timelineNote {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--text-secondary, #5a5248);
+}
+
+/* ── Side note ── */
+.sideNote {
+  padding: 18px;
+  background: var(--surface-bright, #fafaf8);
+  border-left: 3px solid var(--navy, #003049);
+}
+
+.sideNoteTitle {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text, #1a1613);
+  margin: 0 0 8px;
+}
+
+.sideNoteCta {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--navy, #003049);
+  text-decoration: none;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+.sideNoteCta:hover { text-decoration: underline; }
+
+.sideNoteSub {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-muted, #8a8070);
+  margin: 0;
+}
+
+/* ── Responsive ── */
+@media (max-width: 900px) {
+  .body { grid-template-columns: 1fr; }
+  .timeline { position: static; }
+  .header { flex-direction: column; }
+}
+
+/* ── Checklist item check animation ─────────────────────────── */
+@keyframes check-stamp {
+  0% {
+    opacity: 0;
+    transform: scale(0.6) rotate(-10deg);
+  }
+  60% {
+    transform: scale(1.15) rotate(2deg);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) rotate(0);
+  }
+}
+
+/* Apply to the done-state indicator inside checklist items */
+.itemDone .itemCheck,
+[class*="item"][class*="done"] [class*="check"],
+[class*="checkItem"][class*="done"]::before {
+  animation: check-stamp 240ms cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+/* ── Progress bar fill transition ───────────────────────────── */
+.progressFill,
+[class*="progress"][class*="fill"],
+[class*="progressBar"] > div {
+  transition: width 500ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* ── Panel entrance ─────────────────────────────────────────── */
+@keyframes panel-slide-down {
+  from {
+    opacity: 0;
+    transform: translateY(-16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.panel,
+[class*="panel"]:first-child {
+  animation: panel-slide-down 400ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* ── Timeline node entrance (staggered) ─────────────────────── */
+@keyframes node-pop {
+  from {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.timelineNode,
+[class*="timeline"][class*="node"],
+[class*="timelineNode"] {
+  animation: node-pop 300ms cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+.timelineNode:nth-child(1), [class*="timelineNode"]:nth-child(1) { animation-delay: 200ms; }
+.timelineNode:nth-child(2), [class*="timelineNode"]:nth-child(2) { animation-delay: 320ms; }
+.timelineNode:nth-child(3), [class*="timelineNode"]:nth-child(3) { animation-delay: 440ms; }
+.timelineNode:nth-child(4), [class*="timelineNode"]:nth-child(4) { animation-delay: 560ms; }
+
+@media (prefers-reduced-motion: reduce) {
+  .panel,
+  [class*="panel"]:first-child,
+  .timelineNode,
+  [class*="timeline"][class*="node"],
+  [class*="timelineNode"] {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+  .progressFill,
+  [class*="progress"][class*="fill"],
+  [class*="progressBar"] > div {
+    transition: none;
+  }
+}

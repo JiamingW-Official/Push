@@ -1279,6 +1279,110 @@ form.form-loading {
 
 /* ── Reduced motion ───────────────────────────────────────── */
 
+/* ── Magic-link form ───────────────────────────────────── */
+
+.ml-form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  margin-bottom: 8px;
+}
+
+.zip-badge {
+  display: inline-block;
+  margin-left: 8px;
+  padding: 1px 7px;
+  font-size: 10px;
+  font-family: var(--font-mono, monospace);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+.zip-badge--ok   { background: rgba(193,18,31,.08); color: var(--primary,#c1121f); }
+.zip-badge--wait { background: rgba(0,48,73,.08);   color: var(--navy,#003049); }
+
+.field-optional {
+  font-size: 11px;
+  font-weight: 400;
+  color: var(--text-muted, #8a8070);
+  margin-left: 4px;
+}
+
+.disclosure-check {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  cursor: pointer;
+  font-size: 13px;
+  font-family: var(--font-mono, monospace);
+  color: var(--text-secondary, #5a5248);
+  line-height: 1.5;
+}
+.disclosure-check input[type="checkbox"] {
+  flex-shrink: 0;
+  margin-top: 2px;
+  width: 16px;
+  height: 16px;
+  accent-color: var(--primary, #c1121f);
+}
+
+.ml-form-footer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  padding-top: 4px;
+}
+.ml-switch-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  font-family: var(--font-mono, monospace);
+  font-size: 12px;
+  color: var(--text-muted, #8a8070);
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.ml-switch-btn:hover { color: var(--primary, #c1121f); }
+
+/* Magic link sent */
+.ml-sent {
+  text-align: center;
+  padding: 32px 0 16px;
+}
+.ml-sent-icon {
+  font-size: 36px;
+  margin-bottom: 12px;
+  line-height: 1;
+}
+.ml-sent-title {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 900;
+  color: var(--text, #1a1613);
+  margin: 0 0 10px;
+}
+.ml-sent-body {
+  font-family: var(--font-mono, monospace);
+  font-size: 14px;
+  color: var(--text-secondary, #5a5248);
+  line-height: 1.6;
+  margin: 0 0 10px;
+}
+.ml-sent-note {
+  font-family: var(--font-mono, monospace);
+  font-size: 12px;
+  color: var(--text-muted, #8a8070);
+}
+.ml-resend {
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+  color: var(--primary, #c1121f);
+  cursor: pointer;
+  text-decoration: underline;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .brand-panel,
   .form-panel,
@@ -1307,5 +1411,29 @@ form.form-loading {
     max-height: none !important;
     overflow: visible !important;
     pointer-events: auto !important;
+  }
+}
+
+/* ── Segment / step transition ─────────────────────────────── */
+
+@keyframes su-step-enter {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.su-step-frame {
+  animation: su-step-enter 260ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  width: 100%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .su-step-frame {
+    animation: none;
   }
 }

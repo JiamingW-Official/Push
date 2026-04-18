@@ -1340,3 +1340,63 @@
     gap: var(--space-4);
   }
 }
+
+/* ─────────────────────────────────────────────────────────────
+   MICRO-INTERACTIONS — disputes
+   Appended polish pass; existing rules are NOT modified.
+───────────────────────────────────────────────────────────── */
+
+/* Dispute card hover */
+.dispute-card {
+  transition: border-color 200ms cubic-bezier(0.22, 1, 0.36, 1),
+              transform 200ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.dispute-card:hover {
+  border-color: var(--primary, #c1121f);
+  transform: translateY(-2px);
+}
+
+/* High-priority urgent pulse */
+@keyframes dispute-urgent {
+  from { border-color: rgba(193, 18, 31, 0.3); }
+  to   { border-color: rgba(193, 18, 31, 0.8); }
+}
+.dispute-priority--high {
+  animation: dispute-urgent 1.5s ease infinite alternate;
+}
+
+/* Card entrance animation */
+@keyframes dispute-in {
+  from {
+    opacity: 0;
+    transform: scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+.dispute-card {
+  animation: dispute-in 240ms ease both;
+}
+
+/* Stagger nth-child 1-6 at 60ms increments */
+.dispute-card:nth-child(1) { animation-delay: 60ms; }
+.dispute-card:nth-child(2) { animation-delay: 120ms; }
+.dispute-card:nth-child(3) { animation-delay: 180ms; }
+.dispute-card:nth-child(4) { animation-delay: 240ms; }
+.dispute-card:nth-child(5) { animation-delay: 300ms; }
+.dispute-card:nth-child(6) { animation-delay: 360ms; }
+
+/* Respect reduced-motion preference */
+@media (prefers-reduced-motion: reduce) {
+  .dispute-card,
+  .dispute-priority--high {
+    animation: none;
+    transition: none;
+  }
+  .dispute-card:hover {
+    transform: none;
+    border-color: var(--primary, #c1121f);
+  }
+}

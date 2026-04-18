@@ -132,6 +132,24 @@ function save(p: Progress) {
   }
 }
 
+/* ── "Why we ask this" expandable explanation ───────────── */
+function WhyWeAsk({ children }: { children: React.ReactNode }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="cr-why-ask">
+      <button
+        type="button"
+        className="cr-why-ask-btn"
+        onClick={() => setOpen((v) => !v)}
+        aria-expanded={open}
+      >
+        Why do we ask this? <span aria-hidden="true">{open ? "▲" : "▼"}</span>
+      </button>
+      {open && <p className="cr-why-ask-body">{children}</p>}
+    </div>
+  );
+}
+
 function stepStatus(id: StepId, p: Progress): ChecklistItemStatus {
   if (p.completed.includes(id)) return "done";
   if (p.skipped.includes(id)) return "skipped";
@@ -555,6 +573,14 @@ function IdentityStep({
 
   return (
     <div>
+      <WhyWeAsk>
+        Merchants pay per <em>verified</em> walk-in customer. To protect
+        merchant spend — and your own payout — Push confirms you are who you say
+        you are before your first campaign goes live. We use government-issued
+        ID + a one-time selfie liveness check. Data is encrypted at rest and
+        never shared with merchants.
+      </WhyWeAsk>
+
       {isPro && (
         <div className="cr-pro-required">
           <span className="cr-pro-required-badge">Required</span>
@@ -747,6 +773,14 @@ function PayoutStep({
 
   return (
     <div>
+      <WhyWeAsk>
+        We need a payout method before your first verified customer posts so we
+        can release funds within 48 hours. W-9 / tax form is required by US law
+        for creators earning over $600/year — we store it encrypted and use it
+        only for 1099-NEC filing. You can skip and come back before your first
+        payout.
+      </WhyWeAsk>
+
       <div className="cr-payout-grid">
         {methods.map(({ key, label, desc }) => (
           <button
@@ -1194,6 +1228,7 @@ export default function CreatorOnboardingPage() {
   const [expandedStep, setExpandedStep] = useState<StepId | null>(1);
   const [mounted, setMounted] = useState(false);
   const [segment, setSegment] = useState<Segment>("side-income");
+  const [direction, setDirection] = useState<"fwd" | "back">("fwd");
 
   useEffect(() => {
     const p = load();
@@ -1235,7 +1270,22 @@ export default function CreatorOnboardingPage() {
     };
     save(next);
     setProgress(next);
+    setDirection("fwd");
     setExpandedStep(id === TOTAL ? null : nextStep);
+
+    // Tier progression: 1 step → seed, 5 steps → explorer_eligible
+    const doneCount = next.completed.length;
+    const tier =
+      doneCount >= 5 ? "explorer_eligible" : doneCount >= 1 ? "seed" : null;
+    if (tier) {
+      try {
+        localStorage.setItem("push-creator-tier", tier);
+      } catch {
+        /* ignore */
+      }
+      // TODO: write to Supabase `creator_onboarding_progress` table
+      // await supabase.from("creators").update({ tier }).eq("user_id", userId)
+    }
   }
 
   function skipStep(id: StepId) {
@@ -1247,11 +1297,16 @@ export default function CreatorOnboardingPage() {
     };
     save(next);
     setProgress(next);
+    setDirection("fwd");
     setExpandedStep(id === TOTAL ? null : nextStep);
   }
 
   function toggleExpand(id: StepId) {
-    setExpandedStep((prev) => (prev === id ? null : id));
+    setExpandedStep((prev) => {
+      if (prev === id) return null;
+      setDirection(prev !== null && id < prev ? "back" : "fwd");
+      return id;
+    });
   }
 
   const completedCount = progress.completed.length + progress.skipped.length;
@@ -1341,62 +1396,67 @@ export default function CreatorOnboardingPage() {
             isExpanded={isExpanded}
             onExpand={() => toggleExpand(id)}
           >
-            {id === 1 && (
-              <ProfileStep
-                progress={progress}
-                onChange={update}
-                onComplete={() => completeStep(1)}
-              />
-            )}
-            {id === 2 && (
-              <SocialStep
-                progress={progress}
-                onChange={update}
-                onComplete={() => completeStep(2)}
-                onSkip={() => skipStep(2)}
-              />
-            )}
-            {id === 3 && (
-              <IdentityStep
-                progress={progress}
-                onChange={update}
-                onComplete={() => completeStep(3)}
-                onSkip={() => skipStep(3)}
-                isPro={isPro}
-              />
-            )}
-            {id === 4 && (
-              <PayoutStep
-                progress={progress}
-                onChange={update}
-                onComplete={() => completeStep(4)}
-                onSkip={() => skipStep(4)}
-                isPro={isPro}
-              />
-            )}
-            {id === 5 && (
-              <DiscoveryStep
-                progress={progress}
-                onChange={update}
-                onComplete={() => completeStep(5)}
-              />
-            )}
-            {id === 6 && (
-              <NotifsStep
-                progress={progress}
-                onChange={update}
-                onComplete={() => completeStep(6)}
-                onSkip={() => skipStep(6)}
-              />
-            )}
-            {id === 7 && (
-              <InviteStep
-                progress={progress}
-                onChange={update}
-                onComplete={() => completeStep(7)}
-                isPro={isPro}
-              />
-            )}
+            <div
+              key={expandedStep}
+              className={`cr-step-frame cr-step-frame--${direction}`}
+            >
+              {id === 1 && (
+                <ProfileStep
+                  progress={progress}
+                  onChange={update}
+                  onComplete={() => completeStep(1)}
+                />
+              )}
+              {id === 2 && (
+                <SocialStep
+                  progress={progress}
+                  onChange={update}
+                  onComplete={() => completeStep(2)}
+                  onSkip={() => skipStep(2)}
+                />
+              )}
+              {id === 3 && (
+                <IdentityStep
+                  progress={progress}
+                  onChange={update}
+                  onComplete={() => completeStep(3)}
+                  onSkip={() => skipStep(3)}
+                  isPro={isPro}
+                />
+              )}
+              {id === 4 && (
+                <PayoutStep
+                  progress={progress}
+                  onChange={update}
+                  onComplete={() => completeStep(4)}
+                  onSkip={() => skipStep(4)}
+                  isPro={isPro}
+                />
+              )}
+              {id === 5 && (
+                <DiscoveryStep
+                  progress={progress}
+                  onChange={update}
+                  onComplete={() => completeStep(5)}
+                />
+              )}
+              {id === 6 && (
+                <NotifsStep
+                  progress={progress}
+                  onChange={update}
+                  onComplete={() => completeStep(6)}
+                  onSkip={() => skipStep(6)}
+                />
+              )}
+              {id === 7 && (
+                <InviteStep
+                  progress={progress}
+                  onChange={update}
+                  onComplete={() => completeStep(7)}
+                  isPro={isPro}
+                />
+              )}
+            </div>
           </ChecklistItem>
         );
       })}

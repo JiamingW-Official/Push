@@ -10,6 +10,7 @@ import { useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import SLRWidget from "@/components/merchant/SLRWidget";
 import EmptyStateHero from "@/components/merchant/dashboard/EmptyStateHero";
+import JustAppliedPanel from "@/components/merchant/dashboard/JustAppliedPanel";
 import VerifiedFeed, {
   type VerifiedCustomer,
 } from "@/components/merchant/dashboard/VerifiedFeed";
@@ -191,8 +192,9 @@ export default function MerchantDashboardPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const seeded = searchParams?.get("seeded") === "1";
+  const justApplied = searchParams?.get("pilot") === "just_applied";
+  const pilotId = searchParams?.get("pid") ?? undefined;
   // v5.1: Detect whether the merchant has any campaigns yet.
-  // Pretend via hook — only seeded if ?seeded=1 query is present.
   const hasCampaigns = seeded;
 
   const [activeTab, setActiveTab] = useState<SidebarTab>("cockpit");
@@ -323,7 +325,13 @@ export default function MerchantDashboardPage() {
 
         {/* Main */}
         <main className="db-main">
-          {activeTab === "cockpit" && !hasCampaigns && <EmptyStateHero />}
+          {activeTab === "cockpit" && justApplied && (
+            <JustAppliedPanel pilotId={pilotId} />
+          )}
+
+          {activeTab === "cockpit" && !justApplied && !hasCampaigns && (
+            <EmptyStateHero />
+          )}
 
           {activeTab === "cockpit" && hasCampaigns && (
             <>

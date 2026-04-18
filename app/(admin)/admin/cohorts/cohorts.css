@@ -1034,3 +1034,65 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* ─────────────────────────────────────────────────────────────
+   MICRO-INTERACTIONS — cohorts
+   Appended polish pass; existing rules are NOT modified.
+───────────────────────────────────────────────────────────── */
+
+/* Bar width transition */
+.cohort-bar {
+  transition: width 600ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Bar stagger delays 1-8 at 80ms increments */
+.cohort-bar:nth-child(1) { transition-delay: 80ms; }
+.cohort-bar:nth-child(2) { transition-delay: 160ms; }
+.cohort-bar:nth-child(3) { transition-delay: 240ms; }
+.cohort-bar:nth-child(4) { transition-delay: 320ms; }
+.cohort-bar:nth-child(5) { transition-delay: 400ms; }
+.cohort-bar:nth-child(6) { transition-delay: 480ms; }
+.cohort-bar:nth-child(7) { transition-delay: 560ms; }
+.cohort-bar:nth-child(8) { transition-delay: 640ms; }
+
+/* Row hover champagne tint */
+.cohort-row {
+  transition: background 150ms ease;
+}
+.cohort-row:hover {
+  background: rgba(201, 169, 110, 0.06);
+}
+
+/* Bar scale-in entrance */
+@keyframes cohort-bar-in {
+  from { transform: scaleX(0); }
+  to   { transform: scaleX(1); }
+}
+.cohort-bar {
+  transform-origin: left;
+  animation: cohort-bar-in 500ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* Metric hover color */
+.cohort-metric {
+  transition: color 150ms ease;
+}
+.cohort-metric:hover {
+  color: var(--primary, #c1121f);
+}
+
+/* Respect reduced-motion preference */
+@media (prefers-reduced-motion: reduce) {
+  .cohort-bar,
+  .cohort-row,
+  .cohort-metric {
+    animation: none;
+    transition: none;
+  }
+  .cohort-row:hover {
+    background: rgba(201, 169, 110, 0.06);
+  }
+  .cohort-metric:hover {
+    color: var(--primary, #c1121f);
+  }
+}

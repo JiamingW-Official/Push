@@ -671,3 +671,82 @@
     padding-top: var(--space-2);
   }
 }
+
+/* ============================================================
+   Micro-interaction polish — disclosure-audits.css
+   Append-only block; do NOT modify rules above.
+   ============================================================ */
+
+/* Audit row hover: champagne tint + left accent border */
+.da-row {
+  transition: background 150ms ease, box-shadow 150ms ease;
+  border-left: 3px solid transparent;
+}
+
+.da-row:hover {
+  background: rgba(201, 169, 110, 0.06);
+  border-left: 3px solid var(--champagne);
+}
+
+/* Verdict text colors */
+.audit-verdict--pass,
+.da-badge--pass {
+  color: #2d6a4f;
+}
+
+.audit-verdict--warn,
+.da-badge--review {
+  color: #b5451b;
+}
+
+.audit-verdict--fail,
+.da-badge--block {
+  color: var(--primary);
+}
+
+/* Verdict entrance animation */
+@keyframes audit-verdict-in {
+  from {
+    opacity: 0;
+    transform: translateX(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.da-badge {
+  animation: audit-verdict-in 220ms ease both;
+}
+
+/* Audit row stagger entrance */
+@keyframes audit-row-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.da-row:nth-child(1) { animation: audit-row-in 200ms ease both; animation-delay: 0ms; }
+.da-row:nth-child(2) { animation: audit-row-in 200ms ease both; animation-delay: 40ms; }
+.da-row:nth-child(3) { animation: audit-row-in 200ms ease both; animation-delay: 80ms; }
+.da-row:nth-child(4) { animation: audit-row-in 200ms ease both; animation-delay: 120ms; }
+.da-row:nth-child(5) { animation: audit-row-in 200ms ease both; animation-delay: 160ms; }
+.da-row:nth-child(6) { animation: audit-row-in 200ms ease both; animation-delay: 200ms; }
+.da-row:nth-child(7) { animation: audit-row-in 200ms ease both; animation-delay: 240ms; }
+.da-row:nth-child(8) { animation: audit-row-in 200ms ease both; animation-delay: 280ms; }
+
+/* Reduced-motion guard */
+@media (prefers-reduced-motion: reduce) {
+  .da-row,
+  .da-badge {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

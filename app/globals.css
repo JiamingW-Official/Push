@@ -346,7 +346,11 @@ p  { font-size: var(--text-body); line-height: 1.6; }
 /* ------------------------------------------------------------
    6. Button primitives (Design.md)
    ------------------------------------------------------------ */
+
+/* ── Base ── */
 .btn {
+  position: relative;
+  overflow: hidden;
   display: inline-flex;
   align-items: center;
   gap: var(--space-1);
@@ -359,41 +363,140 @@ p  { font-size: var(--text-body); line-height: 1.6; }
   border-radius: 0;
   padding: var(--space-2) var(--space-4);
   transition:
-    background var(--t-slow),
-    color var(--t-slow),
-    border-color var(--t-slow),
-    box-shadow var(--t-slow);
+    background 280ms cubic-bezier(0.22, 1, 0.36, 1),
+    color 280ms cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 280ms cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 280ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 80ms ease;
   white-space: nowrap;
 }
+
+/* Active press — scale compression */
+.btn:active {
+  transform: scale(0.97);
+  transition: transform 80ms ease;
+}
+
+/* Accessible focus ring */
+.btn:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 3px;
+}
+
+/* ── Primary (Flag Red) ── */
 .btn-primary {
   background: var(--primary);
   color: #fff;
   border: 1px solid var(--primary);
-  box-shadow: var(--btn-shadow);
+  box-shadow: var(--btn-shadow); /* 3px 3px 0 var(--accent) */
 }
 .btn-primary:hover {
   background: var(--accent);
   border-color: var(--accent);
-  box-shadow: var(--btn-shadow-hover);
+  box-shadow: var(--btn-shadow-hover); /* 6px 6px 0 var(--dark) */
 }
+.btn-primary:active {
+  box-shadow: 1px 1px 0 var(--dark); /* shadow compresses on press */
+}
+
+/* ── Secondary (wipe-fill-from-left on hover) ── */
 .btn-secondary {
   background: var(--surface);
   color: var(--dark);
   border: 1px solid var(--dark);
+  z-index: 0;
+}
+.btn-secondary::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--dark);
+  transform: translateX(-101%);
+  transition: transform 320ms cubic-bezier(0.22, 1, 0.36, 1);
+  z-index: -1;
+}
+.btn-secondary:hover::before {
+  transform: translateX(0);
 }
 .btn-secondary:hover {
-  background: var(--dark);
   color: var(--surface);
+  border-color: var(--dark);
+  background: transparent;
 }
+
+/* ── Ghost ── */
 .btn-ghost {
   background: transparent;
   color: var(--dark);
   border: 1px solid var(--line);
 }
+.btn-ghost::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--surface-muted);
+  transform: translateX(-101%);
+  transition: transform 280ms cubic-bezier(0.22, 1, 0.36, 1);
+  z-index: -1;
+}
 .btn-ghost:hover {
   border-color: var(--dark);
 }
-.btn:active { transform: scale(0.97); transition: transform 80ms ease; }
+.btn-ghost:hover::before {
+  transform: translateX(0);
+}
+
+/* ── Pending / loading state ── */
+.btn--pending,
+.btn[data-pending="true"] {
+  pointer-events: none;
+  opacity: 0.72;
+}
+.btn--pending::after,
+.btn[data-pending="true"]::after {
+  content: '';
+  display: inline-block;
+  width: 13px;
+  height: 13px;
+  border: 1.5px solid rgba(255,255,255,0.3);
+  border-top-color: currentColor;
+  border-radius: 50%;       /* spinner exception — not a button element */
+  animation: btn-spin 0.55s linear infinite;
+  margin-left: 8px;
+  flex-shrink: 0;
+  vertical-align: middle;
+}
+
+/* ── Arrow slide helper (add class to button) ── */
+.btn-arrow .btn-arrow__icon,
+.btn-arrow > svg:last-child {
+  display: inline-block;
+  transition: transform 220ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.btn-arrow:hover .btn-arrow__icon,
+.btn-arrow:hover > svg:last-child {
+  transform: translateX(5px);
+}
+/* Text arrow variant — add data-arrow="→" and use .btn-arrow-text */
+.btn-arrow-text::after {
+  content: ' →';
+  display: inline-block;
+  transition: transform 220ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.btn-arrow-text:hover::after {
+  transform: translateX(5px);
+}
+
+/* ── Dark fill variant (used in dark-bg sections) ── */
+.btn-dark {
+  background: var(--dark);
+  color: var(--surface);
+  border: 1px solid var(--dark);
+}
+.btn-dark:hover {
+  background: var(--accent);
+  border-color: var(--accent);
+}
 
 /* ------------------------------------------------------------
    7. Form primitives
@@ -402,6 +505,7 @@ p  { font-size: var(--text-body); line-height: 1.6; }
   display: flex;
   flex-direction: column;
   gap: var(--space-1);
+  position: relative;
 }
 .form-field label {
   font-size: var(--text-caption);
@@ -409,6 +513,10 @@ p  { font-size: var(--text-body); line-height: 1.6; }
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--text-muted);
+  transition: color 200ms ease;
+}
+.form-field:focus-within label {
+  color: var(--dark);
 }
 .form-field input,
 .form-field textarea,
@@ -419,16 +527,44 @@ p  { font-size: var(--text-body); line-height: 1.6; }
   background: var(--surface);
   color: var(--dark);
   outline: none;
-  transition: border-color var(--t-base);
+  transition:
+    border-color 200ms ease,
+    background 200ms ease,
+    box-shadow 200ms ease;
 }
 .form-field input:focus,
 .form-field textarea:focus,
 .form-field select:focus {
   border-color: var(--primary);
+  background: var(--surface-elevated);
+  box-shadow: inset 0 0 0 1px rgba(193, 18, 31, 0.12);
 }
+.form-field input:hover:not(:focus),
+.form-field textarea:hover:not(:focus),
+.form-field select:hover:not(:focus) {
+  border-color: rgba(0, 48, 73, 0.32);
+}
+
+/* Valid state (add .field-valid class via JS) */
+.field-valid input,
+.field-valid textarea,
+.field-valid select,
+.form-field input:valid:not(:placeholder-shown),
+.form-field textarea:valid:not(:placeholder-shown) {
+  border-color: rgba(26, 107, 58, 0.5);
+}
+
+/* Error state */
 .form-field .error-msg {
   font-size: var(--text-caption);
   color: var(--primary);
+  animation: field-error-in 200ms ease both;
+}
+.form-field--error input,
+.form-field--error textarea,
+.form-field--error select {
+  border-color: var(--primary);
+  animation: field-shake 300ms cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
 }
 
 /* ------------------------------------------------------------
@@ -753,4 +889,25 @@ a, button {
     content: " (" attr(href) ")";
     font-size: 10px;
   }
+}
+
+/* ------------------------------------------------------------
+   Btn spinner keyframe (referenced by .btn--pending)
+   ------------------------------------------------------------ */
+@keyframes btn-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Field error shake */
+@keyframes field-shake {
+  10%, 90%  { transform: translateX(-1px); }
+  20%, 80%  { transform: translateX(2px); }
+  30%, 50%, 70% { transform: translateX(-3px); }
+  40%, 60%  { transform: translateX(3px); }
+}
+
+/* Error message slide in */
+@keyframes field-error-in {
+  from { opacity: 0; transform: translateY(-4px); }
+  to   { opacity: 1; transform: translateY(0); }
 }

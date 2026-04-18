@@ -86,7 +86,7 @@ const V51_ROLES: Record<
       "Reduce manual campaign triage to under 20% of ops FTE hours",
     ],
     mustHaves: [
-      "4+ years in creator relations, influencer management, or local commerce ops",
+      "4+ years in creator relations, creator management, or local commerce ops",
       "High empathy + firm judgment \u2014 you can be warm and hold a quality line",
       "Excellent written DM/email voice \u2014 every word lands like a brand asset",
       "NYC-based and active at local creator events",

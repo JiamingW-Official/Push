@@ -4,6 +4,8 @@ import CustomCursor from "@/components/layout/CustomCursor";
 import SmoothScroll from "@/components/layout/SmoothScroll";
 import BackToTop from "@/components/layout/BackToTop";
 import { CommandKProvider } from "@/components/search/CommandKProvider";
+import PageTransitionProvider from "@/components/layout/PageTransitionProvider";
+import RouteProgressBar from "@/components/layout/RouteProgressBar";
 
 export const metadata: Metadata = {
   title: {
@@ -113,13 +115,14 @@ export default function RootLayout({
         />
       </head>
       <body>
+        <RouteProgressBar />
         <a href="#main-content" className="skip-nav">
           Skip to main content
         </a>
         <CustomCursor />
         <CommandKProvider>
           <SmoothScroll>
-            {children}
+            <PageTransitionProvider>{children}</PageTransitionProvider>
             <BackToTop />
           </SmoothScroll>
         </CommandKProvider>

@@ -1146,3 +1146,53 @@
     justify-content: center;
   }
 }
+
+/* ── Premium micro-interactions ───────────────────────────── */
+
+.int-card {
+  transition:
+    border-color 200ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 200ms cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 200ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.int-card:hover:not(.int-card--coming-soon) {
+  border-color: #c1121f;
+  transform: translateY(-2px);
+}
+
+.int-card__status--connected {
+  border-color: #c9a96e;
+}
+
+@keyframes connected-glow {
+  0%   { box-shadow: 0 0 0 rgba(201, 169, 110, 0); }
+  50%  { box-shadow: 0 0 10px rgba(201, 169, 110, 0.4); }
+  100% { box-shadow: 0 0 0 rgba(201, 169, 110, 0); }
+}
+
+.int-card--connected {
+  animation: connected-glow 2s ease infinite;
+}
+
+@keyframes integ-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Override existing stagger to use integ-in */
+.int-card:nth-child(1) { animation: integ-in 240ms ease   0ms both; }
+.int-card:nth-child(2) { animation: integ-in 240ms ease  60ms both; }
+.int-card:nth-child(3) { animation: integ-in 240ms ease 120ms both; }
+.int-card:nth-child(4) { animation: integ-in 240ms ease 180ms both; }
+.int-card:nth-child(5) { animation: integ-in 240ms ease 240ms both; }
+.int-card:nth-child(6) { animation: integ-in 240ms ease 300ms both; }
+
+@media (prefers-reduced-motion: reduce) {
+  .int-card,
+  .int-card--connected {
+    animation: none !important;
+    transition: none !important;
+    transform: none !important;
+  }
+}

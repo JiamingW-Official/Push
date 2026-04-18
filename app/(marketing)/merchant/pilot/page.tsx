@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef, FormEvent } from "react";
+import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import ScrollRevealInit from "@/components/layout/ScrollRevealInit";
 import VerificationBadge from "@/components/landing/VerificationBadge";
@@ -95,14 +96,91 @@ const FLOW = [
   },
 ];
 
+const PILOT_ELIGIBLE_ZIPS = new Set(["11211", "11206", "11249"]);
+const DRAFT_KEY = "push-draft-pilot";
+
+// Map economics monthly volume + months to closest pilot goal bucket
+function seedToGoal(monthly: number, months: number): string {
+  const total = monthly * months;
+  if (total <= 12) return "10";
+  if (total <= 35) return "20";
+  if (total <= 70) return "50";
+  return "custom";
+}
+
 export default function PilotPage() {
+  const searchParams = useSearchParams();
   const [step, setStep] = useState<1 | 2 | 3>(1);
+  const [direction, setDirection] = useState<"fwd" | "back">("fwd");
   const [pending, setPending] = useState(false);
+  const [submitError, setSubmitError] = useState("");
+  const [pilotId, setPilotId] = useState("");
   const [loiAck, setLoiAck] = useState(false);
   const [bizName, setBizName] = useState("");
+  const [vertical, setVertical] = useState("");
+  const [zip, setZip] = useState("");
   const [ig, setIg] = useState("");
   const [maps, setMaps] = useState("");
   const [goal, setGoal] = useState("");
+  const [contactEmail, setContactEmail] = useState("");
+
+  const zipEligible = PILOT_ELIGIBLE_ZIPS.has(zip.trim());
+
+  /* ── Pre-fill from ?seed= (comes from economics calculator) */
+  useEffect(() => {
+    const raw = searchParams.get("seed");
+    if (!raw) return;
+    try {
+      const [vKey, monthly, months] = decodeURIComponent(raw).split("|");
+      if (vKey) setVertical(vKey);
+      if (monthly && months)
+        setGoal(seedToGoal(Number(monthly), Number(months)));
+    } catch {
+      /* malformed seed — ignore */
+    }
+  }, [searchParams]);
+
+  /* ── Restore draft from localStorage on mount ──────────── */
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem(DRAFT_KEY);
+      if (!raw) return;
+      const d = JSON.parse(raw);
+      if (d.bizName) setBizName(d.bizName);
+      if (d.vertical) setVertical(d.vertical);
+      if (d.zip) setZip(d.zip);
+      if (d.ig) setIg(d.ig);
+      if (d.maps) setMaps(d.maps);
+      if (d.goal) setGoal(d.goal);
+      if (d.contactEmail) setContactEmail(d.contactEmail);
+    } catch {
+      /* ignore malformed draft */
+    }
+  }, []);
+
+  /* ── Autosave draft every 5s ────────────────────────────── */
+  useEffect(() => {
+    const id = setInterval(() => {
+      if (step !== 1) return;
+      try {
+        localStorage.setItem(
+          DRAFT_KEY,
+          JSON.stringify({
+            bizName,
+            vertical,
+            zip,
+            ig,
+            maps,
+            goal,
+            contactEmail,
+          }),
+        );
+      } catch {
+        /* storage quota — ignore */
+      }
+    }, 5000);
+    return () => clearInterval(id);
+  }, [step, bizName, vertical, zip, ig, maps, goal, contactEmail]);
 
   /* ── GSAP parallax on hero lines (v5.1 polish) ─────────── */
   const heroRef = useRef<HTMLElement | null>(null);
@@ -163,35 +241,67 @@ export default function PilotPage() {
 
   const step1Valid =
     bizName.trim() !== "" &&
+    vertical !== "" &&
+    zip.trim() !== "" &&
     ig.trim() !== "" &&
     maps.trim() !== "" &&
-    goal !== "";
+    goal !== "" &&
+    contactEmail.trim() !== "";
 
   function handleStep1Next(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (!step1Valid) return;
+    // Clear draft on successful step advance
+    try {
+      localStorage.removeItem(DRAFT_KEY);
+    } catch {
+      /* ignore */
+    }
+    setDirection("fwd");
     setStep(2);
   }
 
-  function handleLoiSubmit(e: FormEvent<HTMLFormElement>) {
+  async function handleLoiSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (!loiAck) return;
     setPending(true);
-    // Mock submit — no real API yet; P2 wires /api/merchant/pilot
-    setTimeout(() => {
-      setPending(false);
-      setStep(3);
-      if (typeof window !== "undefined") {
-        // Scroll the brief into view after render
-        setTimeout(
-          () =>
-            document
-              .getElementById("brief")
-              ?.scrollIntoView({ behavior: "smooth" }),
-          80,
-        );
+    setSubmitError("");
+    try {
+      const res = await fetch("/api/merchant/pilot", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          bizName,
+          vertical,
+          zip,
+          ig,
+          maps,
+          goal,
+          contactEmail,
+          loiAck,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setSubmitError(data.error ?? "Something went wrong. Please try again.");
+        setPending(false);
+        return;
       }
-    }, 1200);
+      setPilotId(data.pilotId ?? "");
+      setDirection("fwd");
+      setStep(3);
+      setTimeout(
+        () =>
+          document
+            .getElementById("brief")
+            ?.scrollIntoView({ behavior: "smooth" }),
+        80,
+      );
+    } catch {
+      setSubmitError("Network error. Please check your connection and retry.");
+    } finally {
+      setPending(false);
+    }
   }
 
   const projection = goal ? GOAL_PROJECTIONS[goal] : null;
@@ -462,255 +572,348 @@ export default function PilotPage() {
               })}
             </ol>
 
-            {/* ── Step 1: Business fields ─────────────── */}
-            {step === 1 && (
-              <form className="pilot-apply-form" onSubmit={handleStep1Next}>
-                <div className="pilot-field">
-                  <label htmlFor="biz-name" className="pilot-label">
-                    Business name
-                  </label>
-                  <input
-                    id="biz-name"
-                    name="bizName"
-                    type="text"
-                    required
-                    placeholder="Sey Coffee"
-                    className="pilot-input"
-                    autoComplete="organization"
-                    value={bizName}
-                    onChange={(e) => setBizName(e.target.value)}
-                  />
-                </div>
-
-                <div className="pilot-field">
-                  <label htmlFor="ig" className="pilot-label">
-                    Instagram handle
-                  </label>
-                  <input
-                    id="ig"
-                    name="ig"
-                    type="text"
-                    required
-                    placeholder="@seycoffee"
-                    className="pilot-input"
-                    value={ig}
-                    onChange={(e) => setIg(e.target.value)}
-                  />
-                </div>
-
-                <div className="pilot-field">
-                  <label htmlFor="maps" className="pilot-label">
-                    Google Maps URL
-                  </label>
-                  <input
-                    id="maps"
-                    name="maps"
-                    type="url"
-                    required
-                    placeholder="https://maps.app.goo.gl/…"
-                    className="pilot-input"
-                    value={maps}
-                    onChange={(e) => setMaps(e.target.value)}
-                  />
-                </div>
-
-                <div className="pilot-field">
-                  <label htmlFor="goal" className="pilot-label">
-                    How many customers do you want?
-                  </label>
-                  <select
-                    id="goal"
-                    name="goal"
-                    required
-                    className="pilot-input pilot-select"
-                    value={goal}
-                    onChange={(e) => setGoal(e.target.value)}
-                  >
-                    <option value="" disabled>
-                      Select a goal
-                    </option>
-                    <option value="10">10 new customers (1 week)</option>
-                    <option value="20">20 new customers (2 weeks)</option>
-                    <option value="50">50 new customers (1 month)</option>
-                    <option value="custom">Custom — let&apos;s talk</option>
-                  </select>
-                </div>
-
-                <button
-                  type="submit"
-                  className="btn-fill pilot-submit"
-                  disabled={!step1Valid}
-                >
-                  Continue to LOI &rarr;
-                </button>
-
-                <p className="pilot-apply-fine">
-                  We&apos;ll never share your info. Agent review only.
-                </p>
-              </form>
-            )}
-
-            {/* ── Step 2: LOI terms ───────────────────── */}
-            {step === 2 && (
-              <form className="pilot-apply-form" onSubmit={handleLoiSubmit}>
-                <div className="pilot-loi" role="group" aria-labelledby="loi-h">
-                  <span className="pilot-loi-eyebrow">
-                    Pre-Pilot LOI · $1 nominal fee
-                  </span>
-                  <h3 id="loi-h" className="pilot-loi-h">
-                    Before we prepare your brief.
-                  </h3>
-                  <ul className="pilot-loi-terms">
-                    <li>
-                      <strong>$1 nominal fee</strong> to activate Pre-Pilot LOI
-                      (card on file, not charged beyond $1 during Pilot).
-                    </li>
-                    <li>
-                      <strong>60-day commitment.</strong> You agree to run the
-                      Pilot for the full window so ConversionOracle has enough
-                      signal to optimize.
-                    </li>
-                    <li>
-                      <strong>Case-study authorization.</strong> You authorize
-                      Push to publish your results (logo, metrics, quotes) as a
-                      public case study.
-                    </li>
-                    <li>
-                      <strong>Day-30 checkpoint.</strong> If under 5 verified
-                      customers by Day 30, Push terminates the Pilot and
-                      reclaims 50% of creator payout.
-                    </li>
-                    <li>
-                      <strong>Post-Pilot auto-flip.</strong> Customer 11
-                      triggers Operator tier: $500/mo minimum + $25/customer
-                      (Coffee+ rate) + Retention Add-on ($8/$6/$4).
-                    </li>
-                    <li>
-                      <strong>Cancellation.</strong> You can cancel anytime
-                      after the 60-day commitment; you keep every customer
-                      delivered up to that point.
-                    </li>
-                  </ul>
-                  <label className="pilot-loi-check">
+            <div
+              key={step}
+              className={`pilot-step-frame pilot-step-frame--${direction}`}
+            >
+              {/* ── Step 1: Business fields ─────────────── */}
+              {step === 1 && (
+                <form className="pilot-apply-form" onSubmit={handleStep1Next}>
+                  <div className="pilot-field">
+                    <label htmlFor="biz-name" className="pilot-label">
+                      Business name
+                    </label>
                     <input
-                      type="checkbox"
-                      checked={loiAck}
-                      onChange={(e) => setLoiAck(e.target.checked)}
+                      id="biz-name"
+                      name="bizName"
+                      type="text"
                       required
+                      placeholder="Sey Coffee"
+                      className="pilot-input"
+                      autoComplete="organization"
+                      value={bizName}
+                      onChange={(e) => setBizName(e.target.value)}
                     />
-                    <span>
-                      I acknowledge the $1 Pre-Pilot LOI terms, 60-day
-                      commitment, and case-study authorization.
-                    </span>
-                  </label>
-                </div>
+                  </div>
 
-                <div className="pilot-step-actions">
-                  <button
-                    type="button"
-                    className="btn-outline pilot-step-back"
-                    onClick={() => setStep(1)}
-                    disabled={pending}
-                  >
-                    &larr; Back
-                  </button>
+                  <div className="pilot-field">
+                    <label htmlFor="vertical" className="pilot-label">
+                      Business vertical
+                    </label>
+                    <select
+                      id="vertical"
+                      name="vertical"
+                      required
+                      className="pilot-input pilot-select"
+                      value={vertical}
+                      onChange={(e) => setVertical(e.target.value)}
+                    >
+                      <option value="" disabled>
+                        Select your category
+                      </option>
+                      <option value="coffee_plus">
+                        ✓ Coffee+ · AOV $8-20 (Pilot eligible)
+                      </option>
+                      <option value="coffee">Coffee</option>
+                      <option value="dessert">Dessert / Bakery</option>
+                      <option value="fitness">Fitness / Wellness</option>
+                      <option value="beauty">Beauty / Personal Care</option>
+                      <option value="retail">Retail</option>
+                      <option value="other">Other</option>
+                    </select>
+                  </div>
+
+                  <div className="pilot-field">
+                    <label htmlFor="zip" className="pilot-label">
+                      ZIP code
+                      {zip.trim() && (
+                        <span
+                          className={
+                            zipEligible
+                              ? "pilot-zip-badge pilot-zip-badge--eligible"
+                              : "pilot-zip-badge pilot-zip-badge--waitlist"
+                          }
+                        >
+                          {zipEligible ? "✓ Pilot eligible" : "Waitlist"}
+                        </span>
+                      )}
+                    </label>
+                    <input
+                      id="zip"
+                      name="zip"
+                      type="text"
+                      required
+                      placeholder="11211"
+                      maxLength={10}
+                      className="pilot-input"
+                      value={zip}
+                      onChange={(e) => setZip(e.target.value)}
+                    />
+                  </div>
+
+                  <div className="pilot-field">
+                    <label htmlFor="ig" className="pilot-label">
+                      Instagram handle
+                    </label>
+                    <input
+                      id="ig"
+                      name="ig"
+                      type="text"
+                      required
+                      placeholder="@seycoffee"
+                      className="pilot-input"
+                      value={ig}
+                      onChange={(e) => setIg(e.target.value)}
+                    />
+                  </div>
+
+                  <div className="pilot-field">
+                    <label htmlFor="maps" className="pilot-label">
+                      Google Maps URL
+                    </label>
+                    <input
+                      id="maps"
+                      name="maps"
+                      type="url"
+                      required
+                      placeholder="https://maps.app.goo.gl/…"
+                      className="pilot-input"
+                      value={maps}
+                      onChange={(e) => setMaps(e.target.value)}
+                    />
+                  </div>
+
+                  <div className="pilot-field">
+                    <label htmlFor="goal" className="pilot-label">
+                      How many customers do you want?
+                    </label>
+                    <select
+                      id="goal"
+                      name="goal"
+                      required
+                      className="pilot-input pilot-select"
+                      value={goal}
+                      onChange={(e) => setGoal(e.target.value)}
+                    >
+                      <option value="" disabled>
+                        Select a goal
+                      </option>
+                      <option value="10">10 new customers (1 week)</option>
+                      <option value="20">20 new customers (2 weeks)</option>
+                      <option value="50">50 new customers (1 month)</option>
+                      <option value="custom">Custom — let&apos;s talk</option>
+                    </select>
+                  </div>
+
+                  <div className="pilot-field">
+                    <label htmlFor="contact-email" className="pilot-label">
+                      Contact email
+                    </label>
+                    <input
+                      id="contact-email"
+                      name="contactEmail"
+                      type="email"
+                      required
+                      placeholder="owner@seycoffee.com"
+                      className="pilot-input"
+                      autoComplete="email"
+                      value={contactEmail}
+                      onChange={(e) => setContactEmail(e.target.value)}
+                    />
+                  </div>
+
                   <button
                     type="submit"
                     className="btn-fill pilot-submit"
-                    disabled={pending || !loiAck}
+                    disabled={!step1Valid}
                   >
-                    {pending ? "Signing…" : "Sign LOI & generate brief"}
+                    Continue to LOI &rarr;
                   </button>
-                </div>
 
-                <p className="pilot-apply-fine">
-                  We&apos;ll never share your info. Agent review only.
-                </p>
-              </form>
-            )}
+                  <p className="pilot-apply-fine">
+                    We&apos;ll never share your info. Agent review only.
+                  </p>
+                </form>
+              )}
 
-            {/* ── Step 3: Mock ConversionOracle brief preview ── */}
-            {step === 3 && projection && (
-              <div id="brief" className="pilot-brief" role="status">
-                <div className="pilot-brief-head">
-                  <span className="pilot-brief-eyebrow">
-                    ConversionOracle&trade; · Brief preview
-                  </span>
-                  <h3 className="pilot-brief-h">
-                    Draft for <em>{bizName || "your business"}</em>
-                  </h3>
-                  <p className="pilot-brief-sub">
-                    Generated in 60s. A strategist will review before launch and
-                    ping you via email within 48 hours.
+              {/* ── Step 2: LOI terms ───────────────────── */}
+              {step === 2 && (
+                <form className="pilot-apply-form" onSubmit={handleLoiSubmit}>
+                  <div
+                    className="pilot-loi"
+                    role="group"
+                    aria-labelledby="loi-h"
+                  >
+                    <span className="pilot-loi-eyebrow">
+                      Pre-Pilot LOI · $1 nominal fee
+                    </span>
+                    <h3 id="loi-h" className="pilot-loi-h">
+                      Before we prepare your brief.
+                    </h3>
+                    <ul className="pilot-loi-terms">
+                      <li>
+                        <strong>$1 nominal fee</strong> to activate Pre-Pilot
+                        LOI (card on file, not charged beyond $1 during Pilot).
+                      </li>
+                      <li>
+                        <strong>60-day commitment.</strong> You agree to run the
+                        Pilot for the full window so ConversionOracle has enough
+                        signal to optimize.
+                      </li>
+                      <li>
+                        <strong>Case-study authorization.</strong> You authorize
+                        Push to publish your results (logo, metrics, quotes) as
+                        a public case study.
+                      </li>
+                      <li>
+                        <strong>Day-30 checkpoint.</strong> If under 5 verified
+                        customers by Day 30, Push terminates the Pilot and
+                        reclaims 50% of creator payout.
+                      </li>
+                      <li>
+                        <strong>Post-Pilot auto-flip.</strong> Customer 11
+                        triggers Operator tier: $500/mo minimum + $25/customer
+                        (Coffee+ rate) + Retention Add-on ($8/$6/$4).
+                      </li>
+                      <li>
+                        <strong>Cancellation.</strong> You can cancel anytime
+                        after the 60-day commitment; you keep every customer
+                        delivered up to that point.
+                      </li>
+                    </ul>
+                    <label className="pilot-loi-check">
+                      <input
+                        type="checkbox"
+                        checked={loiAck}
+                        onChange={(e) => setLoiAck(e.target.checked)}
+                        required
+                      />
+                      <span>
+                        I acknowledge the $1 Pre-Pilot LOI terms, 60-day
+                        commitment, and case-study authorization.
+                      </span>
+                    </label>
+                  </div>
+
+                  {submitError && (
+                    <p className="pilot-submit-error" role="alert">
+                      {submitError}
+                    </p>
+                  )}
+
+                  <div className="pilot-step-actions">
+                    <button
+                      type="button"
+                      className="btn-outline pilot-step-back"
+                      onClick={() => {
+                        setDirection("back");
+                        setStep(1);
+                      }}
+                      disabled={pending}
+                    >
+                      &larr; Back
+                    </button>
+                    <button
+                      type="submit"
+                      className="btn-fill pilot-submit"
+                      disabled={pending || !loiAck}
+                    >
+                      {pending ? "Submitting…" : "Sign LOI & generate brief"}
+                    </button>
+                  </div>
+
+                  <p className="pilot-apply-fine">
+                    We&apos;ll never share your info. Agent review only.
+                  </p>
+                </form>
+              )}
+
+              {/* ── Step 3: Mock ConversionOracle brief preview ── */}
+              {step === 3 && projection && (
+                <div id="brief" className="pilot-brief" role="status">
+                  <div className="pilot-brief-head">
+                    <span className="pilot-brief-eyebrow">
+                      ConversionOracle&trade; · Brief preview
+                    </span>
+                    <h3 className="pilot-brief-h">
+                      Draft for <em>{bizName || "your business"}</em>
+                    </h3>
+                    <p className="pilot-brief-sub">
+                      Generated in 60s. A strategist will review before launch
+                      and ping you via email within 48 hours.
+                    </p>
+                  </div>
+
+                  <dl className="pilot-brief-grid">
+                    <div className="pilot-brief-cell">
+                      <dt>Target</dt>
+                      <dd>
+                        {projection.customers > 0
+                          ? `${projection.customers} verified customers`
+                          : "Custom target"}
+                      </dd>
+                    </div>
+                    <div className="pilot-brief-cell">
+                      <dt>Window</dt>
+                      <dd>{projection.window}</dd>
+                    </div>
+                    <div className="pilot-brief-cell">
+                      <dt>Your cost</dt>
+                      <dd>{projection.budget}</dd>
+                    </div>
+                    <div className="pilot-brief-cell">
+                      <dt>ROI projection</dt>
+                      <dd>{projection.roi}</dd>
+                    </div>
+                  </dl>
+
+                  <div className="pilot-brief-matches">
+                    <span className="pilot-brief-matches-label">
+                      Top 5 creator matches &middot; by ConversionOracle
+                    </span>
+                    <ul className="pilot-brief-list">
+                      {MOCK_CREATORS.map((c, i) => (
+                        <li
+                          key={c.handle}
+                          className="pilot-brief-match"
+                          style={{ animationDelay: `${i * 70}ms` }}
+                        >
+                          <span className="pilot-brief-handle">{c.handle}</span>
+                          <span className="pilot-brief-tier">{c.tier}</span>
+                          <span className="pilot-brief-fit">
+                            <span
+                              className="pilot-brief-fit-bar"
+                              style={{ width: `${c.fit}%` }}
+                            />
+                            <span className="pilot-brief-fit-n">{c.fit}</span>
+                          </span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  <div className="pilot-brief-actions">
+                    <Link
+                      href={`/merchant/dashboard?pilot=just_applied${pilotId ? `&pid=${encodeURIComponent(pilotId)}` : ""}`}
+                      className="btn-fill"
+                    >
+                      Go to dashboard &rarr;
+                    </Link>
+                    <Link
+                      href="/merchant/pilot/economics"
+                      className="btn-outline"
+                    >
+                      See pilot economics
+                    </Link>
+                  </div>
+
+                  <p className="pilot-apply-fine">
+                    Preview only. Final brief is confirmed after the 48-hour
+                    strategist review.
                   </p>
                 </div>
-
-                <dl className="pilot-brief-grid">
-                  <div className="pilot-brief-cell">
-                    <dt>Target</dt>
-                    <dd>
-                      {projection.customers > 0
-                        ? `${projection.customers} verified customers`
-                        : "Custom target"}
-                    </dd>
-                  </div>
-                  <div className="pilot-brief-cell">
-                    <dt>Window</dt>
-                    <dd>{projection.window}</dd>
-                  </div>
-                  <div className="pilot-brief-cell">
-                    <dt>Your cost</dt>
-                    <dd>{projection.budget}</dd>
-                  </div>
-                  <div className="pilot-brief-cell">
-                    <dt>ROI projection</dt>
-                    <dd>{projection.roi}</dd>
-                  </div>
-                </dl>
-
-                <div className="pilot-brief-matches">
-                  <span className="pilot-brief-matches-label">
-                    Top 5 creator matches &middot; by ConversionOracle
-                  </span>
-                  <ul className="pilot-brief-list">
-                    {MOCK_CREATORS.map((c, i) => (
-                      <li
-                        key={c.handle}
-                        className="pilot-brief-match"
-                        style={{ animationDelay: `${i * 70}ms` }}
-                      >
-                        <span className="pilot-brief-handle">{c.handle}</span>
-                        <span className="pilot-brief-tier">{c.tier}</span>
-                        <span className="pilot-brief-fit">
-                          <span
-                            className="pilot-brief-fit-bar"
-                            style={{ width: `${c.fit}%` }}
-                          />
-                          <span className="pilot-brief-fit-n">{c.fit}</span>
-                        </span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-
-                <div className="pilot-brief-actions">
-                  <Link href="/merchant/signup" className="btn-fill">
-                    Create merchant account &rarr;
-                  </Link>
-                  <Link
-                    href="/merchant/pilot/economics"
-                    className="btn-outline"
-                  >
-                    See pilot economics
-                  </Link>
-                </div>
-
-                <p className="pilot-apply-fine">
-                  Preview only. Final brief is confirmed after the 48-hour
-                  strategist review.
-                </p>
-              </div>
-            )}
+              )}
+            </div>
           </div>
         </div>
       </section>

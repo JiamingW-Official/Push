@@ -349,7 +349,7 @@ If you're considering joining Push, the message is direct: **your follower count
 
 A creator with 600 followers who drove 30 verified visits last month earns more than a creator with 60,000 followers who drove two.
 
-This is the performance-based future of the creator economy. Push is where it starts.`,
+This is the verified-visit future of local creator economics. ConversionOracle™ is the moat. Push is where it starts.`,
   },
 
   {

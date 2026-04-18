@@ -1216,3 +1216,58 @@
   color: #003049;
   border-color: #003049;
 }
+
+/* ── Polish: campaign-form-section entrance ───────────────── */
+
+@keyframes section-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.campaign-form-section {
+  animation: section-in 240ms ease both;
+}
+
+.campaign-form-section:nth-child(1) { animation-delay: 0ms; }
+.campaign-form-section:nth-child(2) { animation-delay: 60ms; }
+.campaign-form-section:nth-child(3) { animation-delay: 120ms; }
+.campaign-form-section:nth-child(4) { animation-delay: 180ms; }
+.campaign-form-section:nth-child(5) { animation-delay: 240ms; }
+.campaign-form-section:nth-child(6) { animation-delay: 300ms; }
+
+/* ── Polish: payout-slider thumb transition ───────────────── */
+
+.payout-slider::-webkit-slider-thumb {
+  transition: background 150ms ease;
+}
+
+.payout-slider::-moz-range-thumb {
+  transition: background 150ms ease;
+}
+
+/* ── Polish: preview-card hover shadow ────────────────────── */
+
+.preview-card {
+  transition: box-shadow 240ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.preview-card:hover {
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+}
+
+/* ── Polish: prefers-reduced-motion guard ─────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  .campaign-form-section {
+    animation: none !important;
+  }
+
+  .payout-slider::-webkit-slider-thumb,
+  .payout-slider::-moz-range-thumb {
+    transition: none !important;
+  }
+
+  .preview-card {
+    transition: none !important;
+  }
+}

@@ -162,10 +162,12 @@ function CreatorSignupInner() {
   const searchParams = useSearchParams();
   const submitBtnRef = useRef<HTMLButtonElement>(null);
 
-  /* Derive initial segment from ?segment= query param */
+  /* Derive initial segment from ?segment= query param — accept aliases */
   const initialSegment: Segment = (() => {
     const q = searchParams.get("segment");
-    return q === "professional" || q === "side-income" ? q : "side-income";
+    if (q === "professional" || q === "pro") return "professional";
+    if (q === "side-income" || q === "side") return "side-income";
+    return "side-income";
   })();
 
   const [fields, setFields] = useState<Field>(EMPTY);
@@ -185,11 +187,30 @@ function CreatorSignupInner() {
   const [isPressed, setIsPressed] = useState(false);
   const [instagramMockShown, setInstagramMockShown] = useState(false);
 
+  // Magic link mode — default ON for side-income, OFF for professional
+  const [magicLinkMode, setMagicLinkMode] = useState(
+    initialSegment === "side-income",
+  );
+  const [mlEmail, setMlEmail] = useState("");
+  const [mlZip, setMlZip] = useState("");
+  const [mlIg, setMlIg] = useState("");
+  const [mlDisclosure, setMlDisclosure] = useState(false);
+  const [mlSent, setMlSent] = useState(false);
+  const [mlError, setMlError] = useState("");
+  const [mlLoading, setMlLoading] = useState(false);
+
+  const ELIGIBLE_ZIPS = new Set(["11211", "11206", "11249"]);
+  const mlZipEligible = ELIGIBLE_ZIPS.has(mlZip.trim());
+
   /* Re-sync if the user changes the URL client-side */
   useEffect(() => {
     const q = searchParams.get("segment");
-    if (q === "professional" || q === "side-income") {
-      setSegment(q);
+    if (q === "professional" || q === "pro") {
+      setSegment("professional");
+      setMagicLinkMode(false);
+    } else if (q === "side-income" || q === "side") {
+      setSegment("side-income");
+      setMagicLinkMode(true);
     }
   }, [searchParams]);
 
@@ -259,6 +280,44 @@ function CreatorSignupInner() {
       window.alert("Demo mode · Instagram OAuth preview");
     }
     setInstagramMockShown(true);
+  }
+
+  async function handleMagicLink(e: React.FormEvent) {
+    e.preventDefault();
+    setMlError("");
+    if (!mlEmail.trim() || !/\S+@\S+\.\S+/.test(mlEmail)) {
+      setMlError("Please enter a valid email address.");
+      return;
+    }
+    if (!mlZip.trim()) {
+      setMlError("ZIP code is required to match you with local campaigns.");
+      return;
+    }
+    if (!mlDisclosure) {
+      setMlError("Please agree to DisclosureBot FTC compliance checks.");
+      return;
+    }
+    setMlLoading(true);
+    try {
+      const supabase = createClient();
+      const redirectTo =
+        typeof window !== "undefined"
+          ? `${window.location.origin}/creator/onboarding?segment=${segment}&zip=${encodeURIComponent(mlZip.trim())}${mlIg ? `&ig=${encodeURIComponent(mlIg.trim())}` : ""}`
+          : `/creator/onboarding?segment=${segment}`;
+      const { error } = await supabase.auth.signInWithOtp({
+        email: mlEmail.trim(),
+        options: {
+          emailRedirectTo: redirectTo,
+          data: { role: "creator", segment, zip: mlZip.trim() },
+        },
+      });
+      if (error) throw error;
+      setMlSent(true);
+    } catch (err: unknown) {
+      setMlError(sanitizeError(err));
+    } finally {
+      setMlLoading(false);
+    }
   }
 
   async function handleSubmit(e: React.FormEvent) {
@@ -709,374 +768,576 @@ function CreatorSignupInner() {
               </p>
             </fieldset>
 
-            {formError && (
-              <div
-                className="form-error"
-                role="alert"
-                style={{ marginBottom: "var(--space-4)" }}
-              >
-                <span>{formError}</span>
-                <button
-                  type="button"
-                  className="error-retry-btn"
-                  onClick={handleRetry}
-                >
-                  Try again
-                </button>
-              </div>
-            )}
-
-            <form
-              onSubmit={handleSubmit}
-              noValidate
-              className={loading ? "form-loading" : ""}
+            {/* ── Form content: animated on segment / mode change ── */}
+            <div
+              key={`${segment}-${magicLinkMode ? "ml" : "pw"}-${mlSent ? "sent" : "form"}`}
+              className="su-step-frame"
             >
-              <div className="form-grid">
-                {/* ── Profile ──────────────────────────────── */}
-                <div className="form-divider">
-                  <span className="form-divider-line" />
-                  <span className="form-divider-label">Your Profile</span>
-                  <span className="form-divider-line" />
-                </div>
-
-                <div className="form-row">
-                  <div className="form-field">
-                    <label htmlFor="name">Full Name</label>
-                    <div className="field-wrap">
-                      <input
-                        id="name"
-                        name="name"
-                        type="text"
-                        value={fields.name}
-                        onChange={set("name")}
-                        onBlur={() => handleBlur("name")}
-                        placeholder="Your full name"
-                        autoComplete="name"
-                        required
-                        aria-describedby={errors.name ? "err-name" : undefined}
-                      />
-                      {fieldStatus.name === "valid" && (
-                        <span className="field-dot" aria-hidden="true" />
-                      )}
-                    </div>
-                    {errors.name && touched.name && (
-                      <span className="error-msg" id="err-name">
-                        {errors.name}
-                      </span>
-                    )}
-                  </div>
-
-                  <div className="form-field">
-                    <label htmlFor="location">City / Neighbourhood</label>
-                    <div className="field-wrap">
-                      <input
-                        id="location"
-                        name="location"
-                        type="text"
-                        value={fields.location}
-                        onChange={set("location")}
-                        onBlur={() => handleBlur("location")}
-                        placeholder="e.g. Williamsburg, NYC"
-                        autoComplete="address-level2"
-                        required
-                        aria-describedby={
-                          errors.location ? "err-location" : undefined
-                        }
-                      />
-                      {fieldStatus.location === "valid" && (
-                        <span className="field-dot" aria-hidden="true" />
-                      )}
-                    </div>
-                    {errors.location && touched.location && (
-                      <span className="error-msg" id="err-location">
-                        {errors.location}
-                      </span>
-                    )}
-                  </div>
-                </div>
-
-                {/* ── Account ──────────────────────────────── */}
-                <div
-                  className={`form-divider ${revealEmail ? "" : "is-locked"}`}
+              {/* ── Magic link form (side-income default) ─────── */}
+              {magicLinkMode && segment === "side-income" && !mlSent && (
+                <form
+                  onSubmit={handleMagicLink}
+                  noValidate
+                  className="ml-form"
+                  aria-label="Magic link signup"
                 >
-                  <span className="form-divider-line" />
-                  <span className="form-divider-label">Create Account</span>
-                  <span className="form-divider-line" />
-                </div>
-
-                <div
-                  className={`form-field field-reveal ${revealEmail ? "is-visible" : ""}`}
-                >
-                  <label htmlFor="email">Email</label>
-                  <div className="field-wrap">
-                    <input
-                      id="email"
-                      name="email"
-                      type="email"
-                      value={fields.email}
-                      onChange={set("email")}
-                      onBlur={() => handleBlur("email")}
-                      placeholder="you@example.com"
-                      autoComplete="email"
-                      required
-                      aria-describedby={errors.email ? "err-email" : undefined}
-                    />
-                    {fieldStatus.email === "valid" && (
-                      <span className="field-dot" aria-hidden="true" />
-                    )}
-                  </div>
-                  {errors.email && touched.email && (
-                    <span className="error-msg" id="err-email">
-                      {errors.email}
+                  <div
+                    className="form-divider"
+                    style={{ marginBottom: "20px" }}
+                  >
+                    <span className="form-divider-line" />
+                    <span className="form-divider-label">
+                      Quick start — magic link
                     </span>
-                  )}
-                </div>
-
-                <div
-                  className={`form-row field-reveal ${revealPassword ? "is-visible" : ""}`}
-                >
-                  <div className="form-field">
-                    <label htmlFor="password">Password</label>
-                    <div className="input-with-action">
-                      <input
-                        id="password"
-                        name="password"
-                        type={showPw ? "text" : "password"}
-                        value={fields.password}
-                        onChange={set("password")}
-                        onBlur={() => handleBlur("password")}
-                        placeholder="Min 8 characters"
-                        autoComplete="new-password"
-                        required
-                        aria-describedby={
-                          errors.password
-                            ? "err-password"
-                            : fields.password
-                              ? "pw-strength"
-                              : undefined
-                        }
-                      />
-                      <button
-                        type="button"
-                        className="input-action-btn"
-                        onClick={() => setShowPw((v) => !v)}
-                        aria-label={showPw ? "Hide password" : "Show password"}
-                      >
-                        {showPw ? "Hide" : "Show"}
-                      </button>
-                    </div>
-                    {fields.password && pwStrength && (
-                      <div
-                        className="pw-strength"
-                        id="pw-strength"
-                        aria-live="polite"
-                      >
-                        <div className="pw-bar">
-                          <div className={`pw-fill pw-fill--${pwStrength}`} />
-                        </div>
-                        <span className={`pw-label pw-label--${pwStrength}`}>
-                          {pwStrength === "weak"
-                            ? "Weak"
-                            : pwStrength === "fair"
-                              ? "Fair"
-                              : "Strong — good to go"}
-                        </span>
-                      </div>
-                    )}
-                    {errors.password && touched.password && (
-                      <span className="error-msg" id="err-password">
-                        {errors.password}
-                      </span>
-                    )}
+                    <span className="form-divider-line" />
                   </div>
 
-                  <div className="form-field">
-                    <label htmlFor="confirm">Confirm Password</label>
-                    <div className="input-with-action">
-                      <input
-                        id="confirm"
-                        name="confirm"
-                        type={showConfirm ? "text" : "password"}
-                        value={fields.confirm}
-                        onChange={set("confirm")}
-                        onBlur={() => handleBlur("confirm")}
-                        placeholder="Repeat password"
-                        autoComplete="new-password"
-                        required
-                        aria-describedby={
-                          errors.confirm ? "err-confirm" : undefined
-                        }
-                      />
-                      <button
-                        type="button"
-                        className="input-action-btn"
-                        onClick={() => setShowConfirm((v) => !v)}
-                        aria-label={
-                          showConfirm
-                            ? "Hide confirm password"
-                            : "Show confirm password"
-                        }
-                      >
-                        {showConfirm ? "Hide" : "Show"}
-                      </button>
-                    </div>
-                    {errors.confirm && touched.confirm && (
-                      <span className="error-msg" id="err-confirm">
-                        {errors.confirm}
-                      </span>
-                    )}
-                  </div>
-                </div>
-
-                {/* ── Instagram OAuth mock (above Creator Details) ──── */}
-                <button
-                  type="button"
-                  className={`ig-oauth-btn ${instagramMockShown ? "ig-oauth-btn--used" : ""}`}
-                  onClick={handleInstagramMock}
-                >
-                  <span className="ig-oauth-icon" aria-hidden="true">
-                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none">
-                      <rect
-                        x="3"
-                        y="3"
-                        width="18"
-                        height="18"
-                        rx="0"
-                        stroke="currentColor"
-                        strokeWidth="1.6"
-                      />
-                      <circle
-                        cx="12"
-                        cy="12"
-                        r="4"
-                        stroke="currentColor"
-                        strokeWidth="1.6"
-                      />
-                      <circle cx="17.5" cy="6.5" r="1" fill="currentColor" />
-                    </svg>
-                  </span>
-                  <span className="ig-oauth-label">Sign up with Instagram</span>
-                  <span className="ig-oauth-meta">Creator preset</span>
-                </button>
-                <span className="ig-oauth-hint">
-                  Or continue with email below &mdash; same Creator outcome.
-                </span>
-
-                {/* ── Creator details ───────────────────────── */}
-                <div className="form-divider">
-                  <span className="form-divider-line" />
-                  <span className="form-divider-label">Creator Details</span>
-                  <span className="form-divider-line" />
-                </div>
-
-                <div className="form-field">
-                  <label htmlFor="instagram">
-                    Instagram Handle{" "}
-                    <span className="label-optional">(optional)</span>
-                  </label>
-                  <div className="field-wrap">
-                    <input
-                      id="instagram"
-                      name="instagram"
-                      type="text"
-                      value={fields.instagram}
-                      onChange={set("instagram")}
-                      onBlur={() => handleBlur("instagram")}
-                      placeholder="@yourhandle"
-                    />
-                    {fieldStatus.instagram === "valid" && fields.instagram && (
-                      <span className="field-dot" aria-hidden="true" />
-                    )}
-                  </div>
-                  <span className="field-hint">
-                    Helps match you with the right campaigns. Read-only — we
-                    never post or change anything.
-                  </span>
-                </div>
-
-                <div className="form-field">
-                  <label htmlFor="bio">
-                    Bio <span className="label-optional">(optional)</span>
-                  </label>
-                  <div className="bio-wrap">
-                    <textarea
-                      id="bio"
-                      rows={3}
-                      value={fields.bio}
-                      onChange={(e) => {
-                        if (e.target.value.length <= 160) set("bio")(e);
-                      }}
-                      onBlur={() => handleBlur("bio")}
-                      placeholder="Tell merchants about your content style, niche, or local area…"
-                      maxLength={160}
-                    />
-                    <span
-                      className={`bio-counter ${bioRemaining <= 20 ? "bio-counter--warn" : ""}`}
-                      aria-live="polite"
-                      aria-atomic="true"
+                  {mlError && (
+                    <p
+                      className="form-error"
+                      role="alert"
+                      style={{ marginBottom: "16px" }}
                     >
-                      {bioRemaining}
-                    </span>
+                      {mlError}
+                    </p>
+                  )}
+
+                  <div className="form-field">
+                    <label htmlFor="ml-email">Email</label>
+                    <div className="field-wrap">
+                      <input
+                        id="ml-email"
+                        type="email"
+                        required
+                        autoComplete="email"
+                        placeholder="you@email.com"
+                        value={mlEmail}
+                        onChange={(e) => setMlEmail(e.target.value)}
+                      />
+                    </div>
                   </div>
-                </div>
 
-                <p className="trust-line">
-                  Free to join · No follower minimum · 200+ local campaigns
-                </p>
+                  <div className="form-field">
+                    <label htmlFor="ml-zip">
+                      ZIP code
+                      {mlZip.trim() && (
+                        <span
+                          className={
+                            mlZipEligible
+                              ? "zip-badge zip-badge--ok"
+                              : "zip-badge zip-badge--wait"
+                          }
+                        >
+                          {mlZipEligible ? "✓ Pilot eligible" : "Waitlist"}
+                        </span>
+                      )}
+                    </label>
+                    <div className="field-wrap">
+                      <input
+                        id="ml-zip"
+                        type="text"
+                        required
+                        placeholder="11211"
+                        maxLength={10}
+                        value={mlZip}
+                        onChange={(e) => setMlZip(e.target.value)}
+                      />
+                    </div>
+                  </div>
 
-                {/* Terms consent — required before signup */}
-                <div className="form-field terms-field">
-                  <label className="terms-label">
+                  <div className="form-field">
+                    <label htmlFor="ml-ig">
+                      Instagram handle{" "}
+                      <span className="field-optional">(optional)</span>
+                    </label>
+                    <div className="field-wrap">
+                      <input
+                        id="ml-ig"
+                        type="text"
+                        placeholder="@yourhandle"
+                        value={mlIg}
+                        onChange={(e) => setMlIg(e.target.value)}
+                      />
+                    </div>
+                  </div>
+
+                  <label className="disclosure-check">
                     <input
-                      id="terms"
-                      name="terms"
                       type="checkbox"
-                      checked={termsAgreed}
-                      onChange={(e) => {
-                        setTermsAgreed(e.target.checked);
-                        if (e.target.checked) setTermsError("");
-                      }}
+                      checked={mlDisclosure}
+                      onChange={(e) => setMlDisclosure(e.target.checked)}
                       required
                     />
                     <span>
-                      I agree to the{" "}
-                      <Link href="/terms" target="_blank">
-                        Terms of Service
-                      </Link>{" "}
-                      and{" "}
-                      <Link href="/privacy" target="_blank">
-                        Privacy Policy
-                      </Link>
+                      I agree to DisclosureBot FTC compliance checks on all
+                      posts made through Push campaigns.
                     </span>
                   </label>
-                  {termsError && (
-                    <span className="error-msg">{termsError}</span>
-                  )}
-                </div>
 
-                <button
-                  ref={submitBtnRef}
-                  type="submit"
-                  className="btn btn-primary submit-btn"
-                  disabled={loading}
-                  aria-busy={loading}
-                  data-pressed={isPressed}
+                  <button
+                    type="submit"
+                    className="btn-submit"
+                    disabled={mlLoading}
+                  >
+                    {mlLoading ? "Sending…" : "Send me a magic link →"}
+                  </button>
+
+                  <div className="ml-form-footer">
+                    <button
+                      type="button"
+                      className="ml-switch-btn"
+                      onClick={() => setMagicLinkMode(false)}
+                    >
+                      Use password instead
+                    </button>
+                    <Link
+                      href="/creator/signup?segment=professional"
+                      className="ml-switch-btn"
+                    >
+                      I have 30K+ followers — go to pro →
+                    </Link>
+                  </div>
+                </form>
+              )}
+
+              {/* ── Magic link sent confirmation ──────────────── */}
+              {magicLinkMode && segment === "side-income" && mlSent && (
+                <div className="ml-sent" role="status" aria-live="polite">
+                  <div className="ml-sent-icon" aria-hidden="true">
+                    ✉
+                  </div>
+                  <h2 className="ml-sent-title">Check your inbox.</h2>
+                  <p className="ml-sent-body">
+                    We sent a magic link to <strong>{mlEmail}</strong>. Click it
+                    to finish creating your account and start onboarding.
+                  </p>
+                  <p className="ml-sent-note">
+                    No email? Check spam, or{" "}
+                    <button
+                      type="button"
+                      className="ml-resend"
+                      onClick={() => setMlSent(false)}
+                    >
+                      try again
+                    </button>
+                    .
+                  </p>
+                </div>
+              )}
+
+              {/* ── Password form toggle header ───────────────── */}
+              {!magicLinkMode && segment === "side-income" && (
+                <div
+                  className="ml-form-footer"
+                  style={{ marginBottom: "20px" }}
                 >
-                  {loading ? (
-                    <>
-                      <span className="loader-dots" aria-hidden="true">
-                        <span className="dot" />
-                        <span className="dot" />
-                        <span className="dot" />
+                  <button
+                    type="button"
+                    className="ml-switch-btn"
+                    onClick={() => setMagicLinkMode(true)}
+                  >
+                    ← Back to magic link
+                  </button>
+                </div>
+              )}
+
+              {formError && !magicLinkMode && (
+                <div
+                  className="form-error"
+                  role="alert"
+                  style={{ marginBottom: "var(--space-4)" }}
+                >
+                  <span>{formError}</span>
+                  <button
+                    type="button"
+                    className="error-retry-btn"
+                    onClick={handleRetry}
+                  >
+                    Try again
+                  </button>
+                </div>
+              )}
+
+              {(!magicLinkMode || segment === "professional") && (
+                <form
+                  onSubmit={handleSubmit}
+                  noValidate
+                  className={loading ? "form-loading" : ""}
+                >
+                  <div className="form-grid">
+                    {/* ── Profile ──────────────────────────────── */}
+                    <div className="form-divider">
+                      <span className="form-divider-line" />
+                      <span className="form-divider-label">Your Profile</span>
+                      <span className="form-divider-line" />
+                    </div>
+
+                    <div className="form-row">
+                      <div className="form-field">
+                        <label htmlFor="name">Full Name</label>
+                        <div className="field-wrap">
+                          <input
+                            id="name"
+                            name="name"
+                            type="text"
+                            value={fields.name}
+                            onChange={set("name")}
+                            onBlur={() => handleBlur("name")}
+                            placeholder="Your full name"
+                            autoComplete="name"
+                            required
+                            aria-describedby={
+                              errors.name ? "err-name" : undefined
+                            }
+                          />
+                          {fieldStatus.name === "valid" && (
+                            <span className="field-dot" aria-hidden="true" />
+                          )}
+                        </div>
+                        {errors.name && touched.name && (
+                          <span className="error-msg" id="err-name">
+                            {errors.name}
+                          </span>
+                        )}
+                      </div>
+
+                      <div className="form-field">
+                        <label htmlFor="location">City / Neighbourhood</label>
+                        <div className="field-wrap">
+                          <input
+                            id="location"
+                            name="location"
+                            type="text"
+                            value={fields.location}
+                            onChange={set("location")}
+                            onBlur={() => handleBlur("location")}
+                            placeholder="e.g. Williamsburg, NYC"
+                            autoComplete="address-level2"
+                            required
+                            aria-describedby={
+                              errors.location ? "err-location" : undefined
+                            }
+                          />
+                          {fieldStatus.location === "valid" && (
+                            <span className="field-dot" aria-hidden="true" />
+                          )}
+                        </div>
+                        {errors.location && touched.location && (
+                          <span className="error-msg" id="err-location">
+                            {errors.location}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* ── Account ──────────────────────────────── */}
+                    <div
+                      className={`form-divider ${revealEmail ? "" : "is-locked"}`}
+                    >
+                      <span className="form-divider-line" />
+                      <span className="form-divider-label">Create Account</span>
+                      <span className="form-divider-line" />
+                    </div>
+
+                    <div
+                      className={`form-field field-reveal ${revealEmail ? "is-visible" : ""}`}
+                    >
+                      <label htmlFor="email">Email</label>
+                      <div className="field-wrap">
+                        <input
+                          id="email"
+                          name="email"
+                          type="email"
+                          value={fields.email}
+                          onChange={set("email")}
+                          onBlur={() => handleBlur("email")}
+                          placeholder="you@example.com"
+                          autoComplete="email"
+                          required
+                          aria-describedby={
+                            errors.email ? "err-email" : undefined
+                          }
+                        />
+                        {fieldStatus.email === "valid" && (
+                          <span className="field-dot" aria-hidden="true" />
+                        )}
+                      </div>
+                      {errors.email && touched.email && (
+                        <span className="error-msg" id="err-email">
+                          {errors.email}
+                        </span>
+                      )}
+                    </div>
+
+                    <div
+                      className={`form-row field-reveal ${revealPassword ? "is-visible" : ""}`}
+                    >
+                      <div className="form-field">
+                        <label htmlFor="password">Password</label>
+                        <div className="input-with-action">
+                          <input
+                            id="password"
+                            name="password"
+                            type={showPw ? "text" : "password"}
+                            value={fields.password}
+                            onChange={set("password")}
+                            onBlur={() => handleBlur("password")}
+                            placeholder="Min 8 characters"
+                            autoComplete="new-password"
+                            required
+                            aria-describedby={
+                              errors.password
+                                ? "err-password"
+                                : fields.password
+                                  ? "pw-strength"
+                                  : undefined
+                            }
+                          />
+                          <button
+                            type="button"
+                            className="input-action-btn"
+                            onClick={() => setShowPw((v) => !v)}
+                            aria-label={
+                              showPw ? "Hide password" : "Show password"
+                            }
+                          >
+                            {showPw ? "Hide" : "Show"}
+                          </button>
+                        </div>
+                        {fields.password && pwStrength && (
+                          <div
+                            className="pw-strength"
+                            id="pw-strength"
+                            aria-live="polite"
+                          >
+                            <div className="pw-bar">
+                              <div
+                                className={`pw-fill pw-fill--${pwStrength}`}
+                              />
+                            </div>
+                            <span
+                              className={`pw-label pw-label--${pwStrength}`}
+                            >
+                              {pwStrength === "weak"
+                                ? "Weak"
+                                : pwStrength === "fair"
+                                  ? "Fair"
+                                  : "Strong — good to go"}
+                            </span>
+                          </div>
+                        )}
+                        {errors.password && touched.password && (
+                          <span className="error-msg" id="err-password">
+                            {errors.password}
+                          </span>
+                        )}
+                      </div>
+
+                      <div className="form-field">
+                        <label htmlFor="confirm">Confirm Password</label>
+                        <div className="input-with-action">
+                          <input
+                            id="confirm"
+                            name="confirm"
+                            type={showConfirm ? "text" : "password"}
+                            value={fields.confirm}
+                            onChange={set("confirm")}
+                            onBlur={() => handleBlur("confirm")}
+                            placeholder="Repeat password"
+                            autoComplete="new-password"
+                            required
+                            aria-describedby={
+                              errors.confirm ? "err-confirm" : undefined
+                            }
+                          />
+                          <button
+                            type="button"
+                            className="input-action-btn"
+                            onClick={() => setShowConfirm((v) => !v)}
+                            aria-label={
+                              showConfirm
+                                ? "Hide confirm password"
+                                : "Show confirm password"
+                            }
+                          >
+                            {showConfirm ? "Hide" : "Show"}
+                          </button>
+                        </div>
+                        {errors.confirm && touched.confirm && (
+                          <span className="error-msg" id="err-confirm">
+                            {errors.confirm}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* ── Instagram OAuth mock (above Creator Details) ──── */}
+                    <button
+                      type="button"
+                      className={`ig-oauth-btn ${instagramMockShown ? "ig-oauth-btn--used" : ""}`}
+                      onClick={handleInstagramMock}
+                    >
+                      <span className="ig-oauth-icon" aria-hidden="true">
+                        <svg
+                          viewBox="0 0 24 24"
+                          width="16"
+                          height="16"
+                          fill="none"
+                        >
+                          <rect
+                            x="3"
+                            y="3"
+                            width="18"
+                            height="18"
+                            rx="0"
+                            stroke="currentColor"
+                            strokeWidth="1.6"
+                          />
+                          <circle
+                            cx="12"
+                            cy="12"
+                            r="4"
+                            stroke="currentColor"
+                            strokeWidth="1.6"
+                          />
+                          <circle
+                            cx="17.5"
+                            cy="6.5"
+                            r="1"
+                            fill="currentColor"
+                          />
+                        </svg>
                       </span>
-                      <span className="sr-only">Creating account…</span>
-                    </>
-                  ) : (
-                    "Join Push — Start Earning"
-                  )}
-                </button>
-              </div>
-            </form>
+                      <span className="ig-oauth-label">
+                        Sign up with Instagram
+                      </span>
+                      <span className="ig-oauth-meta">Creator preset</span>
+                    </button>
+                    <span className="ig-oauth-hint">
+                      Or continue with email below &mdash; same Creator outcome.
+                    </span>
+
+                    {/* ── Creator details ───────────────────────── */}
+                    <div className="form-divider">
+                      <span className="form-divider-line" />
+                      <span className="form-divider-label">
+                        Creator Details
+                      </span>
+                      <span className="form-divider-line" />
+                    </div>
+
+                    <div className="form-field">
+                      <label htmlFor="instagram">
+                        Instagram Handle{" "}
+                        <span className="label-optional">(optional)</span>
+                      </label>
+                      <div className="field-wrap">
+                        <input
+                          id="instagram"
+                          name="instagram"
+                          type="text"
+                          value={fields.instagram}
+                          onChange={set("instagram")}
+                          onBlur={() => handleBlur("instagram")}
+                          placeholder="@yourhandle"
+                        />
+                        {fieldStatus.instagram === "valid" &&
+                          fields.instagram && (
+                            <span className="field-dot" aria-hidden="true" />
+                          )}
+                      </div>
+                      <span className="field-hint">
+                        Helps match you with the right campaigns. Read-only — we
+                        never post or change anything.
+                      </span>
+                    </div>
+
+                    <div className="form-field">
+                      <label htmlFor="bio">
+                        Bio <span className="label-optional">(optional)</span>
+                      </label>
+                      <div className="bio-wrap">
+                        <textarea
+                          id="bio"
+                          rows={3}
+                          value={fields.bio}
+                          onChange={(e) => {
+                            if (e.target.value.length <= 160) set("bio")(e);
+                          }}
+                          onBlur={() => handleBlur("bio")}
+                          placeholder="Tell merchants about your content style, niche, or local area…"
+                          maxLength={160}
+                        />
+                        <span
+                          className={`bio-counter ${bioRemaining <= 20 ? "bio-counter--warn" : ""}`}
+                          aria-live="polite"
+                          aria-atomic="true"
+                        >
+                          {bioRemaining}
+                        </span>
+                      </div>
+                    </div>
+
+                    <p className="trust-line">
+                      Free to join · No follower minimum · 200+ local campaigns
+                    </p>
+
+                    {/* Terms consent — required before signup */}
+                    <div className="form-field terms-field">
+                      <label className="terms-label">
+                        <input
+                          id="terms"
+                          name="terms"
+                          type="checkbox"
+                          checked={termsAgreed}
+                          onChange={(e) => {
+                            setTermsAgreed(e.target.checked);
+                            if (e.target.checked) setTermsError("");
+                          }}
+                          required
+                        />
+                        <span>
+                          I agree to the{" "}
+                          <Link href="/terms" target="_blank">
+                            Terms of Service
+                          </Link>{" "}
+                          and{" "}
+                          <Link href="/privacy" target="_blank">
+                            Privacy Policy
+                          </Link>
+                        </span>
+                      </label>
+                      {termsError && (
+                        <span className="error-msg">{termsError}</span>
+                      )}
+                    </div>
+
+                    <button
+                      ref={submitBtnRef}
+                      type="submit"
+                      className="btn btn-primary submit-btn"
+                      disabled={loading}
+                      aria-busy={loading}
+                      data-pressed={isPressed}
+                    >
+                      {loading ? (
+                        <>
+                          <span className="loader-dots" aria-hidden="true">
+                            <span className="dot" />
+                            <span className="dot" />
+                            <span className="dot" />
+                          </span>
+                          <span className="sr-only">Creating account…</span>
+                        </>
+                      ) : (
+                        "Join Push — Start Earning"
+                      )}
+                    </button>
+                  </div>
+                </form>
+              )}
+            </div>
+            {/* /su-step-frame */}
 
             <p className="form-footer">
               Already have an account?{" "}

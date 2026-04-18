@@ -114,7 +114,7 @@ The services-era framing is dead. The Vertical AI framing is what's next.`,
     title:
       "Software Leverage Ratio: the one number that tells you if we scale.",
     excerpt:
-      "SLR = active campaigns ÷ ops FTE. Traditional influencer shops run 3-5. Push's Month-12 target is ≥25. Here is why that number is the north star.",
+      "SLR = active campaigns ÷ ops FTE. Traditional creator shops run 3-5. Push's Month-12 target is ≥25. Here is why that number is the north star.",
     heroImage:
       "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1200&q=80",
     author: {

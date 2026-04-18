@@ -830,3 +830,27 @@ form.form-loading {
     transform: none !important;
   }
 }
+
+/* ── Premium micro-interactions ───────────────────────────── */
+
+@keyframes creator-login-in {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.login-card {
+  animation: creator-login-in 340ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.form-field input:focus,
+.input-with-action:focus-within {
+  box-shadow: inset 0 0 0 2px #c1121f;
+  border-color: #c1121f;
+  transition: box-shadow 160ms ease, border-color 160ms ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .login-card {
+    animation: none !important;
+  }
+}

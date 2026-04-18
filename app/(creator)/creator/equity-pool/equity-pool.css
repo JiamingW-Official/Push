@@ -818,6 +818,52 @@
 
 /* ── Responsive ───────────────────────────────────────────── */
 
+/* ── Premium micro-interactions ───────────────────────────── */
+
+.eq-elig-item {
+  transition: transform 240ms cubic-bezier(0.22, 1, 0.36, 1),
+              box-shadow 240ms cubic-bezier(0.22, 1, 0.36, 1),
+              border-color 240ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.eq-elig-item:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 28px rgba(201, 169, 110, 0.2);
+  border-color: var(--champagne, #c9a96e);
+}
+
+@keyframes pool-bar-in {
+  from { transform: scaleX(0); }
+  to   { transform: scaleX(1); }
+}
+
+.an-tier-fill,
+.eq-elig-item .an-tier-fill {
+  transform-origin: left center;
+  animation: pool-bar-in 600ms cubic-bezier(0.22, 1, 0.36, 1) 200ms both;
+}
+
+@keyframes equity-in {
+  from { opacity: 0; transform: scale(0.95); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+.eq-success,
+.eq-form {
+  animation: equity-in 360ms ease both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .eq-elig-item,
+  .an-tier-fill,
+  .eq-success,
+  .eq-form {
+    animation: none !important;
+    transition: none !important;
+    transform: none !important;
+  }
+}
+
 @media (max-width: 820px) {
   .eq-header,
   .eq-section,

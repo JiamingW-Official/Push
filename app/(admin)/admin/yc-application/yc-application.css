@@ -537,3 +537,67 @@
     gap: 10px;
   }
 }
+
+/* ─────────────────────────────────────────────────────────────
+   MICRO-INTERACTIONS — yc-application
+   Appended polish pass; existing rules are NOT modified.
+───────────────────────────────────────────────────────────── */
+
+/* Section border hover */
+.yca-section {
+  transition: border-color 200ms ease;
+}
+.yca-section:hover {
+  border-color: var(--champagne, #c9a96e);
+}
+
+/* Section entrance animation */
+@keyframes yc-section-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.yca-section {
+  animation: yc-section-in 260ms ease both;
+}
+
+/* Stagger sections nth-child 1-6 at 80ms delays */
+.yca-section:nth-child(1) { animation-delay: 80ms; }
+.yca-section:nth-child(2) { animation-delay: 160ms; }
+.yca-section:nth-child(3) { animation-delay: 240ms; }
+.yca-section:nth-child(4) { animation-delay: 320ms; }
+.yca-section:nth-child(5) { animation-delay: 400ms; }
+.yca-section:nth-child(6) { animation-delay: 480ms; }
+
+/* Metric pop on hover */
+@keyframes yc-metric-pop {
+  0%   { transform: scale(1); }
+  50%  { transform: scale(1.04); }
+  100% { transform: scale(1); }
+}
+.yca-metric {
+  transition: transform 300ms ease;
+}
+.yca-metric:hover {
+  animation: yc-metric-pop 300ms ease forwards;
+}
+
+/* Respect reduced-motion preference */
+@media (prefers-reduced-motion: reduce) {
+  .yca-section,
+  .yca-metric {
+    animation: none;
+    transition: none;
+  }
+  .yca-section:hover {
+    border-color: var(--champagne, #c9a96e);
+  }
+  .yca-metric:hover {
+    transform: none;
+  }
+}

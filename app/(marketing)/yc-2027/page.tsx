@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import ScrollRevealInit from "@/components/layout/ScrollRevealInit";
+import StickySubNav from "@/components/layout/StickySubNav";
 import "../landing.css";
 import "./yc-2027.css";
 
@@ -370,6 +371,21 @@ export default function YC2027Page() {
       <meta name="robots" content="noindex,nofollow" />
 
       <ScrollRevealInit />
+
+      <StickySubNav
+        links={[
+          { id: "yc-thesis-h", label: "Thesis" },
+          { id: "yc-chart-h", label: "Traction" },
+          { id: "yc-beachhead-h", label: "Beachhead" },
+          { id: "yc-ask-h", label: "Ask" },
+          { id: "yc-why-h", label: "Team" },
+          { id: "yc-econ-h", label: "Economics" },
+          { id: "yc-faq-h", label: "FAQ" },
+          { id: "yc-apply-h", label: "Apply" },
+        ]}
+        ctaLabel="Schedule call"
+        ctaHref="https://calendly.com/placeholder"
+      />
 
       {/* ── HERO ────────────────────────────────────────── */}
       <section className="yc-hero" aria-labelledby="yc-hero-h">
@@ -1038,6 +1054,216 @@ export default function YC2027Page() {
                 {s}
               </div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── §8 FAQ ───────────────────────────────────────── */}
+      <section className="yc-section yc-faq" id="faq">
+        <div className="container">
+          <div className="yc-section-tag reveal">
+            <span className="yc-section-num">08</span>
+            <span className="yc-section-line" />
+            <span className="yc-section-label">FAQ</span>
+          </div>
+          <h2 className="yc-section-h reveal" id="yc-faq-h">
+            Investor FAQ
+          </h2>
+
+          <div className="yc-faq-list reveal">
+            {/* 1 */}
+            <details className="yc-faq-item">
+              <summary className="yc-faq-q">What are you making?</summary>
+              <div className="yc-faq-a">
+                Push is a Customer Acquisition Engine for local commerce.
+                Merchants pay $15–$85 per verified walk-in. Creators earn per
+                customer they bring through the door — not per post.
+                ConversionOracle™ verifies every transaction with QR scan +
+                Claude Vision OCR + geo-match so neither side can game it.
+              </div>
+            </details>
+
+            {/* 2 */}
+            <details className="yc-faq-item">
+              <summary className="yc-faq-q">
+                What is the problem you&apos;re solving?
+              </summary>
+              <div className="yc-faq-a">
+                Independent local merchants — coffee shops, fitness studios,
+                beauty bars — spend $1,200–$4,000/month on social ads that
+                generate impressions, not customers. They have no way to buy
+                verified foot traffic. Horizontal creator platforms sell reach;
+                they can&apos;t prove anyone walked in.
+              </div>
+            </details>
+
+            {/* 3 */}
+            <details className="yc-faq-item">
+              <summary className="yc-faq-q">Why now?</summary>
+              <div className="yc-faq-a">
+                Three things converged: (1) Claude Vision makes receipt OCR
+                commercially viable at $0.002/scan. (2) NYC independent retail
+                is contracting — merchants are desperate for ROI. (3) Creator
+                supply at the micro tier (3K–30K followers) is oversupplied and
+                underpriced — two-segment economics let Push lock in the best
+                local creators before TikTok / Meta notice.
+              </div>
+            </details>
+
+            {/* 4 */}
+            <details className="yc-faq-item">
+              <summary className="yc-faq-q">Who are your customers?</summary>
+              <div className="yc-faq-a">
+                Primary: independent local merchants in dense NYC neighborhoods,
+                AOV $8–$85. Segment 1 is Coffee+ (Williamsburg beachhead).
+                Segment 2 is Fitness + Beauty, which have higher AOV and unlocks
+                the $85/customer tier. Secondary: local micro-creators (T1–T3,
+                side-income segment) and professional creators (T4–T6, retainer
+                + equity segment).
+              </div>
+            </details>
+
+            {/* 5 */}
+            <details className="yc-faq-item">
+              <summary className="yc-faq-q">
+                How does ConversionOracle™ work?
+              </summary>
+              <div className="yc-faq-a">
+                Creator posts → unique QR code in caption → customer scans at
+                point of sale → Push captures geo, timestamp, receipt photo →
+                Claude Vision extracts line items + total → cross-references
+                against merchant POS → three-layer match = verified walk-in.
+                Fraud rate: 1.2%. Auto-verify rate: 88.4%. Meta and Google
+                cannot replicate this — they have no path to the receipt.
+              </div>
+            </details>
+
+            {/* 6 */}
+            <details className="yc-faq-item">
+              <summary className="yc-faq-q">
+                What makes Push defensible?
+              </summary>
+              <div className="yc-faq-a">
+                Two moats compound: (1) ConversionOracle™ trains on walk-in
+                ground truth only Push generates. Every verified customer
+                sharpens the model — competitors can&apos;t buy this data. (2)
+                Creator Productivity Lock: DisclosureBot automates FTC
+                compliance on every post. Once a creator&apos;s workflow depends
+                on it, switching costs are real. Horizontal platforms have
+                neither.
+              </div>
+            </details>
+
+            {/* 7 */}
+            <details className="yc-faq-item">
+              <summary className="yc-faq-q">
+                What are the unit economics?
+              </summary>
+              <div className="yc-faq-a">
+                Per-customer price: $15–$85 (category-dependent). Platform take:
+                22–40%. Creator payout: 60–78% of take rate. At Operator tier
+                ($500/mo + per-customer), merchant LTV/CAC = 15.7x. Contribution
+                margin at Neighborhood scale: 62%. Month-12 SLR target: 25
+                active campaigns per ops FTE.
+              </div>
+            </details>
+
+            {/* 8 */}
+            <details className="yc-faq-item">
+              <summary className="yc-faq-q">
+                Why Williamsburg Coffee+ first?
+              </summary>
+              <div className="yc-faq-a">
+                It is the densest, highest-trust neighborhood for premium coffee
+                in Brooklyn. AOV $8–$20. Average merchant Instagram following:
+                4,200. Jiaming closed every pilot merchant in person — no cold
+                outreach. This is Template 0. Greenpoint, Bushwick, LES, Nolita,
+                and Astoria are the next five neighborhood units.
+              </div>
+            </details>
+
+            {/* 9 */}
+            <details className="yc-faq-item">
+              <summary className="yc-faq-q">What is the market size?</summary>
+              <div className="yc-faq-a">
+                NYC alone: 26,000 independent local businesses spending
+                $2.1B/year on customer acquisition. Push&apos;s serviceable
+                market in year one is dense neighborhoods × vertical (Coffee+,
+                Fitness, Beauty) = ~2,400 merchants at $500–$2,000/mo ARR +
+                per-customer fees. National Neighborhood Playbook expansion = 12
+                US cities × ~1,000 merchants each.
+              </div>
+            </details>
+
+            {/* 10 */}
+            <details className="yc-faq-item">
+              <summary className="yc-faq-q">What happens at SLR 25?</summary>
+              <div className="yc-faq-a">
+                At Software Leverage Ratio 25, one ops FTE manages 25
+                simultaneously active campaigns. Horizontal acquisition services
+                cap at 3–5 campaigns per FTE — that&apos;s the services-company
+                ceiling. SLR 25 is the delta between a services business and a
+                software business. Month-12 target is SLR 25. Month-24
+                trajectory puts Push at SLR 28.
+              </div>
+            </details>
+
+            {/* 11 */}
+            <details className="yc-faq-item">
+              <summary className="yc-faq-q">What is the ask?</summary>
+              <div className="yc-faq-a">
+                $1.5M seed. 18-month runway. Milestones: 5 neighborhood Playbook
+                deployments, SLR ≥ 12 by Month 6, SLR ≥ 25 by Month 12. Pre-seed
+                use: 60% product + ConversionOracle™ training, 25% neighborhood
+                ops, 15% legal + compliance (DisclosureBot).
+              </div>
+            </details>
+          </div>
+        </div>
+      </section>
+
+      {/* ── §9 CTA / Apply ───────────────────────────────── */}
+      <section className="yc-section yc-apply-cta" id="apply">
+        <div className="container">
+          <div className="yc-section-tag reveal">
+            <span className="yc-section-num">09</span>
+            <span className="yc-section-line" />
+            <span className="yc-section-label">Apply</span>
+          </div>
+
+          <p className="yc-apply-eyebrow reveal">Let&apos;s build it.</p>
+          <h2 className="yc-section-h reveal" id="yc-apply-h">
+            Ready to talk?
+          </h2>
+          <p className="yc-apply-sub reveal">
+            Direct line to the founder. Share a time or download the one-pager
+            first.
+          </p>
+
+          <div className="yc-apply-cta-btns reveal">
+            <a
+              className="yc-apply-cta-btn"
+              href="https://calendly.com/placeholder"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Schedule 30 min
+            </a>
+            <a
+              className="yc-apply-cta-btn yc-apply-cta-btn--outline"
+              href="/api/yc/one-pager"
+            >
+              Download one-pager (PDF)
+            </a>
+          </div>
+
+          <p className="yc-apply-note reveal">
+            NDA available on request · deck shared post-call ·
+            wangjiamingaas@gmail.com
+          </p>
+
+          <div className="yc-calendly-placeholder reveal">
+            Calendly embed — loads at runtime
           </div>
         </div>
       </section>

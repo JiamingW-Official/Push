@@ -102,7 +102,7 @@ const RISKS: Risk[] = [
     probability: "Low",
     impact: "Critical",
     mitigation:
-      "Monitor the FTC NPRM docket weekly. Pre-built contingency pricing: per-campaign flat fee plus outcome-correlated bonus, structured to satisfy current FTC guidance on influencer compensation. Merchant MSAs include a 30-day unilateral pricing-migration clause so the switch is clean if forced.",
+      "Monitor the FTC NPRM docket weekly. Pre-built contingency pricing: per-campaign flat fee plus outcome-correlated bonus, structured to satisfy current FTC guidance on creator compensation. Merchant MSAs include a 30-day unilateral pricing-migration clause so the switch is clean if forced.",
     trigger:
       "FTC NPRM published that materially restricts per-customer creator compensation.",
   },

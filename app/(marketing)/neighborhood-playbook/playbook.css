@@ -1076,3 +1076,26 @@
   color: var(--dark, #003049);
   letter-spacing: 0.02em;
 }
+
+/* ── Wave 3 polish ─────────────────────────────────────────── */
+[class*="playbook"],
+[class*="neighborhood"],
+[class*="card"],
+[class*="step"] {
+  transition: border-color 200ms ease, background 200ms ease, transform 200ms cubic-bezier(0.22,1,0.36,1);
+}
+[class*="playbook"]:hover,
+[class*="neighborhood"]:hover,
+[class*="card"]:hover {
+  border-color: rgba(0,48,73,0.25);
+  background: var(--surface-elevated,#fff);
+  transform: translateY(-2px);
+}
+.reveal-stagger > .reveal:nth-child(1) { transition-delay: 0ms; }
+.reveal-stagger > .reveal:nth-child(2) { transition-delay: 70ms; }
+.reveal-stagger > .reveal:nth-child(3) { transition-delay: 140ms; }
+.reveal-stagger > .reveal:nth-child(4) { transition-delay: 210ms; }
+@media (prefers-reduced-motion: reduce) {
+  [class*="playbook"]:hover,[class*="card"]:hover { transform:none; }
+  .reveal-stagger > .reveal { transition-delay:0ms !important; }
+}

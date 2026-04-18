@@ -2135,3 +2135,92 @@
   margin-top: 2px;
   text-align: right;
 }
+
+/* ============================================================
+   WAVE 3 — Merchant dashboard: transitions + hover
+   ============================================================ */
+
+/* ── Metric cards: lift on hover ─────────────────────────── */
+[class*="metric"],
+[class*="stat-card"],
+[class*="kpi-card"],
+[class*="card"] {
+  transition:
+    border-color 200ms ease,
+    background 200ms ease,
+    box-shadow 200ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 200ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+[class*="metric"]:hover,
+[class*="stat-card"]:hover,
+[class*="kpi-card"]:hover {
+  border-color: rgba(0, 48, 73, 0.25);
+  transform: translateY(-2px);
+  box-shadow:
+    0 4px 16px rgba(0, 48, 73, 0.08),
+    0 1px 3px rgba(0, 48, 73, 0.05);
+}
+
+/* ── Table rows: hover highlight ─────────────────────────── */
+[class*="table"] tr,
+[class*="row"]:not([class*="campaigns"]):not([class*="verif"]) {
+  transition: background 140ms ease;
+}
+[class*="table"] tr:hover,
+[class*="row"]:not([class*="campaigns"]):not([class*="verif"]):hover {
+  background: rgba(0, 48, 73, 0.03);
+}
+
+/* ── Status badges: subtle pulse on active ───────────────── */
+@keyframes status-pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.65; }
+}
+[class*="status--active"],
+[class*="status--live"],
+[class*="badge--active"] {
+  animation: status-pulse 2s ease-in-out infinite;
+}
+
+/* ── Dashboard entrance ──────────────────────────────────── */
+@keyframes dash-col-in {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+[class*="dash-col"]:nth-child(1) { animation: dash-col-in 380ms cubic-bezier(0.22, 1, 0.36, 1) 0ms both; }
+[class*="dash-col"]:nth-child(2) { animation: dash-col-in 380ms cubic-bezier(0.22, 1, 0.36, 1) 80ms both; }
+[class*="dash-col"]:nth-child(3) { animation: dash-col-in 380ms cubic-bezier(0.22, 1, 0.36, 1) 160ms both; }
+
+/* ── Notification bell hover ─────────────────────────────── */
+[class*="bell"],
+[class*="notif"] {
+  transition: transform 200ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+[class*="bell"]:hover,
+[class*="notif"]:hover {
+  transform: rotate(15deg);
+}
+
+/* ── Reduced motion ───────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  [class*="metric"]:hover,
+  [class*="stat-card"]:hover,
+  [class*="kpi-card"]:hover {
+    transform: none;
+    box-shadow: none;
+  }
+  [class*="status--active"],
+  [class*="status--live"],
+  [class*="badge--active"] {
+    animation: none;
+  }
+  [class*="dash-col"] {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+  [class*="bell"]:hover,
+  [class*="notif"]:hover {
+    transform: none;
+  }
+}

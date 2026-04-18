@@ -194,6 +194,75 @@ const VERIFICATIONS: Verification[] = [
   },
 ];
 
+/* ── Suggested campaigns (seed tier, Williamsburg ZIP cluster) ── */
+
+type SuggestedCampaign = {
+  id: string;
+  merchant: string;
+  neighborhood: string;
+  title: string;
+  payout: string;
+  perCustomer: number;
+  spotsLeft: number;
+};
+
+const SUGGESTED_CAMPAIGNS: SuggestedCampaign[] = [
+  {
+    id: "s-001",
+    merchant: "Devoción Williamsburg",
+    neighborhood: "Williamsburg · 11211",
+    title: "Single-origin espresso — 15 verified walk-ins",
+    payout: "$20 × 15",
+    perCustomer: 20,
+    spotsLeft: 3,
+  },
+  {
+    id: "s-002",
+    merchant: "Fortunato No. 4",
+    neighborhood: "Williamsburg · 11211",
+    title: "Weekend pastry + coffee post",
+    payout: "$15 × 20",
+    perCustomer: 15,
+    spotsLeft: 5,
+  },
+  {
+    id: "s-003",
+    merchant: "Blue Bottle Coffee",
+    neighborhood: "Williamsburg · 11249",
+    title: "Cold brew season — morning post",
+    payout: "$18 × 12",
+    perCustomer: 18,
+    spotsLeft: 4,
+  },
+];
+
+/* ── Creator milestones ── */
+
+type CreatorMilestone = {
+  id: string;
+  label: string;
+  bonus: number;
+  target: number;
+  current: number;
+};
+
+const CREATOR_MILESTONES: CreatorMilestone[] = [
+  {
+    id: "m-01",
+    label: "First 20 verified customers",
+    bonus: 50,
+    target: 20,
+    current: 14,
+  },
+  {
+    id: "m-02",
+    label: "Reach Explorer tier (score 40+)",
+    bonus: 100,
+    target: 40,
+    current: 28,
+  },
+];
+
 /* ── Tier Identity helpers (per Design.md v4.1) ── */
 
 const TIER_TO_MATERIAL: Record<TierKey, string> = {
@@ -321,6 +390,8 @@ function EmptyState() {
         </Link>
       </section>
 
+      <SuggestedCampaigns />
+
       <footer className="empty-foot">
         <Link className="empty-foot__skip" href="/creator/dashboard?seeded=1">
           Skip to seeded cockpit (preview)
@@ -396,6 +467,8 @@ function SeededCockpit() {
               nextTierGap={nextTierGap}
             />
           </section>
+
+          <MilestoneWidget />
 
           {/* Active campaigns */}
           <section className="section" aria-labelledby="active-h">
@@ -684,5 +757,81 @@ function FirstCampaignBanner({ onDismiss }: { onDismiss: () => void }) {
         </button>
       </div>
     </aside>
+  );
+}
+
+/* ── Suggested campaigns (first-login) ── */
+
+function SuggestedCampaigns() {
+  return (
+    <section className="suggested-section" aria-labelledby="suggested-h">
+      <div className="section-head">
+        <div>
+          <h2 id="suggested-h" className="section-title">
+            Suggested for you
+          </h2>
+          <p className="suggested-sub">
+            Williamsburg Coffee+ · Seed tier · 3 open briefs
+          </p>
+        </div>
+        <Link href="/creator/explore" className="section-link">
+          See all →
+        </Link>
+      </div>
+      <div className="campaigns-row">
+        {SUGGESTED_CAMPAIGNS.map((c) => (
+          <article key={c.id} className="campaign-card">
+            <header className="campaign-card__head">
+              <span className="status status--applied">Open</span>
+              <span className="campaign-card__deadline">
+                {c.spotsLeft} spots left
+              </span>
+            </header>
+            <div className="campaign-card__body">
+              <p className="campaign-card__merchant">{c.merchant}</p>
+              <h3 className="campaign-card__title">{c.title}</h3>
+              <p className="campaign-card__meta">
+                {c.neighborhood} · ${c.perCustomer}/customer
+              </p>
+            </div>
+            <footer className="campaign-card__foot">
+              <span className="campaign-card__payout">{c.payout}</span>
+              <Link href="/creator/explore" className="campaign-card__cta">
+                Apply →
+              </Link>
+            </footer>
+          </article>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+/* ── Milestone widget ── */
+
+function MilestoneWidget() {
+  const next = CREATOR_MILESTONES.find((m) => m.current < m.target);
+  if (!next) return null;
+  const pct = Math.max(4, Math.min(100, (next.current / next.target) * 100));
+  return (
+    <section className="milestone-widget" aria-label="Next milestone">
+      <div className="milestone-head">
+        <span className="milestone-eyebrow">Next milestone</span>
+        <span className="milestone-bonus">+${next.bonus} bonus</span>
+      </div>
+      <p className="milestone-label">{next.label}</p>
+      <div
+        className="milestone-track"
+        aria-label={`${next.current} of ${next.target} complete`}
+      >
+        <div className="milestone-fill" style={{ width: `${pct}%` }} />
+      </div>
+      <div className="milestone-meta">
+        <span>
+          {next.current} / {next.target} verified
+        </span>
+        <span>{next.target - next.current} to go</span>
+      </div>
+    </section>
   );
 }

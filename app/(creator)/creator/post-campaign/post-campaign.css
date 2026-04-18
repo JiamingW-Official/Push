@@ -962,6 +962,30 @@
   color: rgba(0, 48, 73, 0.5);
 }
 
+/* ── Premium micro-interactions ───────────────────────────── */
+
+@keyframes post-section-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.pc-section:nth-child(1) { animation: post-section-in 260ms ease  80ms both; }
+.pc-section:nth-child(2) { animation: post-section-in 260ms ease 160ms both; }
+.pc-section:nth-child(3) { animation: post-section-in 260ms ease 240ms both; }
+.pc-section:nth-child(4) { animation: post-section-in 260ms ease 320ms both; }
+.pc-section:nth-child(5) { animation: post-section-in 260ms ease 400ms both; }
+
+@keyframes earning-pop {
+  0%   { transform: scale(1); }
+  50%  { transform: scale(1.06); }
+  100% { transform: scale(1); }
+}
+
+.pc-payout-amount,
+.pc-hero-payout-amount {
+  animation: earning-pop 400ms cubic-bezier(0.34, 1.56, 0.64, 1) 600ms both;
+}
+
 /* ── Reduced motion ──────────────────────────────────────── */
 
 @media (prefers-reduced-motion: reduce) {
@@ -989,7 +1013,9 @@
   .pc-hero-payout,
   .pc-section,
   .pc-celebration-confetti::before,
-  .pc-celebration-confetti::after {
+  .pc-celebration-confetti::after,
+  .pc-payout-amount,
+  .pc-hero-payout-amount {
     animation: none;
   }
 }

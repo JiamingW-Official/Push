@@ -831,3 +831,69 @@
     display: none;
   }
 }
+
+/* ── Polish: payment-row hover background ─────────────────── */
+
+.payment-row {
+  transition: background 130ms ease;
+}
+
+.payment-row:hover {
+  background: rgba(201, 169, 110, 0.05);
+}
+
+/* ── Polish: payment-row-in keyframe ─────────────────────── */
+
+@keyframes payment-row-in {
+  from { opacity: 0; transform: translateX(-6px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+.payment-row {
+  animation: payment-row-in 200ms ease both;
+}
+
+.payment-row:nth-child(1)  { animation-delay: 0ms; }
+.payment-row:nth-child(2)  { animation-delay: 25ms; }
+.payment-row:nth-child(3)  { animation-delay: 50ms; }
+.payment-row:nth-child(4)  { animation-delay: 75ms; }
+.payment-row:nth-child(5)  { animation-delay: 100ms; }
+.payment-row:nth-child(6)  { animation-delay: 125ms; }
+.payment-row:nth-child(7)  { animation-delay: 150ms; }
+.payment-row:nth-child(8)  { animation-delay: 175ms; }
+.payment-row:nth-child(9)  { animation-delay: 200ms; }
+.payment-row:nth-child(10) { animation-delay: 225ms; }
+
+/* ── Polish: payment-amount colors ───────────────────────── */
+
+.payment-amount--positive {
+  color: #2d6a4f;
+}
+
+/* ── Polish: pending shimmer ──────────────────────────────── */
+
+@keyframes pending-shimmer {
+  0%   { opacity: 0.6; }
+  50%  { opacity: 1; }
+  100% { opacity: 0.6; }
+}
+
+.payment-amount--pending {
+  animation: pending-shimmer 1.8s ease infinite;
+}
+
+/* ── Polish: prefers-reduced-motion guard ─────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  .payment-row {
+    animation: none !important;
+    transition: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  .payment-amount--pending {
+    animation: none !important;
+    opacity: 1 !important;
+  }
+}

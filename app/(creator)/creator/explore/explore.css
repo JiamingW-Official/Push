@@ -1123,3 +1123,78 @@
     transform: none !important;
   }
 }
+
+/* ============================================================
+   WAVE 3 — Explore: card hover + filter transitions
+   ============================================================ */
+
+/* ── Campaign cards: hover lift ─────────────────────────── */
+[class*="campaign-card"],
+[class*="brief-card"],
+[class*="opportunity"] {
+  transition:
+    border-color 200ms ease,
+    background 200ms ease,
+    box-shadow 200ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 200ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+[class*="campaign-card"]:hover,
+[class*="brief-card"]:hover,
+[class*="opportunity"]:hover {
+  border-color: rgba(0, 48, 73, 0.28);
+  background: var(--surface-elevated, #ffffff);
+  transform: translateY(-2px);
+  box-shadow:
+    0 6px 20px rgba(0, 48, 73, 0.08),
+    0 2px 4px rgba(0, 48, 73, 0.04);
+}
+
+/* ── Filter chips: smooth select transition ──────────────── */
+[class*="filter"],
+[class*="chip"],
+[class*="tag"] {
+  transition:
+    background 180ms ease,
+    color 180ms ease,
+    border-color 180ms ease;
+}
+
+/* ── Grid entrance: stagger ──────────────────────────────── */
+@keyframes card-enter {
+  from { opacity: 0; transform: translateY(20px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+[class*="campaigns-grid"] > *,
+[class*="explore-grid"] > *,
+[class*="briefs-grid"] > * {
+  animation: card-enter 360ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+[class*="campaigns-grid"] > *:nth-child(1),
+[class*="explore-grid"] > *:nth-child(1) { animation-delay: 0ms; }
+[class*="campaigns-grid"] > *:nth-child(2),
+[class*="explore-grid"] > *:nth-child(2) { animation-delay: 50ms; }
+[class*="campaigns-grid"] > *:nth-child(3),
+[class*="explore-grid"] > *:nth-child(3) { animation-delay: 100ms; }
+[class*="campaigns-grid"] > *:nth-child(4),
+[class*="explore-grid"] > *:nth-child(4) { animation-delay: 150ms; }
+[class*="campaigns-grid"] > *:nth-child(5),
+[class*="explore-grid"] > *:nth-child(5) { animation-delay: 200ms; }
+[class*="campaigns-grid"] > *:nth-child(6),
+[class*="explore-grid"] > *:nth-child(6) { animation-delay: 250ms; }
+
+/* ── Reduced motion ───────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  [class*="campaign-card"]:hover,
+  [class*="brief-card"]:hover,
+  [class*="opportunity"]:hover {
+    transform: none;
+    box-shadow: none;
+  }
+  [class*="campaigns-grid"] > *,
+  [class*="explore-grid"] > *,
+  [class*="briefs-grid"] > * {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+}

@@ -1100,7 +1100,7 @@ export default function SecurityPage() {
               <div className="sec-compliance-name">FTC</div>
               <div className="sec-compliance-desc">
                 FTC Act Section 5 (unfair or deceptive practices). Push&apos;s
-                influencer disclosure requirements are enforced in creator
+                creator disclosure requirements are enforced in creator
                 agreements and campaign briefs in accordance with FTC
                 Endorsement Guidelines.
               </div>

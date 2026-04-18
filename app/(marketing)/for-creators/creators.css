@@ -1151,3 +1151,108 @@
     margin-top: var(--space-6);
   }
 }
+
+/* ── Reveal stagger (auto-cascade for grid children) ──────── */
+.reveal-stagger > .reveal:nth-child(1) { transition-delay: 0ms; }
+.reveal-stagger > .reveal:nth-child(2) { transition-delay: 70ms; }
+.reveal-stagger > .reveal:nth-child(3) { transition-delay: 140ms; }
+.reveal-stagger > .reveal:nth-child(4) { transition-delay: 210ms; }
+.reveal-stagger > .reveal:nth-child(5) { transition-delay: 280ms; }
+.reveal-stagger > .reveal:nth-child(6) { transition-delay: 350ms; }
+
+/* ── Card hover: left-border accent + inner lift ──────────── */
+[class*="feature"],
+[class*="benefit"],
+[class*="card"],
+[class*="tier"],
+[class*="plan"],
+[class*="step"] {
+  transition:
+    border-color 200ms ease,
+    background 200ms ease,
+    box-shadow 200ms ease;
+}
+
+[class*="feature"]:hover,
+[class*="benefit"]:hover,
+[class*="card"]:hover,
+[class*="tier"]:hover,
+[class*="plan"]:hover,
+[class*="step"]:hover {
+  border-color: rgba(0, 48, 73, 0.28);
+  background: var(--surface-elevated, #ffffff);
+}
+
+/* ── Stat / number: scale entrance on reveal ─────────────── */
+@keyframes stat-enter {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+[class*="stat"],
+[class*="metric"],
+[class*="number"],
+[class*="kpi"] {
+  will-change: opacity, transform;
+}
+
+[class*="stat"].visible,
+[class*="metric"].visible,
+[class*="number"].visible,
+[class*="kpi"].visible {
+  animation: stat-enter 500ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* ── Section separator: expand on reveal ─────────────────── */
+@keyframes rule-expand {
+  from { width: 0; opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.rule.visible,
+[class*="rule"].visible,
+hr.visible {
+  animation: rule-expand 600ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* ── CTA links: arrow slide on hover ─────────────────────── */
+[class*="cta"]:not(section),
+[class*="cta-link"],
+[class*="apply"],
+[class*="pilot"] a {
+  position: relative;
+}
+
+[class*="cta-arrow"],
+[class*="cta"] [class*="arrow"] {
+  display: inline-block;
+  transition: transform 220ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+[class*="cta"]:hover [class*="cta-arrow"],
+[class*="cta"]:hover [class*="arrow"] {
+  transform: translateX(5px);
+}
+
+/* ── Reduced motion ────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .reveal-stagger > .reveal {
+    transition-delay: 0ms !important;
+  }
+  [class*="stat"].visible,
+  [class*="metric"].visible,
+  [class*="number"].visible,
+  [class*="kpi"].visible,
+  .rule.visible,
+  [class*="rule"].visible {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+}
