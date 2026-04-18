@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import dynamic from "next/dynamic";
+import NeighborhoodDetailMap from "@/components/neighborhoods/NeighborhoodDetailMapLoader";
 import {
   NEIGHBORHOODS,
   getNeighborhoodBySlug,
@@ -134,37 +134,6 @@ function NeighborhoodJsonLd({
     />
   );
 }
-
-/* ── Map (client-only, Leaflet) ────────────────────────────── */
-
-const NeighborhoodDetailMap = dynamic(
-  () => import("@/components/neighborhoods/NeighborhoodDetailMap"),
-  {
-    ssr: false,
-    loading: () => (
-      <div
-        style={{
-          width: "100%",
-          height: "100%",
-          background: "var(--surface-bright)",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
-        <span
-          style={{
-            fontFamily: "var(--font-body)",
-            fontSize: 13,
-            color: "var(--graphite)",
-          }}
-        >
-          Loading map…
-        </span>
-      </div>
-    ),
-  },
-);
 
 /* ── Tier label display ────────────────────────────────────── */
 

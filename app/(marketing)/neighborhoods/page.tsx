@@ -1,48 +1,13 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import dynamic from "next/dynamic";
+import NeighborhoodsMap from "@/components/neighborhoods/NeighborhoodsMapLoader";
+import NeighborhoodsClient from "@/components/neighborhoods/NeighborhoodsClientLoader";
 import {
   NEIGHBORHOODS,
   ALL_BOROUGHS,
   type Borough,
 } from "@/lib/neighborhoods/mock-hoods";
 import "./neighborhoods.css";
-
-// Map is client-only (Leaflet)
-const NeighborhoodsMap = dynamic(
-  () => import("@/components/neighborhoods/NeighborhoodsMap"),
-  {
-    ssr: false,
-    loading: () => (
-      <div
-        style={{
-          width: "100%",
-          height: "100%",
-          background: "var(--surface-bright)",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
-        <span
-          style={{
-            fontFamily: "var(--font-body)",
-            fontSize: 13,
-            color: "var(--graphite)",
-          }}
-        >
-          Loading map…
-        </span>
-      </div>
-    ),
-  },
-);
-
-// Client wrapper for borough tab interactivity
-const NeighborhoodsClient = dynamic(
-  () => import("@/components/neighborhoods/NeighborhoodsClient"),
-  { ssr: false },
-);
 
 /* ── Metadata ──────────────────────────────────────────────── */
 
