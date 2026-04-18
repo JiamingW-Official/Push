@@ -3,17 +3,13 @@
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import type { Dispute } from "@/lib/disputes/types";
-import { getDisputeById, MOCK_DISPUTES } from "@/lib/disputes/mock-disputes";
+import { getDisputeById } from "@/lib/disputes/mock-disputes";
 import { DisputeDetail } from "@/components/disputes/DisputeDetail";
 import "@/components/disputes/disputes.css";
 
 function checkDemoMode(): boolean {
   if (typeof document === "undefined") return false;
   return document.cookie.includes("push-demo-role=merchant");
-}
-
-export function generateStaticParams() {
-  return MOCK_DISPUTES.map((d) => ({ id: d.id }));
 }
 
 export default function MerchantDisputeDetailPage() {
