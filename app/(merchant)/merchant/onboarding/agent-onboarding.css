@@ -1,0 +1,486 @@
+/* ============================================================
+   v5.0 Goal-first merchant onboarding
+   Styles on top of ob2-* primitives in components/onboarding.css
+   ============================================================ */
+
+.goal-step-intro {
+  font-family: var(--font-body);
+  font-size: 13px;
+  line-height: 1.7;
+  color: rgba(0, 48, 73, 0.65);
+  margin: 0 0 var(--space-4);
+  padding: 12px 14px;
+  background: rgba(102, 155, 188, 0.08);
+  border-left: 2px solid var(--tertiary);
+}
+
+/* ─── Step 2: agent pending state ────────────────────────── */
+.agent-pending {
+  padding: var(--space-4);
+  background: rgba(0, 48, 73, 0.02);
+  border: 1px solid var(--line);
+  border-left: 2px solid var(--tertiary);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.agent-pending-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--dark);
+}
+
+.agent-pending-dot {
+  width: 8px;
+  height: 8px;
+  background: var(--tertiary);
+  animation: agent-pulse 1.6s ease-in-out infinite;
+}
+
+@keyframes agent-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.3;
+  }
+}
+
+.agent-pending-label {
+  color: var(--dark);
+  font-weight: 700;
+}
+
+.agent-pending-bar {
+  position: relative;
+  height: 3px;
+  background: rgba(102, 155, 188, 0.15);
+  overflow: hidden;
+}
+
+.agent-pending-bar-fill {
+  position: absolute;
+  top: 0;
+  left: -30%;
+  height: 100%;
+  width: 30%;
+  background: var(--tertiary);
+  animation: agent-slide 1.8s cubic-bezier(0.32, 0.72, 0, 1) infinite;
+}
+
+@keyframes agent-slide {
+  0% {
+    left: -30%;
+  }
+  100% {
+    left: 100%;
+  }
+}
+
+.agent-pending-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.agent-pending-list li {
+  font-family: var(--font-body);
+  font-size: 12px;
+  line-height: 1.5;
+  color: rgba(0, 48, 73, 0.55);
+  padding-left: 16px;
+  position: relative;
+  opacity: 0;
+  animation: agent-line-in 0.5s ease forwards;
+}
+
+.agent-pending-list li::before {
+  content: "→";
+  position: absolute;
+  left: 0;
+  color: var(--tertiary);
+}
+
+.agent-pending-list li:nth-child(1) {
+  animation-delay: 0.1s;
+}
+.agent-pending-list li:nth-child(2) {
+  animation-delay: 0.45s;
+}
+.agent-pending-list li:nth-child(3) {
+  animation-delay: 0.8s;
+}
+.agent-pending-list li:nth-child(4) {
+  animation-delay: 1.15s;
+}
+
+@keyframes agent-line-in {
+  from {
+    opacity: 0;
+    transform: translateX(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* ─── Step 2: agent error ──────────────────────────────── */
+.agent-error {
+  padding: var(--space-3) var(--space-4);
+  background: rgba(193, 18, 31, 0.06);
+  border: 1px solid rgba(193, 18, 31, 0.25);
+  border-left-width: 2px;
+  border-left-color: var(--primary);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.agent-error p {
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: var(--primary);
+  margin: 0;
+}
+
+/* ─── Step 2: agent preview result ──────────────────────── */
+.agent-preview {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.agent-preview-summary {
+  background: var(--dark);
+  color: #fff;
+  padding: var(--space-4);
+  border-left: 3px solid var(--champagne);
+}
+
+.agent-preview-summary-head {
+  margin-bottom: var(--space-3);
+}
+
+.agent-preview-summary-eyebrow {
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(245, 242, 236, 0.5);
+}
+
+.agent-preview-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+}
+
+.agent-preview-summary-stat {
+  padding: 0 var(--space-3);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  border-right: 1px solid rgba(245, 242, 236, 0.1);
+}
+
+.agent-preview-summary-stat:first-child {
+  padding-left: 0;
+}
+
+.agent-preview-summary-stat:last-child {
+  border-right: none;
+}
+
+.agent-preview-summary-num {
+  font-family: var(--font-display);
+  font-size: 32px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: var(--champagne);
+  line-height: 1;
+}
+
+.agent-preview-summary-label {
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(245, 242, 236, 0.55);
+  line-height: 1.4;
+}
+
+.agent-preview-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.agent-preview-h {
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(0, 48, 73, 0.5);
+  margin: 0;
+}
+
+.agent-preview-matches {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.agent-preview-match {
+  padding: 12px 14px;
+  background: var(--surface-elevated, #fff);
+  border: 1px solid var(--line);
+}
+
+.agent-preview-match-head {
+  display: grid;
+  grid-template-columns: 10px 1fr auto auto auto;
+  align-items: center;
+  gap: 10px;
+}
+
+.agent-preview-match-dot {
+  width: 8px;
+  height: 8px;
+}
+
+.agent-preview-match-handle {
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--dark);
+}
+
+.agent-preview-match-tier {
+  font-family: var(--font-body);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 3px 8px;
+}
+
+.agent-preview-match-score {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--tertiary);
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+}
+
+.agent-preview-match-score-l {
+  font-family: var(--font-body);
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(0, 48, 73, 0.4);
+}
+
+.agent-preview-match-est {
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--champagne);
+  background: rgba(201, 169, 110, 0.1);
+  padding: 3px 8px;
+  white-space: nowrap;
+}
+
+.agent-preview-match-reason {
+  font-family: var(--font-body);
+  font-size: 12px;
+  line-height: 1.55;
+  color: rgba(0, 48, 73, 0.6);
+  margin: 8px 0 0;
+  padding-left: 20px;
+  border-left: 1px solid var(--line);
+}
+
+/* ─── Step 2: brief card ───────────────────────────────── */
+.agent-preview-brief {
+  padding: var(--space-3) var(--space-4);
+  background: var(--surface-bright, #fafaf8);
+  border: 1px solid var(--line);
+}
+
+.agent-preview-brief dl {
+  display: grid;
+  grid-template-columns: 110px 1fr;
+  row-gap: 10px;
+  column-gap: var(--space-3);
+  margin: 0;
+}
+
+.agent-preview-brief dt {
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(0, 48, 73, 0.45);
+  padding-top: 2px;
+}
+
+.agent-preview-brief dd {
+  font-family: var(--font-body);
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--dark);
+  margin: 0;
+}
+
+/* ─── Step 3: approve ──────────────────────────────────── */
+.approve-step {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.approve-callout {
+  padding: var(--space-4);
+  background: rgba(201, 169, 110, 0.08);
+  border-left: 3px solid var(--champagne);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.approve-callout-eyebrow {
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--champagne);
+}
+
+.approve-callout-h {
+  font-family: var(--font-display);
+  font-size: 26px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  color: var(--dark);
+  margin: 0;
+}
+
+.approve-callout-h-light {
+  font-weight: 200;
+  color: rgba(0, 48, 73, 0.4);
+}
+
+.approve-callout-body {
+  font-family: var(--font-body);
+  font-size: 13px;
+  line-height: 1.65;
+  color: rgba(0, 48, 73, 0.65);
+  margin: 0;
+}
+
+.approve-summary {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  border-top: 1px solid var(--line);
+}
+
+.approve-summary li {
+  display: grid;
+  grid-template-columns: 180px 1fr;
+  gap: var(--space-3);
+  padding: 12px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.approve-summary-k {
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(0, 48, 73, 0.5);
+  padding-top: 2px;
+}
+
+.approve-summary-v {
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: var(--dark);
+  line-height: 1.5;
+}
+
+/* ─── Responsive ───────────────────────────────────────── */
+@media (max-width: 720px) {
+  .agent-preview-summary-grid {
+    grid-template-columns: repeat(2, 1fr);
+    row-gap: var(--space-3);
+  }
+  .agent-preview-summary-stat {
+    padding: 0 var(--space-2);
+    border-right: none;
+  }
+  .agent-preview-summary-stat:nth-child(odd) {
+    border-right: 1px solid rgba(245, 242, 236, 0.1);
+  }
+  .agent-preview-match-head {
+    grid-template-columns: 10px 1fr auto;
+    row-gap: 4px;
+  }
+  .agent-preview-match-tier,
+  .agent-preview-match-score,
+  .agent-preview-match-est {
+    grid-column: 2 / -1;
+    justify-self: start;
+  }
+  .agent-preview-brief dl {
+    grid-template-columns: 1fr;
+    row-gap: 6px;
+  }
+  .agent-preview-brief dd {
+    margin-bottom: 8px;
+  }
+  .approve-summary li {
+    grid-template-columns: 1fr;
+    gap: 4px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .agent-pending-dot,
+  .agent-pending-bar-fill,
+  .agent-pending-list li {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+}
