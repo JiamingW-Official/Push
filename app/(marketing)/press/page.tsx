@@ -1,85 +1,116 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import ScrollRevealInit from "@/components/layout/ScrollRevealInit";
 import "./press.css";
 
 /* ─── Data ───────────────────────────────────────────────────── */
 
+// v5.1 — Vertical AI for Local Commerce. Numbers are active pilot metrics.
 const COMPANY_FACTS: { number: string; label: string; accent?: boolean }[] = [
-  { number: "2025", label: "Founded in New York" },
-  { number: "NYC", label: "Headquarters" },
-  { number: "340+", label: "Merchants verified", accent: true },
-  { number: "$2M+", label: "Attributed GMV", accent: true },
+  { number: "2025", label: "Founded · NYC" },
+  { number: "1", label: "Beachhead Vertical" },
+  { number: "25", label: "SLR Target · Month 12", accent: true },
+  { number: "$0", label: "Pilot Tier Entry Price", accent: true },
 ];
 
+// v5.1 — one-line fact rows for the Quick Facts table.
+const QUICK_FACTS: { label: string; value: string }[] = [
+  { label: "Founded", value: "2025" },
+  { label: "HQ", value: "Williamsburg, Brooklyn" },
+  {
+    label: "Product",
+    value: "Customer Acquisition Engine (Vertical AI for Local Commerce)",
+  },
+  { label: "Beachhead", value: "Williamsburg Coffee+ (AOV $8-20)" },
+  {
+    label: "North-star",
+    value: "Software Leverage Ratio (SLR) \u2265 25 by Month 12",
+  },
+  {
+    label: "Pricing",
+    value:
+      "Pilot ($0) / Operator ($500/mo + $15-85/customer) / Neighborhood ($8-12K launch)",
+  },
+  {
+    label: "Compliance",
+    value: "DisclosureBot (platform-level FTC pre-screen) + $1M E&O",
+  },
+  { label: "Investors", value: "TBD (Pre-Seed raising)" },
+];
+
+// v5.1 — Newsroom items rewritten on vertical-AI / ConversionOracle framing.
 const PRESS_RELEASES = [
   {
     date: "Apr 2026",
     tag: "Product",
-    title: "Push Launches Real-Time QR Attribution Engine for NYC Restaurants",
+    title:
+      "Push Launches ConversionOracle\u2122 \u2014 Walk-in Attribution Trained on Receipt-Level Ground Truth",
     excerpt:
-      "New verification layer gives merchants granular foot-traffic data tied to creator campaigns, closing the loop between social content and in-store revenue.",
+      "Vertical AI model verifies each in-store customer against QR scan, Claude Vision OCR of the receipt, and geo-match. Meta and Google cannot see who walked through the door; Push can.",
     pdf: "#",
   },
   {
     date: "Mar 2026",
-    tag: "Growth",
-    title: "Push Expands to 340+ Verified Merchants Across Five NYC Boroughs",
+    tag: "Compliance",
+    title:
+      "Push Ships DisclosureBot \u2014 Platform-Level FTC Pre-Screen for Creator Content",
     excerpt:
-      "From Astoria to Bay Ridge, Push now powers creator marketing for independent restaurants, boutiques, and wellness studios citywide.",
+      "Every caption is pre-flighted for #ad and material-connection disclosure before it ships. The architecture makes non-disclosure impossible, not discouraged.",
     pdf: "#",
   },
   {
     date: "Feb 2026",
-    tag: "Milestone",
+    tag: "Pricing",
     title:
-      "$2M in Attributed GMV: Push Creators Drive Measurable Revenue for Local Businesses",
+      "Push Introduces Two-Segment Creator Economics \u2014 Vertical-Priced, Not Per-Post",
     excerpt:
-      "Platform-wide attribution data confirms creator-led campaigns outperform traditional local advertising by a 4:1 ROI ratio on verified visits.",
+      "Williamsburg Coffee+ is priced at $25 per AI-verified customer. Beauty is $85. The price matches the merchant's per-customer margin, doubled \u2014 not the creator's follower count.",
     pdf: "#",
   },
   {
     date: "Jan 2026",
-    tag: "Platform",
+    tag: "Beachhead",
     title:
-      "Push Introduces 6-Tier Creator Ranking System: From Seed to Partner",
+      "Williamsburg Coffee+ \u2014 Push Declares Template 0 for Vertical AI for Local Commerce",
     excerpt:
-      "New tier framework rewards creators based on verified attribution performance, replacing follower count as the primary ranking metric.",
+      "Sixty-day pilot focuses on a single vertical in a single neighborhood. The Neighborhood Playbook is the unit Push will replicate, not the TAM.",
     pdf: "#",
   },
   {
     date: "Dec 2025",
-    tag: "Community",
+    tag: "Metric",
     title:
-      "Push Hosts First NYC Creator Summit — 200 Creators, 50 Merchants, One Evening",
+      "Push Commits to Software Leverage Ratio (SLR) as Its North-Star Metric",
     excerpt:
-      "The inaugural Push Summit connected top-performing creators with local merchants for live campaign pitching and community building.",
+      "Active campaigns per operations person. Influencer shops run three to five. The Month-12 target for Push is twenty-five \u2014 the operating ratio that separates software from services.",
     pdf: "#",
   },
   {
     date: "Nov 2025",
-    tag: "Partnership",
+    tag: "Platform",
     title:
-      "Push Partners With NYC Small Business Services to Support Independent Retail",
+      "Push Builds the Customer Acquisition Engine Around Three Verdict Layers",
     excerpt:
-      "Collaboration brings Push's performance-based marketing model to underserved neighborhood commercial corridors across all five boroughs.",
+      "QR scan, Claude Vision receipt OCR, and geo-match triangulate every payout. Three signals must align or the campaign does not settle.",
     pdf: "#",
   },
   {
     date: "Sep 2025",
     tag: "Product",
-    title: "Push Creator App Now Available on iOS and Android",
+    title:
+      "Push Creator App Ships on iOS and Android \u2014 Campaigns Tied to Verified Walk-ins",
     excerpt:
-      "Mobile-first creator dashboard lets influencers discover campaigns, submit content, and track attributed payouts in real time.",
+      "Creators discover vertical-priced briefs, submit content through DisclosureBot pre-flight, and watch per-customer payouts settle as verdicts resolve.",
     pdf: "#",
   },
   {
     date: "Jul 2025",
-    tag: "Launch",
+    tag: "Founding",
     title:
-      "Push Emerges from Stealth with $1.2M Pre-Seed Round to Reinvent Local Marketing",
+      "Push Emerges From Stealth \u2014 Vertical AI for Local Commerce, Built in Brooklyn",
     excerpt:
-      "Backed by NYC-based operators and angels, Push launches its pay-per-verified-visit platform targeting the $14B local advertising market.",
+      "The Customer Acquisition Engine is purpose-built for independent operators in the five boroughs. The first vertical is coffee; the first neighborhood is Williamsburg.",
     pdf: "#",
   },
 ];
@@ -87,48 +118,48 @@ const PRESS_RELEASES = [
 const BRAND_ASSETS = [
   {
     id: "wordmark-light",
-    name: "Wordmark — Light Background",
-    formats: "SVG · PNG · 1×  2×  3×",
+    name: "Wordmark \u2014 Light Background",
+    formats: "SVG \u00B7 PNG \u00B7 1\u00D7  2\u00D7  3\u00D7",
     bg: "light",
     previewType: "wordmark",
     dark: false,
   },
   {
     id: "wordmark-dark",
-    name: "Wordmark — Dark Background",
-    formats: "SVG · PNG · 1×  2×  3×",
+    name: "Wordmark \u2014 Dark Background",
+    formats: "SVG \u00B7 PNG \u00B7 1\u00D7  2\u00D7  3\u00D7",
     bg: "dark",
     previewType: "wordmark",
     dark: true,
   },
   {
     id: "icon-light",
-    name: "App Icon — Light Background",
-    formats: "SVG · PNG · 1×  2×  3×",
+    name: "App Icon \u2014 Light Background",
+    formats: "SVG \u00B7 PNG \u00B7 1\u00D7  2\u00D7  3\u00D7",
     bg: "light",
     previewType: "icon",
     dark: false,
   },
   {
     id: "icon-dark",
-    name: "App Icon — Dark Background",
-    formats: "SVG · PNG · 1×  2×  3×",
+    name: "App Icon \u2014 Dark Background",
+    formats: "SVG \u00B7 PNG \u00B7 1\u00D7  2\u00D7  3\u00D7",
     bg: "dark",
     previewType: "icon",
     dark: true,
   },
   {
     id: "mono-black",
-    name: "Monochrome — Black",
-    formats: "SVG · PNG · 1×  2×  3×",
+    name: "Monochrome \u2014 Black",
+    formats: "SVG \u00B7 PNG \u00B7 1\u00D7  2\u00D7  3\u00D7",
     bg: "light",
     previewType: "mono-black",
     dark: false,
   },
   {
     id: "mono-white",
-    name: "Monochrome — White",
-    formats: "SVG · PNG · 1×  2×  3×",
+    name: "Monochrome \u2014 White",
+    formats: "SVG \u00B7 PNG \u00B7 1\u00D7  2\u00D7  3\u00D7",
     bg: "dark",
     previewType: "mono-white",
     dark: true,
@@ -144,66 +175,84 @@ const BRAND_COLORS = [
   { name: "Champagne Gold", hex: "#c9a96e", usage: "Premium Identity" },
 ];
 
+// v5.1 — founder bios reframed around Vertical AI for Local Commerce.
 const FOUNDERS = [
   {
     initials: "JW",
     name: "Jiaming Wang",
     title: "Co-Founder & CEO",
-    bio: "Jiaming built Push after watching his family's Queens restaurant struggle to compete with chains that had unlimited marketing budgets. A Columbia engineering graduate, he spent two years running growth at a Series B fintech before founding Push in 2025. His conviction: local businesses deserve the same performance-based tools as Fortune 500 brands. Under his leadership, Push has onboarded 340+ verified merchants and built the first QR-based foot-traffic attribution system purpose-built for independent businesses in New York City.",
+    bio: "Jiaming founded Push in 2025 after watching his family\u2019s Queens restaurant lose customers to chains with unlimited ad budgets and no way to prove anything worked. A Columbia engineering graduate, he spent two years running growth at a Series B fintech before leaving to build a Customer Acquisition Engine for independent operators. Under his leadership, Push has locked onto a single beachhead \u2014 Williamsburg Coffee+ \u2014 and is building ConversionOracle\u2122 and DisclosureBot as the Vertical AI for Local Commerce layer that Meta and Google cannot replicate.",
   },
   {
     initials: "CF",
     name: "Chris Ferrante",
     title: "Co-Founder & CTO",
-    bio: "Chris leads product and engineering at Push, having previously built real-time data pipelines at a Bloomberg spin-out. His obsession is closing the attribution gap — proving that a creator's TikTok actually drove someone through the door last Tuesday at 7 pm. He architected Push's anti-fraud verification stack, which cross-validates QR scans against POS timing windows to eliminate bot and replay attacks. Chris holds a BS in Computer Science from NYU and is a founding member of the NYC Tech Founders Council.",
+    bio: "Chris leads product and engineering at Push, having previously built real-time data pipelines at a Bloomberg spin-out. He architected the three-verdict pipeline behind ConversionOracle\u2122 \u2014 QR scan, Claude Vision receipt OCR, and geo-match \u2014 along with the anti-fraud stack that cross-validates POS timing windows to eliminate bot and replay attacks. Chris holds a BS in Computer Science from NYU and is a founding member of the NYC Tech Founders Council.",
   },
 ];
 
 const PHOTO_PLACEHOLDERS = [
-  { label: "Team — Brooklyn HQ" },
-  { label: "NYC Merchant Partners" },
+  { label: "Team \u2014 Brooklyn HQ" },
+  { label: "Williamsburg Coffee+ Pilot" },
   { label: "Creator Summit 2025" },
-  { label: "Attribution Dashboard" },
-  { label: "Push App — iOS" },
-  { label: "Lower East Side Campaign" },
+  { label: "ConversionOracle\u2122 Dashboard" },
+  { label: "Push App \u2014 iOS" },
+  { label: "Neighborhood Playbook Rollout" },
 ];
 
+// v5.1 — founder-ready quote lines. Use these verbatim in press kits.
+const FOUNDER_QUOTES: { quote: string; context: string }[] = [
+  {
+    quote:
+      "Vertical AI for Local Commerce means the model is small, the vertical is coffee, and the truth is a receipt.",
+    context: "Positioning \u00B7 Push v5.1",
+  },
+  {
+    quote:
+      "Our north-star is Software Leverage Ratio, not GMV. Active campaigns per ops person. Influencer shops run three to five. Our Month-12 target is twenty-five.",
+    context: "North-star metric \u00B7 SLR",
+  },
+  {
+    quote:
+      "ConversionOracle is the only model trained on walk-in ground truth. Meta and Google cannot see who walked through the door.",
+    context: "Product moat \u00B7 ConversionOracle\u2122",
+  },
+  {
+    quote:
+      "We price per vertical, not per post. Coffee+ is $25 per AI-verified customer. Beauty is $85. The price matches the merchant\u2019s per-customer margin, doubled.",
+    context: "Two-Segment Creator Economics",
+  },
+  {
+    quote:
+      "DisclosureBot is platform-level FTC compliance. The architecture makes non-disclosure impossible, not discouraged.",
+    context: "Compliance \u00B7 DisclosureBot",
+  },
+  {
+    quote:
+      "Williamsburg is our Template 0, not our TAM. The Neighborhood Playbook is the unit we expand.",
+    context: "Beachhead \u00B7 Neighborhood Playbook",
+  },
+];
+
+// v5.1 — coverage reshaped toward "vertical AI" / "ConversionOracle" framing.
 const COVERAGE = [
   {
     quote:
-      "Push is rewriting local marketing — performance-based attribution that actually works for the bodega on the corner.",
+      "Push is building the vertical AI layer Meta and Google can\u2019t: receipt-level attribution that proves a creator post drove a Tuesday-night walk-in.",
     source: "TechCrunch",
     date: "Mar 2026",
   },
   {
     quote:
-      "The QR system is elegant. Merchants finally have proof that the Instagram post brought in the Tuesday dinner crowd.",
+      "ConversionOracle is elegant. Three signals \u2014 QR, receipt OCR, geo \u2014 must agree before the campaign settles. No ghost conversions.",
     source: "Fast Company",
     date: "Feb 2026",
   },
   {
     quote:
-      "Push may be the first startup to make creator economics work for businesses with five tables and a standing reservation list.",
+      "Push picked one vertical and one neighborhood on purpose. Williamsburg Coffee+ is Template 0 \u2014 the Neighborhood Playbook is what scales.",
     source: "New York Magazine",
     date: "Jan 2026",
-  },
-  {
-    quote:
-      "A product born from a real problem. Every restaurant owner we spoke to said they'd been waiting for something exactly like this.",
-    source: "Gothamist",
-    date: "Dec 2025",
-  },
-  {
-    quote:
-      "Pay only for verified visits. That three-word pitch is disrupting a $14 billion local advertising industry that hasn't innovated in a decade.",
-    source: "Axios New York",
-    date: "Nov 2025",
-  },
-  {
-    quote:
-      "Push's creator tier system is surprisingly smart — it rewards foot-traffic results, not follower counts. That changes the entire game.",
-    source: "The Information",
-    date: "Oct 2025",
   },
 ];
 
@@ -253,48 +302,62 @@ function LogoPreview({ type, dark }: { type: string; dark: boolean }) {
   return <span className="logo-mono-preview on-dark">Push.</span>;
 }
 
-/* ─── Scroll Reveal Hook ─────────────────────────────────────── */
-function useScrollReveal() {
-  useEffect(() => {
-    const els = document.querySelectorAll(".reveal");
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((e) => {
-          if (e.isIntersecting) {
-            e.target.classList.add("visible");
-            observer.unobserve(e.target);
-          }
-        });
-      },
-      { threshold: 0.12 },
-    );
-    els.forEach((el) => observer.observe(el));
-    return () => observer.disconnect();
-  }, []);
-}
-
 /* ─── Page Component ─────────────────────────────────────────── */
 export default function PressPage() {
-  useScrollReveal();
-
   return (
     <main>
+      <ScrollRevealInit />
+
       {/* ── 1. Hero ─────────────────────────────────────────── */}
       <section className="press-hero">
         <div className="press-hero-inner">
           <p className="press-hero-eyebrow">
-            Push — Media Kit &amp; Press Resources
+            Press &middot; Vertical AI for Local Commerce
           </p>
           <h1 className="press-hero-headline">Press.</h1>
           <p className="press-hero-sub">
-            Resources for journalists, creators, and partners covering the
-            future of local marketing in New York City.
+            Resources for journalists, investors, and partners covering Push
+            &mdash; the Customer Acquisition Engine built on Vertical AI for
+            Local Commerce, beginning with Williamsburg Coffee+.
           </p>
         </div>
       </section>
 
-      {/* ── 2. Company Facts ────────────────────────────────── */}
+      {/* ── 2. Company Overview ─────────────────────────────── */}
       <section className="press-section">
+        <div className="press-container">
+          <p className="press-section-label">Company Overview</p>
+          <h2 className="press-section-title">
+            Vertical AI for Local Commerce.
+          </h2>
+          <div className="press-overview-body reveal">
+            <p>
+              Push is building a Customer Acquisition Engine for independent
+              operators &mdash; starting with coffee shops in Williamsburg,
+              Brooklyn. The company is a Vertical AI for Local Commerce company:
+              narrow model, narrow vertical, receipt-level ground truth.
+              ConversionOracle&trade; verifies each in-store customer through a
+              three-signal pipeline (QR scan, Claude Vision receipt OCR,
+              geo-match) that Meta and Google cannot replicate, because neither
+              can see who walked through the door.
+            </p>
+            <p>
+              Push does not sell follower reach. It settles per verified
+              customer, priced to the vertical&rsquo;s per-customer margin under
+              Two-Segment Creator Economics. DisclosureBot enforces FTC
+              disclosure at the platform layer before any caption ships. The
+              north-star metric is Software Leverage Ratio (SLR) &mdash; active
+              campaigns per operations person &mdash; with a Month-12 target of
+              25, the operating ratio that separates software from services.
+              Williamsburg Coffee+ is Template 0; the Neighborhood Playbook is
+              the unit Push expands.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* ── 3. Company Facts at a Glance ────────────────────── */}
+      <section className="press-section press-section-alt">
         <div className="press-container">
           <p className="press-section-label">At a Glance</p>
           <div className="facts-grid reveal reveal-stagger">
@@ -310,11 +373,27 @@ export default function PressPage() {
         </div>
       </section>
 
-      {/* ── 3. Press Releases ───────────────────────────────── */}
+      {/* ── 4. Quick Facts Table ────────────────────────────── */}
+      <section className="press-section">
+        <div className="press-container">
+          <p className="press-section-label">Quick Facts</p>
+          <h2 className="press-section-title">One-line reference.</h2>
+          <dl className="press-quick-facts reveal">
+            {QUICK_FACTS.map((row) => (
+              <div className="press-quick-fact-row" key={row.label}>
+                <dt className="press-quick-fact-label">{row.label}</dt>
+                <dd className="press-quick-fact-value">{row.value}</dd>
+              </div>
+            ))}
+          </dl>
+        </div>
+      </section>
+
+      {/* ── 5. Newsroom Timeline ────────────────────────────── */}
       <section className="press-section press-section-alt">
         <div className="press-container">
           <p className="press-section-label">News &amp; Announcements</p>
-          <h2 className="press-section-title">Press Releases</h2>
+          <h2 className="press-section-title">Newsroom</h2>
           <div className="press-timeline">
             {PRESS_RELEASES.map((pr, i) => (
               <article
@@ -357,7 +436,7 @@ export default function PressPage() {
         </div>
       </section>
 
-      {/* ── 4. Brand Assets ─────────────────────────────────── */}
+      {/* ── 6. Brand Assets ─────────────────────────────────── */}
       <section className="press-section">
         <div className="press-container">
           <p className="press-section-label">Brand Assets</p>
@@ -431,7 +510,7 @@ export default function PressPage() {
         </div>
       </section>
 
-      {/* ── 5. Color Palette ────────────────────────────────── */}
+      {/* ── 7. Color Palette ────────────────────────────────── */}
       <section className="press-section press-section-alt">
         <div className="press-container">
           <p className="press-section-label">Brand Colors</p>
@@ -455,7 +534,7 @@ export default function PressPage() {
         </div>
       </section>
 
-      {/* ── 6. Typography ───────────────────────────────────── */}
+      {/* ── 8. Typography ───────────────────────────────────── */}
       <section className="press-section">
         <div className="press-container">
           <p className="press-section-label">Brand Typography</p>
@@ -464,17 +543,25 @@ export default function PressPage() {
             {/* Darky Panel */}
             <div className="type-panel">
               <div className="type-panel-label">
-                Darky — Display &amp; Headline
+                Darky &mdash; Display &amp; Headline
               </div>
               <div className="type-darky-display">Push.</div>
               <div className="type-darky-weights">
                 {[
-                  { w: 900, name: "Black", sample: "Local. Proven." },
-                  { w: 800, name: "ExtraBold", sample: "NYC Verified." },
-                  { w: 700, name: "Bold", sample: "340+ Merchants" },
-                  { w: 600, name: "SemiBold", sample: "Press Resources" },
-                  { w: 300, name: "Light", sample: "Editorial partner tier" },
-                  { w: 200, name: "ExtraLight", sample: "$2,000,000" },
+                  { w: 900, name: "Black", sample: "Vertical AI. Verified." },
+                  {
+                    w: 800,
+                    name: "ExtraBold",
+                    sample: "Williamsburg Coffee+",
+                  },
+                  {
+                    w: 700,
+                    name: "Bold",
+                    sample: "ConversionOracle\u2122",
+                  },
+                  { w: 600, name: "SemiBold", sample: "Neighborhood Playbook" },
+                  { w: 300, name: "Light", sample: "Operator tier pricing" },
+                  { w: 200, name: "ExtraLight", sample: "SLR \u2265 25" },
                 ].map((row) => (
                   <div className="type-weight-row" key={row.w}>
                     <span
@@ -484,7 +571,7 @@ export default function PressPage() {
                       {row.sample}
                     </span>
                     <span className="type-weight-meta">
-                      {row.w} · {row.name}
+                      {row.w} &middot; {row.name}
                     </span>
                   </div>
                 ))}
@@ -494,19 +581,22 @@ export default function PressPage() {
             {/* CS Genio Mono Panel */}
             <div className="type-panel">
               <div className="type-panel-label">
-                CS Genio Mono — Body &amp; UI
+                CS Genio Mono &mdash; Body &amp; UI
               </div>
               <div className="type-mono-display">
-                Performance-based
+                Vertical AI for
                 <br />
-                local marketing.
+                Local Commerce.
               </div>
               <div className="type-mono-samples">
                 {[
-                  { sample: "Body — 16px / 1rem / 400", size: 16 },
-                  { sample: "SMALL LABEL — 14PX / 700", size: 14 },
-                  { sample: "Caption — 12px / 400", size: 12 },
-                  { sample: "EYEBROW — 11PX / 700 / 0.08EM", size: 11 },
+                  { sample: "Body \u2014 16px / 1rem / 400", size: 16 },
+                  { sample: "SMALL LABEL \u2014 14PX / 700", size: 14 },
+                  { sample: "Caption \u2014 12px / 400", size: 12 },
+                  {
+                    sample: "EYEBROW \u2014 11PX / 700 / 0.08EM",
+                    size: 11,
+                  },
                 ].map((row) => (
                   <div className="type-mono-row" key={row.size}>
                     <span
@@ -516,7 +606,7 @@ export default function PressPage() {
                       {row.sample}
                     </span>
                     <span className="type-mono-meta">
-                      CS Genio Mono · {row.size}px
+                      CS Genio Mono &middot; {row.size}px
                     </span>
                   </div>
                 ))}
@@ -526,7 +616,7 @@ export default function PressPage() {
         </div>
       </section>
 
-      {/* ── 7. Photography ──────────────────────────────────── */}
+      {/* ── 9. Photography ──────────────────────────────────── */}
       <section className="press-section press-section-alt">
         <div className="press-container">
           <p className="press-section-label">Photography</p>
@@ -575,7 +665,7 @@ export default function PressPage() {
         </div>
       </section>
 
-      {/* ── 8. Founder Bios ─────────────────────────────────── */}
+      {/* ── 10. Founder Bios ────────────────────────────────── */}
       <section className="press-section">
         <div className="press-container">
           <p className="press-section-label">Leadership</p>
@@ -599,22 +689,43 @@ export default function PressPage() {
         </div>
       </section>
 
-      {/* ── 9. Press Contact ────────────────────────────────── */}
+      {/* ── 11. Founder Quotes ──────────────────────────────── */}
+      <section className="press-section press-section-alt">
+        <div className="press-container">
+          <p className="press-section-label">Ready to Quote</p>
+          <h2 className="press-section-title">Founder on the record.</h2>
+          <div className="coverage-grid reveal reveal-stagger">
+            {FOUNDER_QUOTES.map((q, i) => (
+              <div className="coverage-item" key={i}>
+                <blockquote className="coverage-quote">{q.quote}</blockquote>
+                <div className="coverage-source">
+                  <span className="coverage-source-name">Jiaming Wang</span>
+                  <span className="coverage-source-dot" aria-hidden="true" />
+                  <span className="coverage-source-date">{q.context}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── 12. Press Contact ───────────────────────────────── */}
       <section className="press-contact-wrap">
         <div className="press-contact-inner">
-          <p className="press-contact-label">Media Inquiries</p>
+          <p className="press-contact-label">Media &amp; Investor Inquiries</p>
           <h2 className="press-contact-headline">Talk to us.</h2>
           <p className="press-contact-sub">
             For interview requests, embargoed briefings, and asset permissions,
-            reach out directly. We respond within one business day.
+            reach out directly. Founder available for investor and partner
+            conversation. We respond within one business day.
           </p>
-          <a href="mailto:press@push.nyc" className="press-contact-email">
-            press@push.nyc
+          <a href="mailto:press@pushnyc.co" className="press-contact-email">
+            press@pushnyc.co
           </a>
         </div>
       </section>
 
-      {/* ── 10. Coverage ────────────────────────────────────── */}
+      {/* ── 13. Coverage ────────────────────────────────────── */}
       <section className="press-section">
         <div className="press-container">
           <p className="press-section-label">In the News</p>

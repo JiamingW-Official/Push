@@ -1,5 +1,5 @@
 // Push — Merchant Integrations Mock Data
-// All integrations for the marketplace. Status is per-merchant in real DB.
+// All integrations for the Customer Acquisition Engine. Status is per-merchant in real DB.
 
 export type IntegrationCategory =
   | "pos"

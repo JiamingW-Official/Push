@@ -44,7 +44,7 @@ function MerchantDashboard() {
       <div className="dash-bar">
         <div className="dash-bar-left">
           <span className="dash-dot" />
-          <span className="dash-title">AI Verification Layer</span>
+          <span className="dash-title">ConversionOracle Pipeline</span>
         </div>
         <span className="dash-meta">Sey Coffee &middot; Williamsburg</span>
       </div>
@@ -113,23 +113,23 @@ const TIERS = [
   },
 ];
 
-/* ── FAQ ─────────────────────────────────────────────────── */
+/* ── FAQ (v5.1) ──────────────────────────────────────────── */
 const FAQS = [
   {
-    q: "How does the AI verify a customer?",
-    a: "Three-layer check: QR scan + Claude Vision receipt OCR + geo-match within 200m. All three must pass within 8 seconds or the scan goes to manual review. No verification, no charge.",
+    q: "What is Vertical AI for Local Commerce?",
+    a: "A Customer Acquisition Engine built for one vertical at a time. ConversionOracle\u2122 is the moat: Claude Vision + OCR + geo-fence verify every foot-traffic event in <8s. We start narrow (Williamsburg Coffee+, AOV $8\u201320) so the model learns one domain deeply before we expand.",
   },
   {
-    q: "What's the $0 Pilot?",
-    a: "First 10 customers free. No catch. If the AI can't deliver, you don't pay. After 10 verified customers, you move to $500/mo min + $40/customer.",
+    q: "How does Williamsburg Coffee+ pricing work?",
+    a: "Pilot: $0 for the first 10 Coffee+ merchants \u2014 10 free AI-verified customers, no catch. Operator: $500/mo minimum + $15\u201385 per verified customer (priced by vertical, not a flat rate) + Retention Add-on $8\u201324. Neighborhood: $8\u201312K launch + $20\u201335K MRR target for multi-location operators.",
   },
   {
-    q: "Why only coffee × Williamsburg right now?",
-    a: "Network density beats breadth. One category, one ZIP, 60 days of saturation. We expand after the beachhead proves the unit economics.",
+    q: "Why does the Software Leverage Ratio (SLR) matter?",
+    a: "SLR = revenue per human hour. Our north-star target is 25 \u2014 every dollar of MRR should take 1/25th the human labor a legacy acquisition shop would burn. ConversionOracle\u2122 handles verification, matching, and settlement so the human team only touches exceptions.",
   },
   {
     q: "Can I cancel?",
-    a: "Anytime. No contracts. Pilot merchants keep any verified customers already delivered.",
+    a: "Anytime. No contracts. Pilot merchants keep any verified customers already delivered. Operators pay only for the verified events already settled in the current cycle.",
   },
 ];
 
@@ -138,15 +138,15 @@ const jsonLd = {
   "@type": "Organization",
   name: "Push",
   description:
-    "AI-powered customer acquisition agency. We deliver verified new customers to local businesses through an AI-managed creator network.",
+    "Vertical AI for Local Commerce. A Customer Acquisition Engine that delivers AI-verified customers to local Coffee+ operators via three-layer verification (QR + Claude Vision + geo).",
   url: "https://push-six-flax.vercel.app",
-  serviceType: "Customer Acquisition Agency",
+  serviceType: "Customer Acquisition Engine",
   areaServed: { "@type": "City", name: "New York" },
   makesOffer: {
     "@type": "Offer",
-    name: "Customer Acquisition Pilot",
+    name: "Williamsburg Coffee+ Pilot",
     description:
-      "Free pilot for first 10 merchants — pay only for AI-verified customers",
+      "Free pilot for first 10 Coffee+ merchants \u2014 10 AI-verified customers, no charge",
     priceSpecification: {
       "@type": "PriceSpecification",
       priceCurrency: "USD",
@@ -176,18 +176,16 @@ export default function LandingPage() {
         <div className="container hero-inner">
           <div className="hero-label">
             <span className="rule" />
-            <span className="eyebrow">
-              AI-Powered Customer Acquisition Agency
-            </span>
+            <span className="eyebrow">Vertical AI for Local Commerce</span>
           </div>
 
           <h1 id="hero-h" className="hero-h">
             <span className="hero-l1">
-              <span className="hw-conn">Tell us how many</span>{" "}
-              <span className="hw-key">customers</span>
+              <span className="hw-conn">Vertical AI for</span>{" "}
+              <span className="hw-key">Local Commerce</span>
             </span>
             <span className="hero-l2">
-              <span className="hw-conn">you need.</span>{" "}
+              <span className="hw-conn">Tell us how many customers.</span>{" "}
               <em className="hw-accent">We deliver.</em>
             </span>
           </h1>
@@ -198,13 +196,15 @@ export default function LandingPage() {
                 Start $0 Pilot
               </Link>
               <Link href="#how-it-works" className="btn-outline-light">
-                See the AI in action
+                See ConversionOracle in action
               </Link>
             </div>
             <p className="hero-sub">
-              Our AI verifies every customer through QR scan, receipt OCR, and
-              geo-match. Our creator network delivers them. Pay only for who
-              walks through your door.
+              A Customer Acquisition Engine for local Coffee+. Three-layer
+              verification (QR scan + Claude Vision receipt OCR + geo-fence)
+              clears every customer in &lt;8s. Tiered pricing by vertical
+              &mdash; $0 Pilot, $500/mo min + $15&ndash;85 per verified
+              customer. Software Leverage Ratio (SLR) north-star: 25.
             </p>
           </div>
         </div>
@@ -215,19 +215,19 @@ export default function LandingPage() {
               <span className="h-stat-n">
                 <StatCounter value={0} prefix="$" duration={900} />
               </span>
-              <span className="h-stat-l">pilot for first 10</span>
+              <span className="h-stat-l">Pilot first 10</span>
             </div>
             <div className="h-stat reveal" style={{ transitionDelay: "100ms" }}>
               <span className="h-stat-n">
-                <StatCounter value={60} suffix="s" duration={1000} />
+                <StatCounter value={25} duration={1000} />
               </span>
-              <span className="h-stat-l">AI match time</span>
+              <span className="h-stat-l">SLR target</span>
             </div>
             <div className="h-stat reveal" style={{ transitionDelay: "200ms" }}>
               <span className="h-stat-n">
                 <StatCounter value={100} suffix="%" duration={1200} />
               </span>
-              <span className="h-stat-l">customer verified</span>
+              <span className="h-stat-l">AI verified</span>
             </div>
           </div>
         </div>
@@ -236,7 +236,7 @@ export default function LandingPage() {
       {/* ── PROOF ────────────────────────────────────────── */}
       <div className="proof">
         <div className="container proof-inner">
-          <span className="proof-label">Williamsburg coffee pilot cohort</span>
+          <span className="proof-label">Williamsburg Coffee+ pilot cohort</span>
           <div className="proof-names">
             {[
               "Sey Coffee",
@@ -261,7 +261,7 @@ export default function LandingPage() {
           </div>
 
           <h2 id="merch-h" className="d-head d-head--hero reveal">
-            Tell the agent
+            Tell the engine
             <br />
             <span className="d-ghost">
               how many customers
@@ -273,22 +273,26 @@ export default function LandingPage() {
           <div className="merch-grid">
             <div className="merch-copy reveal">
               <p className="s-body">
-                Input your goal — "20 new customers this month." The agent
-                matches creators, drafts briefs, predicts ROI in 60 seconds. Pay
-                only for AI-verified visits.
+                Input your goal &mdash; &ldquo;20 new customers this
+                month.&rdquo; The Customer Acquisition Engine matches operators,
+                drafts briefs, predicts ROI in 60 seconds.
+                ConversionOracle&trade; verifies every visit. Pay only for
+                verified customers.
               </p>
               <ul className="feat-list">
                 <li>
                   <span className="feat-dot" />
-                  Claude Vision + OCR + geo triple-check
+                  ConversionOracle&trade;: Claude Vision + OCR + geo
+                  triple-check
                 </li>
                 <li>
                   <span className="feat-dot" />
-                  60s agent match — no manual outreach
+                  60s engine match &mdash; no manual outreach
                 </li>
                 <li>
                   <span className="feat-dot" />
-                  $0 Pilot &mdash; $500/mo min + $40/customer
+                  $0 Pilot &mdash; then $500/mo min + $15&ndash;85 per verified
+                  customer
                 </li>
               </ul>
               <Link href="/merchant/pilot" className="btn-fill">
@@ -324,7 +328,7 @@ export default function LandingPage() {
           </h2>
 
           <p className="s-body s-body--w reveal">
-            Push agent schedules you. Verified customers pay you. Tier score is
+            The engine schedules you. Verified customers pay you. Tier score is
             your currency &mdash; not followers.
           </p>
 
@@ -347,7 +351,7 @@ export default function LandingPage() {
           <div className="tier-prog reveal">
             <span>Start free</span>
             <span className="tier-prog-a">&rarr;</span>
-            <span>Agent assigns campaigns</span>
+            <span>Engine assigns campaigns</span>
             <span className="tier-prog-a">&rarr;</span>
             <span className="tier-prog-hi">Partner tier: $200/customer</span>
           </div>
@@ -377,25 +381,25 @@ export default function LandingPage() {
           <h2 id="how-h" className="d-head d-head--hero reveal">
             Three steps.
             <br />
-            <span className="d-ghost">AI handles the middle.</span>
+            <span className="d-ghost">The engine handles the middle.</span>
           </h2>
 
           <div className="steps">
             {[
               {
                 n: "01",
-                t: "Tell the agent your goal",
-                b: 'Input: "20 new customers this month, $400 budget, coffee, Williamsburg." Takes 60 seconds.',
+                t: "Tell the engine your goal",
+                b: 'Input: "20 new customers this month, $400 budget, Coffee+, Williamsburg." Takes 60 seconds.',
               },
               {
                 n: "02",
-                t: "AI matches + runs",
-                b: "Claude matches top 5 creators, drafts briefs, predicts ROI. Creators visit, post, drive customers.",
+                t: "Engine matches + runs",
+                b: "Claude matches top 5 operators, drafts briefs, predicts ROI. Operators visit, post, drive customers.",
               },
               {
                 n: "03",
-                t: "Delivered customers — or free",
-                b: "Claude Vision + OCR + geo verify every scan in <8s. Pay only for customers the AI delivers.",
+                t: "ConversionOracle verifies or you don't pay",
+                b: "Claude Vision + OCR + geo clear every scan in <8s. Pay only for verified customers.",
               },
             ].map((s, i) => (
               <div
@@ -424,15 +428,15 @@ export default function LandingPage() {
                 <span>Pricing</span>
               </div>
               <h2 id="price-h" className="d-head">
-                Outcome-based pricing.
+                Tiered by vertical.
                 <br />
                 <span className="d-ghost">Not SaaS.</span>
               </h2>
             </div>
             <p className="price-note">
-              We are the agency, powered by AI.
+              Vertical AI for Local Commerce.
               <br />
-              No legacy agency markup.
+              Pay only for verified customers.
             </p>
           </div>
 
@@ -441,34 +445,49 @@ export default function LandingPage() {
               {
                 name: "Pilot",
                 int: "$0",
-                per: "for first 10 merchants",
-                desc: "First 10 customers free. No catch. If the AI can't deliver, you don't pay.",
+                per: "first 10 Coffee+ merchants",
+                desc: "First 10 AI-verified customers free. No catch. If ConversionOracle\u2122 can't deliver, you don't pay.",
                 feats: [
                   "Up to 10 verified customers free",
-                  "AI creator matching in 60s",
-                  "Claude Vision receipt verification",
-                  "QR + geo attribution",
+                  "60s engine operator matching",
+                  "ConversionOracle\u2122 verification",
+                  "QR + Vision OCR + geo attribution",
                   "Weekly performance review",
                 ],
                 cta: "Apply for pilot",
                 href: "/merchant/pilot",
               },
               {
-                name: "Performance",
+                name: "Operator",
                 int: "$500",
-                per: "/mo min + $40/customer",
-                desc: "You set the target. The agent delivers. Pay only for AI-verified visits.",
+                per: "/mo min + $15\u201385 per verified customer",
+                desc: "You set the target. The engine delivers. Priced by vertical \u2014 not one-size-fits-all. Retention Add-on $8\u201324.",
                 feats: [
-                  "Unlimited AI-matched campaigns",
-                  "Dedicated agent tuning",
+                  "Unlimited engine-matched campaigns",
+                  "Dedicated tuning",
                   "Two-Tier Hero + Sustained offers",
-                  "Creator tier 2–6 access",
+                  "Creator tier 2\u20136 access",
                   "Day-1 multi-modal verification",
                   "Dispute SLA: 24h",
                 ],
                 featured: true,
                 badge: "Outcome-Based",
-                cta: "Talk to agent",
+                cta: "Talk to the engine",
+                href: "/merchant/signup",
+              },
+              {
+                name: "Neighborhood",
+                int: "$8\u201312K",
+                per: "launch + $20\u201335K MRR target",
+                desc: "For multi-location operators rolling out a whole neighborhood. Density unlock, shared ConversionOracle\u2122 pipeline, priority routing.",
+                feats: [
+                  "Multi-location rollout package",
+                  "Shared verification pipeline",
+                  "Priority operator routing",
+                  "Custom SLR reporting",
+                  "Dedicated strategist",
+                ],
+                cta: "Request a plan",
                 href: "/merchant/signup",
               },
             ].map((p, i) => (
@@ -508,8 +527,8 @@ export default function LandingPage() {
         <div className="container">
           <blockquote className="pull-quote reveal">
             <p>
-              &ldquo;Push agent ran 60 seconds, matched 14 Williamsburg coffee
-              creators, drafted briefs. First week: 11 verified new
+              &ldquo;Push engine ran 60 seconds, matched 14 Williamsburg Coffee+
+              operators, drafted briefs. First week: 11 verified new
               customers.&rdquo;
             </p>
             <footer>
@@ -544,17 +563,18 @@ export default function LandingPage() {
         <div className="container cta-inner">
           <div className="cta-label">
             <span className="rule" />
-            <span>Williamsburg Coffee Pilot &mdash; First 10 Merchants</span>
+            <span>Williamsburg Coffee+ Pilot &mdash; First 10 Merchants</span>
             <span className="rule" />
           </div>
           <h2 className="cta-h">
             Ready to hand customer
             <br />
-            <span className="cta-h-thin">acquisition to an AI agency?</span>
+            <span className="cta-h-thin">acquisition to Vertical AI?</span>
           </h2>
           <p className="cta-body">
-            First 10 merchants get $0 Pilot. First 10 customers free. If the AI
-            can&apos;t deliver, you don&apos;t pay.
+            First 10 Coffee+ merchants get $0 Pilot &mdash; 10 AI-verified
+            customers free. If ConversionOracle&trade; can&apos;t deliver, you
+            don&apos;t pay.
           </p>
           <div className="cta-btns">
             <Link href="/merchant/pilot" className="btn-fill">

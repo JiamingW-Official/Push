@@ -1,5 +1,9 @@
 "use client";
 
+// Creator Dashboard — Push v5.1
+// Vertical AI for Local Commerce · Customer Acquisition Engine
+// Operator-facing view: campaign routing, AI verification status, tier progression.
+
 import { createClient } from "@/lib/supabase";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState, useCallback, useMemo, Suspense } from "react";
@@ -2149,7 +2153,7 @@ const DEMO_CAMPAIGNS: Campaign[] = [
   },
   {
     id: "camp-093",
-    title: "Flatiron Creative Agency Pop-Up",
+    title: "Flatiron Creative Studio Pop-Up",
     business_name: "Moxy NYC Chelsea",
     business_address: "105 W 28th St, New York, NY 10001",
     payout: 160,

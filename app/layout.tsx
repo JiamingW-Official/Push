@@ -9,12 +9,12 @@ export const metadata: Metadata = {
   title: {
     template: "%s | Push",
     default:
-      "Push — AI-Powered Customer Acquisition Agency | $0 Pilot for Local Businesses",
+      "Push — Vertical AI for Local Commerce | Customer Acquisition Engine for Local Coffee+",
   },
   description:
-    "AI-powered customer acquisition agency. Tell us how many customers you need — Claude matches creators, verifies every visit via QR + Vision OCR + geo. Pay only for who walks through your door. $0 Pilot for first 10 merchants.",
+    "Vertical AI for Local Commerce. A Customer Acquisition Engine for local Coffee+ operators — ConversionOracle™ (Claude Vision + OCR + geo) verifies every customer in <8s. $0 Pilot for first 10 Williamsburg Coffee+ merchants, then $500/mo min + $15–85 per verified customer. SLR north-star: 25.",
   keywords:
-    "AI customer acquisition, AI marketing agency, outcome-based pricing, local business marketing, AI creator matching, verified foot traffic, Williamsburg coffee",
+    "Vertical AI for Local Commerce, Customer Acquisition Engine, ConversionOracle, Software Leverage Ratio, SLR, local commerce AI, Williamsburg Coffee+, AI foot traffic verification, outcome-based pricing, Claude Vision receipt OCR",
   metadataBase: new URL("https://push-six-flax.vercel.app"),
   alternates: {
     canonical: "/",
@@ -30,9 +30,9 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title:
-      "Push — AI-Powered Customer Acquisition Agency | $0 Pilot for Local Businesses",
+      "Push — Vertical AI for Local Commerce | Customer Acquisition Engine for Local Coffee+",
     description:
-      "Tell us how many customers you need. Claude matches creators in 60s. Every customer AI-verified. Pay only for who walks through your door.",
+      "Tell us how many customers you need. ConversionOracle™ verifies every visit in <8s via Claude Vision + OCR + geo. $0 Pilot for first 10 Williamsburg Coffee+ merchants. SLR north-star: 25.",
     siteName: "Push",
     locale: "en_US",
     type: "website",
@@ -42,16 +42,16 @@ export const metadata: Metadata = {
         url: "/opengraph-image",
         width: 1200,
         height: 630,
-        alt: "Push — AI-Powered Customer Acquisition Agency",
+        alt: "Push — Vertical AI for Local Commerce",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
     title:
-      "Push — AI-Powered Customer Acquisition Agency | $0 Pilot for Local Businesses",
+      "Push — Vertical AI for Local Commerce | Customer Acquisition Engine for Local Coffee+",
     description:
-      "Tell us how many customers you need. Claude matches creators. AI verifies every visit. Pay only for delivered customers.",
+      "Customer Acquisition Engine for local Coffee+. ConversionOracle™ verifies every customer in <8s. Pay only for delivered customers.",
     creator: "@pushnyc",
     site: "@pushnyc",
     images: ["/opengraph-image"],

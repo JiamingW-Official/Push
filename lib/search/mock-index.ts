@@ -101,7 +101,7 @@ const PAGE_ITEMS: SearchItem[] = [
     type: "page",
     id: "page-pricing",
     title: "Pricing",
-    subtitle: "$19.99 / $69 / $199 — transparent plans",
+    subtitle: "$0 Pilot + $500/mo minimum — pay per verified customer",
     url: "/#pricing",
     score: 75,
     keywords: ["pricing", "plans", "cost", "subscription"],

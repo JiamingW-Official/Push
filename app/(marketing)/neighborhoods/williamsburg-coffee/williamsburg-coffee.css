@@ -295,6 +295,52 @@
   letter-spacing: 0.12em;
 }
 
+.wbc-cohort-status {
+  margin-top: auto;
+  padding-top: var(--space-2);
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--champagne);
+}
+
+/* ─── NEIGHBORHOOD PLAYBOOK CALLOUT ─────────────────────── */
+.wbc-playbook {
+  margin-top: var(--space-5);
+  padding: var(--space-4);
+  background: var(--surface-elevated, #fff);
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--champagne);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.wbc-playbook-tag {
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--champagne);
+}
+
+.wbc-playbook-body {
+  font-family: var(--font-body);
+  font-size: 13px;
+  line-height: 1.65;
+  color: var(--graphite, #4a5568);
+  margin: 0;
+  max-width: 720px;
+}
+
+.wbc-playbook-body strong {
+  color: var(--dark);
+  font-weight: 700;
+}
+
 /* ─── OPERATORS GRID ────────────────────────────────────── */
 .wbc-operators {
   display: grid;

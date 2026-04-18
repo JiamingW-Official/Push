@@ -6,22 +6,21 @@ import "../../landing.css";
 import "./williamsburg-coffee.css";
 
 export const metadata: Metadata = {
-  title:
-    "Williamsburg Coffee Pilot — Customer acquisition for local coffee shops | Push",
+  title: "Williamsburg Coffee+ Pilot — Vertical AI for Local Commerce | Push",
   description:
-    "Push is an AI-powered customer acquisition agency. Williamsburg coffee × 60-day beachhead — first 10 merchants get a $0 pilot. AI verifies every customer. Pay only for who walks in.",
+    "Push is Vertical AI for Local Commerce. Williamsburg Coffee+ × 60-day beachhead — first 10 merchants get $0 Pilot, first 10 AI-verified customers free. ConversionOracle predicts, Claude Vision verifies.",
   alternates: {
     canonical: "/neighborhoods/williamsburg-coffee",
   },
   openGraph: {
-    title: "Williamsburg Coffee × Push — $0 Pilot, first 10 merchants",
+    title: "Williamsburg Coffee+ × Push — $0 Pilot, 5 slots remain",
     description:
-      "AI matches local creators. Claude Vision verifies every receipt. Pay only for AI-verified customers.",
+      "Vertical AI for Local Commerce. ConversionOracle predicts. Claude Vision verifies every receipt. Pay only for AI-verified customers.",
     type: "article",
   },
 };
 
-/* ── Pilot merchant cohort ──────────────────────────────────── */
+/* ── Pilot merchant cohort — v5.1: 10 cap, 5 filled + 5 open ── */
 const COHORT_SHOPS = [
   {
     name: "Sey Coffee",
@@ -53,88 +52,86 @@ const COHORT_SHOPS = [
     block: "Wythe Hotel lobby",
     note: "All-day cafe + wholesale roasts",
   },
-  {
-    name: "Toby's Estate",
-    zip: "11211",
-    block: "N 6th & Bedford",
-    note: "Australian third-wave, dedicated brew bar",
-  },
 ];
 
-/* ── Local operator network ─────────────────────────────────── */
+/* ── Two-Segment Creator Economics: 3 T1-T3 cards + 1 T5 card ── */
 const OPERATORS = [
   {
     handle: "@maya.eats.nyc",
-    tier: "Steel",
+    tier: "T2 Steel",
     color: "#4a5568",
     txt: "#ffffff",
     score: 94,
-    focus: "Morning coffee routines, Bedford Ave coverage",
-    last90: "14 verified conversions",
+    focus: "Morning coffee + bakery pairings, Bedford Ave coverage",
+    last90: "14 verified conversions · $25/customer",
   },
   {
     handle: "@brooklyn_bites",
-    tier: "Gold",
+    tier: "T3 Gold",
     color: "#c9a96e",
     txt: "#003049",
     score: 91,
-    focus: "Third-wave espresso, pour-over geekery",
-    last90: "18 verified conversions",
+    focus: "Third-wave espresso + brunch menus, pour-over geekery",
+    last90: "18 verified conversions · $25/customer",
   },
   {
     handle: "@williamsburg.e",
-    tier: "Steel",
-    color: "#4a5568",
-    txt: "#ffffff",
-    score: 89,
-    focus: "Neighborhood anchor, 11211 locals",
-    last90: "10 verified conversions",
-  },
-  {
-    handle: "@coffee.crawl",
-    tier: "Bronze",
+    tier: "T1 Bronze",
     color: "#8c6239",
     txt: "#ffffff",
     score: 86,
-    focus: "Cold-brew saturation + walk-through reels",
-    last90: "8 verified conversions",
+    focus: "Neighborhood anchor, 11211 Coffee+ locals",
+    last90: "10 verified conversions · $25/customer",
+  },
+  {
+    handle: "@coffee.crawl.nyc",
+    tier: "T5 Closer",
+    color: "#780000",
+    txt: "#ffffff",
+    score: 97,
+    focus:
+      "Retainer-backed closer. $1,800/mo + $40/customer + 15% referral rev-share + 0.02% equity pool",
+    last90: "42 verified conversions · multi-merchant owner",
   },
 ];
 
-/* ── Pilot case studies ─────────────────────────────────────── */
+/* ── Pilot case studies — v5.1: $25/customer, Oracle predicted vs actual ── */
 const CASES = [
   {
     shop: "Sey Coffee",
-    campaign: "Williamsburg morning rush — week 2",
+    campaign: "Williamsburg Coffee+ morning rush — week 2",
     matched: 5,
+    predicted: 20,
     customers: 22,
-    cost: "$440",
+    cost: "$550",
     roi: "3.2×",
     window: "April 14 – April 20",
   },
   {
     shop: "Partners Coffee",
-    campaign: "Partners × Williamsburg ambassador",
+    campaign: "Partners × Williamsburg Coffee+ ambassador",
     matched: 4,
+    predicted: 16,
     customers: 18,
-    cost: "$360",
+    cost: "$450",
     roi: "2.9×",
     window: "April 10 – April 17",
   },
   {
     shop: "Variety Coffee",
-    campaign: "Cold-brew push — Williamsburg",
+    campaign: "Cold-brew + pastry push — Williamsburg Coffee+",
     matched: 3,
+    predicted: 13,
     customers: 14,
-    cost: "$280",
+    cost: "$350",
     roi: "3.1×",
     window: "April 12 – April 18",
   },
 ];
 
-/* ── Stats band ─────────────────────────────────────────────── */
+/* ── Stats band — v5.1 numbers ──────────────────────────── */
 const STATS = [
-  { n: "6", l: "Coffee shops in cohort" },
+  { n: "10", l: "Coffee+ pilot cap (5 filled)" },
   { n: "20", l: "Operators in network" },
   { n: "54", l: "AI-verified customers (wk 1)" },
   { n: "60", l: "Days to saturation" },
@@ -144,9 +141,9 @@ export default function WilliamsburgCoffeePage() {
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Service",
-    name: "Push — Williamsburg Coffee Customer Acquisition Pilot",
+    name: "Push — Williamsburg Coffee+ Pilot",
     description:
-      "AI-powered customer acquisition agency for Williamsburg coffee shops. $0 Pilot for the first 10 merchants.",
+      "Vertical AI for Local Commerce. Williamsburg Coffee+ 60-day beachhead pilot. ConversionOracle predicts customer flow, Claude Vision verifies receipts, and merchants pay only for AI-verified customers. First 10 AI-verified customers free per merchant.",
     areaServed: {
       "@type": "City",
       name: "Brooklyn",
@@ -162,9 +159,9 @@ export default function WilliamsburgCoffeePage() {
     },
     offers: {
       "@type": "Offer",
-      name: "$0 Pilot for first 10 Williamsburg coffee merchants",
+      name: "$0 Pilot for first 10 Williamsburg Coffee+ merchants",
       description:
-        "First 10 AI-verified customers free. If the AI can't deliver, you don't pay.",
+        "First 10 AI-verified customers free per merchant. Per-neighborhood Pilot cost capped at $4,200. If the AI can't deliver, you don't pay.",
       priceSpecification: {
         "@type": "PriceSpecification",
         priceCurrency: "USD",
@@ -187,14 +184,14 @@ export default function WilliamsburgCoffeePage() {
           <div className="wbc-hero-label">
             <span className="rule" />
             <span className="eyebrow wbc-hero-eyebrow">
-              Williamsburg × Coffee · Push Beachhead Q2 2026
+              Williamsburg Coffee+ · Vertical AI for Local Commerce · Q2 2026
             </span>
           </div>
 
           <h1 id="wbc-h" className="wbc-hero-h">
             <span className="wbc-hero-l1">
               <span className="wbc-hero-conn">Built for</span>{" "}
-              <span className="wbc-hero-key">coffee,</span>
+              <span className="wbc-hero-key">Coffee+,</span>
             </span>
             <span className="wbc-hero-l2">
               <span className="wbc-hero-conn">saturated in</span>{" "}
@@ -203,10 +200,12 @@ export default function WilliamsburgCoffeePage() {
           </h1>
 
           <p className="wbc-hero-sub">
-            Push is running a 60-day customer acquisition pilot across
-            Williamsburg coffee shops. AI matches local creators, Claude Vision
-            verifies every receipt, and you pay only for customers who walk
-            through your door. First 10 merchants get $0 Pilot.
+            Push is Vertical AI for Local Commerce. Coffee+ covers specialty
+            coffee shops with bakery and brunch items — AOV $8-20, ~200
+            merchants in our Williamsburg beachhead. ConversionOracle™ predicts
+            customer flow before you commit. Claude Vision verifies every
+            receipt. You pay only for customers who walk through your door.
+            First 10 AI-verified customers free per merchant.
           </p>
 
           <div className="wbc-hero-ctas">
@@ -246,14 +245,17 @@ export default function WilliamsburgCoffeePage() {
           </div>
 
           <h2 className="wbc-section-h reveal">
-            Six shops in the pilot.{" "}
-            <span className="wbc-section-h-light">Four slots open.</span>
+            Ten-shop Coffee+ cap.{" "}
+            <span className="wbc-section-h-light">
+              Five filled, five remain.
+            </span>
           </h2>
 
           <p className="wbc-section-sub reveal">
-            The first ten Williamsburg coffee merchants to apply run on a $0
-            pilot. First ten AI-verified customers are free. After that, you
-            move to $500/mo min + $40/customer.
+            First 5 Pre-Pilot LOI signed · 5 slots remain in next 14 days. First
+            10 AI-verified customers free per merchant. After the pilot, Coffee+
+            pricing is $500/mo min + $25/customer, with Retention Add-on $8 / $6
+            / $4. Per-neighborhood Pilot cost cap: $4,200.
           </p>
 
           <div className="wbc-cohort-grid">
@@ -269,20 +271,43 @@ export default function WilliamsburgCoffeePage() {
                 </div>
                 <p className="wbc-cohort-block">{s.block}</p>
                 <p className="wbc-cohort-note">{s.note}</p>
+                <span className="wbc-cohort-status">LOI signed</span>
               </div>
             ))}
 
-            <div className="wbc-cohort-card wbc-cohort-card--open reveal">
-              <span className="wbc-cohort-zip">Open</span>
-              <h3 className="wbc-cohort-name">+ 4 slots</h3>
-              <p className="wbc-cohort-block">Your shop here</p>
-              <p className="wbc-cohort-note">
-                First 10 merchants in the 11211 / 11206 / 11249 pilot zone.
-              </p>
-              <Link href="/merchant/pilot" className="wbc-cohort-apply">
-                Apply &rarr;
-              </Link>
-            </div>
+            {Array.from({ length: 5 }).map((_, i) => (
+              <div
+                key={`open-${i}`}
+                className="wbc-cohort-card wbc-cohort-card--open reveal"
+                style={{
+                  transitionDelay: `${(COHORT_SHOPS.length + i) * 60}ms`,
+                }}
+              >
+                <div className="wbc-cohort-head">
+                  <h3 className="wbc-cohort-name">Slot {i + 6}</h3>
+                  <span className="wbc-cohort-zip">Open</span>
+                </div>
+                <p className="wbc-cohort-block">Your Coffee+ shop here</p>
+                <p className="wbc-cohort-note">
+                  5 slots remain in next 14 days. 11211 / 11206 / 11249 pilot
+                  zone.
+                </p>
+                <Link href="/merchant/pilot" className="wbc-cohort-apply">
+                  Apply &rarr;
+                </Link>
+              </div>
+            ))}
+          </div>
+
+          {/* ── Neighborhood Playbook callout ─────────────── */}
+          <div className="wbc-playbook reveal">
+            <div className="wbc-playbook-tag">Neighborhood Playbook</div>
+            <p className="wbc-playbook-body">
+              Williamsburg Coffee+ is <strong>Template 0</strong>. Our expansion
+              is Neighborhood Playbook units — Greenpoint, Bushwick, Brooklyn
+              Heights, LES, Nolita, Astoria — at a target 5.1-month payback per
+              neighborhood.
+            </p>
           </div>
         </div>
       </section>
@@ -293,21 +318,25 @@ export default function WilliamsburgCoffeePage() {
           <div className="wbc-section-tag wbc-section-tag--w reveal">
             <span className="section-tag-num">02</span>
             <span className="section-tag-line" />
-            <span className="section-tag-label">Operator network</span>
+            <span className="section-tag-label">
+              Two-Segment Creator Economics
+            </span>
           </div>
 
           <h2 className="wbc-section-h wbc-section-h--w reveal">
             Twenty local operators.{" "}
             <span className="wbc-section-h-light wbc-section-h-light--w">
-              The agent schedules them.
+              T1–T3 volume + T5 Closer retainers.
             </span>
           </h2>
 
           <p className="wbc-section-sub wbc-section-sub--w reveal">
-            Our creator network in Williamsburg is AI-managed. You do not pick
-            creators. You tell the agent your goal; Claude routes the right
-            operators to your shop based on tier, category affinity, and
-            verified conversion history.
+            Push runs Two-Segment Creator Economics. T1–T3 operators earn
+            per-customer on verified conversions; T5 Closers sit on retainer
+            with equity. You do not pick creators — Claude routes them based on
+            tier, category affinity, and verified conversion history. Our{" "}
+            <strong>Software Leverage Ratio (SLR)</strong> expands as the agent
+            handles more dispatch per human hour.
           </p>
 
           <div className="wbc-operators">
@@ -371,12 +400,21 @@ export default function WilliamsburgCoffeePage() {
           <div className="wbc-section-tag reveal">
             <span className="section-tag-num">04</span>
             <span className="section-tag-line" />
-            <span className="section-tag-label">Case studies</span>
+            <span className="section-tag-label">
+              Case studies · ConversionOracle™
+            </span>
           </div>
 
           <h2 className="wbc-section-h reveal">
-            Weekly results from the pilot.
+            Predicted vs actual.{" "}
+            <span className="wbc-section-h-light">Weekly pilot results.</span>
           </h2>
+
+          <p className="wbc-section-sub reveal">
+            ConversionOracle prediction: ±25% accuracy at 500 events; target
+            ±15% at 5,000 events. Every Coffee+ campaign ships with a predicted
+            customer count — actuals below are from the live Williamsburg pilot.
+          </p>
 
           <div className="wbc-cases">
             {CASES.map((c, i) => (
@@ -396,11 +434,17 @@ export default function WilliamsburgCoffeePage() {
                     <dd>{c.matched}</dd>
                   </div>
                   <div>
+                    <dt>Predicted customers vs actual</dt>
+                    <dd>
+                      {c.predicted} / {c.customers}
+                    </dd>
+                  </div>
+                  <div>
                     <dt>AI-verified customers</dt>
                     <dd>{c.customers}</dd>
                   </div>
                   <div>
-                    <dt>Cost @ $40 / customer</dt>
+                    <dt>Cost @ $25 / customer</dt>
                     <dd>{c.cost}</dd>
                   </div>
                   <div>
@@ -420,17 +464,18 @@ export default function WilliamsburgCoffeePage() {
           <div className="wbc-cta-label">
             <span className="rule rule--w" />
             <span className="eyebrow">
-              Williamsburg Coffee × Push · Pilot applications open
+              Williamsburg Coffee+ Pilot · Applications open
             </span>
             <span className="rule rule--w" />
           </div>
           <h2 className="wbc-cta-h">
-            Four slots left in the <em className="wbc-cta-h-em">first ten.</em>
+            Williamsburg Coffee+ Pilot —{" "}
+            <em className="wbc-cta-h-em">5 slots remain.</em>
           </h2>
           <p className="wbc-cta-body">
             If the AI can&apos;t deliver, you don&apos;t pay. The pilot is free
-            &mdash; we absorb the acquisition cost for the first ten verified
-            customers.
+            — we absorb the acquisition cost for your first 10 AI-verified
+            customers. Per-neighborhood Pilot cost capped at $4,200.
           </p>
           <div className="wbc-cta-btns">
             <Link href="/merchant/pilot" className="btn-fill">

@@ -31,32 +31,32 @@ const TEAM = [
   },
 ];
 
-/* ── Timeline data (v5.0 — Williamsburg coffee 60-day) ────── */
+/* ── Timeline data (v5.1 — Vertical AI for Local Commerce) ── */
 const TIMELINE = [
   {
     period: "2025 Q4",
     title: "The idea",
-    body: "Marcus pitches an AI-powered customer acquisition agency after losing $30K on influencer campaigns with no measurable outcome. Creator networks are everywhere — accountable ones aren't.",
+    body: "Marcus pitches a vertical AI platform for local commerce after losing $30K on influencer campaigns with no measurable outcome. Creator networks are everywhere — accountable, data-compounding ones aren't.",
   },
   {
     period: "2026 Q1",
     title: "AI verification MVP",
-    body: "Claude Vision + OCR + geo verification ships. First QR-scan-to-verified-customer round trip under 8 seconds. Williamsburg coffee beachhead locked.",
+    body: "Claude Vision + OCR + geo verification ships. ConversionOracle begins training on day one — every verified scan feeds the model flywheel. First QR-scan-to-verified-customer round trip under 8 seconds.",
   },
   {
     period: "2026 Q2 · Week 1–4",
     title: "Beachhead signup",
-    body: "Agent signs 10 Williamsburg coffee shops for $0 Pilot and onboards 20 local creators. First AI-matched campaign goes live Week 2.",
+    body: "Agent signs 10 Williamsburg Coffee+ (AOV $8–20) merchants for $0 Pilot. Ten Pilot merchants cap. $4,200/neighborhood Pilot cost cap. First AI-matched campaign goes live Week 2.",
   },
   {
     period: "2026 Q2 · Week 5–8",
     title: "60-day saturation",
-    body: "20 AI-run campaigns across Williamsburg coffee. Agent match latency averages 47s. First merchant crosses 10 verified customers, flips to Performance tier.",
+    body: "20 AI-run campaigns, SLR crosses 8, first merchant reaches 10 verified customers and auto-flips to Operator tier. Every settled customer trains ConversionOracle further.",
   },
   {
     period: "2026 Q3",
     title: "Adjacent expansion",
-    body: "Beachhead proven. Agent expands to Greenpoint + Bushwick coffee. Additional categories gated on saturation data — network density over breadth.",
+    body: "Neighborhood Playbook productizes the Williamsburg proof. Agent expands to Greenpoint + Bushwick + Brooklyn Heights + LES + Nolita + Astoria. Network density over breadth — every new neighborhood deepens the playbook.",
   },
 ];
 
@@ -78,6 +78,10 @@ const VALUES = [
     word: "Fair",
     desc: "Creators earn on performance, not follower count. Merchants pay only for what they get. No middlemen, no markup.",
   },
+  {
+    word: "Compound",
+    desc: "Every verified customer trains ConversionOracle. Every neighborhood launch feeds the Neighborhood Playbook. The moat compounds.",
+  },
 ];
 
 /* ── Press data ────────────────────────────────────────────── */
@@ -85,13 +89,13 @@ const PRESS = [
   {
     outlet: "Hypepotamus NYC",
     quote:
-      "Push may be the first platform that makes local influencer marketing actually accountable.",
+      "Push is building vertical AI for local commerce — the first platform where every verified customer makes the system smarter.",
     date: "March 2026",
   },
   {
     outlet: "The Grocer Tech Report",
     quote:
-      "QR-verified foot traffic attribution is the missing link between creator content and real-world commerce.",
+      "ConversionOracle turns QR-verified foot traffic into a compounding data asset. That is the moat agencies never had.",
     date: "February 2026",
   },
   {
@@ -128,13 +132,13 @@ export default function AboutPage() {
           <p className="eyebrow about-eyebrow">ABOUT PUSH · NYC</p>
           <h1 id="about-hero-heading" className="about-hero-headline">
             <span className="about-hero-line about-hero-line--black">
-              We built Push
+              Vertical AI
             </span>
             <span className="about-hero-line about-hero-line--light">
-              because customer acquisition
+              for Local Commerce.
             </span>
             <span className="about-hero-line about-hero-line--red">
-              should be AI-operated.
+              Built in Williamsburg Coffee+.
             </span>
           </h1>
           <div className="about-hero-rule" aria-hidden="true" />
@@ -196,20 +200,27 @@ export default function AboutPage() {
                 pay for. That is attribution.
               </p>
               <p>
-                We built the platform so that a restaurant owner in Bushwick
-                pays only when a creator drives a customer through the door. We
-                built the tier system so that a creator with five hundred
-                followers earns on results, not reach, and has a clear path to
-                higher-paying campaigns as they build their track record. We
-                made it so that a campaign can go live in twenty-four hours and
-                every scan is logged, timestamped, and attributed to the exact
-                creator who drove it.
+                Then we realized the deeper opportunity. Every verified scan,
+                every settled customer, every creator-to-merchant match is
+                training data. So we rebuilt Push as Vertical AI for Local
+                Commerce — a system where ConversionOracle, our in-house model,
+                learns from every verified customer and routes the next campaign
+                smarter than the last. The moat is not software. The moat is the
+                compounding data asset underneath it.
+              </p>
+              <p>
+                Our north-star metric is the Software Leverage Ratio — how many
+                customers one operator can deliver per hour as ConversionOracle
+                improves. Agencies cap at one. We are targeting eight by month
+                three, and we do not stop. Williamsburg Coffee+ is our proving
+                ground: one beachhead, sixty days, measurable SLR compounding in
+                public.
               </p>
               <p>
                 We are NYC-first and intentionally so. Network density matters
-                in local marketing. We would rather be deeply useful in one city
-                than thinly spread across twenty. If Push works in New York, it
-                works everywhere.
+                in local commerce. We would rather be deeply useful in one
+                neighborhood, then one city, than thinly spread across twenty.
+                If Push works in Williamsburg Coffee+, it works everywhere.
               </p>
               <p className="about-letter-sign">
                 — Marcus Reyes, Co-founder &amp; CEO

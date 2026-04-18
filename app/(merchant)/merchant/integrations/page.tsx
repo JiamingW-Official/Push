@@ -259,11 +259,15 @@ export default function IntegrationsPage() {
         <section className="int-hero">
           <div className="int-hero__inner">
             <div>
-              <p className="int-hero__eyebrow">Marketplace</p>
+              <p className="int-hero__eyebrow">
+                Vertical AI for Local Commerce
+              </p>
               <h1 className="int-hero__title">Integrations.</h1>
               <p className="int-hero__subtitle">
-                Connect Push to the tools you already use. Sync data, automate
-                workflows, and close the loop on creator campaign ROI.
+                Connect Push to the tools you already use. ConversionOracle
+                powers the Customer Acquisition Engine — piloting with
+                Williamsburg Coffee+ — so you can sync data, automate workflows,
+                and close the loop on creator campaign ROI.
               </p>
             </div>
             <div className="int-hero__stat">

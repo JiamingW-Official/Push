@@ -32,25 +32,48 @@ export interface ChangelogEntry {
 export const changelogEntries: ChangelogEntry[] = [
   // ─── 2026 Q2 ──────────────────────────────────────────────────────────────
   {
+    id: "cl-027",
+    date: "2026-04-19",
+    version: "5.1.0",
+    versionTag: "minor",
+    area: "Platform",
+    title: "Push v5.1 — Vertical AI for Local Commerce (hardening).",
+    summary:
+      "Post-YC-mock-review hardening. Drops the A-word positioning, introduces ConversionOracle moat narrative, tiered per-customer pricing by vertical, Two-Segment creator economics, DisclosureBot FTC compliance, and Neighborhood Playbook expansion framework.",
+    body: "v5.1 is a strategic hardening pass after a YC partner mock review identified ten VC-diligence gaps in v5.0. The work is not new strategy — it is turning v5.0 narrative into diligence-ready numbers and framing. Core shifts: (1) rename positioning to 'Vertical AI for Local Commerce' — services-era wording is a VC warning label. (2) Kill uniform per-customer pricing; replace with vertical-matched ladder $15-85 + Retention Add-on $8-24. (3) Beachhead widens from pure coffee to Coffee+ (AOV $8-20) so unit economics work. (4) Moat story upgrades from 'Day-1 AI verification' to 'ConversionOracle walk-in ground truth + Creator Productivity Lock'. (5) Creator economy splits into Two-Segment: T1-T3 per-customer, T4-T6 retainer + performance + referral rev-share + equity pool. (6) North-star metric = Software Leverage Ratio, Month-12 target ≥25. (7) DisclosureBot makes FTC compliance architectural, not self-reported. (8) Neighborhood Playbook productizes expansion (per-neighborhood $8-12K launch → $20-35K MRR).",
+    bullets: [
+      "Vertical AI for Local Commerce = primary positioning (retires services-era framing)",
+      "ConversionOracle™ trained on AI-verified customer ground truth — Meta/Google cannot replicate",
+      "Per-customer pricing by vertical: pure coffee $15 / Coffee+ $25 / dessert $22 / fitness $60 / beauty $85 + Retention Add-on $8/$6/$4",
+      "Two-Segment Creator: T1-T3 per-customer; T4-T6 retainer $800-$3,500 + performance bonus + 15-20% referral rev-share + 0.02-0.2% equity pool",
+      "Software Leverage Ratio (SLR): Month-12 ≥25, Month-24 ≥50 — north-star, breaks the services-curse framing",
+      "DisclosureBot — platform-level FTC 16 CFR Part 255 compliance, $1M E&O insurance, quarterly external audit",
+      "Williamsburg Coffee+ (AOV $8-20) is Template 0, not TAM; Neighborhood Playbook = $8-12K launch → $20-35K MRR per unit",
+    ],
+    imagePlaceholder:
+      "Push v5.1 — Vertical AI for Local Commerce hardening visual",
+    author: { name: "Jiaming Wang", handle: "@jiamingw", role: "Founder" },
+    codedBy: "Push Engineering",
+  },
+  {
     id: "cl-026",
     date: "2026-04-18",
     version: "5.0.0",
     versionTag: "major",
     area: "Platform",
-    title: "Push v5.0 — From marketplace to AI agency.",
+    title: "Push v5.0 — Vertical AI for Local Commerce.",
     summary:
-      "Push is now an AI-powered customer acquisition agency with outcome-based pricing. Tell us how many customers you need; our AI matches the creator network, verifies every visit, and you pay only for who walks through your door.",
-    body: "v5.0 is the largest strategic reset in Push's history — and the one that aligns us with where commerce is going. We've retired the three-tier SaaS pricing ($19.99 / $69 / $199) in favor of two outcome-based plans: a $0 Pilot for the first 10 merchants in our Williamsburg coffee beachhead (first 10 AI-verified customers are free), and Performance at $500/mo minimum + $40 per verified customer. AI is no longer a feature — it's the product. Claude Sonnet 4.6 now drives creator matching in 60 seconds and verifies every scan through a three-layer check: QR + Vision OCR of the receipt + geo-match within 200 meters. Every legacy founding-cohort merchant stays on their original contract; the new pricing applies only to new signups.",
+      "Push is now Vertical AI for Local Commerce with outcome-based pricing. Tell us how many customers you need; our AI matches the creator network, verifies every visit, and you pay only for who walks through your door.",
+    body: "v5.0 is the largest strategic reset in Push's history — and the one that aligns us with where commerce is going. We've retired the three-tier SaaS pricing in favor of two outcome-based plans: a $0 Pilot for the first 10 merchants in our Williamsburg coffee beachhead (first 10 AI-verified customers are free), plus outcome-based billing with a monthly minimum and a per-verified-customer rate. AI is no longer a feature — it's the product. Claude Sonnet 4.6 now drives creator matching in 60 seconds and verifies every scan through a three-layer check: QR + Vision OCR of the receipt + geo-match within 200 meters. Every legacy founding-cohort merchant stays on their original contract; the new pricing applies only to new signups.",
     bullets: [
-      "Outcome-based pricing: $0 Pilot (first 10 customers free) + $500/mo min + $40/AI-verified customer",
+      "Outcome-based pricing: $0 Pilot (first 10 customers free) + monthly minimum + per-AI-verified-customer rate",
       "Goal-first onboarding — describe what you want, the agent matches creators and drafts the brief in 60 seconds",
       "Day-1 AI verification stack: QR scan + Claude Vision receipt OCR + geo-match (200m) with sub-8-second verdict latency",
       "Williamsburg coffee beachhead — one category, one ZIP, 60 days of saturation before adjacent expansion",
       "Admin AI review queue at /admin/ai-verifications for manual-review verdicts with one-click approve / reject",
       "All Anthropic calls env-gated — sites and demos run end-to-end in mock mode without a paid API key",
     ],
-    imagePlaceholder:
-      "Push v5.0 — AI-powered customer acquisition agency launch card",
+    imagePlaceholder: "Push v5.0 — Vertical AI for Local Commerce launch card",
     author: { name: "Jiaming Wang", handle: "@jiamingw", role: "Founder" },
     codedBy: "Push Engineering",
   },
@@ -666,10 +689,10 @@ export const changelogEntries: ChangelogEntry[] = [
     versionTag: "major",
     area: "Platform",
     title:
-      "Push launches in NYC — the first QR-attribution creator marketplace.",
+      "Push launches in NYC — the first QR-attribution customer acquisition platform.",
     summary:
       "Push is live. Creators earn real money for real visits. Merchants pay only for proven foot traffic. The first 20 campaigns go live today in SoHo and Williamsburg.",
-    body: "Two years of building, one year of pilots. Today Push is live for creators and merchants in New York City. The core loop is simple: a merchant creates a campaign and places QR codes at their venue. A creator posts about the merchant and brings followers to scan the QR code. The creator earns a payout for each verified scan. The merchant pays only for proven visits — no impressions, no clicks, no guessing. Every payout is tied to a unique QR scan event. Every scan is verified in under 2 seconds. This is what performance-based creator marketing looks like.",
+    body: "Two years of building, one year of pilots. Today Push is live for creators and merchants in New York City. The core loop is simple: a merchant creates a campaign and places QR codes at their venue. A creator posts about the merchant and brings followers to scan the QR code. The creator earns a payout for each verified scan. The merchant pays only for proven visits — no impressions, no clicks, no guessing. Every payout is tied to a unique QR scan event. Every scan is verified in under 2 seconds. This is what outcome-based customer acquisition looks like.",
     bullets: [
       "20 campaigns live at launch: 10 restaurants, 4 bars, 3 coffee shops, 2 retail, 1 nightlife",
       "Creator signup open to all NYC-based content creators — no follower minimum",

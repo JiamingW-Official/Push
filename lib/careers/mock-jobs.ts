@@ -42,7 +42,7 @@ export const JOBS: Job[] = [
       "Setting architecture patterns the team will follow as we grow",
     ],
     youShouldHave: [
-      "5+ years building production web apps — ideally SaaS or marketplace",
+      "5+ years building production web apps — ideally SaaS or two-sided platforms",
       "Deep React / Next.js expertise, comfortable with RSC and App Router",
       "PostgreSQL and real-time data (Supabase, Postgres triggers, or similar)",
       "A strong opinion on when NOT to add abstraction",
@@ -124,7 +124,7 @@ export const JOBS: Job[] = [
     ],
     niceToHave: [
       "Motion design experience (GSAP, After Effects, or Lottie)",
-      "Experience designing for marketplaces or two-sided platforms",
+      "Experience designing for two-sided platforms or operator networks",
       "NYC-based and obsessed with the city's visual culture",
     ],
     whatWeOffer: [
@@ -153,7 +153,7 @@ export const JOBS: Job[] = [
       "Shipping fast and iterating based on real data",
     ],
     youShouldHave: [
-      "3+ years in product management, ideally marketplace or creator-economy products",
+      "3+ years in product management, ideally AI-driven operator networks or creator-economy products",
       "Track record of shipping and measuring — not just planning",
       "Strong instinct for creator psychology and motivation",
       "Comfort with SQL for pulling your own data",
@@ -190,7 +190,7 @@ export const JOBS: Job[] = [
       "Feeding creator insights back to Product and Growth",
     ],
     youShouldHave: [
-      "3+ years in community management, creator relations, or marketplace ops",
+      "3+ years in community management, creator relations, or operator-network ops",
       "High empathy + firm judgment — you can be warm and hold a line",
       "Excellent written communication across email, DMs, and documentation",
       "Comfort with ambiguity and fast-changing priorities",
@@ -303,7 +303,7 @@ export const JOBS: Job[] = [
     youShouldHave: [
       "8+ years in business development, market management, or general management",
       "Deep NYC hospitality and food & beverage network — this is non-negotiable",
-      "Track record of building and growing local markets for a tech or marketplace company",
+      "Track record of building and growing local markets for a tech or operator-network company",
       "Strong operator mindset: you measure everything and move fast on data",
       "NYC resident with a genuine love for the city's food and culture scene",
     ],

@@ -571,13 +571,13 @@ export default function ApiDocsPage() {
                       <td>100</td>
                     </tr>
                     <tr>
-                      <td>Performance ($500/mo min)</td>
+                      <td>Operator ($500/mo min + per-customer)</td>
                       <td>600</td>
                       <td>500,000</td>
                       <td>1,000</td>
                     </tr>
                     <tr>
-                      <td>Enterprise Agency (custom)</td>
+                      <td>Neighborhood (custom)</td>
                       <td>2,400</td>
                       <td>Unlimited</td>
                       <td>4,000</td>
@@ -606,6 +606,39 @@ export default function ApiDocsPage() {
               The Push API uses Bearer token authentication over HTTPS. All
               requests to production endpoints must be authenticated.
             </p>
+
+            <div className="api-subsection api-reveal">
+              <h3 className="api-subsection-title">
+                Agent endpoint — creator matching
+              </h3>
+              <p className="api-subsection-desc">
+                <code className="api-inline-code">
+                  POST /api/agent/match-creators
+                </code>{" "}
+                — Day-1 AI match: given a merchant goal (category, ZIP, customer
+                target, budget, timeframe), the Vertical AI returns a ranked
+                roster of operators with estimated customer delivery.
+              </p>
+              <CodeBlock lang="bash">
+                {`curl -X POST https://api.pushapp.co/api/agent/match-creators \\
+  -H `}
+                <span className="tok-str">
+                  &apos;Authorization: Bearer sk_live_&lt;key&gt;&apos;
+                </span>
+                {` \\
+  -H `}
+                <span className="tok-str">
+                  &apos;Content-Type: application/json&apos;
+                </span>
+                {` \\
+  -d `}
+                <span className="tok-str">
+                  &apos;&#123; "goal": &#123; "category": "Coffee", "zip":
+                  "11211", "customer_target": 200, "budget_usd": 500,
+                  "timeframe_days": 60 &#125; &#125;&apos;
+                </span>
+              </CodeBlock>
+            </div>
 
             <div className="api-subsection api-reveal">
               <h3 className="api-subsection-title">Bearer token format</h3>

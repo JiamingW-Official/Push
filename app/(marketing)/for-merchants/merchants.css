@@ -83,6 +83,18 @@
   color: rgba(255, 255, 255, 0.35);
 }
 
+/* v5.1 positioning tagline — between h1 and sub */
+.fm-tagline {
+  font-family: var(--font-body);
+  font-size: var(--text-small);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--primary);
+  margin-bottom: var(--space-4);
+  max-width: 560px;
+}
+
 .fm-sub {
   font-size: var(--text-body);
   color: rgba(245, 242, 236, 0.75);

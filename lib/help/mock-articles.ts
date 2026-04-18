@@ -534,17 +534,17 @@ If you earn more than **$600** in a calendar year on Push, you're required to co
     lastUpdated: "2026-04-02",
     viewCount: 7230,
     helpful: 598,
-    body: `## Merchant pricing plans
+    body: `## Merchant pricing plans (v5.1)
 
-Push offers three merchant subscription tiers:
+Push offers three plans under the Vertical AI for Local Commerce model:
 
-| Plan | Price | Campaigns | Creator cap |
+| Plan | Price | Campaigns | Creator tier access |
 |---|---|---|---|
-| Starter | $19.99/mo | 1 active campaign | 5 creators |
-| Growth | $69/mo | 5 active campaigns | 50 creators |
-| Pro | $199/mo | Unlimited | Unlimited |
+| Pilot | $0 (first 10 Coffee+ merchants) | 1 active campaign | Operator+ |
+| Operator | $500/mo min + $15–85 per AI-verified customer by vertical | Unlimited | Proven+ priority |
+| Neighborhood | $8–12K launch + $20–35K MRR target | Unlimited | Top-100 Closer+ exclusive |
 
-All plans include access to the merchant dashboard, basic analytics, and Square/Toast/Clover integration.
+All plans include access to the merchant dashboard, ConversionOracle™ ROI prediction, 3-layer AI verification (QR + Claude Vision + geo), and Square/Toast/Clover integration. Legacy founding-cohort subscription tiers remain grandfathered through renewal; new signups land on the v5.1 plans above.
 
 ## Campaign budget
 

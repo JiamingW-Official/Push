@@ -5,9 +5,9 @@ import HowItWorksClient from "./HowItWorksClient";
 import "./how-it-works.css";
 
 export const metadata: Metadata = {
-  title: "How Push Works — AI-Powered Customer Acquisition Agency",
+  title: "How Push Works — Vertical AI for Local Commerce",
   description:
-    "How Push's AI agency works: tell the agent your customer goal, Claude matches creators in 60s, every customer is AI-verified (QR + Vision OCR + geo). Pay only for delivered customers.",
+    "Vertical AI for local commerce: tell the agent your customer goal, ConversionOracle matches creators, 3-layer AI verification (QR + Vision OCR + geo). Pay per verified customer (pricing by vertical).",
 };
 
 /* ── QR Diagram SVG ──────────────────────────────────────── */
@@ -246,7 +246,7 @@ const COMPARE_ROWS = [
   {
     feature: "Monthly cost",
     traditional: "$500–$3,000+ retainer",
-    push: "$0 Pilot → $500/mo min + $40/customer",
+    push: "$0 Pilot → $500/mo min + $15-85/customer by vertical",
   },
   {
     feature: "Payout speed",
@@ -349,10 +349,11 @@ export default function HowItWorksPage() {
           </div>
 
           <p className="hiw-hero-sub reveal" data-hero-content="merchant">
-            Tell the agent how many customers you need. Claude matches creators
-            in 60 seconds, drafts briefs, runs the campaign. Every customer is
-            AI-verified through QR scan, receipt OCR, and geo-match. Pay only
-            for who walks through your door.
+            Vertical AI for Local Commerce. Tell the agent how many customers
+            you need. ConversionOracle matches creators in 60 seconds, drafts
+            briefs, runs the campaign. Every customer is AI-verified through QR
+            scan, receipt OCR, and geo-match. Pay only for who walks through
+            your door — SLR compounds with every campaign.
           </p>
           <p
             className="hiw-hero-sub reveal"
@@ -446,11 +447,15 @@ export default function HowItWorksPage() {
               <div className="hiw-step-card">
                 <div className="hiw-step-num">02</div>
                 <span className="hiw-step-label">Match</span>
-                <h3 className="hiw-step-title">AI matches in 60 seconds</h3>
+                <h3 className="hiw-step-title">
+                  ConversionOracle matches in 60 seconds
+                </h3>
                 <p className="hiw-step-body">
-                  Claude ranks the top 5 creators by category fit, geo
-                  proximity, and verified conversion history. Drafts briefs.
-                  Predicts ROI. You approve — or let the agent auto-run.
+                  ConversionOracle — our Customer Acquisition Engine — ranks the
+                  top 5 creators by category fit, geo proximity, and verified
+                  conversion history. Trained on Williamsburg Coffee+ data.
+                  Drafts briefs. Predicts ROI. You approve — or let the agent
+                  auto-run.
                 </p>
                 <div className="hiw-step-demo">
                   <div
@@ -571,8 +576,8 @@ export default function HowItWorksPage() {
                 <p className="hiw-step-body">
                   Every scan runs through Claude Vision (receipt OCR), QR check,
                   and geo-match in under 8 seconds. If all three pass,
-                  you&apos;re billed $40. If the AI can&apos;t deliver, you
-                  don&apos;t pay.
+                  you&apos;re billed per verified customer (priced by vertical).
+                  If the AI can&apos;t deliver, you don&apos;t pay.
                 </p>
                 <div className="hiw-step-demo">
                   <QRMiniSVG />
@@ -778,7 +783,7 @@ export default function HowItWorksPage() {
                 campaign duration. Push surfaces the campaign to eligible
                 creators scored on proximity to the location, tier level, and
                 verified conversion history from previous campaigns. No manual
-                outreach. No agency brief. Live in under 24 hours.
+                outreach. No manual brief. Live in under 24 hours.
               </p>
             </div>
             <div className="hiw-detail-visual">

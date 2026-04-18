@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Terms of Service — Push",
   description:
-    "The legal agreement governing use of the Push creator attribution platform for Merchants and Creators.",
+    "The legal agreement governing use of the Push Vertical AI for Local Commerce platform — the Customer Acquisition Engine for Merchants and Creators.",
 };
 
 export default function TermsPage() {
@@ -18,7 +18,7 @@ export default function TermsPage() {
             <strong>Last updated:</strong>&nbsp;April 15, 2026
           </span>
           <span className="legal-header__meta-divider" aria-hidden="true" />
-          <span className="legal-header__meta-item">Version 5.0</span>
+          <span className="legal-header__meta-item">Version 5.1</span>
           <span className="legal-header__meta-divider" aria-hidden="true" />
           <span className="legal-header__meta-item">
             <svg
@@ -116,10 +116,16 @@ export default function TermsPage() {
         </dd>
         <dt>Merchant</dt>
         <dd>
-          A business entity enrolled in a Push plan (Pilot $0, Performance
-          $500/mo min + $40/verified customer, or Enterprise Agency custom) to
-          run AI-managed customer acquisition campaigns. Legacy founding cohort
-          subscriptions are grandfathered per their original contract.
+          A business entity enrolled in a Push plan under the Two-Segment model
+          — Pilot ($0, Williamsburg Coffee+, first 10 Verified Customers free),
+          Operator ($500/mo minimum plus $15–$85 per Verified Customer by
+          vertical, with an optional Retention Add-on of $8/$6/$4 per repeat
+          visit in the first, second, and third follow-up windows respectively),
+          or Neighborhood (custom launch fee plus a monthly recurring revenue
+          tier, designed for multi-location operators) — to run campaigns
+          powered by the Push Vertical AI for Local Commerce platform and its
+          Customer Acquisition Engine. Legacy founding cohort subscriptions are
+          grandfathered per their original contract.
         </dd>
         <dt>Verified Customer</dt>
         <dd>
@@ -150,7 +156,7 @@ export default function TermsPage() {
         <dt>GMV</dt>
         <dd>
           Gross Merchandise Value: the total customer spend attributed to a
-          Campaign, used as a basis for performance-based payout calculations.
+          Campaign, used as a basis for outcome-based payout calculations.
         </dd>
         <dt>Payout</dt>
         <dd>
@@ -319,20 +325,44 @@ export default function TermsPage() {
 
       <h3>5.1 Outcome-Based Plans</h3>
       <p>
-        Push offers two merchant plans under the v5.0 outcome-based model: Pilot
-        ($0, available to the first 10 merchants in the active beachhead — first
-        10 Verified Customers delivered at no charge) and Performance
-        ($500/month minimum plus $40 per Verified Customer). Legacy merchants
-        enrolled before v5.0 remain on their original Starter, Growth, or Pro
-        contract until renewal; any migration to v5.0 pricing is opt-in and
-        mutually agreed in writing.
+        Push offers three merchant plans under the v5.1 Two-Segment
+        outcome-based model:
+      </p>
+      <ul>
+        <li>
+          <strong>Pilot ($0):</strong> available to the first 10 merchants in
+          the active Williamsburg Coffee+ beachhead — first 10 Verified
+          Customers delivered at no charge, with no monthly minimum. Intended to
+          validate fit before any spend.
+        </li>
+        <li>
+          <strong>
+            Operator ($500/month minimum + $15–$85 per Verified Customer by
+            vertical):
+          </strong>{" "}
+          the per-customer rate is set per vertical (e.g., coffee, fitness,
+          beauty, quick-service restaurant) and disclosed in the signed order
+          form. Merchants may add the optional Retention Add-on at $8 for the
+          first verified repeat visit, $6 for the second, and $4 for the third
+          within the configured retention window.
+        </li>
+        <li>
+          <strong>Neighborhood (custom launch fee plus MRR tier):</strong>{" "}
+          designed for multi-location merchants expanding beyond the beachhead;
+          pricing is negotiated per engagement and documented in an order form.
+        </li>
+      </ul>
+      <p>
+        Legacy merchants enrolled before v5.0 remain on their original Starter,
+        Growth, or Pro contract until renewal; any migration to v5.1 pricing is
+        opt-in and mutually agreed in writing.
       </p>
       <p>
-        Performance tier bills monthly in arrears via Stripe: the $500 minimum
-        is assessed at the end of each calendar month, and Verified Customer
-        charges accrue as the AI verifies each visit. All fees are in USD.
-        Failure to maintain a valid payment method may result in service
-        suspension.
+        Operator and Neighborhood tiers bill monthly in arrears via Stripe: the
+        monthly minimum is assessed at the end of each calendar month, and
+        Verified Customer charges accrue as the Customer Acquisition Engine
+        verifies each visit. All fees are in USD. Failure to maintain a valid
+        payment method may result in service suspension.
       </p>
 
       <h3>5.2 Campaign Creation &amp; Management</h3>
@@ -377,6 +407,32 @@ export default function TermsPage() {
         fees; require Creators to make personal purchases as a condition of
         participation; discriminate against Creators on protected grounds; or
         request Content that violates our Acceptable Use Policy.
+      </p>
+
+      <h3>5.5 ConversionOracle Data Use</h3>
+      <p>
+        Merchant Data generated through Verified Customer events — including
+        offer composition, creator pairing, vertical, neighborhood, time-of-day,
+        and the resulting walk-in outcome — is anonymized, aggregated, and used
+        as AI-verified customer ground truth to train Push&apos;s proprietary
+        matching model, <strong>ConversionOracle&trade;</strong>.
+        ConversionOracle powers the Customer Acquisition Engine that sits at the
+        core of the Push Vertical AI for Local Commerce platform, improving
+        creator-to-offer matching for all Merchants on the Two-Segment model.
+      </p>
+      <p>
+        Merchants are opted in to ConversionOracle training by default. Each
+        Merchant may opt out by emailing{" "}
+        <a href="mailto:legal@pushnyc.co" style={{ color: "var(--tertiary)" }}>
+          legal@pushnyc.co
+        </a>{" "}
+        with the subject line &ldquo;ConversionOracle Opt-Out&rdquo; at least 30
+        days before their first production Campaign run; opt-outs received after
+        the 30-day window take effect on the next billing cycle. Opt-out data is
+        excluded from future training runs but does not require retroactive
+        deletion from previously trained model weights. No raw personally
+        identifiable customer data is used in training — only anonymized
+        per-merchant hashes and aggregated event features.
       </p>
 
       <hr className="legal-divider" />
@@ -429,6 +485,44 @@ export default function TermsPage() {
         suspension and may result in legal action, including claims for damages
         under the Computer Fraud and Abuse Act (18 U.S.C. § 1030) and applicable
         state law.
+      </p>
+
+      <hr className="legal-divider" />
+
+      {/* ── 6A. DisclosureBot Compliance ───────────────────── */}
+      <h2 id="s6a" className="legal-section-heading">
+        <span className="legal-section-heading__number">06A /</span>
+        DisclosureBot Compliance
+      </h2>
+      <p>
+        Because the Push Vertical AI for Local Commerce platform places paid
+        creator content in front of the public, Push operates a platform-level
+        AI pre-screen — <strong>DisclosureBot&trade;</strong> — that reviews
+        every Creator post produced for a Campaign before it is counted toward a
+        Verified Customer event. DisclosureBot checks for conformity with the
+        FTC&apos;s Endorsement Guides (16 CFR Part 255), including the presence,
+        clarity, and placement of the &ldquo;#ad&rdquo; / &ldquo;Paid
+        partnership&rdquo; disclosure and any required material-connection
+        language.
+      </p>
+      <p>
+        DisclosureBot runs automatically on every in-scope post. Creators who
+        bypass, delete, edit around, or otherwise defeat the DisclosureBot
+        pre-screen — for example, by publishing a post outside the scheduled
+        review window, removing the disclosure after approval, or shadow-posting
+        variants — forfeit all Payouts associated with the affected Campaign and
+        are subject to tier demotion under the Creator Scoring Model. Repeat or
+        willful bypass is grounds for immediate termination.
+      </p>
+      <p>
+        Push maintains{" "}
+        <strong>$1,000,000 in Errors &amp; Omissions insurance</strong> covering
+        DisclosureBot operation and related compliance claims, and commissions a{" "}
+        <strong>quarterly external counsel audit</strong> of DisclosureBot
+        decisions and audit logs. Audit summaries are available to Merchants on
+        the Operator and Neighborhood tiers on request. DisclosureBot is part of
+        the Customer Acquisition Engine and its logs are retained for the
+        regulatory retention window described in the Privacy Policy.
       </p>
 
       <hr className="legal-divider" />

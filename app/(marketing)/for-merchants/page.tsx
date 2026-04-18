@@ -55,18 +55,18 @@ const TIERS = [
   },
 ];
 
-/* ── Pricing plans (v5.0 outcome-based) ─────────────────────── */
+/* ── Pricing plans (v5.1 Vertical AI — 3-tier) ──────────────── */
 const PLANS = [
   {
     name: "Pilot",
     price: "$0",
-    period: "for first 10 merchants",
-    desc: "First 10 customers free. No catch. If the AI can't deliver, you don't pay.",
+    period: "first 10 Coffee+ merchants",
+    desc: "First 10 AI-verified customers free. Cap $4,200/neighborhood. If ConversionOracle can't deliver, you don't pay.",
     features: [
       "Up to 10 verified customers free",
-      "AI creator matching in 60s",
-      "Claude Vision receipt verification",
-      "QR + geo attribution",
+      "ConversionOracle ROI prediction",
+      "Claude Vision receipt OCR + QR + geo",
+      "Williamsburg Coffee+ beachhead priority",
       "Weekly performance review",
     ],
     featured: false,
@@ -74,22 +74,39 @@ const PLANS = [
     roi: "First 10 customers on us — acquisition cost zero",
   },
   {
-    name: "Performance",
+    name: "Operator",
     price: "$500",
-    period: "/mo min + $40/customer",
-    desc: "You set the target. The agent delivers. Pay only for AI-verified visits.",
+    period: "/mo min + $15–85/customer",
+    desc: "Vertical AI tuned to your category. Pay per AI-verified visit, with Retention Add-on for repeat customers.",
     features: [
-      "Unlimited AI-matched campaigns",
-      "Dedicated agent tuning",
-      "Two-Tier Hero + Sustained offers",
+      "Per-vertical pricing: coffee $15 · coffee+ $25 · dessert $22 · fitness $60 · beauty $85",
+      "Retention Add-on: visit 2 = $8 · visit 3 = $6 · loyalty opt-in = $4",
+      "ConversionOracle predicts ROI per campaign",
       "Creator tier 2–6 access (Proven+ priority)",
-      "Day-1 multi-modal verification",
+      "3-layer verification per customer",
       "Dispute SLA: 24h",
     ],
     featured: true,
-    badge: "Outcome-Based",
+    badge: "Most Popular",
     cta: "Talk to agent",
-    roi: "$40 per AI-verified customer — no cap, no markup",
+    roi: "Software Leverage Ratio: 1 operator runs ~40 merchants",
+  },
+  {
+    name: "Neighborhood",
+    price: "$8–12K",
+    period: "launch + $20–35K MRR target by M12",
+    desc: "For multi-location operators who want full-neighborhood Customer Acquisition Engine coverage.",
+    features: [
+      "Neighborhood launch package (creator cohort + playbook)",
+      "Multi-location ConversionOracle dashboard",
+      "Dedicated vertical AI tuning",
+      "Cross-location retention attribution",
+      "Priority creator allocation",
+      "Quarterly business review",
+    ],
+    featured: false,
+    cta: "Request a call",
+    roi: "Target $20–35K MRR per neighborhood by M12",
   },
 ];
 
@@ -102,7 +119,7 @@ export default function ForMerchantsPage() {
       <section className="fm-hero">
         <div className="container fm-hero-inner">
           <p className="eyebrow fm-eyebrow">
-            Push for Merchants · Williamsburg Coffee Pilot
+            Push for Merchants · Williamsburg Coffee+ Pilot
           </p>
 
           <h1 className="fm-headline">
@@ -114,11 +131,15 @@ export default function ForMerchantsPage() {
             <span className="fm-headline-light">you need. We deliver.</span>
           </h1>
 
+          <p className="fm-tagline">
+            Vertical AI for Local Commerce. Customer Acquisition Engine.
+          </p>
+
           <p className="fm-sub">
-            AI-powered customer acquisition agency. Claude matches creators.
+            Vertical AI that delivers AI-verified customers to your door.
             <br />
-            Every customer triple-checked by QR + Vision OCR + geo-match. Pay
-            only for who walks through your door.
+            Claude matches creators; ConversionOracle predicts ROI; 3-layer
+            verification per customer.
           </p>
 
           <div className="fm-ctas">
@@ -158,7 +179,7 @@ export default function ForMerchantsPage() {
               <ul className="fm-ps-list">
                 <li>
                   <span className="fm-ps-bullet" />
-                  Agencies: $3,000+/mo + long-term contracts
+                  Retainer creative shops: $3,000+/mo + long-term contracts
                 </li>
                 <li>
                   <span className="fm-ps-bullet" />
@@ -235,13 +256,13 @@ export default function ForMerchantsPage() {
               },
               {
                 n: "02",
-                title: "AI matches + runs the campaign",
-                body: "Claude ranks top 5 creators by geo, category, and verified conversion history. Drafts briefs. Predicts ROI. You approve — or let the agent auto-run.",
+                title: "AI matches + ConversionOracle predicts ROI",
+                body: "Claude ranks top 5 creators by geo, category, and verified conversion history. Drafts briefs. ConversionOracle predicts ROI per campaign. You approve — or let the agent auto-run.",
               },
               {
                 n: "03",
                 title: "Delivered customers — or it's free",
-                body: "Every scan runs through Claude Vision (receipt OCR) + QR + geo-match in <8s. Pay $40/customer only when all three pass. If the AI can't deliver, you don't pay.",
+                body: "Every scan runs through Claude Vision (receipt OCR) + QR + geo-match in <8s. Pay per-vertical rate (coffee $15 · coffee+ $25 · dessert $22 · fitness $60 · beauty $85) only when all three layers pass. If the AI can't deliver, you don't pay.",
               },
             ].map((step, i) => (
               <li
@@ -334,7 +355,7 @@ export default function ForMerchantsPage() {
               </h2>
             </div>
             <p className="fm-pricing-note">
-              Cancel anytime. No agency markup.
+              Cancel anytime. No retainer markup.
               <br />
               Pay only for AI-verified customers.
             </p>
@@ -393,15 +414,17 @@ export default function ForMerchantsPage() {
             <blockquote className="fm-pull-quote">
               <p className="fm-pull-quote-text">
                 &ldquo;Push agent ran 60 seconds, matched 14 creators, drafted
-                briefs. First week: 11 AI-verified customers.&rdquo;
+                briefs. First week: 11 AI-verified customers at $25 per customer
+                + $8 retention add-on.&rdquo;
               </p>
               <footer className="fm-pull-quote-footer">
                 <cite className="fm-pull-quote-cite">
                   Marco A., Sey Coffee &mdash; Williamsburg, NYC
                 </cite>
                 <span className="fm-pull-quote-meta">
-                  $0 Pilot &nbsp;·&nbsp; 5 active creators &nbsp;·&nbsp; $440 in
-                  verified customers
+                  Williamsburg Coffee+ Pilot &nbsp;·&nbsp; 5 active creators
+                  &nbsp;·&nbsp; $25 per AI-verified customer + $8 retention
+                  add-on
                 </span>
               </footer>
             </blockquote>

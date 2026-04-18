@@ -90,7 +90,7 @@ const BLOG_POSTS = [
     slug: "push-vs-traditional-influencer",
     title: "Push vs. Traditional Influencer Marketing: An Honest Comparison",
     description:
-      "No sponsored content, no fake reach guarantees. A side-by-side look at how Push campaigns stack up against agency-managed influencer deals.",
+      "No sponsored content, no fake reach guarantees. A side-by-side look at how Push campaigns stack up against traditional influencer deals.",
     author: "Push Editorial",
     category: "Insights",
     pubDate: new Date("2026-03-10"),
@@ -173,8 +173,8 @@ export async function GET() {
   const feed = `<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:dc="http://purl.org/dc/elements/1.1/">
   <channel>
-    <title>Push Blog — Creator Marketing for NYC Businesses</title>
-    <description>Insights, case studies, and product updates from Push — the pay-per-verified-visit creator marketing platform for NYC.</description>
+    <title>Push Blog — Customer Acquisition Engine for NYC Businesses</title>
+    <description>Insights, case studies, and product updates from Push — Vertical AI for Local Commerce, powering the Customer Acquisition Engine for NYC.</description>
     <link>${BASE_URL}/blog</link>
     <atom:link href="${FEED_URL}" rel="self" type="application/rss+xml"/>
     <language>en-us</language>

@@ -300,11 +300,13 @@ export default function MerchantSignupPage() {
           <div className="form-wrap" id="signup-form">
             <div className="form-header">
               <span className="fomo-badge">32 merchants joined this week</span>
-              <span className="form-eyebrow">Merchant Signup</span>
+              <span className="form-eyebrow">
+                Merchant Signup · Vertical AI for Local Commerce
+              </span>
               <h1 className="form-title">Pay Only for Customers Who Walk In</h1>
               <p className="form-subtitle">
-                Every creator includes a QR code. You see exactly who converts —
-                before paying commission.
+                Every creator includes a QR code. ConversionOracle verifies
+                every walk-in — you see exactly who converts before paying.
               </p>
             </div>
 
@@ -623,7 +625,11 @@ function BrandPanel() {
 
         <div className="brand-stats">
           {[
-            { label: "Monthly cost", value: "$19.99 / mo", pct: 10 },
+            {
+              label: "Operator tier",
+              value: "$500/mo min + per-customer by vertical",
+              pct: 10,
+            },
             { label: "Median creator ROI", value: "35% margin", pct: 35 },
             { label: "How we track", value: "QR per creator", pct: 100 },
           ].map((s) => (

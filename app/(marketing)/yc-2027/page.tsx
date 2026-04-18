@@ -10,7 +10,7 @@ import "./yc-2027.css";
 export const metadata: Metadata = {
   title: "Push · YC Summer 2027 Application",
   description:
-    "Push — AI-Powered Customer Acquisition Agency. Outcome-priced creator marketing for local merchants. Williamsburg coffee beachhead. YC S27 pitch page.",
+    "Push — Vertical AI for Local Commerce. A Customer Acquisition Engine priced by vertical. Williamsburg Coffee+ beachhead. YC S27 pitch page.",
   robots: {
     index: false,
     follow: false,
@@ -32,28 +32,41 @@ const PROBLEM_STATS = [
 const SOLUTION_LAYERS = [
   {
     n: "01",
-    title: "AI Agent (Claude Sonnet 4.6)",
-    body: "Merchant tells the agent a customer goal. Claude matches 3–5 local creators in 60 seconds — profile, geo, historical lift. The agent drafts the brief, predicts ROI, routes the invite.",
+    title: "Vertical AI for Local Commerce",
+    body: "Specialized AI plus a Customer Acquisition Engine tuned to one vertical at a time. Williamsburg Coffee+ is Template 0 — the Neighborhood Playbook ships the entire stack (creators, brief library, verification tuning, Two-Segment Creator Economics) pre-calibrated to that AOV band.",
   },
   {
     n: "02",
-    title: "3-layer verification",
-    body: "Every payout requires all three: QR scan at point-of-entry + Claude Vision OCR of the receipt + GPS geo-match within 200m. Sub-8-second verification. One fails, nothing pays.",
+    title: "ConversionOracle™",
+    body: "Proprietary walk-in prediction model trained on the AI-verified customer ground truth that only Push can generate. Every verified receipt, geo-match, and QR scan flows back into Oracle, compounding Software Leverage Ratio (SLR) per vertical. Horizontal AI has no path to this data.",
   },
   {
     n: "03",
-    title: "Outcome pricing",
-    body: "$0 Pilot for the first 10 merchants and their first 10 customers. After that, $500/mo minimum plus $40 per AI-verified customer. No SaaS fees, no agency markup, no retainer.",
+    title: "DisclosureBot",
+    body: "Platform-level FTC compliance baked into the Customer Acquisition Engine. Push is the only creator platform with architectural compliance — every #ad tag, material-connection line, and jurisdictional clause is emitted by the system, not self-reported by the creator. Regulator-ready by default.",
   },
 ];
 
 const TRACTION = [
-  { n: "6", l: "Signed coffee merchants" },
-  { n: "20", l: "Active operator-tier creators" },
+  { n: "6", l: "Williamsburg Coffee+ merchants signed" },
+  { n: "20", l: "Creators in network (Two-Segment Creator Economics)" },
   { n: "54", l: "AI-verified customers · Week 1" },
-  { n: "60s", l: "AI match latency" },
-  { n: "<8s", l: "Receipt verification" },
-  { n: "200m", l: "Geo-match radius" },
+  { n: "$6,579", l: "LTV per verified customer" },
+  { n: "15.7x", l: "LTV / CAC (10.4x stressed)" },
+  { n: "≥88%", l: "AI verification accuracy target" },
+];
+
+const ECONOMICS = [
+  { n: "$420", l: "CAC per AI-verified customer" },
+  { n: "$6.97", l: "Per-customer gross margin (27.9%)" },
+  { n: "SLR 8", l: "Software Leverage Ratio · Month 3 target" },
+  { n: "SLR ≥25", l: "Month-12 target (vs influencer 3–5)" },
+];
+
+const PLAYBOOK_UNIT = [
+  { label: "Launch cost", value: "$8–12K" },
+  { label: "MRR by Month 6", value: "$20–35K" },
+  { label: "Template", value: "Williamsburg Coffee+ (AOV $8–20)" },
 ];
 
 const SIGNED_MERCHANTS = [
@@ -90,16 +103,17 @@ export default function YC2027Page() {
             <span className="yc-hero-l1">We turn creators into</span>
             <span className="yc-hero-l2">AI-verified customers.</span>
             <span className="yc-hero-l3">
-              <em className="yc-hero-accent">Outcome priced.</em>
+              <em className="yc-hero-accent">Priced by vertical.</em>
             </span>
           </h1>
 
           <p className="yc-hero-sub">
-            Push is an AI-powered customer acquisition agency for local
-            merchants. Claude Sonnet 4.6 matches creators in 60 seconds. Claude
-            Vision verifies every customer with QR + receipt OCR + geo-match.
-            Merchants pay only for AI-verified foot traffic — $40 per customer,
-            not per post.
+            Push is Vertical AI for Local Commerce — a Customer Acquisition
+            Engine tuned to one vertical at a time. ConversionOracle™ predicts
+            walk-ins from the AI-verified ground truth only Push generates.
+            DisclosureBot enforces FTC compliance at the platform layer. The
+            Neighborhood Playbook is the unit — Williamsburg Coffee+ is Template
+            0.
           </p>
 
           <div className="yc-hero-meta">
@@ -110,12 +124,12 @@ export default function YC2027Page() {
             <span className="yc-hero-meta-sep" aria-hidden="true" />
             <span className="yc-hero-meta-item">
               <span className="yc-hero-meta-k">Beachhead</span>
-              <span className="yc-hero-meta-v">Williamsburg coffee</span>
+              <span className="yc-hero-meta-v">Williamsburg Coffee+</span>
             </span>
             <span className="yc-hero-meta-sep" aria-hidden="true" />
             <span className="yc-hero-meta-item">
               <span className="yc-hero-meta-k">RFS</span>
-              <span className="yc-hero-meta-v">S26 #5 — AI Agencies</span>
+              <span className="yc-hero-meta-v">S26 #5 — Vertical AI</span>
             </span>
           </div>
         </div>
@@ -173,17 +187,21 @@ export default function YC2027Page() {
           </div>
 
           <h2 id="yc-solution-h" className="yc-section-h reveal">
-            An AI agent that runs the agency.{" "}
+            Vertical AI for Local Commerce.{" "}
             <span className="yc-section-h-light">
-              Three checks. One invoice.
+              Three layers. One compounding moat.
             </span>
           </h2>
 
           <p className="yc-section-sub reveal">
-            Push replaces the agency account manager with an AI agent and the
-            attribution guesswork with three hard checks. Every dollar billed
-            traces back to a scanned QR, a Vision-read receipt, and a GPS
-            coordinate inside the shop&rsquo;s 200-meter geofence.
+            Push is a Customer Acquisition Engine, not a horizontal tool. Layer
+            1 specializes the AI to one vertical at a time. Layer 2 —
+            ConversionOracle™ — is the proprietary walk-in prediction model,
+            trained on AI-verified ground truth only Push can generate. Layer 3
+            — DisclosureBot — makes Push the only creator platform with
+            architectural FTC compliance. Every verified QR scan, Claude Vision
+            receipt, and geo-matched GPS coordinate compounds Software Leverage
+            Ratio (SLR) inside the Neighborhood Playbook unit.
           </p>
 
           <div className="yc-solution-grid">
@@ -215,17 +233,19 @@ export default function YC2027Page() {
           </div>
 
           <h2 id="yc-traction-h" className="yc-section-h reveal">
-            Williamsburg coffee, sixty days.{" "}
+            Williamsburg Coffee+, sixty days.{" "}
             <span className="yc-section-h-light">
-              Network density over breadth.
+              Template 0 of the Neighborhood Playbook.
             </span>
           </h2>
 
           <p className="yc-section-sub reveal">
-            We picked one category, one ZIP, one season. Six coffee shops
-            signed. Twenty operator-tier creators vetted and onboarded. Week
-            one: 54 AI-verified customers walked through doors that would have
-            otherwise been empty.
+            Williamsburg Coffee+ Pilot (AOV $8–20) · 20 creators in network ·
+            week-1 54 AI-verified customers · SLR 8 at Month 3 target. The
+            Neighborhood Playbook unit is $8–12K launch → $20–35K MRR by M6.
+            Two-Segment Creator Economics keeps operators and first-timers on
+            the same compounding supply. Ground truth flows back into
+            ConversionOracle™ with every verified receipt.
           </p>
 
           <div className="yc-traction-grid reveal">
@@ -237,8 +257,22 @@ export default function YC2027Page() {
             ))}
           </div>
 
+          <div
+            className="yc-traction-grid reveal"
+            style={{ marginTop: "24px" }}
+          >
+            {ECONOMICS.map((s) => (
+              <div key={s.l} className="yc-traction-stat">
+                <span className="yc-traction-n">{s.n}</span>
+                <span className="yc-traction-l">{s.l}</span>
+              </div>
+            ))}
+          </div>
+
           <div className="yc-merchants reveal">
-            <span className="yc-merchants-label">Signed merchants</span>
+            <span className="yc-merchants-label">
+              Williamsburg Coffee+ merchants signed
+            </span>
             <ul className="yc-merchants-list">
               {SIGNED_MERCHANTS.map((name) => (
                 <li key={name} className="yc-merchants-item">
@@ -251,7 +285,28 @@ export default function YC2027Page() {
           <div className="yc-projection reveal">
             <div className="yc-projection-head">
               <span className="yc-projection-label">
-                Projection to S27 interview
+                Neighborhood Playbook unit economics
+              </span>
+              <span className="yc-projection-sub">
+                Williamsburg Coffee+ · Template 0
+              </span>
+            </div>
+            <div className="yc-projection-rows">
+              {PLAYBOOK_UNIT.map((row) => (
+                <div key={row.label} className="yc-projection-row">
+                  <span className="yc-projection-k">{row.label}</span>
+                  <span className="yc-projection-v">
+                    <span className="yc-projection-then">{row.value}</span>
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="yc-projection reveal">
+            <div className="yc-projection-head">
+              <span className="yc-projection-label">
+                Projection by YC S27 application
               </span>
               <span className="yc-projection-sub">
                 Today &rarr; Summer 2027
@@ -286,13 +341,19 @@ export default function YC2027Page() {
 
           <h2 id="yc-team-h" className="yc-section-h reveal">
             Jiaming Wang.{" "}
-            <span className="yc-section-h-light">Founder &amp; builder.</span>
+            <span className="yc-section-h-light">
+              Founder &amp; builder. ML Advisor engaged.
+            </span>
           </h2>
 
           <p className="yc-section-sub reveal">
-            Solo founder. Built the matching agent, the verification pipeline,
-            and the operator network. Based in NYC; onboarded all six
-            Williamsburg merchants in person.
+            Solo founder. Built the Customer Acquisition Engine, the 3-layer
+            verification pipeline, and the Two-Segment Creator Economics
+            network. Based in NYC; onboarded all six Williamsburg Coffee+
+            merchants in person. ML Advisor search in progress (ex-Scale AI /
+            ex-Anthropic / ex-HuggingFace profile target) — 6-week ramp,
+            0.5–1.5% equity, scoped to harden ConversionOracle™ training
+            pipelines and AI verification accuracy toward the ≥88% target.
           </p>
         </div>
       </section>
@@ -310,16 +371,22 @@ export default function YC2027Page() {
             <span className="yc-ask-l1">$150K pre-seed.</span>
             <span className="yc-ask-l2">YC S27 standard.</span>
             <span className="yc-ask-l3">
-              <em className="yc-ask-accent">Deploy in Williamsburg.</em>
+              <em className="yc-ask-accent">Ship the Neighborhood Playbook.</em>
             </span>
           </h2>
 
           <p className="yc-ask-sub reveal">
-            Standard YC terms: $125K on a post-money SAFE (7% target) plus $375K
-            on a MFN SAFE. Capital funds the scale from six Williamsburg
-            merchants to fifty across three adjacent ZIPs, expansion of the
-            verified creator operator network from 20 to 100, and the Vision-OCR
-            throughput infrastructure needed for 500+ concurrent campaigns.
+            Post-money SAFE cap ladder: Pre-Seed F&amp;F $100–200K @ $5–8M cap ·
+            YC Standard $500K · Demo Day $2–4M @ $15–25M cap · Seed Ext $5–8M @
+            $30–50M · Series A $15–25M @ $80–140M. Capital scales the
+            Williamsburg Coffee+ template from six merchants to fifty, compounds
+            ConversionOracle™ ground truth, and hardens DisclosureBot across
+            adjacent verticals.
+          </p>
+
+          <p className="yc-ask-sub reveal">
+            Core bet: Vertical AI &gt; horizontal AI at this layer. Coffee+ is
+            Template 0. Neighborhood Playbook is the unit.
           </p>
 
           <div className="yc-ask-ctas reveal">

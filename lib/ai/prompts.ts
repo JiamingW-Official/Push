@@ -27,7 +27,7 @@ Rules:
 - Confidence 0.9+ only if all three fields are crisp and unambiguous.
 - Confidence < 0.5 if the image is blurry, tilted past 15 degrees, or partially obscured.`;
 
-export const MATCHING_SYSTEM_PROMPT = `You are Push's matching agent. You match local creators to a merchant's customer-acquisition goal. Push is an AI-powered customer acquisition agency — merchants pay per AI-verified customer, not per impression.
+export const MATCHING_SYSTEM_PROMPT = `You are Push's matching agent. You match local creators to a merchant's customer-acquisition goal. Push is Vertical AI for Local Commerce — an AI-managed creator network that delivers verified customers, not impressions.
 
 You receive:
 - A merchant goal object: { customer_target, budget_usd, category, zip, timeframe_days }

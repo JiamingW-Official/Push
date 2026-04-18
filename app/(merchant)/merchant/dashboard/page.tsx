@@ -1096,8 +1096,18 @@ function AnalyticsTab({
 
 /* ── SettingsTab ─────────────────────────────────────────── */
 function SettingsTab({ merchant }: { merchant: Merchant | null }) {
-  const planNames = { starter: "Starter", growth: "Growth", pro: "Pro" };
-  const planPrices = { starter: "$19.99", growth: "$69", pro: "$199" };
+  // v5.1: ConversionOracle powers the Customer Acquisition Engine — Vertical AI for Local Commerce.
+  // Legacy "starter" tier relabelled as "Operator (v5.1)"; pricing displays outcome-based model.
+  const planNames = {
+    starter: "Operator (v5.1)",
+    growth: "Growth",
+    pro: "Pro",
+  };
+  const planPrices = {
+    starter: "$500/mo min + $15-85/customer by vertical",
+    growth: "$69",
+    pro: "$199",
+  };
 
   return (
     <>
@@ -1445,11 +1455,10 @@ export default function MerchantDashboardPage() {
               </div>
               <div className="db-plan-badge__price">
                 {merchant?.plan === "growth"
-                  ? "$69"
+                  ? "$69 / mo"
                   : merchant?.plan === "pro"
-                    ? "$199"
-                    : "$19.99"}{" "}
-                / mo
+                    ? "$199 / mo"
+                    : "$500/mo min + $15-85/customer by vertical"}
               </div>
               <a href="/merchant/upgrade" className="db-plan-badge__upgrade">
                 Upgrade plan →

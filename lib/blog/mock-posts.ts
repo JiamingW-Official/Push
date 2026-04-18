@@ -63,66 +63,72 @@ const IMAGES = {
 
 export const MOCK_POSTS: BlogPost[] = [
   {
-    slug: "push-v5-marketplace-to-ai-agency",
+    slug: "push-v5-1-vertical-ai-hardening",
     category: "Product",
-    title: "Push v5.0 — Why we stopped being a marketplace",
+    title: "Push v5.1 — Why we stopped saying the A-word",
     excerpt:
-      "We killed the three-tier SaaS pricing. We killed the matching UI. We killed the multi-category launch plan. Here is what we replaced them with, and why.",
+      "A YC partner mock review killed the word in 30 seconds. It was the right call. Here is what we replaced it with, and what changed underneath.",
     heroImage: IMAGES.coffee,
     author: {
       name: "Jiaming Wang",
       role: "Founder, Push",
       avatar: "JW",
     },
-    publishedAt: "2026-04-18",
-    readMins: 7,
-    tags: ["v5.0", "AI", "agency", "outcome pricing", "Williamsburg", "coffee"],
-    body: `## The three changes that ship together
+    publishedAt: "2026-04-19",
+    readMins: 6,
+    tags: [
+      "v5.1",
+      "Vertical AI",
+      "ConversionOracle",
+      "Coffee+",
+      "SLR",
+      "Williamsburg",
+    ],
+    body: `## The word mattered
 
-Push v5.0 is the largest reset since we launched. Three things change at once, and they only work as a set:
+v5.0 positioned Push as something the category calls an outcome-based services business. A YC partner killed it in 30 seconds.
 
-1. **Pricing shifts from SaaS tiers to outcome-based.** The old $19.99 / $69 / $199 monthly plans are gone for new merchants. The new model: **$0 Pilot** for the first ten merchants in our Williamsburg coffee beachhead (first ten AI-verified customers on us), then **$500 / month minimum + $40 per verified customer**.
+"That word is a VC warning label. It means human-leverage. It means 'will never scale past 50 FTEs.' I read your pitch, I close the laptop, I don't take the meeting."
 
-2. **AI moves from "matching assist" to the core product.** Claude Sonnet 4.6 now drives creator matching in sixty seconds and verifies every customer through a three-layer check: QR scan + Claude Vision receipt OCR + geo-match within 200 meters. No verification, no charge.
+He wasn't wrong. Pitch deck version control: the banned word appeared 23 times in v5.0. Meanwhile our Software Leverage Ratio target — the number that actually separates us from a services business — appeared zero times.
 
-3. **Beachhead collapses to coffee × Williamsburg × sixty days.** Not F&B across five boroughs. Not dessert-and-beauty-and-fitness. One category, one ZIP, one quarter of saturation before we expand.
+## What v5.1 changes
 
-## Why now
+Three things, together:
 
-A marketplace for local creators is a defensible business, but it is not the business that YC, investors, or the 2026 creator economy actually rewards. YC's Spring 2026 Request for Startups calls out **AI-Powered Agencies** as its fifth priority. More than 70% of the Winter 2026 batch shipped day-zero AI products. The era of "we'll add AI later" is over.
+1. Positioning: **Vertical AI for Local Commerce**. Not services. Not platform-generic. Vertical AI means the model is small, the vertical is coffee, and the truth is a receipt.
 
-Push had a choice: defend the marketplace narrative and get judged against Fiverr / Pearpop / Roster, or lean all the way into what our attribution stack already does — operate a creator network, verify every visit, and charge per customer. We chose the second.
+2. Pricing: **tiered per-customer by vertical**. Pure coffee AOV $6 can't support the same rate as a $80 beauty service. Each vertical's price is derived from merchant per-customer gross margin × 2, not chosen arbitrarily. Coffee+ $25. Beauty $85. Fitness $60. Every rate math'd.
 
-## What does not change
+3. Moat: **ConversionOracle™**, not "AI verification." AI verification is a feature (three engineers, one weekend). ConversionOracle is the proprietary model trained on the ground-truth labels that only Push generates. Meta and Google cannot see who walked through the door.
 
-We are keeping what the original design got right:
+## The north-star we should have had
 
-- **The six-tier creator system.** Clay → Obsidian, with material colors, commission scaling, and milestone bonuses. The tier is now how the agent schedules operators; it is not going anywhere.
-- **The QR + Two-Tier Offer stack.** Hero and Sustained offers, last-click attribution, creator-specific QR fingerprints.
-- **The commission + milestone payout structure.** Creators keep getting paid per verified customer, with tier-based rates and bonuses.
-- **Every founding-cohort merchant's contract.** If you joined on Starter, Growth, or Scale before April 18, you stay on that plan. New pricing applies to new signups only.
+Push's north-star metric is now Software Leverage Ratio (SLR) = active campaigns ÷ ops FTE.
 
-## What that looks like on Day One
+Traditional influencer shops run SLR 3–5. Our Month-12 target is ≥25. Month-24 is ≥50.
 
-The merchant flow is now goal-first. You do not post a campaign. You tell the agent: *"I need twenty customers. Coffee. Williamsburg. Six hundred dollars."* Sixty seconds later, Claude returns five matched creators, a drafted campaign brief, and an ROI prediction. You approve, the agent schedules the operators, and every scan they drive is triple-checked before you see the bill.
+That number — not GMV, not MRR — is what tells you whether Push is software or services.
 
-On the creator side, you no longer browse campaigns. The agent reviews your tier, category affinity, and geo coverage, then surfaces campaigns that match. You visit, you post, you get paid when the AI verifies your customer.
+## Coffee+ (AOV $8-20) is Template 0, not TAM
 
-## The unit economics
+Pure coffee AOV is too low. But Williamsburg specialty coffee with bakery and brunch items (Coffee+) runs AOV $14 average. That is the vertical where the per-customer unit economics work. Williamsburg is Template 0; Neighborhood Playbook is the unit we replicate.
 
-A pilot customer costs Push about $20 – $32 (the creator's base rate plus infrastructure). We absorb that on the first ten to prove the system. Customer eleven flips billing to $40, which gives us a modest but predictable margin. Scale comes from volume, not from markup.
+## Two-Segment Creator Economics
 
-This is the same logic that works for every outcome-based agency, from performance SEO to growth marketing. What is new is that our delivery layer is an AI that verifies in under eight seconds what a human reviewer used to take hours.
+v5.0's uniform 6-tier commission structure would have dissolved at T5+. 100K-follower creators don't accept $20 per customer when their brand-deal rate is $500-2,000 per post.
 
-## What we learned from the migration
+v5.1 splits creators into Two Segments. T1-T3 (5K-50K followers, side-income creators) stay on per-verified-customer pricing. T4-T6 (30K+) get retainer + performance bonus + referral revenue-share + equity pool. Different economics, same unified platform.
 
-Writing this out was a forcing function. The landing copy, the pricing page, the terms of service, the onboarding flow — all of it was rebuilt around a single sentence: *Tell us how many customers you need. We deliver.* When the copy did not fit, the product usually did not fit either. Outcome pricing exposes everything a SaaS tier can hide.
+## DisclosureBot — FTC compliance in architecture
 
-## What is next
+Fashion Nova paid $4.2M to the FTC in 2022 because individual creator disclosures were inconsistent.
 
-Phase 2 is about depth in Williamsburg coffee. We will publish weekly saturation data, double down on verification accuracy, and keep the agent honest about what it can and cannot predict. If coffee works, Greenpoint and Bushwick are next — still coffee-first, still agent-operated.
+In v5.1, every creator post on Push is AI pre-screened for FTC 16 CFR Part 255 compliance before it publishes. Non-compliant posts are blocked, not flagged. This turns compliance into a differentiator at enterprise procurement because legal procurement buys on risk reduction.
 
-If you are a Williamsburg coffee shop, [apply for the pilot](/merchant/pilot). If you are a local creator in the neighborhood, [join the operator network](/creator/signup).
+## What this means for the pilot
+
+Williamsburg Coffee+ Pilot still at /merchant/pilot — now gated to AOV $8-20 merchants, \$1 Pre-Pilot LOI, \$4,200/neighborhood cap, auto-flip to Operator tier after verified customer 10.
 
 We will see you at the counter.`,
   },
