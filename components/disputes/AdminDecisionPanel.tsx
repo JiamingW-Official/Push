@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Dispute, DisputeOutcome } from "@/lib/disputes/mock-disputes";
+import { Dispute, DisputeOutcome } from "@/lib/disputes/mock-admin-disputes";
 
 type Props = {
   dispute: Dispute;

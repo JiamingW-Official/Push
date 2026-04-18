@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { MOCK_DISPUTES, DisputeOutcome } from "@/lib/disputes/mock-disputes";
+import { MOCK_DISPUTES, DisputeOutcome } from "@/lib/disputes/mock-admin-disputes";
 
 type DecideBody = {
   outcome: DisputeOutcome;

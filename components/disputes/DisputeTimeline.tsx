@@ -1,104 +1,114 @@
 "use client";
 
-import { DisputeEvent } from "@/lib/disputes/mock-disputes";
+import { useEffect, useRef } from "react";
+import type { DisputeEvent } from "@/lib/disputes/types";
+import {
+  eventBorderClass,
+  eventTypeLabel,
+  formatDate,
+} from "@/lib/disputes/utils";
 
-function formatTime(iso: string): string {
-  return new Date(iso).toLocaleString("en-US", {
-    month: "short",
-    day: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-    hour12: true,
-  });
-}
-
-const ACTOR_LABELS: Record<string, string> = {
-  creator: "Creator",
-  merchant: "Merchant",
-  admin: "Admin",
-  system: "System",
-};
-
-const EVENT_LABELS: Record<string, string> = {
-  opened: "Dispute opened",
-  evidence_submitted: "Evidence submitted",
-  evidence_requested: "Evidence requested",
-  admin_note: "Admin note",
-  decision_made: "Decision posted",
-  escalated: "Escalated",
-  thread_locked: "Thread locked",
-  message_creator: "Messaged creator",
-  message_merchant: "Messaged merchant",
-  resolved: "Resolved",
-  dismissed: "Dismissed",
-};
-
-function getEventColor(
-  type: DisputeEvent["type"],
-  actor: DisputeEvent["actor"],
-): string {
-  if (type === "resolved") return "var(--tertiary)";
-  if (type === "dismissed") return "var(--graphite)";
-  if (type === "escalated" || type === "thread_locked") return "var(--primary)";
-  if (type === "decision_made") return "var(--champagne)";
-  if (actor === "admin" || actor === "system") return "var(--dark)";
-  if (actor === "creator") return "var(--tertiary)";
-  if (actor === "merchant") return "var(--primary)";
-  return "var(--graphite)";
-}
-
-type Props = {
+interface DisputeTimelineProps {
   events: DisputeEvent[];
-  showInternal?: boolean;
-};
+}
 
-export function DisputeTimeline({ events, showInternal = false }: Props) {
-  const visible = showInternal ? events : events.filter((e) => !e.internal);
+export function DisputeTimeline({ events }: DisputeTimelineProps) {
+  const listRef = useRef<HTMLDivElement>(null);
+
+  // Fade-up entrance on scroll
+  useEffect(() => {
+    const els = listRef.current?.querySelectorAll(".dispute-timeline-event");
+    if (!els?.length) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            (entry.target as HTMLElement).classList.add("visible");
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.1 },
+    );
+
+    // Stagger with small delay per event
+    els.forEach((el, i) => {
+      (el as HTMLElement).style.transitionDelay = `${i * 60}ms`;
+      observer.observe(el);
+    });
+
+    return () => observer.disconnect();
+  }, [events]);
 
   return (
-    <div className="dispute-timeline">
-      {visible.map((event, idx) => {
-        const color = getEventColor(event.type, event.actor);
+    <div className="dispute-timeline" ref={listRef}>
+      {events.map((event) => {
+        const borderCls = eventBorderClass(event.authorRole, event.type);
+        const isDecision = event.type === "admin_decision";
+
         return (
-          <div
-            key={event.id}
-            className={`dt-item${event.internal ? " dt-item--internal" : ""}`}
-          >
-            {/* Connector line */}
-            {idx < visible.length - 1 && <div className="dt-item__line" />}
-
-            {/* Dot */}
-            <div className="dt-item__dot" style={{ background: color }} />
-
-            {/* Content */}
-            <div className="dt-item__body">
-              <div className="dt-item__meta">
-                <span className="dt-item__event-label">
-                  {EVENT_LABELS[event.type] ?? event.type}
-                </span>
-                <span className="dt-item__actor" style={{ color }}>
-                  {ACTOR_LABELS[event.actor] ?? event.actor}
-                  {event.actor !== "system" && ` — ${event.actor_name}`}
-                </span>
-                <span className="dt-item__time">
-                  {formatTime(event.timestamp)}
-                </span>
-                {event.internal && (
-                  <span className="dt-item__internal-badge">Internal</span>
-                )}
-              </div>
-              <p className="dt-item__content">{event.content}</p>
-              {event.attachment_url && (
-                <a
-                  href={event.attachment_url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="dt-item__attachment"
+          <div key={event.id} className={`dispute-timeline-event ${borderCls}`}>
+            <div className="dispute-timeline-event__header">
+              <div className="dispute-timeline-event__author">
+                <span
+                  className={`dispute-timeline-event__role-pill dispute-timeline-event__role-pill--${event.authorRole}`}
                 >
-                  View attachment
-                </a>
-              )}
+                  {event.authorRole}
+                </span>
+                <span className="dispute-timeline-event__author-name">
+                  {event.authorName}
+                </span>
+              </div>
+              <span className="dispute-timeline-event__time">
+                {formatDate(event.createdAt)}
+              </span>
             </div>
+
+            {/* Type label — shown for system events */}
+            {event.type !== "creator_response" &&
+              event.type !== "merchant_response" &&
+              event.type !== "filed" && (
+                <p className="dispute-timeline-event__type-label">
+                  {eventTypeLabel(event.type)}
+                </p>
+              )}
+
+            <p
+              className="dispute-timeline-event__message"
+              style={isDecision ? { fontWeight: 600 } : undefined}
+            >
+              {event.message}
+            </p>
+
+            {/* Evidence thumbnails */}
+            {event.evidence && event.evidence.length > 0 && (
+              <div className="dispute-timeline-evidence">
+                {event.evidence.map((ev) => (
+                  <a
+                    key={ev.id}
+                    href={ev.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="dispute-evidence-thumb"
+                    title={ev.label}
+                  >
+                    {ev.type === "image" ? (
+                      <img
+                        src={ev.url}
+                        alt={ev.label}
+                        className="dispute-evidence-thumb__img"
+                      />
+                    ) : (
+                      <span style={{ fontSize: "20px" }}>🔗</span>
+                    )}
+                    <span className="dispute-evidence-thumb__label">
+                      {ev.label}
+                    </span>
+                  </a>
+                ))}
+              </div>
+            )}
           </div>
         );
       })}

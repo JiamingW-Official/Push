@@ -4,8 +4,8 @@ import { useParams, notFound } from "next/navigation";
 import Link from "next/link";
 import { useState } from "react";
 import "../disputes.css";
-import { MOCK_DISPUTES, AdminNote } from "@/lib/disputes/mock-disputes";
-import { DisputeTimeline } from "@/components/disputes/DisputeTimeline";
+import { MOCK_DISPUTES, AdminNote } from "@/lib/disputes/mock-admin-disputes";
+import { DisputeTimeline } from "@/components/disputes/AdminDisputeTimeline";
 import { AdminDecisionPanel } from "@/components/disputes/AdminDecisionPanel";
 
 // ---------------------------------------------------------------------------

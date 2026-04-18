@@ -9,7 +9,7 @@ import {
   Dispute,
   DisputeStatus,
   DisputeSeverity,
-} from "@/lib/disputes/mock-disputes";
+} from "@/lib/disputes/mock-admin-disputes";
 
 // ---------------------------------------------------------------------------
 // Helpers

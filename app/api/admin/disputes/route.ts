@@ -3,7 +3,7 @@ import {
   MOCK_DISPUTES,
   DisputeStatus,
   DisputeSeverity,
-} from "@/lib/disputes/mock-disputes";
+} from "@/lib/disputes/mock-admin-disputes";
 
 // GET /api/admin/disputes
 // Query params: status, severity, min_amount, max_amount, category, search
