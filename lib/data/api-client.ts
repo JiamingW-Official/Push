@@ -3,9 +3,6 @@
 // Usage:
 //   NEXT_PUBLIC_USE_MOCK=1   → reads/writes localStorage mock store
 //   (default)                → hits real API endpoints
-//
-// To switch to Supabase later, update the `real.*` implementations below.
-// Callers never need to change.
 
 import { mockStore } from "./mock-store";
 import type {
@@ -34,6 +31,14 @@ import type {
   MockSubmission,
 } from "./mock-submissions";
 import { MOCK_SUBMISSIONS } from "./mock-submissions";
+
+import {
+  MOCK_APPLICATIONS,
+  filterApplications,
+  type MockApplication,
+  type ApplicantFilters,
+  type ApplicationStatus,
+} from "./mock-applications";
 
 const USE_MOCK =
   typeof process !== "undefined"
@@ -66,8 +71,6 @@ async function apiFetch<T>(
     };
   }
 }
-
-// ── Mock helpers ──────────────────────────────────────────────────────────────
 
 function mockOk<T>(data: T): ApiResult<T> {
   return { ok: true, data };
@@ -165,6 +168,8 @@ const creatorReal = {
 
 // ── Merchant endpoints ────────────────────────────────────────────────────────
 
+let _applications = [...MOCK_APPLICATIONS];
+
 const merchantMock = {
   getCampaigns(): ApiResult<Campaign[]> {
     const stored = mockStore.read<Campaign[]>("merchant-campaigns", []);
@@ -202,6 +207,37 @@ const merchantMock = {
   payments(): ApiResult<Payment[]> {
     return mockOk(mockStore.read<Payment[]>("merchant-payments", []));
   },
+
+  getApplicants(filters: ApplicantFilters = {}): {
+    data: MockApplication[];
+    total: number;
+  } {
+    return filterApplications(_applications, filters);
+  },
+
+  decideApplication(
+    id: string,
+    decision: "accept" | "decline" | "shortlist",
+  ): MockApplication | null {
+    const statusMap: Record<typeof decision, ApplicationStatus> = {
+      accept: "accepted",
+      decline: "declined",
+      shortlist: "shortlisted",
+    };
+    const idx = _applications.findIndex((a) => a.id === id);
+    if (idx === -1) return null;
+    _applications[idx] = { ..._applications[idx], status: statusMap[decision] };
+    return _applications[idx];
+  },
+
+  batchDecide(
+    ids: string[],
+    decision: "accept" | "decline" | "shortlist",
+  ): MockApplication[] {
+    return ids
+      .map((id) => this.decideApplication(id, decision))
+      .filter((a): a is MockApplication => a !== null);
+  },
 };
 
 const merchantReal = {
@@ -212,6 +248,9 @@ const merchantReal = {
       body: JSON.stringify(data),
     }),
   payments: () => apiFetch<Payment[]>("/merchant/payments"),
+  getApplicants: merchantMock.getApplicants,
+  decideApplication: merchantMock.decideApplication,
+  batchDecide: merchantMock.batchDecide,
 };
 
 // ── Attribution endpoints ─────────────────────────────────────────────────────
@@ -255,7 +294,7 @@ const attributionReal = {
 
 // ── Public API surface ────────────────────────────────────────────────────────
 
-export { creatorMock };
+export { creatorMock, merchantMock };
 
 export const api = {
   creator: USE_MOCK ? creatorMock : creatorReal,
@@ -263,7 +302,6 @@ export const api = {
   attribution: USE_MOCK ? attributionMock : attributionReal,
 };
 
-// Re-export types for convenience
 export type {
   Campaign,
   Creator,
