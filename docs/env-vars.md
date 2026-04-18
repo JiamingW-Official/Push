@@ -19,10 +19,31 @@ SUPABASE_SERVICE_ROLE_KEY=sb_secret_xxxxxxxxxxxx
 # Used for OG images, OAuth callbacks, canonical URLs
 NEXT_PUBLIC_SITE_URL=https://push-six-flax.vercel.app
 
+# ── Anthropic / v5.0 AI Layer (optional) ─────────────────────────────
+# When ANTHROPIC_API_KEY is UNSET, the AI layer degrades to a deterministic
+# mock: /api/agent/match-creators returns the same output shape as Claude
+# (so the onboarding + landing demo run end-to-end), and /api/attribution/scan
+# skips the Vision OCR pass but still records the scan.
+# Set all three to go live. Server-side only — never expose to the browser.
+ANTHROPIC_API_KEY=sk-ant-xxxxxxxxxxxx
+ANTHROPIC_MODEL_VISION=claude-sonnet-4-6      # override to opus-4-7 if OCR < 90%
+ANTHROPIC_MODEL_MATCHING=claude-sonnet-4-6
+
 # ── Feature flags (optional) ─────────────────────────────────────────
 # Set to "1" to force all API routes into mock mode (no DB calls)
 NEXT_PUBLIC_USE_MOCK=0
 ```
+
+## v5.0 migrations
+
+After pulling the v5.0 branch, apply the two new SQL migrations in Supabase
+SQL editor (or via `supabase db push` if you use the CLI):
+
+- `supabase/migrations/20260418000000_add_pricing_tier_to_merchants.sql`
+- `supabase/migrations/20260418000001_add_ai_verifications_and_agent_runs.sql`
+
+Both are idempotent (`IF NOT EXISTS`). Until applied, the new API routes
+return mock data and do not write verification / agent-run rows.
 
 ## Key naming convention
 
