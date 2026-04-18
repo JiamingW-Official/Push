@@ -1,8 +1,6 @@
-// Admin route group — standalone shell, does NOT inherit marketing/creator/merchant layouts
-export default function AdminGroupLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+import type { ReactNode } from "react";
+
+// Admin layout — no public header/footer, isolated shell
+export default function AdminLayout({ children }: { children: ReactNode }) {
   return <>{children}</>;
 }
