@@ -20,13 +20,20 @@ import type {
   ScanEvent,
 } from "./types";
 
-// Import existing demo fixture data for the mock layer
 import {
   DEMO_CAMPAIGNS,
   DEMO_CREATOR,
   DEMO_APPLICATIONS,
   DEMO_PAYOUTS,
 } from "@/lib/demo-data";
+
+import type {
+  ContentType,
+  Platform,
+  Attachment,
+  MockSubmission,
+} from "./mock-submissions";
+import { MOCK_SUBMISSIONS } from "./mock-submissions";
 
 const USE_MOCK =
   typeof process !== "undefined"
@@ -66,11 +73,18 @@ function mockOk<T>(data: T): ApiResult<T> {
   return { ok: true, data };
 }
 
+export type SubmitContentPayload = {
+  contentType: ContentType;
+  platform: Platform;
+  attachments: Attachment[];
+  caption: string;
+  publicUrl: string;
+};
+
 // ── Creator endpoints ─────────────────────────────────────────────────────────
 
 const creatorMock = {
   getCampaigns(): ApiResult<Campaign[]> {
-    // Adapt existing demo fixtures to Campaign shape
     const campaigns = (DEMO_CAMPAIGNS as unknown as Campaign[]).slice(0, 10);
     return mockOk(campaigns);
   },
@@ -92,6 +106,51 @@ const creatorMock = {
     const payments = (DEMO_PAYOUTS as unknown as Payment[]) ?? [];
     return mockOk(payments);
   },
+
+  async submitContent(
+    campaignId: string,
+    data: SubmitContentPayload,
+  ): Promise<MockSubmission> {
+    const res = await fetch(
+      `/api/creator/campaigns/${campaignId}/submissions`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...data, creatorId: "demo-creator-001" }),
+      },
+    );
+    if (!res.ok) throw new Error("Failed to submit content");
+    const json = await res.json();
+    return json.submission as MockSubmission;
+  },
+
+  async getSubmissions(campaignId: string): Promise<MockSubmission[]> {
+    if (typeof window !== "undefined") {
+      return MOCK_SUBMISSIONS.filter((s) => s.campaignId === campaignId);
+    }
+    const res = await fetch(`/api/creator/campaigns/${campaignId}/submissions`);
+    if (!res.ok) return [];
+    const json = await res.json();
+    return json.submissions as MockSubmission[];
+  },
+
+  async resubmit(
+    campaignId: string,
+    submissionId: string,
+    data: Partial<SubmitContentPayload>,
+  ): Promise<MockSubmission> {
+    const res = await fetch(
+      `/api/creator/campaigns/${campaignId}/submissions/${submissionId}`,
+      {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...data, status: "pending_review" }),
+      },
+    );
+    if (!res.ok) throw new Error("Failed to resubmit");
+    const json = await res.json();
+    return json.updated as MockSubmission;
+  },
 };
 
 const creatorReal = {
@@ -99,6 +158,9 @@ const creatorReal = {
   apply: (id: string) =>
     apiFetch<Application>(`/creator/campaigns/${id}/apply`, { method: "POST" }),
   earnings: () => apiFetch<Payment[]>("/creator/earnings"),
+  submitContent: creatorMock.submitContent,
+  getSubmissions: creatorMock.getSubmissions,
+  resubmit: creatorMock.resubmit,
 };
 
 // ── Merchant endpoints ────────────────────────────────────────────────────────
@@ -107,7 +169,6 @@ const merchantMock = {
   getCampaigns(): ApiResult<Campaign[]> {
     const stored = mockStore.read<Campaign[]>("merchant-campaigns", []);
     if (stored.length) return mockOk(stored);
-    // Return a slice of demo campaigns attributed to demo merchant
     const campaigns = (DEMO_CAMPAIGNS as unknown as Campaign[]).slice(0, 5);
     return mockOk(campaigns);
   },
@@ -194,30 +255,12 @@ const attributionReal = {
 
 // ── Public API surface ────────────────────────────────────────────────────────
 
+export { creatorMock };
+
 export const api = {
   creator: USE_MOCK ? creatorMock : creatorReal,
   merchant: USE_MOCK ? merchantMock : merchantReal,
   attribution: USE_MOCK ? attributionMock : attributionReal,
-} as {
-  creator: {
-    getCampaigns(): Promise<ApiResult<Campaign[]>> | ApiResult<Campaign[]>;
-    apply(id: string): Promise<ApiResult<Application>> | ApiResult<Application>;
-    earnings(): Promise<ApiResult<Payment[]>> | ApiResult<Payment[]>;
-  };
-  merchant: {
-    getCampaigns(): Promise<ApiResult<Campaign[]>> | ApiResult<Campaign[]>;
-    createCampaign(
-      data: Partial<Campaign>,
-    ): Promise<ApiResult<Campaign>> | ApiResult<Campaign>;
-    payments(): Promise<ApiResult<Payment[]>> | ApiResult<Payment[]>;
-  };
-  attribution: {
-    scan(qrId: string): Promise<ApiResult<ScanEvent>> | ApiResult<ScanEvent>;
-    verify(
-      qrId: string,
-      evidence: string,
-    ): Promise<ApiResult<ScanEvent>> | ApiResult<ScanEvent>;
-  };
 };
 
 // Re-export types for convenience
