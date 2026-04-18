@@ -1,28 +1,31 @@
 # Supabase — Push Backend
 
-Backend migration is in progress. See [`../.claude/schema-v1.md`](../.claude/schema-v1.md) for the design rationale and open questions.
+The live schema was authored in two migrations on `main` (initial + creator_extended). A v2 redesign was proposed in [`../.claude/schema-v1.md`](../.claude/schema-v1.md) but is currently **superseded** — see that doc for the open questions about money as cents, unified events, and profile-based auth.
 
 ## Structure
 
 ```
 supabase/
-├── config.toml                          # CLI + local stack config (major_version 17)
+├── config.toml                              # CLI + local stack config (major_version 17)
 └── migrations/
-    └── 20260417000000_schema_v1.sql     # 6 core tables + RLS + triggers
+    ├── 20260412000000_initial_schema.sql    # users, creators, merchants, campaigns, campaign_applications
+    └── 20260412000001_creator_extended.sql  # tier, push_score, creator_submissions, creator_payouts, qr_scans
 ```
 
-## Schema v1 — what's live
+## Live tables
 
-| table | purpose | RLS summary |
-|-------|---------|-------------|
-| `profiles` | 1:1 with `auth.users`, carries role | Self read/update; admin all |
-| `creators` | Creator profile + tier + score | Public read; self update; admin all |
-| `merchants` | Merchant profile + geo | Public read; self update; admin all |
-| `campaigns` | Offer listings with tiered slots + budget | Active rows public; merchant full on own; admin all |
-| `qr_codes` | Creator × campaign binding (`short_code` printed on poster) | Public read; creator/merchant full on own; admin all |
-| `scans` | Unified event log (scan / verify / conversion) | Public INSERT; creator/merchant scoped read; admin all |
+| table | purpose | notes |
+|-------|---------|-------|
+| `users` | App-level mirror of `auth.users` with role (creator / merchant) | Auto-created by `handle_new_user` trigger on auth signup |
+| `creators` | Creator profile + tier + push_score + earnings | `user_id` FK to users.id; 6-tier enum (seed → partner); `recalculate_push_score(creator_id)` pg function |
+| `merchants` | Merchant profile + address + contact | `user_id` FK to users.id |
+| `campaigns` | Campaign posts with payout, spots, status | `merchant_id` FK; money as NUMERIC(10,2) USD |
+| `campaign_applications` | Creator → campaign join with status | UNIQUE(creator_id, campaign_id); pending → accepted / rejected / withdrawn |
+| `creator_submissions` | Milestone tracking per application | 7-stage milestone enum, ratings, engagement rate |
+| `creator_payouts` | Payout records per submission | Supports instant / same_day / t1-t3 speeds |
+| `qr_scans` | QR attribution events | `scan_source` default 'post'; `ip_hash` + `device_fingerprint` for anti-fraud |
 
-Every mutable table has a `trigger_set_updated_at` trigger. `scans` is append-only (no trigger).
+All RLS-enabled. Service role bypasses. Creator/merchant scoped via `user_id = auth.uid()` joins.
 
 ## Local development
 

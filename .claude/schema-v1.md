@@ -1,7 +1,26 @@
 # Supabase Schema v1 — Design Proposal
 
+> ## ⚠️ SUPERSEDED on 2026-04-18
+>
+> This doc was written without checking `supabase/migrations/` first. The repo
+> **already ships** two migrations on `main` that define an incompatible
+> schema (`public.users` + `creators.user_id` + NUMERIC money + `qr_scans`
+> single-event table). 8+ pages (signup, dashboard, messages, etc.) already
+> import `@/lib/supabase` and query those tables.
+>
+> My original migration `20260417000000_schema_v1.sql` was removed because it
+> collided with the existing `creators`/`merchants`/`campaigns` tables.
+>
+> **This document is retained as a v2 REDESIGN PROPOSAL** for a future session
+> to evaluate. If adopted, it must be delivered as ALTER-based migrations that
+> evolve the existing tables, not as a from-scratch rewrite (which would break
+> every page that already queries the legacy shape).
+>
+> **Active schema:** see `supabase/migrations/20260412*` and the table reference
+> at the bottom of `supabase/README.md`.
+
 **Date:** 2026-04-17
-**Status:** DRAFT — awaiting user review before writing migration
+**Status:** SUPERSEDED — retained as v2 redesign proposal
 **Scope:** 6 core tables covering the scan→verify→payout loop. Admin/ops tables (disputes, audit_log, cohorts, verifications, invoices) are v2.
 
 ---
