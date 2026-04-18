@@ -40,12 +40,27 @@ import {
   type ApplicationStatus,
 } from "./mock-applications";
 
+import {
+  MOCK_QR_CODES,
+  type QRCodeRecord,
+  type PosterType,
+} from "@/lib/attribution/mock-qr-codes-extended";
+
+import {
+  MOCK_PAYOUT_METHODS,
+  MOCK_WITHDRAWALS,
+  MOCK_TAX_SUMMARY,
+  MOCK_WALLET_BALANCE,
+  type PayoutMethod,
+  type Withdrawal,
+  type TaxSummary,
+  type WalletBalance,
+} from "@/lib/wallet/mock-wallet";
+
 const USE_MOCK =
   typeof process !== "undefined"
     ? process.env.NEXT_PUBLIC_USE_MOCK === "1"
     : false;
-
-// ── Internal fetch wrapper ────────────────────────────────────────────────────
 
 async function apiFetch<T>(
   path: string,
@@ -82,6 +97,25 @@ export type SubmitContentPayload = {
   attachments: Attachment[];
   caption: string;
   publicUrl: string;
+};
+
+export type QRListParams = {
+  campaign_id?: string;
+  poster_type?: PosterType;
+  status?: "active" | "disabled" | "all";
+};
+
+export type QRCreateInput = {
+  campaign_id: string;
+  campaign_name: string;
+  poster_type: PosterType;
+  hero_message: string;
+  sub_message: string;
+};
+
+export type QRUpdateInput = {
+  disabled?: boolean;
+  regenerate?: boolean;
 };
 
 // ── Creator endpoints ─────────────────────────────────────────────────────────
@@ -154,6 +188,72 @@ const creatorMock = {
     const json = await res.json();
     return json.updated as MockSubmission;
   },
+
+  wallet: {
+    getBalance(): Promise<WalletBalance> {
+      return Promise.resolve({ ...MOCK_WALLET_BALANCE });
+    },
+    getPayoutMethods(): Promise<PayoutMethod[]> {
+      return Promise.resolve([...MOCK_PAYOUT_METHODS]);
+    },
+    addPayoutMethod(
+      method: Omit<PayoutMethod, "id" | "addedAt">,
+    ): Promise<PayoutMethod> {
+      const created: PayoutMethod = {
+        ...method,
+        id: `pm-${Date.now()}`,
+        addedAt: new Date().toISOString().split("T")[0],
+      };
+      return Promise.resolve(created);
+    },
+    updatePayoutMethod(
+      id: string,
+      patch: Partial<PayoutMethod>,
+    ): Promise<PayoutMethod> {
+      const method = MOCK_PAYOUT_METHODS.find((m) => m.id === id);
+      if (!method) return Promise.reject(new Error("Method not found"));
+      return Promise.resolve({ ...method, ...patch });
+    },
+    deletePayoutMethod(_id: string): Promise<{ deleted: boolean }> {
+      return Promise.resolve({ deleted: true });
+    },
+    getWithdrawals(filters?: {
+      status?: string;
+      method?: string;
+      year?: string;
+    }): Promise<Withdrawal[]> {
+      let results = [...MOCK_WITHDRAWALS];
+      if (filters?.status)
+        results = results.filter((w) => w.status === filters.status);
+      if (filters?.method)
+        results = results.filter((w) => w.methodType === filters.method);
+      if (filters?.year)
+        results = results.filter((w) => w.date.startsWith(filters.year!));
+      return Promise.resolve(results);
+    },
+    initiateWithdrawal(amount: number, methodId: string): Promise<Withdrawal> {
+      const method = MOCK_PAYOUT_METHODS.find((m) => m.id === methodId);
+      const feeRate = method?.feeRate ?? 0;
+      const flatFee =
+        method?.type === "bank" ? 1.5 : method?.type === "paypal" ? 0.25 : 0;
+      const fee = parseFloat((amount * feeRate + flatFee).toFixed(2));
+      const withdrawal: Withdrawal = {
+        id: `wd-${Date.now()}`,
+        date: new Date().toISOString().split("T")[0],
+        methodId,
+        methodType: method?.type ?? "bank",
+        methodDetail: method?.detail ?? "—",
+        amount,
+        fee,
+        net: parseFloat((amount - fee).toFixed(2)),
+        status: "processing",
+      };
+      return Promise.resolve(withdrawal);
+    },
+    getTaxSummary(): Promise<TaxSummary> {
+      return Promise.resolve({ ...MOCK_TAX_SUMMARY });
+    },
+  },
 };
 
 const creatorReal = {
@@ -164,11 +264,13 @@ const creatorReal = {
   submitContent: creatorMock.submitContent,
   getSubmissions: creatorMock.getSubmissions,
   resubmit: creatorMock.resubmit,
+  wallet: creatorMock.wallet,
 };
 
 // ── Merchant endpoints ────────────────────────────────────────────────────────
 
 let _applications = [...MOCK_APPLICATIONS];
+let _qrStore: QRCodeRecord[] = [...MOCK_QR_CODES];
 
 const merchantMock = {
   getCampaigns(): ApiResult<Campaign[]> {
@@ -238,6 +340,64 @@ const merchantMock = {
       .map((id) => this.decideApplication(id, decision))
       .filter((a): a is MockApplication => a !== null);
   },
+
+  qrCodes: {
+    list(params: QRListParams = {}): QRCodeRecord[] {
+      let results = [..._qrStore];
+      if (params.campaign_id)
+        results = results.filter((q) => q.campaign_id === params.campaign_id);
+      if (params.poster_type)
+        results = results.filter((q) => q.poster_type === params.poster_type);
+      if (params.status === "active")
+        results = results.filter((q) => !q.disabled);
+      else if (params.status === "disabled")
+        results = results.filter((q) => q.disabled);
+      return results;
+    },
+    create(input: QRCreateInput): QRCodeRecord {
+      const newCode: QRCodeRecord = {
+        id: `qr-${Date.now()}`,
+        campaign_id: input.campaign_id,
+        campaign_name: input.campaign_name,
+        poster_type: input.poster_type,
+        hero_message: input.hero_message,
+        sub_message: input.sub_message,
+        scan_url: `/scan/qr-${Date.now()}`,
+        scan_count: 0,
+        conversion_count: 0,
+        created_at: new Date().toISOString(),
+        last_active_at: new Date().toISOString(),
+        disabled: false,
+      };
+      _qrStore = [newCode, ..._qrStore];
+      return newCode;
+    },
+    get(id: string): QRCodeRecord | undefined {
+      return _qrStore.find((q) => q.id === id);
+    },
+    update(id: string, input: QRUpdateInput): QRCodeRecord | null {
+      const idx = _qrStore.findIndex((q) => q.id === id);
+      if (idx === -1) return null;
+      let updated = { ..._qrStore[idx] };
+      if (input.disabled !== undefined) updated.disabled = input.disabled;
+      if (input.regenerate) {
+        updated = {
+          ...updated,
+          id: `qr-regen-${Date.now()}`,
+          scan_count: 0,
+          created_at: new Date().toISOString(),
+          last_active_at: new Date().toISOString(),
+        };
+      }
+      _qrStore = _qrStore.map((q) => (q.id === id ? updated : q));
+      return updated;
+    },
+    delete(id: string): boolean {
+      const before = _qrStore.length;
+      _qrStore = _qrStore.filter((q) => q.id !== id);
+      return _qrStore.length < before;
+    },
+  },
 };
 
 const merchantReal = {
@@ -251,6 +411,7 @@ const merchantReal = {
   getApplicants: merchantMock.getApplicants,
   decideApplication: merchantMock.decideApplication,
   batchDecide: merchantMock.batchDecide,
+  qrCodes: merchantMock.qrCodes,
 };
 
 // ── Attribution endpoints ─────────────────────────────────────────────────────
