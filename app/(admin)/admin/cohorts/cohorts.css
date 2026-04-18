@@ -1,0 +1,1036 @@
+/* ============================================================
+   Push Admin — Cohort Analysis Dashboard
+   Authority: Design.md  |  6 colors / Darky+CSGenioMono / 0 radius / 8px grid
+   ============================================================ */
+
+/* ------------------------------------------------------------
+   Admin Shell
+   ------------------------------------------------------------ */
+.admin-shell {
+  min-height: 100vh;
+  background: var(--surface);
+  display: flex;
+  flex-direction: column;
+}
+
+.admin-nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--dark);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 0 var(--space-5);
+  height: 56px;
+  display: flex;
+  align-items: center;
+  gap: var(--space-6);
+}
+
+.admin-nav__brand {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 18px;
+  color: #fff;
+  text-decoration: none;
+  letter-spacing: -0.04em;
+}
+.admin-nav__brand span {
+  color: var(--primary);
+  margin-left: 2px;
+}
+
+.admin-nav__links {
+  list-style: none;
+  display: flex;
+  gap: var(--space-4);
+  margin-left: auto;
+}
+.admin-nav__links a {
+  font-family: var(--font-body);
+  font-size: var(--text-small);
+  color: rgba(255, 255, 255, 0.65);
+  text-decoration: none;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  transition: color var(--t-base);
+}
+.admin-nav__links a:hover {
+  color: #fff;
+}
+
+.admin-main {
+  flex: 1;
+}
+
+/* ------------------------------------------------------------
+   Hero
+   ------------------------------------------------------------ */
+.cohort-hero {
+  background: var(--dark);
+  padding: var(--space-10) var(--space-5) var(--space-8);
+  border-bottom: 2px solid var(--primary);
+}
+
+.cohort-hero__inner {
+  max-width: var(--content-width);
+  margin: 0 auto;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-8);
+  flex-wrap: wrap;
+}
+
+.cohort-hero__eyebrow {
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--primary);
+  margin-bottom: var(--space-2);
+}
+
+.cohort-hero__title {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(48px, 6vw, 80px);
+  letter-spacing: -0.05em;
+  line-height: 0.95;
+  color: #fff;
+  margin-bottom: var(--space-3);
+}
+
+.cohort-hero__sub {
+  font-family: var(--font-body);
+  font-size: var(--text-body);
+  color: rgba(255, 255, 255, 0.5);
+  max-width: 480px;
+}
+
+.cohort-hero__stats {
+  display: flex;
+  gap: var(--space-6);
+  flex-wrap: wrap;
+}
+
+.hero-stat {
+  text-align: right;
+}
+
+.hero-stat__value {
+  font-family: var(--font-display);
+  font-weight: 200;
+  font-size: clamp(36px, 4vw, 56px);
+  letter-spacing: -0.05em;
+  color: #fff;
+  line-height: 1;
+}
+
+.hero-stat__label {
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.45);
+  margin-top: 4px;
+}
+
+/* ------------------------------------------------------------
+   Toolbar (filters + create)
+   ------------------------------------------------------------ */
+.cohort-toolbar {
+  background: var(--surface-elevated);
+  border-bottom: 1px solid var(--line);
+  padding: var(--space-3) var(--space-5);
+  position: sticky;
+  top: 56px;
+  z-index: 80;
+}
+
+.cohort-toolbar__inner {
+  max-width: var(--content-width);
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+}
+
+.cohort-filter-group {
+  display: flex;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+  flex: 1;
+}
+
+.cohort-filter-chip {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 6px 14px;
+  border: 1.5px solid var(--line);
+  background: transparent;
+  color: var(--graphite);
+  cursor: pointer;
+  border-radius: 50vh; /* pill — Design.md exception for filter chips */
+  transition:
+    background var(--t-base),
+    color var(--t-base),
+    border-color var(--t-base);
+  white-space: nowrap;
+}
+.cohort-filter-chip:hover {
+  border-color: var(--dark);
+  color: var(--dark);
+}
+.cohort-filter-chip.active {
+  background: var(--dark);
+  border-color: var(--dark);
+  color: #fff;
+}
+
+.cohort-create-btn {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 8px 20px;
+  background: var(--primary);
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  border-radius: 0;
+  box-shadow: var(--btn-shadow);
+  transition:
+    box-shadow var(--t-slow),
+    transform var(--t-base);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.cohort-create-btn:hover {
+  box-shadow: var(--btn-shadow-hover);
+}
+.cohort-create-btn:active {
+  transform: scale(0.97);
+}
+
+/* ------------------------------------------------------------
+   Cohort Grid
+   ------------------------------------------------------------ */
+.cohort-grid-section {
+  padding: var(--space-6) var(--space-5);
+}
+
+.cohort-grid-inner {
+  max-width: var(--content-width);
+  margin: 0 auto;
+}
+
+.cohort-grid-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-4);
+}
+
+.cohort-grid-count {
+  font-family: var(--font-body);
+  font-size: var(--text-caption);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--graphite);
+}
+
+.cohort-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: var(--space-3);
+}
+
+/* ------------------------------------------------------------
+   Cohort Card
+   ------------------------------------------------------------ */
+.cohort-card {
+  background: var(--surface-elevated);
+  border: 1px solid var(--line);
+  padding: var(--space-4);
+  cursor: pointer;
+  text-decoration: none;
+  color: inherit;
+  display: block;
+  transition:
+    border-color var(--t-base),
+    transform var(--t-slow),
+    box-shadow var(--t-slow);
+  position: relative;
+  overflow: hidden;
+}
+.cohort-card:hover {
+  border-color: var(--dark);
+  transform: translateY(-4px);
+  box-shadow: 4px 4px 0 var(--dark);
+}
+
+.cohort-card__top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-2);
+  margin-bottom: var(--space-3);
+}
+
+.cohort-card__name {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 20px;
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+  color: var(--dark);
+  flex: 1;
+}
+
+.cohort-badge {
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border-radius: 0;
+  flex-shrink: 0;
+}
+.cohort-badge--merchant {
+  background: rgba(0, 48, 73, 0.08);
+  color: var(--dark);
+  border: 1px solid rgba(0, 48, 73, 0.18);
+}
+.cohort-badge--creator {
+  background: rgba(102, 155, 188, 0.12);
+  color: var(--tertiary);
+  border: 1px solid rgba(102, 155, 188, 0.3);
+}
+
+.cohort-card__meta {
+  font-family: var(--font-body);
+  font-size: var(--text-caption);
+  color: var(--text-muted);
+  letter-spacing: 0.02em;
+  margin-bottom: var(--space-4);
+  display: flex;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+}
+
+.cohort-card__meta-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* Status dot */
+.status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.status-dot--active {
+  background: #22c55e;
+  box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.25);
+}
+.status-dot--completed {
+  background: var(--graphite);
+}
+.status-dot--paused {
+  background: var(--champagne);
+}
+
+/* Metrics row */
+.cohort-card__metrics {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-2);
+  margin-bottom: var(--space-4);
+  padding: var(--space-3) 0;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+
+.cohort-metric {
+  text-align: center;
+}
+
+.cohort-metric__value {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 18px;
+  letter-spacing: -0.03em;
+  color: var(--dark);
+  line-height: 1;
+}
+
+.cohort-metric__label {
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+/* Mini retention curve */
+.cohort-chart {
+  height: 48px;
+  position: relative;
+}
+
+.cohort-chart svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+/* View link */
+.cohort-card__cta {
+  position: absolute;
+  bottom: var(--space-3);
+  right: var(--space-3);
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--primary);
+  opacity: 0;
+  transition: opacity var(--t-base);
+}
+.cohort-card:hover .cohort-card__cta {
+  opacity: 1;
+}
+
+/* ------------------------------------------------------------
+   Create Cohort Modal
+   ------------------------------------------------------------ */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 48, 73, 0.55);
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-4);
+  animation: fadeIn 200ms ease forwards;
+}
+
+.modal-box {
+  background: var(--surface-elevated);
+  border: 1.5px solid var(--line-strong);
+  width: 100%;
+  max-width: 520px;
+  padding: var(--space-6);
+  animation: modalSlideUp 250ms ease forwards;
+  box-shadow: 8px 8px 0 rgba(0, 48, 73, 0.15);
+  position: relative;
+}
+
+.modal-box__title {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 28px;
+  letter-spacing: -0.04em;
+  color: var(--dark);
+  margin-bottom: var(--space-1);
+}
+
+.modal-box__sub {
+  font-family: var(--font-body);
+  font-size: var(--text-small);
+  color: var(--text-muted);
+  margin-bottom: var(--space-5);
+}
+
+.modal-close {
+  position: absolute;
+  top: var(--space-4);
+  right: var(--space-4);
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 20px;
+  color: var(--graphite);
+  line-height: 1;
+  padding: 4px;
+  transition: color var(--t-base);
+}
+.modal-close:hover {
+  color: var(--dark);
+}
+
+.modal-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-label {
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--graphite);
+}
+
+.form-input,
+.form-select {
+  font-family: var(--font-body);
+  font-size: var(--text-small);
+  color: var(--dark);
+  background: var(--surface);
+  border: 1.5px solid var(--line);
+  padding: 10px 14px;
+  border-radius: 0;
+  outline: none;
+  transition: border-color var(--t-base);
+  width: 100%;
+}
+.form-input:focus,
+.form-select:focus {
+  border-color: var(--dark);
+}
+
+.modal-actions {
+  display: flex;
+  gap: var(--space-2);
+  justify-content: flex-end;
+  margin-top: var(--space-2);
+}
+
+.btn-secondary {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 10px 20px;
+  background: transparent;
+  color: var(--graphite);
+  border: 1.5px solid var(--line);
+  cursor: pointer;
+  border-radius: 0;
+  transition:
+    border-color var(--t-base),
+    color var(--t-base);
+}
+.btn-secondary:hover {
+  border-color: var(--dark);
+  color: var(--dark);
+}
+
+.btn-primary {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 10px 24px;
+  background: var(--primary);
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  border-radius: 0;
+  box-shadow: var(--btn-shadow);
+  transition:
+    box-shadow var(--t-slow),
+    transform var(--t-base);
+}
+.btn-primary:hover {
+  box-shadow: var(--btn-shadow-hover);
+}
+.btn-primary:active {
+  transform: scale(0.97);
+}
+
+/* ------------------------------------------------------------
+   Detail Page
+   ------------------------------------------------------------ */
+.cohort-detail {
+  max-width: var(--content-width);
+  margin: 0 auto;
+  padding: var(--space-6) var(--space-5);
+}
+
+/* Back link */
+.cohort-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-body);
+  font-size: var(--text-caption);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--graphite);
+  text-decoration: none;
+  margin-bottom: var(--space-5);
+  transition: color var(--t-base);
+}
+.cohort-back:hover {
+  color: var(--dark);
+}
+.cohort-back::before {
+  content: "←";
+}
+
+/* Detail hero */
+.cohort-detail-hero {
+  background: var(--dark);
+  padding: var(--space-8) var(--space-6);
+  margin-bottom: var(--space-6);
+  border-left: 4px solid var(--primary);
+}
+
+.cohort-detail-hero__eyebrow {
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--primary);
+  margin-bottom: var(--space-2);
+}
+
+.cohort-detail-hero__title {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(36px, 5vw, 64px);
+  letter-spacing: -0.05em;
+  color: #fff;
+  margin-bottom: var(--space-2);
+  line-height: 1;
+}
+
+.cohort-detail-hero__sub {
+  font-family: var(--font-body);
+  font-size: var(--text-small);
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.cohort-detail-hero__kpis {
+  display: flex;
+  gap: var(--space-6);
+  margin-top: var(--space-5);
+  padding-top: var(--space-5);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  flex-wrap: wrap;
+}
+
+.hero-kpi__value {
+  font-family: var(--font-display);
+  font-weight: 200;
+  font-size: 40px;
+  letter-spacing: -0.05em;
+  color: #fff;
+  line-height: 1;
+}
+
+.hero-kpi__label {
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.4);
+  margin-top: 4px;
+}
+
+/* Section title */
+.section-title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 24px;
+  letter-spacing: -0.03em;
+  color: var(--dark);
+  margin-bottom: var(--space-4);
+  padding-bottom: var(--space-2);
+  border-bottom: 2px solid var(--line);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Cards grid for detail sections */
+.detail-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-4);
+  margin-bottom: var(--space-6);
+}
+
+@media (max-width: 768px) {
+  .detail-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.detail-card {
+  background: var(--surface-elevated);
+  border: 1px solid var(--line);
+  padding: var(--space-4);
+}
+
+/* ------------------------------------------------------------
+   Retention Heatmap Table
+   ------------------------------------------------------------ */
+.retention-section {
+  margin-bottom: var(--space-6);
+  overflow-x: auto;
+}
+
+.retention-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--font-body);
+  font-size: var(--text-caption);
+}
+
+.retention-table th {
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--graphite);
+  padding: var(--space-2) var(--space-2);
+  border-bottom: 1.5px solid var(--line-strong);
+  text-align: center;
+  white-space: nowrap;
+}
+.retention-table th:first-child {
+  text-align: left;
+}
+
+.retention-table td {
+  padding: 10px var(--space-2);
+  text-align: center;
+  border-bottom: 1px solid var(--line);
+  font-variant-numeric: tabular-nums;
+  position: relative;
+  font-weight: 600;
+}
+.retention-table td:first-child {
+  text-align: left;
+  font-weight: 700;
+  color: var(--dark);
+  white-space: nowrap;
+  padding-right: var(--space-4);
+}
+
+/* Heatmap cell - color applied via inline style */
+.heat-cell {
+  border-radius: 0;
+  min-width: 56px;
+}
+
+/* ------------------------------------------------------------
+   Activation Funnel
+   ------------------------------------------------------------ */
+.funnel-section {
+  margin-bottom: var(--space-6);
+}
+
+.funnel-bars {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.funnel-step {
+  display: grid;
+  grid-template-columns: 180px 1fr 72px;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.funnel-step__label {
+  font-family: var(--font-body);
+  font-size: var(--text-small);
+  font-weight: 600;
+  color: var(--dark);
+  text-align: right;
+}
+
+.funnel-step__bar-wrap {
+  height: 32px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  position: relative;
+}
+
+.funnel-step__bar {
+  height: 100%;
+  transition: width 800ms ease-out;
+}
+
+.funnel-step__pct {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 18px;
+  letter-spacing: -0.03em;
+  color: var(--dark);
+}
+
+/* ------------------------------------------------------------
+   Member List
+   ------------------------------------------------------------ */
+.member-section {
+  margin-bottom: var(--space-6);
+}
+
+.member-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--font-body);
+  font-size: var(--text-small);
+}
+
+.member-table th {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--graphite);
+  padding: var(--space-2) var(--space-3);
+  border-bottom: 1.5px solid var(--line-strong);
+  text-align: left;
+  background: var(--surface);
+}
+
+.member-table td {
+  padding: 12px var(--space-3);
+  border-bottom: 1px solid var(--line);
+  vertical-align: middle;
+}
+
+.member-table tr:hover td {
+  background: rgba(0, 48, 73, 0.025);
+}
+
+.member-status-badge {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 2px 8px;
+  border-radius: 0;
+}
+.member-status-badge--active {
+  background: rgba(34, 197, 94, 0.12);
+  color: #16a34a;
+  border: 1px solid rgba(34, 197, 94, 0.25);
+}
+.member-status-badge--churned {
+  background: rgba(193, 18, 31, 0.1);
+  color: var(--primary);
+  border: 1px solid rgba(193, 18, 31, 0.2);
+}
+.member-status-badge--paused {
+  background: var(--champagne-light);
+  color: #92650a;
+  border: 1px solid var(--champagne-border);
+}
+
+.member-tier {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 2px 8px;
+  border-radius: 0;
+  background: rgba(0, 48, 73, 0.06);
+  color: var(--dark);
+  display: inline-block;
+}
+
+/* ------------------------------------------------------------
+   Experiment Comparison
+   ------------------------------------------------------------ */
+.compare-section {
+  margin-bottom: var(--space-6);
+}
+
+.compare-chart {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.compare-row {
+  display: grid;
+  grid-template-columns: 200px 1fr 80px;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.compare-row__name {
+  font-family: var(--font-body);
+  font-size: var(--text-small);
+  font-weight: 600;
+  color: var(--dark);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.compare-row__name.is-current {
+  color: var(--primary);
+}
+
+.compare-bar-wrap {
+  height: 28px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  position: relative;
+}
+
+.compare-bar {
+  height: 100%;
+  transition: width 800ms ease-out;
+}
+.compare-bar.is-current {
+  background: var(--primary);
+}
+.compare-bar.is-other {
+  background: rgba(0, 48, 73, 0.18);
+}
+
+.compare-row__val {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 16px;
+  letter-spacing: -0.02em;
+  color: var(--dark);
+  text-align: right;
+}
+
+/* Metric selector */
+.compare-metric-tabs {
+  display: flex;
+  gap: var(--space-2);
+  margin-bottom: var(--space-4);
+  flex-wrap: wrap;
+}
+
+.compare-tab {
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 6px 12px;
+  background: transparent;
+  border: 1.5px solid var(--line);
+  color: var(--graphite);
+  cursor: pointer;
+  border-radius: 0;
+  transition:
+    background var(--t-base),
+    color var(--t-base),
+    border-color var(--t-base);
+}
+.compare-tab:hover {
+  border-color: var(--dark);
+  color: var(--dark);
+}
+.compare-tab.active {
+  background: var(--dark);
+  border-color: var(--dark);
+  color: #fff;
+}
+
+/* ------------------------------------------------------------
+   Export button
+   ------------------------------------------------------------ */
+.export-btn {
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 8px 16px;
+  background: transparent;
+  color: var(--graphite);
+  border: 1.5px solid var(--line);
+  cursor: pointer;
+  border-radius: 0;
+  transition:
+    border-color var(--t-base),
+    color var(--t-base);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.export-btn:hover {
+  border-color: var(--dark);
+  color: var(--dark);
+}
+
+/* ------------------------------------------------------------
+   Keyframes (Design.md tokens)
+   ------------------------------------------------------------ */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes modalSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ------------------------------------------------------------
+   Responsive
+   ------------------------------------------------------------ */
+@media (max-width: 900px) {
+  .cohort-hero__inner {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .hero-stat {
+    text-align: left;
+  }
+  .cohort-grid {
+    grid-template-columns: 1fr;
+  }
+  .funnel-step {
+    grid-template-columns: 1fr;
+  }
+  .funnel-step__label {
+    text-align: left;
+  }
+  .compare-row {
+    grid-template-columns: 1fr;
+  }
+}

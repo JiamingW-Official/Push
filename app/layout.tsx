@@ -3,6 +3,7 @@ import "./globals.css";
 import CustomCursor from "@/components/layout/CustomCursor";
 import SmoothScroll from "@/components/layout/SmoothScroll";
 import BackToTop from "@/components/layout/BackToTop";
+import { CommandKProvider } from "@/components/search/CommandKProvider";
 
 export const metadata: Metadata = {
   title: "Push — Pay Per Verified Visit | Creator Marketing for NYC Businesses",
@@ -95,10 +96,12 @@ export default function RootLayout({
           Skip to main content
         </a>
         <CustomCursor />
-        <SmoothScroll>
-          {children}
-          <BackToTop />
-        </SmoothScroll>
+        <CommandKProvider>
+          <SmoothScroll>
+            {children}
+            <BackToTop />
+          </SmoothScroll>
+        </CommandKProvider>
       </body>
     </html>
   );
