@@ -466,12 +466,13 @@ function CategoryArticles({ category }: { category: HelpCategory }) {
 }
 
 /* ── Page ──────────────────────────────────────────────────── */
-export default function HelpPage({
+export default async function HelpPage({
   searchParams,
 }: {
-  searchParams?: { category?: string };
+  searchParams?: Promise<{ category?: string }>;
 }) {
-  const categoryParam = searchParams?.category as HelpCategory | undefined;
+  const params = await searchParams;
+  const categoryParam = params?.category as HelpCategory | undefined;
   const isValidCategory = categoryParam && categoryParam in CATEGORIES;
 
   return (
