@@ -1,6 +1,7 @@
-import type { ReactNode } from "react";
-
-// Admin layout — no public header/footer, isolated shell
-export default function AdminLayout({ children }: { children: ReactNode }) {
+export default function AdminLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return <>{children}</>;
 }
