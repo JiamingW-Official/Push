@@ -77,7 +77,7 @@ export default function AgentOutputDemo({ showVideoCTA = false }: Props) {
 
   return (
     <div className="agent-demo-wrap">
-      <div className="agent-demo" aria-hidden="true">
+      <div className="agent-demo agent-demo--shimmer" aria-hidden="true">
         <div className="agent-demo-bar">
           <span className="agent-demo-dot" />
           <span className="agent-demo-title">push-agent</span>

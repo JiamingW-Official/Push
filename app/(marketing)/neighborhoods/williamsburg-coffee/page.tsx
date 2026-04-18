@@ -137,6 +137,66 @@ const STATS = [
   { n: "60", l: "Days to saturation" },
 ];
 
+/* ── Week-by-week timeline (big Darky 200 background numbers) */
+const TIMELINE_WEEKS = [
+  {
+    n: "01",
+    title: "ICP lock + QR print",
+    body: "Five LOIs signed. QR artifacts printed and seeded into cohort counters. ConversionOracle™ cold-starts on the Williamsburg Coffee+ walk-in corpus.",
+  },
+  {
+    n: "02",
+    title: "Campaign templates ship",
+    body: "T1 operators onboarded. Campaign brief templates live for morning rush and weekend brunch. DisclosureBot clears compliance on every draft.",
+  },
+  {
+    n: "04",
+    title: "Claude Vision tuning",
+    body: "Receipt OCR auto-verify lifts from 74% to 92%. Geo-match and QR layers fill the last eight points. SLR begins compounding.",
+  },
+  {
+    n: "06",
+    title: "Cohort review + T5 Closer",
+    body: "Retainer-backed T5 Closer deployed across three shops. Software Leverage Ratio crosses 20. Predicted vs actual inside ±15%.",
+  },
+  {
+    n: "08",
+    title: "Expansion decision",
+    body: "Greenpoint pilot queue triggered. Williamsburg Coffee+ Oracle model hands off its corpus. Density compound tested on live neighborhood two.",
+  },
+];
+
+/* ── Metrics waterfall (Weeks 1 / 2 / 4 / 6 / 8) ──────────── */
+const WATERFALL = [
+  { week: "Week 1", customers: "12", slr: "4.0", autoVerify: "74%" },
+  { week: "Week 2", customers: "28", slr: "8.5", autoVerify: "81%" },
+  { week: "Week 4", customers: "54", slr: "14.2", autoVerify: "92%" },
+  { week: "Week 6", customers: "71", slr: "21.4", autoVerify: "94%" },
+  { week: "Week 8", customers: "88", slr: "25.7", autoVerify: "95%" },
+];
+
+/* ── Merchant + creator quotes ─────────────────────────────── */
+const MERCHANT_QUOTES = [
+  {
+    who: "Partners Coffee · Pilot shop lead",
+    text: "We stopped guessing which posts drove walk-ins. ConversionOracle shows us receipts the same afternoon.",
+  },
+  {
+    who: "Sey Coffee · Owner",
+    text: "The Pilot absorbed our first ten customers. We only started paying once the AI proved the door count.",
+  },
+];
+const CREATOR_QUOTES = [
+  {
+    who: "@maya.eats.nyc · T2 Steel",
+    text: "Claude Vision verifies my receipt photos in seconds. I know I'm getting paid per customer, not per view.",
+  },
+  {
+    who: "@coffee.crawl.nyc · T5 Closer",
+    text: "The retainer + rev-share model means I ship weekly, not one-off. Williamsburg Coffee+ is the first pilot where my dispatch was AI-routed.",
+  },
+];
+
 export default function WilliamsburgCoffeePage() {
   const jsonLd = {
     "@context": "https://schema.org",
@@ -177,6 +237,21 @@ export default function WilliamsburgCoffeePage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       <ScrollRevealInit />
+
+      {/* ── STICKY APPLY SIDEBAR (desktop only) ────────────── */}
+      <aside className="wbc-sticky-apply" aria-label="Apply for Pilot">
+        <div className="wbc-sticky-apply-inner">
+          <span className="wbc-sticky-apply-stamp">5 spots remaining</span>
+          <p className="wbc-sticky-apply-body">
+            Williamsburg Coffee+ Pilot — first 10 AI-verified customers free.
+            ConversionOracle™ walk-in ground truth. Per-neighborhood cost cap
+            $4,200.
+          </p>
+          <Link href="/merchant/pilot" className="wbc-sticky-apply-btn">
+            Apply for $0 Pilot
+          </Link>
+        </div>
+      </aside>
 
       {/* ── HERO ────────────────────────────────────────────── */}
       <section className="wbc-hero" aria-labelledby="wbc-h">
@@ -394,11 +469,137 @@ export default function WilliamsburgCoffeePage() {
         </div>
       </section>
 
-      {/* ── CASE STUDIES ────────────────────────────────────── */}
+      {/* ── WEEK-BY-WEEK TIMELINE (big Darky 200 bg numbers) ── */}
       <section className="wbc-section wbc-section--bright">
         <div className="container">
           <div className="wbc-section-tag reveal">
             <span className="section-tag-num">04</span>
+            <span className="section-tag-line" />
+            <span className="section-tag-label">60-day cadence</span>
+          </div>
+          <h2 className="wbc-section-h reveal">
+            Week by week.{" "}
+            <span className="wbc-section-h-light">
+              How the Playbook compounds.
+            </span>
+          </h2>
+
+          <ol className="wbc-weeks">
+            {TIMELINE_WEEKS.map((w, i) => (
+              <li
+                key={w.n}
+                className="wbc-week reveal"
+                style={{ transitionDelay: `${i * 70}ms` }}
+              >
+                <span className="wbc-week-bg" aria-hidden="true">
+                  {w.n}
+                </span>
+                <div className="wbc-week-body">
+                  <span className="wbc-week-label">Week {w.n}</span>
+                  <h3 className="wbc-week-title">{w.title}</h3>
+                  <p className="wbc-week-text">{w.body}</p>
+                </div>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </section>
+
+      {/* ── METRICS WATERFALL ─────────────────────────────── */}
+      <section className="wbc-section wbc-section--dark">
+        <div className="container">
+          <div className="wbc-section-tag wbc-section-tag--w reveal">
+            <span className="section-tag-num">05</span>
+            <span className="section-tag-line" />
+            <span className="section-tag-label">Metrics waterfall</span>
+          </div>
+          <h2 className="wbc-section-h wbc-section-h--w reveal">
+            Verified customers, SLR, auto-verify —{" "}
+            <span className="wbc-section-h-light wbc-section-h-light--w">
+              week over week.
+            </span>
+          </h2>
+          <p className="wbc-section-sub wbc-section-sub--w reveal">
+            Three numbers tell the story of a Neighborhood Playbook: AI-verified
+            customers delivered, Software Leverage Ratio (campaigns per ops
+            hour), and auto-verify rate as Claude Vision tunes to the receipt
+            corpus.
+          </p>
+
+          <div className="wbc-waterfall reveal">
+            <div className="wbc-waterfall-head">
+              <span>Checkpoint</span>
+              <span>Verified customers</span>
+              <span>SLR</span>
+              <span>Auto-verify</span>
+            </div>
+            {WATERFALL.map((row) => (
+              <div key={row.week} className="wbc-waterfall-row">
+                <span className="wbc-waterfall-week">{row.week}</span>
+                <span className="wbc-waterfall-val">{row.customers}</span>
+                <span className="wbc-waterfall-val wbc-waterfall-val--accent">
+                  {row.slr}
+                </span>
+                <span className="wbc-waterfall-val">{row.autoVerify}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── QUOTES ─────────────────────────────────────────── */}
+      <section className="wbc-section">
+        <div className="container">
+          <div className="wbc-section-tag reveal">
+            <span className="section-tag-num">06</span>
+            <span className="section-tag-line" />
+            <span className="section-tag-label">Voices from the pilot</span>
+          </div>
+          <h2 className="wbc-section-h reveal">
+            Merchants. Creators.{" "}
+            <span className="wbc-section-h-light">One Playbook.</span>
+          </h2>
+
+          <div className="wbc-quotes">
+            <div className="wbc-quote-col">
+              <div className="wbc-quote-col-label">Merchants</div>
+              {MERCHANT_QUOTES.map((q, i) => (
+                <figure
+                  key={q.who}
+                  className="wbc-quote reveal"
+                  style={{ transitionDelay: `${i * 80}ms` }}
+                >
+                  <blockquote className="wbc-quote-body">
+                    &ldquo;{q.text}&rdquo;
+                  </blockquote>
+                  <figcaption className="wbc-quote-who">{q.who}</figcaption>
+                </figure>
+              ))}
+            </div>
+            <div className="wbc-quote-col">
+              <div className="wbc-quote-col-label">Creators</div>
+              {CREATOR_QUOTES.map((q, i) => (
+                <figure
+                  key={q.who}
+                  className="wbc-quote reveal"
+                  style={{ transitionDelay: `${i * 80}ms` }}
+                >
+                  <blockquote className="wbc-quote-body">
+                    &ldquo;{q.text}&rdquo;
+                  </blockquote>
+                  <figcaption className="wbc-quote-who">{q.who}</figcaption>
+                </figure>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── CASE STUDIES ────────────────────────────────────── */}
+      <section className="wbc-section wbc-section--bright">
+        <div className="container">
+          <div className="wbc-section-tag reveal">
+            <span className="section-tag-num">07</span>
             <span className="section-tag-line" />
             <span className="section-tag-label">
               Case studies · ConversionOracle™

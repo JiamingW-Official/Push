@@ -3,371 +3,285 @@ import Link from "next/link";
 import ScrollRevealInit from "@/components/layout/ScrollRevealInit";
 import "./playbook.css";
 
+/* ── Metadata ─────────────────────────────────────────────── */
 export const metadata: Metadata = {
   title:
-    "The Neighborhood Playbook — Push Expansion Unit | Vertical AI for Local Commerce",
+    "The 12-step Neighborhood Playbook — Vertical AI for Local Commerce | Push",
   description:
-    "Push's unit of expansion. A Neighborhood Playbook is $8-12K in, $20-35K MRR out by Month 6, 5.1-month payback. 1 ops FTE runs 5 concurrent steady-state neighborhoods at Software Leverage Ratio 25. Williamsburg Coffee+ is Template 0.",
+    "Push's Neighborhood Playbook in 12 numbered steps. ICP lock → seed 10 merchants → campaign templates → tier-0 creators → Claude Vision tuning → QR roll → pilot run → brief review → SLR measure → expansion decision → density unlock → case study. Williamsburg Coffee+ is Template 0.",
   alternates: {
     canonical: "/neighborhood-playbook",
   },
-  robots: {
-    index: true,
-    follow: true,
-  },
+  robots: { index: true, follow: true },
 };
 
-/* ─── Data ────────────────────────────────────────────────── */
-const UNIT_ECON = [
-  {
-    k: "Launch cost",
-    v: "$8-12K",
-    d: "Ops + Pilot subsidy + creator recruitment, fully loaded.",
-  },
-  {
-    k: "Month 6 MRR",
-    v: "$20-35K",
-    d: "Steady-state recurring revenue per neighborhood.",
-  },
-  {
-    k: "Payback",
-    v: "5.1 mo",
-    d: "Blended across 10 Pilot merchants converting to paid.",
-  },
-  {
-    k: "Ops capacity (M12)",
-    v: "1 FTE · 5 hoods",
-    d: "Software Leverage Ratio 25 — one operator, five concurrent steady-state neighborhoods.",
-  },
-  {
-    k: "Pilot merchants",
-    v: "10 per hood",
-    d: "10-customer free cap each · $4,200 Pilot cost cap per merchant.",
-  },
-];
+/* ── 12 steps ──────────────────────────────────────────────── */
 
-const ROADMAP = [
-  {
-    window: "M0 — M6",
-    phase: "Template 0",
-    geo: "1 neighborhood · Williamsburg Coffee+",
-    arr: "$360K ARR",
-    team: "2 founders run ops",
-    proves:
-      "The unit works. Verification pipeline lands. ConversionOracle v1 ships.",
-  },
-  {
-    window: "M6 — M12",
-    phase: "NYC Dense",
-    geo: "5 neighborhoods · + Brooklyn Heights, LES, Nolita, Astoria",
-    arr: "$1.8M ARR",
-    team: "4 ops",
-    proves:
-      "The Playbook transfers inside one metro. First cross-neighborhood model lift.",
-  },
-  {
-    window: "M12 — M24",
-    phase: "Top-5 Metro",
-    geo: "30 neighborhoods · NYC×10 · LA×8 · SF×6 · Austin×3 · Chicago×3",
-    arr: "$10.8M ARR",
-    team: "12 ops",
-    proves:
-      "The Playbook transfers across metros. Software Leverage Ratio compounds past 20.",
-  },
-  {
-    window: "M24 — M36",
-    phase: "Top-20 Metro",
-    geo: "120 neighborhoods",
-    arr: "$43M ARR",
-    team: "35 ops",
-    proves:
-      "Ops cost curve decouples from revenue. Defensive structure locks in per vertical.",
-  },
-];
+interface Step {
+  n: string;
+  title: string;
+  body: string;
+  slr: string;
+  duration: string;
+  id: string;
+}
 
-const SOPS = [
+const STEPS: Step[] = [
   {
     n: "01",
-    title: "Merchant acquisition script",
-    body: "End-to-end outbound playbook: target list build, vertical-specific talk-track, $0 Pilot framing, 10-customer free cap sell. Cold-call to signed Pilot in ≤ 14 days.",
+    id: "icp-lock",
+    title: "ICP lock",
+    body: "Pick the vertical, the ZIP cluster, and the AOV band before you sell a thing. Williamsburg Coffee+ (AOV $8 – $20, ~200 merchants across 11211/11206/11249) is Template 0 for a reason — ICP lock is not negotiation, it's the precondition.",
+    slr: "SLR baseline · 0",
+    duration: "Day 0 · 1 day",
   },
   {
     n: "02",
-    title: "Creator recruitment checklist",
-    body: "6-Tier routing, category affinity gates, neighborhood density targets. Seeds a working operator network inside 21 days of launch.",
+    id: "seed-10",
+    title: "Seed 10 merchants",
+    body: "Outbound the ICP with a vertical-specific script and a $0 Pilot offer. Ten LOIs signed, ten counters getting QR artifacts — no bespoke negotiation. The first five go easiest; the last five prove the script actually transfers.",
+    slr: "SLR 0 → 2",
+    duration: "Week 1 – 2 · 10 days",
   },
   {
     n: "03",
-    title: "ConversionOracle pipeline deployment",
-    body: "Verification stack — QR scan, Claude Vision receipt OCR, geo-match — drops in per neighborhood. Same schema, same training loop, same ground truth.",
+    id: "campaign-templates",
+    title: "Campaign templates",
+    body: "Ship category-specific briefs (morning rush, weekend brunch, cold-brew push). Ops copy-paste per merchant, edit the name, publish. DisclosureBot clears every draft. Zero bespoke campaign authoring after this step.",
+    slr: "SLR 2 → 5",
+    duration: "Week 2 · 3 days",
   },
   {
     n: "04",
-    title: "Campaign template library",
-    body: "Pre-built briefs per vertical (specialty coffee, boutique fitness, independent beauty, specialty bakery). Ops copy-paste, edit the merchant name, ship.",
+    id: "tier-0-creators",
+    title: "Tier-0 creators",
+    body: "Seed the operator network — T1 Bronze locals, T2 Steel verified operators, T3 Gold category authorities. Two-Segment Creator Economics: T1 – T3 per-customer, T5 Closer on retainer. Claude handles dispatch, not a human.",
+    slr: "SLR 5 → 8",
+    duration: "Week 2 – 3 · 7 days",
+  },
+  {
+    n: "05",
+    id: "claude-vision",
+    title: "Claude Vision tuning",
+    body: "Auto-verify rate opens at ~74%. By Week 4 it should be ≥ 92%. You are training ConversionOracle™'s walk-in ground truth on your own neighborhood — that corpus is the moat, and it compounds across every subsequent neighborhood.",
+    slr: "SLR 8 → 12",
+    duration: "Week 2 – 4 · 14 days",
+  },
+  {
+    n: "06",
+    id: "qr-roll",
+    title: "QR roll",
+    body: "Printed QR artifacts deploy on every cohort counter. One artifact per merchant, one-time print, covers the pilot. Creators scan at point-of-sale — QR + receipt OCR + geo-match = three-layer verification inside eight seconds.",
+    slr: "SLR 12 → 14",
+    duration: "Week 2 – 3 · 5 days",
+  },
+  {
+    n: "07",
+    id: "pilot-run",
+    title: "Pilot run",
+    body: "Live campaigns shipping daily. First 10 AI-verified customers per merchant free — we absorb acquisition cost. If the AI can't deliver, the merchant does not pay. ConversionOracle predicts predicted vs actual inside ±25%.",
+    slr: "SLR 14 → 18",
+    duration: "Week 3 – 6 · 21 days",
+  },
+  {
+    n: "08",
+    id: "brief-review",
+    title: "Brief review",
+    body: "Weekly cohort review. Every campaign brief reviewed against verified walk-in outcomes. Templates that underperform get patched; templates that over-index get rolled to adjacent merchants. This is the template library getting sharper.",
+    slr: "SLR 18 → 20",
+    duration: "Week 4 – 6 · ongoing",
+  },
+  {
+    n: "09",
+    id: "slr-measure",
+    title: "SLR measure",
+    body: "Software Leverage Ratio = active campaigns ÷ ops FTE. Target ≥ 20 at Week 6, ≥ 25 at Month 12. If SLR stalls, the unit is not ready to replicate. If it climbs, the Playbook is working.",
+    slr: "SLR 20 · gate",
+    duration: "Week 6 · 1 day",
+  },
+  {
+    n: "10",
+    id: "expansion-decision",
+    title: "Expansion decision",
+    body: "Gate: does the next neighborhood get triggered? SLR must hold ≥ 20, predicted vs actual within ±15%, and the 5.1-month payback must land in projection. If all three pass, queue the next ZIP cluster. If one fails, iterate.",
+    slr: "SLR gate ≥ 20",
+    duration: "Week 7 · 2 days",
+  },
+  {
+    n: "11",
+    id: "density-unlock",
+    title: "Density unlock",
+    body: "Next neighborhood inherits the Oracle model, the campaign templates, and the DisclosureBot corpus. Not a rebuild — a redeployment. Greenpoint does not cold-start; it picks up where Williamsburg left off.",
+    slr: "SLR 20 → 25",
+    duration: "Week 8 – 12 · 30 days",
+  },
+  {
+    n: "12",
+    id: "case-study",
+    title: "Case study",
+    body: "Publish. Every Neighborhood Playbook ends in a shipped case study — SLR ladder, predicted vs actual, Pilot cost vs MRR out. This is how the Playbook becomes operational IP, not a vibe.",
+    slr: "SLR ≥ 25 locked",
+    duration: "Week 10 · 3 days",
   },
 ];
 
-const VERTICALS = [
-  { label: "Specialty coffee", n: "~52K" },
-  { label: "Boutique fitness", n: "~35K" },
-  { label: "Independent beauty", n: "~60K" },
-  { label: "Specialty bakery", n: "~40K" },
-];
+/* ── Page ──────────────────────────────────────────────────── */
 
-/* ─── Page ────────────────────────────────────────────────── */
 export default function NeighborhoodPlaybookPage() {
   return (
-    <main className="pb">
+    <>
       <ScrollRevealInit />
 
-      {/* ───────── HERO ───────── */}
-      <section className="pb-hero">
-        <div className="container">
-          <div className="pb-hero-inner">
-            <div className="pb-eyebrow reveal">
-              <span className="pb-rule" />
-              <span>Expansion · The Neighborhood Playbook</span>
-            </div>
-
-            <h1 className="pb-hero-h reveal">
-              <span className="pb-hero-l1">The unit we replicate.</span>
-              <span className="pb-hero-l2">Not the TAM.</span>
-              <span className="pb-hero-l3">Not a vibe.</span>
-            </h1>
-
-            <p className="pb-hero-sub reveal">
-              A Neighborhood Playbook is Push&apos;s unit of expansion. One
-              neighborhood is a launch, not a city — $8-12K in, $20-35K MRR out
-              by Month 6, 5.1-month payback, 1 ops FTE runs 5 concurrent
-              steady-state neighborhoods at Software Leverage Ratio 25.
-            </p>
-
-            <div className="pb-hero-cta reveal">
-              <Link href="/merchant/pilot" className="pb-btn pb-btn--primary">
-                Apply for Pilot
-                <span aria-hidden="true" className="pb-btn-arrow">
-                  →
+      <main className="pb">
+        {/* ── Hero ────────────────────────────────────────── */}
+        <section className="pb-hero">
+          <div className="container">
+            <div className="pb-hero-inner">
+              <div className="pb-eyebrow reveal">
+                <span className="pb-rule" />
+                <span>
+                  The Neighborhood Playbook · Vertical AI for Local Commerce
                 </span>
-              </Link>
-              <Link
-                href="/neighborhoods/williamsburg-coffee"
-                className="pb-btn pb-btn--ghost"
-              >
-                See Williamsburg Coffee+ Template 0
-              </Link>
-            </div>
-
-            <div className="pb-hero-meta reveal">
-              <span className="pb-chip">Vertical AI for Local Commerce</span>
-              <span className="pb-chip">ConversionOracle&trade; inside</span>
-              <span className="pb-chip">SLR 25 at Month 12</span>
-            </div>
-          </div>
-        </div>
-
-        <div className="pb-hero-grid" aria-hidden="true" />
-      </section>
-
-      {/* ───────── §1 Unit economics ───────── */}
-      <section className="pb-sec pb-sec--unit">
-        <div className="container">
-          <div className="pb-sec-head reveal">
-            <span className="pb-s-label">
-              <span className="pb-rule" />
-              §1 · The unit
-            </span>
-            <h2 className="pb-sec-h">
-              Five numbers that define a neighborhood.
-            </h2>
-            <p className="pb-sec-sub pb-sec-sub--dark">
-              A Neighborhood Playbook is a unit, not a market. Every one lands
-              with the same economics. If the numbers stop holding, the unit
-              stops replicating.
-            </p>
-          </div>
-
-          <div className="pb-unit-grid">
-            {UNIT_ECON.map((u) => (
-              <article key={u.k} className="pb-unit-card reveal">
-                <div className="pb-unit-k">{u.k}</div>
-                <div className="pb-unit-v">{u.v}</div>
-                <p className="pb-unit-d">{u.d}</p>
-              </article>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ───────── §2 Expansion roadmap ───────── */}
-      <section className="pb-sec pb-sec--roadmap">
-        <div className="container">
-          <div className="pb-sec-head pb-sec-head--w reveal">
-            <span className="pb-s-label pb-s-label--w">
-              <span className="pb-rule pb-rule--w" />
-              §2 · Expansion roadmap
-            </span>
-            <h2 className="pb-sec-h pb-sec-h--w">
-              Four phases. One repeating unit.
-            </h2>
-            <p className="pb-sec-sub">
-              The Playbook compounds. Template 0 in Williamsburg Coffee+ proves
-              the unit. Each subsequent phase replicates the same Playbook into
-              the next density tier — not a rebuild, a redeployment.
-            </p>
-          </div>
-
-          <ol className="pb-roadmap">
-            {ROADMAP.map((s, i) => (
-              <li key={s.phase} className="pb-roadmap-item reveal">
-                <div className="pb-roadmap-n">
-                  <span className="pb-roadmap-idx">0{i + 1}</span>
-                  <span className="pb-roadmap-dot" aria-hidden="true" />
-                </div>
-                <div className="pb-roadmap-body">
-                  <div className="pb-roadmap-window">{s.window}</div>
-                  <h3 className="pb-roadmap-phase">{s.phase}</h3>
-                  <div className="pb-roadmap-geo">{s.geo}</div>
-                  <div className="pb-roadmap-arr">{s.arr}</div>
-                  <div className="pb-roadmap-team">{s.team}</div>
-                  <p className="pb-roadmap-proves">{s.proves}</p>
-                </div>
-              </li>
-            ))}
-          </ol>
-        </div>
-      </section>
-
-      {/* ───────── §3 Playbook components ───────── */}
-      <section className="pb-sec pb-sec--sops">
-        <div className="container">
-          <div className="pb-sec-head reveal">
-            <span className="pb-s-label">
-              <span className="pb-rule" />
-              §3 · The Playbook
-            </span>
-            <h2 className="pb-sec-h">
-              Four transferable SOPs. Nothing bespoke.
-            </h2>
-            <p className="pb-sec-sub pb-sec-sub--dark">
-              The Neighborhood Playbook is operational IP, not a pitch deck.
-              Every line ops person running a neighborhood runs the same four
-              SOPs. That is what makes the unit replicable.
-            </p>
-          </div>
-
-          <div className="pb-sops-grid">
-            {SOPS.map((m) => (
-              <article key={m.n} className="pb-sops-card reveal">
-                <div className="pb-sops-n">{m.n}</div>
-                <h3 className="pb-sops-title">{m.title}</h3>
-                <p className="pb-sops-body">{m.body}</p>
-              </article>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ───────── §4 TAM reframed ───────── */}
-      <section className="pb-sec pb-sec--tam">
-        <div className="container">
-          <article className="pb-tam reveal">
-            <div className="pb-tam-mark" aria-hidden="true" />
-            <div className="pb-tam-inner">
-              <span className="pb-s-label pb-s-label--gold">
-                <span className="pb-rule pb-rule--gold" />
-                §4 · TAM reframed
-              </span>
-              <h2 className="pb-tam-h">
-                Williamsburg is a Template, not a market size.
-              </h2>
-
-              <div className="pb-tam-verticals">
-                {VERTICALS.map((v) => (
-                  <div key={v.label} className="pb-tam-v">
-                    <div className="pb-tam-v-n">{v.n}</div>
-                    <div className="pb-tam-v-l">{v.label}</div>
-                  </div>
-                ))}
               </div>
 
-              <div className="pb-tam-math">
-                <div className="pb-tam-math-row">
-                  <span className="pb-tam-math-k">Target merchants</span>
-                  <span className="pb-tam-math-v">
-                    <strong>187K</strong> across 4 verticals (US)
-                  </span>
-                </div>
-                <div className="pb-tam-math-row">
-                  <span className="pb-tam-math-k">Penetration target</span>
-                  <span className="pb-tam-math-v">
-                    <strong>15%</strong> × <strong>$24K</strong> ARPU
-                  </span>
-                </div>
-                <div className="pb-tam-math-row pb-tam-math-row--total">
-                  <span className="pb-tam-math-k">Addressable ARR</span>
-                  <span className="pb-tam-math-v">
-                    <strong>$672M</strong>
-                  </span>
-                </div>
-              </div>
+              <h1 className="pb-hero-h reveal">
+                <span className="pb-hero-l1">The 12-step</span>
+                <span className="pb-hero-l2">Neighborhood</span>
+                <span className="pb-hero-l3">Playbook.</span>
+              </h1>
 
-              <p className="pb-tam-note">
-                US only. Four verticals only. Before adjacent vertical expansion
-                (restaurants, wellness, personal services) and before
-                international. This is the floor, not the ceiling — and every
-                dollar inside it is reached by replicating one Neighborhood
-                Playbook at a time.
+              <p className="pb-hero-sub reveal">
+                Twelve steps, same every time. Williamsburg Coffee+ is Template
+                0. Every neighborhood after it runs the same twelve — ICP lock,
+                seed ten, templates, tier-0 creators, Claude Vision tuning, QR
+                roll, pilot, review, SLR, expansion gate, density unlock, case
+                study. Five-point-one month payback. One unit of expansion.
               </p>
-            </div>
-          </article>
-        </div>
-      </section>
 
-      {/* ───────── §5 CTA ───────── */}
-      <section className="pb-cta">
-        <div className="container">
-          <div className="pb-cta-inner reveal">
-            <span className="pb-s-label pb-s-label--w">
-              <span className="pb-rule pb-rule--w" />
-              §5 · Run the Playbook
-            </span>
-            <h2 className="pb-cta-h">
-              Pick the door you want to walk through.
-            </h2>
-            <p className="pb-cta-sub">
-              One unit. One Playbook. Three paths in — depending on whether
-              you&apos;re a merchant ready to convert customers, an operator
-              studying Template 0, or a Vertical AI for Local Commerce watcher
-              tracking the ConversionOracle&trade; flywheel.
-            </p>
+              <div className="pb-hero-cta reveal">
+                <Link href="/contact" className="pb-btn pb-btn--primary">
+                  Apply this to your neighborhood
+                  <span aria-hidden="true" className="pb-btn-arrow">
+                    →
+                  </span>
+                </Link>
+                <Link
+                  href="/neighborhoods/williamsburg-coffee"
+                  className="pb-btn pb-btn--ghost"
+                >
+                  See Template 0 in action
+                </Link>
+              </div>
 
-            <div className="pb-cta-row">
-              <Link
-                href="/merchant/pilot"
-                className="pb-btn pb-btn--primary pb-btn--lg"
-              >
-                Apply for $0 Pilot
-                <span aria-hidden="true" className="pb-btn-arrow">
-                  →
-                </span>
-              </Link>
-              <Link
-                href="/neighborhoods/williamsburg-coffee"
-                className="pb-btn pb-btn--ghost pb-btn--lg"
-              >
-                See Template 0 in action
-              </Link>
-              <Link
-                href="/conversion-oracle"
-                className="pb-btn pb-btn--ghost pb-btn--lg"
-              >
-                How ConversionOracle&trade; scales
-              </Link>
+              <div className="pb-hero-meta reveal">
+                <span className="pb-chip">ConversionOracle™ inside</span>
+                <span className="pb-chip">Software Leverage Ratio 25</span>
+                <span className="pb-chip">Williamsburg Coffee+ beachhead</span>
+              </div>
             </div>
           </div>
-        </div>
-      </section>
-    </main>
+          <div className="pb-hero-grid" aria-hidden="true" />
+        </section>
+
+        {/* ── 12-step editorial + sticky TOC ────────────── */}
+        <section className="pb-steps">
+          <div className="container pb-steps-inner">
+            {/* Sticky TOC */}
+            <aside className="pb-toc" aria-label="Playbook steps">
+              <div className="pb-toc-head">
+                <span className="pb-toc-eyebrow">12 steps</span>
+                <span className="pb-toc-sub">
+                  Same order, every neighborhood.
+                </span>
+              </div>
+              <ol className="pb-toc-list">
+                {STEPS.map((s) => (
+                  <li key={s.id} className="pb-toc-item">
+                    <a href={`#${s.id}`} className="pb-toc-link">
+                      <span className="pb-toc-num">{s.n}</span>
+                      <span className="pb-toc-title">{s.title}</span>
+                    </a>
+                  </li>
+                ))}
+              </ol>
+            </aside>
+
+            {/* Editorial list */}
+            <ol className="pb-steps-list">
+              {STEPS.map((s) => (
+                <li key={s.id} id={s.id} className="pb-step reveal">
+                  <span className="pb-step-n" aria-hidden="true">
+                    {s.n}
+                  </span>
+                  <div className="pb-step-body">
+                    <h2 className="pb-step-title">{s.title}</h2>
+                    <p className="pb-step-text">{s.body}</p>
+                    <div className="pb-step-meta">
+                      <div className="pb-step-meta-item">
+                        <span className="pb-step-meta-label">
+                          SLR milestone
+                        </span>
+                        <span className="pb-step-meta-value">{s.slr}</span>
+                      </div>
+                      <div className="pb-step-meta-item">
+                        <span className="pb-step-meta-label">
+                          Typical duration
+                        </span>
+                        <span className="pb-step-meta-value">{s.duration}</span>
+                      </div>
+                    </div>
+                  </div>
+                </li>
+              ))}
+            </ol>
+          </div>
+        </section>
+
+        {/* ── Final CTA ───────────────────────────────────── */}
+        <section className="pb-cta">
+          <div className="container">
+            <div className="pb-cta-inner reveal">
+              <span className="pb-s-label pb-s-label--w">
+                <span className="pb-rule pb-rule--w" />
+                Apply this to your neighborhood
+              </span>
+              <h2 className="pb-cta-h">
+                Tell us your ZIP cluster. <em>We'll tell you the Playbook.</em>
+              </h2>
+              <p className="pb-cta-sub">
+                The 12 steps are the unit. Williamsburg Coffee+ is the first.
+                Greenpoint and Bushwick are queued. If you run a Coffee+ shop in
+                11211 / 11206 / 11222 / 11237 / 11249 — or if you're a category
+                operator outside coffee watching the Playbook — walk through the
+                door.
+              </p>
+              <div className="pb-cta-row">
+                <Link
+                  href="/contact"
+                  className="pb-btn pb-btn--primary pb-btn--lg"
+                >
+                  Apply this to your neighborhood
+                  <span aria-hidden="true" className="pb-btn-arrow">
+                    →
+                  </span>
+                </Link>
+                <Link
+                  href="/neighborhoods/williamsburg-coffee"
+                  className="pb-btn pb-btn--ghost pb-btn--lg"
+                >
+                  See Template 0
+                </Link>
+                <Link
+                  href="/neighborhoods"
+                  className="pb-btn pb-btn--ghost pb-btn--lg"
+                >
+                  All neighborhoods
+                </Link>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+    </>
   );
 }

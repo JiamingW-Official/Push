@@ -1,55 +1,380 @@
 "use client";
 
-import { useState } from "react";
+import { Fragment, useMemo, useState } from "react";
 import Link from "next/link";
-import {
-  MOCK_MERCHANT_PAYMENTS,
-  MOCK_MONTHLY_INVOICES,
-  type MerchantPayment,
-} from "@/lib/payments/mock-transactions";
+import "./payments.css";
 
-/* ── Mock hero data ──────────────────────────────────────── */
+/* ─────────────────────────────────────────────────────────────────
+   Push v5.1 — Merchant Payments (ConversionOracle™ Settlement Ledger)
+   Vertical AI for Local Commerce · Customer Acquisition Engine
+   Verified-customer payouts with full verdict trace.
+   ───────────────────────────────────────────────────────────────── */
 
-const THIS_MONTH_SPEND = 12450.0;
-const MONTHLY_BUDGET = 18000.0;
+type Verdict =
+  | "auto_verified"
+  | "manual_review"
+  | "auto_rejected"
+  | "human_approved"
+  | "human_rejected";
+
+type SettlementStatus = "verified" | "pending" | "rejected";
+
+type LedgerEntry = {
+  id: string;
+  date: string; // ISO
+  creatorHandle: string;
+  campaignId: string;
+  campaign: string;
+  qrId: string;
+  customerId: string;
+  amountCents: number;
+  verdict: Verdict;
+  status: SettlementStatus;
+  // trace — ConversionOracle™ three-layer verification
+  trace: {
+    label: "QR" | "OCR" | "GEO" | "HUMAN";
+    result: "pass" | "flag" | "fail";
+    detail: string;
+    confidence: number;
+  }[];
+  receipt: {
+    merchant: string;
+    items: { name: string; amount: number }[];
+    total: number;
+    stamp: string;
+  };
+};
+
+/* ── Mock data ───────────────────────────────────────────────────── */
 const NEXT_PAYOUT_DATE = "2026-05-01";
+const NEXT_PAYOUT_CENTS = 186450;
 
-const CAMPAIGN_SPEND = [
+const MOCK_LEDGER: LedgerEntry[] = [
   {
-    id: "camp-003",
-    campaign: "LA Botanica Aesthetic Shoot",
-    used: 86.25,
-    budget: 450,
+    id: "pay_042",
+    date: "2026-04-16T14:22:00Z",
+    creatorHandle: "@mila.park",
+    campaignId: "camp-014",
+    campaign: "Williamsburg Coffee+ Morning Drip",
+    qrId: "QR-WBRG-MP-0042",
+    customerId: "cust_9a83f2",
+    amountCents: 4200,
+    verdict: "auto_verified",
+    status: "verified",
+    trace: [
+      {
+        label: "QR",
+        result: "pass",
+        detail: "scanned 9:17 AM",
+        confidence: 1.0,
+      },
+      {
+        label: "OCR",
+        result: "pass",
+        detail: "$6.50 latte · match",
+        confidence: 0.94,
+      },
+      {
+        label: "GEO",
+        result: "pass",
+        detail: "within 40m of store",
+        confidence: 0.98,
+      },
+    ],
+    receipt: {
+      merchant: "Blank Street · Bedford Ave",
+      items: [
+        { name: "Oat Latte 12oz", amount: 6.5 },
+        { name: "Almond Croissant", amount: 4.75 },
+      ],
+      total: 11.25,
+      stamp: "2026-04-16 · 09:17",
+    },
   },
   {
-    id: "camp-004",
-    campaign: "Brow Transformation Story",
-    used: 115,
-    budget: 500,
+    id: "pay_041",
+    date: "2026-04-16T11:08:00Z",
+    creatorHandle: "@joonah.shoots",
+    campaignId: "camp-014",
+    campaign: "Williamsburg Coffee+ Morning Drip",
+    qrId: "QR-WBRG-JS-0028",
+    customerId: "cust_71e2d0",
+    amountCents: 4200,
+    verdict: "manual_review",
+    status: "pending",
+    trace: [
+      {
+        label: "QR",
+        result: "pass",
+        detail: "scanned 10:41 AM",
+        confidence: 1.0,
+      },
+      {
+        label: "OCR",
+        result: "flag",
+        detail: "receipt blurred — retry queued",
+        confidence: 0.62,
+      },
+      {
+        label: "GEO",
+        result: "pass",
+        detail: "within 30m of store",
+        confidence: 0.99,
+      },
+    ],
+    receipt: {
+      merchant: "Blank Street · Bedford Ave",
+      items: [
+        { name: "Cappuccino 8oz", amount: 5.25 },
+        { name: "Banana Bread", amount: 4.0 },
+      ],
+      total: 9.25,
+      stamp: "2026-04-16 · 10:41",
+    },
   },
   {
-    id: "camp-002",
-    campaign: "Best Burger in NYC Feature",
-    used: 322,
-    budget: 400,
+    id: "pay_040",
+    date: "2026-04-16T09:52:00Z",
+    creatorHandle: "@sam.travels",
+    campaignId: "camp-014",
+    campaign: "Williamsburg Coffee+ Morning Drip",
+    qrId: "QR-WBRG-ST-0019",
+    customerId: "cust_442b18",
+    amountCents: 0,
+    verdict: "auto_rejected",
+    status: "rejected",
+    trace: [
+      {
+        label: "QR",
+        result: "pass",
+        detail: "scanned 2:04 PM",
+        confidence: 1.0,
+      },
+      {
+        label: "OCR",
+        result: "fail",
+        detail: "no receipt uploaded",
+        confidence: 0.05,
+      },
+      {
+        label: "GEO",
+        result: "fail",
+        detail: "8.2 km from store",
+        confidence: 0.01,
+      },
+    ],
+    receipt: {
+      merchant: "— No valid receipt —",
+      items: [],
+      total: 0,
+      stamp: "2026-04-16 · 14:04",
+    },
   },
   {
-    id: "camp-007",
-    campaign: "KITH x Creator Collab Series",
-    used: 228.85,
-    budget: 700,
+    id: "pay_039",
+    date: "2026-04-15T17:34:00Z",
+    creatorHandle: "@mila.park",
+    campaignId: "camp-014",
+    campaign: "Williamsburg Coffee+ Morning Drip",
+    qrId: "QR-WBRG-MP-0041",
+    customerId: "cust_3fce9a",
+    amountCents: 4200,
+    verdict: "human_approved",
+    status: "verified",
+    trace: [
+      {
+        label: "QR",
+        result: "pass",
+        detail: "scanned 4:02 PM",
+        confidence: 1.0,
+      },
+      {
+        label: "OCR",
+        result: "flag",
+        detail: "partial receipt",
+        confidence: 0.71,
+      },
+      {
+        label: "GEO",
+        result: "pass",
+        detail: "within 20m of store",
+        confidence: 1.0,
+      },
+      {
+        label: "HUMAN",
+        result: "pass",
+        detail: "approved by ops · Jordan K.",
+        confidence: 1.0,
+      },
+    ],
+    receipt: {
+      merchant: "Blank Street · Bedford Ave",
+      items: [{ name: "Matcha Latte 12oz", amount: 6.25 }],
+      total: 6.25,
+      stamp: "2026-04-15 · 16:02",
+    },
+  },
+  {
+    id: "pay_038",
+    date: "2026-04-15T12:18:00Z",
+    creatorHandle: "@ethan.eats",
+    campaignId: "camp-014",
+    campaign: "Williamsburg Coffee+ Morning Drip",
+    qrId: "QR-WBRG-EE-0007",
+    customerId: "cust_88b1cc",
+    amountCents: 0,
+    verdict: "human_rejected",
+    status: "rejected",
+    trace: [
+      {
+        label: "QR",
+        result: "pass",
+        detail: "scanned 11:12 AM",
+        confidence: 1.0,
+      },
+      {
+        label: "OCR",
+        result: "pass",
+        detail: "$5.00 espresso",
+        confidence: 0.88,
+      },
+      { label: "GEO", result: "pass", detail: "within store", confidence: 1.0 },
+      {
+        label: "HUMAN",
+        result: "fail",
+        detail: "duplicate receipt · pay_036",
+        confidence: 1.0,
+      },
+    ],
+    receipt: {
+      merchant: "Blank Street · Bedford Ave",
+      items: [{ name: "Espresso Double", amount: 5.0 }],
+      total: 5.0,
+      stamp: "2026-04-15 · 11:12",
+    },
+  },
+  {
+    id: "pay_037",
+    date: "2026-04-15T08:45:00Z",
+    creatorHandle: "@joonah.shoots",
+    campaignId: "camp-014",
+    campaign: "Williamsburg Coffee+ Morning Drip",
+    qrId: "QR-WBRG-JS-0027",
+    customerId: "cust_555e21",
+    amountCents: 4200,
+    verdict: "auto_verified",
+    status: "verified",
+    trace: [
+      {
+        label: "QR",
+        result: "pass",
+        detail: "scanned 8:12 AM",
+        confidence: 1.0,
+      },
+      {
+        label: "OCR",
+        result: "pass",
+        detail: "$8.25 total · match",
+        confidence: 0.96,
+      },
+      {
+        label: "GEO",
+        result: "pass",
+        detail: "within 15m of store",
+        confidence: 1.0,
+      },
+    ],
+    receipt: {
+      merchant: "Blank Street · Bedford Ave",
+      items: [
+        { name: "Flat White 12oz", amount: 5.75 },
+        { name: "Butter Croissant", amount: 3.5 },
+      ],
+      total: 9.25,
+      stamp: "2026-04-15 · 08:12",
+    },
+  },
+  {
+    id: "pay_036",
+    date: "2026-04-14T14:02:00Z",
+    creatorHandle: "@mila.park",
+    campaignId: "camp-014",
+    campaign: "Williamsburg Coffee+ Morning Drip",
+    qrId: "QR-WBRG-MP-0040",
+    customerId: "cust_612ab4",
+    amountCents: 4200,
+    verdict: "auto_verified",
+    status: "verified",
+    trace: [
+      {
+        label: "QR",
+        result: "pass",
+        detail: "scanned 1:35 PM",
+        confidence: 1.0,
+      },
+      {
+        label: "OCR",
+        result: "pass",
+        detail: "$7.00 iced latte",
+        confidence: 0.92,
+      },
+      {
+        label: "GEO",
+        result: "pass",
+        detail: "within 25m of store",
+        confidence: 0.97,
+      },
+    ],
+    receipt: {
+      merchant: "Blank Street · Bedford Ave",
+      items: [{ name: "Iced Latte 16oz", amount: 7.0 }],
+      total: 7.0,
+      stamp: "2026-04-14 · 13:35",
+    },
+  },
+  {
+    id: "pay_035",
+    date: "2026-04-14T10:28:00Z",
+    creatorHandle: "@sam.travels",
+    campaignId: "camp-014",
+    campaign: "Williamsburg Coffee+ Morning Drip",
+    qrId: "QR-WBRG-ST-0018",
+    customerId: "cust_9e0fb2",
+    amountCents: 4200,
+    verdict: "manual_review",
+    status: "pending",
+    trace: [
+      {
+        label: "QR",
+        result: "pass",
+        detail: "scanned 9:48 AM",
+        confidence: 1.0,
+      },
+      { label: "OCR", result: "pass", detail: "$5.25 latte", confidence: 0.88 },
+      {
+        label: "GEO",
+        result: "flag",
+        detail: "GPS drift · 120m",
+        confidence: 0.55,
+      },
+    ],
+    receipt: {
+      merchant: "Blank Street · Bedford Ave",
+      items: [{ name: "Latte 8oz", amount: 5.25 }],
+      total: 5.25,
+      stamp: "2026-04-14 · 09:48",
+    },
   },
 ];
 
-const TOP_UP_PRESETS = [500, 1000, 2500, 5000];
+const CAMPAIGNS = [
+  { id: "all", name: "All campaigns" },
+  { id: "camp-014", name: "Williamsburg Coffee+ Morning Drip" },
+];
 
-/* ── Helpers ─────────────────────────────────────────────── */
-
-function fmt(n: number): string {
-  return n.toLocaleString("en-US", {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  });
+/* ── Helpers ─────────────────────────────────────────────────────── */
+function fmtCents(cents: number): string {
+  return `$${(cents / 100).toFixed(2)}`;
 }
 
 function fmtDate(iso: string): string {
@@ -60,897 +385,481 @@ function fmtDate(iso: string): string {
   });
 }
 
-const STATUS_COLORS: Record<MerchantPayment["status"], string> = {
-  scheduled: "#669bbc",
-  processing: "#c9a96e",
-  completed: "#2d7a2d",
+function fmtDateTime(iso: string): string {
+  const d = new Date(iso);
+  return `${d.toLocaleDateString("en-US", { month: "short", day: "numeric" })} · ${d.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" })}`;
+}
+
+const VERDICT_LABEL: Record<Verdict, string> = {
+  auto_verified: "Auto verified",
+  manual_review: "Manual review",
+  auto_rejected: "Auto rejected",
+  human_approved: "Human approved",
+  human_rejected: "Human rejected",
 };
 
-const STATUS_BG: Record<MerchantPayment["status"], string> = {
-  scheduled: "rgba(102,155,188,0.12)",
-  processing: "rgba(201,169,110,0.15)",
-  completed: "rgba(45,122,45,0.10)",
+const STATUS_LABEL: Record<SettlementStatus, string> = {
+  verified: "Paid",
+  pending: "Pending",
+  rejected: "Rejected",
 };
 
-/* ── Top-up Modal ────────────────────────────────────────── */
+const STATUS_CSS: Record<SettlementStatus, string> = {
+  verified: "paid",
+  pending: "pending",
+  rejected: "rejected",
+};
 
-function TopUpModal({ onClose }: { onClose: () => void }) {
-  const [amount, setAmount] = useState<number>(1000);
-  const [custom, setCustom] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = useState(false);
-
-  const effectiveAmount = custom ? parseFloat(custom) || 0 : amount;
-
-  async function handleSubmit() {
-    if (effectiveAmount < 100) return;
-    setLoading(true);
-    try {
-      const res = await fetch("/api/merchant/topup", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ amount: effectiveAmount }),
-      });
-      const data = await res.json();
-      if (data.success) setSuccess(true);
-    } finally {
-      setLoading(false);
+/* ── CSV export ──────────────────────────────────────────────────── */
+function buildCsv(rows: LedgerEntry[]): string {
+  const headers = [
+    "date",
+    "creator_handle",
+    "qr_id",
+    "customer_id",
+    "campaign",
+    "amount_usd",
+    "verdict",
+    "status",
+  ];
+  const esc = (v: string): string => {
+    if (v.includes(",") || v.includes('"') || v.includes("\n")) {
+      return `"${v.replace(/"/g, '""')}"`;
     }
-  }
+    return v;
+  };
+  const body = rows
+    .map((r) =>
+      [
+        r.date,
+        r.creatorHandle,
+        r.qrId,
+        r.customerId,
+        r.campaign,
+        (r.amountCents / 100).toFixed(2),
+        r.verdict,
+        r.status,
+      ]
+        .map((v) => esc(String(v)))
+        .join(","),
+    )
+    .join("\n");
+  return `${headers.join(",")}\n${body}`;
+}
+
+function downloadCsv(rows: LedgerEntry[]) {
+  const csv = buildCsv(rows);
+  const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `push-settlement-ledger-${new Date().toISOString().slice(0, 10)}.csv`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+/* ── Page ────────────────────────────────────────────────────────── */
+export default function MerchantPaymentsPage() {
+  const [from, setFrom] = useState("2026-04-14");
+  const [to, setTo] = useState("2026-04-16");
+  const [campaign, setCampaign] = useState("all");
+  const [statusFilter, setStatusFilter] = useState<SettlementStatus | "all">(
+    "all",
+  );
+  const [expandedId, setExpandedId] = useState<string | null>(null);
+
+  const filtered = useMemo(() => {
+    return MOCK_LEDGER.filter((row) => {
+      if (campaign !== "all" && row.campaignId !== campaign) return false;
+      if (statusFilter !== "all" && row.status !== statusFilter) return false;
+      const d = row.date.slice(0, 10);
+      if (from && d < from) return false;
+      if (to && d > to) return false;
+      return true;
+    });
+  }, [from, to, campaign, statusFilter]);
+
+  // Stat totals
+  const owed = filtered
+    .filter((r) => r.status === "pending")
+    .reduce((acc, r) => acc + r.amountCents, 0);
+  const paid = filtered
+    .filter((r) => r.status === "verified")
+    .reduce((acc, r) => acc + r.amountCents, 0);
+  const pendingCount = filtered.filter((r) => r.status === "pending").length;
+  const lifetimeCents = 874200; // static demo
+
+  // Top 3 creators in filtered window
+  const topCreators = useMemo(() => {
+    const byCreator = new Map<string, { amount: number; count: number }>();
+    for (const row of filtered) {
+      if (row.status !== "verified") continue;
+      const existing = byCreator.get(row.creatorHandle) ?? {
+        amount: 0,
+        count: 0,
+      };
+      byCreator.set(row.creatorHandle, {
+        amount: existing.amount + row.amountCents,
+        count: existing.count + 1,
+      });
+    }
+    return Array.from(byCreator.entries())
+      .map(([handle, stats]) => ({ handle, ...stats }))
+      .sort((a, b) => b.amount - a.amount)
+      .slice(0, 3);
+  }, [filtered]);
 
   return (
-    <div style={styles.modalOverlay} onClick={onClose}>
-      <div style={styles.modal} onClick={(e) => e.stopPropagation()}>
-        {success ? (
-          <>
-            <div style={styles.modalTitle}>Funds incoming.</div>
-            <p style={styles.modalBody}>
-              ${fmt(effectiveAmount)} will be added to your campaign balance
-              once payment is confirmed.
-            </p>
-            <button style={styles.modalPrimary} onClick={onClose}>
-              Done
-            </button>
-          </>
-        ) : (
-          <>
-            <div style={styles.modalTitle}>Add funds</div>
-            <p style={styles.modalLabel}>Select amount</p>
-            <div style={styles.presetGrid}>
-              {TOP_UP_PRESETS.map((preset) => (
-                <button
-                  key={preset}
+    <div className="pay-shell">
+      {/* Nav */}
+      <nav className="pay-nav">
+        <Link href="/merchant/dashboard" className="pay-nav__back">
+          ← Dashboard
+        </Link>
+        <span className="pay-nav__crumbs">Finance / Settlement Ledger</span>
+      </nav>
+
+      <div className="pay-body">
+        {/* Hero */}
+        <header className="pay-hero">
+          <span className="pay-hero__eyebrow">
+            ConversionOracle™ settlement ledger
+          </span>
+          <h1 className="pay-hero__title">Payments</h1>
+          <p className="pay-hero__sub">
+            Every line is a{" "}
+            <span className="pay-hero__tag">verified walk-in customer</span> —
+            produced by our Vertical AI for Local Commerce stack and billed
+            under the Customer Acquisition Engine. Three-layer verification (QR
+            + OCR + geo-match) gates every payout before it hits a creator.
+          </p>
+        </header>
+
+        {/* Stat row */}
+        <section className="pay-stats" aria-label="Settlement totals">
+          <div className="pay-stat pay-stat--accent">
+            <span className="pay-stat__label">Owed this cycle</span>
+            <span className="pay-stat__value">{fmtCents(owed)}</span>
+            <span className="pay-stat__meta">
+              {pendingCount} pending verification
+            </span>
+          </div>
+          <div className="pay-stat">
+            <span className="pay-stat__label">Paid last cycle</span>
+            <span className="pay-stat__value">{fmtCents(paid)}</span>
+            <span className="pay-stat__meta">Settled via auto-verify</span>
+          </div>
+          <div className="pay-stat">
+            <span className="pay-stat__label">Pending verification</span>
+            <span className="pay-stat__value">{pendingCount}</span>
+            <span className="pay-stat__meta">Manual review queue</span>
+          </div>
+          <div className="pay-stat">
+            <span className="pay-stat__label">Total lifetime</span>
+            <span className="pay-stat__value">{fmtCents(lifetimeCents)}</span>
+            <span className="pay-stat__meta">Since campaign start</span>
+          </div>
+        </section>
+
+        {/* Grid: ledger + sidebar */}
+        <div className="pay-grid">
+          <div>
+            {/* Filter bar */}
+            <div className="pay-filters">
+              <div className="pay-filter">
+                <label className="pay-filter__label" htmlFor="from">
+                  From
+                </label>
+                <input
+                  id="from"
+                  className="pay-filter__input"
+                  type="date"
+                  value={from}
+                  onChange={(e) => setFrom(e.target.value)}
+                />
+              </div>
+              <div className="pay-filter">
+                <label className="pay-filter__label" htmlFor="to">
+                  To
+                </label>
+                <input
+                  id="to"
+                  className="pay-filter__input"
+                  type="date"
+                  value={to}
+                  onChange={(e) => setTo(e.target.value)}
+                />
+              </div>
+              <div className="pay-filter">
+                <label className="pay-filter__label" htmlFor="campaign">
+                  Campaign
+                </label>
+                <select
+                  id="campaign"
+                  className="pay-filter__select"
+                  value={campaign}
+                  onChange={(e) => setCampaign(e.target.value)}
+                >
+                  {CAMPAIGNS.map((c) => (
+                    <option key={c.id} value={c.id}>
+                      {c.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className="pay-filter">
+                <label className="pay-filter__label" htmlFor="status">
+                  Status
+                </label>
+                <select
+                  id="status"
+                  className="pay-filter__select"
+                  value={statusFilter}
+                  onChange={(e) =>
+                    setStatusFilter(e.target.value as SettlementStatus | "all")
+                  }
+                >
+                  <option value="all">All</option>
+                  <option value="verified">Verified</option>
+                  <option value="pending">Pending</option>
+                  <option value="rejected">Rejected</option>
+                </select>
+              </div>
+              <div className="pay-filters__spacer" />
+              <button
+                className="pay-btn-export"
+                onClick={() => downloadCsv(filtered)}
+                aria-label="Export ledger as CSV"
+              >
+                Export CSV ↓
+              </button>
+            </div>
+
+            {/* Ledger table */}
+            <div className="pay-table-wrap">
+              <table className="pay-table">
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>Creator</th>
+                    <th>QR id</th>
+                    <th>Customer</th>
+                    <th className="pay-table__num-col">Amount</th>
+                    <th>Verdict</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filtered.length === 0 && (
+                    <tr>
+                      <td colSpan={7}>
+                        <div className="pay-empty">
+                          No settlements match the current filters.
+                        </div>
+                      </td>
+                    </tr>
+                  )}
+                  {filtered.map((row) => {
+                    const isOpen = expandedId === row.id;
+                    return (
+                      <Fragment key={row.id}>
+                        <tr
+                          className={isOpen ? "is-expanded" : ""}
+                          onClick={() =>
+                            setExpandedId((prev) =>
+                              prev === row.id ? null : row.id,
+                            )
+                          }
+                          aria-expanded={isOpen}
+                        >
+                          <td className="pay-table__date">
+                            {fmtDateTime(row.date)}
+                          </td>
+                          <td className="pay-table__handle">
+                            {row.creatorHandle}
+                          </td>
+                          <td className="pay-table__qr">{row.qrId}</td>
+                          <td className="pay-table__customer">
+                            {row.customerId}
+                          </td>
+                          <td className="pay-table__amount">
+                            {fmtCents(row.amountCents)}
+                          </td>
+                          <td>
+                            <span
+                              className={`pay-verdict pay-verdict--${row.verdict}`}
+                            >
+                              <span className="pay-verdict__dot" />
+                              {VERDICT_LABEL[row.verdict]}
+                            </span>
+                          </td>
+                          <td>
+                            <span
+                              className={`pay-status pay-status--${STATUS_CSS[row.status]}`}
+                            >
+                              <span className="pay-status__dot" />
+                              {STATUS_LABEL[row.status]}
+                            </span>
+                          </td>
+                        </tr>
+                        {isOpen && (
+                          <tr className="pay-expanded" aria-hidden={false}>
+                            <td colSpan={7}>
+                              <div className="pay-expanded__inner">
+                                {/* Receipt thumb */}
+                                <div className="pay-receipt">
+                                  <div className="pay-receipt__brand">
+                                    PUSH.
+                                  </div>
+                                  <div className="pay-receipt__line">
+                                    <span>{row.receipt.merchant}</span>
+                                  </div>
+                                  <div className="pay-receipt__line">
+                                    <span>{row.receipt.stamp}</span>
+                                  </div>
+                                  <div
+                                    style={{
+                                      borderTop:
+                                        "1px dashed rgba(0,48,73,0.18)",
+                                      margin: "10px 0",
+                                    }}
+                                  />
+                                  {row.receipt.items.length === 0 ? (
+                                    <div className="pay-receipt__line">
+                                      <em>No line items</em>
+                                    </div>
+                                  ) : (
+                                    row.receipt.items.map((it, i) => (
+                                      <div
+                                        key={i}
+                                        className="pay-receipt__line"
+                                      >
+                                        <span>{it.name}</span>
+                                        <span>${it.amount.toFixed(2)}</span>
+                                      </div>
+                                    ))
+                                  )}
+                                  <div className="pay-receipt__total">
+                                    <span>Total</span>
+                                    <span>${row.receipt.total.toFixed(2)}</span>
+                                  </div>
+                                </div>
+
+                                {/* Verdict trace */}
+                                <div className="pay-trace">
+                                  <span className="pay-trace__title">
+                                    ConversionOracle™ verdict trace
+                                  </span>
+                                  <span className="pay-trace__subtitle">
+                                    {VERDICT_LABEL[row.verdict]} — {row.qrId}
+                                  </span>
+                                  <ul className="pay-trace__steps">
+                                    {row.trace.map((s, i) => (
+                                      <li key={i} className="pay-trace__step">
+                                        <span className="pay-trace__step-label">
+                                          {s.label}
+                                        </span>
+                                        <span
+                                          className={`pay-trace__step-icon pay-trace__step-icon--${s.result}`}
+                                          aria-label={s.result}
+                                        >
+                                          {s.result === "pass"
+                                            ? "✓"
+                                            : s.result === "flag"
+                                              ? "!"
+                                              : "✕"}
+                                        </span>
+                                        <span className="pay-trace__step-value">
+                                          {s.detail}
+                                        </span>
+                                        <span className="pay-trace__step-conf">
+                                          {(s.confidence * 100).toFixed(0)}%
+                                        </span>
+                                      </li>
+                                    ))}
+                                  </ul>
+                                </div>
+                              </div>
+                            </td>
+                          </tr>
+                        )}
+                      </Fragment>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          {/* Sidebar: Upcoming settlements */}
+          <aside className="pay-side">
+            <div className="pay-side-card">
+              <span className="pay-side-card__label">Upcoming settlement</span>
+              <h2 className="pay-side-card__title">Next payout</h2>
+              <div className="pay-side-card__big">
+                {fmtCents(NEXT_PAYOUT_CENTS)}
+              </div>
+              <div className="pay-side-card__sub">
+                Clears on {fmtDate(NEXT_PAYOUT_DATE)} — rolls up every verified
+                customer in the cycle.
+              </div>
+              <div className="pay-side-card__divider" />
+              <div className="pay-side-card__listlabel">
+                Top creators — this cycle
+              </div>
+              {topCreators.length === 0 ? (
+                <div
                   style={{
-                    ...styles.presetBtn,
-                    ...(amount === preset && !custom
-                      ? styles.presetBtnActive
-                      : {}),
-                  }}
-                  onClick={() => {
-                    setAmount(preset);
-                    setCustom("");
+                    fontSize: 12,
+                    color: "var(--text-muted)",
+                    padding: "12px 0",
                   }}
                 >
-                  ${preset.toLocaleString()}
-                </button>
-              ))}
+                  No verified payouts in this window.
+                </div>
+              ) : (
+                <div className="pay-side-creators">
+                  {topCreators.map((c) => (
+                    <div key={c.handle} className="pay-side-creator">
+                      <div>
+                        <div className="pay-side-creator__handle">
+                          {c.handle}
+                        </div>
+                        <div className="pay-side-creator__count">
+                          {c.count} verified customer{c.count === 1 ? "" : "s"}
+                        </div>
+                      </div>
+                      <div className="pay-side-creator__amount">
+                        {fmtCents(c.amount)}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
-            <p style={styles.modalLabel}>Or enter custom amount</p>
-            <input
-              type="number"
-              placeholder="e.g. 3500"
-              value={custom}
-              onChange={(e) => setCustom(e.target.value)}
-              style={styles.input}
-              min={100}
-            />
-            {effectiveAmount > 0 && effectiveAmount < 100 && (
-              <p style={styles.inputError}>Minimum top-up is $100</p>
-            )}
-            <div style={{ ...styles.modalActions, marginTop: 24 }}>
-              <button
-                style={styles.modalSecondary}
-                onClick={onClose}
-                disabled={loading}
-              >
-                Cancel
-              </button>
-              <button
+
+            <div className="pay-side-card">
+              <span className="pay-side-card__label">
+                Software Leverage Ratio
+              </span>
+              <h2 className="pay-side-card__title">Neighborhood Playbook</h2>
+              <div
                 style={{
-                  ...styles.modalPrimary,
-                  opacity: loading || effectiveAmount < 100 ? 0.6 : 1,
+                  fontSize: 12,
+                  color: "var(--graphite)",
+                  lineHeight: 1.6,
                 }}
-                onClick={handleSubmit}
-                disabled={loading || effectiveAmount < 100}
               >
-                {loading ? "Processing…" : `Add $${fmt(effectiveAmount)}`}
-              </button>
+                Williamsburg Coffee+ cycle — SLR tracks how many campaigns our
+                Vertical AI runs per ops FTE. Every ConversionOracle auto-verify
+                lifts the ratio; every manual review drags it.
+              </div>
             </div>
-          </>
-        )}
+          </aside>
+        </div>
       </div>
     </div>
   );
 }
-
-/* ── Main Page ───────────────────────────────────────────── */
-
-export default function MerchantPaymentsPage() {
-  const [topupOpen, setTopupOpen] = useState(false);
-
-  const budgetPct = Math.min(
-    100,
-    Math.round((THIS_MONTH_SPEND / MONTHLY_BUDGET) * 100),
-  );
-
-  const scheduled = MOCK_MERCHANT_PAYMENTS.filter(
-    (p) => p.status === "scheduled",
-  );
-  const processing = MOCK_MERCHANT_PAYMENTS.filter(
-    (p) => p.status === "processing",
-  );
-  const completed = MOCK_MERCHANT_PAYMENTS.filter(
-    (p) => p.status === "completed",
-  );
-
-  return (
-    <div style={styles.page}>
-      {/* ── Top nav ─────────────────────────────────────── */}
-      <header style={styles.nav}>
-        <Link href="/merchant/dashboard" style={styles.navBack}>
-          ← Dashboard
-        </Link>
-        <span style={styles.navTitle}>Payments</span>
-        <button style={styles.addFundsBtn} onClick={() => setTopupOpen(true)}>
-          Add funds
-        </button>
-      </header>
-
-      <main style={styles.main}>
-        {/* ── Hero ────────────────────────────────────── */}
-        <section style={styles.hero}>
-          <div style={styles.heroLeft}>
-            <span style={styles.heroEyebrow}>APRIL 2026</span>
-            <div style={styles.heroAmount}>
-              Spent ${fmt(THIS_MONTH_SPEND)} this month.
-            </div>
-            <div style={styles.heroBudgetRow}>
-              <span style={styles.heroBudgetLabel}>
-                Budget utilization — {budgetPct}%
-              </span>
-              <span style={styles.heroBudgetTotal}>
-                of ${fmt(MONTHLY_BUDGET)}
-              </span>
-            </div>
-            <div style={styles.heroBudgetBar}>
-              <div
-                style={{
-                  ...styles.heroBudgetFill,
-                  width: `${budgetPct}%`,
-                  background:
-                    budgetPct >= 90
-                      ? "#c1121f"
-                      : budgetPct >= 75
-                        ? "#c9a96e"
-                        : "#003049",
-                }}
-              />
-            </div>
-          </div>
-          <div style={styles.heroRight}>
-            <div style={styles.heroStatCard}>
-              <span style={styles.heroStatLabel}>Next payout batch</span>
-              <span style={styles.heroStatValue}>
-                {fmtDate(NEXT_PAYOUT_DATE)}
-              </span>
-            </div>
-            <div style={styles.heroStatCard}>
-              <span style={styles.heroStatLabel}>Scheduled payouts</span>
-              <span style={styles.heroStatValue}>{scheduled.length}</span>
-            </div>
-          </div>
-        </section>
-
-        {/* ── Outgoing payments ───────────────────────── */}
-        <section style={styles.section}>
-          <h2 style={styles.sectionTitle}>Outgoing payments</h2>
-          <div style={styles.paymentColumns}>
-            {[
-              {
-                label: "Scheduled",
-                items: scheduled,
-                status: "scheduled" as const,
-              },
-              {
-                label: "Processing",
-                items: processing,
-                status: "processing" as const,
-              },
-              {
-                label: "Completed",
-                items: completed.slice(0, 4),
-                status: "completed" as const,
-              },
-            ].map((col) => (
-              <div key={col.label} style={styles.paymentCol}>
-                <div style={styles.paymentColHeader}>
-                  <span
-                    style={{
-                      ...styles.colStatusDot,
-                      background: STATUS_COLORS[col.status],
-                    }}
-                  />
-                  <span style={styles.paymentColTitle}>{col.label}</span>
-                  <span style={styles.paymentColCount}>{col.items.length}</span>
-                </div>
-                {col.items.length === 0 ? (
-                  <div style={styles.emptyCol}>None</div>
-                ) : (
-                  col.items.map((p) => (
-                    <div key={p.id} style={styles.paymentCard}>
-                      <div style={styles.paymentCardTop}>
-                        <span style={styles.paymentCreator}>{p.creator}</span>
-                        <span style={styles.paymentAmount}>
-                          ${fmt(p.amount)}
-                        </span>
-                      </div>
-                      <span style={styles.paymentCampaign}>{p.campaign}</span>
-                      <div style={styles.paymentMeta}>
-                        <span
-                          style={{
-                            ...styles.statusBadge,
-                            color: STATUS_COLORS[p.status],
-                            background: STATUS_BG[p.status],
-                          }}
-                        >
-                          {p.status.charAt(0).toUpperCase() + p.status.slice(1)}
-                        </span>
-                        <span style={styles.paymentDate}>
-                          {fmtDate(p.date)}
-                        </span>
-                      </div>
-                    </div>
-                  ))
-                )}
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* ── Per-campaign spend ──────────────────────── */}
-        <section style={styles.section}>
-          <h2 style={styles.sectionTitle}>Campaign spend</h2>
-          <div style={styles.campaignList}>
-            {CAMPAIGN_SPEND.map((c) => {
-              const pct = Math.min(100, Math.round((c.used / c.budget) * 100));
-              const overBudget = pct >= 100;
-              return (
-                <div key={c.id} style={styles.campaignRow}>
-                  <div style={styles.campaignRowTop}>
-                    <span style={styles.campaignName}>{c.campaign}</span>
-                    <span style={styles.campaignFigures}>
-                      <span
-                        style={{
-                          color: overBudget ? "#c1121f" : "#003049",
-                          fontWeight: 700,
-                        }}
-                      >
-                        ${fmt(c.used)}
-                      </span>
-                      <span style={{ color: "rgba(0,48,73,0.40)" }}>
-                        {" "}
-                        / ${fmt(c.budget)}
-                      </span>
-                    </span>
-                  </div>
-                  <div style={styles.progressTrack}>
-                    <div
-                      style={{
-                        ...styles.progressFill,
-                        width: `${pct}%`,
-                        background: overBudget
-                          ? "#c1121f"
-                          : pct >= 80
-                            ? "#c9a96e"
-                            : "#003049",
-                      }}
-                    />
-                  </div>
-                  <span style={styles.progressPct}>{pct}% of budget used</span>
-                </div>
-              );
-            })}
-          </div>
-        </section>
-
-        {/* ── Invoices ────────────────────────────────── */}
-        <section style={styles.section}>
-          <h2 style={styles.sectionTitle}>Invoices</h2>
-          <div style={styles.invoiceList}>
-            <div style={styles.invoiceHead}>
-              <span style={{ ...styles.invoiceCell, flex: 2 }}>Period</span>
-              <span style={{ ...styles.invoiceCell, flex: 1.5 }}>Payments</span>
-              <span style={{ ...styles.invoiceCell, flex: 2 }}>Total</span>
-              <span style={{ ...styles.invoiceCell, flex: 1.5 }}>Status</span>
-              <span style={{ ...styles.invoiceCell, flex: 1 }} />
-            </div>
-            {MOCK_MONTHLY_INVOICES.map((inv) => (
-              <div key={inv.id} style={styles.invoiceRow}>
-                <span
-                  style={{ ...styles.invoiceCell, flex: 2, fontWeight: 600 }}
-                >
-                  {inv.month} {inv.year}
-                </span>
-                <span style={{ ...styles.invoiceCell, flex: 1.5 }}>
-                  {inv.paymentCount} payouts
-                </span>
-                <span
-                  style={{
-                    ...styles.invoiceCell,
-                    flex: 2,
-                    fontFamily: "Darky, sans-serif",
-                    fontSize: 18,
-                    fontWeight: 800,
-                    letterSpacing: "-0.02em",
-                    color: "#003049",
-                  }}
-                >
-                  ${fmt(inv.totalAmount)}
-                </span>
-                <span style={{ ...styles.invoiceCell, flex: 1.5 }}>
-                  <span
-                    style={{
-                      ...styles.statusBadge,
-                      color: inv.status === "available" ? "#2d7a2d" : "#669bbc",
-                      background:
-                        inv.status === "available"
-                          ? "rgba(45,122,45,0.10)"
-                          : "rgba(102,155,188,0.12)",
-                    }}
-                  >
-                    {inv.status === "available" ? "Available" : "Pending"}
-                  </span>
-                </span>
-                <span style={{ ...styles.invoiceCell, flex: 1 }}>
-                  {/* TODO: wire to PDF generation API */}
-                  <button
-                    style={styles.downloadBtn}
-                    disabled={inv.status === "pending"}
-                    title={
-                      inv.status === "pending"
-                        ? "Invoice not yet available"
-                        : "Download PDF"
-                    }
-                  >
-                    PDF
-                  </button>
-                </span>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* ── Top-up CTA banner ───────────────────────── */}
-        <section style={styles.ctaSection}>
-          <div style={styles.ctaInner}>
-            <div>
-              <div style={styles.ctaLabel}>Campaign balance</div>
-              <div style={styles.ctaAmount}>
-                ${fmt(MONTHLY_BUDGET - THIS_MONTH_SPEND)} remaining
-              </div>
-            </div>
-            <button style={styles.ctaBtn} onClick={() => setTopupOpen(true)}>
-              Add funds
-            </button>
-          </div>
-          <p style={styles.ctaNote}>
-            Funds are held in escrow and released to creators on milestone
-            completion.
-          </p>
-        </section>
-      </main>
-
-      {/* ── Top-up Modal ────────────────────────────── */}
-      {topupOpen && <TopUpModal onClose={() => setTopupOpen(false)} />}
-    </div>
-  );
-}
-
-/* ── Styles ──────────────────────────────────────────────── */
-
-const styles: Record<string, React.CSSProperties> = {
-  page: {
-    minHeight: "100vh",
-    background: "var(--surface, #f5f2ec)",
-    fontFamily: "'CS Genio Mono', 'SF Mono', monospace",
-  },
-  nav: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "space-between",
-    padding: "16px 32px",
-    borderBottom: "1px solid rgba(0,48,73,0.12)",
-    background: "#ffffff",
-    position: "sticky",
-    top: 0,
-    zIndex: 50,
-  },
-  navBack: {
-    fontFamily: "'CS Genio Mono', monospace",
-    fontSize: 13,
-    color: "#003049",
-    textDecoration: "none",
-    letterSpacing: "0.01em",
-  },
-  navTitle: {
-    fontFamily: "Darky, sans-serif",
-    fontSize: 20,
-    fontWeight: 700,
-    color: "#003049",
-    letterSpacing: "-0.02em",
-  },
-  addFundsBtn: {
-    fontFamily: "'CS Genio Mono', monospace",
-    fontSize: 12,
-    fontWeight: 700,
-    letterSpacing: "0.04em",
-    textTransform: "uppercase",
-    background: "#c1121f",
-    color: "#ffffff",
-    border: "none",
-    padding: "10px 20px",
-    cursor: "pointer",
-    borderRadius: 0,
-  },
-  main: {
-    maxWidth: 960,
-    margin: "0 auto",
-    padding: "0 24px 80px",
-  },
-
-  // Hero
-  hero: {
-    display: "flex",
-    alignItems: "flex-end",
-    justifyContent: "space-between",
-    gap: 32,
-    padding: "56px 0 48px",
-    borderBottom: "1px solid rgba(0,48,73,0.12)",
-  },
-  heroLeft: {
-    flex: 1,
-  },
-  heroEyebrow: {
-    display: "block",
-    fontFamily: "'CS Genio Mono', monospace",
-    fontSize: 11,
-    fontWeight: 700,
-    letterSpacing: "0.08em",
-    color: "rgba(0,48,73,0.50)",
-    marginBottom: 12,
-  },
-  heroAmount: {
-    fontFamily: "Darky, sans-serif",
-    fontSize: "clamp(32px, 5vw, 64px)",
-    fontWeight: 900,
-    color: "#003049",
-    letterSpacing: "-0.04em",
-    lineHeight: 1.1,
-    marginBottom: 20,
-  },
-  heroBudgetRow: {
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginBottom: 8,
-  },
-  heroBudgetLabel: {
-    fontFamily: "'CS Genio Mono', monospace",
-    fontSize: 12,
-    color: "rgba(0,48,73,0.55)",
-  },
-  heroBudgetTotal: {
-    fontFamily: "'CS Genio Mono', monospace",
-    fontSize: 12,
-    color: "rgba(0,48,73,0.40)",
-  },
-  heroBudgetBar: {
-    height: 6,
-    background: "rgba(0,48,73,0.10)",
-    borderRadius: 0,
-    overflow: "hidden",
-    maxWidth: 480,
-  },
-  heroBudgetFill: {
-    height: "100%",
-    transition: "width 0.8s ease-out",
-  },
-  heroRight: {
-    display: "flex",
-    gap: 16,
-    flexShrink: 0,
-  },
-  heroStatCard: {
-    padding: "20px 24px",
-    background: "#ffffff",
-    border: "1px solid rgba(0,48,73,0.12)",
-    display: "flex",
-    flexDirection: "column",
-    gap: 6,
-    minWidth: 160,
-  },
-  heroStatLabel: {
-    fontFamily: "'CS Genio Mono', monospace",
-    fontSize: 11,
-    color: "rgba(0,48,73,0.50)",
-    textTransform: "uppercase",
-    letterSpacing: "0.06em",
-  },
-  heroStatValue: {
-    fontFamily: "Darky, sans-serif",
-    fontSize: 22,
-    fontWeight: 800,
-    color: "#003049",
-    letterSpacing: "-0.03em",
-  },
-
-  // Section
-  section: {
-    paddingTop: 48,
-  },
-  sectionTitle: {
-    fontFamily: "Darky, sans-serif",
-    fontSize: 24,
-    fontWeight: 700,
-    color: "#003049",
-    letterSpacing: "-0.03em",
-    marginBottom: 24,
-  },
-
-  // Payment columns
-  paymentColumns: {
-    display: "grid",
-    gridTemplateColumns: "repeat(3, 1fr)",
-    gap: 0,
-    border: "1px solid rgba(0,48,73,0.12)",
-  },
-  paymentCol: {
-    borderRight: "1px solid rgba(0,48,73,0.12)",
-    background: "#ffffff",
-  },
-  paymentColHeader: {
-    display: "flex",
-    alignItems: "center",
-    gap: 8,
-    padding: "14px 16px",
-    borderBottom: "1px solid rgba(0,48,73,0.08)",
-    background: "rgba(0,48,73,0.02)",
-  },
-  colStatusDot: {
-    width: 8,
-    height: 8,
-    borderRadius: "50%",
-    flexShrink: 0,
-  },
-  paymentColTitle: {
-    fontFamily: "'CS Genio Mono', monospace",
-    fontSize: 11,
-    fontWeight: 700,
-    letterSpacing: "0.06em",
-    textTransform: "uppercase",
-    color: "#003049",
-    flex: 1,
-  },
-  paymentColCount: {
-    fontFamily: "Darky, sans-serif",
-    fontSize: 16,
-    fontWeight: 800,
-    color: "#003049",
-  },
-  emptyCol: {
-    padding: "24px 16px",
-    fontFamily: "'CS Genio Mono', monospace",
-    fontSize: 12,
-    color: "rgba(0,48,73,0.30)",
-  },
-  paymentCard: {
-    padding: "16px",
-    borderBottom: "1px solid rgba(0,48,73,0.06)",
-    display: "flex",
-    flexDirection: "column",
-    gap: 4,
-  },
-  paymentCardTop: {
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "baseline",
-  },
-  paymentCreator: {
-    fontFamily: "'CS Genio Mono', monospace",
-    fontSize: 13,
-    fontWeight: 600,
-    color: "#003049",
-  },
-  paymentAmount: {
-    fontFamily: "Darky, sans-serif",
-    fontSize: 18,
-    fontWeight: 800,
-    color: "#003049",
-    letterSpacing: "-0.02em",
-  },
-  paymentCampaign: {
-    fontFamily: "'CS Genio Mono', monospace",
-    fontSize: 11,
-    color: "rgba(0,48,73,0.50)",
-    lineHeight: 1.4,
-  },
-  paymentMeta: {
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginTop: 4,
-  },
-  paymentDate: {
-    fontFamily: "'CS Genio Mono', monospace",
-    fontSize: 10,
-    color: "rgba(0,48,73,0.40)",
-  },
-  statusBadge: {
-    display: "inline-block",
-    fontFamily: "'CS Genio Mono', monospace",
-    fontSize: 10,
-    fontWeight: 700,
-    letterSpacing: "0.06em",
-    textTransform: "uppercase",
-    padding: "3px 8px",
-  },
-
-  // Campaign spend
-  campaignList: {
-    border: "1px solid rgba(0,48,73,0.12)",
-    background: "#ffffff",
-  },
-  campaignRow: {
-    padding: "20px 24px",
-    borderBottom: "1px solid rgba(0,48,73,0.06)",
-  },
-  campaignRowTop: {
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "baseline",
-    marginBottom: 10,
-  },
-  campaignName: {
-    fontFamily: "'CS Genio Mono', monospace",
-    fontSize: 13,
-    fontWeight: 600,
-    color: "#003049",
-  },
-  campaignFigures: {
-    fontFamily: "'CS Genio Mono', monospace",
-    fontSize: 13,
-  },
-  progressTrack: {
-    height: 6,
-    background: "rgba(0,48,73,0.08)",
-    borderRadius: 0,
-    overflow: "hidden",
-    marginBottom: 6,
-  },
-  progressFill: {
-    height: "100%",
-    transition: "width 0.8s ease-out",
-  },
-  progressPct: {
-    fontFamily: "'CS Genio Mono', monospace",
-    fontSize: 10,
-    color: "rgba(0,48,73,0.40)",
-    letterSpacing: "0.02em",
-  },
-
-  // Invoices
-  invoiceList: {
-    border: "1px solid rgba(0,48,73,0.12)",
-    background: "#ffffff",
-  },
-  invoiceHead: {
-    display: "flex",
-    alignItems: "center",
-    padding: "12px 20px",
-    borderBottom: "1px solid rgba(0,48,73,0.12)",
-    background: "rgba(0,48,73,0.03)",
-  },
-  invoiceRow: {
-    display: "flex",
-    alignItems: "center",
-    padding: "16px 20px",
-    borderBottom: "1px solid rgba(0,48,73,0.06)",
-  },
-  invoiceCell: {
-    fontFamily: "'CS Genio Mono', monospace",
-    fontSize: 12,
-    color: "#003049",
-    letterSpacing: "0.01em",
-    display: "flex",
-    alignItems: "center",
-  },
-  downloadBtn: {
-    fontFamily: "'CS Genio Mono', monospace",
-    fontSize: 10,
-    fontWeight: 700,
-    letterSpacing: "0.06em",
-    textTransform: "uppercase",
-    background: "transparent",
-    color: "#003049",
-    border: "1px solid rgba(0,48,73,0.25)",
-    padding: "6px 12px",
-    cursor: "pointer",
-    borderRadius: 0,
-    transition: "background 120ms ease",
-  },
-
-  // CTA
-  ctaSection: {
-    marginTop: 48,
-    padding: "32px",
-    background: "#003049",
-  },
-  ctaInner: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "space-between",
-    gap: 24,
-  },
-  ctaLabel: {
-    fontFamily: "'CS Genio Mono', monospace",
-    fontSize: 11,
-    fontWeight: 700,
-    letterSpacing: "0.08em",
-    textTransform: "uppercase",
-    color: "rgba(255,255,255,0.55)",
-    marginBottom: 6,
-  },
-  ctaAmount: {
-    fontFamily: "Darky, sans-serif",
-    fontSize: "clamp(28px, 3.5vw, 44px)",
-    fontWeight: 900,
-    color: "#ffffff",
-    letterSpacing: "-0.04em",
-    lineHeight: 1,
-  },
-  ctaBtn: {
-    fontFamily: "'CS Genio Mono', monospace",
-    fontSize: 14,
-    fontWeight: 700,
-    letterSpacing: "0.04em",
-    textTransform: "uppercase",
-    background: "#c1121f",
-    color: "#ffffff",
-    border: "none",
-    padding: "18px 40px",
-    cursor: "pointer",
-    borderRadius: 0,
-    whiteSpace: "nowrap",
-  },
-  ctaNote: {
-    fontFamily: "'CS Genio Mono', monospace",
-    fontSize: 12,
-    color: "rgba(255,255,255,0.40)",
-    marginTop: 12,
-  },
-
-  // Modal
-  modalOverlay: {
-    position: "fixed",
-    inset: 0,
-    background: "rgba(0,48,73,0.50)",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    zIndex: 200,
-  },
-  modal: {
-    background: "#ffffff",
-    padding: "40px",
-    width: 440,
-    maxWidth: "calc(100vw - 48px)",
-    borderRadius: 0,
-  },
-  modalTitle: {
-    fontFamily: "Darky, sans-serif",
-    fontSize: 28,
-    fontWeight: 900,
-    color: "#003049",
-    letterSpacing: "-0.03em",
-    marginBottom: 8,
-  },
-  modalBody: {
-    fontFamily: "'CS Genio Mono', monospace",
-    fontSize: 14,
-    color: "#4a5568",
-    lineHeight: 1.6,
-    marginBottom: 24,
-  },
-  modalLabel: {
-    fontFamily: "'CS Genio Mono', monospace",
-    fontSize: 11,
-    fontWeight: 700,
-    letterSpacing: "0.08em",
-    textTransform: "uppercase",
-    color: "rgba(0,48,73,0.50)",
-    marginBottom: 12,
-    marginTop: 16,
-  },
-  presetGrid: {
-    display: "grid",
-    gridTemplateColumns: "repeat(4, 1fr)",
-    gap: 8,
-  },
-  presetBtn: {
-    fontFamily: "'CS Genio Mono', monospace",
-    fontSize: 13,
-    fontWeight: 600,
-    color: "#003049",
-    background: "transparent",
-    border: "1px solid rgba(0,48,73,0.15)",
-    padding: "12px 8px",
-    cursor: "pointer",
-    borderRadius: 0,
-    transition: "border-color 150ms ease, background 150ms ease",
-  },
-  presetBtnActive: {
-    border: "1.5px solid #c1121f",
-    background: "rgba(193,18,31,0.04)",
-    color: "#c1121f",
-  },
-  input: {
-    width: "100%",
-    fontFamily: "'CS Genio Mono', monospace",
-    fontSize: 14,
-    color: "#003049",
-    background: "#ffffff",
-    border: "1px solid rgba(0,48,73,0.20)",
-    padding: "12px 14px",
-    borderRadius: 0,
-    outline: "none",
-    boxSizing: "border-box",
-  },
-  inputError: {
-    fontFamily: "'CS Genio Mono', monospace",
-    fontSize: 11,
-    color: "#c1121f",
-    marginTop: 6,
-  },
-  modalActions: {
-    display: "flex",
-    gap: 12,
-  },
-  modalPrimary: {
-    flex: 1,
-    background: "#c1121f",
-    color: "#ffffff",
-    border: "none",
-    padding: "16px",
-    fontFamily: "'CS Genio Mono', monospace",
-    fontSize: 13,
-    fontWeight: 700,
-    letterSpacing: "0.04em",
-    textTransform: "uppercase",
-    cursor: "pointer",
-    borderRadius: 0,
-  },
-  modalSecondary: {
-    flex: 1,
-    background: "transparent",
-    color: "#003049",
-    border: "1px solid rgba(0,48,73,0.20)",
-    padding: "16px",
-    fontFamily: "'CS Genio Mono', monospace",
-    fontSize: 13,
-    fontWeight: 600,
-    letterSpacing: "0.04em",
-    textTransform: "uppercase",
-    cursor: "pointer",
-    borderRadius: 0,
-  },
-};

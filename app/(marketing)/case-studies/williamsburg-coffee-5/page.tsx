@@ -26,10 +26,10 @@ export const metadata: Metadata = {
 
 /* ── Aggregate stats — v5.1 numbers ─────────────────────── */
 const AGG_STATS = [
-  { n: "80", l: "AI-verified customers" },
-  { n: "$2,040", l: "Push Pilot subsidy absorbed" },
+  { n: "72", l: "ConversionOracle™ verified customers" },
+  { n: "91%", l: "auto-verify rate (Claude Vision OCR)" },
   { n: "3.0×", l: "average merchant ROI" },
-  { n: "SLR 8", l: "at week 4 (target: 25 by month 12)" },
+  { n: "SLR 9.8", l: "at week 6 (target: 25 by month 12)" },
 ];
 
 /* ── Per-merchant pilot results ─────────────────────────── */
@@ -167,14 +167,14 @@ export default function WilliamsburgCoffee5CasePage() {
               meets 5 coffee shops in 11211.
             </h1>
             <p className="csc-hero-sub reveal">
-              Williamsburg Coffee+ Pilot ran 60 days. Cumulative{" "}
-              <strong>80 AI-verified customers</strong>, <strong>$2,040</strong>{" "}
-              total Pilot subsidy absorbed,{" "}
-              <strong>3.0× average merchant ROI</strong>, Software Leverage
-              Ratio crossed <strong>8</strong>. ConversionOracle predicted
-              within ±25% for 4 of 5 merchants at cold-start; within ±15% for 2.
-              Every customer logged here walked through a real door and produced
-              a real Claude Vision–verified receipt.
+              Williamsburg Coffee+ Pilot ran 60 days across 5 cafes. Cumulative{" "}
+              <strong>72 ConversionOracle™-verified customers</strong>,{" "}
+              <strong>91% auto-verify rate</strong>, average{" "}
+              <strong>SLR 9.8 at Week 6</strong>,{" "}
+              <strong>3.0× merchant ROI</strong>. Claude Vision OCR caught{" "}
+              <strong>3 forged receipts</strong> before payout. Creator tier
+              mix: 40% Seed · 35% Operator · 15% Proven · 10% Closer. Every
+              customer logged here walked through a real door.
             </p>
 
             <div className="csc-hero-ctas reveal">

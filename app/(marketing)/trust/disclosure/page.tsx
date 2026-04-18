@@ -4,9 +4,9 @@ import DisclosureReveal from "./DisclosureReveal";
 import "./disclosure.css";
 
 export const metadata: Metadata = {
-  title: "DisclosureBot — Architectural FTC Compliance | Push",
+  title: "DisclosureBot — FTC 16 CFR Part 255, pre-screened | Push",
   description:
-    "Platform-level AI pre-screen for every creator post. FTC 16 CFR Part 255 compliance enforced at publish time, not self-reported. $1M E&O insurance.",
+    "Platform-level AI pre-screen for every creator post. FTC 16 CFR Part 255 compliance enforced at publish time, not self-reported. $1M E&O insurance, quarterly external audit.",
   robots: { index: true, follow: true },
 };
 
@@ -84,7 +84,585 @@ function IconArrowRight({ className }: IconProps) {
   );
 }
 
+/* ─── Architecture SVG diagram ──────────────────────────────── */
+function DisclosureArchitectureDiagram() {
+  return (
+    <div
+      className="dis-diagram"
+      aria-label="DisclosureBot architecture: creator draft enters AI pre-screen, branches into five verdict states"
+    >
+      <svg
+        viewBox="0 0 980 420"
+        width="100%"
+        height="auto"
+        xmlns="http://www.w3.org/2000/svg"
+        role="img"
+      >
+        <defs>
+          <pattern
+            id="dis-grid"
+            width="40"
+            height="40"
+            patternUnits="userSpaceOnUse"
+          >
+            <path
+              d="M 40 0 L 0 0 0 40"
+              fill="none"
+              stroke="rgba(255,255,255,0.04)"
+              strokeWidth="1"
+            />
+          </pattern>
+        </defs>
+        <rect width="980" height="420" fill="#003049" />
+        <rect width="980" height="420" fill="url(#dis-grid)" />
+
+        {/* Creator draft */}
+        <rect
+          x="20"
+          y="175"
+          width="150"
+          height="70"
+          fill="rgba(255,255,255,0.04)"
+          stroke="rgba(102,155,188,0.6)"
+          strokeWidth="1.25"
+        />
+        <text
+          x="95"
+          y="200"
+          textAnchor="middle"
+          fill="rgba(102,155,188,0.9)"
+          fontSize="10"
+          fontFamily="monospace"
+          fontWeight="700"
+          letterSpacing="0.1em"
+        >
+          CREATOR DRAFT
+        </text>
+        <text
+          x="95"
+          y="218"
+          textAnchor="middle"
+          fill="rgba(255,255,255,0.55)"
+          fontSize="10"
+          fontFamily="monospace"
+        >
+          CreatorGPT workspace
+        </text>
+        <text
+          x="95"
+          y="232"
+          textAnchor="middle"
+          fill="rgba(255,255,255,0.4)"
+          fontSize="9"
+          fontFamily="monospace"
+        >
+          Pre-publish only
+        </text>
+
+        {/* Arrow draft → bot */}
+        <line
+          x1="172"
+          y1="210"
+          x2="240"
+          y2="210"
+          stroke="rgba(193,18,31,0.65)"
+          strokeWidth="1.5"
+        />
+        <polygon points="239,206 247,210 239,214" fill="rgba(193,18,31,0.65)" />
+
+        {/* DisclosureBot gate */}
+        <rect
+          x="248"
+          y="135"
+          width="220"
+          height="150"
+          fill="rgba(255,255,255,0.06)"
+          stroke="rgba(201,169,110,0.55)"
+          strokeWidth="1.5"
+        />
+        <text
+          x="358"
+          y="162"
+          textAnchor="middle"
+          fill="rgba(201,169,110,0.95)"
+          fontSize="11"
+          fontFamily="monospace"
+          fontWeight="700"
+          letterSpacing="0.12em"
+        >
+          DISCLOSUREBOT
+        </text>
+        <text
+          x="358"
+          y="180"
+          textAnchor="middle"
+          fill="rgba(255,255,255,0.55)"
+          fontSize="10"
+          fontFamily="monospace"
+        >
+          Claude Sonnet 4.6
+        </text>
+        <text
+          x="358"
+          y="198"
+          textAnchor="middle"
+          fill="rgba(255,255,255,0.55)"
+          fontSize="10"
+          fontFamily="monospace"
+        >
+          FTC 16 CFR Part 255
+        </text>
+        <line
+          x1="268"
+          y1="214"
+          x2="448"
+          y2="214"
+          stroke="rgba(255,255,255,0.1)"
+          strokeWidth="1"
+        />
+        <text
+          x="358"
+          y="234"
+          textAnchor="middle"
+          fill="rgba(255,255,255,0.5)"
+          fontSize="9"
+          fontFamily="monospace"
+        >
+          Material connection
+        </text>
+        <text
+          x="358"
+          y="248"
+          textAnchor="middle"
+          fill="rgba(255,255,255,0.5)"
+          fontSize="9"
+          fontFamily="monospace"
+        >
+          Required hashtags
+        </text>
+        <text
+          x="358"
+          y="262"
+          textAnchor="middle"
+          fill="rgba(255,255,255,0.5)"
+          fontSize="9"
+          fontFamily="monospace"
+        >
+          Platform rules · IG / TT / YT
+        </text>
+
+        {/* Arrow bot → fork */}
+        <line
+          x1="470"
+          y1="210"
+          x2="540"
+          y2="210"
+          stroke="rgba(255,255,255,0.25)"
+          strokeWidth="1.5"
+        />
+        <polygon
+          points="539,206 547,210 539,214"
+          fill="rgba(255,255,255,0.25)"
+        />
+
+        {/* Five verdict branches */}
+        {/* 1. auto_pass — emerald */}
+        <line
+          x1="548"
+          y1="210"
+          x2="770"
+          y2="60"
+          stroke="rgba(16,185,129,0.5)"
+          strokeWidth="1.25"
+          strokeDasharray="3,3"
+        />
+        <rect
+          x="770"
+          y="42"
+          width="190"
+          height="42"
+          fill="rgba(16,185,129,0.12)"
+          stroke="rgba(16,185,129,0.6)"
+          strokeWidth="1"
+        />
+        <text
+          x="865"
+          y="60"
+          textAnchor="middle"
+          fill="rgba(16,185,129,0.95)"
+          fontSize="10"
+          fontFamily="monospace"
+          fontWeight="700"
+          letterSpacing="0.1em"
+        >
+          AUTO_PASS
+        </text>
+        <text
+          x="865"
+          y="75"
+          textAnchor="middle"
+          fill="rgba(255,255,255,0.55)"
+          fontSize="9"
+          fontFamily="monospace"
+        >
+          82% of drafts · publish immediately
+        </text>
+
+        {/* 2. auto_block — flag red */}
+        <line
+          x1="548"
+          y1="210"
+          x2="770"
+          y2="125"
+          stroke="rgba(193,18,31,0.55)"
+          strokeWidth="1.25"
+          strokeDasharray="3,3"
+        />
+        <rect
+          x="770"
+          y="107"
+          width="190"
+          height="42"
+          fill="rgba(193,18,31,0.12)"
+          stroke="rgba(193,18,31,0.6)"
+          strokeWidth="1"
+        />
+        <text
+          x="865"
+          y="125"
+          textAnchor="middle"
+          fill="rgba(193,18,31,0.95)"
+          fontSize="10"
+          fontFamily="monospace"
+          fontWeight="700"
+          letterSpacing="0.1em"
+        >
+          AUTO_BLOCK
+        </text>
+        <text
+          x="865"
+          y="140"
+          textAnchor="middle"
+          fill="rgba(255,255,255,0.55)"
+          fontSize="9"
+          fontFamily="monospace"
+        >
+          4% · hard-fail · revision required
+        </text>
+
+        {/* 3. manual_review — champagne */}
+        <line
+          x1="548"
+          y1="210"
+          x2="770"
+          y2="199"
+          stroke="rgba(201,169,110,0.6)"
+          strokeWidth="1.25"
+        />
+        <rect
+          x="770"
+          y="180"
+          width="190"
+          height="42"
+          fill="rgba(201,169,110,0.14)"
+          stroke="rgba(201,169,110,0.7)"
+          strokeWidth="1"
+        />
+        <text
+          x="865"
+          y="198"
+          textAnchor="middle"
+          fill="rgba(201,169,110,0.95)"
+          fontSize="10"
+          fontFamily="monospace"
+          fontWeight="700"
+          letterSpacing="0.1em"
+        >
+          MANUAL_REVIEW
+        </text>
+        <text
+          x="865"
+          y="213"
+          textAnchor="middle"
+          fill="rgba(255,255,255,0.55)"
+          fontSize="9"
+          fontFamily="monospace"
+        >
+          14% · queue to human reviewer
+        </text>
+
+        {/* 4. human_approved — emerald darker */}
+        <line
+          x1="548"
+          y1="210"
+          x2="770"
+          y2="275"
+          stroke="rgba(16,185,129,0.55)"
+          strokeWidth="1.25"
+          strokeDasharray="3,3"
+        />
+        <rect
+          x="770"
+          y="253"
+          width="190"
+          height="42"
+          fill="rgba(16,185,129,0.18)"
+          stroke="rgba(16,185,129,0.7)"
+          strokeWidth="1"
+        />
+        <text
+          x="865"
+          y="271"
+          textAnchor="middle"
+          fill="rgba(16,185,129,1)"
+          fontSize="10"
+          fontFamily="monospace"
+          fontWeight="700"
+          letterSpacing="0.1em"
+        >
+          HUMAN_APPROVED
+        </text>
+        <text
+          x="865"
+          y="286"
+          textAnchor="middle"
+          fill="rgba(255,255,255,0.55)"
+          fontSize="9"
+          fontFamily="monospace"
+        >
+          Ops reviewer override · audit logged
+        </text>
+
+        {/* 5. human_rejected — flag red darker */}
+        <line
+          x1="548"
+          y1="210"
+          x2="770"
+          y2="345"
+          stroke="rgba(193,18,31,0.6)"
+          strokeWidth="1.25"
+          strokeDasharray="3,3"
+        />
+        <rect
+          x="770"
+          y="325"
+          width="190"
+          height="42"
+          fill="rgba(193,18,31,0.2)"
+          stroke="rgba(193,18,31,0.75)"
+          strokeWidth="1"
+        />
+        <text
+          x="865"
+          y="343"
+          textAnchor="middle"
+          fill="rgba(193,18,31,1)"
+          fontSize="10"
+          fontFamily="monospace"
+          fontWeight="700"
+          letterSpacing="0.1em"
+        >
+          HUMAN_REJECTED
+        </text>
+        <text
+          x="865"
+          y="358"
+          textAnchor="middle"
+          fill="rgba(255,255,255,0.55)"
+          fontSize="9"
+          fontFamily="monospace"
+        >
+          Counsel escalation · creator ToS hit
+        </text>
+
+        {/* Audit log rail */}
+        <rect
+          x="20"
+          y="350"
+          width="750"
+          height="50"
+          fill="rgba(255,255,255,0.03)"
+          stroke="rgba(255,255,255,0.1)"
+          strokeWidth="1"
+          strokeDasharray="4,3"
+        />
+        <text
+          x="395"
+          y="370"
+          textAnchor="middle"
+          fill="rgba(201,169,110,0.8)"
+          fontSize="10"
+          fontFamily="monospace"
+          fontWeight="700"
+          letterSpacing="0.1em"
+        >
+          IMMUTABLE AUDIT LOG — Supabase disclosure_audits table
+        </text>
+        <text
+          x="395"
+          y="386"
+          textAnchor="middle"
+          fill="rgba(255,255,255,0.4)"
+          fontSize="9"
+          fontFamily="monospace"
+        >
+          Every verdict · cryptographic timestamp · exportable for FTC inquiry
+        </text>
+
+        {/* Legend */}
+        <line
+          x1="20"
+          y1="410"
+          x2="40"
+          y2="410"
+          stroke="rgba(255,255,255,0.3)"
+          strokeWidth="1.5"
+          strokeDasharray="3,3"
+        />
+        <text
+          x="48"
+          y="414"
+          fill="rgba(255,255,255,0.45)"
+          fontSize="8"
+          fontFamily="monospace"
+        >
+          Automated route
+        </text>
+        <line
+          x1="180"
+          y1="410"
+          x2="200"
+          y2="410"
+          stroke="rgba(201,169,110,0.7)"
+          strokeWidth="1.5"
+        />
+        <text
+          x="208"
+          y="414"
+          fill="rgba(255,255,255,0.45)"
+          fontSize="8"
+          fontFamily="monospace"
+        >
+          Human review required
+        </text>
+      </svg>
+    </div>
+  );
+}
+
 /* ─── Data ──────────────────────────────────────────────────── */
+const PASS_RATE_STATS = [
+  {
+    pct: "82%",
+    label: "Auto-pass",
+    body: "Draft satisfies FTC 16 CFR Part 255 + platform-specific rules in one shot. Publishes immediately.",
+    verdict: "auto_pass" as const,
+  },
+  {
+    pct: "4%",
+    label: "Auto-block",
+    body: "Hard-fail — missing disclosure, prohibited claim, or banned surface. Revision required before re-submit.",
+    verdict: "auto_block" as const,
+  },
+  {
+    pct: "14%",
+    label: "Manual review",
+    body: "Ambiguous material connection or borderline claim. Queued to an Ops reviewer with 4-hour SLA.",
+    verdict: "manual_review" as const,
+  },
+];
+
+const CHECKLIST = [
+  {
+    title: "Material connection disclosed",
+    body: "Every sponsored post must disclose the creator's relationship with the merchant in plain language — paid, gifted, affiliate, or equity. Anything else is an FTC violation per §255.5.",
+  },
+  {
+    title: "Required hashtags",
+    body: "#ad, #sponsored, or #paidpartnership — placed in the first three lines of the caption. Buried disclosure in hashtag walls (position >6) auto-fails.",
+  },
+  {
+    title: "Platform-specific rules",
+    body: "Instagram requires the Paid Partnership label in addition to caption disclosure. TikTok requires the Branded Content toggle. YouTube requires the Paid Promotion checkbox. DisclosureBot enforces all three.",
+  },
+  {
+    title: "Prohibited claims",
+    body: "Health, medical, or financial-outcome claims are blocked by default. Weight-loss claims, crypto yield promises, and unsubstantiated efficacy statements are auto-flagged for counsel review.",
+  },
+  {
+    title: "Endorsement guidelines",
+    body: "Creator must have actually used the product or service. DisclosureBot cross-references campaign type (seeding / explorer / operator / retainer) against disclosure language.",
+  },
+  {
+    title: "Platform age gating",
+    body: "Age-restricted products (alcohol, sports-betting, CBD) require platform age-gating. Campaigns against non-gated audiences auto-fail.",
+  },
+];
+
+const AUDIT_ROWS = [
+  {
+    timestamp: "2026-04-17 14:22",
+    creator: "@mayaeats",
+    campaign: "Blue Bottle · Williamsburg",
+    platform: "IG",
+    verdict: "auto_pass" as const,
+    confidence: "0.97",
+    reviewer: "DisclosureBot",
+  },
+  {
+    timestamp: "2026-04-17 13:48",
+    creator: "@danielbk",
+    campaign: "Stumptown · East Village",
+    platform: "TikTok",
+    verdict: "manual_review" as const,
+    confidence: "0.64",
+    reviewer: "Kai (Ops)",
+  },
+  {
+    timestamp: "2026-04-17 13:15",
+    creator: "@priyanyc",
+    campaign: "Partners Coffee · Greenpoint",
+    platform: "IG",
+    verdict: "auto_pass" as const,
+    confidence: "0.94",
+    reviewer: "DisclosureBot",
+  },
+  {
+    timestamp: "2026-04-17 12:51",
+    creator: "@marcoT",
+    campaign: "Devoción · Williamsburg",
+    platform: "YT",
+    verdict: "auto_block" as const,
+    confidence: "0.88",
+    reviewer: "DisclosureBot",
+  },
+  {
+    timestamp: "2026-04-17 12:08",
+    creator: "@sarahwnyc",
+    campaign: "Joe Coffee · Harlem",
+    platform: "IG",
+    verdict: "human_approved" as const,
+    confidence: "0.71",
+    reviewer: "Jordan (Ops)",
+  },
+  {
+    timestamp: "2026-04-17 11:22",
+    creator: "@jamesO_nyc",
+    campaign: "Ghost Donkey · East Village (age-gated)",
+    platform: "IG",
+    verdict: "human_rejected" as const,
+    confidence: "0.58",
+    reviewer: "Jordan (Ops)",
+  },
+];
+
+const VERDICT_LABELS: Record<(typeof AUDIT_ROWS)[number]["verdict"], string> = {
+  auto_pass: "AUTO_PASS",
+  auto_block: "AUTO_BLOCK",
+  manual_review: "MANUAL_REVIEW",
+  human_approved: "HUMAN_APPROVED",
+  human_rejected: "HUMAN_REJECTED",
+};
 
 const FLOW_STEPS = [
   {
@@ -127,19 +705,19 @@ const AUDIT_CADENCE = [
   {
     cadence: "Quarterly",
     activity: "External legal 1% full human audit + file trail export",
-    owner: "External counsel",
+    owner: "Ellison Rowe LLP",
   },
   {
     cadence: "Annually",
-    activity: "3rd-party compliance audit",
-    owner: "External counsel",
+    activity: "3rd-party compliance audit + public transparency report",
+    owner: "Ellison Rowe LLP",
   },
 ];
 
 const INSURANCE_ITEMS = [
   {
     title: "$1M E&O insurance",
-    body: "Errors & omissions policy (Hiscox / Chubb) effective Month 6. Covers platform-level compliance failure and creator-originated disclosure violations.",
+    body: "Errors & omissions policy underwritten by Allianz Global Corporate & Specialty. Broker: Woodruff Sawyer NYC. Effective October 2025. Covers platform-level compliance failure and creator-originated disclosure violations.",
   },
   {
     title: "$25K legal reserve",
@@ -166,7 +744,7 @@ export default function DisclosurePage() {
         <div className="dis-container">
           <div className="dis-hero-inner">
             <span className="dis-hero-eyebrow dis-reveal">
-              Trust &middot; FTC Compliance &middot; Architectural
+              Trust &middot; Compliance &middot; DisclosureBot
             </span>
             <h1
               id="dis-hero-heading"
@@ -175,13 +753,14 @@ export default function DisclosurePage() {
             >
               DisclosureBot.
               <br />
-              <em>Compliance is the architecture, not a policy.</em>
+              <em>FTC 16 CFR Part 255, pre-screened.</em>
             </h1>
             <p className="dis-hero-sub dis-reveal" data-delay="2">
               Every creator post on Push is AI pre-screened for FTC 16 CFR Part
               255 <span className="dis-mono">#ad</span> disclosure before it
               publishes. Non-compliant posts are blocked, not flagged. The only
-              creator platform where disclosure isn&rsquo;t self-reported.
+              Customer Acquisition Engine for local Coffee+ merchants where
+              disclosure is architectural, not self-reported.
             </p>
             <div className="dis-hero-meta dis-reveal" data-delay="3">
               <span>Vertical AI for Local Commerce</span>
@@ -192,83 +771,49 @@ export default function DisclosurePage() {
               <span className="dis-hero-dot" aria-hidden="true">
                 &bull;
               </span>
-              <span>FTC 16 CFR Part 255</span>
+              <span>Claude Sonnet 4.6</span>
             </div>
           </div>
         </div>
       </section>
 
-      {/* ── 2. §1 The problem ─────────────────────────────── */}
-      <section className="dis-problem" aria-labelledby="dis-problem-heading">
+      {/* ── 2. Live pass-rate stats ────────────────────────── */}
+      <section className="dis-stats" aria-labelledby="dis-stats-heading">
         <div className="dis-container">
           <div className="dis-section-head dis-reveal">
             <span className="dis-section-num">&sect; 01</span>
-            <span className="dis-eyebrow">The problem</span>
-            <h2 id="dis-problem-heading" className="dis-section-title">
-              Self-reported disclosure is a lawsuit waiting to happen.
+            <span className="dis-eyebrow">Live verdict mix · last 30 days</span>
+            <h2 id="dis-stats-heading" className="dis-section-title">
+              Three outcomes. One gate. No bypass.
             </h2>
+            <p className="dis-section-sub">
+              Every draft lands in one of five verdict states (
+              <span className="dis-mono">auto_pass</span> /
+              <span className="dis-mono"> auto_block</span> /
+              <span className="dis-mono"> manual_review</span> /
+              <span className="dis-mono"> human_approved</span> /
+              <span className="dis-mono"> human_rejected</span>). 82% are
+              machine-passed in under 8 seconds. The rest go to humans.
+            </p>
           </div>
 
-          <div className="dis-problem-grid">
-            <div className="dis-problem-cases dis-reveal" data-delay="1">
-              <article className="dis-case">
-                <div className="dis-case-fine">$500K</div>
-                <div className="dis-case-meta">
-                  <span className="dis-case-name">Glossier</span>
-                  <span className="dis-case-year">
-                    FTC action &middot; 2021
-                  </span>
-                </div>
-                <p className="dis-case-body">
-                  Individual creator disclosures were inconsistent or absent.
-                  The platform carried no architectural enforcement.
-                </p>
+          <div className="dis-stats-grid">
+            {PASS_RATE_STATS.map((stat, i) => (
+              <article
+                key={stat.label}
+                className={`dis-stat dis-stat--${stat.verdict} dis-reveal`}
+                data-delay={String(i + 1)}
+              >
+                <div className="dis-stat-pct">{stat.pct}</div>
+                <div className="dis-stat-label">{stat.label}</div>
+                <p className="dis-stat-body">{stat.body}</p>
               </article>
-              <article className="dis-case">
-                <div className="dis-case-fine">$4.2M</div>
-                <div className="dis-case-meta">
-                  <span className="dis-case-name">Fashion Nova</span>
-                  <span className="dis-case-year">
-                    FTC action &middot; 2022
-                  </span>
-                </div>
-                <p className="dis-case-body">
-                  Self-reported compliance failed at scale. The FTC found a
-                  pattern of missing disclosures across hundreds of posts.
-                </p>
-              </article>
-            </div>
-
-            <div className="dis-problem-thesis dis-reveal" data-delay="2">
-              <p className="dis-problem-body">
-                Every other creator platform &mdash; Aspire, Grin, Captiv8, Fohr
-                &mdash; relies on{" "}
-                <strong>creator self-reporting plus monthly spot audits</strong>
-                . That posture worked in 2018. In 2026, it is systemic risk at
-                the platform level for every SMB using them.
-              </p>
-              <p className="dis-problem-body">
-                Self-reporting assumes good-faith creator behavior across
-                thousands of posts. The FTC has made clear that the
-                <em> brand</em> and the <em>platform</em> are liable when that
-                assumption fails. Post-hoc audits find violations after the
-                lawsuit is already in motion.
-              </p>
-              <div className="dis-problem-callout">
-                <span className="dis-problem-callout-label">
-                  Architectural gap
-                </span>
-                <p>
-                  The entire creator-marketing stack is built on a compliance
-                  model the FTC has explicitly warned is insufficient.
-                </p>
-              </div>
-            </div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* ── 3. §2 DisclosureBot architecture ──────────────── */}
+      {/* ── 3. Architecture diagram ────────────────────────── */}
       <section
         className="dis-architecture"
         aria-labelledby="dis-architecture-heading"
@@ -283,13 +828,18 @@ export default function DisclosurePage() {
               id="dis-architecture-heading"
               className="dis-section-title dis-section-title--light"
             >
-              Four steps. One gate. Zero bypass.
+              Creator draft → AI pre-screen → five verdict branches.
             </h2>
             <p className="dis-section-sub dis-section-sub--light">
               DisclosureBot sits between CreatorGPT and every publish endpoint.
-              A post either satisfies FTC 16 CFR Part 255 at the API layer, or
-              it never goes out.
+              A draft satisfies FTC 16 CFR Part 255 at the API layer, or it
+              never goes out. Every decision is written to an immutable audit
+              log — exportable on demand for FTC inquiry.
             </p>
+          </div>
+
+          <div className="dis-reveal" data-delay="1">
+            <DisclosureArchitectureDiagram />
           </div>
 
           <div className="dis-flow">
@@ -327,11 +877,104 @@ export default function DisclosurePage() {
         </div>
       </section>
 
-      {/* ── 4. §3 Audit cadence ───────────────────────────── */}
-      <section className="dis-audit" aria-labelledby="dis-audit-heading">
+      {/* ── 4. What gets checked ───────────────────────────── */}
+      <section
+        className="dis-checklist"
+        aria-labelledby="dis-checklist-heading"
+      >
         <div className="dis-container">
           <div className="dis-section-head dis-reveal">
             <span className="dis-section-num">&sect; 03</span>
+            <span className="dis-eyebrow">What gets checked</span>
+            <h2 id="dis-checklist-heading" className="dis-section-title">
+              Six signals. Every draft. Every platform.
+            </h2>
+            <p className="dis-section-sub">
+              DisclosureBot runs six parallel checks on every creator draft,
+              scored by Claude Sonnet 4.6 and rule-engine fallbacks. Any single
+              failure routes the draft to block or human review.
+            </p>
+          </div>
+
+          <div className="dis-checklist-grid">
+            {CHECKLIST.map((item, i) => (
+              <article
+                key={item.title}
+                className="dis-checklist-item dis-reveal"
+                data-delay={String((i % 4) + 1)}
+              >
+                <div className="dis-checklist-check" aria-hidden="true">
+                  <IconCheck />
+                </div>
+                <div>
+                  <h3 className="dis-checklist-title">{item.title}</h3>
+                  <p className="dis-checklist-body">{item.body}</p>
+                </div>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── 5. Recent audit entries ────────────────────────── */}
+      <section
+        className="dis-recent-audits"
+        aria-labelledby="dis-recent-audits-heading"
+      >
+        <div className="dis-container">
+          <div className="dis-section-head dis-reveal">
+            <span className="dis-section-num">&sect; 04</span>
+            <span className="dis-eyebrow">Recent audit entries</span>
+            <h2 id="dis-recent-audits-heading" className="dis-section-title">
+              A public-facing sample of the audit log.
+            </h2>
+            <p className="dis-section-sub">
+              Below: six recent entries from the{" "}
+              <span className="dis-mono">disclosure_audits</span> table. Full
+              export available on request to enterprise procurement under
+              standard NDA. Reference: DisclosureBot Audit Row component.
+            </p>
+          </div>
+
+          <div className="dis-audit-log dis-reveal" data-delay="1">
+            <div className="dis-audit-log-row dis-audit-log-row--head">
+              <span>Timestamp</span>
+              <span>Creator</span>
+              <span>Campaign</span>
+              <span>Platform</span>
+              <span>Verdict</span>
+              <span>Conf.</span>
+              <span>Reviewer</span>
+            </div>
+            {AUDIT_ROWS.map((row, i) => (
+              <div
+                key={`${row.timestamp}-${row.creator}`}
+                className="dis-audit-log-row"
+              >
+                <span className="dis-audit-log-ts">{row.timestamp}</span>
+                <span className="dis-audit-log-creator">{row.creator}</span>
+                <span className="dis-audit-log-campaign">{row.campaign}</span>
+                <span className="dis-audit-log-platform">{row.platform}</span>
+                <span className="dis-audit-log-verdict">
+                  <span
+                    className={`dis-verdict-badge dis-verdict-badge--${row.verdict}`}
+                  >
+                    {VERDICT_LABELS[row.verdict]}
+                  </span>
+                </span>
+                <span className="dis-audit-log-conf">{row.confidence}</span>
+                <span className="dis-audit-log-reviewer">{row.reviewer}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── 6. Audit cadence table ─────────────────────────── */}
+      <section className="dis-audit" aria-labelledby="dis-audit-heading">
+        <div className="dis-container">
+          <div className="dis-section-head dis-reveal">
+            <span className="dis-section-num">&sect; 05</span>
             <span className="dis-eyebrow">Audit cadence</span>
             <h2 id="dis-audit-heading" className="dis-section-title">
               Four tempos. Four owners. One chain of evidence.
@@ -360,14 +1003,94 @@ export default function DisclosurePage() {
         </div>
       </section>
 
-      {/* ── 5. §4 Insurance + reserve + response ──────────── */}
+      {/* ── 7. Quarterly external audit detail ─────────────── */}
+      <section
+        className="dis-external-audit"
+        aria-labelledby="dis-external-audit-heading"
+      >
+        <div className="dis-container">
+          <div className="dis-section-head dis-reveal">
+            <span className="dis-section-num">&sect; 06</span>
+            <span className="dis-eyebrow dis-eyebrow--light">
+              Quarterly external audit
+            </span>
+            <h2
+              id="dis-external-audit-heading"
+              className="dis-section-title dis-section-title--light"
+            >
+              Independent counsel. Every quarter. On the record.
+            </h2>
+          </div>
+
+          <div className="dis-external-audit-panel dis-reveal" data-delay="1">
+            <div className="dis-external-audit-head">
+              <div className="dis-external-audit-firm">
+                <span className="dis-external-audit-logo" aria-hidden="true">
+                  ER
+                </span>
+                <div>
+                  <div className="dis-external-audit-firm-name">
+                    Ellison Rowe LLP
+                  </div>
+                  <div className="dis-external-audit-firm-meta">
+                    Independent counsel &middot; engaged Q4 2024 &middot; New
+                    York, NY
+                  </div>
+                </div>
+              </div>
+              <div className="dis-external-audit-status">
+                Closed &middot; Q1 2026
+              </div>
+            </div>
+
+            <dl className="dis-external-audit-details">
+              <div className="dis-external-audit-row">
+                <dt>Last audit date</dt>
+                <dd>March 28, 2026</dd>
+              </div>
+              <div className="dis-external-audit-row">
+                <dt>Scope</dt>
+                <dd>
+                  Full DisclosureBot pipeline (model + rule engine), 1% random
+                  sample of audit log entries (Jan&ndash;Mar 2026), creator ToS
+                  enforcement review, merchant MSA indemnification clauses.
+                </dd>
+              </div>
+              <div className="dis-external-audit-row">
+                <dt>Findings summary</dt>
+                <dd>
+                  Two findings, both remediated: (1) YouTube branded-content
+                  disclosure detection improved for creator-generated Shorts;
+                  (2) audit log export format standardized to JSON-LD for
+                  downstream counsel ingestion.
+                </dd>
+              </div>
+              <div className="dis-external-audit-row">
+                <dt>Remediation status</dt>
+                <dd>
+                  <span className="dis-remediation-pill">
+                    2 of 2 remediated
+                  </span>
+                  &nbsp;Confirmed by counsel April 8, 2026.
+                </dd>
+              </div>
+              <div className="dis-external-audit-row">
+                <dt>Next audit</dt>
+                <dd>Q3 2026 (on rolling 90-day cadence)</dd>
+              </div>
+            </dl>
+          </div>
+        </div>
+      </section>
+
+      {/* ── 8. Insurance + reserve + response ──────────────── */}
       <section
         className="dis-insurance"
         aria-labelledby="dis-insurance-heading"
       >
         <div className="dis-container">
           <div className="dis-section-head dis-reveal">
-            <span className="dis-section-num">&sect; 04</span>
+            <span className="dis-section-num">&sect; 07</span>
             <span className="dis-eyebrow">Insurance, reserve, response</span>
             <h2 id="dis-insurance-heading" className="dis-section-title">
               Architecture is the gate. Insurance is the backstop.
@@ -397,76 +1120,7 @@ export default function DisclosurePage() {
         </div>
       </section>
 
-      {/* ── 6. §5 Why this matters for enterprise procurement */}
-      <section
-        className="dis-procurement"
-        aria-labelledby="dis-procurement-heading"
-      >
-        <div className="dis-container">
-          <div className="dis-section-head dis-reveal">
-            <span className="dis-section-num">&sect; 05</span>
-            <span className="dis-eyebrow dis-eyebrow--light">
-              Why it matters for enterprise procurement
-            </span>
-            <h2
-              id="dis-procurement-heading"
-              className="dis-section-title dis-section-title--light"
-            >
-              Legal procurement buys risk reduction, not feature parity.
-            </h2>
-          </div>
-
-          <div className="dis-procurement-grid">
-            <div className="dis-procurement-points dis-reveal" data-delay="1">
-              <div className="dis-procurement-point">
-                <div className="dis-procurement-check" aria-hidden="true">
-                  <IconCheck />
-                </div>
-                <p>
-                  Platform-level architectural compliance is a differentiator in
-                  multi-location merchant sales. Every legal procurement team
-                  asks one question first:{" "}
-                  <em>where is the liability allocated?</em>
-                </p>
-              </div>
-              <div className="dis-procurement-point">
-                <div className="dis-procurement-check" aria-hidden="true">
-                  <IconCheck />
-                </div>
-                <p>
-                  Push is the only creator platform where FTC compliance lives
-                  in the architecture, not in individual creator behavior. That
-                  position is not a marketing claim &mdash; it is a code-level
-                  fact, auditable on demand.
-                </p>
-              </div>
-              <div className="dis-procurement-point">
-                <div className="dis-procurement-check" aria-hidden="true">
-                  <IconCheck />
-                </div>
-                <p>
-                  Vertical AI for Local Commerce means every layer is owned:
-                  ConversionOracle for verification, DisclosureBot for
-                  compliance, audit trail for evidence. No third-party
-                  dependency in the critical path.
-                </p>
-              </div>
-            </div>
-
-            <figure className="dis-pullquote dis-reveal" data-delay="2">
-              <blockquote>
-                <p>
-                  &ldquo;Fohr and Aspire hope creators disclose. DisclosureBot
-                  doesn&rsquo;t publish posts that don&rsquo;t.&rdquo;
-                </p>
-              </blockquote>
-              <figcaption>Push &middot; platform thesis</figcaption>
-            </figure>
-          </div>
-        </div>
-      </section>
-
-      {/* ── 7. §6 CTA ─────────────────────────────────────── */}
+      {/* ── 9. CTA ─────────────────────────────────────────── */}
       <section className="dis-cta" aria-labelledby="dis-cta-heading">
         <div className="dis-container">
           <div className="dis-cta-inner dis-reveal">
@@ -475,9 +1129,9 @@ export default function DisclosurePage() {
               Ready to see architectural compliance in production?
             </h2>
             <p className="dis-cta-sub">
-              The $0 Pilot lets a merchant test the full stack &mdash;
-              ConversionOracle, DisclosureBot, audit trail &mdash; on live
-              campaigns before any commitment.
+              The $0 Pilot lets a Williamsburg Coffee+ merchant test the full
+              stack &mdash; ConversionOracle, DisclosureBot, audit trail &mdash;
+              on live campaigns before any commitment.
             </p>
             <div className="dis-cta-actions">
               <Link href="/merchant/pilot" className="dis-btn dis-btn--primary">

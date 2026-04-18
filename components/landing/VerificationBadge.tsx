@@ -3,6 +3,48 @@
    QR scan · Claude Vision · Geo-match
    ============================================================ */
 
+"use client";
+
+import { useEffect, useRef, useState } from "react";
+
+function CountUpPercent({
+  value,
+  duration = 1400,
+}: {
+  value: number;
+  duration?: number;
+}) {
+  const [display, setDisplay] = useState(0);
+  const ref = useRef<HTMLSpanElement>(null);
+  const done = useRef(false);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && !done.current) {
+          done.current = true;
+          const start = performance.now();
+          const easeOut = (t: number) => 1 - Math.pow(1 - t, 3);
+          const tick = (now: number) => {
+            const p = Math.min((now - start) / duration, 1);
+            setDisplay(Math.round(value * easeOut(p)));
+            if (p < 1) requestAnimationFrame(tick);
+          };
+          requestAnimationFrame(tick);
+          io.disconnect();
+        }
+      },
+      { threshold: 0.5 },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, [value, duration]);
+
+  return <span ref={ref}>{display}%</span>;
+}
+
 function QrIcon() {
   return (
     <svg
@@ -107,7 +149,11 @@ export default function VerificationBadge() {
         ))}
       </div>
       <p className="verify-badge-tagline">
-        All three must pass within 8 seconds. No verification, no charge.
+        All three must pass within 8 seconds.{" "}
+        <span className="verify-badge-stat">
+          <CountUpPercent value={88} duration={1400} /> auto-verify
+        </span>{" "}
+        &middot; No verification, no charge.
       </p>
     </div>
   );

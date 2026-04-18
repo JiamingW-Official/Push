@@ -68,6 +68,12 @@ function MerchantDashboard() {
           </div>
         ))}
       </div>
+      <div className="dash-live-row">
+        <span className="dash-live-dot" aria-hidden="true" />
+        <span className="dash-live-text">
+          $560 owed &middot; 14 AI-verified &middot; &lt;8s verify time
+        </span>
+      </div>
       <div className="dash-footer">
         <div className="dash-stat">
           <span className="dash-stat-n">14</span>
@@ -133,6 +139,22 @@ const FAQS = [
   },
 ];
 
+/* ── Rotating social-proof fragments (ticker) ────────────── */
+const PROOF_TICKER = [
+  {
+    who: "Marco A. \u00b7 Sey Coffee",
+    quote: "11 verified customers in week one.",
+  },
+  {
+    who: "Alex \u00b7 Devoci\u00f3n",
+    quote: "ConversionOracle\u2122 caught 3 fakes same day.",
+  },
+  {
+    who: "Jordan \u00b7 Partners Coffee",
+    quote: "SLR math finally makes sense.",
+  },
+];
+
 const jsonLd = {
   "@context": "https://schema.org",
   "@type": "Organization",
@@ -191,20 +213,36 @@ export default function LandingPage() {
           </h1>
 
           <div className="hero-bottom">
-            <div className="hero-ctas">
-              <Link href="/merchant/pilot" className="btn-fill">
-                Start $0 Pilot
-              </Link>
-              <Link href="#how-it-works" className="btn-outline-light">
-                See ConversionOracle in action
-              </Link>
+            <div className="hero-cta-stack">
+              <div className="hero-ctas">
+                <Link href="/merchant/pilot" className="btn-fill">
+                  Start $0 Pilot
+                </Link>
+                <Link
+                  href="/merchant/pilot/economics"
+                  className="btn-outline-light"
+                >
+                  See pilot economics
+                </Link>
+              </div>
+              <div className="hero-creator-switch">
+                <span className="hero-creator-switch-label">
+                  Are you a creator?
+                </span>
+                <Link
+                  href="/creator/signup"
+                  className="hero-creator-switch-link"
+                >
+                  Join the operator network &mdash; Free
+                  <span aria-hidden="true">&nbsp;&rarr;</span>
+                </Link>
+              </div>
             </div>
             <p className="hero-sub">
-              A Customer Acquisition Engine for local Coffee+. Three-layer
-              verification (QR scan + Claude Vision receipt OCR + geo-fence)
-              clears every customer in &lt;8s. Tiered pricing by vertical
-              &mdash; $0 Pilot, $500/mo min + $15&ndash;85 per verified
-              customer. Software Leverage Ratio (SLR) north-star: 25.
+              Customer Acquisition Engine for local Coffee+.
+              ConversionOracle&trade; verifies every visit in &lt;8s (QR +
+              Claude Vision + geo). Pay only for verified customers. SLR
+              north-star: 25.
             </p>
           </div>
         </div>
@@ -233,21 +271,44 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ── PROOF ────────────────────────────────────────── */}
+      {/* ── PROOF (marquee ticker) ───────────────────────── */}
       <div className="proof">
         <div className="container proof-inner">
           <span className="proof-label">Williamsburg Coffee+ pilot cohort</span>
-          <div className="proof-names">
-            {[
-              "Sey Coffee",
-              "Devoción",
-              "Partners Coffee",
-              "Variety Coffee",
-            ].map((n) => (
-              <span key={n} className="proof-name">
-                {n}
-              </span>
-            ))}
+          <div
+            className="proof-marquee"
+            aria-label="Williamsburg Coffee+ pilot merchants"
+          >
+            <div className="proof-marquee-track">
+              {[
+                "Sey Coffee",
+                "Devoci\u00f3n",
+                "Partners Coffee",
+                "Variety Coffee",
+                "Hungry Ghost",
+                "Kos Kaffe",
+                "Toby's Estate",
+                "Bluestone Lane",
+              ]
+                .concat([
+                  "Sey Coffee",
+                  "Devoci\u00f3n",
+                  "Partners Coffee",
+                  "Variety Coffee",
+                  "Hungry Ghost",
+                  "Kos Kaffe",
+                  "Toby's Estate",
+                  "Bluestone Lane",
+                ])
+                .map((n, i) => (
+                  <span key={`${n}-${i}`} className="proof-name-wrap">
+                    <span className="proof-name">{n}</span>
+                    <span className="proof-sep" aria-hidden="true">
+                      &middot;
+                    </span>
+                  </span>
+                ))}
+            </div>
           </div>
         </div>
       </div>
@@ -255,6 +316,7 @@ export default function LandingPage() {
       {/* ── MERCHANTS ──────────────────────────────────── */}
       <section id="merchants" className="s s--light" aria-labelledby="merch-h">
         <div className="container">
+          <div className="s-num reveal">02 /</div>
           <div className="s-label reveal">
             <span className="rule" />
             <span>For Merchants</span>
@@ -316,6 +378,7 @@ export default function LandingPage() {
       {/* ── CREATORS ───────────────────────────────────── */}
       <section id="creators" className="s s--dark" aria-labelledby="create-h">
         <div className="container">
+          <div className="s-num s-num--w reveal">03 /</div>
           <div className="s-label s-label--w reveal">
             <span className="rule rule--w" />
             <span>For Creators</span>
@@ -339,6 +402,7 @@ export default function LandingPage() {
                 className={`tier ${t.featured ? "tier--feat" : ""}`}
                 style={{ "--tc": t.color } as React.CSSProperties}
               >
+                <span className="tier-top-accent" aria-hidden="true" />
                 {t.badge && <span className="tier-badge">{t.badge}</span>}
                 <span className="tier-mat">{t.mat}</span>
                 <span className="tier-name">{t.name}</span>
@@ -349,11 +413,17 @@ export default function LandingPage() {
           </div>
 
           <div className="tier-prog reveal">
-            <span>Start free</span>
-            <span className="tier-prog-a">&rarr;</span>
-            <span>Engine assigns campaigns</span>
-            <span className="tier-prog-a">&rarr;</span>
-            <span className="tier-prog-hi">Partner tier: $200/customer</span>
+            <span className="tier-prog-step">Start free</span>
+            <span className="tier-prog-fill" aria-hidden="true">
+              <span className="tier-prog-line" />
+            </span>
+            <span className="tier-prog-step">Engine assigns campaigns</span>
+            <span className="tier-prog-fill" aria-hidden="true">
+              <span className="tier-prog-line" />
+            </span>
+            <span className="tier-prog-step tier-prog-hi">
+              Partner tier: $200/customer
+            </span>
           </div>
 
           <blockquote className="quote reveal">
@@ -373,6 +443,7 @@ export default function LandingPage() {
       {/* ── HOW IT WORKS ───────────────────────────────── */}
       <section id="how-it-works" className="s s--light" aria-labelledby="how-h">
         <div className="container">
+          <div className="s-num reveal">04 /</div>
           <div className="s-label reveal">
             <span className="rule" />
             <span>How It Works</span>
@@ -407,7 +478,10 @@ export default function LandingPage() {
                 className="step reveal"
                 style={{ transitionDelay: `${i * 120}ms` }}
               >
-                <span className="step-n">{s.n}</span>
+                <span className="step-n step-n--oversize" aria-hidden="true">
+                  {s.n}
+                </span>
+                <span className="step-n-label">{s.n}</span>
                 <div className="step-content">
                   <h3 className="step-t">{s.t}</h3>
                   <p className="step-b">{s.b}</p>
@@ -421,6 +495,7 @@ export default function LandingPage() {
       {/* ── PRICING ────────────────────────────────────── */}
       <section id="pricing" className="s s--snow" aria-labelledby="price-h">
         <div className="container">
+          <div className="s-num reveal">05 /</div>
           <div className="price-top reveal">
             <div>
               <div className="s-label" style={{ marginBottom: 12 }}>
@@ -496,6 +571,9 @@ export default function LandingPage() {
                 className={`pc reveal ${p.featured ? "pc--feat" : ""}`}
                 style={{ transitionDelay: `${i * 100}ms` }}
               >
+                {p.featured && (
+                  <span className="pc-shimmer" aria-hidden="true" />
+                )}
                 {p.badge && <span className="pc-badge">{p.badge}</span>}
                 <h3 className="pc-name">{p.name}</h3>
                 <div className="pc-price">
@@ -536,23 +614,60 @@ export default function LandingPage() {
               <span className="pull-quote-r">Sey Coffee, Williamsburg</span>
             </footer>
           </blockquote>
+
+          <div
+            className="proof-ticker reveal"
+            style={{ transitionDelay: "150ms" }}
+            aria-label="Pilot cohort testimonials"
+          >
+            {PROOF_TICKER.map((p, i) => (
+              <span
+                key={p.who}
+                className="proof-ticker-item"
+                style={{ animationDelay: `${i * 6}s` }}
+              >
+                <span className="proof-ticker-quote">
+                  &ldquo;{p.quote}&rdquo;
+                </span>
+                <span className="proof-ticker-who">{p.who}</span>
+              </span>
+            ))}
+          </div>
         </div>
       </section>
 
       {/* ── FAQ ──────────────────────────────────────────── */}
       <section id="faq" className="s s--light">
         <div className="container">
+          <div className="s-num reveal">06 /</div>
           <h2 className="d-head reveal">
             Common
             <br />
             <span className="d-ghost">questions.</span>
           </h2>
-          <div className="faq-grid reveal">
+          <div className="faq-list reveal">
             {FAQS.map((f, i) => (
-              <div key={i} className="faq">
-                <h3 className="faq-q">{f.q}</h3>
-                <p className="faq-a">{f.a}</p>
-              </div>
+              <details key={i} className="faq-item" open={i === 0}>
+                <summary className="faq-summary">
+                  <span className="faq-q">{f.q}</span>
+                  <span className="faq-chevron" aria-hidden="true">
+                    <svg
+                      width="14"
+                      height="14"
+                      viewBox="0 0 14 14"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="1.8"
+                      strokeLinecap="square"
+                    >
+                      <path d="M3 5l4 4 4-4" />
+                    </svg>
+                  </span>
+                </summary>
+                <div className="faq-body">
+                  <p className="faq-a">{f.a}</p>
+                </div>
+              </details>
             ))}
           </div>
         </div>
@@ -565,6 +680,22 @@ export default function LandingPage() {
             <span className="rule" />
             <span>Williamsburg Coffee+ Pilot &mdash; First 10 Merchants</span>
             <span className="rule" />
+          </div>
+          <div className="cta-slots reveal">
+            <div className="cta-slots-text">
+              <span className="cta-slots-total">10 pilot slots</span>
+              <span className="cta-slots-dot" aria-hidden="true">
+                &middot;
+              </span>
+              <span className="cta-slots-taken">5 taken</span>
+              <span className="cta-slots-dot" aria-hidden="true">
+                &middot;
+              </span>
+              <span className="cta-slots-remain">5 remaining</span>
+            </div>
+            <div className="cta-slots-bar" aria-hidden="true">
+              <span className="cta-slots-fill" />
+            </div>
           </div>
           <h2 className="cta-h">
             Ready to hand customer

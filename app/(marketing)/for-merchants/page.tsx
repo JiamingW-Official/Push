@@ -1,274 +1,443 @@
+"use client";
+
+import { useMemo, useState } from "react";
 import Link from "next/link";
 import ScrollRevealInit from "@/components/layout/ScrollRevealInit";
 import "../landing.css";
 import "./merchants.css";
 
-/* ── Creator tier data ───────────────────────────────────────── */
-const TIERS = [
+/* ── Pain → Lift (Vertical AI for Local Commerce) ───────────── */
+const PAIN_LIFT = [
   {
-    slug: "seed",
-    name: "Seed",
-    followers: "Any — 0 minimum",
-    campaignSize: "$0 — Free product",
-    color: "#b8a99a",
-    note: "Entry tier. No followers required.",
+    pain: "Ads burn cash with no verification",
+    lift: "ConversionOracle™ auto-verifies foot traffic in <8s — every customer tied to a receipt.",
+    tag: "Verification",
   },
   {
-    slug: "explorer",
-    name: "Explorer",
-    followers: "500 – 2K",
-    campaignSize: "$12 – $18 / visit",
-    color: "#8c6239",
-    note: "Proven consistency over 3+ campaigns.",
+    pain: "Creator campaigns can't prove ROI",
+    lift: "3-layer check (QR + Claude Vision OCR + geo) ties every walk-in to the creator who drove it.",
+    tag: "Attribution",
   },
   {
-    slug: "operator",
-    name: "Operator",
-    followers: "2K – 8K",
-    campaignSize: "$20 – $35 + 3%",
-    color: "#4a5568",
-    note: "Commission unlocked. Bonus at 30 tx/mo.",
-  },
-  {
-    slug: "proven",
-    name: "Proven",
-    followers: "8K – 25K",
-    campaignSize: "$32 – $55 + 5%",
-    color: "#c9a96e",
-    note: "Trusted track record. Higher-value campaigns.",
-  },
-  {
-    slug: "closer",
-    name: "Closer",
-    followers: "25K – 100K",
-    campaignSize: "$55 – $80 + 7%",
-    color: "#9b111e",
-    note: "Top performers. Priority campaign access.",
-  },
-  {
-    slug: "partner",
-    name: "Partner",
-    followers: "100K+",
-    campaignSize: "$100 – $200 + 10%",
-    color: "#1a1a2e",
-    note: "Elite tier. Up to $80/mo milestone bonus.",
+    pain: "Ops time scales linearly with spend",
+    lift: "Software Leverage Ratio (SLR) = active campaigns ÷ ops FTE. Month-12 target: 25.",
+    tag: "Leverage",
   },
 ];
 
-/* ── Pricing plans (v5.1 Vertical AI — 3-tier) ──────────────── */
-const PLANS = [
+/* ── Process steps ──────────────────────────────────────────── */
+const STEPS = [
+  {
+    n: "01",
+    title: "Tell the engine your goal",
+    body: '"20 new customers this month, $500 budget, Williamsburg coffee." 60 seconds. No brief writing — Claude parses objective, budget, category, ZIP.',
+  },
+  {
+    n: "02",
+    title: "ConversionOracle™ matches + drafts brief",
+    body: "The engine ranks top creators by geo, vertical fit, and verified conversion history — then writes the brief and predicts ROI per campaign.",
+  },
+  {
+    n: "03",
+    title: "Creators visit + post",
+    body: "Matched creators walk in within 72 hours, post content with disclosure-compliant CTAs, and hand out scan-to-claim QR offers.",
+  },
+  {
+    n: "04",
+    title: "Claude Vision verifies — you pay only for verified",
+    body: "Every scan runs QR + Claude Vision receipt OCR + geo-match in <8s. Fail any of the three layers, you don't get billed. No disputed clicks.",
+  },
+];
+
+/* ── Pricing callout (mini 3-row) ───────────────────────────── */
+const PRICING_ROWS = [
   {
     name: "Pilot",
     price: "$0",
-    period: "first 10 Coffee+ merchants",
-    desc: "First 10 AI-verified customers free. Cap $4,200/neighborhood. If ConversionOracle can't deliver, you don't pay.",
-    features: [
-      "Up to 10 verified customers free",
-      "ConversionOracle ROI prediction",
-      "Claude Vision receipt OCR + QR + geo",
-      "Williamsburg Coffee+ beachhead priority",
-      "Weekly performance review",
-    ],
-    featured: false,
+    detail: "First 10 AI-verified customers free · cap $4,200/neighborhood",
     cta: "Apply for pilot",
-    roi: "First 10 customers on us — acquisition cost zero",
+    href: "/merchant/pilot",
+    highlight: false,
   },
   {
     name: "Operator",
-    price: "$500",
-    period: "/mo min + $15–85/customer",
-    desc: "Vertical AI tuned to your category. Pay per AI-verified visit, with Retention Add-on for repeat customers.",
-    features: [
-      "Per-vertical pricing: coffee $15 · coffee+ $25 · dessert $22 · fitness $60 · beauty $85",
-      "Retention Add-on: visit 2 = $8 · visit 3 = $6 · loyalty opt-in = $4",
-      "ConversionOracle predicts ROI per campaign",
-      "Creator tier 2–6 access (Proven+ priority)",
-      "3-layer verification per customer",
-      "Dispute SLA: 24h",
-    ],
-    featured: true,
-    badge: "Most Popular",
-    cta: "Talk to agent",
-    roi: "Software Leverage Ratio: 1 operator runs ~40 merchants",
+    price: "$500/mo min",
+    detail:
+      "+ $15–85/customer by vertical · Retention Add-on $8–24 · 24h dispute SLA",
+    cta: "Talk to an operator",
+    href: "/merchant/signup",
+    highlight: true,
   },
   {
     name: "Neighborhood",
-    price: "$8–12K",
-    period: "launch + $20–35K MRR target by M12",
-    desc: "For multi-location operators who want full-neighborhood Customer Acquisition Engine coverage.",
-    features: [
-      "Neighborhood launch package (creator cohort + playbook)",
-      "Multi-location ConversionOracle dashboard",
-      "Dedicated vertical AI tuning",
-      "Cross-location retention attribution",
-      "Priority creator allocation",
-      "Quarterly business review",
-    ],
-    featured: false,
+    price: "$8–12K launch",
+    detail:
+      "Full neighborhood Customer Acquisition Engine · $20–35K MRR by M12",
     cta: "Request a call",
-    roi: "Target $20–35K MRR per neighborhood by M12",
+    href: "/contact",
+    highlight: false,
   },
 ];
 
+/* ── JSON-LD (Service) ──────────────────────────────────────── */
+const JSON_LD = {
+  "@context": "https://schema.org",
+  "@type": "Service",
+  name: "Push — Customer Acquisition Engine for Coffee+ merchants",
+  provider: {
+    "@type": "Organization",
+    name: "Push",
+    url: "https://pushagent.app",
+    description:
+      "Vertical AI for Local Commerce — delivers AI-verified foot traffic to Coffee+ merchants in NYC.",
+  },
+  serviceType: "Customer Acquisition Engine",
+  areaServed: {
+    "@type": "City",
+    name: "New York City",
+  },
+  audience: {
+    "@type": "BusinessAudience",
+    audienceType: "Coffee+ merchants (specialty coffee, bakery, cafe)",
+  },
+  offers: [
+    {
+      "@type": "Offer",
+      name: "Pilot",
+      price: "0",
+      priceCurrency: "USD",
+      description: "First 10 AI-verified customers free for first 10 merchants",
+    },
+    {
+      "@type": "Offer",
+      name: "Operator",
+      priceCurrency: "USD",
+      description:
+        "$500/mo minimum plus $15–85 per AI-verified customer by vertical",
+    },
+  ],
+};
+
 export default function ForMerchantsPage() {
+  /* ── ROI calculator state ─────────────────────────────────── */
+  const [customers, setCustomers] = useState(20);
+  const [aov, setAov] = useState(12);
+
+  const RATE_COFFEE_PLUS = 25; // $25/customer (Coffee+)
+  const LTV_MULT = 2.8; // LTV multiplier on AOV
+
+  const calc = useMemo(() => {
+    const cost = customers * RATE_COFFEE_PLUS;
+    const revenue = customers * aov * LTV_MULT;
+    const net = revenue - cost;
+    // payback (days) ≈ cost / (revenue / 30)
+    const daily = revenue / 30;
+    const payback = daily > 0 ? Math.max(1, Math.round(cost / daily)) : 0;
+    // bar graph max is whichever is bigger
+    const max = Math.max(cost, revenue, 1);
+    const costPct = Math.round((cost / max) * 100);
+    const revPct = Math.round((revenue / max) * 100);
+    return { cost, revenue, net, payback, costPct, revPct };
+  }, [customers, aov]);
+
   return (
     <>
       <ScrollRevealInit />
 
+      <script
+        type="application/ld+json"
+        // eslint-disable-next-line react/no-danger
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(JSON_LD) }}
+      />
+
       {/* ── Hero ─────────────────────────────────────────────── */}
       <section className="fm-hero">
         <div className="container fm-hero-inner">
-          <p className="eyebrow fm-eyebrow">
-            Push for Merchants · Williamsburg Coffee+ Pilot
-          </p>
+          <p className="eyebrow fm-eyebrow">For Coffee+ Operators</p>
 
           <h1 className="fm-headline">
-            <span className="fm-headline-black">Tell us how many</span>
+            <span className="fm-headline-black">Stop renting</span>
             <span className="fm-headline-ghost" aria-hidden="true">
-              Tell us how many
+              Stop renting
             </span>
-            <em className="fm-headline-em">customers</em>
-            <span className="fm-headline-light">you need. We deliver.</span>
+            <span className="fm-headline-black">foot traffic.</span>
+            <span className="fm-headline-light">
+              <em className="fm-headline-em">Own</em> a Customer
+              <br />
+              Acquisition Engine.
+            </span>
           </h1>
 
           <p className="fm-tagline">
-            Vertical AI for Local Commerce. Customer Acquisition Engine.
+            Vertical AI for Local Commerce · Williamsburg Coffee+ Beachhead
           </p>
 
           <p className="fm-sub">
-            Vertical AI that delivers AI-verified customers to your door.
-            <br />
-            Claude matches creators; ConversionOracle predicts ROI; 3-layer
-            verification per customer.
+            Tell the engine your goal. ConversionOracle™ predicts conversion,
+            matches creators, verifies every walk-in. Our north star is Software
+            Leverage Ratio — one operator running dozens of campaigns, not one
+            retainer per merchant.
           </p>
 
           <div className="fm-ctas">
-            <Link href="/merchant/pilot" className="btn btn-primary">
-              Apply for $0 Pilot
+            <Link href="/merchant/pilot" className="btn-fill">
+              Start $0 Pilot
             </Link>
-            <Link href="#pricing" className="btn fm-outline-btn">
-              See pricing
+            <Link
+              href="/merchant/pilot/economics"
+              className="btn-outline-light"
+            >
+              See pilot economics
             </Link>
           </div>
 
           <p className="fm-reassure">
             No credit card for Pilot &nbsp;·&nbsp; 60s AI match &nbsp;·&nbsp;
-            Cancel anytime
+            Pay only for AI-verified customers
           </p>
         </div>
 
-        {/* Ambient light layer */}
         <div className="fm-hero-ambient" aria-hidden="true" />
       </section>
 
-      {/* ── Problem / Solution split ──────────────────────────── */}
-      <section className="section section-bright fm-ps-section">
-        <div className="container">
-          <div className="fm-ps-grid">
-            {/* Left: Problem */}
-            <div className="fm-ps-col reveal">
-              <p className="fm-ps-label fm-ps-label--problem">The Problem</p>
-              <p className="fm-ps-statement">
-                <strong>Paying for views</strong>
-                <span className="fm-ps-ghost" aria-hidden="true">
-                  Paying for views
-                </span>
-                <br />
-                you can&apos;t verify.
-              </p>
-              <ul className="fm-ps-list">
-                <li>
-                  <span className="fm-ps-bullet" />
-                  Retainer creative shops: $3,000+/mo + long-term contracts
-                </li>
-                <li>
-                  <span className="fm-ps-bullet" />
-                  Paid social: CPM model — no foot-traffic guarantee
-                </li>
-                <li>
-                  <span className="fm-ps-bullet" />
-                  Influencer posts: zero attribution, zero ROI tracking
-                </li>
-              </ul>
-            </div>
-
-            {/* Vertical rule */}
-            <div className="fm-ps-divider" aria-hidden="true" />
-
-            {/* Right: Solution */}
-            <div
-              className="fm-ps-col reveal"
-              style={{ transitionDelay: "120ms" }}
-            >
-              <p className="fm-ps-label fm-ps-label--solution">The Push Way</p>
-              <p className="fm-ps-statement fm-ps-statement--solution">
-                <strong>QR-verified foot traffic.</strong>
-                <span
-                  className="fm-ps-ghost fm-ps-ghost--solution"
-                  aria-hidden="true"
-                >
-                  QR-verified foot traffic.
-                </span>
-                <br />
-                Milestone payouts.
-              </p>
-              <ul className="fm-ps-list fm-ps-list--solution">
-                <li>
-                  <span className="fm-ps-bullet fm-ps-bullet--solution" />
-                  Claude Vision + OCR + geo — triple-checked per customer
-                </li>
-                <li>
-                  <span className="fm-ps-bullet fm-ps-bullet--solution" />
-                  Pay only after AI verifies — no disputed clicks
-                </li>
-                <li>
-                  <span className="fm-ps-bullet fm-ps-bullet--solution" />
-                  $0 Pilot for first 10 merchants &mdash; AI match in 60s
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ── How it works ─────────────────────────────────────── */}
-      <section className="section fm-how-section">
+      {/* ── Pain → Lift ──────────────────────────────────────── */}
+      <section className="section fm-pl-section">
         <div className="container">
           <div className="reveal">
             <div className="section-tag">
               <span className="section-tag-num">01</span>
               <span className="section-tag-line" />
-              <span className="section-tag-label">How It Works</span>
+              <span className="section-tag-label">Pain → Lift</span>
+            </div>
+            <h2 className="fm-pl-headline">
+              Every local merchant
+              <br />
+              <span className="fm-pl-headline-light">
+                has the same three leaks.
+              </span>
+            </h2>
+          </div>
+
+          <div className="fm-pl-grid">
+            {PAIN_LIFT.map((row, i) => (
+              <article
+                key={row.tag}
+                className="fm-pl-card reveal"
+                style={{ transitionDelay: `${i * 110}ms` }}
+              >
+                <span className="fm-pl-tag">{row.tag}</span>
+                <div className="fm-pl-pain">
+                  <span className="fm-pl-label">Pain</span>
+                  <p className="fm-pl-pain-text">{row.pain}</p>
+                </div>
+                <div className="fm-pl-lift">
+                  <span className="fm-pl-label fm-pl-label--lift">Lift</span>
+                  <p className="fm-pl-lift-text">{row.lift}</p>
+                </div>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── ROI Calculator ──────────────────────────────────── */}
+      <section className="section section-bright fm-roi-section">
+        <div className="container">
+          <div className="fm-roi-head reveal">
+            <div>
+              <div className="section-tag">
+                <span className="section-tag-num">02</span>
+                <span className="section-tag-line" />
+                <span className="section-tag-label">Mini ROI calculator</span>
+              </div>
+              <h2 className="fm-roi-headline">
+                Move the sliders.
+                <br />
+                <span className="fm-roi-headline-light">See your numbers.</span>
+              </h2>
+            </div>
+            <p className="fm-roi-note">
+              Coffee+ rate $25/customer · LTV multiplier 2.8× AOV.
+              <br />
+              Client-side model for a rough look. Final spend set in onboarding.
+            </p>
+          </div>
+
+          <div className="fm-roi-grid reveal">
+            {/* Inputs */}
+            <div className="fm-roi-inputs">
+              <div className="fm-roi-field">
+                <div className="fm-roi-field-head">
+                  <label htmlFor="roi-customers" className="fm-roi-label">
+                    Customers / month
+                  </label>
+                  <span className="fm-roi-value">{customers}</span>
+                </div>
+                <input
+                  id="roi-customers"
+                  type="range"
+                  min={5}
+                  max={80}
+                  step={1}
+                  value={customers}
+                  onChange={(e) => setCustomers(Number(e.target.value))}
+                  className="fm-roi-range"
+                />
+                <div className="fm-roi-scale">
+                  <span>5</span>
+                  <span>80</span>
+                </div>
+              </div>
+
+              <div className="fm-roi-field">
+                <div className="fm-roi-field-head">
+                  <label htmlFor="roi-aov" className="fm-roi-label">
+                    Average order value
+                  </label>
+                  <span className="fm-roi-value">${aov}</span>
+                </div>
+                <input
+                  id="roi-aov"
+                  type="range"
+                  min={8}
+                  max={20}
+                  step={1}
+                  value={aov}
+                  onChange={(e) => setAov(Number(e.target.value))}
+                  className="fm-roi-range"
+                />
+                <div className="fm-roi-scale">
+                  <span>$8</span>
+                  <span>$20</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Output + SVG graph */}
+            <div className="fm-roi-output">
+              <div className="fm-roi-stats">
+                <div className="fm-roi-stat">
+                  <span className="fm-roi-stat-label">Your Push cost</span>
+                  <span className="fm-roi-stat-val">
+                    ${calc.cost.toLocaleString()}
+                  </span>
+                </div>
+                <div className="fm-roi-stat">
+                  <span className="fm-roi-stat-label">Projected revenue</span>
+                  <span className="fm-roi-stat-val fm-roi-stat-val--rev">
+                    $
+                    {calc.revenue.toLocaleString(undefined, {
+                      maximumFractionDigits: 0,
+                    })}
+                  </span>
+                </div>
+                <div className="fm-roi-stat">
+                  <span className="fm-roi-stat-label">Net lift</span>
+                  <span className="fm-roi-stat-val fm-roi-stat-val--net">
+                    $
+                    {calc.net.toLocaleString(undefined, {
+                      maximumFractionDigits: 0,
+                    })}
+                  </span>
+                </div>
+                <div className="fm-roi-stat">
+                  <span className="fm-roi-stat-label">Payback</span>
+                  <span className="fm-roi-stat-val">
+                    {calc.payback} {calc.payback === 1 ? "day" : "days"}
+                  </span>
+                </div>
+              </div>
+
+              <div
+                className="fm-roi-chart"
+                role="img"
+                aria-label={`Bar graph comparing Push cost $${calc.cost} to projected revenue $${Math.round(calc.revenue)}`}
+              >
+                <svg
+                  viewBox="0 0 320 140"
+                  xmlns="http://www.w3.org/2000/svg"
+                  preserveAspectRatio="none"
+                  className="fm-roi-svg"
+                  aria-hidden="true"
+                >
+                  {/* Baseline */}
+                  <line
+                    x1="0"
+                    y1="118"
+                    x2="320"
+                    y2="118"
+                    stroke="rgba(0,48,73,0.12)"
+                    strokeWidth="1"
+                  />
+                  {/* Cost bar */}
+                  <rect
+                    x="40"
+                    y={118 - (calc.costPct * 100) / 100}
+                    width="80"
+                    height={(calc.costPct * 100) / 100}
+                    fill="#003049"
+                  />
+                  {/* Revenue bar */}
+                  <rect
+                    x="200"
+                    y={118 - (calc.revPct * 100) / 100}
+                    width="80"
+                    height={(calc.revPct * 100) / 100}
+                    fill="#c1121f"
+                  />
+                  {/* Labels */}
+                  <text
+                    x="80"
+                    y="134"
+                    textAnchor="middle"
+                    fontFamily="CSGenioMono, monospace"
+                    fontSize="10"
+                    fill="rgba(0,48,73,0.55)"
+                    letterSpacing="0.08em"
+                  >
+                    COST
+                  </text>
+                  <text
+                    x="240"
+                    y="134"
+                    textAnchor="middle"
+                    fontFamily="CSGenioMono, monospace"
+                    fontSize="10"
+                    fill="#c1121f"
+                    letterSpacing="0.08em"
+                    fontWeight="700"
+                  >
+                    REVENUE
+                  </text>
+                </svg>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── Process ──────────────────────────────────────────── */}
+      <section className="section fm-how-section">
+        <div className="container">
+          <div className="reveal">
+            <div className="section-tag">
+              <span className="section-tag-num">03</span>
+              <span className="section-tag-line" />
+              <span className="section-tag-label">Process</span>
             </div>
             <h2 className="fm-how-headline">
-              Three steps.
+              Four steps.
               <br />
               <span className="fm-how-headline-light">Zero guesswork.</span>
             </h2>
           </div>
 
           <ol className="fm-how-list">
-            {[
-              {
-                n: "01",
-                title: "Tell the agent your goal",
-                body: 'Input: "20 new customers this month, $400 budget, coffee, Williamsburg." Takes 60 seconds. Claude parses objective, budget, category, and ZIP — no brief writing.',
-              },
-              {
-                n: "02",
-                title: "AI matches + ConversionOracle predicts ROI",
-                body: "Claude ranks top 5 creators by geo, category, and verified conversion history. Drafts briefs. ConversionOracle predicts ROI per campaign. You approve — or let the agent auto-run.",
-              },
-              {
-                n: "03",
-                title: "Delivered customers — or it's free",
-                body: "Every scan runs through Claude Vision (receipt OCR) + QR + geo-match in <8s. Pay per-vertical rate (coffee $15 · coffee+ $25 · dessert $22 · fitness $60 · beauty $85) only when all three layers pass. If the AI can't deliver, you don't pay.",
-              },
-            ].map((step, i) => (
+            {STEPS.map((step, i) => (
               <li
                 key={step.n}
                 className="fm-how-item reveal"
-                style={{ transitionDelay: `${i * 110}ms` }}
+                style={{ transitionDelay: `${i * 80}ms` }}
               >
                 <span className="fm-how-num">{step.n}</span>
                 <div className="fm-how-content">
@@ -281,150 +450,28 @@ export default function ForMerchantsPage() {
         </div>
       </section>
 
-      {/* ── Creator tier showcase ─────────────────────────────── */}
-      <section className="section section-bright fm-tiers-section">
-        <div className="container">
-          <div className="reveal">
-            <div className="section-tag">
-              <span className="section-tag-num">02</span>
-              <span className="section-tag-line" />
-              <span className="section-tag-label">Creator Tiers</span>
-            </div>
-            <h2 className="fm-tiers-headline">
-              Six tiers.
-              <br />
-              <span className="fm-tiers-headline-light">
-                Every creator verified.
-              </span>
-            </h2>
-            <p className="fm-tiers-sub">
-              From zero-follower newcomers to 100K+ partners — every creator on
-              Push is ranked by verified performance, not vanity metrics.
-            </p>
-          </div>
-
-          <div
-            className="fm-tier-grid reveal"
-            style={{ transitionDelay: "80ms" }}
-          >
-            {TIERS.map((tier) => (
-              <div
-                key={tier.slug}
-                className={`fm-tier-card fm-tier-card--${tier.slug}`}
-              >
-                <span
-                  className="fm-tier-swatch"
-                  style={{ background: tier.color }}
-                  aria-hidden="true"
-                />
-                <span className="fm-tier-name">{tier.name}</span>
-                <div className="fm-tier-row">
-                  <span className="fm-tier-meta-label">Followers</span>
-                  <span className="fm-tier-meta-val">{tier.followers}</span>
-                </div>
-                <div className="fm-tier-row">
-                  <span className="fm-tier-meta-label">Campaign size</span>
-                  <span className="fm-tier-meta-val fm-tier-meta-val--price">
-                    {tier.campaignSize}
-                  </span>
-                </div>
-                <p className="fm-tier-note">{tier.note}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── Pricing teaser ───────────────────────────────────── */}
-      <section id="pricing" className="section fm-pricing-section">
-        <div className="container">
-          <div className="fm-pricing-header reveal">
-            <div>
-              <div
-                className="section-tag"
-                style={{ marginBottom: "var(--space-3)" }}
-              >
-                <span className="section-tag-num">03</span>
-                <span className="section-tag-line" />
-                <span className="section-tag-label">Pricing</span>
-              </div>
-              <h2 className="fm-pricing-headline">
-                Outcome pricing.
-                <br />
-                <span className="fm-pricing-headline-light">Not SaaS.</span>
-              </h2>
-            </div>
-            <p className="fm-pricing-note">
-              Cancel anytime. No retainer markup.
-              <br />
-              Pay only for AI-verified customers.
-            </p>
-          </div>
-
-          <div className="fm-plans">
-            {PLANS.map((plan, i) => (
-              <div
-                key={plan.name}
-                className={`fm-plan reveal${plan.featured ? " fm-plan--featured" : ""}`}
-                style={{ transitionDelay: `${i * 90}ms` }}
-              >
-                {i < PLANS.length - 1 && (
-                  <div className="fm-plan-rule" aria-hidden="true" />
-                )}
-                {plan.badge && (
-                  <span className="fm-plan-badge">{plan.badge}</span>
-                )}
-                <h3 className="fm-plan-name">{plan.name}</h3>
-                <div className="fm-plan-price">
-                  <span className="fm-plan-price-int">{plan.price}</span>
-                  <span className="fm-plan-price-period">{plan.period}</span>
-                </div>
-                <p className="fm-plan-desc">{plan.desc}</p>
-                <ul className="fm-plan-features">
-                  {plan.features.map((f) => (
-                    <li key={f} className="fm-plan-feature">
-                      {f}
-                    </li>
-                  ))}
-                </ul>
-                <p className="fm-plan-roi">{plan.roi}</p>
-                <Link
-                  href="/merchant/signup"
-                  className={`btn ${plan.featured ? "btn-primary" : "btn-secondary"} fm-plan-cta`}
-                >
-                  {plan.cta}
-                </Link>
-              </div>
-            ))}
-          </div>
-
-          <p className="fm-pricing-full-link">
-            <Link href="/pricing" className="fm-link-underline">
-              Full pricing details, including per-visit rates →
-            </Link>
-          </p>
-        </div>
-      </section>
-
-      {/* ── Case study pull-quote ─────────────────────────────── */}
+      {/* ── Testimonial ──────────────────────────────────────── */}
       <section className="section section-bright fm-quote-section">
         <div className="container">
           <div className="fm-quote-wrap reveal">
             <span className="fm-quote-rule" aria-hidden="true" />
             <blockquote className="fm-pull-quote">
               <p className="fm-pull-quote-text">
-                &ldquo;Push agent ran 60 seconds, matched 14 creators, drafted
-                briefs. First week: 11 AI-verified customers at $25 per customer
-                + $8 retention add-on.&rdquo;
+                &ldquo;The engine ran 60 seconds, matched 14 creators, and
+                drafted the briefs itself. Week one: 14 AI-verified customers
+                walked in with receipts. I didn&apos;t write a single
+                brief.&rdquo;
               </p>
               <footer className="fm-pull-quote-footer">
                 <cite className="fm-pull-quote-cite">
                   Marco A., Sey Coffee &mdash; Williamsburg, NYC
                 </cite>
                 <span className="fm-pull-quote-meta">
-                  Williamsburg Coffee+ Pilot &nbsp;·&nbsp; 5 active creators
-                  &nbsp;·&nbsp; $25 per AI-verified customer + $8 retention
-                  add-on
+                  Williamsburg Coffee+ Pilot &nbsp;·&nbsp; 14 verified customers
+                  week 1 &nbsp;·&nbsp;{" "}
+                  <strong className="fm-pull-quote-stat">
+                    SLR 11.2 at week-1 pilot checkpoint
+                  </strong>
                 </span>
               </footer>
             </blockquote>
@@ -432,26 +479,92 @@ export default function ForMerchantsPage() {
         </div>
       </section>
 
+      {/* ── Pricing callout (mini 3-row) ─────────────────────── */}
+      <section id="pricing" className="section fm-pct-section">
+        <div className="container">
+          <div className="reveal">
+            <div className="section-tag">
+              <span className="section-tag-num">04</span>
+              <span className="section-tag-line" />
+              <span className="section-tag-label">Pricing at a glance</span>
+            </div>
+            <h2 className="fm-pct-headline">
+              Outcome pricing.
+              <br />
+              <span className="fm-pct-headline-light">Not SaaS.</span>
+            </h2>
+          </div>
+
+          <div className="fm-pct-table reveal">
+            {PRICING_ROWS.map((row) => (
+              <div
+                key={row.name}
+                className={`fm-pct-row${row.highlight ? " fm-pct-row--hl" : ""}`}
+              >
+                <div className="fm-pct-name">{row.name}</div>
+                <div className="fm-pct-price">{row.price}</div>
+                <div className="fm-pct-detail">{row.detail}</div>
+                <div className="fm-pct-cta">
+                  <Link
+                    href={row.href}
+                    className={row.highlight ? "btn-fill" : "btn-outline"}
+                  >
+                    {row.cta}
+                  </Link>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <p className="fm-pct-foot">
+            <Link href="/pricing" className="fm-link-underline">
+              Full pricing table — per-vertical rates + Retention Add-on →
+            </Link>
+          </p>
+        </div>
+      </section>
+
       {/* ── Final CTA ─────────────────────────────────────────── */}
       <section className="fm-final-cta">
         <div className="container">
           <div className="fm-final-inner reveal">
-            <p className="eyebrow fm-final-eyebrow">Ready to start</p>
+            <p className="eyebrow fm-final-eyebrow">Williamsburg Beachhead</p>
             <h2 className="fm-final-headline">
-              Start getting verified
+              First 10 Coffee+
               <br />
-              <span className="fm-final-headline-light">customers.</span>
+              <span className="fm-final-headline-light">
+                merchants get $0 Pilot.
+              </span>
             </h2>
+
+            <div className="fm-final-counter">
+              <span className="fm-final-counter-num">3</span>
+              <span className="fm-final-counter-label">
+                pilot slots remaining
+                <br />
+                <span className="fm-final-counter-sub">
+                  Cap $4,200 / neighborhood · LTV/CAC 15.7×
+                </span>
+              </span>
+            </div>
+
             <p className="fm-final-sub">
-              Tell the agent your goal. Claude matches creators in 60s. Pay only
-              for AI-verified customers. First 10 merchants get $0 Pilot.
+              Tell the engine your goal. Claude matches creators in 60 seconds.
+              Pay only for AI-verified customers. If ConversionOracle™
+              can&apos;t deliver, you don&apos;t pay.
             </p>
-            <Link
-              href="/merchant/pilot"
-              className="btn btn-primary fm-final-btn"
-            >
-              Apply for $0 Pilot
-            </Link>
+
+            <div className="fm-ctas fm-ctas--final">
+              <Link href="/merchant/pilot" className="btn-fill fm-final-btn">
+                Apply for pilot
+              </Link>
+              <Link
+                href="/merchant/pilot/economics"
+                className="btn-outline-light"
+              >
+                See pilot economics
+              </Link>
+            </div>
           </div>
         </div>
       </section>

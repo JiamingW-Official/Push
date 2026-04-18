@@ -1,28 +1,989 @@
-/* ── Onboarding Page ─────────────────────────────────────── */
+/* ─────────────────────────────────────────────────────────────
+   Creator Onboarding — page-scoped styles
+   Design rails: border-radius 0, 6 brand colors only, Darky + CS Genio Mono,
+   8px grid, Light mode only. prefers-reduced-motion respected.
 
-.ob-page {
-  min-height: 100svh;
-  background: var(--surface);
+   Brand color reference (used directly, matching shared tokens):
+   --flag-red:   #c1121f
+   --molten:     #780000
+   --pearl:      #f5f2ec
+   --dark:       #003049  (Deep Space Blue)
+   --tertiary:   #669bbc  (Steel Blue)
+   --champagne:  #c9a96e  (Champagne Gold)
+   ───────────────────────────────────────────────────────────── */
+
+/* ── Segment banner (v5.1 Two-Segment) — preserved classes ── */
+
+.ob2-segment-banner {
+  border: 1px solid var(--line);
+  padding: 16px 20px;
+  margin-bottom: 20px;
+  background: var(--surface-bright);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  border-left: 4px solid var(--tertiary);
+}
+
+.ob2-segment-banner--professional {
+  border-left-color: var(--champagne);
+  background: rgba(201, 169, 110, 0.04);
+}
+
+.ob2-segment-eyebrow {
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--tertiary);
+}
+
+.ob2-segment-banner--professional .ob2-segment-eyebrow {
+  color: var(--champagne);
+}
+
+.ob2-segment-copy {
+  font-family: var(--font-body);
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--dark);
+  margin: 0;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Utilities
+   ───────────────────────────────────────────────────────────── */
+
+.cr-visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.cr-hint-muted {
+  color: rgba(0, 48, 73, 0.45);
+}
+
+/* Champagne state for the bio counter (60-79 chars) */
+.cr-char-count--champagne {
+  color: #c9a96e;
+  font-weight: 700;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Step 1 — Combobox + avatar + first-impression preview
+   ───────────────────────────────────────────────────────────── */
+
+.cr-avatar-btn {
+  border-radius: 0;
+  overflow: hidden;
+  position: relative;
+}
+
+.cr-combobox {
+  position: relative;
+}
+
+.cr-combobox-list {
+  list-style: none;
+  margin: 4px 0 0;
+  padding: 4px 0;
+  background: #ffffff;
+  border: 1.5px solid rgba(0, 48, 73, 0.15);
+  border-radius: 0;
+  position: absolute;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  max-height: 180px;
+  overflow-y: auto;
+  box-shadow: 4px 4px 0 rgba(0, 48, 73, 0.08);
+}
+
+.cr-combobox-option {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 8px 12px;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  font-family: "CS Genio Mono", "SF Mono", monospace;
+  font-size: 13px;
+  color: #003049;
+  cursor: pointer;
+  transition: background 120ms ease;
+}
+
+.cr-combobox-option:hover,
+.cr-combobox-option:focus-visible {
+  background: rgba(102, 155, 188, 0.12);
+  outline: none;
+}
+
+/* First impression card */
+.cr-first-impression {
+  margin-top: 24px;
+  margin-bottom: 24px;
+  animation: cr-fade-up 280ms ease forwards;
+}
+
+.cr-first-impression-eyebrow {
+  font-family: "CS Genio Mono", "SF Mono", monospace;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(0, 48, 73, 0.4);
+  margin: 0 0 8px;
+}
+
+.cr-first-impression-card {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  padding: 16px;
+  background: #fafaf8;
+  border: 1px solid rgba(0, 48, 73, 0.1);
+  border-left: 4px solid #c1121f;
+  border-radius: 0;
+}
+
+.cr-first-impression-avatar {
+  width: 56px;
+  height: 56px;
+  background: #003049;
+  color: #f5f2ec;
+  font-family: "Darky", serif;
+  font-size: 24px;
+  font-weight: 900;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: var(--space-4, 32px);
+  flex-shrink: 0;
+  border-radius: 0;
 }
 
-.ob-card {
-  max-width: 520px;
-  width: 100%;
+.cr-first-impression-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.cr-first-impression-name {
+  font-family: "Darky", serif;
+  font-size: 20px;
+  font-weight: 800;
+  color: #003049;
+  margin: 0 0 4px;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+
+.cr-first-impression-meta {
+  font-family: "CS Genio Mono", "SF Mono", monospace;
+  font-size: 12px;
+  color: rgba(0, 48, 73, 0.55);
+  margin: 0 0 6px;
+}
+
+.cr-first-impression-bio {
+  font-family: "CS Genio Mono", "SF Mono", monospace;
+  font-size: 13px;
+  line-height: 1.55;
+  color: #003049;
+  margin: 0;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Step 2 — OAuth cards
+   ───────────────────────────────────────────────────────────── */
+
+.cr-oauth-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.cr-oauth-card {
+  position: relative;
   background: #ffffff;
-  border: 1px solid rgba(0, 48, 73, 0.08);
-  padding: var(--space-6, 48px);
+  border: 1px solid rgba(0, 48, 73, 0.12);
+  border-top: 3px solid #c1121f; /* overridden inline per-platform */
+  border-radius: 0;
+  padding: 16px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: flex-start;
+  text-align: left;
+  cursor: pointer;
+  transition:
+    transform 180ms ease,
+    box-shadow 180ms ease,
+    border-color 180ms ease;
+  min-height: 120px;
+  font-family: "CS Genio Mono", "SF Mono", monospace;
 }
 
-/* ── Step Enter Animation ────────────────────────────────── */
+.cr-oauth-card:hover:not(:disabled) {
+  transform: translate(-2px, -2px);
+  box-shadow: 4px 4px 0 rgba(0, 48, 73, 0.08);
+}
 
-@keyframes ob-fade-slide-in {
+.cr-oauth-card:disabled {
+  cursor: default;
+  opacity: 0.92;
+}
+
+.cr-oauth-card--connected {
+  border-color: rgba(201, 169, 110, 0.55);
+  background: rgba(201, 169, 110, 0.06);
+}
+
+.cr-oauth-card--loading {
+  background: rgba(102, 155, 188, 0.05);
+}
+
+.cr-oauth-brand {
+  font-family: "Darky", serif;
+  font-size: 16px;
+  font-weight: 800;
+  color: #003049;
+  letter-spacing: -0.02em;
+}
+
+.cr-oauth-handle {
+  font-size: 11px;
+  color: rgba(0, 48, 73, 0.55);
+}
+
+.cr-oauth-state {
+  margin-top: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(0, 48, 73, 0.4);
+}
+
+.cr-oauth-state--loading {
+  color: #669bbc;
+}
+
+.cr-oauth-state--connected {
+  color: #780000;
+}
+
+.cr-verified-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 14px;
+  height: 14px;
+  background: #c9a96e;
+  color: #ffffff;
+  font-size: 9px;
+  font-weight: 800;
+  border-radius: 0;
+}
+
+.cr-spinner {
+  width: 10px;
+  height: 10px;
+  border: 2px solid rgba(102, 155, 188, 0.3);
+  border-top-color: #669bbc;
+  border-radius: 50%;
+  animation: cr-spin 700ms linear infinite;
+  display: inline-block;
+}
+
+@keyframes cr-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Step 3 — KYC tiles + liveness
+   ───────────────────────────────────────────────────────────── */
+
+.cr-pro-required {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px 16px;
+  margin-bottom: 16px;
+  background: rgba(201, 169, 110, 0.08);
+  border: 1px solid rgba(201, 169, 110, 0.35);
+  border-left: 4px solid #c9a96e;
+  border-radius: 0;
+}
+
+.cr-pro-required-badge {
+  font-family: "CS Genio Mono", "SF Mono", monospace;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #ffffff;
+  background: #c9a96e;
+  padding: 4px 8px;
+  flex-shrink: 0;
+}
+
+.cr-pro-required-copy {
+  font-family: "CS Genio Mono", "SF Mono", monospace;
+  font-size: 13px;
+  line-height: 1.55;
+  color: #003049;
+  margin: 0;
+}
+
+.cr-kyc-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.cr-kyc-tile {
+  padding: 12px;
+  background: #ffffff;
+  border: 1px solid rgba(0, 48, 73, 0.12);
+  border-radius: 0;
+  transition: border-color 180ms ease;
+}
+
+.cr-kyc-tile--done {
+  border-color: #c9a96e;
+  background: rgba(201, 169, 110, 0.04);
+}
+
+.cr-kyc-eyebrow {
+  font-family: "CS Genio Mono", "SF Mono", monospace;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(0, 48, 73, 0.4);
+  margin: 0 0 8px;
+}
+
+.cr-kyc-upload {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 110px;
+  background-color: rgba(0, 48, 73, 0.04);
+  border: 2px dashed rgba(0, 48, 73, 0.22);
+  border-radius: 0;
+  cursor: pointer;
+  transition:
+    border-color 150ms ease,
+    background 150ms ease;
+  padding: 0;
+}
+
+.cr-kyc-upload:hover {
+  border-color: rgba(0, 48, 73, 0.45);
+  background-color: rgba(0, 48, 73, 0.07);
+}
+
+.cr-kyc-upload-label {
+  font-family: "CS Genio Mono", "SF Mono", monospace;
+  font-size: 12px;
+  font-weight: 700;
+  color: #003049;
+  text-align: center;
+  line-height: 1.5;
+}
+
+.cr-kyc-upload-label small {
+  font-weight: 500;
+  color: rgba(0, 48, 73, 0.5);
+  font-size: 10px;
+}
+
+.cr-kyc-live {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 14px 16px;
+  background: #fafaf8;
+  border: 1px solid rgba(0, 48, 73, 0.12);
+  border-left: 4px solid #669bbc;
+  border-radius: 0;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+
+.cr-kyc-live--done {
+  border-left-color: #c9a96e;
+  background: rgba(201, 169, 110, 0.04);
+}
+
+.cr-kyc-live > div:first-child {
+  flex: 1;
+  min-width: 200px;
+}
+
+.cr-kyc-live-desc {
+  font-family: "CS Genio Mono", "SF Mono", monospace;
+  font-size: 13px;
+  color: #003049;
+  margin: 0;
+}
+
+.cr-kyc-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  margin-bottom: 12px;
+  background: rgba(102, 155, 188, 0.1);
+  border-left: 4px solid #669bbc;
+  border-radius: 0;
+  font-family: "CS Genio Mono", "SF Mono", monospace;
+  font-size: 12px;
+  font-weight: 700;
+  color: #003049;
+  letter-spacing: 0.04em;
+}
+
+.cr-kyc-status-dot {
+  width: 8px;
+  height: 8px;
+  background: #669bbc;
+  border-radius: 50%;
+  animation: cr-pulse-dot 1.4s ease-in-out infinite;
+}
+
+@keyframes cr-pulse-dot {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.4;
+    transform: scale(1.25);
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Step 4 — Payout cards + tax box
+   ───────────────────────────────────────────────────────────── */
+
+.cr-payout-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.cr-payout-card {
+  position: relative;
+  padding: 14px 14px;
+  background: #ffffff;
+  border: 1.5px solid rgba(0, 48, 73, 0.15);
+  border-radius: 0;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  text-align: left;
+  transition:
+    border-color 150ms ease,
+    background 150ms ease,
+    transform 150ms ease;
+  font-family: "CS Genio Mono", "SF Mono", monospace;
+  min-height: 76px;
+}
+
+.cr-payout-card:hover {
+  border-color: rgba(0, 48, 73, 0.4);
+}
+
+.cr-payout-card--active {
+  border-color: #c1121f;
+  background: rgba(193, 18, 31, 0.04);
+  border-left: 4px solid #c1121f;
+  padding-left: 10px;
+}
+
+.cr-payout-card-label {
+  font-family: "Darky", serif;
+  font-size: 15px;
+  font-weight: 800;
+  color: #003049;
+  letter-spacing: -0.01em;
+}
+
+.cr-payout-card-desc {
+  font-size: 11px;
+  color: rgba(0, 48, 73, 0.55);
+}
+
+.cr-payout-card-check {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 18px;
+  height: 18px;
+  background: #c1121f;
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0;
+}
+
+.cr-tax-box {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 14px 16px;
+  margin-bottom: 14px;
+  background: rgba(201, 169, 110, 0.06);
+  border: 1px solid rgba(201, 169, 110, 0.35);
+  border-left: 4px solid #c9a96e;
+  border-radius: 0;
+  flex-wrap: wrap;
+}
+
+.cr-tax-box > div {
+  flex: 1;
+  min-width: 180px;
+}
+
+.cr-tax-title {
+  font-family: "CS Genio Mono", "SF Mono", monospace;
+  font-size: 13px;
+  font-weight: 700;
+  color: #003049;
+  margin: 0 0 4px;
+}
+
+.cr-tax-desc {
+  font-family: "CS Genio Mono", "SF Mono", monospace;
+  font-size: 11px;
+  color: rgba(0, 48, 73, 0.6);
+  margin: 0;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Step 5 — Campaign cards
+   ───────────────────────────────────────────────────────────── */
+
+.cr-campaigns-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.cr-campaign-card {
+  background: #ffffff;
+  border: 1px solid rgba(0, 48, 73, 0.12);
+  border-radius: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition:
+    transform 200ms ease,
+    box-shadow 200ms ease;
+}
+
+.cr-campaign-card:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 4px 4px 0 rgba(0, 48, 73, 0.1);
+}
+
+.cr-campaign-photo {
+  height: 120px;
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  border-bottom: 1px solid rgba(0, 48, 73, 0.08);
+}
+
+.cr-campaign-photo-tag {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  padding: 4px 8px;
+  background: #ffffff;
+  color: #003049;
+  font-family: "CS Genio Mono", "SF Mono", monospace;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.cr-campaign-body {
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
+}
+
+.cr-campaign-brand {
+  font-family: "Darky", serif;
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: #003049;
+  margin: 0;
+}
+
+.cr-campaign-brief {
+  font-family: "CS Genio Mono", "SF Mono", monospace;
+  font-size: 12px;
+  line-height: 1.5;
+  color: rgba(0, 48, 73, 0.65);
+  margin: 0;
+  flex: 1;
+}
+
+.cr-campaign-payout {
+  font-family: "CS Genio Mono", "SF Mono", monospace;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  margin: 4px 0 0;
+}
+
+.cr-campaign-cta {
+  margin-top: 8px;
+  padding: 10px 14px;
+  background: #c1121f;
+  color: #ffffff;
+  font-family: "CS Genio Mono", "SF Mono", monospace;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  border: none;
+  border-radius: 0;
+  cursor: pointer;
+  transition: background 150ms ease;
+  min-height: 40px;
+}
+
+.cr-campaign-cta:hover:not(:disabled) {
+  background: #780000;
+}
+
+.cr-campaign-cta--applied {
+  background: #c9a96e;
+  color: #ffffff;
+  cursor: default;
+}
+
+.cr-apply-celebrate {
+  padding: 12px 16px;
+  margin-bottom: 12px;
+  background: rgba(201, 169, 110, 0.1);
+  border-left: 4px solid #c9a96e;
+  border-radius: 0;
+  font-family: "CS Genio Mono", "SF Mono", monospace;
+  font-size: 13px;
+  color: #003049;
+  animation: cr-fade-up 240ms ease forwards;
+}
+
+.cr-apply-celebrate strong {
+  font-family: "Darky", serif;
+  font-size: 18px;
+  font-weight: 900;
+  color: #c9a96e;
+  letter-spacing: -0.02em;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Step 7 — Pro call booking + Share buttons
+   ───────────────────────────────────────────────────────────── */
+
+.cr-callbook {
+  padding: 24px;
+  background: rgba(201, 169, 110, 0.06);
+  border: 1px solid rgba(201, 169, 110, 0.35);
+  border-left: 4px solid #c9a96e;
+  border-radius: 0;
+  margin-bottom: 16px;
+}
+
+.cr-callbook-eyebrow {
+  font-family: "CS Genio Mono", "SF Mono", monospace;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #c9a96e;
+  margin: 0 0 8px;
+}
+
+.cr-callbook-title {
+  font-family: "Darky", serif;
+  font-size: clamp(22px, 4vw, 28px);
+  font-weight: 900;
+  color: #003049;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  margin: 0 0 12px;
+}
+
+.cr-callbook-desc {
+  font-family: "CS Genio Mono", "SF Mono", monospace;
+  font-size: 13px;
+  line-height: 1.6;
+  color: #003049;
+  margin: 0 0 16px;
+}
+
+.cr-callbook-slots {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
+.cr-callbook-slot {
+  padding: 8px 12px;
+  background: #ffffff;
+  border: 1px solid rgba(0, 48, 73, 0.18);
+  border-radius: 0;
+  font-family: "CS Genio Mono", "SF Mono", monospace;
+  font-size: 11px;
+  font-weight: 700;
+  color: #003049;
+  letter-spacing: 0.04em;
+}
+
+.cr-btn-booked {
+  background: #c9a96e !important;
+  cursor: default;
+}
+
+.cr-invite-box {
+  position: relative;
+}
+
+.cr-share-row {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+  flex-wrap: wrap;
+}
+
+.cr-share-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  background: #ffffff;
+  color: #003049;
+  border: 1px solid rgba(0, 48, 73, 0.2);
+  border-radius: 0;
+  font-family: "CS Genio Mono", "SF Mono", monospace;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    background 150ms ease,
+    color 150ms ease,
+    border-color 150ms ease;
+}
+
+.cr-share-btn:hover {
+  background: #003049;
+  color: #ffffff;
+  border-color: #003049;
+}
+
+.cr-share-btn svg {
+  flex-shrink: 0;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   All-set celebration banner (renders briefly before shell flips)
+   ───────────────────────────────────────────────────────────── */
+
+.cr-all-set {
+  position: relative;
+  padding: 32px 28px;
+  margin-bottom: 24px;
+  background: #ffffff;
+  border: 1px solid rgba(0, 48, 73, 0.12);
+  border-left: 4px solid #c1121f;
+  border-radius: 0;
+  overflow: hidden;
+  animation: cr-fade-up 400ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.cr-all-set-eyebrow {
+  font-family: "CS Genio Mono", "SF Mono", monospace;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #c1121f;
+  margin: 0 0 8px;
+}
+
+.cr-all-set-title {
+  font-family: "Darky", serif;
+  font-size: clamp(22px, 3.6vw, 30px);
+  font-weight: 900;
+  color: #003049;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  margin: 0 0 20px;
+}
+
+.cr-pulse {
+  animation: cr-pulse-btn 1.6s ease-in-out infinite;
+}
+
+@keyframes cr-pulse-btn {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(193, 18, 31, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 0 8px rgba(193, 18, 31, 0);
+  }
+}
+
+/* Confetti — CSS-only, 6 brand colors */
+.cr-confetti {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 100%;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.cr-confetti-piece {
+  position: absolute;
+  top: -10px;
+  width: 6px;
+  height: 12px;
+  opacity: 0;
+  animation: cr-confetti-fall 2.6s ease-out forwards;
+}
+
+.cr-confetti-piece--0 {
+  background: #c1121f;
+  left: 8%;
+  animation-delay: 0s;
+}
+.cr-confetti-piece--1 {
+  background: #780000;
+  left: 22%;
+  animation-delay: 0.12s;
+}
+.cr-confetti-piece--2 {
+  background: #669bbc;
+  left: 36%;
+  animation-delay: 0.24s;
+}
+.cr-confetti-piece--3 {
+  background: #003049;
+  left: 50%;
+  animation-delay: 0.36s;
+}
+.cr-confetti-piece--4 {
+  background: #c9a96e;
+  left: 64%;
+  animation-delay: 0.48s;
+}
+.cr-confetti-piece--5 {
+  background: #f5f2ec;
+  border: 1px solid #003049;
+  left: 78%;
+  animation-delay: 0.6s;
+}
+
+/* Stagger across 18 pieces — second row */
+.cr-confetti-piece:nth-child(n + 7) {
+  top: -14px;
+}
+.cr-confetti-piece:nth-child(7) {
+  left: 14%;
+}
+.cr-confetti-piece:nth-child(8) {
+  left: 28%;
+}
+.cr-confetti-piece:nth-child(9) {
+  left: 42%;
+}
+.cr-confetti-piece:nth-child(10) {
+  left: 56%;
+}
+.cr-confetti-piece:nth-child(11) {
+  left: 70%;
+}
+.cr-confetti-piece:nth-child(12) {
+  left: 84%;
+}
+.cr-confetti-piece:nth-child(13) {
+  left: 18%;
+}
+.cr-confetti-piece:nth-child(14) {
+  left: 32%;
+}
+.cr-confetti-piece:nth-child(15) {
+  left: 46%;
+}
+.cr-confetti-piece:nth-child(16) {
+  left: 60%;
+}
+.cr-confetti-piece:nth-child(17) {
+  left: 74%;
+}
+.cr-confetti-piece:nth-child(18) {
+  left: 88%;
+}
+
+@keyframes cr-confetti-fall {
+  0% {
+    opacity: 0;
+    transform: translateY(0) rotate(0deg);
+  }
+  10% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(260px) rotate(540deg);
+  }
+}
+
+@keyframes cr-fade-up {
   from {
     opacity: 0;
-    transform: translateY(10px);
+    transform: translateY(8px);
   }
   to {
     opacity: 1;
@@ -30,698 +991,91 @@
   }
 }
 
-.ob-step-enter {
-  animation: ob-fade-slide-in 220ms ease forwards;
-}
-
-/* ── Progress Dots (squares per design system) ──────────── */
-
-.ob-progress-dots {
-  display: flex;
-  gap: 8px;
-  margin-bottom: var(--space-5, 40px);
-}
-
-.ob-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 0;
-  border: 2px solid rgba(0, 48, 73, 0.2);
-  background: transparent;
-  transition: background 200ms, border-color 200ms;
-}
-
-.ob-dot--active {
-  background: #003049;
-  border-color: #003049;
-}
-
-/* ── Step Label — styled like section-tag ───────────────── */
-
-.ob-step-number {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 11px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: #669bbc;
-  margin-bottom: var(--space-2, 16px);
-  font-family: "CS Genio Mono", monospace;
-}
-
-.ob-step-dot {
-  display: inline-block;
-  width: 6px;
-  height: 6px;
-  border-radius: 0;
-  background: #c1121f;
-  flex-shrink: 0;
-}
-
-/* ── Heading ────────────────────────────────────────────── */
-
-.ob-heading {
-  font-family: "Darky", serif;
-  font-weight: 800;
-  font-size: clamp(28px, 5vw, 40px);
-  letter-spacing: -0.045em;
-  color: #003049;
-  margin-bottom: var(--space-2, 16px);
-  line-height: 1.05;
-}
-
-/* ── Subtext ────────────────────────────────────────────── */
-
-.ob-subtext {
-  font-family: "CS Genio Mono", monospace;
-  font-size: 14px;
-  color: rgba(0, 48, 73, 0.6);
-  line-height: 1.6;
-  margin-bottom: var(--space-5, 40px);
-}
-
-/* ── Avatar Placeholder ──────────────────────────────────── */
-
-.ob-avatar-row {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  margin-bottom: var(--space-4, 32px);
-}
-
-.ob-avatar-placeholder {
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
-  background: rgba(0, 48, 73, 0.05);
-  border: 2px dashed rgba(0, 48, 73, 0.2);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  flex-shrink: 0;
-  transition: border-color 150ms, background 150ms;
-}
-
-.ob-avatar-placeholder:hover {
-  border-color: #003049;
-  background: rgba(0, 48, 73, 0.08);
-}
-
-.ob-avatar-icon {
-  font-size: 24px;
-  opacity: 0.5;
-}
-
-.ob-avatar-hint-title {
-  font-family: "CS Genio Mono", monospace;
-  font-size: 13px;
-  font-weight: 700;
-  color: #003049;
-  margin-bottom: 4px;
-}
-
-.ob-avatar-hint-sub {
-  font-family: "CS Genio Mono", monospace;
-  font-size: 12px;
-  color: rgba(0, 48, 73, 0.5);
-}
-
-/* ── Profile Completeness Bar ───────────────────────────── */
-
-.ob-completeness {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: var(--space-4, 32px);
-}
-
-.ob-completeness-track {
-  flex: 1;
-  height: 4px;
-  background: rgba(0, 48, 73, 0.1);
-  position: relative;
-  overflow: hidden;
-}
-
-.ob-completeness-fill {
-  height: 100%;
-  background: linear-gradient(90deg, #669bbc, #c1121f);
-  transition: width 600ms ease;
-}
-
-.ob-completeness-label {
-  font-family: "CS Genio Mono", monospace;
-  font-size: 11px;
-  font-weight: 700;
-  color: rgba(0, 48, 73, 0.4);
-  white-space: nowrap;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-}
-
-/* ── Form Fields ─────────────────────────────────────────── */
-
-.ob-field {
-  margin-bottom: var(--space-3, 24px);
-}
-
-.ob-label {
-  display: block;
-  font-family: "CS Genio Mono", monospace;
-  font-size: 11px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: rgba(0, 48, 73, 0.5);
-  margin-bottom: 6px;
-}
-
-.ob-input,
-.ob-textarea {
-  width: 100%;
-  border: 1.5px solid rgba(0, 48, 73, 0.15);
-  border-radius: 0;
-  padding: 10px 12px;
-  font-family: "CS Genio Mono", monospace;
-  font-size: 14px;
-  color: #003049;
-  background: #ffffff;
-  transition: border-color 150ms;
-  box-sizing: border-box;
-  outline: none;
-}
-
-.ob-input:focus,
-.ob-textarea:focus {
-  border-color: #003049;
-}
-
-.ob-textarea {
-  resize: none;
-  height: 80px;
-  line-height: 1.5;
-}
-
-.ob-char-count {
-  font-family: "CS Genio Mono", monospace;
-  font-size: 11px;
-  color: rgba(0, 48, 73, 0.35);
-  text-align: right;
-  margin-top: 4px;
-}
-
-.ob-char-count--warning {
-  color: #c1121f;
-}
-
-/* ── Chips ───────────────────────────────────────────────── */
-
-.ob-chips {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-bottom: var(--space-4, 32px);
-}
-
-.ob-chip {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 10px 16px;
-  min-height: 44px;
-  border: 2px solid rgba(0, 48, 73, 0.15);
-  border-radius: 50vh; /* pill — design system exception for filter chips */
-  border-left-width: 2px;
-  font-family: "CS Genio Mono", monospace;
-  font-size: 13px;
-  font-weight: 600;
-  color: #003049;
-  cursor: pointer;
-  transition: all 150ms ease;
-  background: transparent;
-  user-select: none;
-  position: relative;
-}
-
-.ob-chip:hover {
-  border-color: rgba(0, 48, 73, 0.4);
-}
-
-.ob-chip--selected {
-  background: #003049;
-  color: #f5f2ec;
-  border-color: #003049;
-  border-left: 3px solid #c1121f;
-}
-
-.ob-chip-icon {
-  font-size: 16px;
-  line-height: 1;
-}
-
-.ob-chip-label {
-  /* inherits chip font */
-}
-
-.ob-chip-badge {
-  font-family: "CS Genio Mono", monospace;
-  font-size: 9px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: #c1121f;
-  background: rgba(193, 18, 31, 0.08);
-  padding: 2px 6px;
-  border-radius: 50vh;
-}
-
-.ob-chip--selected .ob-chip-badge {
-  color: #f5f2ec;
-  background: rgba(245, 242, 236, 0.15);
-}
-
-/* ── Calendar Grid (Step 3) ──────────────────────────────── */
-
-.ob-calendar-section {
-  margin-bottom: var(--space-3, 24px);
-}
-
-.ob-calendar-group-label {
-  font-family: "CS Genio Mono", monospace;
-  font-size: 11px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: rgba(0, 48, 73, 0.4);
-  margin-bottom: 8px;
-}
-
-.ob-calendar-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 8px;
-}
-
-.ob-calendar-cell {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 48px;
-  border: 1.5px solid rgba(0, 48, 73, 0.15);
-  border-radius: 0;
-  font-family: "CS Genio Mono", monospace;
-  font-size: 12px;
-  font-weight: 600;
-  color: #003049;
-  cursor: pointer;
-  transition: all 150ms ease;
-  background: transparent;
-  user-select: none;
-}
-
-.ob-calendar-cell:hover {
-  border-color: rgba(0, 48, 73, 0.4);
-  background: rgba(0, 48, 73, 0.03);
-}
-
-.ob-calendar-cell--selected {
-  background: #003049;
-  color: #f5f2ec;
-  border-color: #003049;
-  border-left: 3px solid #c1121f;
-}
-
-/* ── Step 4 — Welcome Hero ───────────────────────────────── */
-
-.ob-welcome-hero {
-  margin-bottom: var(--space-4, 32px);
-}
-
-.ob-welcome-eyebrow {
-  font-family: "CS Genio Mono", monospace;
-  font-size: 11px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
-  color: #c1121f;
-  margin-bottom: 8px;
-}
-
-/* ── Step 4 — TierJourney Preview ───────────────────────── */
-
-.ob-tier-preview {
-  background: rgba(0, 48, 73, 0.03);
-  border: 1px solid rgba(0, 48, 73, 0.08);
-  padding: var(--space-3, 24px) var(--space-3, 24px);
-  margin-bottom: var(--space-3, 24px);
-}
-
-/* ── Step 4 — Seed Callout ───────────────────────────────── */
-
-.ob-seed-callout {
-  background: rgba(102, 155, 188, 0.07);
-  border-left: 4px solid #669bbc;
-  padding: 16px 20px;
-  margin-bottom: var(--space-4, 32px);
-}
-
-.ob-seed-callout-title {
-  font-family: "CS Genio Mono", monospace;
-  font-size: 13px;
-  font-weight: 700;
-  color: #003049;
-  margin-bottom: 4px;
-}
-
-.ob-seed-callout-desc {
-  font-family: "CS Genio Mono", monospace;
-  font-size: 12px;
-  color: rgba(0, 48, 73, 0.6);
-  margin-bottom: 12px;
-}
-
-.ob-seed-callout-path {
-  display: flex;
-  align-items: flex-start;
-  gap: 8px;
-  font-family: "CS Genio Mono", monospace;
-  font-size: 12px;
-  color: rgba(0, 48, 73, 0.75);
-  line-height: 1.5;
-}
-
-.ob-seed-path-arrow {
-  color: #c1121f;
-  font-weight: 800;
-  flex-shrink: 0;
-  margin-top: 1px;
-}
-
-/* ── Step 4 — Tier Cards ─────────────────────────────────── */
-
-.ob-unlock-section {
-  margin-bottom: var(--space-4, 32px);
-}
-
-.ob-unlock-heading {
-  font-family: "CS Genio Mono", monospace;
-  font-size: 11px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: rgba(0, 48, 73, 0.4);
-  margin-bottom: 12px;
-}
-
-.ob-tier-cards {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 8px;
-}
-
-.ob-tier-card {
-  border: 1.5px solid rgba(0, 48, 73, 0.1);
-  padding: 12px;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  background: #ffffff;
-  position: relative;
-}
-
-.ob-tier-card--current {
-  border-color: #c1121f;
-  background: rgba(193, 18, 31, 0.03);
-}
-
-.ob-tier-card-header {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  margin-bottom: 4px;
-}
-
-.ob-tier-card-emoji {
-  font-size: 16px;
-  line-height: 1;
-}
-
-.ob-tier-card-name {
-  font-family: "CS Genio Mono", monospace;
-  font-size: 11px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: #003049;
-  flex: 1;
-}
-
-.ob-tier-card-now {
-  font-family: "CS Genio Mono", monospace;
-  font-size: 9px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: #c1121f;
-  background: rgba(193, 18, 31, 0.1);
-  padding: 2px 5px;
-}
-
-.ob-tier-card-benefit {
-  font-family: "Darky", serif;
-  font-size: 14px;
-  font-weight: 700;
-  color: #003049;
-  letter-spacing: -0.02em;
-}
-
-.ob-tier-card-detail {
-  font-family: "CS Genio Mono", monospace;
-  font-size: 11px;
-  color: rgba(0, 48, 73, 0.55);
-}
-
-.ob-tier-card-unlock {
-  font-family: "CS Genio Mono", monospace;
-  font-size: 10px;
-  color: rgba(0, 48, 73, 0.4);
-  margin-top: 4px;
-  padding-top: 6px;
-  border-top: 1px solid rgba(0, 48, 73, 0.07);
-}
-
-.ob-tier-card--current .ob-tier-card-unlock {
-  color: #c1121f;
-  border-top-color: rgba(193, 18, 31, 0.12);
-}
-
-/* ── Promise Box ─────────────────────────────────────────── */
-
-.ob-promise-box {
-  background: rgba(102, 155, 188, 0.08);
-  border-left: 4px solid #669bbc;
-  padding: var(--space-3, 24px);
-  margin: var(--space-4, 32px) 0;
-}
-
-.ob-promise-label {
-  font-family: "CS Genio Mono", monospace;
-  font-size: 11px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: #669bbc;
-  margin-bottom: 8px;
-}
-
-.ob-promise-text {
-  font-family: "CS Genio Mono", monospace;
-  font-size: 14px;
-  color: #003049;
-  line-height: 1.6;
-}
-
-/* ── Countdown ───────────────────────────────────────────── */
-
-.ob-countdown {
-  font-family: "Darky", serif;
-  font-size: 36px;
-  font-weight: 900;
-  color: #003049;
-  letter-spacing: -0.04em;
-  margin-top: 12px;
-  display: block;
-}
-
-/* ── Tier Strip ──────────────────────────────────────────── */
-
-.ob-tier-strip {
-  display: flex;
-  gap: var(--space-2, 16px);
-  margin: var(--space-4, 32px) 0;
-  flex-wrap: wrap;
-}
-
-.ob-tier-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
-}
-
-.ob-tier-dot {
-  width: 10px;
-  height: 10px;
-  border-radius: 0;
-  background: rgba(0, 48, 73, 0.12);
-}
-
-.ob-tier-dot--active {
-  background: #c1121f;
-}
-
-.ob-tier-name {
-  font-family: "CS Genio Mono", monospace;
-  font-size: 10px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: rgba(0, 48, 73, 0.35);
-}
-
-.ob-tier-name--active {
-  color: #c1121f;
-}
-
-/* ── What Happens Next ───────────────────────────────────── */
-
-.ob-next-list {
-  list-style: none;
-  padding: 0;
-  margin: 0 0 var(--space-4, 32px);
-}
-
-.ob-next-list li {
-  font-family: "CS Genio Mono", monospace;
-  font-size: 14px;
-  color: rgba(0, 48, 73, 0.75);
-  line-height: 1.6;
-  padding: 8px 0;
-  border-bottom: 1px solid rgba(0, 48, 73, 0.06);
-  display: flex;
-  gap: 12px;
-  align-items: flex-start;
-}
-
-.ob-next-list li:last-child {
-  border-bottom: none;
-}
-
-.ob-next-list li .ob-step-num {
-  font-weight: 800;
-  color: #c1121f;
-  min-width: 16px;
-}
-
-/* ── Navigation ──────────────────────────────────────────── */
-
-.ob-nav {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: var(--space-5, 40px);
-}
-
-.ob-back-btn {
-  font-family: "CS Genio Mono", monospace;
-  font-size: 13px;
-  font-weight: 600;
-  color: rgba(0, 48, 73, 0.4);
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 0;
-  transition: color 150ms;
-  text-decoration: none;
-}
-
-.ob-back-btn:hover {
-  color: #003049;
-}
-
-.ob-next-btn {
-  padding: 12px 32px;
-  background: #c1121f;
-  color: #ffffff;
-  font-family: "CS Genio Mono", monospace;
-  font-weight: 700;
-  font-size: 14px;
-  border: none;
-  border-radius: 0;
-  cursor: pointer;
-  transition: background 150ms;
-  letter-spacing: 0.02em;
-  text-decoration: none;
-  display: inline-block;
-  min-height: 44px;
-}
-
-.ob-next-btn:hover {
-  background: #780000;
-}
-
-.ob-next-btn:disabled {
-  background: rgba(0, 48, 73, 0.15);
-  cursor: not-allowed;
-}
-
-.ob-next-btn--full {
-  width: 100%;
-  text-align: center;
-}
-
-/* ── Error message ───────────────────────────────────────── */
-
-.ob-error {
-  font-family: "CS Genio Mono", monospace;
-  font-size: 12px;
-  color: #c1121f;
-  margin-top: 8px;
-}
-
-/* ── Mobile ──────────────────────────────────────────────── */
+/* ─────────────────────────────────────────────────────────────
+   Mobile
+   ───────────────────────────────────────────────────────────── */
 
 @media (max-width: 540px) {
-  .ob-page {
-    align-items: flex-start;
-    padding: 0;
+  .cr-oauth-grid {
+    grid-template-columns: 1fr;
   }
 
-  .ob-card {
-    max-width: 100%;
-    border: none;
-    border-radius: 0;
-    padding: 32px 24px 48px;
-    min-height: 100svh;
+  .cr-kyc-grid {
+    grid-template-columns: 1fr;
   }
 
-  .ob-tier-strip {
-    gap: 8px;
+  .cr-payout-grid {
+    grid-template-columns: 1fr;
   }
 
-  .ob-tier-cards {
-    grid-template-columns: repeat(3, 1fr);
-    gap: 6px;
+  .cr-campaigns-grid {
+    grid-template-columns: 1fr;
   }
 
-  .ob-tier-card {
-    padding: 10px 8px;
+  .cr-callbook {
+    padding: 20px 16px;
   }
 
-  .ob-calendar-grid {
-    grid-template-columns: repeat(3, 1fr);
+  .cr-callbook-slots {
+    flex-direction: column;
+  }
+
+  .cr-callbook-slot {
+    width: 100%;
+    text-align: center;
+  }
+
+  .cr-first-impression-card {
+    flex-direction: column;
+  }
+
+  .cr-tax-box {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .cr-kyc-live {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .cr-kyc-live .ob2-btn-secondary {
+    width: 100%;
+  }
+
+  .cr-share-row {
+    justify-content: space-between;
+  }
+
+  .cr-share-btn {
+    flex: 1;
+    justify-content: center;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Reduced motion — kill non-essential animation
+   ───────────────────────────────────────────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  .cr-spinner,
+  .cr-kyc-status-dot,
+  .cr-pulse,
+  .cr-confetti-piece,
+  .cr-first-impression,
+  .cr-apply-celebrate,
+  .cr-all-set {
+    animation: none !important;
+    transition: none !important;
+  }
+
+  .cr-confetti-piece {
+    display: none;
+  }
+
+  .cr-oauth-card:hover:not(:disabled),
+  .cr-campaign-card:hover {
+    transform: none;
+    box-shadow: none;
   }
 }

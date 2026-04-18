@@ -713,6 +713,570 @@ form.form-loading {
   }
 }
 
+/* ── Two-Segment picker (v5.1) ────────────────────────────── */
+
+.segment-picker {
+  border: 1px solid var(--line);
+  padding: var(--space-3) var(--space-3) var(--space-2);
+  margin-bottom: var(--space-4);
+  background: var(--surface-bright);
+  animation: fadeUp 500ms cubic-bezier(0.22, 1, 0.36, 1) 240ms both;
+}
+
+.segment-legend {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--dark);
+  margin-bottom: var(--space-2);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 2px;
+}
+
+.segment-num {
+  display: inline-block;
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  color: var(--primary);
+  background: rgba(193, 18, 31, 0.08);
+  padding: 2px 8px;
+}
+
+.segment-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.segment-card {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 14px 14px 12px;
+  text-align: left;
+  background: var(--surface-elevated);
+  border: 1px solid var(--line);
+  border-radius: 0;
+  cursor: pointer;
+  font-family: inherit;
+  transition: border-color 200ms ease, background 200ms ease,
+    box-shadow 200ms ease;
+}
+
+.segment-card:hover {
+  border-color: rgba(0, 48, 73, 0.35);
+}
+
+.segment-card--active {
+  border-color: var(--primary);
+  box-shadow: 3px 3px 0 var(--accent);
+  background: var(--surface-elevated);
+}
+
+.segment-card-tier {
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--tertiary);
+}
+
+.segment-card-label {
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--dark);
+}
+
+.segment-card--active .segment-card-label {
+  color: var(--primary);
+}
+
+.segment-card-desc {
+  font-family: var(--font-body);
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--graphite);
+}
+
+.segment-card-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-top: 6px;
+  padding-top: 8px;
+  border-top: 1px solid var(--line);
+}
+
+.segment-card-earn {
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--champagne);
+}
+
+.segment-card-aud {
+  font-family: var(--font-body);
+  font-size: 10px;
+  letter-spacing: 0.04em;
+  color: rgba(0, 48, 73, 0.55);
+}
+
+.segment-hint {
+  font-family: var(--font-body);
+  font-size: 11px;
+  color: var(--graphite);
+  margin-top: var(--space-2);
+  padding: 0 2px;
+  line-height: 1.5;
+}
+
+@media (max-width: 640px) {
+  .segment-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ── Success next-steps (v5.1) ────────────────────────────── */
+
+.success-next-steps {
+  list-style: none;
+  padding: 0;
+  margin: var(--space-3) 0 var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  padding-block: var(--space-3);
+}
+
+.success-next-steps li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: var(--graphite);
+  line-height: 1.5;
+}
+
+.success-step-n {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 28px;
+  height: 28px;
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  color: var(--primary);
+  background: rgba(193, 18, 31, 0.08);
+  flex-shrink: 0;
+}
+
+.success-cta-row {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: flex-start;
+}
+
+.success-secondary-link {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--tertiary);
+  text-decoration: none;
+  padding: 4px 0;
+  border-bottom: 1px solid transparent;
+  transition: border-color 200ms ease;
+}
+
+.success-secondary-link:hover {
+  border-bottom-color: var(--tertiary);
+}
+
+/* ── Segment card v5.1 polish (tier-color accent, hover lift) ── */
+
+.segment-card {
+  position: relative;
+  transform: translateY(0);
+}
+
+.segment-card::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: transparent;
+  transition: background 200ms ease;
+  pointer-events: none;
+}
+
+.segment-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 48, 73, 0.08);
+}
+
+.segment-card:active {
+  transform: scale(0.98);
+  transition-duration: 80ms;
+}
+
+/* Active tier-colour accents */
+.segment-card--side-income.segment-card--active::before {
+  background: var(--tertiary);
+}
+
+.segment-card--professional.segment-card--active::before {
+  background: var(--champagne);
+}
+
+.segment-card--professional.segment-card--active .segment-card-label {
+  color: var(--champagne);
+}
+
+.segment-card--professional.segment-card--active {
+  box-shadow: 3px 3px 0 var(--champagne);
+  border-color: var(--champagne);
+}
+
+.segment-card--professional .segment-card-tier {
+  color: var(--champagne);
+}
+
+/* ── Progressive field reveal (v5.1 polish) ───────────────── */
+
+.field-reveal {
+  opacity: 0;
+  transform: translateY(6px);
+  pointer-events: none;
+  max-height: 0;
+  overflow: hidden;
+  transition:
+    opacity 240ms ease,
+    transform 240ms ease,
+    max-height 320ms ease;
+}
+
+.field-reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+  max-height: 260px;
+  overflow: visible;
+}
+
+.form-divider.is-locked {
+  opacity: 0.35;
+}
+
+/* ── Instagram OAuth mock button ──────────────────────────── */
+
+.ig-oauth-btn {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 12px 14px;
+  background: var(--surface-elevated);
+  border: 1px solid var(--line);
+  border-radius: 0;
+  font-family: var(--font-body);
+  cursor: pointer;
+  transition:
+    border-color 200ms ease,
+    background 200ms ease,
+    transform 200ms ease,
+    box-shadow 200ms ease;
+}
+
+.ig-oauth-btn:hover {
+  border-color: var(--dark);
+  background: rgba(0, 48, 73, 0.03);
+  transform: translateY(-1px);
+  box-shadow: 2px 2px 0 var(--dark);
+}
+
+.ig-oauth-btn:active {
+  transform: scale(0.99);
+}
+
+.ig-oauth-btn--used {
+  border-color: var(--tertiary);
+  background: rgba(102, 155, 188, 0.06);
+}
+
+.ig-oauth-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  color: var(--dark);
+  flex-shrink: 0;
+}
+
+.ig-oauth-label {
+  flex: 1;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--dark);
+  text-align: left;
+}
+
+.ig-oauth-meta {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--tertiary);
+  background: rgba(102, 155, 188, 0.1);
+  padding: 3px 7px;
+}
+
+.ig-oauth-hint {
+  display: block;
+  font-family: var(--font-body);
+  font-size: 11px;
+  color: var(--text-muted);
+  text-align: center;
+  margin-top: -6px;
+  margin-bottom: 6px;
+}
+
+/* ── Creator spotlight rotation (BrandPanel) ─────────────── */
+
+.creator-spotlight {
+  margin-top: var(--space-3);
+  padding: var(--space-2) 0 0;
+  border-top: 1px solid rgba(245, 242, 236, 0.1);
+  transition: opacity 300ms ease;
+}
+
+.creator-spotlight.is-fade-in {
+  opacity: 1;
+}
+
+.creator-spotlight.is-fade-out {
+  opacity: 0;
+}
+
+.creator-spotlight-label {
+  display: block;
+  font-family: var(--font-body);
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(201, 169, 110, 0.7);
+  margin-bottom: 8px;
+}
+
+.creator-spotlight-quote {
+  font-family: var(--font-display);
+  font-size: 14px;
+  line-height: 1.45;
+  color: rgba(245, 242, 236, 0.92);
+  margin: 0 0 8px;
+  letter-spacing: -0.01em;
+}
+
+.creator-spotlight-attribution {
+  display: block;
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: rgba(245, 242, 236, 0.75);
+}
+
+.creator-spotlight-detail {
+  display: block;
+  font-family: var(--font-body);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(201, 169, 110, 0.65);
+  margin-top: 2px;
+}
+
+/* ── Push Score explainer chip ────────────────────────────── */
+
+.push-score-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: var(--space-2);
+  padding: 6px 10px;
+  background: rgba(245, 242, 236, 0.06);
+  border: 1px solid rgba(245, 242, 236, 0.12);
+}
+
+.push-score-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--tertiary);
+  flex-shrink: 0;
+  animation: pulseDot 1.8s ease-in-out infinite;
+}
+
+.push-score-label {
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(245, 242, 236, 0.75);
+}
+
+/* ── Success countdown strip ──────────────────────────────── */
+
+.success-countdown {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: var(--space-2);
+  padding: 6px 12px;
+  background: rgba(102, 155, 188, 0.08);
+  border: 1px solid rgba(102, 155, 188, 0.2);
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.success-countdown-label {
+  color: var(--graphite);
+}
+
+.success-countdown-sep {
+  width: 4px;
+  height: 4px;
+  background: var(--tertiary);
+  flex-shrink: 0;
+}
+
+.success-countdown-value {
+  color: var(--tertiary);
+}
+
+/* ── Success QR referral card (side-income only) ─────────── */
+
+.success-qr-card {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin-top: var(--space-2);
+  padding: var(--space-3);
+  background: var(--surface-elevated);
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--champagne);
+  width: 100%;
+  max-width: 340px;
+}
+
+.success-qr-svg {
+  flex-shrink: 0;
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.success-qr-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  text-align: left;
+}
+
+.success-qr-label {
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.success-qr-code {
+  font-family: var(--font-body);
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  color: var(--dark);
+}
+
+.success-qr-hint {
+  font-family: var(--font-body);
+  font-size: 10px;
+  color: var(--graphite);
+  margin-top: 2px;
+}
+
+/* ── Success Partner-ops call link (professional only) ───── */
+
+.success-partner-call {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: var(--space-2);
+  padding: 10px 14px;
+  background: var(--surface-elevated);
+  border: 1px solid var(--champagne);
+  border-left: 3px solid var(--champagne);
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--dark);
+  text-decoration: none;
+  transition:
+    background 200ms ease,
+    transform 200ms ease,
+    box-shadow 200ms ease;
+}
+
+.success-partner-call:hover {
+  background: rgba(201, 169, 110, 0.06);
+  transform: translateY(-1px);
+  box-shadow: 2px 2px 0 var(--champagne);
+}
+
+.success-partner-call-dot {
+  width: 8px;
+  height: 8px;
+  background: var(--champagne);
+  flex-shrink: 0;
+}
+
+.success-partner-call-mono {
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--champagne);
+  margin-left: auto;
+}
+
 /* ── Reduced motion ───────────────────────────────────────── */
 
 @media (prefers-reduced-motion: reduce) {
@@ -724,13 +1288,24 @@ form.form-loading {
   .submit-btn,
   .form-divider-line,
   .form-success,
+  .segment-picker,
   .check-path,
   .field-dot,
-  .loader-dots .dot {
+  .loader-dots .dot,
+  .creator-spotlight,
+  .push-score-dot,
+  .field-reveal,
+  .segment-card {
     animation: none !important;
     transition: none !important;
     opacity: 1 !important;
     transform: none !important;
     stroke-dashoffset: 0 !important;
+  }
+
+  .field-reveal {
+    max-height: none !important;
+    overflow: visible !important;
+    pointer-events: auto !important;
   }
 }

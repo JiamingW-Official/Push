@@ -861,3 +861,477 @@
     transition: none;
   }
 }
+
+/* ============================================================
+   v5.1 additions — stats / diagram / checklist / audit log /
+   external audit panel
+   ============================================================ */
+
+/* ------------------------------------------------------------
+   §1 Live stats
+   ------------------------------------------------------------ */
+.dis-stats {
+  background: var(--surface);
+  padding: var(--space-12) 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.dis-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-3);
+}
+
+@media (max-width: 900px) {
+  .dis-stats-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.dis-stat {
+  background: var(--surface-elevated);
+  border: 1px solid var(--line);
+  border-top: 3px solid var(--tertiary);
+  border-radius: 0;
+  padding: var(--space-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.dis-stat--auto_pass {
+  border-top-color: #10b981;
+}
+
+.dis-stat--auto_block {
+  border-top-color: var(--primary);
+}
+
+.dis-stat--manual_review {
+  border-top-color: var(--champagne);
+}
+
+.dis-stat-pct {
+  font-family: var(--font-display);
+  font-size: clamp(52px, 6vw, 80px);
+  font-weight: 900;
+  letter-spacing: -0.05em;
+  line-height: 0.95;
+  color: var(--dark);
+}
+
+.dis-stat--auto_pass .dis-stat-pct { color: #0b8466; }
+.dis-stat--auto_block .dis-stat-pct { color: var(--primary); }
+.dis-stat--manual_review .dis-stat-pct { color: #7a5c20; }
+
+.dis-stat-label {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--dark);
+  padding-bottom: var(--space-2);
+  border-bottom: 1px solid var(--line);
+}
+
+.dis-stat-body {
+  font-family: var(--font-body);
+  font-size: 13px;
+  line-height: 1.65;
+  color: var(--graphite);
+  margin: 0;
+}
+
+/* ------------------------------------------------------------
+   Architecture SVG diagram wrapper
+   ------------------------------------------------------------ */
+.dis-diagram {
+  background: var(--dark);
+  border: 1px solid rgba(201, 169, 110, 0.35);
+  padding: var(--space-4);
+  margin: 0 0 var(--space-6);
+  overflow-x: auto;
+}
+
+.dis-diagram svg {
+  min-width: 760px;
+  display: block;
+}
+
+/* ------------------------------------------------------------
+   §3 Checklist
+   ------------------------------------------------------------ */
+.dis-checklist {
+  background: var(--surface);
+  padding: var(--space-12) 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.dis-checklist-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-3);
+}
+
+@media (max-width: 900px) {
+  .dis-checklist-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.dis-checklist-item {
+  display: flex;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  background: var(--surface-elevated);
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--tertiary);
+  border-radius: 0;
+}
+
+.dis-checklist-check {
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+  background: rgba(102, 155, 188, 0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--tertiary);
+}
+
+.dis-checklist-check svg {
+  width: 18px;
+  height: 18px;
+  color: var(--tertiary);
+}
+
+.dis-checklist-title {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--dark);
+  margin: 0 0 6px;
+}
+
+.dis-checklist-body {
+  font-family: var(--font-body);
+  font-size: 13px;
+  line-height: 1.65;
+  color: var(--graphite);
+  margin: 0;
+}
+
+/* ------------------------------------------------------------
+   §4 Recent audit log (DisclosureBot Audit Row pattern)
+   ------------------------------------------------------------ */
+.dis-recent-audits {
+  background: var(--surface-bright);
+  padding: var(--space-12) 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.dis-audit-log {
+  background: var(--surface-elevated);
+  border: 1px solid var(--line);
+  border-top: 3px solid var(--champagne);
+  border-radius: 0;
+  overflow: hidden;
+  font-family: var(--font-body);
+}
+
+.dis-audit-log-row {
+  display: grid;
+  grid-template-columns:
+    130px
+    110px
+    1fr
+    60px
+    160px
+    60px
+    120px;
+  gap: var(--space-2);
+  padding: 12px var(--space-4);
+  border-bottom: 1px solid var(--line);
+  align-items: center;
+  font-size: 12px;
+  color: var(--dark);
+  transition: background 0.15s ease;
+}
+
+.dis-audit-log-row:last-child {
+  border-bottom: none;
+}
+
+.dis-audit-log-row:not(.dis-audit-log-row--head):hover {
+  background: rgba(0, 48, 73, 0.04);
+}
+
+.dis-audit-log-row--head {
+  background: var(--champagne-light, rgba(201, 169, 110, 0.12));
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #7a5c20;
+  padding: 10px var(--space-4);
+}
+
+.dis-audit-log-ts {
+  font-feature-settings: "tnum" 1;
+  color: var(--graphite);
+  font-size: 11px;
+}
+
+.dis-audit-log-creator {
+  color: var(--primary);
+  font-weight: 600;
+  font-size: 12px;
+}
+
+.dis-audit-log-campaign {
+  color: var(--dark);
+  font-size: 12px;
+}
+
+.dis-audit-log-platform {
+  color: var(--graphite);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.dis-audit-log-conf {
+  color: var(--graphite);
+  font-feature-settings: "tnum" 1;
+  font-size: 11px;
+}
+
+.dis-audit-log-reviewer {
+  color: var(--graphite);
+  font-size: 11px;
+}
+
+.dis-verdict-badge {
+  display: inline-block;
+  padding: 5px 10px;
+  border-radius: 0;
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.dis-verdict-badge--auto_pass {
+  background: rgba(16, 185, 129, 0.12);
+  color: #0b8466;
+}
+
+.dis-verdict-badge--auto_block {
+  background: rgba(193, 18, 31, 0.12);
+  color: var(--primary);
+}
+
+.dis-verdict-badge--manual_review {
+  background: rgba(201, 169, 110, 0.14);
+  color: #7a5c20;
+}
+
+.dis-verdict-badge--human_approved {
+  background: rgba(16, 185, 129, 0.18);
+  color: #0b8466;
+}
+
+.dis-verdict-badge--human_rejected {
+  background: rgba(193, 18, 31, 0.18);
+  color: var(--primary);
+}
+
+@media (max-width: 900px) {
+  .dis-audit-log-row {
+    grid-template-columns: 1fr;
+    gap: 4px;
+    padding: var(--space-3);
+  }
+  .dis-audit-log-row--head {
+    display: none;
+  }
+  .dis-audit-log-ts::before {
+    content: "Time: ";
+    color: var(--text-muted);
+    font-weight: 700;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .dis-audit-log-platform::before {
+    content: "Platform · ";
+    color: var(--text-muted);
+    font-weight: 700;
+  }
+  .dis-audit-log-conf::before {
+    content: "Confidence: ";
+    color: var(--text-muted);
+    font-weight: 700;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .dis-audit-log-reviewer::before {
+    content: "Reviewer: ";
+    color: var(--text-muted);
+    font-weight: 700;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+}
+
+/* ------------------------------------------------------------
+   §6 External audit panel (Deep Space Blue)
+   ------------------------------------------------------------ */
+.dis-external-audit {
+  background: var(--dark);
+  padding: var(--space-12) 0;
+  position: relative;
+}
+
+.dis-external-audit::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--champagne);
+  opacity: 0.5;
+}
+
+.dis-external-audit-panel {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(201, 169, 110, 0.35);
+  border-radius: 0;
+  padding: var(--space-5);
+  max-width: 860px;
+}
+
+.dis-external-audit-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: var(--space-3);
+  padding-bottom: var(--space-3);
+  border-bottom: 1px solid rgba(201, 169, 110, 0.25);
+  margin-bottom: var(--space-4);
+}
+
+.dis-external-audit-firm {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.dis-external-audit-logo {
+  width: 48px;
+  height: 48px;
+  flex-shrink: 0;
+  background: var(--champagne);
+  color: var(--dark);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 18px;
+  letter-spacing: -0.02em;
+  border-radius: 0;
+}
+
+.dis-external-audit-firm-name {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: #fff;
+}
+
+.dis-external-audit-firm-meta {
+  font-family: var(--font-body);
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.6);
+  margin-top: 2px;
+  letter-spacing: 0.02em;
+}
+
+.dis-external-audit-status {
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #10b981;
+  padding: 5px 10px;
+  background: rgba(16, 185, 129, 0.15);
+  border-radius: 0;
+  flex-shrink: 0;
+}
+
+.dis-external-audit-details {
+  margin: 0;
+}
+
+.dis-external-audit-row {
+  display: grid;
+  grid-template-columns: 180px 1fr;
+  gap: var(--space-3);
+  padding: var(--space-3) 0;
+  border-bottom: 1px dashed rgba(255, 255, 255, 0.08);
+}
+
+.dis-external-audit-row:last-child {
+  border-bottom: none;
+}
+
+.dis-external-audit-row dt {
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.dis-external-audit-row dd {
+  font-family: var(--font-body);
+  font-size: 14px;
+  line-height: 1.65;
+  color: rgba(255, 255, 255, 0.85);
+  margin: 0;
+}
+
+.dis-remediation-pill {
+  display: inline-block;
+  padding: 4px 10px;
+  background: rgba(16, 185, 129, 0.18);
+  color: #10b981;
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border-radius: 0;
+}
+
+@media (max-width: 700px) {
+  .dis-external-audit-head {
+    flex-direction: column;
+  }
+  .dis-external-audit-row {
+    grid-template-columns: 1fr;
+    gap: 4px;
+  }
+}

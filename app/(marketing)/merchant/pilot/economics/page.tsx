@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import ScrollRevealInit from "@/components/layout/ScrollRevealInit";
 import "../../../landing.css";
@@ -133,6 +133,63 @@ export default function PilotEconomicsPage() {
   const toggleBlock = (id: string) =>
     setOpenBlock((prev) => (prev === id ? null : id));
 
+  /* ── GSAP parallax on hero lines (v5.1 polish) ─────────── */
+  const heroRef = useRef<HTMLElement | null>(null);
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    if (
+      window.matchMedia &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    )
+      return;
+
+    let mounted = true;
+    let ctxCleanup: (() => void) | undefined;
+
+    (async () => {
+      const [{ default: gsap }, { ScrollTrigger }] = await Promise.all([
+        import("gsap"),
+        import("gsap/ScrollTrigger"),
+      ]);
+      if (!mounted || !heroRef.current) return;
+      gsap.registerPlugin(ScrollTrigger);
+
+      const ctx = gsap.context(() => {
+        const el = heroRef.current!;
+        const eyebrow = el.querySelector(".pe-hero-eyebrow");
+        const l1 = el.querySelector(".pe-hero-l1");
+        const l2 = el.querySelector(".pe-hero-l2");
+        const l3 = el.querySelector(".pe-hero-l3");
+
+        const makeTween = (target: Element | null, y: number) => {
+          if (!target) return;
+          gsap.to(target, {
+            yPercent: y,
+            ease: "none",
+            scrollTrigger: {
+              trigger: el,
+              start: "top top",
+              end: "bottom top",
+              scrub: 0.6,
+            },
+          });
+        };
+
+        makeTween(eyebrow, -36);
+        makeTween(l1, -24);
+        makeTween(l2, -12);
+        makeTween(l3, -4);
+      }, heroRef);
+
+      ctxCleanup = () => ctx.revert();
+    })();
+
+    return () => {
+      mounted = false;
+      ctxCleanup?.();
+    };
+  }, []);
+
   const v = VERTICALS[verticalKey];
 
   /* ── Derived math (memoized) ────────────────────────────── */
@@ -227,7 +284,7 @@ export default function PilotEconomicsPage() {
       <ScrollRevealInit />
 
       {/* ── HERO ───────────────────────────────────────────── */}
-      <section className="pe-hero" aria-labelledby="pe-h">
+      <section ref={heroRef} className="pe-hero" aria-labelledby="pe-h">
         <div className="container pe-hero-inner">
           <nav className="pe-crumb" aria-label="Breadcrumb">
             <Link href="/" className="pe-crumb-link">

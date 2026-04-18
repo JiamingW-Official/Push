@@ -1,634 +1,1048 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useMemo, useState } from "react";
 import Link from "next/link";
-import {
-  MOCK_PROFILES,
-  type CreatorProfile,
-  type GalleryItem,
-  type PastCampaign,
-} from "@/lib/portfolio/mock-profiles";
-import {
-  TIERS,
-  TIER_ORDER,
-  getNextTier,
-  type CreatorTier,
-} from "@/lib/tier-config";
 import "./portfolio.css";
 
-// Use maya-eats-nyc as the demo "logged-in" creator
-const DEMO_PROFILE: CreatorProfile = MOCK_PROFILES[0];
+// ────────────────────────────────────────────────────────────────────────────
+// Demo data — static ~12 content pieces for the Customer Acquisition Engine
+// portfolio. Mix of campaign-sourced + external work, multi-platform.
+// v5.1 context: Williamsburg Coffee+ beachhead, ConversionOracle verification.
+// ────────────────────────────────────────────────────────────────────────────
 
-type EditableHeader = {
-  displayName: string;
-  neighborhood: string;
-  bio: string;
-  instagramHandle: string;
-  tiktokHandle: string;
+const DEMO_HANDLE = "maya-eats-nyc";
+
+type Platform = "instagram" | "tiktok" | "xiaohongshu" | "link";
+type Source = "campaign" | "external";
+type CardVariant = "image" | "instagram" | "tiktok" | "link";
+
+type ContentPiece = {
+  id: string;
+  variant: CardVariant;
+  platform: Platform;
+  source: Source;
+  featured: boolean;
+  title: string;
+  caption: string;
+  thumbUrl?: string;
+  externalUrl?: string;
+  handle?: string;
+  campaignBrand?: string;
+  addedDate: string;
+  metrics: {
+    likes: number;
+    comments: number;
+    reach: number;
+    verifiedCustomers: number;
+  };
 };
 
-function getInitials(name: string): string {
-  return name
-    .split(" ")
-    .map((w) => w[0])
-    .join("")
-    .toUpperCase()
-    .slice(0, 2);
-}
+const DEMO_CONTENT: ContentPiece[] = [
+  {
+    id: "p1",
+    variant: "instagram",
+    platform: "instagram",
+    source: "campaign",
+    featured: true,
+    title: "Devoción Reel — Williamsburg Coffee+",
+    caption:
+      "Showed the barista pour routine at 7:42am. ConversionOracle flagged high walk-in intent by 11am.",
+    thumbUrl:
+      "https://images.unsplash.com/photo-1511920170033-f8396924c348?w=640&q=70",
+    handle: "maya.eats.nyc",
+    campaignBrand: "Devoción",
+    addedDate: "2026-04-02",
+    metrics: {
+      likes: 4280,
+      comments: 142,
+      reach: 38200,
+      verifiedCustomers: 47,
+    },
+  },
+  {
+    id: "p2",
+    variant: "tiktok",
+    platform: "tiktok",
+    source: "campaign",
+    featured: true,
+    title: "Partners Coffee POV — Bedford Ave",
+    caption:
+      "10-second cold brew POV. Verified customers up 31% over baseline.",
+    thumbUrl:
+      "https://images.unsplash.com/photo-1497935586351-b67a49e012bf?w=640&q=70",
+    handle: "mayacoffee",
+    campaignBrand: "Partners Coffee",
+    addedDate: "2026-03-28",
+    metrics: {
+      likes: 12800,
+      comments: 386,
+      reach: 94500,
+      verifiedCustomers: 62,
+    },
+  },
+  {
+    id: "p3",
+    variant: "instagram",
+    platform: "instagram",
+    source: "campaign",
+    featured: true,
+    title: "Variety Coffee — matcha launch",
+    caption:
+      "Launch-day reel, tagged by Neighborhood Playbook as peak-traffic slot.",
+    thumbUrl:
+      "https://images.unsplash.com/photo-1577936999108-a30b1a6a6f22?w=640&q=70",
+    handle: "maya.eats.nyc",
+    campaignBrand: "Variety Coffee",
+    addedDate: "2026-03-20",
+    metrics: {
+      likes: 5620,
+      comments: 198,
+      reach: 44100,
+      verifiedCustomers: 38,
+    },
+  },
+  {
+    id: "p4",
+    variant: "tiktok",
+    platform: "tiktok",
+    source: "campaign",
+    featured: false,
+    title: "Blank Street — iced chai run",
+    caption:
+      "Morning routine duet. Steady attribution on QR scans through lunch.",
+    thumbUrl:
+      "https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=640&q=70",
+    handle: "mayacoffee",
+    campaignBrand: "Blank Street",
+    addedDate: "2026-03-14",
+    metrics: {
+      likes: 9340,
+      comments: 221,
+      reach: 71800,
+      verifiedCustomers: 29,
+    },
+  },
+  {
+    id: "p5",
+    variant: "image",
+    platform: "instagram",
+    source: "external",
+    featured: false,
+    title: "Still life — oat flat white",
+    caption: "Personal editorial shot. Added to show range.",
+    thumbUrl:
+      "https://images.unsplash.com/photo-1445116572660-236099ec97a0?w=640&q=70",
+    handle: "maya.eats.nyc",
+    addedDate: "2026-03-10",
+    metrics: { likes: 2100, comments: 54, reach: 18600, verifiedCustomers: 0 },
+  },
+  {
+    id: "p6",
+    variant: "instagram",
+    platform: "instagram",
+    source: "external",
+    featured: true,
+    title: "Sey Coffee — unbranded shot",
+    caption: "Organic post before I joined the Customer Acquisition Engine.",
+    thumbUrl:
+      "https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=640&q=70",
+    handle: "maya.eats.nyc",
+    externalUrl: "https://instagram.com/p/abc123",
+    addedDate: "2026-02-28",
+    metrics: { likes: 3150, comments: 89, reach: 24300, verifiedCustomers: 0 },
+  },
+  {
+    id: "p7",
+    variant: "link",
+    platform: "link",
+    source: "external",
+    featured: false,
+    title: "Eater NY feature — 8 new coffee shops",
+    caption: "Quoted as a neighborhood voice on the Williamsburg beat.",
+    externalUrl: "https://ny.eater.com/brooklyn-coffee-guide",
+    addedDate: "2026-02-20",
+    metrics: { likes: 0, comments: 0, reach: 0, verifiedCustomers: 0 },
+  },
+  {
+    id: "p8",
+    variant: "tiktok",
+    platform: "tiktok",
+    source: "external",
+    featured: false,
+    title: "Brooklyn coffee tier list",
+    caption: "Solo ranking video. 6 shops, 60 seconds.",
+    thumbUrl:
+      "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=640&q=70",
+    handle: "mayacoffee",
+    externalUrl: "https://tiktok.com/@mayacoffee/video/7298",
+    addedDate: "2026-02-12",
+    metrics: {
+      likes: 18200,
+      comments: 512,
+      reach: 142000,
+      verifiedCustomers: 0,
+    },
+  },
+  {
+    id: "p9",
+    variant: "instagram",
+    platform: "xiaohongshu",
+    source: "external",
+    featured: false,
+    title: "小红书 — Bushwick cafe 探店",
+    caption: "Cross-platform cafe discovery post. 小红书 audience.",
+    thumbUrl:
+      "https://images.unsplash.com/photo-1541167760496-1628856ab772?w=640&q=70",
+    handle: "maya_nyc",
+    externalUrl: "https://xiaohongshu.com/note/abc",
+    addedDate: "2026-02-04",
+    metrics: { likes: 1840, comments: 67, reach: 12400, verifiedCustomers: 0 },
+  },
+  {
+    id: "p10",
+    variant: "image",
+    platform: "instagram",
+    source: "campaign",
+    featured: false,
+    title: "Oslo Coffee — cortado series",
+    caption: "3-frame grid push. Secondary of a verified campaign.",
+    thumbUrl:
+      "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=640&q=70",
+    handle: "maya.eats.nyc",
+    campaignBrand: "Oslo Coffee",
+    addedDate: "2026-01-24",
+    metrics: { likes: 2760, comments: 74, reach: 21500, verifiedCustomers: 18 },
+  },
+  {
+    id: "p11",
+    variant: "instagram",
+    platform: "instagram",
+    source: "campaign",
+    featured: false,
+    title: "Café Integral — winter menu",
+    caption: "Menu-switch campaign. QR scan attribution held through 10 days.",
+    thumbUrl:
+      "https://images.unsplash.com/photo-1507133750040-4a8f57021571?w=640&q=70",
+    handle: "maya.eats.nyc",
+    campaignBrand: "Café Integral",
+    addedDate: "2026-01-14",
+    metrics: {
+      likes: 3980,
+      comments: 121,
+      reach: 31200,
+      verifiedCustomers: 24,
+    },
+  },
+  {
+    id: "p12",
+    variant: "link",
+    platform: "link",
+    source: "external",
+    featured: false,
+    title: "Brooklyn Magazine — creator economy op-ed",
+    caption:
+      "Essay on Two-Segment Creator Economics from my side of the Engine.",
+    externalUrl: "https://bkmag.com/creator-essay",
+    addedDate: "2026-01-04",
+    metrics: { likes: 0, comments: 0, reach: 0, verifiedCustomers: 0 },
+  },
+];
+
+// ────────────────────────────────────────────────────────────────────────────
+// Utilities
+// ────────────────────────────────────────────────────────────────────────────
+
+type TabFilter = "all" | "campaigns" | "external" | "featured" | "recent";
+type PlatformFilter = "all" | Platform;
 
 function formatNumber(n: number): string {
+  if (n >= 1_000_000) return `${(n / 1_000_000).toFixed(1)}M`;
   if (n >= 1000) return `${(n / 1000).toFixed(1)}k`;
   return String(n);
 }
 
-function tierNormalized(tier: string): CreatorTier {
-  const map: Record<string, CreatorTier> = {
-    seed: "Seed",
-    explorer: "Explorer",
-    operator: "Operator",
-    proven: "Proven",
-    closer: "Closer",
-    partner: "Partner",
-    Seed: "Seed",
-    Explorer: "Explorer",
-    Operator: "Operator",
-    Proven: "Proven",
-    Closer: "Closer",
-    Partner: "Partner",
-  };
-  return map[tier] ?? "Seed";
+function formatDate(iso: string): string {
+  const d = new Date(iso);
+  return d.toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  });
 }
 
-// ── Sub-components ────────────────────────────────────────────────────────────
+function parseHandleFromUrl(url: string): {
+  platform: Platform;
+  handle: string;
+} {
+  const u = url.trim().toLowerCase();
+  if (u.includes("instagram.com")) {
+    const m = u.match(/instagram\.com\/([^/?]+)/);
+    return { platform: "instagram", handle: m?.[1] ?? "unknown" };
+  }
+  if (u.includes("tiktok.com")) {
+    const m = u.match(/tiktok\.com\/@([^/?]+)/);
+    return { platform: "tiktok", handle: m?.[1] ?? "unknown" };
+  }
+  if (u.includes("xiaohongshu.com") || u.includes("xhslink")) {
+    return { platform: "xiaohongshu", handle: "note" };
+  }
+  return { platform: "link", handle: "external" };
+}
 
-function TierProgressBar({
-  tier,
-  score,
-}: {
-  tier: CreatorTier;
-  score: number;
-}) {
-  const tierCfg = TIERS[tier];
-  const nextTier = getNextTier(tier);
-  const nextCfg = nextTier ? TIERS[nextTier] : null;
-  const pct = nextCfg
-    ? Math.min(
-        100,
-        Math.round(
-          ((score - tierCfg.minScore) / (nextCfg.minScore - tierCfg.minScore)) *
-            100,
-        ),
-      )
-    : 100;
+// ────────────────────────────────────────────────────────────────────────────
+// Sub-components
+// ────────────────────────────────────────────────────────────────────────────
 
+function PlatformIcon({ platform }: { platform: Platform }) {
+  // Decorative glyphs — not critical for a11y, labeled by parent
+  if (platform === "instagram") {
+    return (
+      <span className="pf-pi pf-pi--ig" aria-hidden>
+        IG
+      </span>
+    );
+  }
+  if (platform === "tiktok") {
+    return (
+      <span className="pf-pi pf-pi--tt" aria-hidden>
+        TT
+      </span>
+    );
+  }
+  if (platform === "xiaohongshu") {
+    return (
+      <span className="pf-pi pf-pi--xhs" aria-hidden>
+        XHS
+      </span>
+    );
+  }
   return (
-    <div className="pf-tier-progress">
-      <div className="pf-tier-progress-header">
-        <span className="pf-tier-label">{tier}</span>
-        {nextTier && (
-          <span className="pf-tier-next">
-            Next: {nextTier} ({nextCfg!.minScore - score} pts away)
-          </span>
-        )}
-      </div>
-      <div className="pf-tier-bar-track">
-        <div className="pf-tier-bar-fill" style={{ width: `${pct}%` }} />
-      </div>
-      <div className="pf-tier-tiers-row">
-        {TIER_ORDER.map((t) => {
-          const active = TIER_ORDER.indexOf(t) <= TIER_ORDER.indexOf(tier);
-          return (
-            <div
-              key={t}
-              className={`pf-tier-pip ${active ? "pf-tier-pip--active" : ""}`}
-            >
-              <div className="pf-tier-pip-dot" />
-              <span className="pf-tier-pip-label">{t}</span>
-            </div>
-          );
-        })}
-      </div>
-    </div>
+    <span className="pf-pi pf-pi--link" aria-hidden>
+      &#x1F517;
+    </span>
   );
 }
 
-function GalleryEditor({
-  items,
-  onChange,
+function ContentCard({
+  piece,
+  selected,
+  selectMode,
+  onToggleFeature,
+  onOpenDetail,
+  onToggleSelect,
 }: {
-  items: GalleryItem[];
-  onChange: (items: GalleryItem[]) => void;
+  piece: ContentPiece;
+  selected: boolean;
+  selectMode: boolean;
+  onToggleFeature: (id: string) => void;
+  onOpenDetail: (id: string) => void;
+  onToggleSelect: (id: string) => void;
 }) {
-  const [addUrl, setAddUrl] = useState("");
-  const [addCaption, setAddCaption] = useState("");
+  const variantClass = `pf-card pf-card--${piece.variant}`;
+  const isLink = piece.variant === "link";
 
-  function addItem() {
-    if (!addUrl.trim() || items.length >= 24) return;
-    const newItem: GalleryItem = {
-      id: `g${Date.now()}`,
-      type:
-        addUrl.includes("youtube") || addUrl.includes("vimeo")
-          ? "video"
-          : "image",
-      url: addUrl.trim(),
-      caption: addCaption.trim(),
-      visible: true,
-    };
-    onChange([...items, newItem]);
-    setAddUrl("");
-    setAddCaption("");
-  }
-
-  function removeItem(id: string) {
-    onChange(items.filter((i) => i.id !== id));
-  }
-
-  function toggleVisible(id: string) {
-    onChange(
-      items.map((i) => (i.id === id ? { ...i, visible: !i.visible } : i)),
-    );
+  function handleClick(e: React.MouseEvent) {
+    const target = e.target as HTMLElement;
+    if (target.closest("[data-no-open]")) return;
+    if (selectMode) {
+      onToggleSelect(piece.id);
+      return;
+    }
+    onOpenDetail(piece.id);
   }
 
   return (
-    <div className="pf-gallery-editor">
-      <div className="pf-gallery-grid">
-        {items.map((item) => (
-          <div
-            key={item.id}
-            className={`pf-gallery-item ${!item.visible ? "pf-gallery-item--hidden" : ""}`}
-          >
-            {item.type === "image" ? (
+    <article
+      className={`${variantClass} ${selected ? "pf-card--selected" : ""}`}
+      onClick={handleClick}
+    >
+      {selectMode && (
+        <label className="pf-card-checkbox" data-no-open>
+          <input
+            type="checkbox"
+            checked={selected}
+            onChange={() => onToggleSelect(piece.id)}
+          />
+          <span aria-hidden />
+        </label>
+      )}
+
+      <button
+        type="button"
+        className={`pf-card-feature ${piece.featured ? "pf-card-feature--on" : ""}`}
+        onClick={(e) => {
+          e.stopPropagation();
+          onToggleFeature(piece.id);
+        }}
+        aria-label={piece.featured ? "Unfeature" : "Feature on public profile"}
+        aria-pressed={piece.featured}
+        data-no-open
+      >
+        <span aria-hidden>&#9733;</span>
+      </button>
+
+      {isLink ? (
+        <div className="pf-card-link-body">
+          <span className="pf-card-link-icon" aria-hidden>
+            &#x1F517;
+          </span>
+          <div className="pf-card-link-meta">
+            <span className="pf-card-link-domain">
+              {piece.externalUrl?.replace(/^https?:\/\//, "").split("/")[0] ??
+                "external"}
+            </span>
+            <h3 className="pf-card-link-title">{piece.title}</h3>
+            <p className="pf-card-link-caption">{piece.caption}</p>
+          </div>
+        </div>
+      ) : (
+        <>
+          <div className="pf-card-media">
+            {piece.thumbUrl ? (
               <img
-                src={item.url}
-                alt={item.caption}
-                className="pf-gallery-img"
+                src={piece.thumbUrl}
+                alt={piece.title}
+                className="pf-card-img"
+                loading="lazy"
               />
             ) : (
-              <div className="pf-gallery-video-placeholder">
-                <span className="pf-gallery-video-icon">▶</span>
-                <span className="pf-gallery-video-label">Video</span>
-              </div>
+              <div className="pf-card-placeholder" aria-hidden />
             )}
-            {item.caption && (
-              <p className="pf-gallery-caption">{item.caption}</p>
-            )}
-            <div className="pf-gallery-item-actions">
-              <button
-                type="button"
-                className="pf-gallery-action-btn"
-                onClick={() => toggleVisible(item.id)}
-              >
-                {item.visible ? "Hide" : "Show"}
-              </button>
-              <button
-                type="button"
-                className="pf-gallery-action-btn pf-gallery-action-btn--danger"
-                onClick={() => removeItem(item.id)}
-              >
-                Remove
-              </button>
+            <div className="pf-card-platform-badge">
+              <PlatformIcon platform={piece.platform} />
             </div>
           </div>
-        ))}
-      </div>
-
-      {items.length < 24 && (
-        <div className="pf-gallery-add">
-          <p className="pf-gallery-add-label">Add item ({items.length}/24)</p>
-          <div className="pf-gallery-add-row">
-            <input
-              type="url"
-              className="pf-input"
-              placeholder="Image URL or YouTube/Vimeo link"
-              value={addUrl}
-              onChange={(e) => setAddUrl(e.target.value)}
-            />
-            <input
-              type="text"
-              className="pf-input"
-              placeholder="Caption (optional)"
-              value={addCaption}
-              onChange={(e) => setAddCaption(e.target.value)}
-            />
-            <button type="button" className="btn pf-btn-add" onClick={addItem}>
-              Add
-            </button>
-          </div>
-        </div>
-      )}
-    </div>
-  );
-}
-
-function CampaignsEditor({
-  campaigns,
-  onChange,
-}: {
-  campaigns: PastCampaign[];
-  onChange: (campaigns: PastCampaign[]) => void;
-}) {
-  function toggleVisible(id: string) {
-    onChange(
-      campaigns.map((c) => (c.id === id ? { ...c, visible: !c.visible } : c)),
-    );
-  }
-
-  const sorted = [...campaigns].sort(
-    (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
-  );
-
-  return (
-    <div className="pf-campaigns-list">
-      {sorted.map((c) => (
-        <div
-          key={c.id}
-          className={`pf-campaign-row ${!c.visible ? "pf-campaign-row--hidden" : ""}`}
-        >
-          <div className="pf-campaign-row-main">
-            <div className="pf-campaign-row-identity">
-              <span className="pf-campaign-brand">{c.brand}</span>
-              <span className="pf-campaign-location">{c.neighborhood}</span>
-            </div>
-            <div className="pf-campaign-row-stats">
-              <span className="pf-campaign-stat">
-                <span className="pf-campaign-stat-label">Earned</span>
-                <span className="pf-campaign-stat-value">${c.earnings}</span>
+          <div className="pf-card-body">
+            <h3 className="pf-card-title">{piece.title}</h3>
+            <p className="pf-card-caption">{piece.caption}</p>
+            <div className="pf-card-metrics">
+              <span>
+                <strong>{formatNumber(piece.metrics.likes)}</strong> likes
               </span>
-              <span className="pf-campaign-stat">
-                <span className="pf-campaign-stat-label">Visits</span>
-                <span className="pf-campaign-stat-value">
-                  {c.verifiedVisits}
+              <span>
+                <strong>{formatNumber(piece.metrics.reach)}</strong> reach
+              </span>
+              {piece.metrics.verifiedCustomers > 0 && (
+                <span className="pf-card-metric-verified">
+                  <strong>{piece.metrics.verifiedCustomers}</strong> verified
                 </span>
-              </span>
-              <span className="pf-campaign-stat">
-                <span className="pf-campaign-stat-label">Delivery</span>
-                <span className="pf-campaign-stat-value">{c.deliveryTime}</span>
-              </span>
-              <span className="pf-campaign-date">{c.date}</span>
-            </div>
-          </div>
-          <button
-            type="button"
-            className={`pf-campaign-toggle ${!c.visible ? "pf-campaign-toggle--off" : ""}`}
-            onClick={() => toggleVisible(c.id)}
-          >
-            {c.visible ? "Visible" : "Hidden"}
-          </button>
-        </div>
-      ))}
-    </div>
-  );
-}
-
-// ── Main Page ─────────────────────────────────────────────────────────────────
-
-export default function PortfolioPage() {
-  const [profile] = useState<CreatorProfile>(DEMO_PROFILE);
-  const [header, setHeader] = useState<EditableHeader>({
-    displayName: profile.displayName,
-    neighborhood: profile.neighborhood,
-    bio: profile.bio,
-    instagramHandle: profile.instagramHandle ?? "",
-    tiktokHandle: profile.tiktokHandle ?? "",
-  });
-  const [gallery, setGallery] = useState<GalleryItem[]>(profile.gallery);
-  const [campaigns, setCampaigns] = useState<PastCampaign[]>(
-    profile.pastCampaigns,
-  );
-  const [editingHeader, setEditingHeader] = useState(false);
-  const [saved, setSaved] = useState(false);
-  const [copied, setCopied] = useState(false);
-  const tier = tierNormalized(profile.tier);
-  const publicUrl = `push.nyc/c/${profile.handle}`;
-
-  function handleHeaderChange(
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ) {
-    const { name, value } = e.target;
-    if (name === "bio" && value.length > 500) return;
-    setHeader((prev) => ({ ...prev, [name]: value }));
-  }
-
-  function saveHeader() {
-    setEditingHeader(false);
-    setSaved(true);
-    setTimeout(() => setSaved(false), 3000);
-  }
-
-  function copyUrl() {
-    navigator.clipboard.writeText(`https://${publicUrl}`).catch(() => {});
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  }
-
-  return (
-    <div className="pf-page">
-      {/* ── Share bar ─────────────────────────────────────────────── */}
-      <div className="pf-share-bar">
-        <div className="pf-share-bar-inner">
-          <div className="pf-share-url-group">
-            <span className="pf-share-label">Public URL</span>
-            <span className="pf-share-url">{publicUrl}</span>
-          </div>
-          <div className="pf-share-actions">
-            <button type="button" className="btn pf-btn-copy" onClick={copyUrl}>
-              {copied ? "Copied!" : "Copy Link"}
-            </button>
-            <Link
-              href={`/c/${profile.handle}`}
-              className="btn pf-btn-preview"
-              target="_blank"
-            >
-              Preview
-            </Link>
-          </div>
-        </div>
-        {saved && <p className="pf-save-toast">Changes saved</p>}
-      </div>
-
-      {/* ── Header section ────────────────────────────────────────── */}
-      <section className="pf-section pf-header-section">
-        <div className="pf-section-inner">
-          <div className="pf-eyebrow">Your Portfolio</div>
-          <div className="pf-creator-header">
-            {/* Avatar */}
-            <div className="pf-avatar-wrap">
-              <div className="pf-avatar">
-                {profile.avatarUrl ? (
-                  <img
-                    src={profile.avatarUrl}
-                    alt={header.displayName}
-                    className="pf-avatar-img"
-                  />
-                ) : (
-                  <span className="pf-avatar-initials">
-                    {getInitials(header.displayName)}
-                  </span>
-                )}
-              </div>
-              <button type="button" className="pf-avatar-upload-btn">
-                Upload Photo
-              </button>
-            </div>
-
-            {/* Identity */}
-            <div className="pf-creator-identity">
-              {editingHeader ? (
-                <div className="pf-header-form">
-                  <div className="pf-form-row">
-                    <label className="pf-form-label">Display Name</label>
-                    <input
-                      name="displayName"
-                      type="text"
-                      className="pf-input pf-input--large"
-                      value={header.displayName}
-                      onChange={handleHeaderChange}
-                    />
-                  </div>
-                  <div className="pf-form-row">
-                    <label className="pf-form-label">Handle</label>
-                    <div className="pf-input-prefix-wrap">
-                      <span className="pf-input-prefix">push.nyc/c/</span>
-                      <input
-                        type="text"
-                        className="pf-input pf-input--prefixed"
-                        value={profile.handle}
-                        disabled
-                      />
-                    </div>
-                  </div>
-                  <div className="pf-form-row">
-                    <label className="pf-form-label">NYC Neighborhood</label>
-                    <input
-                      name="neighborhood"
-                      type="text"
-                      className="pf-input"
-                      value={header.neighborhood}
-                      onChange={handleHeaderChange}
-                    />
-                  </div>
-                  <div className="pf-form-row">
-                    <label className="pf-form-label">
-                      Bio
-                      <span className="pf-char-count">
-                        {header.bio.length}/500
-                      </span>
-                    </label>
-                    <textarea
-                      name="bio"
-                      className="pf-input pf-textarea"
-                      value={header.bio}
-                      onChange={handleHeaderChange}
-                      rows={5}
-                    />
-                  </div>
-                  <div className="pf-form-row pf-form-row--2col">
-                    <div>
-                      <label className="pf-form-label">Instagram</label>
-                      <div className="pf-input-prefix-wrap">
-                        <span className="pf-input-prefix">@</span>
-                        <input
-                          name="instagramHandle"
-                          type="text"
-                          className="pf-input pf-input--prefixed"
-                          value={header.instagramHandle}
-                          onChange={handleHeaderChange}
-                        />
-                      </div>
-                    </div>
-                    <div>
-                      <label className="pf-form-label">TikTok</label>
-                      <div className="pf-input-prefix-wrap">
-                        <span className="pf-input-prefix">@</span>
-                        <input
-                          name="tiktokHandle"
-                          type="text"
-                          className="pf-input pf-input--prefixed"
-                          value={header.tiktokHandle}
-                          onChange={handleHeaderChange}
-                        />
-                      </div>
-                    </div>
-                  </div>
-                  <div className="pf-form-actions">
-                    <button
-                      type="button"
-                      className="btn pf-btn-cancel"
-                      onClick={() => setEditingHeader(false)}
-                    >
-                      Cancel
-                    </button>
-                    <button
-                      type="button"
-                      className="btn pf-btn-save"
-                      onClick={saveHeader}
-                    >
-                      Save Changes
-                    </button>
-                  </div>
-                </div>
-              ) : (
-                <div className="pf-creator-identity-display">
-                  <h1 className="pf-creator-name">{header.displayName}</h1>
-                  <div className="pf-creator-meta">
-                    <span className="pf-meta-chip pf-meta-chip--handle">
-                      @{profile.handle}
-                    </span>
-                    <span className="pf-meta-chip">
-                      NYC — {header.neighborhood}
-                    </span>
-                    {header.instagramHandle && (
-                      <span className="pf-meta-chip">
-                        IG: @{header.instagramHandle}
-                      </span>
-                    )}
-                    {header.tiktokHandle && (
-                      <span className="pf-meta-chip">
-                        TT: @{header.tiktokHandle}
-                      </span>
-                    )}
-                  </div>
-                  <p className="pf-creator-bio">{header.bio}</p>
-                  <button
-                    type="button"
-                    className="btn pf-btn-edit-header"
-                    onClick={() => setEditingHeader(true)}
-                  >
-                    Edit Header
-                  </button>
-                </div>
               )}
             </div>
           </div>
+        </>
+      )}
+    </article>
+  );
+}
+
+function DetailPanel({
+  piece,
+  onClose,
+  onToggleFeature,
+}: {
+  piece: ContentPiece;
+  onClose: () => void;
+  onToggleFeature: (id: string) => void;
+}) {
+  return (
+    <>
+      <div className="pf-panel-backdrop" onClick={onClose} aria-hidden />
+      <aside
+        className="pf-panel"
+        role="dialog"
+        aria-label={`Details for ${piece.title}`}
+      >
+        <header className="pf-panel-header">
+          <div>
+            <div className="pf-panel-eyebrow">
+              <PlatformIcon platform={piece.platform} />
+              <span>
+                {piece.source === "campaign"
+                  ? `Customer Acquisition Engine · ${piece.campaignBrand}`
+                  : "External work"}
+              </span>
+            </div>
+            <h2 className="pf-panel-title">{piece.title}</h2>
+          </div>
+          <button
+            type="button"
+            className="pf-panel-close"
+            onClick={onClose}
+            aria-label="Close detail panel"
+          >
+            &#215;
+          </button>
+        </header>
+
+        {piece.thumbUrl && (
+          <div className="pf-panel-media">
+            <img src={piece.thumbUrl} alt={piece.title} />
+          </div>
+        )}
+
+        <p className="pf-panel-caption">{piece.caption}</p>
+
+        <div className="pf-panel-metrics">
+          <div className="pf-panel-metric">
+            <span className="pf-panel-metric-label">Likes</span>
+            <span className="pf-panel-metric-value">
+              {formatNumber(piece.metrics.likes)}
+            </span>
+          </div>
+          <div className="pf-panel-metric">
+            <span className="pf-panel-metric-label">Comments</span>
+            <span className="pf-panel-metric-value">
+              {formatNumber(piece.metrics.comments)}
+            </span>
+          </div>
+          <div className="pf-panel-metric">
+            <span className="pf-panel-metric-label">Reach</span>
+            <span className="pf-panel-metric-value">
+              {formatNumber(piece.metrics.reach)}
+            </span>
+          </div>
+          <div className="pf-panel-metric pf-panel-metric--accent">
+            <span className="pf-panel-metric-label">Verified customers</span>
+            <span className="pf-panel-metric-value">
+              {piece.metrics.verifiedCustomers}
+            </span>
+          </div>
+        </div>
+
+        <div className="pf-panel-meta-row">
+          <span>Added {formatDate(piece.addedDate)}</span>
+          {piece.handle && <span>@{piece.handle}</span>}
+        </div>
+
+        <div className="pf-panel-actions">
+          <button
+            type="button"
+            className="pf-btn pf-btn--primary"
+            onClick={() => onToggleFeature(piece.id)}
+          >
+            {piece.featured ? "Unfeature" : "Feature on profile"}
+          </button>
+          {piece.externalUrl && (
+            <a
+              href={piece.externalUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="pf-btn pf-btn--ghost"
+            >
+              Open source
+            </a>
+          )}
+        </div>
+      </aside>
+    </>
+  );
+}
+
+// ────────────────────────────────────────────────────────────────────────────
+// Main page
+// ────────────────────────────────────────────────────────────────────────────
+
+export default function PortfolioPage() {
+  const [pieces, setPieces] = useState<ContentPiece[]>(DEMO_CONTENT);
+  const [tab, setTab] = useState<TabFilter>("all");
+  const [platform, setPlatform] = useState<PlatformFilter>("all");
+  const [selectMode, setSelectMode] = useState(false);
+  const [selected, setSelected] = useState<Set<string>>(new Set());
+  const [openId, setOpenId] = useState<string | null>(null);
+  const [addOpen, setAddOpen] = useState(false);
+
+  // Add External Work form state
+  const [addUrl, setAddUrl] = useState("");
+  const [addCaption, setAddCaption] = useState("");
+  const [addPlatform, setAddPlatform] = useState<Platform>("instagram");
+  const [addPreview, setAddPreview] = useState<{
+    platform: Platform;
+    handle: string;
+  } | null>(null);
+
+  // Derived stats
+  const stats = useMemo(() => {
+    const total = pieces.length;
+    const campaignCount = pieces.filter((p) => p.source === "campaign").length;
+    const externalCount = pieces.filter((p) => p.source === "external").length;
+    const featuredCount = pieces.filter((p) => p.featured).length;
+    return { total, campaignCount, externalCount, featuredCount };
+  }, [pieces]);
+
+  // Filtered list
+  const filtered = useMemo(() => {
+    const sorted = [...pieces].sort(
+      (a, b) =>
+        new Date(b.addedDate).getTime() - new Date(a.addedDate).getTime(),
+    );
+    return sorted.filter((p) => {
+      if (tab === "campaigns" && p.source !== "campaign") return false;
+      if (tab === "external" && p.source !== "external") return false;
+      if (tab === "featured" && !p.featured) return false;
+      // "recent" and "all" don't filter by source; "recent" already sorted
+      if (platform !== "all" && p.platform !== platform) return false;
+      return true;
+    });
+  }, [pieces, tab, platform]);
+
+  const externalOnly = useMemo(
+    () =>
+      pieces
+        .filter((p) => p.source === "external")
+        .sort(
+          (a, b) =>
+            new Date(b.addedDate).getTime() - new Date(a.addedDate).getTime(),
+        ),
+    [pieces],
+  );
+
+  const openPiece = openId
+    ? (pieces.find((p) => p.id === openId) ?? null)
+    : null;
+
+  // Handlers
+  function toggleFeature(id: string) {
+    setPieces((prev) =>
+      prev.map((p) => (p.id === id ? { ...p, featured: !p.featured } : p)),
+    );
+  }
+
+  function toggleSelect(id: string) {
+    setSelected((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  }
+
+  function exitSelectMode() {
+    setSelectMode(false);
+    setSelected(new Set());
+  }
+
+  function bulkFeature(val: boolean) {
+    setPieces((prev) =>
+      prev.map((p) => (selected.has(p.id) ? { ...p, featured: val } : p)),
+    );
+    exitSelectMode();
+  }
+
+  function bulkDelete() {
+    setPieces((prev) => prev.filter((p) => !selected.has(p.id)));
+    exitSelectMode();
+  }
+
+  function bulkExport() {
+    // Static demo — would trigger a CSV/JSON export in production
+    exitSelectMode();
+  }
+
+  function onUrlChange(val: string) {
+    setAddUrl(val);
+    if (val.trim().length > 8) {
+      const parsed = parseHandleFromUrl(val);
+      setAddPreview(parsed);
+      setAddPlatform(parsed.platform);
+    } else {
+      setAddPreview(null);
+    }
+  }
+
+  function submitExternal(e: React.FormEvent) {
+    e.preventDefault();
+    if (!addUrl.trim()) return;
+    const variant: CardVariant =
+      addPlatform === "instagram"
+        ? "instagram"
+        : addPlatform === "tiktok"
+          ? "tiktok"
+          : "link";
+    const newPiece: ContentPiece = {
+      id: `ext${Date.now()}`,
+      variant,
+      platform: addPlatform,
+      source: "external",
+      featured: false,
+      title: addCaption.trim() || "Untitled external piece",
+      caption: addCaption.trim() || "Added from external source.",
+      externalUrl: addUrl.trim(),
+      handle: addPreview?.handle,
+      addedDate: new Date().toISOString().slice(0, 10),
+      metrics: { likes: 0, comments: 0, reach: 0, verifiedCustomers: 0 },
+    };
+    setPieces((prev) => [newPiece, ...prev]);
+    setAddUrl("");
+    setAddCaption("");
+    setAddPreview(null);
+    setAddOpen(false);
+  }
+
+  function removeExternal(id: string) {
+    setPieces((prev) => prev.filter((p) => p.id !== id));
+  }
+
+  const isEmpty = pieces.length === 0;
+  const selectedCount = selected.size;
+
+  return (
+    <div className="pf-page">
+      {/* ── Hero ───────────────────────────────────────────────── */}
+      <section className="pf-hero">
+        <div className="pf-hero-inner">
+          <p className="pf-hero-eyebrow">Portfolio</p>
+          <h1 className="pf-hero-title">Your portfolio.</h1>
+          <p className="pf-hero-sub">
+            Every piece you&apos;ve shipped through the Customer Acquisition
+            Engine, plus your external work. Feature up to 6 for your public
+            profile.
+          </p>
+          <div className="pf-hero-stats">
+            <div className="pf-hero-stat">
+              <span className="pf-hero-stat-n">{stats.total}</span>
+              <span className="pf-hero-stat-l">Total pieces</span>
+            </div>
+            <div className="pf-hero-stat">
+              <span className="pf-hero-stat-n">{stats.campaignCount}</span>
+              <span className="pf-hero-stat-l">Campaign pieces</span>
+            </div>
+            <div className="pf-hero-stat">
+              <span className="pf-hero-stat-n">{stats.externalCount}</span>
+              <span className="pf-hero-stat-l">External pieces</span>
+            </div>
+            <div className="pf-hero-stat pf-hero-stat--accent">
+              <span className="pf-hero-stat-n">{stats.featuredCount}</span>
+              <span className="pf-hero-stat-l">Featured</span>
+            </div>
+          </div>
+          <Link
+            href={`/c/${DEMO_HANDLE}`}
+            className="pf-hero-share"
+            target="_blank"
+          >
+            Share public profile
+            <span aria-hidden> &rarr;</span>
+          </Link>
         </div>
       </section>
 
-      {/* ── Tier showcase ─────────────────────────────────────────── */}
-      <section className="pf-section pf-tier-section">
-        <div className="pf-section-inner">
-          <div className="pf-section-heading">
-            <div className="pf-eyebrow">02</div>
-            <h2 className="pf-section-title">Tier & Progress</h2>
+      {/* ── Featured bar ───────────────────────────────────────── */}
+      {stats.featuredCount > 0 && (
+        <div className="pf-featured-bar">
+          <div className="pf-featured-bar-inner">
+            <span className="pf-featured-bar-count">
+              <strong>{stats.featuredCount}</strong>{" "}
+              {stats.featuredCount === 1 ? "featured item" : "featured items"}
+            </span>
+            <span className="pf-featured-bar-note">
+              Only the first 6 show on your public profile.
+            </span>
           </div>
-          <div className="pf-tier-showcase">
-            <div className="pf-tier-badge-large">
-              <span className="pf-tier-badge-name">{tier}</span>
-              <span className="pf-tier-badge-desc">
-                {TIERS[tier].description}
-              </span>
+        </div>
+      )}
+
+      {/* ── Filter row ─────────────────────────────────────────── */}
+      <div className="pf-filter-row">
+        <div className="pf-filter-row-inner">
+          <div
+            className="pf-chip-group"
+            role="tablist"
+            aria-label="Source filter"
+          >
+            {(
+              [
+                { id: "all", label: "All" },
+                { id: "campaigns", label: "Campaigns" },
+                { id: "external", label: "External" },
+                { id: "featured", label: "Featured" },
+                { id: "recent", label: "Recent" },
+              ] as { id: TabFilter; label: string }[]
+            ).map((f) => (
+              <button
+                key={f.id}
+                type="button"
+                role="tab"
+                aria-selected={tab === f.id}
+                className={`pf-chip ${tab === f.id ? "pf-chip--on" : ""}`}
+                onClick={() => setTab(f.id)}
+              >
+                {f.label}
+              </button>
+            ))}
+          </div>
+
+          <div className="pf-chip-group" aria-label="Platform filter">
+            {(
+              [
+                { id: "all", label: "All" },
+                { id: "instagram", label: "Instagram" },
+                { id: "tiktok", label: "TikTok" },
+                { id: "xiaohongshu", label: "Xiaohongshu" },
+                { id: "link", label: "Link" },
+              ] as { id: PlatformFilter; label: string }[]
+            ).map((f) => (
+              <button
+                key={f.id}
+                type="button"
+                className={`pf-chip pf-chip--sm ${platform === f.id ? "pf-chip--on" : ""}`}
+                onClick={() => setPlatform(f.id)}
+              >
+                {f.label}
+              </button>
+            ))}
+          </div>
+
+          <div className="pf-filter-row-actions">
+            <button
+              type="button"
+              className={`pf-btn pf-btn--ghost pf-btn--sm ${selectMode ? "pf-btn--active" : ""}`}
+              onClick={() =>
+                selectMode ? exitSelectMode() : setSelectMode(true)
+              }
+            >
+              {selectMode ? "Done" : "Select"}
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* ── Bulk actions bar ───────────────────────────────────── */}
+      {selectMode && (
+        <div
+          className={`pf-bulk-bar ${selectedCount > 0 ? "pf-bulk-bar--active" : ""}`}
+        >
+          <div className="pf-bulk-bar-inner">
+            <span className="pf-bulk-count">
+              <strong>{selectedCount}</strong> selected
+            </span>
+            <div className="pf-bulk-actions">
+              <button
+                type="button"
+                className="pf-btn pf-btn--ghost pf-btn--sm"
+                disabled={selectedCount === 0}
+                onClick={() => bulkFeature(true)}
+              >
+                Feature {selectedCount || ""}
+              </button>
+              <button
+                type="button"
+                className="pf-btn pf-btn--ghost pf-btn--sm"
+                disabled={selectedCount === 0}
+                onClick={() => bulkFeature(false)}
+              >
+                Unfeature {selectedCount || ""}
+              </button>
+              <button
+                type="button"
+                className="pf-btn pf-btn--ghost pf-btn--sm"
+                disabled={selectedCount === 0}
+                onClick={bulkExport}
+              >
+                Export {selectedCount || ""}
+              </button>
+              <button
+                type="button"
+                className="pf-btn pf-btn--danger pf-btn--sm"
+                disabled={selectedCount === 0}
+                onClick={bulkDelete}
+              >
+                Delete {selectedCount || ""}
+              </button>
             </div>
-            <div className="pf-tier-progress-wrap">
-              <TierProgressBar tier={tier} score={profile.pushScore} />
-              <div className="pf-tier-benefits">
-                <p className="pf-tier-benefits-heading">Current Benefits</p>
-                <ul className="pf-tier-benefits-list">
-                  {TIERS[tier].benefits.map((b, i) => (
-                    <li key={i} className="pf-tier-benefit-item">
-                      <span className="pf-tier-benefit-dot" />
-                      {b}
-                    </li>
-                  ))}
-                </ul>
-                {TIERS[tier].upgradeHint && (
-                  <p className="pf-tier-upgrade-hint">
-                    {TIERS[tier].upgradeHint}
+          </div>
+        </div>
+      )}
+
+      {/* ── Content grid or empty state ────────────────────────── */}
+      <section className="pf-grid-section">
+        <div className="pf-grid-section-inner">
+          {isEmpty ? (
+            <div className="pf-empty">
+              <div className="pf-empty-mark" aria-hidden />
+              <h2 className="pf-empty-title">Your portfolio is empty.</h2>
+              <p className="pf-empty-sub">
+                Complete your first Customer Acquisition Engine campaign and
+                every verified piece will land here.
+              </p>
+              <Link href="/creator/explore" className="pf-btn pf-btn--primary">
+                Find a campaign
+              </Link>
+            </div>
+          ) : filtered.length === 0 ? (
+            <div className="pf-empty pf-empty--compact">
+              <h2 className="pf-empty-title">No pieces match this filter.</h2>
+              <p className="pf-empty-sub">
+                Try a different tab or platform to see more of your work.
+              </p>
+            </div>
+          ) : (
+            <div className="pf-grid">
+              {filtered.map((p) => (
+                <ContentCard
+                  key={p.id}
+                  piece={p}
+                  selected={selected.has(p.id)}
+                  selectMode={selectMode}
+                  onToggleFeature={toggleFeature}
+                  onOpenDetail={setOpenId}
+                  onToggleSelect={toggleSelect}
+                />
+              ))}
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* ── Add External Work ──────────────────────────────────── */}
+      <section className="pf-add-section">
+        <div className="pf-add-section-inner">
+          <div className="pf-add-heading">
+            <div>
+              <p className="pf-hero-eyebrow">Add external work</p>
+              <h2 className="pf-add-title">
+                Pull in a post you already shipped.
+              </h2>
+              <p className="pf-add-sub">
+                External work doesn&apos;t carry ConversionOracle verified
+                customers, but it helps merchants read your range.
+              </p>
+            </div>
+            <button
+              type="button"
+              className={`pf-btn pf-btn--primary ${addOpen ? "pf-btn--active" : ""}`}
+              onClick={() => setAddOpen((v) => !v)}
+              aria-expanded={addOpen}
+            >
+              {addOpen ? "Close" : "Add external work"}
+            </button>
+          </div>
+
+          {addOpen && (
+            <form className="pf-add-form" onSubmit={submitExternal}>
+              <div className="pf-add-row">
+                <label className="pf-add-label" htmlFor="add-platform">
+                  Platform
+                </label>
+                <select
+                  id="add-platform"
+                  className="pf-input pf-select"
+                  value={addPlatform}
+                  onChange={(e) => setAddPlatform(e.target.value as Platform)}
+                >
+                  <option value="instagram">Instagram</option>
+                  <option value="tiktok">TikTok</option>
+                  <option value="xiaohongshu">Xiaohongshu</option>
+                  <option value="link">Link (article / blog)</option>
+                </select>
+              </div>
+
+              <div className="pf-add-row">
+                <label className="pf-add-label" htmlFor="add-url">
+                  URL
+                </label>
+                <input
+                  id="add-url"
+                  type="url"
+                  className="pf-input"
+                  placeholder="https://instagram.com/p/..."
+                  value={addUrl}
+                  onChange={(e) => onUrlChange(e.target.value)}
+                />
+                {addPreview && (
+                  <p className="pf-add-preview">
+                    Detected: <strong>{addPreview.platform}</strong> · handle{" "}
+                    <strong>@{addPreview.handle}</strong>
                   </p>
                 )}
               </div>
-            </div>
-          </div>
-        </div>
-      </section>
 
-      {/* ── Stats strip ───────────────────────────────────────────── */}
-      <section className="pf-section pf-stats-section">
-        <div className="pf-section-inner">
-          <div className="pf-section-heading">
-            <div className="pf-eyebrow">03</div>
-            <h2 className="pf-section-title">Your Stats</h2>
-          </div>
-          <div className="pf-stats-strip">
-            <div className="pf-stat-block">
-              <div className="pf-stat-number">{profile.totalCampaigns}</div>
-              <div className="pf-stat-label">Total Campaigns</div>
-            </div>
-            <div className="pf-stat-block">
-              <div className="pf-stat-number">
-                {formatNumber(profile.verifiedVisits)}
+              <div className="pf-add-row">
+                <label className="pf-add-label" htmlFor="add-caption">
+                  Caption / notes
+                </label>
+                <textarea
+                  id="add-caption"
+                  className="pf-input pf-textarea"
+                  placeholder="How this piece reflects your work"
+                  value={addCaption}
+                  onChange={(e) => setAddCaption(e.target.value)}
+                  rows={3}
+                />
               </div>
-              <div className="pf-stat-label">Verified Visits</div>
-            </div>
-            <div className="pf-stat-block">
-              <div className="pf-stat-number">{profile.avgDeliveryTime}</div>
-              <div className="pf-stat-label">Avg Delivery Time</div>
-            </div>
-            <div className="pf-stat-block">
-              <div className="pf-stat-number">{profile.tierScore}</div>
-              <div className="pf-stat-label">Tier Score</div>
-            </div>
-          </div>
-        </div>
-      </section>
 
-      {/* ── Content gallery ───────────────────────────────────────── */}
-      <section className="pf-section pf-gallery-section">
-        <div className="pf-section-inner">
-          <div className="pf-section-heading">
-            <div className="pf-eyebrow">04</div>
-            <h2 className="pf-section-title">Content Gallery</h2>
-            <p className="pf-section-sub">
-              Add up to 24 items. Toggle visibility to show/hide on your public
-              page.
-            </p>
-          </div>
-          <GalleryEditor items={gallery} onChange={setGallery} />
-        </div>
-      </section>
-
-      {/* ── Past campaigns ────────────────────────────────────────── */}
-      <section className="pf-section pf-campaigns-section">
-        <div className="pf-section-inner">
-          <div className="pf-section-heading">
-            <div className="pf-eyebrow">05</div>
-            <h2 className="pf-section-title">Past Campaigns</h2>
-            <p className="pf-section-sub">
-              Toggle visibility to control what appears on your public
-              portfolio.
-            </p>
-          </div>
-          <CampaignsEditor campaigns={campaigns} onChange={setCampaigns} />
-        </div>
-      </section>
-
-      {/* ── Testimonials ──────────────────────────────────────────── */}
-      <section className="pf-section pf-testimonials-section">
-        <div className="pf-section-inner">
-          <div className="pf-section-heading">
-            <div className="pf-eyebrow">06</div>
-            <h2 className="pf-section-title">Merchant Testimonials</h2>
-            <p className="pf-section-sub">
-              Testimonials are submitted by verified merchants — read-only.
-            </p>
-          </div>
-          <div className="pf-testimonials-grid">
-            {profile.testimonials.map((t) => (
-              <div key={t.id} className="pf-testimonial-card">
-                <div className="pf-testimonial-stars">
-                  {"★".repeat(t.rating)}
-                  {"☆".repeat(5 - t.rating)}
-                </div>
-                <blockquote className="pf-testimonial-quote">
-                  "{t.quote}"
-                </blockquote>
-                <div className="pf-testimonial-attribution">
-                  <span className="pf-testimonial-name">{t.merchant}</span>
-                  <span className="pf-testimonial-role">{t.role}</span>
-                </div>
+              <div className="pf-add-actions">
+                <button
+                  type="button"
+                  className="pf-btn pf-btn--ghost"
+                  onClick={() => setAddOpen(false)}
+                >
+                  Cancel
+                </button>
+                <button type="submit" className="pf-btn pf-btn--primary">
+                  Add to portfolio
+                </button>
               </div>
-            ))}
-          </div>
+            </form>
+          )}
         </div>
       </section>
+
+      {/* ── External work list ─────────────────────────────────── */}
+      {externalOnly.length > 0 && (
+        <section className="pf-ext-section">
+          <div className="pf-ext-section-inner">
+            <div className="pf-add-heading">
+              <div>
+                <p className="pf-hero-eyebrow">External work log</p>
+                <h2 className="pf-add-title">
+                  {externalOnly.length} external{" "}
+                  {externalOnly.length === 1 ? "piece" : "pieces"}
+                </h2>
+              </div>
+            </div>
+            <ul className="pf-ext-list">
+              {externalOnly.map((p) => (
+                <li key={p.id} className="pf-ext-row">
+                  <span className="pf-ext-icon">
+                    <PlatformIcon platform={p.platform} />
+                  </span>
+                  <div className="pf-ext-body">
+                    <span className="pf-ext-title">{p.title}</span>
+                    {p.externalUrl && (
+                      <a
+                        href={p.externalUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="pf-ext-url"
+                      >
+                        {p.externalUrl.replace(/^https?:\/\//, "")}
+                      </a>
+                    )}
+                  </div>
+                  <span className="pf-ext-date">{formatDate(p.addedDate)}</span>
+                  <button
+                    type="button"
+                    className="pf-ext-remove"
+                    onClick={() => removeExternal(p.id)}
+                    aria-label={`Remove ${p.title}`}
+                  >
+                    Remove
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </section>
+      )}
+
+      {/* ── Detail panel ───────────────────────────────────────── */}
+      {openPiece && (
+        <DetailPanel
+          piece={openPiece}
+          onClose={() => setOpenId(null)}
+          onToggleFeature={toggleFeature}
+        />
+      )}
     </div>
   );
 }

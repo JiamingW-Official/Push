@@ -1,41 +1,366 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
+import "./campaign-detail.css";
+
+// ── Types ─────────────────────────────────────────────────────
+type Status = "active" | "paused" | "completed" | "draft";
+type CreatorStatus = "applied" | "accepted" | "posted" | "verified";
+type Tier = "bronze" | "steel" | "gold";
+
+type Creator = {
+  id: string;
+  handle: string;
+  name: string;
+  avatar: string;
+  tier: Tier;
+  status: CreatorStatus;
+  earnings: number;
+};
+
+type WeekBar = {
+  week: string;
+  verified: number;
+  pending: number;
+};
+
+type ActivityEvent = {
+  id: string;
+  type: "verified" | "posted" | "applied" | "system";
+  body: string;
+  time: string;
+};
 
 type CampaignRecord = {
   id: string;
-  title: string;
-  category: string;
-  description: string;
-  budget: number;
-  tier: string;
-  commissionSplit: number;
-  contentType: string;
-  platform: string;
-  dueDate: string;
-  status: string;
+  name: string;
+  goal?: string;
+  status: Status;
   createdAt: string;
-  applications: number;
-  qrScans: number;
+  target: number;
+  days: number;
+  budget: number;
+  creatorBrief?: string;
+  heroOffer?: string;
+  sustainedOffer?: string;
+  pitch?: string;
+  // Stats (live or seeded)
+  verified: number;
+  pending: number;
+  reach: number;
+  spend: number;
+  timeline: WeekBar[];
+  creators: Creator[];
+  activity: ActivityEvent[];
 };
 
-function capitalize(s: string) {
+// ── Static demo data for any id not in localStorage ──────────
+const DEMO_CAMPAIGN: CampaignRecord = {
+  id: "demo",
+  name: "Coffee+ — 20 in Williamsburg (Fill Seats)",
+  goal: "fill-seats",
+  status: "active",
+  createdAt: "2026-04-10T14:22:00.000Z",
+  target: 20,
+  days: 14,
+  budget: 660,
+  pitch:
+    "Drive walk-ins for a Coffee+ shop in Williamsburg. Target: 20 verified customers via 3-layer verification (QR + Claude Vision OCR + geo-match). ConversionOracle™ predicts walk-in conversion before creators post.",
+  creatorBrief:
+    "You're posting for a Williamsburg coffee shop building this week's seat-fill.\n\nShoot the actual product — steam curling off a pour, latte art close-up, pastry cross-section. Caption should feel like a friend sharing a find, not an ad. DisclosureBot auto-applies #ad for FTC compliance.\n\nTag @thebrand and drop the unique QR-linked promo. Hero Offer is for first 20 customers; sustained offer runs the rest of the window.",
+  heroOffer:
+    "Free 12oz drip for first 20 creators' audiences (redeem once per person)",
+  sustainedOffer:
+    "$3 off any drink + pastry combo for everyone scanning the QR during campaign window",
+  verified: 14,
+  pending: 3,
+  reach: 48700,
+  spend: 462,
+  timeline: [
+    { week: "W1", verified: 6, pending: 2 },
+    { week: "W2", verified: 8, pending: 1 },
+  ],
+  creators: [
+    {
+      id: "c1",
+      handle: "@maya.eats.nyc",
+      name: "Maya Chen",
+      avatar: "MC",
+      tier: "steel",
+      status: "verified",
+      earnings: 125,
+    },
+    {
+      id: "c2",
+      handle: "@brooklyn_bites",
+      name: "Bk Bites",
+      avatar: "BB",
+      tier: "steel",
+      status: "verified",
+      earnings: 100,
+    },
+    {
+      id: "c3",
+      handle: "@nyc.specialty",
+      name: "Noa Park",
+      avatar: "NP",
+      tier: "gold",
+      status: "posted",
+      earnings: 75,
+    },
+    {
+      id: "c4",
+      handle: "@williamsburg.e",
+      name: "Eli W.",
+      avatar: "EW",
+      tier: "bronze",
+      status: "posted",
+      earnings: 50,
+    },
+    {
+      id: "c5",
+      handle: "@coffee.nyc",
+      name: "Jules A.",
+      avatar: "JA",
+      tier: "steel",
+      status: "accepted",
+      earnings: 0,
+    },
+    {
+      id: "c6",
+      handle: "@bushwick.daily",
+      name: "Tomo K.",
+      avatar: "TK",
+      tier: "bronze",
+      status: "applied",
+      earnings: 0,
+    },
+  ],
+  activity: [
+    {
+      id: "a1",
+      type: "verified",
+      body: "<strong>@maya.eats.nyc</strong> delivered customer #14 — verified by QR + Vision OCR + geo-match.",
+      time: "2h ago",
+    },
+    {
+      id: "a2",
+      type: "posted",
+      body: "<strong>@williamsburg.e</strong> published an Instagram Reel. DisclosureBot flagged #ad automatically.",
+      time: "6h ago",
+    },
+    {
+      id: "a3",
+      type: "verified",
+      body: "ConversionOracle™ verified 3 new walk-ins in the last hour. Auto-verify rate this campaign: 91%.",
+      time: "Yesterday",
+    },
+    {
+      id: "a4",
+      type: "applied",
+      body: "<strong>@coffee.nyc</strong> applied — Steel tier, 82% Neighborhood fit.",
+      time: "Yesterday",
+    },
+    {
+      id: "a5",
+      type: "system",
+      body: "Campaign launched. Two-Tier Offer active. QR codes deployed at counter.",
+      time: "5d ago",
+    },
+  ],
+};
+
+// ── Helpers ───────────────────────────────────────────────────
+function capitalize(s: string): string {
   return s.charAt(0).toUpperCase() + s.slice(1);
 }
 
+function formatDate(iso: string): string {
+  try {
+    const d = new Date(iso);
+    return d.toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+    });
+  } catch {
+    return iso;
+  }
+}
+
+function tierLabel(t: Tier): string {
+  if (t === "bronze") return "Explorer · Bronze";
+  if (t === "steel") return "Operator · Steel";
+  return "Proven · Gold";
+}
+
+// ── Timeline bar chart (inline SVG) ──────────────────────────
+function TimelineChart({ data }: { data: WeekBar[] }) {
+  const padding = { top: 20, right: 20, bottom: 30, left: 40 };
+  const chartW = Math.max(560, data.length * 120);
+  const chartH = 200;
+  const innerW = chartW - padding.left - padding.right;
+  const innerH = chartH - padding.top - padding.bottom;
+  const max = Math.max(...data.map((d) => d.verified + d.pending), 10);
+  const barW = Math.min(60, (innerW / data.length) * 0.55);
+  const groupW = innerW / data.length;
+
+  // y-axis gridlines (4 steps)
+  const steps = 4;
+  const stepVal = Math.ceil(max / steps);
+  const yTicks = Array.from({ length: steps + 1 }, (_, i) => i * stepVal);
+
+  return (
+    <div className="cd-chart-wrap">
+      <svg
+        viewBox={`0 0 ${chartW} ${chartH}`}
+        className="cd-chart"
+        role="img"
+        aria-label="Week-by-week campaign results"
+      >
+        {/* Grid lines */}
+        {yTicks.map((t, i) => {
+          const y = padding.top + innerH - (t / (stepVal * steps)) * innerH;
+          return (
+            <g key={i}>
+              <line
+                x1={padding.left}
+                x2={padding.left + innerW}
+                y1={y}
+                y2={y}
+                stroke="rgba(0,48,73,0.08)"
+                strokeWidth={1}
+              />
+              <text
+                x={padding.left - 8}
+                y={y + 3}
+                textAnchor="end"
+                fontSize="9"
+                fontFamily="CS Genio Mono, monospace"
+                fill="#669bbc"
+                letterSpacing="0.05em"
+              >
+                {t}
+              </text>
+            </g>
+          );
+        })}
+        {/* Axis line */}
+        <line
+          x1={padding.left}
+          x2={padding.left + innerW}
+          y1={padding.top + innerH}
+          y2={padding.top + innerH}
+          stroke="#003049"
+          strokeWidth={1.5}
+        />
+        {/* Bars */}
+        {data.map((d, i) => {
+          const cx = padding.left + groupW * i + groupW / 2;
+          const x = cx - barW / 2;
+          const totalH =
+            ((d.verified + d.pending) / (stepVal * steps)) * innerH;
+          const verifiedH = (d.verified / (stepVal * steps)) * innerH;
+          const pendingH = (d.pending / (stepVal * steps)) * innerH;
+          const baseY = padding.top + innerH;
+          return (
+            <g key={d.week}>
+              {/* Pending (stacked top) */}
+              <rect
+                x={x}
+                y={baseY - totalH}
+                width={barW}
+                height={pendingH}
+                fill="#c9a96e"
+              />
+              {/* Verified */}
+              <rect
+                x={x}
+                y={baseY - verifiedH}
+                width={barW}
+                height={verifiedH}
+                fill="#c1121f"
+              />
+              {/* Label above */}
+              <text
+                x={cx}
+                y={baseY - totalH - 8}
+                textAnchor="middle"
+                fontSize="11"
+                fontFamily="Darky, serif"
+                fontStyle="italic"
+                fontWeight="900"
+                fill="#003049"
+              >
+                {d.verified + d.pending}
+              </text>
+              {/* X label */}
+              <text
+                x={cx}
+                y={baseY + 18}
+                textAnchor="middle"
+                fontSize="10"
+                fontFamily="CS Genio Mono, monospace"
+                fill="#669bbc"
+                letterSpacing="0.08em"
+              >
+                {d.week}
+              </text>
+            </g>
+          );
+        })}
+      </svg>
+    </div>
+  );
+}
+
+// ── Page ──────────────────────────────────────────────────────
 export default function CampaignDetailPage() {
   const { id } = useParams<{ id: string }>();
   const [campaign, setCampaign] = useState<CampaignRecord | null>(null);
+  const [filter, setFilter] = useState<CreatorStatus | "all">("all");
+  const [actionState, setActionState] = useState<
+    "idle" | "paused" | "resumed" | "duplicated" | "archived"
+  >("idle");
 
   useEffect(() => {
-    const stored = localStorage.getItem("push-demo-campaigns");
-    if (!stored) return;
-    const list: CampaignRecord[] = JSON.parse(stored);
-    const found = list.find((c) => c.id === id);
-    if (found) setCampaign(found);
+    // Attempt to read from the v5.1 key; fall back to legacy; else demo.
+    try {
+      const raw =
+        localStorage.getItem("push-demo-campaigns-v51") ||
+        localStorage.getItem("push-demo-campaigns");
+      if (raw) {
+        const list: Array<Partial<CampaignRecord> & { id: string }> =
+          JSON.parse(raw);
+        const found = list.find((c) => c.id === id);
+        if (found) {
+          // Hydrate with seeded stats when live data absent.
+          const merged: CampaignRecord = {
+            ...DEMO_CAMPAIGN,
+            ...found,
+            // Keep status from storage when present
+            status: (found.status as Status) || DEMO_CAMPAIGN.status,
+            // Use campaign name (from wizard) if present
+            name: (found as CampaignRecord).name || DEMO_CAMPAIGN.name,
+            id: found.id,
+          };
+          setCampaign(merged);
+          return;
+        }
+      }
+    } catch {
+      // Fall through to demo.
+    }
+    setCampaign({ ...DEMO_CAMPAIGN, id: id || DEMO_CAMPAIGN.id });
   }, [id]);
+
+  const filteredCreators = useMemo(() => {
+    if (!campaign) return [];
+    if (filter === "all") return campaign.creators;
+    return campaign.creators.filter((c) => c.status === filter);
+  }, [campaign, filter]);
 
   if (!campaign) {
     return (
@@ -47,6 +372,54 @@ export default function CampaignDetailPage() {
     );
   }
 
+  const currentStatus: Status =
+    actionState === "paused"
+      ? "paused"
+      : actionState === "resumed"
+        ? "active"
+        : actionState === "archived"
+          ? "completed"
+          : campaign.status;
+
+  function handleAction(a: "pause" | "resume" | "duplicate" | "archive") {
+    if (a === "pause") setActionState("paused");
+    if (a === "resume") setActionState("resumed");
+    if (a === "duplicate") setActionState("duplicated");
+    if (a === "archive") setActionState("archived");
+    // Clear visual state after a tick so it doesn't stick
+    setTimeout(() => {
+      if (a === "duplicate") setActionState("idle");
+    }, 1800);
+  }
+
+  const filterOptions: Array<{
+    id: CreatorStatus | "all";
+    label: string;
+    count: number;
+  }> = [
+    { id: "all", label: "All", count: campaign.creators.length },
+    {
+      id: "applied",
+      label: "Applied",
+      count: campaign.creators.filter((c) => c.status === "applied").length,
+    },
+    {
+      id: "accepted",
+      label: "Accepted",
+      count: campaign.creators.filter((c) => c.status === "accepted").length,
+    },
+    {
+      id: "posted",
+      label: "Posted",
+      count: campaign.creators.filter((c) => c.status === "posted").length,
+    },
+    {
+      id: "verified",
+      label: "Verified",
+      count: campaign.creators.filter((c) => c.status === "verified").length,
+    },
+  ];
+
   return (
     <div className="cd-page">
       <div className="cd-inner">
@@ -54,270 +427,313 @@ export default function CampaignDetailPage() {
           ← Back to dashboard
         </Link>
 
-        {/* Live badge */}
-        <div className="cd-live-row">
-          <span className="cd-live-dot" aria-hidden="true" />
-          <span className="cd-live-label">Campaign Live</span>
-        </div>
+        {/* ── Header ──────────────────────────────── */}
+        <header className="cd-header">
+          <div className="cd-header-left">
+            <div className="cd-header-meta-row">
+              <span
+                className={`cd-pill cd-pill--${currentStatus}`}
+                aria-label={`Status: ${currentStatus}`}
+              >
+                <span className="cd-pill-dot" aria-hidden="true" />
+                {capitalize(currentStatus)}
+              </span>
+              <span className="cd-id-chip" aria-label="Campaign ID">
+                ID · {campaign.id}
+              </span>
+              <span className="cd-created">
+                Created {formatDate(campaign.createdAt)}
+              </span>
+            </div>
+            <h1 className="cd-title">{campaign.name}</h1>
+            <p className="cd-subtitle">
+              Customer Acquisition Engine · Vertical AI for Local Commerce ·
+              ConversionOracle™ active
+            </p>
+          </div>
 
-        <h1 className="cd-title">{campaign.title}</h1>
-        <p className="cd-category">{capitalize(campaign.category)}</p>
+          <div className="cd-actions" aria-label="Campaign actions">
+            <button type="button" className="cd-action-btn">
+              Edit
+            </button>
+            {currentStatus === "active" ? (
+              <button
+                type="button"
+                className="cd-action-btn"
+                onClick={() => handleAction("pause")}
+              >
+                Pause
+              </button>
+            ) : currentStatus === "paused" ? (
+              <button
+                type="button"
+                className="cd-action-btn cd-action-btn--primary"
+                onClick={() => handleAction("resume")}
+              >
+                Resume
+              </button>
+            ) : null}
+            <button
+              type="button"
+              className="cd-action-btn"
+              onClick={() => handleAction("duplicate")}
+            >
+              {actionState === "duplicated" ? "Duplicated ✓" : "Duplicate"}
+            </button>
+            <button
+              type="button"
+              className="cd-action-btn cd-action-btn--danger"
+              onClick={() => handleAction("archive")}
+            >
+              Archive
+            </button>
+          </div>
+        </header>
 
-        {/* Stats bar */}
-        <div className="cd-stats">
+        {/* ── 4-column stats ──────────────────────── */}
+        <div className="cd-stats" aria-label="Campaign performance">
           <div className="cd-stat">
-            <span className="cd-stat-val">$</span>
-            <span className="cd-stat-num">
-              {campaign.budget.toLocaleString()}
+            <span className="cd-stat-label">Verified</span>
+            <span className="cd-stat-num cd-stat-num--verified">
+              {campaign.verified}
+              <span className="cd-stat-unit">/ {campaign.target}</span>
             </span>
-            <span className="cd-stat-label">Budget</span>
+            <span className="cd-stat-sub">
+              3-layer verified (QR + OCR + geo)
+            </span>
           </div>
-          <div className="cd-stat-divider" />
           <div className="cd-stat">
-            <span className="cd-stat-num">{campaign.commissionSplit}%</span>
-            <span className="cd-stat-label">Creator Share</span>
+            <span className="cd-stat-label">Pending</span>
+            <span className="cd-stat-num">{campaign.pending}</span>
+            <span className="cd-stat-sub">Awaiting verification stack</span>
           </div>
-          <div className="cd-stat-divider" />
           <div className="cd-stat">
-            <span className="cd-stat-num">{capitalize(campaign.tier)}</span>
-            <span className="cd-stat-label">Tier Target</span>
+            <span className="cd-stat-label">Reach</span>
+            <span className="cd-stat-num">
+              {campaign.reach >= 1000
+                ? `${(campaign.reach / 1000).toFixed(1)}k`
+                : campaign.reach}
+            </span>
+            <span className="cd-stat-sub">Impressions across creators</span>
           </div>
-          <div className="cd-stat-divider" />
           <div className="cd-stat">
-            <span className="cd-stat-num">{campaign.applications}</span>
-            <span className="cd-stat-label">Applications</span>
+            <span className="cd-stat-label">Spend</span>
+            <span className="cd-stat-num">
+              ${campaign.spend.toLocaleString()}
+              <span className="cd-stat-unit">
+                / ${campaign.budget.toLocaleString()}
+              </span>
+            </span>
+            <span className="cd-stat-sub">Pay-per-verified + retention</span>
           </div>
         </div>
 
-        {/* Description */}
-        <div className="cd-panel">
-          <h2 className="cd-panel-heading">Brief</h2>
-          <p className="cd-desc">{campaign.description}</p>
-        </div>
-
-        {/* Deliverables */}
-        <div className="cd-panel">
-          <h2 className="cd-panel-heading">Deliverables</h2>
-          <div className="cd-detail-grid">
-            <div className="cd-detail-item">
-              <span className="cd-detail-label">Content Type</span>
-              <span className="cd-detail-val">
-                {capitalize(campaign.contentType)}
+        {/* ── Timeline chart ─────────────────────── */}
+        <section className="cd-panel" aria-labelledby="cd-timeline-h">
+          <div className="cd-panel-head">
+            <div>
+              <h2 id="cd-timeline-h" className="cd-panel-heading">
+                Weekly results
+              </h2>
+              <p className="cd-panel-sub">
+                Verified customers delivered per week, tracked by
+                ConversionOracle™.
+              </p>
+            </div>
+            <div className="cd-chart-legend">
+              <span className="cd-legend-item">
+                <span className="cd-legend-swatch cd-legend-swatch--verified" />
+                Verified
+              </span>
+              <span className="cd-legend-item">
+                <span className="cd-legend-swatch cd-legend-swatch--pending" />
+                Pending
               </span>
             </div>
-            <div className="cd-detail-item">
-              <span className="cd-detail-label">Platform</span>
-              <span className="cd-detail-val">{campaign.platform}</span>
+          </div>
+          <TimelineChart data={campaign.timeline} />
+        </section>
+
+        {/* ── Creator table ──────────────────────── */}
+        <section className="cd-panel" aria-labelledby="cd-creators-h">
+          <div className="cd-panel-head">
+            <div>
+              <h2 id="cd-creators-h" className="cd-panel-heading">
+                Creators
+              </h2>
+              <p className="cd-panel-sub">
+                Two-Segment Creator Economics. Tiers assigned by Neighborhood
+                Playbook fit.
+              </p>
             </div>
-            <div className="cd-detail-item">
-              <span className="cd-detail-label">Due Date</span>
-              <span className="cd-detail-val">{campaign.dueDate}</span>
-            </div>
-            <div className="cd-detail-item">
-              <span className="cd-detail-label">Status</span>
-              <span className="cd-detail-val cd-detail-val--live">
-                {capitalize(campaign.status)}
-              </span>
+            <div
+              className="cd-filter-bar"
+              role="tablist"
+              aria-label="Filter creators"
+            >
+              {filterOptions.map((f) => (
+                <button
+                  key={f.id}
+                  type="button"
+                  role="tab"
+                  aria-selected={filter === f.id}
+                  className={[
+                    "cd-filter-btn",
+                    filter === f.id ? "cd-filter-btn--active" : "",
+                  ]
+                    .filter(Boolean)
+                    .join(" ")}
+                  onClick={() => setFilter(f.id)}
+                >
+                  {f.label} · {f.count}
+                </button>
+              ))}
             </div>
           </div>
-        </div>
 
-        <Link href="/merchant/campaigns/new" className="cd-cta">
-          + Create Another Campaign
-        </Link>
+          <div className="cd-table-wrap">
+            <table className="cd-table">
+              <thead>
+                <tr>
+                  <th>Creator</th>
+                  <th>Tier</th>
+                  <th>Status</th>
+                  <th style={{ textAlign: "right" }}>Earnings</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredCreators.length === 0 ? (
+                  <tr>
+                    <td colSpan={4} className="cd-empty">
+                      No creators match this filter.
+                    </td>
+                  </tr>
+                ) : (
+                  filteredCreators.map((c) => (
+                    <tr key={c.id}>
+                      <td>
+                        <div className="cd-creator-cell">
+                          <span className="cd-avatar" aria-hidden="true">
+                            {c.avatar}
+                          </span>
+                          <div>
+                            <div className="cd-handle">{c.handle}</div>
+                            <div
+                              style={{
+                                fontSize: "0.6875rem",
+                                color: "#669bbc",
+                                letterSpacing: "0.02em",
+                              }}
+                            >
+                              {c.name}
+                            </div>
+                          </div>
+                        </div>
+                      </td>
+                      <td>
+                        <span className={`cd-tier-badge cd-tier-${c.tier}`}>
+                          {tierLabel(c.tier)}
+                        </span>
+                      </td>
+                      <td>
+                        <span
+                          className={`cd-status-cell cd-status--${c.status}`}
+                        >
+                          {capitalize(c.status)}
+                        </span>
+                      </td>
+                      <td style={{ textAlign: "right" }}>
+                        <span className="cd-earnings">
+                          ${c.earnings.toLocaleString()}
+                        </span>
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        {/* ── Brief & offers ─────────────────────── */}
+        <section className="cd-panel" aria-labelledby="cd-brief-h">
+          <div className="cd-panel-head">
+            <div>
+              <h2 id="cd-brief-h" className="cd-panel-heading">
+                Brief & Two-Tier Offer
+              </h2>
+              <p className="cd-panel-sub">
+                Drafted by ConversionOracle™ · DisclosureBot ensures FTC
+                compliance.
+              </p>
+            </div>
+          </div>
+          {campaign.creatorBrief && (
+            <p className="cd-brief">{campaign.creatorBrief}</p>
+          )}
+          {(campaign.heroOffer || campaign.sustainedOffer) && (
+            <div className="cd-offer-row">
+              {campaign.heroOffer && (
+                <div className="cd-offer-box">
+                  <div className="cd-offer-box-tag">
+                    <span className="cd-offer-box-dot" />
+                    Hero Offer · Limited
+                  </div>
+                  <div className="cd-offer-box-body">{campaign.heroOffer}</div>
+                </div>
+              )}
+              {campaign.sustainedOffer && (
+                <div className="cd-offer-box cd-offer-box--sustained">
+                  <div className="cd-offer-box-tag">
+                    <span className="cd-offer-box-dot" />
+                    Sustained Offer · Ongoing
+                  </div>
+                  <div className="cd-offer-box-body">
+                    {campaign.sustainedOffer}
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+        </section>
+
+        {/* ── Activity feed ──────────────────────── */}
+        <section className="cd-panel" aria-labelledby="cd-activity-h">
+          <div className="cd-panel-head">
+            <div>
+              <h2 id="cd-activity-h" className="cd-panel-heading">
+                Recent activity
+              </h2>
+              <p className="cd-panel-sub">
+                Latest verifications, posts, and system events.
+              </p>
+            </div>
+          </div>
+          <div className="cd-feed">
+            {campaign.activity.map((ev) => (
+              <div key={ev.id} className="cd-feed-item">
+                <span
+                  className={[
+                    "cd-feed-dot",
+                    ev.type === "applied" || ev.type === "posted"
+                      ? "cd-feed-dot--secondary"
+                      : ev.type === "system"
+                        ? "cd-feed-dot--muted"
+                        : "",
+                  ]
+                    .filter(Boolean)
+                    .join(" ")}
+                  aria-hidden="true"
+                />
+                <div className="cd-feed-body">
+                  <span dangerouslySetInnerHTML={{ __html: ev.body }} />
+                  <span className="cd-feed-time">{ev.time}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
       </div>
-
-      <style>{`
-        .cd-page {
-          min-height: 100svh;
-          background: #f5f2ec;
-          font-family: var(--font-mono, "CS Genio Mono", monospace);
-          color: #003049;
-        }
-        .cd-inner {
-          max-width: 720px;
-          margin: 0 auto;
-          padding: 40px 24px 80px;
-        }
-        .cd-loading {
-          font-size: 0.875rem;
-          color: #669bbc;
-          margin-top: 60px;
-        }
-        .cd-back {
-          display: inline-flex;
-          align-items: center;
-          gap: 6px;
-          font-size: 0.8125rem;
-          font-weight: 500;
-          color: #669bbc;
-          text-decoration: none;
-          letter-spacing: 0.04em;
-          text-transform: uppercase;
-          margin-bottom: 32px;
-          transition: color 0.15s;
-        }
-        .cd-back:hover { color: #003049; }
-        .cd-live-row {
-          display: flex;
-          align-items: center;
-          gap: 8px;
-          margin-bottom: 16px;
-        }
-        .cd-live-dot {
-          width: 8px;
-          height: 8px;
-          background: #c1121f;
-          border-radius: 50%;
-          animation: pulse 1.8s ease-in-out infinite;
-        }
-        @keyframes pulse {
-          0%, 100% { opacity: 1; }
-          50% { opacity: 0.4; }
-        }
-        .cd-live-label {
-          font-size: 0.6875rem;
-          font-weight: 700;
-          letter-spacing: 0.1em;
-          text-transform: uppercase;
-          color: #c1121f;
-        }
-        .cd-title {
-          font-family: var(--font-display, "Darky", serif);
-          font-size: clamp(1.75rem, 5vw, 3rem);
-          font-weight: 900;
-          font-style: italic;
-          letter-spacing: -0.04em;
-          color: #003049;
-          line-height: 1.05;
-          margin: 0 0 8px;
-        }
-        .cd-category {
-          font-size: 0.75rem;
-          font-weight: 600;
-          letter-spacing: 0.08em;
-          text-transform: uppercase;
-          color: #669bbc;
-          margin: 0 0 32px;
-        }
-        .cd-stats {
-          display: flex;
-          align-items: stretch;
-          border: 1.5px solid #003049;
-          box-shadow: 4px 4px 0 #003049;
-          margin-bottom: 32px;
-          overflow-x: auto;
-        }
-        .cd-stat {
-          flex: 1;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          padding: 20px 16px;
-          min-width: 100px;
-        }
-        .cd-stat-val {
-          font-size: 0.75rem;
-          color: #669bbc;
-          font-weight: 600;
-        }
-        .cd-stat-num {
-          font-family: var(--font-display, "Darky", serif);
-          font-size: 1.75rem;
-          font-weight: 900;
-          font-style: italic;
-          color: #003049;
-          line-height: 1;
-        }
-        .cd-stat-label {
-          font-size: 0.6875rem;
-          font-weight: 600;
-          letter-spacing: 0.06em;
-          text-transform: uppercase;
-          color: #669bbc;
-          margin-top: 4px;
-        }
-        .cd-stat-divider {
-          width: 1px;
-          background: rgba(0, 48, 73, 0.12);
-          align-self: stretch;
-        }
-        .cd-panel {
-          background: #fff;
-          border: 1.5px solid #003049;
-          box-shadow: 3px 3px 0 rgba(0, 48, 73, 0.15);
-          padding: 28px;
-          margin-bottom: 16px;
-        }
-        .cd-panel-heading {
-          font-family: var(--font-display, "Darky", serif);
-          font-size: 1rem;
-          font-weight: 900;
-          font-style: italic;
-          color: #003049;
-          margin: 0 0 16px;
-          padding-bottom: 12px;
-          border-bottom: 1px solid rgba(0, 48, 73, 0.1);
-        }
-        .cd-desc {
-          font-size: 0.9375rem;
-          line-height: 1.65;
-          color: #003049;
-          margin: 0;
-        }
-        .cd-detail-grid {
-          display: grid;
-          grid-template-columns: 1fr 1fr;
-          gap: 16px 24px;
-        }
-        @media (max-width: 480px) {
-          .cd-detail-grid { grid-template-columns: 1fr; }
-        }
-        .cd-detail-item {
-          display: flex;
-          flex-direction: column;
-          gap: 3px;
-        }
-        .cd-detail-label {
-          font-size: 0.625rem;
-          font-weight: 700;
-          letter-spacing: 0.09em;
-          text-transform: uppercase;
-          color: #669bbc;
-        }
-        .cd-detail-val {
-          font-size: 0.9375rem;
-          color: #003049;
-          font-weight: 500;
-        }
-        .cd-detail-val--live {
-          color: #c1121f;
-          font-weight: 700;
-        }
-        .cd-cta {
-          display: inline-flex;
-          align-items: center;
-          gap: 8px;
-          margin-top: 32px;
-          padding: 12px 24px;
-          font-family: var(--font-mono, "CS Genio Mono", monospace);
-          font-size: 0.8125rem;
-          font-weight: 700;
-          letter-spacing: 0.08em;
-          text-transform: uppercase;
-          background: #003049;
-          color: #f5f2ec;
-          border: 1.5px solid #003049;
-          box-shadow: 3px 3px 0 #c1121f;
-          text-decoration: none;
-          transition: background 0.15s, box-shadow 0.15s;
-        }
-        .cd-cta:hover {
-          background: #c1121f;
-          border-color: #c1121f;
-          box-shadow: 3px 3px 0 #780000;
-        }
-      `}</style>
     </div>
   );
 }

@@ -6,24 +6,23 @@ import ScrollRevealInit from "@/components/layout/ScrollRevealInit";
 import "../landing.css";
 import "./creators.css";
 
-/* ── Earnings Calculator ─────────────────────────────────────
-   v5.1 Two-Segment Creator Economics
-   - T1–T3 (Seed Clay / Explorer Bronze / Operator Steel): pay-per-verified-customer
-     using vertical base rates (coffee $12, coffee+ $20, dessert $18, fitness $48, beauty $68)
-   - T4 Proven (Gold):  $800/mo retainer + $25/customer perf bonus
-   - T5 Closer (Ruby):  $1,800/mo retainer + $40/customer + 15% referral rev-share
-   - T6 Partner (Obsidian): $3,500/mo retainer + $60/customer + 20% referral rev-share + equity
-   ─────────────────────────────────────────────────────────── */
+/* ==================================================================
+   FOR CREATORS — v5.1 Recruitment Decision Page
+   Push = Vertical AI for Local Commerce. Customer Acquisition Engine.
+   Two-Segment Creator Economics: T1–T3 per-verified-customer /
+   T4–T6 retainer + performance + rev-share + equity.
+   ================================================================== */
 
+/* ── EarningsCalculator data ─────────────────────────────── */
 type Segment = "per-customer" | "retainer";
 
 type TierRate = {
   segment: Segment;
   label: string;
   range: string;
-  base?: number; // monthly retainer (T4–T6)
-  perCustomer: number; // per-customer bonus (all tiers use the vertical rate or bonus rate)
-  revShare?: number; // % of referred merchant Push revenue (T5–T6)
+  base?: number;
+  perCustomer: number;
+  revShare?: number;
   note: string;
 };
 
@@ -98,7 +97,6 @@ function EarningsCalculator() {
   return (
     <div className="calc-wrap">
       <div className="calc-controls">
-        {/* Tier selector */}
         <div className="calc-field">
           <label className="calc-label">Your Tier</label>
           <div className="calc-tier-grid">
@@ -116,7 +114,6 @@ function EarningsCalculator() {
           </div>
         </div>
 
-        {/* Verified customers / month */}
         <div className="calc-field">
           <label className="calc-label">
             Verified customers / mo
@@ -136,7 +133,6 @@ function EarningsCalculator() {
           </div>
         </div>
 
-        {/* Segment readout */}
         <div className="calc-field">
           <label className="calc-label">Segment</label>
           <div className="calc-segment-readout">
@@ -161,7 +157,6 @@ function EarningsCalculator() {
         </div>
       </div>
 
-      {/* Output */}
       <div className="calc-output">
         <p className="calc-output-label">
           Estimated monthly earnings{rate.revShare ? " (base + bonus)" : ""}
@@ -176,258 +171,267 @@ function EarningsCalculator() {
             : `${customers} customer${customers !== 1 ? "s" : ""} × $${rate.perCustomer} base (vertical rate: coffee $12 · coffee+ $20 · dessert $18 · fitness $48 · beauty $68)`}
         </p>
         <Link href="/creator/signup" className="btn btn-primary calc-cta">
-          Apply now &mdash; it&apos;s free
+          Start free &mdash; no follower minimum
         </Link>
       </div>
     </div>
   );
 }
 
-/* ── 6 Tier showcase data — v5.1 Two-Segment ─────────────── */
-const TIERS = [
+/* ── Two-Segment split-hero data ─────────────────────────── */
+const SEGMENTS = [
   {
-    id: "seed",
+    id: "side",
+    tag: "Side income",
+    range: "T1 – T3",
+    bigLabel: "$12 – $20",
+    unit: "/ verified customer",
+    tagline: "Post. Verify. Get paid within 48 hours.",
+    bullets: [
+      "5K–50K followers is the sweet spot — no minimum to start",
+      "Vertical-matched rates: coffee $12 · coffee+ $20 · dessert $18",
+      "Milestone bumps: 30 / 40 / 60 / 80 verified txn lifts pay to $15 / $30 / $50 / $80",
+    ],
+    cta: "Start side-income",
+    segmentParam: "side",
+    accent: "var(--tertiary)",
+  },
+  {
+    id: "pro",
+    tag: "Professional",
+    range: "T4 – T6",
+    bigLabel: "$800 – $3,500",
+    unit: "/ mo retainer + perf + equity",
+    tagline: "Retainer + per-customer perf + rev-share + equity.",
+    bullets: [
+      "30K+ followers or proven T3 Operator track record to qualify",
+      "$800 Gold → $1,800 Ruby (+15% rev-share) → $3,500 Obsidian (+20% + equity)",
+      "Partner tier unlocks 0.05–0.2% equity pool (lock-up)",
+    ],
+    cta: "Apply Professional",
+    segmentParam: "pro",
+    accent: "var(--champagne)",
+  },
+];
+
+/* ── Tier journey — 6 nodes ──────────────────────────────── */
+const TIER_JOURNEY = [
+  {
     num: "01",
     name: "Seed",
     material: "Clay",
-    segment: "Per-verified-customer",
-    followers: "5K–15K",
-    earning: "$150–400",
-    period: "/mo typical",
-    payline: "$12–20 / verified customer · vertical-matched",
+    pay: "$12/cust",
     color: "var(--tier-clay)",
-    textColor: "var(--tier-clay-text)",
-    borderStyle: "dashed",
-    levelUp:
-      "Complete 5 verified customers — ConversionOracle unlocks Explorer routing in ~30 days.",
-    badge: "badge-clay",
   },
   {
-    id: "explorer",
     num: "02",
     name: "Explorer",
     material: "Bronze",
-    segment: "Per-verified-customer",
-    followers: "15K–30K",
-    earning: "$300–600",
-    period: "/mo typical",
-    payline: "$15–25 / verified customer · CreatorGPT brief assist",
+    pay: "$15/cust",
     color: "var(--tier-bronze)",
-    textColor: "#fff",
-    borderStyle: "solid",
-    levelUp: "Hit 15 verified customers in a rolling 60-day window.",
-    badge: "badge-bronze",
   },
   {
-    id: "operator",
     num: "03",
     name: "Operator",
     material: "Steel",
-    segment: "Per-verified-customer",
-    followers: "30K–50K",
-    earning: "$500–900",
-    period: "/mo typical",
-    payline: "$18–30 / verified customer · cross-vertical access",
+    pay: "$20/cust",
     color: "var(--tier-steel)",
-    textColor: "#fff",
-    borderStyle: "solid",
-    levelUp:
-      "Maintain a 4.2+ ConversionOracle score across 25+ verified customers.",
-    badge: "badge-steel",
   },
   {
-    id: "proven",
     num: "04",
     name: "Proven",
     material: "Gold",
-    segment: "Retainer + performance",
-    followers: "30K–80K",
-    earning: "$1,500–2,000",
-    period: "/mo blended",
-    payline: "$800/mo retainer + $25 / verified customer perf bonus",
+    pay: "$800 + $25",
     color: "var(--tier-gold)",
-    textColor: "var(--tier-gold-text)",
-    borderStyle: "solid",
-    levelUp:
-      "50+ lifetime verified customers · ConversionOracle 4.5 · invited by Push.",
-    badge: "badge-gold",
   },
   {
-    id: "closer",
     num: "05",
     name: "Closer",
     material: "Ruby",
-    segment: "Retainer + performance + rev-share",
-    followers: "80K–250K",
-    earning: "$3,000",
-    period: "/mo blended",
-    payline:
-      "$1,800/mo retainer + $40 / verified customer + 15% rev-share (12-mo, $500/mo cap)",
+    pay: "$1.8K + 15%",
     color: "var(--tier-ruby)",
-    textColor: "#fff",
-    borderStyle: "solid",
-    levelUp:
-      "Top 5% ConversionOracle performer · 0.02% equity pool for top-100 Closers (4-yr vest, perf-gated).",
-    badge: "badge-ruby",
-    shimmer: true,
   },
   {
-    id: "partner",
     num: "06",
     name: "Partner",
     material: "Obsidian",
-    segment: "Retainer + performance + rev-share + equity",
-    followers: "250K+",
-    earning: "$5,000+",
-    period: "/mo blended",
-    payline:
-      "$3,500/mo retainer + $60 / verified customer + 20% rev-share + 0.05–0.2% equity pool (lock-up)",
+    pay: "$3.5K + equity",
     color: "var(--tier-obsidian)",
-    textColor: "#fff",
-    borderStyle: "solid",
-    levelUp:
-      "Invite-only. Exclusive enterprise campaign access. Co-creation rights.",
-    badge: "badge-obsidian",
-    shimmer: true,
     pulse: true,
   },
 ];
 
-/* ── Pull quote — T5 Closer voice ────────────────────────── */
-const TESTIMONIAL = {
-  quote:
-    "I earned $3,200 last month from the Williamsburg coffee rotation — $1,800 retainer plus 35 verified customers. CreatorGPT wrote the briefs, DisclosureBot handled FTC, and payouts landed in 48 hours. My hourly rate tripled vs TikTok Creator Marketplace.",
-  name: "Maya R.",
-  handle: "@mayawalksnyc",
-  tier: "Closer",
-  material: "Ruby",
-  badge: "badge-ruby",
-  location: "Bushwick, Brooklyn",
-};
-
-/* ── How to start steps (v5.1) ───────────────────────────── */
+/* ── How it works — 4 steps ──────────────────────────────── */
 const HOW_STEPS = [
   {
     n: "01",
-    title: "Apply to the network",
-    body: "Submit your creator profile. ConversionOracle reviews your content, category fit, and ZIP coverage to predict your per-vertical conversion rate. You hear back within 48 hours — no human gatekeeping.",
+    title: "Sign up",
+    body: "Submit your profile — ConversionOracle™ predicts your per-vertical conversion rate in 48 hours. No human gatekeeping, no exclusivity.",
   },
   {
     n: "02",
-    title: "Get tiered + QR identity",
-    body: "We place you in T1–T6 and issue your unique QR identity. T1–T3 creators earn per verified customer; T4–T6 Proven / Closer / Partner creators unlock retainer + performance + rev-share (T5+) and equity pool (T5 top-100 · T6).",
+    title: "Visit a shop",
+    body: "We match you to Williamsburg Coffee+ and other local merchants near you. CreatorGPT drafts the brief, you walk in on your schedule.",
   },
   {
     n: "03",
-    title: "Agent assigns — you deliver",
-    body: "When a merchant tells the agent their goal, ConversionOracle ranks you by predicted conversion. CreatorGPT drafts your brief, DisclosureBot pre-screens FTC compliance, you visit and post, payout lands in 48 hours — vs industry 30–60 days.",
+    title: "Post + scan receipt",
+    body: "Shoot content on any platform. Scan a verified customer's QR receipt — DisclosureBot auto-adds FTC disclosures at the platform layer.",
+  },
+  {
+    n: "04",
+    title: "Get paid verified",
+    body: "3-layer verification (QR + Claude Vision OCR + geo) confirms the walk-in. Stripe payout hits in 48 hours — industry standard is 30–60 days.",
   },
 ];
 
-/* ── Problem / Solution (v5.1) ───────────────────────────── */
-const PAIN_POINTS = [
-  "Brands pay upfront, you prove nothing — and get ghosted",
-  "Flat-rate sponsored posts disconnect effort from income",
-  "Zero visibility into whether your content actually drove visits",
-  "Platform algorithms tank your reach the week you need it most",
-  "FTC #ad disclosures are your legal risk — not the brand's",
+/* ── Creator testimonials — 3-card row ───────────────────── */
+const TESTIMONIALS = [
+  {
+    handle: "@maya.eats.nyc",
+    name: "Maya R.",
+    tier: "Operator",
+    material: "Steel",
+    color: "var(--tier-steel)",
+    badge: "badge-steel",
+    initial: "M",
+    quote:
+      "I made more in a month posting Williamsburg cafes than six months of TikTok sponsorships. Pay shows up 48 hours after I scan the receipt.",
+    stat: "$820 / mo",
+    statLabel: "41 verified coffee customers",
+  },
+  {
+    handle: "@brooklyn_bites",
+    name: "Jordan L.",
+    tier: "Operator",
+    material: "Steel",
+    color: "var(--tier-steel)",
+    badge: "badge-steel",
+    initial: "J",
+    quote:
+      "ConversionOracle matches me to shops that fit my audience. I don't chase brands — the agent brings me campaigns that actually convert.",
+    stat: "$640 / mo",
+    statLabel: "32 verified customers",
+  },
+  {
+    handle: "@nyc.specialty",
+    name: "Priya S.",
+    tier: "Proven",
+    material: "Gold",
+    color: "var(--tier-gold)",
+    badge: "badge-gold",
+    initial: "P",
+    quote:
+      "Hitting Proven means a $800 retainer every month on top of per-customer perf. DisclosureBot handles FTC so I never stress about #ad tags.",
+    stat: "$1,625 / mo",
+    statLabel: "$800 retainer + 33 customers",
+  },
 ];
 
-const PUSH_SOLUTIONS = [
-  "ConversionOracle predicts your per-campaign conversion rate — your earning/hour runs 2–3x Aspire / TikTok Creator Marketplace",
-  "CreatorGPT auto-drafts briefs and predicts post virality — 70% less ops time",
-  "DisclosureBot pre-screens every post for FTC compliance — platform-level, not your problem",
-  "48-hour payout via Stripe on verified customers — industry standard is 30–60 days",
-  "Foot traffic is algorithm-proof — QR + Vision OCR + geo doesn't depend on reach",
-];
-
-/* ── Creator Productivity Lock (SCOR) — new v5.1 section ── */
-const SCOR = [
+/* ── Trust — ConversionOracle guardrails ─────────────────── */
+const TRUST = [
   {
-    letter: "S",
-    name: "Supply density",
-    body: "50+ merchants per neighborhood rotation. 5.2 active campaigns / month vs Aspire 1.8, TikTok Creator Marketplace 0.9.",
+    icon: "check",
+    title: "Paid only for verified visits",
+    body: "ConversionOracle™ cross-checks QR receipt + Claude Vision OCR + geo match. No verification, no pay — which means every dollar is earned.",
   },
   {
-    letter: "C",
-    name: "Conversion-aware matching",
-    body: "ConversionOracle predicts your conversion rate before the campaign, pairs you with the best-fit merchant → earning/hour 2–3x rivals.",
+    icon: "shield",
+    title: "DisclosureBot auto-adds FTC tags",
+    body: "We auto-inject #ad / #sponsored at the platform layer before the post goes live. You never carry FTC liability.",
   },
   {
-    letter: "O",
-    name: "Operations leverage",
-    body: "CreatorGPT auto-writes briefs + predicts virality · DisclosureBot auto-handles FTC · 48h payout (industry 30–60 days).",
-  },
-  {
-    letter: "R",
-    name: "Reputation portability",
-    body: "Tier label is portable. ConversionOracle context is not — competitors can't replicate your rating without walk-in ground truth data.",
+    icon: "globe",
+    title: "No exclusivity — post on any platform",
+    body: "TikTok, Instagram, YouTube, Twitter — your audience, your channel. Tier label is portable, your ConversionOracle context moves with you.",
   },
 ];
 
-/* ── Page ────────────────────────────────────────────────── */
+/* ── FAQ ─────────────────────────────────────────────────── */
+const FAQ = [
+  {
+    q: "Do I need followers to start?",
+    a: "No minimum. Seed · Clay tier opens at 5K followers but Push evaluates content quality, niche fit, and ZIP coverage — not raw follower count. ConversionOracle predicts your conversion rate, which is what actually determines earnings.",
+  },
+  {
+    q: "When do I get paid?",
+    a: "48 hours after a verified customer scan. Stripe transfers land in your bank ~2 business days later. Industry standard is 30–60 days — Push pays 15× faster because ConversionOracle verifies in real time.",
+  },
+  {
+    q: "Can I be active in two cities?",
+    a: "Yes. Tier status is portable across all Push neighborhoods. ConversionOracle re-ranks you per ZIP based on local performance — strong signal in Williamsburg doesn't automatically transfer to LA, but your global tier does.",
+  },
+  {
+    q: "What if my post gets rejected?",
+    a: "DisclosureBot pre-screens every draft for FTC compliance before publish. If ConversionOracle later flags a verification issue (missing QR, geo mismatch, OCR fail), you get one free revise window. Repeat violations affect tier routing, not earnings on verified customers already in your ledger.",
+  },
+  {
+    q: "How does tier promotion work?",
+    a: "Driven by verified-customer milestones, not vanity metrics. Seed → Explorer: 5 verified customers in 30 days. Explorer → Operator: 15 in rolling 60 days. Operator → Proven: 50 lifetime + 4.5 ConversionOracle score + Push invite. T5+ is invite-only.",
+  },
+];
+
+/* ══════════════════════════════════════════════════════════
+   PAGE
+   ══════════════════════════════════════════════════════════ */
 export default function ForCreatorsPage() {
+  const [openFaq, setOpenFaq] = useState<number | null>(0);
+
   return (
     <>
       <ScrollRevealInit />
 
-      {/* ── 1. Hero ──────────────────────────────────────────── */}
+      {/* ── 1. HERO ─────────────────────────────────────────── */}
       <section className="cr-hero">
         <div className="container cr-hero-inner">
           <div className="cr-hero-content">
-            <p className="eyebrow cr-eyebrow">
-              Push for Creators &middot; AI Agent Network
-            </p>
+            <p className="eyebrow cr-eyebrow">For Creators</p>
             <h1 className="cr-headline">
-              <span className="cr-black">The Vertical AI platform</span>
-              <span className="cr-light">
-                that matches, verifies, and pays you per customer.
-              </span>
+              <span className="cr-black">Get paid for customers</span>
+              <span className="cr-light">you actually brought.</span>
             </h1>
             <p className="cr-sub">
-              Push runs Two-Segment Creator Economics: T1&ndash;T3 earn per
-              verified customer at vertical-matched rates; T4&ndash;T6 unlock
-              retainer + performance + rev-share + equity. ConversionOracle
-              predicts your fit, CreatorGPT drafts your brief, DisclosureBot
-              handles FTC compliance &mdash; and payout hits in 48 hours, not 60
-              days.
+              Push is Vertical AI for Local Commerce — the Customer Acquisition
+              Engine for neighborhood merchants. Two-Segment Creator Economics:
+              no follower minimum, verified-only pay, 48-hour payout. Post on
+              any platform, walk into any partner shop, scan one receipt.
+              That&apos;s the job.
             </p>
             <div className="cr-ctas">
               <Link href="/creator/signup" className="btn btn-primary">
-                Apply to the network
+                Start free
               </Link>
-              <Link href="/demo/creator" className="btn btn-ghost cr-ghost">
-                See how the agent works &rarr;
-              </Link>
+              <a href="#calc" className="btn btn-ghost cr-ghost">
+                See earnings math &rarr;
+              </a>
             </div>
             <p className="cr-reassure">
-              Free to join &middot; No exclusivity &middot; Tier label is
-              portable, ConversionOracle context is not
+              5K+ followers welcome &middot; Verified-only pay &middot; No
+              exclusivity
             </p>
           </div>
 
-          {/* Hero stats — v5.1 */}
           <div className="cr-hero-stats">
             {[
               {
-                num: "5.2",
-                label: "Active campaigns / mo",
-                sub: "vs Aspire 1.8 · TikTok Creator Marketplace 0.9",
-              },
-              {
-                num: "$3,000",
-                label: "T5 Closer blended / mo",
-                sub: "Retainer + performance + rev-share",
+                num: "40+",
+                label: "Creators earning now",
+                sub: "Williamsburg Coffee+ beachhead live",
               },
               {
                 num: "48h",
-                label: "Payout after verification",
-                sub: "Industry standard: 30–60 days",
+                label: "Payout after verify",
+                sub: "Industry: 30–60 days",
               },
               {
-                num: "100%",
-                label: "AI-verified payouts",
-                sub: "QR + Claude Vision OCR + geo",
+                num: "$12–$85",
+                label: "Per verified customer",
+                sub: "Vertical-matched T1–T3 rates",
+              },
+              {
+                num: "0",
+                label: "FTC liability for you",
+                sub: "DisclosureBot handles disclosures",
               },
             ].map((s, i) => (
               <div
@@ -444,222 +448,150 @@ export default function ForCreatorsPage() {
         </div>
       </section>
 
-      {/* ── 2. Problem / Solution split ──────────────────────── */}
-      <section className="section section-bright">
+      {/* ── 2. TWO-SEGMENT SPLIT-HERO ───────────────────────── */}
+      <section className="section section-bright cr-segments-section">
         <div className="container">
           <div className="reveal">
             <div className="section-tag">
               <span className="section-tag-num">01</span>
               <span className="section-tag-line" />
-              <span className="section-tag-label">The Problem</span>
+              <span className="section-tag-label">
+                Two-Segment Creator Economics
+              </span>
             </div>
+            <h2 className="split-headline cr-segments-headline">
+              <span className="wt-900">Pick your lane.</span>
+              <span className="wt-300">Both pay for real customers.</span>
+            </h2>
           </div>
-          <div className="cr-ps-grid">
-            {/* Left — Pain */}
-            <div className="cr-ps-col cr-ps-pain reveal">
-              <h2 className="cr-ps-headline">
-                <span className="wt-900">Traditional sponsored posts</span>
-                <span className="wt-300">don&apos;t pay you fairly.</span>
-              </h2>
-              <ul className="cr-pain-list">
-                {PAIN_POINTS.map((p) => (
-                  <li key={p} className="cr-pain-item">
-                    <span className="cr-pain-dash" />
-                    <span>{p}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
 
-            {/* Divider */}
-            <div className="cr-ps-divider" aria-hidden="true">
-              <div className="cr-ps-line" />
-              <span className="cr-ps-vs">vs</span>
-              <div className="cr-ps-line" />
-            </div>
-
-            {/* Right — Push */}
-            <div
-              className="cr-ps-col cr-ps-push reveal"
-              style={{ transitionDelay: "160ms" }}
-            >
-              <h2 className="cr-ps-headline cr-ps-headline--push">
-                <span className="wt-900">Push anchors</span>
-                <span className="wt-300">
-                  every payment to a verified customer.
+          <div className="cr-segments-grid">
+            {SEGMENTS.map((seg, i) => (
+              <Link
+                key={seg.id}
+                href={`/creator/signup?segment=${seg.segmentParam}`}
+                className="cr-seg-card reveal"
+                style={{
+                  transitionDelay: `${i * 120}ms`,
+                  ["--seg-accent" as string]: seg.accent,
+                }}
+              >
+                <div className="cr-seg-top">
+                  <span className="cr-seg-tag">{seg.tag}</span>
+                  <span className="cr-seg-range">{seg.range}</span>
+                </div>
+                <div className="cr-seg-number">
+                  <span className="cr-seg-big">{seg.bigLabel}</span>
+                  <span className="cr-seg-unit">{seg.unit}</span>
+                </div>
+                <p className="cr-seg-tagline">{seg.tagline}</p>
+                <ul className="cr-seg-bullets">
+                  {seg.bullets.map((b) => (
+                    <li key={b} className="cr-seg-bullet">
+                      <span className="cr-seg-dash" />
+                      <span>{b}</span>
+                    </li>
+                  ))}
+                </ul>
+                <span className="cr-seg-cta">
+                  {seg.cta} <span className="cr-seg-arrow">&rarr;</span>
                 </span>
-              </h2>
-              <ul className="cr-solution-list">
-                {PUSH_SOLUTIONS.map((s) => (
-                  <li key={s} className="cr-solution-item">
-                    <span className="cr-solution-check">
-                      <svg
-                        width="12"
-                        height="12"
-                        viewBox="0 0 12 12"
-                        fill="none"
-                      >
-                        <path
-                          d="M2 6L5 9L10 3.5"
-                          stroke="currentColor"
-                          strokeWidth="1.8"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                      </svg>
-                    </span>
-                    <span>{s}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
+              </Link>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* ── 3. 6 Tier showcase — Two-Segment framing ─────────── */}
-      <section className="section section-warm cr-tiers-section">
+      {/* ── 3. EARNINGS CALCULATOR ──────────────────────────── */}
+      <section id="calc" className="section section-warm cr-calc-section">
         <div className="container">
           <div className="reveal">
             <div className="section-tag">
               <span className="section-tag-num">02</span>
               <span className="section-tag-line" />
-              <span className="section-tag-label">
-                Two-Segment Creator Economics
-              </span>
+              <span className="section-tag-label">Earnings Calculator</span>
             </div>
             <h2 className="split-headline">
-              <span className="wt-900">Six tiers.</span>
-              <span className="wt-300">Two segments. One clear path up.</span>
+              <span className="wt-900">Run your own math.</span>
+              <span className="wt-300">Rates are live, not marketing.</span>
             </h2>
             <p className="split-body">
-              T1&ndash;T3 (Seed Clay &middot; Explorer Bronze &middot; Operator
-              Steel) earn per verified customer at vertical-matched rates.
-              T4&ndash;T6 (Proven Gold &middot; Closer Ruby &middot; Partner
-              Obsidian) unlock monthly retainer + performance bonus + rev-share
-              + equity. You advance by driving real, verified customers &mdash;
-              nothing else.
+              Pick a tier, slide to your realistic verified-customer volume.
+              ConversionOracle™ decides the number, not your inbox.
             </p>
           </div>
 
-          <div className="cr-tier-grid">
-            {TIERS.map((t, i) => (
-              <div
-                key={t.id}
-                className={`cr-tier-card reveal ${t.pulse ? "cr-tier-card--pulse" : ""}`}
-                style={{
-                  borderTopColor: t.color,
-                  borderTopStyle: t.borderStyle as "solid" | "dashed",
-                  transitionDelay: `${i * 80}ms`,
-                }}
-              >
-                <div className="cr-tier-header">
-                  <span className="cr-tier-num">{t.num}</span>
-                  <span
-                    className={`cr-tier-badge ${t.badge} ${t.shimmer ? "badge-shimmer" : ""}`}
-                  >
-                    {t.material} &middot; {t.name}
-                  </span>
-                </div>
-
-                <div className="cr-tier-segment">{t.segment}</div>
-
-                <div className="cr-tier-body">
-                  <div className="cr-tier-reach">
-                    <span className="cr-tier-reach-label">Followers</span>
-                    <span className="cr-tier-reach-val">{t.followers}</span>
-                  </div>
-                  <div className="cr-tier-earning">
-                    <span
-                      className="cr-tier-earn-num"
-                      style={{
-                        color:
-                          t.id === "partner" ? "var(--champagne)" : undefined,
-                      }}
-                    >
-                      {t.earning}
-                    </span>
-                    <span className="cr-tier-earn-period">{t.period}</span>
-                  </div>
-                </div>
-
-                <div className="cr-tier-payline">{t.payline}</div>
-
-                <div className="cr-tier-levelup">
-                  <span className="cr-tier-levelup-label">How to level up</span>
-                  <p className="cr-tier-levelup-body">{t.levelUp}</p>
-                </div>
-              </div>
-            ))}
+          <div className="reveal" style={{ transitionDelay: "120ms" }}>
+            <EarningsCalculator />
           </div>
         </div>
       </section>
 
-      {/* ── 4. Creator Productivity Lock (SCOR) — new v5.1 ──── */}
-      <section className="section section-bright">
+      {/* ── 4. TIER JOURNEY RAIL ────────────────────────────── */}
+      <section className="section section-bright cr-journey-section">
         <div className="container">
           <div className="reveal">
             <div className="section-tag">
               <span className="section-tag-num">03</span>
               <span className="section-tag-line" />
-              <span className="section-tag-label">
-                Creator Productivity Lock
-              </span>
+              <span className="section-tag-label">Tier Journey</span>
             </div>
             <h2 className="split-headline">
-              <span className="wt-900">The SCOR framework.</span>
+              <span className="wt-900">Six tiers.</span>
               <span className="wt-300">
-                Four compounding reasons creators stay.
+                One path — driven by verified customers.
               </span>
             </h2>
-            <p className="split-body">
-              Your tier label is portable. Your ConversionOracle context is not.
-              That&apos;s the moat.
-            </p>
           </div>
 
-          <div className="cr-how-grid">
-            {SCOR.map((item, i) => (
-              <div
-                key={item.letter}
-                className="cr-how-step reveal"
-                style={{ transitionDelay: `${i * 120}ms` }}
-              >
-                <span className="cr-how-n">{item.letter}</span>
-                <h3 className="cr-how-title">{item.name}</h3>
-                <p className="cr-how-body">{item.body}</p>
-              </div>
-            ))}
+          <div className="cr-journey-rail reveal">
+            <div className="cr-journey-track" aria-hidden="true" />
+            <div className="cr-journey-nodes">
+              {TIER_JOURNEY.map((t, i) => (
+                <div
+                  key={t.num}
+                  className="cr-journey-node"
+                  style={{ transitionDelay: `${i * 100}ms` }}
+                >
+                  <span
+                    className={`cr-journey-square ${t.pulse ? "cr-journey-square--pulse" : ""}`}
+                    style={{ background: t.color }}
+                  >
+                    <span className="cr-journey-square-num">{t.num}</span>
+                  </span>
+                  <span className="cr-journey-label">
+                    <span className="cr-journey-mat">{t.material}</span>
+                    <span className="cr-journey-name">{t.name}</span>
+                  </span>
+                  <span className="cr-journey-pay">{t.pay}</span>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </section>
 
-      {/* ── 5. How to start — 3 steps ─────────────────────────── */}
+      {/* ── 5. HOW IT WORKS ─────────────────────────────────── */}
       <section className="section section-warm">
         <div className="container">
           <div className="reveal">
             <div className="section-tag">
               <span className="section-tag-num">04</span>
               <span className="section-tag-line" />
-              <span className="section-tag-label">How to Start</span>
+              <span className="section-tag-label">How it works</span>
             </div>
             <h2 className="split-headline">
-              <span className="wt-900">Three steps.</span>
+              <span className="wt-900">Four steps.</span>
               <span className="wt-300">Then you&apos;re earning.</span>
             </h2>
-            <p className="split-body">
-              T1&ndash;T3 creators earn pay-per-verified-customer from day 1.
-              T4&ndash;T6 creators unlock the retainer + performance + rev-share
-              structure once ConversionOracle confirms proven results.
-            </p>
           </div>
 
-          <div className="cr-how-grid">
+          <div className="cr-how-grid cr-how-grid--4">
             {HOW_STEPS.map((step, i) => (
               <div
                 key={step.n}
                 className="cr-how-step reveal"
-                style={{ transitionDelay: `${i * 120}ms` }}
+                style={{ transitionDelay: `${i * 100}ms` }}
               >
                 <span className="cr-how-n">{step.n}</span>
                 <h3 className="cr-how-title">{step.title}</h3>
@@ -670,86 +602,201 @@ export default function ForCreatorsPage() {
         </div>
       </section>
 
-      {/* ── 6. Earnings calculator ───────────────────────────── */}
-      <section className="section section-bright cr-calc-section">
+      {/* ── 6. CREATOR TESTIMONIALS ─────────────────────────── */}
+      <section className="section section-bright">
         <div className="container">
           <div className="reveal">
             <div className="section-tag">
               <span className="section-tag-num">05</span>
               <span className="section-tag-line" />
-              <span className="section-tag-label">Earnings Calculator</span>
+              <span className="section-tag-label">Creators in the network</span>
             </div>
             <h2 className="split-headline">
-              <span className="wt-900">What could you earn</span>
-              <span className="wt-300">this month?</span>
+              <span className="wt-900">Real creators.</span>
+              <span className="wt-300">Real verified earnings.</span>
             </h2>
-            <p className="split-body">
-              Pick your tier, set your verified-customer volume, see your
-              Two-Segment payout. Rates reflect live Push vertical economics.
-            </p>
           </div>
 
-          <div className="reveal" style={{ transitionDelay: "120ms" }}>
-            <EarningsCalculator />
+          <div className="cr-tmy-grid">
+            {TESTIMONIALS.map((t, i) => (
+              <div
+                key={t.handle}
+                className="cr-tmy-card reveal"
+                style={{ transitionDelay: `${i * 120}ms` }}
+              >
+                <div className="cr-tmy-top">
+                  <span
+                    className="cr-tmy-avatar"
+                    style={{ borderColor: t.color, color: t.color }}
+                  >
+                    {t.initial}
+                  </span>
+                  <div className="cr-tmy-who">
+                    <span className="cr-tmy-handle">{t.handle}</span>
+                    <span className={`cr-tier-badge ${t.badge}`}>
+                      {t.material} &middot; {t.tier}
+                    </span>
+                  </div>
+                </div>
+                <blockquote className="cr-tmy-quote">
+                  &ldquo;{t.quote}&rdquo;
+                </blockquote>
+                <div className="cr-tmy-stat">
+                  <span className="cr-tmy-stat-num" style={{ color: t.color }}>
+                    {t.stat}
+                  </span>
+                  <span className="cr-tmy-stat-label">{t.statLabel}</span>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* ── 7. Creator testimonial — T5 Closer voice ─────────── */}
-      <section className="section section-warm cr-quote-section">
+      {/* ── 7. CONVERSIONORACLE TRUST ───────────────────────── */}
+      <section className="section section-warm">
         <div className="container">
-          <div className="cr-quote-wrap reveal">
-            <div className="cr-quote-mark">&ldquo;</div>
-            <blockquote className="cr-quote-text">
-              {TESTIMONIAL.quote}
-            </blockquote>
-            <div className="cr-quote-meta">
-              <div className="cr-quote-author">
-                <span className="cr-quote-name">{TESTIMONIAL.name}</span>
-                <span className="cr-quote-handle">{TESTIMONIAL.handle}</span>
-              </div>
-              <div className="cr-quote-right">
-                <span className={`cr-tier-badge ${TESTIMONIAL.badge}`}>
-                  {TESTIMONIAL.material} &middot; {TESTIMONIAL.tier}
-                </span>
-                <span className="cr-quote-loc">{TESTIMONIAL.location}</span>
-              </div>
+          <div className="reveal">
+            <div className="section-tag">
+              <span className="section-tag-num">06</span>
+              <span className="section-tag-line" />
+              <span className="section-tag-label">
+                ConversionOracle™ guardrails
+              </span>
             </div>
+            <h2 className="split-headline">
+              <span className="wt-900">Trust isn&apos;t a tagline.</span>
+              <span className="wt-300">It&apos;s the verification stack.</span>
+            </h2>
+          </div>
+
+          <div className="cr-trust-grid">
+            {TRUST.map((t, i) => (
+              <div
+                key={t.title}
+                className="cr-trust-card reveal"
+                style={{ transitionDelay: `${i * 120}ms` }}
+              >
+                <span className="cr-trust-icon" aria-hidden="true">
+                  {t.icon === "check" && (
+                    <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+                      <path
+                        d="M3 9.5L7 13.5L15 5"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="square"
+                      />
+                    </svg>
+                  )}
+                  {t.icon === "shield" && (
+                    <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+                      <path
+                        d="M9 2L3 4V9C3 12.5 5.5 15.5 9 16.5C12.5 15.5 15 12.5 15 9V4L9 2Z"
+                        stroke="currentColor"
+                        strokeWidth="1.6"
+                        strokeLinejoin="miter"
+                      />
+                    </svg>
+                  )}
+                  {t.icon === "globe" && (
+                    <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+                      <circle
+                        cx="9"
+                        cy="9"
+                        r="7"
+                        stroke="currentColor"
+                        strokeWidth="1.6"
+                      />
+                      <path
+                        d="M2 9H16M9 2C11 4 11.5 9 9 16M9 2C7 4 6.5 9 9 16"
+                        stroke="currentColor"
+                        strokeWidth="1.6"
+                      />
+                    </svg>
+                  )}
+                </span>
+                <h3 className="cr-trust-title">{t.title}</h3>
+                <p className="cr-trust-body">{t.body}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* ── 8. Final CTA — dark ──────────────────────────────── */}
+      {/* ── 8. FAQ ──────────────────────────────────────────── */}
+      <section className="section section-bright" id="faq">
+        <div className="container">
+          <div className="reveal">
+            <div className="section-tag">
+              <span className="section-tag-num">07</span>
+              <span className="section-tag-line" />
+              <span className="section-tag-label">FAQ</span>
+            </div>
+            <h2 className="split-headline">
+              <span className="wt-900">Straight answers.</span>
+              <span className="wt-300">No startup fluff.</span>
+            </h2>
+          </div>
+
+          <div className="cr-faq-wrap reveal">
+            {FAQ.map((item, i) => {
+              const open = openFaq === i;
+              return (
+                <div
+                  key={item.q}
+                  className={`cr-faq-item ${open ? "cr-faq-item--open" : ""}`}
+                >
+                  <button
+                    className="cr-faq-q"
+                    onClick={() => setOpenFaq(open ? null : i)}
+                    type="button"
+                    aria-expanded={open}
+                  >
+                    <span className="cr-faq-q-text">{item.q}</span>
+                    <span className="cr-faq-q-icon" aria-hidden="true">
+                      {open ? "–" : "+"}
+                    </span>
+                  </button>
+                  <div className="cr-faq-a" hidden={!open}>
+                    <p>{item.a}</p>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* ── 9. FINAL CTA ────────────────────────────────────── */}
       <section className="cr-final-cta section-warm">
         <div className="container">
           <div className="cr-cta-inner reveal">
             <p className="eyebrow" style={{ color: "var(--tertiary)" }}>
-              Applications open now
+              Applications open
             </p>
             <h2 className="cr-cta-headline">
-              Join the AI Agent Network.
+              Start free.
               <span className="cr-cta-sub">
-                Williamsburg Coffee+ beachhead is live. ConversionOracle is
-                matching now.
+                40+ creators already earning on Push.
               </span>
             </h2>
             <p className="cr-cta-body">
-              Push is Vertical AI for Local Commerce. ConversionOracle pairs you
-              with best-fit merchants, CreatorGPT drafts your briefs,
-              DisclosureBot handles FTC compliance at the platform layer &mdash;
-              not yours. 48-hour payouts on every verified customer.
+              Williamsburg Coffee+ is live. ConversionOracle™ is matching now.
+              T1–T3 opens day one. T4 Proven activates at 50 lifetime verified
+              customers. T6 Partner is invite-only — but you can look at the
+              math.
             </p>
             <div className="cr-cta-actions">
               <Link href="/creator/signup" className="btn btn-primary">
-                Apply to the network &mdash; free
+                Start free &mdash; no follower minimum
               </Link>
-              <Link href="/for-merchants" className="btn btn-ghost cr-ghost">
-                Are you a merchant? &rarr;
-              </Link>
+              <a href="#calc" className="btn btn-ghost cr-ghost">
+                See Partner tier math &rarr;
+              </a>
             </div>
             <p className="cr-cta-note">
-              No minimum follower count for Seed tier &middot; 48-hour payout
-              via Stripe on verified customers
+              Free forever &middot; 48-hour Stripe payout on verified customers
+              &middot; Tier label portable across cities
             </p>
           </div>
         </div>

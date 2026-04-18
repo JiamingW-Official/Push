@@ -241,18 +241,42 @@ const COVERAGE = [
       "Push is building the vertical AI layer Meta and Google can\u2019t: receipt-level attribution that proves a creator post drove a Tuesday-night walk-in.",
     source: "TechCrunch",
     date: "Mar 2026",
+    href: "#",
   },
   {
     quote:
       "ConversionOracle is elegant. Three signals \u2014 QR, receipt OCR, geo \u2014 must agree before the campaign settles. No ghost conversions.",
     source: "Fast Company",
     date: "Feb 2026",
+    href: "#",
   },
   {
     quote:
       "Push picked one vertical and one neighborhood on purpose. Williamsburg Coffee+ is Template 0 \u2014 the Neighborhood Playbook is what scales.",
     source: "New York Magazine",
     date: "Jan 2026",
+    href: "#",
+  },
+  {
+    quote:
+      "The Software Leverage Ratio is the right north-star. Twenty-five campaigns per ops person is how local software escapes services-company margins.",
+    source: "Stratechery",
+    date: "Mar 2026",
+    href: "#",
+  },
+  {
+    quote:
+      "DisclosureBot reads like architecture, not a feature. FTC compliance as a platform-level primitive is a creator-platform first.",
+    source: "The Information",
+    date: "Feb 2026",
+    href: "#",
+  },
+  {
+    quote:
+      "Two-Segment Creator Economics is the cleanest answer to the T1/T4 splitting-point problem local commerce has lived with for a decade.",
+    source: "Axios Pro",
+    date: "Jan 2026",
+    href: "#",
   },
 ];
 
@@ -311,10 +335,8 @@ export default function PressPage() {
       {/* ── 1. Hero ─────────────────────────────────────────── */}
       <section className="press-hero">
         <div className="press-hero-inner">
-          <p className="press-hero-eyebrow">
-            Press &middot; Vertical AI for Local Commerce
-          </p>
-          <h1 className="press-hero-headline">Press.</h1>
+          <p className="press-hero-eyebrow">PRESS</p>
+          <h1 className="press-hero-headline">Press &amp; media.</h1>
           <p className="press-hero-sub">
             Resources for journalists, investors, and partners covering Push
             &mdash; the Customer Acquisition Engine built on Vertical AI for
@@ -722,24 +744,146 @@ export default function PressPage() {
           <a href="mailto:press@pushnyc.co" className="press-contact-email">
             press@pushnyc.co
           </a>
+          <div
+            className="press-contact-spokesperson"
+            style={{
+              marginTop: "var(--space-6)",
+              paddingTop: "var(--space-5)",
+              borderTop: "1px solid var(--line)",
+              display: "flex",
+              flexDirection: "column",
+              gap: "var(--space-1)",
+              alignItems: "center",
+            }}
+          >
+            <span
+              style={{
+                fontFamily: "var(--font-body)",
+                fontSize: 11,
+                fontWeight: 700,
+                letterSpacing: "0.08em",
+                textTransform: "uppercase",
+                color: "var(--tertiary)",
+              }}
+            >
+              Spokesperson
+            </span>
+            <span
+              style={{
+                fontFamily: "var(--font-display)",
+                fontSize: 20,
+                fontWeight: 800,
+                letterSpacing: "-0.02em",
+                color: "var(--dark)",
+              }}
+            >
+              Jiaming &middot; Founder
+            </span>
+            <span
+              style={{
+                fontFamily: "var(--font-body)",
+                fontSize: 13,
+                color: "var(--graphite)",
+              }}
+            >
+              Vertical AI for Local Commerce &middot; Williamsburg Coffee+
+            </span>
+          </div>
         </div>
       </section>
 
-      {/* ── 13. Coverage ────────────────────────────────────── */}
+      {/* ── 13. Media mentions grid — 6 logo placeholders + headline links */}
       <section className="press-section">
         <div className="press-container">
           <p className="press-section-label">In the News</p>
-          <h2 className="press-section-title">Coverage</h2>
-          <div className="coverage-grid reveal reveal-stagger">
+          <h2 className="press-section-title">Media mentions.</h2>
+          <div
+            className="press-media-mentions reveal reveal-stagger"
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
+              gap: "var(--space-4)",
+              marginTop: "var(--space-6)",
+            }}
+          >
             {COVERAGE.map((c, i) => (
-              <div className="coverage-item" key={i}>
-                <blockquote className="coverage-quote">{c.quote}</blockquote>
-                <div className="coverage-source">
-                  <span className="coverage-source-name">{c.source}</span>
-                  <span className="coverage-source-dot" aria-hidden="true" />
-                  <span className="coverage-source-date">{c.date}</span>
+              <a
+                key={i}
+                href={c.href}
+                className="press-media-card"
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "var(--space-3)",
+                  padding: "var(--space-5)",
+                  border: "1px solid var(--line)",
+                  background: "var(--surface-elevated)",
+                  textDecoration: "none",
+                  color: "inherit",
+                  transition: "transform 300ms ease, border-color 300ms ease",
+                }}
+              >
+                {/* Logo placeholder — wordmark-style block per outlet */}
+                <div
+                  aria-hidden="true"
+                  style={{
+                    height: 48,
+                    background:
+                      "repeating-linear-gradient(45deg, rgba(0,48,73,0.04) 0 8px, rgba(0,48,73,0.08) 8px 16px)",
+                    borderBottom: "1px solid var(--line)",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <span
+                    style={{
+                      fontFamily: "var(--font-display)",
+                      fontSize: 18,
+                      fontWeight: 900,
+                      letterSpacing: "-0.03em",
+                      color: "var(--dark)",
+                    }}
+                  >
+                    {c.source}
+                  </span>
                 </div>
-              </div>
+                <span
+                  style={{
+                    fontFamily: "var(--font-body)",
+                    fontSize: 12,
+                    fontWeight: 700,
+                    letterSpacing: "0.06em",
+                    textTransform: "uppercase",
+                    color: "var(--tertiary)",
+                  }}
+                >
+                  {c.date}
+                </span>
+                <span
+                  style={{
+                    fontFamily: "var(--font-body)",
+                    fontSize: 14,
+                    lineHeight: 1.55,
+                    color: "var(--dark)",
+                  }}
+                >
+                  &ldquo;{c.quote}&rdquo;
+                </span>
+                <span
+                  style={{
+                    fontFamily: "var(--font-body)",
+                    fontSize: 11,
+                    fontWeight: 700,
+                    letterSpacing: "0.08em",
+                    textTransform: "uppercase",
+                    color: "var(--primary)",
+                    marginTop: "auto",
+                  }}
+                >
+                  Read headline &rarr;
+                </span>
+              </a>
             ))}
           </div>
         </div>

@@ -1,0 +1,208 @@
+/* ============================================================
+   Merchant First-Run Empty State — Welcome Hero
+   Push v5.1 — Customer Acquisition Engine onboarding
+   ============================================================ */
+
+.hero {
+  padding: var(--space-5, 40px) 0 var(--space-6, 48px);
+  font-family: var(--font-body, "CS Genio Mono", monospace);
+}
+
+/* ---- Header ------------------------------------------------ */
+.heroHeader {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: var(--space-5, 40px);
+  max-width: 780px;
+}
+
+.eyebrow {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--primary, #c1121f);
+  margin: 0;
+}
+
+.title {
+  font-family: var(--font-display, Darky, sans-serif);
+  font-size: clamp(40px, 5vw, 72px);
+  font-weight: 900;
+  letter-spacing: -0.05em;
+  color: var(--dark, #003049);
+  line-height: 0.95;
+  margin: 0;
+}
+
+.sub {
+  font-size: 15px;
+  color: var(--graphite, #4a5568);
+  line-height: 1.65;
+  max-width: 620px;
+  margin: 0;
+}
+
+/* ---- Grid of 3 step cards ---------------------------------- */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-3, 24px);
+  margin-bottom: var(--space-4, 32px);
+}
+
+@media (max-width: 1080px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ---- Cards ------------------------------------------------- */
+.card {
+  position: relative;
+  background: var(--surface-elevated, #ffffff);
+  border: 1px solid var(--line, rgba(0, 48, 73, 0.1));
+  padding: 32px 28px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-height: 260px;
+  transition:
+    transform 280ms cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 280ms cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 200ms ease;
+}
+
+.card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 32px rgba(0, 48, 73, 0.09);
+  border-color: rgba(0, 48, 73, 0.22);
+}
+
+.cardPrimary {
+  border-left: 4px solid var(--champagne, #c9a96e);
+  background: linear-gradient(
+    180deg,
+    rgba(201, 169, 110, 0.06) 0%,
+    var(--surface-elevated, #ffffff) 55%
+  );
+}
+
+.stepNum {
+  font-family: var(--font-display, Darky, sans-serif);
+  font-size: 48px;
+  font-weight: 900;
+  letter-spacing: -0.06em;
+  color: rgba(0, 48, 73, 0.12);
+  line-height: 0.9;
+  font-variant-numeric: tabular-nums;
+}
+
+.cardPrimary .stepNum {
+  color: rgba(201, 169, 110, 0.55);
+}
+
+.cardTitle {
+  font-family: var(--font-display, Darky, sans-serif);
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: var(--dark, #003049);
+  line-height: 1.1;
+  margin: 0;
+}
+
+.cardBody {
+  font-size: 13px;
+  color: var(--graphite, #4a5568);
+  line-height: 1.6;
+  margin: 0;
+  flex: 1;
+}
+
+.cardCta {
+  font-family: var(--font-body, "CS Genio Mono", monospace);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--dark, #003049);
+  border-bottom: 2px solid var(--primary, #c1121f);
+  padding-bottom: 3px;
+  align-self: flex-start;
+  text-decoration: none;
+  transition: color 200ms ease;
+}
+
+.cardCta:hover {
+  color: var(--primary, #c1121f);
+}
+
+/* ---- Option CTA stack (card 1) ----------------------------- */
+.options {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.option {
+  font-family: var(--font-body, "CS Genio Mono", monospace);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 10px 14px;
+  border: 1px solid;
+  border-radius: 0;
+  text-decoration: none;
+  text-align: center;
+  transition:
+    background 200ms ease,
+    color 200ms ease,
+    transform 200ms ease,
+    box-shadow 200ms ease;
+}
+
+.optionSolid {
+  background: var(--dark, #003049);
+  border-color: var(--dark, #003049);
+  color: var(--surface, #f5f2ec);
+  box-shadow: 2px 2px 0 var(--accent, #780000);
+}
+
+.optionSolid:hover {
+  background: #002236;
+  transform: translateY(-1px);
+  box-shadow: 3px 3px 0 var(--accent, #780000);
+}
+
+.optionOutline {
+  background: transparent;
+  border-color: var(--dark, #003049);
+  color: var(--dark, #003049);
+}
+
+.optionOutline:hover {
+  background: rgba(0, 48, 73, 0.05);
+}
+
+.optionGhost {
+  background: transparent;
+  border-color: rgba(0, 48, 73, 0.15);
+  color: rgba(0, 48, 73, 0.55);
+}
+
+.optionGhost:hover {
+  color: var(--dark, #003049);
+  border-color: rgba(0, 48, 73, 0.35);
+}
+
+/* ---- Footnote ---------------------------------------------- */
+.footnote {
+  font-size: 11px;
+  color: rgba(0, 48, 73, 0.45);
+  letter-spacing: 0.04em;
+  margin: 0;
+}

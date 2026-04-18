@@ -688,16 +688,19 @@ export default function SecurityPage() {
       {/* 1. Hero */}
       <section className="sec-hero">
         <div className="sec-hero-inner">
-          <p className="sec-hero-eyebrow">Security whitepaper</p>
+          <p className="sec-hero-eyebrow">Push Security · v5.1</p>
           <h1 className="sec-hero-headline">
             Security
             <br />
-            at Push.
+            by default.
           </h1>
           <p className="sec-hero-sub">
-            How we protect verified foot traffic and the data behind it. This
-            document describes our architecture, controls, and obligations to
-            every creator, merchant, and partner on the platform.
+            Push is Vertical AI for Local Commerce — the Customer Acquisition
+            Engine for neighborhood Coffee+ merchants. Every byte in the
+            ConversionOracle™ stack is encrypted, every access is logged, and
+            every vendor is vetted. This document describes our architecture,
+            controls, and obligations to every creator, merchant, and partner on
+            the platform.
           </p>
           <div className="sec-hero-meta">
             <span className="sec-hero-meta-item">
@@ -815,16 +818,146 @@ export default function SecurityPage() {
             <div className="sec-subsection">
               <div className="sec-subsection-title">Retention & deletion</div>
               <p className="sec-subsection-body">
-                User accounts and associated PII are deletable on request within
-                30 days. Campaign attribution data is retained in anonymized
-                form for analytics. Audit and security logs are retained for 7
-                years to satisfy financial and regulatory obligations. You may
-                submit a data deletion request at security@push.nyc.
+                ConversionOracle raw receipts (Claude Vision OCR inputs) are
+                retained for 90 days and then purged. Device fingerprints —
+                irreversible SHA-256 hashes with no PII payload — are retained
+                indefinitely to support cross-campaign fraud detection. User
+                accounts and associated PII are deletable on request within 30
+                days. Audit and security logs are retained for 7 years to
+                satisfy financial and regulatory obligations. Submit a data
+                deletion request at privacy@push.nyc.
               </p>
-              <div className="sec-subsection-tags">
-                <span className="sec-tag">PII deletable ≤30 days</span>
-                <span className="sec-tag">Audit logs 7 years</span>
+              <div
+                className="sec-retention-table"
+                aria-label="Data retention schedule"
+              >
+                <div className="sec-retention-row sec-retention-row--head">
+                  <span>Data type</span>
+                  <span>Retention</span>
+                  <span>Reason</span>
+                </div>
+                <div className="sec-retention-row">
+                  <span>Raw receipts (OCR input)</span>
+                  <span>
+                    <strong>90 days</strong>
+                  </span>
+                  <span>Dispute + audit window</span>
+                </div>
+                <div className="sec-retention-row">
+                  <span>Device fingerprints (hashed)</span>
+                  <span>
+                    <strong>Indefinite</strong>
+                  </span>
+                  <span>Cross-campaign fraud detection</span>
+                </div>
+                <div className="sec-retention-row">
+                  <span>PII (email, payout, KYC)</span>
+                  <span>
+                    <strong>Account lifetime</strong>
+                  </span>
+                  <span>Deletable ≤30 days on request</span>
+                </div>
+                <div className="sec-retention-row">
+                  <span>Audit / security logs</span>
+                  <span>
+                    <strong>7 years</strong>
+                  </span>
+                  <span>SOX / financial compliance</span>
+                </div>
+                <div className="sec-retention-row">
+                  <span>Backups (encrypted)</span>
+                  <span>
+                    <strong>90 days rolling</strong>
+                  </span>
+                  <span>Disaster recovery</span>
+                </div>
+              </div>
+              <div className="sec-subsection-tags" style={{ marginTop: 16 }}>
+                <span className="sec-tag">90-day raw</span>
+                <span className="sec-tag">Forever fingerprints</span>
+                <span className="sec-tag">AES-256 at rest</span>
                 <span className="sec-tag">GDPR Art. 17 compliant</span>
+              </div>
+            </div>
+
+            <div className="sec-subsection">
+              <div className="sec-subsection-title">
+                RBAC matrix (Merchant · Creator · Admin)
+              </div>
+              <p className="sec-subsection-body">
+                Role-based access control restricts every resource by persona.
+                Admin actions are logged and alertable. Creators and merchants
+                can never access another account&apos;s data — enforced at the
+                database policy layer (Supabase RLS), not just at the API.
+              </p>
+              <div
+                className="sec-rbac-matrix"
+                aria-label="Role-based access control matrix"
+              >
+                <div className="sec-rbac-row sec-rbac-row--head">
+                  <span>Resource</span>
+                  <span>Merchant</span>
+                  <span>Creator</span>
+                  <span>Admin</span>
+                </div>
+                <div className="sec-rbac-row">
+                  <span>Own campaign data</span>
+                  <span className="sec-rbac-cell sec-rbac-cell--rw">R/W</span>
+                  <span className="sec-rbac-cell sec-rbac-cell--r">R</span>
+                  <span className="sec-rbac-cell sec-rbac-cell--rw">R/W</span>
+                </div>
+                <div className="sec-rbac-row">
+                  <span>Own payouts / earnings</span>
+                  <span className="sec-rbac-cell sec-rbac-cell--r">R</span>
+                  <span className="sec-rbac-cell sec-rbac-cell--rw">R/W</span>
+                  <span className="sec-rbac-cell sec-rbac-cell--rw">R/W</span>
+                </div>
+                <div className="sec-rbac-row">
+                  <span>ConversionOracle verdicts</span>
+                  <span className="sec-rbac-cell sec-rbac-cell--r">R</span>
+                  <span className="sec-rbac-cell sec-rbac-cell--r">R</span>
+                  <span className="sec-rbac-cell sec-rbac-cell--rw">R/W</span>
+                </div>
+                <div className="sec-rbac-row">
+                  <span>DisclosureBot audit log</span>
+                  <span className="sec-rbac-cell sec-rbac-cell--r">
+                    R (own)
+                  </span>
+                  <span className="sec-rbac-cell sec-rbac-cell--r">
+                    R (own)
+                  </span>
+                  <span className="sec-rbac-cell sec-rbac-cell--rw">R/W</span>
+                </div>
+                <div className="sec-rbac-row">
+                  <span>Other account PII</span>
+                  <span className="sec-rbac-cell sec-rbac-cell--none">—</span>
+                  <span className="sec-rbac-cell sec-rbac-cell--none">—</span>
+                  <span className="sec-rbac-cell sec-rbac-cell--r">
+                    R (logged)
+                  </span>
+                </div>
+                <div className="sec-rbac-row">
+                  <span>Device fingerprint table</span>
+                  <span className="sec-rbac-cell sec-rbac-cell--none">—</span>
+                  <span className="sec-rbac-cell sec-rbac-cell--none">—</span>
+                  <span className="sec-rbac-cell sec-rbac-cell--r">
+                    R (MFA)
+                  </span>
+                </div>
+                <div className="sec-rbac-row">
+                  <span>Production DB (raw)</span>
+                  <span className="sec-rbac-cell sec-rbac-cell--none">—</span>
+                  <span className="sec-rbac-cell sec-rbac-cell--none">—</span>
+                  <span className="sec-rbac-cell sec-rbac-cell--r">
+                    R (bastion + MFA)
+                  </span>
+                </div>
+              </div>
+              <div className="sec-subsection-tags" style={{ marginTop: 16 }}>
+                <span className="sec-tag">Supabase RLS</span>
+                <span className="sec-tag">MFA on admin</span>
+                <span className="sec-tag">Bastion + VPN</span>
+                <span className="sec-tag">Every access logged</span>
               </div>
             </div>
           </div>

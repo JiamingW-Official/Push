@@ -1,55 +1,85 @@
 /* ============================================================
-   Footer v8.2 — Premium Editorial
-   Background: Deep Space Blue #003049
-   Top accent: Flag Red 1px full-bleed
-   Big brand type: Darky 900 italic, clamp(80px, 15vw, 240px)
+   Footer v9.0 — Editorial 4-column (Push v5.1)
+   Vertical AI for Local Commerce · Customer Acquisition Engine
+   ------------------------------------------------------------
+   Design.md:
+   - border-radius: 0 everywhere (pulse-dot is the sole exception)
+   - Deep Space Blue gradient base (mirrors Header)
+   - Fonts: Darky (display) + CS Genio Mono (body/UI)
+   - 8px spacing grid · Light mode only (footer itself is dark)
+   - Link underline slide-in from left, 300ms
    ============================================================ */
 
 .footer {
-  background: #003049;
-  color: rgba(245, 242, 236, 0.65);
   position: relative;
+  background: linear-gradient(
+    160deg,
+    #003049 0%,
+    #001d2e 60%,
+    #00111a 100%
+  );
+  color: rgba(245, 242, 236, 0.68);
+  isolation: isolate;
 }
 
-/* Full-bleed 1px Flag Red separator */
+/* Full-bleed Flag Red separator */
 .accentLine {
   width: 100%;
   height: 1px;
   background: #c1121f;
 }
 
-/* Constrained inner container */
+/* Constrained inner */
 .inner {
-  max-width: 1080px;
+  max-width: 1240px;
   margin: 0 auto;
-  padding: 120px 40px 120px;
+  padding: 96px 40px 32px;
 }
 
-/* ---- Big editorial brand text ---- */
-.bigBrand {
-  margin-bottom: 80px;
-  overflow: hidden;
+/* ============================================================
+   Row 1 — Brand (left) + 4-column nav (right)
+   ============================================================ */
+.topGrid {
+  display: grid;
+  grid-template-columns: minmax(280px, 360px) 1fr;
+  gap: 72px;
+  padding-bottom: 64px;
+  border-bottom: 1px solid rgba(245, 242, 236, 0.08);
 }
 
-.bigText {
-  display: block;
+/* ---------- Brand block ---------- */
+.brandBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.brandLogo {
+  display: inline-block;
+  text-decoration: none;
+  overflow: hidden; /* clip letter slide-up */
+  line-height: 0.82;
+}
+
+.brandWord {
+  display: inline-block;
   font-family: var(--font-display);
-  font-size: clamp(80px, 15vw, 240px);
+  font-size: clamp(72px, 10vw, 128px);
   font-weight: 900;
   font-style: italic;
   letter-spacing: -0.06em;
-  line-height: 0.85;
-  color: #fff;
-  /* Italic red accent via text-shadow is too heavy;
-     use a subtle mix-blend-mode trick for depth */
+  line-height: 0.82;
+  color: #ffffff;
+  padding-bottom: 4px; /* descender breathing room for italic */
 }
 
-/* Letter animation — start invisible, slide up */
 .letter {
   display: inline-block;
   opacity: 0;
-  transform: translateY(24px);
-  transition: opacity 400ms ease, transform 400ms ease;
+  transform: translateY(22px);
+  transition:
+    opacity 420ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 420ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .letterVisible {
@@ -57,28 +87,139 @@
   transform: translateY(0);
 }
 
-/* ---- 4-column link grid ---- */
+.brandTag {
+  font-family: var(--font-body);
+  font-size: 14px;
+  line-height: 1.5;
+  letter-spacing: 0.01em;
+  color: rgba(245, 242, 236, 0.82);
+  margin: 0;
+  max-width: 320px;
+}
+
+/* --- Meta grid: SLR · NYC clock --- */
+.metaGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  margin: 0;
+  border-top: 1px solid rgba(245, 242, 236, 0.08);
+  border-bottom: 1px solid rgba(245, 242, 236, 0.08);
+}
+
+.metaCell {
+  padding: 16px 20px 16px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.metaCell + .metaCell {
+  padding-left: 20px;
+  border-left: 1px solid rgba(245, 242, 236, 0.08);
+}
+
+.metaLabel {
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(245, 242, 236, 0.42);
+  margin: 0;
+}
+
+.metaValue {
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-weight: 900;
+  font-style: italic;
+  letter-spacing: -0.02em;
+  color: #ffffff;
+  margin: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-variant-numeric: tabular-nums;
+}
+
+.metaArrow {
+  color: #c1121f;
+  font-size: 12px;
+  transform: translateY(-1px);
+  font-style: normal;
+}
+
+.metaSub {
+  font-family: var(--font-body);
+  font-size: 10px;
+  letter-spacing: 0.04em;
+  color: rgba(245, 242, 236, 0.4);
+}
+
+/* --- Social row --- */
+.socialNav {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.socialLink {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  color: rgba(245, 242, 236, 0.5);
+  text-decoration: none;
+  border: 1px solid rgba(245, 242, 236, 0.12);
+  border-radius: 0;
+  transition:
+    color 200ms ease,
+    border-color 200ms ease,
+    background 200ms ease;
+}
+
+.socialLink:hover,
+.socialLink:focus-visible {
+  color: #ffffff;
+  border-color: #c1121f;
+  background: rgba(193, 18, 31, 0.12);
+  outline: none;
+}
+
+.socialLink:focus-visible {
+  outline: 2px solid #c9a96e;
+  outline-offset: 2px;
+}
+
+/* ============================================================
+   4-column nav
+   ============================================================ */
+.navBlock {
+  width: 100%;
+}
+
 .colGrid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 48px;
-  padding-bottom: 80px;
-  border-bottom: 1px solid rgba(245, 242, 236, 0.1);
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 32px;
 }
 
 .col {
   display: flex;
   flex-direction: column;
   gap: 0;
+  min-width: 0;
 }
 
 .colLabel {
   font-family: var(--font-body);
   font-size: 11px;
   font-weight: 700;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: rgba(245, 242, 236, 0.35);
+  color: rgba(245, 242, 236, 0.42);
   margin: 0 0 20px 0;
 }
 
@@ -88,172 +229,320 @@
   padding: 0;
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 12px;
 }
 
-/* Link with underline expand animation */
 .colLink {
   font-family: var(--font-body);
-  font-size: 14px;
-  color: rgba(245, 242, 236, 0.72);
+  font-size: 13.5px;
+  line-height: 1.4;
+  color: rgba(245, 242, 236, 0.78);
   text-decoration: none;
   letter-spacing: 0.01em;
-  display: inline-flex;
-  flex-direction: column;
-  gap: 0;
   transition: color 200ms ease;
 }
 
-.colLink:hover {
-  color: #fff;
+.colLink:hover,
+.colLink:focus-visible {
+  color: #ffffff;
+  outline: none;
 }
 
-/* Underline expand: scaleX 0→1, left anchor, 200ms */
+.colLink:focus-visible .linkInner::after {
+  transform: scaleX(1);
+  background: #c9a96e;
+}
+
+/* Underline slide-in from left, 300ms */
 .linkInner {
   position: relative;
   display: inline-block;
+  padding-bottom: 2px;
 }
 
 .linkInner::after {
   content: "";
   position: absolute;
-  bottom: -2px;
+  bottom: 0;
   left: 0;
   width: 100%;
   height: 1px;
   background: #c1121f;
   transform: scaleX(0);
   transform-origin: left center;
-  transition: transform 200ms ease;
+  transition: transform 300ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .colLink:hover .linkInner::after {
   transform: scaleX(1);
 }
 
-/* ---- Bottom bar ---- */
+/* ============================================================
+   Newsletter (inline, sits inside Resources column)
+   ============================================================ */
+.newsletter {
+  margin-top: 28px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(245, 242, 236, 0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.newsletterLabel {
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(245, 242, 236, 0.5);
+}
+
+.newsletterField {
+  display: flex;
+  align-items: stretch;
+  border: 1px solid rgba(245, 242, 236, 0.16);
+  border-radius: 0;
+  background: rgba(245, 242, 236, 0.04);
+  transition: border-color 200ms ease, background 200ms ease;
+}
+
+.newsletterField:focus-within {
+  border-color: #c1121f;
+  background: rgba(245, 242, 236, 0.06);
+}
+
+.newsletterInput {
+  flex: 1;
+  min-width: 0;
+  font-family: var(--font-body);
+  font-size: 12px;
+  letter-spacing: 0.01em;
+  color: #ffffff;
+  background: transparent;
+  border: none;
+  outline: none;
+  padding: 10px 10px 10px 12px;
+}
+
+.newsletterInput::placeholder {
+  font-family: var(--font-body);
+  color: rgba(245, 242, 236, 0.35);
+  letter-spacing: 0.01em;
+}
+
+.newsletterInput:disabled {
+  color: rgba(245, 242, 236, 0.5);
+  cursor: not-allowed;
+}
+
+.newsletterBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  padding: 0 12px;
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #ffffff;
+  background: #c1121f;
+  border: none;
+  border-radius: 0;
+  cursor: pointer;
+  transition: background 200ms ease, color 200ms ease;
+}
+
+.newsletterBtn:hover,
+.newsletterBtn:focus-visible {
+  background: #780000;
+  outline: none;
+}
+
+.newsletterBtn:focus-visible {
+  outline: 2px solid #c9a96e;
+  outline-offset: 2px;
+}
+
+.newsletterBtn:disabled {
+  background: rgba(245, 242, 236, 0.12);
+  color: rgba(245, 242, 236, 0.5);
+  cursor: default;
+}
+
+.newsletterNote {
+  font-family: var(--font-body);
+  font-size: 10.5px;
+  line-height: 1.4;
+  letter-spacing: 0.02em;
+  color: rgba(245, 242, 236, 0.4);
+  margin: 0;
+}
+
+/* ============================================================
+   Row 2 — Bottom strip
+   ============================================================ */
 .bottomBar {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding-top: 40px;
+  padding-top: 28px;
   gap: 24px;
   flex-wrap: wrap;
 }
 
-.copy {
-  font-family: var(--font-body);
-  font-size: 12px;
-  letter-spacing: 0.04em;
-  color: rgba(245, 242, 236, 0.4);
-  margin: 0;
-  flex-shrink: 0;
-}
-
-/* Language toggle */
-.langToggle {
-  display: flex;
+.status {
+  display: inline-flex;
   align-items: center;
-  gap: 6px;
-  order: 2;
-}
-
-.langBtn {
+  gap: 10px;
   font-family: var(--font-body);
   font-size: 11px;
   letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: rgba(245, 242, 236, 0.35);
-  background: none;
-  border: none;
-  padding: 0;
-  cursor: pointer;
-  transition: color 200ms ease;
+  color: rgba(245, 242, 236, 0.68);
 }
 
-.langBtn:hover {
-  color: rgba(245, 242, 236, 0.7);
+/* pulse-dot — ONE of the Design.md allowed circle exceptions */
+.pulseDot {
+  position: relative;
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #4ade80; /* emerald status */
+  box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.55);
+  animation: footerPulse 2000ms cubic-bezier(0.22, 1, 0.36, 1) infinite;
 }
 
-.langActive {
-  color: rgba(245, 242, 236, 0.75);
+@keyframes footerPulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.55);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(74, 222, 128, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(74, 222, 128, 0);
+  }
 }
 
-.langSep {
+.statusText {
   font-family: var(--font-body);
   font-size: 11px;
-  color: rgba(245, 242, 236, 0.2);
+  letter-spacing: 0.06em;
+  color: rgba(245, 242, 236, 0.68);
 }
 
-/* Social icons */
-.social {
-  display: flex;
+.copy {
+  display: inline-flex;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 16px;
-  order: 3;
+  gap: 10px;
+  font-family: var(--font-body);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  color: rgba(245, 242, 236, 0.48);
+  margin: 0;
 }
 
-.socialLink {
-  display: flex;
+.dot {
+  color: rgba(245, 242, 236, 0.28);
+}
+
+.version {
+  display: inline-flex;
   align-items: center;
-  justify-content: center;
-  width: 36px;
-  height: 36px;
-  color: rgba(245, 242, 236, 0.4);
-  text-decoration: none;
-  border: 1px solid rgba(245, 242, 236, 0.12);
+  padding: 4px 10px;
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(245, 242, 236, 0.8);
+  background: rgba(245, 242, 236, 0.06);
+  border: 1px solid rgba(245, 242, 236, 0.14);
   border-radius: 0;
-  transition: color 200ms ease, border-color 200ms ease;
 }
 
-.socialLink:hover {
-  color: #c1121f;
-  border-color: rgba(193, 18, 31, 0.4);
+/* ============================================================
+   Reduced motion
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  .letter {
+    transition: none;
+    opacity: 1;
+    transform: none;
+  }
+  .pulseDot {
+    animation: none;
+    box-shadow: 0 0 0 3px rgba(74, 222, 128, 0.2);
+  }
+  .linkInner::after {
+    transition: none;
+  }
 }
 
-/* ---- Responsive ---- */
+/* ============================================================
+   Responsive
+   ============================================================ */
+@media (max-width: 1100px) {
+  .topGrid {
+    grid-template-columns: 1fr;
+    gap: 56px;
+  }
+  .metaGrid {
+    max-width: 440px;
+  }
+}
+
 @media (max-width: 900px) {
   .inner {
-    padding: 80px 24px;
+    padding: 72px 24px 28px;
   }
-
   .colGrid {
     grid-template-columns: repeat(2, 1fr);
-    gap: 40px;
-    padding-bottom: 56px;
+    row-gap: 40px;
+    column-gap: 32px;
   }
-
-  .bigBrand {
-    margin-bottom: 56px;
+  .brandWord {
+    font-size: clamp(64px, 14vw, 104px);
   }
 }
 
 @media (max-width: 600px) {
   .inner {
-    padding: 64px 20px;
+    padding: 56px 20px 24px;
   }
-
-  .colGrid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 32px;
+  .topGrid {
+    gap: 40px;
     padding-bottom: 48px;
   }
-
+  .colGrid {
+    grid-template-columns: 1fr 1fr;
+    row-gap: 36px;
+    column-gap: 24px;
+  }
+  .metaGrid {
+    grid-template-columns: 1fr;
+  }
+  .metaCell + .metaCell {
+    padding-left: 0;
+    border-left: none;
+    border-top: 1px solid rgba(245, 242, 236, 0.08);
+  }
   .bottomBar {
     flex-direction: column;
     align-items: flex-start;
-    gap: 20px;
+    gap: 16px;
   }
-
-  .langToggle {
-    order: 1;
-  }
-
-  .social {
-    order: 2;
-  }
-
   .copy {
     order: 3;
+  }
+  .version {
+    order: 2;
+  }
+  .status {
+    order: 1;
   }
 }

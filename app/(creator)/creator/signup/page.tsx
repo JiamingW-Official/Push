@@ -1,8 +1,8 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { Suspense, useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase";
 import "@/styles/auth-split.css";
 import "./signup.css";
@@ -31,15 +31,74 @@ const EMPTY: Field = {
   bio: "",
 };
 
-/* ── Tier progression data ───────────────────────────────── */
+/* ── Tier progression data (v5.1 Two-Segment) ────────────── */
 
 const TIERS = [
-  { icon: "◎", label: "Spark", desc: "Just getting started" },
-  { icon: "◈", label: "Explorer", desc: "First campaigns" },
-  { icon: "◆", label: "Anchor", desc: "Regular earner" },
-  { icon: "◉", label: "Amplifier", desc: "Trusted voice" },
-  { icon: "◑", label: "Luminary", desc: "Top creator" },
-  { icon: "★", label: "Icon", desc: "Elite tier" },
+  { icon: "◎", label: "Seed", mat: "Clay", desc: "Side-income entry" },
+  { icon: "◈", label: "Explorer", mat: "Bronze", desc: "Proven consistency" },
+  { icon: "◆", label: "Operator", mat: "Steel", desc: "Cross-vertical access" },
+  { icon: "◉", label: "Proven", mat: "Gold", desc: "$800/mo + perf bonus" },
+  { icon: "◑", label: "Closer", mat: "Ruby", desc: "$1,800 + 15% rev-share" },
+  { icon: "★", label: "Partner", mat: "Obsidian", desc: "$3,500 + equity" },
+];
+
+/* ── Two-Segment paths (v5.1) ────────────────────────────── */
+
+type Segment = "side-income" | "professional";
+
+const SEGMENTS: {
+  id: Segment;
+  label: string;
+  tierRange: string;
+  description: string;
+  earnExample: string;
+  targetFollowers: string;
+}[] = [
+  {
+    id: "side-income",
+    label: "Side-income creator",
+    tierRange: "T1–T3 · Seed → Operator",
+    description:
+      "Pay-per-verified-customer. Visit shops, post, earn. Followers don't matter — verified visits do.",
+    earnExample: "$12–$20 per verified customer",
+    targetFollowers: "5K–50K followers (or none)",
+  },
+  {
+    id: "professional",
+    label: "Professional creator",
+    tierRange: "T4–T6 · Proven → Partner",
+    description:
+      "Monthly retainer + performance + referral rev-share. Partner tier unlocks 0.05–0.2% equity.",
+    earnExample: "$800–$3,500/mo base + bonuses",
+    targetFollowers: "30K+ followers · track record",
+  },
+];
+
+/* ── Creator spotlight quotes (BrandPanel rotation) ──────── */
+
+const CREATOR_QUOTES: {
+  quote: string;
+  attribution: string;
+  detail: string;
+}[] = [
+  {
+    quote:
+      "Five verified walk-ins in my first week. The ConversionOracle™ ping felt unreal.",
+    attribution: "Maya L. · Williamsburg",
+    detail: "Seed · Clay → Explorer · Bronze",
+  },
+  {
+    quote:
+      "Push pays per customer, not per like. First retainer month covered my rent.",
+    attribution: "Jordan K. · Bushwick",
+    detail: "Operator · Steel",
+  },
+  {
+    quote:
+      "My Partner-ops call mapped a 90-day plan. Equity unlocked at month three.",
+    attribution: "Priya S. · Brooklyn",
+    detail: "Partner · Obsidian",
+  },
 ];
 
 /* ── Helpers ─────────────────────────────────────────────── */
@@ -75,13 +134,42 @@ function sanitizeError(err: unknown): string {
   return err.message;
 }
 
-/* ── Page component ──────────────────────────────────────── */
+/* ── Page wrapper (Suspense boundary) ────────────────────── */
 
 export default function CreatorSignupPage() {
+  return (
+    <Suspense fallback={<CreatorSignupFallback />}>
+      <CreatorSignupInner />
+    </Suspense>
+  );
+}
+
+function CreatorSignupFallback() {
+  return (
+    <div className="page">
+      <div className="brand-panel signup-brand-panel" />
+      <div className="form-panel">
+        <div className="form-wrap" />
+      </div>
+    </div>
+  );
+}
+
+/* ── Page component (inner, uses useSearchParams) ────────── */
+
+function CreatorSignupInner() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const submitBtnRef = useRef<HTMLButtonElement>(null);
 
+  /* Derive initial segment from ?segment= query param */
+  const initialSegment: Segment = (() => {
+    const q = searchParams.get("segment");
+    return q === "professional" || q === "side-income" ? q : "side-income";
+  })();
+
   const [fields, setFields] = useState<Field>(EMPTY);
+  const [segment, setSegment] = useState<Segment>(initialSegment);
   const [errors, setErrors] = useState<Partial<Field>>({});
   const [termsAgreed, setTermsAgreed] = useState(false);
   const [termsError, setTermsError] = useState("");
@@ -95,6 +183,15 @@ export default function CreatorSignupPage() {
   const [formError, setFormError] = useState("");
   const [success, setSuccess] = useState(false);
   const [isPressed, setIsPressed] = useState(false);
+  const [instagramMockShown, setInstagramMockShown] = useState(false);
+
+  /* Re-sync if the user changes the URL client-side */
+  useEffect(() => {
+    const q = searchParams.get("segment");
+    if (q === "professional" || q === "side-income") {
+      setSegment(q);
+    }
+  }, [searchParams]);
 
   const set =
     (k: keyof Field) =>
@@ -157,6 +254,13 @@ export default function CreatorSignupPage() {
     submitBtnRef.current?.focus();
   }
 
+  function handleInstagramMock() {
+    if (typeof window !== "undefined") {
+      window.alert("Demo mode · Instagram OAuth preview");
+    }
+    setInstagramMockShown(true);
+  }
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setFormError("");
@@ -185,8 +289,16 @@ export default function CreatorSignupPage() {
       });
       if (profileError) throw profileError;
 
+      try {
+        if (typeof window !== "undefined") {
+          localStorage.setItem("push-creator-segment", segment);
+        }
+      } catch {
+        /* localStorage may be unavailable */
+      }
+
       if (data.session) {
-        router.push("/explore");
+        router.push(`/creator/onboarding?segment=${segment}`);
       } else {
         setSuccess(true);
       }
@@ -200,6 +312,13 @@ export default function CreatorSignupPage() {
 
   const pwStrength = getPasswordStrength(fields.password);
   const bioRemaining = 160 - fields.bio.length;
+
+  /* Progressive reveal validity gates (v5.1 polish) */
+  const nameLocValid =
+    fields.name.trim().length > 0 && fields.location.trim().length > 0;
+  const emailValid = /\S+@\S+\.\S+/.test(fields.email);
+  const revealEmail = nameLocValid;
+  const revealPassword = revealEmail && emailValid;
 
   /* ── Success state ───────────────────────────────────────── */
 
@@ -232,12 +351,291 @@ export default function CreatorSignupPage() {
               <h2 className="success-heading">You&rsquo;re in!</h2>
               <p className="success-body">
                 We sent a confirmation link to <strong>{fields.email}</strong>.
-                Verify your email to get your first campaign. Check Promotions
-                or Spam if it&apos;s not in your inbox within 2 minutes.
+                Verify your email to unlock your first campaign. Check
+                Promotions or Spam if it&apos;s not in your inbox within 2
+                minutes.
               </p>
-              <Link href="/explore" className="btn btn-primary success-cta">
-                Explore campaigns →
-              </Link>
+
+              {/* ── 48h countdown strip ──────────────────────── */}
+              <div className="success-countdown" aria-hidden="true">
+                <span className="success-countdown-label">
+                  What happens next
+                </span>
+                <span className="success-countdown-sep" />
+                <span className="success-countdown-value">48h window</span>
+              </div>
+
+              <ul className="success-next-steps">
+                <li>
+                  <span className="success-step-n">01</span>
+                  Verify your email (2 min)
+                </li>
+                <li>
+                  <span className="success-step-n">02</span>
+                  Complete your{" "}
+                  {segment === "professional"
+                    ? "Partner intake"
+                    : "creator profile"}{" "}
+                  (~4 min)
+                </li>
+                <li>
+                  <span className="success-step-n">03</span>
+                  {segment === "professional"
+                    ? "Partner-ops schedules a strategy call"
+                    : "Get matched to Williamsburg Coffee+ campaigns"}
+                </li>
+              </ul>
+
+              {/* ── Segment-specific extra ───────────────────── */}
+              {segment === "side-income" && (
+                <div className="success-qr-card">
+                  <div
+                    className="success-qr-svg"
+                    aria-label="Referral QR preview"
+                  >
+                    <svg viewBox="0 0 60 60" width="60" height="60">
+                      <rect
+                        width="60"
+                        height="60"
+                        fill="var(--surface-bright)"
+                      />
+                      {/* Finder patterns */}
+                      <rect
+                        x="4"
+                        y="4"
+                        width="14"
+                        height="14"
+                        fill="var(--dark)"
+                      />
+                      <rect
+                        x="7"
+                        y="7"
+                        width="8"
+                        height="8"
+                        fill="var(--surface-bright)"
+                      />
+                      <rect
+                        x="9"
+                        y="9"
+                        width="4"
+                        height="4"
+                        fill="var(--dark)"
+                      />
+                      <rect
+                        x="42"
+                        y="4"
+                        width="14"
+                        height="14"
+                        fill="var(--dark)"
+                      />
+                      <rect
+                        x="45"
+                        y="7"
+                        width="8"
+                        height="8"
+                        fill="var(--surface-bright)"
+                      />
+                      <rect
+                        x="47"
+                        y="9"
+                        width="4"
+                        height="4"
+                        fill="var(--dark)"
+                      />
+                      <rect
+                        x="4"
+                        y="42"
+                        width="14"
+                        height="14"
+                        fill="var(--dark)"
+                      />
+                      <rect
+                        x="7"
+                        y="45"
+                        width="8"
+                        height="8"
+                        fill="var(--surface-bright)"
+                      />
+                      <rect
+                        x="9"
+                        y="47"
+                        width="4"
+                        height="4"
+                        fill="var(--dark)"
+                      />
+                      {/* Data bits */}
+                      <rect
+                        x="24"
+                        y="8"
+                        width="3"
+                        height="3"
+                        fill="var(--dark)"
+                      />
+                      <rect
+                        x="30"
+                        y="8"
+                        width="3"
+                        height="3"
+                        fill="var(--dark)"
+                      />
+                      <rect
+                        x="24"
+                        y="14"
+                        width="3"
+                        height="3"
+                        fill="var(--dark)"
+                      />
+                      <rect
+                        x="36"
+                        y="14"
+                        width="3"
+                        height="3"
+                        fill="var(--dark)"
+                      />
+                      <rect
+                        x="22"
+                        y="22"
+                        width="3"
+                        height="3"
+                        fill="var(--dark)"
+                      />
+                      <rect
+                        x="28"
+                        y="22"
+                        width="3"
+                        height="3"
+                        fill="var(--dark)"
+                      />
+                      <rect
+                        x="34"
+                        y="22"
+                        width="3"
+                        height="3"
+                        fill="var(--dark)"
+                      />
+                      <rect
+                        x="40"
+                        y="22"
+                        width="3"
+                        height="3"
+                        fill="var(--dark)"
+                      />
+                      <rect
+                        x="22"
+                        y="28"
+                        width="3"
+                        height="3"
+                        fill="var(--dark)"
+                      />
+                      <rect
+                        x="28"
+                        y="28"
+                        width="3"
+                        height="3"
+                        fill="var(--primary)"
+                      />
+                      <rect
+                        x="34"
+                        y="28"
+                        width="3"
+                        height="3"
+                        fill="var(--dark)"
+                      />
+                      <rect
+                        x="22"
+                        y="34"
+                        width="3"
+                        height="3"
+                        fill="var(--dark)"
+                      />
+                      <rect
+                        x="30"
+                        y="34"
+                        width="3"
+                        height="3"
+                        fill="var(--dark)"
+                      />
+                      <rect
+                        x="40"
+                        y="34"
+                        width="3"
+                        height="3"
+                        fill="var(--dark)"
+                      />
+                      <rect
+                        x="24"
+                        y="40"
+                        width="3"
+                        height="3"
+                        fill="var(--dark)"
+                      />
+                      <rect
+                        x="36"
+                        y="40"
+                        width="3"
+                        height="3"
+                        fill="var(--dark)"
+                      />
+                      <rect
+                        x="28"
+                        y="46"
+                        width="3"
+                        height="3"
+                        fill="var(--dark)"
+                      />
+                      <rect
+                        x="34"
+                        y="46"
+                        width="3"
+                        height="3"
+                        fill="var(--dark)"
+                      />
+                      <rect
+                        x="40"
+                        y="46"
+                        width="3"
+                        height="3"
+                        fill="var(--dark)"
+                      />
+                    </svg>
+                  </div>
+                  <div className="success-qr-info">
+                    <span className="success-qr-label">Your referral code</span>
+                    <span className="success-qr-code">YOU25</span>
+                    <span className="success-qr-hint">
+                      Shareable once your email is verified
+                    </span>
+                  </div>
+                </div>
+              )}
+
+              {segment === "professional" && (
+                <a
+                  href="https://cal.com/push-partner-ops"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="success-partner-call"
+                >
+                  <span
+                    className="success-partner-call-dot"
+                    aria-hidden="true"
+                  />
+                  Book your Partner-ops call &rarr;
+                  <span className="success-partner-call-mono">cal.com</span>
+                </a>
+              )}
+
+              <div className="success-cta-row">
+                <Link
+                  href={`/creator/onboarding?segment=${segment}`}
+                  className="btn btn-primary success-cta"
+                >
+                  Continue to onboarding &rarr;
+                </Link>
+                <Link href="/explore" className="success-secondary-link">
+                  Browse campaigns first
+                </Link>
+              </div>
             </div>
             <p className="form-footer">
               Wrong email? <Link href="/creator/signup">Start over</Link>
@@ -266,6 +664,50 @@ export default function CreatorSignupPage() {
                 No follower minimum. No exclusivity. Just show up and create.
               </p>
             </div>
+
+            {/* ── Two-Segment picker (v5.1) ──────────────── */}
+            <fieldset
+              className="segment-picker"
+              aria-describedby="segment-hint"
+            >
+              <legend className="segment-legend">
+                <span className="segment-num">01</span>
+                Pick your path &mdash; Two-Segment Creator Economics, switch
+                later.
+              </legend>
+              <div className="segment-grid">
+                {SEGMENTS.map((s) => {
+                  const active = segment === s.id;
+                  return (
+                    <button
+                      key={s.id}
+                      type="button"
+                      role="radio"
+                      aria-checked={active}
+                      className={`segment-card segment-card--${s.id} ${active ? "segment-card--active" : ""}`}
+                      onClick={() => setSegment(s.id)}
+                    >
+                      <span className="segment-card-tier">{s.tierRange}</span>
+                      <span className="segment-card-label">{s.label}</span>
+                      <span className="segment-card-desc">{s.description}</span>
+                      <span className="segment-card-meta">
+                        <span className="segment-card-earn">
+                          {s.earnExample}
+                        </span>
+                        <span className="segment-card-aud">
+                          {s.targetFollowers}
+                        </span>
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+              <p id="segment-hint" className="segment-hint">
+                {segment === "professional"
+                  ? "Partner-ops reviews every professional application. Expect a 2-day response — ConversionOracle™ baseline pulled from your last 30 posts."
+                  : "You're matched within 48h of email verification. ConversionOracle™ predicts walk-in lift before each campaign."}
+              </p>
+            </fieldset>
 
             {formError && (
               <div
@@ -354,13 +796,17 @@ export default function CreatorSignupPage() {
                 </div>
 
                 {/* ── Account ──────────────────────────────── */}
-                <div className="form-divider">
+                <div
+                  className={`form-divider ${revealEmail ? "" : "is-locked"}`}
+                >
                   <span className="form-divider-line" />
                   <span className="form-divider-label">Create Account</span>
                   <span className="form-divider-line" />
                 </div>
 
-                <div className="form-field">
+                <div
+                  className={`form-field field-reveal ${revealEmail ? "is-visible" : ""}`}
+                >
                   <label htmlFor="email">Email</label>
                   <div className="field-wrap">
                     <input
@@ -386,7 +832,9 @@ export default function CreatorSignupPage() {
                   )}
                 </div>
 
-                <div className="form-row">
+                <div
+                  className={`form-row field-reveal ${revealPassword ? "is-visible" : ""}`}
+                >
                   <div className="form-field">
                     <label htmlFor="password">Password</label>
                     <div className="input-with-action">
@@ -479,6 +927,40 @@ export default function CreatorSignupPage() {
                     )}
                   </div>
                 </div>
+
+                {/* ── Instagram OAuth mock (above Creator Details) ──── */}
+                <button
+                  type="button"
+                  className={`ig-oauth-btn ${instagramMockShown ? "ig-oauth-btn--used" : ""}`}
+                  onClick={handleInstagramMock}
+                >
+                  <span className="ig-oauth-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none">
+                      <rect
+                        x="3"
+                        y="3"
+                        width="18"
+                        height="18"
+                        rx="0"
+                        stroke="currentColor"
+                        strokeWidth="1.6"
+                      />
+                      <circle
+                        cx="12"
+                        cy="12"
+                        r="4"
+                        stroke="currentColor"
+                        strokeWidth="1.6"
+                      />
+                      <circle cx="17.5" cy="6.5" r="1" fill="currentColor" />
+                    </svg>
+                  </span>
+                  <span className="ig-oauth-label">Sign up with Instagram</span>
+                  <span className="ig-oauth-meta">Creator preset</span>
+                </button>
+                <span className="ig-oauth-hint">
+                  Or continue with email below &mdash; same Creator outcome.
+                </span>
 
                 {/* ── Creator details ───────────────────────── */}
                 <div className="form-divider">
@@ -629,35 +1111,52 @@ export default function CreatorSignupPage() {
   );
 }
 
-/* ── Signup brand panel tier data ────────────────────────── */
+/* ── Signup brand panel tier data (v5.1 Two-Segment) ────── */
 
 const SIGNUP_TIERS = [
   {
     icon: "◎",
-    label: "Seed",
-    rate: "Free",
-    benefit: "Start free — zero followers needed",
-    color: "#669bbc",
-  },
-  {
-    icon: "◈",
-    label: "Explorer",
-    rate: "$12/campaign",
-    benefit: "$12/campaign — 2 active campaigns",
-    color: "#f5f2ec",
+    label: "Seed · Clay",
+    rate: "$12/customer",
+    benefit: "Side-income entry — zero followers needed",
+    color: "#b8a99a",
   },
   {
     icon: "◆",
-    label: "Operator",
-    rate: "$20 + 3%",
-    benefit: "$20/campaign + 3% commission",
-    color: "#c1121f",
+    label: "Operator · Steel",
+    rate: "$20/customer",
+    benefit: "Cross-vertical access + priority routing",
+    color: "#4a5568",
+  },
+  {
+    icon: "★",
+    label: "Partner · Obsidian",
+    rate: "$3,500/mo + equity",
+    benefit: "Retainer + 20% rev-share + 0.05–0.2% pool",
+    color: "#c9a96e",
   },
 ];
 
 /* ── Brand panel ─────────────────────────────────────────── */
 
 function BrandPanel() {
+  const [quoteIdx, setQuoteIdx] = useState(0);
+  const [quoteFade, setQuoteFade] = useState(true);
+
+  /* Creator spotlight rotation — 7s cycle, 300ms fade */
+  useEffect(() => {
+    const id = window.setInterval(() => {
+      setQuoteFade(false);
+      window.setTimeout(() => {
+        setQuoteIdx((i) => (i + 1) % CREATOR_QUOTES.length);
+        setQuoteFade(true);
+      }, 300);
+    }, 7000);
+    return () => window.clearInterval(id);
+  }, []);
+
+  const current = CREATOR_QUOTES[quoteIdx];
+
   return (
     <div className="brand-panel signup-brand-panel">
       <div className="brand-top">
@@ -700,6 +1199,29 @@ function BrandPanel() {
           <p className="auth-motivation">
             Your Push Score starts building from day one.
           </p>
+
+          {/* ── Creator spotlight rotation ─────────────────── */}
+          <div
+            className={`creator-spotlight ${quoteFade ? "is-fade-in" : "is-fade-out"}`}
+            aria-live="polite"
+          >
+            <span className="creator-spotlight-label">CREATOR SPOTLIGHT</span>
+            <p className="creator-spotlight-quote">
+              &ldquo;{current.quote}&rdquo;
+            </p>
+            <span className="creator-spotlight-attribution">
+              {current.attribution}
+            </span>
+            <span className="creator-spotlight-detail">{current.detail}</span>
+          </div>
+
+          {/* ── Push Score explainer chip ──────────────────── */}
+          <div className="push-score-chip" aria-hidden="true">
+            <span className="push-score-dot" />
+            <span className="push-score-label">
+              Your Push Score · builds from visit #1
+            </span>
+          </div>
         </div>
       </div>
 

@@ -1,630 +1,831 @@
 "use client";
 
-import { useState, useMemo } from "react";
-import PosterPreview from "@/components/merchant/qr/PosterPreview";
-import {
-  MOCK_QR_CODES,
-  QR_STATS,
-  ACTIVE_CAMPAIGNS_FOR_QR,
-  POSTER_TYPE_LABELS,
-  type QRCodeRecord,
-  type PosterType,
-} from "@/lib/attribution/mock-qr-codes-extended";
+import { useMemo, useState } from "react";
 import "./qr-codes.css";
 
-// TODO: use server-side QR generation
-function qrImageUrl(id: string) {
-  if (typeof window === "undefined") return "";
-  const url = encodeURIComponent(`${window.location.origin}/scan/${id}`);
-  return `https://api.qrserver.com/v1/create-qr-code/?data=${url}&size=56x56&color=003049&bgcolor=ffffff`;
+/* ============================================================
+   Push — Merchant QR Codes Management
+   v5.1 · Vertical AI for Local Commerce
+   ConversionOracle™ attribution entrypoint
+   ============================================================ */
+
+/* ---------- Fixtures ---------------------------------------- */
+
+type QRStatus = "active" | "paused" | "archived";
+
+interface QRRecord {
+  id: string;
+  name: string;
+  location: string;
+  campaign: string;
+  status: QRStatus;
+  scansWeek: number;
+  verifiedRate: number;
+  lastScanMinutes: number; // minutes ago
+  seed: number; // deterministic pattern seed
 }
 
-/* ── Hourly heatmap (mock distribution) ─────────────────── */
-const HOURLY_SCAN_WEIGHTS = [
-  0, 0, 0, 0, 0, 0, 1, 2, 5, 8, 6, 4, 5, 4, 3, 2, 3, 4, 6, 7, 5, 3, 2, 1,
+const LOCATIONS = [
+  { id: "wburg-n6", label: "Williamsburg · N 6th St" },
+  { id: "wburg-bedford", label: "Williamsburg · Bedford Ave" },
+  { id: "wburg-grand", label: "Williamsburg · Grand St" },
+] as const;
+
+const CAMPAIGNS = [
+  { id: "morning-rush", label: "Morning Rush — Weekday 7–10a" },
+  { id: "weekend-pastry", label: "Weekend Pastry Pairing" },
+  { id: "no-campaign", label: "No campaign (generic reward)" },
+] as const;
+
+const MOCK_QRS: QRRecord[] = [
+  {
+    id: "qr-001",
+    name: "Counter · Morning Rush",
+    location: LOCATIONS[0].label,
+    campaign: CAMPAIGNS[0].label,
+    status: "active",
+    scansWeek: 42,
+    verifiedRate: 94,
+    lastScanMinutes: 12,
+    seed: 17,
+  },
+  {
+    id: "qr-002",
+    name: "Window Sticker · Bedford",
+    location: LOCATIONS[1].label,
+    campaign: CAMPAIGNS[1].label,
+    status: "active",
+    scansWeek: 31,
+    verifiedRate: 90,
+    lastScanMinutes: 58,
+    seed: 23,
+  },
+  {
+    id: "qr-003",
+    name: "Table Tent · Back Room",
+    location: LOCATIONS[0].label,
+    campaign: CAMPAIGNS[0].label,
+    status: "active",
+    scansWeek: 24,
+    verifiedRate: 87,
+    lastScanMinutes: 142,
+    seed: 41,
+  },
+  {
+    id: "qr-004",
+    name: "Receipt Print · Grand",
+    location: LOCATIONS[2].label,
+    campaign: CAMPAIGNS[2].label,
+    status: "active",
+    scansWeek: 19,
+    verifiedRate: 96,
+    lastScanMinutes: 33,
+    seed: 59,
+  },
+  {
+    id: "qr-005",
+    name: "Cash Register · N 6th",
+    location: LOCATIONS[0].label,
+    campaign: CAMPAIGNS[1].label,
+    status: "paused",
+    scansWeek: 11,
+    verifiedRate: 82,
+    lastScanMinutes: 1440 * 2, // 2d
+    seed: 73,
+  },
+  {
+    id: "qr-006",
+    name: "Sidewalk A-Frame · Bedford",
+    location: LOCATIONS[1].label,
+    campaign: CAMPAIGNS[0].label,
+    status: "active",
+    scansWeek: 9,
+    verifiedRate: 88,
+    lastScanMinutes: 210,
+    seed: 89,
+  },
+  {
+    id: "qr-007",
+    name: "Bag Sticker · Grand",
+    location: LOCATIONS[2].label,
+    campaign: CAMPAIGNS[1].label,
+    status: "archived",
+    scansWeek: 4,
+    verifiedRate: 80,
+    lastScanMinutes: 1440 * 9, // 9d
+    seed: 101,
+  },
+  {
+    id: "qr-008",
+    name: "Loyalty Card · All Stores",
+    location: LOCATIONS[0].label,
+    campaign: CAMPAIGNS[2].label,
+    status: "active",
+    scansWeek: 3,
+    verifiedRate: 92,
+    lastScanMinutes: 1440, // 1d
+    seed: 113,
+  },
 ];
 
-function HourlyHeatmap({ totalScans }: { totalScans: number }) {
-  const maxWeight = Math.max(...HOURLY_SCAN_WEIGHTS);
+const SUMMARY = {
+  totalQrs: 8,
+  scansWeek: 143,
+  verifiedConversions: 89,
+  autoVerifyRate: 91,
+};
+
+/* ---------- QR SVG (visual placeholder, not functional) ----- */
+// Deterministic "QR-looking" block pattern. 21×21 grid, 3 corner finder patterns,
+// remaining cells filled via a seeded PRNG (~50% density).
+function QRPreview({
+  seed,
+  size = 168,
+  title,
+}: {
+  seed: number;
+  size?: number;
+  title?: string;
+}) {
+  const GRID = 21;
+  const cell = size / GRID;
+
+  // Seeded pseudo-random via mulberry32
+  const mulberry32 = (a: number) => {
+    return () => {
+      a |= 0;
+      a = (a + 0x6d2b79f5) | 0;
+      let t = a;
+      t = Math.imul(t ^ (t >>> 15), t | 1);
+      t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  };
+
+  // Finder pattern: 7x7 square with border, gap, center
+  const isFinder = (r: number, c: number) => {
+    const inTL = r < 7 && c < 7;
+    const inTR = r < 7 && c >= GRID - 7;
+    const inBL = r >= GRID - 7 && c < 7;
+    return inTL || inTR || inBL;
+  };
+
+  const drawFinder = (r: number, c: number) => {
+    // returns true if the cell should be filled for a finder pattern
+    let lr = r,
+      lc = c;
+    if (c >= GRID - 7) lc = c - (GRID - 7);
+    if (r >= GRID - 7) lr = r - (GRID - 7);
+    // 7x7: outer ring filled, inner ring empty, 3x3 center filled
+    const onOuter = lr === 0 || lr === 6 || lc === 0 || lc === 6;
+    const onInner =
+      (lr === 1 || lr === 5 || lc === 1 || lc === 5) &&
+      lr >= 1 &&
+      lr <= 5 &&
+      lc >= 1 &&
+      lc <= 5;
+    const onCenter = lr >= 2 && lr <= 4 && lc >= 2 && lc <= 4;
+    if (onOuter) return true;
+    if (onInner) return false;
+    if (onCenter) return true;
+    return false;
+  };
+
+  const rng = mulberry32(seed);
+  const cells: { x: number; y: number }[] = [];
+  for (let r = 0; r < GRID; r++) {
+    for (let c = 0; c < GRID; c++) {
+      if (isFinder(r, c)) {
+        if (drawFinder(r, c)) cells.push({ x: c, y: r });
+      } else {
+        if (rng() < 0.5) cells.push({ x: c, y: r });
+      }
+    }
+  }
+
   return (
-    <div className="qr-heatmap">
-      <div className="qr-heatmap__title">Scan distribution — hourly</div>
-      <div className="qr-heatmap__grid">
-        {HOURLY_SCAN_WEIGHTS.map((w, i) => {
-          const intensity = maxWeight > 0 ? w / maxWeight : 0;
-          const scans = Math.round(intensity * totalScans * 0.6);
-          const bg =
-            intensity === 0
-              ? "var(--surface)"
-              : `rgba(0,48,73,${0.08 + intensity * 0.72})`;
-          return (
-            <div
-              key={i}
-              className="qr-heatmap__cell"
-              title={`${i}:00 — ~${scans} scans`}
-              style={{ background: bg, border: "none" }}
-            />
-          );
-        })}
-      </div>
-      <div className="qr-heatmap__labels">
-        {["12am", "4am", "8am", "12pm", "4pm", "8pm"].map((l) => (
-          <div key={l} className="qr-heatmap__label">
-            {l}
-          </div>
-        ))}
-      </div>
+    <svg
+      viewBox={`0 0 ${size} ${size}`}
+      width="100%"
+      height="100%"
+      xmlns="http://www.w3.org/2000/svg"
+      role="img"
+      aria-label={title ?? "QR code preview"}
+      preserveAspectRatio="xMidYMid meet"
+      style={{ display: "block" }}
+    >
+      <rect width={size} height={size} fill="#ffffff" />
+      {cells.map((p, i) => (
+        <rect
+          key={i}
+          x={p.x * cell}
+          y={p.y * cell}
+          width={cell}
+          height={cell}
+          fill="#003049"
+        />
+      ))}
+    </svg>
+  );
+}
+
+/* ---------- Utilities --------------------------------------- */
+function relTime(minutes: number): string {
+  if (minutes < 1) return "just now";
+  if (minutes < 60) return `${minutes}m ago`;
+  const h = Math.floor(minutes / 60);
+  if (h < 24) return `${h}h ago`;
+  const d = Math.floor(h / 24);
+  return `${d}d ago`;
+}
+
+function toast(msg: string) {
+  if (typeof window !== "undefined") window.alert(msg);
+}
+
+/* ---------- Summary stat block ------------------------------ */
+function SummaryStat({ value, label }: { value: string; label: string }) {
+  return (
+    <div className="qr-summary__stat">
+      <div className="qr-summary__value">{value}</div>
+      <div className="qr-summary__label">{label}</div>
     </div>
   );
 }
 
-/* ── Detail slide-out panel ──────────────────────────────── */
-function DetailPanel({
-  qr,
-  onClose,
+/* ---------- Filter chip ------------------------------------- */
+function Chip({
+  active,
+  onClick,
+  children,
 }: {
-  qr: QRCodeRecord;
-  onClose: () => void;
+  active: boolean;
+  onClick: () => void;
+  children: React.ReactNode;
 }) {
-  const cvr =
-    qr.scan_count > 0
-      ? Math.round((qr.conversion_count / qr.scan_count) * 100)
-      : 0;
-
   return (
-    <>
-      <div className="qr-detail-overlay" onClick={onClose} />
-      <div className="qr-detail-panel">
-        <button className="qr-detail-close" onClick={onClose}>
-          ← Close
-        </button>
-
-        <div className="qr-detail__campaign">{qr.campaign_name}</div>
-        <div className="qr-detail__title">
-          {POSTER_TYPE_LABELS[qr.poster_type]}
-        </div>
-
-        <div className="qr-detail__qr">
-          <img
-            src={qrImageUrl(qr.id)}
-            alt="QR Code"
-            width={160}
-            height={160}
-            style={{ display: "block", imageRendering: "pixelated" }}
-          />
-        </div>
-
-        <div className="qr-detail__stats-row">
-          <div className="qr-detail__stat">
-            <div className="qr-detail__stat-value">{qr.scan_count}</div>
-            <div className="qr-detail__stat-label">Scans</div>
-          </div>
-          <div className="qr-detail__stat">
-            <div className="qr-detail__stat-value">{qr.conversion_count}</div>
-            <div className="qr-detail__stat-label">Converted</div>
-          </div>
-          <div className="qr-detail__stat">
-            <div className="qr-detail__stat-value">{cvr}%</div>
-            <div className="qr-detail__stat-label">CVR</div>
-          </div>
-        </div>
-
-        <HourlyHeatmap totalScans={qr.scan_count} />
-
-        <div
-          style={{
-            fontSize: "var(--text-caption)",
-            color: "var(--text-muted)",
-            paddingTop: "var(--space-3)",
-            borderTop: "1px solid var(--line)",
-          }}
-        >
-          <div>
-            Created:{" "}
-            {new Date(qr.created_at).toLocaleDateString("en-US", {
-              month: "short",
-              day: "numeric",
-              year: "numeric",
-            })}
-          </div>
-          <div style={{ marginTop: 4 }}>
-            Last active:{" "}
-            {new Date(qr.last_active_at).toLocaleDateString("en-US", {
-              month: "short",
-              day: "numeric",
-            })}
-          </div>
-          <div style={{ marginTop: 8, wordBreak: "break-all" }}>
-            URL:{" "}
-            <span style={{ color: "var(--tertiary)" }}>
-              {typeof window !== "undefined"
-                ? `${window.location.origin}${qr.scan_url}`
-                : qr.scan_url}
-            </span>
-          </div>
-        </div>
-      </div>
-    </>
+    <button
+      type="button"
+      className={`qr-chip${active ? " qr-chip--active" : ""}`}
+      onClick={onClick}
+    >
+      {children}
+    </button>
   );
 }
 
-/* ── QR Card ─────────────────────────────────────────────── */
+/* ---------- QR Card ----------------------------------------- */
 function QRCard({
   qr,
-  onView,
-  onToggle,
-  onRegenerate,
+  onExport,
+  onEdit,
+  onArchive,
+  onPrint,
 }: {
-  qr: QRCodeRecord;
-  onView: () => void;
-  onToggle: () => void;
-  onRegenerate: () => void;
+  qr: QRRecord;
+  onExport: (kind: "png" | "svg" | "pdf") => void;
+  onEdit: () => void;
+  onArchive: () => void;
+  onPrint: () => void;
 }) {
-  const cvr =
-    qr.scan_count > 0
-      ? Math.round((qr.conversion_count / qr.scan_count) * 100)
-      : 0;
+  return (
+    <article className={`qr-card qr-card--${qr.status}`}>
+      <div className="qr-card__thumb">
+        <QRPreview seed={qr.seed} size={168} title={qr.name} />
+        <span className={`qr-card__status qr-card__status--${qr.status}`}>
+          {qr.status}
+        </span>
+      </div>
 
-  const lastActive = new Date(qr.last_active_at).toLocaleDateString("en-US", {
-    month: "short",
-    day: "numeric",
-  });
+      <div className="qr-card__body">
+        <h3 className="qr-card__name">{qr.name}</h3>
+        <div className="qr-card__meta">
+          <span>{qr.location}</span>
+          <span className="qr-card__meta-sep" aria-hidden="true">
+            /
+          </span>
+          <span>{qr.campaign}</span>
+        </div>
+        <div className="qr-card__stats">
+          <div>
+            <div className="qr-card__stat-value">{qr.scansWeek}</div>
+            <div className="qr-card__stat-label">Scans this week</div>
+          </div>
+          <div>
+            <div className="qr-card__stat-value">{qr.verifiedRate}%</div>
+            <div className="qr-card__stat-label">Verified rate</div>
+          </div>
+          <div>
+            <div className="qr-card__stat-value qr-card__stat-value--muted">
+              {relTime(qr.lastScanMinutes)}
+            </div>
+            <div className="qr-card__stat-label">Last scan</div>
+          </div>
+        </div>
+      </div>
+
+      <div className="qr-card__actions">
+        <button
+          type="button"
+          className="qr-act-btn"
+          onClick={() => onExport("png")}
+        >
+          PNG
+        </button>
+        <button
+          type="button"
+          className="qr-act-btn"
+          onClick={() => onExport("svg")}
+        >
+          SVG
+        </button>
+        <button type="button" className="qr-act-btn" onClick={onPrint}>
+          Printable PDF
+        </button>
+        <button type="button" className="qr-act-btn" onClick={onEdit}>
+          Edit
+        </button>
+        <button
+          type="button"
+          className="qr-act-btn qr-act-btn--danger"
+          onClick={onArchive}
+        >
+          {qr.status === "archived" ? "Restore" : "Archive"}
+        </button>
+      </div>
+    </article>
+  );
+}
+
+/* ---------- Printable layout (A6 poster) -------------------- */
+function PrintablePoster({
+  qr,
+  shopName,
+  onClose,
+}: {
+  qr: QRRecord;
+  shopName: string;
+  onClose: () => void;
+}) {
+  const handlePrint = () => {
+    if (typeof window !== "undefined") window.print();
+  };
 
   return (
-    <div className={`qr-card${qr.disabled ? " qr-card--disabled" : ""}`}>
-      {/* QR thumbnail */}
-      <div className="qr-card__qr-thumb">
-        <img
-          src={qrImageUrl(qr.id)}
-          alt="QR"
-          width={56}
-          height={56}
-          style={{ imageRendering: "pixelated" }}
-        />
+    <div className="qr-print-overlay" role="dialog" aria-modal="true">
+      <div className="qr-print-toolbar">
+        <button type="button" className="qr-ghost-btn" onClick={onClose}>
+          Close
+        </button>
+        <button type="button" className="qr-primary-btn" onClick={handlePrint}>
+          Print / Save PDF
+        </button>
       </div>
 
-      {/* Info */}
-      <div className="qr-card__info">
-        <div className="qr-card__campaign">{qr.campaign_name}</div>
-        <div className="qr-card__meta">
-          <span className="qr-card__poster-tag">
-            {POSTER_TYPE_LABELS[qr.poster_type]}
-          </span>
-          <span
-            className={`qr-card__status-dot${qr.disabled ? " qr-card__status-dot--disabled" : ""}`}
-          />
-          <span
-            style={{
-              fontSize: 10,
-              color: "var(--text-muted)",
-              letterSpacing: "0.04em",
-            }}
-          >
-            {qr.disabled ? "Disabled" : "Active"}
-          </span>
-        </div>
-        <div className="qr-card__last-active">Last active {lastActive}</div>
-      </div>
+      <div className="qr-poster-wrap">
+        <div className="qr-poster" id="qr-poster-print">
+          <div className="qr-poster__header">
+            <span className="qr-poster__logo">
+              Push<span>.</span>
+            </span>
+            <span className="qr-poster__tag">Customer Acquisition Engine</span>
+          </div>
 
-      {/* Stats */}
-      <div className="qr-card__stats">
-        <div className="qr-card__stat">
-          <div className="qr-card__stat-value">{qr.scan_count}</div>
-          <div className="qr-card__stat-label">Scans</div>
-          <div className="qr-card__stat-cvr">{cvr}% CVR</div>
-        </div>
+          <div className="qr-poster__qr">
+            <QRPreview seed={qr.seed} size={360} title={qr.name} />
+          </div>
 
-        {/* Actions */}
-        <div className="qr-card__actions">
-          <button className="qr-action-btn" onClick={onView}>
-            View
-          </button>
-          {qr.disabled ? (
-            <button
-              className="qr-action-btn qr-action-btn--enable"
-              onClick={onToggle}
-            >
-              Enable
-            </button>
-          ) : (
-            <button
-              className="qr-action-btn qr-action-btn--danger"
-              onClick={onToggle}
-            >
-              Disable
-            </button>
-          )}
-          <button className="qr-action-btn" onClick={onRegenerate}>
-            Regenerate
-          </button>
+          <div className="qr-poster__copy">
+            <div className="qr-poster__line-eyebrow">Scan for a reward</div>
+            <div className="qr-poster__line-shop">at {shopName}</div>
+          </div>
+
+          <div className="qr-poster__footer">
+            <span>
+              Attribution by ConversionOracle™ · Vertical AI for Local Commerce
+            </span>
+            <span className="qr-poster__id">{qr.id.toUpperCase()}</span>
+          </div>
         </div>
       </div>
     </div>
   );
 }
 
-/* ── Main Page ───────────────────────────────────────────── */
-const POSTER_TYPES: { value: PosterType; label: string; dim: string }[] = [
-  { value: "a4", label: "A4 Poster", dim: "210×297mm" },
-  { value: "table-tent", label: "Table Tent", dim: '4×6"' },
-  { value: "window-sticker", label: "Window Sticker", dim: '8×8"' },
-  { value: "cash-register", label: "Cash Register", dim: '3×3"' },
-];
+/* ---------- New QR Flow (modal) ----------------------------- */
+function NewQRModal({
+  onClose,
+  onGenerate,
+}: {
+  onClose: () => void;
+  onGenerate: (rec: QRRecord) => void;
+}) {
+  const [locationId, setLocationId] = useState<string>(LOCATIONS[0].id);
+  const [campaignId, setCampaignId] = useState<string>(CAMPAIGNS[0].id);
+  const [nameOverride, setNameOverride] = useState("");
 
-export default function QRCodesPage() {
-  // Generator state
-  const [selectedCampaignId, setSelectedCampaignId] = useState(
-    ACTIVE_CAMPAIGNS_FOR_QR[0]?.id ?? "",
+  const loc = LOCATIONS.find((l) => l.id === locationId) ?? LOCATIONS[0];
+  const camp = CAMPAIGNS.find((c) => c.id === campaignId) ?? CAMPAIGNS[0];
+
+  // Auto-suggest name
+  const suggested = useMemo(() => {
+    const shortLoc = loc.label.split("·")[1]?.trim() ?? loc.label;
+    const shortCamp = camp.label.split("—")[0]?.trim() ?? camp.label;
+    return `${shortCamp} · ${shortLoc}`;
+  }, [loc, camp]);
+
+  const finalName = nameOverride.trim() || suggested;
+  const seed = useMemo(
+    () => Array.from(finalName).reduce((acc, ch) => acc + ch.charCodeAt(0), 17),
+    [finalName],
   );
-  const [posterType, setPosterType] = useState<PosterType>("a4");
-  const [heroMessage, setHeroMessage] = useState(
-    "Earn rewards with your content",
-  );
-  const [subMessage, setSubMessage] = useState(
-    "Scan to join our creator campaign",
-  );
-  const [generatedQrId, setGeneratedQrId] = useState<string | undefined>();
-  const [isGenerating, setIsGenerating] = useState(false);
 
-  // List state
-  const [codes, setCodes] = useState<QRCodeRecord[]>(MOCK_QR_CODES);
-  const [filterCampaign, setFilterCampaign] = useState("all");
-  const [filterPoster, setFilterPoster] = useState("all");
-  const [filterStatus, setFilterStatus] = useState("all");
-  const [detailQr, setDetailQr] = useState<QRCodeRecord | null>(null);
-
-  // Derived: update hero/sub defaults when campaign changes
-  const handleCampaignChange = (id: string) => {
-    setSelectedCampaignId(id);
-    const campaign = ACTIVE_CAMPAIGNS_FOR_QR.find((c) => c.id === id);
-    if (campaign) {
-      setHeroMessage("Earn rewards with your content");
-      setSubMessage(`Scan to join the ${campaign.name} campaign`);
-    }
-    setGeneratedQrId(undefined);
-  };
-
-  // Generate & preview
-  const handleGenerate = () => {
-    if (!selectedCampaignId) return;
-    setIsGenerating(true);
-    // Simulate async generation
-    setTimeout(() => {
-      const newId = `qr-gen-${Date.now()}`;
-      setGeneratedQrId(newId);
-
-      // Write to localStorage for demo persistence
-      const stored = JSON.parse(
-        localStorage.getItem("push-generated-qrs") ?? "[]",
-      );
-      const campaign = ACTIVE_CAMPAIGNS_FOR_QR.find(
-        (c) => c.id === selectedCampaignId,
-      );
-      const newRecord: QRCodeRecord = {
-        id: newId,
-        campaign_id: selectedCampaignId,
-        campaign_name: campaign?.name ?? "Campaign",
-        poster_type: posterType,
-        hero_message: heroMessage,
-        sub_message: subMessage,
-        scan_url: `/scan/${newId}`,
-        scan_count: 0,
-        conversion_count: 0,
-        created_at: new Date().toISOString(),
-        last_active_at: new Date().toISOString(),
-        disabled: false,
-      };
-      localStorage.setItem(
-        "push-generated-qrs",
-        JSON.stringify([newRecord, ...stored]),
-      );
-      setCodes((prev) => [newRecord, ...prev]);
-      setIsGenerating(false);
-    }, 600);
-  };
-
-  // Print poster
-  // TODO: server-side PDF generation via @react-pdf/renderer or pdfkit
-  const handleDownload = () => {
-    window.print();
-  };
-
-  // Toggle disable
-  const handleToggle = (id: string) => {
-    setCodes((prev) =>
-      prev.map((q) => (q.id === id ? { ...q, disabled: !q.disabled } : q)),
-    );
-  };
-
-  // Regenerate
-  const handleRegenerate = (id: string) => {
-    const newId = `qr-regen-${Date.now()}`;
-    setCodes((prev) =>
-      prev.map((q) =>
-        q.id === id
-          ? {
-              ...q,
-              id: newId,
-              scan_count: 0,
-              created_at: new Date().toISOString(),
-              last_active_at: new Date().toISOString(),
-            }
-          : q,
-      ),
-    );
-  };
-
-  // Filtered list
-  const filteredCodes = useMemo(() => {
-    return codes.filter((q) => {
-      if (filterCampaign !== "all" && q.campaign_id !== filterCampaign)
-        return false;
-      if (filterPoster !== "all" && q.poster_type !== filterPoster)
-        return false;
-      if (filterStatus === "active" && q.disabled) return false;
-      if (filterStatus === "disabled" && !q.disabled) return false;
-      return true;
+  const handleSubmit = () => {
+    const id = `qr-new-${Date.now()}`;
+    onGenerate({
+      id,
+      name: finalName,
+      location: loc.label,
+      campaign: camp.label,
+      status: "active",
+      scansWeek: 0,
+      verifiedRate: 0,
+      lastScanMinutes: 0,
+      seed,
     });
-  }, [codes, filterCampaign, filterPoster, filterStatus]);
-
-  const selectedCampaign = ACTIVE_CAMPAIGNS_FOR_QR.find(
-    (c) => c.id === selectedCampaignId,
-  );
-
-  // All unique campaigns in list (including closed ones from mock)
-  const allCampaignsInList = useMemo(() => {
-    const seen = new Map<string, string>();
-    codes.forEach((q) => seen.set(q.campaign_id, q.campaign_name));
-    return Array.from(seen.entries()).map(([id, name]) => ({ id, name }));
-  }, [codes]);
+    toast(`QR exported · ${id}.png`);
+    onClose();
+  };
 
   return (
-    <div className="qr-shell">
-      {/* Nav */}
-      <nav className="qr-nav">
-        <a href="/" className="qr-nav__logo">
-          Push<span>.</span>
-        </a>
-        <div className="qr-nav__center">
-          <span className="qr-nav__title">QR Code Manager</span>
-        </div>
-        <a href="/merchant/dashboard" className="qr-nav__back">
-          ← Dashboard
-        </a>
-      </nav>
-
-      {/* Hero */}
-      <section className="qr-hero">
-        <div className="qr-hero__eyebrow">Merchant · QR Attribution</div>
-        <div className="qr-hero__numbers">
-          <div className="qr-big-number">
-            <div className="qr-big-number__label">QR Codes Generated</div>
-            <div className="qr-big-number__value">{codes.length}</div>
-          </div>
-          <div className="qr-hero__divider" />
-          <div className="qr-big-number">
-            <div className="qr-big-number__label">Scans This Month</div>
-            <div className="qr-big-number__value qr-big-number__value--accent">
-              {QR_STATS.scans_this_month}
+    <div className="qr-modal-overlay" onClick={onClose}>
+      <div
+        className="qr-modal"
+        role="dialog"
+        aria-modal="true"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="qr-modal__header">
+          <div>
+            <div className="qr-modal__eyebrow">
+              Create · ConversionOracle™ entrypoint
             </div>
+            <h2 className="qr-modal__title">New QR code</h2>
           </div>
+          <button
+            type="button"
+            className="qr-ghost-btn"
+            onClick={onClose}
+            aria-label="Close"
+          >
+            Close
+          </button>
         </div>
-        <div className="qr-hero__verified">
-          Verified conversions this month:{" "}
-          <strong>{QR_STATS.verified_conversions_month}</strong>
-        </div>
-      </section>
 
-      {/* Body */}
-      <div className="qr-body">
-        {/* Left: Generator */}
-        <aside className="qr-generator">
-          <div className="qr-generator__title">Generate QR</div>
-
-          {/* Step 1: Campaign */}
-          <div className="qr-step">
-            <div className="qr-step__label">
-              <span className="qr-step__num">1</span>
-              Select Campaign
-            </div>
-            <div className="qr-select-wrapper">
+        <div className="qr-modal__body">
+          <div className="qr-modal__form">
+            <div className="qr-field">
+              <label className="qr-field__label" htmlFor="qr-loc">
+                Location
+              </label>
               <select
-                className="qr-select"
-                value={selectedCampaignId}
-                onChange={(e) => handleCampaignChange(e.target.value)}
+                id="qr-loc"
+                className="qr-field__select"
+                value={locationId}
+                onChange={(e) => setLocationId(e.target.value)}
               >
-                {ACTIVE_CAMPAIGNS_FOR_QR.map((c) => (
-                  <option key={c.id} value={c.id}>
-                    {c.name}
+                {LOCATIONS.map((l) => (
+                  <option key={l.id} value={l.id}>
+                    {l.label}
                   </option>
                 ))}
               </select>
             </div>
-          </div>
 
-          {/* Step 2: Poster size */}
-          <div className="qr-step">
-            <div className="qr-step__label">
-              <span className="qr-step__num">2</span>
-              Poster Size
-            </div>
-            <div className="qr-poster-grid">
-              {POSTER_TYPES.map((pt) => (
-                <button
-                  key={pt.value}
-                  className={`qr-poster-option${posterType === pt.value ? " selected" : ""}`}
-                  onClick={() => {
-                    setPosterType(pt.value);
-                    setGeneratedQrId(undefined);
-                  }}
-                >
-                  <div className="qr-poster-option__name">{pt.label}</div>
-                  <div className="qr-poster-option__dim">{pt.dim}</div>
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Step 3: Custom copy */}
-          <div className="qr-step">
-            <div className="qr-step__label">
-              <span className="qr-step__num">3</span>
-              Custom Copy
-              <span
-                style={{
-                  fontWeight: 400,
-                  letterSpacing: "0.02em",
-                  textTransform: "none",
-                  fontSize: 9,
-                }}
+            <div className="qr-field">
+              <label className="qr-field__label" htmlFor="qr-camp">
+                Campaign
+              </label>
+              <select
+                id="qr-camp"
+                className="qr-field__select"
+                value={campaignId}
+                onChange={(e) => setCampaignId(e.target.value)}
               >
-                (optional)
-              </span>
+                {CAMPAIGNS.map((c) => (
+                  <option key={c.id} value={c.id}>
+                    {c.label}
+                  </option>
+                ))}
+              </select>
             </div>
-            <input
-              className="qr-input"
-              placeholder="Hero message"
-              value={heroMessage}
-              onChange={(e) => setHeroMessage(e.target.value)}
-              style={{ marginBottom: 8 }}
-            />
-            <textarea
-              className="qr-textarea"
-              placeholder="Sub message"
-              value={subMessage}
-              onChange={(e) => setSubMessage(e.target.value)}
-            />
-          </div>
 
-          {/* Step 4: Generate */}
-          <div className="qr-step">
-            <div className="qr-step__label">
-              <span className="qr-step__num">4</span>
-              Generate &amp; Download
-            </div>
-            <button
-              className="qr-generate-btn"
-              onClick={handleGenerate}
-              disabled={!selectedCampaignId || isGenerating}
-            >
-              {isGenerating ? "Generating..." : "Generate & Preview"}
-            </button>
-          </div>
-
-          {/* Poster preview (appears after generate) */}
-          {generatedQrId && (
-            <div className="qr-preview-section poster-print-target">
-              <div className="qr-preview-section__label">Live Preview</div>
-              <div className="qr-preview-container">
-                <PosterPreview
-                  posterType={posterType}
-                  heroMessage={heroMessage}
-                  subMessage={subMessage}
-                  campaignName={selectedCampaign?.name ?? "Campaign"}
-                  qrId={generatedQrId}
-                />
+            <div className="qr-field">
+              <label className="qr-field__label" htmlFor="qr-name">
+                QR name
+              </label>
+              <input
+                id="qr-name"
+                className="qr-field__input"
+                placeholder={suggested}
+                value={nameOverride}
+                onChange={(e) => setNameOverride(e.target.value)}
+              />
+              <div className="qr-field__hint">
+                Auto-suggest: <strong>{suggested}</strong>
               </div>
-              {/* TODO: server-side PDF generation via @react-pdf/renderer or pdfkit */}
-              <button className="qr-download-btn" onClick={handleDownload}>
-                Download PDF (Print)
+            </div>
+
+            <div className="qr-field__footer">
+              <button
+                type="button"
+                className="qr-primary-btn"
+                onClick={handleSubmit}
+              >
+                Generate QR
+              </button>
+              <button type="button" className="qr-ghost-btn" onClick={onClose}>
+                Cancel
               </button>
             </div>
-          )}
-        </aside>
-
-        {/* Right: Active QR list */}
-        <main className="qr-list-panel">
-          <div className="qr-list-header">
-            <div className="qr-list-title">Active QR Codes</div>
-            <span
-              style={{
-                fontSize: "var(--text-caption)",
-                color: "var(--text-muted)",
-              }}
-            >
-              {filteredCodes.length} showing
-            </span>
           </div>
 
-          {/* Filters */}
-          <div className="qr-filter-row">
-            <select
-              className="qr-filter-select"
-              value={filterCampaign}
-              onChange={(e) => setFilterCampaign(e.target.value)}
-            >
-              <option value="all">All campaigns</option>
-              {allCampaignsInList.map((c) => (
-                <option key={c.id} value={c.id}>
-                  {c.name}
-                </option>
-              ))}
-            </select>
-
-            <select
-              className="qr-filter-select"
-              value={filterPoster}
-              onChange={(e) => setFilterPoster(e.target.value)}
-            >
-              <option value="all">All sizes</option>
-              {POSTER_TYPES.map((pt) => (
-                <option key={pt.value} value={pt.value}>
-                  {pt.label}
-                </option>
-              ))}
-            </select>
-
-            <button
-              className={`qr-filter-btn${filterStatus === "all" ? " active" : ""}`}
-              onClick={() => setFilterStatus("all")}
-            >
-              All
-            </button>
-            <button
-              className={`qr-filter-btn${filterStatus === "active" ? " active" : ""}`}
-              onClick={() => setFilterStatus("active")}
-            >
-              Active
-            </button>
-            <button
-              className={`qr-filter-btn${filterStatus === "disabled" ? " active" : ""}`}
-              onClick={() => setFilterStatus("disabled")}
-            >
-              Disabled
-            </button>
-          </div>
-
-          {/* List */}
-          {filteredCodes.length === 0 ? (
-            <div className="qr-empty">
-              <div className="qr-empty__title">No QR codes found</div>
-              <div
-                style={{
-                  fontSize: "var(--text-small)",
-                  color: "var(--text-muted)",
-                  marginTop: 8,
-                }}
-              >
-                Adjust filters or generate a new QR code.
+          <div className="qr-modal__preview">
+            <div className="qr-modal__preview-label">Preview</div>
+            <div className="qr-modal__preview-qr">
+              <QRPreview seed={seed} size={260} title={finalName} />
+            </div>
+            <div className="qr-modal__preview-meta">
+              <div className="qr-modal__preview-name">{finalName}</div>
+              <div className="qr-modal__preview-sub">
+                {loc.label} · {camp.label}
               </div>
             </div>
-          ) : (
-            filteredCodes.map((qr) => (
+            <div className="qr-modal__print-hint">
+              Print layout: A6 poster — Push logo, QR, "Scan for a reward at
+              [shop]", ConversionOracle™ attribution line.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ---------- Main Page --------------------------------------- */
+export default function QRCodesPage() {
+  const [qrs, setQrs] = useState<QRRecord[]>(MOCK_QRS);
+  const [search, setSearch] = useState("");
+  const [status, setStatus] = useState<"all" | QRStatus>("all");
+  const [sort, setSort] = useState<"scans" | "newest" | "oldest">("scans");
+  const [locationFilter, setLocationFilter] = useState<string>("all");
+  const [showModal, setShowModal] = useState(false);
+  const [printQr, setPrintQr] = useState<QRRecord | null>(null);
+
+  const filtered = useMemo(() => {
+    const q = search.trim().toLowerCase();
+    let out = qrs.filter((r) => {
+      if (status !== "all" && r.status !== status) return false;
+      if (locationFilter !== "all" && r.location !== locationFilter)
+        return false;
+      if (!q) return true;
+      return (
+        r.name.toLowerCase().includes(q) ||
+        r.campaign.toLowerCase().includes(q) ||
+        r.location.toLowerCase().includes(q)
+      );
+    });
+
+    out = [...out].sort((a, b) => {
+      if (sort === "scans") return b.scansWeek - a.scansWeek;
+      if (sort === "newest") return a.lastScanMinutes - b.lastScanMinutes;
+      return b.lastScanMinutes - a.lastScanMinutes;
+    });
+    return out;
+  }, [qrs, search, status, sort, locationFilter]);
+
+  const allLocations = useMemo(() => {
+    const set = new Set<string>();
+    qrs.forEach((q) => set.add(q.location));
+    return Array.from(set);
+  }, [qrs]);
+
+  const handleExport = (qr: QRRecord, kind: "png" | "svg" | "pdf") => {
+    const ext = kind;
+    toast(`QR exported · ${qr.id}.${ext}`);
+  };
+
+  const handleEdit = (qr: QRRecord) => {
+    toast(`Editing · ${qr.name}`);
+  };
+
+  const handleArchive = (qr: QRRecord) => {
+    setQrs((prev) =>
+      prev.map((r) =>
+        r.id === qr.id
+          ? {
+              ...r,
+              status:
+                r.status === "archived" ? "active" : ("archived" as QRStatus),
+            }
+          : r,
+      ),
+    );
+  };
+
+  const shopName = "Devoción — Williamsburg";
+
+  return (
+    <div className="qrc-shell">
+      {/* Hero strip */}
+      <section className="qrc-hero">
+        <nav className="qrc-breadcrumb" aria-label="Breadcrumb">
+          <a href="/merchant/dashboard" className="qrc-breadcrumb__link">
+            Home
+          </a>
+          <span className="qrc-breadcrumb__sep">/</span>
+          <span className="qrc-breadcrumb__current">QR codes</span>
+        </nav>
+
+        <div className="qrc-hero__eyebrow">
+          ConversionOracle™ attribution entrypoint
+        </div>
+
+        <div className="qrc-hero__row">
+          <h1 className="qrc-hero__title">Your QR codes</h1>
+          <button
+            type="button"
+            className="qr-primary-btn qrc-hero__cta"
+            onClick={() => setShowModal(true)}
+          >
+            + New QR code
+          </button>
+        </div>
+
+        <p className="qrc-hero__note">
+          Consumer-scans-merchant QR. Last-click attribution, 30-day window.
+          Zero ops burden — verification runs on Push's Vertical AI for Local
+          Commerce stack.
+        </p>
+      </section>
+
+      {/* Summary stats */}
+      <section className="qr-summary" aria-label="Summary">
+        <SummaryStat value={String(SUMMARY.totalQrs)} label="Total QRs" />
+        <SummaryStat
+          value={String(SUMMARY.scansWeek)}
+          label="Scans this week"
+        />
+        <SummaryStat
+          value={String(SUMMARY.verifiedConversions)}
+          label="Verified conversions"
+        />
+        <SummaryStat
+          value={`${SUMMARY.autoVerifyRate}%`}
+          label="Auto-verify rate"
+        />
+      </section>
+
+      {/* Filter toolbar */}
+      <section className="qr-toolbar" aria-label="Filter toolbar">
+        <div className="qr-toolbar__search">
+          <svg
+            viewBox="0 0 20 20"
+            width="16"
+            height="16"
+            aria-hidden="true"
+            className="qr-toolbar__search-icon"
+          >
+            <circle
+              cx="9"
+              cy="9"
+              r="6"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.5"
+            />
+            <line
+              x1="14"
+              y1="14"
+              x2="18"
+              y2="18"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+            />
+          </svg>
+          <input
+            className="qr-toolbar__search-input"
+            type="search"
+            placeholder="Search QR name, campaign, location"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            aria-label="Search QR codes"
+          />
+        </div>
+
+        <div className="qr-toolbar__chips" role="tablist">
+          <Chip active={status === "all"} onClick={() => setStatus("all")}>
+            All
+          </Chip>
+          <Chip
+            active={status === "active"}
+            onClick={() => setStatus("active")}
+          >
+            Active
+          </Chip>
+          <Chip
+            active={status === "paused"}
+            onClick={() => setStatus("paused")}
+          >
+            Paused
+          </Chip>
+          <Chip
+            active={status === "archived"}
+            onClick={() => setStatus("archived")}
+          >
+            Archived
+          </Chip>
+        </div>
+
+        <div className="qr-toolbar__controls">
+          <label className="qr-toolbar__select-wrap">
+            <span className="qr-toolbar__select-label">Sort</span>
+            <select
+              className="qr-toolbar__select"
+              value={sort}
+              onChange={(e) => setSort(e.target.value as typeof sort)}
+            >
+              <option value="scans">Most scans</option>
+              <option value="newest">Newest</option>
+              <option value="oldest">Oldest</option>
+            </select>
+          </label>
+
+          <label className="qr-toolbar__select-wrap">
+            <span className="qr-toolbar__select-label">Location</span>
+            <select
+              className="qr-toolbar__select"
+              value={locationFilter}
+              onChange={(e) => setLocationFilter(e.target.value)}
+            >
+              <option value="all">All locations</option>
+              {allLocations.map((loc) => (
+                <option key={loc} value={loc}>
+                  {loc}
+                </option>
+              ))}
+            </select>
+          </label>
+        </div>
+      </section>
+
+      {/* QR grid */}
+      <section className="qr-grid-wrap" aria-label="QR codes">
+        {filtered.length === 0 ? (
+          <div className="qr-empty">
+            <div className="qr-empty__title">No QR codes match</div>
+            <div className="qr-empty__sub">
+              Adjust filters or create a new Williamsburg Coffee+ QR code.
+            </div>
+          </div>
+        ) : (
+          <div className="qr-grid">
+            {filtered.map((qr) => (
               <QRCard
                 key={qr.id}
                 qr={qr}
-                onView={() => setDetailQr(qr)}
-                onToggle={() => handleToggle(qr.id)}
-                onRegenerate={() => handleRegenerate(qr.id)}
+                onExport={(k) => handleExport(qr, k)}
+                onEdit={() => handleEdit(qr)}
+                onArchive={() => handleArchive(qr)}
+                onPrint={() => setPrintQr(qr)}
               />
-            ))
-          )}
-        </main>
-      </div>
+            ))}
+          </div>
+        )}
+      </section>
 
-      {/* Detail slide-out */}
-      {detailQr && (
-        <DetailPanel qr={detailQr} onClose={() => setDetailQr(null)} />
+      {/* Footer attribution caption */}
+      <footer className="qrc-foot">
+        <span>
+          ConversionOracle™ 3-layer verify: QR + Claude Vision OCR + geo 200m.
+        </span>
+        <span>Software Leverage Ratio (SLR) amplified per location.</span>
+      </footer>
+
+      {showModal && (
+        <NewQRModal
+          onClose={() => setShowModal(false)}
+          onGenerate={(rec) => setQrs((prev) => [rec, ...prev])}
+        />
+      )}
+
+      {printQr && (
+        <PrintablePoster
+          qr={printQr}
+          shopName={shopName}
+          onClose={() => setPrintQr(null)}
+        />
       )}
     </div>
   );

@@ -161,6 +161,37 @@
   padding-top: var(--space-4);
 }
 
+/* Mission statement block under the founder letter */
+.about-letter-mission {
+  margin-top: var(--space-8);
+  padding: var(--space-6);
+  background: var(--surface-elevated);
+  border: 1px solid var(--line);
+  border-left: 4px solid var(--primary);
+  max-width: 680px;
+}
+
+.about-letter-mission-label {
+  display: block;
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--primary);
+  margin-bottom: var(--space-2);
+}
+
+.about-letter-mission-body {
+  font-family: var(--font-display);
+  font-size: clamp(20px, 2.2vw, 26px);
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: -0.03em;
+  color: var(--dark);
+  margin: 0;
+}
+
 /* ------------------------------------------------------------
    Timeline
    ------------------------------------------------------------ */
@@ -264,32 +295,37 @@
   border: 1px solid var(--line);
   padding: var(--space-6);
   background: var(--surface-elevated);
-  transition: transform 360ms cubic-bezier(0.22, 1, 0.36, 1),
+  transition:
+    transform 360ms cubic-bezier(0.22, 1, 0.36, 1),
     box-shadow 360ms cubic-bezier(0.22, 1, 0.36, 1);
+  transform-origin: center center;
+  will-change: transform;
 }
 
+/* 2deg hover tilt per v5.1 spec — team card micro-interaction */
 .about-team-card:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 12px 32px rgba(0, 48, 73, 0.08);
+  transform: translateY(-4px) rotate(2deg);
+  box-shadow: 0 14px 32px rgba(0, 48, 73, 0.1);
 }
 
+/* Avatar: Darky initial in circle — 'indicator dot' Design.md exception */
 .about-team-avatar {
-  width: 56px;
-  height: 56px;
+  width: 64px;
+  height: 64px;
   background: var(--dark);
   display: flex;
   align-items: center;
   justify-content: center;
   margin-bottom: var(--space-4);
-  border-radius: 0;
+  border-radius: 50%;
 }
 
 .about-team-initials {
   font-family: var(--font-display);
-  font-size: 18px;
-  font-weight: 800;
+  font-size: 28px;
+  font-weight: 900;
   color: #fff;
-  letter-spacing: -0.03em;
+  letter-spacing: -0.04em;
 }
 
 .about-team-name {

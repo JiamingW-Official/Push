@@ -1,45 +1,120 @@
-// Push — /status  (Server Component, statically generated at build, ISR 60s)
+// Push — /status  (Server Component, ISR 60s)
 // Design authority: Design.md
-// Status colors: Operational = Champagne Gold | Degraded = Steel Blue | Outage = Flag Red
+// v5.1: Vertical AI for Local Commerce — Customer Acquisition Engine
 
 import type { Metadata } from "next";
 import {
   SERVICES,
-  PERFORMANCE_METRICS,
+  INCIDENTS,
   getOverallStatus,
-  getActiveIncidents,
   getRecentIncidents,
   type Service,
   type Incident,
   type ServiceStatus,
   type DayStatus,
-  type PerformanceMetric,
 } from "@/lib/status/mock-services";
 import SubscribeForm from "./SubscribeForm";
 import "./status.css";
 
 export const metadata: Metadata = {
-  title: "System Status — Push",
+  title: "Status — Push",
   description:
-    "Real-time status of all Push services including API, payments, QR scanning, and attribution.",
+    "Real-time status of the Push Customer Acquisition Engine — API, Dashboard, ConversionOracle™, Payments, and Webhooks.",
 };
 
-// ISR: regenerate every 60 seconds
 export const revalidate = 60;
 
-// ─── Helpers ──────────────────────────────────────────────────────────────────
+/* ── v5.1 display services ──────────────────────────────────
+   The data layer defines 8 services. The v5.1 status surface shows
+   exactly 5: API / Dashboard / ConversionOracle™ / Payments / Webhooks.
+   We remap without touching the data layer.
+   ────────────────────────────────────────────────────────── */
+interface DisplayService {
+  id: string;
+  name: string;
+  description: string;
+  status: ServiceStatus;
+  uptimePercent: number;
+  uptime90: DayStatus[];
+  latencyMs?: number;
+}
 
-function formatTimestamp(iso: string): string {
-  const d = new Date(iso);
-  return d.toLocaleString("en-US", {
-    month: "short",
-    day: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-    timeZoneName: "short",
-    hour12: false,
-    timeZone: "UTC",
-  });
+function pickService(id: string): Service | undefined {
+  return SERVICES.find((s) => s.id === id);
+}
+
+function buildDisplayServices(): DisplayService[] {
+  const api = pickService("api")!;
+  const dashboard = pickService("dashboard")!;
+  const attribution = pickService("attribution")!;
+  const payments = pickService("payments")!;
+  const qr = pickService("qr-scan")!;
+
+  return [
+    {
+      id: "api",
+      name: "API",
+      description:
+        "Core REST API — campaigns, creators, ConversionOracle predictions.",
+      status: api.status,
+      uptimePercent: api.uptimePercent,
+      uptime90: api.uptime90,
+      latencyMs: api.latencyMs,
+    },
+    {
+      id: "dashboard",
+      name: "Dashboard",
+      description:
+        "Merchant and creator dashboards — SLR widget, campaign workspace.",
+      status: dashboard.status,
+      uptimePercent: dashboard.uptimePercent,
+      uptime90: dashboard.uptime90,
+    },
+    {
+      // ConversionOracle™ is backed by the Attribution engine in the data layer.
+      id: "conversion-oracle",
+      name: "ConversionOracle™",
+      description:
+        "Walk-in prediction model — per-creator, per-neighborhood, per-hour.",
+      status: attribution.status,
+      uptimePercent: attribution.uptimePercent,
+      uptime90: attribution.uptime90,
+      latencyMs: attribution.latencyMs,
+    },
+    {
+      id: "payments",
+      name: "Payments",
+      description:
+        "Stripe Connect payouts — Two-Segment creator disbursements and equity-pool accruals.",
+      status: payments.status,
+      uptimePercent: payments.uptimePercent,
+      uptime90: payments.uptime90,
+    },
+    {
+      // Webhooks piggyback on the QR-scan service in the data layer.
+      id: "webhooks",
+      name: "Webhooks",
+      description:
+        "QR scan events and verification-result delivery to merchant POS integrations.",
+      status: qr.status,
+      uptimePercent: qr.uptimePercent,
+      uptime90: qr.uptime90,
+      latencyMs: qr.latencyMs,
+    },
+  ];
+}
+
+/* ── Helpers ────────────────────────────────────────────── */
+function heroLabel(status: ServiceStatus): string {
+  if (status === "operational") return "All systems operational.";
+  if (status === "degraded") return "Partial degradation.";
+  return "Active outage.";
+}
+
+function statusLabel(status: ServiceStatus): string {
+  if (status === "operational") return "Operational";
+  if (status === "degraded") return "Degraded";
+  return "Outage";
 }
 
 function formatDate(iso: string): string {
@@ -51,351 +126,331 @@ function formatDate(iso: string): string {
   });
 }
 
-function heroLabel(status: ServiceStatus): string {
-  if (status === "operational") return "All systems operational.";
-  if (status === "degraded") return "Partial outage.";
-  return "Major outage.";
-}
+/* ── 90-day uptime chart (inline SVG bars) ──────────────── */
+function UptimeChart({ days }: { days: DayStatus[] }) {
+  // Build SVG 360x36. 90 bars × (3px + 1px gap) = 360 wide.
+  const barWidth = 3;
+  const gap = 1;
+  const chartHeight = 32;
+  const totalWidth = days.length * (barWidth + gap);
 
-function heroClass(status: ServiceStatus): string {
-  return `status-hero-headline is-${status}`;
-}
+  function colorFor(d: DayStatus): string {
+    switch (d) {
+      case "operational":
+        return "#10b981"; // green
+      case "degraded":
+        return "var(--champagne)";
+      case "outage":
+        return "var(--primary)";
+      default:
+        return "rgba(0, 48, 73, 0.12)";
+    }
+  }
 
-function statusLabel(status: ServiceStatus): string {
-  if (status === "operational") return "Operational";
-  if (status === "degraded") return "Degraded";
-  return "Outage";
-}
-
-// ─── Sub-components ───────────────────────────────────────────────────────────
-
-function HeatmapBar({ days }: { days: DayStatus[] }) {
   return (
-    <div>
-      <div className="heatmap-bar" aria-label="90-day uptime heatmap">
-        {days.map((d, i) => (
-          <div
+    <svg
+      className="status-uptime-svg"
+      viewBox={`0 0 ${totalWidth} ${chartHeight + 4}`}
+      preserveAspectRatio="none"
+      role="img"
+      aria-label="90-day uptime history"
+    >
+      {days.map((d, i) => {
+        const x = i * (barWidth + gap);
+        const height =
+          d === "outage"
+            ? chartHeight
+            : d === "degraded"
+              ? chartHeight * 0.7
+              : chartHeight * 0.55;
+        const y = chartHeight - height + 2;
+        return (
+          <rect
             key={i}
-            className={`heatmap-cell ${d}`}
-            title={`Day ${90 - (89 - i)}: ${d}`}
+            x={x}
+            y={y}
+            width={barWidth}
+            height={height}
+            fill={colorFor(d)}
           />
-        ))}
-      </div>
-      <div className="heatmap-meta">
-        <span>90 days ago</span>
-        <span>Today</span>
-      </div>
-    </div>
+        );
+      })}
+    </svg>
   );
 }
 
-function ServiceCard({ service }: { service: Service }) {
+/* ── Service row (current status) ────────────────────────── */
+function ServiceRow({ service }: { service: DisplayService }) {
   return (
-    <div className="service-card reveal-up">
-      <div className="service-card-header">
-        <span className="service-name">{service.name}</span>
-        <div className={`service-status-indicator ${service.status}`}>
-          <span className={`status-dot ${service.status}`} />
+    <article className="status-service">
+      <div className="status-service__header">
+        <div className="status-service__title-block">
+          <h3 className="status-service__name">{service.name}</h3>
+          <p className="status-service__desc">{service.description}</p>
+        </div>
+        <div className={`status-pill status-pill--${service.status}`}>
+          <span className={`status-dot status-dot--${service.status}`} />
           {statusLabel(service.status)}
         </div>
       </div>
-      <div className="service-uptime-value">
-        {service.uptimePercent.toFixed(2)}
-        <span
-          style={{
-            fontSize: "18px",
-            fontWeight: 300,
-            letterSpacing: 0,
-            color: "rgba(0,48,73,0.4)",
-          }}
-        >
-          %
-        </span>
+
+      <div className="status-service__chart-wrap">
+        <UptimeChart days={service.uptime90} />
+        <div className="status-service__chart-meta">
+          <span>90 days ago</span>
+          <span>Today</span>
+        </div>
       </div>
-      <div className="service-uptime-label">90-day uptime</div>
-      <HeatmapBar days={service.uptime90} />
-    </div>
+
+      <dl className="status-service__stats">
+        <div className="status-service__stat">
+          <dt>Uptime</dt>
+          <dd>
+            <span className="status-service__stat-value">
+              {service.uptimePercent.toFixed(2)}
+            </span>
+            <span className="status-service__stat-unit">%</span>
+          </dd>
+        </div>
+        <div className="status-service__stat">
+          <dt>P95 latency</dt>
+          <dd>
+            <span className="status-service__stat-value">
+              {service.latencyMs ?? "—"}
+            </span>
+            <span className="status-service__stat-unit">
+              {service.latencyMs ? "ms" : ""}
+            </span>
+          </dd>
+        </div>
+        <div className="status-service__stat">
+          <dt>Status</dt>
+          <dd>
+            <span
+              className={`status-service__stat-value status-service__stat-value--${service.status}`}
+            >
+              {statusLabel(service.status).toUpperCase()}
+            </span>
+          </dd>
+        </div>
+      </dl>
+    </article>
   );
 }
 
-function IncidentCard({ incident }: { incident: Incident }) {
+/* ── Recent incident card ────────────────────────────────── */
+function IncidentCard({
+  incident,
+  serviceMap,
+}: {
+  incident: Incident;
+  serviceMap: Map<string, string>;
+}) {
+  const lastUpdate = incident.updates[incident.updates.length - 1];
+  const firstUpdate = incident.updates[0];
+
+  // Root cause = first "identified" message if available
+  const rootCause = incident.updates.find(
+    (u) => u.phase === "identified",
+  )?.message;
+
+  // Prevention note — synthesized from the last update for demo purposes
+  const prevention =
+    lastUpdate.phase === "resolved"
+      ? `Post-mortem scheduled. ${lastUpdate.message.split(". ")[1] ?? "Runbook updated."}`
+      : "Monitoring in progress.";
+
+  const services = incident.affectedServices
+    .map((id) => serviceMap.get(id) ?? id)
+    .join(", ");
+
   return (
     <article
-      className={`incident-card severity-${incident.severity} reveal-up`}
-      aria-label={`Incident: ${incident.title}`}
+      className={`status-incident status-incident--${incident.severity}`}
     >
-      <div className="incident-card-header">
-        <div className="incident-title-group">
-          <h3 className="incident-title">{incident.title}</h3>
-          <div className="incident-meta">
-            <span className="incident-meta-item">
-              {formatDate(incident.startedAt)}
-            </span>
-            <div className="incident-services">
-              {incident.affectedServices.map((sid) => {
-                const svc = SERVICES.find((s) => s.id === sid);
-                return (
-                  <span key={sid} className="incident-service-tag">
-                    {svc?.name ?? sid}
-                  </span>
-                );
-              })}
-            </div>
-          </div>
+      <div className="status-incident__header">
+        <div className="status-incident__header-left">
+          <time className="status-incident__date" dateTime={incident.startedAt}>
+            {formatDate(incident.startedAt)}
+          </time>
+          <span className="status-incident__service">{services}</span>
         </div>
-        <span className={`incident-severity-badge ${incident.severity}`}>
-          {incident.severity}
-        </span>
-      </div>
-
-      {/* Timeline */}
-      <div className="incident-timeline">
-        {incident.updates.map((update, i) => (
-          <div key={i} className="timeline-item">
-            <div className="timeline-time">
-              {formatTimestamp(update.timestamp)
-                .split(",")
-                .slice(0, 2)
-                .join(",")}
-            </div>
-            <div className={`timeline-node ${update.phase}`} />
-            {i < incident.updates.length - 1 && (
-              <div className="timeline-line" />
-            )}
-            <div className="timeline-content">
-              <div className={`timeline-phase ${update.phase}`}>
-                {update.phase}
-              </div>
-              <p className="timeline-message">{update.message}</p>
-            </div>
-          </div>
-        ))}
-      </div>
-
-      {/* Footer */}
-      {(incident.durationMinutes || incident.postmortemUrl) && (
-        <div className="incident-footer">
+        <div className="status-incident__header-right">
+          <span
+            className={`status-incident__severity status-incident__severity--${incident.severity}`}
+          >
+            {incident.severity}
+          </span>
           {incident.durationMinutes && (
-            <span className="incident-duration">
-              Duration: {incident.durationMinutes} min
+            <span className="status-incident__duration">
+              {incident.durationMinutes} min
             </span>
           )}
-          {incident.postmortemUrl && (
-            <a
-              href={incident.postmortemUrl}
-              className="incident-postmortem-link"
-            >
-              Post-mortem ↗
-            </a>
-          )}
         </div>
+      </div>
+
+      <h3 className="status-incident__title">{incident.title}</h3>
+
+      <dl className="status-incident__details">
+        <div className="status-incident__detail">
+          <dt>Summary</dt>
+          <dd>{firstUpdate.message}</dd>
+        </div>
+        {rootCause && (
+          <div className="status-incident__detail">
+            <dt>Root cause</dt>
+            <dd>{rootCause}</dd>
+          </div>
+        )}
+        <div className="status-incident__detail">
+          <dt>Prevention</dt>
+          <dd>{prevention}</dd>
+        </div>
+      </dl>
+
+      {incident.postmortemUrl && (
+        <a className="status-incident__link" href={incident.postmortemUrl}>
+          Read post-mortem →
+        </a>
       )}
     </article>
   );
 }
 
-function PerfMetricCard({ metric }: { metric: PerformanceMetric }) {
-  const trendIcon =
-    metric.id === "api-p95" && metric.trend === "down"
-      ? "↓"
-      : metric.trend === "up"
-        ? "↑"
-        : metric.trend === "down"
-          ? "↓"
-          : "→";
-
-  return (
-    <div className="perf-metric-card reveal-up">
-      <div className="perf-metric-label">{metric.label}</div>
-      <div className="perf-metric-value-row">
-        <span className="perf-metric-value">{metric.value}</span>
-        <span className="perf-metric-unit">{metric.unit}</span>
-      </div>
-      <div className={`perf-metric-trend ${metric.trend}`}>
-        {trendIcon} {metric.trendValue}
-      </div>
-    </div>
-  );
-}
-
-// ─── Page ────────────────────────────────────────────────────────────────────
-
+/* ── Page ────────────────────────────────────────────────── */
 export default function StatusPage() {
-  const overall = getOverallStatus();
-  const activeIncidents = getActiveIncidents();
-  const recentIncidents = getRecentIncidents(7);
+  const displayServices = buildDisplayServices();
+
+  // Compute overall from the display set to keep the hero truthful.
+  const displayStatuses = displayServices.map((s) => s.status);
+  const overall: ServiceStatus = displayStatuses.includes("outage")
+    ? "outage"
+    : displayStatuses.includes("degraded")
+      ? "degraded"
+      : "operational";
+
+  // Rough aggregate from the data layer's function for consistency.
+  void getOverallStatus();
+
+  // Service id → display name (for incident rendering)
+  const serviceMap = new Map<string, string>();
+  serviceMap.set("api", "API");
+  serviceMap.set("dashboard", "Dashboard");
+  serviceMap.set("attribution", "ConversionOracle™");
+  serviceMap.set("payments", "Payments");
+  serviceMap.set("qr-scan", "Webhooks");
+  serviceMap.set("webapp", "Dashboard");
+  serviceMap.set("auth", "API");
+  serviceMap.set("cdn", "API");
+
+  // Include both resolved and active incidents (past ~2 weeks) for a 4-5 list.
+  const resolved = getRecentIncidents(14);
+  const open = INCIDENTS.filter((i) => i.status === "open");
+  const recentIncidents = [...open, ...resolved].slice(0, 5);
+
+  const overallLabelForHero =
+    overall === "operational" ? "All systems operational." : heroLabel(overall);
 
   return (
     <main className="status-page">
-      {/* ── 1. Hero banner ─────────────────────────────────────── */}
+      {/* ── Hero ─────────────────────────────────────────── */}
       <section className="status-hero" aria-label="Overall system status">
-        <div className="status-hero-inner">
-          <div className="status-eyebrow">Push Platform Status</div>
-          <h1 className={heroClass(overall)}>{heroLabel(overall)}</h1>
-          <p className="status-hero-meta">
-            <span
-              className={`status-hero-meta-dot is-${overall}`}
-              aria-hidden="true"
-            />
-            Last updated {formatTimestamp(new Date().toISOString())}
-            &nbsp;&nbsp;·&nbsp;&nbsp;
-            <a
-              href="/api/status"
-              style={{
-                color: "rgba(255,255,255,0.45)",
-                textDecoration: "none",
-                fontFamily: "inherit",
-                fontSize: "inherit",
-                transition: "color 300ms",
-              }}
-            >
-              JSON API
-            </a>
+        <div className="container status-hero__inner">
+          <p className="status-hero__eyebrow">Status</p>
+          <h1 className={`status-hero__title status-hero__title--${overall}`}>
+            {overallLabelForHero}
+          </h1>
+          <p className="status-hero__sub">
+            Live health of the Push Customer Acquisition Engine — Vertical AI
+            for Local Commerce. 60-second refresh.
           </p>
+          <div className="status-hero__meta">
+            <span className={`status-hero__dot status-hero__dot--${overall}`} />
+            <span className="status-hero__meta-text">
+              {overall === "operational"
+                ? "All 5 services operating normally"
+                : overall === "degraded"
+                  ? "Performance degradation detected"
+                  : "Outage in progress"}
+            </span>
+            <span className="status-hero__sep" aria-hidden="true">
+              ·
+            </span>
+            <a href="/api/status" className="status-hero__api">
+              JSON API ↗
+            </a>
+          </div>
         </div>
       </section>
 
-      <div className="status-container">
-        {/* ── 2. Service grid ──────────────────────────────────── */}
+      <div className="container status-body">
+        {/* ── Services grid ───────────────────────────── */}
         <section className="status-section" aria-labelledby="services-heading">
-          <div className="status-section-header">
-            <span className="status-section-num">01 /</span>
-            <h2 className="status-section-title" id="services-heading">
-              Services
+          <div className="status-section__header">
+            <span className="status-section__num">01 /</span>
+            <h2 className="status-section__title" id="services-heading">
+              Current status
             </h2>
+            <span className="status-section__meta">5 services</span>
           </div>
-          <div className="service-grid">
-            {SERVICES.map((svc) => (
-              <ServiceCard key={svc.id} service={svc} />
+          <div className="status-services-grid">
+            {displayServices.map((svc) => (
+              <ServiceRow key={svc.id} service={svc} />
             ))}
           </div>
         </section>
 
-        {/* ── 3. Active incidents ──────────────────────────────── */}
-        <section
-          className="status-section"
-          aria-labelledby="active-incidents-heading"
-        >
-          <div className="status-section-header">
-            <span className="status-section-num">02 /</span>
-            <h2 className="status-section-title" id="active-incidents-heading">
-              Active Incidents
+        {/* ── Recent incidents ────────────────────────── */}
+        <section className="status-section" aria-labelledby="incidents-heading">
+          <div className="status-section__header">
+            <span className="status-section__num">02 /</span>
+            <h2 className="status-section__title" id="incidents-heading">
+              Recent incidents
             </h2>
-          </div>
-
-          {activeIncidents.length === 0 ? (
-            <div className="incident-empty" role="status">
-              <span className="incident-empty-check" aria-hidden="true">
-                ✓
-              </span>
-              No active incidents. All services are operating normally.
-            </div>
-          ) : (
-            <div>
-              {activeIncidents.map((inc) => (
-                <IncidentCard key={inc.id} incident={inc} />
-              ))}
-            </div>
-          )}
-        </section>
-
-        {/* ── 4. Recent incident history (7 days) ─────────────── */}
-        <section
-          className="status-section"
-          aria-labelledby="recent-incidents-heading"
-        >
-          <div className="status-section-header">
-            <span className="status-section-num">03 /</span>
-            <h2 className="status-section-title" id="recent-incidents-heading">
-              Recent Incidents
-              <span
-                style={{
-                  fontFamily: "'CSGenioMono', monospace",
-                  fontSize: "12px",
-                  fontWeight: 600,
-                  color: "rgba(0,48,73,0.4)",
-                  letterSpacing: "0.04em",
-                  marginLeft: "12px",
-                  verticalAlign: "middle",
-                }}
-              >
-                Last 7 days
-              </span>
-            </h2>
+            <span className="status-section__meta">last 14 days</span>
           </div>
 
           {recentIncidents.length === 0 ? (
-            <div className="incident-empty" role="status">
-              <span className="incident-empty-check" aria-hidden="true">
+            <div className="status-empty">
+              <span className="status-empty__check" aria-hidden="true">
                 ✓
               </span>
-              No incidents in the past 7 days.
+              <span>
+                No incidents in the past 14 days. All services nominal.
+              </span>
             </div>
           ) : (
-            <div className="recent-incidents-list">
+            <div className="status-incidents">
               {recentIncidents.map((inc) => (
-                <IncidentCard key={inc.id} incident={inc} />
+                <IncidentCard
+                  key={inc.id}
+                  incident={inc}
+                  serviceMap={serviceMap}
+                />
               ))}
             </div>
           )}
         </section>
-
-        {/* ── 5. Performance metrics ───────────────────────────── */}
-        <section
-          className="status-section"
-          aria-labelledby="perf-metrics-heading"
-        >
-          <div className="status-section-header">
-            <span className="status-section-num">04 /</span>
-            <h2 className="status-section-title" id="perf-metrics-heading">
-              Performance
-            </h2>
-          </div>
-          <div className="perf-metrics-grid">
-            {PERFORMANCE_METRICS.map((m) => (
-              <PerfMetricCard key={m.id} metric={m} />
-            ))}
-          </div>
-        </section>
       </div>
 
-      {/* ── 6. Subscribe ─────────────────────────────────────────── */}
+      {/* ── Subscribe ─────────────────────────────────── */}
       <section className="status-subscribe" aria-labelledby="subscribe-heading">
-        <div className="status-subscribe-inner">
-          <div>
-            <h2 className="subscribe-headline" id="subscribe-heading">
-              Get status updates.
+        <div className="container status-subscribe__inner">
+          <div className="status-subscribe__text">
+            <p className="status-subscribe__eyebrow">Stay informed</p>
+            <h2 className="status-subscribe__headline" id="subscribe-heading">
+              <span className="wt-900">Know when something breaks.</span>
+              <br />
+              <span className="wt-300">Before a campaign does.</span>
             </h2>
-            <p className="subscribe-sub">
-              Subscribe for email notifications on incidents and maintenance.
+            <p className="status-subscribe__sub">
+              Pick your channel. We&apos;ll push incident updates, scheduled
+              maintenance windows, and post-mortem links.
             </p>
           </div>
           <SubscribeForm />
         </div>
       </section>
-
-      {/* ── Scroll reveal script ──────────────────────────────────── */}
-      <ScrollRevealScript />
     </main>
   );
-}
-
-// Inline script for scroll-reveal — avoids FOUC without adding a client component
-function ScrollRevealScript() {
-  const script = `
-    (function() {
-      var els = document.querySelectorAll('.reveal-up');
-      if (!els.length) return;
-      var io = new IntersectionObserver(function(entries) {
-        entries.forEach(function(e) {
-          if (e.isIntersecting) {
-            e.target.classList.add('is-visible');
-            io.unobserve(e.target);
-          }
-        });
-      }, { threshold: 0.08 });
-      els.forEach(function(el) { io.observe(el); });
-    })();
-  `;
-  return <script dangerouslySetInnerHTML={{ __html: script }} defer />;
 }

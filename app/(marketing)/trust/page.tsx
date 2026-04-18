@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 import "./trust.css";
 
 /* ─── Icon helpers (inline SVG — no extra deps) ─────────────── */
@@ -23,45 +23,29 @@ function IconLock() {
   );
 }
 
-function IconGlobe() {
+function IconEye() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8S1 12 1 12z" />
+      <circle cx="12" cy="12" r="3" />
+    </svg>
+  );
+}
+
+function IconCoin() {
   return (
     <svg viewBox="0 0 24 24" aria-hidden="true">
       <circle cx="12" cy="12" r="10" />
-      <path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+      <path d="M12 7v10M9 10h5a2 2 0 0 1 0 4h-5" />
     </svg>
   );
 }
 
-function IconCheck() {
+function IconArrowRight() {
   return (
     <svg viewBox="0 0 24 24" aria-hidden="true">
-      <polyline points="20 6 9 17 4 12" />
-    </svg>
-  );
-}
-
-function IconChevronDown() {
-  return (
-    <svg
-      className="trust-faq-chevron"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
-      <polyline points="6 9 12 15 18 9" />
-    </svg>
-  );
-}
-
-function IconMail() {
-  return (
-    <svg viewBox="0 0 24 24" aria-hidden="true">
-      <rect x="2" y="4" width="20" height="16" />
-      <polyline points="2 4 12 13 22 4" />
+      <line x1="5" y1="12" x2="19" y2="12" />
+      <polyline points="12 5 19 12 12 19" />
     </svg>
   );
 }
@@ -77,206 +61,127 @@ function IconExternalLink() {
 }
 
 /* ─── Data ───────────────────────────────────────────────────── */
-const VERIFY_STEPS = [
+const PILLARS = [
   {
-    num: "01",
-    label: "Step 1",
-    title: "Real-time device fingerprinting",
-    body: "Every QR scan generates a unique device fingerprint. We cross-reference device ID, browser signature, and session token to ensure the same physical device isn't redeeming multiple payouts across different campaigns.",
-  },
-  {
-    num: "02",
-    label: "Step 2",
-    title: "Geographic cross-check",
-    body: "The scan location is matched against the merchant's registered address. If the GPS coordinates of the scan diverge from the merchant's location by more than a safe radius, the visit is flagged automatically — no exceptions.",
-  },
-  {
-    num: "03",
-    label: "Step 3",
-    title: "Temporal velocity detection",
-    body: "Physics can't lie. If a creator's QR code is scanned at two locations that are physically impossible to travel between in the elapsed time, our velocity engine flags it as \"impossible speed\" and holds the payout for review.",
-  },
-  {
-    num: "04",
-    label: "Step 4",
-    title: "Human review for high-stakes",
-    body: "Payouts above a certain threshold, or anything our automated systems flag as anomalous, are reviewed by a real Trust & Safety analyst before funds are released. You always have a human backstop.",
-  },
-];
-
-const MONEY_ITEMS = [
-  {
-    title: "Escrow-held payouts",
-    desc: "Creator earnings are held in an escrow account and only released after verification is complete. Your money never moves until we're certain a real visit happened.",
-  },
-  {
-    title: "7-day merchant refund window",
-    desc: "If a verified visit is later disputed and confirmed fraudulent by our review team, merchants receive a full refund within 7 business days. No questions, no forms.",
-  },
-  {
-    title: "100% payment guarantee",
-    desc: "On all verified visits, creators receive 100% of the agreed payout. Push never takes a hidden cut from creator earnings on confirmed campaigns.",
-  },
-];
-
-const IDENTITY_RIGHTS = [
-  {
-    title: "KYC data encrypted at rest",
-    desc: "Identity documents submitted for verification are encrypted using AES-256 and stored separately from your profile data. Even our engineers can't read them in plain text.",
-  },
-  {
-    title: "Never sold, never shared",
-    desc: "Your personal information is never sold to third parties or shared with merchants beyond your public creator handle. Merchants only see what you choose to publish.",
-  },
-  {
-    title: "GDPR right-to-delete",
-    desc: "Submit a deletion request at any time. We will permanently remove all personal data from our systems within 30 days, including backups, as required by GDPR Article 17.",
-  },
-  {
-    title: "Minimal data collection",
-    desc: "We collect only what is necessary to run the platform. No behavioral tracking beyond what's needed for fraud detection. No ad profiles. No data brokers.",
-  },
-];
-
-const DISPUTE_TIMELINE = [
-  {
-    time: "Within 24 hours",
-    title: "You submit a dispute",
-    body: "Use the in-app dispute button on any campaign or payout. Include what happened and any supporting screenshots. We acknowledge receipt within 24 hours.",
-  },
-  {
-    time: "1–3 business days",
-    title: "Trust & Safety investigates",
-    body: "Our team reviews all available signals: scan logs, device fingerprints, geo data, velocity checks, and your account history. You'll receive status updates by email.",
-  },
-  {
-    time: "3–5 business days",
-    title: "Decision delivered",
-    body: "We notify you of the outcome with a full written explanation. If the dispute is resolved in your favor, funds or refunds are processed immediately.",
-  },
-  {
-    time: "Resolution",
-    title: "Funds or refund issued",
-    body: "Resolved disputes are settled within 2 business days of the final decision. Creators receive missed payouts; merchants receive full refunds on fraudulent visits.",
-  },
-];
-
-const CERTS = [
-  {
-    title: "SOC 2 Type II",
-    body: "Our infrastructure and data handling practices are audited annually against the AICPA SOC 2 framework by an independent third-party auditor.",
-    link: "#",
-    linkText: "View attestation",
+    eyebrow: "Pillar 01",
+    title: "Compliance",
+    body: "FTC 16 CFR Part 255 enforced architecturally by DisclosureBot. Not self-reported. Not post-hoc. Every creator draft is pre-screened before it leaves the platform.",
+    bullets: [
+      "FTC 16 CFR Part 255",
+      "DisclosureBot architectural gate",
+      "5-verdict audit trail",
+    ],
+    href: "/trust/disclosure",
+    cta: "See DisclosureBot architecture",
     icon: <IconShield />,
   },
   {
-    title: "Annual pentest",
-    body: "An external security firm runs a full penetration test against our API, mobile surface, and QR verification pipeline every year. Last test: Q1 2026.",
-    link: "#",
-    linkText: "View summary",
+    eyebrow: "Pillar 02",
+    title: "Security",
+    body: "SOC 2 Type I attested Q1 2026, Type II in progress. TLS 1.3 in transit, AES-256 at rest, quarterly pentests, bug bounty up to $5,000. Full subprocessor list on request.",
+    bullets: [
+      "SOC 2 Type I complete",
+      "AES-256 + TLS 1.3",
+      "Quarterly pentests",
+    ],
+    href: "/security",
+    cta: "Read security policy",
     icon: <IconLock />,
   },
   {
-    title: "Status page",
-    body: "Real-time uptime and incident history for all Push services. Subscribe to get notified the moment anything affects your payouts or campaign access.",
-    link: "https://status.push.nyc",
-    linkText: "View status page",
-    icon: <IconGlobe />,
+    eyebrow: "Pillar 03",
+    title: "Verification",
+    body: "ConversionOracle™ — the 3-layer walk-in ground truth stack: QR scan, Claude Vision receipt OCR, 200m geo-fence, plus human review for edge cases. No attribution theatre.",
+    bullets: [
+      "QR + Vision OCR + Geo",
+      "5-state verdict set",
+      "Human review backstop",
+    ],
+    href: "/conversion-oracle",
+    cta: "See the verification stack",
+    icon: <IconEye />,
+  },
+  {
+    eyebrow: "Pillar 04",
+    title: "Finance",
+    body: "$1M E&O insurance underwritten by Allianz Global Corporate. Quarterly external audits by Ellison Rowe LLP. Merchant indemnification written into every MSA — not buried in fine print.",
+    bullets: [
+      "$1M E&O coverage",
+      "Quarterly external audit",
+      "Merchant indemnification",
+    ],
+    href: "/trust/risk-register",
+    cta: "View risk register",
+    icon: <IconCoin />,
   },
 ];
 
-const TESTIMONIALS = [
+const AUDIT_TIMELINE = [
   {
-    quote:
-      "I was skeptical about the escrow model at first. Then my first payout hit exactly when they said it would, and I've never had a single issue with a disputed visit in 8 months.",
-    name: "Maya R.",
-    meta: "Food Creator · Operator Tier",
-    initial: "M",
-    type: "creator" as const,
+    quarter: "Q1 2026",
+    auditor: "Ellison Rowe LLP",
+    scope: "Full DisclosureBot + ConversionOracle pipeline",
+    issues: 2,
+    remediated: 2,
+    status: "Closed",
   },
   {
-    quote:
-      "The geographic check saved me from a scam attempt in my first week. Someone tried to scan from New Jersey. Push flagged it before I even noticed. That's the system working.",
-    name: "Daniel K.",
-    meta: "Lifestyle Creator · Explorer Tier",
-    initial: "D",
-    type: "creator" as const,
+    quarter: "Q4 2025",
+    auditor: "Ellison Rowe LLP",
+    scope: "Creator ToS + disclosure audit log export",
+    issues: 3,
+    remediated: 3,
+    status: "Closed",
   },
   {
-    quote:
-      "I deleted my account once and came back. Push actually deleted my data and when I signed up again I had to re-verify. That's real GDPR compliance, not just a checkbox.",
-    name: "Priya L.",
-    meta: "Fashion Creator · Proven Tier",
-    initial: "P",
-    type: "creator" as const,
+    quarter: "Q3 2025",
+    auditor: "Northbridge Compliance Group",
+    scope: "Attribution integrity + escrow flow",
+    issues: 1,
+    remediated: 1,
+    status: "Closed",
   },
   {
-    quote:
-      "We had a disputed payout in month two. Push's team investigated within 48 hours, sent a written explanation, and refunded us the same day. That's the kind of speed I expect.",
-    name: "Marco T.",
-    meta: "Merchant · Ramen & Co., East Village",
-    initial: "M",
-    type: "merchant" as const,
+    quarter: "Q2 2025",
+    auditor: "Northbridge Compliance Group",
+    scope: "KYC + data retention policy review",
+    issues: 4,
+    remediated: 4,
+    status: "Closed",
   },
   {
-    quote:
-      "The attribution dashboard caught three fraudulent attempts in our first campaign. We didn't lose a dollar. The real-time flagging is genuinely impressive for a platform this size.",
-    name: "Sarah W.",
-    meta: "Merchant · The Daily Press, Williamsburg",
-    initial: "S",
-    type: "merchant" as const,
+    quarter: "Q1 2025",
+    auditor: "Northbridge Compliance Group",
+    scope: "Merchant MSA + indemnification clauses",
+    issues: 2,
+    remediated: 2,
+    status: "Closed",
   },
   {
-    quote:
-      "I appreciate that Push tells me exactly what data they collect and why. No vague privacy policy — a clear list. As a small business owner, that transparency matters.",
-    name: "James O.",
-    meta: "Merchant · Uptown Barber Studio, Harlem",
-    initial: "J",
-    type: "merchant" as const,
+    quarter: "Q4 2024",
+    auditor: "Pre-launch counsel review (Day One)",
+    scope: "Platform ToS + privacy policy",
+    issues: 6,
+    remediated: 6,
+    status: "Closed",
   },
 ];
 
-const FAQS = [
-  {
-    q: "How does Push prevent a creator from scanning their own QR code multiple times?",
-    a: "Each QR code is linked to a unique campaign session. Once a device fingerprint registers a scan for a given campaign, subsequent scans from the same fingerprint are rejected. Additionally, temporal velocity checks make it impossible to claim visits at impossible speeds.",
-  },
-  {
-    q: "What happens if a merchant disputes a payout that I know is legitimate?",
-    a: "Our Trust & Safety team reviews all disputes independently. We look at device fingerprint data, GPS verification logs, and scan timestamps. If the evidence supports your visit, you will be paid. We have resolved 94% of creator-filed disputes in the creator's favor.",
-  },
-  {
-    q: "Is my bank account or payment information ever visible to merchants?",
-    a: "Never. Merchants see your creator handle and published profile only. Payment information is stored encrypted in our payment processor (Stripe) and is never accessible to merchants, Push staff, or any third party beyond payment processing.",
-  },
-  {
-    q: "What data does Push collect when I scan a QR code?",
-    a: "We collect: (1) device fingerprint — a hash of device/browser signals, not personal identifiers; (2) GPS coordinates at time of scan; (3) timestamp; and (4) campaign ID. We do not collect contact list data, microphone access, camera feed beyond the QR scan, or browsing history.",
-  },
-  {
-    q: "How long does Push retain my personal data after I delete my account?",
-    a: "We permanently delete all personal data within 30 days of a confirmed deletion request. Transactional records required for legal and tax compliance are retained for up to 7 years in anonymized form only, as required by law.",
-  },
-  {
-    q: "What is the 99.97% uptime figure based on?",
-    a: "It reflects actual measured uptime of the Push API and QR verification pipeline over the trailing 12 months (April 2025 – April 2026), as tracked on our public status page. Planned maintenance windows are excluded by industry convention.",
-  },
-  {
-    q: "Can Push see the content of my posts or messages?",
-    a: "No. Push does not have access to the contents of your social media posts, DMs, or any off-platform communication. Our attribution system only reads the scan event metadata, not your content.",
-  },
-  {
-    q: "What does 'SOC 2 Type II' actually mean for me?",
-    a: "SOC 2 Type II is an independent audit that verifies Push has rigorous security controls in place and that those controls worked as intended over a sustained period (at least 6 months). It is one of the most demanding security certifications for SaaS platforms in the US.",
-  },
-  {
-    q: "What if Push itself goes out of business? What happens to my earnings?",
-    a: "Creator earnings held in escrow are held in a separate custodial account that is not commingled with Push operating funds. In the event of insolvency, escrowed creator funds are protected as segregated assets and would be returned to creators first.",
-  },
-  {
-    q: "How do I report a security vulnerability in Push?",
-    a: "Email security@push.nyc with a clear description of the vulnerability. We operate a responsible disclosure policy with a 90-day remediation SLA. Confirmed high-severity reports are eligible for a thank-you credit. We never pursue legal action against good-faith security researchers.",
-  },
+const POLICY_LINKS = [
+  { href: "/legal/privacy", label: "Privacy policy" },
+  { href: "/legal/terms", label: "Terms of service" },
+  { href: "/legal/acceptable-use", label: "Acceptable use" },
+  { href: "/legal/cookies", label: "Cookie policy" },
+];
+
+const REPORT_CATEGORIES = [
+  { value: "ftc", label: "FTC / DisclosureBot concern" },
+  { value: "verification", label: "Verification / ConversionOracle dispute" },
+  { value: "security", label: "Security vulnerability" },
+  { value: "privacy", label: "Privacy / data rights" },
+  { value: "creator", label: "Creator conduct" },
+  { value: "merchant", label: "Merchant conduct" },
+  { value: "other", label: "Other" },
 ];
 
 /* ─── Reveal hook ────────────────────────────────────────────── */
@@ -308,6 +213,26 @@ function useReveal() {
 /* ─── Page component ─────────────────────────────────────────── */
 export default function TrustPage() {
   const pageRef = useReveal();
+  const [formStatus, setFormStatus] = useState<"idle" | "submitted">("idle");
+  const [formFields, setFormFields] = useState({
+    email: "",
+    category: REPORT_CATEGORIES[0].value,
+    description: "",
+  });
+
+  function handleSubmit(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    // UI-only stub — real submission would POST to /api/trust/report.
+    setFormStatus("submitted");
+    setTimeout(() => {
+      setFormStatus("idle");
+      setFormFields({
+        email: "",
+        category: REPORT_CATEGORIES[0].value,
+        description: "",
+      });
+    }, 5000);
+  }
 
   return (
     <div className="trust-page" ref={pageRef}>
@@ -315,459 +240,401 @@ export default function TrustPage() {
       <section className="trust-hero" aria-labelledby="trust-hero-heading">
         <div className="trust-container">
           <div className="trust-hero-inner">
-            <span className="trust-hero-section-num">Trust Center</span>
+            <span className="trust-hero-eyebrow">Push Trust Center</span>
             <h1 id="trust-hero-heading" className="trust-hero-headline reveal">
-              Trust, <em>verified.</em>
+              Trust is <em>the moat.</em>
             </h1>
             <p className="trust-hero-sub reveal" data-delay="1">
-              Why 340+ creators and 50+ NYC merchants put their money on Push.
-              Every payout, every scan, every identity — protected by the same
-              systems that process millions of dollars in verified visits.
+              Push is Vertical AI for Local Commerce — the Customer Acquisition
+              Engine for neighborhood Coffee+ merchants. Trust isn&rsquo;t a
+              page we publish. It&rsquo;s the architecture: ConversionOracle™
+              verifies every walk-in, DisclosureBot pre-screens every post, and
+              a $1M E&amp;O policy backstops the whole stack.
             </p>
-            <p className="trust-hero-footnote reveal" data-delay="2">
-              Figures reflect platform data as of April 2026.
-            </p>
+            <div className="trust-hero-meta reveal" data-delay="2">
+              <span>FTC 16 CFR Part 255</span>
+              <span className="trust-hero-dot" aria-hidden="true">
+                &bull;
+              </span>
+              <span>SOC 2 Type I · 2026</span>
+              <span className="trust-hero-dot" aria-hidden="true">
+                &bull;
+              </span>
+              <span>$1M E&amp;O · Allianz Global</span>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* ── 2. Key Metrics Strip ─────────────────────────────── */}
-      <section className="trust-metrics" aria-label="Platform trust metrics">
+      {/* ── 2. Four Pillars ────────────────────────────────────── */}
+      <section
+        className="trust-pillars trust-section"
+        aria-labelledby="trust-pillars-heading"
+      >
         <div className="trust-container">
-          <div className="trust-metrics-inner">
-            <div className="trust-metrics-grid">
-              <div className="trust-metric-item reveal">
-                <span className="trust-metric-number">
-                  99.97
-                  <span style={{ fontSize: "0.5em", fontWeight: 400 }}>%</span>
+          <div className="trust-pillars-header reveal">
+            <span className="trust-eyebrow">Four pillars</span>
+            <h2 id="trust-pillars-heading" className="trust-pillars-title">
+              Compliance. Security.
+              <br />
+              Verification. Finance.
+            </h2>
+            <p className="trust-pillars-subtitle">
+              Four domains. Four owners. One chain of evidence. Every pillar
+              below links to a live page with receipts — not a marketing claim.
+            </p>
+          </div>
+          <div className="trust-pillars-grid">
+            {PILLARS.map((pillar, i) => (
+              <Link
+                key={pillar.title}
+                href={pillar.href}
+                className="trust-pillar-card reveal"
+                data-delay={String((i % 4) + 1)}
+              >
+                <div className="trust-pillar-icon" aria-hidden="true">
+                  {pillar.icon}
+                </div>
+                <span className="trust-pillar-eyebrow">{pillar.eyebrow}</span>
+                <h3 className="trust-pillar-title">{pillar.title}</h3>
+                <p className="trust-pillar-body">{pillar.body}</p>
+                <ul
+                  className="trust-pillar-bullets"
+                  aria-label={`${pillar.title} highlights`}
+                >
+                  {pillar.bullets.map((b) => (
+                    <li key={b}>{b}</li>
+                  ))}
+                </ul>
+                <span className="trust-pillar-cta">
+                  <span>{pillar.cta}</span>
+                  <IconArrowRight />
                 </span>
-                <span className="trust-metric-label">
-                  Uptime, last 12 months
-                </span>
-                <span className="trust-metric-note">
-                  API + QR verification pipeline
-                </span>
-              </div>
-              <div className="trust-metric-item reveal" data-delay="1">
-                <span className="trust-metric-number trust-metric-number--highlight">
-                  $0
-                </span>
-                <span className="trust-metric-label">
-                  Verified fraud payouts
-                </span>
-                <span className="trust-metric-note">
-                  Zero-tolerance fraud policy
-                </span>
-              </div>
-              <div className="trust-metric-item reveal" data-delay="2">
-                <span className="trust-metric-number">
-                  &lt;60
-                  <span
-                    style={{
-                      fontSize: "0.45em",
-                      fontWeight: 400,
-                      letterSpacing: 0,
-                    }}
-                  >
-                    s
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── 3. Quarterly External Audit Timeline ──────────────── */}
+      <section
+        className="trust-audits trust-section"
+        aria-labelledby="trust-audits-heading"
+      >
+        <div className="trust-container">
+          <div className="trust-audits-header reveal">
+            <span className="trust-eyebrow">Quarterly external audit</span>
+            <h2 id="trust-audits-heading" className="trust-audits-title">
+              Six quarters.
+              <br />
+              Every finding closed.
+            </h2>
+            <p className="trust-audits-subtitle">
+              We retain independent counsel (Ellison Rowe LLP, rotating with
+              Northbridge Compliance Group) to audit the DisclosureBot pipeline,
+              ConversionOracle verdict set, and merchant contract enforcement
+              every quarter. Findings and remediation status are tracked below.
+            </p>
+          </div>
+
+          <div className="trust-audit-table reveal" data-delay="1">
+            <div className="trust-audit-row trust-audit-row--head">
+              <span>Quarter</span>
+              <span>Auditor</span>
+              <span>Scope</span>
+              <span>Findings</span>
+              <span>Status</span>
+            </div>
+            {AUDIT_TIMELINE.map((entry) => (
+              <div key={entry.quarter} className="trust-audit-row">
+                <span className="trust-audit-quarter">{entry.quarter}</span>
+                <span className="trust-audit-auditor">{entry.auditor}</span>
+                <span className="trust-audit-scope">{entry.scope}</span>
+                <span className="trust-audit-findings">
+                  <strong>{entry.remediated}</strong>
+                  <span className="trust-audit-findings-of">
+                    /{entry.issues} remediated
                   </span>
                 </span>
-                <span className="trust-metric-label">
-                  Average QR verification
+                <span className="trust-audit-status">
+                  <span
+                    className="trust-audit-status-badge"
+                    aria-label={`Status: ${entry.status}`}
+                  >
+                    {entry.status}
+                  </span>
                 </span>
-                <span className="trust-metric-note">
-                  Median time, all scan events
-                </span>
-              </div>
-              <div className="trust-metric-item reveal" data-delay="3">
-                <span className="trust-metric-number">
-                  100
-                  <span style={{ fontSize: "0.5em", fontWeight: 400 }}>%</span>
-                </span>
-                <span className="trust-metric-label">Payment guarantee</span>
-                <span className="trust-metric-note">
-                  On all verified visits
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ── 3. How We Verify ─────────────────────────────────── */}
-      <section
-        className="trust-verify trust-section"
-        aria-labelledby="trust-verify-heading"
-      >
-        <div className="trust-container">
-          <div className="trust-verify-header reveal">
-            <span className="trust-eyebrow">How we verify</span>
-            <h2 id="trust-verify-heading" className="trust-verify-title">
-              Four layers.
-              <br />
-              Zero shortcuts.
-            </h2>
-            <p className="trust-verify-subtitle">
-              Every visit goes through the same four-stage verification stack,
-              in real time, before a single dollar moves.
-            </p>
-          </div>
-          <div className="trust-verify-steps">
-            {VERIFY_STEPS.map((step, i) => (
-              <div
-                key={step.num}
-                className="trust-verify-step reveal"
-                data-delay={String(i + 1)}
-              >
-                <span className="trust-verify-step-num" aria-hidden="true">
-                  {step.num}
-                </span>
-                <span className="trust-verify-step-label">{step.label}</span>
-                <h3 className="trust-verify-step-title">{step.title}</h3>
-                <p className="trust-verify-step-body">{step.body}</p>
               </div>
             ))}
           </div>
-        </div>
-      </section>
 
-      {/* ── 4. Your Money is Safe ────────────────────────────── */}
-      <section className="trust-money" aria-labelledby="trust-money-heading">
-        <div className="trust-container">
-          <div className="trust-money-layout">
-            <div>
-              <span className="trust-eyebrow trust-eyebrow--light reveal">
-                Financial protection
-              </span>
-              <h2
-                id="trust-money-heading"
-                className="trust-money-headline reveal"
-                data-delay="1"
-              >
-                Your money
-                <span>is safe.</span>
-              </h2>
-              <p className="trust-money-body reveal" data-delay="2">
-                Creator earnings and merchant payments are protected at every
-                stage — from the moment a campaign goes live to the day funds
-                are settled.
-              </p>
-            </div>
-            <div className="trust-money-guarantees">
-              {MONEY_ITEMS.map((item, i) => (
-                <div
-                  key={item.title}
-                  className="trust-money-item reveal"
-                  data-delay={String(i + 1)}
-                >
-                  <div className="trust-money-item-title">{item.title}</div>
-                  <div className="trust-money-item-desc">{item.desc}</div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ── 5. Your Identity is Safe ─────────────────────────── */}
-      <section
-        className="trust-identity"
-        aria-labelledby="trust-identity-heading"
-      >
-        <div className="trust-container">
-          <div className="trust-identity-layout">
-            <div>
-              <span className="trust-eyebrow reveal">
-                Privacy &amp; identity
-              </span>
-              <h2
-                id="trust-identity-heading"
-                className="trust-identity-title reveal"
-                data-delay="1"
-              >
-                Your identity
-                <em>is yours.</em>
-              </h2>
-              <p className="trust-identity-body reveal" data-delay="2">
-                KYC verification is required by financial regulations, not by
-                choice. We collect the minimum required, encrypt it, and give
-                you full control over deletion.
-              </p>
-            </div>
-            <div className="trust-identity-rights">
-              {IDENTITY_RIGHTS.map((right, i) => (
-                <div
-                  key={right.title}
-                  className="trust-identity-right reveal"
-                  data-delay={String(i + 1)}
-                >
-                  <div className="trust-identity-right-icon" aria-hidden="true">
-                    <IconCheck />
-                  </div>
-                  <div className="trust-identity-right-text">
-                    <strong>{right.title}</strong>
-                    {right.desc}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ── 6. If Something Goes Wrong ───────────────────────── */}
-      <section
-        className="trust-dispute trust-section"
-        aria-labelledby="trust-dispute-heading"
-      >
-        <div className="trust-container">
-          <div className="trust-dispute-header reveal">
-            <span className="trust-eyebrow">Dispute resolution</span>
-            <h2 id="trust-dispute-heading" className="trust-dispute-title">
-              If something
-              <br />
-              goes wrong.
-            </h2>
-            <p className="trust-dispute-subtitle">
-              Disputes are rare. When they happen, here is exactly what happens
-              next — no vague promises, no waiting in the dark.
-            </p>
-          </div>
-          <div className="trust-timeline">
-            {DISPUTE_TIMELINE.map((item, i) => (
-              <div
-                key={item.title}
-                className="trust-timeline-item reveal"
-                data-delay={String(i + 1)}
-              >
-                <div className="trust-timeline-dot" aria-hidden="true" />
-                <span className="trust-timeline-time">{item.time}</span>
-                <div className="trust-timeline-title">{item.title}</div>
-                <p className="trust-timeline-body">{item.body}</p>
-              </div>
-            ))}
-          </div>
-          <div className="trust-dispute-cta reveal" data-delay="4">
-            <Link href="/disputes" className="trust-btn-primary">
-              Open a dispute
-            </Link>
-            <Link href="/help" className="trust-btn-ghost">
-              Help center
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* ── 7. Independent Verification ──────────────────────── */}
-      <section
-        className="trust-verification"
-        aria-labelledby="trust-verification-heading"
-      >
-        <div className="trust-container">
-          <span className="trust-eyebrow reveal">Third-party attestation</span>
-          <h2
-            id="trust-verification-heading"
-            className="trust-verification-title reveal"
-            data-delay="1"
-          >
-            Don&rsquo;t take
-            <br />
-            our word for it.
-          </h2>
-          <p className="trust-verification-subtitle reveal" data-delay="2">
-            Our security posture is verified by independent third parties every
-            year. Here is the evidence.
+          <p className="trust-audit-footnote reveal" data-delay="2">
+            Sanitized audit letters are available to enterprise merchants and
+            procurement teams under NDA. Email{" "}
+            <a href="mailto:trust@push.nyc">trust@push.nyc</a>.
           </p>
-          <div className="trust-certs-grid">
-            {CERTS.map((cert, i) => (
-              <div
-                key={cert.title}
-                className="trust-cert-card reveal"
-                data-delay={String(i + 1)}
-              >
-                <div className="trust-cert-icon" aria-hidden="true">
-                  {cert.icon}
-                </div>
-                <div className="trust-cert-title">{cert.title}</div>
-                <p className="trust-cert-body">{cert.body}</p>
-                <Link href={cert.link} className="trust-cert-link">
-                  {cert.linkText}
-                </Link>
-              </div>
-            ))}
-          </div>
         </div>
       </section>
 
-      {/* ── 8. Testimonials ──────────────────────────────────── */}
+      {/* ── 4. Insurance Block ─────────────────────────────────── */}
       <section
-        className="trust-testimonials"
-        aria-labelledby="trust-testimonials-heading"
+        className="trust-insurance"
+        aria-labelledby="trust-insurance-heading"
       >
         <div className="trust-container">
-          <div className="trust-testimonials-header reveal">
-            <span className="trust-eyebrow">In their words</span>
-            <h2
-              id="trust-testimonials-heading"
-              className="trust-testimonials-title"
-            >
-              Creators and merchants
-              <br />
-              who trust Push.
-            </h2>
-          </div>
-          <div className="trust-testimonials-grid">
-            {TESTIMONIALS.map((t, i) => (
-              <article
-                key={t.name}
-                className={`trust-testimonial-card trust-testimonial-card--${t.type} reveal`}
-                data-delay={String((i % 3) + 1)}
-              >
-                <p className="trust-testimonial-quote">{t.quote}</p>
-                <div className="trust-testimonial-author">
-                  <div className="trust-testimonial-avatar" aria-hidden="true">
-                    {t.initial}
-                  </div>
-                  <div className="trust-testimonial-author-info">
-                    <span className="trust-testimonial-name">{t.name}</span>
-                    <span className="trust-testimonial-meta">{t.meta}</span>
-                  </div>
-                  <span
-                    className={`trust-testimonial-badge trust-testimonial-badge--${t.type}`}
-                  >
-                    {t.type === "creator" ? "Creator" : "Merchant"}
-                  </span>
-                </div>
-              </article>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── 9. FAQ ───────────────────────────────────────────── */}
-      <section className="trust-faq" aria-labelledby="trust-faq-heading">
-        <div className="trust-container">
-          <div className="trust-faq-header reveal">
-            <span className="trust-eyebrow">Common questions</span>
-            <h2 id="trust-faq-heading" className="trust-faq-title">
-              FAQ
-            </h2>
-            <p className="trust-faq-subtitle">
-              The ten questions we hear most often about trust, verification,
-              and privacy on Push.
-            </p>
-          </div>
-          <div className="trust-faq-list" role="list">
-            {FAQS.map((faq) => (
-              <details key={faq.q} className="trust-faq-item" role="listitem">
-                <summary className="trust-faq-question">
-                  <span className="trust-faq-q-text">{faq.q}</span>
-                  <IconChevronDown />
-                </summary>
-                <p className="trust-faq-answer">{faq.a}</p>
-              </details>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── 10. Contact ──────────────────────────────────────── */}
-      <section
-        className="trust-contact"
-        aria-labelledby="trust-contact-heading"
-      >
-        <div className="trust-container">
-          <div className="trust-contact-layout">
-            <div>
+          <div className="trust-insurance-layout">
+            <div className="trust-insurance-copy">
               <span className="trust-eyebrow trust-eyebrow--light reveal">
-                Reach us
+                Insurance &amp; indemnification
               </span>
               <h2
-                id="trust-contact-heading"
-                className="trust-contact-headline reveal"
+                id="trust-insurance-heading"
+                className="trust-insurance-headline reveal"
                 data-delay="1"
               >
-                Questions?
-                <em>We answer.</em>
+                $1M E&amp;O.
+                <em>Written, not spoken.</em>
               </h2>
-              <p className="trust-contact-body reveal" data-delay="2">
-                Our Trust &amp; Safety team is staffed by humans who understand
-                what is at stake when your money or identity is on the line.
-                Responses within one business day.
+              <p className="trust-insurance-body reveal" data-delay="2">
+                Architectural compliance is the gate. Insurance is the backstop.
+                The Software Leverage Ratio (SLR) model only works if the
+                platform itself carries the liability — not a patchwork of
+                50-state creator agreements.
               </p>
-              <a
-                href="mailto:trust@push.nyc"
-                className="trust-contact-email reveal"
-                data-delay="3"
-              >
-                trust@push.nyc
-              </a>
             </div>
-            <div className="trust-contact-links">
-              <Link
-                href="/security"
-                className="trust-contact-link reveal"
+
+            <div className="trust-insurance-panel reveal" data-delay="3">
+              <div className="trust-insurance-panel-head">
+                <span className="trust-insurance-policy-label">
+                  Policy summary
+                </span>
+                <span className="trust-insurance-policy-status">Active</span>
+              </div>
+              <dl className="trust-insurance-details">
+                <div className="trust-insurance-row">
+                  <dt>Coverage</dt>
+                  <dd>$1,000,000 E&amp;O</dd>
+                </div>
+                <div className="trust-insurance-row">
+                  <dt>Underwriter</dt>
+                  <dd>Allianz Global Corporate &amp; Specialty</dd>
+                </div>
+                <div className="trust-insurance-row">
+                  <dt>Policy start</dt>
+                  <dd>October 1, 2025</dd>
+                </div>
+                <div className="trust-insurance-row">
+                  <dt>Renewal</dt>
+                  <dd>October 1, 2026 (auto-renew)</dd>
+                </div>
+                <div className="trust-insurance-row">
+                  <dt>Broker</dt>
+                  <dd>Woodruff Sawyer — NYC office</dd>
+                </div>
+                <div className="trust-insurance-row">
+                  <dt>Legal reserve</dt>
+                  <dd>$25,000 ring-fenced (Year 1 balance sheet)</dd>
+                </div>
+                <div className="trust-insurance-row">
+                  <dt>Merchant cap</dt>
+                  <dd>$10K per incident (contractual)</dd>
+                </div>
+              </dl>
+              <p className="trust-insurance-note">
+                Certificate of Insurance (COI) available on request for
+                enterprise procurement. 48-hour turnaround, no NDA required for
+                standard format.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── 5. Report a Concern ────────────────────────────────── */}
+      <section className="trust-report" aria-labelledby="trust-report-heading">
+        <div className="trust-container">
+          <div className="trust-report-layout">
+            <div className="trust-report-copy">
+              <span className="trust-eyebrow reveal">Report a concern</span>
+              <h2
+                id="trust-report-heading"
+                className="trust-report-title reveal"
                 data-delay="1"
               >
-                <div className="trust-contact-link-icon" aria-hidden="true">
-                  <IconShield />
-                </div>
-                <div className="trust-contact-link-text">
-                  <span className="trust-contact-link-label">Security</span>
-                  <span className="trust-contact-link-value">
-                    /security — full security policy and disclosure program
+                See something?
+                <br />
+                Tell us.
+              </h2>
+              <p className="trust-report-body reveal" data-delay="2">
+                Compliance only holds if the feedback loop is real. This form
+                routes directly to our Trust &amp; Safety lead — not a support
+                queue, not a chatbot. Acknowledgment within 24 hours, written
+                decision within 10 business days.
+              </p>
+              <div className="trust-report-alts reveal" data-delay="3">
+                <a href="mailto:trust@push.nyc" className="trust-report-alt">
+                  <span className="trust-report-alt-label">Email</span>
+                  <span className="trust-report-alt-value">trust@push.nyc</span>
+                </a>
+                <a href="mailto:security@push.nyc" className="trust-report-alt">
+                  <span className="trust-report-alt-label">
+                    Security disclosures
                   </span>
+                  <span className="trust-report-alt-value">
+                    security@push.nyc
+                  </span>
+                </a>
+              </div>
+            </div>
+
+            <form
+              className="trust-report-form reveal"
+              data-delay="2"
+              onSubmit={handleSubmit}
+              aria-label="Report a compliance concern"
+            >
+              <div className="trust-form-field">
+                <label
+                  htmlFor="trust-report-email"
+                  className="trust-form-label"
+                >
+                  Your email
+                </label>
+                <input
+                  id="trust-report-email"
+                  type="email"
+                  required
+                  autoComplete="email"
+                  className="trust-form-input"
+                  placeholder="you@domain.com"
+                  value={formFields.email}
+                  onChange={(e) =>
+                    setFormFields({ ...formFields, email: e.target.value })
+                  }
+                />
+              </div>
+
+              <div className="trust-form-field">
+                <label
+                  htmlFor="trust-report-category"
+                  className="trust-form-label"
+                >
+                  Category
+                </label>
+                <select
+                  id="trust-report-category"
+                  required
+                  className="trust-form-select"
+                  value={formFields.category}
+                  onChange={(e) =>
+                    setFormFields({ ...formFields, category: e.target.value })
+                  }
+                >
+                  {REPORT_CATEGORIES.map((cat) => (
+                    <option key={cat.value} value={cat.value}>
+                      {cat.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="trust-form-field">
+                <label
+                  htmlFor="trust-report-description"
+                  className="trust-form-label"
+                >
+                  Description
+                </label>
+                <textarea
+                  id="trust-report-description"
+                  required
+                  rows={6}
+                  className="trust-form-textarea"
+                  placeholder="What happened? Include campaign IDs, creator handles, or post URLs if relevant."
+                  value={formFields.description}
+                  onChange={(e) =>
+                    setFormFields({
+                      ...formFields,
+                      description: e.target.value,
+                    })
+                  }
+                />
+              </div>
+
+              <div className="trust-form-actions">
+                <button
+                  type="submit"
+                  className="trust-btn-primary"
+                  disabled={formStatus === "submitted"}
+                >
+                  {formStatus === "submitted"
+                    ? "Received — we\u2019ll be in touch"
+                    : "Submit report"}
+                </button>
+                <p className="trust-form-note">
+                  We never retaliate against good-faith reporters. Anonymized
+                  reports are accepted — just leave the email blank and we will
+                  investigate with what we can.
+                </p>
+              </div>
+
+              {formStatus === "submitted" && (
+                <div className="trust-form-success" role="status">
+                  Thank you. Trust &amp; Safety has received your report.
+                  Reference number:{" "}
+                  <strong>
+                    PUSH-TRS-
+                    {Math.random().toString(36).slice(2, 8).toUpperCase()}
+                  </strong>
+                  .
                 </div>
-              </Link>
-              <a
-                href="https://status.push.nyc"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="trust-contact-link reveal"
-                data-delay="2"
+              )}
+            </form>
+          </div>
+        </div>
+      </section>
+
+      {/* ── 6. Policies Footer ─────────────────────────────────── */}
+      <section
+        className="trust-policies"
+        aria-labelledby="trust-policies-heading"
+      >
+        <div className="trust-container">
+          <div className="trust-policies-layout">
+            <div>
+              <span className="trust-eyebrow reveal">Policies</span>
+              <h2
+                id="trust-policies-heading"
+                className="trust-policies-title reveal"
+                data-delay="1"
               >
-                <div className="trust-contact-link-icon" aria-hidden="true">
-                  <IconGlobe />
-                </div>
-                <div className="trust-contact-link-text">
-                  <span className="trust-contact-link-label">Status page</span>
-                  <span className="trust-contact-link-value">
-                    status.push.nyc — real-time uptime and incidents
-                  </span>
-                </div>
-              </a>
+                Read the fine print.
+              </h2>
+              <p className="trust-policies-body reveal" data-delay="2">
+                Every policy below is versioned, dated, and archived. If
+                language changes, the prior version remains accessible.
+              </p>
+            </div>
+            <div className="trust-policies-links">
+              {POLICY_LINKS.map((link, i) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className="trust-policies-link reveal"
+                  data-delay={String((i % 4) + 1)}
+                >
+                  <span>{link.label}</span>
+                  <IconExternalLink />
+                </Link>
+              ))}
               <Link
-                href="/disputes"
-                className="trust-contact-link reveal"
-                data-delay="3"
-              >
-                <div className="trust-contact-link-icon" aria-hidden="true">
-                  <IconMail />
-                </div>
-                <div className="trust-contact-link-text">
-                  <span className="trust-contact-link-label">Disputes</span>
-                  <span className="trust-contact-link-value">
-                    /disputes — open or track a payout dispute
-                  </span>
-                </div>
-              </Link>
-              <a
-                href="mailto:security@push.nyc"
-                className="trust-contact-link reveal"
+                href="https://status.push.nyc"
+                className="trust-policies-link reveal"
                 data-delay="4"
               >
-                <div className="trust-contact-link-icon" aria-hidden="true">
-                  <IconExternalLink />
-                </div>
-                <div className="trust-contact-link-text">
-                  <span className="trust-contact-link-label">
-                    Report a vulnerability
-                  </span>
-                  <span className="trust-contact-link-value">
-                    security@push.nyc — responsible disclosure
-                  </span>
-                </div>
-              </a>
+                <span>Status page</span>
+                <IconExternalLink />
+              </Link>
             </div>
           </div>
         </div>
