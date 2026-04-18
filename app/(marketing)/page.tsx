@@ -2,6 +2,8 @@ import Link from "next/link";
 import ScrollRevealInit from "@/components/layout/ScrollRevealInit";
 import LandingInteractivity from "@/components/layout/LandingInteractivity";
 import StatCounter from "@/components/layout/StatCounter";
+import AgentOutputDemo from "@/components/landing/AgentOutputDemo";
+import VerificationBadge from "@/components/landing/VerificationBadge";
 import "./landing.css";
 
 /* ── Merchant verification dashboard ──────────────────────── */
@@ -170,6 +172,7 @@ export default function LandingPage() {
 
       {/* ── HERO ─────────────────────────────────────────── */}
       <section id="main-content" className="hero" aria-labelledby="hero-h">
+        <AgentOutputDemo />
         <div className="container hero-inner">
           <div className="hero-label">
             <span className="rule" />
@@ -298,6 +301,10 @@ export default function LandingPage() {
             >
               <MerchantDashboard />
             </div>
+          </div>
+
+          <div className="reveal" style={{ transitionDelay: "200ms" }}>
+            <VerificationBadge />
           </div>
         </div>
       </section>
