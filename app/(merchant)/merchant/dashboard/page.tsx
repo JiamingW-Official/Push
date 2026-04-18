@@ -346,6 +346,19 @@ const IconSettings = () => (
   </svg>
 );
 
+const IconLocations = () => (
+  <svg
+    className="db-nav-item__icon"
+    viewBox="0 0 16 16"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="1.5"
+  >
+    <path d="M8 1C5.791 1 4 2.791 4 5c0 3.5 4 9 4 9s4-5.5 4-9c0-2.209-1.791-4-4-4Z" />
+    <circle cx="8" cy="5" r="1.5" />
+  </svg>
+);
+
 const IconGhost = () => (
   <svg
     className="db-empty-state__icon"
@@ -1402,6 +1415,14 @@ export default function MerchantDashboardPage() {
                 <IconAnalytics />
                 Analytics
               </button>
+              <a
+                href="/merchant/locations"
+                className="db-nav-item"
+                style={{ textDecoration: "none" }}
+              >
+                <IconLocations />
+                Locations
+              </a>
               <button
                 className={`db-nav-item${activeTab === "settings" ? " active" : ""}`}
                 onClick={() => setActiveTab("settings")}
