@@ -57,31 +57,31 @@ export const ARTICLES: HelpArticle[] = [
     category: "getting-started",
     title: "What is Push and how does it work?",
     excerpt:
-      "Push connects local creators with nearby merchants through performance-based QR attribution campaigns.",
-    lastUpdated: "2026-03-15",
+      "Push is Vertical AI for Local Commerce — you tell us how many customers you need and we deliver them through creator campaigns with 3-layer AI verification.",
+    lastUpdated: "2026-04-18",
     viewCount: 12480,
     helpful: 934,
     body: `## Overview
 
-Push is a performance-based local marketing platform. Merchants run campaigns, creators promote them to their audiences, and every conversion is tracked via a unique QR code tied to the creator's profile.
+Push is **Vertical AI for Local Commerce**. Merchants tell us how many new customers they need; we run creator campaigns, verify every walk-in with a 3-layer AI stack (QR + Claude Vision OCR + geo-match), and only charge for the customers our ConversionOracle™ model confirms.
 
 ## The Core Loop
 
-1. **Merchant creates a campaign** — sets a budget, a payout per verified visit, and a campaign window.
-2. **Creators browse and join** — any creator meeting the campaign's tier requirement can opt in and receive a personal QR code.
-3. **Audience scans the QR** — when a follower visits the venue and scans at the point of sale, the visit is logged.
-4. **Creator earns a payout** — verified visits trigger automatic payouts to the creator's Push wallet.
+1. **Merchant states a customer goal** — e.g. "I need 40 new customers this month." ConversionOracle™ forecasts creators, content, and budget needed to hit that goal.
+2. **Creators browse and join** — any creator meeting the campaign's tier requirement can opt in and receive a personal QR code. DisclosureBot auto-checks each post for FTC compliance before it goes live.
+3. **Audience scans the QR** — the visit enters our 3-layer verification pipeline: QR timestamp + Claude Vision receipt OCR + geo-match within 2 miles of the venue.
+4. **Merchant pays per verified customer** — pricing scales by vertical ($15–$85 per AI-verified customer). Creators earn from a two-segment economics model tied to the same verified outcome.
 
 ## Who Push is for
 
 - **Creators** — food bloggers, lifestyle influencers, neighborhood micro-influencers with 500–500 000 followers.
-- **Merchants** — restaurants, cafes, retail shops, event venues in major metro areas.
+- **Merchants** — coffee shops, restaurants, retail, wellness — starting with Williamsburg, Brooklyn's Coffee+ beachhead.
 
-> **Note:** Push currently operates in New York City, with Chicago, Los Angeles, and Miami launching in Q3 2026.
+> **Note:** Push v5.1 launches in Williamsburg, Brooklyn. Expansion to Bushwick, Greenpoint, and Lower East Side is scheduled for Q3 2026.
 
 ## Key difference from traditional influencer marketing
 
-Traditional influencer deals pay a flat rate for posting. Push pays only for **verified footfall** — you only pay for real visits, never for impressions or followers alone.`,
+Traditional influencer deals pay a flat rate for posting. Push pays only for **AI-verified customers** — no flat fees for impressions, no flat fees for followers, and no payout until all three verification layers agree.`,
   },
   {
     slug: "create-your-account",
@@ -117,7 +117,7 @@ Push has two distinct account types: **Creator** and **Merchant**. You must choo
 | Creator | Instant (social connect) |
 | Merchant | 1–3 business days |
 
-> **Tip:** Merchants on the **Pro plan** ($199/mo) get priority verification — typically under 4 hours during business hours.
+> **Tip:** Merchants on the **Neighborhood plan** get priority verification — typically under 4 hours during business hours. Pilot and Operator merchants follow the standard 1–3 day timeline.
 
 ## After account creation
 
@@ -565,7 +565,7 @@ Unused budget is **fully refunded** to your payment method within 5 business day
 - Monthly subscription invoices are emailed on your billing anniversary date
 - Campaign budget charges are immediate (when you launch the campaign)
 - All invoices are available in **Settings → Billing → Invoice History**
-- Push accepts Visa, Mastercard, Amex, and ACH (Pro plan only)
+- Push accepts Visa, Mastercard, Amex, and ACH (Neighborhood plan only)
 
 ## Failed payments
 
@@ -601,7 +601,7 @@ Merchants can set **score-based payout tiers** within a campaign. For example:
 | 700–899 | $10.00 |
 | 900–1000 | $12.00 |
 
-Not all campaigns use tiered payouts — many have a flat rate regardless of score. The campaign card always shows whether tiered payouts are in effect.
+Not all campaigns use tiered payouts — many use a uniform per-verified-customer rate regardless of score. The campaign card always shows whether tiered payouts are in effect.
 
 ## Improving your score
 
@@ -940,13 +940,13 @@ Push verifies merchants to protect creators from fraudulent campaigns. Unverifie
 
 | Plan | Typical timeline |
 |---|---|
-| Starter | 2–4 business days |
-| Growth | 1–2 business days |
-| Pro | Same day (during business hours) |
+| Pilot | 2–4 business days |
+| Operator | 1–2 business days |
+| Neighborhood | Same day (during business hours) |
 
 ## Expedited verification
 
-Pro plan merchants can contact **onboarding@push.nyc** for dedicated onboarding support. Expedited verification is typically completed within 4 hours.
+Neighborhood plan merchants can contact **onboarding@push.nyc** for dedicated onboarding support. Expedited verification is typically completed within 4 hours.
 
 ## Re-verification
 
@@ -1002,7 +1002,7 @@ Enter your average ticket value in **Settings → Business Profile → Avg Ticke
 
 ## Exporting data
 
-CSV exports are available for all metrics. For custom reporting or Looker/Tableau integration, Pro plan merchants can access the Push Merchant API — contact **api@push.nyc** for API key provisioning.`,
+CSV exports are available for all metrics. For custom reporting or Looker/Tableau integration, Neighborhood plan merchants can access the Push Merchant API — contact **api@push.nyc** for API key provisioning.`,
   },
   {
     slug: "inviting-specific-creators",
@@ -1015,7 +1015,7 @@ CSV exports are available for all metrics. For custom reporting or Looker/Tablea
     helpful: 381,
     body: `## Creator search
 
-Merchants on **Growth and Pro plans** can search the Push creator directory to find specific creators before launching a campaign.
+Merchants on **Operator and Neighborhood plans** can search the Push creator directory to find specific creators before launching a campaign.
 
 Navigate to **Creators → Search** and filter by:
 
@@ -1033,7 +1033,7 @@ Invited creators receive an in-app notification and email. They have 48 hours to
 
 ## Private campaigns
 
-Pro plan merchants can launch **Private campaigns** that are only visible to explicitly invited creators — they don't appear in the public Explore feed. This is useful for:
+Neighborhood plan merchants can launch **Private campaigns** that are only visible to explicitly invited creators — they don't appear in the public Explore feed. This is useful for:
 
 - Exclusive preview events
 - High-spend campaigns where you want full creator control
@@ -1153,7 +1153,7 @@ Creator accounts with payout methods and merchant accounts with campaign budgets
 |---|---|---|
 | Authenticator app (TOTP) | High | Yes |
 | SMS text message | Medium | Acceptable |
-| Hardware key (FIDO2) | Very high | For Pro merchants |
+| Hardware key (FIDO2) | Very high | For Neighborhood merchants |
 
 ## Setting up TOTP (authenticator app)
 
@@ -1603,6 +1603,266 @@ There is no cap on the number of creators you can refer. However, Push monitors 
 ## Escalation
 
 If you disagree with the dispute outcome, you can escalate to **senior review** once per dispute. Email **disputes@push.nyc** with your case number and escalation reason. Senior review takes an additional 7 business days.`,
+  },
+
+  // ─── v5.1 platform articles ───────────────────────────────────────────────
+  {
+    slug: "what-is-vertical-ai-for-local-commerce",
+    category: "getting-started",
+    title: "What is Vertical AI for Local Commerce?",
+    excerpt:
+      "Push's v5.1 core positioning — goal-first campaigns, ConversionOracle forecasting, DisclosureBot compliance, and 3-layer AI verification purpose-built for local foot traffic.",
+    lastUpdated: "2026-04-18",
+    viewCount: 4820,
+    helpful: 402,
+    body: `## What Vertical AI means
+
+Horizontal AI (ChatGPT, generic LLMs) answers any prompt. **Vertical AI for Local Commerce** is the opposite: a narrow stack of models fine-tuned for one job — **delivering verified, in-person customers to local businesses**. Every layer is purpose-built for the Coffee+ local-commerce workflow, not borrowed from a general-purpose playbook.
+
+## The four pillars
+
+### 1. ConversionOracle™ — goal-first forecasting
+
+You don't set a budget and hope for results. You tell ConversionOracle how many new customers you need; it forecasts the creator mix, content strategy, and spend required to hit that goal, with a confidence band. See "How does ConversionOracle predict customers?" for the model details.
+
+### 2. DisclosureBot — pre-publish compliance gate
+
+Every creator post is auto-scanned for FTC-compliant disclosure language (#ad, #sponsored, Paid Partnership tag) before the QR goes live. Non-compliant posts are blocked with a specific fix request. See "What's DisclosureBot and why does it block some posts?" for the workflow.
+
+### 3. 3-layer AI verification — every walk-in triple-checked
+
+Every verified customer clears three independent layers:
+- **Layer 1 — QR timestamp**: scan event within the campaign window
+- **Layer 2 — Claude Vision OCR**: receipt image matched to merchant + amount
+- **Layer 3 — Geo-match**: scan IP geolocates within 2 miles of the venue
+
+Only a 3-of-3 match becomes a billable customer. See the attribution article for the technical pipeline.
+
+### 4. Two-Segment Creator Economics — aligned incentives
+
+T1–T3 creators earn per-verified-customer payouts (seed/explorer/operator tracks). T4–T6 creators operate on retainer + performance + rev-share + equity. This keeps the long-tail nano/micro segment activated while rewarding Closer-tier creators with real upside. See "What's the Two-Segment Creator Economics model?"
+
+## Why vertical beats horizontal here
+
+Local commerce has ground truth — the customer either walked in or didn't. Horizontal AI guesses at intent; Vertical AI measures the outcome. That's why Push only charges when all three verification layers agree, and why our ConversionOracle forecasts are auditable against real POS data.
+
+## Where Push is headed
+
+Williamsburg Coffee+ is the 60-day beachhead. Next verticals: wellness, boutique retail, restaurants. Same stack, tuned for each vertical's conversion patterns and compliance needs.`,
+  },
+  {
+    slug: "how-conversionoracle-predicts-customers",
+    category: "merchants",
+    title: "How does ConversionOracle predict customers?",
+    excerpt:
+      "Inside Push's walk-in forecasting model — what ConversionOracle sees, how it translates a customer goal into a campaign plan, and how accuracy is measured against POS ground truth.",
+    lastUpdated: "2026-04-18",
+    viewCount: 3640,
+    helpful: 308,
+    body: `## The customer-goal-first loop
+
+Traditional campaign tools ask: "What's your budget?" Push flips the question: **"How many new customers do you need?"** ConversionOracle™ takes the customer target and returns a campaign plan — creators, content, spend, and a confidence band — that's expected to hit it.
+
+## What ConversionOracle sees
+
+The model draws on four data families:
+
+### 1. Creator signals
+- Historical conversion rate per vertical (coffee, wellness, retail)
+- Audience geo-density within 2 miles of the merchant
+- Content format mix (Stories vs Reels vs feed) and which formats have previously converted for this merchant's vertical
+- Recent fraud-flag rate (lower = higher weight)
+
+### 2. Merchant signals
+- Vertical + venue location + day-of-week foot traffic patterns
+- Historical verified-customer yield from past Push campaigns (if any)
+- Average ticket value, which feeds the ROI forecast
+
+### 3. Temporal signals
+- Campaign window length, seasonality, local events calendar
+- Time-to-walk-in distribution from prior Williamsburg cohorts
+
+### 4. Verification-loop feedback
+- Every 3-layer-verified customer becomes labeled training data
+- The model retrains weekly; forecast drift is monitored per vertical
+
+## What you get back
+
+When you submit "I need 40 new customers in 30 days at my Williamsburg espresso bar," ConversionOracle returns:
+
+- **Creator mix**: e.g. 8 Micro creators + 2 Mid creators matched to your vertical and geo
+- **Spend forecast**: expected AI-verified customer cost × target customers, with a confidence band (e.g. $1,400 ± $180 at 80% confidence)
+- **Content strategy**: recommended formats and posting windows based on what has converted before
+- **Expected timeline**: customer-arrival curve across the campaign window
+
+## How accuracy is measured
+
+Every campaign closes with an accuracy scorecard:
+- Predicted verified customers vs. actual
+- Confidence-band hit rate (actual inside the 80% band?)
+- Per-creator contribution vs. prediction
+
+Published accuracy (Williamsburg Coffee+ pilot, rolling 30 days): **81% of campaigns land inside the predicted confidence band**, with mean absolute error of 4.2 customers.
+
+## What ConversionOracle does not do
+
+- It does not guarantee customers. No model guarantees in-person foot traffic.
+- It does not replace creator judgment on content style or tone.
+- It does not factor in merchant operations (staffing, hours, menu). A great campaign to a closed store still won't convert.
+
+## Improving your forecast
+
+The model gets sharper with every campaign you run. First-time merchants get a wider confidence band; by campaign 3, the band typically narrows by 30–40% as the model learns your specific vertical, venue, and audience fit.`,
+  },
+  {
+    slug: "what-is-disclosurebot",
+    category: "creators",
+    title: "What's DisclosureBot and why does it block some posts?",
+    excerpt:
+      "DisclosureBot pre-scans every Push campaign post for FTC-compliant disclosure before your QR goes live. Here's what it checks, how to pass the first time, and how to appeal a false block.",
+    lastUpdated: "2026-04-18",
+    viewCount: 2980,
+    helpful: 256,
+    body: `## What DisclosureBot does
+
+DisclosureBot is Push's automated FTC-compliance gate. **Before your QR code activates on a campaign post, DisclosureBot inspects your caption, in-video overlay, and platform-native disclosure tag** and verifies that each meets FTC-compliant sponsored-content rules. If anything is missing, the QR stays inactive until you fix the post.
+
+## Why we block, not warn
+
+FTC violations carry real liability for both creators and merchants. A warning-only system has a 22% miss rate in industry data. DisclosureBot blocks at source — if the post isn't compliant, nobody scans, nobody verifies, nobody loses money. A compliant post with an active QR converts normally.
+
+## What DisclosureBot checks
+
+### Required elements (all must be present)
+
+| Platform | Required disclosure |
+|---|---|
+| Instagram Story / Reel / Feed | Native "Paid Partnership" tag **AND** \`#ad\` or \`#sponsored\` in caption |
+| TikTok | "Branded Content" toggle **AND** \`#ad\` in first 3 seconds or in caption |
+| YouTube | Spoken sponsorship mention in first 30 seconds **AND** in description |
+
+### Automatic pass conditions
+
+- Paid Partnership / Branded Content toggle is active
+- Hashtag is present in a non-hidden caption section (not buried below the "more" fold on platforms where that matters)
+- Disclosure appears before the QR image (so viewers see the sponsorship framing before scanning)
+
+### Common reasons DisclosureBot blocks
+
+1. **Missing hashtag** — "#ad" or "#sponsored" wasn't found in the caption
+2. **Disclosure below the fold** — hashtag present but buried 30+ words deep on platforms that truncate captions
+3. **Native tag off** — you forgot the Paid Partnership / Branded Content toggle
+4. **Disclosure after QR** — QR appears before the disclosure text in a Story/Reel sequence
+
+## What happens when DisclosureBot blocks
+
+1. You get a push notification and email within 60 seconds of posting
+2. The notification tells you **exactly what's missing** (e.g. "Add #ad to your Instagram caption")
+3. Edit the post on-platform to fix the issue
+4. DisclosureBot rescans every 5 minutes — your QR activates as soon as the fix is detected
+5. You have 6 hours to remediate before the campaign moves on without you
+
+## Appealing a false block
+
+If you believe DisclosureBot blocked a compliant post in error:
+
+1. Navigate to **Campaigns → [Active campaign] → My Post → Appeal Block**
+2. Attach a screenshot of your post showing the compliant disclosure
+3. Push Trust & Safety reviews within 2 hours during business hours
+
+False-block reversal rate (Q1 2026): 14% of appeals are upheld as genuine false positives and the QR is manually activated.
+
+## Tips to pass on the first try
+
+- Add the disclosure **before you add the QR overlay** so the sequence is disclosure → context → QR
+- Use the native platform tag **in addition to** the hashtag, not instead of
+- Don't use camouflaged spellings (\`#a d\`, \`#spo ns ored\`) — these don't count
+- If you're unsure, run DisclosureBot's pre-check from the Push app: **Create → Pre-check Disclosure** before posting`,
+  },
+  {
+    slug: "two-segment-creator-economics",
+    category: "creators",
+    title: "What's the Two-Segment Creator Economics model?",
+    excerpt:
+      "Push v5.1 pays T1–T3 creators per verified customer and puts T4–T6 creators on retainer + performance + rev-share + equity. Here's how each track works and how you move between them.",
+    lastUpdated: "2026-04-18",
+    viewCount: 2340,
+    helpful: 198,
+    body: `## Two segments, one outcome
+
+Push v5.1 creator payouts split into two tracks — **T1–T3 (per-verified-customer)** and **T4–T6 (retainer + performance + rev-share + equity)**. Both tracks are tied to the same ground truth: AI-verified customers that clear all three verification layers.
+
+## Segment 1 — T1 to T3: per-verified-customer
+
+Best for nano/micro creators with high frequency and neighborhood audiences.
+
+### How it works
+
+You join a campaign; you post; every 3-layer-verified customer triggers a payout into your wallet. No retainer, no commitment, no minimum posts — pure outcome pay.
+
+### Sub-tracks
+
+| Tier | Sub-track | Typical range |
+|---|---|---|
+| T1 Nano | Seed | 500–4,999 followers, 5%+ engagement |
+| T2 Micro | Explorer | 5,000–24,999 followers, 4%+ engagement |
+| T3 Mid | Operator | 25,000–99,999 followers, 3%+ engagement |
+
+### Payout logic
+
+Per-verified-customer rate scales by vertical and creator tier. Coffee+ starting ranges:
+
+- T1 Seed: $15–$25 per verified customer
+- T2 Explorer: $30–$55 per verified customer
+- T3 Operator: $60–$85 per verified customer
+
+Higher-ticket verticals (restaurants, wellness) pay at the upper end of each range.
+
+## Segment 2 — T4 to T6: retainer + performance + rev-share + equity
+
+Best for Macro/Mega/Elite creators with established followings and longer-term commercial relationships.
+
+### How it works
+
+You sign a creator agreement with Push (not per campaign) that combines four revenue streams:
+
+1. **Monthly retainer** — base pay for availability and a minimum post cadence
+2. **Performance bonus** — per-verified-customer rate on top of retainer
+3. **Rev-share** — percentage of merchant spend routed through your campaigns
+4. **Equity** — vesting participation in Push platform growth (Closer tier only)
+
+### The Closer tier (top 100)
+
+The top 100 T4–T6 creators by rolling verified-customer volume enter the **Closer tier**, which unlocks:
+
+- Highest rev-share percentage
+- Equity grant with multi-year vesting
+- Direct access to Neighborhood-plan merchant campaigns (invite-only, private)
+- Dedicated partnerships manager
+
+## Moving between segments
+
+- **Up-tier**: your tier recalculates every 30 days. Crossing a follower/engagement threshold moves you to the next tier at the next recalculation.
+- **Segment transition**: reaching T4 (100K+ followers) automatically offers a segment transition. You choose to stay on per-verified-customer economics or sign the retainer agreement.
+- **Down-tier**: engagement drops below the floor for two consecutive monthly recalculations trigger a demotion with a 14-day warning email.
+
+## Why two segments
+
+Nano/micro creators thrive on frequency and freedom — they don't want contracts, they want to post when their audience is ready. Macro/mega creators need commercial commitment that reflects the cost of exclusivity and brand alignment. One payout structure can't serve both well; two segments keep incentives aligned at both ends of the creator spectrum.
+
+## FAQ
+
+### Can I be on both segments?
+
+No. Your segment is determined by your highest-tier connected platform. Multi-platform creators roll up into a single tier assessment.
+
+### Does retainer disqualify me from other brand deals?
+
+No. Your Push retainer covers Push campaign availability and cadence. Non-Push brand work is unrestricted unless you're on a vertical-exclusive Closer agreement (rare, and always explicit in the contract).
+
+### How is rev-share calculated?
+
+Merchant spend routed through creators you recruited or mentored (T5–T6 only) pays a percentage into your account. The calculation is transparent in your Push dashboard — every dollar traceable to source.`,
   },
 ];
 

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import {
   MOCK_METRICS,
   MOCK_EVENTS,
@@ -9,6 +10,35 @@ import {
   type LiveEvent,
   type AlertItem,
 } from "@/lib/admin/mock-admin";
+import "./admin.css";
+
+/* ── Admin Home quick-access card ─────────────────────────────
+   v5.1 console — Vertical AI for Local Commerce operations.
+   Cards link to DisclosureBot audits, ConversionOracle AI
+   verifications, YC Summer 2027 prep hub, plus core admin.
+   ──────────────────────────────────────────────────────────── */
+type QuickCard = {
+  href: string;
+  group: "v5.1" | "core";
+  title: string;
+  desc: string;
+  stat: string;
+  statLabel: string;
+};
+
+function QuickAccessCard({ card }: { card: QuickCard }) {
+  return (
+    <Link href={card.href} className="ah-card">
+      <div className="ah-card__stat">
+        <span className="ah-card__stat-val">{card.stat}</span>
+        <span className="ah-card__stat-label">{card.statLabel}</span>
+      </div>
+      <div className="ah-card__title">{card.title}</div>
+      <div className="ah-card__desc">{card.desc}</div>
+      <div className="ah-card__cta">Open →</div>
+    </Link>
+  );
+}
 
 /* ── Helpers ─────────────────────────────────────────────────── */
 function formatCurrency(n: number): string {
@@ -262,6 +292,102 @@ export default function AdminOverviewPage() {
     metrics.alerts.kyc_pending +
     metrics.alerts.disputes_open;
 
+  // v5.1 quick-access cards — DisclosureBot compliance + ConversionOracle
+  // AI verification are the new Vertical AI for Local Commerce surfaces.
+  const v51Cards: QuickCard[] = [
+    {
+      href: "/admin/disclosure-audits",
+      group: "v5.1",
+      title: "DisclosureBot Audits",
+      desc: "FTC disclosure trail for every creator post — 30-day retention window",
+      stat: "24",
+      statLabel: "flagged posts · 7d",
+    },
+    {
+      href: "/admin/ai-verifications",
+      group: "v5.1",
+      title: "AI Verifications",
+      desc: "ConversionOracle queue for Vision + OCR + geo verifications needing review",
+      stat: "12",
+      statLabel: "in manual review",
+    },
+    {
+      href: "/admin/yc-application",
+      group: "v5.1",
+      title: "YC Application Hub",
+      desc: "Summer 2027 prep — Vertical AI for Local Commerce application assets",
+      stat: "S27",
+      statLabel: "batch target",
+    },
+  ];
+
+  const coreCards: QuickCard[] = [
+    {
+      href: "/admin/users",
+      group: "core",
+      title: "Users",
+      desc: "Creators, merchants, staff — KYC status, roles, lifetime activity",
+      stat: String(metrics.kpi.new_users_today),
+      statLabel: "new · 24h",
+    },
+    {
+      href: "/admin/campaigns",
+      group: "core",
+      title: "Campaigns",
+      desc: "All live and paused campaigns across merchants and creators",
+      stat: String(metrics.kpi.active_campaigns),
+      statLabel: "active now",
+    },
+    {
+      href: "/admin/cohorts",
+      group: "core",
+      title: "Cohorts",
+      desc: "Pilot cohorts by beachhead vertical — Williamsburg Coffee+ first",
+      stat: "3",
+      statLabel: "cohorts live",
+    },
+    {
+      href: "/admin/disputes",
+      group: "core",
+      title: "Disputes",
+      desc: "Open merchant-creator disputes awaiting resolution or SLA breach",
+      stat: String(metrics.alerts.disputes_open),
+      statLabel: "open now",
+    },
+    {
+      href: "/admin/finance",
+      group: "core",
+      title: "Finance",
+      desc: "Payouts, escrow, ledger — reconciliation and merchant settlements",
+      stat: formatCurrency(metrics.kpi.gmv_month),
+      statLabel: "GMV · month",
+    },
+    {
+      href: "/admin/fraud",
+      group: "core",
+      title: "Fraud",
+      desc: "Suspicious verifications, velocity anomalies, blacklist hits",
+      stat: String(metrics.alerts.fraud_suspected),
+      statLabel: "flagged",
+    },
+    {
+      href: "/admin/audit-log",
+      group: "core",
+      title: "Audit Log",
+      desc: "Immutable admin action trail — policy, payouts, role changes",
+      stat: "30d",
+      statLabel: "retention",
+    },
+    {
+      href: "/admin/verifications",
+      group: "core",
+      title: "Verifications",
+      desc: "Manual verification review — QR scan + receipt + location checks",
+      stat: String(metrics.alerts.kyc_pending),
+      statLabel: "pending",
+    },
+  ];
+
   return (
     <>
       {/* Hero */}
@@ -329,7 +455,25 @@ export default function AdminOverviewPage() {
         />
       </div>
 
+      {/* v5.1 quick-access — surfaces for DisclosureBot +
+          ConversionOracle, the Vertical AI for Local Commerce layer */}
+      <div className="adm-section-head">v5.1 Admin · AI Commerce Layer</div>
+      <div className="ah-grid ah-grid--v51">
+        {v51Cards.map((card) => (
+          <QuickAccessCard key={card.href} card={card} />
+        ))}
+      </div>
+
+      {/* Core admin surfaces */}
+      <div className="adm-section-head">Core Admin</div>
+      <div className="ah-grid ah-grid--core">
+        {coreCards.map((card) => (
+          <QuickAccessCard key={card.href} card={card} />
+        ))}
+      </div>
+
       {/* Two-column: feed left, alerts+charts right */}
+      <div className="adm-section-head">Live Ops</div>
       <div className="adm-grid">
         {/* Left: activity feed */}
         <ActivityFeed events={events} />

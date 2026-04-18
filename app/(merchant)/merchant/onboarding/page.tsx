@@ -9,29 +9,73 @@ import type { ChecklistItemStatus } from "@/components/onboarding/ChecklistItem"
 import "./agent-onboarding.css";
 
 /* ─────────────────────────────────────────────────────────────
-   v5.0 Goal-First Merchant Onboarding
+   v5.1 Goal-First Merchant Onboarding — Vertical AI for Local Commerce
 
    3 steps replace the legacy 7-step checklist:
-     1. Tell the agent your goal
-     2. Review AI brief preview (mock agent — P2 wires real API)
+     1. Tell the agent your goal (vertical-aware pricing)
+     2. Review AI brief + ConversionOracle ROI prediction
      3. Approve & launch → dashboard
    ───────────────────────────────────────────────────────────── */
 
-const STORAGE_KEY = "push-demo-merchant-onboarding-v5";
+const STORAGE_KEY = "push-demo-merchant-onboarding-v51";
 
 const TOTAL = 3;
 
 type StepId = 1 | 2 | 3;
 
-const CATEGORIES = [
-  "Coffee",
-  "Restaurant",
-  "Bar / Nightlife",
-  "Retail",
-  "Beauty & Wellness",
-  "Fitness",
-  "Other",
-] as const;
+/* v5.1 Vertical AI for Local Commerce — 5 verticals, each with its own rate */
+type VerticalId =
+  | "coffee-pure"
+  | "coffee-plus"
+  | "dessert"
+  | "fitness"
+  | "beauty";
+
+type Vertical = {
+  id: VerticalId;
+  label: string;
+  rate: number;
+  hint: string;
+};
+
+const VERTICALS: Vertical[] = [
+  {
+    id: "coffee-pure",
+    label: "Pure Coffee",
+    rate: 15,
+    hint: "Specialty cafes, espresso bars — $15 per AI-verified customer",
+  },
+  {
+    id: "coffee-plus",
+    label: "Williamsburg Coffee+",
+    rate: 25,
+    hint: "Coffee + light food / retail hybrid — $25 per AI-verified customer (beachhead)",
+  },
+  {
+    id: "dessert",
+    label: "Dessert & Bakery",
+    rate: 22,
+    hint: "Bakeries, ice-cream, boba — $22 per AI-verified customer",
+  },
+  {
+    id: "fitness",
+    label: "Fitness & Wellness",
+    rate: 60,
+    hint: "Studios, gyms, yoga — $60 per AI-verified customer",
+  },
+  {
+    id: "beauty",
+    label: "Beauty & Salon",
+    rate: 85,
+    hint: "Nails, hair, lashes, skincare — $85 per AI-verified customer",
+  },
+];
+
+const PILOT_VERTICAL: VerticalId = "coffee-plus";
+
+function getVertical(id: VerticalId): Vertical {
+  return VERTICALS.find((v) => v.id === id) ?? VERTICALS[1];
+}
 
 const GOAL_OPTIONS = [
   { value: "10", label: "10 new customers (1 week)" },
@@ -42,7 +86,7 @@ const GOAL_OPTIONS = [
 
 type GoalForm = {
   businessName: string;
-  category: string;
+  vertical: VerticalId;
   zip: string;
   customerGoal: string;
   budget: string;
@@ -74,6 +118,11 @@ type AgentResponse = {
     confidence: number;
     estSpend: number;
     estRevenueMultiplier: number;
+    verticalRate: number;
+    verticalLabel: string;
+    predictedLiftPct: number;
+    retentionAddonRevenue: number;
+    oracleSource: "ConversionOracle";
   };
 };
 
@@ -89,7 +138,7 @@ const INITIAL: Progress = {
   activeStep: 1,
   goal: {
     businessName: "",
-    category: "Coffee",
+    vertical: "coffee-plus",
     zip: "11211",
     customerGoal: "",
     budget: "",
@@ -130,8 +179,9 @@ function stepStatus(id: StepId, p: Progress): ChecklistItemStatus {
 }
 
 /* ─────────────────────────────────────────────────────────────
-   Mock agent — fixed response based on goal
-   Phase 2 replaces this with a real /api/agent/match-creators call.
+   Mock agent — ConversionOracle-style response based on goal + vertical
+   Phase 2 replaces this with a real /api/agent/match-creators call
+   backed by the ConversionOracle model.
    ───────────────────────────────────────────────────────────── */
 
 function runMockAgent(goal: GoalForm): Promise<AgentResponse> {
@@ -140,6 +190,16 @@ function runMockAgent(goal: GoalForm): Promise<AgentResponse> {
     setTimeout(() => {
       const target = parseInt(goal.customerGoal || "20", 10) || 20;
       const perCreator = Math.max(3, Math.round(target / 5));
+      const vertical = getVertical(goal.vertical);
+      const estVerified = target + 2;
+      const estSpend = estVerified * vertical.rate;
+      // ConversionOracle predicts lift: higher for beachhead vertical
+      const predictedLiftPct =
+        vertical.id === PILOT_VERTICAL
+          ? 34
+          : 18 + Math.round(Math.random() * 10);
+      // Retention Add-on projection: assume 35% come back once, AOV proxy
+      const retentionAddonRevenue = Math.round(estVerified * 0.35 * 12);
       resolve({
         generatedAt: new Date().toISOString(),
         latencyMs: Math.round(latency),
@@ -194,13 +254,18 @@ function runMockAgent(goal: GoalForm): Promise<AgentResponse> {
           headline: `New in Williamsburg: ${goal.businessName || "your shop"} — try it on Push`,
           cta: "Scan the QR at the counter for $5 off your first drink",
           tone: "Editorial · warm · under-sold",
-          offerHook: "Hero offer — 7-day window, runs with Sustained backup",
+          offerHook: `ConversionOracle predicts +${predictedLiftPct}% walk-in lift vs. organic baseline (${vertical.label})`,
         },
         prediction: {
-          estVerifiedCustomers: target + 2,
+          estVerifiedCustomers: estVerified,
           confidence: 0.91,
-          estSpend: (target + 2) * 40,
+          estSpend,
           estRevenueMultiplier: 3.2,
+          verticalRate: vertical.rate,
+          verticalLabel: vertical.label,
+          predictedLiftPct,
+          retentionAddonRevenue,
+          oracleSource: "ConversionOracle",
         },
       });
     }, latency);
@@ -231,11 +296,15 @@ function GoalStep({
     onChange({ goal: { ...goal, [key]: value } });
   }
 
+  const selectedVertical = getVertical(goal.vertical);
+  const isPilotVertical = goal.vertical === PILOT_VERTICAL;
+
   return (
     <div>
       <p className="goal-step-intro">
-        The agent reads four inputs: who you are, how many customers you need,
-        what you&apos;ll pay, and where you are. No brief writing. No RFP.
+        <strong>Vertical AI for Local Commerce.</strong> Tell the agent your
+        vertical, your customer target, and your ZIP &mdash; ConversionOracle
+        predicts your ROI before you commit a dollar. No brief writing. No RFP.
       </p>
 
       <div className="ob2-field">
@@ -255,21 +324,22 @@ function GoalStep({
 
       <div className="ob2-field-row">
         <div className="ob2-field">
-          <label className="ob2-label" htmlFor="biz-category">
-            Category
+          <label className="ob2-label" htmlFor="biz-vertical">
+            Vertical
           </label>
           <select
-            id="biz-category"
+            id="biz-vertical"
             className="ob2-select"
-            value={goal.category}
-            onChange={(e) => update("category", e.target.value)}
+            value={goal.vertical}
+            onChange={(e) => update("vertical", e.target.value as VerticalId)}
           >
-            {CATEGORIES.map((c) => (
-              <option key={c} value={c}>
-                {c}
+            {VERTICALS.map((v) => (
+              <option key={v.id} value={v.id}>
+                {v.label} &middot; ${v.rate}/customer
               </option>
             ))}
           </select>
+          <p className="ob2-input-hint">{selectedVertical.hint}</p>
         </div>
         <div className="ob2-field">
           <label className="ob2-label" htmlFor="biz-zip">
@@ -319,11 +389,27 @@ function GoalStep({
           value={goal.budget}
           onChange={(e) => update("budget", e.target.value)}
         />
-        <p className="ob2-input-hint">
-          Performance tier: $500/mo min + $40 per AI-verified customer. Pilot
-          merchants (first 10 in Williamsburg coffee) get the first 10 customers
-          on us.
-        </p>
+        {isPilotVertical ? (
+          <p className="ob2-input-hint">
+            <strong>$0 Pilot</strong> &mdash; first 10 customers free for
+            Williamsburg Coffee+ merchants, then auto-flips to Operator at{" "}
+            <strong>${selectedVertical.rate}/customer</strong>. $500/mo minimum
+            applies once the Pilot converts.{" "}
+            <Link href="/merchant/pilot/economics" className="ob2-inline-link">
+              See full Pilot economics &rarr;
+            </Link>
+          </p>
+        ) : (
+          <p className="ob2-input-hint">
+            Operator tier: $500/mo min +{" "}
+            <strong>${selectedVertical.rate}/customer</strong> for{" "}
+            {selectedVertical.label}. Only the Williamsburg Coffee+ beachhead
+            vertical qualifies for the $0 Pilot today.{" "}
+            <Link href="/merchant/pilot/economics" className="ob2-inline-link">
+              See full Pilot economics &rarr;
+            </Link>
+          </p>
+        )}
       </div>
 
       <div className="ob2-step-actions">
@@ -333,7 +419,7 @@ function GoalStep({
           onClick={onComplete}
           disabled={!canProceed}
         >
-          Send to agent &rarr;
+          Send to Customer Acquisition Engine &rarr;
         </button>
       </div>
     </div>
@@ -380,13 +466,14 @@ function AgentPreviewStep({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const verticalForGoal = getVertical(goal.vertical);
   if (running || (!agent && !error)) {
     return (
       <div className="agent-pending">
         <div className="agent-pending-header">
           <span className="agent-pending-dot" />
           <span className="agent-pending-label">
-            claude-sonnet-4-6 &middot; matching creators
+            ConversionOracle &middot; Customer Acquisition Engine booting
           </span>
         </div>
         <div className="agent-pending-bar">
@@ -395,10 +482,14 @@ function AgentPreviewStep({
         <ul className="agent-pending-list">
           <li>Parsing goal &mdash; {goal.customerGoal} customers</li>
           <li>
-            Scanning creator network for {goal.category} &middot; {goal.zip}
+            Scanning creator network for {verticalForGoal.label} &middot;{" "}
+            {goal.zip}
           </li>
           <li>Ranking by score + geo + verified-conversion history</li>
-          <li>Drafting campaign brief + ROI prediction</li>
+          <li>
+            ConversionOracle: running walk-in lift prediction vs. organic
+            baseline
+          </li>
         </ul>
       </div>
     );
@@ -423,7 +514,9 @@ function AgentPreviewStep({
       <div className="agent-preview-summary">
         <div className="agent-preview-summary-head">
           <span className="agent-preview-summary-eyebrow">
-            Agent result &middot; {(agent.latencyMs / 1000).toFixed(1)}s
+            ConversionOracle result &middot;{" "}
+            {(agent.latencyMs / 1000).toFixed(1)}s &middot;{" "}
+            {agent.prediction.verticalLabel}
           </span>
         </div>
         <div className="agent-preview-summary-grid">
@@ -437,10 +530,10 @@ function AgentPreviewStep({
           </div>
           <div className="agent-preview-summary-stat">
             <span className="agent-preview-summary-num">
-              {Math.round(agent.prediction.confidence * 100)}%
+              +{agent.prediction.predictedLiftPct}%
             </span>
             <span className="agent-preview-summary-label">
-              Agent confidence
+              ConversionOracle predicted lift
             </span>
           </div>
           <div className="agent-preview-summary-stat">
@@ -448,7 +541,7 @@ function AgentPreviewStep({
               ${agent.prediction.estSpend}
             </span>
             <span className="agent-preview-summary-label">
-              Est. spend @ $40/customer
+              Est. spend @ ${agent.prediction.verticalRate}/customer
             </span>
           </div>
           <div className="agent-preview-summary-stat">
@@ -544,6 +637,11 @@ function ApproveStep({
   onComplete: () => void;
 }) {
   const { agent, goal } = progress;
+  const vertical = getVertical(goal.vertical);
+  const isPilot = goal.vertical === PILOT_VERTICAL;
+  const billingLine = isPilot
+    ? `$0 Pilot (first 10 customers free) → auto-flips to Operator at $${vertical.rate}/customer + $500/mo minimum`
+    : `Operator tier · $500/mo min + $${vertical.rate} per AI-verified customer (${vertical.label})`;
 
   return (
     <div className="approve-step">
@@ -552,14 +650,15 @@ function ApproveStep({
         <h3 className="approve-callout-h">
           Campaign ready.{" "}
           <span className="approve-callout-h-light">
-            Agent will schedule the network.
+            Customer Acquisition Engine will schedule the network.
           </span>
         </h3>
         <p className="approve-callout-body">
           The agent queues your matched creators, hands each a unique QR, and
           monitors every scan through Claude Vision + geo verification.
-          You&apos;ll see the first AI-verified customer in your dashboard as
-          soon as it happens.
+          ConversionOracle retrains on every verified walk-in so next
+          month&apos;s prediction gets sharper. You&apos;ll see the first
+          AI-verified customer in your dashboard as soon as it happens.
         </p>
       </div>
 
@@ -567,7 +666,7 @@ function ApproveStep({
         <li>
           <span className="approve-summary-k">Business</span>
           <span className="approve-summary-v">
-            {goal.businessName || "—"} &middot; {goal.category}
+            {goal.businessName || "—"} &middot; {vertical.label}
           </span>
         </li>
         <li>
@@ -591,14 +690,19 @@ function ApproveStep({
         <li>
           <span className="approve-summary-k">Est. spend</span>
           <span className="approve-summary-v">
-            ${agent?.prediction.estSpend ?? 0} @ $40/customer
+            ${agent?.prediction.estSpend ?? 0} @ ${vertical.rate}/customer
+          </span>
+        </li>
+        <li>
+          <span className="approve-summary-k">Retention Add-on projection</span>
+          <span className="approve-summary-v">
+            +${agent?.prediction.retentionAddonRevenue ?? 0} /mo repeat-visit
+            revenue (ConversionOracle, 90-day window)
           </span>
         </li>
         <li>
           <span className="approve-summary-k">Billing</span>
-          <span className="approve-summary-v">
-            Outcome-based &middot; $500/mo min + $40 per verified customer
-          </span>
+          <span className="approve-summary-v">{billingLine}</span>
         </li>
       </ul>
 
@@ -606,6 +710,9 @@ function ApproveStep({
         <button type="button" className="ob2-btn-primary" onClick={onComplete}>
           Launch campaign &rarr;
         </button>
+        <Link href="/merchant/pilot/economics" className="ob2-btn-ghost">
+          See full Pilot economics
+        </Link>
         <Link href="/merchant/dashboard" className="ob2-btn-ghost">
           Dashboard now, launch later
         </Link>
@@ -626,12 +733,13 @@ const STEPS: {
   {
     id: 1,
     title: "Tell the agent your goal",
-    description: "Customer count, budget, category, ZIP",
+    description: "Customer count, budget, vertical, ZIP",
   },
   {
     id: 2,
     title: "Review the AI brief",
-    description: "Matched creators + draft brief + ROI prediction",
+    description:
+      "Matched creators + draft brief + ConversionOracle ROI prediction",
   },
   {
     id: 3,

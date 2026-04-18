@@ -657,3 +657,134 @@ import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 gsap.registerPlugin(ScrollTrigger);
 ```
+
+---
+
+## v5.1 Component Additions
+
+> v5.1 components follow all existing Design.md tokens — no new colors, no new fonts, no new radii.
+> All components inherit the 6-color palette, Darky + CS Genio Mono type system, `border-radius: 0`, 8px grid, and animation tokens documented above.
+
+### SLRWidget
+**Path:** `components/merchant/SLRWidget.tsx`
+North-star dashboard widget surfacing the current SLR value alongside a historical trend line.
+- **Current value:** Darky weight `900`, big-number treatment, `--champagne` (`#c9a96e`) color
+- **Chart:** inline SVG line chart (no recharts / no external chart lib)
+  - Target line: `--tertiary` (Steel Blue `#669bbc`), 1.5px stroke, dashed
+  - Actual line: `--champagne` (Champagne Gold `#c9a96e`), 2px stroke, solid
+- **Industry baseline caption:** CS Genio Mono `11px`, muted text color (`rgba(0, 48, 73, 0.55)`)
+- **Container:** `border: 1px solid var(--line)`, `border-radius: 0`, Surface Elevated background
+- **Responsive:**
+  - `<640px`: stacks vertically (value → chart → caption)
+  - `640px–899px`: compact single-column with inline chart
+  - `≥900px`: single-column layout with chart at full widget width
+
+### Risk Card Severity System
+**Path:** `app/(marketing)/trust/risk-register/`
+Card treatment for enumerated risk entries. Severity is encoded as a left-edge stripe.
+- **Card base:** `border: 1px solid var(--line)`, `border-radius: 0`
+- **Severity stripe:** `border-left: 4px solid {severity-color}` added to the card base border
+- **Severity color mapping:**
+  | Level | Color | Token |
+  |-------|-------|-------|
+  | Critical | `#c1121f` | `--primary` (Flag Red) |
+  | High | `#c9a96e` | `--champagne` (Champagne Gold) |
+  | Medium | `#669bbc` | `--tertiary` (Steel Blue) |
+  | Low | `#4a5568` | `--graphite` (Graphite) |
+- **Probability / Impact pills:**
+  - Font: CS Genio Mono, small (12px), weight 600, uppercase
+  - Border: `1px solid {severity-color}`, no fill
+  - `border-radius: 0`
+  - Used inline in the card header to express P × I
+
+### Accuracy Chart
+**Path:** `app/(marketing)/conversion-oracle/accuracy/`
+Inline-SVG accuracy trend visualization for ConversionOracle prediction quality.
+- **Implementation:** inline SVG only — no recharts, no D3
+- **Target bands** (horizontal reference lines, dashed):
+  - 75%: `--tertiary` (Steel Blue `#669bbc`) dashed
+  - 85%: `--champagne` (Champagne Gold `#c9a96e`) dashed
+  - 90%: `--primary` (Flag Red `#c1121f`) dashed
+- **NOW marker:** solid `--primary` circle, `r=4`, with CS Genio Mono label "NOW" anchored right of the point
+- **Axis labels:** `--graphite` fill, CS Genio Mono `10px`
+- **Background:** transparent (inherits Surface Elevated from parent card)
+
+### Equity-Pool Signup Gate
+**Path:** `app/(creator)/creator/equity-pool/`
+Three-row eligibility gate rendered before allowing equity-pool enrollment.
+- **Card container:** `border: 1px solid var(--line)`, `border-radius: 0`, Surface Bright background
+- **Row structure:** each row is a horizontal flex — `icon + label + value + pass/fail chip`
+  - Icon: 20px, `--graphite` fill
+  - Label: CS Genio Mono 14px, weight 600, `--dark`
+  - Value: CS Genio Mono 14px, weight 400, `--graphite`
+  - Chip: right-aligned
+- **Pass chip:**
+  - Background: `#10b981` at 12% opacity (`rgba(16, 185, 129, 0.12)`)
+  - Text: `--graphite`
+  - CS Genio Mono 11px, weight 700, uppercase
+  - `border-radius: 0`, padding `4px 10px`
+- **Fail chip:**
+  - Background: `--primary` at 12% opacity (`rgba(193, 18, 31, 0.12)`)
+  - Text: `--primary` (Flag Red)
+  - Same typography and radius as pass chip
+- **Row separator:** `1px solid var(--line)` between rows
+
+### DisclosureBot Audit Row
+**Path:** `app/(admin)/admin/disclosure-audits/`
+Admin table row pattern for FTC/disclosure compliance audit records.
+- **Table row layout:** 9 columns, `border-radius: 0` everywhere
+  - Timestamp / Creator / Campaign / Platform / Verdict / Confidence / Reviewer / Action / Detail-link
+- **Row hover:** `background: rgba(0, 48, 73, 0.04)` (surface-muted)
+- **Verdict badge:**
+  - Font: CS Genio Mono 10px, weight 700, uppercase, letter-spacing 0.08em
+  - Padding: `5px 10px`, `border-radius: 0`
+  - Verdict color mapping:
+    | Verdict | Background | Text |
+    |---------|-----------|------|
+    | `auto_pass` | `#10b981` at 12% | `#10b981` |
+    | `auto_block` | `--primary` at 12% | `--primary` |
+    | `manual_review` | `--champagne` at 12% | `--champagne` darkened |
+    | `human_approved` | `#10b981` at 18% | `#10b981` |
+    | `human_rejected` | `--primary` at 18% | `--primary` |
+- **Sticky detail sidebar:**
+  - Width: `420px` fixed on desktop
+  - Background: `--surface` (Pearl Stone `#f5f2ec`)
+  - `border-left: 3px solid var(--champagne)`
+  - `position: sticky; top: 0` within the audit layout
+  - Collapses to bottom sheet on `<1024px`
+
+### Pilot-Economics Calculator
+**Path:** `app/(marketing)/merchant/pilot/economics/`
+Interactive two-panel layout for merchant-facing economics modeling.
+- **Layout:** 2-column split
+  - **Left (sticky form):** `position: sticky; top: 0`
+    - Form background: `--tertiary` at low opacity (`rgba(102, 155, 188, 0.06)`) — the Steel Blue form bg
+    - Inputs: `border: 1px solid var(--line)`, `border-radius: 0`, CS Genio Mono labels
+    - Focus state: `--primary` border per existing form token
+  - **Right (output cards):** 7-card grid, responsive 1 / 2 / 3 columns across breakpoints
+- **Output card spec:**
+  - Container: `border: 1px solid var(--line)`, Surface Elevated bg, `border-radius: 0`
+  - Big number: Darky weight 900, `--champagne` color, clamp sizing (`clamp(32px, 4vw, 48px)`)
+  - Label: CS Genio Mono 11px, weight 700, uppercase, `--tertiary`
+  - **Collapsible math row:** below label, button reveals the derivation
+    - Trigger: CS Genio Mono 12px, `--graphite`, chevron icon rotates on open
+    - Content: CS Genio Mono 12px, `--graphite`, shows the formula breakdown
+- **Collapses** to single-column `<900px`; form un-sticks on mobile
+
+### Per-Vertical Pricing Card
+**Path:** `app/(marketing)/pricing/[category]/`
+Vertical-specific pricing explainer — one per category route.
+- **Header:**
+  - H1: Darky weight 900, vertical name (e.g., "Coffee", "Fitness")
+  - Rate display: `--champagne` color, Darky weight 800, prominently sized
+- **Unit-econ derivation table:**
+  - Columns: `AOV × visits → merchant LTV → Push rate`
+  - Table: `border-collapse: collapse`, `border: 1px solid var(--line)`, `border-radius: 0`
+  - Header row: CS Genio Mono 11px, weight 700, uppercase, `--graphite`
+  - Body rows: CS Genio Mono 14px; numeric cells use `font-variant-numeric: tabular-nums`
+  - Row separator: `1px solid var(--line)`
+- **Retention Add-on mini-table:**
+  - Smaller secondary table below the primary derivation
+  - Shares the same border/type tokens
+  - Visually demoted via reduced max-width and lower contrast header
+- **Container:** Surface Elevated card, `border: 1px solid var(--line)`, `border-radius: 0`
