@@ -1,11 +1,5 @@
-import type { Metadata } from "next";
-
-export const metadata: Metadata = {
-  title: "Push Admin",
-  robots: { index: false, follow: false },
-};
-
-export default function AdminGroupLayout({
+// Admin route group layout
+export default function AdminLayout({
   children,
 }: {
   children: React.ReactNode;
