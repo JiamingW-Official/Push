@@ -5,9 +5,9 @@ const SUPPORTED = ["instagram", "tiktok", "xiaohongshu", "youtube", "twitter"];
 
 export async function GET(
   _request: Request,
-  { params }: { params: { provider: string } },
+  { params }: { params: Promise<{ provider: string }> },
 ) {
-  const { provider } = params;
+  const { provider } = await params;
 
   if (!SUPPORTED.includes(provider)) {
     return NextResponse.json(

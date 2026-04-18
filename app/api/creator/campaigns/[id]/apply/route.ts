@@ -6,7 +6,7 @@ import { createClient } from "@/lib/supabase";
 // Returns: { success, applicationId, queuePosition }
 export async function POST(
   req: NextRequest,
-  { params }: { params: { id: string } },
+  { params }: { params: Promise<{ id: string }> },
 ) {
   const supabase = createClient();
   const {
@@ -17,7 +17,7 @@ export async function POST(
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const campaignId = params.id;
+  const campaignId = (await params).id;
 
   // Check campaign exists and is active
   const { data: campaign, error: campaignError } = await supabase

@@ -4,17 +4,19 @@ import { MOCK_APPLICATIONS } from "@/lib/data/mock-applications";
 
 export async function GET(
   _req: NextRequest,
-  { params }: { params: { id: string } },
+  { params }: { params: Promise<{ id: string }> },
 ) {
-  const app = MOCK_APPLICATIONS.find((a) => a.id === params.id);
+  const { id } = await params;
+  const app = MOCK_APPLICATIONS.find((a) => a.id === id);
   if (!app) return NextResponse.json({ error: "Not found" }, { status: 404 });
   return NextResponse.json(app);
 }
 
 export async function PATCH(
   req: NextRequest,
-  { params }: { params: { id: string } },
+  { params }: { params: Promise<{ id: string }> },
 ) {
+  const { id } = await params;
   const body = await req.json();
   const { status } = body as { status: string };
   const validStatuses = ["pending", "accepted", "declined", "shortlisted"];
@@ -23,5 +25,5 @@ export async function PATCH(
   }
 
   // TODO: update Supabase + trigger realtime push to creator
-  return NextResponse.json({ id: params.id, status });
+  return NextResponse.json({ id, status });
 }
