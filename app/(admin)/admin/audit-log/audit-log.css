@@ -656,3 +656,63 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* ─────────────────────────────────────────────────────────────
+   MICRO-INTERACTIONS — audit-log
+   Appended polish pass; existing rules are NOT modified.
+───────────────────────────────────────────────────────────── */
+
+/* Entry hover — accent left border shift */
+.audit-entry {
+  border-left: 0px solid var(--primary, #c1121f);
+  transition: border-left-width 150ms ease,
+              padding-left 150ms ease;
+}
+.audit-entry:hover {
+  border-left-width: 3px;
+  padding-left: calc(var(--audit-entry-pl, 12px) + 3px);
+}
+
+/* Entrance animation */
+@keyframes audit-entry-in {
+  from {
+    opacity: 0;
+    transform: translateX(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+.audit-entry {
+  animation: audit-entry-in 180ms ease both;
+}
+
+/* Stagger nth-child 1-10 at 25ms increments */
+.audit-entry:nth-child(1)  { animation-delay: 25ms; }
+.audit-entry:nth-child(2)  { animation-delay: 50ms; }
+.audit-entry:nth-child(3)  { animation-delay: 75ms; }
+.audit-entry:nth-child(4)  { animation-delay: 100ms; }
+.audit-entry:nth-child(5)  { animation-delay: 125ms; }
+.audit-entry:nth-child(6)  { animation-delay: 150ms; }
+.audit-entry:nth-child(7)  { animation-delay: 175ms; }
+.audit-entry:nth-child(8)  { animation-delay: 200ms; }
+.audit-entry:nth-child(9)  { animation-delay: 225ms; }
+.audit-entry:nth-child(10) { animation-delay: 250ms; }
+
+/* Action type colors */
+.audit-action--create { color: #2d6a4f; }
+.audit-action--delete { color: var(--primary, #c1121f); }
+.audit-action--update { color: var(--dark, #003049); }
+
+/* Respect reduced-motion preference */
+@media (prefers-reduced-motion: reduce) {
+  .audit-entry {
+    animation: none;
+    transition: none;
+  }
+  .audit-entry:hover {
+    border-left-width: 3px;
+    padding-left: calc(var(--audit-entry-pl, 12px) + 3px);
+  }
+}

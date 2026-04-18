@@ -157,10 +157,51 @@
   gap: var(--space-5);
 }
 
+.hero-cta-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  align-items: flex-start;
+}
+
 .hero-ctas {
   display: flex;
   gap: 10px;
   align-items: center;
+}
+
+.hero-creator-switch {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-body);
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  padding-top: 10px;
+  border-top: 1px solid rgba(245, 242, 236, 0.08);
+  width: 100%;
+}
+
+.hero-creator-switch-label {
+  color: rgba(245, 242, 236, 0.45);
+  text-transform: uppercase;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  font-size: 10px;
+}
+
+.hero-creator-switch-link {
+  color: #fff;
+  font-weight: 600;
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color 300ms ease, color 300ms ease;
+}
+
+.hero-creator-switch-link:hover,
+.hero-creator-switch-link:focus-visible {
+  color: var(--champagne);
+  border-bottom-color: var(--champagne);
 }
 
 .hero-sub {
@@ -1794,5 +1835,781 @@ section#faq             { padding-block: 120px; }
   }
   .attr-step {
     min-width: unset;
+  }
+}
+
+/* ============================================================
+   v5.0 — Agent Output Demo (hero top-right terminal card)
+   ============================================================ */
+.agent-demo {
+  position: absolute;
+  top: var(--space-7);
+  right: var(--space-5);
+  width: 380px;
+  z-index: 2;
+  background: rgba(10, 22, 35, 0.92);
+  border: 2px solid var(--tertiary);
+  font-family: var(--font-body);
+  color: rgba(245, 242, 236, 0.88);
+  box-shadow:
+    0 20px 60px rgba(0, 0, 0, 0.45),
+    0 4px 14px rgba(102, 155, 188, 0.15);
+  opacity: 0;
+  transform: translateY(-12px);
+  animation: agent-demo-in 0.9s cubic-bezier(0.32, 0.72, 0, 1) 0.4s forwards;
+}
+
+@keyframes agent-demo-in {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.agent-demo-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  background: rgba(255, 255, 255, 0.03);
+  border-bottom: 1px solid rgba(102, 155, 188, 0.25);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.agent-demo-dot {
+  width: 8px;
+  height: 8px;
+  background: var(--tertiary);
+  flex-shrink: 0;
+  animation: agent-demo-pulse 1.8s ease-in-out infinite;
+}
+
+@keyframes agent-demo-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.35;
+  }
+}
+
+.agent-demo-title {
+  color: #fff;
+  flex: 1;
+}
+
+.agent-demo-meta {
+  color: rgba(245, 242, 236, 0.35);
+  font-weight: 400;
+  letter-spacing: 0.04em;
+}
+
+.agent-demo-body {
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.agent-demo-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.agent-demo-row--prompt {
+  padding: 10px 12px;
+  background: rgba(102, 155, 188, 0.08);
+  border-left: 2px solid var(--tertiary);
+}
+
+.agent-demo-caret {
+  color: var(--tertiary);
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.agent-demo-text {
+  color: #fff;
+  font-size: 11px;
+  letter-spacing: 0.02em;
+}
+
+.agent-demo-row--status {
+  font-size: 10px;
+  color: rgba(245, 242, 236, 0.55);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 700;
+}
+
+.agent-demo-bar-track {
+  position: relative;
+  width: 110px;
+  height: 3px;
+  background: rgba(102, 155, 188, 0.15);
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+.agent-demo-bar-fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background: var(--tertiary);
+  width: 0;
+  animation: agent-demo-progress 1.4s cubic-bezier(0.32, 0.72, 0, 1) 0.8s forwards;
+}
+
+@keyframes agent-demo-progress {
+  to {
+    width: 100%;
+  }
+}
+
+.agent-demo-status-text {
+  display: inline-block;
+  animation: agent-demo-blink 1.2s ease-in-out infinite;
+}
+
+@keyframes agent-demo-blink {
+  0%,
+  100% {
+    opacity: 0.55;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+.agent-demo-output {
+  border-top: 1px solid rgba(102, 155, 188, 0.12);
+  padding-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.agent-demo-out-label {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(245, 242, 236, 0.4);
+}
+
+.agent-demo-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.agent-demo-item {
+  display: grid;
+  grid-template-columns: 10px 1fr auto auto auto;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 8px;
+  background: rgba(255, 255, 255, 0.02);
+  border-left: 1px solid transparent;
+  font-size: 11px;
+  opacity: 0;
+  transform: translateX(-8px);
+  animation: agent-demo-row-in 0.4s cubic-bezier(0.32, 0.72, 0, 1) forwards;
+}
+
+@keyframes agent-demo-row-in {
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.agent-demo-tier-dot {
+  width: 8px;
+  height: 8px;
+  flex-shrink: 0;
+}
+
+.agent-demo-handle {
+  color: #fff;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.agent-demo-tier {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(245, 242, 236, 0.5);
+}
+
+.agent-demo-score {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 13px;
+  color: var(--tertiary);
+  letter-spacing: -0.02em;
+  min-width: 22px;
+  text-align: right;
+}
+
+.agent-demo-est {
+  font-size: 9px;
+  color: rgba(245, 242, 236, 0.45);
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+
+.agent-demo-footer {
+  margin-top: 4px;
+  padding: 9px 10px;
+  background: rgba(201, 169, 110, 0.08);
+  border-left: 2px solid var(--champagne);
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  opacity: 0;
+  animation: agent-demo-row-in 0.5s cubic-bezier(0.32, 0.72, 0, 1) 3.6s forwards;
+}
+
+.agent-demo-footer-label {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(245, 242, 236, 0.55);
+}
+
+.agent-demo-footer-val {
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--champagne);
+  letter-spacing: -0.01em;
+}
+
+/* Hide demo below 1100px — hero stays editorial on mobile */
+@media (max-width: 1099px) {
+  .agent-demo {
+    display: none;
+  }
+}
+
+/* Reserve right-side space in hero when demo is visible */
+@media (min-width: 1100px) {
+  .hero-inner {
+    padding-right: 440px;
+  }
+  .hero-stats-wrap {
+    padding-right: 0;
+  }
+  .hero .hero-sub {
+    max-width: 260px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .agent-demo,
+  .agent-demo-dot,
+  .agent-demo-bar-fill,
+  .agent-demo-status-text,
+  .agent-demo-item,
+  .agent-demo-footer {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ============================================================
+   v5.1 — Optional Video CTA + Modal (ConversionOracle demo)
+   Rendered only when AgentOutputDemo receives showVideoCTA.
+   Wrap uses display:contents so .agent-demo absolute layout is
+   unchanged. CTA sits under the terminal card on desktop only.
+   ============================================================ */
+.agent-demo-wrap {
+  display: contents;
+}
+
+.agent-demo-video-cta {
+  position: absolute;
+  top: calc(var(--space-7) + 430px);
+  right: var(--space-5);
+  width: 380px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 16px;
+  background: var(--surface-elevated, #ffffff);
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--primary);
+  font-family: var(--font-body);
+  color: var(--ink, #0a1623);
+  text-align: left;
+  cursor: pointer;
+  z-index: 2;
+  opacity: 0;
+  transform: translateY(-8px);
+  animation: agent-demo-in 0.9s cubic-bezier(0.32, 0.72, 0, 1) 0.9s forwards;
+  transition:
+    background 180ms ease,
+    border-color 180ms ease,
+    transform 180ms ease;
+}
+
+.agent-demo-video-cta:hover {
+  background: var(--surface-bright, #fafaf8);
+  border-left-color: var(--molten, #780000);
+  transform: translateY(-10px);
+}
+
+.agent-demo-video-cta:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 3px;
+}
+
+.agent-demo-video-play {
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  background: var(--primary);
+  position: relative;
+  display: inline-block;
+}
+
+.agent-demo-video-play::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 58%;
+  transform: translate(-50%, -50%);
+  width: 0;
+  height: 0;
+  border-left: 11px solid #ffffff;
+  border-top: 7px solid transparent;
+  border-bottom: 7px solid transparent;
+}
+
+.agent-demo-video-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+  flex: 1;
+}
+
+.agent-demo-video-eyebrow {
+  font-family: var(--font-body);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--tertiary);
+}
+
+.agent-demo-video-label {
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  line-height: 1.25;
+  color: var(--ink, #0a1623);
+}
+
+.agent-demo-video-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: rgba(10, 22, 35, 0.78);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-5);
+  animation: agent-demo-video-fade 220ms ease forwards;
+}
+
+@keyframes agent-demo-video-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.agent-demo-video-sheet {
+  position: relative;
+  width: 100%;
+  max-width: 960px;
+  background: var(--surface-elevated, #ffffff);
+  border: 2px solid var(--primary);
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.45);
+}
+
+.agent-demo-video-close {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 44px;
+  height: 44px;
+  background: var(--primary);
+  color: #ffffff;
+  border: none;
+  font-family: var(--font-body);
+  font-size: 22px;
+  line-height: 1;
+  cursor: pointer;
+  z-index: 2;
+}
+
+.agent-demo-video-close:hover {
+  background: var(--molten, #780000);
+}
+
+.agent-demo-video-close:focus-visible {
+  outline: 2px solid var(--champagne);
+  outline-offset: -4px;
+}
+
+.agent-demo-video-frame {
+  position: relative;
+  width: 100%;
+  padding-top: 56.25%; /* 16:9 */
+  background: #000;
+}
+
+.agent-demo-video-frame iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+.agent-demo-video-fallback {
+  padding: var(--space-6, 32px) var(--space-5, 24px);
+  text-align: center;
+  font-family: var(--font-body);
+  background: var(--surface-elevated, #ffffff);
+}
+
+.agent-demo-video-fallback-eyebrow {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--tertiary);
+  margin-bottom: 12px;
+}
+
+.agent-demo-video-fallback-title {
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--ink, #0a1623);
+  margin-bottom: 12px;
+}
+
+.agent-demo-video-fallback-body {
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--ink-muted, #4a5568);
+  max-width: 520px;
+  margin: 0 auto 20px;
+}
+
+.agent-demo-video-fallback-link {
+  display: inline-block;
+  padding: 12px 20px;
+  background: var(--primary);
+  color: #ffffff;
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-decoration: none;
+  border: 1px solid var(--primary);
+  transition: background 180ms ease;
+}
+
+.agent-demo-video-fallback-link:hover {
+  background: var(--molten, #780000);
+  border-color: var(--molten, #780000);
+}
+
+/* Match the existing desktop-only visibility of .agent-demo */
+@media (max-width: 1099px) {
+  .agent-demo-video-cta {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .agent-demo-video-cta,
+  .agent-demo-video-modal {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+  .agent-demo-video-cta:hover {
+    transform: none;
+  }
+}
+
+/* ============================================================
+   v5.0 — Verification Badge (3-layer trust strip)
+   ============================================================ */
+.verify-badge {
+  max-width: 920px;
+  margin: var(--space-5) auto 0;
+  padding: var(--space-5);
+  background: var(--surface-elevated, #ffffff);
+  border: 1px solid var(--line);
+}
+
+.verify-badge-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: var(--space-4);
+}
+
+.verify-badge-eyebrow {
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--primary);
+}
+
+.verify-badge-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0;
+  position: relative;
+}
+
+.verify-badge-col {
+  position: relative;
+  padding: var(--space-3) var(--space-4);
+  text-align: center;
+  border-right: 1px solid var(--line);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.verify-badge-col:last-child {
+  border-right: none;
+}
+
+.verify-badge-icon {
+  width: 48px;
+  height: 48px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(102, 155, 188, 0.08);
+  color: var(--tertiary);
+  border: 1px solid rgba(102, 155, 188, 0.25);
+}
+
+.verify-badge-label {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--dark);
+  margin-top: 4px;
+}
+
+.verify-badge-sub {
+  font-family: var(--font-body);
+  font-size: 11px;
+  letter-spacing: 0.02em;
+  color: var(--graphite, #4a5568);
+  line-height: 1.5;
+}
+
+.verify-badge-connector {
+  position: absolute;
+  right: -8px;
+  top: calc(var(--space-3) + 24px);
+  width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--surface-elevated, #ffffff);
+  color: var(--tertiary);
+  font-size: 12px;
+  font-weight: 700;
+  z-index: 1;
+}
+
+.verify-badge-tagline {
+  margin-top: var(--space-4);
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--line);
+  font-family: var(--font-body);
+  font-size: 12px;
+  color: var(--graphite, #4a5568);
+  letter-spacing: 0.02em;
+  text-align: center;
+}
+
+@media (max-width: 760px) {
+  .verify-badge-row {
+    grid-template-columns: 1fr;
+  }
+  .verify-badge-col {
+    border-right: none;
+    border-bottom: 1px solid var(--line);
+    padding: var(--space-3) 0;
+  }
+  .verify-badge-col:last-child {
+    border-bottom: none;
+  }
+  .verify-badge-connector {
+    display: none;
+  }
+}
+
+/* ── Reveal stagger delays (cascade siblings) ──────────────── */
+/* Add .reveal-d1 through .reveal-d5 for stagger timing */
+.reveal-d1 { transition-delay: 60ms; }
+.reveal-d2 { transition-delay: 120ms; }
+.reveal-d3 { transition-delay: 180ms; }
+.reveal-d4 { transition-delay: 240ms; }
+.reveal-d5 { transition-delay: 300ms; }
+
+/* Auto-stagger for grids using :nth-child on direct .reveal children */
+/* Apply .reveal-stagger class to the grid container */
+.reveal-stagger > .reveal:nth-child(1) { transition-delay: 0ms; }
+.reveal-stagger > .reveal:nth-child(2) { transition-delay: 70ms; }
+.reveal-stagger > .reveal:nth-child(3) { transition-delay: 140ms; }
+.reveal-stagger > .reveal:nth-child(4) { transition-delay: 210ms; }
+.reveal-stagger > .reveal:nth-child(5) { transition-delay: 280ms; }
+.reveal-stagger > .reveal:nth-child(6) { transition-delay: 350ms; }
+
+/* ── Hero display text: clip reveal on load ─────────────────── */
+@keyframes hero-clip-in {
+  from {
+    clip-path: inset(0 100% 0 0);
+    opacity: 0;
+  }
+  to {
+    clip-path: inset(0 0% 0 0);
+    opacity: 1;
+  }
+}
+
+/* Apply to the hero heading when .visible is added by ScrollReveal */
+.hero-h.visible,
+.hero-title.visible,
+[class*="hero-h"].visible {
+  animation: hero-clip-in 700ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* ── Card hover: inset border light sweep ───────────────────── */
+/* Any element with .card-hover-sweep gets a subtle inset highlight on hover */
+.card-hover-sweep {
+  position: relative;
+  transition: border-color 200ms ease, background 200ms ease;
+}
+.card-hover-sweep::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border: 1px solid transparent;
+  pointer-events: none;
+  transition: border-color 280ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.card-hover-sweep:hover::after {
+  border-color: rgba(0, 48, 73, 0.28);
+}
+
+/* ── CTA primary link: underline draw-in ────────────────────── */
+.cta-underline {
+  position: relative;
+  display: inline-block;
+}
+.cta-underline::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: var(--primary, #c1121f);
+  transition: width 300ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.cta-underline:hover::after {
+  width: 100%;
+}
+
+/* ── Section separator: animated rule on reveal ─────────────── */
+@keyframes rule-expand {
+  from { width: 0; }
+  to   { width: var(--rule-w, 40px); }
+}
+.rule.visible {
+  animation: rule-expand 400ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* ── Landing demo (MerchantDashboard / dash-row): stagger in ── */
+@keyframes dash-row-in {
+  from {
+    opacity: 0;
+    transform: translateX(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.dash-rows .dash-row {
+  animation: dash-row-in 380ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+/* dash-row already uses animationDelay inline — this adds the keyframe */
+
+/* ── Reduced motion overrides ───────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .reveal-d1, .reveal-d2, .reveal-d3, .reveal-d4, .reveal-d5,
+  .reveal-stagger > .reveal {
+    transition-delay: 0ms !important;
+  }
+  .hero-h.visible,
+  .hero-title.visible,
+  [class*="hero-h"].visible {
+    animation: none;
+  }
+  .rule.visible {
+    animation: none;
+  }
+  .dash-rows .dash-row {
+    animation: none;
+    opacity: 1;
+    transform: none;
   }
 }

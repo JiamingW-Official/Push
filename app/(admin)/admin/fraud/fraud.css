@@ -1059,3 +1059,62 @@
     transition: none;
   }
 }
+
+/* ============================================================
+   Micro-interaction polish — fraud.css
+   Append-only block; do NOT modify rules above.
+   ============================================================ */
+
+/* Flag hover: light red bg + primary border */
+.fraud-action-btn--flag {
+  transition: background 160ms ease, border-color 160ms ease, color 160ms ease;
+}
+
+/* Generic fraud-flag element hover */
+.fraud-flag {
+  transition: background 160ms ease, border-color 160ms ease;
+}
+
+.fraud-flag:hover {
+  background: #fff0f0;
+  border-color: var(--primary);
+}
+
+/* High-risk row hover */
+.fraud-row--high:hover {
+  background: rgba(193, 18, 31, 0.04);
+  cursor: pointer;
+}
+
+/* Alert entrance animation */
+@keyframes fraud-alert-in {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.fraud-detail {
+  animation: fraud-alert-in 240ms ease both;
+}
+
+/* Score bar width transition */
+.fraud-score-bar {
+  transition: width 600ms cubic-bezier(0.22, 1, 0.36, 1) 100ms;
+}
+
+/* Reduced-motion guard */
+@media (prefers-reduced-motion: reduce) {
+  .fraud-flag,
+  .fraud-row--high,
+  .fraud-score-bar,
+  .fraud-detail {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

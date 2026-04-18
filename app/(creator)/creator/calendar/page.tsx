@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useRef, useEffect } from "react";
+import { useState, useMemo, useEffect } from "react";
 import Link from "next/link";
 import "./calendar.css";
 import {
@@ -9,17 +9,18 @@ import {
   EventType,
   EVENT_TYPE_COLORS,
   EVENT_TYPE_LABELS,
-  countDeadlinesInMonth,
 } from "@/lib/calendar/mock-events";
 
-/* ── Types ───────────────────────────────────────────────── */
+/* ─────────────────────────────────────────────────────────────
+   Your schedule.
+   Customer Acquisition Engine — Creator Calendar
+   Week / Month / Agenda views with ConversionOracle™ tips
+   ───────────────────────────────────────────────────────────── */
 
-type CalView = "month" | "week" | "list";
+type CalView = "week" | "month" | "agenda";
 
-/* ── Constants ───────────────────────────────────────────── */
-
-const DOW_LABELS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-const DOW_LABELS_FULL = [
+const DOW_SHORT = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+const DOW_LONG = [
   "Sunday",
   "Monday",
   "Tuesday",
@@ -28,7 +29,6 @@ const DOW_LABELS_FULL = [
   "Friday",
   "Saturday",
 ];
-
 const MONTH_NAMES = [
   "January",
   "February",
@@ -44,46 +44,94 @@ const MONTH_NAMES = [
   "December",
 ];
 
+/* Hours visible in week view: 6AM → 11PM */
+const WEEK_HOURS = Array.from({ length: 18 }, (_, i) => i + 6); // 6..23
+
+/* Tier colors mapped to roles/event payout ranges.
+   These mirror Design.md tier token palette. */
+const TIER_COLORS = {
+  clay: "#b8a99a", // Seed Clay
+  bronze: "#8c6239", // Explorer Bronze
+  steel: "#4a5568", // Operator Steel
+  gold: "#c9a96e", // Proven / Champagne Gold
+  ruby: "#9b111e", // Closer Ruby
+  obsidian: "#1a1a2e", // Partner Obsidian
+};
+
+/* ConversionOracle™ daily tips pool — rotates by day-of-year */
+const ORACLE_TIPS = [
+  "ConversionOracle™ says: creators who visit during peak hours (7–10AM) see 2.3x the walk-in conversion.",
+  "ConversionOracle™ says: posting within 18h of your visit lifts verified walk-ins by +42%.",
+  "ConversionOracle™ says: tagging the merchant's geo-pin in-frame boosts QR scans by +28%.",
+  "ConversionOracle™ says: Williamsburg Coffee+ creators earn more on Fridays 8–11AM.",
+  "ConversionOracle™ says: DisclosureBot-approved captions convert 1.6x better on Reels.",
+  "ConversionOracle™ says: Two-Segment creators who cross-post to Stories see 31% higher retention.",
+  "ConversionOracle™ says: morning light shots (before 10AM) outperform afternoon shots by 19% in saves.",
+];
+
 /* ── Helpers ─────────────────────────────────────────────── */
 
 function toYMD(d: Date): string {
-  return d.toISOString().slice(0, 10);
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${y}-${m}-${day}`;
 }
 
 function todayYMD(): string {
   return toYMD(new Date());
 }
 
-function formatYearMonth(year: number, month: number): string {
-  return `${year}-${String(month + 1).padStart(2, "0")}`;
-}
-
 function buildMonthGrid(year: number, month: number): (Date | null)[] {
   const first = new Date(year, month, 1);
   const last = new Date(year, month + 1, 0);
   const cells: (Date | null)[] = [];
-
-  // Pad leading empty cells
-  for (let i = 0; i < first.getDay(); i++) cells.push(null);
-
+  // Start grid on Monday (shift Sun=0 → 6)
+  const leading = (first.getDay() + 6) % 7;
+  for (let i = 0; i < leading; i++) cells.push(null);
   for (let d = 1; d <= last.getDate(); d++) {
     cells.push(new Date(year, month, d));
   }
-
-  // Pad trailing
   while (cells.length % 7 !== 0) cells.push(null);
-
   return cells;
 }
 
+/* Monday-first week dates */
 function buildWeekDates(anchorDate: Date): Date[] {
   const start = new Date(anchorDate);
-  start.setDate(anchorDate.getDate() - anchorDate.getDay());
+  const dow = (anchorDate.getDay() + 6) % 7; // Mon=0
+  start.setDate(anchorDate.getDate() - dow);
   return Array.from({ length: 7 }, (_, i) => {
     const d = new Date(start);
     d.setDate(start.getDate() + i);
     return d;
   });
+}
+
+/* Next N days including today */
+function buildNextNDays(n: number): Date[] {
+  const arr: Date[] = [];
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  for (let i = 0; i < n; i++) {
+    const d = new Date(today);
+    d.setDate(today.getDate() + i);
+    arr.push(d);
+  }
+  return arr;
+}
+
+function formatTime12(hhmm: string): string {
+  const [h, m] = hhmm.split(":").map(Number);
+  const period = h >= 12 ? "PM" : "AM";
+  const h12 = h % 12 === 0 ? 12 : h % 12;
+  return `${h12}:${String(m).padStart(2, "0")} ${period}`;
+}
+
+function formatHourLabel(h: number): string {
+  const period = h >= 12 ? "PM" : "AM";
+  const h12 = h % 12 === 0 ? 12 : h % 12;
+  return `${h12} ${period}`;
 }
 
 function formatDisplayDate(dateStr: string): string {
@@ -96,220 +144,150 @@ function formatDisplayDate(dateStr: string): string {
   });
 }
 
-function downloadICS(events: CalendarEvent[]) {
-  const lines = [
+/* Deterministic tier color per event.
+   Visit → champagne gold (milestone/visit events)
+   Deadline → Flag Red (primary)
+   Payment → Steel Blue
+   Review → graphite steel (tier steel) */
+function tierColorForEvent(ev: CalendarEvent): string {
+  // Allow tier color to track event.type + payout magnitude for variety.
+  if (ev.type === "deadline") return "#c1121f"; // Flag Red
+  if (ev.type === "payment") return "#669bbc"; // Steel Blue
+  if (ev.type === "review") return TIER_COLORS.steel; // Operator Steel
+  // milestone / visit
+  if (!ev.payout) return TIER_COLORS.clay;
+  if (ev.payout >= 150) return TIER_COLORS.obsidian;
+  if (ev.payout >= 100) return TIER_COLORS.ruby;
+  if (ev.payout >= 50) return TIER_COLORS.gold;
+  if (ev.payout >= 25) return TIER_COLORS.bronze;
+  return TIER_COLORS.clay;
+}
+
+function eventTypeLabel(ev: CalendarEvent): string {
+  if (ev.type === "milestone") {
+    if (ev.title.toLowerCase().includes("visit")) return "Visit scheduled";
+    if (ev.title.toLowerCase().includes("shoot")) return "Visit scheduled";
+    if (ev.title.toLowerCase().includes("appointment"))
+      return "Visit scheduled";
+    return "Milestone";
+  }
+  if (ev.type === "deadline") return "Post deadline";
+  if (ev.type === "payment") return "Payment pending";
+  if (ev.type === "review") return "Verification review";
+  return EVENT_TYPE_LABELS[ev.type];
+}
+
+function eventAction(ev: CalendarEvent): { label: string; href: string } {
+  if (ev.type === "deadline" && ev.postUrl) {
+    return { label: "View brief", href: ev.postUrl };
+  }
+  if (ev.type === "payment") {
+    return { label: "Upload receipt", href: `/creator/wallet` };
+  }
+  if (ev.type === "milestone") {
+    return {
+      label: "Mark visited",
+      href: `/creator/campaigns/${ev.campaignId}`,
+    };
+  }
+  return {
+    label: "View brief",
+    href: ev.postUrl ?? `/creator/campaigns/${ev.campaignId}`,
+  };
+}
+
+/* .ics blob export — Google Calendar + Apple Calendar compatible */
+function buildICS(events: CalendarEvent[]): string {
+  const lines: string[] = [
     "BEGIN:VCALENDAR",
     "VERSION:2.0",
-    "PRODID:-//Push//Creator Calendar//EN",
+    "PRODID:-//Push//Customer Acquisition Engine Creator Calendar//EN",
     "CALSCALE:GREGORIAN",
     "METHOD:PUBLISH",
+    "X-WR-CALNAME:Push — Your schedule",
   ];
+  const dtstamp = new Date()
+    .toISOString()
+    .replace(/[-:]/g, "")
+    .replace(/\.\d+Z$/, "Z");
 
   for (const ev of events) {
-    const dtStart = ev.time
-      ? ev.date.replace(/-/g, "") + "T" + ev.time.replace(":", "") + "00"
-      : ev.date.replace(/-/g, "");
-    lines.push("BEGIN:VEVENT");
-    lines.push(`UID:${ev.id}@push`);
-    lines.push(`DTSTART:${dtStart}`);
-    lines.push(`SUMMARY:${ev.title}`);
-    lines.push(`DESCRIPTION:${ev.description ?? ""}`);
-    lines.push("END:VEVENT");
+    const yyyymmdd = ev.date.replace(/-/g, "");
+    const hhmm = (ev.time ?? "09:00").replace(":", "");
+    const dtStart = `${yyyymmdd}T${hhmm}00`;
+    // +1h default duration
+    const [hh, mm] = (ev.time ?? "09:00").split(":").map(Number);
+    const endH = String((hh + 1) % 24).padStart(2, "0");
+    const dtEnd = `${yyyymmdd}T${endH}${String(mm).padStart(2, "0")}00`;
+
+    lines.push(
+      "BEGIN:VEVENT",
+      `UID:${ev.id}@push.nyc`,
+      `DTSTAMP:${dtstamp}`,
+      `DTSTART:${dtStart}`,
+      `DTEND:${dtEnd}`,
+      `SUMMARY:${escapeICS(ev.title)}`,
+      `DESCRIPTION:${escapeICS(
+        `${ev.merchantName} · ${ev.campaignTitle}${
+          ev.payout ? ` · Payout $${ev.payout}` : ""
+        }${ev.description ? ` — ${ev.description}` : ""}`,
+      )}`,
+      `CATEGORIES:${eventTypeLabel(ev).toUpperCase()}`,
+      "END:VEVENT",
+    );
   }
-
   lines.push("END:VCALENDAR");
+  return lines.join("\r\n");
+}
 
-  const blob = new Blob([lines.join("\r\n")], { type: "text/calendar" });
+function escapeICS(s: string): string {
+  return s
+    .replace(/\\/g, "\\\\")
+    .replace(/,/g, "\\,")
+    .replace(/;/g, "\\;")
+    .replace(/\n/g, "\\n");
+}
+
+function triggerDownloadICS(events: CalendarEvent[], filename: string) {
+  const blob = new Blob([buildICS(events)], {
+    type: "text/calendar;charset=utf-8",
+  });
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
   a.href = url;
-  a.download = "push-calendar.ics";
+  a.download = filename;
+  document.body.appendChild(a);
   a.click();
-  URL.revokeObjectURL(url);
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 800);
 }
 
-/* ── Event dot colors ─────────────────────────────────────── */
-
-function dotColor(type: EventType): string {
-  return EVENT_TYPE_COLORS[type];
-}
-
-/* ── Sub-components ──────────────────────────────────────── */
-
-interface ActionButtonsProps {
-  event: CalendarEvent;
-  onMarkDone: (id: string) => void;
-  onSnooze: (id: string) => void;
-  onAddNote: (id: string) => void;
-}
-
-function ActionButtons({
-  event,
-  onMarkDone,
-  onSnooze,
-  onAddNote,
-}: ActionButtonsProps) {
-  return (
-    <div className="cal-popover-actions">
-      {event.postUrl && !event.done && (
-        <Link
-          href={event.postUrl}
-          className="cal-action-btn cal-action-btn--primary"
-        >
-          Submit content
-        </Link>
-      )}
-      <button
-        className={
-          event.done ? "cal-action-btn cal-action-btn--done" : "cal-action-btn"
-        }
-        onClick={() => onMarkDone(event.id)}
-        disabled={event.done}
-      >
-        {event.done ? "Done" : "Mark done"}
-      </button>
-      {!event.done && (
-        <>
-          <button className="cal-action-btn" onClick={() => onSnooze(event.id)}>
-            Snooze
-          </button>
-          <button
-            className="cal-action-btn"
-            onClick={() => onAddNote(event.id)}
-          >
-            Add note
-          </button>
-        </>
-      )}
-    </div>
+/* Google Calendar quick-add for a single representative event (template) */
+function googleAddUrl(ev: CalendarEvent): string {
+  const yyyymmdd = ev.date.replace(/-/g, "");
+  const hhmm = (ev.time ?? "09:00").replace(":", "");
+  const [hh, mm] = (ev.time ?? "09:00").split(":").map(Number);
+  const endH = String((hh + 1) % 24).padStart(2, "0");
+  const start = `${yyyymmdd}T${hhmm}00`;
+  const end = `${yyyymmdd}T${endH}${String(mm).padStart(2, "0")}00`;
+  const u = new URL("https://calendar.google.com/calendar/render");
+  u.searchParams.set("action", "TEMPLATE");
+  u.searchParams.set("text", ev.title);
+  u.searchParams.set("dates", `${start}/${end}`);
+  u.searchParams.set(
+    "details",
+    `${ev.merchantName} — ${ev.campaignTitle}${ev.description ? `\n\n${ev.description}` : ""}`,
   );
+  return u.toString();
 }
 
-/* ── Day popover ─────────────────────────────────────────── */
-
-interface DayPopoverProps {
-  dateStr: string;
-  events: CalendarEvent[];
-  anchorRef: React.RefObject<HTMLElement | null>;
-  onClose: () => void;
-  onMarkDone: (id: string) => void;
-  onSnooze: (id: string) => void;
-  onAddNote: (id: string) => void;
-  noteTarget: string | null;
-  noteValue: string;
-  onNoteChange: (v: string) => void;
-  onNoteSave: () => void;
-}
-
-function DayPopover({
-  dateStr,
-  events,
-  anchorRef,
-  onClose,
-  onMarkDone,
-  onSnooze,
-  onAddNote,
-  noteTarget,
-  noteValue,
-  onNoteChange,
-  onNoteSave,
-}: DayPopoverProps) {
-  const popRef = useRef<HTMLDivElement>(null);
-  const [pos, setPos] = useState({ top: 120, left: 120 });
-
-  useEffect(() => {
-    if (!anchorRef.current) return;
-    const rect = anchorRef.current.getBoundingClientRect();
-    const pw = 320;
-    const left = Math.min(rect.left, window.innerWidth - pw - 16);
-    const top = rect.bottom + 8;
-    setPos({ top: Math.max(8, top), left: Math.max(8, left) });
-  }, [anchorRef]);
-
-  // Close on escape
-  useEffect(() => {
-    function onKey(e: KeyboardEvent) {
-      if (e.key === "Escape") onClose();
-    }
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [onClose]);
-
-  return (
-    <>
-      <div className="cal-popover-backdrop" onClick={onClose} />
-      <div
-        ref={popRef}
-        className="cal-popover"
-        style={{ top: pos.top, left: pos.left }}
-        role="dialog"
-        aria-label={`Events for ${formatDisplayDate(dateStr)}`}
-      >
-        <div className="cal-popover-header">
-          <span className="cal-popover-date">{formatDisplayDate(dateStr)}</span>
-          <button
-            className="cal-popover-close"
-            onClick={onClose}
-            aria-label="Close"
-          >
-            &times;
-          </button>
-        </div>
-
-        <div className="cal-popover-events">
-          {events.length === 0 ? (
-            <p className="cal-popover-empty">No events today.</p>
-          ) : (
-            events.map((ev) => (
-              <div key={ev.id} className="cal-popover-event">
-                <div className="cal-popover-event-top">
-                  <span
-                    className="cal-popover-type-dot"
-                    style={{ background: dotColor(ev.type) }}
-                  />
-                  <span className="cal-popover-event-title">{ev.title}</span>
-                </div>
-                {ev.time && (
-                  <div className="cal-popover-event-time">{ev.time}</div>
-                )}
-                <div className="cal-popover-event-campaign">
-                  {ev.merchantName} · {ev.campaignTitle}
-                </div>
-                <ActionButtons
-                  event={ev}
-                  onMarkDone={onMarkDone}
-                  onSnooze={onSnooze}
-                  onAddNote={onAddNote}
-                />
-                {noteTarget === ev.id && (
-                  <div style={{ paddingLeft: 17, marginTop: 8 }}>
-                    <textarea
-                      className="cal-note-input"
-                      rows={2}
-                      placeholder="Add a note..."
-                      value={noteValue}
-                      onChange={(e) => onNoteChange(e.target.value)}
-                      autoFocus
-                    />
-                    <button
-                      className="cal-action-btn"
-                      style={{ marginTop: 6 }}
-                      onClick={onNoteSave}
-                    >
-                      Save note
-                    </button>
-                  </div>
-                )}
-                {ev.note && noteTarget !== ev.id && (
-                  <p className="cal-note-saved">Note: {ev.note}</p>
-                )}
-              </div>
-            ))
-          )}
-        </div>
-      </div>
-    </>
-  );
+/* Pick an oracle tip deterministically by day of year */
+function pickOracleTip(): string {
+  const d = new Date();
+  const start = new Date(d.getFullYear(), 0, 0);
+  const diff = d.getTime() - start.getTime();
+  const doy = Math.floor(diff / (1000 * 60 * 60 * 24));
+  return ORACLE_TIPS[doy % ORACLE_TIPS.length];
 }
 
 /* ── Main page ───────────────────────────────────────────── */
@@ -318,134 +296,116 @@ export default function CreatorCalendarPage() {
   const today = new Date();
   const todayStr = todayYMD();
 
-  const [view, setView] = useState<CalView>("month");
+  // Detect mobile on mount; default to agenda on mobile
+  const [isMobile, setIsMobile] = useState(false);
+  const [view, setView] = useState<CalView>("week");
+  const [weekAnchor, setWeekAnchor] = useState<Date>(today);
   const [year, setYear] = useState(today.getFullYear());
-  const [month, setMonth] = useState(today.getMonth()); // 0-indexed
+  const [month, setMonth] = useState(today.getMonth());
+  const [slideoverDate, setSlideoverDate] = useState<string | null>(null);
+  const [nowMinutes, setNowMinutes] = useState<number>(
+    today.getHours() * 60 + today.getMinutes(),
+  );
 
-  // Week anchor (defaults to today's week)
-  const [weekAnchor, setWeekAnchor] = useState(today);
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 820px)");
+    const apply = () => {
+      setIsMobile(mq.matches);
+      if (mq.matches) setView("agenda");
+    };
+    apply();
+    mq.addEventListener?.("change", apply);
+    return () => mq.removeEventListener?.("change", apply);
+  }, []);
 
-  // Popover state
-  const [popoverDate, setPopoverDate] = useState<string | null>(null);
-  const popoverAnchor = useRef<HTMLElement | null>(null);
+  // Tick now-line every minute in week view
+  useEffect(() => {
+    const id = setInterval(() => {
+      const d = new Date();
+      setNowMinutes(d.getHours() * 60 + d.getMinutes());
+    }, 60000);
+    return () => clearInterval(id);
+  }, []);
 
-  // Event state (local mutation for demo)
-  const [events, setEvents] = useState<CalendarEvent[]>(MOCK_EVENTS);
-
-  // Note state
-  const [noteTarget, setNoteTarget] = useState<string | null>(null);
-  const [noteValue, setNoteValue] = useState("");
-
-  /* ── Derived ─────────────────────────────────────────── */
-
-  const ym = formatYearMonth(year, month);
-  const deadlineCount = useMemo(() => countDeadlinesInMonth(ym), [ym]);
+  const events = MOCK_EVENTS;
 
   const eventsByDate = useMemo(() => {
     const map: Record<string, CalendarEvent[]> = {};
     for (const ev of events) {
-      if (!map[ev.date]) map[ev.date] = [];
-      map[ev.date].push(ev);
+      (map[ev.date] ??= []).push(ev);
+    }
+    // sort each day's events by time
+    for (const k of Object.keys(map)) {
+      map[k].sort((a, b) => (a.time ?? "").localeCompare(b.time ?? ""));
     }
     return map;
   }, [events]);
 
+  const weekDates = useMemo(() => buildWeekDates(weekAnchor), [weekAnchor]);
   const monthGrid = useMemo(() => buildMonthGrid(year, month), [year, month]);
 
-  const weekDates = useMemo(() => buildWeekDates(weekAnchor), [weekAnchor]);
+  // Next 14 days agenda
+  const agendaDays = useMemo(() => buildNextNDays(14), []);
+  const agendaGroups = useMemo(() => {
+    return agendaDays
+      .map((d) => {
+        const ds = toYMD(d);
+        return { date: d, dateStr: ds, events: eventsByDate[ds] ?? [] };
+      })
+      .filter((g) => g.events.length > 0);
+  }, [agendaDays, eventsByDate]);
 
-  // List view: events in current month, grouped by date
-  const listGroups = useMemo(() => {
-    const monthEvents = events.filter((e) => e.date.startsWith(ym));
-    const grouped: Record<string, CalendarEvent[]> = {};
-    for (const ev of monthEvents) {
-      if (!grouped[ev.date]) grouped[ev.date] = [];
-      grouped[ev.date].push(ev);
-    }
-    return Object.entries(grouped).sort(([a], [b]) => a.localeCompare(b));
-  }, [events, ym]);
+  // Upcoming 5 (today → future)
+  const upcoming5 = useMemo(() => {
+    return [...events]
+      .filter((e) => e.date >= todayStr && !e.done)
+      .sort((a, b) =>
+        (a.date + (a.time ?? "")).localeCompare(b.date + (b.time ?? "")),
+      )
+      .slice(0, 5);
+  }, [events, todayStr]);
 
-  /* ── Handlers ────────────────────────────────────────── */
+  // Deadlines this week (current weekDates)
+  const deadlinesThisWeek = useMemo(() => {
+    const start = toYMD(weekDates[0]);
+    const end = toYMD(weekDates[6]);
+    return events.filter(
+      (e) => e.type === "deadline" && e.date >= start && e.date <= end,
+    ).length;
+  }, [events, weekDates]);
+
+  const oracleTip = useMemo(() => pickOracleTip(), []);
+
+  /* ── Navigation ──────────────────────────────────────── */
 
   function prevPeriod() {
     if (view === "week") {
       const d = new Date(weekAnchor);
       d.setDate(d.getDate() - 7);
       setWeekAnchor(d);
-    } else {
+    } else if (view === "month") {
       if (month === 0) {
         setYear((y) => y - 1);
         setMonth(11);
-      } else {
-        setMonth((m) => m - 1);
-      }
+      } else setMonth((m) => m - 1);
     }
   }
-
   function nextPeriod() {
     if (view === "week") {
       const d = new Date(weekAnchor);
       d.setDate(d.getDate() + 7);
       setWeekAnchor(d);
-    } else {
+    } else if (view === "month") {
       if (month === 11) {
         setYear((y) => y + 1);
         setMonth(0);
-      } else {
-        setMonth((m) => m + 1);
-      }
+      } else setMonth((m) => m + 1);
     }
   }
-
   function goToday() {
+    setWeekAnchor(new Date());
     setYear(today.getFullYear());
     setMonth(today.getMonth());
-    setWeekAnchor(today);
-  }
-
-  function openPopover(dateStr: string, el: HTMLElement) {
-    popoverAnchor.current = el;
-    setPopoverDate(dateStr);
-    setNoteTarget(null);
-    setNoteValue("");
-  }
-
-  function closePopover() {
-    setPopoverDate(null);
-    setNoteTarget(null);
-    setNoteValue("");
-  }
-
-  function markDone(id: string) {
-    setEvents((prev) =>
-      prev.map((e) => (e.id === id ? { ...e, done: true } : e)),
-    );
-  }
-
-  function snooze(id: string) {
-    // Snooze: push date forward 1 day
-    setEvents((prev) =>
-      prev.map((e) => {
-        if (e.id !== id) return e;
-        const d = new Date(e.date + "T00:00:00");
-        d.setDate(d.getDate() + 1);
-        return { ...e, date: toYMD(d), snoozed: true };
-      }),
-    );
-  }
-
-  function addNote(id: string) {
-    setNoteTarget(id);
-    setNoteValue("");
-  }
-
-  function saveNote() {
-    if (!noteTarget) return;
-    setEvents((prev) =>
-      prev.map((e) => (e.id === noteTarget ? { ...e, note: noteValue } : e)),
-    );
-    setNoteTarget(null);
-    setNoteValue("");
   }
 
   /* ── Period label ────────────────────────────────────── */
@@ -453,14 +413,260 @@ export default function CreatorCalendarPage() {
   const periodLabel =
     view === "week"
       ? (() => {
-          const start = weekDates[0];
-          const end = weekDates[6];
-          if (start.getMonth() === end.getMonth()) {
-            return `${MONTH_NAMES[start.getMonth()]} ${start.getDate()}–${end.getDate()}, ${start.getFullYear()}`;
+          const s = weekDates[0];
+          const e = weekDates[6];
+          if (s.getMonth() === e.getMonth()) {
+            return `${MONTH_NAMES[s.getMonth()]} ${s.getDate()}–${e.getDate()}, ${s.getFullYear()}`;
           }
-          return `${MONTH_NAMES[start.getMonth()]} ${start.getDate()} – ${MONTH_NAMES[end.getMonth()]} ${end.getDate()}, ${end.getFullYear()}`;
+          return `${MONTH_NAMES[s.getMonth()]} ${s.getDate()} – ${MONTH_NAMES[e.getMonth()]} ${e.getDate()}, ${e.getFullYear()}`;
         })()
-      : `${MONTH_NAMES[month]} ${year}`;
+      : view === "month"
+        ? `${MONTH_NAMES[month]} ${year}`
+        : `Next 14 days`;
+
+  /* ── Render helpers ─────────────────────────────────── */
+
+  function renderWeekGrid() {
+    return (
+      <div className="cal-week-wrap">
+        <div className="cal-week-sticky-head">
+          <div className="cal-week-gutter-corner" aria-hidden />
+          {weekDates.map((d) => {
+            const isToday = toYMD(d) === todayStr;
+            return (
+              <div
+                key={toYMD(d)}
+                className={`cal-week-day-head${isToday ? " cal-week-day-head--today" : ""}`}
+              >
+                <span className="cal-week-day-dow">
+                  {DOW_SHORT[d.getDay()]}
+                </span>
+                <span className="cal-week-day-num">{d.getDate()}</span>
+              </div>
+            );
+          })}
+        </div>
+
+        <div className="cal-week-grid-body">
+          {/* Hour gutter */}
+          <div className="cal-week-gutter">
+            {WEEK_HOURS.map((h) => (
+              <div key={h} className="cal-week-hour-label">
+                {formatHourLabel(h)}
+              </div>
+            ))}
+          </div>
+
+          {/* 7 day columns */}
+          {weekDates.map((d) => {
+            const ds = toYMD(d);
+            const isToday = ds === todayStr;
+            const dayEvents = (eventsByDate[ds] ?? []).filter((e) => {
+              if (!e.time) return false;
+              const h = parseInt(e.time.split(":")[0], 10);
+              return h >= 6 && h <= 23;
+            });
+
+            return (
+              <div
+                key={ds}
+                className={`cal-week-col${isToday ? " cal-week-col--today" : ""}`}
+              >
+                {/* Hour grid lines */}
+                {WEEK_HOURS.map((h) => (
+                  <div key={h} className="cal-week-hour-slot" />
+                ))}
+
+                {/* Events absolutely positioned */}
+                {dayEvents.map((ev) => {
+                  const [hh, mm] = ev.time!.split(":").map(Number);
+                  const topMin = (hh - 6) * 60 + mm;
+                  // 1h block (or until next event fits naturally); demo defaults 60min
+                  const duration = 60;
+                  return (
+                    <button
+                      key={ev.id}
+                      className={`cal-week-block${ev.done ? " cal-week-block--done" : ""}`}
+                      style={{
+                        top: `${(topMin / 60) * 72}px`,
+                        height: `${(duration / 60) * 72 - 4}px`,
+                        background: tierColorForEvent(ev),
+                        color:
+                          tierColorForEvent(ev) === TIER_COLORS.gold
+                            ? "#003049"
+                            : "#fff",
+                      }}
+                      onClick={() => setSlideoverDate(ds)}
+                      title={`${ev.title} — ${ev.merchantName}`}
+                    >
+                      <span className="cal-week-block-type">
+                        {eventTypeLabel(ev)}
+                      </span>
+                      <span className="cal-week-block-title">
+                        {ev.merchantName}
+                      </span>
+                      <span className="cal-week-block-meta">
+                        {formatTime12(ev.time!)}
+                        {ev.payout ? ` · $${ev.payout}` : ""}
+                      </span>
+                    </button>
+                  );
+                })}
+
+                {/* Now ruler only for today */}
+                {isToday &&
+                  nowMinutes >= 6 * 60 &&
+                  nowMinutes <= 23 * 60 + 59 && (
+                    <div
+                      className="cal-week-now"
+                      style={{ top: `${((nowMinutes - 360) / 60) * 72}px` }}
+                      aria-hidden
+                    >
+                      <span className="cal-week-now-dot" />
+                    </div>
+                  )}
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    );
+  }
+
+  function renderMonthGrid() {
+    return (
+      <div className="cal-month">
+        <div className="cal-month-header">
+          {/* Monday-first headers */}
+          {["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map((d) => (
+            <div key={d} className="cal-month-dow">
+              {d}
+            </div>
+          ))}
+        </div>
+        <div className="cal-month-grid">
+          {monthGrid.map((date, i) => {
+            if (!date) {
+              return (
+                <div key={`x-${i}`} className="cal-cell cal-cell--empty" />
+              );
+            }
+            const ds = toYMD(date);
+            const isToday = ds === todayStr;
+            const dayEvents = eventsByDate[ds] ?? [];
+            const shownDots = dayEvents.slice(0, 3);
+            const extra = dayEvents.length - shownDots.length;
+
+            return (
+              <button
+                key={ds}
+                className={`cal-cell${isToday ? " cal-cell--today" : ""}`}
+                onClick={() => setSlideoverDate(ds)}
+                aria-label={`${formatDisplayDate(ds)}, ${dayEvents.length} events`}
+              >
+                <span className="cal-cell-num">{date.getDate()}</span>
+                <div className="cal-cell-dots">
+                  {shownDots.map((ev) => (
+                    <span
+                      key={ev.id}
+                      className="cal-cell-dot"
+                      style={{ background: tierColorForEvent(ev) }}
+                    />
+                  ))}
+                  {extra > 0 && <span className="cal-cell-more">+{extra}</span>}
+                </div>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+    );
+  }
+
+  function renderAgenda() {
+    return (
+      <div className="cal-agenda">
+        {agendaGroups.length === 0 ? (
+          <div className="cal-empty">
+            <div className="cal-empty-num">0</div>
+            <p className="cal-empty-msg">
+              Nothing scheduled in the next 14 days.
+            </p>
+          </div>
+        ) : (
+          agendaGroups.map((g) => {
+            const isToday = g.dateStr === todayStr;
+            return (
+              <section key={g.dateStr} className="cal-agenda-group">
+                <header className="cal-agenda-head">
+                  <span className="cal-agenda-head-date">
+                    {MONTH_NAMES[g.date.getMonth()].slice(0, 3)}{" "}
+                    {g.date.getDate()}
+                  </span>
+                  <span className="cal-agenda-head-dow">
+                    {DOW_LONG[g.date.getDay()]}
+                  </span>
+                  {isToday && (
+                    <span className="cal-agenda-head-today">Today</span>
+                  )}
+                </header>
+
+                <ul className="cal-agenda-list">
+                  {g.events.map((ev) => {
+                    const action = eventAction(ev);
+                    const tier = tierColorForEvent(ev);
+                    return (
+                      <li key={ev.id} className="cal-agenda-item">
+                        <span className="cal-agenda-time">
+                          {ev.time ? formatTime12(ev.time) : "—"}
+                        </span>
+                        <div className="cal-agenda-body">
+                          <span
+                            className="cal-agenda-pill"
+                            style={{
+                              background: tier,
+                              color:
+                                tier === TIER_COLORS.gold ? "#003049" : "#fff",
+                            }}
+                          >
+                            {eventTypeLabel(ev)}
+                          </span>
+                          <span className="cal-agenda-merchant">
+                            {ev.merchantName}
+                          </span>
+                          <span className="cal-agenda-title">{ev.title}</span>
+                          <span className="cal-agenda-meta">
+                            {ev.campaignTitle}
+                            {ev.payout ? ` · $${ev.payout} payout` : ""}
+                          </span>
+                        </div>
+                        <Link href={action.href} className="cal-agenda-action">
+                          {action.label}
+                        </Link>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </section>
+            );
+          })
+        )}
+      </div>
+    );
+  }
+
+  /* ── Slide-over (used by month + week) ───────────────── */
+
+  const slideoverEvents = slideoverDate
+    ? (eventsByDate[slideoverDate] ?? [])
+    : [];
+
+  /* ── Floating add (mobile) ───────────────────────────── */
+
+  function onFloatingAdd() {
+    // Demo behavior: trigger .ics export of full calendar
+    triggerDownloadICS(events, "push-schedule.ics");
+  }
 
   /* ── Render ──────────────────────────────────────────── */
 
@@ -468,66 +674,75 @@ export default function CreatorCalendarPage() {
     <div className="cal">
       {/* ── Hero ─────────────────────────────────────── */}
       <section className="cal-hero">
-        <p className="cal-hero-eyebrow">Creator Portal</p>
-        <h1 className="cal-hero-title">Your calendar.</h1>
+        <p className="cal-hero-eyebrow">Calendar</p>
+        <h1 className="cal-hero-title">Your schedule.</h1>
+        <p className="cal-hero-sub">
+          Visits, deadlines, and posts for your Customer Acquisition Engine
+          campaigns — synced with ConversionOracle™ walk-in tracking.
+        </p>
+
         <div className="cal-hero-meta">
-          <span className="cal-hero-month">
-            {MONTH_NAMES[month]} {year}
+          <span className="cal-hero-chip">
+            <strong>{upcoming5.length}</strong> upcoming
           </span>
-          <span className="cal-hero-stat">
-            <strong>{deadlineCount}</strong>{" "}
-            {deadlineCount === 1 ? "deadline" : "deadlines"} this month
+          <span className="cal-hero-chip">
+            <strong>{deadlinesThisWeek}</strong> deadlines this week
           </span>
           <div className="cal-hero-actions">
             <button
               className="cal-hero-btn"
-              onClick={() => downloadICS(events)}
-              title="Export .ics calendar file"
+              onClick={() => triggerDownloadICS(events, "push-schedule.ics")}
+              title="Export full .ics (Apple Calendar)"
             >
-              Export .ics
+              Apple .ics
             </button>
             <a
               className="cal-hero-btn"
-              href="webcal://push.nyc/api/creator/calendar/feed"
-              title="Subscribe to calendar"
+              href={upcoming5[0] ? googleAddUrl(upcoming5[0]) : "#"}
+              target="_blank"
+              rel="noopener noreferrer"
+              title="Add next event to Google Calendar"
             >
-              Subscribe
+              Google Cal
             </a>
           </div>
         </div>
       </section>
 
-      {/* ── Controls bar ─────────────────────────────── */}
+      {/* ── Controls ─────────────────────────────────── */}
       <div className="cal-controls">
         <div className="cal-nav">
           <button
             className="cal-nav-btn"
             onClick={prevPeriod}
-            aria-label="Previous period"
+            disabled={view === "agenda"}
+            aria-label="Previous"
           >
             &#8249;
           </button>
           <button
             className="cal-nav-label"
             onClick={goToday}
-            title="Go to today"
-            style={{ cursor: "pointer", background: "none", border: "none" }}
+            title="Jump to today"
           >
             {periodLabel}
           </button>
           <button
             className="cal-nav-btn"
             onClick={nextPeriod}
-            aria-label="Next period"
+            disabled={view === "agenda"}
+            aria-label="Next"
           >
             &#8250;
           </button>
         </div>
 
-        <div className="cal-view-tabs">
-          {(["month", "week", "list"] as CalView[]).map((v) => (
+        <div className="cal-view-tabs" role="tablist">
+          {(["week", "month", "agenda"] as CalView[]).map((v) => (
             <button
               key={v}
+              role="tab"
+              aria-selected={view === v}
               className={`cal-view-tab${view === v ? " cal-view-tab--active" : ""}`}
               onClick={() => setView(v)}
             >
@@ -540,332 +755,193 @@ export default function CreatorCalendarPage() {
       {/* ── Legend ───────────────────────────────────── */}
       <div className="cal-legend">
         {(Object.entries(EVENT_TYPE_LABELS) as [EventType, string][]).map(
-          ([type, label]) => (
-            <span key={type} className="cal-legend-item">
-              <span
-                className="cal-legend-dot"
-                style={{ background: EVENT_TYPE_COLORS[type] }}
-              />
-              {label}
-            </span>
-          ),
+          ([type]) => {
+            const label =
+              type === "milestone"
+                ? "Visit scheduled"
+                : type === "deadline"
+                  ? "Post deadline"
+                  : type === "payment"
+                    ? "Payment pending"
+                    : "Verification review";
+            return (
+              <span key={type} className="cal-legend-item">
+                <span
+                  className="cal-legend-dot"
+                  style={{ background: EVENT_TYPE_COLORS[type] }}
+                />
+                {label}
+              </span>
+            );
+          },
         )}
       </div>
 
-      {/* ── Month view ───────────────────────────────── */}
-      {view === "month" && (
-        <div className="cal-month">
-          {/* Day-of-week headers */}
-          <div className="cal-month-header">
-            {DOW_LABELS.map((d) => (
-              <div key={d} className="cal-month-dow">
-                {d}
-              </div>
-            ))}
-          </div>
-
-          {/* Grid */}
-          <div className="cal-month-grid">
-            {monthGrid.map((date, i) => {
-              if (!date) {
-                return (
-                  <div
-                    key={`empty-${i}`}
-                    className="cal-cell cal-cell--other-month"
-                  />
-                );
-              }
-
-              const dateStr = toYMD(date);
-              const isToday = dateStr === todayStr;
-              const dayEvents = eventsByDate[dateStr] ?? [];
-              const shown = dayEvents.slice(0, 2);
-              const extra = dayEvents.length - shown.length;
-
-              return (
-                <div
-                  key={dateStr}
-                  className={["cal-cell", isToday ? "cal-cell--today" : ""]
-                    .filter(Boolean)
-                    .join(" ")}
-                  onClick={(e) => openPopover(dateStr, e.currentTarget)}
-                  role="button"
-                  aria-label={`${formatDisplayDate(dateStr)}, ${dayEvents.length} events`}
-                  tabIndex={0}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter" || e.key === " ")
-                      openPopover(dateStr, e.currentTarget);
-                  }}
-                >
-                  <span className="cal-cell-num">{date.getDate()}</span>
-
-                  {/* Dot row */}
-                  <div className="cal-cell-dots">
-                    {dayEvents.slice(0, 6).map((ev) => (
-                      <span
-                        key={ev.id}
-                        className="cal-dot"
-                        style={{
-                          background: dotColor(ev.type),
-                          opacity: ev.done ? 0.3 : 1,
-                        }}
-                      />
-                    ))}
-                  </div>
-
-                  {/* Compact pills — hide on small */}
-                  <div className="cal-cell-events">
-                    {shown.map((ev) => (
-                      <span
-                        key={ev.id}
-                        className="cal-cell-event-pill"
-                        style={{
-                          background: dotColor(ev.type),
-                          opacity: ev.done ? 0.4 : 1,
-                        }}
-                      >
-                        {ev.title}
-                      </span>
-                    ))}
-                    {extra > 0 && (
-                      <span className="cal-cell-event-more">+{extra} more</span>
-                    )}
-                  </div>
-                </div>
-              );
-            })}
-          </div>
+      {/* ── Main + Sidebar layout ────────────────────── */}
+      <div className="cal-layout">
+        <div className="cal-main">
+          {view === "week" && renderWeekGrid()}
+          {view === "month" && renderMonthGrid()}
+          {view === "agenda" && renderAgenda()}
         </div>
-      )}
 
-      {/* ── Week view ────────────────────────────────── */}
-      {view === "week" && (
-        <div className="cal-week">
-          <div className="cal-week-grid">
-            {weekDates.map((date) => {
-              const dateStr = toYMD(date);
-              const isToday = dateStr === todayStr;
-              const dayEvents = eventsByDate[dateStr] ?? [];
+        {/* Sidebar — desktop only */}
+        <aside className="cal-side">
+          <section className="cal-side-card">
+            <h3 className="cal-side-title">Upcoming</h3>
+            {upcoming5.length === 0 ? (
+              <p className="cal-side-empty">Nothing on deck.</p>
+            ) : (
+              <ul className="cal-side-list">
+                {upcoming5.map((ev) => (
+                  <li key={ev.id} className="cal-side-item">
+                    <span
+                      className="cal-side-dot"
+                      style={{ background: tierColorForEvent(ev) }}
+                    />
+                    <div className="cal-side-item-body">
+                      <span className="cal-side-item-date">
+                        {ev.date.slice(5).replace("-", "/")}
+                        {ev.time ? ` · ${formatTime12(ev.time)}` : ""}
+                      </span>
+                      <span className="cal-side-item-title">
+                        {ev.merchantName}
+                      </span>
+                      <span className="cal-side-item-type">
+                        {eventTypeLabel(ev)}
+                        {ev.payout ? ` · $${ev.payout}` : ""}
+                      </span>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </section>
 
-              return (
-                <div
-                  key={dateStr}
-                  className={`cal-week-col${isToday ? " cal-week-col--today" : ""}`}
-                >
-                  <div className="cal-week-col-header">
-                    <span className="cal-week-col-dow">
-                      {DOW_LABELS_FULL[date.getDay()]}
-                    </span>
-                    <span className="cal-week-col-num">{date.getDate()}</span>
-                  </div>
+          <section className="cal-side-stat">
+            <span className="cal-side-stat-num">{deadlinesThisWeek}</span>
+            <span className="cal-side-stat-label">
+              Deadline{deadlinesThisWeek === 1 ? "" : "s"} this week
+            </span>
+          </section>
 
-                  <div className="cal-week-col-events">
-                    {dayEvents.length === 0 ? (
-                      <span className="cal-week-col-empty">—</span>
-                    ) : (
-                      dayEvents.map((ev) => (
-                        <div
-                          key={ev.id}
-                          className={`cal-week-event${ev.done ? " cal-week-event-done" : ""}`}
-                          style={{ background: dotColor(ev.type) }}
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            openPopover(dateStr, e.currentTarget);
-                          }}
-                          role="button"
-                          tabIndex={0}
-                          title={ev.title}
-                        >
-                          <span className="cal-week-event-title">
+          <section className="cal-side-oracle">
+            <span className="cal-side-oracle-eyebrow">ConversionOracle™</span>
+            <p className="cal-side-oracle-body">{oracleTip}</p>
+          </section>
+        </aside>
+      </div>
+
+      {/* ── Day slide-over (month / week click) ─────── */}
+      {slideoverDate && (
+        <>
+          <div
+            className="cal-slideover-backdrop"
+            onClick={() => setSlideoverDate(null)}
+          />
+          <aside
+            className="cal-slideover"
+            role="dialog"
+            aria-label="Day detail"
+          >
+            <header className="cal-slideover-head">
+              <div>
+                <span className="cal-slideover-eyebrow">Day detail</span>
+                <h3 className="cal-slideover-date">
+                  {formatDisplayDate(slideoverDate)}
+                </h3>
+              </div>
+              <button
+                className="cal-slideover-close"
+                onClick={() => setSlideoverDate(null)}
+                aria-label="Close"
+              >
+                &times;
+              </button>
+            </header>
+            <div className="cal-slideover-body">
+              {slideoverEvents.length === 0 ? (
+                <p className="cal-slideover-empty">No events this day.</p>
+              ) : (
+                <ul className="cal-slideover-list">
+                  {slideoverEvents.map((ev) => {
+                    const action = eventAction(ev);
+                    const tier = tierColorForEvent(ev);
+                    return (
+                      <li key={ev.id} className="cal-slideover-item">
+                        <span
+                          className="cal-slideover-item-bar"
+                          style={{ background: tier }}
+                        />
+                        <div className="cal-slideover-item-body">
+                          <span
+                            className="cal-slideover-item-type"
+                            style={{
+                              color: tier,
+                            }}
+                          >
+                            {eventTypeLabel(ev)}
+                          </span>
+                          <span className="cal-slideover-item-title">
                             {ev.title}
                           </span>
-                          {ev.time && (
-                            <span className="cal-week-event-time">
-                              {ev.time}
+                          <span className="cal-slideover-item-meta">
+                            {ev.merchantName} · {ev.campaignTitle}
+                          </span>
+                          {(ev.time || ev.payout) && (
+                            <span className="cal-slideover-item-sub">
+                              {ev.time ? formatTime12(ev.time) : ""}
+                              {ev.time && ev.payout ? " · " : ""}
+                              {ev.payout ? `$${ev.payout} payout` : ""}
                             </span>
                           )}
-                        </div>
-                      ))
-                    )}
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      )}
-
-      {/* ── List view ────────────────────────────────── */}
-      {view === "list" && (
-        <div className="cal-list">
-          {listGroups.length === 0 ? (
-            <div className="cal-empty">
-              <div className="cal-empty-num">0</div>
-              <p className="cal-empty-msg">
-                No events in {MONTH_NAMES[month]}.
-              </p>
-            </div>
-          ) : (
-            listGroups.map(([dateStr, dayEvents]) => {
-              const [y, m, d] = dateStr.split("-").map(Number);
-              const date = new Date(y, m - 1, d);
-              const isToday = dateStr === todayStr;
-
-              return (
-                <div key={dateStr} className="cal-list-group">
-                  <div className="cal-list-group-header">
-                    <span className="cal-list-group-date">
-                      {MONTH_NAMES[date.getMonth()]} {date.getDate()}
-                    </span>
-                    <span className="cal-list-group-dow">
-                      {DOW_LABELS_FULL[date.getDay()]}
-                    </span>
-                    {isToday && (
-                      <span className="cal-list-group-today-badge">Today</span>
-                    )}
-                  </div>
-
-                  {dayEvents.map((ev) => (
-                    <div
-                      key={ev.id}
-                      className={`cal-list-row${ev.done ? " cal-list-row--done" : ""}`}
-                    >
-                      {/* Time column */}
-                      <div className="cal-list-time-col">{ev.time ?? "—"}</div>
-
-                      {/* Content column */}
-                      <div className="cal-list-content">
-                        <div className="cal-list-type-row">
-                          <span
-                            className="cal-list-type-dot"
-                            style={{ background: dotColor(ev.type) }}
-                          />
-                          <span className="cal-list-type-label">
-                            {EVENT_TYPE_LABELS[ev.type]}
-                          </span>
-                          {ev.payout ? (
-                            <span
-                              style={{
-                                fontSize: 10,
-                                fontFamily: "var(--font-body)",
-                                color: "var(--champagne)",
-                                fontWeight: 700,
-                                marginLeft: 4,
-                              }}
+                          <div className="cal-slideover-actions">
+                            <Link
+                              href={action.href}
+                              className="cal-slideover-btn cal-slideover-btn--primary"
                             >
-                              ${ev.payout}
-                            </span>
-                          ) : null}
-                        </div>
-
-                        <span className="cal-list-title">{ev.title}</span>
-
-                        <Link
-                          href={
-                            ev.postUrl ??
-                            `/creator/campaigns/${ev.campaignId}/post`
-                          }
-                          className="cal-list-campaign"
-                        >
-                          {ev.campaignTitle}
-                        </Link>
-
-                        <span className="cal-list-merchant">
-                          {ev.merchantName}
-                        </span>
-
-                        {/* Note textarea */}
-                        {noteTarget === ev.id && (
-                          <div style={{ marginTop: 8 }}>
-                            <textarea
-                              className="cal-note-input"
-                              rows={2}
-                              placeholder="Add a note..."
-                              value={noteValue}
-                              onChange={(e) => setNoteValue(e.target.value)}
-                              autoFocus
-                            />
+                              {action.label}
+                            </Link>
+                            <a
+                              className="cal-slideover-btn"
+                              href={googleAddUrl(ev)}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              Add to Google
+                            </a>
                             <button
-                              className="cal-action-btn"
-                              style={{ marginTop: 6 }}
-                              onClick={saveNote}
+                              className="cal-slideover-btn"
+                              onClick={() =>
+                                triggerDownloadICS([ev], `push-${ev.id}.ics`)
+                              }
                             >
-                              Save note
+                              .ics
                             </button>
                           </div>
-                        )}
-                        {ev.note && noteTarget !== ev.id && (
-                          <p className="cal-note-saved">Note: {ev.note}</p>
-                        )}
-                      </div>
-
-                      {/* Actions column */}
-                      <div className="cal-list-actions-col">
-                        {ev.postUrl && !ev.done && (
-                          <Link
-                            href={ev.postUrl}
-                            className="cal-action-btn cal-action-btn--primary"
-                          >
-                            Submit
-                          </Link>
-                        )}
-                        <button
-                          className={
-                            ev.done
-                              ? "cal-action-btn cal-action-btn--done"
-                              : "cal-action-btn"
-                          }
-                          onClick={() => markDone(ev.id)}
-                          disabled={ev.done}
-                        >
-                          {ev.done ? "Done" : "Mark done"}
-                        </button>
-                        {!ev.done && (
-                          <>
-                            <button
-                              className="cal-action-btn"
-                              onClick={() => snooze(ev.id)}
-                            >
-                              Snooze
-                            </button>
-                            <button
-                              className="cal-action-btn"
-                              onClick={() => addNote(ev.id)}
-                            >
-                              Note
-                            </button>
-                          </>
-                        )}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              );
-            })
-          )}
-        </div>
+                        </div>
+                      </li>
+                    );
+                  })}
+                </ul>
+              )}
+            </div>
+          </aside>
+        </>
       )}
 
-      {/* ── Day popover ───────────────────────────────── */}
-      {popoverDate && (
-        <DayPopover
-          dateStr={popoverDate}
-          events={eventsByDate[popoverDate] ?? []}
-          anchorRef={popoverAnchor}
-          onClose={closePopover}
-          onMarkDone={(id) => {
-            markDone(id);
-          }}
-          onSnooze={(id) => {
-            snooze(id);
-            closePopover();
-          }}
-          onAddNote={addNote}
-          noteTarget={noteTarget}
-          noteValue={noteValue}
-          onNoteChange={setNoteValue}
-          onNoteSave={saveNote}
-        />
+      {/* ── Floating add (mobile) ───────────────────── */}
+      {isMobile && (
+        <button
+          className="cal-fab"
+          onClick={onFloatingAdd}
+          aria-label="Export full schedule"
+          title="Export full schedule (.ics)"
+        >
+          <span className="cal-fab-plus" aria-hidden>
+            +
+          </span>
+        </button>
       )}
     </div>
   );

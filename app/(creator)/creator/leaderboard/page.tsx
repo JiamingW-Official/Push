@@ -1,302 +1,681 @@
 "use client";
 
-import { useState, useMemo, useCallback, useRef } from "react";
+import { useState, useMemo, useCallback } from "react";
 import Link from "next/link";
 import "./leaderboard.css";
-import {
-  MOCK_BY_WINDOW,
-  NEIGHBORHOOD_LABELS,
-  type TimeWindow,
-  type CreatorTier,
-  type NeighborhoodKey,
-  type RankEntry,
-} from "@/lib/leaderboard/mock-rankings";
 
-/* ── Constants ──────────────────────────────────────────── */
+/* ============================================================
+   Williamsburg Coffee+ Leaderboard — Week 17
+   Vertical AI for Local Commerce · Customer Acquisition Engine
+   ============================================================ */
 
-const TIME_WINDOWS: { key: TimeWindow; label: string }[] = [
-  { key: "7d", label: "This week" },
-  { key: "30d", label: "This month" },
+type Period = "week" | "month" | "all";
+type Category = "all" | "verified" | "earnings" | "streak" | "velocity";
+type Tier =
+  | "clay-seed"
+  | "bronze-explorer"
+  | "steel-operator"
+  | "gold-proven"
+  | "ruby-closer"
+  | "obsidian-partner";
+
+interface CreatorRow {
+  id: string;
+  rank: number;
+  deltaRank: number; // positive = moved up
+  name: string;
+  handle: string;
+  initials: string;
+  tier: Tier;
+  verifiedCustomers: number;
+  earnings: number; // USD
+  streak: number; // weeks
+  velocity: number; // Push Score points gained this period
+  isCurrentUser?: boolean;
+}
+
+interface HistoricalWinner {
+  week: number;
+  name: string;
+  initials: string;
+  tier: Tier;
+  earnings: number;
+  verified: number;
+  headline: string;
+}
+
+/* ── Tier metadata (Design.md Tier Identity System v4.1) ─── */
+
+const TIER_META: Record<
+  Tier,
+  { material: string; role: string; accent: string; text: string }
+> = {
+  "clay-seed": {
+    material: "Clay",
+    role: "Seed",
+    accent: "#b8a99a",
+    text: "#003049",
+  },
+  "bronze-explorer": {
+    material: "Bronze",
+    role: "Explorer",
+    accent: "#8c6239",
+    text: "#ffffff",
+  },
+  "steel-operator": {
+    material: "Steel",
+    role: "Operator",
+    accent: "#4a5568",
+    text: "#ffffff",
+  },
+  "gold-proven": {
+    material: "Gold",
+    role: "Proven",
+    accent: "#c9a96e",
+    text: "#003049",
+  },
+  "ruby-closer": {
+    material: "Ruby",
+    role: "Closer",
+    accent: "#9b111e",
+    text: "#ffffff",
+  },
+  "obsidian-partner": {
+    material: "Obsidian",
+    role: "Partner",
+    accent: "#1a1a2e",
+    text: "#ffffff",
+  },
+};
+
+/* ── Tabs ─────────────────────────────────────────────────── */
+
+const PERIODS: { key: Period; label: string }[] = [
+  { key: "week", label: "This week" },
+  { key: "month", label: "This month" },
   { key: "all", label: "All time" },
 ];
 
-const TIER_FILTERS: { key: CreatorTier | "all"; label: string }[] = [
-  { key: "all", label: "All tiers" },
-  { key: "seed", label: "Seed" },
-  { key: "explorer", label: "Explorer" },
-  { key: "operator", label: "Operator" },
-  { key: "proven", label: "Proven" },
-  { key: "closer", label: "Closer" },
-  { key: "partner", label: "Partner" },
-];
-
-const NEIGHBORHOOD_FILTERS: { key: NeighborhoodKey | "all"; label: string }[] =
+const CATEGORIES: { key: Category; label: string; sortBy: keyof CreatorRow }[] =
   [
-    { key: "all", label: "All NYC" },
-    ...Object.entries(NEIGHBORHOOD_LABELS).map(([k, v]) => ({
-      key: k as NeighborhoodKey,
-      label: v,
-    })),
+    { key: "all", label: "All", sortBy: "rank" },
+    {
+      key: "verified",
+      label: "Verified customers",
+      sortBy: "verifiedCustomers",
+    },
+    { key: "earnings", label: "Earnings", sortBy: "earnings" },
+    { key: "streak", label: "Streak", sortBy: "streak" },
+    { key: "velocity", label: "Score velocity", sortBy: "velocity" },
   ];
 
-const TIER_MATERIAL: Record<CreatorTier, string> = {
-  seed: "Clay",
-  explorer: "Bronze",
-  operator: "Steel",
-  proven: "Gold",
-  closer: "Ruby",
-  partner: "Obsidian",
-};
+/* ── Seed dataset — 30 creators, Williamsburg Coffee+ beachhead ─ */
 
-/* ── Helpers ─────────────────────────────────────────────── */
+const BASE_ROSTER: Omit<CreatorRow, "rank" | "deltaRank">[] = [
+  {
+    id: "c01",
+    name: "Maya Okafor",
+    handle: "mayabklyn",
+    initials: "MO",
+    tier: "obsidian-partner",
+    verifiedCustomers: 184,
+    earnings: 9120,
+    streak: 14,
+    velocity: 82,
+  },
+  {
+    id: "c02",
+    name: "Jordan Liang",
+    handle: "jordaneats",
+    initials: "JL",
+    tier: "ruby-closer",
+    verifiedCustomers: 162,
+    earnings: 7840,
+    streak: 11,
+    velocity: 76,
+  },
+  {
+    id: "c03",
+    name: "Priya Venkatesan",
+    handle: "priyapours",
+    initials: "PV",
+    tier: "ruby-closer",
+    verifiedCustomers: 149,
+    earnings: 6720,
+    streak: 9,
+    velocity: 71,
+  },
+  {
+    id: "c04",
+    name: "Theo Marchetti",
+    handle: "theobklyn",
+    initials: "TM",
+    tier: "gold-proven",
+    verifiedCustomers: 128,
+    earnings: 5480,
+    streak: 8,
+    velocity: 64,
+  },
+  {
+    id: "c05",
+    name: "Zara Halpern",
+    handle: "zaradrips",
+    initials: "ZH",
+    tier: "gold-proven",
+    verifiedCustomers: 117,
+    earnings: 5040,
+    streak: 12,
+    velocity: 58,
+  },
+  {
+    id: "c06",
+    name: "Dara Okonkwo",
+    handle: "daragrinds",
+    initials: "DO",
+    tier: "gold-proven",
+    verifiedCustomers: 108,
+    earnings: 4620,
+    streak: 6,
+    velocity: 55,
+  },
+  {
+    id: "c07",
+    name: "Finn Abramowitz",
+    handle: "finnbklyn",
+    initials: "FA",
+    tier: "gold-proven",
+    verifiedCustomers: 102,
+    earnings: 4280,
+    streak: 7,
+    velocity: 53,
+  },
+  {
+    id: "c08",
+    name: "Iris Nakamura",
+    handle: "irisespresso",
+    initials: "IN",
+    tier: "gold-proven",
+    verifiedCustomers: 94,
+    earnings: 3960,
+    streak: 10,
+    velocity: 48,
+  },
+  {
+    id: "c09",
+    name: "Samir Bhatt",
+    handle: "samirpours",
+    initials: "SB",
+    tier: "steel-operator",
+    verifiedCustomers: 86,
+    earnings: 3520,
+    streak: 5,
+    velocity: 44,
+  },
+  {
+    id: "c10",
+    name: "Noa Guttman",
+    handle: "noabklyn",
+    initials: "NG",
+    tier: "steel-operator",
+    verifiedCustomers: 81,
+    earnings: 3320,
+    streak: 8,
+    velocity: 42,
+  },
+  {
+    id: "c11",
+    name: "Elias Vance",
+    handle: "eliasgrinds",
+    initials: "EV",
+    tier: "steel-operator",
+    verifiedCustomers: 76,
+    earnings: 3080,
+    streak: 4,
+    velocity: 40,
+  },
+  {
+    id: "c12",
+    name: "Harper Zhao",
+    handle: "harperpours",
+    initials: "HZ",
+    tier: "steel-operator",
+    verifiedCustomers: 72,
+    earnings: 2920,
+    streak: 6,
+    velocity: 38,
+  },
+  {
+    id: "c13",
+    name: "Ayaan Khurana",
+    handle: "ayaanbklyn",
+    initials: "AK",
+    tier: "steel-operator",
+    verifiedCustomers: 68,
+    earnings: 2760,
+    streak: 3,
+    velocity: 36,
+  },
+  {
+    id: "c14",
+    name: "Cleo Fontaine",
+    handle: "cleodrips",
+    initials: "CF",
+    tier: "steel-operator",
+    verifiedCustomers: 64,
+    earnings: 2580,
+    streak: 9,
+    velocity: 34,
+  },
+  {
+    id: "c15",
+    name: "Rafael Ortega",
+    handle: "rafapours",
+    initials: "RO",
+    tier: "steel-operator",
+    verifiedCustomers: 60,
+    earnings: 2420,
+    streak: 2,
+    velocity: 32,
+  },
+  {
+    id: "c16",
+    name: "Tamsin Reyes",
+    handle: "tamsinbklyn",
+    initials: "TR",
+    tier: "bronze-explorer",
+    verifiedCustomers: 54,
+    earnings: 2180,
+    streak: 5,
+    velocity: 30,
+  },
+  {
+    id: "c17",
+    name: "Quinn Hasegawa",
+    handle: "quinnespresso",
+    initials: "QH",
+    tier: "bronze-explorer",
+    verifiedCustomers: 49,
+    earnings: 1960,
+    streak: 4,
+    velocity: 28,
+  },
+  {
+    id: "c18",
+    name: "Linus Park",
+    handle: "linuspours",
+    initials: "LP",
+    tier: "bronze-explorer",
+    verifiedCustomers: 45,
+    earnings: 1800,
+    streak: 3,
+    velocity: 26,
+  },
+  {
+    id: "c19",
+    name: "Mira Solberg",
+    handle: "mirabklyn",
+    initials: "MS",
+    tier: "bronze-explorer",
+    verifiedCustomers: 42,
+    earnings: 1680,
+    streak: 7,
+    velocity: 25,
+  },
+  {
+    id: "c20",
+    name: "Devon Asante",
+    handle: "devondrips",
+    initials: "DA",
+    tier: "bronze-explorer",
+    verifiedCustomers: 39,
+    earnings: 1560,
+    streak: 2,
+    velocity: 23,
+  },
+  {
+    id: "c21",
+    name: "Hazel Romano",
+    handle: "hazelgrinds",
+    initials: "HR",
+    tier: "bronze-explorer",
+    verifiedCustomers: 36,
+    earnings: 1440,
+    streak: 4,
+    velocity: 22,
+  },
+  {
+    id: "c22",
+    name: "Kai Brennan",
+    handle: "kaibklyn",
+    initials: "KB",
+    tier: "bronze-explorer",
+    verifiedCustomers: 33,
+    earnings: 1320,
+    streak: 3,
+    velocity: 20,
+  },
+  {
+    id: "c23",
+    name: "Alex Chen",
+    handle: "alexchenpours",
+    initials: "AC",
+    tier: "bronze-explorer",
+    verifiedCustomers: 29,
+    earnings: 1160,
+    streak: 5,
+    velocity: 19,
+    isCurrentUser: true,
+  },
+  {
+    id: "c24",
+    name: "Sasha Molina",
+    handle: "sashabklyn",
+    initials: "SM",
+    tier: "bronze-explorer",
+    verifiedCustomers: 27,
+    earnings: 1080,
+    streak: 2,
+    velocity: 18,
+  },
+  {
+    id: "c25",
+    name: "Reza Farahani",
+    handle: "rezadrips",
+    initials: "RF",
+    tier: "clay-seed",
+    verifiedCustomers: 22,
+    earnings: 880,
+    streak: 3,
+    velocity: 15,
+  },
+  {
+    id: "c26",
+    name: "Juno Salazar",
+    handle: "junopours",
+    initials: "JS",
+    tier: "clay-seed",
+    verifiedCustomers: 19,
+    earnings: 760,
+    streak: 2,
+    velocity: 14,
+  },
+  {
+    id: "c27",
+    name: "Bea Whitlock",
+    handle: "beabklyn",
+    initials: "BW",
+    tier: "clay-seed",
+    verifiedCustomers: 16,
+    earnings: 640,
+    streak: 1,
+    velocity: 12,
+  },
+  {
+    id: "c28",
+    name: "Theo Nguyen",
+    handle: "theonguyen",
+    initials: "TN",
+    tier: "clay-seed",
+    verifiedCustomers: 14,
+    earnings: 560,
+    streak: 2,
+    velocity: 11,
+  },
+  {
+    id: "c29",
+    name: "Marisol Ayala",
+    handle: "marisolpours",
+    initials: "MA",
+    tier: "clay-seed",
+    verifiedCustomers: 11,
+    earnings: 440,
+    streak: 1,
+    velocity: 9,
+  },
+  {
+    id: "c30",
+    name: "Omar Dagher",
+    handle: "omarbklyn",
+    initials: "OD",
+    tier: "clay-seed",
+    verifiedCustomers: 8,
+    earnings: 320,
+    streak: 1,
+    velocity: 7,
+  },
+];
 
-function formatEarnings(n: number): string {
-  if (n === 0) return "$0";
-  if (n >= 1000) return `$${(n / 1000).toFixed(1)}k`;
+// Deterministic deltaRank for this week — small variations
+const DELTAS = [
+  0, 1, -1, 2, 1, 0, 3, -2, 1, 4, -1, 0, 2, -3, 1, 0, 2, -1, 3, 0, -2, 1, 2, -1,
+  1, 0, 2, -1, 0, 1,
+];
+
+function applyDeltas(
+  rows: Omit<CreatorRow, "rank" | "deltaRank">[],
+): CreatorRow[] {
+  return rows.map((r, i) => ({
+    ...r,
+    rank: i + 1,
+    deltaRank: DELTAS[i] ?? 0,
+  }));
+}
+
+const HISTORICAL_WINNERS: HistoricalWinner[] = [
+  {
+    week: 16,
+    name: "Jordan Liang",
+    initials: "JL",
+    tier: "ruby-closer",
+    earnings: 8920,
+    verified: 178,
+    headline: "Rainy Monday sprint — 42 walk-ins before noon",
+  },
+  {
+    week: 15,
+    name: "Dara Okonkwo",
+    initials: "DO",
+    tier: "gold-proven",
+    earnings: 7440,
+    verified: 151,
+    headline: "First Saturday over 60 verified customers",
+  },
+  {
+    week: 14,
+    name: "Maya Okafor",
+    initials: "MO",
+    tier: "obsidian-partner",
+    earnings: 11280,
+    verified: 214,
+    headline: "Partner-tier record — 3 cafés in one block",
+  },
+  {
+    week: 13,
+    name: "Theo Marchetti",
+    initials: "TM",
+    tier: "gold-proven",
+    earnings: 6780,
+    verified: 139,
+    headline: "Cold snap rescue for two merchants",
+  },
+  {
+    week: 12,
+    name: "Priya Venkatesan",
+    initials: "PV",
+    tier: "ruby-closer",
+    earnings: 7120,
+    verified: 144,
+    headline: "Longest streak — 9 weeks top 10",
+  },
+  {
+    week: 11,
+    name: "Iris Nakamura",
+    initials: "IN",
+    tier: "gold-proven",
+    earnings: 5340,
+    verified: 112,
+    headline: "Rookie week — 112 verified first pass",
+  },
+];
+
+/* ── Helpers ───────────────────────────────────────────────── */
+
+function formatUSD(n: number): string {
+  if (n >= 1000) {
+    const k = n / 1000;
+    return `$${k.toFixed(k < 10 ? 2 : 1)}k`;
+  }
   return `$${n}`;
 }
 
-function formatDelta(delta: number): { text: string; cls: string } {
-  if (delta === 0) return { text: "—", cls: "lb-delta--flat" };
-  if (delta > 0) return { text: `+${delta}`, cls: "lb-delta--up" };
-  return { text: `${delta}`, cls: "lb-delta--down" };
+function formatDelta(d: number): { text: string; symbol: string; cls: string } {
+  if (d === 0) return { text: "0", symbol: "=", cls: "lb-delta--flat" };
+  if (d > 0) return { text: `${d}`, symbol: "↑", cls: "lb-delta--up" };
+  return { text: `${Math.abs(d)}`, symbol: "↓", cls: "lb-delta--down" };
 }
 
-function generateBadgeSVG(rank: number, name: string, score: number): string {
-  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="300" height="300" viewBox="0 0 300 300">
-  <rect width="300" height="300" fill="#003049"/>
-  <rect x="0" y="0" width="6" height="300" fill="#c1121f"/>
-  <text x="24" y="120" font-family="sans-serif" font-size="96" font-weight="900" fill="#c9a96e" letter-spacing="-4">#${rank}</text>
-  <text x="24" y="160" font-family="monospace" font-size="14" fill="rgba(245,242,236,0.55)" letter-spacing="2">PUSH SCORE</text>
-  <text x="24" y="190" font-family="sans-serif" font-size="32" font-weight="900" fill="#f5f2ec" letter-spacing="-1">${score}</text>
-  <text x="24" y="240" font-family="monospace" font-size="12" fill="rgba(245,242,236,0.4)">${name}</text>
-  <text x="24" y="275" font-family="sans-serif" font-size="18" font-weight="900" font-style="italic" fill="#c1121f" letter-spacing="-1">Push</text>
-</svg>`;
-  return svg;
-}
+/* ── Presentational bits ───────────────────────────────────── */
 
-function downloadBadge(rank: number, name: string, score: number): void {
-  const svg = generateBadgeSVG(rank, name, score);
-  const blob = new Blob([svg], { type: "image/svg+xml" });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = `push-rank-${rank}-badge.svg`;
-  a.click();
-  URL.revokeObjectURL(url);
-}
-
-/* ── Sub-components ──────────────────────────────────────── */
-
-function TierBadge({ tier }: { tier: CreatorTier }) {
+function TierPill({ tier, size = "sm" }: { tier: Tier; size?: "sm" | "md" }) {
+  const meta = TIER_META[tier];
   return (
-    <span className={`lb-tier-badge lb-tier-badge--${tier}`}>
-      {TIER_MATERIAL[tier]} · {tier.charAt(0).toUpperCase() + tier.slice(1)}
+    <span
+      className={`lb-tier-pill lb-tier-pill--${size}`}
+      style={{ background: meta.accent, color: meta.text }}
+    >
+      <span className="lb-tier-pill-material">{meta.material}</span>
+      <span className="lb-tier-pill-dot" aria-hidden="true">
+        ·
+      </span>
+      <span className="lb-tier-pill-role">{meta.role}</span>
     </span>
   );
 }
 
-function DeltaCell({ delta }: { delta: number }) {
-  const { text, cls } = formatDelta(delta);
+function DeltaArrow({ delta }: { delta: number }) {
+  const { text, symbol, cls } = formatDelta(delta);
   return (
-    <span className={`lb-delta ${cls}`}>
-      {delta > 0 && <span aria-hidden="true">▲</span>}
-      {delta < 0 && <span aria-hidden="true">▼</span>}
-      {text}
+    <span className={`lb-delta ${cls}`} aria-label={`Change ${symbol} ${text}`}>
+      <span className="lb-delta-symbol" aria-hidden="true">
+        {symbol}
+      </span>
+      <span className="lb-delta-num">{text}</span>
     </span>
   );
 }
 
-interface PodiumCardProps {
-  entry: RankEntry;
-  position: "first" | "second" | "third";
-}
+/* ── Podium ───────────────────────────────────────────────── */
 
-function PodiumCard({ entry, position }: PodiumCardProps) {
-  const { text: deltaText, cls: deltaCls } = formatDelta(entry.deltaRank);
+function PodiumCard({
+  entry,
+  position,
+}: {
+  entry: CreatorRow;
+  position: 1 | 2 | 3;
+}) {
+  const posLabel =
+    position === 1 ? "first" : position === 2 ? "second" : "third";
   return (
-    <article className={`lb-podium-card lb-podium-card--${position}`}>
-      <div className={`lb-podium-rank`}>
-        {position === "first" ? "#1" : position === "second" ? "#2" : "#3"}
+    <article
+      className={`lb-podium-card lb-podium-card--${posLabel}`}
+      aria-label={`Rank ${position}: ${entry.name}`}
+    >
+      {position === 1 && (
+        <span className="lb-podium-crown" aria-hidden="true">
+          ♕
+        </span>
+      )}
+      <div className="lb-podium-rank-num">{position}</div>
+      <div className="lb-podium-rank-ord">
+        {position === 1 ? "st" : position === 2 ? "nd" : "rd"}
       </div>
-      <div className="lb-podium-avatar">{entry.avatarInitials}</div>
-      <div className="lb-podium-name" title={entry.name}>
+
+      <div className="lb-podium-avatar">{entry.initials}</div>
+      <h3 className="lb-podium-name" title={entry.name}>
         {entry.name}
-      </div>
+      </h3>
       <div className="lb-podium-handle">@{entry.handle}</div>
-      <TierBadge tier={entry.tier} />
-      <div style={{ marginTop: 12 }}>
-        <div className="lb-podium-score">{entry.pushScore}</div>
-        <div className="lb-podium-score-label">Push Score</div>
+      <div className="lb-podium-tier">
+        <TierPill tier={entry.tier} size={position === 1 ? "md" : "sm"} />
       </div>
-      <div className="lb-podium-stats">
+
+      <div className="lb-podium-bignum">
+        <span className="lb-podium-bignum-val">{entry.verifiedCustomers}</span>
+        <span className="lb-podium-bignum-lbl">verified customers</span>
+      </div>
+
+      <dl className="lb-podium-stats">
         <div className="lb-podium-stat">
-          <span className="lb-podium-stat-val">{entry.verifiedVisits}</span>
-          <span className="lb-podium-stat-lbl">Visits</span>
+          <dt>Earnings</dt>
+          <dd>{formatUSD(entry.earnings)}</dd>
         </div>
         <div className="lb-podium-stat">
-          <span className="lb-podium-stat-val">
-            {formatEarnings(entry.earningsWindow)}
-          </span>
-          <span className="lb-podium-stat-lbl">Earned</span>
+          <dt>Streak</dt>
+          <dd>{entry.streak}w</dd>
         </div>
-      </div>
-      <div style={{ marginTop: 8, fontSize: 12, color: "var(--text-muted)" }}>
-        <span className={`lb-delta ${deltaCls}`} style={{ fontSize: 12 }}>
-          {entry.deltaRank > 0 && "▲"}
-          {entry.deltaRank < 0 && "▼"} {deltaText}
-        </span>
-        <span style={{ marginLeft: 6, color: "var(--text-muted)" }}>
-          vs last period
-        </span>
-      </div>
+        <div className="lb-podium-stat">
+          <dt>Velocity</dt>
+          <dd>+{entry.velocity}</dd>
+        </div>
+      </dl>
     </article>
   );
 }
 
-interface LeaderboardRowProps {
-  entry: RankEntry;
-  isTop10: boolean;
-}
+/* ── Main Page ────────────────────────────────────────────── */
 
-function LeaderboardRow({ entry, isTop10 }: LeaderboardRowProps) {
-  return (
-    <div
-      className={`lb-row${entry.isCurrentUser ? " lb-row--me" : ""}`}
-      aria-label={
-        entry.isCurrentUser
-          ? `Your rank: #${entry.rank}`
-          : `Rank ${entry.rank}: ${entry.name}`
-      }
-    >
-      {/* Rank */}
-      <div className="lb-row-rank">
-        <span
-          className={`lb-rank-num ${isTop10 ? "lb-rank-num--top10" : "lb-rank-num--normal"}`}
-        >
-          {entry.rank}
-        </span>
-      </div>
-
-      {/* Creator */}
-      <div className="lb-row-creator">
-        <div
-          className="lb-creator-avatar"
-          style={
-            entry.isCurrentUser ? { background: "var(--primary)" } : undefined
-          }
-        >
-          {entry.avatarInitials}
-        </div>
-        <div className="lb-creator-info">
-          <span className="lb-creator-name">
-            {entry.name}
-            {entry.isCurrentUser && (
-              <span
-                style={{
-                  marginLeft: 6,
-                  fontSize: 10,
-                  fontWeight: 700,
-                  textTransform: "uppercase",
-                  letterSpacing: "0.06em",
-                  color: "var(--primary)",
-                }}
-              >
-                You
-              </span>
-            )}
-          </span>
-          <span className="lb-creator-handle">@{entry.handle}</span>
-          <TierBadge tier={entry.tier} />
-        </div>
-      </div>
-
-      {/* Push Score */}
-      <div className="lb-row-score">
-        <span className="lb-score-val">{entry.pushScore}</span>
-        <span className="lb-score-label">score</span>
-      </div>
-
-      {/* Verified Visits */}
-      <div className="lb-row-visits">{entry.verifiedVisits}</div>
-
-      {/* Earnings */}
-      <div className="lb-row-earnings">
-        {formatEarnings(entry.earningsWindow)}
-      </div>
-
-      {/* Delta */}
-      <div className="lb-row-delta">
-        <DeltaCell delta={entry.deltaRank} />
-      </div>
-    </div>
-  );
-}
-
-/* ── Main Page ───────────────────────────────────────────── */
+const WEEK_NUMBER = 17;
 
 export default function LeaderboardPage() {
-  const [window, setWindow] = useState<TimeWindow>("7d");
-  const [tierFilter, setTierFilter] = useState<CreatorTier | "all">("all");
-  const [neighborhoodFilter, setNeighborhoodFilter] = useState<
-    NeighborhoodKey | "all"
-  >("all");
+  const [period, setPeriod] = useState<Period>("week");
+  const [category, setCategory] = useState<Category>("all");
 
-  const contentRef = useRef<HTMLDivElement>(null);
+  const baseRows = useMemo(() => applyDeltas(BASE_ROSTER), []);
 
-  // Derive entries from mock data + filters
-  const allEntries = useMemo(() => MOCK_BY_WINDOW[window].entries, [window]);
+  // Re-sort and re-rank based on category
+  const rows = useMemo(() => {
+    const cfg = CATEGORIES.find((c) => c.key === category);
+    if (!cfg || cfg.key === "all") return baseRows;
+    const sortKey = cfg.sortBy;
+    const sorted = [...baseRows].sort(
+      (a, b) => (b[sortKey] as number) - (a[sortKey] as number),
+    );
+    return sorted.map((r, i) => ({ ...r, rank: i + 1 }));
+  }, [baseRows, category]);
 
-  const filteredEntries = useMemo(() => {
-    let result = allEntries;
-    if (tierFilter !== "all") {
-      result = result.filter((e) => e.tier === tierFilter);
-    }
-    if (neighborhoodFilter !== "all") {
-      result = result.filter((e) => e.neighborhood === neighborhoodFilter);
-    }
-    // Re-rank within filtered set
-    return result.map((e, i) => ({ ...e, rank: i + 1 }));
-  }, [allEntries, tierFilter, neighborhoodFilter]);
+  // Scale numbers per period for realism
+  const displayRows: CreatorRow[] = useMemo(() => {
+    const mul = period === "week" ? 1 : period === "month" ? 4.1 : 18.6;
+    return rows.map((r) => ({
+      ...r,
+      verifiedCustomers: Math.round(r.verifiedCustomers * mul),
+      earnings: Math.round(r.earnings * mul),
+    }));
+  }, [rows, period]);
 
-  const top3 = useMemo(() => filteredEntries.slice(0, 3), [filteredEntries]);
-  const tableEntries = useMemo(
-    () => filteredEntries.slice(3),
-    [filteredEntries],
-  );
+  const top3 = displayRows.slice(0, 3);
+  const remaining = displayRows.slice(3);
+  const currentUser = displayRows.find((r) => r.isCurrentUser);
+  const topTenCutoff = displayRows[9]?.verifiedCustomers ?? 0;
+  const spotsToTopTen =
+    currentUser && currentUser.rank > 10
+      ? Math.max(
+          0,
+          displayRows[19].verifiedCustomers - currentUser.verifiedCustomers + 1,
+        )
+      : 0;
 
-  // Current user — always Alex Chen at index 10 in raw data
-  const currentUser = useMemo(
-    () => filteredEntries.find((e) => e.isCurrentUser) ?? null,
-    [filteredEntries],
-  );
-
-  // Catch-up info: how many visits to pass the person above
-  const catchupInfo = useMemo(() => {
-    if (!currentUser) return null;
-    const above = filteredEntries.find((e) => e.rank === currentUser.rank - 1);
-    if (!above) return null;
-    const diff = above.verifiedVisits - currentUser.verifiedVisits;
-    return { aboveRank: above.rank, aboveName: above.name, visitDiff: diff };
-  }, [currentUser, filteredEntries]);
-
-  const handleTabChange = useCallback((w: TimeWindow) => {
-    setWindow(w);
-  }, []);
-
-  const handleDownloadBadge = useCallback(() => {
-    if (!currentUser) return;
-    downloadBadge(currentUser.rank, currentUser.name, currentUser.pushScore);
-  }, [currentUser]);
+  const handleSelectPeriod = useCallback((p: Period) => setPeriod(p), []);
+  const handleSelectCategory = useCallback((c: Category) => setCategory(c), []);
 
   return (
     <div className="lb">
-      {/* ── Nav ───────────────────────────────────────────── */}
-      <nav className="lb-nav">
+      {/* ── Top Nav ────────────────────────────────────────── */}
+      <nav className="lb-nav" aria-label="Creator navigation">
         <Link href="/" className="lb-nav-logo">
           Push
         </Link>
-        <div className="lb-nav-sep" />
+        <div className="lb-nav-sep" aria-hidden="true" />
         <span className="lb-nav-label">Leaderboard</span>
         <div className="lb-nav-spacer" />
         <Link href="/creator/dashboard" className="lb-nav-back">
@@ -304,214 +683,289 @@ export default function LeaderboardPage() {
         </Link>
       </nav>
 
-      {/* ── Hero ──────────────────────────────────────────── */}
+      {/* ── Hero ───────────────────────────────────────────── */}
       <section className="lb-hero">
         <div className="lb-hero-inner">
-          <div className="lb-hero-eyebrow">Creator Rankings · NYC</div>
-          <h1 className="lb-hero-title">Top this week.</h1>
-          <div className="lb-hero-meta">
-            {currentUser ? (
-              <>
-                <div className="lb-hero-rank">#{currentUser.rank}</div>
-                <div className="lb-hero-rank-label">your rank</div>
-                <div className="lb-hero-divider" />
-                <div className="lb-hero-total">
-                  of {MOCK_BY_WINDOW[window].totalCreators.toLocaleString()}{" "}
-                  creators
-                </div>
-              </>
-            ) : (
-              <div className="lb-hero-total">
-                {MOCK_BY_WINDOW[window].totalCreators.toLocaleString()} creators
-                ranked
-              </div>
-            )}
+          <div className="lb-hero-eyebrow">LEADERBOARD</div>
+          <h1 className="lb-hero-title">
+            Williamsburg Coffee+
+            <br />
+            <span className="lb-hero-title-sub">
+              Leaderboard · Week {WEEK_NUMBER}.
+            </span>
+          </h1>
+          <p className="lb-hero-deck">
+            Vertical AI for Local Commerce — 30 creators, one neighborhood,
+            every walk-in verified by ConversionOracle&trade;.
+          </p>
+        </div>
+      </section>
+
+      {/* ── Prize Pool Banner ──────────────────────────────── */}
+      <section className="lb-prize-banner" aria-label="Weekly prize pool">
+        <div className="lb-prize-inner">
+          <div className="lb-prize-left">
+            <span className="lb-prize-eyebrow">Weekly prize pool</span>
+            <h2 className="lb-prize-title">
+              Top 10 split <span className="lb-prize-amount">$500</span> in
+              Williamsburg Coffee+ merchant credits.
+            </h2>
+          </div>
+          <div className="lb-prize-right" aria-live="polite">
+            <span className="lb-prize-countdown-lbl">Week ends in</span>
+            <span className="lb-prize-countdown">
+              <span className="lb-prize-num">3</span>
+              <span className="lb-prize-unit">d</span>
+              <span className="lb-prize-num">14</span>
+              <span className="lb-prize-unit">h</span>
+            </span>
           </div>
         </div>
       </section>
 
-      {/* ── Content ───────────────────────────────────────── */}
-      <div className="lb-content" ref={contentRef}>
-        {/* Time window tabs */}
-        <nav className="lb-tabs" aria-label="Time window">
-          {TIME_WINDOWS.map(({ key, label }) => (
-            <button
-              key={key}
-              className={`lb-tab${window === key ? " lb-tab--active" : ""}`}
-              onClick={() => handleTabChange(key)}
-              aria-pressed={window === key}
-            >
-              {label}
-            </button>
-          ))}
-          {/* Neighborhood tab group */}
-          <div
-            style={{
-              marginLeft: "auto",
-              display: "flex",
-              gap: 0,
-            }}
-          >
-            {NEIGHBORHOOD_FILTERS.slice(0, 5).map(({ key, label }) => (
+      {/* ── Main content ──────────────────────────────────── */}
+      <div className="lb-layout">
+        <div className="lb-main">
+          {/* Period tabs (pill) */}
+          <nav className="lb-pills" aria-label="Period">
+            <span className="lb-pills-label">Period</span>
+            {PERIODS.map((p) => (
               <button
-                key={key}
-                className={`lb-tab${neighborhoodFilter === key ? " lb-tab--active" : ""}`}
-                onClick={() =>
-                  setNeighborhoodFilter(key as NeighborhoodKey | "all")
-                }
-                aria-pressed={neighborhoodFilter === key}
+                key={p.key}
+                type="button"
+                className={`lb-pill${period === p.key ? " lb-pill--active" : ""}`}
+                onClick={() => handleSelectPeriod(p.key)}
+                aria-pressed={period === p.key}
               >
-                {label}
+                {p.label}
               </button>
             ))}
-          </div>
-        </nav>
+          </nav>
 
-        {/* Top 3 podium */}
-        {top3.length >= 3 && (
+          {/* Category tabs (pill) */}
+          <nav className="lb-pills" aria-label="Category">
+            <span className="lb-pills-label">Category</span>
+            {CATEGORIES.map((c) => (
+              <button
+                key={c.key}
+                type="button"
+                className={`lb-pill${category === c.key ? " lb-pill--active" : ""}`}
+                onClick={() => handleSelectCategory(c.key)}
+                aria-pressed={category === c.key}
+              >
+                {c.label}
+              </button>
+            ))}
+          </nav>
+
+          {/* Top 3 Podium */}
           <section aria-label="Top 3 creators">
             <div className="lb-podium">
-              {/* Render order: 2nd, 1st, 3rd — for visual podium height */}
-              <PodiumCard entry={top3[1]} position="second" />
-              <PodiumCard entry={top3[0]} position="first" />
-              <PodiumCard entry={top3[2]} position="third" />
+              <PodiumCard entry={top3[1]} position={2} />
+              <PodiumCard entry={top3[0]} position={1} />
+              <PodiumCard entry={top3[2]} position={3} />
             </div>
           </section>
-        )}
 
-        {/* Tier filter chips */}
-        <div
-          className="lb-tier-filters"
-          role="group"
-          aria-label="Filter by tier"
-        >
-          <span className="lb-tier-filter-label">Tier</span>
-          {TIER_FILTERS.map(({ key, label }) => (
-            <button
-              key={key}
-              className={`lb-tier-chip lb-tier-chip--${key}${tierFilter === key ? " lb-tier-chip--active" : ""}`}
-              onClick={() => setTierFilter(key as CreatorTier | "all")}
-              aria-pressed={tierFilter === key}
-            >
-              {label}
-            </button>
-          ))}
+          {/* Full ranking table */}
+          <section className="lb-table-section" aria-label="Full ranking">
+            <header className="lb-table-title-row">
+              <h2 className="lb-table-title">Full ranking</h2>
+              <span className="lb-table-count">
+                {displayRows.length} creators · Week {WEEK_NUMBER}
+              </span>
+            </header>
+
+            <div className="lb-table-wrap">
+              <div className="lb-table-head" role="row" aria-hidden="true">
+                <div className="lb-th lb-th--rank">Rank</div>
+                <div className="lb-th lb-th--creator">Creator</div>
+                <div className="lb-th lb-th--tier">Tier</div>
+                <div className="lb-th lb-th--num">Verified</div>
+                <div className="lb-th lb-th--num">Earnings</div>
+                <div className="lb-th lb-th--num">Streak</div>
+                <div className="lb-th lb-th--num">Velocity</div>
+              </div>
+
+              {remaining.map((entry) => (
+                <div
+                  key={entry.id}
+                  className={`lb-row${entry.isCurrentUser ? " lb-row--me" : ""}`}
+                  role="row"
+                  aria-label={
+                    entry.isCurrentUser
+                      ? `You, rank ${entry.rank}`
+                      : `Rank ${entry.rank} ${entry.name}`
+                  }
+                >
+                  <div className="lb-td lb-td--rank">
+                    <span className="lb-rank-num">{entry.rank}</span>
+                    <DeltaArrow delta={entry.deltaRank} />
+                  </div>
+                  <div className="lb-td lb-td--creator">
+                    <span
+                      className={`lb-avatar${entry.isCurrentUser ? " lb-avatar--me" : ""}`}
+                      aria-hidden="true"
+                    >
+                      {entry.initials}
+                    </span>
+                    <div className="lb-creator-info">
+                      <span className="lb-creator-name">
+                        {entry.name}
+                        {entry.isCurrentUser && (
+                          <span className="lb-you-badge">You</span>
+                        )}
+                      </span>
+                      <span className="lb-creator-handle">@{entry.handle}</span>
+                    </div>
+                  </div>
+                  <div className="lb-td lb-td--tier">
+                    <TierPill tier={entry.tier} />
+                  </div>
+                  <div className="lb-td lb-td--num">
+                    <span className="lb-num">{entry.verifiedCustomers}</span>
+                  </div>
+                  <div className="lb-td lb-td--num">
+                    <span className="lb-num">{formatUSD(entry.earnings)}</span>
+                  </div>
+                  <div className="lb-td lb-td--num">
+                    <span className="lb-num">{entry.streak}w</span>
+                  </div>
+                  <div className="lb-td lb-td--num">
+                    <span className="lb-num lb-num--velocity">
+                      +{entry.velocity}
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          {/* Historical winners carousel */}
+          <section className="lb-winners" aria-label="Past week champions">
+            <header className="lb-winners-header">
+              <h2 className="lb-winners-title">Past week champions.</h2>
+              <p className="lb-winners-deck">
+                The Williamsburg Coffee+ Neighborhood Playbook, written by the
+                creators who keep topping it.
+              </p>
+            </header>
+            <div className="lb-winners-scroll">
+              <div className="lb-winners-track">
+                {HISTORICAL_WINNERS.map((w) => (
+                  <article
+                    key={w.week}
+                    className="lb-winner-card"
+                    aria-label={`Week ${w.week} champion ${w.name}`}
+                  >
+                    <div className="lb-winner-week">Week {w.week}</div>
+                    <div
+                      className="lb-winner-photo"
+                      style={{ background: TIER_META[w.tier].accent }}
+                    >
+                      <span className="lb-winner-photo-initials">
+                        {w.initials}
+                      </span>
+                    </div>
+                    <div className="lb-winner-body">
+                      <h3 className="lb-winner-name">{w.name}</h3>
+                      <TierPill tier={w.tier} />
+                      <p className="lb-winner-headline">{w.headline}</p>
+                      <dl className="lb-winner-stats">
+                        <div>
+                          <dt>Earned</dt>
+                          <dd>{formatUSD(w.earnings)}</dd>
+                        </div>
+                        <div>
+                          <dt>Verified</dt>
+                          <dd>{w.verified}</dd>
+                        </div>
+                      </dl>
+                    </div>
+                  </article>
+                ))}
+              </div>
+            </div>
+          </section>
         </div>
 
-        {/* Leaderboard table */}
-        <section aria-label="Full leaderboard">
-          <div className="lb-table-wrap">
-            {/* Column headers */}
-            <div className="lb-table-head" aria-hidden="true">
-              <div className="lb-table-head-cell">Rank</div>
-              <div className="lb-table-head-cell">Creator</div>
-              <div
-                className="lb-table-head-cell"
-                style={{ textAlign: "right" }}
-              >
-                Score
-              </div>
-              <div
-                className="lb-table-head-cell"
-                style={{ textAlign: "right" }}
-              >
-                Visits
-              </div>
-              <div
-                className="lb-table-head-cell"
-                style={{ textAlign: "right" }}
-              >
-                Earned
-              </div>
-              <div
-                className="lb-table-head-cell"
-                style={{ textAlign: "right" }}
-              >
-                Delta
-              </div>
-            </div>
-
-            {/* Ranks 4+ */}
-            {tableEntries.length === 0 ? (
-              <div className="lb-empty">
-                <div className="lb-empty-title">No creators found</div>
-                <p>Try adjusting the tier or neighborhood filter.</p>
-              </div>
-            ) : (
-              tableEntries.map((entry) => (
-                <LeaderboardRow
-                  key={entry.creatorId}
-                  entry={entry}
-                  isTop10={entry.rank <= 10}
-                />
-              ))
-            )}
-          </div>
-        </section>
-
-        {/* Share badge section */}
+        {/* ── Your position sidebar ─────────────────────── */}
         {currentUser && (
-          <section className="lb-share-section" aria-label="Share your rank">
-            <div className="lb-share-badge-preview" aria-hidden="true">
-              <div className="lb-share-badge-rank">#{currentUser.rank}</div>
-              <div className="lb-share-badge-label">Push Score</div>
-              <div
-                style={{
-                  fontFamily: "var(--font-display)",
-                  fontSize: 20,
-                  fontWeight: 900,
-                  color: "var(--champagne)",
-                  letterSpacing: "-0.04em",
-                }}
-              >
-                {currentUser.pushScore}
+          <aside
+            className="lb-sidebar"
+            aria-label="Your position"
+            role="complementary"
+          >
+            <div className="lb-sidebar-sticky">
+              <div className="lb-sidebar-eyebrow">Your position</div>
+              <div className="lb-sidebar-rank">
+                <span className="lb-sidebar-rank-hash" aria-hidden="true">
+                  #
+                </span>
+                <span className="lb-sidebar-rank-num">{currentUser.rank}</span>
               </div>
-              <div className="lb-share-badge-logo">Push</div>
+              <div className="lb-sidebar-name">
+                {currentUser.name} <span className="lb-you-badge">You</span>
+              </div>
+              <div className="lb-sidebar-tier">
+                <TierPill tier={currentUser.tier} />
+              </div>
+
+              {currentUser.rank > 10 ? (
+                <p className="lb-sidebar-callout">
+                  You&rsquo;re <strong>#{currentUser.rank}</strong> — need{" "}
+                  <strong>{Math.max(3, spotsToTopTen)} more verified</strong> to
+                  crack <strong>top 20</strong>.
+                </p>
+              ) : currentUser.rank > 3 ? (
+                <p className="lb-sidebar-callout">
+                  You&rsquo;re <strong>#{currentUser.rank}</strong> — podium is{" "}
+                  <strong>
+                    {top3[2].verifiedCustomers -
+                      currentUser.verifiedCustomers +
+                      1}{" "}
+                    verified
+                  </strong>{" "}
+                  away.
+                </p>
+              ) : (
+                <p className="lb-sidebar-callout">
+                  You&rsquo;re on the podium — hold it.
+                </p>
+              )}
+
+              <dl className="lb-sidebar-stats">
+                <div>
+                  <dt>Verified</dt>
+                  <dd>{currentUser.verifiedCustomers}</dd>
+                </div>
+                <div>
+                  <dt>Earned</dt>
+                  <dd>{formatUSD(currentUser.earnings)}</dd>
+                </div>
+                <div>
+                  <dt>Streak</dt>
+                  <dd>{currentUser.streak}w</dd>
+                </div>
+                <div>
+                  <dt>Velocity</dt>
+                  <dd>+{currentUser.velocity}</dd>
+                </div>
+              </dl>
+
+              <div className="lb-sidebar-cta">
+                <Link href="/creator/campaigns" className="lb-sidebar-cta-btn">
+                  View open campaigns
+                </Link>
+              </div>
+
+              <div className="lb-sidebar-foot">
+                Verified by ConversionOracle&trade; walk-in ground truth.
+              </div>
             </div>
-            <div className="lb-share-info">
-              <div className="lb-share-title">Share your rank.</div>
-              <p className="lb-share-desc">
-                You&apos;re #{currentUser.rank} of{" "}
-                {MOCK_BY_WINDOW[window].totalCreators.toLocaleString()} creators
-                in NYC. Download your rank badge and share it on Instagram.
-              </p>
-              <button className="lb-share-btn" onClick={handleDownloadBadge}>
-                Download Badge (SVG)
-              </button>
-            </div>
-          </section>
+          </aside>
         )}
       </div>
-
-      {/* ── Sticky "Your Rank" card ────────────────────────── */}
-      {currentUser && (
-        <div className="lb-sticky-you" role="status" aria-live="polite">
-          <div className="lb-sticky-rank">#{currentUser.rank}</div>
-          <div className="lb-sticky-sep" />
-          <div className="lb-sticky-info">
-            <div className="lb-sticky-name">
-              You&apos;re #{currentUser.rank} · {currentUser.name}
-            </div>
-            {catchupInfo && catchupInfo.visitDiff > 0 ? (
-              <div className="lb-sticky-catchup">
-                {catchupInfo.visitDiff} visit
-                {catchupInfo.visitDiff !== 1 ? "s" : ""} from catching up to #
-                {catchupInfo.aboveRank} ({catchupInfo.aboveName.split(" ")[0]})
-              </div>
-            ) : catchupInfo && catchupInfo.visitDiff <= 0 ? (
-              <div className="lb-sticky-catchup">
-                Ahead of #{catchupInfo.aboveRank} — keep going
-              </div>
-            ) : (
-              <div className="lb-sticky-catchup">Top of the leaderboard</div>
-            )}
-          </div>
-          <div className="lb-sticky-score">
-            <span className="lb-sticky-score-val">{currentUser.pushScore}</span>
-            <span className="lb-sticky-score-lbl">Score</span>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

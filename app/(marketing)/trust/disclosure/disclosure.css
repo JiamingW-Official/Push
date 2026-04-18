@@ -1,0 +1,1337 @@
+/* ============================================================
+   /trust/disclosure — DisclosureBot FTC compliance explainer
+   Editorial · Push design system · zero border-radius
+   ============================================================ */
+
+/* ------------------------------------------------------------
+   Shared
+   ------------------------------------------------------------ */
+.dis-page {
+  background: var(--surface);
+  min-height: 100vh;
+  color: var(--dark);
+}
+
+.dis-container {
+  max-width: var(--content-width);
+  margin: 0 auto;
+  padding: 0 var(--space-4);
+}
+
+@media (max-width: 768px) {
+  .dis-container {
+    padding: 0 var(--space-2);
+  }
+}
+
+.dis-eyebrow {
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--primary);
+  display: block;
+  margin-bottom: var(--space-3);
+}
+
+.dis-eyebrow--light {
+  color: var(--champagne);
+}
+
+.dis-mono {
+  font-family: var(--font-body);
+  font-feature-settings: "tnum" 1;
+  color: var(--primary);
+  font-weight: 700;
+}
+
+/* ------------------------------------------------------------
+   Section head
+   ------------------------------------------------------------ */
+.dis-section-head {
+  max-width: 720px;
+  margin-bottom: var(--space-10);
+}
+
+.dis-section-num {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  display: block;
+  margin-bottom: var(--space-2);
+}
+
+.dis-section-title {
+  font-family: var(--font-display);
+  font-size: clamp(36px, 4.2vw, 64px);
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  line-height: 1.02;
+  color: var(--dark);
+  margin: 0 0 var(--space-3);
+}
+
+.dis-section-title--light {
+  color: #fff;
+}
+
+.dis-section-sub {
+  font-family: var(--font-body);
+  font-size: var(--text-body);
+  line-height: 1.65;
+  color: var(--graphite);
+  margin: var(--space-3) 0 0;
+  max-width: 620px;
+}
+
+.dis-section-sub--light {
+  color: rgba(245, 242, 236, 0.70);
+}
+
+/* ------------------------------------------------------------
+   1. Hero  (Deep Space Blue)
+   ------------------------------------------------------------ */
+.dis-hero {
+  background: var(--dark);
+  padding-top: 128px;
+  padding-bottom: var(--space-12);
+  position: relative;
+  overflow: hidden;
+}
+
+.dis-hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(
+      ellipse 55% 45% at 85% 18%,
+      rgba(102, 155, 188, 0.09) 0%,
+      transparent 62%
+    ),
+    radial-gradient(
+      ellipse 45% 40% at 10% 95%,
+      rgba(193, 18, 31, 0.05) 0%,
+      transparent 55%
+    );
+  pointer-events: none;
+  z-index: 0;
+}
+
+.dis-hero::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--primary);
+  z-index: 1;
+}
+
+.dis-hero-inner {
+  position: relative;
+  z-index: 1;
+  max-width: 960px;
+}
+
+.dis-hero-eyebrow {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(245, 242, 236, 0.55);
+  display: block;
+  margin-bottom: var(--space-5);
+  padding-bottom: var(--space-3);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.10);
+}
+
+.dis-hero-headline {
+  font-family: var(--font-display);
+  font-size: clamp(52px, 8vw, 112px);
+  font-weight: 900;
+  letter-spacing: -0.055em;
+  line-height: 0.92;
+  color: #fff;
+  margin: 0 0 var(--space-6);
+}
+
+.dis-hero-headline em {
+  display: block;
+  font-style: italic;
+  font-weight: 300;
+  color: rgba(245, 242, 236, 0.55);
+  margin-top: var(--space-2);
+}
+
+.dis-hero-sub {
+  font-family: var(--font-body);
+  font-size: clamp(16px, 1.6vw, 19px);
+  line-height: 1.65;
+  color: rgba(245, 242, 236, 0.78);
+  max-width: 680px;
+  margin: 0 0 var(--space-6);
+}
+
+.dis-hero-meta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  padding-top: var(--space-4);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: rgba(245, 242, 236, 0.55);
+}
+
+.dis-hero-dot {
+  color: rgba(245, 242, 236, 0.30);
+}
+
+/* ------------------------------------------------------------
+   §1 Problem  (Pearl Stone)
+   ------------------------------------------------------------ */
+.dis-problem {
+  background: var(--surface);
+  padding: var(--space-15) 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.dis-problem-grid {
+  display: grid;
+  grid-template-columns: 0.9fr 1.1fr;
+  gap: var(--space-8);
+  align-items: start;
+}
+
+@media (max-width: 1024px) {
+  .dis-problem-grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-6);
+  }
+}
+
+.dis-problem-cases {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.dis-case {
+  background: var(--surface-elevated);
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--primary);
+  padding: var(--space-4) var(--space-5);
+}
+
+.dis-case-fine {
+  font-family: var(--font-display);
+  font-size: clamp(36px, 4vw, 52px);
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  color: var(--primary);
+  line-height: 1;
+  margin-bottom: var(--space-2);
+}
+
+.dis-case-meta {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+  margin-bottom: var(--space-2);
+  flex-wrap: wrap;
+}
+
+.dis-case-name {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--dark);
+}
+
+.dis-case-year {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.dis-case-body {
+  font-family: var(--font-body);
+  font-size: 14px;
+  line-height: 1.65;
+  color: var(--graphite);
+  margin: 0;
+}
+
+.dis-problem-thesis {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.dis-problem-body {
+  font-family: var(--font-body);
+  font-size: var(--text-body);
+  line-height: 1.7;
+  color: var(--graphite);
+  margin: 0;
+}
+
+.dis-problem-body strong {
+  color: var(--dark);
+  font-weight: 700;
+}
+
+.dis-problem-body em {
+  font-style: italic;
+  color: var(--dark);
+}
+
+.dis-problem-callout {
+  background: var(--surface-elevated);
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--dark);
+  padding: var(--space-4);
+}
+
+.dis-problem-callout-label {
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--primary);
+  display: block;
+  margin-bottom: var(--space-2);
+}
+
+.dis-problem-callout p {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.35;
+  color: var(--dark);
+  margin: 0;
+}
+
+/* ------------------------------------------------------------
+   §2 Architecture  (Deep Space Blue, 4-step flow)
+   ------------------------------------------------------------ */
+.dis-architecture {
+  background: var(--dark);
+  padding: var(--space-15) 0;
+  position: relative;
+}
+
+.dis-architecture::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--tertiary);
+  opacity: 0.35;
+}
+
+.dis-flow {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+@media (max-width: 1024px) {
+  .dis-flow {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .dis-flow {
+    grid-template-columns: 1fr;
+  }
+}
+
+.dis-flow-step {
+  background: var(--dark);
+  padding: var(--space-5);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.dis-flow-step-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-2);
+  padding-bottom: var(--space-3);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  margin-bottom: var(--space-2);
+}
+
+.dis-flow-num {
+  font-family: var(--font-display);
+  font-size: 40px;
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  color: var(--primary);
+  line-height: 1;
+}
+
+.dis-flow-label {
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(245, 242, 236, 0.55);
+}
+
+.dis-flow-title {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.25;
+  color: #fff;
+  margin: 0 0 var(--space-2);
+}
+
+.dis-flow-body {
+  font-family: var(--font-body);
+  font-size: 13px;
+  line-height: 1.65;
+  color: rgba(245, 242, 236, 0.70);
+  margin: 0;
+}
+
+.dis-tos {
+  margin-top: var(--space-6);
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-4);
+  padding: var(--space-5);
+  background: rgba(193, 18, 31, 0.08);
+  border: 1px solid rgba(193, 18, 31, 0.25);
+  border-left: 3px solid var(--primary);
+}
+
+.dis-tos-icon {
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  background: rgba(193, 18, 31, 0.18);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dis-tos-icon svg {
+  width: 20px;
+  height: 20px;
+  color: var(--primary);
+}
+
+.dis-tos-label {
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--primary);
+  display: block;
+  margin-bottom: 6px;
+}
+
+.dis-tos-text p {
+  font-family: var(--font-body);
+  font-size: 14px;
+  line-height: 1.7;
+  color: rgba(245, 242, 236, 0.82);
+  margin: 0;
+}
+
+.dis-tos-text strong {
+  color: var(--primary);
+  font-weight: 700;
+}
+
+/* ------------------------------------------------------------
+   §3 Audit cadence  (Champagne Gold callout)
+   ------------------------------------------------------------ */
+.dis-audit {
+  background: var(--surface-bright);
+  padding: var(--space-15) 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.dis-audit-table {
+  border: 1px solid var(--line);
+  border-top: 3px solid var(--champagne);
+  background: var(--surface-elevated);
+}
+
+.dis-audit-row {
+  display: grid;
+  grid-template-columns: 1fr 2.6fr 1fr;
+  gap: var(--space-4);
+  padding: var(--space-4) var(--space-5);
+  border-bottom: 1px solid var(--line);
+  align-items: center;
+}
+
+.dis-audit-row:last-child {
+  border-bottom: none;
+}
+
+.dis-audit-row--head {
+  background: var(--champagne-light, rgba(201, 169, 110, 0.12));
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #7a5c20;
+}
+
+.dis-audit-cadence {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--dark);
+}
+
+.dis-audit-activity {
+  font-family: var(--font-body);
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--graphite);
+}
+
+.dis-audit-owner {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--tertiary);
+  text-align: right;
+}
+
+@media (max-width: 768px) {
+  .dis-audit-row {
+    grid-template-columns: 1fr;
+    gap: var(--space-1);
+  }
+  .dis-audit-row--head {
+    display: none;
+  }
+  .dis-audit-owner {
+    text-align: left;
+  }
+}
+
+/* ------------------------------------------------------------
+   §4 Insurance
+   ------------------------------------------------------------ */
+.dis-insurance {
+  background: var(--surface);
+  padding: var(--space-15) 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.dis-insurance-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-3);
+}
+
+@media (max-width: 768px) {
+  .dis-insurance-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.dis-insurance-item {
+  background: var(--surface-elevated);
+  border: 1px solid var(--line);
+  padding: var(--space-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  transition: transform var(--t-slow, 400ms cubic-bezier(0.32, 0.72, 0, 1)),
+    box-shadow var(--t-slow, 400ms cubic-bezier(0.32, 0.72, 0, 1));
+}
+
+.dis-insurance-item:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 32px rgba(0, 48, 73, 0.08);
+}
+
+.dis-insurance-icon {
+  width: 40px;
+  height: 40px;
+  background: var(--dark);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: var(--space-2);
+}
+
+.dis-insurance-icon svg {
+  width: 20px;
+  height: 20px;
+  color: #fff;
+}
+
+.dis-insurance-title {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--dark);
+  margin: 0 0 6px;
+}
+
+.dis-insurance-body {
+  font-family: var(--font-body);
+  font-size: 14px;
+  line-height: 1.65;
+  color: var(--graphite);
+  margin: 0;
+}
+
+/* ------------------------------------------------------------
+   §5 Procurement  (Deep Space Blue)
+   ------------------------------------------------------------ */
+.dis-procurement {
+  background: var(--dark);
+  padding: var(--space-15) 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.dis-procurement::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--champagne);
+}
+
+.dis-procurement-grid {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: var(--space-8);
+  align-items: start;
+}
+
+@media (max-width: 1024px) {
+  .dis-procurement-grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-6);
+  }
+}
+
+.dis-procurement-points {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.dis-procurement-point {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  padding: var(--space-3) 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.dis-procurement-point:last-child {
+  border-bottom: none;
+}
+
+.dis-procurement-check {
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
+  background: var(--champagne);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 2px;
+}
+
+.dis-procurement-check svg {
+  width: 16px;
+  height: 16px;
+  color: var(--dark);
+}
+
+.dis-procurement-point p {
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.7;
+  color: rgba(245, 242, 236, 0.80);
+  margin: 0;
+}
+
+.dis-procurement-point em {
+  font-style: italic;
+  color: var(--champagne);
+}
+
+.dis-pullquote {
+  background: rgba(245, 242, 236, 0.04);
+  border: 1px solid rgba(201, 169, 110, 0.30);
+  border-left: 3px solid var(--champagne);
+  padding: var(--space-6);
+  margin: 0;
+}
+
+.dis-pullquote blockquote {
+  margin: 0 0 var(--space-4);
+}
+
+.dis-pullquote blockquote p {
+  font-family: var(--font-display);
+  font-size: clamp(22px, 2.4vw, 30px);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.3;
+  color: #fff;
+  margin: 0;
+}
+
+.dis-pullquote figcaption {
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--champagne);
+  padding-top: var(--space-3);
+  border-top: 1px solid rgba(201, 169, 110, 0.25);
+}
+
+/* ------------------------------------------------------------
+   §6 CTA
+   ------------------------------------------------------------ */
+.dis-cta {
+  background: var(--surface-bright);
+  padding: var(--space-15) 0;
+  border-top: 3px solid var(--primary);
+}
+
+.dis-cta-inner {
+  max-width: 820px;
+}
+
+.dis-cta-headline {
+  font-family: var(--font-display);
+  font-size: clamp(36px, 4.8vw, 64px);
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  line-height: 1.02;
+  color: var(--dark);
+  margin: 0 0 var(--space-3);
+}
+
+.dis-cta-sub {
+  font-family: var(--font-body);
+  font-size: var(--text-body);
+  line-height: 1.65;
+  color: var(--graphite);
+  max-width: 620px;
+  margin: 0 0 var(--space-6);
+}
+
+.dis-cta-actions {
+  display: flex;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+}
+
+.dis-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 16px 26px;
+  border: 2px solid transparent;
+  text-decoration: none;
+  transition:
+    background var(--t-slow, 400ms cubic-bezier(0.32, 0.72, 0, 1)),
+    border-color var(--t-slow, 400ms cubic-bezier(0.32, 0.72, 0, 1)),
+    color var(--t-slow, 400ms cubic-bezier(0.32, 0.72, 0, 1)),
+    box-shadow var(--t-slow, 400ms cubic-bezier(0.32, 0.72, 0, 1));
+}
+
+.dis-btn-arrow {
+  width: 16px;
+  height: 16px;
+  transition: transform var(--t-base, 220ms cubic-bezier(0.32, 0.72, 0, 1));
+}
+
+.dis-btn:hover .dis-btn-arrow {
+  transform: translateX(4px);
+}
+
+.dis-btn--primary {
+  background: var(--primary);
+  color: #fff;
+  border-color: var(--primary);
+  box-shadow: var(--btn-shadow, 0 2px 8px rgba(193, 18, 31, 0.20));
+}
+
+.dis-btn--primary:hover {
+  background: var(--accent, var(--dark));
+  border-color: var(--accent, var(--dark));
+  box-shadow: var(--btn-shadow-hover, 0 6px 20px rgba(0, 48, 73, 0.25));
+}
+
+.dis-btn--ghost {
+  background: transparent;
+  color: var(--dark);
+  border-color: var(--dark);
+}
+
+.dis-btn--ghost:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+/* ------------------------------------------------------------
+   Scroll reveal
+   ------------------------------------------------------------ */
+.dis-reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition:
+    opacity 720ms cubic-bezier(0.32, 0.72, 0, 1),
+    transform 720ms cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+.dis-reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+.dis-reveal[data-delay="1"] { transition-delay: 80ms; }
+.dis-reveal[data-delay="2"] { transition-delay: 160ms; }
+.dis-reveal[data-delay="3"] { transition-delay: 240ms; }
+.dis-reveal[data-delay="4"] { transition-delay: 320ms; }
+
+@media (prefers-reduced-motion: reduce) {
+  .dis-reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  .dis-insurance-item {
+    transition: none;
+  }
+  .dis-btn-arrow {
+    transition: none;
+  }
+}
+
+/* ============================================================
+   v5.1 additions — stats / diagram / checklist / audit log /
+   external audit panel
+   ============================================================ */
+
+/* ------------------------------------------------------------
+   §1 Live stats
+   ------------------------------------------------------------ */
+.dis-stats {
+  background: var(--surface);
+  padding: var(--space-12) 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.dis-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-3);
+}
+
+@media (max-width: 900px) {
+  .dis-stats-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.dis-stat {
+  background: var(--surface-elevated);
+  border: 1px solid var(--line);
+  border-top: 3px solid var(--tertiary);
+  border-radius: 0;
+  padding: var(--space-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.dis-stat--auto_pass {
+  border-top-color: #10b981;
+}
+
+.dis-stat--auto_block {
+  border-top-color: var(--primary);
+}
+
+.dis-stat--manual_review {
+  border-top-color: var(--champagne);
+}
+
+.dis-stat-pct {
+  font-family: var(--font-display);
+  font-size: clamp(52px, 6vw, 80px);
+  font-weight: 900;
+  letter-spacing: -0.05em;
+  line-height: 0.95;
+  color: var(--dark);
+}
+
+.dis-stat--auto_pass .dis-stat-pct { color: #0b8466; }
+.dis-stat--auto_block .dis-stat-pct { color: var(--primary); }
+.dis-stat--manual_review .dis-stat-pct { color: #7a5c20; }
+
+.dis-stat-label {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--dark);
+  padding-bottom: var(--space-2);
+  border-bottom: 1px solid var(--line);
+}
+
+.dis-stat-body {
+  font-family: var(--font-body);
+  font-size: 13px;
+  line-height: 1.65;
+  color: var(--graphite);
+  margin: 0;
+}
+
+/* ------------------------------------------------------------
+   Architecture SVG diagram wrapper
+   ------------------------------------------------------------ */
+.dis-diagram {
+  background: var(--dark);
+  border: 1px solid rgba(201, 169, 110, 0.35);
+  padding: var(--space-4);
+  margin: 0 0 var(--space-6);
+  overflow-x: auto;
+}
+
+.dis-diagram svg {
+  min-width: 760px;
+  display: block;
+}
+
+/* ------------------------------------------------------------
+   §3 Checklist
+   ------------------------------------------------------------ */
+.dis-checklist {
+  background: var(--surface);
+  padding: var(--space-12) 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.dis-checklist-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-3);
+}
+
+@media (max-width: 900px) {
+  .dis-checklist-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.dis-checklist-item {
+  display: flex;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  background: var(--surface-elevated);
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--tertiary);
+  border-radius: 0;
+}
+
+.dis-checklist-check {
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+  background: rgba(102, 155, 188, 0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--tertiary);
+}
+
+.dis-checklist-check svg {
+  width: 18px;
+  height: 18px;
+  color: var(--tertiary);
+}
+
+.dis-checklist-title {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--dark);
+  margin: 0 0 6px;
+}
+
+.dis-checklist-body {
+  font-family: var(--font-body);
+  font-size: 13px;
+  line-height: 1.65;
+  color: var(--graphite);
+  margin: 0;
+}
+
+/* ------------------------------------------------------------
+   §4 Recent audit log (DisclosureBot Audit Row pattern)
+   ------------------------------------------------------------ */
+.dis-recent-audits {
+  background: var(--surface-bright);
+  padding: var(--space-12) 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.dis-audit-log {
+  background: var(--surface-elevated);
+  border: 1px solid var(--line);
+  border-top: 3px solid var(--champagne);
+  border-radius: 0;
+  overflow: hidden;
+  font-family: var(--font-body);
+}
+
+.dis-audit-log-row {
+  display: grid;
+  grid-template-columns:
+    130px
+    110px
+    1fr
+    60px
+    160px
+    60px
+    120px;
+  gap: var(--space-2);
+  padding: 12px var(--space-4);
+  border-bottom: 1px solid var(--line);
+  align-items: center;
+  font-size: 12px;
+  color: var(--dark);
+  transition: background 0.15s ease;
+}
+
+.dis-audit-log-row:last-child {
+  border-bottom: none;
+}
+
+.dis-audit-log-row:not(.dis-audit-log-row--head):hover {
+  background: rgba(0, 48, 73, 0.04);
+}
+
+.dis-audit-log-row--head {
+  background: var(--champagne-light, rgba(201, 169, 110, 0.12));
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #7a5c20;
+  padding: 10px var(--space-4);
+}
+
+.dis-audit-log-ts {
+  font-feature-settings: "tnum" 1;
+  color: var(--graphite);
+  font-size: 11px;
+}
+
+.dis-audit-log-creator {
+  color: var(--primary);
+  font-weight: 600;
+  font-size: 12px;
+}
+
+.dis-audit-log-campaign {
+  color: var(--dark);
+  font-size: 12px;
+}
+
+.dis-audit-log-platform {
+  color: var(--graphite);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.dis-audit-log-conf {
+  color: var(--graphite);
+  font-feature-settings: "tnum" 1;
+  font-size: 11px;
+}
+
+.dis-audit-log-reviewer {
+  color: var(--graphite);
+  font-size: 11px;
+}
+
+.dis-verdict-badge {
+  display: inline-block;
+  padding: 5px 10px;
+  border-radius: 0;
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.dis-verdict-badge--auto_pass {
+  background: rgba(16, 185, 129, 0.12);
+  color: #0b8466;
+}
+
+.dis-verdict-badge--auto_block {
+  background: rgba(193, 18, 31, 0.12);
+  color: var(--primary);
+}
+
+.dis-verdict-badge--manual_review {
+  background: rgba(201, 169, 110, 0.14);
+  color: #7a5c20;
+}
+
+.dis-verdict-badge--human_approved {
+  background: rgba(16, 185, 129, 0.18);
+  color: #0b8466;
+}
+
+.dis-verdict-badge--human_rejected {
+  background: rgba(193, 18, 31, 0.18);
+  color: var(--primary);
+}
+
+@media (max-width: 900px) {
+  .dis-audit-log-row {
+    grid-template-columns: 1fr;
+    gap: 4px;
+    padding: var(--space-3);
+  }
+  .dis-audit-log-row--head {
+    display: none;
+  }
+  .dis-audit-log-ts::before {
+    content: "Time: ";
+    color: var(--text-muted);
+    font-weight: 700;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .dis-audit-log-platform::before {
+    content: "Platform · ";
+    color: var(--text-muted);
+    font-weight: 700;
+  }
+  .dis-audit-log-conf::before {
+    content: "Confidence: ";
+    color: var(--text-muted);
+    font-weight: 700;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .dis-audit-log-reviewer::before {
+    content: "Reviewer: ";
+    color: var(--text-muted);
+    font-weight: 700;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+}
+
+/* ------------------------------------------------------------
+   §6 External audit panel (Deep Space Blue)
+   ------------------------------------------------------------ */
+.dis-external-audit {
+  background: var(--dark);
+  padding: var(--space-12) 0;
+  position: relative;
+}
+
+.dis-external-audit::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--champagne);
+  opacity: 0.5;
+}
+
+.dis-external-audit-panel {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(201, 169, 110, 0.35);
+  border-radius: 0;
+  padding: var(--space-5);
+  max-width: 860px;
+}
+
+.dis-external-audit-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: var(--space-3);
+  padding-bottom: var(--space-3);
+  border-bottom: 1px solid rgba(201, 169, 110, 0.25);
+  margin-bottom: var(--space-4);
+}
+
+.dis-external-audit-firm {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.dis-external-audit-logo {
+  width: 48px;
+  height: 48px;
+  flex-shrink: 0;
+  background: var(--champagne);
+  color: var(--dark);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 18px;
+  letter-spacing: -0.02em;
+  border-radius: 0;
+}
+
+.dis-external-audit-firm-name {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: #fff;
+}
+
+.dis-external-audit-firm-meta {
+  font-family: var(--font-body);
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.6);
+  margin-top: 2px;
+  letter-spacing: 0.02em;
+}
+
+.dis-external-audit-status {
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #10b981;
+  padding: 5px 10px;
+  background: rgba(16, 185, 129, 0.15);
+  border-radius: 0;
+  flex-shrink: 0;
+}
+
+.dis-external-audit-details {
+  margin: 0;
+}
+
+.dis-external-audit-row {
+  display: grid;
+  grid-template-columns: 180px 1fr;
+  gap: var(--space-3);
+  padding: var(--space-3) 0;
+  border-bottom: 1px dashed rgba(255, 255, 255, 0.08);
+}
+
+.dis-external-audit-row:last-child {
+  border-bottom: none;
+}
+
+.dis-external-audit-row dt {
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.dis-external-audit-row dd {
+  font-family: var(--font-body);
+  font-size: 14px;
+  line-height: 1.65;
+  color: rgba(255, 255, 255, 0.85);
+  margin: 0;
+}
+
+.dis-remediation-pill {
+  display: inline-block;
+  padding: 4px 10px;
+  background: rgba(16, 185, 129, 0.18);
+  color: #10b981;
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border-radius: 0;
+}
+
+@media (max-width: 700px) {
+  .dis-external-audit-head {
+    flex-direction: column;
+  }
+  .dis-external-audit-row {
+    grid-template-columns: 1fr;
+    gap: 4px;
+  }
+}

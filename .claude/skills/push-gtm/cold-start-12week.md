@@ -1,409 +1,379 @@
-# Cold Start 12-Week Plan
+# Cold-Start Plan — Williamsburg Coffee+ × 30 Weeks (v5.1)
 
-Complete detailed roadmap for launching Push in one neighborhood zone over 12 weeks, with budget and MVP tech stack.
+Complete detailed roadmap for launching Push v5.1 **Vertical AI for Local Commerce** in **Williamsburg (11211 / 11206 / 11249)**, category **Coffee+**, with 60-day saturation window followed by adjacent-ZIP expansion and YC Summer 2027 application prep.
 
----
+**Week 1 baseline:** 2026-04-14. **YC Summer 2027 application target:** 2026-09.
 
-## Phase 1: Foundation (Week 1–4)
-
-### Week 1: Zone Selection & Merchant Scouting
-
-**Monday–Tuesday: Pick ONE neighborhood**
-- Decide between NYC (Williamsburg, LES, Astoria), LA, or SF zone
-- Lock in by EOD Tuesday
-
-**Wednesday–Friday: Walk and scout 30 merchant prospects**
-
-For each prospect, capture:
-- Name, address, Instagram handle
-- Category (café, dessert, beauty, etc.)
-- Visual score (1–5): is it Instagram-friendly?
-- Dead hours: when is it slowest? (best time to pitch)
-- Owner-operated? (Y/N — if yes, you can talk to decision-maker immediately)
-- Current creator activity: any partnerships, tags, posted content?
-
-**Saturday–Sunday: Research 50 creator prospects**
-
-Search tactics:
-- Instagram location tags for the neighborhood
-- Hashtags: #[neighborhood]eats, #[neighborhood]food, local food/lifestyle hashtags
-- TikTok: same hashtags and location tags
-- TikTok trends: see who's trending in the category
-
-For each creator, capture:
-- Handle, platform (IG/TikTok)
-- Follower count
-- Engagement rate (likes + comments / followers)
-- Content quality (1–5): production value, consistency, authenticity
-- Location relevance: do they feature local spots? Are they local?
-
-**End of Week 1 Output:**
-- 30 merchant prospects with contact info and dead hours
-- 50 creator prospects with handles and engagement metrics
+> Filename retained as `cold-start-12week.md` for path stability — content is the v5.1 30-week Neighborhood Playbook.
 
 ---
 
-### Week 2: First Merchant Conversations (15 conversations → 8 soft commits)
+## Beachhead Lock-in (do not dilute)
 
-**Approach: Walk-in pitch during slow periods**
-
-Timing: Tuesday–Thursday, 2–4pm (dead hours)
-
-**Script:**
-1. Walk in, order something small
-2. Wait for order to be ready
-3. Ask to speak to owner/manager
-4. Once you have them:
-   - "Hey, [name]. Love what you're building here. We help local shops like you get new customers through local food creators. We match you with creators in the neighborhood, manage everything, track results, and you only pay if it works."
-   - "Want to try it? First campaign is free. You literally just tell us what you'd offer creators, and we handle the rest."
-
-**Remove ALL friction:**
-- Free first campaign (no credit card)
-- You handle everything (matching, logistics, tracking)
-- Zero time burden on merchant
-
-**For each conversation, capture:**
-- Owner/manager name and preferred contact (phone/email)
-- Current challenges: new customers? Off-peak traffic? Launch event?
-- What they'd offer creators (discount, free product, bundle, etc.)
-- What success means to them (foot traffic? Instagram mentions? sales lift?)
-- Dead hours (confirm)
-- Willingness to try (yes/soft yes/no)
-
-**Soft commits:** Goal is 8 merchants who say "yeah, sure, let's try it" or "I'm interested, tell me more"
-
-**End of Week 2 Output:**
-- 8 soft-commit merchants with contact info and offer preferences
-- Documented pain points and success metrics for each
+| Axis | Value |
+|------|-------|
+| **Category** | **Williamsburg Coffee+** — specialty coffee shops + those with bakery / brunch items (AOV $8–20) |
+| **Why not pure coffee** | Pure coffee AOV ~$6 is too low to hit $40/customer payout economics |
+| **Addressable** | ~200 Coffee+ merchants in Williamsburg |
+| **Geography** | Williamsburg: ZIPs **11211 / 11206 / 11249** |
+| **Saturation window** | 60 days (Week 1 – Week 8) |
+| **Next ZIP** | Greenpoint (11222) in Week 13, then Bushwick (11237 / 11206) |
+| **New category** | **Frozen** until Williamsburg + Greenpoint + Bushwick all prove unit economics on Coffee+ |
+| **Per-neighborhood Pilot cost cap** | **$4,200** — do not exceed in any single ZIP |
 
 ---
 
-### Week 3: Creator Outreach + Website MVP
+## Software Leverage Ratio (SLR) Ladder
 
-**Creator Outreach: Goal 20 signed-up creators**
+SLR = campaigns run per week ÷ human-ops hours per week. This is the primary north star for Vertical AI for Local Commerce. Each phase below lists the SLR target the phase must hit by its end.
 
-**DM Script (customize per creator):**
-- "Love your [specific post about local spot] 🔥 Launching Push — it connects local creators like you with shops for paid campaigns. We just matched [X] creators with [shop name]. Interested?"
-- Link to landing page / creator signup form
-- If they engage: "Here's how it works: [brief 1-min explainer]. Sound good?"
+| Phase | Week | SLR Target | Driver |
+|-------|------|-----------|--------|
+| 1 — AI MVP + first merchant | W1–2 | **3–5** | Baseline, ConversionOracle staging-only |
+| 2 — Cohort fill, first AI-matched campaign | W3–4 | **6** | ConversionOracle live in production |
+| 3 — Saturation, first merchant auto-flips to Operator | W5–8 | **8** by Week 8 | DisclosureBot live; 20 active campaigns same ops count |
+| 4 — Retention + Greenpoint prep | W9–12 | **10** by Week 12 | Auto ROI statements, standing-order campaigns |
+| 5 — Adjacent expansion | W13–20 | **15** by Week 20 | Neighborhood Playbook replicates without per-ZIP engineering |
+| 6 — YC S27 prep | W20+ / M5 / M12 | **18 by M5, 25 by M12** | Full ConversionOracle + DisclosureBot at steady state |
 
-**Creator Signup Form should ask for:**
-- Name, email, phone
-- Instagram/TikTok handles + follower count
-- Location (neighborhood focus)
-- Category preference (food, beauty, etc.)
-- Availability (how often can they post?)
-- Payment method preference (Venmo, Zelle, direct deposit)
-
-**Website MVP: Minimal but functional**
-
-Core pages:
-1. **Landing page** — 1 min explainer (hero, problem, solution, CTA)
-2. **Merchant signup form** — name, email, address, category, initial offer
-3. **Creator signup form** — (see above)
-4. **Campaign listings** — show available campaigns with details (shop, offer, slots, deadline)
-5. **Admin dashboard** (private) — list all merchants, creators, campaigns, and basic status tracking
-
-**Tech Stack (MVP):**
-- Frontend: Next.js (React) + Vercel (free tier)
-- Database: Supabase free tier (PostgreSQL) or Airtable
-- Auth: Supabase Auth or email magic links
-- Hosting: Vercel (auto-deploys from GitHub)
-
-**Timeline:**
-- Days 1–2: Set up Next.js project, GitHub, Vercel
-- Days 3–4: Build landing page + forms
-- Days 5–7: Set up database, admin dashboard, campaign listings page
-- Go live by EOW
-
-**End of Week 3 Output:**
-- 20+ creators signed up
-- Website live (all forms working, admin dashboard functional)
+**SLR tripwire:** if SLR stalls below target for 2 consecutive weeks, the next week's work is AI/automation, not merchant acquisition. Density without leverage is services, not software.
 
 ---
 
-### Week 4: Campaign Setup + Dry Run
+## Pilot Economics Framework (v5.1 — applies every phase)
 
-**Set up 5 campaigns manually**
+| Item | Value |
+|------|-------|
+| **Per-neighborhood Pilot cost cap** | **$4,200** (all Pilot creator payouts + API + ops in one ZIP) |
+| **Pre-Pilot LOI** | **$1 nominal + 60-day commitment + case-study authorization** |
+| **Pilot-to-Paid conversion target** | **60%+** |
+| **Auto-terminate clause** | Day-30 auto-terminate if merchant has **< 5 verified customers** |
+| **Creator payout during Pilot** | **70% of standard rate** (shared risk; full rate kicks in once merchant flips to Paid) |
 
-For each campaign, define:
-- **Merchant:** name, offer (what creators get)
-- **Deliverables:** 1 Instagram post + 1 Story? 1 TikTok video? 2 posts? (be specific)
-- **Proof requirements:** screenshot of post, video proof, link to post
-- **Number of slots:** 2–3 creators per merchant
-- **Deadline:** when must creator complete by?
-- **Creator instructions:** "Tag the shop in your post. Use hashtag #pushcampaign"
-
-**Creator matching:** For each slot, match by:
-- Proximity (do they feature the neighborhood?)
-- Style fit (their content tone matches the brand)
-- Category (if dessert shop, feature food creators)
-- Availability
-
-**Do 1–2 campaigns yourself as dry run**
-- Pick 1 merchant + 2 creators
-- Go through entire flow: send brief, collect proof, verify, pay
-- Document every step
-- Ask merchant for feedback (did creators deliver? Quality of content?)
-
-**End of Week 4 Output:**
-- 5 campaigns set up and assigned to creators
-- 1–2 test campaigns complete
-- Full documented flow from brief → completion → payment
+Every Pilot starts with a signed $1 LOI. Every Pilot has a 30-day checkpoint. Every Pilot closes into a Go/No-Go at day 60.
 
 ---
 
-## Phase 2: First Campaigns (Week 5–8)
+## Phase 1 — AI MVP + First Merchant Signup (Week 1–2) · SLR target 3–5
 
-### Week 5–6: Execute First Batch
+### Week 1 — Ship AI MVP + Anchor Merchant Outreach Begins
 
-**Run 5 merchants × 2–3 creators = 10–15 slots**
+**Engineering deliverables (due EOW):**
+- [ ] AgentOutputDemo UI live (shows ConversionOracle verification reel to merchant prospects)
+- [ ] `/merchant/pilot` landing page with **goal-first onboarding** ("How many customers do you need this month?")
+- [ ] ConversionOracle (Claude Vision + OCR + geo) path, env-gated (enabled in staging + Sey account only)
+- [ ] `/neighborhoods/williamsburg-coffee` route scaffolded (will populate Week 5)
+- [ ] SLR measurement harness shipped (campaigns/week ÷ ops-hours/week)
+- [ ] $1 LOI PDF template drafted (legal review queued)
 
-**Daily ops rhythm:**
-- **AM:** Review overdue proofs (DM creators if late)
-- **Midday:** Review and approve submissions (tag and share with merchant)
-- **PM:** Track publications (see if posts are up, engagement starting)
-- **Evening:** Log everything in a spreadsheet (creator, merchant, campaign, completion status, payout amount)
+**Merchant outreach (anchors):**
+- Build outreach list of **3 anchor Coffee+ shops**: **Sey Coffee**, **Devocion**, **Partners Coffee**
+- Founder does cold walk-in to each during dead hours (Tue/Wed/Thu 2–4pm) with printed pilot sheet
+- Target: 3 warm conversations with owner/manager by EOW
 
-**After each campaign:**
-- Pay creator within 24h (Venmo/Zelle)
-- Email merchant: "Your campaign is live. Here's the link to [creator's post]. We'll track performance through [date]."
-- Send quick survey to merchant: How was the quality? Would you run again?
-- Send quick survey to creator: Any issues? Want to run again?
+**Creator recruitment:**
+- Build Instagram prospect list: search "coffee" + "Williamsburg" + 1K–5K followers
+- DM **10 creators** in 11211 / 11249 with specific post reference + pilot invitation
 
-**Tracking spreadsheet columns:**
-- Campaign ID
-- Merchant name
-- Creator handle
-- Offer (what creator received)
-- Deliverable (posts/videos)
-- Due date
-- Completion date
-- Quality (1–5)
-- Merchant feedback
-- Creator feedback
-- Payout amount
-- Status (completed / late / rejected)
-
-**End of Week 5–6 Output:**
-- 10–15 campaigns completed
-- 100% of creators paid within 24h
-- Feedback collected from merchants and creators
-- Clear view of which merchants/creators performed best
+**End of Week 1 output:**
+- AI MVP shippable build
+- 3 anchor Coffee+ shop conversations logged with owner contact
+- 10 DM'd creators; target 5+ interested responses
+- SLR baseline captured
 
 ---
 
-### Week 7–8: Second Batch + First Improvements
+### Week 2 — First Merchant Signs + Creator Cohort Fills
 
-**Launch 5–8 more campaigns**
+**Merchant:**
+- [ ] Sign **Sey Coffee** on $0 Pilot plan with **$1 LOI + 60-day commitment + case-study authorization** (signature by Friday)
+- [ ] Close remaining 2 anchor shops (Devocion, Partners) — all signed with $1 LOI by EOW Week 2
+- [ ] Ship anchor pilot briefs into the admin dashboard
 
-Include at least 2+ repeat merchants from batch 1 (this is KEY — repeat is signal of success)
+**Creator:**
+- [ ] Complete **10 creators** signed up (finish Week 1 prospect list)
+- [ ] Run 15-minute onboarding call with each Partner-tier candidate
+- [ ] All creators acknowledge Pilot-phase 70%-rate clause
 
-**Track these metrics obsessively:**
-- **Merchant repeat rate:** What % of merchants from batch 1 are running a 2nd campaign?
-- **Creator repeat rate:** What % of creators from batch 1 want to do another campaign?
-- **Time-to-fill:** How long does it take to fill all slots for a campaign?
-- **Completion rate:** What % of creators finish on time?
-- **Content quality:** Are submissions getting better or worse?
+**Product:**
+- [ ] Ship basic admin dashboard for manual ops (campaigns table, creator table, merchant table)
+- [ ] Ship first weekly ROI email template (will auto-send Week 5)
+- [ ] DisclosureBot prototype in staging (auto-generate FTC-compliant disclosure copy)
 
-**Iterate website based on learnings:**
-- Add simple **creator profile page** (follower count, engagement rate, past campaigns, merchant feedback score)
-- Add **merchant dashboard** with basic reporting (# campaigns run, total creators, avg quality score)
-- Add **campaign status tracker** (pending, in progress, completed)
-- Add simple **creator scoring** (e.g., 1–5 stars based on merchant feedback)
-
-**End of Week 7–8 Output:**
-- 20+ total campaigns (batches 1 + 2)
-- Merchant repeat rate visible (ideally 30%+)
-- Creator repeat rate visible (ideally 60%+)
-- Metrics dashboard showing:
-  - 8+ merchants ran 1+ campaign
-  - 15+ creators completed 1+ campaign
-  - 3+ merchants ran SECOND campaign (repeat!)
-  - Completion rate > 80%
-  - Creator satisfaction > 4/5
-  - Merchant satisfaction > 3.5/5
+**End of Week 2 output:**
+- 3 anchor merchants live on Pilot with signed $1 LOI
+- 10 creators signed (70%-Pilot-rate acknowledged), 5+ ready for Week 3 campaign
+- All outreach logged in shared spreadsheet (date, channel, response)
 
 ---
 
-## Phase 3: Validate Repeat & Launch (Week 9–12)
+## Phase 2 — Cohort Fill + First Campaign (Week 3–4) · SLR target 6
 
-### Week 9–10: Scale to 15 Merchants
+### Week 3 — Fill Merchant Cohort + Prep First Campaign
 
-**Acquire 5–7 more merchants**
+**Merchant:**
+- [ ] Sign **7 more Coffee+ shops** using anchor-referral + cold walk-in (cumulative **10 merchants live**)
+- [ ] Each new shop: goal-first onboarding, Pilot pricing ($0 to deliver first 10 verified customers), signed $1 LOI
+- [ ] Cumulative Pilot spend stays inside Williamsburg's **$4,200 cap**
 
-Tactics:
-- Referral: Email existing merchants: "Know any other shops that would want this? We'll take good care of them."
-- Walk-in: Keep scouting new neighborhoods (same process as Week 1)
-- Leverage case studies: "Look, [Merchant A] ran 5 campaigns and got [X] new customers. Interested?"
+**Creator:**
+- [ ] Recruit **10 more creators** (cumulative **20 creators**)
+- [ ] Activate Channel 2: ask each signed merchant's manager to recommend 2–3 regulars who create content
 
-**Introduce basic creator scoring** (visible on creator profiles in admin)
+**Campaign prep:**
+- [ ] ConversionOracle matching: Claude Vision + Push Score selects **top 5 creators** for Sey Coffee's first campaign
+- [ ] Write campaign brief: deliverable, verification method (QR + ConversionOracle), payout trigger, DisclosureBot-generated disclosure copy
 
-Scoring rubric:
-- Completion rate (did they finish on time?)
-- Quality score (merchant feedback)
-- Engagement rate (their posts got comments/likes)
-- Reliability (did they show up when promised?)
-
-**Introduce standby mechanism**
-
-Standby queue: 5–10 creators on standby for each campaign. If a slot opens up (creator drops out), ping standby creators immediately. First to respond gets the gig. This will reveal:
-- Response time (are they engaged?)
-- Conversion (do standby creators take the gig?)
-- Whether standby changes engagement levels
-
-**End of Week 9–10 Output:**
-- 15+ merchants total in pipeline
-- Creator scoring system live
-- Standby mechanism tested on 3–5 campaigns
-- Data showing repeat rate, completion rate, conversion
+**End of Week 3 output:**
+- 10 merchants live (all with $1 LOI)
+- 20 creators signed
+- Sey Coffee × 5 creators campaign ready to launch Monday Week 4
+- SLR = 6 by EOW
 
 ---
 
-### Week 11–12: Transition to Paid
+### Week 4 — First Campaign Ships + First Verified Customers
 
-**Pricing tiers (from push-pricing):**
-- **Starter:** $19.99/mo
-- **Growth:** $69/mo
-- **Pro:** $199/mo
+**Launch:**
+- [ ] Monday: **first AI-matched campaign** goes live (Sey Coffee × 5 creators)
+- [ ] Tuesday–Friday: creators post, scan events flow into `scan_events` table, ConversionOracle runs verification
+- [ ] Saturday: **10 verified customers** delivered for Sey Coffee (Week 4 target)
 
-**Transition conversation (Week 11):**
+**Ops:**
+- [ ] Daily ops standup: review `/api/attribution/scan` failures, verify ConversionOracle results
+- [ ] Payout creators (at 70% Pilot rate) within 24h of verified campaign completion
+- [ ] DisclosureBot compliance check on each campaign post
 
-Email to merchants who've run 2+ campaigns:
-- "Great work, [name]. You've run [X] campaigns with [Y] creators, and we've tracked [results]. Up until now, the first campaign was free. Going forward, we're introducing paid plans so we can keep supporting you with better creator matching and performance tracking."
-- "Starter plan is $19.99/mo and includes [X]. Want to give it a try?"
+**Merchant feedback:**
+- [ ] Sunday call with Sey Coffee owner: review 10 verified customers, ROI, willingness to flip to Paid (Operator plan)
 
-**Payment: Stripe subscription**
-- Set up Stripe account
-- Add subscription payment page
-- Auto-generate monthly invoice
-- Ensure payouts to creators happen regardless (never stiff a creator)
-
-**First paid campaigns (Week 11–12)**
-
-Goal: Get 2–3 merchants to convert to paid. This proves willingness to pay.
-
-**End of Week 11–12 Output:**
-- All metrics updated
-- First 2–3 merchants on paid plans
-- Verified that merchants will pay for better matching / dashboard / support
-- Revenue flowing in (even if small)
+**End of Week 4 output:**
+- First campaign shipped end-to-end
+- 10 verified customers for Sey Coffee (milestone)
+- Sey ready to flip to Paid (Operator) in Week 5 — first Pilot-to-Paid conversion
 
 ---
 
-## Week 12 Go/No-Go Decision
+## Phase 3 — Saturation + Case-Study Generation (Week 5–8) · SLR target 8 by Week 8
 
-**Review all metrics against targets:**
+### Week 5–6 — Scale to 20 Active Campaigns
+
+**Weekly target checklist:**
+- [ ] **20 active campaigns** running across all 10 Williamsburg Coffee+ merchants
+- [ ] Sey Coffee flips to **Paid (Operator plan)** ($500/mo min + $40/customer) — first Pilot-to-Paid conversion
+- [ ] 2+ more merchants cross 10 verified customers, flip to Paid
+- [ ] **Day-30 auto-terminate check** runs on every Pilot merchant: if any merchant has < 5 verified customers at day 30, Pilot terminates
+
+**Dashboard:**
+- [ ] Ship `/neighborhoods/williamsburg-coffee` public dashboard with live numbers: scans, verified customers, cost-per-customer, ROI, SLR
+- [ ] Auto-refresh every 24h
+
+**Experiments (Week 5–6):**
+- [ ] Experiment 1: **Merchant pricing test** — 5 control / 5 treatment on Operator plan positioning
+
+**End of Week 5–6 output:**
+- 20 active campaigns
+- 3+ merchants on Paid (Operator)
+- Dashboard live and linked from homepage
+
+---
+
+### Week 7–8 — Saturation + First Case Studies Drafted
+
+**Weekly target checklist:**
+- [ ] All 10 merchants have run at least 1 campaign
+- [ ] 5+ merchants on Paid (Operator)
+- [ ] Draft 3 case studies: **Sey / Devocion / Partners** (results, verified customer count, creator highlights)
+- [ ] DisclosureBot promoted from staging to production; 90-day rolling compliance tracker begins
+
+**Experiments (Week 7–8):**
+- [ ] Experiment 2: **Creator compensation test** — fixed $20 base vs. variable 3% commission
+- [ ] Experiment 4: **DisclosureBot compliance test** starts (target ≥ 98% pass rate at 90-day rolling)
+
+**End of Week 7–8 output:**
+- 10 merchants saturated
+- 50%+ on Paid (Operator)
+- 3 case studies drafted, ready for publication
+- SLR = 8 by EOW8
+
+---
+
+## Phase 4 — Retention + Greenpoint Prep (Week 9–12) · SLR target 10 by Week 12
+
+### Week 9–10 — Lock In Retention
+
+**Weekly target checklist:**
+- [ ] **60%+ Pilot-to-Paid conversion** (v5.1 target)
+- [ ] First monthly ROI statement emailed to all merchants
+- [ ] Publish Case Study #1 (Sey Coffee) on `/neighborhoods/williamsburg-coffee`
+- [ ] DisclosureBot 30-day rolling pass rate ≥ 98% (trending toward 90-day target)
+
+**Experiments:**
+- [ ] Experiment 3: **ConversionOracle geo threshold** test — 180m vs. 200m vs. 250m geo-match pass window
+
+---
+
+### Week 11–12 — Publish Case Studies + Start Greenpoint Discovery
+
+**Weekly target checklist:**
+- [ ] Publish Case Studies #2 (Devocion) and #3 (Partners) with live metrics
+- [ ] Begin **Greenpoint (11222) Coffee+ discovery**: identify 8 merchants, 12 creators (not yet signed)
+- [ ] Greenpoint Pilot budget ring-fenced at **$4,200 cap** before any commitment
+- [ ] Week 12 Go/No-Go review (see table below)
+
+**Week 12 Go/No-Go Decision:**
 
 | Metric | Target | Status |
 |--------|--------|--------|
-| Merchant repeat rate | 40%+ run 2+ campaigns | Go/No-go? |
+| Williamsburg Coffee+ merchants live | 10+ | Go/No-go? |
+| Pilot-to-Paid conversion | 60%+ | Go/No-go? |
+| Verified customers delivered (total) | 200+ | Go/No-go? |
 | Creator completion rate | 85%+ | Go/No-go? |
-| Time-to-fill | < 48 hours | Go/No-go? |
-| Willingness to pay | 30%+ convert to paid | Go/No-go? |
-| NPS | > 7/10 both sides | Go/No-go? |
-| Total campaigns | 25+ | Go/No-go? |
-| Revenue | Any (proves WTP) | Go/No-go? |
+| Case studies published | 3 | Go/No-go? |
+| ConversionOracle false-positive rate | < 2% | Go/No-go? |
+| DisclosureBot 90-day rolling pass rate | ≥ 98% | Go/No-go? |
+| SLR at Week 12 | ≥ 10 | Go/No-go? |
+| Merchant NPS | > 7/10 | Go/No-go? |
 
-**Decision:**
-- ✅ **GO:** repeat > 30%, completion > 80%, some WTP → Expand to next ZIP code
-- ⚠️ **ITERATE:** one metric weak, others strong → Stay in zone, fix weak point (e.g., if completion is 70%, improve creator onboarding)
-- ❌ **PIVOT:** no repeat, unreliable creators, zero WTP → Revisit value prop, pricing, or entire approach
-
-If GO: Replicate exact playbook in next ZIP code (repeat Week 1–12 in new zone).
+- ✅ **GO** → proceed to Week 13 Greenpoint launch (spend from Greenpoint's $4,200 cap)
+- ⚠️ **ITERATE** → extend Williamsburg 2 weeks, fix weakest metric (do NOT touch Greenpoint budget yet)
+- ❌ **PIVOT** → stop, revisit with user
 
 ---
 
-## Budget (12 Weeks)
+## Phase 5 — Adjacent Expansion (Week 13–20) · SLR target 15 by Week 20
+
+### Week 13–16 — Greenpoint (11222) Launch
+
+**Weekly target checklist:**
+- [ ] Week 13: sign 3 Greenpoint anchor Coffee+ shops using identical Neighborhood Playbook
+- [ ] Week 14: cumulative 8 Greenpoint merchants live
+- [ ] Week 15: 12 Greenpoint creators signed
+- [ ] Week 16: first Greenpoint campaigns running, on pace for 60%+ Pilot-to-Paid conversion by Week 20
+- [ ] Greenpoint spend contained inside its **$4,200 cap**
+
+---
+
+### Week 17–20 — Bushwick (11237 / 11206) Launch + Multi-ZIP Proof
+
+**Weekly target checklist:**
+- [ ] Week 17: Bushwick anchor outreach begins (5 shops) — Bushwick's own **$4,200 cap** applies
+- [ ] Week 18: 8 Bushwick merchants signed
+- [ ] Week 19: **25+ total merchants** across Williamsburg + Greenpoint + Bushwick
+- [ ] Week 20: multi-ZIP public dashboard live at `/neighborhoods` (index of all three)
+- [ ] SLR = 15 by EOW20
+
+---
+
+## Phase 6 — YC Summer 2027 Application (Week 20+)
+
+**Target submission:** 2026-09 (YC Summer 2027 batch)
+
+**Application traction bar (v5.1):**
+- [ ] **50+ paying merchants** live on Operator plan
+- [ ] **500+ campaigns** shipped end-to-end
+- [ ] **$50K+ GMV** processed through platform
+- [ ] **SLR ≥ 18 by M5, ≥ 25 by M12**
+- [ ] **ConversionOracle accuracy ≥ 90% by M5**
+- [ ] **DisclosureBot compliance pass rate ≥ 98%** (90-day rolling)
+- [ ] 3+ published case studies + multi-ZIP dashboard
+- [ ] Founder demo: walk-through of AgentOutputDemo + live `/neighborhoods/williamsburg-coffee` dashboard + SLR time-series chart
+
+**Why this positions for RFS #5:**
+- "AI agents for vertical industries" → Push is Vertical AI for Local Commerce
+- Beachhead density (Williamsburg Coffee+) proves the model
+- Multi-ZIP expansion at 60%+ Pilot-to-Paid proves the Neighborhood Playbook replicates
+- Rising SLR across phases proves real software leverage (not repackaged services)
+- ConversionOracle + DisclosureBot are named, dated, production AI systems with measurable accuracy / compliance rates
+
+---
+
+## Expansion Budget Caps (Pre-Series A Total: $130,200 across 31 neighborhoods)
+
+| Tier | Scope | Count | Per-ZIP Cap | Total |
+|------|-------|-------|-------------|-------|
+| **Template 0** | Williamsburg Coffee+ | 1 | $4,200 | **$4,200** |
+| **NYC Dense** | +4 adjacent (Greenpoint, Bushwick, LES, Astoria) | 5 | $4,200 | **$21,000** |
+| **Top-5 Metro** | +25 incremental (NYC, LA, SF, Chicago, Boston) | 25 | $4,200 | **$105,000** |
+| **Pre-Series A Total** | | **31** | | **$130,200** |
+
+A new neighborhood may only open after the prior tier's neighborhoods hit Pilot-to-Paid ≥ 60%, ConversionOracle accuracy ≥ 90%, DisclosureBot pass rate ≥ 98%. Failing any of these = Neighborhood Playbook bug; fix before spending the next cap.
+
+---
+
+## Per-Neighborhood Budget (Williamsburg worked example, ≤ $4,200 cap)
 
 | Item | Cost | Notes |
 |------|------|-------|
-| Creator payments (Phase 1, Week 1–4) | $750–1,200 | 20 creators × avg $40–60 per campaign |
-| Creator payments (Phase 2, Week 5–8) | $600–1,000 | Increasing slots, potentially more creators |
-| Creator payments (Phase 3, Week 9–12) | $400–800 | Reduced phase (focus on paid merchants) |
-| Domain name | $10–12/yr | push.com, push.co, or pushapp.co equivalent |
-| Vercel / Supabase hosting | Free–50 | Mostly free tier; maybe $10 for Vercel Pro if needed |
-| Stripe account + processing | Free–50 | Stripe takes 2.9% + $0.30 per transaction |
-| Scouting expenses | $200 | Transport, coffee meetings, meals |
-| Miscellaneous | $200 | Supplies, unexpected costs |
-| **Total** | **~$2,400–3,500** | Conservative estimate with buffer |
+| Creator payments during Pilot (Week 1–4) | ~$1,050 | 20 creators × ~$53 avg at 70% Pilot rate |
+| Creator payments during Pilot (Week 5–8) | ~$1,680 | 20 active campaigns × 2 weeks × ~$42 avg (70% Pilot rate on deliveries flipping to full on Paid conversions) |
+| Claude API (ConversionOracle + DisclosureBot + matching) | $280–560 | Scales with campaign count |
+| Supabase + Vercel (attributed to this ZIP) | $30–70 | Pro tier Week 9+ allocation |
+| Amex gift cards (manager referral) | $300 | 3 × $100 bonuses expected to trigger |
+| Scouting, walk-ins, meals | $400 | Coffee at each merchant during pitch |
+| Miscellaneous / buffer | $200 | |
+| **Williamsburg subtotal** | **≤ $4,200** | Hard cap |
+
+Greenpoint and Bushwick each get their own $4,200 cap using this same breakdown. If a cap starts to be breached, pause new Pilot signups in that ZIP until the Playbook is fixed.
 
 ---
 
-## MVP Tech Stack
+## v5.1 MVP Tech Stack
 
 ### Frontend
-- **Framework:** Next.js (React)
-- **Styling:** Vanilla CSS (Follow Design.md sharp corners requirement)
-- **Hosting:** Vercel (free tier, auto-deploys from GitHub)
-- **Cost:** Free
+- **Framework:** Next.js (App Router)
+- **Styling:** Vanilla CSS, strictly following `Design.md` (sharp corners, 6-color brand palette)
+- **Hosting:** Vercel (Pro tier from Week 9)
+- **Cost:** $0 → $20/mo
 
 ### Backend / Database
-- **Database:** Supabase (PostgreSQL, free tier) OR Airtable (if faster to launch)
-- **Auth:** Supabase Auth (email magic links) or simple email verification
-- **API:** Next.js API routes (serverless functions)
-- **Cost:** Free tier sufficient
+- **Database:** Supabase (PostgreSQL) — 6 core tables already shipped (see commit `4e98348`)
+- **Auth:** Supabase Auth (email magic links) + service-role for trusted server inserts (commit `ec1f9d6`)
+- **API:** Next.js API routes (first route `/api/attribution/scan` live per commit `86a7972`)
+- **Cost:** Free → Pro ~$25/mo
+
+### AI Layer (v5.1 — the product)
+- **ConversionOracle** — verification + matching (Claude Vision + OCR + geo). Target ≥ 90% accuracy by M5.
+- **DisclosureBot** — automated FTC-compliant disclosure copy generator + compliance tracker. Target ≥ 98% pass rate at 90-day rolling.
+- **Cost:** ~$0.05–0.15 per verified customer at steady state
 
 ### Payments & Comms
-- **Creator payouts (early):** Venmo, Zelle, direct deposit
-- **Merchant billing (later):** Stripe subscription
-- **Email:** SendGrid free tier (100/day)
-- **SMS (optional):** Twilio free trial
-- **Cost:** Free until scale
+- **Merchant billing:** Stripe subscriptions (Operator plan: $500/mo base + metered $40/verified customer)
+- **Creator payouts:** Venmo / Zelle (manual through Week 12) — 70% rate during Pilot, 100% once merchant flips to Paid. Stripe Connect from Week 13+
+- **Email:** Resend or SendGrid for ROI statements, campaign emails
+- **Cost:** ~$800 total over 30 weeks (shared across all neighborhoods)
 
-### Analytics & Logging
-- **Metrics:** Google Analytics (free, on website)
-- **Campaign tracking:** Manual spreadsheet + database queries
-- **Logging:** Console logs, Vercel logs
-- **Cost:** Free
-
-### Essential Pages & Functions
-
-**Merchant-facing:**
-1. Landing page (problem, solution, CTA to signup)
-2. Signup form (shop details)
-3. Dashboard (past campaigns, results, available campaigns)
-4. Campaign detail (creators assigned, proofs, status)
-
-**Creator-facing:**
-1. Landing page (opportunity, how it works)
-2. Signup form (handles, follower count, availability)
-3. Campaign feed (available opportunities, slots, deadlines)
-4. Campaign detail (merchant, offer, deliverables, submit proof)
-5. Profile page (past campaigns, score, earnings)
-
-**Admin (you):**
-1. Merchant management (list, status, campaigns)
-2. Creator management (list, status, score)
-3. Campaign management (create, assign, track)
-4. Manual payout tracker
-5. Metrics dashboard
-
-**Defer to later:**
-- Automated matching algorithm (do manually first)
-- Automated payouts (use Stripe + Plaid API)
-- Social login (use email first)
-- Advanced analytics (export to Looker Studio later)
-- Mobile app (web-only for MVP)
+### Analytics
+- **Campaign tracking:** Supabase queries → public dashboard
+- **SLR tracking:** custom harness logging campaigns run per week and ops hours per week
+- **Product analytics:** PostHog (optional, Week 9+)
+- **Logging:** Vercel logs + Sentry (Week 9+)
+- **Cost:** Free tier through Week 12
 
 ---
 
-## Execution Tips
+## Execution Tips (v5.1-specific)
 
-### Week 1–2: Move Fast
-- Scouting is legs-on-ground work. Don't overthink. Get addresses, IG handles, talk to owners.
-- First 10 merchant conversations are clunky. By conversation 15, you'll have tight talking points.
+### Week 1–4: Ship AI, Win Anchors, Signed LOIs
+- The AgentOutputDemo is the single strongest sales asset. Ship it first, demo it in every walk-in.
+- Sey / Devocion / Partners are non-negotiable. If one passes, re-pitch with case-study-promise language.
+- Never start a Pilot without a signed $1 LOI. Verbal commitment is not a Pilot.
 
-### Week 3–4: One Feature Per Day
-- Website MVP can be rough. Forms can use Airtable embeds if you want to move faster.
-- Don't over-build the admin dashboard. Spreadsheet + basic web form is enough.
+### Week 5–8: Metrics Discipline + Auto-Terminate
+- The `/neighborhoods/williamsburg-coffee` dashboard must update daily. If it stalls, merchant trust stalls.
+- Every campaign must close its loop: creator paid (at 70% Pilot rate) within 24h, merchant ROI emailed monthly.
+- Day-30 auto-terminate is non-negotiable. If a merchant has < 5 verified customers at day 30, end the Pilot cleanly — don't prolong it.
 
-### Week 5–12: Ops Discipline
-- Log everything in a spreadsheet **same day.** Don't wait a week.
-- Pay creators within 24h, every time. This builds trust.
-- Ask merchants and creators for feedback on every single campaign. This is your gold.
+### Week 9–12: Case Studies > New Merchants + SLR Hygiene
+- Week 9–12 is about **depth**, not breadth. Publish the 3 case studies with real numbers even if they're small.
+- Greenpoint discovery in parallel is background work, not the focus.
+- If SLR is below 10 by Week 12, pause Greenpoint prep and ship more automation.
 
-### Expansion Readiness (Week 13+)
-- Only expand when metrics hit targets. Premature expansion kills early zones.
-- Replicate the exact same process in the next ZIP code.
-- Hire a local ops person for zone 2 if you've proven the model works.
+### Week 13–20: Replicate the Neighborhood Playbook, Don't Improvise
+- Greenpoint and Bushwick use the **exact** Williamsburg Neighborhood Playbook. Do not rework the pitch, pricing, or ConversionOracle threshold mid-expansion.
+- If a ZIP under-performs, assume the Playbook is right and the ZIP is wrong (go to the next ZIP instead of reworking the Playbook).
+- Each ZIP has its own $4,200 cap; don't cross-subsidize from another ZIP's budget.
+
+### Expansion Readiness (Week 20+)
+- New category (e.g., bakeries, espresso bars adjacent) only unlocks after ALL three Brooklyn ZIPs saturate
+- YC application week: founder mode, freeze engineering on new features, only metric improvements + SLR polish

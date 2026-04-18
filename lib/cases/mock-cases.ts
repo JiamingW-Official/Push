@@ -239,7 +239,7 @@ export const CASES: Case[] = [
       "We're a third-generation bodega that went through a soft redesign — specialty products, " +
       "a proper deli counter, café space in the back. But nobody knew the new Bodega Azul yet. " +
       "The Bushwick creative community walks past us every day. We wanted them inside. The challenge " +
-      "was scale — we couldn't afford agency fees, and free products for 'collaborations' " +
+      "was scale — we couldn't afford traditional marketing retainers, and free products for 'collaborations' " +
       "had delivered exactly zero verifiable customers.",
     steps: [
       {

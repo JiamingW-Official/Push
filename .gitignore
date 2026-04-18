@@ -9,6 +9,7 @@ out/
 .env
 .env.local
 .env.*.local
+!.env.example
 
 # Build artifacts
 tsconfig.tsbuildinfo
@@ -16,14 +17,31 @@ tsconfig.tsbuildinfo
 
 # OS
 .DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+*.swp
 
 # Misc
 *.log
 .vercel
 
-# Claude Code worktrees
+# Claude Code workspace
 .claude/worktrees/
+.claude/scheduled_tasks.lock
+.claude/**/*.lock
 
 # Supabase CLI local state
 supabase/.branches/
 supabase/.temp/
+
+# Legacy audit reports (archived)
+/FULL-AUDIT-*.md
+/PREMIUM-AUDIT-*.md
+/push-site-audit-*.md
+/premium-fixes-agent-prompt.md
+/v4-upgrade-agent-prompt.md
+/v4.1-full-sync-agent-prompt.md
+/tier-identity-preview.html

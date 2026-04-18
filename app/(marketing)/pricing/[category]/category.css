@@ -1,0 +1,818 @@
+/* ============================================================
+   Push Pricing — Vertical Category Detail (v5.1)
+   Per-vertical unit economics page — 6-color palette only
+   All border-radius: 0 per Design.md
+   ============================================================ */
+
+/* ── Shared section tag ──────────────────────────────────────── */
+.pcat-section-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-bottom: var(--space-5);
+}
+
+.pcat-tag-num {
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+}
+
+.pcat-tag-line {
+  display: inline-block;
+  width: 24px;
+  height: 1px;
+  background: var(--line-strong);
+}
+
+.pcat-tag-label {
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+/* ============================================================
+   1. HERO
+   ============================================================ */
+.pcat-hero {
+  background: var(--dark);
+  min-height: 76svh;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding-top: 120px;
+  position: relative;
+  overflow: hidden;
+}
+
+.pcat-hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(
+      ellipse 55% 40% at 15% 80%,
+      rgba(193, 18, 31, 0.1) 0%,
+      transparent 70%
+    ),
+    radial-gradient(
+      ellipse 45% 35% at 85% 15%,
+      rgba(102, 155, 188, 0.08) 0%,
+      transparent 65%
+    );
+  pointer-events: none;
+}
+
+.pcat-hero-inner {
+  position: relative;
+  z-index: 1;
+  padding-bottom: var(--space-8);
+}
+
+.pcat-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  color: rgba(245, 242, 236, 0.45);
+  margin-bottom: var(--space-5);
+}
+
+.pcat-breadcrumb a {
+  color: rgba(245, 242, 236, 0.65);
+  text-decoration: none;
+  transition: color 180ms ease;
+}
+
+.pcat-breadcrumb a:hover {
+  color: var(--primary);
+}
+
+.pcat-breadcrumb-current {
+  color: rgba(245, 242, 236, 0.85);
+}
+
+.pcat-hero-label {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-bottom: var(--space-5);
+}
+
+.pcat-hero-eyebrow {
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(245, 242, 236, 0.45);
+}
+
+.pcat-hero-eyebrow-sub {
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  color: rgba(245, 242, 236, 0.3);
+}
+
+.pcat-hero-h {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin-bottom: var(--space-7);
+  line-height: 0.92;
+}
+
+.pcat-h-bold {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(44px, 7vw, 104px);
+  letter-spacing: -0.05em;
+  color: #fff;
+  display: block;
+}
+
+.pcat-h-light {
+  font-family: var(--font-display);
+  font-weight: 300;
+  font-size: clamp(44px, 7vw, 104px);
+  letter-spacing: -0.04em;
+  color: var(--champagne);
+  display: block;
+  font-style: italic;
+}
+
+.pcat-hero-bottom {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  max-width: 680px;
+}
+
+.pcat-hero-sub {
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.7;
+  color: rgba(245, 242, 236, 0.75);
+  margin: 0;
+}
+
+.pcat-hero-anchors {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  align-items: center;
+}
+
+.pcat-hero-ghost {
+  position: absolute;
+  right: -4%;
+  bottom: -14%;
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(220px, 32vw, 460px);
+  letter-spacing: -0.06em;
+  line-height: 0.8;
+  color: rgba(245, 242, 236, 0.04);
+  pointer-events: none;
+  user-select: none;
+  white-space: nowrap;
+}
+
+/* ============================================================
+   2. UNIT ECONOMICS
+   ============================================================ */
+.pcat-econ-section {
+  background: var(--surface);
+  padding-block: var(--space-12);
+}
+
+.pcat-econ-h {
+  font-family: var(--font-display);
+  font-size: clamp(32px, 4.5vw, 52px);
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+  color: var(--dark);
+  margin: 0 0 var(--space-3);
+  max-width: 880px;
+}
+
+.pcat-econ-h-light {
+  font-weight: 300;
+  font-style: italic;
+  color: var(--text-muted);
+}
+
+.pcat-econ-intro {
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.65;
+  color: var(--text-muted);
+  margin: 0 0 var(--space-7);
+  max-width: 680px;
+}
+
+.pcat-econ-grid {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr auto 1fr auto 1fr;
+  gap: var(--space-2);
+  align-items: stretch;
+  margin-bottom: var(--space-6);
+}
+
+.pcat-econ-card {
+  background: var(--surface-elevated);
+  border: 1px solid var(--line);
+  padding: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  min-height: 160px;
+  justify-content: space-between;
+}
+
+.pcat-econ-card--hero {
+  background: var(--dark);
+  border-color: var(--dark);
+}
+
+.pcat-econ-card--hero .pcat-econ-label,
+.pcat-econ-card--hero .pcat-econ-note {
+  color: rgba(245, 242, 236, 0.55);
+}
+
+.pcat-econ-card--hero .pcat-econ-value {
+  color: var(--champagne);
+}
+
+.pcat-econ-label {
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.pcat-econ-value {
+  font-family: var(--font-display);
+  font-size: clamp(30px, 3.2vw, 44px);
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  color: var(--dark);
+}
+
+.pcat-econ-note {
+  font-family: var(--font-body);
+  font-size: 11px;
+  line-height: 1.5;
+  color: var(--text-muted);
+  margin-top: var(--space-1);
+}
+
+.pcat-econ-arrow {
+  font-family: var(--font-display);
+  font-size: 32px;
+  font-weight: 300;
+  color: var(--line-strong);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Derivation block */
+.pcat-derivation {
+  background: var(--surface-elevated);
+  border: 1px solid var(--line);
+  padding: var(--space-4) var(--space-5);
+  margin-bottom: var(--space-5);
+}
+
+.pcat-derivation-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding-block: var(--space-2);
+  border-bottom: 1px solid var(--line);
+  gap: var(--space-3);
+}
+
+.pcat-derivation-row:last-child {
+  border-bottom: none;
+}
+
+.pcat-derivation-row--final {
+  border-top: 1px solid var(--line-strong);
+  border-bottom: none;
+  padding-top: var(--space-3);
+}
+
+.pcat-derivation-label {
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--text-muted);
+  letter-spacing: 0.02em;
+}
+
+.pcat-derivation-value {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--dark);
+  letter-spacing: -0.02em;
+}
+
+.pcat-derivation-primary {
+  color: var(--primary);
+  font-size: 24px;
+  font-weight: 900;
+}
+
+.pcat-econ-footnote {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-style: italic;
+  color: var(--text-muted);
+  line-height: 1.6;
+  max-width: 720px;
+  margin: 0;
+}
+
+/* ============================================================
+   3. RETENTION ADD-ON
+   ============================================================ */
+.pcat-retention-section {
+  padding-block: var(--space-12);
+}
+
+.pcat-retention-h {
+  font-family: var(--font-display);
+  font-size: clamp(32px, 4.5vw, 52px);
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+  color: var(--dark);
+  margin: 0 0 var(--space-3);
+  max-width: 880px;
+}
+
+.pcat-retention-h-light {
+  font-weight: 300;
+  font-style: italic;
+  color: var(--text-muted);
+}
+
+.pcat-retention-intro {
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.65;
+  color: var(--text-muted);
+  margin: 0 0 var(--space-6);
+  max-width: 680px;
+}
+
+.pcat-retention-table {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  max-width: 720px;
+}
+
+.pcat-retention-row {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr 0.8fr;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  border-bottom: 1px solid var(--line);
+  align-items: baseline;
+}
+
+.pcat-retention-row:last-child {
+  border-bottom: none;
+}
+
+.pcat-retention-row--head {
+  background: var(--dark);
+  border-bottom: 1px solid var(--dark);
+}
+
+.pcat-retention-row--head .pcat-retention-col {
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(245, 242, 236, 0.65);
+}
+
+.pcat-retention-col {
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: var(--dark);
+}
+
+.pcat-retention-col--right {
+  text-align: right;
+}
+
+.pcat-retention-rate {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 20px;
+  color: var(--primary);
+  letter-spacing: -0.02em;
+}
+
+/* ============================================================
+   4. COMPARISON
+   ============================================================ */
+.pcat-compare-section {
+  background: var(--surface);
+  padding-block: var(--space-12);
+}
+
+.pcat-compare-h {
+  font-family: var(--font-display);
+  font-size: clamp(32px, 4.5vw, 52px);
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+  color: var(--dark);
+  margin: 0 0 var(--space-6);
+  max-width: 880px;
+}
+
+.pcat-compare-h-light {
+  font-weight: 300;
+  font-style: italic;
+  color: var(--text-muted);
+}
+
+.pcat-compare-wrap {
+  background: var(--surface-elevated);
+  border: 1px solid var(--line);
+  overflow-x: auto;
+}
+
+.pcat-compare-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--font-body);
+}
+
+.pcat-compare-table thead {
+  background: var(--dark);
+}
+
+.pcat-th-feature,
+.pcat-th {
+  padding: var(--space-3) var(--space-4);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(245, 242, 236, 0.7);
+  text-align: left;
+  border: none;
+}
+
+.pcat-th {
+  text-align: left;
+}
+
+.pcat-tr {
+  border-bottom: 1px solid var(--line);
+  transition: background 180ms ease;
+}
+
+.pcat-tr:last-child {
+  border-bottom: none;
+}
+
+.pcat-tr:hover {
+  background: var(--surface);
+}
+
+.pcat-tr--current {
+  background: var(--surface);
+}
+
+.pcat-tr--current:hover {
+  background: var(--surface);
+}
+
+.pcat-td-feature,
+.pcat-td {
+  padding: var(--space-3) var(--space-4);
+  font-size: 14px;
+  color: var(--dark);
+  vertical-align: middle;
+}
+
+.pcat-td-feature {
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.pcat-current-dot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  background: var(--primary);
+  flex-shrink: 0;
+}
+
+.pcat-td-price {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 16px;
+  color: var(--dark);
+  letter-spacing: -0.01em;
+}
+
+.pcat-tr--current .pcat-td-price {
+  color: var(--primary);
+}
+
+.pcat-compare-link {
+  color: var(--dark);
+  text-decoration: none;
+  border-bottom: 1px solid var(--line-strong);
+  transition:
+    color 180ms ease,
+    border-color 180ms ease;
+}
+
+.pcat-compare-link:hover {
+  color: var(--primary);
+  border-color: var(--primary);
+}
+
+/* ============================================================
+   5. ELIGIBILITY
+   ============================================================ */
+.pcat-eligibility-section {
+  padding-block: var(--space-12);
+}
+
+.pcat-elig-h {
+  font-family: var(--font-display);
+  font-size: clamp(32px, 4.5vw, 52px);
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+  color: var(--dark);
+  margin: 0 0 var(--space-3);
+  max-width: 880px;
+}
+
+.pcat-elig-h-light {
+  font-weight: 300;
+  font-style: italic;
+  color: var(--text-muted);
+}
+
+.pcat-elig-intro {
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.65;
+  color: var(--text-muted);
+  margin: 0 0 var(--space-6);
+  max-width: 680px;
+}
+
+.pcat-elig-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 var(--space-5);
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: var(--space-2);
+  max-width: 880px;
+}
+
+.pcat-elig-item {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  font-family: var(--font-body);
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--dark);
+}
+
+.pcat-elig-mark {
+  display: inline-block;
+  width: 4px;
+  height: 16px;
+  background: var(--primary);
+  flex-shrink: 0;
+  margin-top: 3px;
+}
+
+.pcat-elig-footnote {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-style: italic;
+  color: var(--text-muted);
+  line-height: 1.65;
+  max-width: 720px;
+  margin: 0;
+}
+
+/* ============================================================
+   6. BOTTOM CTA
+   ============================================================ */
+.pcat-cta-section {
+  background: var(--dark);
+  padding-block: var(--space-12);
+  position: relative;
+  overflow: hidden;
+}
+
+.pcat-cta-section::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse 50% 40% at 50% 100%,
+    rgba(193, 18, 31, 0.12) 0%,
+    transparent 70%
+  );
+  pointer-events: none;
+}
+
+.pcat-cta-inner {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+}
+
+.pcat-cta-eyebrow {
+  color: rgba(245, 242, 236, 0.5);
+  margin-bottom: var(--space-4);
+  display: block;
+}
+
+.pcat-cta-h {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin: 0 0 var(--space-4);
+  line-height: 0.95;
+}
+
+.pcat-cta-h-bold {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(40px, 6vw, 84px);
+  letter-spacing: -0.04em;
+  color: #fff;
+  display: block;
+}
+
+.pcat-cta-h-light {
+  font-family: var(--font-display);
+  font-weight: 300;
+  font-style: italic;
+  font-size: clamp(40px, 6vw, 84px);
+  letter-spacing: -0.03em;
+  color: var(--champagne);
+  display: block;
+}
+
+.pcat-cta-body {
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.7;
+  color: rgba(245, 242, 236, 0.7);
+  max-width: 580px;
+  margin: 0 auto var(--space-5);
+}
+
+.pcat-cta-actions {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  justify-content: center;
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 960px) {
+  .pcat-econ-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .pcat-econ-arrow {
+    transform: rotate(90deg);
+    padding-block: var(--space-1);
+    min-height: 32px;
+  }
+
+  .pcat-econ-card {
+    min-height: auto;
+  }
+}
+
+@media (max-width: 720px) {
+  .pcat-hero {
+    min-height: 68svh;
+    padding-top: 96px;
+  }
+
+  .pcat-h-bold,
+  .pcat-h-light {
+    font-size: clamp(40px, 10vw, 64px);
+  }
+
+  .pcat-hero-ghost {
+    font-size: clamp(160px, 44vw, 280px);
+    right: -8%;
+    bottom: -8%;
+  }
+
+  .pcat-hero-anchors {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .pcat-hero-anchors .btn {
+    width: 100%;
+  }
+
+  .pcat-retention-row {
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-2);
+  }
+
+  .pcat-retention-row .pcat-retention-col:nth-child(2) {
+    display: none;
+  }
+
+  .pcat-retention-row--head .pcat-retention-col:nth-child(2) {
+    display: none;
+  }
+
+  .pcat-compare-table {
+    font-size: 13px;
+  }
+
+  .pcat-th-feature,
+  .pcat-th,
+  .pcat-td-feature,
+  .pcat-td {
+    padding: var(--space-2);
+  }
+
+  .pcat-elig-list {
+    grid-template-columns: 1fr;
+  }
+
+  .pcat-cta-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .pcat-cta-actions .btn {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .pcat-derivation {
+    padding: var(--space-3);
+  }
+
+  .pcat-derivation-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-1);
+  }
+
+  .pcat-derivation-value {
+    font-size: 22px;
+  }
+
+  .pcat-derivation-primary {
+    font-size: 26px;
+  }
+}

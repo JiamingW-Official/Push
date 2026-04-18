@@ -1,0 +1,132 @@
+/* ============================================================
+   First-campaign Guide Banner
+   ============================================================ */
+
+.banner {
+  position: relative;
+  background: var(--surface-elevated, #ffffff);
+  border: 1px solid var(--line, rgba(0, 48, 73, 0.1));
+  border-left: 4px solid var(--champagne, #c9a96e);
+  padding: 20px 24px 20px 24px;
+  font-family: var(--font-body, "CS Genio Mono", monospace);
+  margin-bottom: var(--space-4, 32px);
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 16px;
+  align-items: start;
+}
+
+.inner {
+  display: grid;
+  grid-template-columns: minmax(240px, 320px) 1fr;
+  gap: 32px;
+  align-items: start;
+}
+
+.textCol {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.eyebrow {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--champagne, #c9a96e);
+  margin: 0;
+}
+
+.title {
+  font-family: var(--font-display, Darky, sans-serif);
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--dark, #003049);
+  line-height: 1.2;
+  margin: 0;
+}
+
+.steps {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.step {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-template-rows: auto auto;
+  column-gap: 10px;
+  row-gap: 2px;
+  align-items: start;
+}
+
+.stepNum {
+  font-family: var(--font-display, Darky, sans-serif);
+  font-size: 22px;
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  color: var(--champagne, #c9a96e);
+  line-height: 1;
+  grid-row: 1 / span 2;
+  font-variant-numeric: tabular-nums;
+}
+
+.stepTitle {
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--dark, #003049);
+}
+
+.stepBody {
+  font-size: 11px;
+  color: var(--graphite, #4a5568);
+  line-height: 1.5;
+  grid-column: 2 / 3;
+}
+
+.dismiss {
+  font-family: var(--font-body, "CS Genio Mono", monospace);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(0, 48, 73, 0.45);
+  background: none;
+  border: 1px solid var(--line, rgba(0, 48, 73, 0.12));
+  padding: 6px 12px;
+  cursor: pointer;
+  border-radius: 0;
+  transition:
+    color 200ms ease,
+    border-color 200ms ease;
+}
+
+.dismiss:hover {
+  color: var(--dark, #003049);
+  border-color: rgba(0, 48, 73, 0.35);
+}
+
+@media (max-width: 900px) {
+  .banner {
+    grid-template-columns: 1fr;
+  }
+  .inner {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  .steps {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  .dismiss {
+    justify-self: start;
+  }
+}

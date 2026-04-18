@@ -1,177 +1,90 @@
 import Link from "next/link";
 import ScrollRevealInit from "@/components/layout/ScrollRevealInit";
+import VerticalSelector from "./_parts/VerticalSelector";
+import RetentionTabs from "./_parts/RetentionTabs";
+import CompareDeepDive from "./_parts/CompareDeepDive";
 import "../landing.css";
 import "./pricing.css";
 
-/* ── Plan data ──────────────────────────────────────────────── */
+/* ── Plan data (v5.1 tier-based per-customer pricing) ──────── */
 const PLANS = [
   {
-    name: "Starter",
-    price: "$19",
-    cents: ".99",
-    period: "/mo",
-    desc: "One location. Two campaigns. Real attribution from day one.",
+    name: "Pilot",
+    price: "$0",
+    period: "for first 10 Coffee+ merchants",
+    desc: "Up to 10 AI-verified customers free. No credit card. Auto-flips to Operator after customer 10. Per-neighborhood cap $4,200.",
     features: [
-      "2 active campaigns",
-      "3 creator slots per campaign",
-      "AI creator matching",
-      "QR code attribution",
-      "Basic analytics dashboard",
-      "Email support",
+      "First 10 AI-verified customers free",
+      "Williamsburg Coffee+ beachhead only",
+      "3-layer verification (QR + Claude Vision + geo)",
+      "No credit card · no contract",
+      "Auto-flip to Operator after customer 10",
+      "72h dispute SLA · shared queue",
     ],
     featured: false,
-    cta: "Start free trial",
-    href: "/merchant/signup?plan=starter",
-    roi: "Avg. $420 attributed revenue in month 1",
-    qrLimit: "50 QR scans/mo",
-    campaignLimit: "2 campaigns",
-    applicants: "15/mo",
-    analytics: "Basic",
-    priority: false,
-    api: false,
+    cta: "Apply for $0 Pilot",
+    href: "/merchant/pilot",
+    roi: "Per-neighborhood cap $4,200",
   },
   {
-    name: "Growth",
-    price: "$69",
-    cents: "",
-    period: "/mo",
-    desc: "Scale across your location. Better matching, deeper data, stronger ROI.",
+    name: "Operator",
+    price: "$500",
+    period: "/mo min + $15–85 per verified customer",
+    desc: "Monthly base in arrears + per-customer rate tiered to your vertical. Retention Add-on opt-in. ConversionOracle™ live on every campaign.",
     features: [
-      "4 active campaigns",
-      "5 creator slots per campaign",
-      "Priority creator matching",
-      "Full analytics dashboard",
-      "Campaign templates library",
-      "Priority support",
+      "$500/mo minimum (billed in arrears)",
+      "Coffee $15 · Coffee+ $25 · Dessert $22",
+      "Fitness $60 · Beauty $85",
+      "Retention Add-on: $8/$6/$4 (coffee tier)",
+      "Unlimited campaigns · 24h SLA",
+      "Creator T2–T6 access",
     ],
     featured: true,
-    badge: "Most Popular",
-    cta: "Get Growth",
-    href: "/merchant/signup?plan=growth",
-    roi: "Avg. 3.9× ROI on campaign spend",
-    qrLimit: "250 QR scans/mo",
-    campaignLimit: "4 campaigns",
-    applicants: "60/mo",
-    analytics: "Full",
-    priority: true,
-    api: false,
+    badge: "Most verified",
+    cta: "Talk to ops agent",
+    href: "/merchant/signup",
+    roi: "$15–85 per verified customer · tiered by vertical",
   },
   {
-    name: "Scale",
-    price: "$199",
-    cents: "",
-    period: "/mo",
-    desc: "Multi-location operators running ongoing creator programs at full power.",
+    name: "Neighborhood",
+    price: "Custom",
+    period: "$8–12K launch + $20–35K MRR target",
+    desc: "Multi-location operator. Launch package covers Pilot subsidy, ops analyst, creator recruitment. 5.1-month payback per neighborhood.",
     features: [
-      "Unlimited campaigns",
-      "Unlimited creator slots",
-      "Dedicated account manager",
-      "Custom attribution rules",
-      "API access",
-      "White-glove onboarding",
+      "$8,000–12,000 launch package (one-time)",
+      "$20,000–35,000 MRR target by Month 12",
+      "Dedicated ops analyst · 24h SLA",
+      "Retention Add-on included",
+      "Custom ConversionOracle™ tuning",
+      "Top-100 Closer + Equity creator access",
     ],
     featured: false,
-    cta: "Get Scale",
-    href: "/merchant/signup?plan=scale",
-    roi: "Full white-glove setup included",
-    qrLimit: "Unlimited",
-    campaignLimit: "Unlimited",
-    applicants: "Unlimited",
-    analytics: "Advanced + Export",
-    priority: true,
-    api: true,
+    cta: "Contact sales",
+    href: "/merchant/enterprise",
+    roi: "5.1-month neighborhood payback",
   },
 ];
 
-/* ── Comparison table rows ──────────────────────────────────── */
-const COMPARE_ROWS = [
+/* ── LTV/CAC cohort stats (Williamsburg Coffee+ pilot M3) ───── */
+const LTV_STATS = [
   {
-    feature: "QR scans / mo",
-    starter: "50",
-    growth: "250",
-    scale: "Unlimited",
+    label: "Merchant LTV",
+    value: "$6,579",
+    note: "Avg Coffee+ merchant · 90-day retention cohort",
   },
   {
-    feature: "Active campaigns",
-    starter: "2",
-    growth: "4",
-    scale: "Unlimited",
+    label: "CAC blended",
+    value: "$420",
+    note: "Push per-customer + creator cost + ops overhead",
   },
   {
-    feature: "Creator applicants / mo",
-    starter: "15",
-    growth: "60",
-    scale: "Unlimited",
-  },
-  {
-    feature: "Analytics",
-    starter: "Basic",
-    growth: "Full dashboard",
-    scale: "Advanced + Export",
-  },
-  {
-    feature: "Priority support",
-    starter: false,
-    growth: true,
-    scale: true,
-  },
-  {
-    feature: "API access",
-    starter: false,
-    growth: false,
-    scale: true,
-  },
-  {
-    feature: "Dedicated account manager",
-    starter: false,
-    growth: false,
-    scale: true,
-  },
-  {
-    feature: "Custom attribution rules",
-    starter: false,
-    growth: false,
-    scale: true,
+    label: "LTV / CAC",
+    value: "15.7x",
+    note: "Base ratio before Retention Add-on LTV amortization",
   },
 ];
 
-/* ── FAQ data ───────────────────────────────────────────────── */
-const FAQS = [
-  {
-    q: "What exactly am I paying for each month?",
-    a: "Your monthly plan covers platform access, campaign management tools, AI creator matching, and QR attribution infrastructure. Creator payouts are separate — you fund a campaign escrow per campaign, and creators are paid only after verified visits.",
-  },
-  {
-    q: "Are there fees on top of the subscription?",
-    a: "No hidden fees. Creator payouts are funded by you directly (you set the rate per campaign), and Push takes no commission on those. The subscription is flat — $19.99, $69, or $199 per month.",
-  },
-  {
-    q: 'How does QR verification work and what counts as a "verified visit"?',
-    a: "Each creator gets a unique QR code linked to your campaign. When a customer they referred scans in-store, the visit is logged with timestamp, creator ID, and location. Fraud filters run within 60 seconds — only clean visits count.",
-  },
-  {
-    q: "Can I upgrade or downgrade my plan anytime?",
-    a: "Yes. Upgrades take effect immediately. Downgrades apply at the start of the next billing cycle. No contracts, no cancellation fees.",
-  },
-  {
-    q: "What happens if I exceed my QR scan or campaign limits?",
-    a: "On Starter and Growth, active campaigns pause when limits are reached. You'll receive a notification and can upgrade mid-cycle. Prorated charges apply for mid-cycle upgrades.",
-  },
-  {
-    q: "Do I need a credit card to start?",
-    a: "You can explore Push with a free trial on Starter — no card required for the first 14 days. To launch a live campaign, you'll add payment to fund creator escrow.",
-  },
-  {
-    q: "Is Push available outside New York City?",
-    a: "Push is currently invite-only in NYC. Expansion to Chicago, LA, and Miami is planned for Q3 2026. Join the waitlist if you're outside NYC.",
-  },
-  {
-    q: "What is the Enterprise plan and who is it for?",
-    a: "Enterprise is for multi-location chains (5+ locations), franchise operators, or brands running large-scale creator programs. Pricing is custom — includes volume QR allocations, dedicated CSM, SLA guarantees, and SSO/API integration.",
-  },
-];
-
-/* ── Check / X icons ────────────────────────────────────────── */
+/* ── Check icon ───────────────────────────────────────────── */
 function CheckIcon() {
   return (
     <svg
@@ -191,95 +104,91 @@ function CheckIcon() {
   );
 }
 
-function XIcon() {
-  return (
-    <svg
-      width="16"
-      height="16"
-      viewBox="0 0 16 16"
-      fill="none"
-      aria-hidden="true"
-    >
-      <path
-        d="M5 5l6 6M11 5l-6 6"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="square"
-      />
-    </svg>
-  );
-}
-
 /* ── Page ───────────────────────────────────────────────────── */
 export default function PricingPage() {
   return (
     <>
       <ScrollRevealInit />
 
-      {/* ══ 1. EDITORIAL HERO ══════════════════════════════════ */}
+      {/* ══ 1. HERO ═════════════════════════════════════════════ */}
       <section className="pr-hero">
         <div className="container pr-hero-inner">
           <div className="pr-hero-label reveal">
-            <span className="eyebrow pr-hero-eyebrow">Push Pricing</span>
+            <span className="eyebrow pr-hero-eyebrow">Vertical AI Pricing</span>
             <span className="rule" />
-            <span className="pr-hero-eyebrow-sub">For Merchants · NYC</span>
+            <span className="pr-hero-eyebrow-sub">
+              Customer Acquisition Engine · Williamsburg Coffee+ beachhead
+            </span>
           </div>
 
-          {/* Asymmetric headline: 900 + 300 */}
           <h1 className="pr-hero-h">
             <span
               className="pr-h-bold reveal"
               style={{ transitionDelay: "60ms" }}
             >
-              Pricing that pays
+              Tiered by vertical.
             </span>
             <span
               className="pr-h-light reveal"
               style={{ transitionDelay: "140ms" }}
             >
-              only when it works.
+              Not SaaS.
             </span>
           </h1>
 
           <div
-            className="pr-hero-bottom reveal"
+            className="pr-hero-selector reveal"
             style={{ transitionDelay: "220ms" }}
           >
+            <VerticalSelector />
+          </div>
+
+          <div
+            className="pr-hero-bottom reveal"
+            style={{ transitionDelay: "280ms" }}
+          >
             <p className="pr-hero-sub">
-              Flat monthly subscription. Creator payouts only on verified foot
-              traffic. No agency retainers, no mystery fees.
+              Push is vertical AI for local commerce — per-customer rates
+              derived from each vertical&apos;s gross-margin math, never flat.
+              Unit economics work at every vertical or we don&apos;t launch it.
             </p>
             <div className="pr-hero-anchors">
               <a href="#plans" className="btn btn-primary">
                 See plans
               </a>
-              <a href="#compare" className="btn btn-secondary">
-                Compare features
+              <a href="#deep-dive" className="btn btn-secondary">
+                Compare plans
               </a>
             </div>
           </div>
 
-          {/* Ambient decorative number */}
           <span className="pr-hero-ghost" aria-hidden="true">
-            $0
+            Vertical
           </span>
         </div>
       </section>
 
-      {/* ══ 2. PRICING CARDS ═══════════════════════════════════ */}
+      {/* ══ 2. 3-PLAN GRID ══════════════════════════════════════ */}
       <section id="plans" className="section pr-plans-section">
         <div className="container">
           <div className="pr-section-tag reveal">
             <span className="section-tag-num">01</span>
             <span className="section-tag-line" />
-            <span className="section-tag-label">Merchant Plans</span>
+            <span className="section-tag-label">Merchant plans</span>
           </div>
 
-          <div className="pr-plans-grid">
+          <h2 className="pr-plans-h reveal">
+            Three plans.{" "}
+            <span className="pr-plans-h-light">One unit-economic rule.</span>
+          </h2>
+
+          <div className="pc pr-plans-grid">
             {PLANS.map((plan, i) => (
-              <div
+              <article
                 key={plan.name}
-                className={`pr-plan reveal${plan.featured ? " pr-plan--featured" : ""}`}
+                className={`pc-card pr-plan reveal${
+                  plan.featured ? " pr-plan--featured" : ""
+                }`}
                 style={{ transitionDelay: `${i * 100}ms` }}
               >
                 {plan.badge && (
@@ -287,12 +196,9 @@ export default function PricingPage() {
                 )}
 
                 <div className="pr-plan-header">
-                  <h2 className="pr-plan-name">{plan.name}</h2>
+                  <h3 className="pr-plan-name">{plan.name}</h3>
                   <div className="pr-plan-price-row">
                     <span className="pr-plan-price-int">{plan.price}</span>
-                    {plan.cents && (
-                      <span className="pr-plan-price-cents">{plan.cents}</span>
-                    )}
                     <span className="pr-plan-price-period">{plan.period}</span>
                   </div>
                   <p className="pr-plan-desc">{plan.desc}</p>
@@ -313,230 +219,139 @@ export default function PricingPage() {
                   <p className="pr-plan-roi">{plan.roi}</p>
                   <Link
                     href={plan.href}
-                    className={`btn ${plan.featured ? "btn-primary" : "btn-secondary"} pr-plan-cta`}
+                    className={`btn ${
+                      plan.featured ? "btn-primary" : "btn-secondary"
+                    } pr-plan-cta`}
                   >
                     {plan.cta}
                   </Link>
                 </div>
-              </div>
+              </article>
             ))}
           </div>
 
           <p className="pr-plans-note reveal">
-            All plans include a 14-day free trial. No credit card required to
-            explore. Creator payouts funded per-campaign, billed separately.
+            $0 Pilot means $0 — no credit card. Auto-flip to Operator after your
+            10th AI-verified customer. Per-customer rates derived from each
+            vertical&apos;s gross-margin math. Never flat, never markup.
           </p>
         </div>
       </section>
 
-      {/* ══ 3. ENTERPRISE ROW ═════════════════════════════════ */}
-      <section className="section-bright pr-enterprise-section reveal">
-        <div className="container pr-enterprise-inner">
-          <div className="pr-enterprise-left">
-            <p className="eyebrow pr-enterprise-eyebrow">Enterprise</p>
-            <h2 className="pr-enterprise-h">
-              Running 5+ locations?{" "}
-              <span className="pr-enterprise-h-light">Let&apos;s talk.</span>
+      {/* ══ 3. RETENTION ADD-ON TABS ═════════════════════════════ */}
+      <section className="section-bright pr-retention-section">
+        <div className="container pr-retention-inner">
+          <div className="pr-retention-left reveal">
+            <p className="eyebrow pr-retention-eyebrow">Retention Add-on</p>
+            <h2 className="pr-retention-h">
+              First visit funds acquisition.{" "}
+              <span className="pr-retention-h-light">
+                Repeat visits fund LTV.
+              </span>
             </h2>
-            <p className="pr-enterprise-desc">
-              Custom QR allocations, dedicated Customer Success Manager, SLA
-              guarantees, SSO + API integration, and volume campaign pricing.
-              Built for franchise operators and multi-location chains.
+            <p className="pr-retention-desc">
+              Push charges a software-margin fee on verified repeat visits — no
+              new creator cost, just LTV amortization for the merchant. Opt-in
+              on Operator, included in Neighborhood engagements. Tier scales
+              with vertical ticket size.
             </p>
-          </div>
-          <div className="pr-enterprise-right">
-            <ul className="pr-enterprise-list">
-              <li>
-                <span className="pr-enterprise-bullet" />
-                Unlimited locations &amp; campaigns
-              </li>
-              <li>
-                <span className="pr-enterprise-bullet" />
-                Dedicated CSM + white-glove onboarding
-              </li>
-              <li>
-                <span className="pr-enterprise-bullet" />
-                Custom attribution &amp; reporting SLA
-              </li>
-              <li>
-                <span className="pr-enterprise-bullet" />
-                SSO, API, and webhook integrations
-              </li>
-              <li>
-                <span className="pr-enterprise-bullet" />
-                Volume creator network access
-              </li>
+            <ul className="pr-retention-bullets">
+              <li>Same 3-layer verification (QR + Vision + Geo)</li>
+              <li>Billed monthly in arrears alongside base</li>
+              <li>ConversionOracle™ re-scores every repeat event</li>
             </ul>
-            <Link href="/merchant/enterprise" className="btn btn-primary">
-              Contact sales
-            </Link>
+          </div>
+          <div className="pr-retention-right reveal">
+            <RetentionTabs />
           </div>
         </div>
       </section>
 
-      {/* ══ 4. COMPARISON TABLE ════════════════════════════════ */}
-      <section id="compare" className="section pr-compare-section">
+      {/* ══ 4. COMPARISON DEEP-DIVE ══════════════════════════════ */}
+      <section id="deep-dive" className="section pr-deep-section">
         <div className="container">
           <div className="pr-section-tag reveal">
             <span className="section-tag-num">02</span>
             <span className="section-tag-line" />
-            <span className="section-tag-label">Feature Comparison</span>
+            <span className="section-tag-label">Plan deep-dive</span>
           </div>
 
-          <h2 className="pr-compare-h reveal">
-            Every plan,{" "}
-            <span className="pr-compare-h-light">side by side.</span>
+          <h2 className="pr-deep-h reveal">
+            Everything that moves{" "}
+            <span className="pr-deep-h-light">when you step up a plan.</span>
           </h2>
 
-          <div className="pr-compare-wrap reveal">
-            <table className="pr-compare-table">
-              <thead>
-                <tr>
-                  <th className="pr-th-feature">Feature</th>
-                  <th className="pr-th-plan">Starter</th>
-                  <th className="pr-th-plan pr-th-featured">Growth</th>
-                  <th className="pr-th-plan">Scale</th>
-                </tr>
-              </thead>
-              <tbody>
-                {COMPARE_ROWS.map((row) => (
-                  <tr key={row.feature} className="pr-tr">
-                    <td className="pr-td-feature">{row.feature}</td>
-                    <td className="pr-td">
-                      {typeof row.starter === "boolean" ? (
-                        <span
-                          className={`pr-td-icon ${row.starter ? "pr-td-icon--yes" : "pr-td-icon--no"}`}
-                        >
-                          {row.starter ? <CheckIcon /> : <XIcon />}
-                        </span>
-                      ) : (
-                        row.starter
-                      )}
-                    </td>
-                    <td className="pr-td pr-td--featured">
-                      {typeof row.growth === "boolean" ? (
-                        <span
-                          className={`pr-td-icon ${row.growth ? "pr-td-icon--yes" : "pr-td-icon--no"}`}
-                        >
-                          {row.growth ? <CheckIcon /> : <XIcon />}
-                        </span>
-                      ) : (
-                        row.growth
-                      )}
-                    </td>
-                    <td className="pr-td">
-                      {typeof row.scale === "boolean" ? (
-                        <span
-                          className={`pr-td-icon ${row.scale ? "pr-td-icon--yes" : "pr-td-icon--no"}`}
-                        >
-                          {row.scale ? <CheckIcon /> : <XIcon />}
-                        </span>
-                      ) : (
-                        row.scale
-                      )}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+          <p className="pr-deep-intro reveal">
+            Expand a plan to see verification layers, creator tier access,
+            Retention Add-on availability, SLA, and dedicated support scope.
+          </p>
+
+          <div className="reveal">
+            <CompareDeepDive />
           </div>
         </div>
       </section>
 
-      {/* ══ 5. FAQ INLINE ═════════════════════════════════════ */}
-      <section className="section-bright pr-faq-section">
+      {/* ══ 5. LTV / CAC BLOCK ═══════════════════════════════════ */}
+      <section className="section-bright pr-ltv-section">
         <div className="container">
           <div className="pr-section-tag reveal">
             <span className="section-tag-num">03</span>
             <span className="section-tag-line" />
-            <span className="section-tag-label">FAQ</span>
+            <span className="section-tag-label">Merchant unit economics</span>
           </div>
 
-          <div className="pr-faq-grid">
-            {FAQS.map((item, i) => (
+          <h2 className="pr-ltv-h reveal">
+            <span className="pr-ltv-h-bold">15.7x LTV / CAC.</span>
+            <span className="pr-ltv-h-light">Verified, not projected.</span>
+          </h2>
+
+          <p className="pr-ltv-intro reveal">
+            Every number below is traced to a walk-in event the
+            ConversionOracle™ verified. Source: Williamsburg Coffee+ pilot
+            cohort, Month 3.
+          </p>
+
+          <div className="pr-ltv-grid reveal">
+            {LTV_STATS.map((stat, i) => (
               <div
-                key={i}
-                className="pr-faq-item reveal"
-                style={{ transitionDelay: `${(i % 2) * 80}ms` }}
+                key={stat.label}
+                className={`pr-ltv-stat${i === 2 ? " pr-ltv-stat--hero" : ""}`}
               >
-                <h3 className="pr-faq-q">{item.q}</h3>
-                <p className="pr-faq-a">{item.a}</p>
+                <span className="pr-ltv-label">{stat.label}</span>
+                <span className="pr-ltv-value">{stat.value}</span>
+                <span className="pr-ltv-note">{stat.note}</span>
               </div>
             ))}
           </div>
-        </div>
-      </section>
 
-      {/* ══ 6. GUARANTEE ══════════════════════════════════════ */}
-      <section className="pr-guarantee-section">
-        <div className="container pr-guarantee-inner">
-          <p className="eyebrow pr-guarantee-eyebrow reveal">Our Promise</p>
-          <h2 className="pr-guarantee-h">
-            <span
-              className="pr-guarantee-h-bold reveal"
-              style={{ transitionDelay: "60ms" }}
-            >
-              Pay only for
-            </span>
-            <span
-              className="pr-guarantee-h-light reveal"
-              style={{ transitionDelay: "140ms" }}
-            >
-              verified visits.
-            </span>
-          </h2>
-          <p
-            className="pr-guarantee-body reveal"
-            style={{ transitionDelay: "200ms" }}
-          >
-            Every creator payout requires a QR-confirmed, fraud-filtered visit.
-            If it doesn&apos;t scan, it doesn&apos;t pay. Your budget only moves
-            when real customers walk through the door.
+          <p className="pr-ltv-footnote reveal">
+            Per-merchant Month-6 revenue $1,051 · gross margin $731 (70%). Unit
+            economics derived from the Neighborhood Playbook — not modelled, not
+            benchmarked.
           </p>
-          <div
-            className="pr-guarantee-stats reveal"
-            style={{ transitionDelay: "260ms" }}
-          >
-            <div className="pr-g-stat">
-              <span className="pr-g-stat-n">100%</span>
-              <span className="pr-g-stat-l">Scan-verified payouts</span>
-            </div>
-            <div className="pr-g-stat-div" aria-hidden="true" />
-            <div className="pr-g-stat">
-              <span className="pr-g-stat-n">&lt;60s</span>
-              <span className="pr-g-stat-l">Fraud filter latency</span>
-            </div>
-            <div className="pr-g-stat-div" aria-hidden="true" />
-            <div className="pr-g-stat">
-              <span className="pr-g-stat-n">$0</span>
-              <span className="pr-g-stat-l">Disputed visits billed</span>
-            </div>
-          </div>
         </div>
-
-        {/* Decorative ghost text */}
-        <span className="pr-guarantee-ghost" aria-hidden="true">
-          Verified
-        </span>
       </section>
 
-      {/* ══ 7. BOTTOM CTA ════════════════════════════════════ */}
+      {/* ══ 6. BOTTOM CTA ═══════════════════════════════════════ */}
       <section className="pr-cta-section">
         <div className="container pr-cta-inner">
           <div className="pr-cta-content reveal">
             <div className="pr-cta-label">
               <span className="rule rule--w" />
-              <span className="eyebrow pr-cta-eyebrow">Get started today</span>
+              <span className="eyebrow pr-cta-eyebrow">
+                Williamsburg Coffee+ beachhead
+              </span>
             </div>
             <h2 className="pr-cta-h">
-              Launch your first
+              Tiered by vertical.
               <br />
-              <em className="pr-cta-h-em">creator campaign</em>
-              <br />
-              in 24 hours.
+              <em className="pr-cta-h-em">Paid by outcome.</em>
             </h2>
             <p className="pr-cta-sub">
-              No agency. No guesswork. Just verified foot traffic.
+              Vertical AI for Local Commerce. Per-customer pricing derived from
+              merchant gross-margin math. Customer Acquisition Engine built for
+              the Coffee+ beachhead.
             </p>
           </div>
           <div
@@ -544,16 +359,17 @@ export default function PricingPage() {
             style={{ transitionDelay: "100ms" }}
           >
             <Link
-              href="/merchant/signup"
+              href="/merchant/pilot/economics"
               className="btn btn-primary pr-cta-btn-primary"
             >
-              Start free — $0 today
+              See pilot economics
             </Link>
-            <Link href="/merchant/enterprise" className="btn pr-cta-btn-ghost">
-              Talk to sales
+            <Link href="/merchant/pilot" className="btn pr-cta-btn-ghost">
+              Apply for $0 Pilot
             </Link>
             <p className="pr-cta-fine">
-              14-day trial · No credit card · Cancel anytime
+              First 10 Coffee+ merchants · Cap $4,200/neighborhood · Cancel
+              anytime
             </p>
           </div>
         </div>

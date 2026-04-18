@@ -1,580 +1,384 @@
-"use client";
-
-import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import "../help.css";
-import {
-  CATEGORIES,
-  getArticleBySlug,
-  getRelatedArticles,
-  type HelpArticle,
-} from "@/lib/help/mock-articles";
+import { HelpArticleClient } from "./client";
 
-/* ────────────────────────────────────────────────────────────
-   Markdown renderer — covers h2/h3/p/ul/ol/code/pre/blockquote/table
-   ──────────────────────────────────────────────────────────── */
-function renderMarkdown(md: string): React.ReactNode[] {
-  const lines = md.split("\n");
-  const nodes: React.ReactNode[] = [];
-  let i = 0;
-  let keyCounter = 0;
-  const key = () => keyCounter++;
+/* ============================================================
+   Push — Help Article Template (v5.1 Vertical AI for Local Commerce)
+   ------------------------------------------------------------
+   Server component that resolves a slug to structured content,
+   then hands the interactive bits (feedback widget, sticky TOC
+   highlighting) to a small client subtree.
+   ============================================================ */
 
-  function inlineText(text: string): React.ReactNode {
-    // Bold, code, links in inline text
-    const parts: React.ReactNode[] = [];
-    const re = /(`[^`]+`|\*\*[^*]+\*\*|\[[^\]]+\]\([^)]+\))/g;
-    let last = 0;
-    let match: RegExpExecArray | null;
-    while ((match = re.exec(text)) !== null) {
-      if (match.index > last) {
-        parts.push(text.slice(last, match.index));
-      }
-      const m = match[0];
-      if (m.startsWith("`")) {
-        parts.push(<code key={key()}>{m.slice(1, -1)}</code>);
-      } else if (m.startsWith("**")) {
-        parts.push(<strong key={key()}>{m.slice(2, -2)}</strong>);
-      } else {
-        // link
-        const label = m.match(/\[([^\]]+)\]/)?.[1] ?? "";
-        const href = m.match(/\(([^)]+)\)/)?.[1] ?? "#";
-        parts.push(
-          <a key={key()} href={href}>
-            {label}
-          </a>,
-        );
-      }
-      last = match.index + m.length;
-    }
-    if (last < text.length) parts.push(text.slice(last));
-    return parts.length === 1 && typeof parts[0] === "string"
-      ? parts[0]
-      : parts;
-  }
-
-  while (i < lines.length) {
-    const line = lines[i];
-
-    // Blank line
-    if (line.trim() === "") {
-      i++;
-      continue;
-    }
-
-    // H2
-    if (line.startsWith("## ")) {
-      const text = line.slice(3);
-      const id = text.toLowerCase().replace(/[^a-z0-9]+/g, "-");
-      nodes.push(
-        <h2 key={key()} id={id}>
-          {text}
-        </h2>,
-      );
-      i++;
-      continue;
-    }
-
-    // H3
-    if (line.startsWith("### ")) {
-      const text = line.slice(4);
-      const id = text.toLowerCase().replace(/[^a-z0-9]+/g, "-");
-      nodes.push(
-        <h3 key={key()} id={id}>
-          {text}
-        </h3>,
-      );
-      i++;
-      continue;
-    }
-
-    // Code block
-    if (line.startsWith("```")) {
-      i++;
-      const codeLines: string[] = [];
-      while (i < lines.length && !lines[i].startsWith("```")) {
-        codeLines.push(lines[i]);
-        i++;
-      }
-      i++; // closing ```
-      nodes.push(
-        <pre key={key()}>
-          <code>{codeLines.join("\n")}</code>
-        </pre>,
-      );
-      continue;
-    }
-
-    // Blockquote
-    if (line.startsWith("> ")) {
-      const bqLines: string[] = [];
-      while (i < lines.length && lines[i].startsWith("> ")) {
-        bqLines.push(lines[i].slice(2));
-        i++;
-      }
-      nodes.push(
-        <blockquote key={key()}>
-          {bqLines.map((l, li) => (
-            <p key={li}>{inlineText(l)}</p>
-          ))}
-        </blockquote>,
-      );
-      continue;
-    }
-
-    // Table
-    if (line.startsWith("|")) {
-      const tableLines: string[] = [];
-      while (i < lines.length && lines[i].startsWith("|")) {
-        tableLines.push(lines[i]);
-        i++;
-      }
-      // First row = header, second = separator, rest = body
-      const parseRow = (row: string) =>
-        row
-          .split("|")
-          .slice(1, -1)
-          .map((c) => c.trim());
-
-      const headers = parseRow(tableLines[0]);
-      const bodyRows = tableLines.slice(2).map(parseRow);
-
-      nodes.push(
-        <table key={key()}>
-          <thead>
-            <tr>
-              {headers.map((h, hi) => (
-                <th key={hi}>{inlineText(h)}</th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {bodyRows.map((row, ri) => (
-              <tr key={ri}>
-                {row.map((cell, ci) => (
-                  <td key={ci}>{inlineText(cell)}</td>
-                ))}
-              </tr>
-            ))}
-          </tbody>
-        </table>,
-      );
-      continue;
-    }
-
-    // Unordered list
-    if (line.match(/^[-*] /)) {
-      const items: React.ReactNode[] = [];
-      while (i < lines.length && lines[i].match(/^[-*] /)) {
-        items.push(<li key={key()}>{inlineText(lines[i].slice(2))}</li>);
-        i++;
-      }
-      nodes.push(<ul key={key()}>{items}</ul>);
-      continue;
-    }
-
-    // Ordered list
-    if (line.match(/^\d+\. /)) {
-      const items: React.ReactNode[] = [];
-      while (i < lines.length && lines[i].match(/^\d+\. /)) {
-        const text = lines[i].replace(/^\d+\. /, "");
-        items.push(<li key={key()}>{inlineText(text)}</li>);
-        i++;
-      }
-      nodes.push(<ol key={key()}>{items}</ol>);
-      continue;
-    }
-
-    // Checklist items
-    if (line.match(/^- \[ \] /)) {
-      const items: React.ReactNode[] = [];
-      while (i < lines.length && lines[i].match(/^- \[[ x]\] /)) {
-        const checked = lines[i].startsWith("- [x]");
-        const text = lines[i].replace(/^- \[[ x]\] /, "");
-        items.push(
-          <li key={key()}>
-            <input
-              type="checkbox"
-              defaultChecked={checked}
-              readOnly
-              style={{ marginRight: 8 }}
-            />
-            {inlineText(text)}
-          </li>,
-        );
-        i++;
-      }
-      nodes.push(<ul key={key()}>{items}</ul>);
-      continue;
-    }
-
-    // Paragraph
-    const paraLines: string[] = [];
-    while (
-      i < lines.length &&
-      lines[i].trim() !== "" &&
-      !lines[i].startsWith("#") &&
-      !lines[i].startsWith("```") &&
-      !lines[i].startsWith(">") &&
-      !lines[i].startsWith("|") &&
-      !lines[i].match(/^[-*] /) &&
-      !lines[i].match(/^\d+\. /)
-    ) {
-      paraLines.push(lines[i]);
-      i++;
-    }
-    if (paraLines.length > 0) {
-      nodes.push(<p key={key()}>{inlineText(paraLines.join(" "))}</p>);
-    }
-  }
-
-  return nodes;
-}
-
-/* ────────────────────────────────────────────────────────────
-   TOC extraction
-   ──────────────────────────────────────────────────────────── */
-interface TocEntry {
-  level: 2 | 3;
-  text: string;
+type Section = {
   id: string;
-}
+  heading: string;
+  level: 2 | 3;
+  body?: string[];
+  bullets?: string[];
+};
 
-function extractToc(body: string): TocEntry[] {
-  const entries: TocEntry[] = [];
-  for (const line of body.split("\n")) {
-    if (line.startsWith("## ")) {
-      const text = line.slice(3);
-      entries.push({
+export type ArticleRecord = {
+  slug: string;
+  topic: string;
+  topicSlug: string;
+  title: string;
+  intro: string;
+  lastUpdated: string; // ISO date
+  readMinutes: number;
+  sections: Section[];
+  related: Array<{
+    slug: string;
+    topic: string;
+    title: string;
+    readMinutes: number;
+  }>;
+};
+
+/* ── Demo articles — spec requires at least 3 slugs ────── */
+const ARTICLES: Record<string, ArticleRecord> = {
+  "first-campaign": {
+    slug: "first-campaign",
+    topic: "Your first campaign",
+    topicSlug: "first-campaign",
+    title: "Launch your first Williamsburg Coffee+ campaign in 48 hours",
+    intro:
+      "A step-by-step walk-through of the Push Customer Acquisition Engine, from acquisition goal to ConversionOracle™ forecast to going live on a Thursday morning.",
+    lastUpdated: "2026-04-16",
+    readMinutes: 6,
+    sections: [
+      {
+        id: "state-your-goal",
+        heading: "State your customer acquisition goal",
         level: 2,
-        text,
-        id: text.toLowerCase().replace(/[^a-z0-9]+/g, "-"),
-      });
-    } else if (line.startsWith("### ")) {
-      const text = line.slice(4);
-      entries.push({
-        level: 3,
-        text,
-        id: text.toLowerCase().replace(/[^a-z0-9]+/g, "-"),
-      });
-    }
-  }
-  return entries;
-}
-
-/* ────────────────────────────────────────────────────────────
-   TOC sidebar — highlights active heading on scroll
-   ──────────────────────────────────────────────────────────── */
-function TableOfContents({ toc }: { toc: TocEntry[] }) {
-  const [activeId, setActiveId] = useState(toc[0]?.id ?? "");
-
-  useEffect(() => {
-    if (toc.length === 0) return;
-    const headings = toc
-      .map((t) => document.getElementById(t.id))
-      .filter(Boolean) as HTMLElement[];
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          if (entry.isIntersecting) {
-            setActiveId(entry.target.id);
-            break;
-          }
-        }
+        body: [
+          "Every Push campaign starts with a single number: how many new customers you need this month. That's the input ConversionOracle™ uses to forecast creators, content, and budget — no marketing brief, no ad copy, no funnel to wire up.",
+          "Good Coffee+ goals sit between 20 and 80 new customers per week. Numbers below 20 tend to be noisy; above 80 we'll recommend a Neighborhood plan because saturation matters more than spend.",
+        ],
       },
-      { rootMargin: "0px 0px -60% 0px", threshold: 0.1 },
-    );
+      {
+        id: "forecast-and-approve",
+        heading: "Review the ConversionOracle™ forecast",
+        level: 2,
+        body: [
+          "Within 60 seconds of entering your goal, you'll see a ±25% confidence band with a suggested creator mix — typically 3–5 Seed and Explorer-tier creators for a new Coffee+ merchant. Each forecast shows the Software Leverage Ratio (SLR) projection for the month.",
+        ],
+      },
+      {
+        id: "print-qr-optional",
+        heading: "Print your QR (optional but recommended)",
+        level: 3,
+        body: [
+          "Push mails a free table-tent with your creator QR overlay. Merchants who add one see about 14% incremental attribution — the offline-to-scan bridge captures customers who saw a creator post earlier in the week.",
+        ],
+      },
+      {
+        id: "launch-thursday",
+        heading: "Campaign goes live Thursday at 10am ET",
+        level: 2,
+        bullets: [
+          "DisclosureBot pre-screens every creator post for FTC 16 CFR Part 255 compliance",
+          "Your first verified walk-in usually lands within 6 hours",
+          "You only pay after ConversionOracle™ labels the scan verified",
+        ],
+      },
+    ],
+    related: [
+      {
+        slug: "print-qr-code",
+        topic: "QR codes",
+        title: "Print and place your in-store QR code",
+        readMinutes: 4,
+      },
+      {
+        slug: "connect-square-pos",
+        topic: "Integrations",
+        title: "Connect Square POS to feed ConversionOracle™",
+        readMinutes: 5,
+      },
+      {
+        slug: "understand-retention-add-on",
+        topic: "Payments",
+        title: "How the Retention Add-on works",
+        readMinutes: 3,
+      },
+    ],
+  },
+  "print-qr-code": {
+    slug: "print-qr-code",
+    topic: "QR codes",
+    topicSlug: "qr-codes",
+    title: "Print and place your in-store QR code",
+    intro:
+      "Your creator QR is the primary attribution point inside the venue — here's how to print it, where to place it, and how to replace it if it gets damaged during the Williamsburg Coffee+ beachhead.",
+    lastUpdated: "2026-04-12",
+    readMinutes: 4,
+    sections: [
+      {
+        id: "order-a-table-tent",
+        heading: "Order a free table-tent",
+        level: 2,
+        body: [
+          "Every Operator-plan merchant gets one free table-tent and window cling per campaign, printed on recyclable 280gsm stock and shipped with a 3-day SLA inside Williamsburg.",
+        ],
+      },
+      {
+        id: "placement-rules",
+        heading: "Placement rules that move the needle",
+        level: 2,
+        bullets: [
+          "Counter, eye-level — not the back wall",
+          "Inside the 2-mile geo-match radius (the whole venue by default)",
+          "Lit well enough for a phone camera to focus in under 1 second",
+        ],
+      },
+      {
+        id: "replacement",
+        heading: "Replacement and reprints",
+        level: 3,
+        body: [
+          "If your tent gets coffee-stained or curls, request a reprint from the Merchant Dashboard. Reprints ship within 72 hours at no cost for the duration of your pilot.",
+        ],
+      },
+    ],
+    related: [
+      {
+        slug: "first-campaign",
+        topic: "Your first campaign",
+        title: "Launch your first Williamsburg Coffee+ campaign in 48 hours",
+        readMinutes: 6,
+      },
+      {
+        slug: "connect-square-pos",
+        topic: "Integrations",
+        title: "Connect Square POS to feed ConversionOracle™",
+        readMinutes: 5,
+      },
+      {
+        slug: "dispute-a-verified-scan",
+        topic: "Disputes",
+        title: "File a dispute when a verified scan looks wrong",
+        readMinutes: 4,
+      },
+    ],
+  },
+  "connect-square-pos": {
+    slug: "connect-square-pos",
+    topic: "Integrations",
+    topicSlug: "integrations",
+    title: "Connect Square POS to feed ConversionOracle™ ground truth",
+    intro:
+      "The POS webhook is what makes ConversionOracle™ different from Meta and Google — you're teaching our walk-in model with your own transaction reality. Setup takes about 7 minutes.",
+    lastUpdated: "2026-04-10",
+    readMinutes: 5,
+    sections: [
+      {
+        id: "why-it-matters",
+        heading: "Why the POS feed matters",
+        level: 2,
+        body: [
+          "Without a POS webhook, ConversionOracle™ can verify scans but not learn your AOV, basket, or return cadence. With the webhook, Push can offer Retention Add-on pricing and tighten the confidence band from ±25% to ±15% over the first 10,000 events.",
+        ],
+      },
+      {
+        id: "install-steps",
+        heading: "Install the Square integration",
+        level: 2,
+        bullets: [
+          "Open Merchant Dashboard → Integrations → Square",
+          "Authorize via Square OAuth (scopes: PAYMENTS_READ, ORDERS_READ)",
+          "Pick the location that matches your venue pin",
+          "Send a $0.01 test transaction to confirm the webhook",
+        ],
+      },
+      {
+        id: "what-we-store",
+        heading: "What Push stores",
+        level: 3,
+        body: [
+          "We store the total, timestamp, item count, and a hashed customer token — never names, phone numbers, or payment card data. You can revoke the webhook at any time from the Integrations panel.",
+        ],
+      },
+    ],
+    related: [
+      {
+        slug: "first-campaign",
+        topic: "Your first campaign",
+        title: "Launch your first Williamsburg Coffee+ campaign in 48 hours",
+        readMinutes: 6,
+      },
+      {
+        slug: "understand-retention-add-on",
+        topic: "Payments",
+        title: "How the Retention Add-on works",
+        readMinutes: 3,
+      },
+      {
+        slug: "print-qr-code",
+        topic: "QR codes",
+        title: "Print and place your in-store QR code",
+        readMinutes: 4,
+      },
+    ],
+  },
+};
 
-    headings.forEach((h) => observer.observe(h));
-    return () => observer.disconnect();
-  }, [toc]);
+/* ── Static params ────────────────────────────────────── */
+export function generateStaticParams() {
+  return Object.keys(ARTICLES).map((slug) => ({ slug }));
+}
 
-  if (toc.length === 0) return null;
-
+/* ── SVG bits (server-safe) ───────────────────────────── */
+function IconCalendar() {
   return (
-    <aside className="help-toc" aria-label="Table of contents">
-      <p className="help-toc__title">On this page</p>
-      <ul className="help-toc__list">
-        {toc.map((entry) => (
-          <li
-            key={entry.id}
-            className={`help-toc__item${entry.level === 3 ? " help-toc__item--h3" : ""}`}
-          >
-            <a
-              href={`#${entry.id}`}
-              className={activeId === entry.id ? "active" : ""}
-              onClick={(e) => {
-                e.preventDefault();
-                document.getElementById(entry.id)?.scrollIntoView({
-                  behavior: "smooth",
-                  block: "start",
-                });
-                setActiveId(entry.id);
-              }}
-            >
-              {entry.text}
-            </a>
-          </li>
-        ))}
-      </ul>
-    </aside>
+    <svg
+      width={14}
+      height={14}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={1.6}
+      aria-hidden="true"
+    >
+      <rect x="3" y="5" width="18" height="16" />
+      <path d="M3 10h18" />
+      <path d="M8 3v4M16 3v4" strokeLinecap="round" />
+    </svg>
   );
 }
 
-/* ────────────────────────────────────────────────────────────
-   Feedback widget
-   ──────────────────────────────────────────────────────────── */
-function FeedbackWidget({ article }: { article: HelpArticle }) {
-  const [vote, setVote] = useState<"yes" | "no" | null>(null);
-  const [feedback, setFeedback] = useState("");
-  const [submitted, setSubmitted] = useState(false);
-
-  const handleVote = (v: "yes" | "no") => {
-    setVote(v);
-    if (v === "yes") {
-      // For "yes", auto-submit after short delay
-      setTimeout(() => setSubmitted(true), 800);
-    }
-  };
-
-  const handleSubmitFeedback = () => {
-    setSubmitted(true);
-  };
-
+function IconClock() {
   return (
-    <div className="help-feedback">
-      <p className="help-feedback__title">Was this article helpful?</p>
-
-      {submitted ? (
-        <p className="help-feedback__thanks">
-          Thanks for your feedback — it helps us improve Push Help Center.
-        </p>
-      ) : (
-        <>
-          <div className="help-feedback__buttons">
-            <button
-              className={`help-feedback__btn help-feedback__btn--yes${vote === "yes" ? " active" : ""}`}
-              onClick={() => handleVote("yes")}
-              aria-pressed={vote === "yes"}
-            >
-              <svg
-                width={16}
-                height={16}
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth={2}
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M6.633 10.5c.806 0 1.533-.446 2.031-1.08a9.041 9.041 0 012.861-2.4c.723-.384 1.35-.956 1.653-1.715a4.498 4.498 0 00.322-1.672V3a.75.75 0 01.75-.75A2.25 2.25 0 0116.5 4.5c0 1.152-.26 2.243-.723 3.218-.266.558.107 1.282.725 1.282h3.126c1.026 0 1.945.694 2.054 1.715.045.422.068.85.068 1.285a11.95 11.95 0 01-2.649 7.521c-.388.482-.987.729-1.605.729H13.48c-.483 0-.964-.078-1.423-.23l-3.114-1.04a4.501 4.501 0 00-1.423-.23H5.25M6.633 10.5H5.25a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25h.463"
-                />
-              </svg>
-              Yes, it helped
-            </button>
-            <button
-              className={`help-feedback__btn help-feedback__btn--no${vote === "no" ? " active" : ""}`}
-              onClick={() => handleVote("no")}
-              aria-pressed={vote === "no"}
-            >
-              <svg
-                width={16}
-                height={16}
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth={2}
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M17.367 13.5c-.806 0-1.533.446-2.031 1.08a9.041 9.041 0 01-2.861 2.4c-.723.384-1.35.956-1.653 1.715a4.498 4.498 0 00-.322 1.672V21a.75.75 0 01-.75.75 2.25 2.25 0 01-2.25-2.25c0-1.152.26-2.243.723-3.218.266-.558-.107-1.282-.725-1.282H4.372c-1.026 0-1.945-.694-2.054-1.715A12.134 12.134 0 012.25 12c0-2.848.992-5.464 2.649-7.521.388-.482.987-.729 1.605-.729h3.586c.483 0 .964.078 1.423.23l3.114 1.04a4.501 4.501 0 001.423.23h1.383M17.367 13.5H18.75a2.25 2.25 0 002.25-2.25V4.5a2.25 2.25 0 00-2.25-2.25h-.463"
-                />
-              </svg>
-              Not really
-            </button>
-          </div>
-
-          {vote === "no" && (
-            <div className="help-feedback__textarea-wrap">
-              <textarea
-                className="help-feedback__textarea"
-                placeholder="Tell us what we can improve..."
-                value={feedback}
-                onChange={(e) => setFeedback(e.target.value)}
-                aria-label="Feedback details"
-              />
-              <button
-                className="help-feedback__submit"
-                onClick={handleSubmitFeedback}
-              >
-                Send feedback
-              </button>
-            </div>
-          )}
-
-          <p
-            style={{
-              fontFamily: "var(--font-body)",
-              fontSize: 12,
-              color: "var(--text-muted)",
-              marginTop: 12,
-            }}
-          >
-            {article.helpful.toLocaleString()} people found this helpful
-          </p>
-        </>
-      )}
-    </div>
+    <svg
+      width={14}
+      height={14}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={1.6}
+      aria-hidden="true"
+    >
+      <circle cx="12" cy="12" r="9" />
+      <path d="M12 7v5l3 2" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
   );
 }
 
-/* ────────────────────────────────────────────────────────────
-   Related articles
-   ──────────────────────────────────────────────────────────── */
-function RelatedArticles({ article }: { article: HelpArticle }) {
-  const related = getRelatedArticles(article, 3);
-  if (related.length === 0) return null;
-
-  return (
-    <div className="help-related">
-      <h2 className="help-related__title">Related articles</h2>
-      <div className="help-related__list">
-        {related.map((a) => (
-          <Link
-            key={a.slug}
-            href={`/help/${a.slug}`}
-            className="help-related__item"
-          >
-            <span className="help-related__item-title">{a.title}</span>
-            <span className="help-related__item-meta">
-              {a.viewCount.toLocaleString()} views
-            </span>
-            <svg
-              className="help-related__arrow"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth={1.5}
-              aria-hidden
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"
-              />
-            </svg>
-          </Link>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-/* ────────────────────────────────────────────────────────────
-   Article page
-   ──────────────────────────────────────────────────────────── */
-export default function ArticlePage({ params }: { params: { slug: string } }) {
-  const article = getArticleBySlug(params.slug);
+/* ── Page ─────────────────────────────────────────────── */
+export default async function HelpArticlePage({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  const { slug } = await params;
+  const article = ARTICLES[slug];
   if (!article) notFound();
-
-  const cat = CATEGORIES[article.category];
-  const toc = extractToc(article.body);
-  const renderedBody = renderMarkdown(article.body);
 
   const formattedDate = new Date(article.lastUpdated).toLocaleDateString(
     "en-US",
     { month: "long", day: "numeric", year: "numeric" },
   );
 
+  const tocEntries = article.sections.map((s) => ({
+    id: s.id,
+    heading: s.heading,
+    level: s.level,
+  }));
+
   return (
     <main className="help-article-page">
-      {/* Breadcrumb */}
-      <nav className="help-breadcrumb" aria-label="Breadcrumb">
-        <Link href="/help">Help Center</Link>
-        <span className="help-breadcrumb__sep" aria-hidden>
-          /
-        </span>
-        <Link href={`/help?category=${article.category}`}>{cat.label}</Link>
-        <span className="help-breadcrumb__sep" aria-hidden>
-          /
-        </span>
-        <span className="help-breadcrumb__current">{article.title}</span>
-      </nav>
-
-      {/* Article header */}
-      <header className="help-article-header">
-        <span className="help-article-cat-badge">{cat.label}</span>
-        <h1 className="help-article-title">{article.title}</h1>
-        <div className="help-article-meta">
-          <span className="help-article-meta__item">
-            <svg
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth={1.5}
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5"
-              />
-            </svg>
-            Updated {formattedDate}
+      <div className="help-article-inner">
+        {/* Breadcrumb */}
+        <nav className="help-breadcrumb" aria-label="Breadcrumb">
+          <Link href="/">Home</Link>
+          <span className="help-breadcrumb-sep" aria-hidden="true">
+            /
           </span>
-          <span className="help-article-meta__item">
-            <svg
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth={1.5}
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"
-              />
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-              />
-            </svg>
-            {article.viewCount.toLocaleString()} views
+          <Link href="/help">Help</Link>
+          <span className="help-breadcrumb-sep" aria-hidden="true">
+            /
           </span>
-          <span className="help-article-meta__item">
-            <svg
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth={1.5}
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M6.633 10.5c.806 0 1.533-.446 2.031-1.08a9.041 9.041 0 012.861-2.4c.723-.384 1.35-.956 1.653-1.715a4.498 4.498 0 00.322-1.672V3a.75.75 0 01.75-.75A2.25 2.25 0 0116.5 4.5c0 1.152-.26 2.243-.723 3.218-.266.558.107 1.282.725 1.282h3.126c1.026 0 1.945.694 2.054 1.715.045.422.068.85.068 1.285a11.95 11.95 0 01-2.649 7.521c-.388.482-.987.729-1.605.729H13.48c-.483 0-.964-.078-1.423-.23l-3.114-1.04a4.501 4.501 0 00-1.423-.23H5.25M6.633 10.5H5.25a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25h.463"
-              />
-            </svg>
-            {article.helpful.toLocaleString()} found helpful
+          <Link href={`/help#${article.topicSlug}`}>{article.topic}</Link>
+          <span className="help-breadcrumb-sep" aria-hidden="true">
+            /
           </span>
-        </div>
-      </header>
+          <span className="help-breadcrumb-current">{article.title}</span>
+        </nav>
 
-      <hr className="help-article-divider" />
+        {/* Header */}
+        <header className="help-article-header">
+          <h1 className="help-article-title">{article.title}</h1>
+          <div className="help-article-meta">
+            <span className="help-article-meta-item">
+              <IconCalendar />
+              Last updated {formattedDate}
+            </span>
+            <span className="help-article-meta-sep" aria-hidden="true">
+              |
+            </span>
+            <span className="help-article-meta-item">
+              <IconClock />
+              {article.readMinutes} min read
+            </span>
+            <span className="help-article-meta-sep" aria-hidden="true">
+              |
+            </span>
+            <span className="help-article-meta-item">{article.topic}</span>
+          </div>
+        </header>
 
-      {/* TOC + body layout */}
-      <div className="help-article-layout">
-        {/* TOC — hidden on mobile via CSS grid collapse */}
-        <TableOfContents toc={toc} />
+        {/* TOC + Body layout */}
+        <div className="help-article-layout">
+          {/* Sticky TOC */}
+          <aside className="help-toc" aria-label="Table of contents">
+            <p className="help-toc-title">On this page</p>
+            <ul className="help-toc-list">
+              {tocEntries.map((entry) => (
+                <li
+                  key={entry.id}
+                  style={{
+                    paddingLeft: entry.level === 3 ? 12 : 0,
+                  }}
+                >
+                  <a href={`#${entry.id}`}>{entry.heading}</a>
+                </li>
+              ))}
+            </ul>
+          </aside>
 
-        {/* Body */}
-        <div>
-          <article className="help-article-body">{renderedBody}</article>
-          <FeedbackWidget article={article} />
-          <RelatedArticles article={article} />
+          {/* Body */}
+          <div>
+            <article className="help-article-body">
+              <p>
+                <strong>{article.intro}</strong>
+              </p>
+              {article.sections.map((section) => {
+                const Heading = section.level === 2 ? "h2" : "h3";
+                return (
+                  <section key={section.id}>
+                    <Heading id={section.id}>{section.heading}</Heading>
+                    {section.body?.map((para, i) => (
+                      <p key={i}>{para}</p>
+                    ))}
+                    {section.bullets && (
+                      <ul>
+                        {section.bullets.map((b, i) => (
+                          <li key={i}>{b}</li>
+                        ))}
+                      </ul>
+                    )}
+                  </section>
+                );
+              })}
+            </article>
+
+            {/* Interactive bits — isolated to a client island */}
+            <HelpArticleClient
+              related={article.related}
+              articleSlug={article.slug}
+            />
+          </div>
         </div>
       </div>
     </main>

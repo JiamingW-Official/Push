@@ -1181,3 +1181,63 @@
     width: 100%;
   }
 }
+
+/* ─────────────────────────────────────────────────────────────
+   MICRO-INTERACTIONS — finance
+   Appended polish pass; existing rules are NOT modified.
+───────────────────────────────────────────────────────────── */
+
+/* Metric card hover lift */
+.finance-metric-card {
+  transition: transform 240ms cubic-bezier(0.22, 1, 0.36, 1),
+              box-shadow 240ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.finance-metric-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+}
+
+/* Amount count-in entrance */
+@keyframes amount-count-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.finance-metric-card {
+  animation: amount-count-in 320ms ease both;
+}
+
+/* Stagger nth-child 1-4 at 80ms delays */
+.finance-metric-card:nth-child(1) { animation-delay: 80ms; }
+.finance-metric-card:nth-child(2) { animation-delay: 160ms; }
+.finance-metric-card:nth-child(3) { animation-delay: 240ms; }
+.finance-metric-card:nth-child(4) { animation-delay: 320ms; }
+
+/* Finance row hover tint */
+.finance-row {
+  transition: background 120ms ease;
+}
+.finance-row:hover {
+  background: rgba(0, 48, 73, 0.02);
+}
+
+/* Respect reduced-motion preference */
+@media (prefers-reduced-motion: reduce) {
+  .finance-metric-card,
+  .finance-row {
+    animation: none;
+    transition: none;
+  }
+  .finance-metric-card:hover {
+    transform: none;
+    box-shadow: none;
+  }
+  .finance-row:hover {
+    background: rgba(0, 48, 73, 0.02);
+  }
+}

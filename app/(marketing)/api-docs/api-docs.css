@@ -203,6 +203,17 @@
   line-height: 1.1;
 }
 
+.api-soon-badge {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--steel-blue, #669bbc);
+  margin-left: var(--space-2);
+  vertical-align: middle;
+}
+
 .api-section-desc {
   font-family: var(--font-body);
   font-size: var(--text-body);

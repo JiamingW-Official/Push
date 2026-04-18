@@ -1,494 +1,509 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
+import type { ReactElement } from "react";
+import { useMemo, useState } from "react";
 import "./help.css";
-import {
-  ARTICLES,
-  CATEGORIES,
-  getPopularArticles,
-  getArticleCountByCategory,
-  searchArticles,
-  type HelpCategory,
-} from "@/lib/help/mock-articles";
 
-/* ── Category icons (outline SVG) ─────────────────────────── */
-function IconRocket() {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={1.5}
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M15.59 14.37a6 6 0 01-5.84 7.38v-4.82m5.84-2.56a14.98 14.98 0 006.16-12.12A14.98 14.98 0 009.631 8.41m5.96 5.96a14.926 14.926 0 01-5.841 2.58m-.119-8.54a6 6 0 00-7.381 5.84h4.82m2.56-5.84a14.927 14.927 0 00-2.58 5.84m2.699 2.7c-.103.021-.207.041-.311.06a15.09 15.09 0 01-2.448-2.448 14.9 14.9 0 01.06-.312m-2.24 2.39a4.493 4.493 0 00-1.757 4.306 4.493 4.493 0 004.306-1.758M16.5 9a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z"
-      />
-    </svg>
-  );
-}
+/* ============================================================
+   Push — Help Center (v5.1 Vertical AI for Local Commerce)
+   ------------------------------------------------------------
+   - Big hero search (client-side, filters article list)
+   - 8 topic cards with inline SVG, title, 1-line desc, count
+   - Popular articles — 5-item list with read-time
+   - Sidebar: "Talk to support" + email + 24h SLA
+   ============================================================ */
 
-function IconQr() {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={1.5}
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M3.75 4.875c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5A1.125 1.125 0 013.75 9.375v-4.5zm0 9.75c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5a1.125 1.125 0 01-1.125-1.125v-4.5zm9.75-9.75c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5A1.125 1.125 0 0113.5 9.375v-4.5z"
-      />
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M6.75 6.75h.75v.75h-.75v-.75zm0 9.75h.75v.75h-.75v-.75zm9.75-9.75h.75v.75h-.75v-.75zm-3.75 9h1.5v1.5H12.75v-1.5zm3 0h.75v.75h-.75v-.75zm0 3h.75v.75h-.75v-.75zm-3 0h.75v.75h-.75v-.75zm-3-3h.75v.75h-.75v-.75zm3-3h.75v.75h-.75v-.75zm3 0h.75v.75h-.75v-.75z"
-      />
-    </svg>
-  );
-}
-
-function IconCreditCard() {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={1.5}
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5z"
-      />
-    </svg>
-  );
-}
-
-function IconStar() {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={1.5}
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z"
-      />
-    </svg>
-  );
-}
-
-function IconStore() {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={1.5}
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M13.5 21v-7.5a.75.75 0 01.75-.75h3a.75.75 0 01.75.75V21m-4.5 0H2.36m11.14 0H18m0 0h3.64m-1.39 0V9.349m-16.5 11.65V9.35m0 0a3.001 3.001 0 003.75-.615A2.993 2.993 0 009.75 9.75c.896 0 1.7-.393 2.25-1.016a2.993 2.993 0 002.25 1.016c.896 0 1.7-.393 2.25-1.016a3.001 3.001 0 003.75.614m-16.5 0a3.004 3.004 0 01-.621-4.72L4.318 3.44A1.5 1.5 0 015.378 3h13.243a1.5 1.5 0 011.06.44l1.19 1.189a3 3 0 01-.621 4.72m-13.5 8.65h3.75a.75.75 0 00.75-.75V13.5a.75.75 0 00-.75-.75H6.75a.75.75 0 00-.75.75v3.75c0 .415.336.75.75.75z"
-      />
-    </svg>
-  );
-}
-
-function IconUser() {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={1.5}
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"
-      />
-    </svg>
-  );
-}
-
-function IconSearch() {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={1.5}
-      width={20}
-      height={20}
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 15.803 7.5 7.5 0 0015.803 15.803z"
-      />
-    </svg>
-  );
-}
-
-function IconArrowRight() {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={1.5}
-      width={16}
-      height={16}
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"
-      />
-    </svg>
-  );
-}
-
-function IconStatus() {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={1.5}
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-      />
-    </svg>
-  );
-}
-
-function IconMail() {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={1.5}
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75"
-      />
-    </svg>
-  );
-}
-
-function IconUsers() {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={1.5}
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 016 18.719m12 0a5.971 5.971 0 00-.941-3.197m0 0A5.995 5.995 0 0012 12.75a5.995 5.995 0 00-5.058 2.772m0 0a3 3 0 00-4.681 2.72 8.986 8.986 0 003.74.477m.94-3.197a5.971 5.971 0 00-.94 3.197M15 6.75a3 3 0 11-6 0 3 3 0 016 0zm6 3a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0zm-13.5 0a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z"
-      />
-    </svg>
-  );
-}
-
-/* ── Category icon map ─────────────────────────────────────── */
-const CATEGORY_ICONS: Record<HelpCategory, React.ReactNode> = {
-  "getting-started": <IconRocket />,
-  "qr-attribution": <IconQr />,
-  payments: <IconCreditCard />,
-  creators: <IconStar />,
-  merchants: <IconStore />,
-  account: <IconUser />,
+/* ── Topic catalog ──────────────────────────────────────── */
+type Topic = {
+  slug: string;
+  title: string;
+  desc: string;
+  articleCount: number;
+  Icon: () => ReactElement;
 };
 
-/* ── Hero with search ──────────────────────────────────────── */
-function HelpHero() {
-  const [query, setQuery] = useState("");
-  const [debouncedQuery, setDebouncedQuery] = useState("");
-  const [focused, setFocused] = useState(false);
-  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+/* Icons — outline, 24x24, inherit stroke color */
+const IconRocket = () => (
+  <svg
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth={1.6}
+    aria-hidden="true"
+  >
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      d="M15.6 14.4a6 6 0 0 1-5.8 7.3v-4.8m5.8-2.5a15 15 0 0 0 6.1-12.1A15 15 0 0 0 9.6 8.4m6 6a15 15 0 0 1-5.8 2.6m-.1-8.5a6 6 0 0 0-7.4 5.8h4.8m2.6-5.8a15 15 0 0 0-2.6 5.8m2.7 2.7a15 15 0 0 1-2.4-2.4m-2.3 2.4a4.5 4.5 0 0 0-1.7 4.3 4.5 4.5 0 0 0 4.3-1.8"
+    />
+  </svg>
+);
+const IconTarget = () => (
+  <svg
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth={1.6}
+    aria-hidden="true"
+  >
+    <circle cx="12" cy="12" r="9" />
+    <circle cx="12" cy="12" r="5" />
+    <circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none" />
+  </svg>
+);
+const IconQr = () => (
+  <svg
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth={1.6}
+    aria-hidden="true"
+  >
+    <rect x="3.5" y="3.5" width="6" height="6" />
+    <rect x="14.5" y="3.5" width="6" height="6" />
+    <rect x="3.5" y="14.5" width="6" height="6" />
+    <path d="M14.5 14.5h3m0 0v3m0-3h3m-3 3v3m3-3h-3" strokeLinecap="round" />
+  </svg>
+);
+const IconCard = () => (
+  <svg
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth={1.6}
+    aria-hidden="true"
+  >
+    <rect x="2.5" y="5.5" width="19" height="13" />
+    <path d="M2.5 9.5h19" />
+    <path d="M6.5 14.5h4" strokeLinecap="round" />
+  </svg>
+);
+const IconShield = () => (
+  <svg
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth={1.6}
+    aria-hidden="true"
+  >
+    <path
+      d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6l8-3z"
+      strokeLinejoin="round"
+    />
+    <path d="M9 12l2 2 4-4" strokeLinecap="round" strokeLinejoin="round" />
+  </svg>
+);
+const IconAlert = () => (
+  <svg
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth={1.6}
+    aria-hidden="true"
+  >
+    <path d="M12 3l10 17H2L12 3z" strokeLinejoin="round" />
+    <path d="M12 10v4" strokeLinecap="round" />
+    <path d="M12 17.5v.5" strokeLinecap="round" />
+  </svg>
+);
+const IconPlug = () => (
+  <svg
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth={1.6}
+    aria-hidden="true"
+  >
+    <path d="M9 3v5M15 3v5" strokeLinecap="round" />
+    <path d="M5 8h14v4a7 7 0 0 1-14 0V8z" />
+    <path d="M12 19v3" strokeLinecap="round" />
+  </svg>
+);
+const IconUser = () => (
+  <svg
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth={1.6}
+    aria-hidden="true"
+  >
+    <circle cx="12" cy="8" r="4" />
+    <path d="M4 21a8 8 0 0 1 16 0" strokeLinecap="round" />
+  </svg>
+);
 
-  // Debounce 200ms
-  useEffect(() => {
-    if (timerRef.current) clearTimeout(timerRef.current);
-    timerRef.current = setTimeout(() => setDebouncedQuery(query), 200);
-    return () => {
-      if (timerRef.current) clearTimeout(timerRef.current);
+const TOPICS: Topic[] = [
+  {
+    slug: "getting-started",
+    title: "Getting started",
+    desc: "Create your merchant account and claim your Williamsburg Coffee+ pilot slot.",
+    articleCount: 6,
+    Icon: IconRocket,
+  },
+  {
+    slug: "first-campaign",
+    title: "Your first campaign",
+    desc: "Set an acquisition goal and let ConversionOracle™ forecast creators, content, and budget.",
+    articleCount: 9,
+    Icon: IconTarget,
+  },
+  {
+    slug: "qr-codes",
+    title: "QR codes",
+    desc: "Place, test, and reprint the creator QR + optional in-store table tent.",
+    articleCount: 5,
+    Icon: IconQr,
+  },
+  {
+    slug: "payments",
+    title: "Payments",
+    desc: "Merchant billing, creator payouts, retention add-on, and invoices.",
+    articleCount: 7,
+    Icon: IconCard,
+  },
+  {
+    slug: "verification",
+    title: "Verification",
+    desc: "3-layer AI verification: QR timestamp, Claude Vision OCR, and 2-mile geo-match.",
+    articleCount: 8,
+    Icon: IconShield,
+  },
+  {
+    slug: "disputes",
+    title: "Disputes",
+    desc: "72-hour dispute window, evidence review, and how ConversionOracle™ learns.",
+    articleCount: 4,
+    Icon: IconAlert,
+  },
+  {
+    slug: "integrations",
+    title: "Integrations",
+    desc: "Square, Toast, and Shopify POS webhooks plus Instagram and TikTok auth.",
+    articleCount: 6,
+    Icon: IconPlug,
+  },
+  {
+    slug: "account",
+    title: "Account",
+    desc: "Roles, permissions, 2FA, and Neighborhood Playbook access controls.",
+    articleCount: 5,
+    Icon: IconUser,
+  },
+];
+
+/* ── Popular articles (with read-time) ──────────────────── */
+type PopularArticle = {
+  slug: string;
+  topic: string;
+  title: string;
+  readMinutes: number;
+};
+
+const POPULAR_ARTICLES: PopularArticle[] = [
+  {
+    slug: "first-campaign",
+    topic: "Your first campaign",
+    title: "Launch your first Williamsburg Coffee+ campaign in 48 hours",
+    readMinutes: 6,
+  },
+  {
+    slug: "print-qr-code",
+    topic: "QR codes",
+    title: "Print and place your in-store QR code (table tent + window cling)",
+    readMinutes: 4,
+  },
+  {
+    slug: "connect-square-pos",
+    topic: "Integrations",
+    title: "Connect Square POS to feed ConversionOracle™ ground truth",
+    readMinutes: 5,
+  },
+  {
+    slug: "understand-retention-add-on",
+    topic: "Payments",
+    title: "How the Retention Add-on works — only pay for returning customers",
+    readMinutes: 3,
+  },
+  {
+    slug: "dispute-a-verified-scan",
+    topic: "Disputes",
+    title: "File a dispute when a verified scan looks wrong",
+    readMinutes: 4,
+  },
+];
+
+/* ── Search icon ────────────────────────────────────────── */
+function SearchGlass() {
+  return (
+    <svg
+      className="help-search-glass"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={1.6}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <circle cx="11" cy="11" r="7" />
+      <path d="m20 20-3.5-3.5" />
+    </svg>
+  );
+}
+
+function ArrowRight() {
+  return (
+    <svg
+      width={16}
+      height={16}
+      viewBox="0 0 16 16"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={1.8}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <path d="M3 8h10" />
+      <path d="M8 3l5 5-5 5" />
+    </svg>
+  );
+}
+
+/* ── Page ───────────────────────────────────────────────── */
+export default function HelpPage() {
+  const [query, setQuery] = useState("");
+
+  // Client-side filter across topics + popular articles
+  const filtered = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    if (!q) return { topics: TOPICS, popular: POPULAR_ARTICLES };
+    return {
+      topics: TOPICS.filter(
+        (t) =>
+          t.title.toLowerCase().includes(q) || t.desc.toLowerCase().includes(q),
+      ),
+      popular: POPULAR_ARTICLES.filter(
+        (a) =>
+          a.title.toLowerCase().includes(q) ||
+          a.topic.toLowerCase().includes(q),
+      ),
     };
   }, [query]);
 
-  const results =
-    debouncedQuery.trim().length > 1 ? searchArticles(debouncedQuery) : [];
-  const showDropdown = focused && debouncedQuery.trim().length > 1;
+  const hasResults = filtered.topics.length > 0 || filtered.popular.length > 0;
 
   return (
-    <section className="help-hero">
-      <p className="help-hero__eyebrow">Help Center</p>
-      <h1 className="help-hero__title">
-        How can we <em>help?</em>
-      </h1>
-      <div className="help-search">
-        <input
-          type="text"
-          className="help-search__input"
-          placeholder="Search articles..."
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          onFocus={() => setFocused(true)}
-          onBlur={() => setTimeout(() => setFocused(false), 150)}
-          aria-label="Search help articles"
-          autoComplete="off"
-        />
-        <span className="help-search__icon" aria-hidden>
-          <IconSearch />
-        </span>
+    <main className="help-page">
+      {/* ── Hero ─────────────────────────────────────────── */}
+      <section className="help-hero">
+        <div className="help-hero-inner">
+          <p className="help-eyebrow">Help Center</p>
+          <h1 className="help-headline">
+            How can we <em>help?</em>
+          </h1>
+          <p className="help-subhead">
+            Answers for the Williamsburg Coffee+ Customer Acquisition Engine —
+            onboarding, ConversionOracle™ verification, payments, and the
+            Two-Segment creator model.
+          </p>
 
-        {showDropdown && (
-          <div className="help-search__results" role="listbox">
-            {results.length === 0 ? (
-              <p className="help-search__no-results">
-                No results for &quot;{query}&quot;
-              </p>
-            ) : (
-              results.slice(0, 8).map((a) => (
-                <Link
-                  key={a.slug}
-                  href={`/help/${a.slug}`}
-                  className="help-search__result-item"
-                  role="option"
-                  aria-selected={false}
+          <div className="help-search">
+            <SearchGlass />
+            <input
+              type="search"
+              className="help-search-input"
+              placeholder="Search help articles..."
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              aria-label="Search help articles"
+              autoComplete="off"
+              spellCheck={false}
+            />
+            {query && (
+              <button
+                type="button"
+                className="help-search-clear"
+                aria-label="Clear search"
+                onClick={() => setQuery("")}
+              >
+                <svg
+                  width={14}
+                  height={14}
+                  viewBox="0 0 14 14"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth={1.8}
+                  strokeLinecap="round"
                 >
-                  <span className="help-search__result-title">{a.title}</span>
-                  <span className="help-search__result-cat">
-                    {CATEGORIES[a.category].label}
-                  </span>
-                </Link>
-              ))
+                  <path d="M1 1l12 12M13 1L1 13" />
+                </svg>
+              </button>
             )}
           </div>
-        )}
+          {query && (
+            <p className="help-search-meta">
+              {filtered.topics.length + filtered.popular.length} result
+              {filtered.topics.length + filtered.popular.length !== 1
+                ? "s"
+                : ""}{" "}
+              for &ldquo;{query}&rdquo;
+            </p>
+          )}
+        </div>
+      </section>
+
+      {/* ── Main body + sidebar layout ───────────────────── */}
+      <div className="help-body">
+        <div className="help-body-inner">
+          {/* Main column */}
+          <div className="help-main">
+            {!hasResults ? (
+              <div className="help-empty">
+                <p className="help-empty-title">No matches for that search.</p>
+                <p className="help-empty-sub">
+                  Try a shorter term, or{" "}
+                  <a href="mailto:support@push.nyc">email support</a>.
+                </p>
+              </div>
+            ) : (
+              <>
+                {/* Topic grid */}
+                {filtered.topics.length > 0 && (
+                  <section className="help-topics-section">
+                    <header className="help-section-head">
+                      <span className="help-section-rule" aria-hidden="true" />
+                      <h2 className="help-section-title">Browse by topic</h2>
+                    </header>
+                    <div className="help-topic-grid">
+                      {filtered.topics.map((topic) => {
+                        const Icon = topic.Icon;
+                        return (
+                          <Link
+                            key={topic.slug}
+                            href={`/help/${topic.slug}`}
+                            className="help-topic-card"
+                          >
+                            <span
+                              className="help-topic-icon"
+                              aria-hidden="true"
+                            >
+                              <Icon />
+                            </span>
+                            <span className="help-topic-body">
+                              <span className="help-topic-title">
+                                {topic.title}
+                              </span>
+                              <span className="help-topic-desc">
+                                {topic.desc}
+                              </span>
+                              <span className="help-topic-count">
+                                {topic.articleCount} article
+                                {topic.articleCount !== 1 ? "s" : ""}
+                              </span>
+                            </span>
+                            <span
+                              className="help-topic-arrow"
+                              aria-hidden="true"
+                            >
+                              <ArrowRight />
+                            </span>
+                          </Link>
+                        );
+                      })}
+                    </div>
+                  </section>
+                )}
+
+                {/* Popular articles */}
+                {filtered.popular.length > 0 && (
+                  <section className="help-popular-section">
+                    <header className="help-section-head">
+                      <span className="help-section-rule" aria-hidden="true" />
+                      <h2 className="help-section-title">Popular articles</h2>
+                    </header>
+                    <ol className="help-popular-list">
+                      {filtered.popular.map((article, idx) => (
+                        <li key={article.slug} className="help-popular-item">
+                          <Link
+                            href={`/help/${article.slug}`}
+                            className="help-popular-link"
+                          >
+                            <span
+                              className="help-popular-rank"
+                              aria-hidden="true"
+                            >
+                              {String(idx + 1).padStart(2, "0")}
+                            </span>
+                            <span className="help-popular-body">
+                              <span className="help-popular-title">
+                                {article.title}
+                              </span>
+                              <span className="help-popular-meta">
+                                {article.topic} &middot; {article.readMinutes}{" "}
+                                min read
+                              </span>
+                            </span>
+                            <span
+                              className="help-popular-arrow"
+                              aria-hidden="true"
+                            >
+                              <ArrowRight />
+                            </span>
+                          </Link>
+                        </li>
+                      ))}
+                    </ol>
+                  </section>
+                )}
+              </>
+            )}
+          </div>
+
+          {/* Sidebar (desktop) */}
+          <aside className="help-sidebar" aria-label="Support">
+            <div className="help-support-card">
+              <p className="help-support-eyebrow">Talk to support</p>
+              <h3 className="help-support-title">
+                Our team answers in <span>24h.</span>
+              </h3>
+              <p className="help-support-sub">
+                Williamsburg Coffee+ onboarding questions, ConversionOracle™
+                label disputes, and integration help.
+              </p>
+              <a
+                href="mailto:support@push.nyc"
+                className="help-support-primary"
+              >
+                support@push.nyc
+                <ArrowRight />
+              </a>
+              <dl className="help-support-meta">
+                <div>
+                  <dt>Response SLA</dt>
+                  <dd>24 business hours</dd>
+                </div>
+                <div>
+                  <dt>Trust escalations</dt>
+                  <dd>4 hours</dd>
+                </div>
+                <div>
+                  <dt>Hours</dt>
+                  <dd>Mon–Fri, 9a–7p ET</dd>
+                </div>
+              </dl>
+              <div className="help-support-divider" />
+              <Link href="/faq" className="help-support-secondary">
+                Read the FAQ
+              </Link>
+              <Link href="/status" className="help-support-secondary">
+                System status
+              </Link>
+            </div>
+          </aside>
+        </div>
       </div>
-    </section>
-  );
-}
-
-/* ── Category grid ─────────────────────────────────────────── */
-function CategoryGrid() {
-  const counts = getArticleCountByCategory();
-  const cats = Object.entries(CATEGORIES) as [
-    HelpCategory,
-    { label: string; description: string },
-  ][];
-
-  return (
-    <section className="help-categories">
-      <h2 className="help-section-title">Browse by topic</h2>
-      <div className="help-category-grid">
-        {cats.map(([key, cat], i) => (
-          <Link
-            key={key}
-            href={`/help?category=${key}`}
-            className={`help-category-card help-animate help-animate--delay-${Math.min(i + 1, 6)}`}
-          >
-            <span className="help-category-icon" aria-hidden>
-              {CATEGORY_ICONS[key]}
-            </span>
-            <span className="help-category-body">
-              <span className="help-category-name">{cat.label}</span>
-              <span className="help-category-desc">{cat.description}</span>
-              <span className="help-category-count">
-                {counts[key]} article{counts[key] !== 1 ? "s" : ""}
-              </span>
-            </span>
-          </Link>
-        ))}
-      </div>
-    </section>
-  );
-}
-
-/* ── Popular articles ──────────────────────────────────────── */
-function PopularArticles() {
-  const popular = getPopularArticles(8);
-
-  return (
-    <section className="help-popular">
-      <h2 className="help-section-title">Popular articles</h2>
-      <div className="help-popular-grid">
-        {popular.map((article, i) => (
-          <Link
-            key={article.slug}
-            href={`/help/${article.slug}`}
-            className="help-article-row"
-          >
-            <span className="help-article-row__rank">
-              {String(i + 1).padStart(2, "0")}
-            </span>
-            <span className="help-article-row__body">
-              <span className="help-article-row__title">{article.title}</span>
-              <span className="help-article-row__meta">
-                {CATEGORIES[article.category].label} &middot;{" "}
-                {article.viewCount.toLocaleString()} views
-              </span>
-            </span>
-            <span className="help-article-row__arrow" aria-hidden>
-              <IconArrowRight />
-            </span>
-          </Link>
-        ))}
-      </div>
-    </section>
-  );
-}
-
-/* ── Quick links ───────────────────────────────────────────── */
-function QuickLinks() {
-  return (
-    <section className="help-quicklinks">
-      <h2 className="help-section-title">Quick links</h2>
-      <div className="help-quicklinks-row">
-        <a
-          href="https://status.push.nyc"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="help-quicklink"
-        >
-          <IconStatus />
-          Status page
-        </a>
-        <a href="mailto:support@push.nyc" className="help-quicklink">
-          <IconMail />
-          Contact support
-        </a>
-        <a
-          href="https://community.push.nyc"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="help-quicklink"
-        >
-          <IconUsers />
-          Community forum
-        </a>
-      </div>
-    </section>
-  );
-}
-
-/* ── Category filter view ──────────────────────────────────── */
-function CategoryArticles({ category }: { category: HelpCategory }) {
-  const cat = CATEGORIES[category];
-  const articles = ARTICLES.filter((a) => a.category === category).sort(
-    (a, b) => b.viewCount - a.viewCount,
-  );
-
-  return (
-    <div style={{ paddingTop: 48 }}>
-      <div style={{ marginBottom: 40 }}>
-        <Link
-          href="/help"
-          style={{
-            fontFamily: "var(--font-body)",
-            fontSize: 13,
-            color: "var(--tertiary)",
-            textDecoration: "none",
-          }}
-        >
-          &larr; All topics
-        </Link>
-        <h1
-          style={{
-            fontFamily: "var(--font-display)",
-            fontSize: "clamp(32px, 5vw, 56px)",
-            fontWeight: 900,
-            letterSpacing: "-0.04em",
-            color: "var(--dark)",
-            marginTop: 16,
-            marginBottom: 8,
-          }}
-        >
-          {cat.label}
-        </h1>
-        <p
-          style={{
-            fontFamily: "var(--font-body)",
-            fontSize: 15,
-            color: "var(--graphite)",
-          }}
-        >
-          {cat.description}
-        </p>
-      </div>
-
-      <div className="help-popular-grid" style={{ gridTemplateColumns: "1fr" }}>
-        {articles.map((article) => (
-          <Link
-            key={article.slug}
-            href={`/help/${article.slug}`}
-            className="help-article-row"
-          >
-            <span className="help-article-row__body">
-              <span className="help-article-row__title">{article.title}</span>
-              <span className="help-article-row__meta">
-                {article.viewCount.toLocaleString()} views &middot; Updated{" "}
-                {new Date(article.lastUpdated).toLocaleDateString("en-US", {
-                  month: "short",
-                  day: "numeric",
-                  year: "numeric",
-                })}
-              </span>
-            </span>
-            <span className="help-article-row__arrow" aria-hidden>
-              <IconArrowRight />
-            </span>
-          </Link>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-/* ── Page ──────────────────────────────────────────────────── */
-export default async function HelpPage({
-  searchParams,
-}: {
-  searchParams?: Promise<{ category?: string }>;
-}) {
-  const params = await searchParams;
-  const categoryParam = params?.category as HelpCategory | undefined;
-  const isValidCategory = categoryParam && categoryParam in CATEGORIES;
-
-  return (
-    <>
-      <HelpHero />
-      <main className="help-main">
-        {isValidCategory ? (
-          <CategoryArticles category={categoryParam as HelpCategory} />
-        ) : (
-          <>
-            <CategoryGrid />
-            <PopularArticles />
-            <QuickLinks />
-          </>
-        )}
-      </main>
-    </>
+    </main>
   );
 }

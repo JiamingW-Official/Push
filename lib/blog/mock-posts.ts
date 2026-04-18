@@ -63,6 +63,76 @@ const IMAGES = {
 
 export const MOCK_POSTS: BlogPost[] = [
   {
+    slug: "push-v5-1-vertical-ai-hardening",
+    category: "Product",
+    title: "Push v5.1 — Why we stopped saying the A-word",
+    excerpt:
+      "A YC partner mock review killed the word in 30 seconds. It was the right call. Here is what we replaced it with, and what changed underneath.",
+    heroImage: IMAGES.coffee,
+    author: {
+      name: "Jiaming Wang",
+      role: "Founder, Push",
+      avatar: "JW",
+    },
+    publishedAt: "2026-04-19",
+    readMins: 6,
+    tags: [
+      "v5.1",
+      "Vertical AI",
+      "ConversionOracle",
+      "Coffee+",
+      "SLR",
+      "Williamsburg",
+    ],
+    body: `## The word mattered
+
+v5.0 positioned Push as something the category calls an outcome-based services business. A YC partner killed it in 30 seconds.
+
+"That word is a VC warning label. It means human-leverage. It means 'will never scale past 50 FTEs.' I read your pitch, I close the laptop, I don't take the meeting."
+
+He wasn't wrong. Pitch deck version control: the banned word appeared 23 times in v5.0. Meanwhile our Software Leverage Ratio target — the number that actually separates us from a services business — appeared zero times.
+
+## What v5.1 changes
+
+Three things, together:
+
+1. Positioning: **Vertical AI for Local Commerce**. Not services. Not platform-generic. Vertical AI means the model is small, the vertical is coffee, and the truth is a receipt.
+
+2. Pricing: **tiered per-customer by vertical**. Pure coffee AOV $6 can't support the same rate as a $80 beauty service. Each vertical's price is derived from merchant per-customer gross margin × 2, not chosen arbitrarily. Coffee+ $25. Beauty $85. Fitness $60. Every rate math'd.
+
+3. Moat: **ConversionOracle™**, not "AI verification." AI verification is a feature (three engineers, one weekend). ConversionOracle is the proprietary model trained on the ground-truth labels that only Push generates. Meta and Google cannot see who walked through the door.
+
+## The north-star we should have had
+
+Push's north-star metric is now Software Leverage Ratio (SLR) = active campaigns ÷ ops FTE.
+
+Traditional influencer shops run SLR 3–5. Our Month-12 target is ≥25. Month-24 is ≥50.
+
+That number — not GMV, not MRR — is what tells you whether Push is software or services.
+
+## Coffee+ (AOV $8-20) is Template 0, not TAM
+
+Pure coffee AOV is too low. But Williamsburg specialty coffee with bakery and brunch items (Coffee+) runs AOV $14 average. That is the vertical where the per-customer unit economics work. Williamsburg is Template 0; Neighborhood Playbook is the unit we replicate.
+
+## Two-Segment Creator Economics
+
+v5.0's uniform 6-tier commission structure would have dissolved at T5+. 100K-follower creators don't accept $20 per customer when their brand-deal rate is $500-2,000 per post.
+
+v5.1 splits creators into Two Segments. T1-T3 (5K-50K followers, side-income creators) stay on per-verified-customer pricing. T4-T6 (30K+) get retainer + performance bonus + referral revenue-share + equity pool. Different economics, same unified platform.
+
+## DisclosureBot — FTC compliance in architecture
+
+Fashion Nova paid $4.2M to the FTC in 2022 because individual creator disclosures were inconsistent.
+
+In v5.1, every creator post on Push is AI pre-screened for FTC 16 CFR Part 255 compliance before it publishes. Non-compliant posts are blocked, not flagged. This turns compliance into a differentiator at enterprise procurement because legal procurement buys on risk reduction.
+
+## What this means for the pilot
+
+Williamsburg Coffee+ Pilot still at /merchant/pilot — now gated to AOV $8-20 merchants, \$1 Pre-Pilot LOI, \$4,200/neighborhood cap, auto-flip to Operator tier after verified customer 10.
+
+We will see you at the counter.`,
+  },
+  {
     slug: "qr-attribution-death-of-vanity-metrics",
     category: "Insights",
     title: "QR Attribution and the Death of Vanity Metrics in Local Marketing",
@@ -279,7 +349,7 @@ If you're considering joining Push, the message is direct: **your follower count
 
 A creator with 600 followers who drove 30 verified visits last month earns more than a creator with 60,000 followers who drove two.
 
-This is the performance-based future of the creator economy. Push is where it starts.`,
+This is the verified-visit future of local creator economics. ConversionOracle™ is the moat. Push is where it starts.`,
   },
 
   {

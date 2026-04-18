@@ -12,7 +12,7 @@ import "./careers.css";
 export const metadata: Metadata = {
   title: "Careers — Push",
   description:
-    "Join Push and rewrite local marketing. 8 open roles across Engineering, Design, Product, Growth, and Ops.",
+    "Join Push and build Vertical AI for Local Commerce. Open roles across Engineering, Design, Product, Growth, and Ops — starting from the Williamsburg Coffee+ beachhead.",
 };
 
 const VALUES = [
@@ -43,6 +43,11 @@ const BENEFITS = [
     icon: "⬛",
     name: "Real Equity",
     desc: "Meaningful options with a clean cap table. You'll understand what you own.",
+  },
+  {
+    icon: "◐",
+    name: "Shared Upside",
+    desc: "A Two-Segment creator equity pool means we share ownership with the creators who build our supply side. Aligned incentives, end to end.",
   },
   {
     icon: "4×",
@@ -137,11 +142,17 @@ export default function CareersPage() {
               </h2>
               <div className="careers-philosophy-body reveal">
                 <p>
-                  Push is building something that hasn&apos;t existed before — a
-                  verified, attribution-backed creator network for local
-                  businesses. That means every person we hire is shaping the
-                  product, the culture, and the market simultaneously. We
-                  can&apos;t afford to get it wrong.
+                  Our mission is to{" "}
+                  <strong>build Vertical AI for Local Commerce</strong> —
+                  software that promises a merchant a specific number of walk-in
+                  customers and then proves each one with ConversionOracle. The
+                  north-star we run against is a{" "}
+                  <strong>Software Leverage Ratio of 25 by Month 12</strong>:
+                  twenty-five dollars of verified customer value for every
+                  dollar of human touch. Right now that means the{" "}
+                  <strong>Williamsburg Coffee+ beachhead</strong>, 60 days to
+                  prove the model, then expansion one Neighborhood Playbook unit
+                  at a time.
                 </p>
                 <p>
                   <strong>

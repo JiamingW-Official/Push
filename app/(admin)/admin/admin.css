@@ -733,6 +733,96 @@
 }
 
 /* ------------------------------------------------------------
+   Admin Home quick-access cards (.ah-*)
+   v5.1 console — routes to DisclosureBot, ConversionOracle AI
+   verification, YC Application hub, plus core admin surfaces.
+   ------------------------------------------------------------ */
+.ah-grid {
+  display: grid;
+  gap: var(--space-2);
+  margin-bottom: var(--space-4);
+}
+
+.ah-grid--v51 {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.ah-grid--core {
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.ah-card {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: var(--space-3);
+  background: var(--surface-elevated);
+  border: 1px solid var(--line);
+  text-decoration: none;
+  color: inherit;
+  transition: border-color 120ms ease, transform 120ms ease;
+  min-height: 140px;
+}
+
+.ah-card:hover {
+  border-color: var(--dark);
+  transform: translateY(-1px);
+}
+
+.ah-grid--v51 .ah-card {
+  border-left: 3px solid var(--primary);
+}
+
+.ah-card__stat {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.ah-card__stat-val {
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  color: var(--dark);
+  line-height: 1;
+}
+
+.ah-card__stat-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.ah-card__title {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--dark);
+  line-height: 1.2;
+}
+
+.ah-card__desc {
+  font-size: 12px;
+  color: var(--text-muted);
+  line-height: 1.45;
+  flex: 1;
+}
+
+.ah-card__cta {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--primary);
+  margin-top: auto;
+}
+
+/* ------------------------------------------------------------
    Responsive
    ------------------------------------------------------------ */
 @media (max-width: 1100px) {
@@ -741,6 +831,12 @@
   }
   .adm-grid {
     grid-template-columns: 1fr;
+  }
+  .ah-grid--v51 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .ah-grid--core {
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 
@@ -754,6 +850,10 @@
   .adm-kpi-grid {
     grid-template-columns: 1fr 1fr;
   }
+  .ah-grid--v51,
+  .ah-grid--core {
+    grid-template-columns: 1fr;
+  }
   .adm-feed__table-head,
   .adm-feed__row {
     grid-template-columns: 80px 70px 1fr;
@@ -761,5 +861,78 @@
   .adm-feed__table-head span:nth-child(n+4),
   .adm-feed__row > *:nth-child(n+4) {
     display: none;
+  }
+}
+
+/* ============================================================
+   Micro-interaction polish — admin.css
+   Append-only block; do NOT modify rules above.
+   ============================================================ */
+
+/* Nav item hover: left border accent + color shift */
+.adm-nav-item {
+  transition: color 180ms ease, background 180ms ease, border-left-color 180ms ease;
+}
+
+.adm-nav-item:hover:not(.active) {
+  border-left: 2px solid var(--primary);
+  color: var(--surface);
+  padding-left: 22px; /* compensate 2px border so text doesn't jump */
+}
+
+/* Stat/KPI card hover lift */
+.adm-kpi-card {
+  transition: transform 220ms cubic-bezier(0.22, 1, 0.36, 1),
+              box-shadow 220ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.adm-kpi-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(0, 48, 73, 0.10);
+}
+
+/* Sidebar collapse transition */
+.adm-sidebar {
+  transition: width 280ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Quick-access card hover lift */
+.ah-card {
+  transition: border-color 120ms ease, transform 220ms cubic-bezier(0.22, 1, 0.36, 1),
+              box-shadow 220ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.ah-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 48, 73, 0.10);
+}
+
+/* Table row stagger entrance */
+@keyframes admin-row-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.adm-feed__row:nth-child(1) { animation: admin-row-in 200ms ease both; animation-delay: 0ms; }
+.adm-feed__row:nth-child(2) { animation: admin-row-in 200ms ease both; animation-delay: 30ms; }
+.adm-feed__row:nth-child(3) { animation: admin-row-in 200ms ease both; animation-delay: 60ms; }
+.adm-feed__row:nth-child(4) { animation: admin-row-in 200ms ease both; animation-delay: 90ms; }
+.adm-feed__row:nth-child(5) { animation: admin-row-in 200ms ease both; animation-delay: 120ms; }
+.adm-feed__row:nth-child(6) { animation: admin-row-in 200ms ease both; animation-delay: 150ms; }
+.adm-feed__row:nth-child(7) { animation: admin-row-in 200ms ease both; animation-delay: 180ms; }
+.adm-feed__row:nth-child(8) { animation: admin-row-in 200ms ease both; animation-delay: 210ms; }
+
+/* Reduced-motion guard */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 }

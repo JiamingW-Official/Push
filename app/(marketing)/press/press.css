@@ -1089,4 +1089,74 @@
   .brand-asset-name {
     font-size: var(--text-caption);
   }
+
+  .press-quick-fact-row {
+    grid-template-columns: 1fr;
+    gap: var(--space-1);
+    padding: var(--space-3) var(--space-1);
+  }
+
+  .press-quick-fact-label {
+    font-size: 10px;
+  }
+
+  .press-quick-fact-value {
+    font-size: var(--text-body);
+  }
+}
+
+/* ------------------------------------------------------------
+   Company Overview (v5.1)
+   ------------------------------------------------------------ */
+.press-overview-body {
+  max-width: 780px;
+  margin-top: var(--space-4);
+}
+
+.press-overview-body p {
+  font-family: var(--font-body);
+  font-size: var(--text-body);
+  line-height: 1.7;
+  color: var(--text-primary);
+  margin-bottom: var(--space-4);
+}
+
+.press-overview-body p:last-child {
+  margin-bottom: 0;
+}
+
+/* ------------------------------------------------------------
+   Quick Facts Table (v5.1)
+   ------------------------------------------------------------ */
+.press-quick-facts {
+  border-top: 1px solid var(--line);
+  margin: 0;
+  padding: 0;
+}
+
+.press-quick-fact-row {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: var(--space-4);
+  padding: var(--space-4) var(--space-2);
+  border-bottom: 1px solid var(--line);
+  align-items: baseline;
+}
+
+.press-quick-fact-label {
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--primary);
+  margin: 0;
+}
+
+.press-quick-fact-value {
+  font-family: var(--font-body);
+  font-size: var(--text-body);
+  color: var(--dark);
+  line-height: 1.55;
+  margin: 0;
 }

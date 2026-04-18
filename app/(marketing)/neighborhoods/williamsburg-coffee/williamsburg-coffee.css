@@ -1,0 +1,872 @@
+/* ============================================================
+   /neighborhoods/williamsburg-coffee — v5.0 beachhead landing
+   Uses landing.css tokens, direct right angles, Pearl Stone bg
+   ============================================================ */
+
+/* ─── HERO ──────────────────────────────────────────────── */
+.wbc-hero {
+  min-height: 82svh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: var(--space-8) 0 var(--space-7);
+  background:
+    radial-gradient(
+      ellipse 55% 40% at 18% 28%,
+      rgba(193, 18, 31, 0.07) 0%,
+      transparent 68%
+    ),
+    radial-gradient(
+      ellipse 45% 40% at 82% 78%,
+      rgba(102, 155, 188, 0.1) 0%,
+      transparent 62%
+    ),
+    var(--dark);
+  color: #fff;
+  position: relative;
+  overflow: hidden;
+}
+
+.wbc-hero-inner {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.wbc-hero-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.wbc-hero-eyebrow {
+  color: rgba(245, 242, 236, 0.5);
+}
+
+.wbc-hero-h {
+  font-family: var(--font-display);
+  line-height: 0.92;
+  letter-spacing: -0.05em;
+  margin: 0;
+}
+
+.wbc-hero-l1,
+.wbc-hero-l2 {
+  display: block;
+  font-size: clamp(44px, 7vw, 108px);
+}
+
+.wbc-hero-conn {
+  font-weight: 300;
+  color: rgba(255, 255, 255, 0.38);
+}
+
+.wbc-hero-key {
+  font-weight: 900;
+  color: #fff;
+}
+
+.wbc-hero-accent {
+  font-weight: 900;
+  font-style: italic;
+  color: var(--primary);
+}
+
+.wbc-hero-sub {
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: rgba(245, 242, 236, 0.6);
+  line-height: 1.7;
+  max-width: 620px;
+  letter-spacing: 0.01em;
+  margin: 0;
+}
+
+.wbc-hero-ctas {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+/* ─── STATS BAND ────────────────────────────────────────── */
+.wbc-stats {
+  background: var(--surface-bright, #fafaf8);
+  border-bottom: 1px solid var(--line);
+  padding: var(--space-5) 0;
+}
+
+.wbc-stats-inner {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+}
+
+.wbc-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 0 var(--space-4);
+  border-right: 1px solid var(--line);
+}
+
+.wbc-stat:first-child {
+  padding-left: 0;
+}
+
+.wbc-stat:last-child {
+  border-right: none;
+}
+
+.wbc-stat-n {
+  font-family: var(--font-display);
+  font-size: clamp(36px, 5vw, 64px);
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  color: var(--dark);
+  line-height: 1;
+}
+
+.wbc-stat-l {
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--graphite, #4a5568);
+}
+
+/* ─── SECTION PRIMITIVES ────────────────────────────────── */
+.wbc-section {
+  padding: var(--space-8) 0;
+  background: var(--surface);
+}
+
+.wbc-section--bright {
+  background: var(--surface-bright, #fafaf8);
+}
+
+.wbc-section--dark {
+  background: var(--dark);
+  color: #fff;
+}
+
+.wbc-section-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: var(--space-3);
+  font-family: var(--font-body);
+}
+
+.wbc-section-tag--w .section-tag-num,
+.wbc-section-tag--w .section-tag-label {
+  color: rgba(245, 242, 236, 0.55);
+}
+
+.wbc-section-tag--w .section-tag-line {
+  background: rgba(245, 242, 236, 0.2);
+}
+
+.wbc-section-h {
+  font-family: var(--font-display);
+  font-size: clamp(32px, 4.5vw, 60px);
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  line-height: 1;
+  color: var(--dark);
+  margin: 0 0 var(--space-3);
+}
+
+.wbc-section-h--w {
+  color: #fff;
+}
+
+.wbc-section-h-light {
+  font-weight: 200;
+  color: rgba(0, 48, 73, 0.38);
+}
+
+.wbc-section-h-light--w {
+  color: rgba(255, 255, 255, 0.42);
+}
+
+.wbc-section-sub {
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: var(--graphite, #4a5568);
+  line-height: 1.65;
+  max-width: 620px;
+  margin: 0 0 var(--space-5);
+}
+
+.wbc-section-sub--w {
+  color: rgba(245, 242, 236, 0.55);
+}
+
+/* ─── COHORT GRID ───────────────────────────────────────── */
+.wbc-cohort-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-3);
+}
+
+.wbc-cohort-card {
+  padding: var(--space-4);
+  background: var(--surface-elevated, #fff);
+  border: 1px solid var(--line);
+  border-top: 3px solid var(--primary);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.wbc-cohort-card--open {
+  border-top-color: var(--champagne);
+  background: rgba(201, 169, 110, 0.06);
+}
+
+.wbc-cohort-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.wbc-cohort-name {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  color: var(--dark);
+  margin: 0;
+}
+
+.wbc-cohort-card--open .wbc-cohort-name {
+  color: var(--champagne);
+}
+
+.wbc-cohort-zip {
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--graphite, #4a5568);
+}
+
+.wbc-cohort-card--open .wbc-cohort-zip {
+  color: var(--champagne);
+}
+
+.wbc-cohort-block {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--dark);
+  margin: 0;
+  text-transform: uppercase;
+}
+
+.wbc-cohort-note {
+  font-family: var(--font-body);
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--graphite, #4a5568);
+  margin: 0;
+}
+
+.wbc-cohort-apply {
+  margin-top: auto;
+  padding-top: var(--space-2);
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--primary);
+  text-decoration: none;
+  transition: letter-spacing 200ms ease;
+}
+
+.wbc-cohort-apply:hover {
+  letter-spacing: 0.12em;
+}
+
+.wbc-cohort-status {
+  margin-top: auto;
+  padding-top: var(--space-2);
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--champagne);
+}
+
+/* ─── NEIGHBORHOOD PLAYBOOK CALLOUT ─────────────────────── */
+.wbc-playbook {
+  margin-top: var(--space-5);
+  padding: var(--space-4);
+  background: var(--surface-elevated, #fff);
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--champagne);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.wbc-playbook-tag {
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--champagne);
+}
+
+.wbc-playbook-body {
+  font-family: var(--font-body);
+  font-size: 13px;
+  line-height: 1.65;
+  color: var(--graphite, #4a5568);
+  margin: 0;
+  max-width: 720px;
+}
+
+.wbc-playbook-body strong {
+  color: var(--dark);
+  font-weight: 700;
+}
+
+/* ─── OPERATORS GRID ────────────────────────────────────── */
+.wbc-operators {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-3);
+}
+
+.wbc-operator-card {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.wbc-operator-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.wbc-operator-dot {
+  width: 10px;
+  height: 10px;
+  flex-shrink: 0;
+}
+
+.wbc-operator-handle {
+  flex: 1;
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: 0.01em;
+}
+
+.wbc-operator-tier {
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 4px 10px;
+}
+
+.wbc-operator-body {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.wbc-operator-score-row {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.wbc-operator-score {
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: var(--champagne);
+  line-height: 1;
+}
+
+.wbc-operator-score-l {
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(245, 242, 236, 0.45);
+}
+
+.wbc-operator-focus {
+  font-family: var(--font-body);
+  font-size: 13px;
+  line-height: 1.55;
+  color: rgba(245, 242, 236, 0.72);
+  margin: 0;
+}
+
+.wbc-operator-conv {
+  font-family: var(--font-body);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  color: rgba(245, 242, 236, 0.45);
+  margin: 0;
+}
+
+/* ─── CASE STUDIES ──────────────────────────────────────── */
+.wbc-cases {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-3);
+}
+
+.wbc-case {
+  background: var(--surface-elevated, #fff);
+  border: 1px solid var(--line);
+  padding: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.wbc-case-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+
+.wbc-case-shop {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  color: var(--dark);
+  margin: 0;
+}
+
+.wbc-case-window {
+  font-family: var(--font-body);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  color: var(--graphite, #4a5568);
+}
+
+.wbc-case-campaign {
+  font-family: var(--font-body);
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--graphite, #4a5568);
+  margin: 0;
+}
+
+.wbc-case-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  border-top: 1px solid var(--line);
+  padding-top: 12px;
+  margin: 0;
+}
+
+.wbc-case-grid > div {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.wbc-case-grid dt {
+  font-family: var(--font-body);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(0, 48, 73, 0.5);
+}
+
+.wbc-case-grid dd {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--dark);
+  line-height: 1;
+  margin: 0;
+}
+
+/* ─── CTA ───────────────────────────────────────────────── */
+.wbc-cta {
+  background: var(--dark);
+  color: #fff;
+  padding: var(--space-8) 0;
+  text-align: center;
+}
+
+.wbc-cta-inner {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  align-items: center;
+}
+
+.wbc-cta-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  justify-content: center;
+}
+
+.wbc-cta-label .eyebrow {
+  color: rgba(245, 242, 236, 0.5);
+}
+
+.wbc-cta-h {
+  font-family: var(--font-display);
+  font-size: clamp(36px, 5vw, 72px);
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  line-height: 1;
+  color: #fff;
+  margin: 0;
+  max-width: 880px;
+}
+
+.wbc-cta-h-em {
+  color: var(--primary);
+  font-style: italic;
+}
+
+.wbc-cta-body {
+  font-family: var(--font-body);
+  font-size: 14px;
+  line-height: 1.65;
+  color: rgba(245, 242, 236, 0.55);
+  max-width: 540px;
+  margin: 0 auto;
+}
+
+.wbc-cta-btns {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+/* ─── RESPONSIVE ────────────────────────────────────────── */
+@media (max-width: 960px) {
+  .wbc-cohort-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .wbc-cases {
+    grid-template-columns: 1fr;
+  }
+  .wbc-operators {
+    grid-template-columns: 1fr;
+  }
+  .wbc-stats-inner {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-4);
+  }
+  .wbc-stat:nth-child(2) {
+    border-right: none;
+  }
+  .wbc-stat:first-child,
+  .wbc-stat:nth-child(3) {
+    padding-left: 0;
+  }
+}
+
+@media (max-width: 640px) {
+  .wbc-cohort-grid {
+    grid-template-columns: 1fr;
+  }
+  .wbc-stats-inner {
+    grid-template-columns: 1fr;
+  }
+  .wbc-stat {
+    border-right: none;
+    border-bottom: 1px solid var(--line);
+    padding: var(--space-3) 0;
+  }
+  .wbc-stat:last-child {
+    border-bottom: none;
+  }
+  .wbc-hero-ctas,
+  .wbc-cta-btns {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+
+/* ============================================================
+   V5.1 additions — weeks, waterfall, quotes, sticky apply
+   ============================================================ */
+
+/* ── Sticky apply sidebar (desktop only) ──────────────────── */
+.wbc-sticky-apply {
+  display: none;
+}
+@media (min-width: 1200px) {
+  .wbc-sticky-apply {
+    display: block;
+    position: fixed;
+    right: 24px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 40;
+    width: 260px;
+  }
+  .wbc-sticky-apply-inner {
+    background: var(--surface-elevated, #fff);
+    border: 1px solid rgba(0, 48, 73, 0.18);
+    border-left: 4px solid var(--primary, #c1121f);
+    padding: var(--space-4);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    box-shadow: 0 24px 48px rgba(0, 48, 73, 0.12);
+    border-radius: 0;
+  }
+  .wbc-sticky-apply-stamp {
+    font-family: var(--font-body);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #fff;
+    background: var(--primary, #c1121f);
+    padding: 5px 10px;
+    align-self: flex-start;
+    border-radius: 0;
+  }
+  .wbc-sticky-apply-body {
+    font-family: var(--font-body);
+    font-size: 12px;
+    line-height: 1.5;
+    color: var(--dark, #003049);
+    margin: 0;
+  }
+  .wbc-sticky-apply-btn {
+    font-family: var(--font-body);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    background: var(--primary, #c1121f);
+    color: #fff;
+    padding: 12px 16px;
+    text-align: center;
+    text-decoration: none;
+    border-radius: 0;
+    transition: background 200ms ease;
+  }
+  .wbc-sticky-apply-btn:hover {
+    background: var(--molten, #780000);
+  }
+}
+
+/* ── Week-by-week timeline ────────────────────────────────── */
+.wbc-weeks {
+  list-style: none;
+  padding: 0;
+  margin: var(--space-4) 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+.wbc-week {
+  position: relative;
+  padding: var(--space-5) var(--space-6);
+  background: var(--surface-elevated, #fff);
+  border: 1px solid var(--line, rgba(0, 48, 73, 0.12));
+  overflow: hidden;
+  min-height: 140px;
+  display: flex;
+  align-items: center;
+}
+.wbc-week-bg {
+  position: absolute;
+  right: -20px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-family: var(--font-display);
+  font-weight: 200;
+  font-size: clamp(140px, 18vw, 240px);
+  letter-spacing: -0.05em;
+  line-height: 0.8;
+  color: rgba(0, 48, 73, 0.06);
+  pointer-events: none;
+  user-select: none;
+}
+.wbc-week-body {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-width: 70%;
+}
+.wbc-week-label {
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--primary, #c1121f);
+}
+.wbc-week-title {
+  font-family: var(--font-display);
+  font-size: clamp(24px, 3vw, 34px);
+  font-weight: 900;
+  letter-spacing: -0.035em;
+  line-height: 1;
+  color: var(--dark, #003049);
+  margin: 0;
+}
+.wbc-week-text {
+  font-family: var(--font-body);
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--graphite, #4a5568);
+  margin: 0;
+}
+
+/* ── Metrics waterfall ───────────────────────────────────── */
+.wbc-waterfall {
+  margin-top: var(--space-4);
+  border: 1px solid rgba(245, 242, 236, 0.15);
+  background: rgba(255, 255, 255, 0.02);
+}
+.wbc-waterfall-head,
+.wbc-waterfall-row {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 1fr 1fr;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  align-items: center;
+}
+.wbc-waterfall-head {
+  background: rgba(255, 255, 255, 0.04);
+  border-bottom: 1px solid rgba(245, 242, 236, 0.12);
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(245, 242, 236, 0.55);
+}
+.wbc-waterfall-row {
+  border-bottom: 1px solid rgba(245, 242, 236, 0.08);
+  transition: background 200ms ease;
+}
+.wbc-waterfall-row:last-child {
+  border-bottom: none;
+}
+.wbc-waterfall-row:hover {
+  background: rgba(245, 242, 236, 0.03);
+}
+.wbc-waterfall-week {
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: #fff;
+}
+.wbc-waterfall-val {
+  font-family: var(--font-display);
+  font-size: clamp(22px, 2.6vw, 30px);
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  color: #fff;
+  line-height: 1;
+}
+.wbc-waterfall-val--accent {
+  color: var(--champagne, #c9a96e);
+}
+@media (max-width: 720px) {
+  .wbc-waterfall-head,
+  .wbc-waterfall-row {
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  .wbc-waterfall-head span:nth-child(3),
+  .wbc-waterfall-head span:nth-child(4),
+  .wbc-waterfall-row .wbc-waterfall-val:nth-child(3),
+  .wbc-waterfall-row .wbc-waterfall-val:nth-child(4) {
+    display: none;
+  }
+}
+
+/* ── Quotes ──────────────────────────────────────────────── */
+.wbc-quotes {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-5);
+  margin-top: var(--space-4);
+}
+@media (max-width: 860px) {
+  .wbc-quotes {
+    grid-template-columns: 1fr;
+  }
+}
+.wbc-quote-col {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+.wbc-quote-col-label {
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--champagne, #c9a96e);
+}
+.wbc-quote {
+  background: var(--surface-elevated, #fff);
+  border: 1px solid var(--line, rgba(0, 48, 73, 0.12));
+  border-left: 3px solid var(--primary, #c1121f);
+  padding: var(--space-4);
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.wbc-quote-body {
+  font-family: var(--font-display);
+  font-size: clamp(18px, 2.2vw, 22px);
+  font-weight: 400;
+  line-height: 1.35;
+  color: var(--dark, #003049);
+  margin: 0;
+  letter-spacing: -0.015em;
+}
+.wbc-quote-who {
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--graphite, #4a5568);
+}

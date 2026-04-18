@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Privacy Policy — Push",
   description:
-    "How Push collects, uses, and protects your personal data across our creator attribution platform.",
+    "How Push collects, uses, and protects your personal data across the Push Vertical AI for Local Commerce platform — the Customer Acquisition Engine for Merchants and Creators.",
 };
 
 export default function PrivacyPage() {
@@ -18,7 +18,7 @@ export default function PrivacyPage() {
             <strong>Last updated:</strong>&nbsp;April 15, 2026
           </span>
           <span className="legal-header__meta-divider" aria-hidden="true" />
-          <span className="legal-header__meta-item">Version 3.1</span>
+          <span className="legal-header__meta-item">Version 5.1</span>
           <span className="legal-header__meta-divider" aria-hidden="true" />
           <span className="legal-header__meta-item">
             <svg
@@ -52,11 +52,13 @@ export default function PrivacyPage() {
       <div className="legal-infobox">
         <p className="legal-infobox__title">Summary</p>
         <p>
-          Push NYC, Inc. operates a performance-based creator attribution
-          platform. This policy explains what data we collect, why we collect
-          it, how we share it, and your rights under applicable privacy law
-          including GDPR, CCPA, and New York SHIELD Act. If you have questions,
-          email{" "}
+          Push NYC, Inc. operates the Push Vertical AI for Local Commerce
+          platform — a Customer Acquisition Engine that converts creator content
+          into AI-verified walk-in customers for local Merchants under our
+          Two-Segment outcome-based model. This policy explains what data we
+          collect, why we collect it, how we share it, and your rights under
+          applicable privacy law including GDPR, CCPA, and New York SHIELD Act.
+          If you have questions, email{" "}
           <a
             href="mailto:privacy@pushnyc.co"
             style={{ color: "var(--tertiary)" }}
@@ -121,8 +123,10 @@ export default function PrivacyPage() {
         </dd>
         <dt>Merchant</dt>
         <dd>
-          A business entity that subscribes to Push under the Starter, Growth,
-          or Pro plan to run performance-based marketing campaigns.
+          A business entity that subscribes to Push under the Two-Segment
+          outcome-based model — Pilot, Operator, or Neighborhood — to run
+          AI-managed customer acquisition campaigns powered by the Customer
+          Acquisition Engine.
         </dd>
         <dt>QR Attribution Event</dt>
         <dd>
@@ -315,6 +319,26 @@ export default function PrivacyPage() {
           legal process, maintaining records required by IRS, NY State, and
           applicable data protection authorities.
         </li>
+        <li>
+          <strong>AI processing &mdash; ConversionOracle training:</strong> the
+          Customer Acquisition Engine uses an ML training pipeline called
+          <strong> ConversionOracle&trade;</strong> to improve creator-to-offer
+          matching across the Push Vertical AI for Local Commerce platform.
+          ConversionOracle ingests the following Merchant Data <em>features</em>{" "}
+          &mdash; <code>creator_profile</code>, <code>content_style</code>,{" "}
+          <code>merchant_category</code>, <code>offer_type</code>,{" "}
+          <code>neighborhood</code>, <code>weather</code>, and{" "}
+          <code>time-of-day</code> &mdash; and the following <em>labels</em>{" "}
+          &mdash; <code>walk_in</code> (boolean) and <code>customer_LTV</code>{" "}
+          &mdash; each keyed to an anonymized per-merchant hash rather than a
+          direct Merchant identifier. DisclosureBot&trade; audit outcomes are
+          retained separately for FTC compliance and are not used as
+          ConversionOracle training labels. Under our Two-Segment model,
+          Merchants are enrolled by default and may request deletion of their
+          ConversionOracle contributions; Push will action verified deletion
+          requests within a 30-day SLA, consistent with the rights described in
+          Section 10.
+        </li>
       </ol>
 
       <hr className="legal-divider" />
@@ -325,8 +349,10 @@ export default function PrivacyPage() {
         How We Share Your Data
       </h2>
       <p>
-        We do <strong>not</strong> sell your personal data. We share data only
-        in the following circumstances:
+        We do <strong>not</strong> sell your personal data. Push does not share
+        individual customer identity with creators, merchants, or third parties;
+        only aggregated AI-verified customer counts. We share data only in the
+        following circumstances:
       </p>
       <ul>
         <li>

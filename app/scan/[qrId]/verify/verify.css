@@ -1,0 +1,564 @@
+/* ============================================================
+   /scan/[qrId]/verify — ConversionOracle™ 3-layer verification
+   Mobile-first. Design.md tokens only (6 brand colors, Darky +
+   CS Genio Mono, border-radius 0, 8px grid).
+   ============================================================ */
+
+.vf-page {
+  min-height: 100svh;
+  background: var(--surface, #f5f2ec);
+  display: flex;
+  flex-direction: column;
+  color: var(--dark, #003049);
+}
+
+.vf-page--state {
+  background: var(--surface-bright, #fafaf8);
+}
+
+/* ── Top bar ───────────────────────────────────────────── */
+.vf-top {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 20px;
+  border-bottom: 1px solid rgba(0, 48, 73, 0.1);
+  background: var(--surface, #f5f2ec);
+}
+
+.vf-top__back {
+  font-family: "CS Genio Mono", "SF Mono", monospace;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--dark, #003049);
+  text-decoration: none;
+  padding: 6px 10px;
+  border: 1px solid rgba(0, 48, 73, 0.15);
+  border-radius: 0;
+  transition: background 200ms ease;
+}
+
+.vf-top__back:hover {
+  background: rgba(0, 48, 73, 0.04);
+}
+
+.vf-top__logo {
+  font-family: "Darky", sans-serif;
+  font-size: 18px;
+  font-weight: 900;
+  font-style: italic;
+  letter-spacing: -0.05em;
+  color: var(--dark, #003049);
+  margin-left: auto;
+}
+
+.vf-top__tag {
+  font-family: "CS Genio Mono", "SF Mono", monospace;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--primary, #c1121f);
+  padding: 4px 8px;
+  background: rgba(193, 18, 31, 0.08);
+}
+
+/* ── Intro header ──────────────────────────────────────── */
+.vf-intro {
+  padding: 32px 20px 20px;
+}
+
+.vf-intro__headline {
+  font-family: "Darky", sans-serif;
+  font-size: clamp(32px, 8vw, 56px);
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  line-height: 1;
+  color: var(--dark, #003049);
+  margin: 0 0 12px;
+}
+
+.vf-intro__sub {
+  font-family: "CS Genio Mono", "SF Mono", monospace;
+  font-size: 13px;
+  line-height: 1.6;
+  color: rgba(0, 48, 73, 0.6);
+  max-width: 520px;
+  margin: 0;
+}
+
+/* ── Merchant context strip ────────────────────────────── */
+.vf-context {
+  padding: 16px 20px;
+  background: #ffffff;
+  border-top: 1px solid rgba(0, 48, 73, 0.08);
+  border-bottom: 1px solid rgba(0, 48, 73, 0.08);
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.vf-context__name {
+  font-family: "Darky", sans-serif;
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--dark, #003049);
+}
+
+.vf-context__meta {
+  font-family: "CS Genio Mono", "SF Mono", monospace;
+  font-size: 11px;
+  color: rgba(0, 48, 73, 0.55);
+  margin-left: auto;
+  text-align: right;
+}
+
+/* ── Body section wrapper ──────────────────────────────── */
+.vf-section {
+  padding: 20px;
+}
+
+.vf-section__label {
+  font-family: "CS Genio Mono", "SF Mono", monospace;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(0, 48, 73, 0.45);
+  margin-bottom: 12px;
+  display: block;
+}
+
+/* ── Upload zone ───────────────────────────────────────── */
+.vf-upload {
+  background: #ffffff;
+  border: 1px solid rgba(0, 48, 73, 0.12);
+  padding: 20px;
+}
+
+.vf-upload__zone {
+  border: 2px dashed rgba(0, 48, 73, 0.2);
+  padding: 32px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 12px;
+  cursor: pointer;
+  transition: border-color 200ms ease, background 200ms ease;
+}
+
+.vf-upload__zone:hover,
+.vf-upload__zone:focus-within {
+  border-color: var(--primary, #c1121f);
+  background: rgba(193, 18, 31, 0.02);
+}
+
+.vf-upload__icon {
+  font-size: 40px;
+  color: var(--tertiary, #669bbc);
+  line-height: 1;
+}
+
+.vf-upload__primary {
+  font-family: "Darky", sans-serif;
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--dark, #003049);
+  letter-spacing: -0.02em;
+}
+
+.vf-upload__hint {
+  font-family: "CS Genio Mono", "SF Mono", monospace;
+  font-size: 11px;
+  color: rgba(0, 48, 73, 0.55);
+  line-height: 1.5;
+}
+
+.vf-upload__input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
+
+.vf-upload__preview {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: stretch;
+  padding: 12px;
+  background: rgba(0, 48, 73, 0.03);
+}
+
+.vf-upload__bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.vf-upload__file {
+  font-family: "CS Genio Mono", "SF Mono", monospace;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--dark, #003049);
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.vf-upload__remove {
+  font-family: "CS Genio Mono", "SF Mono", monospace;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--primary, #c1121f);
+  background: none;
+  border: none;
+  border-radius: 0;
+  padding: 4px 8px;
+  cursor: pointer;
+}
+
+.vf-upload__remove:hover {
+  background: rgba(193, 18, 31, 0.08);
+}
+
+.vf-upload__notes {
+  font-family: "CS Genio Mono", "SF Mono", monospace;
+  font-size: 11px;
+  color: rgba(0, 48, 73, 0.55);
+  line-height: 1.55;
+  padding: 12px;
+  background: rgba(102, 155, 188, 0.06);
+  border-left: 3px solid var(--tertiary, #669bbc);
+}
+
+/* ── ConversionOracle live stack ────────────────────────── */
+.vf-oracle {
+  background: #ffffff;
+  border: 1px solid rgba(0, 48, 73, 0.12);
+  padding: 20px;
+}
+
+.vf-oracle__head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.vf-oracle__title {
+  font-family: "Darky", sans-serif;
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--dark, #003049);
+}
+
+.vf-oracle__sub {
+  font-family: "CS Genio Mono", "SF Mono", monospace;
+  font-size: 11px;
+  color: rgba(0, 48, 73, 0.55);
+}
+
+.vf-oracle__thumb {
+  width: 100%;
+  max-height: 180px;
+  object-fit: contain;
+  border: 1px solid rgba(0, 48, 73, 0.08);
+  margin-bottom: 16px;
+  background: rgba(0, 48, 73, 0.03);
+}
+
+.vf-oracle__scan {
+  display: block;
+  font-family: "CS Genio Mono", "SF Mono", monospace;
+  font-size: 12px;
+  color: rgba(0, 48, 73, 0.6);
+  line-height: 1.5;
+}
+
+.vf-oracle__foot {
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(0, 48, 73, 0.08);
+  font-family: "CS Genio Mono", "SF Mono", monospace;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(0, 48, 73, 0.4);
+}
+
+/* ── Step list ──────────────────────────────────────────── */
+.vf-steps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  border: 1px solid rgba(0, 48, 73, 0.12);
+  background: #ffffff;
+}
+
+.vf-steps__row,
+.vf-steps li {
+  display: grid;
+  grid-template-columns: 36px 1fr auto;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border-bottom: 1px solid rgba(0, 48, 73, 0.06);
+  font-family: "CS Genio Mono", "SF Mono", monospace;
+  font-size: 13px;
+  color: var(--dark, #003049);
+}
+
+.vf-steps__row:last-child,
+.vf-steps li:last-child {
+  border-bottom: none;
+}
+
+.vf-steps__num {
+  font-family: "CS Genio Mono", "SF Mono", monospace;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  color: var(--primary, #c1121f);
+}
+
+.vf-steps__label {
+  font-weight: 600;
+}
+
+.vf-steps__spinner {
+  width: 10px;
+  height: 10px;
+  border: 2px solid rgba(102, 155, 188, 0.3);
+  border-top-color: var(--tertiary, #669bbc);
+  border-radius: 50%;
+  animation: vf-spin 700ms linear infinite;
+  display: inline-block;
+}
+
+@keyframes vf-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ── Verdict + state ────────────────────────────────────── */
+.vf-state {
+  padding: 32px 24px;
+  text-align: center;
+  background: #ffffff;
+  border: 1px solid rgba(0, 48, 73, 0.12);
+}
+
+.vf-state__eyebrow {
+  display: inline-block;
+  font-family: "CS Genio Mono", "SF Mono", monospace;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  background: rgba(16, 185, 129, 0.12);
+  color: #0f9b6e;
+  margin-bottom: 16px;
+}
+
+.vf-state__eyebrow--alert {
+  background: rgba(193, 18, 31, 0.1);
+  color: var(--primary, #c1121f);
+}
+
+.vf-state__headline {
+  font-family: "Darky", sans-serif;
+  font-size: clamp(28px, 7vw, 44px);
+  font-weight: 900;
+  letter-spacing: -0.035em;
+  line-height: 1.05;
+  color: var(--dark, #003049);
+  margin: 0 0 12px;
+}
+
+.vf-state__body {
+  font-family: "CS Genio Mono", "SF Mono", monospace;
+  font-size: 13px;
+  line-height: 1.6;
+  color: rgba(0, 48, 73, 0.6);
+  max-width: 440px;
+  margin: 0 auto 20px;
+}
+
+.vf-verdict {
+  font-family: "CS Genio Mono", "SF Mono", monospace;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--dark, #003049);
+  padding: 14px 16px;
+  background: rgba(0, 48, 73, 0.04);
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* ── Appeal form ───────────────────────────────────────── */
+.vf-appeal {
+  padding: 16px;
+  background: rgba(201, 169, 110, 0.08);
+  border: 1px solid rgba(201, 169, 110, 0.4);
+  border-left: 3px solid var(--champagne, #c9a96e);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.vf-appeal__tag {
+  font-family: "CS Genio Mono", "SF Mono", monospace;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--champagne, #c9a96e);
+}
+
+.vf-appeal__label {
+  font-family: "CS Genio Mono", "SF Mono", monospace;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--dark, #003049);
+  display: block;
+  margin-bottom: 4px;
+}
+
+.vf-appeal__text,
+.vf-appeal textarea,
+.vf-appeal input {
+  width: 100%;
+  font-family: "CS Genio Mono", "SF Mono", monospace;
+  font-size: 13px;
+  color: var(--dark, #003049);
+  background: #ffffff;
+  border: 1px solid rgba(0, 48, 73, 0.15);
+  border-radius: 0;
+  padding: 10px 12px;
+  min-height: 80px;
+  resize: vertical;
+}
+
+.vf-appeal__text:focus,
+.vf-appeal textarea:focus,
+.vf-appeal input:focus {
+  border-color: var(--primary, #c1121f);
+  outline: none;
+  box-shadow: inset 2px 0 0 var(--primary, #c1121f);
+}
+
+.vf-appeal__row {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+}
+
+.vf-appeal__confirm {
+  padding: 12px;
+  background: rgba(16, 185, 129, 0.1);
+  border-left: 3px solid #10b981;
+  color: #0f9b6e;
+  font-family: "CS Genio Mono", "SF Mono", monospace;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.vf-appeal--submitted {
+  background: rgba(16, 185, 129, 0.06);
+  border-color: rgba(16, 185, 129, 0.4);
+  border-left-color: #10b981;
+}
+
+/* ── Buttons ───────────────────────────────────────────── */
+.vf-btn {
+  font-family: "CS Genio Mono", "SF Mono", monospace;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 12px 20px;
+  border-radius: 0;
+  cursor: pointer;
+  transition: background 200ms ease, color 200ms ease, border-color 200ms ease;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.vf-btn--primary {
+  background: var(--primary, #c1121f);
+  color: #ffffff;
+  border: 1px solid var(--primary, #c1121f);
+}
+
+.vf-btn--primary:hover {
+  background: var(--accent, #780000);
+  border-color: var(--accent, #780000);
+}
+
+.vf-btn--primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.vf-btn--ghost {
+  background: transparent;
+  color: var(--dark, #003049);
+  border: 1px solid rgba(0, 48, 73, 0.2);
+}
+
+.vf-btn--ghost:hover {
+  background: rgba(0, 48, 73, 0.04);
+  border-color: var(--dark, #003049);
+}
+
+/* ── Footer ─────────────────────────────────────────────── */
+.vf-foot {
+  margin-top: auto;
+  padding: 20px;
+  text-align: center;
+  font-family: "CS Genio Mono", "SF Mono", monospace;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  color: rgba(0, 48, 73, 0.4);
+  border-top: 1px solid rgba(0, 48, 73, 0.08);
+  line-height: 1.6;
+}
+
+/* ── Reduced motion ─────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .vf-steps__spinner {
+    animation: none;
+  }
+  .vf-page,
+  .vf-page *,
+  .vf-page *::before,
+  .vf-page *::after {
+    transition-duration: 0.01ms !important;
+  }
+}

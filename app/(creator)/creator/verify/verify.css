@@ -1084,3 +1084,53 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* ── Wave 3: Verify page transitions ──────────────────────── */
+
+/* QR scan / receipt upload area: hover pulse border */
+@keyframes scan-border-pulse {
+  0%, 100% { border-color: rgba(0, 48, 73, 0.15); }
+  50%       { border-color: rgba(193, 18, 31, 0.4); }
+}
+[class*="scan-zone"],
+[class*="upload-zone"],
+[class*="qr-zone"],
+[class*="drop-zone"] {
+  transition: border-color 200ms ease, background 200ms ease;
+}
+[class*="scan-zone"]:hover,
+[class*="upload-zone"]:hover,
+[class*="drop-zone"]:hover {
+  border-color: rgba(193, 18, 31, 0.5);
+  background: rgba(193, 18, 31, 0.025);
+}
+
+/* Verification result: slide in */
+@keyframes result-reveal {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+[class*="result"],
+[class*="verdict"],
+[class*="verification-result"] {
+  animation: result-reveal 400ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* Verified checkmark: pop in */
+@keyframes check-pop {
+  0%   { transform: scale(0); opacity: 0; }
+  60%  { transform: scale(1.2); }
+  100% { transform: scale(1); opacity: 1; }
+}
+[class*="check--ok"],
+[class*="verified-icon"],
+[class*="success-icon"] {
+  animation: check-pop 350ms cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [class*="result"],[class*="verdict"],[class*="verification-result"],
+  [class*="check--ok"],[class*="verified-icon"],[class*="success-icon"] {
+    animation: none; opacity: 1; transform: none;
+  }
+}

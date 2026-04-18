@@ -1,0 +1,991 @@
+/* ============================================================
+   YC Summer 2027 pitch page — unlisted
+   Deep Space Blue editorial, large-type pitch.
+   Uses landing.css tokens + reveal pattern.
+   ============================================================ */
+
+/* ── HERO ──────────────────────────────────────────────── */
+.yc-hero {
+  min-height: 92svh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: var(--space-10) 0 var(--space-8);
+  background:
+    radial-gradient(
+      ellipse 60% 45% at 12% 18%,
+      rgba(201, 169, 110, 0.08) 0%,
+      transparent 70%
+    ),
+    radial-gradient(
+      ellipse 50% 40% at 88% 82%,
+      rgba(193, 18, 31, 0.09) 0%,
+      transparent 65%
+    ),
+    var(--dark);
+  color: #fff;
+  position: relative;
+  overflow: hidden;
+}
+
+.yc-hero-inner {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.yc-hero-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.yc-hero-eyebrow {
+  color: rgba(201, 169, 110, 0.72);
+}
+
+.yc-hero-h {
+  font-family: var(--font-display);
+  line-height: 0.88;
+  letter-spacing: -0.055em;
+  margin: 0;
+  color: #fff;
+}
+
+.yc-hero-l1,
+.yc-hero-l2,
+.yc-hero-l3 {
+  display: block;
+}
+
+.yc-hero-l1 {
+  font-size: clamp(44px, 7vw, 108px);
+  font-weight: 300;
+  color: rgba(255, 255, 255, 0.42);
+}
+
+.yc-hero-l2 {
+  font-size: clamp(56px, 10vw, 148px);
+  font-weight: 900;
+  color: #fff;
+}
+
+.yc-hero-l3 {
+  font-size: clamp(44px, 7vw, 108px);
+}
+
+.yc-hero-accent {
+  font-weight: 900;
+  font-style: italic;
+  color: var(--champagne);
+}
+
+.yc-hero-sub {
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.7;
+  letter-spacing: 0.01em;
+  color: rgba(245, 242, 236, 0.62);
+  max-width: 640px;
+  margin: 0;
+}
+
+.yc-hero-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+  margin-top: var(--space-2);
+  padding-top: var(--space-3);
+  border-top: 1px solid rgba(245, 242, 236, 0.1);
+}
+
+.yc-hero-meta-item {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.yc-hero-meta-k {
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(245, 242, 236, 0.38);
+}
+
+.yc-hero-meta-v {
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  color: rgba(255, 255, 255, 0.88);
+}
+
+.yc-hero-meta-sep {
+  width: 1px;
+  height: 28px;
+  background: rgba(245, 242, 236, 0.14);
+}
+
+/* ── Section primitives ────────────────────────────────── */
+.yc-section {
+  padding: var(--space-10) 0;
+}
+
+.yc-section-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: var(--space-3);
+  font-family: var(--font-body);
+}
+
+.yc-section-num {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: var(--primary);
+}
+
+.yc-section-line {
+  width: 32px;
+  height: 1.5px;
+  background: var(--primary);
+}
+
+.yc-section-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(0, 48, 73, 0.55);
+}
+
+.yc-section-h {
+  font-family: var(--font-display);
+  font-size: clamp(36px, 5.5vw, 72px);
+  font-weight: 900;
+  letter-spacing: -0.045em;
+  line-height: 0.98;
+  color: var(--dark);
+  margin: 0 0 var(--space-4);
+  max-width: 20ch;
+}
+
+.yc-section-h-light {
+  font-weight: 200;
+  color: rgba(0, 48, 73, 0.38);
+}
+
+.yc-section-sub {
+  font-family: var(--font-body);
+  font-size: 14px;
+  line-height: 1.7;
+  letter-spacing: 0.01em;
+  color: var(--graphite);
+  max-width: 640px;
+  margin: 0 0 var(--space-5);
+}
+
+/* ── §1 PROBLEM ────────────────────────────────────────── */
+.yc-problem {
+  background: var(--surface);
+}
+
+.yc-stat-strip {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  margin-top: var(--space-4);
+}
+
+.yc-stat {
+  padding: var(--space-5) var(--space-3);
+  border-right: 1px solid var(--line);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.yc-stat:last-child {
+  border-right: none;
+}
+
+.yc-stat-n {
+  font-family: var(--font-display);
+  font-size: clamp(40px, 5vw, 64px);
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  color: var(--primary);
+  line-height: 1;
+}
+
+.yc-stat-l {
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--graphite);
+}
+
+/* ── §2 SOLUTION ───────────────────────────────────────── */
+.yc-solution {
+  background: var(--dark);
+  color: #fff;
+}
+
+.yc-solution .yc-section-h {
+  color: #fff;
+}
+
+.yc-solution .yc-section-h-light {
+  color: rgba(255, 255, 255, 0.35);
+}
+
+.yc-solution .yc-section-label {
+  color: rgba(245, 242, 236, 0.55);
+}
+
+.yc-solution .yc-section-sub {
+  color: rgba(245, 242, 236, 0.58);
+}
+
+.yc-solution-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-3);
+  margin-top: var(--space-4);
+}
+
+.yc-solution-card {
+  padding: var(--space-5);
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-top: 3px solid var(--champagne);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.yc-solution-num {
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: var(--champagne);
+}
+
+.yc-solution-title {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: #fff;
+  margin: 0;
+  line-height: 1.15;
+}
+
+.yc-solution-body {
+  font-family: var(--font-body);
+  font-size: 13px;
+  line-height: 1.7;
+  color: rgba(245, 242, 236, 0.62);
+  margin: 0;
+}
+
+/* ── §3 TRACTION ───────────────────────────────────────── */
+.yc-traction {
+  background: var(--surface);
+}
+
+.yc-traction-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  margin: var(--space-4) 0;
+}
+
+.yc-traction-stat {
+  padding: var(--space-4) var(--space-2);
+  border-right: 1px solid var(--line);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.yc-traction-stat:last-child {
+  border-right: none;
+}
+
+.yc-traction-n {
+  font-family: var(--font-display);
+  font-size: clamp(28px, 3vw, 44px);
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  color: var(--champagne);
+  line-height: 1;
+}
+
+.yc-traction-l {
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--graphite);
+  line-height: 1.4;
+}
+
+/* ── Merchants list ────────────────────────────────────── */
+.yc-merchants {
+  margin: var(--space-5) 0;
+  padding: var(--space-4);
+  background: var(--surface-elevated);
+  border-left: 3px solid var(--primary);
+}
+
+.yc-merchants-label {
+  display: block;
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--graphite);
+  margin-bottom: 14px;
+}
+
+.yc-merchants-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 22px;
+}
+
+.yc-merchants-item {
+  font-family: var(--font-display);
+  font-size: 19px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--dark);
+  position: relative;
+  padding-right: 22px;
+}
+
+.yc-merchants-item::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  top: 50%;
+  width: 1px;
+  height: 14px;
+  background: var(--line-strong);
+  transform: translateY(-50%);
+}
+
+.yc-merchants-item:last-child::after {
+  display: none;
+}
+
+/* ── Projection table ──────────────────────────────────── */
+.yc-projection {
+  padding: var(--space-4);
+  background: var(--surface-elevated);
+  border: 1px solid var(--line);
+}
+
+.yc-projection-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: var(--space-2);
+  padding-bottom: var(--space-3);
+  margin-bottom: var(--space-3);
+  border-bottom: 1px solid var(--line);
+  flex-wrap: wrap;
+}
+
+.yc-projection-label {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--dark);
+}
+
+.yc-projection-sub {
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--tertiary);
+}
+
+.yc-projection-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.yc-projection-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: var(--space-2);
+  padding: 10px 0;
+  border-bottom: 1px dashed var(--line);
+}
+
+.yc-projection-row:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.yc-projection-k {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--graphite);
+}
+
+.yc-projection-v {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 12px;
+  font-family: var(--font-display);
+}
+
+.yc-projection-now {
+  font-size: 20px;
+  font-weight: 600;
+  color: rgba(0, 48, 73, 0.5);
+  letter-spacing: -0.02em;
+}
+
+.yc-projection-arrow {
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: var(--primary);
+}
+
+.yc-projection-then {
+  font-size: 28px;
+  font-weight: 900;
+  color: var(--dark);
+  letter-spacing: -0.03em;
+}
+
+/* ── §4 TEAM ───────────────────────────────────────────── */
+.yc-team {
+  background: var(--surface-bright);
+}
+
+/* ── §5 ASK ────────────────────────────────────────────── */
+.yc-ask {
+  background: var(--dark);
+  color: #fff;
+  padding: var(--space-12) 0 var(--space-10);
+}
+
+.yc-ask .yc-section-label {
+  color: rgba(245, 242, 236, 0.55);
+}
+
+.yc-section-tag--dark .yc-section-num {
+  color: var(--champagne);
+}
+
+.yc-section-tag--dark .yc-section-line {
+  background: var(--champagne);
+}
+
+.yc-ask-h {
+  font-family: var(--font-display);
+  line-height: 0.92;
+  letter-spacing: -0.05em;
+  margin: 0 0 var(--space-4);
+  color: #fff;
+}
+
+.yc-ask-l1,
+.yc-ask-l2,
+.yc-ask-l3 {
+  display: block;
+}
+
+.yc-ask-l1 {
+  font-size: clamp(48px, 8vw, 120px);
+  font-weight: 900;
+  color: #fff;
+}
+
+.yc-ask-l2 {
+  font-size: clamp(32px, 4.5vw, 60px);
+  font-weight: 300;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.yc-ask-l3 {
+  font-size: clamp(36px, 5vw, 72px);
+}
+
+.yc-ask-accent {
+  font-weight: 900;
+  font-style: italic;
+  color: var(--primary);
+}
+
+.yc-ask-sub {
+  font-family: var(--font-body);
+  font-size: 14px;
+  line-height: 1.75;
+  letter-spacing: 0.01em;
+  color: rgba(245, 242, 236, 0.6);
+  max-width: 640px;
+  margin: 0 0 var(--space-5);
+}
+
+.yc-ask-ctas {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: var(--space-4);
+}
+
+.yc-ask-cta {
+  min-width: 220px;
+  justify-content: center;
+}
+
+.yc-ask-fine {
+  font-family: var(--font-body);
+  font-size: 11px;
+  line-height: 1.7;
+  letter-spacing: 0.04em;
+  color: rgba(245, 242, 236, 0.4);
+  margin: 0;
+}
+
+/* ── Responsive ────────────────────────────────────────── */
+@media (max-width: 1024px) {
+  .yc-solution-grid {
+    grid-template-columns: 1fr;
+  }
+  .yc-traction-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .yc-traction-stat:nth-child(3n) {
+    border-right: none;
+  }
+  .yc-traction-stat:nth-child(-n + 3) {
+    border-bottom: 1px solid var(--line);
+  }
+}
+
+@media (max-width: 640px) {
+  .yc-hero {
+    padding: var(--space-7) 0 var(--space-6);
+    min-height: auto;
+  }
+
+  .yc-hero-meta {
+    gap: var(--space-2);
+  }
+
+  .yc-hero-meta-sep {
+    display: none;
+  }
+
+  .yc-section {
+    padding: var(--space-7) 0;
+  }
+
+  .yc-section-h {
+    max-width: none;
+  }
+
+  .yc-stat-strip {
+    grid-template-columns: 1fr;
+  }
+
+  .yc-stat {
+    border-right: none;
+    border-bottom: 1px solid var(--line);
+    padding: var(--space-3) 0;
+  }
+
+  .yc-stat:last-child {
+    border-bottom: none;
+  }
+
+  .yc-traction-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .yc-traction-stat {
+    border-right: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .yc-traction-stat:nth-child(2n) {
+    border-right: none;
+  }
+
+  .yc-traction-stat:nth-last-child(-n + 2) {
+    border-bottom: none;
+  }
+
+  .yc-merchants-list {
+    gap: 8px 18px;
+  }
+
+  .yc-merchants-item {
+    font-size: 16px;
+  }
+
+  .yc-projection-head,
+  .yc-projection-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .yc-ask {
+    padding: var(--space-8) 0 var(--space-7);
+  }
+
+  .yc-ask-ctas {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .yc-ask-cta {
+    min-width: 0;
+    width: 100%;
+  }
+}
+
+/* ── Reduced motion ────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+/* ── §8 FAQ ─────────────────────────────────────────────── */
+.yc-faq {
+  padding: var(--space-10) 0 var(--space-9);
+}
+
+.yc-faq-list {
+  margin-top: var(--space-7);
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  border-top: 1px solid var(--line);
+}
+
+.yc-faq-item {
+  border-bottom: 1px solid var(--line);
+}
+
+.yc-faq-q {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  padding: var(--space-5) 0;
+  font-family: var(--font-body);
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--dark);
+  cursor: pointer;
+  list-style: none;
+  user-select: none;
+}
+
+.yc-faq-q::-webkit-details-marker {
+  display: none;
+}
+
+/* Indicator arrow */
+.yc-faq-q::after {
+  content: "+";
+  flex-shrink: 0;
+  font-family: var(--font-body);
+  font-size: 20px;
+  font-weight: 300;
+  color: var(--graphite);
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.yc-faq-item[open] > .yc-faq-q::after {
+  content: "−";
+  color: var(--primary);
+  transform: rotate(0deg);
+}
+
+.yc-faq-item[open] > .yc-faq-q {
+  color: var(--primary);
+}
+
+.yc-faq-a {
+  padding: 0 0 var(--space-5);
+  font-family: var(--font-body);
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--graphite);
+  max-width: 72ch;
+}
+
+/* ── §9 CTA / Apply ─────────────────────────────────────── */
+.yc-apply-cta {
+  padding: var(--space-10) 0 var(--space-10);
+  background: var(--dark);
+  color: #fff;
+}
+
+.yc-apply-cta .yc-section-tag {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.yc-apply-cta .yc-section-num {
+  color: var(--champagne);
+}
+
+.yc-apply-cta .yc-section-line {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.yc-apply-cta .yc-section-label {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.yc-apply-eyebrow {
+  margin-top: var(--space-6);
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--champagne);
+}
+
+.yc-apply-cta .yc-section-h {
+  color: #fff;
+  margin-top: var(--space-3);
+}
+
+.yc-apply-sub {
+  margin-top: var(--space-4);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.65);
+  max-width: 52ch;
+}
+
+.yc-apply-cta-btns {
+  margin-top: var(--space-6);
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  align-items: center;
+}
+
+.yc-apply-cta-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14px 32px;
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  text-decoration: none;
+  border-radius: 0;
+  border: 1px solid #fff;
+  background: #fff;
+  color: var(--dark);
+  cursor: pointer;
+  transition: background 0.18s ease, color 0.18s ease, border-color 0.18s ease;
+}
+
+.yc-apply-cta-btn:hover {
+  background: var(--champagne);
+  border-color: var(--champagne);
+  color: var(--dark);
+}
+
+.yc-apply-cta-btn--outline {
+  background: transparent;
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+.yc-apply-cta-btn--outline:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: #fff;
+  color: #fff;
+}
+
+.yc-apply-note {
+  margin-top: var(--space-5);
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.yc-calendly-placeholder {
+  margin-top: var(--space-6);
+  min-height: 200px;
+  border: 1px dashed rgba(255, 255, 255, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.25);
+}
+
+/* ── FAQ + CTA responsive ───────────────────────────────── */
+@media (max-width: 768px) {
+  .yc-faq-q {
+    font-size: 14px;
+    padding: var(--space-4) 0;
+  }
+
+  .yc-apply-cta-btns {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .yc-apply-cta-btn {
+    width: 100%;
+    text-align: center;
+  }
+}
+
+/* ============================================================
+   WAVE 2 — FAQ + CTA polish
+   ============================================================ */
+
+/* ── FAQ accordion: smooth open/close ────────────────────── */
+/* <details> open transition — use max-height interpolation */
+.yc-faq-item,
+details[class*="yc-faq"] {
+  transition: border-color 180ms ease;
+}
+.yc-faq-item:hover,
+details[class*="yc-faq"]:hover {
+  border-color: rgba(0, 48, 73, 0.22);
+}
+
+/* Summary hover state */
+.yc-faq-q,
+details[class*="yc-faq"] summary {
+  transition: color 180ms ease, background 180ms ease;
+}
+.yc-faq-q:hover,
+details[class*="yc-faq"] summary:hover {
+  background: rgba(0, 48, 73, 0.025);
+}
+
+/* Answer body: slide reveal using grid trick (works in Chrome/FF/Safari) */
+.yc-faq-a,
+details[class*="yc-faq"] [class*="body"],
+details[class*="yc-faq"] p {
+  overflow: hidden;
+}
+details[class*="yc-faq"]:not([open]) .yc-faq-a,
+details[class*="yc-faq"]:not([open]) p {
+  /* collapsed */
+}
+
+/* ── Apply CTA section entrance ──────────────────────────── */
+@keyframes yc-cta-rise {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+[class*="yc-apply-cta"],
+section[class*="yc-apply"] {
+  animation: yc-cta-rise 600ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-play-state: paused;
+}
+/* When .visible is added by IntersectionObserver */
+[class*="yc-apply-cta"].visible,
+section[class*="yc-apply"].visible,
+.cockpit--seeded ~ [class*="yc-apply-cta"] {
+  animation-play-state: running;
+}
+
+/* ── CTA button hover (in yc dark section) ───────────────── */
+[class*="yc-apply-cta-btn"]:not([class*="outline"]) {
+  transition:
+    background 240ms cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 240ms ease,
+    transform 80ms ease;
+}
+[class*="yc-apply-cta-btn"]:not([class*="outline"]):hover {
+  box-shadow: 4px 4px 0 rgba(201, 169, 110, 0.5);
+}
+[class*="yc-apply-cta-btn"]:not([class*="outline"]):active {
+  transform: scale(0.97);
+}
+
+[class*="yc-apply-cta-btn"][class*="outline"] {
+  transition:
+    background 240ms cubic-bezier(0.22, 1, 0.36, 1),
+    color 240ms ease,
+    border-color 240ms ease;
+}
+
+/* ── Calendly placeholder pulse ──────────────────────────── */
+@keyframes calendly-pulse {
+  0%, 100% { border-color: rgba(255,255,255,0.15); }
+  50%       { border-color: rgba(255,255,255,0.35); }
+}
+[class*="calendly"][class*="placeholder"] {
+  animation: calendly-pulse 2.5s ease-in-out infinite;
+}
+
+/* ── Reduced motion ───────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  [class*="yc-apply-cta"],
+  section[class*="yc-apply"] {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+  [class*="calendly"][class*="placeholder"] {
+    animation: none;
+  }
+}

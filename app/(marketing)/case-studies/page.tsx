@@ -1,86 +1,72 @@
 import Link from "next/link";
-import Image from "next/image";
 import type { Metadata } from "next";
-import { CASES } from "@/lib/cases/mock-cases";
+import ScrollRevealInit from "@/components/layout/ScrollRevealInit";
+import CaseStudiesGrid from "./CaseStudiesGrid";
 import "./case-studies.css";
 
 export const metadata: Metadata = {
-  title: "Case Studies — Push",
+  title: "Case Studies — Push | Vertical AI for Local Commerce",
   description:
-    "Real results from real NYC merchants. Verified walk-ins, attributed revenue, and measurable ROI — powered by Push creator campaigns.",
+    "ConversionOracle™-verified walk-ins and attributed revenue for Coffee+, dessert, beauty, and fitness merchants. Real Software Leverage Ratio outcomes — no media spend required.",
+  openGraph: {
+    title: "Case Studies — Push | Vertical AI for Local Commerce",
+    description:
+      "Williamsburg Coffee+ beachhead results, Neighborhood Playbook outcomes, ConversionOracle™ prediction accuracy — every metric Claude-Vision verified.",
+    type: "website",
+  },
 };
 
 export default function CaseStudiesPage() {
   return (
     <>
+      <ScrollRevealInit />
+
       {/* ── Header ─────────────────────────────────────────────── */}
       <section className="cs-header">
         <div className="cs-header-inner">
-          <p className="cs-eyebrow">Case Studies</p>
+          <p className="cs-eyebrow">
+            <span className="cs-eyebrow-rule" aria-hidden="true" />
+            Case Studies · Vertical AI for Local Commerce
+          </p>
           <h1 className="cs-headline">
             Real merchants.
             <br />
-            <em>Real results.</em>
+            <em>Verified walk-ins.</em>
           </h1>
           <p className="cs-header-sub">
-            Every number is verified. Every walk-in is tracked. These are the
-            outcomes Push delivered for five NYC businesses — no ad spend
-            required.
+            Every walk-in below passed through ConversionOracle™ — QR
+            attribution plus Claude Vision receipt OCR plus geo-match. These are
+            the outcomes our Customer Acquisition Engine delivered, split by
+            category. Filter to find your vertical.
           </p>
         </div>
       </section>
 
-      {/* ── Grid ───────────────────────────────────────────────── */}
+      {/* ── Grid + chips ───────────────────────────────────────── */}
       <section className="cs-section">
         <div className="cs-container">
-          <div className="cs-grid">
-            {CASES.map((c, i) => (
-              <Link
-                key={c.slug}
-                href={`/case-studies/${c.slug}`}
-                className="cs-card cs-card-reveal"
-                style={{ animationDelay: `${i * 80}ms` }}
-              >
-                {/* Hero image */}
-                <div className="cs-card-image-wrap">
-                  <Image
-                    src={c.heroImage}
-                    alt={c.name}
-                    fill
-                    sizes="(max-width: 768px) 100vw, 50vw"
-                    className="cs-card-image"
-                    priority={i < 2}
-                  />
-                  <span className="cs-card-cat">{c.category}</span>
-                </div>
+          <CaseStudiesGrid />
+        </div>
+      </section>
 
-                {/* Body */}
-                <div className="cs-card-body">
-                  <p className="cs-card-location">{c.neighborhood}</p>
-
-                  <h2 className="cs-card-name">{c.name}</h2>
-
-                  {/* Primary outcome — big number */}
-                  <div className="cs-card-outcome">
-                    <span className="cs-card-outcome-value">
-                      {c.primaryOutcome.value}
-                    </span>
-                    <span className="cs-card-outcome-label">
-                      {c.primaryOutcome.label}
-                    </span>
-                  </div>
-
-                  <p className="cs-card-tagline">{c.tagline}</p>
-
-                  <div className="cs-card-cta">
-                    Read case study
-                    <span className="cs-card-cta-arrow" aria-hidden="true">
-                      →
-                    </span>
-                  </div>
-                </div>
-              </Link>
-            ))}
+      {/* ── Trailing CTA strip ─────────────────────────────────── */}
+      <section className="cs-footer-cta">
+        <div className="cs-container cs-footer-cta-inner">
+          <div>
+            <p className="cs-footer-eyebrow">
+              Pilot slots · 11211 / 11206 / 11249
+            </p>
+            <h2 className="cs-footer-h">
+              Williamsburg Coffee+ beachhead is still open.
+            </h2>
+          </div>
+          <div className="cs-footer-ctas">
+            <Link href="/merchant/pilot" className="btn btn-primary">
+              Start $0 Pilot
+            </Link>
+            <Link href="/pricing" className="btn btn-secondary">
+              See pilot economics
+            </Link>
           </div>
         </div>
       </section>

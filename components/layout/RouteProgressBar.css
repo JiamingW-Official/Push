@@ -1,0 +1,46 @@
+/* Push — Route Progress Bar
+   A thin Flag Red line at the top of the viewport.
+   Appears on every route change, fades out after completion.
+   z-index 10000 — above everything including StickySubNav (z-50). */
+
+.rpb {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  z-index: 10000;
+  pointer-events: none;
+}
+
+.rpb__bar {
+  height: 100%;
+  background: var(--primary, #c1121f);
+  /* Dual transition: width animates on progress change, opacity fades on complete */
+  transition:
+    width 300ms cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 200ms ease 50ms;
+  /* Soft glow — makes the thin bar visible on all backgrounds */
+  box-shadow:
+    0 0 6px rgba(193, 18, 31, 0.5),
+    0 0 2px rgba(193, 18, 31, 0.8);
+  /* Leading edge spark */
+  position: relative;
+}
+
+.rpb__bar::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 60px;
+  height: 1px;
+  background: linear-gradient(to left, rgba(193, 18, 31, 0.0), rgba(193, 18, 31, 0.3));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rpb {
+    display: none;
+  }
+}

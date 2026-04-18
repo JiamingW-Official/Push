@@ -70,7 +70,7 @@ export const FAQ_ITEMS: FaqItem[] = [
     category: "for-merchants",
     question: "What does a typical campaign cost?",
     answer:
-      "Your total campaign spend equals your per-visit payout multiplied by verified visits. There's no upfront campaign fee — you only pay when the QR code is scanned by a new customer. Our platform subscription starts at $19.99/month, which includes unlimited campaigns and full attribution reporting.",
+      "Push offers three plans: **Pilot** ($0 for first 10 Coffee+ merchants — first 10 AI-verified customers free). **Operator** ($500/mo minimum + $15–85 per AI-verified customer by vertical + Retention Add-on $8–24). **Neighborhood** (custom $8–12K launch + $20–35K MRR target). Legacy SaaS-tier cohort contracts (founding merchants only) remain grandfathered through renewal.",
     helpful: 211,
     related: ["p-001", "p-002", "m-003"],
   },
@@ -115,7 +115,7 @@ export const FAQ_ITEMS: FaqItem[] = [
     category: "for-merchants",
     question: "Is there a contract or minimum commitment?",
     answer:
-      "No contracts, no minimums. Your $19.99/month subscription is month-to-month and can be cancelled anytime. Campaign budgets are pay-as-you-go. We earn when you earn — our incentives are fully aligned with driving real results for your business.",
+      "Push offers three plans: **Pilot** ($0 for first 10 Coffee+ merchants — first 10 AI-verified customers free). **Operator** ($500/mo minimum + $15–85 per AI-verified customer by vertical + Retention Add-on $8–24). **Neighborhood** (custom $8–12K launch + $20–35K MRR target). Legacy SaaS-tier cohort contracts (founding merchants only) remain grandfathered through renewal.",
     helpful: 198,
     related: ["p-001", "p-002", "m-007"],
   },
@@ -236,7 +236,7 @@ export const FAQ_ITEMS: FaqItem[] = [
     category: "pricing-payments",
     question: "What are Push's subscription plans?",
     answer:
-      "Push offers three merchant plans: Starter ($19.99/month) for up to 3 active campaigns with basic analytics; Growth ($69/month) for unlimited campaigns, advanced attribution, and priority creator matching; and Scale ($199/month) for enterprise features, dedicated account management, custom reporting, and early access to new features. Annual billing saves 20% on all plans.",
+      "Push offers three plans: **Pilot** ($0 for first 10 Coffee+ merchants — first 10 AI-verified customers free). **Operator** ($500/mo minimum + $15–85 per AI-verified customer by vertical + Retention Add-on $8–24). **Neighborhood** (custom $8–12K launch + $20–35K MRR target). Legacy SaaS-tier cohort contracts (founding merchants only) remain grandfathered through renewal.",
     helpful: 289,
     related: ["p-002", "m-005", "m-010"],
   },
@@ -451,5 +451,52 @@ export const FAQ_ITEMS: FaqItem[] = [
       "Use the in-app 'Report' button on any profile, campaign, or piece of content. Alternatively, email trust@pushapp.co with details. Our Trust & Safety team reviews all reports within 24 hours (critical safety issues within 2 hours). We do not tolerate harassment, discrimination, or illegal activity on the platform and will take swift action on substantiated reports.",
     helpful: 134,
     related: ["t-005", "t-002", "t-006"],
+  },
+
+  /* ── v5.1 Additions ───────────────────────────────────────── */
+  {
+    id: "v51-001",
+    category: "for-merchants",
+    question: "What does Vertical AI for Local Commerce mean?",
+    answer:
+      "Vertical AI for Local Commerce is specialized AI + a Customer Acquisition Engine tuned for one vertical: local commerce. A merchant uploads a customer goal; ConversionOracle predicts ROI; Push runs the Williamsburg Coffee+ beachhead end-to-end — creator sourcing, brief generation, AI verification, dispute handling, and settlement. Unlike a horizontal tool that works across every industry, Push compounds domain data into a ConversionOracle that Meta and Google cannot replicate.",
+    helpful: 0,
+    related: ["m-001", "v51-002", "p-001"],
+  },
+  {
+    id: "v51-002",
+    category: "attribution-qr",
+    question: "What's ConversionOracle?",
+    answer:
+      "ConversionOracle is Push's proprietary walk-in prediction model, trained on AI-verified customer ground truth from the Williamsburg Coffee+ beachhead. At 1,000 verified events it reaches ±25% accuracy. At 10,000 events it tightens to ±15%. Meta and Google cannot train this model — they do not see offline foot traffic. ConversionOracle is what converts raw scans into a Software Leverage Ratio advantage over every horizontal ad platform.",
+    helpful: 0,
+    related: ["a-001", "a-003", "v51-001"],
+  },
+  {
+    id: "v51-003",
+    category: "for-merchants",
+    question: "What's SLR (Software Leverage Ratio)?",
+    answer:
+      "Software Leverage Ratio = active campaigns ÷ ops FTE. Traditional influencer shops run 3–5 campaigns per operator. Push's north-star targets are Month-12 ≥25 and Month-24 ≥50 — a direct proxy for software-leverage versus human-leverage. The higher the SLR, the more the Vertical AI for Local Commerce stack (ConversionOracle + DisclosureBot) is doing the work, and the lower the marginal cost of every new Williamsburg Coffee+ merchant.",
+    helpful: 0,
+    related: ["v51-001", "v51-002", "m-005"],
+  },
+  {
+    id: "v51-004",
+    category: "trust-safety",
+    question: "What's DisclosureBot?",
+    answer:
+      "DisclosureBot is Push's platform-level FTC compliance layer. Every creator post is AI-pre-screened for #ad disclosure as mandated by 16 CFR Part 255 before it goes live. Non-compliant posts are blocked with an automatic revision prompt until the disclosure is compliant. Push carries $1M E&O insurance and commissions a quarterly external audit on DisclosureBot outcomes — compliance is infrastructure, not a checkbox.",
+    helpful: 0,
+    related: ["t-003", "t-002", "v51-001"],
+  },
+  {
+    id: "v51-005",
+    category: "for-creators",
+    question: "What are Two-Segment Creator Economics?",
+    answer:
+      "Push runs a Two-Segment creator economy. T1–T3 (5K–50K followers) earn pay-per-verified-customer of $15–$85 depending on the vertical — fast, outcome-tied, predictable. T4–T6 (30K+ followers) earn a monthly retainer of $800–$3,500, a per-customer performance bonus, a 12-month referral rev-share (capped at $500/mo per merchant), and access to an equity pool (0.02–0.2%, 4-year vest, performance-gated). Two-Segment aligns earnings with each tier's actual acquisition role in the Williamsburg Coffee+ beachhead.",
+    helpful: 0,
+    related: ["c-002", "c-003", "v51-001"],
   },
 ];

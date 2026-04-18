@@ -1764,3 +1764,463 @@
     transform: translateY(0);
   }
 }
+
+/* ============================================================
+   v5.1 Cockpit Layout — SLR + Stats + Feed + Campaigns
+   ============================================================ */
+
+.cockpit-greeting {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: var(--space-4, 32px);
+}
+
+.cockpit-greeting__eyebrow {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--primary, #c1121f);
+}
+
+.cockpit-greeting__title {
+  font-family: var(--font-display, Darky, sans-serif);
+  font-size: clamp(32px, 3.6vw, 48px);
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  color: var(--dark, #003049);
+  line-height: 1;
+  margin: 0;
+}
+
+.cockpit-greeting__sub {
+  font-size: 13px;
+  color: var(--graphite, #4a5568);
+  margin: 0;
+}
+
+/* ---- 2-col cockpit grid -------------------------------------- */
+.cockpit-grid {
+  display: grid;
+  grid-template-columns: 1.05fr 1fr;
+  gap: var(--space-4, 32px);
+  margin-top: var(--space-3, 24px);
+}
+
+@media (max-width: 1080px) {
+  .cockpit-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.cockpit-col {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4, 32px);
+  min-width: 0;
+}
+
+/* ---- This-week stats row ------------------------------------- */
+.cockpit-stats-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+  border: 1px solid var(--line, rgba(0, 48, 73, 0.1));
+  background: var(--surface-elevated, #ffffff);
+}
+
+@media (max-width: 820px) {
+  .cockpit-stats-row {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.cockpit-stat {
+  padding: 20px;
+  border-right: 1px solid var(--line, rgba(0, 48, 73, 0.08));
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.cockpit-stat:last-child {
+  border-right: 0;
+}
+
+@media (max-width: 820px) {
+  .cockpit-stat:nth-child(2n) {
+    border-right: 0;
+  }
+  .cockpit-stat:nth-child(-n + 2) {
+    border-bottom: 1px solid var(--line, rgba(0, 48, 73, 0.08));
+  }
+}
+
+.cockpit-stat__label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(0, 48, 73, 0.45);
+}
+
+.cockpit-stat__value {
+  font-family: var(--font-display, Darky, sans-serif);
+  font-size: 32px;
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  color: var(--dark, #003049);
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.cockpit-stat__sub {
+  font-size: 10px;
+  letter-spacing: 0.04em;
+  color: rgba(0, 48, 73, 0.45);
+}
+
+.cockpit-stat__sub--pos {
+  color: #065f46;
+}
+
+.cockpit-stat__sub--warn {
+  color: var(--champagne, #c9a96e);
+  font-weight: 700;
+}
+
+/* ---- Section wrapper (header + card) ------------------------ */
+.cockpit-section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.cockpit-section__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.cockpit-section__title {
+  font-family: var(--font-display, Darky, sans-serif);
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--dark, #003049);
+  margin: 0;
+}
+
+.cockpit-section__link {
+  font-family: var(--font-body, "CS Genio Mono", monospace);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--tertiary, #669bbc);
+  text-decoration: none;
+  transition: color 200ms ease;
+}
+
+.cockpit-section__link:hover {
+  color: var(--dark, #003049);
+}
+
+/* ---- Mini campaign card ------------------------------------- */
+.mini-campaign {
+  background: var(--surface-elevated, #ffffff);
+  border: 1px solid var(--line, rgba(0, 48, 73, 0.1));
+  padding: 18px 20px;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 12px 20px;
+  align-items: center;
+  transition:
+    border-color 200ms ease,
+    transform 200ms ease,
+    box-shadow 200ms ease;
+}
+
+.mini-campaign + .mini-campaign {
+  border-top: 0;
+}
+
+.mini-campaign:hover {
+  border-color: rgba(0, 48, 73, 0.2);
+  transform: translateY(-1px);
+  box-shadow: 0 8px 24px rgba(0, 48, 73, 0.06);
+}
+
+.mini-campaign__head {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.mini-campaign__title {
+  font-family: var(--font-display, Darky, sans-serif);
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--dark, #003049);
+  line-height: 1.2;
+  margin: 0;
+}
+
+.mini-campaign__goal {
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  color: rgba(0, 48, 73, 0.55);
+}
+
+.mini-campaign__body {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.mini-campaign__progress {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(0, 48, 73, 0.55);
+}
+
+.mini-campaign__progress strong {
+  font-family: var(--font-display, Darky, sans-serif);
+  font-size: 16px;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  color: var(--dark, #003049);
+  font-variant-numeric: tabular-nums;
+}
+
+.mini-campaign__bar {
+  height: 3px;
+  background: rgba(0, 48, 73, 0.08);
+}
+
+.mini-campaign__bar-fill {
+  height: 100%;
+  background: var(--champagne, #c9a96e);
+}
+
+.mini-campaign__roi {
+  font-size: 11px;
+  color: rgba(0, 48, 73, 0.55);
+}
+
+.mini-campaign__roi strong {
+  color: var(--dark, #003049);
+  font-weight: 700;
+}
+
+.mini-campaign__actions {
+  display: flex;
+  gap: 6px;
+  grid-column: 1 / -1;
+  border-top: 1px solid var(--line, rgba(0, 48, 73, 0.06));
+  padding-top: 10px;
+}
+
+.mini-action {
+  font-family: var(--font-body, "CS Genio Mono", monospace);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(0, 48, 73, 0.55);
+  background: none;
+  border: 1px solid var(--line, rgba(0, 48, 73, 0.12));
+  padding: 5px 10px;
+  cursor: pointer;
+  border-radius: 0;
+  transition: all 180ms ease;
+}
+
+.mini-action:hover {
+  color: var(--dark, #003049);
+  border-color: rgba(0, 48, 73, 0.35);
+}
+
+.mini-action--danger:hover {
+  color: var(--primary, #c1121f);
+  border-color: var(--primary, #c1121f);
+}
+
+/* ---- QR snapshot list --------------------------------------- */
+.qr-snap {
+  background: var(--surface-elevated, #ffffff);
+  border: 1px solid var(--line, rgba(0, 48, 73, 0.1));
+}
+
+.qr-snap__row {
+  display: grid;
+  grid-template-columns: 40px 1fr auto;
+  gap: 14px;
+  padding: 14px 20px;
+  align-items: center;
+  border-bottom: 1px solid rgba(0, 48, 73, 0.05);
+  transition: background 180ms ease;
+}
+
+.qr-snap__row:last-child {
+  border-bottom: 0;
+}
+
+.qr-snap__row:hover {
+  background: rgba(245, 242, 236, 0.6);
+}
+
+.qr-snap__chip {
+  width: 40px;
+  height: 40px;
+  background: var(--surface, #f5f2ec);
+  border: 1px solid var(--line, rgba(0, 48, 73, 0.12));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-body, "CS Genio Mono", monospace);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--dark, #003049);
+}
+
+.qr-snap__info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.qr-snap__name {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--dark, #003049);
+}
+
+.qr-snap__meta {
+  font-size: 11px;
+  color: rgba(0, 48, 73, 0.5);
+  letter-spacing: 0.02em;
+}
+
+.qr-snap__count {
+  font-family: var(--font-display, Darky, sans-serif);
+  font-size: 22px;
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  color: var(--dark, #003049);
+  font-variant-numeric: tabular-nums;
+}
+
+.qr-snap__count small {
+  font-family: var(--font-body, "CS Genio Mono", monospace);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(0, 48, 73, 0.45);
+  display: block;
+  line-height: 1;
+  margin-top: 2px;
+  text-align: right;
+}
+
+/* ============================================================
+   WAVE 3 — Merchant dashboard: transitions + hover
+   ============================================================ */
+
+/* ── Metric cards: lift on hover ─────────────────────────── */
+[class*="metric"],
+[class*="stat-card"],
+[class*="kpi-card"],
+[class*="card"] {
+  transition:
+    border-color 200ms ease,
+    background 200ms ease,
+    box-shadow 200ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 200ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+[class*="metric"]:hover,
+[class*="stat-card"]:hover,
+[class*="kpi-card"]:hover {
+  border-color: rgba(0, 48, 73, 0.25);
+  transform: translateY(-2px);
+  box-shadow:
+    0 4px 16px rgba(0, 48, 73, 0.08),
+    0 1px 3px rgba(0, 48, 73, 0.05);
+}
+
+/* ── Table rows: hover highlight ─────────────────────────── */
+[class*="table"] tr,
+[class*="row"]:not([class*="campaigns"]):not([class*="verif"]) {
+  transition: background 140ms ease;
+}
+[class*="table"] tr:hover,
+[class*="row"]:not([class*="campaigns"]):not([class*="verif"]):hover {
+  background: rgba(0, 48, 73, 0.03);
+}
+
+/* ── Status badges: subtle pulse on active ───────────────── */
+@keyframes status-pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.65; }
+}
+[class*="status--active"],
+[class*="status--live"],
+[class*="badge--active"] {
+  animation: status-pulse 2s ease-in-out infinite;
+}
+
+/* ── Dashboard entrance ──────────────────────────────────── */
+@keyframes dash-col-in {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+[class*="dash-col"]:nth-child(1) { animation: dash-col-in 380ms cubic-bezier(0.22, 1, 0.36, 1) 0ms both; }
+[class*="dash-col"]:nth-child(2) { animation: dash-col-in 380ms cubic-bezier(0.22, 1, 0.36, 1) 80ms both; }
+[class*="dash-col"]:nth-child(3) { animation: dash-col-in 380ms cubic-bezier(0.22, 1, 0.36, 1) 160ms both; }
+
+/* ── Notification bell hover ─────────────────────────────── */
+[class*="bell"],
+[class*="notif"] {
+  transition: transform 200ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+[class*="bell"]:hover,
+[class*="notif"]:hover {
+  transform: rotate(15deg);
+}
+
+/* ── Reduced motion ───────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  [class*="metric"]:hover,
+  [class*="stat-card"]:hover,
+  [class*="kpi-card"]:hover {
+    transform: none;
+    box-shadow: none;
+  }
+  [class*="status--active"],
+  [class*="status--live"],
+  [class*="badge--active"] {
+    animation: none;
+  }
+  [class*="dash-col"] {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+  [class*="bell"]:hover,
+  [class*="notif"]:hover {
+    transform: none;
+  }
+}

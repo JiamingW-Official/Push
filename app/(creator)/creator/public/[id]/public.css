@@ -471,6 +471,67 @@
   color: rgba(0, 48, 73, 0.55);
 }
 
+/* ── Animation / transition polish (appended) ──────────────────────────────── */
+
+/* public-hero entrance */
+@keyframes public-hero-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.public-hero {
+  animation: public-hero-in 360ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* pub-stat hover */
+.pub-stat {
+  transition: color 150ms ease;
+}
+.pub-stat:hover {
+  color: var(--primary, #c1121f);
+}
+
+/* campaign card stagger entrance */
+@keyframes public-campaign-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.pub-campaign-card:nth-child(1) {
+  animation: public-campaign-in 260ms ease both;
+  animation-delay: 0ms;
+}
+.pub-campaign-card:nth-child(2) {
+  animation: public-campaign-in 260ms ease both;
+  animation-delay: 70ms;
+}
+.pub-campaign-card:nth-child(3) {
+  animation: public-campaign-in 260ms ease both;
+  animation-delay: 140ms;
+}
+.pub-campaign-card:nth-child(4) {
+  animation: public-campaign-in 260ms ease both;
+  animation-delay: 210ms;
+}
+
+/* Reduced-motion guard */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
 /* ── Mobile ────────────────────────────────────────────────────────────────── */
 
 @media (max-width: 700px) {

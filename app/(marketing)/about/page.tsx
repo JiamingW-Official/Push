@@ -2,91 +2,111 @@ import Link from "next/link";
 import ScrollRevealInit from "@/components/layout/ScrollRevealInit";
 import "./about.css";
 
-/* ── Team data ─────────────────────────────────────────────── */
+/* ── Team data (v5.1 — 5-person founding crew) ──────────────── */
 const TEAM = [
   {
-    name: "Marcus Reyes",
-    role: "Co-founder & CEO",
-    bio: "Former operations lead at a Williamsburg hospitality group. Watched $80K in ad spend yield zero trackable results in 2024.",
+    initial: "J",
+    name: "Jiaming",
+    role: "Founder · Strategy",
+    bio: "Sets the Vertical AI for Local Commerce thesis and drives the Williamsburg Coffee+ beachhead. Closes merchants in person.",
   },
   {
-    name: "Yuna Park",
-    role: "Co-founder & CTO",
-    bio: "Built attribution systems at a Series B e-commerce company. Moved to NYC in 2023, fell in love with local food culture.",
+    initial: "Z",
+    name: "Z",
+    role: "Engineering · ConversionOracle™",
+    bio: "Owns the three-layer verification pipeline and the ConversionOracle training loop. Ships the Customer Acquisition Engine end to end.",
   },
   {
-    name: "Darius Okafor",
-    role: "Head of Creator Network",
-    bio: "Content creator turned operator. Ran local campaigns across Brooklyn and Queens before joining Push full-time.",
+    initial: "L",
+    name: "Lucy",
+    role: "Marketing · Creator Relations",
+    bio: "Runs Two-Segment Creator Economics signup, T1–T6 tier progression, and the NYC creator community. First call for every new creator.",
   },
   {
-    name: "Sofia Mendez",
-    role: "Head of Growth",
-    bio: "Previously scaled creator programs at two NYC-based consumer startups. Obsessed with neighborhood-level data.",
+    initial: "P",
+    name: "Prum",
+    role: "Operations · Neighborhood Playbook",
+    bio: "Translates every Williamsburg Coffee+ Pilot into a repeatable Neighborhood Playbook unit. Owns campaign SLAs and SLR compounding.",
   },
   {
-    name: "Alex Chen",
-    role: "Lead Engineer",
-    bio: "Shipped real-time data pipelines at a fintech. Joined Push to solve a harder problem: proving local foot traffic.",
+    initial: "M",
+    name: "Milly",
+    role: "Design · Content",
+    bio: "Protects the Push editorial language — Darky, CS Genio Mono, zero corners. Every brief, every deck, every landing page runs through her.",
   },
 ];
 
-/* ── Timeline data ─────────────────────────────────────────── */
+/* ── Timeline data (v5.1 — 2025 founded → roadmap) ─────────── */
 const TIMELINE = [
   {
-    period: "2025 Q4",
-    title: "The idea",
-    body: "Marcus pitches the attribution-first creator marketplace after losing $30K on influencer campaigns with no measurable outcome.",
+    period: "2025",
+    title: "Founded in NYC",
+    body: "Jiaming incorporates Push in New York City. Thesis: one vertical, one neighborhood, one compounding data asset. Vertical AI for Local Commerce becomes the product.",
   },
   {
     period: "2026 Q1",
-    title: "Launch",
-    body: "Push ships to ten founding merchants across Williamsburg and the East Village. First QR-verified visit recorded February 14.",
+    title: "ConversionOracle™ MVP",
+    body: "Three-layer verification ships — QR scan + Claude Vision receipt OCR + geo-match. First QR-to-verified-customer round trip lands under 8 seconds. DisclosureBot pre-flight wires into the creator caption ship path.",
   },
   {
     period: "2026 Q2",
-    title: "NYC pilot",
-    body: "Forty-seven creators, twelve businesses. $8.2K attributed revenue. Performance scoring model validated with real cohort data.",
+    title: "v5.1 Williamsburg Coffee+ Pilot",
+    body: "Ten Williamsburg Coffee+ merchants signed at $0 Pilot cost (cap $4,200 / neighborhood). 60-day SLR ladder runs publicly. First merchant auto-flips to Operator tier at 10 verified customers.",
   },
   {
     period: "2026 Q3",
-    title: "City-wide expansion",
-    body: "Rolling into all five boroughs. Creator tier system goes live. Merchant waitlist opens for Chicago and LA.",
+    title: "Neighborhood Playbook replication",
+    body: "Greenpoint + Bushwick + LES go live as repeatable Neighborhood Playbook units. T1–T6 Two-Segment Creator Economics scaled to 200 creators. DisclosureBot clears its first vertical expansion outside Coffee+.",
+  },
+  {
+    period: "2026 Q4+",
+    title: "Roadmap — SLR 25 by Month 12",
+    body: "SLR ladder targets 25 active campaigns per ops FTE by Month 12 of the beachhead. Series A raise on proof of the Customer Acquisition Engine replacing local acquisition services revenue with software revenue.",
   },
 ];
 
-/* ── Values data ───────────────────────────────────────────── */
+/* ── Values data (v5.1 — 5 operating principles) ───────────── */
 const VALUES = [
   {
-    word: "Honest",
-    desc: "Every payout is traceable. Every claim is backed by a QR scan. We don't count reach — only results.",
+    word: "Verified beats claimed",
+    desc: "Impressions and reach are claims. A QR scan matched to a Claude Vision receipt matched to a geo ping is a verified customer. We only count the latter.",
   },
   {
-    word: "Local",
-    desc: "We exist for the block-by-block economy of New York City. Hyper-proximity is not a feature, it is our reason for being.",
+    word: "Narrow beats broad",
+    desc: "One vertical (Coffee+), one neighborhood (Williamsburg), one AOV band ($8–20). Depth is the moat horizontal platforms will never get.",
   },
   {
-    word: "Verified",
-    desc: "A visit without proof is an assumption. We built the entire stack around a single obsession: prove the foot traffic happened.",
+    word: "Leverage beats labor",
+    desc: "Software Leverage Ratio (SLR) is the north-star — active campaigns per ops FTE. Twenty-five by Month 12. Every human-touch hour we remove is a unit of moat.",
   },
   {
-    word: "Fair",
-    desc: "Creators earn on performance, not follower count. Merchants pay only for what they get. No middlemen, no markup.",
+    word: "Trust is a moat",
+    desc: "DisclosureBot makes non-disclosure architecturally impossible. ConversionOracle™ ground truth accumulates per neighborhood. Trust compounds where reach can only repeat.",
+  },
+  {
+    word: "Operators before platforms",
+    desc: "The independent coffee owner pulling espresso at 6am is the customer. The platform is the means. We build what an operator can actually use on a Tuesday.",
   },
 ];
+
+/* ── Mission statement (v5.1) ───────────────────────────────── */
+// NOTE: Rephrased from the task brief's literal copy (which used a forbidden
+// project keyword) to stay inside the v5.1 grep-0 policy. Intent preserved.
+const MISSION =
+  "Replace the local acquisition services model with a Customer Acquisition Engine that ops teams can run 25\u00d7 leaner.";
 
 /* ── Press data ────────────────────────────────────────────── */
 const PRESS = [
   {
     outlet: "Hypepotamus NYC",
     quote:
-      "Push may be the first platform that makes local influencer marketing actually accountable.",
+      "Push is building vertical AI for local commerce — the first platform where every verified customer makes the system smarter.",
     date: "March 2026",
   },
   {
     outlet: "The Grocer Tech Report",
     quote:
-      "QR-verified foot traffic attribution is the missing link between creator content and real-world commerce.",
+      "ConversionOracle turns QR-verified foot traffic into a compounding data asset. That is the moat local services shops never had.",
     date: "February 2026",
   },
   {
@@ -120,16 +140,16 @@ export default function AboutPage() {
       {/* ── Hero ─────────────────────────────────────────────── */}
       <section className="about-hero" aria-labelledby="about-hero-heading">
         <div className="container">
-          <p className="eyebrow about-eyebrow">ABOUT PUSH · NYC</p>
+          <p className="eyebrow about-eyebrow">ABOUT PUSH</p>
           <h1 id="about-hero-heading" className="about-hero-headline">
             <span className="about-hero-line about-hero-line--black">
-              We built Push
+              Why we bet on
             </span>
             <span className="about-hero-line about-hero-line--light">
-              because attribution
+              Vertical AI
             </span>
             <span className="about-hero-line about-hero-line--red">
-              was broken.
+              for Local Commerce.
             </span>
           </h1>
           <div className="about-hero-rule" aria-hidden="true" />
@@ -151,64 +171,53 @@ export default function AboutPage() {
             </div>
 
             <h2 id="letter-heading" className="about-letter-headline">
-              <span className="wt-900">A letter</span>{" "}
-              <span className="wt-300">from the founder.</span>
+              <span className="wt-900">Why one vertical,</span>{" "}
+              <span className="wt-300">one neighborhood.</span>
             </h2>
 
             <div className="about-letter-body">
               <p>
-                I ran marketing for a hospitality group in Williamsburg for
-                three years. We worked with creators constantly — restaurant
-                takeovers, Instagram stories, TikTok walk-throughs. The content
-                always looked great. Our follower counts went up. But when I
-                asked which creator drove which customer through the door on a
-                Tuesday night, nobody could tell me. Not the creators. Not the
-                agencies. Not the platforms. Nobody.
+                Horizontal creator platforms lose every argument at the block
+                level. A generalist tool pricing coffee shops the same as
+                dentists the same as gyms cannot price accurately, cannot verify
+                attribution accurately, and cannot pre-screen disclosure
+                accurately — because the ground truth lives in a receipt, a QR
+                scan, and a geo ping that are specific to each vertical at each
+                AOV band. We bet on narrow on purpose: one vertical (Coffee+),
+                one neighborhood (Williamsburg), one 60-day Pilot window.
+                Specialization is the moat a generalist platform cannot
+                replicate.
               </p>
               <p>
-                In 2024, we spent $80,000 across creator campaigns. We could
-                attribute maybe $12,000 of it to anything measurable. The rest
-                was faith-based marketing dressed up in performance language.
-                "Brand awareness." "Reach." "Impressions." All of it is noise if
-                you cannot tie it to a body walking through your door.
+                The math on one-vertical-one-neighborhood is the Software
+                Leverage Ratio (SLR). SLR = active campaigns divided by ops FTE.
+                Local acquisition services shops run three to five campaigns per
+                human. Horizontal platforms plateau around the same number
+                because every new vertical costs a new playbook. Push is built
+                to run 25 by Month 12 — because the Neighborhood Playbook,
+                ConversionOracle™, and DisclosureBot mean one ops FTE
+                orchestrates twenty-five simultaneous campaigns without manual
+                triage. That 25× ratio is not a growth metric. It is the reason
+                Vertical AI for Local Commerce replaces services revenue with
+                software revenue.
               </p>
               <p>
-                NYC is the best laboratory for this problem. Two hundred and
-                thirty thousand local businesses, fifty thousand food and
-                lifestyle creators, and almost none of them have a reliable way
-                to find each other — let alone measure what happens when they
-                do. Every neighborhood is its own micro-economy. Williamsburg is
-                not Crown Heights. The East Village is not Astoria. Local
-                marketing should be local.
+                Williamsburg Coffee+ is Template 0, not our TAM. Every verified
+                walk-in trains ConversionOracle on the AOV $8–20 band. Every
+                creator brief hardens the Neighborhood Playbook. Every
+                disclosure we auto-clear is a row in the DisclosureBot training
+                set. Sixty days in one neighborhood produces the compounding
+                data asset the next 50 neighborhoods ship on top of. That is the
+                bet: depth first, then replicate the unit — never the other way
+                around.
               </p>
-              <p>
-                The insight that started Push was simple: the QR code is already
-                at every restaurant table, every retail counter, every event
-                entrance. It is not infrastructure we need to build — it is
-                infrastructure we need to close the loop on. When a creator
-                posts about your ramen shop and a customer walks in and scans
-                the code, that is a verified visit. That is something you can
-                pay for. That is attribution.
-              </p>
-              <p>
-                We built the platform so that a restaurant owner in Bushwick
-                pays only when a creator drives a customer through the door. We
-                built the tier system so that a creator with five hundred
-                followers earns on results, not reach, and has a clear path to
-                higher-paying campaigns as they build their track record. We
-                made it so that a campaign can go live in twenty-four hours and
-                every scan is logged, timestamped, and attributed to the exact
-                creator who drove it.
-              </p>
-              <p>
-                We are NYC-first and intentionally so. Network density matters
-                in local marketing. We would rather be deeply useful in one city
-                than thinly spread across twenty. If Push works in New York, it
-                works everywhere.
-              </p>
-              <p className="about-letter-sign">
-                — Marcus Reyes, Co-founder &amp; CEO
-              </p>
+              <p className="about-letter-sign">— Jiaming, Founder</p>
+            </div>
+
+            {/* Mission statement block */}
+            <div className="about-letter-mission reveal" aria-label="Mission">
+              <span className="about-letter-mission-label">Mission</span>
+              <p className="about-letter-mission-body">{MISSION}</p>
             </div>
           </div>
         </div>
@@ -278,12 +287,7 @@ export default function AboutPage() {
                 style={{ transitionDelay: `${i * 80}ms` }}
               >
                 <div className="about-team-avatar" aria-hidden="true">
-                  <span className="about-team-initials">
-                    {member.name
-                      .split(" ")
-                      .map((n) => n[0])
-                      .join("")}
-                  </span>
+                  <span className="about-team-initials">{member.initial}</span>
                 </div>
                 <div className="about-team-info">
                   <h3 className="about-team-name">{member.name}</h3>
@@ -381,23 +385,21 @@ export default function AboutPage() {
           <div className="about-cta-inner reveal">
             <p className="eyebrow about-cta-eyebrow">06 / Join us</p>
             <h2 id="about-cta-heading" className="about-cta-headline">
-              <span className="wt-900">Join us in rewriting</span>
+              <span className="wt-900">Build the Customer</span>
               <br />
-              <span className="wt-200">local marketing.</span>
+              <span className="wt-200">Acquisition Engine with us.</span>
             </h2>
             <p className="about-cta-body">
-              Whether you run a restaurant in Crown Heights or create content in
-              Astoria — Push is built for you.
+              We&apos;re five people running Williamsburg Coffee+ toward SLR 25.
+              Operator, engineer, or investor — if the Vertical AI for Local
+              Commerce bet lands for you, talk to us.
             </p>
             <div className="about-cta-actions">
-              <Link href="/merchant/signup" className="btn btn-primary">
-                Start as a Merchant
+              <Link href="/careers" className="btn btn-primary">
+                Join us
               </Link>
-              <Link
-                href="/creator/signup"
-                className="btn btn-ghost about-cta-ghost"
-              >
-                Apply as Creator
+              <Link href="/yc-2027" className="btn btn-ghost about-cta-ghost">
+                Invest
               </Link>
             </div>
           </div>

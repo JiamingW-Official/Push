@@ -184,7 +184,7 @@ export const MOCK_PROFILES: CreatorProfile[] = [
         merchant: "Elena Vasquez",
         role: "Marketing, Salt & Stone Bar",
         quote:
-          "Exceptional storytelling. She captured our cocktail program better than any agency we've worked with.",
+          "Exceptional storytelling. She captured our cocktail program better than any creative partner we've worked with.",
         rating: 5,
       },
       {

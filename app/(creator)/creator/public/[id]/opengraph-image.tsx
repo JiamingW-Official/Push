@@ -4,6 +4,7 @@ import { ogTemplate, loadFonts, buildFonts } from "@/lib/og/template";
 export const alt = "Push Creator Profile";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
+export const dynamic = "force-dynamic";
 
 interface CreatorProfile {
   handle: string;

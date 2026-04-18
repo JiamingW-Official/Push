@@ -1200,3 +1200,64 @@
     -webkit-overflow-scrolling: touch;
   }
 }
+
+/* ─────────────────────────────────────────────────────────────
+   MICRO-INTERACTIONS — campaigns
+   Appended polish pass; existing rules are NOT modified.
+───────────────────────────────────────────────────────────── */
+
+/* Row hover lift */
+.campaign-row {
+  transition: transform 180ms ease, box-shadow 180ms ease;
+}
+.campaign-row:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+/* Active-status glow pulse */
+@keyframes camp-status-glow {
+  from { box-shadow: 0 0 0px rgba(193, 18, 31, 0); }
+  to   { box-shadow: 0 0 6px rgba(193, 18, 31, 0.3); }
+}
+.campaign-status--active {
+  animation: camp-status-glow 1.5s ease infinite alternate;
+}
+
+/* Row entrance animation */
+@keyframes camp-row-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.campaign-row {
+  animation: camp-row-in 220ms ease both;
+}
+
+/* Stagger delays 1-8 at 40ms increments */
+.campaign-row:nth-child(1) { animation-delay: 40ms; }
+.campaign-row:nth-child(2) { animation-delay: 80ms; }
+.campaign-row:nth-child(3) { animation-delay: 120ms; }
+.campaign-row:nth-child(4) { animation-delay: 160ms; }
+.campaign-row:nth-child(5) { animation-delay: 200ms; }
+.campaign-row:nth-child(6) { animation-delay: 240ms; }
+.campaign-row:nth-child(7) { animation-delay: 280ms; }
+.campaign-row:nth-child(8) { animation-delay: 320ms; }
+
+/* Respect reduced-motion preference */
+@media (prefers-reduced-motion: reduce) {
+  .campaign-row,
+  .campaign-status--active {
+    animation: none;
+    transition: none;
+  }
+  .campaign-row:hover {
+    transform: none;
+    box-shadow: none;
+  }
+}

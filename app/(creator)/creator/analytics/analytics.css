@@ -405,3 +405,46 @@
   color: var(--primary);
   border-color: var(--primary);
 }
+
+/* ── Premium micro-interactions ───────────────────────────── */
+
+.an-insight-card:hover,
+.an-hero-stat:hover {
+  /* analytics-metric lift */
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transition: transform 200ms cubic-bezier(0.22, 1, 0.36, 1),
+              box-shadow 200ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes creator-chart-in {
+  from { transform: scaleY(0); }
+  to   { transform: scaleY(1); }
+}
+
+.an-hbar-fill {
+  transform-origin: left center;
+  animation: creator-chart-in 500ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* chart-col stagger — maps to .an-hbar-row:nth-child(n) */
+.an-hbar-row:nth-child(1)  .an-hbar-fill { animation-delay:  50ms; }
+.an-hbar-row:nth-child(2)  .an-hbar-fill { animation-delay: 100ms; }
+.an-hbar-row:nth-child(3)  .an-hbar-fill { animation-delay: 150ms; }
+.an-hbar-row:nth-child(4)  .an-hbar-fill { animation-delay: 200ms; }
+.an-hbar-row:nth-child(5)  .an-hbar-fill { animation-delay: 250ms; }
+.an-hbar-row:nth-child(6)  .an-hbar-fill { animation-delay: 300ms; }
+.an-hbar-row:nth-child(7)  .an-hbar-fill { animation-delay: 350ms; }
+.an-hbar-row:nth-child(8)  .an-hbar-fill { animation-delay: 400ms; }
+.an-hbar-row:nth-child(9)  .an-hbar-fill { animation-delay: 450ms; }
+.an-hbar-row:nth-child(10) .an-hbar-fill { animation-delay: 500ms; }
+
+@media (prefers-reduced-motion: reduce) {
+  .an-insight-card,
+  .an-hero-stat,
+  .an-hbar-fill {
+    animation: none !important;
+    transition: none !important;
+    transform: none !important;
+  }
+}

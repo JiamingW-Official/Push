@@ -23,6 +23,15 @@ const ALL_TIERS: CreatorTier[] = [
 ];
 
 const TIER_DISPLAY: Record<CreatorTier, string> = {
+  seed: "Clay",
+  explorer: "Bronze",
+  operator: "Steel",
+  proven: "Gold",
+  closer: "Ruby",
+  partner: "Obsidian",
+};
+
+const TIER_FULL_LABEL: Record<CreatorTier, string> = {
   seed: "Clay · Seed",
   explorer: "Bronze · Explorer",
   operator: "Steel · Operator",
@@ -31,40 +40,15 @@ const TIER_DISPLAY: Record<CreatorTier, string> = {
   partner: "Obsidian · Partner",
 };
 
-type TierCfg = {
-  bg: string;
-  color: string;
-  border: string;
-  borderLeft?: string;
-};
-
-const TIER_CFG: Record<CreatorTier, TierCfg> = {
-  seed: {
-    bg: "transparent",
-    color: "#003049",
-    border: "1.5px dashed rgba(184,169,154,0.65)",
-  },
-  explorer: { bg: "#8c6239", color: "#fff", border: "1px solid #8c6239" },
-  operator: { bg: "#4a5568", color: "#fff", border: "1px solid #4a5568" },
-  proven: { bg: "#c9a96e", color: "#003049", border: "1px solid #c9a96e" },
-  closer: { bg: "#9b111e", color: "#fff", border: "1px solid #9b111e" },
-  partner: {
-    bg: "#1a1a2e",
-    color: "#fff",
-    border: "1px solid #1a1a2e",
-    borderLeft: "3px solid #c1121f",
-  },
-};
-
-type SortOption = "recent" | "score_desc" | "match_desc";
-type BulkDecision = "accept" | "decline" | "shortlist";
-
 const STATUS_LABELS: Record<ApplicationStatus, string> = {
   pending: "Pending",
   accepted: "Accepted",
   declined: "Declined",
-  shortlisted: "Shortlisted",
+  shortlisted: "Waitlist",
 };
+
+type SortOption = "recent" | "score_desc" | "match_desc";
+type BulkDecision = "accept" | "decline" | "shortlist";
 
 /* ── Utility ─────────────────────────────────────────────── */
 
@@ -72,7 +56,7 @@ function relativeTime(iso: string): string {
   const diff = Date.now() - new Date(iso).getTime();
   const days = Math.floor(diff / 86400000);
   if (days === 0) return "Today";
-  if (days === 1) return "Yesterday";
+  if (days === 1) return "1d ago";
   if (days < 7) return `${days}d ago`;
   return new Date(iso).toLocaleDateString("en-US", {
     month: "short",
@@ -80,263 +64,344 @@ function relativeTime(iso: string): string {
   });
 }
 
-/* ── Sub-components ──────────────────────────────────────── */
+// Deterministic pseudo-score based on creator+dimension, 55–95 range.
+function subScore(seed: string, dimension: string): number {
+  let h = 0;
+  const s = `${seed}::${dimension}`;
+  for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) | 0;
+  return 55 + (Math.abs(h) % 41);
+}
+
+/* ── Tier Badge (Design.md Tier Identity) ────────────────── */
 
 function TierBadge({ tier }: { tier: CreatorTier }) {
-  const c = TIER_CFG[tier];
   return (
-    <span
-      className="ap-creator__tier"
-      style={{
-        background: c.bg,
-        color: c.color,
-        border: c.border,
-        borderLeft: c.borderLeft ?? c.border,
-      }}
-    >
+    <span className={`tier-badge tier-badge--${tier}`}>
       {TIER_DISPLAY[tier]}
     </span>
   );
 }
 
-function StatusBadge({ status }: { status: ApplicationStatus }) {
-  if (status === "pending") return null;
-  return (
-    <span className={`ap-status-badge ap-status-badge--${status}`}>
-      {STATUS_LABELS[status]}
-    </span>
-  );
-}
-
-function EmptyStateInbox() {
-  return (
-    <div className="ap-empty">
-      <svg
-        className="ap-empty__icon"
-        viewBox="0 0 64 64"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.5"
-      >
-        <rect x="8" y="16" width="48" height="36" />
-        <polyline points="8,16 32,38 56,16" />
-      </svg>
-      <div className="ap-empty__title">Inbox zero. Nice.</div>
-      <div className="ap-empty__sub">
-        All applications have been reviewed. Check back when new creators apply.
-      </div>
-    </div>
-  );
-}
-
-function EmptyStateFiltered() {
-  return (
-    <div className="ap-empty">
-      <svg
-        className="ap-empty__icon"
-        viewBox="0 0 64 64"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.5"
-      >
-        <circle cx="28" cy="28" r="18" />
-        <line x1="41" y1="41" x2="56" y2="56" />
-        <line x1="20" y1="28" x2="36" y2="28" />
-      </svg>
-      <div className="ap-empty__title">No match.</div>
-      <div className="ap-empty__sub">
-        No applications match these filters. Try adjusting your selection.
-      </div>
-    </div>
-  );
-}
-
-/* ── Accordion row ───────────────────────────────────────── */
+/* ── Applicant row (list item) ───────────────────────────── */
 
 function ApplicantRow({
   app,
   selected,
+  checked,
   onSelect,
-  onDecide,
+  onToggleCheck,
 }: {
   app: MockApplication;
   selected: boolean;
-  onSelect: (id: string, checked: boolean) => void;
-  onDecide: (id: string, decision: "accept" | "decline") => void;
+  checked: boolean;
+  onSelect: () => void;
+  onToggleCheck: (checked: boolean) => void;
 }) {
-  const [open, setOpen] = useState(false);
-  const score = app.creator.pushScore;
-  const isHigh = score >= 75;
-
-  const handleRowClick = (e: React.MouseEvent) => {
-    const target = e.target as HTMLElement;
-    if (
-      target.tagName === "INPUT" ||
-      target.tagName === "BUTTON" ||
-      target.tagName === "A" ||
-      target.closest("button") ||
-      target.closest("a")
-    )
-      return;
-    setOpen((v) => !v);
-  };
+  const score = app.matchScore;
 
   return (
-    <div className="ap-row-wrap">
-      <div
-        className={`ap-row${selected ? " ap-row--selected" : ""}${app.status === "declined" ? " ap-row--declined" : ""}`}
-        onClick={handleRowClick}
-        role="button"
-        tabIndex={0}
-        onKeyDown={(e) => {
-          if (e.key === "Enter" || e.key === " ") setOpen((v) => !v);
+    <div
+      className={[
+        "ap-row",
+        selected ? "ap-row--selected" : "",
+        app.status === "declined" ? "ap-row--declined" : "",
+      ]
+        .filter(Boolean)
+        .join(" ")}
+      onClick={onSelect}
+      role="button"
+      tabIndex={0}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          onSelect();
+        }
+      }}
+      aria-selected={selected}
+    >
+      <input
+        type="checkbox"
+        className="ap-checkbox"
+        checked={checked}
+        onChange={(e) => {
+          e.stopPropagation();
+          onToggleCheck(e.target.checked);
         }}
-        aria-expanded={open}
-      >
-        {/* Checkbox */}
-        <input
-          type="checkbox"
-          className="ap-checkbox"
-          checked={selected}
-          onChange={(e) => {
-            e.stopPropagation();
-            onSelect(app.id, e.target.checked);
-          }}
-          onClick={(e) => e.stopPropagation()}
-          aria-label={`Select ${app.creator.name}`}
+        onClick={(e) => e.stopPropagation()}
+        aria-label={`Select ${app.creator.name}`}
+      />
+
+      <div className={`ap-avatar-wrap tier--${app.creator.tier}`}>
+        <img
+          src={app.creator.avatar}
+          alt={app.creator.name}
+          className="ap-avatar"
+          loading="lazy"
         />
+      </div>
 
-        {/* Creator */}
-        <div className="ap-creator">
-          <img
-            src={app.creator.avatar}
-            alt={app.creator.name}
-            className="ap-creator__avatar"
-            loading="lazy"
-          />
-          <div className="ap-creator__info">
-            <div className="ap-creator__name">{app.creator.name}</div>
-            <div className="ap-creator__handle">{app.creator.handle}</div>
-            <TierBadge tier={app.creator.tier} />
+      <div className="ap-row__body">
+        <div className="ap-row__top">
+          <div className="ap-row__identity">
+            <div className="ap-row__handle">{app.creator.handle}</div>
+            <div className="ap-row__name">{app.creator.name}</div>
           </div>
+          <TierBadge tier={app.creator.tier} />
         </div>
 
-        {/* Push Score */}
-        <div className={`ap-score${isHigh ? " ap-score--high" : ""}`}>
-          {score}
-        </div>
+        <div className="ap-row__stats">
+          <div className="ap-row__verified">
+            <span className="ap-row__verified-value">
+              {app.creator.campaignsCompleted}
+            </span>
+            <span className="ap-row__verified-label">verified</span>
+          </div>
 
-        {/* Campaign */}
-        <a
-          href={`/merchant/dashboard`}
-          className="ap-campaign"
-          onClick={(e) => e.stopPropagation()}
-          title={app.campaignName}
-        >
-          {app.campaignName}
-        </a>
-
-        {/* Match % */}
-        <div className="ap-match">{app.matchScore}%</div>
-
-        {/* Last active */}
-        <div className="ap-active">{relativeTime(app.creator.lastActive)}</div>
-
-        {/* Actions */}
-        <div className="ap-actions">
-          {app.status === "pending" ? (
-            <>
-              <button
-                className="ap-btn ap-btn--message"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  // TODO: integrate with messaging once merged
-                  console.log(
-                    `Navigate to /merchant/messages and pre-select thread for ${app.creator.handle}`,
-                  );
-                }}
-                title="Message creator"
-              >
-                Msg
-              </button>
-              <button
-                className="ap-btn ap-btn--accept"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onDecide(app.id, "accept");
-                }}
-              >
-                Accept
-              </button>
-              <button
-                className="ap-btn ap-btn--decline"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onDecide(app.id, "decline");
-                }}
-              >
-                Decline
-              </button>
-            </>
-          ) : (
-            <StatusBadge status={app.status} />
-          )}
+          <div className="ap-row__status-cell">
+            <span
+              className={`ap-status ap-status--${app.status}`}
+              data-status={app.status}
+            >
+              {STATUS_LABELS[app.status]}
+            </span>
+          </div>
         </div>
       </div>
 
-      {/* Accordion */}
-      <div className={`ap-accordion${open ? " ap-accordion--open" : ""}`}>
-        <div className="ap-accordion__inner">
-          {/* Left column: bio + stats + samples */}
-          <div>
-            <div className="ap-accordion__section-label">Creator profile</div>
-            <div className="ap-accordion__bio">{app.creator.bio}</div>
-            <div className="ap-accordion__stats">
-              <div className="ap-accordion__stat">
-                <span className="ap-accordion__stat-value">
-                  {app.creator.campaignsCompleted}
-                </span>
-                <span className="ap-accordion__stat-label">
-                  Campaigns completed
-                </span>
-              </div>
-              <div className="ap-accordion__stat">
-                <span className="ap-accordion__stat-value">
-                  {(app.creator.conversionRate * 100).toFixed(1)}%
-                </span>
-                <span className="ap-accordion__stat-label">
-                  Conversion rate
-                </span>
-              </div>
-              <div className="ap-accordion__stat">
-                <span className="ap-accordion__stat-value">
-                  {app.creator.followers >= 1000
-                    ? `${(app.creator.followers / 1000).toFixed(1)}K`
-                    : app.creator.followers}
-                </span>
-                <span className="ap-accordion__stat-label">Followers</span>
-              </div>
-            </div>
-            <div className="ap-accordion__section-label">Sample posts</div>
-            <div className="ap-accordion__samples">
-              {app.sampleUrls.map((url, i) => (
-                <img
-                  key={i}
-                  src={url}
-                  alt={`Sample ${i + 1}`}
-                  className="ap-accordion__sample"
-                  loading="lazy"
-                />
-              ))}
-            </div>
-          </div>
+      <div className="ap-row__score" title="ConversionOracle™ match score">
+        <div className="ap-row__score-value">{score}</div>
+        <div className="ap-row__score-label">match</div>
+      </div>
+    </div>
+  );
+}
 
-          {/* Right column: cover letter */}
-          <div>
-            <div className="ap-accordion__section-label">Application note</div>
-            <div className="ap-accordion__cover">{app.coverLetter}</div>
+/* ── Sub-score bar ───────────────────────────────────────── */
+
+function SubScoreBar({
+  label,
+  value,
+  tier,
+}: {
+  label: string;
+  value: number;
+  tier: CreatorTier;
+}) {
+  return (
+    <div className="ap-sub">
+      <div className="ap-sub__head">
+        <span className="ap-sub__label">{label}</span>
+        <span className="ap-sub__value">{value}</span>
+      </div>
+      <div className="ap-sub__track">
+        <span
+          className={`tier-progress--${tier}`}
+          style={{ width: `${value}%` }}
+        />
+      </div>
+    </div>
+  );
+}
+
+/* ── Detail Panel ────────────────────────────────────────── */
+
+function DetailPanel({
+  app,
+  onDecide,
+}: {
+  app: MockApplication | null;
+  onDecide: (id: string, decision: BulkDecision) => void;
+}) {
+  if (!app) {
+    return (
+      <div className="ap-detail ap-detail--empty">
+        <div className="ap-detail__empty-icon" aria-hidden>
+          <svg
+            viewBox="0 0 64 64"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.5"
+          >
+            <circle cx="32" cy="24" r="10" />
+            <path d="M12 52c4-10 12-14 20-14s16 4 20 14" />
+          </svg>
+        </div>
+        <div className="ap-detail__empty-title">No applicant selected</div>
+        <div className="ap-detail__empty-sub">
+          Select a creator from the list to review their ConversionOracle™ match
+          and past walk-in performance.
+        </div>
+      </div>
+    );
+  }
+
+  const seedId = app.creator.id;
+  const scores = {
+    consistency: subScore(seedId, "consistency"),
+    match: app.matchScore,
+    reach: Math.min(
+      95,
+      Math.round(55 + Math.log10(app.creator.followers + 10) * 9),
+    ),
+    authenticity: subScore(seedId, "authenticity"),
+  };
+
+  return (
+    <div className="ap-detail">
+      {/* Tier band */}
+      <span className={`tier-header--${app.creator.tier}`} aria-hidden />
+
+      {/* Header */}
+      <div className="ap-detail__head">
+        <div
+          className={`ap-avatar-wrap ap-avatar-wrap--lg tier--${app.creator.tier}`}
+        >
+          <img
+            src={app.creator.avatar}
+            alt={app.creator.name}
+            className="ap-avatar ap-avatar--lg"
+          />
+        </div>
+        <div className="ap-detail__ident">
+          <div className="ap-detail__handle">{app.creator.handle}</div>
+          <h2 className="ap-detail__name">{app.creator.name}</h2>
+          <div className="ap-detail__meta">
+            <TierBadge tier={app.creator.tier} />
+            <span className="ap-detail__meta-dot" aria-hidden>
+              ·
+            </span>
+            <span className="ap-detail__applied">
+              Applied {relativeTime(app.appliedAt)}
+            </span>
           </div>
         </div>
+        <a
+          href={`/merchant/applicants/${app.id}`}
+          className="ap-detail__full-link"
+        >
+          View full profile →
+        </a>
+      </div>
+
+      {/* ConversionOracle Match score headline */}
+      <div className="ap-detail__oracle">
+        <div className="ap-detail__oracle-num">{app.matchScore}</div>
+        <div className="ap-detail__oracle-right">
+          <div className="ap-detail__oracle-label">ConversionOracle™ match</div>
+          <div className="ap-detail__oracle-caption">
+            Predicted walk-in conversion vs. your Williamsburg Coffee+ beachhead
+            baseline.
+          </div>
+        </div>
+      </div>
+
+      {/* Mini portfolio */}
+      <div className="ap-detail__section">
+        <div className="ap-detail__section-label">Mini-portfolio</div>
+        <div className="ap-detail__samples">
+          {app.sampleUrls.slice(0, 3).map((url, i) => (
+            <div key={i} className="ap-detail__sample">
+              <img src={url} alt={`Sample ${i + 1}`} loading="lazy" />
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Verified customers timeline */}
+      <div className="ap-detail__section">
+        <div className="ap-detail__section-label">
+          Verified customers · last 5 campaigns
+        </div>
+        <div className="ap-detail__timeline">
+          {Array.from({ length: 5 }).map((_, i) => {
+            const count = Math.max(
+              0,
+              Math.round(
+                (app.creator.campaignsCompleted || 0) * (0.25 - i * 0.035) +
+                  subScore(seedId, `ts${i}`) / 10,
+              ),
+            );
+            return (
+              <div key={i} className="ap-detail__ts-bar">
+                <div
+                  className="ap-detail__ts-fill"
+                  style={{ height: `${Math.min(100, count * 2.5)}%` }}
+                />
+                <div className="ap-detail__ts-count">{count}</div>
+              </div>
+            );
+          })}
+        </div>
+        <div className="ap-detail__timeline-axis">
+          <span>Oldest</span>
+          <span>Latest</span>
+        </div>
+      </div>
+
+      {/* Creator score breakdown */}
+      <div className="ap-detail__section">
+        <div className="ap-detail__section-label">Creator score breakdown</div>
+        <div className="ap-detail__subs">
+          <SubScoreBar
+            label="Consistency"
+            value={scores.consistency}
+            tier={app.creator.tier}
+          />
+          <SubScoreBar
+            label="Match"
+            value={scores.match}
+            tier={app.creator.tier}
+          />
+          <SubScoreBar
+            label="Reach"
+            value={scores.reach}
+            tier={app.creator.tier}
+          />
+          <SubScoreBar
+            label="Authenticity"
+            value={scores.authenticity}
+            tier={app.creator.tier}
+          />
+        </div>
+      </div>
+
+      {/* Last campaign notes */}
+      <div className="ap-detail__section">
+        <div className="ap-detail__section-label">Notes · last campaign</div>
+        <blockquote className="ap-detail__notes">
+          &ldquo;{app.coverLetter}&rdquo;
+        </blockquote>
+      </div>
+
+      {/* Primary actions */}
+      <div className="ap-detail__actions">
+        <button
+          className="ap-detail-btn ap-detail-btn--accept"
+          onClick={() => onDecide(app.id, "accept")}
+          disabled={app.status === "accepted"}
+        >
+          Approve
+        </button>
+        <button
+          className="ap-detail-btn ap-detail-btn--waitlist"
+          onClick={() => onDecide(app.id, "shortlist")}
+          disabled={app.status === "shortlisted"}
+        >
+          Waitlist
+        </button>
+        <button
+          className="ap-detail-btn ap-detail-btn--reject"
+          onClick={() => onDecide(app.id, "decline")}
+          disabled={app.status === "declined"}
+        >
+          Reject
+        </button>
+        <a
+          href="/merchant/messages"
+          className="ap-detail-btn ap-detail-btn--message"
+        >
+          Message creator
+        </a>
       </div>
     </div>
   );
@@ -357,26 +422,27 @@ function ConfirmModal({
 }) {
   const label =
     decision === "accept"
-      ? "Accept"
+      ? "Approve"
       : decision === "decline"
-        ? "Decline"
-        : "Shortlist";
+        ? "Reject"
+        : "Waitlist";
   const verb =
     decision === "accept"
-      ? "accepted"
+      ? "approved"
       : decision === "decline"
-        ? "declined"
-        : "shortlisted";
+        ? "rejected"
+        : "waitlisted";
 
   return (
     <div className="ap-modal-overlay" onClick={onCancel}>
       <div className="ap-modal" onClick={(e) => e.stopPropagation()}>
         <div className="ap-modal__title">
-          {label} {count} creator{count !== 1 ? "s" : ""}?
+          {label} {count} applicant{count !== 1 ? "s" : ""}?
         </div>
         <div className="ap-modal__body">
           {count} application{count !== 1 ? "s" : ""} will be marked as{" "}
-          <strong>{verb}</strong>. Creators will be notified.
+          <strong>{verb}</strong>. DisclosureBot will notify creators
+          automatically.
         </div>
         <div className="ap-modal__actions">
           <button className="ap-modal__cancel" onClick={onCancel}>
@@ -391,84 +457,26 @@ function ConfirmModal({
   );
 }
 
-/* ── Bulk Bar ────────────────────────────────────────────── */
-
-function BulkBar({
-  count,
-  visible,
-  onDecision,
-  onClear,
-}: {
-  count: number;
-  visible: boolean;
-  onDecision: (d: BulkDecision) => void;
-  onClear: () => void;
-}) {
-  return (
-    <div className={`ap-bulk-bar${visible ? " ap-bulk-bar--visible" : ""}`}>
-      <span className="ap-bulk-bar__count">{count} selected</span>
-      <div className="ap-bulk-bar__sep" />
-      <button
-        className="ap-bulk-btn ap-bulk-btn--accept"
-        onClick={() => onDecision("accept")}
-      >
-        Accept all
-      </button>
-      <button
-        className="ap-bulk-btn ap-bulk-btn--decline"
-        onClick={() => onDecision("decline")}
-      >
-        Decline all
-      </button>
-      <button
-        className="ap-bulk-btn ap-bulk-btn--shortlist"
-        onClick={() => onDecision("shortlist")}
-      >
-        Shortlist
-      </button>
-      <button
-        className="ap-bulk-btn ap-bulk-btn--message"
-        onClick={() => {
-          // TODO: integrate with messaging once merged
-          console.log("Open bulk message thread for selected creators");
-        }}
-      >
-        Message all
-      </button>
-      <div className="ap-bulk-bar__sep" />
-      <button
-        className="ap-bulk-bar__close"
-        onClick={onClear}
-        aria-label="Clear selection"
-      >
-        ×
-      </button>
-    </div>
-  );
-}
-
 /* ── Main Page ───────────────────────────────────────────── */
 
 export default function MerchantApplicantsPage() {
-  // Filter state
   const [campaignId, setCampaignId] = useState<string>("");
   const [selectedTiers, setSelectedTiers] = useState<CreatorTier[]>([]);
   const [selectedStatuses, setSelectedStatuses] = useState<ApplicationStatus[]>(
     [],
   );
-  const [sort, setSort] = useState<SortOption>("recent");
+  const [sort, setSort] = useState<SortOption>("match_desc");
   const [search, setSearch] = useState("");
+  const [minMatch, setMinMatch] = useState<number>(0);
 
-  // Selection state
-  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [checkedIds, setCheckedIds] = useState<Set<string>>(new Set());
 
-  // Modal state
   const [pendingDecision, setPendingDecision] = useState<{
     decision: BulkDecision;
     ids: string[];
   } | null>(null);
 
-  // Local application state (mirrors mock store)
   const [, forceRender] = useState(0);
 
   const filters: ApplicantFilters = {
@@ -481,22 +489,21 @@ export default function MerchantApplicantsPage() {
     limit: 80,
   };
 
-  const { data: apps, total } = merchantMock.getApplicants(filters);
+  const { data: allFiltered, total: rawTotal } =
+    merchantMock.getApplicants(filters);
 
-  // Hero stats
-  const allApps = merchantMock.getApplicants({ limit: 80 }).data;
-  const pendingCount = useMemo(
-    () => allApps.filter((a) => a.status === "pending").length,
-    [allApps],
+  // Apply match-score threshold on top (UI-only filter)
+  const apps = useMemo(
+    () => allFiltered.filter((a) => a.matchScore >= minMatch),
+    [allFiltered, minMatch],
   );
-  const thisWeekCount = useMemo(() => {
-    const weekAgo = Date.now() - 7 * 86400000;
-    return allApps.filter((a) => new Date(a.appliedAt).getTime() > weekAgo)
-      .length;
-  }, [allApps]);
+  const total = apps.length;
 
-  // Avg response time (mock: 2.4h)
-  const avgResponseTime = "2.4h";
+  // Auto-select first applicant when none selected (or current is filtered out)
+  const activeApp = useMemo(() => {
+    if (!selectedId) return apps[0] ?? null;
+    return apps.find((a) => a.id === selectedId) ?? apps[0] ?? null;
+  }, [selectedId, apps]);
 
   const toggleTier = useCallback((tier: CreatorTier) => {
     setSelectedTiers((prev) =>
@@ -512,8 +519,8 @@ export default function MerchantApplicantsPage() {
     );
   }, []);
 
-  const handleSelect = useCallback((id: string, checked: boolean) => {
-    setSelectedIds((prev) => {
+  const handleToggleCheck = useCallback((id: string, checked: boolean) => {
+    setCheckedIds((prev) => {
       const next = new Set(prev);
       if (checked) next.add(id);
       else next.delete(id);
@@ -521,94 +528,67 @@ export default function MerchantApplicantsPage() {
     });
   }, []);
 
-  const handleDecide = useCallback(
-    (id: string, decision: "accept" | "decline") => {
-      merchantMock.decideApplication(id, decision);
-      setSelectedIds((prev) => {
-        const next = new Set(prev);
-        next.delete(id);
-        return next;
-      });
-      forceRender((n) => n + 1);
-    },
-    [],
-  );
+  const handleDecide = useCallback((id: string, decision: BulkDecision) => {
+    const mapped: "accept" | "decline" | "shortlist" =
+      decision === "accept"
+        ? "accept"
+        : decision === "decline"
+          ? "decline"
+          : "shortlist";
+    // merchantMock.decideApplication supports accept/decline;
+    // use batchDecide for shortlist to reuse existing setter logic.
+    if (mapped === "shortlist") {
+      merchantMock.batchDecide([id], "shortlist");
+    } else {
+      merchantMock.decideApplication(id, mapped);
+    }
+    setCheckedIds((prev) => {
+      const next = new Set(prev);
+      next.delete(id);
+      return next;
+    });
+    forceRender((n) => n + 1);
+  }, []);
 
   const handleBulkTrigger = useCallback(
     (decision: BulkDecision) => {
-      setPendingDecision({ decision, ids: Array.from(selectedIds) });
+      if (checkedIds.size === 0) return;
+      setPendingDecision({ decision, ids: Array.from(checkedIds) });
     },
-    [selectedIds],
+    [checkedIds],
   );
 
   const handleConfirmBulk = useCallback(() => {
     if (!pendingDecision) return;
     merchantMock.batchDecide(pendingDecision.ids, pendingDecision.decision);
-    setSelectedIds(new Set());
+    setCheckedIds(new Set());
     setPendingDecision(null);
     forceRender((n) => n + 1);
   }, [pendingDecision]);
 
-  const clearSelection = useCallback(() => {
-    setSelectedIds(new Set());
-  }, []);
-
-  const hasFilters =
-    !!campaignId ||
-    selectedTiers.length > 0 ||
-    selectedStatuses.length > 0 ||
-    !!search;
+  const clearChecks = useCallback(() => setCheckedIds(new Set()), []);
 
   return (
     <div className="ap-shell">
-      {/* Nav */}
-      <nav className="ap-nav">
-        <a href="/" className="ap-nav__logo">
-          Push<span>.</span>
-        </a>
-        <a href="/merchant/dashboard" className="ap-nav__back">
-          ← Dashboard
-        </a>
-        <div className="ap-nav__center">
-          <span className="ap-nav__title">Applicant Inbox</span>
-        </div>
-        <div className="ap-nav__right" />
-      </nav>
-
       <div className="ap-content">
-        {/* Editorial Hero */}
-        <section className="ap-hero">
-          <div className="ap-hero__inner">
-            <div className="ap-hero__eyebrow">Merchant · Applicant Inbox</div>
-            <div className="ap-hero__row">
-              <div className="ap-hero__stat">
-                <div className="ap-hero__number">{pendingCount}</div>
-                <div className="ap-hero__label">
-                  Applications pending review
-                </div>
-              </div>
+        {/* Page header */}
+        <header className="ap-page-header">
+          <div className="ap-page-header__inner">
+            <div className="ap-page-header__eyebrow">
+              Customer Acquisition Engine · Vertical AI for Local Commerce
             </div>
-            <div className="ap-hero__meta">
-              <div className="ap-hero__meta-item">
-                <span className="ap-hero__meta-value">+{thisWeekCount}</span>
-                <span className="ap-hero__meta-label">New this week</span>
-              </div>
-              <div className="ap-hero__meta-item">
-                <span className="ap-hero__meta-value">{avgResponseTime}</span>
-                <span className="ap-hero__meta-label">Avg. response time</span>
-              </div>
-              <div className="ap-hero__meta-item">
-                <span className="ap-hero__meta-value">{allApps.length}</span>
-                <span className="ap-hero__meta-label">Total applications</span>
-              </div>
-            </div>
+            <h1 className="ap-page-header__title">Applicants</h1>
+            <p className="ap-page-header__sub">
+              Triage creators applying to your campaigns. ConversionOracle™
+              ranks by predicted walk-ins against your Williamsburg Coffee+
+              beachhead baseline.
+            </p>
           </div>
-        </section>
+        </header>
 
-        {/* Sticky Filter Bar */}
+        {/* Filter row */}
         <div className="ap-filters">
           <div className="ap-filters__inner">
-            {/* Campaign dropdown */}
             <select
               className="ap-select"
               value={campaignId}
@@ -625,7 +605,6 @@ export default function MerchantApplicantsPage() {
 
             <div className="ap-filters__sep" />
 
-            {/* Status pills */}
             {(
               [
                 "pending",
@@ -636,8 +615,9 @@ export default function MerchantApplicantsPage() {
             ).map((s) => (
               <button
                 key={s}
-                className={`ap-pill${selectedStatuses.includes(s) ? " ap-pill--active" : ""}`}
+                className={`ap-chip${selectedStatuses.includes(s) ? " ap-chip--active" : ""}`}
                 onClick={() => toggleStatus(s)}
+                type="button"
               >
                 {STATUS_LABELS[s]}
               </button>
@@ -645,34 +625,47 @@ export default function MerchantApplicantsPage() {
 
             <div className="ap-filters__sep" />
 
-            {/* Tier filter */}
             <span className="ap-filters__group-label">Tier</span>
             {ALL_TIERS.map((t) => (
               <button
                 key={t}
-                className={`ap-pill ap-pill--tier${selectedTiers.includes(t) ? " ap-pill--active" : ""}`}
+                className={`ap-chip ap-chip--tier tier-pill--${t}${selectedTiers.includes(t) ? " ap-chip--active" : ""}`}
                 onClick={() => toggleTier(t)}
-                title={TIER_DISPLAY[t]}
+                title={TIER_FULL_LABEL[t]}
+                type="button"
               >
-                {t.charAt(0).toUpperCase() + t.slice(1)}
+                {TIER_DISPLAY[t]}
               </button>
             ))}
 
             <div className="ap-filters__sep" />
 
-            {/* Sort */}
+            <label className="ap-match-filter">
+              <span className="ap-match-filter__label">Min match</span>
+              <input
+                type="range"
+                min={0}
+                max={95}
+                step={5}
+                value={minMatch}
+                onChange={(e) => setMinMatch(Number(e.target.value))}
+                className="ap-match-filter__input"
+                aria-label="Minimum ConversionOracle match score"
+              />
+              <span className="ap-match-filter__value">{minMatch}</span>
+            </label>
+
             <select
               className="ap-select"
               value={sort}
               onChange={(e) => setSort(e.target.value as SortOption)}
-              aria-label="Sort applications"
+              aria-label="Sort applicants"
             >
-              <option value="recent">Most Recent</option>
-              <option value="score_desc">Score High → Low</option>
               <option value="match_desc">Match High → Low</option>
+              <option value="score_desc">Score High → Low</option>
+              <option value="recent">Most Recent</option>
             </select>
 
-            {/* Search */}
             <input
               type="search"
               className="ap-search"
@@ -682,63 +675,84 @@ export default function MerchantApplicantsPage() {
               aria-label="Search by creator name or handle"
             />
 
-            {/* Result count */}
             <div className="ap-filters__count">
-              <strong>{total}</strong> result{total !== 1 ? "s" : ""}
+              <strong>{total}</strong>
+              {rawTotal > total ? (
+                <span className="ap-filters__count-muted"> / {rawTotal}</span>
+              ) : null}{" "}
+              result{total !== 1 ? "s" : ""}
             </div>
           </div>
         </div>
 
-        {/* Main List */}
-        <div className="ap-main">
-          {apps.length === 0 ? (
-            hasFilters ? (
-              <EmptyStateFiltered />
-            ) : (
-              <EmptyStateInbox />
-            )
-          ) : (
-            <>
-              {/* Table header */}
-              <div className="ap-table-header">
-                <div />
-                <div className="ap-table-header__cell">Creator</div>
-                <div className="ap-table-header__cell">Score</div>
-                <div className="ap-table-header__cell">Campaign</div>
-                <div className="ap-table-header__cell">Match</div>
-                <div className="ap-table-header__cell">Last active</div>
-                <div
-                  className="ap-table-header__cell"
-                  style={{ textAlign: "right" }}
-                >
-                  Actions
+        {/* Split-pane */}
+        <div className="ap-split">
+          {/* Left: list */}
+          <aside className="ap-list" aria-label="Applicants list">
+            {apps.length === 0 ? (
+              <div className="ap-empty">
+                <div className="ap-empty__title">No match.</div>
+                <div className="ap-empty__sub">
+                  Adjust filters — or widen your tier range to pull in Seed /
+                  Explorer creators.
                 </div>
               </div>
-
-              {/* Rows */}
-              {apps.map((app) => (
+            ) : (
+              apps.map((app) => (
                 <ApplicantRow
                   key={app.id}
                   app={app}
-                  selected={selectedIds.has(app.id)}
-                  onSelect={handleSelect}
-                  onDecide={handleDecide}
+                  selected={activeApp?.id === app.id}
+                  checked={checkedIds.has(app.id)}
+                  onSelect={() => setSelectedId(app.id)}
+                  onToggleCheck={(c) => handleToggleCheck(app.id, c)}
                 />
-              ))}
-            </>
-          )}
+              ))
+            )}
+          </aside>
+
+          {/* Right: detail panel */}
+          <section className="ap-detail-wrap" aria-label="Applicant detail">
+            <DetailPanel app={activeApp} onDecide={handleDecide} />
+          </section>
         </div>
       </div>
 
-      {/* Floating Bulk Bar */}
-      <BulkBar
-        count={selectedIds.size}
-        visible={selectedIds.size > 0}
-        onDecision={handleBulkTrigger}
-        onClear={clearSelection}
-      />
+      {/* Batch action bar */}
+      <div
+        className={`ap-batch-bar${checkedIds.size > 0 ? " ap-batch-bar--visible" : ""}`}
+      >
+        <span className="ap-batch-bar__count">
+          <strong>{checkedIds.size}</strong> selected
+        </span>
+        <div className="ap-batch-bar__sep" />
+        <button
+          className="ap-batch-btn ap-batch-btn--accept"
+          onClick={() => handleBulkTrigger("accept")}
+        >
+          Approve {checkedIds.size}
+        </button>
+        <button
+          className="ap-batch-btn ap-batch-btn--waitlist"
+          onClick={() => handleBulkTrigger("shortlist")}
+        >
+          Waitlist {checkedIds.size}
+        </button>
+        <button
+          className="ap-batch-btn ap-batch-btn--reject"
+          onClick={() => handleBulkTrigger("decline")}
+        >
+          Reject {checkedIds.size}
+        </button>
+        <button
+          className="ap-batch-bar__clear"
+          onClick={clearChecks}
+          aria-label="Clear selection"
+        >
+          ×
+        </button>
+      </div>
 
-      {/* Confirm Modal */}
       {pendingDecision && (
         <ConfirmModal
           count={pendingDecision.ids.length}

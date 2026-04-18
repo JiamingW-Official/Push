@@ -40,7 +40,7 @@
   overflow: hidden;
 }
 
-/* Wave 1: large squares — Flag Red + Steel Blue + Papaya Whip */
+/* Wave 1: large squares — Flag Red + Steel Blue + Pearl Stone */
 .fp-confetti::before {
   content: "";
   position: absolute;
@@ -62,7 +62,7 @@
     62vw  -10px 0 0 #669bbc,
     75vw  -10px 0 0 #669bbc,
     88vw  -10px 0 0 #669bbc,
-    /* Papaya Whip */
+    /* Pearl Stone */
     4vw   -10px 0 0 #f5f2ec,
     18vw  -10px 0 0 #f5f2ec,
     34vw  -10px 0 0 #f5f2ec,
@@ -93,7 +93,7 @@
     50vw  -10px 0 0 #669bbc,
     65vw  -10px 0 0 #669bbc,
     84vw  -10px 0 0 #669bbc,
-    /* Papaya Whip */
+    /* Pearl Stone */
     16vw  -10px 0 0 #f5f2ec,
     32vw  -10px 0 0 #f5f2ec,
     48vw  -10px 0 0 #f5f2ec,
