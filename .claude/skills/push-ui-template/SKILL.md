@@ -15,7 +15,24 @@ description: "SaaS website template extraction — all layout structures, sectio
 |------|-------------|
 | `sections.md` | Building a new page or section — has every section type with full HTML structure |
 | `interactions.md` | Adding animations, scroll effects, hover states, parallax, counters, carousels |
-| `components.md` | Implementing specific components: nav, cards, accordions, forms, modals, pricing, blog |
+| `components.md` | Implementing specific components: nav, cards, accordions, forms, modals, pricing, blog. **v5.0 additions at the top** (AgentOutputDemo, VerificationBadge, goal form, agent pending/preview, AI verification queue) |
+
+## v5.0 New Components — Index
+
+Added April 2026 as part of v5.0 (AI-Powered Customer Acquisition Agency). Full specs in `components.md` sections 0.1–0.6.
+
+| Component | Path | Use on |
+|-----------|------|--------|
+| `AgentOutputDemo` | `components/landing/AgentOutputDemo.tsx` | Landing hero (≥1100px only) — fixture of one agent run |
+| `VerificationBadge` | `components/landing/VerificationBadge.tsx` | Marketing pages — QR / Vision / Geo trust strip |
+| Merchant goal form | `app/(marketing)/merchant/pilot/page.tsx` + `app/(merchant)/merchant/onboarding/page.tsx` | Any v5.0 onboarding surface |
+| Agent pending (`.agent-pending-*`) | `app/(merchant)/merchant/onboarding/agent-onboarding.css` | While agent runs (1–3s) |
+| Agent preview (`.agent-preview-*`) | same file | Surfacing AI-returned results (summary + matches + brief) |
+| AI verification queue | `app/(admin)/admin/ai-verifications/page.tsx` | Admin review of manual_review verdicts |
+
+Animation references — for the exact CSS keyframes / delays behind the above:
+- `.agent-demo*` in `app/(marketing)/landing.css` (hero terminal card, stagger on `.agent-demo-item`)
+- `.agent-pending-*` + `@keyframes agent-pulse` / `agent-slide` / `agent-line-in` in `app/(merchant)/merchant/onboarding/agent-onboarding.css`
 
 ## Quick Reference — Page Blueprint
 

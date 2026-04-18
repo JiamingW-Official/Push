@@ -1,13 +1,55 @@
 ---
 name: push-creator
-description: "Push creator system: 6-tier progression, scoring model, recruitment, retention, commission structure. Use for any creator-related question."
+description: "Push operator network: AI-managed creator routing, 6-tier progression, scoring model (with category_affinity + verified_conversions_90d), recruitment, retention, commission structure. Use for any creator/operator-related question."
 ---
 
 # Push Creator System
 
+> **Terminology note:** In Push v5.0, the creator network is the **Operator Network** — an AI-managed roster, not a marketplace. "Operator" is also the name of tier 3 in the 6-tier ladder (Steel). When the doc says "operator" lowercase / "operator network" it means a network participant at any tier; "Operator" capitalized means the specific tier 3. Both uses are intentional.
+
 ## Philosophy
-"Anyone can start. Performance determines how far you go."
-Creators are valued by completion rate, reliability, merchant satisfaction, and commercial results — not follower count.
+"Anyone can start. Performance determines how far the agent routes you."
+Creators are valued by verified conversions delivered, completion rate, reliability, merchant satisfaction, and commercial results — not follower count. Campaigns are **routed by the matching agent**, not browsed by creators.
+
+---
+
+## Operator Network (v5.0) — Agent-Routed Model
+
+In v4.x, creators browsed an open campaign board and applied to campaigns they liked. **In v5.0 that flow is inverted.**
+
+### How it works now
+1. **Merchant inputs a goal** via the Pilot/Subscription portal (e.g., "100 first-time customers at 11211 coffee shop, 30 days").
+2. **Matching agent (Claude Sonnet 4.6)** reads the goal, the merchant's category + geo + tier entitlements, and runs a ranked query across the operator network.
+3. **Top 5 operators** per merchant goal are selected. They receive a DM invitation containing a **draft brief** (campaign concept, payout breakdown, timeline). No open board. No application queue.
+4. **Operator accepts or declines** in-DM. A declined slot triggers the agent to surface the next candidate within minutes — target end-to-end turnaround from merchant input to operator invite: **under 60 seconds**.
+
+### What the agent reads when ranking
+The ranking signal is a weighted composite. Tier is still the coarsest filter (merchant plan entitles access to specific tier bands — see "Merchant Tier Linkage" below), but within the entitled band the agent reads:
+
+| Signal | Source | Why it matters in v5.0 |
+|--------|--------|------------------------|
+| **Tier** | Push Score → tier band | Determines routing priority + commission rate |
+| **Push Score** | Composite formula (see `scoring-model.md`) | Overall quality proxy |
+| **`category_affinity`** (0.0-1.0 per vertical) | Content history classification (coffee, restaurant, fitness, retail, etc.) | NEW — drives category fit; a 0.92 coffee-affinity operator beats a 0.50 one for a coffee goal even at same tier |
+| **`verified_conversions_90d`** | Rolling 90-day count of AI-verified customers delivered | NEW — replaces raw "campaigns completed" as the north-star output metric. A creator can run many campaigns and convert few; this signal separates them. |
+| **Distance to merchant** | Creator home geo → merchant geo (miles) | For hyperlocal verticals, < 2 mi beats > 5 mi |
+| **Last-30d availability** | Current concurrent campaigns vs. tier cap | Prevents inviting already-saturated operators |
+| **Anti-fraud flags** | Device/IP/self-referral history | Hard exclusion |
+
+### Williamsburg coffee priority (current beachhead)
+Until we graduate beachhead, the agent applies a priority lane:
+- `coffee_affinity > 0.7` AND
+- `distance_miles < 1.2` from zip 11211
+
+Operators meeting both conditions get **first-pass routing** for any Williamsburg coffee merchant goal, regardless of tier. A Seed-tier operator with 0.91 coffee affinity living 4 blocks from the merchant often outperforms a higher-tier operator living 3 miles away — and the agent knows it.
+
+### What did NOT change
+The tier ladder, material colors, Push Score formula, commission percentages, milestone bonuses, demotion grace window, and anti-gaming rules are **unchanged**. v5.0 is a routing change, not a scoring change. The agent reads the existing score; it does not rewrite it.
+
+---
+
+## Philosophy (continued)
+"Anyone can start. Performance determines how far you go" is still the core line, just re-pointed: performance now determines **how high you rank in agent routing**, not how many campaigns you can click "apply" on.
 
 ## 6-Tier System v4.1
 
@@ -75,19 +117,21 @@ Each tier unlocks exactly what the previous tier's creators start craving:
 - Proven → Closer: Dedicated manager + structured campaign feedback
 - Closer → Partner: Co-branding + advisory access to platform roadmap
 
-### Merchant Tier Linkage (Bidirectional)
+### Merchant Tier Linkage (Bidirectional) — v5.0 mapping
 
-**Merchant → Creator access:**
-- **Starter ($19.99/mo):** Seed + Explorer + Operator, 3 slots/campaign
-- **Growth ($69/mo):** All tiers (Proven priority), 5 slots/campaign
-- **Pro ($199/mo):** All tiers + can invite specific Closer/Partner, 8 slots/campaign
+Agent routing respects tier entitlements defined by the merchant's current plan:
 
-**Creator → Merchant preference (NEW):**
-- **Proven+:** Can set preference to prioritize Growth/Pro merchants
-- **Closer+:** Can filter to only accept Pro merchant campaigns
-- **Partner:** Can set exclusive merchant partnerships (1-3 merchants)
+**Merchant plan → operator tier band accessible to agent routing:**
+- **Pilot ($0, 30-day trial):** Seed + Explorer + Operator; agent routes up to 3 invites per goal
+- **Subscription ($500/mo min):** All tiers eligible; agent routes up to 5 invites per goal, with Proven+ priority
+- **Scale tier (higher retainers):** All tiers + founder can request specific Closer/Partner operator by name; up to 8 invites per goal
 
-This bidirectional linkage gives merchants a concrete reason to upgrade plans.
+**Operator → Merchant preference (unchanged):**
+- **Proven+:** Can set preference to prioritize Subscription-tier merchants; the agent reads this preference and weights routing accordingly
+- **Closer+:** Can filter to only accept Scale-tier merchant goals; the agent skips them for lower-tier invites
+- **Partner:** Can lock in exclusive merchant partnerships (1-3 merchants); agent routes matching goals to them first
+
+This bidirectional linkage still gives merchants a concrete reason to upgrade — higher plans unlock the deeper, higher-conversion operator pool.
 
 ## Education & Growth Benefits by Tier (NEW)
 

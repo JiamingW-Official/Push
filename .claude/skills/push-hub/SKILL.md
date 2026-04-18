@@ -6,17 +6,20 @@ description: "Master routing skill for Push. Start here for ANY Push-related tas
 # Push Hub — Master Router
 
 ## What is Push
-Push is an AI-native local customer acquisition engine that turns creators into measurable acquisition channels for local businesses. Push is NOT a generic influencer marketplace, discovery app, or loyalty platform.
+Push is an AI-powered customer acquisition agency. Push is NOT a generic influencer marketplace, discovery app, or loyalty platform.
 
 **Core Invariant:** Push only rewards verified, repeatable value creation.
 
-**Primary Line:** "Push is the AI engine that turns creators into measurable customer acquisition for local businesses."
+**Primary Line:** "Push is an AI-powered customer acquisition agency. Tell us how many customers you need — our AI matches creators, verifies every visit, and you pay only for delivered customers."
 
 ## Quick Reference
 
-### Latest Key Numbers (Updated 2026-04-12)
-- **Merchant Pricing:** Starter $19.99/mo (2 campaigns, 3 slots) | Growth $69/mo (4 campaigns, 5 slots) | Pro $199/mo (unlimited, 8 slots)
+### Latest Key Numbers (Updated 2026-04-18)
+- **Merchant Pricing:** $0 Pilot (first 10 merchants, first 10 customers free) + $500/mo min + $40 per AI-verified customer. Legacy $19.99 / $69 / $199 tiers grandfathered for founding cohort only.
 - **Creator Tiers:** 6-tier system v4.1 — Seed(Clay)/Explorer(Bronze)/Operator(Steel)/Proven(Gold)/Closer(Ruby)/Partner(Obsidian)
+- **AI Stack:** Claude Sonnet 4.6 for matching (60s) + Vision OCR for verification (<8s). Env-gated mock fallback via ANTHROPIC_API_KEY unset.
+- **Verification:** 3-layer check — QR scan + Claude Vision receipt OCR + geo-match ≤ 200m. Verdicts: auto_verified / auto_rejected / manual_review.
+- **Beachhead:** Williamsburg coffee × 60 days. 6 shops signed, 20 operators in network.
 - **Attribution:** Last-click, 30-day window, consumer-scans-merchant QR code (zero merchant ops burden)
 - **Commission:** Operator 3% → Proven 5% → Closer 7% → Partner 10% + Referral Milestone Bonus ($15/$30/$50/$80 at 30/40/60/80 txns/mo)
 - **Base Rate:** $12/$20/$32/$55/$100 × Campaign Difficulty Multiplier (Standard 1.0x / Premium 1.3x / Complex 1.6x)

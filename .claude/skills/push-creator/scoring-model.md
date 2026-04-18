@@ -6,6 +6,42 @@
 
 Range: 0-100
 
+**The formula, the 5 dimensions, and their weights are UNCHANGED from v4.1.** What v5.0 adds is how the score is consumed: the matching agent reads Push Score + two new auxiliary signals (below) to rank operators per merchant goal.
+
+---
+
+## v5.0 Agent-Input Signals (Auxiliary — Not Part of Push Score)
+
+These are **not** added into the 100-point Push Score. They live alongside it as separate fields the matching agent reads when ranking operators for a merchant goal.
+
+### `category_affinity` — per-vertical fit (0.0 – 1.0)
+**Source:** Automated classification of the creator's last 90 days of content + campaign history, bucketed by vertical (coffee, restaurant, bar, fitness, retail-apparel, retail-beauty, services).
+
+**Example record for one operator:**
+```
+{ coffee: 0.92, restaurant: 0.74, bar: 0.41, fitness: 0.08, retail_apparel: 0.22 }
+```
+
+**Agent usage:** When routing a "100 customers at coffee shop" goal, the agent multiplies the operator's `coffee` affinity into the ranking weight. A Seed-tier operator at 0.91 coffee affinity often out-ranks an Operator-tier operator at 0.45 coffee affinity.
+
+**Recomputed:** Nightly, rolling 90-day window.
+
+### `verified_conversions_90d` — proven output (integer)
+**Source:** Rolling 90-day count of AI-verified customers this operator delivered across all campaigns. Sourced from `push-attribution`'s verified-scan pipeline (AI-verified only — flagged/failed scans excluded).
+
+**Why it matters:** "Completed 12 campaigns" says nothing about outcome — a creator can run many campaigns and convert few. `verified_conversions_90d` is the north-star output metric. A creator with 47 verified conversions in 90 days is a meaningfully different asset than one with 6.
+
+**Agent usage:** Tiebreaker within a tier + affinity band. Also used in operator profile badges ("47 verified customers last 90d").
+
+**Not retroactive into Push Score:** The 5-dimension Push Score formula stays intact. `verified_conversions_90d` is a parallel signal the agent reads, not an input to the 0-100 score.
+
+### Williamsburg coffee priority flag (beachhead-only)
+The agent applies a hard priority for Williamsburg coffee goals:
+- `coffee_affinity > 0.7` AND `distance_miles < 1.2` from zip 11211 → **first-pass routing regardless of tier**.
+This flag is beachhead-specific and retires once we leave Williamsburg-only mode.
+
+---
+
 ---
 
 ## 5 Scoring Dimensions

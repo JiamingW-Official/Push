@@ -1,409 +1,306 @@
-# Cold Start 12-Week Plan
+# Cold-Start Plan — Williamsburg Coffee × 30 Weeks (v5.0)
 
-Complete detailed roadmap for launching Push in one neighborhood zone over 12 weeks, with budget and MVP tech stack.
+Complete detailed roadmap for launching Push v5.0 in **Williamsburg (11211 / 11206 / 11249)**, category **coffee**, with 60-day saturation window followed by adjacent-ZIP expansion and YC S27 application prep.
 
----
+**Week 1 baseline:** 2026-04-14. **YC S27 application target:** 2026-09.
 
-## Phase 1: Foundation (Week 1–4)
-
-### Week 1: Zone Selection & Merchant Scouting
-
-**Monday–Tuesday: Pick ONE neighborhood**
-- Decide between NYC (Williamsburg, LES, Astoria), LA, or SF zone
-- Lock in by EOD Tuesday
-
-**Wednesday–Friday: Walk and scout 30 merchant prospects**
-
-For each prospect, capture:
-- Name, address, Instagram handle
-- Category (café, dessert, beauty, etc.)
-- Visual score (1–5): is it Instagram-friendly?
-- Dead hours: when is it slowest? (best time to pitch)
-- Owner-operated? (Y/N — if yes, you can talk to decision-maker immediately)
-- Current creator activity: any partnerships, tags, posted content?
-
-**Saturday–Sunday: Research 50 creator prospects**
-
-Search tactics:
-- Instagram location tags for the neighborhood
-- Hashtags: #[neighborhood]eats, #[neighborhood]food, local food/lifestyle hashtags
-- TikTok: same hashtags and location tags
-- TikTok trends: see who's trending in the category
-
-For each creator, capture:
-- Handle, platform (IG/TikTok)
-- Follower count
-- Engagement rate (likes + comments / followers)
-- Content quality (1–5): production value, consistency, authenticity
-- Location relevance: do they feature local spots? Are they local?
-
-**End of Week 1 Output:**
-- 30 merchant prospects with contact info and dead hours
-- 50 creator prospects with handles and engagement metrics
+> Filename retained as `cold-start-12week.md` for path stability — content is the v5.0 30-week plan.
 
 ---
 
-### Week 2: First Merchant Conversations (15 conversations → 8 soft commits)
+## Beachhead Lock-in (do not dilute)
 
-**Approach: Walk-in pitch during slow periods**
-
-Timing: Tuesday–Thursday, 2–4pm (dead hours)
-
-**Script:**
-1. Walk in, order something small
-2. Wait for order to be ready
-3. Ask to speak to owner/manager
-4. Once you have them:
-   - "Hey, [name]. Love what you're building here. We help local shops like you get new customers through local food creators. We match you with creators in the neighborhood, manage everything, track results, and you only pay if it works."
-   - "Want to try it? First campaign is free. You literally just tell us what you'd offer creators, and we handle the rest."
-
-**Remove ALL friction:**
-- Free first campaign (no credit card)
-- You handle everything (matching, logistics, tracking)
-- Zero time burden on merchant
-
-**For each conversation, capture:**
-- Owner/manager name and preferred contact (phone/email)
-- Current challenges: new customers? Off-peak traffic? Launch event?
-- What they'd offer creators (discount, free product, bundle, etc.)
-- What success means to them (foot traffic? Instagram mentions? sales lift?)
-- Dead hours (confirm)
-- Willingness to try (yes/soft yes/no)
-
-**Soft commits:** Goal is 8 merchants who say "yeah, sure, let's try it" or "I'm interested, tell me more"
-
-**End of Week 2 Output:**
-- 8 soft-commit merchants with contact info and offer preferences
-- Documented pain points and success metrics for each
+| Axis | Value |
+|------|-------|
+| **Category** | Coffee (only) |
+| **Geography** | Williamsburg: ZIPs **11211 / 11206 / 11249** |
+| **Saturation window** | 60 days (Week 1 – Week 8) |
+| **Next ZIP** | Greenpoint (11222) in Week 13, then Bushwick (11237 / 11206) |
+| **New category** | **Frozen** until Williamsburg + Greenpoint + Bushwick all prove unit economics on coffee |
 
 ---
 
-### Week 3: Creator Outreach + Website MVP
+## Phase 1 — AI MVP + First Merchant Signup (Week 1–2)
 
-**Creator Outreach: Goal 20 signed-up creators**
+### Week 1 — Ship AI MVP + Anchor Merchant Outreach Begins
 
-**DM Script (customize per creator):**
-- "Love your [specific post about local spot] 🔥 Launching Push — it connects local creators like you with shops for paid campaigns. We just matched [X] creators with [shop name]. Interested?"
-- Link to landing page / creator signup form
-- If they engage: "Here's how it works: [brief 1-min explainer]. Sound good?"
+**Engineering deliverables (due EOW):**
+- [ ] AgentOutputDemo UI live (shows Claude-Vision verification reel to merchant prospects)
+- [ ] `/merchant/pilot` landing page with **goal-first onboarding** ("How many customers do you need this month?")
+- [ ] Claude Vision verification path, env-gated (enabled in staging + Sey account only)
+- [ ] `/neighborhoods/williamsburg-coffee` route scaffolded (will populate Week 5)
 
-**Creator Signup Form should ask for:**
-- Name, email, phone
-- Instagram/TikTok handles + follower count
-- Location (neighborhood focus)
-- Category preference (food, beauty, etc.)
-- Availability (how often can they post?)
-- Payment method preference (Venmo, Zelle, direct deposit)
+**Merchant outreach (anchors):**
+- Build outreach list of **3 anchor coffee shops**: **Sey Coffee**, **Devocion**, **Partners Coffee**
+- Founder does cold walk-in to each during dead hours (Tue/Wed/Thu 2–4pm) with printed pilot sheet
+- Target: 3 warm conversations with owner/manager by EOW
 
-**Website MVP: Minimal but functional**
+**Creator recruitment:**
+- Build Instagram prospect list: search "coffee" + "Williamsburg" + 1K–5K followers
+- DM **10 creators** in 11211 / 11249 with specific post reference + pilot invitation
 
-Core pages:
-1. **Landing page** — 1 min explainer (hero, problem, solution, CTA)
-2. **Merchant signup form** — name, email, address, category, initial offer
-3. **Creator signup form** — (see above)
-4. **Campaign listings** — show available campaigns with details (shop, offer, slots, deadline)
-5. **Admin dashboard** (private) — list all merchants, creators, campaigns, and basic status tracking
-
-**Tech Stack (MVP):**
-- Frontend: Next.js (React) + Vercel (free tier)
-- Database: Supabase free tier (PostgreSQL) or Airtable
-- Auth: Supabase Auth or email magic links
-- Hosting: Vercel (auto-deploys from GitHub)
-
-**Timeline:**
-- Days 1–2: Set up Next.js project, GitHub, Vercel
-- Days 3–4: Build landing page + forms
-- Days 5–7: Set up database, admin dashboard, campaign listings page
-- Go live by EOW
-
-**End of Week 3 Output:**
-- 20+ creators signed up
-- Website live (all forms working, admin dashboard functional)
+**End of Week 1 output:**
+- AI MVP shippable build
+- 3 anchor coffee shop conversations logged with owner contact
+- 10 DM'd creators; target 5+ interested responses
 
 ---
 
-### Week 4: Campaign Setup + Dry Run
+### Week 2 — First Merchant Signs + Creator Cohort Fills
 
-**Set up 5 campaigns manually**
+**Merchant:**
+- [ ] Sign **Sey Coffee** on $0 Pilot plan (signature by Friday)
+- [ ] Close remaining 2 anchor shops (Devocion, Partners) — target: all 3 anchors signed by EOW Week 2
+- [ ] Ship anchor pilot briefs into the admin dashboard
 
-For each campaign, define:
-- **Merchant:** name, offer (what creators get)
-- **Deliverables:** 1 Instagram post + 1 Story? 1 TikTok video? 2 posts? (be specific)
-- **Proof requirements:** screenshot of post, video proof, link to post
-- **Number of slots:** 2–3 creators per merchant
-- **Deadline:** when must creator complete by?
-- **Creator instructions:** "Tag the shop in your post. Use hashtag #pushcampaign"
+**Creator:**
+- [ ] Complete **10 creators** signed up (finish Week 1 prospect list)
+- [ ] Run 15-minute onboarding call with each Partner-tier candidate
 
-**Creator matching:** For each slot, match by:
-- Proximity (do they feature the neighborhood?)
-- Style fit (their content tone matches the brand)
-- Category (if dessert shop, feature food creators)
-- Availability
+**Product:**
+- [ ] Ship basic admin dashboard for manual ops (campaigns table, creator table, merchant table)
+- [ ] Ship first weekly ROI email template (will auto-send Week 5)
 
-**Do 1–2 campaigns yourself as dry run**
-- Pick 1 merchant + 2 creators
-- Go through entire flow: send brief, collect proof, verify, pay
-- Document every step
-- Ask merchant for feedback (did creators deliver? Quality of content?)
-
-**End of Week 4 Output:**
-- 5 campaigns set up and assigned to creators
-- 1–2 test campaigns complete
-- Full documented flow from brief → completion → payment
+**End of Week 2 output:**
+- 3 anchor merchants live on Pilot
+- 10 creators signed, 5+ ready for Week 3 campaign
+- All outreach logged in shared spreadsheet (date, channel, response)
 
 ---
 
-## Phase 2: First Campaigns (Week 5–8)
+## Phase 2 — Cohort Fill + First Campaign (Week 3–4)
 
-### Week 5–6: Execute First Batch
+### Week 3 — Fill Merchant Cohort + Prep First Campaign
 
-**Run 5 merchants × 2–3 creators = 10–15 slots**
+**Merchant:**
+- [ ] Sign **7 more coffee shops** using anchor-referral + cold walk-in (cumulative **10 merchants live**)
+- [ ] Each new shop: goal-first onboarding, Pilot pricing ($0 to deliver first 10 verified customers)
 
-**Daily ops rhythm:**
-- **AM:** Review overdue proofs (DM creators if late)
-- **Midday:** Review and approve submissions (tag and share with merchant)
-- **PM:** Track publications (see if posts are up, engagement starting)
-- **Evening:** Log everything in a spreadsheet (creator, merchant, campaign, completion status, payout amount)
+**Creator:**
+- [ ] Recruit **10 more creators** (cumulative **20 creators**)
+- [ ] Activate Channel 2: ask each signed merchant's manager to recommend 2–3 regulars who create content
 
-**After each campaign:**
-- Pay creator within 24h (Venmo/Zelle)
-- Email merchant: "Your campaign is live. Here's the link to [creator's post]. We'll track performance through [date]."
-- Send quick survey to merchant: How was the quality? Would you run again?
-- Send quick survey to creator: Any issues? Want to run again?
+**Campaign prep:**
+- [ ] AI-matching: Claude Vision + Push Score selects **top 5 creators** for Sey Coffee's first campaign
+- [ ] Write campaign brief: deliverable, verification method (QR + Claude Vision + geo), payout trigger
 
-**Tracking spreadsheet columns:**
-- Campaign ID
-- Merchant name
-- Creator handle
-- Offer (what creator received)
-- Deliverable (posts/videos)
-- Due date
-- Completion date
-- Quality (1–5)
-- Merchant feedback
-- Creator feedback
-- Payout amount
-- Status (completed / late / rejected)
-
-**End of Week 5–6 Output:**
-- 10–15 campaigns completed
-- 100% of creators paid within 24h
-- Feedback collected from merchants and creators
-- Clear view of which merchants/creators performed best
+**End of Week 3 output:**
+- 10 merchants live
+- 20 creators signed
+- Sey Coffee × 5 creators campaign ready to launch Monday Week 4
 
 ---
 
-### Week 7–8: Second Batch + First Improvements
+### Week 4 — First Campaign Ships + First Verified Customers
 
-**Launch 5–8 more campaigns**
+**Launch:**
+- [ ] Monday: **first AI-matched campaign** goes live (Sey Coffee × 5 creators)
+- [ ] Tuesday–Friday: creators post, scan events flow into `scan_events` table, Claude Vision runs
+- [ ] Saturday: **10 verified customers** delivered for Sey Coffee (Week 4 target)
 
-Include at least 2+ repeat merchants from batch 1 (this is KEY — repeat is signal of success)
+**Ops:**
+- [ ] Daily ops standup: review `/api/attribution/scan` failures, verify Claude Vision results
+- [ ] Payout creators within 24h of verified campaign completion
 
-**Track these metrics obsessively:**
-- **Merchant repeat rate:** What % of merchants from batch 1 are running a 2nd campaign?
-- **Creator repeat rate:** What % of creators from batch 1 want to do another campaign?
-- **Time-to-fill:** How long does it take to fill all slots for a campaign?
-- **Completion rate:** What % of creators finish on time?
-- **Content quality:** Are submissions getting better or worse?
+**Merchant feedback:**
+- [ ] Sunday call with Sey Coffee owner: review 10 verified customers, ROI, willingness to flip to Performance
 
-**Iterate website based on learnings:**
-- Add simple **creator profile page** (follower count, engagement rate, past campaigns, merchant feedback score)
-- Add **merchant dashboard** with basic reporting (# campaigns run, total creators, avg quality score)
-- Add **campaign status tracker** (pending, in progress, completed)
-- Add simple **creator scoring** (e.g., 1–5 stars based on merchant feedback)
-
-**End of Week 7–8 Output:**
-- 20+ total campaigns (batches 1 + 2)
-- Merchant repeat rate visible (ideally 30%+)
-- Creator repeat rate visible (ideally 60%+)
-- Metrics dashboard showing:
-  - 8+ merchants ran 1+ campaign
-  - 15+ creators completed 1+ campaign
-  - 3+ merchants ran SECOND campaign (repeat!)
-  - Completion rate > 80%
-  - Creator satisfaction > 4/5
-  - Merchant satisfaction > 3.5/5
+**End of Week 4 output:**
+- First campaign shipped end-to-end
+- 10 verified customers for Sey Coffee (milestone)
+- Sey ready to flip to Performance in Week 5
 
 ---
 
-## Phase 3: Validate Repeat & Launch (Week 9–12)
+## Phase 3 — Saturation + Case-Study Generation (Week 5–8)
 
-### Week 9–10: Scale to 15 Merchants
+### Week 5–6 — Scale to 20 Active Campaigns
 
-**Acquire 5–7 more merchants**
+**Weekly target checklist:**
+- [ ] **20 active campaigns** running across all 10 Williamsburg coffee merchants
+- [ ] Sey Coffee flips to **Performance plan** ($500/mo min + $40/customer) — first paid merchant
+- [ ] 2+ more merchants cross 10 verified customers, flip to Performance
 
-Tactics:
-- Referral: Email existing merchants: "Know any other shops that would want this? We'll take good care of them."
-- Walk-in: Keep scouting new neighborhoods (same process as Week 1)
-- Leverage case studies: "Look, [Merchant A] ran 5 campaigns and got [X] new customers. Interested?"
+**Dashboard:**
+- [ ] Ship `/neighborhoods/williamsburg-coffee` public dashboard with live numbers: scans, verified customers, cost-per-customer, ROI
+- [ ] Auto-refresh every 24h
 
-**Introduce basic creator scoring** (visible on creator profiles in admin)
+**Experiments (Week 5–6):**
+- [ ] Experiment 1: **Merchant pricing test** — 5 control / 5 treatment on Performance plan positioning
 
-Scoring rubric:
-- Completion rate (did they finish on time?)
-- Quality score (merchant feedback)
-- Engagement rate (their posts got comments/likes)
-- Reliability (did they show up when promised?)
-
-**Introduce standby mechanism**
-
-Standby queue: 5–10 creators on standby for each campaign. If a slot opens up (creator drops out), ping standby creators immediately. First to respond gets the gig. This will reveal:
-- Response time (are they engaged?)
-- Conversion (do standby creators take the gig?)
-- Whether standby changes engagement levels
-
-**End of Week 9–10 Output:**
-- 15+ merchants total in pipeline
-- Creator scoring system live
-- Standby mechanism tested on 3–5 campaigns
-- Data showing repeat rate, completion rate, conversion
+**End of Week 5–6 output:**
+- 20 active campaigns
+- 3+ merchants on Performance
+- Dashboard live and linked from homepage
 
 ---
 
-### Week 11–12: Transition to Paid
+### Week 7–8 — Saturation + First Case Studies Drafted
 
-**Pricing tiers (from push-pricing):**
-- **Starter:** $19.99/mo
-- **Growth:** $69/mo
-- **Pro:** $199/mo
+**Weekly target checklist:**
+- [ ] All 10 merchants have run at least 1 campaign
+- [ ] 5+ merchants on Performance
+- [ ] Draft 3 case studies: **Sey / Devocion / Partners** (results, verified customer count, creator highlights)
 
-**Transition conversation (Week 11):**
+**Experiments (Week 7–8):**
+- [ ] Experiment 2: **Creator compensation test** — fixed $20 base vs. variable 3% commission
 
-Email to merchants who've run 2+ campaigns:
-- "Great work, [name]. You've run [X] campaigns with [Y] creators, and we've tracked [results]. Up until now, the first campaign was free. Going forward, we're introducing paid plans so we can keep supporting you with better creator matching and performance tracking."
-- "Starter plan is $19.99/mo and includes [X]. Want to give it a try?"
-
-**Payment: Stripe subscription**
-- Set up Stripe account
-- Add subscription payment page
-- Auto-generate monthly invoice
-- Ensure payouts to creators happen regardless (never stiff a creator)
-
-**First paid campaigns (Week 11–12)**
-
-Goal: Get 2–3 merchants to convert to paid. This proves willingness to pay.
-
-**End of Week 11–12 Output:**
-- All metrics updated
-- First 2–3 merchants on paid plans
-- Verified that merchants will pay for better matching / dashboard / support
-- Revenue flowing in (even if small)
+**End of Week 7–8 output:**
+- 10 merchants saturated
+- 50%+ on Performance
+- 3 case studies drafted, ready for publication
 
 ---
 
-## Week 12 Go/No-Go Decision
+## Phase 4 — Retention + Greenpoint Prep (Week 9–12)
 
-**Review all metrics against targets:**
+### Week 9–10 — Lock In Retention
+
+**Weekly target checklist:**
+- [ ] **80% of Pilot merchants on Performance** by end of Week 10
+- [ ] First monthly ROI statement emailed to all merchants
+- [ ] Publish Case Study #1 (Sey Coffee) on `/neighborhoods/williamsburg-coffee`
+
+**Experiments:**
+- [ ] Experiment 3: **Verification threshold test** — 180m vs. 200m vs. 250m geo-match pass window
+
+---
+
+### Week 11–12 — Publish Case Studies + Start Greenpoint Discovery
+
+**Weekly target checklist:**
+- [ ] Publish Case Studies #2 (Devocion) and #3 (Partners) with live metrics
+- [ ] Begin **Greenpoint (11222) coffee discovery**: identify 8 merchants, 12 creators (not yet signed)
+- [ ] Week 12 Go/No-Go review (see table below)
+
+**Week 12 Go/No-Go Decision:**
 
 | Metric | Target | Status |
 |--------|--------|--------|
-| Merchant repeat rate | 40%+ run 2+ campaigns | Go/No-go? |
+| Williamsburg coffee merchants live | 10+ | Go/No-go? |
+| Pilot → Performance conversion | 80%+ | Go/No-go? |
+| Verified customers delivered (total) | 200+ | Go/No-go? |
 | Creator completion rate | 85%+ | Go/No-go? |
-| Time-to-fill | < 48 hours | Go/No-go? |
-| Willingness to pay | 30%+ convert to paid | Go/No-go? |
-| NPS | > 7/10 both sides | Go/No-go? |
-| Total campaigns | 25+ | Go/No-go? |
-| Revenue | Any (proves WTP) | Go/No-go? |
+| Case studies published | 3 | Go/No-go? |
+| False-positive verification rate | < 2% | Go/No-go? |
+| Merchant NPS | > 7/10 | Go/No-go? |
 
-**Decision:**
-- ✅ **GO:** repeat > 30%, completion > 80%, some WTP → Expand to next ZIP code
-- ⚠️ **ITERATE:** one metric weak, others strong → Stay in zone, fix weak point (e.g., if completion is 70%, improve creator onboarding)
-- ❌ **PIVOT:** no repeat, unreliable creators, zero WTP → Revisit value prop, pricing, or entire approach
-
-If GO: Replicate exact playbook in next ZIP code (repeat Week 1–12 in new zone).
+- ✅ **GO** → proceed to Week 13 Greenpoint launch
+- ⚠️ **ITERATE** → extend Williamsburg 2 weeks, fix weakest metric
+- ❌ **PIVOT** → stop, revisit with user
 
 ---
 
-## Budget (12 Weeks)
+## Phase 5 — Adjacent ZIP Expansion (Week 13–20)
+
+### Week 13–16 — Greenpoint (11222) Launch
+
+**Weekly target checklist:**
+- [ ] Week 13: sign 3 Greenpoint anchor coffee shops (same walk-in playbook)
+- [ ] Week 14: cumulative 8 Greenpoint merchants live
+- [ ] Week 15: 12 Greenpoint creators signed
+- [ ] Week 16: first Greenpoint campaigns running, on pace for 80% Performance conversion by Week 20
+
+---
+
+### Week 17–20 — Bushwick (11237 / 11206) Launch + Multi-ZIP Proof
+
+**Weekly target checklist:**
+- [ ] Week 17: Bushwick anchor outreach begins (5 shops)
+- [ ] Week 18: 8 Bushwick merchants signed
+- [ ] Week 19: **25+ total merchants** across Williamsburg + Greenpoint + Bushwick
+- [ ] Week 20: multi-ZIP public dashboard live at `/neighborhoods` (index of all three)
+
+---
+
+## Phase 6 — YC S27 Application (Week 20+)
+
+**Target submission:** 2026-09 (YC Summer 2027 batch)
+
+**Application traction bar:**
+- [ ] **50+ merchants** live on Performance plan
+- [ ] **500+ campaigns** shipped end-to-end
+- [ ] **$50K+ GMV** processed through platform
+- [ ] 3+ published case studies + multi-ZIP dashboard
+- [ ] Founder demo: walk-through of AgentOutputDemo + live `/neighborhoods/williamsburg-coffee` dashboard
+
+**Why this positions for RFS #5:**
+- "AI agents for vertical industries" → Push is the verticalized customer acquisition agent for local merchants
+- Beachhead density (Williamsburg coffee) proves model; multi-ZIP expansion proves scalability; outcome-based pricing proves unit economics
+
+---
+
+## Budget (30 Weeks)
 
 | Item | Cost | Notes |
 |------|------|-------|
-| Creator payments (Phase 1, Week 1–4) | $750–1,200 | 20 creators × avg $40–60 per campaign |
-| Creator payments (Phase 2, Week 5–8) | $600–1,000 | Increasing slots, potentially more creators |
-| Creator payments (Phase 3, Week 9–12) | $400–800 | Reduced phase (focus on paid merchants) |
-| Domain name | $10–12/yr | push.com, push.co, or pushapp.co equivalent |
-| Vercel / Supabase hosting | Free–50 | Mostly free tier; maybe $10 for Vercel Pro if needed |
-| Stripe account + processing | Free–50 | Stripe takes 2.9% + $0.30 per transaction |
-| Scouting expenses | $200 | Transport, coffee meetings, meals |
-| Miscellaneous | $200 | Supplies, unexpected costs |
-| **Total** | **~$2,400–3,500** | Conservative estimate with buffer |
+| Creator payments (Week 1–4) | $1,500 | 20 creators × ~$75 avg per campaign during ramp |
+| Creator payments (Week 5–8) | $2,400 | 20 active campaigns × 2 weeks × ~$60 avg |
+| Creator payments (Week 9–12) | $2,000 | Retention phase; higher-tier creators |
+| Creator payments (Week 13–20) | $4,000 | Greenpoint + Bushwick ramp |
+| Claude API (Vision + matching) | $400–800 | Scales with campaign count |
+| Supabase + Vercel | $40–100 | Pro tier Week 9+ |
+| Stripe + processing | ~$800 | 2.9% + $0.30 on Performance revenue |
+| Domain, design assets | $100 | Minor |
+| Amex gift cards (manager referral) | $500 | 5 × $100 bonuses expected to trigger |
+| Scouting, walk-ins, meals | $600 | Coffee at each merchant during pitch |
+| Miscellaneous | $400 | Buffer |
+| **Total** | **~$12,500** | 30-week budget through YC application |
 
 ---
 
-## MVP Tech Stack
+## v5.0 MVP Tech Stack
 
 ### Frontend
-- **Framework:** Next.js (React)
-- **Styling:** Vanilla CSS (Follow Design.md sharp corners requirement)
-- **Hosting:** Vercel (free tier, auto-deploys from GitHub)
-- **Cost:** Free
+- **Framework:** Next.js (App Router)
+- **Styling:** Vanilla CSS, strictly following `Design.md` (sharp corners, 6-color brand palette)
+- **Hosting:** Vercel (Pro tier from Week 9)
+- **Cost:** $0 → $20/mo
 
 ### Backend / Database
-- **Database:** Supabase (PostgreSQL, free tier) OR Airtable (if faster to launch)
-- **Auth:** Supabase Auth (email magic links) or simple email verification
-- **API:** Next.js API routes (serverless functions)
-- **Cost:** Free tier sufficient
+- **Database:** Supabase (PostgreSQL) — 6 core tables already shipped (see commit `4e98348`)
+- **Auth:** Supabase Auth (email magic links) + service-role for trusted server inserts (commit `ec1f9d6`)
+- **API:** Next.js API routes (first route `/api/attribution/scan` live per commit `86a7972`)
+- **Cost:** Free → Pro ~$25/mo
+
+### AI Layer (v5.0 core)
+- **Verification:** Claude Vision (env-gated, enabled per merchant)
+- **Matching:** Claude-driven creator ranking, factoring Push Score + category affinity + verified_conversions_90d
+- **OCR + geo:** bundled into Day-1 verification pipeline
+- **Cost:** ~$0.05–0.15 per verified customer at steady state
 
 ### Payments & Comms
-- **Creator payouts (early):** Venmo, Zelle, direct deposit
-- **Merchant billing (later):** Stripe subscription
-- **Email:** SendGrid free tier (100/day)
-- **SMS (optional):** Twilio free trial
-- **Cost:** Free until scale
+- **Merchant billing:** Stripe subscriptions (Performance plan: $500/mo base + metered $40/verified customer)
+- **Creator payouts:** Venmo / Zelle (manual through Week 12), Stripe Connect (Week 13+)
+- **Email:** Resend or SendGrid for ROI statements, campaign emails
+- **Cost:** ~$800 total over 30 weeks
 
-### Analytics & Logging
-- **Metrics:** Google Analytics (free, on website)
-- **Campaign tracking:** Manual spreadsheet + database queries
-- **Logging:** Console logs, Vercel logs
-- **Cost:** Free
-
-### Essential Pages & Functions
-
-**Merchant-facing:**
-1. Landing page (problem, solution, CTA to signup)
-2. Signup form (shop details)
-3. Dashboard (past campaigns, results, available campaigns)
-4. Campaign detail (creators assigned, proofs, status)
-
-**Creator-facing:**
-1. Landing page (opportunity, how it works)
-2. Signup form (handles, follower count, availability)
-3. Campaign feed (available opportunities, slots, deadlines)
-4. Campaign detail (merchant, offer, deliverables, submit proof)
-5. Profile page (past campaigns, score, earnings)
-
-**Admin (you):**
-1. Merchant management (list, status, campaigns)
-2. Creator management (list, status, score)
-3. Campaign management (create, assign, track)
-4. Manual payout tracker
-5. Metrics dashboard
-
-**Defer to later:**
-- Automated matching algorithm (do manually first)
-- Automated payouts (use Stripe + Plaid API)
-- Social login (use email first)
-- Advanced analytics (export to Looker Studio later)
-- Mobile app (web-only for MVP)
+### Analytics
+- **Campaign tracking:** Supabase queries → public dashboard
+- **Product analytics:** PostHog (optional, Week 9+)
+- **Logging:** Vercel logs + Sentry (Week 9+)
+- **Cost:** Free tier through Week 12
 
 ---
 
-## Execution Tips
+## Execution Tips (v5.0-specific)
 
-### Week 1–2: Move Fast
-- Scouting is legs-on-ground work. Don't overthink. Get addresses, IG handles, talk to owners.
-- First 10 merchant conversations are clunky. By conversation 15, you'll have tight talking points.
+### Week 1–4: Ship AI, Win Anchors
+- The AgentOutputDemo is the single strongest sales asset. Ship it first, demo it in every walk-in.
+- Sey / Devocion / Partners are non-negotiable. If one passes, re-pitch with case-study-promise language.
 
-### Week 3–4: One Feature Per Day
-- Website MVP can be rough. Forms can use Airtable embeds if you want to move faster.
-- Don't over-build the admin dashboard. Spreadsheet + basic web form is enough.
+### Week 5–8: Metrics Discipline
+- The `/neighborhoods/williamsburg-coffee` dashboard must update daily. If it stalls, merchant trust stalls.
+- Every campaign must close its loop: creator paid within 24h, merchant ROI emailed monthly.
 
-### Week 5–12: Ops Discipline
-- Log everything in a spreadsheet **same day.** Don't wait a week.
-- Pay creators within 24h, every time. This builds trust.
-- Ask merchants and creators for feedback on every single campaign. This is your gold.
+### Week 9–12: Case Studies > New Merchants
+- Week 9–12 is about **depth**, not breadth. Publish the 3 case studies with real numbers even if they're small.
+- Greenpoint discovery in parallel is background work, not the focus.
 
-### Expansion Readiness (Week 13+)
-- Only expand when metrics hit targets. Premature expansion kills early zones.
-- Replicate the exact same process in the next ZIP code.
-- Hire a local ops person for zone 2 if you've proven the model works.
+### Week 13–20: Replicate, Don't Improvise
+- Greenpoint and Bushwick use the **exact** Williamsburg playbook. Do not rework the pitch, pricing, or verification threshold mid-expansion.
+- If a ZIP under-performs, assume the playbook is right and the ZIP is wrong (go to the next ZIP instead of reworking the playbook).
+
+### Expansion Readiness (Week 20+)
+- New category (e.g., bakeries, espresso bars adjacent) only unlocks after ALL three Brooklyn ZIPs saturate
+- YC application week: founder mode, freeze engineering on new features, only metric improvements

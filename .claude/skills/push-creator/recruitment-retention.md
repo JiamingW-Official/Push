@@ -29,13 +29,13 @@
 - Urgency (batch closing, limited spots)
 - Direct call-to-action with link
 
-### Recruitment Funnel (Updated v4.1)
+### Recruitment Funnel (v5.0 update)
 1. **Outreach:** 100 DMs → expect 10-15% response
-2. **Signup:** Interested creators fill profile (1 min)
-3. **Seed onboarding:** Welcome kit ("Your First Campaign" checklist + 3 example posts) + first campaign invite
-4. **First campaign:** Free product + $25-35 cash (Push-funded for Phase 1)
-5. **Second campaign:** Free product + $25-35 cash + **$5 upgrade bonus** upon completion
-6. **Conversion to Explorer:** Complete 2 campaigns + provisional score ≥ 40 = auto-upgrade
+2. **Signup:** Interested creators fill profile (1 min) — profile includes IG/TikTok handle so the agent can seed an initial `category_affinity` estimate from public content
+3. **Seed onboarding:** Welcome kit ("Your First Campaign" checklist + 3 example posts). Initial `category_affinity` is estimated from scraped handle content; the agent uses this provisional affinity for first-campaign routing.
+4. **First campaign (bootstrapped routing):** Because new Seed ops have no Push-internal history, their first invite is a **founder-curated agent pick** — the founder/ops manually approves the agent's top suggestion before it DMs out. Free product + $25-35 cash (Push-funded for Phase 1).
+5. **Second campaign (full agent routing):** After campaign 1 completes, the agent now has real `verified_conversions_90d` data + in-platform content rating. Invite for campaign 2 comes through the same DM flow all tiers use. Free product + $25-35 cash + **$5 upgrade bonus** upon completion.
+6. **Conversion to Explorer:** Complete 2 campaigns + provisional score ≥ 40 = auto-upgrade. `category_affinity` now anchored in real Push data, not scraped content.
 
 ### Phase 1 Recruitment Economics
 - **Founder outreach budget:** $25-35/creator × 15 creators/batch + $5 upgrade bonus = $380-530/batch
@@ -51,15 +51,16 @@ The retention engine has two layers: **behavioral design** (what keeps creators 
 
 ### Behavioral Design (Creator Psychology)
 
-| Mechanism | Psychological Trigger | Implementation |
+| Mechanism | Psychological Trigger | Implementation (v5.0) |
 |---|---|---|
-| **Limited seats per campaign** | FOMO (fear of missing out) | Only 3-5 spots per tier; high demand visibility |
-| **Standby queue** | Near-miss effect (loss aversion) | If campaign full, creator joins waitlist; notification if spot opens |
+| **Agent-issued invites** | Scarcity + validation | "You were selected by the matching agent out of N operators" — the invite itself signals you were picked |
+| **Time-boxed invite response** | Loss aversion | 2-hour default window to accept/decline; if you let it lapse, the agent routes to the next candidate. Visible countdown in the DM. |
+| **Rising-rank visibility** | Progress feedback | Dashboard shows "agent routed you 7 invites in the last 30 days, up from 3 last month" — operators can feel the ranking improve |
 | **Tier progression ladder** | Achievement/status | Visible tier badges, score dashboard, public leaderboard |
 | **Fast payouts** | Instant gratification | T+3 for Explorer, same-day for Closer/Partner |
-| **Non-portable score** | Lock-in/switching cost | Score earned on Push; cannot transfer to competitors |
-| **Public rebook history** | Reputation/social proof | Show "worked with [merchant]" on creator profile |
-| **Campaign difficulty badges** | Prestige signaling | "Proven with 5-star merchants" or "premium brand partnerships" |
+| **Non-portable score** | Lock-in/switching cost | Push Score, `category_affinity`, and `verified_conversions_90d` all live ONLY on Push — invariant, cannot transfer to competitors |
+| **Public rebook history** | Reputation/social proof | Show "worked with [merchant]" on operator profile |
+| **Verified conversion badge** | Prestige signaling | "47 verified customers last 90d" beats "12 campaigns completed" as a bragging line |
 | **Referral milestone tracker** | Goal proximity (Operator+) | Dashboard shows "23/30 referrals this month — $15 bonus at 30!" |
 
 ### What Each Tier Unlocks (Narrative) — Updated v4.1
@@ -97,9 +98,10 @@ The core design principle: **Each tier is designed so its rewards match what cre
 **What Operator unlocks:**
 - **Commission (3% first unlock) + Referral Milestone Bonus ($15 at 30 txns/mo)** — This is the behavioral inflection point. The milestone bonus makes commission tangible in local F&B context.
 - **Data Literacy Tutorial (NEW)** — how to read referral data, optimize posting times, understand which content drives most visits
-- **Campaign filtering** (can browse and choose campaigns; not auto-assigned)
-- **Campaign pre-briefing** (see full campaign brief, decide if it fits their audience)
-- **3 concurrent campaigns** (vs. 2; ability to pipeline campaigns)
+- **Higher agent-routing priority** — the matching agent weights Operator-tier ops above Explorer/Seed within the same affinity + geo band; more invites reach their DM
+- **Full campaign pre-briefing** in the invite DM — see draft concept, payout breakdown, timeline before deciding (Seed/Explorer see condensed briefs; Operator+ sees the full merchant context)
+- **Decline-without-penalty** — Operator+ can decline an agent-routed invite with a structured reason (wrong fit, schedule, audience mismatch); the reason feeds back into the ranking model and does not hurt their Push Score
+- **3 concurrent campaigns** (vs. 2; pipeline capacity)
 - **Slightly higher base pay** ($20 Standard vs. $12, determined by Campaign Difficulty Multiplier)
 
 **Retention mechanic:** Commission alone on $5-8 transactions is not enough ($0.15-0.24/txn). The milestone bonus transforms it: an Operator with 40 referral transactions × $7 avg gets $8.40 commission + $15 milestone bonus = **$23.40/month in passive referral income**, on top of $15-25/campaign base pay. That's the real inflection point.

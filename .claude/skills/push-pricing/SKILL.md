@@ -1,48 +1,110 @@
 ---
 name: push-pricing
-description: "Push pricing model, unit economics, revenue layers, payment flows, and financial projections. Use for any pricing, economics, or financial question."
+description: "Push pricing model, unit economics, payment flows, and financial projections. Use for any pricing, economics, or financial question."
 ---
 
-# Push Pricing & Economics — Complete Reference
+# Push Pricing & Economics — v5.0 (Outcome-Based)
 
 ## 1. Pricing Philosophy
-Price for learning, not revenue. Remove friction → prove willingness to pay → establish value perception → don't destroy margins at scale.
 
-## 2. Merchant Pricing (Updated 2026-04-12)
+**Pay for verified outcomes, not access.** Push is an AI-powered customer acquisition agency — the merchant's bill tracks AI-verified customers walking through their door. Zero upfront risk, zero subscription if no results. We absorb acquisition cost until the model has proven itself; from there, every dollar a merchant pays maps directly to a customer we delivered.
 
-### Current Tier Structure
-| Plan | Price | Campaigns/mo | Creator Tiers Available | Slots/Campaign |
-|------|-------|-------------|------------------------|---------------|
-| Starter | $19.99/mo | 2 | Seed + Explorer + Operator | 3 |
-| Growth | $69/mo | 4 | All tiers (Proven priority) | 5 |
-| Pro | $199/mo | Unlimited | All + invite Closer/Partner | 8 |
+Removes the single biggest objection from local F&B operators: "I've paid marketers before and got nothing." Under v5.0, if we bring nothing, the merchant pays nothing.
 
-### Phased Rollout
-**Phase 1 (Week 1-8): FREE**
-- Everything free. Goal = data + repeat behavior, not revenue
-- Merchant provides: offer to creators (free food/drink, $8-15 retail, $3-8 COGS)
-- Push provides: matching, management, verification, summary
+---
 
-**Phase 2 (Week 9-12): Introductory Paid**
-- After proving value via free campaigns, introduce pricing
-- First campaign: FREE (already done)
-- Pricing conversation: "You've run [X] campaigns with [results]. Going forward..."
+## 2. Merchant Pricing Plans
 
-**Phase 3+: Full Pricing + Performance Tiers**
-- Subscription + campaign fees + performance-based take rate
-- Pay-to-feature: merchants pay to promote campaigns to community top
+### Pilot — $0
 
-### Additional Revenue: Merchant Preload
-- Merchants preload funds to cover promotional costs + creator commissions + milestone bonuses
-- Funds drawn down per verified transaction through referral system
-- Preload amount recommendation by plan:
-  - Starter: $100-150/month (covers ~2 campaigns of promotional offers)
-  - Growth: $300-500/month (covers offers + creator commission/milestone)
-  - Pro: $500-1000/month (covers all + premium creator invitations)
+**For:** first 10 merchants in the active beachhead (Williamsburg coffee, as of April 2026).
 
-## 3. Creator Compensation (Updated v4.1)
+| Item | Value |
+|------|-------|
+| Platform fee | $0 |
+| Setup / onboarding | $0 |
+| Credit card required | No |
+| First 10 AI-verified customers | On the house |
+| After customer 10 | Auto-flip to Performance tier |
 
-### Campaign Difficulty Multiplier (NEW)
+**Eligibility:**
+- Brick-and-mortar with a physical entry point
+- Willing to display the Push QR code at the door
+- Registered business in the NYC metro
+- Able to receive a short agent onboarding call
+
+**Intent:** prove the model, remove every friction point, generate the first trust-anchored case studies. Pilot is our acquisition cost, booked as opex until the merchant converts.
+
+### Performance — $500/month minimum + $40 per AI-verified customer
+
+**For:** merchants past their first 10 verified customers, or any merchant outside the Pilot cohort who signs directly onto Performance.
+
+| Item | Detail |
+|------|--------|
+| Monthly minimum | $500, assessed in arrears at end of calendar month |
+| Per-customer fee | $40, accrued as AI verifies each visit (QR + Claude Vision + geo) |
+| Active campaigns | Unlimited |
+| Creator tier access | Priority access to tiers 2–6 (Proven+ priority) |
+| Dispute SLA | 24 hours |
+| Billing | Stripe, monthly, USD |
+
+**How the bill works:** `max($500, $40 × verified_customers_this_month)`. If AI verifies 12 customers in a month → $500 (minimum binds). If AI verifies 20 customers → $800. If AI verifies 50 customers → $2,000.
+
+Minimum guarantees Push a floor of operating revenue per merchant; variable component aligns us with merchant outcomes.
+
+### Enterprise Agency — custom
+
+**For:** merchants with 5+ locations, franchise operators, and multi-brand parents.
+
+| Item | Detail |
+|------|--------|
+| Per-customer rate | Custom, volume-tiered |
+| Verification SLA | Custom |
+| Reporting | Custom dashboards + attribution export |
+| Agent tuning | Dedicated, with regular performance reviews |
+| Integrations | SSO + API + webhook channels |
+
+**Intent:** land multi-location operators where a single merchant deal can equal 5–20 single-store Performance accounts. Priced against alternative acquisition channels (franchise marketing spend, regional agencies) rather than the single-store $500/$40 template.
+
+### Legacy tiers — grandfathered, not for sale
+
+The v4 SaaS tiers are retained only for founding-cohort merchants under original contract:
+
+- Starter $19.99/mo
+- Growth $69/mo
+- Scale $199/mo
+
+**Rules:**
+- Existing founding-cohort merchants remain on their original contract until renewal
+- Migration to v5.0 pricing is opt-in and mutually agreed in writing
+- No new signups can land on legacy tiers under any circumstances
+- Sales must never present these as an option — they exist solely as a contractual footnote
+
+---
+
+## 3. When to Recommend Which Plan
+
+| Merchant Profile | Recommend | Why |
+|------------------|-----------|-----|
+| New Williamsburg coffee shop, no prior Push history | **Pilot** | Beachhead target, first 10 customers free removes friction, we need the case study |
+| Established merchant past first 10 AI-verified customers | **Performance** | Pilot graduation is automatic; the $500 min + $40/customer model kicks in |
+| Non-Williamsburg NYC merchant that wants in now | **Performance** (direct signup) | Pilot is beachhead-gated; we don't dilute the case-study cohort |
+| Merchant with 5+ locations, franchise operator, multi-brand parent | **Enterprise Agency** | Volume economics justify custom rate; requires SSO/API/dedicated tuning |
+| Founding-cohort merchant under legacy contract | **Keep on legacy until renewal**, then offer v5.0 migration | Protect trust; migrate only when mutually agreed |
+
+**Hard rules:**
+- Pilot is only for active beachhead (Williamsburg coffee as of April 2026). Do not offer Pilot outside the beachhead.
+- Performance is the default for everyone outside Pilot.
+- Enterprise is pitched only when the merchant has 5+ locations or multi-brand complexity. Don't over-engineer for a single-store operator.
+
+---
+
+## 4. Creator Compensation (Unchanged in v5.0)
+
+Creator-side economics carry over from v4.1 intact. Outcome-based pricing on the merchant side does not change what creators earn or how milestone bonuses work.
+
+### Campaign Difficulty Multiplier
+
 Base pay is determined by tier base rate × campaign difficulty:
 
 | Difficulty | Multiplier | Examples |
@@ -53,7 +115,8 @@ Base pay is determined by tier base rate × campaign difficulty:
 
 Difficulty is set by the platform based on campaign requirements. Merchant cannot override downward.
 
-### By Tier (v4.1)
+### By Tier
+
 | Tier | Base Rate (Standard) | Commission | Referral Milestone Bonus | Total Earning Potential/mo |
 |------|---------------------|------------|--------------------------|---------------------------|
 | Seed | Free product only | 0% | — | Free items only |
@@ -66,118 +129,137 @@ Difficulty is set by the platform based on campaign requirements. Merchant canno
 *Base rates shown are Standard (1.0x) difficulty. Premium = 1.3x, Complex = 1.6x.*
 
 ### Seed Upgrade Bonus
+
 - $5 cash bonus upon completing 2nd campaign (upgrade acceleration incentive)
-- Push-funded in Phase 1; absorbed into platform ops cost at scale
+- Push-funded in Pilot phase; absorbed into platform ops cost at scale
 
-### Phase 1 Creator Compensation (Push-funded)
-| Type | Creator Gets |
-|------|-------------|
-| Standard F&B visit + 1 post | Free item + $25-35 cash |
-| Premium content (Reel/TikTok) | Free item + $40-50 cash |
-| Story-only (lower effort) | Free item + $15-20 cash |
+### Commission + Milestone Bonus Structure
 
-Payment timing: Within 24 hours via Venmo/Zelle. **Non-negotiable trust-builder.**
-
-### Commission + Milestone Bonus Structure (v4.1)
 - 30-day attribution window (last-click attribution)
 - Commission on every transaction through creator's referral QR/link
 - **Milestone bonus:** flat cash bonus when referral transaction count hits monthly threshold
 
 | Tier | Commission % | Milestone Threshold | Milestone Bonus |
-|------|-------------|--------------------|-----------------| 
+|------|-------------|--------------------|-----------------|
 | Operator | 3% | 30 txns/month | +$15 |
 | Proven | 5% | 40 txns/month | +$30 |
 | Closer | 7% | 60 txns/month | +$50 |
 | Partner | 10% | 80 txns/month | +$80 |
 
-**Why milestone bonus:** Pure percentage commission on $5-8 F&B transactions yields negligible absolute value (3% × $6 = $0.18). Milestone bonus makes "commission unlock at Operator" a real behavioral inflection point. Source: merchant preloaded funds.
+**Why milestone bonus:** Pure percentage commission on $5-8 F&B transactions yields negligible absolute value (3% × $6 = $0.18). Milestone bonus makes "commission unlock at Operator" a real behavioral inflection point. Under v5.0, milestone bonuses are funded from Performance-plan revenue rather than a separate merchant preload.
 
-## 4. Five Revenue Layers
+### Payment Timing
 
-### Layer 1: Merchant Subscription (Stability)
-$19.99 / $69 / $199 monthly recurring
+Within 24 hours via Venmo/Zelle (Pilot phase) or Stripe Connect (Performance+ scale). **Non-negotiable trust-builder.**
 
-### Layer 2: Campaign Service Fees (Operational)
-Per-campaign fees for add-ons, extra slots, premium matching
+---
 
-### Layer 3: Performance-Based Take Rate (Strongest Long-Term)
-- 15% take rate on creator payouts processed through Push
-- Activated when attribution is strong enough to justify
-- Tied to verified completion — strongest moat
+## 5. Unit Economics (Zero-Risk Rule)
 
-### Layer 4: Creator Premium (Optional Acceleration)
-Creators pay for premium features (advanced analytics, priority matching, profile boost)
-Only activate when creator side sees enough value
+### Per-Customer Math
 
-### Layer 5: Future Financial Products
-Payout acceleration, cash advance for high-performing creators, merchant credit line
+| Stage | Merchant Pays | Push Direct Cost | Push Net |
+|-------|---------------|------------------|----------|
+| Pilot customer 1–10 | $0 | ~$20–32 (creator base + AI verification) | **−$20 to −$32** (acquisition cost) |
+| Performance customer 11+ | $40 | ~$20–32 (creator base + AI verification) | **+$8 to +$20** per customer |
 
-## 5. Unit Economics (Updated v4.1)
+**Zero-risk rule:** the merchant never pays during Pilot. Push absorbs the first 10 customers as acquisition cost. From customer 11 onward, the merchant pays $40 and Push nets a modest per-unit margin. Scale comes from volume — 100 verified customers/month per merchant is the near-term target, not 10.
 
-### Per-Campaign Target (Standard difficulty, Operator-tier creator)
-| Item | Amount |
-|------|--------|
-| Merchant payment (subscription portion) | ~$35 (prorated) |
-| Campaign fee | ~$30 |
-| Creator base pay | ~$20 |
-| Creator milestone bonus (prorated) | ~$5 |
-| Take rate (15% of payout) | ~$4 |
-| Ops cost | ~$8 |
-| **Platform net** | **~$36 (45% margin)** |
+### Target Contribution Margin
+
+**40% at scale.** Achieved by:
+- Claude Vision + OCR reducing manual verification cost per customer
+- Geo-fencing reducing dispute rate
+- Creator tier progression reducing cost per successful campaign (higher-tier creators close more efficiently)
+- Monthly minimum ($500) absorbing fixed ops cost even on low-volume merchants
 
 ### Cost Structure
-- Creator payments: largest cost, funded by merchant fees at scale
-- Milestone bonuses: funded by merchant preload; predictable cost per tier
-- Ops: verification, support, dispute handling → drops with AI automation
-- Tech: hosting, tools (Vercel free → scales with revenue)
 
-### Break-Even
-At $19.99-$199/month per merchant, need ~15 paying merchants to cover ongoing costs when creators paid from campaign fees. Achievable by Month 4-5.
+- **Creator payments:** largest variable cost. Funded from Performance revenue once merchant converts from Pilot.
+- **AI verification:** Claude Vision + OCR + geo. Marginal cost per verification is small but non-trivial; amortized across volume.
+- **Milestone bonuses:** predictable cost per tier, funded by merchant Performance revenue.
+- **Ops:** dispute handling, onboarding calls, merchant support. Drops per-customer as AI automation expands.
+- **Pilot acquisition:** 10 × ($20–32) = $200–320 CAC per merchant. Recovered within weeks of Performance conversion at healthy verified-volume.
 
-## 6. Pricing Comparison vs Alternatives
+### Break-Even on a Performance Merchant
+
+Merchant verifies 25 customers/month → pays $1,000 → Push direct cost ~$500–800 → $200–500 contribution/month. Break-even on the Pilot CAC ($200–320) in the first Performance month at this volume.
+
+---
+
+## 6. Payment Flow
+
+### Pilot
+
+- No invoicing. No Stripe charge. No credit card on file.
+- Push funds creator payouts directly.
+- AI verifies each customer; verified count tracked in merchant dashboard.
+- At customer 10, merchant receives migration notice + opt-in confirmation for Performance.
+- Customer 11 lands → Performance kicks in.
+
+### Performance
+
+- Stripe monthly billing, USD, arrears.
+- End of calendar month: invoice = `max($500, $40 × verified_customers_this_month)`.
+- Creator commission + milestone bonus calculated from same verified-customer feed.
+- Creator payout: Stripe Connect, 24h after verification, cleared against merchant invoice.
+- Disputes raised inside 24h SLA; verified count adjusts before invoice generation.
+
+### Enterprise Agency
+
+- Custom contract, typically monthly or quarterly billing.
+- Volume-tiered per-customer rate replaces the $40 flat.
+- SLA, reporting, and API access per negotiated terms.
+- Creator commission structure unchanged (tier-based 3/5/7/10%).
+
+---
+
+## 7. Pricing Comparison vs Alternatives
+
 | Method | Cost | Measurability | Effort |
 |--------|------|--------------|--------|
-| DM a creator | $50-200/post + product | None | High |
-| Local agency | $500-2000/mo | Low-Medium | Low |
-| Instagram/FB Ads | $200-1000/mo | Medium | Medium |
-| **Push Starter** | **$19.99/mo + ~$100 preload** | **High** | **Very Low** |
+| DM a creator directly | $50-200/post + product | None | High |
+| Local marketing agency | $500-2000/mo retainer | Low–Medium | Low |
+| Instagram/FB Ads | $200-1000/mo | Medium (platform metrics, not door traffic) | Medium |
+| **Push Pilot** | **$0 for first 10 customers** | **High (AI-verified at door)** | **Very Low** |
+| **Push Performance** | **$500 min + $40/verified customer** | **High** | **Very Low** |
 
-This is the core sales weapon.
+**The core sales weapon:** "We show up, verify the outcome at your door with AI, and only charge for what we deliver. Your first 10 customers are free."
 
-## 7. Payment Flow
-
-### Phase 1-2 (Manual)
-Merchant pays Push → Venmo/Zelle or Stripe invoice
-Push pays Creator → Venmo/Zelle within 24h of verification
-
-### Phase 3+ (Automated)
-Merchant subscribes → Stripe monthly billing
-Merchant preloads → Stripe balance (covers offers + commission + milestone)
-Campaign completes → Auto-verification
-Creator payout → Stripe Connect (payout speed per tier)
-Milestone bonus → Auto-calculated monthly, paid on 1st of following month
-Platform fee → Auto-deducted
+---
 
 ## 8. Economic Traps to Avoid
-1. High activity / low value (vanity metrics)
-2. Premium tiers without real utility
-3. Weak attribution + aggressive pricing (merchants won't pay)
-4. Subsidy dependence (can't wean off free)
-5. **Milestone bonus inflation** — don't lower thresholds too aggressively; maintain aspiration value
+
+1. **Diluting Pilot.** Pilot is for Williamsburg coffee. Offering it outside the beachhead dilutes the case-study cohort and bleeds the acquisition budget.
+2. **Subsidizing forever.** Pilot must auto-flip at customer 10. A soft flip creates merchants who expect perpetual free service.
+3. **Weakening verification.** The whole model depends on AI-verified outcomes being trustworthy. Loosening verification to pump volume destroys the pricing narrative.
+4. **Lowering the $500 minimum.** The floor covers fixed ops cost and filters out merchants who won't commit. Dropping it below $500 breaks unit economics.
+5. **Milestone bonus inflation.** Don't lower thresholds aggressively; maintain aspiration value. Creator retention comes from earning the next tier, not collecting easy bonuses.
+6. **Legacy-tier leakage.** Never offer v4 SaaS tiers to new signups. Legacy exists only as a grandfather clause.
+
+---
 
 ## 9. Pricing Experiments to Run
-1. $19.99 vs $49 vs $99 per month: conversion rate comparison
-2. Per-campaign vs subscription: which gets higher adoption?
-3. Creator payout sensitivity: $25 vs $35 effect on completion
-4. Standby premium: would merchants pay $20 extra for guaranteed fill?
+
+1. **Pilot volume cap sensitivity:** 10 vs 8 vs 12 free customers — where does conversion to Performance peak vs CAC?
+2. **$500 minimum vs $750 minimum:** does a higher floor filter signal without killing conversion?
+3. **Per-customer rate test:** $40 vs $50 in cohorts outside Williamsburg. Does elasticity differ by neighborhood?
+4. **Creator payout sensitivity:** $25 vs $35 effect on completion rate (carried over from v4 backlog).
 5. **Milestone threshold sensitivity:** 30 vs 20 txns — does lower threshold improve retention without inflating cost?
-6. **Campaign difficulty premium:** do merchants accept 1.3x/1.6x multiplier?
+6. **Campaign difficulty premium:** do merchants accept 1.3x/1.6x multiplier when the underlying pricing is outcome-based?
+7. **Enterprise Agency per-customer rate:** at what volume does $40 become uneconomic for multi-location operators?
+
+---
 
 ## 10. Rules & Guardrails
-- NEVER charge before merchant completes 1 free campaign
-- ALWAYS pay creators within 24 hours (trust non-negotiable)
-- Creator minimum payout: $10 (Seed gets product only)
-- No annual contracts in Phase 1-2 (monthly, cancel anytime)
-- Full refund if campaign gets zero completions
-- Milestone bonus is guaranteed if threshold met — never retroactively adjusted
-- Campaign difficulty multiplier is platform-set, transparent to both sides
+
+- **NEVER** charge a Pilot merchant. Pilot is $0 end-to-end.
+- **NEVER** sell legacy tiers to new merchants. They're grandfathered only.
+- **ALWAYS** auto-flip at customer 11. Don't manually extend Pilot.
+- **ALWAYS** pay creators within 24 hours (trust non-negotiable).
+- **Creator minimum payout:** $10 (Seed gets product only).
+- **No annual contracts in Pilot or early Performance.** Monthly, cancel anytime.
+- **Full refund / invoice adjustment** if AI verification is successfully disputed.
+- **Milestone bonus** is guaranteed if threshold met — never retroactively adjusted.
+- **Campaign difficulty multiplier** is platform-set, transparent to both sides.
+- **Enterprise** deals require written contract before any onboarding work.

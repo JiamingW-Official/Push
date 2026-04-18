@@ -77,11 +77,74 @@ No dark mode.
 ### Component Override Rule
 Third-party components: ALWAYS override rounded corners to 0.
 
-## 2. Portal Site Structure
+## 2. Route Map — v5.0 (Next.js App Router)
 
-Current site: https://jiamingw-official.github.io/Push_Portal/
+> v5.0 app lives under `app/` with route groups `(marketing)`, `(merchant)`, `(creator)`, `(admin)`. Portal reference site (legacy static HTML) retained at the end of this section for archival context.
 
-### Pages
+### 2.1 Marketing Routes `(marketing)/`
+
+| Route | Status | Purpose | SEO |
+|-------|--------|---------|-----|
+| `/` | v5.0 rewrite | Landing. Hero: **"Tell us how many customers you need. We deliver."** + `<AgentOutputDemo>` in hero (desktop ≥1100px) + `<VerificationBadge>` in merchant section | Indexable |
+| `/pricing` | v5.0 rewrite | 2-tier outcome plans (Pilot + Performance), compare table, guarantee section | Indexable |
+| `/how-it-works` | v5.0 rewrite | 3-step agent-driven flow: Goal → Match → Deliver | Indexable |
+| `/for-merchants` | v5.0 rewrite | Williamsburg coffee eyebrow, outcome pricing, agent-run case study pull quote | Indexable |
+| `/for-creators` | v5.0 rewrite | "AI-managed operator network" framing, agent-routed campaigns | Indexable |
+| `/about` | v5.0 rewrite | Timeline rewritten as Williamsburg coffee 60-day cold start | Indexable |
+| `/merchant/pilot` | **NEW v5.0** | $0 Pilot apply page (`(marketing)/merchant/pilot/`). Client component. 4-field form + mock submit + champagne-border thanks state | Indexable |
+| `/neighborhoods/williamsburg-coffee` | **NEW v5.0** | Beachhead landing. **Static route that wins over `[slug]`.** JSON-LD Service offer | Indexable |
+| `/yc-2027` | **NEW v5.0 (unlisted)** | Unlisted pitch page. `robots: { index: false, follow: false }`. **Not linked from nav.** | **noindex, nofollow** |
+
+### 2.2 Portal Routes (unchanged by v5.0)
+
+| Group | Route prefix | Purpose |
+|-------|--------------|---------|
+| Merchant | `/merchant/...` | Merchant dashboard (campaigns, attribution, settings) |
+| Creator | `/creator/...` | Creator dashboard (tier, earnings, campaign feed) |
+| Admin | `/admin/...` | Admin console |
+| Admin — AI review | `/admin/ai-verifications` | **NEW v5.0.** Manual-review queue for `ai_verifications` rows. Behind admin role |
+
+> Portal structure (merchant / creator / admin dashboards) is preserved from v4.x — v5.0 only adds the `/admin/ai-verifications` queue and the `/merchant/pilot` marketing page.
+
+### 2.3 Redirects (`next.config.ts`)
+
+All 301, preserve query behavior via App Router redirect rules:
+
+| From | To | Reason |
+|------|-----|--------|
+| `/pricing?plan=starter` | `/pilot` | v4.x Starter tier retired; becomes $0 Pilot |
+| `/pricing?plan=growth` | `/pricing#performance` | v4.x Growth tier folded into Performance |
+| `/pricing?plan=scale` | `/pricing#performance` | v4.x Pro/Scale tier folded into Performance |
+| `/merchant/signup?plan=starter` | `/merchant/pilot` | Old signup path → new Pilot apply page |
+
+Source of truth: `next.config.ts` `redirects()`. Skill stays in sync when adding new v5.0 redirects.
+
+### 2.4 Root Metadata (`app/layout.tsx`)
+
+| Key | Value |
+|-----|-------|
+| `metadata.title` (default) | `"Push — AI-Powered Customer Acquisition Agency \| $0 Pilot for Local Businesses"` |
+| `metadataBase` | `https://push-six-flax.vercel.app` |
+| OG image | Deep Space Blue `#003049` bg, headline **"Tell us how many customers you need. We deliver."** |
+
+**`metadataBase` rationale:** Vercel preview URL used as baseline because the production domain is still pending (§9.7 project naming). All `og:image` / `twitter:image` URLs resolve against this base until the domain is finalized; update in one place when that happens.
+
+### 2.5 v5.0 Reusable Components (landing)
+
+| Component | Path | Used on |
+|-----------|------|---------|
+| `AgentOutputDemo` | `components/landing/AgentOutputDemo.tsx` | `/` hero (desktop ≥1100px); reusable on `/how-it-works`, `/for-merchants` if needed |
+| `VerificationBadge` | `components/landing/VerificationBadge.tsx` | `/` merchant section; reusable anywhere verification proof is shown |
+
+Treat both as building blocks — do not inline their markup in other pages.
+
+### 2.6 Legacy Portal Site (archival)
+
+Pre-v5.0 static HTML portal at https://jiamingw-official.github.io/Push_Portal/ — retained for historical reference during transition. Not part of the Next.js app.
+
+<details>
+<summary>Legacy portal page list</summary>
+
 | Page | URL | Purpose |
 |------|-----|---------|
 | Home | index.html | Main landing, vision, how it works |
@@ -103,44 +166,61 @@ Current site: https://jiamingw-official.github.io/Push_Portal/
 | NDA | nda.html | NDA page |
 | Team Dashboard | push-team-dashboard.html | Team overview |
 
+</details>
+
 ## 3. Website Content Standards
 
-### Voice & Tone
+> **Copy is authoritatively maintained in `push-brand-voice` skill.** This section captures route-level copy anchors that must match brand-voice templates. When copy conflicts, brand-voice wins.
+
+### Voice & Tone (v5.0)
 - Direct, confident, no fluff
-- Infrastructure language, not marketplace cliches
-- Focus on outcomes and measurement, not features
+- Agency + outcome language (not marketplace/platform cliches)
+- Focus on delivered customers and verification, not features
 - Never say: "connecting creators with businesses" (too generic)
-- Always say: "verified customer acquisition through creators"
+- Always say: "AI-powered customer acquisition" or "verified customers delivered"
 
-### Key Copy Points
-- Push = AI-native local customer acquisition engine
-- Transaction-level attribution via QR codes
-- 6-tier creator progression system v4.1 (anyone can start, Seed = zero barrier)
-- Commission + Referral Milestone Bonus (hybrid model, unlocks at Operator)
-- Merchant pricing: Starter $19.99/mo | Growth $69/mo | Pro $199/mo
-- Campaign Difficulty Multiplier: Standard 1.0x / Premium 1.3x / Complex 1.6x
-- 35% platform margin target
-- Beachhead: NYC cafe + dessert + beauty
+### Key Copy Points — v5.0 (current)
+- **Push = AI-Powered Customer Acquisition Agency** (not a marketplace, not SaaS)
+- **Tagline:** "Tell us how many customers you need. We deliver."
+- **Pricing (outcome-based):** $0 Pilot → Performance ($500/month minimum + $40/verified customer)
+- **Verification core:** Claude Vision + OCR + geo-match, Day-1 validation
+- **Beachhead:** Williamsburg coffee × 60 days (NYC, narrow not broad)
+- **Route-level copy anchors:**
+  - `/` hero: "Tell us how many customers you need. We deliver."
+  - `/pricing`: "Outcome pricing. Pay for verified customers, not impressions."
+  - `/how-it-works`: Goal → Match → Deliver (3-step agent flow)
+  - `/for-merchants`: Williamsburg coffee eyebrow + agent-run case study pull quote
+  - `/for-creators`: "AI-managed operator network" — agent-routed campaigns
+  - `/about`: 60-day cold-start timeline (Williamsburg coffee origin story)
+  - `/merchant/pilot`: "$0 Pilot. Zero risk. Verified results."
+  - `/neighborhoods/williamsburg-coffee`: Neighborhood-specific outcome promise (JSON-LD Service offer)
 
-### Merchant-Facing Copy
-Focus: ROI, ease, measurement
-- "Stop guessing which creators work. Start buying verified results."
-- "Tell us your goal. We handle creator matching, execution, and verification."
-- "$19.99/month. Less than one Instagram ad."
+### v4.x Historical Anchors (archived, do NOT use in new copy)
+- ~~Starter $19.99/mo | Growth $69/mo | Pro $199/mo~~ → replaced by Pilot + Performance
+- ~~"Stop guessing which creators work. Start buying verified results."~~ → replaced by "Tell us how many customers you need. We deliver."
+- ~~"$19.99/month. Less than one Instagram ad."~~ → retired with SaaS-tier pricing
+- 6-tier creator system, Commission + Milestone Bonus, Campaign Difficulty Multiplier, 35% platform margin — still operational internally; de-emphasized in public marketing copy.
 
-### Creator-Facing Copy
-Focus: earnings, growth, fairness
-- "No followers required. Start earning from day one."
-- "Your performance score is your currency. Build it, and better campaigns come to you."
-- "From free coffee to $100/campaign + $80 milestone bonus — your progression is tracked and rewarded."
+## 4. v5.0 Surface Checklist (what exists / what's required)
 
-## 4. Website MVP Requirements (Phase 1)
-- Landing page: both merchant and creator paths
-- Merchant signup form: name, business, address, Instagram, goals, availability
-- Creator signup form: name, handles, location, content type, availability
-- Campaign listing page
-- Simple admin dashboard for manual campaign management
-- Tech: Next.js/React + Vercel + Supabase/Airtable
+Marketing surfaces:
+- `/` landing (hero rewrite + AgentOutputDemo + VerificationBadge) — v5.0
+- `/pricing` 2-tier outcome plans + guarantee section — v5.0
+- `/how-it-works` 3-step agent flow — v5.0
+- `/for-merchants` Williamsburg coffee eyebrow + case study pull quote — v5.0
+- `/for-creators` AI-managed operator network framing — v5.0
+- `/about` 60-day cold-start timeline — v5.0
+- `/merchant/pilot` $0 Pilot apply form (4 fields + mock submit + champagne thanks state) — v5.0 NEW
+- `/neighborhoods/williamsburg-coffee` beachhead landing + JSON-LD Service offer — v5.0 NEW
+- `/yc-2027` unlisted pitch page (noindex) — v5.0 NEW
+
+Portal surfaces (preserved, unchanged by v5.0 unless noted):
+- Merchant dashboard (campaigns, attribution, settings)
+- Creator dashboard (tier, earnings, campaign feed)
+- Admin console
+- `/admin/ai-verifications` — v5.0 NEW, admin-only AI review queue
+
+Tech stack: Next.js App Router + React + Vercel + Supabase (see `.claude/handoff-v8.3.md` for v4.x debt context).
 
 ## 5. Design Patterns
 
