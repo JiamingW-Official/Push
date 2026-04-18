@@ -9,13 +9,13 @@ export const metadata: Metadata = {
   title: {
     template: "%s | Push",
     default:
-      "Push — Pay Per Verified Visit | Creator Marketing for NYC Businesses",
+      "Push — AI-Powered Customer Acquisition Agency | $0 Pilot for Local Businesses",
   },
   description:
-    "Push connects NYC businesses with local creators. You only pay when a creator drives a verified visit — tracked by QR code. No followers minimum. No upfront fees.",
+    "AI-powered customer acquisition agency. Tell us how many customers you need — Claude matches creators, verifies every visit via QR + Vision OCR + geo. Pay only for who walks through your door. $0 Pilot for first 10 merchants.",
   keywords:
-    "creator marketing, local marketing NYC, foot traffic, QR attribution, pay per visit, influencer marketing NYC",
-  metadataBase: new URL("https://pushnyc.co"),
+    "AI customer acquisition, AI marketing agency, outcome-based pricing, local business marketing, AI creator matching, verified foot traffic, Williamsburg coffee",
+  metadataBase: new URL("https://push-six-flax.vercel.app"),
   alternates: {
     canonical: "/",
     types: {
@@ -30,28 +30,28 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title:
-      "Push — Pay Per Verified Visit | Creator Marketing for NYC Businesses",
+      "Push — AI-Powered Customer Acquisition Agency | $0 Pilot for Local Businesses",
     description:
-      "Push connects NYC businesses with local creators. You only pay when a creator drives a verified visit — tracked by QR code.",
+      "Tell us how many customers you need. Claude matches creators in 60s. Every customer AI-verified. Pay only for who walks through your door.",
     siteName: "Push",
     locale: "en_US",
     type: "website",
-    url: "https://pushnyc.co",
+    url: "https://push-six-flax.vercel.app",
     images: [
       {
         url: "/opengraph-image",
         width: 1200,
         height: 630,
-        alt: "Push — Pay Per Verified Visit",
+        alt: "Push — AI-Powered Customer Acquisition Agency",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
     title:
-      "Push — Pay Per Verified Visit | Creator Marketing for NYC Businesses",
+      "Push — AI-Powered Customer Acquisition Agency | $0 Pilot for Local Businesses",
     description:
-      "Push connects NYC businesses with local creators. You only pay when a creator drives a verified visit.",
+      "Tell us how many customers you need. Claude matches creators. AI verifies every visit. Pay only for delivered customers.",
     creator: "@pushnyc",
     site: "@pushnyc",
     images: ["/opengraph-image"],

@@ -12,6 +12,36 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "avatars.githubusercontent.com" },
     ],
   },
+  async redirects() {
+    // v5.0 301 redirects: legacy SaaS tier query params → outcome-based pricing.
+    // Starter → $0 Pilot (smallest bucket). Growth/Scale → Performance.
+    return [
+      {
+        source: "/pricing",
+        has: [{ type: "query", key: "plan", value: "starter" }],
+        destination: "/pilot",
+        permanent: true,
+      },
+      {
+        source: "/pricing",
+        has: [{ type: "query", key: "plan", value: "growth" }],
+        destination: "/pricing#performance",
+        permanent: true,
+      },
+      {
+        source: "/pricing",
+        has: [{ type: "query", key: "plan", value: "scale" }],
+        destination: "/pricing#performance",
+        permanent: true,
+      },
+      {
+        source: "/merchant/signup",
+        has: [{ type: "query", key: "plan", value: "starter" }],
+        destination: "/merchant/pilot",
+        permanent: true,
+      },
+    ];
+  },
 };
 
 export default nextConfig;

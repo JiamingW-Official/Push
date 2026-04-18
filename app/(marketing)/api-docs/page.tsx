@@ -565,22 +565,22 @@ export default function ApiDocsPage() {
                   </thead>
                   <tbody>
                     <tr>
-                      <td>Starter ($19.99/mo)</td>
+                      <td>Pilot ($0)</td>
                       <td>60</td>
                       <td>10,000</td>
                       <td>100</td>
                     </tr>
                     <tr>
-                      <td>Growth ($69/mo)</td>
-                      <td>300</td>
-                      <td>100,000</td>
-                      <td>500</td>
+                      <td>Performance ($500/mo min)</td>
+                      <td>600</td>
+                      <td>500,000</td>
+                      <td>1,000</td>
                     </tr>
                     <tr>
-                      <td>Scale ($199/mo)</td>
-                      <td>1,200</td>
+                      <td>Enterprise Agency (custom)</td>
+                      <td>2,400</td>
                       <td>Unlimited</td>
-                      <td>2,000</td>
+                      <td>4,000</td>
                     </tr>
                   </tbody>
                 </table>

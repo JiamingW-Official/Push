@@ -4,33 +4,33 @@ import LandingInteractivity from "@/components/layout/LandingInteractivity";
 import StatCounter from "@/components/layout/StatCounter";
 import "./landing.css";
 
-/* ── Merchant attribution dashboard ──────────────────────── */
+/* ── Merchant verification dashboard ──────────────────────── */
 const ATTR_ROWS = [
   {
     handle: "@maya.eats.nyc",
     qr: "QR-4821",
-    amount: "+$32",
+    amount: "+$40",
     verified: true,
     delay: "0s",
   },
   {
     handle: "@brooklyn_bites",
     qr: "QR-4822",
-    amount: "+$32",
+    amount: "+$40",
     verified: true,
     delay: "0.15s",
   },
   {
     handle: "@nycfoodie_",
     qr: "QR-4823",
-    amount: "+$32",
+    amount: "+$40",
     verified: false,
     delay: "0.3s",
   },
   {
     handle: "@williamsburg.e",
     qr: "QR-4824",
-    amount: "+$32",
+    amount: "+$40",
     verified: true,
     delay: "0.45s",
   },
@@ -42,9 +42,9 @@ function MerchantDashboard() {
       <div className="dash-bar">
         <div className="dash-bar-left">
           <span className="dash-dot" />
-          <span className="dash-title">Attribution Dashboard</span>
+          <span className="dash-title">AI Verification Layer</span>
         </div>
-        <span className="dash-meta">Ramen &amp; Co. &middot; Tonight</span>
+        <span className="dash-meta">Sey Coffee &middot; Williamsburg</span>
       </div>
       <div className="dash-rows">
         {ATTR_ROWS.map((r) => (
@@ -68,30 +68,30 @@ function MerchantDashboard() {
       </div>
       <div className="dash-footer">
         <div className="dash-stat">
-          <span className="dash-stat-n">47</span>
-          <span className="dash-stat-l">QR scans</span>
+          <span className="dash-stat-n">14</span>
+          <span className="dash-stat-l">AI-verified</span>
         </div>
         <div className="dash-stat">
-          <span className="dash-stat-n">$1,504</span>
-          <span className="dash-stat-l">Revenue</span>
+          <span className="dash-stat-n">$560</span>
+          <span className="dash-stat-l">Owed</span>
         </div>
         <div className="dash-stat">
-          <span className="dash-stat-n">3.2&times;</span>
-          <span className="dash-stat-l">ROI</span>
+          <span className="dash-stat-n">&lt;8s</span>
+          <span className="dash-stat-l">Verify time</span>
         </div>
       </div>
     </div>
   );
 }
 
-/* ── 3 key tiers ─────────────────────────────────────────── */
+/* ── 3 key tiers (creator operator network) ──────────────── */
 const TIERS = [
   {
     color: "#b8a99a",
     mat: "Clay",
     name: "Seed",
     earn: "Free product",
-    desc: "Zero followers. First campaign.",
+    desc: "First campaign. Training data.",
     badge: "Entry",
   },
   {
@@ -99,7 +99,7 @@ const TIERS = [
     mat: "Steel",
     name: "Operator",
     earn: "$20 + 3%",
-    desc: "Commission + bonuses.",
+    desc: "AI-scheduled. Commission active.",
     featured: true,
   },
   {
@@ -107,41 +107,54 @@ const TIERS = [
     mat: "Obsidian",
     name: "Partner",
     earn: "$100 + 10%",
-    desc: "Elite. $80/mo milestone.",
+    desc: "Elite. Agent priority routing.",
   },
 ];
 
 /* ── FAQ ─────────────────────────────────────────────────── */
 const FAQS = [
   {
-    q: "How is a visit verified?",
-    a: "Customers scan a unique QR code at your location. No scan, no charge.",
+    q: "How does the AI verify a customer?",
+    a: "Three-layer check: QR scan + Claude Vision receipt OCR + geo-match within 200m. All three must pass within 8 seconds or the scan goes to manual review. No verification, no charge.",
   },
   {
-    q: "Low follower count?",
-    a: "Irrelevant. We score on verified conversions. 500 followers driving 30 visits beats 50K driving zero.",
+    q: "What's the $0 Pilot?",
+    a: "First 10 customers free. No catch. If the AI can't deliver, you don't pay. After 10 verified customers, you move to $500/mo min + $40/customer.",
   },
   {
-    q: "How do creators get paid?",
-    a: "Weekly direct deposit. No invoicing, no 30-day waits.",
+    q: "Why only coffee × Williamsburg right now?",
+    a: "Network density beats breadth. One category, one ZIP, 60 days of saturation. We expand after the beachhead proves the unit economics.",
   },
-  { q: "Can I cancel?", a: "Anytime. No contracts, no lock-in." },
+  {
+    q: "Can I cancel?",
+    a: "Anytime. No contracts. Pilot merchants keep any verified customers already delivered.",
+  },
 ];
 
 const jsonLd = {
   "@context": "https://schema.org",
-  "@type": "SoftwareApplication",
+  "@type": "Organization",
   name: "Push",
   description:
-    "Creator marketplace for NYC businesses. Pay per verified visit.",
-  applicationCategory: "BusinessApplication",
-  operatingSystem: "Web",
-  url: "https://pushnyc.co",
-  offers: { "@type": "Offer", price: "19.99", priceCurrency: "USD" },
+    "AI-powered customer acquisition agency. We deliver verified new customers to local businesses through an AI-managed creator network.",
+  url: "https://push-six-flax.vercel.app",
+  serviceType: "Customer Acquisition Agency",
+  areaServed: { "@type": "City", name: "New York" },
+  makesOffer: {
+    "@type": "Offer",
+    name: "Customer Acquisition Pilot",
+    description:
+      "Free pilot for first 10 merchants — pay only for AI-verified customers",
+    priceSpecification: {
+      "@type": "PriceSpecification",
+      priceCurrency: "USD",
+      price: "0",
+    },
+  },
   provider: {
     "@type": "Organization",
     name: "Push",
-    url: "https://pushnyc.co",
+    url: "https://push-six-flax.vercel.app",
   },
 };
 
@@ -160,32 +173,35 @@ export default function LandingPage() {
         <div className="container hero-inner">
           <div className="hero-label">
             <span className="rule" />
-            <span className="eyebrow">Performance-Based Creator Marketing</span>
+            <span className="eyebrow">
+              AI-Powered Customer Acquisition Agency
+            </span>
           </div>
 
           <h1 id="hero-h" className="hero-h">
             <span className="hero-l1">
-              <span className="hw-conn">Turn</span>{" "}
-              <span className="hw-key">creators</span>
+              <span className="hw-conn">Tell us how many</span>{" "}
+              <span className="hw-key">customers</span>
             </span>
             <span className="hero-l2">
-              <span className="hw-conn">into</span>{" "}
-              <em className="hw-accent">results.</em>
+              <span className="hw-conn">you need.</span>{" "}
+              <em className="hw-accent">We deliver.</em>
             </span>
           </h1>
 
           <div className="hero-bottom">
             <div className="hero-ctas">
-              <Link href="/merchant/signup" className="btn-fill">
-                Start Free
+              <Link href="/merchant/pilot" className="btn-fill">
+                Start $0 Pilot
               </Link>
               <Link href="#how-it-works" className="btn-outline-light">
-                How It Works
+                See the AI in action
               </Link>
             </div>
             <p className="hero-sub">
-              Pay only when a creator drives a verified visit &mdash; tracked by
-              QR code. Zero guesswork.
+              Our AI verifies every customer through QR scan, receipt OCR, and
+              geo-match. Our creator network delivers them. Pay only for who
+              walks through your door.
             </p>
           </div>
         </div>
@@ -194,26 +210,21 @@ export default function LandingPage() {
           <div className="container hero-stats">
             <div className="h-stat reveal">
               <span className="h-stat-n">
-                <StatCounter
-                  value={19.99}
-                  prefix="$"
-                  decimals={2}
-                  duration={1200}
-                />
+                <StatCounter value={0} prefix="$" duration={900} />
               </span>
-              <span className="h-stat-l">/ month</span>
+              <span className="h-stat-l">pilot for first 10</span>
             </div>
             <div className="h-stat reveal" style={{ transitionDelay: "100ms" }}>
               <span className="h-stat-n">
-                <StatCounter value={6} duration={800} />
+                <StatCounter value={60} suffix="s" duration={1000} />
               </span>
-              <span className="h-stat-l">creator tiers</span>
+              <span className="h-stat-l">AI match time</span>
             </div>
             <div className="h-stat reveal" style={{ transitionDelay: "200ms" }}>
               <span className="h-stat-n">
-                <StatCounter value={24} suffix="h" duration={1000} />
+                <StatCounter value={100} suffix="%" duration={1200} />
               </span>
-              <span className="h-stat-l">to launch</span>
+              <span className="h-stat-l">customer verified</span>
             </div>
           </div>
         </div>
@@ -222,13 +233,13 @@ export default function LandingPage() {
       {/* ── PROOF ────────────────────────────────────────── */}
       <div className="proof">
         <div className="container proof-inner">
-          <span className="proof-label">Trusted by NYC businesses</span>
+          <span className="proof-label">Williamsburg coffee pilot cohort</span>
           <div className="proof-names">
             {[
-              "Ramen & Co.",
-              "Bloom Florals",
-              "The Roast Room",
-              "Bodega Azul",
+              "Sey Coffee",
+              "Devoción",
+              "Partners Coffee",
+              "Variety Coffee",
             ].map((n) => (
               <span key={n} className="proof-name">
                 {n}
@@ -247,37 +258,38 @@ export default function LandingPage() {
           </div>
 
           <h2 id="merch-h" className="d-head d-head--hero reveal">
-            Know exactly
+            Tell the agent
             <br />
             <span className="d-ghost">
-              which creators
+              how many customers
               <br />
-              drive customers.
+              you need.
             </span>
           </h2>
 
           <div className="merch-grid">
             <div className="merch-copy reveal">
               <p className="s-body">
-                Transaction-level attribution via QR codes. Know which creator
-                drove which customer &mdash; pay only for verified results.
+                Input your goal — "20 new customers this month." The agent
+                matches creators, drafts briefs, predicts ROI in 60 seconds. Pay
+                only for AI-verified visits.
               </p>
               <ul className="feat-list">
                 <li>
                   <span className="feat-dot" />
-                  87% match rate within 2 miles
+                  Claude Vision + OCR + geo triple-check
                 </li>
                 <li>
                   <span className="feat-dot" />
-                  Every scan logged, zero ops burden
+                  60s agent match — no manual outreach
                 </li>
                 <li>
                   <span className="feat-dot" />
-                  From $19.99/mo &mdash; no agency markup
+                  $0 Pilot &mdash; $500/mo min + $40/customer
                 </li>
               </ul>
-              <Link href="/merchant/signup" className="btn-fill">
-                Get Started
+              <Link href="/merchant/pilot" className="btn-fill">
+                Apply for $0 Pilot
               </Link>
             </div>
             <div
@@ -299,13 +311,14 @@ export default function LandingPage() {
           </div>
 
           <h2 id="create-h" className="d-head d-head--w d-head--hero reveal">
-            No followers
+            An AI-managed
             <br />
-            <span className="d-ghost d-ghost--w">required.</span>
+            <span className="d-ghost d-ghost--w">operator network.</span>
           </h2>
 
           <p className="s-body s-body--w reveal">
-            Your performance score is your currency. Start from zero.
+            Push agent schedules you. Verified customers pay you. Tier score is
+            your currency &mdash; not followers.
           </p>
 
           <div className="tier-row reveal" style={{ transitionDelay: "100ms" }}>
@@ -327,21 +340,21 @@ export default function LandingPage() {
           <div className="tier-prog reveal">
             <span>Start free</span>
             <span className="tier-prog-a">&rarr;</span>
-            <span>Build track record</span>
+            <span>Agent assigns campaigns</span>
             <span className="tier-prog-a">&rarr;</span>
-            <span className="tier-prog-hi">Top 1%: $200/visit</span>
+            <span className="tier-prog-hi">Partner tier: $200/customer</span>
           </div>
 
           <blockquote className="quote reveal">
             <p>
-              &ldquo;I earned $320 last month just visiting restaurants I&apos;d
-              go to anyway.&rdquo;
+              &ldquo;I earned $320 last month from coffee shops I was already
+              walking to.&rdquo;
             </p>
             <cite>&mdash; @maya.eats.nyc &middot; Operator</cite>
           </blockquote>
 
           <Link href="/creator/signup" className="btn-outline-light reveal">
-            Join as Creator &mdash; Free
+            Join the operator network &mdash; Free
           </Link>
         </div>
       </section>
@@ -357,25 +370,25 @@ export default function LandingPage() {
           <h2 id="how-h" className="d-head d-head--hero reveal">
             Three steps.
             <br />
-            <span className="d-ghost">Zero guesswork.</span>
+            <span className="d-ghost">AI handles the middle.</span>
           </h2>
 
           <div className="steps">
             {[
               {
                 n: "01",
-                t: "Post a campaign",
-                b: "Set goal, budget, payout. Push matches creators by score, tier, proximity.",
+                t: "Tell the agent your goal",
+                b: 'Input: "20 new customers this month, $400 budget, coffee, Williamsburg." Takes 60 seconds.',
               },
               {
                 n: "02",
-                t: "Creator visits & creates",
-                b: "Matched by location. Posts authentic content with unique QR code.",
+                t: "AI matches + runs",
+                b: "Claude matches top 5 creators, drafts briefs, predicts ROI. Creators visit, post, drive customers.",
               },
               {
                 n: "03",
-                t: "Verify & pay",
-                b: "Every scan logged. Payouts release automatically. No disputes.",
+                t: "Delivered customers — or free",
+                b: "Claude Vision + OCR + geo verify every scan in <8s. Pay only for customers the AI delivers.",
               },
             ].map((s, i) => (
               <div
@@ -404,64 +417,52 @@ export default function LandingPage() {
                 <span>Pricing</span>
               </div>
               <h2 id="price-h" className="d-head">
-                Pricing that scales
+                Outcome-based pricing.
                 <br />
-                <span className="d-ghost">with results.</span>
+                <span className="d-ghost">Not SaaS.</span>
               </h2>
             </div>
             <p className="price-note">
-              Cancel anytime. No setup fees.
+              We are the agency, powered by AI.
               <br />
-              Creators always join free.
+              No legacy agency markup.
             </p>
           </div>
 
           <div className="price-grid">
             {[
               {
-                name: "Starter",
-                int: "$19",
-                dec: ".99",
-                per: "/mo",
-                desc: "Pay per visit, keep full control.",
+                name: "Pilot",
+                int: "$0",
+                per: "for first 10 merchants",
+                desc: "First 10 customers free. No catch. If the AI can't deliver, you don't pay.",
                 feats: [
-                  "2 campaigns",
-                  "3 creator slots",
-                  "AI matching",
-                  "QR attribution",
-                  "Basic analytics",
+                  "Up to 10 verified customers free",
+                  "AI creator matching in 60s",
+                  "Claude Vision receipt verification",
+                  "QR + geo attribution",
+                  "Weekly performance review",
                 ],
-                cta: "Get Started",
+                cta: "Apply for pilot",
+                href: "/merchant/pilot",
               },
               {
-                name: "Growth",
-                int: "$69",
-                per: "/mo",
-                desc: "Best for growing restaurants, gyms, retail.",
+                name: "Performance",
+                int: "$500",
+                per: "/mo min + $40/customer",
+                desc: "You set the target. The agent delivers. Pay only for AI-verified visits.",
                 feats: [
-                  "4 campaigns",
-                  "5 creator slots",
-                  "Priority matching",
-                  "Full dashboard",
-                  "Templates",
+                  "Unlimited AI-matched campaigns",
+                  "Dedicated agent tuning",
+                  "Two-Tier Hero + Sustained offers",
+                  "Creator tier 2–6 access",
+                  "Day-1 multi-modal verification",
+                  "Dispute SLA: 24h",
                 ],
                 featured: true,
-                badge: "Most Popular",
-                cta: "Get Growth",
-              },
-              {
-                name: "Pro",
-                int: "$199",
-                per: "/mo",
-                desc: "Unlimited campaigns, priority everything.",
-                feats: [
-                  "Unlimited campaigns",
-                  "8 creator slots",
-                  "Account manager",
-                  "Custom rules",
-                  "API access",
-                ],
-                cta: "Get Pro",
+                badge: "Outcome-Based",
+                cta: "Talk to agent",
+                href: "/merchant/signup",
               },
             ].map((p, i) => (
               <div
@@ -473,7 +474,6 @@ export default function LandingPage() {
                 <h3 className="pc-name">{p.name}</h3>
                 <div className="pc-price">
                   <span className="pc-int">{p.int}</span>
-                  {p.dec && <span className="pc-dec">{p.dec}</span>}
                   <span className="pc-per">{p.per}</span>
                 </div>
                 <p className="pc-desc">{p.desc}</p>
@@ -483,7 +483,7 @@ export default function LandingPage() {
                   ))}
                 </ul>
                 <Link
-                  href="/merchant/signup"
+                  href={p.href}
                   className={
                     p.featured ? "btn-fill pc-btn" : "btn-outline pc-btn"
                   }
@@ -501,14 +501,13 @@ export default function LandingPage() {
         <div className="container">
           <blockquote className="pull-quote reveal">
             <p>
-              &ldquo;We spent $200 and got 47 verified visits in one week.
-              Better ROI than any Instagram ad.&rdquo;
+              &ldquo;Push agent ran 60 seconds, matched 14 Williamsburg coffee
+              creators, drafted briefs. First week: 11 verified new
+              customers.&rdquo;
             </p>
             <footer>
-              <span className="pull-quote-n">Maria C.</span>
-              <span className="pull-quote-r">
-                Caf&eacute; Dos Alas, Brooklyn
-              </span>
+              <span className="pull-quote-n">Marco A.</span>
+              <span className="pull-quote-r">Sey Coffee, Williamsburg</span>
             </footer>
           </blockquote>
         </div>
@@ -538,24 +537,24 @@ export default function LandingPage() {
         <div className="container cta-inner">
           <div className="cta-label">
             <span className="rule" />
-            <span>NYC Founding Cohort</span>
+            <span>Williamsburg Coffee Pilot &mdash; First 10 Merchants</span>
             <span className="rule" />
           </div>
           <h2 className="cta-h">
-            Ready to pay
+            Ready to hand customer
             <br />
-            <span className="cta-h-thin">only for results?</span>
+            <span className="cta-h-thin">acquisition to an AI agency?</span>
           </h2>
           <p className="cta-body">
-            First 50 merchants get priority creator matching. Creators always
-            join free.
+            First 10 merchants get $0 Pilot. First 10 customers free. If the AI
+            can&apos;t deliver, you don&apos;t pay.
           </p>
           <div className="cta-btns">
-            <Link href="/merchant/signup" className="btn-fill">
-              Start Free &mdash; Merchants
+            <Link href="/merchant/pilot" className="btn-fill">
+              Apply for $0 Pilot
             </Link>
             <Link href="/creator/signup" className="btn-outline-light">
-              Apply as Creator
+              Join operator network
             </Link>
           </div>
         </div>

@@ -5,9 +5,9 @@ import HowItWorksClient from "./HowItWorksClient";
 import "./how-it-works.css";
 
 export const metadata: Metadata = {
-  title: "How Push Works — Performance-Based Creator Marketing",
+  title: "How Push Works — AI-Powered Customer Acquisition Agency",
   description:
-    "Learn how Push connects NYC merchants with local creators. Pay only for verified foot traffic tracked by QR code. Dual-role explainer for merchants and creators.",
+    "How Push's AI agency works: tell the agent your customer goal, Claude matches creators in 60s, every customer is AI-verified (QR + Vision OCR + geo). Pay only for delivered customers.",
 };
 
 /* ── QR Diagram SVG ──────────────────────────────────────── */
@@ -245,8 +245,8 @@ const COMPARE_ROWS = [
   },
   {
     feature: "Monthly cost",
-    traditional: "$500–$3,000+",
-    push: "From $19.99/mo",
+    traditional: "$500–$3,000+ retainer",
+    push: "$0 Pilot → $500/mo min + $40/customer",
   },
   {
     feature: "Payout speed",
@@ -349,19 +349,20 @@ export default function HowItWorksPage() {
           </div>
 
           <p className="hiw-hero-sub reveal" data-hero-content="merchant">
-            Post a campaign in 2 minutes. Push matches you with nearby creators
-            scored on verified conversion history. Pay only when a customer
-            walks through your door — tracked by QR code, attributed to the
-            creator who drove them.
+            Tell the agent how many customers you need. Claude matches creators
+            in 60 seconds, drafts briefs, runs the campaign. Every customer is
+            AI-verified through QR scan, receipt OCR, and geo-match. Pay only
+            for who walks through your door.
           </p>
           <p
             className="hiw-hero-sub reveal"
             data-hero-content="creator"
             style={{ display: "none" }}
           >
-            Browse campaigns near you. Apply, visit, post authentic content.
-            Earn when your audience actually shows up. No follower minimum —
-            your performance score is the only thing that matters.
+            Join the operator network. The agent schedules you on campaigns that
+            match your category and ZIP. Your performance score earns priority
+            routing — followers don&apos;t. Weekly payouts per verified
+            customer.
           </p>
         </div>
       </section>
@@ -429,12 +430,13 @@ export default function HowItWorksPage() {
             >
               <div className="hiw-step-card">
                 <div className="hiw-step-num">01</div>
-                <span className="hiw-step-label">Post</span>
-                <h3 className="hiw-step-title">Set your campaign</h3>
+                <span className="hiw-step-label">Goal</span>
+                <h3 className="hiw-step-title">Tell the agent your goal</h3>
                 <p className="hiw-step-body">
-                  Define your goal, payout per visit, and target neighborhood.
-                  Push handles creator matching automatically — no manual
-                  outreach, no agency.
+                  Input: &ldquo;20 new customers this month, $400 budget,
+                  coffee, Williamsburg.&rdquo; The agent parses objective,
+                  budget, category, and ZIP in 60 seconds. No brief writing, no
+                  RFP.
                 </p>
                 <div className="hiw-step-demo">
                   <DemoPostCampaign />
@@ -443,12 +445,12 @@ export default function HowItWorksPage() {
 
               <div className="hiw-step-card">
                 <div className="hiw-step-num">02</div>
-                <span className="hiw-step-label">Accept</span>
-                <h3 className="hiw-step-title">Creators are matched</h3>
+                <span className="hiw-step-label">Match</span>
+                <h3 className="hiw-step-title">AI matches in 60 seconds</h3>
                 <p className="hiw-step-body">
-                  Push surfaces creators scored on proximity, tier, and verified
-                  conversion history. You approve or let Push auto-match for
-                  fastest launch.
+                  Claude ranks the top 5 creators by category fit, geo
+                  proximity, and verified conversion history. Drafts briefs.
+                  Predicts ROI. You approve — or let the agent auto-run.
                 </p>
                 <div className="hiw-step-demo">
                   <div
@@ -564,12 +566,13 @@ export default function HowItWorksPage() {
 
               <div className="hiw-step-card">
                 <div className="hiw-step-num">03</div>
-                <span className="hiw-step-label">Pay on results</span>
-                <h3 className="hiw-step-title">Pay per verified visit</h3>
+                <span className="hiw-step-label">Deliver or free</span>
+                <h3 className="hiw-step-title">Triple-checked by AI</h3>
                 <p className="hiw-step-body">
-                  Every QR scan is timestamped and logged. Payouts release
-                  automatically after verification. No disputes. No manual
-                  tracking. No surprises.
+                  Every scan runs through Claude Vision (receipt OCR), QR check,
+                  and geo-match in under 8 seconds. If all three pass,
+                  you&apos;re billed $40. If the AI can&apos;t deliver, you
+                  don&apos;t pay.
                 </p>
                 <div className="hiw-step-demo">
                   <QRMiniSVG />
@@ -1011,12 +1014,12 @@ export default function HowItWorksPage() {
                 </span>
               </h2>
               <p className="hiw-cta-body">
-                Post a campaign in 2 minutes. Push matches you with nearby
-                creators. Pay only when a verified customer walks through your
-                door. From $19.99/mo — cancel anytime.
+                Tell the agent your goal. Claude matches creators in 60s. Pay
+                only for AI-verified customers who walk through your door. $0
+                Pilot for first 10 merchants — cancel anytime.
               </p>
-              <Link href="/merchant/signup" className="btn-hiw-merchant">
-                Start Free — $0 upfront
+              <Link href="/merchant/pilot" className="btn-hiw-merchant">
+                Apply for $0 Pilot
               </Link>
               <p
                 style={{

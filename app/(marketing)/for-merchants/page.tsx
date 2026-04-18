@@ -55,56 +55,41 @@ const TIERS = [
   },
 ];
 
-/* ── Pricing plans ───────────────────────────────────────────── */
+/* ── Pricing plans (v5.0 outcome-based) ─────────────────────── */
 const PLANS = [
   {
-    name: "Starter",
-    price: "$19.99",
-    period: "/mo",
-    desc: "One location. Two campaigns. Real attribution from day one.",
+    name: "Pilot",
+    price: "$0",
+    period: "for first 10 merchants",
+    desc: "First 10 customers free. No catch. If the AI can't deliver, you don't pay.",
     features: [
-      "2 active campaigns",
-      "3 creator slots per campaign",
-      "AI creator matching",
-      "QR attribution",
-      "Basic analytics",
+      "Up to 10 verified customers free",
+      "AI creator matching in 60s",
+      "Claude Vision receipt verification",
+      "QR + geo attribution",
+      "Weekly performance review",
     ],
     featured: false,
-    cta: "Get started",
-    roi: "Avg. $420 attributed revenue in month 1",
+    cta: "Apply for pilot",
+    roi: "First 10 customers on us — acquisition cost zero",
   },
   {
-    name: "Growth",
-    price: "$69",
-    period: "/mo",
-    desc: "Scale across your location. Better matching, deeper data.",
+    name: "Performance",
+    price: "$500",
+    period: "/mo min + $40/customer",
+    desc: "You set the target. The agent delivers. Pay only for AI-verified visits.",
     features: [
-      "4 active campaigns",
-      "5 creator slots",
-      "Priority creator matching",
-      "Full analytics dashboard",
-      "Campaign templates",
+      "Unlimited AI-matched campaigns",
+      "Dedicated agent tuning",
+      "Two-Tier Hero + Sustained offers",
+      "Creator tier 2–6 access (Proven+ priority)",
+      "Day-1 multi-modal verification",
+      "Dispute SLA: 24h",
     ],
     featured: true,
-    badge: "Most Popular",
-    cta: "Get Growth",
-    roi: "Avg. 3.9× ROI on campaign spend",
-  },
-  {
-    name: "Pro",
-    price: "$199",
-    period: "/mo",
-    desc: "Multi-location operators running ongoing creator programs.",
-    features: [
-      "Unlimited campaigns",
-      "Unlimited creator slots",
-      "Dedicated account manager",
-      "Custom attribution rules",
-      "API access",
-    ],
-    featured: false,
-    cta: "Get Pro",
-    roi: "Full white-glove setup included",
+    badge: "Outcome-Based",
+    cta: "Talk to agent",
+    roi: "$40 per AI-verified customer — no cap, no markup",
   },
 ];
 
@@ -116,27 +101,29 @@ export default function ForMerchantsPage() {
       {/* ── Hero ─────────────────────────────────────────────── */}
       <section className="fm-hero">
         <div className="container fm-hero-inner">
-          <p className="eyebrow fm-eyebrow">Push for Merchants · NYC</p>
+          <p className="eyebrow fm-eyebrow">
+            Push for Merchants · Williamsburg Coffee Pilot
+          </p>
 
           <h1 className="fm-headline">
-            <span className="fm-headline-black">Find creators who</span>
+            <span className="fm-headline-black">Tell us how many</span>
             <span className="fm-headline-ghost" aria-hidden="true">
-              Find creators who
+              Tell us how many
             </span>
-            <em className="fm-headline-em">actually</em>
-            <span className="fm-headline-light">drive foot traffic.</span>
+            <em className="fm-headline-em">customers</em>
+            <span className="fm-headline-light">you need. We deliver.</span>
           </h1>
 
           <p className="fm-sub">
-            QR-verified attribution. Milestone payouts. No agency fees.
+            AI-powered customer acquisition agency. Claude matches creators.
             <br />
-            Know exactly which creator drove which customer — and pay only for
-            results.
+            Every customer triple-checked by QR + Vision OCR + geo-match. Pay
+            only for who walks through your door.
           </p>
 
           <div className="fm-ctas">
-            <Link href="/merchant/signup" className="btn btn-primary">
-              Launch a campaign
+            <Link href="/merchant/pilot" className="btn btn-primary">
+              Apply for $0 Pilot
             </Link>
             <Link href="#pricing" className="btn fm-outline-btn">
               See pricing
@@ -144,8 +131,8 @@ export default function ForMerchantsPage() {
           </div>
 
           <p className="fm-reassure">
-            No credit card to explore &nbsp;·&nbsp; Campaign live in 24h
-            &nbsp;·&nbsp; Cancel anytime
+            No credit card for Pilot &nbsp;·&nbsp; 60s AI match &nbsp;·&nbsp;
+            Cancel anytime
           </p>
         </div>
 
@@ -207,15 +194,15 @@ export default function ForMerchantsPage() {
               <ul className="fm-ps-list fm-ps-list--solution">
                 <li>
                   <span className="fm-ps-bullet fm-ps-bullet--solution" />
-                  Every scan logged — transaction-level attribution
+                  Claude Vision + OCR + geo — triple-checked per customer
                 </li>
                 <li>
                   <span className="fm-ps-bullet fm-ps-bullet--solution" />
-                  Pay only after verification — no disputed clicks
+                  Pay only after AI verifies — no disputed clicks
                 </li>
                 <li>
                   <span className="fm-ps-bullet fm-ps-bullet--solution" />
-                  Campaign live in 24 hours, from $19.99/mo
+                  $0 Pilot for first 10 merchants &mdash; AI match in 60s
                 </li>
               </ul>
             </div>
@@ -243,18 +230,18 @@ export default function ForMerchantsPage() {
             {[
               {
                 n: "01",
-                title: "Post a campaign brief",
-                body: "Set your goal, payout structure, and creator requirements. Takes 10 minutes. Push handles creator matching, QR generation, and attribution from there.",
+                title: "Tell the agent your goal",
+                body: 'Input: "20 new customers this month, $400 budget, coffee, Williamsburg." Takes 60 seconds. Claude parses objective, budget, category, and ZIP — no brief writing.',
               },
               {
                 n: "02",
-                title: "Accept applicants from verified tiers",
-                body: "Push surfaces creators ranked by performance score, proximity, and tier. You approve or auto-accept — every creator is verified before they post.",
+                title: "AI matches + runs the campaign",
+                body: "Claude ranks top 5 creators by geo, category, and verified conversion history. Drafts briefs. Predicts ROI. You approve — or let the agent auto-run.",
               },
               {
                 n: "03",
-                title: "Pay on milestones, not promises",
-                body: "Payouts release automatically after QR-verified visits. No manual tracking, no invoice disputes, no agency overhead — just clean, verified results.",
+                title: "Delivered customers — or it's free",
+                body: "Every scan runs through Claude Vision (receipt OCR) + QR + geo-match in <8s. Pay $40/customer only when all three pass. If the AI can't deliver, you don't pay.",
               },
             ].map((step, i) => (
               <li
@@ -341,17 +328,15 @@ export default function ForMerchantsPage() {
                 <span className="section-tag-label">Pricing</span>
               </div>
               <h2 className="fm-pricing-headline">
-                Flat monthly.
+                Outcome pricing.
                 <br />
-                <span className="fm-pricing-headline-light">
-                  No hidden fees.
-                </span>
+                <span className="fm-pricing-headline-light">Not SaaS.</span>
               </h2>
             </div>
             <p className="fm-pricing-note">
-              Cancel anytime. No setup fees.
+              Cancel anytime. No agency markup.
               <br />
-              Creator payouts billed separately per campaign.
+              Pay only for AI-verified customers.
             </p>
           </div>
 
@@ -407,16 +392,16 @@ export default function ForMerchantsPage() {
             <span className="fm-quote-rule" aria-hidden="true" />
             <blockquote className="fm-pull-quote">
               <p className="fm-pull-quote-text">
-                &ldquo;We got 340 verified walk-ins in 6 weeks. We never paid
-                for a single click.&rdquo;
+                &ldquo;Push agent ran 60 seconds, matched 14 creators, drafted
+                briefs. First week: 11 AI-verified customers.&rdquo;
               </p>
               <footer className="fm-pull-quote-footer">
                 <cite className="fm-pull-quote-cite">
-                  Owner, Roberta&apos;s Bed-Stuy &mdash; Brooklyn, NYC
+                  Marco A., Sey Coffee &mdash; Williamsburg, NYC
                 </cite>
                 <span className="fm-pull-quote-meta">
-                  Growth plan &nbsp;·&nbsp; 6 active creators &nbsp;·&nbsp;
-                  $69/mo
+                  $0 Pilot &nbsp;·&nbsp; 5 active creators &nbsp;·&nbsp; $440 in
+                  verified customers
                 </span>
               </footer>
             </blockquote>
@@ -435,14 +420,14 @@ export default function ForMerchantsPage() {
               <span className="fm-final-headline-light">customers.</span>
             </h2>
             <p className="fm-final-sub">
-              Launch a campaign in 10 minutes. Pay only for QR-verified visits.
-              No agency fees. No long-term contracts.
+              Tell the agent your goal. Claude matches creators in 60s. Pay only
+              for AI-verified customers. First 10 merchants get $0 Pilot.
             </p>
             <Link
-              href="/merchant/signup"
+              href="/merchant/pilot"
               className="btn btn-primary fm-final-btn"
             >
-              Create account
+              Apply for $0 Pilot
             </Link>
           </div>
         </div>

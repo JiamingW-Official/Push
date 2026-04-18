@@ -116,8 +116,19 @@ export default function TermsPage() {
         </dd>
         <dt>Merchant</dt>
         <dd>
-          A business entity subscribed to a Push plan (Starter $19.99/mo, Growth
-          $69/mo, or Pro $199/mo) to run attribution campaigns.
+          A business entity enrolled in a Push plan (Pilot $0, Performance
+          $500/mo min + $40/verified customer, or Enterprise Agency custom) to
+          run AI-managed customer acquisition campaigns. Legacy founding cohort
+          subscriptions are grandfathered per their original contract.
+        </dd>
+        <dt>Verified Customer</dt>
+        <dd>
+          A physical visit to the Merchant location that passes all three layers
+          of the Push AI verification: (i) QR code scan at the point of entry,
+          (ii) Claude Vision OCR of a receipt confirming Merchant name and
+          transaction, and (iii) geo-match within 200 meters of the registered
+          Merchant address, completed within 8 seconds. A scan that fails any
+          layer goes to human review and is not billable until adjudicated.
         </dd>
         <dt>Campaign</dt>
         <dd>
@@ -306,18 +317,22 @@ export default function TermsPage() {
         Merchant-Specific Terms
       </h2>
 
-      <h3>5.1 Subscription Plans</h3>
+      <h3>5.1 Outcome-Based Plans</h3>
       <p>
-        Push offers three subscription tiers: Starter ($19.99/month), Growth
-        ($69/month), and Pro ($199/month). Plan features, campaign limits, and
-        Creator tier access are as specified on the pricing page at the time of
-        subscription. Push reserves the right to modify plan pricing with 30
-        days&apos; advance notice to existing subscribers.
+        Push offers two merchant plans under the v5.0 outcome-based model: Pilot
+        ($0, available to the first 10 merchants in the active beachhead — first
+        10 Verified Customers delivered at no charge) and Performance
+        ($500/month minimum plus $40 per Verified Customer). Legacy merchants
+        enrolled before v5.0 remain on their original Starter, Growth, or Pro
+        contract until renewal; any migration to v5.0 pricing is opt-in and
+        mutually agreed in writing.
       </p>
       <p>
-        Subscriptions are billed monthly on the anniversary of the subscription
-        date via Stripe. All fees are in USD. Failure to maintain a valid
-        payment method may result in service suspension.
+        Performance tier bills monthly in arrears via Stripe: the $500 minimum
+        is assessed at the end of each calendar month, and Verified Customer
+        charges accrue as the AI verifies each visit. All fees are in USD.
+        Failure to maintain a valid payment method may result in service
+        suspension.
       </p>
 
       <h3>5.2 Campaign Creation &amp; Management</h3>

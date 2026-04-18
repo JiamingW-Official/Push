@@ -227,18 +227,18 @@ const TESTIMONIAL = {
 const HOW_STEPS = [
   {
     n: "01",
-    title: "Apply",
-    body: "Submit your creator profile. Push reviews your content, audience, and neighbourhood fit. Most creators hear back within 48 hours.",
+    title: "Apply to the network",
+    body: "Submit your creator profile. The agent reviews your content, category fit, and ZIP coverage. You hear back within 48 hours — no human gatekeeping delays.",
   },
   {
     n: "02",
-    title: "Get verified",
-    body: "We confirm your reach, content quality, and location coverage. You receive your tier assignment and a unique creator QR identity.",
+    title: "Get tiered + QR identity",
+    body: "We assign your starting tier (Seed → Partner) and issue your unique QR identity. The agent now has you in its match pool for relevant campaigns.",
   },
   {
     n: "03",
-    title: "Start earning",
-    body: "Browse open campaigns, apply for the ones that fit. When a customer scans your QR and visits the merchant, the payout hits your dashboard instantly.",
+    title: "Agent assigns — you deliver",
+    body: "When a merchant tells the agent their goal, Claude ranks you by fit. You get the brief. Visit, post, drive customers. Payout hits when the AI verifies each scan.",
   },
 ];
 
@@ -267,27 +267,29 @@ export default function ForCreatorsPage() {
       <section className="cr-hero">
         <div className="container cr-hero-inner">
           <div className="cr-hero-content">
-            <p className="eyebrow cr-eyebrow">Push for Creators</p>
+            <p className="eyebrow cr-eyebrow">
+              Push for Creators · Operator Network
+            </p>
             <h1 className="cr-headline">
-              <span className="cr-black">Get paid for traffic</span>
-              <span className="cr-light">you already drive.</span>
+              <span className="cr-black">Join the AI-managed</span>
+              <span className="cr-light">operator network.</span>
             </h1>
             <p className="cr-sub">
-              Push connects NYC creators with local merchants. Post about the
-              spots you love. Every verified customer visit earns you a payout —
-              no fake metrics, no guesswork, no hidden fees.
+              Push is an AI-powered customer acquisition agency. The agent
+              schedules you on campaigns that match your category and ZIP. Your
+              tier score earns priority routing &mdash; followers don&apos;t.
+              Paid per AI-verified customer.
             </p>
             <div className="cr-ctas">
               <Link href="/creator/signup" className="btn btn-primary">
-                Apply to create
+                Apply to the network
               </Link>
               <Link href="/demo/creator" className="btn btn-ghost cr-ghost">
-                See how it works →
+                See how the agent works →
               </Link>
             </div>
             <p className="cr-reassure">
-              Free to join · No exclusivity required · Keep your other brand
-              deals
+              Free to join · No exclusivity · Tier score is portable within Push
             </p>
           </div>
 
@@ -296,19 +298,19 @@ export default function ForCreatorsPage() {
             {[
               {
                 num: "$320",
-                label: "Avg. creator month-1 payout",
-                sub: "Operator tier",
+                label: "Avg. Operator month-1 payout",
+                sub: "Agent-routed campaigns",
               },
               {
-                num: "48h",
-                label: "Approval turnaround",
-                sub: "From apply to active",
+                num: "60s",
+                label: "Agent match time",
+                sub: "From merchant goal → your DM",
               },
               { num: "6", label: "Tiers to climb", sub: "Seed → Partner" },
               {
                 num: "100%",
-                label: "Visit-verified payouts",
-                sub: "No fake impressions",
+                label: "AI-verified payouts",
+                sub: "QR + Vision OCR + geo",
               },
             ].map((s, i) => (
               <div
@@ -553,27 +555,27 @@ export default function ForCreatorsPage() {
               Applications open now
             </p>
             <h2 className="cr-cta-headline">
-              Join the NYC cohort.
+              Join the operator network.
               <span className="cr-cta-sub">
-                Your neighbourhood. Your content. Your payout.
+                Williamsburg coffee beachhead is live. Agent is matching now.
               </span>
             </h2>
             <p className="cr-cta-body">
-              Push is live across Brooklyn, Manhattan, Queens, and the Bronx. We
-              review every application within 48 hours. No exclusivity, no
-              minimum posts — just real earnings for real visits.
+              Push runs an AI-managed creator network, starting with
+              Williamsburg coffee. The agent reviews every application within 48
+              hours. No exclusivity, no minimum posts &mdash; just AI-verified
+              customers and weekly payouts.
             </p>
             <div className="cr-cta-actions">
               <Link href="/creator/signup" className="btn btn-primary">
-                Apply to create — free
+                Apply to the network &mdash; free
               </Link>
               <Link href="/for-merchants" className="btn btn-ghost cr-ghost">
                 Are you a merchant? →
               </Link>
             </div>
             <p className="cr-cta-note">
-              No minimum follower count for Seed tier · Payouts weekly via
-              Stripe
+              No minimum follower count for Seed tier · Weekly payout via Stripe
             </p>
           </div>
         </div>

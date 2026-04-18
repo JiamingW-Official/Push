@@ -31,27 +31,32 @@ const TEAM = [
   },
 ];
 
-/* ── Timeline data ─────────────────────────────────────────── */
+/* ── Timeline data (v5.0 — Williamsburg coffee 60-day) ────── */
 const TIMELINE = [
   {
     period: "2025 Q4",
     title: "The idea",
-    body: "Marcus pitches the attribution-first creator marketplace after losing $30K on influencer campaigns with no measurable outcome.",
+    body: "Marcus pitches an AI-powered customer acquisition agency after losing $30K on influencer campaigns with no measurable outcome. Creator networks are everywhere — accountable ones aren't.",
   },
   {
     period: "2026 Q1",
-    title: "Launch",
-    body: "Push ships to ten founding merchants across Williamsburg and the East Village. First QR-verified visit recorded February 14.",
+    title: "AI verification MVP",
+    body: "Claude Vision + OCR + geo verification ships. First QR-scan-to-verified-customer round trip under 8 seconds. Williamsburg coffee beachhead locked.",
   },
   {
-    period: "2026 Q2",
-    title: "NYC pilot",
-    body: "Forty-seven creators, twelve businesses. $8.2K attributed revenue. Performance scoring model validated with real cohort data.",
+    period: "2026 Q2 · Week 1–4",
+    title: "Beachhead signup",
+    body: "Agent signs 10 Williamsburg coffee shops for $0 Pilot and onboards 20 local creators. First AI-matched campaign goes live Week 2.",
+  },
+  {
+    period: "2026 Q2 · Week 5–8",
+    title: "60-day saturation",
+    body: "20 AI-run campaigns across Williamsburg coffee. Agent match latency averages 47s. First merchant crosses 10 verified customers, flips to Performance tier.",
   },
   {
     period: "2026 Q3",
-    title: "City-wide expansion",
-    body: "Rolling into all five boroughs. Creator tier system goes live. Merchant waitlist opens for Chicago and LA.",
+    title: "Adjacent expansion",
+    body: "Beachhead proven. Agent expands to Greenpoint + Bushwick coffee. Additional categories gated on saturation data — network density over breadth.",
   },
 ];
 
@@ -126,10 +131,10 @@ export default function AboutPage() {
               We built Push
             </span>
             <span className="about-hero-line about-hero-line--light">
-              because attribution
+              because customer acquisition
             </span>
             <span className="about-hero-line about-hero-line--red">
-              was broken.
+              should be AI-operated.
             </span>
           </h1>
           <div className="about-hero-rule" aria-hidden="true" />
