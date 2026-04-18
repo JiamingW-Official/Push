@@ -1,19 +1,23 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createHash } from "node:crypto";
-import { createServerSupabaseClient } from "@/lib/supabase-server";
+import { createClient } from "@supabase/supabase-js";
 
 // POST /api/attribution/scan
 // Records a QR-code scan event.
 //
 // Body: { qrId, campaignId, creatorId, merchantId, timestamp?, sessionId }
 //
-// Behaviour:
-//   • If creatorId and campaignId are real UUIDs AND Supabase env is set,
-//     insert into public.qr_scans (the existing schema from 20260412000001).
-//   • Otherwise — demo scans use string slugs like "demo-creator-001" —
-//     return a mock-shaped success so /demo keeps working.
+// Architecture:
+//   This endpoint is a server-trusted writer. We use the service-role key
+//   directly (bypassing RLS) because the API route itself validates the
+//   request shape before inserting. The browser never sees this key.
 //
-// Schema reference: supabase/migrations/20260412000001_creator_extended.sql
+//   Anonymous clients COULD write through the anon key with a permissive
+//   INSERT policy, but Supabase's new `sb_publishable_*` keys don't appear
+//   to map to the `anon` role in PostgREST the same way legacy JWT keys do,
+//   and more importantly — server-trusted writes belong on the server.
+//
+// Schema: supabase/migrations/20260412000001_creator_extended.sql
 //   qr_scans (id, creator_id, campaign_id, scanned_at, scan_source, ip_hash, device_fingerprint)
 
 const UUID_RE =
@@ -21,6 +25,16 @@ const UUID_RE =
 
 function isUuid(s: unknown): s is string {
   return typeof s === "string" && UUID_RE.test(s);
+}
+
+function getServiceClient() {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const secret =
+    process.env.SUPABASE_SERVICE_ROLE_KEY ?? process.env.SUPABASE_SECRET_KEY;
+  if (!url || !secret) return null;
+  return createClient(url, secret, {
+    auth: { persistSession: false, autoRefreshToken: false },
+  });
 }
 
 export async function POST(request: NextRequest) {
@@ -55,28 +69,20 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  // Degrade to mock when env is unset or when IDs are demo slugs (not UUIDs)
-  const envReady =
-    !!process.env.NEXT_PUBLIC_SUPABASE_URL &&
-    !!(
-      process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ??
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-    );
+  const client = getServiceClient();
   const idsReal = isUuid(creatorId) && isUuid(campaignId);
 
-  if (!envReady || !idsReal) {
+  // Degrade to mock when service client cannot be built or IDs are demo slugs
+  if (!client || !idsReal) {
     return NextResponse.json({
       ok: true,
       scanId: `scan-${Date.now()}`,
       mock: true,
-      reason: !envReady ? "env_missing" : "demo_slug_ids",
+      reason: !client ? "env_missing" : "demo_slug_ids",
       qrId,
       recordedAt: new Date().toISOString(),
     });
   }
-
-  // Real path — insert into existing qr_scans table
-  const supabase = await createServerSupabaseClient();
 
   const ip =
     request.headers.get("x-forwarded-for")?.split(",")[0].trim() ??
@@ -86,7 +92,7 @@ export async function POST(request: NextRequest) {
     ? createHash("sha256").update(ip).digest("hex").slice(0, 32)
     : null;
 
-  const { data, error } = await supabase
+  const { data, error } = await client
     .from("qr_scans")
     .insert({
       creator_id: creatorId,
