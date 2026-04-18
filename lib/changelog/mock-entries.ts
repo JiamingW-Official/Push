@@ -32,6 +32,29 @@ export interface ChangelogEntry {
 export const changelogEntries: ChangelogEntry[] = [
   // ─── 2026 Q2 ──────────────────────────────────────────────────────────────
   {
+    id: "cl-026",
+    date: "2026-04-18",
+    version: "5.0.0",
+    versionTag: "major",
+    area: "Platform",
+    title: "Push v5.0 — From marketplace to AI agency.",
+    summary:
+      "Push is now an AI-powered customer acquisition agency with outcome-based pricing. Tell us how many customers you need; our AI matches the creator network, verifies every visit, and you pay only for who walks through your door.",
+    body: "v5.0 is the largest strategic reset in Push's history — and the one that aligns us with where commerce is going. We've retired the three-tier SaaS pricing ($19.99 / $69 / $199) in favor of two outcome-based plans: a $0 Pilot for the first 10 merchants in our Williamsburg coffee beachhead (first 10 AI-verified customers are free), and Performance at $500/mo minimum + $40 per verified customer. AI is no longer a feature — it's the product. Claude Sonnet 4.6 now drives creator matching in 60 seconds and verifies every scan through a three-layer check: QR + Vision OCR of the receipt + geo-match within 200 meters. Every legacy founding-cohort merchant stays on their original contract; the new pricing applies only to new signups.",
+    bullets: [
+      "Outcome-based pricing: $0 Pilot (first 10 customers free) + $500/mo min + $40/AI-verified customer",
+      "Goal-first onboarding — describe what you want, the agent matches creators and drafts the brief in 60 seconds",
+      "Day-1 AI verification stack: QR scan + Claude Vision receipt OCR + geo-match (200m) with sub-8-second verdict latency",
+      "Williamsburg coffee beachhead — one category, one ZIP, 60 days of saturation before adjacent expansion",
+      "Admin AI review queue at /admin/ai-verifications for manual-review verdicts with one-click approve / reject",
+      "All Anthropic calls env-gated — sites and demos run end-to-end in mock mode without a paid API key",
+    ],
+    imagePlaceholder:
+      "Push v5.0 — AI-powered customer acquisition agency launch card",
+    author: { name: "Jiaming Wang", handle: "@jiamingw", role: "Founder" },
+    codedBy: "Push Engineering",
+  },
+  {
     id: "cl-025",
     date: "2026-04-10",
     version: "3.0.0",

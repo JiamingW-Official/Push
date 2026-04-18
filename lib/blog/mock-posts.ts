@@ -63,6 +63,70 @@ const IMAGES = {
 
 export const MOCK_POSTS: BlogPost[] = [
   {
+    slug: "push-v5-marketplace-to-ai-agency",
+    category: "Product",
+    title: "Push v5.0 — Why we stopped being a marketplace",
+    excerpt:
+      "We killed the three-tier SaaS pricing. We killed the matching UI. We killed the multi-category launch plan. Here is what we replaced them with, and why.",
+    heroImage: IMAGES.coffee,
+    author: {
+      name: "Jiaming Wang",
+      role: "Founder, Push",
+      avatar: "JW",
+    },
+    publishedAt: "2026-04-18",
+    readMins: 7,
+    tags: ["v5.0", "AI", "agency", "outcome pricing", "Williamsburg", "coffee"],
+    body: `## The three changes that ship together
+
+Push v5.0 is the largest reset since we launched. Three things change at once, and they only work as a set:
+
+1. **Pricing shifts from SaaS tiers to outcome-based.** The old $19.99 / $69 / $199 monthly plans are gone for new merchants. The new model: **$0 Pilot** for the first ten merchants in our Williamsburg coffee beachhead (first ten AI-verified customers on us), then **$500 / month minimum + $40 per verified customer**.
+
+2. **AI moves from "matching assist" to the core product.** Claude Sonnet 4.6 now drives creator matching in sixty seconds and verifies every customer through a three-layer check: QR scan + Claude Vision receipt OCR + geo-match within 200 meters. No verification, no charge.
+
+3. **Beachhead collapses to coffee × Williamsburg × sixty days.** Not F&B across five boroughs. Not dessert-and-beauty-and-fitness. One category, one ZIP, one quarter of saturation before we expand.
+
+## Why now
+
+A marketplace for local creators is a defensible business, but it is not the business that YC, investors, or the 2026 creator economy actually rewards. YC's Spring 2026 Request for Startups calls out **AI-Powered Agencies** as its fifth priority. More than 70% of the Winter 2026 batch shipped day-zero AI products. The era of "we'll add AI later" is over.
+
+Push had a choice: defend the marketplace narrative and get judged against Fiverr / Pearpop / Roster, or lean all the way into what our attribution stack already does — operate a creator network, verify every visit, and charge per customer. We chose the second.
+
+## What does not change
+
+We are keeping what the original design got right:
+
+- **The six-tier creator system.** Clay → Obsidian, with material colors, commission scaling, and milestone bonuses. The tier is now how the agent schedules operators; it is not going anywhere.
+- **The QR + Two-Tier Offer stack.** Hero and Sustained offers, last-click attribution, creator-specific QR fingerprints.
+- **The commission + milestone payout structure.** Creators keep getting paid per verified customer, with tier-based rates and bonuses.
+- **Every founding-cohort merchant's contract.** If you joined on Starter, Growth, or Scale before April 18, you stay on that plan. New pricing applies to new signups only.
+
+## What that looks like on Day One
+
+The merchant flow is now goal-first. You do not post a campaign. You tell the agent: *"I need twenty customers. Coffee. Williamsburg. Six hundred dollars."* Sixty seconds later, Claude returns five matched creators, a drafted campaign brief, and an ROI prediction. You approve, the agent schedules the operators, and every scan they drive is triple-checked before you see the bill.
+
+On the creator side, you no longer browse campaigns. The agent reviews your tier, category affinity, and geo coverage, then surfaces campaigns that match. You visit, you post, you get paid when the AI verifies your customer.
+
+## The unit economics
+
+A pilot customer costs Push about $20 – $32 (the creator's base rate plus infrastructure). We absorb that on the first ten to prove the system. Customer eleven flips billing to $40, which gives us a modest but predictable margin. Scale comes from volume, not from markup.
+
+This is the same logic that works for every outcome-based agency, from performance SEO to growth marketing. What is new is that our delivery layer is an AI that verifies in under eight seconds what a human reviewer used to take hours.
+
+## What we learned from the migration
+
+Writing this out was a forcing function. The landing copy, the pricing page, the terms of service, the onboarding flow — all of it was rebuilt around a single sentence: *Tell us how many customers you need. We deliver.* When the copy did not fit, the product usually did not fit either. Outcome pricing exposes everything a SaaS tier can hide.
+
+## What is next
+
+Phase 2 is about depth in Williamsburg coffee. We will publish weekly saturation data, double down on verification accuracy, and keep the agent honest about what it can and cannot predict. If coffee works, Greenpoint and Bushwick are next — still coffee-first, still agent-operated.
+
+If you are a Williamsburg coffee shop, [apply for the pilot](/merchant/pilot). If you are a local creator in the neighborhood, [join the operator network](/creator/signup).
+
+We will see you at the counter.`,
+  },
+  {
     slug: "qr-attribution-death-of-vanity-metrics",
     category: "Insights",
     title: "QR Attribution and the Death of Vanity Metrics in Local Marketing",
