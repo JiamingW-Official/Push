@@ -6,7 +6,11 @@ import BackToTop from "@/components/layout/BackToTop";
 import { CommandKProvider } from "@/components/search/CommandKProvider";
 
 export const metadata: Metadata = {
-  title: "Push — Pay Per Verified Visit | Creator Marketing for NYC Businesses",
+  title: {
+    template: "%s | Push",
+    default:
+      "Push — Pay Per Verified Visit | Creator Marketing for NYC Businesses",
+  },
   description:
     "Push connects NYC businesses with local creators. You only pay when a creator drives a verified visit — tracked by QR code. No followers minimum. No upfront fees.",
   keywords:
@@ -14,6 +18,15 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://pushnyc.co"),
   alternates: {
     canonical: "/",
+    types: {
+      "application/rss+xml": [
+        { url: "/feed.xml", title: "Push Blog RSS Feed" },
+        { url: "/rss/merchants", title: "Push Merchants Directory RSS" },
+      ],
+      "application/atom+xml": [
+        { url: "/changelog/feed.xml", title: "Push Changelog Atom Feed" },
+      ],
+    },
   },
   openGraph: {
     title:
@@ -40,11 +53,19 @@ export const metadata: Metadata = {
     description:
       "Push connects NYC businesses with local creators. You only pay when a creator drives a verified visit.",
     creator: "@pushnyc",
+    site: "@pushnyc",
     images: ["/opengraph-image"],
   },
   robots: {
     index: true,
     follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
   },
   other: {
     "format-detection": "telephone=no",
