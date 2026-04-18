@@ -2096,6 +2096,243 @@ section#faq             { padding-block: 120px; }
 }
 
 /* ============================================================
+   v5.1 — Optional Video CTA + Modal (ConversionOracle demo)
+   Rendered only when AgentOutputDemo receives showVideoCTA.
+   Wrap uses display:contents so .agent-demo absolute layout is
+   unchanged. CTA sits under the terminal card on desktop only.
+   ============================================================ */
+.agent-demo-wrap {
+  display: contents;
+}
+
+.agent-demo-video-cta {
+  position: absolute;
+  top: calc(var(--space-7) + 430px);
+  right: var(--space-5);
+  width: 380px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 16px;
+  background: var(--surface-elevated, #ffffff);
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--primary);
+  font-family: var(--font-body);
+  color: var(--ink, #0a1623);
+  text-align: left;
+  cursor: pointer;
+  z-index: 2;
+  opacity: 0;
+  transform: translateY(-8px);
+  animation: agent-demo-in 0.9s cubic-bezier(0.32, 0.72, 0, 1) 0.9s forwards;
+  transition:
+    background 180ms ease,
+    border-color 180ms ease,
+    transform 180ms ease;
+}
+
+.agent-demo-video-cta:hover {
+  background: var(--surface-bright, #fafaf8);
+  border-left-color: var(--molten, #780000);
+  transform: translateY(-10px);
+}
+
+.agent-demo-video-cta:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 3px;
+}
+
+.agent-demo-video-play {
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  background: var(--primary);
+  position: relative;
+  display: inline-block;
+}
+
+.agent-demo-video-play::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 58%;
+  transform: translate(-50%, -50%);
+  width: 0;
+  height: 0;
+  border-left: 11px solid #ffffff;
+  border-top: 7px solid transparent;
+  border-bottom: 7px solid transparent;
+}
+
+.agent-demo-video-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+  flex: 1;
+}
+
+.agent-demo-video-eyebrow {
+  font-family: var(--font-body);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--tertiary);
+}
+
+.agent-demo-video-label {
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  line-height: 1.25;
+  color: var(--ink, #0a1623);
+}
+
+.agent-demo-video-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: rgba(10, 22, 35, 0.78);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-5);
+  animation: agent-demo-video-fade 220ms ease forwards;
+}
+
+@keyframes agent-demo-video-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.agent-demo-video-sheet {
+  position: relative;
+  width: 100%;
+  max-width: 960px;
+  background: var(--surface-elevated, #ffffff);
+  border: 2px solid var(--primary);
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.45);
+}
+
+.agent-demo-video-close {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 44px;
+  height: 44px;
+  background: var(--primary);
+  color: #ffffff;
+  border: none;
+  font-family: var(--font-body);
+  font-size: 22px;
+  line-height: 1;
+  cursor: pointer;
+  z-index: 2;
+}
+
+.agent-demo-video-close:hover {
+  background: var(--molten, #780000);
+}
+
+.agent-demo-video-close:focus-visible {
+  outline: 2px solid var(--champagne);
+  outline-offset: -4px;
+}
+
+.agent-demo-video-frame {
+  position: relative;
+  width: 100%;
+  padding-top: 56.25%; /* 16:9 */
+  background: #000;
+}
+
+.agent-demo-video-frame iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+.agent-demo-video-fallback {
+  padding: var(--space-6, 32px) var(--space-5, 24px);
+  text-align: center;
+  font-family: var(--font-body);
+  background: var(--surface-elevated, #ffffff);
+}
+
+.agent-demo-video-fallback-eyebrow {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--tertiary);
+  margin-bottom: 12px;
+}
+
+.agent-demo-video-fallback-title {
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--ink, #0a1623);
+  margin-bottom: 12px;
+}
+
+.agent-demo-video-fallback-body {
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--ink-muted, #4a5568);
+  max-width: 520px;
+  margin: 0 auto 20px;
+}
+
+.agent-demo-video-fallback-link {
+  display: inline-block;
+  padding: 12px 20px;
+  background: var(--primary);
+  color: #ffffff;
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-decoration: none;
+  border: 1px solid var(--primary);
+  transition: background 180ms ease;
+}
+
+.agent-demo-video-fallback-link:hover {
+  background: var(--molten, #780000);
+  border-color: var(--molten, #780000);
+}
+
+/* Match the existing desktop-only visibility of .agent-demo */
+@media (max-width: 1099px) {
+  .agent-demo-video-cta {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .agent-demo-video-cta,
+  .agent-demo-video-modal {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+  .agent-demo-video-cta:hover {
+    transform: none;
+  }
+}
+
+/* ============================================================
    v5.0 — Verification Badge (3-layer trust strip)
    ============================================================ */
 .verify-badge {

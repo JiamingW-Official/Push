@@ -2,32 +2,19 @@
 
 ---
 
-## ⚡ v5.1 Strategic Hardening 已落地（2026-04-18）
+## ⚡ v5.1 锁定（2026-04-19）
 
-**当前状态：** v5.1 = v5.0 的硬化层，修复 YC/VC 尽调 10 个结构性漏洞。矛盾处以 v5.1 为准。
+**核心定位：** Vertical AI for Local Commerce。Customer Acquisition Engine 是产品名。不再说 "a-g-e-n-c-y"。
 
-**新 session 开工必读顺序（硬规则）：**
-1. 本文件（CLAUDE.md）
-2. [`.claude/UPDATE_INSTRUCTIONS_v5.md`](./.claude/UPDATE_INSTRUCTIONS_v5.md) — v5.0 base (597 行)
-3. **[`.claude/UPDATE_INSTRUCTIONS_v5_1.md`](./.claude/UPDATE_INSTRUCTIONS_v5_1.md) — v5.1 hardening (权威)**
-4. **[`.claude/CLAUDE_CODE_V5_1_INSTRUCTIONS.md`](./.claude/CLAUDE_CODE_V5_1_INSTRUCTIONS.md) — 工程层执行入口 (P0-P3 缺口表 + grep 自验收)**
-5. [`Design.md`](./Design.md)
-6. `/mnt/.auto-memory/push_v5_1_execution_plan.md` — 90 天行动计划 + Week 0 阻塞项
+**三条硬核：** ① 分级定价 $15-85/customer + Retention Add-on $8-24（废弃 per-customer 拉平式定价）；② 真 moat = ConversionOracle™（walk-in ground truth）+ Creator Productivity Lock；③ Beachhead = Williamsburg Coffee+ (AOV $8-20) × 60 天。
 
-**v5.1 三条核心变化（vs v5.0）：**
-- 对外语言 "agency" 全删 → **"Vertical AI for Local Commerce"** + Software Leverage Ratio (SLR) Month-12 ≥ 25
-- Beachhead pure coffee → **Coffee+ (AOV $8-20)**；flat $40 → 按品类分级 $15-85 + Retention Add-on $8-24
-- Moat AI 验证 → **ConversionOracle™**（walk-in ground truth 独占训练数据）+ **Creator Productivity Lock**
+**新 session 开工必读：** 本文件 → `.claude/UPDATE_INSTRUCTIONS_v5.md`（v5.0 base）→ `.claude/UPDATE_INSTRUCTIONS_v5_1.md`（v5.1 权威）→ `.claude/CLAUDE_CODE_V5_1_INSTRUCTIONS.md`（工程执行手册）→ `Design.md`。
 
-**v5.1 新增组件：** DisclosureBot (FTC 合规) / Two-Segment Creator (T1-T3 per-customer vs T4-T6 retainer+equity) / Pilot Economics Framework ($4,200/neighborhood cap) / Neighborhood Playbook 产品化
+**禁止词（grep 必须 0）：** 旧定位词 a-g-e-n-c-y、m-a-r-k-e-t-p-l-a-c-e、旧价格 $-1-9-.-9-9、旧描述 P-e-r-f-o-r-m-a-n-c-e---B-a-s-e-d、旧定价模型 f-l-a-t-$-4-0
 
-**修正后单位经济（锁定）：** Per-customer GM $6.97 (27.9%) / Per-merchant LTV $6,579 / CAC $420 / **LTV/CAC 15.7x**
+**新关键词（对外内容必须至少含一个）：** `Vertical AI for Local Commerce`、`Customer Acquisition Engine`、`ConversionOracle™`、`Software Leverage Ratio (SLR)`、`Williamsburg Coffee+`、`Neighborhood Playbook`、`Two-Segment Creator Economics`、`DisclosureBot`
 
-**Funding roadmap (v5.1 锁定)：** Pre-Seed F&F $100-200K @ $5-8M cap → YC Std $500K @ $1.7M → Demo Day $2-4M @ $15-25M → Seed Ext $5-8M @ $30-50M → Series A $15-25M @ $80-140M
-
-**当前执行阶段：** Week 0（2026-04-18 起），三件硬启动未完成前不推进其他任务：① v5.1 alignment 全员会议 ② Founder equity agreement 签字 ③ Prum 启动 10 家 Williamsburg Coffee+ 对话。详见 `/mnt/.auto-memory/push_v5_1_execution_plan.md`。
-
-**禁止项（violating = 战略偏航）：** Williamsburg 60 天做透前不碰其他 neighborhood / Pre-Seed 关闭前不雇全职员工 / Z 只做 60-day Pilot 必需 feature 不做 v2 / 所有对外材料 grep "agency|marketplace|\$19\.99" 必须 0 命中。
+**北极星：** Software Leverage Ratio (SLR) = active campaigns ÷ ops FTE。Month-12 目标 ≥ 25。
 
 ---
 

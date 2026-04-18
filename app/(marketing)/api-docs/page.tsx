@@ -103,6 +103,16 @@ const NAV_SECTIONS = [
     ],
   },
   {
+    label: "Vertical AI",
+    items: [
+      { id: "match-creators", label: "Match Operators" },
+      { id: "attribution-scan", label: "Verify Scan" },
+      { id: "conversion-oracle", label: "ConversionOracle" },
+      { id: "disclosure-audit", label: "DisclosureBot Audit" },
+      { id: "data-models", label: "Data Models" },
+    ],
+  },
+  {
     label: "Platform",
     items: [
       { id: "webhooks", label: "Webhooks" },
@@ -594,6 +604,71 @@ export default function ApiDocsPage() {
                 </p>
               </div>
             </div>
+
+            {/* Endpoint tier gating */}
+            <div className="api-subsection api-reveal">
+              <h3 className="api-subsection-title">Endpoint tier gating</h3>
+              <p className="api-subsection-desc">
+                Vertical AI for Local Commerce endpoints are gated by pricing
+                tier. ConversionOracle and DisclosureBot require Operator+ for
+                production use; sandbox requests on Pilot return a capped
+                response for evaluation.
+              </p>
+              <div className="api-table-wrap">
+                <table className="api-rate-table">
+                  <thead>
+                    <tr>
+                      <th>Endpoint</th>
+                      <th>Pilot</th>
+                      <th>Operator</th>
+                      <th>Neighborhood</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>
+                        <code className="api-inline-code">
+                          /api/agent/match-creators
+                        </code>
+                      </td>
+                      <td>Yes</td>
+                      <td>Yes</td>
+                      <td>Yes</td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <code className="api-inline-code">
+                          /api/attribution/scan
+                        </code>
+                      </td>
+                      <td>Yes</td>
+                      <td>Yes</td>
+                      <td>Yes</td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <code className="api-inline-code">
+                          /api/conversion-oracle/predict
+                        </code>
+                      </td>
+                      <td>Sandbox only</td>
+                      <td>Yes</td>
+                      <td>Yes</td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <code className="api-inline-code">
+                          /api/disclosure/audit-trail
+                        </code>
+                      </td>
+                      <td>No</td>
+                      <td>Yes</td>
+                      <td>Yes</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
           </section>
 
           <hr className="api-divider" />
@@ -606,39 +681,6 @@ export default function ApiDocsPage() {
               The Push API uses Bearer token authentication over HTTPS. All
               requests to production endpoints must be authenticated.
             </p>
-
-            <div className="api-subsection api-reveal">
-              <h3 className="api-subsection-title">
-                Agent endpoint — creator matching
-              </h3>
-              <p className="api-subsection-desc">
-                <code className="api-inline-code">
-                  POST /api/agent/match-creators
-                </code>{" "}
-                — Day-1 AI match: given a merchant goal (category, ZIP, customer
-                target, budget, timeframe), the Vertical AI returns a ranked
-                roster of operators with estimated customer delivery.
-              </p>
-              <CodeBlock lang="bash">
-                {`curl -X POST https://api.pushapp.co/api/agent/match-creators \\
-  -H `}
-                <span className="tok-str">
-                  &apos;Authorization: Bearer sk_live_&lt;key&gt;&apos;
-                </span>
-                {` \\
-  -H `}
-                <span className="tok-str">
-                  &apos;Content-Type: application/json&apos;
-                </span>
-                {` \\
-  -d `}
-                <span className="tok-str">
-                  &apos;&#123; "goal": &#123; "category": "Coffee", "zip":
-                  "11211", "customer_target": 200, "budget_usd": 500,
-                  "timeframe_days": 60 &#125; &#125;&apos;
-                </span>
-              </CodeBlock>
-            </div>
 
             <div className="api-subsection api-reveal">
               <h3 className="api-subsection-title">Bearer token format</h3>
@@ -1202,9 +1244,846 @@ export default function ApiDocsPage() {
 
           <hr className="api-divider" />
 
+          {/* ── Match Operators (Vertical AI) ───────────────── */}
+          <section id="match-creators" className="api-section">
+            <p className="api-section-eyebrow">07</p>
+            <h2 className="api-section-title">Match Operators</h2>
+            <p className="api-section-desc">
+              Vertical AI for Local Commerce Day-1 match. Given a merchant goal
+              — category, ZIP, customer target, budget, timeframe — the matching
+              agent returns a ranked operator roster, a draft campaign brief,
+              and a walk-in prediction with confidence. Runs against the
+              Williamsburg roster by default.
+            </p>
+
+            <Endpoint
+              method="POST"
+              path="/api/agent/match-creators"
+              desc="Synchronous match call. Returns matches[], brief, prediction, and a meta block with model, latency, and a mock flag (true when ANTHROPIC_API_KEY is not configured)."
+            >
+              <div className="api-table-wrap">
+                <table className="api-table">
+                  <thead>
+                    <tr>
+                      <th>Field</th>
+                      <th>Type</th>
+                      <th>Required</th>
+                      <th>Description</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {[
+                      {
+                        name: "goal.customer_target",
+                        type: "integer",
+                        req: true,
+                        desc: "Number of verified walk-in customers the merchant wants",
+                      },
+                      {
+                        name: "goal.budget_usd",
+                        type: "number",
+                        req: true,
+                        desc: "Total campaign budget in USD",
+                      },
+                      {
+                        name: "goal.category",
+                        type: "string",
+                        req: true,
+                        desc: "Merchant category — Coffee, Bakery, Bar, Boutique, Fitness",
+                      },
+                      {
+                        name: "goal.zip",
+                        type: "string",
+                        req: true,
+                        desc: "5-digit ZIP — used for distance ranking",
+                      },
+                      {
+                        name: "goal.timeframe_days",
+                        type: "integer",
+                        req: true,
+                        desc: "Campaign window in days (e.g. 60)",
+                      },
+                      {
+                        name: "goal.business_name",
+                        type: "string",
+                        req: false,
+                        desc: "Business name — improves brief personalization",
+                      },
+                      {
+                        name: "merchantId",
+                        type: "string",
+                        req: false,
+                        desc: "UUID of an existing merchant record — scopes roster to prior interactions",
+                      },
+                    ].map((p) => (
+                      <tr key={p.name}>
+                        <td>
+                          <code className="api-param-name">{p.name}</code>
+                        </td>
+                        <td>
+                          <code className="api-param-type">{p.type}</code>
+                        </td>
+                        <td>
+                          {p.req ? (
+                            <span className="api-param-required">Required</span>
+                          ) : (
+                            <span className="api-param-optional">Optional</span>
+                          )}
+                        </td>
+                        <td>
+                          <span className="api-param-desc">{p.desc}</span>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+
+              <p className="api-example-title">cURL example</p>
+              <CodeBlock lang="bash">
+                {`curl -X POST https://api.pushapp.co/api/agent/match-creators \\
+  -H `}
+                <span className="tok-str">
+                  &apos;Authorization: Bearer sk_live_&lt;key&gt;&apos;
+                </span>
+                {` \\
+  -H `}
+                <span className="tok-str">
+                  &apos;Content-Type: application/json&apos;
+                </span>
+                {` \\
+  -d `}
+                <span className="tok-str">
+                  &apos;&#123;&quot;goal&quot;:&#123;&quot;category&quot;:&quot;Coffee&quot;,&quot;zip&quot;:&quot;11211&quot;,&quot;customer_target&quot;:200,&quot;budget_usd&quot;:500,&quot;timeframe_days&quot;:60,&quot;business_name&quot;:&quot;Radio
+                  Coffee&quot;&#125;&#125;&apos;
+                </span>
+              </CodeBlock>
+
+              <p className="api-example-title">Response shape</p>
+              <CodeBlock lang="json">
+                {`{
+  `}
+                <span className="tok-key">&quot;matches&quot;</span>
+                {`: [
+    { `}
+                <span className="tok-key">&quot;creator_ref&quot;</span>
+                {`: `}
+                <span className="tok-str">&quot;op_01HX...&quot;</span>
+                {`, `}
+                <span className="tok-key">&quot;est_customers&quot;</span>
+                {`: `}
+                <span className="tok-num">42</span>
+                {`, `}
+                <span className="tok-key">&quot;reason&quot;</span>
+                {`: `}
+                <span className="tok-str">&quot;Tier 3, 0.4mi...&quot;</span>
+                {` }
+  ],
+  `}
+                <span className="tok-key">&quot;brief&quot;</span>
+                {`: {
+    `}
+                <span className="tok-key">&quot;headline&quot;</span>
+                {`: `}
+                <span className="tok-str">&quot;New in 11211...&quot;</span>
+                {`,
+    `}
+                <span className="tok-key">&quot;cta&quot;</span>
+                {`: `}
+                <span className="tok-str">
+                  &quot;Scan QR at counter for $5 off&quot;
+                </span>
+                {`,
+    `}
+                <span className="tok-key">&quot;tone&quot;</span>
+                {`: `}
+                <span className="tok-str">&quot;Editorial · warm&quot;</span>
+                {`,
+    `}
+                <span className="tok-key">&quot;offer_hook&quot;</span>
+                {`: `}
+                <span className="tok-str">&quot;Hero offer...&quot;</span>
+                {`
+  },
+  `}
+                <span className="tok-key">&quot;prediction&quot;</span>
+                {`: {
+    `}
+                <span className="tok-key">
+                  &quot;est_verified_customers&quot;
+                </span>
+                {`: `}
+                <span className="tok-num">210</span>
+                {`,
+    `}
+                <span className="tok-key">&quot;confidence&quot;</span>
+                {`: `}
+                <span className="tok-num">0.91</span>
+                {`,
+    `}
+                <span className="tok-key">&quot;est_spend_usd&quot;</span>
+                {`: `}
+                <span className="tok-num">8400</span>
+                {`,
+    `}
+                <span className="tok-key">
+                  &quot;est_revenue_multiplier&quot;
+                </span>
+                {`: `}
+                <span className="tok-num">3.2</span>
+                {`
+  },
+  `}
+                <span className="tok-key">&quot;meta&quot;</span>
+                {`: {
+    `}
+                <span className="tok-key">&quot;model&quot;</span>
+                {`: `}
+                <span className="tok-str">&quot;claude-sonnet-4-6&quot;</span>
+                {`,
+    `}
+                <span className="tok-key">&quot;latency_ms&quot;</span>
+                {`: `}
+                <span className="tok-num">1420</span>
+                {`,
+    `}
+                <span className="tok-key">&quot;cost_usd&quot;</span>
+                {`: `}
+                <span className="tok-num">0.018</span>
+                {`,
+    `}
+                <span className="tok-key">&quot;mock&quot;</span>
+                {`: `}
+                <span className="tok-bool">false</span>
+                {`
+  }
+}`}
+              </CodeBlock>
+            </Endpoint>
+          </section>
+
+          <hr className="api-divider" />
+
+          {/* ── Attribution — Verify Scan ───────────────────── */}
+          <section id="attribution-scan" className="api-section">
+            <p className="api-section-eyebrow">08</p>
+            <h2 className="api-section-title">Verify Scan</h2>
+            <p className="api-section-desc">
+              The three-layer verification endpoint. Each request records the QR
+              scan event and, when a receipt image is attached, runs Claude
+              Vision OCR plus geo-match against the merchant location. The
+              combined signal yields a verdict used for payout settlement.
+            </p>
+
+            <Endpoint
+              method="POST"
+              path="/api/attribution/scan"
+              desc="Records a scan and returns the verification verdict synchronously. If no receipt image is supplied, verification is null and settlement defers to async review."
+            >
+              <div className="api-table-wrap">
+                <table className="api-table">
+                  <thead>
+                    <tr>
+                      <th>Field</th>
+                      <th>Type</th>
+                      <th>Required</th>
+                      <th>Description</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {[
+                      {
+                        name: "qrId",
+                        type: "uuid",
+                        req: true,
+                        desc: "QR code record ID that was scanned",
+                      },
+                      {
+                        name: "campaignId",
+                        type: "uuid",
+                        req: true,
+                        desc: "Campaign linked to the QR code",
+                      },
+                      {
+                        name: "creatorId",
+                        type: "uuid",
+                        req: true,
+                        desc: "Operator credited with the scan",
+                      },
+                      {
+                        name: "merchantId",
+                        type: "uuid",
+                        req: true,
+                        desc: "Merchant receiving the verified customer",
+                      },
+                      {
+                        name: "sessionId",
+                        type: "string",
+                        req: true,
+                        desc: "Client-side session identifier — dedupes repeat scans",
+                      },
+                      {
+                        name: "receiptImageBase64",
+                        type: "string",
+                        req: false,
+                        desc: "Base64-encoded receipt photo for Vision OCR",
+                      },
+                      {
+                        name: "mediaType",
+                        type: "string",
+                        req: false,
+                        desc: "image/png | image/jpeg | image/webp",
+                      },
+                      {
+                        name: "geoLat",
+                        type: "number",
+                        req: false,
+                        desc: "Device latitude at scan time (decimal degrees)",
+                      },
+                      {
+                        name: "geoLng",
+                        type: "number",
+                        req: false,
+                        desc: "Device longitude at scan time (decimal degrees)",
+                      },
+                    ].map((p) => (
+                      <tr key={p.name}>
+                        <td>
+                          <code className="api-param-name">{p.name}</code>
+                        </td>
+                        <td>
+                          <code className="api-param-type">{p.type}</code>
+                        </td>
+                        <td>
+                          {p.req ? (
+                            <span className="api-param-required">Required</span>
+                          ) : (
+                            <span className="api-param-optional">Optional</span>
+                          )}
+                        </td>
+                        <td>
+                          <span className="api-param-desc">{p.desc}</span>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+
+              <p className="api-example-title">cURL example</p>
+              <CodeBlock lang="bash">
+                {`curl -X POST https://api.pushapp.co/api/attribution/scan \\
+  -H `}
+                <span className="tok-str">
+                  &apos;Authorization: Bearer sk_live_&lt;key&gt;&apos;
+                </span>
+                {` \\
+  -H `}
+                <span className="tok-str">
+                  &apos;Content-Type: application/json&apos;
+                </span>
+                {` \\
+  -d `}
+                <span className="tok-str">
+                  &apos;&#123;&quot;qrId&quot;:&quot;...&quot;,&quot;campaignId&quot;:&quot;...&quot;,&quot;creatorId&quot;:&quot;...&quot;,&quot;merchantId&quot;:&quot;...&quot;,&quot;sessionId&quot;:&quot;s_abc&quot;,&quot;geoLat&quot;:40.7142,&quot;geoLng&quot;:-73.9614,&quot;receiptImageBase64&quot;:&quot;iVBORw0KGgo...&quot;,&quot;mediaType&quot;:&quot;image/png&quot;&#125;&apos;
+                </span>
+              </CodeBlock>
+
+              <p className="api-example-title">Response shape</p>
+              <CodeBlock lang="json">
+                {`{
+  `}
+                <span className="tok-key">&quot;ok&quot;</span>
+                {`: `}
+                <span className="tok-bool">true</span>
+                {`,
+  `}
+                <span className="tok-key">&quot;scanId&quot;</span>
+                {`: `}
+                <span className="tok-str">&quot;scan_01HX...&quot;</span>
+                {`,
+  `}
+                <span className="tok-key">&quot;qrId&quot;</span>
+                {`: `}
+                <span className="tok-str">&quot;qr_01HX...&quot;</span>
+                {`,
+  `}
+                <span className="tok-key">&quot;recordedAt&quot;</span>
+                {`: `}
+                <span className="tok-str">
+                  &quot;2026-04-18T14:02:11Z&quot;
+                </span>
+                {`,
+  `}
+                <span className="tok-key">&quot;verification&quot;</span>
+                {`: {
+    `}
+                <span className="tok-key">&quot;verdict&quot;</span>
+                {`: `}
+                <span className="tok-str">&quot;auto_verified&quot;</span>
+                {`,
+    `}
+                <span className="tok-key">
+                  &quot;merchantMatchConfidence&quot;
+                </span>
+                {`: `}
+                <span className="tok-num">0.94</span>
+                {`,
+    `}
+                <span className="tok-key">&quot;geoDistanceMeters&quot;</span>
+                {`: `}
+                <span className="tok-num">38</span>
+                {`,
+    `}
+                <span className="tok-key">&quot;amountUsd&quot;</span>
+                {`: `}
+                <span className="tok-num">7.5</span>
+                {`,
+    `}
+                <span className="tok-key">&quot;model&quot;</span>
+                {`: `}
+                <span className="tok-str">&quot;claude-sonnet-4-6&quot;</span>
+                {`,
+    `}
+                <span className="tok-key">&quot;mock&quot;</span>
+                {`: `}
+                <span className="tok-bool">false</span>
+                {`
+  }
+}`}
+              </CodeBlock>
+
+              <div className="api-note api-reveal">
+                <p className="api-note-label">Verdict enum</p>
+                <p className="api-note-body">
+                  <code className="api-inline-code">auto_verified</code> ·{" "}
+                  <code className="api-inline-code">auto_rejected</code> ·{" "}
+                  <code className="api-inline-code">manual_review</code> ·{" "}
+                  <code className="api-inline-code">human_approved</code> ·{" "}
+                  <code className="api-inline-code">human_rejected</code>. See
+                  Data Models below for the full definition.
+                </p>
+              </div>
+            </Endpoint>
+          </section>
+
+          <hr className="api-divider" />
+
+          {/* ── ConversionOracle ────────────────────────────── */}
+          <section id="conversion-oracle" className="api-section">
+            <p className="api-section-eyebrow">09</p>
+            <h2 className="api-section-title">
+              ConversionOracle
+              <span className="api-soon-badge"> · Coming soon</span>
+            </h2>
+            <p className="api-section-desc">
+              ConversionOracle returns the predicted walk-in probability for
+              each operator × merchant pair. Use it to pre-qualify candidates
+              before issuing a formal invite, or to price per-customer delivery
+              with a confidence band. v1 scheduled 2026-05-15 — Operator+ tier.
+            </p>
+
+            <Endpoint
+              method="POST"
+              path="/api/conversion-oracle/predict"
+              desc="Returns ConversionOracle walk-in probability for each creator × merchant pair."
+            >
+              <div className="api-table-wrap">
+                <table className="api-table">
+                  <thead>
+                    <tr>
+                      <th>Field</th>
+                      <th>Type</th>
+                      <th>Required</th>
+                      <th>Description</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {[
+                      {
+                        name: "merchantId",
+                        type: "uuid",
+                        req: true,
+                        desc: "Merchant asking for the prediction",
+                      },
+                      {
+                        name: "campaignGoal",
+                        type: "MatchingGoal",
+                        req: true,
+                        desc: "Same shape as /api/agent/match-creators goal",
+                      },
+                      {
+                        name: "creatorCandidateIds",
+                        type: "uuid[]",
+                        req: true,
+                        desc: "Operator IDs to score — up to 50 per call",
+                      },
+                    ].map((p) => (
+                      <tr key={p.name}>
+                        <td>
+                          <code className="api-param-name">{p.name}</code>
+                        </td>
+                        <td>
+                          <code className="api-param-type">{p.type}</code>
+                        </td>
+                        <td>
+                          {p.req ? (
+                            <span className="api-param-required">Required</span>
+                          ) : (
+                            <span className="api-param-optional">Optional</span>
+                          )}
+                        </td>
+                        <td>
+                          <span className="api-param-desc">{p.desc}</span>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+
+              <p className="api-example-title">Response shape</p>
+              <CodeBlock lang="json">
+                {`{
+  `}
+                <span className="tok-key">&quot;predictions&quot;</span>
+                {`: [
+    {
+      `}
+                <span className="tok-key">&quot;creatorRef&quot;</span>
+                {`: `}
+                <span className="tok-str">&quot;op_01HX...&quot;</span>
+                {`,
+      `}
+                <span className="tok-key">&quot;walkInProbability&quot;</span>
+                {`: `}
+                <span className="tok-num">0.62</span>
+                {`,
+      `}
+                <span className="tok-key">&quot;estCustomers&quot;</span>
+                {`: `}
+                <span className="tok-num">28</span>
+                {`,
+      `}
+                <span className="tok-key">&quot;confidenceInterval&quot;</span>
+                {`: [`}
+                <span className="tok-num">22</span>
+                {`, `}
+                <span className="tok-num">34</span>
+                {`]
+    }
+  ]
+}`}
+              </CodeBlock>
+            </Endpoint>
+          </section>
+
+          <hr className="api-divider" />
+
+          {/* ── DisclosureBot Audit Trail ───────────────────── */}
+          <section id="disclosure-audit" className="api-section">
+            <p className="api-section-eyebrow">10</p>
+            <h2 className="api-section-title">
+              DisclosureBot Audit Trail
+              <span className="api-soon-badge"> · Coming soon</span>
+            </h2>
+            <p className="api-section-desc">
+              DisclosureBot reviews every operator post for FTC #ad compliance
+              before it goes live. This endpoint returns the exportable audit
+              trail merchants need for procurement review. Enterprise merchant
+              procurement often requires exportable compliance evidence. v1
+              scheduled Q3 2026 — Operator+ tier.
+            </p>
+
+            <Endpoint
+              method="GET"
+              path="/api/disclosure/audit-trail"
+              desc="Returns the DisclosureBot audit trail for a merchant's campaigns. Each record links a post to a verdict, model, and human override (if any)."
+            >
+              <div className="api-table-wrap">
+                <table className="api-table">
+                  <thead>
+                    <tr>
+                      <th>Field</th>
+                      <th>Type</th>
+                      <th>Required</th>
+                      <th>Description</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {[
+                      {
+                        name: "merchantId",
+                        type: "uuid",
+                        req: true,
+                        desc: "Merchant whose trail is being exported",
+                      },
+                      {
+                        name: "campaignId",
+                        type: "uuid",
+                        req: false,
+                        desc: "Scope to a single campaign",
+                      },
+                      {
+                        name: "dateRange",
+                        type: "object",
+                        req: false,
+                        desc: "{ from, to } ISO 8601 — defaults to last 90 days",
+                      },
+                    ].map((p) => (
+                      <tr key={p.name}>
+                        <td>
+                          <code className="api-param-name">{p.name}</code>
+                        </td>
+                        <td>
+                          <code className="api-param-type">{p.type}</code>
+                        </td>
+                        <td>
+                          {p.req ? (
+                            <span className="api-param-required">Required</span>
+                          ) : (
+                            <span className="api-param-optional">Optional</span>
+                          )}
+                        </td>
+                        <td>
+                          <span className="api-param-desc">{p.desc}</span>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+
+              <p className="api-example-title">Response shape</p>
+              <CodeBlock lang="json">
+                {`[
+  {
+    `}
+                <span className="tok-key">&quot;disclosureAuditId&quot;</span>
+                {`: `}
+                <span className="tok-str">&quot;da_01HX...&quot;</span>
+                {`,
+    `}
+                <span className="tok-key">&quot;postRef&quot;</span>
+                {`: `}
+                <span className="tok-str">&quot;ig_post_...&quot;</span>
+                {`,
+    `}
+                <span className="tok-key">&quot;campaignId&quot;</span>
+                {`: `}
+                <span className="tok-str">&quot;camp_01HX...&quot;</span>
+                {`,
+    `}
+                <span className="tok-key">&quot;verdict&quot;</span>
+                {`: `}
+                <span className="tok-str">&quot;auto_pass&quot;</span>
+                {`,
+    `}
+                <span className="tok-key">&quot;model&quot;</span>
+                {`: `}
+                <span className="tok-str">&quot;claude-sonnet-4-6&quot;</span>
+                {`,
+    `}
+                <span className="tok-key">&quot;reviewedAt&quot;</span>
+                {`: `}
+                <span className="tok-str">
+                  &quot;2026-04-18T09:11:00Z&quot;
+                </span>
+                {`,
+    `}
+                <span className="tok-key">&quot;humanOverride&quot;</span>
+                {`: `}
+                <span className="tok-bool">null</span>
+                {`
+  }
+]`}
+              </CodeBlock>
+            </Endpoint>
+          </section>
+
+          <hr className="api-divider" />
+
+          {/* ── Data Models ─────────────────────────────────── */}
+          <section id="data-models" className="api-section">
+            <p className="api-section-eyebrow">11</p>
+            <h2 className="api-section-title">Data Models</h2>
+            <p className="api-section-desc">
+              Compact reference for the shapes exchanged by Vertical AI for
+              Local Commerce endpoints. Source of truth lives in{" "}
+              <code className="api-inline-code">lib/ai/matching.ts</code>.
+            </p>
+
+            <div className="api-subsection api-reveal">
+              <h3 className="api-subsection-title">MatchingGoal</h3>
+              <CodeBlock lang="typescript">
+                {``}
+                <span className="tok-kw">interface</span>
+                {` `}
+                <span className="tok-fn">MatchingGoal</span>
+                {` {
+  customer_target: `}
+                <span className="tok-kw">number</span>
+                {`;
+  budget_usd: `}
+                <span className="tok-kw">number</span>
+                {`;
+  category: `}
+                <span className="tok-kw">string</span>
+                {`;
+  zip: `}
+                <span className="tok-kw">string</span>
+                {`;
+  timeframe_days: `}
+                <span className="tok-kw">number</span>
+                {`;
+  business_name?: `}
+                <span className="tok-kw">string</span>
+                {`;
+}`}
+              </CodeBlock>
+            </div>
+
+            <div className="api-subsection api-reveal">
+              <h3 className="api-subsection-title">CreatorCandidate</h3>
+              <CodeBlock lang="typescript">
+                {``}
+                <span className="tok-kw">interface</span>
+                {` `}
+                <span className="tok-fn">CreatorCandidate</span>
+                {` {
+  creator_ref: `}
+                <span className="tok-kw">string</span>
+                {`;
+  tier: `}
+                <span className="tok-kw">string</span>
+                {`;
+  score: `}
+                <span className="tok-kw">number</span>
+                {`;
+  category_affinity: `}
+                <span className="tok-kw">number</span>
+                {`; `}
+                <span className="tok-comment">{`// 0.0 – 1.0`}</span>
+                {`
+  distance_miles: `}
+                <span className="tok-kw">number</span>
+                {`;
+  verified_conversions_90d: `}
+                <span className="tok-kw">number</span>
+                {`;
+}`}
+              </CodeBlock>
+            </div>
+
+            <div className="api-subsection api-reveal">
+              <h3 className="api-subsection-title">MatchingOutput</h3>
+              <CodeBlock lang="typescript">
+                {``}
+                <span className="tok-kw">interface</span>
+                {` `}
+                <span className="tok-fn">MatchingOutput</span>
+                {` {
+  matches: { creator_ref: `}
+                <span className="tok-kw">string</span>
+                {`; est_customers: `}
+                <span className="tok-kw">number</span>
+                {`; reason: `}
+                <span className="tok-kw">string</span>
+                {` }[];
+  brief: { headline: `}
+                <span className="tok-kw">string</span>
+                {`; cta: `}
+                <span className="tok-kw">string</span>
+                {`; tone: `}
+                <span className="tok-kw">string</span>
+                {`; offer_hook: `}
+                <span className="tok-kw">string</span>
+                {` };
+  prediction: {
+    est_verified_customers: `}
+                <span className="tok-kw">number</span>
+                {`;
+    confidence: `}
+                <span className="tok-kw">number</span>
+                {`;
+    est_spend_usd: `}
+                <span className="tok-kw">number</span>
+                {`;
+    est_revenue_multiplier: `}
+                <span className="tok-kw">number</span>
+                {`;
+  };
+  meta: { model: `}
+                <span className="tok-kw">string</span>
+                {`; latency_ms: `}
+                <span className="tok-kw">number</span>
+                {`; cost_usd: `}
+                <span className="tok-kw">number</span>
+                {`; mock: `}
+                <span className="tok-kw">boolean</span>
+                {` };
+}`}
+              </CodeBlock>
+            </div>
+
+            <div className="api-subsection api-reveal">
+              <h3 className="api-subsection-title">VerificationVerdict</h3>
+              <CodeBlock lang="typescript">
+                {``}
+                <span className="tok-kw">type</span>
+                {` `}
+                <span className="tok-fn">VerificationVerdict</span>
+                {` =
+  | `}
+                <span className="tok-str">&quot;auto_verified&quot;</span>
+                {`
+  | `}
+                <span className="tok-str">&quot;auto_rejected&quot;</span>
+                {`
+  | `}
+                <span className="tok-str">&quot;manual_review&quot;</span>
+                {`
+  | `}
+                <span className="tok-str">&quot;human_approved&quot;</span>
+                {`
+  | `}
+                <span className="tok-str">&quot;human_rejected&quot;</span>
+                {`;`}
+              </CodeBlock>
+            </div>
+
+            <div className="api-subsection api-reveal">
+              <h3 className="api-subsection-title">DisclosureVerdict</h3>
+              <CodeBlock lang="typescript">
+                {``}
+                <span className="tok-kw">type</span>
+                {` `}
+                <span className="tok-fn">DisclosureVerdict</span>
+                {` =
+  | `}
+                <span className="tok-str">&quot;auto_pass&quot;</span>
+                {`
+  | `}
+                <span className="tok-str">&quot;auto_block&quot;</span>
+                {`
+  | `}
+                <span className="tok-str">&quot;manual_review&quot;</span>
+                {`
+  | `}
+                <span className="tok-str">&quot;human_approved&quot;</span>
+                {`
+  | `}
+                <span className="tok-str">&quot;human_rejected&quot;</span>
+                {`;`}
+              </CodeBlock>
+            </div>
+          </section>
+
+          <hr className="api-divider" />
+
           {/* ── Webhooks ───────────────────────────────────── */}
           <section id="webhooks" className="api-section">
-            <p className="api-section-eyebrow">07</p>
+            <p className="api-section-eyebrow">12</p>
             <h2 className="api-section-title">Webhooks</h2>
             <p className="api-section-desc">
               Push delivers real-time event notifications to your HTTPS
@@ -1374,7 +2253,7 @@ export default function ApiDocsPage() {
 
           {/* ── Errors ─────────────────────────────────────── */}
           <section id="errors" className="api-section">
-            <p className="api-section-eyebrow">08</p>
+            <p className="api-section-eyebrow">13</p>
             <h2 className="api-section-title">Error Codes</h2>
             <p className="api-section-desc">
               All errors follow a consistent structure. The{" "}
@@ -1497,7 +2376,7 @@ export default function ApiDocsPage() {
 
           {/* ── SDKs ───────────────────────────────────────── */}
           <section id="sdks" className="api-section">
-            <p className="api-section-eyebrow">09</p>
+            <p className="api-section-eyebrow">14</p>
             <h2 className="api-section-title">SDKs</h2>
             <p className="api-section-desc">
               Official SDKs wrap the REST API with language-native idioms,

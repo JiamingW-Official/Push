@@ -1,0 +1,358 @@
+/* ============================================================
+   SLR Widget — Software Leverage Ratio
+   Push v5.1 — Vertical AI for Local Commerce
+   ============================================================ */
+
+.widget {
+  position: relative;
+  background: var(--surface-bright, #fafaf8);
+  border: 1px solid var(--line, rgba(0, 48, 73, 0.12));
+  border-top: 3px solid var(--tertiary, #669bbc);
+  padding: var(--space-4, 32px);
+  border-radius: 0;
+  font-family: var(--font-body, "CS Genio Mono", monospace);
+}
+
+/* ---- Header ------------------------------------------------ */
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-3, 24px);
+  margin-bottom: var(--space-4, 32px);
+  flex-wrap: wrap;
+}
+
+.headerLeft {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.eyebrow {
+  font-family: var(--font-body, "CS Genio Mono", monospace);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--primary, #c1121f);
+  margin: 0;
+}
+
+.title {
+  font-family: var(--font-display, Darky, sans-serif);
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: var(--dark, #003049);
+  line-height: 1.1;
+  margin: 0;
+}
+
+.subtitle {
+  font-family: var(--font-body, "CS Genio Mono", monospace);
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  color: var(--graphite, #4a5568);
+  margin: 0;
+}
+
+.categoryTag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-body, "CS Genio Mono", monospace);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--dark, #003049);
+  background: var(--champagne-light, rgba(201, 169, 110, 0.12));
+  border: 1px solid var(--champagne-border, rgba(201, 169, 110, 0.35));
+  padding: 6px 10px;
+  border-radius: 0;
+  white-space: nowrap;
+}
+
+.categoryDot {
+  width: 6px;
+  height: 6px;
+  background: var(--champagne, #c9a96e);
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* ---- Body grid --------------------------------------------- */
+.body {
+  display: grid;
+  grid-template-columns: minmax(220px, 280px) 1fr;
+  gap: var(--space-5, 40px);
+  align-items: start;
+}
+
+/* ---- Big number panel -------------------------------------- */
+.bigNumber {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2, 16px);
+}
+
+.bigNumberLabel {
+  font-family: var(--font-body, "CS Genio Mono", monospace);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--graphite, #4a5568);
+  margin: 0;
+}
+
+.bigNumberValue {
+  font-family: var(--font-display, Darky, sans-serif);
+  font-size: clamp(64px, 8vw, 96px);
+  font-weight: 900;
+  letter-spacing: -0.05em;
+  color: var(--champagne, #c9a96e);
+  line-height: 0.9;
+  margin: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+.bigNumberFoot {
+  font-family: var(--font-body, "CS Genio Mono", monospace);
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  color: var(--dark, #003049);
+  margin: 0;
+}
+
+.divider {
+  border: 0;
+  border-top: 1px solid var(--line, rgba(0, 48, 73, 0.12));
+  margin: 4px 0;
+}
+
+.baselineCaption {
+  font-family: var(--font-body, "CS Genio Mono", monospace);
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  color: var(--graphite, #4a5568);
+  line-height: 1.5;
+  margin: 0;
+}
+
+.baselineCaption strong {
+  color: var(--tertiary, #669bbc);
+  font-weight: 700;
+}
+
+/* ---- Chart panel ------------------------------------------- */
+.chartPanel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2, 16px);
+  min-width: 0;
+}
+
+.chartHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2, 16px);
+  flex-wrap: wrap;
+}
+
+.chartTitle {
+  font-family: var(--font-body, "CS Genio Mono", monospace);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--graphite, #4a5568);
+  margin: 0;
+}
+
+.chartLegend {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2, 16px);
+  font-family: var(--font-body, "CS Genio Mono", monospace);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--graphite, #4a5568);
+}
+
+.legendItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.legendSwatch {
+  width: 10px;
+  height: 2px;
+  flex-shrink: 0;
+}
+
+.legendSwatchTarget {
+  background: var(--tertiary, #669bbc);
+}
+
+.legendSwatchActual {
+  background: var(--champagne, #c9a96e);
+}
+
+.chartSvg {
+  width: 100%;
+  height: auto;
+  display: block;
+  background: var(--surface-elevated, #ffffff);
+  border: 1px solid var(--line, rgba(0, 48, 73, 0.12));
+}
+
+.chartGrid {
+  stroke: var(--line, rgba(0, 48, 73, 0.12));
+  stroke-width: 1;
+  stroke-dasharray: 2 4;
+}
+
+.chartAxis {
+  stroke: rgba(0, 48, 73, 0.25);
+  stroke-width: 1;
+}
+
+.chartTargetLine {
+  fill: none;
+  stroke: var(--tertiary, #669bbc);
+  stroke-width: 2;
+  stroke-linecap: square;
+  stroke-linejoin: miter;
+}
+
+.chartActualLine {
+  fill: none;
+  stroke: var(--champagne, #c9a96e);
+  stroke-width: 2.5;
+  stroke-linecap: square;
+  stroke-linejoin: miter;
+}
+
+.chartTargetDot {
+  fill: var(--tertiary, #669bbc);
+}
+
+.chartActualDot {
+  fill: var(--champagne, #c9a96e);
+  stroke: var(--dark, #003049);
+  stroke-width: 1.5;
+}
+
+.chartLabel {
+  font-family: var(--font-body, "CS Genio Mono", monospace);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  fill: var(--graphite, #4a5568);
+}
+
+.chartAxisLabel {
+  font-family: var(--font-body, "CS Genio Mono", monospace);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  fill: var(--graphite, #4a5568);
+}
+
+/* ---- Milestone targets grid -------------------------------- */
+.milestoneGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+  border: 1px solid var(--line, rgba(0, 48, 73, 0.12));
+  margin-top: var(--space-3, 24px);
+}
+
+.milestoneCell {
+  padding: var(--space-2, 16px);
+  border-right: 1px solid var(--line, rgba(0, 48, 73, 0.12));
+  background: var(--surface-elevated, #ffffff);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.milestoneCell:last-child {
+  border-right: 0;
+}
+
+.milestoneLabel {
+  font-family: var(--font-body, "CS Genio Mono", monospace);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--graphite, #4a5568);
+}
+
+.milestoneValue {
+  font-family: var(--font-display, Darky, sans-serif);
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: var(--dark, #003049);
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.milestoneSub {
+  font-family: var(--font-body, "CS Genio Mono", monospace);
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  color: var(--graphite, #4a5568);
+}
+
+/* ---- Responsive -------------------------------------------- */
+@media (max-width: 900px) {
+  .body {
+    grid-template-columns: 1fr;
+    gap: var(--space-4, 32px);
+  }
+
+  .milestoneGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .milestoneCell:nth-child(2) {
+    border-right: 0;
+  }
+
+  .milestoneCell:nth-child(1),
+  .milestoneCell:nth-child(2) {
+    border-bottom: 1px solid var(--line, rgba(0, 48, 73, 0.12));
+  }
+}
+
+@media (max-width: 640px) {
+  .widget {
+    padding: var(--space-3, 24px);
+  }
+
+  .bigNumberValue {
+    font-size: 64px;
+  }
+
+  .title {
+    font-size: 20px;
+  }
+
+  .header {
+    margin-bottom: var(--space-3, 24px);
+  }
+}

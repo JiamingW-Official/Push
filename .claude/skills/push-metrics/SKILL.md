@@ -240,3 +240,70 @@ Two new tables back all AI-layer and outcome KPIs above:
 - **`agent_runs`** — one row per matching-agent invocation. Columns include `merchant_id`, `campaign_id` (nullable until confirmed), `goal_text`, `proposed_creator_ids` (array), `predicted_verified_customers`, `regenerate_count`, `approved_at` (nullable), `latency_ms`, `agent_cost_usd`, plus post-hoc `actual_verified_customers` backfilled when campaign settles. Source for §14 + `predicted_vs_actual_customers` in §17.
 
 Both tables feed the v5.0 AI Performance dashboard (daily latency + cost; weekly approval/error rates; monthly unit economics). v4 tables (§12) remain unchanged.
+
+---
+
+# v5.1 Additions — Vertical AI for Local Commerce KPIs
+
+All sections below are additive to v4 + v5.0 KPIs above. v5.1 re-frames Push as **Vertical AI for Local Commerce** — ConversionOracle (the matching brain) and DisclosureBot (the compliance brain) are the proprietary software layer whose leverage is measured via **Software Leverage Ratio (SLR)**.
+
+## 19. North-Star v5.1 — Software Leverage Ratio (SLR)
+
+**SLR is the single most-prominent metric in the v5.1 stack.** It encodes the Vertical AI for Local Commerce thesis: software (ConversionOracle + DisclosureBot) carries load, not headcount.
+
+| Metric | Definition | Targets | Owner | Cadence |
+|---|---|---|---|---|
+| `software_leverage_ratio` | Active campaigns ÷ ops FTE | M3 = 8 / M6 = 12 / M12 ≥ 25 / M24 ≥ 50 | Ops + Founders | weekly |
+
+**Action rule:** SLR below target for 30 consecutive days → mandatory founder review (scope: which layer — ConversionOracle, DisclosureBot, or manual-review fallback — is leaking leverage, and whether to pause new merchant signups until the leak is patched).
+
+SLR supersedes §1's v4 North Star as the primary board/investor-facing metric for v5.1. The v4 North Star (verified repeat campaign value per active merchant cohort) remains a valid retention/quality signal.
+
+## 20. ConversionOracle Accuracy KPIs (v5.1)
+
+ConversionOracle v1 is the matching engine that replaces the v5.0 cold-Claude-API zero-shot approach. These KPIs prove the moat is compounding.
+
+| Metric | Definition | Target | Owner | Cadence |
+|---|---|---|---|---|
+| `oracle_prediction_lift` | % improvement of ConversionOracle v1 matching vs. cold Claude API zero-shot, measured via Month-6 A/B test | ≥ 15% at p < 0.05 | Data | Month-6, then quarterly |
+| `oracle_training_events` | Cumulative AI-verified customer labels feeding Oracle training | 500 by Day 60 / 1K by M3 / 5K by M6 / 10K by M9 / 25K by M12 | Eng | weekly |
+| `oracle_neighborhood_coverage` | Neighborhoods with ≥ 1K training events | 1 by M6 / 5 by M12 / 30 by M24 | Data | monthly |
+
+These sit alongside §14 Matching Agent KPIs. §14 measures operational performance of the live matching agent; §20 measures whether the ConversionOracle moat is compounding.
+
+## 21. DisclosureBot Compliance KPIs (v5.1)
+
+DisclosureBot is the automated FTC-disclosure compliance layer for creator posts. These KPIs gate continued operation without legal liability.
+
+| Metric | Definition | Target | Owner | Cadence |
+|---|---|---|---|---|
+| `disclosurebot_pass_rate` | % of creator posts that auto-pass DisclosureBot on first submission | ≥ 70% | Ops | weekly |
+| `disclosure_compliance_rate_global` | Rolling 90-day % of posts with compliant disclosure after iteration | ≥ 98% | Ops | weekly |
+| `ftc_incident_count` | Any external FTC-flagged incident | 0 | Legal | monthly |
+
+## 22. v5.1 90-Day Hard Milestones
+
+Public commitment table. Miss any row by ≥ 20% → trigger the §23 tripwire review.
+
+| Milestone | 60 days | 90 days | M5 |
+|---|---|---|---|
+| Paying merchants | 5 | 12 | 15+ |
+| Verified customers (cumulative) | 50 | 150 | 300+ |
+| MRR | $2,500 | $8,000 | $15,000+ |
+| AI accuracy | ≥ 80% | ≥ 88% | ≥ 90% |
+| Manual review rate | ≤ 30% | ≤ 20% | ≤ 15% |
+| Active creator network | 40 | 80 | 120+ |
+| Campaign cycle time | ≤ 7 days | ≤ 4 days | ≤ 3 days |
+| Software Leverage Ratio (SLR) | 8 | 12 | 18+ |
+| Merchant NPS | ≥ 40 | ≥ 50 | ≥ 55 |
+| Creator retention M2 → M3 | — | ≥ 65% | ≥ 75% |
+
+## 23. v5.1 Decision Rules Tripwire
+
+Supplements §7 (v4 rules) and §17 (v5.0 thresholds). Each row is a founder- or legal-level escalation, not an ops-level tuning knob.
+
+| Metric | Trip Threshold | Action |
+|---|---|---|
+| `software_leverage_ratio` | Below target for 30 consecutive days | Mandatory founder review — identify which layer (ConversionOracle, DisclosureBot, manual review) is leaking leverage; consider pausing new merchant signups until patched |
+| `oracle_prediction_lift` | < 15% at Month-6 A/B test | **Public pivot of moat narrative** — the ConversionOracle advantage is not materializing at required scale; re-position investor/board narrative before continuing to claim Vertical AI for Local Commerce moat |
+| `ftc_incident_count` | > 0 (any external FTC-flagged incident) | **48-hour legal response window** — Legal + Founders assemble incident report, pause affected campaigns, issue corrective disclosure guidance, file with Legal counsel within 48h of flag |

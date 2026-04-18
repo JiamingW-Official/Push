@@ -3,6 +3,7 @@
 import { useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase";
+import SLRWidget from "@/components/merchant/SLRWidget";
 import "./dashboard.css";
 
 /* ── Demo mode ───────────────────────────────────────────── */
@@ -554,6 +555,18 @@ function CampaignsTab({
           value={totalQrScans}
           trend={isDemo ? "+12 vs last month" : "— attribution tracking"}
           neutral={!isDemo}
+        />
+      </div>
+
+      {/* Software Leverage Ratio — v5.1 north-star metric */}
+      <div style={{ marginBottom: "var(--space-5)" }}>
+        <SLRWidget
+          currentSLR={8}
+          actualByMonth={[
+            { month: 1, actual: 3 },
+            { month: 2, actual: 6 },
+            { month: 3, actual: 8 },
+          ]}
         />
       </div>
 

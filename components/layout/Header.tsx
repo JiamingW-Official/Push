@@ -6,8 +6,10 @@ import styles from "./Header.module.css";
 
 const NAV_LINKS = [
   { label: "Product", href: "/#merchants" },
-  { label: "Creators", href: "/#creators" },
-  { label: "Pricing", href: "/#pricing" },
+  { label: "Pricing", href: "/pricing/coffee-plus" },
+  { label: "ConversionOracle", href: "/conversion-oracle" },
+  { label: "Trust", href: "/trust/disclosure" },
+  { label: "Neighborhoods", href: "/neighborhoods" },
 ];
 
 export default function Header() {

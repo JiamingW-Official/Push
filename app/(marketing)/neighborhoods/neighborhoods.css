@@ -1065,3 +1065,97 @@
     transition: none;
   }
 }
+
+/* ── Template 0 / Neighborhood Playbook spotlight (v5.1) ───── */
+
+.nh-template {
+  background: var(--surface-bright, #fafaf8);
+  padding: var(--space-12) 0;
+  border-top: 1px solid rgba(0, 48, 73, 0.12);
+  border-bottom: 1px solid rgba(0, 48, 73, 0.12);
+}
+
+.nh-template-inner {
+  max-width: 860px;
+  margin: 0 auto;
+  text-align: left;
+}
+
+.nh-template-eyebrow {
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--flag-red, #c1121f);
+  margin-bottom: var(--space-3);
+}
+
+.nh-template-headline {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 4vw, 3rem);
+  line-height: 1.1;
+  color: var(--dark, #003049);
+  margin-bottom: var(--space-4);
+  letter-spacing: -0.01em;
+}
+
+.nh-template-sub {
+  font-family: var(--font-body);
+  font-size: 1rem;
+  line-height: 1.65;
+  color: var(--dark, #003049);
+  opacity: 0.85;
+  margin-bottom: var(--space-6);
+  max-width: 720px;
+}
+
+.nh-template-cta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+  align-items: center;
+}
+
+.nh-template-btn {
+  display: inline-block;
+  background: var(--flag-red, #c1121f);
+  color: #fff;
+  font-family: var(--font-body);
+  font-size: 0.875rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: var(--space-3) var(--space-6);
+  border-radius: 0;
+  transition: background 200ms ease;
+}
+
+.nh-template-btn:hover {
+  background: var(--molten, #780000);
+}
+
+.nh-template-link {
+  font-family: var(--font-body);
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--dark, #003049);
+  border-bottom: 1px solid currentColor;
+  padding-bottom: 2px;
+  transition: color 200ms ease;
+}
+
+.nh-template-link:hover {
+  color: var(--flag-red, #c1121f);
+}
+
+.nh-hero-link {
+  color: var(--steel-blue, #669bbc);
+  border-bottom: 1px solid currentColor;
+  padding-bottom: 1px;
+  transition: color 200ms ease;
+}
+
+.nh-hero-link:hover {
+  color: #fff;
+}

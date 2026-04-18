@@ -1,44 +1,70 @@
-# Push Score Scoring Model
+# Push Score Scoring Model — v5.1
 
-## Composite Formula
+## Composite Formula (preserved unchanged from v4.1)
 
 **Push Score = (Completion × 0.30) + (Reliability × 0.20) + (Quality × 0.25) + (Merchant Satisfaction × 0.15) + (Engagement × 0.10)**
 
 Range: 0-100
 
-**The formula, the 5 dimensions, and their weights are UNCHANGED from v4.1.** What v5.0 adds is how the score is consumed: the matching agent reads Push Score + two new auxiliary signals (below) to rank operators per merchant goal.
+**The 0-100 formula, the 5 dimensions, and their weights are UNCHANGED from v4.1 and remain the authoritative score in v5.1.** v5.1 does not fold any new signals into the Push Score. What v5.1 adds is a parallel layer of **agent-input signals** (below) the matching agent reads alongside the Push Score to rank creators per merchant goal — and the core is ConversionOracle.
 
 ---
 
-## v5.0 Agent-Input Signals (Auxiliary — Not Part of Push Score)
+## v5.1 Agent-Input Signals (Auxiliary — Not Folded Into Push Score)
 
-These are **not** added into the 100-point Push Score. They live alongside it as separate fields the matching agent reads when ranking operators for a merchant goal.
+These signals are **explicitly NOT added into the 100-point Push Score**. They live alongside it as separate fields the matching agent (powered by ConversionOracle) reads when ranking creators for a merchant goal. Keeping them parallel preserves the integrity of the 0-100 composite while giving the agent richer context.
 
 ### `category_affinity` — per-vertical fit (0.0 – 1.0)
-**Source:** Automated classification of the creator's last 90 days of content + campaign history, bucketed by vertical (coffee, restaurant, bar, fitness, retail-apparel, retail-beauty, services).
 
-**Example record for one operator:**
+**Source:** Automated classification of the creator's last 90 days of content + campaign history, bucketed by vertical (coffee, coffee+, dessert, restaurant, bar, fitness, retail-apparel, retail-beauty, services). Recomputed **nightly** on a rolling 90-day window.
+
+**Example record for one creator:**
 ```
-{ coffee: 0.92, restaurant: 0.74, bar: 0.41, fitness: 0.08, retail_apparel: 0.22 }
+{ coffee: 0.92, coffee_plus: 0.81, dessert: 0.68, restaurant: 0.74, bar: 0.41, fitness: 0.08, beauty: 0.22 }
 ```
 
-**Agent usage:** When routing a "100 customers at coffee shop" goal, the agent multiplies the operator's `coffee` affinity into the ranking weight. A Seed-tier operator at 0.91 coffee affinity often out-ranks an Operator-tier operator at 0.45 coffee affinity.
+**Agent usage:** When routing a "100 customers at coffee shop" goal, the matching agent multiplies the creator's `coffee` affinity into the ranking weight. A Seed-tier creator at 0.91 coffee affinity often out-ranks an Operator-tier creator at 0.45 coffee affinity for a coffee-vertical goal. ConversionOracle combines this with geo and time-of-day history to produce a predicted conversion rate per creator × merchant pair.
 
-**Recomputed:** Nightly, rolling 90-day window.
+**Not folded into Push Score:** `category_affinity` is an auxiliary routing signal. It does not add points to the 0-100 score. A high category_affinity creator with a mediocre Push Score is still flagged by the Push Score for the quality concerns it represents; category_affinity only changes *which* goals get routed to them.
 
 ### `verified_conversions_90d` — proven output (integer)
-**Source:** Rolling 90-day count of AI-verified customers this operator delivered across all campaigns. Sourced from `push-attribution`'s verified-scan pipeline (AI-verified only — flagged/failed scans excluded).
 
-**Why it matters:** "Completed 12 campaigns" says nothing about outcome — a creator can run many campaigns and convert few. `verified_conversions_90d` is the north-star output metric. A creator with 47 verified conversions in 90 days is a meaningfully different asset than one with 6.
+**Source:** Rolling 90-day count of AI-verified customers this creator delivered across all campaigns. Sourced from `push-attribution`'s verified-scan pipeline (AI-verified only — flagged/failed scans excluded). This is the same ledger that feeds ConversionOracle's training loop.
 
-**Agent usage:** Tiebreaker within a tier + affinity band. Also used in operator profile badges ("47 verified customers last 90d").
+**Why it matters:** "Completed 12 campaigns" says nothing about outcome — a creator can run many campaigns and convert few. `verified_conversions_90d` is the **north-star output metric**. A creator with 47 verified conversions in 90 days is a meaningfully different asset than one with 6. At T4-T6 it becomes the basis for the per-customer performance bonus settlement.
 
-**Not retroactive into Push Score:** The 5-dimension Push Score formula stays intact. `verified_conversions_90d` is a parallel signal the agent reads, not an input to the 0-100 score.
+**Agent usage:** Tiebreaker within a tier + affinity band. Also used in:
+- Creator profile badges ("47 verified customers last 90d")
+- T4-T6 monthly performance bonus settlement input (Proven $25/customer, Closer $40/customer, Partner $60/customer — same 90d ledger)
+- ConversionOracle model retraining input
+
+**Not folded into Push Score:** The 5-dimension Push Score formula stays intact. `verified_conversions_90d` is a parallel signal the agent reads, not an input to the 0-100 score. This separation lets verified-conversion output scale without gaming the composite score's behavioral dimensions (completion, reliability, quality, satisfaction, engagement).
+
+### `disclosure_compliance_rate_90d` — FTC DisclosureBot pass rate (0.0 – 1.0)
+
+**Source:** Rolling 90-day auto-screen pass rate from DisclosureBot across every creator post run through the system. A "pass" = DisclosureBot flagged no issues with #ad disclosure placement, visibility, and language clarity. A "fail" = post required creator correction or was held from publication.
+
+**Agent usage:**
+- **Gates equity pool eligibility** (Closer/Partner): rate must be ≥ 0.98 to accrue equity vesting in the trailing quarter
+- **Flags tier risk** below 0.95: creator is reviewed for tier maintenance, not auto-demoted
+- **Visible on creator dashboard:** "Your DisclosureBot compliance rate: 99.2% — equity eligible"
+
+**Not folded into Push Score:** Like the other v5.1 signals, compliance rate is an auxiliary gate, not a score input. A clean-compliance creator still needs a real Push Score to route well; a dirty-compliance creator can have a high Push Score but lose equity and face tier risk. The two layers are independent.
 
 ### Williamsburg coffee priority flag (beachhead-only)
 The agent applies a hard priority for Williamsburg coffee goals:
 - `coffee_affinity > 0.7` AND `distance_miles < 1.2` from zip 11211 → **first-pass routing regardless of tier**.
 This flag is beachhead-specific and retires once we leave Williamsburg-only mode.
+
+---
+
+## Summary — what the agent reads
+
+| Layer | Component | Role |
+|-------|-----------|------|
+| **Push Score (0-100)** | Completion + Reliability + Quality + Satisfaction + Engagement (weighted) | Overall quality proxy. **Unchanged from v4.1.** Determines tier band + routing priority. |
+| **v5.1 auxiliary signals** | `category_affinity`, `verified_conversions_90d`, `disclosure_compliance_rate_90d` | Matching-agent inputs + T4-T6 settlement + equity gating. **Not folded into Push Score.** |
+| **ConversionOracle prediction** | Model output combining all of the above + geo + time + merchant history | Pre-route filter: weeds out predicted-low-conversion matches before the invite DM fires. |
 
 ---
 

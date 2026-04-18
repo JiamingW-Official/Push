@@ -77,36 +77,50 @@ const NAV_COLS = [
   {
     label: "Product",
     links: [
-      { label: "For Creators", href: "/#for-creators" },
       { label: "For Merchants", href: "/for-merchants" },
-      { label: "Pricing", href: "/#pricing" },
+      { label: "For Creators", href: "/#for-creators" },
+      { label: "ConversionOracle", href: "/conversion-oracle" },
       { label: "Attribution", href: "/#attribution" },
+    ],
+  },
+  {
+    label: "Pricing",
+    links: [
+      { label: "Coffee", href: "/pricing/coffee" },
+      { label: "Coffee+", href: "/pricing/coffee-plus" },
+      { label: "Dessert", href: "/pricing/dessert" },
+      { label: "Fitness", href: "/pricing/fitness" },
+      { label: "Beauty", href: "/pricing/beauty" },
+    ],
+  },
+  {
+    label: "Trust",
+    links: [
+      { label: "Disclosure", href: "/trust/disclosure" },
+      { label: "Risk Register", href: "/trust/risk-register" },
+      { label: "Accuracy", href: "/conversion-oracle/accuracy" },
+      { label: "Case Studies", href: "/case-studies" },
+    ],
+  },
+  {
+    label: "Neighborhoods",
+    links: [
+      { label: "All Neighborhoods", href: "/neighborhoods" },
+      { label: "Neighborhood Playbook", href: "/neighborhood-playbook" },
+      {
+        label: "Williamsburg Coffee+",
+        href: "/case-studies/williamsburg-coffee-5",
+      },
+      { label: "Williamsburg", href: "/neighborhoods/williamsburg" },
     ],
   },
   {
     label: "Company",
     links: [
       { label: "About", href: "#" },
-      { label: "Careers", href: "#" },
-      { label: "Press", href: "#" },
       { label: "Contact", href: "#" },
-    ],
-  },
-  {
-    label: "Resources",
-    links: [
-      { label: "Blog", href: "#" },
-      { label: "Help", href: "#" },
-      { label: "API", href: "#" },
-      { label: "Status", href: "#" },
-    ],
-  },
-  {
-    label: "Legal",
-    links: [
       { label: "Privacy", href: "#" },
       { label: "Terms", href: "#" },
-      { label: "Cookies", href: "#" },
     ],
   },
 ];

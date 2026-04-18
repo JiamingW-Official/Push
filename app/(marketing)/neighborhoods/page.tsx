@@ -12,21 +12,21 @@ import "./neighborhoods.css";
 /* ── Metadata ──────────────────────────────────────────────── */
 
 export const metadata: Metadata = {
-  title:
-    "NYC Neighborhoods — Creator marketing for verified foot traffic | Push",
+  title: "NYC Neighborhoods — Vertical AI for Local Commerce | Push",
   description:
-    "Push operates across 30 NYC neighborhoods, connecting local merchants with verified creator campaigns and QR-attributed foot traffic. Discover active campaigns in Manhattan, Brooklyn, Queens, the Bronx, and Staten Island.",
+    "Push operates a Neighborhood Playbook across 30 NYC neighborhoods. Williamsburg Coffee+ is the active Template 0 — priced per verified customer, verified by ConversionOracle. Explore neighborhood templates and active deployments.",
   openGraph: {
     title: "NYC Neighborhoods — Push",
     description:
-      "30 NYC neighborhoods. Real creators. Verified foot traffic. Explore Push campaigns by neighborhood.",
+      "30 NYC neighborhoods. Williamsburg Coffee+ Template 0 active. Per-customer pricing, verified by ConversionOracle.",
     type: "website",
     url: "https://withpush.co/neighborhoods",
   },
   twitter: {
     card: "summary_large_image",
     title: "NYC Neighborhoods — Push",
-    description: "30 NYC neighborhoods. Real creators. Verified foot traffic.",
+    description:
+      "Williamsburg Coffee+ Template 0. Verified by ConversionOracle.",
   },
   alternates: {
     canonical: "https://withpush.co/neighborhoods",
@@ -112,15 +112,23 @@ export default function NeighborhoodsPage() {
         {/* ── Hero ──────────────────────────────────────────── */}
         <section className="nh-hero">
           <div className="container nh-hero-inner">
-            <p className="nh-hero-eyebrow">Push · NYC Coverage Map</p>
+            <p className="nh-hero-eyebrow">
+              Push · Vertical AI for Local Commerce
+            </p>
             <h1 className="nh-hero-headline">
               Neighborhoods
               <br />
               <em>Push serves.</em>
             </h1>
             <p className="nh-hero-sub">
-              30 New York City neighborhoods. Verified foot traffic. Real
-              creators. QR-attributed campaigns that prove the visit happened.
+              30 NYC neighborhoods. One active Template 0:{" "}
+              <strong>Williamsburg Coffee+</strong>. Every new neighborhood
+              follows the same{" "}
+              <Link href="/neighborhood-playbook" className="nh-hero-link">
+                Neighborhood Playbook
+              </Link>
+              — verified per-customer outcomes via ConversionOracle, nothing
+              less.
             </p>
 
             <div className="nh-hero-stats">
@@ -146,6 +154,33 @@ export default function NeighborhoodsPage() {
         <div className="nh-map-strip">
           <NeighborhoodsMap pins={mapPins} />
         </div>
+
+        {/* ── Template 0 / Neighborhood Playbook spotlight ──── */}
+        <section className="nh-template">
+          <div className="container nh-template-inner">
+            <p className="nh-template-eyebrow">Template 0 · Active</p>
+            <h2 className="nh-template-headline">
+              Williamsburg Coffee+ is running live.
+            </h2>
+            <p className="nh-template-sub">
+              One neighborhood, one vertical, one priced outcome: every new
+              customer walking into a Williamsburg Coffee+ shop is verified by
+              ConversionOracle before Push gets paid. Template 0 proves the
+              loop. The Neighborhood Playbook makes it repeatable.
+            </p>
+            <div className="nh-template-cta">
+              <Link
+                href="/case-studies/williamsburg-coffee-5"
+                className="nh-template-btn"
+              >
+                Read the Williamsburg Coffee+ case study
+              </Link>
+              <Link href="/neighborhood-playbook" className="nh-template-link">
+                See the Neighborhood Playbook →
+              </Link>
+            </div>
+          </div>
+        </section>
 
         {/* ── Borough tabs + grid (client interactive) ──────── */}
         <NeighborhoodsClient

@@ -15,7 +15,11 @@ const PUBLIC_PREFIXES = [
 
 // Creator-protected route patterns
 const CREATOR_PROTECTED = ["/creator/dashboard", "/creator/profile"];
-const CREATOR_PROTECTED_PREFIXES = ["/creator/campaigns", "/creator/earnings"];
+const CREATOR_PROTECTED_PREFIXES = [
+  "/creator/campaigns",
+  "/creator/earnings",
+  "/creator/equity-pool",
+];
 
 // Merchant-protected route patterns
 const MERCHANT_PROTECTED = ["/merchant/dashboard"];
