@@ -1,16 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import { gsap } from "gsap";
-import {
-  DEMO_CREATOR,
-  DEMO_APPLICATIONS,
-  DEMO_CAMPAIGNS,
-} from "@/lib/creator/demo-data";
+import { DEMO_CREATOR, DEMO_APPLICATIONS } from "@/lib/creator/demo-data";
 import "./dashboard.css";
 
-/* ── Tier display config ─────────────────────────────────── */
+/* ── Tier config ─────────────────────────────────────────── */
 
 const TIER_LABELS: Record<string, string> = {
   seed: "Seed Starter",
@@ -21,206 +17,95 @@ const TIER_LABELS: Record<string, string> = {
   partner: "Brand Partner",
 };
 
-const TIER_NEXT_SCORE: Record<string, number> = {
-  seed: 30,
-  explorer: 55,
-  operator: 75,
-  proven: 90,
-  closer: 98,
-  partner: 100,
+const TIER_NEXT: Record<string, { score: number; name: string }> = {
+  seed: { score: 30, name: "Steel Explorer" },
+  explorer: { score: 55, name: "City Operator" },
+  operator: { score: 75, name: "Proven Closer" },
+  proven: { score: 90, name: "Top Closer" },
+  closer: { score: 98, name: "Brand Partner" },
+  partner: { score: 100, name: "Max" },
 };
 
-/* ── Mock today schedule items ───────────────────────────── */
-
-type ScheduleItem = {
-  id: string;
-  time: string;
-  campaignName: string;
-  merchantName: string;
-  earn: string;
-  status: "upcoming" | "active" | "done";
-  timeLabel: string;
-};
-
-const SCHEDULE_ITEMS: ScheduleItem[] = [
-  {
-    id: "s1",
-    time: "12:30",
-    campaignName: "Best Burger in NYC Feature",
-    merchantName: "Superiority Burger",
-    earn: "$35",
-    status: "active",
-    timeLabel: "now",
-  },
-  {
-    id: "s2",
-    time: "16:00",
-    campaignName: "LA Botanica Aesthetic Shoot",
-    merchantName: "Flamingo Estate",
-    earn: "$75",
-    status: "upcoming",
-    timeLabel: "in 2h",
-  },
-  {
-    id: "s3",
-    time: "18:30",
-    campaignName: "Brow Transformation Story",
-    merchantName: "Brow Theory",
-    earn: "$50",
-    status: "upcoming",
-    timeLabel: "in 4h",
-  },
-];
-
-/* ── Featured discover campaign ──────────────────────────── */
-
-const FEATURED_CAMPAIGN = {
-  id: "camp-007",
-  title: "KITH x Creator Collab Series",
-  merchantName: "KITH",
-  earn: "$199",
-  earnRate: "$199 / post",
-  tags: ["Retail", "Editorial", "5+ Posts"],
-  spotsLeft: 1,
-};
-
-/* ── Helpers ─────────────────────────────────────────────── */
-
-function getDaysUntil(isoDate: string): number {
-  const diff = new Date(isoDate).getTime() - Date.now();
-  return Math.max(0, Math.ceil(diff / (1000 * 60 * 60 * 24)));
-}
-
-function getDeadlineUrgency(days: number): number {
-  // Returns 0–1 fill: full bar = deadline passed, empty = 30+ days away
-  return Math.max(0, Math.min(1, (30 - days) / 30));
-}
-
-function formatDate(date: Date): string {
-  return date.toLocaleDateString("en-US", {
-    weekday: "long",
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  });
-}
+/* ── Greeting ────────────────────────────────────────────── */
 
 function getGreeting(): string {
-  const hour = new Date().getHours();
-  if (hour < 12) return "Good morning";
-  if (hour < 17) return "Good afternoon";
+  const h = new Date().getHours();
+  if (h < 12) return "Good morning";
+  if (h < 17) return "Good afternoon";
   return "Good evening";
 }
 
-function getScoreDashOffset(score: number, radius = 45): number {
-  const circumference = 2 * Math.PI * radius;
-  return circumference - (score / 100) * circumference;
-}
+/* ── Today's top task (first active or upcoming item) ───── */
 
-/** Get merchant initials (up to 2 chars) */
-function getMerchantInitials(name: string): string {
-  const parts = name.trim().split(/\s+/);
-  if (parts.length >= 2) return (parts[0][0] + parts[1][0]).toUpperCase();
-  return name.slice(0, 2).toUpperCase();
+const TODAY_TASK = {
+  id: "s1",
+  time: "12:30",
+  campaignName: "Best Burger in NYC Feature",
+  merchantName: "Superiority Burger",
+  earn: "$35",
+  action: "Shoot + Submit",
+  timeLeft: "2h left",
+  status: "active" as const,
+};
+
+const TODAY_TOTAL = 3; // total tasks today
+
+/* ── Open invite count (mock) ───────────────────────────── */
+
+const OPEN_INVITES = 3;
+
+/* ── Score ring helper ───────────────────────────────────── */
+
+function getScoreDashOffset(score: number, r = 45): number {
+  return 2 * Math.PI * r * (1 - score / 100);
 }
 
 /* ── Component ───────────────────────────────────────────── */
 
 export default function CreatorDashboard() {
   const creator = DEMO_CREATOR;
-  const today = new Date();
+  const tierKey = creator.tier;
+  const tierLabel = TIER_LABELS[tierKey] ?? creator.tier;
+  const tierNext = TIER_NEXT[tierKey] ?? { score: 100, name: "Max" };
+  const ptsToNext = Math.max(0, tierNext.score - creator.push_score);
+  const tierProgress = Math.round((creator.push_score / tierNext.score) * 100);
+  const circumference = 2 * Math.PI * 45;
+  const finalOffset = getScoreDashOffset(creator.push_score);
 
-  /* GSAP refs */
-  const scoreNumRef = useRef<HTMLSpanElement>(null);
-  const scoreRingRef = useRef<SVGCircleElement>(null);
-  const kpiRowRef = useRef<HTMLElement>(null);
-  const greetingRef = useRef<HTMLElement>(null);
+  // Active applications
+  const activeCampaigns = DEMO_APPLICATIONS.filter(
+    (a) => a.status === "accepted" && a.milestone !== "settled",
+  ).length;
 
-  // Active applications (accepted, non-settled)
-  const activeApps = useMemo(
-    () =>
-      DEMO_APPLICATIONS.filter(
-        (a) => a.status === "accepted" && a.milestone !== "settled",
-      ),
-    [],
-  );
+  /* GSAP entrance */
+  const pageRef = useRef<HTMLDivElement>(null);
+  const scoreRing = useRef<SVGCircleElement>(null);
+  const scoreNum = useRef<HTMLSpanElement>(null);
 
-  // Stats
-  const weekEarnings = useMemo(
-    () =>
-      DEMO_APPLICATIONS.filter(
-        (a) => a.milestone === "verified" || a.milestone === "settled",
-      ).reduce((sum, a) => sum + a.payout, 0),
-    [],
-  );
-
-  const scansToday = 7; // mock
-  const tierLabel = TIER_LABELS[creator.tier] ?? creator.tier;
-  const tierNextScore = TIER_NEXT_SCORE[creator.tier] ?? 100;
-  const tierProgress = Math.round((creator.push_score / tierNextScore) * 100);
-  const scoreCircumference = 2 * Math.PI * 45;
-  const scoreFinalOffset = getScoreDashOffset(creator.push_score);
-
-  // KPI data
-  const kpis = [
-    {
-      label: "This Week Earnings",
-      value: `$${weekEarnings}`,
-      ghost: `$${weekEarnings}`,
-      sub: `${DEMO_APPLICATIONS.filter((a) => a.milestone === "settled").length} settled`,
-      earningsColor: true,
-    },
-    {
-      label: "Active Campaigns",
-      value: String(activeApps.length),
-      ghost: String(activeApps.length).padStart(2, "0"),
-      sub: "in progress",
-      earningsColor: false,
-    },
-    {
-      label: "Scans Today",
-      value: String(scansToday),
-      ghost: String(scansToday).padStart(2, "0"),
-      sub: "+3 vs yesterday",
-      earningsColor: false,
-    },
-    {
-      label: "Tier Progress",
-      value: `${tierProgress}%`,
-      ghost: `${tierProgress}`,
-      sub: `to ${tierLabel}+`,
-      earningsColor: true,
-      isProgress: true,
-      progressFill: tierProgress,
-    },
-  ];
-
-  /* ── GSAP hero entrance ────────────────────────────────── */
   useEffect(() => {
     const ctx = gsap.context(() => {
       const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
 
-      /* 1. Greeting fades in */
-      tl.from(greetingRef.current, { opacity: 0, y: 16, duration: 0.5 });
+      // Stagger the three blocks in
+      tl.from(".db3-block", {
+        opacity: 0,
+        y: 20,
+        stagger: 0.12,
+        duration: 0.5,
+      });
 
-      /* 2. Score ring fills from 0 → final offset */
-      if (scoreRingRef.current) {
-        gsap.set(scoreRingRef.current, {
-          strokeDashoffset: scoreCircumference,
-        });
+      // Score ring fill
+      if (scoreRing.current) {
+        gsap.set(scoreRing.current, { strokeDashoffset: circumference });
         tl.to(
-          scoreRingRef.current,
-          {
-            strokeDashoffset: scoreFinalOffset,
-            duration: 1,
-            ease: "power2.inOut",
-          },
+          scoreRing.current,
+          { strokeDashoffset: finalOffset, duration: 1, ease: "power2.inOut" },
           "-=0.2",
         );
       }
 
-      /* 3. Score number counts up 0 → push_score */
-      if (scoreNumRef.current) {
+      // Score number count-up
+      if (scoreNum.current) {
         const counter = { val: 0 };
         tl.to(
           counter,
@@ -229,348 +114,146 @@ export default function CreatorDashboard() {
             duration: 1,
             ease: "power2.out",
             onUpdate() {
-              if (scoreNumRef.current) {
-                scoreNumRef.current.textContent = String(
-                  Math.round(counter.val),
-                );
-              }
+              if (scoreNum.current)
+                scoreNum.current.textContent = String(Math.round(counter.val));
             },
           },
           "<",
         );
       }
 
-      /* 4. KPI cards stagger in from below */
-      if (kpiRowRef.current) {
-        const cards = kpiRowRef.current.querySelectorAll(".db-kpi-card");
-        tl.from(
-          cards,
-          {
-            opacity: 0,
-            y: 24,
-            stagger: 0.1,
-            duration: 0.5,
-            ease: "power2.out",
-          },
-          "-=0.4",
+      // Progress bar
+      const fill = document.querySelector<HTMLElement>(".db3-score-fill");
+      if (fill) {
+        const target = fill.style.width;
+        gsap.set(fill, { width: "0%" });
+        tl.to(
+          fill,
+          { width: target, duration: 0.8, ease: "power2.out" },
+          "-=0.6",
         );
       }
-
-      /* 5. Progress bars animate width via CSS var trick */
-      const fills = document.querySelectorAll<HTMLElement>(
-        ".db-kpi-progress-fill, .db-score-bar-fill",
-      );
-      fills.forEach((el) => {
-        const target = el.style.width;
-        gsap.set(el, { width: "0%" });
-        tl.to(
-          el,
-          { width: target, duration: 0.8, ease: "power2.out" },
-          "-=0.3",
-        );
-      });
-
-      const deadlineFills =
-        document.querySelectorAll<HTMLElement>(".db-deadline-fill");
-      deadlineFills.forEach((el) => {
-        const target = el.style.width;
-        gsap.set(el, { width: "0%" });
-        tl.to(el, { width: target, duration: 0.6, ease: "power2.out" }, "<");
-      });
-    });
+    }, pageRef);
 
     return () => ctx.revert();
-  }, [creator.push_score, scoreCircumference, scoreFinalOffset]);
+  }, [creator.push_score, circumference, finalOffset]);
 
   return (
-    <div className="db-page">
-      {/* ── Sub-nav breadcrumb ─────────────────────────────── */}
-      <nav className="db-subnav" aria-label="Dashboard navigation">
-        <span className="db-subnav-title">Dashboard</span>
-        <span className="db-subnav-date">{formatDate(today)}</span>
-      </nav>
-
-      {/* ── Greeting header ───────────────────────────────── */}
-      <header className="db-greeting" ref={greetingRef}>
-        <p className="db-greeting-eyebrow">{getGreeting()}</p>
-        <h1 className="db-greeting-name">{creator.name}</h1>
-        <p className="db-greeting-date">
-          {today.toLocaleDateString("en-US", {
-            weekday: "long",
-            month: "long",
-            day: "numeric",
-            year: "numeric",
-          })}
-        </p>
+    <div className="db3-page" ref={pageRef}>
+      {/* ── Greeting header ──────────────────────────────── */}
+      <header className="db3-greeting">
+        <p className="db3-greeting-eyebrow">{getGreeting()}</p>
+        <h1 className="db3-greeting-name">{creator.name}</h1>
       </header>
 
-      {/* ── Score hero ────────────────────────────────────── */}
-      <section className="db-score-hero" aria-labelledby="db-score-heading">
-        {/* Ghost editorial score number behind ring */}
-        <span className="db-score-ghost-bg" aria-hidden="true">
-          {creator.push_score}
-        </span>
-
-        {/* SVG ring */}
-        <div className="db-score-ring-wrap" aria-hidden="true">
-          <svg className="db-score-ring-svg" viewBox="0 0 100 100">
-            <circle className="db-score-ring-track" cx="50" cy="50" r="45" />
-            <circle
-              ref={scoreRingRef}
-              className="db-score-ring-fill"
-              cx="50"
-              cy="50"
-              r="45"
-              strokeDasharray={scoreCircumference}
-              strokeDashoffset={scoreCircumference}
-            />
-          </svg>
-          <div className="db-score-center">
-            <span className="db-score-number" ref={scoreNumRef}>
-              0
+      {/* ── Three-block layout ───────────────────────────── */}
+      <div className="db3-blocks">
+        {/* BLOCK 1 — Today */}
+        <section className="db3-block" aria-labelledby="db3-today-heading">
+          <div className="db3-block-header">
+            <span className="db3-block-label" id="db3-today-heading">
+              Today
             </span>
-            <span className="db-score-label">Score</span>
+            <Link href="/creator/work/today" className="db3-block-link">
+              View all ({TODAY_TOTAL}) →
+            </Link>
           </div>
-        </div>
 
-        {/* Score info — editorial layout */}
-        <div className="db-score-info">
-          <p className="db-score-oracle-label">ConversionOracle™</p>
-          <h2 id="db-score-heading" className="db-score-hero-number">
-            {creator.push_score}
-          </h2>
-          <div className={`db-tier-badge db-tier-badge--${creator.tier}`}>
-            {tierLabel}
-          </div>
-          <p className="db-score-next-hint">
-            <strong>{tierNextScore - creator.push_score} pts</strong> to unlock
-            next tier
-          </p>
-          <div className="db-score-bar-wrap">
-            <div className="db-score-bar" aria-hidden="true">
-              <div
-                className="db-score-bar-fill"
-                style={{ width: `${tierProgress}%` }}
-              />
-            </div>
-            <span className="db-score-bar-label">{tierProgress}%</span>
-          </div>
-        </div>
-      </section>
-
-      {/* ── KPI Row ───────────────────────────────────────── */}
-      <section className="db-kpi-row" aria-label="Key metrics" ref={kpiRowRef}>
-        {kpis.map((kpi, i) => (
-          <div
-            key={kpi.label}
-            className={`db-kpi-card${kpi.earningsColor && i === 0 ? " db-kpi-card--featured" : ""}`}
+          <Link
+            href="/creator/work/today"
+            className="db3-task-card db3-task-card--active"
           >
-            <span className="db-kpi-ghost" aria-hidden="true">
-              {kpi.ghost}
-            </span>
-            <p className="db-kpi-label">{kpi.label}</p>
-            <p
-              className={`db-kpi-value${kpi.earningsColor ? "" : " db-kpi-value--neutral"}`}
-            >
-              {kpi.value}
+            <div className="db3-task-top">
+              <span className="db3-task-pill">NOW</span>
+              <span className="db3-task-time-left">{TODAY_TASK.timeLeft}</span>
+            </div>
+            <p className="db3-task-name">{TODAY_TASK.campaignName}</p>
+            <p className="db3-task-sub">
+              {TODAY_TASK.time} · {TODAY_TASK.action} ·{" "}
+              {TODAY_TASK.merchantName}
             </p>
-            {kpi.isProgress ? (
-              <div className="db-kpi-progress">
-                <div className="db-kpi-progress-bar">
+            <div className="db3-task-footer">
+              <span className="db3-task-earn">Earn {TODAY_TASK.earn}</span>
+            </div>
+          </Link>
+        </section>
+
+        {/* BLOCK 2 — Push Score */}
+        <section className="db3-block" aria-labelledby="db3-score-heading">
+          <div className="db3-block-header">
+            <span className="db3-block-label" id="db3-score-heading">
+              Your Push Score
+            </span>
+          </div>
+
+          <div className="db3-score-wrap">
+            {/* SVG ring */}
+            <div className="db3-ring-wrap" aria-hidden="true">
+              <svg className="db3-ring-svg" viewBox="0 0 100 100">
+                <circle className="db3-ring-track" cx="50" cy="50" r="45" />
+                <circle
+                  ref={scoreRing}
+                  className="db3-ring-fill"
+                  cx="50"
+                  cy="50"
+                  r="45"
+                  strokeDasharray={circumference}
+                  strokeDashoffset={circumference}
+                />
+              </svg>
+              <div className="db3-ring-center">
+                <span className="db3-ring-number" ref={scoreNum}>
+                  0
+                </span>
+                <span className="db3-ring-denom">/100</span>
+              </div>
+            </div>
+
+            {/* Score info */}
+            <div className="db3-score-info">
+              <div className={`db3-tier-badge db3-tier-badge--${tierKey}`}>
+                {tierLabel}
+              </div>
+              <div className="db3-progress-row">
+                <div className="db3-progress-bar">
                   <div
-                    className="db-kpi-progress-fill"
-                    style={{ width: `${kpi.progressFill}%` }}
+                    className="db3-score-fill"
+                    style={{ width: `${tierProgress}%` }}
                   />
                 </div>
-                <span className="db-kpi-progress-label">{kpi.sub}</span>
+                <span className="db3-progress-hint">
+                  {ptsToNext > 0
+                    ? `${ptsToNext} pts to ${tierNext.name}`
+                    : "Max tier reached"}
+                </span>
               </div>
-            ) : (
-              <p className="db-kpi-sub">{kpi.sub}</p>
+            </div>
+          </div>
+        </section>
+
+        {/* BLOCK 3 — Open Invites */}
+        <section className="db3-block" aria-labelledby="db3-invites-heading">
+          <div className="db3-block-header">
+            <span className="db3-block-label" id="db3-invites-heading">
+              Open Invites
+            </span>
+          </div>
+
+          <div className="db3-invites-body">
+            <p className="db3-invites-count">
+              <strong>{OPEN_INVITES}</strong> new campaigns match you
+            </p>
+            {activeCampaigns > 0 && (
+              <p className="db3-invites-sub">
+                {activeCampaigns} campaign{activeCampaigns > 1 ? "s" : ""}{" "}
+                already active
+              </p>
             )}
           </div>
-        ))}
-      </section>
-
-      {/* ── Main two-column content ────────────────────────── */}
-      <div className="db-main">
-        {/* ── Left: schedule + campaigns ─────────────────── */}
-        <div className="db-content">
-          {/* Today's schedule */}
-          <div
-            className="db-section-head"
-            role="heading"
-            aria-level={3}
-            id="db-schedule-heading"
-          >
-            <span className="db-section-label">Today&apos;s Schedule</span>
-            <Link href="/creator/work/today" className="db-section-link">
-              See all →
-            </Link>
-          </div>
-
-          <ul
-            className="db-schedule-list"
-            aria-labelledby="db-schedule-heading"
-          >
-            {SCHEDULE_ITEMS.map((item) => (
-              <li key={item.id}>
-                <Link
-                  href="/creator/work/today"
-                  className={`db-schedule-item${item.status === "active" ? " db-schedule-item--active" : ""}`}
-                >
-                  {/* Time-left pill */}
-                  <span
-                    className={`db-schedule-pill db-schedule-pill--${item.status}`}
-                    aria-label={item.timeLabel}
-                  >
-                    {item.timeLabel}
-                  </span>
-
-                  {/* Merchant initials avatar */}
-                  <span className="db-schedule-avatar" aria-hidden="true">
-                    {getMerchantInitials(item.merchantName)}
-                  </span>
-
-                  <span className="db-schedule-time">{item.time}</span>
-                  <div className="db-schedule-info">
-                    <p className="db-schedule-name">{item.campaignName}</p>
-                    <p className="db-schedule-merchant">{item.merchantName}</p>
-                  </div>
-                  <span className="db-schedule-earn">{item.earn}</span>
-                </Link>
-              </li>
-            ))}
-          </ul>
-
-          <Link href="/creator/work/today" className="db-schedule-see-all">
-            View full schedule →
+          <Link href="/creator/discover" className="db3-cta">
+            Browse campaigns →
           </Link>
-
-          {/* Active campaigns */}
-          <div
-            className="db-section-head db-section--tight"
-            role="heading"
-            aria-level={3}
-            id="db-campaigns-heading"
-          >
-            <span className="db-section-label">Active Campaigns</span>
-            <Link href="/creator/work/pipeline" className="db-section-link">
-              Pipeline →
-            </Link>
-          </div>
-
-          <div
-            className="db-campaigns-list"
-            aria-labelledby="db-campaigns-heading"
-          >
-            {activeApps.map((app) => {
-              const days = getDaysUntil(app.deadline ?? "");
-              const urgency = getDeadlineUrgency(days);
-              const isUrgent = days <= 3;
-              return (
-                <Link
-                  key={app.id}
-                  href="/creator/work/pipeline"
-                  className="db-campaign-card"
-                >
-                  <div>
-                    <p className="db-campaign-name">{app.campaign_title}</p>
-                    <p className="db-campaign-merchant">{app.merchant_name}</p>
-                    <div className="db-campaign-deadline-bar">
-                      <div className="db-deadline-track">
-                        <div
-                          className={`db-deadline-fill${isUrgent ? " db-deadline-fill--urgent" : ""}`}
-                          style={{ width: `${urgency * 100}%` }}
-                        />
-                      </div>
-                      <span
-                        className={`db-deadline-label${isUrgent ? " db-deadline-label--urgent" : ""}`}
-                      >
-                        {days === 0 ? "TODAY" : `${days}D LEFT`}
-                      </span>
-                    </div>
-                  </div>
-                  <div className="db-campaign-right">
-                    <span className="db-campaign-earn">${app.payout}</span>
-                    <span className="db-campaign-category">{app.category}</span>
-                    <span
-                      className={`db-campaign-status-chip${app.milestone === "verified" ? " db-campaign-status-chip--active" : ""}`}
-                    >
-                      {app.milestone}
-                    </span>
-                  </div>
-                </Link>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* ── Right aside ────────────────────────────────── */}
-        <aside className="db-aside" aria-label="Discover and quick actions">
-          {/* Discover teaser */}
-          <div className="db-discover-teaser">
-            <p className="db-discover-eyebrow">Featured Opportunity</p>
-
-            <div className="db-discover-card">
-              {/* Urgency chip */}
-              <span className="db-discover-spots-chip">
-                {FEATURED_CAMPAIGN.spotsLeft} spot left
-              </span>
-              <p className="db-discover-card-earn">
-                {FEATURED_CAMPAIGN.earnRate}
-              </p>
-              <p className="db-discover-card-name">{FEATURED_CAMPAIGN.title}</p>
-              <p className="db-discover-card-merchant">
-                {FEATURED_CAMPAIGN.merchantName}
-              </p>
-              <div className="db-discover-card-tags">
-                {FEATURED_CAMPAIGN.tags.map((tag) => (
-                  <span key={tag} className="db-discover-tag">
-                    {tag}
-                  </span>
-                ))}
-              </div>
-            </div>
-
-            <Link href="/creator/discover" className="db-discover-cta">
-              Apply →
-            </Link>
-          </div>
-
-          {/* Quick actions */}
-          <div className="db-quick-actions">
-            <p className="db-quick-label">Quick Actions</p>
-            <div className="db-quick-grid">
-              <Link href="/creator/work/today" className="db-quick-btn">
-                <span className="db-quick-icon" aria-hidden="true">
-                  📅
-                </span>
-                <span className="db-quick-name">Today</span>
-              </Link>
-              <Link href="/creator/work/pipeline" className="db-quick-btn">
-                <span className="db-quick-icon" aria-hidden="true">
-                  ⚡
-                </span>
-                <span className="db-quick-name">Pipeline</span>
-              </Link>
-              <Link href="/creator/inbox" className="db-quick-btn">
-                <span className="db-quick-icon" aria-hidden="true">
-                  ✉
-                </span>
-                <span className="db-quick-name">Inbox</span>
-                <span className="db-quick-unread" aria-label="3 unread">
-                  3
-                </span>
-              </Link>
-              <Link href="/creator/discover" className="db-quick-btn">
-                <span className="db-quick-icon" aria-hidden="true">
-                  🔍
-                </span>
-                <span className="db-quick-name">Discover</span>
-              </Link>
-            </div>
-          </div>
-        </aside>
+        </section>
       </div>
     </div>
   );

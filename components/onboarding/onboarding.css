@@ -1343,3 +1343,369 @@
     font-size: clamp(56px, 15vw, 80px);
   }
 }
+
+/* ═══════════════════════════════════════════════════════════
+   WIZARD LAYOUT — Full-screen single-step (humanized flow)
+   Replaces the old two-column sidebar layout for creator onboarding.
+   ═══════════════════════════════════════════════════════════ */
+
+/* ── Wizard page wrapper ──────────────────────────────────── */
+
+.ob2-wizard {
+  width: 100%;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  background: var(--surface, #f5f2ec);
+}
+
+/* ── Top header ───────────────────────────────────────────── */
+
+.ob2-wizard-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 32px;
+}
+
+.ob2-wizard-brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ob2-wizard-brand-dot {
+  display: block;
+  width: 7px;
+  height: 7px;
+  background: #c1121f;
+  flex-shrink: 0;
+}
+
+.ob2-wizard-brand-name {
+  font-family: "Darky", sans-serif;
+  font-weight: 900;
+  font-size: 18px;
+  color: #003049;
+  letter-spacing: -0.04em;
+}
+
+.ob2-wizard-step-count {
+  font-family: "CS Genio Mono", "SF Mono", monospace;
+  font-size: 11px;
+  font-weight: 600;
+  color: rgba(0, 48, 73, 0.4);
+  letter-spacing: 0.04em;
+}
+
+/* ── Progress bar (thin stripe just below header) ─────────── */
+
+.ob2-wizard-progress-track {
+  height: 2px;
+  background: rgba(0, 48, 73, 0.08);
+  position: relative;
+  overflow: hidden;
+}
+
+.ob2-wizard-progress-fill {
+  height: 100%;
+  background: #c1121f;
+  transition: width 500ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* ── Step dots ────────────────────────────────────────────── */
+
+.ob2-wizard-dots {
+  display: flex;
+  gap: 6px;
+  padding: 16px 32px 0;
+}
+
+.ob2-wizard-dot {
+  width: 7px;
+  height: 7px;
+  border: 1.5px solid rgba(0, 48, 73, 0.2);
+  background: transparent;
+  transition: background 250ms ease, border-color 250ms ease;
+}
+
+.ob2-wizard-dot--active {
+  border-color: #003049;
+  background: #003049;
+}
+
+.ob2-wizard-dot--done {
+  border-color: #c1121f;
+  background: #c1121f;
+}
+
+/* ── Main content area ────────────────────────────────────── */
+
+.ob2-wizard-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 24px 80px;
+}
+
+/* ── Step card ────────────────────────────────────────────── */
+
+.ob2-step-card {
+  width: 100%;
+  max-width: 480px;
+  animation: ob2-step-enter 280ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes ob2-step-enter {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ── Step icon / emoji ────────────────────────────────────── */
+
+.ob2-step-icon {
+  font-size: 36px;
+  line-height: 1;
+  margin-bottom: 24px;
+  display: block;
+}
+
+/* ── Step question heading ────────────────────────────────── */
+
+.ob2-step-question {
+  font-family: "Darky", sans-serif;
+  font-weight: 800;
+  font-size: clamp(28px, 5vw, 40px);
+  letter-spacing: -0.045em;
+  color: #003049;
+  line-height: 1.05;
+  margin: 0 0 12px;
+}
+
+/* ── Step description ─────────────────────────────────────── */
+
+.ob2-step-desc {
+  font-family: "CS Genio Mono", "SF Mono", monospace;
+  font-size: 14px;
+  color: rgba(0, 48, 73, 0.6);
+  line-height: 1.65;
+  margin: 0 0 32px;
+}
+
+/* ── Large input fields ───────────────────────────────────── */
+
+.ob2-wizard .ob2-input,
+.ob2-wizard .ob2-textarea,
+.ob2-wizard .ob2-select {
+  padding: 14px 16px;
+  font-size: 15px;
+}
+
+/* ── Primary CTA button (larger, full-width) ──────────────── */
+
+.ob2-wizard-cta {
+  width: 100%;
+  padding: 16px 24px;
+  background: #c1121f;
+  color: #ffffff;
+  border: none;
+  border-radius: 0;
+  font-family: "CS Genio Mono", "SF Mono", monospace;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  cursor: pointer;
+  transition: background 150ms;
+  min-height: 52px;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.ob2-wizard-cta:hover {
+  background: #780000;
+}
+
+.ob2-wizard-cta:disabled {
+  background: rgba(0, 48, 73, 0.15);
+  cursor: not-allowed;
+}
+
+/* ── Ghost skip link ──────────────────────────────────────── */
+
+.ob2-wizard-skip {
+  display: block;
+  text-align: center;
+  margin-top: 16px;
+  font-family: "CS Genio Mono", "SF Mono", monospace;
+  font-size: 12px;
+  font-weight: 600;
+  color: rgba(0, 48, 73, 0.4);
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 0;
+  transition: color 150ms;
+  text-decoration: none;
+}
+
+.ob2-wizard-skip:hover {
+  color: #003049;
+}
+
+/* ── Already have account link ────────────────────────────── */
+
+.ob2-wizard-signin {
+  display: block;
+  text-align: center;
+  margin-top: 24px;
+  font-family: "CS Genio Mono", "SF Mono", monospace;
+  font-size: 12px;
+  color: rgba(0, 48, 73, 0.45);
+}
+
+.ob2-wizard-signin a {
+  color: #003049;
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+/* ── Category niche chips (step 3) ────────────────────────── */
+
+.ob2-niche-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+
+.ob2-niche-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 16px;
+  border: 1.5px solid rgba(0, 48, 73, 0.15);
+  border-radius: 50vh; /* filter chip exception */
+  font-family: "CS Genio Mono", "SF Mono", monospace;
+  font-size: 13px;
+  font-weight: 600;
+  color: #003049;
+  background: transparent;
+  cursor: pointer;
+  transition: all 150ms ease;
+  user-select: none;
+}
+
+.ob2-niche-chip:hover {
+  border-color: rgba(0, 48, 73, 0.4);
+}
+
+.ob2-niche-chip--selected {
+  background: #003049;
+  color: #f5f2ec;
+  border-color: #003049;
+  border-left-color: #c1121f;
+  border-left-width: 3px;
+}
+
+/* ── Done step — campaign preview cards ───────────────────── */
+
+.ob2-done-campaigns {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+
+.ob2-done-campaign-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 16px;
+  background: #ffffff;
+  border: 1.5px solid rgba(0, 48, 73, 0.1);
+  text-decoration: none;
+  transition: border-color 150ms;
+}
+
+.ob2-done-campaign-card:hover {
+  border-color: #003049;
+}
+
+.ob2-done-campaign-logo {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "CS Genio Mono", "SF Mono", monospace;
+  font-size: 12px;
+  font-weight: 800;
+  color: #f5f2ec;
+  flex-shrink: 0;
+}
+
+.ob2-done-campaign-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.ob2-done-campaign-name {
+  font-family: "CS Genio Mono", "SF Mono", monospace;
+  font-size: 13px;
+  font-weight: 700;
+  color: #003049;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ob2-done-campaign-meta {
+  font-family: "CS Genio Mono", "SF Mono", monospace;
+  font-size: 11px;
+  color: rgba(0, 48, 73, 0.5);
+  margin-top: 2px;
+}
+
+.ob2-done-campaign-earn {
+  font-family: "Darky", sans-serif;
+  font-weight: 700;
+  font-size: 16px;
+  color: #003049;
+  letter-spacing: -0.02em;
+  flex-shrink: 0;
+}
+
+/* ── Mobile ───────────────────────────────────────────────── */
+
+@media (max-width: 540px) {
+  .ob2-wizard-header {
+    padding: 16px 20px;
+  }
+
+  .ob2-wizard-dots {
+    padding: 12px 20px 0;
+  }
+
+  .ob2-wizard-main {
+    padding: 32px 20px 64px;
+    justify-content: flex-start;
+    padding-top: 48px;
+  }
+
+  .ob2-step-question {
+    font-size: clamp(26px, 7vw, 36px);
+  }
+}

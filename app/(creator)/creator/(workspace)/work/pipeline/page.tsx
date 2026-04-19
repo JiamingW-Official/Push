@@ -10,6 +10,14 @@ type PipelineStatus = "applied" | "active" | "pending_review" | "completed";
 type ViewMode = "grid" | "list";
 type ActiveTab = "all" | "active" | "deadlines" | "completed";
 type SortMode = "deadline" | "earn" | "merchant";
+type CategoryFilter =
+  | "all"
+  | "Coffee"
+  | "Food"
+  | "Beauty"
+  | "Retail"
+  | "Fitness"
+  | "Lifestyle";
 
 type PipelineCampaign = {
   id: string;
@@ -355,10 +363,11 @@ function DeadlineBadge({
 /* ── Status Action Button ──────────────────────────────────── */
 
 function StatusActionButton({ campaign }: { campaign: PipelineCampaign }) {
+  // ACTIVE: primary CTA — most important action
   if (campaign.status === "active") {
     return (
       <Link
-        href={`/creator/campaigns/${campaign.id}`}
+        href={`/creator/campaigns/${campaign.id}/post`}
         className="pl-action-btn pl-action-primary"
         onClick={(e) => e.stopPropagation()}
       >
@@ -366,10 +375,11 @@ function StatusActionButton({ campaign }: { campaign: PipelineCampaign }) {
       </Link>
     );
   }
+  // APPLIED: text link only, not a red button
   if (campaign.status === "applied") {
     return (
       <button
-        className="pl-action-btn pl-action-ghost"
+        className="pl-action-link"
         onClick={(e) => e.stopPropagation()}
         title="Withdraw application"
       >
@@ -377,28 +387,11 @@ function StatusActionButton({ campaign }: { campaign: PipelineCampaign }) {
       </button>
     );
   }
+  // PENDING REVIEW: no button, just status indicator
   if (campaign.status === "pending_review") {
-    return (
-      <Link
-        href={`/creator/campaigns/${campaign.id}`}
-        className="pl-action-btn pl-action-secondary"
-        onClick={(e) => e.stopPropagation()}
-      >
-        Check Status
-      </Link>
-    );
+    return <span className="pl-action-status">Under Review</span>;
   }
-  if (campaign.status === "completed") {
-    return (
-      <Link
-        href={`/creator/campaigns/${campaign.id}`}
-        className="pl-action-btn pl-action-ghost"
-        onClick={(e) => e.stopPropagation()}
-      >
-        View Details
-      </Link>
-    );
-  }
+  // COMPLETED: no button needed
   return null;
 }
 
@@ -524,39 +517,12 @@ function CampaignCard({
           </div>
           <p className="pl-card-merchant">{campaign.merchantName}</p>
 
-          {/* Progress bar — active / pending_review / completed */}
-          {(campaign.status === "active" ||
-            campaign.status === "pending_review" ||
-            campaign.status === "completed") && (
-            <div className="pl-progress-wrap">
-              <div className="pl-progress-track">
-                <div
-                  className="pl-progress-fill"
-                  style={{ width: `${pct}%` }}
-                />
-              </div>
-              <span className="pl-progress-label">
-                {campaign.contentSubmitted}/{campaign.contentRequired} posts
-              </span>
-            </div>
+          {/* Completed: show post count as subtle detail */}
+          {campaign.status === "completed" && (
+            <p className="pl-card-posts-done">
+              {campaign.contentRequired} posts completed
+            </p>
           )}
-
-          {/* Walk-in count micro-detail */}
-          {campaign.status === "active" &&
-            campaign.walkinCount !== undefined && (
-              <p className="pl-card-walkin">
-                {campaign.walkinCount} walk-ins so far
-              </p>
-            )}
-
-          {/* Bonus tier progress */}
-          {campaign.bonusTarget !== undefined &&
-            campaign.walkinCount !== undefined &&
-            campaign.status === "active" && (
-              <p className="pl-card-bonus">
-                {campaign.walkinCount}/{campaign.bonusTarget} toward bonus tier
-              </p>
-            )}
         </div>
 
         {/* Meta */}

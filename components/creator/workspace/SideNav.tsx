@@ -1,13 +1,12 @@
 "use client";
 
-// Push Creator Workspace — SideNav  (Wave 4 Polish)
+// Push Creator Workspace — SideNav (Simplified)
 // Design.md: 240px width, --surface bg, 8px grid
-// Active = 3px Flag Red left border (animated) + subtle bg tint
-// Fonts: CSGenioMono (body/UI)
+// Active = 3px Flag Red left border + text darkens, no bg highlight
+// Structure: 5 primary + divider + 2 secondary + footer user row
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
 import { DEMO_CREATOR } from "@/lib/creator/demo-data";
 import "./workspace.css";
 
@@ -15,21 +14,17 @@ import "./workspace.css";
 // Types
 // ---------------------------------------------------------------------------
 
-interface NavItem {
+interface PrimaryNavItem {
   label: string;
   href: string;
   icon: string;
-  /** Static badge variant (alert = red) */
-  badgeVariant?: "default" | "alert";
+  /** Match by prefix or exact */
+  exact?: boolean;
 }
 
-interface NavSection {
-  id: string;
-  /** null = no eyebrow header (standalone section) */
-  title: string | null;
-  items: NavItem[];
-  /** Whether this section supports collapse */
-  collapsible?: boolean;
+interface SecondaryNavItem {
+  label: string;
+  href: string;
 }
 
 // ---------------------------------------------------------------------------
@@ -38,112 +33,38 @@ interface NavSection {
 
 const ICONS: Record<string, string> = {
   home: "⬡",
-  today: "◈",
-  pipeline: "◇",
-  calendar: "◻",
-  drafts: "◎",
-  inbox: "▣",
-  invites: "◆",
-  messages: "▸",
-  system: "◌",
+  work: "◈",
   discover: "◐",
-  identity: "◉",
+  inbox: "▣",
   earnings: "▲",
-  archive: "▷",
-  wallet: "◎",
   profile: "○",
   settings: "◍",
   logout: "◁",
 };
 
 // ---------------------------------------------------------------------------
-// Nav structure — aligned to actual file-system routes
+// Primary nav items (icon + label, full weight)
 // ---------------------------------------------------------------------------
 
-const NAV_SECTIONS: NavSection[] = [
+const PRIMARY_ITEMS: PrimaryNavItem[] = [
+  { label: "Home", href: "/creator/dashboard", icon: ICONS.home, exact: true },
+  { label: "Work", href: "/creator/work/today", icon: ICONS.work },
+  { label: "Discover", href: "/creator/discover", icon: ICONS.discover },
+  { label: "Inbox", href: "/creator/inbox", icon: ICONS.inbox },
   {
-    // Dashboard — standalone, no section header
-    id: "home",
-    title: null,
-    collapsible: false,
-    items: [
-      { label: "Dashboard", href: "/creator/dashboard", icon: ICONS.home },
-    ],
+    label: "Earnings",
+    href: "/creator/portfolio/earnings",
+    icon: ICONS.earnings,
   },
-  {
-    id: "work",
-    title: "WORK",
-    collapsible: true,
-    items: [
-      { label: "Today", href: "/creator/work/today", icon: ICONS.today },
-      {
-        label: "Pipeline",
-        href: "/creator/work/pipeline",
-        icon: ICONS.pipeline,
-      },
-      {
-        label: "Calendar",
-        href: "/creator/work/calendar",
-        icon: ICONS.calendar,
-      },
-      { label: "Drafts", href: "/creator/work/drafts", icon: ICONS.drafts },
-    ],
-  },
-  {
-    id: "discover",
-    title: null,
-    collapsible: false,
-    items: [
-      { label: "Discover", href: "/creator/discover", icon: ICONS.discover },
-    ],
-  },
-  {
-    id: "inbox",
-    title: "INBOX",
-    collapsible: true,
-    items: [
-      { label: "All", href: "/creator/inbox", icon: ICONS.inbox },
-      {
-        label: "Invites",
-        href: "/creator/inbox/invites",
-        icon: ICONS.invites,
-        badgeVariant: "alert",
-      },
-      {
-        label: "Messages",
-        href: "/creator/inbox/messages",
-        icon: ICONS.messages,
-      },
-      { label: "System", href: "/creator/inbox/system", icon: ICONS.system },
-    ],
-  },
-  {
-    id: "portfolio",
-    title: "PORTFOLIO",
-    collapsible: true,
-    items: [
-      {
-        label: "Identity",
-        href: "/creator/portfolio/identity",
-        icon: ICONS.identity,
-      },
-      {
-        label: "Earnings",
-        href: "/creator/portfolio/earnings",
-        icon: ICONS.earnings,
-      },
-      {
-        label: "Archive",
-        href: "/creator/portfolio/archive",
-        icon: ICONS.archive,
-      },
-      {
-        label: "Wallet",
-        href: "/creator/wallet",
-        icon: ICONS.wallet,
-      },
-    ],
-  },
+];
+
+// ---------------------------------------------------------------------------
+// Secondary nav items (no icon, smaller, lower visual weight)
+// ---------------------------------------------------------------------------
+
+const SECONDARY_ITEMS: SecondaryNavItem[] = [
+  { label: "Profile", href: "/creator/portfolio/identity" },
+  { label: "Settings", href: "/creator/settings" },
 ];
 
 // ---------------------------------------------------------------------------
@@ -153,9 +74,9 @@ const NAV_SECTIONS: NavSection[] = [
 export interface SideNavProps {
   /** Dynamic badge counts — key = href */
   badges?: Record<string, number>;
-  /** Creator display name (falls back to DEMO_CREATOR) */
+  /** Creator display name */
   userName?: string;
-  /** Creator tier lowercase (falls back to DEMO_CREATOR) */
+  /** Creator tier lowercase */
   tier?: string;
   /** Avatar image URL */
   avatarUrl?: string;
@@ -188,106 +109,6 @@ function tierLabel(tier: string): string {
 }
 
 // ---------------------------------------------------------------------------
-// NavLink sub-component
-// ---------------------------------------------------------------------------
-
-function NavLink({
-  item,
-  isActive,
-  badgeCount,
-}: {
-  item: NavItem;
-  isActive: boolean;
-  badgeCount?: number;
-}) {
-  const showBadge = badgeCount !== undefined && badgeCount > 0;
-
-  return (
-    <Link
-      href={item.href}
-      className={`ws-sidenav__item${isActive ? " ws-sidenav__item--active" : ""}`}
-      aria-current={isActive ? "page" : undefined}
-    >
-      <span className="ws-sidenav__item-icon" aria-hidden="true">
-        {item.icon}
-      </span>
-      <span className="ws-sidenav__item-label">{item.label}</span>
-      {showBadge && (
-        <span
-          className={`ws-sidenav__badge${
-            item.badgeVariant === "alert" ? " ws-sidenav__badge--alert" : ""
-          }`}
-          aria-label={`${badgeCount} unread`}
-        >
-          {badgeCount > 99 ? "99+" : badgeCount}
-        </span>
-      )}
-    </Link>
-  );
-}
-
-// ---------------------------------------------------------------------------
-// CollapsibleSection sub-component
-// ---------------------------------------------------------------------------
-
-function CollapsibleSection({
-  section,
-  isExpanded,
-  isSectionActive,
-  onToggle,
-  badges,
-  isActive,
-}: {
-  section: NavSection;
-  isExpanded: boolean;
-  isSectionActive: boolean;
-  onToggle: () => void;
-  badges: Record<string, number>;
-  isActive: (href: string) => boolean;
-}) {
-  return (
-    <div
-      className={`ws-sidenav__section${isSectionActive ? " ws-sidenav__section--active" : ""}`}
-    >
-      {section.title && (
-        <button
-          className={`ws-sidenav__section-header ws-sidenav__section-header--btn${
-            isSectionActive ? " ws-sidenav__section-header--active" : ""
-          }`}
-          onClick={onToggle}
-          aria-expanded={isExpanded}
-          type="button"
-        >
-          <span>{section.title}</span>
-          <span
-            className={`ws-sidenav__section-chevron${isExpanded ? " ws-sidenav__section-chevron--open" : ""}`}
-            aria-hidden="true"
-          >
-            ›
-          </span>
-        </button>
-      )}
-      <div
-        className={`ws-sidenav__section-items${isExpanded ? " ws-sidenav__section-items--open" : ""}`}
-        aria-hidden={!isExpanded}
-      >
-        {/* Inner wrapper required for grid-template-rows collapse trick */}
-        <div>
-          {section.items.map((item) => (
-            <NavLink
-              key={item.href}
-              item={item}
-              isActive={isActive(item.href)}
-              badgeCount={badges[item.href]}
-            />
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-}
-
-// ---------------------------------------------------------------------------
 // Component
 // ---------------------------------------------------------------------------
 
@@ -300,31 +121,17 @@ export function SideNav({
 }: SideNavProps) {
   const pathname = usePathname();
 
-  // Fall back to DEMO_CREATOR values
   const displayName = userName ?? DEMO_CREATOR.name;
   const displayTier = tier ?? DEMO_CREATOR.tier;
   const tierKey = displayTier.toLowerCase();
   const tierColor = TIER_COLORS[tierKey] ?? TIER_COLORS.seed;
   const initial = displayName.charAt(0).toUpperCase();
 
-  // Collapsible state — all sections start expanded
-  const [collapsed, setCollapsed] = useState<Record<string, boolean>>({});
-
-  const isExpanded = (sectionId: string) => !collapsed[sectionId];
-
-  const toggleSection = (sectionId: string) => {
-    setCollapsed((prev) => ({ ...prev, [sectionId]: !prev[sectionId] }));
-  };
-
   // Active match: exact for dashboard, prefix for everything else
-  const isActive = (href: string): boolean => {
-    if (href === "/creator/dashboard") return pathname === href;
+  const isActive = (href: string, exact?: boolean): boolean => {
+    if (exact) return pathname === href;
     return pathname.startsWith(href);
   };
-
-  // Section is active if any child item is active
-  const isSectionActive = (section: NavSection): boolean =>
-    section.items.some((item) => isActive(item.href));
 
   return (
     <nav className="ws-sidenav" aria-label="Main navigation">
@@ -343,58 +150,63 @@ export function SideNav({
         </div>
       )}
 
-      {/* ── Scrollable nav sections ── */}
+      {/* ── Primary nav items ── */}
       <div className="ws-sidenav__scroll">
-        {NAV_SECTIONS.map((section) => {
-          const sectionActive = isSectionActive(section);
+        <div className="ws-sidenav__primary">
+          {PRIMARY_ITEMS.map((item) => {
+            const active = isActive(item.href, item.exact);
+            const badgeCount = badges[item.href];
+            const showBadge = badgeCount !== undefined && badgeCount > 0;
 
-          // Standalone section (no title, no collapse) — Dashboard, Discover
-          if (!section.collapsible || !section.title) {
             return (
-              <div
-                key={section.id}
-                className={`ws-sidenav__section${sectionActive ? " ws-sidenav__section--active" : ""}`}
+              <Link
+                key={item.href}
+                href={item.href}
+                className={`ws-sidenav__item${active ? " ws-sidenav__item--active" : ""}`}
+                aria-current={active ? "page" : undefined}
               >
-                {section.title && (
-                  <div
-                    className={`ws-sidenav__section-header${sectionActive ? " ws-sidenav__section-header--active" : ""}`}
-                    aria-hidden="true"
+                <span className="ws-sidenav__item-icon" aria-hidden="true">
+                  {item.icon}
+                </span>
+                <span className="ws-sidenav__item-label">{item.label}</span>
+                {showBadge && (
+                  <span
+                    className="ws-sidenav__badge ws-sidenav__badge--alert"
+                    aria-label={`${badgeCount} unread`}
                   >
-                    {section.title}
-                  </div>
+                    {badgeCount > 99 ? "99+" : badgeCount}
+                  </span>
                 )}
-                {section.items.map((item) => (
-                  <NavLink
-                    key={item.href}
-                    item={item}
-                    isActive={isActive(item.href)}
-                    badgeCount={badges[item.href]}
-                  />
-                ))}
-              </div>
+              </Link>
             );
-          }
+          })}
+        </div>
 
-          // Collapsible section
-          return (
-            <CollapsibleSection
-              key={section.id}
-              section={section}
-              isExpanded={isExpanded(section.id)}
-              isSectionActive={sectionActive}
-              onToggle={() => toggleSection(section.id)}
-              badges={badges}
-              isActive={isActive}
-            />
-          );
-        })}
+        {/* ── Divider ── */}
+        <div className="ws-sidenav__divider" aria-hidden="true" />
+
+        {/* ── Secondary nav items (no icon) ── */}
+        <div className="ws-sidenav__secondary">
+          {SECONDARY_ITEMS.map((item) => {
+            const active = pathname.startsWith(item.href);
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={`ws-sidenav__sec-item${active ? " ws-sidenav__sec-item--active" : ""}`}
+                aria-current={active ? "page" : undefined}
+              >
+                {item.label}
+              </Link>
+            );
+          })}
+        </div>
       </div>
 
-      {/* ── Footer: user identity + settings ── */}
+      {/* ── Footer: user identity row ── */}
       <div className="ws-sidenav__footer">
-        {/* User profile row */}
         <Link
-          href="/creator/profile"
+          href="/creator/portfolio/identity"
           className="ws-sidenav__user"
           aria-label={`Profile — ${displayName} (${tierLabel(tierKey)})`}
         >
@@ -426,18 +238,7 @@ export function SideNav({
           </span>
         </Link>
 
-        {/* Settings + Logout */}
         <div className="ws-sidenav__footer-actions">
-          <Link
-            href="/creator/settings"
-            className={`ws-sidenav__footer-action${pathname.startsWith("/creator/settings") ? " ws-sidenav__footer-action--active" : ""}`}
-            aria-label="Settings"
-          >
-            <span className="ws-sidenav__item-icon" aria-hidden="true">
-              {ICONS.settings}
-            </span>
-            <span>Settings</span>
-          </Link>
           <Link
             href="/creator/login"
             className="ws-sidenav__footer-action ws-sidenav__footer-action--logout"

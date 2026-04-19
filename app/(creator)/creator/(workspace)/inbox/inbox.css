@@ -192,10 +192,10 @@
 .inbox-row {
   display: flex;
   align-items: center;
-  gap: 12px;
-  height: 40px;
+  gap: 14px;
+  height: 64px; /* increased from 40px — more breathing room, less terminal-like */
   padding: 0 24px;
-  border-bottom: 1px solid var(--line);
+  border-bottom: 1.5px solid var(--line); /* slightly heavier for clear row separation */
   cursor: pointer;
   position: relative;
   overflow: hidden;
@@ -227,6 +227,7 @@
 
 .inbox-row--unread .inbox-row-preview {
   color: var(--dark);
+  font-weight: 500; /* slightly heavier than read state to signal unread content */
 }
 
 /* New row entering animation delay */
@@ -254,12 +255,12 @@
 
 /* Avatar */
 .inbox-row-avatar {
-  width: 28px;
-  height: 28px;
+  width: 40px; /* increased from 28px — better presence at larger row height */
+  height: 40px;
   background: var(--dark);
   color: var(--surface-bright);
   font-family: var(--font-display);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 800;
   display: flex;
   align-items: center;
@@ -278,14 +279,14 @@
 
 .inbox-row-sender {
   font-family: var(--font-body);
-  font-size: 13px;
-  font-weight: 400;
+  font-size: 14px; /* bumped from 13px for better readability */
+  font-weight: 600; /* bolder sender name — clear visual anchor */
   color: var(--graphite);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   flex-shrink: 0;
-  max-width: 140px;
+  max-width: 160px;
 }
 
 .inbox-row-separator {
@@ -295,7 +296,7 @@
 
 .inbox-row-preview {
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: 14px; /* increased from 12-13px — readable without strain */
   color: var(--graphite);
   white-space: nowrap;
   overflow: hidden;
@@ -313,9 +314,9 @@
 
 .inbox-row-time {
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 12px; /* slightly larger — timestamp is now the date context */
   color: var(--graphite);
-  opacity: 0.6;
+  opacity: 0.75; /* less suppressed — readable at a glance */
 }
 
 .inbox-row-unread-dot {
@@ -388,7 +389,7 @@
   align-items: center;
   justify-content: center;
   width: 64px;
-  height: 40px;
+  height: 64px; /* matches updated row height */
   font-family: var(--font-body);
   font-size: 11px;
   font-weight: 600;
@@ -510,20 +511,11 @@
   margin: 0;
 }
 
-/* ── Section divider ─────────────────────────────────────────── */
-
-.inbox-section-divider {
-  padding: 8px 24px;
-  background: var(--surface);
-  font-family: var(--font-body);
-  font-size: 10px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: var(--graphite);
-  border-bottom: 1px solid var(--line);
-  opacity: 0.7;
-}
+/* ── Section divider — REMOVED ────────────────────────────────
+   Date group labels ("TODAY" / "THIS WEEK") felt overly terminal-
+   like for a consumer creator product. Timestamps are shown
+   inline in .inbox-row-time instead.
+   ──────────────────────────────────────────────────────────── */
 
 /* ── Mobile swipe CSS ────────────────────────────────────────── */
 
