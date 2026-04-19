@@ -1,0 +1,24 @@
+.discover-page-loading {
+  padding: 32px;
+}
+
+.discover-skeleton {
+  height: 400px;
+  background: linear-gradient(
+    90deg,
+    var(--surface, #f5f2ec) 25%,
+    var(--surface-bright, #fafaf8) 50%,
+    var(--surface, #f5f2ec) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s linear infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}

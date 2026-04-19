@@ -1,28 +1,25 @@
+"use client";
+
+import DiscoverFeed from "@/components/creator/discover/DiscoverFeed";
+import { useCampaigns } from "@/lib/creator/hooks/useCampaigns";
+import "./discover.css";
+
 export default function DiscoverPage() {
+  const { campaigns, loading } = useCampaigns(false);
+
+  if (loading) {
+    return (
+      <div className="discover-page-loading">
+        <div className="discover-skeleton" />
+      </div>
+    );
+  }
+
   return (
-    <div style={{ padding: "32px" }}>
-      <h1
-        style={{
-          fontFamily: "Darky, sans-serif",
-          fontSize: "clamp(32px, 4vw, 48px)",
-          fontWeight: 900,
-          letterSpacing: "-0.03em",
-          color: "#003049",
-          margin: 0,
-        }}
-      >
-        Discover
-      </h1>
-      <p
-        style={{
-          fontFamily: "'CS Genio Mono', monospace",
-          fontSize: "14px",
-          color: "#4a5568",
-          marginTop: "12px",
-        }}
-      >
-        No campaigns match. Try clearing filters.
-      </p>
-    </div>
+    <DiscoverFeed
+      campaigns={campaigns}
+      isAuthenticated={true}
+      agentBannerText="Agent is matching you — invites land in Inbox automatically. Browse here to explore."
+    />
   );
 }
