@@ -625,6 +625,10 @@
 @media (max-width: 768px) {
   .pl-hero { padding: 36px 20px 0; }
 
+  .pl-headline {
+    font-size: clamp(36px, 8vw, 60px);
+  }
+
   .pl-tabs {
     margin: 24px -20px 0;
     padding: 0 20px;
@@ -643,4 +647,33 @@
   .pl-card-merchant { font-size: 16px; }
 
   .pl-card-earn { font-size: 18px; }
+}
+
+@media (max-width: 480px) {
+  .pl-hero { padding: 28px 16px 0; }
+
+  .pl-headline {
+    font-size: clamp(32px, 8vw, 48px);
+  }
+
+  .pl-tabs {
+    margin: 20px -16px 0;
+    padding: 0 16px;
+  }
+
+  .pl-toolbar { padding: 10px 16px; }
+
+  .pl-list { padding: 0 16px 40px; }
+
+  .pl-card-inner { padding: 14px 16px; gap: 10px; }
+
+  .pl-card-merchant { font-size: 14px; }
+
+  .pl-card-earn { font-size: 16px; }
+
+  .pl-card-logo {
+    width: 32px;
+    height: 32px;
+    font-size: 11px;
+  }
 }

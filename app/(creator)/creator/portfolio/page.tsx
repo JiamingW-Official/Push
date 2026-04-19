@@ -323,20 +323,20 @@ export default function PortfolioPage() {
 
   return (
     <div className="pf-page">
-      {/* ── Share bar ─────────────────────────────────────────────── */}
-      <div className="pf-share-bar">
-        <div className="pf-share-bar-inner">
-          <div className="pf-share-url-group">
-            <span className="pf-share-label">Public URL</span>
-            <span className="pf-share-url">{publicUrl}</span>
+      {/* ── Action bar (pearl stone sticky bar) ───────────────── */}
+      <div className="pf-action-bar">
+        <div className="pf-action-bar-inner">
+          <div className="pf-action-url-group">
+            <span className="pf-action-label">Public URL</span>
+            <span className="pf-action-url">{publicUrl}</span>
           </div>
-          <div className="pf-share-actions">
-            <button type="button" className="btn pf-btn-copy" onClick={copyUrl}>
+          <div className="pf-action-buttons">
+            <button type="button" className="pf-btn-copy" onClick={copyUrl}>
               {copied ? "Copied!" : "Copy Link"}
             </button>
             <Link
               href={`/c/${profile.handle}`}
-              className="btn pf-btn-preview"
+              className="pf-btn-preview"
               target="_blank"
             >
               Preview
@@ -503,11 +503,44 @@ export default function PortfolioPage() {
         </div>
       </section>
 
+      {/* ── Stats row (3-col: Campaigns / Earned / Avg Rating) ── */}
+      <section className="pf-section pf-stats-section">
+        <div className="pf-section-inner">
+          <div className="pf-section-heading">
+            <div className="pf-eyebrow">02</div>
+            <h2 className="pf-section-title">Your Numbers</h2>
+          </div>
+          <div className="pf-stats-strip">
+            <div className="pf-stat-block">
+              <div className="pf-stat-number">{profile.totalCampaigns}</div>
+              <div className="pf-stat-label">Campaigns</div>
+            </div>
+            <div className="pf-stat-block">
+              <div className="pf-stat-number">
+                $
+                {formatNumber(
+                  profile.pastCampaigns.reduce((sum, c) => sum + c.earnings, 0),
+                )}
+              </div>
+              <div className="pf-stat-label">Total Earned</div>
+            </div>
+            <div className="pf-stat-block">
+              <div className="pf-stat-number">
+                {profile.totalCampaigns > 0
+                  ? (profile.tierScore / profile.totalCampaigns).toFixed(1)
+                  : "—"}
+              </div>
+              <div className="pf-stat-label">Avg Rating</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* ── Tier showcase ─────────────────────────────────────────── */}
       <section className="pf-section pf-tier-section">
         <div className="pf-section-inner">
           <div className="pf-section-heading">
-            <div className="pf-eyebrow">02</div>
+            <div className="pf-eyebrow">03</div>
             <h2 className="pf-section-title">Tier & Progress</h2>
           </div>
           <div className="pf-tier-showcase">
@@ -535,36 +568,6 @@ export default function PortfolioPage() {
                   </p>
                 )}
               </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ── Stats strip ───────────────────────────────────────────── */}
-      <section className="pf-section pf-stats-section">
-        <div className="pf-section-inner">
-          <div className="pf-section-heading">
-            <div className="pf-eyebrow">03</div>
-            <h2 className="pf-section-title">Your Stats</h2>
-          </div>
-          <div className="pf-stats-strip">
-            <div className="pf-stat-block">
-              <div className="pf-stat-number">{profile.totalCampaigns}</div>
-              <div className="pf-stat-label">Total Campaigns</div>
-            </div>
-            <div className="pf-stat-block">
-              <div className="pf-stat-number">
-                {formatNumber(profile.verifiedVisits)}
-              </div>
-              <div className="pf-stat-label">Verified Visits</div>
-            </div>
-            <div className="pf-stat-block">
-              <div className="pf-stat-number">{profile.avgDeliveryTime}</div>
-              <div className="pf-stat-label">Avg Delivery Time</div>
-            </div>
-            <div className="pf-stat-block">
-              <div className="pf-stat-number">{profile.tierScore}</div>
-              <div className="pf-stat-label">Tier Score</div>
             </div>
           </div>
         </div>

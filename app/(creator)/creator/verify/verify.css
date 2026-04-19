@@ -1,16 +1,20 @@
-/* ── KYC Verify — verify.css ────────────────────────────────── */
-/* Design tokens: Pearl Stone #f5f2ec | Deep Space Blue #003049  */
-/* Flag Red #c1121f | Steel Blue #669bbc | Champagne Gold #c9a96e */
-/* Molten Lava #780000 | Surface Bright #fafaf8 | Elevated #fff   */
-/* Fonts: Darky (display) + CS Genio Mono (body/UI)              */
-/* 8px grid | border-radius: 0 everywhere                        */
-/* Spring easing: cubic-bezier(0.32, 0.72, 0, 1)                 */
+/* ============================================================
+   Verify / KYC Page  (Wave 8 rewrite)
+   Design.md: border-radius:0, 8px grid, 6 brand colors only
+   ============================================================ */
 
-/* ── Page shell ──────────────────────────────────────────── */
+/* ── Fade-up animation (one only) ────────────────────────────── */
+@keyframes vr-fade-up {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Page shell ──────────────────────────────────────────────── */
 .kv-page {
   min-height: 100vh;
   background: #f5f2ec;
   padding: 0 0 96px;
+  animation: vr-fade-up 0.4s ease both;
 }
 
 .kv-inner {
@@ -19,12 +23,12 @@
   padding: 40px 24px 0;
 }
 
-/* ── Back link ───────────────────────────────────────────── */
+/* ── Back link ───────────────────────────────────────────────── */
 .kv-back {
   display: inline-block;
   font-family: "CS Genio Mono", monospace;
-  font-size: 0.75rem;
-  letter-spacing: 0.08em;
+  font-size: 0.6875rem;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   color: #669bbc;
   text-decoration: none;
@@ -35,7 +39,7 @@
   color: #003049;
 }
 
-/* ── Editorial hero ──────────────────────────────────────── */
+/* ── Hero ─────────────────────────────────────────────────────── */
 .kv-hero {
   display: flex;
   align-items: flex-start;
@@ -50,24 +54,24 @@
 
 .kv-hero__headline {
   font-family: "Darky", sans-serif;
-  font-size: clamp(3rem, 7vw, 5.5rem);
+  font-size: 56px;
   font-weight: 700;
   color: #003049;
   line-height: 0.95;
-  margin: 0 0 16px;
+  margin: 0 0 14px;
   letter-spacing: -0.02em;
 }
 
 .kv-hero__sub {
   font-family: "CS Genio Mono", monospace;
-  font-size: 0.875rem;
+  font-size: 1rem;
   color: #669bbc;
   margin: 0;
-  max-width: 440px;
+  max-width: 400px;
   line-height: 1.6;
 }
 
-/* ── Status badge ────────────────────────────────────────── */
+/* ── Status badge ─────────────────────────────────────────────── */
 .kv-status-badge {
   display: inline-flex;
   align-items: center;
@@ -104,11 +108,11 @@
   color: #f5f2ec;
 }
 
-/* ── Progress rail ───────────────────────────────────────── */
+/* ── Progress steps (horizontal stepper) ─────────────────────── */
 .kv-progress {
   display: flex;
   align-items: center;
-  margin-bottom: 40px;
+  margin-bottom: 32px;
 }
 
 .kv-progress__step {
@@ -122,19 +126,18 @@
   flex: none;
 }
 
+/* 32px square indicator with border */
 .kv-progress__indicator {
   width: 32px;
   height: 32px;
-  border: 1.5px solid #d0ccc3;
+  border: 1px solid #d0ccc3;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
   border-radius: 0;
   background: #f5f2ec;
-  transition: background 0.3s cubic-bezier(0.32, 0.72, 0, 1),
-              border-color 0.3s cubic-bezier(0.32, 0.72, 0, 1),
-              color 0.3s;
+  transition: background 0.25s, border-color 0.25s;
 }
 
 .kv-progress__num {
@@ -151,9 +154,10 @@
   text-transform: uppercase;
   color: #d0ccc3;
   white-space: nowrap;
-  transition: color 0.3s;
+  transition: color 0.25s;
 }
 
+/* Connector line between steps */
 .kv-progress__connector {
   flex: 1;
   height: 1px;
@@ -161,7 +165,7 @@
   margin: 0 8px;
 }
 
-/* Active step */
+/* Active state: solid dark bg, white text */
 .kv-progress__step--active .kv-progress__indicator {
   background: #003049;
   border-color: #003049;
@@ -175,7 +179,7 @@
   color: #003049;
 }
 
-/* Done step */
+/* Done state: champagne bg */
 .kv-progress__step--done .kv-progress__indicator {
   background: #c9a96e;
   border-color: #c9a96e;
@@ -189,30 +193,35 @@
   color: #669bbc;
 }
 
-/* ── Wizard panel ────────────────────────────────────────── */
+/* ── Step card ────────────────────────────────────────────────── */
 .kv-panel {
   background: #ffffff;
   border: 1px solid #e8e4dc;
+  border-top: 3px solid #d0ccc3;
   padding: 40px;
-  min-height: 400px;
+  min-height: 380px;
   border-radius: 0;
-  transition: transform 0.4s cubic-bezier(0.32, 0.72, 0, 1),
-              opacity 0.4s cubic-bezier(0.32, 0.72, 0, 1);
+  transition: opacity 0.35s, transform 0.35s;
+}
+
+/* Active panel gets primary top border */
+.kv-panel:not(.kv-panel--exit-right):not(.kv-panel--exit-left) {
+  border-top-color: #c1121f;
 }
 
 .kv-panel--exit-right {
-  transform: translateX(-24px);
+  transform: translateX(-20px);
   opacity: 0;
   pointer-events: none;
 }
 
 .kv-panel--exit-left {
-  transform: translateX(24px);
+  transform: translateX(20px);
   opacity: 0;
   pointer-events: none;
 }
 
-/* ── Step internals ──────────────────────────────────────── */
+/* ── Step internals ───────────────────────────────────────────── */
 .kv-step-body {
   display: flex;
   flex-direction: column;
@@ -221,7 +230,7 @@
 
 .kv-step-heading {
   font-family: "Darky", sans-serif;
-  font-size: clamp(1.75rem, 3.5vw, 2.5rem);
+  font-size: clamp(1.75rem, 3.5vw, 2.25rem);
   font-weight: 700;
   color: #003049;
   margin: 0 0 8px;
@@ -232,16 +241,16 @@
   font-family: "CS Genio Mono", monospace;
   font-size: 0.8125rem;
   color: #669bbc;
-  margin: 0 0 32px;
+  margin: 0 0 28px;
   line-height: 1.6;
 }
 
-/* ── Field primitives ────────────────────────────────────── */
+/* ── Field primitives ─────────────────────────────────────────── */
 .kv-field {
   display: flex;
   flex-direction: column;
   gap: 6px;
-  margin-bottom: 20px;
+  margin-bottom: 18px;
 }
 
 .kv-label {
@@ -303,21 +312,11 @@
   gap: 16px;
 }
 
-.kv-field--state {
-  min-width: 0;
-  flex: 1;
-}
-
-.kv-field--zip {
-  min-width: 0;
-  flex: 0 0 90px;
-}
-
-/* ── Fieldset / radio ────────────────────────────────────── */
+/* ── Fieldset / radio chips ───────────────────────────────────── */
 .kv-fieldset {
   border: none;
   padding: 0;
-  margin: 0 0 20px;
+  margin: 0 0 18px;
 }
 
 .kv-radio-group {
@@ -354,18 +353,18 @@
   height: 0;
 }
 
-/* ── Drop zones ──────────────────────────────────────────── */
+/* ── Drop zones ───────────────────────────────────────────────── */
 .kv-dropzones {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
   gap: 16px;
-  margin-bottom: 24px;
+  margin-bottom: 20px;
 }
 
 .kv-dropzone {
   border: 1px dashed #d0ccc3;
   border-radius: 0;
-  min-height: 120px;
+  min-height: 110px;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -378,11 +377,11 @@
 .kv-dropzone:hover,
 .kv-dropzone:focus-visible {
   border-color: #669bbc;
-  background: #f5f2ec;
+  background: #ffffff;
 }
 
 .kv-dropzone--sm {
-  min-height: 80px;
+  min-height: 72px;
 }
 
 .kv-dropzone__empty {
@@ -397,7 +396,7 @@
   font-family: "CS Genio Mono", monospace;
   font-size: 0.75rem;
   color: #003049;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.04em;
 }
 
 .kv-dropzone__hint {
@@ -420,7 +419,7 @@
 
 .kv-dropzone__img {
   width: 100%;
-  height: 80px;
+  height: 72px;
   object-fit: cover;
   border-radius: 0;
 }
@@ -441,7 +440,7 @@
   text-transform: uppercase;
 }
 
-/* ── Security note ───────────────────────────────────────── */
+/* ── Security note ────────────────────────────────────────────── */
 .kv-security-note {
   display: flex;
   align-items: center;
@@ -452,7 +451,7 @@
   margin-top: 8px;
 }
 
-/* ── Social cards ────────────────────────────────────────── */
+/* ── Social cards ─────────────────────────────────────────────── */
 .kv-social-list {
   display: flex;
   flex-direction: column;
@@ -593,7 +592,7 @@
   flex-shrink: 0;
 }
 
-/* ── Address layout ──────────────────────────────────────── */
+/* ── Address layout ───────────────────────────────────────────── */
 .kv-addr-layout {
   display: grid;
   grid-template-columns: 1fr auto;
@@ -601,12 +600,10 @@
   align-items: start;
 }
 
-.kv-addr-form {
-  min-width: 0;
-}
+.kv-addr-form { min-width: 0; }
 
 .kv-map-wrap {
-  width: 160px;
+  width: 140px;
   flex-shrink: 0;
 }
 
@@ -616,7 +613,7 @@
   display: block;
 }
 
-/* ── Proof upload ─────────────────────────────────────────── */
+/* ── Proof upload ─────────────────────────────────────────────── */
 .kv-proof-uploaded {
   display: flex;
   align-items: center;
@@ -648,7 +645,7 @@
   text-transform: uppercase;
 }
 
-/* ── Warn states ─────────────────────────────────────────── */
+/* ── Warn states ──────────────────────────────────────────────── */
 .kv-warn-banner {
   display: flex;
   align-items: center;
@@ -666,14 +663,14 @@
   font-family: "CS Genio Mono", monospace;
   font-size: 0.8125rem;
   color: #c1121f;
-  margin-top: 8px;
+  margin-top: 6px;
 }
 
-/* ── Review section ──────────────────────────────────────── */
+/* ── Review section ───────────────────────────────────────────── */
 .kv-review-section {
   border-bottom: 1px solid #e8e4dc;
-  padding-bottom: 24px;
-  margin-bottom: 24px;
+  padding-bottom: 20px;
+  margin-bottom: 20px;
 }
 
 .kv-review-section:last-of-type {
@@ -684,15 +681,14 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 16px;
+  margin-bottom: 14px;
 }
 
 .kv-review-section-label {
   font-family: "Darky", sans-serif;
-  font-size: 1.125rem;
+  font-size: 1rem;
   font-weight: 700;
   color: #003049;
-  letter-spacing: -0.01em;
 }
 
 .kv-edit-link {
@@ -708,14 +704,12 @@
   transition: color 0.2s;
 }
 
-.kv-edit-link:hover {
-  color: #003049;
-}
+.kv-edit-link:hover { color: #003049; }
 
 .kv-review-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 12px 24px;
+  gap: 10px 20px;
 }
 
 .kv-review-item {
@@ -760,11 +754,11 @@
   color: #669bbc;
 }
 
-/* ── Submit ──────────────────────────────────────────────── */
+/* ── Submit button (full-width CTA) ───────────────────────────── */
 .kv-review-submit {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: stretch;
   gap: 12px;
   margin-top: 8px;
 }
@@ -778,12 +772,14 @@
   color: #f5f2ec;
   border: none;
   border-radius: 0;
-  padding: 14px 32px;
+  padding: 16px 32px;
   cursor: pointer;
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 10px;
-  transition: background 0.2s cubic-bezier(0.32, 0.72, 0, 1);
+  width: 100%;
+  transition: background 0.2s;
 }
 
 .kv-submit-btn:hover:not(:disabled) {
@@ -791,7 +787,7 @@
 }
 
 .kv-submit-btn:disabled {
-  opacity: 0.6;
+  opacity: 0.55;
   cursor: wait;
 }
 
@@ -801,14 +797,15 @@
   color: #669bbc;
   margin: 0;
   line-height: 1.6;
+  text-align: center;
 }
 
-/* ── Navigation footer ───────────────────────────────────── */
+/* ── Navigation footer ────────────────────────────────────────── */
 .kv-nav {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-top: 24px;
+  margin-top: 20px;
 }
 
 .kv-btn {
@@ -820,9 +817,7 @@
   padding: 12px 28px;
   cursor: pointer;
   border: none;
-  transition: background 0.2s cubic-bezier(0.32, 0.72, 0, 1),
-              color 0.2s,
-              opacity 0.2s;
+  transition: background 0.2s, color 0.2s, opacity 0.2s;
 }
 
 .kv-btn--primary {
@@ -846,11 +841,11 @@
 }
 
 .kv-btn--disabled {
-  opacity: 0.4;
+  opacity: 0.38;
   cursor: not-allowed;
 }
 
-/* ── Dot loader ──────────────────────────────────────────── */
+/* ── Dot loader ───────────────────────────────────────────────── */
 .kv-dots {
   display: inline-flex;
   gap: 4px;
@@ -872,10 +867,10 @@
 
 @keyframes kv-dot-bounce {
   0%, 80%, 100% { transform: scale(0.7); opacity: 0.5; }
-  40% { transform: scale(1); opacity: 1; }
+  40%            { transform: scale(1);   opacity: 1; }
 }
 
-/* ── Verified state ──────────────────────────────────────── */
+/* ── Verified state ───────────────────────────────────────────── */
 .kv-verified {
   display: flex;
   flex-direction: column;
@@ -884,8 +879,8 @@
 }
 
 .kv-verified__mark {
-  width: 72px;
-  height: 72px;
+  width: 64px;
+  height: 64px;
   background: #003049;
   display: flex;
   align-items: center;
@@ -909,7 +904,7 @@
   font-size: 0.9375rem;
   color: #669bbc;
   margin: 0 0 32px;
-  max-width: 440px;
+  max-width: 420px;
   line-height: 1.7;
 }
 
@@ -941,9 +936,7 @@
   transition: background 0.2s;
 }
 
-.kv-verified__cta:hover {
-  background: #780000;
-}
+.kv-verified__cta:hover { background: #780000; }
 
 .kv-verified__reset {
   font-family: "CS Genio Mono", monospace;
@@ -958,7 +951,7 @@
   text-underline-offset: 3px;
 }
 
-/* ── Rejected state ──────────────────────────────────────── */
+/* ── Rejected state ───────────────────────────────────────────── */
 .kv-rejected {
   display: flex;
   flex-direction: column;
@@ -967,9 +960,7 @@
   gap: 16px;
 }
 
-.kv-rejected__icon {
-  margin-bottom: 8px;
-}
+.kv-rejected__icon { margin-bottom: 8px; }
 
 .kv-rejected__headline {
   font-family: "Darky", sans-serif;
@@ -986,10 +977,10 @@
   color: #669bbc;
   margin: 0 0 16px;
   line-height: 1.6;
-  max-width: 440px;
+  max-width: 420px;
 }
 
-/* ── In-review state ─────────────────────────────────────── */
+/* ── In-review state ──────────────────────────────────────────── */
 .kv-in-review {
   display: flex;
   flex-direction: column;
@@ -998,10 +989,10 @@
   gap: 16px;
 }
 
+/* Square pulse block replaces border-radius 50% circle */
 .kv-in-review__pulse {
   width: 16px;
   height: 16px;
-  border-radius: 50%;
   background: #003049;
   position: relative;
   margin-bottom: 24px;
@@ -1011,13 +1002,13 @@
   content: "";
   position: absolute;
   inset: -8px;
-  border-radius: 50%;
   border: 1.5px solid #003049;
-  animation: kv-pulse-ring 2s cubic-bezier(0.32, 0.72, 0, 1) infinite;
+  animation: kv-pulse-ring 2s ease infinite;
+  border-radius: 0;
 }
 
 @keyframes kv-pulse-ring {
-  0% { transform: scale(0.6); opacity: 1; }
+  0%   { transform: scale(0.6); opacity: 1; }
   100% { transform: scale(1.8); opacity: 0; }
 }
 
@@ -1036,7 +1027,7 @@
   color: #669bbc;
   margin: 0;
   line-height: 1.7;
-  max-width: 440px;
+  max-width: 420px;
 }
 
 .kv-in-review__demo-note {
@@ -1044,24 +1035,41 @@
   font-style: italic;
 }
 
-/* ── Responsive ──────────────────────────────────────────── */
+/* ── Responsive ───────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .kv-progress {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+
+  .kv-progress__step {
+    flex: none;
+    width: 100%;
+  }
+
+  .kv-progress__connector {
+    display: none;
+  }
+}
+
 @media (max-width: 600px) {
   .kv-inner {
     padding: 24px 16px 0;
   }
 
   .kv-panel {
-    padding: 24px 20px;
+    padding: 24px 18px;
   }
 
   .kv-hero {
     flex-direction: column;
-    gap: 16px;
-    margin-bottom: 32px;
+    gap: 14px;
+    margin-bottom: 28px;
   }
 
-  .kv-progress__label {
-    display: none;
+  .kv-hero__headline {
+    font-size: 40px;
   }
 
   .kv-row {

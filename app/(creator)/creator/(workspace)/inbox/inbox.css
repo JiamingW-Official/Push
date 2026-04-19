@@ -420,3 +420,42 @@
 
   .inbox-toast { min-width: 0; max-width: calc(100vw - 32px); }
 }
+
+@media (max-width: 480px) {
+  .inbox-nav {
+    padding: 0 16px;
+    height: 48px;
+  }
+
+  .inbox-nav-title { font-size: 18px; }
+
+  .inbox-tabs {
+    padding: 0 16px;
+  }
+
+  .inbox-tab {
+    padding: 0 10px;
+    font-size: 11px;
+  }
+
+  .inbox-row {
+    padding: 0 12px;
+    height: 64px;
+    gap: 10px;
+  }
+
+  /* Hide timestamp on very small screens to save space */
+  .inbox-row-time {
+    display: none;
+  }
+
+  .inbox-row-avatar {
+    width: 34px;
+    height: 34px;
+    font-size: 12px;
+  }
+
+  .inbox-row-sender { font-size: 13px; }
+
+  .inbox-row-preview { font-size: 12px; }
+}

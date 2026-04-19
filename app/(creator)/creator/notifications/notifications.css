@@ -1,11 +1,17 @@
 /* ============================================================
-   Notifications Inbox — notifications.css
-   Design.md: border-radius 0, 8px grid, 6-color palette
-   Darky (display) + CS Genio Mono (body)
-   Bloomberg editorial density
+   Notifications — notifications.css
+   Design.md: border-radius 0, 6-color palette, Darky + CS Genio Mono
+   Restraint = Luxury. One hero focus. 8px grid.
    ============================================================ */
 
-/* ── Shell ─────────────────────────────────────────────────── */
+/* ── Animation ────────────────────────────────────────────── */
+
+@keyframes notif-fade-up {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Shell ────────────────────────────────────────────────── */
 
 .np-shell {
   min-height: 100vh;
@@ -16,7 +22,7 @@
   flex-direction: column;
 }
 
-/* ── Top bar ────────────────────────────────────────────────── */
+/* ── Top bar ──────────────────────────────────────────────── */
 
 .np-topbar {
   display: flex;
@@ -24,7 +30,8 @@
   gap: 16px;
   padding: 0 32px;
   height: 56px;
-  border-bottom: 2px solid var(--dark);
+  border-bottom: 1px solid var(--line);
+  border-top: 3px solid var(--primary);
   background: var(--surface-elevated);
   position: sticky;
   top: 0;
@@ -32,20 +39,17 @@
 }
 
 .np-back {
-  font-family: var(--font-body);
   font-size: 12px;
   font-weight: 600;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  color: var(--graphite);
+  color: var(--text-muted);
   text-decoration: none;
-  transition: color 180ms ease;
+  transition: color 160ms ease;
   white-space: nowrap;
 }
 
-.np-back:hover {
-  color: var(--primary);
-}
+.np-back:hover { color: var(--primary); }
 
 .np-topbar-title {
   font-family: var(--font-display);
@@ -57,25 +61,20 @@
 }
 
 .np-mark-all {
-  font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--graphite);
-  background: none;
-  border: 1px solid rgba(0, 48, 73, 0.2);
-  cursor: pointer;
-  padding: 6px 12px;
-  transition: all 180ms ease;
-}
-
-.np-mark-all:hover {
-  border-color: var(--primary);
+  letter-spacing: 0.04em;
   color: var(--primary);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  transition: opacity 160ms ease;
 }
 
-/* ── Body layout ────────────────────────────────────────────── */
+.np-mark-all:hover { opacity: 0.7; }
+
+/* ── Body layout ──────────────────────────────────────────── */
 
 .np-body {
   display: flex;
@@ -84,30 +83,28 @@
   width: 100%;
   margin: 0 auto;
   padding: 0 32px;
-  gap: 0;
   align-items: flex-start;
 }
 
-/* ── Main column ────────────────────────────────────────────── */
+/* ── Main column ──────────────────────────────────────────── */
 
 .np-main {
   flex: 1;
   min-width: 0;
   max-width: 900px;
   padding-right: 40px;
-  border-right: 1px solid rgba(0, 48, 73, 0.12);
+  border-right: 1px solid var(--line);
 }
 
-/* ── Hero ───────────────────────────────────────────────────── */
+/* ── Hero ─────────────────────────────────────────────────── */
 
 .np-hero {
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
   gap: 32px;
-  padding: 48px 0 40px;
+  padding: 48px 0 32px;
   border-bottom: 2px solid var(--dark);
-  margin-bottom: 0;
 }
 
 .np-hero-left {
@@ -116,40 +113,24 @@
   gap: 4px;
 }
 
-.np-hero-number {
+.np-hero-title {
   font-family: var(--font-display);
-  font-size: clamp(72px, 10vw, 120px);
+  font-size: clamp(48px, 6vw, 72px);
   font-weight: 900;
   letter-spacing: -0.06em;
-  line-height: 0.9;
-  color: var(--primary);
-}
-
-.np-hero-label {
-  font-family: var(--font-display);
-  font-size: clamp(32px, 5vw, 56px);
-  font-weight: 200;
-  letter-spacing: -0.04em;
-  line-height: 1;
-  color: var(--graphite);
-}
-
-.np-hero-label--full {
-  font-size: clamp(48px, 7vw, 96px);
-  font-weight: 900;
+  line-height: 0.95;
   color: var(--dark);
+  margin: 0;
 }
 
 .np-hero-sub {
-  font-family: var(--font-body);
   font-size: 12px;
   letter-spacing: 0.04em;
-  color: rgba(0, 48, 73, 0.45);
+  color: var(--text-muted);
   margin: 8px 0 0;
   text-transform: uppercase;
 }
 
-/* Hero quick stats */
 .np-hero-right {
   display: flex;
   flex-direction: column;
@@ -166,12 +147,11 @@
 }
 
 .np-stat-label {
-  font-family: var(--font-body);
   font-size: 10px;
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: rgba(0, 48, 73, 0.4);
+  color: var(--text-muted);
 }
 
 .np-stat-val {
@@ -183,52 +163,54 @@
   min-width: 32px;
 }
 
-/* ── Filter tabs ─────────────────────────────────────────────── */
+/* ── Filter tabs ──────────────────────────────────────────── */
 
 .np-filters {
   display: flex;
-  gap: 0;
-  border-bottom: 1px solid rgba(0, 48, 73, 0.12);
-  margin-bottom: 0;
+  border-bottom: 1px solid var(--line);
   overflow-x: auto;
   scrollbar-width: none;
 }
 
-.np-filters::-webkit-scrollbar {
-  display: none;
-}
+.np-filters::-webkit-scrollbar { display: none; }
 
 .np-filter-tab {
-  font-family: var(--font-body);
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--graphite);
+  color: var(--text-muted);
   background: none;
   border: none;
-  border-bottom: 3px solid transparent;
-  padding: 16px 20px 13px;
-  cursor: pointer;
-  transition: all 160ms ease;
-  white-space: nowrap;
+  border-bottom: 2px solid transparent;
+  padding: 16px 20px 14px;
   margin-bottom: -1px;
+  cursor: pointer;
+  transition: color 160ms ease, border-color 160ms ease;
+  white-space: nowrap;
 }
 
-.np-filter-tab:hover {
-  color: var(--dark);
-}
+.np-filter-tab:hover { color: var(--dark); }
 
 .np-filter-tab--active {
   color: var(--dark);
   border-bottom-color: var(--primary);
 }
 
-/* ── Notification list ──────────────────────────────────────── */
+/* ── Notification list ────────────────────────────────────── */
 
-.np-list {
-  display: flex;
-  flex-direction: column;
+.np-list { display: flex; flex-direction: column; }
+
+/* Group header */
+.np-group-header {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+  padding: 8px 24px;
+  border-bottom: 1px solid var(--line);
+  background: var(--surface);
 }
 
 /* Empty state */
@@ -239,7 +221,7 @@
 
 .np-empty-title {
   font-family: var(--font-display);
-  font-size: 36px;
+  font-size: 32px;
   font-weight: 900;
   letter-spacing: -0.04em;
   color: var(--dark);
@@ -247,75 +229,53 @@
 }
 
 .np-empty-body {
-  font-family: var(--font-body);
   font-size: 14px;
-  color: var(--graphite);
+  color: var(--text-muted);
 }
 
-/* ── Notification item ───────────────────────────────────────── */
-
-@keyframes npItemIn {
-  from {
-    opacity: 0;
-    transform: translateY(6px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
+/* ── Notification item ────────────────────────────────────── */
 
 .np-item {
   display: flex;
-  align-items: flex-start;
+  align-items: stretch;
   gap: 0;
-  padding: 16px 0;
-  border-bottom: 1px solid rgba(0, 48, 73, 0.08);
+  border-bottom: 1px solid var(--line);
   text-decoration: none;
   color: inherit;
   position: relative;
-  transition: background 140ms ease, padding 140ms ease;
-  animation: npItemIn 300ms cubic-bezier(0.22, 1, 0.36, 1) both;
   cursor: pointer;
+  transition: background 140ms ease;
+  min-height: 72px;
 }
 
-.np-item:first-child {
-  border-top: none;
+.np-item:last-child { border-bottom: none; }
+
+.np-item:hover { background: var(--surface-elevated); }
+
+/* Unread: left 3px red accent */
+.np-item--unread {
+  border-left: 3px solid var(--primary);
 }
 
-.np-item:last-child {
-  border-bottom: none;
-}
+/* Read: slightly faded */
+.np-item--read { opacity: 0.62; }
+.np-item--read:hover { opacity: 1; }
 
-.np-item:hover {
-  background: var(--surface-elevated);
-  padding-left: 12px;
-  padding-right: 12px;
-  margin-left: -12px;
-  margin-right: -12px;
-}
-
-.np-item--read {
-  opacity: 0.62;
-}
-
-.np-item--read:hover {
-  opacity: 1;
-}
-
-/* Type swatch (colored left block) */
-.np-item-swatch {
-  width: 4px;
-  align-self: stretch;
+/* Type dot — colored left indicator */
+.np-item-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
   flex-shrink: 0;
-  margin-right: 16px;
-  min-height: 40px;
+  margin: 22px 16px 0 20px;
+  align-self: flex-start;
 }
 
-/* Item content */
+/* Content */
 .np-item-content {
   flex: 1;
   min-width: 0;
+  padding: 16px 16px 16px 0;
   display: flex;
   flex-direction: column;
   gap: 4px;
@@ -337,18 +297,15 @@
 }
 
 .np-item-cat-label {
-  font-family: var(--font-body);
   font-size: 9px;
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: rgba(0, 48, 73, 0.35);
+  color: var(--text-muted);
   flex-shrink: 0;
-  padding-top: 1px;
 }
 
 .np-item-title {
-  font-family: var(--font-body);
   font-size: 14px;
   font-weight: 700;
   letter-spacing: -0.01em;
@@ -358,23 +315,18 @@
   text-overflow: ellipsis;
 }
 
-.np-item--read .np-item-title {
-  font-weight: 500;
-}
+.np-item--read .np-item-title { font-weight: 500; }
 
 .np-item-time {
-  font-family: var(--font-body);
-  font-size: 11px;
-  color: rgba(0, 48, 73, 0.38);
+  font-size: 12px;
+  color: var(--text-muted);
   flex-shrink: 0;
-  padding-top: 1px;
 }
 
 .np-item-body {
-  font-family: var(--font-body);
   font-size: 13px;
   line-height: 1.5;
-  color: var(--graphite);
+  color: var(--text-muted);
   margin: 0;
   display: -webkit-box;
   -webkit-line-clamp: 2;
@@ -382,23 +334,12 @@
   overflow: hidden;
 }
 
-/* Unread dot */
-.np-unread-dot {
-  width: 7px;
-  height: 7px;
-  background: var(--primary);
-  border-radius: 50%;
-  flex-shrink: 0;
-  margin-top: 5px;
-  margin-left: 12px;
-}
-
-/* ── Right panel ─────────────────────────────────────────────── */
+/* ── Right panel ──────────────────────────────────────────── */
 
 .np-panel {
   width: 260px;
   flex-shrink: 0;
-  padding: 48px 0 40px 32px;
+  padding: 40px 0 40px 32px;
   position: sticky;
   top: 56px;
   max-height: calc(100vh - 56px);
@@ -406,9 +347,7 @@
   scrollbar-width: none;
 }
 
-.np-panel::-webkit-scrollbar {
-  display: none;
-}
+.np-panel::-webkit-scrollbar { display: none; }
 
 .np-panel-block {
   display: flex;
@@ -418,26 +357,20 @@
 
 .np-panel-divider {
   height: 1px;
-  background: rgba(0, 48, 73, 0.1);
+  background: var(--line);
   margin: 24px 0;
 }
 
 .np-panel-eyebrow {
-  font-family: var(--font-body);
   font-size: 10px;
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: rgba(0, 48, 73, 0.38);
+  color: var(--text-muted);
   margin-bottom: 4px;
 }
 
-/* Panel stats */
-.np-panel-stat {
-  display: flex;
-  flex-direction: column;
-  gap: 1px;
-}
+.np-panel-stat { display: flex; flex-direction: column; gap: 1px; }
 
 .np-panel-stat-num {
   font-family: var(--font-display);
@@ -448,39 +381,31 @@
   color: var(--dark);
 }
 
-.np-panel-stat-num--gold {
-  color: var(--champagne);
-}
+.np-panel-stat-num--gold { color: var(--champagne); }
 
 .np-panel-stat-desc {
-  font-family: var(--font-body);
   font-size: 11px;
-  color: var(--graphite);
+  color: var(--text-muted);
   letter-spacing: 0.01em;
 }
 
-/* Quick actions */
 .np-quick-action {
-  font-family: var(--font-body);
   font-size: 12px;
   font-weight: 600;
-  letter-spacing: 0.01em;
   color: var(--dark);
   text-decoration: none;
   display: block;
   padding: 10px 14px;
-  border: 1px solid rgba(0, 48, 73, 0.15);
+  border: 1px solid var(--line);
   background: var(--surface-elevated);
-  transition: all 160ms ease;
+  transition: border-color 160ms ease, color 160ms ease;
 }
 
 .np-quick-action:hover {
   border-color: var(--primary);
   color: var(--primary);
-  background: rgba(193, 18, 31, 0.03);
 }
 
-/* Legend */
 .np-legend-row {
   display: flex;
   align-items: center;
@@ -488,24 +413,27 @@
 }
 
 .np-legend-dot {
-  width: 10px;
-  height: 10px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
   flex-shrink: 0;
 }
 
 .np-legend-label {
-  font-family: var(--font-body);
   font-size: 11px;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  color: var(--graphite);
+  color: var(--text-muted);
 }
 
-/* ── Skeleton ─────────────────────────────────────────────────── */
+/* ── Skeleton ─────────────────────────────────────────────── */
 
-.np-skeleton-hero {
-  padding: 48px 32px;
+@keyframes shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
 }
+
+.np-skeleton-hero { padding: 48px 32px; }
 
 .np-skel {
   background: linear-gradient(
@@ -518,28 +446,15 @@
   animation: shimmer 1.5s linear infinite;
 }
 
-.np-skel--lg {
-  height: 80px;
-  width: 260px;
-}
+.np-skel--lg { height: 72px; width: 240px; }
+.np-skel--sm { height: 14px; width: 140px; }
 
-.np-skel--sm {
-  height: 14px;
-  width: 140px;
-}
-
-@keyframes shimmer {
-  0% { background-position: 200% 0; }
-  100% { background-position: -200% 0; }
-}
-
-/* ── Responsive ──────────────────────────────────────────────── */
+/* ── Responsive ───────────────────────────────────────────── */
 
 @media (max-width: 900px) {
   .np-body {
     flex-direction: column;
     padding: 0 20px;
-    gap: 0;
   }
 
   .np-main {
@@ -563,22 +478,22 @@
     gap: 16px;
   }
 
-  .np-panel-eyebrow {
-    grid-column: 1 / -1;
-    margin-bottom: 0;
-  }
+  .np-panel-eyebrow { grid-column: 1 / -1; margin-bottom: 0; }
+}
+
+@media (max-width: 768px) {
+  .np-topbar { padding: 0 16px; }
+  .np-body   { padding: 0 16px; }
+  .np-hero   { padding: 32px 0 24px; }
+
+  .np-item-dot { margin-left: 12px; }
 }
 
 @media (max-width: 600px) {
-  .np-topbar {
-    padding: 0 16px;
-  }
-
   .np-hero {
     flex-direction: column;
     align-items: flex-start;
-    gap: 24px;
-    padding: 32px 0 32px;
+    gap: 20px;
   }
 
   .np-hero-right {
@@ -593,20 +508,12 @@
     gap: 2px;
   }
 
-  .np-filter-tab {
-    padding: 14px 14px 11px;
-    font-size: 10px;
-  }
+  .np-filter-tab { padding: 14px 14px 12px; font-size: 10px; }
 }
 
-/* ── Reduced motion ──────────────────────────────────────────── */
+/* ── Reduced motion ───────────────────────────────────────── */
 
 @media (prefers-reduced-motion: reduce) {
-  .np-item {
-    animation: none;
-  }
-
-  .np-skel {
-    animation: none;
-  }
+  .np-item,
+  .np-skel { animation: none; }
 }

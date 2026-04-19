@@ -1112,6 +1112,63 @@
   }
 }
 
+@media (max-width: 480px) {
+  .wallet-mini-nav {
+    padding: 0 16px;
+    font-size: 11px;
+  }
+
+  .wallet-hero {
+    padding: 32px 16px 28px;
+    gap: 20px;
+  }
+
+  .wallet-hero-balance {
+    font-size: clamp(48px, 12vw, 72px);
+  }
+
+  .wallet-hero-meta {
+    gap: 20px;
+  }
+
+  .wallet-tabs {
+    padding: 0 16px;
+  }
+
+  .wallet-tab-btn {
+    padding: 16px 16px;
+    font-size: 11px;
+  }
+
+  .wallet-tab-content {
+    padding: 24px 16px;
+  }
+
+  .wallet-withdraw-btn {
+    padding: 16px 24px;
+    font-size: 13px;
+    width: 100%;
+  }
+
+  .wallet-method-card {
+    padding: 16px;
+  }
+
+  .wallet-history-filters {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .wallet-export-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .wallet-tax-big {
+    font-size: clamp(40px, 10vw, 60px);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .wallet-hero,
   .wallet-tab-content,

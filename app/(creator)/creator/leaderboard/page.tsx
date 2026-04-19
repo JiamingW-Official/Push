@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useCallback, useRef } from "react";
+import { useState, useMemo, useCallback } from "react";
 import Link from "next/link";
 import "./leaderboard.css";
 import {
@@ -63,7 +63,7 @@ function formatDelta(delta: number): { text: string; cls: string } {
 }
 
 function generateBadgeSVG(rank: number, name: string, score: number): string {
-  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="300" height="300" viewBox="0 0 300 300">
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="300" height="300" viewBox="0 0 300 300">
   <rect width="300" height="300" fill="#003049"/>
   <rect x="0" y="0" width="6" height="300" fill="#c1121f"/>
   <text x="24" y="120" font-family="sans-serif" font-size="96" font-weight="900" fill="#c9a96e" letter-spacing="-4">#${rank}</text>
@@ -72,7 +72,6 @@ function generateBadgeSVG(rank: number, name: string, score: number): string {
   <text x="24" y="240" font-family="monospace" font-size="12" fill="rgba(245,242,236,0.4)">${name}</text>
   <text x="24" y="275" font-family="sans-serif" font-size="18" font-weight="900" font-style="italic" fill="#c1121f" letter-spacing="-1">Push</text>
 </svg>`;
-  return svg;
 }
 
 function downloadBadge(rank: number, name: string, score: number): void {
@@ -107,16 +106,16 @@ function DeltaCell({ delta }: { delta: number }) {
   );
 }
 
-interface PodiumCardProps {
+function PodiumCard({
+  entry,
+  position,
+}: {
   entry: RankEntry;
   position: "first" | "second" | "third";
-}
-
-function PodiumCard({ entry, position }: PodiumCardProps) {
-  const { text: deltaText, cls: deltaCls } = formatDelta(entry.deltaRank);
+}) {
   return (
     <article className={`lb-podium-card lb-podium-card--${position}`}>
-      <div className={`lb-podium-rank`}>
+      <div className="lb-podium-rank">
         {position === "first" ? "#1" : position === "second" ? "#2" : "#3"}
       </div>
       <div className="lb-podium-avatar">{entry.avatarInitials}</div>
@@ -141,35 +140,27 @@ function PodiumCard({ entry, position }: PodiumCardProps) {
           <span className="lb-podium-stat-lbl">Earned</span>
         </div>
       </div>
-      <div style={{ marginTop: 8, fontSize: 12, color: "var(--text-muted)" }}>
-        <span className={`lb-delta ${deltaCls}`} style={{ fontSize: 12 }}>
-          {entry.deltaRank > 0 && "▲"}
-          {entry.deltaRank < 0 && "▼"} {deltaText}
-        </span>
-        <span style={{ marginLeft: 6, color: "var(--text-muted)" }}>
-          vs last period
-        </span>
-      </div>
     </article>
   );
 }
 
-interface LeaderboardRowProps {
+function LeaderboardRow({
+  entry,
+  isTop10,
+}: {
   entry: RankEntry;
   isTop10: boolean;
-}
-
-function LeaderboardRow({ entry, isTop10 }: LeaderboardRowProps) {
+}) {
   return (
     <div
       className={`lb-row${entry.isCurrentUser ? " lb-row--me" : ""}`}
+      data-rank={entry.rank <= 3 ? entry.rank : undefined}
       aria-label={
         entry.isCurrentUser
           ? `Your rank: #${entry.rank}`
           : `Rank ${entry.rank}: ${entry.name}`
       }
     >
-      {/* Rank */}
       <div className="lb-row-rank">
         <span
           className={`lb-rank-num ${isTop10 ? "lb-rank-num--top10" : "lb-rank-num--normal"}`}
@@ -178,7 +169,6 @@ function LeaderboardRow({ entry, isTop10 }: LeaderboardRowProps) {
         </span>
       </div>
 
-      {/* Creator */}
       <div className="lb-row-creator">
         <div
           className="lb-creator-avatar"
@@ -211,21 +201,17 @@ function LeaderboardRow({ entry, isTop10 }: LeaderboardRowProps) {
         </div>
       </div>
 
-      {/* Push Score */}
       <div className="lb-row-score">
         <span className="lb-score-val">{entry.pushScore}</span>
         <span className="lb-score-label">score</span>
       </div>
 
-      {/* Verified Visits */}
       <div className="lb-row-visits">{entry.verifiedVisits}</div>
 
-      {/* Earnings */}
       <div className="lb-row-earnings">
         {formatEarnings(entry.earningsWindow)}
       </div>
 
-      {/* Delta */}
       <div className="lb-row-delta">
         <DeltaCell delta={entry.deltaRank} />
       </div>
@@ -242,20 +228,14 @@ export default function LeaderboardPage() {
     NeighborhoodKey | "all"
   >("all");
 
-  const contentRef = useRef<HTMLDivElement>(null);
-
-  // Derive entries from mock data + filters
   const allEntries = useMemo(() => MOCK_BY_WINDOW[window].entries, [window]);
 
   const filteredEntries = useMemo(() => {
     let result = allEntries;
-    if (tierFilter !== "all") {
+    if (tierFilter !== "all")
       result = result.filter((e) => e.tier === tierFilter);
-    }
-    if (neighborhoodFilter !== "all") {
+    if (neighborhoodFilter !== "all")
       result = result.filter((e) => e.neighborhood === neighborhoodFilter);
-    }
-    // Re-rank within filtered set
     return result.map((e, i) => ({ ...e, rank: i + 1 }));
   }, [allEntries, tierFilter, neighborhoodFilter]);
 
@@ -265,24 +245,21 @@ export default function LeaderboardPage() {
     [filteredEntries],
   );
 
-  // Current user — always Alex Chen at index 10 in raw data
   const currentUser = useMemo(
     () => filteredEntries.find((e) => e.isCurrentUser) ?? null,
     [filteredEntries],
   );
 
-  // Catch-up info: how many visits to pass the person above
   const catchupInfo = useMemo(() => {
     if (!currentUser) return null;
     const above = filteredEntries.find((e) => e.rank === currentUser.rank - 1);
     if (!above) return null;
-    const diff = above.verifiedVisits - currentUser.verifiedVisits;
-    return { aboveRank: above.rank, aboveName: above.name, visitDiff: diff };
+    return {
+      aboveRank: above.rank,
+      aboveName: above.name,
+      visitDiff: above.verifiedVisits - currentUser.verifiedVisits,
+    };
   }, [currentUser, filteredEntries]);
-
-  const handleTabChange = useCallback((w: TimeWindow) => {
-    setWindow(w);
-  }, []);
 
   const handleDownloadBadge = useCallback(() => {
     if (!currentUser) return;
@@ -291,7 +268,7 @@ export default function LeaderboardPage() {
 
   return (
     <div className="lb">
-      {/* ── Nav ───────────────────────────────────────────── */}
+      {/* Nav */}
       <nav className="lb-nav">
         <Link href="/" className="lb-nav-logo">
           Push
@@ -304,54 +281,47 @@ export default function LeaderboardPage() {
         </Link>
       </nav>
 
-      {/* ── Hero ──────────────────────────────────────────── */}
+      {/* Hero */}
       <section className="lb-hero">
         <div className="lb-hero-inner">
           <div className="lb-hero-eyebrow">Creator Rankings · NYC</div>
-          <h1 className="lb-hero-title">Top this week.</h1>
-          <div className="lb-hero-meta">
-            {currentUser ? (
-              <>
-                <div className="lb-hero-rank">#{currentUser.rank}</div>
-                <div className="lb-hero-rank-label">your rank</div>
-                <div className="lb-hero-divider" />
-                <div className="lb-hero-total">
-                  of {MOCK_BY_WINDOW[window].totalCreators.toLocaleString()}{" "}
-                  creators
-                </div>
-              </>
-            ) : (
+          <h1 className="lb-hero-title">Leaderboard.</h1>
+          {currentUser ? (
+            <div className="lb-hero-you">
+              <div className="lb-hero-rank">#{currentUser.rank}</div>
+              <div className="lb-hero-rank-label">your rank</div>
+              <div className="lb-hero-divider" />
+              <div className="lb-hero-total">
+                of {MOCK_BY_WINDOW[window].totalCreators.toLocaleString()}{" "}
+                creators
+              </div>
+            </div>
+          ) : (
+            <div className="lb-hero-you">
               <div className="lb-hero-total">
                 {MOCK_BY_WINDOW[window].totalCreators.toLocaleString()} creators
                 ranked
               </div>
-            )}
-          </div>
+            </div>
+          )}
         </div>
       </section>
 
-      {/* ── Content ───────────────────────────────────────── */}
-      <div className="lb-content" ref={contentRef}>
-        {/* Time window tabs */}
+      {/* Content */}
+      <div className="lb-content">
+        {/* Time window + neighborhood tabs */}
         <nav className="lb-tabs" aria-label="Time window">
           {TIME_WINDOWS.map(({ key, label }) => (
             <button
               key={key}
               className={`lb-tab${window === key ? " lb-tab--active" : ""}`}
-              onClick={() => handleTabChange(key)}
+              onClick={() => setWindow(key)}
               aria-pressed={window === key}
             >
               {label}
             </button>
           ))}
-          {/* Neighborhood tab group */}
-          <div
-            style={{
-              marginLeft: "auto",
-              display: "flex",
-              gap: 0,
-            }}
-          >
+          <div style={{ marginLeft: "auto", display: "flex", gap: 0 }}>
             {NEIGHBORHOOD_FILTERS.slice(0, 5).map(({ key, label }) => (
               <button
                 key={key}
@@ -371,7 +341,6 @@ export default function LeaderboardPage() {
         {top3.length >= 3 && (
           <section aria-label="Top 3 creators">
             <div className="lb-podium">
-              {/* Render order: 2nd, 1st, 3rd — for visual podium height */}
               <PodiumCard entry={top3[1]} position="second" />
               <PodiumCard entry={top3[0]} position="first" />
               <PodiumCard entry={top3[2]} position="third" />
@@ -398,10 +367,9 @@ export default function LeaderboardPage() {
           ))}
         </div>
 
-        {/* Leaderboard table */}
+        {/* Table */}
         <section aria-label="Full leaderboard">
           <div className="lb-table-wrap">
-            {/* Column headers */}
             <div className="lb-table-head" aria-hidden="true">
               <div className="lb-table-head-cell">Rank</div>
               <div className="lb-table-head-cell">Creator</div>
@@ -431,7 +399,6 @@ export default function LeaderboardPage() {
               </div>
             </div>
 
-            {/* Ranks 4+ */}
             {tableEntries.length === 0 ? (
               <div className="lb-empty">
                 <div className="lb-empty-title">No creators found</div>
@@ -449,7 +416,7 @@ export default function LeaderboardPage() {
           </div>
         </section>
 
-        {/* Share badge section */}
+        {/* Share badge */}
         {currentUser && (
           <section className="lb-share-section" aria-label="Share your rank">
             <div className="lb-share-badge-preview" aria-hidden="true">
@@ -483,7 +450,7 @@ export default function LeaderboardPage() {
         )}
       </div>
 
-      {/* ── Sticky "Your Rank" card ────────────────────────── */}
+      {/* Sticky rank card */}
       {currentUser && (
         <div className="lb-sticky-you" role="status" aria-live="polite">
           <div className="lb-sticky-rank">#{currentUser.rank}</div>

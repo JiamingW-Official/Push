@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import type { KycState, KycStatus } from "@/lib/verify/mock-kyc";
 import { loadKyc, saveKyc, submitKyc, resetKyc } from "@/lib/verify/mock-kyc";
@@ -224,25 +224,13 @@ export default function VerifyPage() {
   const [kycState, setKycState] = useState<KycState | null>(null);
   const [step, setStep] = useState<WizardStep>(1);
   const [submitting, setSubmitting] = useState(false);
-  const [slideDir, setSlideDir] = useState<"left" | "right">("right");
-  const [animating, setAnimating] = useState(false);
-  const containerRef = useRef<HTMLDivElement>(null);
 
   // Load from localStorage on mount
   useEffect(() => {
-    const loaded = loadKyc();
-    setKycState(loaded);
-    // If previously submitted, show appropriate state without wizard
-    if (
-      loaded.status === "in_review" ||
-      loaded.status === "verified" ||
-      loaded.status === "rejected"
-    ) {
-      // status states bypass wizard
-    }
+    setKycState(loadKyc());
   }, []);
 
-  // Auto-poll localStorage for verified transition (mock 3s)
+  // Auto-poll for verified transition (mock 3s delay)
   useEffect(() => {
     if (!kycState || kycState.status !== "in_review") return;
     const interval = setInterval(() => {
@@ -257,7 +245,7 @@ export default function VerifyPage() {
 
   if (!kycState) return null;
 
-  // ── State-based renders ──────────────────────────────────
+  // ── Status-based full-page renders ──────────────────────────
   if (kycState.status === "verified") {
     return (
       <div className="kv-page">
@@ -301,24 +289,17 @@ export default function VerifyPage() {
     );
   }
 
-  // ── Wizard navigation ────────────────────────────────────
+  // ── Wizard navigation ────────────────────────────────────────
   function navigate(target: WizardStep) {
-    if (animating) return;
-    const dir = target > step ? "right" : "left";
-    setSlideDir(dir);
-    setAnimating(true);
-    setTimeout(() => {
-      setStep(target);
-      setAnimating(false);
-    }, 400);
+    setStep(target);
   }
 
   function handleNext() {
-    if (step < 4) navigate((step + 1) as WizardStep);
+    if (step < 4) setStep((s) => (s + 1) as WizardStep);
   }
 
   function handleBack() {
-    if (step > 1) navigate((step - 1) as WizardStep);
+    if (step > 1) setStep((s) => (s - 1) as WizardStep);
   }
 
   async function handleSubmit() {
@@ -332,8 +313,7 @@ export default function VerifyPage() {
   }
 
   function updateState(partial: Partial<KycState>) {
-    const next = saveKyc(partial);
-    setKycState(next);
+    setKycState(saveKyc(partial));
   }
 
   const nextEnabled = canProceed(step, kycState);
@@ -346,10 +326,10 @@ export default function VerifyPage() {
           ← Dashboard
         </Link>
 
-        {/* Editorial hero */}
+        {/* Hero — "Verify Your Identity." */}
         <div className="kv-hero">
           <div className="kv-hero__text">
-            <h1 className="kv-hero__headline">Get verified.</h1>
+            <h1 className="kv-hero__headline">Verify Your Identity.</h1>
             <p className="kv-hero__sub">
               Three steps to unlock Operator-tier campaigns and higher payouts.
             </p>
@@ -357,18 +337,11 @@ export default function VerifyPage() {
           <StatusBadge status={kycState.status} />
         </div>
 
-        {/* Progress rail */}
+        {/* Horizontal progress stepper */}
         <ProgressRail current={step} />
 
-        {/* Step container */}
-        <div
-          className={["kv-panel", animating && `kv-panel--exit-${slideDir}`]
-            .filter(Boolean)
-            .join(" ")}
-          ref={containerRef}
-          aria-live="polite"
-          aria-atomic="true"
-        >
+        {/* Step card — border-top: red on active */}
+        <div className="kv-panel" aria-live="polite" aria-atomic="true">
           {step === 1 && (
             <StepIdentity
               identity={kycState.identity}
@@ -405,7 +378,6 @@ export default function VerifyPage() {
                 type="button"
                 className="kv-btn kv-btn--ghost"
                 onClick={handleBack}
-                disabled={animating}
               >
                 ← Back
               </button>
@@ -422,7 +394,7 @@ export default function VerifyPage() {
                 .filter(Boolean)
                 .join(" ")}
               onClick={handleNext}
-              disabled={!nextEnabled || animating}
+              disabled={!nextEnabled}
               aria-disabled={!nextEnabled}
             >
               {step === 3 ? "Review →" : "Next →"}

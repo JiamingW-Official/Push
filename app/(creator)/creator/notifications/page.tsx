@@ -9,7 +9,7 @@ import {
 } from "@/lib/notifications/useNotifications";
 import "./notifications.css";
 
-/* ── Notification type inference ───────────────────────────── */
+/* ── Types ──────────────────────────────────────────────── */
 
 type NotifCategory = "ALL" | "CAMPAIGNS" | "PAYMENTS" | "SCORE" | "SYSTEM";
 
@@ -38,20 +38,20 @@ function inferCategory(n: Notification): Exclude<NotifCategory, "ALL"> {
 }
 
 const CATEGORY_COLORS: Record<Exclude<NotifCategory, "ALL">, string> = {
-  CAMPAIGNS: "var(--primary)", // Flag Red
-  PAYMENTS: "var(--champagne)", // Champagne Gold
-  SCORE: "var(--dark)", // Deep Space Blue
-  SYSTEM: "var(--tertiary)", // Steel Blue
+  CAMPAIGNS: "var(--primary)",
+  PAYMENTS: "var(--champagne)",
+  SCORE: "var(--dark)",
+  SYSTEM: "var(--steel-blue)",
 };
 
 const CATEGORY_LABELS: Record<Exclude<NotifCategory, "ALL">, string> = {
-  CAMPAIGNS: "CAMPAIGN",
-  PAYMENTS: "PAYMENT",
-  SCORE: "SCORE",
-  SYSTEM: "SYSTEM",
+  CAMPAIGNS: "Campaign",
+  PAYMENTS: "Payment",
+  SCORE: "Score",
+  SYSTEM: "System",
 };
 
-/* ── Stats helpers ──────────────────────────────────────────── */
+/* ── Stats ──────────────────────────────────────────────── */
 
 function computeStats(notifications: Notification[]) {
   const now = Date.now();
@@ -65,7 +65,6 @@ function computeStats(notifications: Notification[]) {
     (n) => now - new Date(n.createdAt).getTime() < oneWeekMs,
   );
 
-  // Rough: count payment-type notifs and sum up $ amounts mentioned
   let pendingPayments = 0;
   notifications.forEach((n) => {
     const match = n.body.match(/\$(\d+(\.\d+)?)/);
@@ -87,7 +86,15 @@ function computeStats(notifications: Notification[]) {
   };
 }
 
-/* ── Main page ──────────────────────────────────────────────── */
+const FILTERS: NotifCategory[] = [
+  "ALL",
+  "CAMPAIGNS",
+  "PAYMENTS",
+  "SCORE",
+  "SYSTEM",
+];
+
+/* ── Main page ──────────────────────────────────────────── */
 
 export default function CreatorNotificationsPage() {
   const { notifications, unreadCount, markAsRead, markAllRead, hydrated } =
@@ -97,40 +104,25 @@ export default function CreatorNotificationsPage() {
 
   const stats = useMemo(() => computeStats(notifications), [notifications]);
 
-  const sorted = useMemo(
-    () =>
-      [...notifications].sort(
-        (a, b) =>
-          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
-      ),
-    [notifications],
-  );
+  const filtered = useMemo(() => {
+    const sorted = [...notifications].sort(
+      (a, b) =>
+        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+    );
+    return activeFilter === "ALL"
+      ? sorted
+      : sorted.filter((n) => inferCategory(n) === activeFilter);
+  }, [notifications, activeFilter]);
 
-  const filtered = useMemo(
-    () =>
-      activeFilter === "ALL"
-        ? sorted
-        : sorted.filter((n) => inferCategory(n) === activeFilter),
-    [sorted, activeFilter],
-  );
-
-  const FILTERS: NotifCategory[] = [
-    "ALL",
-    "CAMPAIGNS",
-    "PAYMENTS",
-    "SCORE",
-    "SYSTEM",
-  ];
-
-  /* ── Skeleton ── */
+  /* Skeleton */
   if (!hydrated) {
     return (
       <div className="np-shell">
         <header className="np-topbar">
           <Link href="/creator/dashboard" className="np-back">
-            ← Back to Workspace
+            ← Back
           </Link>
-          <span className="np-topbar-title">Inbox.</span>
+          <span className="np-topbar-title">Notifications.</span>
         </header>
         <div className="np-skeleton-hero">
           <div className="np-skel np-skel--lg" />
@@ -142,12 +134,12 @@ export default function CreatorNotificationsPage() {
 
   return (
     <div className="np-shell">
-      {/* ── Top bar ── */}
+      {/* Top bar */}
       <header className="np-topbar">
         <Link href="/creator/dashboard" className="np-back">
           ← Back to Workspace
         </Link>
-        <span className="np-topbar-title">Inbox.</span>
+        <span className="np-topbar-title">Notifications.</span>
         {unreadCount > 0 && (
           <button className="np-mark-all" onClick={markAllRead}>
             Mark all read
@@ -155,40 +147,31 @@ export default function CreatorNotificationsPage() {
         )}
       </header>
 
-      {/* ── Body ── */}
       <div className="np-body">
-        {/* ── Main column ── */}
+        {/* Main column */}
         <div className="np-main">
           {/* Hero */}
           <section className="np-hero">
             <div className="np-hero-left">
-              {unreadCount > 0 ? (
-                <>
-                  <div className="np-hero-number">{unreadCount}</div>
-                  <div className="np-hero-label">unread.</div>
-                </>
-              ) : (
-                <div className="np-hero-label np-hero-label--full">
-                  All caught up.
-                </div>
-              )}
+              <h1 className="np-hero-title">
+                {unreadCount > 0 ? `${unreadCount} unread.` : "All caught up."}
+              </h1>
               <p className="np-hero-sub">
                 {notifications.length} notification
                 {notifications.length !== 1 ? "s" : ""} total
               </p>
             </div>
-
             <div className="np-hero-right">
               <div className="np-stat-row">
-                <span className="np-stat-label">TODAY</span>
+                <span className="np-stat-label">Today</span>
                 <span className="np-stat-val">{stats.todayCount}</span>
               </div>
               <div className="np-stat-row">
-                <span className="np-stat-label">THIS WEEK</span>
+                <span className="np-stat-label">This week</span>
                 <span className="np-stat-val">{stats.weekCount}</span>
               </div>
               <div className="np-stat-row">
-                <span className="np-stat-label">TOTAL</span>
+                <span className="np-stat-label">Total</span>
                 <span className="np-stat-val">{notifications.length}</span>
               </div>
             </div>
@@ -217,24 +200,20 @@ export default function CreatorNotificationsPage() {
                 </div>
               </div>
             ) : (
-              filtered.map((n, i) => {
+              filtered.map((n) => {
                 const cat = inferCategory(n);
                 return (
                   <Link
                     key={n.id}
                     href={n.href}
-                    className={`np-item${n.read ? " np-item--read" : ""}`}
+                    className={`np-item${n.read ? " np-item--read" : " np-item--unread"}`}
                     onClick={() => markAsRead(n.id)}
-                    style={{ animationDelay: `${i * 30}ms` }}
                   >
-                    {/* Type swatch */}
                     <span
-                      className="np-item-swatch"
+                      className="np-item-dot"
                       style={{ background: CATEGORY_COLORS[cat] }}
                       aria-label={cat}
                     />
-
-                    {/* Content */}
                     <div className="np-item-content">
                       <div className="np-item-header">
                         <div className="np-item-title-row">
@@ -249,11 +228,6 @@ export default function CreatorNotificationsPage() {
                       </div>
                       <p className="np-item-body">{n.body}</p>
                     </div>
-
-                    {/* Unread indicator */}
-                    {!n.read && (
-                      <span className="np-unread-dot" aria-label="Unread" />
-                    )}
                   </Link>
                 );
               })
@@ -261,10 +235,10 @@ export default function CreatorNotificationsPage() {
           </div>
         </div>
 
-        {/* ── Right panel ── */}
+        {/* Right panel */}
         <aside className="np-panel">
           <div className="np-panel-block">
-            <div className="np-panel-eyebrow">NOTIFICATION STATS</div>
+            <div className="np-panel-eyebrow">Notification Stats</div>
             <div className="np-panel-stat">
               <span className="np-panel-stat-num">{stats.unreadToday}</span>
               <span className="np-panel-stat-desc">unread today</span>
@@ -288,7 +262,7 @@ export default function CreatorNotificationsPage() {
           <div className="np-panel-divider" />
 
           <div className="np-panel-block">
-            <div className="np-panel-eyebrow">QUICK ACTIONS</div>
+            <div className="np-panel-eyebrow">Quick Actions</div>
             <Link href="/creator/campaigns" className="np-quick-action">
               View all campaigns →
             </Link>
@@ -299,9 +273,8 @@ export default function CreatorNotificationsPage() {
 
           <div className="np-panel-divider" />
 
-          {/* Legend */}
           <div className="np-panel-block">
-            <div className="np-panel-eyebrow">KEY</div>
+            <div className="np-panel-eyebrow">Key</div>
             {(
               Object.keys(CATEGORY_COLORS) as Exclude<NotifCategory, "ALL">[]
             ).map((cat) => (

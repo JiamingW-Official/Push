@@ -998,18 +998,58 @@
 
 /* ── Responsive ───────────────────────────────────────────── */
 
-@media (max-width: 600px) {
+@media (max-width: 767px) {
   .wt-hero {
     padding: 36px 20px 28px;
   }
 
+  .wt-date-day {
+    font-size: clamp(48px, 10vw, 72px);
+  }
+
+  .wt-date-month {
+    font-size: clamp(24px, 6vw, 36px);
+  }
+
   .wt-body {
-    padding: 24px 20px;
+    padding: 32px 20px;
+  }
+
+  .wt-nav {
+    padding: 0 20px;
+  }
+}
+
+@media (max-width: 600px) {
+  .wt-hero {
+    padding: 28px 16px 20px;
+  }
+
+  .wt-body {
+    padding: 24px 16px;
   }
 
   .wt-timeline-axis { left: 52px; }
 
   .wt-timeline-row {
     grid-template-columns: 48px 24px 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .wt-date-day {
+    font-size: clamp(40px, 10vw, 56px);
+  }
+
+  .wt-date-month {
+    font-size: clamp(20px, 5vw, 28px);
+  }
+
+  .wt-cta-earn {
+    font-size: 22px;
+  }
+
+  .wt-task-campaign {
+    font-size: 14px;
   }
 }

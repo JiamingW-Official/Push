@@ -233,6 +233,10 @@
     padding: 32px 24px 28px;
   }
 
+  .db3-name {
+    font-size: clamp(36px, 9vw, 56px);
+  }
+
   .db3-task-hero {
     padding: 32px 24px;
   }
@@ -249,6 +253,41 @@
 
   .db3-invites-card {
     padding: 32px 24px;
+  }
+
+  .db3-big-num {
+    font-size: clamp(48px, 12vw, 72px);
+  }
+
+  .db3-earn {
+    font-size: clamp(28px, 8vw, 40px);
+  }
+}
+
+@media (max-width: 480px) {
+  .db3-greeting {
+    padding: 24px 16px 20px;
+  }
+
+  .db3-name {
+    font-size: clamp(32px, 8vw, 48px);
+  }
+
+  .db3-task-hero {
+    padding: 24px 16px;
+  }
+
+  .db3-score-card,
+  .db3-invites-card {
+    padding: 24px 16px;
+  }
+
+  .db3-big-num {
+    font-size: clamp(40px, 10vw, 60px);
+  }
+
+  .db3-earn {
+    font-size: clamp(24px, 7vw, 36px);
   }
 }
 
