@@ -3,6 +3,8 @@
 import "./TopNav.css";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
+import SearchModal from "./SearchModal";
 
 const ZONES = [
   { href: "/creator/inbox", label: "Inbox", badge: true },
@@ -13,6 +15,18 @@ const ZONES = [
 
 export default function TopNav() {
   const pathname = usePathname();
+  const [searchOpen, setSearchOpen] = useState(false);
+
+  useEffect(() => {
+    function handler(e: KeyboardEvent) {
+      if ((e.metaKey || e.ctrlKey) && e.key === "k") {
+        e.preventDefault();
+        setSearchOpen(true);
+      }
+    }
+    document.addEventListener("keydown", handler);
+    return () => document.removeEventListener("keydown", handler);
+  }, []);
 
   return (
     <div className="ws-topnav-inner">
@@ -39,7 +53,11 @@ export default function TopNav() {
       </nav>
 
       <div className="ws-topnav-right">
-        <button className="ws-search-btn" aria-label="Search (Cmd+K)">
+        <button
+          className="ws-search-btn"
+          aria-label="Search (Cmd+K)"
+          onClick={() => setSearchOpen(true)}
+        >
           <svg
             width="16"
             height="16"
@@ -70,6 +88,8 @@ export default function TopNav() {
           tabIndex={0}
         />
       </div>
+
+      <SearchModal open={searchOpen} onClose={() => setSearchOpen(false)} />
     </div>
   );
 }
