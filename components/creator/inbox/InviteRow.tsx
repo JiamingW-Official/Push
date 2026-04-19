@@ -48,6 +48,7 @@ export default function InviteRow({
         <div className="invite-row__actions">
           <button
             className="invite-row__btn invite-row__btn--accept"
+            aria-label={`Accept invite from ${item.merchantName}`}
             onClick={(e) => {
               e.stopPropagation();
               onAccept(item.id);
@@ -57,6 +58,7 @@ export default function InviteRow({
           </button>
           <button
             className="invite-row__btn invite-row__btn--decline"
+            aria-label={`Decline invite from ${item.merchantName}`}
             onClick={(e) => {
               e.stopPropagation();
               onDecline(item.id);

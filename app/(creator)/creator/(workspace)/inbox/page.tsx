@@ -55,6 +55,7 @@ export default function InboxPage() {
               key={f.key}
               className={`inbox-filter-btn${filter === f.key ? " inbox-filter-btn--active" : ""}`}
               onClick={() => setFilter(f.key)}
+              aria-pressed={filter === f.key}
             >
               {f.label}
             </button>
@@ -62,7 +63,7 @@ export default function InboxPage() {
         </nav>
       </div>
 
-      <div className="inbox-list">
+      <div className="inbox-list" role="list">
         {loading && (
           <div className="inbox-skeleton">
             {[1, 2, 3].map((n) => (

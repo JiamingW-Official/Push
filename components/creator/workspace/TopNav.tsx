@@ -42,6 +42,7 @@ export default function TopNav() {
               key={zone.href}
               href={zone.href}
               className={`ws-zone-link${isActive ? " ws-zone-link--active" : ""}`}
+              aria-current={isActive ? "page" : undefined}
             >
               {zone.label}
               {zone.badge && (
