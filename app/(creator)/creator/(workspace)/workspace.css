@@ -1,0 +1,70 @@
+.ws-shell {
+  display: grid;
+  grid-template-columns: var(--ws-side-w, 240px) 1fr var(--ws-context-w, 320px);
+  grid-template-rows: var(--ws-topnav-h, 56px) 1fr;
+  min-height: 100vh;
+  background: var(--surface, #f5f2ec);
+}
+
+.ws-topnav {
+  grid-column: 1 / -1;
+  grid-row: 1;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--surface, #f5f2ec);
+  border-bottom: 1px solid var(--line, rgba(0,48,73,0.12));
+}
+
+.ws-sidenav {
+  grid-column: 1;
+  grid-row: 2;
+  border-right: 1px solid var(--line, rgba(0,48,73,0.12));
+  overflow-y: auto;
+  position: sticky;
+  top: var(--ws-topnav-h, 56px);
+  height: calc(100vh - var(--ws-topnav-h, 56px));
+}
+
+.ws-main {
+  grid-column: 2;
+  grid-row: 2;
+  overflow-y: auto;
+  min-width: 0;
+}
+
+.ws-context {
+  grid-column: 3;
+  grid-row: 2;
+  border-left: 1px solid var(--line, rgba(0,48,73,0.12));
+  background: var(--surface-bright, #fafaf8);
+  position: sticky;
+  top: var(--ws-topnav-h, 56px);
+  height: calc(100vh - var(--ws-topnav-h, 56px));
+  overflow-y: auto;
+}
+
+/* CSS variables for workspace layout */
+:root {
+  --ws-side-w: 240px;
+  --ws-context-w: 320px;
+  --ws-topnav-h: 56px;
+}
+
+/* Mobile: single column */
+@media (max-width: 767px) {
+  .ws-shell {
+    grid-template-columns: 1fr;
+    grid-template-rows: 48px 1fr;
+  }
+
+  .ws-sidenav,
+  .ws-context {
+    display: none;
+  }
+
+  .ws-main {
+    grid-column: 1;
+    grid-row: 2;
+  }
+}
