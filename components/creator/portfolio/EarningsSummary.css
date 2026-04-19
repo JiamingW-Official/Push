@@ -1,0 +1,191 @@
+/* EarningsSummary — stat cards + payout history table */
+
+.es-root {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+/* ── Stat cards ──────────────────────────────────────────────── */
+
+.es-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  border-bottom: 1px solid var(--line, rgba(0, 48, 73, 0.12));
+}
+
+.es-card {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 24px;
+  border-right: 1px solid var(--line, rgba(0, 48, 73, 0.12));
+  border-top: 1px solid var(--line, rgba(0, 48, 73, 0.12));
+  background: var(--surface-elevated, #ffffff);
+  border-radius: 0;
+}
+
+.es-card:last-child {
+  border-right: none;
+}
+
+.es-card__label {
+  font-family: "CS Genio Mono", monospace;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--tertiary, #669bbc);
+}
+
+.es-card__value {
+  font-family: "Darky", sans-serif;
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--champagne, #c9a96e);
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+
+/* ── History heading ─────────────────────────────────────────── */
+
+.es-history {
+  display: flex;
+  flex-direction: column;
+}
+
+.es-history__heading {
+  font-family: "Darky", sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--graphite, #4a5568);
+  margin: 0;
+  padding: 16px 24px;
+  border-bottom: 1px solid var(--line, rgba(0, 48, 73, 0.12));
+}
+
+/* ── Table ───────────────────────────────────────────────────── */
+
+.es-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+.es-th {
+  font-family: "CS Genio Mono", monospace;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--graphite, #4a5568);
+  padding: 10px 16px;
+  text-align: left;
+  border-bottom: 1px solid var(--line, rgba(0, 48, 73, 0.12));
+  background: var(--surface, #f5f2ec);
+}
+
+.es-th--right {
+  text-align: right;
+}
+
+.es-tr {
+  height: 48px;
+  transition: background 120ms ease;
+}
+
+.es-tr:hover {
+  background: var(--surface-bright, #fafaf8);
+}
+
+.es-tr:not(:last-child) .es-td {
+  border-bottom: 1px solid var(--line, rgba(0, 48, 73, 0.12));
+}
+
+.es-td {
+  font-family: "CS Genio Mono", monospace;
+  font-size: 14px;
+  color: var(--dark, #003049);
+  padding: 0 16px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.es-td--right {
+  text-align: right;
+}
+
+.es-td--campaign {
+  font-weight: 600;
+}
+
+.es-td--amount {
+  font-family: "Darky", sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--champagne, #c9a96e);
+}
+
+.es-td--date {
+  color: var(--graphite, #4a5568);
+  font-size: 12px;
+}
+
+/* ── Status pills ────────────────────────────────────────────── */
+
+.es-pill {
+  font-family: "CS Genio Mono", monospace;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  display: inline-block;
+  border-radius: 0;
+}
+
+.es-pill--completed {
+  background: var(--tertiary, #669bbc);
+  color: #ffffff;
+}
+
+.es-pill--pending {
+  background: color-mix(in srgb, var(--tertiary, #669bbc) 20%, transparent);
+  color: var(--tertiary, #669bbc);
+}
+
+.es-pill--processing {
+  background: color-mix(in srgb, var(--champagne, #c9a96e) 22%, transparent);
+  color: color-mix(in srgb, var(--champagne, #c9a96e) 80%, var(--dark, #003049));
+}
+
+/* ── Empty state ─────────────────────────────────────────────── */
+
+.es-empty {
+  padding: 40px 24px;
+  border-left: 3px solid var(--primary, #c1121f);
+  margin: 24px;
+}
+
+.es-empty__text {
+  font-family: "CS Genio Mono", monospace;
+  font-size: 13px;
+  color: var(--graphite, #4a5568);
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* ── Responsive — collapse to 1-col stats on narrow ─────────── */
+@media (max-width: 480px) {
+  .es-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .es-card {
+    border-right: none;
+    border-bottom: 1px solid var(--line, rgba(0, 48, 73, 0.12));
+  }
+}

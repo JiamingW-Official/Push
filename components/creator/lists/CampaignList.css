@@ -1,0 +1,125 @@
+/* CampaignList — campaign pipeline rows */
+
+.cl-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* Row */
+.cl-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  height: 72px;
+  padding: 0 24px;
+  border-bottom: 1px solid var(--line, rgba(0, 48, 73, 0.12));
+  cursor: default;
+  transition: background 120ms ease;
+}
+
+.cl-row[role="button"] {
+  cursor: pointer;
+}
+
+.cl-row:hover {
+  background: var(--surface-bright, #fafaf8);
+}
+
+/* Left column */
+.cl-row__left {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.cl-merchant {
+  font-family: "Darky", sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--dark, #003049);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.cl-campaign-title {
+  font-family: "CS Genio Mono", monospace;
+  font-size: 13px;
+  color: var(--graphite, #4a5568);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Right column */
+.cl-row__right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+/* Status badge */
+.cl-badge {
+  font-family: "CS Genio Mono", monospace;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 2px 8px;
+  border-radius: 0;
+}
+
+.cl-badge--accepted {
+  background: color-mix(in srgb, var(--tertiary, #669bbc) 15%, transparent);
+  color: var(--tertiary, #669bbc);
+}
+
+.cl-badge--active {
+  background: color-mix(in srgb, var(--dark, #003049) 10%, transparent);
+  color: var(--dark, #003049);
+}
+
+.cl-badge--settled {
+  background: color-mix(in srgb, var(--graphite, #4a5568) 10%, transparent);
+  color: var(--graphite, #4a5568);
+}
+
+/* Payout */
+.cl-payout {
+  font-family: "Darky", sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--champagne, #c9a96e);
+}
+
+/* Empty state */
+.cl-empty {
+  padding: 40px 24px;
+  border-left: 3px solid var(--primary, #c1121f);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.cl-empty__title {
+  font-family: "Darky", sans-serif;
+  font-size: 1.5rem;
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  color: var(--dark, #003049);
+  margin: 0;
+  line-height: 1.1;
+}
+
+.cl-empty__body {
+  font-family: "CS Genio Mono", monospace;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--graphite, #4a5568);
+  margin: 0;
+}
