@@ -1,0 +1,137 @@
+.today-page {
+  max-width: 800px;
+  padding: 0;
+}
+
+.today-header {
+  padding: 32px 32px 24px;
+  border-bottom: 1px solid var(--line, rgba(0,48,73,0.12));
+}
+
+.today-title {
+  font-family: Darky, sans-serif;
+  font-size: clamp(40px, 5vw, 64px);
+  font-weight: 800;
+  letter-spacing: -0.05em;
+  color: var(--dark, #003049);
+  margin: 0;
+  line-height: 1;
+}
+
+.today-date {
+  font-family: 'CS Genio Mono', monospace;
+  font-size: 13px;
+  color: var(--graphite, #4a5568);
+  margin: 8px 0 0;
+  letter-spacing: 0.02em;
+}
+
+/* Editorial empty state */
+.today-empty {
+  padding: 48px 32px;
+}
+
+.today-empty__title {
+  font-family: Darky, sans-serif;
+  font-weight: 900;
+  font-size: clamp(32px, 5vw, 56px);
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+  color: var(--dark, #003049);
+  margin: 0;
+}
+
+.today-empty__body {
+  font-family: 'CS Genio Mono', monospace;
+  font-size: 14px;
+  color: var(--graphite, #4a5568);
+  margin: 12px 0 0;
+  line-height: 1.5;
+}
+
+.today-empty__link {
+  display: inline-block;
+  margin-top: 20px;
+  font-family: 'CS Genio Mono', monospace;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--primary, #c1121f);
+  border-bottom: 1px solid currentColor;
+  padding-bottom: 2px;
+  text-decoration: none;
+}
+
+/* Timeline */
+.today-timeline {
+  padding: 0 0 32px;
+}
+
+.today-timeline__row {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 0 32px;
+  min-height: 48px;
+  border-bottom: 1px solid var(--line, rgba(0,48,73,0.12));
+}
+
+.today-timeline__hour {
+  font-family: 'CS Genio Mono', monospace;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--graphite, #4a5568);
+  width: 40px;
+  flex-shrink: 0;
+  padding-top: 14px;
+  letter-spacing: 0.04em;
+}
+
+.today-timeline__events {
+  flex: 1;
+  padding: 8px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.today-event {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: var(--surface-elevated, #fff);
+  border: 1px solid var(--line, rgba(0,48,73,0.12));
+  border-left: 3px solid var(--primary, #c1121f);
+  text-decoration: none;
+  transition: background 200ms ease;
+}
+
+.today-event:hover {
+  background: var(--surface-bright, #fafaf8);
+}
+
+.today-event--deadline {
+  border-left-color: var(--primary, #c1121f);
+}
+
+.today-event--visit {
+  border-left-color: var(--tertiary, #669bbc);
+}
+
+.today-event--publish {
+  border-left-color: var(--champagne, #c9a96e);
+}
+
+.today-event__label {
+  font-family: Darky, sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--dark, #003049);
+}
+
+.today-event__merchant {
+  font-family: 'CS Genio Mono', monospace;
+  font-size: 12px;
+  color: var(--graphite, #4a5568);
+}

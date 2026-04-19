@@ -1,0 +1,130 @@
+.drafts-page {
+  max-width: 800px;
+}
+
+.drafts-header {
+  padding: 32px 32px 24px;
+  border-bottom: 1px solid var(--line, rgba(0,48,73,0.12));
+}
+
+.drafts-title {
+  font-family: Darky, sans-serif;
+  font-size: clamp(32px, 4vw, 48px);
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  color: var(--dark, #003049);
+  margin: 0;
+  line-height: 1.05;
+}
+
+.drafts-empty {
+  padding: 48px 32px;
+}
+
+.drafts-empty__title {
+  font-family: Darky, sans-serif;
+  font-weight: 900;
+  font-size: clamp(32px, 5vw, 56px);
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+  color: var(--dark, #003049);
+  margin: 0;
+}
+
+.drafts-empty__body {
+  font-family: 'CS Genio Mono', monospace;
+  font-size: 14px;
+  color: var(--graphite, #4a5568);
+  margin: 12px 0 0;
+  line-height: 1.5;
+  max-width: 420px;
+}
+
+.drafts-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.drafts-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 32px;
+  height: 64px;
+  border-bottom: 1px solid var(--line, rgba(0,48,73,0.12));
+  background: var(--surface-elevated, #fff);
+  transition: background 200ms ease;
+}
+
+.drafts-row:hover {
+  background: var(--surface-bright, #fafaf8);
+}
+
+.drafts-row__content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.drafts-row__merchant {
+  font-family: Darky, sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--dark, #003049);
+}
+
+.drafts-row__campaign {
+  font-family: 'CS Genio Mono', monospace;
+  font-size: 12px;
+  color: var(--graphite, #4a5568);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.drafts-row__meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+  flex-shrink: 0;
+}
+
+.drafts-row__time {
+  font-family: 'CS Genio Mono', monospace;
+  font-size: 11px;
+  color: var(--graphite, #4a5568);
+}
+
+.drafts-row__type {
+  font-family: 'CS Genio Mono', monospace;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--tertiary, #669bbc);
+}
+
+.drafts-row__resume {
+  padding: 6px 14px;
+  background: none;
+  border: 1px solid var(--dark, #003049);
+  font-family: 'CS Genio Mono', monospace;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--dark, #003049);
+  cursor: pointer;
+  border-radius: 0;
+  transition: background 200ms ease, color 200ms ease;
+  flex-shrink: 0;
+}
+
+.drafts-row__resume:hover {
+  background: var(--dark, #003049);
+  color: #fff;
+}

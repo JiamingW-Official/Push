@@ -1,0 +1,47 @@
+.pipeline-page {
+  max-width: 800px;
+}
+
+.pipeline-header {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  padding: 32px 32px 24px;
+  border-bottom: 1px solid var(--line, rgba(0,48,73,0.12));
+}
+
+.pipeline-title {
+  font-family: Darky, sans-serif;
+  font-size: clamp(32px, 4vw, 48px);
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  color: var(--dark, #003049);
+  margin: 0;
+  line-height: 1.05;
+}
+
+.pipeline-count {
+  font-family: 'CS Genio Mono', monospace;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--graphite, #4a5568);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.pipeline-skeleton {
+  padding: 0;
+}
+
+.pipeline-skeleton-row {
+  height: 72px;
+  background: linear-gradient(90deg, var(--surface, #f5f2ec) 25%, var(--surface-bright, #fafaf8) 50%, var(--surface, #f5f2ec) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s linear infinite;
+  border-bottom: 1px solid var(--line, rgba(0,48,73,0.12));
+}
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
