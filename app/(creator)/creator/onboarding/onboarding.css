@@ -1,28 +1,234 @@
-/* ── Onboarding Page ─────────────────────────────────────── */
+/* ── Onboarding Page — Two-column editorial layout ─────────── */
 
 .ob-page {
   min-height: 100svh;
-  background: var(--surface);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: var(--space-4, 32px);
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  background: var(--surface, #f5f2ec);
 }
 
-.ob-card {
-  max-width: 520px;
+/* ── Sidebar ──────────────────────────────────────────────── */
+
+.ob-sidebar {
+  background: linear-gradient(160deg, #003049 0%, #001d2e 60%, #000f18 100%);
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  padding: 48px 36px;
+  box-sizing: border-box;
+  background-image:
+    linear-gradient(160deg, #003049 0%, #001d2e 60%, #000f18 100%),
+    repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(245, 242, 236, 0.012) 40px),
+    repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(245, 242, 236, 0.012) 40px);
+  background-blend-mode: normal, overlay, overlay;
+}
+
+.ob-sidebar::after {
+  content: "PUSH";
+  position: absolute;
+  bottom: -20px;
+  right: -8px;
+  font-family: "Darky", sans-serif;
+  font-size: clamp(80px, 14vw, 180px);
+  font-weight: 900;
+  letter-spacing: -0.08em;
+  color: rgba(255, 255, 255, 0.015);
+  line-height: 1;
+  pointer-events: none;
+}
+
+.ob-sidebar-logo {
+  font-family: "Darky", sans-serif;
+  font-size: 1.5rem;
+  font-weight: 900;
+  font-style: italic;
+  letter-spacing: -0.06em;
+  color: var(--surface, #f5f2ec);
+  text-decoration: none;
+  position: relative;
+  width: fit-content;
+  margin-bottom: 48px;
+  z-index: 1;
+}
+
+.ob-sidebar-logo::after {
+  content: "";
+  position: absolute;
+  bottom: -3px;
+  left: 0;
+  width: 24px;
+  height: 2px;
+  background: var(--primary, #c1121f);
+}
+
+.ob-sidebar-content {
+  flex: 1;
+  position: relative;
+  z-index: 1;
+}
+
+.ob-sidebar-eyebrow {
+  font-family: "CS Genio Mono", monospace;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(245, 242, 236, 0.35);
+  display: block;
+  margin-bottom: 8px;
+}
+
+.ob-sidebar-tier {
+  margin-bottom: 32px;
+}
+
+.ob-sidebar-tier-badge {
+  font-family: "CS Genio Mono", monospace;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(184, 169, 154, 0.9);
+  border: 1.5px dashed rgba(184, 169, 154, 0.4);
+  padding: 4px 12px;
+  display: inline-block;
+}
+
+/* Step nav */
+.ob-step-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.ob-step-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(245, 242, 236, 0.06);
+  transition: opacity 200ms ease;
+  opacity: 0.4;
+}
+
+.ob-step-nav-item--active {
+  opacity: 1;
+}
+
+.ob-step-nav-item--done {
+  opacity: 0.6;
+}
+
+.ob-step-nav-item:last-child {
+  border-bottom: none;
+}
+
+.ob-step-nav-num {
+  font-family: "Darky", sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: rgba(245, 242, 236, 0.4);
+  letter-spacing: -0.02em;
+  min-width: 28px;
+  line-height: 1;
+  transition: color 200ms ease;
+}
+
+.ob-step-nav-item--active .ob-step-nav-num {
+  color: var(--primary, #c1121f);
+}
+
+.ob-step-nav-item--done .ob-step-nav-num {
+  color: rgba(245, 242, 236, 0.5);
+}
+
+.ob-step-nav-label {
+  font-family: "CS Genio Mono", monospace;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(245, 242, 236, 0.5);
+  transition: color 200ms ease;
+}
+
+.ob-step-nav-item--active .ob-step-nav-label {
+  color: var(--surface, #f5f2ec);
+}
+
+.ob-step-nav-item--done .ob-step-nav-label {
+  color: rgba(245, 242, 236, 0.55);
+  text-decoration: line-through;
+  text-decoration-color: rgba(245, 242, 236, 0.25);
+}
+
+/* Big editorial step number */
+.ob-sidebar-stat {
+  position: relative;
+  z-index: 1;
+  border-top: 1px solid rgba(245, 242, 236, 0.1);
+  padding-top: 24px;
+}
+
+.ob-sidebar-big-num {
+  display: block;
+  font-family: "Darky", sans-serif;
+  font-size: clamp(64px, 10vw, 96px);
+  font-weight: 200;
+  letter-spacing: -0.06em;
+  color: var(--surface, #f5f2ec);
+  line-height: 0.9;
+}
+
+.ob-sidebar-big-label {
+  font-family: "CS Genio Mono", monospace;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(245, 242, 236, 0.35);
+  display: block;
+  margin-top: 8px;
+}
+
+/* ── Main content ─────────────────────────────────────────── */
+
+.ob-main {
+  display: flex;
+  flex-direction: column;
+  min-height: 100svh;
+  overflow-y: auto;
+}
+
+.ob-content {
+  flex: 1;
+  padding: 48px 56px;
+  max-width: 640px;
   width: 100%;
-  background: #ffffff;
-  border: 1px solid rgba(0, 48, 73, 0.08);
-  padding: var(--space-6, 48px);
+  box-sizing: border-box;
+}
+
+/* Legacy ob-card — redirect to ob-content for compat */
+.ob-card {
+  background: transparent;
+  border: none;
+  padding: 0;
+  max-width: unset;
 }
 
 /* ── Step Enter Animation ────────────────────────────────── */
 
+.ob-step-enter {
+  animation: ob-fade-slide-in 220ms ease forwards;
+}
+
 @keyframes ob-fade-slide-in {
   from {
     opacity: 0;
-    transform: translateY(10px);
+    transform: translateY(8px);
   }
   to {
     opacity: 1;
@@ -30,16 +236,18 @@
   }
 }
 
-.ob-step-enter {
-  animation: ob-fade-slide-in 220ms ease forwards;
-}
-
-/* ── Progress Dots (squares per design system) ──────────── */
+/* ── Progress Dots — hidden on desktop, shown on mobile ───── */
 
 .ob-progress-dots {
-  display: flex;
+  display: none;
   gap: 8px;
-  margin-bottom: var(--space-5, 40px);
+  margin-bottom: 32px;
+}
+
+@media (max-width: 900px) {
+  .ob-progress-dots {
+    display: flex;
+  }
 }
 
 .ob-dot {
@@ -56,7 +264,7 @@
   border-color: #003049;
 }
 
-/* ── Step Label — styled like section-tag ───────────────── */
+/* ── Step Label ─────────────────────────────────────────── */
 
 .ob-step-number {
   display: inline-flex;
@@ -67,7 +275,7 @@
   text-transform: uppercase;
   letter-spacing: 0.1em;
   color: #669bbc;
-  margin-bottom: var(--space-2, 16px);
+  margin-bottom: 16px;
   font-family: "CS Genio Mono", monospace;
 }
 
@@ -80,73 +288,45 @@
   flex-shrink: 0;
 }
 
+/* ── Step Header block ──────────────────────────────────── */
+
+.ob-step-header {
+  margin-bottom: 40px;
+  padding-bottom: 32px;
+  border-bottom: 1px solid rgba(0, 48, 73, 0.12);
+}
+
+.ob-step-tag {
+  display: block;
+  font-family: "CS Genio Mono", monospace;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--tertiary, #669bbc);
+  margin-bottom: 16px;
+}
+
 /* ── Heading ────────────────────────────────────────────── */
 
 .ob-heading {
-  font-family: "Darky", serif;
-  font-weight: 800;
-  font-size: clamp(28px, 5vw, 40px);
-  letter-spacing: -0.045em;
-  color: #003049;
-  margin-bottom: var(--space-2, 16px);
-  line-height: 1.05;
+  font-family: "Darky", sans-serif;
+  font-weight: 900;
+  font-size: clamp(32px, 5vw, 52px);
+  letter-spacing: -0.05em;
+  color: var(--dark, #003049);
+  margin: 0 0 12px;
+  line-height: 1.0;
 }
 
 /* ── Subtext ────────────────────────────────────────────── */
 
 .ob-subtext {
   font-family: "CS Genio Mono", monospace;
-  font-size: 14px;
-  color: rgba(0, 48, 73, 0.6);
-  line-height: 1.6;
-  margin-bottom: var(--space-5, 40px);
-}
-
-/* ── Avatar Placeholder ──────────────────────────────────── */
-
-.ob-avatar-row {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  margin-bottom: var(--space-4, 32px);
-}
-
-.ob-avatar-placeholder {
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
-  background: rgba(0, 48, 73, 0.05);
-  border: 2px dashed rgba(0, 48, 73, 0.2);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  flex-shrink: 0;
-  transition: border-color 150ms, background 150ms;
-}
-
-.ob-avatar-placeholder:hover {
-  border-color: #003049;
-  background: rgba(0, 48, 73, 0.08);
-}
-
-.ob-avatar-icon {
-  font-size: 24px;
-  opacity: 0.5;
-}
-
-.ob-avatar-hint-title {
-  font-family: "CS Genio Mono", monospace;
   font-size: 13px;
-  font-weight: 700;
-  color: #003049;
-  margin-bottom: 4px;
-}
-
-.ob-avatar-hint-sub {
-  font-family: "CS Genio Mono", monospace;
-  font-size: 12px;
   color: rgba(0, 48, 73, 0.5);
+  line-height: 1.7;
+  margin: 0;
 }
 
 /* ── Profile Completeness Bar ───────────────────────────── */
@@ -155,68 +335,67 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  margin-bottom: var(--space-4, 32px);
+  margin-bottom: 32px;
 }
 
 .ob-completeness-track {
   flex: 1;
-  height: 4px;
-  background: rgba(0, 48, 73, 0.1);
-  position: relative;
-  overflow: hidden;
+  height: 2px;
+  background: rgba(0, 48, 73, 0.08);
 }
 
 .ob-completeness-fill {
   height: 100%;
-  background: linear-gradient(90deg, #669bbc, #c1121f);
-  transition: width 600ms ease;
+  background: var(--primary, #c1121f);
+  transition: width 600ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .ob-completeness-label {
   font-family: "CS Genio Mono", monospace;
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 700;
-  color: rgba(0, 48, 73, 0.4);
+  color: rgba(0, 48, 73, 0.35);
   white-space: nowrap;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
 }
 
 /* ── Form Fields ─────────────────────────────────────────── */
 
 .ob-field {
-  margin-bottom: var(--space-3, 24px);
+  margin-bottom: 24px;
 }
 
 .ob-label {
   display: block;
   font-family: "CS Genio Mono", monospace;
-  font-size: 11px;
-  font-weight: 600;
+  font-size: 10px;
+  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: rgba(0, 48, 73, 0.5);
-  margin-bottom: 6px;
+  letter-spacing: 0.12em;
+  color: rgba(0, 48, 73, 0.40);
+  margin-bottom: 8px;
 }
 
 .ob-input,
 .ob-textarea {
   width: 100%;
-  border: 1.5px solid rgba(0, 48, 73, 0.15);
-  border-radius: 0;
-  padding: 10px 12px;
+  border: none;
+  border-bottom: 1.5px solid rgba(0, 48, 73, 0.15);
+  padding: 10px 0;
   font-family: "CS Genio Mono", monospace;
-  font-size: 14px;
-  color: #003049;
-  background: #ffffff;
-  transition: border-color 150ms;
+  font-size: 15px;
+  color: var(--dark, #003049);
+  background: transparent;
+  transition: border-color 200ms ease;
   box-sizing: border-box;
   outline: none;
+  border-radius: 0;
 }
 
 .ob-input:focus,
 .ob-textarea:focus {
-  border-color: #003049;
+  border-bottom-color: var(--primary, #c1121f);
 }
 
 .ob-textarea {
@@ -227,23 +406,649 @@
 
 .ob-char-count {
   font-family: "CS Genio Mono", monospace;
-  font-size: 11px;
-  color: rgba(0, 48, 73, 0.35);
+  font-size: 10px;
+  color: rgba(0, 48, 73, 0.30);
   text-align: right;
   margin-top: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
 }
 
 .ob-char-count--warning {
-  color: #c1121f;
+  color: var(--primary, #c1121f);
 }
 
-/* ── Chips ───────────────────────────────────────────────── */
+/* ── Campaign cards — dark, editorial, dramatic ─────────── */
+
+.ob-campaign-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-top: 0;
+}
+
+.ob-campaign-card {
+  background: var(--dark, #003049);
+  border: none;
+  padding: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  animation: cardReveal 400ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  min-height: 180px;
+}
+
+@keyframes cardReveal {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.ob-campaign-top {
+  background: var(--primary, #c1121f);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.ob-campaign-payout-big {
+  font-family: "Darky", sans-serif;
+  font-size: 32px;
+  font-weight: 900;
+  color: #ffffff;
+  letter-spacing: -0.04em;
+  line-height: 1;
+}
+
+.ob-campaign-payout-unit {
+  font-family: "CS Genio Mono", monospace;
+  font-size: 9px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: rgba(255, 255, 255, 0.65);
+}
+
+.ob-campaign-body {
+  padding: 16px;
+  flex: 1;
+}
+
+.ob-campaign-merchant {
+  font-family: "Darky", sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--surface, #f5f2ec);
+  margin: 0 0 4px;
+  letter-spacing: -0.02em;
+}
+
+.ob-campaign-category {
+  font-family: "CS Genio Mono", monospace;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(245, 242, 236, 0.40);
+  margin: 0;
+}
+
+.ob-campaign-footer {
+  padding: 12px 16px;
+  border-top: 1px solid rgba(245, 242, 236, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.ob-campaign-spots {
+  font-family: "CS Genio Mono", monospace;
+  font-size: 10px;
+  font-weight: 600;
+  color: rgba(245, 242, 236, 0.45);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+.ob-campaign-apply {
+  font-family: "CS Genio Mono", monospace;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border: 1px solid rgba(245, 242, 236, 0.2);
+  background: transparent;
+  color: rgba(245, 242, 236, 0.3);
+  padding: 5px 12px;
+  cursor: not-allowed;
+  border-radius: 0;
+}
+
+/* ── Platform tiles ──────────────────────────────────────── */
+
+.ob-platform-tiles {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  border: 1px solid rgba(0, 48, 73, 0.12);
+  margin-top: 0;
+}
+
+.ob-platform-tile {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  border-bottom: 1px solid rgba(0, 48, 73, 0.12);
+  padding: 20px 24px;
+  background: var(--surface-elevated, #ffffff);
+  transition: background 200ms ease;
+}
+
+.ob-platform-tile:last-child {
+  border-bottom: none;
+}
+
+.ob-platform-tile--connected {
+  background: rgba(193, 18, 31, 0.03);
+  border-left: 3px solid var(--primary, #c1121f);
+}
+
+.ob-platform-tile--connected.ob-platform-tile {
+  padding-left: 21px;
+}
+
+.ob-platform-icon {
+  font-family: "CS Genio Mono", monospace;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  width: 44px;
+  height: 44px;
+  border: 1px solid rgba(0, 48, 73, 0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--dark, #003049);
+  flex-shrink: 0;
+}
+
+.ob-platform-tile--connected .ob-platform-icon {
+  background: var(--primary, #c1121f);
+  border-color: var(--primary, #c1121f);
+  color: #fff;
+}
+
+.ob-platform-info {
+  flex: 1;
+}
+
+.ob-platform-name {
+  font-family: "Darky", sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--dark, #003049);
+  margin: 0 0 2px;
+  letter-spacing: -0.02em;
+}
+
+.ob-platform-req {
+  font-family: "CS Genio Mono", monospace;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(0, 48, 73, 0.40);
+  margin: 0;
+}
+
+.ob-platform-btn {
+  margin-left: auto;
+  font-family: "CS Genio Mono", monospace;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border: 1px solid var(--dark, #003049);
+  background: transparent;
+  padding: 8px 20px;
+  cursor: pointer;
+  white-space: nowrap;
+  color: var(--dark, #003049);
+  transition: background 200ms ease, color 200ms ease;
+  border-radius: 0;
+}
+
+.ob-platform-btn:hover:not(:disabled) {
+  background: var(--dark, #003049);
+  color: var(--surface, #f5f2ec);
+}
+
+.ob-platform-btn--connected {
+  background: var(--primary, #c1121f);
+  border-color: var(--primary, #c1121f);
+  color: #fff;
+  cursor: default;
+}
+
+/* ── Payout tabs — Bloomberg terminal precision ─────────── */
+
+.ob-payout-tabs {
+  display: flex;
+  border: 1px solid rgba(0, 48, 73, 0.12);
+  border-bottom: none;
+  margin-bottom: 0;
+  gap: 0;
+}
+
+.ob-payout-tab {
+  flex: 1;
+  font-family: "CS Genio Mono", monospace;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 12px 16px;
+  border: none;
+  border-right: 1px solid rgba(0, 48, 73, 0.12);
+  background: var(--surface-elevated, #ffffff);
+  cursor: pointer;
+  color: rgba(0, 48, 73, 0.45);
+  border-bottom: 2px solid transparent;
+  margin-bottom: 0;
+  transition: color 200ms ease, background 200ms ease;
+  text-align: center;
+}
+
+.ob-payout-tab:last-child {
+  border-right: none;
+}
+
+.ob-payout-tab--active {
+  color: var(--primary, #c1121f);
+  background: var(--surface-bright, #fafaf8);
+  border-bottom-color: var(--primary, #c1121f);
+}
+
+.ob-payout-panel {
+  border: 1px solid rgba(0, 48, 73, 0.12);
+  padding: 24px;
+  background: var(--surface-elevated, #ffffff);
+  margin-bottom: 24px;
+}
+
+/* ── Upload areas ────────────────────────────────────────── */
+
+.ob-upload-area {
+  border: 1.5px dashed rgba(0, 48, 73, 0.2);
+  padding: 40px 24px;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 250ms ease, background 250ms ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.ob-upload-area:hover {
+  border-color: rgba(0, 48, 73, 0.5);
+  background: rgba(0, 48, 73, 0.02);
+}
+
+.ob-upload-area--done {
+  border-style: solid;
+  border-color: #10b981;
+  background: rgba(16, 185, 129, 0.04);
+}
+
+.ob-upload-hint {
+  font-family: "CS Genio Mono", monospace;
+  font-size: 12px;
+  font-weight: 500;
+  color: rgba(0, 48, 73, 0.40);
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.ob-upload-done {
+  font-family: "CS Genio Mono", monospace;
+  font-size: 12px;
+  font-weight: 700;
+  color: #10b981;
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+/* ── Navigation buttons ──────────────────────────────────── */
+
+.ob-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 48px;
+  padding-top: 32px;
+  border-top: 1px solid rgba(0, 48, 73, 0.12);
+}
+
+.ob-back-btn {
+  font-family: "CS Genio Mono", monospace;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(0, 48, 73, 0.35);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  transition: color 150ms ease;
+  text-decoration: none;
+}
+
+.ob-back-btn:hover {
+  color: var(--dark, #003049);
+}
+
+.ob-next-btn {
+  font-family: "CS Genio Mono", monospace;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 14px 36px;
+  background: var(--dark, #003049);
+  color: var(--surface, #f5f2ec);
+  border: none;
+  cursor: pointer;
+  transition: background 200ms ease, box-shadow 200ms ease;
+  min-height: 48px;
+  position: relative;
+  overflow: hidden;
+  border-radius: 0;
+}
+
+.ob-next-btn:hover:not(:disabled) {
+  background: var(--primary, #c1121f);
+  box-shadow: 4px 4px 0 var(--dark, #003049);
+}
+
+.ob-next-btn:disabled {
+  background: rgba(0, 48, 73, 0.12);
+  color: rgba(0, 48, 73, 0.3);
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.ob-next-btn--full {
+  background: var(--primary, #c1121f);
+  padding: 14px 48px;
+}
+
+.ob-next-btn--full:hover:not(:disabled) {
+  background: #780000;
+  box-shadow: 4px 4px 0 var(--dark, #003049);
+}
+
+/* ── Error message ───────────────────────────────────────── */
+
+.ob-error {
+  font-family: "CS Genio Mono", monospace;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--primary, #c1121f);
+  margin-top: 12px;
+  padding: 10px 0;
+  border-top: 1px solid rgba(193, 18, 31, 0.15);
+  letter-spacing: 0.04em;
+}
+
+/* ── Completion — full-bleed takeover ────────────────────── */
+
+.ob-page--completion {
+  display: flex;
+  grid-template-columns: unset;
+  align-items: stretch;
+  background: var(--dark, #003049);
+}
+
+.ob-completion {
+  width: 100%;
+  min-height: 100svh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  padding: 48px;
+}
+
+.ob-completion::before {
+  content: "LIVE";
+  position: absolute;
+  bottom: -40px;
+  right: -20px;
+  font-family: "Darky", sans-serif;
+  font-size: clamp(120px, 25vw, 320px);
+  font-weight: 900;
+  letter-spacing: -0.08em;
+  color: rgba(245, 242, 236, 0.025);
+  line-height: 1;
+  pointer-events: none;
+}
+
+.ob-completion-inner {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  max-width: 560px;
+}
+
+.ob-completion-eyebrow {
+  display: block;
+  font-family: "CS Genio Mono", monospace;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--primary, #c1121f);
+  margin-bottom: 24px;
+  animation: fadeUp 600ms cubic-bezier(0.22, 1, 0.36, 1) 100ms both;
+}
+
+.ob-completion-hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0 0 24px;
+  line-height: 1;
+}
+
+.ob-completion-hero-thin {
+  font-family: "Darky", sans-serif;
+  font-size: clamp(64px, 12vw, 120px);
+  font-weight: 200;
+  color: rgba(245, 242, 236, 0.5);
+  letter-spacing: -0.05em;
+  animation: fadeUp 700ms cubic-bezier(0.22, 1, 0.36, 1) 200ms both;
+}
+
+.ob-completion-hero-bold {
+  font-family: "Darky", sans-serif;
+  font-size: clamp(72px, 14vw, 160px);
+  font-weight: 900;
+  color: var(--surface, #f5f2ec);
+  letter-spacing: -0.06em;
+  animation: fadeUp 700ms cubic-bezier(0.22, 1, 0.36, 1) 300ms both;
+}
+
+.ob-completion-sub {
+  font-family: "CS Genio Mono", monospace;
+  font-size: 14px;
+  color: rgba(245, 242, 236, 0.55);
+  max-width: 440px;
+  margin: 0 auto 40px;
+  line-height: 1.7;
+  animation: fadeUp 600ms cubic-bezier(0.22, 1, 0.36, 1) 400ms both;
+}
+
+.ob-completion-cta {
+  font-family: "CS Genio Mono", monospace;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  background: var(--primary, #c1121f);
+  color: #fff;
+  border: none;
+  padding: 16px 48px;
+  cursor: pointer;
+  transition: background 200ms ease, box-shadow 200ms ease;
+  animation: fadeUp 600ms cubic-bezier(0.22, 1, 0.36, 1) 500ms both;
+  border-radius: 0;
+}
+
+.ob-completion-cta:hover {
+  background: #780000;
+  box-shadow: 5px 5px 0 rgba(245, 242, 236, 0.2);
+}
+
+/* Confetti rects */
+.ob-confetti {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.ob-confetti-piece {
+  position: absolute;
+  width: 8px;
+  height: 20px;
+  animation: confettiFall 2.4s cubic-bezier(0.4, 0, 1, 1) infinite;
+  opacity: 0;
+}
+
+.ob-confetti-piece--1 { background: var(--primary, #c1121f); left: 15%; top: -30px; animation-delay: 0ms; transform: rotate(15deg); }
+.ob-confetti-piece--2 { background: var(--champagne, #c9a96e); left: 32%; top: -30px; animation-delay: 320ms; transform: rotate(-8deg); width: 6px; height: 16px; }
+.ob-confetti-piece--3 { background: var(--tertiary, #669bbc); left: 58%; top: -30px; animation-delay: 160ms; transform: rotate(22deg); width: 10px; height: 10px; }
+.ob-confetti-piece--4 { background: var(--surface, #f5f2ec); left: 78%; top: -30px; animation-delay: 480ms; transform: rotate(-18deg); }
+.ob-confetti-piece:nth-child(5)  { left: 22%; animation-delay: 640ms; background: var(--champagne, #c9a96e); }
+.ob-confetti-piece:nth-child(6)  { left: 45%; animation-delay: 800ms; background: var(--primary, #c1121f); width: 5px; }
+.ob-confetti-piece:nth-child(7)  { left: 65%; animation-delay: 950ms; background: var(--tertiary, #669bbc); height: 14px; }
+.ob-confetti-piece:nth-child(8)  { left: 85%; animation-delay: 1100ms; background: var(--surface, #f5f2ec); }
+.ob-confetti-piece:nth-child(9)  { left: 10%; animation-delay: 1250ms; background: var(--primary, #c1121f); }
+.ob-confetti-piece:nth-child(10) { left: 38%; animation-delay: 1400ms; background: var(--champagne, #c9a96e); height: 12px; }
+.ob-confetti-piece:nth-child(11) { left: 55%; animation-delay: 1550ms; background: var(--tertiary, #669bbc); width: 12px; height: 12px; }
+.ob-confetti-piece:nth-child(12) { left: 72%; animation-delay: 1700ms; background: var(--surface, #f5f2ec); }
+
+@keyframes confettiFall {
+  0%   { opacity: 0; transform: translateY(0) rotate(0deg); }
+  10%  { opacity: 1; }
+  90%  { opacity: 0.8; }
+  100% { opacity: 0; transform: translateY(100vh) rotate(480deg); }
+}
+
+/* ── KYC specific ────────────────────────────────────────── */
+
+.ob-kyc-eyebrow {
+  display: block;
+  font-family: "CS Genio Mono", monospace;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--champagne, #c9a96e);
+  margin-bottom: 8px;
+}
+
+.ob-kyc-why {
+  margin-top: 24px;
+  font-family: "CS Genio Mono", monospace;
+  font-size: 12px;
+  color: rgba(0, 48, 73, 0.45);
+}
+
+.ob-kyc-why summary {
+  cursor: pointer;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-size: 10px;
+  color: rgba(0, 48, 73, 0.55);
+}
+
+/* ── Selfie states ───────────────────────────────────────── */
+
+.ob-selfie-done,
+.ob-selfie-countdown {
+  font-family: "CS Genio Mono", monospace;
+  font-size: 13px;
+  padding: 20px 24px;
+  border: 1px solid;
+  text-align: center;
+}
+
+.ob-selfie-done {
+  color: #10b981;
+  border-color: rgba(16, 185, 129, 0.3);
+  background: rgba(16, 185, 129, 0.04);
+}
+
+.ob-selfie-countdown {
+  color: var(--dark, #003049);
+  border-color: rgba(0, 48, 73, 0.12);
+}
+
+.ob-btn-secondary {
+  font-family: "CS Genio Mono", monospace;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  border: 1px solid var(--dark, #003049);
+  background: transparent;
+  padding: 12px 24px;
+  cursor: pointer;
+  color: var(--dark, #003049);
+  transition: background 200ms ease;
+  border-radius: 0;
+}
+
+.ob-btn-secondary:hover {
+  background: var(--dark, #003049);
+  color: var(--surface, #f5f2ec);
+}
+
+/* ── Misc labels ─────────────────────────────────────────── */
+
+.ob-step-dot--gold {
+  background: var(--champagne, #c9a96e) !important;
+}
+
+.ob-label-optional {
+  font-family: "CS Genio Mono", monospace;
+  font-size: 10px;
+  color: rgba(0, 48, 73, 0.35);
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+/* ── Chips (retained for compat) ─────────────────────────── */
 
 .ob-chips {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
-  margin-bottom: var(--space-4, 32px);
+  margin-bottom: 32px;
 }
 
 .ob-chip {
@@ -253,8 +1058,7 @@
   padding: 10px 16px;
   min-height: 44px;
   border: 2px solid rgba(0, 48, 73, 0.15);
-  border-radius: 50vh; /* pill — design system exception for filter chips */
-  border-left-width: 2px;
+  border-radius: 50vh;
   font-family: "CS Genio Mono", monospace;
   font-size: 13px;
   font-weight: 600;
@@ -263,7 +1067,6 @@
   transition: all 150ms ease;
   background: transparent;
   user-select: none;
-  position: relative;
 }
 
 .ob-chip:hover {
@@ -275,15 +1078,6 @@
   color: #f5f2ec;
   border-color: #003049;
   border-left: 3px solid #c1121f;
-}
-
-.ob-chip-icon {
-  font-size: 16px;
-  line-height: 1;
-}
-
-.ob-chip-label {
-  /* inherits chip font */
 }
 
 .ob-chip-badge {
@@ -303,425 +1097,98 @@
   background: rgba(245, 242, 236, 0.15);
 }
 
-/* ── Calendar Grid (Step 3) ──────────────────────────────── */
+/* ── fadeUp animation ────────────────────────────────────── */
 
-.ob-calendar-section {
-  margin-bottom: var(--space-3, 24px);
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-.ob-calendar-group-label {
-  font-family: "CS Genio Mono", monospace;
-  font-size: 11px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: rgba(0, 48, 73, 0.4);
-  margin-bottom: 8px;
-}
+/* ── Responsive — tablet: sidebar collapses to top strip ─── */
 
-.ob-calendar-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 8px;
-}
-
-.ob-calendar-cell {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 48px;
-  border: 1.5px solid rgba(0, 48, 73, 0.15);
-  border-radius: 0;
-  font-family: "CS Genio Mono", monospace;
-  font-size: 12px;
-  font-weight: 600;
-  color: #003049;
-  cursor: pointer;
-  transition: all 150ms ease;
-  background: transparent;
-  user-select: none;
-}
-
-.ob-calendar-cell:hover {
-  border-color: rgba(0, 48, 73, 0.4);
-  background: rgba(0, 48, 73, 0.03);
-}
-
-.ob-calendar-cell--selected {
-  background: #003049;
-  color: #f5f2ec;
-  border-color: #003049;
-  border-left: 3px solid #c1121f;
-}
-
-/* ── Step 4 — Welcome Hero ───────────────────────────────── */
-
-.ob-welcome-hero {
-  margin-bottom: var(--space-4, 32px);
-}
-
-.ob-welcome-eyebrow {
-  font-family: "CS Genio Mono", monospace;
-  font-size: 11px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
-  color: #c1121f;
-  margin-bottom: 8px;
-}
-
-/* ── Step 4 — TierJourney Preview ───────────────────────── */
-
-.ob-tier-preview {
-  background: rgba(0, 48, 73, 0.03);
-  border: 1px solid rgba(0, 48, 73, 0.08);
-  padding: var(--space-3, 24px) var(--space-3, 24px);
-  margin-bottom: var(--space-3, 24px);
-}
-
-/* ── Step 4 — Seed Callout ───────────────────────────────── */
-
-.ob-seed-callout {
-  background: rgba(102, 155, 188, 0.07);
-  border-left: 4px solid #669bbc;
-  padding: 16px 20px;
-  margin-bottom: var(--space-4, 32px);
-}
-
-.ob-seed-callout-title {
-  font-family: "CS Genio Mono", monospace;
-  font-size: 13px;
-  font-weight: 700;
-  color: #003049;
-  margin-bottom: 4px;
-}
-
-.ob-seed-callout-desc {
-  font-family: "CS Genio Mono", monospace;
-  font-size: 12px;
-  color: rgba(0, 48, 73, 0.6);
-  margin-bottom: 12px;
-}
-
-.ob-seed-callout-path {
-  display: flex;
-  align-items: flex-start;
-  gap: 8px;
-  font-family: "CS Genio Mono", monospace;
-  font-size: 12px;
-  color: rgba(0, 48, 73, 0.75);
-  line-height: 1.5;
-}
-
-.ob-seed-path-arrow {
-  color: #c1121f;
-  font-weight: 800;
-  flex-shrink: 0;
-  margin-top: 1px;
-}
-
-/* ── Step 4 — Tier Cards ─────────────────────────────────── */
-
-.ob-unlock-section {
-  margin-bottom: var(--space-4, 32px);
-}
-
-.ob-unlock-heading {
-  font-family: "CS Genio Mono", monospace;
-  font-size: 11px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: rgba(0, 48, 73, 0.4);
-  margin-bottom: 12px;
-}
-
-.ob-tier-cards {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 8px;
-}
-
-.ob-tier-card {
-  border: 1.5px solid rgba(0, 48, 73, 0.1);
-  padding: 12px;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  background: #ffffff;
-  position: relative;
-}
-
-.ob-tier-card--current {
-  border-color: #c1121f;
-  background: rgba(193, 18, 31, 0.03);
-}
-
-.ob-tier-card-header {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  margin-bottom: 4px;
-}
-
-.ob-tier-card-emoji {
-  font-size: 16px;
-  line-height: 1;
-}
-
-.ob-tier-card-name {
-  font-family: "CS Genio Mono", monospace;
-  font-size: 11px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: #003049;
-  flex: 1;
-}
-
-.ob-tier-card-now {
-  font-family: "CS Genio Mono", monospace;
-  font-size: 9px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: #c1121f;
-  background: rgba(193, 18, 31, 0.1);
-  padding: 2px 5px;
-}
-
-.ob-tier-card-benefit {
-  font-family: "Darky", serif;
-  font-size: 14px;
-  font-weight: 700;
-  color: #003049;
-  letter-spacing: -0.02em;
-}
-
-.ob-tier-card-detail {
-  font-family: "CS Genio Mono", monospace;
-  font-size: 11px;
-  color: rgba(0, 48, 73, 0.55);
-}
-
-.ob-tier-card-unlock {
-  font-family: "CS Genio Mono", monospace;
-  font-size: 10px;
-  color: rgba(0, 48, 73, 0.4);
-  margin-top: 4px;
-  padding-top: 6px;
-  border-top: 1px solid rgba(0, 48, 73, 0.07);
-}
-
-.ob-tier-card--current .ob-tier-card-unlock {
-  color: #c1121f;
-  border-top-color: rgba(193, 18, 31, 0.12);
-}
-
-/* ── Promise Box ─────────────────────────────────────────── */
-
-.ob-promise-box {
-  background: rgba(102, 155, 188, 0.08);
-  border-left: 4px solid #669bbc;
-  padding: var(--space-3, 24px);
-  margin: var(--space-4, 32px) 0;
-}
-
-.ob-promise-label {
-  font-family: "CS Genio Mono", monospace;
-  font-size: 11px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: #669bbc;
-  margin-bottom: 8px;
-}
-
-.ob-promise-text {
-  font-family: "CS Genio Mono", monospace;
-  font-size: 14px;
-  color: #003049;
-  line-height: 1.6;
-}
-
-/* ── Countdown ───────────────────────────────────────────── */
-
-.ob-countdown {
-  font-family: "Darky", serif;
-  font-size: 36px;
-  font-weight: 900;
-  color: #003049;
-  letter-spacing: -0.04em;
-  margin-top: 12px;
-  display: block;
-}
-
-/* ── Tier Strip ──────────────────────────────────────────── */
-
-.ob-tier-strip {
-  display: flex;
-  gap: var(--space-2, 16px);
-  margin: var(--space-4, 32px) 0;
-  flex-wrap: wrap;
-}
-
-.ob-tier-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
-}
-
-.ob-tier-dot {
-  width: 10px;
-  height: 10px;
-  border-radius: 0;
-  background: rgba(0, 48, 73, 0.12);
-}
-
-.ob-tier-dot--active {
-  background: #c1121f;
-}
-
-.ob-tier-name {
-  font-family: "CS Genio Mono", monospace;
-  font-size: 10px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: rgba(0, 48, 73, 0.35);
-}
-
-.ob-tier-name--active {
-  color: #c1121f;
-}
-
-/* ── What Happens Next ───────────────────────────────────── */
-
-.ob-next-list {
-  list-style: none;
-  padding: 0;
-  margin: 0 0 var(--space-4, 32px);
-}
-
-.ob-next-list li {
-  font-family: "CS Genio Mono", monospace;
-  font-size: 14px;
-  color: rgba(0, 48, 73, 0.75);
-  line-height: 1.6;
-  padding: 8px 0;
-  border-bottom: 1px solid rgba(0, 48, 73, 0.06);
-  display: flex;
-  gap: 12px;
-  align-items: flex-start;
-}
-
-.ob-next-list li:last-child {
-  border-bottom: none;
-}
-
-.ob-next-list li .ob-step-num {
-  font-weight: 800;
-  color: #c1121f;
-  min-width: 16px;
-}
-
-/* ── Navigation ──────────────────────────────────────────── */
-
-.ob-nav {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: var(--space-5, 40px);
-}
-
-.ob-back-btn {
-  font-family: "CS Genio Mono", monospace;
-  font-size: 13px;
-  font-weight: 600;
-  color: rgba(0, 48, 73, 0.4);
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 0;
-  transition: color 150ms;
-  text-decoration: none;
-}
-
-.ob-back-btn:hover {
-  color: #003049;
-}
-
-.ob-next-btn {
-  padding: 12px 32px;
-  background: #c1121f;
-  color: #ffffff;
-  font-family: "CS Genio Mono", monospace;
-  font-weight: 700;
-  font-size: 14px;
-  border: none;
-  border-radius: 0;
-  cursor: pointer;
-  transition: background 150ms;
-  letter-spacing: 0.02em;
-  text-decoration: none;
-  display: inline-block;
-  min-height: 44px;
-}
-
-.ob-next-btn:hover {
-  background: #780000;
-}
-
-.ob-next-btn:disabled {
-  background: rgba(0, 48, 73, 0.15);
-  cursor: not-allowed;
-}
-
-.ob-next-btn--full {
-  width: 100%;
-  text-align: center;
-}
-
-/* ── Error message ───────────────────────────────────────── */
-
-.ob-error {
-  font-family: "CS Genio Mono", monospace;
-  font-size: 12px;
-  color: #c1121f;
-  margin-top: 8px;
-}
-
-/* ── Mobile ──────────────────────────────────────────────── */
-
-@media (max-width: 540px) {
+@media (max-width: 900px) {
   .ob-page {
-    align-items: flex-start;
-    padding: 0;
+    grid-template-columns: 1fr;
   }
 
-  .ob-card {
-    max-width: 100%;
-    border: none;
-    border-radius: 0;
-    padding: 32px 24px 48px;
-    min-height: 100svh;
+  .ob-sidebar {
+    position: static;
+    height: auto;
+    padding: 20px 24px;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    min-height: unset;
   }
 
-  .ob-tier-strip {
-    gap: 8px;
+  .ob-sidebar::after {
+    display: none;
   }
 
-  .ob-tier-cards {
-    grid-template-columns: repeat(3, 1fr);
+  .ob-sidebar-logo {
+    margin-bottom: 0;
+  }
+
+  .ob-sidebar-content {
+    display: none;
+  }
+
+  .ob-sidebar-stat {
+    border-top: none;
+    padding-top: 0;
+    display: flex;
+    align-items: baseline;
     gap: 6px;
   }
 
-  .ob-tier-card {
-    padding: 10px 8px;
+  .ob-sidebar-big-num {
+    font-size: 28px;
   }
 
-  .ob-calendar-grid {
-    grid-template-columns: repeat(3, 1fr);
+  .ob-sidebar-big-label {
+    margin-top: 0;
+    font-size: 9px;
+  }
+
+  .ob-content {
+    padding: 32px 24px 48px;
+  }
+
+  .ob-progress-dots {
+    display: flex;
+  }
+
+  .ob-campaign-grid {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+}
+
+@media (max-width: 540px) {
+  .ob-sidebar {
+    padding: 16px 20px;
+  }
+
+  .ob-content {
+    padding: 24px 20px 40px;
+  }
+
+  .ob-heading {
+    font-size: clamp(28px, 8vw, 40px);
+  }
+}
+
+/* ── Reduced motion ──────────────────────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition-duration: 0ms !important;
+    animation-duration: 0ms !important;
   }
 }

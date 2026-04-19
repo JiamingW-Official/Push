@@ -1,0 +1,39 @@
+# Dependencies — Vercel installs fresh
+node_modules
+
+# Local build artifacts
+.next
+out
+tsconfig.tsbuildinfo
+
+# Claude Code workspace
+.claude
+*.lock
+
+# Audit docs (historical, not needed in deploy)
+FULL-AUDIT-*.md
+PREMIUM-AUDIT-*.md
+push-site-audit-*.md
+premium-fixes-agent-prompt.md
+v4-upgrade-agent-prompt.md
+v4.1-full-sync-agent-prompt.md
+tier-identity-preview.html
+AGENTS.md
+docs/archive/
+
+# Supabase local state
+supabase/.branches
+supabase/.temp
+supabase/snippets
+
+# Dev tooling
+.github
+.vscode
+.idea
+.DS_Store
+
+# Fonts source (already in public/)
+Fonts/
+
+# Logs
+*.log

@@ -1,6 +1,8 @@
-# Templates & Brand Story
+# Templates & Brand Story — v5.0
 
-Referenced from: `SKILL.md` → Sections 7-9
+Referenced from: `SKILL.md` → Sections 6-7
+
+> v5.0 alignment: email templates below use outcome-based agency language. Retired v4 copy ("marketplace," "$19.99," "verified visit," "influencer," "performance-scored creators") has been swapped out. See SKILL.md §5 for the vocabulary swap table and §6 for authoritative FAQs.
 
 ---
 
@@ -8,17 +10,21 @@ Referenced from: `SKILL.md` → Sections 7-9
 
 ### Merchant Cold Outreach
 
-**Subject:** Bring 20 new customers to [Business Name] this month
+**Subject (primary):** `20 new customers for [shop name] — $0 pilot`
+**Subject (alternative):** `Williamsburg coffee pilot: [shop name]?`
+**Never use:** "Grow your business with influencer marketing"
 
 ---
 
 Hey [Name],
 
-I walked past [Business Name] last week — great space, great product. But I noticed your Tuesday afternoons are quiet.
+I walked past [Shop Name] last week — the space, the pour, the Tuesday-afternoon lull. Here's the pitch.
 
-I'm building Push. We match local businesses with performance-scored creators who drive real, trackable foot traffic. Every customer gets attributed via QR code so you see exactly what you're paying for.
+Push is an AI-powered customer acquisition agency. You tell us how many customers you need — our AI matches creators from our Williamsburg network, verifies every visit with QR + Claude Vision + geo-match, and you pay only for who walks through your door.
 
-Want to try a free campaign? We handle everything — you just provide the offer.
+You're one of the first 10 shops eligible for our $0 Pilot: first 10 AI-verified customers are on us. AI delivers, or it's free.
+
+Open to a 10-minute call?
 
 [Your name]
 
@@ -28,15 +34,15 @@ Want to try a free campaign? We handle everything — you just provide the offer
 
 Hey [Name]! Your content at [Place] is exactly the kind of thing local shops pay for.
 
-I'm launching Push — local creators do paid campaigns with shops in [Neighborhood]. You visit, create content, post, get paid. $25-50 per campaign + you build a performance score that unlocks higher-paying gigs.
+I'm launching Push — creators in Williamsburg do paid campaigns with neighborhood shops. You visit, create content, post, get paid. $25-50 per campaign + you build a Push Score that unlocks higher-paying gigs.
 
-[X] spots open in the first batch. Want in?
+Push is an AI-powered customer acquisition agency — the shops tell us how many customers they need, our AI matches creators like you. No follower gate. [X] spots open in the first batch. Want in?
 
 ---
 
 ### Post-Campaign Merchant Email
 
-**Subject:** Your campaign results are in
+**Subject:** Your Push campaign: [X] AI-verified customers delivered
 
 ---
 
@@ -44,12 +50,12 @@ Hey [Name],
 
 Here's what your Push campaign delivered:
 
-- [X] creator visits completed
-- [X] pieces of content published
-- [X] QR-verified new customer visits
-- Estimated value: $[X]
+- [X] AI-verified customers through your door
+- Each one triple-checked: QR scan + Claude Vision receipt OCR + geo-match within 200m
+- [X] pieces of content published by [X] creators in our network
+- Billable total: $[X] ([X] customers × $40)
 
-Ready to run another one? [One-click repeat link]
+AI delivered. Ready for the next run? [One-click repeat link]
 
 ---
 
@@ -57,11 +63,13 @@ Ready to run another one? [One-click repeat link]
 
 | Context | Tagline |
 |---------|---------|
-| **Primary** | "Creators that convert." |
-| **Merchant-facing** | "Real creators. Real customers. Real numbers." |
+| **Primary (v5.0)** | "Tell us how many customers you need. We deliver." |
+| **Eyebrow / category** | "AI-Powered Customer Acquisition Agency" |
+| **Promise / hero CTA** | "AI delivers, or it's free." |
+| **Merchant-facing short** | "Pay only for who walks through your door." |
 | **Creator-facing** | "Your results open doors." |
-| **Investor-facing** | "The acquisition engine for local commerce." |
-| **Technical** | "Performance infrastructure for the creator economy." |
+| **Investor-facing** | "The AI-powered customer acquisition agency for local commerce." |
+| **Technical** | "Triple-checked customer acquisition. QR + Claude Vision + geo-match." |
 
 ---
 
@@ -69,14 +77,18 @@ Ready to run another one? [One-click repeat link]
 
 ### The Short Version (30 seconds)
 
-Push started with a simple observation: local businesses spend money on creators and have no idea if it works. Meanwhile, talented micro-creators can't prove their commercial value because no one tracks it. Push exists to fix both sides — give merchants verified acquisition, give creators a score that proves they deliver.
+Push is an AI-powered customer acquisition agency. Local merchants don't need another marketing tool — they need customers on a schedule, at a known cost. Tell us how many customers you need. Our AI matches creators from our network, verifies every visit with QR + Claude Vision + geo-match, and you pay only for delivered customers. AI delivers, or it's free.
 
 ### The Long Version (For PR / About Page)
 
-Every day, thousands of local businesses — cafés, bakeries, beauty spots — try to grow by working with creators. They DM someone with a nice feed, send free product, hope for the best. Most of the time, they have no idea if a single new customer walked through the door.
+Every day, thousands of local merchants — cafés, bakeries, beauty shops — try to grow by throwing money at creators and ads. They DM someone with a nice feed, send free product, buy an Instagram boost, and hope. Most of the time, they have no idea if a single new customer walked through the door.
 
-On the other side, millions of micro-creators produce incredible local content but have no way to prove they drive real business results. Their value is invisible.
+On the other side, millions of micro-creators produce incredible local content but have no way to prove they drive real business results. Their commercial value is invisible.
 
-Push makes both sides visible. Our QR-code attribution tracks every customer a creator brings in. Our scoring system builds a verifiable commercial track record for creators. And our matching engine gets smarter with every campaign.
+Push is the first AI-powered customer acquisition agency. A merchant tells us a number — "20 new customers in two weeks." Our AI matches creators from our network, runs the campaign, and triple-checks every visit: QR scan at the door, Claude Vision OCR of the receipt, and a geo-match within 200 meters. All three must pass in under 8 seconds, or the visit goes to human review. Only AI-verified customers are billable.
 
-We started in one NYC neighborhood — a handful of cafés and a group of creators who wanted to earn based on results, not follower counts. That's still the core belief: **if you can bring real customers, you deserve to get paid — and we'll prove that you did.**
+Pricing is outcome-based, not subscription. The first 10 merchants in our Williamsburg coffee beachhead get a $0 Pilot — the first 10 AI-verified customers are on us. After that, $500/month minimum plus $40 per AI-verified customer. If the AI can't deliver, you don't pay.
+
+We're starting in one category, one ZIP, 60 days of saturation — coffee × Williamsburg. Network density beats breadth. Every AI-verified customer makes the matching sharper. After the beachhead proves the unit economics, we expand category by category, ZIP by ZIP.
+
+The core belief: **if a creator can bring a real customer through your door, they deserve to get paid — and we'll prove that customer was real.**

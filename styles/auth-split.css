@@ -1,5 +1,6 @@
 /* ============================================================
    Creator Signup — Split-panel layout (Design.md: Login Page)
+   10x design upgrade v5.1
    ============================================================ */
 
 .page {
@@ -12,7 +13,11 @@
    Left panel — brand (dark)
    ------------------------------------------------------------ */
 .brand-panel {
-  background: linear-gradient(160deg, #003049 0%, #001d2e 55%, #00111a 100%);
+  background:
+    linear-gradient(160deg, #003049 0%, #001d2e 55%, #00111a 100%),
+    repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(245,242,236,0.015) 40px),
+    repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(245,242,236,0.015) 40px);
+  background-blend-mode: normal, overlay, overlay;
   padding: var(--space-10) var(--space-8);
   display: flex;
   flex-direction: column;
@@ -36,17 +41,17 @@
   z-index: 0;
 }
 
-/* Ghost "PUSH" watermark */
+/* Ghost "PUSH" watermark — larger, more impactful */
 .brand-panel::after {
   content: 'PUSH';
   position: absolute;
-  bottom: -24px;
-  right: -12px;
+  bottom: -40px;
+  right: -20px;
   font-family: var(--font-display);
-  font-size: clamp(110px, 16vw, 200px);
+  font-size: clamp(140px, 22vw, 280px);
   font-weight: 900;
-  color: rgba(255,255,255,0.025);
-  letter-spacing: -0.06em;
+  color: rgba(255,255,255,0.018);
+  letter-spacing: -0.08em;
   line-height: 1;
   pointer-events: none;
   z-index: 0;
@@ -95,12 +100,13 @@
   to   { transform: scaleX(1); }
 }
 
+/* Brand headline — heavier weight + contrast sub-line */
 .brand-headline {
   font-family: var(--font-display);
-  font-size: clamp(36px, 4vw, 56px);
+  font-size: clamp(40px, 4.5vw, 64px);
   font-weight: 900;
   letter-spacing: -0.05em;
-  line-height: 1;
+  line-height: 1.0;
   color: var(--surface);
 }
 
@@ -109,11 +115,56 @@
   font-style: italic;
 }
 
+/* Thin sub-line below headline — ultra-thin contrasts with 900 above */
+.brand-headline + .brand-headline-sub {
+  font-family: var(--font-display);
+  font-size: clamp(28px, 3vw, 44px);
+  font-weight: 200;
+  letter-spacing: -0.04em;
+  color: rgba(245,242,236,0.50);
+  line-height: 1;
+  margin-top: -8px;
+  display: block;
+}
+
 .brand-tagline {
   font-size: var(--text-small);
-  color: rgba(245, 242, 236, 0.70); /* A11y: was 0.55 — raised for contrast */
+  color: rgba(245, 242, 236, 0.70);
   line-height: 1.7;
   max-width: 300px;
+}
+
+/* Location chip — live green dot + monospaced uppercase */
+.brand-location {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'CS Genio Mono', monospace;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(245,242,236,0.55);
+  padding: 6px 12px;
+  border: 1px solid rgba(245,242,236,0.12);
+  width: fit-content;
+  margin-top: 16px;
+}
+
+.brand-location::before {
+  content: '';
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  background: #10b981;
+  border-radius: 50%;
+  animation: locationPulse 2s ease-in-out infinite;
+  flex-shrink: 0;
+}
+
+@keyframes locationPulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.3; }
 }
 
 /* Testimonial quote */
@@ -153,7 +204,7 @@
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: rgba(245, 242, 236, 0.60); /* A11y: raised from 0.40 */
+  color: rgba(245, 242, 236, 0.60);
 }
 
 .stat-bar-track {
@@ -177,19 +228,35 @@
   color: var(--surface);
 }
 
-/* Bottom back-link */
+/* Bottom back-link — monospaced, uppercase, sliding arrow */
 .brand-back {
-  font-size: var(--text-caption);
-  color: rgba(245, 242, 236, 0.60); /* A11y: raised from 0.35 */
+  font-family: 'CS Genio Mono', monospace;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(245,242,236,0.45);
   text-decoration: none;
-  transition: color var(--t-base);
+  transition: color 200ms ease;
   display: inline-flex;
   align-items: center;
-  gap: var(--space-1);
+  gap: 8px;
+  position: relative;
+  z-index: 1;
+}
+
+.brand-back::before {
+  content: '←';
+  font-size: 14px;
+  transition: transform 200ms ease;
 }
 
 .brand-back:hover {
-  color: rgba(245, 242, 236, 0.8);
+  color: rgba(245,242,236,0.8);
+}
+
+.brand-back:hover::before {
+  transform: translateX(-3px);
 }
 
 /* ------------------------------------------------------------
@@ -200,13 +267,13 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: var(--space-10) var(--space-8);
+  padding: var(--space-8) var(--space-6);
   overflow-y: auto;
 }
 
 .form-wrap {
   width: 100%;
-  max-width: 440px;
+  max-width: 420px;
 }
 
 .form-header {
@@ -223,13 +290,15 @@
   margin-bottom: var(--space-2);
 }
 
+/* Form title — bigger, more editorial */
 .form-title {
   font-family: var(--font-display);
-  font-size: var(--text-h2);
-  font-weight: 700;
-  letter-spacing: -0.03em;
+  font-size: clamp(32px, 4vw, 48px);
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  line-height: 1.0;
   color: var(--dark);
-  margin-bottom: var(--space-1);
+  margin-bottom: var(--space-2);
 }
 
 .form-subtitle {
@@ -250,12 +319,12 @@
   gap: var(--space-3);
 }
 
-/* Divider */
+/* Divider — more editorial, tight label */
 .form-divider {
   display: flex;
   align-items: center;
-  gap: var(--space-2);
-  margin-block: var(--space-2);
+  gap: 12px;
+  margin-block: 4px;
 }
 
 .form-divider-line {
@@ -265,20 +334,99 @@
 }
 
 .form-divider-label {
-  font-size: var(--text-caption);
+  font-family: 'CS Genio Mono', monospace;
+  font-size: 9px;
   font-weight: 700;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--text-muted);
+  color: rgba(0,48,73,0.30);
 }
 
-/* Submit button */
+/* Form input fields — underline-only Bloomberg terminal style */
+.form-panel input[type="text"],
+.form-panel input[type="email"],
+.form-panel input[type="password"],
+.form-panel input[type="tel"] {
+  background: transparent;
+  border: none;
+  border-bottom: 1.5px solid rgba(0,48,73,0.18);
+  padding: 10px 0;
+  border-radius: 0;
+  font-family: 'CS Genio Mono', monospace;
+  font-size: 15px;
+  color: var(--dark);
+  transition: border-color 250ms ease;
+  outline: none;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.form-panel input[type="text"]:focus,
+.form-panel input[type="email"]:focus,
+.form-panel input[type="password"]:focus,
+.form-panel input[type="tel"]:focus {
+  border-bottom-color: var(--primary);
+  box-shadow: none;
+}
+
+.form-panel input[type="text"]:not(:placeholder-shown),
+.form-panel input[type="email"]:not(:placeholder-shown) {
+  border-bottom-color: rgba(0,48,73,0.35);
+}
+
+/* Override field-wrap: remove box border */
+.form-panel .field-wrap {
+  border: none;
+  background: transparent;
+}
+
+/* Remove box from input-with-action — underline only */
+.form-panel .input-with-action {
+  border: none;
+  border-bottom: 1.5px solid rgba(0,48,73,0.18);
+  transition: border-color 250ms ease;
+  background: transparent;
+}
+
+.form-panel .input-with-action:focus-within {
+  border-bottom-color: var(--primary);
+  box-shadow: none;
+}
+
+.form-panel .input-with-action input {
+  background: transparent;
+  padding: 10px 0;
+}
+
+/* Submit button — with sliding arrow */
 .submit-btn {
   width: 100%;
   justify-content: center;
   margin-top: var(--space-2);
   padding-block: var(--space-2);
   font-size: var(--text-body);
+  position: relative;
+  overflow: hidden;
+}
+
+.submit-btn::after {
+  content: '→';
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%) translateX(0);
+  font-family: 'CS Genio Mono', monospace;
+  font-size: 16px;
+  transition: transform 250ms cubic-bezier(0.22,1,0.36,1);
+}
+
+.submit-btn:not(:disabled):hover::after {
+  transform: translateY(-50%) translateX(6px);
+}
+
+/* Make room for the arrow */
+.submit-btn:not(.loading) {
+  padding-right: 52px;
 }
 
 /* Error / success banners */

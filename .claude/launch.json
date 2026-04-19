@@ -4,8 +4,16 @@
     {
       "name": "Next.js Dev",
       "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "dev"],
-      "port": 3000
+      "runtimeArgs": ["run", "dev:webpack"],
+      "port": 3000,
+      "autoPort": true
+    },
+    {
+      "name": "Next.js Start",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["next", "start"],
+      "port": 3000,
+      "autoPort": true
     }
   ]
 }

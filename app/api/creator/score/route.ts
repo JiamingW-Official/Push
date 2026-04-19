@@ -1,6 +1,7 @@
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
+import { rateLimit, getIP } from "@/lib/rate-limit";
 
 // Tier thresholds based on Push Score and campaigns completed
 function getTier(score: number, completed: number): string {
@@ -13,7 +14,14 @@ function getTier(score: number, completed: number): string {
   return "seed";
 }
 
-export async function POST(_request: NextRequest) {
+export async function POST(request: NextRequest) {
+  if (!rateLimit(getIP(request), 5, 60_000)) {
+    return NextResponse.json(
+      { error: "Too many requests — try again in a minute" },
+      { status: 429 },
+    );
+  }
+
   const cookieStore = await cookies();
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,

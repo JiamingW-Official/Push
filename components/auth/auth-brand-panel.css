@@ -1,0 +1,209 @@
+/* AuthBrandPanel — shared across signup / login / reset-password
+   Tokens: Design.md §Color + §Typography + §Motion
+   border-radius: 0 everywhere (Design.md §Shape) */
+
+.abp-panel {
+  display: flex;
+  flex-direction: column;
+  background: var(--dark, #003049);
+  padding: 64px 48px;
+  min-height: 100vh;
+  box-sizing: border-box;
+  color: var(--surface, #f5f2ec);
+  position: relative;
+}
+
+/* ── Top section ──────────────────────────────────────────── */
+
+.abp-top {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.abp-logo {
+  font-family: "Darky", sans-serif;
+  font-size: 1.625rem;
+  font-weight: 900;
+  font-style: italic;
+  letter-spacing: -0.06em;
+  color: var(--surface, #f5f2ec);
+  text-decoration: none;
+  margin-bottom: 48px;
+  display: inline-block;
+}
+.abp-logo::after {
+  content: "";
+  display: block;
+  width: 3px;
+  height: 3px;
+  background: var(--primary, #c1121f);
+  margin-top: 2px;
+}
+
+.abp-eyebrow {
+  font-family: "CS Genio Mono", "SF Mono", monospace;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(245, 242, 236, 0.55);
+  display: block;
+  margin-bottom: 16px;
+}
+
+.abp-headline {
+  font-family: "Darky", sans-serif;
+  font-size: clamp(36px, 4vw, 64px);
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  color: var(--surface, #f5f2ec);
+  margin: 0 0 32px;
+}
+
+/* 32px rule divider */
+.abp-rule {
+  display: block;
+  width: 32px;
+  height: 1px;
+  background: rgba(245, 242, 236, 0.18);
+  margin-bottom: 32px;
+}
+
+/* ── Moving signal variants ───────────────────────────────── */
+
+.abp-quote {
+  font-family: "CS Genio Mono", "SF Mono", monospace;
+  font-size: 14px;
+  line-height: 1.7;
+  color: rgba(245, 242, 236, 0.75);
+  margin: 0;
+  max-width: 320px;
+  transition: opacity 300ms linear;
+}
+.abp-quote--fade-out {
+  opacity: 0;
+}
+
+.abp-live-stat {
+  font-family: "CS Genio Mono", "SF Mono", monospace;
+  font-size: 14px;
+  color: rgba(245, 242, 236, 0.75);
+  margin: 0;
+}
+
+/* ── Editorial numeric ────────────────────────────────────── */
+
+.abp-editorial {
+  margin-top: auto;
+  padding-top: 40px;
+  border-top: 1px solid rgba(245, 242, 236, 0.18);
+  margin-bottom: 40px;
+}
+
+.abp-big-number {
+  display: block;
+  font-family: "Darky", sans-serif;
+  font-size: clamp(72px, 10vw, 120px);
+  font-weight: 700;
+  line-height: 1;
+  color: var(--surface, #f5f2ec);
+}
+
+.abp-big-label {
+  font-family: "CS Genio Mono", "SF Mono", monospace;
+  font-size: 13px;
+  color: rgba(245, 242, 236, 0.55);
+  margin: 8px 0 0;
+  max-width: 200px;
+  line-height: 1.5;
+}
+
+/* ── Bottom ───────────────────────────────────────────────── */
+
+.abp-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 24px;
+  border-top: 1px solid rgba(245, 242, 236, 0.1);
+}
+
+.abp-cta-link {
+  font-family: "CS Genio Mono", "SF Mono", monospace;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--surface, #f5f2ec);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(245, 242, 236, 0.4);
+  padding-bottom: 1px;
+  transition: border-color 200ms ease;
+}
+.abp-cta-link:hover {
+  border-color: var(--surface, #f5f2ec);
+}
+
+.abp-back {
+  font-family: "CS Genio Mono", "SF Mono", monospace;
+  font-size: 13px;
+  color: rgba(245, 242, 236, 0.55);
+  text-decoration: none;
+  transition: color 200ms ease;
+}
+.abp-back:hover {
+  color: var(--surface, #f5f2ec);
+}
+
+/* ── Responsive ───────────────────────────────────────────── */
+
+/* Tablet: BrandPanel collapses to compact header strip */
+@media (max-width: 768px) {
+  .abp-panel {
+    min-height: auto;
+    padding: 24px 20px;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .abp-top {
+    flex: unset;
+  }
+  .abp-headline,
+  .abp-rule,
+  .abp-quote,
+  .abp-live-stat,
+  .abp-eyebrow {
+    display: none;
+  }
+  .abp-editorial {
+    margin: 0;
+    padding: 0;
+    border: none;
+  }
+  .abp-big-number {
+    font-size: 28px;
+  }
+  .abp-big-label {
+    display: none;
+  }
+  .abp-bottom {
+    display: none;
+  }
+}
+
+/* Mobile: compact strip only shows logo */
+@media (max-width: 480px) {
+  .abp-editorial {
+    display: none;
+  }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .abp-quote,
+  .abp-back,
+  .abp-cta-link {
+    transition-duration: 0ms;
+  }
+}

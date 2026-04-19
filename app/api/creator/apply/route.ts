@@ -1,6 +1,7 @@
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
+import { rateLimit, getIP } from "@/lib/rate-limit";
 
 // Tier rank order for eligibility comparison
 const TIER_RANK: Record<string, number> = {
@@ -13,6 +14,13 @@ const TIER_RANK: Record<string, number> = {
 };
 
 export async function POST(request: NextRequest) {
+  if (!rateLimit(getIP(request), 10, 60_000)) {
+    return NextResponse.json(
+      { error: "Too many requests — try again in a minute" },
+      { status: 429 },
+    );
+  }
+
   const cookieStore = await cookies();
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -46,12 +54,24 @@ export async function POST(request: NextRequest) {
   // Fetch creator record
   const { data: creator, error: creatorErr } = await supabase
     .from("creators")
-    .select("id, tier")
+    .select("id, tier, onboarding_completed")
     .eq("user_id", user.id)
     .single();
 
   if (creatorErr || !creator)
     return NextResponse.json({ error: "Creator not found" }, { status: 404 });
+
+  // A-03: Onboarding gate — creator must complete onboarding before applying
+  // The onboarding_completed column is set when /creator/onboarding step 5 is submitted.
+  if (creator.onboarding_completed === false) {
+    return NextResponse.json(
+      {
+        error: "Complete onboarding before applying to campaigns",
+        redirect: "/creator/onboarding",
+      },
+      { status: 403 },
+    );
+  }
 
   // Fetch campaign — verify it exists, is active, and has open spots
   const { data: campaign, error: campaignErr } = await supabase
@@ -131,14 +151,29 @@ export async function POST(request: NextRequest) {
   if (submissionErr)
     return NextResponse.json({ error: submissionErr.message }, { status: 500 });
 
-  // Decrement spots_remaining on campaign
-  const { error: decrementErr } = await supabase
+  // A-01 fix: Atomic decrement with optimistic lock — only decrements if
+  // spots_remaining still matches our read value. Returns empty if someone
+  // else claimed the last spot between our read and this write → 409.
+  // Ideal: replace with a Postgres RPC `claim_campaign_spot(p_id)` that does
+  // UPDATE ... WHERE spots_remaining > 0 RETURNING id in a single statement.
+  const { data: decremented, error: decrementErr } = await supabase
     .from("campaigns")
     .update({ spots_remaining: campaign.spots_remaining - 1 })
-    .eq("id", campaign_id);
+    .eq("id", campaign_id)
+    .eq("spots_remaining", campaign.spots_remaining)
+    .select("id")
+    .maybeSingle();
 
   if (decrementErr)
     return NextResponse.json({ error: decrementErr.message }, { status: 500 });
+
+  if (!decremented) {
+    // Another request claimed the last spot between our read and write
+    return NextResponse.json(
+      { error: "No spots remaining on this campaign" },
+      { status: 409 },
+    );
+  }
 
   return NextResponse.json({ application_id: application.id, success: true });
 }

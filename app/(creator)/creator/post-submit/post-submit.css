@@ -1,0 +1,230 @@
+/* ── Post Submit Page ─────────────────────────────────────── */
+
+.ps-page {
+  min-height: 100svh;
+  background: var(--surface, #f5f2ec);
+  padding: 64px 48px;
+  max-width: 680px;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+.ps-header {
+  margin-bottom: 48px;
+}
+
+.ps-back {
+  font-family: "CS Genio Mono", monospace;
+  font-size: 12px;
+  font-weight: 600;
+  color: rgba(0, 48, 73, 0.5);
+  text-decoration: none;
+  letter-spacing: 0.04em;
+  display: inline-block;
+  margin-bottom: 24px;
+  transition: color 150ms ease;
+}
+.ps-back:hover { color: var(--dark, #003049); }
+
+.ps-eyebrow {
+  display: block;
+  font-family: "CS Genio Mono", monospace;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  color: var(--primary, #c1121f);
+  margin-bottom: 12px;
+}
+
+.ps-heading {
+  font-family: "Darky", sans-serif;
+  font-size: clamp(32px, 5vw, 48px);
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  color: var(--dark, #003049);
+  margin: 0 0 12px;
+  line-height: 1.05;
+}
+
+.ps-sub {
+  font-family: "CS Genio Mono", monospace;
+  font-size: 13px;
+  line-height: 1.7;
+  color: rgba(0, 48, 73, 0.55);
+  margin: 0;
+  max-width: 440px;
+}
+
+/* ── Steps ────────────────────────────────────────────────── */
+
+.ps-form {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.ps-step {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+}
+
+.ps-step--locked {
+  opacity: 0.45;
+  pointer-events: none;
+}
+
+.ps-step-num {
+  font-family: "Darky", sans-serif;
+  font-size: 2rem;
+  font-weight: 200;
+  color: rgba(0, 48, 73, 0.2);
+  line-height: 1;
+  flex-shrink: 0;
+  min-width: 40px;
+  padding-top: 2px;
+}
+
+.ps-step-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.ps-step-label {
+  display: block;
+  font-family: "CS Genio Mono", monospace;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  color: rgba(0, 48, 73, 0.45);
+  margin-bottom: 12px;
+}
+
+.ps-lock-hint {
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: 0;
+  color: rgba(0, 48, 73, 0.3);
+  font-size: 11px;
+}
+
+.ps-url-input {
+  width: 100%;
+  box-sizing: border-box;
+  border: none;
+  border-bottom: 1.5px solid rgba(0, 48, 73, 0.18);
+  background: transparent;
+  padding: 12px 0;
+  font-family: "CS Genio Mono", monospace;
+  font-size: 13px;
+  color: var(--dark, #003049);
+  outline: none;
+  transition: border-color 200ms ease;
+  border-radius: 0;
+}
+
+.ps-url-input::placeholder { color: rgba(0, 48, 73, 0.3); }
+.ps-url-input:focus { border-bottom-color: var(--dark, #003049); }
+
+/* ── Submit button ────────────────────────────────────────── */
+
+.ps-submit-btn {
+  background: var(--dark, #003049);
+  color: var(--surface, #f5f2ec);
+  border: none;
+  padding: 18px 32px;
+  font-family: "CS Genio Mono", monospace;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  transition: background 200ms ease, box-shadow 200ms ease;
+  align-self: flex-start;
+  border-radius: 0;
+}
+
+.ps-submit-btn:hover:not(:disabled) {
+  background: var(--primary, #c1121f);
+  box-shadow: 4px 4px 0 var(--dark, #003049);
+}
+
+.ps-submit-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.ps-campaign-ref {
+  font-family: "CS Genio Mono", monospace;
+  font-size: 10px;
+  color: rgba(0, 48, 73, 0.3);
+  margin: -16px 0 0;
+  letter-spacing: 0.06em;
+}
+
+/* ── Completion ───────────────────────────────────────────── */
+
+.ps-completion {
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 64px 48px;
+  max-width: 680px;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+.ps-completion-icon {
+  display: block;
+  width: 40px;
+  height: 40px;
+  border: 1.5px solid #10b981;
+  color: #10b981;
+  font-family: "CS Genio Mono", monospace;
+  font-size: 18px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 24px;
+}
+
+.ps-completion-heading {
+  font-family: "Darky", sans-serif;
+  font-size: clamp(40px, 6vw, 64px);
+  font-weight: 900;
+  letter-spacing: -0.05em;
+  color: var(--dark, #003049);
+  margin: 0 0 16px;
+  line-height: 1;
+}
+
+.ps-completion-body {
+  font-family: "CS Genio Mono", monospace;
+  font-size: 13px;
+  line-height: 1.7;
+  color: rgba(0, 48, 73, 0.6);
+  max-width: 400px;
+  margin: 0 0 32px;
+}
+
+.ps-completion-cta {
+  font-family: "CS Genio Mono", monospace;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--dark, #003049);
+  text-decoration: none;
+  border-bottom: 1.5px solid var(--dark, #003049);
+  padding-bottom: 2px;
+  transition: color 150ms ease, border-color 150ms ease;
+}
+.ps-completion-cta:hover {
+  color: var(--primary, #c1121f);
+  border-color: var(--primary, #c1121f);
+}
+
+@media (max-width: 600px) {
+  .ps-page,
+  .ps-completion { padding: 40px 20px; }
+}

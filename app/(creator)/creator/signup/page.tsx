@@ -1,46 +1,45 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase";
+import { track } from "@/lib/analytics";
 import "@/styles/auth-split.css";
 import "./signup.css";
 
 /* ── Types ───────────────────────────────────────────────── */
 
 type Field = {
-  name: string;
-  location: string;
   email: string;
+  zip: string;
   password: string;
   confirm: string;
-  instagram: string;
-  bio: string;
 };
 
 type FieldStatus = Partial<Record<keyof Field, "valid" | "error">>;
 
 const EMPTY: Field = {
-  name: "",
-  location: "",
   email: "",
+  zip: "",
   password: "",
   confirm: "",
-  instagram: "",
-  bio: "",
 };
 
 /* ── Tier progression data ───────────────────────────────── */
 
 const TIERS = [
-  { icon: "◎", label: "Spark", desc: "Just getting started" },
-  { icon: "◈", label: "Explorer", desc: "First campaigns" },
-  { icon: "◆", label: "Anchor", desc: "Regular earner" },
-  { icon: "◉", label: "Amplifier", desc: "Trusted voice" },
-  { icon: "◑", label: "Luminary", desc: "Top creator" },
-  { icon: "★", label: "Icon", desc: "Elite tier" },
+  { icon: "◎", label: "Seed", desc: "Free product campaigns" },
+  { icon: "◈", label: "Explorer", desc: "First campaigns — $15+/booking" },
+  { icon: "◆", label: "Operator", desc: "Commission kicks in" },
+  { icon: "◉", label: "Proven", desc: "Trusted local voice" },
+  { icon: "◑", label: "Closer", desc: "Top 10% of creators" },
+  { icon: "★", label: "Partner", desc: "Elite — retainer + equity" },
 ];
+
+/* ── Eligible ZIP codes (Williamsburg Coffee+) ───────────── */
+
+const ELIGIBLE_ZIPS = ["11211", "11206", "11249"];
 
 /* ── Helpers ─────────────────────────────────────────────── */
 
@@ -81,6 +80,13 @@ export default function CreatorSignupPage() {
   const router = useRouter();
   const submitBtnRef = useRef<HTMLButtonElement>(null);
 
+  const [segment, setSegment] = useState<"side-income" | "professional">(
+    "side-income",
+  );
+
+  useEffect(() => {
+    track("signup_started");
+  }, []);
   const [fields, setFields] = useState<Field>(EMPTY);
   const [errors, setErrors] = useState<Partial<Field>>({});
   const [termsAgreed, setTermsAgreed] = useState(false);
@@ -105,15 +111,10 @@ export default function CreatorSignupPage() {
     setTouched((t) => ({ ...t, [k]: true }));
     const v = fields[k];
     let ok = false;
-    if (k === "name") ok = v.trim().length > 0;
-    else if (k === "location") ok = v.trim().length > 0;
-    else if (k === "email") ok = /\S+@\S+\.\S+/.test(v) && v.trim().length > 0;
+    if (k === "email") ok = /\S+@\S+\.\S+/.test(v) && v.trim().length > 0;
+    else if (k === "zip") ok = /^[0-9]{5}$/.test(v);
     else if (k === "password") ok = v.length >= 8;
     else if (k === "confirm") ok = v === fields.password && v.length > 0;
-    else if (k === "instagram")
-      ok = true; // optional
-    else if (k === "bio")
-      ok = true; // optional
     else ok = true;
     setFieldStatus((p) => ({
       ...p,
@@ -123,11 +124,6 @@ export default function CreatorSignupPage() {
 
   function validate(): boolean {
     const errs: Partial<Field> = {};
-    if (!fields.name.trim())
-      errs.name = "Please enter your full name so merchants know who you are.";
-    if (!fields.location.trim())
-      errs.location =
-        "We need your city or neighbourhood to match you with local campaigns.";
     if (!fields.email.trim()) errs.email = "Required";
     else if (!/\S+@\S+\.\S+/.test(fields.email))
       errs.email = "Please enter a valid email address.";
@@ -143,8 +139,6 @@ export default function CreatorSignupPage() {
     }
     // Mark all required fields as touched
     setTouched({
-      name: true,
-      location: true,
       email: true,
       password: true,
       confirm: true,
@@ -165,26 +159,25 @@ export default function CreatorSignupPage() {
       setIsPressed(false);
       return;
     }
+    track("signup_submitted", { segment });
     setLoading(true);
     try {
       const supabase = createClient();
       const { data, error } = await supabase.auth.signUp({
         email: fields.email.trim(),
         password: fields.password,
-        options: { data: { role: "creator", name: fields.name } },
+        options: { data: { role: "creator", segment } },
       });
       if (error) throw error;
       if (!data.user) throw new Error("Signup failed — no user returned");
 
       const { error: profileError } = await supabase.from("creators").insert({
         user_id: data.user.id,
-        name: fields.name.trim(),
-        location: fields.location.trim(),
-        instagram_handle: fields.instagram.replace(/^@+/, "") || null,
-        bio: fields.bio.trim() || null,
+        zip: fields.zip.trim() || null,
       });
       if (profileError) throw profileError;
 
+      track("signup_success", { segment, hasSession: !!data.session });
       if (data.session) {
         router.push("/explore");
       } else {
@@ -199,7 +192,53 @@ export default function CreatorSignupPage() {
   }
 
   const pwStrength = getPasswordStrength(fields.password);
-  const bioRemaining = 160 - fields.bio.length;
+
+  /* ── Segment picker (closure over segment / setSegment) ── */
+
+  function SegmentPicker() {
+    const options = [
+      {
+        value: "side-income" as const,
+        title: "I do this on weekends",
+        sub: "$15–85 / booking · Seed → Explorer",
+      },
+      {
+        value: "professional" as const,
+        title: "This is my day job",
+        sub: "retainer + equity · Operator → Partner",
+      },
+    ];
+    return (
+      <div
+        className="segment-picker"
+        role="radiogroup"
+        aria-label="Choose your creator path"
+      >
+        {options.map((opt) => (
+          <div
+            key={opt.value}
+            role="radio"
+            aria-checked={segment === opt.value}
+            tabIndex={0}
+            className={`segment-card${segment === opt.value ? " segment-card--active" : ""}`}
+            onClick={() => {
+              setSegment(opt.value);
+              track("segment_selected", { segment: opt.value });
+            }}
+            onKeyDown={(e) => {
+              if (e.key === " " || e.key === "Enter") {
+                setSegment(opt.value);
+                track("segment_selected", { segment: opt.value });
+              }
+            }}
+          >
+            <p className="segment-card-title">{opt.title}</p>
+            <p className="segment-card-sub">{opt.sub}</p>
+          </div>
+        ))}
+      </div>
+    );
+  }
 
   /* ── Success state ───────────────────────────────────────── */
 
@@ -231,9 +270,8 @@ export default function CreatorSignupPage() {
               </div>
               <h2 className="success-heading">You&rsquo;re in!</h2>
               <p className="success-body">
-                We sent a confirmation link to <strong>{fields.email}</strong>.
-                Verify your email to get your first campaign. Check Promotions
-                or Spam if it&apos;s not in your inbox within 2 minutes.
+                We sent a magic link to <strong>{fields.email}</strong>. Your
+                first campaign match lands within 24h.
               </p>
               <Link href="/explore" className="btn btn-primary success-cta">
                 Explore campaigns →
@@ -260,8 +298,10 @@ export default function CreatorSignupPage() {
         <div className="form-panel">
           <div className="form-wrap" id="signup-form">
             <div className="form-header">
-              <span className="form-eyebrow">Creator Signup</span>
-              <h1 className="form-title">Start Earning.</h1>
+              <span className="form-eyebrow">JOIN PUSH</span>
+              <h1 className="form-title">
+                Get paid for walking your neighborhood in.
+              </h1>
               <p className="form-subtitle">
                 No follower minimum. No exclusivity. Just show up and create.
               </p>
@@ -290,68 +330,8 @@ export default function CreatorSignupPage() {
               className={loading ? "form-loading" : ""}
             >
               <div className="form-grid">
-                {/* ── Profile ──────────────────────────────── */}
-                <div className="form-divider">
-                  <span className="form-divider-line" />
-                  <span className="form-divider-label">Your Profile</span>
-                  <span className="form-divider-line" />
-                </div>
-
-                <div className="form-row">
-                  <div className="form-field">
-                    <label htmlFor="name">Full Name</label>
-                    <div className="field-wrap">
-                      <input
-                        id="name"
-                        name="name"
-                        type="text"
-                        value={fields.name}
-                        onChange={set("name")}
-                        onBlur={() => handleBlur("name")}
-                        placeholder="Your full name"
-                        autoComplete="name"
-                        required
-                        aria-describedby={errors.name ? "err-name" : undefined}
-                      />
-                      {fieldStatus.name === "valid" && (
-                        <span className="field-dot" aria-hidden="true" />
-                      )}
-                    </div>
-                    {errors.name && touched.name && (
-                      <span className="error-msg" id="err-name">
-                        {errors.name}
-                      </span>
-                    )}
-                  </div>
-
-                  <div className="form-field">
-                    <label htmlFor="location">City / Neighbourhood</label>
-                    <div className="field-wrap">
-                      <input
-                        id="location"
-                        name="location"
-                        type="text"
-                        value={fields.location}
-                        onChange={set("location")}
-                        onBlur={() => handleBlur("location")}
-                        placeholder="e.g. Williamsburg, NYC"
-                        autoComplete="address-level2"
-                        required
-                        aria-describedby={
-                          errors.location ? "err-location" : undefined
-                        }
-                      />
-                      {fieldStatus.location === "valid" && (
-                        <span className="field-dot" aria-hidden="true" />
-                      )}
-                    </div>
-                    {errors.location && touched.location && (
-                      <span className="error-msg" id="err-location">
-                        {errors.location}
-                      </span>
-                    )}
-                  </div>
-                </div>
+                {/* ── Segment picker ────────────────────────── */}
+                <SegmentPicker />
 
                 {/* ── Account ──────────────────────────────── */}
                 <div className="form-divider">
@@ -382,6 +362,34 @@ export default function CreatorSignupPage() {
                   {errors.email && touched.email && (
                     <span className="error-msg" id="err-email">
                       {errors.email}
+                    </span>
+                  )}
+                </div>
+
+                <div className="form-field">
+                  <label htmlFor="zip">ZIP Code</label>
+                  <div className="field-wrap">
+                    <input
+                      id="zip"
+                      name="zip"
+                      type="text"
+                      inputMode="numeric"
+                      pattern="[0-9]{5}"
+                      maxLength={5}
+                      value={fields.zip}
+                      onChange={set("zip")}
+                      onBlur={() => handleBlur("zip")}
+                      placeholder="e.g. 11211"
+                      autoComplete="postal-code"
+                    />
+                  </div>
+                  {fields.zip.length === 5 && (
+                    <span
+                      className={`zip-pill${ELIGIBLE_ZIPS.includes(fields.zip) ? " zip-pill--eligible" : " zip-pill--waitlist"}`}
+                    >
+                      {ELIGIBLE_ZIPS.includes(fields.zip)
+                        ? "✓ Williamsburg Coffee+ live"
+                        : "Not live yet — join waitlist"}
                     </span>
                   )}
                 </div>
@@ -480,64 +488,6 @@ export default function CreatorSignupPage() {
                   </div>
                 </div>
 
-                {/* ── Creator details ───────────────────────── */}
-                <div className="form-divider">
-                  <span className="form-divider-line" />
-                  <span className="form-divider-label">Creator Details</span>
-                  <span className="form-divider-line" />
-                </div>
-
-                <div className="form-field">
-                  <label htmlFor="instagram">
-                    Instagram Handle{" "}
-                    <span className="label-optional">(optional)</span>
-                  </label>
-                  <div className="field-wrap">
-                    <input
-                      id="instagram"
-                      name="instagram"
-                      type="text"
-                      value={fields.instagram}
-                      onChange={set("instagram")}
-                      onBlur={() => handleBlur("instagram")}
-                      placeholder="@yourhandle"
-                    />
-                    {fieldStatus.instagram === "valid" && fields.instagram && (
-                      <span className="field-dot" aria-hidden="true" />
-                    )}
-                  </div>
-                  <span className="field-hint">
-                    Helps match you with the right campaigns. Read-only — we
-                    never post or change anything.
-                  </span>
-                </div>
-
-                <div className="form-field">
-                  <label htmlFor="bio">
-                    Bio <span className="label-optional">(optional)</span>
-                  </label>
-                  <div className="bio-wrap">
-                    <textarea
-                      id="bio"
-                      rows={3}
-                      value={fields.bio}
-                      onChange={(e) => {
-                        if (e.target.value.length <= 160) set("bio")(e);
-                      }}
-                      onBlur={() => handleBlur("bio")}
-                      placeholder="Tell merchants about your content style, niche, or local area…"
-                      maxLength={160}
-                    />
-                    <span
-                      className={`bio-counter ${bioRemaining <= 20 ? "bio-counter--warn" : ""}`}
-                      aria-live="polite"
-                      aria-atomic="true"
-                    >
-                      {bioRemaining}
-                    </span>
-                  </div>
-                </div>
-
                 <p className="trust-line">
                   Free to join · No follower minimum · 200+ local campaigns
                 </p>
@@ -590,7 +540,7 @@ export default function CreatorSignupPage() {
                       <span className="sr-only">Creating account…</span>
                     </>
                   ) : (
-                    "Join Push — Start Earning"
+                    "Create account →"
                   )}
                 </button>
               </div>
@@ -629,32 +579,6 @@ export default function CreatorSignupPage() {
   );
 }
 
-/* ── Signup brand panel tier data ────────────────────────── */
-
-const SIGNUP_TIERS = [
-  {
-    icon: "◎",
-    label: "Seed",
-    rate: "Free",
-    benefit: "Start free — zero followers needed",
-    color: "#669bbc",
-  },
-  {
-    icon: "◈",
-    label: "Explorer",
-    rate: "$12/campaign",
-    benefit: "$12/campaign — 2 active campaigns",
-    color: "#f5f2ec",
-  },
-  {
-    icon: "◆",
-    label: "Operator",
-    rate: "$20 + 3%",
-    benefit: "$20/campaign + 3% commission",
-    color: "#c1121f",
-  },
-];
-
 /* ── Brand panel ─────────────────────────────────────────── */
 
 function BrandPanel() {
@@ -667,9 +591,11 @@ function BrandPanel() {
 
         <div>
           <h2 className="brand-headline">
-            Join 40+ creators
+            Get paid for walking
             <br />
-            <em>earning on Push.</em>
+            your neighborhood
+            <br />
+            <em>in.</em>
           </h2>
           <p className="brand-tagline">
             Push connects micro-creators like you with local businesses that
@@ -678,27 +604,10 @@ function BrandPanel() {
           </p>
         </div>
 
-        {/* First 3 tier preview */}
-        <div className="auth-tier-preview signup-tier-preview">
-          <span className="auth-tier-preview-label">YOUR STARTING PATH</span>
-          {SIGNUP_TIERS.map((t) => (
-            <div key={t.label} className="auth-tier-item signup-tier-item">
-              <span
-                className="auth-tier-icon"
-                aria-hidden="true"
-                style={{ color: t.color }}
-              >
-                {t.icon}
-              </span>
-              <div className="auth-tier-info">
-                <span className="auth-tier-name">{t.label}</span>
-                <span className="auth-tier-benefit">{t.benefit}</span>
-              </div>
-              <span className="auth-tier-rate">{t.rate}</span>
-            </div>
-          ))}
-          <p className="auth-motivation">
-            Your Push Score starts building from day one.
+        <div className="editorial-stat">
+          <span className="editorial-stat-number">14</span>
+          <p className="editorial-stat-label">
+            creators joined Williamsburg this week
           </p>
         </div>
       </div>
