@@ -1,0 +1,26 @@
+{
+  "extends": "./tsconfig.json",
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "**/*.mts"],
+  "exclude": [
+    "node_modules",
+    ".next",
+    "app/(marketing)",
+    "app/(merchant)",
+    "app/demo",
+    "app/scan",
+    "app/api/admin",
+    "app/api/attribution",
+    "app/api/contact",
+    "app/api/disputes",
+    "app/api/merchant",
+    "app/api/search",
+    "app/api/status",
+    "app/api/threads",
+    "components/disputes",
+    "components/neighborhoods",
+    "components/messaging",
+    "components/merchant",
+    "lib/services/**",
+    "app/api/internal"
+  ]
+}
