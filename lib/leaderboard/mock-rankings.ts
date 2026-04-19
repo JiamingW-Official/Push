@@ -285,7 +285,17 @@ function scoreForTier(tier: CreatorTier, rank: number): number {
   return Math.round(min + (max - min) * progress);
 }
 
-function visitsForTier(tier: CreatorTier, window: TimeWindow): number {
+// Deterministic pseudo-random — same seed always returns same value (prevents hydration mismatch)
+function seededRand(seed: number): number {
+  const s = Math.sin(seed * 9301 + 49297) * 233280;
+  return s - Math.floor(s);
+}
+
+function visitsForTier(
+  tier: CreatorTier,
+  window: TimeWindow,
+  rank: number,
+): number {
   const factor = window === "7d" ? 1 : window === "30d" ? 4.2 : 18;
   const base: Record<CreatorTier, number> = {
     partner: 22,
@@ -295,10 +305,15 @@ function visitsForTier(tier: CreatorTier, window: TimeWindow): number {
     explorer: 3,
     seed: 1,
   };
-  return Math.round(base[tier] * factor * (0.8 + Math.random() * 0.4));
+  const seed = rank + (window === "7d" ? 0 : window === "30d" ? 1000 : 2000);
+  return Math.round(base[tier] * factor * (0.8 + seededRand(seed) * 0.4));
 }
 
-function earningsForTier(tier: CreatorTier, window: TimeWindow): number {
+function earningsForTier(
+  tier: CreatorTier,
+  window: TimeWindow,
+  rank: number,
+): number {
   const factor = window === "7d" ? 1 : window === "30d" ? 4 : 16;
   const base: Record<CreatorTier, number> = {
     partner: 420,
@@ -308,14 +323,15 @@ function earningsForTier(tier: CreatorTier, window: TimeWindow): number {
     explorer: 22,
     seed: 0,
   };
-  return Math.round(base[tier] * factor * (0.75 + Math.random() * 0.5));
+  const seed =
+    rank + 500 + (window === "7d" ? 0 : window === "30d" ? 1000 : 2000);
+  return Math.round(base[tier] * factor * (0.75 + seededRand(seed) * 0.5));
 }
 
 function deltaForRank(rank: number): number {
-  // Top creators move less; mid-pack is volatile
   const maxDelta = rank <= 10 ? 3 : rank <= 30 ? 12 : 25;
-  const sign = Math.random() > 0.45 ? 1 : -1;
-  return sign * Math.round(Math.random() * maxDelta);
+  const sign = seededRand(rank * 7) > 0.45 ? 1 : -1;
+  return sign * Math.round(seededRand(rank * 13) * maxDelta);
 }
 
 function buildEntries(window: TimeWindow): RankEntry[] {
@@ -334,8 +350,8 @@ function buildEntries(window: TimeWindow): RankEntry[] {
       avatarInitials: initials,
       tier,
       pushScore: scoreForTier(tier, rank),
-      verifiedVisits: visitsForTier(tier, window),
-      earningsWindow: earningsForTier(tier, window),
+      verifiedVisits: visitsForTier(tier, window, rank),
+      earningsWindow: earningsForTier(tier, window, rank),
       deltaRank: isCurrentUser ? -3 : deltaForRank(rank), // user moved down 3 for demo
       neighborhood,
       isCurrentUser,
