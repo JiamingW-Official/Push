@@ -1,0 +1,192 @@
+.inbox-page {
+  max-width: 800px;
+}
+
+.inbox-header {
+  padding: 32px 32px 0;
+  border-bottom: 1px solid var(--line, rgba(0,48,73,0.12));
+}
+
+.inbox-title {
+  font-family: Darky, sans-serif;
+  font-size: clamp(32px, 4vw, 48px);
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  color: var(--dark, #003049);
+  margin: 0 0 16px;
+  line-height: 1.05;
+}
+
+.inbox-filters {
+  display: flex;
+  gap: 0;
+}
+
+.inbox-filter-btn {
+  padding: 8px 16px;
+  font-family: 'CS Genio Mono', monospace;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--graphite, #4a5568);
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  transition: color 200ms ease, border-color 200ms ease;
+}
+
+.inbox-filter-btn:hover {
+  color: var(--dark, #003049);
+}
+
+.inbox-filter-btn--active {
+  color: var(--primary, #c1121f);
+  border-bottom-color: var(--primary, #c1121f);
+}
+
+.inbox-list {
+  padding: 0;
+}
+
+.inbox-skeleton {
+  padding: 0;
+}
+
+.inbox-skeleton-row {
+  height: 64px;
+  background: linear-gradient(90deg, var(--surface, #f5f2ec) 25%, var(--surface-bright, #fafaf8) 50%, var(--surface, #f5f2ec) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s linear infinite;
+  border-bottom: 1px solid var(--line, rgba(0,48,73,0.12));
+}
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* Editorial empty state */
+.inbox-empty {
+  padding: 48px 32px;
+  text-align: left;
+}
+
+.inbox-empty__title {
+  font-family: Darky, sans-serif;
+  font-weight: 900;
+  font-size: clamp(32px, 5vw, 56px);
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+  color: var(--dark, #003049);
+  margin: 0;
+}
+
+.inbox-empty__body {
+  font-family: 'CS Genio Mono', monospace;
+  font-size: 14px;
+  color: var(--graphite, #4a5568);
+  margin: 12px 0 0;
+  max-width: 420px;
+  line-height: 1.5;
+}
+
+.inbox-empty__link {
+  display: inline-block;
+  margin-top: 20px;
+  font-family: 'CS Genio Mono', monospace;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--primary, #c1121f);
+  border-bottom: 1px solid currentColor;
+  padding-bottom: 2px;
+  text-decoration: none;
+}
+
+/* Generic inbox row (message/system) */
+.inbox-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 16px;
+  min-height: 56px;
+  border-bottom: 1px solid var(--line, rgba(0,48,73,0.12));
+  cursor: pointer;
+  position: relative;
+  background: var(--surface-elevated, #fff);
+  transition: background 200ms ease;
+}
+
+.inbox-row:hover {
+  background: var(--surface-bright, #fafaf8);
+}
+
+.inbox-row__status-bar {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: var(--line, rgba(0,48,73,0.12));
+}
+
+.inbox-row--unread .inbox-row__status-bar {
+  background: var(--primary, #c1121f);
+}
+
+.inbox-row__icon {
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  color: var(--graphite, #4a5568);
+  flex-shrink: 0;
+}
+
+.inbox-row__content {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.inbox-row__title {
+  font-family: Darky, sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--dark, #003049);
+}
+
+.inbox-row--unread .inbox-row__title {
+  font-weight: 700;
+}
+
+.inbox-row__body {
+  font-family: 'CS Genio Mono', monospace;
+  font-size: 12px;
+  color: var(--graphite, #4a5568);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.inbox-row__badge {
+  min-width: 20px;
+  height: 20px;
+  padding: 0 5px;
+  background: var(--primary, #c1121f);
+  color: #fff;
+  font-family: 'CS Genio Mono', monospace;
+  font-size: 11px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border-radius: 0;
+}
