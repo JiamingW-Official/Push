@@ -4,6 +4,56 @@
    ========================================================================== */
 
 /* --------------------------------------------------------------------------
+   Mini-nav (Back to Workspace)
+   -------------------------------------------------------------------------- */
+
+.settings-mini-nav {
+  height: 48px;
+  background: var(--dark, #003049);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 24px;
+  font-family: var(--font-body, 'CS Genio Mono', monospace);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  position: sticky;
+  top: 0;
+  z-index: 200;
+}
+
+.settings-mini-nav__back {
+  color: var(--surface, #f5f2ec);
+  text-decoration: none;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-weight: 700;
+  transition: opacity 150ms ease;
+}
+
+.settings-mini-nav__back:hover {
+  opacity: 0.7;
+}
+
+.settings-mini-nav__sep {
+  color: rgba(245, 242, 236, 0.3);
+  font-weight: 400;
+  user-select: none;
+}
+
+.settings-mini-nav__brand {
+  color: var(--surface, #f5f2ec);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.settings-mini-nav__page {
+  color: rgba(245, 242, 236, 0.55);
+  font-weight: 400;
+}
+
+/* --------------------------------------------------------------------------
    Shell layout
    -------------------------------------------------------------------------- */
 
@@ -244,7 +294,7 @@
 }
 
 .settings-save-bar__status--saved {
-  color: #2d7d46;
+  color: var(--tertiary, #669bbc);
 }
 
 .settings-save-bar__actions {

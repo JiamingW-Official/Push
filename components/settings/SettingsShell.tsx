@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 
 export interface NavItem {
   key: string;
@@ -15,6 +16,10 @@ interface SettingsShellProps {
   activeSection: string;
   onSectionChange: (key: string) => void;
   children: React.ReactNode;
+  /** Page label shown in mini-nav breadcrumb, e.g. "Settings" */
+  pageLabel?: string;
+  /** Back link target, defaults to /creator/dashboard */
+  backHref?: string;
 }
 
 export function SettingsShell({
@@ -23,62 +28,81 @@ export function SettingsShell({
   activeSection,
   onSectionChange,
   children,
+  pageLabel = "Settings",
+  backHref = "/creator/dashboard",
 }: SettingsShellProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   const activeItem = navItems.find((n) => n.key === activeSection);
 
   return (
-    <div className="settings-shell">
-      {/* Mobile header */}
-      <div className="settings-mobile-header">
-        <button
-          className="settings-mobile-toggle"
-          onClick={() => setMobileOpen((v) => !v)}
-          aria-expanded={mobileOpen}
-        >
-          <span className="settings-mobile-toggle__icon">
-            {mobileOpen ? "✕" : "☰"}
-          </span>
-          <span>{activeItem?.label ?? "Settings"}</span>
-        </button>
-      </div>
+    <>
+      {/* Mini-nav: Back to Workspace */}
+      <nav className="settings-mini-nav" aria-label="Back to workspace">
+        <Link href={backHref} className="settings-mini-nav__back">
+          ← WORKSPACE
+        </Link>
+        <span className="settings-mini-nav__sep" aria-hidden="true">
+          |
+        </span>
+        <span className="settings-mini-nav__brand">Push</span>
+        <span className="settings-mini-nav__sep" aria-hidden="true">
+          ·
+        </span>
+        <span className="settings-mini-nav__page">{pageLabel}</span>
+      </nav>
 
-      {/* Sidebar */}
-      <aside
-        className={`settings-sidebar${mobileOpen ? " settings-sidebar--open" : ""}`}
-      >
-        <div className="settings-sidebar__header">
-          <span className="settings-sidebar__label">SETTINGS</span>
-          <span className="settings-sidebar__title">{title}</span>
+      <div className="settings-shell">
+        {/* Mobile header */}
+        <div className="settings-mobile-header">
+          <button
+            className="settings-mobile-toggle"
+            onClick={() => setMobileOpen((v) => !v)}
+            aria-expanded={mobileOpen}
+          >
+            <span className="settings-mobile-toggle__icon">
+              {mobileOpen ? "✕" : "☰"}
+            </span>
+            <span>{activeItem?.label ?? "Settings"}</span>
+          </button>
         </div>
-        <nav className="settings-sidebar__nav">
-          {navItems.map((item) => (
-            <button
-              key={item.key}
-              className={`settings-nav-item${item.key === activeSection ? " settings-nav-item--active" : ""}${item.danger ? " settings-nav-item--danger" : ""}`}
-              onClick={() => {
-                onSectionChange(item.key);
-                setMobileOpen(false);
-              }}
-            >
-              <span className="settings-nav-item__icon">{item.icon}</span>
-              <span className="settings-nav-item__label">{item.label}</span>
-            </button>
-          ))}
-        </nav>
-      </aside>
 
-      {/* Main pane */}
-      <main className="settings-pane">{children}</main>
+        {/* Sidebar */}
+        <aside
+          className={`settings-sidebar${mobileOpen ? " settings-sidebar--open" : ""}`}
+        >
+          <div className="settings-sidebar__header">
+            <span className="settings-sidebar__label">SETTINGS</span>
+            <span className="settings-sidebar__title">{title}</span>
+          </div>
+          <nav className="settings-sidebar__nav">
+            {navItems.map((item) => (
+              <button
+                key={item.key}
+                className={`settings-nav-item${item.key === activeSection ? " settings-nav-item--active" : ""}${item.danger ? " settings-nav-item--danger" : ""}`}
+                onClick={() => {
+                  onSectionChange(item.key);
+                  setMobileOpen(false);
+                }}
+              >
+                <span className="settings-nav-item__icon">{item.icon}</span>
+                <span className="settings-nav-item__label">{item.label}</span>
+              </button>
+            ))}
+          </nav>
+        </aside>
 
-      {/* Mobile overlay */}
-      {mobileOpen && (
-        <div
-          className="settings-overlay"
-          onClick={() => setMobileOpen(false)}
-        />
-      )}
-    </div>
+        {/* Main pane */}
+        <main className="settings-pane">{children}</main>
+
+        {/* Mobile overlay */}
+        {mobileOpen && (
+          <div
+            className="settings-overlay"
+            onClick={() => setMobileOpen(false)}
+          />
+        )}
+      </div>
+    </>
   );
 }
