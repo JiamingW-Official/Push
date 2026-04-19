@@ -7,17 +7,8 @@ import "./pipeline.css";
 /* ── Types ─────────────────────────────────────────────────── */
 
 type PipelineStatus = "applied" | "active" | "pending_review" | "completed";
-type ViewMode = "grid" | "list";
-type ActiveTab = "all" | "active" | "deadlines" | "completed";
+type ActiveTab = "all" | "active" | "pending" | "completed";
 type SortMode = "deadline" | "earn" | "merchant";
-type CategoryFilter =
-  | "all"
-  | "Coffee"
-  | "Food"
-  | "Beauty"
-  | "Retail"
-  | "Fitness"
-  | "Lifestyle";
 
 type PipelineCampaign = {
   id: string;
@@ -25,7 +16,6 @@ type PipelineCampaign = {
   merchantName: string;
   merchantContact?: string;
   category: string;
-  categoryColor: string;
   status: PipelineStatus;
   deadline: string;
   daysLeft: number;
@@ -39,13 +29,7 @@ type PipelineCampaign = {
   completedDate?: string;
   brief?: string;
   walkinCount?: number;
-  bonusTarget?: number;
   attributionNote?: string;
-};
-
-type FilterChipOption = {
-  label: string;
-  value: string;
 };
 
 /* ── Mock data ─────────────────────────────────────────────── */
@@ -57,7 +41,6 @@ const MOCK_CAMPAIGNS: PipelineCampaign[] = [
     merchantName: "Blank Street Coffee",
     merchantContact: "/creator/messages?merchant=blank-street",
     category: "Coffee",
-    categoryColor: "#c9a96e",
     status: "active",
     deadline: "Apr 20",
     daysLeft: 2,
@@ -71,7 +54,6 @@ const MOCK_CAMPAIGNS: PipelineCampaign[] = [
     brief:
       "Create 3 authentic morning-routine Stories featuring your Blank Street order. Focus on the ritual, not the product. Tag @blankstreetcoffee.",
     walkinCount: 4,
-    bonusTarget: 10,
     attributionNote:
       "Scan QR at register — show barista your creator code BS-4821.",
   },
@@ -81,7 +63,6 @@ const MOCK_CAMPAIGNS: PipelineCampaign[] = [
     merchantName: "Superiority Burger",
     merchantContact: "/creator/messages?merchant=superiority-burger",
     category: "Food",
-    categoryColor: "#c1121f",
     status: "active",
     deadline: "Apr 22",
     daysLeft: 4,
@@ -95,7 +76,6 @@ const MOCK_CAMPAIGNS: PipelineCampaign[] = [
     brief:
       "Film a 30-second Reel showing the full Superiority experience — ordering, unwrapping, first bite reaction. Neighborhood vibe is the hook.",
     walkinCount: 2,
-    bonusTarget: 8,
     attributionNote: "Show SB-7734 code at the counter to log your walk-in.",
   },
   {
@@ -104,7 +84,6 @@ const MOCK_CAMPAIGNS: PipelineCampaign[] = [
     merchantName: "Flamingo Estate",
     merchantContact: "/creator/messages?merchant=flamingo-estate",
     category: "Lifestyle",
-    categoryColor: "#669bbc",
     status: "pending_review",
     deadline: "Apr 25",
     daysLeft: 7,
@@ -126,7 +105,6 @@ const MOCK_CAMPAIGNS: PipelineCampaign[] = [
     merchantName: "Cha Cha Matcha",
     merchantContact: "/creator/messages?merchant=cha-cha-matcha",
     category: "Coffee",
-    categoryColor: "#c9a96e",
     status: "applied",
     deadline: "Apr 28",
     daysLeft: 10,
@@ -147,7 +125,6 @@ const MOCK_CAMPAIGNS: PipelineCampaign[] = [
     merchantName: "Brow Theory",
     merchantContact: "/creator/messages?merchant=brow-theory",
     category: "Beauty",
-    categoryColor: "#780000",
     status: "applied",
     deadline: "May 1",
     daysLeft: 13,
@@ -169,7 +146,6 @@ const MOCK_CAMPAIGNS: PipelineCampaign[] = [
     merchantName: "Egg Shop",
     merchantContact: "/creator/messages?merchant=egg-shop",
     category: "Food",
-    categoryColor: "#c1121f",
     status: "applied",
     deadline: "May 5",
     daysLeft: 17,
@@ -178,7 +154,7 @@ const MOCK_CAMPAIGNS: PipelineCampaign[] = [
     contentRequired: 2,
     contentSubmitted: 0,
     logoInitials: "ES",
-    logoColor: "#4a5568",
+    logoColor: "#003049",
     appliedDate: "Apr 17",
     brief:
       "Cover Saturday brunch at Egg Shop in 2 posts — the wait, the plate, the vibe. Make it feel like the best morning someone almost missed.",
@@ -190,7 +166,6 @@ const MOCK_CAMPAIGNS: PipelineCampaign[] = [
     merchantName: "Assembly New York",
     merchantContact: "/creator/messages?merchant=assembly-ny",
     category: "Retail",
-    categoryColor: "#003049",
     status: "completed",
     deadline: "Apr 10",
     daysLeft: -8,
@@ -211,7 +186,6 @@ const MOCK_CAMPAIGNS: PipelineCampaign[] = [
     merchantName: "Asics Williamsburg",
     merchantContact: "/creator/messages?merchant=asics-wburg",
     category: "Fitness",
-    categoryColor: "#669bbc",
     status: "completed",
     deadline: "Apr 5",
     daysLeft: -13,
@@ -232,7 +206,6 @@ const MOCK_CAMPAIGNS: PipelineCampaign[] = [
     merchantName: "Moto Coffee",
     merchantContact: "/creator/messages?merchant=moto-coffee",
     category: "Coffee",
-    categoryColor: "#c9a96e",
     status: "completed",
     deadline: "Mar 28",
     daysLeft: -21,
@@ -241,7 +214,7 @@ const MOCK_CAMPAIGNS: PipelineCampaign[] = [
     contentRequired: 2,
     contentSubmitted: 2,
     logoInitials: "MC",
-    logoColor: "#4a5568",
+    logoColor: "#003049",
     completedDate: "Mar 28",
     brief:
       "2 close-up product shots of the seasonal matcha latte. Warm tones, morning light. No text overlays.",
@@ -249,150 +222,34 @@ const MOCK_CAMPAIGNS: PipelineCampaign[] = [
   },
 ];
 
-const CATEGORY_FILTERS: FilterChipOption[] = [
-  { label: "All Categories", value: "all" },
-  { label: "Coffee", value: "Coffee" },
-  { label: "Food", value: "Food" },
-  { label: "Beauty", value: "Beauty" },
-  { label: "Retail", value: "Retail" },
-  { label: "Fitness", value: "Fitness" },
-  { label: "Lifestyle", value: "Lifestyle" },
-];
-
-/* ── Helpers ──────────────────────────────────────────────── */
-
-const STATUS_CONFIG: Record<
-  PipelineStatus,
-  { label: string; color: string; dotColor: string }
-> = {
-  applied: {
-    label: "APPLIED",
-    color: "var(--tertiary)",
-    dotColor: "#669bbc",
-  },
-  active: {
-    label: "ACTIVE",
-    color: "var(--primary)",
-    dotColor: "#c1121f",
-  },
-  pending_review: {
-    label: "PENDING REVIEW",
-    color: "var(--champagne)",
-    dotColor: "#c9a96e",
-  },
-  completed: {
-    label: "COMPLETED",
-    color: "var(--graphite)",
-    dotColor: "#4a5568",
-  },
-};
-
-const TAB_ORDER: ActiveTab[] = ["all", "active", "deadlines", "completed"];
-const TAB_LABELS: Record<ActiveTab, string> = {
-  all: "ALL",
-  active: "ACTIVE",
-  deadlines: "DEADLINES",
-  completed: "COMPLETED",
-};
-
 const SORT_OPTIONS: { label: string; value: SortMode }[] = [
   { label: "Deadline", value: "deadline" },
   { label: "Earnings", value: "earn" },
   { label: "Merchant", value: "merchant" },
 ];
 
-function getProgressPct(submitted: number, required: number): number {
-  if (required === 0) return 0;
-  return Math.round((submitted / required) * 100);
-}
+const TAB_ORDER: ActiveTab[] = ["all", "active", "pending", "completed"];
+const TAB_LABELS: Record<ActiveTab, string> = {
+  all: "All",
+  active: "Active",
+  pending: "Pending",
+  completed: "Done",
+};
 
-function getDeadlineUrgency(daysLeft: number, status: PipelineStatus) {
-  if (status === "completed") return "done";
-  if (daysLeft < 0) return "overdue";
-  if (daysLeft < 3) return "critical"; // < 3 days: red pulse
-  if (daysLeft <= 7) return "amber"; // 3-7 days: amber
-  return "safe"; // > 7 days: green
-}
+/* ── Status config ────────────────────────────────────────── */
 
-/* ── Deadline Badge ────────────────────────────────────────── */
+const STATUS_LABEL: Record<PipelineStatus, string> = {
+  active: "ACTIVE",
+  pending_review: "PENDING APPROVAL",
+  applied: "APPLIED",
+  completed: "COMPLETED",
+};
 
-function DeadlineBadge({
-  daysLeft,
-  status,
-  completedDate,
-}: {
-  daysLeft: number;
-  status: PipelineStatus;
-  completedDate?: string;
-}) {
-  const urgency = getDeadlineUrgency(daysLeft, status);
+/* ── Content type label ───────────────────────────────────── */
 
-  if (urgency === "done") {
-    return (
-      <span className="pl-deadline-badge pl-deadline-done">
-        Done {completedDate ?? ""}
-      </span>
-    );
-  }
-  if (urgency === "overdue") {
-    // Overdue is shown via the card-level stamp, badge shows nothing extra
-    return (
-      <span className="pl-deadline-badge pl-deadline-overdue">OVERDUE</span>
-    );
-  }
-  if (urgency === "critical") {
-    return (
-      <span className="pl-deadline-badge pl-deadline-critical">
-        {daysLeft === 0 ? "Due today" : `${daysLeft}d left`}
-      </span>
-    );
-  }
-  if (urgency === "amber") {
-    return (
-      <span className="pl-deadline-badge pl-deadline-amber">
-        {daysLeft}d left
-      </span>
-    );
-  }
-  // safe
-  return (
-    <span className="pl-deadline-badge pl-deadline-safe">{daysLeft}d left</span>
-  );
-}
-
-/* ── Status Action Button ──────────────────────────────────── */
-
-function StatusActionButton({ campaign }: { campaign: PipelineCampaign }) {
-  // ACTIVE: primary CTA — most important action
-  if (campaign.status === "active") {
-    return (
-      <Link
-        href={`/creator/campaigns/${campaign.id}/post`}
-        className="pl-action-btn pl-action-primary"
-        onClick={(e) => e.stopPropagation()}
-      >
-        Submit Content ↑
-      </Link>
-    );
-  }
-  // APPLIED: text link only, not a red button
-  if (campaign.status === "applied") {
-    return (
-      <button
-        className="pl-action-link"
-        onClick={(e) => e.stopPropagation()}
-        title="Withdraw application"
-      >
-        Withdraw
-      </button>
-    );
-  }
-  // PENDING REVIEW: no button, just status indicator
-  if (campaign.status === "pending_review") {
-    return <span className="pl-action-status">Under Review</span>;
-  }
-  // COMPLETED: no button needed
-  return null;
+function contentTypeLabel(required: number, submitted: number): string {
+  if (submitted >= required) return "Done";
+  return `${submitted}/${required} posts`;
 }
 
 /* ── Expanded Panel ────────────────────────────────────────── */
@@ -400,7 +257,6 @@ function StatusActionButton({ campaign }: { campaign: PipelineCampaign }) {
 function ExpandedPanel({ campaign }: { campaign: PipelineCampaign }) {
   return (
     <div className="pl-expand-panel">
-      {/* Brief */}
       {campaign.brief && (
         <div className="pl-expand-section">
           <p className="pl-expand-label">CAMPAIGN BRIEF</p>
@@ -409,7 +265,6 @@ function ExpandedPanel({ campaign }: { campaign: PipelineCampaign }) {
       )}
 
       <div className="pl-expand-row">
-        {/* Submission status */}
         <div className="pl-expand-section">
           <p className="pl-expand-label">SUBMISSION STATUS</p>
           <p className="pl-expand-stat">
@@ -423,7 +278,6 @@ function ExpandedPanel({ campaign }: { campaign: PipelineCampaign }) {
           )}
         </div>
 
-        {/* Attribution */}
         {campaign.attributionNote && (
           <div className="pl-expand-section">
             <p className="pl-expand-label">ATTRIBUTION</p>
@@ -431,7 +285,6 @@ function ExpandedPanel({ campaign }: { campaign: PipelineCampaign }) {
           </div>
         )}
 
-        {/* Contact */}
         {campaign.merchantContact && (
           <div className="pl-expand-section">
             <p className="pl-expand-label">MERCHANT</p>
@@ -445,56 +298,72 @@ function ExpandedPanel({ campaign }: { campaign: PipelineCampaign }) {
           </div>
         )}
       </div>
+
+      {/* Actions */}
+      <div className="pl-expand-actions">
+        {campaign.status === "active" && (
+          <Link
+            href={`/creator/campaigns/${campaign.id}/post`}
+            className="pl-action-btn pl-action-primary"
+            onClick={(e) => e.stopPropagation()}
+          >
+            Submit Content ↑
+          </Link>
+        )}
+        <Link
+          href={`/creator/campaigns/${campaign.id}`}
+          className="pl-action-btn pl-action-ghost"
+          onClick={(e) => e.stopPropagation()}
+        >
+          View Details
+        </Link>
+        {campaign.status === "pending_review" && (
+          <span className="pl-action-status">Under review by merchant</span>
+        )}
+        {campaign.status === "applied" && (
+          <button
+            className="pl-action-link"
+            onClick={(e) => e.stopPropagation()}
+          >
+            Withdraw application
+          </button>
+        )}
+      </div>
     </div>
   );
 }
 
-/* ── Campaign Card ─────────────────────────────────────────── */
+/* ── Campaign Row Card ─────────────────────────────────────── */
 
 function CampaignCard({
   campaign,
-  viewMode,
   expanded,
   onToggle,
 }: {
   campaign: PipelineCampaign;
-  viewMode: ViewMode;
   expanded: boolean;
   onToggle: () => void;
 }) {
-  const cfg = STATUS_CONFIG[campaign.status];
-  const pct = getProgressPct(
-    campaign.contentSubmitted,
-    campaign.contentRequired,
-  );
-  const urgency = getDeadlineUrgency(campaign.daysLeft, campaign.status);
-  const overdue = urgency === "overdue";
-  const critical = urgency === "critical";
+  const dateInfo =
+    campaign.status === "completed"
+      ? `Completed ${campaign.completedDate ?? ""}`
+      : campaign.daysLeft < 0
+        ? `Overdue since ${campaign.deadline}`
+        : `Due ${campaign.deadline}`;
 
   return (
     <div
       className={[
         "pl-card",
         `pl-card-${campaign.status}`,
-        overdue ? "pl-card-overdue" : "",
-        critical ? "pl-card-critical" : "",
         expanded ? "pl-card-expanded" : "",
-        `pl-view-${viewMode}`,
       ]
         .filter(Boolean)
         .join(" ")}
       role="article"
       onClick={onToggle}
       aria-expanded={expanded}
-      style={{ cursor: "pointer" }}
     >
-      {/* Category color strip */}
-      <div
-        className="pl-card-category-strip"
-        style={{ background: campaign.categoryColor }}
-        aria-hidden="true"
-      />
-
       <div className="pl-card-inner">
         {/* Logo */}
         <div
@@ -505,77 +374,31 @@ function CampaignCard({
           {campaign.logoInitials}
         </div>
 
-        {/* Main info */}
+        {/* Info */}
         <div className="pl-card-info">
-          <div className="pl-card-header-row">
-            <p className="pl-card-campaign">{campaign.campaignName}</p>
-            <span
-              className="pl-status-dot"
-              style={{ background: cfg.dotColor }}
-              aria-hidden="true"
-            />
-          </div>
           <p className="pl-card-merchant">{campaign.merchantName}</p>
-
-          {/* Completed: show post count as subtle detail */}
-          {campaign.status === "completed" && (
-            <p className="pl-card-posts-done">
-              {campaign.contentRequired} posts completed
-            </p>
-          )}
+          <p className="pl-card-campaign">{campaign.campaignName}</p>
+          <div className="pl-card-status-row">
+            <span className={`pl-card-status pl-status-${campaign.status}`}>
+              {STATUS_LABEL[campaign.status]}
+            </span>
+            <span className="pl-card-date">· {dateInfo}</span>
+            <span className="pl-card-type">
+              {contentTypeLabel(
+                campaign.contentRequired,
+                campaign.contentSubmitted,
+              )}
+            </span>
+          </div>
         </div>
 
-        {/* Meta */}
-        <div className="pl-card-meta">
+        {/* Earn */}
+        <div>
           <div className="pl-card-earn">{campaign.earnEstimate}</div>
-          <DeadlineBadge
-            daysLeft={campaign.daysLeft}
-            status={campaign.status}
-            completedDate={campaign.completedDate}
-          />
-          <div className="pl-card-category-label">{campaign.category}</div>
-        </div>
-
-        {/* Quick actions — revealed on hover */}
-        <div className="pl-card-actions">
           {campaign.status === "active" && (
-            <Link
-              href={`/creator/campaigns/${campaign.id}/post`}
-              className="pl-action-icon pl-action-submit"
-              title="Submit content"
-              aria-label="Submit content"
-              onClick={(e) => e.stopPropagation()}
-            >
-              ↑
-            </Link>
+            <span className="pl-card-earn-arrow">Submit →</span>
           )}
-          <Link
-            href={`/creator/campaigns/${campaign.id}`}
-            className="pl-action-icon pl-action-view"
-            title="View campaign"
-            aria-label="View campaign"
-            onClick={(e) => e.stopPropagation()}
-          >
-            ◈
-          </Link>
-          <Link
-            href="/creator/messages"
-            className="pl-action-icon pl-action-msg"
-            title="Message merchant"
-            aria-label="Message merchant"
-            onClick={(e) => e.stopPropagation()}
-          >
-            ◉
-          </Link>
         </div>
-      </div>
-
-      {/* Status action button */}
-      <div className="pl-card-cta" onClick={(e) => e.stopPropagation()}>
-        <StatusActionButton campaign={campaign} />
-        <span className="pl-expand-toggle" aria-hidden="true">
-          {expanded ? "▲" : "▼"}
-        </span>
       </div>
 
       {/* Expanded panel */}
@@ -588,8 +411,6 @@ function CampaignCard({
 
 export default function WorkPipelinePage() {
   const [activeTab, setActiveTab] = useState<ActiveTab>("all");
-  const [viewMode, setViewMode] = useState<ViewMode>("grid");
-  const [categoryFilter, setCategoryFilter] = useState("all");
   const [sortMode, setSortMode] = useState<SortMode>("deadline");
   const [expandedId, setExpandedId] = useState<string | null>(null);
 
@@ -601,94 +422,42 @@ export default function WorkPipelinePage() {
   const tabFiltered = MOCK_CAMPAIGNS.filter((c) => {
     if (activeTab === "active")
       return c.status === "active" || c.status === "pending_review";
-    if (activeTab === "deadlines")
-      return c.daysLeft >= 0 && c.daysLeft <= 7 && c.status !== "completed";
+    if (activeTab === "pending") return c.status === "applied";
     if (activeTab === "completed") return c.status === "completed";
-    return true; // "all"
-  });
-
-  // Category filter
-  const filtered = tabFiltered.filter((c) => {
-    if (categoryFilter !== "all" && c.category !== categoryFilter) return false;
     return true;
   });
 
   // Sort
-  const sortedFiltered = [...filtered].sort((a, b) => {
+  const sorted = [...tabFiltered].sort((a, b) => {
     if (sortMode === "earn") return b.earnRaw - a.earnRaw;
     if (sortMode === "merchant")
       return a.merchantName.localeCompare(b.merchantName);
-    // deadline (default): overdue first, then ascending daysLeft
-    const aOverdue =
+    // deadline: overdue first, then ascending
+    const aOver =
       a.daysLeft < 0 && a.status !== "completed" ? -1000 + a.daysLeft : 0;
-    const bOverdue =
+    const bOver =
       b.daysLeft < 0 && b.status !== "completed" ? -1000 + b.daysLeft : 0;
-    if (aOverdue !== bOverdue) return aOverdue - bOverdue;
+    if (aOver !== bOver) return aOver - bOver;
     return a.daysLeft - b.daysLeft;
   });
-
-  // Group by status for column layout
-  const grouped: Record<PipelineStatus, PipelineCampaign[]> = {
-    applied: sortedFiltered.filter((c) => c.status === "applied"),
-    active: sortedFiltered.filter((c) => c.status === "active"),
-    pending_review: sortedFiltered.filter((c) => c.status === "pending_review"),
-    completed: sortedFiltered.filter((c) => c.status === "completed"),
-  };
 
   // Summary stats
   const totalPotential = MOCK_CAMPAIGNS.filter(
     (c) => c.status !== "completed",
   ).reduce((sum, c) => sum + c.earnRaw, 0);
 
-  const activeCount = MOCK_CAMPAIGNS.filter(
-    (c) => c.status === "active",
-  ).length;
-  const inProgressCount = MOCK_CAMPAIGNS.filter(
-    (c) => c.status !== "completed",
-  ).length;
-
-  // This-week potential: active + pending_review with deadline <= 7 days
-  const thisWeekPotential = MOCK_CAMPAIGNS.filter(
-    (c) =>
-      (c.status === "active" || c.status === "pending_review") &&
-      c.daysLeft >= 0 &&
-      c.daysLeft <= 7,
-  ).reduce((sum, c) => sum + c.earnRaw, 0);
-
-  // Deadlines this week count
-  const deadlinesThisWeek = MOCK_CAMPAIGNS.filter(
-    (c) => c.daysLeft >= 0 && c.daysLeft <= 7 && c.status !== "completed",
-  ).length;
-
-  // Tab badge counts
   function tabCount(tab: ActiveTab): number {
     if (tab === "all") return MOCK_CAMPAIGNS.length;
     if (tab === "active")
       return MOCK_CAMPAIGNS.filter(
         (c) => c.status === "active" || c.status === "pending_review",
       ).length;
-    if (tab === "deadlines")
-      return MOCK_CAMPAIGNS.filter(
-        (c) => c.daysLeft >= 0 && c.daysLeft <= 7 && c.status !== "completed",
-      ).length;
+    if (tab === "pending")
+      return MOCK_CAMPAIGNS.filter((c) => c.status === "applied").length;
     if (tab === "completed")
       return MOCK_CAMPAIGNS.filter((c) => c.status === "completed").length;
     return 0;
   }
-
-  // Grid column statuses to show
-  const GRID_STATUSES: PipelineStatus[] = [
-    "applied",
-    "active",
-    "pending_review",
-    "completed",
-  ];
-  const GRID_STATUS_LABELS: Record<PipelineStatus, string> = {
-    applied: "APPLIED",
-    active: "ACTIVE",
-    pending_review: "PENDING REVIEW",
-    completed: "COMPLETED",
-  };
 
   return (
     <div className="pl-page">
@@ -709,131 +478,54 @@ export default function WorkPipelinePage() {
       {/* ── Hero ────────────────────────────────────────────── */}
       <header className="pl-hero">
         <div className="pl-hero-inner">
-          <div className="pl-hero-left">
-            <p className="pl-eyebrow">
-              {activeCount} ACTIVE · {MOCK_CAMPAIGNS.length} TOTAL
-            </p>
-            <h1 className="pl-headline">PIPELINE</h1>
-            <p className="pl-headline-sub">
-              {inProgressCount} campaigns in progress
-            </p>
-            <p className="pl-hero-sub">
-              Track every campaign from application to completion
-            </p>
-          </div>
-          <div className="pl-hero-right">
-            {/* This-week potential */}
-            {thisWeekPotential > 0 && (
-              <div className="pl-hero-week-stat">
-                <p className="pl-week-label">POTENTIAL THIS WEEK</p>
-                <p className="pl-week-value">${thisWeekPotential}</p>
-              </div>
-            )}
-
-            {/* Deadline warning */}
-            {deadlinesThisWeek > 0 && (
-              <div className="pl-hero-deadline-warn">
-                <span className="pl-warn-dot" aria-hidden="true" />
-                {deadlinesThisWeek} deadline{deadlinesThisWeek > 1 ? "s" : ""}{" "}
-                this week
-              </div>
-            )}
-
-            <p className="pl-potential-label">POTENTIAL EARNINGS</p>
-            <p className="pl-potential-value">
-              ${totalPotential.toLocaleString()}
-            </p>
-            <p className="pl-potential-sub">across active + applied</p>
-          </div>
+          <h1 className="pl-headline">Your Pipeline</h1>
+          <p className="pl-hero-sub">
+            {MOCK_CAMPAIGNS.filter((c) => c.status !== "completed").length}{" "}
+            campaigns · ${totalPotential.toLocaleString()} potential
+          </p>
         </div>
 
         {/* Tabs */}
         <div className="pl-tabs">
-          {TAB_ORDER.map((tab) => {
-            const count = tabCount(tab);
-            return (
-              <button
-                key={tab}
-                className={`pl-tab${activeTab === tab ? " pl-tab-active" : ""}`}
-                onClick={() => setActiveTab(tab)}
-              >
-                {TAB_LABELS[tab]}
-                <span className="pl-tab-count">{count}</span>
-              </button>
-            );
-          })}
+          {TAB_ORDER.map((tab) => (
+            <button
+              key={tab}
+              className={`pl-tab${activeTab === tab ? " pl-tab-active" : ""}`}
+              onClick={() => setActiveTab(tab)}
+            >
+              {TAB_LABELS[tab]}
+              <span className="pl-tab-count">{tabCount(tab)}</span>
+            </button>
+          ))}
         </div>
       </header>
 
-      {/* ── Toolbar ─────────────────────────────────────────── */}
+      {/* ── Sort toolbar ────────────────────────────────────── */}
       <div className="pl-toolbar">
-        <div className="pl-filters">
-          {/* Category filter chips */}
-          <div className="pl-filter-group">
-            {CATEGORY_FILTERS.map((f) => (
-              <button
-                key={f.value}
-                className={`pl-chip${categoryFilter === f.value ? " pl-chip-active" : ""}`}
-                onClick={() => setCategoryFilter(f.value)}
-              >
-                {f.label}
-              </button>
-            ))}
-          </div>
-
-          <div className="pl-filter-divider" />
-
-          {/* Sort options */}
-          <div className="pl-filter-group pl-sort-group">
-            <span className="pl-sort-label">SORT</span>
-            {SORT_OPTIONS.map((s) => (
-              <button
-                key={s.value}
-                className={`pl-chip${sortMode === s.value ? " pl-chip-active" : ""}`}
-                onClick={() => setSortMode(s.value)}
-              >
-                {s.label}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* View toggle */}
-        <div className="pl-view-toggle">
+        <span className="pl-sort-label">Sort</span>
+        {SORT_OPTIONS.map((s) => (
           <button
-            className={`pl-view-btn${viewMode === "grid" ? " pl-view-active" : ""}`}
-            onClick={() => setViewMode("grid")}
-            aria-label="Grid view"
-            title="Grid view"
+            key={s.value}
+            className={`pl-chip${sortMode === s.value ? " pl-chip-active" : ""}`}
+            onClick={() => setSortMode(s.value)}
           >
-            ▦
+            {s.label}
           </button>
-          <button
-            className={`pl-view-btn${viewMode === "list" ? " pl-view-active" : ""}`}
-            onClick={() => setViewMode("list")}
-            aria-label="List view"
-            title="List view"
-          >
-            ☰
-          </button>
-        </div>
+        ))}
       </div>
 
-      {/* ── Content ─────────────────────────────────────────── */}
-      {filtered.length === 0 ? (
+      {/* ── Campaign list ────────────────────────────────────── */}
+      {sorted.length === 0 ? (
         <div className="pl-empty">
-          <p className="pl-empty-ghost" aria-hidden="true">
-            EMPTY
-          </p>
           <p className="pl-empty-title">
             {activeTab === "active"
               ? "No active campaigns"
-              : "No campaigns match your filters"}
+              : "No campaigns match"}
           </p>
           <p className="pl-empty-sub">
             {activeTab === "active"
               ? "Head to Discover to find your next campaign"
-              : "Try adjusting filters or discover new opportunities"}
+              : "Try a different filter or discover new opportunities"}
           </p>
           {activeTab === "active" ? (
             <Link
@@ -848,7 +540,6 @@ export default function WorkPipelinePage() {
                 className="pl-empty-reset"
                 onClick={() => {
                   setActiveTab("all");
-                  setCategoryFilter("all");
                   setSortMode("deadline");
                 }}
               >
@@ -860,96 +551,15 @@ export default function WorkPipelinePage() {
             </>
           )}
         </div>
-      ) : viewMode === "grid" ? (
-        /* Grid / Column layout — 4 columns for 4 statuses */
-        <div className="pl-columns">
-          {GRID_STATUSES.map((status) => {
-            const cfg = STATUS_CONFIG[status];
-            const cols = grouped[status];
-            // In active/deadlines tab, hide applied + completed columns
-            if (
-              activeTab === "active" &&
-              (status === "applied" || status === "completed")
-            )
-              return null;
-            if (
-              activeTab === "deadlines" &&
-              (status === "applied" || status === "completed")
-            )
-              return null;
-            if (activeTab === "completed" && status !== "completed")
-              return null;
-            return (
-              <div key={status} className={`pl-column pl-col-${status}`}>
-                <div className="pl-col-header">
-                  <span
-                    className="pl-col-dot"
-                    style={{ background: cfg.dotColor }}
-                  />
-                  <span className="pl-col-title" style={{ color: cfg.color }}>
-                    {GRID_STATUS_LABELS[status]}
-                  </span>
-                  <span className="pl-col-count">{cols.length}</span>
-                </div>
-                <div className="pl-col-cards">
-                  {cols.length === 0 ? (
-                    <div className="pl-col-empty">
-                      {status === "active" ? (
-                        <Link
-                          href="/creator/explore"
-                          className="pl-col-empty-link"
-                        >
-                          Browse Discover →
-                        </Link>
-                      ) : (
-                        "No campaigns"
-                      )}
-                    </div>
-                  ) : (
-                    cols.map((c, i) => (
-                      <div
-                        key={c.id}
-                        style={{ animationDelay: `${i * 55}ms` }}
-                        className="pl-card-wrapper"
-                      >
-                        <CampaignCard
-                          campaign={c}
-                          viewMode={viewMode}
-                          expanded={expandedId === c.id}
-                          onToggle={() => toggleExpand(c.id)}
-                        />
-                      </div>
-                    ))
-                  )}
-                </div>
-              </div>
-            );
-          })}
-        </div>
       ) : (
-        /* List layout */
         <div className="pl-list">
-          <div className="pl-list-header">
-            <span>Campaign</span>
-            <span>Merchant</span>
-            <span>Status</span>
-            <span>Deadline</span>
-            <span>Earnings</span>
-            <span>Actions</span>
-          </div>
-          {sortedFiltered.map((c, i) => (
-            <div
+          {sorted.map((c) => (
+            <CampaignCard
               key={c.id}
-              style={{ animationDelay: `${i * 35}ms` }}
-              className="pl-card-wrapper"
-            >
-              <CampaignCard
-                campaign={c}
-                viewMode={viewMode}
-                expanded={expandedId === c.id}
-                onToggle={() => toggleExpand(c.id)}
-              />
-            </div>
+              campaign={c}
+              expanded={expandedId === c.id}
+              onToggle={() => toggleExpand(c.id)}
+            />
           ))}
         </div>
       )}

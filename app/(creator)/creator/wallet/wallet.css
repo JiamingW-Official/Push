@@ -98,9 +98,10 @@
   padding: 64px 48px 56px;
   display: grid;
   grid-template-columns: 1fr auto;
-  align-items: start;
+  align-items: center;
   gap: 32px;
   animation: wallet-fade-in 400ms ease forwards;
+  border-bottom: 3px solid rgba(201, 169, 110, 0.3);
 }
 
 .wallet-hero-left {}
@@ -109,9 +110,9 @@
   font-family: 'CS Genio Mono', monospace;
   font-size: 11px;
   font-weight: 700;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: rgba(245, 242, 236, 0.55);
+  color: rgba(201, 169, 110, 0.7);
   margin-bottom: 8px;
 }
 
@@ -120,7 +121,7 @@
   font-size: clamp(64px, 10vw, 96px);
   font-weight: 900;
   letter-spacing: -0.06em;
-  color: var(--surface, #f5f2ec);
+  color: var(--champagne, #c9a96e);
   line-height: 0.9;
   margin-bottom: 24px;
 }
@@ -148,9 +149,9 @@
 .wallet-hero-meta-value {
   font-family: Darky, sans-serif;
   font-size: 22px;
-  font-weight: 300;
+  font-weight: 700;
   letter-spacing: -0.02em;
-  color: rgba(245, 242, 236, 0.75);
+  color: rgba(245, 242, 236, 0.65);
 }
 
 .wallet-hero-right {
@@ -164,21 +165,21 @@
 .wallet-withdraw-btn {
   font-family: 'CS Genio Mono', monospace;
   font-size: 14px;
-  font-weight: 600;
-  letter-spacing: 0.04em;
+  font-weight: 700;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
-  background: var(--primary, #c1121f);
-  color: #fff;
+  background: var(--champagne, #c9a96e);
+  color: var(--dark, #003049);
   border: none;
   border-radius: 0;
-  padding: 16px 32px;
+  padding: 20px 40px;
   cursor: pointer;
   transition: background 200ms ease, transform 120ms ease;
   white-space: nowrap;
 }
 
 .wallet-withdraw-btn:hover {
-  background: var(--accent, #780000);
+  background: #b8924a;
 }
 
 .wallet-withdraw-btn:active {
@@ -186,7 +187,8 @@
 }
 
 .wallet-withdraw-btn:disabled {
-  background: rgba(193, 18, 31, 0.4);
+  background: rgba(201, 169, 110, 0.35);
+  color: rgba(0, 48, 73, 0.4);
   cursor: not-allowed;
 }
 
@@ -616,7 +618,7 @@
   font-size: clamp(48px, 7vw, 80px);
   font-weight: 900;
   letter-spacing: -0.05em;
-  color: var(--dark, #003049);
+  color: var(--champagne, #c9a96e);
   line-height: 0.9;
   margin-bottom: 8px;
 }

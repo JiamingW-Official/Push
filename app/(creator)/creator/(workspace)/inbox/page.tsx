@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation";
 import { useNotifications } from "@/lib/notifications/useNotifications";
 import "./inbox.css";
 
-/* ── Mock thread data ─────────────────────────────────────────── */
+/* ── Types ────────────────────────────────────────────────── */
 
 type Thread = {
   id: string;
@@ -18,6 +18,14 @@ type Thread = {
   unread: boolean;
   isNew?: boolean;
 };
+
+type Toast = {
+  id: string;
+  text: string;
+  fading: boolean;
+};
+
+/* ── Mock data ────────────────────────────────────────────── */
 
 const INITIAL_THREADS: Thread[] = [
   {
@@ -72,15 +80,7 @@ const INITIAL_THREADS: Thread[] = [
   },
 ];
 
-/* ── Toast type ───────────────────────────────────────────────── */
-
-type Toast = {
-  id: string;
-  text: string;
-  fading: boolean;
-};
-
-/* ── Main Inbox page ──────────────────────────────────────────── */
+/* ── Inbox Page ───────────────────────────────────────────── */
 
 export default function InboxPage() {
   const pathname = usePathname();
@@ -94,7 +94,7 @@ export default function InboxPage() {
     new Map(),
   );
 
-  // Simulate a new message arriving after 6 seconds
+  // Simulate new message arriving
   useEffect(() => {
     const timer = setTimeout(() => {
       const newThread: Thread = {
@@ -109,20 +109,17 @@ export default function InboxPage() {
         isNew: true,
       };
       setThreads((prev) => [newThread, ...prev]);
-      addToast(`New message from Bed-Stuy Eats`);
+      addToast("New message from Bed-Stuy Eats");
     }, 6000);
     return () => clearTimeout(timer);
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const addToast = useCallback((text: string) => {
     const id = `toast-${Date.now()}`;
     setToasts((prev) => [...prev, { id, text, fading: false }]);
-    // auto-dismiss after 4s
-    const timer = setTimeout(() => {
-      dismissToast(id);
-    }, 4000);
+    const timer = setTimeout(() => dismissToast(id), 4000);
     toastTimers.current.set(id, timer);
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const dismissToast = useCallback((id: string) => {
     setToasts((prev) =>
@@ -155,24 +152,27 @@ export default function InboxPage() {
 
   return (
     <div className="inbox-page">
-      {/* Top nav */}
+      {/* Nav */}
       <header className="inbox-nav">
         <Link href="/creator/dashboard" className="inbox-nav-back">
           ← Dashboard
         </Link>
         <span className="inbox-nav-title">Inbox.</span>
-        {/* Live indicator */}
         <div className="inbox-live-indicator">
           <span className="inbox-live-dot" />
           <span className="inbox-live-label">Live</span>
         </div>
       </header>
 
-      {/* Section tabs */}
+      {/* Tabs */}
       <nav className="inbox-tabs">
         <Link
           href="/creator/inbox"
-          className={`inbox-tab${pathname === "/creator/inbox" || pathname?.endsWith("/inbox") ? " inbox-tab--active" : ""}`}
+          className={`inbox-tab${
+            pathname === "/creator/inbox" || pathname?.endsWith("/inbox")
+              ? " inbox-tab--active"
+              : ""
+          }`}
         >
           Messages
           {unreadThreads > 0 && (
@@ -222,9 +222,6 @@ export default function InboxPage() {
               >
                 <div
                   className={`inbox-row${unread ? " inbox-row--unread" : ""}${thread.isNew ? " inbox-row--new" : ""}`}
-                  style={{
-                    animationDelay: thread.isNew ? "0ms" : `${idx * 30}ms`,
-                  }}
                 >
                   {/* Avatar */}
                   <div className="inbox-row-avatar">{thread.senderInitial}</div>
@@ -232,11 +229,10 @@ export default function InboxPage() {
                   {/* Content */}
                   <div className="inbox-row-content">
                     <span className="inbox-row-sender">{thread.sender}</span>
-                    <span className="inbox-row-separator">—</span>
                     <span className="inbox-row-preview">{thread.preview}</span>
                   </div>
 
-                  {/* Right side */}
+                  {/* Right */}
                   <div className="inbox-row-right">
                     <span className="inbox-row-time">{thread.time}</span>
                     {unread && (
@@ -251,7 +247,7 @@ export default function InboxPage() {
                   </div>
                 </div>
 
-                {/* Hover tooltip preview (desktop only) */}
+                {/* Hover tooltip */}
                 {isHovered && (
                   <div className="inbox-row-tooltip">
                     <div className="inbox-row-tooltip-sender">
@@ -268,7 +264,7 @@ export default function InboxPage() {
         )}
       </div>
 
-      {/* Toast container */}
+      {/* Toasts */}
       <div className="inbox-toast-container">
         {toasts.map((toast) => (
           <div

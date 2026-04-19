@@ -14,14 +14,6 @@ const REACH_DATA = [
   { month: "Apr", value: 12847 },
 ];
 
-const CAMPAIGN_CONVERSIONS = [
-  { name: "Blank Street", value: 87, category: "Coffee" },
-  { name: "Superiority Burger", value: 142, category: "Food" },
-  { name: "Flamingo Estate", value: 64, category: "Lifestyle" },
-  { name: "Brow Theory", value: 98, category: "Beauty" },
-  { name: "Cha Cha Matcha", value: 76, category: "Coffee" },
-];
-
 const NEIGHBORHOOD_DATA = [
   { name: "Williamsburg", value: 3240 },
   { name: "Lower East Side", value: 2810 },
@@ -29,6 +21,49 @@ const NEIGHBORHOOD_DATA = [
   { name: "Park Slope", value: 1870 },
   { name: "Bed-Stuy", value: 1540 },
   { name: "Greenpoint", value: 1197 },
+];
+
+const RECENT_CAMPAIGNS = [
+  {
+    id: 1,
+    campaign: "Best Burger Feature",
+    merchant: "Superiority Burger",
+    scans: 142,
+    earned: 44,
+    status: "done",
+  },
+  {
+    id: 2,
+    campaign: "Lifestyle Shoot",
+    merchant: "Flamingo Estate",
+    scans: 64,
+    earned: 35,
+    status: "done",
+  },
+  {
+    id: 3,
+    campaign: "Matcha Bar Content",
+    merchant: "Cha Cha Matcha",
+    scans: 76,
+    earned: 34,
+    status: "live",
+  },
+  {
+    id: 4,
+    campaign: "Brow Transformation",
+    merchant: "Brow Theory",
+    scans: 98,
+    earned: 50,
+    status: "live",
+  },
+  {
+    id: 5,
+    campaign: "Cold Brew Launch",
+    merchant: "Blank Street",
+    scans: 87,
+    earned: 42,
+    status: "done",
+  },
 ];
 
 const TIER_CONFIG = {
@@ -42,37 +77,37 @@ const TIER_CONFIG = {
 const INSIGHTS = [
   {
     id: 1,
-    headline: "Food campaigns",
     stat: "2.4×",
     context: "conversion rate vs. lifestyle",
+    headline: "Food campaigns",
     body: "Your food content consistently outperforms every other category. The audience trusts your taste.",
     cta: "Find food campaigns",
     ctaHref: "/creator/dashboard",
-    accent: "var(--primary)",
+    accent: "var(--primary, #c1121f)",
   },
   {
     id: 2,
-    headline: "Williamsburg",
     stat: "+31%",
     context: "reach vs. last month",
+    headline: "Williamsburg",
     body: "Your Williamsburg content is hitting. Three of your top-5 posts this month were from that neighborhood.",
     cta: "Browse nearby",
     ctaHref: "/creator/dashboard",
-    accent: "var(--tertiary)",
+    accent: "var(--steel-blue, #669bbc)",
   },
   {
     id: 3,
-    headline: "4 points",
-    stat: "75",
+    stat: "4 pts",
     context: "to reach Proven tier",
+    headline: "Almost there",
     body: "One strong campaign away from unlocking higher-paying spots and exclusive merchant partnerships.",
     cta: "See what unlocks",
-    ctaHref: "/creator/profile",
-    accent: "var(--champagne)",
+    ctaHref: "/creator/dashboard",
+    accent: "var(--champagne, #c9a96e)",
   },
 ];
 
-/* ── SVG helpers ────────────────────────────────────────────── */
+/* ── SVG line chart ─────────────────────────────────────────── */
 
 function LineChart({
   data,
@@ -105,7 +140,6 @@ function LineChart({
     ` L${points[points.length - 1].x.toFixed(1)},${(pad.top + innerH).toFixed(1)}` +
     ` L${points[0].x.toFixed(1)},${(pad.top + innerH).toFixed(1)} Z`;
 
-  // Y axis labels
   const yTicks = [minVal, Math.round((minVal + maxVal) / 2), maxVal];
 
   return (
@@ -115,10 +149,8 @@ function LineChart({
       height={height}
       aria-label="Reach over time"
     >
-      {/* Area fill */}
-      <path d={areaD} fill="var(--primary)" fillOpacity="0.06" />
+      <path d={areaD} fill="var(--primary, #c1121f)" fillOpacity="0.05" />
 
-      {/* Grid lines */}
       {yTicks.map((tick) => {
         const y = pad.top + (1 - (tick - minVal) / range) * innerH;
         return (
@@ -128,7 +160,7 @@ function LineChart({
               y1={y}
               x2={pad.left + innerW}
               y2={y}
-              stroke="var(--line)"
+              stroke="rgba(0,48,73,0.08)"
               strokeWidth="1"
             />
             <text
@@ -136,8 +168,8 @@ function LineChart({
               y={y + 4}
               textAnchor="end"
               fontSize="10"
-              fontFamily="var(--font-body)"
-              fill="var(--graphite)"
+              fontFamily="var(--font-body, 'CS Genio Mono', monospace)"
+              fill="rgba(0,48,73,0.4)"
             >
               {tick >= 1000 ? `${(tick / 1000).toFixed(1)}k` : tick}
             </text>
@@ -145,17 +177,15 @@ function LineChart({
         );
       })}
 
-      {/* Line */}
       <path
         d={pathD}
         fill="none"
-        stroke="var(--primary)"
+        stroke="var(--primary, #c1121f)"
         strokeWidth="1.5"
         strokeLinejoin="round"
         strokeLinecap="square"
       />
 
-      {/* Data points */}
       {points.map((p) => (
         <g key={p.month}>
           <rect
@@ -163,15 +193,15 @@ function LineChart({
             y={p.y - 3}
             width="6"
             height="6"
-            fill="var(--primary)"
+            fill="var(--primary, #c1121f)"
           />
           <text
             x={p.x}
             y={pad.top + innerH + 20}
             textAnchor="middle"
             fontSize="10"
-            fontFamily="var(--font-body)"
-            fill="var(--graphite)"
+            fontFamily="var(--font-body, 'CS Genio Mono', monospace)"
+            fill="rgba(0,48,73,0.4)"
           >
             {p.month}
           </text>
@@ -181,123 +211,12 @@ function LineChart({
   );
 }
 
-function BarChart({
-  data,
-  width = 600,
-  height = 180,
-}: {
-  data: { name: string; value: number }[];
-  width?: number;
-  height?: number;
-}) {
-  const pad = { top: 16, right: 16, bottom: 40, left: 8 };
-  const innerW = width - pad.left - pad.right;
-  const innerH = height - pad.top - pad.bottom;
-  const maxVal = Math.max(...data.map((d) => d.value));
-  const barW = innerW / data.length - 8;
-
-  return (
-    <svg
-      viewBox={`0 0 ${width} ${height}`}
-      width="100%"
-      height={height}
-      aria-label="Conversions by campaign"
-    >
-      {data.map((d, i) => {
-        const barH = (d.value / maxVal) * innerH;
-        const x = pad.left + i * (innerW / data.length) + 4;
-        const y = pad.top + innerH - barH;
-
-        return (
-          <g key={d.name}>
-            <rect
-              x={x}
-              y={y}
-              width={barW}
-              height={barH}
-              fill="var(--dark)"
-              fillOpacity={0.5 + 0.5 * (d.value / maxVal)}
-            />
-            <text
-              x={x + barW / 2}
-              y={pad.top + innerH + 14}
-              textAnchor="middle"
-              fontSize="9"
-              fontFamily="var(--font-body)"
-              fill="var(--graphite)"
-            >
-              {d.name.split(" ")[0]}
-            </text>
-            <text
-              x={x + barW / 2}
-              y={y - 5}
-              textAnchor="middle"
-              fontSize="10"
-              fontFamily="var(--font-body)"
-              fill="var(--dark)"
-              fontWeight="600"
-            >
-              {d.value}
-            </text>
-          </g>
-        );
-      })}
-    </svg>
-  );
-}
-
-function HorizontalBar({ data }: { data: { name: string; value: number }[] }) {
-  const max = Math.max(...data.map((d) => d.value));
-  return (
-    <div className="an-hbar-list">
-      {data.map((d, i) => (
-        <div key={d.name} className="an-hbar-row">
-          <span className="an-hbar-label">{d.name}</span>
-          <div className="an-hbar-track">
-            <div
-              className="an-hbar-fill"
-              style={{
-                width: `${(d.value / max) * 100}%`,
-                opacity: 0.4 + 0.6 * (1 - i / data.length),
-              }}
-            />
-          </div>
-          <span className="an-hbar-value">
-            {d.value >= 1000 ? `${(d.value / 1000).toFixed(1)}k` : d.value}
-          </span>
-        </div>
-      ))}
-    </div>
-  );
-}
-
-function TierProgress() {
-  const { score, prevScore, nextScore, current, nextTier } = TIER_CONFIG;
-  const pct = Math.round(((score - prevScore) / (nextScore - prevScore)) * 100);
-  return (
-    <div className="an-tier-wrap">
-      <div className="an-tier-labels">
-        <span className="an-tier-current">{current}</span>
-        <span className="an-tier-next">{nextTier} →</span>
-      </div>
-      <div className="an-tier-track">
-        <div className="an-tier-fill" style={{ width: `${pct}%` }} />
-      </div>
-      <div className="an-tier-meta">
-        <span className="an-tier-score">
-          Score: <strong>{score}</strong>
-        </span>
-        <span className="an-tier-gap">
-          {nextScore - score} pts to {nextTier}
-        </span>
-      </div>
-    </div>
-  );
-}
-
 /* ── Page ───────────────────────────────────────────────────── */
 
 export default function CreatorAnalyticsPage() {
+  const { current, score, nextTier, nextScore, prevScore } = TIER_CONFIG;
+  const pct = Math.round(((score - prevScore) / (nextScore - prevScore)) * 100);
+
   return (
     <div className="an-page">
       {/* Nav */}
@@ -309,77 +228,139 @@ export default function CreatorAnalyticsPage() {
         <span className="an-nav-date">Apr 2026</span>
       </header>
 
-      {/* Hero */}
-      <section className="an-hero">
-        <p className="an-hero-eyebrow">This month</p>
-        <h1 className="an-hero-headline">
-          You reached <span className="an-hero-number">12,847</span>{" "}
-          <span className="an-hero-light">people.</span>
-        </h1>
-        <div className="an-hero-stats">
-          <div className="an-hero-stat">
-            <span className="an-hero-stat-value">$205</span>
-            <span className="an-hero-stat-label">Earned</span>
+      {/* Page header */}
+      <div className="an-page-header">
+        <h1 className="an-page-title">Analytics</h1>
+        <p className="an-page-subtitle">Last 30 days · Apr 2026</p>
+      </div>
+
+      {/* Hero stats — 3 big numbers */}
+      <section className="an-hero-stats">
+        <div className="an-stat-cell">
+          <span className="an-stat-label">Total Scans</span>
+          <span className="an-stat-number">12,847</span>
+          <span className="an-stat-delta an-stat-delta--pos">
+            +1,647 vs last month
+          </span>
+        </div>
+        <div className="an-stat-cell">
+          <span className="an-stat-label">Earned</span>
+          <span className="an-stat-number an-stat-number--gold">$1,840</span>
+          <span className="an-stat-delta an-stat-delta--pos">
+            +$230 vs last month
+          </span>
+        </div>
+        <div className="an-stat-cell">
+          <span className="an-stat-label">Avg Rating</span>
+          <span className="an-stat-number an-stat-number--blue">4.8★</span>
+          <span className="an-stat-delta an-stat-delta--neu">
+            Top 15% of creators
+          </span>
+        </div>
+      </section>
+
+      {/* Push Score */}
+      <section className="an-score-section">
+        <div className="an-score-number-wrap">
+          <span className="an-score-number">{score}</span>
+          <span className="an-score-denom">/100</span>
+        </div>
+        <div className="an-score-details">
+          <div className="an-score-tier-label">Push Score · Current tier</div>
+          <div className="an-score-tier-name">{current}</div>
+          <div className="an-score-progress-label">
+            <strong>{nextScore - score} pts</strong> to {nextTier}
           </div>
-          <div className="an-hero-stat-div" />
-          <div className="an-hero-stat">
-            <span className="an-hero-stat-value">5</span>
-            <span className="an-hero-stat-label">Campaigns</span>
+          <div className="an-score-track">
+            <div className="an-score-fill" style={{ width: `${pct}%` }} />
           </div>
-          <div className="an-hero-stat-div" />
-          <div className="an-hero-stat">
-            <span className="an-hero-stat-value">467</span>
-            <span className="an-hero-stat-label">Conversions</span>
-          </div>
-          <div className="an-hero-stat-div" />
-          <div className="an-hero-stat">
-            <span className="an-hero-stat-value">3.6%</span>
-            <span className="an-hero-stat-label">Conv. rate</span>
+          <div className="an-score-next">
+            {prevScore} · {current} ────── {score} ──── {nextScore} · {nextTier}
           </div>
         </div>
       </section>
 
-      {/* Chart grid */}
-      <section className="an-charts">
-        {/* Reach over time */}
-        <div className="an-chart-card an-chart-card--wide">
-          <div className="an-chart-header">
-            <span className="an-chart-label">Reach over time</span>
-            <span className="an-chart-sublabel">Last 6 months</span>
-          </div>
-          <LineChart data={REACH_DATA} />
-        </div>
+      {/* Reach chart */}
+      <section className="an-chart-section">
+        <div className="an-section-label">Reach over time</div>
+        <h2 className="an-section-title">Last 6 months</h2>
+        <LineChart data={REACH_DATA} />
+      </section>
 
-        {/* Conversions by campaign */}
-        <div className="an-chart-card">
-          <div className="an-chart-header">
-            <span className="an-chart-label">Conversions by campaign</span>
-            <span className="an-chart-sublabel">Verified walk-ins</span>
-          </div>
-          <BarChart data={CAMPAIGN_CONVERSIONS} />
-        </div>
+      {/* Recent campaigns table */}
+      <section className="an-campaigns-section">
+        <div className="an-section-label">Recent campaigns</div>
+        <h2 className="an-section-title">Performance</h2>
+        <table className="an-table">
+          <thead>
+            <tr>
+              <th>Campaign</th>
+              <th>Merchant</th>
+              <th>Scans</th>
+              <th>Earned</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            {RECENT_CAMPAIGNS.map((c) => (
+              <tr key={c.id}>
+                <td>
+                  <div className="an-table-campaign">{c.campaign}</div>
+                </td>
+                <td>
+                  <div className="an-table-merchant">{c.merchant}</div>
+                </td>
+                <td>
+                  <span className="an-table-scans">{c.scans}</span>
+                </td>
+                <td>
+                  <span className="an-table-amount">${c.earned}</span>
+                </td>
+                <td>
+                  <span className={`an-status an-status--${c.status}`}>
+                    {c.status === "live"
+                      ? "Live"
+                      : c.status === "done"
+                        ? "Complete"
+                        : "Pending"}
+                  </span>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </section>
 
-        {/* Top neighborhoods */}
-        <div className="an-chart-card">
-          <div className="an-chart-header">
-            <span className="an-chart-label">Top neighborhoods</span>
-            <span className="an-chart-sublabel">NYC reach by area</span>
-          </div>
-          <HorizontalBar data={NEIGHBORHOOD_DATA} />
-        </div>
-
-        {/* Tier progression */}
-        <div className="an-chart-card an-chart-card--tier">
-          <div className="an-chart-header">
-            <span className="an-chart-label">Tier progression</span>
-            <span className="an-chart-sublabel">Push Score</span>
-          </div>
-          <TierProgress />
+      {/* Top neighborhoods */}
+      <section className="an-neighborhoods-section">
+        <div className="an-section-label">Top neighborhoods</div>
+        <h2 className="an-section-title">NYC reach by area</h2>
+        <div className="an-nbhd-list">
+          {NEIGHBORHOOD_DATA.map((n, i) => {
+            const max = NEIGHBORHOOD_DATA[0].value;
+            return (
+              <div key={n.name} className="an-nbhd-row">
+                <span className="an-nbhd-rank">{i + 1}</span>
+                <span className="an-nbhd-name">{n.name}</span>
+                <div className="an-nbhd-bar-wrap">
+                  <div
+                    className="an-nbhd-bar"
+                    style={{ width: `${(n.value / max) * 100}%` }}
+                  />
+                </div>
+                <span className="an-nbhd-value">
+                  {n.value >= 1000
+                    ? `${(n.value / 1000).toFixed(1)}k`
+                    : n.value}
+                </span>
+              </div>
+            );
+          })}
         </div>
       </section>
 
       {/* Insights */}
-      <section className="an-insights">
+      <section className="an-insights-section">
         <div className="an-insights-header">
           <p className="an-insights-eyebrow">Auto-generated</p>
           <h2 className="an-insights-title">Insights</h2>
@@ -387,16 +368,10 @@ export default function CreatorAnalyticsPage() {
         <div className="an-insights-grid">
           {INSIGHTS.map((ins) => (
             <div key={ins.id} className="an-insight-card">
-              <div
-                className="an-insight-accent"
-                style={{ background: ins.accent }}
-              />
-              <div className="an-insight-stat-row">
-                <span className="an-insight-stat" style={{ color: ins.accent }}>
-                  {ins.stat}
-                </span>
-                <span className="an-insight-context">{ins.context}</span>
-              </div>
+              <span className="an-insight-stat" style={{ color: ins.accent }}>
+                {ins.stat}
+              </span>
+              <span className="an-insight-context">{ins.context}</span>
               <h3 className="an-insight-headline">{ins.headline}</h3>
               <p className="an-insight-body">{ins.body}</p>
               <Link href={ins.ctaHref} className="an-insight-cta">

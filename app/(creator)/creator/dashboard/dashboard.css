@@ -1,347 +1,219 @@
 /* ============================================================
-   Push — Creator Dashboard v2 (Simplified 3-block)
+   Push — Creator Dashboard v3 Premium
    Design.md: border-radius 0, 8px grid, 6-color palette
    Fonts: Darky (display) + CS Genio Mono (body/UI)
-   First screen: greeting + 3 focused blocks
+   Philosophy: restraint is luxury. one hero moment per section.
    ============================================================ */
+
+/* ── Entrance animation ───────────────────────────────────── */
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
 
 /* ── Page Shell ───────────────────────────────────────────── */
 
 .db3-page {
   min-height: 100%;
-  background: var(--surface);
-  color: var(--dark);
+  background: var(--surface, #f5f2ec);
+  color: var(--dark, #003049);
   font-family: var(--font-body);
-  padding-bottom: 64px;
+  padding: 0;
 }
 
-/* ── Greeting Header ──────────────────────────────────────── */
-
-.db3-greeting {
-  padding: 48px 40px 40px;
-  border-bottom: 1px solid var(--line);
-}
-
-.db3-greeting-eyebrow {
-  font-family: var(--font-body);
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--text-muted);
-  margin-bottom: 8px;
-}
-
-.db3-greeting-name {
-  font-family: var(--font-display);
-  font-size: clamp(36px, 4vw, 56px);
-  font-weight: 700;
-  letter-spacing: -0.03em;
-  color: var(--dark);
-  line-height: 1.05;
-}
-
-/* ── Three-block container ───────────────────────────────── */
-
-.db3-blocks {
-  display: flex;
-  flex-direction: column;
-  gap: 0;
-}
-
-/* ── Shared block structure ──────────────────────────────── */
+/* ── Shared block entrance ───────────────────────────────── */
 
 .db3-block {
-  padding: 32px 40px 40px;
-  border-bottom: 1px solid var(--line);
+  animation: fadeUp 400ms ease-out both;
 }
 
-.db3-block-header {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  margin-bottom: 24px;
-}
+/* ── Shared eyebrow label ────────────────────────────────── */
 
-.db3-block-label {
-  font-family: var(--font-body);
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--graphite);
-}
-
-.db3-block-link {
-  font-family: var(--font-body);
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--text-muted);
-  text-decoration: none;
-  transition: color 150ms ease;
-}
-
-.db3-block-link:hover {
-  color: var(--primary);
-}
-
-/* ── Block 1: Today task card ────────────────────────────── */
-
-.db3-task-card {
-  display: block;
-  padding: 24px;
-  background: var(--surface-elevated);
-  border: 1px solid var(--line);
-  border-left: 3px solid transparent;
-  text-decoration: none;
-  color: inherit;
-  transition: border-color 150ms ease, background 150ms ease;
-}
-
-.db3-task-card--active {
-  border-left-color: var(--primary);
-}
-
-.db3-task-card:hover {
-  background: var(--surface-bright, #fafaf8);
-}
-
-.db3-task-card:focus-visible {
-  outline: 2px solid var(--primary);
-  outline-offset: 2px;
-}
-
-.db3-task-top {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 12px;
-}
-
-.db3-task-pill {
-  display: inline-flex;
-  align-items: center;
-  padding: 3px 8px;
-  font-family: var(--font-body);
-  font-size: 9px;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  background: rgba(193, 18, 31, 0.1);
-  color: var(--primary);
-  line-height: 1;
-}
-
-.db3-task-time-left {
-  font-family: var(--font-body);
-  font-size: 11px;
-  font-weight: 600;
-  color: var(--text-muted);
-  letter-spacing: 0.04em;
-}
-
-.db3-task-name {
-  font-family: var(--font-body);
-  font-size: 16px;
-  font-weight: 700;
-  color: var(--dark);
-  letter-spacing: 0.01em;
-  margin-bottom: 6px;
-  line-height: 1.3;
-}
-
-.db3-task-sub {
-  font-family: var(--font-body);
-  font-size: 12px;
-  color: var(--text-muted);
-  letter-spacing: 0.01em;
-  margin-bottom: 20px;
-}
-
-.db3-task-footer {
-  display: flex;
-  align-items: center;
-}
-
-.db3-task-earn {
-  font-family: var(--font-display);
-  font-size: 22px;
-  font-weight: 900;
-  color: var(--champagne, #c9a96e);
-  letter-spacing: -0.04em;
-  line-height: 1;
-}
-
-/* ── Block 2: Push Score ─────────────────────────────────── */
-
-.db3-score-wrap {
-  display: flex;
-  align-items: center;
-  gap: 32px;
-}
-
-/* SVG ring */
-.db3-ring-wrap {
-  position: relative;
-  flex-shrink: 0;
-  width: 120px;
-  height: 120px;
-}
-
-.db3-ring-svg {
-  width: 100%;
-  height: 100%;
-  transform: rotate(-90deg);
-}
-
-.db3-ring-track {
-  fill: none;
-  stroke: rgba(0, 48, 73, 0.08);
-  stroke-width: 5;
-}
-
-.db3-ring-fill {
-  fill: none;
-  stroke: var(--champagne, #c9a96e);
-  stroke-width: 5;
-  stroke-linecap: butt;
-}
-
-.db3-ring-center {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 1px;
-}
-
-.db3-ring-number {
-  font-family: var(--font-display);
-  font-size: 34px;
-  font-weight: 900;
-  color: var(--dark);
-  letter-spacing: -0.05em;
-  line-height: 1;
-}
-
-.db3-ring-denom {
-  font-family: var(--font-body);
-  font-size: 11px;
-  font-weight: 700;
-  color: var(--text-muted);
-  letter-spacing: 0.02em;
-  align-self: flex-end;
-  padding-bottom: 6px;
-}
-
-/* Score text info */
-.db3-score-info {
-  flex: 1;
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.db3-tier-badge {
-  display: inline-flex;
-  align-items: center;
-  height: 24px;
-  padding: 0 10px;
-  border: 1px solid;
-  border-left-width: 3px;
+.db3-eyebrow {
   font-family: var(--font-body);
   font-size: 10px;
   font-weight: 700;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
-  border-radius: 0;
-  width: fit-content;
+  color: var(--dark, #003049);
+  opacity: 0.5;
+  margin: 0 0 12px;
 }
 
-.db3-tier-badge--seed     { color: #6b7280; border-color: #6b7280; background: rgba(107,114,128,0.07); }
-.db3-tier-badge--explorer { color: var(--steel-blue,#669bbc); border-color: var(--steel-blue,#669bbc); background: rgba(102,155,188,0.08); }
-.db3-tier-badge--operator { color: #4a5568; border-color: #4a5568; background: rgba(74,85,104,0.07); }
-.db3-tier-badge--proven   { color: var(--champagne,#c9a96e); border-color: var(--champagne,#c9a96e); background: rgba(201,169,110,0.1); }
-.db3-tier-badge--closer   { color: var(--primary,#c1121f); border-color: var(--primary,#c1121f); background: rgba(193,18,31,0.08); }
-.db3-tier-badge--partner  { color: var(--dark,#003049); border-color: var(--dark,#003049); background: rgba(0,48,73,0.07); }
+/* ── Greeting ─────────────────────────────────────────────── */
 
-.db3-progress-row {
+.db3-greeting {
+  padding: 48px 40px 40px;
+  border-bottom: 1px solid rgba(0, 48, 73, 0.08);
+}
+
+.db3-name {
+  font-family: var(--font-display);
+  font-size: clamp(48px, 6vw, 80px);
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  color: var(--dark, #003049);
+  line-height: 1;
+  margin: 0;
+}
+
+/* ── Today's Task — hero card ────────────────────────────── */
+
+.db3-task-hero {
+  display: block;
+  padding: 40px;
+  background: var(--surface-elevated, #ffffff);
+  border-left: 3px solid var(--primary, #c1121f);
+  border-bottom: 1px solid rgba(0, 48, 73, 0.08);
+  text-decoration: none;
+  color: inherit;
+  transition: background 150ms ease;
+}
+
+.db3-task-hero:hover {
+  background: var(--surface-bright, #fafaf8);
+}
+
+.db3-task-hero:focus-visible {
+  outline: 2px solid var(--primary, #c1121f);
+  outline-offset: -2px;
+}
+
+.db3-task-title {
+  font-family: var(--font-display);
+  font-size: clamp(20px, 3vw, 28px);
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  color: var(--dark, #003049);
+  line-height: 1.1;
+  margin: 0 0 8px;
+}
+
+.db3-task-meta {
+  font-family: var(--font-body);
+  font-size: 12px;
+  color: var(--dark, #003049);
+  opacity: 0.5;
+  letter-spacing: 0.02em;
+  margin: 0 0 24px;
+}
+
+.db3-earn {
+  font-family: var(--font-display);
+  font-size: clamp(36px, 5vw, 48px);
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  color: var(--champagne, #c9a96e);
+  line-height: 1;
+  margin: 0;
+}
+
+/* ── Bottom row: Score + Invites ─────────────────────────── */
+
+.db3-bottom-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  animation-delay: 160ms;
+}
+
+/* ── Shared card base ────────────────────────────────────── */
+
+.db3-score-card,
+.db3-invites-card {
+  padding: 40px;
+}
+
+.db3-score-card {
+  border-right: 1px solid rgba(0, 48, 73, 0.08);
+}
+
+/* ── Big number display ──────────────────────────────────── */
+
+.db3-big-num-row {
   display: flex;
-  flex-direction: column;
-  gap: 8px;
+  align-items: baseline;
+  gap: 4px;
+  margin-bottom: 8px;
 }
 
-.db3-progress-bar {
-  height: 3px;
-  background: rgba(0, 48, 73, 0.1);
-  overflow: hidden;
-  max-width: 200px;
+.db3-big-num {
+  font-family: var(--font-display);
+  font-size: clamp(56px, 8vw, 96px);
+  font-weight: 900;
+  letter-spacing: -0.05em;
+  color: var(--dark, #003049);
+  line-height: 1;
 }
 
-.db3-score-fill {
-  height: 100%;
-  background: var(--champagne, #c9a96e);
+.db3-big-denom {
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--dark, #003049);
+  opacity: 0.4;
+  letter-spacing: 0.02em;
+  align-self: flex-end;
+  padding-bottom: 8px;
 }
 
-.db3-progress-hint {
+/* ── Score tier label ────────────────────────────────────── */
+
+.db3-tier-label {
   font-family: var(--font-body);
   font-size: 11px;
-  color: var(--text-muted);
-  letter-spacing: 0.01em;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--steel-blue, #669bbc);
+  margin: 0;
 }
 
-/* ── Block 3: Open Invites ───────────────────────────────── */
-
-.db3-invites-body {
-  margin-bottom: 24px;
-}
-
-.db3-invites-count {
-  font-family: var(--font-body);
-  font-size: 15px;
-  color: var(--dark);
-  letter-spacing: 0.01em;
-  margin-bottom: 6px;
-}
-
-.db3-invites-count strong {
-  font-family: var(--font-display);
-  font-size: 32px;
-  font-weight: 900;
-  color: var(--dark);
-  letter-spacing: -0.04em;
-  line-height: 1;
-  margin-right: 4px;
-  vertical-align: middle;
-}
+/* ── Invites card specifics ──────────────────────────────── */
 
 .db3-invites-sub {
   font-family: var(--font-body);
   font-size: 12px;
-  color: var(--text-muted);
-  letter-spacing: 0.01em;
+  color: var(--dark, #003049);
+  opacity: 0.5;
+  letter-spacing: 0.02em;
+  margin: 0 0 8px;
 }
 
-/* Primary CTA button */
-.db3-cta {
-  display: inline-flex;
-  align-items: center;
-  height: 44px;
-  padding: 0 24px;
+.db3-invites-active {
   font-family: var(--font-body);
   font-size: 11px;
   font-weight: 700;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--steel-blue, #669bbc);
+  margin: 0 0 24px;
+}
+
+/* ── CTA button ──────────────────────────────────────────── */
+
+.db3-cta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 48px;
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   text-decoration: none;
   background: var(--dark, #003049);
   color: #fff;
   border: none;
-  border-radius: 0;
+  margin-top: 24px;
   transition: background 200ms ease;
 }
 
@@ -350,7 +222,7 @@
 }
 
 .db3-cta:focus-visible {
-  outline: 2px solid var(--primary);
+  outline: 2px solid var(--primary, #c1121f);
   outline-offset: 2px;
 }
 
@@ -358,26 +230,32 @@
 
 @media (max-width: 767px) {
   .db3-greeting {
-    padding: 32px 20px 28px;
+    padding: 32px 24px 28px;
   }
 
-  .db3-block {
-    padding: 24px 20px 32px;
+  .db3-task-hero {
+    padding: 32px 24px;
   }
 
-  .db3-score-wrap {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 20px;
+  .db3-bottom-row {
+    grid-template-columns: 1fr;
+  }
+
+  .db3-score-card {
+    border-right: none;
+    border-bottom: 1px solid rgba(0, 48, 73, 0.08);
+    padding: 32px 24px;
+  }
+
+  .db3-invites-card {
+    padding: 32px 24px;
   }
 }
 
 /* ── Motion preferences ───────────────────────────────────── */
 
 @media (prefers-reduced-motion: reduce) {
-  .db3-ring-fill,
-  .db3-score-fill {
-    transition: none !important;
-    animation: none !important;
+  .db3-block {
+    animation: none;
   }
 }

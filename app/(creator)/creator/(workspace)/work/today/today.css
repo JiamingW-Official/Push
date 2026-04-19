@@ -1,91 +1,24 @@
 /* ============================================================
-   Work Today — Daily Focus Dashboard  (Wave 4 Polish)
-   Design system: border-radius 0, 8px grid, 6-color palette
-   Fonts: Darky (display) + CS Genio Mono (body/UI)
+   Work Today — Daily Focus  (20x Premium Overhaul)
+   Design: editorial restraint, one hero moment, clean timeline
+   border-radius: 0 | 6 colors | Darky + CS Genio Mono
    ============================================================ */
 
-/* ── Animation Tokens ─────────────────────────────────────── */
+/* ── Keyframes (only 3) ───────────────────────────────────── */
 
 @keyframes wt-fade-up {
-  from { opacity: 0; transform: translateY(16px); }
+  from { opacity: 0; transform: translateY(12px); }
   to   { opacity: 1; transform: translateY(0); }
 }
 
-@keyframes wt-slide-right {
-  from { opacity: 0; transform: translateX(-20px); }
-  to   { opacity: 1; transform: translateX(0); }
-}
-
-@keyframes wt-ghost-breathe {
-  0%, 100% { opacity: 0.035; }
-  50%       { opacity: 0.065; }
-}
-
-/* Active campaign red-dot pulse */
-@keyframes wt-red-pulse {
-  0%   { box-shadow: 0 0 0 0 rgba(193, 18, 31, 0.55); }
-  60%  { box-shadow: 0 0 0 7px rgba(193, 18, 31, 0); }
-  100% { box-shadow: 0 0 0 0 rgba(193, 18, 31, 0); }
-}
-
-/* Active row left-border breathing */
-@keyframes wt-border-pulse {
-  0%, 100% { opacity: 1; }
-  50%       { opacity: 0.6; }
-}
-
-/* Progress fill entrance */
-@keyframes wt-progress-fill {
-  from { width: 0 !important; }
-}
-
-/* Staggered row reveal */
 @keyframes wt-row-in {
-  from { opacity: 0; transform: translateX(-10px); }
-  to   { opacity: 1; transform: translateX(0); }
-}
-
-@keyframes wt-expand {
-  from { opacity: 0; transform: translateY(-6px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-
-/* Stat counter entrance */
-@keyframes wt-count-in {
-  from { opacity: 0; transform: translateY(8px) scale(0.92); }
-  to   { opacity: 1; transform: translateY(0) scale(1); }
-}
-
-/* Task completion strikethrough draw left-to-right */
-@keyframes wt-task-complete {
-  from { width: 0; }
-  to   { width: 100%; }
-}
-
-/* Urgency pulsing border scale */
-@keyframes inviteCountdownPulse {
-  0%, 100% { transform: scale(1); }
-  50%       { transform: scale(1.015); }
-}
-
-/* Scan counter bump on increment */
-@keyframes wt-stat-bump {
-  0%   { transform: scale(1); }
-  40%  { transform: scale(1.18); color: var(--primary); }
-  100% { transform: scale(1); }
-}
-
-/* NOW line entrance */
-@keyframes wt-now-in {
   from { opacity: 0; transform: translateX(-8px); }
   to   { opacity: 1; transform: translateX(0); }
 }
 
-/* Projected earnings value pop */
-@keyframes wt-value-pop {
-  0%   { transform: scale(1); }
-  50%  { transform: scale(1.06); color: var(--champagne); }
-  100% { transform: scale(1); }
+@keyframes wt-expand {
+  from { opacity: 0; transform: translateY(-4px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
 /* ── Page Shell ───────────────────────────────────────────── */
@@ -159,276 +92,54 @@
 
 .wt-nav-link:hover { color: var(--accent); }
 
-/* ── Hero ─────────────────────────────────────────────────── */
+/* ── Hero — editorial, one clear message ─────────────────── */
 
 .wt-hero {
-  background: var(--surface-bright);
-  border-bottom: 3px solid var(--dark);
-  padding: 56px 32px 44px;
+  padding: 48px 40px 40px;
+  border-bottom: 1px solid rgba(0, 48, 73, 0.08);
   animation: wt-fade-up 500ms cubic-bezier(0.22, 1, 0.36, 1) both;
-  position: relative;
-  overflow: hidden;
-}
-
-/* Faint ghost behind hero */
-.wt-hero::after {
-  content: "TODAY";
-  position: absolute;
-  right: -20px;
-  bottom: -32px;
-  font-family: var(--font-display);
-  font-size: clamp(100px, 18vw, 220px);
-  font-weight: 900;
-  letter-spacing: -0.07em;
-  color: var(--dark);
-  opacity: 0.04;
-  pointer-events: none;
-  user-select: none;
-  line-height: 1;
-  animation: wt-ghost-breathe 6s ease-in-out infinite;
 }
 
 .wt-hero-inner {
   max-width: 1200px;
   margin: 0 auto;
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 40px;
-  flex-wrap: wrap;
-  position: relative;
-  z-index: 1;
-}
-
-.wt-hero-left {
-  flex: 1;
-  min-width: 280px;
-}
-
-/* Editorial date block */
-.wt-date-block {
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 20px;
 }
 
 .wt-date-day {
   font-family: var(--font-display);
-  font-size: clamp(56px, 8vw, 104px);
+  font-size: clamp(64px, 8vw, 96px);
   font-weight: 900;
   letter-spacing: -0.05em;
-  line-height: 0.88;
+  line-height: 0.9;
   color: var(--dark);
   margin: 0;
 }
 
 .wt-date-month {
   font-family: var(--font-display);
-  font-size: clamp(28px, 4vw, 52px);
+  font-size: clamp(32px, 4vw, 48px);
   font-weight: 200;
   letter-spacing: -0.03em;
-  line-height: 1;
+  line-height: 1.1;
   color: var(--dark);
-  opacity: 0.45;
-  margin: 0;
-}
-
-.wt-eyebrow {
-  font-family: var(--font-body);
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--graphite);
+  opacity: 0.35;
   margin: 0 0 16px;
 }
 
-.wt-progress-row {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-top: 8px;
+.wt-hero-divider {
+  width: 48px;
+  height: 1px;
+  background: rgba(0, 48, 73, 0.2);
+  margin: 0 0 16px;
 }
 
-.wt-progress-text {
+.wt-hero-summary {
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 14px;
   color: var(--graphite);
-  white-space: nowrap;
-}
-
-.wt-progress-bar {
-  width: 160px;
-  height: 2px;
-  background: rgba(0, 48, 73, 0.12);
-  flex-shrink: 0;
-}
-
-.wt-progress-fill {
-  height: 100%;
-  background: var(--primary);
-  animation: wt-progress-fill 800ms ease-out both;
-  transition: width 600ms cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-.wt-hero-right {
-  text-align: right;
-  flex-shrink: 0;
-}
-
-.wt-earnings-label {
-  font-family: var(--font-body);
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--graphite);
-  margin: 0 0 8px;
-}
-
-.wt-earnings-value {
-  font-family: var(--font-display);
-  font-size: clamp(44px, 6vw, 72px);
-  font-weight: 900;
-  letter-spacing: -0.04em;
-  line-height: 0.95;
-  color: var(--champagne);
-  margin: 0 0 6px;
-}
-
-.wt-earnings-sub {
-  font-family: var(--font-body);
-  font-size: 12px;
-  color: var(--graphite);
-}
-
-/* ── Stats Strip ──────────────────────────────────────────── */
-
-.wt-stats-strip {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  border-bottom: 1px solid var(--line);
-  background: var(--surface-elevated);
-  animation: wt-fade-up 400ms cubic-bezier(0.22, 1, 0.36, 1) both;
-}
-
-@media (max-width: 768px) {
-  .wt-stats-strip {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-.wt-stat-card {
-  position: relative;
-  overflow: hidden;
-  padding: 28px 24px 22px;
-  border-right: 1px solid var(--line);
-  height: 88px;
-  display: flex;
-  align-items: center;
-  transition: background 200ms ease;
-}
-
-.wt-stat-card:last-child { border-right: none; }
-
-.wt-stat-card:hover {
-  background: var(--surface-bright);
-}
-
-/* Scan card: flex row, extra right padding for +1 button */
-.wt-stat-scan-card {
-  padding-right: 64px;
-  gap: 0;
-}
-
-.wt-stat-ghost {
-  position: absolute;
-  right: -8px;
-  top: 50%;
-  transform: translateY(-50%);
-  font-family: var(--font-display);
-  font-size: 64px;
-  font-weight: 900;
-  letter-spacing: -0.07em;
-  color: var(--dark);
-  opacity: 0.045;
-  line-height: 1;
-  pointer-events: none;
-  user-select: none;
-  animation: wt-ghost-breathe 4s ease-in-out infinite;
-}
-
-.wt-stat-body {
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-  z-index: 1;
-}
-
-.wt-stat-value {
-  font-family: var(--font-display);
-  font-size: 34px;
-  font-weight: 900;
-  letter-spacing: -0.04em;
-  line-height: 1;
-  color: var(--dark);
-  animation: wt-count-in 400ms cubic-bezier(0.22, 1, 0.36, 1) both;
-  display: inline-block;
-}
-
-/* Scan count pulse on increment */
-.wt-stat-pulse {
-  animation: wt-stat-bump 600ms cubic-bezier(0.22, 1, 0.36, 1) both !important;
-}
-
-/* Earnings stat in champagne */
-.wt-stat-card:last-child .wt-stat-value {
-  color: var(--champagne);
-}
-
-.wt-stat-label {
-  font-family: var(--font-body);
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.09em;
-  text-transform: uppercase;
-  color: var(--graphite);
-}
-
-.wt-stat-sub {
-  font-family: var(--font-body);
-  font-size: 10px;
-  color: var(--graphite);
-  opacity: 0.65;
-}
-
-/* +1 button on scan card */
-.wt-scan-plus-btn {
-  position: absolute;
-  right: 16px;
-  top: 50%;
-  transform: translateY(-50%);
-  font-family: var(--font-body);
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  background: var(--primary);
-  color: #fff;
-  border: none;
-  padding: 6px 10px;
-  cursor: pointer;
-  border-radius: 0;
-  transition: background 150ms ease, transform 150ms ease;
-  z-index: 2;
-}
-
-.wt-scan-plus-btn:hover {
-  background: var(--accent);
-  transform: translateY(-50%) scale(1.05);
-}
-
-.wt-scan-plus-btn:active {
-  transform: translateY(-50%) scale(0.96);
+  margin: 0;
+  line-height: 1.5;
+  letter-spacing: 0.01em;
 }
 
 /* ── Body Layout ──────────────────────────────────────────── */
@@ -437,21 +148,36 @@
   max-width: 1200px;
   margin: 0 auto;
   display: grid;
-  grid-template-columns: 1fr 300px;
+  grid-template-columns: 1fr 280px;
   gap: 0;
   align-items: start;
-  padding: 48px 32px;
-  animation: wt-fade-up 400ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  padding: 48px 40px;
+  animation: wt-fade-up 400ms 80ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 @media (max-width: 960px) {
   .wt-body {
     grid-template-columns: 1fr;
-    padding: 24px 16px;
+    padding: 32px 24px;
   }
 }
 
-/* ── Section Header ───────────────────────────────────────── */
+/* ── Timeline Section ─────────────────────────────────────── */
+
+.wt-timeline-section {
+  padding-right: 48px;
+  border-right: 1px solid var(--line);
+}
+
+@media (max-width: 960px) {
+  .wt-timeline-section {
+    padding-right: 0;
+    border-right: none;
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 40px;
+    margin-bottom: 40px;
+  }
+}
 
 .wt-section-header {
   display: flex;
@@ -469,6 +195,7 @@
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--graphite);
+  opacity: 0.6;
 }
 
 .wt-section-link {
@@ -484,7 +211,32 @@
 
 .wt-section-link:hover { color: var(--accent); }
 
-/* ── Time Group Eyebrow ───────────────────────────────────── */
+/* ── Timeline ─────────────────────────────────────────────── */
+
+.wt-timeline {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 400px;
+}
+
+/* Vertical axis line */
+.wt-timeline-axis {
+  position: absolute;
+  left: 66px;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    var(--line) 40px,
+    var(--line) calc(100% - 40px),
+    transparent
+  );
+}
+
+/* ── Time Group ───────────────────────────────────────────── */
 
 .wt-time-group {
   margin-bottom: 0;
@@ -504,7 +256,7 @@
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--graphite);
-  opacity: 0.6;
+  opacity: 0.5;
   white-space: nowrap;
 }
 
@@ -513,48 +265,6 @@
   flex: 1;
   height: 1px;
   background: var(--line);
-}
-
-/* ── Timeline ─────────────────────────────────────────────── */
-
-.wt-timeline-section {
-  padding-right: 48px;
-  border-right: 1px solid var(--line);
-}
-
-@media (max-width: 960px) {
-  .wt-timeline-section {
-    padding-right: 0;
-    border-right: none;
-    border-bottom: 1px solid var(--line);
-    padding-bottom: 40px;
-    margin-bottom: 40px;
-  }
-}
-
-.wt-timeline {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  gap: 0;
-  /* Give the NOW line a coordinate system */
-  min-height: 400px;
-}
-
-/* Vertical axis line */
-.wt-timeline-axis {
-  position: absolute;
-  left: 88px;
-  top: 0;
-  bottom: 0;
-  width: 1px;
-  background: linear-gradient(
-    to bottom,
-    transparent,
-    var(--line) 40px,
-    var(--line) calc(100% - 40px),
-    transparent
-  );
 }
 
 /* ── NOW Line ─────────────────────────────────────────────── */
@@ -567,15 +277,13 @@
   background: var(--primary);
   z-index: 10;
   pointer-events: none;
-  animation: wt-now-in 600ms ease both;
-  /* smooth reposition on minute tick */
   transition: top 4s linear;
 }
 
 .wt-now-line::before {
   content: "";
   position: absolute;
-  left: 80px;
+  left: 58px;
   top: -3px;
   width: 7px;
   height: 7px;
@@ -602,90 +310,91 @@
 
 .wt-timeline-row {
   display: grid;
-  grid-template-columns: 72px 28px 1fr;
+  grid-template-columns: 56px 24px 1fr;
   align-items: flex-start;
   gap: 0;
-  min-height: 80px;
+  min-height: 72px;
   position: relative;
-  animation: wt-row-in 400ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation: wt-row-in 360ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 .wt-timeline-row:nth-child(1) { animation-delay: 0ms; }
-.wt-timeline-row:nth-child(2) { animation-delay: 30ms; }
-.wt-timeline-row:nth-child(3) { animation-delay: 60ms; }
-.wt-timeline-row:nth-child(4) { animation-delay: 90ms; }
-.wt-timeline-row:nth-child(5) { animation-delay: 120ms; }
-.wt-timeline-row:nth-child(6) { animation-delay: 150ms; }
+.wt-timeline-row:nth-child(2) { animation-delay: 40ms; }
+.wt-timeline-row:nth-child(3) { animation-delay: 80ms; }
+.wt-timeline-row:nth-child(4) { animation-delay: 120ms; }
+.wt-timeline-row:nth-child(5) { animation-delay: 160ms; }
+.wt-timeline-row:nth-child(6) { animation-delay: 200ms; }
 
+/* Time label */
 .wt-time-label {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  padding: 24px 14px 0 0;
+  padding: 20px 12px 0 0;
   gap: 2px;
   font-family: var(--font-body);
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.04em;
   color: var(--graphite);
+  opacity: 0.6;
   line-height: 1;
 }
 
 .wt-time-end {
   font-size: 9px;
   font-weight: 400;
-  color: var(--graphite);
-  opacity: 0.5;
+  opacity: 0.6;
 }
 
-/* ── Timeline Dots ────────────────────────────────────────── */
+/* ── Timeline Dots (50% exception for dots only) ─────────── */
 
 .wt-timeline-dot {
-  width: 10px;
-  height: 10px;
-  margin: 27px auto 0;
+  width: 8px;
+  height: 8px;
+  margin: 23px auto 0;
   flex-shrink: 0;
+  border-radius: 50%;
   position: relative;
   z-index: 2;
 }
 
-.wt-dot-done {
-  background: var(--graphite);
-  width: 6px;
-  height: 6px;
-  margin: 29px auto 0;
-  opacity: 0.4;
-}
-
 .wt-dot-active {
   background: var(--primary);
-  border-radius: 50%;
-  animation: wt-red-pulse 2s ease-in-out infinite;
 }
 
 .wt-dot-upcoming {
-  background: var(--surface-elevated);
-  border: 2px solid rgba(0, 48, 73, 0.25);
-  border-radius: 50%;
+  background: rgba(0, 48, 73, 0.2);
+}
+
+.wt-dot-done {
+  background: rgba(0, 48, 73, 0.15);
+  width: 6px;
+  height: 6px;
+  margin: 24px auto 0;
 }
 
 .wt-dot-free {
   background: none;
   border: 1.5px dashed rgba(0, 48, 73, 0.2);
-  border-radius: 50%;
   width: 8px;
   height: 8px;
-  margin: 29px auto 0;
+  margin: 23px auto 0;
 }
 
-/* ── Task Block ───────────────────────────────────────────── */
+/* ── Task Content ─────────────────────────────────────────── */
 
 .wt-task-content {
-  padding: 10px 0 10px 16px;
+  padding: 8px 0 8px 16px;
   flex: 1;
-  border-left: 3px solid transparent;
+  border-bottom: 1px solid var(--line);
   margin-left: 2px;
-  transition: border-color 200ms ease, background 200ms ease;
+  transition: background 200ms ease;
+}
+
+/* Last row: no bottom border */
+.wt-timeline-row:last-child .wt-task-content {
+  border-bottom: none;
 }
 
 .wt-timeline-task {
@@ -693,73 +402,40 @@
 }
 
 .wt-timeline-task:hover .wt-task-content {
-  border-left-color: rgba(193, 18, 31, 0.3);
-}
-
-/* Status-specific left-border on task content */
-.wt-status-active .wt-task-content {
-  border-left-color: var(--primary);
-  animation: wt-border-pulse 2.5s ease-in-out infinite;
-}
-
-.wt-status-done .wt-task-content {
-  border-left-color: rgba(0, 48, 73, 0.2);
-}
-
-.wt-status-upcoming .wt-task-content {
-  border-left-color: var(--tertiary);
+  background: rgba(0, 48, 73, 0.015);
 }
 
 .wt-timeline-task.wt-selected .wt-task-content {
-  border-left-color: var(--primary);
-  background: rgba(193, 18, 31, 0.025);
+  background: rgba(193, 18, 31, 0.02);
 }
 
-/* ── Completed task state ─────────────────────────────────── */
+/* ── Completed task ───────────────────────────────────────── */
 
 .wt-task-completed {
-  opacity: 0.5;
-  transition: opacity 200ms ease;
+  opacity: 0.45;
 }
 
 .wt-task-completed .wt-task-campaign {
-  position: relative;
+  text-decoration: line-through;
+  text-decoration-color: rgba(0, 48, 73, 0.4);
 }
 
-/* Strikethrough that draws left-to-right */
-.wt-task-completed .wt-task-campaign::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 50%;
-  height: 1.5px;
-  background: var(--graphite);
-  animation: wt-task-complete 200ms ease forwards;
-  width: 100%;
-}
+/* ── Task urgency ─────────────────────────────────────────── */
 
-/* ── Task urgency — amber pulsing border ──────────────────── */
-
-.wt-task-urgent .wt-task-content {
-  border-left-color: #f59e0b !important;
-  animation: inviteCountdownPulse 1.2s ease-in-out infinite !important;
-}
-
-/* Overdue: red pulsing border */
+.wt-task-urgent .wt-task-content,
 .wt-task-overdue .wt-task-content {
-  border-left-color: var(--primary) !important;
-  animation: inviteCountdownPulse 1.2s ease-in-out infinite !important;
+  background: rgba(193, 18, 31, 0.02);
 }
 
 /* ── Complete toggle button ───────────────────────────────── */
 
 .wt-complete-btn {
-  width: 24px;
-  height: 24px;
+  width: 22px;
+  height: 22px;
   border-radius: 50%;
-  border: 1.5px solid rgba(0, 48, 73, 0.25);
+  border: 1.5px solid rgba(0, 48, 73, 0.2);
   background: transparent;
-  font-size: 12px;
+  font-size: 11px;
   cursor: pointer;
   flex-shrink: 0;
   display: flex;
@@ -767,7 +443,7 @@
   justify-content: center;
   color: var(--graphite);
   transition: border-color 150ms ease, background 150ms ease, color 150ms ease;
-  margin-right: 4px;
+  margin-right: 8px;
 }
 
 .wt-complete-btn:hover {
@@ -776,14 +452,9 @@
 }
 
 .wt-complete-btn--done {
-  background: var(--graphite);
-  border-color: var(--graphite);
-  color: #fff;
-}
-
-.wt-complete-btn--done:hover {
-  background: var(--primary);
-  border-color: var(--primary);
+  background: rgba(0, 48, 73, 0.12);
+  border-color: transparent;
+  color: var(--graphite);
 }
 
 /* ── Task main row ────────────────────────────────────────── */
@@ -791,33 +462,22 @@
 .wt-task-main {
   display: flex;
   align-items: center;
-  gap: 12px;
-  height: 60px;
+  gap: 10px;
+  min-height: 56px;
 }
 
 .wt-task-logo {
-  width: 40px;
-  height: 40px;
+  width: 36px;
+  height: 36px;
   display: flex;
   align-items: center;
   justify-content: center;
   font-family: var(--font-display);
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 800;
   color: #fff;
   flex-shrink: 0;
   border-radius: 0;
-  position: relative;
-}
-
-/* Active campaign logo pulsing outline */
-.wt-status-active .wt-task-logo::after {
-  content: "";
-  position: absolute;
-  inset: -3px;
-  border: 2px solid var(--primary);
-  opacity: 0.5;
-  animation: wt-border-pulse 2s ease-in-out infinite;
 }
 
 .wt-task-info {
@@ -835,7 +495,6 @@
   overflow: hidden;
   text-overflow: ellipsis;
   margin: 0 0 2px;
-  transition: opacity 200ms ease;
 }
 
 .wt-task-merchant {
@@ -843,9 +502,10 @@
   font-size: 11px;
   color: var(--graphite);
   margin: 0;
+  opacity: 0.7;
 }
 
-/* Active row shows "● LIVE" label next to merchant */
+/* Active indicator: inline text, no animation */
 .wt-active-indicator {
   display: inline-flex;
   align-items: center;
@@ -864,10 +524,10 @@
   height: 5px;
   border-radius: 50%;
   background: var(--primary);
-  animation: wt-red-pulse 1.5s ease-in-out infinite;
   flex-shrink: 0;
 }
 
+/* Task meta: earn badge on right */
 .wt-task-meta {
   display: flex;
   flex-direction: column;
@@ -883,14 +543,14 @@
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--graphite);
-  opacity: 0.5;
+  opacity: 0.4;
 }
 
-/* Earn badge — champagne gold */
+/* Earn badge */
 .wt-task-earn {
   font-family: var(--font-display);
-  font-size: 17px;
-  font-weight: 800;
+  font-size: 16px;
+  font-weight: 700;
   letter-spacing: -0.02em;
   color: var(--champagne);
   line-height: 1;
@@ -914,42 +574,44 @@
 }
 
 .wt-chip-done {
-  background: rgba(0, 48, 73, 0.08);
+  background: rgba(0, 48, 73, 0.07);
   color: var(--graphite);
 }
 
 .wt-chip-upcoming {
-  background: rgba(102, 155, 188, 0.12);
-  border: 1px solid var(--tertiary);
-  color: var(--tertiary);
+  background: transparent;
+  border: 1px solid rgba(0, 48, 73, 0.15);
+  color: var(--graphite);
+  opacity: 0.7;
 }
 
 .wt-chip-overdue {
   background: var(--primary);
   color: #fff;
-  animation: inviteCountdownPulse 1.2s ease-in-out infinite;
 }
 
-/* Status modifier: done task — muted */
+/* Done state — muted */
 .wt-status-done .wt-task-campaign,
 .wt-status-done .wt-task-merchant {
-  opacity: 0.38;
+  opacity: 0.35;
 }
 
 .wt-status-done .wt-task-earn {
-  opacity: 0.38;
+  opacity: 0.3;
 }
 
-/* Expanded actions */
+/* ── Expanded actions ─────────────────────────────────────── */
+
 .wt-task-expanded {
   padding: 0 0 16px;
-  animation: wt-expand 220ms ease both;
+  animation: wt-expand 200ms ease both;
 }
 
 .wt-task-actions {
   display: flex;
   gap: 8px;
   flex-wrap: wrap;
+  padding-top: 8px;
 }
 
 .wt-action-btn {
@@ -973,63 +635,40 @@
   color: #fff;
 }
 
-.wt-action-primary:hover {
-  background: var(--accent);
-}
+.wt-action-primary:hover { background: var(--accent); }
 
 .wt-action-secondary {
   background: var(--dark);
   color: #fff;
 }
 
-.wt-action-secondary:hover {
-  background: var(--accent);
-}
+.wt-action-secondary:hover { background: var(--accent); }
 
 .wt-action-ghost {
   background: transparent;
   color: var(--dark);
-  border: 1px solid rgba(0, 48, 73, 0.2);
+  border: 1px solid rgba(0, 48, 73, 0.18);
 }
 
-.wt-action-ghost:hover {
-  border-color: var(--dark);
-}
-
-.wt-action-done {
-  font-family: var(--font-body);
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.07em;
-  text-transform: uppercase;
-  color: var(--graphite);
-  opacity: 0.6;
-  padding: 9px 0;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-}
+.wt-action-ghost:hover { border-color: var(--dark); }
 
 /* ── Free Block ───────────────────────────────────────────── */
 
-.wt-timeline-free {
-  opacity: 0.55;
-}
+.wt-timeline-free { opacity: 0.5; }
 
 .wt-free-block {
   display: flex;
   align-items: center;
   gap: 16px;
-  border: 1px dashed rgba(0, 48, 73, 0.2);
-  margin: 14px 0 14px 18px;
+  border: 1px dashed rgba(0, 48, 73, 0.15);
+  margin: 12px 0 12px 16px;
   padding: 0 16px;
-  height: 44px;
-  background: var(--surface);
+  height: 40px;
   transition: opacity 200ms ease, border-color 200ms ease;
 }
 
 .wt-timeline-free:hover .wt-free-block {
-  border-color: var(--primary);
+  border-color: rgba(0, 48, 73, 0.3);
   opacity: 1;
 }
 
@@ -1038,7 +677,6 @@
   font-size: 11px;
   color: var(--graphite);
   flex: 1;
-  letter-spacing: 0.02em;
 }
 
 .wt-free-cta {
@@ -1050,16 +688,15 @@
   color: var(--primary);
   text-decoration: none;
   white-space: nowrap;
-  transition: color 150ms ease;
 }
 
-.wt-free-cta:hover { color: var(--accent); }
+.wt-free-cta:hover { opacity: 0.7; }
 
 /* ── Quick Add Zone ───────────────────────────────────────── */
 
 .wt-quick-add-zone {
   padding: 16px 0 8px;
-  border-top: 1px dashed rgba(0, 48, 73, 0.15);
+  border-top: 1px dashed rgba(0, 48, 73, 0.12);
   margin-top: 8px;
 }
 
@@ -1074,23 +711,22 @@
   text-transform: uppercase;
   color: var(--graphite);
   background: transparent;
-  border: 1px dashed rgba(0, 48, 73, 0.25);
-  padding: 8px 16px;
+  border: none;
+  padding: 8px 0;
   cursor: pointer;
   border-radius: 0;
-  transition: border-color 150ms ease, color 150ms ease;
-  opacity: 0.7;
+  opacity: 0.45;
+  transition: opacity 150ms ease, color 150ms ease;
 }
 
 .wt-quick-add-btn:hover {
-  border-color: var(--primary);
-  color: var(--primary);
   opacity: 1;
+  color: var(--dark);
 }
 
 .wt-quick-add-icon {
-  font-size: 15px;
-  font-weight: 400;
+  font-size: 14px;
+  font-weight: 300;
   line-height: 1;
 }
 
@@ -1121,9 +757,7 @@
   min-width: 112px;
 }
 
-.wt-add-time-picker:focus {
-  border-color: var(--primary);
-}
+.wt-add-time-picker:focus { border-color: var(--primary); }
 
 .wt-add-text-input {
   flex: 1;
@@ -1141,12 +775,10 @@
 
 .wt-add-text-input::placeholder {
   color: var(--graphite);
-  opacity: 0.5;
+  opacity: 0.4;
 }
 
-.wt-add-text-input:focus {
-  border-color: var(--primary);
-}
+.wt-add-text-input:focus { border-color: var(--primary); }
 
 .wt-add-submit-btn {
   font-family: var(--font-body);
@@ -1163,21 +795,15 @@
   transition: background 150ms ease;
 }
 
-.wt-add-submit-btn:hover:not(:disabled) {
-  background: var(--accent);
-}
-
-.wt-add-submit-btn:disabled {
-  opacity: 0.4;
-  cursor: not-allowed;
-}
+.wt-add-submit-btn:hover:not(:disabled) { background: var(--accent); }
+.wt-add-submit-btn:disabled { opacity: 0.35; cursor: not-allowed; }
 
 .wt-add-cancel-btn {
   font-family: var(--font-body);
   font-size: 13px;
   background: transparent;
   color: var(--graphite);
-  border: 1px solid rgba(0, 48, 73, 0.2);
+  border: 1px solid rgba(0, 48, 73, 0.15);
   padding: 7px 11px;
   cursor: pointer;
   border-radius: 0;
@@ -1196,7 +822,7 @@
   padding-left: 32px;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 16px;
   position: sticky;
   top: 64px;
 }
@@ -1208,28 +834,17 @@
   }
 }
 
-/* CTA Card — dark with champagne accent */
+/* ── Active CTA Card ──────────────────────────────────────── */
+
 .wt-cta-card {
   background: var(--dark);
   color: #fff;
-  padding: 24px;
+  padding: 28px 24px 24px;
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: 6px;
   border-radius: 0;
-  position: relative;
-  overflow: hidden;
-}
-
-/* Faint red shimmer accent */
-.wt-cta-card::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: var(--primary);
+  border-top: 2px solid var(--primary);
 }
 
 .wt-cta-eyebrow {
@@ -1240,20 +855,6 @@
   text-transform: uppercase;
   color: var(--primary);
   margin: 0;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-/* Live indicator in CTA eyebrow */
-.wt-cta-eyebrow::before {
-  content: "";
-  display: inline-block;
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
-  background: var(--primary);
-  animation: wt-red-pulse 1.5s ease-in-out infinite;
 }
 
 .wt-cta-title {
@@ -1269,8 +870,8 @@
 .wt-cta-desc {
   font-family: var(--font-body);
   font-size: 12px;
-  color: rgba(255, 255, 255, 0.5);
-  margin: 0 0 6px;
+  color: rgba(255, 255, 255, 0.45);
+  margin: 0 0 4px;
 }
 
 .wt-cta-earn {
@@ -1295,94 +896,29 @@
   text-decoration: none;
   background: var(--primary);
   color: #fff;
-  padding: 12px 20px;
+  padding: 13px 20px;
   border-radius: 0;
   transition: background 150ms ease;
-  margin-top: 10px;
+  margin-top: 12px;
 }
 
 .wt-cta-btn:hover { background: var(--accent); }
 
-/* Activity Card */
-.wt-activity-card {
-  background: var(--surface-elevated);
-  border: 1px solid var(--line);
-  padding: 18px 20px;
-  border-radius: 0;
-}
+/* ── Pipeline Shortcut ────────────────────────────────────── */
 
-.wt-activity-title {
-  font-family: var(--font-body);
-  font-size: 9px;
-  font-weight: 700;
-  letter-spacing: 0.13em;
-  text-transform: uppercase;
-  color: var(--graphite);
-  margin: 0 0 14px;
-}
-
-.wt-activity-list {
-  list-style: none;
-  display: flex;
-  flex-direction: column;
-  gap: 0;
-}
-
-.wt-activity-item {
-  display: flex;
-  align-items: flex-start;
-  gap: 10px;
-  padding: 10px 0;
-  border-bottom: 1px solid var(--line);
-  transition: background 150ms ease;
-}
-
-.wt-activity-item:last-child {
-  border-bottom: none;
-  padding-bottom: 0;
-}
-
-.wt-activity-icon {
-  font-size: 13px;
-  flex-shrink: 0;
-  margin-top: 1px;
-}
-
-.wt-activity-body { flex: 1; min-width: 0; }
-
-.wt-activity-text {
-  font-family: var(--font-body);
-  font-size: 11px;
-  color: var(--dark);
-  line-height: 1.4;
-  margin: 0 0 2px;
-}
-
-.wt-activity-time {
-  font-family: var(--font-body);
-  font-size: 9px;
-  color: var(--graphite);
-  opacity: 0.55;
-  margin: 0;
-}
-
-/* Pipeline shortcut */
 .wt-pipeline-shortcut {
   display: flex;
   align-items: center;
   justify-content: space-between;
   background: var(--surface-elevated);
   border: 1px solid var(--line);
-  padding: 16px 18px;
+  padding: 18px 20px;
   text-decoration: none;
-  transition: border-color 200ms ease, transform 200ms cubic-bezier(0.22, 1, 0.36, 1);
+  transition: border-color 200ms ease;
   border-radius: 0;
 }
 
-.wt-pipeline-shortcut:hover {
-  border-color: var(--dark);
-  transform: translateY(-2px);
-}
+.wt-pipeline-shortcut:hover { border-color: var(--dark); }
 
 .wt-pipeline-shortcut-label {
   font-family: var(--font-body);
@@ -1391,12 +927,13 @@
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--graphite);
+  opacity: 0.6;
   margin: 0 0 4px;
 }
 
 .wt-pipeline-shortcut-sub {
   font-family: var(--font-display);
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 700;
   letter-spacing: -0.02em;
   color: var(--dark);
@@ -1404,75 +941,13 @@
 }
 
 .wt-pipeline-shortcut-arrow {
-  font-size: 22px;
+  font-size: 20px;
   color: var(--primary);
-  transition: transform 180ms ease;
+  transition: transform 150ms ease;
 }
 
 .wt-pipeline-shortcut:hover .wt-pipeline-shortcut-arrow {
-  transform: translateX(4px);
-}
-
-/* ── Projected Earnings Widget ────────────────────────────── */
-
-.wt-projection-card {
-  background: var(--surface-bright);
-  border: 1px solid var(--line);
-  border-top: 2px solid var(--champagne);
-  padding: 18px 20px 16px;
-  border-radius: 0;
-}
-
-.wt-projection-label {
-  font-family: var(--font-body);
-  font-size: 9px;
-  font-weight: 700;
-  letter-spacing: 0.13em;
-  text-transform: uppercase;
-  color: var(--graphite);
-  margin: 0 0 8px;
-}
-
-/* key= on this so React re-triggers animation on value change */
-.wt-projection-value {
-  font-family: var(--font-display);
-  font-size: 36px;
-  font-weight: 900;
-  letter-spacing: -0.04em;
-  line-height: 1;
-  color: var(--champagne);
-  margin: 0 0 4px;
-  display: inline-block;
-  animation: wt-value-pop 400ms cubic-bezier(0.22, 1, 0.36, 1) both;
-}
-
-.wt-projection-sub {
-  font-family: var(--font-body);
-  font-size: 10px;
-  color: var(--graphite);
-  margin: 0 0 10px;
-  opacity: 0.7;
-}
-
-.wt-projection-bar {
-  width: 100%;
-  height: 2px;
-  background: rgba(0, 48, 73, 0.1);
-  margin-bottom: 6px;
-}
-
-.wt-projection-fill {
-  height: 100%;
-  background: var(--champagne);
-  transition: width 600ms cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-.wt-projection-cap {
-  font-family: var(--font-body);
-  font-size: 9px;
-  color: var(--graphite);
-  opacity: 0.5;
-  margin: 0;
+  transform: translateX(3px);
 }
 
 /* ── Empty State ──────────────────────────────────────────── */
@@ -1485,24 +960,7 @@
   min-height: 60vh;
   gap: 12px;
   padding: 48px;
-  position: relative;
-  overflow: hidden;
   text-align: center;
-}
-
-.wt-empty-ghost {
-  position: absolute;
-  font-family: var(--font-display);
-  font-size: clamp(80px, 20vw, 240px);
-  font-weight: 900;
-  letter-spacing: -0.06em;
-  color: var(--dark);
-  opacity: 0.035;
-  pointer-events: none;
-  user-select: none;
-  z-index: 0;
-  line-height: 1;
-  animation: wt-ghost-breathe 5s ease-in-out infinite;
 }
 
 .wt-empty-title {
@@ -1511,17 +969,14 @@
   font-weight: 200;
   letter-spacing: -0.02em;
   color: var(--dark);
-  opacity: 0.5;
-  position: relative;
-  z-index: 1;
+  opacity: 0.4;
 }
 
 .wt-empty-sub {
   font-family: var(--font-body);
   font-size: 13px;
   color: var(--graphite);
-  position: relative;
-  z-index: 1;
+  opacity: 0.6;
 }
 
 .wt-empty-cta {
@@ -1536,8 +991,6 @@
   padding: 12px 28px;
   border-radius: 0;
   margin-top: 8px;
-  position: relative;
-  z-index: 1;
   transition: background 150ms ease;
 }
 
@@ -1547,27 +1000,16 @@
 
 @media (max-width: 600px) {
   .wt-hero {
-    padding: 36px 16px 28px;
+    padding: 36px 20px 28px;
   }
 
-  .wt-hero::after { display: none; }
-
-  .wt-hero-inner {
-    flex-direction: column;
-    align-items: flex-start;
+  .wt-body {
+    padding: 24px 20px;
   }
 
-  .wt-hero-right { text-align: left; }
-
-  .wt-body { padding: 24px 16px; }
-
-  .wt-stats-strip {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .wt-timeline-axis { left: 76px; }
+  .wt-timeline-axis { left: 52px; }
 
   .wt-timeline-row {
-    grid-template-columns: 60px 28px 1fr;
+    grid-template-columns: 48px 24px 1fr;
   }
 }
