@@ -1,147 +1,969 @@
-.archive-page {
-  max-width: 800px;
+/* ============================================================
+   Portfolio Archive — "Achievement Chronicle"
+   Design: editorial magazine archive room
+   Design.md: border-radius:0, 8px grid, 6 brand colors
+   Colors: #c1121f / #780000 / #f5f2ec / #003049 / #669bbc / #c9a96e
+   Fonts: Darky (heading) + CS Genio Mono (body/UI)
+   ============================================================ */
+
+/* ── Page shell ─────────────────────────────────────────────── */
+.ar-page {
+  min-height: 100vh;
+  background: var(--surface, #f5f2ec);
+  font-family: var(--font-body, "CS Genio Mono", monospace);
 }
 
-.archive-header {
+/* ── Page Header ─────────────────────────────────────────────── */
+.ar-page-header {
+  background: var(--dark, #003049);
+  position: relative;
+  overflow: hidden;
+}
+
+/* diagonal grid texture */
+.ar-page-header::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: repeating-linear-gradient(
+    45deg,
+    rgba(245,242,236,0.03) 0px,
+    rgba(245,242,236,0.03) 1px,
+    transparent 1px,
+    transparent 20px
+  );
+  pointer-events: none;
+}
+
+.ar-page-header-inner {
+  position: relative;
+  z-index: 1;
+  max-width: var(--content-width, 1280px);
+  margin: 0 auto;
+  padding: 56px var(--space-5, 40px) 48px;
   display: flex;
-  align-items: baseline;
-  gap: 16px;
-  padding: 32px 32px 24px;
-  border-bottom: 1px solid var(--line, rgba(0,48,73,0.12));
-}
-
-.archive-title {
-  font-family: Darky, sans-serif;
-  font-size: clamp(32px, 4vw, 48px);
-  font-weight: 900;
-  letter-spacing: -0.03em;
-  color: var(--dark, #003049);
-  margin: 0;
-  line-height: 1.05;
-}
-
-.archive-count {
-  font-family: 'CS Genio Mono', monospace;
-  font-size: 13px;
-  font-weight: 700;
-  color: var(--graphite, #4a5568);
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-}
-
-.archive-skeleton {
-  margin: 32px;
-  height: 120px;
-  background: linear-gradient(90deg, var(--surface, #f5f2ec) 25%, var(--surface-bright, #fafaf8) 50%, var(--surface, #f5f2ec) 75%);
-  background-size: 200% 100%;
-  animation: shimmer 1.5s linear infinite;
-}
-
-@keyframes shimmer {
-  0% { background-position: 200% 0; }
-  100% { background-position: -200% 0; }
-}
-
-.archive-empty {
-  padding: 48px 32px;
-}
-
-.archive-empty__title {
-  font-family: Darky, sans-serif;
-  font-weight: 900;
-  font-size: clamp(28px, 4vw, 48px);
-  letter-spacing: -0.03em;
-  color: var(--dark, #003049);
-  margin: 0;
-}
-
-.archive-empty__body {
-  font-family: 'CS Genio Mono', monospace;
-  font-size: 14px;
-  color: var(--graphite, #4a5568);
-  margin: 12px 0 0;
-  line-height: 1.5;
-}
-
-.archive-list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
-.archive-row {
-  display: flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: space-between;
-  padding: 0 32px;
-  height: 72px;
-  border-bottom: 1px solid var(--line, rgba(0,48,73,0.12));
-  background: var(--surface-elevated, #fff);
-  transition: background 200ms ease;
+  gap: var(--space-6, 48px);
+  flex-wrap: wrap;
 }
 
-.archive-row:hover {
-  background: var(--surface-bright, #fafaf8);
+.ar-header-left {
+  flex: 1;
+  min-width: 280px;
 }
 
-.archive-row__content {
+/* Big decorative "ARCHIVE" wordmark */
+.ar-wordmark {
+  font-family: var(--font-display, "Darky", serif);
+  font-size: clamp(56px, 8vw, 96px);
+  font-weight: 900;
+  color: #f5f2ec;
+  letter-spacing: -0.05em;
+  line-height: 0.9;
+  margin: 0 0 var(--space-3, 24px);
+  display: block;
+}
+
+.ar-eyebrow {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--champagne, #c9a96e);
+  margin-bottom: 8px;
+  font-family: var(--font-body, "CS Genio Mono", monospace);
+}
+
+.ar-stats-eyebrow {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(245,242,236,0.5);
+  font-family: var(--font-body, "CS Genio Mono", monospace);
+}
+
+/* Total earned highlight */
+.ar-total-earned {
+  font-family: var(--font-display, "Darky", serif);
+  font-size: clamp(32px, 5vw, 52px);
+  font-weight: 900;
+  color: var(--champagne, #c9a96e);
+  letter-spacing: -0.04em;
+  line-height: 1;
+  margin: 4px 0 0;
+  display: block;
+}
+
+.ar-total-sublabel {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(245,242,236,0.35);
+  margin-top: 6px;
+  display: block;
+  font-family: var(--font-body, "CS Genio Mono", monospace);
+}
+
+/* Header right controls */
+.ar-header-right {
   display: flex;
   flex-direction: column;
-  gap: 2px;
-  min-width: 0;
+  align-items: flex-end;
+  gap: var(--space-3, 24px);
 }
 
-.archive-row__merchant {
-  font-family: Darky, sans-serif;
-  font-size: 15px;
-  font-weight: 700;
-  color: var(--dark, #003049);
-  letter-spacing: -0.01em;
+/* Time filter buttons */
+.ar-time-filter {
+  display: flex;
+  gap: 1px;
+  background: rgba(245,242,236,0.08);
+  border: 1px solid rgba(245,242,236,0.1);
 }
 
-.archive-row__campaign {
-  font-family: 'CS Genio Mono', monospace;
-  font-size: 12px;
-  color: var(--graphite, #4a5568);
-}
-
-.archive-row__time {
-  font-family: 'CS Genio Mono', monospace;
+.ar-time-btn {
+  padding: 8px 16px;
+  font-family: var(--font-body, "CS Genio Mono", monospace);
   font-size: 11px;
-  color: var(--graphite, #4a5568);
-  opacity: 0.7;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  background: transparent;
+  color: rgba(245,242,236,0.45);
+  border: none;
+  cursor: pointer;
+  transition: background 150ms, color 150ms;
+  border-radius: 0;
+  white-space: nowrap;
 }
 
-.archive-row__right {
+.ar-time-btn:hover {
+  background: rgba(245,242,236,0.08);
+  color: rgba(245,242,236,0.75);
+}
+
+.ar-time-btn--active {
+  background: var(--primary, #c1121f);
+  color: #f5f2ec;
+}
+
+/* View toggle */
+.ar-view-toggle {
+  display: flex;
+  gap: 1px;
+  background: rgba(245,242,236,0.08);
+  border: 1px solid rgba(245,242,236,0.1);
+}
+
+.ar-view-btn {
+  padding: 8px 14px;
+  background: transparent;
+  border: none;
+  color: rgba(245,242,236,0.4);
+  cursor: pointer;
+  font-size: 14px;
+  transition: background 150ms, color 150ms;
+  border-radius: 0;
   display: flex;
   align-items: center;
-  gap: 16px;
+  justify-content: center;
+  width: 40px;
+  height: 36px;
+}
+
+.ar-view-btn:hover {
+  background: rgba(245,242,236,0.08);
+  color: rgba(245,242,236,0.75);
+}
+
+.ar-view-btn--active {
+  background: rgba(245,242,236,0.15);
+  color: #f5f2ec;
+}
+
+/* ── Achievement Badge Strip ─────────────────────────────────── */
+.ar-achievements-section {
+  background: var(--surface-bright, #fafaf8);
+  border-bottom: 1px solid var(--line, rgba(0,48,73,0.12));
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.ar-achievements-inner {
+  max-width: var(--content-width, 1280px);
+  margin: 0 auto;
+  padding: var(--space-4, 32px) var(--space-5, 40px);
+  display: flex;
+  gap: var(--space-4, 32px);
+  align-items: stretch;
+  min-width: max-content;
+}
+
+.ar-achievement-badge {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3, 24px);
+  padding: var(--space-3, 24px) var(--space-4, 32px);
+  border: 1px solid var(--line, rgba(0,48,73,0.12));
+  background: var(--surface-elevated, #fff);
+  min-width: 220px;
+  position: relative;
+  overflow: hidden;
+  transition: transform 200ms, box-shadow 200ms;
+}
+
+.ar-achievement-badge:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0,48,73,0.08);
+}
+
+/* Color accent line at top */
+.ar-achievement-badge::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+}
+
+.ar-achievement-badge--first::before { background: #669bbc; }
+.ar-achievement-badge--milestone::before { background: var(--champagne, #c9a96e); }
+.ar-achievement-badge--ten::before { background: var(--dark, #003049); }
+
+/* CSS geometry icon */
+.ar-badge-icon {
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.ar-badge-icon--first {
+  background: rgba(102,155,188,0.12);
+  border: 2px solid rgba(102,155,188,0.3);
+}
+
+.ar-badge-icon--milestone {
+  background: rgba(201,169,110,0.12);
+  border: 2px solid rgba(201,169,110,0.3);
+}
+
+.ar-badge-icon--ten {
+  background: rgba(0,48,73,0.06);
+  border: 2px solid rgba(0,48,73,0.15);
+}
+
+/* Inner geometry shapes */
+.ar-badge-icon--first::after {
+  content: "";
+  width: 14px;
+  height: 14px;
+  border: 2.5px solid #669bbc;
+  transform: rotate(45deg);
+  display: block;
+}
+
+.ar-badge-icon--milestone::after {
+  content: "";
+  width: 16px;
+  height: 16px;
+  background: var(--champagne, #c9a96e);
+  clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
+  display: block;
+}
+
+.ar-badge-icon--ten::after {
+  content: "";
+  width: 14px;
+  height: 14px;
+  background: var(--dark, #003049);
+  display: block;
+}
+
+.ar-badge-text {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.ar-badge-name {
+  font-family: var(--font-body, "CS Genio Mono", monospace);
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--dark, #003049);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.ar-badge-date {
+  font-size: 10px;
+  color: rgba(0,48,73,0.4);
+  font-family: var(--font-body, "CS Genio Mono", monospace);
+  letter-spacing: 0.03em;
+}
+
+/* ── Filter / Search Bar ─────────────────────────────────────── */
+.ar-filter-bar {
+  background: var(--surface-elevated, #fff);
+  border-bottom: 1px solid var(--line, rgba(0,48,73,0.12));
+}
+
+.ar-filter-inner {
+  max-width: var(--content-width, 1280px);
+  margin: 0 auto;
+  padding: 16px var(--space-5, 40px);
+  display: flex;
+  align-items: center;
+  gap: var(--space-3, 24px);
+  flex-wrap: wrap;
+}
+
+/* Search input */
+.ar-search-wrap {
+  position: relative;
+  flex: 1;
+  min-width: 200px;
+  max-width: 360px;
+}
+
+.ar-search-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 14px;
+  height: 14px;
+  border: 1.5px solid rgba(0,48,73,0.3);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.ar-search-icon::after {
+  content: "";
+  position: absolute;
+  bottom: -4px;
+  right: -4px;
+  width: 5px;
+  height: 1.5px;
+  background: rgba(0,48,73,0.3);
+  transform: rotate(45deg);
+  transform-origin: left center;
+}
+
+.ar-search-input {
+  width: 100%;
+  padding: 9px 12px 9px 36px;
+  font-family: var(--font-body, "CS Genio Mono", monospace);
+  font-size: 13px;
+  color: var(--dark, #003049);
+  background: var(--surface, #f5f2ec);
+  border: 1px solid var(--line, rgba(0,48,73,0.12));
+  outline: none;
+  border-radius: 0;
+  transition: border-color 150ms;
+}
+
+.ar-search-input::placeholder {
+  color: rgba(0,48,73,0.3);
+}
+
+.ar-search-input:focus {
+  border-color: var(--dark, #003049);
+}
+
+/* Filter chips — 50vh border-radius per Design.md exception */
+.ar-filter-chips {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.ar-filter-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(0,48,73,0.35);
+  white-space: nowrap;
+}
+
+.ar-chip {
+  padding: 5px 12px;
+  font-family: var(--font-body, "CS Genio Mono", monospace);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  background: var(--surface, #f5f2ec);
+  border: 1px solid var(--line, rgba(0,48,73,0.12));
+  color: rgba(0,48,73,0.6);
+  cursor: pointer;
+  border-radius: 50vh; /* Design.md exception for filter chips */
+  transition: background 150ms, color 150ms, border-color 150ms;
+  white-space: nowrap;
+}
+
+.ar-chip:hover {
+  background: var(--dark, #003049);
+  color: #f5f2ec;
+  border-color: var(--dark, #003049);
+}
+
+.ar-chip--active {
+  background: var(--dark, #003049);
+  color: #f5f2ec;
+  border-color: var(--dark, #003049);
+}
+
+/* ── Main Content ────────────────────────────────────────────── */
+.ar-content {
+  max-width: var(--content-width, 1280px);
+  margin: 0 auto;
+  padding: var(--space-6, 48px) var(--space-5, 40px);
+}
+
+/* ── Year Group ──────────────────────────────────────────────── */
+.ar-year-group {
+  margin-bottom: var(--space-10, 80px);
+  position: relative;
+}
+
+.ar-year-group:last-child {
+  margin-bottom: 0;
+}
+
+/* Large decorative year number in background */
+.ar-year-header {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-4, 32px);
+  margin-bottom: var(--space-5, 40px);
+  position: relative;
+}
+
+.ar-year-number {
+  font-family: var(--font-display, "Darky", serif);
+  font-size: clamp(72px, 12vw, 120px);
+  font-weight: 900;
+  color: rgba(0,48,73,0.06);
+  letter-spacing: -0.06em;
+  line-height: 0.85;
+  user-select: none;
+  pointer-events: none;
   flex-shrink: 0;
 }
 
-.archive-row__payout {
-  font-family: Darky, sans-serif;
-  font-size: 20px;
-  font-weight: 700;
-  color: var(--champagne, #c9a96e);
-  letter-spacing: -0.02em;
+.ar-year-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
 
-.archive-row__link {
-  padding: 4px 10px;
-  font-family: 'CS Genio Mono', monospace;
-  font-size: 11px;
+.ar-year-count {
+  font-family: var(--font-body, "CS Genio Mono", monospace);
+  font-size: 12px;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.04em;
-  color: var(--dark, #003049);
-  border: 1px solid var(--line, rgba(0,48,73,0.12));
-  text-decoration: none;
-  border-radius: 0;
-  transition: border-color 200ms ease, background 200ms ease;
+  letter-spacing: 0.08em;
+  color: var(--graphite, #4a5568);
 }
 
-.archive-row__link:hover {
-  border-color: var(--dark, #003049);
+.ar-year-earned {
+  font-family: var(--font-display, "Darky", serif);
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--primary, #c1121f);
+  letter-spacing: -0.03em;
+}
+
+/* ── Grid View ───────────────────────────────────────────────── */
+.ar-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-3, 24px);
+}
+
+/* Archive card */
+.ar-card {
+  background: var(--surface-elevated, #fff);
+  border: 1px solid var(--line, rgba(0,48,73,0.12));
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+  transition: transform 240ms cubic-bezier(0.22,1,0.36,1),
+              box-shadow 240ms cubic-bezier(0.22,1,0.36,1);
+  text-decoration: none;
+  color: inherit;
+  position: relative;
+  overflow: hidden;
+}
+
+.ar-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 40px rgba(0,48,73,0.12);
+  border-color: rgba(0,48,73,0.2);
+}
+
+/* Color tint zone at top */
+.ar-card-tint {
+  height: 72px;
+  position: relative;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.ar-card-tint::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    135deg,
+    rgba(255,255,255,0.1) 0px,
+    rgba(255,255,255,0.1) 1px,
+    transparent 1px,
+    transparent 12px
+  );
+}
+
+/* Category colors — will be applied via inline style */
+
+.ar-card-category-pill {
+  position: absolute;
+  bottom: 10px;
+  left: 12px;
+  font-family: var(--font-body, "CS Genio Mono", monospace);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  background: rgba(0,0,0,0.35);
+  color: rgba(255,255,255,0.9);
+  backdrop-filter: blur(4px);
+  border-radius: 0;
+}
+
+/* Card body */
+.ar-card-body {
+  padding: var(--space-3, 24px);
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.ar-card-campaign-name {
+  font-family: var(--font-display, "Darky", serif);
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--dark, #003049);
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  margin: 0;
+}
+
+.ar-card-merchant {
+  font-family: var(--font-body, "CS Genio Mono", monospace);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--graphite, #4a5568);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-top: 2px;
+}
+
+.ar-card-date {
+  font-size: 10px;
+  color: rgba(0,48,73,0.35);
+  letter-spacing: 0.03em;
+  margin-top: 2px;
+}
+
+/* Card footer — earnings + scans */
+.ar-card-footer {
+  padding: var(--space-2, 16px) var(--space-3, 24px);
+  border-top: 1px solid var(--line, rgba(0,48,73,0.08));
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2, 16px);
+}
+
+.ar-card-earning {
+  font-family: var(--font-display, "Darky", serif);
+  font-size: 24px;
+  font-weight: 900;
+  color: var(--primary, #c1121f);
+  letter-spacing: -0.03em;
+  line-height: 1;
+}
+
+.ar-card-earning--zero {
+  color: var(--tertiary, #669bbc);
+}
+
+.ar-card-scans {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+}
+
+.ar-card-scans-number {
+  font-family: var(--font-body, "CS Genio Mono", monospace);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--dark, #003049);
+}
+
+.ar-card-scans-label {
+  font-size: 9px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: rgba(0,48,73,0.3);
+}
+
+/* ── Timeline View ───────────────────────────────────────────── */
+.ar-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  position: relative;
+}
+
+/* Vertical line */
+.ar-timeline::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 20px;
+  width: 2px;
+  background: var(--line, rgba(0,48,73,0.12));
+}
+
+/* Timeline row */
+.ar-timeline-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4, 32px);
+  padding: 0 0 0 52px;
+  position: relative;
+  height: 40px; /* compact density = 40px */
+  transition: height 200ms cubic-bezier(0.22,1,0.36,1);
+  overflow: hidden;
+  cursor: pointer;
+  border-bottom: 1px solid var(--line, rgba(0,48,73,0.08));
+  background: transparent;
+  transition: background 150ms, height 200ms cubic-bezier(0.22,1,0.36,1);
+}
+
+.ar-timeline-row:last-child {
+  border-bottom: none;
+}
+
+.ar-timeline-row:hover {
+  height: 80px;
   background: var(--surface-bright, #fafaf8);
+}
+
+/* Timeline dot */
+.ar-timeline-dot {
+  position: absolute;
+  left: 13px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 16px;
+  height: 16px;
+  background: var(--surface-elevated, #fff);
+  border: 2px solid rgba(0,48,73,0.2);
+  z-index: 1;
+  flex-shrink: 0;
+  transition: border-color 150ms, background 150ms;
+}
+
+.ar-timeline-row:hover .ar-timeline-dot {
+  background: var(--primary, #c1121f);
+  border-color: var(--primary, #c1121f);
+}
+
+/* Timeline content */
+.ar-timeline-content {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: var(--space-4, 32px);
+  min-width: 0;
+  height: 40px;
+  flex-shrink: 0;
+}
+
+.ar-timeline-date {
+  font-size: 10px;
+  color: rgba(0,48,73,0.35);
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+  width: 80px;
+  flex-shrink: 0;
+}
+
+.ar-timeline-brand {
+  font-family: var(--font-body, "CS Genio Mono", monospace);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--dark, #003049);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex: 1;
+  min-width: 0;
+}
+
+.ar-timeline-location {
+  font-size: 11px;
+  color: rgba(0,48,73,0.4);
+  white-space: nowrap;
+  letter-spacing: 0.03em;
+}
+
+.ar-timeline-earning {
+  font-family: var(--font-display, "Darky", serif);
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--primary, #c1121f);
+  letter-spacing: -0.03em;
+  white-space: nowrap;
+  flex-shrink: 0;
+  width: 80px;
+  text-align: right;
+}
+
+/* Expanded hover state content */
+.ar-timeline-expand {
+  position: absolute;
+  bottom: 8px;
+  left: 52px;
+  right: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--space-3, 24px);
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 200ms, transform 200ms;
+  pointer-events: none;
+}
+
+.ar-timeline-row:hover .ar-timeline-expand {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.ar-timeline-expand-stat {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  color: rgba(0,48,73,0.5);
+}
+
+.ar-timeline-expand-stat strong {
+  color: var(--dark, #003049);
+  font-size: 12px;
+}
+
+/* ── Empty State ─────────────────────────────────────────────── */
+.ar-empty {
+  padding: var(--space-10, 80px) var(--space-5, 40px);
+  text-align: center;
+}
+
+.ar-empty-icon {
+  width: 48px;
+  height: 48px;
+  border: 2px solid var(--line, rgba(0,48,73,0.12));
+  margin: 0 auto var(--space-4, 32px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ar-empty-icon::after {
+  content: "";
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(0,48,73,0.2);
+  transform: rotate(45deg);
+}
+
+.ar-empty-title {
+  font-family: var(--font-display, "Darky", serif);
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--dark, #003049);
+  margin: 0 0 var(--space-1, 8px);
+}
+
+.ar-empty-sub {
+  font-size: 13px;
+  color: rgba(0,48,73,0.45);
+  line-height: 1.6;
+  max-width: 360px;
+  margin: 0 auto;
+}
+
+/* ── Scroll Reveal Animation ─────────────────────────────────── */
+@keyframes ar-reveal-up {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes ar-feed-in {
+  from {
+    opacity: 0;
+    transform: translateX(-12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.ar-card {
+  animation: ar-reveal-up 600ms cubic-bezier(0.22,1,0.36,1) both;
+}
+
+.ar-timeline-row {
+  animation: ar-feed-in 500ms cubic-bezier(0.22,1,0.36,1) both;
+}
+
+/* Stagger delays */
+.ar-card:nth-child(1) { animation-delay: 0ms; }
+.ar-card:nth-child(2) { animation-delay: 60ms; }
+.ar-card:nth-child(3) { animation-delay: 120ms; }
+.ar-card:nth-child(4) { animation-delay: 40ms; }
+.ar-card:nth-child(5) { animation-delay: 80ms; }
+.ar-card:nth-child(6) { animation-delay: 120ms; }
+
+.ar-timeline-row:nth-child(1) { animation-delay: 0ms; }
+.ar-timeline-row:nth-child(2) { animation-delay: 40ms; }
+.ar-timeline-row:nth-child(3) { animation-delay: 80ms; }
+.ar-timeline-row:nth-child(4) { animation-delay: 120ms; }
+.ar-timeline-row:nth-child(5) { animation-delay: 160ms; }
+
+/* ── Responsive ──────────────────────────────────────────────── */
+@media (max-width: 1024px) {
+  .ar-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .ar-page-header-inner {
+    padding: 40px var(--space-3, 24px) 32px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-4, 32px);
+  }
+
+  .ar-header-right {
+    align-items: flex-start;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: var(--space-2, 16px);
+  }
+
+  .ar-wordmark {
+    font-size: clamp(48px, 14vw, 72px);
+  }
+
+  .ar-achievements-inner {
+    padding: var(--space-3, 24px);
+  }
+
+  .ar-filter-inner {
+    padding: 12px var(--space-3, 24px);
+  }
+
+  .ar-content {
+    padding: var(--space-4, 32px) var(--space-3, 24px);
+  }
+
+  .ar-grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-2, 16px);
+  }
+
+  .ar-timeline::before {
+    left: 16px;
+  }
+
+  .ar-timeline-row {
+    padding-left: 40px;
+  }
+
+  .ar-timeline-dot {
+    left: 9px;
+  }
+
+  .ar-timeline-location {
+    display: none;
+  }
+
+  .ar-year-number {
+    font-size: clamp(48px, 18vw, 72px);
+  }
+}
+
+@media (max-width: 480px) {
+  .ar-time-filter {
+    flex-wrap: wrap;
+  }
+
+  .ar-timeline-content {
+    gap: var(--space-2, 16px);
+  }
+
+  .ar-timeline-date {
+    width: 60px;
+    font-size: 9px;
+  }
+
+  .ar-timeline-earning {
+    width: 60px;
+    font-size: 15px;
+  }
+}
+
+/* ── Reduced motion ──────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .ar-card,
+  .ar-timeline-row {
+    animation: none;
+  }
+
+  .ar-card:hover {
+    transform: none;
+  }
+
+  .ar-timeline-row:hover {
+    height: 80px;
+  }
+
+  .ar-timeline-expand {
+    transition: none;
+  }
 }

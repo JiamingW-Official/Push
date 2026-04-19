@@ -1,139 +1,454 @@
+/* ============================================================
+   Push Inbox — Bloomberg-terminal density design
+   All sub-pages import this file.
+   Design.md: 0 border-radius, 8px grid, 6-color palette
+   ============================================================ */
+
+/* ── Animations ───────────────────────────────────────────── */
+
+@keyframes inboxRowEnter {
+  from { opacity: 0; transform: translateX(-6px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes inviteCountdownPulse {
+  0%, 100% { transform: scale(1); }
+  50%       { transform: scale(1.05); }
+}
+
+@keyframes threadSectionReveal {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes unreadPulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.4; }
+}
+
+/* ── Page Shell ───────────────────────────────────────────── */
+
 .inbox-page {
-  max-width: 800px;
+  min-height: 100vh;
+  background: var(--surface);
+  color: var(--dark);
+  font-family: var(--font-body);
 }
 
-.inbox-header {
-  padding: 32px 32px 0;
-  border-bottom: 1px solid var(--line, rgba(0,48,73,0.12));
+/* ── Top Bar ──────────────────────────────────────────────── */
+
+.inbox-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 32px;
+  height: 56px;
+  border-bottom: 1px solid var(--line);
+  background: var(--surface-elevated);
+  position: sticky;
+  top: 0;
+  z-index: 60;
+  gap: 16px;
 }
 
-.inbox-title {
-  font-family: Darky, sans-serif;
-  font-size: clamp(32px, 4vw, 48px);
+.inbox-topbar__left {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+}
+
+.inbox-topbar__title {
+  font-family: var(--font-display);
+  font-size: 20px;
   font-weight: 900;
   letter-spacing: -0.03em;
-  color: var(--dark, #003049);
-  margin: 0 0 16px;
-  line-height: 1.05;
+  color: var(--dark);
+  text-transform: uppercase;
 }
 
-.inbox-filters {
+.inbox-topbar__badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 5px;
+  background: var(--primary);
+  color: #fff;
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 700;
+  border-radius: 0;
+  line-height: 1;
+}
+
+.inbox-topbar__actions {
   display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.inbox-topbar__mark-all {
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--graphite);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 6px 10px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  transition: color 160ms ease;
+}
+
+.inbox-topbar__mark-all:hover {
+  color: var(--dark);
+}
+
+/* ── Tab Nav ──────────────────────────────────────────────── */
+
+.inbox-tabs {
+  display: flex;
+  border-bottom: 1px solid var(--line);
+  background: var(--surface-elevated);
+  padding: 0 32px;
   gap: 0;
 }
 
-.inbox-filter-btn {
-  padding: 8px 16px;
-  font-family: 'CS Genio Mono', monospace;
-  font-size: 12px;
+.inbox-tab {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 12px 16px 11px;
+  font-family: var(--font-body);
+  font-size: 11px;
   font-weight: 700;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: var(--graphite, #4a5568);
+  color: var(--graphite);
   background: none;
   border: none;
   border-bottom: 2px solid transparent;
   cursor: pointer;
-  transition: color 200ms ease, border-color 200ms ease;
+  transition: color 160ms ease, border-color 160ms ease;
+  text-decoration: none;
+  white-space: nowrap;
+  margin-bottom: -1px;
 }
 
-.inbox-filter-btn:hover {
-  color: var(--dark, #003049);
+.inbox-tab:hover {
+  color: var(--dark);
 }
 
-.inbox-filter-btn--active {
-  color: var(--primary, #c1121f);
-  border-bottom-color: var(--primary, #c1121f);
+.inbox-tab--active {
+  color: var(--primary);
+  border-bottom-color: var(--primary);
 }
 
-.inbox-list {
-  padding: 0;
+.inbox-tab__count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 16px;
+  height: 16px;
+  padding: 0 4px;
+  font-size: 10px;
+  font-weight: 700;
+  border-radius: 0;
 }
 
-.inbox-skeleton {
-  padding: 0;
+.inbox-tab--active .inbox-tab__count {
+  background: var(--primary);
+  color: #fff;
 }
 
-.inbox-skeleton-row {
-  height: 64px;
-  background: linear-gradient(90deg, var(--surface, #f5f2ec) 25%, var(--surface-bright, #fafaf8) 50%, var(--surface, #f5f2ec) 75%);
-  background-size: 200% 100%;
-  animation: shimmer 1.5s linear infinite;
-  border-bottom: 1px solid var(--line, rgba(0,48,73,0.12));
+.inbox-tab:not(.inbox-tab--active) .inbox-tab__count {
+  background: rgba(0,48,73,0.1);
+  color: var(--graphite);
 }
 
-@keyframes shimmer {
-  0% { background-position: 200% 0; }
-  100% { background-position: -200% 0; }
+/* ── Section Header ───────────────────────────────────────── */
+
+.inbox-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 32px 8px;
 }
 
-/* Editorial empty state */
-.inbox-empty {
-  padding: 48px 32px;
-  text-align: left;
+.inbox-section-label {
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--graphite);
 }
 
-.inbox-empty__title {
-  font-family: Darky, sans-serif;
-  font-weight: 900;
-  font-size: clamp(32px, 5vw, 56px);
-  letter-spacing: -0.03em;
-  line-height: 1.05;
-  color: var(--dark, #003049);
-  margin: 0;
+.inbox-section-link {
+  font-family: var(--font-body);
+  font-size: 11px;
+  color: var(--tertiary);
+  text-decoration: none;
+  transition: color 160ms ease;
 }
 
-.inbox-empty__body {
-  font-family: 'CS Genio Mono', monospace;
-  font-size: 14px;
-  color: var(--graphite, #4a5568);
-  margin: 12px 0 0;
-  max-width: 420px;
-  line-height: 1.5;
+.inbox-section-link:hover {
+  color: var(--dark);
 }
 
-.inbox-empty__link {
-  display: inline-block;
-  margin-top: 20px;
-  font-family: 'CS Genio Mono', monospace;
+/* ── Invite Cards ─────────────────────────────────────────── */
+
+.inbox-invites-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  padding: 0 32px 8px;
+}
+
+.invite-card {
+  display: grid;
+  grid-template-columns: 4px 1fr auto;
+  min-height: 96px;
+  border-bottom: 1px solid var(--line);
+  background: var(--surface-elevated);
+  transition: background 160ms ease;
+  animation: inboxRowEnter 240ms ease-out both;
+  position: relative;
+}
+
+.invite-card + .invite-card {
+  border-top: none;
+}
+
+.invite-card:hover {
+  background: var(--surface-bright);
+}
+
+.invite-card__accent {
+  background: var(--primary);
+  flex-shrink: 0;
+}
+
+.invite-card__accent--active {
+  background: #16a34a; /* green for active */
+}
+
+.invite-card__accent--urgent {
+  background: var(--primary);
+}
+
+.invite-card__accent--new {
+  background: var(--champagne);
+}
+
+.invite-card__body {
+  padding: 16px 20px;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.invite-card__header-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.invite-card__campaign {
+  font-family: var(--font-display);
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--dark);
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.invite-card__new-dot {
+  width: 7px;
+  height: 7px;
+  background: var(--primary);
+  border-radius: 50%;
+  flex-shrink: 0;
+  animation: unreadPulse 1.4s ease-in-out infinite;
+}
+
+.invite-card__merchant {
+  font-family: var(--font-body);
   font-size: 13px;
+  color: var(--graphite);
+}
+
+.invite-card__meta-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 4px;
+  flex-wrap: wrap;
+}
+
+.invite-card__earning {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--primary);
+  letter-spacing: -0.03em;
+  line-height: 1;
+}
+
+.invite-card__earning-label {
+  font-family: var(--font-body);
+  font-size: 10px;
+  color: var(--graphite);
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  color: var(--primary, #c1121f);
-  border-bottom: 1px solid currentColor;
+  align-self: flex-end;
   padding-bottom: 2px;
-  text-decoration: none;
 }
 
-/* Generic inbox row (message/system) */
+.invite-card__deadline {
+  font-family: var(--font-body);
+  font-size: 12px;
+  color: var(--graphite);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.invite-card__deadline--urgent {
+  color: var(--primary);
+  font-weight: 600;
+  animation: inviteCountdownPulse 1.2s ease-in-out infinite;
+}
+
+.invite-card__fomo-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 2px;
+  flex-wrap: wrap;
+}
+
+.invite-card__viewers {
+  font-family: var(--font-body);
+  font-size: 11px;
+  color: var(--tertiary);
+}
+
+.invite-card__slots {
+  font-family: var(--font-body);
+  font-size: 11px;
+  color: var(--champagne);
+  font-weight: 600;
+}
+
+.invite-card__actions {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-end;
+  gap: 8px;
+  padding: 16px 20px;
+  flex-shrink: 0;
+}
+
+.invite-btn {
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 8px 16px;
+  border: none;
+  cursor: pointer;
+  transition: background 160ms ease, color 160ms ease;
+  white-space: nowrap;
+  border-radius: 0;
+  min-width: 88px;
+}
+
+.invite-btn--accept {
+  background: var(--primary);
+  color: #fff;
+}
+
+.invite-btn--accept:hover {
+  background: var(--accent);
+}
+
+.invite-btn--decline {
+  background: transparent;
+  color: var(--graphite);
+  border: 1px solid var(--line-strong);
+}
+
+.invite-btn--decline:hover {
+  border-color: var(--graphite);
+  color: var(--dark);
+}
+
+/* ── Bloomberg Row (messages / system) ───────────────────── */
+
+.inbox-rows {
+  display: flex;
+  flex-direction: column;
+  padding: 0 32px 8px;
+}
+
 .inbox-row {
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 0 16px;
-  min-height: 56px;
-  border-bottom: 1px solid var(--line, rgba(0,48,73,0.12));
+  height: var(--density-compact-row, 40px);
+  border-bottom: 1px solid rgba(0,48,73,0.06);
   cursor: pointer;
-  position: relative;
-  background: var(--surface-elevated, #fff);
-  transition: background 200ms ease;
+  transition: background 120ms ease;
+  animation: inboxRowEnter 240ms ease-out both;
+  background: transparent;
+  width: 100%;
+  border-left: 3px solid transparent;
+  text-decoration: none;
+  color: inherit;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 .inbox-row:hover {
-  background: var(--surface-bright, #fafaf8);
+  background: rgba(0,48,73,0.04);
 }
 
-.inbox-row__status-bar {
-  position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  width: 3px;
-  background: var(--line, rgba(0,48,73,0.12));
+.inbox-row--unread {
+  border-left-color: var(--primary);
+  background: rgba(193,18,31,0.02);
 }
 
-.inbox-row--unread .inbox-row__status-bar {
-  background: var(--primary, #c1121f);
+.inbox-row--unread:hover {
+  background: rgba(193,18,31,0.04);
+}
+
+.inbox-row--system-unread {
+  border-left-color: var(--tertiary);
+}
+
+.inbox-row__avatar {
+  width: 24px;
+  height: 24px;
+  background: var(--dark);
+  color: #fff;
+  font-family: var(--font-display);
+  font-size: 11px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-left: 3px;
 }
 
 .inbox-row__icon {
@@ -142,51 +457,477 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 16px;
-  color: var(--graphite, #4a5568);
   flex-shrink: 0;
+  margin-left: 3px;
 }
 
-.inbox-row__content {
+.inbox-row__icon--payment { color: #16a34a; }
+.inbox-row__icon--submission { color: var(--tertiary); }
+.inbox-row__icon--account { color: var(--champagne); }
+.inbox-row__icon--system { color: var(--graphite); }
+
+.inbox-row__body {
   flex: 1;
   min-width: 0;
   display: flex;
-  flex-direction: column;
-  gap: 2px;
+  align-items: baseline;
+  gap: 8px;
 }
 
-.inbox-row__title {
-  font-family: Darky, sans-serif;
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--dark, #003049);
-}
-
-.inbox-row--unread .inbox-row__title {
-  font-weight: 700;
-}
-
-.inbox-row__body {
-  font-family: 'CS Genio Mono', monospace;
-  font-size: 12px;
-  color: var(--graphite, #4a5568);
+.inbox-row__sender {
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--dark);
   white-space: nowrap;
+  flex-shrink: 0;
+  max-width: 140px;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-.inbox-row__badge {
-  min-width: 20px;
-  height: 20px;
-  padding: 0 5px;
-  background: var(--primary, #c1121f);
-  color: #fff;
-  font-family: 'CS Genio Mono', monospace;
+.inbox-row--unread .inbox-row__sender {
+  font-weight: 700;
+}
+
+.inbox-row__preview {
+  font-family: var(--font-body);
+  font-size: 12px;
+  color: var(--graphite);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex: 1;
+  opacity: 0.75;
+}
+
+.inbox-row--unread .inbox-row__preview {
+  color: var(--dark);
+  opacity: 1;
+  font-weight: 600;
+}
+
+.inbox-row__meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+  padding-right: 8px;
+}
+
+.inbox-row__time {
+  font-family: var(--font-body);
   font-size: 11px;
+  color: var(--graphite);
+  opacity: 0.6;
+  white-space: nowrap;
+}
+
+.inbox-row__unread-badge {
+  min-width: 16px;
+  height: 16px;
+  background: var(--primary);
+  color: #fff;
+  font-family: var(--font-body);
+  font-size: 9px;
   font-weight: 700;
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-shrink: 0;
+  padding: 0 3px;
   border-radius: 0;
+}
+
+/* ── Search Bar ───────────────────────────────────────────── */
+
+.inbox-search-bar {
+  padding: 12px 32px;
+  border-bottom: 1px solid rgba(0,48,73,0.06);
+  background: var(--surface);
+}
+
+.inbox-search-inner {
+  position: relative;
+  max-width: 400px;
+}
+
+.inbox-search-icon {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: rgba(0,48,73,0.35);
+  pointer-events: none;
+  display: flex;
+}
+
+.inbox-search-input {
+  width: 100%;
+  padding: 7px 10px 7px 32px;
+  border: 1px solid var(--line);
+  background: var(--surface-elevated);
+  font-family: var(--font-body);
+  font-size: 12px;
+  color: var(--dark);
+  outline: none;
+  border-radius: 0;
+  box-sizing: border-box;
+  transition: border-color 150ms ease;
+}
+
+.inbox-search-input:focus {
+  border-color: var(--primary);
+}
+
+.inbox-search-input::placeholder {
+  color: rgba(0,48,73,0.3);
+}
+
+/* ── Empty State ──────────────────────────────────────────── */
+
+.inbox-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 64px 32px;
+  gap: 8px;
+}
+
+.inbox-empty__title {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 700;
+  color: rgba(0,48,73,0.3);
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+
+.inbox-empty__body {
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: rgba(0,48,73,0.25);
+  margin: 0;
+  text-align: center;
+}
+
+.inbox-empty__link {
+  font-family: var(--font-body);
+  font-size: 12px;
+  color: var(--tertiary);
+  text-decoration: none;
+  margin-top: 4px;
+  transition: color 160ms ease;
+}
+
+.inbox-empty__link:hover { color: var(--dark); }
+
+/* ── Thread Detail (chat view) ────────────────────────────── */
+
+.inbox-thread {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 56px);
+  background: var(--surface-bright);
+  overflow: hidden;
+}
+
+.inbox-thread__header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 24px;
+  height: 64px;
+  border-bottom: 1px solid var(--line);
+  background: var(--surface-elevated);
+  flex-shrink: 0;
+}
+
+.inbox-thread__back {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--graphite);
+  text-decoration: none;
+  transition: color 160ms ease;
+  flex-shrink: 0;
+}
+
+.inbox-thread__back:hover { color: var(--dark); }
+
+.inbox-thread__avatar-wrap {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.inbox-thread__avatar {
+  width: 36px;
+  height: 36px;
+  background: var(--dark);
+  color: #fff;
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.inbox-thread__avatar-status {
+  position: absolute;
+  bottom: -1px;
+  right: -1px;
+  width: 10px;
+  height: 10px;
+  background: #16a34a;
+  border-radius: 50%;
+  border: 2px solid var(--surface-elevated);
+}
+
+.inbox-thread__info {
+  flex: 1;
+  min-width: 0;
+}
+
+.inbox-thread__name {
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--dark);
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+}
+
+.inbox-thread__status {
+  font-family: var(--font-body);
+  font-size: 11px;
+  color: var(--graphite);
+  opacity: 0.7;
+  margin-top: 1px;
+}
+
+.inbox-thread__campaign-badge {
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--tertiary);
+  background: rgba(102,155,188,0.12);
+  padding: 4px 10px;
+  flex-shrink: 0;
+}
+
+.inbox-thread__messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 24px 24px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  overscroll-behavior: contain;
+}
+
+.inbox-thread__messages::-webkit-scrollbar { width: 4px; }
+.inbox-thread__messages::-webkit-scrollbar-track { background: transparent; }
+.inbox-thread__messages::-webkit-scrollbar-thumb { background: rgba(0,48,73,0.12); }
+
+.inbox-thread__date-divider {
+  text-align: center;
+  font-family: var(--font-body);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(0,48,73,0.3);
+  margin: 16px 0 8px;
+  position: relative;
+}
+
+.inbox-thread__date-divider::before,
+.inbox-thread__date-divider::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  width: calc(50% - 50px);
+  height: 1px;
+  background: var(--line);
+}
+
+.inbox-thread__date-divider::before { left: 0; }
+.inbox-thread__date-divider::after  { right: 0; }
+
+/* Message section reveal */
+.inbox-thread__group {
+  animation: threadSectionReveal 480ms ease-out both;
+}
+
+/* ── Composer Bottom ──────────────────────────────────────── */
+
+.inbox-composer {
+  flex-shrink: 0;
+  border-top: 1px solid var(--line);
+  background: var(--surface-elevated);
+  padding: 12px 24px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.inbox-composer__quickreply {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.inbox-composer__chip {
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 600;
+  padding: 5px 12px;
+  background: transparent;
+  border: 1px solid var(--line-strong);
+  color: var(--graphite);
+  cursor: pointer;
+  transition: border-color 150ms, color 150ms, background 150ms;
+  border-radius: 50vh; /* chips are exempt from 0-radius rule */
+  white-space: nowrap;
+}
+
+.inbox-composer__chip:hover {
+  border-color: var(--dark);
+  color: var(--dark);
+  background: rgba(0,48,73,0.04);
+}
+
+.inbox-composer__input-row {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  min-height: 48px;
+}
+
+.inbox-composer__textarea {
+  flex: 1;
+  min-height: 36px;
+  max-height: 160px;
+  border: 1px solid var(--line);
+  background: var(--surface-bright);
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: var(--dark);
+  outline: none;
+  resize: none;
+  padding: 10px 12px;
+  box-sizing: border-box;
+  line-height: 1.5;
+  border-radius: 0;
+  transition: border-color 150ms ease;
+}
+
+.inbox-composer__textarea:focus {
+  border-color: var(--primary);
+}
+
+.inbox-composer__textarea::placeholder {
+  color: rgba(0,48,73,0.3);
+}
+
+.inbox-composer__send {
+  width: 44px;
+  height: 44px;
+  background: var(--primary);
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: background 150ms ease;
+  border-radius: 0;
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+}
+
+.inbox-composer__send:hover { background: var(--accent); }
+.inbox-composer__send:disabled {
+  background: rgba(0,48,73,0.08);
+  cursor: not-allowed;
+  color: rgba(0,48,73,0.25);
+}
+
+/* ── System type icons (CSS geometry) ────────────────────── */
+
+.sys-icon {
+  width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.sys-icon--payment::before {
+  content: '$';
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 800;
+  color: #16a34a;
+}
+
+.sys-icon--check::before {
+  content: '✓';
+  font-size: 13px;
+  color: var(--tertiary);
+}
+
+.sys-icon--user::before {
+  content: '◎';
+  font-size: 12px;
+  color: var(--champagne);
+}
+
+.sys-icon--bell::before {
+  content: '◆';
+  font-size: 10px;
+  color: var(--graphite);
+}
+
+/* ── Utility: stagger delays for list items ───────────────── */
+
+.inbox-row:nth-child(1)  { animation-delay: 0ms; }
+.inbox-row:nth-child(2)  { animation-delay: 20ms; }
+.inbox-row:nth-child(3)  { animation-delay: 40ms; }
+.inbox-row:nth-child(4)  { animation-delay: 60ms; }
+.inbox-row:nth-child(5)  { animation-delay: 80ms; }
+.inbox-row:nth-child(6)  { animation-delay: 100ms; }
+.inbox-row:nth-child(7)  { animation-delay: 120ms; }
+.inbox-row:nth-child(8)  { animation-delay: 140ms; }
+
+.invite-card:nth-child(1) { animation-delay: 0ms; }
+.invite-card:nth-child(2) { animation-delay: 60ms; }
+.invite-card:nth-child(3) { animation-delay: 120ms; }
+
+/* ── Responsive ───────────────────────────────────────────── */
+
+@media (max-width: 768px) {
+  .inbox-topbar,
+  .inbox-tabs,
+  .inbox-section-header,
+  .inbox-invites-grid,
+  .inbox-rows,
+  .inbox-search-bar { padding-left: 16px; padding-right: 16px; }
+
+  .inbox-thread__header,
+  .inbox-thread__messages,
+  .inbox-composer { padding-left: 16px; padding-right: 16px; }
+
+  .invite-card__actions { flex-direction: row; gap: 6px; }
+  .inbox-tabs { overflow-x: auto; }
+
+  .inbox-row__sender { max-width: 100px; }
 }

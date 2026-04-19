@@ -2,881 +2,1413 @@
 
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { useState, useEffect } from "react";
-import { createClient } from "@/lib/supabase";
-import { track } from "@/lib/analytics";
+import { useState, useEffect, useCallback, useRef } from "react";
 import "./onboarding.css";
 
-/* ── Types ───────────────────────────────────────────────── */
+/* ─────────────────────────────────────────────────────────────
+   Types
+   ───────────────────────────────────────────────────────────── */
 
-type Step = 1 | 2 | 3 | 4 | 5;
+const STORAGE_KEY = "push-demo-creator-onboarding-progress";
+const TOTAL = 7;
 
-interface CreatorState {
-  schemaVersion: 1;
-  onboarding: {
-    completedSteps: number[];
-    profile: {
-      name: string;
-      handle: string;
-      location: string;
-      instagram: string;
-      bio: string;
-    };
-    social: { ig: boolean; tiktok: boolean; xhs: boolean };
-    payout: {
-      method: "venmo" | "cashapp" | "ach" | null;
-      value: string;
-      routing: string;
-      account: string;
-    };
-    lightKyc: { idUploaded: boolean; selfieComplete: boolean };
-    done: boolean;
-    segment: "side-income" | "professional";
+type StepId = 1 | 2 | 3 | 4 | 5 | 6 | 7;
+
+type Progress = {
+  completed: StepId[];
+  skipped: StepId[];
+  activeStep: StepId;
+  profile: {
+    name: string;
+    handle: string;
+    neighborhood: string;
+    bio: string;
   };
-}
-
-/* ── Constants ───────────────────────────────────────────── */
-
-const STORAGE_KEY = "push.creator.state";
-
-const STEP_LABELS: Record<Step, string> = {
-  1: "DISCOVER",
-  2: "PROFILE",
-  3: "SOCIAL",
-  4: "PAYOUT",
-  5: "LIGHT KYC",
+  social: { ig: boolean; tiktok: boolean; red: boolean };
+  notifs: { matches: boolean; applications: boolean; payments: boolean };
 };
 
-/* ── Demo mode detection ─────────────────────────────────── */
-function isDemoMode(): boolean {
-  if (typeof document === "undefined") return false;
-  return document.cookie.includes("push-demo-role=creator");
+const INITIAL: Progress = {
+  completed: [],
+  skipped: [],
+  activeStep: 1,
+  profile: { name: "", handle: "", neighborhood: "", bio: "" },
+  social: { ig: false, tiktok: false, red: false },
+  notifs: { matches: true, applications: true, payments: true },
+};
+
+const NYC_NEIGHBORHOODS = [
+  "Williamsburg",
+  "Bushwick",
+  "LES",
+  "East Village",
+  "SoHo",
+  "Astoria",
+  "Crown Heights",
+  "Harlem",
+  "Greenpoint",
+  "Bed-Stuy",
+  "Park Slope",
+  "Hell's Kitchen",
+  "Chelsea",
+  "Ridgewood",
+  "Jackson Heights",
+];
+
+const BIO_MAX = 80;
+
+/* ─────────────────────────────────────────────────────────────
+   Step metadata
+   ───────────────────────────────────────────────────────────── */
+
+const STEPS: {
+  id: StepId;
+  title: string;
+  shortTitle: string;
+  description: string;
+  eyebrow: string;
+  skippable: boolean;
+}[] = [
+  {
+    id: 1,
+    title: "Profile basics",
+    shortTitle: "Profile",
+    description: "Name, handle, neighborhood, and avatar",
+    eyebrow: "YOUR IDENTITY",
+    skippable: false,
+  },
+  {
+    id: 2,
+    title: "Social connect",
+    shortTitle: "Socials",
+    description: "Link Instagram, TikTok, or Xiaohongshu",
+    eyebrow: "REACH & AUDIENCE",
+    skippable: true,
+  },
+  {
+    id: 3,
+    title: "Identity verify",
+    shortTitle: "Verify",
+    description: "Required for paid campaigns",
+    eyebrow: "TRUST & SAFETY",
+    skippable: true,
+  },
+  {
+    id: 4,
+    title: "Payout setup",
+    shortTitle: "Payout",
+    description: "Connect your bank or debit card",
+    eyebrow: "GET PAID",
+    skippable: true,
+  },
+  {
+    id: 5,
+    title: "First campaign discovery",
+    shortTitle: "Explore",
+    description: "Explore live campaigns near you",
+    eyebrow: "LAUNCH",
+    skippable: true,
+  },
+  {
+    id: 6,
+    title: "Notification prefs",
+    shortTitle: "Alerts",
+    description: "Choose what updates you receive",
+    eyebrow: "STAY IN THE LOOP",
+    skippable: true,
+  },
+  {
+    id: 7,
+    title: "Get your invite link",
+    shortTitle: "Invite",
+    description: "Refer a friend — both get $25",
+    eyebrow: "GROW TOGETHER",
+    skippable: false,
+  },
+];
+
+/* ─────────────────────────────────────────────────────────────
+   Helpers
+   ───────────────────────────────────────────────────────────── */
+
+function load(): Progress {
+  if (typeof window === "undefined") return INITIAL;
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return INITIAL;
+    return { ...INITIAL, ...JSON.parse(raw) };
+  } catch {
+    return INITIAL;
+  }
 }
 
-/* ── Main Page ───────────────────────────────────────────── */
-
-export default function OnboardingPage() {
-  const router = useRouter();
-
-  const [step, setStep] = useState<Step>(1);
-  const [saving, setSaving] = useState(false);
-  const [error, setError] = useState("");
-  const [animating, setAnimating] = useState(false);
-  const [showCompletion, setShowCompletion] = useState(false);
-
-  // Step 2 — Profile
-  const [profile, setProfile] = useState({
-    name: "",
-    handle: "",
-    location: "",
-    instagram: "",
-    bio: "",
-  });
-
-  // Step 3 — Social
-  const [connectedSocials, setConnectedSocials] = useState({
-    ig: false,
-    tiktok: false,
-    xhs: false,
-  });
-
-  // Step 4 — Payout
-  const [payoutTab, setPayoutTab] = useState<"venmo" | "cashapp" | "ach">(
-    "venmo",
-  );
-  const [payoutVenmo, setPayoutVenmo] = useState("");
-  const [payoutCashapp, setPayoutCashapp] = useState("");
-  const [payoutRouting, setPayoutRouting] = useState("");
-  const [payoutAccount, setPayoutAccount] = useState("");
-
-  // Step 5 — Light KYC
-  const [idUploaded, setIdUploaded] = useState(false);
-  const [selfieComplete, setSelfieComplete] = useState(false);
-  const [selfieCountdown, setSelfieCountdown] = useState(0);
-
-  // Segment from stored state
-  const [segment, setSegment] = useState<"side-income" | "professional">(
-    "side-income",
-  );
-
-  /* ── State hydration ─────────────────────────────────────── */
-
-  useEffect(() => {
-    // migrate legacy key
-    const legacy = localStorage.getItem("push-onboarding-profile");
-    if (legacy) {
-      try {
-        const parsed = JSON.parse(legacy);
-        setProfile((prev) => ({
-          ...prev,
-          name: parsed.name || "",
-          location: parsed.location || "",
-          bio: parsed.bio || "",
-          instagram: parsed.instagram || "",
-        }));
-      } catch {
-        // ignore
-      }
-      localStorage.removeItem("push-onboarding-profile");
-    }
-
-    // load new state
-    const stored = localStorage.getItem(STORAGE_KEY);
-    if (stored) {
-      try {
-        const state: CreatorState = JSON.parse(stored);
-        if (state.onboarding) {
-          const ob = state.onboarding;
-          if (ob.profile) setProfile(ob.profile);
-          if (ob.social) setConnectedSocials(ob.social);
-          if (ob.payout) {
-            if (ob.payout.method) setPayoutTab(ob.payout.method);
-            setPayoutVenmo(ob.payout.value || "");
-            setPayoutRouting(ob.payout.routing || "");
-            setPayoutAccount(ob.payout.account || "");
-          }
-          if (ob.lightKyc) {
-            setIdUploaded(ob.lightKyc.idUploaded);
-            setSelfieComplete(ob.lightKyc.selfieComplete);
-          }
-          if (ob.segment) setSegment(ob.segment);
-          if (ob.done) setShowCompletion(true);
-        }
-      } catch {
-        // ignore
-      }
-    }
-  }, []);
-
-  /* ── State persistence ───────────────────────────────────── */
-
-  function saveState(updates: Partial<CreatorState["onboarding"]>) {
-    const stored = localStorage.getItem(STORAGE_KEY);
-    const current: CreatorState = stored
-      ? JSON.parse(stored)
-      : {
-          schemaVersion: 1,
-          onboarding: {
-            completedSteps: [],
-            profile: {
-              name: "",
-              handle: "",
-              location: "",
-              instagram: "",
-              bio: "",
-            },
-            social: { ig: false, tiktok: false, xhs: false },
-            payout: { method: null, value: "", routing: "", account: "" },
-            lightKyc: { idUploaded: false, selfieComplete: false },
-            done: false,
-            segment: "side-income",
-          },
-        };
-    current.onboarding = { ...current.onboarding, ...updates };
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(current));
+function save(p: Progress) {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(p));
+  } catch {
+    /* ignore */
   }
+}
 
-  /* ── Supabase helper ─────────────────────────────────────── */
+/* ─────────────────────────────────────────────────────────────
+   Step content components
+   ───────────────────────────────────────────────────────────── */
 
-  async function getUserId(): Promise<string | null> {
-    const supabase = createClient();
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-    return user?.id ?? null;
-  }
+function ProfileStep({
+  progress,
+  onChange,
+  onComplete,
+}: {
+  progress: Progress;
+  onChange: (p: Partial<Progress>) => void;
+  onComplete: () => void;
+}) {
+  const { profile } = progress;
+  const canProceed =
+    profile.name.trim().length > 0 &&
+    profile.handle.trim().length > 0 &&
+    profile.neighborhood.trim().length > 0;
 
-  /* ── Navigation ──────────────────────────────────────────── */
+  const completeness = [
+    profile.name.trim().length > 0,
+    profile.handle.trim().length > 0,
+    profile.neighborhood.trim().length > 0,
+    profile.bio.trim().length > 0,
+  ].filter(Boolean).length;
 
-  function triggerStepTransition(nextStep: Step) {
-    track("onboarding_step_completed", { step, label: STEP_LABELS[step] });
-    setAnimating(true);
-    setTimeout(() => {
-      setStep(nextStep);
-      track("onboarding_step_entered", {
-        step: nextStep,
-        label: STEP_LABELS[nextStep],
-      });
-      setAnimating(false);
-    }, 180);
-  }
+  const completenessPercent = Math.round((completeness / 4) * 100);
 
-  function handleBack() {
-    setError("");
-    if (step > 1) triggerStepTransition((step - 1) as Step);
-  }
-
-  async function handleNext() {
-    setError("");
-    setSaving(true);
-    try {
-      if (step === 1) {
-        // Discover — always valid
-        saveState({ completedSteps: [1] });
-        triggerStepTransition(2);
-      } else if (step === 2) {
-        if (!profile.name.trim() || !profile.location.trim()) {
-          setError("Please fill in your display name and neighborhood.");
-          setSaving(false);
-          return;
-        }
-        saveState({ profile, completedSteps: [1, 2] });
-        if (!isDemoMode()) {
-          const supabase = createClient();
-          const uid = await getUserId();
-          if (uid)
-            await supabase
-              .from("creators")
-              .update({
-                name: profile.name,
-                location: profile.location,
-                bio: profile.bio,
-              })
-              .eq("id", uid);
-        }
-        triggerStepTransition(3);
-      } else if (step === 3) {
-        if (!connectedSocials.ig) {
-          setError("Please connect your Instagram account to continue.");
-          setSaving(false);
-          return;
-        }
-        saveState({ social: connectedSocials, completedSteps: [1, 2, 3] });
-        triggerStepTransition(4);
-      } else if (step === 4) {
-        const payoutFilled =
-          (payoutTab === "venmo" && payoutVenmo.trim()) ||
-          (payoutTab === "cashapp" && payoutCashapp.trim()) ||
-          (payoutTab === "ach" && payoutRouting.trim() && payoutAccount.trim());
-        if (!payoutFilled) {
-          setError("Please fill in your payout details.");
-          setSaving(false);
-          return;
-        }
-        saveState({
-          payout: {
-            method: payoutTab,
-            value: payoutTab === "venmo" ? payoutVenmo : payoutCashapp,
-            routing: payoutRouting,
-            account: payoutAccount,
-          },
-          completedSteps: [1, 2, 3, 4],
-        });
-        triggerStepTransition(5);
-      } else if (step === 5) {
-        if (!idUploaded || !selfieComplete) {
-          setError("Please upload your ID and complete the selfie check.");
-          setSaving(false);
-          return;
-        }
-        saveState({
-          lightKyc: { idUploaded, selfieComplete },
-          completedSteps: [1, 2, 3, 4, 5],
-          done: true,
-        });
-        if (!isDemoMode()) {
-          const supabase = createClient();
-          const uid = await getUserId();
-          if (uid)
-            await supabase
-              .from("creators")
-              .update({ is_active: true, onboarding_completed: true })
-              .eq("id", uid);
-        }
-        track("onboarding_submitted", { segment });
-        setShowCompletion(true);
-      }
-    } catch {
-      setError("Something went wrong. Please try again.");
-    }
-    setSaving(false);
-  }
-
-  /* ── Step components ─────────────────────────────────────── */
-
-  function DiscoverStep() {
-    const campaigns = [
-      {
-        id: 1,
-        merchant: "Banter Coffee",
-        category: "Coffee & Café",
-        payout: "$28",
-        unit: "/ verified customer",
-        spots: 3,
-        color: "#780000",
-      },
-      {
-        id: 2,
-        merchant: "Girls Who Walk",
-        category: "Fitness · Wellness",
-        payout: "$45",
-        unit: "/ verified customer",
-        spots: 5,
-        color: "#003049",
-      },
-      {
-        id: 3,
-        merchant: "Myrtle & Co.",
-        category: "Retail · Lifestyle",
-        payout: "$32",
-        unit: "/ verified customer",
-        spots: 2,
-        color: "#003049",
-      },
-    ];
-    return (
-      <>
-        <div className="ob-step-header">
-          <span className="ob-step-tag">STEP 1 OF 5 · DISCOVER</span>
-          <h1 className="ob-heading">
-            See what&apos;s live
-            <br />
-            in Williamsburg.
-          </h1>
-          <p className="ob-subtext">
-            Real campaigns. Real pay.
-            <br />
-            Finish setup to apply.
-          </p>
-        </div>
-        <div className="ob-campaign-grid">
-          {campaigns.map((c, i) => (
-            <div
-              key={c.id}
-              className="ob-campaign-card"
-              style={{ animationDelay: `${i * 80}ms` }}
-            >
-              <div className="ob-campaign-top">
-                <span className="ob-campaign-payout-big">{c.payout}</span>
-                <span className="ob-campaign-payout-unit">{c.unit}</span>
-              </div>
-              <div className="ob-campaign-body">
-                <p className="ob-campaign-merchant">{c.merchant}</p>
-                <p className="ob-campaign-category">{c.category}</p>
-              </div>
-              <div className="ob-campaign-footer">
-                <span className="ob-campaign-spots">{c.spots} spots left</span>
-                <button
-                  className="ob-campaign-apply"
-                  disabled
-                  title="Finish your profile to apply"
-                >
-                  Apply
-                </button>
-              </div>
-            </div>
-          ))}
-        </div>
-      </>
-    );
-  }
-
-  function ProfileStep() {
-    const completeness = [profile.name, profile.location, profile.bio].filter(
-      (s) => s.trim(),
-    ).length;
-    const pct = Math.round((completeness / 3) * 100);
-    return (
-      <>
-        <span className="ob-step-number">
-          <span className="ob-step-dot" aria-hidden="true" />
-          STEP 2 OF 5 · PROFILE
-        </span>
-        <h1 className="ob-heading">Build your first impression.</h1>
-        <p className="ob-subtext">This is what merchants see first.</p>
-
-        <div
-          className="ob-completeness"
-          aria-label={`Profile ${pct}% complete`}
+  return (
+    <div className="step-body">
+      {/* Avatar upload */}
+      <div className="avatar-zone">
+        <button
+          type="button"
+          className="avatar-upload-btn"
+          aria-label="Upload profile photo"
         >
-          <div className="ob-completeness-track">
-            <div
-              className="ob-completeness-fill"
-              style={{ width: `${pct}%` }}
+          <span className="avatar-upload-icon">
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" />
+              <polyline points="17 8 12 3 7 8" />
+              <line x1="12" y1="3" x2="12" y2="15" />
+            </svg>
+          </span>
+          <span className="avatar-upload-label">Drop photo</span>
+          <span className="avatar-upload-hint">PNG, JPG up to 4MB</span>
+        </button>
+        <div className="avatar-meta">
+          <p className="avatar-meta-title">Profile photo</p>
+          <p className="avatar-meta-sub">Helps brands recognize your work</p>
+          <div className="completeness-bar-wrap">
+            <div className="completeness-bar">
+              <div
+                className="completeness-bar-fill"
+                style={{ width: `${completenessPercent}%` }}
+              />
+            </div>
+            <span className="completeness-label">
+              {completenessPercent}% complete
+            </span>
+          </div>
+        </div>
+      </div>
+
+      {/* Name + Handle row */}
+      <div className="field-row-2">
+        <div className="field">
+          <label className="field-label" htmlFor="cr-name">
+            Display name
+          </label>
+          <div className="input-wrap">
+            <input
+              id="cr-name"
+              className="field-input"
+              type="text"
+              placeholder="How brands see you"
+              value={profile.name}
+              onChange={(e) =>
+                onChange({ profile: { ...profile, name: e.target.value } })
+              }
+              autoComplete="name"
             />
           </div>
-          <span className="ob-completeness-label">{pct}% complete</span>
         </div>
-
-        <div className="ob-field">
-          <label className="ob-label" htmlFor="ob-name">
-            Display Name
-          </label>
-          <input
-            id="ob-name"
-            className="ob-input"
-            type="text"
-            placeholder="How brands will see you"
-            value={profile.name}
-            onChange={(e) => setProfile({ ...profile, name: e.target.value })}
-            autoComplete="name"
-          />
-        </div>
-        <div className="ob-field">
-          <label className="ob-label" htmlFor="ob-handle">
+        <div className="field">
+          <label className="field-label" htmlFor="cr-handle">
             Handle
           </label>
-          <input
-            id="ob-handle"
-            className="ob-input"
-            type="text"
-            placeholder="e.g. @coffee_jess"
-            value={profile.handle}
-            onChange={(e) => setProfile({ ...profile, handle: e.target.value })}
-          />
-        </div>
-        <div className="ob-field">
-          <label className="ob-label" htmlFor="ob-location">
-            Neighborhood
-          </label>
-          <input
-            id="ob-location"
-            className="ob-input"
-            type="text"
-            placeholder="e.g. Williamsburg, LES, Astoria"
-            value={profile.location}
-            onChange={(e) =>
-              setProfile({ ...profile, location: e.target.value })
-            }
-          />
-        </div>
-        <div className="ob-field">
-          <label className="ob-label" htmlFor="ob-instagram">
-            Instagram Handle
-          </label>
-          <input
-            id="ob-instagram"
-            className="ob-input"
-            type="text"
-            placeholder="@yourhandle"
-            value={profile.instagram}
-            onChange={(e) =>
-              setProfile({ ...profile, instagram: e.target.value })
-            }
-          />
-        </div>
-        <div className="ob-field">
-          <label className="ob-label" htmlFor="ob-bio">
-            Short Bio <span className="ob-label-optional">(120 chars)</span>
-          </label>
-          <textarea
-            id="ob-bio"
-            className="ob-textarea"
-            placeholder="What makes your content unique?"
-            value={profile.bio}
-            maxLength={120}
-            rows={3}
-            onChange={(e) => setProfile({ ...profile, bio: e.target.value })}
-          />
-          <p
-            className={`ob-char-count${profile.bio.length >= 120 ? " ob-char-count--warning" : ""}`}
-          >
-            {profile.bio.length}/120
-          </p>
-        </div>
-      </>
-    );
-  }
-
-  function SocialStep() {
-    const platforms = [
-      { key: "ig" as const, name: "Instagram", abbr: "IG", required: true },
-      { key: "tiktok" as const, name: "TikTok", abbr: "TT", required: false },
-      { key: "xhs" as const, name: "小红书", abbr: "XHS", required: false },
-    ];
-    return (
-      <>
-        <span className="ob-step-number">
-          <span className="ob-step-dot" aria-hidden="true" />
-          STEP 3 OF 5 · SOCIAL
-        </span>
-        <h1 className="ob-heading">Connect your socials.</h1>
-        <p className="ob-subtext">Read-only. We never post on your behalf.</p>
-        <div className="ob-platform-tiles">
-          {platforms.map((p) => {
-            const connected = connectedSocials[p.key];
-            return (
-              <div
-                key={p.key}
-                className={`ob-platform-tile${connected ? " ob-platform-tile--connected" : ""}`}
-              >
-                <span className="ob-platform-icon">{p.abbr}</span>
-                <div className="ob-platform-info">
-                  <p className="ob-platform-name">{p.name}</p>
-                  <p className="ob-platform-req">
-                    {p.required ? "Required" : "Optional"}
-                  </p>
-                </div>
-                <button
-                  type="button"
-                  className={`ob-platform-btn${connected ? " ob-platform-btn--connected" : ""}`}
-                  onClick={() =>
-                    setConnectedSocials((prev) => ({
-                      ...prev,
-                      [p.key]: !prev[p.key],
-                    }))
-                  }
-                  disabled={connected}
-                >
-                  {connected ? "Connected · Read only" : "Connect"}
-                </button>
-              </div>
-            );
-          })}
-        </div>
-      </>
-    );
-  }
-
-  function PayoutStep() {
-    return (
-      <>
-        <span className="ob-step-number">
-          <span className="ob-step-dot" aria-hidden="true" />
-          STEP 4 OF 5 · PAYOUT
-        </span>
-        <h1 className="ob-heading">Set up payouts.</h1>
-        <p className="ob-subtext">
-          Payouts settle within 3 business days of a verified customer visit.
-        </p>
-
-        <div className="ob-payout-tabs" role="tablist">
-          {(["venmo", "cashapp", "ach"] as const).map((tab) => (
-            <button
-              key={tab}
-              role="tab"
-              aria-selected={payoutTab === tab}
-              className={`ob-payout-tab${payoutTab === tab ? " ob-payout-tab--active" : ""}`}
-              type="button"
-              onClick={() => setPayoutTab(tab)}
-            >
-              {tab === "venmo"
-                ? "Venmo"
-                : tab === "cashapp"
-                  ? "CashApp"
-                  : "ACH Bank"}
-            </button>
-          ))}
-        </div>
-
-        <div className="ob-payout-panel">
-          {payoutTab === "venmo" && (
-            <div className="ob-field">
-              <label className="ob-label" htmlFor="ob-venmo">
-                Venmo Handle
-              </label>
-              <input
-                id="ob-venmo"
-                className="ob-input"
-                type="text"
-                placeholder="@your-venmo"
-                value={payoutVenmo}
-                onChange={(e) => setPayoutVenmo(e.target.value)}
-              />
-            </div>
-          )}
-          {payoutTab === "cashapp" && (
-            <div className="ob-field">
-              <label className="ob-label" htmlFor="ob-cashapp">
-                CashApp $Cashtag
-              </label>
-              <input
-                id="ob-cashapp"
-                className="ob-input"
-                type="text"
-                placeholder="$YourCashTag"
-                value={payoutCashapp}
-                onChange={(e) => setPayoutCashapp(e.target.value)}
-              />
-            </div>
-          )}
-          {payoutTab === "ach" && (
-            <>
-              <div className="ob-field">
-                <label className="ob-label" htmlFor="ob-routing">
-                  Routing Number
-                </label>
-                <input
-                  id="ob-routing"
-                  className="ob-input"
-                  type="text"
-                  inputMode="numeric"
-                  pattern="[0-9]{9}"
-                  maxLength={9}
-                  placeholder="9-digit routing number"
-                  value={payoutRouting}
-                  onChange={(e) => setPayoutRouting(e.target.value)}
-                />
-              </div>
-              <div className="ob-field">
-                <label className="ob-label" htmlFor="ob-account">
-                  Account Number
-                </label>
-                <input
-                  id="ob-account"
-                  className="ob-input"
-                  type="text"
-                  inputMode="numeric"
-                  placeholder="Account number"
-                  value={payoutAccount}
-                  onChange={(e) => setPayoutAccount(e.target.value)}
-                />
-              </div>
-              {segment === "professional" && (
-                <div className="ob-field">
-                  <label className="ob-label">
-                    W-9 Upload{" "}
-                    <span className="ob-label-optional">(Professional)</span>
-                  </label>
-                  <div
-                    className="ob-upload-area"
-                    onClick={() =>
-                      alert("W-9 upload — connect to real file upload")
-                    }
-                  >
-                    <p className="ob-upload-hint">Click to upload W-9 form</p>
-                  </div>
-                </div>
-              )}
-            </>
-          )}
-        </div>
-      </>
-    );
-  }
-
-  function LightKycStep() {
-    function startSelfie() {
-      setSelfieCountdown(3);
-      const tick = setInterval(() => {
-        setSelfieCountdown((prev) => {
-          if (prev <= 1) {
-            clearInterval(tick);
-            setSelfieComplete(true);
-            return 0;
-          }
-          return prev - 1;
-        });
-      }, 1000);
-    }
-
-    return (
-      <>
-        <span className="ob-step-number">
-          <span className="ob-step-dot ob-step-dot--gold" aria-hidden="true" />
-          STEP 5 OF 5 · LIGHT KYC
-        </span>
-        <span className="ob-kyc-eyebrow">UNLOCKS EXPLORER TIER</span>
-        <h1 className="ob-heading">Quick selfie check.</h1>
-        <p className="ob-subtext">
-          Confirms you&apos;re real. The deeper check only happens when you
-          apply to Operator tier.
-        </p>
-
-        <div className="ob-field">
-          <label className="ob-label">ID Document — Front</label>
-          <div
-            className={`ob-upload-area${idUploaded ? " ob-upload-area--done" : ""}`}
-            onClick={() => setIdUploaded(true)}
-            role="button"
-            tabIndex={0}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") setIdUploaded(true);
-            }}
-            aria-label="Upload ID document front"
-          >
-            {idUploaded ? (
-              <p className="ob-upload-done">ID uploaded</p>
-            ) : (
-              <p className="ob-upload-hint">
-                Click or drag to upload · PNG / JPG / PDF
-              </p>
-            )}
+          <div className="input-wrap input-wrap--prefix">
+            <span className="input-prefix">@</span>
+            <input
+              id="cr-handle"
+              className="field-input field-input--prefixed"
+              type="text"
+              placeholder="yourhandle"
+              value={profile.handle.replace(/^@/, "")}
+              onChange={(e) =>
+                onChange({ profile: { ...profile, handle: e.target.value } })
+              }
+            />
           </div>
         </div>
+      </div>
 
-        <div className="ob-field">
-          <label className="ob-label">Selfie</label>
-          {selfieComplete ? (
-            <div className="ob-selfie-done">Selfie captured</div>
-          ) : selfieCountdown > 0 ? (
-            <div className="ob-selfie-countdown" aria-live="polite">
-              Taking selfie in {selfieCountdown}…
-            </div>
-          ) : (
-            <button
-              type="button"
-              className="ob-btn-secondary"
-              onClick={startSelfie}
-            >
-              Take selfie (3s liveness)
-            </button>
-          )}
+      {/* Neighborhood */}
+      <div className="field">
+        <label className="field-label" htmlFor="cr-neighborhood">
+          NYC neighborhood
+        </label>
+        <div className="input-wrap">
+          <input
+            id="cr-neighborhood"
+            className="field-input"
+            type="text"
+            placeholder="e.g. Williamsburg, LES, Astoria"
+            value={profile.neighborhood}
+            list="cr-neighborhoods"
+            onChange={(e) =>
+              onChange({
+                profile: { ...profile, neighborhood: e.target.value },
+              })
+            }
+          />
         </div>
+        <datalist id="cr-neighborhoods">
+          {NYC_NEIGHBORHOODS.map((n) => (
+            <option key={n} value={n} />
+          ))}
+        </datalist>
+      </div>
 
-        <details className="ob-kyc-why">
-          <summary>Why we ask</summary>
-          <p>
-            FTC 5.5 compliance and platform safety. Reviewed by
-            ConversionOracle, never stored beyond verification.
-          </p>
-        </details>
-      </>
-    );
+      {/* Bio */}
+      <div className="field">
+        <label className="field-label" htmlFor="cr-bio">
+          Short bio
+        </label>
+        <div className="textarea-wrap">
+          <textarea
+            id="cr-bio"
+            className="field-textarea"
+            placeholder="What makes your content unique?"
+            value={profile.bio}
+            maxLength={BIO_MAX}
+            onChange={(e) =>
+              onChange({ profile: { ...profile, bio: e.target.value } })
+            }
+          />
+          <span
+            className={`char-count${profile.bio.length >= BIO_MAX * 0.9 ? " char-count--warn" : ""}`}
+          >
+            {profile.bio.length}/{BIO_MAX}
+          </span>
+        </div>
+      </div>
+
+      <div className="step-actions">
+        <button
+          type="button"
+          className="btn-primary"
+          onClick={onComplete}
+          disabled={!canProceed}
+        >
+          Save profile
+          <span className="btn-arrow">→</span>
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function SocialStep({
+  progress,
+  onChange,
+  onComplete,
+  onSkip,
+}: {
+  progress: Progress;
+  onChange: (p: Partial<Progress>) => void;
+  onComplete: () => void;
+  onSkip: () => void;
+}) {
+  const { social } = progress;
+  const anyConnected = social.ig || social.tiktok || social.red;
+  const [showWhy, setShowWhy] = useState(false);
+
+  const PLATFORMS = [
+    {
+      key: "ig" as const,
+      label: "Instagram",
+      handle: "@push_nyc",
+      followers: "12.4K avg",
+      icon: (
+        <svg
+          width="22"
+          height="22"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+          <path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z" />
+          <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
+        </svg>
+      ),
+      color: "#E1306C",
+    },
+    {
+      key: "tiktok" as const,
+      label: "TikTok",
+      handle: "@push_nyc",
+      followers: "8.2K avg",
+      icon: (
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.18 8.18 0 004.78 1.52V6.79a4.85 4.85 0 01-1.01-.1z" />
+        </svg>
+      ),
+      color: "#010101",
+    },
+    {
+      key: "red" as const,
+      label: "小红书",
+      handle: "@push_nyc",
+      followers: "5.1K avg",
+      icon: (
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 14.59V13H9v-2h4V8.41L17.59 12 13 16.59z" />
+        </svg>
+      ),
+      color: "#FF2442",
+    },
+  ];
+
+  function toggle(key: keyof typeof social) {
+    onChange({ social: { ...social, [key]: !social[key] } });
   }
 
-  /* ── Progress dots ───────────────────────────────────────── */
+  return (
+    <div className="step-body">
+      <div className="social-platforms">
+        {PLATFORMS.map(({ key, label, followers, icon, color }) => (
+          <button
+            key={key}
+            type="button"
+            className={`social-tile${social[key] ? " social-tile--connected" : ""}`}
+            onClick={() => toggle(key)}
+          >
+            <span
+              className="social-tile-icon"
+              style={{ color: social[key] ? color : undefined }}
+            >
+              {icon}
+            </span>
+            <div className="social-tile-info">
+              <span className="social-tile-name">{label}</span>
+              <span className="social-tile-stat">{followers}</span>
+            </div>
+            <span
+              className={`social-tile-status${social[key] ? " social-tile-status--on" : ""}`}
+            >
+              {social[key] ? (
+                <>
+                  <span className="status-dot status-dot--green" />
+                  Connected
+                </>
+              ) : (
+                "Connect"
+              )}
+            </span>
+          </button>
+        ))}
+      </div>
 
-  function ProgressDots() {
-    return (
-      <div
-        className="ob-progress-dots ob-progress-dots--mobile-only"
-        role="progressbar"
-        aria-valuenow={step}
-        aria-valuemax={5}
-        aria-label={`Step ${step} of 5`}
+      {/* Why we need this */}
+      <button
+        type="button"
+        className="disclosure-toggle"
+        onClick={() => setShowWhy(!showWhy)}
+        aria-expanded={showWhy}
       >
-        {([1, 2, 3, 4, 5] as Step[]).map((s) => (
+        <svg
+          width="14"
+          height="14"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <circle cx="12" cy="12" r="10" />
+          <line x1="12" y1="8" x2="12" y2="12" />
+          <line x1="12" y1="16" x2="12.01" y2="16" />
+        </svg>
+        Why we need this
+        <span className="disclosure-chevron">{showWhy ? "−" : "+"}</span>
+      </button>
+      {showWhy && (
+        <div className="disclosure-body">
+          <p>
+            We use your follower count and engagement data to match you with
+            campaigns that fit your reach. We never post on your behalf without
+            explicit approval.
+          </p>
+        </div>
+      )}
+
+      <div className="step-actions">
+        <button
+          type="button"
+          className="btn-primary"
+          onClick={onComplete}
+          disabled={!anyConnected}
+        >
+          Confirm
+          <span className="btn-arrow">→</span>
+        </button>
+        <button type="button" className="btn-ghost" onClick={onSkip}>
+          Skip for now
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function IdentityStep({ onSkip }: { onSkip: () => void }) {
+  return (
+    <div className="step-body">
+      <div className="kyc-grid">
+        <div className="upload-zone">
+          <div className="upload-zone-inner">
+            <svg
+              width="28"
+              height="28"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <rect x="3" y="4" width="18" height="16" rx="2" />
+              <circle cx="9" cy="10" r="2" />
+              <path d="M15 8h2M15 12h2M3 16l5-5 4 4 2-2 4 4" />
+            </svg>
+            <span className="upload-zone-label">Upload ID</span>
+            <span className="upload-zone-hint">
+              Passport or Driver's license
+            </span>
+          </div>
+        </div>
+        <div className="upload-zone">
+          <div className="upload-zone-inner">
+            <svg
+              width="28"
+              height="28"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" />
+              <circle cx="12" cy="7" r="4" />
+            </svg>
+            <span className="upload-zone-label">Selfie</span>
+            <span className="upload-zone-hint">Hold next to your ID</span>
+          </div>
+        </div>
+      </div>
+
+      <div className="trust-badge">
+        <svg
+          width="14"
+          height="14"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+        </svg>
+        Your data is encrypted and never shared with third parties.
+      </div>
+
+      <div className="link-action-card">
+        <div className="link-action-icon">
+          <svg
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <rect x="3" y="4" width="18" height="16" rx="2" />
+            <circle cx="9" cy="10" r="2" />
+            <path d="M15 8h2M15 12h2" />
+          </svg>
+        </div>
+        <div className="link-action-info">
+          <p className="link-action-title">Identity verification</p>
+          <p className="link-action-sub">
+            Required before your first paid campaign · Under 2 min via Stripe
+            Identity
+          </p>
+        </div>
+        <Link href="/creator/verify" className="btn-secondary">
+          Verify →
+        </Link>
+      </div>
+
+      <div className="step-actions">
+        <button type="button" className="btn-ghost" onClick={onSkip}>
+          Skip for now
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function PayoutStep({ onSkip }: { onSkip: () => void }) {
+  const [activeTab, setActiveTab] = useState<"bank" | "paypal" | "venmo">(
+    "bank",
+  );
+
+  return (
+    <div className="step-body">
+      {/* Payout method tabs */}
+      <div className="payout-tabs">
+        {(["bank", "paypal", "venmo"] as const).map((tab) => (
+          <button
+            key={tab}
+            type="button"
+            className={`payout-tab${activeTab === tab ? " payout-tab--active" : ""}`}
+            onClick={() => setActiveTab(tab)}
+          >
+            {tab === "bank" && (
+              <svg
+                width="15"
+                height="15"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <rect x="3" y="10" width="18" height="11" rx="1" />
+                <path d="M3 10l9-7 9 7" />
+                <line x1="12" y1="10" x2="12" y2="21" />
+                <line x1="7" y1="15" x2="7" y2="21" />
+                <line x1="17" y1="15" x2="17" y2="21" />
+              </svg>
+            )}
+            {tab === "paypal" && (
+              <svg
+                width="15"
+                height="15"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M17.5 6.5C17.5 9.54 15.04 12 12 12H8.5L7 18H4L6.5 6H12C15.04 6 17.5 6.46 17.5 6.5z" />
+                <path d="M20 9c0 3.04-2.46 5.5-5.5 5.5H11l-1.5 6H6.5l2.5-12H14C17.04 8.5 20 8.96 20 9z" />
+              </svg>
+            )}
+            {tab === "venmo" && (
+              <svg
+                width="15"
+                height="15"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <circle cx="12" cy="12" r="10" />
+                <path d="M8 9l4 6 4-6" />
+              </svg>
+            )}
+            <span>
+              {tab === "bank" ? "Bank" : tab === "paypal" ? "PayPal" : "Venmo"}
+            </span>
+          </button>
+        ))}
+      </div>
+
+      {/* Tab content */}
+      <div className="payout-form">
+        {activeTab === "bank" && (
+          <>
+            <div className="field">
+              <label className="field-label" htmlFor="routing">
+                Routing number
+              </label>
+              <div className="input-wrap">
+                <input
+                  id="routing"
+                  className="field-input"
+                  type="text"
+                  placeholder="9 digits"
+                />
+              </div>
+            </div>
+            <div className="field">
+              <label className="field-label" htmlFor="account">
+                Account number
+              </label>
+              <div className="input-wrap">
+                <input
+                  id="account"
+                  className="field-input"
+                  type="text"
+                  placeholder="10–12 digits"
+                />
+              </div>
+            </div>
+          </>
+        )}
+        {activeTab === "paypal" && (
+          <div className="field">
+            <label className="field-label" htmlFor="paypal-email">
+              PayPal email
+            </label>
+            <div className="input-wrap">
+              <input
+                id="paypal-email"
+                className="field-input"
+                type="email"
+                placeholder="you@example.com"
+              />
+            </div>
+          </div>
+        )}
+        {activeTab === "venmo" && (
+          <div className="field">
+            <label className="field-label" htmlFor="venmo-handle">
+              Venmo handle
+            </label>
+            <div className="input-wrap input-wrap--prefix">
+              <span className="input-prefix">@</span>
+              <input
+                id="venmo-handle"
+                className="field-input field-input--prefixed"
+                type="text"
+                placeholder="yourhandle"
+              />
+            </div>
+          </div>
+        )}
+      </div>
+
+      <div className="trust-badge trust-badge--gold">
+        <svg
+          width="14"
+          height="14"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+        </svg>
+        Payments processed within 48 hours of campaign completion.
+      </div>
+
+      <div className="step-actions">
+        <Link href="/creator/wallet" className="btn-primary">
+          Set up payout
+          <span className="btn-arrow">→</span>
+        </Link>
+        <button type="button" className="btn-ghost" onClick={onSkip}>
+          Skip for now
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function DiscoveryStep({ onComplete }: { onComplete: () => void }) {
+  const CATEGORIES = [
+    { emoji: "☕", name: "Coffee + Cafe", avg: "$32", campaigns: "14 active" },
+    { emoji: "🍜", name: "Food + Drink", avg: "$28", campaigns: "22 active" },
+    {
+      emoji: "👟",
+      name: "Retail + Fashion",
+      avg: "$45",
+      campaigns: "9 active",
+    },
+  ];
+
+  const [selected, setSelected] = useState<string | null>(null);
+
+  return (
+    <div className="step-body">
+      <div className="campaign-cards">
+        {CATEGORIES.map(({ emoji, name, avg, campaigns }) => (
+          <button
+            key={name}
+            type="button"
+            className={`campaign-card${selected === name ? " campaign-card--selected" : ""}`}
+            onClick={() => setSelected(name)}
+          >
+            <span className="campaign-card-ghost">{avg}</span>
+            <span className="campaign-card-emoji">{emoji}</span>
+            <span className="campaign-card-name">{name}</span>
+            <span className="campaign-card-meta">
+              avg {avg}/visit · {campaigns}
+            </span>
+          </button>
+        ))}
+      </div>
+
+      <div className="discovery-callout">
+        <p className="discovery-callout-eyebrow">HOW IT WORKS</p>
+        <p className="discovery-callout-text">
+          Browse live campaigns by neighborhood, category, or payout. Apply in
+          one tap — brands review within 24 hours.
+        </p>
+      </div>
+
+      <div className="step-actions">
+        <Link href="/creator/explore" className="btn-primary">
+          Explore campaigns
+          <span className="btn-arrow">→</span>
+        </Link>
+        <button type="button" className="btn-ghost" onClick={onComplete}>
+          Mark as seen
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function NotifsStep({
+  progress,
+  onChange,
+  onComplete,
+  onSkip,
+}: {
+  progress: Progress;
+  onChange: (p: Partial<Progress>) => void;
+  onComplete: () => void;
+  onSkip: () => void;
+}) {
+  const { notifs } = progress;
+
+  function toggle(key: keyof typeof notifs) {
+    onChange({ notifs: { ...notifs, [key]: !notifs[key] } });
+  }
+
+  const items = [
+    {
+      key: "matches" as const,
+      name: "Campaign matches",
+      desc: "New campaigns that match your profile",
+      icon: (
+        <svg
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <circle cx="11" cy="11" r="8" />
+          <line x1="21" y1="21" x2="16.65" y2="16.65" />
+        </svg>
+      ),
+    },
+    {
+      key: "applications" as const,
+      name: "Application updates",
+      desc: "When brands accept or decline",
+      icon: (
+        <svg
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
+          <polyline points="14 2 14 8 20 8" />
+        </svg>
+      ),
+    },
+    {
+      key: "payments" as const,
+      name: "Payment releases",
+      desc: "When your earnings hit your wallet",
+      icon: (
+        <svg
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <rect x="2" y="5" width="20" height="14" rx="2" />
+          <line x1="2" y1="10" x2="22" y2="10" />
+        </svg>
+      ),
+    },
+  ];
+
+  return (
+    <div className="step-body">
+      <div className="notif-list">
+        {items.map(({ key, name, desc, icon }) => (
+          <div key={key} className="notif-row">
+            <span className="notif-icon">{icon}</span>
+            <div className="notif-info">
+              <p className="notif-name">{name}</p>
+              <p className="notif-desc">{desc}</p>
+            </div>
+            <label className="toggle-switch">
+              <input
+                type="checkbox"
+                checked={notifs[key]}
+                onChange={() => toggle(key)}
+              />
+              <span className="toggle-track" />
+            </label>
+          </div>
+        ))}
+      </div>
+
+      <div className="step-actions">
+        <button type="button" className="btn-primary" onClick={onComplete}>
+          Save preferences
+          <span className="btn-arrow">→</span>
+        </button>
+        <button type="button" className="btn-ghost" onClick={onSkip}>
+          Skip
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function InviteStep({ onComplete }: { onComplete: () => void }) {
+  const [copied, setCopied] = useState(false);
+  const inviteLink = "https://push.nyc/invite/YOU25";
+
+  function handleCopy() {
+    navigator.clipboard.writeText(inviteLink).catch(() => {});
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  }
+
+  return (
+    <div className="step-body">
+      <div className="invite-hero">
+        <span className="invite-hero-eyebrow">Referral bonus</span>
+        <h3 className="invite-hero-title">
+          Give <em>$25</em>.<br />
+          Get <em>$25</em>.
+        </h3>
+        <div className="invite-link-row">
+          <input
+            type="text"
+            className="invite-link-input"
+            value={inviteLink}
+            readOnly
+            aria-label="Your invite link"
+          />
+          <button
+            type="button"
+            className={`invite-copy-btn${copied ? " invite-copy-btn--copied" : ""}`}
+            onClick={handleCopy}
+          >
+            {copied ? "Copied!" : "Copy link"}
+          </button>
+        </div>
+        <p className="invite-sub">
+          Both you and your friend earn $25 after their first completed
+          campaign.
+        </p>
+      </div>
+
+      <div className="step-actions">
+        <button type="button" className="btn-primary" onClick={onComplete}>
+          Done
+          <span className="btn-arrow">→</span>
+        </button>
+      </div>
+    </div>
+  );
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Sidebar Step List
+   ───────────────────────────────────────────────────────────── */
+
+function SidebarStepList({
+  steps,
+  progress,
+  expandedStep,
+  onStepClick,
+}: {
+  steps: typeof STEPS;
+  progress: Progress;
+  expandedStep: StepId | null;
+  onStepClick: (id: StepId) => void;
+}) {
+  return (
+    <nav className="sidebar-step-list" aria-label="Onboarding steps">
+      {steps.map(({ id, shortTitle }) => {
+        const isDone =
+          progress.completed.includes(id) || progress.skipped.includes(id);
+        const isActive = id === progress.activeStep;
+        const isExpanded = expandedStep === id;
+        const isLocked =
+          !isDone &&
+          !isActive &&
+          !(
+            progress.completed.includes((id - 1) as StepId) ||
+            progress.skipped.includes((id - 1) as StepId) ||
+            id === 1
+          );
+
+        return (
+          <button
+            key={id}
+            type="button"
+            className={[
+              "sidebar-step",
+              isDone ? "sidebar-step--done" : "",
+              isActive ? "sidebar-step--active" : "",
+              isExpanded ? "sidebar-step--expanded" : "",
+              isLocked ? "sidebar-step--locked" : "",
+            ]
+              .filter(Boolean)
+              .join(" ")}
+            onClick={() => !isLocked && onStepClick(id)}
+            disabled={isLocked}
+            aria-current={isExpanded ? "step" : undefined}
+          >
+            <span className="sidebar-step-marker" aria-hidden="true">
+              {isDone ? (
+                <svg
+                  width="10"
+                  height="10"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="3"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+              ) : isActive ? (
+                <span className="sidebar-step-active-dot" />
+              ) : (
+                <span className="sidebar-step-num">
+                  {String(id).padStart(2, "0")}
+                </span>
+              )}
+            </span>
+            <span className="sidebar-step-label">{shortTitle}</span>
+          </button>
+        );
+      })}
+    </nav>
+  );
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Complete screen
+   ───────────────────────────────────────────────────────────── */
+
+function CompleteScreen({ onDashboard }: { onDashboard?: () => void }) {
+  return (
+    <div className="complete-page">
+      {/* Confetti particles */}
+      <div className="confetti-wrap" aria-hidden="true">
+        {Array.from({ length: 28 }).map((_, i) => (
           <span
-            key={s}
-            className={`ob-dot${step >= s ? " ob-dot--active" : ""}`}
+            key={i}
+            className={`confetti-particle confetti-particle--${i % 6}`}
           />
         ))}
       </div>
-    );
-  }
 
-  /* ── Completion screen ───────────────────────────────────── */
+      <div className="complete-content">
+        <div className="complete-rule" />
+        <p className="complete-eyebrow">Creator profile · 7/7 complete</p>
+        <h1 className="complete-hero">YOU'RE IN.</h1>
 
-  if (showCompletion) {
-    return (
-      <div className="ob-page ob-page--completion">
-        <div className="ob-completion">
-          <div className="ob-completion-inner">
-            <span className="ob-completion-eyebrow">YOU&apos;RE IN</span>
-            <h1 className="ob-completion-hero">
-              <span className="ob-completion-hero-thin">You&apos;re</span>
-              <span className="ob-completion-hero-bold">live.</span>
-            </h1>
-            <p className="ob-completion-sub">
-              SLR counting starts now · Month-12 target 25 · First match inside
-              24h.
-            </p>
-            <button
-              type="button"
-              className="ob-completion-cta"
-              onClick={() => router.push("/creator/dashboard")}
+        <div className="complete-badge-row">
+          {[
+            { name: "Clay", emoji: "🪨", active: true },
+            { name: "Spark", emoji: "✨", active: false },
+            { name: "Ember", emoji: "🔥", active: false },
+          ].map(({ name, emoji, active }) => (
+            <div
+              key={name}
+              className={`tier-badge${active ? " tier-badge--active" : ""}`}
             >
-              Go to dashboard →
-            </button>
-          </div>
-          {/* CSS confetti rects */}
-          <div className="ob-confetti" aria-hidden="true">
-            {Array.from({ length: 12 }).map((_, i) => (
-              <span
-                key={i}
-                className={`ob-confetti-piece ob-confetti-piece--${(i % 4) + 1}`}
-                style={{ animationDelay: `${i * 120}ms` }}
-              />
-            ))}
-          </div>
+              <span className="tier-badge-emoji">{emoji}</span>
+              <span className="tier-badge-name">{name}</span>
+              {active && <span className="tier-badge-now">NOW</span>}
+            </div>
+          ))}
+          <div className="tier-badge-arrow">→</div>
         </div>
+
+        <p className="complete-sub">
+          Welcome to the Push creator network.
+          <br />
+          Your first campaign match is already on its way.
+        </p>
+
+        <button type="button" className="complete-cta" onClick={onDashboard}>
+          Go to dashboard
+          <span className="btn-arrow">→</span>
+        </button>
       </div>
+    </div>
+  );
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Main Page
+   ───────────────────────────────────────────────────────────── */
+
+export default function CreatorOnboardingPage() {
+  const router = useRouter();
+  const [progress, setProgress] = useState<Progress>(INITIAL);
+  const [expandedStep, setExpandedStep] = useState<StepId | null>(1);
+  const [mounted, setMounted] = useState(false);
+  const [completingStep, setCompletingStep] = useState<StepId | null>(null);
+  const mainRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const p = load();
+    setProgress(p);
+    setExpandedStep(p.activeStep);
+    setMounted(true);
+  }, []);
+
+  const update = useCallback((partial: Partial<Progress>) => {
+    setProgress((prev) => {
+      const next = { ...prev, ...partial };
+      save(next);
+      return next;
+    });
+  }, []);
+
+  function completeStep(id: StepId) {
+    setCompletingStep(id);
+    setTimeout(() => {
+      const nextStep = (id < TOTAL ? id + 1 : id) as StepId;
+      const next: Progress = {
+        ...progress,
+        completed: [...progress.completed.filter((c) => c !== id), id],
+        skipped: progress.skipped.filter((s) => s !== id),
+        activeStep: nextStep,
+      };
+      save(next);
+      setProgress(next);
+      setCompletingStep(null);
+      setExpandedStep(id === TOTAL ? null : nextStep);
+    }, 350);
+  }
+
+  function skipStep(id: StepId) {
+    const nextStep = (id < TOTAL ? id + 1 : id) as StepId;
+    const next: Progress = {
+      ...progress,
+      skipped: [...progress.skipped.filter((s) => s !== id), id],
+      activeStep: nextStep,
+    };
+    save(next);
+    setProgress(next);
+    setExpandedStep(id === TOTAL ? null : nextStep);
+  }
+
+  function toggleExpand(id: StepId) {
+    setExpandedStep((prev) => (prev === id ? null : id));
+  }
+
+  const completedCount = progress.completed.length + progress.skipped.length;
+  const progressPercent = Math.round((completedCount / TOTAL) * 100);
+  const isComplete = completedCount >= TOTAL;
+
+  if (!mounted) return null;
+
+  if (isComplete) {
+    return (
+      <CompleteScreen onDashboard={() => router.push("/creator/dashboard")} />
     );
   }
 
-  /* ── Layout ──────────────────────────────────────────────── */
+  const currentStepData = STEPS.find((s) => s.id === expandedStep) ?? STEPS[0];
 
   return (
     <div className="ob-page">
-      {/* Left editorial sidebar */}
-      <aside className="ob-sidebar" aria-label="Onboarding progress">
-        <Link href="/" className="ob-sidebar-logo">
-          Push
-        </Link>
+      {/* Global progress bar */}
+      <div
+        className="global-progress-bar"
+        role="progressbar"
+        aria-valuenow={progressPercent}
+        aria-valuemin={0}
+        aria-valuemax={100}
+      >
+        <div
+          className="global-progress-fill"
+          style={{ width: `${progressPercent}%` }}
+        />
+      </div>
 
-        <div className="ob-sidebar-content">
-          <span className="ob-sidebar-eyebrow">CREATOR</span>
-          <div className="ob-sidebar-tier">
-            <span className="ob-sidebar-tier-badge">Clay · Seed</span>
+      <div className="ob-layout">
+        {/* ── Sidebar ─────────────────────────────────────────── */}
+        <aside className="ob-sidebar">
+          {/* Logo */}
+          <div className="ob-sidebar-logo">
+            <span className="ob-sidebar-logo-dot" aria-hidden="true" />
+            <span className="ob-sidebar-logo-text">Push</span>
           </div>
 
-          {/* Vertical step list */}
-          <nav className="ob-step-nav" aria-label="Steps">
-            {([1, 2, 3, 4, 5] as Step[]).map((s) => (
-              <div
-                key={s}
-                className={`ob-step-nav-item${step === s ? " ob-step-nav-item--active" : ""}${step > s ? " ob-step-nav-item--done" : ""}`}
-                aria-current={step === s ? "step" : undefined}
-              >
-                <span className="ob-step-nav-num">0{s}</span>
-                <span className="ob-step-nav-label">{STEP_LABELS[s]}</span>
-              </div>
-            ))}
-          </nav>
-        </div>
-
-        {/* Editorial big number at bottom */}
-        <div className="ob-sidebar-stat">
-          <span className="ob-sidebar-big-num">
-            {String(step).padStart(2, "0")}
-          </span>
-          <span className="ob-sidebar-big-label">/ 05 STEPS</span>
-        </div>
-      </aside>
-
-      {/* Right content panel */}
-      <main className="ob-main">
-        <div className="ob-content">
-          <ProgressDots />
-
-          <div className={animating ? "ob-step-enter" : undefined}>
-            {step === 1 && <DiscoverStep />}
-            {step === 2 && <ProfileStep />}
-            {step === 3 && <SocialStep />}
-            {step === 4 && <PayoutStep />}
-            {step === 5 && <LightKycStep />}
-          </div>
-
-          {error && (
-            <p className="ob-error" role="alert">
-              {error}
-            </p>
+          {/* Current step eyebrow */}
+          {expandedStep && (
+            <p className="ob-sidebar-current-step">{currentStepData.eyebrow}</p>
           )}
 
-          <div className="ob-nav">
-            {step > 1 ? (
-              <button
-                type="button"
-                className="ob-back-btn"
-                onClick={handleBack}
-              >
-                ← Back
-              </button>
-            ) : (
-              <Link href="/creator/dashboard" className="ob-back-btn">
-                Skip for now
-              </Link>
-            )}
-            <button
-              type="button"
-              className={`ob-next-btn${step === 5 ? " ob-next-btn--full" : ""}`}
-              onClick={handleNext}
-              disabled={
-                saving || (step === 5 && (!idUploaded || !selfieComplete))
-              }
-            >
-              {saving
-                ? "Saving…"
-                : step === 5
-                  ? "Finish setup →"
-                  : step === 1
-                    ? "Continue →"
-                    : "Next →"}
-            </button>
+          {/* Vertical step list */}
+          <SidebarStepList
+            steps={STEPS}
+            progress={progress}
+            expandedStep={expandedStep}
+            onStepClick={(id) => toggleExpand(id)}
+          />
+
+          {/* Social proof */}
+          <div className="ob-sidebar-social-proof">
+            <div className="social-proof-avatars" aria-hidden="true">
+              {["#c1121f", "#669bbc", "#c9a96e", "#780000"].map((c, i) => (
+                <span
+                  key={i}
+                  className="social-proof-avatar"
+                  style={{ background: c, zIndex: 4 - i }}
+                />
+              ))}
+            </div>
+            <p className="social-proof-text">
+              <strong>2,847 creators</strong> onboarded this week
+            </p>
           </div>
-        </div>
-      </main>
+        </aside>
+
+        {/* ── Main content ─────────────────────────────────────── */}
+        <main className="ob-main" ref={mainRef}>
+          {/* Top bar */}
+          <div className="ob-topbar">
+            <span className="ob-topbar-eyebrow">
+              <span className="ob-topbar-dot" aria-hidden="true" />
+              {expandedStep
+                ? `STEP ${String(expandedStep).padStart(2, "0")} OF ${String(TOTAL).padStart(2, "0")} · ${currentStepData.eyebrow}`
+                : "ONBOARDING"}
+            </span>
+            <div className="ob-topbar-progress">
+              <span className="ob-topbar-progress-label">
+                {completedCount}/{TOTAL}
+              </span>
+              <div
+                className="ob-dots"
+                aria-label={`Step ${progress.activeStep} of ${TOTAL}`}
+                role="status"
+              >
+                {Array.from({ length: TOTAL }, (_, i) => {
+                  const n = (i + 1) as StepId;
+                  const isDone =
+                    progress.completed.includes(n) ||
+                    progress.skipped.includes(n);
+                  const isAct = n === progress.activeStep;
+                  return (
+                    <span
+                      key={n}
+                      className={[
+                        "ob-dot",
+                        isDone ? "ob-dot--done" : "",
+                        isAct ? "ob-dot--active" : "",
+                      ]
+                        .filter(Boolean)
+                        .join(" ")}
+                    />
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+
+          {/* Steps */}
+          <div className="ob-steps">
+            {STEPS.map(({ id, title, description, eyebrow }) => {
+              const isDone =
+                progress.completed.includes(id) ||
+                progress.skipped.includes(id);
+              const isSkipped = progress.skipped.includes(id);
+              const isActive =
+                !isDone &&
+                (id === progress.activeStep ||
+                  progress.completed.includes((id - 1) as StepId) ||
+                  progress.skipped.includes((id - 1) as StepId) ||
+                  id === 1);
+              const isLocked = !isDone && !isActive;
+              const isExpanded = expandedStep === id;
+              const isCompleting = completingStep === id;
+
+              return (
+                <div
+                  key={id}
+                  className={[
+                    "step-item",
+                    isDone ? "step-item--done" : "",
+                    isSkipped ? "step-item--skipped" : "",
+                    isActive ? "step-item--active" : "",
+                    isLocked ? "step-item--locked" : "",
+                    isExpanded ? "step-item--expanded" : "",
+                    isCompleting ? "step-item--completing" : "",
+                  ]
+                    .filter(Boolean)
+                    .join(" ")}
+                >
+                  <button
+                    type="button"
+                    className="step-header"
+                    onClick={
+                      isActive || isDone ? () => toggleExpand(id) : undefined
+                    }
+                    disabled={isLocked}
+                    aria-expanded={isExpanded}
+                  >
+                    {/* Marker */}
+                    <span className="step-marker" aria-hidden="true">
+                      {isDone ? (
+                        <svg
+                          width="12"
+                          height="12"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="3"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        >
+                          <polyline points="20 6 9 17 4 12" />
+                        </svg>
+                      ) : (
+                        <span className="step-marker-num">
+                          {String(id).padStart(2, "0")}
+                        </span>
+                      )}
+                    </span>
+
+                    {/* Title */}
+                    <span className="step-title-block">
+                      <span className="step-eyebrow">{eyebrow}</span>
+                      <span className="step-title">{title}</span>
+                      <span className="step-desc">{description}</span>
+                    </span>
+
+                    {/* Status badge */}
+                    <span
+                      className={`step-badge step-badge--${isDone ? "done" : isSkipped ? "skipped" : isActive ? "active" : "locked"}`}
+                    >
+                      {isDone && !isSkipped
+                        ? "Complete"
+                        : isSkipped
+                          ? "Skipped"
+                          : isActive
+                            ? "In progress"
+                            : "Locked"}
+                    </span>
+
+                    {/* Chevron */}
+                    {(isActive || isDone) && (
+                      <span className="step-chevron" aria-hidden="true">
+                        {isExpanded ? "−" : "+"}
+                      </span>
+                    )}
+                  </button>
+
+                  {/* Expanded content */}
+                  {isExpanded && (
+                    <div className="step-content">
+                      {id === 1 && (
+                        <ProfileStep
+                          progress={progress}
+                          onChange={update}
+                          onComplete={() => completeStep(1)}
+                        />
+                      )}
+                      {id === 2 && (
+                        <SocialStep
+                          progress={progress}
+                          onChange={update}
+                          onComplete={() => completeStep(2)}
+                          onSkip={() => skipStep(2)}
+                        />
+                      )}
+                      {id === 3 && <IdentityStep onSkip={() => skipStep(3)} />}
+                      {id === 4 && <PayoutStep onSkip={() => skipStep(4)} />}
+                      {id === 5 && (
+                        <DiscoveryStep onComplete={() => completeStep(5)} />
+                      )}
+                      {id === 6 && (
+                        <NotifsStep
+                          progress={progress}
+                          onChange={update}
+                          onComplete={() => completeStep(6)}
+                          onSkip={() => skipStep(6)}
+                        />
+                      )}
+                      {id === 7 && (
+                        <InviteStep onComplete={() => completeStep(7)} />
+                      )}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </main>
+      </div>
     </div>
   );
 }

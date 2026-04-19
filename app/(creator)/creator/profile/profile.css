@@ -1,13 +1,16 @@
 /* ============================================================
-   Creator Profile Page
+   Creator Profile Page — 20x Design Refresh
+   Design System: border-radius:0, 8px grid, Push brand palette
    ============================================================ */
 
-/* ── Page shell ─────────────────────────────────────────────── */
+/* ── CSS Variables (local) ───────────────────────────────── */
 
 .profile-page {
+  --pf-line: rgba(0, 48, 73, 0.1);
+  --pf-surface-tint: rgba(0, 48, 73, 0.03);
   max-width: 960px;
   margin: 0 auto;
-  padding: var(--space-5) var(--space-4);
+  padding: 40px 32px 80px;
 }
 
 .profile-loading {
@@ -15,110 +18,126 @@
   align-items: center;
   justify-content: center;
   height: 100svh;
-  font-size: var(--text-small);
-  color: var(--text-muted);
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
+  font-family: "CS Genio Mono", monospace;
+  font-size: 11px;
   font-weight: 700;
+  color: rgba(0, 48, 73, 0.45);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
 }
 
-/* ── Top bar ─────────────────────────────────────────────────── */
+/* ── Top bar ─────────────────────────────────────────────── */
 
 .profile-topbar {
   display: flex;
-  flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: var(--space-4);
+  margin-bottom: 40px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid rgba(0, 48, 73, 0.1);
+}
+
+.profile-topbar-title {
+  font-family: "Darky", serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(0, 48, 73, 0.45);
 }
 
 .profile-back-link {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  font-family: var(--font-body);
-  font-size: var(--text-eyebrow);
+  font-family: "CS Genio Mono", monospace;
+  font-size: 11px;
   font-weight: 700;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--text-muted);
+  color: rgba(0, 48, 73, 0.5);
   text-decoration: none;
-  transition: color var(--t-fast);
+  transition: color 150ms ease;
 }
 
 .profile-back-link:hover {
-  color: var(--dark);
+  color: #003049;
 }
 
 .profile-back-arrow {
-  font-size: 14px;
+  font-size: 13px;
   line-height: 1;
+  color: #c1121f;
 }
 
-/* ── Save toast ──────────────────────────────────────────────── */
+/* ── Save toast ──────────────────────────────────────────── */
 
 .save-toast {
-  font-family: var(--font-body);
-  font-size: 13px;
-  color: #2a9d8f;
+  font-family: "CS Genio Mono", monospace;
+  font-size: 11px;
   font-weight: 700;
-  letter-spacing: 0.04em;
-  text-align: center;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #003049;
+  background: rgba(201, 169, 110, 0.15);
+  border: 1px solid rgba(201, 169, 110, 0.4);
+  padding: 6px 16px;
   animation: toast-fade-in 200ms ease;
 }
 
 @keyframes toast-fade-in {
-  from {
-    opacity: 0;
-    transform: translateY(4px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0);   }
 }
 
-/* ── Section title ───────────────────────────────────────────── */
+/* ── Section title ───────────────────────────────────────── */
 
 .pf-section-title {
-  font-family: var(--font-display);
-  font-size: var(--text-h3);
+  font-family: "CS Genio Mono", monospace;
+  font-size: 11px;
   font-weight: 700;
-  letter-spacing: -0.02em;
-  color: var(--dark);
-  margin-bottom: var(--space-3);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(0, 48, 73, 0.45);
+  padding: 24px 0 8px;
+  border-top: 1px solid rgba(0, 48, 73, 0.1);
+  margin-bottom: 16px;
 }
 
-/* ── Hero Section ────────────────────────────────────────────── */
+/* ── Hero Section ────────────────────────────────────────── */
 
 .pf-hero {
-  display: flex;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
   align-items: flex-start;
-  gap: 24px;
-  background: #fff;
-  border: 1px solid rgba(0, 48, 73, 0.08);
-  padding: var(--space-4);
-  margin-bottom: var(--space-4);
+  gap: 32px;
+  background: #ffffff;
+  border: 1px solid rgba(0, 48, 73, 0.1);
+  border-top: 3px solid #003049;
+  padding: 32px;
+  margin-bottom: 2px;
 }
 
+/* Avatar — 50% exception per design system */
 .pf-avatar {
-  width: 120px;
-  height: 120px;
+  width: 96px;
+  height: 96px;
   border-radius: 50%;
-  border: 3px solid var(--dark);
-  background: var(--dark);
+  border: 3px solid #003049;
+  background: #003049;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
   overflow: hidden;
+  position: relative;
 }
 
 .pf-avatar-initials {
-  font-family: var(--font-display);
+  font-family: "Darky", serif;
   font-weight: 900;
-  font-size: 40px;
-  color: var(--surface);
+  font-size: 32px;
+  color: #f5f2ec;
   line-height: 1;
   letter-spacing: -0.03em;
 }
@@ -127,17 +146,18 @@
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 10px;
   min-width: 0;
 }
 
 .pf-name {
-  font-family: var(--font-display);
-  font-size: 32px;
+  font-family: "Darky", serif;
+  font-size: 40px;
   font-weight: 800;
-  letter-spacing: -0.03em;
-  color: var(--dark);
-  line-height: 1.05;
+  letter-spacing: -0.04em;
+  color: #003049;
+  line-height: 1;
+  margin: 0;
 }
 
 .pf-hero-meta-row {
@@ -151,34 +171,35 @@
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  font-family: var(--font-body);
-  font-size: var(--text-small);
-  color: var(--text-muted);
+  font-family: "CS Genio Mono", monospace;
+  font-size: 12px;
+  color: rgba(0, 48, 73, 0.55);
 }
 
 .pf-meta-icon {
   font-style: normal;
   font-weight: 700;
-  color: var(--tertiary);
-  font-size: 11px;
+  color: #669bbc;
+  font-size: 10px;
 }
 
 .pf-bio {
-  font-family: var(--font-body);
-  font-size: var(--text-body);
-  color: var(--dark);
-  line-height: 1.6;
-  opacity: 0.75;
-  max-width: 480px;
+  font-family: "CS Genio Mono", monospace;
+  font-size: 14px;
+  color: #4a5568;
+  line-height: 1.65;
+  max-width: 460px;
+  margin: 0;
 }
 
 .pf-member-since {
-  font-family: var(--font-body);
-  font-size: var(--text-caption);
-  color: var(--text-muted);
-  margin-top: 4px;
+  font-family: "CS Genio Mono", monospace;
+  font-size: 11px;
+  color: rgba(0, 48, 73, 0.4);
+  letter-spacing: 0.04em;
 }
 
+/* Hero right column */
 .pf-hero-right {
   display: flex;
   flex-direction: column;
@@ -192,86 +213,100 @@
   flex-direction: column;
   align-items: flex-end;
   gap: 2px;
+  padding: 16px 20px;
+  background: #003049;
+  min-width: 100px;
 }
 
 .pf-score-number {
-  font-family: var(--font-display);
+  font-family: "Darky", serif;
   font-weight: 900;
-  font-size: 56px;
-  color: var(--dark);
-  letter-spacing: -0.05em;
+  font-size: 52px;
+  color: #f5f2ec;
+  letter-spacing: -0.06em;
   line-height: 1;
 }
 
 .pf-score-label {
-  font-family: var(--font-body);
-  font-size: var(--text-eyebrow);
+  font-family: "CS Genio Mono", monospace;
+  font-size: 10px;
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--text-muted);
+  color: rgba(245, 242, 236, 0.5);
 }
 
-/* Edit Profile button — secondary ghost style */
+/* Edit Profile button */
 .pf-edit-btn {
-  padding: 8px 20px;
+  padding: 10px 20px;
   background: transparent;
-  color: var(--dark);
-  font-family: var(--font-body);
-  font-size: var(--text-small);
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  border: 1.5px solid var(--dark);
-  border-radius: 0;
-  cursor: pointer;
-  transition: background var(--t-fast), color var(--t-fast),
-    border-color var(--t-fast);
-  white-space: nowrap;
-}
-
-.pf-edit-btn:hover {
-  background: var(--dark);
-  color: var(--surface);
-}
-
-/* ── Stats Grid ──────────────────────────────────────────────── */
-
-.pf-stats-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: var(--space-3);
-  margin-bottom: var(--space-4);
-}
-
-.pf-stat-card {
-  padding: 20px;
-  background: #fff;
-  border: 1px solid rgba(0, 48, 73, 0.08);
-  border-left: 3px solid var(--tertiary);
-}
-
-.pf-stat-card--score {
-  border-left-color: var(--primary);
-}
-
-.pf-stat-value {
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: 24px;
-  color: var(--dark);
-  letter-spacing: -0.03em;
-  line-height: 1;
-  margin-bottom: 6px;
-}
-
-.pf-stat-label {
-  font-family: var(--font-body);
+  color: #003049;
+  font-family: "CS Genio Mono", monospace;
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--text-muted);
+  border: 1.5px solid rgba(0, 48, 73, 0.3);
+  border-radius: 0;
+  cursor: pointer;
+  transition: background 150ms ease, color 150ms ease, border-color 150ms ease;
+  white-space: nowrap;
+}
+
+.pf-edit-btn:hover {
+  background: #003049;
+  color: #f5f2ec;
+  border-color: #003049;
+}
+
+/* ── Stats Grid ──────────────────────────────────────────── */
+
+.pf-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2px;
+  margin-bottom: 2px;
+  background: rgba(0, 48, 73, 0.08);
+}
+
+.pf-stat-card {
+  padding: 24px 20px;
+  background: #ffffff;
+  position: relative;
+  overflow: hidden;
+}
+
+.pf-stat-card::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: #669bbc;
+}
+
+.pf-stat-card--score::before {
+  background: #c1121f;
+}
+
+.pf-stat-value {
+  font-family: "Darky", serif;
+  font-weight: 700;
+  font-size: 28px;
+  color: #003049;
+  letter-spacing: -0.04em;
+  line-height: 1;
+  margin-bottom: 8px;
+}
+
+.pf-stat-label {
+  font-family: "CS Genio Mono", monospace;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(0, 48, 73, 0.45);
   display: flex;
   align-items: center;
   gap: 6px;
@@ -283,77 +318,131 @@
   align-items: center;
 }
 
-/* ── Earnings Section ────────────────────────────────────────── */
+/* ── Earnings Section ────────────────────────────────────── */
 
 .pf-earnings-section {
-  background: #fff;
-  border: 1px solid rgba(0, 48, 73, 0.08);
-  padding: var(--space-4);
-  margin-bottom: var(--space-4);
+  background: #ffffff;
+  border: 1px solid rgba(0, 48, 73, 0.1);
+  padding: 32px;
+  margin-bottom: 2px;
 }
 
 .pf-earnings-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: var(--space-3);
+  gap: 1px;
+  background: rgba(0, 48, 73, 0.1);
+  border: 1px solid rgba(0, 48, 73, 0.1);
+  margin-top: 4px;
 }
 
 .pf-earnings-item {
+  background: #ffffff;
   display: flex;
   flex-direction: column;
   gap: 4px;
+  padding: 20px 24px;
 }
 
 .pf-earnings-value {
-  font-family: var(--font-display);
+  font-family: "Darky", serif;
   font-weight: 700;
-  font-size: 28px;
-  color: var(--dark);
-  letter-spacing: -0.03em;
+  font-size: 32px;
+  color: #003049;
+  letter-spacing: -0.04em;
   line-height: 1;
 }
 
-.pf-earnings-label {
-  font-family: var(--font-body);
-  font-size: var(--text-eyebrow);
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--text-muted);
+.pf-earnings-item:first-child .pf-earnings-value {
+  color: #c1121f;
 }
 
-/* ── Tier & Score Section ────────────────────────────────────── */
+.pf-earnings-label {
+  font-family: "CS Genio Mono", monospace;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(0, 48, 73, 0.45);
+}
+
+/* ── Tier & Score Section ────────────────────────────────── */
 
 .pf-tier-section {
-  padding: 32px 0;
-  border-top: 1px solid rgba(0, 48, 73, 0.1);
-  margin-bottom: var(--space-4);
+  padding: 0;
+  margin-bottom: 2px;
 }
 
 .pf-benefits-wrap {
-  margin-top: var(--space-4);
+  margin-top: 2px;
 }
 
-/* ── Edit Section ────────────────────────────────────────────── */
+/* ── Edit Section ────────────────────────────────────────── */
 
 .pf-edit-section {
-  border-top: 1px solid rgba(0, 48, 73, 0.1);
-  padding-top: var(--space-4);
-  margin-bottom: var(--space-4);
+  margin-top: 32px;
+  animation: pf-slide-down 250ms ease both;
 }
 
-/* ── Form card ───────────────────────────────────────────────── */
+@keyframes pf-slide-down {
+  from { opacity: 0; transform: translateY(-8px); }
+  to   { opacity: 1; transform: translateY(0);    }
+}
+
+/* ── Form card ───────────────────────────────────────────── */
 
 .profile-form-card {
-  background: #fff;
-  border: 1px solid rgba(0, 48, 73, 0.08);
-  padding: var(--space-4);
+  background: #ffffff;
+  border: 1px solid rgba(0, 48, 73, 0.1);
+}
+
+.profile-form-card-header {
+  padding: 20px 32px;
+  border-bottom: 1px solid rgba(0, 48, 73, 0.1);
+  background: #003049;
+}
+
+.profile-form-card-header-title {
+  font-family: "CS Genio Mono", monospace;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(245, 242, 236, 0.7);
 }
 
 .profile-form {
   display: flex;
   flex-direction: column;
-  gap: var(--space-3);
+  gap: 0;
+  padding: 0;
+}
+
+/* Form section dividers */
+
+.form-section {
+  padding: 24px 32px;
+  border-bottom: 1px solid rgba(0, 48, 73, 0.08);
+}
+
+.form-section:last-of-type {
+  border-bottom: none;
+}
+
+.form-section-eyebrow {
+  font-family: "CS Genio Mono", monospace;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(0, 48, 73, 0.4);
+  margin-bottom: 16px;
+}
+
+.form-grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
 }
 
 /* Form rows */
@@ -365,57 +454,65 @@
 }
 
 .form-label {
-  font-family: var(--font-body);
-  font-size: var(--text-eyebrow);
+  font-family: "CS Genio Mono", monospace;
+  font-size: 10px;
   font-weight: 700;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--dark);
+  color: #003049;
 }
 
 .form-label-optional {
   font-weight: 400;
   text-transform: none;
   letter-spacing: 0;
-  color: var(--text-muted);
+  color: rgba(0, 48, 73, 0.45);
+  margin-left: 4px;
 }
 
 .form-label-chars {
   font-weight: 400;
   text-transform: none;
   letter-spacing: 0;
-  color: var(--text-muted);
-  font-size: var(--text-caption);
+  color: rgba(0, 48, 73, 0.45);
+  font-size: 10px;
+  float: right;
 }
 
 .form-input {
   width: 100%;
-  padding: 10px var(--space-2);
-  background: var(--surface-muted);
-  border: 1px solid var(--line-strong);
+  height: 48px;
+  padding: 0 14px;
+  background: #fafaf8;
+  border: 1px solid rgba(0, 48, 73, 0.15);
   border-radius: 0;
-  font-family: var(--font-body);
-  font-size: var(--text-body);
-  color: var(--dark);
+  font-family: "CS Genio Mono", monospace;
+  font-size: 14px;
+  color: #003049;
   outline: none;
-  transition: border-color var(--t-fast), background var(--t-fast);
+  transition: border-color 150ms ease, background 150ms ease,
+    box-shadow 150ms ease;
   -webkit-appearance: none;
   appearance: none;
+  box-sizing: border-box;
 }
 
 .form-input::placeholder {
-  color: var(--text-muted);
+  color: rgba(0, 48, 73, 0.3);
 }
 
 .form-input:focus {
-  border-color: var(--dark);
-  background: #fff;
+  border-color: #003049;
+  background: #ffffff;
+  box-shadow: -3px 0 0 0 #c1121f;
 }
 
 .form-textarea {
+  height: auto;
+  padding: 12px 14px;
   resize: vertical;
-  min-height: 80px;
-  line-height: 1.6;
+  min-height: 96px;
+  line-height: 1.65;
 }
 
 /* Prefix wrap (@ symbol) */
@@ -423,24 +520,41 @@
 .form-input-prefix-wrap {
   display: flex;
   align-items: stretch;
+  height: 48px;
 }
 
 .form-input-prefix {
   display: flex;
   align-items: center;
-  padding: 0 10px;
+  padding: 0 12px;
   background: rgba(0, 48, 73, 0.06);
-  border: 1px solid var(--line-strong);
+  border: 1px solid rgba(0, 48, 73, 0.15);
   border-right: none;
-  font-family: var(--font-body);
-  font-size: var(--text-body);
-  color: var(--text-muted);
+  font-family: "CS Genio Mono", monospace;
+  font-size: 14px;
+  color: rgba(0, 48, 73, 0.5);
   font-weight: 700;
   flex-shrink: 0;
 }
 
 .form-input--prefixed {
   flex: 1;
+  height: 100%;
+}
+
+/* Readonly input */
+
+.form-input--readonly {
+  background: rgba(0, 48, 73, 0.03);
+  color: rgba(0, 48, 73, 0.5);
+  cursor: not-allowed;
+  border-style: dashed;
+}
+
+.form-input--readonly:focus {
+  border-color: rgba(0, 48, 73, 0.15);
+  background: rgba(0, 48, 73, 0.03);
+  box-shadow: none;
 }
 
 /* Avatar notice in form */
@@ -448,148 +562,286 @@
 .profile-avatar-notice {
   display: flex;
   align-items: center;
-  gap: var(--space-2);
-  padding: var(--space-2);
-  background: var(--surface-muted);
-  border: 1px dashed var(--line-strong);
+  gap: 16px;
+  padding: 16px;
+  background: rgba(0, 48, 73, 0.03);
+  border: 1px dashed rgba(0, 48, 73, 0.18);
 }
 
 .profile-avatar-sm {
-  width: 40px;
-  height: 40px;
+  width: 48px;
+  height: 48px;
   background: #003049;
+  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: var(--font-display);
+  font-family: "Darky", serif;
   font-weight: 900;
-  font-size: 16px;
+  font-size: 18px;
   color: #f5f2ec;
   letter-spacing: -0.02em;
   flex-shrink: 0;
 }
 
 .profile-avatar-notice-text {
-  font-family: var(--font-body);
-  font-size: var(--text-caption);
-  color: var(--text-muted);
+  font-family: "CS Genio Mono", monospace;
+  font-size: 12px;
+  color: rgba(0, 48, 73, 0.5);
+  line-height: 1.5;
 }
 
-/* ── Form actions row ────────────────────────────────────────── */
+.profile-avatar-notice-badge {
+  display: inline-block;
+  margin-top: 4px;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: rgba(0, 48, 73, 0.35);
+  background: rgba(0, 48, 73, 0.06);
+  padding: 2px 8px;
+}
+
+/* ── Notification toggles ────────────────────────────────── */
+
+.pf-toggle-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 0;
+  border-bottom: 1px solid rgba(0, 48, 73, 0.06);
+}
+
+.pf-toggle-row:last-child {
+  border-bottom: none;
+}
+
+.pf-toggle-info {
+  flex: 1;
+}
+
+.pf-toggle-label {
+  font-family: "CS Genio Mono", monospace;
+  font-size: 13px;
+  font-weight: 700;
+  color: #003049;
+  display: block;
+  margin-bottom: 2px;
+}
+
+.pf-toggle-desc {
+  font-family: "CS Genio Mono", monospace;
+  font-size: 11px;
+  color: rgba(0, 48, 73, 0.5);
+}
+
+/* CSS-only toggle switch */
+.pf-toggle-switch {
+  position: relative;
+  width: 44px;
+  height: 24px;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
+.pf-toggle-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+  position: absolute;
+}
+
+.pf-toggle-track {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 48, 73, 0.15);
+  border-radius: 12px;
+  transition: background 200ms ease;
+}
+
+.pf-toggle-thumb {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 18px;
+  height: 18px;
+  background: #ffffff;
+  border-radius: 50%;
+  transition: transform 200ms ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.pf-toggle-switch input:checked ~ .pf-toggle-track {
+  background: #c1121f;
+}
+
+.pf-toggle-switch input:checked ~ .pf-toggle-thumb {
+  transform: translateX(20px);
+}
+
+/* ── Form actions row ────────────────────────────────────── */
 
 .pf-form-actions {
   display: flex;
   align-items: center;
-  gap: var(--space-2);
+  gap: 12px;
   justify-content: flex-end;
+  padding: 24px 32px;
+  background: rgba(0, 48, 73, 0.02);
+  border-top: 1px solid rgba(0, 48, 73, 0.08);
 }
 
 /* Save button — primary */
 .save-btn {
-  padding: 12px var(--space-4);
-  background: var(--primary);
+  padding: 12px 32px;
+  background: #c1121f;
   color: #fff;
-  font-family: var(--font-body);
-  font-size: var(--text-small);
+  font-family: "CS Genio Mono", monospace;
+  font-size: 11px;
   font-weight: 700;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   border: none;
   border-radius: 0;
   cursor: pointer;
-  box-shadow: var(--btn-shadow);
-  transition: box-shadow var(--t-fast), background var(--t-fast);
+  transition: background 150ms ease;
 }
 
 .save-btn:hover:not(:disabled) {
-  background: var(--accent);
-  box-shadow: var(--btn-shadow-hover);
+  background: #780000;
 }
 
 .save-btn:disabled {
-  opacity: 0.55;
+  opacity: 0.45;
   cursor: not-allowed;
-  box-shadow: none;
 }
 
 /* Cancel button — ghost */
 .pf-cancel-btn {
-  padding: 12px var(--space-3);
+  padding: 12px 24px;
   background: transparent;
-  color: var(--dark);
-  font-family: var(--font-body);
-  font-size: var(--text-small);
+  color: #003049;
+  font-family: "CS Genio Mono", monospace;
+  font-size: 11px;
   font-weight: 700;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  border: 1.5px solid rgba(0, 48, 73, 0.25);
+  border: 1.5px solid rgba(0, 48, 73, 0.2);
   border-radius: 0;
   cursor: pointer;
-  transition: border-color var(--t-fast), background var(--t-fast);
+  transition: border-color 150ms ease, background 150ms ease;
 }
 
 .pf-cancel-btn:hover:not(:disabled) {
-  border-color: var(--dark);
+  border-color: #003049;
   background: rgba(0, 48, 73, 0.04);
 }
 
 .pf-cancel-btn:disabled {
-  opacity: 0.55;
+  opacity: 0.45;
   cursor: not-allowed;
 }
 
-/* ── Mobile ──────────────────────────────────────────────────── */
+/* ── Social platform tiles ───────────────────────────────── */
+
+.pf-social-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.pf-social-tile {
+  padding: 16px;
+  border: 1px solid rgba(0, 48, 73, 0.1);
+  background: #fafaf8;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.pf-social-tile-name {
+  font-family: "CS Genio Mono", monospace;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(0, 48, 73, 0.5);
+}
+
+.pf-social-tile-handle {
+  font-family: "CS Genio Mono", monospace;
+  font-size: 13px;
+  color: #003049;
+  font-weight: 700;
+}
+
+.pf-social-tile-handle--empty {
+  color: rgba(0, 48, 73, 0.3);
+  font-weight: 400;
+}
+
+/* ── Mobile ──────────────────────────────────────────────── */
 
 @media (max-width: 768px) {
   .profile-page {
-    padding: var(--space-3) var(--space-2);
+    padding: 24px 16px 64px;
   }
 
-  /* Hero */
   .pf-hero {
-    flex-direction: column;
-    align-items: stretch;
+    grid-template-columns: auto 1fr;
+    grid-template-rows: auto auto;
+    padding: 24px;
     gap: 16px;
   }
 
   .pf-avatar {
-    width: 88px;
-    height: 88px;
+    width: 72px;
+    height: 72px;
   }
 
   .pf-avatar-initials {
-    font-size: 28px;
-  }
-
-  .pf-name {
     font-size: 24px;
   }
 
-  .pf-score-number {
-    font-size: 40px;
+  .pf-name {
+    font-size: 28px;
   }
 
   .pf-hero-right {
+    grid-column: 1 / -1;
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
   }
 
-  /* Stats grid — 2 cols on tablet */
+  .pf-score-display {
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+  }
+
+  .pf-score-number {
+    font-size: 36px;
+  }
+
   .pf-stats-grid {
     grid-template-columns: repeat(2, 1fr);
   }
 
-  /* Earnings — 1 col */
   .pf-earnings-grid {
     grid-template-columns: 1fr;
-    gap: var(--space-2);
+    gap: 1px;
   }
 
-  /* Form actions — stack */
+  .form-grid-2 {
+    grid-template-columns: 1fr;
+  }
+
   .pf-form-actions {
     flex-direction: column-reverse;
-    gap: var(--space-2);
+    padding: 20px;
   }
 
   .save-btn,
@@ -597,11 +849,23 @@
     width: 100%;
     text-align: center;
   }
+
+  .pf-social-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .profile-form-card-header {
+    padding: 16px 20px;
+  }
+
+  .form-section {
+    padding: 20px;
+  }
 }
 
 @media (max-width: 480px) {
-  /* Stats grid — 1 col on mobile */
   .pf-stats-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
   }
 }

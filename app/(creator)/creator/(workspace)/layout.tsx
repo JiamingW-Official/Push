@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
-import TopNav from "@/components/creator/workspace/TopNav";
-import SideNav from "@/components/creator/workspace/SideNav";
-import ContextPanel from "@/components/creator/workspace/ContextPanel";
+import { TopNav } from "@/components/creator/workspace/TopNav";
+import { SideNav } from "@/components/creator/workspace/SideNav";
+import { ContextPanel } from "@/components/creator/workspace/ContextPanel";
 import "./workspace.css";
 
 export default function WorkspaceLayout({ children }: { children: ReactNode }) {

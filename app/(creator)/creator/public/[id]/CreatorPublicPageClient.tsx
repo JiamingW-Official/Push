@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { TierBadge } from "@/components/creator/TierBadge";
-import { ScoreRings } from "@/components/creator/ScoreRings";
 import { TierJourney } from "@/components/creator/TierJourney";
 import "./public.css";
 
@@ -28,6 +27,7 @@ type PublicCreator = {
   id: string;
   name: string;
   instagram_handle: string;
+  tiktok_handle?: string;
   location: string;
   bio: string;
   tier: CreatorTier;
@@ -37,16 +37,20 @@ type PublicCreator = {
   completion_rate: number;
   merchant_satisfaction: number;
   earnings_total: number;
+  instagram_followers?: number;
+  tiktok_followers?: number;
   avatar_url: string | undefined;
   campaign_history: CampaignHistoryItem[];
+  niches?: string[];
 };
 
 const DEMO_PUBLIC_CREATOR: PublicCreator = {
   id: "demo-creator-001",
   name: "Alex Chen",
   instagram_handle: "alexcheneats",
+  tiktok_handle: "alexcheneats",
   location: "Lower East Side, NYC",
-  bio: "NYC food & lifestyle creator. Always hunting for the next hidden gem.",
+  bio: "NYC food & lifestyle creator. Always hunting for the next hidden gem. I cover local spots that deserve more love — from hole-in-the-wall ramen to rooftop cocktail bars.",
   tier: "operator" as const,
   push_score: 71,
   campaigns_completed: 12,
@@ -54,7 +58,10 @@ const DEMO_PUBLIC_CREATOR: PublicCreator = {
   completion_rate: 86,
   merchant_satisfaction: 4.2,
   earnings_total: 340,
+  instagram_followers: 4200,
+  tiktok_followers: 1800,
   avatar_url: undefined,
+  niches: ["Food", "Brooklyn", "Lifestyle"],
   campaign_history: [
     {
       id: "1",
@@ -110,21 +117,6 @@ const TIER_COLOR: Record<CreatorTier, string> = {
   partner: "#1a1a2e",
 };
 
-function deriveDimensionScores(
-  pushScore: number,
-  completionRate: number,
-  satisfaction: number,
-) {
-  const satisfactionNorm = Math.round((satisfaction / 5) * 100);
-  return {
-    completion: Math.min(100, completionRate),
-    reliability: Math.min(100, Math.round(pushScore * 0.95)),
-    quality: Math.min(100, Math.round(satisfactionNorm * 0.9)),
-    satisfaction: satisfactionNorm,
-    engagement: Math.min(100, Math.round(pushScore * 0.7)),
-  };
-}
-
 function checkDemoMode(): boolean {
   if (typeof document === "undefined") return false;
   return document.cookie.includes("push-demo-role=creator");
@@ -132,6 +124,11 @@ function checkDemoMode(): boolean {
 
 function getInitial(name: string): string {
   return name.charAt(0).toUpperCase();
+}
+
+function formatFollowers(n: number): string {
+  if (n >= 1000) return `${(n / 1000).toFixed(1)}K`;
+  return String(n);
 }
 
 function ProfileSkeleton() {
@@ -143,7 +140,10 @@ function ProfileSkeleton() {
       </div>
       <div className="pub-hero skeleton-block" style={{ height: 320 }} />
       <div className="pub-stats-strip skeleton-block" style={{ height: 100 }} />
-      <div className="pub-campaigns skeleton-block" style={{ height: 280 }} />
+      <div
+        className="pub-campaigns-section skeleton-block"
+        style={{ height: 280 }}
+      />
     </div>
   );
 }
@@ -177,24 +177,68 @@ export default function CreatorPublicPage() {
 
   const tierColor = TIER_COLOR[creator.tier];
   const firstName = creator.name.split(" ")[0];
-  const dimensionScores = deriveDimensionScores(
-    creator.push_score,
-    creator.completion_rate,
-    creator.merchant_satisfaction,
-  );
+  const niches = creator.niches ?? ["Content", "Local", "NYC"];
 
   return (
     <div className="public-profile page-fade-in">
+      {/* ── 1. Sticky nav strip ─────────────────────────────── */}
       <div className="profile-header-strip">
         <Link href="/explore" className="header-back">
-          ← Creators
+          Creators
         </Link>
         <span className="header-label">Push Creator Profile</span>
       </div>
 
+      {/* ── 2. Editorial Hero ───────────────────────────────── */}
       <div className="pub-hero">
         <div className="pub-hero-inner">
+          {/* Left — name + tags + badges */}
           <div className="pub-hero-left">
+            {/* Niche tags eyebrow */}
+            <div className="pub-niche-tags">
+              {niches.map((tag, i) => (
+                <span key={tag} style={{ display: "contents" }}>
+                  {i > 0 && <span className="pub-niche-dot" />}
+                  {tag}
+                </span>
+              ))}
+            </div>
+
+            {/* Big name */}
+            <h1 className="pub-name">{creator.name}</h1>
+
+            {/* Tier + score badges */}
+            <div className="pub-badge-row">
+              <TierBadge tier={creator.tier} size="xl" />
+              <div className="pub-score-badge">
+                <span
+                  className="pub-score-badge-num"
+                  style={{ color: tierColor }}
+                >
+                  {creator.push_score}
+                </span>
+                <span className="pub-score-badge-label">Push Score</span>
+              </div>
+            </div>
+
+            {/* Meta */}
+            <p className="pub-location">
+              <span className="pub-location-icon">◎</span>
+              {creator.location}
+            </p>
+            <p className="pub-handle">@{creator.instagram_handle}</p>
+
+            {/* Available indicator */}
+            <div className="pub-available">
+              <span className="pub-available-dot" />
+              <span className="pub-available-label">
+                Available for campaigns
+              </span>
+            </div>
+          </div>
+
+          {/* Right — avatar */}
+          <div className="pub-hero-avatar-col">
             <div
               className="pub-avatar"
               style={{ borderColor: tierColor }}
@@ -208,50 +252,22 @@ export default function CreatorPublicPage() {
                   className="pub-avatar-img"
                 />
               ) : (
-                <span
-                  className="pub-avatar-initial"
-                  style={{ color: tierColor }}
-                >
+                <span className="pub-avatar-initial">
                   {getInitial(creator.name)}
                 </span>
               )}
             </div>
-            <div className="pub-identity">
-              <h1 className="pub-name">{creator.name}</h1>
-              <div className="pub-badge-row">
-                <TierBadge tier={creator.tier} size="xl" />
-              </div>
-              <p className="pub-location">
-                <span className="pub-location-icon">◎</span>
-                {creator.location}
-              </p>
-              <p className="pub-handle">@{creator.instagram_handle}</p>
-              <p className="pub-bio">{creator.bio}</p>
-              <div className="pub-available">
-                <span className="pub-available-dot" />
-                <span className="pub-available-label">
-                  Available for campaigns
-                </span>
-              </div>
-            </div>
-          </div>
-          <div className="pub-score-section">
-            <p className="pub-section-eyebrow">Push Score</p>
-            <ScoreRings
-              scores={dimensionScores}
-              totalScore={creator.push_score}
-              variant="hero"
-              size={260}
-              tier={creator.tier}
-              animate={true}
-            />
           </div>
         </div>
       </div>
 
+      {/* ── 3. Stats bar ────────────────────────────────────── */}
       <div className="pub-stats-strip">
         <div className="pub-stat">
-          <div className="pub-stat-value" style={{ color: tierColor }}>
+          <div
+            className="pub-stat-value"
+            style={{ color: tierColor === "#4a5568" ? "#f5f2ec" : tierColor }}
+          >
             {creator.push_score}
           </div>
           <div className="pub-stat-label">Push Score</div>
@@ -272,49 +288,120 @@ export default function CreatorPublicPage() {
         </div>
       </div>
 
-      <div className="pub-tier-section">
-        <p className="pub-section-eyebrow">Tier Journey</p>
-        <TierJourney
-          currentTier={creator.tier}
-          currentScore={creator.push_score}
-        />
-      </div>
+      {/* ── 4. Bio ──────────────────────────────────────────── */}
+      {creator.bio && (
+        <div className="pub-bio-section">
+          <div className="pub-bio-inner">
+            <p className="pub-section-eyebrow">About</p>
+            <p className="pub-bio">{creator.bio}</p>
+          </div>
+        </div>
+      )}
 
-      <div className="pub-campaigns-section">
-        <p className="pub-section-eyebrow">Campaign History</p>
-        <div className="pub-campaigns">
-          {creator.campaign_history.map((c) => (
-            <div
-              key={c.id}
-              className="pub-campaign-card"
-              style={{ borderLeftColor: tierColor }}
-            >
-              <div className="pub-campaign-header">
-                <span className="pub-campaign-business">{c.business}</span>
-                <span className="pub-campaign-category">{c.category}</span>
-              </div>
-              <div className="pub-campaign-footer">
-                <span className="pub-campaign-date">{c.date}</span>
-                {c.payout > 0 ? (
-                  <span className="pub-campaign-payout">
-                    ${c.payout} earned
-                  </span>
-                ) : (
-                  <span className="pub-campaign-payout pub-campaign-payout--product">
-                    Product exchange
-                  </span>
+      {/* ── 5. Social links ─────────────────────────────────── */}
+      <div className="pub-social-section">
+        <div className="pub-social-inner">
+          <p className="pub-section-eyebrow">Social Platforms</p>
+          <div className="pub-social-scroll">
+            {creator.instagram_handle && (
+              <a
+                href={`https://instagram.com/${creator.instagram_handle}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="pub-social-card"
+              >
+                <span className="pub-social-platform">Instagram</span>
+                <span className="pub-social-handle">
+                  @{creator.instagram_handle}
+                </span>
+                {creator.instagram_followers && (
+                  <>
+                    <span className="pub-social-followers">
+                      {formatFollowers(creator.instagram_followers)}
+                    </span>
+                    <span className="pub-social-followers-label">
+                      followers
+                    </span>
+                  </>
                 )}
-              </div>
-            </div>
-          ))}
+              </a>
+            )}
+            {creator.tiktok_handle && (
+              <a
+                href={`https://tiktok.com/@${creator.tiktok_handle}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="pub-social-card"
+              >
+                <span className="pub-social-platform">TikTok</span>
+                <span className="pub-social-handle">
+                  @{creator.tiktok_handle}
+                </span>
+                {creator.tiktok_followers && (
+                  <>
+                    <span className="pub-social-followers">
+                      {formatFollowers(creator.tiktok_followers)}
+                    </span>
+                    <span className="pub-social-followers-label">
+                      followers
+                    </span>
+                  </>
+                )}
+              </a>
+            )}
+          </div>
         </div>
       </div>
 
+      {/* ── 6. Tier journey ─────────────────────────────────── */}
+      <div className="pub-tier-section">
+        <div className="pub-tier-inner">
+          <p className="pub-section-eyebrow">Tier Journey</p>
+          <TierJourney
+            currentTier={creator.tier}
+            currentScore={creator.push_score}
+          />
+        </div>
+      </div>
+
+      {/* ── 7. Campaign history — sticky grid ───────────────── */}
+      <div className="pub-campaigns-section">
+        <div className="pub-campaigns-inner">
+          <p className="pub-section-eyebrow">Campaign History</p>
+          <div className="pub-campaigns">
+            {creator.campaign_history.map((c) => (
+              <div key={c.id} className="pub-campaign-card">
+                <div
+                  className="pub-campaign-card-accent"
+                  style={{ background: tierColor }}
+                />
+                <div className="pub-campaign-header">
+                  <span className="pub-campaign-business">{c.business}</span>
+                  <span className="pub-campaign-category">{c.category}</span>
+                </div>
+                <div className="pub-campaign-footer">
+                  <span className="pub-campaign-date">{c.date}</span>
+                  {c.payout > 0 ? (
+                    <span className="pub-campaign-payout">${c.payout}</span>
+                  ) : (
+                    <span className="pub-campaign-payout pub-campaign-payout--product">
+                      Product exchange
+                    </span>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* ── 8. CTA ──────────────────────────────────────────── */}
       <div className="pub-cta-section">
         <p className="pub-cta-eyebrow">Work with this creator</p>
         <h2 className="pub-cta-headline">Work with {firstName}</h2>
         <p className="pub-cta-sub">
           Launch a campaign on Push and invite local creators like {firstName}.
+          Pay only for verified walk-ins.
         </p>
         <Link href="/merchant/signup" className="pub-cta-button">
           Start a Campaign →
@@ -325,7 +412,7 @@ export default function CreatorPublicPage() {
       </div>
 
       <footer className="profile-footer">
-        Push · Creator attribution platform
+        Push · Customer Acquisition Engine for Local Commerce
       </footer>
     </div>
   );

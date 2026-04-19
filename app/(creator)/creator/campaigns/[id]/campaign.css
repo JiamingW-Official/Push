@@ -1,8 +1,8 @@
 /* =============================================================
-   Push Creator — Campaign Detail Page — campaign.css
+   Push Creator — Campaign Detail — "Campaign Workbench"
    Design system: border-radius 0 everywhere
-   Colors: #c1121f / #780000 / #003049 / #669bbc / #f5f2ec
-   Fonts: var(--font-display) Darky, var(--font-body) CS Genio Mono
+   Colors: #c1121f / #780000 / #003049 / #669bbc / #f5f2ec / #c9a96e
+   Fonts: Darky (display) + CS Genio Mono (body/UI)
    Grid: 8px base (--space-1 … --space-10)
    ============================================================= */
 
@@ -10,9 +10,9 @@
    1. PAGE SHELL
    ───────────────────────────────────────── */
 .campaign-page {
-  max-width: 1100px;
+  max-width: 1200px;
   margin: 0 auto;
-  padding: var(--space-4, 32px) var(--space-4, 32px) var(--space-10, 80px);
+  padding: var(--space-4, 32px) var(--space-5, 40px) var(--space-10, 80px);
 }
 
 /* ─────────────────────────────────────────
@@ -23,13 +23,13 @@
   align-items: center;
   gap: 6px;
   font-family: var(--font-body, "CS Genio Mono", monospace);
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 0.06em;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: rgba(0, 48, 73, 0.5);
+  color: rgba(0, 48, 73, 0.4);
   text-decoration: none;
-  margin-bottom: var(--space-3, 24px);
+  margin-bottom: var(--space-4, 32px);
   transition: color 150ms;
 }
 
@@ -38,7 +38,321 @@
 }
 
 /* ─────────────────────────────────────────
-   3. HERO
+   3. CAMPAIGN HEADER CARD
+   ───────────────────────────────────────── */
+.cp-header {
+  background: var(--dark, #003049);
+  color: #f5f2ec;
+  margin-bottom: var(--space-4, 32px);
+  border-radius: 0;
+  position: relative;
+  overflow: hidden;
+}
+
+/* diagonal grid texture */
+.cp-header::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: repeating-linear-gradient(
+    45deg,
+    rgba(245, 242, 236, 0.025) 0px,
+    rgba(245, 242, 236, 0.025) 1px,
+    transparent 1px,
+    transparent 20px
+  );
+  pointer-events: none;
+}
+
+.cp-header-inner {
+  position: relative;
+  z-index: 1;
+  padding: 0;
+}
+
+/* Top section: merchant logo + title + status */
+.cp-header-top {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-4, 32px);
+  padding: 40px var(--space-5, 40px) 32px;
+  border-bottom: 1px solid rgba(245, 242, 236, 0.06);
+}
+
+/* Merchant logo square */
+.cp-merchant-logo {
+  flex-shrink: 0;
+  width: 56px;
+  height: 56px;
+  background: rgba(245, 242, 236, 0.1);
+  border: 1px solid rgba(245, 242, 236, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display, "Darky", serif);
+  font-size: 22px;
+  font-weight: 900;
+  color: #f5f2ec;
+  letter-spacing: -0.03em;
+  text-transform: uppercase;
+}
+
+.cp-header-title-group {
+  flex: 1;
+  min-width: 0;
+}
+
+.cp-title {
+  font-family: var(--font-display, "Darky", serif);
+  font-size: clamp(24px, 3.5vw, 36px);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: #f5f2ec;
+  margin: 0 0 8px;
+  line-height: 1.1;
+}
+
+.cp-business {
+  font-family: var(--font-body, "CS Genio Mono", monospace);
+  font-size: 12px;
+  font-weight: 600;
+  color: rgba(245, 242, 236, 0.5);
+  margin: 0 0 var(--space-2, 16px);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.cp-business-addr {
+  color: rgba(245, 242, 236, 0.3);
+  font-size: 11px;
+}
+
+.cp-header-status-group {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: var(--space-2, 16px);
+}
+
+/* Status badge */
+.cp-status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  font-family: var(--font-body, "CS Genio Mono", monospace);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border: 1px solid transparent;
+  border-radius: 0;
+}
+
+.cp-status-badge--active {
+  background: rgba(34, 160, 107, 0.15);
+  border-color: rgba(34, 160, 107, 0.3);
+  color: #22a06b;
+}
+
+.cp-status-badge--pending {
+  background: rgba(201, 169, 110, 0.15);
+  border-color: rgba(201, 169, 110, 0.3);
+  color: var(--champagne, #c9a96e);
+}
+
+.cp-status-badge--completed {
+  background: rgba(102, 155, 188, 0.15);
+  border-color: rgba(102, 155, 188, 0.3);
+  color: #669bbc;
+}
+
+/* Status dot */
+.cp-status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.cp-status-badge--active .cp-status-dot { background: #22a06b; }
+.cp-status-badge--pending .cp-status-dot { background: var(--champagne, #c9a96e); }
+.cp-status-badge--completed .cp-status-dot { background: #669bbc; }
+
+/* Expected payout in header */
+.cp-expected-payout {
+  text-align: right;
+}
+
+.cp-payout-number {
+  font-family: var(--font-display, "Darky", serif);
+  font-size: 36px;
+  font-weight: 900;
+  color: var(--primary, #c1121f);
+  letter-spacing: -0.04em;
+  line-height: 1;
+  display: block;
+}
+
+.cp-payout-number--free {
+  color: #669bbc;
+  font-size: 28px;
+}
+
+.cp-payout-sublabel {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: rgba(245, 242, 236, 0.35);
+  display: block;
+  margin-top: 4px;
+  font-family: var(--font-body, "CS Genio Mono", monospace);
+}
+
+/* ── Header meta row ─────────────────────────────────────────── */
+.cp-meta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-1, 8px);
+}
+
+.cp-meta-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  background: rgba(245, 242, 236, 0.06);
+  border: 1px solid rgba(245, 242, 236, 0.12);
+  color: rgba(245, 242, 236, 0.8);
+  font-family: var(--font-body, "CS Genio Mono", monospace);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  border-radius: 0;
+}
+
+.cp-meta-badge--category {
+  background: rgba(102, 155, 188, 0.15);
+  border-color: rgba(102, 155, 188, 0.3);
+  color: #669bbc;
+}
+
+.cp-meta-badge--payout {
+  background: rgba(193, 18, 31, 0.15);
+  border-color: rgba(193, 18, 31, 0.3);
+  color: #f5f2ec;
+}
+
+.cp-meta-badge--free {
+  background: rgba(102, 155, 188, 0.15);
+  border-color: rgba(102, 155, 188, 0.3);
+  color: #669bbc;
+}
+
+.cp-meta-divider {
+  width: 1px;
+  height: 16px;
+  background: rgba(245, 242, 236, 0.12);
+  flex-shrink: 0;
+}
+
+/* ── Header footer: countdown + spots ───────────────────────── */
+.cp-header-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4, 32px);
+  padding: var(--space-3, 24px) var(--space-5, 40px);
+  flex-wrap: wrap;
+}
+
+/* ─────────────────────────────────────────
+   4. COUNTDOWN
+   ───────────────────────────────────────── */
+.cp-countdown {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  font-family: var(--font-body, "CS Genio Mono", monospace);
+}
+
+.cp-countdown-number {
+  font-family: var(--font-display, "Darky", serif);
+  font-size: 40px;
+  font-weight: 900;
+  color: #f5f2ec;
+  line-height: 1;
+  letter-spacing: -0.04em;
+}
+
+.cp-countdown-number--urgent {
+  color: var(--primary, #c1121f);
+  animation: cp-urgent-pulse 2s ease-in-out infinite;
+}
+
+@keyframes cp-urgent-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+.cp-countdown-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: rgba(245, 242, 236, 0.4);
+}
+
+/* ─────────────────────────────────────────
+   5. SPOTS INDICATOR
+   ───────────────────────────────────────── */
+.cp-spots-indicator {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 200px;
+}
+
+.cp-spots-text {
+  font-family: var(--font-body, "CS Genio Mono", monospace);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: rgba(245, 242, 236, 0.4);
+  display: flex;
+  justify-content: space-between;
+}
+
+.cp-spots-text span:last-child {
+  color: rgba(245, 242, 236, 0.85);
+}
+
+.cp-spots-bar {
+  height: 4px;
+  background: rgba(245, 242, 236, 0.08);
+  border-radius: 0;
+  overflow: hidden;
+}
+
+.cp-spots-fill {
+  height: 100%;
+  background: var(--primary, #c1121f);
+  border-radius: 0;
+  transition: width 600ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.cp-spots-fill--low  { background: var(--primary, #c1121f); }
+.cp-spots-fill--mid  { background: #669bbc; }
+
+/* ─────────────────────────────────────────
+   6. HERO IMAGE (unapplied state)
    ───────────────────────────────────────── */
 .campaign-hero {
   width: 100%;
@@ -46,6 +360,7 @@
   position: relative;
   overflow: hidden;
   border-radius: 0;
+  margin-bottom: var(--space-4, 32px);
 }
 
 .campaign-hero-img {
@@ -69,9 +384,6 @@
   );
 }
 
-/* ─────────────────────────────────────────
-   4. CATEGORY / TIER CHIPS
-   ───────────────────────────────────────── */
 .campaign-chips {
   position: absolute;
   bottom: var(--space-2, 16px);
@@ -84,7 +396,6 @@
   padding: 3px 10px;
   background: rgba(0, 48, 73, 0.75);
   backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
   color: #f5f2ec;
   font-family: var(--font-body, "CS Genio Mono", monospace);
   font-size: 11px;
@@ -92,7 +403,6 @@
   letter-spacing: 0.06em;
   text-transform: uppercase;
   border-radius: 0;
-  line-height: 1.6;
 }
 
 .campaign-chip--tier {
@@ -100,265 +410,14 @@
 }
 
 /* ─────────────────────────────────────────
-   5. CAMPAIGN HEADER (Premium dark header)
-   ───────────────────────────────────────── */
-.cp-header {
-  background: var(--dark, #003049);
-  color: #f5f2ec;
-  padding: 48px var(--space-5, 40px);
-  margin-bottom: var(--space-4, 32px);
-  border-radius: 0;
-  position: relative;
-  overflow: hidden;
-}
-
-/* subtle diagonal grid texture */
-.cp-header::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background-image: repeating-linear-gradient(
-    45deg,
-    rgba(245, 242, 236, 0.03) 0px,
-    rgba(245, 242, 236, 0.03) 1px,
-    transparent 1px,
-    transparent 16px
-  );
-  pointer-events: none;
-}
-
-.cp-header-inner {
-  position: relative;
-  z-index: 1;
-}
-
-.cp-title {
-  font-family: var(--font-display, "Darky", serif);
-  font-size: clamp(28px, 4vw, 36px);
-  font-weight: 800;
-  letter-spacing: -0.03em;
-  color: #f5f2ec;
-  margin: 0 0 var(--space-1, 8px) 0;
-  line-height: 1.1;
-}
-
-.cp-business {
-  font-family: var(--font-body, "CS Genio Mono", monospace);
-  font-size: 13px;
-  font-weight: 600;
-  color: rgba(245, 242, 236, 0.6);
-  margin: 0 0 var(--space-3, 24px) 0;
-}
-
-.cp-business-addr {
-  font-size: 11px;
-  color: rgba(245, 242, 236, 0.4);
-  margin-left: 8px;
-}
-
-.cp-meta {
-  font-family: var(--font-body, "CS Genio Mono", monospace);
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: var(--space-1, 8px);
-  margin-bottom: var(--space-4, 32px);
-}
-
-.cp-meta-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  padding: 4px 10px;
-  background: rgba(245, 242, 236, 0.08);
-  border: 1px solid rgba(245, 242, 236, 0.15);
-  color: rgba(245, 242, 236, 0.85);
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.07em;
-  text-transform: uppercase;
-  border-radius: 0;
-}
-
-.cp-meta-badge--category {
-  background: rgba(102, 155, 188, 0.18);
-  border-color: rgba(102, 155, 188, 0.35);
-  color: #669bbc;
-}
-
-.cp-meta-badge--payout {
-  background: rgba(193, 18, 31, 0.18);
-  border-color: rgba(193, 18, 31, 0.35);
-  color: #f5f2ec;
-}
-
-.cp-meta-badge--free {
-  background: rgba(102, 155, 188, 0.18);
-  border-color: rgba(102, 155, 188, 0.35);
-  color: #669bbc;
-}
-
-.cp-meta-divider {
-  width: 1px;
-  height: 16px;
-  background: rgba(245, 242, 236, 0.15);
-  flex-shrink: 0;
-}
-
-/* Bottom row: countdown + spots */
-.cp-header-footer {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--space-4, 32px);
-  flex-wrap: wrap;
-}
-
-/* ─────────────────────────────────────────
-   6. COUNTDOWN
-   ───────────────────────────────────────── */
-.cp-countdown {
-  display: flex;
-  align-items: baseline;
-  gap: 6px;
-  font-family: var(--font-body, "CS Genio Mono", monospace);
-}
-
-.cp-countdown-number {
-  font-family: var(--font-display, "Darky", serif);
-  font-size: 32px;
-  font-weight: 900;
-  color: #f5f2ec;
-  line-height: 1;
-  letter-spacing: -0.04em;
-}
-
-.cp-countdown-number--urgent {
-  color: #c1121f;
-}
-
-.cp-countdown-label {
-  font-size: 11px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: rgba(245, 242, 236, 0.5);
-}
-
-/* ─────────────────────────────────────────
-   7. HEADER SPOTS INDICATOR
-   ───────────────────────────────────────── */
-.cp-spots-indicator {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  min-width: 200px;
-}
-
-.cp-spots-text {
-  font-family: var(--font-body, "CS Genio Mono", monospace);
-  font-size: 11px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.07em;
-  color: rgba(245, 242, 236, 0.5);
-  display: flex;
-  justify-content: space-between;
-}
-
-.cp-spots-text span:last-child {
-  color: rgba(245, 242, 236, 0.85);
-}
-
-.cp-spots-bar {
-  height: 4px;
-  background: rgba(245, 242, 236, 0.1);
-  border-radius: 0;
-  overflow: hidden;
-}
-
-.cp-spots-fill {
-  height: 100%;
-  background: #c1121f;
-  border-radius: 0;
-  transition: width 400ms ease;
-}
-
-.cp-spots-fill--low {
-  background: #c1121f;
-}
-
-.cp-spots-fill--mid {
-  background: #669bbc;
-}
-
-/* ─────────────────────────────────────────
-   8. BODY GRID (main + sidebar)
-   ───────────────────────────────────────── */
-.campaign-body {
-  display: grid;
-  grid-template-columns: 1fr 320px;
-  gap: var(--space-5, 40px);
-  margin-top: var(--space-4, 32px);
-  align-items: start;
-}
-
-/* ─────────────────────────────────────────
-   9. MAIN COLUMN
-   ───────────────────────────────────────── */
-.campaign-main {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-4, 32px);
-}
-
-.campaign-business {
-  font-family: var(--font-body, "CS Genio Mono", monospace);
-  font-size: 11px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: #669bbc;
-  margin: 0 0 var(--space-1, 8px) 0;
-}
-
-.campaign-title {
-  font-family: var(--font-display, "Darky", serif);
-  font-size: clamp(24px, 4vw, 36px);
-  font-weight: 800;
-  letter-spacing: -0.03em;
-  color: #003049;
-  margin: 0;
-  line-height: 1.1;
-}
-
-.campaign-desc {
-  font-family: var(--font-body, "CS Genio Mono", monospace);
-  font-size: 15px;
-  line-height: 1.7;
-  color: rgba(0, 48, 73, 0.75);
-  margin: 0;
-}
-
-/* Section label */
-.campaign-section-label {
-  font-family: var(--font-body, "CS Genio Mono", monospace);
-  font-size: 10px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: rgba(0, 48, 73, 0.4);
-  margin: 0 0 var(--space-1, 8px) 0;
-}
-
-/* ─────────────────────────────────────────
-   10. MILESTONE PROGRESS TRACKER
+   7. MILESTONE PROGRESS TRACKER
    ───────────────────────────────────────── */
 .cp-milestone-track {
-  background: #ffffff;
+  background: var(--surface-elevated, #fff);
   border: 1px solid rgba(0, 48, 73, 0.08);
-  padding: var(--space-4, 32px) var(--space-3, 24px) var(--space-3, 24px);
+  padding: var(--space-4, 32px) var(--space-4, 32px) var(--space-3, 24px);
   border-radius: 0;
+  margin-bottom: var(--space-4, 32px);
   overflow: hidden;
 }
 
@@ -375,7 +434,6 @@
 .cp-milestone-steps {
   display: flex;
   align-items: flex-start;
-  gap: 0;
 }
 
 .cp-milestone-step-wrap {
@@ -387,84 +445,74 @@
   position: relative;
 }
 
-/* Connecting line between steps */
 .cp-milestone-line {
   position: absolute;
   top: 10px;
   left: calc(50% + 10px);
   right: calc(-50% + 10px);
   height: 2px;
-  background: rgba(0, 48, 73, 0.12);
-  border-radius: 0;
+  background: rgba(0, 48, 73, 0.1);
   z-index: 0;
 }
 
-.cp-milestone-line--done {
-  background: #003049;
-}
-
-.cp-milestone-line--dashed {
+.cp-milestone-line--done    { background: var(--dark, #003049); }
+.cp-milestone-line--dashed  {
   background: none;
-  border-top: 2px dashed rgba(0, 48, 73, 0.18);
+  border-top: 2px dashed rgba(0, 48, 73, 0.15);
 }
 
-/* Step dot */
 .cp-milestone-step {
   width: 20px;
   height: 20px;
-  border-radius: 0;
-  border: 2px solid rgba(0, 48, 73, 0.2);
-  background: var(--surface);
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  border: 2px solid rgba(0, 48, 73, 0.18);
+  background: var(--surface, #f5f2ec);
   flex-shrink: 0;
   position: relative;
   z-index: 1;
   margin-bottom: 8px;
   transition: border-color 200ms, background 200ms;
+  border-radius: 0;
 }
 
 .cp-milestone-step--done {
-  background: #003049;
-  border-color: #003049;
+  background: var(--dark, #003049);
+  border-color: var(--dark, #003049);
 }
 
 .cp-milestone-step--done::after {
   content: "";
-  width: 6px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-60%, -65%) rotate(-45deg);
+  width: 7px;
   height: 4px;
   border-left: 1.5px solid #f5f2ec;
   border-bottom: 1.5px solid #f5f2ec;
-  transform: rotate(-45deg) translateY(-1px);
-  display: block;
 }
 
 .cp-milestone-step--active {
-  background: #c1121f;
-  border-color: #c1121f;
+  background: var(--primary, #c1121f);
+  border-color: var(--primary, #c1121f);
   animation: cp-pulse 2s ease-in-out infinite;
 }
 
 .cp-milestone-step--active::after {
   content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   width: 6px;
   height: 6px;
   background: #f5f2ec;
-  border-radius: 0;
-  display: block;
 }
 
 @keyframes cp-pulse {
-  0%, 100% {
-    box-shadow: 0 0 0 0 rgba(193, 18, 31, 0.4);
-  }
-  50% {
-    box-shadow: 0 0 0 6px rgba(193, 18, 31, 0);
-  }
+  0%, 100% { box-shadow: 0 0 0 0 rgba(193, 18, 31, 0.4); }
+  50%       { box-shadow: 0 0 0 6px rgba(193, 18, 31, 0); }
 }
 
-/* Step label */
 .cp-milestone-label {
   font-family: var(--font-body, "CS Genio Mono", monospace);
   font-size: 9px;
@@ -472,43 +520,105 @@
   text-transform: uppercase;
   letter-spacing: 0.06em;
   text-align: center;
-  color: rgba(0, 48, 73, 0.35);
+  color: rgba(0, 48, 73, 0.3);
   line-height: 1.3;
   padding: 0 2px;
   word-break: break-word;
 }
 
-.cp-milestone-label--done {
-  color: rgba(0, 48, 73, 0.7);
-}
+.cp-milestone-label--done   { color: rgba(0, 48, 73, 0.65); }
+.cp-milestone-label--active { color: var(--primary, #c1121f); font-weight: 700; }
 
-.cp-milestone-label--active {
-  color: #c1121f;
-  font-weight: 700;
+/* ─────────────────────────────────────────
+   8. BODY GRID
+   ───────────────────────────────────────── */
+.campaign-body {
+  display: grid;
+  grid-template-columns: 1fr 336px;
+  gap: var(--space-5, 40px);
+  align-items: start;
 }
 
 /* ─────────────────────────────────────────
-   11. REQUIREMENTS SECTION
+   9. MAIN COLUMN
    ───────────────────────────────────────── */
+.campaign-main {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4, 32px);
+}
+
+/* Section card wrapper */
+.cp-section-card {
+  background: var(--surface-elevated, #fff);
+  border: 1px solid rgba(0, 48, 73, 0.08);
+  overflow: hidden;
+}
+
+.cp-section-card-header {
+  padding: var(--space-3, 24px) var(--space-4, 32px);
+  border-bottom: 1px solid rgba(0, 48, 73, 0.06);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.cp-section-card-title {
+  font-family: var(--font-body, "CS Genio Mono", monospace);
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: rgba(0, 48, 73, 0.4);
+  margin: 0;
+}
+
+.cp-section-card-body {
+  padding: var(--space-4, 32px);
+}
+
+/* ── Campaign Brief ─────────────────────────────────────────── */
+.campaign-section-label {
+  font-family: var(--font-body, "CS Genio Mono", monospace);
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: rgba(0, 48, 73, 0.4);
+  margin: 0 0 var(--space-1, 8px);
+}
+
+.campaign-desc {
+  font-family: var(--font-body, "CS Genio Mono", monospace);
+  font-size: 14px;
+  line-height: 1.75;
+  color: rgba(0, 48, 73, 0.8);
+  margin: 0;
+}
+
+/* ── Requirements Checklist ─────────────────────────────────── */
 .cp-requirements {
   display: flex;
   flex-direction: column;
-  gap: 0;
 }
 
 .cp-req-item {
   display: flex;
   align-items: center;
   gap: var(--space-2, 16px);
-  padding: 14px 16px;
-  background: #ffffff;
+  padding: 0 var(--space-3, 24px);
+  height: 40px; /* --density-compact-row */
+  background: var(--surface-elevated, #fff);
   border: 1px solid rgba(0, 48, 73, 0.07);
   border-bottom: none;
   font-family: var(--font-body, "CS Genio Mono", monospace);
-  font-size: 14px;
+  font-size: 13px;
   color: rgba(0, 48, 73, 0.85);
-  line-height: 1.5;
+  line-height: 1;
   transition: background 150ms;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
 }
 
 .cp-req-item:last-child {
@@ -516,156 +626,325 @@
 }
 
 .cp-req-item:hover {
-  background: rgba(245, 242, 236, 0.6);
+  background: rgba(245, 242, 236, 0.5);
 }
 
-/* Square checkbox-style icon */
+/* Checked state */
+.cp-req-item--checked {
+  background: rgba(245, 242, 236, 0.4);
+}
+
+.cp-req-item--checked .cp-req-text {
+  text-decoration: line-through;
+  color: rgba(0, 48, 73, 0.35);
+}
+
+/* Square checkbox */
+.cp-req-checkbox {
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+  border: 1.5px solid rgba(0, 48, 73, 0.2);
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color 150ms, background 150ms;
+  border-radius: 0;
+}
+
+.cp-req-item:hover .cp-req-checkbox {
+  border-color: rgba(0, 48, 73, 0.4);
+}
+
+.cp-req-item--checked .cp-req-checkbox {
+  background: var(--dark, #003049);
+  border-color: var(--dark, #003049);
+}
+
+.cp-req-item--checked .cp-req-checkbox::after {
+  content: "";
+  width: 7px;
+  height: 4px;
+  border-left: 1.5px solid #f5f2ec;
+  border-bottom: 1.5px solid #f5f2ec;
+  transform: rotate(-45deg) translateY(-1px);
+  display: block;
+}
+
+/* Red square requirement icon (pre-check state) */
 .cp-req-icon {
   flex-shrink: 0;
-  width: 18px;
-  height: 18px;
-  border: 1.5px solid #c1121f;
+  width: 16px;
+  height: 16px;
+  border: 1.5px solid rgba(193, 18, 31, 0.3);
   background: transparent;
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: 0;
+  transition: border-color 150ms;
+}
+
+.cp-req-item:hover .cp-req-icon {
+  border-color: var(--primary, #c1121f);
 }
 
 .cp-req-icon--check::after {
   content: "";
-  width: 7px;
+  width: 6px;
   height: 4px;
-  border-left: 1.5px solid #c1121f;
-  border-bottom: 1.5px solid #c1121f;
+  border-left: 1.5px solid rgba(193, 18, 31, 0.5);
+  border-bottom: 1.5px solid rgba(193, 18, 31, 0.5);
   transform: rotate(-45deg) translateY(-1px);
   display: block;
 }
 
 .cp-req-number {
   flex-shrink: 0;
-  font-family: var(--font-body, "CS Genio Mono", monospace);
   font-size: 10px;
   font-weight: 700;
-  color: rgba(0, 48, 73, 0.3);
+  color: rgba(0, 48, 73, 0.25);
   width: 16px;
   text-align: center;
 }
 
-/* ─────────────────────────────────────────
-   12. ACTION AREA
-   ───────────────────────────────────────── */
-.cp-action-area {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-2, 16px);
-  padding: var(--space-3, 24px);
-  background: #003049;
-  border-radius: 0;
-  margin-top: var(--space-2, 16px);
+.cp-req-text {
+  flex: 1;
+  transition: color 150ms, text-decoration 150ms;
 }
 
-.cp-action-label {
-  font-family: var(--font-body, "CS Genio Mono", monospace);
-  font-size: 10px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: rgba(245, 242, 236, 0.45);
-}
-
-.cp-action-btn {
-  width: 100%;
-  height: 52px;
-  font-family: var(--font-body, "CS Genio Mono", monospace);
-  font-weight: 700;
-  font-size: 13px;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  border: none;
-  border-radius: 0;
+/* ── Submission / Upload Area ───────────────────────────────── */
+.cp-submit-area {
+  border: 2px dashed rgba(0, 48, 73, 0.15);
+  padding: var(--space-6, 48px) var(--space-5, 40px);
+  text-align: center;
+  background: rgba(245, 242, 236, 0.5);
+  transition: border-color 150ms, background 150ms;
   cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+.cp-submit-area:hover {
+  border-color: rgba(0, 48, 73, 0.3);
+  background: rgba(245, 242, 236, 0.8);
+}
+
+.cp-submit-area--dragging {
+  border-color: var(--primary, #c1121f);
+  background: rgba(193, 18, 31, 0.04);
+}
+
+/* Upload icon — CSS squares */
+.cp-upload-icon {
+  width: 40px;
+  height: 40px;
+  border: 2px solid rgba(0, 48, 73, 0.2);
+  margin: 0 auto var(--space-2, 16px);
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  transition: background 150ms, color 150ms, opacity 150ms;
-  line-height: 1;
 }
 
-.cp-action-btn--primary {
-  background: #c1121f;
+.cp-upload-icon::before {
+  content: "";
+  width: 2px;
+  height: 16px;
+  background: rgba(0, 48, 73, 0.3);
+}
+
+.cp-upload-icon::after {
+  content: "";
+  position: absolute;
+  top: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 10px;
+  height: 10px;
+  border-top: 2px solid rgba(0, 48, 73, 0.3);
+  border-right: 2px solid rgba(0, 48, 73, 0.3);
+  transform: translateX(-50%) rotate(-45deg);
+}
+
+.cp-submit-title {
+  font-family: var(--font-body, "CS Genio Mono", monospace);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--dark, #003049);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 6px;
+}
+
+.cp-submit-sub {
+  font-size: 12px;
+  color: rgba(0, 48, 73, 0.4);
+  margin-bottom: var(--space-3, 24px);
+  font-family: var(--font-body, "CS Genio Mono", monospace);
+}
+
+/* URL input row */
+.cp-url-row {
+  display: flex;
+  gap: 0;
+  margin: var(--space-2, 16px) auto 0;
+  max-width: 480px;
+}
+
+.cp-url-input {
+  flex: 1;
+  padding: 10px 14px;
+  font-family: var(--font-body, "CS Genio Mono", monospace);
+  font-size: 13px;
+  color: var(--dark, #003049);
+  background: var(--surface-elevated, #fff);
+  border: 1px solid rgba(0, 48, 73, 0.15);
+  border-right: none;
+  outline: none;
+  border-radius: 0;
+  transition: border-color 150ms;
+}
+
+.cp-url-input::placeholder { color: rgba(0, 48, 73, 0.3); }
+.cp-url-input:focus { border-color: var(--dark, #003049); }
+
+.cp-url-btn {
+  padding: 10px 20px;
+  background: var(--dark, #003049);
   color: #f5f2ec;
+  border: 1px solid var(--dark, #003049);
+  font-family: var(--font-body, "CS Genio Mono", monospace);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  cursor: pointer;
+  border-radius: 0;
+  transition: background 150ms;
+  white-space: nowrap;
 }
 
-.cp-action-btn--primary:hover {
-  background: #780000;
+.cp-url-btn:hover { background: var(--accent, #780000); border-color: var(--accent, #780000); }
+
+/* Progress bar */
+.cp-progress-bar-wrap {
+  margin-top: var(--space-3, 24px);
+  display: none;
 }
 
-.cp-action-btn--secondary {
-  background: rgba(245, 242, 236, 0.08);
-  color: rgba(245, 242, 236, 0.6);
-  border: 1px solid rgba(245, 242, 236, 0.12);
+.cp-progress-bar-wrap--visible {
+  display: block;
 }
 
-.cp-action-btn--secondary:hover {
-  background: rgba(245, 242, 236, 0.15);
+.cp-progress-track {
+  height: 4px;
+  background: rgba(0, 48, 73, 0.08);
+  overflow: hidden;
 }
 
-/* ─────────────────────────────────────────
-   13. REQUIREMENTS LIST (existing, kept)
-   ───────────────────────────────────────── */
-.campaign-reqs {
-  list-style: none;
-  margin: 0;
-  padding: 0;
+.cp-progress-fill {
+  height: 100%;
+  background: var(--primary, #c1121f);
+  width: 0%;
+  animation: cp-progress-fill 800ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 
-.campaign-req-item {
+@keyframes cp-progress-fill {
+  from { width: 0%; }
+  to   { width: 75%; }
+}
+
+.cp-progress-label {
+  font-size: 10px;
+  color: rgba(0, 48, 73, 0.4);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-top: 6px;
+  font-family: var(--font-body, "CS Genio Mono", monospace);
+}
+
+/* ── Submission History ─────────────────────────────────────── */
+.cp-submission-history {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+/* Left timeline line */
+.cp-submission-history::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 28px;
+  width: 1px;
+  background: rgba(0, 48, 73, 0.08);
+}
+
+.cp-submission-item {
   display: flex;
   align-items: flex-start;
-  gap: var(--space-1, 8px);
-  padding: 10px 0;
-  border-bottom: 1px solid rgba(0, 48, 73, 0.08);
-  font-family: var(--font-body, "CS Genio Mono", monospace);
-  font-size: 14px;
-  color: rgba(0, 48, 73, 0.8);
-  line-height: 1.5;
+  gap: var(--space-3, 24px);
+  padding: var(--space-2, 16px) 0 var(--space-2, 16px) 0;
+  position: relative;
 }
 
-.campaign-req-item:first-child {
-  border-top: 1px solid rgba(0, 48, 73, 0.08);
+.cp-submission-item + .cp-submission-item {
+  border-top: 1px solid rgba(0, 48, 73, 0.05);
 }
 
-/* 6×6 Flag Red square bullet — no border-radius */
-.campaign-req-bullet {
-  display: inline-block;
+/* Status dot */
+.cp-sub-dot {
   flex-shrink: 0;
-  width: 6px;
-  height: 6px;
-  background: #c1121f;
-  border-radius: 0;
-  margin-top: 5px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  margin-top: 3px;
+  position: relative;
+  z-index: 1;
 }
 
-/* ─────────────────────────────────────────
-   14. BUSINESS INFO
-   ───────────────────────────────────────── */
-.campaign-biz-info {
-  /* wrapper */
+.cp-sub-dot--submitted  { background: rgba(0, 48, 73, 0.2); }
+.cp-sub-dot--review     { background: var(--champagne, #c9a96e); }
+.cp-sub-dot--approved   { background: #22a06b; }
+.cp-sub-dot--rejected   { background: var(--primary, #c1121f); }
+
+.cp-sub-content {
+  flex: 1;
+  min-width: 0;
 }
+
+.cp-sub-title {
+  font-family: var(--font-body, "CS Genio Mono", monospace);
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--dark, #003049);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 3px;
+}
+
+.cp-sub-date {
+  font-size: 11px;
+  color: rgba(0, 48, 73, 0.4);
+  font-family: var(--font-body, "CS Genio Mono", monospace);
+}
+
+/* ── Business Info ─────────────────────────────────────────── */
+.campaign-biz-info { /* wrapper */ }
 
 .campaign-biz-dl {
   margin: 0;
   display: flex;
   flex-direction: column;
-  gap: 0;
 }
 
 .campaign-biz-row {
   display: flex;
   gap: var(--space-2, 16px);
-  padding: 8px 0;
+  padding: 10px 0;
   border-bottom: 1px solid rgba(0, 48, 73, 0.06);
   font-family: var(--font-body, "CS Genio Mono", monospace);
   font-size: 13px;
@@ -679,7 +958,7 @@
   width: 80px;
   flex-shrink: 0;
   font-weight: 700;
-  color: rgba(0, 48, 73, 0.45);
+  color: rgba(0, 48, 73, 0.4);
   text-transform: uppercase;
   letter-spacing: 0.05em;
   font-size: 10px;
@@ -688,17 +967,16 @@
 
 .campaign-biz-row dd {
   margin: 0;
-  color: #003049;
+  color: var(--dark, #003049);
   line-height: 1.5;
 }
 
 /* Map placeholder */
 .cp-map-placeholder {
   width: 100%;
-  height: 80px;
-  background: rgba(0, 48, 73, 0.04);
-  border: 1px solid rgba(0, 48, 73, 0.08);
-  border-radius: 0;
+  height: 88px;
+  background: rgba(0, 48, 73, 0.03);
+  border: 1px solid rgba(0, 48, 73, 0.07);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -707,36 +985,105 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.07em;
-  color: rgba(0, 48, 73, 0.25);
-  margin-top: 12px;
+  color: rgba(0, 48, 73, 0.2);
+  margin-top: var(--space-2, 16px);
   gap: 8px;
 }
 
-/* ─────────────────────────────────────────
-   15. QR ATTRIBUTION NOTE
-   ───────────────────────────────────────── */
+/* ── Action Area (milestone next step) ─────────────────────── */
+.cp-action-area {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2, 16px);
+  padding: var(--space-3, 24px);
+  background: var(--dark, #003049);
+  position: relative;
+  overflow: hidden;
+}
+
+.cp-action-area::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: repeating-linear-gradient(
+    45deg,
+    rgba(245, 242, 236, 0.02) 0px,
+    rgba(245, 242, 236, 0.02) 1px,
+    transparent 1px,
+    transparent 16px
+  );
+  pointer-events: none;
+}
+
+.cp-action-label {
+  font-family: var(--font-body, "CS Genio Mono", monospace);
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: rgba(245, 242, 236, 0.4);
+  position: relative;
+  z-index: 1;
+}
+
+.cp-action-btn {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  height: 52px;
+  font-family: var(--font-body, "CS Genio Mono", monospace);
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  border: none;
+  border-radius: 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: background 150ms, opacity 150ms;
+}
+
+.cp-action-btn--primary {
+  background: var(--primary, #c1121f);
+  color: #f5f2ec;
+}
+
+.cp-action-btn--primary:hover { background: var(--accent, #780000); }
+
+.cp-action-btn--secondary {
+  background: rgba(245, 242, 236, 0.07);
+  color: rgba(245, 242, 236, 0.55);
+  border: 1px solid rgba(245, 242, 236, 0.1);
+}
+
+.cp-action-btn--secondary:hover { background: rgba(245, 242, 236, 0.13); }
+
+/* ── QR Attribution note ───────────────────────────────────── */
 .campaign-qr-note {
   display: flex;
   gap: var(--space-2, 16px);
-  background: rgba(102, 155, 188, 0.08);
+  background: rgba(102, 155, 188, 0.06);
   border-left: 3px solid #669bbc;
   padding: var(--space-2, 16px) var(--space-3, 24px);
-  border-radius: 0;
 }
 
 .campaign-qr-icon {
-  font-size: 20px;
-  line-height: 1.2;
+  font-size: 18px;
+  line-height: 1.3;
   flex-shrink: 0;
+  color: #669bbc;
 }
 
 .campaign-qr-note strong {
   display: block;
   font-family: var(--font-body, "CS Genio Mono", monospace);
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.07em;
   color: #669bbc;
   margin-bottom: 4px;
 }
@@ -744,29 +1091,35 @@
 .campaign-qr-note p {
   font-family: var(--font-body, "CS Genio Mono", monospace);
   font-size: 13px;
-  line-height: 1.6;
-  color: rgba(0, 48, 73, 0.7);
+  line-height: 1.65;
+  color: rgba(0, 48, 73, 0.65);
   margin: 0;
 }
 
 /* ─────────────────────────────────────────
-   16. SIDEBAR CARD
+   10. SIDEBAR CARD
    ───────────────────────────────────────── */
 .campaign-sidebar-card {
   position: sticky;
   top: var(--space-4, 32px);
-  background: #ffffff;
+  background: var(--surface-elevated, #fff);
   border: 1px solid rgba(0, 48, 73, 0.08);
-  padding: var(--space-4, 32px);
-  border-radius: 0;
   display: flex;
   flex-direction: column;
-  gap: var(--space-2, 16px);
+  overflow: hidden;
 }
 
-/* ─────────────────────────────────────────
-   17. PAYOUT
-   ───────────────────────────────────────── */
+/* Sidebar section dividers */
+.cp-sidebar-section {
+  padding: var(--space-3, 24px) var(--space-4, 32px);
+  border-bottom: 1px solid rgba(0, 48, 73, 0.07);
+}
+
+.cp-sidebar-section:last-child {
+  border-bottom: none;
+}
+
+/* Payout */
 .campaign-payout {
   display: flex;
   align-items: baseline;
@@ -775,33 +1128,32 @@
 
 .campaign-payout-amount {
   font-family: var(--font-display, "Darky", serif);
-  font-size: 40px;
+  font-size: 44px;
   font-weight: 900;
-  color: #003049;
+  color: var(--dark, #003049);
   line-height: 1;
   letter-spacing: -0.04em;
 }
 
-/* Free product payout — Steel Blue */
 .campaign-payout-amount--free {
   color: #669bbc;
+  font-size: 32px;
 }
 
 .campaign-payout-label {
   font-family: var(--font-body, "CS Genio Mono", monospace);
-  font-size: 12px;
-  color: rgba(0, 48, 73, 0.45);
+  font-size: 11px;
+  color: rgba(0, 48, 73, 0.4);
 }
 
-/* Commission row */
 .campaign-commission-row {
   display: flex;
   align-items: center;
   gap: 6px;
   font-family: var(--font-body, "CS Genio Mono", monospace);
   font-size: 12px;
-  color: rgba(0, 48, 73, 0.5);
-  margin-top: -8px;
+  color: rgba(0, 48, 73, 0.45);
+  margin-top: 6px;
 }
 
 .campaign-commission-pct {
@@ -809,46 +1161,41 @@
   color: #669bbc;
 }
 
-/* ─────────────────────────────────────────
-   18. SPOTS BAR
-   ───────────────────────────────────────── */
+/* Spots bar */
 .campaign-spots {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 8px;
 }
 
 .campaign-spots-meta {
   font-family: var(--font-body, "CS Genio Mono", monospace);
-  font-size: 12px;
-  color: rgba(0, 48, 73, 0.6);
+  font-size: 11px;
+  font-weight: 600;
+  color: rgba(0, 48, 73, 0.5);
+  display: flex;
+  justify-content: space-between;
 }
 
 .campaign-spots-bar {
   height: 3px;
-  background: rgba(0, 48, 73, 0.1);
-  border-radius: 0;
+  background: rgba(0, 48, 73, 0.08);
   overflow: hidden;
 }
 
 .campaign-spots-fill {
   height: 100%;
-  background: #c1121f;
-  border-radius: 0;
-  transition: width 400ms ease;
+  background: var(--primary, #c1121f);
+  transition: width 600ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-/* ─────────────────────────────────────────
-   19. DEADLINE
-   ───────────────────────────────────────── */
+/* Deadline */
 .campaign-deadline {
   display: flex;
   justify-content: space-between;
   align-items: center;
   font-family: var(--font-body, "CS Genio Mono", monospace);
   font-size: 13px;
-  padding: var(--space-1, 8px) 0;
-  border-top: 1px solid rgba(0, 48, 73, 0.08);
 }
 
 .campaign-deadline-label {
@@ -856,50 +1203,37 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: rgba(0, 48, 73, 0.4);
+  color: rgba(0, 48, 73, 0.38);
 }
 
 .campaign-deadline-value {
   font-weight: 600;
-  color: #003049;
+  color: var(--dark, #003049);
+  font-size: 12px;
 }
 
-/* ─────────────────────────────────────────
-   20. ELIGIBILITY
-   ───────────────────────────────────────── */
+/* Eligibility */
 .campaign-eligibility {
   font-family: var(--font-body, "CS Genio Mono", monospace);
-  font-size: 13px;
+  font-size: 12px;
   display: flex;
   align-items: center;
   gap: 6px;
-  padding: var(--space-2, 16px) 0;
-  border-top: 1px solid rgba(0, 48, 73, 0.08);
-  color: rgba(0, 48, 73, 0.75);
+  color: rgba(0, 48, 73, 0.7);
   font-weight: 500;
 }
 
-.campaign-elig-icon--ok {
-  color: #22a06b;
-  font-weight: 700;
-  font-size: 15px;
-}
+.campaign-elig-icon--ok   { color: #22a06b; font-weight: 700; font-size: 14px; }
+.campaign-elig-icon--lock { font-size: 13px; color: rgba(0, 48, 73, 0.3); }
 
-.campaign-elig-icon--lock {
-  font-size: 14px;
-  line-height: 1;
-}
-
-/* ─────────────────────────────────────────
-   21. APPLY BUTTON
-   ───────────────────────────────────────── */
+/* Apply button */
 .apply-btn {
   width: 100%;
-  height: 52px;
+  height: 56px;
   font-family: var(--font-body, "CS Genio Mono", monospace);
   font-weight: 700;
   font-size: 15px;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.05em;
   text-transform: uppercase;
   border: none;
   border-radius: 0;
@@ -908,66 +1242,139 @@
   line-height: 1;
 }
 
-/* Default — Flag Red */
 .apply-btn--default {
-  background: #c1121f;
+  background: var(--primary, #c1121f);
   color: #f5f2ec;
 }
 
-.apply-btn--default:hover:not(:disabled) {
-  background: #780000;
-}
+.apply-btn--default:hover:not(:disabled) { background: var(--accent, #780000); }
 
-/* Applied — Steel Blue */
 .apply-btn--applied {
   background: #669bbc;
   color: #f5f2ec;
   cursor: default;
 }
 
-/* Locked — muted */
 .apply-btn--locked {
-  background: rgba(0, 48, 73, 0.08);
-  color: rgba(0, 48, 73, 0.35);
+  background: rgba(0, 48, 73, 0.06);
+  color: rgba(0, 48, 73, 0.3);
   cursor: not-allowed;
-  font-size: 12px;
+  font-size: 11px;
+  letter-spacing: 0.03em;
 }
 
-/* ─────────────────────────────────────────
-   22. COMMISSION NOTE
-   ───────────────────────────────────────── */
 .commission-note {
   font-family: var(--font-body, "CS Genio Mono", monospace);
-  font-size: 12px;
-  color: rgba(0, 48, 73, 0.5);
-  margin: var(--space-2, 16px) 0 0 0;
+  font-size: 11px;
+  color: rgba(0, 48, 73, 0.45);
   text-align: center;
   line-height: 1.6;
+  margin: 0;
+}
+
+/* ── Campaign Stats (completed) ────────────────────────────── */
+.cp-stats-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px;
+  background: rgba(0, 48, 73, 0.08);
+  border-top: 1px solid rgba(0, 48, 73, 0.08);
+}
+
+.cp-stat-cell {
+  padding: var(--space-3, 24px) var(--space-3, 24px) var(--space-2, 16px);
+  background: var(--surface-elevated, #fff);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.cp-stat-value {
+  font-family: var(--font-display, "Darky", serif);
+  font-size: 28px;
+  font-weight: 900;
+  color: var(--dark, #003049);
+  letter-spacing: -0.03em;
+  line-height: 1;
+}
+
+.cp-stat-value--earnings {
+  color: var(--primary, #c1121f);
+}
+
+.cp-stat-label {
+  font-family: var(--font-body, "CS Genio Mono", monospace);
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: rgba(0, 48, 73, 0.35);
+}
+
+.cp-stat-compare {
+  font-size: 10px;
+  color: #22a06b;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  font-family: var(--font-body, "CS Genio Mono", monospace);
 }
 
 /* ─────────────────────────────────────────
-   23. LOADING / ERROR
+   11. LOADING / ERROR
    ───────────────────────────────────────── */
 .campaign-loading,
 .campaign-error {
   font-family: var(--font-body, "CS Genio Mono", monospace);
-  font-size: 14px;
-  color: rgba(0, 48, 73, 0.5);
-  padding: var(--space-6, 48px) 0;
+  font-size: 13px;
+  color: rgba(0, 48, 73, 0.45);
+  padding: var(--space-8, 64px) 0;
   text-align: center;
 }
 
-.campaign-error {
-  color: #c1121f;
-}
+.campaign-error { color: var(--primary, #c1121f); }
 
 /* ─────────────────────────────────────────
-   24. MOBILE — 768px breakpoint
+   12. MOBILE — 768px
    ───────────────────────────────────────── */
 @media (max-width: 768px) {
   .campaign-page {
     padding: var(--space-3, 24px) var(--space-2, 16px) 120px;
   }
+
+  .cp-header-top {
+    flex-wrap: wrap;
+    padding: 28px var(--space-3, 24px) 24px;
+    gap: var(--space-2, 16px);
+  }
+
+  .cp-header-status-group {
+    align-items: flex-start;
+    flex-direction: row;
+    align-items: center;
+    gap: var(--space-2, 16px);
+    width: 100%;
+  }
+
+  .cp-expected-payout {
+    text-align: left;
+  }
+
+  .cp-payout-number {
+    font-size: 28px;
+  }
+
+  .cp-title {
+    font-size: 22px;
+  }
+
+  .cp-header-footer {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: var(--space-2, 16px) var(--space-3, 24px);
+    gap: var(--space-2, 16px);
+  }
+
+  .cp-spots-indicator { min-width: 0; width: 100%; }
 
   .campaign-hero {
     height: 200px;
@@ -975,14 +1382,12 @@
     width: calc(100% + 2 * var(--space-2, 16px));
   }
 
-  /* Single column on mobile */
   .campaign-body {
     grid-template-columns: 1fr;
-    gap: var(--space-4, 32px);
-    margin-top: var(--space-3, 24px);
+    gap: var(--space-3, 24px);
   }
 
-  /* Sidebar becomes bottom-sticky action bar */
+  /* Sidebar → bottom sticky action bar */
   .campaign-sidebar-card {
     position: fixed;
     bottom: 0;
@@ -990,72 +1395,64 @@
     right: 0;
     top: auto;
     z-index: 50;
-    padding: var(--space-2, 16px) var(--space-3, 24px);
     border-top: 1px solid rgba(0, 48, 73, 0.1);
     border-left: none;
     border-right: none;
     border-bottom: none;
-    box-shadow: 0 -4px 20px rgba(0, 48, 73, 0.08);
-    /* Collapse to action strip */
+    box-shadow: 0 -6px 24px rgba(0, 48, 73, 0.1);
     flex-direction: row;
     align-items: center;
-    gap: var(--space-2, 16px);
-    background: #ffffff;
+    overflow: visible;
   }
 
-  /* On mobile, hide non-essential sidebar items to keep the bar slim */
+  .cp-sidebar-section { border-bottom: none; }
+
+  /* Hide non-essential items on mobile sticky bar */
   .campaign-sidebar-card .campaign-spots,
   .campaign-sidebar-card .campaign-deadline,
   .campaign-sidebar-card .campaign-eligibility,
-  .campaign-sidebar-card .commission-note {
+  .campaign-sidebar-card .commission-note,
+  .campaign-sidebar-card .cp-stats-grid {
     display: none;
   }
 
-  .campaign-payout {
-    flex-shrink: 0;
+  .campaign-sidebar-card .cp-sidebar-section:first-child {
+    padding: var(--space-2, 16px) var(--space-3, 24px);
   }
 
-  .campaign-payout-amount {
-    font-size: 28px;
+  .campaign-sidebar-card .cp-sidebar-section:last-of-type {
+    flex: 1;
+    padding: var(--space-2, 16px) var(--space-3, 24px);
   }
+
+  .campaign-payout-amount { font-size: 28px; }
 
   .apply-btn {
-    flex: 1;
-    height: 44px;
+    height: 48px;
     font-size: 13px;
   }
 
-  /* Header responsive */
-  .cp-header {
-    padding: 32px var(--space-3, 24px);
-  }
-
-  .cp-title {
-    font-size: 24px;
-  }
-
-  .cp-header-footer {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: var(--space-2, 16px);
-  }
-
-  .cp-spots-indicator {
-    min-width: 0;
-    width: 100%;
-  }
-
-  /* Milestone: scroll horizontally on small screens */
+  /* Milestone scroll on small screens */
   .cp-milestone-steps {
     overflow-x: auto;
     padding-bottom: 8px;
   }
 
-  .cp-milestone-step-wrap {
-    min-width: 72px;
+  .cp-milestone-step-wrap { min-width: 72px; }
+  .cp-milestone-label { font-size: 8px; }
+}
+
+/* ─────────────────────────────────────────
+   13. REDUCED MOTION
+   ───────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .cp-milestone-step--active,
+  .cp-countdown-number--urgent {
+    animation: none;
   }
 
-  .cp-milestone-label {
-    font-size: 8px;
+  .cp-spots-fill,
+  .campaign-spots-fill {
+    transition: none;
   }
 }

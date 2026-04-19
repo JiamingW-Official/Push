@@ -1,61 +1,222 @@
 "use client";
 
-import { useEffect, useState, type ReactNode } from "react";
-import "./ContextPanel.css";
+// Push Creator Workspace — ContextPanel
+// Design.md: --surface-bright bg, 16px padding, --line dividers
+// Collapsible on 768-1024px (280ms slide animation)
 
-interface ContextPanelProps {
-  children?: ReactNode;
-  title?: string;
+import { useState } from "react";
+import Link from "next/link";
+import "./workspace.css";
+
+// ---------------------------------------------------------------------------
+// Types
+// ---------------------------------------------------------------------------
+
+export interface QuickStat {
+  label: string;
+  value: string;
+  delta?: string;
+  deltaPositive?: boolean;
 }
 
-const STORAGE_KEY = "push-ws-context:collapsed";
+export interface Deadline {
+  label: string;
+  date: string;
+  href?: string;
+  urgent?: boolean;
+}
 
-export default function ContextPanel({ children, title = "Context" }: ContextPanelProps) {
-  const [collapsed, setCollapsed] = useState(false);
+export interface QuickAction {
+  label: string;
+  href?: string;
+  onClick?: () => void;
+  variant?: "primary" | "secondary";
+}
 
-  useEffect(() => {
-    try {
-      const stored = localStorage.getItem(STORAGE_KEY);
-      if (stored === "true") setCollapsed(true);
-    } catch {}
-  }, []);
+export interface ContextPanelProps {
+  /** Panel title — shown in eyebrow style */
+  title?: string;
+  /** Quick stats for current period */
+  stats?: QuickStat[];
+  /** Upcoming deadlines (2-3 items) */
+  deadlines?: Deadline[];
+  /** Quick action buttons (max 2) */
+  actions?: QuickAction[];
+  /** Whether panel starts collapsed (tablet breakpoint handles auto-collapse via CSS) */
+  defaultCollapsed?: boolean;
+}
 
-  function toggle() {
-    const next = !collapsed;
-    setCollapsed(next);
-    try {
-      localStorage.setItem(STORAGE_KEY, String(next));
-    } catch {}
-  }
+// ---------------------------------------------------------------------------
+// Default content (demo / fallback)
+// ---------------------------------------------------------------------------
+
+const DEFAULT_STATS: QuickStat[] = [
+  { label: "This Week", value: "$0", delta: "—" },
+  { label: "Active Scans", value: "0", delta: "—" },
+  { label: "Campaigns", value: "0", delta: "—" },
+];
+
+const DEFAULT_DEADLINES: Deadline[] = [
+  { label: "No upcoming deadlines", date: "", urgent: false },
+];
+
+const DEFAULT_ACTIONS: QuickAction[] = [
+  { label: "Explore Campaigns", href: "/creator/explore", variant: "primary" },
+  { label: "View Earnings", href: "/creator/earnings", variant: "secondary" },
+];
+
+// ---------------------------------------------------------------------------
+// Sub-components
+// ---------------------------------------------------------------------------
+
+function CollapseIcon({ collapsed }: { collapsed: boolean }) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="14"
+      height="14"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={2}
+      aria-hidden="true"
+      style={{
+        transform: collapsed ? "rotate(-90deg)" : "rotate(0deg)",
+        transition: "transform 200ms ease",
+        flexShrink: 0,
+      }}
+    >
+      <path strokeLinecap="square" strokeLinejoin="miter" d="M19 9l-7 7-7-7" />
+    </svg>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Component
+// ---------------------------------------------------------------------------
+
+export function ContextPanel({
+  title = "CONTEXT",
+  stats = DEFAULT_STATS,
+  deadlines = DEFAULT_DEADLINES,
+  actions = DEFAULT_ACTIONS,
+  defaultCollapsed = false,
+}: ContextPanelProps) {
+  const [collapsed, setCollapsed] = useState(defaultCollapsed);
+
+  const visibleActions = actions.slice(0, 2);
 
   return (
-    <div className={`ws-context-panel${collapsed ? " ws-context-panel--collapsed" : ""}`}>
-      <div className="ws-context-header">
-        {!collapsed && (
-          <span className="ws-context-title">{title}</span>
-        )}
+    <aside
+      className={`ws-context${collapsed ? " ws-context--collapsed" : ""}`}
+      aria-label="Context panel"
+    >
+      {/* ── Header ── */}
+      <div className="ws-context__header">
+        <span className="ws-context__title">{title}</span>
+        {/* Collapse toggle — visible on tablet only via CSS */}
         <button
-          className="ws-context-toggle"
-          onClick={toggle}
-          aria-label={collapsed ? "Expand context panel" : "Collapse context panel"}
+          className="ws-context__collapse-btn"
+          onClick={() => setCollapsed((c) => !c)}
+          aria-expanded={!collapsed}
+          aria-label={
+            collapsed ? "Expand context panel" : "Collapse context panel"
+          }
+          type="button"
         >
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-            {collapsed
-              ? <path d="M6 3l5 5-5 5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="square"/>
-              : <path d="M10 3L5 8l5 5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="square"/>
-            }
-          </svg>
+          <CollapseIcon collapsed={collapsed} />
         </button>
       </div>
-      {!collapsed && (
-        <div className="ws-context-body">
-          {children ?? (
-            <p className="ws-context-empty">
-              Select an item to see details.
-            </p>
+
+      {/* ── Body (slides in/out) ── */}
+      <div className="ws-context__body" aria-hidden={collapsed}>
+        {/* Quick Stats */}
+        <section className="ws-context__section">
+          <div className="ws-context__section-label">This Period</div>
+          <div className="ws-context__stats">
+            {stats.map((stat, i) => (
+              <div key={i} className="ws-context__stat">
+                <span className="ws-context__stat-value">{stat.value}</span>
+                <span className="ws-context__stat-label">{stat.label}</span>
+                {stat.delta && (
+                  <span
+                    className={`ws-context__stat-delta${stat.deltaPositive ? " ws-context__stat-delta--up" : ""}`}
+                  >
+                    {stat.delta}
+                  </span>
+                )}
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <div className="ws-context__divider" aria-hidden="true" />
+
+        {/* Upcoming Deadlines */}
+        <section className="ws-context__section">
+          <div className="ws-context__section-label">Upcoming</div>
+          <ul className="ws-context__deadlines" role="list">
+            {deadlines.map((d, i) => (
+              <li key={i} className="ws-context__deadline">
+                {d.href ? (
+                  <Link
+                    href={d.href}
+                    className={`ws-context__deadline-inner ws-context__deadline-inner--link${d.urgent ? " ws-context__deadline-inner--urgent" : ""}`}
+                  >
+                    <span className="ws-context__deadline-label">
+                      {d.label}
+                    </span>
+                    {d.date && (
+                      <span className="ws-context__deadline-date">
+                        {d.date}
+                      </span>
+                    )}
+                  </Link>
+                ) : (
+                  <div
+                    className={`ws-context__deadline-inner${d.urgent ? " ws-context__deadline-inner--urgent" : ""}`}
+                  >
+                    <span className="ws-context__deadline-label">
+                      {d.label}
+                    </span>
+                    {d.date && (
+                      <span className="ws-context__deadline-date">
+                        {d.date}
+                      </span>
+                    )}
+                  </div>
+                )}
+              </li>
+            ))}
+          </ul>
+        </section>
+
+        <div className="ws-context__divider" aria-hidden="true" />
+
+        {/* Quick Actions */}
+        <section className="ws-context__section ws-context__section--actions">
+          {visibleActions.map((action, i) =>
+            action.href ? (
+              <Link
+                key={i}
+                href={action.href}
+                className={`ws-context__action${action.variant === "primary" ? " ws-context__action--primary" : ""}`}
+              >
+                {action.label}
+              </Link>
+            ) : (
+              <button
+                key={i}
+                type="button"
+                className={`ws-context__action${action.variant === "primary" ? " ws-context__action--primary" : ""}`}
+                onClick={action.onClick}
+              >
+                {action.label}
+              </button>
+            ),
           )}
-        </div>
-      )}
-    </div>
+        </section>
+      </div>
+    </aside>
   );
 }

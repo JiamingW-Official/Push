@@ -219,6 +219,10 @@ export default function CreatorLoginPage() {
               </div>
             </form>
 
+            <div className="form-footer-divider">
+              <span className="form-footer-divider-text">or</span>
+            </div>
+
             <p className="form-footer">
               Don&apos;t have an account?{" "}
               <Link href="/creator/signup">Join as Creator &rarr;</Link>
@@ -238,37 +242,38 @@ export default function CreatorLoginPage() {
 }
 
 const LOGIN_TIERS = [
-  { icon: "◎", label: "Seed", rate: "Free", desc: "Zero followers needed" },
+  { icon: "◎", label: "Clay", rate: "Free", desc: "Zero followers needed" },
   {
     icon: "◈",
-    label: "Explorer",
-    rate: "$12/campaign",
+    label: "Bronze",
+    rate: "$15/customer",
     desc: "2 active campaigns",
   },
   {
     icon: "◆",
-    label: "Operator",
-    rate: "$20 + 3%",
-    desc: "Commission on walk-ins",
+    label: "Steel",
+    rate: "$25/customer",
+    desc: "Walk-in commission",
   },
-  {
-    icon: "◉",
-    label: "Amplifier",
-    rate: "$35/campaign",
-    desc: "Priority matching",
-  },
+  { icon: "◉", label: "Gold", rate: "$40/customer", desc: "Priority matching" },
   {
     icon: "◑",
-    label: "Luminary",
-    rate: "$65/campaign",
+    label: "Ruby",
+    rate: "$65/customer",
     desc: "Brand partnerships",
   },
   {
     icon: "★",
-    label: "Icon",
-    rate: "$100+/campaign",
+    label: "Obsidian",
+    rate: "$85+/customer",
     desc: "Elite exclusives",
   },
+];
+
+const SOCIAL_PROOF = [
+  "847 creators earned last month",
+  "$2.4M paid out to creators total",
+  "avg. 4.2 campaigns per active creator",
 ];
 
 function BrandPanel() {
@@ -281,19 +286,37 @@ function BrandPanel() {
 
         <div>
           <h2 className="brand-headline">
-            Your performance score
+            Your score
             <br />
-            <em>is your currency.</em>
+            <em>is your salary.</em>
           </h2>
           <p className="brand-tagline">
-            Every campaign you complete builds your Push Score &mdash; higher
-            score means better brands, higher payouts, and commission income.
+            Every walk-in you drive builds your ConversionOracle™ score. Higher
+            score = better brands, bigger payouts.
           </p>
         </div>
 
-        {/* Tier journey preview */}
+        {/* Big stat block */}
+        <div className="brand-stat-block">
+          <span className="brand-stat-number">$2.4M</span>
+          <span className="brand-stat-ghost">
+            paid to creators · and growing
+          </span>
+        </div>
+
+        {/* Social proof bullets */}
+        <div className="brand-social-proof" aria-label="Creator stats">
+          {SOCIAL_PROOF.map((item) => (
+            <div key={item} className="brand-social-proof-item">
+              <span className="brand-social-proof-dot" aria-hidden="true" />
+              {item}
+            </div>
+          ))}
+        </div>
+
+        {/* Tier journey — diagonal layout */}
         <div className="auth-tier-preview">
-          <span className="auth-tier-preview-label">YOUR TIER JOURNEY</span>
+          <span className="auth-tier-preview-label">TIER JOURNEY</span>
           {LOGIN_TIERS.map((t, i) => (
             <div key={t.label} className="auth-tier-item" data-active={i === 0}>
               <span className="auth-tier-icon" aria-hidden="true">
@@ -307,8 +330,7 @@ function BrandPanel() {
             </div>
           ))}
           <p className="auth-motivation">
-            From free product to $100/campaign &mdash; your score unlocks it
-            all.
+            Your journey starts at Clay &rarr; unlock Obsidian tier
           </p>
         </div>
       </div>

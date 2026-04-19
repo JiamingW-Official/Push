@@ -1,80 +1,245 @@
 "use client";
 
+// Push Creator Workspace — SideNav
+// Design.md: 240px width, --surface bg, 8px grid, active = 3px Flag Red left border
+// Fonts: CSGenioMono (body/UI)
+
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { SIDE_NAV, getZoneFromPath } from "./side-nav-config";
-import "./SideNav.css";
+import "./workspace.css";
 
-const ICON_PATHS: Record<string, string> = {
-  inbox: "M3 8l5-5 5 5M8 3v10",
-  mail: "M2 4h12v8H2zM2 4l6 5 6-5",
-  chat: "M2 3h12v9H2zM5 15l3-3",
-  bell: "M8 2a5 5 0 015 5v3l1 2H2l1-2V7a5 5 0 015-5zm-1 11h2",
-  sun: "M8 5v1M8 14v1M3 8H2M14 8h1M4.9 4.9l-.7-.7M11.8 11.8l-.7-.7M4.9 11.1l-.7.7M11.8 4.2l-.7.7M8 6a2 2 0 100 4 2 2 0 000-4z",
-  flow: "M3 4h4M3 8h8M3 12h6M9 4l3 4-3 4",
-  cal: "M2 5h12v9H2zM2 5V3h12v2M5 3V2M11 3V2",
-  draft: "M3 4h8M3 8h6M3 12h4M10 9l3-3 1 1-3 3z",
-  id: "M2 4h12v8H2zM5 10a2 2 0 110-4 2 2 0 010 4zM9 7h3M9 9h2",
-  cash: "M8 2v2M8 12v2M4 8H2M14 8h-2M5 5l-1-1M11 5l1-1M5 11l-1 1M11 11l1 1M8 5a3 3 0 100 6 3 3 0 000-6z",
-  box: "M2 6l6-3 6 3M2 6v7l6 3 6-3V6M8 3v10",
+// ---------------------------------------------------------------------------
+// Nav item type
+// ---------------------------------------------------------------------------
+
+interface NavItem {
+  label: string;
+  href: string;
+  icon: string;
+  badge?: number | null;
+  badgeVariant?: "default" | "alert";
+}
+
+interface NavSection {
+  id: string;
+  title: string | null; // null = no section header (standalone)
+  items: NavItem[];
+}
+
+// ---------------------------------------------------------------------------
+// Icon map (geometric / monospace glyphs — no external icon lib needed)
+// ---------------------------------------------------------------------------
+
+const ICONS: Record<string, string> = {
+  today: "◈",
+  pipeline: "◇",
+  calendar: "◻",
+  drafts: "◎",
+  identity: "◉",
+  earnings: "▲",
+  archive: "▷",
+  messages: "▣",
+  invites: "◆",
+  system: "◌",
+  discover: "◐",
+  profile: "○",
 };
 
-function NavIcon({ icon }: { icon: string }) {
-  const d = ICON_PATHS[icon] ?? "";
+// ---------------------------------------------------------------------------
+// Static nav structure
+// ---------------------------------------------------------------------------
+
+const NAV_SECTIONS: NavSection[] = [
+  {
+    id: "work",
+    title: "WORK",
+    items: [
+      { label: "Today", href: "/creator/dashboard", icon: ICONS.today },
+      { label: "Pipeline", href: "/creator/campaigns", icon: ICONS.pipeline },
+      { label: "Calendar", href: "/creator/calendar", icon: ICONS.calendar },
+      { label: "Drafts", href: "/creator/drafts", icon: ICONS.drafts },
+    ],
+  },
+  {
+    id: "portfolio",
+    title: "PORTFOLIO",
+    items: [
+      { label: "Identity", href: "/creator/portfolio", icon: ICONS.identity },
+      { label: "Earnings", href: "/creator/earnings", icon: ICONS.earnings },
+      { label: "Archive", href: "/creator/archive", icon: ICONS.archive },
+    ],
+  },
+  {
+    id: "inbox",
+    title: "INBOX",
+    items: [
+      { label: "Messages", href: "/creator/messages", icon: ICONS.messages },
+      {
+        label: "Invites",
+        href: "/creator/notifications",
+        icon: ICONS.invites,
+        badgeVariant: "alert",
+      },
+      { label: "System", href: "/creator/settings", icon: ICONS.system },
+    ],
+  },
+  {
+    id: "discover",
+    title: null, // standalone — no section header
+    items: [
+      { label: "Discover", href: "/creator/explore", icon: ICONS.discover },
+    ],
+  },
+];
+
+// ---------------------------------------------------------------------------
+// Props
+// ---------------------------------------------------------------------------
+
+export interface SideNavProps {
+  /** Dynamic badge counts — key = href */
+  badges?: Record<string, number>;
+  /** Creator display name */
+  userName?: string;
+  /** Creator tier (lowercase) */
+  tier?: string;
+  /** Avatar image URL */
+  avatarUrl?: string;
+}
+
+// ---------------------------------------------------------------------------
+// Helpers
+// ---------------------------------------------------------------------------
+
+const TIER_COLORS: Record<string, string> = {
+  seed: "#b8a99a",
+  explorer: "#669bbc",
+  operator: "#2d6a4f",
+  proven: "#3a4fd8",
+  closer: "#c9a96e",
+  partner: "#c1121f",
+  clay: "#b8a99a",
+  bronze: "#c9a96e",
+  steel: "#669bbc",
+  gold: "#d4a017",
+  ruby: "#c1121f",
+  obsidian: "#003049",
+};
+
+function tierLabel(tier: string): string {
+  return tier.charAt(0).toUpperCase() + tier.slice(1).toLowerCase();
+}
+
+// ---------------------------------------------------------------------------
+// NavItem component
+// ---------------------------------------------------------------------------
+
+function NavLink({
+  item,
+  isActive,
+  badgeCount,
+}: {
+  item: NavItem;
+  isActive: boolean;
+  badgeCount?: number;
+}) {
+  const showBadge = badgeCount !== undefined && badgeCount > 0;
+
   return (
-    <svg
-      width="16"
-      height="16"
-      viewBox="0 0 16 16"
-      fill="none"
-      aria-hidden="true"
-      className="ws-sidenav-icon"
+    <Link
+      href={item.href}
+      className={`ws-sidenav__item${isActive ? " ws-sidenav__item--active" : ""}`}
+      aria-current={isActive ? "page" : undefined}
     >
-      <path
-        d={d}
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="square"
-        strokeLinejoin="miter"
-      />
-    </svg>
+      <span className="ws-sidenav__item-icon" aria-hidden="true">
+        {item.icon}
+      </span>
+      <span className="ws-sidenav__item-label">{item.label}</span>
+      {showBadge && (
+        <span
+          className={`ws-sidenav__badge${item.badgeVariant === "alert" ? " ws-sidenav__badge--alert" : ""}`}
+          aria-label={`${badgeCount} unread`}
+        >
+          {badgeCount > 99 ? "99+" : badgeCount}
+        </span>
+      )}
+    </Link>
   );
 }
 
-export default function SideNav() {
-  const pathname = usePathname();
-  const zone = getZoneFromPath(pathname);
-  const items = SIDE_NAV[zone];
+// ---------------------------------------------------------------------------
+// Component
+// ---------------------------------------------------------------------------
 
-  if (items.length === 0) {
-    return (
-      <div className="ws-sidenav-inner ws-sidenav-empty">
-        <span className="ws-sidenav-zone-label">Discover</span>
-      </div>
-    );
-  }
+export function SideNav({
+  badges = {},
+  userName = "Creator",
+  tier = "seed",
+  avatarUrl,
+}: SideNavProps) {
+  const pathname = usePathname();
+  const tierKey = tier.toLowerCase();
+  const tierColor = TIER_COLORS[tierKey] ?? TIER_COLORS.seed;
+  const initial = userName.charAt(0).toUpperCase();
+
+  // Active match: exact or prefix (e.g. /creator/campaigns/[id] → campaigns active)
+  const isActive = (href: string) => {
+    if (href === "/creator/dashboard") return pathname === href;
+    return pathname.startsWith(href);
+  };
 
   return (
-    <div className="ws-sidenav-inner">
-      <span className="ws-sidenav-zone-label">{zone.toUpperCase()}</span>
-      <ul className="ws-sidenav-list" role="list">
-        {items.map((item) => {
-          const isActive =
-            pathname === item.href || pathname.startsWith(item.href + "/");
-          return (
-            <li key={item.href}>
-              <Link
-                href={item.href}
-                className={`ws-sidenav-item${isActive ? " ws-sidenav-item--active" : ""}`}
-                aria-current={isActive ? "page" : undefined}
-              >
-                <NavIcon icon={item.icon} />
-                {item.label}
-              </Link>
-            </li>
-          );
-        })}
-      </ul>
-    </div>
+    <nav className="ws-sidenav" aria-label="Creator workspace navigation">
+      {/* ── Nav sections ── */}
+      <div className="ws-sidenav__scroll">
+        {NAV_SECTIONS.map((section) => (
+          <div key={section.id} className="ws-sidenav__section">
+            {section.title && (
+              <div className="ws-sidenav__section-header" aria-hidden="true">
+                {section.title}
+              </div>
+            )}
+            {section.items.map((item) => (
+              <NavLink
+                key={item.href}
+                item={item}
+                isActive={isActive(item.href)}
+                badgeCount={badges[item.href]}
+              />
+            ))}
+          </div>
+        ))}
+      </div>
+
+      {/* ── Bottom: user info ── */}
+      <div className="ws-sidenav__footer">
+        <Link href="/creator/profile" className="ws-sidenav__user">
+          <div className="ws-sidenav__user-avatar" aria-hidden="true">
+            {avatarUrl ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={avatarUrl}
+                alt={userName}
+                className="ws-sidenav__user-avatar-img"
+              />
+            ) : (
+              <span className="ws-sidenav__user-initial">{initial}</span>
+            )}
+          </div>
+          <div className="ws-sidenav__user-info">
+            <span className="ws-sidenav__user-name">{userName}</span>
+            <span
+              className="ws-sidenav__user-tier"
+              style={{ color: tierColor }}
+            >
+              {tierLabel(tierKey)}
+            </span>
+          </div>
+          <span className="ws-sidenav__user-arrow" aria-hidden="true">
+            ›
+          </span>
+        </Link>
+      </div>
+    </nav>
   );
 }

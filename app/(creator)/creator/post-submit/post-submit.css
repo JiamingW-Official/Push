@@ -1,230 +1,451 @@
-/* ── Post Submit Page ─────────────────────────────────────── */
+/* ============================================================
+   Post-Submit Confirmation — 20x Design
+   Design System: border-radius: 0, Push brand palette
+   Tone: Instant positive reinforcement, reduce user anxiety
+   ============================================================ */
+
+/* ── Page shell ──────────────────────────────────────────── */
 
 .ps-page {
   min-height: 100svh;
-  background: var(--surface, #f5f2ec);
-  padding: 64px 48px;
-  max-width: 680px;
-  margin: 0 auto;
-  box-sizing: border-box;
-}
-
-.ps-header {
-  margin-bottom: 48px;
-}
-
-.ps-back {
-  font-family: "CS Genio Mono", monospace;
-  font-size: 12px;
-  font-weight: 600;
-  color: rgba(0, 48, 73, 0.5);
-  text-decoration: none;
-  letter-spacing: 0.04em;
-  display: inline-block;
-  margin-bottom: 24px;
-  transition: color 150ms ease;
-}
-.ps-back:hover { color: var(--dark, #003049); }
-
-.ps-eyebrow {
-  display: block;
-  font-family: "CS Genio Mono", monospace;
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.18em;
-  color: var(--primary, #c1121f);
-  margin-bottom: 12px;
-}
-
-.ps-heading {
-  font-family: "Darky", sans-serif;
-  font-size: clamp(32px, 5vw, 48px);
-  font-weight: 900;
-  letter-spacing: -0.04em;
-  color: var(--dark, #003049);
-  margin: 0 0 12px;
-  line-height: 1.05;
-}
-
-.ps-sub {
-  font-family: "CS Genio Mono", monospace;
-  font-size: 13px;
-  line-height: 1.7;
-  color: rgba(0, 48, 73, 0.55);
-  margin: 0;
-  max-width: 440px;
-}
-
-/* ── Steps ────────────────────────────────────────────────── */
-
-.ps-form {
+  background: #f5f2ec;
   display: flex;
   flex-direction: column;
-  gap: 32px;
+  align-items: center;
+  font-family: "CS Genio Mono", "Courier New", monospace;
 }
 
-.ps-step {
-  display: flex;
-  gap: 20px;
-  align-items: flex-start;
+/* ── Hero confirmation panel ─────────────────────────────── */
+
+.ps-hero {
+  width: 100%;
+  background: #003049;
+  padding: 72px 40px 56px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
 }
 
-.ps-step--locked {
-  opacity: 0.45;
+.ps-hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse 60% 80% at 50% 0%,
+    rgba(193, 18, 31, 0.12) 0%,
+    transparent 60%
+  );
   pointer-events: none;
 }
 
-.ps-step-num {
-  font-family: "Darky", sans-serif;
-  font-size: 2rem;
-  font-weight: 200;
-  color: rgba(0, 48, 73, 0.2);
-  line-height: 1;
-  flex-shrink: 0;
-  min-width: 40px;
-  padding-top: 2px;
+/* ── Animated checkmark ──────────────────────────────────── */
+
+.ps-check-wrap {
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 28px;
+  position: relative;
+  z-index: 1;
+  animation: ps-check-scale 400ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
-.ps-step-content {
+@keyframes ps-check-scale {
+  from { transform: scale(0.4); opacity: 0; }
+  to   { transform: scale(1);   opacity: 1; }
+}
+
+.ps-check-circle {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: rgba(193, 18, 31, 0.12);
+  border: 2px solid rgba(193, 18, 31, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ps-check-svg {
+  width: 40px;
+  height: 40px;
+}
+
+.ps-check-path {
+  stroke-dasharray: 80;
+  stroke-dashoffset: 80;
+  animation: ps-draw-check 500ms ease 350ms forwards;
+}
+
+@keyframes ps-draw-check {
+  to { stroke-dashoffset: 0; }
+}
+
+/* ── Hero text ───────────────────────────────────────────── */
+
+.ps-hero-eyebrow {
+  font-family: "CS Genio Mono", monospace;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #669bbc;
+  margin-bottom: 12px;
+  position: relative;
+  z-index: 1;
+  animation: ps-fade-up 400ms ease 300ms both;
+}
+
+.ps-hero-title {
+  font-family: "Darky", serif;
+  font-weight: 900;
+  font-size: clamp(40px, 8vw, 72px);
+  color: #f5f2ec;
+  letter-spacing: -0.05em;
+  margin: 0 0 16px;
+  line-height: 1;
+  text-transform: uppercase;
+  position: relative;
+  z-index: 1;
+  animation: ps-fade-up 400ms ease 400ms both;
+}
+
+.ps-hero-status {
+  font-family: "CS Genio Mono", monospace;
+  font-size: 13px;
+  color: rgba(245, 242, 236, 0.55);
+  position: relative;
+  z-index: 1;
+  animation: ps-fade-up 400ms ease 500ms both;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.ps-hero-status-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #4ade80;
+  flex-shrink: 0;
+  animation: ps-pulse-dot 2s ease-in-out infinite;
+}
+
+@keyframes ps-pulse-dot {
+  0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.4); }
+  50%       { opacity: 0.8; box-shadow: 0 0 0 4px rgba(74, 222, 128, 0); }
+}
+
+.ps-hero-time-estimate {
+  font-family: "CS Genio Mono", monospace;
+  font-size: 11px;
+  color: rgba(245, 242, 236, 0.35);
+  position: relative;
+  z-index: 1;
+  margin-top: 8px;
+  animation: ps-fade-up 400ms ease 600ms both;
+  letter-spacing: 0.04em;
+}
+
+/* ── Body container ──────────────────────────────────────── */
+
+.ps-body {
+  max-width: 600px;
+  width: 100%;
+  padding: 32px 32px 80px;
+  flex: 1;
+}
+
+/* ── Section card ────────────────────────────────────────── */
+
+.ps-section {
+  background: #ffffff;
+  border: 1px solid rgba(0, 48, 73, 0.08);
+  padding: 28px;
+  margin-bottom: 2px;
+}
+
+.ps-section:nth-child(1) { animation: ps-fade-up 400ms ease 200ms both; }
+.ps-section:nth-child(2) { animation: ps-fade-up 400ms ease 300ms both; }
+.ps-section:nth-child(3) { animation: ps-fade-up 400ms ease 400ms both; }
+
+.ps-section-eyebrow {
+  font-family: "CS Genio Mono", monospace;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(0, 48, 73, 0.4);
+  margin-bottom: 20px;
+}
+
+@keyframes ps-fade-up {
+  from { transform: translateY(12px); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+
+/* ── Submission preview ──────────────────────────────────── */
+
+.ps-submission-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.ps-submission-thumb {
+  width: 64px;
+  height: 64px;
+  background: rgba(0, 48, 73, 0.06);
+  border: 1px dashed rgba(0, 48, 73, 0.18);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.ps-submission-thumb-icon {
+  font-size: 22px;
+  opacity: 0.25;
+}
+
+.ps-submission-info {
   flex: 1;
   min-width: 0;
 }
 
-.ps-step-label {
-  display: block;
+.ps-submission-title {
   font-family: "CS Genio Mono", monospace;
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 700;
-  letter-spacing: 0.16em;
-  color: rgba(0, 48, 73, 0.45);
-  margin-bottom: 12px;
+  color: #003049;
+  margin-bottom: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.ps-lock-hint {
-  font-weight: 400;
-  text-transform: none;
-  letter-spacing: 0;
-  color: rgba(0, 48, 73, 0.3);
+.ps-submission-meta {
+  font-family: "CS Genio Mono", monospace;
   font-size: 11px;
-}
-
-.ps-url-input {
-  width: 100%;
-  box-sizing: border-box;
-  border: none;
-  border-bottom: 1.5px solid rgba(0, 48, 73, 0.18);
-  background: transparent;
-  padding: 12px 0;
-  font-family: "CS Genio Mono", monospace;
-  font-size: 13px;
-  color: var(--dark, #003049);
-  outline: none;
-  transition: border-color 200ms ease;
-  border-radius: 0;
-}
-
-.ps-url-input::placeholder { color: rgba(0, 48, 73, 0.3); }
-.ps-url-input:focus { border-bottom-color: var(--dark, #003049); }
-
-/* ── Submit button ────────────────────────────────────────── */
-
-.ps-submit-btn {
-  background: var(--dark, #003049);
-  color: var(--surface, #f5f2ec);
-  border: none;
-  padding: 18px 32px;
-  font-family: "CS Genio Mono", monospace;
-  font-size: 13px;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  cursor: pointer;
-  transition: background 200ms ease, box-shadow 200ms ease;
-  align-self: flex-start;
-  border-radius: 0;
-}
-
-.ps-submit-btn:hover:not(:disabled) {
-  background: var(--primary, #c1121f);
-  box-shadow: 4px 4px 0 var(--dark, #003049);
-}
-
-.ps-submit-btn:disabled {
-  opacity: 0.35;
-  cursor: not-allowed;
-}
-
-.ps-campaign-ref {
-  font-family: "CS Genio Mono", monospace;
-  font-size: 10px;
-  color: rgba(0, 48, 73, 0.3);
-  margin: -16px 0 0;
-  letter-spacing: 0.06em;
-}
-
-/* ── Completion ───────────────────────────────────────────── */
-
-.ps-completion {
-  min-height: 100svh;
+  color: rgba(0, 48, 73, 0.5);
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  justify-content: center;
-  padding: 64px 48px;
-  max-width: 680px;
-  margin: 0 auto;
-  box-sizing: border-box;
+  gap: 3px;
 }
 
-.ps-completion-icon {
-  display: block;
-  width: 40px;
-  height: 40px;
-  border: 1.5px solid #10b981;
-  color: #10b981;
+.ps-submission-link {
   font-family: "CS Genio Mono", monospace;
-  font-size: 18px;
+  font-size: 11px;
+  color: #669bbc;
+  text-decoration: none;
+  word-break: break-all;
+  transition: color 150ms ease;
+}
+
+.ps-submission-link:hover {
+  color: #003049;
+}
+
+.ps-submission-timestamp {
+  font-family: "CS Genio Mono", monospace;
+  font-size: 11px;
+  color: rgba(0, 48, 73, 0.35);
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(0, 48, 73, 0.06);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ps-submission-timestamp::before {
+  content: "";
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  background: rgba(0, 48, 73, 0.2);
+  flex-shrink: 0;
+}
+
+/* ── What happens next steps ─────────────────────────────── */
+
+.ps-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.ps-step {
+  display: flex;
+  gap: 16px;
+  padding: 16px 0;
+  border-bottom: 1px solid rgba(0, 48, 73, 0.06);
+}
+
+.ps-step:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.ps-step-num {
+  font-family: "Darky", serif;
+  font-size: 28px;
+  font-weight: 900;
+  color: rgba(0, 48, 73, 0.1);
+  letter-spacing: -0.04em;
+  line-height: 1;
+  flex-shrink: 0;
+  width: 32px;
+  text-align: right;
+}
+
+.ps-step-content {
+  flex: 1;
+  padding-top: 2px;
+}
+
+.ps-step-title {
+  font-family: "CS Genio Mono", monospace;
+  font-size: 13px;
   font-weight: 700;
+  color: #003049;
+  margin-bottom: 4px;
+}
+
+.ps-step-desc {
+  font-family: "CS Genio Mono", monospace;
+  font-size: 12px;
+  color: rgba(0, 48, 73, 0.5);
+  line-height: 1.55;
+}
+
+.ps-step-time {
+  font-family: "CS Genio Mono", monospace;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #c1121f;
+  margin-top: 4px;
+}
+
+/* ── CTAs ────────────────────────────────────────────────── */
+
+.ps-cta-section {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-top: 32px;
+}
+
+.ps-primary-btn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 24px;
+  background: #c1121f;
+  color: #ffffff;
+  font-family: "CS Genio Mono", monospace;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  text-decoration: none;
+  border-radius: 0;
+  border: none;
+  cursor: pointer;
+  transition: background 150ms ease;
+}
+
+.ps-primary-btn:hover {
+  background: #780000;
+}
+
+.ps-primary-btn-arrow {
+  font-size: 16px;
+  transition: transform 150ms ease;
+}
+
+.ps-primary-btn:hover .ps-primary-btn-arrow {
+  transform: translateX(4px);
+}
+
+.ps-secondary-btn {
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 24px;
-}
-
-.ps-completion-heading {
-  font-family: "Darky", sans-serif;
-  font-size: clamp(40px, 6vw, 64px);
-  font-weight: 900;
-  letter-spacing: -0.05em;
-  color: var(--dark, #003049);
-  margin: 0 0 16px;
-  line-height: 1;
-}
-
-.ps-completion-body {
+  padding: 16px 24px;
+  background: #ffffff;
+  color: #003049;
   font-family: "CS Genio Mono", monospace;
-  font-size: 13px;
-  line-height: 1.7;
-  color: rgba(0, 48, 73, 0.6);
-  max-width: 400px;
-  margin: 0 0 32px;
-}
-
-.ps-completion-cta {
-  font-family: "CS Genio Mono", monospace;
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 700;
-  color: var(--dark, #003049);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
   text-decoration: none;
-  border-bottom: 1.5px solid var(--dark, #003049);
-  padding-bottom: 2px;
-  transition: color 150ms ease, border-color 150ms ease;
+  border: 1px solid rgba(0, 48, 73, 0.15);
+  border-radius: 0;
+  cursor: pointer;
+  transition: border-color 150ms ease, background 150ms ease;
 }
-.ps-completion-cta:hover {
-  color: var(--primary, #c1121f);
-  border-color: var(--primary, #c1121f);
+
+.ps-secondary-btn:hover {
+  border-color: rgba(0, 48, 73, 0.3);
+  background: #fafaf8;
 }
+
+/* ── Helpful tip ─────────────────────────────────────────── */
+
+.ps-tip {
+  margin-top: 24px;
+  padding: 16px;
+  background: rgba(102, 155, 188, 0.08);
+  border: 1px solid rgba(102, 155, 188, 0.2);
+  border-left: 3px solid #669bbc;
+}
+
+.ps-tip-label {
+  font-family: "CS Genio Mono", monospace;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #669bbc;
+  margin-bottom: 6px;
+}
+
+.ps-tip-text {
+  font-family: "CS Genio Mono", monospace;
+  font-size: 12px;
+  color: rgba(0, 48, 73, 0.6);
+  line-height: 1.55;
+}
+
+/* ── Reduced motion ──────────────────────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  .ps-check-wrap,
+  .ps-hero-eyebrow,
+  .ps-hero-title,
+  .ps-hero-status,
+  .ps-hero-time-estimate,
+  .ps-section { animation: none; opacity: 1; transform: none; }
+  .ps-check-path { animation: none; stroke-dashoffset: 0; }
+  .ps-hero-status-dot { animation: none; }
+}
+
+/* ── Mobile ──────────────────────────────────────────────── */
 
 @media (max-width: 600px) {
-  .ps-page,
-  .ps-completion { padding: 40px 20px; }
+  .ps-hero {
+    padding: 48px 20px 40px;
+  }
+
+  .ps-body {
+    padding: 24px 16px 64px;
+  }
+
+  .ps-section {
+    padding: 20px;
+  }
 }

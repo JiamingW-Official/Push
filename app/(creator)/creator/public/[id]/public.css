@@ -1,16 +1,16 @@
-/* ── Public Creator Profile ─────────────────────────────────────────────────
-   Design system: border-radius 0 everywhere (exceptions: avatar 50%, tier badge 50%)
-   Colors: #c1121f / #780000 / #003049 / #669bbc / #f5f2ec
+/* ── Public Creator Profile — 20x Refresh ───────────────────────────────────
+   Design: editorial magazine hero + sticky grid campaigns
+   border-radius: 0 everywhere (exceptions: avatar 50%, status dots 50%)
+   Colors: #c1121f / #780000 / #003049 / #669bbc / #f5f2ec / #c9a96e
    Fonts: Darky (headlines), CS Genio Mono (all UI text)
-   Grid: 8px base
 ────────────────────────────────────────────────────────────────────────────── */
 
 /* ── Page wrapper ──────────────────────────────────────────────────────────── */
 
 .public-profile {
-  max-width: 860px;
-  margin: 0 auto;
-  background: var(--surface);
+  max-width: 100%;
+  margin: 0;
+  background: #f5f2ec;
   min-height: 100vh;
   font-family: "CS Genio Mono", "Courier New", monospace;
   color: #003049;
@@ -19,38 +19,46 @@
 /* ── Fade-in animation ─────────────────────────────────────────────────────── */
 
 @keyframes profileFadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(8px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0);   }
 }
 
 .page-fade-in {
-  animation: profileFadeIn 0.3s ease forwards;
+  animation: profileFadeIn 0.4s ease forwards;
 }
 
-/* ── 1. Header strip ───────────────────────────────────────────────────────── */
+/* ── 1. Header nav strip ───────────────────────────────────────────────────── */
 
 .profile-header-strip {
   background: #003049;
-  padding: 12px 24px;
+  padding: 14px 40px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border-radius: 0;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  border-bottom: 1px solid rgba(245, 242, 236, 0.08);
 }
 
 .header-back {
   font-family: "CS Genio Mono", monospace;
-  font-size: 13px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
   color: #669bbc;
   text-decoration: none;
-  letter-spacing: 0.02em;
-  transition: color 0.15s ease;
+  transition: color 150ms ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.header-back::before {
+  content: "←";
+  font-size: 13px;
+  color: #c1121f;
 }
 
 .header-back:hover {
@@ -59,46 +67,200 @@
 
 .header-label {
   font-family: "CS Genio Mono", monospace;
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 700;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: rgba(245, 242, 236, 0.55);
+  color: rgba(245, 242, 236, 0.3);
 }
 
-/* ── 2. Hero ───────────────────────────────────────────────────────────────── */
+/* ── 2. Hero — editorial magazine style ────────────────────────────────────── */
 
 .pub-hero {
-  background: #ffffff;
-  padding: 64px 40px;
-  border-bottom: 1px solid rgba(0, 48, 73, 0.12);
+  background: #003049;
+  padding: 0;
+  position: relative;
+  overflow: hidden;
+  border-bottom: none;
+}
+
+/* Warm radial glow overlay */
+.pub-hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 70% 80% at 15% 50%, rgba(193, 18, 31, 0.12) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 60% at 85% 20%, rgba(102, 155, 188, 0.08) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: 0;
 }
 
 .pub-hero-inner {
+  position: relative;
+  z-index: 1;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 80px 40px 64px;
   display: grid;
   grid-template-columns: 1fr auto;
-  gap: 48px;
-  align-items: flex-start;
+  gap: 64px;
+  align-items: center;
 }
 
 .pub-hero-left {
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 0;
+}
+
+/* Eyebrow niche tags above name */
+.pub-niche-tags {
+  font-family: "CS Genio Mono", monospace;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #669bbc;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.pub-niche-dot {
+  width: 3px;
+  height: 3px;
+  background: rgba(102, 155, 188, 0.5);
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* Big editorial name */
+.pub-name {
+  font-family: "Darky", serif;
+  font-size: clamp(52px, 8vw, 96px);
+  font-weight: 900;
+  color: #f5f2ec;
+  letter-spacing: -0.05em;
+  margin: 0 0 24px;
+  line-height: 0.95;
+  text-transform: uppercase;
+}
+
+/* Badge row */
+.pub-badge-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+/* Score badge inside hero */
+.pub-score-badge {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+  background: rgba(245, 242, 236, 0.08);
+  border: 1px solid rgba(245, 242, 236, 0.15);
+  padding: 6px 14px;
+}
+
+.pub-score-badge-num {
+  font-family: "Darky", serif;
+  font-weight: 900;
+  font-size: 22px;
+  color: #f5f2ec;
+  letter-spacing: -0.04em;
+  line-height: 1;
+}
+
+.pub-score-badge-label {
+  font-family: "CS Genio Mono", monospace;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(245, 242, 236, 0.5);
+}
+
+.pub-location {
+  font-family: "CS Genio Mono", monospace;
+  font-size: 13px;
+  color: rgba(245, 242, 236, 0.55);
+  margin: 0 0 6px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.pub-location-icon {
+  font-size: 10px;
+  color: #669bbc;
+}
+
+.pub-handle {
+  font-family: "CS Genio Mono", monospace;
+  font-size: 12px;
+  color: rgba(245, 242, 236, 0.4);
+  margin: 0;
+  letter-spacing: 0.02em;
+}
+
+/* Available indicator */
+.pub-available {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 20px;
+}
+
+.pub-available-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #4ade80;
+  flex-shrink: 0;
+  animation: pulse-available 2s ease-in-out infinite;
+}
+
+@keyframes pulse-available {
+  0%, 100% { opacity: 1;   box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.4); }
+  50%       { opacity: 0.8; box-shadow: 0 0 0 4px rgba(74, 222, 128, 0); }
+}
+
+.pub-available-label {
+  font-family: "CS Genio Mono", monospace;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #4ade80;
+}
+
+/* Hero right — avatar column */
+.pub-hero-avatar-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  flex-shrink: 0;
 }
 
 /* Avatar — 50% border-radius exception per design system */
 .pub-avatar {
-  width: 160px;
-  height: 160px;
+  width: 140px;
+  height: 140px;
   border-radius: 50%;
-  border: 4px solid #c1121f; /* overridden inline with tier color */
-  background: var(--surface);
+  border: 4px solid #c1121f;
+  background: rgba(245, 242, 236, 0.1);
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
   flex-shrink: 0;
+  box-shadow: 0 0 0 8px rgba(193, 18, 31, 0.12);
 }
 
 .pub-avatar-img {
@@ -109,105 +271,175 @@
 
 .pub-avatar-initial {
   font-family: "Darky", serif;
-  font-size: 64px;
+  font-size: 52px;
   font-weight: 900;
   line-height: 1;
   letter-spacing: -0.04em;
+  color: #f5f2ec;
 }
 
-/* Identity block */
-.pub-identity {
+/* Score rings kept but hidden — replaced with score badge in hero */
+.pub-score-section {
+  display: none;
+}
+
+/* ── 3. Stats bar (dark bg continues) ─────────────────────────────────────── */
+
+.pub-stats-strip {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  background: #003049;
+  border-top: 1px solid rgba(245, 242, 236, 0.06);
+}
+
+.pub-stat {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  align-items: center;
+  justify-content: center;
+  padding: 28px 16px;
+  border-right: 1px solid rgba(245, 242, 236, 0.06);
+  text-align: center;
+  position: relative;
 }
 
-.pub-name {
+.pub-stat:last-child {
+  border-right: none;
+}
+
+.pub-stat::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 32px;
+  height: 2px;
+  background: transparent;
+  transition: background 200ms ease;
+}
+
+.pub-stat:first-child::after {
+  background: #c1121f;
+}
+
+.pub-stat-value {
   font-family: "Darky", serif;
-  font-size: 48px;
+  font-size: 36px;
   font-weight: 900;
-  color: #003049;
+  color: #f5f2ec;
   letter-spacing: -0.04em;
-  margin: 0;
-  line-height: 1.0;
+  line-height: 1;
 }
 
-.pub-badge-row {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.pub-location {
+.pub-stat-label {
   font-family: "CS Genio Mono", monospace;
-  font-size: 13px;
-  color: rgba(0, 48, 73, 0.6);
-  margin: 0;
-  display: flex;
-  align-items: center;
-  gap: 6px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(245, 242, 236, 0.4);
+  margin-top: 8px;
 }
 
-.pub-location-icon {
-  font-size: 11px;
-  color: rgba(0, 48, 73, 0.4);
+/* ── 4. About / Bio section ────────────────────────────────────────────────── */
+
+.pub-bio-section {
+  background: #ffffff;
+  padding: 48px 40px;
+  border-bottom: 1px solid rgba(0, 48, 73, 0.08);
+  max-width: 100%;
 }
 
-.pub-handle {
-  font-family: "CS Genio Mono", monospace;
-  font-size: 13px;
-  color: rgba(0, 48, 73, 0.55);
-  margin: 0;
-  letter-spacing: 0.01em;
+.pub-bio-inner {
+  max-width: 720px;
+  margin: 0 auto;
 }
 
 .pub-bio {
   font-family: "CS Genio Mono", monospace;
-  font-size: 15px;
-  line-height: 1.65;
+  font-size: 18px;
+  line-height: 1.7;
   color: #003049;
-  margin: 4px 0 0;
-  max-width: 480px;
+  margin: 0;
+  max-width: 680px;
 }
 
-/* Available indicator */
-.pub-available {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
+/* ── 5. Social links ───────────────────────────────────────────────────────── */
+
+.pub-social-section {
+  background: #f5f2ec;
+  padding: 32px 40px;
+  border-bottom: 1px solid rgba(0, 48, 73, 0.08);
+  overflow: hidden;
+}
+
+.pub-social-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.pub-social-scroll {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  padding-bottom: 4px;
+}
+
+.pub-social-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.pub-social-card {
+  background: #ffffff;
+  border: 1px solid rgba(0, 48, 73, 0.1);
+  padding: 16px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex-shrink: 0;
+  min-width: 160px;
+  text-decoration: none;
+  transition: border-color 150ms ease, box-shadow 150ms ease;
+}
+
+.pub-social-card:hover {
+  border-color: rgba(0, 48, 73, 0.25);
+  box-shadow: 0 4px 12px rgba(0, 48, 73, 0.06);
+}
+
+.pub-social-platform {
+  font-family: "CS Genio Mono", monospace;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(0, 48, 73, 0.4);
+}
+
+.pub-social-handle {
+  font-family: "CS Genio Mono", monospace;
+  font-size: 14px;
+  font-weight: 700;
+  color: #003049;
+}
+
+.pub-social-followers {
+  font-family: "Darky", serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: #c1121f;
+  letter-spacing: -0.03em;
+  line-height: 1;
   margin-top: 4px;
 }
 
-.pub-available-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: #2e7d32;
-  flex-shrink: 0;
-  animation: pulse-dot 2s ease-in-out infinite;
-}
-
-@keyframes pulse-dot {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.4; }
-}
-
-.pub-available-label {
+.pub-social-followers-label {
   font-family: "CS Genio Mono", monospace;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: #2e7d32;
-}
-
-/* Score rings side */
-.pub-score-section {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 12px;
-  flex-shrink: 0;
+  font-size: 10px;
+  color: rgba(0, 48, 73, 0.4);
 }
 
 /* ── Shared section eyebrow ────────────────────────────────────────────────── */
@@ -216,117 +448,107 @@
   font-family: "CS Genio Mono", monospace;
   font-size: 11px;
   font-weight: 700;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: rgba(0, 48, 73, 0.45);
-  margin: 0 0 16px;
+  color: rgba(0, 48, 73, 0.4);
+  margin: 0 0 20px;
 }
 
-/* ── 3. Stats strip ────────────────────────────────────────────────────────── */
-
-.pub-stats-strip {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  border-top: 1px solid rgba(0, 48, 73, 0.1);
-  border-bottom: 1px solid rgba(0, 48, 73, 0.1);
-  background: #ffffff;
-  padding: 0;
-}
-
-.pub-stat {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 24px 16px;
-  border-right: 1px solid rgba(0, 48, 73, 0.08);
-  text-align: center;
-}
-
-.pub-stat:last-child {
-  border-right: none;
-}
-
-.pub-stat-value {
-  font-family: "Darky", serif;
-  font-size: 28px;
-  font-weight: 700;
-  color: #003049;
-  letter-spacing: -0.03em;
-  line-height: 1;
-}
-
-.pub-stat-label {
-  font-family: "CS Genio Mono", monospace;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: rgba(0, 48, 73, 0.45);
-  margin-top: 6px;
-}
-
-/* ── 4. Tier journey ───────────────────────────────────────────────────────── */
+/* ── 6. Tier journey ───────────────────────────────────────────────────────── */
 
 .pub-tier-section {
-  background: var(--surface);
-  padding: 40px;
-  border-bottom: 1px solid rgba(0, 48, 73, 0.1);
-}
-
-/* ── 5. Campaign history ───────────────────────────────────────────────────── */
-
-.pub-campaigns-section {
-  background: #ffffff;
-  padding: 40px;
+  background: #f5f2ec;
+  padding: 48px 40px;
   border-bottom: 1px solid rgba(0, 48, 73, 0.08);
 }
 
+.pub-tier-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* ── 7. Campaign history (Sticky Grid Scroll style) ────────────────────────── */
+
+.pub-campaigns-section {
+  background: #ffffff;
+  padding: 48px 40px;
+  border-bottom: 1px solid rgba(0, 48, 73, 0.08);
+}
+
+.pub-campaigns-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* 3-column grid with stickyGridItem reveal animation */
 .pub-campaigns {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 12px;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2px;
+  background: rgba(0, 48, 73, 0.08);
 }
 
 .pub-campaign-card {
-  border-left: 3px solid #c1121f; /* overridden inline with tier color */
-  padding: 16px;
-  background: var(--surface);
-  border-radius: 0;
+  background: #ffffff;
+  padding: 24px;
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  transition: background 0.15s ease;
+  gap: 12px;
+  transition: background 150ms ease;
+  /* stickyGridItem reveal */
+  opacity: 0;
+  transform: scale(0.97);
+  animation: gridItemReveal 500ms ease forwards;
+}
+
+.pub-campaign-card:nth-child(1) { animation-delay: 0ms; }
+.pub-campaign-card:nth-child(2) { animation-delay: 80ms; }
+.pub-campaign-card:nth-child(3) { animation-delay: 160ms; }
+.pub-campaign-card:nth-child(4) { animation-delay: 240ms; }
+.pub-campaign-card:nth-child(5) { animation-delay: 320ms; }
+.pub-campaign-card:nth-child(6) { animation-delay: 400ms; }
+
+@keyframes gridItemReveal {
+  to { opacity: 1; transform: scale(1); }
 }
 
 .pub-campaign-card:hover {
-  background: rgba(193, 18, 31, 0.04);
+  background: rgba(193, 18, 31, 0.02);
+}
+
+/* Top accent line per tier color */
+.pub-campaign-card-accent {
+  width: 32px;
+  height: 3px;
+  background: #c1121f;
+  flex-shrink: 0;
 }
 
 .pub-campaign-header {
   display: flex;
-  align-items: center;
-  gap: 8px;
-  flex-wrap: wrap;
+  flex-direction: column;
+  gap: 6px;
 }
 
 .pub-campaign-business {
   font-family: "CS Genio Mono", monospace;
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 700;
   color: #003049;
+  line-height: 1.2;
 }
 
 .pub-campaign-category {
   font-family: "CS Genio Mono", monospace;
   font-size: 10px;
   font-weight: 700;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: rgba(0, 48, 73, 0.55);
-  background: rgba(0, 48, 73, 0.08);
-  padding: 2px 6px;
-  border-radius: 0;
+  color: rgba(0, 48, 73, 0.45);
+  background: rgba(0, 48, 73, 0.06);
+  padding: 3px 8px;
+  display: inline-block;
+  width: fit-content;
 }
 
 .pub-campaign-footer {
@@ -334,80 +556,105 @@
   align-items: center;
   justify-content: space-between;
   gap: 8px;
+  margin-top: auto;
+  padding-top: 12px;
+  border-top: 1px solid rgba(0, 48, 73, 0.06);
 }
 
 .pub-campaign-date {
   font-family: "CS Genio Mono", monospace;
   font-size: 11px;
-  color: rgba(0, 48, 73, 0.45);
+  color: rgba(0, 48, 73, 0.4);
 }
 
 .pub-campaign-payout {
-  font-family: "CS Genio Mono", monospace;
-  font-size: 11px;
+  font-family: "Darky", serif;
+  font-size: 18px;
   font-weight: 700;
-  color: #2e7d32;
-  letter-spacing: 0.02em;
+  color: #c1121f;
+  letter-spacing: -0.03em;
+  line-height: 1;
 }
 
 .pub-campaign-payout--product {
-  color: rgba(0, 48, 73, 0.45);
+  font-family: "CS Genio Mono", monospace;
+  font-size: 11px;
   font-weight: 400;
+  color: rgba(0, 48, 73, 0.4);
+  letter-spacing: 0;
 }
 
-/* ── 6. CTA section ────────────────────────────────────────────────────────── */
+/* ── 8. CTA section ────────────────────────────────────────────────────────── */
 
 .pub-cta-section {
   background: #003049;
-  padding: 64px 40px;
+  padding: 80px 40px;
   text-align: center;
-  border-radius: 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.pub-cta-section::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 60% 80% at 50% 50%, rgba(193, 18, 31, 0.12) 0%, transparent 60%);
+  pointer-events: none;
 }
 
 .pub-cta-eyebrow {
   font-family: "CS Genio Mono", monospace;
   font-size: 11px;
   font-weight: 700;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: rgba(245, 242, 236, 0.45);
-  margin: 0 0 12px;
+  color: rgba(245, 242, 236, 0.35);
+  margin: 0 0 16px;
+  position: relative;
+  z-index: 1;
 }
 
 .pub-cta-headline {
   font-family: "Darky", serif;
-  font-size: 40px;
+  font-size: clamp(36px, 6vw, 64px);
   font-weight: 900;
   color: #f5f2ec;
-  letter-spacing: -0.04em;
-  margin: 0 0 12px;
-  line-height: 1.05;
+  letter-spacing: -0.05em;
+  margin: 0 0 16px;
+  line-height: 1;
+  text-transform: uppercase;
+  position: relative;
+  z-index: 1;
 }
 
 .pub-cta-sub {
   font-family: "CS Genio Mono", monospace;
   font-size: 14px;
-  color: rgba(245, 242, 236, 0.7);
-  margin: 0 0 32px;
-  line-height: 1.6;
+  color: rgba(245, 242, 236, 0.6);
+  margin: 0 auto 40px;
+  line-height: 1.65;
   max-width: 440px;
-  margin-left: auto;
-  margin-right: auto;
+  position: relative;
+  z-index: 1;
 }
 
 .pub-cta-button {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
   background: #c1121f;
   color: #ffffff;
   font-family: "CS Genio Mono", monospace;
-  font-size: 14px;
+  font-size: 12px;
   font-weight: 700;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
-  padding: 16px 32px;
+  padding: 18px 40px;
   border-radius: 0;
   text-decoration: none;
-  transition: background 0.15s ease;
+  transition: background 150ms ease;
+  position: relative;
+  z-index: 1;
 }
 
 .pub-cta-button:hover {
@@ -417,22 +664,24 @@
 .pub-cta-note {
   font-family: "CS Genio Mono", monospace;
   font-size: 11px;
-  color: rgba(245, 242, 236, 0.4);
-  margin: 20px 0 0;
-  letter-spacing: 0.02em;
+  color: rgba(245, 242, 236, 0.3);
+  margin: 24px 0 0;
+  letter-spacing: 0.04em;
+  position: relative;
+  z-index: 1;
 }
 
-/* ── 7. Footer ─────────────────────────────────────────────────────────────── */
+/* ── 9. Footer ─────────────────────────────────────────────────────────────── */
 
 .profile-footer {
-  background: var(--surface);
-  padding: 20px 24px;
+  background: #003049;
+  padding: 20px 40px;
   text-align: center;
   font-family: "CS Genio Mono", monospace;
   font-size: 11px;
-  color: rgba(0, 48, 73, 0.35);
-  letter-spacing: 0.04em;
-  border-top: 1px solid rgba(0, 48, 73, 0.08);
+  color: rgba(245, 242, 236, 0.2);
+  letter-spacing: 0.06em;
+  border-top: 1px solid rgba(245, 242, 236, 0.06);
 }
 
 /* ── Skeleton states ───────────────────────────────────────────────────────── */
@@ -452,13 +701,8 @@
 }
 
 @keyframes skeletonPulse {
-  0%,
-  100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.4;
-  }
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.4; }
 }
 
 /* ── Not found ─────────────────────────────────────────────────────────────── */
@@ -473,36 +717,39 @@
 
 /* ── Mobile ────────────────────────────────────────────────────────────────── */
 
+@media (max-width: 900px) {
+  .pub-campaigns {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
 @media (max-width: 700px) {
-  .pub-hero {
-    padding: 32px 20px;
+  .profile-header-strip {
+    padding: 12px 20px;
   }
 
   .pub-hero-inner {
     grid-template-columns: 1fr;
+    padding: 48px 20px 40px;
     gap: 32px;
   }
 
+  .pub-hero-avatar-col {
+    order: -1;
+    align-items: flex-start;
+  }
+
   .pub-avatar {
-    width: 100px;
-    height: 100px;
+    width: 96px;
+    height: 96px;
   }
 
   .pub-avatar-initial {
-    font-size: 40px;
+    font-size: 36px;
   }
 
   .pub-name {
-    font-size: 32px;
-  }
-
-  .pub-bio {
-    font-size: 14px;
-    max-width: 100%;
-  }
-
-  .pub-score-section {
-    align-items: flex-start;
+    font-size: clamp(40px, 10vw, 64px);
   }
 
   .pub-stats-strip {
@@ -510,20 +757,26 @@
   }
 
   .pub-stat {
-    border-bottom: 1px solid rgba(0, 48, 73, 0.08);
+    border-bottom: 1px solid rgba(245, 242, 236, 0.06);
   }
 
   .pub-stat:nth-child(odd) {
-    border-right: 1px solid rgba(0, 48, 73, 0.08);
+    border-right: 1px solid rgba(245, 242, 236, 0.06);
   }
 
   .pub-stat:nth-child(even) {
     border-right: none;
   }
 
+  .pub-bio-section,
+  .pub-social-section,
   .pub-tier-section,
   .pub-campaigns-section {
-    padding: 24px 20px;
+    padding: 32px 20px;
+  }
+
+  .pub-bio {
+    font-size: 15px;
   }
 
   .pub-campaigns {
@@ -531,10 +784,10 @@
   }
 
   .pub-cta-section {
-    padding: 40px 20px;
+    padding: 56px 20px;
   }
 
-  .pub-cta-headline {
-    font-size: 28px;
+  .profile-footer {
+    padding: 20px;
   }
 }
