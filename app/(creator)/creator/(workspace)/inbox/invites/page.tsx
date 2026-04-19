@@ -1,349 +1,352 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { useNotifications } from "@/lib/notifications/useNotifications";
 import "../inbox.css";
 
-/* ── Mock invite data ──────────────────────────────────────── */
-const INITIAL_INVITES = [
+/* ── Types ───────────────────────────────────────────────────── */
+
+type InviteStatus = "pending" | "accepted" | "declined";
+
+type Invite = {
+  id: string;
+  brand: string;
+  brandInitial: string;
+  campaign: string;
+  matchScore: number;
+  minEarn: number;
+  maxEarn: number;
+  bonusEarn: number;
+  expiresAt: number; // timestamp ms
+  status: InviteStatus;
+  category: string;
+};
+
+/* ── Seed invites ────────────────────────────────────────────── */
+
+const SEED_INVITES: Invite[] = [
   {
     id: "inv-001",
-    campaign: "Summer Brunch Series",
-    merchant: "Okonomi",
-    region: "Williamsburg, BK",
-    earning: "$48",
-    earningMin: 40,
-    earningMax: 56,
-    earningLabel: "est. payout",
-    deadline: new Date(Date.now() + 22 * 60 * 1000).toISOString(),
-    viewerCount: 7,
-    slotsLeft: 3,
-    accentClass: "invite-card__accent--urgent",
-    accentColor: "var(--primary)",
-    isNew: true,
-    description:
-      "Weekend brunch content — 1 Reel + 2 Stories. Must visit Sat or Sun.",
+    brand: "Roberta's Pizza",
+    brandInitial: "R",
+    campaign: "Summer Menu Launch",
+    matchScore: 98,
+    minEarn: 40,
+    maxEarn: 65,
+    bonusEarn: 85,
+    expiresAt: Date.now() + 4 * 60 * 60 * 1000 + 23 * 60 * 1000, // 4h 23m
+    status: "pending",
+    category: "Food & Beverage",
   },
   {
     id: "inv-002",
-    campaign: "Cold Brew Launch",
-    merchant: "Partners Coffee",
-    region: "Bushwick, BK",
-    earning: "$32",
-    earningMin: 28,
-    earningMax: 38,
-    earningLabel: "est. payout",
-    deadline: new Date(Date.now() + 4 * 60 * 60 * 1000).toISOString(),
-    viewerCount: 12,
-    slotsLeft: 8,
-    accentClass: "invite-card__accent--new",
-    accentColor: "var(--champagne)",
-    isNew: true,
-    description:
-      "Announce the new cold brew menu launch. Any day this week works.",
+    brand: "Flamingo Estate",
+    brandInitial: "F",
+    campaign: "Wellness Weekend",
+    matchScore: 94,
+    minEarn: 55,
+    maxEarn: 70,
+    bonusEarn: 85,
+    expiresAt: Date.now() + 11 * 60 * 60 * 1000, // 11h
+    status: "pending",
+    category: "Lifestyle",
   },
   {
     id: "inv-003",
-    campaign: "Neighborhood Playbook: Fort Greene",
-    merchant: "Ode to Babel",
-    region: "Fort Greene, BK",
-    earning: "$65",
-    earningMin: 55,
-    earningMax: 75,
-    earningLabel: "est. payout",
-    deadline: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000).toISOString(),
-    viewerCount: 4,
-    slotsLeft: 2,
-    accentClass: "invite-card__accent--active",
-    accentColor: "#16a34a",
-    isNew: false,
-    description:
-      "Part of the Williamsburg Coffee+ Neighborhood Playbook. 2 Reels minimum.",
+    brand: "Fort Greene Coffee",
+    brandInitial: "G",
+    campaign: "Morning Ritual Series",
+    matchScore: 91,
+    minEarn: 35,
+    maxEarn: 55,
+    bonusEarn: 70,
+    expiresAt: Date.now() + 26 * 60 * 60 * 1000, // 26h
+    status: "pending",
+    category: "Coffee & Cafe",
+  },
+  {
+    id: "inv-004",
+    brand: "Bed-Stuy Eats",
+    brandInitial: "B",
+    campaign: "Local Favorites Reel",
+    matchScore: 82,
+    minEarn: 30,
+    maxEarn: 50,
+    bonusEarn: 65,
+    expiresAt: Date.now() + 48 * 60 * 60 * 1000, // 48h
+    status: "pending",
+    category: "Food & Beverage",
+  },
+  {
+    id: "inv-005",
+    brand: "Brow Theory",
+    brandInitial: "B",
+    campaign: "Spring Beauty Campaign",
+    matchScore: 79,
+    minEarn: 45,
+    maxEarn: 60,
+    bonusEarn: 75,
+    expiresAt: Date.now() + 72 * 60 * 60 * 1000,
+    status: "pending",
+    category: "Beauty & Wellness",
   },
 ];
 
-/* ── Countdown ─────────────────────────────────────────────── */
-function formatCountdown(iso: string): { label: string; urgent: boolean } {
-  const diff = new Date(iso).getTime() - Date.now();
-  if (diff <= 0) return { label: "Expired", urgent: true };
-  const totalMins = Math.floor(diff / 60000);
-  if (totalMins < 60)
-    return { label: `${totalMins}m left`, urgent: totalMins < 30 };
-  const h = Math.floor(totalMins / 60);
-  const m = totalMins % 60;
-  if (h < 24)
-    return { label: `${h}h ${m > 0 ? `${m}m` : ""} left`, urgent: false };
-  const d = Math.floor(h / 24);
-  return { label: `${d}d remaining`, urgent: false };
-}
+/* ── Countdown hook ──────────────────────────────────────────── */
 
-/* ── Single invite card ────────────────────────────────────── */
-function InviteCard({ invite }: { invite: (typeof INITIAL_INVITES)[0] }) {
-  const [state, setState] = useState<"pending" | "accepted" | "declined">(
-    "pending",
-  );
-  const countdown = formatCountdown(invite.deadline);
-  const initial = invite.merchant.charAt(0).toUpperCase();
+function useCountdown(expiresAt: number) {
+  const [remaining, setRemaining] = useState(expiresAt - Date.now());
 
-  if (state === "declined") return null;
+  useEffect(() => {
+    const tick = () => setRemaining(expiresAt - Date.now());
+    tick();
+    const id = setInterval(tick, 30000); // update every 30s
+    return () => clearInterval(id);
+  }, [expiresAt]);
 
-  if (state === "accepted") {
-    return (
-      <div className="invite-card">
-        <div className="invite-card__accent invite-card__accent--active" />
-        <div
-          className="invite-card__body"
-          style={{
-            justifyContent: "center",
-            flexDirection: "row",
-            alignItems: "center",
-            gap: 10,
-          }}
-        >
-          <span
-            style={{
-              fontFamily: "var(--font-body)",
-              fontSize: 13,
-              color: "#16a34a",
-              fontWeight: 700,
-            }}
-          >
-            ✓ Accepted
-          </span>
-          <span
-            style={{
-              fontFamily: "var(--font-body)",
-              fontSize: 12,
-              color: "var(--graphite)",
-            }}
-          >
-            {invite.campaign} — check Campaigns for details
-          </span>
-        </div>
-        <div className="invite-card__actions" />
-      </div>
-    );
+  if (remaining <= 0) return "Expired";
+
+  const totalMins = Math.floor(remaining / 60000);
+  const hours = Math.floor(totalMins / 60);
+  const mins = totalMins % 60;
+
+  if (hours > 24) {
+    const days = Math.floor(hours / 24);
+    return `${days}d left`;
   }
+  if (hours > 0) return `${hours}h ${mins}m left`;
+  return `${mins}m left`;
+}
+
+/* ── Earn bar ────────────────────────────────────────────────── */
+
+function EarnBar({
+  min,
+  max,
+  bonus,
+}: {
+  min: number;
+  max: number;
+  bonus: number;
+}) {
+  // Fill to max as % of bonus range
+  const fillPct = Math.round(((max - min) / (bonus - min)) * 100);
+  const bonusMarkerPct = Math.round(((bonus - min) / (bonus - min)) * 100); // 100%
 
   return (
-    <article className="invite-card" aria-label={`Invite: ${invite.campaign}`}>
-      <div className={`invite-card__accent ${invite.accentClass}`} />
-
-      <div className="invite-card__body">
-        {/* Header row: logo + new dot + campaign name */}
-        <div className="invite-card__header-row">
-          <div
-            className="invite-card__logo"
-            style={{ background: invite.accentColor }}
-            aria-hidden
-          >
-            {initial}
-          </div>
-          {invite.isNew && (
-            <span className="invite-card__new-dot" aria-label="New invite" />
-          )}
-          <span className="invite-card__campaign">{invite.campaign}</span>
-        </div>
-
-        {/* Merchant + region */}
-        <div className="invite-card__merchant">
-          <span style={{ fontWeight: 600, color: "var(--dark)" }}>
-            {invite.merchant}
-          </span>
-          <span style={{ color: "rgba(74,85,104,0.45)", margin: "0 4px" }}>
-            ·
-          </span>
-          <span>{invite.region}</span>
-        </div>
-
-        {/* Description */}
-        <p className="invite-card__description">{invite.description}</p>
-
-        {/* Earn range + deadline countdown */}
-        <div className="invite-card__meta-row">
-          <span className="invite-card__earning">{invite.earning}</span>
-          <span className="invite-card__earning-label">
-            {invite.earningLabel}
-          </span>
-          {/* Earn range chip */}
-          <span
-            style={{
-              fontFamily: "var(--font-body)",
-              fontSize: 10,
-              color: "var(--graphite)",
-              background: "rgba(0,48,73,0.06)",
-              padding: "2px 7px",
-              letterSpacing: "0.02em",
-            }}
-          >
-            ${invite.earningMin}–${invite.earningMax}
-          </span>
-          <span
-            className={`invite-card__deadline${countdown.urgent ? " invite-card__deadline--urgent" : ""}`}
-          >
-            ⏱ {countdown.label}
-          </span>
-        </div>
-
-        {/* FOMO row */}
-        <div className="invite-card__fomo-row">
-          <span className="invite-card__viewers">
-            🔥 {invite.viewerCount} creators viewed
-          </span>
-          <span className="invite-card__slots">
-            {invite.slotsLeft} slot{invite.slotsLeft !== 1 ? "s" : ""} left
-          </span>
-        </div>
+    <div className="invite-earn-bar-wrap">
+      <div className="invite-earn-bar-labels">
+        <span className="invite-earn-label">${min} base</span>
+        <span className="invite-earn-label">${max} max</span>
+        <span className="invite-earn-label invite-earn-label--bonus">
+          ${bonus} bonus
+        </span>
       </div>
-
-      {/* Action buttons — full-width stacked */}
-      <div className="invite-card__actions">
-        <button
-          className="invite-btn invite-btn--accept"
-          onClick={() => setState("accepted")}
-          type="button"
-        >
-          Accept
-        </button>
-        <button
-          className="invite-btn invite-btn--decline"
-          onClick={() => setState("declined")}
-          type="button"
-        >
-          Decline
-        </button>
+      <div className="invite-earn-track">
+        <div className="invite-earn-fill" style={{ width: `${fillPct}%` }} />
+        <div
+          className="invite-earn-bonus-marker"
+          style={{ left: `${bonusMarkerPct - 1}%` }}
+        />
       </div>
-    </article>
+    </div>
   );
 }
 
-/* ── Page ──────────────────────────────────────────────────── */
-export default function InboxInvitesPage() {
-  const [invites] = useState(INITIAL_INVITES);
-  const activeCount = invites.length;
+/* ── Invite card ─────────────────────────────────────────────── */
+
+function InviteCard({
+  invite,
+  onAccept,
+  onDecline,
+}: {
+  invite: Invite;
+  onAccept: (id: string) => void;
+  onDecline: (id: string) => void;
+}) {
+  const countdown = useCountdown(invite.expiresAt);
+  const accepted = invite.status === "accepted";
+  const declined = invite.status === "declined";
+
+  if (declined) return null;
 
   return (
-    <div className="inbox-page">
-      {/* Top bar */}
-      <header className="inbox-topbar">
-        <div className="inbox-topbar__left">
-          <span className="inbox-topbar__title">Invites</span>
-          {activeCount > 0 && (
-            <span className="inbox-topbar__badge">{activeCount}</span>
+    <div className={`invite-card${accepted ? " invite-card--accepted" : ""}`}>
+      <div className="invite-card-header">
+        <div className="invite-card-left">
+          <div className="invite-card-avatar">{invite.brandInitial}</div>
+          <div className="invite-card-meta">
+            <div className="invite-card-brand">{invite.brand}</div>
+            <div className="invite-card-campaign">{invite.campaign}</div>
+          </div>
+        </div>
+        <div className="invite-card-badges">
+          {invite.matchScore >= 90 && (
+            <span className="invite-card-match">
+              {invite.matchScore}% match
+            </span>
           )}
+          <span className="invite-card-countdown">{countdown}</span>
+        </div>
+      </div>
+
+      <EarnBar
+        min={invite.minEarn}
+        max={invite.maxEarn}
+        bonus={invite.bonusEarn}
+      />
+
+      <div className="invite-card-actions">
+        {accepted ? (
+          <button
+            className="invite-btn-accept invite-btn-accept--accepted"
+            disabled
+          >
+            Accepted ✓
+          </button>
+        ) : (
+          <button
+            className="invite-btn-accept"
+            onClick={() => onAccept(invite.id)}
+          >
+            Accept
+          </button>
+        )}
+        {!accepted && (
+          <button
+            className="invite-btn-decline"
+            onClick={() => onDecline(invite.id)}
+          >
+            Decline
+          </button>
+        )}
+        <button className="invite-btn-details">View details</button>
+      </div>
+    </div>
+  );
+}
+
+/* ── Page ────────────────────────────────────────────────────── */
+
+export default function InvitesPage() {
+  const pathname = usePathname();
+  const { unreadCount } = useNotifications("creator");
+  const [invites, setInvites] = useState<Invite[]>(SEED_INVITES);
+  const [batchAccepted, setBatchAccepted] = useState(false);
+
+  const pending = invites.filter((i) => i.status === "pending");
+  const topMatches = pending.filter((i) => i.matchScore >= 90);
+  const showBatchBar = topMatches.length >= 3 && !batchAccepted;
+
+  const handleAccept = useCallback((id: string) => {
+    setInvites((prev) =>
+      prev.map((i) => (i.id === id ? { ...i, status: "accepted" } : i)),
+    );
+  }, []);
+
+  const handleDecline = useCallback((id: string) => {
+    setInvites((prev) =>
+      prev.map((i) => (i.id === id ? { ...i, status: "declined" } : i)),
+    );
+  }, []);
+
+  const handleAcceptAllMatching = useCallback(() => {
+    setInvites((prev) =>
+      prev.map((i) =>
+        i.matchScore >= 90 && i.status === "pending"
+          ? { ...i, status: "accepted" }
+          : i,
+      ),
+    );
+    setBatchAccepted(true);
+  }, []);
+
+  const unreadMessages = 2;
+  const systemUnread = unreadCount;
+  const pendingCount = pending.length;
+
+  return (
+    <div className="invites-page">
+      {/* Top nav */}
+      <header className="inbox-nav">
+        <Link href="/creator/dashboard" className="inbox-nav-back">
+          ← Dashboard
+        </Link>
+        <span className="inbox-nav-title">Inbox.</span>
+        <div className="inbox-live-indicator">
+          <span className="inbox-live-dot" />
+          <span className="inbox-live-label">Live</span>
         </div>
       </header>
 
-      {/* Tabs */}
-      <nav className="inbox-tabs" aria-label="Inbox sections">
-        <Link href="/creator/inbox" className="inbox-tab">
-          All
-        </Link>
-        <Link href="/creator/inbox/messages" className="inbox-tab">
+      {/* Section tabs */}
+      <nav className="inbox-tabs">
+        <Link
+          href="/creator/inbox"
+          className={`inbox-tab${!pathname?.endsWith("/invites") && !pathname?.endsWith("/system") ? " inbox-tab--active" : ""}`}
+        >
           Messages
+          {unreadMessages > 0 && (
+            <span className="inbox-tab-badge">{unreadMessages}</span>
+          )}
         </Link>
         <Link
           href="/creator/inbox/invites"
-          className="inbox-tab inbox-tab--active"
+          className={`inbox-tab${pathname?.endsWith("/invites") ? " inbox-tab--active" : ""}`}
         >
           Invites
-          {activeCount > 0 && (
-            <span className="inbox-tab__count">{activeCount}</span>
+          {pendingCount > 0 && (
+            <span className="inbox-tab-badge">{pendingCount}</span>
           )}
         </Link>
-        <Link href="/creator/inbox/system" className="inbox-tab">
+        <Link
+          href="/creator/inbox/system"
+          className={`inbox-tab${pathname?.endsWith("/system") ? " inbox-tab--active" : ""}`}
+        >
           System
+          {systemUnread > 0 && (
+            <span className="inbox-tab-badge">{systemUnread}</span>
+          )}
         </Link>
       </nav>
 
-      {/* Hero callout */}
-      <div
-        style={{
-          padding: "20px 32px 16px",
-          borderBottom: "1px solid var(--line)",
-          background: "var(--surface-bright)",
-        }}
-      >
-        <div
-          style={{
-            fontFamily: "var(--font-display)",
-            fontSize: "clamp(26px, 5vw, 44px)",
-            fontWeight: 900,
-            letterSpacing: "-0.04em",
-            color: "var(--dark)",
-            lineHeight: 1.05,
-          }}
-        >
-          {activeCount > 0 ? (
-            <>
-              <span style={{ color: "var(--primary)" }}>{activeCount}</span>{" "}
-              <span style={{ fontWeight: 200, color: "var(--graphite)" }}>
-                open invite{activeCount !== 1 ? "s" : ""}.
-              </span>
-            </>
-          ) : (
-            <span style={{ fontWeight: 200, color: "var(--graphite)" }}>
-              No invites right now.
-            </span>
-          )}
+      {/* Batch accept bar */}
+      {showBatchBar && (
+        <div className="invites-batch-bar">
+          <span className="invites-batch-text">
+            {topMatches.length} invites match your top niches (90%+ match)
+          </span>
+          <button
+            className="invites-batch-btn"
+            onClick={handleAcceptAllMatching}
+          >
+            Accept all matching
+          </button>
         </div>
-        <p
-          style={{
-            fontFamily: "var(--font-body)",
-            fontSize: 12,
-            color: "var(--graphite)",
-            margin: "6px 0 0",
-            opacity: 0.75,
-          }}
-        >
-          Campaign invites expire — accept fast to lock in your slot.
-        </p>
-      </div>
+      )}
 
       {/* Invite list */}
-      {activeCount === 0 ? (
-        <div className="inbox-empty" style={{ paddingTop: 80 }}>
-          <div className="inbox-empty__icon" aria-hidden>
-            ◈
+      <div className="invites-list">
+        {invites.every((i) => i.status !== "pending") ? (
+          <div className="inbox-empty">
+            <p className="inbox-empty-title">All done.</p>
+            <p className="inbox-empty-body">
+              No pending invites. New campaign matches will appear here.
+            </p>
           </div>
-          <p className="inbox-empty__title">No invites right now</p>
-          <p className="inbox-empty__body">
-            New campaigns are added weekly. Check back soon.
-          </p>
-          <Link href="/creator/explore" className="inbox-empty__link">
-            Explore campaigns →
-          </Link>
-        </div>
-      ) : (
-        <>
-          <div className="inbox-section-header">
-            <span className="inbox-section-label">
-              Active Invites · {activeCount}
-            </span>
-          </div>
-          <div className="inbox-invites-grid">
-            {invites.map((inv) => (
-              <InviteCard key={inv.id} invite={inv} />
-            ))}
-          </div>
-
-          {/* Bottom notice */}
-          <div
-            style={{
-              padding: "12px 32px",
-              fontFamily: "var(--font-body)",
-              fontSize: 10,
-              color: "rgba(0,48,73,0.3)",
-              borderTop: "1px solid var(--line)",
-              marginTop: 8,
-              letterSpacing: "0.02em",
-            }}
-          >
-            Invites auto-expire after their deadline. Accepting locks your
-            campaign slot — view details in Campaigns.
-          </div>
-        </>
-      )}
+        ) : (
+          invites.map((invite) => (
+            <InviteCard
+              key={invite.id}
+              invite={invite}
+              onAccept={handleAccept}
+              onDecline={handleDecline}
+            />
+          ))
+        )}
+      </div>
     </div>
   );
 }

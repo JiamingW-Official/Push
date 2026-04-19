@@ -79,7 +79,7 @@ export function MobileNav({ unreadCounts = {}, onTabClick }: MobileNavProps) {
   };
 
   return (
-    <nav className="ws-mobile-nav" aria-label="Mobile workspace navigation">
+    <nav className="ws-mobile-nav" aria-label="Bottom navigation">
       {MOBILE_TABS.map((tab) => {
         const active = isActive(tab);
         const unread = unreadCounts[tab.id] ?? 0;

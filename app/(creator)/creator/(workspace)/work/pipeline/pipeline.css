@@ -1,5 +1,5 @@
 /* ============================================================
-   Work Pipeline — Campaign Kanban View  (Wave 2 Polish)
+   Work Pipeline — Campaign Kanban View  (Wave 4 Polish)
    Design system: border-radius 0, 8px grid, 6-color palette
    Fonts: Darky (display) + CS Genio Mono (body/UI)
    ============================================================ */
@@ -34,6 +34,17 @@
 @keyframes pl-count-pop {
   from { opacity: 0; transform: scale(0.85); }
   to   { opacity: 1; transform: scale(1); }
+}
+
+/* Critical deadline: badge pulses red */
+@keyframes inviteCountdownPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(193, 18, 31, 0.6); }
+  50%       { box-shadow: 0 0 0 5px rgba(193, 18, 31, 0); }
+}
+
+@keyframes pl-expand-in {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
 /* ── Page Shell ───────────────────────────────────────────── */
@@ -195,6 +206,64 @@
 .pl-hero-right {
   text-align: right;
   flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 10px;
+}
+
+/* This-week potential stat */
+.pl-hero-week-stat {
+  background: rgba(201, 169, 110, 0.08);
+  border: 1px solid rgba(201, 169, 110, 0.25);
+  padding: 10px 16px;
+  text-align: right;
+}
+
+.pl-week-label {
+  font-family: var(--font-body);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--champagne);
+  margin: 0 0 4px;
+}
+
+.pl-week-value {
+  font-family: var(--font-display);
+  font-size: clamp(22px, 3vw, 32px);
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  color: var(--champagne);
+  margin: 0;
+  line-height: 1;
+  animation: pl-count-pop 500ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* Deadline warning pill */
+.pl-hero-deadline-warn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(201, 100, 0, 0.07);
+  border: 1px solid rgba(201, 100, 0, 0.2);
+  padding: 6px 12px;
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #b85c00;
+}
+
+.pl-warn-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #b85c00;
+  animation: pl-red-pulse 2s ease-in-out infinite;
+  flex-shrink: 0;
 }
 
 .pl-potential-label {
@@ -204,7 +273,7 @@
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--graphite);
-  margin: 0 0 8px;
+  margin: 0;
 }
 
 .pl-potential-value {
@@ -214,7 +283,7 @@
   letter-spacing: -0.04em;
   line-height: 0.95;
   color: var(--champagne);
-  margin: 0 0 6px;
+  margin: 0;
   animation: pl-count-pop 500ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
@@ -223,6 +292,7 @@
   font-size: 12px;
   color: var(--graphite);
   opacity: 0.7;
+  margin: 0;
 }
 
 /* ── Tabs ─────────────────────────────────────────────────── */
@@ -324,6 +394,21 @@
   flex-shrink: 0;
 }
 
+.pl-sort-group {
+  gap: 6px;
+}
+
+.pl-sort-label {
+  font-family: var(--font-body);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--graphite);
+  opacity: 0.5;
+  margin-right: 2px;
+}
+
 .pl-filter-divider {
   width: 1px;
   height: 18px;
@@ -404,12 +489,19 @@
 
 /* ── Column Layout ────────────────────────────────────────── */
 
+/* 4 columns: Applied / Active / Pending Review / Completed */
 .pl-columns {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 0;
   min-height: calc(100vh - 300px);
   animation: pl-fade-up 500ms 160ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@media (max-width: 1100px) {
+  .pl-columns {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
 @media (max-width: 900px) {
@@ -440,9 +532,10 @@
 }
 
 /* Top color band on column header */
-.pl-col-applied .pl-col-header { border-top: 2px solid var(--tertiary); }
-.pl-col-active  .pl-col-header { border-top: 2px solid var(--primary); }
-.pl-col-completed .pl-col-header { border-top: 2px solid var(--graphite); }
+.pl-col-applied      .pl-col-header { border-top: 2px solid var(--tertiary); }
+.pl-col-active       .pl-col-header { border-top: 2px solid var(--primary); }
+.pl-col-pending_review .pl-col-header { border-top: 2px solid var(--champagne); }
+.pl-col-completed    .pl-col-header { border-top: 2px solid var(--graphite); }
 
 .pl-col-dot {
   width: 7px;
@@ -494,6 +587,19 @@
   margin: 6px 0;
 }
 
+.pl-col-empty-link {
+  color: var(--primary);
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 1;
+  transition: opacity 150ms ease;
+}
+
+.pl-col-empty-link:hover { opacity: 0.7; }
+
 /* ── Card Wrapper ─────────────────────────────────────────── */
 
 .pl-card-wrapper {
@@ -514,9 +620,15 @@
 }
 
 .pl-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 8px 28px rgba(0, 48, 73, 0.09);
-  border-color: rgba(0, 48, 73, 0.2);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 24px rgba(0, 48, 73, 0.08);
+  border-color: rgba(0, 48, 73, 0.18);
+}
+
+.pl-card-expanded {
+  transform: none !important;
+  box-shadow: 0 4px 20px rgba(0, 48, 73, 0.1) !important;
+  border-color: rgba(0, 48, 73, 0.2) !important;
 }
 
 /* Left status border stripe */
@@ -527,43 +639,49 @@
   top: 0;
   bottom: 0;
   width: 4px;
+  z-index: 1;
 }
 
-.pl-card-applied::before { background: var(--tertiary); }
-.pl-card-active::before  { background: var(--primary); }
-.pl-card-completed::before { background: var(--graphite); opacity: 0.4; }
+.pl-card-applied::before        { background: var(--tertiary); }
+.pl-card-active::before         { background: var(--primary); }
+.pl-card-pending_review::before { background: var(--champagne); }
+.pl-card-completed::before      { background: var(--graphite); opacity: 0.4; }
 
-/* Overdue urgency overlay */
-.pl-card-overdue {
-  border-color: rgba(193, 18, 31, 0.3);
-}
-
-.pl-card-overdue::after {
-  content: "OVERDUE";
+/* Category color strip — bottom of card left area */
+.pl-card-category-strip {
   position: absolute;
-  top: 6px;
-  right: 8px;
-  font-family: var(--font-body);
-  font-size: 8px;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  color: var(--primary);
-  background: rgba(193, 18, 31, 0.08);
-  padding: 2px 5px;
+  left: 4px;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  opacity: 0.35;
+  z-index: 0;
+}
+
+/* Overdue urgency — red background tint */
+.pl-card-overdue {
+  background: rgba(193, 18, 31, 0.03);
+  border-color: rgba(193, 18, 31, 0.25);
+}
+
+/* Critical (< 3 days) — subtle pulse on card */
+.pl-card-critical {
+  border-color: rgba(193, 18, 31, 0.3);
 }
 
 .pl-card-inner {
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 14px 12px 14px 18px;
-  min-height: 92px;
+  padding: 14px 12px 10px 18px;
+  min-height: 88px;
 }
 
 /* ── Card: List View overrides ────────────────────────────── */
 
 .pl-card.pl-view-list {
-  height: 56px;
+  height: auto;
+  min-height: 56px;
 }
 
 .pl-card.pl-view-list .pl-card-inner {
@@ -579,6 +697,8 @@
 
 .pl-card.pl-view-list .pl-progress-wrap { display: none; }
 .pl-card.pl-view-list .pl-card-merchant { display: none; }
+.pl-card.pl-view-list .pl-card-walkin   { display: none; }
+.pl-card.pl-view-list .pl-card-bonus    { display: none; }
 
 /* ── Card Logo ────────────────────────────────────────────── */
 
@@ -594,6 +714,8 @@
   color: #fff;
   flex-shrink: 0;
   border-radius: 0;
+  position: relative;
+  z-index: 1;
 }
 
 /* ── Card Info ────────────────────────────────────────────── */
@@ -601,6 +723,8 @@
 .pl-card-info {
   flex: 1;
   min-width: 0;
+  position: relative;
+  z-index: 1;
 }
 
 .pl-card-header-row {
@@ -644,7 +768,7 @@
   font-family: var(--font-body);
   font-size: 11px;
   color: var(--graphite);
-  margin: 0 0 8px;
+  margin: 0 0 7px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -655,6 +779,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
+  margin-bottom: 4px;
 }
 
 .pl-progress-track {
@@ -675,6 +800,11 @@
   background: var(--graphite);
 }
 
+/* Pending review progress — champagne */
+.pl-card-pending_review .pl-progress-fill {
+  background: var(--champagne);
+}
+
 .pl-progress-label {
   font-family: var(--font-body);
   font-size: 9px;
@@ -682,6 +812,25 @@
   white-space: nowrap;
   flex-shrink: 0;
   opacity: 0.7;
+}
+
+/* Walk-in count micro-detail */
+.pl-card-walkin {
+  font-family: var(--font-body);
+  font-size: 9px;
+  color: var(--graphite);
+  margin: 0;
+  opacity: 0.65;
+}
+
+/* Bonus tier progress */
+.pl-card-bonus {
+  font-family: var(--font-body);
+  font-size: 9px;
+  color: var(--champagne);
+  margin: 0;
+  font-weight: 700;
+  letter-spacing: 0.04em;
 }
 
 /* ── Card Meta ────────────────────────────────────────────── */
@@ -693,6 +842,8 @@
   gap: 5px;
   flex-shrink: 0;
   margin-left: 8px;
+  position: relative;
+  z-index: 1;
 }
 
 /* Earn amount — champagne gold */
@@ -712,24 +863,54 @@
   font-size: 14px;
 }
 
-.pl-card-deadline {
+/* ── Deadline Badges ──────────────────────────────────────── */
+
+.pl-deadline-badge {
   font-family: var(--font-body);
-  font-size: 10px;
-  color: var(--graphite);
-  white-space: nowrap;
-  opacity: 0.7;
-}
-
-/* Urgent deadline badge */
-.pl-urgent {
-  color: var(--primary);
+  font-size: 9px;
   font-weight: 700;
-  opacity: 1;
-  background: rgba(193, 18, 31, 0.07);
-  padding: 1px 5px;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  padding: 2px 6px;
+  white-space: nowrap;
+  border-radius: 0;
 }
 
-.pl-card-category {
+/* > 7 days: green */
+.pl-deadline-safe {
+  color: #2d7a4f;
+  background: rgba(45, 122, 79, 0.1);
+}
+
+/* 3-7 days: amber */
+.pl-deadline-amber {
+  color: #b85c00;
+  background: rgba(184, 92, 0, 0.1);
+}
+
+/* < 3 days: red + pulse animation */
+.pl-deadline-critical {
+  color: var(--primary);
+  background: rgba(193, 18, 31, 0.1);
+  animation: inviteCountdownPulse 1.6s ease-in-out infinite;
+}
+
+/* Overdue */
+.pl-deadline-overdue {
+  color: var(--primary);
+  background: rgba(193, 18, 31, 0.12);
+  font-size: 8px;
+}
+
+/* Done */
+.pl-deadline-done {
+  color: var(--graphite);
+  background: transparent;
+  opacity: 0.6;
+  font-weight: 400;
+}
+
+.pl-card-category-label {
   font-family: var(--font-body);
   font-size: 8px;
   font-weight: 700;
@@ -749,6 +930,8 @@
   margin-left: 4px;
   opacity: 0;
   transition: opacity 180ms ease;
+  position: relative;
+  z-index: 1;
 }
 
 .pl-card:hover .pl-card-actions { opacity: 1; }
@@ -794,6 +977,153 @@
   background: var(--graphite);
   color: #fff;
 }
+
+/* ── Card CTA Row ─────────────────────────────────────────── */
+
+.pl-card-cta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 12px 10px 18px;
+  gap: 8px;
+}
+
+/* Status action buttons */
+.pl-action-btn {
+  font-family: var(--font-body);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  text-decoration: none;
+  padding: 6px 14px;
+  border: none;
+  border-radius: 0;
+  cursor: pointer;
+  transition: background 150ms ease, color 150ms ease, border-color 150ms ease;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+/* Primary CTA — Submit Content */
+.pl-action-primary {
+  background: var(--primary);
+  color: #fff;
+}
+
+.pl-action-primary:hover {
+  background: var(--accent);
+}
+
+/* Secondary — Check Status */
+.pl-action-secondary {
+  background: transparent;
+  color: var(--champagne);
+  border: 1px solid rgba(201, 169, 110, 0.4);
+}
+
+.pl-action-secondary:hover {
+  background: rgba(201, 169, 110, 0.08);
+  border-color: var(--champagne);
+}
+
+/* Ghost — Withdraw / View Details */
+.pl-action-ghost {
+  background: transparent;
+  color: var(--graphite);
+  border: 1px solid rgba(0, 48, 73, 0.18);
+}
+
+.pl-action-ghost:hover {
+  border-color: var(--dark);
+  color: var(--dark);
+}
+
+.pl-expand-toggle {
+  font-size: 8px;
+  color: var(--graphite);
+  opacity: 0.4;
+  transition: opacity 150ms ease, transform 150ms ease;
+  cursor: pointer;
+  user-select: none;
+  flex-shrink: 0;
+}
+
+.pl-card:hover .pl-expand-toggle { opacity: 0.7; }
+.pl-card-expanded .pl-expand-toggle { opacity: 0.7; }
+
+/* ── Expanded Panel ───────────────────────────────────────── */
+
+.pl-expand-panel {
+  border-top: 1px solid var(--line);
+  padding: 16px 18px 18px;
+  background: var(--surface-bright);
+  animation: pl-expand-in 250ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.pl-expand-row {
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+  margin-top: 12px;
+}
+
+.pl-expand-section {
+  flex: 1;
+  min-width: 120px;
+}
+
+.pl-expand-label {
+  font-family: var(--font-body);
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--graphite);
+  opacity: 0.55;
+  margin: 0 0 5px;
+}
+
+.pl-expand-text {
+  font-family: var(--font-body);
+  font-size: 11px;
+  color: var(--dark);
+  line-height: 1.55;
+  margin: 0;
+  opacity: 0.8;
+}
+
+.pl-expand-stat {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--dark);
+  margin: 0 0 3px;
+  letter-spacing: -0.01em;
+}
+
+.pl-expand-walkin {
+  font-family: var(--font-body);
+  font-size: 10px;
+  color: var(--graphite);
+  margin: 0;
+  opacity: 0.7;
+}
+
+.pl-expand-contact {
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--primary);
+  text-decoration: none;
+  transition: opacity 150ms ease;
+}
+
+.pl-expand-contact:hover { opacity: 0.7; }
 
 /* ── List Layout ──────────────────────────────────────────── */
 
@@ -935,6 +1265,20 @@
 
 .pl-empty-discover:hover { border-color: var(--dark); }
 
+/* Active-tab empty: primary CTA style */
+.pl-empty-discover-primary {
+  background: var(--primary);
+  color: #fff;
+  border-color: var(--primary);
+  margin-top: 8px;
+}
+
+.pl-empty-discover-primary:hover {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
 /* ── Responsive ───────────────────────────────────────────── */
 
 @media (max-width: 768px) {
@@ -950,7 +1294,10 @@
     margin-bottom: 28px;
   }
 
-  .pl-hero-right { text-align: left; }
+  .pl-hero-right {
+    text-align: left;
+    align-items: flex-start;
+  }
 
   .pl-toolbar {
     padding: 12px 16px;
@@ -973,4 +1320,6 @@
   .pl-list-header { display: none; }
 
   .pl-col-header { top: 48px; }
+
+  .pl-expand-row { flex-direction: column; gap: 16px; }
 }

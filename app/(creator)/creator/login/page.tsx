@@ -106,7 +106,7 @@ export default function CreatorLoginPage() {
           <div className="form-wrap" id="login-form">
             <div className="form-header">
               <span className="form-eyebrow">Creator Login</span>
-              <h1 className="form-title">Welcome back.</h1>
+              <h1 className="form-title login-form-title">Welcome back.</h1>
               <p className="form-subtitle">Your campaigns are waiting.</p>
             </div>
 
@@ -219,10 +219,6 @@ export default function CreatorLoginPage() {
               </div>
             </form>
 
-            <div className="form-footer-divider">
-              <span className="form-footer-divider-text">or</span>
-            </div>
-
             <p className="form-footer">
               Don&apos;t have an account?{" "}
               <Link href="/creator/signup">Join as Creator &rarr;</Link>
@@ -242,81 +238,76 @@ export default function CreatorLoginPage() {
 }
 
 const LOGIN_TIERS = [
-  { icon: "◎", label: "Clay", rate: "Free", desc: "Zero followers needed" },
+  { icon: "◎", label: "Seed", rate: "Free", desc: "Zero followers needed" },
   {
     icon: "◈",
-    label: "Bronze",
-    rate: "$15/customer",
+    label: "Explorer",
+    rate: "$12/campaign",
     desc: "2 active campaigns",
   },
   {
     icon: "◆",
-    label: "Steel",
-    rate: "$25/customer",
-    desc: "Walk-in commission",
+    label: "Operator",
+    rate: "$20 + 3%",
+    desc: "Commission on walk-ins",
   },
-  { icon: "◉", label: "Gold", rate: "$40/customer", desc: "Priority matching" },
+  {
+    icon: "◉",
+    label: "Amplifier",
+    rate: "$35/campaign",
+    desc: "Priority matching",
+  },
   {
     icon: "◑",
-    label: "Ruby",
-    rate: "$65/customer",
+    label: "Luminary",
+    rate: "$65/campaign",
     desc: "Brand partnerships",
   },
   {
     icon: "★",
-    label: "Obsidian",
-    rate: "$85+/customer",
+    label: "Icon",
+    rate: "$100+/campaign",
     desc: "Elite exclusives",
   },
 ];
 
-const SOCIAL_PROOF = [
-  "847 creators earned last month",
-  "$2.4M paid out to creators total",
-  "avg. 4.2 campaigns per active creator",
-];
-
 function BrandPanel() {
   return (
-    <div className="brand-panel">
+    <div className="brand-panel login-brand-panel">
       <div className="brand-top">
         <Link href="/" className="brand-logo">
           Push
         </Link>
 
-        <div>
-          <h2 className="brand-headline">
-            Your score
-            <br />
-            <em>is your salary.</em>
-          </h2>
+        <div className="login-brand-hero">
+          <p className="login-brand-tagline">Your Score Is Your Salary.</p>
           <p className="brand-tagline">
-            Every walk-in you drive builds your ConversionOracle™ score. Higher
-            score = better brands, bigger payouts.
+            Every campaign you complete builds your Push Score &mdash; higher
+            score means better brands, higher payouts, and commission income.
           </p>
         </div>
 
-        {/* Big stat block */}
-        <div className="brand-stat-block">
-          <span className="brand-stat-number">$2.4M</span>
-          <span className="brand-stat-ghost">
-            paid to creators · and growing
-          </span>
+        {/* Animated stats row */}
+        <div className="login-stats-row" aria-label="Platform statistics">
+          <div className="login-stat">
+            <span className="login-stat-value">$2.4M</span>
+            <span className="login-stat-label">Paid to creators</span>
+          </div>
+          <div className="login-stat-divider" aria-hidden="true" />
+          <div className="login-stat">
+            <span className="login-stat-value">847</span>
+            <span className="login-stat-label">Active creators</span>
+          </div>
+          <div className="login-stat-divider" aria-hidden="true" />
+          <div className="login-stat">
+            <span className="login-stat-value">4.2</span>
+            <span className="login-stat-label">Avg campaigns/mo</span>
+          </div>
         </div>
 
-        {/* Social proof bullets */}
-        <div className="brand-social-proof" aria-label="Creator stats">
-          {SOCIAL_PROOF.map((item) => (
-            <div key={item} className="brand-social-proof-item">
-              <span className="brand-social-proof-dot" aria-hidden="true" />
-              {item}
-            </div>
-          ))}
-        </div>
-
-        {/* Tier journey — diagonal layout */}
+        {/* Tier journey preview */}
         <div className="auth-tier-preview">
-          <span className="auth-tier-preview-label">TIER JOURNEY</span>
+          <span className="auth-tier-preview-label">YOUR TIER JOURNEY</span>
           {LOGIN_TIERS.map((t, i) => (
             <div key={t.label} className="auth-tier-item" data-active={i === 0}>
               <span className="auth-tier-icon" aria-hidden="true">
@@ -330,7 +321,8 @@ function BrandPanel() {
             </div>
           ))}
           <p className="auth-motivation">
-            Your journey starts at Clay &rarr; unlock Obsidian tier
+            From free product to $100/campaign &mdash; your score unlocks it
+            all.
           </p>
         </div>
       </div>

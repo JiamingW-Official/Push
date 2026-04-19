@@ -1,530 +1,295 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
-import { useRouter } from "next/navigation";
+import { useState, useEffect, useCallback, useRef } from "react";
 import Link from "next/link";
-import { createClient } from "@/lib/supabase";
-import { api } from "@/lib/messaging/api-client";
-import {
-  useNotifications,
-  groupNotifications,
-  timeAgo,
-} from "@/lib/notifications/useNotifications";
-import type { Thread } from "@/lib/messaging/types";
+import { usePathname } from "next/navigation";
+import { useNotifications } from "@/lib/notifications/useNotifications";
 import "./inbox.css";
 
-/* ── Demo ──────────────────────────────────────────────────── */
-const DEMO_USER_ID = "demo-user-001";
+/* ── Mock thread data ─────────────────────────────────────────── */
 
-function checkDemoMode(): boolean {
-  if (typeof document === "undefined") return false;
-  return document.cookie.includes("push-demo-role=creator");
-}
+type Thread = {
+  id: string;
+  sender: string;
+  senderInitial: string;
+  preview: string;
+  fullPreview: string;
+  time: string;
+  unread: boolean;
+  isNew?: boolean;
+};
 
-/* ── Mock invite data ──────────────────────────────────────── */
-const MOCK_INVITES = [
+const INITIAL_THREADS: Thread[] = [
   {
-    id: "inv-001",
-    campaign: "Summer Brunch Series",
-    merchant: "Okonomi · Williamsburg",
-    earning: "$48",
-    earningLabel: "est. payout",
-    deadline: new Date(Date.now() + 22 * 60 * 1000).toISOString(),
-    viewerCount: 7,
-    slotsLeft: 3,
-    accentClass: "invite-card__accent--urgent",
-    isNew: true,
+    id: "t-001",
+    sender: "Push Team",
+    senderInitial: "P",
+    preview: "Your application to Roberta's was accepted — next steps inside.",
+    fullPreview:
+      "Congrats! Your application to Roberta's Spring campaign was accepted. Head to your dashboard to schedule your visit and review campaign requirements.",
+    time: "2m ago",
+    unread: true,
   },
   {
-    id: "inv-002",
-    campaign: "Cold Brew Launch",
-    merchant: "Partners Coffee · Bushwick",
-    earning: "$32",
-    earningLabel: "est. payout",
-    deadline: new Date(Date.now() + 4 * 60 * 60 * 1000).toISOString(),
-    viewerCount: 12,
-    slotsLeft: 8,
-    accentClass: "invite-card__accent--new",
-    isNew: true,
+    id: "t-002",
+    sender: "Flamingo Estate",
+    senderInitial: "F",
+    preview: "Shoot deadline reminder — 3 days left to complete your content.",
+    fullPreview:
+      "Hi! This is a reminder that your Flamingo Estate campaign content deadline is in 3 days. Please ensure you complete your visit and submit proof by Friday 5pm.",
+    time: "1h ago",
+    unread: true,
+  },
+  {
+    id: "t-003",
+    sender: "Push Payments",
+    senderInitial: "$",
+    preview: "$120 has been added to your wallet — campaign verified.",
+    fullPreview:
+      "$120.00 payout from Brow Theory campaign has been processed and added to your wallet. Funds are available for withdrawal.",
+    time: "3h ago",
+    unread: false,
+  },
+  {
+    id: "t-004",
+    sender: "Fort Greene Coffee",
+    senderInitial: "F",
+    preview: "We loved your content — can you do a follow-up post?",
+    fullPreview:
+      "Hey! We saw the content you published for our spring campaign and we absolutely loved it. Would you be interested in a follow-up collaboration?",
+    time: "Yesterday",
+    unread: false,
+  },
+  {
+    id: "t-005",
+    sender: "Campaign Updates",
+    senderInitial: "C",
+    preview: "Score updated: +3 points after Brow Theory verification.",
+    fullPreview:
+      "Your Push Score has increased by 3 points following the successful verification of your Brow Theory campaign visit. New score: 87.",
+    time: "2d ago",
+    unread: false,
   },
 ];
 
-/* ── Countdown helper ──────────────────────────────────────── */
-function formatCountdown(iso: string): { label: string; urgent: boolean } {
-  const diff = new Date(iso).getTime() - Date.now();
-  if (diff <= 0) return { label: "Expired", urgent: true };
-  const totalMins = Math.floor(diff / 60000);
-  if (totalMins < 60)
-    return { label: `Expires in ${totalMins}m`, urgent: totalMins < 30 };
-  const h = Math.floor(totalMins / 60);
-  const m = totalMins % 60;
-  return { label: `Expires in ${h}h ${m}m`, urgent: false };
-}
+/* ── Toast type ───────────────────────────────────────────────── */
 
-function formatRelativeTime(iso: string): string {
-  const diff = Date.now() - new Date(iso).getTime();
-  const mins = Math.floor(diff / 60000);
-  const hours = Math.floor(mins / 60);
-  const days = Math.floor(hours / 24);
-  if (mins < 1) return "now";
-  if (mins < 60) return `${mins}m`;
-  if (hours < 24) return `${hours}h`;
-  if (days < 7) return `${days}d`;
-  return new Date(iso).toLocaleDateString("en-US", {
-    month: "short",
-    day: "numeric",
-  });
-}
+type Toast = {
+  id: string;
+  text: string;
+  fading: boolean;
+};
 
-function getOtherParticipant(thread: Thread, selfUserId: string) {
-  return (
-    thread.participants.find((p) => p.userId !== selfUserId) ??
-    thread.participants[0]
-  );
-}
+/* ── Main Inbox page ──────────────────────────────────────────── */
 
-/* ── Date group helper ─────────────────────────────────────── */
-function getDateGroup(iso: string): "Today" | "This Week" | "Earlier" {
-  const diff = Date.now() - new Date(iso).getTime();
-  const hours = diff / 3600000;
-  if (hours < 24) return "Today";
-  if (hours < 24 * 7) return "This Week";
-  return "Earlier";
-}
-
-function groupThreadsByDate(
-  threads: Thread[],
-): Array<{ label: string; threads: Thread[] }> {
-  const buckets: Record<string, Thread[]> = {
-    Today: [],
-    "This Week": [],
-    Earlier: [],
-  };
-  for (const t of threads) {
-    buckets[getDateGroup(t.updatedAt)].push(t);
-  }
-  return (["Today", "This Week", "Earlier"] as const)
-    .filter((k) => buckets[k].length > 0)
-    .map((k) => ({ label: k, threads: buckets[k] }));
-}
-
-/* ── Invite Card Component ─────────────────────────────────── */
-function InviteCard({ invite }: { invite: (typeof MOCK_INVITES)[0] }) {
-  const [accepted, setAccepted] = useState(false);
-  const [declined, setDeclined] = useState(false);
-  const countdown = formatCountdown(invite.deadline);
-  const initial = invite.merchant.charAt(0).toUpperCase();
-
-  if (declined) return null;
-  if (accepted)
-    return (
-      <div className="invite-card">
-        <div className="invite-card__accent invite-card__accent--active" />
-        <div
-          className="invite-card__body"
-          style={{
-            justifyContent: "center",
-            flexDirection: "row",
-            alignItems: "center",
-            gap: 8,
-          }}
-        >
-          <span
-            style={{
-              fontFamily: "var(--font-body)",
-              fontSize: 13,
-              color: "#16a34a",
-              fontWeight: 700,
-            }}
-          >
-            ✓ Accepted
-          </span>
-          <span
-            style={{
-              fontFamily: "var(--font-body)",
-              fontSize: 12,
-              color: "var(--graphite)",
-            }}
-          >
-            {invite.campaign} — check Campaigns
-          </span>
-        </div>
-        <div className="invite-card__actions" />
-      </div>
-    );
-
-  return (
-    <div className="invite-card">
-      <div className={`invite-card__accent ${invite.accentClass}`} />
-      <div className="invite-card__body">
-        <div className="invite-card__header-row">
-          <div
-            className="invite-card__logo"
-            style={{
-              background:
-                invite.accentClass === "invite-card__accent--urgent"
-                  ? "var(--primary)"
-                  : invite.accentClass === "invite-card__accent--new"
-                    ? "var(--champagne)"
-                    : "#16a34a",
-            }}
-          >
-            {initial}
-          </div>
-          {invite.isNew && (
-            <span className="invite-card__new-dot" aria-label="New" />
-          )}
-          <span className="invite-card__campaign">{invite.campaign}</span>
-        </div>
-        <div className="invite-card__merchant">{invite.merchant}</div>
-        <div className="invite-card__meta-row">
-          <span className="invite-card__earning">{invite.earning}</span>
-          <span className="invite-card__earning-label">
-            {invite.earningLabel}
-          </span>
-          <span
-            className={`invite-card__deadline ${countdown.urgent ? "invite-card__deadline--urgent" : ""}`}
-          >
-            ⏱ {countdown.label}
-          </span>
-        </div>
-        <div className="invite-card__fomo-row">
-          <span className="invite-card__viewers">
-            🔥 {invite.viewerCount} creators viewed
-          </span>
-          <span className="invite-card__slots">
-            {invite.slotsLeft} slots left
-          </span>
-        </div>
-      </div>
-      <div className="invite-card__actions">
-        <button
-          className="invite-btn invite-btn--accept"
-          onClick={() => setAccepted(true)}
-          type="button"
-        >
-          Accept
-        </button>
-        <button
-          className="invite-btn invite-btn--decline"
-          onClick={() => setDeclined(true)}
-          type="button"
-        >
-          Decline
-        </button>
-      </div>
-    </div>
-  );
-}
-
-/* ── Page ──────────────────────────────────────────────────── */
 export default function InboxPage() {
-  const router = useRouter();
-  const [selfUserId, setSelfUserId] = useState<string | null>(null);
-  const [threads, setThreads] = useState<Thread[]>([]);
-  const [ready, setReady] = useState(false);
+  const pathname = usePathname();
+  const { unreadCount } = useNotifications("creator");
 
-  const {
-    notifications,
-    unreadCount: sysUnread,
-    markAsRead,
-    markAllRead,
-    hydrated,
-  } = useNotifications("creator");
+  const [threads, setThreads] = useState<Thread[]>(INITIAL_THREADS);
+  const [toasts, setToasts] = useState<Toast[]>([]);
+  const [hoveredId, setHoveredId] = useState<string | null>(null);
+  const [readIds, setReadIds] = useState<Set<string>>(new Set());
+  const toastTimers = useRef<Map<string, ReturnType<typeof setTimeout>>>(
+    new Map(),
+  );
 
-  const unreadMessages = threads.reduce((s, t) => s + (t.unreadCount || 0), 0);
-  const totalUnread = unreadMessages + sysUnread + MOCK_INVITES.length;
-
-  /* Auth + load threads */
+  // Simulate a new message arriving after 6 seconds
   useEffect(() => {
-    const isDemo = checkDemoMode();
-    if (isDemo) {
-      setSelfUserId(DEMO_USER_ID);
-      api.messages.listThreads("creator", DEMO_USER_ID).then((ts) => {
-        setThreads(ts);
-        setReady(true);
-      });
-      return;
+    const timer = setTimeout(() => {
+      const newThread: Thread = {
+        id: `t-new-${Date.now()}`,
+        sender: "Bed-Stuy Eats",
+        senderInitial: "B",
+        preview: "Invite: Summer menu shoot — $65 base, $85 bonus available.",
+        fullPreview:
+          "We'd love to have you for our summer menu launch campaign. Base payout is $65 with a $85 bonus available for top-performing content. Spots are limited!",
+        time: "just now",
+        unread: true,
+        isNew: true,
+      };
+      setThreads((prev) => [newThread, ...prev]);
+      addToast(`New message from Bed-Stuy Eats`);
+    }, 6000);
+    return () => clearTimeout(timer);
+  }, []);
+
+  const addToast = useCallback((text: string) => {
+    const id = `toast-${Date.now()}`;
+    setToasts((prev) => [...prev, { id, text, fading: false }]);
+    // auto-dismiss after 4s
+    const timer = setTimeout(() => {
+      dismissToast(id);
+    }, 4000);
+    toastTimers.current.set(id, timer);
+  }, []);
+
+  const dismissToast = useCallback((id: string) => {
+    setToasts((prev) =>
+      prev.map((t) => (t.id === id ? { ...t, fading: true } : t)),
+    );
+    setTimeout(() => {
+      setToasts((prev) => prev.filter((t) => t.id !== id));
+    }, 300);
+    const timer = toastTimers.current.get(id);
+    if (timer) {
+      clearTimeout(timer);
+      toastTimers.current.delete(id);
     }
-    const supabase = createClient();
-    supabase.auth.getUser().then(({ data }) => {
-      if (!data.user) {
-        router.push("/creator/login");
-        return;
-      }
-      const uid = data.user.id;
-      setSelfUserId(uid);
-      api.messages.listThreads("creator", uid).then((ts) => {
-        setThreads(ts);
-        setReady(true);
-      });
-    });
-  }, [router]);
+  }, []);
 
-  const recentThreads = threads.slice(0, 8);
-  const recentNotifs = [...notifications]
-    .sort(
-      (a, b) =>
-        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
-    )
-    .slice(0, 5);
+  const markRead = useCallback((id: string, e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setReadIds((prev) => new Set([...prev, id]));
+    setThreads((prev) =>
+      prev.map((t) => (t.id === id ? { ...t, unread: false } : t)),
+    );
+  }, []);
 
-  const threadGroups = groupThreadsByDate(recentThreads);
+  const isUnread = (thread: Thread) => thread.unread && !readIds.has(thread.id);
+
+  const unreadThreads = threads.filter(isUnread).length;
+  const totalInvites = 3;
+  const systemUnread = unreadCount;
 
   return (
     <div className="inbox-page">
-      {/* Top bar */}
-      <header className="inbox-topbar">
-        <div className="inbox-topbar__left">
-          <span className="inbox-topbar__title">Inbox</span>
-          {totalUnread > 0 && (
-            <span className="inbox-topbar__badge">{totalUnread}</span>
-          )}
-        </div>
-        <div className="inbox-topbar__actions">
-          {sysUnread > 0 && (
-            <button
-              className="inbox-topbar__mark-all"
-              onClick={markAllRead}
-              type="button"
-            >
-              Mark all read
-            </button>
-          )}
+      {/* Top nav */}
+      <header className="inbox-nav">
+        <Link href="/creator/dashboard" className="inbox-nav-back">
+          ← Dashboard
+        </Link>
+        <span className="inbox-nav-title">Inbox.</span>
+        {/* Live indicator */}
+        <div className="inbox-live-indicator">
+          <span className="inbox-live-dot" />
+          <span className="inbox-live-label">Live</span>
         </div>
       </header>
 
-      {/* Tab nav */}
-      <nav className="inbox-tabs" aria-label="Inbox sections">
-        <Link href="/creator/inbox" className="inbox-tab inbox-tab--active">
-          All
-          {totalUnread > 0 && (
-            <span className="inbox-tab__count">{totalUnread}</span>
-          )}
-        </Link>
-        <Link href="/creator/inbox/messages" className="inbox-tab">
+      {/* Section tabs */}
+      <nav className="inbox-tabs">
+        <Link
+          href="/creator/inbox"
+          className={`inbox-tab${pathname === "/creator/inbox" || pathname?.endsWith("/inbox") ? " inbox-tab--active" : ""}`}
+        >
           Messages
-          {unreadMessages > 0 && (
-            <span className="inbox-tab__count">{unreadMessages}</span>
+          {unreadThreads > 0 && (
+            <span className="inbox-tab-badge">{unreadThreads}</span>
           )}
         </Link>
-        <Link href="/creator/inbox/invites" className="inbox-tab">
+        <Link
+          href="/creator/inbox/invites"
+          className={`inbox-tab${pathname?.endsWith("/invites") ? " inbox-tab--active" : ""}`}
+        >
           Invites
-          <span className="inbox-tab__count">{MOCK_INVITES.length}</span>
+          {totalInvites > 0 && (
+            <span className="inbox-tab-badge">{totalInvites}</span>
+          )}
         </Link>
-        <Link href="/creator/inbox/system" className="inbox-tab">
+        <Link
+          href="/creator/inbox/system"
+          className={`inbox-tab${pathname?.endsWith("/system") ? " inbox-tab--active" : ""}`}
+        >
           System
-          {sysUnread > 0 && (
-            <span className="inbox-tab__count">{sysUnread}</span>
+          {systemUnread > 0 && (
+            <span className="inbox-tab-badge">{systemUnread}</span>
           )}
         </Link>
       </nav>
 
-      {/* ── INVITES (highest priority) ── */}
-      {MOCK_INVITES.length > 0 && (
-        <section aria-label="Campaign invites">
-          <div className="inbox-section-header">
-            <span className="inbox-section-label">Campaign Invites</span>
-            <Link href="/creator/inbox/invites" className="inbox-section-link">
-              View all →
-            </Link>
-          </div>
-          <div className="inbox-invites-grid">
-            {MOCK_INVITES.map((inv) => (
-              <InviteCard key={inv.id} invite={inv} />
-            ))}
-          </div>
-        </section>
-      )}
-
-      {/* ── MESSAGES ── */}
-      <section aria-label="Messages">
-        <div className="inbox-section-header">
-          <span className="inbox-section-label">Messages</span>
-          <Link href="/creator/inbox/messages" className="inbox-section-link">
-            View all →
-          </Link>
-        </div>
-
-        {!ready ? (
-          /* Skeleton */
-          <div className="inbox-rows">
-            {[1, 2, 3].map((i) => (
-              <div
-                key={i}
-                className="inbox-row"
-                style={{ opacity: 0.15 + i * 0.06, pointerEvents: "none" }}
-              >
-                <div
-                  className="inbox-row__avatar"
-                  style={{ background: "rgba(0,48,73,0.08)" }}
-                />
-                <div className="inbox-row__body">
-                  <span
-                    style={{
-                      display: "block",
-                      width: 60 + i * 16,
-                      height: 9,
-                      background: "rgba(0,48,73,0.07)",
-                    }}
-                  />
-                </div>
-              </div>
-            ))}
-          </div>
-        ) : recentThreads.length === 0 ? (
+      {/* Thread list */}
+      <div className="inbox-list">
+        {threads.length === 0 ? (
           <div className="inbox-empty">
-            <div className="inbox-empty__icon" aria-hidden>
-              ✉
-            </div>
-            <p className="inbox-empty__title">No messages yet</p>
-            <p className="inbox-empty__body">
-              Accept a campaign invite and the merchant will reach out here.
+            <p className="inbox-empty-title">No messages yet.</p>
+            <p className="inbox-empty-body">
+              When brands reach out or Push sends updates, they appear here.
             </p>
           </div>
         ) : (
-          /* Date-grouped thread rows */
-          threadGroups.map((group) => (
-            <div key={group.label} className="inbox-date-group">
-              <div className="inbox-date-group__label">
-                <span className="inbox-date-group__label-text">
-                  {group.label}
-                </span>
-                <span className="inbox-date-group__line" />
-              </div>
-              <div className="inbox-rows">
-                {group.threads.map((thread) => {
-                  const other = selfUserId
-                    ? getOtherParticipant(thread, selfUserId)
-                    : thread.participants[0];
-                  const hasUnread = thread.unreadCount > 0;
-                  const initial = other.name.charAt(0).toUpperCase();
-                  return (
-                    <Link
-                      key={thread.id}
-                      href={`/creator/inbox/${thread.id}`}
-                      className={`inbox-row ${hasUnread ? "inbox-row--unread" : ""}`}
-                      aria-label={`Thread with ${other.name}`}
-                    >
-                      <div
-                        className="inbox-row__avatar"
-                        data-initial={initial}
-                        aria-hidden
-                      >
-                        {initial}
-                      </div>
-                      <div className="inbox-row__body">
-                        <span className="inbox-row__sender">{other.name}</span>
-                        {thread.campaignTitle && (
-                          <span className="inbox-row__campaign-tag">
-                            {thread.campaignTitle}
-                          </span>
-                        )}
-                        <span className="inbox-row__preview">
-                          {thread.lastMessage.content}
-                        </span>
-                      </div>
-                      <div className="inbox-row__meta">
-                        <span className="inbox-row__time">
-                          {formatRelativeTime(thread.updatedAt)}
-                        </span>
-                        {hasUnread && (
-                          <span
-                            className="inbox-row__unread-badge"
-                            aria-label={`${thread.unreadCount} unread`}
-                          >
-                            {thread.unreadCount}
-                          </span>
-                        )}
-                      </div>
-                    </Link>
-                  );
-                })}
-              </div>
-            </div>
-          ))
-        )}
-      </section>
-
-      {/* ── SYSTEM ── */}
-      <section aria-label="System notifications">
-        <div className="inbox-section-header">
-          <span className="inbox-section-label">System</span>
-          <Link href="/creator/inbox/system" className="inbox-section-link">
-            View all →
-          </Link>
-        </div>
-        {!hydrated || recentNotifs.length === 0 ? (
-          <div className="inbox-empty" style={{ padding: "32px 32px" }}>
-            <p className="inbox-empty__title">All caught up.</p>
-          </div>
-        ) : (
-          <div className="inbox-rows">
-            {recentNotifs.map((n) => {
-              const isUnread = !n.read;
-              return (
-                <Link
-                  key={n.id}
-                  href={n.href}
-                  className={`inbox-row ${isUnread ? "inbox-row--system-unread" : ""}`}
-                  onClick={() => markAsRead(n.id)}
-                  aria-label={n.title}
+          threads.map((thread, idx) => {
+            const unread = isUnread(thread);
+            const isHovered = hoveredId === thread.id;
+            return (
+              <div
+                key={thread.id}
+                className="inbox-row-tooltip-wrap"
+                onMouseEnter={() => setHoveredId(thread.id)}
+                onMouseLeave={() => setHoveredId(null)}
+                style={{ animationDelay: `${idx * 30}ms` }}
+              >
+                <div
+                  className={`inbox-row${unread ? " inbox-row--unread" : ""}${thread.isNew ? " inbox-row--new" : ""}`}
+                  style={{
+                    animationDelay: thread.isNew ? "0ms" : `${idx * 30}ms`,
+                  }}
                 >
-                  <div className="inbox-row__icon">
-                    <SysIconWrapped title={n.title} />
-                  </div>
-                  <div className="inbox-row__body">
-                    <span className="inbox-row__sender">{n.title}</span>
-                    <span className="inbox-row__preview">{n.body}</span>
-                  </div>
-                  <div className="inbox-row__meta">
-                    <span className="inbox-row__time">
-                      {timeAgo(n.createdAt)}
-                    </span>
-                    {isUnread && (
-                      <span
-                        className="inbox-row__unread-dot"
-                        style={{ background: "var(--tertiary)" }}
-                        aria-hidden
-                      />
-                    )}
-                  </div>
-                </Link>
-              );
-            })}
-          </div>
-        )}
-      </section>
-    </div>
-  );
-}
+                  {/* Avatar */}
+                  <div className="inbox-row-avatar">{thread.senderInitial}</div>
 
-/* ── Wrapped icon with colored background square ──────────── */
-function SysIconWrapped({ title }: { title: string }) {
-  const lower = title.toLowerCase();
-  let variant: "payment" | "check" | "user" | "bell" = "bell";
-  if (
-    lower.includes("payment") ||
-    lower.includes("paycheck") ||
-    lower.includes("paid")
-  ) {
-    variant = "payment";
-  } else if (
-    lower.includes("submis") ||
-    lower.includes("accepted") ||
-    lower.includes("campaign")
-  ) {
-    variant = "check";
-  } else if (
-    lower.includes("score") ||
-    lower.includes("profile") ||
-    lower.includes("account")
-  ) {
-    variant = "user";
-  }
-  return (
-    <span className={`sys-icon-wrap sys-icon-wrap--${variant}`}>
-      <span className={`sys-icon sys-icon--${variant}`} aria-hidden />
-    </span>
+                  {/* Content */}
+                  <div className="inbox-row-content">
+                    <span className="inbox-row-sender">{thread.sender}</span>
+                    <span className="inbox-row-separator">—</span>
+                    <span className="inbox-row-preview">{thread.preview}</span>
+                  </div>
+
+                  {/* Right side */}
+                  <div className="inbox-row-right">
+                    <span className="inbox-row-time">{thread.time}</span>
+                    {unread && (
+                      <button
+                        className="inbox-row-mark-read"
+                        onClick={(e) => markRead(thread.id, e)}
+                      >
+                        Mark read
+                      </button>
+                    )}
+                    {unread && <span className="inbox-row-unread-dot" />}
+                  </div>
+                </div>
+
+                {/* Hover tooltip preview (desktop only) */}
+                {isHovered && (
+                  <div className="inbox-row-tooltip">
+                    <div className="inbox-row-tooltip-sender">
+                      {thread.sender}
+                    </div>
+                    <div className="inbox-row-tooltip-text">
+                      {thread.fullPreview}
+                    </div>
+                  </div>
+                )}
+              </div>
+            );
+          })
+        )}
+      </div>
+
+      {/* Toast container */}
+      <div className="inbox-toast-container">
+        {toasts.map((toast) => (
+          <div
+            key={toast.id}
+            className={`inbox-toast${toast.fading ? " inbox-toast--out" : ""}`}
+          >
+            <span className="inbox-toast-dot" />
+            <div className="inbox-toast-body">
+              <div className="inbox-toast-label">New message</div>
+              <div className="inbox-toast-text">{toast.text}</div>
+            </div>
+            <button
+              className="inbox-toast-dismiss"
+              onClick={() => dismissToast(toast.id)}
+              aria-label="Dismiss"
+            >
+              ×
+            </button>
+          </div>
+        ))}
+      </div>
+    </div>
   );
 }

@@ -1,5 +1,5 @@
 /* ============================================================
-   Work Today — Daily Focus Dashboard  (Wave 2 Polish)
+   Work Today — Daily Focus Dashboard  (Wave 4 Polish)
    Design system: border-radius 0, 8px grid, 6-color palette
    Fonts: Darky (display) + CS Genio Mono (body/UI)
    ============================================================ */
@@ -54,6 +54,38 @@
 @keyframes wt-count-in {
   from { opacity: 0; transform: translateY(8px) scale(0.92); }
   to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* Task completion strikethrough draw left-to-right */
+@keyframes wt-task-complete {
+  from { width: 0; }
+  to   { width: 100%; }
+}
+
+/* Urgency pulsing border scale */
+@keyframes inviteCountdownPulse {
+  0%, 100% { transform: scale(1); }
+  50%       { transform: scale(1.015); }
+}
+
+/* Scan counter bump on increment */
+@keyframes wt-stat-bump {
+  0%   { transform: scale(1); }
+  40%  { transform: scale(1.18); color: var(--primary); }
+  100% { transform: scale(1); }
+}
+
+/* NOW line entrance */
+@keyframes wt-now-in {
+  from { opacity: 0; transform: translateX(-8px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+/* Projected earnings value pop */
+@keyframes wt-value-pop {
+  0%   { transform: scale(1); }
+  50%  { transform: scale(1.06); color: var(--champagne); }
+  100% { transform: scale(1); }
 }
 
 /* ── Page Shell ───────────────────────────────────────────── */
@@ -303,6 +335,12 @@
   background: var(--surface-bright);
 }
 
+/* Scan card: flex row, extra right padding for +1 button */
+.wt-stat-scan-card {
+  padding-right: 64px;
+  gap: 0;
+}
+
 .wt-stat-ghost {
   position: absolute;
   right: -8px;
@@ -335,6 +373,12 @@
   line-height: 1;
   color: var(--dark);
   animation: wt-count-in 400ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  display: inline-block;
+}
+
+/* Scan count pulse on increment */
+.wt-stat-pulse {
+  animation: wt-stat-bump 600ms cubic-bezier(0.22, 1, 0.36, 1) both !important;
 }
 
 /* Earnings stat in champagne */
@@ -356,6 +400,35 @@
   font-size: 10px;
   color: var(--graphite);
   opacity: 0.65;
+}
+
+/* +1 button on scan card */
+.wt-scan-plus-btn {
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  background: var(--primary);
+  color: #fff;
+  border: none;
+  padding: 6px 10px;
+  cursor: pointer;
+  border-radius: 0;
+  transition: background 150ms ease, transform 150ms ease;
+  z-index: 2;
+}
+
+.wt-scan-plus-btn:hover {
+  background: var(--accent);
+  transform: translateY(-50%) scale(1.05);
+}
+
+.wt-scan-plus-btn:active {
+  transform: translateY(-50%) scale(0.96);
 }
 
 /* ── Body Layout ──────────────────────────────────────────── */
@@ -464,6 +537,8 @@
   display: flex;
   flex-direction: column;
   gap: 0;
+  /* Give the NOW line a coordinate system */
+  min-height: 400px;
 }
 
 /* Vertical axis line */
@@ -473,7 +548,54 @@
   top: 0;
   bottom: 0;
   width: 1px;
-  background: linear-gradient(to bottom, transparent, var(--line) 40px, var(--line) calc(100% - 40px), transparent);
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    var(--line) 40px,
+    var(--line) calc(100% - 40px),
+    transparent
+  );
+}
+
+/* ── NOW Line ─────────────────────────────────────────────── */
+
+.wt-now-line {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--primary);
+  z-index: 10;
+  pointer-events: none;
+  animation: wt-now-in 600ms ease both;
+  /* smooth reposition on minute tick */
+  transition: top 4s linear;
+}
+
+.wt-now-line::before {
+  content: "";
+  position: absolute;
+  left: 80px;
+  top: -3px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--primary);
+}
+
+.wt-now-label {
+  position: absolute;
+  left: 0;
+  top: -9px;
+  font-family: var(--font-body);
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--primary);
+  white-space: nowrap;
+  background: var(--surface);
+  padding: 0 4px 0 0;
 }
 
 /* ── Timeline Row ─────────────────────────────────────────── */
@@ -592,6 +714,79 @@
   border-left-color: var(--primary);
   background: rgba(193, 18, 31, 0.025);
 }
+
+/* ── Completed task state ─────────────────────────────────── */
+
+.wt-task-completed {
+  opacity: 0.5;
+  transition: opacity 200ms ease;
+}
+
+.wt-task-completed .wt-task-campaign {
+  position: relative;
+}
+
+/* Strikethrough that draws left-to-right */
+.wt-task-completed .wt-task-campaign::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  height: 1.5px;
+  background: var(--graphite);
+  animation: wt-task-complete 200ms ease forwards;
+  width: 100%;
+}
+
+/* ── Task urgency — amber pulsing border ──────────────────── */
+
+.wt-task-urgent .wt-task-content {
+  border-left-color: #f59e0b !important;
+  animation: inviteCountdownPulse 1.2s ease-in-out infinite !important;
+}
+
+/* Overdue: red pulsing border */
+.wt-task-overdue .wt-task-content {
+  border-left-color: var(--primary) !important;
+  animation: inviteCountdownPulse 1.2s ease-in-out infinite !important;
+}
+
+/* ── Complete toggle button ───────────────────────────────── */
+
+.wt-complete-btn {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(0, 48, 73, 0.25);
+  background: transparent;
+  font-size: 12px;
+  cursor: pointer;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--graphite);
+  transition: border-color 150ms ease, background 150ms ease, color 150ms ease;
+  margin-right: 4px;
+}
+
+.wt-complete-btn:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+.wt-complete-btn--done {
+  background: var(--graphite);
+  border-color: var(--graphite);
+  color: #fff;
+}
+
+.wt-complete-btn--done:hover {
+  background: var(--primary);
+  border-color: var(--primary);
+}
+
+/* ── Task main row ────────────────────────────────────────── */
 
 .wt-task-main {
   display: flex;
@@ -729,6 +924,12 @@
   color: var(--tertiary);
 }
 
+.wt-chip-overdue {
+  background: var(--primary);
+  color: #fff;
+  animation: inviteCountdownPulse 1.2s ease-in-out infinite;
+}
+
 /* Status modifier: done task — muted */
 .wt-status-done .wt-task-campaign,
 .wt-status-done .wt-task-merchant {
@@ -853,6 +1054,141 @@
 }
 
 .wt-free-cta:hover { color: var(--accent); }
+
+/* ── Quick Add Zone ───────────────────────────────────────── */
+
+.wt-quick-add-zone {
+  padding: 16px 0 8px;
+  border-top: 1px dashed rgba(0, 48, 73, 0.15);
+  margin-top: 8px;
+}
+
+.wt-quick-add-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--graphite);
+  background: transparent;
+  border: 1px dashed rgba(0, 48, 73, 0.25);
+  padding: 8px 16px;
+  cursor: pointer;
+  border-radius: 0;
+  transition: border-color 150ms ease, color 150ms ease;
+  opacity: 0.7;
+}
+
+.wt-quick-add-btn:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+  opacity: 1;
+}
+
+.wt-quick-add-icon {
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 1;
+}
+
+/* Inline add form */
+.wt-quick-add-form {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  animation: wt-expand 180ms ease both;
+}
+
+.wt-add-time-picker {
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--dark);
+  background: var(--surface-elevated);
+  border: 1px solid var(--line);
+  border-radius: 0;
+  padding: 8px 10px;
+  cursor: pointer;
+  outline: none;
+  transition: border-color 150ms ease;
+  appearance: none;
+  -webkit-appearance: none;
+  min-width: 112px;
+}
+
+.wt-add-time-picker:focus {
+  border-color: var(--primary);
+}
+
+.wt-add-text-input {
+  flex: 1;
+  min-width: 160px;
+  font-family: var(--font-body);
+  font-size: 12px;
+  color: var(--dark);
+  background: var(--surface-elevated);
+  border: 1px solid var(--line);
+  border-radius: 0;
+  padding: 8px 12px;
+  outline: none;
+  transition: border-color 150ms ease;
+}
+
+.wt-add-text-input::placeholder {
+  color: var(--graphite);
+  opacity: 0.5;
+}
+
+.wt-add-text-input:focus {
+  border-color: var(--primary);
+}
+
+.wt-add-submit-btn {
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  background: var(--primary);
+  color: #fff;
+  border: none;
+  padding: 9px 18px;
+  cursor: pointer;
+  border-radius: 0;
+  transition: background 150ms ease;
+}
+
+.wt-add-submit-btn:hover:not(:disabled) {
+  background: var(--accent);
+}
+
+.wt-add-submit-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.wt-add-cancel-btn {
+  font-family: var(--font-body);
+  font-size: 13px;
+  background: transparent;
+  color: var(--graphite);
+  border: 1px solid rgba(0, 48, 73, 0.2);
+  padding: 7px 11px;
+  cursor: pointer;
+  border-radius: 0;
+  transition: border-color 150ms ease, color 150ms ease;
+  line-height: 1;
+}
+
+.wt-add-cancel-btn:hover {
+  border-color: var(--dark);
+  color: var(--dark);
+}
 
 /* ── Sidebar ──────────────────────────────────────────────── */
 
@@ -1039,7 +1375,7 @@
   border: 1px solid var(--line);
   padding: 16px 18px;
   text-decoration: none;
-  transition: border-color 200ms ease, transform 200ms cubic-bezier(0.22,1,0.36,1);
+  transition: border-color 200ms ease, transform 200ms cubic-bezier(0.22, 1, 0.36, 1);
   border-radius: 0;
 }
 
@@ -1075,6 +1411,68 @@
 
 .wt-pipeline-shortcut:hover .wt-pipeline-shortcut-arrow {
   transform: translateX(4px);
+}
+
+/* ── Projected Earnings Widget ────────────────────────────── */
+
+.wt-projection-card {
+  background: var(--surface-bright);
+  border: 1px solid var(--line);
+  border-top: 2px solid var(--champagne);
+  padding: 18px 20px 16px;
+  border-radius: 0;
+}
+
+.wt-projection-label {
+  font-family: var(--font-body);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--graphite);
+  margin: 0 0 8px;
+}
+
+/* key= on this so React re-triggers animation on value change */
+.wt-projection-value {
+  font-family: var(--font-display);
+  font-size: 36px;
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  line-height: 1;
+  color: var(--champagne);
+  margin: 0 0 4px;
+  display: inline-block;
+  animation: wt-value-pop 400ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.wt-projection-sub {
+  font-family: var(--font-body);
+  font-size: 10px;
+  color: var(--graphite);
+  margin: 0 0 10px;
+  opacity: 0.7;
+}
+
+.wt-projection-bar {
+  width: 100%;
+  height: 2px;
+  background: rgba(0, 48, 73, 0.1);
+  margin-bottom: 6px;
+}
+
+.wt-projection-fill {
+  height: 100%;
+  background: var(--champagne);
+  transition: width 600ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.wt-projection-cap {
+  font-family: var(--font-body);
+  font-size: 9px;
+  color: var(--graphite);
+  opacity: 0.5;
+  margin: 0;
 }
 
 /* ── Empty State ──────────────────────────────────────────── */

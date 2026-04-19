@@ -1,20 +1,19 @@
 /* ============================================================
    Creator Login — Component Styles
-   Wave 2 visual polish — v5.2
    ============================================================ */
 
-/* ── Page load entrance animations ──────────────────────────── */
+/* ── Page load entrance animations ───────────────────────── */
 
 .brand-panel {
-  animation: slideInLeft 700ms cubic-bezier(0.22,1,0.36,1) both;
+  animation: slideInLeft 600ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 .form-panel {
-  animation: fadeUpPanel 550ms cubic-bezier(0.22,1,0.36,1) 80ms both;
+  animation: fadeUpPanel 500ms cubic-bezier(0.22, 1, 0.36, 1) 150ms both;
 }
 
 @keyframes slideInLeft {
-  from { transform: translateX(-24px); opacity: 0; }
+  from { transform: translateX(-20px); opacity: 0; }
   to   { transform: translateX(0);     opacity: 1; }
 }
 
@@ -23,95 +22,68 @@
   to   { transform: translateY(0);    opacity: 1; }
 }
 
-/* ── Form element stagger ────────────────────────────────────── */
+/* ── Form sections stagger in ─────────────────────────────── */
 
-.form-header                          { animation: fadeUp 480ms cubic-bezier(0.22,1,0.36,1) 160ms both; }
-.form-grid > .form-field:nth-child(1) { animation: fadeUp 480ms cubic-bezier(0.22,1,0.36,1) 240ms both; }
-.form-grid > .form-field:nth-child(2) { animation: fadeUp 480ms cubic-bezier(0.22,1,0.36,1) 300ms both; }
-.form-grid > .forgot-link             { animation: fadeUp 480ms cubic-bezier(0.22,1,0.36,1) 350ms both; }
-.submit-btn                           { animation: fadeUp 480ms cubic-bezier(0.22,1,0.36,1) 400ms both; }
-.form-footer                          { animation: fadeUp 480ms cubic-bezier(0.22,1,0.36,1) 460ms both; }
+.form-header                              { animation: fadeUp 500ms cubic-bezier(0.22,1,0.36,1) 200ms both; }
+.form-grid > .form-field:nth-child(1)     { animation: fadeUp 500ms cubic-bezier(0.22,1,0.36,1) 280ms both; }
+.form-grid > .form-field:nth-child(2)     { animation: fadeUp 500ms cubic-bezier(0.22,1,0.36,1) 340ms both; }
+.form-grid > .forgot-link                 { animation: fadeUp 500ms cubic-bezier(0.22,1,0.36,1) 390ms both; }
+.submit-btn                               { animation: fadeUp 500ms cubic-bezier(0.22,1,0.36,1) 430ms both; }
 
 @keyframes fadeUp {
   from { transform: translateY(12px); opacity: 0; }
   to   { transform: translateY(0);    opacity: 1; }
 }
 
-/* ── Error banner shake ──────────────────────────────────────── */
+/* ── Error shake ──────────────────────────────────────────── */
 
 .form-error {
-  animation: errorShake 420ms ease-in-out;
+  animation: errorShake 450ms ease-in-out;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: var(--space-2);
-  margin-bottom: var(--space-4);
 }
 
 @keyframes errorShake {
   0%   { transform: translateX(0);    }
-  20%  { transform: translateX(-6px); }
-  40%  { transform: translateX(6px);  }
-  60%  { transform: translateX(-3px); }
-  80%  { transform: translateX(3px);  }
+  20%  { transform: translateX(-7px); }
+  40%  { transform: translateX(7px);  }
+  60%  { transform: translateX(-4px); }
+  80%  { transform: translateX(4px);  }
   100% { transform: translateX(0);    }
 }
 
-/* ── Error retry button ──────────────────────────────────────── */
+/* ── Error retry button ───────────────────────────────────── */
 
 .error-retry-btn {
   background: none;
   border: none;
-  color: var(--primary, #c1121f);
-  font-family: var(--font-body, 'CS Genio Mono', monospace);
-  font-size: 10px;
+  color: var(--primary);
+  font-size: var(--text-caption);
   font-weight: 700;
-  letter-spacing: 0.07em;
+  letter-spacing: 0.05em;
   text-transform: uppercase;
   text-decoration: underline;
   text-underline-offset: 2px;
   cursor: pointer;
   flex-shrink: 0;
   padding: 0;
-  transition: opacity 150ms;
+  transition: opacity var(--t-fast);
 }
 
-.error-retry-btn:hover       { opacity: 0.65; }
+.error-retry-btn:hover { opacity: 0.7; }
 .error-retry-btn:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
 
-/* ── Form loading state ──────────────────────────────────────── */
+/* ── Form loading state ───────────────────────────────────── */
 
 form.form-loading {
-  opacity: 0.60;
+  opacity: 0.7;
   pointer-events: none;
 }
 
-/* ─────────────────────────────────────────────────────────────
-   FORM FIELD COMPONENTS
-   ───────────────────────────────────────────────────────────── */
+/* ── Field wrapper + valid dot ────────────────────────────── */
 
-.form-field {
-  position: relative;
-}
-
-/* Label — uppercase mono, animates to red on focus */
-.form-field label {
-  display: block;
-  font-family: var(--font-body, 'CS Genio Mono', monospace);
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: rgba(0,48,73,0.50);
-  margin-bottom: 8px;
-  transition: color 200ms;
-}
-
-.form-field:focus-within label {
-  color: var(--primary, #c1121f);
-}
-
-/* Field wrapper */
 .field-wrap {
   position: relative;
   display: flex;
@@ -122,137 +94,244 @@ form.form-loading {
   flex: 1;
 }
 
-/* Valid indicator dot */
 .field-dot {
   position: absolute;
-  right: 14px;
+  right: var(--space-2);
   top: 50%;
-  transform: translateY(-50%) scale(0);
+  transform: translateY(-50%);
   width: 5px;
   height: 5px;
-  background: #22a06b;
+  background: var(--tertiary);
   border-radius: 50%;
   pointer-events: none;
-  animation: dotPop 200ms cubic-bezier(0.22,1,0.36,1) forwards;
+  animation: dotPop 200ms cubic-bezier(0.22,1,0.36,1) both;
 }
 
 @keyframes dotPop {
-  to { transform: translateY(-50%) scale(1); }
+  from { transform: translateY(-50%) scale(0); }
+  to   { transform: translateY(-50%) scale(1); }
 }
 
-/* ── Error message ───────────────────────────────────────────── */
+/* ── Error message ────────────────────────────────────────── */
 
 .error-msg {
   display: block;
-  margin-top: 6px;
-  font-family: var(--font-body, 'CS Genio Mono', monospace);
-  font-size: 11px;
-  color: var(--primary, #c1121f);
-  font-weight: 600;
-  letter-spacing: 0.02em;
-  line-height: 1.4;
+  margin-top: var(--space-1);
+  font-size: var(--text-caption);
+  color: var(--primary);
+  font-weight: 500;
 }
 
-/* ── Error field states ──────────────────────────────────────── */
+/* ── Input enhancements ───────────────────────────────────── */
+
+.form-field input::placeholder {
+  color: rgba(0, 48, 73, 0.30);
+  font-weight: 400;
+}
+
+.form-field input {
+  min-height: 44px;
+  transition: border-color var(--t-base), box-shadow var(--t-base);
+}
+
+.form-field input:focus {
+  border-color: var(--primary);
+  box-shadow: inset 2px 0 0 var(--primary);
+  outline: none;
+}
+
+.form-field input:not(:placeholder-shown) {
+  border-color: rgba(0, 48, 73, 0.35);
+}
+
+.form-field input:not(:placeholder-shown):focus {
+  border-color: var(--primary);
+  box-shadow: inset 2px 0 0 var(--primary);
+}
 
 .form-field:has(.error-msg) input {
-  border-color: rgba(193,18,31,0.45) !important;
-  box-shadow: inset 3px 0 0 var(--primary, #c1121f) !important;
-  background: rgba(193,18,31,0.02) !important;
+  border-color: var(--primary);
+  box-shadow: inset 2px 0 0 var(--primary);
 }
 
-.form-field:has(.error-msg) .input-with-action {
-  border-color: rgba(193,18,31,0.45) !important;
-  box-shadow: inset 3px 0 0 var(--primary, #c1121f) !important;
-}
-
-/* ── Password show/hide ──────────────────────────────────────── */
+/* ── Password + show/hide ─────────────────────────────────── */
 
 .input-with-action {
   display: flex;
   align-items: stretch;
-  transition: border-color 200ms ease, box-shadow 200ms ease;
+  border: 1px solid var(--line);
+  transition: border-color var(--t-base), box-shadow var(--t-base);
+}
+
+.input-with-action:focus-within {
+  border-color: var(--primary);
+  box-shadow: inset 2px 0 0 var(--primary);
 }
 
 .input-with-action input {
   flex: 1;
+  border: none !important;
+  box-shadow: none !important;
+  outline: none !important;
+  background: var(--surface);
+  padding: var(--space-2);
+  min-height: 44px;
 }
 
 .input-action-btn {
-  padding-inline: var(--space-3);
-  font-family: var(--font-body, 'CS Genio Mono', monospace);
-  font-size: 10px;
+  padding-inline: var(--space-2);
+  font-family: var(--font-body);
+  font-size: var(--text-caption);
   font-weight: 700;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: rgba(0,48,73,0.38);
-  background: transparent;
+  color: var(--text-muted);
+  background: var(--surface);
   border: none;
-  border-left: 1px solid rgba(0,48,73,0.12);
+  border-left: 1px solid var(--line);
   cursor: pointer;
   flex-shrink: 0;
-  transition: color 150ms, background 150ms;
+  transition: color var(--t-fast);
 }
 
-.input-action-btn:hover {
-  color: var(--dark, #003049);
-  background: rgba(0,48,73,0.03);
-}
-
+.input-action-btn:hover { color: var(--dark); }
 .input-action-btn:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
 
-/* ── Forgot password link ────────────────────────────────────── */
+/* ── Forgot password link ─────────────────────────────────── */
 
 .forgot-link {
   display: flex;
   justify-content: flex-end;
-  margin-top: calc(var(--space-2) * -1);
+  margin-top: calc(var(--space-1) * -1);
 }
 
 .forgot-link a {
-  font-family: var(--font-body, 'CS Genio Mono', monospace);
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.03em;
-  color: rgba(0,48,73,0.40);
-  text-decoration: none;
-  transition: color 150ms;
-}
-
-.forgot-link a:hover {
-  color: var(--dark, #003049);
+  font-size: var(--text-caption);
+  color: #669bbc;
   text-decoration: underline;
   text-underline-offset: 2px;
+  transition: color var(--t-fast);
 }
 
-/* ── Footer "or" divider ─────────────────────────────────────── */
+.forgot-link a:hover { color: var(--dark); }
 
-.form-footer-divider {
+/* ── Submit button ────────────────────────────────────────── */
+
+.submit-btn {
+  width: 100%;
+  justify-content: center;
+  padding-block: 0;
+  height: 56px;
+  font-size: var(--text-body);
+  transition: background var(--t-base), box-shadow 200ms ease, transform 150ms ease;
+}
+
+.submit-btn:hover {
+  box-shadow: 6px 6px 0 var(--dark);
+  transform: translateX(2px);
+}
+
+.submit-btn:active,
+.submit-btn[data-pressed="true"] {
+  transform: scale(0.98);
+  opacity: 0.9;
+}
+
+/* ── Login form title — larger editorial weight ───────────── */
+
+.login-form-title {
+  font-size: clamp(32px, 4vw, 42px);
+  font-weight: 700;
+  letter-spacing: -0.04em;
+}
+
+/* ── Login brand panel — editorial hero wordmark ─────────── */
+
+.login-brand-panel::after {
+  /* Larger ghost "PUSH" for login — fills bottom corner */
+  font-size: clamp(120px, 18vw, 220px);
+  opacity: 1; /* uses color already at opacity 0.025 */
+}
+
+/* Heroic brand section */
+.login-brand-hero {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+/* "Your Score Is Your Salary." — editorial tagline */
+.login-brand-tagline {
+  font-family: var(--font-display);
+  font-size: clamp(26px, 3.5vw, 40px);
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  line-height: 1.05;
+  color: var(--surface);
+  margin: 0;
+}
+
+/* ── Animated stats row ───────────────────────────────────── */
+
+.login-stats-row {
   display: flex;
   align-items: center;
   gap: var(--space-3);
-  margin: var(--space-5) 0 var(--space-4);
+  padding: var(--space-3) 0;
+  border-top: 1px solid rgba(245,242,236,0.10);
+  border-bottom: 1px solid rgba(245,242,236,0.10);
+  animation: statsRowIn 700ms cubic-bezier(0.22,1,0.36,1) 500ms both;
 }
 
-.form-footer-divider::before,
-.form-footer-divider::after {
-  content: '';
+@keyframes statsRowIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.login-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
   flex: 1;
-  height: 1px;
-  background: rgba(0,48,73,0.10);
+  min-width: 0;
 }
 
-.form-footer-divider-text {
-  font-family: var(--font-body, 'CS Genio Mono', monospace);
+.login-stat-value {
+  font-family: var(--font-display);
+  font-size: clamp(20px, 2.5vw, 28px);
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  color: var(--surface);
+  line-height: 1;
+}
+
+.login-stat-label {
+  font-family: var(--font-body);
   font-size: 9px;
   font-weight: 700;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.10em;
   text-transform: uppercase;
-  color: rgba(0,48,73,0.28);
-  white-space: nowrap;
+  color: rgba(245,242,236,0.45);
 }
 
-/* ── Loading dots ────────────────────────────────────────────── */
+.login-stat-divider {
+  width: 1px;
+  height: 36px;
+  background: rgba(245,242,236,0.12);
+  flex-shrink: 0;
+}
+
+/* Stagger stat values animate in */
+.login-stat:nth-child(1) .login-stat-value { animation: statCountIn 500ms cubic-bezier(0.22,1,0.36,1) 600ms both; }
+.login-stat:nth-child(3) .login-stat-value { animation: statCountIn 500ms cubic-bezier(0.22,1,0.36,1) 700ms both; }
+.login-stat:nth-child(5) .login-stat-value { animation: statCountIn 500ms cubic-bezier(0.22,1,0.36,1) 800ms both; }
+
+@keyframes statCountIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Loading dots ─────────────────────────────────────────── */
 
 .loader-dots {
   display: inline-flex;
@@ -273,75 +352,31 @@ form.form-loading {
 
 @keyframes pulseDot {
   0%, 80%, 100% { opacity: 0.3; transform: scale(1);    }
-  40%            { opacity: 1;   transform: scale(1.3);  }
+  40%            { opacity: 1;   transform: scale(1.25); }
 }
 
-/* ── Demo mode link — prominent CTA ─────────────────────────── */
-
-.auth-demo-link {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  margin-top: var(--space-3);
-  font-family: var(--font-body, 'CS Genio Mono', monospace);
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--dark, #003049);
-  text-decoration: none;
-  background: rgba(0,48,73,0.04);
-  border: 1.5px solid rgba(0,48,73,0.14);
-  padding: var(--space-2) var(--space-4);
-  transition: color 150ms, border-color 150ms, background 150ms, box-shadow 150ms;
-  position: relative;
-  overflow: hidden;
-}
-
-/* Arrow — slides right on hover */
-.auth-demo-link::after {
-  content: '→';
-  font-size: 13px;
-  transition: transform 250ms cubic-bezier(0.22,1,0.36,1);
-  display: inline-block;
-  opacity: 0.5;
-}
-
-.auth-demo-link:hover {
-  color: var(--dark, #003049);
-  border-color: var(--dark, #003049);
-  background: rgba(0,48,73,0.07);
-  box-shadow: 3px 3px 0 rgba(0,48,73,0.10);
-}
-
-.auth-demo-link:hover::after {
-  transform: translateX(4px);
-  opacity: 1;
-}
-
-/* ── Skip link (a11y) ────────────────────────────────────────── */
+/* ── Skip link (a11y) ─────────────────────────────────────── */
 
 .skip-link {
   position: absolute;
   top: -48px;
   left: var(--space-3);
-  background: var(--primary, #c1121f);
+  background: var(--primary);
   color: #fff;
   padding: var(--space-1) var(--space-3);
-  font-family: var(--font-body, 'CS Genio Mono', monospace);
-  font-size: 11px;
+  font-size: var(--text-small);
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.07em;
+  letter-spacing: 0.05em;
   z-index: 999;
-  transition: top 150ms;
-  text-decoration: none;
+  transition: top var(--t-fast);
 }
 
-.skip-link:focus { top: var(--space-2); }
+.skip-link:focus {
+  top: var(--space-2);
+}
 
-/* ── Screen-reader only ──────────────────────────────────────── */
+/* ── Screen-reader only ───────────────────────────────────── */
 
 .sr-only {
   position: absolute;
@@ -355,257 +390,139 @@ form.form-loading {
   border: 0;
 }
 
-/* ─────────────────────────────────────────────────────────────
-   BRAND PANEL — LOGIN SPECIFIC
-   ───────────────────────────────────────────────────────────── */
+/* ── Demo link ────────────────────────────────────────────── */
 
-/* ── Stat block — hero number ────────────────────────────────── */
-
-.brand-stat-block {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-1);
-  padding: var(--space-5) 0;
-  border-top: 1px solid rgba(245,242,236,0.08);
-  border-bottom: 1px solid rgba(245,242,236,0.08);
-  position: relative;
-}
-
-/* Champagne accent bar left */
-.brand-stat-block::before {
-  content: '';
-  position: absolute;
-  left: -4px;
-  top: 20%;
-  bottom: 20%;
-  width: 2px;
-  background: var(--champagne, #c9a96e);
-  opacity: 0.6;
-}
-
-.brand-stat-number {
-  font-family: var(--font-display, 'Darky', serif);
-  font-size: clamp(52px, 7vw, 88px);
-  font-weight: 900;
-  letter-spacing: -0.05em;
-  line-height: 0.88;
-  /* Gold-to-white gradient for prestige */
-  background: linear-gradient(
-    125deg,
-    #ffffff 0%,
-    rgba(255,255,255,0.90) 40%,
-    var(--champagne, #c9a96e) 100%
-  );
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+.auth-demo-link {
   display: block;
-}
-
-.brand-stat-ghost {
-  font-family: var(--font-body, 'CS Genio Mono', monospace);
+  text-align: center;
+  margin-top: var(--space-3);
+  font-family: var(--font-body);
   font-size: 11px;
-  font-weight: 400;
-  letter-spacing: 0.04em;
-  color: rgba(245,242,236,0.38);
-  line-height: 1.5;
-  margin-top: var(--space-1);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  text-decoration: none;
+  border: 1px solid var(--line);
+  padding: var(--space-2) var(--space-3);
+  transition: color var(--t-fast), border-color var(--t-fast), background var(--t-fast);
 }
 
-/* ── Social proof bullets ────────────────────────────────────── */
-
-.brand-social-proof {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+.auth-demo-link:hover {
+  color: var(--dark);
+  border-color: var(--dark);
+  background: rgba(0, 48, 73, 0.04);
 }
 
-.brand-social-proof-item {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-family: var(--font-body, 'CS Genio Mono', monospace);
-  font-size: 11px;
-  color: rgba(245,242,236,0.55);
-  letter-spacing: 0.02em;
-  line-height: 1.4;
-}
-
-.brand-social-proof-dot {
-  width: 3px;
-  height: 3px;
-  background: var(--champagne, #c9a96e);
-  border-radius: 50%;
-  flex-shrink: 0;
-  opacity: 0.7;
-}
-
-/* ─────────────────────────────────────────────────────────────
-   TIER JOURNEY — DIAGONAL STAIRCASE
-   ───────────────────────────────────────────────────────────── */
+/* ── Tier preview (brand panel) ───────────────────────────── */
 
 .auth-tier-preview {
   display: flex;
   flex-direction: column;
   gap: 0;
-  position: relative;
 }
 
 .auth-tier-preview-label {
   display: block;
-  font-family: var(--font-body, 'CS Genio Mono', monospace);
+  font-family: var(--font-body);
   font-size: 9px;
   font-weight: 700;
-  letter-spacing: 0.16em;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: rgba(245,242,236,0.28);
-  margin-bottom: var(--space-3);
-}
-
-/* Left timeline line */
-.auth-tier-preview::before {
-  content: '';
-  position: absolute;
-  left: 10px;
-  top: 24px;
-  bottom: 40px;
-  width: 1px;
-  background: linear-gradient(
-    to bottom,
-    rgba(245,242,236,0.20) 0%,
-    rgba(245,242,236,0.05) 100%
-  );
-  z-index: 0;
+  color: rgba(245, 242, 236, 0.40);
+  margin-bottom: var(--space-2);
 }
 
 .auth-tier-item {
   display: flex;
   align-items: center;
   gap: var(--space-2);
-  padding: 9px 0 9px 4px;
-  border-bottom: 1px solid rgba(245,242,236,0.04);
-  opacity: 0.32;
-  transition: opacity 250ms ease;
-  position: relative;
-  z-index: 1;
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(245, 242, 236, 0.07);
+  opacity: 0.45;
+  transition: opacity var(--t-fast);
 }
-
-/* Staircase indent — each tier steps right */
-.auth-tier-item:nth-child(2)  { margin-left: 0px;  }
-.auth-tier-item:nth-child(3)  { margin-left: 8px;  }
-.auth-tier-item:nth-child(4)  { margin-left: 16px; }
-.auth-tier-item:nth-child(5)  { margin-left: 24px; }
-.auth-tier-item:nth-child(6)  { margin-left: 32px; }
-.auth-tier-item:nth-child(7)  { margin-left: 40px; }
-.auth-tier-item:last-child    { border-bottom: none; }
 
 .auth-tier-item[data-active="true"] {
   opacity: 1;
 }
 
 .auth-tier-item:hover {
-  opacity: 0.75;
+  opacity: 1;
 }
 
-/* Dot indicator left of icon */
 .auth-tier-icon {
-  font-size: 15px;
+  font-size: 18px;
   line-height: 1;
-  color: rgba(245,242,236,0.55);
-  width: 20px;
+  color: rgba(245, 242, 236, 0.80);
+  width: 24px;
   flex-shrink: 0;
   text-align: center;
 }
 
 .auth-tier-item[data-active="true"] .auth-tier-icon {
-  color: var(--primary, #c1121f);
-  animation: iconGlow 3s ease-in-out infinite;
-}
-
-@keyframes iconGlow {
-  0%, 100% { opacity: 1; text-shadow: none; }
-  50%       { opacity: 0.65; }
+  color: var(--primary);
 }
 
 .auth-tier-info {
   display: flex;
   flex-direction: column;
-  gap: 1px;
+  gap: 2px;
   flex: 1;
   min-width: 0;
 }
 
 .auth-tier-name {
-  font-family: var(--font-body, 'CS Genio Mono', monospace);
-  font-size: 11px;
+  font-family: var(--font-body);
+  font-size: 12px;
   font-weight: 700;
-  letter-spacing: 0.07em;
-  color: rgba(245,242,236,0.88);
+  letter-spacing: 0.04em;
+  color: rgba(245, 242, 236, 0.90);
   text-transform: uppercase;
 }
 
 .auth-tier-benefit {
-  font-family: var(--font-body, 'CS Genio Mono', monospace);
-  font-size: 10px;
-  color: rgba(245,242,236,0.38);
-  line-height: 1.35;
+  font-family: var(--font-body);
+  font-size: 11px;
+  color: rgba(245, 242, 236, 0.50);
+  line-height: 1.3;
 }
 
 .auth-tier-rate {
-  font-family: var(--font-body, 'CS Genio Mono', monospace);
+  font-family: var(--font-body);
   font-size: 11px;
   font-weight: 700;
-  color: rgba(245,242,236,0.55);
+  color: rgba(245, 242, 236, 0.70);
   white-space: nowrap;
   flex-shrink: 0;
   letter-spacing: 0.02em;
 }
 
 .auth-tier-item[data-active="true"] .auth-tier-rate {
-  color: var(--champagne, #c9a96e);
+  color: var(--surface);
 }
 
 .auth-motivation {
   margin-top: var(--space-3);
-  font-family: var(--font-body, 'CS Genio Mono', monospace);
-  font-size: 10px;
+  font-size: 11px;
   font-style: italic;
-  color: rgba(245,242,236,0.32);
-  line-height: 1.55;
-  padding-top: var(--space-2);
-  border-top: 1px solid rgba(245,242,236,0.06);
+  color: rgba(245, 242, 236, 0.45);
+  line-height: 1.5;
+  text-align: center;
+  padding: var(--space-2) 0;
+  border-top: 1px solid rgba(245, 242, 236, 0.10);
 }
 
-/* ─────────────────────────────────────────────────────────────
-   RESPONSIVE
-   ───────────────────────────────────────────────────────────── */
+/* ── Responsive ───────────────────────────────────────────── */
 
 @media (max-width: 768px) {
-  /* Prevent zoom on mobile inputs */
   .form-field input,
   .input-with-action input {
     font-size: 16px !important;
   }
-
-  /* Flatten staircase on narrow panels */
-  .auth-tier-item:nth-child(n) {
-    margin-left: 0;
-  }
-
-  .auth-tier-preview::before {
-    display: none;
-  }
-
-  .brand-stat-number {
-    font-size: 52px;
-  }
-
-  .brand-social-proof { display: none; }
 }
 
-/* ─────────────────────────────────────────────────────────────
-   REDUCED MOTION
-   ───────────────────────────────────────────────────────────── */
+/* ── Reduced motion ───────────────────────────────────────── */
 
 @media (prefers-reduced-motion: reduce) {
   .brand-panel,
@@ -614,17 +531,13 @@ form.form-loading {
   .form-grid > *,
   .forgot-link,
   .submit-btn,
-  .submit-btn::after,
-  .auth-demo-link::after,
   .field-dot,
   .loader-dots .dot,
-  .auth-tier-icon,
-  .brand-logo::after,
-  .brand-stat-number {
+  .login-stats-row,
+  .login-stat-value {
     animation: none !important;
     transition: none !important;
     opacity: 1 !important;
     transform: none !important;
-    -webkit-text-fill-color: unset !important;
   }
 }

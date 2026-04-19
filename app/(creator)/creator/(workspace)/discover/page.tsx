@@ -1,10 +1,13 @@
 "use client";
 
-import { useCallback, useMemo, useState, useEffect, useRef } from "react";
+import { useMemo, useState, useEffect } from "react";
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import "./discover.css";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+// Dynamically import MapView to avoid SSR issues with Leaflet
+const MapView = dynamic(() => import("./MapView"), { ssr: false });
 
 /* ── View mode ───────────────────────────────────────────── */
 type ViewMode = "grid" | "map";
@@ -1109,10 +1112,7 @@ export default function DiscoverPage() {
 
           {/* Campaign grid / Map view */}
           {viewMode === "map" ? (
-            <MapPlaceholder
-              count={filteredCampaigns.length}
-              onSwitch={() => setViewMode("grid")}
-            />
+            <MapView applications={applications} onApply={handleApply} />
           ) : filteredCampaigns.length === 0 ? (
             <EmptyState onClear={clearFilters} />
           ) : (
@@ -1124,60 +1124,6 @@ export default function DiscoverPage() {
           )}
         </section>
       </main>
-    </div>
-  );
-}
-
-/* ── Map Placeholder ──────────────────────────────────────── */
-
-function MapPlaceholder({
-  count,
-  onSwitch,
-}: {
-  count: number;
-  onSwitch: () => void;
-}) {
-  return (
-    <div className="disc-map-placeholder">
-      <div className="disc-map-placeholder-bg">
-        {/* Decorative grid lines */}
-        <div className="disc-map-grid" aria-hidden="true" />
-      </div>
-      <div className="disc-map-content">
-        <div className="disc-map-pin-cluster" aria-hidden="true">
-          {[
-            { left: "22%", top: "38%", payout: "$45", delay: "0ms" },
-            { left: "38%", top: "55%", payout: "$32", delay: "80ms" },
-            { left: "55%", top: "30%", payout: "$85", delay: "160ms" },
-            { left: "68%", top: "50%", payout: "$60", delay: "240ms" },
-            { left: "44%", top: "70%", payout: "$28", delay: "320ms" },
-          ].map((pin, i) => (
-            <div
-              key={i}
-              className="disc-map-pin"
-              style={
-                {
-                  left: pin.left,
-                  top: pin.top,
-                  "--pin-delay": pin.delay,
-                } as React.CSSProperties
-              }
-            >
-              <span className="disc-map-pin-label">{pin.payout}</span>
-            </div>
-          ))}
-        </div>
-        <div className="disc-map-message">
-          <div className="disc-map-icon">◎</div>
-          <h3 className="disc-map-title">Map View</h3>
-          <p className="disc-map-sub">
-            {count} campaigns near you — interactive map coming soon
-          </p>
-          <button className="disc-map-switch-btn" onClick={onSwitch}>
-            Back to Grid
-          </button>
-        </div>
-      </div>
     </div>
   );
 }

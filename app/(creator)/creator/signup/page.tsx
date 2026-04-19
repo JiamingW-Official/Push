@@ -1,93 +1,46 @@
 "use client";
 
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase";
-import { track } from "@/lib/analytics";
 import "@/styles/auth-split.css";
 import "./signup.css";
 
 /* ── Types ───────────────────────────────────────────────── */
 
-type Step = 1 | 2 | 3;
-
-type Fields = {
+type Field = {
+  name: string;
+  location: string;
   email: string;
   password: string;
   confirm: string;
-  city: string;
   instagram: string;
-  niches: string[];
+  bio: string;
 };
 
-type FieldStatus = Partial<
-  Record<keyof Omit<Fields, "niches">, "valid" | "error">
->;
+type FieldStatus = Partial<Record<keyof Field, "valid" | "error">>;
 
-const NICHE_OPTIONS = [
-  "Food",
-  "Coffee",
-  "Beauty",
-  "Fashion",
-  "Fitness",
-  "Travel",
-  "Art",
-];
-
-const TIERS = [
-  {
-    icon: "◎",
-    label: "Clay",
-    rate: "Start here",
-    desc: "Free product campaigns — build your score",
-    current: true,
-  },
-  {
-    icon: "◈",
-    label: "Bronze",
-    rate: "$15+/booking",
-    desc: "First paid campaigns unlock",
-    current: false,
-  },
-  {
-    icon: "◆",
-    label: "Silver",
-    rate: "$30+/booking",
-    desc: "Commission kicks in — real earnings",
-    current: false,
-  },
-  {
-    icon: "◉",
-    label: "Gold",
-    rate: "$55+/booking",
-    desc: "Trusted local voice",
-    current: false,
-  },
-  {
-    icon: "◑",
-    label: "Platinum",
-    rate: "$75+/booking",
-    desc: "Top 10% of creators",
-    current: false,
-  },
-  {
-    icon: "★",
-    label: "Diamond",
-    rate: "Retainer + equity",
-    desc: "Elite — $85+/booking + retainer",
-    current: false,
-  },
-];
-
-const EMPTY: Fields = {
+const EMPTY: Field = {
+  name: "",
+  location: "",
   email: "",
   password: "",
   confirm: "",
-  city: "",
   instagram: "",
-  niches: [],
+  bio: "",
 };
+
+/* ── Tier progression data ───────────────────────────────── */
+
+const TIERS = [
+  { icon: "◎", label: "Spark", desc: "Just getting started" },
+  { icon: "◈", label: "Explorer", desc: "First campaigns" },
+  { icon: "◆", label: "Anchor", desc: "Regular earner" },
+  { icon: "◉", label: "Amplifier", desc: "Trusted voice" },
+  { icon: "◑", label: "Luminary", desc: "Top creator" },
+  { icon: "★", label: "Icon", desc: "Elite tier" },
+];
 
 /* ── Helpers ─────────────────────────────────────────────── */
 
@@ -128,59 +81,53 @@ export default function CreatorSignupPage() {
   const router = useRouter();
   const submitBtnRef = useRef<HTMLButtonElement>(null);
 
-  const [step, setStep] = useState<Step>(1);
-  const [fields, setFields] = useState<Fields>(EMPTY);
-  const [errors, setErrors] = useState<Partial<Record<keyof Fields, string>>>(
+  const [fields, setFields] = useState<Field>(EMPTY);
+  const [errors, setErrors] = useState<Partial<Field>>({});
+  const [termsAgreed, setTermsAgreed] = useState(false);
+  const [termsError, setTermsError] = useState("");
+  const [touched, setTouched] = useState<Partial<Record<keyof Field, boolean>>>(
     {},
   );
   const [fieldStatus, setFieldStatus] = useState<FieldStatus>({});
-  const [touched, setTouched] = useState<
-    Partial<Record<keyof Omit<Fields, "niches">, boolean>>
-  >({});
   const [showPw, setShowPw] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
-  const [termsAgreed, setTermsAgreed] = useState(false);
-  const [termsError, setTermsError] = useState("");
   const [loading, setLoading] = useState(false);
   const [formError, setFormError] = useState("");
   const [success, setSuccess] = useState(false);
-  const [stepTransition, setStepTransition] = useState(false);
-
-  useEffect(() => {
-    track("signup_started");
-  }, []);
-
-  /* ── Field helpers ─────────────────────────────────────── */
+  const [isPressed, setIsPressed] = useState(false);
 
   const set =
-    (k: keyof Omit<Fields, "niches">) =>
-    (e: React.ChangeEvent<HTMLInputElement>) =>
+    (k: keyof Field) =>
+    (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
       setFields((f) => ({ ...f, [k]: e.target.value }));
 
-  function toggleNiche(niche: string) {
-    setFields((f) => ({
-      ...f,
-      niches: f.niches.includes(niche)
-        ? f.niches.filter((n) => n !== niche)
-        : [...f.niches, niche],
+  function handleBlur(k: keyof Field) {
+    setTouched((t) => ({ ...t, [k]: true }));
+    const v = fields[k];
+    let ok = false;
+    if (k === "name") ok = v.trim().length > 0;
+    else if (k === "location") ok = v.trim().length > 0;
+    else if (k === "email") ok = /\S+@\S+\.\S+/.test(v) && v.trim().length > 0;
+    else if (k === "password") ok = v.length >= 8;
+    else if (k === "confirm") ok = v === fields.password && v.length > 0;
+    else if (k === "instagram")
+      ok = true; // optional
+    else if (k === "bio")
+      ok = true; // optional
+    else ok = true;
+    setFieldStatus((p) => ({
+      ...p,
+      [k]: ok ? "valid" : "error",
     }));
   }
 
-  function handleBlur(k: keyof Omit<Fields, "niches">) {
-    setTouched((t) => ({ ...t, [k]: true }));
-    const v = fields[k] as string;
-    let ok = false;
-    if (k === "email") ok = /\S+@\S+\.\S+/.test(v) && v.trim().length > 0;
-    else if (k === "password") ok = v.length >= 8;
-    else if (k === "confirm") ok = v === fields.password && v.length > 0;
-    else ok = true;
-    setFieldStatus((p) => ({ ...p, [k]: ok ? "valid" : "error" }));
-  }
-
-  /* ── Step validation ───────────────────────────────────── */
-
-  function validateStep1(): boolean {
-    const errs: Partial<Record<keyof Fields, string>> = {};
+  function validate(): boolean {
+    const errs: Partial<Field> = {};
+    if (!fields.name.trim())
+      errs.name = "Please enter your full name so merchants know who you are.";
+    if (!fields.location.trim())
+      errs.location =
+        "We need your city or neighbourhood to match you with local campaigns.";
     if (!fields.email.trim()) errs.email = "Required";
     else if (!/\S+@\S+\.\S+/.test(fields.email))
       errs.email = "Please enter a valid email address.";
@@ -189,81 +136,55 @@ export default function CreatorSignupPage() {
     if (fields.confirm !== fields.password)
       errs.confirm = "Passwords don't match — double-check and try again.";
     setErrors(errs);
-    setTouched({ email: true, password: true, confirm: true });
-    return Object.keys(errs).length === 0;
-  }
-
-  function validateStep2(): boolean {
-    // All step 2 fields are optional — just proceed
-    return true;
-  }
-
-  /* ── Step transitions ──────────────────────────────────── */
-
-  function goToStep(next: Step) {
-    setStepTransition(true);
-    setTimeout(() => {
-      setStep(next);
-      setStepTransition(false);
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    }, 180);
-  }
-
-  function handleNext() {
-    setFormError("");
-    if (step === 1) {
-      if (!validateStep1()) return;
-      track("signup_step1_complete");
-      goToStep(2);
-    } else if (step === 2) {
-      if (!validateStep2()) return;
-      track("signup_step2_complete");
-      goToStep(3);
+    if (!termsAgreed) {
+      setTermsError("Please agree to the Terms & Privacy Policy to continue.");
+    } else {
+      setTermsError("");
     }
+    // Mark all required fields as touched
+    setTouched({
+      name: true,
+      location: true,
+      email: true,
+      password: true,
+      confirm: true,
+    });
+    return Object.keys(errs).length === 0 && termsAgreed;
   }
 
-  function handleBack() {
-    if (step > 1) goToStep((step - 1) as Step);
+  function handleRetry() {
+    setFormError("");
+    submitBtnRef.current?.focus();
   }
-
-  /* ── Final submit ──────────────────────────────────────── */
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setFormError("");
-    if (!termsAgreed) {
-      setTermsError("Please agree to the Terms & Privacy Policy to continue.");
+    setIsPressed(true);
+    if (!validate()) {
+      setIsPressed(false);
       return;
     }
-    setTermsError("");
-    track("signup_submitted");
     setLoading(true);
     try {
       const supabase = createClient();
       const { data, error } = await supabase.auth.signUp({
         email: fields.email.trim(),
         password: fields.password,
-        options: {
-          data: {
-            role: "creator",
-            city: fields.city.trim() || null,
-            instagram: fields.instagram.trim() || null,
-            niches: fields.niches,
-          },
-        },
+        options: { data: { role: "creator", name: fields.name } },
       });
       if (error) throw error;
       if (!data.user) throw new Error("Signup failed — no user returned");
 
       const { error: profileError } = await supabase.from("creators").insert({
         user_id: data.user.id,
-        city: fields.city.trim() || null,
-        instagram_handle: fields.instagram.trim() || null,
-        niches: fields.niches,
+        name: fields.name.trim(),
+        location: fields.location.trim(),
+        instagram_handle: fields.instagram.replace(/^@+/, "") || null,
+        bio: fields.bio.trim() || null,
       });
       if (profileError) throw profileError;
 
-      track("signup_success", { hasSession: !!data.session });
       if (data.session) {
         router.push("/explore");
       } else {
@@ -271,24 +192,26 @@ export default function CreatorSignupPage() {
       }
     } catch (err: unknown) {
       setFormError(sanitizeError(err));
+      setIsPressed(false);
     } finally {
       setLoading(false);
     }
   }
 
   const pwStrength = getPasswordStrength(fields.password);
+  const bioRemaining = 160 - fields.bio.length;
 
   /* ── Success state ───────────────────────────────────────── */
 
   if (success) {
     return (
       <div className="page">
-        <BrandPanel step={step} />
+        <BrandPanel />
         <div className="form-panel">
           <div className="form-wrap">
             <div className="form-success" role="status" aria-live="polite">
-              <div className="success-icon" aria-hidden="true">
-                <svg viewBox="0 0 48 48" fill="none" width="48" height="48">
+              <div className="success-check" aria-hidden="true">
+                <svg viewBox="0 0 48 48" fill="none">
                   <circle
                     cx="24"
                     cy="24"
@@ -308,8 +231,9 @@ export default function CreatorSignupPage() {
               </div>
               <h2 className="success-heading">You&rsquo;re in!</h2>
               <p className="success-body">
-                We sent a magic link to <strong>{fields.email}</strong>. Your
-                first campaign match lands within 24h.
+                We sent a confirmation link to <strong>{fields.email}</strong>.
+                Verify your email to get your first campaign. Check Promotions
+                or Spam if it&apos;s not in your inbox within 2 minutes.
               </p>
               <Link href="/explore" className="btn btn-primary success-cta">
                 Explore campaigns →
@@ -332,31 +256,17 @@ export default function CreatorSignupPage() {
         Skip to form
       </a>
       <div className="page">
-        <BrandPanel step={step} />
+        <BrandPanel />
         <div className="form-panel">
           <div className="form-wrap" id="signup-form">
-            {/* ── Step indicator ─────────────────────────── */}
-            <StepIndicator current={step} total={3} />
-
-            {/* ── Form header ────────────────────────────── */}
             <div className="form-header">
-              <span className="form-eyebrow">JOIN PUSH — STEP {step} OF 3</span>
-              <h1 className="form-title">
-                {step === 1 && "Create your account."}
-                {step === 2 && "Build your profile."}
-                {step === 3 && "Your journey starts at Clay."}
-              </h1>
+              <span className="form-eyebrow">Creator Signup</span>
+              <h1 className="form-title">Start Earning.</h1>
               <p className="form-subtitle">
-                {step === 1 &&
-                  "Free to join · No follower minimum · No exclusivity."}
-                {step === 2 &&
-                  "Help us match you with the right campaigns. All optional."}
-                {step === 3 &&
-                  "Every creator starts at Clay. Here's how you level up."}
+                No follower minimum. No exclusivity. Just show up and create.
               </p>
             </div>
 
-            {/* ── Global form error ──────────────────────── */}
             {formError && (
               <div
                 className="form-error"
@@ -367,381 +277,332 @@ export default function CreatorSignupPage() {
                 <button
                   type="button"
                   className="error-retry-btn"
-                  onClick={() => setFormError("")}
+                  onClick={handleRetry}
                 >
-                  Dismiss
+                  Try again
                 </button>
               </div>
             )}
 
-            {/* ── Step content ───────────────────────────── */}
-            <div
-              className={`step-content${stepTransition ? " step-content--exit" : ""}`}
+            <form
+              onSubmit={handleSubmit}
+              noValidate
+              className={loading ? "form-loading" : ""}
             >
-              {/* ─── STEP 1: Basic account info ─────────── */}
-              {step === 1 && (
-                <form
-                  onSubmit={(e) => {
-                    e.preventDefault();
-                    handleNext();
-                  }}
-                  noValidate
-                >
-                  <div className="form-grid">
-                    <div className="form-field">
-                      <label htmlFor="email">Email</label>
-                      <div className="field-wrap">
-                        <input
-                          id="email"
-                          name="email"
-                          type="email"
-                          value={fields.email}
-                          onChange={set("email")}
-                          onBlur={() => handleBlur("email")}
-                          placeholder="you@example.com"
-                          autoComplete="email"
-                          required
-                          aria-describedby={
-                            errors.email ? "err-email" : undefined
-                          }
-                        />
-                        {fieldStatus.email === "valid" && (
-                          <span className="field-dot" aria-hidden="true" />
-                        )}
-                      </div>
-                      {errors.email && touched.email && (
-                        <span className="error-msg" id="err-email">
-                          {errors.email}
-                        </span>
-                      )}
-                    </div>
+              <div className="form-grid">
+                {/* ── Profile ──────────────────────────────── */}
+                <div className="form-divider">
+                  <span className="form-divider-line" />
+                  <span className="form-divider-label">Your Profile</span>
+                  <span className="form-divider-line" />
+                </div>
 
-                    <div className="form-field">
-                      <label htmlFor="password">Password</label>
-                      <div className="input-with-action">
-                        <input
-                          id="password"
-                          name="password"
-                          type={showPw ? "text" : "password"}
-                          value={fields.password}
-                          onChange={set("password")}
-                          onBlur={() => handleBlur("password")}
-                          placeholder="Min 8 characters"
-                          autoComplete="new-password"
-                          required
-                          aria-describedby={
-                            errors.password
-                              ? "err-password"
-                              : fields.password
-                                ? "pw-strength"
-                                : undefined
-                          }
-                        />
-                        <button
-                          type="button"
-                          className="input-action-btn"
-                          onClick={() => setShowPw((v) => !v)}
-                          aria-label={
-                            showPw ? "Hide password" : "Show password"
-                          }
-                        >
-                          {showPw ? "Hide" : "Show"}
-                        </button>
-                      </div>
-                      {fields.password && pwStrength && (
-                        <div
-                          className="pw-strength"
-                          id="pw-strength"
-                          aria-live="polite"
-                        >
-                          <div className="pw-bar">
-                            <div className={`pw-fill pw-fill--${pwStrength}`} />
-                          </div>
-                          <span className={`pw-label pw-label--${pwStrength}`}>
-                            {pwStrength === "weak"
-                              ? "Weak"
-                              : pwStrength === "fair"
-                                ? "Fair"
-                                : "Strong — good to go"}
-                          </span>
-                        </div>
-                      )}
-                      {errors.password && touched.password && (
-                        <span className="error-msg" id="err-password">
-                          {errors.password}
-                        </span>
-                      )}
-                    </div>
-
-                    <div className="form-field">
-                      <label htmlFor="confirm">Confirm Password</label>
-                      <div className="input-with-action">
-                        <input
-                          id="confirm"
-                          name="confirm"
-                          type={showConfirm ? "text" : "password"}
-                          value={fields.confirm}
-                          onChange={set("confirm")}
-                          onBlur={() => handleBlur("confirm")}
-                          placeholder="Repeat password"
-                          autoComplete="new-password"
-                          required
-                          aria-describedby={
-                            errors.confirm ? "err-confirm" : undefined
-                          }
-                        />
-                        <button
-                          type="button"
-                          className="input-action-btn"
-                          onClick={() => setShowConfirm((v) => !v)}
-                          aria-label={
-                            showConfirm
-                              ? "Hide confirm password"
-                              : "Show confirm password"
-                          }
-                        >
-                          {showConfirm ? "Hide" : "Show"}
-                        </button>
-                      </div>
-                      {errors.confirm && touched.confirm && (
-                        <span className="error-msg" id="err-confirm">
-                          {errors.confirm}
-                        </span>
-                      )}
-                    </div>
-
-                    <p className="trust-line">
-                      Free to join · No follower minimum · 200+ local campaigns
-                    </p>
-
-                    <button
-                      type="submit"
-                      className="btn btn-primary submit-btn"
-                    >
-                      Continue →
-                    </button>
-                  </div>
-                </form>
-              )}
-
-              {/* ─── STEP 2: Creator profile ────────────── */}
-              {step === 2 && (
-                <div className="form-grid">
+                <div className="form-row">
                   <div className="form-field">
-                    <label htmlFor="city">
-                      City / Neighborhood{" "}
-                      <span className="label-optional">(optional)</span>
-                    </label>
+                    <label htmlFor="name">Full Name</label>
                     <div className="field-wrap">
                       <input
-                        id="city"
-                        name="city"
+                        id="name"
+                        name="name"
                         type="text"
-                        value={fields.city}
-                        onChange={set("city")}
-                        placeholder="e.g. Williamsburg, Brooklyn"
-                        autoComplete="address-level2"
+                        value={fields.name}
+                        onChange={set("name")}
+                        onBlur={() => handleBlur("name")}
+                        placeholder="Your full name"
+                        autoComplete="name"
+                        required
+                        aria-describedby={errors.name ? "err-name" : undefined}
                       />
-                      {fields.city.length > 0 && (
+                      {fieldStatus.name === "valid" && (
                         <span className="field-dot" aria-hidden="true" />
                       )}
                     </div>
-                    <span className="field-hint">
-                      We match campaigns by neighborhood — more specific =
-                      better matches.
-                    </span>
+                    {errors.name && touched.name && (
+                      <span className="error-msg" id="err-name">
+                        {errors.name}
+                      </span>
+                    )}
                   </div>
 
                   <div className="form-field">
-                    <label htmlFor="instagram">
-                      Instagram Handle{" "}
-                      <span className="label-optional">(optional)</span>
-                    </label>
-                    <div className="field-wrap field-wrap--prefix">
-                      <span className="field-prefix" aria-hidden="true">
-                        @
-                      </span>
+                    <label htmlFor="location">City / Neighbourhood</label>
+                    <div className="field-wrap">
                       <input
-                        id="instagram"
-                        name="instagram"
+                        id="location"
+                        name="location"
                         type="text"
-                        value={fields.instagram}
-                        onChange={set("instagram")}
-                        placeholder="yourhandle"
-                        autoComplete="username"
-                        style={{ paddingLeft: "28px" }}
+                        value={fields.location}
+                        onChange={set("location")}
+                        onBlur={() => handleBlur("location")}
+                        placeholder="e.g. Williamsburg, NYC"
+                        autoComplete="address-level2"
+                        required
+                        aria-describedby={
+                          errors.location ? "err-location" : undefined
+                        }
                       />
-                    </div>
-                    <span className="field-hint">
-                      Brands browse creator profiles — adding yours helps you
-                      get discovered.
-                    </span>
-                  </div>
-
-                  <div className="form-field">
-                    <label>
-                      Content Niches{" "}
-                      <span className="label-optional">
-                        (pick any that fit)
-                      </span>
-                    </label>
-                    <div
-                      className="niche-chips"
-                      role="group"
-                      aria-label="Select content niches"
-                    >
-                      {NICHE_OPTIONS.map((niche) => (
-                        <button
-                          key={niche}
-                          type="button"
-                          className={`niche-chip filter-chip${
-                            fields.niches.includes(niche)
-                              ? " niche-chip--active"
-                              : ""
-                          }`}
-                          onClick={() => toggleNiche(niche)}
-                          aria-pressed={fields.niches.includes(niche)}
-                        >
-                          {niche}
-                        </button>
-                      ))}
-                    </div>
-                    <span className="field-hint">
-                      Helps us surface campaigns you'll actually enjoy creating.
-                    </span>
-                  </div>
-
-                  <div className="step-nav">
-                    <button
-                      type="button"
-                      className="btn btn-ghost back-btn"
-                      onClick={handleBack}
-                    >
-                      ← Back
-                    </button>
-                    <button
-                      type="button"
-                      className="btn btn-primary submit-btn submit-btn--flex"
-                      onClick={handleNext}
-                    >
-                      Continue →
-                    </button>
-                  </div>
-                </div>
-              )}
-
-              {/* ─── STEP 3: Tier preview + submit ──────── */}
-              {step === 3 && (
-                <form onSubmit={handleSubmit} noValidate>
-                  <div className="form-grid">
-                    {/* Tier journey */}
-                    <div className="tier-journey">
-                      {TIERS.map((tier, i) => (
-                        <div
-                          key={tier.label}
-                          className={`tier-row${tier.current ? " tier-row--current" : ""}${
-                            i > 0 ? " tier-row--locked" : ""
-                          }`}
-                        >
-                          <div className="tier-row-icon" aria-hidden="true">
-                            {tier.icon}
-                          </div>
-                          <div className="tier-row-body">
-                            <div className="tier-row-top">
-                              <span className="tier-row-name">
-                                {tier.label}
-                              </span>
-                              <span className="tier-row-rate">{tier.rate}</span>
-                            </div>
-                            <span className="tier-row-desc">{tier.desc}</span>
-                          </div>
-                          {tier.current && (
-                            <span
-                              className="tier-row-you"
-                              aria-label="You start here"
-                            >
-                              YOU START HERE
-                            </span>
-                          )}
-                        </div>
-                      ))}
-                    </div>
-
-                    <p className="tier-upgrade-hint">
-                      Tier upgrades automatically as you complete campaigns and
-                      earn reviews. Top creators reach{" "}
-                      <strong style={{ color: "var(--champagne)" }}>
-                        $85+/booking
-                      </strong>{" "}
-                      within 90 days.
-                    </p>
-
-                    {/* Terms */}
-                    <div className="form-field terms-field">
-                      <label className="terms-label">
-                        <input
-                          id="terms"
-                          name="terms"
-                          type="checkbox"
-                          checked={termsAgreed}
-                          onChange={(e) => {
-                            setTermsAgreed(e.target.checked);
-                            if (e.target.checked) setTermsError("");
-                          }}
-                          required
-                        />
-                        <span>
-                          I agree to the{" "}
-                          <Link href="/terms" target="_blank">
-                            Terms of Service
-                          </Link>{" "}
-                          and{" "}
-                          <Link href="/privacy" target="_blank">
-                            Privacy Policy
-                          </Link>
-                        </span>
-                      </label>
-                      {termsError && (
-                        <span className="error-msg">{termsError}</span>
+                      {fieldStatus.location === "valid" && (
+                        <span className="field-dot" aria-hidden="true" />
                       )}
                     </div>
+                    {errors.location && touched.location && (
+                      <span className="error-msg" id="err-location">
+                        {errors.location}
+                      </span>
+                    )}
+                  </div>
+                </div>
 
-                    <div className="step-nav">
+                {/* ── Account ──────────────────────────────── */}
+                <div className="form-divider">
+                  <span className="form-divider-line" />
+                  <span className="form-divider-label">Create Account</span>
+                  <span className="form-divider-line" />
+                </div>
+
+                <div className="form-field">
+                  <label htmlFor="email">Email</label>
+                  <div className="field-wrap">
+                    <input
+                      id="email"
+                      name="email"
+                      type="email"
+                      value={fields.email}
+                      onChange={set("email")}
+                      onBlur={() => handleBlur("email")}
+                      placeholder="you@example.com"
+                      autoComplete="email"
+                      required
+                      aria-describedby={errors.email ? "err-email" : undefined}
+                    />
+                    {fieldStatus.email === "valid" && (
+                      <span className="field-dot" aria-hidden="true" />
+                    )}
+                  </div>
+                  {errors.email && touched.email && (
+                    <span className="error-msg" id="err-email">
+                      {errors.email}
+                    </span>
+                  )}
+                </div>
+
+                <div className="form-row">
+                  <div className="form-field">
+                    <label htmlFor="password">Password</label>
+                    <div className="input-with-action">
+                      <input
+                        id="password"
+                        name="password"
+                        type={showPw ? "text" : "password"}
+                        value={fields.password}
+                        onChange={set("password")}
+                        onBlur={() => handleBlur("password")}
+                        placeholder="Min 8 characters"
+                        autoComplete="new-password"
+                        required
+                        aria-describedby={
+                          errors.password
+                            ? "err-password"
+                            : fields.password
+                              ? "pw-strength"
+                              : undefined
+                        }
+                      />
                       <button
                         type="button"
-                        className="btn btn-ghost back-btn"
-                        onClick={handleBack}
-                        disabled={loading}
+                        className="input-action-btn"
+                        onClick={() => setShowPw((v) => !v)}
+                        aria-label={showPw ? "Hide password" : "Show password"}
                       >
-                        ← Back
-                      </button>
-                      <button
-                        ref={submitBtnRef}
-                        type="submit"
-                        className="btn btn-primary submit-btn submit-btn--flex"
-                        disabled={loading}
-                        aria-busy={loading}
-                      >
-                        {loading ? (
-                          <>
-                            <span className="loader-dots" aria-hidden="true">
-                              <span className="dot" />
-                              <span className="dot" />
-                              <span className="dot" />
-                            </span>
-                            <span className="sr-only">Creating account…</span>
-                          </>
-                        ) : (
-                          "Join Push →"
-                        )}
+                        {showPw ? "Hide" : "Show"}
                       </button>
                     </div>
+                    {fields.password && pwStrength && (
+                      <div
+                        className="pw-strength"
+                        id="pw-strength"
+                        aria-live="polite"
+                      >
+                        <div
+                          className="pw-bar"
+                          data-strength={pwStrength}
+                          aria-hidden="true"
+                        >
+                          <span className="pw-bar-seg" />
+                          <span className="pw-bar-seg" />
+                          <span className="pw-bar-seg" />
+                          <span className="pw-bar-seg" />
+                        </div>
+                        <span className={`pw-label pw-label--${pwStrength}`}>
+                          {pwStrength === "weak"
+                            ? "Weak"
+                            : pwStrength === "fair"
+                              ? "Fair"
+                              : "Strong — good to go"}
+                        </span>
+                      </div>
+                    )}
+                    {errors.password && touched.password && (
+                      <span className="error-msg" id="err-password">
+                        {errors.password}
+                      </span>
+                    )}
                   </div>
-                </form>
-              )}
-            </div>
 
-            {/* ── Footer ─────────────────────────────────── */}
+                  <div className="form-field">
+                    <label htmlFor="confirm">Confirm Password</label>
+                    <div className="input-with-action">
+                      <input
+                        id="confirm"
+                        name="confirm"
+                        type={showConfirm ? "text" : "password"}
+                        value={fields.confirm}
+                        onChange={set("confirm")}
+                        onBlur={() => handleBlur("confirm")}
+                        placeholder="Repeat password"
+                        autoComplete="new-password"
+                        required
+                        aria-describedby={
+                          errors.confirm ? "err-confirm" : undefined
+                        }
+                      />
+                      <button
+                        type="button"
+                        className="input-action-btn"
+                        onClick={() => setShowConfirm((v) => !v)}
+                        aria-label={
+                          showConfirm
+                            ? "Hide confirm password"
+                            : "Show confirm password"
+                        }
+                      >
+                        {showConfirm ? "Hide" : "Show"}
+                      </button>
+                    </div>
+                    {errors.confirm && touched.confirm && (
+                      <span className="error-msg" id="err-confirm">
+                        {errors.confirm}
+                      </span>
+                    )}
+                  </div>
+                </div>
+
+                {/* ── Creator details ───────────────────────── */}
+                <div className="form-divider">
+                  <span className="form-divider-line" />
+                  <span className="form-divider-label">Creator Details</span>
+                  <span className="form-divider-line" />
+                </div>
+
+                <div className="form-field">
+                  <label htmlFor="instagram">
+                    Instagram Handle{" "}
+                    <span className="label-optional">(optional)</span>
+                  </label>
+                  <div className="field-wrap">
+                    <input
+                      id="instagram"
+                      name="instagram"
+                      type="text"
+                      value={fields.instagram}
+                      onChange={set("instagram")}
+                      onBlur={() => handleBlur("instagram")}
+                      placeholder="@yourhandle"
+                    />
+                    {fieldStatus.instagram === "valid" && fields.instagram && (
+                      <span className="field-dot" aria-hidden="true" />
+                    )}
+                  </div>
+                  <span className="field-hint">
+                    Helps match you with the right campaigns. Read-only — we
+                    never post or change anything.
+                  </span>
+                </div>
+
+                <div className="form-field">
+                  <label htmlFor="bio">
+                    Bio <span className="label-optional">(optional)</span>
+                  </label>
+                  <div className="bio-wrap">
+                    <textarea
+                      id="bio"
+                      rows={3}
+                      value={fields.bio}
+                      onChange={(e) => {
+                        if (e.target.value.length <= 160) set("bio")(e);
+                      }}
+                      onBlur={() => handleBlur("bio")}
+                      placeholder="Tell merchants about your content style, niche, or local area…"
+                      maxLength={160}
+                    />
+                    <span
+                      className={`bio-counter ${bioRemaining <= 20 ? "bio-counter--warn" : ""}`}
+                      aria-live="polite"
+                      aria-atomic="true"
+                    >
+                      {bioRemaining}
+                    </span>
+                  </div>
+                </div>
+
+                <p className="trust-line">
+                  Free to join · No follower minimum · 200+ local campaigns
+                </p>
+
+                {/* Terms consent — required before signup */}
+                <div className="form-field terms-field">
+                  <label className="terms-label">
+                    <input
+                      id="terms"
+                      name="terms"
+                      type="checkbox"
+                      checked={termsAgreed}
+                      onChange={(e) => {
+                        setTermsAgreed(e.target.checked);
+                        if (e.target.checked) setTermsError("");
+                      }}
+                      required
+                    />
+                    <span>
+                      I agree to the{" "}
+                      <Link href="/terms" target="_blank">
+                        Terms of Service
+                      </Link>{" "}
+                      and{" "}
+                      <Link href="/privacy" target="_blank">
+                        Privacy Policy
+                      </Link>
+                    </span>
+                  </label>
+                  {termsError && (
+                    <span className="error-msg">{termsError}</span>
+                  )}
+                </div>
+
+                <button
+                  ref={submitBtnRef}
+                  type="submit"
+                  className="btn btn-primary submit-btn"
+                  disabled={loading}
+                  aria-busy={loading}
+                  data-pressed={isPressed}
+                >
+                  {loading ? (
+                    <>
+                      <span className="loader-dots" aria-hidden="true">
+                        <span className="dot" />
+                        <span className="dot" />
+                        <span className="dot" />
+                      </span>
+                      <span className="sr-only">Creating account…</span>
+                    </>
+                  ) : (
+                    "Join Push — Start Earning"
+                  )}
+                </button>
+              </div>
+            </form>
+
             <p className="form-footer">
               Already have an account?{" "}
               <Link href="/creator/login">Sign in &rarr;</Link>
@@ -753,6 +614,32 @@ export default function CreatorSignupPage() {
             <Link href="/demo/creator" className="auth-demo-link">
               Try Demo Mode &mdash; no account needed &rarr;
             </Link>
+
+            {/* ── Tier journey strip ────────────────────────── */}
+            <div className="tier-preview">
+              <span className="tier-preview-title">YOUR JOURNEY</span>
+              <div
+                className="tier-list"
+                role="list"
+                aria-label="Creator tier progression"
+              >
+                {TIERS.map((t, i) => (
+                  <div
+                    key={t.label}
+                    className="tier-item"
+                    data-index={i}
+                    role="listitem"
+                    title={t.desc}
+                    style={{ animationDelay: `${700 + i * 80}ms` }}
+                  >
+                    <span className="tier-icon" aria-hidden="true">
+                      {t.icon}
+                    </span>
+                    <span className="tier-label">{t.label}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -760,41 +647,35 @@ export default function CreatorSignupPage() {
   );
 }
 
-/* ── Step Indicator ──────────────────────────────────────── */
+/* ── Signup brand panel tier data ────────────────────────── */
 
-function StepIndicator({ current, total }: { current: Step; total: number }) {
-  const labels = ["Account", "Profile", "Tiers"];
-  return (
-    <div className="step-indicator" aria-label={`Step ${current} of ${total}`}>
-      {Array.from({ length: total }, (_, i) => {
-        const n = (i + 1) as Step;
-        const state =
-          n < current ? "done" : n === current ? "active" : "pending";
-        return (
-          <div
-            key={n}
-            className={`step-indicator__item step-indicator__item--${state}`}
-          >
-            <div className="step-indicator__dot" aria-hidden="true">
-              {state === "done" ? "✓" : n}
-            </div>
-            <span className="step-indicator__label">{labels[i]}</span>
-            {i < total - 1 && (
-              <div
-                className={`step-indicator__line${state === "done" ? " step-indicator__line--done" : ""}`}
-                aria-hidden="true"
-              />
-            )}
-          </div>
-        );
-      })}
-    </div>
-  );
-}
+const SIGNUP_TIERS = [
+  {
+    icon: "◎",
+    label: "Seed",
+    rate: "Free",
+    benefit: "Start free — zero followers needed",
+    color: "#669bbc",
+  },
+  {
+    icon: "◈",
+    label: "Explorer",
+    rate: "$12/campaign",
+    benefit: "$12/campaign — 2 active campaigns",
+    color: "#f5f2ec",
+  },
+  {
+    icon: "◆",
+    label: "Operator",
+    rate: "$20 + 3%",
+    benefit: "$20/campaign + 3% commission",
+    color: "#c1121f",
+  },
+];
 
 /* ── Brand panel ─────────────────────────────────────────── */
 
-function BrandPanel({ step }: { step: Step }) {
+function BrandPanel() {
   return (
     <div className="brand-panel signup-brand-panel">
       <div className="brand-top">
@@ -802,19 +683,12 @@ function BrandPanel({ step }: { step: Step }) {
           Push
         </Link>
 
-        <div>
-          <h2 className="brand-headline">
-            Start Earning
+        <div className="signup-brand-hero">
+          <h2 className="brand-headline signup-brand-headline">
+            Join 40+ creators
             <br />
-            Today.
+            <em>earning on Push.</em>
           </h2>
-          <p
-            className="brand-earning-tag"
-            aria-label="Earn $15 to $85 per customer"
-          >
-            <span className="brand-earning-amount">$15–$85</span>
-            <span className="brand-earning-unit">/customer</span>
-          </p>
           <p className="brand-tagline">
             Push connects micro-creators like you with local businesses that
             need real foot traffic. Visit, post, earn &mdash; and build a score
@@ -822,32 +696,32 @@ function BrandPanel({ step }: { step: Step }) {
           </p>
         </div>
 
-        {/* Social proof — changes by step */}
-        <div className="editorial-stat">
-          {step === 1 && (
-            <>
-              <span className="editorial-stat-number">14</span>
-              <p className="editorial-stat-label">
-                creators joined Williamsburg this week
-              </p>
-            </>
-          )}
-          {step === 2 && (
-            <>
-              <span className="editorial-stat-number">200+</span>
-              <p className="editorial-stat-label">
-                active campaigns waiting for creators like you
-              </p>
-            </>
-          )}
-          {step === 3 && (
-            <>
-              <span className="editorial-stat-number">90</span>
-              <p className="editorial-stat-label">
-                days to reach Gold tier — $55+/booking
-              </p>
-            </>
-          )}
+        {/* First 3 tier preview — staggered entry animation */}
+        <div className="auth-tier-preview signup-tier-preview">
+          <span className="auth-tier-preview-label">YOUR STARTING PATH</span>
+          {SIGNUP_TIERS.map((t, i) => (
+            <div
+              key={t.label}
+              className="auth-tier-item signup-tier-item"
+              style={{ animationDelay: `${400 + i * 120}ms` }}
+            >
+              <span
+                className="auth-tier-icon"
+                aria-hidden="true"
+                style={{ color: t.color }}
+              >
+                {t.icon}
+              </span>
+              <div className="auth-tier-info">
+                <span className="auth-tier-name">{t.label}</span>
+                <span className="auth-tier-benefit">{t.benefit}</span>
+              </div>
+              <span className="auth-tier-rate">{t.rate}</span>
+            </div>
+          ))}
+          <p className="auth-motivation">
+            Your Push Score starts building from day one.
+          </p>
         </div>
       </div>
 

@@ -366,6 +366,8 @@ export function TopNav({
               src={avatarUrl}
               alt={userName}
               className="ws-topnav__avatar-img"
+              loading="lazy"
+              decoding="async"
             />
           ) : (
             <span className="ws-topnav__avatar-initial" aria-hidden="true">

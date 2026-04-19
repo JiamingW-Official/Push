@@ -5,7 +5,7 @@
 // Collapsible on 768-1024px (280ms slide animation)
 // Wave 3: page-aware contextual content via usePathname()
 
-import { useState } from "react";
+import { useState, useMemo, useCallback } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import "./workspace.css";
@@ -386,14 +386,16 @@ export function ContextPanel({
   const [collapsed, setCollapsed] = useState(defaultCollapsed);
   const pathname = usePathname();
 
-  // Per-page context — props override if explicitly provided
-  const ctx = getPageContext(pathname);
+  // Per-page context — memoised to avoid re-computation on unrelated re-renders
+  const ctx = useMemo(() => getPageContext(pathname), [pathname]);
   const earnings = earningsProp ?? ctx.earnings;
   const stats = statsProp ?? ctx.stats ?? [];
   const deadlines = deadlinesProp ?? ctx.deadlines ?? [];
   const actions = actionsProp ?? ctx.actions ?? [];
 
   const visibleActions = actions.slice(0, 2);
+
+  const toggleCollapsed = useCallback(() => setCollapsed((c) => !c), []);
 
   return (
     <aside
@@ -406,7 +408,7 @@ export function ContextPanel({
         {/* Collapse toggle — visible on tablet via CSS */}
         <button
           className="ws-context__collapse-btn"
-          onClick={() => setCollapsed((c) => !c)}
+          onClick={toggleCollapsed}
           aria-expanded={!collapsed}
           aria-label={
             collapsed ? "Expand context panel" : "Collapse context panel"
@@ -417,8 +419,11 @@ export function ContextPanel({
         </button>
       </div>
 
-      {/* ── Body ── */}
-      <div className="ws-context__body" aria-hidden={collapsed}>
+      {/* ── Body — hidden from AT when panel is collapsed ── */}
+      <div
+        className="ws-context__body"
+        aria-hidden={collapsed ? "true" : undefined}
+      >
         {/* Earnings / hero block — only when defined for this page */}
         {earnings && (
           <>

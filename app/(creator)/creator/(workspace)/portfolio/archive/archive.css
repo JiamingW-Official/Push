@@ -1,917 +1,200 @@
-/* ============================================================
-   Portfolio Archive — "Achievement Chronicle"
-   Design: editorial magazine archive room
-   Design.md: border-radius:0, 8px grid, 6 brand colors
-   Colors: #c1121f / #780000 / #f5f2ec / #003049 / #669bbc / #c9a96e
-   Fonts: Darky (heading) + CS Genio Mono (body/UI)
-   ============================================================ */
+/* ── Portfolio Archive ───────────────────────────────────────────────────────
+   Design system: border-radius 0, brand palette, Darky + CS Genio Mono
+   Density: compact rows 40px, stats bar spacious
+────────────────────────────────────────────────────────────────────────────── */
 
-/* ── Page shell ─────────────────────────────────────────────── */
-.ar-page {
-  min-height: 100vh;
+/* ── Page wrapper ──────────────────────────────────────────────────────────── */
+
+.arc-page {
+  padding: 0;
   background: var(--surface, #f5f2ec);
-  font-family: var(--font-body, "CS Genio Mono", monospace);
+  min-height: 100vh;
+  font-family: "CS Genio Mono", "Courier New", monospace;
+  color: #003049;
 }
 
-/* ── Page Header ─────────────────────────────────────────────── */
-.ar-page-header {
-  background: var(--dark, #003049);
-  position: relative;
-  overflow: hidden;
-}
+/* ── Page header ───────────────────────────────────────────────────────────── */
 
-/* diagonal grid texture */
-.ar-page-header::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background-image: repeating-linear-gradient(
-    45deg,
-    rgba(245,242,236,0.03) 0px,
-    rgba(245,242,236,0.03) 1px,
-    transparent 1px,
-    transparent 20px
-  );
-  pointer-events: none;
-}
-
-.ar-page-header-inner {
-  position: relative;
-  z-index: 1;
-  max-width: var(--content-width, 1280px);
-  margin: 0 auto;
-  padding: 56px var(--space-5, 40px) 48px;
+.arc-page-header {
+  background: #003049;
+  padding: 24px 32px 20px;
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   justify-content: space-between;
-  gap: var(--space-6, 48px);
-  flex-wrap: wrap;
+  gap: 16px;
 }
 
-.ar-header-left {
-  flex: 1;
-  min-width: 280px;
-}
-
-/* Big decorative "ARCHIVE" wordmark */
-.ar-wordmark {
-  font-family: var(--font-display, "Darky", serif);
-  font-size: clamp(56px, 8vw, 96px);
-  font-weight: 900;
-  color: var(--surface);
-  letter-spacing: -0.05em;
-  line-height: 0.9;
-  margin: 0 0 var(--space-3, 24px);
-  display: block;
-}
-
-.ar-eyebrow {
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--champagne, #c9a96e);
-  margin-bottom: 8px;
-  font-family: var(--font-body, "CS Genio Mono", monospace);
-}
-
-.ar-stats-eyebrow {
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: rgba(245,242,236,0.45);
-  font-family: var(--font-body, "CS Genio Mono", monospace);
-  margin-top: 4px;
-}
-
-/* Stats strip inside archive header */
-.ar-header-stats {
-  display: flex;
-  gap: 32px;
-  margin-top: 20px;
-  flex-wrap: wrap;
-}
-
-.ar-header-stat {
+.arc-page-header-left {
   display: flex;
   flex-direction: column;
   gap: 4px;
 }
 
-.ar-header-stat-val {
-  font-family: var(--font-display, "Darky", serif);
-  font-size: clamp(28px, 4vw, 44px);
-  font-weight: 900;
-  letter-spacing: -0.04em;
-  line-height: 1;
-}
-
-.ar-header-stat-val--champagne {
-  color: var(--champagne, #c9a96e);
-}
-
-.ar-header-stat-val--white {
-  color: var(--surface);
-}
-
-.ar-header-stat-lbl {
-  font-family: var(--font-body, "CS Genio Mono", monospace);
+.arc-eyebrow {
+  font-family: "CS Genio Mono", monospace;
   font-size: 10px;
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: rgba(245,242,236,0.35);
+  color: rgba(245, 242, 236, 0.4);
 }
 
-/* Total earned highlight */
-.ar-total-earned {
-  font-family: var(--font-display, "Darky", serif);
-  font-size: clamp(32px, 5vw, 52px);
+.arc-page-title {
+  font-family: "Darky", serif;
+  font-size: 28px;
   font-weight: 900;
-  color: var(--champagne, #c9a96e);
-  letter-spacing: -0.04em;
+  color: #f5f2ec;
+  letter-spacing: -0.03em;
+  margin: 0;
   line-height: 1;
-  margin: 4px 0 0;
-  display: block;
 }
 
-.ar-total-sublabel {
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: rgba(245,242,236,0.35);
-  margin-top: 6px;
-  display: block;
-  font-family: var(--font-body, "CS Genio Mono", monospace);
-}
-
-/* Header right controls */
-.ar-header-right {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: var(--space-3, 24px);
-}
-
-/* Time filter buttons */
-.ar-time-filter {
-  display: flex;
-  gap: 1px;
-  background: rgba(245,242,236,0.08);
-  border: 1px solid rgba(245,242,236,0.1);
-}
-
-.ar-time-btn {
-  padding: 8px 16px;
-  font-family: var(--font-body, "CS Genio Mono", monospace);
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  background: transparent;
-  color: rgba(245,242,236,0.45);
-  border: none;
-  cursor: pointer;
-  transition: background 150ms, color 150ms;
-  border-radius: 0;
-  white-space: nowrap;
-}
-
-.ar-time-btn:hover {
-  background: rgba(245,242,236,0.08);
-  color: rgba(245,242,236,0.75);
-}
-
-.ar-time-btn--active {
-  background: var(--primary, #c1121f);
-  color: var(--surface);
-}
-
-/* View toggle */
-.ar-view-toggle {
-  display: flex;
-  gap: 1px;
-  background: rgba(245,242,236,0.08);
-  border: 1px solid rgba(245,242,236,0.1);
-}
-
-.ar-view-btn {
-  padding: 8px 14px;
-  background: transparent;
-  border: none;
-  color: rgba(245,242,236,0.4);
-  cursor: pointer;
-  font-size: 14px;
-  transition: background 150ms, color 150ms;
-  border-radius: 0;
+.arc-header-actions {
   display: flex;
   align-items: center;
-  justify-content: center;
-  width: 40px;
-  height: 36px;
+  gap: 10px;
 }
 
-.ar-view-btn:hover {
-  background: rgba(245,242,236,0.08);
-  color: rgba(245,242,236,0.75);
-}
+/* ── Buttons ───────────────────────────────────────────────────────────────── */
 
-.ar-view-btn--active {
-  background: rgba(245,242,236,0.15);
-  color: var(--surface);
-}
-
-/* ── Quick nav tabs ──────────────────────────────────────────── */
-.ar-quick-nav {
-  background: var(--dark, #003049);
-  border-bottom: 2px solid var(--primary, #c1121f);
-}
-.ar-quick-nav-inner {
-  max-width: var(--content-width, 1280px);
-  margin: 0 auto;
-  padding: 0 var(--space-5, 40px);
-  display: flex;
-}
-.ar-nav-tab {
-  font-family: var(--font-body, "CS Genio Mono", monospace);
+.arc-btn {
+  font-family: "CS Genio Mono", monospace;
   font-size: 11px;
   font-weight: 700;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.45);
-  padding: 14px 24px;
-  background: transparent;
+  padding: 8px 16px;
   border: none;
-  border-bottom: 2px solid transparent;
-  margin-bottom: -2px;
+  border-radius: 0;
   cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
   text-decoration: none;
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  transition: color 150ms, border-color 150ms;
-}
-.ar-nav-tab:hover {
-  color: rgba(255, 255, 255, 0.8);
-}
-.ar-nav-tab--active {
-  color: #fff;
-  border-bottom-color: var(--champagne, #c9a96e);
-}
-.ar-nav-tab-dot {
-  width: 5px;
-  height: 5px;
-  background: var(--champagne, #c9a96e);
-  display: none;
-  flex-shrink: 0;
-}
-.ar-nav-tab--active .ar-nav-tab-dot {
-  display: block;
-}
-
-/* ── Achievement Badge Strip ─────────────────────────────────── */
-.ar-achievements-section {
-  background: var(--surface-bright, #fafaf8);
-  border-bottom: 1px solid var(--line, rgba(0,48,73,0.12));
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-}
-
-.ar-achievements-inner {
-  max-width: var(--content-width, 1280px);
-  margin: 0 auto;
-  padding: var(--space-4, 32px) var(--space-5, 40px);
-  display: flex;
-  gap: var(--space-4, 32px);
-  align-items: stretch;
-  min-width: max-content;
-}
-
-.ar-achievement-badge {
-  display: flex;
-  align-items: center;
-  gap: var(--space-3, 24px);
-  padding: var(--space-3, 24px) var(--space-4, 32px);
-  border: 1px solid var(--line, rgba(0,48,73,0.12));
-  background: var(--surface-elevated, #fff);
-  min-width: 220px;
-  position: relative;
-  overflow: hidden;
-  transition: transform 200ms, box-shadow 200ms;
-}
-
-.ar-achievement-badge:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(0,48,73,0.08);
-}
-
-/* Color accent line at top */
-.ar-achievement-badge::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 3px;
-}
-
-.ar-achievement-badge--first::before { background: var(--tertiary); }
-.ar-achievement-badge--milestone::before { background: var(--champagne, #c9a96e); }
-.ar-achievement-badge--ten::before { background: var(--dark, #003049); }
-
-/* CSS geometry icon */
-.ar-badge-icon {
-  flex-shrink: 0;
-  width: 40px;
-  height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-}
-
-.ar-badge-icon--first {
-  background: rgba(102,155,188,0.12);
-  border: 2px solid rgba(102,155,188,0.3);
-}
-
-.ar-badge-icon--milestone {
-  background: rgba(201,169,110,0.12);
-  border: 2px solid rgba(201,169,110,0.3);
-}
-
-.ar-badge-icon--ten {
-  background: rgba(0,48,73,0.06);
-  border: 2px solid rgba(0,48,73,0.15);
-}
-
-/* Inner geometry shapes */
-.ar-badge-icon--first::after {
-  content: "";
-  width: 14px;
-  height: 14px;
-  border: 2.5px solid var(--tertiary);
-  transform: rotate(45deg);
-  display: block;
-}
-
-.ar-badge-icon--milestone::after {
-  content: "";
-  width: 16px;
-  height: 16px;
-  background: var(--champagne, #c9a96e);
-  clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
-  display: block;
-}
-
-.ar-badge-icon--ten::after {
-  content: "";
-  width: 14px;
-  height: 14px;
-  background: var(--dark, #003049);
-  display: block;
-}
-
-.ar-badge-text {
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-}
-
-.ar-badge-name {
-  font-family: var(--font-body, "CS Genio Mono", monospace);
-  font-size: 12px;
-  font-weight: 700;
-  color: var(--dark, #003049);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-
-.ar-badge-date {
-  font-size: 10px;
-  color: rgba(0,48,73,0.4);
-  font-family: var(--font-body, "CS Genio Mono", monospace);
-  letter-spacing: 0.03em;
-}
-
-/* ── Filter / Search Bar ─────────────────────────────────────── */
-.ar-filter-bar {
-  background: var(--surface-elevated, #fff);
-  border-bottom: 1px solid var(--line, rgba(0,48,73,0.12));
-}
-
-.ar-filter-inner {
-  max-width: var(--content-width, 1280px);
-  margin: 0 auto;
-  padding: 16px var(--space-5, 40px);
-  display: flex;
-  align-items: center;
-  gap: var(--space-3, 24px);
-  flex-wrap: wrap;
-}
-
-/* Search input */
-.ar-search-wrap {
-  position: relative;
-  flex: 1;
-  min-width: 200px;
-  max-width: 360px;
-}
-
-.ar-search-icon {
-  position: absolute;
-  left: 12px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 14px;
-  height: 14px;
-  border: 1.5px solid rgba(0,48,73,0.3);
-  border-radius: 50%;
-  pointer-events: none;
-}
-
-.ar-search-icon::after {
-  content: "";
-  position: absolute;
-  bottom: -4px;
-  right: -4px;
-  width: 5px;
-  height: 1.5px;
-  background: rgba(0,48,73,0.3);
-  transform: rotate(45deg);
-  transform-origin: left center;
-}
-
-.ar-search-input {
-  width: 100%;
-  padding: 9px 12px 9px 36px;
-  font-family: var(--font-body, "CS Genio Mono", monospace);
-  font-size: 13px;
-  color: var(--dark, #003049);
-  background: var(--surface, #f5f2ec);
-  border: 1px solid var(--line, rgba(0,48,73,0.12));
-  outline: none;
-  border-radius: 0;
-  transition: border-color 150ms;
-}
-
-.ar-search-input::placeholder {
-  color: rgba(0,48,73,0.3);
-}
-
-.ar-search-input:focus {
-  border-color: var(--dark, #003049);
-}
-
-/* Filter chips — 50vh border-radius per Design.md exception */
-.ar-filter-chips {
-  display: flex;
   gap: 6px;
-  flex-wrap: wrap;
-  align-items: center;
 }
 
-.ar-filter-label {
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: rgba(0,48,73,0.35);
-  white-space: nowrap;
+.arc-btn--primary {
+  background: #c1121f;
+  color: #ffffff;
 }
 
-.ar-chip {
-  padding: 5px 12px;
-  font-family: var(--font-body, "CS Genio Mono", monospace);
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  background: var(--surface, #f5f2ec);
-  border: 1px solid var(--line, rgba(0,48,73,0.12));
-  color: rgba(0,48,73,0.6);
-  cursor: pointer;
-  border-radius: 50vh; /* Design.md exception for filter chips */
-  transition: background 150ms, color 150ms, border-color 150ms;
-  white-space: nowrap;
+.arc-btn--primary:hover {
+  background: #780000;
 }
 
-.ar-chip:hover {
-  background: var(--dark, #003049);
-  color: var(--surface);
-  border-color: var(--dark, #003049);
+.arc-btn--secondary {
+  background: rgba(245, 242, 236, 0.12);
+  color: rgba(245, 242, 236, 0.7);
+  border: 1px solid rgba(245, 242, 236, 0.18);
 }
 
-.ar-chip--active {
-  background: var(--dark, #003049);
-  color: var(--surface);
-  border-color: var(--dark, #003049);
+.arc-btn--secondary:hover {
+  background: rgba(245, 242, 236, 0.2);
+  color: #f5f2ec;
 }
 
-/* ── Main Content ────────────────────────────────────────────── */
-.ar-content {
-  max-width: var(--content-width, 1280px);
-  margin: 0 auto;
-  padding: var(--space-6, 48px) var(--space-5, 40px);
+.arc-btn--ghost {
+  background: transparent;
+  color: rgba(0, 48, 73, 0.55);
+  border: 1px solid rgba(0, 48, 73, 0.18);
 }
 
-/* ── Year Group ──────────────────────────────────────────────── */
-.ar-year-group {
-  margin-bottom: var(--space-10, 80px);
-  position: relative;
+.arc-btn--ghost:hover {
+  background: rgba(0, 48, 73, 0.06);
+  color: #003049;
 }
 
-.ar-year-group:last-child {
-  margin-bottom: 0;
+.arc-btn--active {
+  background: #003049;
+  color: #f5f2ec;
+  border-color: #003049;
 }
 
-/* Large decorative year number in background */
-.ar-year-header {
-  display: flex;
-  align-items: baseline;
-  gap: var(--space-4, 32px);
-  margin-bottom: var(--space-5, 40px);
-  position: relative;
-}
+/* ── Stats bar ─────────────────────────────────────────────────────────────── */
 
-.ar-year-number {
-  font-family: var(--font-display, "Darky", serif);
-  font-size: clamp(72px, 12vw, 120px);
-  font-weight: 900;
-  color: rgba(0,48,73,0.06);
-  letter-spacing: -0.06em;
-  line-height: 0.85;
-  user-select: none;
-  pointer-events: none;
-  flex-shrink: 0;
-}
-
-.ar-year-meta {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.ar-year-count {
-  font-family: var(--font-body, "CS Genio Mono", monospace);
-  font-size: 12px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--graphite, #4a5568);
-}
-
-.ar-year-earned {
-  font-family: var(--font-display, "Darky", serif);
-  font-size: 26px;
-  font-weight: 900;
-  color: var(--champagne, #c9a96e);
-  letter-spacing: -0.03em;
-}
-
-/* ── Grid View ───────────────────────────────────────────────── */
-.ar-grid {
+.arc-stats-bar {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: var(--space-3, 24px);
+  background: #ffffff;
+  border-bottom: 1px solid rgba(0, 48, 73, 0.1);
 }
 
-/* Archive card */
-.ar-card {
-  background: var(--surface-elevated, #fff);
-  border: 1px solid var(--line, rgba(0,48,73,0.12));
+.arc-stat-block {
   display: flex;
   flex-direction: column;
-  cursor: pointer;
-  transition: transform 240ms cubic-bezier(0.22,1,0.36,1),
-              box-shadow 240ms cubic-bezier(0.22,1,0.36,1);
-  text-decoration: none;
-  color: inherit;
-  position: relative;
-  overflow: hidden;
-}
-
-.ar-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 16px 40px rgba(0,48,73,0.12);
-  border-color: rgba(0,48,73,0.2);
-}
-
-/* Color tint zone at top */
-.ar-card-tint {
-  height: 72px;
-  position: relative;
-  overflow: hidden;
-  flex-shrink: 0;
-}
-
-.ar-card-tint::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: repeating-linear-gradient(
-    135deg,
-    rgba(255,255,255,0.1) 0px,
-    rgba(255,255,255,0.1) 1px,
-    transparent 1px,
-    transparent 12px
-  );
-}
-
-/* Category colors — will be applied via inline style */
-
-.ar-card-category-pill {
-  position: absolute;
-  bottom: 10px;
-  left: 12px;
-  font-family: var(--font-body, "CS Genio Mono", monospace);
-  font-size: 9px;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  padding: 3px 8px;
-  background: rgba(0,0,0,0.35);
-  color: rgba(255,255,255,0.9);
-  backdrop-filter: blur(4px);
-  border-radius: 0;
-}
-
-/* Card body */
-.ar-card-body {
-  padding: var(--space-3, 24px);
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.ar-card-campaign-name {
-  font-family: var(--font-display, "Darky", serif);
-  font-size: 18px;
-  font-weight: 700;
-  color: var(--dark, #003049);
-  letter-spacing: -0.02em;
-  line-height: 1.2;
-  margin: 0;
-}
-
-.ar-card-merchant {
-  font-family: var(--font-body, "CS Genio Mono", monospace);
-  font-size: 11px;
-  font-weight: 600;
-  color: var(--graphite, #4a5568);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  margin-top: 2px;
-}
-
-.ar-card-date {
-  font-size: 10px;
-  color: rgba(0,48,73,0.35);
-  letter-spacing: 0.03em;
-  margin-top: 2px;
-}
-
-/* Card footer — earnings + scans */
-.ar-card-footer {
-  padding: var(--space-2, 16px) var(--space-3, 24px);
-  border-top: 1px solid var(--line, rgba(0,48,73,0.08));
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--space-2, 16px);
-}
-
-.ar-card-earning {
-  font-family: var(--font-display, "Darky", serif);
-  font-size: 26px;
-  font-weight: 900;
-  color: var(--champagne, #c9a96e);
-  letter-spacing: -0.03em;
-  line-height: 1;
-}
-
-.ar-card-earning--zero {
-  color: var(--tertiary, #669bbc);
-}
-
-.ar-card-scans {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 2px;
-}
-
-.ar-card-scans-number {
-  font-family: var(--font-body, "CS Genio Mono", monospace);
-  font-size: 14px;
-  font-weight: 700;
-  color: var(--dark, #003049);
-}
-
-.ar-card-scans-label {
-  font-size: 9px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: rgba(0,48,73,0.3);
-}
-
-/* ── Timeline View ───────────────────────────────────────────── */
-.ar-timeline {
-  display: flex;
-  flex-direction: column;
-  gap: 0;
-  position: relative;
-}
-
-/* Vertical line */
-.ar-timeline::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 20px;
-  width: 2px;
-  background: var(--line, rgba(0,48,73,0.12));
-}
-
-/* Timeline row */
-.ar-timeline-row {
-  display: flex;
-  align-items: center;
-  gap: var(--space-4, 32px);
-  padding: 0 0 0 52px;
-  position: relative;
-  height: 40px; /* compact density = 40px */
-  transition: height 200ms cubic-bezier(0.22,1,0.36,1);
-  overflow: hidden;
-  cursor: pointer;
-  border-bottom: 1px solid var(--line, rgba(0,48,73,0.08));
-  background: transparent;
-  transition: background 150ms, height 200ms cubic-bezier(0.22,1,0.36,1);
-}
-
-.ar-timeline-row:last-child {
-  border-bottom: none;
-}
-
-.ar-timeline-row:hover {
-  height: 80px;
-  background: var(--surface-bright, #fafaf8);
-}
-
-/* Timeline dot */
-.ar-timeline-dot {
-  position: absolute;
-  left: 13px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 16px;
-  height: 16px;
-  background: var(--surface-elevated, #fff);
-  border: 2px solid rgba(0,48,73,0.2);
-  z-index: 1;
-  flex-shrink: 0;
-  transition: border-color 150ms, background 150ms;
-}
-
-.ar-timeline-row:hover .ar-timeline-dot {
-  background: var(--primary, #c1121f);
-  border-color: var(--primary, #c1121f);
-}
-
-/* Timeline content */
-.ar-timeline-content {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  gap: var(--space-4, 32px);
-  min-width: 0;
-  height: 40px;
-  flex-shrink: 0;
-}
-
-.ar-timeline-date {
-  font-size: 10px;
-  color: rgba(0,48,73,0.35);
-  letter-spacing: 0.05em;
-  white-space: nowrap;
-  width: 80px;
-  flex-shrink: 0;
-}
-
-.ar-timeline-brand {
-  font-family: var(--font-body, "CS Genio Mono", monospace);
-  font-size: 13px;
-  font-weight: 700;
-  color: var(--dark, #003049);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  flex: 1;
-  min-width: 0;
-}
-
-.ar-timeline-location {
-  font-size: 11px;
-  color: rgba(0,48,73,0.4);
-  white-space: nowrap;
-  letter-spacing: 0.03em;
-}
-
-.ar-timeline-earning {
-  font-family: var(--font-display, "Darky", serif);
-  font-size: 18px;
-  font-weight: 900;
-  color: var(--champagne, #c9a96e);
-  letter-spacing: -0.03em;
-  white-space: nowrap;
-  flex-shrink: 0;
-  width: 80px;
-  text-align: right;
-}
-
-/* Expanded hover state content */
-.ar-timeline-expand {
-  position: absolute;
-  bottom: 8px;
-  left: 52px;
-  right: 0;
-  display: flex;
-  align-items: center;
-  gap: var(--space-3, 24px);
-  opacity: 0;
-  transform: translateY(8px);
-  transition: opacity 200ms, transform 200ms;
-  pointer-events: none;
-}
-
-.ar-timeline-row:hover .ar-timeline-expand {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.ar-timeline-expand-stat {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  font-size: 11px;
-  color: rgba(0,48,73,0.5);
-}
-
-.ar-timeline-expand-stat strong {
-  color: var(--dark, #003049);
-  font-size: 12px;
-}
-
-/* ── Empty State ─────────────────────────────────────────────── */
-.ar-empty {
-  padding: var(--space-10, 80px) var(--space-5, 40px);
-  text-align: center;
-}
-
-.ar-empty-icon {
-  width: 48px;
-  height: 48px;
-  border: 2px solid var(--line, rgba(0,48,73,0.12));
-  margin: 0 auto var(--space-4, 32px);
-  display: flex;
   align-items: center;
   justify-content: center;
+  padding: 28px 20px;
+  border-right: 1px solid rgba(0, 48, 73, 0.08);
+  text-align: center;
+  position: relative;
+  overflow: hidden;
 }
 
-.ar-empty-icon::after {
+.arc-stat-block::after {
   content: "";
-  width: 20px;
-  height: 20px;
-  border: 2px solid rgba(0,48,73,0.2);
-  transform: rotate(45deg);
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 3px;
+  background: #c9a96e;
+  width: 0;
+  animation: progressFill 1.2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 
-.ar-empty-title {
-  font-family: var(--font-display, "Darky", serif);
-  font-size: 24px;
-  font-weight: 700;
-  color: var(--dark, #003049);
-  margin: 0 0 var(--space-1, 8px);
+.arc-stat-block:nth-child(1)::after {
+  animation-delay: 0.1s;
 }
 
-.ar-empty-sub {
-  font-size: 13px;
-  color: rgba(0,48,73,0.45);
-  line-height: 1.6;
-  max-width: 360px;
-  margin: 0 auto;
+.arc-stat-block:nth-child(2)::after {
+  animation-delay: 0.25s;
 }
 
-/* ── Scroll Reveal Animation ─────────────────────────────────── */
-@keyframes ar-reveal-up {
+.arc-stat-block:nth-child(3)::after {
+  animation-delay: 0.4s;
+}
+
+@keyframes progressFill {
+  from {
+    width: 0;
+  }
+  to {
+    width: 100%;
+  }
+}
+
+.arc-stat-block:last-child {
+  border-right: none;
+}
+
+.arc-stat-number {
+  font-family: "Darky", serif;
+  font-size: 40px;
+  font-weight: 900;
+  color: #c9a96e;
+  letter-spacing: -0.04em;
+  line-height: 1;
+  opacity: 0;
+  animation: countUp 0.6s ease forwards;
+}
+
+.arc-stat-block:nth-child(1) .arc-stat-number {
+  animation-delay: 0.15s;
+}
+
+.arc-stat-block:nth-child(2) .arc-stat-number {
+  animation-delay: 0.3s;
+}
+
+.arc-stat-block:nth-child(3) .arc-stat-number {
+  animation-delay: 0.45s;
+}
+
+@keyframes countUp {
   from {
     opacity: 0;
-    transform: translateY(24px);
+    transform: translateY(12px);
   }
   to {
     opacity: 1;
@@ -919,10 +202,166 @@
   }
 }
 
-@keyframes ar-feed-in {
+.arc-stat-sublabel {
+  font-family: "CS Genio Mono", monospace;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(0, 48, 73, 0.45);
+  margin-top: 6px;
+}
+
+/* ── Controls row ──────────────────────────────────────────────────────────── */
+
+.arc-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 24px;
+  background: #fafaf8;
+  border-bottom: 1px solid rgba(0, 48, 73, 0.08);
+  gap: 12px;
+}
+
+.arc-controls-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.arc-controls-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.arc-view-toggle {
+  display: flex;
+  align-items: center;
+  border: 1px solid rgba(0, 48, 73, 0.18);
+  overflow: hidden;
+}
+
+.arc-view-btn {
+  font-family: "CS Genio Mono", monospace;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  padding: 7px 12px;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  color: rgba(0, 48, 73, 0.5);
+  cursor: pointer;
+  transition: background 0.12s ease, color 0.12s ease;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.arc-view-btn:first-child {
+  border-right: 1px solid rgba(0, 48, 73, 0.18);
+}
+
+.arc-view-btn.arc-view-btn--active {
+  background: #003049;
+  color: #f5f2ec;
+}
+
+.arc-view-btn svg {
+  flex-shrink: 0;
+}
+
+/* Filter chips */
+.arc-filter-chip {
+  font-family: "CS Genio Mono", monospace;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  padding: 5px 10px;
+  background: transparent;
+  color: rgba(0, 48, 73, 0.5);
+  border: 1px solid rgba(0, 48, 73, 0.18);
+  border-radius: 50vh; /* design system: filter chips */
+  cursor: pointer;
+  transition: background 0.12s ease, color 0.12s ease;
+}
+
+.arc-filter-chip.arc-filter-chip--active {
+  background: #003049;
+  color: #f5f2ec;
+  border-color: #003049;
+}
+
+/* ── List view: year groups ────────────────────────────────────────────────── */
+
+.arc-list-view {
+  padding: 0 24px 40px;
+}
+
+.arc-year-group {
+  margin-top: 24px;
+}
+
+.arc-year-header {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  padding: 12px 0 8px;
+  border-bottom: 1px solid rgba(0, 48, 73, 0.12);
+  margin-bottom: 4px;
+}
+
+.arc-year-label {
+  font-family: "Darky", serif;
+  font-size: 22px;
+  font-weight: 800;
+  color: #003049;
+  letter-spacing: -0.03em;
+  line-height: 1;
+}
+
+.arc-year-total {
+  font-family: "CS Genio Mono", monospace;
+  font-size: 12px;
+  font-weight: 700;
+  color: #c9a96e;
+  letter-spacing: 0.02em;
+}
+
+.arc-year-count {
+  font-family: "CS Genio Mono", monospace;
+  font-size: 11px;
+  color: rgba(0, 48, 73, 0.4);
+  margin-left: auto;
+  letter-spacing: 0.03em;
+}
+
+/* ── Campaign row ──────────────────────────────────────────────────────────── */
+
+.arc-campaign-row {
+  display: grid;
+  grid-template-columns: 4px 1fr auto auto auto;
+  align-items: center;
+  gap: 0;
+  min-height: 40px;
+  border-bottom: 1px solid rgba(0, 48, 73, 0.06);
+  background: #ffffff;
+  transition: background 0.12s ease;
+  animation: feedCardIn 0.3s ease both;
+}
+
+.arc-campaign-row:hover {
+  background: #fafaf8;
+}
+
+@keyframes feedCardIn {
   from {
     opacity: 0;
-    transform: translateX(-12px);
+    transform: translateX(-6px);
   }
   to {
     opacity: 1;
@@ -930,141 +369,317 @@
   }
 }
 
-.ar-card {
-  animation: ar-reveal-up 600ms cubic-bezier(0.22,1,0.36,1) both;
+.arc-row-color-strip {
+  width: 4px;
+  align-self: stretch;
+  flex-shrink: 0;
 }
 
-.ar-timeline-row {
-  animation: ar-feed-in 500ms cubic-bezier(0.22,1,0.36,1) both;
+.arc-row-main {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  padding: 8px 12px;
+  min-width: 0;
 }
 
-/* Stagger delays */
-.ar-card:nth-child(1) { animation-delay: 0ms; }
-.ar-card:nth-child(2) { animation-delay: 60ms; }
-.ar-card:nth-child(3) { animation-delay: 120ms; }
-.ar-card:nth-child(4) { animation-delay: 40ms; }
-.ar-card:nth-child(5) { animation-delay: 80ms; }
-.ar-card:nth-child(6) { animation-delay: 120ms; }
-
-.ar-timeline-row:nth-child(1) { animation-delay: 0ms; }
-.ar-timeline-row:nth-child(2) { animation-delay: 40ms; }
-.ar-timeline-row:nth-child(3) { animation-delay: 80ms; }
-.ar-timeline-row:nth-child(4) { animation-delay: 120ms; }
-.ar-timeline-row:nth-child(5) { animation-delay: 160ms; }
-
-/* ── Responsive ──────────────────────────────────────────────── */
-@media (max-width: 1024px) {
-  .ar-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
+.arc-row-merchant {
+  font-family: "CS Genio Mono", monospace;
+  font-size: 13px;
+  font-weight: 700;
+  color: #003049;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-@media (max-width: 768px) {
-  .ar-quick-nav-inner {
-    padding: 0 16px;
-  }
-  .ar-nav-tab {
-    padding: 12px 14px;
-    font-size: 10px;
-  }
-  .ar-header-stats {
-    gap: 20px;
-  }
-  .ar-header-stat-val {
-    font-size: clamp(22px, 6vw, 32px);
-  }
-  .ar-page-header-inner {
-    padding: 40px var(--space-3, 24px) 32px;
+.arc-row-type {
+  font-family: "CS Genio Mono", monospace;
+  font-size: 10px;
+  color: rgba(0, 48, 73, 0.45);
+  letter-spacing: 0.03em;
+}
+
+.arc-row-date {
+  font-family: "CS Genio Mono", monospace;
+  font-size: 11px;
+  color: rgba(0, 48, 73, 0.4);
+  padding: 0 12px;
+  white-space: nowrap;
+  letter-spacing: 0.01em;
+}
+
+.arc-row-metrics {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 0 12px;
+}
+
+.arc-row-walkins {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+}
+
+.arc-row-walkins-val {
+  font-family: "CS Genio Mono", monospace;
+  font-size: 13px;
+  font-weight: 700;
+  color: #003049;
+}
+
+.arc-row-walkins-lbl {
+  font-family: "CS Genio Mono", monospace;
+  font-size: 9px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: rgba(0, 48, 73, 0.35);
+}
+
+.arc-row-earn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+}
+
+.arc-row-earn-val {
+  font-family: "CS Genio Mono", monospace;
+  font-size: 13px;
+  font-weight: 700;
+  color: #c9a96e;
+}
+
+.arc-row-earn-lbl {
+  font-family: "CS Genio Mono", monospace;
+  font-size: 9px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: rgba(0, 48, 73, 0.35);
+}
+
+.arc-row-status {
+  padding: 0 12px;
+}
+
+/* Status chips */
+.arc-status-chip {
+  font-family: "CS Genio Mono", monospace;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  padding: 3px 7px;
+  border-radius: 0;
+  white-space: nowrap;
+}
+
+.arc-status-chip--completed {
+  background: #003049;
+  color: #f5f2ec;
+}
+
+.arc-status-chip--processing {
+  background: rgba(102, 155, 188, 0.18);
+  color: #669bbc;
+  border: 1px solid rgba(102, 155, 188, 0.3);
+}
+
+/* ── Grid view ─────────────────────────────────────────────────────────────── */
+
+.arc-grid-view {
+  padding: 24px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 16px;
+}
+
+.arc-grid-card {
+  background: #ffffff;
+  border: 1px solid rgba(0, 48, 73, 0.1);
+  border-radius: 0;
+  overflow: hidden;
+  position: relative;
+  cursor: pointer;
+  animation: feedCardIn 0.3s ease both;
+  transition: box-shadow 0.2s ease;
+}
+
+.arc-grid-card:hover {
+  box-shadow: 0 8px 24px rgba(0, 48, 73, 0.12);
+}
+
+.arc-grid-card:hover .arc-grid-overlay {
+  opacity: 1;
+}
+
+.arc-grid-card:hover .arc-grid-thumb {
+  transform: scale(1.03);
+}
+
+.arc-grid-thumb-wrap {
+  aspect-ratio: 4/3;
+  overflow: hidden;
+  position: relative;
+  background: rgba(0, 48, 73, 0.06);
+}
+
+.arc-grid-thumb {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.arc-grid-thumb-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.arc-grid-placeholder-icon {
+  font-size: 28px;
+  opacity: 0.3;
+}
+
+.arc-grid-color-bar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+}
+
+.arc-grid-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 48, 73, 0.72);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  padding: 12px;
+  text-align: center;
+}
+
+.arc-grid-overlay-name {
+  font-family: "CS Genio Mono", monospace;
+  font-size: 12px;
+  font-weight: 700;
+  color: #f5f2ec;
+  letter-spacing: 0.02em;
+}
+
+.arc-grid-overlay-earn {
+  font-family: "Darky", serif;
+  font-size: 20px;
+  font-weight: 900;
+  color: #c9a96e;
+  letter-spacing: -0.03em;
+  line-height: 1;
+}
+
+.arc-grid-footer {
+  padding: 10px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.arc-grid-merchant {
+  font-family: "CS Genio Mono", monospace;
+  font-size: 11px;
+  font-weight: 700;
+  color: #003049;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.arc-grid-date {
+  font-family: "CS Genio Mono", monospace;
+  font-size: 10px;
+  color: rgba(0, 48, 73, 0.4);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* ── Empty state ───────────────────────────────────────────────────────────── */
+
+.arc-empty {
+  padding: 64px 24px;
+  text-align: center;
+  color: rgba(0, 48, 73, 0.45);
+  font-family: "CS Genio Mono", monospace;
+  font-size: 13px;
+}
+
+.arc-empty-icon {
+  font-size: 32px;
+  opacity: 0.25;
+  margin-bottom: 12px;
+  display: block;
+}
+
+/* ── Mobile ────────────────────────────────────────────────────────────────── */
+
+@media (max-width: 700px) {
+  .arc-page-header {
     flex-direction: column;
     align-items: flex-start;
-    gap: var(--space-4, 32px);
+    gap: 12px;
+    padding: 20px 16px 16px;
   }
 
-  .ar-header-right {
-    align-items: flex-start;
-    flex-direction: row;
-    flex-wrap: wrap;
-    gap: var(--space-2, 16px);
-  }
-
-  .ar-wordmark {
-    font-size: clamp(48px, 14vw, 72px);
-  }
-
-  .ar-achievements-inner {
-    padding: var(--space-3, 24px);
-  }
-
-  .ar-filter-inner {
-    padding: 12px var(--space-3, 24px);
-  }
-
-  .ar-content {
-    padding: var(--space-4, 32px) var(--space-3, 24px);
-  }
-
-  .ar-grid {
+  .arc-stats-bar {
     grid-template-columns: 1fr;
-    gap: var(--space-2, 16px);
   }
 
-  .ar-timeline::before {
-    left: 16px;
+  .arc-stat-block {
+    border-right: none;
+    border-bottom: 1px solid rgba(0, 48, 73, 0.08);
+    padding: 20px;
   }
 
-  .ar-timeline-row {
-    padding-left: 40px;
+  .arc-controls {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 10px 16px;
+    gap: 10px;
   }
 
-  .ar-timeline-dot {
-    left: 9px;
+  .arc-list-view {
+    padding: 0 12px 32px;
   }
 
-  .ar-timeline-location {
+  .arc-campaign-row {
+    grid-template-columns: 4px 1fr auto;
+  }
+
+  .arc-row-date {
     display: none;
   }
 
-  .ar-year-number {
-    font-size: clamp(48px, 18vw, 72px);
-  }
-}
-
-@media (max-width: 480px) {
-  .ar-time-filter {
-    flex-wrap: wrap;
+  .arc-row-metrics {
+    display: none;
   }
 
-  .ar-timeline-content {
-    gap: var(--space-2, 16px);
+  .arc-row-status {
+    padding: 0 8px;
   }
 
-  .ar-timeline-date {
-    width: 60px;
-    font-size: 9px;
-  }
-
-  .ar-timeline-earning {
-    width: 60px;
-    font-size: 15px;
-  }
-}
-
-/* ── Reduced motion ──────────────────────────────────────────── */
-@media (prefers-reduced-motion: reduce) {
-  .ar-card,
-  .ar-timeline-row {
-    animation: none;
-  }
-
-  .ar-card:hover {
-    transform: none;
-  }
-
-  .ar-timeline-row:hover {
-    height: 80px;
-  }
-
-  .ar-timeline-expand {
-    transition: none;
+  .arc-grid-view {
+    padding: 16px;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
   }
 }

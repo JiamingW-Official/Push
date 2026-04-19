@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo } from "react";
+import { useMemo, useEffect, useRef } from "react";
+import { gsap } from "gsap";
 import {
   DEMO_CREATOR,
   DEMO_APPLICATIONS,
@@ -38,6 +39,7 @@ type ScheduleItem = {
   merchantName: string;
   earn: string;
   status: "upcoming" | "active" | "done";
+  timeLabel: string;
 };
 
 const SCHEDULE_ITEMS: ScheduleItem[] = [
@@ -48,6 +50,7 @@ const SCHEDULE_ITEMS: ScheduleItem[] = [
     merchantName: "Superiority Burger",
     earn: "$35",
     status: "active",
+    timeLabel: "now",
   },
   {
     id: "s2",
@@ -56,6 +59,7 @@ const SCHEDULE_ITEMS: ScheduleItem[] = [
     merchantName: "Flamingo Estate",
     earn: "$75",
     status: "upcoming",
+    timeLabel: "in 2h",
   },
   {
     id: "s3",
@@ -64,6 +68,7 @@ const SCHEDULE_ITEMS: ScheduleItem[] = [
     merchantName: "Brow Theory",
     earn: "$50",
     status: "upcoming",
+    timeLabel: "in 4h",
   },
 ];
 
@@ -74,6 +79,7 @@ const FEATURED_CAMPAIGN = {
   title: "KITH x Creator Collab Series",
   merchantName: "KITH",
   earn: "$199",
+  earnRate: "$199 / post",
   tags: ["Retail", "Editorial", "5+ Posts"],
   spotsLeft: 1,
 };
@@ -111,11 +117,24 @@ function getScoreDashOffset(score: number, radius = 45): number {
   return circumference - (score / 100) * circumference;
 }
 
+/** Get merchant initials (up to 2 chars) */
+function getMerchantInitials(name: string): string {
+  const parts = name.trim().split(/\s+/);
+  if (parts.length >= 2) return (parts[0][0] + parts[1][0]).toUpperCase();
+  return name.slice(0, 2).toUpperCase();
+}
+
 /* ── Component ───────────────────────────────────────────── */
 
 export default function CreatorDashboard() {
   const creator = DEMO_CREATOR;
   const today = new Date();
+
+  /* GSAP refs */
+  const scoreNumRef = useRef<HTMLSpanElement>(null);
+  const scoreRingRef = useRef<SVGCircleElement>(null);
+  const kpiRowRef = useRef<HTMLElement>(null);
+  const greetingRef = useRef<HTMLElement>(null);
 
   // Active applications (accepted, non-settled)
   const activeApps = useMemo(
@@ -139,8 +158,8 @@ export default function CreatorDashboard() {
   const tierLabel = TIER_LABELS[creator.tier] ?? creator.tier;
   const tierNextScore = TIER_NEXT_SCORE[creator.tier] ?? 100;
   const tierProgress = Math.round((creator.push_score / tierNextScore) * 100);
-  const scoreDashOffset = getScoreDashOffset(creator.push_score);
   const scoreCircumference = 2 * Math.PI * 45;
+  const scoreFinalOffset = getScoreDashOffset(creator.push_score);
 
   // KPI data
   const kpis = [
@@ -176,6 +195,93 @@ export default function CreatorDashboard() {
     },
   ];
 
+  /* ── GSAP hero entrance ────────────────────────────────── */
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
+
+      /* 1. Greeting fades in */
+      tl.from(greetingRef.current, { opacity: 0, y: 16, duration: 0.5 });
+
+      /* 2. Score ring fills from 0 → final offset */
+      if (scoreRingRef.current) {
+        gsap.set(scoreRingRef.current, {
+          strokeDashoffset: scoreCircumference,
+        });
+        tl.to(
+          scoreRingRef.current,
+          {
+            strokeDashoffset: scoreFinalOffset,
+            duration: 1,
+            ease: "power2.inOut",
+          },
+          "-=0.2",
+        );
+      }
+
+      /* 3. Score number counts up 0 → push_score */
+      if (scoreNumRef.current) {
+        const counter = { val: 0 };
+        tl.to(
+          counter,
+          {
+            val: creator.push_score,
+            duration: 1,
+            ease: "power2.out",
+            onUpdate() {
+              if (scoreNumRef.current) {
+                scoreNumRef.current.textContent = String(
+                  Math.round(counter.val),
+                );
+              }
+            },
+          },
+          "<",
+        );
+      }
+
+      /* 4. KPI cards stagger in from below */
+      if (kpiRowRef.current) {
+        const cards = kpiRowRef.current.querySelectorAll(".db-kpi-card");
+        tl.from(
+          cards,
+          {
+            opacity: 0,
+            y: 24,
+            stagger: 0.1,
+            duration: 0.5,
+            ease: "power2.out",
+          },
+          "-=0.4",
+        );
+      }
+
+      /* 5. Progress bars animate width via CSS var trick */
+      const fills = document.querySelectorAll<HTMLElement>(
+        ".db-kpi-progress-fill, .db-score-bar-fill",
+      );
+      fills.forEach((el) => {
+        const target = el.style.width;
+        gsap.set(el, { width: "0%" });
+        tl.to(
+          el,
+          { width: target, duration: 0.8, ease: "power2.out" },
+          "-=0.3",
+        );
+      });
+
+      const deadlineFills =
+        document.querySelectorAll<HTMLElement>(".db-deadline-fill");
+      deadlineFills.forEach((el) => {
+        const target = el.style.width;
+        gsap.set(el, { width: "0%" });
+        tl.to(el, { width: target, duration: 0.6, ease: "power2.out" }, "<");
+      });
+    });
+
+    return () => ctx.revert();
+  }, [creator.push_score, scoreCircumference, scoreFinalOffset]);
+
   return (
     <div className="db-page">
       {/* ── Sub-nav breadcrumb ─────────────────────────────── */}
@@ -185,7 +291,7 @@ export default function CreatorDashboard() {
       </nav>
 
       {/* ── Greeting header ───────────────────────────────── */}
-      <header className="db-greeting">
+      <header className="db-greeting" ref={greetingRef}>
         <p className="db-greeting-eyebrow">{getGreeting()}</p>
         <h1 className="db-greeting-name">{creator.name}</h1>
         <p className="db-greeting-date">
@@ -200,33 +306,41 @@ export default function CreatorDashboard() {
 
       {/* ── Score hero ────────────────────────────────────── */}
       <section className="db-score-hero" aria-labelledby="db-score-heading">
+        {/* Ghost editorial score number behind ring */}
+        <span className="db-score-ghost-bg" aria-hidden="true">
+          {creator.push_score}
+        </span>
+
         {/* SVG ring */}
         <div className="db-score-ring-wrap" aria-hidden="true">
           <svg className="db-score-ring-svg" viewBox="0 0 100 100">
             <circle className="db-score-ring-track" cx="50" cy="50" r="45" />
             <circle
+              ref={scoreRingRef}
               className="db-score-ring-fill"
               cx="50"
               cy="50"
               r="45"
               strokeDasharray={scoreCircumference}
-              strokeDashoffset={scoreDashOffset}
+              strokeDashoffset={scoreCircumference}
             />
           </svg>
           <div className="db-score-center">
-            <span className="db-score-number">{creator.push_score}</span>
+            <span className="db-score-number" ref={scoreNumRef}>
+              0
+            </span>
             <span className="db-score-label">Score</span>
           </div>
         </div>
 
-        {/* Score info */}
+        {/* Score info — editorial layout */}
         <div className="db-score-info">
           <p className="db-score-oracle-label">ConversionOracle™</p>
-          <h2 id="db-score-heading" className="db-score-title">
-            Score <span>{creator.push_score}</span>
+          <h2 id="db-score-heading" className="db-score-hero-number">
+            {creator.push_score}
           </h2>
           <div className={`db-tier-badge db-tier-badge--${creator.tier}`}>
-            Tier: {tierLabel}
+            {tierLabel}
           </div>
           <p className="db-score-next-hint">
             <strong>{tierNextScore - creator.push_score} pts</strong> to unlock
@@ -245,9 +359,12 @@ export default function CreatorDashboard() {
       </section>
 
       {/* ── KPI Row ───────────────────────────────────────── */}
-      <section className="db-kpi-row" aria-label="Key metrics">
-        {kpis.map((kpi) => (
-          <div key={kpi.label} className="db-kpi-card">
+      <section className="db-kpi-row" aria-label="Key metrics" ref={kpiRowRef}>
+        {kpis.map((kpi, i) => (
+          <div
+            key={kpi.label}
+            className={`db-kpi-card${kpi.earningsColor && i === 0 ? " db-kpi-card--featured" : ""}`}
+          >
             <span className="db-kpi-ghost" aria-hidden="true">
               {kpi.ghost}
             </span>
@@ -297,11 +414,23 @@ export default function CreatorDashboard() {
           >
             {SCHEDULE_ITEMS.map((item) => (
               <li key={item.id}>
-                <Link href="/creator/work/today" className="db-schedule-item">
+                <Link
+                  href="/creator/work/today"
+                  className={`db-schedule-item${item.status === "active" ? " db-schedule-item--active" : ""}`}
+                >
+                  {/* Time-left pill */}
                   <span
-                    className={`db-schedule-dot db-schedule-dot--${item.status}`}
-                    aria-label={item.status}
-                  />
+                    className={`db-schedule-pill db-schedule-pill--${item.status}`}
+                    aria-label={item.timeLabel}
+                  >
+                    {item.timeLabel}
+                  </span>
+
+                  {/* Merchant initials avatar */}
+                  <span className="db-schedule-avatar" aria-hidden="true">
+                    {getMerchantInitials(item.merchantName)}
+                  </span>
+
                   <span className="db-schedule-time">{item.time}</span>
                   <div className="db-schedule-info">
                     <p className="db-schedule-name">{item.campaignName}</p>
@@ -337,6 +466,7 @@ export default function CreatorDashboard() {
             {activeApps.map((app) => {
               const days = getDaysUntil(app.deadline ?? "");
               const urgency = getDeadlineUrgency(days);
+              const isUrgent = days <= 3;
               return (
                 <Link
                   key={app.id}
@@ -349,11 +479,13 @@ export default function CreatorDashboard() {
                     <div className="db-campaign-deadline-bar">
                       <div className="db-deadline-track">
                         <div
-                          className="db-deadline-fill"
+                          className={`db-deadline-fill${isUrgent ? " db-deadline-fill--urgent" : ""}`}
                           style={{ width: `${urgency * 100}%` }}
                         />
                       </div>
-                      <span className="db-deadline-label">
+                      <span
+                        className={`db-deadline-label${isUrgent ? " db-deadline-label--urgent" : ""}`}
+                      >
                         {days === 0 ? "TODAY" : `${days}D LEFT`}
                       </span>
                     </div>
@@ -380,7 +512,13 @@ export default function CreatorDashboard() {
             <p className="db-discover-eyebrow">Featured Opportunity</p>
 
             <div className="db-discover-card">
-              <p className="db-discover-card-earn">{FEATURED_CAMPAIGN.earn}</p>
+              {/* Urgency chip */}
+              <span className="db-discover-spots-chip">
+                {FEATURED_CAMPAIGN.spotsLeft} spot left
+              </span>
+              <p className="db-discover-card-earn">
+                {FEATURED_CAMPAIGN.earnRate}
+              </p>
               <p className="db-discover-card-name">{FEATURED_CAMPAIGN.title}</p>
               <p className="db-discover-card-merchant">
                 {FEATURED_CAMPAIGN.merchantName}
@@ -391,14 +529,11 @@ export default function CreatorDashboard() {
                     {tag}
                   </span>
                 ))}
-                <span className="db-discover-tag">
-                  {FEATURED_CAMPAIGN.spotsLeft} spot left
-                </span>
               </div>
             </div>
 
             <Link href="/creator/discover" className="db-discover-cta">
-              Apply Now →
+              Apply →
             </Link>
           </div>
 
@@ -407,22 +542,30 @@ export default function CreatorDashboard() {
             <p className="db-quick-label">Quick Actions</p>
             <div className="db-quick-grid">
               <Link href="/creator/work/today" className="db-quick-btn">
-                <span className="db-quick-icon">📅</span>
+                <span className="db-quick-icon" aria-hidden="true">
+                  📅
+                </span>
                 <span className="db-quick-name">Today</span>
               </Link>
               <Link href="/creator/work/pipeline" className="db-quick-btn">
-                <span className="db-quick-icon">⚡</span>
+                <span className="db-quick-icon" aria-hidden="true">
+                  ⚡
+                </span>
                 <span className="db-quick-name">Pipeline</span>
               </Link>
               <Link href="/creator/inbox" className="db-quick-btn">
-                <span className="db-quick-icon">✉</span>
+                <span className="db-quick-icon" aria-hidden="true">
+                  ✉
+                </span>
                 <span className="db-quick-name">Inbox</span>
                 <span className="db-quick-unread" aria-label="3 unread">
                   3
                 </span>
               </Link>
               <Link href="/creator/discover" className="db-quick-btn">
-                <span className="db-quick-icon">🔍</span>
+                <span className="db-quick-icon" aria-hidden="true">
+                  🔍
+                </span>
                 <span className="db-quick-name">Discover</span>
               </Link>
             </div>
