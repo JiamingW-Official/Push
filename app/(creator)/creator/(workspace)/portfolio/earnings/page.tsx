@@ -1,28 +1,26 @@
+"use client";
+
+import { useCreatorProfile } from "@/lib/creator/hooks/useCreatorProfile";
+import { usePayouts } from "@/lib/creator/hooks/usePayouts";
+import EarningsSummary from "@/components/creator/portfolio/EarningsSummary";
+import "./earnings.css";
+
 export default function PortfolioEarningsPage() {
+  const { creator, loading: profileLoading, isDemo } = useCreatorProfile();
+  const { payouts, loading: payoutsLoading } = usePayouts(isDemo, creator?.id);
+
+  const loading = profileLoading || payoutsLoading;
+
   return (
-    <div style={{ padding: "32px" }}>
-      <h1
-        style={{
-          fontFamily: "Darky, sans-serif",
-          fontSize: "clamp(32px, 4vw, 48px)",
-          fontWeight: 900,
-          letterSpacing: "-0.03em",
-          color: "#003049",
-          margin: 0,
-        }}
-      >
-        Earnings
-      </h1>
-      <p
-        style={{
-          fontFamily: "'CS Genio Mono', monospace",
-          fontSize: "14px",
-          color: "#4a5568",
-          marginTop: "12px",
-        }}
-      >
-        No payouts yet. Complete your first campaign to earn.
-      </p>
+    <div className="earnings-page">
+      <div className="earnings-header">
+        <h1 className="earnings-title">Earnings</h1>
+      </div>
+      {loading ? (
+        <div className="earnings-skeleton-row" />
+      ) : (
+        <EarningsSummary creator={creator} payouts={payouts} />
+      )}
     </div>
   );
 }

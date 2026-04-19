@@ -1,0 +1,224 @@
+.identity-loading {
+  padding: 32px;
+}
+
+.identity-skeleton {
+  height: 300px;
+  background: linear-gradient(90deg, var(--surface, #f5f2ec) 25%, var(--surface-bright, #fafaf8) 50%, var(--surface, #f5f2ec) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s linear infinite;
+}
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+.identity-page {
+  max-width: 900px;
+}
+
+/* Hero */
+.identity-hero {
+  padding: 48px 32px 32px;
+  border-bottom: 1px solid var(--line, rgba(0,48,73,0.12));
+}
+
+.identity-hero__eyebrow {
+  font-family: 'CS Genio Mono', monospace;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--tertiary, #669bbc);
+  margin: 0 0 8px;
+}
+
+.identity-hero__tier {
+  font-family: Darky, sans-serif;
+  font-size: clamp(64px, 12vw, 120px);
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  line-height: 1;
+  margin: 0;
+  /* color set inline via tierColor */
+}
+
+.identity-hero__tier--obsidian {
+  animation: obsidianPulse 2.4s ease-in-out infinite;
+}
+
+@keyframes obsidianPulse {
+  0%, 100% { text-shadow: 0 0 0 rgba(26, 26, 46, 0); }
+  50% { text-shadow: 0 0 40px rgba(26, 26, 46, 0.15); }
+}
+
+.identity-hero__tier-name {
+  font-family: 'CS Genio Mono', monospace;
+  font-size: 14px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--graphite, #4a5568);
+  margin: 8px 0 0;
+}
+
+/* Score */
+.identity-score-section {
+  padding: 24px 32px;
+  border-bottom: 1px solid var(--line, rgba(0,48,73,0.12));
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  flex-wrap: wrap;
+}
+
+.identity-score-card {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.identity-score__label {
+  font-family: 'CS Genio Mono', monospace;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--tertiary, #669bbc);
+}
+
+.identity-score__value {
+  font-family: Darky, sans-serif;
+  font-size: 48px;
+  font-weight: 200;
+  color: var(--dark, #003049);
+  letter-spacing: -0.04em;
+  line-height: 1;
+}
+
+.identity-progress-card {
+  flex: 1;
+  min-width: 200px;
+}
+
+.identity-progress__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.identity-progress__label {
+  font-family: 'CS Genio Mono', monospace;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--graphite, #4a5568);
+}
+
+.identity-progress__pct {
+  font-family: 'CS Genio Mono', monospace;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--primary, #c1121f);
+}
+
+.identity-progress__bar {
+  height: 4px;
+  background: var(--line, rgba(0,48,73,0.12));
+  width: 100%;
+}
+
+.identity-progress__fill {
+  height: 100%;
+  background: var(--primary, #c1121f);
+  transition: width 800ms ease-out;
+}
+
+.identity-top-label {
+  font-family: 'CS Genio Mono', monospace;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--champagne, #c9a96e);
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+/* Stats */
+.identity-stats {
+  display: flex;
+  gap: 0;
+  border-bottom: 1px solid var(--line, rgba(0,48,73,0.12));
+}
+
+.identity-stat {
+  flex: 1;
+  padding: 24px 32px;
+  border-right: 1px solid var(--line, rgba(0,48,73,0.12));
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.identity-stat:last-child {
+  border-right: none;
+}
+
+.identity-stat__value {
+  font-family: Darky, sans-serif;
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--champagne, #c9a96e);
+  letter-spacing: -0.03em;
+  line-height: 1;
+}
+
+.identity-stat__label {
+  font-family: 'CS Genio Mono', monospace;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--tertiary, #669bbc);
+}
+
+/* Meta */
+.identity-meta {
+  padding: 24px 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.identity-meta__name {
+  font-family: Darky, sans-serif;
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--dark, #003049);
+  margin: 0;
+  letter-spacing: -0.02em;
+}
+
+.identity-meta__handle {
+  font-family: 'CS Genio Mono', monospace;
+  font-size: 14px;
+  color: var(--tertiary, #669bbc);
+  margin: 0;
+}
+
+.identity-meta__location {
+  font-family: 'CS Genio Mono', monospace;
+  font-size: 13px;
+  color: var(--graphite, #4a5568);
+  margin: 0;
+}
+
+.identity-meta__bio {
+  font-family: 'CS Genio Mono', monospace;
+  font-size: 14px;
+  color: var(--dark, #003049);
+  line-height: 1.6;
+  margin: 8px 0 0;
+  max-width: 560px;
+}

@@ -1,0 +1,31 @@
+.earnings-page {
+  max-width: 900px;
+}
+
+.earnings-header {
+  padding: 32px 32px 24px;
+  border-bottom: 1px solid var(--line, rgba(0,48,73,0.12));
+}
+
+.earnings-title {
+  font-family: Darky, sans-serif;
+  font-size: clamp(32px, 4vw, 48px);
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  color: var(--dark, #003049);
+  margin: 0;
+  line-height: 1.05;
+}
+
+.earnings-skeleton-row {
+  margin: 32px;
+  height: 200px;
+  background: linear-gradient(90deg, var(--surface, #f5f2ec) 25%, var(--surface-bright, #fafaf8) 50%, var(--surface, #f5f2ec) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s linear infinite;
+}
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}

@@ -1,0 +1,147 @@
+.archive-page {
+  max-width: 800px;
+}
+
+.archive-header {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  padding: 32px 32px 24px;
+  border-bottom: 1px solid var(--line, rgba(0,48,73,0.12));
+}
+
+.archive-title {
+  font-family: Darky, sans-serif;
+  font-size: clamp(32px, 4vw, 48px);
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  color: var(--dark, #003049);
+  margin: 0;
+  line-height: 1.05;
+}
+
+.archive-count {
+  font-family: 'CS Genio Mono', monospace;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--graphite, #4a5568);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.archive-skeleton {
+  margin: 32px;
+  height: 120px;
+  background: linear-gradient(90deg, var(--surface, #f5f2ec) 25%, var(--surface-bright, #fafaf8) 50%, var(--surface, #f5f2ec) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s linear infinite;
+}
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+.archive-empty {
+  padding: 48px 32px;
+}
+
+.archive-empty__title {
+  font-family: Darky, sans-serif;
+  font-weight: 900;
+  font-size: clamp(28px, 4vw, 48px);
+  letter-spacing: -0.03em;
+  color: var(--dark, #003049);
+  margin: 0;
+}
+
+.archive-empty__body {
+  font-family: 'CS Genio Mono', monospace;
+  font-size: 14px;
+  color: var(--graphite, #4a5568);
+  margin: 12px 0 0;
+  line-height: 1.5;
+}
+
+.archive-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.archive-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 32px;
+  height: 72px;
+  border-bottom: 1px solid var(--line, rgba(0,48,73,0.12));
+  background: var(--surface-elevated, #fff);
+  transition: background 200ms ease;
+}
+
+.archive-row:hover {
+  background: var(--surface-bright, #fafaf8);
+}
+
+.archive-row__content {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.archive-row__merchant {
+  font-family: Darky, sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--dark, #003049);
+  letter-spacing: -0.01em;
+}
+
+.archive-row__campaign {
+  font-family: 'CS Genio Mono', monospace;
+  font-size: 12px;
+  color: var(--graphite, #4a5568);
+}
+
+.archive-row__time {
+  font-family: 'CS Genio Mono', monospace;
+  font-size: 11px;
+  color: var(--graphite, #4a5568);
+  opacity: 0.7;
+}
+
+.archive-row__right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-shrink: 0;
+}
+
+.archive-row__payout {
+  font-family: Darky, sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--champagne, #c9a96e);
+  letter-spacing: -0.02em;
+}
+
+.archive-row__link {
+  padding: 4px 10px;
+  font-family: 'CS Genio Mono', monospace;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--dark, #003049);
+  border: 1px solid var(--line, rgba(0,48,73,0.12));
+  text-decoration: none;
+  border-radius: 0;
+  transition: border-color 200ms ease, background 200ms ease;
+}
+
+.archive-row__link:hover {
+  border-color: var(--dark, #003049);
+  background: var(--surface-bright, #fafaf8);
+}
