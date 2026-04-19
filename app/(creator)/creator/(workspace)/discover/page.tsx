@@ -1,8 +1,10 @@
 "use client";
 
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useMemo, useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import "./discover.css";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 /* ── View mode ───────────────────────────────────────────── */
 type ViewMode = "grid" | "map";
@@ -342,6 +344,50 @@ export default function DiscoverPage() {
 
   /* -- Bookmarks -- */
   const [bookmarks, setBookmarks] = useState<Set<string>>(new Set());
+
+  /* -- GSAP ScrollTrigger animations -- */
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    gsap.registerPlugin(ScrollTrigger);
+
+    // Filter chips bar: slides in from top on mount
+    gsap.from(".disc-filters-zone", {
+      y: -32,
+      opacity: 0,
+      duration: 0.5,
+      ease: "power3.out",
+      delay: 0.15,
+    });
+
+    // Featured card: scrollReveal on enter
+    const featuredEl = document.querySelector(".disc-featured");
+    if (featuredEl) {
+      gsap.from(featuredEl, {
+        scrollTrigger: { trigger: featuredEl, start: "top 82%" },
+        y: 40,
+        opacity: 0,
+        duration: 0.6,
+        ease: "cubic.out",
+      });
+    }
+
+    // Campaign grid cards: feedCardIn stagger
+    gsap.utils.toArray<Element>(".disc-card").forEach((el, i) => {
+      gsap.from(el, {
+        scrollTrigger: { trigger: el, start: "top 88%" },
+        y: 24,
+        opacity: 0,
+        scale: 0.97,
+        duration: 0.5,
+        ease: "cubic.out",
+        delay: i * 0.08,
+      });
+    });
+
+    return () => {
+      ScrollTrigger.getAll().forEach((t) => t.kill());
+    };
+  }, []);
 
   /* -- Toggle functions -- */
   function toggleBookmark(id: string) {

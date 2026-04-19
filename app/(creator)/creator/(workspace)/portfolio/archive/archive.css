@@ -58,7 +58,7 @@
   font-family: var(--font-display, "Darky", serif);
   font-size: clamp(56px, 8vw, 96px);
   font-weight: 900;
-  color: #f5f2ec;
+  color: var(--surface);
   letter-spacing: -0.05em;
   line-height: 0.9;
   margin: 0 0 var(--space-3, 24px);
@@ -112,7 +112,7 @@
 }
 
 .ar-header-stat-val--white {
-  color: #f5f2ec;
+  color: var(--surface);
 }
 
 .ar-header-stat-lbl {
@@ -186,7 +186,7 @@
 
 .ar-time-btn--active {
   background: var(--primary, #c1121f);
-  color: #f5f2ec;
+  color: var(--surface);
 }
 
 /* View toggle */
@@ -220,7 +220,7 @@
 
 .ar-view-btn--active {
   background: rgba(245,242,236,0.15);
-  color: #f5f2ec;
+  color: var(--surface);
 }
 
 /* ── Quick nav tabs ──────────────────────────────────────────── */
@@ -317,7 +317,7 @@
   height: 3px;
 }
 
-.ar-achievement-badge--first::before { background: #669bbc; }
+.ar-achievement-badge--first::before { background: var(--tertiary); }
 .ar-achievement-badge--milestone::before { background: var(--champagne, #c9a96e); }
 .ar-achievement-badge--ten::before { background: var(--dark, #003049); }
 
@@ -352,7 +352,7 @@
   content: "";
   width: 14px;
   height: 14px;
-  border: 2.5px solid #669bbc;
+  border: 2.5px solid var(--tertiary);
   transform: rotate(45deg);
   display: block;
 }
@@ -500,13 +500,13 @@
 
 .ar-chip:hover {
   background: var(--dark, #003049);
-  color: #f5f2ec;
+  color: var(--surface);
   border-color: var(--dark, #003049);
 }
 
 .ar-chip--active {
   background: var(--dark, #003049);
-  color: #f5f2ec;
+  color: var(--surface);
   border-color: var(--dark, #003049);
 }
 

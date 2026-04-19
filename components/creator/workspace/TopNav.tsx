@@ -1,12 +1,13 @@
 "use client";
 
-// Push Creator Workspace — TopNav  (Wave 2)
+// Push Creator Workspace — TopNav  (Wave 3)
 // Design.md: 56px height, --surface-elevated bg, 1px --line bottom border, sticky z-100
 // Colors: --primary #c1121f, --dark #003049, --surface, --line
 // Fonts: Darky (display/logo), CSGenioMono (body/UI)
 
-import { useState } from "react";
+import { useEffect } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useCommandK } from "@/components/search/CommandKProvider";
 import "./workspace.css";
 
@@ -69,11 +70,109 @@ const TIER_BADGE_STYLES: Record<
 };
 
 // ---------------------------------------------------------------------------
+// Breadcrumb config — maps pathname to section + page labels
+// ---------------------------------------------------------------------------
+
+interface BreadcrumbConfig {
+  section: string;
+  sectionHref: string;
+  page?: string;
+  /** document.title prefix */
+  title: string;
+}
+
+function getBreadcrumb(pathname: string): BreadcrumbConfig {
+  if (pathname.startsWith("/creator/work/today"))
+    return {
+      section: "Work",
+      sectionHref: "/creator/work/today",
+      page: "Today",
+      title: "Today",
+    };
+  if (pathname.startsWith("/creator/work/pipeline"))
+    return {
+      section: "Work",
+      sectionHref: "/creator/work/today",
+      page: "Pipeline",
+      title: "Pipeline",
+    };
+  if (pathname.startsWith("/creator/work/calendar"))
+    return {
+      section: "Work",
+      sectionHref: "/creator/work/today",
+      page: "Calendar",
+      title: "Calendar",
+    };
+  if (pathname.startsWith("/creator/work/drafts"))
+    return {
+      section: "Work",
+      sectionHref: "/creator/work/today",
+      page: "Drafts",
+      title: "Drafts",
+    };
+  if (pathname.startsWith("/creator/discover"))
+    return {
+      section: "Discover",
+      sectionHref: "/creator/discover",
+      title: "Discover",
+    };
+  if (pathname.startsWith("/creator/inbox/invites"))
+    return {
+      section: "Inbox",
+      sectionHref: "/creator/inbox",
+      page: "Invites",
+      title: "Invites",
+    };
+  if (pathname.startsWith("/creator/inbox/messages"))
+    return {
+      section: "Inbox",
+      sectionHref: "/creator/inbox",
+      page: "Messages",
+      title: "Messages",
+    };
+  if (pathname.startsWith("/creator/inbox"))
+    return { section: "Inbox", sectionHref: "/creator/inbox", title: "Inbox" };
+  if (pathname.startsWith("/creator/portfolio/earnings"))
+    return {
+      section: "Portfolio",
+      sectionHref: "/creator/portfolio",
+      page: "Earnings",
+      title: "Earnings",
+    };
+  if (pathname.startsWith("/creator/portfolio/archive"))
+    return {
+      section: "Portfolio",
+      sectionHref: "/creator/portfolio",
+      page: "Archive",
+      title: "Archive",
+    };
+  if (pathname.startsWith("/creator/portfolio/identity"))
+    return {
+      section: "Portfolio",
+      sectionHref: "/creator/portfolio",
+      page: "Identity",
+      title: "Identity",
+    };
+  if (pathname.startsWith("/creator/portfolio"))
+    return {
+      section: "Portfolio",
+      sectionHref: "/creator/portfolio",
+      title: "Portfolio",
+    };
+  // Fallback
+  return {
+    section: "Dashboard",
+    sectionHref: "/creator/dashboard",
+    title: "Dashboard",
+  };
+}
+
+// ---------------------------------------------------------------------------
 // Props
 // ---------------------------------------------------------------------------
 
 export interface TopNavProps {
-  /** Current page display name */
+  /** Current page display name (legacy — overridden by pathname breadcrumb) */
   pageName?: string;
   /** Creator's current tier key (lowercase) */
   tier?: string;
@@ -83,6 +182,8 @@ export interface TopNavProps {
   notifCount?: number;
   /** Avatar image URL — if absent, shows initial avatar */
   avatarUrl?: string;
+  /** Called when hamburger menu button is clicked (tablet/mobile) */
+  onMenuClick?: () => void;
 }
 
 // ---------------------------------------------------------------------------
@@ -138,17 +239,40 @@ export function TopNav({
   userName = "Creator",
   notifCount = 0,
   avatarUrl,
+  onMenuClick,
 }: TopNavProps) {
   const { open: openSearch } = useCommandK();
+  const pathname = usePathname();
   const tierKey = tier.toLowerCase();
   const tierStyle = TIER_BADGE_STYLES[tierKey] ?? TIER_BADGE_STYLES.seed;
   const initial = userName.charAt(0).toUpperCase();
   const clampedNotif = Math.min(notifCount, 99);
 
+  // Derive breadcrumb from current pathname
+  const crumb = getBreadcrumb(pathname ?? "");
+
+  // Update document title on navigation
+  useEffect(() => {
+    document.title = `${crumb.title} — Push Creator`;
+  }, [crumb.title]);
+
   return (
     <header className="ws-topnav" role="banner">
-      {/* ── Left: Logo + Breadcrumb ── */}
+      {/* ── Left: Hamburger (tablet/mobile) + Logo + Breadcrumb ── */}
       <div className="ws-topnav__left">
+        {/* Hamburger — visible on tablet (≤1024px), hidden on desktop */}
+        <button
+          className="ws-topnav__hamburger"
+          onClick={onMenuClick}
+          aria-label="Open navigation menu"
+          type="button"
+          aria-haspopup="dialog"
+        >
+          <span className="ws-topnav__hamburger-bar" aria-hidden="true" />
+          <span className="ws-topnav__hamburger-bar" aria-hidden="true" />
+          <span className="ws-topnav__hamburger-bar" aria-hidden="true" />
+        </button>
+
         <Link
           href="/creator/dashboard"
           className="ws-topnav__logo"
@@ -159,12 +283,24 @@ export function TopNav({
         <span className="ws-topnav__sep" aria-hidden="true">
           /
         </span>
-        <span
-          className="ws-topnav__page"
-          aria-label={`Current section: ${pageName}`}
-        >
-          {pageName}
-        </span>
+
+        {/* Breadcrumb: section (clickable) + optional page */}
+        <nav className="ws-topnav__breadcrumb" aria-label="Breadcrumb">
+          <Link
+            href={crumb.sectionHref}
+            className={`ws-topnav__bc-section${!crumb.page ? " ws-topnav__bc-section--active" : ""}`}
+          >
+            {crumb.section}
+          </Link>
+          {crumb.page && (
+            <>
+              <span className="ws-topnav__bc-sep" aria-hidden="true">
+                /
+              </span>
+              <span className="ws-topnav__bc-page">{crumb.page}</span>
+            </>
+          )}
+        </nav>
       </div>
 
       {/* ── Center: Global Search trigger ── */}

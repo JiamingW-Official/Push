@@ -4,6 +4,8 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useState, useEffect, useCallback, useRef } from "react";
 import "./onboarding.css";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 /* ─────────────────────────────────────────────────────────────
    Types
@@ -1207,6 +1209,93 @@ export default function CreatorOnboardingPage() {
     setExpandedStep(p.activeStep);
     setMounted(true);
   }, []);
+
+  // GSAP ScrollTrigger animations
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    gsap.registerPlugin(ScrollTrigger);
+
+    // Hero section: logo fades in, headline slides up, stats count up
+    const heroTl = gsap.timeline();
+    heroTl
+      .from(".ob-sidebar-logo", {
+        opacity: 0,
+        y: -16,
+        duration: 0.5,
+        ease: "power3.out",
+      })
+      .from(
+        ".ob-hero-eyebrow",
+        { opacity: 0, y: 20, duration: 0.5, ease: "power3.out" },
+        "-=0.2",
+      )
+      .from(
+        ".ob-hero-headline",
+        { opacity: 0, y: 40, duration: 0.6, ease: "cubic.out" },
+        "-=0.3",
+      )
+      .from(
+        ".ob-hero-subhead",
+        { opacity: 0, y: 24, duration: 0.5, ease: "power3.out" },
+        "-=0.35",
+      )
+      .from(
+        ".ob-hero-stat",
+        {
+          opacity: 0,
+          y: 20,
+          duration: 0.45,
+          stagger: 0.1,
+          ease: "power3.out",
+        },
+        "-=0.25",
+      )
+      .from(
+        ".ob-hero-cta",
+        { opacity: 0, y: 16, duration: 0.4, ease: "power3.out" },
+        "-=0.2",
+      );
+
+    // How It Works: 3 steps reveal with scrollReveal stagger
+    gsap.utils.toArray<Element>(".ob-how-step").forEach((el, i) => {
+      gsap.from(el, {
+        scrollTrigger: { trigger: el, start: "top 82%" },
+        y: 40,
+        opacity: 0,
+        duration: 0.6,
+        ease: "cubic.out",
+        delay: i * 0.15,
+      });
+    });
+
+    // Tier journey rows: stagger in from left as you scroll
+    gsap.utils.toArray<Element>(".tier-row").forEach((el, i) => {
+      gsap.from(el, {
+        scrollTrigger: { trigger: el, start: "top 90%" },
+        x: -24,
+        opacity: 0,
+        duration: 0.5,
+        ease: "power3.out",
+        delay: i * 0.08,
+      });
+    });
+
+    // Step items: reveal each step as it enters viewport
+    gsap.utils.toArray<Element>(".step-item").forEach((el, i) => {
+      gsap.from(el, {
+        scrollTrigger: { trigger: el, start: "top 85%" },
+        y: 32,
+        opacity: 0,
+        duration: 0.55,
+        ease: "cubic.out",
+        delay: i * 0.06,
+      });
+    });
+
+    return () => {
+      ScrollTrigger.getAll().forEach((t) => t.kill());
+    };
+  }, [mounted]);
 
   const update = useCallback((partial: Partial<Progress>) => {
     setProgress((prev) => {

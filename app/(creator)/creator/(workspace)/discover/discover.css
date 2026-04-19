@@ -172,7 +172,7 @@
   left: 0;
   width: 4px;
   height: 100%;
-  background: linear-gradient(180deg, var(--primary) 0%, #780000 100%);
+  background: linear-gradient(180deg, var(--primary) 0%, var(--accent) 100%);
 }
 
 /* Champagne glow, top-right */
@@ -989,7 +989,7 @@
 }
 
 .disc-featured-apply:hover {
-  background: #a00f1a;
+  background: var(--accent);
 }
 
 .disc-featured-apply:active {
@@ -1360,7 +1360,7 @@
 }
 
 .disc-card-apply:hover {
-  background: #a00f1a;
+  background: var(--accent);
 }
 
 .disc-card-apply:active {

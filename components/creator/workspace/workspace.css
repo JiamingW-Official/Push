@@ -55,6 +55,13 @@
   to   { clip-path: inset(0 0 0 0); }
 }
 
+
+/* Page enter animation (Wave 3) */
+@keyframes ws-page-enter {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
 /* ============================================================
    WORKSPACE LAYOUT
    ============================================================ */
@@ -82,6 +89,12 @@
 .ws-layout__main::-webkit-scrollbar { width: 4px; }
 .ws-layout__main::-webkit-scrollbar-thumb { background: var(--line); }
 .ws-layout__context { grid-area: context; }
+
+/* Page enter animation — applied to immediate children of .ws-main */
+.ws-main > * {
+  animation: ws-page-enter 300ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
 
 /* ============================================================
    TOP NAV  (.ws-topnav)
@@ -168,6 +181,67 @@
   overflow: hidden;
   text-overflow: ellipsis;
   max-width: 140px;
+}
+
+
+/* ── Breadcrumb (Wave 3) ── */
+
+.ws-topnav__breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  min-width: 0;
+}
+
+/* Section name — CS Genio Mono 12px, graphite, uppercase */
+.ws-topnav__bc-section {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--graphite);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: color var(--anim-base);
+}
+
+.ws-topnav__bc-section:hover {
+  color: var(--dark);
+}
+
+/* Active section (leaf page) — highlighted with primary */
+.ws-topnav__bc-section--active {
+  color: var(--primary);
+  font-weight: 700;
+}
+
+.ws-topnav__bc-section--active:hover {
+  color: var(--primary);
+}
+
+/* Breadcrumb separator */
+.ws-topnav__bc-sep {
+  font-family: var(--font-body);
+  font-size: 12px;
+  color: var(--line);
+  font-weight: 400;
+  user-select: none;
+  margin: 0 7px;
+  opacity: 0.9;
+}
+
+/* Page name — 13px, dark, bolder */
+.ws-topnav__bc-page {
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--dark);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 120px;
 }
 
 /* ── Center: Search ── */
@@ -991,6 +1065,236 @@
 }
 
 /* ============================================================
+   HAMBURGER BUTTON  (.ws-topnav__hamburger)
+   Hidden on desktop (>1024px), shown on tablet/mobile
+   ============================================================ */
+
+.ws-topnav__hamburger {
+  display: none; /* shown via media query */
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 4px;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  background: transparent;
+  border: 1px solid transparent;
+  cursor: pointer;
+  flex-shrink: 0;
+  border-radius: 0;
+  margin-right: 8px;
+  transition: border-color var(--anim-base), background var(--anim-base);
+}
+
+.ws-topnav__hamburger:hover {
+  background: rgba(0, 48, 73, 0.05);
+  border-color: var(--line);
+}
+
+.ws-topnav__hamburger:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+.ws-topnav__hamburger-bar {
+  display: block;
+  width: 16px;
+  height: 1.5px;
+  background: var(--dark);
+  border-radius: 0;
+  transition: background var(--anim-base);
+}
+
+.ws-topnav__hamburger:hover .ws-topnav__hamburger-bar {
+  background: var(--dark);
+}
+
+/* ============================================================
+   OVERLAY SIDEBAR  (.ws-sidebar-backdrop / .ws-sidebar-overlay)
+   ============================================================ */
+
+@keyframes ws-backdropIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes ws-sidebarSlideIn {
+  from { transform: translateX(-100%); }
+  to   { transform: translateX(0); }
+}
+
+.ws-sidebar-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 48, 73, 0.4);
+  z-index: 200;
+  cursor: pointer;
+  animation: ws-backdropIn 280ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.ws-sidebar-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 280px;
+  z-index: 201;
+  animation: ws-sidebarSlideIn 280ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  /* SideNav inside fills the full height */
+  display: flex;
+  flex-direction: column;
+}
+
+/* Make the SideNav inside overlay fill width properly */
+.ws-sidebar-overlay .ws-sidenav {
+  width: 100%;
+  height: 100%;
+}
+
+/* Overlay header with close button */
+.ws-sidenav__overlay-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: var(--ws-topnav-h);
+  padding: 0 16px;
+  border-bottom: 1px solid var(--line);
+  flex-shrink: 0;
+  background: var(--surface-elevated);
+}
+
+.ws-sidenav__overlay-title {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 900;
+  font-style: italic;
+  letter-spacing: -0.07em;
+  color: var(--dark);
+  user-select: none;
+}
+
+.ws-sidenav__close-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  background: transparent;
+  border: 1px solid transparent;
+  cursor: pointer;
+  font-family: var(--font-body);
+  font-size: 12px;
+  color: var(--graphite);
+  border-radius: 0;
+  transition: background var(--anim-base), border-color var(--anim-base), color var(--anim-base);
+}
+
+.ws-sidenav__close-btn:hover {
+  background: rgba(0, 48, 73, 0.06);
+  border-color: var(--line);
+  color: var(--dark);
+}
+
+.ws-sidenav__close-btn:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+/* ============================================================
+   MOBILE BOTTOM NAV  (.ws-mobile-nav)
+   Fixed bar, 56px, visible only on ≤767px
+   ============================================================ */
+
+@keyframes ws-mobileNavIn {
+  from { transform: translateY(100%); opacity: 0; }
+  to   { transform: translateY(0); opacity: 1; }
+}
+
+.ws-mobile-nav {
+  display: none; /* shown only on mobile via media query */
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 56px;
+  background: var(--surface-elevated);
+  border-top: 1px solid var(--line);
+  z-index: 150;
+  flex-direction: row;
+  align-items: stretch;
+  /* safe-area inset for notch/home-indicator */
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  box-shadow: 0 -1px 0 var(--line), 0 -2px 8px rgba(0, 48, 73, 0.06);
+  animation: ws-mobileNavIn 300ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.ws-mobile-nav__tab {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  text-decoration: none;
+  color: var(--graphite);
+  padding: 6px 4px;
+  transition: color var(--anim-fast), background var(--anim-fast);
+  position: relative;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.ws-mobile-nav__tab:active {
+  background: rgba(0, 48, 73, 0.04);
+}
+
+.ws-mobile-nav__tab--active {
+  color: var(--primary);
+}
+
+/* Top accent line on active tab */
+.ws-mobile-nav__tab--active::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 16%;
+  right: 16%;
+  height: 2px;
+  background: var(--primary);
+  border-radius: 0 0 2px 2px;
+}
+
+.ws-mobile-nav__icon {
+  font-size: 16px;
+  line-height: 1;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ws-mobile-nav__unread-dot {
+  position: absolute;
+  top: -3px;
+  right: -5px;
+  width: 7px;
+  height: 7px;
+  background: var(--primary);
+  border-radius: 50%;
+  border: 1.5px solid var(--surface-elevated);
+}
+
+.ws-mobile-nav__label {
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+/* ============================================================
    RESPONSIVE — Tablet (768px – 1024px)
    ============================================================ */
 
@@ -1017,6 +1321,11 @@
   .ws-topnav__left {
     width: calc(200px - 20px);
   }
+
+  /* Show hamburger on tablet */
+  .ws-topnav__hamburger {
+    display: flex;
+  }
 }
 
 /* ============================================================
@@ -1037,24 +1346,42 @@
     display: none;
   }
 
+  /* Main area: add bottom padding for MobileNav (56px + safe area) */
+  .ws-layout__main {
+    padding-bottom: calc(56px + env(safe-area-inset-bottom, 0px));
+  }
+
   .ws-topnav__left {
     width: auto;
+  }
+
+  /* Hide breadcrumb sep + page on mobile — just show logo */
+  .ws-topnav__sep,
+  .ws-topnav__breadcrumb {
+    display: none;
   }
 
   .ws-topnav__search-kbd {
     display: none;
   }
 
-  .ws-topnav__page {
-    max-width: 72px;
-  }
-
   .ws-topnav__search {
     max-width: 200px;
   }
 
+  /* Hide tier badge on mobile */
   .ws-topnav__tier {
     display: none;
+  }
+
+  /* Show hamburger on mobile */
+  .ws-topnav__hamburger {
+    display: flex;
+  }
+
+  /* Show mobile bottom nav */
+  .ws-mobile-nav {
+    display: flex;
   }
 }
 
@@ -1075,7 +1402,12 @@
   .ws-context__action,
   .ws-context__deadline-inner--link,
   .ws-context__stat,
-  .ws-context__body {
+  .ws-context__body,
+  .ws-sidebar-backdrop,
+  .ws-sidebar-overlay,
+  .ws-mobile-nav,
+  .ws-mobile-nav__tab,
+  .ws-main > * {
     animation: none !important;
     transition: none !important;
   }

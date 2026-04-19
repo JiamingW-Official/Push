@@ -506,9 +506,9 @@ function avatarStyle(initial: string): React.CSSProperties {
     E: "var(--champagne)",
     K: "var(--champagne)",
     W: "var(--champagne)",
-    F: "#780000",
-    L: "#780000",
-    R: "#780000",
+    F: "var(--accent)",
+    L: "var(--accent)",
+    R: "var(--accent)",
   };
   return { background: map[initial] ?? "var(--dark)" };
 }

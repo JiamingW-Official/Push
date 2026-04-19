@@ -107,6 +107,8 @@ export interface SideNavProps {
   tier?: string;
   /** Avatar image URL */
   avatarUrl?: string;
+  /** When rendered as overlay, call this to close it */
+  onClose?: () => void;
 }
 
 // ---------------------------------------------------------------------------
@@ -180,6 +182,7 @@ export function SideNav({
   userName = "Creator",
   tier = "seed",
   avatarUrl,
+  onClose,
 }: SideNavProps) {
   const pathname = usePathname();
   const tierKey = tier.toLowerCase();
@@ -194,6 +197,21 @@ export function SideNav({
 
   return (
     <nav className="ws-sidenav" aria-label="Creator workspace navigation">
+      {/* ── Overlay close button (only in overlay mode) ── */}
+      {onClose && (
+        <div className="ws-sidenav__overlay-header">
+          <span className="ws-sidenav__overlay-title">PUSH</span>
+          <button
+            className="ws-sidenav__close-btn"
+            onClick={onClose}
+            aria-label="Close navigation"
+            type="button"
+          >
+            ✕
+          </button>
+        </div>
+      )}
+
       {/* ── Scrollable nav sections ── */}
       <div className="ws-sidenav__scroll">
         {NAV_SECTIONS.map((section) => (
