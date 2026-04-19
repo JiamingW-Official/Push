@@ -6,6 +6,8 @@
 export type AnalyticsEvent =
   | "signup_started"
   | "segment_selected"
+  | "signup_step1_complete"
+  | "signup_step2_complete"
   | "signup_submitted"
   | "signup_success"
   | "onboarding_step_entered"

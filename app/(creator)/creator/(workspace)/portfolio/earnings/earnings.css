@@ -27,37 +27,59 @@
 .earn-kpi-strip {
   background: var(--dark);
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  position: relative;
+  overflow: hidden;
+}
+/* Subtle champagne watermark */
+.earn-kpi-strip::before {
+  content: "$";
+  position: absolute;
+  right: -20px;
+  top: -40px;
+  font-family: var(--font-display);
+  font-size: 320px;
+  font-weight: 900;
+  color: rgba(201, 169, 110, 0.04);
+  letter-spacing: -0.08em;
+  line-height: 1;
+  pointer-events: none;
+  user-select: none;
 }
 .earn-kpi-strip-inner {
   max-width: var(--content-width);
   margin: 0 auto;
-  padding: 48px 32px;
+  padding: 56px 32px 48px;
   display: flex;
   align-items: flex-end;
-  gap: 48px;
+  gap: 56px;
+  position: relative;
+  z-index: 1;
 }
 
 /* Primary KPI */
 .earn-kpi-primary {
   flex-shrink: 0;
+  min-width: 260px;
 }
 .earn-kpi-eyebrow {
   display: block;
   font-size: 10px;
   font-weight: 700;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.4);
-  margin-bottom: 12px;
+  color: var(--champagne);
+  opacity: 0.6;
+  margin-bottom: 16px;
 }
 .earn-kpi-amount {
   font-family: var(--font-display);
-  font-size: clamp(48px, 7vw, 88px);
+  font-size: clamp(56px, 8vw, 104px);
   font-weight: 900;
-  color: var(--primary);
+  color: var(--champagne);
   letter-spacing: -0.05em;
-  line-height: 1;
-  margin-bottom: 12px;
+  line-height: 0.95;
+  margin-bottom: 16px;
+  text-shadow: 0 0 80px rgba(201, 169, 110, 0.25);
 }
 .earn-kpi-delta-row {
   display: flex;
@@ -86,42 +108,94 @@
 .earn-kpi-secondary-group {
   display: flex;
   gap: 1px;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   flex: 1;
+  align-self: stretch;
 }
 .earn-kpi-card {
   flex: 1;
-  padding: 20px 20px;
-  background: rgba(255, 255, 255, 0.03);
+  padding: 24px 20px;
+  background: rgba(255, 255, 255, 0.02);
   display: flex;
   flex-direction: column;
   gap: 4px;
+  justify-content: center;
   transition: background var(--t-fast);
 }
 .earn-kpi-card:hover {
-  background: rgba(255, 255, 255, 0.07);
+  background: rgba(255, 255, 255, 0.06);
 }
 .earn-kpi-card-label {
   font-size: 9px;
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.35);
+  color: rgba(255, 255, 255, 0.3);
 }
 .earn-kpi-card-val {
   font-family: var(--font-display);
-  font-size: clamp(20px, 2.5vw, 28px);
+  font-size: clamp(22px, 2.5vw, 30px);
   font-weight: 900;
-  color: #fff;
+  color: var(--champagne);
   letter-spacing: -0.04em;
   line-height: 1;
 }
 .earn-kpi-card-sub {
   font-size: 10px;
-  color: rgba(255, 255, 255, 0.35);
+  color: rgba(255, 255, 255, 0.3);
   letter-spacing: 0.02em;
   margin-top: 2px;
+}
+
+/* ── Quick nav tabs ──────────────────────────────────────────── */
+.earn-quick-nav {
+  background: var(--dark);
+  border-bottom: 2px solid var(--primary);
+  position: relative;
+  z-index: 2;
+}
+.earn-quick-nav-inner {
+  max-width: var(--content-width);
+  margin: 0 auto;
+  padding: 0 32px;
+  display: flex;
+}
+.earn-nav-tab {
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.45);
+  padding: 14px 24px;
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: color var(--t-fast), border-color var(--t-fast);
+}
+.earn-nav-tab:hover {
+  color: rgba(255, 255, 255, 0.8);
+}
+.earn-nav-tab--active {
+  color: #fff;
+  border-bottom-color: var(--champagne);
+}
+.earn-nav-tab-dot {
+  width: 5px;
+  height: 5px;
+  background: var(--champagne);
+  display: none;
+  flex-shrink: 0;
+}
+.earn-nav-tab--active .earn-nav-tab-dot {
+  display: block;
 }
 
 /* ── Main content area ───────────────────────────────────────── */
@@ -232,7 +306,7 @@
   animation-delay: calc(var(--bar-index, 0) * 40ms);
 }
 .earn-bar-fill--current {
-  background: var(--primary);
+  background: var(--champagne);
 }
 .earn-bar-col:hover .earn-bar-fill {
   opacity: 0.8;
@@ -325,9 +399,9 @@
 }
 .earn-balance-val {
   font-family: var(--font-display);
-  font-size: clamp(24px, 3vw, 36px);
+  font-size: clamp(24px, 3vw, 40px);
   font-weight: 900;
-  color: var(--dark);
+  color: var(--champagne);
   letter-spacing: -0.04em;
   line-height: 1;
   margin-bottom: 4px;
@@ -406,9 +480,9 @@
 }
 .earn-breakdown-amount {
   font-family: var(--font-display);
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 900;
-  color: var(--dark);
+  color: var(--champagne);
   letter-spacing: -0.03em;
   text-align: right;
 }
@@ -453,9 +527,9 @@
 }
 .earn-milestone-payout {
   font-family: var(--font-display);
-  font-size: 24px;
+  font-size: 28px;
   font-weight: 900;
-  color: var(--primary);
+  color: var(--champagne);
   letter-spacing: -0.03em;
 }
 .earn-milestone-track {
@@ -602,13 +676,13 @@
   justify-content: flex-end;
   font-family: var(--font-display);
   font-size: 14px;
-  font-weight: 700;
-  color: var(--text-muted);
+  font-weight: 900;
+  color: var(--graphite);
   text-transform: none;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.03em;
 }
 .earn-amount--paid {
-  color: var(--dark);
+  color: var(--champagne);
 }
 .earn-tx-campaign {
   font-size: 13px;
@@ -717,7 +791,7 @@
   font-family: var(--font-display);
   font-size: clamp(24px, 3vw, 36px);
   font-weight: 900;
-  color: #fff;
+  color: var(--champagne);
   letter-spacing: -0.04em;
   line-height: 1;
 }
@@ -911,6 +985,13 @@
 }
 
 @media (max-width: 640px) {
+  .earn-quick-nav-inner {
+    padding: 0 16px;
+  }
+  .earn-nav-tab {
+    padding: 12px 14px;
+    font-size: 10px;
+  }
   .earn-main {
     padding: 0 16px 48px;
   }

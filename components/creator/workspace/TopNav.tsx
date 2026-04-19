@@ -1,18 +1,17 @@
 "use client";
 
-// Push Creator Workspace — TopNav
-// Design.md: 56px height, --surface bg, 1px --line bottom border, sticky z-100
+// Push Creator Workspace — TopNav  (Wave 2)
+// Design.md: 56px height, --surface-elevated bg, 1px --line bottom border, sticky z-100
 // Colors: --primary #c1121f, --dark #003049, --surface, --line
 // Fonts: Darky (display/logo), CSGenioMono (body/UI)
 
 import { useState } from "react";
 import Link from "next/link";
 import { useCommandK } from "@/components/search/CommandKProvider";
-import type { CreatorTier } from "@/lib/tier-config";
 import "./workspace.css";
 
 // ---------------------------------------------------------------------------
-// Tier badge config (workspace-specific, compact display)
+// Tier badge config
 // ---------------------------------------------------------------------------
 
 const TIER_BADGE_STYLES: Record<
@@ -50,7 +49,7 @@ const TIER_BADGE_STYLES: Record<
     border: "#c1121f",
     label: "Partner",
   },
-  // v5.1 mapping aliases
+  // v5.1 tiers
   clay: { bg: "#f7f5f3", color: "#b8a99a", border: "#b8a99a", label: "Clay" },
   bronze: {
     bg: "#fff4e5",
@@ -62,8 +61,8 @@ const TIER_BADGE_STYLES: Record<
   gold: { bg: "#fff8e1", color: "#d4a017", border: "#d4a017", label: "Gold" },
   ruby: { bg: "#fdf0f0", color: "#c1121f", border: "#c1121f", label: "Ruby" },
   obsidian: {
-    bg: "#f0f0f4",
-    color: "#003049",
+    bg: "#1a1f2e",
+    color: "#c9a96e",
     border: "#003049",
     label: "Obsidian",
   },
@@ -74,7 +73,7 @@ const TIER_BADGE_STYLES: Record<
 // ---------------------------------------------------------------------------
 
 export interface TopNavProps {
-  /** Current page display name shown after the slash separator */
+  /** Current page display name */
   pageName?: string;
   /** Creator's current tier key (lowercase) */
   tier?: string;
@@ -87,15 +86,15 @@ export interface TopNavProps {
 }
 
 // ---------------------------------------------------------------------------
-// Notification Bell icon (inline SVG, no extra dep)
+// Icons (inline SVG — no external dep)
 // ---------------------------------------------------------------------------
 
 function BellIcon() {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      width="16"
-      height="16"
+      width="14"
+      height="14"
       fill="none"
       viewBox="0 0 24 24"
       stroke="currentColor"
@@ -111,27 +110,20 @@ function BellIcon() {
   );
 }
 
-// ---------------------------------------------------------------------------
-// Search trigger icon
-// ---------------------------------------------------------------------------
-
 function SearchIcon() {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      width="16"
-      height="16"
+      width="13"
+      height="13"
       fill="none"
       viewBox="0 0 24 24"
       stroke="currentColor"
-      strokeWidth={2}
+      strokeWidth={2.2}
       aria-hidden="true"
     >
-      <path
-        strokeLinecap="square"
-        strokeLinejoin="miter"
-        d="M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z"
-      />
+      <circle cx="11" cy="11" r="6" />
+      <path strokeLinecap="square" d="M21 21l-4.35-4.35" />
     </svg>
   );
 }
@@ -151,12 +143,11 @@ export function TopNav({
   const tierKey = tier.toLowerCase();
   const tierStyle = TIER_BADGE_STYLES[tierKey] ?? TIER_BADGE_STYLES.seed;
   const initial = userName.charAt(0).toUpperCase();
-
   const clampedNotif = Math.min(notifCount, 99);
 
   return (
     <header className="ws-topnav" role="banner">
-      {/* ── Left: Logo + Page ── */}
+      {/* ── Left: Logo + Breadcrumb ── */}
       <div className="ws-topnav__left">
         <Link
           href="/creator/dashboard"
@@ -168,10 +159,15 @@ export function TopNav({
         <span className="ws-topnav__sep" aria-hidden="true">
           /
         </span>
-        <span className="ws-topnav__page">{pageName}</span>
+        <span
+          className="ws-topnav__page"
+          aria-label={`Current section: ${pageName}`}
+        >
+          {pageName}
+        </span>
       </div>
 
-      {/* ── Center: Global Search ── */}
+      {/* ── Center: Global Search trigger ── */}
       <div className="ws-topnav__center">
         <button
           className="ws-topnav__search"
@@ -179,8 +175,12 @@ export function TopNav({
           aria-label="Open search (Cmd+K)"
           type="button"
         >
-          <SearchIcon />
-          <span className="ws-topnav__search-placeholder">Search…</span>
+          <span className="ws-topnav__search-icon">
+            <SearchIcon />
+          </span>
+          <span className="ws-topnav__search-placeholder">
+            Search everything…
+          </span>
           <span className="ws-topnav__search-kbd" aria-hidden="true">
             <kbd>⌘</kbd>
             <kbd>K</kbd>
@@ -199,6 +199,7 @@ export function TopNav({
             borderColor: tierStyle.border,
           }}
           aria-label={`Tier: ${tierStyle.label}`}
+          title={`Creator tier: ${tierStyle.label}`}
         >
           {tierStyle.label}
         </span>

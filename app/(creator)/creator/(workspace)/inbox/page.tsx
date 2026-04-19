@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
-import { useRouter, usePathname } from "next/navigation";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase";
 import { api } from "@/lib/messaging/api-client";
@@ -29,7 +29,7 @@ const MOCK_INVITES = [
     merchant: "Okonomi · Williamsburg",
     earning: "$48",
     earningLabel: "est. payout",
-    deadline: new Date(Date.now() + 22 * 60 * 1000).toISOString(), // 22 min
+    deadline: new Date(Date.now() + 22 * 60 * 1000).toISOString(),
     viewerCount: 7,
     slotsLeft: 3,
     accentClass: "invite-card__accent--urgent",
@@ -41,7 +41,7 @@ const MOCK_INVITES = [
     merchant: "Partners Coffee · Bushwick",
     earning: "$32",
     earningLabel: "est. payout",
-    deadline: new Date(Date.now() + 4 * 60 * 60 * 1000).toISOString(), // 4h
+    deadline: new Date(Date.now() + 4 * 60 * 60 * 1000).toISOString(),
     viewerCount: 12,
     slotsLeft: 8,
     accentClass: "invite-card__accent--new",
@@ -83,18 +83,52 @@ function getOtherParticipant(thread: Thread, selfUserId: string) {
   );
 }
 
+/* ── Date group helper ─────────────────────────────────────── */
+function getDateGroup(iso: string): "Today" | "This Week" | "Earlier" {
+  const diff = Date.now() - new Date(iso).getTime();
+  const hours = diff / 3600000;
+  if (hours < 24) return "Today";
+  if (hours < 24 * 7) return "This Week";
+  return "Earlier";
+}
+
+function groupThreadsByDate(
+  threads: Thread[],
+): Array<{ label: string; threads: Thread[] }> {
+  const buckets: Record<string, Thread[]> = {
+    Today: [],
+    "This Week": [],
+    Earlier: [],
+  };
+  for (const t of threads) {
+    buckets[getDateGroup(t.updatedAt)].push(t);
+  }
+  return (["Today", "This Week", "Earlier"] as const)
+    .filter((k) => buckets[k].length > 0)
+    .map((k) => ({ label: k, threads: buckets[k] }));
+}
+
 /* ── Invite Card Component ─────────────────────────────────── */
 function InviteCard({ invite }: { invite: (typeof MOCK_INVITES)[0] }) {
   const [accepted, setAccepted] = useState(false);
   const [declined, setDeclined] = useState(false);
   const countdown = formatCountdown(invite.deadline);
+  const initial = invite.merchant.charAt(0).toUpperCase();
 
   if (declined) return null;
   if (accepted)
     return (
       <div className="invite-card">
-        <div className={`invite-card__accent invite-card__accent--active`} />
-        <div className="invite-card__body" style={{ justifyContent: "center" }}>
+        <div className="invite-card__accent invite-card__accent--active" />
+        <div
+          className="invite-card__body"
+          style={{
+            justifyContent: "center",
+            flexDirection: "row",
+            alignItems: "center",
+            gap: 8,
+          }}
+        >
           <span
             style={{
               fontFamily: "var(--font-body)",
@@ -103,7 +137,16 @@ function InviteCard({ invite }: { invite: (typeof MOCK_INVITES)[0] }) {
               fontWeight: 700,
             }}
           >
-            ✓ Accepted — check Campaigns for details
+            ✓ Accepted
+          </span>
+          <span
+            style={{
+              fontFamily: "var(--font-body)",
+              fontSize: 12,
+              color: "var(--graphite)",
+            }}
+          >
+            {invite.campaign} — check Campaigns
           </span>
         </div>
         <div className="invite-card__actions" />
@@ -115,6 +158,19 @@ function InviteCard({ invite }: { invite: (typeof MOCK_INVITES)[0] }) {
       <div className={`invite-card__accent ${invite.accentClass}`} />
       <div className="invite-card__body">
         <div className="invite-card__header-row">
+          <div
+            className="invite-card__logo"
+            style={{
+              background:
+                invite.accentClass === "invite-card__accent--urgent"
+                  ? "var(--primary)"
+                  : invite.accentClass === "invite-card__accent--new"
+                    ? "var(--champagne)"
+                    : "#16a34a",
+            }}
+          >
+            {initial}
+          </div>
           {invite.isNew && (
             <span className="invite-card__new-dot" aria-label="New" />
           )}
@@ -134,10 +190,10 @@ function InviteCard({ invite }: { invite: (typeof MOCK_INVITES)[0] }) {
         </div>
         <div className="invite-card__fomo-row">
           <span className="invite-card__viewers">
-            🔥 {invite.viewerCount} creators viewed this
+            🔥 {invite.viewerCount} creators viewed
           </span>
           <span className="invite-card__slots">
-            Limited: {invite.slotsLeft} slots left
+            {invite.slotsLeft} slots left
           </span>
         </div>
       </div>
@@ -205,13 +261,15 @@ export default function InboxPage() {
     });
   }, [router]);
 
-  const recentThreads = threads.slice(0, 5);
+  const recentThreads = threads.slice(0, 8);
   const recentNotifs = [...notifications]
     .sort(
       (a, b) =>
         new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
     )
     .slice(0, 5);
+
+  const threadGroups = groupThreadsByDate(recentThreads);
 
   return (
     <div className="inbox-page">
@@ -287,73 +345,104 @@ export default function InboxPage() {
             View all →
           </Link>
         </div>
+
         {!ready ? (
+          /* Skeleton */
           <div className="inbox-rows">
             {[1, 2, 3].map((i) => (
-              <div key={i} className="inbox-row" style={{ opacity: 0.3 }}>
+              <div
+                key={i}
+                className="inbox-row"
+                style={{ opacity: 0.15 + i * 0.06, pointerEvents: "none" }}
+              >
                 <div
                   className="inbox-row__avatar"
-                  style={{ background: "rgba(0,48,73,0.1)" }}
+                  style={{ background: "rgba(0,48,73,0.08)" }}
                 />
                 <div className="inbox-row__body">
                   <span
-                    className="inbox-row__sender"
                     style={{
-                      background: "rgba(0,48,73,0.08)",
-                      color: "transparent",
-                      width: 80,
+                      display: "block",
+                      width: 60 + i * 16,
+                      height: 9,
+                      background: "rgba(0,48,73,0.07)",
                     }}
-                  >
-                    —
-                  </span>
+                  />
                 </div>
               </div>
             ))}
           </div>
         ) : recentThreads.length === 0 ? (
           <div className="inbox-empty">
+            <div className="inbox-empty__icon" aria-hidden>
+              ✉
+            </div>
             <p className="inbox-empty__title">No messages yet</p>
             <p className="inbox-empty__body">
-              Start a conversation with a merchant.
+              Accept a campaign invite and the merchant will reach out here.
             </p>
           </div>
         ) : (
-          <div className="inbox-rows">
-            {recentThreads.map((thread) => {
-              const other = selfUserId
-                ? getOtherParticipant(thread, selfUserId)
-                : thread.participants[0];
-              const hasUnread = thread.unreadCount > 0;
-              return (
-                <Link
-                  key={thread.id}
-                  href={`/creator/inbox/${thread.id}`}
-                  className={`inbox-row ${hasUnread ? "inbox-row--unread" : ""}`}
-                  aria-label={`Thread with ${other.name}`}
-                >
-                  <div className="inbox-row__avatar">
-                    {other.name.charAt(0).toUpperCase()}
-                  </div>
-                  <div className="inbox-row__body">
-                    <span className="inbox-row__sender">{other.name}</span>
-                    <span className="inbox-row__preview">
-                      {thread.lastMessage.content}
-                    </span>
-                  </div>
-                  <div className="inbox-row__meta">
-                    <span className="inbox-row__time">
-                      {formatRelativeTime(thread.updatedAt)}
-                    </span>
-                    {hasUnread && (
-                      <span className="inbox-row__unread-badge">
-                        {thread.unreadCount}
-                      </span>
-                    )}
-                  </div>
-                </Link>
-              );
-            })}
-          </div>
+          /* Date-grouped thread rows */
+          threadGroups.map((group) => (
+            <div key={group.label} className="inbox-date-group">
+              <div className="inbox-date-group__label">
+                <span className="inbox-date-group__label-text">
+                  {group.label}
+                </span>
+                <span className="inbox-date-group__line" />
+              </div>
+              <div className="inbox-rows">
+                {group.threads.map((thread) => {
+                  const other = selfUserId
+                    ? getOtherParticipant(thread, selfUserId)
+                    : thread.participants[0];
+                  const hasUnread = thread.unreadCount > 0;
+                  const initial = other.name.charAt(0).toUpperCase();
+                  return (
+                    <Link
+                      key={thread.id}
+                      href={`/creator/inbox/${thread.id}`}
+                      className={`inbox-row ${hasUnread ? "inbox-row--unread" : ""}`}
+                      aria-label={`Thread with ${other.name}`}
+                    >
+                      <div
+                        className="inbox-row__avatar"
+                        data-initial={initial}
+                        aria-hidden
+                      >
+                        {initial}
+                      </div>
+                      <div className="inbox-row__body">
+                        <span className="inbox-row__sender">{other.name}</span>
+                        {thread.campaignTitle && (
+                          <span className="inbox-row__campaign-tag">
+                            {thread.campaignTitle}
+                          </span>
+                        )}
+                        <span className="inbox-row__preview">
+                          {thread.lastMessage.content}
+                        </span>
+                      </div>
+                      <div className="inbox-row__meta">
+                        <span className="inbox-row__time">
+                          {formatRelativeTime(thread.updatedAt)}
+                        </span>
+                        {hasUnread && (
+                          <span
+                            className="inbox-row__unread-badge"
+                            aria-label={`${thread.unreadCount} unread`}
+                          >
+                            {thread.unreadCount}
+                          </span>
+                        )}
+                      </div>
+                    </Link>
+                  );
+                })}
+              </div>
+            </div>
+          ))
         )}
       </section>
 
@@ -366,7 +455,7 @@ export default function InboxPage() {
           </Link>
         </div>
         {!hydrated || recentNotifs.length === 0 ? (
-          <div className="inbox-empty">
+          <div className="inbox-empty" style={{ padding: "32px 32px" }}>
             <p className="inbox-empty__title">All caught up.</p>
           </div>
         ) : (
@@ -382,7 +471,7 @@ export default function InboxPage() {
                   aria-label={n.title}
                 >
                   <div className="inbox-row__icon">
-                    <SysIcon title={n.title} />
+                    <SysIconWrapped title={n.title} />
                   </div>
                   <div className="inbox-row__body">
                     <span className="inbox-row__sender">{n.title}</span>
@@ -393,7 +482,11 @@ export default function InboxPage() {
                       {timeAgo(n.createdAt)}
                     </span>
                     {isUnread && (
-                      <span className="inbox-row__unread-badge">•</span>
+                      <span
+                        className="inbox-row__unread-dot"
+                        style={{ background: "var(--tertiary)" }}
+                        aria-hidden
+                      />
                     )}
                   </div>
                 </Link>
@@ -406,31 +499,32 @@ export default function InboxPage() {
   );
 }
 
-/* ── Utility: pick system icon by notification title ──────── */
-function SysIcon({ title }: { title: string }) {
+/* ── Wrapped icon with colored background square ──────────── */
+function SysIconWrapped({ title }: { title: string }) {
   const lower = title.toLowerCase();
+  let variant: "payment" | "check" | "user" | "bell" = "bell";
   if (
     lower.includes("payment") ||
     lower.includes("paycheck") ||
-    lower.includes("pending") ||
     lower.includes("paid")
   ) {
-    return <span className="sys-icon sys-icon--payment" aria-hidden />;
-  }
-  if (
+    variant = "payment";
+  } else if (
     lower.includes("submis") ||
-    lower.includes("verify") ||
     lower.includes("accepted") ||
     lower.includes("campaign")
   ) {
-    return <span className="sys-icon sys-icon--check" aria-hidden />;
-  }
-  if (
+    variant = "check";
+  } else if (
     lower.includes("score") ||
     lower.includes("profile") ||
     lower.includes("account")
   ) {
-    return <span className="sys-icon sys-icon--user" aria-hidden />;
+    variant = "user";
   }
-  return <span className="sys-icon sys-icon--bell" aria-hidden />;
+  return (
+    <span className={`sys-icon-wrap sys-icon-wrap--${variant}`}>
+      <span className={`sys-icon sys-icon--${variant}`} aria-hidden />
+    </span>
+  );
 }

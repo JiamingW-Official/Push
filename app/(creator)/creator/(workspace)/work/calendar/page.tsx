@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useRef, useEffect } from "react";
+import { useState, useMemo, useRef, useCallback } from "react";
 import Link from "next/link";
 import "./calendar.css";
 import {
@@ -62,20 +62,12 @@ function buildMonthGrid(year: number, month: number): (Date | null)[] {
   const first = new Date(year, month, 1);
   const last = new Date(year, month + 1, 0);
   const cells: (Date | null)[] = [];
-
-  // Pad leading empty cells — week starts Monday (1)
-  // getDay() returns 0=Sun,1=Mon,...,6=Sat
-  // We want Monday as col-0: offset = (getDay() + 6) % 7
+  // week starts Monday: offset = (getDay() + 6) % 7
   const offset = (first.getDay() + 6) % 7;
   for (let i = 0; i < offset; i++) cells.push(null);
-
-  for (let d = 1; d <= last.getDate(); d++) {
+  for (let d = 1; d <= last.getDate(); d++)
     cells.push(new Date(year, month, d));
-  }
-
-  // Pad trailing
   while (cells.length % 7 !== 0) cells.push(null);
-
   return cells;
 }
 
@@ -99,6 +91,18 @@ function formatDisplayDate(dateStr: string): string {
   });
 }
 
+function formatShortDate(dateStr: string): string {
+  const [y, m, d] = dateStr.split("-").map(Number);
+  const date = new Date(y, m - 1, d);
+  return date.toLocaleDateString("en-US", { month: "long", day: "numeric" });
+}
+
+function getDOW(dateStr: string): string {
+  const [y, m, d] = dateStr.split("-").map(Number);
+  const date = new Date(y, m - 1, d);
+  return DOW_LABELS_FULL[date.getDay()];
+}
+
 function downloadICS(events: CalendarEvent[]) {
   const lines = [
     "BEGIN:VCALENDAR",
@@ -107,7 +111,6 @@ function downloadICS(events: CalendarEvent[]) {
     "CALSCALE:GREGORIAN",
     "METHOD:PUBLISH",
   ];
-
   for (const ev of events) {
     const dtStart = ev.time
       ? ev.date.replace(/-/g, "") + "T" + ev.time.replace(":", "") + "00"
@@ -119,9 +122,7 @@ function downloadICS(events: CalendarEvent[]) {
     lines.push(`DESCRIPTION:${ev.description ?? ""}`);
     lines.push("END:VEVENT");
   }
-
   lines.push("END:VCALENDAR");
-
   const blob = new Blob([lines.join("\r\n")], { type: "text/calendar" });
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
@@ -131,21 +132,193 @@ function downloadICS(events: CalendarEvent[]) {
   URL.revokeObjectURL(url);
 }
 
-/* ── Estimated earnings for a month ──────────────────────── */
-
 function estimateMonthEarnings(events: CalendarEvent[], ym: string): number {
   return events
     .filter((e) => e.date.startsWith(ym) && e.type === "payment" && e.payout)
     .reduce((sum, e) => sum + (e.payout ?? 0), 0);
 }
 
-/* ── Event dot colors ─────────────────────────────────────── */
-
 function dotColor(type: EventType): string {
   return EVENT_TYPE_COLORS[type];
 }
 
-/* ── Sub-components ──────────────────────────────────────── */
+function pillTypeClass(type: EventType): string {
+  const map: Record<EventType, string> = {
+    deadline: "cal-cell-event-pill--deadline",
+    review: "cal-cell-event-pill--review",
+    payment: "cal-cell-event-pill--payment",
+    milestone: "cal-cell-event-pill--milestone",
+  };
+  return map[type];
+}
+
+/* ── Side Panel ──────────────────────────────────────────── */
+
+interface SidePanelProps {
+  selectedDate: string | null;
+  events: CalendarEvent[];
+  todayStr: string;
+  onMarkDone: (id: string) => void;
+  onSnooze: (id: string) => void;
+  onAddNote: (id: string) => void;
+  noteTarget: string | null;
+  noteValue: string;
+  onNoteChange: (v: string) => void;
+  onNoteSave: () => void;
+}
+
+function SidePanel({
+  selectedDate,
+  events,
+  todayStr,
+  onMarkDone,
+  onSnooze,
+  onAddNote,
+  noteTarget,
+  noteValue,
+  onNoteChange,
+  onNoteSave,
+}: SidePanelProps) {
+  if (!selectedDate) {
+    return (
+      <div className="cal-side-panel">
+        <div className="cal-side-panel-hint">
+          Click any day
+          <br />
+          to see events
+        </div>
+      </div>
+    );
+  }
+
+  const dayEvents = events.filter((e) => e.date === selectedDate);
+  const isToday = selectedDate === todayStr;
+
+  return (
+    <div className="cal-side-panel">
+      <div className="cal-side-panel-header">
+        <div className="cal-side-panel-date">
+          {formatShortDate(selectedDate)}
+          {isToday && <span className="cal-side-panel-today-badge">Today</span>}
+        </div>
+        <div className="cal-side-panel-dow">{getDOW(selectedDate)}</div>
+      </div>
+
+      <div className="cal-side-panel-events">
+        {dayEvents.length === 0 ? (
+          <div className="cal-side-panel-empty">
+            No events scheduled.
+            <br />
+            <span style={{ opacity: 0.6 }}>Free day!</span>
+          </div>
+        ) : (
+          dayEvents.map((ev) => (
+            <div
+              key={ev.id}
+              className="cal-side-panel-event"
+              style={
+                { "--event-color": dotColor(ev.type) } as React.CSSProperties
+              }
+            >
+              <div className="cal-side-panel-event-top">
+                <span
+                  className={`cal-side-panel-type-chip${ev.type === "milestone" ? " cal-side-panel-type-chip--milestone" : ""}`}
+                  style={
+                    ev.type !== "milestone"
+                      ? { background: dotColor(ev.type) }
+                      : {}
+                  }
+                >
+                  {EVENT_TYPE_LABELS[ev.type]}
+                </span>
+              </div>
+
+              <div
+                className="cal-side-panel-event-title"
+                style={{ marginTop: 6, paddingLeft: 0 }}
+              >
+                {ev.title}
+              </div>
+
+              {ev.time && (
+                <div className="cal-side-panel-event-time">{ev.time}</div>
+              )}
+              <div className="cal-side-panel-event-campaign">
+                {ev.merchantName} · {ev.campaignTitle}
+              </div>
+              {ev.payout ? (
+                <div className="cal-side-panel-event-payout">${ev.payout}</div>
+              ) : null}
+
+              <div className="cal-side-panel-actions">
+                {ev.postUrl && !ev.done && (
+                  <Link
+                    href={ev.postUrl}
+                    className="cal-action-btn cal-action-btn--primary"
+                  >
+                    Submit
+                  </Link>
+                )}
+                <button
+                  className={
+                    ev.done
+                      ? "cal-action-btn cal-action-btn--done"
+                      : "cal-action-btn"
+                  }
+                  onClick={() => onMarkDone(ev.id)}
+                  disabled={ev.done}
+                >
+                  {ev.done ? "Done" : "Mark done"}
+                </button>
+                {!ev.done && (
+                  <>
+                    <button
+                      className="cal-action-btn"
+                      onClick={() => onSnooze(ev.id)}
+                    >
+                      Snooze
+                    </button>
+                    <button
+                      className="cal-action-btn"
+                      onClick={() => onAddNote(ev.id)}
+                    >
+                      Note
+                    </button>
+                  </>
+                )}
+              </div>
+
+              {noteTarget === ev.id && (
+                <div style={{ paddingLeft: 0, marginTop: 8 }}>
+                  <textarea
+                    className="cal-note-input"
+                    rows={2}
+                    placeholder="Add a note..."
+                    value={noteValue}
+                    onChange={(e) => onNoteChange(e.target.value)}
+                    autoFocus
+                  />
+                  <button
+                    className="cal-action-btn"
+                    style={{ marginTop: 6 }}
+                    onClick={onNoteSave}
+                  >
+                    Save note
+                  </button>
+                </div>
+              )}
+              {ev.note && noteTarget !== ev.id && (
+                <p className="cal-note-saved">Note: {ev.note}</p>
+              )}
+            </div>
+          ))
+        )}
+      </div>
+    </div>
+  );
+}
+
+/* ── Action buttons component ────────────────────────────── */
 
 interface ActionButtonsProps {
   event: CalendarEvent;
@@ -226,25 +399,14 @@ function DayPopover({
   onNoteSave,
 }: DayPopoverProps) {
   const popRef = useRef<HTMLDivElement>(null);
-  const [pos, setPos] = useState({ top: 120, left: 120 });
-
-  useEffect(() => {
-    if (!anchorRef.current) return;
+  const [pos] = useState(() => {
+    if (!anchorRef.current) return { top: 120, left: 120 };
     const rect = anchorRef.current.getBoundingClientRect();
     const pw = 320;
     const left = Math.min(rect.left, window.innerWidth - pw - 16);
     const top = rect.bottom + 8;
-    setPos({ top: Math.max(8, top), left: Math.max(8, left) });
-  }, [anchorRef]);
-
-  // Close on escape
-  useEffect(() => {
-    function onKey(e: KeyboardEvent) {
-      if (e.key === "Escape") onClose();
-    }
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [onClose]);
+    return { top: Math.max(8, top), left: Math.max(8, left) };
+  });
 
   return (
     <>
@@ -331,16 +493,17 @@ export default function CreatorCalendarPage() {
 
   const [view, setView] = useState<CalView>("month");
   const [year, setYear] = useState(today.getFullYear());
-  const [month, setMonth] = useState(today.getMonth()); // 0-indexed
-
-  // Week anchor (defaults to today's week)
+  const [month, setMonth] = useState(today.getMonth());
   const [weekAnchor, setWeekAnchor] = useState(today);
 
-  // Popover state
+  // Selected day for side panel
+  const [selectedDate, setSelectedDate] = useState<string | null>(todayStr);
+
+  // Popover for mobile (on smaller screens)
   const [popoverDate, setPopoverDate] = useState<string | null>(null);
   const popoverAnchor = useRef<HTMLElement | null>(null);
 
-  // Event state (local mutation for demo)
+  // Event state
   const [events, setEvents] = useState<CalendarEvent[]>(MOCK_EVENTS);
 
   // Note state
@@ -366,10 +529,8 @@ export default function CreatorCalendarPage() {
   }, [events]);
 
   const monthGrid = useMemo(() => buildMonthGrid(year, month), [year, month]);
-
   const weekDates = useMemo(() => buildWeekDates(weekAnchor), [weekAnchor]);
 
-  // List view: events in current month, grouped by date
   const listGroups = useMemo(() => {
     const monthEvents = events.filter((e) => e.date.startsWith(ym));
     const grouped: Record<string, CalendarEvent[]> = {};
@@ -391,9 +552,7 @@ export default function CreatorCalendarPage() {
       if (month === 0) {
         setYear((y) => y - 1);
         setMonth(11);
-      } else {
-        setMonth((m) => m - 1);
-      }
+      } else setMonth((m) => m - 1);
     }
   }
 
@@ -406,9 +565,7 @@ export default function CreatorCalendarPage() {
       if (month === 11) {
         setYear((y) => y + 1);
         setMonth(0);
-      } else {
-        setMonth((m) => m + 1);
-      }
+      } else setMonth((m) => m + 1);
     }
   }
 
@@ -416,6 +573,7 @@ export default function CreatorCalendarPage() {
     setYear(today.getFullYear());
     setMonth(today.getMonth());
     setWeekAnchor(today);
+    setSelectedDate(todayStr);
   }
 
   function openPopover(dateStr: string, el: HTMLElement) {
@@ -431,14 +589,22 @@ export default function CreatorCalendarPage() {
     setNoteValue("");
   }
 
-  function markDone(id: string) {
+  function handleCellClick(dateStr: string, el: HTMLElement) {
+    // On large screens: use side panel. On small: popover.
+    if (window.innerWidth >= 1024) {
+      setSelectedDate((prev) => (prev === dateStr ? null : dateStr));
+    } else {
+      openPopover(dateStr, el);
+    }
+  }
+
+  const markDone = useCallback((id: string) => {
     setEvents((prev) =>
       prev.map((e) => (e.id === id ? { ...e, done: true } : e)),
     );
-  }
+  }, []);
 
-  function snooze(id: string) {
-    // Snooze: push date forward 1 day
+  const snooze = useCallback((id: string) => {
     setEvents((prev) =>
       prev.map((e) => {
         if (e.id !== id) return e;
@@ -447,21 +613,21 @@ export default function CreatorCalendarPage() {
         return { ...e, date: toYMD(d), snoozed: true };
       }),
     );
-  }
+  }, []);
 
-  function addNote(id: string) {
+  const addNote = useCallback((id: string) => {
     setNoteTarget(id);
     setNoteValue("");
-  }
+  }, []);
 
-  function saveNote() {
+  const saveNote = useCallback(() => {
     if (!noteTarget) return;
     setEvents((prev) =>
       prev.map((e) => (e.id === noteTarget ? { ...e, note: noteValue } : e)),
     );
     setNoteTarget(null);
     setNoteValue("");
-  }
+  }, [noteTarget, noteValue]);
 
   /* ── Period label ────────────────────────────────────── */
 
@@ -563,7 +729,7 @@ export default function CreatorCalendarPage() {
           ([type, label]) => (
             <span key={type} className="cal-legend-item">
               <span
-                className="cal-legend-dot"
+                className="cal-legend-swatch"
                 style={{ background: EVENT_TYPE_COLORS[type] }}
               />
               {label}
@@ -574,87 +740,116 @@ export default function CreatorCalendarPage() {
 
       {/* ── Month view ───────────────────────────────── */}
       {view === "month" && (
-        <div className="cal-month">
-          {/* Day-of-week headers */}
-          <div className="cal-month-header">
-            {DOW_LABELS.map((d) => (
-              <div key={d} className="cal-month-dow">
-                {d}
-              </div>
-            ))}
-          </div>
+        <div className="cal-month-layout">
+          <div className="cal-month">
+            {/* Day-of-week headers */}
+            <div className="cal-month-header">
+              {DOW_LABELS.map((d) => (
+                <div key={d} className="cal-month-dow">
+                  {d}
+                </div>
+              ))}
+            </div>
 
-          {/* Grid */}
-          <div className="cal-month-grid">
-            {monthGrid.map((date, i) => {
-              if (!date) {
+            {/* Grid */}
+            <div className="cal-month-grid">
+              {monthGrid.map((date, i) => {
+                if (!date) {
+                  return (
+                    <div
+                      key={`empty-${i}`}
+                      className="cal-cell cal-cell--other-month"
+                    />
+                  );
+                }
+
+                const dateStr = toYMD(date);
+                const isToday = dateStr === todayStr;
+                const isSelected = dateStr === selectedDate;
+                const dayEvents = eventsByDate[dateStr] ?? [];
+                const shown = dayEvents.slice(0, 3);
+                const extra = dayEvents.length - shown.length;
+
+                const cellClasses = [
+                  "cal-cell",
+                  isToday ? "cal-cell--today" : "",
+                  isSelected && !isToday ? "cal-cell--selected" : "",
+                ]
+                  .filter(Boolean)
+                  .join(" ");
+
                 return (
                   <div
-                    key={`empty-${i}`}
-                    className="cal-cell cal-cell--other-month"
-                  />
-                );
-              }
-
-              const dateStr = toYMD(date);
-              const isToday = dateStr === todayStr;
-              const dayEvents = eventsByDate[dateStr] ?? [];
-              const shown = dayEvents.slice(0, 2);
-              const extra = dayEvents.length - shown.length;
-
-              return (
-                <div
-                  key={dateStr}
-                  className={["cal-cell", isToday ? "cal-cell--today" : ""]
-                    .filter(Boolean)
-                    .join(" ")}
-                  onClick={(e) => openPopover(dateStr, e.currentTarget)}
-                  role="button"
-                  aria-label={`${formatDisplayDate(dateStr)}, ${dayEvents.length} events`}
-                  tabIndex={0}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter" || e.key === " ")
-                      openPopover(dateStr, e.currentTarget);
-                  }}
-                >
-                  <span className="cal-cell-num">{date.getDate()}</span>
-
-                  {/* Dot row */}
-                  <div className="cal-cell-dots">
-                    {dayEvents.slice(0, 6).map((ev) => (
-                      <span
-                        key={ev.id}
-                        className="cal-dot"
-                        style={{
-                          background: dotColor(ev.type),
-                          opacity: ev.done ? 0.3 : 1,
-                        }}
-                      />
-                    ))}
-                  </div>
-
-                  {/* Compact pills — hide on small */}
-                  <div className="cal-cell-events">
-                    {shown.map((ev) => (
-                      <span
-                        key={ev.id}
-                        className="cal-cell-event-pill"
-                        style={{
-                          background: dotColor(ev.type),
-                          opacity: ev.done ? 0.4 : 1,
-                        }}
-                      >
-                        {ev.title}
+                    key={dateStr}
+                    className={cellClasses}
+                    onClick={(e) => handleCellClick(dateStr, e.currentTarget)}
+                    role="button"
+                    aria-label={`${formatDisplayDate(dateStr)}, ${dayEvents.length} events`}
+                    aria-pressed={isSelected}
+                    tabIndex={0}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" || e.key === " ")
+                        handleCellClick(dateStr, e.currentTarget);
+                    }}
+                  >
+                    <div className="cal-cell-num">
+                      <span className="cal-cell-num-inner">
+                        {date.getDate()}
                       </span>
-                    ))}
-                    {extra > 0 && (
-                      <span className="cal-cell-event-more">+{extra} more</span>
-                    )}
+                    </div>
+
+                    {/* Compact pills */}
+                    <div className="cal-cell-events">
+                      {shown.map((ev) => (
+                        <span
+                          key={ev.id}
+                          className={`cal-cell-event-pill ${pillTypeClass(ev.type)}`}
+                          style={{ opacity: ev.done ? 0.4 : 1 }}
+                        >
+                          {ev.title}
+                        </span>
+                      ))}
+                      {extra > 0 && (
+                        <span className="cal-cell-event-more">
+                          +{extra} more
+                        </span>
+                      )}
+                    </div>
+
+                    {/* Dot strip (mobile fallback) */}
+                    <div className="cal-cell-dots">
+                      {dayEvents.slice(0, 6).map((ev) => (
+                        <span
+                          key={ev.id}
+                          className="cal-dot"
+                          style={{
+                            background: dotColor(ev.type),
+                            opacity: ev.done ? 0.3 : 1,
+                          }}
+                        />
+                      ))}
+                    </div>
                   </div>
-                </div>
-              );
-            })}
+                );
+              })}
+            </div>
           </div>
+
+          {/* Side panel */}
+          <SidePanel
+            selectedDate={selectedDate}
+            events={events}
+            todayStr={todayStr}
+            onMarkDone={markDone}
+            onSnooze={(id) => {
+              snooze(id);
+            }}
+            onAddNote={addNote}
+            noteTarget={noteTarget}
+            noteValue={noteValue}
+            onNoteChange={setNoteValue}
+            onNoteSave={saveNote}
+          />
         </div>
       )}
 
@@ -750,10 +945,8 @@ export default function CreatorCalendarPage() {
                       key={ev.id}
                       className={`cal-list-row${ev.done ? " cal-list-row--done" : ""}`}
                     >
-                      {/* Time column */}
                       <div className="cal-list-time-col">{ev.time ?? "—"}</div>
 
-                      {/* Content column */}
                       <div className="cal-list-content">
                         <div className="cal-list-type-row">
                           <span
@@ -764,15 +957,7 @@ export default function CreatorCalendarPage() {
                             {EVENT_TYPE_LABELS[ev.type]}
                           </span>
                           {ev.payout ? (
-                            <span
-                              style={{
-                                fontSize: 10,
-                                fontFamily: "var(--font-body)",
-                                color: "var(--champagne)",
-                                fontWeight: 700,
-                                marginLeft: 4,
-                              }}
-                            >
+                            <span className="cal-list-payout">
                               ${ev.payout}
                             </span>
                           ) : null}
@@ -794,7 +979,6 @@ export default function CreatorCalendarPage() {
                           {ev.merchantName}
                         </span>
 
-                        {/* Note textarea */}
                         {noteTarget === ev.id && (
                           <div style={{ marginTop: 8 }}>
                             <textarea
@@ -819,7 +1003,6 @@ export default function CreatorCalendarPage() {
                         )}
                       </div>
 
-                      {/* Actions column */}
                       <div className="cal-list-actions-col">
                         {ev.postUrl && !ev.done && (
                           <Link
@@ -866,16 +1049,14 @@ export default function CreatorCalendarPage() {
         </div>
       )}
 
-      {/* ── Day popover ───────────────────────────────── */}
+      {/* ── Day popover (mobile / week view) ─────────── */}
       {popoverDate && (
         <DayPopover
           dateStr={popoverDate}
           events={eventsByDate[popoverDate] ?? []}
           anchorRef={popoverAnchor}
           onClose={closePopover}
-          onMarkDone={(id) => {
-            markDone(id);
-          }}
+          onMarkDone={(id) => markDone(id)}
           onSnooze={(id) => {
             snooze(id);
             closePopover();

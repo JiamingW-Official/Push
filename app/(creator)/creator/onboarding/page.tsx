@@ -594,6 +594,19 @@ function PayoutStep({ onSkip }: { onSkip: () => void }) {
 
   return (
     <div className="step-body">
+      {/* Earn rate callout */}
+      <div className="earn-callout" aria-label="Earning potential">
+        <span className="earn-callout-icon" aria-hidden="true">
+          $
+        </span>
+        <div className="earn-callout-text">
+          <span className="earn-callout-amount">$15–$85</span>
+          <span className="earn-callout-label">
+            per verified customer walk-in
+          </span>
+        </div>
+      </div>
+
       {/* Payout method tabs */}
       <div className="payout-tabs">
         {(["bank", "paypal", "venmo"] as const).map((tab) => (
@@ -768,6 +781,19 @@ function DiscoveryStep({ onComplete }: { onComplete: () => void }) {
 
   return (
     <div className="step-body">
+      {/* Earn rate callout */}
+      <div className="earn-callout" aria-label="Earning potential">
+        <span className="earn-callout-icon" aria-hidden="true">
+          $
+        </span>
+        <div className="earn-callout-text">
+          <span className="earn-callout-amount">$28–$45</span>
+          <span className="earn-callout-label">
+            avg payout per walk-in, this category
+          </span>
+        </div>
+      </div>
+
       <div className="campaign-cards">
         {CATEGORIES.map(({ emoji, name, avg, campaigns }) => (
           <button
@@ -779,9 +805,8 @@ function DiscoveryStep({ onComplete }: { onComplete: () => void }) {
             <span className="campaign-card-ghost">{avg}</span>
             <span className="campaign-card-emoji">{emoji}</span>
             <span className="campaign-card-name">{name}</span>
-            <span className="campaign-card-meta">
-              avg {avg}/visit · {campaigns}
-            </span>
+            <span className="campaign-card-earn">{avg}</span>
+            <span className="campaign-card-meta">{campaigns}</span>
           </button>
         ))}
       </div>
@@ -973,6 +998,55 @@ function InviteStep({ onComplete }: { onComplete: () => void }) {
 }
 
 /* ─────────────────────────────────────────────────────────────
+   Tier data (used in sidebar + complete screen)
+   ───────────────────────────────────────────────────────────── */
+
+const TIERS = [
+  {
+    key: "clay",
+    name: "Clay",
+    desc: "Starting out",
+    earn: "$15–25/cust",
+    color: "rgba(245,242,236,0.2)",
+  },
+  {
+    key: "bronze",
+    name: "Bronze",
+    desc: "Building momentum",
+    earn: "$25–35/cust",
+    color: "#c9a96e",
+  },
+  {
+    key: "steel",
+    name: "Steel",
+    desc: "Consistent closer",
+    earn: "$35–50/cust",
+    color: "#669bbc",
+  },
+  {
+    key: "gold",
+    name: "Gold",
+    desc: "Local powerhouse",
+    earn: "$50–65/cust",
+    color: "#e8b84b",
+  },
+  {
+    key: "ruby",
+    name: "Ruby",
+    desc: "Top performer",
+    earn: "$65–75/cust",
+    color: "#c1121f",
+  },
+  {
+    key: "obsidian",
+    name: "Obsidian",
+    desc: "Elite: retainer+",
+    earn: "$75–85+",
+    color: "rgba(245,242,236,0.9)",
+  },
+];
+
+/* ─────────────────────────────────────────────────────────────
    Sidebar Step List
    ───────────────────────────────────────────────────────────── */
 
@@ -1070,24 +1144,34 @@ function CompleteScreen({ onDashboard }: { onDashboard?: () => void }) {
       <div className="complete-content">
         <div className="complete-rule" />
         <p className="complete-eyebrow">Creator profile · 7/7 complete</p>
-        <h1 className="complete-hero">YOU'RE IN.</h1>
+        <h1 className="complete-hero">YOU&apos;RE IN.</h1>
 
-        <div className="complete-badge-row">
-          {[
-            { name: "Clay", emoji: "🪨", active: true },
-            { name: "Spark", emoji: "✨", active: false },
-            { name: "Ember", emoji: "🔥", active: false },
-          ].map(({ name, emoji, active }) => (
+        {/* Tier journey list — shows the path ahead */}
+        <div className="complete-tier-list" role="list">
+          {TIERS.map((tier, i) => (
             <div
-              key={name}
-              className={`tier-badge${active ? " tier-badge--active" : ""}`}
+              key={tier.key}
+              className={`complete-tier-row complete-tier-row--${tier.key}${i === 0 ? " complete-tier-row--current" : ""}`}
+              role="listitem"
             >
-              <span className="tier-badge-emoji">{emoji}</span>
-              <span className="tier-badge-name">{name}</span>
-              {active && <span className="tier-badge-now">NOW</span>}
+              <span
+                className="complete-tier-dot"
+                style={{ background: tier.color }}
+                aria-hidden="true"
+              />
+              <span className="complete-tier-name">{tier.name}</span>
+              <span className="complete-tier-desc">{tier.desc}</span>
+              <span className="complete-tier-earn">{tier.earn}</span>
+              {i === 0 && (
+                <span
+                  className="complete-tier-now"
+                  aria-label="Your current tier"
+                >
+                  NOW
+                </span>
+              )}
             </div>
           ))}
-          <div className="tier-badge-arrow">→</div>
         </div>
 
         <p className="complete-sub">
@@ -1217,25 +1301,126 @@ export default function CreatorOnboardingPage() {
             onStepClick={(id) => toggleExpand(id)}
           />
 
-          {/* Social proof */}
-          <div className="ob-sidebar-social-proof">
-            <div className="social-proof-avatars" aria-hidden="true">
-              {["#c1121f", "#669bbc", "#c9a96e", "#780000"].map((c, i) => (
-                <span
-                  key={i}
-                  className="social-proof-avatar"
-                  style={{ background: c, zIndex: 4 - i }}
-                />
-              ))}
+          {/* Tier journey */}
+          <div className="tier-journey" aria-label="Tier progression">
+            <p className="tier-journey-title">Your earning path</p>
+            {TIERS.map((tier, i) => (
+              <div key={tier.key}>
+                <div
+                  className={`tier-row tier-row--${tier.key}${i === 0 ? " tier-row--current" : ""}`}
+                >
+                  <span className="tier-row-dot" aria-hidden="true" />
+                  <span className="tier-row-name">{tier.name}</span>
+                  <span className="tier-row-earn">{tier.earn}</span>
+                </div>
+                {i < TIERS.length - 1 && (
+                  <div className="tier-connector" aria-hidden="true" />
+                )}
+              </div>
+            ))}
+          </div>
+
+          {/* Social proof — upgraded */}
+          <div className="ob-sidebar-social-proof-upgraded">
+            <div className="sp-avatars-row" aria-hidden="true">
+              {["#c1121f", "#669bbc", "#c9a96e", "#780000", "#003049"].map(
+                (c, i) => (
+                  <span
+                    key={i}
+                    className="sp-avatar"
+                    style={{ background: c }}
+                  />
+                ),
+              )}
             </div>
-            <p className="social-proof-text">
-              <strong>2,847 creators</strong> onboarded this week
+            <p className="sp-big-number">$2.4M</p>
+            <p className="sp-desc">
+              paid to creators. <strong>847 active</strong> this month.
             </p>
           </div>
         </aside>
 
         {/* ── Main content ─────────────────────────────────────── */}
         <main className="ob-main" ref={mainRef}>
+          {/* Hero section */}
+          <section className="ob-hero" aria-label="Creator onboarding intro">
+            <p className="ob-hero-eyebrow">Push Creator Network · NYC</p>
+            <h1 className="ob-hero-headline">
+              Your Score Is
+              <span className="ob-hero-headline-accent">Your Salary.</span>
+            </h1>
+            <p className="ob-hero-subhead">
+              Every walk-in you drive builds your{" "}
+              <strong>ConversionOracle™</strong> score — and your per-customer
+              rate.
+            </p>
+
+            {/* Stat strip */}
+            <div className="ob-hero-stats" role="list">
+              <div className="ob-hero-stat" role="listitem">
+                <span className="ob-hero-stat-value">$15–$85</span>
+                <span className="ob-hero-stat-label">
+                  per customer you bring in
+                </span>
+              </div>
+              <div className="ob-hero-stat" role="listitem">
+                <span className="ob-hero-stat-value ob-hero-stat-value--white">
+                  847
+                </span>
+                <span className="ob-hero-stat-label">active creators</span>
+              </div>
+              <div className="ob-hero-stat" role="listitem">
+                <span className="ob-hero-stat-value">$2.4M</span>
+                <span className="ob-hero-stat-label">paid out to creators</span>
+              </div>
+            </div>
+
+            <button
+              type="button"
+              className="ob-hero-cta"
+              onClick={() => {
+                document
+                  .querySelector(".ob-steps")
+                  ?.scrollIntoView({ behavior: "smooth" });
+              }}
+            >
+              Start Earning
+              <span className="btn-arrow">→</span>
+            </button>
+          </section>
+
+          {/* How It Works strip */}
+          <section className="ob-how-it-works" aria-label="How it works">
+            <p className="ob-how-eyebrow">HOW IT WORKS</p>
+            <div className="ob-how-steps">
+              <div className="ob-how-step">
+                <span className="ob-how-num">01</span>
+                <h3 className="ob-how-title">Build your profile</h3>
+                <p className="ob-how-desc">
+                  Connect your socials and verify your identity — takes under 3
+                  minutes.
+                </p>
+              </div>
+              <div className="ob-how-step">
+                <span className="ob-how-num">02</span>
+                <h3 className="ob-how-title">Drive walk-ins</h3>
+                <p className="ob-how-desc">
+                  Post content, share your QR link, bring customers through the
+                  door.
+                </p>
+                <span className="ob-how-earn">$15–$85 /visit</span>
+              </div>
+              <div className="ob-how-step">
+                <span className="ob-how-num">03</span>
+                <h3 className="ob-how-title">Score climbs, rate rises</h3>
+                <p className="ob-how-desc">
+                  ConversionOracle™ tracks every verified walk-in. Your tier
+                  unlocks higher rates automatically.
+                </p>
+              </div>
+            </div>
+          </section>
+
           {/* Top bar */}
           <div className="ob-topbar">
             <span className="ob-topbar-eyebrow">
@@ -1293,6 +1478,10 @@ export default function CreatorOnboardingPage() {
               const isExpanded = expandedStep === id;
               const isCompleting = completingStep === id;
 
+              // Earn rate shown on payout step header
+              const stepEarnRate =
+                id === 4 ? "$15–85" : id === 5 ? "$15–85/visit" : null;
+
               return (
                 <div
                   key={id}
@@ -1345,6 +1534,16 @@ export default function CreatorOnboardingPage() {
                       <span className="step-title">{title}</span>
                       <span className="step-desc">{description}</span>
                     </span>
+
+                    {/* Earn rate badge — champagne, shown on active/expanded */}
+                    {stepEarnRate && (
+                      <span
+                        className="step-earn-badge"
+                        aria-label={`Earn ${stepEarnRate}`}
+                      >
+                        {stepEarnRate}
+                      </span>
+                    )}
 
                     {/* Status badge */}
                     <span

@@ -36,6 +36,9 @@ type Creator = {
   earnings_pending: number;
   instagram_followers?: number;
   tiktok_followers?: number;
+  walkins_total?: number;
+  rating?: number;
+  niches?: string[];
 };
 
 // ── Demo helpers ─────────────────────────────────────────────────────────────
@@ -62,6 +65,9 @@ const DEMO_CREATOR: Creator = {
   earnings_pending: 0,
   instagram_followers: 4200,
   tiktok_followers: 0,
+  walkins_total: 87,
+  rating: 4.2,
+  niches: ["Food", "Coffee", "Brooklyn", "Lifestyle"],
 };
 
 // ── Tier config ───────────────────────────────────────────────────────────────
@@ -136,6 +142,43 @@ function formatCurrency(amount: number): string {
 function getCompletionRate(completed: number, accepted: number): string {
   if (accepted === 0) return "—";
   return `${Math.round((completed / accepted) * 100)}%`;
+}
+
+function formatFollowers(n: number): string {
+  if (n >= 1000) return `${(n / 1000).toFixed(1)}K`;
+  return String(n);
+}
+
+// ── Score Ring SVG ────────────────────────────────────────────────────────────
+
+function ScoreRing({ score }: { score: number }) {
+  const radius = 42;
+  const circumference = 2 * Math.PI * radius; // ~263.9
+  const pct = Math.min(1, score / 100);
+  const offset = circumference * (1 - pct);
+
+  return (
+    <div className="pf-score-ring-wrap">
+      <svg
+        className="pf-score-ring-svg"
+        viewBox="0 0 100 100"
+        aria-label={`ConversionOracle score: ${score}`}
+      >
+        <circle className="pf-score-ring-track" cx="50" cy="50" r={radius} />
+        <circle
+          className="pf-score-ring-fill"
+          cx="50"
+          cy="50"
+          r={radius}
+          style={{ "--ring-offset": offset } as React.CSSProperties}
+        />
+      </svg>
+      <div className="pf-score-ring-inner">
+        <span className="pf-score-number">{score}</span>
+        <span className="pf-score-label">Score</span>
+      </div>
+    </div>
+  );
 }
 
 // ── Editable form state ───────────────────────────────────────────────────────
@@ -313,7 +356,7 @@ export default function CreatorProfilePage() {
     return <div className="profile-loading">Creator not found.</div>;
   }
 
-  const tierCfg = TIER_CONFIG[creator.tier];
+  const niches = creator.niches ?? ["Content", "Local"];
 
   return (
     <div className="profile-page">
@@ -334,7 +377,7 @@ export default function CreatorProfilePage() {
       {/* ── Hero Section ────────────────────────────────────── */}
       <div className="pf-hero">
         {/* Avatar */}
-        <div className="pf-avatar" style={{ borderColor: tierCfg.color }}>
+        <div className="pf-avatar">
           <span className="pf-avatar-initials">
             {getInitials(creator.name)}
           </span>
@@ -362,11 +405,11 @@ export default function CreatorProfilePage() {
           <p className="pf-member-since">Member since April 2026</p>
         </div>
 
-        {/* Push Score + Edit */}
+        {/* Push Score Ring + Edit */}
         <div className="pf-hero-right">
           <div className="pf-score-display">
-            <span className="pf-score-number">{creator.push_score}</span>
-            <span className="pf-score-label">Push Score</span>
+            <ScoreRing score={creator.push_score} />
+            <span className="pf-score-oracle-label">ConversionOracle™</span>
           </div>
           <button
             className="pf-edit-btn"
@@ -378,31 +421,28 @@ export default function CreatorProfilePage() {
         </div>
       </div>
 
-      {/* ── Stats Grid ───────────────────────────────────────── */}
+      {/* ── Stats Grid — 4 KPI cards ─────────────────────────── */}
       <div className="pf-stats-grid">
-        <div className="pf-stat-card">
-          <div className="pf-stat-value">{creator.campaigns_completed}</div>
-          <div className="pf-stat-label">Campaigns Completed</div>
-        </div>
-        <div className="pf-stat-card">
-          <div className="pf-stat-value">
-            {getCompletionRate(
-              creator.campaigns_completed,
-              creator.campaigns_accepted,
-            )}
-          </div>
-          <div className="pf-stat-label">Completion Rate</div>
-        </div>
-        <div className="pf-stat-card">
+        <div className="pf-stat-card pf-stat-card--champagne">
           <div className="pf-stat-value">
             {formatCurrency(creator.earnings_total)}
           </div>
           <div className="pf-stat-label">Total Earned</div>
         </div>
-        <div className="pf-stat-card pf-stat-card--score">
-          <div className="pf-stat-value">{creator.push_score}</div>
+        <div className="pf-stat-card">
+          <div className="pf-stat-value">{creator.campaigns_completed}</div>
+          <div className="pf-stat-label">Campaigns</div>
+        </div>
+        <div className="pf-stat-card pf-stat-card--red">
+          <div className="pf-stat-value">{creator.walkins_total ?? "—"}</div>
+          <div className="pf-stat-label">Walk-ins Driven</div>
+        </div>
+        <div className="pf-stat-card pf-stat-card--dark">
+          <div className="pf-stat-value">
+            {creator.rating ? creator.rating.toFixed(1) : "—"}
+          </div>
           <div className="pf-stat-label">
-            Push Score
+            Rating
             <span className="pf-stat-tier-inline">
               <TierBadge
                 tier={creator.tier}
@@ -434,11 +474,76 @@ export default function CreatorProfilePage() {
             <span className="pf-earnings-label">Pending Payout</span>
           </div>
           <div className="pf-earnings-item">
-            <span className="pf-earnings-value">—</span>
-            <span className="pf-earnings-label">This Month</span>
+            <span className="pf-earnings-value">
+              {getCompletionRate(
+                creator.campaigns_completed,
+                creator.campaigns_accepted,
+              )}
+            </span>
+            <span className="pf-earnings-label">Completion Rate</span>
           </div>
         </div>
       </div>
+
+      {/* ── Niche Tags ───────────────────────────────────────── */}
+      <div className="pf-niche-section">
+        <p className="pf-section-title">Niches</p>
+        <div className="pf-niche-tags-row">
+          {niches.map((tag) => (
+            <span key={tag} className="pf-niche-tag">
+              {tag}
+            </span>
+          ))}
+          <button className="pf-niche-tag-add" type="button">
+            + Add
+          </button>
+        </div>
+      </div>
+
+      {/* ── Social Links ─────────────────────────────────────── */}
+      {(creator.instagram_handle || creator.tiktok_handle) && (
+        <div className="pf-social-section">
+          <p className="pf-section-title">Social Platforms</p>
+          <div className="pf-social-links-row">
+            {creator.instagram_handle && (
+              <a
+                href={`https://instagram.com/${creator.instagram_handle}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="pf-social-link"
+              >
+                <span className="pf-social-link-platform">Instagram</span>
+                <span className="pf-social-link-handle">
+                  @{creator.instagram_handle}
+                </span>
+                {creator.instagram_followers && (
+                  <span className="pf-social-link-followers">
+                    {formatFollowers(creator.instagram_followers)}
+                  </span>
+                )}
+              </a>
+            )}
+            {creator.tiktok_handle && (
+              <a
+                href={`https://tiktok.com/@${creator.tiktok_handle}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="pf-social-link"
+              >
+                <span className="pf-social-link-platform">TikTok</span>
+                <span className="pf-social-link-handle">
+                  @{creator.tiktok_handle}
+                </span>
+                {creator.tiktok_followers && (
+                  <span className="pf-social-link-followers">
+                    {formatFollowers(creator.tiktok_followers)}
+                  </span>
+                )}
+              </a>
+            )}
+          </div>
+        </div>
+      )}
 
       {/* ── Tier & Score Section ─────────────────────────────── */}
       <div className="pf-tier-section">

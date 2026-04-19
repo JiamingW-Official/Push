@@ -37,6 +37,52 @@ function getOtherParticipant(thread: Thread, selfUserId: string) {
   );
 }
 
+/* ── Date grouping ─────────────────────────────────────────── */
+function getDateGroup(iso: string): "Today" | "This Week" | "Earlier" {
+  const diff = Date.now() - new Date(iso).getTime();
+  const hours = diff / 3600000;
+  if (hours < 24) return "Today";
+  if (hours < 24 * 7) return "This Week";
+  return "Earlier";
+}
+
+function groupThreadsByDate(
+  threads: Thread[],
+): Array<{ label: string; threads: Thread[] }> {
+  const buckets: Record<string, Thread[]> = {
+    Today: [],
+    "This Week": [],
+    Earlier: [],
+  };
+  for (const t of threads) {
+    buckets[getDateGroup(t.updatedAt)].push(t);
+  }
+  return (["Today", "This Week", "Earlier"] as const)
+    .filter((k) => buckets[k].length > 0)
+    .map((k) => ({ label: k, threads: buckets[k] }));
+}
+
+/* ── Avatar color ──────────────────────────────────────────── */
+function avatarBg(initial: string): string {
+  const map: Record<string, string> = {
+    B: "var(--primary)",
+    H: "var(--primary)",
+    N: "var(--primary)",
+    T: "var(--primary)",
+    C: "var(--tertiary)",
+    I: "var(--tertiary)",
+    O: "var(--tertiary)",
+    U: "var(--tertiary)",
+    E: "var(--champagne)",
+    K: "var(--champagne)",
+    W: "var(--champagne)",
+    F: "#780000",
+    L: "#780000",
+    R: "#780000",
+  };
+  return map[initial] ?? "var(--dark)";
+}
+
 export default function InboxMessagesPage() {
   const router = useRouter();
   const [selfUserId, setSelfUserId] = useState<string | null>(null);
@@ -108,6 +154,8 @@ export default function InboxMessagesPage() {
     return result;
   }, [threads, filter, debouncedQuery, selfUserId]);
 
+  const dateGroups = groupThreadsByDate(filtered);
+
   return (
     <div className="inbox-page">
       {/* Top bar */}
@@ -144,38 +192,24 @@ export default function InboxMessagesPage() {
 
       {/* Filter chips */}
       <div
-        style={{
-          display: "flex",
-          gap: 6,
-          padding: "10px 32px",
-          borderBottom: "1px solid rgba(0,48,73,0.06)",
-          background: "var(--surface)",
-        }}
+        className="inbox-filter-row"
+        role="group"
+        aria-label="Filter threads"
       >
         {(["all", "unread", "campaigns"] as const).map((f) => (
           <button
             key={f}
             onClick={() => setFilter(f)}
-            style={{
-              fontFamily: "var(--font-body)",
-              fontSize: 11,
-              fontWeight: 700,
-              letterSpacing: "0.07em",
-              textTransform: "uppercase",
-              padding: "5px 12px",
-              background: filter === f ? "var(--dark)" : "transparent",
-              color: filter === f ? "#fff" : "var(--graphite)",
-              border:
-                filter === f
-                  ? "1px solid var(--dark)"
-                  : "1px solid var(--line-strong)",
-              cursor: "pointer",
-              borderRadius: 0,
-              transition: "all 150ms ease",
-            }}
+            className={`inbox-filter-chip ${filter === f ? "inbox-filter-chip--active" : ""}`}
             type="button"
+            aria-pressed={filter === f}
           >
             {f === "all" ? "All" : f === "unread" ? "Unread" : "Campaigns"}
+            {f === "unread" && unreadCount > 0 && (
+              <span style={{ marginLeft: 4, opacity: 0.8 }}>
+                · {unreadCount}
+              </span>
+            )}
           </button>
         ))}
       </div>
@@ -197,7 +231,7 @@ export default function InboxMessagesPage() {
         </div>
       </div>
 
-      {/* Section header */}
+      {/* Section count */}
       <div className="inbox-section-header">
         <span className="inbox-section-label">
           {filter === "all"
@@ -216,19 +250,19 @@ export default function InboxMessagesPage() {
             <div
               key={i}
               className="inbox-row"
-              style={{ opacity: 0.2 + i * 0.05 }}
+              style={{ opacity: 0.1 + i * 0.04, pointerEvents: "none" }}
             >
               <div
                 className="inbox-row__avatar"
-                style={{ background: "rgba(0,48,73,0.08)" }}
+                style={{ background: "rgba(0,48,73,0.07)" }}
               />
               <div className="inbox-row__body">
                 <span
                   style={{
                     display: "block",
-                    width: 80 + i * 10,
-                    height: 10,
-                    background: "rgba(0,48,73,0.07)",
+                    width: 60 + i * 14,
+                    height: 9,
+                    background: "rgba(0,48,73,0.06)",
                   }}
                 />
               </div>
@@ -237,6 +271,9 @@ export default function InboxMessagesPage() {
         </div>
       ) : filtered.length === 0 ? (
         <div className="inbox-empty">
+          <div className="inbox-empty__icon" aria-hidden>
+            ✉
+          </div>
           <p className="inbox-empty__title">No conversations found</p>
           <p className="inbox-empty__body">
             {query
@@ -245,61 +282,68 @@ export default function InboxMessagesPage() {
           </p>
         </div>
       ) : (
-        <div className="inbox-rows" role="list">
-          {filtered.map((thread) => {
-            const other = selfUserId
-              ? getOtherParticipant(thread, selfUserId)
-              : thread.participants[0];
-            const hasUnread = thread.unreadCount > 0;
-            return (
-              <Link
-                key={thread.id}
-                href={`/creator/inbox/${thread.id}`}
-                className={`inbox-row ${hasUnread ? "inbox-row--unread" : ""}`}
-                role="listitem"
-                aria-label={`Thread with ${other.name}`}
-              >
-                <div className="inbox-row__avatar">
-                  {other.name.charAt(0).toUpperCase()}
-                </div>
-                <div className="inbox-row__body">
-                  <span className="inbox-row__sender">{other.name}</span>
-                  {thread.campaignTitle && (
-                    <span
-                      style={{
-                        fontFamily: "var(--font-body)",
-                        fontSize: 10,
-                        fontWeight: 700,
-                        letterSpacing: "0.06em",
-                        textTransform: "uppercase",
-                        color: "var(--tertiary)",
-                        flexShrink: 0,
-                      }}
+        /* Date-grouped thread rows */
+        dateGroups.map((group) => (
+          <div key={group.label} className="inbox-date-group">
+            <div className="inbox-date-group__label">
+              <span className="inbox-date-group__label-text">
+                {group.label}
+              </span>
+              <span className="inbox-date-group__line" />
+            </div>
+            <div className="inbox-rows" role="list">
+              {group.threads.map((thread) => {
+                const other = selfUserId
+                  ? getOtherParticipant(thread, selfUserId)
+                  : thread.participants[0];
+                const hasUnread = thread.unreadCount > 0;
+                const initial = other.name.charAt(0).toUpperCase();
+                return (
+                  <Link
+                    key={thread.id}
+                    href={`/creator/inbox/${thread.id}`}
+                    className={`inbox-row ${hasUnread ? "inbox-row--unread" : ""}`}
+                    role="listitem"
+                    aria-label={`Thread with ${other.name}`}
+                  >
+                    <div
+                      className="inbox-row__avatar"
+                      data-initial={initial}
+                      style={{ background: avatarBg(initial) }}
+                      aria-hidden
                     >
-                      {thread.campaignTitle}
-                    </span>
-                  )}
-                  <span className="inbox-row__preview">
-                    {thread.lastMessage.content}
-                  </span>
-                </div>
-                <div className="inbox-row__meta">
-                  <span className="inbox-row__time">
-                    {formatRelativeTime(thread.updatedAt)}
-                  </span>
-                  {hasUnread && (
-                    <span
-                      className="inbox-row__unread-badge"
-                      aria-label={`${thread.unreadCount} unread`}
-                    >
-                      {thread.unreadCount}
-                    </span>
-                  )}
-                </div>
-              </Link>
-            );
-          })}
-        </div>
+                      {initial}
+                    </div>
+                    <div className="inbox-row__body">
+                      <span className="inbox-row__sender">{other.name}</span>
+                      {thread.campaignTitle && (
+                        <span className="inbox-row__campaign-tag">
+                          {thread.campaignTitle}
+                        </span>
+                      )}
+                      <span className="inbox-row__preview">
+                        {thread.lastMessage.content}
+                      </span>
+                    </div>
+                    <div className="inbox-row__meta">
+                      <span className="inbox-row__time">
+                        {formatRelativeTime(thread.updatedAt)}
+                      </span>
+                      {hasUnread && (
+                        <span
+                          className="inbox-row__unread-badge"
+                          aria-label={`${thread.unreadCount} unread`}
+                        >
+                          {thread.unreadCount}
+                        </span>
+                      )}
+                    </div>
+                  </Link>
+                );
+              })}
+            </div>
+          </div>
+        ))
       )}
     </div>
   );

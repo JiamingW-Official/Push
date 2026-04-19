@@ -928,22 +928,29 @@ export default function CampaignDetailPage() {
 
         {/* ── Sidebar ──────────────────────────────────────── */}
         <aside className="campaign-sidebar-card">
-          {/* Payout */}
+          {/* Payout — earn potential hero */}
           <div className="cp-sidebar-section">
             <div className="campaign-payout">
+              <span className="campaign-payout-eyebrow">
+                {campaign.payout === 0 ? "Compensation" : "You Earn"}
+              </span>
               {campaign.payout === 0 ? (
                 <>
                   <span className="campaign-payout-amount campaign-payout-amount--free">
                     Free
                   </span>
-                  <span className="campaign-payout-label">Product (trade)</span>
+                  <span className="campaign-payout-label">
+                    product · trade campaign
+                  </span>
                 </>
               ) : (
                 <>
                   <span className="campaign-payout-amount">
                     ${campaign.payout}
                   </span>
-                  <span className="campaign-payout-label">per campaign</span>
+                  <span className="campaign-payout-label">
+                    per campaign · flat rate
+                  </span>
                 </>
               )}
             </div>
@@ -951,7 +958,7 @@ export default function CampaignDetailPage() {
               <div className="campaign-commission-row">
                 <span>+</span>
                 <span className="campaign-commission-pct">{commission}%</span>
-                <span>walk-in commission</span>
+                <span>on every walk-in you drive</span>
               </div>
             )}
           </div>

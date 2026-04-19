@@ -12,11 +12,14 @@ const INITIAL_INVITES = [
     merchant: "Okonomi",
     region: "Williamsburg, BK",
     earning: "$48",
+    earningMin: 40,
+    earningMax: 56,
     earningLabel: "est. payout",
     deadline: new Date(Date.now() + 22 * 60 * 1000).toISOString(),
     viewerCount: 7,
     slotsLeft: 3,
     accentClass: "invite-card__accent--urgent",
+    accentColor: "var(--primary)",
     isNew: true,
     description:
       "Weekend brunch content — 1 Reel + 2 Stories. Must visit Sat or Sun.",
@@ -27,11 +30,14 @@ const INITIAL_INVITES = [
     merchant: "Partners Coffee",
     region: "Bushwick, BK",
     earning: "$32",
+    earningMin: 28,
+    earningMax: 38,
     earningLabel: "est. payout",
     deadline: new Date(Date.now() + 4 * 60 * 60 * 1000).toISOString(),
     viewerCount: 12,
     slotsLeft: 8,
     accentClass: "invite-card__accent--new",
+    accentColor: "var(--champagne)",
     isNew: true,
     description:
       "Announce the new cold brew menu launch. Any day this week works.",
@@ -42,11 +48,14 @@ const INITIAL_INVITES = [
     merchant: "Ode to Babel",
     region: "Fort Greene, BK",
     earning: "$65",
+    earningMin: 55,
+    earningMax: 75,
     earningLabel: "est. payout",
     deadline: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000).toISOString(),
     viewerCount: 4,
     slotsLeft: 2,
     accentClass: "invite-card__accent--active",
+    accentColor: "#16a34a",
     isNew: false,
     description:
       "Part of the Williamsburg Coffee+ Neighborhood Playbook. 2 Reels minimum.",
@@ -59,17 +68,11 @@ function formatCountdown(iso: string): { label: string; urgent: boolean } {
   if (diff <= 0) return { label: "Expired", urgent: true };
   const totalMins = Math.floor(diff / 60000);
   if (totalMins < 60)
-    return {
-      label: `Expires in ${totalMins}m`,
-      urgent: totalMins < 30,
-    };
+    return { label: `${totalMins}m left`, urgent: totalMins < 30 };
   const h = Math.floor(totalMins / 60);
   const m = totalMins % 60;
   if (h < 24)
-    return {
-      label: `Expires in ${h}h ${m > 0 ? `${m}m` : ""}`,
-      urgent: false,
-    };
+    return { label: `${h}h ${m > 0 ? `${m}m` : ""} left`, urgent: false };
   const d = Math.floor(h / 24);
   return { label: `${d}d remaining`, urgent: false };
 }
@@ -80,6 +83,7 @@ function InviteCard({ invite }: { invite: (typeof INITIAL_INVITES)[0] }) {
     "pending",
   );
   const countdown = formatCountdown(invite.deadline);
+  const initial = invite.merchant.charAt(0).toUpperCase();
 
   if (state === "declined") return null;
 
@@ -93,7 +97,7 @@ function InviteCard({ invite }: { invite: (typeof INITIAL_INVITES)[0] }) {
             justifyContent: "center",
             flexDirection: "row",
             alignItems: "center",
-            gap: 8,
+            gap: 10,
           }}
         >
           <span
@@ -124,9 +128,17 @@ function InviteCard({ invite }: { invite: (typeof INITIAL_INVITES)[0] }) {
   return (
     <article className="invite-card" aria-label={`Invite: ${invite.campaign}`}>
       <div className={`invite-card__accent ${invite.accentClass}`} />
+
       <div className="invite-card__body">
-        {/* Title row */}
+        {/* Header row: logo + new dot + campaign name */}
         <div className="invite-card__header-row">
+          <div
+            className="invite-card__logo"
+            style={{ background: invite.accentColor }}
+            aria-hidden
+          >
+            {initial}
+          </div>
           {invite.isNew && (
             <span className="invite-card__new-dot" aria-label="New invite" />
           )}
@@ -135,36 +147,36 @@ function InviteCard({ invite }: { invite: (typeof INITIAL_INVITES)[0] }) {
 
         {/* Merchant + region */}
         <div className="invite-card__merchant">
-          {invite.merchant}
-          <span
-            style={{
-              color: "rgba(74,85,104,0.55)",
-              margin: "0 4px",
-            }}
-          >
+          <span style={{ fontWeight: 600, color: "var(--dark)" }}>
+            {invite.merchant}
+          </span>
+          <span style={{ color: "rgba(74,85,104,0.45)", margin: "0 4px" }}>
             ·
           </span>
-          {invite.region}
+          <span>{invite.region}</span>
         </div>
 
         {/* Description */}
-        <div
-          style={{
-            fontFamily: "var(--font-body)",
-            fontSize: 12,
-            color: "var(--graphite)",
-            marginTop: 4,
-            lineHeight: 1.5,
-          }}
-        >
-          {invite.description}
-        </div>
+        <p className="invite-card__description">{invite.description}</p>
 
-        {/* Earning + deadline */}
+        {/* Earn range + deadline countdown */}
         <div className="invite-card__meta-row">
           <span className="invite-card__earning">{invite.earning}</span>
           <span className="invite-card__earning-label">
             {invite.earningLabel}
+          </span>
+          {/* Earn range chip */}
+          <span
+            style={{
+              fontFamily: "var(--font-body)",
+              fontSize: 10,
+              color: "var(--graphite)",
+              background: "rgba(0,48,73,0.06)",
+              padding: "2px 7px",
+              letterSpacing: "0.02em",
+            }}
+          >
+            ${invite.earningMin}–${invite.earningMax}
           </span>
           <span
             className={`invite-card__deadline${countdown.urgent ? " invite-card__deadline--urgent" : ""}`}
@@ -176,16 +188,15 @@ function InviteCard({ invite }: { invite: (typeof INITIAL_INVITES)[0] }) {
         {/* FOMO row */}
         <div className="invite-card__fomo-row">
           <span className="invite-card__viewers">
-            🔥 {invite.viewerCount} creators viewed this
+            🔥 {invite.viewerCount} creators viewed
           </span>
           <span className="invite-card__slots">
-            Limited: {invite.slotsLeft} slot{invite.slotsLeft !== 1 ? "s" : ""}{" "}
-            left
+            {invite.slotsLeft} slot{invite.slotsLeft !== 1 ? "s" : ""} left
           </span>
         </div>
       </div>
 
-      {/* Action buttons */}
+      {/* Action buttons — full-width stacked */}
       <div className="invite-card__actions">
         <button
           className="invite-btn invite-btn--accept"
@@ -248,7 +259,7 @@ export default function InboxInvitesPage() {
       {/* Hero callout */}
       <div
         style={{
-          padding: "24px 32px 20px",
+          padding: "20px 32px 16px",
           borderBottom: "1px solid var(--line)",
           background: "var(--surface-bright)",
         }}
@@ -256,11 +267,11 @@ export default function InboxInvitesPage() {
         <div
           style={{
             fontFamily: "var(--font-display)",
-            fontSize: "clamp(28px, 5vw, 48px)",
+            fontSize: "clamp(26px, 5vw, 44px)",
             fontWeight: 900,
             letterSpacing: "-0.04em",
             color: "var(--dark)",
-            lineHeight: 1.1,
+            lineHeight: 1.05,
           }}
         >
           {activeCount > 0 ? (
@@ -279,9 +290,10 @@ export default function InboxInvitesPage() {
         <p
           style={{
             fontFamily: "var(--font-body)",
-            fontSize: 13,
+            fontSize: 12,
             color: "var(--graphite)",
-            margin: "8px 0 0",
+            margin: "6px 0 0",
+            opacity: 0.75,
           }}
         >
           Campaign invites expire — accept fast to lock in your slot.
@@ -291,9 +303,12 @@ export default function InboxInvitesPage() {
       {/* Invite list */}
       {activeCount === 0 ? (
         <div className="inbox-empty" style={{ paddingTop: 80 }}>
+          <div className="inbox-empty__icon" aria-hidden>
+            ◈
+          </div>
           <p className="inbox-empty__title">No invites right now</p>
           <p className="inbox-empty__body">
-            Check back soon — new campaigns are added weekly.
+            New campaigns are added weekly. Check back soon.
           </p>
           <Link href="/creator/explore" className="inbox-empty__link">
             Explore campaigns →
@@ -315,12 +330,13 @@ export default function InboxInvitesPage() {
           {/* Bottom notice */}
           <div
             style={{
-              padding: "16px 32px",
+              padding: "12px 32px",
               fontFamily: "var(--font-body)",
-              fontSize: 11,
-              color: "rgba(0,48,73,0.35)",
+              fontSize: 10,
+              color: "rgba(0,48,73,0.3)",
               borderTop: "1px solid var(--line)",
               marginTop: 8,
+              letterSpacing: "0.02em",
             }}
           >
             Invites auto-expire after their deadline. Accepting locks your

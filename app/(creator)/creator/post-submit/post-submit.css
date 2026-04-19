@@ -20,30 +20,29 @@
 .ps-hero {
   width: 100%;
   background: #003049;
-  padding: 72px 40px 56px;
+  padding: 80px 40px 64px;
   text-align: center;
   position: relative;
   overflow: hidden;
+  border-bottom: 4px solid #c1121f;
 }
 
 .ps-hero::before {
   content: "";
   position: absolute;
   inset: 0;
-  background: radial-gradient(
-    ellipse 60% 80% at 50% 0%,
-    rgba(193, 18, 31, 0.12) 0%,
-    transparent 60%
-  );
+  background:
+    radial-gradient(ellipse 60% 80% at 50% 0%, rgba(193, 18, 31, 0.14) 0%, transparent 60%),
+    radial-gradient(ellipse 40% 50% at 80% 90%, rgba(102, 155, 188, 0.06) 0%, transparent 50%);
   pointer-events: none;
 }
 
 /* ── Animated checkmark ──────────────────────────────────── */
 
 .ps-check-wrap {
-  width: 80px;
-  height: 80px;
-  margin: 0 auto 28px;
+  width: 88px;
+  height: 88px;
+  margin: 0 auto 32px;
   position: relative;
   z-index: 1;
   animation: ps-check-scale 400ms cubic-bezier(0.22, 1, 0.36, 1) both;
@@ -55,14 +54,16 @@
 }
 
 .ps-check-circle {
-  width: 80px;
-  height: 80px;
+  width: 88px;
+  height: 88px;
   border-radius: 50%;
-  background: rgba(193, 18, 31, 0.12);
-  border: 2px solid rgba(193, 18, 31, 0.4);
+  background: rgba(193, 18, 31, 0.15);
+  border: 2px solid rgba(193, 18, 31, 0.5);
   display: flex;
   align-items: center;
   justify-content: center;
+  /* outer glow ring */
+  box-shadow: 0 0 0 8px rgba(193, 18, 31, 0.07), 0 0 32px rgba(193, 18, 31, 0.15);
 }
 
 .ps-check-svg {
@@ -98,10 +99,10 @@
 .ps-hero-title {
   font-family: "Darky", serif;
   font-weight: 900;
-  font-size: clamp(40px, 8vw, 72px);
+  font-size: clamp(48px, 9vw, 80px);
   color: #f5f2ec;
   letter-spacing: -0.05em;
-  margin: 0 0 16px;
+  margin: 0 0 20px;
   line-height: 1;
   text-transform: uppercase;
   position: relative;
@@ -277,9 +278,10 @@
 
 .ps-step {
   display: flex;
-  gap: 16px;
-  padding: 16px 0;
+  gap: 20px;
+  padding: 20px 0;
   border-bottom: 1px solid rgba(0, 48, 73, 0.06);
+  position: relative;
 }
 
 .ps-step:last-child {
@@ -287,29 +289,71 @@
   padding-bottom: 0;
 }
 
+/* vertical connector line between steps */
+.ps-step:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  left: 19px;
+  top: 52px;
+  bottom: 0;
+  width: 2px;
+  background: rgba(0, 48, 73, 0.06);
+}
+
+.ps-step-num-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-shrink: 0;
+  gap: 4px;
+  padding-top: 2px;
+}
+
+.ps-step-dot {
+  width: 10px;
+  height: 10px;
+  background: #c1121f;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 1;
+}
+
+.ps-step:nth-child(2) .ps-step-dot {
+  background: rgba(0, 48, 73, 0.2);
+}
+
+.ps-step:nth-child(3) .ps-step-dot {
+  background: rgba(0, 48, 73, 0.2);
+}
+
 .ps-step-num {
   font-family: "Darky", serif;
-  font-size: 28px;
+  font-size: 13px;
   font-weight: 900;
-  color: rgba(0, 48, 73, 0.1);
-  letter-spacing: -0.04em;
+  color: rgba(0, 48, 73, 0.2);
+  letter-spacing: -0.02em;
   line-height: 1;
-  flex-shrink: 0;
-  width: 32px;
-  text-align: right;
+}
+
+.ps-step:first-child .ps-step-num {
+  color: #c1121f;
 }
 
 .ps-step-content {
   flex: 1;
-  padding-top: 2px;
+  padding-top: 0;
 }
 
 .ps-step-title {
   font-family: "CS Genio Mono", monospace;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 700;
   color: #003049;
-  margin-bottom: 4px;
+  margin-bottom: 6px;
+}
+
+.ps-step:not(:first-child) .ps-step-title {
+  color: rgba(0, 48, 73, 0.6);
 }
 
 .ps-step-desc {
@@ -326,7 +370,15 @@
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: #c1121f;
-  margin-top: 4px;
+  margin-top: 6px;
+  display: inline-block;
+  background: rgba(193, 18, 31, 0.06);
+  padding: 2px 8px;
+}
+
+.ps-step:not(:first-child) .ps-step-time {
+  color: rgba(0, 48, 73, 0.35);
+  background: rgba(0, 48, 73, 0.04);
 }
 
 /* ── CTAs ────────────────────────────────────────────────── */

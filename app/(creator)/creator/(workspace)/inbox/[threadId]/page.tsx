@@ -88,6 +88,42 @@ function lastSeenLabel(iso: string): string {
   return `Last seen ${Math.floor(h / 24)}d ago`;
 }
 
+/* ── Campaign Context Bar ───────────────────────────────────── */
+function CampaignContextBar({
+  title,
+  status,
+  earn,
+}: {
+  title: string;
+  status?: string;
+  earn?: number;
+}) {
+  const isActive =
+    status === "active" || status === "live" || status === "running";
+
+  return (
+    <div className="inbox-thread__context-bar" aria-label="Campaign context">
+      <span className="inbox-thread__context-bar-icon" aria-hidden>
+        ◈
+      </span>
+      <span className="inbox-thread__context-bar-label">Campaign</span>
+      <span className="inbox-thread__context-bar-name">{title}</span>
+      <span
+        className={`inbox-thread__context-bar-status ${
+          isActive
+            ? "inbox-thread__context-bar-status--active"
+            : "inbox-thread__context-bar-status--pending"
+        }`}
+      >
+        {isActive ? "Active" : (status ?? "Pending")}
+      </span>
+      {earn != null && earn > 0 && (
+        <span className="inbox-thread__context-bar-earn">${earn}</span>
+      )}
+    </div>
+  );
+}
+
 /* ── Message bubble ─────────────────────────────────────────── */
 function Bubble({ message, isSelf }: { message: Message; isSelf: boolean }) {
   return (
@@ -219,15 +255,7 @@ function Composer({
       </div>
 
       {/* Hint */}
-      <p
-        style={{
-          fontFamily: "var(--font-body)",
-          fontSize: 10,
-          color: "rgba(0,48,73,0.25)",
-          margin: 0,
-          textAlign: "right",
-        }}
-      >
+      <p className="inbox-composer__hint">
         Enter to send · Shift+Enter for new line
       </p>
     </div>
@@ -260,18 +288,15 @@ export default function ThreadDetailPage() {
     const load = async (uid: string) => {
       setSelfUserId(uid);
       try {
-        // Load thread list to find current thread
         const threads = await api.messages.listThreads("creator", uid);
         const found = threads.find((t) => t.id === threadId) ?? null;
         setThread(found);
 
-        // Load messages
         const { messages: msgs } = await api.messages.getMessages(threadId);
         setMessages(msgs);
         setLoading(false);
         requestAnimationFrame(() => scrollToBottom("instant"));
 
-        // Mark as read
         api.messages.markRead(threadId, uid).catch(() => {});
       } catch {
         setLoading(false);
@@ -335,6 +360,8 @@ export default function ThreadDetailPage() {
   const other =
     thread && selfUserId ? getOtherParticipant(thread, selfUserId) : null;
 
+  const otherInitial = other ? other.name.charAt(0).toUpperCase() : "?";
+
   return (
     <div className="inbox-thread">
       {/* Header */}
@@ -348,10 +375,14 @@ export default function ThreadDetailPage() {
         </Link>
 
         <div className="inbox-thread__avatar-wrap">
-          <div className="inbox-thread__avatar">
-            {other ? other.name.charAt(0).toUpperCase() : "?"}
+          <div
+            className="inbox-thread__avatar"
+            data-initial={otherInitial}
+            style={avatarStyle(otherInitial)}
+          >
+            {otherInitial}
           </div>
-          {/* Status dot — always show as online for demo */}
+          {/* Status dot — active for demo */}
           <span className="inbox-thread__avatar-status" aria-label="Online" />
         </div>
 
@@ -373,16 +404,27 @@ export default function ThreadDetailPage() {
         )}
       </header>
 
+      {/* Campaign context bar — pinned below header */}
+      {thread?.campaignTitle && (
+        <CampaignContextBar
+          title={thread.campaignTitle}
+          status="active"
+          earn={thread.campaignId ? 48 : undefined}
+        />
+      )}
+
       {/* Messages area */}
       <div className="inbox-thread__messages" ref={scrollRef}>
         {loading && (
           <p
             style={{
               fontFamily: "var(--font-body)",
-              fontSize: 12,
-              color: "rgba(0,48,73,0.3)",
+              fontSize: 11,
+              color: "rgba(0,48,73,0.28)",
               textAlign: "center",
               margin: "auto",
+              letterSpacing: "0.04em",
+              textTransform: "uppercase",
             }}
           >
             Loading…
@@ -403,10 +445,10 @@ export default function ThreadDetailPage() {
             <p
               style={{
                 fontFamily: "var(--font-display)",
-                fontSize: 18,
+                fontSize: 17,
                 fontWeight: 700,
-                color: "rgba(0,48,73,0.25)",
-                letterSpacing: "-0.01em",
+                color: "rgba(0,48,73,0.22)",
+                letterSpacing: "-0.02em",
                 margin: 0,
               }}
             >
@@ -416,7 +458,7 @@ export default function ThreadDetailPage() {
               style={{
                 fontFamily: "var(--font-body)",
                 fontSize: 12,
-                color: "rgba(0,48,73,0.2)",
+                color: "rgba(0,48,73,0.18)",
                 margin: 0,
               }}
             >
@@ -448,6 +490,27 @@ export default function ThreadDetailPage() {
       <Composer onSend={handleSend} disabled={sending || loading} />
     </div>
   );
+}
+
+/* ── Avatar color by initial ────────────────────────────────── */
+function avatarStyle(initial: string): React.CSSProperties {
+  const map: Record<string, string> = {
+    B: "var(--primary)",
+    H: "var(--primary)",
+    N: "var(--primary)",
+    T: "var(--primary)",
+    C: "var(--tertiary)",
+    I: "var(--tertiary)",
+    O: "var(--tertiary)",
+    U: "var(--tertiary)",
+    E: "var(--champagne)",
+    K: "var(--champagne)",
+    W: "var(--champagne)",
+    F: "#780000",
+    L: "#780000",
+    R: "#780000",
+  };
+  return { background: map[initial] ?? "var(--dark)" };
 }
 
 function BackIcon() {

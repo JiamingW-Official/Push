@@ -39,7 +39,7 @@ type ActivityItem = {
 
 const TODAY_STATS: StatItem[] = [
   {
-    label: "Today Scans",
+    label: "Scans Today",
     value: "7",
     ghost: "07",
     sublabel: "+3 vs yesterday",
@@ -49,12 +49,6 @@ const TODAY_STATS: StatItem[] = [
     value: "3",
     ghost: "03",
     sublabel: "2 due this week",
-  },
-  {
-    label: "Pending Submissions",
-    value: "2",
-    ghost: "02",
-    sublabel: "Submit before 6pm",
   },
   {
     label: "Est. Earnings",
@@ -171,6 +165,14 @@ const ACTIVITY_COLORS: Record<ActivityItem["type"], string> = {
   message: "var(--graphite)",
 };
 
+// Group tasks into morning / afternoon / evening
+function getTimeGroup(time: string): "MORNING" | "AFTERNOON" | "EVENING" {
+  const hour = parseInt(time.split(":")[0], 10);
+  if (hour < 12) return "MORNING";
+  if (hour < 17) return "AFTERNOON";
+  return "EVENING";
+}
+
 /* ── Component ─────────────────────────────────────────────── */
 
 export default function WorkTodayPage() {
@@ -183,6 +185,20 @@ export default function WorkTodayPage() {
     (sum, t) => sum + parseInt(t.earnBadge.replace("$", "") || "0"),
     0,
   );
+  const activeCampaign = TIMELINE_TASKS.find((t) => t.status === "active");
+  const scheduledTasks = TIMELINE_TASKS.filter((t) => t.status !== "free");
+
+  // Build time-grouped sections
+  const groups: { label: string; tasks: TimelineTask[] }[] = [];
+  const seen = new Set<string>();
+  for (const task of TIMELINE_TASKS) {
+    const group = getTimeGroup(task.time);
+    if (!seen.has(group)) {
+      seen.add(group);
+      groups.push({ label: group, tasks: [] });
+    }
+    groups[groups.length - 1].tasks.push(task);
+  }
 
   return (
     <div className="wt-page">
@@ -204,19 +220,23 @@ export default function WorkTodayPage() {
       <header className="wt-hero">
         <div className="wt-hero-inner">
           <div className="wt-hero-left">
-            <p className="wt-eyebrow">FRIDAY · APR 18 · 3 ACTIVE CAMPAIGNS</p>
-            <h1 className="wt-headline">TODAY</h1>
+            <p className="wt-eyebrow">
+              FRIDAY · APR 18 · {TODAY_STATS[1].value} ACTIVE CAMPAIGNS
+            </p>
+            {/* Editorial date: weight contrast */}
+            <div className="wt-date-block">
+              <h1 className="wt-date-day">FRIDAY</h1>
+              <p className="wt-date-month">April 18</p>
+            </div>
             <div className="wt-progress-row">
               <span className="wt-progress-text">
-                {completedCount} of{" "}
-                {TIMELINE_TASKS.filter((t) => t.status !== "free").length} tasks
-                completed
+                {completedCount} of {scheduledTasks.length} tasks completed
               </span>
               <div className="wt-progress-bar">
                 <div
                   className="wt-progress-fill"
                   style={{
-                    width: `${(completedCount / TIMELINE_TASKS.filter((t) => t.status !== "free").length) * 100}%`,
+                    width: `${scheduledTasks.length ? (completedCount / scheduledTasks.length) * 100 : 0}%`,
                   }}
                 />
               </div>
@@ -226,14 +246,13 @@ export default function WorkTodayPage() {
             <p className="wt-earnings-label">POTENTIAL EARNINGS TODAY</p>
             <p className="wt-earnings-value">${totalPaid}</p>
             <p className="wt-earnings-sub">
-              across {TIMELINE_TASKS.filter((t) => t.status !== "free").length}{" "}
-              campaigns
+              across {scheduledTasks.length} campaigns
             </p>
           </div>
         </div>
       </header>
 
-      {/* ── Stats Strip ─────────────────────────────────────── */}
+      {/* ── Stats Strip — 3 editorial numbers ─────────────────── */}
       <section className="wt-stats-strip">
         {TODAY_STATS.map((stat) => (
           <div key={stat.label} className="wt-stat-card">
@@ -253,10 +272,10 @@ export default function WorkTodayPage() {
 
       {/* ── Main Layout ─────────────────────────────────────── */}
       <div className="wt-body">
-        {/* ── Timeline ──────────────────────────────────────── */}
+        {/* ── Timeline ────────────────────────────────────────── */}
         <section className="wt-timeline-section">
           <div className="wt-section-header">
-            <h2 className="wt-section-title">TODAY'S SCHEDULE</h2>
+            <h2 className="wt-section-title">TODAY&apos;S SCHEDULE</h2>
             <Link href="/creator/campaigns" className="wt-section-link">
               Browse more →
             </Link>
@@ -265,132 +284,165 @@ export default function WorkTodayPage() {
           <div className="wt-timeline">
             <div className="wt-timeline-axis" aria-hidden="true" />
 
-            {TIMELINE_TASKS.map((task) => {
-              if (task.status === "free") {
-                return (
-                  <div
-                    key={task.id}
-                    className="wt-timeline-row wt-timeline-free"
-                  >
-                    <div className="wt-time-label">
-                      <span>{task.time}</span>
-                      <span className="wt-time-end">{task.endTime}</span>
-                    </div>
-                    <div className="wt-timeline-dot wt-dot-free" />
-                    <div className="wt-free-block">
-                      <span className="wt-free-text">
-                        Free time · Add content
-                      </span>
-                      <Link href="/creator/explore" className="wt-free-cta">
-                        + Find campaign
-                      </Link>
-                    </div>
-                  </div>
-                );
-              }
+            {groups.map(({ label, tasks }) => (
+              <div key={label} className="wt-time-group">
+                {/* Time group eyebrow */}
+                <div className="wt-time-group-label">
+                  <span>{label}</span>
+                </div>
 
-              const isSelected = selectedTask === task.id;
-
-              return (
-                <div
-                  key={task.id}
-                  className={`wt-timeline-row wt-timeline-task wt-status-${task.status}${isSelected ? " wt-selected" : ""}`}
-                  onClick={() => setSelectedTask(isSelected ? null : task.id)}
-                  role="button"
-                  tabIndex={0}
-                  aria-expanded={isSelected}
-                  onKeyDown={(e) =>
-                    e.key === "Enter" &&
-                    setSelectedTask(isSelected ? null : task.id)
-                  }
-                >
-                  <div className="wt-time-label">
-                    <span>{task.time}</span>
-                    <span className="wt-time-end">{task.endTime}</span>
-                  </div>
-
-                  <div className={`wt-timeline-dot wt-dot-${task.status}`} />
-
-                  <div className="wt-task-content">
-                    <div className="wt-task-main">
+                {tasks.map((task) => {
+                  if (task.status === "free") {
+                    return (
                       <div
-                        className="wt-task-logo"
-                        style={{ background: task.logoColor }}
-                        aria-hidden="true"
+                        key={task.id}
+                        className="wt-timeline-row wt-timeline-free"
                       >
-                        {task.logoInitials}
-                      </div>
-                      <div className="wt-task-info">
-                        <p className="wt-task-campaign">{task.campaignName}</p>
-                        <p className="wt-task-merchant">{task.merchantName}</p>
-                      </div>
-                      <div className="wt-task-meta">
-                        <span className="wt-task-category">
-                          {task.category}
-                        </span>
-                        <span className="wt-task-earn">{task.earnBadge}</span>
-                      </div>
-                      <span className={`wt-status-chip wt-chip-${task.status}`}>
-                        {STATUS_LABEL[task.status]}
-                      </span>
-                    </div>
-
-                    {/* Expanded actions */}
-                    {isSelected && (
-                      <div className="wt-task-expanded">
-                        <div className="wt-task-actions">
-                          {task.status === "active" && (
-                            <Link
-                              href={`/creator/campaigns/demo-campaign-001/post`}
-                              className="wt-action-btn wt-action-primary"
-                            >
-                              Submit Content
-                            </Link>
-                          )}
-                          {task.status === "upcoming" && (
-                            <button className="wt-action-btn wt-action-secondary">
-                              Mark Arrived
-                            </button>
-                          )}
-                          {task.status === "done" && (
-                            <span className="wt-action-done">✓ Completed</span>
-                          )}
-                          <Link
-                            href={`/creator/campaigns/demo-campaign-001`}
-                            className="wt-action-btn wt-action-ghost"
-                          >
-                            View Details
-                          </Link>
-                          <Link
-                            href="/creator/messages"
-                            className="wt-action-btn wt-action-ghost"
-                          >
-                            Message Merchant
+                        <div className="wt-time-label">
+                          <span>{task.time}</span>
+                          <span className="wt-time-end">{task.endTime}</span>
+                        </div>
+                        <div className="wt-timeline-dot wt-dot-free" />
+                        <div className="wt-free-block">
+                          <span className="wt-free-text">
+                            Free window · No commitments
+                          </span>
+                          <Link href="/creator/explore" className="wt-free-cta">
+                            + Find campaign
                           </Link>
                         </div>
                       </div>
-                    )}
-                  </div>
-                </div>
-              );
-            })}
+                    );
+                  }
+
+                  const isSelected = selectedTask === task.id;
+
+                  return (
+                    <div
+                      key={task.id}
+                      className={`wt-timeline-row wt-timeline-task wt-status-${task.status}${isSelected ? " wt-selected" : ""}`}
+                      onClick={() =>
+                        setSelectedTask(isSelected ? null : task.id)
+                      }
+                      role="button"
+                      tabIndex={0}
+                      aria-expanded={isSelected}
+                      onKeyDown={(e) =>
+                        e.key === "Enter" &&
+                        setSelectedTask(isSelected ? null : task.id)
+                      }
+                    >
+                      <div className="wt-time-label">
+                        <span>{task.time}</span>
+                        <span className="wt-time-end">{task.endTime}</span>
+                      </div>
+
+                      <div
+                        className={`wt-timeline-dot wt-dot-${task.status}`}
+                      />
+
+                      <div className="wt-task-content">
+                        <div className="wt-task-main">
+                          <div
+                            className="wt-task-logo"
+                            style={{ background: task.logoColor }}
+                            aria-hidden="true"
+                          >
+                            {task.logoInitials}
+                          </div>
+                          <div className="wt-task-info">
+                            <p className="wt-task-campaign">
+                              {task.campaignName}
+                            </p>
+                            <p className="wt-task-merchant">
+                              {task.merchantName}
+                              {/* Pulsing LIVE indicator for active */}
+                              {task.status === "active" && (
+                                <span className="wt-active-indicator">
+                                  <span className="wt-active-dot" />
+                                  LIVE
+                                </span>
+                              )}
+                            </p>
+                          </div>
+                          <div className="wt-task-meta">
+                            <span className="wt-task-category">
+                              {task.category}
+                            </span>
+                            <span className="wt-task-earn">
+                              {task.earnBadge}
+                            </span>
+                          </div>
+                          <span
+                            className={`wt-status-chip wt-chip-${task.status}`}
+                          >
+                            {STATUS_LABEL[task.status]}
+                          </span>
+                        </div>
+
+                        {/* Expanded actions */}
+                        {isSelected && (
+                          <div className="wt-task-expanded">
+                            <div className="wt-task-actions">
+                              {task.status === "active" && (
+                                <Link
+                                  href={`/creator/campaigns/demo-campaign-001/post`}
+                                  className="wt-action-btn wt-action-primary"
+                                >
+                                  Submit Content
+                                </Link>
+                              )}
+                              {task.status === "upcoming" && (
+                                <button className="wt-action-btn wt-action-secondary">
+                                  Mark Arrived
+                                </button>
+                              )}
+                              {task.status === "done" && (
+                                <span className="wt-action-done">
+                                  ✓ Completed
+                                </span>
+                              )}
+                              <Link
+                                href={`/creator/campaigns/demo-campaign-001`}
+                                className="wt-action-btn wt-action-ghost"
+                              >
+                                View Details
+                              </Link>
+                              <Link
+                                href="/creator/messages"
+                                className="wt-action-btn wt-action-ghost"
+                              >
+                                Message Merchant
+                              </Link>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            ))}
           </div>
         </section>
 
         {/* ── Sidebar ───────────────────────────────────────── */}
         <aside className="wt-sidebar">
-          {/* Submit CTA */}
-          <div className="wt-cta-card">
-            <p className="wt-cta-eyebrow">ACTIVE NOW</p>
-            <p className="wt-cta-title">Superiority Burger</p>
-            <p className="wt-cta-desc">Lunch Reel Campaign · $32 est.</p>
-            <Link
-              href="/creator/campaigns/demo-campaign-001/post"
-              className="wt-cta-btn"
-            >
-              Submit Content →
-            </Link>
-          </div>
+          {/* Active campaign CTA — shows earn in champagne */}
+          {activeCampaign && (
+            <div className="wt-cta-card">
+              <p className="wt-cta-eyebrow">ACTIVE NOW</p>
+              <p className="wt-cta-title">{activeCampaign.merchantName}</p>
+              <p className="wt-cta-desc">{activeCampaign.campaignName}</p>
+              <p className="wt-cta-earn">{activeCampaign.earnBadge} est.</p>
+              <Link
+                href="/creator/campaigns/demo-campaign-001/post"
+                className="wt-cta-btn"
+              >
+                Submit Content →
+              </Link>
+            </div>
+          )}
 
           {/* Recent Activity */}
           <div className="wt-activity-card">
@@ -427,16 +479,18 @@ export default function WorkTodayPage() {
         </aside>
       </div>
 
-      {/* ── Empty state (hidden when data exists) ─────────────── */}
+      {/* ── Empty state ────────────────────────────────────────── */}
       {TIMELINE_TASKS.length === 0 && (
         <div className="wt-empty">
           <p className="wt-empty-ghost" aria-hidden="true">
-            REST DAY
+            REST
           </p>
-          <p className="wt-empty-title">No campaigns today</p>
-          <p className="wt-empty-sub">Take a break or find new opportunities</p>
+          <p className="wt-empty-title">No commitments today</p>
+          <p className="wt-empty-sub">
+            Take a break, or find your next opportunity
+          </p>
           <Link href="/creator/explore" className="wt-empty-cta">
-            Find campaigns →
+            Browse campaigns →
           </Link>
         </div>
       )}

@@ -80,8 +80,48 @@
   font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: rgba(245,242,236,0.5);
+  color: rgba(245,242,236,0.45);
   font-family: var(--font-body, "CS Genio Mono", monospace);
+  margin-top: 4px;
+}
+
+/* Stats strip inside archive header */
+.ar-header-stats {
+  display: flex;
+  gap: 32px;
+  margin-top: 20px;
+  flex-wrap: wrap;
+}
+
+.ar-header-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.ar-header-stat-val {
+  font-family: var(--font-display, "Darky", serif);
+  font-size: clamp(28px, 4vw, 44px);
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  line-height: 1;
+}
+
+.ar-header-stat-val--champagne {
+  color: var(--champagne, #c9a96e);
+}
+
+.ar-header-stat-val--white {
+  color: #f5f2ec;
+}
+
+.ar-header-stat-lbl {
+  font-family: var(--font-body, "CS Genio Mono", monospace);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(245,242,236,0.35);
 }
 
 /* Total earned highlight */
@@ -181,6 +221,54 @@
 .ar-view-btn--active {
   background: rgba(245,242,236,0.15);
   color: #f5f2ec;
+}
+
+/* ── Quick nav tabs ──────────────────────────────────────────── */
+.ar-quick-nav {
+  background: var(--dark, #003049);
+  border-bottom: 2px solid var(--primary, #c1121f);
+}
+.ar-quick-nav-inner {
+  max-width: var(--content-width, 1280px);
+  margin: 0 auto;
+  padding: 0 var(--space-5, 40px);
+  display: flex;
+}
+.ar-nav-tab {
+  font-family: var(--font-body, "CS Genio Mono", monospace);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.45);
+  padding: 14px 24px;
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: color 150ms, border-color 150ms;
+}
+.ar-nav-tab:hover {
+  color: rgba(255, 255, 255, 0.8);
+}
+.ar-nav-tab--active {
+  color: #fff;
+  border-bottom-color: var(--champagne, #c9a96e);
+}
+.ar-nav-tab-dot {
+  width: 5px;
+  height: 5px;
+  background: var(--champagne, #c9a96e);
+  display: none;
+  flex-shrink: 0;
+}
+.ar-nav-tab--active .ar-nav-tab-dot {
+  display: block;
 }
 
 /* ── Achievement Badge Strip ─────────────────────────────────── */
@@ -477,9 +565,9 @@
 
 .ar-year-earned {
   font-family: var(--font-display, "Darky", serif);
-  font-size: 22px;
-  font-weight: 800;
-  color: var(--primary, #c1121f);
+  font-size: 26px;
+  font-weight: 900;
+  color: var(--champagne, #c9a96e);
   letter-spacing: -0.03em;
 }
 
@@ -598,9 +686,9 @@
 
 .ar-card-earning {
   font-family: var(--font-display, "Darky", serif);
-  font-size: 24px;
+  font-size: 26px;
   font-weight: 900;
-  color: var(--primary, #c1121f);
+  color: var(--champagne, #c9a96e);
   letter-spacing: -0.03em;
   line-height: 1;
 }
@@ -737,8 +825,8 @@
 .ar-timeline-earning {
   font-family: var(--font-display, "Darky", serif);
   font-size: 18px;
-  font-weight: 800;
-  color: var(--primary, #c1121f);
+  font-weight: 900;
+  color: var(--champagne, #c9a96e);
   letter-spacing: -0.03em;
   white-space: nowrap;
   flex-shrink: 0;
@@ -872,6 +960,19 @@
 }
 
 @media (max-width: 768px) {
+  .ar-quick-nav-inner {
+    padding: 0 16px;
+  }
+  .ar-nav-tab {
+    padding: 12px 14px;
+    font-size: 10px;
+  }
+  .ar-header-stats {
+    gap: 20px;
+  }
+  .ar-header-stat-val {
+    font-size: clamp(22px, 6vw, 32px);
+  }
   .ar-page-header-inner {
     padding: 40px var(--space-3, 24px) 32px;
     flex-direction: column;

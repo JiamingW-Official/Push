@@ -278,9 +278,25 @@ export default function PortfolioArchivePage() {
           <div className="ar-header-left">
             <div className="ar-eyebrow">Portfolio</div>
             <span className="ar-wordmark">ARCHIVE</span>
-            <div className="ar-stats-eyebrow">
-              {totalCount} COMPLETED CAMPAIGNS · ${totalEarned.toLocaleString()}{" "}
-              TOTAL EARNED
+            <div className="ar-header-stats">
+              <div className="ar-header-stat">
+                <span className="ar-header-stat-val ar-header-stat-val--champagne">
+                  ${totalEarned.toLocaleString()}
+                </span>
+                <span className="ar-header-stat-lbl">Total Earned</span>
+              </div>
+              <div className="ar-header-stat">
+                <span className="ar-header-stat-val ar-header-stat-val--white">
+                  {totalCount}
+                </span>
+                <span className="ar-header-stat-lbl">Campaigns</span>
+              </div>
+              <div className="ar-header-stat">
+                <span className="ar-header-stat-val ar-header-stat-val--white">
+                  4.9★
+                </span>
+                <span className="ar-header-stat-lbl">Avg Rating</span>
+              </div>
             </div>
           </div>
 
@@ -360,6 +376,22 @@ export default function PortfolioArchivePage() {
           </div>
         </div>
       </header>
+
+      {/* ── Quick nav tabs ────────────────────────────────────── */}
+      <nav className="ar-quick-nav" aria-label="Portfolio sections">
+        <div className="ar-quick-nav-inner">
+          <Link href="/creator/portfolio" className="ar-nav-tab">
+            Identity
+          </Link>
+          <Link href="/creator/portfolio/earnings" className="ar-nav-tab">
+            Earnings
+          </Link>
+          <span className="ar-nav-tab ar-nav-tab--active">
+            <span className="ar-nav-tab-dot" />
+            Archive
+          </span>
+        </div>
+      </nav>
 
       {/* ── Achievement Badges ────────────────────────────────── */}
       {achievements.length > 0 && (

@@ -79,7 +79,7 @@ function tierNormalized(tier: string): CreatorTier {
 // ── Score Ring (SVG animated) ─────────────────────────────────────────────────
 function ScoreRing({ score }: { score: number }) {
   const circleRef = useRef<SVGCircleElement>(null);
-  const radius = 54;
+  const radius = 58;
   const circumference = 2 * Math.PI * radius;
 
   useEffect(() => {
@@ -98,16 +98,16 @@ function ScoreRing({ score }: { score: number }) {
   return (
     <div className="pf-score-ring-wrap">
       <svg
-        width="128"
-        height="128"
-        viewBox="0 0 128 128"
+        width="140"
+        height="140"
+        viewBox="0 0 140 140"
         className="pf-score-ring-svg"
       >
-        <circle cx="64" cy="64" r={radius} className="pf-score-ring-track" />
+        <circle cx="70" cy="70" r={radius} className="pf-score-ring-track" />
         <circle
           ref={circleRef}
-          cx="64"
-          cy="64"
+          cx="70"
+          cy="70"
           r={radius}
           className="pf-score-ring-fill"
           strokeDasharray={circumference}
@@ -576,29 +576,52 @@ export default function PortfolioPage() {
         </div>
       </section>
 
+      {/* ── Quick nav tabs ────────────────────────────────────────── */}
+      <nav className="pf-quick-nav" aria-label="Portfolio sections">
+        <div className="pf-quick-nav-inner">
+          <span className="pf-nav-tab pf-nav-tab--active">
+            <span className="pf-nav-tab-dot" />
+            Identity
+          </span>
+          <Link href="/creator/portfolio/earnings" className="pf-nav-tab">
+            Earnings
+          </Link>
+          <Link href="/creator/portfolio/archive" className="pf-nav-tab">
+            Archive
+          </Link>
+        </div>
+      </nav>
+
       {/* ── Stats strip (horizontal) ──────────────────────────────── */}
       <section className="pf-stats-strip pf-reveal">
         {[
           {
             val: formatNumber(profile.verifiedVisits),
             unit: "scans",
-            label: "TOTAL SCANS",
+            label: "WALK-INS DRIVEN",
+            money: false,
           },
           {
             val: `$${profile.pastCampaigns.reduce((s, c) => s + c.earnings, 0).toLocaleString()}`,
             unit: "",
             label: "TOTAL EARNED",
+            money: true,
           },
           {
             val: String(profile.totalCampaigns),
             unit: "runs",
             label: "CAMPAIGNS",
+            money: false,
           },
-          { val: "4.9", unit: "★", label: "AVG RATING" },
+          { val: "4.9", unit: "★", label: "AVG RATING", money: false },
         ].map((stat, i) => (
           <div key={i} className="pf-stat-col">
             <div className="pf-stat-value-row">
-              <span className="pf-stat-big">{stat.val}</span>
+              <span
+                className={`pf-stat-big${stat.money ? " pf-stat-big--money" : ""}`}
+              >
+                {stat.val}
+              </span>
               {stat.unit && <span className="pf-stat-unit">{stat.unit}</span>}
             </div>
             <span className="pf-stat-lbl">{stat.label}</span>

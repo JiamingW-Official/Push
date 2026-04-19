@@ -4,6 +4,9 @@ import { useCallback, useMemo, useState } from "react";
 import Link from "next/link";
 import "./discover.css";
 
+/* ── View mode ───────────────────────────────────────────── */
+type ViewMode = "grid" | "map";
+
 /* ── Types ────────────────────────────────────────────────── */
 
 type Category =
@@ -34,6 +37,7 @@ interface Campaign {
   slotsTotal: number;
   slotsRemaining: number;
   slotsFilledToday: number;
+  createdIso?: string; // for "NEW" badge (< 48h)
   deadlineIso?: string;
   distanceMi: number;
   isRemoteOk: boolean;
@@ -77,6 +81,7 @@ const MOCK_CAMPAIGNS: Campaign[] = [
     slotsTotal: 20,
     slotsRemaining: 6,
     slotsFilledToday: 4,
+    createdIso: "2026-04-17",
     deadlineIso: "2026-04-28",
     distanceMi: 0.4,
     isRemoteOk: false,
@@ -98,6 +103,7 @@ const MOCK_CAMPAIGNS: Campaign[] = [
     slotsTotal: 10,
     slotsRemaining: 2,
     slotsFilledToday: 6,
+    createdIso: "2026-04-18",
     deadlineIso: "2026-05-08",
     distanceMi: 1.2,
     isRemoteOk: false,
@@ -120,6 +126,7 @@ const MOCK_CAMPAIGNS: Campaign[] = [
     slotsTotal: 8,
     slotsRemaining: 4,
     slotsFilledToday: 3,
+    createdIso: "2026-04-17",
     deadlineIso: "2026-05-12",
     distanceMi: 0.8,
     isRemoteOk: false,
@@ -139,6 +146,7 @@ const MOCK_CAMPAIGNS: Campaign[] = [
     slotsTotal: 12,
     slotsRemaining: 7,
     slotsFilledToday: 2,
+    createdIso: "2026-04-16",
     deadlineIso: "2026-05-01",
     distanceMi: 1.5,
     isRemoteOk: false,
@@ -159,6 +167,7 @@ const MOCK_CAMPAIGNS: Campaign[] = [
     slotsTotal: 6,
     slotsRemaining: 3,
     slotsFilledToday: 1,
+    createdIso: "2026-04-18",
     deadlineIso: "2026-05-05",
     distanceMi: 0.9,
     isRemoteOk: false,
@@ -178,6 +187,7 @@ const MOCK_CAMPAIGNS: Campaign[] = [
     slotsTotal: 8,
     slotsRemaining: 5,
     slotsFilledToday: 2,
+    createdIso: "2026-04-15",
     deadlineIso: "2026-05-15",
     distanceMi: 0.7,
     isRemoteOk: false,
@@ -198,6 +208,7 @@ const MOCK_CAMPAIGNS: Campaign[] = [
     slotsTotal: 15,
     slotsRemaining: 10,
     slotsFilledToday: 3,
+    createdIso: "2026-04-18",
     deadlineIso: "2026-05-20",
     distanceMi: 0.5,
     isRemoteOk: true,
@@ -217,6 +228,7 @@ const MOCK_CAMPAIGNS: Campaign[] = [
     slotsTotal: 20,
     slotsRemaining: 14,
     slotsFilledToday: 1,
+    createdIso: "2026-04-17",
     deadlineIso: "2026-04-30",
     distanceMi: 1.8,
     isRemoteOk: false,
@@ -237,6 +249,7 @@ const MOCK_CAMPAIGNS: Campaign[] = [
     slotsTotal: 5,
     slotsRemaining: 1,
     slotsFilledToday: 2,
+    createdIso: "2026-04-14",
     deadlineIso: "2026-04-26",
     distanceMi: 1.1,
     isRemoteOk: false,
@@ -257,6 +270,7 @@ const MOCK_CAMPAIGNS: Campaign[] = [
     slotsTotal: 2,
     slotsRemaining: 1,
     slotsFilledToday: 1,
+    createdIso: "2026-04-13",
     deadlineIso: "2026-05-20",
     distanceMi: 1.4,
     isRemoteOk: false,
@@ -278,6 +292,12 @@ function daysLeft(iso?: string): number | null {
 function isUrgent(iso?: string): boolean {
   const d = daysLeft(iso);
   return d !== null && d <= 3;
+}
+
+function isNew(createdIso?: string): boolean {
+  if (!createdIso) return false;
+  const hoursAgo = (Date.now() - new Date(createdIso).getTime()) / 3600000;
+  return hoursAgo <= 48;
 }
 
 function slotPercent(filled: number, total: number): number {
@@ -311,6 +331,9 @@ export default function DiscoverPage() {
   const [activeDistance, setActiveDistance] = useState<DistanceFilter>("ALL");
   const [activeType, setActiveType] = useState<TypeFilter>("ALL");
   const [sortKey, setSortKey] = useState<SortKey>("match");
+
+  /* -- View mode -- */
+  const [viewMode, setViewMode] = useState<ViewMode>("grid");
 
   /* -- Application state -- */
   const [applications, setApplications] = useState<
@@ -454,12 +477,9 @@ export default function DiscoverPage() {
     const appStatus = applications[c.id] || "none";
     const isBookmarked = bookmarks.has(c.id);
     const slotsUrgent = c.slotsRemaining < 3;
-    const slotsFilledPct = slotPercent(
-      c.slotsTotal - c.slotsRemaining,
-      c.slotsTotal,
-    );
     const catColor = getCategoryColor(c.category);
     const urgent = isUrgent(c.deadlineIso);
+    const brandNew = isNew(c.createdIso);
 
     return (
       <article
@@ -482,12 +502,17 @@ export default function DiscoverPage() {
 
         {/* Card head */}
         <div className="disc-card-head">
-          <div className="disc-card-logo">
-            {c.image ? (
-              <img src={c.image} alt={c.merchantName} />
-            ) : (
-              <span className="disc-card-logo-letter">{c.merchantName[0]}</span>
-            )}
+          <div className="disc-card-logo-wrap">
+            <div className="disc-card-logo">
+              {c.image ? (
+                <img src={c.image} alt={c.merchantName} />
+              ) : (
+                <span className="disc-card-logo-letter">
+                  {c.merchantName[0]}
+                </span>
+              )}
+            </div>
+            {brandNew && <span className="disc-new-badge">NEW</span>}
           </div>
 
           <div style={{ display: "flex", alignItems: "flex-start", gap: 8 }}>
@@ -619,23 +644,37 @@ export default function DiscoverPage() {
       c.slotsTotal,
     );
     const { amount, unit } = formatPayout(c.payout, c.payoutLabel);
+    const catColor = getCategoryColor(c.category);
 
     return (
-      <div className="disc-featured">
+      <div
+        className="disc-featured"
+        style={{ "--disc-card-cat-color": catColor } as React.CSSProperties}
+      >
+        {/* Featured badge — overlaid top-left */}
+        <div className="disc-featured-badge">FEATURED</div>
+
         {/* Logo column */}
         <div className="disc-featured-logo-col">
           <span className="disc-featured-logo-letter">{c.merchantName[0]}</span>
+          <span className="disc-featured-match-pct">{c.matchScore}% match</span>
         </div>
 
         {/* Body */}
         <div className="disc-featured-body">
           <div>
             <div className="disc-featured-eyebrow">
-              ⭐ FEATURED · HIGH MATCH
+              <span
+                className="disc-featured-cat-dot"
+                style={{ background: catColor }}
+              />
+              {c.category} · {c.neighborhood}
             </div>
             <div className="disc-featured-name">{c.title}</div>
-            <div className="disc-featured-address">
-              {c.merchantName} · {c.neighborhood}
+            <div className="disc-featured-address">{c.merchantName}</div>
+            <div className="disc-featured-earn-hook">
+              Earn <span className="disc-featured-earn-amount">{amount}</span>{" "}
+              <span className="disc-featured-earn-unit">{unit}</span>
             </div>
             <div className="disc-featured-tags">
               {c.tags.map((t) => (
@@ -649,9 +688,9 @@ export default function DiscoverPage() {
 
         {/* Metrics column */}
         <div className="disc-featured-metrics">
-          <div>
+          <div className="disc-featured-payout-wrap">
             <div className="disc-featured-payout">{amount}</div>
-            <div className="disc-featured-payout-label">{unit}</div>
+            <div className="disc-featured-payout-label">/{unit}</div>
           </div>
 
           <div className="disc-featured-slots-wrap">
@@ -678,7 +717,11 @@ export default function DiscoverPage() {
 
           <button
             className={`disc-featured-apply${
-              appStatus !== "none" ? " disc-featured-apply--applied" : ""
+              appStatus === "applied"
+                ? " disc-featured-apply--applied"
+                : appStatus === "pending"
+                  ? " disc-featured-apply--pending"
+                  : ""
             }`}
             onClick={() => {
               if (appStatus === "none") handleApply(c.id);
@@ -688,8 +731,8 @@ export default function DiscoverPage() {
             {appStatus === "applied"
               ? "✓ APPLIED"
               : appStatus === "pending"
-                ? "⏳ PENDING REVIEW"
-                : "APPLY NOW"}
+                ? "PENDING REVIEW"
+                : "APPLY NOW →"}
             {appStatus === "applied" && (
               <span className="disc-featured-apply-success" />
             )}
@@ -717,7 +760,7 @@ export default function DiscoverPage() {
             <p className="disc-hero-sub">
               47 CAMPAIGNS
               <span className="disc-hero-sub-sep" />
-              NYC AREA
+              WILLIAMSBURG · CHELSEA · SOHO
               <span className="disc-hero-sub-sep" />
               UPDATED 2H AGO
             </p>
@@ -921,32 +964,110 @@ export default function DiscoverPage() {
                 ? "matching campaigns"
                 : "campaigns available"}
             </span>
-            <div className="disc-sort-row">
-              <span className="disc-sort-label">Sort</span>
-              {(
-                [
-                  { key: "match" as SortKey, label: "Best Match" },
-                  { key: "payout" as SortKey, label: "Highest Pay" },
-                  {
-                    key: "ending-soon" as SortKey,
-                    label: "Ending Soon",
-                  },
-                  { key: "spots" as SortKey, label: "Most Spots" },
-                ] satisfies { key: SortKey; label: string }[]
-              ).map(({ key, label }) => (
+            <div className="disc-results-bar-right">
+              <div className="disc-sort-row">
+                <span className="disc-sort-label">Sort</span>
+                {(
+                  [
+                    { key: "match" as SortKey, label: "Best Match" },
+                    { key: "payout" as SortKey, label: "Highest Pay" },
+                    {
+                      key: "ending-soon" as SortKey,
+                      label: "Ending Soon",
+                    },
+                    { key: "spots" as SortKey, label: "Most Spots" },
+                  ] satisfies { key: SortKey; label: string }[]
+                ).map(({ key, label }) => (
+                  <button
+                    key={key}
+                    className={`disc-sort-btn${sortKey === key ? " disc-sort-btn--active" : ""}`}
+                    onClick={() => setSortKey(key)}
+                  >
+                    {label}
+                  </button>
+                ))}
+              </div>
+              {/* Map/Grid toggle */}
+              <div
+                className="disc-view-toggle"
+                role="group"
+                aria-label="View mode"
+              >
                 <button
-                  key={key}
-                  className={`disc-sort-btn${sortKey === key ? " disc-sort-btn--active" : ""}`}
-                  onClick={() => setSortKey(key)}
+                  className={`disc-view-btn${viewMode === "grid" ? " disc-view-btn--active" : ""}`}
+                  onClick={() => setViewMode("grid")}
+                  aria-label="Grid view"
+                  title="Grid view"
                 >
-                  {label}
+                  <svg
+                    width="14"
+                    height="14"
+                    viewBox="0 0 14 14"
+                    fill="none"
+                    aria-hidden="true"
+                  >
+                    <rect
+                      x="0"
+                      y="0"
+                      width="6"
+                      height="6"
+                      fill="currentColor"
+                    />
+                    <rect
+                      x="8"
+                      y="0"
+                      width="6"
+                      height="6"
+                      fill="currentColor"
+                    />
+                    <rect
+                      x="0"
+                      y="8"
+                      width="6"
+                      height="6"
+                      fill="currentColor"
+                    />
+                    <rect
+                      x="8"
+                      y="8"
+                      width="6"
+                      height="6"
+                      fill="currentColor"
+                    />
+                  </svg>
+                  GRID
                 </button>
-              ))}
+                <button
+                  className={`disc-view-btn${viewMode === "map" ? " disc-view-btn--active" : ""}`}
+                  onClick={() => setViewMode("map")}
+                  aria-label="Map view"
+                  title="Map view"
+                >
+                  <svg
+                    width="12"
+                    height="14"
+                    viewBox="0 0 12 16"
+                    fill="none"
+                    aria-hidden="true"
+                  >
+                    <path
+                      d="M6 0C3.24 0 1 2.24 1 5c0 3.75 5 11 5 11s5-7.25 5-11c0-2.76-2.24-5-5-5zm0 6.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"
+                      fill="currentColor"
+                    />
+                  </svg>
+                  MAP
+                </button>
+              </div>
             </div>
           </div>
 
-          {/* Campaign grid */}
-          {filteredCampaigns.length === 0 ? (
+          {/* Campaign grid / Map view */}
+          {viewMode === "map" ? (
+            <MapPlaceholder
+              count={filteredCampaigns.length}
+              onSwitch={() => setViewMode("grid")}
+            />
+          ) : filteredCampaigns.length === 0 ? (
             <EmptyState onClear={clearFilters} />
           ) : (
             <div className="disc-grid">
@@ -957,6 +1078,60 @@ export default function DiscoverPage() {
           )}
         </section>
       </main>
+    </div>
+  );
+}
+
+/* ── Map Placeholder ──────────────────────────────────────── */
+
+function MapPlaceholder({
+  count,
+  onSwitch,
+}: {
+  count: number;
+  onSwitch: () => void;
+}) {
+  return (
+    <div className="disc-map-placeholder">
+      <div className="disc-map-placeholder-bg">
+        {/* Decorative grid lines */}
+        <div className="disc-map-grid" aria-hidden="true" />
+      </div>
+      <div className="disc-map-content">
+        <div className="disc-map-pin-cluster" aria-hidden="true">
+          {[
+            { left: "22%", top: "38%", payout: "$45", delay: "0ms" },
+            { left: "38%", top: "55%", payout: "$32", delay: "80ms" },
+            { left: "55%", top: "30%", payout: "$85", delay: "160ms" },
+            { left: "68%", top: "50%", payout: "$60", delay: "240ms" },
+            { left: "44%", top: "70%", payout: "$28", delay: "320ms" },
+          ].map((pin, i) => (
+            <div
+              key={i}
+              className="disc-map-pin"
+              style={
+                {
+                  left: pin.left,
+                  top: pin.top,
+                  "--pin-delay": pin.delay,
+                } as React.CSSProperties
+              }
+            >
+              <span className="disc-map-pin-label">{pin.payout}</span>
+            </div>
+          ))}
+        </div>
+        <div className="disc-map-message">
+          <div className="disc-map-icon">◎</div>
+          <h3 className="disc-map-title">Map View</h3>
+          <p className="disc-map-sub">
+            {count} campaigns near you — interactive map coming soon
+          </p>
+          <button className="disc-map-switch-btn" onClick={onSwitch}>
+            Back to Grid
+          </button>
+        </div>
+      </div>
     </div>
   );
 }

@@ -1,5 +1,5 @@
-/* ── Public Creator Profile — 20x Refresh ───────────────────────────────────
-   Design: editorial magazine hero + sticky grid campaigns
+/* ── Public Creator Profile — Wave 2 Visual Polish ───────────────────────────
+   Design: editorial magazine hero + merchant-impressive stats + trust signals
    border-radius: 0 everywhere (exceptions: avatar 50%, status dots 50%)
    Colors: #c1121f / #780000 / #003049 / #669bbc / #f5f2ec / #c9a96e
    Fonts: Darky (headlines), CS Genio Mono (all UI text)
@@ -90,7 +90,7 @@
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(ellipse 70% 80% at 15% 50%, rgba(193, 18, 31, 0.12) 0%, transparent 60%),
+    radial-gradient(ellipse 70% 80% at 15% 50%, rgba(193, 18, 31, 0.14) 0%, transparent 60%),
     radial-gradient(ellipse 50% 60% at 85% 20%, rgba(102, 155, 188, 0.08) 0%, transparent 50%);
   pointer-events: none;
   z-index: 0;
@@ -126,6 +126,7 @@
   display: flex;
   align-items: center;
   gap: 12px;
+  flex-wrap: wrap;
 }
 
 .pub-niche-dot {
@@ -155,6 +156,30 @@
   gap: 12px;
   margin-bottom: 20px;
   flex-wrap: wrap;
+}
+
+/* Verified badge */
+.pub-verified-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(201, 169, 110, 0.15);
+  border: 1px solid rgba(201, 169, 110, 0.35);
+  padding: 5px 12px;
+  font-family: "CS Genio Mono", monospace;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #c9a96e;
+}
+
+.pub-verified-dot {
+  width: 6px;
+  height: 6px;
+  background: #c9a96e;
+  border-radius: 50%;
+  flex-shrink: 0;
 }
 
 /* Score badge inside hero */
@@ -250,8 +275,8 @@
 
 /* Avatar — 50% border-radius exception per design system */
 .pub-avatar {
-  width: 140px;
-  height: 140px;
+  width: 160px;
+  height: 160px;
   border-radius: 50%;
   border: 4px solid #c1121f;
   background: rgba(245, 242, 236, 0.1);
@@ -260,7 +285,7 @@
   justify-content: center;
   overflow: hidden;
   flex-shrink: 0;
-  box-shadow: 0 0 0 8px rgba(193, 18, 31, 0.12);
+  box-shadow: 0 0 0 8px rgba(193, 18, 31, 0.1), 0 24px 48px rgba(0,0,0,0.3);
 }
 
 .pub-avatar-img {
@@ -271,7 +296,7 @@
 
 .pub-avatar-initial {
   font-family: "Darky", serif;
-  font-size: 52px;
+  font-size: 60px;
   font-weight: 900;
   line-height: 1;
   letter-spacing: -0.04em;
@@ -283,11 +308,11 @@
   display: none;
 }
 
-/* ── 3. Stats bar (dark bg continues) ─────────────────────────────────────── */
+/* ── 3. Stats bar — merchant-impressive ────────────────────────────────────── */
 
 .pub-stats-strip {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(5, 1fr);
   background: #003049;
   border-top: 1px solid rgba(245, 242, 236, 0.06);
 }
@@ -323,13 +348,25 @@
   background: #c1121f;
 }
 
+.pub-stat:nth-child(3)::after {
+  background: #c9a96e;
+}
+
 .pub-stat-value {
   font-family: "Darky", serif;
-  font-size: 36px;
+  font-size: 40px;
   font-weight: 900;
   color: #f5f2ec;
-  letter-spacing: -0.04em;
+  letter-spacing: -0.05em;
   line-height: 1;
+}
+
+.pub-stat:first-child .pub-stat-value {
+  color: #c1121f;
+}
+
+.pub-stat:nth-child(3) .pub-stat-value {
+  color: #c9a96e;
 }
 
 .pub-stat-label {
@@ -346,13 +383,13 @@
 
 .pub-bio-section {
   background: #ffffff;
-  padding: 48px 40px;
+  padding: 56px 40px;
   border-bottom: 1px solid rgba(0, 48, 73, 0.08);
   max-width: 100%;
 }
 
 .pub-bio-inner {
-  max-width: 720px;
+  max-width: 800px;
   margin: 0 auto;
 }
 
@@ -361,14 +398,115 @@
   font-size: 18px;
   line-height: 1.7;
   color: #003049;
-  margin: 0;
+  margin: 0 0 32px;
   max-width: 680px;
 }
 
-/* ── 5. Social links ───────────────────────────────────────────────────────── */
+/* Trust signals bar below bio */
+.pub-trust-signals {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  flex-wrap: wrap;
+  padding-top: 24px;
+  border-top: 1px solid rgba(0, 48, 73, 0.08);
+}
+
+.pub-trust-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.pub-trust-icon {
+  width: 6px;
+  height: 6px;
+  background: #c9a96e;
+  flex-shrink: 0;
+}
+
+.pub-trust-text {
+  font-family: "CS Genio Mono", monospace;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(0, 48, 73, 0.5);
+}
+
+/* ── 5. Media gallery ──────────────────────────────────────────────────────── */
+
+.pub-media-section {
+  background: #f5f2ec;
+  padding: 48px 40px;
+  border-bottom: 1px solid rgba(0, 48, 73, 0.08);
+  overflow: hidden;
+}
+
+.pub-media-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.pub-media-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2px;
+  margin-top: 20px;
+  background: rgba(0, 48, 73, 0.08);
+}
+
+.pub-media-card {
+  position: relative;
+  background: rgba(0, 48, 73, 0.06);
+  aspect-ratio: 3/4;
+  overflow: hidden;
+  cursor: pointer;
+  transition: opacity 150ms ease;
+}
+
+.pub-media-card:hover {
+  opacity: 0.9;
+}
+
+.pub-media-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 16px;
+  background: linear-gradient(160deg, rgba(0,48,73,0.12) 0%, rgba(0,48,73,0.35) 100%);
+  position: relative;
+}
+
+.pub-media-placeholder::before {
+  content: "▶";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -60%);
+  font-size: 24px;
+  color: rgba(245, 242, 236, 0.25);
+}
+
+.pub-media-category {
+  font-family: "CS Genio Mono", monospace;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(245, 242, 236, 0.7);
+  background: rgba(0, 48, 73, 0.6);
+  padding: 3px 8px;
+  align-self: flex-start;
+}
+
+/* ── 6. Social links ───────────────────────────────────────────────────────── */
 
 .pub-social-section {
-  background: #f5f2ec;
+  background: #fafaf8;
   padding: 32px 40px;
   border-bottom: 1px solid rgba(0, 48, 73, 0.08);
   overflow: hidden;
@@ -395,19 +533,30 @@
 .pub-social-card {
   background: #ffffff;
   border: 1px solid rgba(0, 48, 73, 0.1);
-  padding: 16px 20px;
+  padding: 20px 24px;
   display: flex;
   flex-direction: column;
   gap: 4px;
   flex-shrink: 0;
-  min-width: 160px;
+  min-width: 180px;
   text-decoration: none;
   transition: border-color 150ms ease, box-shadow 150ms ease;
+  position: relative;
+}
+
+.pub-social-card::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: #669bbc;
 }
 
 .pub-social-card:hover {
   border-color: rgba(0, 48, 73, 0.25);
-  box-shadow: 0 4px 12px rgba(0, 48, 73, 0.06);
+  box-shadow: 0 4px 16px rgba(0, 48, 73, 0.06);
 }
 
 .pub-social-platform {
@@ -421,19 +570,19 @@
 
 .pub-social-handle {
   font-family: "CS Genio Mono", monospace;
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 700;
   color: #003049;
 }
 
 .pub-social-followers {
   font-family: "Darky", serif;
-  font-size: 22px;
-  font-weight: 700;
+  font-size: 28px;
+  font-weight: 900;
   color: #c1121f;
-  letter-spacing: -0.03em;
+  letter-spacing: -0.04em;
   line-height: 1;
-  margin-top: 4px;
+  margin-top: 6px;
 }
 
 .pub-social-followers-label {
@@ -454,7 +603,7 @@
   margin: 0 0 20px;
 }
 
-/* ── 6. Tier journey ───────────────────────────────────────────────────────── */
+/* ── 7. Tier journey ───────────────────────────────────────────────────────── */
 
 .pub-tier-section {
   background: #f5f2ec;
@@ -467,17 +616,43 @@
   margin: 0 auto;
 }
 
-/* ── 7. Campaign history (Sticky Grid Scroll style) ────────────────────────── */
+/* ── 8. Campaign history (Sticky Grid Scroll style) ────────────────────────── */
 
 .pub-campaigns-section {
   background: #ffffff;
-  padding: 48px 40px;
+  padding: 56px 40px;
   border-bottom: 1px solid rgba(0, 48, 73, 0.08);
 }
 
 .pub-campaigns-inner {
   max-width: 1200px;
   margin: 0 auto;
+}
+
+.pub-campaigns-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.pub-campaigns-count {
+  font-family: "Darky", serif;
+  font-size: 56px;
+  font-weight: 900;
+  color: #003049;
+  letter-spacing: -0.05em;
+  line-height: 1;
+}
+
+.pub-campaigns-count-label {
+  font-family: "CS Genio Mono", monospace;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(0, 48, 73, 0.4);
+  margin-left: 8px;
 }
 
 /* 3-column grid with stickyGridItem reveal animation */
@@ -490,7 +665,7 @@
 
 .pub-campaign-card {
   background: #ffffff;
-  padding: 24px;
+  padding: 28px;
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -518,7 +693,7 @@
 
 /* Top accent line per tier color */
 .pub-campaign-card-accent {
-  width: 32px;
+  width: 40px;
   height: 3px;
   background: #c1121f;
   flex-shrink: 0;
@@ -527,15 +702,16 @@
 .pub-campaign-header {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 8px;
 }
 
 .pub-campaign-business {
-  font-family: "CS Genio Mono", monospace;
-  font-size: 15px;
+  font-family: "Darky", serif;
+  font-size: 18px;
   font-weight: 700;
   color: #003049;
-  line-height: 1.2;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
 }
 
 .pub-campaign-category {
@@ -557,7 +733,7 @@
   justify-content: space-between;
   gap: 8px;
   margin-top: auto;
-  padding-top: 12px;
+  padding-top: 14px;
   border-top: 1px solid rgba(0, 48, 73, 0.06);
 }
 
@@ -569,10 +745,10 @@
 
 .pub-campaign-payout {
   font-family: "Darky", serif;
-  font-size: 18px;
-  font-weight: 700;
-  color: #c1121f;
-  letter-spacing: -0.03em;
+  font-size: 22px;
+  font-weight: 900;
+  color: #c9a96e;
+  letter-spacing: -0.04em;
   line-height: 1;
 }
 
@@ -584,11 +760,75 @@
   letter-spacing: 0;
 }
 
-/* ── 8. CTA section ────────────────────────────────────────────────────────── */
+/* ── 9. Invite CTA banner ──────────────────────────────────────────────────── */
+
+.pub-invite-banner {
+  background: #f5f2ec;
+  padding: 40px;
+  border-bottom: 1px solid rgba(0, 48, 73, 0.08);
+}
+
+.pub-invite-banner-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 32px;
+  flex-wrap: wrap;
+}
+
+.pub-invite-banner-text {
+  flex: 1;
+  min-width: 200px;
+}
+
+.pub-invite-banner-headline {
+  font-family: "Darky", serif;
+  font-size: 28px;
+  font-weight: 900;
+  color: #003049;
+  letter-spacing: -0.04em;
+  line-height: 1;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+}
+
+.pub-invite-banner-sub {
+  font-family: "CS Genio Mono", monospace;
+  font-size: 13px;
+  color: rgba(0, 48, 73, 0.55);
+  line-height: 1.5;
+}
+
+.pub-invite-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: #c1121f;
+  color: #ffffff;
+  font-family: "CS Genio Mono", monospace;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 16px 32px;
+  border-radius: 0;
+  text-decoration: none;
+  transition: background 150ms ease;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+.pub-invite-btn:hover {
+  background: #780000;
+}
+
+/* ── 10. CTA section ───────────────────────────────────────────────────────── */
 
 .pub-cta-section {
   background: #003049;
-  padding: 80px 40px;
+  padding: 96px 40px;
   text-align: center;
   position: relative;
   overflow: hidden;
@@ -598,7 +838,7 @@
   content: "";
   position: absolute;
   inset: 0;
-  background: radial-gradient(ellipse 60% 80% at 50% 50%, rgba(193, 18, 31, 0.12) 0%, transparent 60%);
+  background: radial-gradient(ellipse 60% 80% at 50% 50%, rgba(193, 18, 31, 0.14) 0%, transparent 60%);
   pointer-events: none;
 }
 
@@ -616,7 +856,7 @@
 
 .pub-cta-headline {
   font-family: "Darky", serif;
-  font-size: clamp(36px, 6vw, 64px);
+  font-size: clamp(40px, 6vw, 72px);
   font-weight: 900;
   color: #f5f2ec;
   letter-spacing: -0.05em;
@@ -631,7 +871,7 @@
   font-family: "CS Genio Mono", monospace;
   font-size: 14px;
   color: rgba(245, 242, 236, 0.6);
-  margin: 0 auto 40px;
+  margin: 0 auto 48px;
   line-height: 1.65;
   max-width: 440px;
   position: relative;
@@ -641,7 +881,7 @@
 .pub-cta-button {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   background: #c1121f;
   color: #ffffff;
   font-family: "CS Genio Mono", monospace;
@@ -649,7 +889,7 @@
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  padding: 18px 40px;
+  padding: 20px 48px;
   border-radius: 0;
   text-decoration: none;
   transition: background 150ms ease;
@@ -665,13 +905,13 @@
   font-family: "CS Genio Mono", monospace;
   font-size: 11px;
   color: rgba(245, 242, 236, 0.3);
-  margin: 24px 0 0;
+  margin: 28px 0 0;
   letter-spacing: 0.04em;
   position: relative;
   z-index: 1;
 }
 
-/* ── 9. Footer ─────────────────────────────────────────────────────────────── */
+/* ── 11. Footer ────────────────────────────────────────────────────────────── */
 
 .profile-footer {
   background: #003049;
@@ -721,6 +961,14 @@
   .pub-campaigns {
     grid-template-columns: repeat(2, 1fr);
   }
+
+  .pub-stats-strip {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .pub-media-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
 }
 
 @media (max-width: 700px) {
@@ -754,6 +1002,7 @@
 
   .pub-stats-strip {
     grid-template-columns: repeat(2, 1fr);
+    gap: 0;
   }
 
   .pub-stat {
@@ -771,7 +1020,8 @@
   .pub-bio-section,
   .pub-social-section,
   .pub-tier-section,
-  .pub-campaigns-section {
+  .pub-campaigns-section,
+  .pub-media-section {
     padding: 32px 20px;
   }
 
@@ -783,8 +1033,31 @@
     grid-template-columns: 1fr;
   }
 
+  .pub-media-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
   .pub-cta-section {
-    padding: 56px 20px;
+    padding: 64px 20px;
+  }
+
+  .pub-invite-banner {
+    padding: 32px 20px;
+  }
+
+  .pub-invite-banner-inner {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+  }
+
+  .pub-invite-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .pub-campaigns-count {
+    font-size: 40px;
   }
 
   .profile-footer {

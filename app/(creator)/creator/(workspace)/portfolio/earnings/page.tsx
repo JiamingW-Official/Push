@@ -298,6 +298,22 @@ export default function CreatorEarningsPage() {
         </div>
       </section>
 
+      {/* ── Quick nav tabs ──────────────────────────────────── */}
+      <nav className="earn-quick-nav" aria-label="Portfolio sections">
+        <div className="earn-quick-nav-inner">
+          <Link href="/creator/portfolio" className="earn-nav-tab">
+            Identity
+          </Link>
+          <span className="earn-nav-tab earn-nav-tab--active">
+            <span className="earn-nav-tab-dot" />
+            Earnings
+          </span>
+          <Link href="/creator/portfolio/archive" className="earn-nav-tab">
+            Archive
+          </Link>
+        </div>
+      </nav>
+
       <div className="earn-main">
         {/* ── Monthly bar chart ───────────────────────────── */}
         <section className="earn-section earn-reveal">

@@ -13,15 +13,57 @@
   font-family: "CS Genio Mono", "Courier New", monospace;
 }
 
+/* ── Share bar (below hero) ──────────────────────────────── */
+
+.pc-share-bar {
+  background: rgba(0, 48, 73, 0.96);
+  padding: 16px 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  border-bottom: 1px solid rgba(245, 242, 236, 0.06);
+}
+
+.pc-share-label {
+  font-family: "CS Genio Mono", monospace;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(245, 242, 236, 0.3);
+}
+
+.pc-share-btn {
+  font-family: "CS Genio Mono", monospace;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(245, 242, 236, 0.7);
+  background: rgba(245, 242, 236, 0.06);
+  border: 1px solid rgba(245, 242, 236, 0.12);
+  padding: 8px 18px;
+  border-radius: 0;
+  cursor: pointer;
+  transition: background 150ms ease, color 150ms ease;
+}
+
+.pc-share-btn:hover {
+  background: rgba(245, 242, 236, 0.1);
+  color: #f5f2ec;
+}
+
 /* ── Hero panel ──────────────────────────────────────────── */
 
 .pc-hero {
   background: #003049;
-  padding: 72px 40px 56px;
+  padding: 80px 40px 64px;
   text-align: center;
   width: 100%;
   position: relative;
   overflow: hidden;
+  border-bottom: 4px solid #c1121f;
 }
 
 /* Layered bg: radial glow + diagonal grain texture */
@@ -200,7 +242,7 @@
 .pc-hero-payout-amount {
   font-family: "Darky", serif;
   font-weight: 900;
-  font-size: clamp(64px, 14vw, 112px);
+  font-size: clamp(80px, 16vw, 128px);
   color: #f5f2ec;
   letter-spacing: -0.06em;
   line-height: 1;
@@ -298,7 +340,7 @@
 }
 
 .pc-result-cell:last-child .pc-result-cell-value {
-  color: #c1121f;
+  color: #c9a96e;
 }
 
 .pc-result-cell-sub {
@@ -789,7 +831,7 @@
   font-family: "Darky", serif;
   font-weight: 900;
   font-size: 56px;
-  color: #c1121f;
+  color: #c9a96e;
   letter-spacing: -0.06em;
   line-height: 1;
   margin-bottom: 8px;
@@ -949,21 +991,27 @@
   font-family: "CS Genio Mono", monospace;
   font-size: 13px;
   color: rgba(0, 48, 73, 0.55);
-  padding: 40px 32px 64px;
-  border-top: 1px solid rgba(0, 48, 73, 0.08);
-  background: #f5f2ec;
+  padding: 48px 32px 80px;
+  border-top: 3px solid #003049;
+  background: #003049;
 }
 
 .pc-motivation-count {
-  font-weight: 700;
-  color: #003049;
-  margin-bottom: 6px;
-  font-size: 14px;
+  font-family: "Darky", serif;
+  font-weight: 900;
+  font-size: 28px;
+  color: #f5f2ec;
+  margin-bottom: 8px;
+  letter-spacing: -0.03em;
+  line-height: 1;
 }
 
 .pc-motivation-tagline {
+  font-family: "CS Genio Mono", monospace;
+  font-size: 12px;
   font-style: italic;
-  color: rgba(0, 48, 73, 0.45);
+  color: rgba(245, 242, 236, 0.4);
+  letter-spacing: 0.04em;
 }
 
 /* ── Loading state ───────────────────────────────────────── */

@@ -71,6 +71,22 @@
   font-style: normal;
   font-display: optional;
 }
+/* CS Genio Mono — primary body/UI font (canonical name: 'CS Genio Mono') */
+@font-face {
+  font-family: 'CS Genio Mono';
+  src: url('/fonts/CSGenioMono-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'CS Genio Mono';
+  src: url('/fonts/CSGenioMono-Italic.ttf') format('truetype');
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+/* Alias: legacy components using 'CSGenioMono' still resolve correctly */
 @font-face {
   font-family: 'CSGenioMono';
   src: url('/fonts/CSGenioMono-Regular.ttf') format('truetype');
@@ -115,7 +131,7 @@
 
   /* Typography */
   --font-display: 'Darky', sans-serif;
-  --font-body:    'CSGenioMono', 'SF Mono', 'Fira Code', monospace;
+  --font-body:    'CS Genio Mono', 'CSGenioMono', 'SF Mono', 'Fira Code', monospace;
 
   /* Type Scale (Design.md) */
   --text-display: clamp(64px, 12vw, 160px);
@@ -163,6 +179,7 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+  border-radius: 0; /* Push Design Rule: no rounded corners globally */
 }
 html {
   font-size: 16px;
@@ -753,4 +770,57 @@ a, button {
     content: " (" attr(href) ")";
     font-size: 10px;
   }
+}
+
+/* ============================================================
+   13. Global Keyframes Library
+   All reusable animation keyframes centralised here.
+   ============================================================ */
+
+/* Already defined above: shimmer */
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%       { opacity: 0.6; transform: scale(0.97); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes slideInRight {
+  from { transform: translateX(24px); opacity: 0; }
+  to   { transform: translateX(0);    opacity: 1; }
+}
+
+@keyframes scrollReveal {
+  from { transform: translateY(24px); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+
+@keyframes feedCardIn {
+  from { transform: translateY(16px) scale(0.98); opacity: 0; }
+  to   { transform: translateY(0)    scale(1);    opacity: 1; }
+}
+
+@keyframes scoreRingFill {
+  from { stroke-dashoffset: var(--ring-circumference, 283); }
+  to   { stroke-dashoffset: var(--ring-offset, 0); }
+}
+
+@keyframes progressFill {
+  from { width: 0; }
+  to   { width: var(--progress-target, 100%); }
+}
+
+@keyframes tierShimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position:  200% center; }
+}
+
+@keyframes badgeShimmer {
+  0%   { background-position: -200% center; opacity: 0.7; }
+  50%  { background-position:    0% center; opacity: 1;   }
+  100% { background-position:  200% center; opacity: 0.7; }
 }

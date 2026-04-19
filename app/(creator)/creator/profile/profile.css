@@ -1,5 +1,5 @@
 /* ============================================================
-   Creator Profile Page — 20x Design Refresh
+   Creator Profile Page — Wave 2 Visual Polish
    Design System: border-radius:0, 8px grid, Push brand palette
    ============================================================ */
 
@@ -8,9 +8,9 @@
 .profile-page {
   --pf-line: rgba(0, 48, 73, 0.1);
   --pf-surface-tint: rgba(0, 48, 73, 0.03);
-  max-width: 960px;
+  max-width: 1040px;
   margin: 0 auto;
-  padding: 40px 32px 80px;
+  padding: 40px 32px 100px;
 }
 
 .profile-loading {
@@ -38,7 +38,7 @@
 }
 
 .profile-topbar-title {
-  font-family: "Darky", serif;
+  font-family: "CS Genio Mono", monospace;
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.16em;
@@ -99,7 +99,7 @@
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: rgba(0, 48, 73, 0.45);
-  padding: 24px 0 8px;
+  padding: 28px 0 12px;
   border-top: 1px solid rgba(0, 48, 73, 0.1);
   margin-bottom: 16px;
 }
@@ -111,32 +111,43 @@
   grid-template-columns: auto 1fr auto;
   align-items: flex-start;
   gap: 32px;
-  background: #ffffff;
-  border: 1px solid rgba(0, 48, 73, 0.1);
-  border-top: 3px solid #003049;
-  padding: 32px;
+  background: #003049;
+  border-top: 4px solid #c1121f;
+  padding: 40px;
   margin-bottom: 2px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Subtle grain overlay on hero */
+.pf-hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 80% 100% at 110% 50%, rgba(102, 155, 188, 0.08) 0%, transparent 60%);
+  pointer-events: none;
 }
 
 /* Avatar — 50% exception per design system */
 .pf-avatar {
-  width: 96px;
-  height: 96px;
+  width: 104px;
+  height: 104px;
   border-radius: 50%;
-  border: 3px solid #003049;
-  background: #003049;
+  border: 3px solid rgba(245, 242, 236, 0.2);
+  background: rgba(245, 242, 236, 0.08);
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
   overflow: hidden;
   position: relative;
+  z-index: 1;
 }
 
 .pf-avatar-initials {
   font-family: "Darky", serif;
   font-weight: 900;
-  font-size: 32px;
+  font-size: 36px;
   color: #f5f2ec;
   line-height: 1;
   letter-spacing: -0.03em;
@@ -146,34 +157,37 @@
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 12px;
   min-width: 0;
+  position: relative;
+  z-index: 1;
 }
 
 .pf-name {
   font-family: "Darky", serif;
-  font-size: 40px;
-  font-weight: 800;
-  letter-spacing: -0.04em;
-  color: #003049;
-  line-height: 1;
+  font-size: 52px;
+  font-weight: 900;
+  letter-spacing: -0.05em;
+  color: #f5f2ec;
+  line-height: 0.95;
   margin: 0;
+  text-transform: uppercase;
 }
 
 .pf-hero-meta-row {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: 10px;
 }
 
 .pf-meta-item {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
+  gap: 5px;
   font-family: "CS Genio Mono", monospace;
   font-size: 12px;
-  color: rgba(0, 48, 73, 0.55);
+  color: rgba(245, 242, 236, 0.55);
 }
 
 .pf-meta-icon {
@@ -186,7 +200,7 @@
 .pf-bio {
   font-family: "CS Genio Mono", monospace;
   font-size: 14px;
-  color: #4a5568;
+  color: rgba(245, 242, 236, 0.65);
   line-height: 1.65;
   max-width: 460px;
   margin: 0;
@@ -195,7 +209,7 @@
 .pf-member-since {
   font-family: "CS Genio Mono", monospace;
   font-size: 11px;
-  color: rgba(0, 48, 73, 0.4);
+  color: rgba(245, 242, 236, 0.3);
   letter-spacing: 0.04em;
 }
 
@@ -206,22 +220,64 @@
   align-items: flex-end;
   gap: 16px;
   flex-shrink: 0;
+  position: relative;
+  z-index: 1;
 }
 
+/* ConversionOracle™ score ring */
 .pf-score-display {
   display: flex;
   flex-direction: column;
-  align-items: flex-end;
-  gap: 2px;
-  padding: 16px 20px;
-  background: #003049;
-  min-width: 100px;
+  align-items: center;
+  gap: 8px;
+}
+
+.pf-score-ring-wrap {
+  position: relative;
+  width: 100px;
+  height: 100px;
+}
+
+.pf-score-ring-svg {
+  width: 100px;
+  height: 100px;
+  transform: rotate(-90deg);
+}
+
+.pf-score-ring-track {
+  fill: none;
+  stroke: rgba(245, 242, 236, 0.08);
+  stroke-width: 4;
+}
+
+.pf-score-ring-fill {
+  fill: none;
+  stroke: #c1121f;
+  stroke-width: 4;
+  stroke-linecap: square;
+  stroke-dasharray: 263; /* 2π × 42 */
+  stroke-dashoffset: 263;
+  animation: scoreRingFill 1s ease 400ms forwards;
+}
+
+@keyframes scoreRingFill {
+  to { stroke-dashoffset: var(--ring-offset, 100); }
+}
+
+.pf-score-ring-inner {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
 }
 
 .pf-score-number {
   font-family: "Darky", serif;
   font-weight: 900;
-  font-size: 52px;
+  font-size: 36px;
   color: #f5f2ec;
   letter-spacing: -0.06em;
   line-height: 1;
@@ -229,24 +285,36 @@
 
 .pf-score-label {
   font-family: "CS Genio Mono", monospace;
-  font-size: 10px;
+  font-size: 7px;
   font-weight: 700;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: rgba(245, 242, 236, 0.5);
+  color: rgba(245, 242, 236, 0.4);
+  text-align: center;
+  line-height: 1.2;
+}
+
+.pf-score-oracle-label {
+  font-family: "CS Genio Mono", monospace;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(245, 242, 236, 0.35);
+  text-align: center;
 }
 
 /* Edit Profile button */
 .pf-edit-btn {
   padding: 10px 20px;
   background: transparent;
-  color: #003049;
+  color: rgba(245, 242, 236, 0.7);
   font-family: "CS Genio Mono", monospace;
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  border: 1.5px solid rgba(0, 48, 73, 0.3);
+  border: 1.5px solid rgba(245, 242, 236, 0.2);
   border-radius: 0;
   cursor: pointer;
   transition: background 150ms ease, color 150ms ease, border-color 150ms ease;
@@ -254,9 +322,9 @@
 }
 
 .pf-edit-btn:hover {
-  background: #003049;
+  background: rgba(245, 242, 236, 0.1);
   color: #f5f2ec;
-  border-color: #003049;
+  border-color: rgba(245, 242, 236, 0.4);
 }
 
 /* ── Stats Grid ──────────────────────────────────────────── */
@@ -270,7 +338,7 @@
 }
 
 .pf-stat-card {
-  padding: 24px 20px;
+  padding: 28px 24px;
   background: #ffffff;
   position: relative;
   overflow: hidden;
@@ -286,18 +354,30 @@
   background: #669bbc;
 }
 
-.pf-stat-card--score::before {
+.pf-stat-card--champagne::before {
+  background: #c9a96e;
+}
+
+.pf-stat-card--red::before {
   background: #c1121f;
+}
+
+.pf-stat-card--dark::before {
+  background: #003049;
 }
 
 .pf-stat-value {
   font-family: "Darky", serif;
-  font-weight: 700;
-  font-size: 28px;
+  font-weight: 900;
+  font-size: 40px;
   color: #003049;
-  letter-spacing: -0.04em;
+  letter-spacing: -0.05em;
   line-height: 1;
-  margin-bottom: 8px;
+  margin-bottom: 10px;
+}
+
+.pf-stat-card--champagne .pf-stat-value {
+  color: #c9a96e;
 }
 
 .pf-stat-label {
@@ -346,15 +426,15 @@
 
 .pf-earnings-value {
   font-family: "Darky", serif;
-  font-weight: 700;
-  font-size: 32px;
+  font-weight: 900;
+  font-size: 40px;
   color: #003049;
-  letter-spacing: -0.04em;
+  letter-spacing: -0.05em;
   line-height: 1;
 }
 
 .pf-earnings-item:first-child .pf-earnings-value {
-  color: #c1121f;
+  color: #c9a96e;
 }
 
 .pf-earnings-label {
@@ -364,6 +444,119 @@
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: rgba(0, 48, 73, 0.45);
+}
+
+/* ── Niche tags section ──────────────────────────────────── */
+
+.pf-niche-section {
+  background: #ffffff;
+  border: 1px solid rgba(0, 48, 73, 0.1);
+  padding: 24px 32px;
+  margin-bottom: 2px;
+}
+
+.pf-niche-tags-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+/* pill-shaped exception per design system */
+.pf-niche-tag {
+  font-family: "CS Genio Mono", monospace;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #003049;
+  background: rgba(0, 48, 73, 0.06);
+  border: 1px solid rgba(0, 48, 73, 0.12);
+  padding: 5px 14px;
+  border-radius: 50vh; /* pill exception */
+  transition: background 150ms ease, border-color 150ms ease;
+}
+
+.pf-niche-tag:hover {
+  background: rgba(0, 48, 73, 0.1);
+  border-color: rgba(0, 48, 73, 0.2);
+}
+
+.pf-niche-tag-add {
+  font-family: "CS Genio Mono", monospace;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(0, 48, 73, 0.35);
+  background: transparent;
+  border: 1px dashed rgba(0, 48, 73, 0.18);
+  padding: 5px 14px;
+  border-radius: 50vh; /* pill exception */
+  cursor: pointer;
+  transition: color 150ms ease, border-color 150ms ease;
+}
+
+.pf-niche-tag-add:hover {
+  color: #003049;
+  border-color: rgba(0, 48, 73, 0.3);
+}
+
+/* ── Social links section ────────────────────────────────── */
+
+.pf-social-section {
+  background: #ffffff;
+  border: 1px solid rgba(0, 48, 73, 0.1);
+  padding: 24px 32px;
+  margin-bottom: 2px;
+}
+
+.pf-social-links-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.pf-social-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 16px;
+  background: #fafaf8;
+  border: 1px solid rgba(0, 48, 73, 0.1);
+  text-decoration: none;
+  transition: border-color 150ms ease, background 150ms ease;
+}
+
+.pf-social-link:hover {
+  border-color: rgba(0, 48, 73, 0.25);
+  background: #f5f2ec;
+}
+
+.pf-social-link-platform {
+  font-family: "CS Genio Mono", monospace;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(0, 48, 73, 0.4);
+}
+
+.pf-social-link-handle {
+  font-family: "CS Genio Mono", monospace;
+  font-size: 13px;
+  font-weight: 700;
+  color: #003049;
+}
+
+.pf-social-link-followers {
+  font-family: "Darky", serif;
+  font-size: 16px;
+  font-weight: 700;
+  color: #c1121f;
+  letter-spacing: -0.03em;
+  line-height: 1;
 }
 
 /* ── Tier & Score Section ────────────────────────────────── */
@@ -743,44 +936,6 @@
   cursor: not-allowed;
 }
 
-/* ── Social platform tiles ───────────────────────────────── */
-
-.pf-social-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 8px;
-}
-
-.pf-social-tile {
-  padding: 16px;
-  border: 1px solid rgba(0, 48, 73, 0.1);
-  background: #fafaf8;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.pf-social-tile-name {
-  font-family: "CS Genio Mono", monospace;
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: rgba(0, 48, 73, 0.5);
-}
-
-.pf-social-tile-handle {
-  font-family: "CS Genio Mono", monospace;
-  font-size: 13px;
-  color: #003049;
-  font-weight: 700;
-}
-
-.pf-social-tile-handle--empty {
-  color: rgba(0, 48, 73, 0.3);
-  font-weight: 400;
-}
-
 /* ── Mobile ──────────────────────────────────────────────── */
 
 @media (max-width: 768px) {
@@ -791,8 +946,9 @@
   .pf-hero {
     grid-template-columns: auto 1fr;
     grid-template-rows: auto auto;
-    padding: 24px;
-    gap: 16px;
+    padding: 28px 24px;
+    gap: 20px;
+    border-top-width: 3px;
   }
 
   .pf-avatar {
@@ -801,11 +957,11 @@
   }
 
   .pf-avatar-initials {
-    font-size: 24px;
+    font-size: 26px;
   }
 
   .pf-name {
-    font-size: 28px;
+    font-size: 36px;
   }
 
   .pf-hero-right {
@@ -818,16 +974,29 @@
   .pf-score-display {
     flex-direction: row;
     align-items: center;
-    gap: 8px;
-    padding: 10px 16px;
+    gap: 12px;
+  }
+
+  .pf-score-ring-wrap {
+    width: 72px;
+    height: 72px;
+  }
+
+  .pf-score-ring-svg {
+    width: 72px;
+    height: 72px;
   }
 
   .pf-score-number {
-    font-size: 36px;
+    font-size: 26px;
   }
 
   .pf-stats-grid {
     grid-template-columns: repeat(2, 1fr);
+  }
+
+  .pf-stat-value {
+    font-size: 32px;
   }
 
   .pf-earnings-grid {
@@ -850,15 +1019,16 @@
     text-align: center;
   }
 
-  .pf-social-grid {
-    grid-template-columns: 1fr;
-  }
-
   .profile-form-card-header {
     padding: 16px 20px;
   }
 
   .form-section {
+    padding: 20px;
+  }
+
+  .pf-niche-section,
+  .pf-social-section {
     padding: 20px;
   }
 }
@@ -867,5 +1037,9 @@
   .pf-stats-grid {
     grid-template-columns: 1fr 1fr;
     gap: 1px;
+  }
+
+  .pf-stat-value {
+    font-size: 28px;
   }
 }

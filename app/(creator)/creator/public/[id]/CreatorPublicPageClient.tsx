@@ -37,11 +37,14 @@ type PublicCreator = {
   completion_rate: number;
   merchant_satisfaction: number;
   earnings_total: number;
+  walkins_total?: number;
+  avg_customer_value?: number;
   instagram_followers?: number;
   tiktok_followers?: number;
   avatar_url: string | undefined;
   campaign_history: CampaignHistoryItem[];
   niches?: string[];
+  is_verified?: boolean;
 };
 
 const DEMO_PUBLIC_CREATOR: PublicCreator = {
@@ -58,10 +61,13 @@ const DEMO_PUBLIC_CREATOR: PublicCreator = {
   completion_rate: 86,
   merchant_satisfaction: 4.2,
   earnings_total: 340,
+  walkins_total: 87,
+  avg_customer_value: 24,
   instagram_followers: 4200,
   tiktok_followers: 1800,
   avatar_url: undefined,
-  niches: ["Food", "Brooklyn", "Lifestyle"],
+  niches: ["Food", "Coffee", "Brooklyn", "Lifestyle"],
+  is_verified: true,
   campaign_history: [
     {
       id: "1",
@@ -116,6 +122,9 @@ const TIER_COLOR: Record<CreatorTier, string> = {
   closer: "#9b111e",
   partner: "#1a1a2e",
 };
+
+// Media gallery placeholder categories
+const MEDIA_CATEGORIES = ["Food", "Coffee", "Lifestyle", "Brooklyn"];
 
 function checkDemoMode(): boolean {
   if (typeof document === "undefined") return false;
@@ -207,18 +216,26 @@ export default function CreatorPublicPage() {
             {/* Big name */}
             <h1 className="pub-name">{creator.name}</h1>
 
-            {/* Tier + score badges */}
+            {/* Tier + score + verified badges */}
             <div className="pub-badge-row">
               <TierBadge tier={creator.tier} size="xl" />
               <div className="pub-score-badge">
                 <span
                   className="pub-score-badge-num"
-                  style={{ color: tierColor }}
+                  style={{
+                    color: tierColor === "#4a5568" ? "#c9a96e" : tierColor,
+                  }}
                 >
                   {creator.push_score}
                 </span>
-                <span className="pub-score-badge-label">Push Score</span>
+                <span className="pub-score-badge-label">ConversionOracle™</span>
               </div>
+              {creator.is_verified && (
+                <div className="pub-verified-badge">
+                  <span className="pub-verified-dot" />
+                  Verified
+                </div>
+              )}
             </div>
 
             {/* Meta */}
@@ -241,7 +258,9 @@ export default function CreatorPublicPage() {
           <div className="pub-hero-avatar-col">
             <div
               className="pub-avatar"
-              style={{ borderColor: tierColor }}
+              style={{
+                borderColor: tierColor === "#4a5568" ? "#c1121f" : tierColor,
+              }}
               aria-label={`${creator.name} avatar`}
             >
               {creator.avatar_url ? (
@@ -261,15 +280,10 @@ export default function CreatorPublicPage() {
         </div>
       </div>
 
-      {/* ── 3. Stats bar ────────────────────────────────────── */}
+      {/* ── 3. Stats bar — 5 merchant-relevant KPIs ─────────── */}
       <div className="pub-stats-strip">
         <div className="pub-stat">
-          <div
-            className="pub-stat-value"
-            style={{ color: tierColor === "#4a5568" ? "#f5f2ec" : tierColor }}
-          >
-            {creator.push_score}
-          </div>
+          <div className="pub-stat-value">{creator.push_score}</div>
           <div className="pub-stat-label">Push Score</div>
         </div>
         <div className="pub-stat">
@@ -277,8 +291,16 @@ export default function CreatorPublicPage() {
           <div className="pub-stat-label">Campaigns Done</div>
         </div>
         <div className="pub-stat">
-          <div className="pub-stat-value">{creator.completion_rate}%</div>
-          <div className="pub-stat-label">Completion Rate</div>
+          <div className="pub-stat-value">{creator.walkins_total ?? "—"}</div>
+          <div className="pub-stat-label">Walk-ins Driven</div>
+        </div>
+        <div className="pub-stat">
+          <div className="pub-stat-value">
+            {creator.avg_customer_value
+              ? `$${creator.avg_customer_value}`
+              : "—"}
+          </div>
+          <div className="pub-stat-label">Avg Customer Value</div>
         </div>
         <div className="pub-stat">
           <div className="pub-stat-value">
@@ -288,17 +310,59 @@ export default function CreatorPublicPage() {
         </div>
       </div>
 
-      {/* ── 4. Bio ──────────────────────────────────────────── */}
+      {/* ── 4. Bio + trust signals ──────────────────────────── */}
       {creator.bio && (
         <div className="pub-bio-section">
           <div className="pub-bio-inner">
             <p className="pub-section-eyebrow">About</p>
             <p className="pub-bio">{creator.bio}</p>
+            <div className="pub-trust-signals">
+              <div className="pub-trust-item">
+                <span className="pub-trust-icon" />
+                <span className="pub-trust-text">
+                  {creator.completion_rate}% completion rate
+                </span>
+              </div>
+              <div className="pub-trust-item">
+                <span className="pub-trust-icon" />
+                <span className="pub-trust-text">
+                  {creator.campaigns_completed} campaigns completed
+                </span>
+              </div>
+              {creator.is_verified && (
+                <div className="pub-trust-item">
+                  <span className="pub-trust-icon" />
+                  <span className="pub-trust-text">Identity verified</span>
+                </div>
+              )}
+              <div className="pub-trust-item">
+                <span className="pub-trust-icon" />
+                <span className="pub-trust-text">
+                  {creator.merchant_satisfaction.toFixed(1)} merchant rating
+                </span>
+              </div>
+            </div>
           </div>
         </div>
       )}
 
-      {/* ── 5. Social links ─────────────────────────────────── */}
+      {/* ── 5. Media gallery ────────────────────────────────── */}
+      <div className="pub-media-section">
+        <div className="pub-media-inner">
+          <p className="pub-section-eyebrow">Past Content</p>
+          <div className="pub-media-grid">
+            {MEDIA_CATEGORIES.map((cat, i) => (
+              <div key={i} className="pub-media-card">
+                <div className="pub-media-placeholder">
+                  <span className="pub-media-category">{cat}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* ── 6. Social links ─────────────────────────────────── */}
       <div className="pub-social-section">
         <div className="pub-social-inner">
           <p className="pub-section-eyebrow">Social Platforms</p>
@@ -353,7 +417,7 @@ export default function CreatorPublicPage() {
         </div>
       </div>
 
-      {/* ── 6. Tier journey ─────────────────────────────────── */}
+      {/* ── 7. Tier journey ─────────────────────────────────── */}
       <div className="pub-tier-section">
         <div className="pub-tier-inner">
           <p className="pub-section-eyebrow">Tier Journey</p>
@@ -364,16 +428,26 @@ export default function CreatorPublicPage() {
         </div>
       </div>
 
-      {/* ── 7. Campaign history — sticky grid ───────────────── */}
+      {/* ── 8. Campaign history ─────────────────────────────── */}
       <div className="pub-campaigns-section">
         <div className="pub-campaigns-inner">
-          <p className="pub-section-eyebrow">Campaign History</p>
+          <div className="pub-campaigns-header">
+            <div>
+              <p className="pub-section-eyebrow">Campaign History</p>
+              <span className="pub-campaigns-count">
+                {creator.campaign_history.length}
+              </span>
+              <span className="pub-campaigns-count-label">campaigns</span>
+            </div>
+          </div>
           <div className="pub-campaigns">
             {creator.campaign_history.map((c) => (
               <div key={c.id} className="pub-campaign-card">
                 <div
                   className="pub-campaign-card-accent"
-                  style={{ background: tierColor }}
+                  style={{
+                    background: tierColor === "#4a5568" ? "#c1121f" : tierColor,
+                  }}
                 />
                 <div className="pub-campaign-header">
                   <span className="pub-campaign-business">{c.business}</span>
@@ -395,7 +469,25 @@ export default function CreatorPublicPage() {
         </div>
       </div>
 
-      {/* ── 8. CTA ──────────────────────────────────────────── */}
+      {/* ── 9. Invite to Campaign banner (merchant view) ────── */}
+      <div className="pub-invite-banner">
+        <div className="pub-invite-banner-inner">
+          <div className="pub-invite-banner-text">
+            <p className="pub-invite-banner-headline">
+              Invite {firstName} to Your Campaign
+            </p>
+            <p className="pub-invite-banner-sub">
+              {firstName} has driven {creator.walkins_total ?? 0} verified
+              walk-ins. Pay only for results.
+            </p>
+          </div>
+          <Link href="/merchant/signup" className="pub-invite-btn">
+            Invite to Campaign →
+          </Link>
+        </div>
+      </div>
+
+      {/* ── 10. CTA ─────────────────────────────────────────── */}
       <div className="pub-cta-section">
         <p className="pub-cta-eyebrow">Work with this creator</p>
         <h2 className="pub-cta-headline">Work with {firstName}</h2>

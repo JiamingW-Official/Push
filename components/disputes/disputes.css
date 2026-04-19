@@ -1,0 +1,1337 @@
+/* =============================================================
+   Push — Dispute Resolution System — disputes.css
+   Authority: Design.md
+   border-radius: 0 everywhere
+   Colors: var(--primary) / var(--accent) / var(--dark) / var(--tertiary)
+           var(--champagne) / var(--surface) / var(--surface-elevated)
+   Fonts: var(--font-display) Darky | var(--font-body) CS Genio Mono
+   Grid: 8px base (--space-1 … --space-10)
+   ============================================================= */
+
+/* ─────────────────────────────────────────
+   STATUS COLORS (within 6-color system)
+   ─────────────────────────────────────────
+   Open              → var(--primary)   #c1121f Flag Red
+   Under Review      → var(--champagne) #c9a96e Champagne Gold
+   Awaiting Response → var(--tertiary)  #669bbc Steel Blue
+   Resolved (creator wins) → var(--tertiary) Steel Blue
+   Resolved (merchant wins)→ var(--dark)     Deep Space Blue
+   Closed            → var(--graphite)  #4a5568
+   ─────────────────────────────────────────────── */
+
+/* ─────────────────────────────────────────
+   1. PAGE SHELL
+   ───────────────────────────────────────── */
+.disputes-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--space-4) var(--space-4) var(--space-10);
+}
+
+/* ─────────────────────────────────────────
+   2. EDITORIAL HERO
+   ───────────────────────────────────────── */
+.disputes-hero {
+  border-bottom: 1px solid var(--line);
+  padding-bottom: var(--space-5);
+  margin-bottom: var(--space-5);
+}
+
+.disputes-hero__eyebrow {
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: var(--space-2);
+}
+
+.disputes-hero__title {
+  font-family: var(--font-display);
+  font-size: clamp(40px, 6vw, 80px);
+  font-weight: 900;
+  letter-spacing: -0.05em;
+  color: var(--dark);
+  line-height: 1;
+  margin-bottom: var(--space-4);
+}
+
+.disputes-hero__stats {
+  display: flex;
+  gap: var(--space-6);
+  align-items: flex-end;
+}
+
+.disputes-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.disputes-stat__number {
+  font-family: var(--font-display);
+  font-size: 48px;
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  line-height: 1;
+  color: var(--dark);
+}
+
+.disputes-stat__number--open {
+  color: var(--primary);
+}
+
+.disputes-stat__number--resolved {
+  color: var(--tertiary);
+}
+
+.disputes-stat__label {
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+/* ─────────────────────────────────────────
+   3. TOOLBAR (tabs + actions)
+   ───────────────────────────────────────── */
+.disputes-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  margin-bottom: var(--space-4);
+  flex-wrap: wrap;
+}
+
+.disputes-tabs {
+  display: flex;
+  gap: 0;
+  border: 1px solid var(--line);
+}
+
+.disputes-tab {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  background: var(--surface);
+  border: none;
+  border-right: 1px solid var(--line);
+  padding: var(--space-1) var(--space-3);
+  cursor: pointer;
+  transition: background var(--t-base), color var(--t-base);
+  border-radius: 0;
+  white-space: nowrap;
+}
+
+.disputes-tab:last-child {
+  border-right: none;
+}
+
+.disputes-tab:hover {
+  background: var(--surface-elevated);
+  color: var(--dark);
+}
+
+.disputes-tab--active {
+  background: var(--dark);
+  color: var(--surface);
+}
+
+.disputes-tab--active:hover {
+  background: var(--dark);
+  color: var(--surface);
+}
+
+.disputes-file-btn {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #fff;
+  background: var(--primary);
+  border: 1px solid var(--primary);
+  padding: var(--space-1) var(--space-3);
+  cursor: pointer;
+  transition: background var(--t-slow), box-shadow var(--t-slow);
+  border-radius: 0;
+  box-shadow: var(--btn-shadow);
+  white-space: nowrap;
+}
+
+.disputes-file-btn:hover {
+  background: var(--accent);
+  border-color: var(--accent);
+  box-shadow: var(--btn-shadow-hover);
+}
+
+/* ─────────────────────────────────────────
+   4. DISPUTE LIST TABLE
+   ───────────────────────────────────────── */
+.disputes-list {
+  border: 1px solid var(--line);
+  background: var(--surface-elevated);
+}
+
+.disputes-list__header {
+  display: grid;
+  grid-template-columns: 120px 1fr 100px 120px 120px 80px 24px;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  background: var(--surface);
+  border-bottom: 1px solid var(--line);
+}
+
+.disputes-list__col-label {
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.disputes-list__row {
+  display: grid;
+  grid-template-columns: 120px 1fr 100px 120px 120px 80px 24px;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  border-bottom: 1px solid var(--line);
+  cursor: pointer;
+  transition: background var(--t-fast);
+  align-items: center;
+  text-decoration: none;
+  color: inherit;
+}
+
+.disputes-list__row:last-child {
+  border-bottom: none;
+}
+
+.disputes-list__row:hover {
+  background: var(--surface);
+}
+
+.disputes-list__row:hover .disputes-row__arrow {
+  opacity: 1;
+  transform: translateX(3px);
+}
+
+.disputes-row__id {
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--dark);
+  letter-spacing: -0.01em;
+}
+
+.disputes-row__campaign {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.disputes-row__campaign-name {
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--dark);
+}
+
+.disputes-row__party {
+  font-family: var(--font-body);
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.disputes-row__amount {
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--dark);
+  letter-spacing: -0.02em;
+}
+
+.disputes-row__filed-by {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.disputes-row__filed-name {
+  font-family: var(--font-body);
+  font-size: 12px;
+  color: var(--dark);
+}
+
+.disputes-row__filed-role {
+  font-family: var(--font-body);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.disputes-row__age {
+  font-family: var(--font-body);
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.disputes-row__arrow {
+  font-size: 16px;
+  color: var(--text-muted);
+  opacity: 0;
+  transition: opacity var(--t-fast), transform var(--t-fast);
+}
+
+/* ─────────────────────────────────────────
+   5. STATUS BADGES
+   ───────────────────────────────────────── */
+.dispute-badge {
+  display: inline-block;
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border-radius: 0;
+  white-space: nowrap;
+}
+
+.dispute-badge--open {
+  background: rgba(193, 18, 31, 0.1);
+  color: var(--primary);
+  border: 1px solid rgba(193, 18, 31, 0.25);
+}
+
+.dispute-badge--under_review {
+  background: rgba(201, 169, 110, 0.15);
+  color: #8a6a1a;
+  border: 1px solid rgba(201, 169, 110, 0.4);
+}
+
+.dispute-badge--awaiting_response {
+  background: rgba(102, 155, 188, 0.12);
+  color: var(--tertiary);
+  border: 1px solid rgba(102, 155, 188, 0.3);
+}
+
+.dispute-badge--resolved {
+  background: rgba(102, 155, 188, 0.12);
+  color: #2a6a8a;
+  border: 1px solid rgba(102, 155, 188, 0.3);
+}
+
+.dispute-badge--closed {
+  background: rgba(74, 85, 104, 0.08);
+  color: var(--graphite);
+  border: 1px solid rgba(74, 85, 104, 0.2);
+}
+
+/* ─────────────────────────────────────────
+   6. EMPTY STATE
+   ───────────────────────────────────────── */
+.disputes-empty {
+  padding: var(--space-10) var(--space-4);
+  text-align: center;
+  border: 1px solid var(--line);
+  background: var(--surface-elevated);
+}
+
+.disputes-empty__title {
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--dark);
+  margin-bottom: var(--space-2);
+}
+
+.disputes-empty__body {
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: var(--text-muted);
+}
+
+/* ─────────────────────────────────────────
+   7. DETAIL PAGE SHELL
+   ───────────────────────────────────────── */
+.dispute-detail-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--space-4) var(--space-4) var(--space-10);
+}
+
+.dispute-detail-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  text-decoration: none;
+  margin-bottom: var(--space-4);
+  transition: color var(--t-fast);
+}
+
+.dispute-detail-back:hover {
+  color: var(--dark);
+}
+
+/* ─────────────────────────────────────────
+   8. DETAIL HEADER
+   ───────────────────────────────────────── */
+.dispute-detail-header {
+  border-bottom: 1px solid var(--line);
+  padding-bottom: var(--space-4);
+  margin-bottom: var(--space-5);
+}
+
+.dispute-detail-header__eyebrow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-bottom: var(--space-2);
+}
+
+.dispute-detail-header__id-label {
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.dispute-detail-header__title {
+  font-family: var(--font-display);
+  font-size: clamp(32px, 5vw, 64px);
+  font-weight: 900;
+  letter-spacing: -0.05em;
+  color: var(--dark);
+  line-height: 1;
+  margin-bottom: var(--space-3);
+}
+
+.dispute-detail-header__meta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+}
+
+.dispute-detail-header__meta-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.dispute-detail-header__meta-label {
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.dispute-detail-header__meta-value {
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: var(--dark);
+}
+
+/* ─────────────────────────────────────────
+   9. DETAIL LAYOUT (sidebar + main)
+   ───────────────────────────────────────── */
+.dispute-detail-layout {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: var(--space-5);
+  align-items: start;
+}
+
+@media (max-width: 900px) {
+  .dispute-detail-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ─────────────────────────────────────────
+   10. SIDEBAR
+   ───────────────────────────────────────── */
+.dispute-sidebar {
+  position: sticky;
+  top: 80px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.dispute-sidebar-card {
+  border: 1px solid var(--line);
+  background: var(--surface-elevated);
+  padding: var(--space-3);
+}
+
+.dispute-sidebar-card__label {
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: var(--space-2);
+  padding-bottom: var(--space-1);
+  border-bottom: 1px solid var(--line);
+}
+
+.dispute-sidebar-card__row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 6px 0;
+  border-bottom: 1px solid rgba(0, 48, 73, 0.06);
+}
+
+.dispute-sidebar-card__row:last-child {
+  border-bottom: none;
+}
+
+.dispute-sidebar-card__key {
+  font-family: var(--font-body);
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.dispute-sidebar-card__value {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--dark);
+  text-align: right;
+}
+
+.dispute-sidebar-card__amount {
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  color: var(--dark);
+}
+
+.dispute-sidebar-card__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--tertiary);
+  text-decoration: none;
+  margin-top: var(--space-1);
+  transition: color var(--t-fast);
+}
+
+.dispute-sidebar-card__link:hover {
+  color: var(--dark);
+}
+
+/* Participants */
+.dispute-participants {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.dispute-participant {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.dispute-participant__avatar {
+  width: 36px;
+  height: 36px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--dark);
+  flex-shrink: 0;
+}
+
+.dispute-participant__info {
+  flex: 1;
+  min-width: 0;
+}
+
+.dispute-participant__name {
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--dark);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.dispute-participant__role {
+  font-family: var(--font-body);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.dispute-participant__filer-dot {
+  width: 6px;
+  height: 6px;
+  background: var(--primary);
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* Campaign mini card */
+.dispute-campaign-mini {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.dispute-campaign-mini__title {
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--dark);
+}
+
+.dispute-campaign-mini__merchant {
+  font-family: var(--font-body);
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+/* ─────────────────────────────────────────
+   11. OUTCOME BANNER
+   ───────────────────────────────────────── */
+.dispute-outcome-banner {
+  padding: var(--space-3) var(--space-4);
+  margin-bottom: var(--space-4);
+  border: 1px solid;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+}
+
+.dispute-outcome-banner--refund_creator {
+  background: rgba(102, 155, 188, 0.08);
+  border-color: rgba(102, 155, 188, 0.35);
+}
+
+.dispute-outcome-banner--refund_merchant {
+  background: rgba(0, 48, 73, 0.05);
+  border-color: rgba(0, 48, 73, 0.2);
+}
+
+.dispute-outcome-banner--split {
+  background: rgba(201, 169, 110, 0.08);
+  border-color: rgba(201, 169, 110, 0.35);
+}
+
+.dispute-outcome-banner--dismissed {
+  background: rgba(74, 85, 104, 0.06);
+  border-color: rgba(74, 85, 104, 0.2);
+}
+
+.dispute-outcome-banner__label {
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 4px;
+}
+
+.dispute-outcome-banner__title {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--dark);
+  letter-spacing: -0.02em;
+}
+
+.dispute-outcome-banner__note {
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: var(--graphite);
+  margin-top: 4px;
+}
+
+.dispute-outcome-banner__reopen {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--dark);
+  background: transparent;
+  border: 1px solid var(--dark);
+  padding: var(--space-1) var(--space-3);
+  cursor: pointer;
+  border-radius: 0;
+  transition: background var(--t-slow), color var(--t-slow);
+  white-space: nowrap;
+  align-self: center;
+}
+
+.dispute-outcome-banner__reopen:hover {
+  background: var(--dark);
+  color: var(--surface);
+}
+
+/* ─────────────────────────────────────────
+   12. TIMELINE
+   ───────────────────────────────────────── */
+.dispute-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.dispute-timeline-event {
+  border: 1px solid var(--line);
+  background: var(--surface-elevated);
+  padding: var(--space-3);
+  position: relative;
+  opacity: 0;
+  transform: translateY(24px);
+  transition:
+    opacity 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.dispute-timeline-event.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Role-based left border accent */
+.dispute-timeline-event--creator {
+  border-left: 3px solid var(--primary);
+}
+
+.dispute-timeline-event--merchant {
+  border-left: 3px solid var(--dark);
+}
+
+.dispute-timeline-event--admin {
+  border-left: 3px solid var(--champagne);
+}
+
+.dispute-timeline-event--decision {
+  border-left: 3px solid var(--tertiary);
+  background: rgba(102, 155, 188, 0.04);
+}
+
+.dispute-timeline-event__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  margin-bottom: var(--space-2);
+  flex-wrap: wrap;
+}
+
+.dispute-timeline-event__author {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.dispute-timeline-event__role-pill {
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  padding: 2px 8px;
+  border-radius: 0;
+}
+
+.dispute-timeline-event__role-pill--creator {
+  background: rgba(193, 18, 31, 0.1);
+  color: var(--primary);
+}
+
+.dispute-timeline-event__role-pill--merchant {
+  background: rgba(0, 48, 73, 0.08);
+  color: var(--dark);
+}
+
+.dispute-timeline-event__role-pill--admin {
+  background: rgba(201, 169, 110, 0.15);
+  color: #8a6a1a;
+}
+
+.dispute-timeline-event__author-name {
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--dark);
+}
+
+.dispute-timeline-event__time {
+  font-family: var(--font-body);
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.dispute-timeline-event__message {
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: var(--graphite);
+  line-height: 1.6;
+}
+
+.dispute-timeline-event__type-label {
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: var(--space-1);
+}
+
+/* Evidence thumbnails */
+.dispute-timeline-evidence {
+  display: flex;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+  margin-top: var(--space-2);
+  padding-top: var(--space-2);
+  border-top: 1px solid var(--line);
+}
+
+.dispute-evidence-thumb {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  padding: 6px var(--space-1);
+  text-decoration: none;
+  transition: border-color var(--t-fast), background var(--t-fast);
+  cursor: pointer;
+}
+
+.dispute-evidence-thumb:hover {
+  border-color: var(--dark);
+  background: var(--surface-elevated);
+}
+
+.dispute-evidence-thumb__img {
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+  border-radius: 0;
+  flex-shrink: 0;
+}
+
+.dispute-evidence-thumb__label {
+  font-family: var(--font-body);
+  font-size: 11px;
+  color: var(--dark);
+  max-width: 120px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ─────────────────────────────────────────
+   13. COMPOSER (add response)
+   ───────────────────────────────────────── */
+.dispute-composer {
+  border: 1px solid var(--line);
+  background: var(--surface-elevated);
+  padding: var(--space-3);
+  margin-top: var(--space-4);
+}
+
+.dispute-composer__label {
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: var(--space-2);
+}
+
+.dispute-composer__textarea {
+  width: 100%;
+  min-height: 100px;
+  padding: var(--space-2);
+  border: 1px solid var(--line);
+  background: var(--surface);
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: var(--dark);
+  resize: vertical;
+  border-radius: 0;
+  outline: none;
+  transition: border-color var(--t-base);
+}
+
+.dispute-composer__textarea:focus {
+  border-color: var(--primary);
+}
+
+.dispute-composer__actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  margin-top: var(--space-2);
+  flex-wrap: wrap;
+}
+
+.dispute-composer__attach {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted);
+  background: transparent;
+  border: 1px dashed var(--line);
+  padding: 6px var(--space-2);
+  cursor: pointer;
+  border-radius: 0;
+  transition: border-color var(--t-fast), color var(--t-fast);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.dispute-composer__attach:hover {
+  border-color: var(--dark);
+  color: var(--dark);
+}
+
+.dispute-composer__submit {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #fff;
+  background: var(--primary);
+  border: 1px solid var(--primary);
+  padding: var(--space-1) var(--space-4);
+  cursor: pointer;
+  border-radius: 0;
+  box-shadow: var(--btn-shadow);
+  transition: background var(--t-slow), box-shadow var(--t-slow);
+}
+
+.dispute-composer__submit:hover {
+  background: var(--accent);
+  border-color: var(--accent);
+  box-shadow: var(--btn-shadow-hover);
+}
+
+.dispute-composer__submit:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* ─────────────────────────────────────────
+   14. EVIDENCE UPLOADER (drop zone)
+   ───────────────────────────────────────── */
+.evidence-uploader {
+  border: 1px dashed var(--line);
+  padding: var(--space-4);
+  text-align: center;
+  transition: border-color var(--t-fast), background var(--t-fast);
+  cursor: pointer;
+  background: var(--surface);
+}
+
+.evidence-uploader:hover,
+.evidence-uploader--dragover {
+  border-color: var(--primary);
+  background: rgba(193, 18, 31, 0.03);
+}
+
+.evidence-uploader__icon {
+  font-size: 32px;
+  margin-bottom: var(--space-1);
+  color: var(--text-muted);
+}
+
+.evidence-uploader__title {
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--dark);
+  margin-bottom: 4px;
+}
+
+.evidence-uploader__sub {
+  font-family: var(--font-body);
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.evidence-uploader__or {
+  font-family: var(--font-body);
+  font-size: 11px;
+  color: var(--text-muted);
+  margin: var(--space-2) 0;
+}
+
+.evidence-uploader__link-input {
+  width: 100%;
+  max-width: 360px;
+  padding: var(--space-1) var(--space-2);
+  border: 1px solid var(--line);
+  background: var(--surface-elevated);
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: var(--dark);
+  border-radius: 0;
+  outline: none;
+  transition: border-color var(--t-base);
+}
+
+.evidence-uploader__link-input:focus {
+  border-color: var(--primary);
+}
+
+.evidence-uploader__previews {
+  display: flex;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+  margin-top: var(--space-2);
+  justify-content: center;
+}
+
+.evidence-uploader__preview {
+  width: 64px;
+  height: 64px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  position: relative;
+  overflow: hidden;
+  border-radius: 0;
+}
+
+.evidence-uploader__preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 0;
+}
+
+.evidence-uploader__preview-remove {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  width: 16px;
+  height: 16px;
+  background: var(--primary);
+  color: #fff;
+  border: none;
+  border-radius: 0;
+  font-size: 10px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
+/* ─────────────────────────────────────────
+   15. NEW DISPUTE MODAL
+   ───────────────────────────────────────── */
+.dispute-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 48, 73, 0.55);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-4);
+}
+
+.dispute-modal {
+  width: 100%;
+  max-width: 600px;
+  background: var(--surface-elevated);
+  border: 1px solid var(--line);
+  border-radius: 0;
+  max-height: 90vh;
+  overflow-y: auto;
+  animation: disputeModalIn 250ms ease forwards;
+}
+
+@keyframes disputeModalIn {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.dispute-modal__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: var(--space-4);
+  border-bottom: 1px solid var(--line);
+  gap: var(--space-3);
+}
+
+.dispute-modal__title {
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  color: var(--dark);
+}
+
+.dispute-modal__close {
+  background: transparent;
+  border: 1px solid var(--line);
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 16px;
+  color: var(--graphite);
+  border-radius: 0;
+  flex-shrink: 0;
+  transition: background var(--t-fast), color var(--t-fast);
+}
+
+.dispute-modal__close:hover {
+  background: var(--dark);
+  color: var(--surface);
+}
+
+.dispute-modal__body {
+  padding: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.dispute-modal__field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.dispute-modal__field label {
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.dispute-modal__field input,
+.dispute-modal__field select,
+.dispute-modal__field textarea {
+  width: 100%;
+  padding: var(--space-2);
+  border: 1px solid var(--line);
+  background: var(--surface);
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: var(--dark);
+  border-radius: 0;
+  outline: none;
+  transition: border-color var(--t-base);
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.dispute-modal__field select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23003049' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 36px;
+}
+
+.dispute-modal__field input:focus,
+.dispute-modal__field select:focus,
+.dispute-modal__field textarea:focus {
+  border-color: var(--primary);
+}
+
+.dispute-modal__field textarea {
+  min-height: 80px;
+  resize: vertical;
+}
+
+.dispute-modal__footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-4);
+  border-top: 1px solid var(--line);
+  background: var(--surface);
+}
+
+.dispute-modal__cancel {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--dark);
+  background: transparent;
+  border: 1px solid var(--line);
+  padding: var(--space-1) var(--space-3);
+  cursor: pointer;
+  border-radius: 0;
+  transition: border-color var(--t-fast), background var(--t-fast);
+}
+
+.dispute-modal__cancel:hover {
+  border-color: var(--dark);
+  background: var(--surface-elevated);
+}
+
+.dispute-modal__submit {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #fff;
+  background: var(--primary);
+  border: 1px solid var(--primary);
+  padding: var(--space-1) var(--space-4);
+  cursor: pointer;
+  border-radius: 0;
+  box-shadow: var(--btn-shadow);
+  transition: background var(--t-slow), box-shadow var(--t-slow);
+}
+
+.dispute-modal__submit:hover {
+  background: var(--accent);
+  border-color: var(--accent);
+  box-shadow: var(--btn-shadow-hover);
+}
+
+.dispute-modal__submit:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* ─────────────────────────────────────────
+   16. RESPONSIVE
+   ───────────────────────────────────────── */
+@media (max-width: 768px) {
+  .disputes-hero__stats {
+    gap: var(--space-4);
+    flex-wrap: wrap;
+  }
+
+  .disputes-stat__number {
+    font-size: 36px;
+  }
+
+  .disputes-list__header {
+    display: none;
+  }
+
+  .disputes-list__row {
+    grid-template-columns: 1fr;
+    gap: var(--space-1);
+  }
+
+  .disputes-row__arrow {
+    display: none;
+  }
+
+  .disputes-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .disputes-tabs {
+    overflow-x: auto;
+  }
+}
+
+@media (max-width: 480px) {
+  .disputes-page {
+    padding: var(--space-3) var(--space-2) var(--space-8);
+  }
+
+  .dispute-detail-page {
+    padding: var(--space-3) var(--space-2) var(--space-8);
+  }
+
+  .dispute-modal {
+    max-height: 100vh;
+    border-left: none;
+    border-right: none;
+    border-bottom: none;
+  }
+
+  .dispute-modal-overlay {
+    align-items: flex-end;
+    padding: 0;
+  }
+}
+
+/* ─────────────────────────────────────────
+   17. ACCESSIBILITY
+   ───────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .dispute-timeline-event {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  .dispute-modal {
+    animation: none;
+  }
+}

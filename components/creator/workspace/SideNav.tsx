@@ -1,7 +1,8 @@
 "use client";
 
-// Push Creator Workspace — SideNav
-// Design.md: 240px width, --surface bg, 8px grid, active = 3px Flag Red left border
+// Push Creator Workspace — SideNav  (Wave 2)
+// Design.md: 240px width, --surface bg, 8px grid
+// Active = 3px Flag Red left border (animated) + subtle bg tint
 // Fonts: CSGenioMono (body/UI)
 
 import Link from "next/link";
@@ -9,7 +10,7 @@ import { usePathname } from "next/navigation";
 import "./workspace.css";
 
 // ---------------------------------------------------------------------------
-// Nav item type
+// Types
 // ---------------------------------------------------------------------------
 
 interface NavItem {
@@ -22,12 +23,13 @@ interface NavItem {
 
 interface NavSection {
   id: string;
-  title: string | null; // null = no section header (standalone)
+  /** null = no eyebrow header (standalone section) */
+  title: string | null;
   items: NavItem[];
 }
 
 // ---------------------------------------------------------------------------
-// Icon map (geometric / monospace glyphs — no external icon lib needed)
+// Icon map — geometric Unicode glyphs, no external lib
 // ---------------------------------------------------------------------------
 
 const ICONS: Record<string, string> = {
@@ -43,6 +45,7 @@ const ICONS: Record<string, string> = {
   system: "◌",
   discover: "◐",
   profile: "○",
+  settings: "◍",
 };
 
 // ---------------------------------------------------------------------------
@@ -61,15 +64,6 @@ const NAV_SECTIONS: NavSection[] = [
     ],
   },
   {
-    id: "portfolio",
-    title: "PORTFOLIO",
-    items: [
-      { label: "Identity", href: "/creator/portfolio", icon: ICONS.identity },
-      { label: "Earnings", href: "/creator/earnings", icon: ICONS.earnings },
-      { label: "Archive", href: "/creator/archive", icon: ICONS.archive },
-    ],
-  },
-  {
     id: "inbox",
     title: "INBOX",
     items: [
@@ -80,12 +74,20 @@ const NAV_SECTIONS: NavSection[] = [
         icon: ICONS.invites,
         badgeVariant: "alert",
       },
-      { label: "System", href: "/creator/settings", icon: ICONS.system },
+    ],
+  },
+  {
+    id: "portfolio",
+    title: "PORTFOLIO",
+    items: [
+      { label: "Identity", href: "/creator/portfolio", icon: ICONS.identity },
+      { label: "Earnings", href: "/creator/earnings", icon: ICONS.earnings },
+      { label: "Archive", href: "/creator/archive", icon: ICONS.archive },
     ],
   },
   {
     id: "discover",
-    title: null, // standalone — no section header
+    title: null, // standalone — rendered with top separator via CSS
     items: [
       { label: "Discover", href: "/creator/explore", icon: ICONS.discover },
     ],
@@ -108,7 +110,7 @@ export interface SideNavProps {
 }
 
 // ---------------------------------------------------------------------------
-// Helpers
+// Tier helpers
 // ---------------------------------------------------------------------------
 
 const TIER_COLORS: Record<string, string> = {
@@ -131,7 +133,7 @@ function tierLabel(tier: string): string {
 }
 
 // ---------------------------------------------------------------------------
-// NavItem component
+// NavLink sub-component
 // ---------------------------------------------------------------------------
 
 function NavLink({
@@ -157,7 +159,9 @@ function NavLink({
       <span className="ws-sidenav__item-label">{item.label}</span>
       {showBadge && (
         <span
-          className={`ws-sidenav__badge${item.badgeVariant === "alert" ? " ws-sidenav__badge--alert" : ""}`}
+          className={`ws-sidenav__badge${
+            item.badgeVariant === "alert" ? " ws-sidenav__badge--alert" : ""
+          }`}
           aria-label={`${badgeCount} unread`}
         >
           {badgeCount > 99 ? "99+" : badgeCount}
@@ -182,7 +186,7 @@ export function SideNav({
   const tierColor = TIER_COLORS[tierKey] ?? TIER_COLORS.seed;
   const initial = userName.charAt(0).toUpperCase();
 
-  // Active match: exact or prefix (e.g. /creator/campaigns/[id] → campaigns active)
+  // Active match: exact for dashboard, prefix for everything else
   const isActive = (href: string) => {
     if (href === "/creator/dashboard") return pathname === href;
     return pathname.startsWith(href);
@@ -190,7 +194,7 @@ export function SideNav({
 
   return (
     <nav className="ws-sidenav" aria-label="Creator workspace navigation">
-      {/* ── Nav sections ── */}
+      {/* ── Scrollable nav sections ── */}
       <div className="ws-sidenav__scroll">
         {NAV_SECTIONS.map((section) => (
           <div key={section.id} className="ws-sidenav__section">
@@ -211,9 +215,13 @@ export function SideNav({
         ))}
       </div>
 
-      {/* ── Bottom: user info ── */}
+      {/* ── Footer: user identity ── */}
       <div className="ws-sidenav__footer">
-        <Link href="/creator/profile" className="ws-sidenav__user">
+        <Link
+          href="/creator/profile"
+          className="ws-sidenav__user"
+          aria-label={`Profile — ${userName} (${tierLabel(tierKey)})`}
+        >
           <div className="ws-sidenav__user-avatar" aria-hidden="true">
             {avatarUrl ? (
               // eslint-disable-next-line @next/next/no-img-element

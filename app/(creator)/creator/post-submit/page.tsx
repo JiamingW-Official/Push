@@ -146,8 +146,8 @@ function PostSubmitContent() {
       <div className="ps-hero">
         <CheckmarkSVG />
 
-        <p className="ps-hero-eyebrow">Content Submitted</p>
-        <h1 className="ps-hero-title">CONTENT SUBMITTED</h1>
+        <p className="ps-hero-eyebrow">Submission Received</p>
+        <h1 className="ps-hero-title">SUBMISSION RECEIVED</h1>
 
         <div className="ps-hero-status">
           <span className="ps-hero-status-dot" />
@@ -200,7 +200,10 @@ function PostSubmitContent() {
           <div className="ps-steps">
             {NEXT_STEPS.map((step) => (
               <div key={step.num} className="ps-step">
-                <span className="ps-step-num">{step.num}</span>
+                <div className="ps-step-num-wrap">
+                  <span className="ps-step-dot" />
+                  <span className="ps-step-num">{step.num}</span>
+                </div>
                 <div className="ps-step-content">
                   <p className="ps-step-title">{step.title}</p>
                   <p className="ps-step-desc">{step.desc}</p>

@@ -206,8 +206,8 @@ const STATUS_CONFIG: Record<
   },
   completed: {
     label: "COMPLETED",
-    color: "var(--dark)",
-    dotColor: "#003049",
+    color: "var(--graphite)",
+    dotColor: "#4a5568",
   },
 };
 
@@ -238,15 +238,19 @@ function CampaignCard({
     campaign.contentSubmitted,
     campaign.contentRequired,
   );
-  const urgent = campaign.daysLeft >= 0 && campaign.daysLeft <= 3;
+  // Urgent = 3 days or fewer remaining (not overdue)
+  const urgent =
+    campaign.daysLeft >= 0 &&
+    campaign.daysLeft <= 3 &&
+    campaign.status !== "completed";
+  // Overdue = active/applied but past deadline
+  const overdue = campaign.daysLeft < 0 && campaign.status !== "completed";
 
   return (
     <div
-      className={`pl-card pl-card-${campaign.status} pl-view-${viewMode}`}
+      className={`pl-card pl-card-${campaign.status}${overdue ? " pl-card-overdue" : ""} pl-view-${viewMode}`}
       role="article"
     >
-      {/* Left status border painted via CSS pseudo-element */}
-
       <div className="pl-card-inner">
         {/* Logo */}
         <div
@@ -262,15 +266,16 @@ function CampaignCard({
           <div className="pl-card-header-row">
             <p className="pl-card-campaign">{campaign.campaignName}</p>
             <span
-              className={`pl-status-dot`}
+              className="pl-status-dot"
               style={{ background: cfg.dotColor }}
               aria-hidden="true"
             />
           </div>
           <p className="pl-card-merchant">{campaign.merchantName}</p>
 
-          {/* Progress bar — only for active */}
-          {campaign.status === "active" && (
+          {/* Progress bar — active and completed */}
+          {(campaign.status === "active" ||
+            campaign.status === "completed") && (
             <div className="pl-progress-wrap">
               <div className="pl-progress-track">
                 <div
@@ -298,7 +303,7 @@ function CampaignCard({
           <div className="pl-card-category">{campaign.category}</div>
         </div>
 
-        {/* Quick actions */}
+        {/* Quick actions — revealed on hover */}
         <div className="pl-card-actions">
           {campaign.status === "active" && (
             <Link
@@ -349,11 +354,21 @@ export default function WorkPipelinePage() {
     return true;
   });
 
-  // Group by status for column layout
+  // Sort: overdue first (by daysLeft asc), then urgent, then rest
+  const sortedFiltered = [...filtered].sort((a, b) => {
+    const aOverdue =
+      a.daysLeft < 0 && a.status !== "completed" ? -1000 + a.daysLeft : 0;
+    const bOverdue =
+      b.daysLeft < 0 && b.status !== "completed" ? -1000 + b.daysLeft : 0;
+    if (aOverdue !== bOverdue) return aOverdue - bOverdue;
+    return a.daysLeft - b.daysLeft;
+  });
+
+  // Group by status for column layout — maintain overdue-first within columns
   const grouped: Record<PipelineStatus, PipelineCampaign[]> = {
-    applied: filtered.filter((c) => c.status === "applied"),
-    active: filtered.filter((c) => c.status === "active"),
-    completed: filtered.filter((c) => c.status === "completed"),
+    applied: sortedFiltered.filter((c) => c.status === "applied"),
+    active: sortedFiltered.filter((c) => c.status === "active"),
+    completed: sortedFiltered.filter((c) => c.status === "completed"),
   };
 
   const totalPotential = MOCK_CAMPAIGNS.filter(
@@ -364,6 +379,9 @@ export default function WorkPipelinePage() {
   );
   const activeCount = MOCK_CAMPAIGNS.filter(
     (c) => c.status === "active",
+  ).length;
+  const inProgressCount = MOCK_CAMPAIGNS.filter(
+    (c) => c.status !== "completed",
   ).length;
 
   return (
@@ -389,7 +407,11 @@ export default function WorkPipelinePage() {
             <p className="pl-eyebrow">
               {activeCount} ACTIVE · {MOCK_CAMPAIGNS.length} TOTAL
             </p>
+            {/* Large editorial headline with weight contrast */}
             <h1 className="pl-headline">PIPELINE</h1>
+            <p className="pl-headline-sub">
+              {inProgressCount} campaigns in progress
+            </p>
             <p className="pl-hero-sub">
               Track every campaign from application to completion
             </p>
@@ -484,6 +506,9 @@ export default function WorkPipelinePage() {
             EMPTY
           </p>
           <p className="pl-empty-title">No campaigns match your filters</p>
+          <p className="pl-empty-sub">
+            Try adjusting filters or discover new opportunities
+          </p>
           <button
             className="pl-empty-reset"
             onClick={() => {
@@ -494,6 +519,9 @@ export default function WorkPipelinePage() {
           >
             Reset filters
           </button>
+          <Link href="/creator/explore" className="pl-empty-discover">
+            Discover campaigns →
+          </Link>
         </div>
       ) : viewMode === "grid" ? (
         /* Grid / Column layout */
@@ -522,7 +550,7 @@ export default function WorkPipelinePage() {
                       cols.map((c, i) => (
                         <div
                           key={c.id}
-                          style={{ animationDelay: `${i * 50}ms` }}
+                          style={{ animationDelay: `${i * 55}ms` }}
                           className="pl-card-wrapper"
                         >
                           <CampaignCard campaign={c} viewMode={viewMode} />
@@ -546,10 +574,10 @@ export default function WorkPipelinePage() {
             <span>Earnings</span>
             <span>Actions</span>
           </div>
-          {filtered.map((c, i) => (
+          {sortedFiltered.map((c, i) => (
             <div
               key={c.id}
-              style={{ animationDelay: `${i * 30}ms` }}
+              style={{ animationDelay: `${i * 35}ms` }}
               className="pl-card-wrapper"
             >
               <CampaignCard campaign={c} viewMode={viewMode} />

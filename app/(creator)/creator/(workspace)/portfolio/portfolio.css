@@ -104,12 +104,12 @@
 .pf-hero {
   display: grid;
   grid-template-columns: 1fr 320px;
-  min-height: 440px;
+  min-height: 480px;
   border-bottom: 1px solid var(--line);
 }
 .pf-hero-dark-panel {
   background: var(--dark);
-  padding: 56px 48px 56px 40px;
+  padding: 64px 48px 64px 40px;
   display: flex;
   align-items: flex-end;
   position: relative;
@@ -207,11 +207,11 @@
 }
 .pf-hero-name {
   font-family: var(--font-display);
-  font-size: clamp(40px, 5.5vw, 72px);
+  font-size: clamp(48px, 6.5vw, 88px);
   font-weight: 900;
   color: #fff;
   letter-spacing: -0.04em;
-  line-height: 1;
+  line-height: 0.95;
   margin: 0;
 }
 .pf-hero-name-input {
@@ -277,29 +277,33 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 20px;
-  padding: 40px 24px;
+  gap: 24px;
+  padding: 48px 32px;
+  min-width: 280px;
 }
 
 /* Score ring */
 .pf-score-ring-wrap {
   position: relative;
-  width: 128px;
-  height: 128px;
+  width: 140px;
+  height: 140px;
 }
 .pf-score-ring-svg {
   transform: rotate(-90deg);
+  width: 140px;
+  height: 140px;
 }
 .pf-score-ring-track {
   fill: none;
-  stroke: var(--line);
-  stroke-width: 8;
+  stroke: rgba(0, 48, 73, 0.1);
+  stroke-width: 10;
 }
 .pf-score-ring-fill {
   fill: none;
-  stroke: var(--primary);
-  stroke-width: 8;
+  stroke: var(--champagne);
+  stroke-width: 10;
   stroke-linecap: square;
+  filter: drop-shadow(0 0 6px rgba(201, 169, 110, 0.5));
 }
 .pf-score-ring-center {
   position: absolute;
@@ -312,7 +316,7 @@
 }
 .pf-score-number {
   font-family: var(--font-display);
-  font-size: 36px;
+  font-size: 40px;
   font-weight: 900;
   color: var(--dark);
   letter-spacing: -0.04em;
@@ -331,25 +335,50 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 4px;
-  padding: 12px 24px;
+  gap: 6px;
+  padding: 16px 28px;
   background: var(--dark);
   text-align: center;
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+}
+/* Shimmer for Partner tier (or all tiers for polish) */
+.pf-tier-badge-pill::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    105deg,
+    transparent 30%,
+    rgba(201, 169, 110, 0.1) 50%,
+    transparent 70%
+  );
+  animation: tierShimmer 2.4s infinite;
+}
+@keyframes tierShimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
 }
 .pf-tier-badge-name {
   font-family: var(--font-display);
-  font-size: 22px;
+  font-size: 26px;
   font-weight: 900;
   color: var(--champagne);
   letter-spacing: -0.02em;
   line-height: 1;
+  text-shadow: 0 0 24px rgba(201, 169, 110, 0.4);
+  position: relative;
+  z-index: 1;
 }
 .pf-tier-badge-desc {
   font-size: 10px;
   font-weight: 600;
   letter-spacing: 0.07em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.5);
+  color: rgba(255, 255, 255, 0.45);
+  position: relative;
+  z-index: 1;
 }
 
 /* Edit / save buttons */
@@ -416,6 +445,54 @@
   color: var(--dark);
 }
 
+/* ── Quick nav tabs (Identity / Earnings / Archive) ──────────── */
+.pf-quick-nav {
+  background: var(--dark);
+  border-bottom: 2px solid var(--primary);
+}
+.pf-quick-nav-inner {
+  max-width: var(--content-width);
+  margin: 0 auto;
+  padding: 0 32px;
+  display: flex;
+  gap: 0;
+}
+.pf-nav-tab {
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.45);
+  padding: 14px 24px;
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: color var(--t-fast), border-color var(--t-fast);
+}
+.pf-nav-tab:hover {
+  color: rgba(255, 255, 255, 0.8);
+}
+.pf-nav-tab--active {
+  color: #fff;
+  border-bottom-color: var(--champagne);
+}
+.pf-nav-tab-dot {
+  width: 5px;
+  height: 5px;
+  background: var(--champagne);
+  display: none;
+}
+.pf-nav-tab--active .pf-nav-tab-dot {
+  display: block;
+}
+
 /* ── Stats strip ─────────────────────────────────────────────── */
 .pf-stats-strip {
   display: grid;
@@ -445,6 +522,9 @@
   color: var(--dark);
   letter-spacing: -0.04em;
   line-height: 1;
+}
+.pf-stat-big--money {
+  color: var(--champagne);
 }
 .pf-stat-unit {
   font-family: var(--font-display);
@@ -769,7 +849,7 @@
 }
 .pf-tier-bar-fill {
   height: 100%;
-  background: var(--primary);
+  background: linear-gradient(90deg, var(--primary) 0%, var(--champagne) 100%);
   transition: width 800ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 .pf-tier-tiers-row {
@@ -1133,6 +1213,13 @@
 }
 
 @media (max-width: 768px) {
+  .pf-quick-nav-inner {
+    padding: 0 16px;
+  }
+  .pf-nav-tab {
+    padding: 12px 16px;
+    font-size: 10px;
+  }
   .pf-hero-dark-panel {
     padding: 40px 24px 40px;
   }
