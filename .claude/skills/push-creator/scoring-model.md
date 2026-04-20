@@ -1,31 +1,30 @@
-# Push Score Scoring Model
+# Push Score Scoring Model — v5.2
 
 ## Composite Formula
 
-**Push Score = (Completion × 0.30) + (Reliability × 0.20) + (Quality × 0.25) + (Merchant Satisfaction × 0.15) + (Engagement × 0.10)**
+**Push Score = (VerifiedCustomerRate × 0.30) + (Reliability × 0.20) + (Quality × 0.25) + (MerchantSatisfaction × 0.15) + (Engagement × 0.10)**
 
-Range: 0-100
+Range: 0–100.
 
 ---
 
-## 5 Scoring Dimensions
+## 1. Verified Customer Rate (30% weight)
 
-### 1. Completion Rate (30% weight)
-**Formula:** `(Completed / Accepted) × 100`
+**Formula:** `(Verified customers delivered / Promised customers in campaign contract) × 100`
 
-| Completion % | Points |
-|---|---|
-| 95-100% | 30 |
-| 85-94% | 24 |
-| 70-84% | 18 |
-| 50-69% | 10 |
+| Rate | Points |
+|------|--------|
+| 95–100% | 30 |
+| 85–94% | 24 |
+| 70–84% | 18 |
+| 50–69% | 10 |
 | <50% | 0 |
 
-**Rationale:** First and foremost — did you finish what you promised?
+**Rationale:** v5.2 core question — did the creator deliver the verified customers promised in the campaign contract? Replaces v4.1 "campaign completion" which measured posting activity rather than verified customer outcomes.
 
 ---
 
-### 2. Reliability (20% weight)
+## 2. Reliability (20% weight)
 **Formula:** `((On-time / Total) × 0.6 + (1 - No-show rate) × 0.4) × 100`
 
 | Reliability Score | Points |
@@ -43,7 +42,7 @@ Range: 0-100
 
 ---
 
-### 3. Content Quality (25% weight)
+## 3. Content Quality (25% weight)
 **Formula:** `(Avg merchant content rating / 5) × 100`
 
 | Merchant Rating | Points |
@@ -57,7 +56,7 @@ Range: 0-100
 
 ---
 
-### 4. Merchant Satisfaction (15% weight)
+## 4. Merchant Satisfaction (15% weight)
 **Formula:** `(Avg rebook score / 5) × 100`
 
 | Rebook Score | Points |
@@ -71,7 +70,7 @@ Range: 0-100
 
 ---
 
-### 5. Engagement Proxy (10% weight)
+## 5. Engagement Proxy (10% weight)
 **Formula:** `min((Avg engagement rate / 3%) × 100, 100)`
 
 | Engagement Rate | Points |
@@ -81,17 +80,17 @@ Range: 0-100
 | 1-2% | 4 |
 | <1% | 2 |
 
-**Rationale:** Audience resonance matters, but is capped at 10% to prevent follower-only creators from gaming the system.
+**Rationale:** Audience resonance matters, but capped at 10% to prevent follower-only creators from gaming the system.
 
 ---
 
-## Cold Start Scoring
+## Cold Start Scoring (v5.2)
 
 **New Creators:**
 - Display "New" badge; no visible score
-- Internal provisional score starts at **50** (eligible for Seed tier)
-- After **2 completed campaigns** → real score calculated, tier assigned based on performance
-- Fast track: If first 2 campaigns complete AND avg merchant rating ≥ 4.0 AND score ≥ 55 → jump to Operator
+- Internal provisional score starts at **50** (eligible for T1 Seed tier)
+- After **2 completed campaigns** → real score calculated; tier assigned based on verified customer performance
+- Fast track: first 2 campaigns complete + merchant rating ≥ 4.0 + Score ≥ 55 → jump to T3 Operator
 
 ---
 
@@ -113,7 +112,7 @@ Range: 0-100
 
 ## Dispute Impact
 
-When a campaign completion is disputed:
+When a verified customer delivery is disputed:
 
 | Outcome | Score Impact |
 |---|---|
@@ -126,27 +125,25 @@ When a campaign completion is disputed:
 
 ---
 
-## Tier Transition Rules
+## Tier Transition Rules (v5.2)
 
-### Promotion
-- **Condition:** Score at or above tier threshold for **2 consecutive campaigns**
-- **Timing:** Auto-applied end-of-campaign
-- **From Seed:** Complete 2 campaigns + provisional score ≥ 40 → auto-promote to Explorer
-- **Upgrade nudge:** Seed creators receive $5 cash bonus upon completing 2nd campaign (acceleration incentive)
+### Promotion (retained v4.1 base, updated thresholds)
+- Score at or above tier threshold for **2 consecutive campaigns**
+- T1 → T2 special: 2 verified customers in first 2 campaigns (v5.2 new)
+- T3 → T4 and above: INVITE-ONLY per SKILL.md §3
 
-### Fast Track (Updated v4.1)
-- **Condition:** Score ≥ 55 achieved within first 2 campaigns + avg merchant rating ≥ 4.0
-- **Effect:** Skip Explorer, jump directly to Operator
-- **Rationale:** Threshold aligned with Operator entry (55+), not Proven (65+). Exceptional newcomers earn Operator access; they still need to prove sustained performance for further promotion.
+### Fast Track (v5.2 aligned)
+- Score ≥ 55 in first 2 campaigns + merchant rating ≥ 4.0 → T3 Operator
+- Rationale: threshold aligned with T3 entry, not T4 Proven. Exceptional newcomers earn Operator access; sustained verified customer throughput required for further promotion.
 
-### Demotion (Updated v4.1)
-- **Grace period:** Score falls below tier threshold → **30-day grace window** (time-based, not campaign-count-based)
-- **During grace period:** Commission rate drops to next-lower-tier rate; payout speed and concurrent campaign limit remain unchanged
-- **After grace period:** If score still below threshold at end of 30 days, full demotion applied
-- **Exception:** Demotion never happens during active campaign; evaluated between campaigns
-- **Notification:** Creator receives warning immediately when score drops below threshold; reminder at day 15; demotion applied at day 30 if unrecovered
+### Demotion (v5.2 30-day time-based)
+- Score falls below tier threshold → 30-day grace window (time-based, not campaign-count-based)
+- During grace: rate drops to next-lower tier; retainer suspended for T4–T6
+- End of grace: full demotion applied if score still below threshold
+- Exception: demotion never happens during active campaign; evaluated between campaigns
+- Notification: warning at score-drop, reminder at day 15, demotion at day 30
 
-**Why time-based instead of campaign-based:** Campaign-based (old: 3 campaigns) allowed creators to stall — do nothing for months and retain tier. Time-based ensures consistent accountability. The commission-rate drop during grace period prevents exploiting high-tier benefits with low-tier performance.
+**Why time-based instead of campaign-based:** campaign-based allowed creators to stall — do nothing for months and retain tier. Time-based ensures consistent accountability. The rate drop during grace period prevents exploiting high-tier benefits with low-tier verified customer performance.
 
 ---
 
@@ -154,18 +151,18 @@ When a campaign completion is disputed:
 
 | Attack Type | Detection Mechanism | Defense |
 |---|---|---|
-| Cherry-picking easy campaigns | Track campaign difficulty/riskiness distribution | Require balanced mix (at least 1 each of food type, time slot, location) for promotion |
+| Cherry-picking easy campaigns | Track campaign difficulty / verified-customer distribution | Require balanced mix (at least 1 each of food type, time slot, location) for promotion |
 | Fake engagement (buying likes) | Spike analysis; follower/engagement ratio test | Engagement = only 10% of score; easy to game but capped |
 | Merchant collusion | Repeated same-merchant pairing | Flag any creator-merchant pair with >3 consecutive campaigns; audit ratings |
 | Low-quality rushing | Merchant content rating | Quality = 25% of score; high quality required for tier progression |
 | Multi-accounting | Device fingerprint + IP tracking | Link accounts sharing same device; one account per creator |
-| Milestone bonus gaming | Abnormal referral spike patterns | Cross-reference referral IPs/devices; flag self-referral patterns |
+| Verified-customer fraud | Abnormal verified spike patterns | Cross-reference verification IPs/devices; flag self-referral patterns; -25 score + 30-day suspension |
 
 ---
 
 ## Phase 1 Spreadsheet Formula
 
-**Columns:** Creator name | Campaigns accepted | Completed | Completion rate | On-time submissions | Reliability | Avg content rating | Avg rebook score | Avg engagement rate | Push Score | Tier
+**Columns:** Creator name | Campaigns accepted | Completed | Verified Customer Rate | On-time submissions | Reliability | Avg content rating | Avg rebook score | Avg engagement rate | Push Score | Tier
 
 **Excel formula:**
 ```
@@ -173,7 +170,7 @@ When a campaign completion is disputed:
 ```
 
 **Explanation:**
-- `D` = Completion rate (already %)
+- `D` = Verified Customer Rate (v5.2: verified customers delivered / promised, expressed as decimal-of-1). Replaces v4.1 "Completion rate."
 - `F` = Reliability (already %)
 - `G` = Avg content rating (1-5 scale)
 - `H` = Avg rebook score (1-5 scale)

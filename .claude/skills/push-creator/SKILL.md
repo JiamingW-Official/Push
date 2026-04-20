@@ -1,109 +1,138 @@
 ---
 name: push-creator
-description: "Push creator system: 6-tier progression, scoring model, recruitment, retention, commission structure. Use for any creator-related question."
+description: "Push 6-Tier Creator System v5.2 Two-Segment Economics, scoring, tier progression, recruitment. Use for any creator question."
 ---
 
-# Push Creator System
+# Push Creator System — v5.2 Two-Segment Economics
 
-## Philosophy
-"Anyone can start. Performance determines how far you go."
-Creators are valued by completion rate, reliability, merchant satisfaction, and commercial results — not follower count.
+## 0. Authority Notice
+v5.2 (2026-04-20) introduces Two-Segment Economics:
+- T1–T3: Per-verified-customer pricing (low barrier, high throughput)
+- T4–T6: Retainer + per-customer + equity (retention moat)
+v4.1 "per-campaign" pricing is DEPRECATED.
 
-## 6-Tier System v4.1
+## 1. Six-Tier Ladder
 
-| Tier | Material | Push Score | Base Pay (Standard) | Commission | Referral Milestone Bonus | Payout Speed | Concurrent |
-|------|----------|-----------|---------|------------|--------------------------|-------------|------------|
-| Seed | Clay | None (provisional 50) | Free product only | 0% | — | Instant redemption | 1 |
-| Explorer | Bronze | 40+ | $12/campaign | 0% | — | T+3 | 2 |
-| Operator | Steel | 55+ | $20/campaign | 3% | $15 @ 30 txns/mo | T+2 | 3 |
-| Proven | Gold | 65+ | $32/campaign | 5% | $30 @ 40 txns/mo | T+1 | 4 |
-| Closer | Ruby | 78+ | $55/campaign | 7% | $50 @ 60 txns/mo | Same-day | 5 |
-| Partner | Obsidian | 88+ | $100/campaign | 10% | $80 @ 80 txns/mo | Instant | 6 |
+| Tier | Name | Material | Identity | Trust |
+|------|------|---------|---------|------|
+| T1 | Seed | Clay | Beginner, unverified | New |
+| T2 | Explorer | Bronze | Regular, verified | Verified |
+| T3 | Operator | Steel | Reliable, scales volume | Trusted |
+| T4 | Proven | Gold | Contracted performer | Contract |
+| T5 | Closer | Ruby | Equity-granted partner | Partner L1 |
+| T6 | Partner | Obsidian | Senior equity partner | Partner L2 |
 
-**Material Identity System:** Each tier has a material name and unique identity color used in badges, UI, and communications. Progression: Clay `#b8a99a` → Bronze `#8c6239` → Steel `#4a5568` → Gold `#c9a96e` → Ruby `#9b111e` → Obsidian `#1a1a2e`. Each tier occupies a distinct hue family: taupe → copper → graphite → gold → red → near-black. Visual spec in Design.md → Tier Identity System v4.1.
+## 2. Tier Economics (Authoritative)
 
-### Base Pay Determination — Campaign Difficulty Multiplier
-Base pay is NOT arbitrary. Each campaign is assigned a difficulty tier that multiplies the tier's base rate:
+### T1 Clay (Seed)
+- Per-verified-customer: $5
+- Free item from merchant (valued $5–15 retail, ~$3–5 COGS)
+- First-verified-customer bonus: +$10
+- T1 minimum earning guarantee: $15 if 1 campaign completed with 0 verified customers (merchant fail-to-deliver protection)
+- Monthly theoretical range: $30–$75
+- Graduation to T2: 2 verified customers within first 2 campaigns → auto-promote
 
-| Difficulty | Multiplier | Examples |
-|-----------|-----------|---------|
-| Standard | 1.0x | Single-post story, simple check-in |
-| Premium | 1.3x | Reel/TikTok, multi-location, weekend |
-| Complex | 1.6x | Video series, event coverage, multi-day |
+### T2 Bronze (Explorer)
+- Per-verified-customer: $15
+- Free item
+- Monthly theoretical: $150–$450 (10–30 customers/mo)
 
-**Example:** Operator base rate = $20. Standard campaign = $20, Premium = $26, Complex = $32.
-Difficulty is set by the platform based on campaign requirements; merchant cannot override downward.
+### T3 Steel (Operator)
+- Per-verified-customer: $20
+- 3% referral commission (on total merchant revenue from referred customer, 30-day window)
+- Monthly theoretical: $400–$900
 
-### Commission Structure — Redesigned for Local F&B
-**Problem solved:** Pure percentage commission on $5-8 F&B transactions yields negligible absolute value (3% of $6 = $0.18). Commission alone cannot serve as the "behavioral inflection point."
+### T4 Gold (Proven)
+- Monthly retainer: $800
+- Per-verified-customer: $25
+- 10% referral commission
+- 30-day guaranteed minimum: $800 even if 0 customers delivered (merchant responsibility)
+- Monthly theoretical: $1,500–$2,500
 
-**Solution: Percentage + Referral Milestone Bonus (hybrid model)**
-- **Percentage commission** still applies per transaction (3%-10% by tier) — builds the "passive income" narrative
-- **Referral Milestone Bonus** unlocks when creator's referral transactions hit a monthly threshold — this is where the real money is
+### T5 Ruby (Closer)
+- Monthly retainer: $1,800
+- Per-verified-customer: $40
+- 15% referral commission
+- Equity: 0.02% RSA (Restricted Stock Agreement), 4-year vesting 1-year cliff
+- Monthly theoretical: $3,000–$4,500
 
-| Tier | Commission % | Milestone Threshold | Milestone Bonus |
-|------|-------------|--------------------|-----------------| 
-| Operator | 3% | 30 transactions/month | +$15 |
-| Proven | 5% | 40 transactions/month | +$30 |
-| Closer | 7% | 60 transactions/month | +$50 |
-| Partner | 10% | 80 transactions/month | +$80 |
+### T6 Obsidian (Partner)
+- Monthly retainer: $3,500
+- Per-verified-customer: $60
+- 20% referral commission
+- Equity: 0.05%–0.2% RSA depending on tenure
+- Monthly theoretical: $5,000–$8,000
 
-**Concrete example — Operator:**
-- 40 referral transactions × $7 avg = $280 total referral value
-- Commission: $280 × 3% = $8.40
-- Milestone bonus (hit 30+): $15
-- **Total referral income: $23.40/month** (vs. $8.40 without milestone)
+## 3. Onboarding & Progression
 
-This makes "unlock commission at Operator" feel like a real inflection point, not a rounding error.
+### T1 Entry (all creators start here)
+- Social proof minimum: 500+ followers OR 5+ organic local posts
+- Application: single-form submission + 1-hour pilot campaign sample
 
-### 30-Day Attribution Window
-- All transactions through a creator's referral link within 30 days count toward commission + milestone
-- Window resets if consumer uses a different creator's referral link (last-click attribution)
-- Creator dashboard shows real-time referral count + distance to milestone
+### Promotion Rules (v5.2)
+- T1 → T2: 2 verified customers in first 2 campaigns
+- T2 → T3: 10 verified customers cumulative + Push Score ≥ 55
+- T3 → T4: Contract offered by Push based on demonstrated monthly throughput ≥ 20 customers + Push Score ≥ 70 (INVITE-ONLY)
+- T4 → T5: Performance review at Month 6 on contract; sustained throughput ≥ 40 customers/mo + Score ≥ 80 (INVITE-ONLY with equity offer)
+- T5 → T6: Senior-only; 12+ months on T5 + Score ≥ 90 + unique strategic value (INVITE-ONLY)
 
-### Seed Tier — Key Differentiator
-- **Zero barrier:** No follower count requirement. Just register + fill profile.
-- **15-20 slots per campaign** (high volume, low cost) — transforms Push from "influencer platform" to "local community acquisition platform"
-- **Upgrade path:** Complete 2 campaigns + provisional score ≥ 40 → auto-promote to Explorer
-- **Upgrade nudge:** After completing 1st campaign, creator receives "$5 cash bonus" on 2nd campaign completion as acceleration incentive
+### Demotion (v5.2 30-day grace)
+- If Push Score drops below tier threshold: 30-day grace window
+- Grace period: creator earns at next-lower tier rate; retainer suspended (T4–T6)
+- End of grace: if score unrecovered, full demotion; retainer and equity vesting suspended per contract
 
-### Progression Philosophy
-Each tier unlocks exactly what the previous tier's creators start craving:
-- Seed → Explorer: Official identity + cash payment + **referral data transparency**
-- Explorer → Operator: Commission + milestone bonus = real passive income (behavioral inflection point)
-- Operator → Proven: Premium brand partnerships + **merchant tier preference setting**
-- Proven → Closer: Dedicated manager + structured campaign feedback
-- Closer → Partner: Co-branding + advisory access to platform roadmap
+## 4. Push Score — Composite Formula
 
-### Merchant Tier Linkage (Bidirectional)
+See `scoring-model.md` in this folder for full detail.
 
-**Merchant → Creator access:**
-- **Starter ($19.99/mo):** Seed + Explorer + Operator, 3 slots/campaign
-- **Growth ($69/mo):** All tiers (Proven priority), 5 slots/campaign
-- **Pro ($199/mo):** All tiers + can invite specific Closer/Partner, 8 slots/campaign
+Summary:
+- Completion Rate: 30%
+- Reliability: 20%
+- Content Quality: 25%
+- Merchant Satisfaction: 15%
+- Engagement: 10%
 
-**Creator → Merchant preference (NEW):**
-- **Proven+:** Can set preference to prioritize Growth/Pro merchants
-- **Closer+:** Can filter to only accept Pro merchant campaigns
-- **Partner:** Can set exclusive merchant partnerships (1-3 merchants)
+**v5.2 change:** "Completion" = verified customer delivery rate, NOT campaign completion rate.
 
-This bidirectional linkage gives merchants a concrete reason to upgrade plans.
+## 5. Dispute & Anti-Gaming
 
-## Education & Growth Benefits by Tier (NEW)
+### Dispute Impact
+- Creator at fault (no-show, fake proof, fraud): -15 score
+- Partially at fault: -8
+- Not at fault: 0
+- Merchant false claim: +2 (trust restoration)
 
-| Tier | Education Benefit |
-|------|------------------|
-| Seed | Welcome kit: "Your First Campaign" checklist + 3 example posts |
-| Explorer | Content Creation Guide + Best Practices Library + **referral analytics dashboard** |
-| Operator | Data Literacy Tutorial (how to read your referral data and optimize) |
-| Proven | Monthly 1-on-1 content review with Push team |
-| Closer | Dedicated account manager + strategy coaching sessions |
-| Partner | Quarterly business review + media feature opportunities |
+### Anti-Gaming Measures
+- Device fingerprint + IP for self-referral detection
+- Merchant collusion: flag any >3 consecutive campaign same creator-merchant pair
+- Fake engagement: engagement capped at 10% of score
+- Verified customer fraud: -25 score + 30-day suspension + merchant refund
 
-These are high-perceived-value, low-cost benefits that directly improve content quality → merchant satisfaction → creator score → tier progression. Virtuous cycle.
+## 6. Creator UI Tier Colors
 
-## Sub-files Reference
+Pending P1-1 decision. Under review: Path A = collapse to 6 brand colors; Path B = 6 independent tier colors. This section defers to Design.md v5.2 design-token update post-P1-1 decision.
 
-**All scoring details, dimensions, decay, disputes, tier transitions, and anti-gaming measures:** 詳見 `scoring-model.md`
+## 7. v4.1 Historical Reference (DEPRECATED 2026-04-20)
 
-**Creator recruitment strategy, DM scripts, retention architecture, and what-each-tier-unlocks narrative:** 詳見 `recruitment-retention.md`
+All content below is DEPRECATED. Retained for archaeology only. Per-campaign pricing, milestone bonuses, and take-rate model are replaced by the v5.2 Two-Segment Economics above.
+
+### v4.1 6-Tier Pay Table — DEPRECATED 2026-04-20
+Base pay in v4.1 was paid per campaign (Standard difficulty); v5.2 replaces this with per-verified-customer.
+
+| Tier | Base Pay | Commission | Referral Milestone Bonus |
+|------|---------|------------|--------------------------|
+| Seed | Free product only | 0% | — |
+| Explorer | $12 | 0% | — |
+| Operator | $20 | 3% | $15 @ 30 txns/mo |
+| Proven | $32 | 5% | $30 @ 40 txns/mo |
+| Closer | $55 | 7% | $50 @ 60 txns/mo |
+| Partner | $100 | 10% | $80 @ 80 txns/mo |
+
+### v4.1 Campaign Difficulty Multiplier — DEPRECATED 2026-04-20
+Standard 1.0x / Premium 1.3x / Complex 1.6x applied to per-campaign base rate. Retired because v5.2 pays on verified customers delivered, not campaign difficulty.
+
+### v4.1 Commission Hybrid Model — DEPRECATED 2026-04-20
+Pure percentage + milestone bonus at 30/40/60/80 monthly referral transactions. Retired: pure-percent commission on $5–8 F&B events yielded $0.15–0.50 per event; replaced by direct per-verified-customer payout in v5.2 §2.
+
+### v4.1 Merchant Tier Linkage — DEPRECATED 2026-04-20
+Starter/Growth/Pro access tiers and bidirectional creator-merchant preference filters retired alongside v4.1 subscription tiers. See push-pricing appendix for the full deprecated subscription structure.
