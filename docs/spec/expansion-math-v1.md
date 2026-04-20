@@ -399,3 +399,327 @@ For founder (Jiaming), Ops lead (Prum), Creator Ops (Milly), future ML Advisor, 
 ---
 
 *END OF DRAFT v1. Prepared 2026-04-20 as P2-3 deliverable. Founder sign-off pending by 2026-05-04. This document supersedes v5.1 expansion pace upon sign-off and becomes the authoritative source for all external claims about Push's metro, neighborhood, merchant, and revenue trajectory. Review cadence post-sign-off: monthly for first 6 months, then quarterly.*
+
+---
+
+## §9. Downstream Update Diffs (actionable)
+
+Each downstream file listed in §7 gets a concrete, paste-ready edit. Diffs are line-numbered where the file is stable; where the target is a section body that may shift, the diff uses section references and verbatim anchor strings.
+
+### 9.1 `.claude/skills/push-gtm/SKILL.md`
+
+**Change 1 — Launch Philosophy (current line 9):**
+- BEFORE: `Concentrate on one small zone. One neighborhood, ~10 merchants, ~30 curated creators. Prove the loop before expanding. **Never launch "a city" — launch a ZIP code.**`
+- AFTER: append a new sentence at the end of the same paragraph: `Expansion pace anchored to SLR math — see docs/spec/expansion-math-v1.md §3.1 for month-by-month merchant / neighborhood / ops-FTE table. Any "Top-5 metro by M18" framing is deprecated as of 2026-04-20.`
+
+**Change 2 — Expansion Triggers (current lines 56-62):**
+- BEFORE (the whole trigger list): a flat 4-bullet list with no SLR anchoring.
+- AFTER: add 5th bullet: `- SLR ≥ thresholds per expansion-math-v1 §3.3 (M12→M18 gate: SLR ≥20 trailing 2mo; M18→M24 gate: SLR ≥20 trailing 2mo + 8 neighborhoods at Williamsburg-level metrics; M24→M30 gate: SLR ≥25 sustained 3mo + ConversionOracle v2 precision ≥90% for 8 weeks; M30→M36 gate: SLR ≥30 + multi-state compliance playbook executed; M36→M48 gate: ConversionOracle v3 shipped + SLR ≥50 sustained 6mo + Series A closed).`
+
+**Change 3 — new subsection after Expansion Triggers:**
+- Insert after line 62: a new `## Pace & Scale Table` subsection that links to `docs/spec/expansion-math-v1.md §3.1` as the authoritative merchant / neighborhood / ARR trajectory. Copy the 6-row M12–M48 table inline OR link by reference; prefer inline for skill-file self-containment.
+
+### 9.2 `.claude/skills/push-metrics/SKILL.md` §1.1 Definitions
+
+**Change 4 — append to the `Active Campaign` bullet (current line 13):**
+- BEFORE: `**Active Campaign** = campaign with status IN ('live', 'scheduled-future', 'verifying') AND NOT ('paused', 'cancelled', 'completed-final', 'draft'). Campaigns in verifying state (customer scanned, awaiting verification) count for 48h then roll off.`
+- AFTER: append sentence at end of bullet: `Steady-state assumption: 1.0 campaign/mo/merchant (sensitivity table in docs/spec/expansion-math-v1.md §2.2). First-3-months-of-merchant-lifecycle spike: 1.5.`
+
+### 9.3 `.claude/skills/push-metrics/SKILL.md` §1.4 Decomposition
+
+**Change 5 — add sensitivity note after line 35 (after the Levers list):**
+- INSERT new paragraph: `**Campaign-frequency sensitivity:** the SLR target of 25 at M12 is consistent with 1.0 campaign/mo/merchant at 25-merchant scale (1.0 ops FTE). At 2.0 campaigns/mo/merchant the same SLR requires 2.0 ops FTE (Appendix A of docs/spec/expansion-math-v1.md). Validate campaign-frequency assumption with Pilot data before scaling. See §5 kill criterion of that doc.`
+
+### 9.4 `.claude/skills/push-metrics/SKILL.md` §6.4 Competitor Benchmarks
+
+**Change 6 — replace the final italic line (current line 156):**
+- BEFORE: `*Any competitor number must be flagged "estimated" in external comms until sourced to disclosed financials.*`
+- AFTER: `*Any competitor number must be flagged "estimated" in external comms until sourced to disclosed financials.* **Benchmark calibration note:** agency SLR 3–5 reflects ~4 campaigns/mo/merchant (industry norm); the v4.1 implicit 4-campaigns assumption therefore benchmarked Push as an agency. v5.2 corrected assumption of 1.0 campaign/mo/merchant at SLR 25 positions Push as mid-stack AI-augmented ops (see docs/spec/expansion-math-v1.md §2.1).`
+
+### 9.5 `.claude/skills/push-pricing/SKILL.md` §5 Unit Economics
+
+**Change 7 — after the `12-Month LTV / CAC` subsection header (around line 89), append a cross-reference paragraph:**
+- INSERT: `**Merchant-base revenue trajectory:** per-merchant $2,620/mo Coffee+ M12 baseline assumes 85 verified customers/mo at steady state. For merchant-base aggregate revenue trajectory from M12 ($25K MRR) → M36 ($10.8M ARR = $10M threshold) → M48 ($19.8M ARR), see docs/spec/expansion-math-v1.md §5.1. LTV figure here ($6,354) is per-merchant; expansion spec §5 gives the cross-cohort ARR build.`
+
+### 9.6 `docs/v5_2_status/numeric_reconciliation.md`
+
+**Change 8 — append 12 new rows (rows 113–124) per §7.2 of this spec.** No diff block needed; the row-by-row table in §7.2 is already paste-ready. Owner: Jiaming. Deadline: before any Series Seed investor call referencing expansion math.
+
+### 9.7 `docs/v5_2_status/P1_rollup.md` §Open Risks
+
+**Change 9 — add row 9 to the Open Risks table (current lines 228-236):**
+- INSERT new row after row 8: `| 9 | Expansion pace miscalibrated (campaigns/mo/merchant assumption wrong) | High (breaks SLR target and ops FTE ramp) | Pilot Week 12 actual >2.0 campaigns/mo/merchant OR <0.7 | Founder |`
+
+**Change 10 — Achievements section:**
+- INSERT bullet: `- P2-3 expansion-math-v1 drafted (docs/spec/expansion-math-v1.md); v5.1 "Top-5 metro by M18" pace deprecated; SLR-consistent pace table committed for Seed + Series A narrative.`
+
+### 9.8 `docs/v5_2_status/audits/05-investor-dry-run.md`
+
+**Change 11 — Q2 answer (current lines 53-55):**
+- BEFORE (last line of "Our answer"): the three-asymmetry framing ends without a pace reference.
+- AFTER: append sentence: `Asymmetry (4) added post-expansion-math-v1: neighborhood-density compounding — Push's pace (docs/spec/expansion-math-v1.md §3.1) is 5 neighborhoods at M12 / 8 at M24 / 40+ at M36, which is the OpenTable-era economics Meta cannot replicate by ad-product fiat; neighborhood density is a supply-and-ops investment, not a feature flag.`
+
+**Change 12 — Q3 answer (current lines 64-67):**
+- BEFORE: answer ends with stressed case and Groupon ~2.25x churn math.
+- AFTER: append sentence: `MRR trajectory is independent of lifetime assumption — at $25K (M12) → $240K (M24) → $900K (M36) → $1.65M (M48) per docs/spec/expansion-math-v1.md §5.1, the ARR build holds under 6-month lifetime as long as Pilot-to-Beachhead conversion ≥60% (push-pricing §9 Experiment #1); lifetime stresses LTV/CAC, not the top-line ramp.`
+
+**Change 13 — Q12 answer (current lines 163-164):**
+- BEFORE: references "SLR 25 at M-12 with, say, 250 active campaigns at M-12 ... 10 Ops FTE." This is the v5.1 arithmetic error.
+- AFTER: REPLACE with: `SLR 25 at M12 with 25 active campaigns (25 merchants × 1.0 campaign/mo per docs/spec/expansion-math-v1.md §3.1) implies 1.0 ops FTE, not 10. The 250-campaigns-at-M12 figure was an artifact of the deprecated 4-campaigns/mo assumption. Corrected ramp: 1.0 ops FTE at M12 → 4.0 at M18 → 8.0 at M24 → 16.0 at M30 → 24.0 at M36. Current team (3 headcount, ~1 FTE-equivalent ops-allocated) is consistent with M12. Ops ramp from M12 starts at hire cadence of ~1 ops role per quarter beginning M9 (per §Open Questions #6 of expansion-math-v1).`
+
+**Change 14 — Q14 answer (current lines 184-188):**
+- BEFORE: answer acknowledges no Beachhead-only CAC data exists.
+- AFTER: append sentence: `At M48 per docs/spec/expansion-math-v1.md §5, aggregate ARR is $19.8M (not the $25–35M that was implicit in v5.1's 3,000-merchant Top-5-metro claim). The revised Series B credibility anchor is $10M ARR at M36 (600 merchants); Series A remains the M18–M24 window at $2.88M ARR.`
+
+**Change 15 — Q15 answer (current lines 196-198):**
+- BEFORE: multiple ranges based on v5.1 implicit revenue.
+- AFTER: append: `Exit multiples re-anchored to M48 ARR $19.8M (not v5.1 implicit $25–35M). Toast 6–10x comp yields $120–200M exit at M48 ARR — honest revision of prior aspiration. Shopify 10–15x comp requires post-M48 ramp to $30M ARR for the vertical-SaaS-comparable valuation to hold.`
+
+---
+
+## §10. Scenario Planning (Bull / Base / Bear)
+
+Three-scenario financial model for the M12–M48 window. Probability weights reflect the founder's honest read at 2026-04-20 and are pre-Pilot; update after Pilot W12 data lands.
+
+### 10.1 Bull case (30% probability)
+
+**Operating assumptions:**
+- Campaigns/mo/merchant: 1.5 (sustained, not first-3-months-only)
+- Avg merchant lifetime: 12 months (retention add-on adoption >50%)
+- Pilot-to-Paid conversion: 60%
+- ConversionOracle v2 precision: 92%+ by M18; v3 shipped by M30
+- Secondary metro activation: LA live at M20 (ahead of base-case M30)
+
+**Financial projections:**
+- M24 MRR: $360K ARR $4.3M; M36 MRR $1.2M ARR $14.4M; M48 MRR $2.5M ARR $30M
+- LTV: $9,500 (12 × $706 × retention factor); CAC $350 (subsidy amortizes faster); **LTV/CAC 27x base / 18x stressed**
+- Ops FTE at M36: 24 at SLR 37 midway to SLR 50
+- Headcount M36: 40 total (ops 24, creator ops 4, eng 8, sales 2, founder 1, COO 1)
+
+**Runway / raises:**
+- Series Seed $2.5M closes Q3 2026 at $12M post (strong traction)
+- Series A $12M closes M18 at $60M post (NYC-dense + LA first neighborhood live)
+- Series B $30M closes M36 at $180M post (Shopify-comparable multiple on vertical SaaS)
+
+**Decisions that differ vs. base:**
+- Secondary metro (LA) accelerated to M20; Miami starts at M30; Austin at M42
+- T4 retainer issued at M8 (not M10); T5 first equity grant at M14 (not M18)
+- Founder transitions out of ops IC work at M15 (not M24)
+
+### 10.2 Base case (50% probability — default plan)
+
+**Operating assumptions:** per main body of this doc. Campaigns 1.0/mo/merchant; retention 9 months; Pilot-to-Paid 40%; ConversionOracle v2 precision 90% by M24; v3 by M36; secondary metro at M30.
+
+**Financial projections:**
+- M24 MRR $240K ARR $2.88M; M36 MRR $900K ARR $10.8M; M48 MRR $1.65M ARR $19.8M
+- LTV $6,354; CAC $420; **LTV/CAC 15.1x base / 10x stressed**
+- Ops FTE at M36: 24 at SLR 25 (or 12 at SLR 50 if v3 lands)
+- Headcount M36: 34 total (ops 24, creator ops 3, eng 5, sales 1, founder 1)
+
+**Runway / raises:**
+- Series Seed $1.5M closes Q3 2026 at $8M post
+- Series A $8M closes M24 at $40M post (NYC-dense)
+- Series B $20M closes M42 at $100M post
+
+**Decisions that match main body:** follow §3, §5, §7 verbatim.
+
+### 10.3 Bear case (20% probability)
+
+**Operating assumptions:**
+- Campaigns/mo/merchant: 0.6 (below base; standing campaigns dominate, fewer refresh cycles)
+- Avg merchant lifetime: 6 months (retention add-on uptake <30%; outcome-warranty fires at Month 3 >15% of time)
+- Pilot-to-Paid conversion: 25%
+- ConversionOracle v2 precision: stuck at 82% through M24; v3 slips past M42
+- Secondary metro activation: delayed to M36
+
+**Financial projections:**
+- M24 MRR $144K ARR $1.7M; M36 MRR $540K ARR $6.5M; M48 MRR $1M ARR $12M
+- LTV $4,200 (6 × $706); CAC $580 (higher subsidy per converted merchant); **LTV/CAC 7.2x base / 4.8x stressed** — still above 3x VC floor on Model A, below 3x on Model B
+- Ops FTE at M36: 24 at SLR 22 (v3 didn't land; labor-bound)
+- Headcount M36: 35 total (same roles, lower productivity)
+
+**Runway / raises:**
+- Series Seed $1.5M still closes at $6M post (narrative compression but pilot data carries)
+- Series A delayed to M30 at $6M on $24M post (lower multiple, narrative pivot to "best-in-class ops + category leadership" without the vertical-AI moat)
+- Series B not reachable by M48; company either (a) raises A+ bridge, (b) re-positions to agency-comparable valuation multiple, or (c) pursues strategic acquisition by OpenTable / Toast / Shopify
+
+**Decisions that differ vs. base:**
+- Bear case **delays Scale entry** from M24 to M30 (NYC-dense ramp takes 6 extra months)
+- T4 retainer issuance postponed to M14 (zero T4 until Beachhead graduates validate)
+- T5/T6 equity grants deferred until Series A close (de-risks Rule 701 until counsel confirms exemption math on slower merchant ramp)
+- Ops hiring slows from +1/quarter to +1/half; COO hire postponed past M30
+
+### 10.4 Scenario triggers — when do we know which case we're in?
+
+| Signal | Date | Bull threshold | Base threshold | Bear threshold |
+|---|---|---|---|---|
+| Pilot Week 2 verified-customer count per merchant | 2026-06-01 | ≥5 customers ≥70% of cohort | ≥3 customers ≥50% | <3 customers ≥50% |
+| Pilot Week 12 Pilot-to-Paid conversion | 2026-07-27 | ≥55% | 35–55% | <35% |
+| Beachhead Month 6 retention | 2026-11-01 | >85% | 70–85% | <70% |
+| Campaigns/mo/merchant at M6 Beachhead | 2027-01-01 | ≥1.3 | 0.8–1.3 | <0.8 |
+| ConversionOracle v2 precision at M12 | 2027-04-01 | ≥92% | 85–92% | <85% |
+
+**Primary trigger:** Pilot Week 12 data lands 2026-07-27. By that date we have clarity on ~60% of the scenario identification. The Month 6 Beachhead retention readout (2026-11-01) reinforces or revises the read. If the Pilot-to-Paid signal and the Beachhead retention signal disagree by more than one scenario tier, treat as Base case pending third data point.
+
+---
+
+## §11. Sensitivity Heat Map (2D)
+
+### 11.1 Heat map 1 — M24 MRR by Pilot→Paid × campaigns/mo/merchant
+
+Each cell = M24 MRR ($K/month). Anchored on 200 merchants at M24 (per §3.1), scaled by effective productivity (campaigns × conversion-to-customer rate) and MRR/merchant of $1,200 baseline. Series A narrative holds at ≥$180K M24 MRR ($2.16M ARR clearing the 10x base LTV/CAC story).
+
+| campaigns/mo/merchant ↓ \ Pilot→Paid → | 20% | 40% (base) | 60% |
+|---|---|---|---|
+| **0.5** | $95K (✗ Series A story breaks — narrative pivot required) | $145K (⚠ borderline — bear-case trajectory) | $195K (✓ holds at upper end of bear) |
+| **1.0 (base)** | $140K (⚠ borderline; needs retention upside) | **$240K (✓ base case — Series A story clean)** | $315K (✓ bull-adjacent) |
+| **1.5** | $190K (✓ holds) | $320K (✓ bull case threshold) | $420K (✓ strong bull — Series A oversubscribed) |
+
+**Reading:** the base cell (1.0 campaigns/mo, 40% conversion) sits at $240K MRR / $2.88M ARR — consistent with §5.1. Moving in either dimension one tier has asymmetric impact: dropping conversion to 20% at base frequency costs $100K MRR (40% of base); dropping frequency to 0.5 at base conversion costs $95K (40% of base). The diagonal is the danger zone (low-low = $95K; ✗).
+
+### 11.2 Heat map 2 — LTV/CAC by retention × Pilot→Paid
+
+Each cell = Model A LTV/CAC at base CAC $420 and base per-merchant monthly GM $706. ✓ = above 10x base VC comfort; ⚠ = 3–10x still fundable; ✗ = below 3x floor.
+
+| retention months ↓ \ Pilot→Paid → | 25% | 40% (base) | 60% |
+|---|---|---|---|
+| **6 months** | 6.3x (⚠ bear case — Model A only) | 10.1x (✓ base — clears 10x) | 15.1x (✓ strong) |
+| **9 months (base)** | **9.4x (⚠ high end of bear)** | **15.1x (✓ base case headline)** | **22.7x (✓ bull)** |
+| **12 months** | 12.6x (✓ bull-tier retention) | 20.2x (✓ strong bull) | 30.3x (✓ category-definer) |
+
+**Reading:** the base cell (9 months, 40%) is the $15.1x headline. The floor-breach cell (6 months, 25%) at 6.3x is still fundable on Model A but fails the 3x bar on Model B (Pilot-cost-as-CAC, per conversion-assumption-v1 §3.3 Model B 2.3x). The 12-month retention row is the bull-case anchor; it's the only row where all three conversion scenarios remain ✓.
+
+**Cross-spec note:** heat map 2 reads alongside conversion-assumption-v1 §3.3's four-scenario table. That spec stress-tests Pilot→Paid in isolation; this heat map adds the retention dimension.
+
+---
+
+## §12. Metrics Dashboard — Expansion Readiness
+
+Five gates, each with a single owner, a review cadence, and a specific measurable threshold. These replace the loose "Expansion Triggers" bullet list in push-gtm SKILL.md with numbered, SLR-anchored criteria.
+
+### 12.1 Neighborhood 1→5 expansion gate (M6 → M12)
+
+**Criterion:** ≥5 active merchants (meaning: contracted at Beachhead tier AND campaign-active in the trailing 30 days) with ≥3 verified customers per week sustained for 4 consecutive weeks.
+
+**Why this threshold:** 5 active merchants = minimum viable density for creator supply to self-organize around a neighborhood. 3 verified customers/week/merchant sustained 4 weeks = proves the outcome delivery loop is not a single-campaign fluke.
+
+**Measurement infrastructure today:** Pilot dashboard exists (per conversion-assumption-v1 Appendix A); verified-customer count is a core field. Ready now.
+
+**Owner:** Prum (ops lead). **Review cadence:** weekly Monday standup; formal gate decision on the 1st of each month.
+
+### 12.2 Dense-NYC 8-neighborhoods gate (M18 → M24)
+
+**Criterion:** NPS ≥50 across 25+ merchants AND SLR ≥20 trailing 3 months AND merchant repeat rate ≥40% in cohorts older than 60 days.
+
+**Why this threshold:** NPS 50 is the OpenTable-era small-merchant benchmark for "happy enough to tell peers." 25 merchants is the statistical floor for an NPS read that isn't dominated by 2–3 outliers. SLR 20 is 80% of the M12 target, proving the ops-leverage thesis is on track even if it's not at peak.
+
+**Measurement infrastructure today:** NPS survey instrument does NOT exist. **GAP:** need to build a merchant NPS pulse (quarterly survey, 1-question NPS + 1-question verbatim) before M18. Owner: Prum. Build target: M9.
+
+**Review cadence:** monthly on the 1st; gate decision at founder strategic review every 90 days.
+
+### 12.3 Secondary-metro gate (M24 → M30)
+
+**Criterion:** ConversionOracle precision ≥85% in new geo cohort AND 10+ merchants in secondary metro retained 3 months AND SLR ≥25 sustained 3 months.
+
+**Why this threshold:** 85% precision in new geo (vs. 90% in NYC) allows a graceful ramp — the geo cohort is 6 months behind NYC on data volume. 10+ retained merchants = first-neighborhood density reached. SLR 25 sustained = ops-leverage thesis is not breaking under multi-geo operational complexity.
+
+**Measurement infrastructure today:** ConversionOracle precision-by-geo breakdown does NOT exist (system itself is pre-MVP). **GAP:** instrumentation requires ConversionOracle v2 shipped with per-geo precision/recall dashboards. Target: M15 (3 months before gate).
+
+**Owner:** ML Advisor (when engaged) for precision; Prum for merchant-count and SLR. **Review cadence:** monthly; gate decision at founder strategic review.
+
+### 12.4 Multi-metro gate (M30 → M36)
+
+**Criterion:** ConversionOracle precision ≥90% cross-geo AND SLR ≥35 trailing 6 months AND second-metro neighborhood repeat rate ≥40% AND multi-state 1099 + sales tax nexus + pay transparency compliance playbook executed (per audit 05 Q13).
+
+**Why this threshold:** 90% cross-geo precision = the ConversionOracle v3 target partial. SLR 35 = midpoint between M12 (25) and M24 (50) targets. Compliance playbook executed = not just "counsel retained" but "playbook run through for one trigger event."
+
+**Measurement infrastructure today:** per-metro SLR decomposition does NOT exist. Time logs are tagged by role category but not geo. **GAP:** add `geo_cohort` field to time_logs table; build SLR-by-metro dashboard. Target: M24 (6 months before gate).
+
+**Owner:** Founder + Ops Director (post-COO-hire). **Review cadence:** monthly; gate decision at founder + board strategic review.
+
+### 12.5 Series A gate (M18–M24 window)
+
+**Criterion:** $1M+ ARR trailing 12 months AND SLR ≥30 AND LTV/CAC ≥8x in actuals (not model) AND at least 30 Beachhead merchants with 6+ months of retention data.
+
+**Why this threshold:** $1M ARR trailing = threshold for Series A conversations at most tier-1 funds. SLR 30 = above M12 target, proves trajectory toward M24 SLR 50 target. LTV/CAC ≥8x in **actuals** not model = the killer requirement — this is the gate that forces us to have real cohort data, not just planning assumptions.
+
+**Measurement infrastructure today:** ARR dashboard exists conceptually; cohort LTV measurement requires 6+ months of post-Beachhead data. **GAP:** merchant cohort tracker with monthly revenue/retention decomposition. Target: M9 build.
+
+**Owner:** Founder (for raise decision) + Data Owner (for cohort measurement). **Review cadence:** monthly from M12 onward; Series A process opens at first month all 4 criteria met.
+
+### 12.6 Dashboard owner + weekly review cadence
+
+- **Primary dashboard owner:** Prum (ops lead) until data analyst is hired (post-Series-A)
+- **Weekly cadence:** Monday 10am standup; 5 gates + trigger status reviewed as a single table
+- **Monthly cadence:** 1st of month, formal gate decision if within 30 days of a gate window; founder-strategic-review covers gates every 90 days
+- **Quarterly cadence:** P1_rollup §Open Risks refreshed with gate status; any gate moving from "on track" to "at risk" escalated to founder within 24h
+
+**Infrastructure summary (what needs building):** merchant NPS instrument (§12.2 gap); ConversionOracle per-geo precision dashboard (§12.3 gap); SLR-by-metro decomposition (§12.4 gap); merchant cohort tracker with 6mo retention data (§12.5 gap). Four gaps total; 3 of 4 are unbuildable until ConversionOracle v2 ships, which gates the Series A narrative.
+
+---
+
+## §13. Cross-Spec Dependencies + Contradiction Check
+
+### 13.1 P2-6 conversion-assumption-v1
+
+- **Shared date:** Pilot Week 12 EOW (2026-07-27). conversion-assumption-v1 §4 locks the Pilot-to-Paid final rate; this spec's §10.4 scenario triggers use the same readout.
+- **Tripwire:** if conversion-assumption-v1 Week 12 actual drops below 40%, update §3.1 pace table here — Beachhead 11–50 merchant ramp is paced by conversion rate and the M18 100-merchant target becomes optimistic.
+- **Action:** Jiaming re-reads §3.1 within 7 days of conversion-assumption-v1 Week 12 readout.
+
+### 13.2 P2-5 legal budget (multi-state compliance)
+
+- **Dependency:** expansion beyond Williamsburg triggers new-state blue-sky + nexus review (per audit 05 Q13; per §12.4 multi-metro gate criterion).
+- **Budget coupling:** P2-5 legal budget must cover LA/Miami/Austin counsel retainer before M27 (3 months pre-M30 secondary-metro gate).
+- **Tripwire:** if P2-5 budget doesn't include multi-state counsel by M18, §3.1 M30 secondary-metro entry slips to M36.
+
+### 13.3 P2-1 consumer-facing (loyalty card retention)
+
+- **Dependency:** per-merchant MRR ramp from $1,000 (M12) to $1,650 (M48) in §5.2 depends on retention add-on (visit 2/3/loyalty) adoption reaching ~40% by M24 and ~60% by M36.
+- **Tripwire:** if loyalty card retention rate at M12 Beachhead cohort is below 30%, §5.2 blended per-customer rate assumption ($25 flat) must be revised downward; M36 ARR drops from $10.8M toward $8.5M.
+- **Action:** first read of loyalty adoption rate at Pilot Week 12; second read at Beachhead Month 6 (M8 in calendar time).
+
+### 13.4 push-pricing §5 Unit Economics
+
+- **Dependency:** all GM / LTV / CAC values in this spec are **model-derived** from pricing base case. Pilot W12 will provide first real numbers.
+- **Coupling:** push-pricing §9 Experiment #1 (Pilot-to-Beachhead 60% target) shares the §10.4 scenario trigger calendar.
+- **Contradiction watch:** if push-pricing §9 Experiment #2 (per-customer price sensitivity $25 vs $30 vs $35) validates $30 at parity demand, blended per-customer rate in §5.2 must be updated upward (could pull M36 ARR toward $12–13M).
+
+### 13.5 Contradictions to watch (the tripwire list)
+
+| # | Watch | Signal | Response SLA |
+|---|---|---|---|
+| 1 | Actual campaigns/mo/merchant >1.5 at Beachhead | Pilot W12 data | Spec pace is over-conservative; founder memo to F&F within 7 days; §3.1 revised upward |
+| 2 | Actual campaigns/mo/merchant <0.7 at Beachhead | Pilot W12 data | Spec pace under-delivered; F&F notification within 7 days; revise §3.1 and §5.1 downward; consider pricing pivot |
+| 3 | conversion-assumption-v1 Week 12 actual <25% | 2026-07-27 readout | Freeze Beachhead 11–50 expansion; §3.1 M18 target slips; re-derive §10.4 bear case |
+| 4 | Per-merchant MRR ramp stalls at $1,100 by M18 | M18 MRR snapshot | Retention add-on adoption <40%; push-pricing §2.3 repricing trigger; §5 ARR trajectory downgrades |
+| 5 | ConversionOracle v2 precision stuck <85% at M15 | M15 ML review | SLR target 50 at M24 unreachable; org becomes labor-bound; §3.2 Month-48 caveat activated |
+| 6 | ML Advisor Day 14 readout = 0 conversations | 2026-05-04 | Per P1 risk #1; contingency plan activates; ConversionOracle roadmap slips; §3.2 ripple forward |
+| 7 | T4 retainer not issued by M10 | M10 review | Creator Productivity Lock moat deferred; §6.3 distribution assumptions break; reset retention-levered portion of expansion |
+
+**Founder memo template for tripwire firing:** one-page doc to F&F investors within 7 days of any tripwire above firing, covering (a) which tripwire fired, (b) measured value vs threshold, (c) implication for §3.1 pace or §5.1 revenue, (d) founder's one-sentence read on Bull/Base/Bear shift, (e) next review date and who's accountable.
+
+### 13.6 Master cross-spec coupling diagram (narrative)
+
+```
+Pilot W12 (2026-07-27)
+       │
+       ├─→ conversion-assumption-v1 §4 (Pilot-to-Paid final rate)
+       │         │
+       │         └─→ this spec §10.4 scenario triggers (Bull/Base/Bear identification)
+       │                   │
+       │                   └─→ this spec §3.1 pace table (re-derive if needed)
+       │                             │
+       │                             └─→ push-gtm SKILL.md Expansion Triggers (§9.1 change 2)
+       │                             └─→ push-metrics SKILL.md §1.1 Active Campaign assumption (§9.2 change 4)
+       │                             └─→ numeric_reconciliation.md rows 113–124 (§9.6 change 8)
+       │
+       ├─→ push-pricing §9 Experiment #1 (same data, primary owner)
+       │
+       └─→ P1_rollup §Risks #7 (Pilot-to-Beachhead <60%) — risk closure trigger
+```
+
+The W12 readout is therefore the **single highest-leverage data point** in the entire v5.2 planning cycle. Every spec in the P2 wave eventually cites it.
+
+---
+
+*Wave 2 append complete 2026-04-20. Sections §9–§13 extend v1 draft without revising §1–§8 + Appendices A–D. Next revision: v2 (post-W12 empirical), targeted 2026-08-03 for founder review, 2026-08-10 for commit.*

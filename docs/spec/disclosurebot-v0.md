@@ -590,6 +590,190 @@ To hand to outside FTC counsel alongside the §8.1 opinion request.
 
 ---
 
+## §11. RACI — DisclosureBot v0 Launch
+
+The matrix is read strictly: **R** = does the work; **A** = single accountable; **C** = consulted before decision; **I** = informed on completion. One A per row. Where counsel sits in the "A" seat, the ownership reflects a legally-accountable decision that cannot be delegated to engineering.
+
+| # | Activity | Z (eng) | Prum (ops) | Jiaming | Outside FTC counsel | ML Advisor |
+|---|---|---|---|---|---|---|
+| 1 | Rule engine implementation (v0 pattern match) — `lib/services/disclosure/rule-engine.ts`, §2 / Appendix A | **R/A** | I | I | C | I |
+| 2 | Instagram Graph API Business Center verification + Meta App Review (elevated rate tier per §6.1) | **R/A** | I | C (corp docs signer) | I | — |
+| 3 | TikTok for Business API access (§6.2) — business verification + developer-terms review | **R/A** | I | C | C (Platform Terms review) | — |
+| 4 | `disclosure_audit_log` + `disclosure_audit_amendments` schema + migrations (§4.1) | **R/A** | C (access-path review for ops dashboard) | I | C (retention + evidence-export sign-off) | — |
+| 5 | Creator portal UI — lint state surface → creator decision dialog → consent signature capture (§3.2, §3.3) | **R/A** | C (YELLOW-queue UX parity with ops dashboard) | C | **C (copy sign-off — §8.1 hard gate)** | — |
+| 6 | Ops escalation runbook (YELLOW / RED states → MANUAL_REVIEW queue; §3.1, §5 edge cases, §6.4 manual-upload fallback) | C | **R/A** | I | I | — |
+| 7 | Outside FTC counsel engagement + §8.1 pre-launch opinion letter | C | I | **R/A** (signs the engagement letter) | **R** (drafts the opinion) | — |
+| 8 | Creator briefing materials (what's being enforced + why) — §13 onboarding module, quiz, signed acknowledgment | C (implements quiz scoring) | **R/A** (owns the creator-ops relationship) | C (brand voice) | C (legal accuracy sign-off) | — |
+| 9 | Weekly audit-log spot-check (30 random posts, trailing 7d) + monthly summary report (§14) | C (tooling) | **R/A** | I | I (recipient of monthly report) | — |
+| 10 | Quarterly outside-counsel spot audit (50 rows, §8.4 + §14) + opinion-letter refresh | I | C | **A** (authorizes spend) | **R** | — |
+| 11 | Annual false-positive / false-negative rate audit + rule-set update (§14) | **R/A** | C (provides ground-truth labels from MANUAL_REVIEW history) | I | C (reviews any rule-list changes) | C (from v5.4) |
+| 12 | Incident response — FTC / state-AG inquiry, platform notice, rule-engine systematic failure (§8.5) | R (forensic log export) | R (internal triage) | **A** (convenes counsel within 48h) | **R** (leads response) | I |
+| 13 | v1 roadmap activation (ML classifier, ASR, OCR) — §7 trigger gates | C | I | **A** | C (re-review) | **R** |
+
+**Gating rule.** Activities #1 / #4 / #5 cannot reach production without activity #7 complete. Activity #8 cannot reach production without #5 live in staging. The launch gate in §10.2 ("Trigger to enable in production") is the conjunction of #7-done + #2-approved + #6-live + backup drill complete.
+
+---
+
+## §12. Counsel Defense Brief — why v0 meets "clear and conspicuous"
+
+This section is written to be handed to outside FTC counsel alongside the Appendix B checklist. Each row states a design decision, the rule sub-reference, the FTC-defensible basis, and the alternative we explicitly rejected. Counsel confirmation per §8.1 (a)-(d) is the hard gate.
+
+| # | Design decision | Rule | Defensible basis (counsel-confirmable) | Alternative rejected — why |
+|---|---|---|---|---|
+| 1 | Lint window = first 100 characters OR first 4 hashtags of the caption (whichever contains more tokens) | §2.1 | FTC 2023 "Endorsement Guides: What People Are Asking" explicitly rejects disclosure hidden behind a "more" expand on Instagram / TikTok. 100 chars corresponds to the portrait-mobile pre-fold on both platforms in 2024-2026 layouts. Human-scan behavior in feed contexts is ~1-3 seconds per post — what's above-the-fold dominates comprehension (FTC "first 3 seconds" framing). | Full-caption scan — would grade GREEN on a disclosure at character 800, which FTC 2023 guidance explicitly calls non-compliant. We treat out-of-window tokens as YELLOW (buried) rather than GREEN. |
+| 2 | Auto-append the literal suffix `(#ad via @push_local)` rather than rejecting non-compliant posts outright | §2.3 | Maintains campaign delivery (creator earns, merchant gets the post) while ensuring FTC-compliant disclosure reaches the consumer. Creator consent is captured **before** append via §3.3 HMAC signature — Push does not modify the creator's speech without affirmative authorization. Single-remediation path at platform API scale is materially lower-risk than human-review-every-post (which itself introduces latency that pushes pilot economics negative). | Reject + pause campaign for any missing disclosure. Rejected because (a) creator bears no payment while the dispute sits, (b) merchants stop getting attributed customers, (c) creates creator-onboarding churn pressure that pushes creators to lie about posting under Push — exactly the outcome FTC wants to prevent. |
+| 3 | No audio-track ASR (spoken disclosure in video) in v0 — caption-only enforcement; video posts must carry caption disclosure | §1.4 non-goals; Edge case #13 → RED | Deferred to v1.1 post-ML Advisor onboarding and ≥3 months of v0 production data. Interim risk mitigation: v0 treats video-audio-only disclosure as RED (no caption-level disclosure). This is **over**-inclusive relative to FTC — FTC would accept a clear audio disclosure — but an over-inclusive v0 is a defensible posture ("our system was conservative; we erred toward requiring more disclosure, not less"). | Ship ASR in v0. Rejected: no ML Advisor on staff until v5.3 W3; production-grade ASR on creator video with accented / noisy audio has error rates too high for an evidentiary-weight audit log without human-in-the-loop QA. |
+| 4 | Instagram Branded Content tag presence = GREEN (platform-native flag counts as sufficient disclosure) | §2.2; Appendix D open Q#9 | Meta's Branded Content tool is the platform's **first-class** disclosure UI — the label renders above the caption on the post itself, is non-dismissible, and is standardized across all Branded Content posts per Meta's Platform Terms. FTC 2023 guidance implicitly validates platform-native tools as equivalent to hashtag disclosure. TikTok's Branded Content Toggle is the exact parity. | Require both the tag AND `#ad` in the caption. Rejected as over-engineering — would grade creators non-compliant for using the very tool the platform provides. Counsel confirmation per §8.1 (a) required. |
+| 5 | Hashtag / phrase matching is case-insensitive (`#AD`, `#Ad`, `#ad` all match) | §2.2 ("matched on word / hashtag boundaries … case-insensitive") | Consumer reading comprehension is case-insensitive. FTC cares whether the consumer understands the material connection; no FTC guidance has ever distinguished `#AD` from `#ad`. Enforcing case would produce false negatives with no consumer-protection upside. | Case-sensitive matching. Rejected — would generate ops noise (Prum reviewing `#AD` as non-compliant) without any FTC benefit. |
+| 6 | Disclosure must precede the primary product claim in caption order — "sequence test" (§2.5) | §2.5 + FTC 2019+ proximity guidance | FTC 2019 "Disclosures 101" and the 2023 update both emphasize **proximity** — the disclosure and the endorsement must be proximate enough that the consumer processes them together. A disclosure 50+ characters downstream of the product claim risks consumer misread (they've already formed a purchase intent before the disclosure registers). Borderline cases (disclosure trails claim by <50 chars) are YELLOW for human review — not auto-fail. | Ignore sequence / only check presence. Rejected — consumer-protection research post-2019 consistently shows disclosure-after-claim underperforms disclosure-before-claim on comprehension. |
+| 7 | `#spon`, `#collab`, `#ambassador`, `#partner`, `#thanks`, `#gifted` alone are **rejected** (REJECT_LIST in Appendix A) | §2.2 "Tokens not accepted"; edge case #15 | FTC 2023 "What People Are Asking" specifically calls out ambiguous abbreviations and relationship-only hashtags as insufficient — consumers do not reliably infer a paid advertising relationship from `#collab`. `#gifted` is under active FTC scrutiny per 2023 workshops. Our reject list matches FTC-published examples of non-compliance. | Accept `#spon` as a truncation of `#sponsored`. Rejected — FTC guidance explicitly rejects truncations, and v0 prioritizes legal defensibility over creator-UX convenience. Counsel confirmation per Appendix B #2-#4 required. |
+| 8 | Creator consent signature (HMAC over `creator_id ‖ post_url ‖ content_hash ‖ disclosure_version ‖ timestamp`) required before any auto-append | §3.3 | **First Amendment posture:** Push cannot modify a creator's authored speech on a third-party platform without the creator's affirmative consent. The HMAC is a tamper-evident timestamped record of the Approve action; it is the audit-trail artifact that makes auto-append legally distinguishable from unauthorized platform-content modification under Instagram / TikTok Platform Terms. Removing the consent step would convert auto-append into a unilateral content-modification act with no authorization basis. | Silent auto-append. Rejected — violates Platform Terms (both Meta and TikTok prohibit automated caption modification without user consent), and would not survive a First-Amendment-adjacent challenge by a creator. |
+| 9 | Strict mode (auto-append disabled; any missing disclosure = RED + campaign pause) is the default for health / financial / children-targeted categories | §2.4 | FTC enforcement posture is categorically stricter on these verticals — FTC Act § 5 penalties are stacked by state AGs under CA Consumer Legal Remedies Act and NY GBL § 349 precisely in these categories. Strict mode = no auto-append = creator must type the disclosure themselves = lower platform-liability surface. Counsel confirmation per §8.1 (d) and Appendix B #9. | Allow auto-append across all categories uniformly. Rejected — health / financial verticals carry asymmetric downside (per-violation penalties + state-AG stacking); the UX cost of strict mode is acceptable at pilot scale. |
+| 10 | 20-year retention on `disclosure_audit_log`; no in-place UPDATE or DELETE; corrections go through `disclosure_audit_amendments` (parallel table, counsel_reviewed boolean) | §4.1 / §4.2 | FTC enforcement statute of limitations for § 5 violations is 3 years, but a **prior order** (consent decree with FTC) extends enforcement exposure to 20 years. Immutable write-once log + parallel-amendment pattern is the standard evidentiary-weight audit structure for legally-reviewed systems (SEC books-and-records, SOX financial controls, HIPAA medical records all use the same pattern). Counsel confirmation per Appendix B #11-#12. | In-place mutable log. Rejected — fails the evidentiary-weight test on any FTC or state-AG inquiry. |
+
+**Summary count.** 10 design decisions defended, each with FTC-specific citation, counsel-confirmable basis, and rejected alternative. All 10 are subject to §8.1 counsel opinion letter before v0 launch.
+
+---
+
+## §13. Creator Onboarding + Education Plan
+
+DisclosureBot is a rule engine; the creator is the endorser. FTC enforcement targets the endorser first. Push's posture is: no creator posts under a Push campaign without documented FTC § 255 training + a signed acknowledgment. This section is the operational script.
+
+### 13.1 Pre-pilot onboarding module
+
+Every creator onboards through a single 45-minute gated flow before their first Push campaign. The gate cannot be skipped; campaign access is blocked at the `creators.onboarding_status != 'complete'` DB check.
+
+- **Video (5 min):** "How Push and the FTC work together" — covers 16 CFR § 255 in plain English, the 5 required disclosure tokens in v0 (`#ad`, `#sponsored`, `#paidpartnership`, "paid partnership" phrase, platform Branded Content tag), and a walk-through of a GREEN / YELLOW / RED sample post. Scripted with counsel sign-off per §8.4 (ad-hoc counsel review on creator-facing copy).
+- **Quiz (10 questions, pass threshold 80%):** see §13.3 question bank. Randomized from a bank of ≥15. Three-attempt limit; after 3 fails the creator is routed to a 1:1 call with Prum.
+- **Signed acknowledgment:** free-text checkbox + creator-typed full name → stored as an `onboarding_acknowledgment` row with HMAC signature (same pattern as §3.3). Verbatim text: *"I have reviewed Push's FTC 16 CFR § 255 materials. I understand that Push enforces FTC disclosure requirements on my posts, that my posts will be scanned by the DisclosureBot system, and that Push may, with my per-post consent, append the text `(#ad via @push_local)` to my caption via the platform's official API. I understand I may reject an auto-append at any time, and that doing so removes the specific post from the Push campaign."*
+
+### 13.2 Ongoing education
+
+- **Monthly creator-ops newsletter** (owned by Prum, copy counsel-reviewed quarterly per §8.4). Includes 2-3 "disclosure mistakes of the month" — redacted real examples from the audit log, rendered as before/after screenshots, with the rule sub-reference explaining the grade.
+- **Quarterly refresh quiz:** 5 questions from the §13.3 bank sent to every active creator. Fails don't revoke access but do flag Prum for a 1:1 check-in.
+- **FTC regulatory-update bulletin:** any material FTC enforcement action or guidance update (per §8.4 annual re-opinion) triggers an email + in-portal banner to all creators within 7 business days.
+
+### 13.3 Quiz question bank (answer key attached)
+
+Bank of 15+ questions; onboarding quiz randomly samples 10; pass threshold 80% (8/10). All answers counsel-confirmed before deploy per §8.4.
+
+| Q# | Question | Correct answer | FTC source |
+|---|---|---|---|
+| Q1 | Is `#gifted` alone an acceptable FTC disclosure on a paid Push campaign post? | **No.** `#gifted` signals a gift but does not disclose payment for an endorsement. FTC 2023 has signaled active scrutiny. | FTC 2023 "What People Are Asking" §"What if I got free product?" |
+| Q2 | Can I put the disclosure only in my Instagram bio instead of on the individual post? | **No.** FTC requires post-level disclosure; bio-only is explicitly insufficient. | FTC 2023 "What People Are Asking" §"Where does the disclosure go?" |
+| Q3 | Is `#spon` (short for sponsored) acceptable? | **No.** FTC rejects abbreviations that readers may not understand. Use `#sponsored` instead. | FTC 2023 "What People Are Asking" §"What words should I use?" |
+| Q4 | Is `#collab` by itself acceptable? | **No.** `#collab` signals a relationship but not a paid advertising relationship. | FTC 2023 Endorsement Guides + FTC Native Advertising enforcement actions |
+| Q5 | Where in my caption must the disclosure appear? | **In the first ~100 characters, above any "…more" fold.** FTC requires the disclosure to be visible without the consumer needing to expand the post. | FTC 2023 "first 3 seconds" guidance |
+| Q6 | If I set the Instagram Branded Content Tag, do I also need `#ad` in the caption? | **No, under Push v0.** The Branded Content Tag is accepted as a platform-native disclosure. (Counsel-confirmed per §8.1 (a).) | Meta Branded Content Platform Terms + FTC 2023 platform-tool validation |
+| Q7 | I posted a Reel and said "this is sponsored" in the audio. Is that enough? | **No, under Push v0.** v0 does not scan audio; your caption must also carry the disclosure. v1 may extend to audio ASR. | Push DisclosureBot v0 §1.4 non-goals |
+| Q8 | Can Push edit my caption without asking me first? | **No.** Push will present the proposed edit and capture your Approve action before any platform API write. You can reject at any time. | DisclosureBot v0 §3 state machine + §3.3 consent signature |
+| Q9 | If I reject the auto-append and refuse to edit the caption myself, what happens? | **The post is removed from the Push campaign.** You are not paid for that post. Your Push Score may be affected per `push-creator` §5 Dispute & Anti-Gaming. | DisclosureBot v0 §3.1 REJECT branch + push-creator §5 |
+| Q10 | Does `#ad` alone in the first 100 characters of my caption satisfy FTC? | **Yes, under Push v0.** `#ad` is the FTC-canonical minimum disclosure. (Subject to counsel confirmation per §8.1 (a).) | FTC 2023 "What People Are Asking" §"What's the shortest acceptable disclosure?" |
+| Q11 | Does my disclosure need to be in the same language as the rest of my caption? | **Yes.** FTC requires disclosure in the same language as the endorsement. For dual-language captions, both languages must carry disclosure. | 16 CFR § 255.5 + FTC 2023 multi-language guidance |
+| Q12 | If I edit the post caption after DisclosureBot grades it GREEN, does Push re-check? | **Yes.** Push polls the platform API at 15 / 30 / 60 / 180 / 720 / 2880 minutes post-publish; any edit re-runs the lint. | DisclosureBot v0 §6.1 edit detection |
+| Q13 | Is disclosure text inside an image (overlay text) acceptable under Push v0? | **No, under v0.** v0 does not OCR images. Caption-level disclosure is required. (v1 may add OCR per §7.2.) | DisclosureBot v0 §1.4 non-goals |
+| Q14 | I'm promoting a health supplement under a Push campaign. Is auto-append available? | **No — health/financial/children-targeted campaigns are strict-mode by default**, which disables auto-append. You must type the disclosure yourself. | DisclosureBot v0 §2.4 strict-mode |
+| Q15 | Does "Paid partnership with [Brand]" as a phrase in my caption count as disclosure? | **Yes.** "paid partnership" is on the accepted phrase list. | DisclosureBot v0 §2.2 required literal tokens |
+
+**Quiz Question count: 15.** Answer key maintained as part of this spec; any change to the bank requires §8.4 counsel ad-hoc review before re-deploy.
+
+### 13.4 Question Bank Maintenance
+
+- **Question authorship.** Every new Question added to the bank must cite an FTC source (16 CFR § 255 sub-section, FTC 2023 "What People Are Asking" sub-section, or a specific FTC enforcement action). A Question without a citable source is rejected at counsel review.
+- **Question retirement.** Any Question whose correct answer becomes ambiguous due to FTC guidance update is retired from the active bank within 30 days. Retired Question rows remain in the spec for historical traceability, marked `[RETIRED yyyy-mm]`.
+- **Question difficulty calibration.** Aggregate creator-quiz pass-rate per Question is reviewed quarterly; any Question with a <40% correct rate across 50+ attempts is flagged for rewording (the Question may be confusing rather than the creator wrong). Counsel signs off on rewording before redeploy.
+- **Question counsel review cadence.** Annual full-bank review by outside FTC counsel (bundled with §8.4 annual re-opinion). Mid-year ad-hoc review on any FTC enforcement action that touches a Question topic.
+
+---
+
+## §14. Audit Program — Quarterly + Ad-Hoc
+
+Launch-plus controls to keep v0 defensible in steady state.
+
+### 14.1 Cadence
+
+| Frequency | Activity | Sample | Owner | Output |
+|---|---|---|---|---|
+| Weekly | Spot-check: 30 random posts from trailing 7 days; operator reviews lint decision + any auto-append for compliance with rules vs. operator independent judgment | 30 rows | Prum | Discrepancy report; escalate >5% disagreement to Z for rule-engine review |
+| Monthly | `disclosure_audit_log` summary report: total posts, compliance rate (GREEN %), auto-append rate, creator edit rate, REJECT rate, MANUAL_REVIEW volume, disputes opened | All rows for the month | Prum | Dashboard snapshot emailed to Jiaming + counsel (CC) |
+| Quarterly | Outside FTC counsel reviews 50 randomly-sampled audit-log rows; issues opinion-letter refresh | 50 rows | Outside FTC counsel | Written refresh memo; cost ~$1,500/quarter matching `counsel-engagement-plan §7` + §8.4 |
+| Ad-hoc | FTC / state-AG / platform inquiry response: immediate lawful hold on implicated audit-log rows; counsel engaged within 24h (24h is tighter than §8.5's general 48h SLA because these rows are evidentiary) | All implicated rows | Jiaming → counsel | Evidence export per §4.3 signed + delivered |
+| Annual | Full false-positive / false-negative rate audit across the rule engine; rule-set update proposal with counsel sign-off before deploy; retention-policy restore drill | All rows for the trailing year | Z + Prum + counsel | Annual audit memo; rule-engine version bump; restore-drill log |
+
+### 14.2 Dashboard KPI mock
+
+The ops dashboard surfaces these KPIs at the top of the `/ops/disclosure` view. Numbers in parentheses are the operator-alert thresholds; crossing them pages Prum.
+
+| KPI | Target | Alert threshold | Source |
+|---|---|---|---|
+| Compliance rate trailing 30 days (GREEN %) | ≥ 85% | < 75% two consecutive weeks | `disclosure_audit_log` where `status = 'linted_green' OR matched_rule = 'branded_content_tag'` |
+| Auto-append rate (share of posts that needed v0 to append) | < 15% | > 25% for a week | `disclosure_added IS NOT NULL` ÷ total |
+| Creator REJECT rate | < 2% | > 5% in a month | `status = 'failed' AND notes ILIKE 'reject%'` ÷ total decisions |
+| YELLOW queue depth (posts awaiting MANUAL_REVIEW) | < 10 at any time | > 25 for > 2 hours | `status = 'manual_review'` |
+| Quarterly counsel-review pass rate (counsel agrees with v0's decision on 50-row sample) | ≥ 95% | < 90% | Quarterly counsel memo |
+| FTC / state-AG inquiries opened (trailing 12 months) | 0 | Any | Manual log, Jiaming-owned |
+| v0 manual-upload share (§6.4 fallback volume) | < 5% weekly | > 5% for 2 consecutive weeks (signals API regression) | `platform = 'manual'` |
+
+### 14.3 Dashboard widget layout
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│  DisclosureBot v0 — Ops Dashboard       rule v0.1.0+g_HASH  │
+├──────────────┬──────────────┬──────────────┬───────────────┤
+│ Compliance % │ Auto-append  │ REJECT rate  │ YELLOW queue  │
+│   92.1%      │   11.3%      │   0.8%       │   3 posts     │
+│   (30-day)   │   (30-day)   │   (30-day)   │   (live)      │
+├──────────────┴──────────────┴──────────────┴───────────────┤
+│ Counsel quarterly review — 2026-Q2: PASS (48/50 agree)     │
+│ Last restore drill: 2026-03-15  (next: 2027-03-15)         │
+│ Rule-engine version bump pending counsel sign-off: none    │
+├─────────────────────────────────────────────────────────────┤
+│ Recent events                                               │
+│  2026-Q2 week 3: 1 MANUAL_REVIEW > 4h → Prum paged          │
+│  2026-Q2 week 1: 0 FTC / state-AG inquiries                 │
+│  2026-Q1 annual FP/FN audit: FP 0.4%, FN 2.1% (within plan) │
+└─────────────────────────────────────────────────────────────┘
+```
+
+### 14.4 Lawful-hold procedure
+
+On ad-hoc trigger (FTC CID, state-AG inquiry, platform notice):
+1. Jiaming logs the trigger in `incident-log.md` with UTC timestamp.
+2. Ops applies a lawful-hold flag on the implicated `creator_id` / `campaign_id` tuple in the audit DB (disables any UPDATE path that is not the §4.1-blessed amendments flow — already the default, but the hold makes it explicit).
+3. Outside counsel engaged within 24 hours per §14.1 Ad-hoc row.
+4. Evidence export per §4.3 prepared by Z on counsel's written request (signed JSON-lines export).
+5. No rule-engine changes may deploy for the implicated categories until counsel releases the hold.
+
+---
+
+## §15. Cross-Spec Dependencies + Contradiction Check
+
+DisclosureBot v0 does not exist in isolation. The following cross-spec dependencies and contradictions must be tracked by whoever owns each adjacent spec.
+
+### 15.1 Upstream dependencies (this spec depends on)
+
+- **P2-5 legal budget (counsel-engagement-plan §7 Marketing/FTC).** Line item FTC counsel ($2K-5K initial per §7 table + $500-1.5K/quarter spot audit per §8.4) is a **direct budget dependency** on v0 launch. Incremental item: E&O insurance ($3K-8K annual per §8.3) covering DisclosureBot missed-disclosure liability — this is §Unaddressed Risks row on `legal-compliance-register` already marked P2. Both line items must be confirmed-funded before v5.3 W1 counsel engagement opens.
+- **`counsel-engagement-plan` §7 FTC roster.** The §8.1 opinion letter must be signed by counsel on the Davis & Gilbert / Frankfurt Kurnit Klein + Selz / Kelley Drye roster from that plan. Substituting a general-corporate counsel for the FTC-specialist opinion is not acceptable and triggers §8.1 hard-gate failure.
+- **Meta App Review + TikTok Business Center onboarding (§6.1, §6.2).** Both block prod scale (not dev). Must be scheduled before v5.3 W5 so approval lands before v5.3 W10 launch per §9.2.
+
+### 15.2 Downstream dependencies (specs that depend on this one)
+
+- **P2-1 consumer-facing attribution surface.** The creator-attribution surface on the consumer page (attribution verification screen; see `push-attribution`) must display an FTC disclosure line that is copy-identical to the creator's post-level disclosure. **Verification task:** confirm `(#ad via @push_local)` copy appears on the consumer-side verification screen for any post that used auto-append. Owner: Z on the UI side; Prum on the copy-parity review.
+- **P2-2 SMS compliance path.** Creator-driven marketing SMS (not just TCPA consent; *content* SMS) must also carry FTC disclosure because the material connection chain is the same. **v0 scope:** does not cover SMS; **v1.x scope:** the rule-engine architecture generalizes from caption text to SMS text cheaply (same lint + same reject list, different lint-window sizes). Track as a future-v1 roadmap item.
+- **`push-creator` §5 Dispute & Anti-Gaming.** Integration points:
+  - Creator refuses disclosure (REJECT branch, §3.1) → **-15 Push Score** per `push-creator §5` "Creator at fault" row, **and** a dispute opens per §5 dispute impact schedule. DisclosureBot's REJECT row must trigger the Push Score event directly.
+  - Repeated disclosure failures (≥ 3 in 30 days) → Anti-Gaming review per `push-creator §5` measures; v0 currently has no automated threshold (per Appendix D Q12, open for counsel). Interim: Prum manual flag at 3 REDs same creator in 30 days.
+- **`push-creator` §5.5 NYC LL-144 AEDT.** Tier assignment and demotion are AEDT-affecting decisions. DisclosureBot outcomes (consistent REJECTs, serial RED+no-edit) **must be listed as tier-affecting inputs** in the §5.5 pre-use-notice text for NYC creators. This is a **direct parity obligation** — the creator cannot be surprised that their disclosure behavior influences their tier. Fix: `push-creator` §5.5 creator-facing notice must add a line "Your compliance with FTC disclosure requirements (as measured by DisclosureBot) is a factor in your Push Score reliability component."
+
+### 15.3 Contradictions and failure modes to monitor
+
+- **Platform API deprecation or rate-limit tightening.** If Meta or TikTok rate-limits or deprecates the caption-edit endpoints (§6.1 / §6.2), v0 falls back to **manual ops review at 10-100x ops cost** (every post enters MANUAL_REVIEW queue; Prum cannot scale to pilot volume without additional ops headcount). **Trigger:** weekly manual-upload share (§14.2 last KPI) exceeds 5% for two consecutive weeks **OR** platform publishes a caption-edit API deprecation notice. **Response:** escalate to Jiaming + counsel; evaluate whether pilot pauses until v0.1 remediation. Owner: Z, with Prum flagging via the dashboard.
+- **Counsel opinion arrives with material carve-outs.** If §8.1 counsel opinion letter blesses the rule engine but requires, e.g., "disclose-the-payer-by-name in the auto-append" (replacing `(#ad via @push_local)` with `(#ad — paid by Push on behalf of [Merchant])`), the auto-append string changes, triggering: Appendix A version bump, re-deploy, every existing creator consent signature must be re-captured for the new string, onboarding module (§13.1) script update, quiz bank (§13.3) update. **Launch slip risk:** 2-3 weeks. **Mitigation:** counsel engagement letter per §9.1 explicitly asks for any string-level carve-outs in the first counsel read so they land before implementation finalizes.
+- **Strict-mode category definitions drift.** §2.4 lists health / financial / children-targeted as default strict-mode. If a Push campaign is categorized "lifestyle" but merchant is e.g. a telehealth provider in lifestyle marketing, the campaign's strict-mode flag is mis-set. **Trigger:** any campaign flagged for counsel review in the quarterly spot audit (§14.1) where counsel's category read differs from the campaign template. **Mitigation:** campaign-template category list counsel-reviewed annually; any new merchant category must be categorized with Jiaming + counsel consent at merchant-onboarding time.
+- **v0 vs. `app/page.tsx` FTC disclosure content confusion.** `legal-compliance-register §Marketing/Advertising` row #3 ("FTC 16 CFR § 255 disclosure verified live on prod") refers to the **illustrative-numbers** disclosure on the marketing pages, a **different** control from DisclosureBot (creator-post-level). **Risk:** someone reads one and believes the other is shipped. **Mitigation:** this spec's Acknowledgements section explicitly disambiguates; any counsel correspondence must cite which disclosure surface is in scope.
+
+---
+
 ## Acknowledgements & Cross-references
 
 - `counsel-engagement-plan.md §7 Marketing/FTC` is the source of the counsel-roster suggestions and engagement sequence; DisclosureBot v0 sits under that same marketing/FTC counsel track.

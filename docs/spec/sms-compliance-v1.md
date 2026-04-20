@@ -591,4 +591,310 @@ Every material change to consent language (§2.1), opt-in flow (§2.5), opt-out 
 
 ---
 
+### §10. RACI — SMS Compliance Launch
+
+Responsible = does the work. Accountable = single approver who signs off. Consulted = expertise input before decision. Informed = notified after. One Accountable per row; multiple Responsibles acceptable only when the work is genuinely split. Counsel is Accountable on every legal-language row — engineering cannot self-approve disclosure text.
+
+| # | Activity | Responsible | Accountable | Consulted | Informed |
+|---|---|---|---|---|---|
+| R1 | Draft consent language v1 (§2.1 Variants A/B) + counsel review | Jiaming | Outside TCPA counsel | Z (display constraints), Prum (ops review) | Board; first pilot merchant |
+| R2 | A2P 10DLC brand registration (Twilio Trust Hub → TCR) | Z | Jiaming | Twilio account team; counsel (opt-in language submission) | Prum; board |
+| R3 | A2P 10DLC campaign registration (use-case, sample-message submission) | Z | Jiaming | Counsel (references approved §2.1 language) | Prum |
+| R4 | `consent_log` DDL + migration `2026-05-04-sms-compliance-v1.sql` | Z | Z | Jiaming (schema approval); counsel (field sufficiency, §6.2) | Prum |
+| R5 | `opt_out_log` DDL + indefinite-retention RLS policy | Z | Z | Jiaming; counsel (CCPA §1798.105(d)(1) posture, §4.5) | Prum |
+| R6 | Twilio Verify integration (double opt-in orchestrator; §2.5) | Z | Z | Jiaming (copy review); counsel (flow approval) | Prum |
+| R7 | Outbound message send-gate — fail-closed wrapper around every SMS dispatch (§5.5) | Z | Z | Prum (alerting hooks); counsel (fail-closed posture) | Jiaming |
+| R8 | Pepper rotation infrastructure — KMS key, `phone_pepper_rotations` table, dual-read window logic (§4.6; §12) | Z | Jiaming | Counsel (PII posture); security reviewer (pre-A audit partner when engaged) | Prum |
+| R9 | Opt-out SLA dashboard — 10-second target, 30-second escalation, PagerDuty rule (§3.4; §5.6) | Prum | Prum | Z (metric instrumentation) | Jiaming; counsel (evidence of SLA honored) |
+| R10 | Incident-response runbook + tabletop rehearsal (§11) | Prum | Jiaming | Counsel (scenario 5/6 escalation tree); Z (containment hooks) | Board (post-rehearsal readiness report) |
+| R11 | Merchant briefing + countersigned acknowledgement (§9, item 6) | Jiaming | Jiaming | Counsel (acknowledgement text); Prum (attended the call) | Merchant; Z |
+| R12 | Disclosure-version governance — `disclosure_versions` write-ops, immutable audit, counsel review on every change (§12) | Jiaming | Outside TCPA counsel | Z (storage); Prum (ops awareness of version-in-flight) | Board |
+
+**Role legend.**
+- Responsible = does the work (multiple OK).
+- Accountable = single sign-off, no delegation.
+- Both Responsible and Accountable rows above must be staffed before §9 hard gate is released.
+
+**Escalation paths.** P0 (outbound to opted-out number) escalates: on-call engineer → Prum (≤ 30 min) → Jiaming (≤ 1 hr) → outside TCPA counsel (same-day emergency call, pre-authorized retainer). P1 (opt-out SLA p95 breach, Twilio webhook failures > 1%) escalates to Prum hourly, Jiaming daily digest, counsel weekly. P2 stays inside engineering.
+
+---
+
+### §11. Incident Response Runbook (TCPA violation scenarios)
+
+Six-step template per scenario: **Detection → Containment → Investigation → Notification → Remediation → Post-mortem**. P0 targets < 60 min to containment; P1 < 4 hr. Owner Prum; counsel-reviewed before §9 gate 5 closes.
+
+#### 11.1 Scenario — Outbound SMS sent to an opted-out number (P0)
+
+- **Detection.** §5.6 P0 page: any gate-block where `attempted_recipient_phone_hash` is present in `opt_out_log`. Also: direct consumer complaint (email, social, follow-up STOP).
+- **Containment.** Within 10 min: feature-flag OFF for sending merchant; set `outbound_blocklist_override=true` until root-cause identified; pause Twilio Messaging Services on brand (Console → suspend campaign).
+- **Investigation.** Pull `outbound_message_attempts` row; trace send orchestrator logs; read `consent_log` history including `supersedes_consent_id` chain; read Twilio delivery callback; confirm whether §5.5 check fired and returned wrong answer or was bypassed.
+- **Notification.** Direct apology SMS to consumer within 24 hr from same A2P 10DLC campaign: *"A message was sent in error after your opt-out. You remain opted out. We're sorry. Reply HELP for help."* Email outside TCPA counsel same-day with payload (message SID, consent_log IDs, opt_out_log ID, gate-check log). Jiaming + Prum on call within 24 hr.
+- **Remediation.** Re-confirm opt-out (`compliance-forced` row); add permanent blocklist with `forbid-reactivation=true`; if pilot-merchant campaign spend involved, refund the SMS cost and offer $50 good-faith credit (policy pending counsel confirmation).
+- **Post-mortem.** 5-business-day written post-mortem; new `disclosure_versions` row only if consent/opt-out language changes (not for pure infra fixes). Archive at `docs/ops/incidents/YYYY-MM-DD-scenario-1.md`.
+
+#### 11.2 Scenario — Outbound SMS sent without any consent record (P0)
+
+- **Detection.** §5.6 P0 page: `outbound_message_attempts` row dispatched where no `consent_log` row with `status='completed'` exists for `(phone_hash, merchant_id)`. Or consumer complaint: "I never signed up."
+- **Containment.** Pause sending campaign in Twilio; feature-flag OFF for that merchant; halt scheduled sends for the pair. Within 60 min: halt all outbound for the brand pending triage.
+- **Investigation.** Did §5.5 check fail open (fail-closed broken)? Did a code path skip the check? Was `consent_log` row purged early (§4.1 should prevent for 4 yr)? Pull consent-service app logs from 72 hr prior.
+- **Notification.** Consumer apology SMS (template per 11.1); counsel same-day; if multi-consumer gap, counsel advises whether voluntary FCC/state-AG disclosure is appropriate. Jiaming-to-board within 48 hr if class-action exposure possible.
+- **Remediation.** Root-cause fix deployed with verification test; backfill affected `phone_hash` rows to `opt_out_log` as `compliance-forced`; internal Code Orange — no outbound until remediated + counsel sign-off.
+- **Post-mortem.** 5-business-day post-mortem; triggers §12 disclosure-version rotation if the gap was process (not pure code). Pre-Series-A TCPA audit scope expands to cover.
+
+#### 11.3 Scenario — `consent_log` bulk-deleted accidentally (P0)
+
+- **Detection.** Schema-monitor alert (row-count drop > 0.1% in 5 min); failed-check rate on §5.5 gate spikes; ops discovery in dashboard.
+- **Containment.** Revoke the Supabase role that issued the delete; pause all outbound SMS; freeze schema migrations.
+- **Investigation.** Pull Supabase audit logs (PITR + WAL); identify the SQL statement and actor; confirm whether backups cover the time range; assess which `(phone_hash, merchant_id)` pairs lost evidence.
+- **Notification.** Counsel same-day — loss of defense-of-consent evidence is elevated litigation risk. If restore impossible, treat affected consumers as expired; re-opt-in SMS not permitted (would be first-contact without consent). Merchant informed audience is off-limits until consumer re-initiates §2.5.
+- **Remediation.** Restore from backup if available; otherwise mark affected rows `status='expired-unverified'` with data-loss annotation; verify §4.4 INSERT-only RLS is enforced; add row-deletion alarm to §5.6.
+- **Post-mortem.** 10-business-day post-mortem (process failure, not code bug). Pepper rotation NOT triggered (data loss does not imply pepper compromise).
+
+#### 11.4 Scenario — Twilio webhook outage (opt-out not received) (P1)
+
+- **Detection.** Twilio webhook failure rate > 1% over 15 minutes (§5.6 alert); or Twilio status page indicates platform incident; or inbound-SMS test traffic fails.
+- **Containment.** Enter Twilio-degraded mode: outbound marketing sends pause for the duration of the outage (fail-closed preferred over a missed opt-out). In-memory deny-list continues to operate for already-known opt-outs.
+- **Investigation.** Work with Twilio support in parallel; pull Twilio's `messages` API to reconcile any inbound messages Push did NOT webhook-receive during the window; run the reconciliation batch job (below).
+- **Notification.** Counsel informed within 4 hours if outage exceeds 30 minutes; merchants on the affected sending campaigns informed that their outbound queue paused. No direct consumer notification until reconciliation completes.
+- **Remediation.** Reconciliation batch job runs against Twilio `messages` API for the outage window; any inbound message matching an opt-out keyword is treated as if its webhook had fired — `opt_out_log` rows inserted retroactively with the Twilio-reported `date_received` timestamp; `outbound_message_attempts` from that window are reviewed for any post-outage send to those newly-detected opt-outs (should be zero because outbound was paused; any such row escalates to §11.1).
+- **Post-mortem.** 3-business-day post-mortem; revises §5.6 alerting if outage was detected late. Twilio outage falls under Twilio's SLA, not Push's — but Push's fail-closed architecture is what prevents this from becoming a §11.1 incident.
+
+#### 11.5 Scenario — State AG inquiry letter received (P1, escalates to P0 on response)
+
+- **Detection.** Receipt of a letter from a state AG's office (via legal@push.nyc, postal mail, or service of process on the registered agent). Usually Florida, Washington, or California given Push's footprint.
+- **Containment.** Do not respond unilaterally. Jiaming forwards same-day to outside TCPA counsel + general corporate counsel. Litigation hold enters effect on all `consent_log`, `opt_out_log`, `disclosure_versions`, `outbound_message_attempts`, Twilio logs, and relevant Slack/email threads.
+- **Investigation.** Counsel-led. Push engineering produces a data-export of all rows matching the AG's cited phone numbers or date range within 5 business days. Disclosure-version history is compiled. Gate-block event log is compiled.
+- **Notification.** Consumer notification depends entirely on counsel direction; default is no direct notification. Board notified within 24 hours. Investors notified only if counsel advises material-adverse-change threshold is met.
+- **Remediation.** Counsel drafts response. Remediation of any identified practice (e.g., a state requires stricter time-of-day window) is implemented within the AG's stipulated window or counsel-negotiated timeline.
+- **Post-mortem.** Written by counsel (privileged); internal distillation in `docs/ops/incidents/` captures process learnings. Disclosure version bumps if the inquiry forces a language change.
+
+#### 11.6 Scenario — Class-action demand letter received (P0)
+
+- **Detection.** Receipt of a demand letter from plaintiffs' counsel, typically alleging one or more violations of 47 U.S.C. §227(b) and requesting records plus a pre-suit resolution offer (FL FTSA 15-day pre-suit notice-and-cure also lives here for FL-focused letters).
+- **Containment.** Jiaming forwards same-day to outside TCPA counsel. Automatic litigation hold on all compliance records. D&O insurer is notified immediately per policy language (most policies require notice within 30 days of a claim; do it within 5 business days to be safe).
+- **Investigation.** Counsel-led, privileged. Push produces the proof-of-consent binder (§13 audit group) for the named plaintiffs within 10 business days.
+- **Notification.** Named plaintiffs only via counsel. No direct contact with plaintiffs. Board notified within 24 hours; if the claim plausibly exceeds $500K gross exposure, a board resolution memorializes counsel engagement and reserves for fees.
+- **Remediation.** Dependent on counsel strategy — pre-suit settle, cure-notice response (FL HB 761 15-day window), or full-defense posture. If a practice is identified as non-compliant, remediate regardless of outcome on the specific claim (stop the harm now; defend the past separately).
+- **Post-mortem.** Post-case only; during active litigation, privileged counsel work-product is the only written record. Disclosure version bumps if the case surfaces a language defect.
+
+#### 11.7 Gaps surfaced by this runbook (platform-side readiness deltas — must close before §9 gate 5)
+
+1. **No 24x7 on-call rotation.** Prum is sole ops-SLA owner. Sub-60-min P0 containment requires a rotation OR a written response-hours-only SLA (e.g., 9 a.m.–9 p.m. ET) plus an outbound-pause policy outside the window.
+2. **Twilio reconciliation batch job (§11.4) does not exist.** Must be written and tested before launch; owner Z.
+3. **Point-in-time-recovery (§11.3) assumes Supabase PITR enabled.** Verify plan tier supports PITR and retention covers a 4-yr litigation-exposure period; otherwise export-to-archive nightly job required.
+4. **D&O insurance (§11.6) is not yet bound** (audit register row #26). A class-action demand letter today lands on an uninsured balance sheet. Treat D&O as §9-gate-adjacent.
+5. **No pre-authorized counsel retainer for emergency calls.** Engagement letter (§6.2) must specify 2-hr emergency-call availability with hourly-rate cap; otherwise same-day response in §11.1/§11.2 is best-effort only.
+
+---
+
+### §12. Governance Log (disclosure version + pepper rotation)
+
+Source of truth for "which consent text did we show the consumer on date X, and who approved it?" Per *Van Patten* and progeny, a defendant who cannot produce the exact text shown loses on the consent element — this is the TCPA defense workhorse.
+#### 12.1 `disclosure_versions` — extended contract
+
+- `version_id` (PK, text): monotonic tag following `v<MAJOR>.<MINOR>.<PATCH>-YYYY-MM-DD` (e.g., `v1.0.0-2026-05-04`). MAJOR bumps on counsel-redlined rewrite; MINOR on text change (word order, added phrase); PATCH on typo fix only (must still be counsel-confirmed as non-substantive).
+- `disclosure_text` (text, not null): exact verbatim text shown to the consumer. Merchant-name placeholder stays as `[Merchant Legal Name]` in this table; the substituted final string lives in `consent_log.exact_consent_text_shown`.
+- `effective_from_timestamp` / `effective_to_timestamp` (timestamptz; second is nullable): live window. Exactly one row per scope has `effective_to_timestamp IS NULL` at any instant.
+- `approved_by` (text, not null): legal name of the Push approver (Jiaming or GC when engaged).
+- `legal_review_id` (text, not null): opaque reference to counsel opinion / redline (e.g., `kelley-drye-2026-05-04-opinion.pdf`) in the privileged legal folder.
+- `change_reason` (enum: `initial`, `counsel-redline`, `state-law-update`, `twilio-policy-update`, `typo-fix`, `regulatory-update`, `incident-driven`).
+- `previous_version_id` (nullable FK back to `disclosure_versions`): lineage for diff.
+- `counsel_firm` / `counsel_attorney` (text, not null for non-`typo-fix` rows).
+
+**Rotation triggers (exhaustive list — any one triggers a new version before re-deploy).**
+
+1. Counsel-approved text change of any kind.
+2. State-law update that touches timing, scope, or language (e.g., new state mini-TCPA passed).
+3. Platform-terms update — Twilio, CTIA, or TCR publishes a new requirement or recommended language.
+4. FCC rulemaking (NPRM final or declaratory ruling) that affects consent.
+5. Merchant entity-name change (triggers a new version scoped to that merchant only — the template text is unchanged but the substituted-display text differs).
+6. Incident-driven — §11.1 or §11.2 where counsel advises prospective language tightening.
+
+#### 12.2 Pepper rotation — operational contract
+
+- **Cadence.** Annual, on the first Monday of April (e.g., 2027-04-05). This deliberately misaligns from calendar-year roll to avoid conflicting with December retail peak and end-of-year close.
+- **Dual-read window.** 90 days following rotation, the consent-lookup service computes the hash under both `pepper_N` and `pepper_N+1` and accepts a match under either. After Day 90, `pepper_N` is retired from the read path (still retained in KMS for §4.6 4-year recovery).
+- **Atomic switch.** The `consent_log.pepper_version` column is not backfilled; each row retains its original pepper_version. New rows written during the dual-read window use `pepper_N+1`.
+- **Authority.** Jiaming is the sole approver; Z performs the rotation; Prum verifies hashes match for a spot-check sample of 50 rows in production before the rotation is marked complete.
+
+#### 12.3 Audit log — append-only
+
+```sql
+CREATE TABLE governance_log (
+  governance_event_id  uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  event_timestamp      timestamptz NOT NULL DEFAULT now(),
+  event_type           text NOT NULL CHECK (event_type IN (
+    'disclosure_version_created',
+    'disclosure_version_effective',
+    'disclosure_version_superseded',
+    'pepper_rotation_initiated',
+    'pepper_rotation_dual_read_start',
+    'pepper_rotation_dual_read_end',
+    'pepper_rotation_completed',
+    'counsel_opinion_received',
+    'state_law_scan_performed',
+    'incident_post_mortem_archived'
+  )),
+  actor                text NOT NULL,
+  subject_version_id   text REFERENCES disclosure_versions(version_id),
+  subject_pepper_version int REFERENCES phone_pepper_rotations(pepper_version),
+  payload              jsonb NOT NULL DEFAULT '{}',
+  immutable_hash       char(64) NOT NULL -- SHA-256 of all preceding fields; computed at insert
+);
+
+CREATE INDEX idx_governance_event_timestamp ON governance_log (event_timestamp DESC);
+CREATE INDEX idx_governance_event_type ON governance_log (event_type, event_timestamp DESC);
+
+ALTER TABLE governance_log ENABLE ROW LEVEL SECURITY;
+-- Service role INSERT only. Ops role SELECT only. No UPDATE / DELETE by any role.
+
+CREATE TABLE pepper_rotations (
+  pepper_version             int PRIMARY KEY,
+  rotation_initiated_at      timestamptz NOT NULL,
+  dual_read_start_at         timestamptz NOT NULL,
+  dual_read_end_at           timestamptz NOT NULL,
+  rotation_completed_at      timestamptz,
+  initiated_by               text NOT NULL,
+  completed_by               text,
+  kms_key_reference          text NOT NULL,
+  previous_pepper_version    int REFERENCES pepper_rotations(pepper_version),
+  spot_check_sample_count    int,
+  spot_check_passed          boolean,
+  notes                      text
+);
+
+ALTER TABLE pepper_rotations ENABLE ROW LEVEL SECURITY;
+-- Service role INSERT / UPDATE until rotation_completed_at is set; then row is effectively frozen.
+-- Ops role SELECT only.
+```
+
+**Immutability.** `governance_log.immutable_hash` chains each row to the SHA-256 of the prior row's hash concatenated with the current row's contents, producing a lightweight hash-chain. Tampering downstream is detectable on audit. `pepper_rotations` is INSERT-only once `rotation_completed_at` is set; pre-completion UPDATEs are permitted only to advance the workflow fields (`dual_read_start_at` → `dual_read_end_at` → `rotation_completed_at`).
+
+**Replaces** the earlier `phone_pepper_rotations` sketch in §5.3 — the DDL above is the authoritative version. The migration `2026-05-04-sms-compliance-v1.sql` should use these definitions.
+
+---
+
+### §13. Pre-Deploy Checklist (30 items, owner per item)
+
+Expands Appendix B (23 items) into a 30-item Monday-morning readiness list grouped by function. Each row has a single owner, verification step, status. Items marked **(verify)** require second-party sign-off. All 30 must close before §9 hard gate releases.
+
+#### 13.1 Legal (6 items)
+
+| # | Item | Owner | Verification | Status |
+|---|---|---|---|---|
+| PD-L1 | Engagement letter signed with outside TCPA counsel; retainer paid | Jiaming | Counter-signed engagement letter PDF archived | [ ] |
+| PD-L2 | Counsel opinion letter received covering §2.1 consent language, §5.3 schema, §2.5 flow, §3 opt-out (verify) | Jiaming + counsel | Opinion letter PDF archived; `legal_review_id` recorded in `disclosure_versions` row | [ ] |
+| PD-L3 | Counsel opinion on state-law overlay (§1.3) — list of states to treat as stricter than TCPA produced | Counsel | Written memo, at minimum FL/OK/WA/CT/MD covered | [ ] |
+| PD-L4 | Counsel opinion on CCPA §1798.105(d)(1) compliance-exception posture for opt-out records (§4.2) | Privacy counsel (possibly bundled) | Written memo | [ ] |
+| PD-L5 | Fresh state-law scan — all 50 states surveyed for mini-TCPA / new-law changes in the 120 days preceding launch | Counsel (or assistant under counsel) | Dated memo | [ ] |
+| PD-L6 | FCC 2024 robocall/robotext-update review — confirm no unhonored obligations (e.g., one-to-one consent rule developments) | Counsel | Written memo | [ ] |
+
+#### 13.2 Technical (10 items)
+
+| # | Item | Owner | Verification | Status |
+|---|---|---|---|---|
+| PD-T1 | A2P 10DLC brand approved by TCR via Twilio Trust Hub | Z | Twilio console shows brand status = `APPROVED`; confirmation email archived | [ ] |
+| PD-T2 | A2P 10DLC campaign registered with approved §2.1 opt-in language | Z | Twilio console shows campaign status = `REGISTERED`; opt-in language matches `disclosure_versions` row byte-for-byte | [ ] |
+| PD-T3 | Database migration `2026-05-04-sms-compliance-v1.sql` applied to production | Z | `consent_log`, `opt_out_log`, `disclosure_versions`, `pepper_rotations`, `governance_log`, `outbound_message_attempts` tables exist; `\d+` spot-check of each; RLS enabled on all | [ ] |
+| PD-T4 | RLS policies verified on all compliance tables (verify) | Z + Jiaming | Attempt from each role (service / app / ops) confirms the policy matrix | [ ] |
+| PD-T5 | Pepper v2026 generated, stored in KMS, seeded in `pepper_rotations` | Z | KMS reference in `kms_key_reference` column; test hash roundtrip | [ ] |
+| PD-T6 | Internal consent service deployed with feature flag OFF | Z | Service live at `/api/internal/consent/*`; feature-flag check blocks all traffic; synthetic healthcheck green | [ ] |
+| PD-T7 | Twilio Verify integration end-to-end test passed with trial numbers (happy path + code-timeout path) | Z | Test log archived showing both outcomes | [ ] |
+| PD-T8 | Outbound send-gate §5.5 integration test — blocks unauthorized send across 5 counter-example fixtures (verify) | Z + Prum | Test log with each fixture showing `permitted=false` and no Twilio-send-attempt | [ ] |
+| PD-T9 | Inbound opt-out keyword handler — all 9 keywords recognized including case + whitespace variants (verify) | Z | Integration test suite passing | [ ] |
+| PD-T10 | Twilio webhook reconciliation batch job (§11.4) deployed, dry-run over a past 24-hour window succeeds | Z | Log shows zero missed opt-outs reconciled from test window | [ ] |
+
+#### 13.3 Operational (6 items)
+
+| # | Item | Owner | Verification | Status |
+|---|---|---|---|---|
+| PD-O1 | PagerDuty opt-out-latency rule configured at p95 > 30s threshold; test page delivered to Prum | Prum | PagerDuty rule config screenshot + on-call ack received | [ ] |
+| PD-O2 | P0 page for gate-block-on-opted-out-number tested end-to-end | Prum | Test page delivered; Jiaming cc'd | [ ] |
+| PD-O3 | Dashboard panels live (opt-in rate, opt-out latency p50/p95/p99, gate-block events, Twilio delivery rate) | Prum | Grafana / Supabase Studio URL with all 5 panels visible; each panel queries live data | [ ] |
+| PD-O4 | Incident-response runbook §11 rehearsed as a tabletop (all 6 scenarios walked through) | Prum + Jiaming + Z | Tabletop minutes archived; gaps (§11.7) tracked to closure | [ ] |
+| PD-O5 | Ops on-call coverage defined — either 24x7 rotation OR written response-hours-only SLA with outbound-pause policy outside the window | Prum + Jiaming | Rotation roster or policy memo signed | [ ] |
+| PD-O6 | Weekly compliance-review cadence scheduled in Prum's calendar for the first 13 post-launch weeks | Prum | Calendar series created with agenda template | [ ] |
+
+#### 13.4 Communication (4 items)
+
+| # | Item | Owner | Verification | Status |
+|---|---|---|---|---|
+| PD-C1 | Consumer-facing copy (§2.1 + §3.2 + §3.5) reviewed byte-for-byte across every surface that renders it (web form, Wallet card, email) | Jiaming | Surface-level screenshots attached to the `disclosure_versions` row; Cross-ref to P2-1 consumer-facing §1 user journey step 5 | [ ] |
+| PD-C2 | First pilot merchant briefed in a recorded call covering consumer-opt-in-required architecture; recording retained | Jiaming | Recording URL + attendance list archived | [ ] |
+| PD-C3 | First pilot merchant countersigned the one-page §9 acknowledgement; PDF archived | Jiaming | Counter-signed PDF archived in legal folder | [ ] |
+| PD-C4 | Privacy Policy updated with SMS consent, retention, and CCPA-exception language; Cross-ref to audit register row #24 | Jiaming + privacy counsel | Privacy Policy live at `/privacy`; version bump recorded | [ ] |
+
+#### 13.5 Audit (4 items)
+
+| # | Item | Owner | Verification | Status |
+|---|---|---|---|---|
+| PD-A1 | Proof-of-Compliance binder Day-0 snapshot assembled (consent language; A2P 10DLC approval; RLS proof; disclosure_version v1.0.0 payload) | Prum | Binder PDF archived in legal folder | [ ] |
+| PD-A2 | Proof-of-Compliance binder has a rotation schedule — Day 7, Day 30, Day 90 snapshots scheduled | Prum | Calendar events created; snapshot template defined | [ ] |
+| PD-A3 | `governance_log` hash-chain integrity check scheduled weekly for first 13 weeks | Z | Cron job or scheduled task archived; first run green | [ ] |
+| PD-A4 | First-90-days external-audit-readiness memo drafted — what would we hand a TCPA auditor if they arrived tomorrow | Jiaming + counsel | Memo archived; referenced in pre-Series-A audit scope (§6.4) | [ ] |
+
+**Total: 30 items.** Any "no" answer is a launch blocker.
+
+---
+
+### §14. FAQ / Counsel Pre-Reads
+
+Questions an outside TCPA specialist is most likely to ask on a first read, with Push's proposed answer, spec-evidence pointer, and known gap. This is the prep doc Jiaming brings to the §6.2 counsel call.
+
+1. **"Show me the exact consent language shown to the consumer. Is it clear and conspicuous?"**
+   - **Answer.** Two variants in §2.1 (Variant A primary, Variant B condensed for ≤ 320px). §2.2 specifies ≥14px font, #003049 on #f5f2ec (contrast ≥ 7.0), placement directly above the phone-input, checkbox-never-pre-checked, no tooltip or expand/collapse hiding.
+   - **Evidence.** §2.1, §2.2; `disclosure_versions` table (§5.3 + §12); `consent_log.exact_consent_text_shown` per row. **Gap.** None structural; pending counsel redline.
+2. **"What record of each opt-in event do you retain?"**
+   - **Answer.** One `consent_log` row per event with 19 fields including exact consent text shown, IP hash, UA, timestamp, and pepper version. Retained 4 years from opt-in. Insert-only; amendments are new rows.
+   - **Evidence.** §2.4 table; §4.1 retention; §5.3 DDL. **Gap.** Counsel may request screen-capture / session replay (see FAQ #2 overlap) — current design excludes them per CCPA minimization.
+3. **"How do you handle STOP replies received outside business hours?"**
+   - **Answer.** Opt-out handler is always-on via Twilio webhook. Latency target p95 ≤ 10s, p99 < 30s regardless of time-of-day. §3.4 fail-closed in-memory deny-list protects against webhook-handler backlog. §11.7 flags that Push does not yet have 24x7 human on-call, but the machine-side opt-out propagation is 24x7 by design.
+   - **Evidence.** §3.4; §3.6; §5.5 deny-list; §11.7 gap. **Gap.** Human escalation outside business hours is a §11.7 gap; manual-override tickets might accrue overnight.
+4. **"What's your position on reassigned numbers (consumer X's number later assigned to Y)?"**
+   - **Answer.** Open question for counsel, raised as Appendix D item #4. Interim posture: do not query the Reassigned Number Database in v1; rely on §64.1200(a)(1)(iv) one-call safe harbor for the first verification-SMS; §2.5 double-opt-in materially reduces the window in which a reassigned number is silent.
+   - **Evidence.** Appendix D #4; §2.5 step 2. **Gap.** Counsel may require RND queries before §9 gate is released. RND subscription cost estimated $1.50 per-query; budgeted line-item not yet in §legal-budget-v1.
+5. **"How do you handle international numbers in your flow?"**
+   - **Answer.** Twilio Lookup rejects any non-US/Canada E.164 at the `/initiate` endpoint in v1. Consumer sees "This service is currently US-only" copy. GDPR / non-US compliance deferred to a later revision.
+   - **Evidence.** §1.4 (GDPR out of scope); §5.4 `/initiate` validates via Twilio Lookup. **Gap.** Copy for the US-only rejection is not yet written; add to PD-C1 consumer-facing review.
+6. **"Do you send any transactional SMS (non-marketing) and how is that distinguished?"**
+   - **Answer.** v1 does not send transactional SMS. The verification SMS during §2.5 double-opt-in is the sole non-marketing send; it is required for consent establishment and is sent only to numbers where the consumer affirmatively submitted the web form. No appointment reminders, order confirmations, or other transactional traffic in v1. Counsel question pending (Appendix D #12) on whether bundling future transactional consent with marketing consent is acceptable.
+   - **Evidence.** §2.5 step 2; Appendix D #12. **Gap.** Transactional architecture will require a v2 spec if/when merchants request it.
+7. **"What's the TCPA exposure on welcome/verification SMS during the double-opt-in flow itself?"**
+   - **Answer.** The verification SMS is content-neutral and time-bounded (10-minute code TTL, §2.5 step 2). It is sent only to numbers where the consumer affirmatively entered the number and checked the disclosure — the act-of-submission is prior express consent for the single verification SMS under existing precedent (*In re Rules and Regulations Implementing the TCPA*, CG Docket No. 02-278, confirmatory-text analysis). The welcome SMS (§2.5 step 4) is sent only after code confirmation and includes the STOP reminder.
+   - **Evidence.** §2.5; Appendix D #3 for counsel confirmation. **Gap.** Counsel opinion should confirm both sends are permissible without additional consent capture.
+8. **"Have you reviewed FCC 2024 robocall/robotext updates?"**
+   - **Answer.** The FCC's 2023–2024 rulemaking on "one-to-one consent" (revocation of lead-generator aggregated consent) was stayed by the 11th Circuit in *Insurance Marketing Coalition v. FCC* (Jan 2025). Push's architecture already treats consent as one-to-one between consumer and merchant (§2.4 `consenting_party='consumer'`, no third-party-originated consent accepted), so Push is structurally aligned regardless of where the rulemaking lands. PD-L6 tracks counsel's full review.
+   - **Evidence.** §2.3 primary-path-only; §2.4 schema; PD-L6. **Gap.** Counsel confirmation of current FCC posture on-date-of-launch is required.
+9. **"Are pilot merchants required to sign a sub-processor agreement?"**
+   - **Answer.** Pilot merchants are the **senders of record** (the "[Merchant Legal Name]" in §2.1 consent text), not sub-processors. Push is the **platform/vendor**. The acknowledgement referenced in §9 item 6 captures the merchant's agreement that (a) Push will not send SMS on their behalf absent §2.5 opt-in and (b) the merchant will not instruct Push to override consent checks. Whether an additional DPA or sub-processor attachment is needed is a corporate-hygiene row (#5.1 MSA), not a TCPA-specific requirement.
+   - **Evidence.** §9 item 6; `docs/legal/corporate-hygiene-checklist.md` §5.1. **Gap.** Merchant-acknowledgement template text not yet drafted; add to PD-L4 scope or a new sub-item.
+10. **"What's the process if a consumer's phone is passed to a non-opted-in family member?"**
+    - **Answer.** Reply STOP propagates identically regardless of which human holds the phone; §3 opt-out is keyed to `(phone_hash, merchant_id)`. If the new holder replies STOP, opt-out is recorded. If they do not reply and complain downstream, the record of prior explicit consent from the previously-associated consumer is our defense under existing TCPA caselaw — `consent_log.ip_address_hash` + `consent_log.user_agent` support the authenticity-of-consent evidence.
+    - **Evidence.** §3.3 scope; §2.4 schema. **Gap.** Practical — the distinction between "reassigned" and "family-passed" may be counsel-relevant per Appendix D #4 analysis.
+11. **"How do you reconcile opt-out across merchants (one brand vs platform-wide)?"**
+    - **Answer.** Per-merchant by default. STOPALL opts out across all merchants the consumer has ever consented to via Push (§3.3 exception). Default scope mirrors CTIA treatment of separate senders; STOPALL provides a platform-level escape hatch. Appendix D #6 flags this for counsel confirmation.
+    - **Evidence.** §3.3; Appendix D #6. **Gap.** STOPALL confirmation-SMS language under counsel-review; verify it enumerates scope clearly.
+12. **"What's your A/B testing policy for consent text?"**
+    - **Answer.** Both Variant A and Variant B must individually pass counsel review before either is deployed. A/B test split must be tied to a single `disclosure_version` row in `disclosure_versions`, with Variant B being a separate row if it differs materially. Impressions for each variant are tied to `consent_log.disclosure_version` — there is no orphan A/B event. Counsel sign-off is required on each variant before that variant is deployed; we do not A/B-test language that is un-reviewed.
+    - **Evidence.** §2.1; §12 rotation triggers; Appendix D #1. **Gap.** Counsel may prefer we ship only Variant A for v1 and defer Variant B. If so, §2.1 retires Variant B pending a later revision.
+13. **"What notice do you give consumers when the pepper used for their `phone_hash` is rotated?"**
+    - **Answer.** None — the rotation is a server-side hashing change, not a change to the consumer's data or consent. No user-facing surface displays or references the pepper. Appendix D #13 flags this for counsel confirmation; if counsel disagrees, a notice template is required in the privacy policy rather than direct SMS (which would itself be a marketing message requiring consent).
+    - **Evidence.** §4.6; §12.2; Appendix D #13. **Gap.** Counsel opinion on notice obligation.
+14. **"If a consent check times out and a send is blocked (fail-closed), what is our obligation to notify the merchant that their campaign didn't reach this recipient?"**
+    - **Answer.** We notify the merchant via the merchant-facing campaign dashboard; blocked-send events are aggregated and exposed as "consent-check-blocked: N recipients" with drilldown available. No PII is exposed. The merchant has visibility and can decide whether to retry via a re-opt-in offer (ephemeral on their next visit) or accept that the audience is off-limits. Appendix D #14 flags this for counsel confirmation.
+    - **Evidence.** §5.5; Appendix D #14. **Gap.** Merchant dashboard UI for this event is a P2-3 surface, not yet built.
+
+---
+
+### §15. Cross-Spec Dependencies
+
+This spec does not stand alone. Below: where a change in another spec forces a revision here (and vice-versa). Any surfaced contradiction is a same-day ping to Jiaming.
+- **P2-1 consumer-facing-v1 — direct dependency.** SMS opt-in flow spec (§2.5) is consumed by consumer-facing §1 user journey step 5. Any change to consent copy, checkbox placement, or double-opt-in narrative forces a P2-1 re-review; `PD-C1` binds the byte-for-byte review across both specs. Consumer-facing table `loyalty_cards.sms_opt_in_ip` + `phone_hash` align with `consent_log.ip_address_hash` + `phone_hash` — a schema change in either spec is a breaking change to the other.
+- **P2-4 DisclosureBot-v0 — parallel, no direct dependency.** DisclosureBot handles FTC 16 CFR §255 creator-disclosure monitoring, a separate statutory regime. No data or flow overlap in v1. Shared only in counsel budget: both require specialist review under the same counsel-engagement track.
+- **P2-5 legal-budget-v1 — cross-reference item #12.** TCPA counsel opinion ($500–1,500) + A2P 10DLC registration ($4 one-time brand + $1.50/campaign/month) appear as line items in legal-budget-v1 §12. Budget changes (e.g., counsel firm swap) do not revise this spec but do update the engagement-target row in §8 working group.
+- **Infrastructure — Supabase schema migration.** `consent_log`, `opt_out_log`, `disclosure_versions`, `pepper_rotations`, `governance_log`, `outbound_message_attempts` sit alongside existing `users`, `loyalty_cards`, `merchants`, `campaigns` tables. Migration `2026-05-04-sms-compliance-v1.sql` must land cleanly; a schema conflict with consumer-facing-v1's `consumer_sms_optout` table name is one known conflict — the canonical name is `opt_out_log`, and the consumer-facing spec should reference the canonical name in any subsequent revision. Flag: audit-register row #20 (Supabase DPA) must close before production writes, per `lib/db/index.ts` service-role-key boot guard.
+- **Contradictions to watch.** (1) **A2P 10DLC rejection (~5–10% first-submission per Twilio).** If rejected, v5.3 Week 7 loyalty-card launch slips by re-registration (2–4 wk); mitigation — submit no later than v5.3 Week 1 (PD-T1 target 2026-05-11, 7-wk buffer). (2) **Counsel turnaround.** 2–4 hr billable + 5–10 calendar days redline; if > 2 wk slip, launch slips; mitigation — PD-L1 v5.3 Week 1, ≥ 6 wk review window. (3) **State-law change between scan and launch.** Unmitigable external risk; PD-L5 re-scan within 14 days of launch. (4) **Twilio platform-term change (TCR throughput, new requirements).** Treated as `disclosure_version` rotation (§12.1 #3); material change pauses launch for re-registration. (5) **Consumer-facing-v1 `loyalty_cards.sms_opt_in_ip` storing raw IP** conflicts with §2.4 here (`ip_address_hash` only). Resolution: consumer-facing-v1 changes on next revision; interim, API hashes IP before write, so no raw-IP lands in DB.
+
+---
+
 *This spec is counsel-preparation work product, not legal advice. Every normative claim (citation, interpretation, implementation guidance) requires counsel confirmation before external use. Push has not engaged TCPA counsel as of 2026-04-20. Firm suggestions are placeholders. Version: v1 DRAFT, 2026-04-20.*

@@ -388,4 +388,185 @@ The below questions are intentionally open. The first investor conversation afte
 
 ---
 
+## §8. RACI — Recalibration Execution
+
+| Activity | Responsible | Accountable | Consulted | Informed |
+|---|---|---|---|---|
+| Pilot LOI template distribution (Day 0) | Prum | Jiaming | Outside counsel | Milly |
+| Pilot W2 mid-pilot check-in scheduling | Milly | Prum | Jiaming | F&F investors (passive) |
+| Pilot W2 verified-customer count instrumentation | Z (eng) | Prum | ML Advisor | Jiaming |
+| Pilot W4 EOW data snapshot + memo | Prum | Jiaming | ML Advisor | F&F investors (memo) |
+| Pilot W8 EOW interim conversion compute | Prum | Jiaming | — | F&F investors (memo) |
+| Pilot W12 EOW final cohort rate + model refresh | Jiaming | Jiaming | Prum, ML Advisor | F&F investors (full memo + call if <40%) |
+| Conversion <40% F&F investor call | Jiaming | Jiaming | Outside counsel (if material misstatement risk) | Prum, Milly |
+| Conversion <25% Beachhead-expansion-freeze decision | Jiaming | Jiaming (with board if formed) | Prum, Milly, ML Advisor | F&F investors |
+| External pitch gating — verify rate is current | Jiaming | Jiaming | — | Diligence team |
+| Pilot exit-interview execution (W12) | Milly | Prum | Jiaming | F&F investors (themes only; no quotes without consent) |
+
+Owners summary: Prum owns data; Jiaming owns model + investor comms; Milly owns merchant-side surfaces.
+
+---
+
+## §9. Data Collection Schema (DDL + dashboard)
+
+### §9.1 pilot_merchants table
+
+```sql
+CREATE TABLE pilot_merchants (
+  merchant_id            uuid PRIMARY KEY REFERENCES merchants(id),
+  pilot_cohort_id        uuid NOT NULL REFERENCES pilot_cohorts(id),
+  pilot_start_date       date NOT NULL,
+  pilot_end_date         date NOT NULL,
+  status                 text NOT NULL CHECK (status IN ('active', 'converted', 'churned', 'pending', 'extended')),
+  conversion_decision_date     date,
+  conversion_decision_reason   text,
+  week_2_verified_count        int CHECK (week_2_verified_count >= 0),
+  week_4_verified_count        int CHECK (week_4_verified_count >= 0),
+  week_8_verified_count        int CHECK (week_8_verified_count >= 0),
+  week_12_verified_count       int CHECK (week_12_verified_count >= 0),
+  week_2_check_in_attended     boolean,
+  notes                  text,
+  created_at             timestamptz DEFAULT now(),
+  updated_at             timestamptz DEFAULT now()
+);
+CREATE INDEX idx_pilot_merchants_cohort ON pilot_merchants(pilot_cohort_id);
+CREATE INDEX idx_pilot_merchants_status ON pilot_merchants(status);
+```
+
+### §9.2 pilot_merchant_exit_interview table
+
+```sql
+CREATE TABLE pilot_merchant_exit_interview (
+  id                              uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  merchant_id                     uuid NOT NULL REFERENCES pilot_merchants(merchant_id),
+  interview_date                  date NOT NULL,
+  interviewer_id                  uuid NOT NULL,
+  decline_reason                  text NOT NULL CHECK (decline_reason IN ('price', 'outcome', 'fit', 'timing', 'other')),
+  decline_reason_detail           text,
+  price_sensitivity_score         int CHECK (price_sensitivity_score BETWEEN 1 AND 5),
+  outcome_satisfaction_score      int CHECK (outcome_satisfaction_score BETWEEN 1 AND 5),
+  would_consider_later_months     int,
+  open_feedback                   text,
+  consent_to_quote                boolean DEFAULT false,
+  created_at                      timestamptz DEFAULT now()
+);
+```
+
+Retention: pilot_merchant_exit_interview retained 4 years (statute-of-limitations on contract-related claims). PII minimized: no consumer phone or PAN; merchant_id is internal.
+
+### §9.3 Dashboard — Pilot Cohort Funnel
+
+A weekly-refreshed dashboard owned by Prum, surfacing:
+- Cohort funnel: outreach → LOI → active-pilot → converted-Beachhead, with weekly drop-offs visualized
+- Per-merchant week-by-week verified-customer trajectory (small-multiples, 10 sparklines)
+- Leading-indicator scatter: Week-2 verified count (X) vs conversion outcome (Y, binary)
+- Decline-reason histogram (from exit interviews)
+- Running interim Pilot→Paid rate with confidence interval
+
+Build: BI tool (Metabase, Hex, or simple Streamlit) by v5.3 W3. Until then: Google Sheet with named-range formulas.
+
+---
+
+## §10. Investor Output Artifacts (per checkpoint)
+
+### §10.1 Week 4 EOW artifact (v5.3 W4, ~2026-06-22 calibration window)
+
+**Form:** one-page memo + dashboard link.
+
+**Contents:**
+- Soft-commit count (how many merchants have verbally indicated intent to convert)
+- Week-2 verified-customer leading-indicator signal: actual median across cohort vs hypothesis (≥5 → ≥70%)
+- Top 3 themes from W2 mid-pilot check-ins
+- Updated LTV/CAC table only if leading indicator suggests rate <40%
+- Investor communication: short email; no model-changing claim at this checkpoint
+
+**Skeleton:** see Appendix E (template).
+
+### §10.2 Week 8 EOW artifact (v5.3 W8)
+
+**Form:** one-page memo + dashboard link + sensitivity table refresh.
+
+**Contents:**
+- Interim Pilot→Paid rate computed on however-many merchants have decided
+- Refresh of §3 stress-test table with actuals where available
+- "What we're seeing / what would trigger a change" framing
+- Specific pricing experiments to consider for Beachhead 11–50 window (links to push-pricing §9 experiment 1)
+
+### §10.3 Week 12 EOW artifact (~2026-07-27, v5.3 W12 — full revision)
+
+**Form:** full investor memo + deck update + data-room refresh.
+
+**Contents:**
+- FINAL Pilot→Paid rate for cohort-1 (sample size = 10)
+- Updated push-pricing §5 with real numbers replacing assumptions; commit + diff cited
+- Updated `docs/v5_2_status/numeric_reconciliation.md` (rows for LTV/CAC, lifetime, conversion rate)
+- F&F investor call within 7 days if actual <40%; written-only update if 40-60%; celebratory call if >60%
+- Public talking points for next investor pitch (with current rate cited; no obsolete 60% references)
+
+---
+
+## §11. Leading-Indicator Research Plan (extending Week-2 hypothesis)
+
+**Primary hypothesis (H1):** Merchants with ≥5 verified customers by Week 2 convert to Beachhead at ≥70%; those with <3 convert at ≤25%.
+
+**Secondary hypothesis (H2):** Merchants who attend the Week-2 mid-pilot check-in call convert at 20-percentage-points higher rate than decliners.
+
+**Confounders to control:**
+- Category mix (Coffee+ vs boba vs fitness vs beauty) — small N likely to limit; collect for v2 cohort
+- Creator quality assigned to merchant's campaigns (avg Push Score of creators)
+- Geographic density (foot traffic baseline of the merchant's neighborhood)
+- Merchant's prior outcome-pricing experience (have they used Toast loyalty / OpenTable / Yelp ads?)
+
+**Measurement plan:**
+- Log Week-2 verified count + check-in attendance flag in `pilot_merchants` table (§9.1)
+- At Pilot W12 EOW, compute Pearson correlation r between (Week-2 count, conversion-binary) and (check-in attended, conversion-binary)
+- Decision rule:
+  - r > 0.5: adopt as primary sales-development signal in Beachhead 11–50
+  - 0.3 < r ≤ 0.5: use as soft signal (informs but doesn't gate sales actions)
+  - r ≤ 0.3: hypothesis discarded; design v2 leading indicator for cohort-2
+
+**Sample-size caveat:** N=10 cohort is statistically thin; r-values should be reported with 95% confidence intervals (Fisher z-transformation). For a binary outcome and N=10, r-confidence-intervals are wide; treat as directional only until cohort-2 (target N=15 in Beachhead first wave) provides additional data.
+
+---
+
+## §12. FAQ for Investor / Board
+
+1. **"Why should we believe you'll hit 40% when industry is 25-35%?"** Honest answer: 40% is mid-range optimism reflecting (a) outcome-priced model removes "did the campaign work?" friction, (b) Williamsburg Coffee+ is high-density category fit. We track to 25-60% range and recalibrate at Week 4.
+
+2. **"What's the cost if actual is 15%? Do you still raise a seed?"** A 15% actual triggers a fundamental pricing-model revisit. We'd not pursue a seed round on the v5.2 thesis without first restructuring Beachhead pricing. Our floor: maintain enough runway through F&F to execute the alternative pricing pilot before approaching seed.
+
+3. **"How will you communicate the final rate to us?"** Per §10.3, full memo + dashboard link + 30-min call. If actual <40%, call within 7 days of Week 12 EOW. If 40-60%, written update. If >60%, celebratory call with case-study spotlight from first converter.
+
+4. **"What if one pilot merchant sets the narrative (single outlier)?"** N=10 makes single-outlier risk material. We report cohort-level + per-merchant trajectories; single-merchant outliers (top or bottom decile) called out explicitly in §10.3 memo. Cohort-2 (Beachhead first wave) provides the de-noising.
+
+5. **"Do you have a backup model if Pilot→Paid drops below floor?"** Yes — alternative model under consideration: lower floor ($300/mo) + higher per-customer (Coffee+ $35 instead of $25) + retention add-on emphasis. Tested in cohort-2 if cohort-1 lands <25%.
+
+6. **"Can you tell me the name of the first converted merchant so we can call them?"** With merchant consent, yes. We anticipate first conversion by Pilot W6 (4 weeks of pilot + 2 weeks decision); reference call available by W7.
+
+7. **"Why Week 12 and not Week 8 for final number?"** Week 8 captures merchants who decided early; Week 12 captures the "considered carefully" cohort. Excluding the latter biases conversion upward. Industry benchmark is full pilot+30-day decision window (we use 4 weeks pilot + 4 weeks decision = 8 weeks, plus 4-week reasonability margin = 12).
+
+8. **"How does this interact with the 9-month lifetime assumption?"** Pilot→Paid is the entry into the 9-month lifetime calculation. If Pilot→Paid is X and 9-month retention assumption is Y, LTV = X × Y × monthly GM. The two compound: a 50% miss on each compresses LTV by 75%.
+
+9. **"What's the incentive for pilot merchants to NOT convert?"** Price (most common, per industry); ROI clarity (some merchants want longer pilot); fit (categories outside Coffee+ may not see clear lift in 4 weeks). All captured in §9.2 exit interview.
+
+10. **"Has any comparable vertical-AI company published their pilot conversion?"** Not publicly. Hebbia (legal AI), Harvey (legal AI), Cresta (sales AI) — none publish pilot-to-paid rates explicitly. We're flying without close-comparable benchmarks; this is an honest gap.
+
+---
+
+## §13. Cross-Spec Dependencies + Contradictions
+
+- **P2-3 expansion math:** Shares Pilot W12 data point. If Pilot→Paid <40%, expansion-math §3 pace must revise (cascade); §10 Bull/Base/Bear scenario probability redistributes to Bear-weighted. **Critical:** the M12 ARR forecast in expansion-math §5 ($25K MRR = 25 × $1,000) ASSUMES 100% retention from Pilot to Beachhead — if 60% Pilot→Paid is the realistic baseline, then M12 ARR is closer to 25 × 0.6 × $1,000 = $15K MRR. This is a v1-spec drafting error in expansion-math; Wave 4 reconciliation must fix.
+
+- **P2-1 consumer-facing:** Visit-2 return rate is a quality signal for Pilot→Paid. If a pilot merchant has high visit-2 rates, conversion likelihood spikes. Add as tertiary hypothesis (H3) in §11 if v2 spec.
+
+- **P2-5 legal budget:** Pilot LOI template (#9) MUST spell out the Week-4 conversion-decision pathway in plain English. Otherwise a merchant declining at Week 4 with a "you didn't tell me about $500/mo" claim creates contract-law exposure.
+
+- **P1-3 T1 minimum guarantee:** Doesn't directly intersect Pilot→Paid mechanics, but BOTH affect first-pilot merchant experience. If a merchant's first pilot delivers 0 verified customers AND triggers the T1 guarantee, the merchant may form a negative outcome impression and decline conversion — track that interaction in §9.1 notes column.
+
+- **Infrastructure:** `pilot_merchants` table needs a `pilot_cohort_id` FK; `pilot_cohorts` table doesn't yet exist. Add to v5.3 W1 schema migration ticket.
+
+- **Cross-spec contradiction (must resolve in Wave 4):** Expansion-math v1 §3 implicitly assumes 100% Pilot→Paid (counts all 25 Williamsburg merchants in M12 MRR); this spec's stress-test models 25-60%. The two specs disagree on the M12 MRR ($25K vs $15K). Wave 4 owner: reconcile in numeric_reconciliation.md.
+
+---
+
 *End of spec v1. Next revision: v2 (empirical), to be committed at Pilot Week 12 EOW (~2026-07-27) by Jiaming.*
