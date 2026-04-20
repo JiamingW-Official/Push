@@ -7,7 +7,7 @@ description: "Push strategic foundation, positioning, competitive analysis, and 
 
 ## Strategic Definition
 
-Push is an **AI-native local customer acquisition engine**. Merchants tell Push how many new customers they want; Push's system matches creators, executes campaigns, verifies results, and optimizes.
+Push is **Vertical AI for Local Commerce**. Merchants tell Push how many new customers they want; Push's system matches creators, executes campaigns, verifies results, and optimizes.
 
 **Push IS:** transaction system, trust system, creator credit system, local demand orchestration system.
 **Push is NOT:** generic influencer marketplace, local discovery app, content community, reward app, loyalty system.
@@ -18,12 +18,21 @@ Creators are not media inventory—they are **unstructured customer acquisition 
 
 ## External Positioning
 
-**Killer Lines:**
-- Primary: "Push is the AI engine that turns creators into measurable customer acquisition for local businesses."
-- Investors: "We don't sell software. We sell verified customers — delivered by AI-matched creators."
-- Merchants: "Tell us how many new customers you want this week. Push handles everything else."
-- Creators: "Push's AI finds the best-paying opportunities for your style, location, and track record."
-- Technical: "Push is the autonomous performance loop for local creator commerce."
+### Killer Lines (v5.2)
+- **Primary (public):** "Vertical AI for Local Commerce — we sell verified customers, not software."
+- **Investors:** "Outcome-priced AI for local; SLR ≥ 25 at Month 12; ConversionOracle + Creator Productivity Lock = moat."
+- **Merchants:** "Tell us how many customers. We deliver — and you pay when they walk in."
+- **Creators:** "Get paid per verified customer; top performers become equity partners."
+- **Technical:** "ConversionOracle™ = Computer Vision + OCR + geo-verification. FTC-compliant DisclosureBot. SLR-driven unit economics."
+
+### Push is NOT (v5.2)
+- ❌ Marketing agency
+- ❌ Creator marketplace
+- ❌ Loyalty app
+- ❌ Local discovery platform
+- ❌ Coupon engine
+- ❌ Content community
+- ❌ Influencer marketing tool
 
 ## Five Strategic Pillars
 
@@ -35,7 +44,7 @@ Creators are not media inventory—they are **unstructured customer acquisition 
 
 ## Company-Building Thesis
 
-**End state:** A new market layer standardizing creator-driven local commerce. Operating system positioning—Push is not a platform (replaceable) but an **OS** (irreplaceable due to accumulated intelligence: creator scores, merchant playbooks, matched data). Benchmark: Shopify for e-commerce = Push for local creator commerce.
+**End state:** A new market layer standardizing creator-driven local commerce. Operating system positioning—Push is not a platform (replaceable) but an **OS** (irreplaceable due to accumulated intelligence: creator scores, merchant playbooks, matched data). Category: **Vertical AI for Local Commerce**. Benchmark: Shopify for e-commerce = Push for local creator commerce.
 
 ## Core Invariant
 
