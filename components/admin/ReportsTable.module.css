@@ -1,0 +1,82 @@
+/* ============================================================
+   Admin ReportsTable — weekly merchant metrics
+   Authority: Design.md (sharp corners, CSGenioMono)
+   ============================================================ */
+
+.wrapper {
+  width: 100%;
+  overflow-x: auto;
+  border: 1px solid var(--line-strong);
+  background: var(--surface-elevated);
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--font-body);
+  font-size: var(--text-small);
+}
+
+.table thead {
+  background: var(--surface);
+  border-bottom: 1px solid var(--line-strong);
+}
+
+.table th {
+  text-align: left;
+  padding: var(--space-2) var(--space-3);
+  font-weight: 700;
+  font-size: var(--text-caption);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--dark);
+}
+
+.table tbody tr {
+  border-bottom: 1px solid var(--line);
+  transition: background var(--t-fast);
+}
+
+.table tbody tr:last-child {
+  border-bottom: none;
+}
+
+.table tbody tr:hover {
+  background: var(--surface-muted);
+}
+
+.table td {
+  padding: var(--space-2) var(--space-3);
+  color: var(--dark);
+  vertical-align: middle;
+}
+
+.weekCell {
+  font-variant-numeric: tabular-nums;
+  font-family: var(--font-body);
+  color: var(--graphite);
+}
+
+.merchantCell {
+  font-weight: 600;
+  color: var(--dark);
+}
+
+.customersCell {
+  text-align: center;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.revenueCell {
+  text-align: right;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.roiCell {
+  text-align: right;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--primary);
+}
