@@ -423,15 +423,8 @@ export default function CreatorSignupPage() {
                         id="pw-strength"
                         aria-live="polite"
                       >
-                        <div
-                          className="pw-bar"
-                          data-strength={pwStrength}
-                          aria-hidden="true"
-                        >
-                          <span className="pw-bar-seg" />
-                          <span className="pw-bar-seg" />
-                          <span className="pw-bar-seg" />
-                          <span className="pw-bar-seg" />
+                        <div className="pw-bar">
+                          <div className={`pw-fill pw-fill--${pwStrength}`} />
                         </div>
                         <span className={`pw-label pw-label--${pwStrength}`}>
                           {pwStrength === "weak"
@@ -618,20 +611,9 @@ export default function CreatorSignupPage() {
             {/* ── Tier journey strip ────────────────────────── */}
             <div className="tier-preview">
               <span className="tier-preview-title">YOUR JOURNEY</span>
-              <div
-                className="tier-list"
-                role="list"
-                aria-label="Creator tier progression"
-              >
+              <div className="tier-list">
                 {TIERS.map((t, i) => (
-                  <div
-                    key={t.label}
-                    className="tier-item"
-                    data-index={i}
-                    role="listitem"
-                    title={t.desc}
-                    style={{ animationDelay: `${700 + i * 80}ms` }}
-                  >
+                  <div key={t.label} className="tier-item" data-index={i}>
                     <span className="tier-icon" aria-hidden="true">
                       {t.icon}
                     </span>
@@ -683,8 +665,8 @@ function BrandPanel() {
           Push
         </Link>
 
-        <div className="signup-brand-hero">
-          <h2 className="brand-headline signup-brand-headline">
+        <div>
+          <h2 className="brand-headline">
             Join 40+ creators
             <br />
             <em>earning on Push.</em>
@@ -696,15 +678,11 @@ function BrandPanel() {
           </p>
         </div>
 
-        {/* First 3 tier preview — staggered entry animation */}
+        {/* First 3 tier preview */}
         <div className="auth-tier-preview signup-tier-preview">
           <span className="auth-tier-preview-label">YOUR STARTING PATH</span>
-          {SIGNUP_TIERS.map((t, i) => (
-            <div
-              key={t.label}
-              className="auth-tier-item signup-tier-item"
-              style={{ animationDelay: `${400 + i * 120}ms` }}
-            >
+          {SIGNUP_TIERS.map((t) => (
+            <div key={t.label} className="auth-tier-item signup-tier-item">
               <span
                 className="auth-tier-icon"
                 aria-hidden="true"

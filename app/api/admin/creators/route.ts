@@ -123,7 +123,7 @@ export async function GET(request: NextRequest) {
     const { data, error } = await query;
     if (error) throw error;
 
-    const rows = (data ?? []) as FunnelListRow[];
+    const rows = (data ?? []) as unknown as FunnelListRow[];
     return success(rows, { count: rows.length });
   } catch (err) {
     return serverError("admin-creators", err);

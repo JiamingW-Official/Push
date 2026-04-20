@@ -1,0 +1,449 @@
+/* ============================================================
+   Merchant Analytics — analytics.css
+   Follows Design.md: 0 border-radius, 8px grid, 6-color palette
+   ============================================================ */
+
+.man-page {
+  min-height: 100vh;
+  background: var(--surface);
+  color: var(--dark);
+  font-family: var(--font-body);
+}
+
+/* ── Nav ─────────────────────────────────────────────────── */
+
+.man-nav {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 32px;
+  border-bottom: 1px solid var(--line);
+  background: var(--surface-elevated);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+
+.man-nav-back {
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: var(--graphite);
+  text-decoration: none;
+  letter-spacing: 0.01em;
+  transition: color 200ms ease;
+}
+
+.man-nav-back:hover {
+  color: var(--dark);
+}
+
+.man-nav-title {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--dark);
+  letter-spacing: -0.02em;
+  flex: 1;
+}
+
+.man-nav-date {
+  font-family: var(--font-body);
+  font-size: 12px;
+  color: var(--graphite);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* ── Hero ─────────────────────────────────────────────────── */
+
+.man-hero {
+  padding: 64px 32px 48px;
+  border-bottom: 1px solid var(--line);
+  background: var(--dark);
+}
+
+.man-hero-eyebrow {
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: rgba(245, 242, 236, 0.55);
+  margin: 0 0 16px;
+}
+
+.man-hero-headline {
+  font-family: var(--font-display);
+  font-size: clamp(36px, 5vw, 72px);
+  font-weight: 900;
+  letter-spacing: -0.05em;
+  line-height: 1;
+  color: var(--surface-bright);
+  margin: 0 0 40px;
+}
+
+.man-hero-number {
+  color: var(--surface-elevated);
+  font-weight: 900;
+}
+
+.man-hero-roi {
+  color: var(--champagne);
+}
+
+.man-hero-light {
+  font-weight: 200;
+  color: rgba(245, 242, 236, 0.55);
+}
+
+.man-hero-stats {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.man-hero-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 0 24px;
+}
+
+.man-hero-stat:first-child {
+  padding-left: 0;
+}
+
+.man-hero-stat-value {
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: var(--surface-elevated);
+}
+
+.man-hero-stat-label {
+  font-family: var(--font-body);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: rgba(245, 242, 236, 0.55);
+}
+
+.man-hero-stat-div {
+  width: 1px;
+  height: 40px;
+  background: rgba(245, 242, 236, 0.18);
+}
+
+/* ── Charts ───────────────────────────────────────────────── */
+
+.man-charts {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px;
+  background: var(--line);
+  border-bottom: 1px solid var(--line);
+}
+
+@media (max-width: 900px) {
+  .man-charts {
+    grid-template-columns: 1fr;
+  }
+}
+
+.man-chart-card {
+  background: var(--surface-elevated);
+  padding: 24px;
+}
+
+.man-chart-card--wide {
+  grid-column: 1 / -1;
+}
+
+.man-chart-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.man-chart-label {
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  color: var(--dark);
+  text-transform: uppercase;
+}
+
+.man-chart-sublabel {
+  font-family: var(--font-body);
+  font-size: 11px;
+  color: var(--graphite);
+}
+
+.man-chart-legend {
+  display: flex;
+  gap: 16px;
+}
+
+.man-chart-legend-item {
+  font-family: var(--font-body);
+  font-size: 11px;
+}
+
+.man-chart-legend-item--dark {
+  color: var(--dark);
+}
+
+.man-chart-legend-item--blue {
+  color: var(--tertiary);
+}
+
+/* ── Campaign matrix ──────────────────────────────────────── */
+
+.man-matrix-section {
+  border-bottom: 1px solid var(--line);
+  background: var(--surface-elevated);
+}
+
+.man-matrix-header {
+  padding: 24px 24px 0;
+}
+
+.man-matrix-wrap {
+  overflow-x: auto;
+  padding: 16px 24px 24px;
+}
+
+.man-matrix {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--font-body);
+  font-size: 13px;
+}
+
+.man-matrix th {
+  text-align: left;
+  padding: 8px 12px;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--graphite);
+  border-bottom: 1px solid var(--line-strong);
+  white-space: nowrap;
+}
+
+.man-matrix td {
+  padding: 12px 12px;
+  border-bottom: 1px solid var(--line);
+  color: var(--dark);
+  vertical-align: middle;
+}
+
+.man-matrix tr:last-child td {
+  border-bottom: none;
+}
+
+.man-matrix tr:hover td {
+  background: var(--surface);
+}
+
+.man-matrix-name {
+  font-weight: 500;
+}
+
+.man-matrix-roi {
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--dark);
+}
+
+.man-tier-badge {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 2px 6px;
+  border: 1px solid var(--line);
+}
+
+.man-tier-badge--partner {
+  background: var(--champagne-light);
+  border-color: var(--champagne-border);
+  color: #7a5e2a;
+}
+
+.man-tier-badge--proven {
+  background: rgba(0, 48, 73, 0.08);
+  border-color: rgba(0, 48, 73, 0.2);
+  color: var(--dark);
+}
+
+.man-tier-badge--operator {
+  background: rgba(102, 155, 188, 0.1);
+  border-color: rgba(102, 155, 188, 0.3);
+  color: #2a5a7a;
+}
+
+.man-tier-badge--explorer {
+  background: var(--surface-muted);
+  color: var(--graphite);
+}
+
+.man-tier-badge--seed {
+  background: var(--surface-muted);
+  color: var(--graphite);
+  opacity: 0.7;
+}
+
+.man-status-badge {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 2px 6px;
+}
+
+.man-status-badge--active {
+  background: rgba(45, 122, 45, 0.1);
+  color: #2d7a2d;
+  border: 1px solid rgba(45, 122, 45, 0.25);
+}
+
+.man-status-badge--paused {
+  background: var(--champagne-light);
+  color: #7a5e2a;
+  border: 1px solid var(--champagne-border);
+}
+
+.man-status-badge--ended {
+  background: var(--surface-muted);
+  color: var(--graphite);
+  border: 1px solid var(--line);
+}
+
+/* ── Insights ─────────────────────────────────────────────── */
+
+.man-insights {
+  padding: 64px 32px;
+}
+
+.man-insights-header {
+  margin-bottom: 40px;
+}
+
+.man-insights-eyebrow {
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--graphite);
+  margin: 0 0 8px;
+}
+
+.man-insights-title {
+  font-family: var(--font-display);
+  font-size: clamp(36px, 4vw, 56px);
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  color: var(--dark);
+  margin: 0;
+}
+
+.man-insights-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: var(--line);
+  border: 1px solid var(--line);
+}
+
+@media (max-width: 900px) {
+  .man-insights-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.man-insight-card {
+  background: var(--surface-elevated);
+  padding: 32px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  transition: background 200ms ease;
+}
+
+.man-insight-card:hover {
+  background: var(--surface-bright);
+}
+
+.man-insight-accent {
+  width: 32px;
+  height: 3px;
+  margin-bottom: 4px;
+}
+
+.man-insight-stat-row {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.man-insight-stat {
+  font-family: var(--font-display);
+  font-size: 40px;
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  line-height: 1;
+}
+
+.man-insight-context {
+  font-family: var(--font-body);
+  font-size: 12px;
+  color: var(--graphite);
+}
+
+.man-insight-headline {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--dark);
+  margin: 0;
+}
+
+.man-insight-body {
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: var(--graphite);
+  line-height: 1.6;
+  margin: 0;
+  flex: 1;
+}
+
+.man-insight-cta {
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--dark);
+  text-decoration: none;
+  border-bottom: 1px solid var(--line-strong);
+  padding-bottom: 2px;
+  display: inline-block;
+  transition: border-color 200ms ease, color 200ms ease;
+  align-self: flex-start;
+}
+
+.man-insight-cta:hover {
+  color: var(--primary);
+  border-color: var(--primary);
+}

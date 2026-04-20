@@ -106,7 +106,7 @@ export default function CreatorLoginPage() {
           <div className="form-wrap" id="login-form">
             <div className="form-header">
               <span className="form-eyebrow">Creator Login</span>
-              <h1 className="form-title login-form-title">Welcome back.</h1>
+              <h1 className="form-title">Welcome back.</h1>
               <p className="form-subtitle">Your campaigns are waiting.</p>
             </div>
 
@@ -273,36 +273,22 @@ const LOGIN_TIERS = [
 
 function BrandPanel() {
   return (
-    <div className="brand-panel login-brand-panel">
+    <div className="brand-panel">
       <div className="brand-top">
         <Link href="/" className="brand-logo">
           Push
         </Link>
 
-        <div className="login-brand-hero">
-          <p className="login-brand-tagline">Your Score Is Your Salary.</p>
+        <div>
+          <h2 className="brand-headline">
+            Your performance score
+            <br />
+            <em>is your currency.</em>
+          </h2>
           <p className="brand-tagline">
             Every campaign you complete builds your Push Score &mdash; higher
             score means better brands, higher payouts, and commission income.
           </p>
-        </div>
-
-        {/* Animated stats row */}
-        <div className="login-stats-row" aria-label="Platform statistics">
-          <div className="login-stat">
-            <span className="login-stat-value">$2.4M</span>
-            <span className="login-stat-label">Paid to creators</span>
-          </div>
-          <div className="login-stat-divider" aria-hidden="true" />
-          <div className="login-stat">
-            <span className="login-stat-value">847</span>
-            <span className="login-stat-label">Active creators</span>
-          </div>
-          <div className="login-stat-divider" aria-hidden="true" />
-          <div className="login-stat">
-            <span className="login-stat-value">4.2</span>
-            <span className="login-stat-label">Avg campaigns/mo</span>
-          </div>
         </div>
 
         {/* Tier journey preview */}

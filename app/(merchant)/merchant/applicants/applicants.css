@@ -1,0 +1,937 @@
+/* ============================================================
+   Push — Merchant Applicants Inbox
+   Design.md: border-radius 0, 6 brand colors, 8px grid,
+   Darky + CS Genio Mono, Light mode only.
+   ============================================================ */
+
+/* ------------------------------------------------------------
+   Shell
+   ------------------------------------------------------------ */
+.ap-shell {
+  min-height: 100svh;
+  background: var(--surface);
+  font-family: var(--font-body);
+}
+
+/* ------------------------------------------------------------
+   Top Nav (reuses dashboard pattern)
+   ------------------------------------------------------------ */
+.ap-nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
+  background: var(--dark);
+  display: flex;
+  align-items: center;
+  padding: 0 var(--space-3);
+  z-index: 200;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.ap-nav__logo {
+  font-family: var(--font-display);
+  font-size: 26px;
+  font-weight: 900;
+  font-style: italic;
+  letter-spacing: -0.04em;
+  color: var(--surface);
+  line-height: 1;
+  text-decoration: none;
+  flex-shrink: 0;
+}
+
+.ap-nav__logo span {
+  color: var(--primary);
+}
+
+.ap-nav__back {
+  margin-left: var(--space-4);
+  font-size: var(--text-caption);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(245, 242, 236, 0.55);
+  text-decoration: none;
+  transition: color var(--t-fast);
+}
+
+.ap-nav__back:hover {
+  color: var(--surface);
+}
+
+.ap-nav__center {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+
+.ap-nav__title {
+  font-family: var(--font-body);
+  font-size: var(--text-caption);
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(245, 242, 236, 0.45);
+}
+
+.ap-nav__right {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-shrink: 0;
+}
+
+/* ------------------------------------------------------------
+   Page Content Wrapper
+   ------------------------------------------------------------ */
+.ap-content {
+  padding-top: 60px;
+}
+
+/* ------------------------------------------------------------
+   Editorial Hero
+   ------------------------------------------------------------ */
+.ap-hero {
+  background: var(--dark);
+  padding: var(--space-10) var(--space-6) var(--space-8);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.ap-hero__inner {
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.ap-hero__eyebrow {
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--primary);
+  margin-bottom: var(--space-2);
+}
+
+.ap-hero__row {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--space-6);
+  flex-wrap: wrap;
+}
+
+.ap-hero__stat {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.ap-hero__number {
+  font-family: var(--font-display);
+  font-size: clamp(56px, 8vw, 84px);
+  font-weight: 900;
+  letter-spacing: -0.05em;
+  color: var(--surface-bright);
+  line-height: 0.9;
+}
+
+.ap-hero__label {
+  font-family: var(--font-body);
+  font-size: var(--text-small);
+  font-weight: 400;
+  color: rgba(245, 242, 236, 0.55);
+  letter-spacing: 0.02em;
+  max-width: 180px;
+  line-height: 1.4;
+}
+
+.ap-hero__meta {
+  margin-top: var(--space-4);
+  display: flex;
+  gap: var(--space-5);
+  flex-wrap: wrap;
+}
+
+.ap-hero__meta-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.ap-hero__meta-value {
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: var(--champagne);
+  line-height: 1;
+}
+
+.ap-hero__meta-label {
+  font-family: var(--font-body);
+  font-size: var(--text-caption);
+  color: rgba(245, 242, 236, 0.45);
+  letter-spacing: 0.04em;
+}
+
+/* ------------------------------------------------------------
+   Sticky Filter Bar
+   ------------------------------------------------------------ */
+.ap-filters {
+  position: sticky;
+  top: 60px;
+  z-index: 100;
+  background: var(--surface-elevated);
+  border-bottom: 1px solid var(--line);
+  padding: 12px var(--space-6);
+}
+
+.ap-filters__inner {
+  max-width: 1280px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+
+/* Pill buttons — direct-angle, no pill shape */
+.ap-pill {
+  font-family: var(--font-body);
+  font-size: var(--text-caption);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 6px 14px;
+  border: 1.5px solid var(--line-strong);
+  border-radius: 0;
+  background: transparent;
+  color: var(--graphite);
+  cursor: pointer;
+  transition: background var(--t-fast), color var(--t-fast), border-color var(--t-fast);
+  white-space: nowrap;
+}
+
+.ap-pill:hover {
+  border-color: var(--dark);
+  color: var(--dark);
+}
+
+.ap-pill--active {
+  background: var(--dark);
+  border-color: var(--dark);
+  color: var(--surface);
+}
+
+.ap-pill--tier {
+  font-size: 10px;
+}
+
+/* Dropdown selects */
+.ap-select {
+  font-family: var(--font-body);
+  font-size: var(--text-caption);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  padding: 6px 12px;
+  border: 1.5px solid var(--line-strong);
+  border-radius: 0;
+  background: var(--surface-elevated);
+  color: var(--dark);
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23003049' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  padding-right: 28px;
+  min-width: 140px;
+}
+
+.ap-select:focus {
+  outline: 2px solid var(--primary);
+  outline-offset: 0;
+}
+
+/* Search input */
+.ap-search {
+  font-family: var(--font-body);
+  font-size: var(--text-caption);
+  padding: 6px 12px;
+  border: 1.5px solid var(--line-strong);
+  border-radius: 0;
+  background: var(--surface-elevated);
+  color: var(--dark);
+  min-width: 180px;
+  transition: border-color var(--t-fast);
+}
+
+.ap-search:focus {
+  outline: none;
+  border-color: var(--dark);
+}
+
+.ap-search::placeholder {
+  color: var(--text-muted);
+}
+
+/* Result count */
+.ap-filters__count {
+  margin-left: auto;
+  font-size: var(--text-caption);
+  color: var(--text-muted);
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+
+.ap-filters__count strong {
+  color: var(--dark);
+  font-weight: 700;
+}
+
+.ap-filters__sep {
+  width: 1px;
+  height: 20px;
+  background: var(--line);
+  flex-shrink: 0;
+}
+
+/* Tier filter group label */
+.ap-filters__group-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+/* ------------------------------------------------------------
+   Main list area
+   ------------------------------------------------------------ */
+.ap-main {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: var(--space-4) var(--space-6) var(--space-10);
+}
+
+/* Table header row */
+.ap-table-header {
+  display: grid;
+  grid-template-columns: 32px 1fr 80px 180px 72px 100px 130px;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 10px var(--space-3);
+  border-bottom: 1.5px solid var(--line-strong);
+  margin-bottom: 0;
+}
+
+.ap-table-header__cell {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+/* Application row */
+.ap-row-wrap {
+  border-bottom: 1px solid var(--line);
+}
+
+.ap-row {
+  display: grid;
+  grid-template-columns: 32px 1fr 80px 180px 72px 100px 130px;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 14px var(--space-3);
+  background: var(--surface-elevated);
+  cursor: pointer;
+  transition: background var(--t-fast), border-color var(--t-fast);
+  border-left: 3px solid transparent;
+  position: relative;
+}
+
+.ap-row:hover {
+  background: var(--surface-bright);
+}
+
+.ap-row--selected {
+  border-left-color: var(--primary);
+  background: rgba(193, 18, 31, 0.03);
+}
+
+.ap-row--declined {
+  opacity: 0.55;
+}
+
+/* Checkbox */
+.ap-checkbox {
+  width: 16px;
+  height: 16px;
+  border: 1.5px solid var(--line-strong);
+  border-radius: 0;
+  cursor: pointer;
+  accent-color: var(--primary);
+  flex-shrink: 0;
+}
+
+/* Creator cell */
+.ap-creator {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+.ap-creator__avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 0;
+  object-fit: cover;
+  flex-shrink: 0;
+  background: var(--surface);
+}
+
+.ap-creator__info {
+  min-width: 0;
+}
+
+.ap-creator__name {
+  font-size: var(--text-small);
+  font-weight: 700;
+  color: var(--dark);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ap-creator__handle {
+  font-size: var(--text-caption);
+  color: var(--text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 4px;
+}
+
+.ap-creator__tier {
+  display: inline-block;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border-radius: 0;
+  white-space: nowrap;
+}
+
+/* Push Score */
+.ap-score {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  color: var(--dark);
+  text-align: center;
+}
+
+.ap-score--high {
+  color: var(--primary);
+}
+
+/* Campaign name */
+.ap-campaign {
+  font-size: var(--text-caption);
+  color: var(--dark);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color var(--t-fast);
+  line-height: 1.35;
+}
+
+.ap-campaign:hover {
+  border-bottom-color: var(--dark);
+}
+
+/* Match % */
+.ap-match {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--tertiary);
+  text-align: center;
+}
+
+/* Last active */
+.ap-active {
+  font-size: var(--text-caption);
+  color: var(--text-muted);
+  letter-spacing: 0.02em;
+}
+
+/* Action group */
+.ap-actions {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.ap-btn {
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 5px 10px;
+  border-radius: 0;
+  cursor: pointer;
+  border: 1.5px solid transparent;
+  transition: background var(--t-fast), color var(--t-fast), border-color var(--t-fast), transform 80ms ease;
+  white-space: nowrap;
+}
+
+.ap-btn:active {
+  transform: scale(0.97);
+}
+
+.ap-btn--accept {
+  background: var(--primary);
+  color: #fff;
+  border-color: var(--primary);
+}
+
+.ap-btn--accept:hover {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.ap-btn--decline {
+  background: transparent;
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+.ap-btn--decline:hover {
+  background: var(--accent);
+  color: #fff;
+}
+
+.ap-btn--message {
+  background: transparent;
+  color: var(--dark);
+  border-color: var(--line-strong);
+}
+
+.ap-btn--message:hover {
+  border-color: var(--dark);
+}
+
+/* Status badge (for accepted/declined/shortlisted rows) */
+.ap-status-badge {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border-radius: 0;
+  white-space: nowrap;
+}
+
+.ap-status-badge--accepted {
+  background: rgba(0, 48, 73, 0.08);
+  color: var(--dark);
+  border: 1px solid var(--line-strong);
+}
+
+.ap-status-badge--declined {
+  background: rgba(120, 0, 0, 0.06);
+  color: var(--accent);
+  border: 1px solid rgba(120, 0, 0, 0.2);
+}
+
+.ap-status-badge--shortlisted {
+  background: var(--champagne-light);
+  color: #7a5e28;
+  border: 1px solid var(--champagne-border);
+}
+
+/* ------------------------------------------------------------
+   Accordion (row expand)
+   ------------------------------------------------------------ */
+.ap-accordion {
+  overflow: hidden;
+  max-height: 0;
+  transition: max-height 340ms cubic-bezier(0.22, 1, 0.36, 1);
+  background: var(--surface-bright);
+  border-left: 3px solid var(--line);
+}
+
+.ap-accordion--open {
+  max-height: 600px;
+}
+
+.ap-accordion__inner {
+  padding: var(--space-4) var(--space-4) var(--space-4) calc(32px + var(--space-2) + var(--space-3) + 36px + var(--space-2) + 3px);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-4);
+}
+
+.ap-accordion__section-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+}
+
+.ap-accordion__bio {
+  font-size: var(--text-caption);
+  color: var(--graphite);
+  line-height: 1.6;
+  margin-bottom: var(--space-3);
+}
+
+.ap-accordion__stats {
+  display: flex;
+  gap: var(--space-4);
+  margin-bottom: var(--space-3);
+}
+
+.ap-accordion__stat {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.ap-accordion__stat-value {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: var(--dark);
+}
+
+.ap-accordion__stat-label {
+  font-size: var(--text-caption);
+  color: var(--text-muted);
+  letter-spacing: 0.02em;
+}
+
+.ap-accordion__samples {
+  display: flex;
+  gap: var(--space-1);
+}
+
+.ap-accordion__sample {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 0;
+  background: var(--surface);
+}
+
+.ap-accordion__cover {
+  font-size: var(--text-caption);
+  color: var(--graphite);
+  line-height: 1.6;
+  font-style: italic;
+  padding-left: var(--space-2);
+  border-left: 2px solid var(--primary);
+}
+
+/* ------------------------------------------------------------
+   Floating Bulk Action Bar
+   ------------------------------------------------------------ */
+.ap-bulk-bar {
+  position: fixed;
+  bottom: var(--space-4);
+  left: 50%;
+  transform: translateX(-50%) translateY(120%);
+  z-index: 300;
+  background: var(--dark);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  padding: 14px var(--space-4);
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
+  transition: transform 300ms cubic-bezier(0.22, 1, 0.36, 1);
+  white-space: nowrap;
+}
+
+.ap-bulk-bar--visible {
+  transform: translateX(-50%) translateY(0);
+}
+
+.ap-bulk-bar__count {
+  font-size: var(--text-caption);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: rgba(245, 242, 236, 0.7);
+}
+
+.ap-bulk-bar__sep {
+  width: 1px;
+  height: 18px;
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.ap-bulk-btn {
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 7px 16px;
+  border-radius: 0;
+  cursor: pointer;
+  border: 1.5px solid transparent;
+  transition: background var(--t-fast), color var(--t-fast), border-color var(--t-fast);
+}
+
+.ap-bulk-btn--accept {
+  background: var(--primary);
+  color: #fff;
+  border-color: var(--primary);
+}
+
+.ap-bulk-btn--accept:hover {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.ap-bulk-btn--decline {
+  background: transparent;
+  color: rgba(245, 242, 236, 0.85);
+  border-color: rgba(245, 242, 236, 0.3);
+}
+
+.ap-bulk-btn--decline:hover {
+  border-color: rgba(245, 242, 236, 0.8);
+  color: #fff;
+}
+
+.ap-bulk-btn--shortlist {
+  background: transparent;
+  color: var(--champagne);
+  border-color: var(--champagne-border);
+}
+
+.ap-bulk-btn--shortlist:hover {
+  background: var(--champagne-light);
+}
+
+.ap-bulk-btn--message {
+  background: transparent;
+  color: rgba(245, 242, 236, 0.55);
+  border-color: transparent;
+}
+
+.ap-bulk-btn--message:hover {
+  color: rgba(245, 242, 236, 0.9);
+}
+
+/* Close bulk bar */
+.ap-bulk-bar__close {
+  background: none;
+  border: none;
+  color: rgba(245, 242, 236, 0.4);
+  cursor: pointer;
+  font-size: 18px;
+  line-height: 1;
+  padding: 0 4px;
+  transition: color var(--t-fast);
+}
+
+.ap-bulk-bar__close:hover {
+  color: rgba(245, 242, 236, 0.9);
+}
+
+/* ------------------------------------------------------------
+   Confirm Modal
+   ------------------------------------------------------------ */
+.ap-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 48, 73, 0.55);
+  z-index: 400;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 200ms ease forwards;
+}
+
+.ap-modal {
+  background: var(--surface-elevated);
+  border: 1px solid var(--line-strong);
+  padding: var(--space-5);
+  min-width: 340px;
+  max-width: 480px;
+  width: 90%;
+  animation: modalSlideUp 250ms ease forwards;
+  border-radius: 0;
+}
+
+.ap-modal__title {
+  font-family: var(--font-display);
+  font-size: var(--text-h3);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: var(--dark);
+  margin-bottom: var(--space-2);
+}
+
+.ap-modal__body {
+  font-size: var(--text-small);
+  color: var(--graphite);
+  line-height: 1.6;
+  margin-bottom: var(--space-4);
+}
+
+.ap-modal__actions {
+  display: flex;
+  gap: var(--space-2);
+  justify-content: flex-end;
+}
+
+.ap-modal__cancel {
+  font-family: var(--font-body);
+  font-size: var(--text-caption);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 8px 20px;
+  border: 1.5px solid var(--line-strong);
+  border-radius: 0;
+  background: transparent;
+  color: var(--graphite);
+  cursor: pointer;
+  transition: border-color var(--t-fast), color var(--t-fast);
+}
+
+.ap-modal__cancel:hover {
+  border-color: var(--dark);
+  color: var(--dark);
+}
+
+.ap-modal__confirm {
+  font-family: var(--font-body);
+  font-size: var(--text-caption);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 8px 20px;
+  border: 1.5px solid var(--primary);
+  border-radius: 0;
+  background: var(--primary);
+  color: #fff;
+  cursor: pointer;
+  transition: background var(--t-fast), border-color var(--t-fast);
+}
+
+.ap-modal__confirm:hover {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+/* ------------------------------------------------------------
+   Empty States
+   ------------------------------------------------------------ */
+.ap-empty {
+  padding: var(--space-10) var(--space-4);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.ap-empty__title {
+  font-family: var(--font-display);
+  font-size: var(--text-h3);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: var(--dark);
+}
+
+.ap-empty__sub {
+  font-size: var(--text-small);
+  color: var(--text-muted);
+  max-width: 320px;
+  line-height: 1.6;
+}
+
+.ap-empty__icon {
+  width: 64px;
+  height: 64px;
+  color: var(--line-strong);
+  margin-bottom: var(--space-1);
+}
+
+/* ------------------------------------------------------------
+   Animations (Design.md tokens)
+   ------------------------------------------------------------ */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes modalSlideUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ------------------------------------------------------------
+   Reduced motion
+   ------------------------------------------------------------ */
+@media (prefers-reduced-motion: reduce) {
+  .ap-accordion,
+  .ap-bulk-bar,
+  .ap-modal-overlay,
+  .ap-modal {
+    transition: none;
+    animation: none;
+  }
+}
+
+/* ------------------------------------------------------------
+   Responsive: collapse table columns on smaller screens
+   ------------------------------------------------------------ */
+@media (max-width: 900px) {
+  .ap-table-header,
+  .ap-row {
+    grid-template-columns: 32px 1fr 80px 100px;
+  }
+
+  .ap-table-header__cell:nth-child(4),
+  .ap-table-header__cell:nth-child(5),
+  .ap-table-header__cell:nth-child(6),
+  .ap-row > *:nth-child(4),
+  .ap-row > *:nth-child(5),
+  .ap-row > *:nth-child(6) {
+    display: none;
+  }
+
+  .ap-hero {
+    padding: var(--space-8) var(--space-3) var(--space-6);
+  }
+
+  .ap-filters {
+    padding: 10px var(--space-3);
+  }
+
+  .ap-main {
+    padding: var(--space-3) var(--space-3) var(--space-8);
+  }
+
+  .ap-accordion__inner {
+    grid-template-columns: 1fr;
+    padding-left: var(--space-4);
+  }
+}

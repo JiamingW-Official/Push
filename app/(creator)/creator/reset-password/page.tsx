@@ -69,7 +69,7 @@ export default function CreatorResetPasswordPage() {
         Skip to form
       </a>
       <div className="page">
-        <BrandPanel currentStep={sent ? 2 : 1} />
+        <BrandPanel />
         <div className="form-panel">
           <div className="form-wrap" id="reset-form">
             {sent ? (
@@ -123,7 +123,7 @@ function RequestState({
         <h1 className="form-title">Forgot your password?</h1>
         <p className="form-subtitle">
           No worries. Enter your email and we&apos;ll send you a secure reset
-          link — valid for 60 minutes.
+          link.
         </p>
       </div>
 
@@ -145,7 +145,7 @@ function RequestState({
         <div className="form-grid">
           {/* ── Email ──────────────────────────────────── */}
           <div className="form-field">
-            <label htmlFor="email">Email address</label>
+            <label htmlFor="email">Email</label>
             <div className="field-wrap">
               <input
                 id="email"
@@ -191,7 +191,7 @@ function RequestState({
       </form>
 
       <p className="form-footer">
-        Remember it? <Link href="/creator/login">Sign in &rarr;</Link>
+        Remember it? <Link href="/creator/login">Log in &rarr;</Link>
       </p>
     </>
   );
@@ -210,16 +210,15 @@ function SentState({ email }: { email: string }) {
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
         >
-          <rect
-            x="1.5"
-            y="1.5"
-            width="37"
-            height="37"
+          <circle
+            cx="20"
+            cy="20"
+            r="19"
             stroke="currentColor"
             strokeWidth="2"
           />
           <polyline
-            points="11,21 18,28 30,13"
+            points="12,21 18,27 29,14"
             stroke="currentColor"
             strokeWidth="2.5"
             strokeLinecap="square"
@@ -229,47 +228,18 @@ function SentState({ email }: { email: string }) {
       </div>
       <h1 className="sent-title">Check your email</h1>
       <p className="sent-message">
-        We sent a reset link to <strong>{email}</strong>. The link expires in 60
-        minutes.
+        We sent a reset link to <strong>{email}</strong>.
       </p>
-
-      {/* Next steps */}
-      <div className="sent-steps">
-        <div className="sent-step">
-          <span className="sent-step__num">1</span>
-          <span className="sent-step__text">Open the email from Push</span>
-        </div>
-        <div className="sent-step">
-          <span className="sent-step__num">2</span>
-          <span className="sent-step__text">Click the reset link</span>
-        </div>
-        <div className="sent-step">
-          <span className="sent-step__num">3</span>
-          <span className="sent-step__text">Enter your new password</span>
-        </div>
-      </div>
-
-      <div className="sent-actions">
-        <Link href="/creator/login" className="btn btn-primary sent-signin">
-          Sign in &rarr;
-        </Link>
-        <Link href="/creator/login" className="sent-back">
-          &larr; Back to login
-        </Link>
-      </div>
+      <Link href="/creator/login" className="sent-back">
+        &larr; Back to login
+      </Link>
     </div>
   );
 }
 
 /* ── Brand panel ────────────────────────────────────────────── */
 
-function BrandPanel({ currentStep }: { currentStep: number }) {
-  const steps = [
-    { n: 1, label: "Enter email" },
-    { n: 2, label: "Check inbox" },
-    { n: 3, label: "New password" },
-  ];
-
+function BrandPanel() {
   return (
     <div className="brand-panel">
       <div className="brand-top">
@@ -283,31 +253,15 @@ function BrandPanel({ currentStep }: { currentStep: number }) {
             <br />
             <em>reset.</em>
           </h2>
-          <span className="brand-headline-sub">Secure in 3 steps.</span>
           <p className="brand-tagline">
-            Your campaigns, score, and earnings are safely stored. We&apos;ll
-            have you back in under a minute.
+            We&apos;ll send you a secure link. Your campaigns and score are
+            safely stored.
           </p>
-        </div>
-
-        {/* Step indicator */}
-        <div className="reset-steps">
-          {steps.map((s) => (
-            <div
-              key={s.n}
-              className={`reset-step${currentStep === s.n ? " reset-step--active" : currentStep > s.n ? " reset-step--done" : ""}`}
-            >
-              <span className="reset-step__num">
-                {currentStep > s.n ? "✓" : s.n}
-              </span>
-              <span className="reset-step__label">{s.label}</span>
-            </div>
-          ))}
         </div>
 
         <div className="brand-stats">
           {[
-            { label: "Link expires in", value: "60 min", pct: 100 },
+            { label: "Link expires in", value: "60 minutes", pct: 100 },
             { label: "Accounts secured", value: "100%", pct: 100 },
           ].map((s) => (
             <div key={s.label} className="stat-bar">
@@ -322,7 +276,7 @@ function BrandPanel({ currentStep }: { currentStep: number }) {
       </div>
 
       <Link href="/creator/login" className="brand-back">
-        Creator login
+        &larr; Creator login
       </Link>
     </div>
   );

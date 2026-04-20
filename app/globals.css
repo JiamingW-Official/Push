@@ -107,6 +107,27 @@
   --champagne-light:  rgba(201, 169, 110, 0.12);
   --champagne-border: rgba(201, 169, 110, 0.35);
 
+  /* Tier tokens (Creator progression — semantic aliases) */
+  --tier-seed:        #b8a99a;   /* Clay — warm taupe, provisional */
+  --tier-explorer:    #8c6239;   /* Earth Brown — curious, grounded */
+  --tier-operator:    var(--graphite);  /* #4a5568 — competent, neutral */
+  --tier-proven:      var(--champagne); /* #c9a96e — earned prestige */
+  --tier-closer:      #9b111e;   /* Deep Flag Red — driven, near-brand */
+  --tier-partner:     #1a1a2e;   /* Ink Navy — elite, premium */
+
+  /* Semantic state colors (v5.2 Extended Color System) */
+  --success:          #22c55e;   /* verified, approved, positive delta */
+  --success-dark:     #155833;   /* success text on light surface */
+  --warning:          #e07b00;   /* pending, caution, needs attention */
+  --danger:           var(--tier-closer);  /* rejected, error — aliases #9b111e */
+
+  /* Neutral scale (v5.2 Extended Color System) */
+  --gray-50:          #f3f4f6;
+  --gray-200:         #e5e7eb;
+  --gray-400:         #9ca3af;
+  --gray-500:         #6b7280;
+  /* --gray-700 = --graphite (#4a5568), no duplicate token */
+
   /* Derived */
   --line:          rgba(0, 48, 73, 0.12);
   --line-strong:   rgba(0, 48, 73, 0.22);

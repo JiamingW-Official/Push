@@ -220,8 +220,8 @@ form.form-loading {
 .submit-btn {
   width: 100%;
   justify-content: center;
-  padding-block: 0;
-  height: 56px;
+  padding-block: var(--space-3);
+  min-height: 52px;
   font-size: var(--text-body);
   transition: background var(--t-base), box-shadow 200ms ease, transform 150ms ease;
 }
@@ -235,100 +235,6 @@ form.form-loading {
 .submit-btn[data-pressed="true"] {
   transform: scale(0.98);
   opacity: 0.9;
-}
-
-/* ── Login form title — larger editorial weight ───────────── */
-
-.login-form-title {
-  font-size: clamp(32px, 4vw, 42px);
-  font-weight: 700;
-  letter-spacing: -0.04em;
-}
-
-/* ── Login brand panel — editorial hero wordmark ─────────── */
-
-.login-brand-panel::after {
-  /* Larger ghost "PUSH" for login — fills bottom corner */
-  font-size: clamp(120px, 18vw, 220px);
-  opacity: 1; /* uses color already at opacity 0.025 */
-}
-
-/* Heroic brand section */
-.login-brand-hero {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-2);
-}
-
-/* "Your Score Is Your Salary." — editorial tagline */
-.login-brand-tagline {
-  font-family: var(--font-display);
-  font-size: clamp(26px, 3.5vw, 40px);
-  font-weight: 700;
-  letter-spacing: -0.04em;
-  line-height: 1.05;
-  color: var(--surface);
-  margin: 0;
-}
-
-/* ── Animated stats row ───────────────────────────────────── */
-
-.login-stats-row {
-  display: flex;
-  align-items: center;
-  gap: var(--space-3);
-  padding: var(--space-3) 0;
-  border-top: 1px solid rgba(245,242,236,0.10);
-  border-bottom: 1px solid rgba(245,242,236,0.10);
-  animation: statsRowIn 700ms cubic-bezier(0.22,1,0.36,1) 500ms both;
-}
-
-@keyframes statsRowIn {
-  from { opacity: 0; transform: translateY(8px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-
-.login-stat {
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-  flex: 1;
-  min-width: 0;
-}
-
-.login-stat-value {
-  font-family: var(--font-display);
-  font-size: clamp(20px, 2.5vw, 28px);
-  font-weight: 900;
-  letter-spacing: -0.04em;
-  color: var(--surface);
-  line-height: 1;
-}
-
-.login-stat-label {
-  font-family: var(--font-body);
-  font-size: 9px;
-  font-weight: 700;
-  letter-spacing: 0.10em;
-  text-transform: uppercase;
-  color: rgba(245,242,236,0.45);
-}
-
-.login-stat-divider {
-  width: 1px;
-  height: 36px;
-  background: rgba(245,242,236,0.12);
-  flex-shrink: 0;
-}
-
-/* Stagger stat values animate in */
-.login-stat:nth-child(1) .login-stat-value { animation: statCountIn 500ms cubic-bezier(0.22,1,0.36,1) 600ms both; }
-.login-stat:nth-child(3) .login-stat-value { animation: statCountIn 500ms cubic-bezier(0.22,1,0.36,1) 700ms both; }
-.login-stat:nth-child(5) .login-stat-value { animation: statCountIn 500ms cubic-bezier(0.22,1,0.36,1) 800ms both; }
-
-@keyframes statCountIn {
-  from { opacity: 0; transform: translateY(6px); }
-  to   { opacity: 1; transform: translateY(0); }
 }
 
 /* ── Loading dots ─────────────────────────────────────────── */
@@ -532,9 +438,7 @@ form.form-loading {
   .forgot-link,
   .submit-btn,
   .field-dot,
-  .loader-dots .dot,
-  .login-stats-row,
-  .login-stat-value {
+  .loader-dots .dot {
     animation: none !important;
     transition: none !important;
     opacity: 1 !important;

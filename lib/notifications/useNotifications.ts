@@ -76,6 +76,46 @@ export function timeAgo(iso: string): string {
   return `${Math.floor(hrs / 24)}d ago`;
 }
 
+export type NotificationGroup = {
+  label: string;
+  items: AppNotification[];
+};
+
+// Groups notifications into Today / Yesterday / This week / Earlier buckets.
+// Input is expected to be pre-sorted (newest first); output preserves that order.
+export function groupNotifications(
+  notifications: AppNotification[],
+): NotificationGroup[] {
+  const now = new Date();
+  const startOfToday = new Date(
+    now.getFullYear(),
+    now.getMonth(),
+    now.getDate(),
+  ).getTime();
+  const dayMs = 24 * 60 * 60 * 1000;
+  const startOfYesterday = startOfToday - dayMs;
+  const startOfWeek = startOfToday - 6 * dayMs;
+
+  const buckets: Record<string, AppNotification[]> = {
+    Today: [],
+    Yesterday: [],
+    "This week": [],
+    Earlier: [],
+  };
+
+  for (const n of notifications) {
+    const t = new Date(n.createdAt).getTime();
+    if (t >= startOfToday) buckets.Today.push(n);
+    else if (t >= startOfYesterday) buckets.Yesterday.push(n);
+    else if (t >= startOfWeek) buckets["This week"].push(n);
+    else buckets.Earlier.push(n);
+  }
+
+  return (["Today", "Yesterday", "This week", "Earlier"] as const)
+    .filter((label) => buckets[label].length > 0)
+    .map((label) => ({ label, items: buckets[label] }));
+}
+
 export function useNotifications(role: NotificationRole) {
   const [notifications, setNotifications] = useState<AppNotification[]>([]);
   const [hydrated, setHydrated] = useState(false);

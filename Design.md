@@ -40,6 +40,39 @@
 - **Champagne-derived tokens:** `--champagne-light: rgba(201, 169, 110, 0.12)` for tinted backgrounds; `--champagne-border: rgba(201, 169, 110, 0.35)` for borders.
 - **Champagne + Surface warmth warning:** When `--champagne` elements appear on `--surface` background, ensure a cool anchor (`--dark`/`--tertiary`/`--graphite`) is nearby to prevent the page from skewing too warm. Champagne should not appear more than 3 times per page.
 
+## Extended Color System (v5.2)
+
+Brand palette (6 colors) covers primary identity. Extended tokens cover tier progression, semantic states, and neutral scale. All referenced as CSS custom properties from `app/globals.css`.
+
+### Tier Colors (Creator 6-Tier progression)
+| Token | Value | Usage |
+|-------|-------|-------|
+| `--tier-seed` | `#b8a99a` | Clay — provisional |
+| `--tier-explorer` | `#8c6239` | Earth Brown — grounded |
+| `--tier-operator` | `#4a5568` | Graphite — competent (= `--graphite`) |
+| `--tier-proven` | `#c9a96e` | = `--champagne` (brand, no new token) |
+| `--tier-closer` | `#9b111e` | Deep Flag Red — driven |
+| `--tier-partner` | `#1a1a2e` | Ink Navy — premium |
+
+### Semantic Colors
+| Token | Value | Usage |
+|-------|-------|-------|
+| `--success` | `#22c55e` | verified, approved, positive delta |
+| `--success-dark` | `#155833` | success text on light surface |
+| `--warning` | `#e07b00` | pending, caution, needs attention |
+| `--danger` | `#9b111e` | rejected, error, destructive (aliases `--tier-closer`) |
+
+### Neutral Scale
+| Token | Value |
+|-------|-------|
+| `--gray-50` | `#f3f4f6` |
+| `--gray-200` | `#e5e7eb` |
+| `--gray-400` | `#9ca3af` |
+| `--gray-500` | `#6b7280` |
+| `--gray-700` | `#4a5568` (= `--graphite`) |
+
+Any hex in the codebase not in the brand palette, this Extended System, or the permitted `#ffffff` / `#000000` / `#fafaf8` (Surface Bright) is **noise** and must be migrated to a token.
+
 ---
 
 ## Typography
@@ -110,34 +143,6 @@
 | **Map pins** | `50%` (circle) | Cartographic convention |
 | **Filter chips** | `50vh` (pill) | Interaction control standard — tappable/toggleable tokens |
 | **Back-to-top button** | `50%` (circle) | Functional navigation control |
-| **Decorative status dots** | `50%` (circle) | Non-interactive indicator dots ≤ 6px (field valid state, loader dots, presence indicators) |
-
----
-
-## Density Tokens (Workspace)
-
-Workspace zones span a wide density range — Inbox needs Bloomberg-style compactness, Portfolio Identity needs editorial spaciousness. These tokens control row height and line height consistently across zones.
-
-### Density Token Values (add to `:root`)
-```css
-/* Density tokens — controls row-height & line-height across workspace zones */
---density-compact-row:    40px;
---density-compact-line:   1.25;
---density-default-row:    56px;
---density-default-line:   1.4;
---density-spacious-row:   80px;
---density-spacious-line:  1.55;
---density-editorial-line: 1.5;   /* no row-height; used for portfolio identity headlines */
-```
-
-### Density Usage Rules
-
-| Density | Where |
-|---|---|
-| compact | Inbox list, Earnings payout row, Archive list rows |
-| default | Pipeline campaign card row, Calendar event pill container |
-| spacious | Today timeline event block, Thread section separators |
-| editorial | Portfolio Identity hero, Discover featured card |
 
 ---
 
@@ -181,12 +186,6 @@ Push's interaction design blends three references:
 | `progressFill` | 800ms | ease-out | Progress bars |
 | `tierShimmer` | 2.4s loop | linear | Partner tier badge gradient |
 | `badgeShimmer` | 2.8s loop | linear | Featured badge shimmer |
-| `inviteCountdownPulse` | 1.2s loop | ease-in-out | Invite row <30min countdown text scale(1→1.05) |
-| `threadSectionReveal` | 480ms | cubic-bezier(0.22, 1, 0.36, 1) | Thread section enters viewport |
-| `sideNavItemActive` | 220ms | ease-out | Left 3px border grows from 0→3px |
-| `contextPanelSlide` | 280ms | cubic-bezier(0.22, 1, 0.36, 1) | ContextPanel collapse/expand |
-| `inboxRowEnter` | 240ms | ease-out | New invite slides in from top |
-| `calendarCellHover` | 180ms | ease | Month view cell hover background |
 | `modalSlideUp` | 250ms | ease | Modal entrance |
 
 ### Micro-interactions
@@ -589,230 +588,6 @@ Metrics overview for merchant/admin.
 - Trend: up arrow in green `#10b981`; down in `--primary`
 - Sparkline: inline SVG 80x32, `stroke: var(--primary)`, no fill
 
-### Workspace Shell
-
-Creator-facing workspace top-level layout primitive, shared by all `/creator/(workspace)/*` routes.
-
-**Grid:**
-```css
-.ws-shell {
-  display: grid;
-  grid-template-columns: var(--ws-side-w, 240px) 1fr var(--ws-context-w, 320px);
-  grid-template-rows: var(--ws-topnav-h, 56px) 1fr;
-  min-height: 100vh;
-  background: var(--surface);
-}
-.ws-topnav    { grid-column: 1 / -1; }
-.ws-sidenav   { grid-column: 1; grid-row: 2; border-right: 1px solid var(--line); }
-.ws-main      { grid-column: 2; grid-row: 2; overflow-y: auto; }
-.ws-context   { grid-column: 3; grid-row: 2; border-left: 1px solid var(--line); }
-```
-
-**TopNav (56px):**
-- Background: `var(--surface)` + `border-bottom: 1px solid var(--line)`
-- Logo left: Darky 900 italic `1.625rem` + 3px `--primary` underline (matches existing Navbar spec)
-- Center: 4-Zone links (CS Genio Mono `0.8125rem` weight 700 uppercase letter-spacing `0.06em`)
-- Active Zone: `border-left: 3px solid var(--primary)` + `background: rgba(193,18,31,0.06)`
-- Hover: underline slides from left (matches Link hover micro-interaction)
-- Right: search icon (28px) + Cmd+K hint + square avatar (36px, no border-radius, hover 2px primary ring)
-
-**SideNav (240px contextual):**
-- Background: `var(--surface)`
-- Vertical list, each item 44px height
-- CS Genio Mono `13px` weight 600, active item `var(--primary)` + left 3px border
-- Icon 16px, gap 12px left of text
-- Bottom collapse toggle (v2)
-
-**ContextPanel (320px):**
-- Background: `var(--surface-bright)`
-- Top 40px panel header (Title: CS Genio Mono 11px uppercase letter-spacing 0.08em + close/collapse btn right)
-- Content area: zone-specific (invite preview / today next-up / tier progress / discover quick filter)
-- Collapsed: `transform: translateX(calc(100% - 40px))` — 40px re-expand handle remains
-- Animation: `transition: transform 280ms cubic-bezier(0.22, 1, 0.36, 1)`
-
-**Mobile (<768px):**
-- Grid degrades to single column
-- TopNav height 48px, logo centered, hamburger left, avatar right
-- SideNav becomes drawer (slides from left), using `modalSlideUp` direction adjusted
-- ContextPanel becomes bottom sheet (slides from bottom, initial 80px peek, pull to full screen)
-- Fixed bottom `MobileNav` 4 icons (Inbox / Work / Portfolio / Discover), matches existing MobileNav spec
-
-### Inbox List
-
-Gmail/Linear-style list component. Closest existing component is Campaign Card (card shape), but InboxRow is a list row.
-
-**InboxRow:**
-- **Height**: `var(--density-compact-row)` = 40px default; unread 64px (to show subtext)
-- **Layout**:
-  ```
-  [3px status bar] [24px gap] [avatar 40px] [12px gap] [primary+secondary flex:1] [right meta] [actions on hover]
-  ```
-- **Status bar (left 3px)**:
-  - Unread: `var(--primary)` solid
-  - Read: `var(--line)`
-  - Urgent countdown (<30min): `var(--primary)` + `pulse` animation (existing Design.md pulse token)
-- **Primary text**: Darky weight 600 `15px` letter-spacing `-0.01em`; unread weight 700
-- **Secondary text**: CS Genio Mono `13px` `var(--graphite)`, truncate 1 line
-- **Right meta**: time (12px tertiary) + amount badge (Darky 700 16px) + countdown pill (if invite, CS Genio Mono 10px uppercase)
-- **Hover**: full row `background: var(--surface-bright)`; right side shows inline `Accept` / `Decline` / `Archive` ghost buttons
-- **Selected**: `background: rgba(193,18,31,0.06)` + left 3px `--primary` (replaces unread bar)
-- **Focus ring (keyboard)**: `outline: 2px solid var(--primary); outline-offset: -2px`
-
-**Invite Variant:**
-- Extra right pill showing "2h 14m left"; <30min: red + pulse
-- Action icons visible by default (not hover-only) to emphasize urgency
-
-**Message Variant:**
-- Avatar uses merchant logo (circle mask inside 40px square, only avatar itself is circle)
-- Unread message count: 24x16px `--primary` badge at end of secondary text
-
-**System Variant:**
-- Avatar replaced by system icon (16px in 24x24 badge), background color by type:
-  - Tier up: `--champagne`
-  - Payout: `--tertiary`
-  - Compliance warn: `--primary` tint
-  - Verify result: `--graphite` tint
-
-### Thread View
-
-Replaces original Campaign full-page detail + slide panel patterns. Vertical scroll long-page + sticky mini-nav.
-
-**ThreadShell:**
-- Max-width: `960px`, centered, padding `32px`
-- Top `ThreadHeader` (96px, does not scroll out)
-  - Left: merchant logo 56px + name (Darky 700 24px) + campaign title (CS Genio Mono 14px graphite)
-  - Right: tier badge (existing Design.md spec) + status pill + `$payout` big number (Darky 800 28px)
-- `ThreadMiniNav` (44px, sticky below TopNav at `top: 56px`)
-  - Anchors: Brief / Timeline / Chat / Submit / Verify / Earnings
-  - Each anchor: CS Genio Mono 12px weight 600 uppercase, active color `--primary` + bottom 2px line
-  - Smooth scroll (GSAP ScrollTrigger syncs active state, not CSS-only)
-
-**ThreadSection:**
-- Vertical spacing: `margin: 48px 0`
-- `scroll-margin-top: 112px` (topnav 56 + mininav 44 + 12 buffer)
-- Section label: CS Genio Mono 11px uppercase letter-spacing 0.08em `--tertiary` (matches dashboard section label spec)
-- Section title: Darky 700 20px `--dark`
-- Left 24px `border-left: 1px solid var(--line)` visually threads all sections
-
-**MilestoneRail (in Timeline section):**
-- Horizontal rail, node spacing 56px
-- Node: 16px dot
-  - Done: `--dark` fill
-  - Active: `--primary` fill + 3px outer ring
-  - Upcoming: `--line`
-- Connector: 1px `--line`; completed segment 2px `--dark`
-- Node label below: CS Genio Mono 10px uppercase weight 700
-- Underneath: ETA / due date (CS Genio Mono 11px graphite)
-
-**MerchantChat:**
-- Input: `border: 1px solid var(--line)`, focus `--primary`; border-radius: 0
-- Message bubbles: **no rounded corners** (sharp rectangles consistent with Push design system)
-  - Creator own: `background: rgba(0,48,73,0.04)` + right-aligned
-  - Merchant: `background: var(--surface-bright)` + left-aligned
-  - Max width 480px
-  - Timestamp below: CS Genio Mono 10px graphite
-- "Suggest reply" CreatorGPT button: below input, dashed outline, click fills draft
-
-**SubmitForm:**
-- URL input: `min-height: 48px`, CS Genio Mono placeholder
-- Image upload button: dashed drop-zone, `1.5px dashed var(--line)`; hover `--primary`
-- Submit button: full-width `--primary` bg + `3px 3px 0 var(--accent)` box-shadow (matches Design.md button shadow system)
-
-### Calendar View
-
-**Month View:**
-- Grid: 7 cols × 5-6 rows, each cell `min-height: 96px`, `border: 1px solid var(--line)` outer, inner bottom border only
-- Date: Darky 500 16px top-right
-- Today: date background `--primary` filled 20px square white text
-- Non-current month: date in `--line` color
-- Event pill (max 3):
-  - `height: 20px`
-  - CS Genio Mono `10px` weight 700
-  - Background: merchant category color (reuse `CATEGORY_DOT_COLOR`)
-  - Text: white (except light-background `Lifestyle` category uses `--dark`)
-  - Truncate 1 line
-- `+N more`: 4th+ items collapse to `CS Genio Mono 10px --graphite`
-
-**Week View (v1 can defer):**
-- Time axis 6:00–23:00
-- Hourly hr-line `1px dashed var(--line)`
-- Event block: absolute positioned, width 100%
-
-**Nav bar:**
-- `< April 2026 >` center (Darky 600 20px)
-- Left `Today` button (outlined)
-- Right `Month / Week` toggle (CS Genio Mono chips, filter chip spec border-radius: 50vh)
-
-### Editorial Empty States
-
-Narrative empty states for each workspace zone. Replaces generic `.empty-state` icon+retry pattern inside the workspace.
-
-**Tone Guide:**
-
-| Zone | Empty state tone | Pattern |
-|---|---|---|
-| Inbox/All | Steady anticipation | "Clear inbox. Agent's still matching — new invite typically lands ~4h." + [Browse Discover] link |
-| Inbox/Invites | Resume what you were doing | "No active invites. You're up to date." + no CTA |
-| Work/Today | Autonomous lightness | "No commitments today. Enjoy the day." |
-| Work/Pipeline | Getting-started guidance | "Pipeline is empty. Accept an invite or explore Discover to start." + [Go to Discover] |
-| Work/Calendar | Brief neutral | "No events this month." |
-| Work/Drafts | None | "No drafts saved." |
-| Portfolio/Earnings | Future anticipation | "No payouts yet. Complete your first campaign to earn." |
-| Portfolio/Archive | Forward encouragement | "Archive is empty. Your first completed campaign lands here." |
-| Discover | Broaden scope | "No campaigns match. Try clearing filters." |
-
-**Visual spec:**
-
-```css
-.empty-state-editorial {
-  padding: var(--space-8) var(--space-4);   /* 64px vertical */
-  text-align: left;                          /* NOT centered — feels less "system error" */
-}
-.empty-state-editorial__title {
-  font-family: Darky;
-  font-weight: 900;
-  font-size: clamp(32px, 5vw, 56px);
-  letter-spacing: -0.03em;
-  line-height: 1.05;
-  color: var(--dark);
-}
-.empty-state-editorial__body {
-  font-family: 'CS Genio Mono';
-  font-size: 14px;
-  color: var(--graphite);
-  margin-top: 12px;
-  max-width: 420px;
-  line-height: 1.5;
-}
-.empty-state-editorial__link {
-  display: inline-block;
-  margin-top: 20px;
-  font-family: 'CS Genio Mono';
-  font-size: 13px;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: var(--primary);
-  border-bottom: 1px solid currentColor;
-  padding-bottom: 2px;
-}
-```
-
-**Prohibited in empty states:** emoji, large illustrations, overly cheerful exclamation marks. Maintain editorial calm.
-
-### Navigation Active State Rules
-
-Consistent active-state treatment across all navigation layers:
-
-| Layer | Active Style |
-|---|---|
-| TopNav Zone link | `color: var(--primary)` + bottom 3px red border + bg `rgba(193,18,31,0.06)` |
-| SideNav sub-item | Left 3px `--primary` border + color `--primary` + bg `rgba(193,18,31,0.06)` |
-| ThreadMiniNav anchor | Bottom 2px `--primary` border + color `--primary` |
-| Filter chip | bg `--primary` + color white |
-| Calendar event pill | (no selected state — click navigates) |
-
-**Consistency rule:** All navigation active states use `--primary` as the indicator color with a directional border. Never use different colors across navigation layers.
-
 ---
 
 ## Loading States
@@ -915,240 +690,3 @@ import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 gsap.registerPlugin(ScrollTrigger);
 ```
-
----
-
-## v5.1 Component Additions
-
-> v5.1 components follow all existing Design.md tokens — no new colors, no new fonts, no new radii.
-> All components inherit the 6-color palette, Darky + CS Genio Mono type system, `border-radius: 0`, 8px grid, and animation tokens documented above.
-
-### SLRWidget
-**Path:** `components/merchant/SLRWidget.tsx`
-North-star dashboard widget surfacing the current SLR value alongside a historical trend line.
-- **Current value:** Darky weight `900`, big-number treatment, `--champagne` (`#c9a96e`) color
-- **Chart:** inline SVG line chart (no recharts / no external chart lib)
-  - Target line: `--tertiary` (Steel Blue `#669bbc`), 1.5px stroke, dashed
-  - Actual line: `--champagne` (Champagne Gold `#c9a96e`), 2px stroke, solid
-- **Industry baseline caption:** CS Genio Mono `11px`, muted text color (`rgba(0, 48, 73, 0.55)`)
-- **Container:** `border: 1px solid var(--line)`, `border-radius: 0`, Surface Elevated background
-- **Responsive:**
-  - `<640px`: stacks vertically (value → chart → caption)
-  - `640px–899px`: compact single-column with inline chart
-  - `≥900px`: single-column layout with chart at full widget width
-
-### Risk Card Severity System
-**Path:** `app/(marketing)/trust/risk-register/`
-Card treatment for enumerated risk entries. Severity is encoded as a left-edge stripe.
-- **Card base:** `border: 1px solid var(--line)`, `border-radius: 0`
-- **Severity stripe:** `border-left: 4px solid {severity-color}` added to the card base border
-- **Severity color mapping:**
-  | Level | Color | Token |
-  |-------|-------|-------|
-  | Critical | `#c1121f` | `--primary` (Flag Red) |
-  | High | `#c9a96e` | `--champagne` (Champagne Gold) |
-  | Medium | `#669bbc` | `--tertiary` (Steel Blue) |
-  | Low | `#4a5568` | `--graphite` (Graphite) |
-- **Probability / Impact pills:**
-  - Font: CS Genio Mono, small (12px), weight 600, uppercase
-  - Border: `1px solid {severity-color}`, no fill
-  - `border-radius: 0`
-  - Used inline in the card header to express P × I
-
-### Accuracy Chart
-**Path:** `app/(marketing)/conversion-oracle/accuracy/`
-Inline-SVG accuracy trend visualization for ConversionOracle prediction quality.
-- **Implementation:** inline SVG only — no recharts, no D3
-- **Target bands** (horizontal reference lines, dashed):
-  - 75%: `--tertiary` (Steel Blue `#669bbc`) dashed
-  - 85%: `--champagne` (Champagne Gold `#c9a96e`) dashed
-  - 90%: `--primary` (Flag Red `#c1121f`) dashed
-- **NOW marker:** solid `--primary` circle, `r=4`, with CS Genio Mono label "NOW" anchored right of the point
-- **Axis labels:** `--graphite` fill, CS Genio Mono `10px`
-- **Background:** transparent (inherits Surface Elevated from parent card)
-
-### Equity-Pool Signup Gate
-**Path:** `app/(creator)/creator/equity-pool/`
-Three-row eligibility gate rendered before allowing equity-pool enrollment.
-- **Card container:** `border: 1px solid var(--line)`, `border-radius: 0`, Surface Bright background
-- **Row structure:** each row is a horizontal flex — `icon + label + value + pass/fail chip`
-  - Icon: 20px, `--graphite` fill
-  - Label: CS Genio Mono 14px, weight 600, `--dark`
-  - Value: CS Genio Mono 14px, weight 400, `--graphite`
-  - Chip: right-aligned
-- **Pass chip:**
-  - Background: `#10b981` at 12% opacity (`rgba(16, 185, 129, 0.12)`)
-  - Text: `--graphite`
-  - CS Genio Mono 11px, weight 700, uppercase
-  - `border-radius: 0`, padding `4px 10px`
-- **Fail chip:**
-  - Background: `--primary` at 12% opacity (`rgba(193, 18, 31, 0.12)`)
-  - Text: `--primary` (Flag Red)
-  - Same typography and radius as pass chip
-- **Row separator:** `1px solid var(--line)` between rows
-
-### DisclosureBot Audit Row
-**Path:** `app/(admin)/admin/disclosure-audits/`
-Admin table row pattern for FTC/disclosure compliance audit records.
-- **Table row layout:** 9 columns, `border-radius: 0` everywhere
-  - Timestamp / Creator / Campaign / Platform / Verdict / Confidence / Reviewer / Action / Detail-link
-- **Row hover:** `background: rgba(0, 48, 73, 0.04)` (surface-muted)
-- **Verdict badge:**
-  - Font: CS Genio Mono 10px, weight 700, uppercase, letter-spacing 0.08em
-  - Padding: `5px 10px`, `border-radius: 0`
-  - Verdict color mapping:
-    | Verdict | Background | Text |
-    |---------|-----------|------|
-    | `auto_pass` | `#10b981` at 12% | `#10b981` |
-    | `auto_block` | `--primary` at 12% | `--primary` |
-    | `manual_review` | `--champagne` at 12% | `--champagne` darkened |
-    | `human_approved` | `#10b981` at 18% | `#10b981` |
-    | `human_rejected` | `--primary` at 18% | `--primary` |
-- **Sticky detail sidebar:**
-  - Width: `420px` fixed on desktop
-  - Background: `--surface` (Pearl Stone `#f5f2ec`)
-  - `border-left: 3px solid var(--champagne)`
-  - `position: sticky; top: 0` within the audit layout
-  - Collapses to bottom sheet on `<1024px`
-
-### Pilot-Economics Calculator
-**Path:** `app/(marketing)/merchant/pilot/economics/`
-Interactive two-panel layout for merchant-facing economics modeling.
-- **Layout:** 2-column split
-  - **Left (sticky form):** `position: sticky; top: 0`
-    - Form background: `--tertiary` at low opacity (`rgba(102, 155, 188, 0.06)`) — the Steel Blue form bg
-    - Inputs: `border: 1px solid var(--line)`, `border-radius: 0`, CS Genio Mono labels
-    - Focus state: `--primary` border per existing form token
-  - **Right (output cards):** 7-card grid, responsive 1 / 2 / 3 columns across breakpoints
-- **Output card spec:**
-  - Container: `border: 1px solid var(--line)`, Surface Elevated bg, `border-radius: 0`
-  - Big number: Darky weight 900, `--champagne` color, clamp sizing (`clamp(32px, 4vw, 48px)`)
-  - Label: CS Genio Mono 11px, weight 700, uppercase, `--tertiary`
-  - **Collapsible math row:** below label, button reveals the derivation
-    - Trigger: CS Genio Mono 12px, `--graphite`, chevron icon rotates on open
-    - Content: CS Genio Mono 12px, `--graphite`, shows the formula breakdown
-- **Collapses** to single-column `<900px`; form un-sticks on mobile
-
-### Per-Vertical Pricing Card
-**Path:** `app/(marketing)/pricing/[category]/`
-Vertical-specific pricing explainer — one per category route.
-- **Header:**
-  - H1: Darky weight 900, vertical name (e.g., "Coffee", "Fitness")
-  - Rate display: `--champagne` color, Darky weight 800, prominently sized
-- **Unit-econ derivation table:**
-  - Columns: `AOV × visits → merchant LTV → Push rate`
-  - Table: `border-collapse: collapse`, `border: 1px solid var(--line)`, `border-radius: 0`
-  - Header row: CS Genio Mono 11px, weight 700, uppercase, `--graphite`
-  - Body rows: CS Genio Mono 14px; numeric cells use `font-variant-numeric: tabular-nums`
-  - Row separator: `1px solid var(--line)`
-- **Retention Add-on mini-table:**
-  - Smaller secondary table below the primary derivation
-  - Shares the same border/type tokens
-  - Visually demoted via reduced max-width and lower contrast header
-- **Container:** Surface Elevated card, `border: 1px solid var(--line)`, `border-radius: 0`
-
----
-
-## Auth Motion Tokens (v5.1 — Creator Onboarding)
-
-> Proposed in `Creator_Auth_Onboarding_Figma_Spec_v5.1.md §5.3`. Accepted and added here.
-
-| Token | Value | Usage |
-|-------|-------|-------|
-| `--ease-editorial` | `cubic-bezier(0.16, 1, 0.3, 1)` | BrandPanel rhythm transitions, ChecklistItem expand, onboarding step slide |
-| `--motion-400` | `400ms` | Primary transition duration (matches existing verify slide) |
-| `--motion-200-fade` | `200ms linear` | Inline state transitions — ZIP pill fade, dot activation, form field validation |
-| `--state-deferred` | `var(--champagne)` dot indicator | New `ChecklistItem` `deferred` state (upgrade KYC gate) |
-
-### CSS Variables (add to `:root`)
-```css
---ease-editorial: cubic-bezier(0.16, 1, 0.3, 1);
---motion-400: 400ms;
---motion-200-fade: 200ms linear;
---state-deferred: var(--champagne, #c9a96e);
-```
-
-### `<AuthBrandPanel>` Component
-**Path:** `components/auth/AuthBrandPanel.tsx`
-Unified brand panel for the auth family (signup / login / reset-password). Three rhythm variants:
-
-| Variant | Used on | Moving signal |
-|---------|---------|---------------|
-| `quote` | signup | Rotating creator quote, 7s cycle, 300ms fade |
-| `stat-live` | login | Session context ("3 new campaigns in Williamsburg since 2 days ago") |
-| `numeric-large` | reset, onboarding sidebar | Giant editorial number with short context label |
-
-**Props**
-
-| Prop | Type | Default | Notes |
-|------|------|---------|-------|
-| `rhythm` | `"quote" \| "stat-live" \| "numeric-large"` | `"numeric-large"` | Picks moving signal slot |
-| `eyebrow` | `string` | — | Phase label, CS Genio Mono 11px uppercase |
-| `headline` | `string` | — | Darky 64pt, ≤ 4 lines |
-| `bigNumber` | `string` | — | Editorial 120pt. Optional. |
-| `bigNumberLabel` | `string` | — | CS Genio Mono 13pt, max 3 lines, muted |
-| `ctaHref` | `string` | — | Bottom-left CTA link |
-| `backHref` | `string` | `"/"` | Bottom-right back link |
-| `quotes` | `string[]` | Default creator quotes | For `rhythm="quote"` |
-| `liveStat` | `string` | — | For `rhythm="stat-live"` |
-
-**Usage:**
-```tsx
-import { AuthBrandPanel } from "@/components/auth/AuthBrandPanel";
-
-// signup
-<AuthBrandPanel rhythm="quote" headline="Get paid for walking your neighborhood in." bigNumber="14" bigNumberLabel="creators joined Williamsburg this week" />
-
-// login
-<AuthBrandPanel rhythm="stat-live" headline="Your Customer Acquisition Engine is waiting." liveStat="3 new campaigns in Williamsburg since 2 days ago" />
-
-// reset-password
-<AuthBrandPanel rhythm="numeric-large" eyebrow="ACCOUNT RECOVERY" headline="Reset your password." bigNumber="60" bigNumberLabel="minutes before this link expires" />
-```
-
-### Creator Onboarding localStorage Schema (v5.1)
-Key: `push.creator.state`
-
-```ts
-interface CreatorLocalState {
-  schemaVersion: 1;
-  onboarding: {
-    completedSteps: number[];
-    profile: { name: string; handle: string; location: string; instagram: string; bio: string };
-    social: { ig: boolean; tiktok: boolean; xhs: boolean };
-    payout: { method: "venmo" | "cashapp" | "ach" | null; value: string; routing: string; account: string };
-    lightKyc: { idUploaded: boolean; selfieComplete: boolean };
-    done: boolean;
-    segment: "side-income" | "professional";
-  };
-}
-```
-
-Replaces legacy keys: `push-creator-remember`, `push-demo-creator-onboarding-progress`, `push-creator-tier`, `push-creator-kyc-state`, `push-onboarding-profile`.
-
-### Creator Onboarding 5-Step Flow (v5.1)
-```
-Step 1 — DISCOVER    3 live Williamsburg Coffee+ campaign cards (dimmed Apply)
-Step 2 — PROFILE     name / handle / location / instagram / bio + avatar
-Step 3 — SOCIAL      IG required, TikTok / 小红书 optional (platform tiles)
-Step 4 — PAYOUT      Venmo / CashApp / ACH tabs; pro = ACH + W-9 upload
-Step 5 — LIGHT KYC   ID front + selfie liveness (unlocks Explorer tier)
-→ Completion         "You're live. SLR counting starts now · Month-12 target 25 · First match inside 24h."
-```
-
-**Deferred gate (not in onboarding):** Upgrade-KYC modal fires when `earnings ≥ $50` or creator applies to Operator tier. Frames as "Unlock Operator tier" not "Get verified."
-
----
-
-## Workspace Consistency Rules
-
-All Creator Workspace pages (`/creator/(workspace)/*`) must follow these constraints:
-
-1. **Shell wrapping:** All workspace pages must be wrapped by `(workspace)/layout.tsx` — no custom layouts allowed
-2. **L1 typography:** Every page must have exactly one L1 heading using Darky weight 800+ at ≥32px
-3. **Density tokens:** All list row components must use a density token (`--density-compact-row`, `--density-default-row`, or `--density-spacious-row`). No hard-coded row heights
-4. **Empty states:** All empty states must use `.empty-state-editorial` class (see Editorial Empty States pattern). No emoji, no centered icons
-5. **URL-driven views:** All Zone and view switches must be URL-driven. No `useState` managing which view is shown
-6. **Countdown animation:** Any countdown UI showing <30min remaining must apply `inviteCountdownPulse` animation
-7. **Amount display:** All monetary amounts use Darky weight 700+. Never use CS Genio Mono for dollar values
-8. **Tier references:** All tier color references must use `--tier-{material}` CSS variables. No direct hex values for tier colors

@@ -384,7 +384,7 @@ function clampListLimit(n: number): number {
  *     Trojan-Source style visual reordering in bidi-aware log viewers.
  */
 function sanitizeForLog(s: string): string {
-  // eslint-disable-next-line no-control-regex
+   
   return s
     .replace(
       /[\r\n\t\x00-\x1f\x7f\u061c\u200e\u200f\u2028\u2029\u202a-\u202e\u2066-\u2069]/g,

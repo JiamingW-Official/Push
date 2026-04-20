@@ -15,38 +15,7 @@ description: "SaaS website template extraction — all layout structures, sectio
 |------|-------------|
 | `sections.md` | Building a new page or section — has every section type with full HTML structure |
 | `interactions.md` | Adding animations, scroll effects, hover states, parallax, counters, carousels |
-| `components.md` | Implementing specific components: nav, cards, accordions, forms, modals, pricing, blog. **v5.1 additions at the very top** (SLRWidget, per-vertical pricing card, risk card, accuracy chart, equity pool signup, DisclosureBot audit row, pilot economics calculator), then **v5.0 additions** (AgentOutputDemo, VerificationBadge, goal form, agent pending/preview, AI verification queue) |
-
-## v5.1 Components Index (Vertical AI for Local Commerce)
-
-Added April 2026 as part of v5.1 (Vertical AI for Local Commerce, Two-Segment creator economics, ConversionOracle + DisclosureBot). Full specs in `components.md` sections V1.1–V1.7. These extend — do not replace — the v5.0 catalog below.
-
-| Component | Path | Use on |
-|-----------|------|--------|
-| `SLRWidget` | `components/merchant/SLRWidget.tsx` | **Merchant dashboard only** — north-star SLR big number + inline SVG line chart + industry baseline caption |
-| Per-vertical pricing tier card | `app/(marketing)/pricing/[category]/page.tsx` | Per-vertical pricing pages (coffee, restaurant, retail, etc.) — unit-economics table + retention add-on mini-table |
-| Risk card (9-item grid) | `app/(marketing)/trust/risk-register/page.tsx` | Trust / risk register page — severity-colored left edge + probability/impact pills + Mitigation + Trigger callout |
-| Accuracy chart (inline SVG) | `app/(marketing)/conversion-oracle/accuracy/page.tsx` | ConversionOracle accuracy page — target bands 75/85/90%, NOW marker, weeks × accuracy % |
-| Equity pool signup | `app/(creator)/creator/equity-pool/*` | Creator equity-pool onboarding — 3-gate eligibility card + RSA terms table + tax-ID form |
-| DisclosureBot audit row | `app/(admin)/admin/disclosure-audits/*` | Admin DisclosureBot review — table row + sticky 420px detail sidebar (post preview, missing tags, approve/reject) |
-| Pilot economics calculator | `app/(marketing)/merchant/pilot/economics/*` | Merchant pilot economics — sticky form (vertical dropdown + 3 sliders) + 7 collapsible live-math output cards |
-
-## v5.0 Components Index (Goal-First Agent Era)
-
-Added April 2026 as part of the v5.0 goal-first agent era (now superseded by v5.1 Vertical AI for Local Commerce). These v5.0 components remain in use — don't remove them. Full specs in `components.md` sections 0.1–0.6.
-
-| Component | Path | Use on |
-|-----------|------|--------|
-| `AgentOutputDemo` | `components/landing/AgentOutputDemo.tsx` | Landing hero (≥1100px only) — fixture of one agent run |
-| `VerificationBadge` | `components/landing/VerificationBadge.tsx` | Marketing pages — QR / Vision / Geo trust strip |
-| Merchant goal form | `app/(marketing)/merchant/pilot/page.tsx` + `app/(merchant)/merchant/onboarding/page.tsx` | Any v5.0 onboarding surface |
-| Agent pending (`.agent-pending-*`) | `app/(merchant)/merchant/onboarding/agent-onboarding.css` | While agent runs (1–3s) |
-| Agent preview (`.agent-preview-*`) | same file | Surfacing AI-returned results (summary + matches + brief) |
-| AI verification queue | `app/(admin)/admin/ai-verifications/page.tsx` | Admin review of manual_review verdicts |
-
-Animation references — for the exact CSS keyframes / delays behind the above:
-- `.agent-demo*` in `app/(marketing)/landing.css` (hero terminal card, stagger on `.agent-demo-item`)
-- `.agent-pending-*` + `@keyframes agent-pulse` / `agent-slide` / `agent-line-in` in `app/(merchant)/merchant/onboarding/agent-onboarding.css`
+| `components.md` | Implementing specific components: nav, cards, accordions, forms, modals, pricing, blog |
 
 ## Quick Reference — Page Blueprint
 

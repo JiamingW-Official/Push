@@ -1,14 +1,18 @@
-import { redirect } from "next/navigation";
-
-interface Props {
-  params: Promise<{ id: string }>;
-}
-
-export default async function LegacyCampaignPage({ params }: Props) {
-  const { id } = await params;
-  redirect(`/creator/work/campaign/${id}`);
-}
+import CampaignDetailPage from "./CampaignPageClient";
 
 export function generateStaticParams() {
-  return [{ id: "demo-campaign-001" }];
+  return [
+    "demo-campaign-001",
+    "demo-campaign-002",
+    "demo-campaign-003",
+    "demo-campaign-004",
+    "demo-campaign-005",
+    "demo-campaign-006",
+    "demo-campaign-007",
+    "demo-campaign-008",
+  ].map((id) => ({ id }));
+}
+
+export default function Page() {
+  return <CampaignDetailPage />;
 }

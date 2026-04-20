@@ -62,7 +62,7 @@ function checkDemoMode(): boolean {
   return document.cookie.includes("push-demo-role=creator");
 }
 
-/* ── Tier helpers ────────────────────────────────────────── */
+/* ── Tier order ──────────────────────────────────────────── */
 
 const TIER_ORDER: CreatorTier[] = [
   "seed",
@@ -100,8 +100,6 @@ const CATEGORY_BG: Record<string, string> = {
   Tech: "#002035",
 };
 
-/* ── Milestones ──────────────────────────────────────────── */
-
 const MILESTONES: { key: MilestoneStatus; label: string }[] = [
   { key: "accepted", label: "Accepted" },
   { key: "scheduled", label: "Scheduled" },
@@ -113,8 +111,6 @@ const MILESTONES: { key: MilestoneStatus; label: string }[] = [
 ];
 
 const MILESTONE_ORDER: MilestoneStatus[] = MILESTONES.map((m) => m.key);
-
-/* ── Demo data ───────────────────────────────────────────── */
 
 const DEMO_CAMPAIGNS: Campaign[] = [
   {
@@ -322,8 +318,6 @@ const DEMO_MILESTONE_BY_CAMPAIGN: Record<string, MilestoneStatus> = {
   "demo-campaign-008": "accepted",
 };
 
-/* ── Helpers ─────────────────────────────────────────────── */
-
 function formatDeadline(iso: string): string {
   return new Date(iso).toLocaleDateString("en-US", {
     month: "long",
@@ -340,17 +334,6 @@ function daysRemaining(iso: string): number {
 function isEligible(creatorTier: CreatorTier, required: CreatorTier): boolean {
   return TIER_ORDER.indexOf(creatorTier) >= TIER_ORDER.indexOf(required);
 }
-
-function getMerchantInitials(name: string): string {
-  return name
-    .split(" ")
-    .map((w) => w[0])
-    .join("")
-    .toUpperCase()
-    .slice(0, 2);
-}
-
-/* ── Milestone Track ─────────────────────────────────────── */
 
 function MilestoneTrack({ current }: { current: MilestoneStatus }) {
   const currentIdx = MILESTONE_ORDER.indexOf(current);
@@ -401,8 +384,6 @@ function MilestoneTrack({ current }: { current: MilestoneStatus }) {
   );
 }
 
-/* ── Milestone Action Area ───────────────────────────────── */
-
 function MilestoneActionArea({ milestone }: { milestone: MilestoneStatus }) {
   const config: Record<
     MilestoneStatus,
@@ -434,61 +415,22 @@ function MilestoneActionArea({ milestone }: { milestone: MilestoneStatus }) {
     },
     settled: null,
   };
-
   const step = config[milestone];
   if (!step) return null;
-
   return (
     <div className="cp-action-area">
       <span className="cp-action-label">{step.label}</span>
-      <button type="button" className="cp-action-btn cp-action-btn--primary">
+      <button className="cp-action-btn cp-action-btn--primary">
         {step.cta}
       </button>
       {step.secondary && (
-        <button
-          type="button"
-          className="cp-action-btn cp-action-btn--secondary"
-        >
+        <button className="cp-action-btn cp-action-btn--secondary">
           {step.secondary}
         </button>
       )}
     </div>
   );
 }
-
-/* ── Requirements Checklist ──────────────────────────────── */
-
-function RequirementsChecklist({ requirements }: { requirements: string[] }) {
-  const [checked, setChecked] = useState<boolean[]>(() =>
-    requirements.map(() => false),
-  );
-
-  function toggle(i: number) {
-    setChecked((prev) => prev.map((v, idx) => (idx === i ? !v : v)));
-  }
-
-  return (
-    <div className="cp-requirements">
-      {requirements.map((req, i) => (
-        <div
-          key={i}
-          className={`cp-req-item${checked[i] ? " cp-req-item--checked" : ""}`}
-          onClick={() => toggle(i)}
-          role="checkbox"
-          aria-checked={checked[i]}
-          tabIndex={0}
-          onKeyDown={(e) => e.key === " " && toggle(i)}
-        >
-          <div className="cp-req-checkbox" aria-hidden="true" />
-          <span className="cp-req-number">{i + 1}</span>
-          <span className="cp-req-text">{req}</span>
-        </div>
-      ))}
-    </div>
-  );
-}
-
-/* ── Main Page ───────────────────────────────────────────── */
 
 export default function CampaignDetailPage() {
   const params = useParams();
@@ -502,13 +444,11 @@ export default function CampaignDetailPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [milestone, setMilestone] = useState<MilestoneStatus | null>(null);
-  const [urlInput, setUrlInput] = useState("");
 
   useEffect(() => {
     async function load() {
       setLoading(true);
       setError(null);
-
       if (isDemo) {
         const found =
           DEMO_CAMPAIGNS.find((c) => c.id === id) ?? DEMO_CAMPAIGNS[0];
@@ -522,7 +462,6 @@ export default function CampaignDetailPage() {
         setLoading(false);
         return;
       }
-
       try {
         const supabase = createClient();
         const {
@@ -573,7 +512,6 @@ export default function CampaignDetailPage() {
   async function handleApply() {
     if (!campaign || !creator || applying || applied) return;
     setApplying(true);
-
     if (isDemo) {
       await new Promise((r) => setTimeout(r, 600));
       setApplied(true);
@@ -581,21 +519,24 @@ export default function CampaignDetailPage() {
       setApplying(false);
       return;
     }
-
     try {
       const supabase = createClient();
-      await supabase.from("campaign_applications").insert({
-        campaign_id: campaign.id,
-        creator_id: creator.id,
-        merchant_id: campaign.merchant_id,
-        status: "pending",
-        payout: campaign.payout,
-      });
-      await supabase.from("creator_submissions").insert({
-        campaign_id: campaign.id,
-        creator_id: creator.id,
-        status: "pending",
-      });
+      await supabase
+        .from("campaign_applications")
+        .insert({
+          campaign_id: campaign.id,
+          creator_id: creator.id,
+          merchant_id: campaign.merchant_id,
+          status: "pending",
+          payout: campaign.payout,
+        });
+      await supabase
+        .from("creator_submissions")
+        .insert({
+          campaign_id: campaign.id,
+          creator_id: creator.id,
+          status: "pending",
+        });
       setApplied(true);
     } catch {
       setError("Failed to apply. Please try again.");
@@ -604,15 +545,12 @@ export default function CampaignDetailPage() {
     }
   }
 
-  /* ── Loading / Error states ────────────────────────────── */
-
   if (loading)
     return (
       <div className="campaign-page">
         <div className="campaign-loading">Loading campaign…</div>
       </div>
     );
-
   if (error || !campaign)
     return (
       <div className="campaign-page">
@@ -622,8 +560,6 @@ export default function CampaignDetailPage() {
         <div className="campaign-error">{error ?? "Campaign not found."}</div>
       </div>
     );
-
-  /* ── Derived values ────────────────────────────────────── */
 
   const eligible = creator
     ? isEligible(creator.tier, campaign.tier_required)
@@ -641,8 +577,7 @@ export default function CampaignDetailPage() {
     3 - (creator?.campaigns_completed ?? 0),
   );
   const days = daysRemaining(campaign.deadline);
-  const isUrgent = days <= 7;
-  const isCritical = days <= 3;
+  const isUrgent = days <= 3;
 
   let btnLabel = "Apply Now";
   let btnClass = "apply-btn apply-btn--default";
@@ -652,7 +587,7 @@ export default function CampaignDetailPage() {
     btnClass = "apply-btn apply-btn--applied";
     btnDisabled = true;
   } else if (!eligible) {
-    btnLabel = `Unlock at ${TIER_LABELS[campaign.tier_required]} tier`;
+    btnLabel = `Unlock at ${TIER_LABELS[campaign.tier_required]} to apply`;
     btnClass = "apply-btn apply-btn--locked";
     btnDisabled = true;
   } else if (applying) {
@@ -660,104 +595,47 @@ export default function CampaignDetailPage() {
     btnDisabled = true;
   }
 
-  const statusLabel = campaign.status === "active" ? "Active" : campaign.status;
-  const statusMod =
-    campaign.status === "active"
-      ? "active"
-      : campaign.status === "completed"
-        ? "completed"
-        : "pending";
-
-  /* ── Render ────────────────────────────────────────────── */
-
   return (
     <div className="campaign-page">
       <Link href="/creator/dashboard" className="campaign-back">
         ← Back to Campaigns
       </Link>
-
-      {/* ── Campaign Header ─────────────────────────────── */}
       <div className="cp-header">
         <div className="cp-header-inner">
-          {/* Top: logo + title + status/payout */}
-          <div className="cp-header-top">
-            {/* Merchant logo */}
-            <div className="cp-merchant-logo" aria-hidden="true">
-              {getMerchantInitials(campaign.business_name)}
-            </div>
-
-            {/* Title group */}
-            <div className="cp-header-title-group">
-              <h1 className="cp-title">{campaign.title}</h1>
-              <p className="cp-business">
-                {campaign.business_name}
-                <span className="cp-business-addr">
-                  {campaign.business_address}
-                </span>
-              </p>
-              <div className="cp-meta">
-                <span className="cp-meta-badge cp-meta-badge--category">
-                  {campaign.category}
-                </span>
-                <TierBadge
-                  tier={campaign.tier_required}
-                  size="sm"
-                  variant="outlined"
-                />
-                <span className="cp-meta-divider" aria-hidden="true" />
-                {campaign.payout === 0 ? (
-                  <span className="cp-meta-badge cp-meta-badge--free">
-                    Free Product
-                  </span>
-                ) : (
-                  <span className="cp-meta-badge cp-meta-badge--payout">
-                    ${campaign.payout} base
-                    {commission > 0 && ` + ${commission}% commission`}
-                  </span>
-                )}
-              </div>
-            </div>
-
-            {/* Status + expected payout */}
-            <div className="cp-header-status-group">
-              <div
-                className={`cp-status-badge cp-status-badge--${statusMod}`}
-                role="status"
-              >
-                <span className="cp-status-dot" />
-                {statusLabel}
-              </div>
-              <div className="cp-expected-payout">
-                {campaign.payout === 0 ? (
-                  <span className="cp-payout-number cp-payout-number--free">
-                    Free
-                  </span>
-                ) : (
-                  <span className="cp-payout-number">
-                    ${campaign.payout}
-                    {commission > 0 && (
-                      <sup
-                        style={{ fontSize: "0.45em", verticalAlign: "super" }}
-                      >
-                        +{commission}%
-                      </sup>
-                    )}
-                  </span>
-                )}
-                <span className="cp-payout-sublabel">
-                  {campaign.payout === 0 ? "product trade" : "per campaign"}
-                </span>
-              </div>
-            </div>
+          <h1 className="cp-title">{campaign.title}</h1>
+          <p className="cp-business">
+            {campaign.business_name}
+            <span className="cp-business-addr">
+              {campaign.business_address}
+            </span>
+          </p>
+          <div className="cp-meta">
+            <span className="cp-meta-badge cp-meta-badge--category">
+              {campaign.category}
+            </span>
+            <TierBadge
+              tier={campaign.tier_required}
+              size="sm"
+              variant="outlined"
+            />
+            <span className="cp-meta-divider" />
+            {campaign.payout === 0 ? (
+              <span className="cp-meta-badge cp-meta-badge--free">
+                Free Product
+              </span>
+            ) : (
+              <span className="cp-meta-badge cp-meta-badge--payout">
+                ${campaign.payout} base
+                {commission > 0 && ` + ${commission}% commission`}
+              </span>
+            )}
           </div>
-
-          {/* Footer: countdown + spots */}
           <div className="cp-header-footer">
             <div className="cp-countdown">
               <span
                 className={[
                   "cp-countdown-number",
-                  isCritical ? "cp-countdown-number--urgent" : "",
+                  isUrgent ? "cp-countdown-number--urgent" : "",
                 ]
                   .filter(Boolean)
                   .join(" ")}
@@ -767,28 +645,6 @@ export default function CampaignDetailPage() {
               <span className="cp-countdown-label">
                 {days === 1 ? "day left" : "days left"} &mdash;{" "}
                 {formatDeadline(campaign.deadline)}
-                {isUrgent && !isCritical && (
-                  <span
-                    style={{
-                      marginLeft: 8,
-                      color: "rgba(201,169,110,0.9)",
-                      fontSize: "9px",
-                    }}
-                  >
-                    · CLOSING SOON
-                  </span>
-                )}
-                {isCritical && (
-                  <span
-                    style={{
-                      marginLeft: 8,
-                      color: "var(--primary, #c1121f)",
-                      fontSize: "9px",
-                    }}
-                  >
-                    · URGENT
-                  </span>
-                )}
               </span>
             </div>
             <div className="cp-spots-indicator">
@@ -814,10 +670,7 @@ export default function CampaignDetailPage() {
         </div>
       </div>
 
-      {/* ── Milestone Track (applied) ─────────────────────── */}
       {applied && milestone && <MilestoneTrack current={milestone} />}
-
-      {/* ── Hero image (not applied) ──────────────────────── */}
       {!applied && (
         <div className="campaign-hero" style={{ background: heroBg }}>
           {campaign.image ? (
@@ -839,54 +692,24 @@ export default function CampaignDetailPage() {
         </div>
       )}
 
-      {/* ── Body grid: main + sidebar ─────────────────────── */}
       <div className="campaign-body">
-        {/* ── Main column ─────────────────────────────────── */}
         <div className="campaign-main">
-          {/* Campaign Brief */}
           <div>
-            <p className="campaign-section-label">Campaign Brief</p>
+            <p className="campaign-section-label">About This Campaign</p>
             <p className="campaign-desc">{campaign.description}</p>
           </div>
-
-          {/* Requirements checklist */}
           <div>
             <p className="campaign-section-label">Requirements</p>
-            <RequirementsChecklist requirements={campaign.requirements} />
-          </div>
-
-          {/* Submission area (when applied) */}
-          {applied && (
-            <div>
-              <p className="campaign-section-label">Submit Your Content</p>
-              <div className="cp-submit-area">
-                <div className="cp-upload-icon" aria-hidden="true" />
-                <p className="cp-submit-title">Drop files or paste a URL</p>
-                <p className="cp-submit-sub">
-                  Upload your content file or link your published post
-                </p>
-                <div className="cp-url-row">
-                  <input
-                    type="url"
-                    className="cp-url-input"
-                    placeholder="https://instagram.com/p/..."
-                    value={urlInput}
-                    onChange={(e) => setUrlInput(e.target.value)}
-                    aria-label="Content URL"
-                  />
-                  <button
-                    type="button"
-                    className="cp-url-btn"
-                    disabled={!urlInput.trim()}
-                  >
-                    Submit
-                  </button>
+            <div className="cp-requirements">
+              {campaign.requirements.map((req, i) => (
+                <div key={i} className="cp-req-item">
+                  <span className="cp-req-icon cp-req-icon--check" />
+                  <span className="cp-req-number">{i + 1}</span>
+                  <span>{req}</span>
                 </div>
-              </div>
+              ))}
             </div>
-          )}
-
-          {/* Business info */}
+          </div>
           <div className="campaign-biz-info">
             <p className="campaign-section-label">Business Info</p>
             <dl className="campaign-biz-dl">
@@ -899,18 +722,14 @@ export default function CampaignDetailPage() {
                 <dd>{campaign.category}</dd>
               </div>
             </dl>
-            <div className="cp-map-placeholder" aria-label="Map placeholder">
-              <span aria-hidden="true">&#9679;</span>
+            <div className="cp-map-placeholder">
+              <span>&#9679;</span>
               {campaign.business_name}
             </div>
           </div>
-
-          {/* Milestone action area (applied) */}
           {applied && milestone && (
             <MilestoneActionArea milestone={milestone} />
           )}
-
-          {/* QR Attribution note */}
           <div className="campaign-qr-note">
             <span className="campaign-qr-icon" aria-hidden="true">
               &#9632;
@@ -926,176 +745,119 @@ export default function CampaignDetailPage() {
           </div>
         </div>
 
-        {/* ── Sidebar ──────────────────────────────────────── */}
         <aside className="campaign-sidebar-card">
-          {/* Payout — earn potential hero */}
-          <div className="cp-sidebar-section">
-            <div className="campaign-payout">
-              <span className="campaign-payout-eyebrow">
-                {campaign.payout === 0 ? "Compensation" : "You Earn"}
-              </span>
-              {campaign.payout === 0 ? (
-                <>
-                  <span className="campaign-payout-amount campaign-payout-amount--free">
-                    Free
-                  </span>
-                  <span className="campaign-payout-label">
-                    product · trade campaign
-                  </span>
-                </>
-              ) : (
-                <>
-                  <span className="campaign-payout-amount">
-                    ${campaign.payout}
-                  </span>
-                  <span className="campaign-payout-label">
-                    per campaign · flat rate
-                  </span>
-                </>
-              )}
-            </div>
-            {commission > 0 && (
-              <div className="campaign-commission-row">
-                <span>+</span>
-                <span className="campaign-commission-pct">{commission}%</span>
-                <span>on every walk-in you drive</span>
-              </div>
+          <div className="campaign-payout">
+            {campaign.payout === 0 ? (
+              <>
+                <span className="campaign-payout-amount campaign-payout-amount--free">
+                  Free
+                </span>
+                <span className="campaign-payout-label">Product (trade)</span>
+              </>
+            ) : (
+              <>
+                <span className="campaign-payout-amount">
+                  ${campaign.payout}
+                </span>
+                <span className="campaign-payout-label">per campaign</span>
+              </>
             )}
           </div>
-
-          {/* Spots */}
-          <div className="cp-sidebar-section">
-            <div className="campaign-spots">
-              <div className="campaign-spots-meta">
-                <span>Spots Remaining</span>
-                <span>
-                  {campaign.spots_remaining} / {campaign.spots_total}
-                </span>
-              </div>
-              <div className="campaign-spots-bar">
-                <div
-                  className="campaign-spots-fill"
-                  style={{ width: `${spotsFillPct}%` }}
-                />
-              </div>
+          {commission > 0 && (
+            <div className="campaign-commission-row">
+              <span>+</span>
+              <span className="campaign-commission-pct">{commission}%</span>
+              <span>walk-in commission</span>
             </div>
-          </div>
-
-          {/* Deadline */}
-          <div className="cp-sidebar-section">
-            <div className="campaign-deadline">
-              <span className="campaign-deadline-label">Deadline</span>
-              <span
-                className="campaign-deadline-value"
-                style={isCritical ? { color: "var(--primary, #c1121f)" } : {}}
-              >
-                {isCritical
-                  ? `${days} DAYS LEFT`
-                  : formatDeadline(campaign.deadline)}
+          )}
+          <div className="campaign-spots">
+            <div className="campaign-spots-meta">
+              <span>
+                {campaign.spots_remaining} of {campaign.spots_total} spots
+                remaining
               </span>
             </div>
-          </div>
-
-          {/* Tier required */}
-          <div className="cp-sidebar-section">
-            <div className="campaign-deadline">
-              <span className="campaign-deadline-label">Tier Required</span>
-              <TierBadge
-                tier={campaign.tier_required}
-                size="sm"
-                variant="subtle"
+            <div className="campaign-spots-bar">
+              <div
+                className="campaign-spots-fill"
+                style={{ width: `${spotsFillPct}%` }}
               />
             </div>
           </div>
-
-          {/* Eligibility */}
-          <div className="cp-sidebar-section">
-            <div className="campaign-eligibility">
-              {eligible ? (
+          <div className="campaign-deadline">
+            <span className="campaign-deadline-label">Deadline</span>
+            <span className="campaign-deadline-value">
+              {formatDeadline(campaign.deadline)}
+            </span>
+          </div>
+          <div
+            className="campaign-deadline"
+            style={{ borderTop: "none", paddingTop: 0 }}
+          >
+            <span className="campaign-deadline-label">Tier Required</span>
+            <TierBadge
+              tier={campaign.tier_required}
+              size="sm"
+              variant="subtle"
+            />
+          </div>
+          <div className="campaign-eligibility">
+            {eligible ? (
+              <>
+                <span
+                  className="campaign-elig-icon campaign-elig-icon--ok"
+                  aria-hidden="true"
+                >
+                  ✓
+                </span>
+                <span>
+                  You qualify ({creator ? TIER_LABELS[creator.tier] : ""} tier)
+                </span>
+              </>
+            ) : (
+              <>
+                <span
+                  className="campaign-elig-icon campaign-elig-icon--lock"
+                  aria-hidden="true"
+                >
+                  —
+                </span>
+                <span>Requires {TIER_LABELS[campaign.tier_required]} tier</span>
+              </>
+            )}
+          </div>
+          <button
+            className={btnClass}
+            disabled={btnDisabled}
+            onClick={handleApply}
+            aria-label={btnLabel}
+          >
+            {btnLabel}
+          </button>
+          {eligible && !applied && (
+            <p className="commission-note">
+              {noCommission ? (
                 <>
-                  <span
-                    className="campaign-elig-icon campaign-elig-icon--ok"
-                    aria-hidden="true"
-                  >
-                    ✓
-                  </span>
-                  <span>
-                    You qualify ({creator ? TIER_LABELS[creator.tier] : ""}{" "}
-                    tier)
-                  </span>
+                  No commission at your tier.{" "}
+                  {campaignsToOperator > 0
+                    ? `Complete ${campaignsToOperator} more campaign${campaignsToOperator !== 1 ? "s" : ""} to reach Operator and unlock 3% commission.`
+                    : "Reach Operator tier to unlock 3% commission."}
                 </>
               ) : (
-                <>
-                  <span
-                    className="campaign-elig-icon campaign-elig-icon--lock"
-                    aria-hidden="true"
-                  >
-                    —
-                  </span>
-                  <span>
-                    Requires {TIER_LABELS[campaign.tier_required]} tier
-                  </span>
-                </>
+                <>You earn {commission}% on each walk-in you drive</>
               )}
-            </div>
-          </div>
-
-          {/* Apply button */}
-          <div className="cp-sidebar-section">
-            <button
-              className={btnClass}
-              disabled={btnDisabled}
-              onClick={handleApply}
-              aria-label={btnLabel}
-              type="button"
-            >
-              {btnLabel}
-            </button>
-            {eligible && !applied && (
-              <p className="commission-note" style={{ marginTop: 12 }}>
-                {noCommission ? (
-                  <>
-                    No commission at your tier.{" "}
-                    {campaignsToOperator > 0
-                      ? `Complete ${campaignsToOperator} more campaign${campaignsToOperator !== 1 ? "s" : ""} to reach Operator and unlock 3% commission.`
-                      : "Reach Operator tier to unlock 3% commission."}
-                  </>
-                ) : (
-                  <>You earn {commission}% on each walk-in you drive</>
-                )}
-              </p>
-            )}
-            {applied && (
-              <p className="commission-note" style={{ marginTop: 12 }}>
-                Application submitted. The merchant will review and confirm.
-              </p>
-            )}
-          </div>
-
-          {/* Stats when completed */}
-          {milestone === "settled" && (
-            <div className="cp-stats-grid">
-              <div className="cp-stat-cell">
-                <span className="cp-stat-value">
-                  {campaign.payout > 0 ? `$${campaign.payout}` : "—"}
-                </span>
-                <span className="cp-stat-label">Earned</span>
-                {campaign.payout > 0 && (
-                  <span className="cp-stat-compare">+12% vs avg</span>
-                )}
-              </div>
-              <div className="cp-stat-cell">
-                <span className="cp-stat-value">—</span>
-                <span className="cp-stat-label">Scans</span>
-              </div>
-            </div>
+            </p>
+          )}
+          {applied && (
+            <p className="commission-note">
+              Application submitted. The merchant will review and confirm.
+            </p>
           )}
         </aside>
       </div>
 
-      {/* ── Campaign Checklist ───────────────────────────── */}
       {applied && campaign && (
-        <div style={{ marginTop: 24 }}>
+        <div style={{ marginTop: 20 }}>
           <CampaignChecklist
             campaignTitle={campaign.title}
             merchantName={campaign.business_name}

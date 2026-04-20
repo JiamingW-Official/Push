@@ -1,27 +1,27 @@
 /* ── Public Creator Profile ─────────────────────────────────────────────────
-   Design system: border-radius 0 everywhere (exceptions: avatar 50%, filter chips 50vh)
-   Colors: #c1121f / #780000 / #003049 / #669bbc / #c9a96e / #f5f2ec
+   Design system: border-radius 0 everywhere (exceptions: avatar 50%, tier badge 50%)
+   Colors: #c1121f / #780000 / #003049 / #669bbc / #f5f2ec
    Fonts: Darky (headlines), CS Genio Mono (all UI text)
    Grid: 8px base
 ────────────────────────────────────────────────────────────────────────────── */
 
 /* ── Page wrapper ──────────────────────────────────────────────────────────── */
 
-.pub-profile {
-  max-width: 920px;
+.public-profile {
+  max-width: 860px;
   margin: 0 auto;
-  background: var(--surface, #f5f2ec);
+  background: var(--surface);
   min-height: 100vh;
   font-family: "CS Genio Mono", "Courier New", monospace;
   color: #003049;
 }
 
-/* ── Fade-in ───────────────────────────────────────────────────────────────── */
+/* ── Fade-in animation ─────────────────────────────────────────────────────── */
 
-@keyframes pubFadeIn {
+@keyframes profileFadeIn {
   from {
     opacity: 0;
-    transform: translateY(10px);
+    transform: translateY(8px);
   }
   to {
     opacity: 1;
@@ -29,21 +29,22 @@
   }
 }
 
-.pub-fade-in {
-  animation: pubFadeIn 0.35s ease forwards;
+.page-fade-in {
+  animation: profileFadeIn 0.3s ease forwards;
 }
 
-/* ── Top bar ───────────────────────────────────────────────────────────────── */
+/* ── 1. Header strip ───────────────────────────────────────────────────────── */
 
-.pub-topbar {
+.profile-header-strip {
   background: #003049;
   padding: 12px 24px;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  border-radius: 0;
 }
 
-.pub-topbar-back {
+.header-back {
   font-family: "CS Genio Mono", monospace;
   font-size: 13px;
   color: #669bbc;
@@ -52,47 +53,47 @@
   transition: color 0.15s ease;
 }
 
-.pub-topbar-back:hover {
+.header-back:hover {
   color: #f5f2ec;
 }
 
-.pub-topbar-label {
+.header-label {
   font-family: "CS Genio Mono", monospace;
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: rgba(245, 242, 236, 0.45);
+  color: rgba(245, 242, 236, 0.55);
 }
 
-/* ── Hero ──────────────────────────────────────────────────────────────────── */
+/* ── 2. Hero ───────────────────────────────────────────────────────────────── */
 
 .pub-hero {
   background: #ffffff;
-  padding: 64px 48px;
+  padding: 64px 40px;
   border-bottom: 1px solid rgba(0, 48, 73, 0.12);
 }
 
 .pub-hero-inner {
   display: grid;
   grid-template-columns: 1fr auto;
-  gap: 56px;
+  gap: 48px;
   align-items: flex-start;
 }
 
 .pub-hero-left {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 24px;
 }
 
-/* Avatar — 50% border-radius exception */
+/* Avatar — 50% border-radius exception per design system */
 .pub-avatar {
-  width: 128px;
-  height: 128px;
+  width: 160px;
+  height: 160px;
   border-radius: 50%;
-  border: 4px solid #c9a96e;
-  background: #f5f2ec;
+  border: 4px solid #c1121f; /* overridden inline with tier color */
+  background: var(--surface);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -108,49 +109,33 @@
 
 .pub-avatar-initial {
   font-family: "Darky", serif;
-  font-size: 52px;
+  font-size: 64px;
   font-weight: 900;
   line-height: 1;
   letter-spacing: -0.04em;
 }
 
-/* Identity */
+/* Identity block */
 .pub-identity {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 8px;
+}
+
+.pub-name {
+  font-family: "Darky", serif;
+  font-size: 48px;
+  font-weight: 900;
+  color: #003049;
+  letter-spacing: -0.04em;
+  margin: 0;
+  line-height: 1.0;
 }
 
 .pub-badge-row {
   display: flex;
   align-items: center;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-
-/* Verified badge */
-.pub-verified-badge {
-  font-family: "CS Genio Mono", monospace;
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: #669bbc;
-  background: rgba(102, 155, 188, 0.12);
-  border: 1px solid rgba(102, 155, 188, 0.3);
-  padding: 3px 8px;
-  border-radius: 0;
-}
-
-/* Name — massive Darky display */
-.pub-name {
-  font-family: "Darky", serif;
-  font-size: clamp(48px, 7vw, 96px);
-  font-weight: 900;
-  color: #003049;
-  letter-spacing: -0.05em;
-  margin: 0;
-  line-height: 0.9;
+  gap: 8px;
 }
 
 .pub-location {
@@ -165,65 +150,24 @@
 
 .pub-location-icon {
   font-size: 11px;
-  color: rgba(0, 48, 73, 0.35);
+  color: rgba(0, 48, 73, 0.4);
 }
 
 .pub-handle {
   font-family: "CS Genio Mono", monospace;
   font-size: 13px;
-  color: rgba(0, 48, 73, 0.5);
+  color: rgba(0, 48, 73, 0.55);
   margin: 0;
-}
-
-/* ConversionOracle score block */
-.pub-oracle-block {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  padding: 16px 20px;
-  background: rgba(201, 169, 110, 0.08);
-  border-left: 4px solid #c9a96e;
-  margin-top: 4px;
-}
-
-.pub-oracle-score {
-  font-family: "Darky", serif;
-  font-size: 52px;
-  font-weight: 900;
-  letter-spacing: -0.05em;
-  line-height: 1;
-  color: #c9a96e;
-  flex-shrink: 0;
-}
-
-.pub-oracle-meta {
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-}
-
-.pub-oracle-label {
-  font-family: "CS Genio Mono", monospace;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: #003049;
-}
-
-.pub-oracle-sub {
-  font-family: "CS Genio Mono", monospace;
-  font-size: 13px;
-  color: rgba(0, 48, 73, 0.6);
+  letter-spacing: 0.01em;
 }
 
 .pub-bio {
   font-family: "CS Genio Mono", monospace;
-  font-size: 14px;
-  line-height: 1.7;
-  color: rgba(0, 48, 73, 0.75);
+  font-size: 15px;
+  line-height: 1.65;
+  color: #003049;
   margin: 4px 0 0;
-  max-width: 460px;
+  max-width: 480px;
 }
 
 /* Available indicator */
@@ -231,6 +175,7 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
+  margin-top: 4px;
 }
 
 .pub-available-dot {
@@ -239,17 +184,12 @@
   border-radius: 50%;
   background: #2e7d32;
   flex-shrink: 0;
-  animation: pulseDot 2s ease-in-out infinite;
+  animation: pulse-dot 2s ease-in-out infinite;
 }
 
-@keyframes pulseDot {
-  0%,
-  100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.4;
-  }
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
 }
 
 .pub-available-label {
@@ -270,66 +210,27 @@
   flex-shrink: 0;
 }
 
-/* ── Section eyebrow ───────────────────────────────────────────────────────── */
+/* ── Shared section eyebrow ────────────────────────────────────────────────── */
 
 .pub-section-eyebrow {
   font-family: "CS Genio Mono", monospace;
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 700;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: rgba(0, 48, 73, 0.4);
-  margin: 0 0 12px;
+  color: rgba(0, 48, 73, 0.45);
+  margin: 0 0 16px;
 }
 
-/* ── Social proof strip ────────────────────────────────────────────────────── */
-
-.pub-proof-strip {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0;
-  background: #003049;
-  padding: 0;
-  border-bottom: 1px solid rgba(245, 242, 236, 0.08);
-  flex-wrap: wrap;
-}
-
-.pub-proof-item {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 14px 28px;
-}
-
-.pub-proof-icon {
-  font-size: 14px;
-  color: #c9a96e;
-  flex-shrink: 0;
-}
-
-.pub-proof-text {
-  font-family: "CS Genio Mono", monospace;
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.03em;
-  color: rgba(245, 242, 236, 0.85);
-}
-
-.pub-proof-divider {
-  width: 1px;
-  height: 32px;
-  background: rgba(245, 242, 236, 0.15);
-  flex-shrink: 0;
-}
-
-/* ── Stats strip ───────────────────────────────────────────────────────────── */
+/* ── 3. Stats strip ────────────────────────────────────────────────────────── */
 
 .pub-stats-strip {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  background: #ffffff;
+  border-top: 1px solid rgba(0, 48, 73, 0.1);
   border-bottom: 1px solid rgba(0, 48, 73, 0.1);
+  background: #ffffff;
+  padding: 0;
 }
 
 .pub-stat {
@@ -337,7 +238,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 28px 16px;
+  padding: 24px 16px;
   border-right: 1px solid rgba(0, 48, 73, 0.08);
   text-align: center;
 }
@@ -348,140 +249,32 @@
 
 .pub-stat-value {
   font-family: "Darky", serif;
-  font-size: 32px;
-  font-weight: 900;
+  font-size: 28px;
+  font-weight: 700;
   color: #003049;
-  letter-spacing: -0.04em;
+  letter-spacing: -0.03em;
   line-height: 1;
 }
 
 .pub-stat-label {
   font-family: "CS Genio Mono", monospace;
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 700;
-  letter-spacing: 0.07em;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: rgba(0, 48, 73, 0.4);
+  color: rgba(0, 48, 73, 0.45);
   margin-top: 6px;
 }
 
-/* ── Portfolio gallery ─────────────────────────────────────────────────────── */
-
-.pub-gallery-section {
-  background: #fafaf8;
-  padding: 40px 40px 48px;
-  border-bottom: 1px solid rgba(0, 48, 73, 0.08);
-}
-
-.pub-gallery-title {
-  font-family: "Darky", serif;
-  font-size: 22px;
-  font-weight: 800;
-  color: #003049;
-  letter-spacing: -0.03em;
-  margin: 0 0 24px;
-  line-height: 1;
-}
-
-.pub-gallery-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  grid-template-rows: repeat(2, 1fr);
-  gap: 10px;
-  aspect-ratio: 3/2;
-}
-
-.pub-gallery-cell {
-  position: relative;
-  overflow: hidden;
-  cursor: pointer;
-  background: rgba(0, 48, 73, 0.06);
-  animation: feedCardIn 0.4s ease both;
-}
-
-@keyframes feedCardIn {
-  from {
-    opacity: 0;
-    transform: scale(0.97);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-.pub-gallery-cell:hover .pub-gallery-overlay {
-  opacity: 1;
-}
-
-.pub-gallery-cell:hover .pub-gallery-thumb {
-  transform: scale(1.05);
-}
-
-.pub-gallery-thumb {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-.pub-gallery-placeholder-icon {
-  font-size: 24px;
-  opacity: 0.25;
-}
-
-.pub-gallery-cat-bar {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 3px;
-}
-
-.pub-gallery-overlay {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  opacity: 0;
-  transition: opacity 0.22s ease;
-  padding: 12px;
-  text-align: center;
-}
-
-.pub-gallery-overlay-business {
-  font-family: "CS Genio Mono", monospace;
-  font-size: 11px;
-  font-weight: 700;
-  color: #ffffff;
-  letter-spacing: 0.04em;
-  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
-}
-
-.pub-gallery-overlay-earn {
-  font-family: "Darky", serif;
-  font-size: 22px;
-  font-weight: 900;
-  color: #ffffff;
-  letter-spacing: -0.03em;
-  line-height: 1;
-  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
-}
-
-/* ── Tier journey ──────────────────────────────────────────────────────────── */
+/* ── 4. Tier journey ───────────────────────────────────────────────────────── */
 
 .pub-tier-section {
-  background: #f5f2ec;
+  background: var(--surface);
   padding: 40px;
-  border-bottom: 1px solid rgba(0, 48, 73, 0.08);
+  border-bottom: 1px solid rgba(0, 48, 73, 0.1);
 }
 
-/* ── Campaign history ──────────────────────────────────────────────────────── */
+/* ── 5. Campaign history ───────────────────────────────────────────────────── */
 
 .pub-campaigns-section {
   background: #ffffff;
@@ -492,23 +285,22 @@
 .pub-campaigns {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 10px;
+  gap: 12px;
 }
 
 .pub-campaign-card {
-  border-left: 4px solid #c1121f;
-  padding: 14px 16px;
-  background: #fafaf8;
+  border-left: 3px solid #c1121f; /* overridden inline with tier color */
+  padding: 16px;
+  background: var(--surface);
   border-radius: 0;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 8px;
   transition: background 0.15s ease;
-  cursor: default;
 }
 
 .pub-campaign-card:hover {
-  background: #f5f2ec;
+  background: rgba(193, 18, 31, 0.04);
 }
 
 .pub-campaign-header {
@@ -520,7 +312,7 @@
 
 .pub-campaign-business {
   font-family: "CS Genio Mono", monospace;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 700;
   color: #003049;
 }
@@ -531,6 +323,8 @@
   font-weight: 700;
   letter-spacing: 0.04em;
   text-transform: uppercase;
+  color: rgba(0, 48, 73, 0.55);
+  background: rgba(0, 48, 73, 0.08);
   padding: 2px 6px;
   border-radius: 0;
 }
@@ -545,69 +339,60 @@
 .pub-campaign-date {
   font-family: "CS Genio Mono", monospace;
   font-size: 11px;
-  color: rgba(0, 48, 73, 0.4);
-}
-
-.pub-campaign-metrics {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.pub-campaign-walkins {
-  font-family: "CS Genio Mono", monospace;
-  font-size: 11px;
-  color: rgba(0, 48, 73, 0.55);
+  color: rgba(0, 48, 73, 0.45);
 }
 
 .pub-campaign-payout {
   font-family: "CS Genio Mono", monospace;
   font-size: 11px;
   font-weight: 700;
-  color: #c9a96e;
+  color: #2e7d32;
   letter-spacing: 0.02em;
 }
 
 .pub-campaign-payout--product {
-  color: rgba(0, 48, 73, 0.4);
+  color: rgba(0, 48, 73, 0.45);
   font-weight: 400;
 }
 
-/* ── CTA section ───────────────────────────────────────────────────────────── */
+/* ── 6. CTA section ────────────────────────────────────────────────────────── */
 
 .pub-cta-section {
   background: #003049;
-  padding: 80px 48px;
+  padding: 64px 40px;
   text-align: center;
+  border-radius: 0;
 }
 
 .pub-cta-eyebrow {
   font-family: "CS Genio Mono", monospace;
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 700;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: rgba(245, 242, 236, 0.4);
+  color: rgba(245, 242, 236, 0.45);
   margin: 0 0 12px;
 }
 
 .pub-cta-headline {
   font-family: "Darky", serif;
-  font-size: clamp(32px, 5vw, 56px);
+  font-size: 40px;
   font-weight: 900;
   color: #f5f2ec;
   letter-spacing: -0.04em;
-  margin: 0 0 16px;
-  line-height: 1.0;
+  margin: 0 0 12px;
+  line-height: 1.05;
 }
 
 .pub-cta-sub {
   font-family: "CS Genio Mono", monospace;
   font-size: 14px;
-  color: rgba(245, 242, 236, 0.65);
-  margin: 0 auto 36px;
-  line-height: 1.65;
-  max-width: 480px;
+  color: rgba(245, 242, 236, 0.7);
+  margin: 0 0 32px;
+  line-height: 1.6;
+  max-width: 440px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .pub-cta-button {
@@ -617,9 +402,9 @@
   font-family: "CS Genio Mono", monospace;
   font-size: 14px;
   font-weight: 700;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.05em;
   text-transform: uppercase;
-  padding: 18px 40px;
+  padding: 16px 32px;
   border-radius: 0;
   text-decoration: none;
   transition: background 0.15s ease;
@@ -632,25 +417,25 @@
 .pub-cta-note {
   font-family: "CS Genio Mono", monospace;
   font-size: 11px;
-  color: rgba(245, 242, 236, 0.35);
+  color: rgba(245, 242, 236, 0.4);
   margin: 20px 0 0;
-  letter-spacing: 0.03em;
+  letter-spacing: 0.02em;
 }
 
-/* ── Footer ────────────────────────────────────────────────────────────────── */
+/* ── 7. Footer ─────────────────────────────────────────────────────────────── */
 
-.pub-footer {
-  background: #f5f2ec;
+.profile-footer {
+  background: var(--surface);
   padding: 20px 24px;
   text-align: center;
   font-family: "CS Genio Mono", monospace;
   font-size: 11px;
-  color: rgba(0, 48, 73, 0.3);
-  letter-spacing: 0.05em;
+  color: rgba(0, 48, 73, 0.35);
+  letter-spacing: 0.04em;
   border-top: 1px solid rgba(0, 48, 73, 0.08);
 }
 
-/* ── Skeleton ──────────────────────────────────────────────────────────────── */
+/* ── Skeleton states ───────────────────────────────────────────────────────── */
 
 .skeleton-line {
   display: inline-block;
@@ -676,17 +461,19 @@
   }
 }
 
-.pub-not-found {
+/* ── Not found ─────────────────────────────────────────────────────────────── */
+
+.profile-not-found {
   padding: 80px 24px;
   text-align: center;
   font-family: "CS Genio Mono", monospace;
   font-size: 14px;
-  color: rgba(0, 48, 73, 0.5);
+  color: rgba(0, 48, 73, 0.55);
 }
 
 /* ── Mobile ────────────────────────────────────────────────────────────────── */
 
-@media (max-width: 720px) {
+@media (max-width: 700px) {
   .pub-hero {
     padding: 32px 20px;
   }
@@ -696,38 +483,34 @@
     gap: 32px;
   }
 
+  .pub-avatar {
+    width: 100px;
+    height: 100px;
+  }
+
+  .pub-avatar-initial {
+    font-size: 40px;
+  }
+
   .pub-name {
-    font-size: clamp(40px, 12vw, 64px);
+    font-size: 32px;
   }
 
-  .pub-oracle-block {
-    padding: 12px 14px;
-  }
-
-  .pub-oracle-score {
-    font-size: 36px;
+  .pub-bio {
+    font-size: 14px;
+    max-width: 100%;
   }
 
   .pub-score-section {
     align-items: flex-start;
   }
 
-  .pub-proof-strip {
-    flex-direction: column;
-    align-items: flex-start;
-    padding: 0 20px;
-  }
-
-  .pub-proof-divider {
-    display: none;
-  }
-
-  .pub-proof-item {
-    padding: 10px 0;
-  }
-
   .pub-stats-strip {
     grid-template-columns: repeat(2, 1fr);
+  }
+
+  .pub-stat {
+    border-bottom: 1px solid rgba(0, 48, 73, 0.08);
   }
 
   .pub-stat:nth-child(odd) {
@@ -738,24 +521,9 @@
     border-right: none;
   }
 
-  .pub-stat {
-    border-bottom: 1px solid rgba(0, 48, 73, 0.06);
-  }
-
-  .pub-gallery-section {
-    padding: 32px 16px;
-  }
-
-  .pub-gallery-grid {
-    grid-template-columns: repeat(2, 1fr);
-    grid-template-rows: repeat(3, 1fr);
-    aspect-ratio: auto;
-    min-height: 360px;
-  }
-
   .pub-tier-section,
   .pub-campaigns-section {
-    padding: 28px 16px;
+    padding: 24px 20px;
   }
 
   .pub-campaigns {
@@ -763,6 +531,10 @@
   }
 
   .pub-cta-section {
-    padding: 48px 20px;
+    padding: 40px 20px;
+  }
+
+  .pub-cta-headline {
+    font-size: 28px;
   }
 }

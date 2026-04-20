@@ -299,7 +299,7 @@ form.form-loading {
 .input-action-btn:hover { color: var(--dark); }
 .input-action-btn:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
 
-/* ── Password strength — 4-bar segmented indicator ────────── */
+/* ── Password strength ────────────────────────────────────── */
 
 .pw-strength {
   display: flex;
@@ -308,31 +308,24 @@ form.form-loading {
   margin-top: 6px;
 }
 
-/* 4 discrete bars instead of single fill */
 .pw-bar {
   flex: 1;
-  display: flex;
-  gap: 3px;
-  height: 4px;
-}
-
-.pw-bar-seg {
-  flex: 1;
-  height: 100%;
+  height: 3px;
   background: var(--line);
-  transition: background 280ms ease, transform 200ms ease;
+  position: relative;
 }
 
-/* Weak — 1 bar lit */
-.pw-fill--weak   ~ * .pw-bar-seg { background: var(--line); }
+.pw-fill {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  transition: width 300ms ease, background 300ms ease;
+}
 
-/* Segments lit by strength via sibling targeting isn't possible in CSS —
-   use data-strength on the container + nth-child instead */
-.pw-bar[data-strength="weak"]   .pw-bar-seg:nth-child(1)              { background: var(--primary); transform: scaleY(1.5); }
-.pw-bar[data-strength="fair"]   .pw-bar-seg:nth-child(-n+2)           { background: #e07b00; }
-.pw-bar[data-strength="fair"]   .pw-bar-seg:nth-child(2)              { transform: scaleY(1.3); }
-.pw-bar[data-strength="strong"] .pw-bar-seg                           { background: var(--tertiary); }
-.pw-bar[data-strength="strong"] .pw-bar-seg:nth-child(4)              { transform: scaleY(1.5); }
+.pw-fill--weak   { width: 33%;  background: var(--primary); }
+.pw-fill--fair   { width: 66%;  background: #e07b00; }
+.pw-fill--strong { width: 100%; background: var(--tertiary); }
 
 .pw-label {
   font-size: 10px;
@@ -437,8 +430,8 @@ form.form-loading {
 .submit-btn {
   width: 100%;
   justify-content: center;
-  padding-block: 0;
-  height: 56px;
+  padding-block: var(--space-3);
+  min-height: 52px;
   font-size: var(--text-body);
   transition: background var(--t-base), box-shadow 200ms ease, transform 150ms ease;
 }
@@ -720,58 +713,6 @@ form.form-loading {
   }
 }
 
-/* ── Signup brand hero ────────────────────────────────────── */
-
-.signup-brand-hero {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-2);
-}
-
-.signup-brand-headline {
-  font-size: clamp(32px, 4vw, 52px);
-}
-
-/* ── Signup tier items — stagger entry ───────────────────── */
-
-.signup-tier-item {
-  opacity: 0;
-  animation: tierSlideIn 500ms cubic-bezier(0.22,1,0.36,1) both;
-}
-
-@keyframes tierSlideIn {
-  from { opacity: 0; transform: translateX(-12px); }
-  to   { opacity: 1; transform: translateX(0); }
-}
-
-/* ── Form panel tier items — stagger entry ────────────────── */
-
-.tier-item {
-  opacity: 0;
-  animation: tierItemIn 400ms cubic-bezier(0.22,1,0.36,1) both;
-}
-
-@keyframes tierItemIn {
-  from { opacity: 0; transform: translateY(8px) scale(0.92); }
-  to   { opacity: 0.40; transform: translateY(0) scale(1); }
-}
-
-/* First item stays full opacity after animation */
-.tier-item[data-index="0"] {
-  animation-name: tierItemInActive;
-}
-
-@keyframes tierItemInActive {
-  from { opacity: 0; transform: translateY(8px) scale(0.92); }
-  to   { opacity: 1; transform: translateY(0) scale(1); }
-}
-
-.tier-item:hover {
-  opacity: 1;
-  transform: scale(1.05);
-  transition: opacity var(--t-fast), transform var(--t-fast);
-}
-
 /* ── Reduced motion ───────────────────────────────────────── */
 
 @media (prefers-reduced-motion: reduce) {
@@ -785,9 +726,7 @@ form.form-loading {
   .form-success,
   .check-path,
   .field-dot,
-  .loader-dots .dot,
-  .signup-tier-item,
-  .tier-item {
+  .loader-dots .dot {
     animation: none !important;
     transition: none !important;
     opacity: 1 !important;

@@ -739,7 +739,7 @@
   width: 56px;
   height: 56px;
   flex-shrink: 0;
-  background: #22c55e;
+  background: var(--success);
   color: #ffffff;
   font-size: 24px;
   font-weight: 700;

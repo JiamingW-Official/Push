@@ -7,13 +7,6 @@
       "runtimeArgs": ["run", "dev:webpack"],
       "port": 3000,
       "autoPort": true
-    },
-    {
-      "name": "Next.js Start",
-      "runtimeExecutable": "npx",
-      "runtimeArgs": ["next", "start"],
-      "port": 3000,
-      "autoPort": true
     }
   ]
 }

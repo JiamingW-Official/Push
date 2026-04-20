@@ -70,7 +70,7 @@ export async function GET(request: NextRequest) {
   }
 
   // Filter
-  let filtered = MOCK_AUDIT_LOG.filter((entry) => {
+  const filtered = MOCK_AUDIT_LOG.filter((entry) => {
     if (actorFilter && entry.actor.id !== actorFilter) return false;
     if (actionFilter && entry.action !== actionFilter) return false;
     if (targetTypeFilter && entry.target.type !== targetTypeFilter)

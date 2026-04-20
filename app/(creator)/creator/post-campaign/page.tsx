@@ -620,6 +620,7 @@ function PostCampaignContent() {
 
     // Check if a tier boundary was crossed
     const scoreBefore = resolved.score - resolved.score_delta;
+    const prevTierTarget = TIER_NEXT[resolved.tier]?.target ?? 999;
     const currentIdx = tierIndex(resolved.tier);
     if (currentIdx < ALL_TIERS.length - 1) {
       // Detect if score_delta pushed score past a threshold
@@ -669,14 +670,11 @@ function PostCampaignContent() {
       <div className="pc-page">
         {/* ── 1. Hero celebration ──────────────────────────── */}
         <section className="pc-hero">
-          {/* Confetti particles */}
-          <div className="pc-hero-confetti" aria-hidden="true" />
-
           <CheckSVG />
 
           <div className="pc-hero-eyebrow">Campaign Complete</div>
 
-          <h1 className="pc-hero-title">WELL DONE.</h1>
+          <h1 className="pc-hero-title">Well done.</h1>
 
           <div className="pc-hero-meta">
             <span className="pc-merchant-name">{data.merchant}</span>
@@ -693,34 +691,6 @@ function PostCampaignContent() {
             </span>
           </div>
         </section>
-
-        {/* ── 1b. Share bar ────────────────────────────────── */}
-        <div className="pc-share-bar">
-          <span className="pc-share-label">Share your win</span>
-          <button
-            className="pc-share-btn"
-            type="button"
-            onClick={() => {
-              if (navigator.share) {
-                navigator.share({
-                  title: `Campaign complete at ${data.merchant}!`,
-                  text: `Just earned $${data.amount} creating content for ${data.merchant} on Push. push.so`,
-                });
-              } else {
-                navigator.clipboard
-                  .writeText(
-                    `Just earned $${data.amount} at ${data.merchant} on Push! push.so`,
-                  )
-                  .catch(() => {});
-              }
-            }}
-          >
-            ↑ Share
-          </button>
-          <Link href="/creator/profile" className="pc-share-btn">
-            View Profile
-          </Link>
-        </div>
 
         {/* ── Body ─────────────────────────────────────────── */}
         <div className="pc-body">
@@ -749,8 +719,8 @@ function PostCampaignContent() {
         {/* ── 8. Bottom motivation ─────────────────────────── */}
         <div className="pc-motivation">
           <div className="pc-motivation-count">
-            {DEMO_CAMPAIGNS_COMPLETED} campaigns · {remaining.toFixed(0)} pts to{" "}
-            {nextTier.label}
+            {DEMO_CAMPAIGNS_COMPLETED} campaigns completed.{" "}
+            {remaining.toFixed(0)} more points to {nextTier.label}.
           </div>
           <div className="pc-motivation-tagline">{tagline}</div>
         </div>

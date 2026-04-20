@@ -9,11 +9,7 @@ import type {
   ApiResult,
   Application,
   Campaign,
-  Creator,
-  Merchant,
-  Milestone,
   Payment,
-  QRCode,
   ScanEvent,
 } from "./types";
 
@@ -407,7 +403,7 @@ const creatorReal = {
 
 // ── Merchant endpoints ────────────────────────────────────────────────────────
 
-let _applications = [...MOCK_APPLICATIONS];
+const _applications = [...MOCK_APPLICATIONS];
 let _qrStore: QRCodeRecord[] = [...MOCK_QR_CODES];
 
 const merchantMock = {

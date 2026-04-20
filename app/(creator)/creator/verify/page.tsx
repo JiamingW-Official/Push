@@ -57,8 +57,11 @@ function canProceed(step: WizardStep, state: KycState): boolean {
 
 // ── Status badge ─────────────────────────────────────────────
 const STATUS_LABEL: Record<KycStatus, string> = {
+  idle: "Not Verified",
   unverified: "Not Verified",
+  pending: "In Review",
   in_review: "In Review",
+  approved: "Verified",
   verified: "Verified",
   rejected: "Rejected",
 };
@@ -269,7 +272,11 @@ export default function VerifyPage() {
           <RejectedState
             reason={kycState.rejectionReason}
             onResubmit={() => {
-              saveKyc({ status: "unverified", rejectionReason: undefined });
+              saveKyc({
+                ...kycState,
+                status: "unverified",
+                rejectionReason: undefined,
+              });
               setKycState(loadKyc());
               setStep(1);
             }}
@@ -313,7 +320,10 @@ export default function VerifyPage() {
   }
 
   function updateState(partial: Partial<KycState>) {
-    setKycState(saveKyc(partial));
+    if (!kycState) return;
+    const merged = { ...kycState, ...partial };
+    saveKyc(merged);
+    setKycState(merged);
   }
 
   const nextEnabled = canProceed(step, kycState);
@@ -334,7 +344,7 @@ export default function VerifyPage() {
               Three steps to unlock Operator-tier campaigns and higher payouts.
             </p>
           </div>
-          <StatusBadge status={kycState.status} />
+          <StatusBadge status={kycState.status ?? "unverified"} />
         </div>
 
         {/* Horizontal progress stepper */}

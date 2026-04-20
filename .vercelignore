@@ -37,3 +37,21 @@ Fonts/
 
 # Logs
 *.log
+
+# Automation reports (regenerated each run)
+lint-report.txt
+type-check-report.txt
+build-report.txt
+test-report.txt
+vercel-deploy.txt
+automation-summary.txt
+
+# Historical audit / spec docs (top-level)
+CODEBASE_AUDIT.md
+CLAUDE_CODE_AUTOMATE_MAY_4_8.md
+CLAUDE_CODE_V5_1_CREATOR_WORKSPACE.md
+CREATOR_WORKSPACE_AUDIT.md
+DESIGN_MD_PATCH.md
+
+# Duplicate build dirs
+.next 2/

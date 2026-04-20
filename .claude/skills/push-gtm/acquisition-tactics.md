@@ -1,327 +1,407 @@
-# Acquisition Tactics: Williamsburg Coffee+ × v5.1
+# Acquisition Tactics: Merchants & Creators
 
-Detailed tactics, scripts, and conversion strategies for acquiring and retaining **Coffee+ merchants in Williamsburg (11211 / 11206 / 11249)** and local coffee creators during the v5.1 cold-start.
-
-All copy is written in Push v5.1 voice: outcome-first, Vertical-AI-for-Local-Commerce framing, no hype. (See `push-brand-voice` skill.)
+Detailed tactics, scripts, and conversion strategies for acquiring and retaining merchants and creators during cold start.
 
 ---
 
-## Why Coffee+ (not pure coffee)
+## Merchant Acquisition
 
-**Coffee+ = specialty coffee shops + those with bakery / brunch items (AOV $8–20).**
+### Why In-Person Beats Everything
 
-Pure-coffee AOV sits around $6, which doesn't clear the $40-per-verified-customer payout economics cleanly. Coffee+ captures the ~200 Williamsburg merchants where avg ticket is $8+ because the shop sells pastry, sandwich, or brunch alongside the pour-over. That bump in AOV is what makes the Operator plan ($500/mo min + $40/customer) work for both sides.
+**In-person > email > DM > paid ads**
+
+For first 10 merchants:
+- In-person: ~40% conversion (they trust face-to-face)
+- Email: ~10% conversion (merchants get 100s of pitches)
+- DM: ~5% conversion (feels spammy)
+- Paid ads: ~2% conversion (wrong audience)
+
+In-person is slower but builds trust and yields committed merchants who will give real feedback.
+
+### Target Profile: Owner-Operated Shops
+
+**Why owner-operated?**
+- Decision-maker is literally in the building → no sales cycle
+- They care more about foot traffic → core problem we solve
+- More willing to try new things → less risk-averse than big chains
+
+**Where to find them:**
+- Walk the neighborhood (Williamsburg, LES, etc.)
+- Look for shops without corporate signage
+- Ask: "Is the owner here?" If yes, great. If no, come back at different times.
+
+### The Walk-In Pitch (Week 2 Execution)
+
+#### Timing
+- **Best days:** Tuesday, Wednesday, Thursday
+- **Best hours:** 2–4pm (dead hours)
+- **Why?** Owner is less stressed, more time to chat
+
+#### Step-by-Step Script
+
+**1. Enter, order something small**
+- "Hey, can I get [small item]?"
+- Makes it natural. You're not *just* there to pitch.
+- Gives you something to talk about while you wait.
+
+**2. Wait for order, observe**
+- While waiting, look around:
+  - Is it photogenic? Good lighting?
+  - Do they already have creator partnerships (posters, tags)?
+  - What's the vibe? High-energy? Cozy?
+- This tells you if they're a good fit and what they care about.
+
+**3. Ask for the owner/manager**
+- "Is the owner around? I have a quick idea I think they'd like."
+- Be confident. Not apologetic.
+
+**4. The pitch (60 seconds)**
+
+> "Hey [name], thanks for [what you ordered]. I run this platform called Push. We help local shops like you get new customers through local food creators. Here's how it works: We match you with 2–3 creators in the neighborhood who have a real following. They post about your place, you provide a discount or free product, they show it to their followers, and you get new customers. We handle all the matching, logistics, everything. Your first campaign is free — you just tell us what you'd offer, and we do the rest. Interested?"
+
+**Key talking points:**
+- "New customers" — addresses the core pain
+- "Local creators" — trust, relevance
+- "You handle zero logistics" — removes friction
+- "Free first campaign" — no risk
+
+**5. Remove ALL objections immediately**
+- "But I don't have time..." → "You literally don't need to do anything. We send you updates, creators post, we track it."
+- "How much does it cost?" → "First one's free. After that, we have plans starting at $19.99/mo."
+- "How do I know it works?" → "We track every creator's followers, engagement, and traffic. You'll see everything."
+- "I've tried influencers before..." → "Yeah, most of them don't know your shop. We're matching you with *local* creators who already feature your neighborhood."
+
+**6. Get a soft commit**
+- If they seem interested: "Cool. What's your email? I'll send you the details and we'll get rolling."
+- If they're hesitant: "No pressure. What would make this interesting to you?"
+- If they say no: "Got it. But if you ever want to try something like this, I'll be in the neighborhood. Feel free to reach out."
+
+#### What You're Listening For
+
+**Green lights (high intent):**
+- "Yeah, sure, let's try it"
+- "That's interesting. How does it work?"
+- "I get a lot of food blogger requests, but local is different"
+- "What do you need from me?"
+
+**Yellow lights (hesitant but possible):**
+- "I don't have time, but..."
+- "My Instagram is not great..."
+- "I'd need to think about it"
+- "How much traffic actually comes?"
+
+**Red lights (not a fit):**
+- "We don't really do Instagram"
+- "We're too busy, can't deal with extra stuff"
+- "We've tried that, didn't work"
+- Long pauses, quick dismissals
+
+### Merchant Conversion Expectations
+
+**Week 2 targets:**
+- 15 conversations → 8 soft commits
+- 53% conversion rate
+
+**Why 53%?**
+- Some shops are chain-owned or corporate (auto-pass)
+- Some owners are genuinely too busy
+- Some don't care about new customers (rare, but it happens)
+- 8 out of 15 is realistic with good execution
+
+**Beyond Week 2:**
+- Soft commits → scheduled calls or follow-ups
+- Follow-up script: "Just checking in. Ready to launch your first campaign?"
+- Expected conversion: 80% of soft commits close within 1 week
+
+### Early Merchant Feedback Loops
+
+**After Week 4 (first campaign):**
+
+Email to merchant:
+> "Hi [name], your first campaign is live! [Creator name] posted about you on Instagram at [link]. We'll track how many people see it, engage with it, and hopefully show up at your shop. I'll follow up with full results in [X days]."
+
+**After completion:**
+
+1. **Quick feedback survey** (2 min)
+   - "How would you rate the quality of content? 1–5"
+   - "Did you get new customers because of this?"
+   - "Would you run another campaign?"
+   - "What would make it better?"
+
+2. **Share results**
+   - Creator's follower count
+   - Post reach (if available via IG)
+   - Engagement (likes, comments, saves)
+   - Foot traffic estimate (if they track it)
+
+3. **Pitch for repeat**
+   - "Great results. Want to run another campaign this month?"
+   - "We've matched you with 3 other creators who are interested..."
+   - Use results data as anchor
+
+### Referral Loop (Week 9+)
+
+Once you have 5–8 merchants who've run campaigns:
+
+**Email to happy merchants:**
+
+> "Hey [name], we've been running a lot of campaigns in the neighborhood. A few other shops have asked if you'd recommend us. Would you be open to referring shops you know? I'll make sure they get the same free first campaign you did."
+
+**Referral conversion is 70%+ because:**
+- Owner-to-owner trust
+- No cold pitch required
+- They've seen the system work
+
+**Referral script (merchant A to merchant B):**
+> "Hey [friend], you should check out Push. [Your shop] ran a campaign with them and got [X result]. Free first time, and they handle everything."
 
 ---
 
-## Merchant Acquisition (Williamsburg Coffee+)
+## Creator Acquisition
 
-### Why Cold Walk-In Still Wins in v5.1
+### Target Profile: Local + Mid-Size + Consistent
 
-**In-person > personalized DM > email > anything paid**
+**Follower tiers (best to worst):**
+- **Micro (2K–10K):** Best conversion, high engagement, know neighborhood
+- **Mid (10K–50K):** Good conversion, good reach, slightly less engaged
+- **Macro (50K+):** Lower conversion, huge reach, but often ask for more money
 
-Conversion expectations for Williamsburg Coffee+ owners:
+**Category preferences (for food/beauty zone):**
+- Food bloggers > lifestyle > random
+- Consistency > growth (would rather have 5K consistent followers than 20K flaky)
+- Engagement rate (likes + comments) / followers > absolute follower count
 
-| Channel | Conversion | Cost | Notes |
-|---------|------------|------|-------|
-| Founder cold walk-in with pilot sheet + $1 LOI | ~40% | $0 | Owner is on-site; Pilot = $0 + $1 nominal LOI |
-| Personalized Instagram DM | ~10% | $0 | Mid-quality volume; works as warm-up |
-| Manager referral (Channel 3) | ~70% | $100 Amex | Activates Week 5+ once we have case evidence |
-| Cold email / paid ads | Not used | — | We don't do either in v5.1 cold-start |
+**Geographic preferences:**
+- Live or frequent the neighborhood (tag posts with location)
+- Post about local spots regularly
+- Comment on local business posts
 
-### Target Profile (v5.1)
+### Creator Scouting (Week 1, Sunday)
 
-**Coffee+ shop** in Williamsburg (11211 / 11206 / 11249), owner-operated or manager-on-site, that:
-- Sells bakery, sandwich, or brunch items alongside coffee (AOV $8+)
-- Has its own Instagram account with ≥ 500 followers
-- Isn't already locked into an exclusive brand partnership
-- Has slow periods during weekday 2–4pm
-- Would recognize the names Sey / Devocion / Partners as peers or aspirational
+**Search strategy:**
 
-**Why owner-operated Coffee+ specifically:**
-- Coffee+ owners care about foot traffic — their whole model runs on repeat visits + food attach
-- Williamsburg Coffee+ scene is tight and gossip-driven; one signed anchor opens three conversations
-- Coffee+ photo/video content is a saturated creator category → easy creator supply
-- Coffee+ has short decision cycles — walk in Tuesday, sign Friday
-- AOV $8+ makes the $40/customer economics self-evident to the owner
+1. **Instagram location tags**
+   - Search: "[Neighborhood]" (e.g., "Williamsburg")
+   - Filter: Recent, Most liked
+   - Look for creators who tag the location in food/beauty posts
 
-### The v5.1 Walk-In Pitch (Week 1–3)
+2. **Hashtag search**
+   - #[neighborhood]eats (e.g., #williamsburgeats)
+   - #[neighborhood]food, #[neighborhood]beauty
+   - #food, #foodblog filtered by location tag
 
-**Timing:** Tuesday, Wednesday, Thursday, 2–4pm
+3. **Local business mention search**
+   - Find 5 popular shops
+   - Look at who's tagged them or mentioned them
+   - Check those creators' engagement
 
-**Step 1 — Enter, order a signature item**
-- Order something signature (e.g., a pour-over + pastry). Pay normally. Tip.
+4. **TikTok (growing pool)**
+   - Same hashtags
+   - Look at trending sounds / creator categories in the neighborhood
+   - TikTok creators often have higher engagement than IG
 
-**Step 2 — Observe while waiting**
-- Is the barista or owner in? Is the shop photogenic? Any existing Instagram tagging from customers?
+**Capture for each creator:**
+- Handle (Instagram + TikTok if both)
+- Follower count
+- Engagement rate (likes + comments / followers; target > 3%)
+- Recent posts (quality, consistency, visual style)
+- Location tags (do they post locally?)
+- Bio (do they mention being local or food-focused?)
 
-**Step 3 — Ask for the owner**
-> "Hey — is the owner around? I have a customer-acquisition idea I'd love to run by them. Won't take more than five minutes."
+### DM Pitch Script
 
-**Step 4 — The pitch (60 seconds, v5.1 voice)**
+**Goal:** Get them to click the link and signup.
 
-> "Hey [name], thanks for [the pour-over and the cardamom bun]. I run Push — we build Vertical AI for Local Commerce. You tell us how many customers you need this month; our system (we call it ConversionOracle) matches local creators, brings customers in, and verifies every single one with location + photo + receipt before you pay.
+**Timing:** DM during their active hours (check their story frequency; if they post 2x/day, afternoon is good).
+
+#### Script Template
+
+> "Hey [name]! Love your posts at [specific shop/neighborhood]. Launching Push — we connect creators like you with local shops for paid campaigns. Just matched [X other creators] with some cool places. [X] spots open. Interested?
 >
-> First ten customers are free — that's our Pilot. $1 LOI upfront, 60-day commitment, and we get to publish a case study if it works. After the Pilot, it's $500 a month plus $40 per verified customer. No verified customers in a given month, no charge beyond the $500 floor. Sey Coffee just signed on. Want to be next?"
+> [link to creator signup]"
 
-**Key v5.1 talking points:**
-- "Vertical AI for Local Commerce" — specific product category, not a generic SaaS or two-sided platform
-- "ConversionOracle" — named AI system that does verification + matching
-- "Tell us how many customers you need" — outcome-first onboarding
-- "Verify every single one with location + photo + receipt" — Day-1 verification is the differentiator
-- "First ten customers are free, $1 LOI, 60-day commitment" — the Pilot Economics Framework in one breath
-- "$500/mo + $40/customer" — concrete, not vague
-- "Sey Coffee just signed on" — social proof from the first anchor
+**Why this works:**
+- Specific callout ("your posts at [shop]") = personalized, not spam
+- Social proof ("[X] other creators") = legitimate, not just you
+- FOMO ("[X] spots open") = scarcity
+- Link first, ask second = low friction
+- Casual tone = friendly, not corporate
 
-**Step 5 — Handle objections**
+#### Variations by Creator Type
 
-| Objection | v5.1 Response |
-|-----------|---------------|
-| "I don't have time." | "You literally approve the campaign goal once. ConversionOracle handles matching, verification, and DisclosureBot generates the compliant disclosure copy. You see a weekly ROI email." |
-| "How much does it cost?" | "Pilot is $0 for the first 10 verified customers, with a $1 LOI. After that, $500/mo minimum + $40/customer. If you get 0 customers in a month, you pay only the $500 floor. If you get 50, it's $500 + $2,000." |
-| "Why the $1 LOI?" | "Legally binding 60-day commitment so we both take it seriously, plus permission to publish a case study if it works. $1 keeps it symbolic — the real cost is time." |
-| "I've tried influencers before." | "We don't do influencers. ConversionOracle matches local creators who already post about Williamsburg Coffee+, verifies with QR + photo + geo + receipt, and you pay per verified customer. DisclosureBot keeps every post FTC-compliant. It's structurally different." |
-| "How do I know the customer is real?" | "Every scan runs through ConversionOracle — Claude Vision for photo match, OCR for receipt match, geo check for location match, anti-fraud for duplicates. Typical false-positive rate is under 2%." |
-| "What if it doesn't work?" | "Day-30 auto-terminate — if we haven't delivered 5 verified customers in 30 days, the Pilot ends cleanly. No lock-in beyond the 60-day window in the LOI." |
-| "Let me think about it." | "Totally. Can I text you the pilot one-pager plus the $1 LOI and check in Friday? No pressure." |
+**For food bloggers (most common):**
+> "Saw your post about [popular local spot]. We're connecting food creators like you with local restaurants for paid campaigns. Just signed up [X] creators from [neighborhood]. Interested? [link]"
 
-**Step 6 — Get the sign**
-- Warm: "Cool, what's the best email for you? I'll send the pilot agreement + $1 LOI tonight."
-- Hesitant: "No pressure — want me to send the one-pager and follow up Friday?"
-- Hard no: "Appreciate the time. If you ever want to see what the Williamsburg dashboard looks like, I'll text you the link when it's public next month."
+**For lifestyle/beauty creators:**
+> "Love your beauty content and how you feature [neighborhood]. Launching Push for local creators. Matched with some great independent shops. Want in? [link]"
 
-### Green / Yellow / Red Signals
+**For very large creators (50K+):**
+> "Hey [name], big fan of your work. We're running a local campaign with [premium shop/brand] in [neighborhood]. Normally we work with micro/mid-size creators, but we think you'd be great. [X]$/campaign. Interested? [link]"
 
-**Green (sign this week):**
-- "Which other shops have you talked to?"
-- "Show me what Sey's campaign looked like."
-- "Can the first one start next week?"
-- Asks about dashboard, reporting, ConversionOracle, or DisclosureBot in depth.
+### Creator Signup Form (Week 3)
 
-**Yellow (work the follow-up):**
-- "Interesting, but I'd need to check with my partner."
-- "We already work with a PR firm / marketing person."
-- "Our Instagram isn't really active."
+**Keep it short (3 min max). Ask:**
 
-**Red (pass and move on):**
-- "We're a chain, I'm just the manager."
-- "We don't do anything digital."
-- "We tried something like this; didn't work."
-
-### Merchant Conversion Targets (v5.1)
-
-| Phase | Conversations | Signs (cumulative) |
-|-------|---------------|---------------------|
-| Week 1 | 3 anchors (Sey, Devocion, Partners) | 1 signed with $1 LOI |
-| Week 2 | — | 3 signed with $1 LOI |
-| Week 3 | 12 cold walk-ins | 10 signed |
-| Week 4 | (fill-ins) | 10 confirmed live |
-| Week 9–12 | (referral flywheel) | 10 + Greenpoint discovery |
-| Week 13–20 | Greenpoint + Bushwick | 25+ total |
-
-Walk-in → sign conversion target: **40%** in Williamsburg Coffee+. Pilot-to-Paid target: **60%+** by Week 12.
-
-### Merchant Feedback & Retention (Week 5+)
-
-**After first 10 verified customers delivered:**
-
-Email template (Pilot-to-Paid flip, Operator plan):
-> Hi [name],
->
-> Your Pilot is complete — we delivered **[N] verified customers** to [shop] between [date] and [date]. Average cost to you so far: $0 (plus the $1 LOI).
->
-> Starting [next month], you'll move to the Operator plan: $500/mo base + $40/verified customer. Based on this month, that would have been [$500 + N × $40 = $X].
->
-> I've attached your ROI statement. Want to keep going? Reply "yes" and we'll keep the campaign calendar rolling.
-
-**Monthly ROI statement (auto-generated):**
-- Verified customers delivered
-- Cost to merchant (base + per-customer)
-- Estimated customer LTV (industry benchmark + repeat-visit tracking)
-- Published dashboard link
-
-### Referral Flywheel (Week 9+)
-
-Email to happy merchants:
-> Hey [name], a couple other Williamsburg Coffee+ shops have asked who you're working with on customer acquisition. Would you be open to introducing us? First-month floor is waived for anyone you refer, and we'll send you a $100 gift card for every intro that signs.
-
-Why 70% conversion on referrals:
-- Coffee+ owners trust Coffee+ owners
-- We've got public numbers on `/neighborhoods/williamsburg-coffee` they can point to
-- The intro is warm and outcome-anchored
-
----
-
-## Creator Acquisition (Williamsburg Coffee+ Creators)
-
-### Target Profile (v5.1)
-
-**Williamsburg-local creator** who posts about coffee / bakery / brunch or café culture, with:
-- 1K–5K Instagram followers (micro-tier)
-- Engagement rate > 3%
-- Posts geo-tagged to 11211 / 11206 / 11249 regularly
-- Coffee+ content (coffee, pastry, brunch, café settings) in past 60 days
-
-**Why micro + local:**
-- Micro-tier creators have higher conversion and closer community
-- Local = authentic; followers actually live/visit Williamsburg
-- Coffee+ vertical specialization means Push Score compounds (category_affinity signal)
-
-### Creator Scouting Playbook (Week 1 onward)
-
-**Channel 1 — Instagram geo + hashtag search:**
-- Search: `coffee Williamsburg`, `williamsburgcoffee`, `brooklyncoffee`, `brunchbrooklyn` + filter 1K–5K followers
-- Check geotagged posts at Sey / Devocion / Partners — who's already posting about these shops?
-- Capture: handle, follower count, engagement rate, last 3 Coffee+ posts (quality 1–5)
-
-**Channel 2 — Coffee+ shop manager recommendation:**
-- After each signed merchant, ask manager: "Any regulars here who post great Instagram content about your shop? We'd love to meet them."
-- Expect 2–3 recommendations per shop
-- Warm intro conversion: ~60%
-
-**Channel 3 — BKC / NYC creator Discord + Slack:**
-- Post in Brooklyn Creator Collective, NYC Food Creators channels
-- Low volume, high quality (pre-filtered community)
-
-### DM Pitch Script (v5.1 voice)
-
-**Cold DM template:**
-
-> Hey [name] — saw your post at [specific shop, e.g., Sey Coffee] last week. Super clean frame.
->
-> I run Push — we build Vertical AI for Local Commerce, and we match local coffee creators with Williamsburg Coffee+ shops for paid campaigns. Our system (ConversionOracle) verifies every customer we bring in with photo + receipt + location, so shops pay you based on real results. DisclosureBot generates the FTC-compliant copy so you never have to worry about disclosure rules.
->
-> First campaign: $20 base + 3% of verified customers (during merchant's Pilot we run at 70% — usually $35–55 per campaign; once the merchant flips to Paid, full rate kicks in and it's $50–80 per campaign). You free this week? [link]
-
-**Why this works (v5.1):**
-- Specific shop reference proves it's not spam
-- "Local coffee creators" + "Coffee+" — clear category, no ambiguity
-- "ConversionOracle verifies every customer" — signals legitimate platform, not influencer farm
-- "DisclosureBot handles FTC copy" — addresses a real creator pain point
-- Concrete payout numbers with the Pilot-vs-Paid distinction upfront (no surprises on payday)
-- Low ask — link + timing
-
-### Creator Signup Form (v5.1)
-
-Keep it ≤ 3 minutes. Ask:
 1. Name
 2. Email
-3. Instagram handle + follower count
-4. Phone (for SMS campaign alerts)
-5. "Which Williamsburg ZIPs do you frequent?" (checkboxes: 11211 / 11206 / 11249)
-6. "Categories you post about?" (coffee, bakery, brunch, café, lifestyle, other)
-7. "Preferred payout method?" (Venmo, Zelle, Stripe Connect when live)
-8. "Can you do a campaign in the next 14 days?" (yes / no)
-9. Acknowledge 70%-Pilot-rate clause (yes / no)
+3. Phone (optional, for direct outreach)
+4. Instagram handle + follower count
+5. TikTok handle (if applicable)
+6. "Which neighborhood(s) do you feature most?" (text field)
+7. "How often can you post? (daily / 3x/week / 1x/week / monthly)"
+8. "What's your preferred payment method?" (Venmo, Zelle, direct deposit, PayPal)
+9. "Any categories you won't feature?" (optional)
+10. "Ready to start?" (Yes, I want to see available campaigns)
 
-Post-signup auto-email: welcome + 3-step explainer + link to available campaigns.
+**Post-signup:** Immediate email with:
+- Welcome message
+- How it works (3-step explainer)
+- Link to campaign feed
+- "First campaign ready? Check available campaigns and apply."
 
-### Creator Pitch Funnel (v5.1)
+### Creator Pitch Funnel
 
-| Stage | Conversion | Notes |
-|-------|------------|-------|
-| DM sent → opens | 35% | Specific reference helps |
-| Opens → signups | 18% | Lower than v4 because we gate on Coffee+ category |
-| Signups → applied to first campaign | 70% | FOMO + clear payout |
-| Applied → accepted | 80% | Push Score + category affinity filter |
-| Accepted → completed | 90% | Fast payout loyalty |
-| **Full funnel** | 10 DMs → 3.5 opens → ~0.6 signups → ~0.4 applied → ~0.3 completed |
+**Stage 1: DM → Signup**
+- Expected conversion: 15–20% (150 DMs → 25 signups)
+- Why low? Cold DM, skeptical, no brand awareness
 
-Target: 150 DMs per week yields ~5 completed first-time campaigns (Week 1–4).
+**Stage 2: Signup → Apply to Campaign**
+- Expected conversion: 60% (25 signups → 15 applications)
+- Why? Email nurture, clear CTAs, FOMO from seeing campaigns
 
-### Payout & Retention (v5.1)
+**Stage 3: Application → Approval**
+- Expected conversion: 100% (15 applications → 15 accepted) — but you filter for fit
+- You decline if: doesn't fit merchant brand, low engagement rate, not local
+- Expected: 12–13 final approvals
 
-**24-hour payout rule:**
-- Every verified campaign pays within 24h (Venmo / Zelle, later Stripe Connect)
-- During the merchant's Pilot: 70% rate; once merchant flips to Paid: full rate
-- "Payment sent to [Venmo]. Thanks for Sey's shot last night."
+**Stage 4: Approval → Completion**
+- Expected conversion: 80–90% (13 → 10–12 completed)
+- Why some don't? Forgot, got busy, life happened
+- Recovery: Day-of reminder
 
-**Push Score visibility (Week 5+):**
-- Creator profile shows live Push Score, tier, next-tier distance
-- Category affinity signal boosts Coffee+-specific creators
+**Full funnel:** 150 DMs → 25 signups → 15 apps → 12 approved → 10 completed
 
-**Repeat outreach:**
-- "Hey [name], new Williamsburg Coffee+ campaign matches your style. Want first look?"
-- Link + 24h accept window
+### Creator Feedback & Retention
 
-### Creator Retention Mechanisms
+**After each campaign:**
 
-- **Limited seats:** "Only 3 creators on this Devocion campaign. Apply by EOD."
-- **Standby queue:** "You were #4 for Sey. Partners Coffee campaign opened today — you fit."
-- **Tier progression:** "You hit Operator after this campaign. Unlock: 3% commission + $15 bonus @ 30 transactions."
-- **Fast payouts:** sub-24h payout is the retention lever we control directly.
-- **Non-portable score:** "Your Push Score of 71 was built over 12 Williamsburg Coffee+ campaigns — drop a tier and it takes 30-day grace to recover."
+1. **Quick feedback survey** (1 min, in DM)
+   - "How was it? 1–5"
+   - "Any issues?"
+   - "Want to do another?"
+
+2. **Fast payout** (< 24 hours)
+   - Send to their preferred method immediately
+   - "Payment sent to [Venmo]. Thanks for the great content!"
+
+3. **Share results** (if they ask)
+   - Post reach
+   - Engagement
+   - Merchant feedback ("Shop owner loved your vibe!")
+
+4. **Repeat opportunity** (next week)
+   - "We have 3 new campaigns this week. Want to see them?"
+   - Link to available campaigns
+   - Personalized: "We matched you with [shop] because..."
+
+### Creator Scoring — Push Score (Week 7+)
+
+Once creators have 2+ campaigns, activate the v4.1 Push Score system (0–100 scale):
+
+**Push Score Dimensions:**
+
+| Dimension | Weight | What It Measures |
+|-----------|--------|-----------------|
+| **Completion** (承诺力) | 30% | Campaigns completed ÷ accepted |
+| **Quality** (内容力) | 25% | Average merchant content rating |
+| **Reliability** (靠谱度) | 20% | On-time submission rate |
+| **Merchant Satisfaction** (商家心水度) | 15% | Average merchant satisfaction rating |
+| **Engagement** (影响力) | 10% | Audience engagement rate (capped) |
+
+**6-Tier System (v4.1):**
+- **Seed** (score < 40): Free product only, 1 concurrent campaign
+- **Explorer** (40+): $12/campaign base, 2 concurrent campaigns
+- **Operator** (55+): $20/campaign + 3% commission + $15 milestone bonus @ 30 txns
+- **Proven** (65+): $32/campaign + 5% commission + $30 milestone bonus @ 40 txns
+- **Closer** (78+): $55/campaign + 7% commission + $50 milestone bonus @ 60 txns
+- **Partner** (88+): $100/campaign + 10% commission + $80 milestone bonus @ 80 txns
+
+**Seed Upgrade:** Complete 2 campaigns + score ≥ 40 → Explorer (+ $5 cash bonus on 2nd completion)
+
+**Visibility:**
+- Display Push Score on creator profile in admin dashboard
+- Show score + tier to merchants (social proof)
+- Show score + next-tier distance to creator (motivation to improve)
+
+### Creator Retention Mechanisms (Psychological)
+
+**Limited seats (FOMO):** "Only 2 spots left for this campaign. Apply now."
+
+**Standby queue (near-miss):** "You were #4 in standby for [campaign]. Here's another opportunity that fits your style."
+
+**Tier progression (growth narrative):** "You've reached Operator! You now unlock commission + milestone bonus."
+
+**Fast payouts (instant gratification):** Payout within 4 hours, not 24.
+
+**Non-portable score (loss aversion):** "Your Push Score is 71, built over 12 campaigns. Dropping tier means 30-day grace window and lower commission."
+
+**Social proof:** "You + 8 other creators are featured on [shop]'s Instagram. Check it out!"
+
+**Direct messaging:** "Hey [name], you crushed your last 3 campaigns. We have a new merchant coming in (upscale coffee roastery) and think you'd be perfect. Want first dibs?"
 
 ---
 
-## Acquisition Metrics (v5.1 targets)
+## Acquisition Metrics to Track
 
-### Merchant Side
+### Merchant Acquisition
 
-| Metric | Week 4 target | Week 12 target |
-|--------|---------------|----------------|
-| Williamsburg Coffee+ merchants live | 10 | 10 (saturated) |
-| Walk-in → sign conversion | 40% | — |
-| Cost per merchant signed | < $25 | < $25 |
-| Pilot-to-Paid conversion | — | 60%+ |
-| Per-neighborhood Pilot spend | — | ≤ $4,200 cap |
-| Merchant NPS | — | > 7/10 |
+| Metric | Target | Status |
+|--------|--------|--------|
+| Conversations per week | 15 | |
+| Conversion rate (conversations → soft commit) | 53% | |
+| Soft commit to campaign start | 80% in 1 week | |
+| Cost per merchant | < $50 | |
+| Merchant repeat rate (by week 8) | 30%+ | |
 
-### Creator Side
+### Creator Acquisition
 
-| Metric | Week 4 target | Week 12 target |
-|--------|---------------|----------------|
-| Creators signed (Williamsburg) | 20 | 30 |
-| DM → signup conversion | 18% | 20%+ |
-| Creator completion rate | 80% | 85%+ |
-| 24h payout success rate | 100% | 100% |
-| Creator NPS | — | > 7/10 |
+| Metric | Target | Status |
+|--------|--------|--------|
+| DMs per week | 150 | |
+| DM-to-signup conversion | 15–20% | |
+| Signup-to-application conversion | 60% | |
+| Application-to-approval conversion | 80% | |
+| Final completion rate | 80% | |
+| Cost per creator completed | $40–60 (payout) | |
+| Creator repeat rate (by week 8) | 60%+ | |
 
 ### Cohort Analysis (Week 8 retrospective)
 
-**Merchant cohort (Week 1–4 signups):**
-- How many crossed 10 verified customers?
-- How many flipped from Pilot to Paid?
-- How many triggered the day-30 auto-terminate clause?
-- Time from Pilot start to Paid flip (target < 4 weeks)
+**Merchant cohort:**
+- Batch 1 (Week 2 signups): How many ran 2+ campaigns?
+- Batch 2 (Week 4–6 signups): How many ran any campaign?
+- Repeat rate by category (café vs dessert vs beauty)
 
-**Creator cohort (Week 1–4 signups):**
-- Completion rate on first campaign
-- Completion rate on second campaign
-- Push Score average by cohort
+**Creator cohort:**
+- Batch 1 (Week 3 signups): What % completed first campaign? Second?
+- Batch 2 (Week 5–7 signups): Completion rate?
+- Completion rate by follower tier (micro vs mid vs macro)
 
-**What to watch:**
-- If creators from manager-recommended channel out-perform cold-DM creators: bias channel spend
-- If first-week signed merchants have faster Pilot-to-Paid flip than Week 3 signed: anchor effect is real, invest in anchor-first strategy for Greenpoint
-- If Pilot-to-Paid sits below 60%: the Neighborhood Playbook is mis-matched, fix before Greenpoint launch
-
----
-
-## Quick Reference: Week-by-Week Acquisition Goals (v5.1)
-
-| Week | Merchants | Creators | Campaigns | SLR |
-|------|-----------|----------|-----------|-----|
-| Week 1 | 3 anchor conversations | 10 DM'd | — | 3–5 |
-| Week 2 | 3 anchors signed ($1 LOI) | 10 signed | — | 3–5 |
-| Week 3 | 10 merchants live | 20 signed | Sey × 5 prepped | 6 |
-| Week 4 | (10 confirmed live) | (20) | First campaign live + 10 verified for Sey | 6 |
-| Week 5–6 | — | — | 20 active campaigns | toward 8 |
-| Week 7–8 | — | — | 3 case studies drafted | 8 |
-| Week 9–10 | — | — | 60%+ Pilot-to-Paid | toward 10 |
-| Week 11–12 | Start Greenpoint discovery | — | 3 case studies published | 10 |
-| Week 13–16 | +8 Greenpoint (new $4,200 cap) | +12 Greenpoint creators | Greenpoint campaigns live | toward 15 |
-| Week 17–20 | +8 Bushwick (new $4,200 cap) | — | 25+ merchants total | 15 |
+**Insights:**
+- If micro-creators out-perform macro: focus DMs on micro, pay slightly more
+- If café merchants have 50% repeat and beauty has 20%: double down on cafés
+- If early adopters (Week 2) have 80% repeat but Week 6 have 20%: scouting quality degraded, tighten criteria
 
 ---
 
-## What We Explicitly Don't Do (v5.1)
+## Quick Reference: Week-by-Week Acquisition Goals
 
-- **Not running dessert, beauty, or non-Coffee+ outreach.** Coffee+ only until Greenpoint + Bushwick prove out.
-- **Not expanding to LES, Astoria, Bed-Stuy, Manhattan, LA, SF.** Williamsburg → Greenpoint → Bushwick is the only path through Week 20.
-- **Not running paid ads for merchant acquisition.** Walk-in + referral only.
-- **Not pitching "SaaS subscription" or generic "customer acquisition."** Always pitch "Vertical AI for Local Commerce" with ConversionOracle + DisclosureBot named.
-- **Not dropping the $500/mo Operator floor.** It's the base, not a negotiable.
-- **Not running unverified campaigns.** Every customer flows through ConversionOracle (Claude Vision + OCR + geo) before payout.
-- **Not skipping the $1 LOI.** No signed LOI, no Pilot.
-- **Not exceeding the $4,200 per-ZIP Pilot cap.** Cap breach = Neighborhood Playbook bug; fix before spending more.
-- **Not overriding the day-30 auto-terminate.** Below 5 verified customers at day 30 = clean termination, no extensions.
+| Week | Merchants | Creators | Campaigns |
+|------|-----------|----------|-----------|
+| Week 2 | 8 soft commits | — | — |
+| Week 3 | 5 first campaigns | 20 signups | 5 campaigns live |
+| Week 4 | 5 confirmed | 25 creators | 5 campaigns running |
+| Week 5–6 | (continue outreach) | (continue DMs) | 10–15 campaigns |
+| Week 7–8 | 10 total | 30+ total | 20+ campaigns |
+| Week 9–10 | 15 total | 40+ total | 25+ campaigns |
+| Week 11–12 | (referrals active) | (tier system active) | 25+ total, 2–3 paid |

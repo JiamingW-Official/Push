@@ -203,12 +203,12 @@
   transition: width 0.5s ease-out;
 }
 
-.tier-progress--seed     { background-color: #b8a99a; }
-.tier-progress--explorer { background-color: #8c6239; }
-.tier-progress--operator { background-color: #4a5568; }
+.tier-progress--seed     { background-color: var(--tier-seed); }
+.tier-progress--explorer { background-color: var(--tier-explorer); }
+.tier-progress--operator { background-color: var(--tier-operator); }
 .tier-progress--proven   { background-color: #c9a96e; }
-.tier-progress--closer   { background-color: #9b111e; }
-.tier-progress--partner  { background-color: #1a1a2e; }
+.tier-progress--closer   { background-color: var(--tier-closer); }
+.tier-progress--partner  { background-color: var(--tier-partner); }
 
 
 /* ==========================================================================
@@ -217,31 +217,31 @@
    Apply to the <svg> or wrapping element; set stroke="var(--ring-fill)" in SVG.
    ========================================================================== */
 
-.ring--seed     { --ring-fill: #b8a99a; }
-.ring--explorer { --ring-fill: #8c6239; }
-.ring--operator { --ring-fill: #4a5568; }
+.ring--seed     { --ring-fill: var(--tier-seed); }
+.ring--explorer { --ring-fill: var(--tier-explorer); }
+.ring--operator { --ring-fill: var(--tier-operator); }
 .ring--proven   { --ring-fill: #c9a96e; }
-.ring--closer   { --ring-fill: #9b111e; }
-.ring--partner  { --ring-fill: #1a1a2e; }
+.ring--closer   { --ring-fill: var(--tier-closer); }
+.ring--partner  { --ring-fill: var(--tier-partner); }
 
 /* Convenience: direct stroke override for inline SVG children */
 .ring--seed     > svg circle,
-.ring--seed     > svg path     { stroke: #b8a99a; }
+.ring--seed     > svg path     { stroke: var(--tier-seed); }
 
 .ring--explorer > svg circle,
-.ring--explorer > svg path     { stroke: #8c6239; }
+.ring--explorer > svg path     { stroke: var(--tier-explorer); }
 
 .ring--operator > svg circle,
-.ring--operator > svg path     { stroke: #4a5568; }
+.ring--operator > svg path     { stroke: var(--tier-operator); }
 
 .ring--proven   > svg circle,
 .ring--proven   > svg path     { stroke: #c9a96e; }
 
 .ring--closer   > svg circle,
-.ring--closer   > svg path     { stroke: #9b111e; }
+.ring--closer   > svg path     { stroke: var(--tier-closer); }
 
 .ring--partner  > svg circle,
-.ring--partner  > svg path     { stroke: #1a1a2e; }
+.ring--partner  > svg path     { stroke: var(--tier-partner); }
 
 
 /* ==========================================================================
@@ -352,18 +352,18 @@
 }
 
 .tier-stamp--seed {
-  border-color: #b8a99a;
+  border-color: var(--tier-seed);
   color:        #7a6b5d;
 }
 
 .tier-stamp--explorer {
-  border-color: #8c6239;
-  color:        #8c6239;
+  border-color: var(--tier-explorer);
+  color:        var(--tier-explorer);
 }
 
 .tier-stamp--operator {
-  border-color: #4a5568;
-  color:        #4a5568;
+  border-color: var(--tier-operator);
+  color:        var(--tier-operator);
 }
 
 .tier-stamp--proven {
@@ -372,13 +372,13 @@
 }
 
 .tier-stamp--closer {
-  border-color: #9b111e;
-  color:        #9b111e;
+  border-color: var(--tier-closer);
+  color:        var(--tier-closer);
 }
 
 .tier-stamp--partner {
   border-color: #b8860b;
-  color:        #1a1a2e;
+  color:        var(--tier-partner);
   animation:    shimmer-gold 2.4s ease-in-out infinite;
 }
 

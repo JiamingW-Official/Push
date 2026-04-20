@@ -237,7 +237,7 @@
 .lb-tier-chip--explorer.lb-tier-chip--active { background: #8c6239; border-color: #8c6239; color: #fff; }
 .lb-tier-chip--operator.lb-tier-chip--active { background: #4a5568; border-color: #4a5568; color: #fff; }
 .lb-tier-chip--proven.lb-tier-chip--active   { background: #c9a96e; border-color: #c9a96e; color: var(--dark); }
-.lb-tier-chip--closer.lb-tier-chip--active   { background: #9b111e; border-color: #9b111e; color: #fff; }
+.lb-tier-chip--closer.lb-tier-chip--active   { background: var(--tier-closer); border-color: var(--tier-closer); color: #fff; }
 .lb-tier-chip--partner.lb-tier-chip--active  { background: #1a1a2e; border-color: #1a1a2e; color: #fff; }
 
 /* ── Podium — Top 3 ───────────────────────────────────────── */
@@ -489,7 +489,7 @@
 .lb-tier-badge--explorer { background: #8c6239; color: #fff; }
 .lb-tier-badge--operator { background: #4a5568; color: #fff; }
 .lb-tier-badge--proven   { background: #c9a96e; color: var(--dark); }
-.lb-tier-badge--closer   { background: #9b111e; color: #fff; }
+.lb-tier-badge--closer   { background: var(--tier-closer); color: #fff; }
 .lb-tier-badge--partner  { background: #1a1a2e; color: #fff; border-left: 3px solid var(--primary); }
 
 /* Score, visits, earnings, delta cells */
@@ -541,7 +541,7 @@
   gap: 2px;
 }
 
-.lb-delta--up   { color: #10b981; }
+.lb-delta--up   { color: var(--success); }
 .lb-delta--down { color: var(--primary); }
 .lb-delta--flat { color: var(--text-muted); }
 

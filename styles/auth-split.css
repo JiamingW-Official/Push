@@ -1,5 +1,5 @@
 /* ============================================================
-   Auth Split Layout — shared by login + signup pages
+   Creator Signup — Split-panel layout (Design.md: Login Page)
    ============================================================ */
 
 .page {
@@ -23,15 +23,15 @@
   overflow: hidden;
 }
 
-/* Dot-grid texture overlay */
+/* Radial ambient highlight top-right */
 .brand-panel::before {
   content: '';
   position: absolute;
-  inset: 0;
-  background-image:
-    radial-gradient(ellipse at top right, rgba(102,155,188,0.10) 0%, transparent 65%),
-    radial-gradient(circle, rgba(245,242,236,0.055) 1px, transparent 1px);
-  background-size: 100% 100%, 28px 28px;
+  top: -5%;
+  right: -10%;
+  width: 70%;
+  height: 60%;
+  background: radial-gradient(ellipse at top right, rgba(102,155,188,0.09) 0%, transparent 70%);
   pointer-events: none;
   z-index: 0;
 }
@@ -272,32 +272,13 @@
   color: var(--text-muted);
 }
 
-/* Submit button — 56px height, shimmer on hover */
+/* Submit button */
 .submit-btn {
   width: 100%;
   justify-content: center;
   margin-top: var(--space-2);
-  padding-block: 0;
-  height: 56px;
+  padding-block: var(--space-2);
   font-size: var(--text-body);
-  position: relative;
-  overflow: hidden;
-}
-
-/* Shimmer sweep overlay */
-.submit-btn::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.18) 50%, transparent 60%);
-  transform: translateX(-120%);
-  transition: transform 0s;
-  pointer-events: none;
-}
-
-.submit-btn:hover::after {
-  transform: translateX(120%);
-  transition: transform 600ms ease;
 }
 
 /* Error / success banners */
@@ -337,34 +318,24 @@
 }
 
 /* ------------------------------------------------------------
-   Responsive — stack vertically on small screens
+   Responsive
    ------------------------------------------------------------ */
 @media (max-width: 768px) {
   .page {
     grid-template-columns: 1fr;
-    /* Brand panel slides in from top, form panel below */
   }
 
   .brand-panel {
     position: static;
     height: auto;
+    padding: var(--space-6) var(--space-3);
     min-height: auto;
-    padding: var(--space-6) var(--space-5);
-    /* Shrink ghost PUSH on mobile */
-  }
-
-  .brand-panel::after {
-    font-size: clamp(80px, 22vw, 140px);
   }
 
   .brand-stats { display: none; }
 
-  .brand-top {
-    gap: var(--space-5);
-  }
-
   .form-panel {
-    padding: var(--space-6) var(--space-5);
+    padding: var(--space-6) var(--space-3);
     align-items: flex-start;
   }
 
@@ -376,11 +347,11 @@
 /* Phone — compact brand header, full form focus */
 @media (max-width: 480px) {
   .brand-panel {
-    padding: var(--space-4) var(--space-3);
+    padding: var(--space-3) var(--space-2);
   }
 
   .brand-headline {
-    font-size: clamp(28px, 8vw, 40px);
+    display: none; /* remove tall headline — tagline + logo enough */
   }
 
   .brand-tagline {
@@ -389,6 +360,6 @@
   }
 
   .form-panel {
-    padding: var(--space-5) var(--space-3);
+    padding: var(--space-5) var(--space-2);
   }
 }

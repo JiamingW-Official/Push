@@ -61,6 +61,7 @@ const EXTENDED_NOTIFICATIONS: SystemNotif[] = [
   {
     id: "sys-c-001",
     role: "creator",
+    type: "system",
     title: "Payment received",
     body: "$120.00 payout from Brow Theory campaign processed.",
     href: "/creator/wallet",
@@ -72,6 +73,7 @@ const EXTENDED_NOTIFICATIONS: SystemNotif[] = [
   {
     id: "sys-c-002",
     role: "creator",
+    type: "system",
     title: "Application accepted",
     body: "Your application to Roberta's Summer campaign was accepted.",
     href: "/creator/dashboard",
@@ -82,6 +84,7 @@ const EXTENDED_NOTIFICATIONS: SystemNotif[] = [
   {
     id: "sys-c-003",
     role: "creator",
+    type: "system",
     title: "Deadline in 3 days",
     body: "Flamingo Estate shoot deadline is Friday 5pm.",
     href: "/creator/campaigns",
@@ -93,6 +96,7 @@ const EXTENDED_NOTIFICATIONS: SystemNotif[] = [
   {
     id: "sys-c-004",
     role: "creator",
+    type: "system",
     title: "Push Score updated",
     body: "Your Push Score increased by 3 points — now 87.",
     href: "/creator/profile",
@@ -103,6 +107,7 @@ const EXTENDED_NOTIFICATIONS: SystemNotif[] = [
   {
     id: "sys-c-005",
     role: "creator",
+    type: "system",
     title: "New campaign match",
     body: "Fort Greene Coffee matches your profile — $55 base payout.",
     href: "/creator/dashboard",
@@ -113,6 +118,7 @@ const EXTENDED_NOTIFICATIONS: SystemNotif[] = [
   {
     id: "sys-c-006",
     role: "creator",
+    type: "system",
     title: "Wallet withdrawal processed",
     body: "$240 transferred to your bank account ending 4521.",
     href: "/creator/wallet",
@@ -124,6 +130,7 @@ const EXTENDED_NOTIFICATIONS: SystemNotif[] = [
   {
     id: "sys-c-007",
     role: "creator",
+    type: "system",
     title: "Campaign completed",
     body: "Brow Theory Spring campaign marked complete. Great work!",
     href: "/creator/campaigns",
@@ -136,6 +143,7 @@ const EXTENDED_NOTIFICATIONS: SystemNotif[] = [
   {
     id: "sys-c-008",
     role: "creator",
+    type: "system",
     title: "Tier upgrade available",
     body: "You're 2 campaigns away from Operator tier — higher payouts unlock.",
     href: "/creator/profile",
@@ -146,6 +154,7 @@ const EXTENDED_NOTIFICATIONS: SystemNotif[] = [
   {
     id: "sys-c-009",
     role: "creator",
+    type: "system",
     title: "Content flagged for review",
     body: "Your post for Fort Greene was flagged for minor compliance check.",
     href: "/creator/campaigns",

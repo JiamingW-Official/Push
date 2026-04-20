@@ -22,7 +22,6 @@ type CreatorTier =
 type Creator = {
   id: string;
   name: string;
-  email?: string;
   instagram_handle?: string;
   tiktok_handle?: string;
   location?: string;
@@ -36,9 +35,6 @@ type Creator = {
   earnings_pending: number;
   instagram_followers?: number;
   tiktok_followers?: number;
-  walkins_total?: number;
-  rating?: number;
-  niches?: string[];
 };
 
 // ── Demo helpers ─────────────────────────────────────────────────────────────
@@ -51,7 +47,6 @@ function checkDemoMode(): boolean {
 const DEMO_CREATOR: Creator = {
   id: "demo-creator-001",
   name: "Alex Chen",
-  email: "alex@example.com",
   instagram_handle: "alexcheneats",
   tiktok_handle: "",
   location: "Lower East Side NYC",
@@ -65,9 +60,6 @@ const DEMO_CREATOR: Creator = {
   earnings_pending: 0,
   instagram_followers: 4200,
   tiktok_followers: 0,
-  walkins_total: 87,
-  rating: 4.2,
-  niches: ["Food", "Coffee", "Brooklyn", "Lifestyle"],
 };
 
 // ── Tier config ───────────────────────────────────────────────────────────────
@@ -76,6 +68,7 @@ const TIER_CONFIG: Record<
   CreatorTier,
   {
     label: string;
+    emoji: string;
     minScore: number;
     maxScore: number;
     nextTier: CreatorTier | null;
@@ -84,6 +77,7 @@ const TIER_CONFIG: Record<
 > = {
   seed: {
     label: "Seed",
+    emoji: "",
     minScore: 0,
     maxScore: 39,
     nextTier: "explorer",
@@ -91,6 +85,7 @@ const TIER_CONFIG: Record<
   },
   explorer: {
     label: "Explorer",
+    emoji: "",
     minScore: 40,
     maxScore: 54,
     nextTier: "operator",
@@ -98,6 +93,7 @@ const TIER_CONFIG: Record<
   },
   operator: {
     label: "Operator",
+    emoji: "",
     minScore: 55,
     maxScore: 64,
     nextTier: "proven",
@@ -105,6 +101,7 @@ const TIER_CONFIG: Record<
   },
   proven: {
     label: "Proven",
+    emoji: "",
     minScore: 65,
     maxScore: 77,
     nextTier: "closer",
@@ -112,6 +109,7 @@ const TIER_CONFIG: Record<
   },
   closer: {
     label: "Closer",
+    emoji: "",
     minScore: 78,
     maxScore: 87,
     nextTier: "partner",
@@ -119,6 +117,7 @@ const TIER_CONFIG: Record<
   },
   partner: {
     label: "Partner",
+    emoji: "",
     minScore: 88,
     maxScore: 100,
     nextTier: null,
@@ -144,43 +143,6 @@ function getCompletionRate(completed: number, accepted: number): string {
   return `${Math.round((completed / accepted) * 100)}%`;
 }
 
-function formatFollowers(n: number): string {
-  if (n >= 1000) return `${(n / 1000).toFixed(1)}K`;
-  return String(n);
-}
-
-// ── Score Ring SVG ────────────────────────────────────────────────────────────
-
-function ScoreRing({ score }: { score: number }) {
-  const radius = 42;
-  const circumference = 2 * Math.PI * radius; // ~263.9
-  const pct = Math.min(1, score / 100);
-  const offset = circumference * (1 - pct);
-
-  return (
-    <div className="pf-score-ring-wrap">
-      <svg
-        className="pf-score-ring-svg"
-        viewBox="0 0 100 100"
-        aria-label={`ConversionOracle score: ${score}`}
-      >
-        <circle className="pf-score-ring-track" cx="50" cy="50" r={radius} />
-        <circle
-          className="pf-score-ring-fill"
-          cx="50"
-          cy="50"
-          r={radius}
-          style={{ "--ring-offset": offset } as React.CSSProperties}
-        />
-      </svg>
-      <div className="pf-score-ring-inner">
-        <span className="pf-score-number">{score}</span>
-        <span className="pf-score-label">Score</span>
-      </div>
-    </div>
-  );
-}
-
 // ── Editable form state ───────────────────────────────────────────────────────
 
 type FormState = {
@@ -191,31 +153,6 @@ type FormState = {
   bio: string;
   instagram_followers: string;
 };
-
-// ── Toggle Component ──────────────────────────────────────────────────────────
-
-function Toggle({
-  id,
-  checked,
-  onChange,
-}: {
-  id: string;
-  checked: boolean;
-  onChange: (v: boolean) => void;
-}) {
-  return (
-    <label className="pf-toggle-switch" htmlFor={id}>
-      <input
-        type="checkbox"
-        id={id}
-        checked={checked}
-        onChange={(e) => onChange(e.target.checked)}
-      />
-      <span className="pf-toggle-track" />
-      <span className="pf-toggle-thumb" />
-    </label>
-  );
-}
 
 // ── Page ──────────────────────────────────────────────────────────────────────
 
@@ -235,11 +172,6 @@ export default function CreatorProfilePage() {
     bio: "",
     instagram_followers: "",
   });
-
-  // Notification toggles state
-  const [notifCampaigns, setNotifCampaigns] = useState(true);
-  const [notifPayouts, setNotifPayouts] = useState(true);
-  const [notifMessages, setNotifMessages] = useState(false);
 
   useEffect(() => {
     const demo = checkDemoMode();
@@ -313,6 +245,7 @@ export default function CreatorProfilePage() {
     setSaving(true);
 
     if (isDemo) {
+      // Simulate a short save delay in demo mode
       await new Promise((r) => setTimeout(r, 400));
       setSaving(false);
       setSaveSuccess(true);
@@ -356,28 +289,29 @@ export default function CreatorProfilePage() {
     return <div className="profile-loading">Creator not found.</div>;
   }
 
-  const niches = creator.niches ?? ["Content", "Local"];
+  const tierCfg = TIER_CONFIG[creator.tier];
 
   return (
     <div className="profile-page">
-      {/* ── Top bar ─────────────────────────────────────────── */}
+      {/* Top bar */}
       <div className="profile-topbar">
         <Link href="/dashboard" className="profile-back-link">
           <span className="profile-back-arrow">←</span>
-          Dashboard
+          Back to dashboard
         </Link>
-        <span className="profile-topbar-title">Profile Settings</span>
         {saveSuccess && (
           <p className="save-toast">
-            {isDemo ? "Saved (demo)" : "Profile updated"}
+            {isDemo
+              ? "Changes saved! (Demo mode — not persisted)"
+              : "Profile updated"}
           </p>
         )}
       </div>
 
-      {/* ── Hero Section ────────────────────────────────────── */}
+      {/* ── Hero Section ────────────────────────────────────────── */}
       <div className="pf-hero">
         {/* Avatar */}
-        <div className="pf-avatar">
+        <div className="pf-avatar" style={{ borderColor: tierCfg.color }}>
           <span className="pf-avatar-initials">
             {getInitials(creator.name)}
           </span>
@@ -405,14 +339,14 @@ export default function CreatorProfilePage() {
           <p className="pf-member-since">Member since April 2026</p>
         </div>
 
-        {/* Push Score Ring + Edit */}
+        {/* Push Score + Edit */}
         <div className="pf-hero-right">
           <div className="pf-score-display">
-            <ScoreRing score={creator.push_score} />
-            <span className="pf-score-oracle-label">ConversionOracle™</span>
+            <span className="pf-score-number">{creator.push_score}</span>
+            <span className="pf-score-label">Push Score</span>
           </div>
           <button
-            className="pf-edit-btn"
+            className="btn pf-edit-btn"
             onClick={() => setEditOpen((v) => !v)}
             type="button"
           >
@@ -421,28 +355,31 @@ export default function CreatorProfilePage() {
         </div>
       </div>
 
-      {/* ── Stats Grid — 4 KPI cards ─────────────────────────── */}
+      {/* ── Stats Grid ───────────────────────────────────────────── */}
       <div className="pf-stats-grid">
-        <div className="pf-stat-card pf-stat-card--champagne">
+        <div className="pf-stat-card">
+          <div className="pf-stat-value">{creator.campaigns_completed}</div>
+          <div className="pf-stat-label">Campaigns Completed</div>
+        </div>
+        <div className="pf-stat-card">
+          <div className="pf-stat-value">
+            {getCompletionRate(
+              creator.campaigns_completed,
+              creator.campaigns_accepted,
+            )}
+          </div>
+          <div className="pf-stat-label">Completion Rate</div>
+        </div>
+        <div className="pf-stat-card">
           <div className="pf-stat-value">
             {formatCurrency(creator.earnings_total)}
           </div>
           <div className="pf-stat-label">Total Earned</div>
         </div>
-        <div className="pf-stat-card">
-          <div className="pf-stat-value">{creator.campaigns_completed}</div>
-          <div className="pf-stat-label">Campaigns</div>
-        </div>
-        <div className="pf-stat-card pf-stat-card--red">
-          <div className="pf-stat-value">{creator.walkins_total ?? "—"}</div>
-          <div className="pf-stat-label">Walk-ins Driven</div>
-        </div>
-        <div className="pf-stat-card pf-stat-card--dark">
-          <div className="pf-stat-value">
-            {creator.rating ? creator.rating.toFixed(1) : "—"}
-          </div>
+        <div className="pf-stat-card pf-stat-card--score">
+          <div className="pf-stat-value">{creator.push_score}</div>
           <div className="pf-stat-label">
-            Rating
+            Push Score
             <span className="pf-stat-tier-inline">
               <TierBadge
                 tier={creator.tier}
@@ -455,9 +392,9 @@ export default function CreatorProfilePage() {
         </div>
       </div>
 
-      {/* ── Earnings Summary ─────────────────────────────────── */}
+      {/* ── Earnings Summary ─────────────────────────────────────── */}
       <div className="pf-earnings-section">
-        <p className="pf-section-title">Earnings</p>
+        <h2 className="pf-section-title">Earnings</h2>
         <div className="pf-earnings-grid">
           <div className="pf-earnings-item">
             <span className="pf-earnings-value">
@@ -474,80 +411,15 @@ export default function CreatorProfilePage() {
             <span className="pf-earnings-label">Pending Payout</span>
           </div>
           <div className="pf-earnings-item">
-            <span className="pf-earnings-value">
-              {getCompletionRate(
-                creator.campaigns_completed,
-                creator.campaigns_accepted,
-              )}
-            </span>
-            <span className="pf-earnings-label">Completion Rate</span>
+            <span className="pf-earnings-value">—</span>
+            <span className="pf-earnings-label">This Month</span>
           </div>
         </div>
       </div>
 
-      {/* ── Niche Tags ───────────────────────────────────────── */}
-      <div className="pf-niche-section">
-        <p className="pf-section-title">Niches</p>
-        <div className="pf-niche-tags-row">
-          {niches.map((tag) => (
-            <span key={tag} className="pf-niche-tag">
-              {tag}
-            </span>
-          ))}
-          <button className="pf-niche-tag-add" type="button">
-            + Add
-          </button>
-        </div>
-      </div>
-
-      {/* ── Social Links ─────────────────────────────────────── */}
-      {(creator.instagram_handle || creator.tiktok_handle) && (
-        <div className="pf-social-section">
-          <p className="pf-section-title">Social Platforms</p>
-          <div className="pf-social-links-row">
-            {creator.instagram_handle && (
-              <a
-                href={`https://instagram.com/${creator.instagram_handle}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="pf-social-link"
-              >
-                <span className="pf-social-link-platform">Instagram</span>
-                <span className="pf-social-link-handle">
-                  @{creator.instagram_handle}
-                </span>
-                {creator.instagram_followers && (
-                  <span className="pf-social-link-followers">
-                    {formatFollowers(creator.instagram_followers)}
-                  </span>
-                )}
-              </a>
-            )}
-            {creator.tiktok_handle && (
-              <a
-                href={`https://tiktok.com/@${creator.tiktok_handle}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="pf-social-link"
-              >
-                <span className="pf-social-link-platform">TikTok</span>
-                <span className="pf-social-link-handle">
-                  @{creator.tiktok_handle}
-                </span>
-                {creator.tiktok_followers && (
-                  <span className="pf-social-link-followers">
-                    {formatFollowers(creator.tiktok_followers)}
-                  </span>
-                )}
-              </a>
-            )}
-          </div>
-        </div>
-      )}
-
-      {/* ── Tier & Score Section ─────────────────────────────── */}
+      {/* ── Tier & Score Section ─────────────────────────────────── */}
       <div className="pf-tier-section">
-        <p className="pf-section-title">Tier Journey</p>
+        <h2 className="pf-section-title">Tier Journey</h2>
         <TierJourney
           currentTier={creator.tier}
           currentScore={creator.push_score}
@@ -560,225 +432,140 @@ export default function CreatorProfilePage() {
         </div>
       </div>
 
-      {/* ── Edit Form (collapsible) ──────────────────────────── */}
+      {/* ── Edit Form (collapsible) ──────────────────────────────── */}
       {editOpen && (
         <div className="pf-edit-section">
-          <p className="pf-section-title">Edit Profile</p>
+          <h2 className="pf-section-title">Edit Profile</h2>
           <div className="profile-form-card">
-            <div className="profile-form-card-header">
-              <span className="profile-form-card-header-title">
-                Account Settings
-              </span>
-            </div>
             <form onSubmit={handleSave} className="profile-form">
-              {/* ── Identity Section ── */}
-              <div className="form-section">
-                <p className="form-section-eyebrow">Identity</p>
+              <div className="form-row">
+                <label className="form-label" htmlFor="name">
+                  Full Name
+                </label>
+                <input
+                  id="name"
+                  name="name"
+                  type="text"
+                  className="form-input"
+                  value={form.name}
+                  onChange={handleChange}
+                  placeholder="Your name"
+                  required
+                />
+              </div>
 
-                {/* Avatar notice */}
-                <div
-                  className="profile-avatar-notice"
-                  style={{ marginBottom: 20 }}
-                >
-                  <div className="profile-avatar-sm">
-                    {getInitials(creator.name)}
-                  </div>
-                  <div>
-                    <span className="profile-avatar-notice-text">
-                      Profile photo upload
-                    </span>
-                    <br />
-                    <span className="profile-avatar-notice-badge">
-                      Coming soon
-                    </span>
-                  </div>
-                </div>
+              <div className="form-row">
+                <label className="form-label" htmlFor="location">
+                  Location
+                </label>
+                <input
+                  id="location"
+                  name="location"
+                  type="text"
+                  className="form-input"
+                  value={form.location}
+                  onChange={handleChange}
+                  placeholder="e.g. Lower East Side NYC"
+                />
+              </div>
 
-                <div className="form-grid-2">
-                  <div className="form-row">
-                    <label className="form-label" htmlFor="name">
-                      Full Name
-                    </label>
-                    <input
-                      id="name"
-                      name="name"
-                      type="text"
-                      className="form-input"
-                      value={form.name}
-                      onChange={handleChange}
-                      placeholder="Your name"
-                      required
-                    />
-                  </div>
-
-                  <div className="form-row">
-                    <label className="form-label" htmlFor="location">
-                      Location
-                    </label>
-                    <input
-                      id="location"
-                      name="location"
-                      type="text"
-                      className="form-input"
-                      value={form.location}
-                      onChange={handleChange}
-                      placeholder="e.g. Lower East Side NYC"
-                    />
-                  </div>
-                </div>
-
-                <div className="form-row" style={{ marginTop: 16 }}>
-                  <label className="form-label" htmlFor="bio">
-                    Bio
-                    <span className="form-label-chars">
-                      {form.bio.length}/160
-                    </span>
-                  </label>
-                  <textarea
-                    id="bio"
-                    name="bio"
-                    className="form-input form-textarea"
-                    value={form.bio}
+              <div className="form-row">
+                <label className="form-label" htmlFor="instagram_handle">
+                  Instagram Handle
+                </label>
+                <div className="form-input-prefix-wrap">
+                  <span className="form-input-prefix">@</span>
+                  <input
+                    id="instagram_handle"
+                    name="instagram_handle"
+                    type="text"
+                    className="form-input form-input--prefixed"
+                    value={form.instagram_handle}
                     onChange={handleChange}
-                    placeholder="Tell brands a bit about yourself…"
-                    maxLength={160}
+                    placeholder="yourhandle"
                   />
                 </div>
               </div>
 
-              {/* ── Social Section ── */}
-              <div className="form-section">
-                <p className="form-section-eyebrow">Social Platforms</p>
-                <div className="form-grid-2">
-                  <div className="form-row">
-                    <label className="form-label" htmlFor="instagram_handle">
-                      Instagram
-                    </label>
-                    <div className="form-input-prefix-wrap">
-                      <span className="form-input-prefix">@</span>
-                      <input
-                        id="instagram_handle"
-                        name="instagram_handle"
-                        type="text"
-                        className="form-input form-input--prefixed"
-                        value={form.instagram_handle}
-                        onChange={handleChange}
-                        placeholder="yourhandle"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="form-row">
-                    <label className="form-label" htmlFor="tiktok_handle">
-                      TikTok
-                      <span className="form-label-optional">(optional)</span>
-                    </label>
-                    <div className="form-input-prefix-wrap">
-                      <span className="form-input-prefix">@</span>
-                      <input
-                        id="tiktok_handle"
-                        name="tiktok_handle"
-                        type="text"
-                        className="form-input form-input--prefixed"
-                        value={form.tiktok_handle}
-                        onChange={handleChange}
-                        placeholder="yourhandle"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="form-row">
-                    <label className="form-label" htmlFor="instagram_followers">
-                      Instagram Followers
-                    </label>
-                    <input
-                      id="instagram_followers"
-                      name="instagram_followers"
-                      type="number"
-                      min={0}
-                      className="form-input"
-                      value={form.instagram_followers}
-                      onChange={handleChange}
-                      placeholder="e.g. 4200"
-                    />
-                  </div>
+              <div className="form-row">
+                <label className="form-label" htmlFor="tiktok_handle">
+                  TikTok Handle{" "}
+                  <span className="form-label-optional">(optional)</span>
+                </label>
+                <div className="form-input-prefix-wrap">
+                  <span className="form-input-prefix">@</span>
+                  <input
+                    id="tiktok_handle"
+                    name="tiktok_handle"
+                    type="text"
+                    className="form-input form-input--prefixed"
+                    value={form.tiktok_handle}
+                    onChange={handleChange}
+                    placeholder="yourhandle"
+                  />
                 </div>
               </div>
 
-              {/* ── Contact Section ── */}
-              <div className="form-section">
-                <p className="form-section-eyebrow">Contact</p>
-                <div className="form-grid-2">
-                  <div className="form-row">
-                    <label className="form-label" htmlFor="email_readonly">
-                      Email
-                    </label>
-                    <input
-                      id="email_readonly"
-                      type="email"
-                      className="form-input form-input--readonly"
-                      value={creator.email ?? "—"}
-                      readOnly
-                    />
-                  </div>
-                </div>
+              <div className="form-row">
+                <label className="form-label" htmlFor="bio">
+                  Bio{" "}
+                  <span className="form-label-chars">
+                    {form.bio.length}/160
+                  </span>
+                </label>
+                <textarea
+                  id="bio"
+                  name="bio"
+                  className="form-input form-textarea"
+                  value={form.bio}
+                  onChange={handleChange}
+                  placeholder="Tell brands a bit about yourself…"
+                  rows={3}
+                  maxLength={160}
+                />
               </div>
 
-              {/* ── Notifications Section ── */}
-              <div className="form-section">
-                <p className="form-section-eyebrow">Notifications</p>
-                <div className="pf-toggle-row">
-                  <div className="pf-toggle-info">
-                    <span className="pf-toggle-label">New Campaigns</span>
-                    <span className="pf-toggle-desc">
-                      Get notified when new campaigns match your tier
-                    </span>
-                  </div>
-                  <Toggle
-                    id="notif-campaigns"
-                    checked={notifCampaigns}
-                    onChange={setNotifCampaigns}
-                  />
+              <div className="form-row">
+                <label className="form-label" htmlFor="instagram_followers">
+                  Instagram Followers
+                </label>
+                <input
+                  id="instagram_followers"
+                  name="instagram_followers"
+                  type="number"
+                  min={0}
+                  className="form-input"
+                  value={form.instagram_followers}
+                  onChange={handleChange}
+                  placeholder="e.g. 4200"
+                />
+              </div>
+
+              {/* Avatar notice */}
+              <div className="profile-avatar-notice">
+                <div className="profile-avatar-sm">
+                  {getInitials(creator.name)}
                 </div>
-                <div className="pf-toggle-row">
-                  <div className="pf-toggle-info">
-                    <span className="pf-toggle-label">Payout Updates</span>
-                    <span className="pf-toggle-desc">
-                      Notify when payouts are processed
-                    </span>
-                  </div>
-                  <Toggle
-                    id="notif-payouts"
-                    checked={notifPayouts}
-                    onChange={setNotifPayouts}
-                  />
-                </div>
-                <div className="pf-toggle-row">
-                  <div className="pf-toggle-info">
-                    <span className="pf-toggle-label">Messages</span>
-                    <span className="pf-toggle-desc">
-                      Merchant and platform messages
-                    </span>
-                  </div>
-                  <Toggle
-                    id="notif-messages"
-                    checked={notifMessages}
-                    onChange={setNotifMessages}
-                  />
-                </div>
+                <span className="profile-avatar-notice-text">
+                  Profile photo coming soon
+                </span>
               </div>
 
               {/* Form actions */}
               <div className="pf-form-actions">
                 <button
                   type="button"
-                  className="pf-cancel-btn"
+                  className="btn pf-cancel-btn"
                   onClick={() => setEditOpen(false)}
                   disabled={saving}
                 >
                   Cancel
                 </button>
-                <button type="submit" className="save-btn" disabled={saving}>
+                <button
+                  type="submit"
+                  className="btn save-btn"
+                  disabled={saving}
+                >
                   {saving ? "Saving…" : "Save Changes"}
                 </button>
               </div>
