@@ -5,9 +5,22 @@ description: "Push KPIs, dashboard framework, data model, cohort analysis, decis
 
 # Push Metrics & Data — Complete Reference
 
-## 1. North Star Metric
-**Verified repeat campaign value per active merchant cohort**
-Combines: retention + delivery quality + verified outcomes. If this number grows, Push is winning.
+## 1. North Star Metric (v5.2)
+
+**Primary: Software Leverage Ratio (SLR) = Active Campaigns / Ops FTE**
+
+| Window | Target |
+|---|---|
+| Month 6 | ≥ 12 |
+| Month 12 | ≥ 25 |
+| Month 24 | ≥ 50 |
+
+SLR measures how many campaigns one ops person can run — the core "vertical AI vs agency" differentiator:
+- Agencies: SLR 3–5 (labor-bound)
+- Pure platforms: SLR 100+ (fully self-serve, weak verification)
+- **Push target SLR 25 at M-12:** "mid-stack AI-augmented ops" — ConversionOracle + DisclosureBot absorb verification and compliance load; humans handle exception review + relationship.
+
+**Secondary (retained from v4.x as health metric):** Verified repeat customer value per active merchant cohort. Measures whether delivered customers drive merchant LTV growth — prevents gaming SLR by inflating low-quality campaigns.
 
 ## 2. Merchant Metrics
 
@@ -74,6 +87,14 @@ Combines: retention + delivery quality + verified outcomes. If this number grows
 - Average revenue per merchant (ARPM)
 - LTV / CAC ratio
 
+### 6.x Operations Metrics (v5.2)
+
+- **Software Leverage Ratio (SLR):** active campaigns / ops FTE (monthly snapshot). North Star — see §1.
+- **Auto-verification accuracy:** ConversionOracle precision + recall. Target: precision ≥ 92%, recall ≥ 88% at Month 12.
+- **Manual intervention rate:** % of campaigns requiring human review. Target: ≤ 15% M-6, ≤ 8% M-12, ≤ 3% M-24.
+- **DisclosureBot false-positive rate:** posts flagged but FTC-compliant / total flagged. Target: ≤ 5%.
+- **Ops FTE utilization:** hours worked / 160 per month. Target: 60–85% (outside → under- or over-staffed).
+
 ## 7. Four Decision Rules
 
 ### Rule 1: Low Repeat + High Fill
@@ -114,6 +135,8 @@ Combines: retention + delivery quality + verified outcomes. If this number grows
 - Unit economics
 - LTV/CAC
 - Expansion readiness signals
+- **SLR Monthly Trend:** line chart of SLR across trailing 6 months. Target band overlay: M-6 ≥ 12 (yellow), M-12 ≥ 25 (green). Y-axis 0–60.
+- **ConversionOracle Accuracy vs Target:** twin-line chart, precision and recall over trailing 12 weeks. Red floor line at 88%, green aspiration at 92%. Y-axis 80–100%.
 
 ## 10. Cohort Analysis Framework
 - Merchant cohorts by signup month → track repeat rate, revenue per merchant, LTV
