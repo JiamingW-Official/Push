@@ -569,4 +569,41 @@ Build: BI tool (Metabase, Hex, or simple Streamlit) by v5.3 W3. Until then: Goog
 
 ---
 
-*End of spec v1. Next revision: v2 (empirical), to be committed at Pilot Week 12 EOW (~2026-07-27) by Jiaming.*
+## §14. Wave 3 Audit Reconciliation (2026-04-20)
+
+Audit `docs/spec/audits/06-p2-6-audit.md` found one HIGH arithmetic error and recommended a stronger statistical posture.
+
+### §14.1 Model A LTV/CAC arithmetic correction
+
+**The error:** §3 Model A reported LTV/CAC values 15.1x / 10.4x / 6.5x / 3.9x at conversion rates 60% / 40% / 25% / 15% with CAC = $420 fixed. At constant CAC, LTV/CAC must equal 15.1x at every conversion rate (since LTV = 9 mo × $706/mo = $6,354 doesn't depend on conversion). The values 10.4x / 6.5x / 3.9x derive only when CAC is **cohort-allocated** (i.e., CAC inflates as fewer pilots convert).
+
+**The reconciliation:** Model A's correct interpretation is **per-converted-merchant LTV with cohort-allocated CAC**:
+- Cohort cost ≈ $6,000 (10 pilots × $150/wk × 4 wk per audit 06 §2)
+- CAC per converted merchant = $420 (sales+onboarding) + ($6,000 / N converted)
+- At 60%: CAC = $420 + $1,000 = $1,420; LTV/CAC = $6,354 / $1,420 = **4.5x** ← matches Model B
+- At 40%: CAC = $420 + $1,500 = $1,920; LTV/CAC = $6,354 / $1,920 = **3.3x**
+- At 25%: CAC = $420 + $2,400 = $2,820; LTV/CAC = $6,354 / $2,820 = **2.3x**
+- At 15%: CAC = $420 + $4,000 = $4,420; LTV/CAC = $6,354 / $4,420 = **1.4x**
+
+Model A and Model B converge when CAC includes pilot allocation. The 15.1x / 10.4x / 6.5x / 3.9x values reported in §3 are **withdrawn** as inconsistent. **Use Model B (all-in CAC) values exclusively** for any external defense going forward.
+
+### §14.2 r-threshold update for leading-indicator hypothesis (§11)
+
+Audit 06 finds that r=0.5 at N=10 cannot be statistically distinguished from zero (Fisher z 95% CI ≈ [-0.19, +0.86]). The decision rule in §11 is updated:
+- **r ≥ 0.78** for "adopt as primary signal" (lower 95% CI clears 0.3) — was r > 0.5
+- **0.5 ≤ r < 0.78** for "directional only; revisit at cohort-2 (N≥15)" — was 0.3 < r ≤ 0.5
+- **r < 0.5** for "discard hypothesis" — was r ≤ 0.3
+
+Sample-size implications: N=10 cohort cannot conclusively confirm the Week-2 → conversion hypothesis. Cohort-2 (Beachhead first wave, target N≥15) provides the joint-evidence basis. Until cohort-2, treat the Week-2 signal as soft only.
+
+### §14.3 §7 framing correction
+
+The "we'd catch that at Week 4 of Pilot and reset before scale" line in §7.1 contradicts §7.3's prior caveat that Week 4 is interim only. Replace with:
+
+> "Today the 60% Pilot-to-Paid is an aspirational baseline, not data; industry proxies suggest 25–45% is realistic for a new category. Our **Model B (all-in CAC)** breaks below the 3x VC floor at the 25% pessimistic case — we'd see a directional signal at Week 8 actuals (first hard conversion data point) and a final answer at Week 12 (week of 2026-07-27). Pilot Week 4 is interim intent only and not a decision-quality signal."
+
+This corrects the audit's flagged self-contradiction.
+
+---
+
+*End of spec v1. Next revision: v2 (empirical), to be committed at Pilot Week 12 EOW (~2026-07-27) by Jiaming. §14 appended 2026-04-20 in Wave 3 fix-round per integration audit P0 #4.*

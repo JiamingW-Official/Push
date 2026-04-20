@@ -308,7 +308,7 @@ CREATE TABLE wallet_pass_meta (
 );
 ```
 
-**PII-hashing note.** `phone_hash` = `SHA-256(E.164_phone || server_pepper)`. Pepper is a 32-byte random value stored in the `SUPABASE_SERVICE_ROLE_KEY`-adjacent secret `CONSUMER_PHONE_PEPPER`, rotated at most yearly with a versioned column added at rotation (`phone_hash_v` tinyint). The raw phone number is never persisted to the database. It lives only in transit: inbound from the opt-in form, outbound to Twilio for SMS send. Twilio messaging logs are the system of record for raw phone.
+**PII-hashing note (Wave 3 reconciliation 2026-04-20).** `phone_hash` = `SHA-256(E.164_phone || pepper_[year])`. **Authoritative pepper storage = KMS (per P2-2 sms-compliance-v1 §4.6 + §12.2).** The earlier draft's env-var path (`CONSUMER_PHONE_PEPPER`) is **deprecated** to avoid a silent join-key break with the SMS `consent_log`. Adopt P2-2's KMS-backed pepper with annual rotation on first Monday of April; store `pepper_version int` (year-indexed, e.g. 2026) per row in BOTH `consumer_visits` and `loyalty_cards`. Old peppers retained 4 years for hash regeneration during dual-read window. **Cross-spec invariant:** a single phone number must produce the SAME `phone_hash` in `consumer_visits`, `loyalty_cards`, AND `consent_log`. Raw phone is never persisted to the database; it lives only in transit (inbound from opt-in, outbound to Twilio). Twilio messaging logs are the system of record for raw phone.
 
 **Hot-query access pattern.** The primary lookup is "does a loyalty card exist for this phone × this merchant?" — satisfied by `uq_merchant_phone` unique constraint. Secondary: "how many visits in the last 30 days for this phone × this merchant?" — `idx_visits_phone_merchant` covers this.
 

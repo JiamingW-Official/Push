@@ -811,3 +811,51 @@ Every line item in §1 has upstream and downstream spec dependencies. This secti
 ---
 
 *§§8–13 appended 2026-04-20 in Wave 2 pass to support counsel negotiation + investor defense. Does not supersede §§1–7; reference §§1–7 as the authoritative deliverable + phasing specification. Dollar figures in §§8–13 are cross-referenced to source specs and match where specs align; discrepancies flagged in §13.6 for Wave 4 reconciliation.*
+
+---
+
+## §14. Wave 3 Audit Reconciliation (2026-04-20)
+
+Audit `docs/spec/audits/05-p2-5-audit.md` finds this spec **UNDERBUDGETED by ~40%**. Realistic Year-1 envelope is **$55K–$90K combined** (counsel + insurance + tax + DPAs + missing items + contingency reserve), not the §2 estimate of $25K–$40K. Adopt the audit numbers for any external defense; the §1 line items remain the work-breakdown structure.
+
+### §14.1 Cost corrections to §1 line items
+
+| # | Item | Original $ | Audit-corrected $ | Why |
+|---|---|---|---|---|
+| #13 | FTC DisclosureBot opinion | $500–$1,500 | **$1,800–$4,800** | disclosurebot-v0 §8.1 hard-gate scope is broader (rule-set + auto-append + consent-signature + strict-mode) than original review-only quote |
+| #16 | E&O Insurance | $3,000–$8,000 | **$6,000–$12,000** | 2024–2025 premium hardening + AI-mediated platform carve-out buy-back |
+| #17 | D&O Insurance | $4,000–$10,000 | **$6,000–$15,000** | NYC AI-startup D&O hardened minimum |
+
+### §14.2 Eight missing line items (add to §1 work breakdown)
+
+1. **Tax counsel — state nexus + 1099-NEC/K classification memo:** $2,500–$4,500. Trigger: pre-50-merchant.
+2. **Form D filing (Reg D 506(b) for F&F + Series Seed):** counsel-prepared filing $500–$1,500 + SEC filing fee $0; state blue-sky filings $300–$1,000 per applicable state.
+3. **Subprocessor DPAs (Supabase + Stripe + Vercel + analytics):** $1,000–$2,500 (covers DPA review + counter-signature negotiation).
+4. **Stripe Connect compliance review:** $1,000–$2,500 (FinCEN MSB analysis: is Push acting as a money transmitter, or is Stripe the principal?).
+5. **First pilot merchant contract negotiation:** $2,000–$6,000 (templates require negotiation on first instance even if subsequent contracts use the v1 template).
+6. **IP freedom-to-operate search (post-mark filing):** $1,500–$4,000 (validates ConversionOracle™ and "Vertical AI for Local Commerce" don't infringe).
+7. **NYC DCWP gig-platform inquiry response reserve:** $5,000–$25,000 (15–25% probability in Year 1 per industry rate).
+8. **Contingency reserve (20% of Phase A+B+C base):** $4,000–$8,000 for surprises (subpoena response, founder severance, investor diligence redlines).
+
+### §14.3 Counsel-engagement-plan reconciliation
+
+This spec ($25K–$40K original / $55K–$90K audit-corrected) and `docs/legal/counsel-engagement-plan.md` ($32K–$69K) **disagree on Year-1 envelope by definition**: counsel-engagement-plan covers Phase A–D counsel hours only, NOT insurance or tax filings or DPAs. Adopt the following reconciled view for investor defense:
+
+| Bucket | Counsel-engagement-plan | Legal-budget-v1 (audit-corrected) | Reconciled |
+|---|---|---|---|
+| Counsel hours | $32K–$69K | $20K–$45K (Phase A+B+C only) | $32K–$69K (broader) |
+| Insurance (D&O/E&O/cyber) | not in scope | $15K–$32K | $15K–$32K |
+| Filings (Form D, blue sky, USPTO) | partial (USPTO only ~$3K) | partial ($1K–$3K filings) | $4K–$6K |
+| Tax | not in scope | $2.5K–$4.5K | $2.5K–$4.5K |
+| Contingency | not in scope | $4K–$8K | $4K–$8K |
+| **TOTAL Year-1** | $32K–$69K | $42K–$92K | **$57K–$120K** |
+
+External-defensible Year-1 legal envelope: **$57K–$120K** (mid-point $88K), of which **first 90 days will spend ~$10K–$15K** (Phase A + Phase B partial).
+
+### §14.4 Cooley/Gunderson cold-RFQ posture (audit 05 finding)
+
+Audit notes that Cooley Go and Gunderson Early Stage no longer accept cold pre-seed RFQs without warm intro at scale. Action: route RFQ via warm intro from F&F investor or YC alumni network. If no warm intro available within 14 days, default to fractional-GC services (Rally Legal, Outlaw, PilotLegal) for Phase A; engage a tier-1 firm at Series Seed term sheet.
+
+---
+
+*§14 appended 2026-04-20 in Wave 3 fix-round per integration audit P0 #6. Cross-reference: docs/spec/audits/05-p2-5-audit.md and docs/spec/audits/00-integration-audit.md §3 row N11.*

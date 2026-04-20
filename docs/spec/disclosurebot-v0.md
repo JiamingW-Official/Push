@@ -783,4 +783,69 @@ DisclosureBot v0 does not exist in isolation. The following cross-spec dependenc
 
 ---
 
-*Spec v1.0 — 2026-04-20. DRAFT. Not implementation-ready until §8.1 counsel opinion is in hand. All token lists, prominence tests, and auto-append strings are subject to counsel revision prior to v5.3 W10 launch.*
+## §16. Wave 3 Audit Reconciliation (2026-04-20)
+
+Audit `docs/spec/audits/04-p2-4-audit.md` graded **conditional-no for FTC opinion letter as-is** with three HIGH findings.
+
+### §16.1 §3.3 HMAC architecture — must add `creator_consent_events` table
+
+The §3.3 HMAC over content+timestamp+disclosure_version is a derivation, not authentication. FTC inquiry needs a full event row. Add to §4 schema (P0 before any creator-facing flow ships):
+
+```sql
+CREATE TABLE creator_consent_events (
+  id                   uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  creator_id           uuid NOT NULL REFERENCES creators(id),
+  campaign_id          uuid NOT NULL REFERENCES campaigns(id),
+  post_url             text NOT NULL,
+  content_hash         char(64) NOT NULL,
+  proposed_append_str  text NOT NULL,
+  appended_str         text,
+  click_timestamp      timestamptz NOT NULL,
+  click_ip_hash        char(64) NOT NULL,
+  click_user_agent     text NOT NULL,
+  session_id           uuid NOT NULL,
+  dialog_dom_snapshot  text,
+  hmac_signature       char(64) NOT NULL,
+  created_at           timestamptz DEFAULT now()
+);
+CREATE INDEX idx_creator_consent_events_creator ON creator_consent_events(creator_id, click_timestamp DESC);
+```
+
+The HMAC stays as integrity check ON THIS row; the row itself reconstructs the click event. Counsel-defensible.
+
+### §16.2 §2.4 strict-mode category list — expand for FTC 2024
+
+Audit finds the strict-mode list (health/financial/children) under-covers FTC 2024 priorities. Expand to:
+- health, financial, children-targeted (existing)
+- **alcohol** (added)
+- **cannabis / CBD / hemp products** (added)
+- **weight-loss / supplements** (added)
+- **AI-generated content** (added per FTC 2024 AI-washing advisory)
+- **gambling / sweepstakes / contests** (added)
+- **telehealth and prescription products** (added)
+
+Strict-mode posture per category: (1) auto-append NOT permitted; (2) creator must take affirmative pre-publish action with category-specific disclosure; (3) ops review queue includes 100% sample (not random).
+
+### §16.3 Quiz answer-key corrections (§13)
+
+- **Q10** (`#ad` alone): add caveat — sufficient for non-strict-mode ONLY; AI-generated content requires "AI-generated" qualifier per FTC 2024
+- **Q11** (dual-language): correct answer is "primary-language disclosure suffices per FTC 2023" — NOT "both languages required"
+- **Q14** (health-supplement strict mode): expand stem to list full §16.2 categories
+- Answer-key version-bump to v0.2; re-issue quiz to any creator who took v0.1
+
+### §16.4 Counsel opinion timeline (audit-corrected)
+
+§8.1 implied 1-2 weeks. Audit estimates **6-8 weeks** total. Opinion letter must close by **2026-06-15** for v5.3 W10 launch to hold.
+
+### §16.5 De-scope decision (founder approval needed)
+
+Per integration audit §9.4: **P2-4 v0 may be de-scoped to v0.5** — manual creator-paste workflow only, no IG/TikTok API integration. Rationale: Z bandwidth is binding constraint for parallel P2-1 + P2-4 launch. v0.5 still requires §16.1 + §16.2 + §16.3 (compliance preserved); only API automation is deferred to v0.6 / Beachhead. **Decision: requires founder sign-off; default to v0.5 unless founder declines.**
+
+### §16.6 Cross-spec invariants
+
+- DisclosureBot consent_signature event format consumed by P2-1 consumer-page creator-attribution surface — verify copy parity in Wave 4
+- DisclosureBot creator-flow REJECT branch triggers Push Score -15 per push-creator §5; that score event must log via `disclosure_audit_log.status = 'REJECT'` for AEDT compliance (push-creator §5.5)
+
+---
+
+*Spec v1.0 — 2026-04-20. DRAFT. Not implementation-ready until §8.1 counsel opinion in hand AND §16.1 schema migrated. §16 appended 2026-04-20 in Wave 3 fix-round per integration audit P0 #9.*

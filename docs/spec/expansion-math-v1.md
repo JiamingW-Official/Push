@@ -125,7 +125,7 @@ Each pace-table row represents a "steady state reached at month X" snapshot. Tra
 
 | Round | Window | Pace promise | Revenue promise |
 |---|---|---|---|
-| Series Seed (2026 Q3 target) | Pre-pilot / Pilot active | M12 Williamsburg 25 merchants; conservative: "5 neighborhoods, SLR ≥ 25 validated" | $25K MRR / $300K ARR by M12 |
+| Series Seed (2026 Q3 target) | Pre-pilot / Pilot active | M12 Williamsburg 25 contracted merchants (40% Pilot→Paid base = ~16 effective Beachhead-paying); SLR ≥ 25 validated | $16K MRR / $192K ARR by M12 (40% base); $25K / $300K (60% upside) |
 | Series A (M18–M24 window) | NYC-dense active | "NYC-dense (8 neighborhoods, 200 merchants) by M24; path to $10M ARR by M48 at 600-1,000 merchants across 2–3 metros" | $2.88M ARR at raise; $10.8M ARR at M36 target |
 | Series B (M36–M42 window) | Multi-metro active | "3 metros dense at M42; SLR 50+ validated by ConversionOracle v3" | $10M+ ARR at raise; path to $30M ARR |
 
@@ -153,14 +153,18 @@ The following v5.1 claims must be removed from all external materials:
 
 Per-merchant MRR assumptions: $500 base + $15–$85 per verified customer × customers/mo. Coffee+ mode from push-pricing §5 = $500 + 85 × $25 = $2,625 (rounded to $2,620 in docs). Average MRR across all merchants grows over time as (a) category mix diversifies toward higher-AOV (beauty/fitness at $60–$85 per verified customer), (b) retention add-on adoption climbs (visit 2/3/loyalty, cap $18/customer), (c) average verified customers per merchant rises with creator density.
 
-| Month | Merchants | Avg MRR/merchant | MRR | ARR | Notes |
-|---|---|---|---|---|---|
-| M12 | 25 | $1,000 | **$25K** | $300K | Early Beachhead; low per-customer volume (~20/mo avg); mixed Pilot + Beachhead cohorts |
-| M18 | 100 | $1,100 | **$110K** | $1.32M | Beachhead maturity; ~25–30 customers/mo avg; retention add-on starts kicking in |
-| M24 | 200 | $1,200 | **$240K** | $2.88M | NYC-dense; ~30–35 customers/mo avg; category mix diversifies |
-| M30 | 400 | $1,350 | **$540K** | $6.48M | Secondary metro first neighborhood live; ~40 customers/mo avg; beauty/fitness share ~15% |
-| M36 | 600 | $1,500 | **$900K** | **$10.8M** | **$10M ARR threshold crossed**; 2 metros dense; ~50 customers/mo avg; beauty/fitness ~25% |
-| M48 | 1,000 | $1,650 | **$1.65M** | $19.8M | 2–3 metros; ~60 customers/mo avg; beauty/fitness ~35% |
+**Wave 3 reconciliation (audit 03 P0):** prior table assumed 100% Pilot→Beachhead conversion AND a $1,000 immature per-merchant MRR that doesn't reconcile with numeric_reconciliation row 51 ($2,620 mature Coffee+). Below is the corrected table with explicit Pilot→Paid baseline and per-merchant MRR ramp (from immature mix at M12 to mature Coffee+ by M24+).
+
+**Authoritative Pilot→Paid baseline:** 40% (Moderate scenario, per conversion-assumption-v1 §3 stress test + audit 06 alignment). 60% retained as upside; reported separately in Bull-case ARR (§10).
+
+| Month | Effective Merchants (40% Pilot→Paid base) | Avg MRR/merchant (ramp) | MRR (40% base) | ARR | MRR @ 60% upside | Notes |
+|---|---|---|---|---|---|---|
+| M12 | ~16 (10 Pilot × 40% + 12 Beachhead) | $1,000 | **$16K** | $192K | $25K @ 60% | Mostly immature; low per-customer volume ~20/mo; mixed Pilot+Beachhead cohorts. Per-merchant MRR will ramp to ~$2,620 mature by M24 as Coffee+ matures (numeric_reconciliation row 51). |
+| M18 | ~75 (Williamsburg + 3 NYC neighborhoods × 40% conversion) | $1,300 | **$98K** | $1.18M | $130K @ 60% | Beachhead maturity beginning; retention add-on kicks in (push-pricing §2.3); ~30 customers/mo avg. |
+| M24 | ~160 | $1,800 | **$288K** | $3.46M | $360K @ 60% | NYC-dense 8 neighborhoods; per-merchant MRR converging on $2,620 mature Coffee+; category mix diversifies. |
+| M30 | ~320 | $2,100 | **$672K** | $8.06M | $864K @ 60% | Secondary metro first neighborhood live; ~40 customers/mo avg; beauty/fitness ~15%. |
+| M36 | ~480 | $2,200 | **$1.06M** | **$12.7M** | $1.36M @ 60% ($16.3M ARR) | **$10M ARR threshold cleared at 40% base**; 2 metros dense; ~50 customers/mo avg; beauty/fitness ~25%. |
+| M48 | ~800 | $2,300 | **$1.84M** | $22.1M | $2.36M @ 60% ($28.3M ARR) | 2–3 metros; ~60 customers/mo avg; beauty/fitness ~35%. |
 
 ### 5.2 Per-merchant MRR ramp assumptions
 
@@ -176,7 +180,7 @@ The table above is conservative: it assumes blended per-customer rate stays at C
 ### 5.3 Revenue forecast caveats
 
 - These numbers are **planning assumptions**, not projections. The outcome-warranty mechanic (Month 1 prorated if <5 verified customers; push-pricing §8) and 9-month avg merchant lifetime (push-pricing §5) both need Pilot cohort validation before external use.
-- The M12 $25K MRR assumes 25 merchants all at Beachhead pricing by M12. If Pilot-to-Beachhead conversion is below 60% (push-pricing §9 Experiment #1), M12 MRR could compress to $15–20K.
+- (Wave 3 reconciliation) The M12 MRR row in §5.1 above is now base-cased at 40% Pilot→Paid ($16K MRR), with 60% upside ($25K) reported separately. Spec previously assumed 100% conversion implicitly; corrected per audit 03.
 - The M36 $10M ARR threshold is the **Series B credibility anchor**. Missing it by more than 15% is a signal to re-forecast; missing by more than 30% is a signal that the category is smaller than modeled.
 
 ---

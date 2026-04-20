@@ -44,11 +44,11 @@ Push intends to send marketing text messages (loyalty-card promotions, campaign 
 
 2. **Definition, 47 C.F.R. §64.1200(f)(9).** A written agreement that: (a) bears the recipient's signature, (b) clearly authorizes the seller to deliver advertisements/telemarketing via automatic dialing to a designated number, (c) includes that number, and (d) includes a clear-and-conspicuous disclosure that by signing the recipient authorizes the seller to deliver telemarketing via automatic dialing AND that the recipient is not required to sign as a condition of purchase.
 
-3. **Statutory damages, 47 U.S.C. §227(b)(3).** Private right of action; **$500 per violation**, trebled to **up to $1,500 per violation** on willful/knowing violation. Per-message; class actions routinely certified.
+3. **Statutory damages, 47 U.S.C. §227(b)(3).** Private right of action. Base damages: **$500 per violation**. **Discretionary enhancement** (NOT mandatory trebling — court "may, in its discretion, increase the amount of the award to an amount equal to not more than 3 times" per §227(b)(3)(C)): up to **$1,500 per violation** for willful or knowing violation. Per-message; class actions routinely certified. *(Wave 3 audit 02 cite-correction: prior wording "trebled" misstated the statute as automatic; the enhancement is discretionary.)*
 
 4. **Standing.** *TransUnion LLC v. Ramirez*, 594 U.S. 413 (2021) requires concrete injury; receipt of an unwanted text is treated as sufficient (*Drazen v. Pinto*, 74 F.4th 1336 (11th Cir. 2023)).
 
-5. **Pre-emption.** TCPA does not pre-empt stricter state laws (47 U.S.C. §227(e)). Compliance requires federal-plus-state floor analysis for every message.
+5. **Pre-emption.** TCPA does not pre-empt stricter state laws — savings clause at **47 U.S.C. §227(f)** *(Wave 3 audit 02 cite-correction: §227(e) is the do-not-call registry section, not the savings clause)*. Compliance requires federal-plus-state floor analysis for every message.
 
 ### 1.2 California: CCPA / CPRA
 
@@ -64,7 +64,7 @@ Push intends to send marketing text messages (loyalty-card promotions, campaign 
 Push must comply with the strictest applicable state law for each recipient (proxy: phone NPA-NXX + last-known address).
 
 1. **Florida — Fla. Stat. §501.059 (FTSA), amended by SB 1120 (2021) and HB 761 (2023).** Prior express written consent + time-of-day restriction (8 a.m.–8 p.m. local). Damages: $500 / $1,500. HB 761 added a 15-day pre-suit notice-and-cure.
-2. **Oklahoma — OTCPA, 15 Okla. Stat. §775C.1 et seq.** Modeled on FTSA; private right of action.
+2. **Oklahoma — OTCPA, 15 Okla. Stat. §775B.1 et seq.** Modeled on FTSA; private right of action.
 3. **Washington — Wash. Rev. Code §19.190 + RCW 80.36.400.** Commercial-text restrictions; sender identification + functional opt-out; per-message damages.
 4. **Connecticut — Conn. Gen. Stat. §42-288a (Public Act 23-56, 2023).** Written consent for SMS + time-of-day limits.
 5. **Maryland — Md. Code, Com. Law §14-3301 et seq.** Emerging enforcement.
@@ -496,7 +496,7 @@ All six items are checklist-tracked in the launch readiness doc. Any "no" answer
 4. **FCC Declaratory Ruling and Order, CG Docket No. 02-278 (July 10, 2015)** — the "2015 Omnibus" addressing revocation of consent and reassigned-number safe harbors.
 5. **Cal. Civ. Code §§1798.100–1798.199.100** — California Consumer Privacy Act (CCPA) as amended by the California Privacy Rights Act (CPRA). Notice, deletion, and compliance-exception provisions.
 6. **Fla. Stat. §501.059** — Florida Telephone Solicitation Act, as amended by SB 1120 (2021) and HB 761 (2023).
-7. **15 Okla. Stat. §775C.1 et seq.** — Oklahoma Telephone Solicitation Act (OTCPA).
+7. **15 Okla. Stat. §775B.1 et seq.** — Oklahoma Telephone Solicitation Act (OTCPA).
 8. **Wash. Rev. Code §19.190** — Washington Commercial Electronic Mail Act and related RCW 80.36.400.
 9. **Conn. Gen. Stat. §42-288a** — Connecticut telemarketing restrictions (as amended 2023).
 10. **Md. Code, Com. Law §14-3301 et seq.** — Maryland Telephone Solicitations Act.
@@ -550,7 +550,7 @@ Drawn from reported TCPA class-action dockets. Not exhaustive.
 5. **No proof of consent** — defendants routinely lose TCPA class actions because they cannot produce the record. See §5.3 `consent_log`.
 6. **Sending during prohibited hours** — FTSA 8 a.m.–8 p.m. local; observe strictest state window.
 7. **ATDS without prior express written consent** — *Facebook, Inc. v. Duguid*, 592 U.S. 395 (2021) narrowed but did not eliminate ATDS liability; state mini-TCPAs unaffected.
-8. **Reassigned-number exposure** — FCC 2015 Omnibus one-call safe harbor; 2019 RND available. Query RND or accept safe-harbor risk.
+8. **Reassigned-number exposure** — the FCC 2015 Omnibus one-call safe harbor was vacated in part by *ACA International v. FCC*, 885 F.3d 687 (D.C. Cir. 2018). The current operative regime is the FCC's Reassigned Numbers Database (RND), operational since November 2021 (47 CFR §64.1200(a)(1)(iv) safe harbor for callers who query RND before each call/text). Push posture: query RND before each batch send OR accept residual safe-harbor risk via §2.5 double-opt-in. Counsel must confirm the RND-vs-safe-harbor election before launch. *(Wave 3 audit 02 cite-correction.)*
 9. **Text from unregistered A2P 10DLC number** — Twilio/carrier throttling and fines pass through.
 10. **Omission of sender identity** — §64.1200(b) caller-ID identification, satisfied via brand + campaign.
 11. **Confusing opt-out instructions** — "Reply STOP to opt out" is the only safe phrasing.
