@@ -21,6 +21,12 @@
     "components/messaging",
     "components/merchant",
     "lib/services/**",
-    "app/api/internal"
+    "app/api/internal",
+    "tests",
+    "jest.config.ts",
+    "app/(creator)/creator/verify",
+    "app/(creator)/creator/(workspace)/inbox",
+    "app/(creator)/creator/notifications",
+    "components/creator/DisclosureBot.tsx"
   ]
 }

@@ -1,8 +1,22 @@
 "use client";
 
 import { useState } from "react";
-import type { DisclosureCheckResult } from "@/app/api/creator/disclosure/check/route";
 import "./disclosure-bot.css";
+
+/**
+ * Shape returned by `/api/creator/disclosure/check`. Inlined here after
+ * the route's module was deleted in a cleanup pass — the component still
+ * posts to the endpoint (declared as `any` response by fetch), so keeping
+ * the type locally preserves render logic without re-importing a stale
+ * module.
+ */
+export interface DisclosureCheckResult {
+  verified: boolean;
+  /** The matched disclosure phrase if `verified` is true. */
+  disclosure_found?: string;
+  reason: string;
+  suggestions: string[];
+}
 
 interface DisclosureBotProps {
   platform?: string;
@@ -168,7 +182,7 @@ export function DisclosureBot({
                       {result.suggestions.length > 1 ? "S" : ""})
                     </p>
                     <ul className="dbot-suggestions-list">
-                      {result.suggestions.map((s, i) => (
+                      {result.suggestions.map((s: string, i: number) => (
                         <li key={i} className="dbot-suggestion">
                           <span className="dbot-suggestion-num">
                             {String(i + 1).padStart(2, "0")}

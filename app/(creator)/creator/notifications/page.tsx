@@ -5,7 +5,7 @@ import Link from "next/link";
 import {
   useNotifications,
   timeAgo,
-  type Notification,
+  type AppNotification as Notification,
 } from "@/lib/notifications/useNotifications";
 import "./notifications.css";
 

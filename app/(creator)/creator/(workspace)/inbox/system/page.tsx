@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation";
 import {
   useNotifications,
   timeAgo,
-  type Notification,
+  type AppNotification as Notification,
 } from "@/lib/notifications/useNotifications";
 import "../inbox.css";
 
@@ -50,6 +50,9 @@ const EMPTY_MESSAGES: Record<Category, { title: string; body: string }> = {
 type SystemNotif = Notification & {
   category: Category;
   priority?: boolean;
+  /** Legacy role field on seeded rows — ignored by render but kept so
+   *  the seed literal at line 57 remains valid. */
+  role?: string;
 };
 
 /* ── Seed with categories ────────────────────────────────────── */
@@ -344,7 +347,7 @@ export default function SystemPage() {
                   style={{ animationDelay: `${idx * 25}ms` }}
                 >
                   <div className="system-item-icon">
-                    {CATEGORY_ICONS[notif.category]}
+                    {CATEGORY_ICONS[notif.category as Category]}
                   </div>
                   <div className="system-item-body">
                     <div className="system-item-header">
