@@ -266,8 +266,12 @@ export class CreatorRecruitmentService {
     try {
       const cleaned = reason ? sanitizeForLog(reason).trim() : "";
       if (cleaned) {
+        // PII note: log only the first 8 chars of creator_id so the
+        // ID stays greppable for a single ops session but doesn't
+        // end up in centralized log storage / Sentry indefinitely
+        // in plain text.
         console.info("[CreatorRecruitmentService] churn", {
-          creatorId,
+          creatorId: `${creatorId.slice(0, 8)}…`,
           reason: cleaned,
         });
       }
