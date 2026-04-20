@@ -109,6 +109,8 @@ Summary:
 
 **v5.2 change:** "Completion" = verified customer delivery rate, NOT campaign completion rate.
 
+> **AEDT Compliance:** Push Score is subject to NYC LL-144 bias audit + pre-use notice requirements. See §5.5 for full compliance spec + creator-facing disclosure language.
+
 ## 5. Dispute & Anti-Gaming
 
 ### Dispute Impact
@@ -122,6 +124,38 @@ Summary:
 - Merchant collusion: flag any >3 consecutive campaign same creator-merchant pair
 - Fake engagement: engagement capped at 10% of score
 - Verified customer fraud: -25 score + 30-day suspension + merchant refund
+
+## 5.5 NYC LL-144 AEDT Compliance (Push Score)
+
+**Applicability.** NYC Local Law 144 (Automated Employment Decision Tools Act, effective 2023-07-05) requires independent annual bias audits for AEDTs used to substantially assist employment decisions for NYC-based candidates/employees. Push Score is an automated scoring system that affects:
+- Tier assignment (T1 → T2 / T3 promotion thresholds based on score + verified customer count)
+- Tier demotion (30-day grace window triggered by score dropping below tier threshold)
+- Campaign access (some campaigns filter by tier)
+- Earning potential (per-verified-customer rate varies by tier: $5 / $15 / $20 / $25 / $40 / $60)
+
+Creators are Push's independent contractors (not employees), but LL-144 applies broadly to "employment decisions" including contractor onboarding/tier changes in many interpretations. **Counsel should confirm applicability before 2026-07-05** (first anniversary of platform launch); Push's conservative posture is to comply as if LL-144 applies.
+
+**Required Controls (target 2026-06-30 for annual bias audit):**
+
+1. **Pre-use notice to NYC creators** (10+ business days before AEDT is used on them). Notice language (to insert in Creator Terms §X):
+   > "Push uses an automated tool (Push Score) to determine your tier placement and to affect your earning rate. Push Score uses these inputs: verified customer delivery rate (30%), content quality rating from merchants (25%), reliability i.e. on-time delivery (20%), merchant rebook rate (15%), audience engagement (10%). You may request alternative evaluation by contacting support@push.nyc; we respond within 10 business days."
+
+2. **Independent bias audit.** Annual, by qualified auditor. Must publish: summary of data, impact ratios across protected categories (gender, race/ethnicity, intersectional), selection/scoring rate disparities. Published at push.nyc/aedt-audit.
+
+3. **Data retention.** Push Score inputs, outputs, and tier changes retained for 3 years. Candidate/creator may request their own scoring record.
+
+4. **Protected categories for bias audit:** Per NYC DCWP guidance: race (Black/African American, Asian, White, Native Hawaiian/Pacific Islander, American Indian/Alaska Native), sex (male/female), race × sex intersection. Creators self-identify voluntarily; low self-identification participation increases audit risk.
+
+**Non-Compliance Exposure.** Civil penalties: $500 first violation; $500–$1,500 per violation per day continuing. Private right of action under City Human Rights Law possible.
+
+**Action Items:**
+- [ ] **P0 (by 2026-06-22)**: Draft + legal-review the pre-use notice language; deploy in creator onboarding
+- [ ] **P0 (by 2026-06-22)**: Establish voluntary self-ID flow for NYC creators (opt-in demographic fields)
+- [ ] **P1 (by 2026-09-30)**: Engage independent bias auditor; scope annual audit for first-anniversary
+- [ ] **P1 (by 2026-09-30)**: Publish first annual bias audit at push.nyc/aedt-audit
+- [ ] **P2 (2027-06-30)**: Second annual bias audit
+
+**Related compliance:** NY Freelance Isn't Free Act (contract formalities), NYC Fair Chance Act (bg-check considerations in advisor hiring — see docs/hiring/), CA/CPRA (automated-decision-making notices).
 
 ## 6. Creator UI Tier Colors (Path A adopted 2026-04-20)
 
