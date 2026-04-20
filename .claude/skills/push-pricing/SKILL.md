@@ -68,25 +68,26 @@ Creators pay for premium features (advanced analytics, priority matching). Activ
 ### Layer 5: Future Financial Products
 Payout acceleration, creator cash advance, merchant credit line. Post-Series-A.
 
-## 5. Unit Economics (v5.1 Locked)
+## 5. Unit Economics (v5.2 — T1 reserve allocated)
 
 ### Per-Customer
 - Revenue: $25 (Coffee+ base, mode)
 - Creator payout: $15 (T2 Bronze, mode)
 - AI verification cost: $1.50
 - Payment processing: $0.75
-- Allocated ops: $1.20
-- **Gross Margin: $6.97 / 27.9%**
+- Allocated ops: $1.50 (was $1.20 + T1 fail-to-deliver reserve $0.30)
+- T1 fail-to-deliver reserve: $0.30 (funds $15 minimum earning guarantee for T1 creators on failed campaigns; allocated across all verified customers)
+- **Gross Margin: $6.67 / 26.7%**
 
 ### Per-Merchant (Coffee+ Month 12)
 - Revenue: $2,620 ($500 base + 85 verified customers × $25)
-- COGS: $1,889 (creator + AI + ops + overhead)
-- **Monthly GM: $731 / 27.9%**
+- COGS: $1,914 (creator + AI + ops + overhead; includes 85 × $0.30 = $25.50 T1 reserve)
+- **Monthly GM: $706 / 26.9%**
 
 ### 12-Month LTV / CAC
-- LTV: $6,579 (monthly GM × avg merchant lifetime 9 mo × retention factor)
+- LTV: $6,354 (monthly GM × avg merchant lifetime 9 mo × retention factor)
 - CAC: $420 (sales + onboarding + Pilot subsidy allocated)
-- **LTV/CAC: 15.7x base / 10.4x stressed (churn 2x / CAC 1.5x)**
+- **LTV/CAC: 15.1x base / 10.0x stressed (churn 2x / CAC 1.5x)**
 
 ## 6. Pricing vs Alternatives
 
@@ -144,6 +145,7 @@ Payout acceleration, creator cash advance, merchant credit line. Post-Series-A.
 - Pilot subsidy cap: 10 merchants total per neighborhood; never extend to 11th.
 - Creator payout SLA: 24h for T1–T3; monthly retainer for T4–T6 on 1st; perf bonus on 15th.
 - Per verified customer fee cannot be negotiated below $15 (coffee+ floor); category overrides documented in §2.2 only.
+- T1 minimum earning guarantee: $15 paid if a T1 creator completes 1 campaign with 0 verified customers (merchant fail-to-deliver protection). Funded from a reserve equivalent to ~$0.30 per verified customer.
 
 ---
 
