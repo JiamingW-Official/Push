@@ -9,7 +9,7 @@
     "dev:webpack": "mkdir -p .next/dev && next dev --webpack",
     "typecheck": "tsc --noEmit -p tsconfig.tsc.json",
     "type-check": "tsc --noEmit -p tsconfig.tsc.json",
-    "lint": "eslint app components lib hooks types proxy.ts",
+    "lint": "eslint app components lib hooks types middleware.ts",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
