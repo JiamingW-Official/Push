@@ -10,7 +10,7 @@ import {
 } from "react";
 import { useRouter, useParams } from "next/navigation";
 import Link from "next/link";
-import { createClient } from "@/lib/supabase";
+import { createClient } from "@/lib/db/browser";
 import { api } from "@/lib/messaging/api-client";
 import type { Thread, Message, UserRole } from "@/lib/messaging/types";
 import "../inbox.css";

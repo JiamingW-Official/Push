@@ -12,6 +12,7 @@ out/
 
 # Build artifacts
 tsconfig.tsbuildinfo
+tsconfig.tsc.tsbuildinfo
 .open-next/
 
 # OS

@@ -1,4 +1,4 @@
-import { createServerSupabaseClient } from "@/lib/supabase-server";
+import { createServerSupabaseClient } from "@/lib/db/server";
 import { forbidden, unauthorized } from "./responses";
 import type { NextResponse } from "next/server";
 

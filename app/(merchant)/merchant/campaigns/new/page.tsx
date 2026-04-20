@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { createClient } from "@/lib/supabase";
+import { createClient } from "@/lib/db/browser";
 import "./campaign-new.css";
 
 // ── Types ────────────────────────────────────────────────────

@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
-import { createClient } from "@/lib/supabase";
+import { createClient } from "@/lib/db/browser";
 import type { Creator } from "../types";
 import { DEMO_CREATOR } from "../demo-data";
 

@@ -13,7 +13,7 @@
 
 import { NextRequest } from "next/server";
 import { supabase } from "@/lib/db";
-import { createServerSupabaseClient } from "@/lib/supabase-server";
+import { createServerSupabaseClient } from "@/lib/db/server";
 import { serverError, unauthorized } from "@/lib/api/responses";
 import type { MerchantMetricsWeekly } from "@/types/database";
 

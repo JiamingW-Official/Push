@@ -1,7 +1,17 @@
+/**
+ * Server Supabase client with cookie session handling (anon/publishable key).
+ *
+ * Use in Server Components, Route Handlers, and Server Actions. Because this
+ * file imports `next/headers`, it CANNOT be imported from Client Components —
+ * Next.js will throw "You're importing a component that needs `cookies`. It
+ * only works in a Server Component..." at build time.
+ *
+ * For service-role (RLS-bypass) queries, import `supabase` from "@/lib/db".
+ * For Client Components, import `createClient` from "@/lib/db/browser".
+ */
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 
-// Server client — use in Server Components, Route Handlers, Server Actions only
 export const createServerSupabaseClient = async () => {
   const cookieStore = await cookies();
   return createServerClient(

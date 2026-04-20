@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { createClient } from "@/lib/supabase";
+import { createClient } from "@/lib/db/browser";
 import type { Payout } from "../types";
 import { DEMO_PAYOUTS } from "../demo-data";
 

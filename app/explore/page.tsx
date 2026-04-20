@@ -3,7 +3,7 @@
 import { useEffect, useState, useMemo } from "react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
-import { createClient } from "@/lib/supabase";
+import { createClient } from "@/lib/db/browser";
 import "./explore.css";
 
 const MapView = dynamic(() => import("@/components/layout/MapView"), {

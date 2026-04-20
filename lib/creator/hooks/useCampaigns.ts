@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { createClient } from "@/lib/supabase";
+import { createClient } from "@/lib/db/browser";
 import type { Campaign } from "../types";
 import { DEMO_CAMPAIGNS } from "../demo-data";
 

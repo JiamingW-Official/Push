@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { createClient } from "@/lib/supabase";
+import { createClient } from "@/lib/db/browser";
 import type { Application } from "../types";
 import { DEMO_APPLICATIONS } from "../demo-data";
 

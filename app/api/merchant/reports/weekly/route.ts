@@ -17,7 +17,7 @@
 
 import { NextRequest } from "next/server";
 import { WeeklyMerchantReportService } from "@/lib/services/WeeklyMerchantReportService";
-import { createServerSupabaseClient } from "@/lib/supabase-server";
+import { createServerSupabaseClient } from "@/lib/db/server";
 import {
   badRequest,
   notFound,
