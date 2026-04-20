@@ -701,7 +701,7 @@ export default function SecurityPage() {
           </p>
           <div className="sec-hero-meta">
             <span className="sec-hero-meta-item">
-              <span>Version</span>2.1
+              <span>Version</span>2.2
             </span>
             <span className="sec-hero-meta-item">
               <span>Last reviewed</span>April 2026
@@ -713,6 +713,26 @@ export default function SecurityPage() {
               <span>Contact</span>security@push.nyc
             </span>
           </div>
+          <p
+            className="sec-hero-sub"
+            style={{
+              marginTop: "var(--space-4)",
+              padding: "var(--space-3)",
+              border: "1px solid var(--sec-line, rgba(255,255,255,0.18))",
+              fontSize: "0.85em",
+            }}
+          >
+            <strong>Compliance status disclosure (2026-04-20):</strong> All
+            certification claims on this page reflect current in-progress
+            status. Push has not completed any formal third-party security or
+            privacy audits as of the date above. Targets and timelines may shift
+            subject to audit-firm engagement. For the current compliance
+            posture, contact{" "}
+            <a className="sec-link" href="mailto:security@push.nyc">
+              security@push.nyc
+            </a>
+            .
+          </p>
         </div>
       </section>
 
@@ -722,9 +742,10 @@ export default function SecurityPage() {
           <div className="sec-tldr-item">
             <IconShield className="sec-tldr-icon" />
             <span className="sec-tldr-label">Compliance</span>
-            <div className="sec-tldr-value">SOC 2 Type II</div>
+            <div className="sec-tldr-value">SOC 2 — in planning</div>
             <div className="sec-tldr-note">
-              Audit in progress. Type I attested Q1 2026.
+              Targeting SOC 2 Type I by Q4 2026, subject to audit-firm
+              engagement. No attestation has been issued.
             </div>
           </div>
           <div className="sec-tldr-item">
@@ -824,7 +845,9 @@ export default function SecurityPage() {
               <div className="sec-subsection-tags">
                 <span className="sec-tag">PII deletable ≤30 days</span>
                 <span className="sec-tag">Audit logs 7 years</span>
-                <span className="sec-tag">GDPR Art. 17 compliant</span>
+                <span className="sec-tag">
+                  GDPR Art. 17–aligned (counsel review pending)
+                </span>
               </div>
             </div>
           </div>
@@ -928,12 +951,14 @@ export default function SecurityPage() {
             <div className="sec-compliance-item">
               <div className="sec-compliance-name">SOC 2</div>
               <div className="sec-compliance-desc">
-                Type I attestation completed Q1 2026. Type II audit is in
-                progress with expected completion Q3 2026. Covers Security,
-                Availability, and Confidentiality trust service criteria.
+                SOC 2 Type I audit — in planning. Targeting engagement of an
+                AICPA-licensed auditor in 2026 with attestation by Q4 2026,
+                subject to firm engagement. No SOC 2 report has been issued yet.
+                Scope (when engaged) will cover Security, Availability, and
+                Confidentiality trust service criteria.
               </div>
               <div className="sec-compliance-status in-progress">
-                In progress
+                In planning
               </div>
             </div>
             <div className="sec-compliance-item">
@@ -948,11 +973,15 @@ export default function SecurityPage() {
             <div className="sec-compliance-item">
               <div className="sec-compliance-name">GDPR</div>
               <div className="sec-compliance-desc">
-                General Data Protection Regulation. Applicable to EU-resident
-                creators. Push maintains a Data Processing Agreement (DPA),
-                lawful basis documentation, and Article 17 deletion rights.
+                General Data Protection Regulation — GDPR-aligned data
+                practices. Applicable to EU-resident creators. A Data Processing
+                Agreement (DPA) template is available on request (counsel review
+                pending); deletion-rights tooling matches the spirit of Article
+                17. Formal compliance attestation has not been issued.
               </div>
-              <div className="sec-compliance-status active">Active</div>
+              <div className="sec-compliance-status in-progress">
+                Aligned (no formal attestation)
+              </div>
             </div>
             <div className="sec-compliance-item">
               <div className="sec-compliance-name">NY SHIELD</div>
@@ -1454,18 +1483,20 @@ curl -X POST https://api.push.nyc/v1/campaigns \\
             <div className="sec-trust-card">
               <IconFile className="sec-trust-doc-icon" />
               <div className="sec-trust-doc-title">
-                SOC 2 Type I — March 2026
+                SOC 2 Type I — in planning (target Q4 2026)
               </div>
               <p className="sec-trust-doc-desc">
-                AICPA attestation report covering Security, Availability, and
-                Confidentiality trust service criteria. Issued by Deloitte &
-                Touche LLP (fictional). Available to signed NDAs.
+                AICPA attestation covering Security, Availability, and
+                Confidentiality is on the roadmap, subject to audit-firm
+                engagement and readiness assessment. No SOC 2 report has been
+                issued; no auditor is yet engaged. Contact security@push.nyc for
+                the current compliance posture and target date.
               </p>
               <a
-                href="mailto:security@push.nyc?subject=SOC 2 Report Request"
+                href="mailto:security@push.nyc?subject=SOC%202%20Roadmap%20Inquiry"
                 className="sec-trust-doc-action"
               >
-                Request access{" "}
+                Inquire about roadmap{" "}
                 <IconArrowRight style={{ width: 12, height: 12 }} />
               </a>
             </div>

@@ -216,4 +216,50 @@ Each entry below is a drift, ambiguity, or under-specification found during the 
 
 ---
 
+## Wave 3 Additions (2026-04-20, post-audit)
+
+Per `docs/v5_2_status/audits/01-numeric-audit.md` §5 "Reconciliation Table Gaps", these 16 metrics were quoted in committed artefacts but missing from the master table. Added as rows 118–133.
+
+| # | Metric | Value | Unit | Source (file:§) | Last Updated |
+|---|---|---|---|---|---|
+| 118 | T1 minimum-guarantee trigger window | 14 | days post-campaign | push-creator/SKILL.md §2 | 2026-04-20 (bb9319e) |
+| 119 | T1 entry criterion (minimum social proof) | 500 followers OR 5 organic local posts | — | push-creator/SKILL.md §3 | 2026-04-20 (b67de90) |
+| 120 | AutoVerification coverage playbook trigger | ≥70% by M-6; ≥85% by M-12 | % | push-metrics/SKILL.md §6.2 | 2026-04-20 (cafc0ec) |
+| 121 | Onboarding hours playbook threshold | 8 | hours/merchant | push-metrics/SKILL.md §6.2 | 2026-04-20 (cafc0ec) |
+| 122 | Dispute minutes playbook threshold | 45 | minutes/dispute | push-metrics/SKILL.md §6.2 | 2026-04-20 (cafc0ec) |
+| 123 | Competitor-copy window (strategic estimate) | 24 | months | push-strategy/SKILL.md §Messaging Matrix 2 | 2026-04-20 (820cf79) |
+| 124 | Pre-competitor label target (pilot) | 10,000 | labeled events | push-strategy/SKILL.md §Messaging Matrix 2 | 2026-04-20 (820cf79) |
+| 125 | First verified pilot results window | week of 2026-06-22 (Week 4 of Q2 2026) | calendar | FTC disclosure footers; docs/hiring/inmail_drafts.md (10×) | 2026-04-20 (Wave 3) |
+| 126 | Time-to-first-creator (marketing target) | 24 | hours | app/(marketing)/page.tsx hero stats | 2026-04-20 (f5532a6) |
+| 127 | Creator-match-rate target (marketing; NOT a committed KPI) | 87% | within 2-mile radius | app/(marketing)/page.tsx L841 | 2026-04-20 — **flagged as illustrative; confirm or remove before investor call** |
+| 128 | Month-1 prorate trigger | < 5 | verified customers | push-pricing/SKILL.md §10; landing Beachhead card | 2026-04-20 (fa7f9a8) |
+| 129 | US local ad spend TAM | $47B | annual USD | app/(marketing)/page.tsx proof strip | 2026-04-20 — **needs public-report citation** |
+| 130 | NYC local advertising market | $2B+ | annual USD | app/(marketing)/page.tsx proof strip | 2026-04-20 — **needs citation** |
+| 131 | NYC local businesses count | 230,000+ | businesses | app/(marketing)/page.tsx proof strip | 2026-04-20 — **needs citation** |
+| 132 | NYC F&B + lifestyle creators count | 50,000+ | creators | app/(marketing)/page.tsx proof strip | 2026-04-20 — **needs citation** |
+| 133 | Creator signup target (CTA copy) | 30 | seconds | app/(marketing)/page.tsx final CTA | 2026-04-20 (f5532a6) |
+
+### §Marketing Illustratives (data-mock numbers)
+
+Numbers below carry `data-mock="true"` + asterisk disclosure on landing/portal pages. Illustrative only — NOT commitments. Must NEVER appear in investor decks, press, or legal filings without the illustrative label.
+
+| # | Illustrative | Location | Disclosure |
+|---|---|---|---|
+| I-01 | "+$32" per verified visit (×7 placements) | app/(marketing)/page.tsx attribution dashboard | FTC footer |
+| I-02 | "$1,504" attributed revenue | app/(marketing)/page.tsx attribution dashboard + hero preview | FTC footer |
+| I-03 | "47" QR scans / QR scans today | app/(marketing)/page.tsx attribution dashboard + hero preview | FTC footer |
+| I-04 | "3.2×" ROI vs spend | app/(marketing)/page.tsx attribution dashboard | FTC footer |
+| I-05 | "12+" / "47+" / "$8.2K" proof strip | app/(marketing)/page.tsx proof strip | FTC footer |
+| I-06 | "5 / 10 / 15 / 10" portal KPI stats | app/page.tsx portal | FTC footer |
+| I-07 | "Illustrative Coffee+ merchant ≈ $2,620/mo" ROI example | app/(marketing)/page.tsx pricing section | FTC footer |
+| I-08 | "14 / 20 slots filled / 70%" campaign-preview progress | app/(marketing)/page.tsx hero preview | FTC footer |
+| I-09 | "Score 94 · Operator" matched-creator badge | app/(marketing)/page.tsx hero preview | FTC footer |
+
+### §Change Log
+
+- **2026-04-20 (Wave 1)** — initial 117 rows compiled from P1-1 through P1-5 commits.
+- **2026-04-20 (Wave 3, post-audit)** — added rows 118–133 and §Marketing Illustratives per audit 01-numeric-audit.md §5. Row 127 ("87% creator match") flagged for confirm-or-remove; rows 129–132 flagged for citation; row 125 canonicalized "Week 4 of 2026-Q2" → "week of 2026-06-22".
+
+---
+
 *Review cadence: weekly, every Monday by ops lead. This file must be updated before any quoted v5.2 number is published in an external artefact (pitch deck, landing page, investor memo, press release). If a drift is found, fix the quotation; do not silently edit this file's Value column without a commit that explains the change in plain English.*

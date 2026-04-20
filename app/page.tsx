@@ -381,8 +381,8 @@ export default function HomePage() {
           Illustrative example from pilot target. Actual outcomes vary by
           merchant category, local market density, creator tier, and
           seasonality. Push is a pre-pilot product; first verified pilot results
-          available Week 4 of 2026-Q2. Creator compensation disclosed in full
-          via{" "}
+          available week of 2026-06-22 (Week 4 of Q2 2026). Creator compensation
+          disclosed in full via{" "}
           <Link
             href="/legal/creator-terms"
             style={{

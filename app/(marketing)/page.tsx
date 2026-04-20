@@ -800,8 +800,8 @@ export default function LandingPage() {
           </p>
 
           <span className="proof-strip-note">
-            *Illustrative targets · First verified pilot results Week 4 of
-            2026-Q2 · NYC-first
+            *Illustrative targets · First verified pilot results week of
+            2026-06-22 (Week 4 of Q2 2026) · NYC-first
           </span>
         </div>
       </div>
@@ -835,9 +835,9 @@ export default function LandingPage() {
                 verified results.
               </p>
 
-              <ul className="feature-list">
+              <ul className="feature-list" data-mock="true">
                 {[
-                  "Target 87% creator match rate within 2 miles of your business",
+                  "Target 87% creator match rate within 2 miles of your business*",
                   "QR attribution — zero ops burden, every scan logged",
                   "Campaign live in under 24 hours, from signup to first creator",
                   "$500/mo min + $15–85 per verified customer — no setup fees, no agency markup",
@@ -1568,7 +1568,7 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Testimonials intentionally removed until first verified pilot cohort (2026-Q2 Week 4). */}
+      {/* Testimonials intentionally removed until first verified pilot cohort (week of 2026-06-22, Week 4 of Q2 2026). */}
       {/* Pre-pilot testimonials would violate FTC 16 CFR § 255.1(a) (no real customer experience yet). */}
 
       <FAQSection />
@@ -1652,11 +1652,14 @@ export default function LandingPage() {
             <span className="asterisk" aria-hidden="true">
               *
             </span>{" "}
-            Illustrative example from pilot target. Actual outcomes vary by
+            Illustrative example from pilot target (including the "87% creator
+            match rate within 2 miles" marketing target on this page, which is a
+            pre-pilot goal, not a measured figure). Actual outcomes vary by
             merchant category, local market density, creator tier, and
             seasonality. Push is a pre-pilot product; first verified pilot
-            results available Week 4 of 2026-Q2. Creator compensation disclosed
-            in full via <Link href="/legal/creator-terms">Creator Terms</Link>.
+            results available week of 2026-06-22 (Week 4 of Q2 2026). Creator
+            compensation disclosed in full via{" "}
+            <Link href="/legal/creator-terms">Creator Terms</Link>.
             FTC-compliant disclosure per 16 CFR § 255.
           </p>
         </div>
