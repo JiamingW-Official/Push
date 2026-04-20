@@ -1,6 +1,7 @@
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
+import { unauthorized, notFound, serverError } from "@/lib/api/responses";
 
 // Mutates DB (creators.push_score + tier) + reads auth session. Opt out
 // of Next's route-level cache so every request sees current state.
@@ -29,8 +30,7 @@ export async function POST(_request: NextRequest) {
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  if (!user)
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  if (!user) return unauthorized();
 
   // Get creator record
   const { data: creator, error: creatorErr } = await supabase
@@ -39,8 +39,7 @@ export async function POST(_request: NextRequest) {
     .eq("user_id", user.id)
     .single();
 
-  if (creatorErr || !creator)
-    return NextResponse.json({ error: "Creator not found" }, { status: 404 });
+  if (creatorErr || !creator) return notFound("Creator not found");
 
   // Get settled submissions for score calculation
   const { data: submissions } = await supabase
@@ -112,8 +111,7 @@ export async function POST(_request: NextRequest) {
     })
     .eq("id", creator.id);
 
-  if (updateErr)
-    return NextResponse.json({ error: updateErr.message }, { status: 500 });
+  if (updateErr) return serverError("creator-score", updateErr);
 
   return NextResponse.json({
     score: clampedScore,

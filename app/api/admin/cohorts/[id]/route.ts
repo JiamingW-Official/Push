@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getCohortById } from "@/lib/admin/mock-cohorts";
 import { requireAdminSession } from "@/lib/api/admin-auth";
+import { notFound } from "@/lib/api/responses";
 
 export const dynamic = "force-dynamic";
 
@@ -15,7 +16,7 @@ export async function GET(
   const cohort = getCohortById(id);
 
   if (!cohort) {
-    return NextResponse.json({ error: "Cohort not found" }, { status: 404 });
+    return notFound("Cohort not found");
   }
 
   return NextResponse.json({ cohort });

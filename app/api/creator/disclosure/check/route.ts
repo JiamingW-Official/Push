@@ -1,6 +1,7 @@
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
+import { unauthorized, badRequest } from "@/lib/api/responses";
 
 // FTC Endorsement Guide keywords — comprehensive rule-based engine, zero cost
 const FTC_STRONG = [
@@ -65,19 +66,18 @@ export async function POST(request: NextRequest) {
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  if (!user)
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  if (!user) return unauthorized();
 
   let body: { caption?: string; platform?: string; brand_name?: string };
   try {
     body = await request.json();
   } catch {
-    return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
+    return badRequest("Invalid JSON body");
   }
 
   const { caption, brand_name = "" } = body;
   if (!caption?.trim()) {
-    return NextResponse.json({ error: "caption is required" }, { status: 400 });
+    return badRequest("caption is required");
   }
 
   const lower = caption.toLowerCase();

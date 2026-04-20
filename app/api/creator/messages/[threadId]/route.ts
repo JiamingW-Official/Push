@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabaseClient } from "@/lib/db/server";
+import { unauthorized, badRequest, serverError } from "@/lib/api/responses";
 
 interface Message {
   id: string;
@@ -35,14 +36,13 @@ export async function GET(
     const {
       data: { user },
     } = await supabase.auth.getUser();
-    if (!user)
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    if (!user) return unauthorized();
 
     const { threadId } = await params;
     const messages = MOCK_MESSAGES[threadId] ?? [];
     return NextResponse.json({ messages });
-  } catch {
-    return NextResponse.json({ error: "Internal error" }, { status: 500 });
+  } catch (err) {
+    return serverError("creator-messages-thread", err);
   }
 }
 
@@ -56,17 +56,13 @@ export async function POST(
     const {
       data: { user },
     } = await supabase.auth.getUser();
-    if (!user)
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    if (!user) return unauthorized();
 
     const { threadId } = await params;
     const { body } = (await req.json()) as { body: string };
 
     if (!body?.trim()) {
-      return NextResponse.json(
-        { error: "Message body required" },
-        { status: 400 },
-      );
+      return badRequest("Message body required");
     }
 
     const message: Message = {
@@ -80,7 +76,7 @@ export async function POST(
     };
 
     return NextResponse.json({ message });
-  } catch {
-    return NextResponse.json({ error: "Internal error" }, { status: 500 });
+  } catch (err) {
+    return serverError("creator-messages-thread", err);
   }
 }

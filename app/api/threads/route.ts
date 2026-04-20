@@ -6,6 +6,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { MOCK_THREADS } from "@/lib/messaging/mock-threads";
 import type { CreateThreadPayload } from "@/lib/messaging/types";
+import { badRequest } from "@/lib/api/responses";
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
@@ -13,10 +14,7 @@ export async function GET(request: NextRequest) {
   const userId = searchParams.get("userId");
 
   if (!role || !userId) {
-    return NextResponse.json(
-      { error: "role and userId are required" },
-      { status: 400 },
-    );
+    return badRequest("role and userId are required");
   }
 
   const threads = MOCK_THREADS.filter((t) =>
@@ -37,13 +35,12 @@ export async function POST(request: NextRequest) {
   try {
     body = await request.json();
   } catch {
-    return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
+    return badRequest("Invalid JSON body");
   }
 
   if (!body.selfUserId || !body.selfRole || !body.participantUserId) {
-    return NextResponse.json(
-      { error: "selfUserId, selfRole, and participantUserId are required" },
-      { status: 400 },
+    return badRequest(
+      "selfUserId, selfRole, and participantUserId are required",
     );
   }
 

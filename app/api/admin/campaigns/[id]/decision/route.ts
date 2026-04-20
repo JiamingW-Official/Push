@@ -10,6 +10,7 @@ import {
   type AdminFlag,
 } from "@/lib/admin/mock-campaigns";
 import { requireAdminSession } from "@/lib/api/admin-auth";
+import { notFound, badRequest } from "@/lib/api/responses";
 
 export const dynamic = "force-dynamic";
 
@@ -38,7 +39,7 @@ export async function POST(request: NextRequest, { params }: RouteContext) {
   const campaign = getAdminCampaignById(id);
 
   if (!campaign) {
-    return NextResponse.json({ error: "Campaign not found" }, { status: 404 });
+    return notFound("Campaign not found");
   }
 
   let body: {
@@ -50,7 +51,7 @@ export async function POST(request: NextRequest, { params }: RouteContext) {
   try {
     body = await request.json();
   } catch {
-    return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
+    return badRequest("Invalid JSON body");
   }
 
   const { action, note, flag_type, flag_description } = body;
@@ -63,6 +64,7 @@ export async function POST(request: NextRequest, { params }: RouteContext) {
     "force_refund",
   ];
   if (!action || !validActions.includes(action)) {
+    // TODO(codemod): migrate to badRequest/etc. — message contains a template literal
     return NextResponse.json(
       {
         error: `action must be one of: ${validActions.join(", ")}`,
@@ -75,7 +77,7 @@ export async function POST(request: NextRequest, { params }: RouteContext) {
   const idx = ADMIN_CAMPAIGNS.findIndex((c) => c.id === id);
 
   if (idx === -1) {
-    return NextResponse.json({ error: "Campaign not found" }, { status: 404 });
+    return notFound("Campaign not found");
   }
 
   const target = ADMIN_CAMPAIGNS[idx];

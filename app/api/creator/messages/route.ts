@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { createServerSupabaseClient } from "@/lib/db/server";
+import { unauthorized, serverError } from "@/lib/api/responses";
 
 // GET /api/creator/messages — list all message threads
 export async function GET() {
@@ -8,8 +9,7 @@ export async function GET() {
     const {
       data: { user },
     } = await supabase.auth.getUser();
-    if (!user)
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    if (!user) return unauthorized();
 
     // Return mock threads for now (real join with campaigns/merchants in v2)
     const threads = [
@@ -24,7 +24,7 @@ export async function GET() {
     ];
 
     return NextResponse.json({ threads });
-  } catch {
-    return NextResponse.json({ error: "Internal error" }, { status: 500 });
+  } catch (err) {
+    return serverError("creator-messages", err);
   }
 }

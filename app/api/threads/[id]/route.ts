@@ -5,6 +5,7 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { MOCK_THREADS } from "@/lib/messaging/mock-threads";
+import { notFound, badRequest } from "@/lib/api/responses";
 
 export async function GET(
   _request: NextRequest,
@@ -13,7 +14,7 @@ export async function GET(
   const { id } = await params;
   const thread = MOCK_THREADS.find((t) => t.id === id);
   if (!thread) {
-    return NextResponse.json({ error: "Thread not found" }, { status: 404 });
+    return notFound("Thread not found");
   }
   return NextResponse.json({ thread });
 }
@@ -25,14 +26,14 @@ export async function PATCH(
   const { id } = await params;
   const thread = MOCK_THREADS.find((t) => t.id === id);
   if (!thread) {
-    return NextResponse.json({ error: "Thread not found" }, { status: 404 });
+    return notFound("Thread not found");
   }
 
   let body: { action?: string; userId?: string };
   try {
     body = await request.json();
   } catch {
-    return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
+    return badRequest("Invalid JSON body");
   }
 
   if (body.action === "mark_read") {
@@ -40,5 +41,5 @@ export async function PATCH(
     return NextResponse.json({ success: true, threadId: id });
   }
 
-  return NextResponse.json({ error: "Unknown action" }, { status: 400 });
+  return badRequest("Unknown action");
 }

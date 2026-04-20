@@ -4,6 +4,7 @@ import {
   type VerificationStatus,
 } from "@/lib/admin/mock-verifications";
 import { requireAdminSession } from "@/lib/api/admin-auth";
+import { notFound, badRequest } from "@/lib/api/responses";
 
 export const dynamic = "force-dynamic";
 
@@ -24,17 +25,14 @@ export async function POST(
 
   const verification = MOCK_VERIFICATIONS.find((v) => v.id === id);
   if (!verification) {
-    return NextResponse.json(
-      { error: "Verification not found" },
-      { status: 404 },
-    );
+    return notFound("Verification not found");
   }
 
   let body: DecisionBody;
   try {
     body = await request.json();
   } catch {
-    return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
+    return badRequest("Invalid JSON body");
   }
 
   const { action, note } = body;
@@ -45,6 +43,7 @@ export async function POST(
     "pending",
   ];
   if (!action || !validActions.includes(action)) {
+    // TODO(codemod): migrate to badRequest/etc. — message contains a template literal
     return NextResponse.json(
       { error: `action must be one of: ${validActions.join(", ")}` },
       { status: 400 },

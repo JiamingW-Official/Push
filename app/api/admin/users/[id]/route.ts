@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getUserById, mockUsers } from "@/lib/admin/mock-users";
 import { requireAdminSession } from "@/lib/api/admin-auth";
+import { notFound } from "@/lib/api/responses";
 
 export const dynamic = "force-dynamic";
 
@@ -13,8 +14,7 @@ export async function GET(
 
   const { id } = await params;
   const user = getUserById(id);
-  if (!user)
-    return NextResponse.json({ error: "User not found" }, { status: 404 });
+  if (!user) return notFound("User not found");
   return NextResponse.json({ user });
 }
 
@@ -27,8 +27,7 @@ export async function PATCH(
 
   const { id } = await params;
   const idx = mockUsers.findIndex((u) => u.id === id);
-  if (idx === -1)
-    return NextResponse.json({ error: "User not found" }, { status: 404 });
+  if (idx === -1) return notFound("User not found");
 
   const body = await req.json();
   // Merge allowed fields
@@ -53,8 +52,7 @@ export async function DELETE(
 
   const { id } = await params;
   const idx = mockUsers.findIndex((u) => u.id === id);
-  if (idx === -1)
-    return NextResponse.json({ error: "User not found" }, { status: 404 });
+  if (idx === -1) return notFound("User not found");
 
   // Stub: mark as banned
   mockUsers[idx] = { ...mockUsers[idx], status: "banned" };

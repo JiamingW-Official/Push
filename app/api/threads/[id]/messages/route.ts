@@ -6,6 +6,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { MOCK_MESSAGES } from "@/lib/messaging/mock-threads";
 import type { Message } from "@/lib/messaging/types";
+import { badRequest } from "@/lib/api/responses";
 
 export async function GET(
   request: NextRequest,
@@ -45,14 +46,11 @@ export async function POST(
   try {
     body = await request.json();
   } catch {
-    return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
+    return badRequest("Invalid JSON body");
   }
 
   if (!body.senderId || !body.senderRole || !body.content) {
-    return NextResponse.json(
-      { error: "senderId, senderRole, and content are required" },
-      { status: 400 },
-    );
+    return badRequest("senderId, senderRole, and content are required");
   }
 
   // TODO: persist to Supabase messages table + broadcast on Realtime channel

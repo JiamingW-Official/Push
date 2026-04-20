@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createHash } from "node:crypto";
 import { createClient } from "@supabase/supabase-js";
-import { serverError } from "@/lib/api/responses";
+import { serverError, badRequest } from "@/lib/api/responses";
 import { getIP, rateLimit } from "@/lib/rate-limit";
 
 // POST /api/attribution/scan
@@ -52,7 +52,7 @@ export async function POST(request: NextRequest) {
   try {
     body = await request.json();
   } catch {
-    return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
+    return badRequest("Invalid JSON");
   }
 
   const { qrId, campaignId, creatorId, merchantId, sessionId } = body as {
@@ -64,19 +64,12 @@ export async function POST(request: NextRequest) {
   };
 
   if (!qrId || !campaignId || !creatorId || !merchantId) {
-    return NextResponse.json(
-      {
-        error:
-          "Missing required fields: qrId, campaignId, creatorId, merchantId",
-      },
-      { status: 400 },
+    return badRequest(
+      "Missing required fields: qrId, campaignId, creatorId, merchantId",
     );
   }
   if (!sessionId) {
-    return NextResponse.json(
-      { error: "Missing required field: sessionId" },
-      { status: 400 },
-    );
+    return badRequest("Missing required field: sessionId");
   }
 
   const client = getServiceClient();

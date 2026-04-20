@@ -30,7 +30,7 @@ import {
   AIVerificationService,
   type VerifyClaimInput,
 } from "@/lib/services/AIVerificationService";
-import { serverError } from "@/lib/api/responses";
+import { serverError, badRequest } from "@/lib/api/responses";
 import { getIP, rateLimit } from "@/lib/rate-limit";
 
 export const dynamic = "force-dynamic";
@@ -71,7 +71,7 @@ export async function POST(request: NextRequest) {
   try {
     body = await request.json();
   } catch {
-    return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
+    return badRequest("Invalid JSON");
   }
 
   // Validate required fields.
@@ -86,10 +86,7 @@ export async function POST(request: NextRequest) {
   }
 
   if (missing.length > 0) {
-    return NextResponse.json(
-      { error: "Missing or invalid fields", fields: missing },
-      { status: 400 },
-    );
+    return badRequest("Missing or invalid fields", { fields: missing });
   }
 
   const claim: VerifyClaimInput = {

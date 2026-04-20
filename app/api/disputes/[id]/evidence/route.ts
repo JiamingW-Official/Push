@@ -8,6 +8,7 @@ import { NextRequest, NextResponse } from "next/server";
 export const dynamic = "force-dynamic";
 import { getDisputeById } from "@/lib/disputes/mock-disputes";
 import type { DisputeEvidence } from "@/lib/disputes/types";
+import { notFound } from "@/lib/api/responses";
 
 export async function POST(
   req: NextRequest,
@@ -18,7 +19,7 @@ export async function POST(
   const dispute = getDisputeById(id);
 
   if (!dispute) {
-    return NextResponse.json({ error: "Dispute not found" }, { status: 404 });
+    return notFound("Dispute not found");
   }
 
   const body = await req.json();
