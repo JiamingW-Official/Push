@@ -70,6 +70,8 @@ Payout acceleration, creator cash advance, merchant credit line. Post-Series-A.
 
 ## 5. Unit Economics (v5.2 — T1 reserve allocated)
 
+> T1 reserve mechanics + decision tree: see push-creator §2 T1 Clay.
+
 ### Per-Customer
 - Revenue: $25 (Coffee+ base, mode)
 - Creator payout: $15 (T2 Bronze, mode)
@@ -88,6 +90,26 @@ Payout acceleration, creator cash advance, merchant credit line. Post-Series-A.
 - LTV: $6,354 (monthly GM × avg merchant lifetime 9 mo × retention factor)
 - CAC: $420 (sales + onboarding + Pilot subsidy allocated)
 - **LTV/CAC: 15.1x base / 10.0x stressed (churn 2x / CAC 1.5x)**
+
+### Sensitivity: T1 reserve allocation
+T1 reserve per verified customer = $15 × (T1 fail rate) × (T1 volume share of total verified customers).
+
+| T1 fail rate \ T1 volume share | 10% | 25% | 40% |
+|---|---|---|---|
+| 10% | $0.15 | $0.38 | $0.60 |
+| 20% (base) | $0.30 | $0.75 | $1.20 |
+| 30% | $0.45 | $1.13 | $1.80 |
+
+Baseline is 20% fail × 10% share = **$0.30/customer** (thin — assumes most volume from T2+). Worst-credible case 30%×40% = $1.80/customer — would compress Coffee+ GM from 26.7% to 22.0% (–4.7 pts). Mitigation: cap T1 guarantees at 3/year/creator to prevent gaming (see push-creator decision tree).
+
+### GAAP treatment
+The T1 reserve is a COGS allocation metric, NOT a pre-funded balance-sheet reserve. Accounting policy:
+- Recognition: expense recognized when guarantee is triggered (campaign closes with 0 verified + conditions met)
+- Measurement: $15 per triggering event (flat rate; not discounted)
+- Balance sheet: accrued liability from trigger event → creator payout (within 15 days per Creator Terms)
+- No pre-funding required; reserve figure in §5 is allocational only, used to avoid understating per-campaign cost
+
+Classification: **Cost of Revenue — Creator Payouts** (not Marketing; not R&D).
 
 ## 6. Pricing vs Alternatives
 
@@ -145,7 +167,7 @@ Payout acceleration, creator cash advance, merchant credit line. Post-Series-A.
 - Pilot subsidy cap: 10 merchants total per neighborhood; never extend to 11th.
 - Creator payout SLA: 24h for T1–T3; monthly retainer for T4–T6 on 1st; perf bonus on 15th.
 - Per verified customer fee cannot be negotiated below $15 (coffee+ floor); category overrides documented in §2.2 only.
-- T1 minimum earning guarantee: $15 paid if a T1 creator completes 1 campaign with 0 verified customers (merchant fail-to-deliver protection). Funded from a reserve equivalent to ~$0.30 per verified customer.
+- T1 minimum earning guarantee: $15 paid if a T1 creator completes 1 campaign with 0 verified customers, per the decision tree in push-creator §2 (see "Decision Tree — T1 campaign closes with 0 verified customers"). Funded from a reserve equivalent to ~$0.30 per verified customer (sensitivity: $0.15–$1.80 under scenario analysis). Capped at 3 triggering events per creator per year.
 
 ---
 

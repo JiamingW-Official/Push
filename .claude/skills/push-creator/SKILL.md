@@ -25,12 +25,27 @@ v4.1 "per-campaign" pricing is DEPRECATED.
 ## 2. Tier Economics (Authoritative)
 
 ### T1 Clay (Seed)
+> Reserve allocation + financial impact: see push-pricing §5 Sensitivity block.
+
 - Per-verified-customer: $5
 - Free item from merchant (valued $5–15 retail, ~$3–5 COGS)
 - First-verified-customer bonus: +$10
 - T1 minimum earning guarantee: $15 if 1 campaign completed with 0 verified customers (merchant fail-to-deliver protection)
 - Monthly theoretical range: $30–$75
 - Graduation to T2: 2 verified customers within first 2 campaigns → auto-promote
+
+### Decision Tree — T1 campaign closes with 0 verified customers
+
+1. **Merchant QR offline >6 hr during campaign** → Merchant fail-to-deliver → Push pays $15 → Merchant billed $25 retroactively (if Beachhead+) → creator score unchanged.
+2. **Creator no-show / failed to post** → Creator at fault → $0 paid → Push Score –15 → dispute opens.
+3. **Creator posted + showed, but 0 scans** (low reach / low interest) → Merchant assumes outcome risk → Push pays $15 (goodwill + fail-to-deliver) → creator score unchanged → flag campaign for post-mortem (was creator-merchant match poor?).
+4. **Fraud suspected** (fake posts, scan spoofing) → freeze payout → Integrity review within 5 business days → if fraud confirmed: $0 + Push Score –25 + 30-day suspension.
+5. **Dispute / ambiguous** → ops review within 48h → default to paying $15 if ≥51% evidence of merchant fail; default to $0 with –8 score if ≥51% evidence of creator fail.
+
+Caps: Max 3 triggering events per T1 creator per calendar year (anti-gaming). Exceeded → auto-demotion below T1 (removed from platform; manual appeal).
+
+### Creator-facing disclosure (insert verbatim into Creator Terms §X)
+> **T1 Seed Minimum Earning Guarantee.** If you complete one campaign as a T1 Seed creator and zero customers are verified through your QR scan within 14 days of campaign close, Push will pay you $15 as a Merchant Fail-to-Deliver Protection payment. This guarantee does NOT apply if: (a) you terminated the campaign early; (b) dispute review finds you at fault (no-show, false proof, policy violation); (c) the campaign predated the Beachhead phase; or (d) you have already received 3 such payments in the current calendar year (anti-gaming cap). Payment within 15 days of eligibility confirmation. This is not a minimum-wage guarantee; it reflects the platform absorbing merchant-fail risk at the Seed tier.
 
 ### T2 Bronze (Explorer)
 - Per-verified-customer: $15
