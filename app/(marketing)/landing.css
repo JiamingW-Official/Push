@@ -4040,6 +4040,51 @@ section#faq {
 }
 
 /* ─────────────────────────────────────────────────────────────── */
+/* FTC 16 CFR § 255 Disclosure                                     */
+/* ─────────────────────────────────────────────────────────────── */
+.compliance-disclosure {
+  background: #f5f2ec; /* Pearl Stone */
+  padding: 16px 24px;
+  border-top: 1px solid #003049; /* Deep Space Blue */
+  font-family: "CS Genio Mono", monospace;
+  font-size: 12px;
+  line-height: 1.5;
+  color: #003049;
+}
+.compliance-disclosure .disclosure-text {
+  margin: 0;
+}
+.compliance-disclosure .asterisk {
+  color: #c1121f; /* Flag Red */
+  font-weight: 700;
+  margin-right: 4px;
+}
+.compliance-disclosure a {
+  color: #003049;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.disclosure-marker {
+  color: #c1121f; /* Flag Red */
+  font-weight: 700;
+  font-size: 0.7em;
+  vertical-align: super;
+  margin-left: 2px;
+  cursor: help;
+}
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ─────────────────────────────────────────────────────────────── */
 /* MOBILE — responsive breakpoints                                 */
 /* ─────────────────────────────────────────────────────────────── */
 @media (max-width: 768px) {
@@ -4054,4 +4099,5 @@ section#faq {
   .testimonial-card::before { font-size: 64px; }
   .proof-stat-num      { font-size: 38px !important; }
   .stat-num            { font-size: clamp(36px, 8vw, 52px) !important; }
+  .compliance-disclosure { padding: 16px; font-size: 11px; }
 }

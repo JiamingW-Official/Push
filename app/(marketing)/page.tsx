@@ -39,12 +39,15 @@ const ATTR_ROWS = [
 
 function MerchantAttributionVisual() {
   return (
-    <div className="merch-attr-visual">
+    <div className="merch-attr-visual" data-mock="true">
       {/* Header */}
       <div className="mav-header">
         <div className="mav-header-left">
           <span className="mav-live-dot" />
-          <span className="mav-title">Attribution Dashboard</span>
+          <span className="mav-title">
+            Attribution Dashboard
+            <sup className="disclosure-marker">*</sup>
+          </span>
         </div>
         <span className="mav-campaign">Ramen &amp; Co. · Tonight</span>
       </div>
@@ -317,23 +320,23 @@ function TierVisual() {
   );
 }
 
-/* ── 6-tier showcase grid cards ───────────────────────────── */
+/* ── 6-tier showcase grid cards (v5.2 Two-Segment Economics) ── */
 const TIER_SHOWCASE_DATA = [
   {
     color: "#b8a99a",
     material: "Clay",
     name: "Seed",
-    earning: "Free product",
-    earnRange: "Earn free product per visit",
-    desc: "Zero followers needed. Get your first campaign.",
+    earning: "$5 + free item",
+    earnRange: "$5 per verified customer",
+    desc: "Zero followers needed. +$10 first-customer bonus.",
     highlight: false,
   },
   {
     color: "#8c6239",
     material: "Bronze",
     name: "Explorer",
-    earning: "$12/campaign",
-    earnRange: "Earn $12\u201318 per visit",
+    earning: "$15",
+    earnRange: "$15 per verified customer",
     desc: "Prove consistency. Build your performance score.",
     highlight: false,
   },
@@ -342,35 +345,35 @@ const TIER_SHOWCASE_DATA = [
     material: "Steel",
     name: "Operator",
     earning: "$20 + 3%",
-    earnRange: "Earn $20\u201335 per visit",
-    desc: "Commission kicks in. Bonuses at 30 transactions.",
+    earnRange: "$20 per customer + 3% referral",
+    desc: "Commission kicks in. Reliable volume tier.",
     highlight: true,
   },
   {
     color: "#c9a96e",
     material: "Gold",
     name: "Proven",
-    earning: "$32 + 5%",
-    earnRange: "Earn $32\u201355 per visit",
-    desc: "Trusted track record. Higher-value campaigns.",
+    earning: "$800/mo + $25",
+    earnRange: "$800 retainer + $25 per customer",
+    desc: "Contracted. 10% referral + monthly guarantee.",
     highlight: false,
   },
   {
     color: "#9b111e",
     material: "Ruby",
     name: "Closer",
-    earning: "$55 + 7%",
-    earnRange: "Earn $55\u201380 per visit",
-    desc: "Top performers. Priority campaign access.",
+    earning: "$1,800/mo + $40",
+    earnRange: "$1,800 retainer + $40 per customer",
+    desc: "Invite-only. 15% referral + 0.02% equity.",
     highlight: false,
   },
   {
     color: "#1a1a2e",
     material: "Obsidian",
     name: "Partner",
-    earning: "$100 + 10%",
-    earnRange: "Earn $100\u2013200 per visit",
-    desc: "Elite tier. Up to $80/month milestone bonus.",
+    earning: "$3,500/mo + $60",
+    earnRange: "$3,500 retainer + $60 per customer",
+    desc: "Senior partner. 20% referral + 0.05–0.2% equity.",
     highlight: false,
   },
 ];
@@ -410,7 +413,9 @@ function TierShowcaseGrid() {
         <span className="tp-arrow">&#8594;</span>
         <span className="tp-step">Unlock higher rates</span>
         <span className="tp-arrow">&#8594;</span>
-        <span className="tp-step tp-step--highlight">Top 1%: $200/visit</span>
+        <span className="tp-step tp-step--highlight">
+          Partner: $3,500/mo + equity
+        </span>
       </div>
     </>
   );
@@ -419,7 +424,7 @@ function TierShowcaseGrid() {
 /* ── Hero campaign preview (right column) ─────────────────── */
 function HeroCampaignPreview() {
   return (
-    <div className="hero-preview" aria-hidden="true">
+    <div className="hero-preview" data-mock="true" aria-hidden="true">
       <div className="hcp-card">
         <span
           className="hcp-example-tag"
@@ -430,7 +435,8 @@ function HeroCampaignPreview() {
             letterSpacing: "0.08em",
           }}
         >
-          Live campaign preview
+          Illustrative campaign preview
+          <sup className="disclosure-marker">*</sup>
         </span>
         <div className="hcp-live-row">
           <span className="hcp-live-dot" />
@@ -527,13 +533,13 @@ const TICKER_ITEMS = [
   "Verified Foot Traffic",
   "Zero Followers Needed",
   "AI-Powered Matching",
-  "$19.99 / mo",
+  "Pay per Verified Customer",
   "6 Creator Tiers",
   "Zero Setup Fees",
   "24-Hour Campaign Launch",
   "Transaction-Level Data",
   "No Agency Fees",
-  "$100 / Campaign Potential",
+  "Retainer + Equity for Top Tiers",
 ];
 
 const FAQ_ITEMS = [
@@ -547,7 +553,7 @@ const FAQ_ITEMS = [
   },
   {
     q: "Is there a monthly fee?",
-    a: "No. You set a per-visit rate and only pay when visits happen. The $19.99/mo Starter plan is optional for volume discounts and advanced analytics.",
+    a: "Beachhead merchants pay a $500/mo floor (covers AI + ops) plus a per-verified-customer fee of $15–85 by category. Pilot cohort pays $0 base + $0 per customer during the first-10-merchant onboarding window.",
   },
   {
     q: "How do creators get paid?",
@@ -574,9 +580,10 @@ const jsonLd = {
   url: "https://pushnyc.co",
   offers: {
     "@type": "Offer",
-    price: "19.99",
+    price: "500",
     priceCurrency: "USD",
-    description: "Merchant subscription starting at $19.99/month",
+    description:
+      "Beachhead merchants: $500/mo minimum + $15–85 per verified customer by category. Pilot cohort: $0 base during onboarding.",
   },
   provider: {
     "@type": "Organization",
@@ -658,16 +665,14 @@ export default function LandingPage() {
 
           {/* Stats: full-width bottom row */}
           <div className="hero-stats">
-            <div className="stat-item reveal">
+            <div className="stat-item reveal" data-mock="true">
               <span className="stat-num">
-                <StatCounter
-                  value={19.99}
-                  prefix="$"
-                  decimals={2}
-                  duration={1200}
-                />
+                <StatCounter value={500} prefix="$" duration={1200} />
+                <sup className="disclosure-marker">*</sup>
               </span>
-              <span className="stat-label">Merchant entry price / mo</span>
+              <span className="stat-label">
+                Beachhead floor / mo + $15–85 per verified customer
+              </span>
             </div>
             <div
               className="stat-item reveal"
@@ -733,8 +738,8 @@ export default function LandingPage() {
             ))}
           </div>
 
-          {/* Traction numbers — pilot data */}
-          <div className="proof-stats">
+          {/* Traction numbers — illustrative pilot targets */}
+          <div className="proof-stats" data-mock="true">
             <div className="proof-stat">
               <span className="proof-stat-num">
                 <CountUp target={12} suffix="+" duration={1400} />
@@ -761,10 +766,13 @@ export default function LandingPage() {
             </div>
           </div>
 
-          <div className="vc-metrics-bar reveal">
+          <div className="vc-metrics-bar reveal" data-mock="true">
             <span className="vcm-item">
               <span className="vcm-label">Market</span>
-              <span className="vcm-value">$47B local ad spend</span>
+              <span className="vcm-value">
+                $47B local ad spend
+                <sup className="disclosure-marker">*</sup>
+              </span>
             </span>
             <span className="vcm-divider" aria-hidden="true">
               —
@@ -792,7 +800,8 @@ export default function LandingPage() {
           </p>
 
           <span className="proof-strip-note">
-            *Based on pilot data · Early access cohort · NYC-first
+            *Illustrative targets · First verified pilot results Week 4 of
+            2026-Q2 · NYC-first
           </span>
         </div>
       </div>
@@ -828,10 +837,10 @@ export default function LandingPage() {
 
               <ul className="feature-list">
                 {[
-                  "87% creator match rate within 2 miles of your business",
+                  "Target 87% creator match rate within 2 miles of your business",
                   "QR attribution — zero ops burden, every scan logged",
                   "Campaign live in under 24 hours, from signup to first creator",
-                  "From $19.99/mo — no setup fees, no agency markup",
+                  "$500/mo min + $15–85 per verified customer — no setup fees, no agency markup",
                 ].map((f) => (
                   <li key={f} className="feature-item">
                     <span className="feature-dot" />
@@ -1007,9 +1016,10 @@ export default function LandingPage() {
                 </div>
               </div>
             </div>
-            <p className="attr-note">
-              Average verified visit costs $4–$12. Traditional ads: $15–$50 per
-              click with no visit guarantee.
+            <p className="attr-note" data-mock="true">
+              Verified customer fees range $15–$85 by category
+              <sup className="disclosure-marker">*</sup>. Traditional ads:
+              $15–$50 per click with no visit guarantee.
             </p>
           </div>
         </div>
@@ -1052,22 +1062,30 @@ export default function LandingPage() {
             <TierShowcaseGrid />
           </div>
 
-          {/* Performance score explainer */}
+          {/* Performance score explainer (v5.2 weights) */}
           <div className="reveal" style={{ transitionDelay: "150ms" }}>
             <div className="perf-score-explainer">
               <h4>How your score works</h4>
               <div className="pse-items">
                 <div className="pse-item">
-                  <span className="pse-metric">Verified visits</span>
-                  <span className="pse-weight">50%</span>
-                </div>
-                <div className="pse-item">
-                  <span className="pse-metric">Content quality</span>
+                  <span className="pse-metric">Verified customer rate</span>
                   <span className="pse-weight">30%</span>
                 </div>
                 <div className="pse-item">
-                  <span className="pse-metric">Consistency</span>
+                  <span className="pse-metric">Content quality</span>
+                  <span className="pse-weight">25%</span>
+                </div>
+                <div className="pse-item">
+                  <span className="pse-metric">Reliability</span>
                   <span className="pse-weight">20%</span>
+                </div>
+                <div className="pse-item">
+                  <span className="pse-metric">Merchant satisfaction</span>
+                  <span className="pse-weight">15%</span>
+                </div>
+                <div className="pse-item">
+                  <span className="pse-metric">Engagement</span>
+                  <span className="pse-weight">10%</span>
                 </div>
               </div>
               <p className="pse-note">
@@ -1100,9 +1118,9 @@ export default function LandingPage() {
                 <ul className="feature-list">
                   {[
                     "Start at Seed — zero followers, zero cost to join",
-                    "6-tier progression: earn $12→$100/campaign as you level up",
-                    "Commission on every verified sale (3%→10%)",
-                    "Milestone bonuses from $15→$80/month — unlocks at 30 transactions",
+                    "6-tier progression: earn $5→$60 per verified customer",
+                    "Commission on every referred sale (3%→20% at top tiers)",
+                    "T4+ tiers add monthly retainer ($800→$3,500) + equity grants",
                   ].map((f) => (
                     <li key={f} className="feature-item">
                       <span
@@ -1124,28 +1142,33 @@ export default function LandingPage() {
                   </ol>
                 </div>
 
-                <div className="earning-preview">
+                <div className="earning-preview" data-mock="true">
                   <p className="earning-preview-label">
                     Your earning potential
+                    <sup className="disclosure-marker">*</sup>
                   </p>
                   <div className="earning-tier">
                     <span className="earning-tier-name">Seed</span>
-                    <span className="earning-tier-value">Free product</span>
+                    <span className="earning-tier-value">
+                      $5 + free item / verified customer
+                    </span>
                   </div>
                   <div className="earning-tier">
                     <span className="earning-tier-name">Explorer</span>
-                    <span className="earning-tier-value">$12/campaign</span>
+                    <span className="earning-tier-value">
+                      $15 / verified customer
+                    </span>
                   </div>
                   <div className="earning-tier highlight">
                     <span className="earning-tier-name">Operator</span>
                     <span className="earning-tier-value">
-                      $20 + 3% commission + $15 bonus at 30 tx/mo
+                      $20 / customer + 3% referral commission
                     </span>
                   </div>
                   <div className="earning-tier">
                     <span className="earning-tier-name">Partner</span>
                     <span className="earning-tier-value">
-                      $100 + 10% commission + $80 bonus
+                      $3,500/mo retainer + $60 / customer + 20% + equity
                     </span>
                   </div>
                 </div>
@@ -1174,14 +1197,6 @@ export default function LandingPage() {
                     </ul>
                   </div>
                 </div>
-
-                <blockquote className="creator-testimonial">
-                  <p>
-                    &ldquo;I earned $320 last month just visiting restaurants
-                    I&apos;d go to anyway.&rdquo;
-                  </p>
-                  <cite>— @maya.eats.nyc · Operator Tier</cite>
-                </blockquote>
 
                 <Link href="/creator/signup" className="btn btn-secondary">
                   Join as Creator — Start Free
@@ -1343,55 +1358,55 @@ export default function LandingPage() {
           <div className="pricing-grid">
             {[
               {
-                name: "Starter",
-                int: "$19",
-                dec: ".99",
-                period: "/mo",
-                desc: "Pay per visit, keep full control.",
+                name: "Pilot",
+                int: "$0",
+                dec: "",
+                period: "",
+                desc: "First 10 Williamsburg Coffee+ merchants — generates AI training data.",
                 features: [
-                  "2 active campaigns",
-                  "3 creator slots",
-                  "AI creator matching",
-                  "QR attribution",
-                  "Basic analytics",
+                  "$0 base + $0 per verified customer",
+                  "Time-boxed to first 10 merchants per neighborhood",
+                  "Full attribution + content asset delivery",
+                  "White-glove onboarding",
+                  "Pilot playbook & priority support",
                 ],
                 featured: false,
-                badge: null,
-                cta: "Get Started",
+                badge: "Invite-Only",
+                cta: "Apply for Pilot",
               },
               {
-                name: "Growth",
-                int: "$69",
+                name: "Beachhead",
+                int: "$500",
                 dec: "",
                 period: "/mo",
-                desc: "Best for growing restaurants, gyms, retail.",
+                desc: "Merchants 11–50. Pay a floor + per verified customer.",
                 features: [
-                  "4 active campaigns",
-                  "5 creator slots",
-                  "Priority creator matching",
+                  "$500/mo floor covers AI + ops",
+                  "$15–$85 per verified customer by category",
+                  "Retention add-on: +$8 visit 2 / +$6 visit 3 / +$4 loyalty",
+                  "Month 1 prorated if <5 verified customers",
                   "Full analytics dashboard",
-                  "Campaign templates",
                 ],
                 featured: true,
-                badge: "Most Popular",
-                cta: "Get Growth",
+                badge: "Most Common",
+                cta: "Join Beachhead",
               },
               {
-                name: "Pro",
-                int: "$199",
+                name: "Scale",
+                int: "Custom",
                 dec: "",
-                period: "/mo",
-                desc: "Unlimited campaigns, priority matching.",
+                period: "",
+                desc: "Williamsburg 50+ / NYC-dense / other metros.",
                 features: [
-                  "Unlimited campaigns",
-                  "8 creator slots",
+                  "Same $500/mo floor + per-verified-customer by category",
+                  "Auto merchant preload balance + usage draw-down",
                   "Dedicated account manager",
                   "Custom attribution rules",
                   "API access",
                 ],
                 featured: false,
                 badge: null,
-                cta: "Get Pro",
+                cta: "Talk to Sales",
               },
             ].map((plan, i) => (
               <div
@@ -1423,7 +1438,7 @@ export default function LandingPage() {
                 >
                   {plan.cta}
                 </Link>
-                {plan.name === "Starter" && (
+                {plan.name === "Pilot" && (
                   <p
                     style={{
                       fontSize: "11px",
@@ -1440,11 +1455,13 @@ export default function LandingPage() {
             ))}
           </div>
 
-          {/* ROI math example */}
-          <div className="roi-math reveal">
+          {/* Illustrative math — Coffee+ category at Beachhead floor */}
+          <div className="roi-math reveal" data-mock="true">
             <span className="roi-example">
-              Example: Pay $150 for verified foot traffic → avg customer LTV $85
-              × 3 visits = <strong>$255 return</strong>
+              Illustrative
+              <sup className="disclosure-marker">*</sup>: a Coffee+ merchant at
+              Beachhead pays $500/mo floor + $25 × ~85 verified customers ≈{" "}
+              <strong>$2,620/mo</strong> for verified walk-in + content asset.
             </span>
           </div>
 
@@ -1551,50 +1568,8 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Testimonials */}
-      <section className="section testimonials-section">
-        <div className="container">
-          <div className="testimonials-grid reveal">
-            <blockquote className="testimonial-card testimonial-card--merchant">
-              <p className="testimonial-quote">
-                &ldquo;We spent $200 and got 47 verified visits in one week.
-                That&apos;s better ROI than any Instagram ad we&apos;ve
-                run.&rdquo;
-              </p>
-              <footer className="testimonial-footer">
-                <span className="testimonial-name">Maria C.</span>
-                <span className="testimonial-role">
-                  Owner, Café Dos Alas — Brooklyn
-                </span>
-              </footer>
-            </blockquote>
-            <blockquote className="testimonial-card testimonial-card--creator">
-              <p className="testimonial-quote">
-                &ldquo;I posted twice about a ramen spot near me and made $180.
-                Push actually pays out — and fast.&rdquo;
-              </p>
-              <footer className="testimonial-footer">
-                <span className="testimonial-name">@jayxnyc</span>
-                <span className="testimonial-role">
-                  Creator, 3,200 followers — Manhattan
-                </span>
-              </footer>
-            </blockquote>
-            <blockquote className="testimonial-card testimonial-card--merchant">
-              <p className="testimonial-quote">
-                &ldquo;The QR attribution is the thing. We finally know exactly
-                which post drove which customer.&rdquo;
-              </p>
-              <footer className="testimonial-footer">
-                <span className="testimonial-name">David K.</span>
-                <span className="testimonial-role">
-                  Co-founder, Uptown Fitness — Harlem
-                </span>
-              </footer>
-            </blockquote>
-          </div>
-        </div>
-      </section>
+      {/* Testimonials intentionally removed until first verified pilot cohort (2026-Q2 Week 4). */}
+      {/* Pre-pilot testimonials would violate FTC 16 CFR § 255.1(a) (no real customer experience yet). */}
 
       <FAQSection />
 
@@ -1659,6 +1634,31 @@ export default function LandingPage() {
               </p>
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* ── FTC 16 CFR § 255 Disclosure ──────────────────────────── */}
+      <section
+        className="compliance-disclosure"
+        data-section="ftc-disclosure"
+        role="note"
+        aria-labelledby="ftc-disclosure-heading"
+      >
+        <div className="container">
+          <h2 id="ftc-disclosure-heading" className="visually-hidden">
+            Illustrative numbers disclosure
+          </h2>
+          <p id="ftc-disclosure-text" className="disclosure-text">
+            <span className="asterisk" aria-hidden="true">
+              *
+            </span>{" "}
+            Illustrative example from pilot target. Actual outcomes vary by
+            merchant category, local market density, creator tier, and
+            seasonality. Push is a pre-pilot product; first verified pilot
+            results available Week 4 of 2026-Q2. Creator compensation disclosed
+            in full via <Link href="/legal/creator-terms">Creator Terms</Link>.
+            FTC-compliant disclosure per 16 CFR § 255.
+          </p>
         </div>
       </section>
     </>
