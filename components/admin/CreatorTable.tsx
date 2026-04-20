@@ -26,12 +26,14 @@ export default function CreatorTable({ data }: CreatorTableProps) {
       <table className={styles.table}>
         <thead>
           <tr>
-            <th>ID</th>
-            <th>Tier</th>
-            <th>Status</th>
-            <th style={{ textAlign: "right" }}>Score</th>
-            <th>Source</th>
-            <th>Signed</th>
+            <th scope="col">ID</th>
+            <th scope="col">Tier</th>
+            <th scope="col">Status</th>
+            <th scope="col" style={{ textAlign: "right" }}>
+              Score
+            </th>
+            <th scope="col">Source</th>
+            <th scope="col">Signed</th>
           </tr>
         </thead>
         <tbody>
@@ -44,6 +46,7 @@ export default function CreatorTable({ data }: CreatorTableProps) {
                   className={styles.badge}
                   style={{ color: STATUS_COLORS[row.status] }}
                 >
+                  <span className="sr-only">Status: </span>
                   {row.status.replace("_", " ")}
                 </span>
               </td>

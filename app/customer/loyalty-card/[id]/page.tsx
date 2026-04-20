@@ -33,8 +33,8 @@ export default async function LoyaltyCardPage({ params }: PageProps) {
   return (
     <div className="loyalty-shell">
       <div className="loyalty-topbar">
-        <a href="/customer" className="loyalty-back">
-          ← 返回
+        <a href="/" className="loyalty-back" aria-label="返回首页">
+          <span aria-hidden="true">←</span> 返回首页
         </a>
       </div>
 

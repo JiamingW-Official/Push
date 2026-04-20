@@ -21,11 +21,17 @@ export default function ReportsTable({ data }: ReportsTableProps) {
       <table className={styles.table}>
         <thead>
           <tr>
-            <th>Week Start</th>
-            <th>Merchant</th>
-            <th style={{ textAlign: "center" }}>Customers</th>
-            <th style={{ textAlign: "right" }}>Revenue</th>
-            <th style={{ textAlign: "right" }}>ROI</th>
+            <th scope="col">Week Start</th>
+            <th scope="col">Merchant</th>
+            <th scope="col" style={{ textAlign: "center" }}>
+              Customers
+            </th>
+            <th scope="col" style={{ textAlign: "right" }}>
+              Revenue
+            </th>
+            <th scope="col" style={{ textAlign: "right" }}>
+              ROI
+            </th>
           </tr>
         </thead>
         <tbody>

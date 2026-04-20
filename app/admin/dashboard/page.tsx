@@ -48,9 +48,18 @@ export default function AdminDashboardPage() {
         {error && (
           <div className="admin-alert" role="alert">
             <p className="admin-alert__text">
-              部分数据加载失败，已降级到 mock 数据。
+              部分数据未能加载，正在显示缓存数据。
             </p>
-            <p className="admin-alert__detail">失败的数据源：{error}</p>
+            <button
+              type="button"
+              className="admin-alert__retry"
+              onClick={() => {
+                void refetch();
+              }}
+              aria-label="重新加载数据"
+            >
+              重试
+            </button>
           </div>
         )}
 

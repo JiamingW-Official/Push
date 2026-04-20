@@ -63,5 +63,8 @@ function constantTimeEqual(a: string, b: string): boolean {
  * skips the edge entirely.
  */
 export const config = {
-  matcher: ["/api/internal/:path*"],
+  // Include both the bare `/api/internal` path (in case a root handler is
+  // ever added) and every nested path. Next's matcher treats `:path*` as
+  // "at least one segment" on some versions, so list the root explicitly.
+  matcher: ["/api/internal", "/api/internal/:path*"],
 };

@@ -19,7 +19,12 @@ export default function LiveTimestamp({ lastUpdated }: { lastUpdated: Date }) {
   }, []);
 
   return (
-    <span className="admin-timestamp">
+    <span
+      className="admin-timestamp"
+      role="status"
+      aria-live="polite"
+      aria-atomic="true"
+    >
       最后更新：{formatTimeAgo(lastUpdated)}
     </span>
   );

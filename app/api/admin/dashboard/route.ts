@@ -47,11 +47,16 @@ export async function GET() {
   try {
     const weekStart = getCurrentWeekStartISO();
 
-    // Three parallel COUNT / aggregate queries. `head: true` + `count: "exact"`
-    // returns only the row count (no row payload) — fastest possible shape.
+    // Three parallel COUNT / aggregate queries. `count: "estimated"` uses
+    // pg_class.reltuples for O(1) counts — off-by-a-few is acceptable for
+    // a dashboard KPI and avoids a full-table seq scan every 30 s poll.
     const [merchantsRes, creatorsRes, weeklyRes] = await Promise.all([
-      supabase.from("merchants").select("id", { head: true, count: "exact" }),
-      supabase.from("creators").select("id", { head: true, count: "exact" }),
+      supabase
+        .from("merchants")
+        .select("id", { head: true, count: "estimated" }),
+      supabase
+        .from("creators")
+        .select("id", { head: true, count: "estimated" }),
       supabase
         .from("merchant_metrics_weekly")
         .select("verified_customers, roi")

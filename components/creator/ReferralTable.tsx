@@ -26,11 +26,15 @@ export default function ReferralTable({ data }: ReferralTableProps) {
       <table className={styles.table}>
         <thead>
           <tr>
-            <th>Date</th>
-            <th>Merchant</th>
-            <th>Customer</th>
-            <th style={{ textAlign: "center" }}>Status</th>
-            <th style={{ textAlign: "right" }}>Commission</th>
+            <th scope="col">Date</th>
+            <th scope="col">Merchant</th>
+            <th scope="col">Customer</th>
+            <th scope="col" style={{ textAlign: "center" }}>
+              Status
+            </th>
+            <th scope="col" style={{ textAlign: "right" }}>
+              Commission
+            </th>
           </tr>
         </thead>
         <tbody>
@@ -46,6 +50,7 @@ export default function ReferralTable({ data }: ReferralTableProps) {
                   className={styles.badge}
                   style={{ backgroundColor: STATUS_BG[row.status] }}
                 >
+                  <span className="sr-only">Status: </span>
                   {row.status}
                 </span>
               </td>

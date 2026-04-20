@@ -27,10 +27,16 @@ export default function LeaderboardTable({
       <table className={styles.table}>
         <thead>
           <tr>
-            <th style={{ textAlign: "center" }}>Rank</th>
-            <th>Name</th>
-            <th style={{ textAlign: "center" }}>Weekly Referrals</th>
-            <th style={{ textAlign: "right" }}>Weekly Earnings</th>
+            <th scope="col" style={{ textAlign: "center" }}>
+              Rank
+            </th>
+            <th scope="col">Name</th>
+            <th scope="col" style={{ textAlign: "center" }}>
+              Weekly Referrals
+            </th>
+            <th scope="col" style={{ textAlign: "right" }}>
+              Weekly Earnings
+            </th>
           </tr>
         </thead>
         <tbody>
@@ -45,7 +51,14 @@ export default function LeaderboardTable({
                 <td className={styles.rankCell}>{row.rank}</td>
                 <td className={styles.nameCell}>
                   {row.creator_name}
-                  {isCurrent && <span className={styles.youTag}>you</span>}
+                  {isCurrent && (
+                    <>
+                      <span className={styles.youTag} aria-hidden="true">
+                        you
+                      </span>
+                      <span className="sr-only"> (current user)</span>
+                    </>
+                  )}
                 </td>
                 <td className={styles.referralsCell}>{row.weekly_referrals}</td>
                 <td className={styles.earningsCell}>
