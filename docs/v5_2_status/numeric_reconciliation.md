@@ -255,10 +255,61 @@ Numbers below carry `data-mock="true"` + asterisk disclosure on landing/portal p
 | I-08 | "14 / 20 slots filled / 70%" campaign-preview progress | app/(marketing)/page.tsx hero preview | FTC footer |
 | I-09 | "Score 94 · Operator" matched-creator badge | app/(marketing)/page.tsx hero preview | FTC footer |
 
+## P2 Wave Additions (2026-04-20)
+
+Per the 6 P2 specs (Wave 1) + Wave 2 deepening + Wave 3 audit + Wave 3 fix-round, the following metrics enter or revise the SoT.
+
+| # | Metric | Value | Unit | Source (file:§) | Last Updated |
+|---|---|---|---|---|---|
+| 134 | M12 MRR — base case (40% Pilot→Paid) | $16K | USD/mo | docs/spec/expansion-math-v1.md §5.1 | 2026-04-20 (426b71d) |
+| 135 | M12 MRR — upside (60% Pilot→Paid) | $25K | USD/mo | docs/spec/expansion-math-v1.md §5.1 | 2026-04-20 (426b71d) |
+| 136 | M24 MRR — base case | $288K | USD/mo | docs/spec/expansion-math-v1.md §5.1 | 2026-04-20 (426b71d) |
+| 137 | M36 MRR — base case | $1.06M | USD/mo | docs/spec/expansion-math-v1.md §5.1 | 2026-04-20 (426b71d) |
+| 138 | M48 MRR — base case | $1.84M | USD/mo | docs/spec/expansion-math-v1.md §5.1 | 2026-04-20 (426b71d) |
+| 139 | $10M ARR threshold cleared | M36 | calendar (40% base) | docs/spec/expansion-math-v1.md §5.1 | 2026-04-20 (426b71d) |
+| 140 | Per-merchant MRR ramp (M12 immature → M24+ mature) | $1,000 → $2,200–$2,300 | USD/mo | docs/spec/expansion-math-v1.md §5.1 | 2026-04-20 (426b71d) |
+| 141 | Pilot→Paid baseline (authoritative for forecasting) | 40% | conversion rate | docs/spec/expansion-math-v1.md §5.1; docs/spec/conversion-assumption-v1.md §14.1 | 2026-04-20 (426b71d) |
+| 142 | Pilot→Paid upside (best-case scenario) | 60% | conversion rate | docs/spec/conversion-assumption-v1.md §1 + §14.1 | 2026-04-20 |
+| 143 | Pilot→Paid stress floor (LTV/CAC ≥ 3x via Model B) | 25% | conversion rate | docs/spec/conversion-assumption-v1.md §3 | 2026-04-20 |
+| 144 | LTV/CAC — Model B all-in (60% conversion) | 4.5× | ratio | docs/spec/conversion-assumption-v1.md §3 + §14.1 | 2026-04-20 (426b71d) |
+| 145 | LTV/CAC — Model B all-in (40% conversion) | 3.3× | ratio | docs/spec/conversion-assumption-v1.md §3 + §14.1 | 2026-04-20 |
+| 146 | LTV/CAC — Model B all-in (25% conversion) | 2.3× | ratio | docs/spec/conversion-assumption-v1.md §3 + §14.1 | 2026-04-20 |
+| 147 | LTV/CAC — Model B all-in (15% conversion, breaches floor) | 1.4× | ratio | docs/spec/conversion-assumption-v1.md §3 + §14.1 | 2026-04-20 |
+| 148 | Pilot cohort cost (10 pilots × $150/wk × 4 wk) | $6,000 | USD | docs/spec/conversion-assumption-v1.md §3 | 2026-04-20 |
+| 149 | Per-converted-merchant CAC at 60% Pilot→Paid | $1,420 | USD | docs/spec/conversion-assumption-v1.md §14.1 | 2026-04-20 (426b71d) |
+| 150 | Per-converted-merchant CAC at 40% Pilot→Paid | $1,920 | USD | docs/spec/conversion-assumption-v1.md §14.1 | 2026-04-20 (426b71d) |
+| 151 | Leading-indicator r-threshold for adoption (Week-2 verified count → conversion) | r ≥ 0.78 | Pearson | docs/spec/conversion-assumption-v1.md §11 + §14.2 | 2026-04-20 (426b71d) |
+| 152 | Pilot Week-12 final-data window | week of 2026-07-27 | calendar | docs/spec/conversion-assumption-v1.md §4; expansion-math §5.1 | 2026-04-20 |
+| 153 | Year-1 legal envelope (audit-corrected) | $57K–$120K | USD | docs/spec/legal-budget-v1.md §14.3 | 2026-04-20 (426b71d) |
+| 154 | Year-1 legal envelope mid-point | $88K | USD | docs/spec/legal-budget-v1.md §14.3 | 2026-04-20 (426b71d) |
+| 155 | First 90-day legal spend | $10K–$15K | USD | docs/spec/legal-budget-v1.md §14.3 | 2026-04-20 (426b71d) |
+| 156 | TCPA opinion-letter timeline (audit-corrected) | 3–5 weeks | elapsed | docs/spec/sms-compliance-v1.md §6.2 + audit 02 | 2026-04-20 |
+| 157 | FTC DisclosureBot opinion-letter timeline | 6–8 weeks | elapsed | docs/spec/disclosurebot-v0.md §16.4 | 2026-04-20 (426b71d) |
+| 158 | E&O insurance Year-1 cost (audit-corrected) | $6K–$12K | USD/year | docs/spec/legal-budget-v1.md §14.1 | 2026-04-20 (426b71d) |
+| 159 | D&O insurance Year-1 cost (audit-corrected) | $6K–$15K | USD/year | docs/spec/legal-budget-v1.md §14.1 | 2026-04-20 (426b71d) |
+| 160 | DisclosureBot v0 launch gate (counsel opinion) | 2026-06-15 | calendar | docs/spec/disclosurebot-v0.md §16.4 | 2026-04-20 (426b71d) |
+| 161 | TCPA statutory damages base | $500 | USD/violation | docs/spec/sms-compliance-v1.md §1 | 2026-04-20 |
+| 162 | TCPA statutory damages enhancement (discretionary, NOT trebled) | up to $1,500 | USD/violation | docs/spec/sms-compliance-v1.md §1 (Wave 3 cite-correction) | 2026-04-20 (426b71d) |
+| 163 | Twilio A2P 10DLC registration window | 2–4 weeks | elapsed | docs/spec/sms-compliance-v1.md §5.1 | 2026-04-20 |
+| 164 | Apple Developer Program annual fee | $99 | USD/year | docs/spec/consumer-facing-v1.md §5 | 2026-04-20 |
+| 165 | Phone-pepper rotation cadence | first Monday of April annually | calendar | docs/spec/sms-compliance-v1.md §4.6 + §12.2; consumer-facing §4 (post Wave 3 reconciliation) | 2026-04-20 (426b71d) |
+| 166 | Pepper-version retention for hash regeneration | 4 years | retention | docs/spec/sms-compliance-v1.md §4.6 | 2026-04-20 |
+| 167 | Pilot W12 readout date (M48 calendar) | 2026-07-27 (week of) | calendar | docs/spec/conversion-assumption-v1.md §4 | 2026-04-20 |
+
+### §P2 Cross-Spec Reconciliation Notes (Wave 3 fix-round outcomes)
+
+- **N1 M12 MRR resolved:** $16K base (40% Pilot→Paid) + $25K upside (60%) per row 134/135. Prior $25K-only quotation in expansion-math §5.1 corrected.
+- **N6 Pepper storage resolved:** KMS authoritative; Vercel env var path deprecated in P2-1 §4.
+- **N4 LTV/CAC arithmetic resolved:** Model A withdrawn; Model B exclusive (rows 144-147).
+- **N8/N9 Counsel timelines corrected:** TCPA 3-5wk (was 1-2); FTC 6-8wk (was 4-6).
+- **N10/N11 Legal budget corrected:** Year-1 $57K-$120K mid $88K (was $25K-$40K).
+- **De-scope decision pending:** P2-4 v0 → v0.5 (manual paste only) per audit 00 §9.4 and disclosurebot §16.5; founder approval required.
+
 ### §Change Log
 
-- **2026-04-20 (Wave 1)** — initial 117 rows compiled from P1-1 through P1-5 commits.
-- **2026-04-20 (Wave 3, post-audit)** — added rows 118–133 and §Marketing Illustratives per audit 01-numeric-audit.md §5. Row 127 ("87% creator match") flagged for confirm-or-remove; rows 129–132 flagged for citation; row 125 canonicalized "Week 4 of 2026-Q2" → "week of 2026-06-22".
+- **2026-04-20 (Wave 1, P1)** — initial 117 rows compiled from P1-1 through P1-5 commits.
+- **2026-04-20 (Wave 3, post-audit)** — added rows 118–133 and §Marketing Illustratives per audit 01-numeric-audit.md §5.
+- **2026-04-20 (P2 Wave 4 consolidation)** — added rows 134–167 and §P2 Cross-Spec Reconciliation Notes per the 6 P2 specs (Wave 1+2) + integration audit (Wave 3) + fix-round (commit 426b71d).
 
 ---
 

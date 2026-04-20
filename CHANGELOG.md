@@ -76,4 +76,49 @@ P1 wave landed on branch `creator-workspace-v1`. P0 (FTC compliance, landing-pag
 
 ---
 
-*Next entry will be created at P1 Day 14 readout (2026-05-04) or P2 scoping kickoff, whichever comes first.*
+## [v5.2-P2] — 2026-04-20 (same-day P2 spec wave)
+
+P2 wave shipped 6 spec deliverables across 4 sub-waves on `creator-workspace-v1`. See [`docs/v5_2_status/P2_rollup.md`](./docs/v5_2_status/P2_rollup.md) for the investor/board summary and [`docs/spec/audits/00-integration-audit.md`](./docs/spec/audits/00-integration-audit.md) for cross-spec analysis.
+
+### Added (specs)
+- `docs/spec/consumer-facing-v1.md` (690 lines) — P2-1 consumer QR scan + loyalty + Apple/Google Wallet flow.
+- `docs/spec/sms-compliance-v1.md` (900 lines) — P2-2 TCPA/CCPA compliance; 47 USC §227, CCPA §§1798.100-1798.199.100, FL §501.059, OK 15 Stat. §775B.1, WA RCW 19.190, CT §42-288a, MD §14-3301; double-opt-in; consent_log + opt_out_log + disclosure_versions DDL.
+- `docs/spec/expansion-math-v1.md` (729 lines) — P2-3 expansion-pace correction (M12 25 → M48 1,000 merchants); SLR-vs-agency math reconciliation; 40% Pilot→Paid base case.
+- `docs/spec/disclosurebot-v0.md` (851 lines) — P2-4 rule-based FTC §255 enforcement; disclosure_audit_log + creator_consent_events DDL; 9-category strict-mode list.
+- `docs/spec/legal-budget-v1.md` (861 lines) — P2-5 phased counsel + insurance + tax envelope $57K-$120K Y1 (mid $88K).
+- `docs/spec/conversion-assumption-v1.md` (609 lines) — P2-6 4-scenario stress-test on Pilot→Paid; Model B all-in CAC; W4/W8/W12 recalibration calendar.
+- `docs/spec/audits/00-integration-audit.md` (198 lines) + 6 per-spec audits (~200-440 lines each) — Wave 3 fresh-eyes review identifying 5 cross-spec contradictions.
+- `docs/v5_2_status/P2_rollup.md` — investor/board summary of P2 wave.
+
+### Changed (numeric_reconciliation extension)
+- 34 new rows added (134-167) covering P2-derived metrics: M12-M48 MRR forecasts, Pilot→Paid scenarios, LTV/CAC Model B all-in, legal envelope, counsel timelines, pepper rotation cadence, A2P 10DLC window, FTC/TCPA opinion windows.
+- §P2 Cross-Spec Reconciliation Notes added documenting Wave 3 fix-round outcomes.
+
+### Fixed (Wave 3 fix-round, commit 426b71d)
+- **Numeric drift**: M12 MRR $25K (assumed 100% Pilot→Paid) → $16K base (40%) + $25K upside (60%).
+- **TCPA cite errors** (4): §227(b)(3) "trebled" → discretionary enhancement per §227(b)(3)(C); §227(e) preemption → §227(f) savings clause; 15 Okla. Stat. §775C.1 → §775B.1; 2015 Omnibus reassigned-number safe harbor → vacated by *ACA International v. FCC* (D.C. Cir. 2018), current regime is RND per 47 CFR §64.1200(a)(1)(iv).
+- **LTV/CAC arithmetic**: Model A values (15.1x/10.4x/6.5x/3.9x) withdrawn (denominator category error); Model B all-in adopted exclusively (4.5x/3.3x/2.3x/1.4x).
+- **Legal budget underbudget by ~40%**: corrected #13 FTC opinion ($500-1500 → $1,800-4,800), #16 E&O ($3K-8K → $6K-12K), #17 D&O ($4K-10K → $6K-15K); 8 missing line items added (tax, Form D, blue-sky, subprocessor DPAs, Stripe Connect MSB, first-pilot contract negotiation, IP FTO, NYC DCWP reserve, contingency).
+- **Phone-pepper storage**: env var path deprecated in P2-1; KMS adopted as authoritative across P2-1 + P2-2 (would have caused silent join-key break on first rotation).
+- **DisclosureBot HMAC inadequacy**: added `creator_consent_events` table DDL — HMAC stays as integrity check on the row, the row reconstructs the click event for FTC inquiry.
+- **DisclosureBot strict-mode category list**: expanded from 3 (health/financial/children) to 9 (added alcohol, cannabis/CBD, weight-loss/supplements, AI-generated content, gambling, telehealth) per FTC 2024 priorities.
+- **Statistical rigor**: P2-6 r-threshold raised 0.5 → 0.78 for adoption (Fisher z 95% CI clears zero only at r ≥ 0.78 with N=10).
+
+### Compliance
+- 7 audit reports + 1 integration audit committed under `docs/spec/audits/` for permanent record.
+- Phone_hash cross-spec invariant documented (single SHA-256 with year-versioned KMS pepper across `consumer_visits`, `loyalty_cards`, `consent_log`).
+- Counsel-engagement plan + corporate hygiene checklist + founders CIIAA template (from earlier Wave 3) referenced throughout P2 specs.
+
+### Open decisions (require founder sign-off before code starts)
+- P2-4 v0 → v0.5 de-scope (manual creator-paste workflow; defer IG/TikTok API to v0.6/Beachhead) — saves Z bandwidth; default to v0.5 unless founder declines per disclosurebot §16.5.
+- Counsel firm selection (Cooley/Gunderson cold-RFQ requires warm intro; fractional-GC fallback if no warm intro by Day 14).
+
+### Known limitations
+- 6 P2 specs are spec-only; NO code shipped this wave.
+- All v5.3 W5+ launch dates assume external timelines (counsel + Apple Developer + A2P 10DLC) start v5.3 W1.
+- N=10 Pilot cohort statistically thin for the leading-indicator hypothesis; cohort-2 (Beachhead first wave, target N≥15) provides joint evidence.
+- Day-15 readiness score per integration audit: 30% (most external timelines have not started).
+
+---
+
+*P3 wave will be created at Pilot W12 readout (~2026-07-27) when assumed metrics get replaced with actuals.*
