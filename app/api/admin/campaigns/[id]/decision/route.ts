@@ -64,13 +64,7 @@ export async function POST(request: NextRequest, { params }: RouteContext) {
     "force_refund",
   ];
   if (!action || !validActions.includes(action)) {
-    // TODO(codemod): migrate to badRequest/etc. — message contains a template literal
-    return NextResponse.json(
-      {
-        error: `action must be one of: ${validActions.join(", ")}`,
-      },
-      { status: 400 },
-    );
+    return badRequest(`action must be one of: ${validActions.join(", ")}`);
   }
 
   const now = new Date().toISOString();

@@ -43,11 +43,7 @@ export async function POST(
     "pending",
   ];
   if (!action || !validActions.includes(action)) {
-    // TODO(codemod): migrate to badRequest/etc. — message contains a template literal
-    return NextResponse.json(
-      { error: `action must be one of: ${validActions.join(", ")}` },
-      { status: 400 },
-    );
+    return badRequest(`action must be one of: ${validActions.join(", ")}`);
   }
 
   // In production this would persist to DB — for mock we return the updated record

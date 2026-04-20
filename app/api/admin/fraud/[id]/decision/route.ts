@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { MOCK_FRAUD_EVENTS, type FraudStatus } from "@/lib/admin/mock-fraud";
 import { requireAdminSession } from "@/lib/api/admin-auth";
-import { badRequest } from "@/lib/api/responses";
+import { badRequest, notFound } from "@/lib/api/responses";
 
 export const dynamic = "force-dynamic";
 
@@ -33,12 +33,8 @@ export async function POST(
   const { decision, note, bulk } = body;
 
   if (!decision || !VALID_DECISIONS.includes(decision as FraudStatus)) {
-    // TODO(codemod): migrate to badRequest/etc. — message contains a template literal
-    return NextResponse.json(
-      {
-        error: `Invalid decision. Must be one of: ${VALID_DECISIONS.join(", ")}`,
-      },
-      { status: 400 },
+    return badRequest(
+      `Invalid decision. Must be one of: ${VALID_DECISIONS.join(", ")}`,
     );
   }
 
@@ -69,11 +65,7 @@ export async function POST(
   // Single event decision
   const event = MOCK_FRAUD_EVENTS.find((e) => e.id === id);
   if (!event) {
-    // TODO(codemod): migrate to badRequest/etc. — message contains a template literal
-    return NextResponse.json(
-      { error: `Event '${id}' not found` },
-      { status: 404 },
-    );
+    return notFound(`Event '${id}' not found`);
   }
 
   event.status = decision as FraudStatus;

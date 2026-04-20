@@ -117,10 +117,9 @@ export async function POST(request: NextRequest) {
     .single();
 
   if (appErr || !application)
-    // TODO(codemod): migrate to badRequest/etc. — message is a variable expression
-    return NextResponse.json(
-      { error: appErr?.message ?? "Failed to create application" },
-      { status: 500 },
+    return serverError(
+      "creator-apply",
+      appErr ?? new Error("Failed to create application"),
     );
 
   // Insert submission record (milestone: accepted)
