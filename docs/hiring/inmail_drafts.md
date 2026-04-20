@@ -1,5 +1,7 @@
 # ML Advisor InMail Drafts (v5.2 P1-2)
 
+> **TEMPLATE STATUS:** This file contains unfilled template tokens (`{{mutual: ____}}`, `[insert Cal.com link]`, etc.). Do NOT send any draft before Jiaming replaces ALL tokens and removes this disclaimer block. Each send must go through the Send Day 7 Checklist at the bottom.
+
 Companion to [`ml_advisor_outreach_tracker.md`](./ml_advisor_outreach_tracker.md) and [`advisor-sourcing-playbook.md`](./advisor-sourcing-playbook.md). Advisor terms reference [`docs/week-0/legal/equity/RSA_TEMPLATE.md`](../week-0/legal/equity/RSA_TEMPLATE.md).
 
 ## Template Skeleton (per Appendix A-5)
@@ -126,7 +128,7 @@ If this isn't a fit, reply 'remove' and I won't follow up.
 ### Variant A — Blog-post hook (technical tone)
 
 **Subject:** Geo-verification (GPS + cell triangulation) — advisor ask
-**Subject rationale:** Names the sub-system they're best-in-class at, and flags the intent (advisor, not hire, not sales) in the first read.
+**Subject rationale:** Names the sub-system they've shipped at production scale, and flags the intent (advisor, not hire, not sales) in the first read.
 
 Hi {{first_name}},
 
@@ -195,12 +197,12 @@ If this isn't a fit, reply 'remove' and I won't follow up.
 
 ### Variant B — Cold-start hook (founder-to-founder tone)
 
-**Subject:** Cold-start matching with 20 merchants — wisdom ask
-**Subject rationale:** Names our constraint (20 merchants) openly; signals we don't have data and want their judgment, not their code.
+**Subject:** Cold-start matching with 10 pilot merchants — wisdom ask
+**Subject rationale:** Names our constraint (10 pilot merchants, with 11–50 early-Beachhead window) openly; signals we don't have data and want their judgment, not their code.
 
 Hi {{first_name}},
 
-We'll launch our pilot with roughly 20 merchants and 60 creators in a single neighborhood. The matching model you'd normally train on a million trips doesn't exist yet. {{mutual: ____}} mentioned you'd taken two pre-seed companies through exactly this phase.
+We'll launch our pilot with 10 merchants (with an 11–50 early-Beachhead window) and ~60 creators in a single neighborhood. The matching model you'd normally train on a million trips doesn't exist yet. {{mutual: ____}} mentioned you'd taken two pre-seed companies through exactly this phase.
 
 Push is vertical AI for local commerce, pre-pilot Week 4 (Q2 2026). I'd like 25 minutes to walk through how we're planning rules-first then learned-ranker, and pressure-test it against what actually worked for you in the zero-data regime.
 
@@ -276,7 +278,7 @@ Hi {{first_name}} — bumping this in case my first note got buried. Happy to cu
 
 ### Day 10 Last-chance (≤50 words)
 
-Hi {{first_name}} — closing my search window this week. If you're not in a position to advise, totally understood — would love a 1-line referral to anyone you'd trust with the CV/OCR + geo-verification roadmap. Comp remains 0.25–0.5% equity on Y Combinator FAST terms.
+Hi {{first_name}} — closing my search window this week. If you're not in a position to advise, understood — would love a 1-line referral to anyone you'd trust with the CV/OCR + geo-verification roadmap. Comp remains 0.25–0.5% equity on Y Combinator FAST terms.
 
 — Jiaming
 

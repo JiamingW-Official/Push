@@ -74,7 +74,7 @@ Rubric file-of-record: append a completed rubric as comment rows in the tracker 
 ### Evaluator bias checks
 - Explicit: review each score against behavioural evidence, not generic impressions.
 - Blind comparison: score each rubric dimension before discussing the candidate with the second evaluator.
-- Reject halo: a strong single dimension cannot raise a 2 elsewhere.
+- Reject halo: a single dimension score of 5 does not compensate for any dimension scored ≤2 in a different area.
 
 ---
 
@@ -96,9 +96,9 @@ Do not re-engage a closed-lost candidate for at least 6 months. After 6 months, 
 **Format:** Zoom/Google Meet with recording disclosure. Recording kept in private folder, retention per §8.
 
 - **0:00 – 3:00 Context (3 min).** Jiaming: who is Push, v5.2 positioning, pre-pilot status, ConversionOracle architecture overview, why we're hiring an advisor now.
-- **3:00 – 11:00 Their experience (8 min).** Ask open-ended: "Walk me through the most interesting CV/OCR (or geo-fusion) system you shipped. What broke in production?" Listen for depth, failure-mode intuition, humility.
+- **3:00 – 11:00 Their experience (8 min).** Ask open-ended: "Walk me through a CV/OCR or geo-fusion system you shipped that broke in production — what failed and how you fixed it?" Listen for depth, failure-mode intuition, humility.
 - **11:00 – 19:00 Push moat discussion (8 min).** Open ConversionOracle threat model and creator-productivity-lock summary. Ask: "What would you try first? What would you refuse to do?" Score technical depth (rubric #1) and vertical fit (#2) here.
-- **19:00 – 23:00 Compensation & logistics (4 min).** Re-state the band: 0.25–0.5% equity, 2-year vest, 6-month cliff, no cash, Y Confidential advisor agreement. Clarify time commitment (2–4 hrs/wk). Ask about conflicts, other advisor slots, geography.
+- **19:00 – 23:00 Compensation & logistics (4 min).** Re-state the band: 0.25–0.5% equity, 2-year vest, 6-month cliff, no cash, YC FAST advisor agreement. Clarify time commitment (2–4 hrs/wk). Ask about conflicts, other advisor slots, geography.
 - **23:00 – 25:00 Next steps (2 min).** Outline: references (≥2), conflict-of-interest disclosure, agreement drafted in Clerky. Commit to a decision window of ≤7 days from call.
 
 ### Must-cover topics (cannot end the call without)

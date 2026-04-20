@@ -1,5 +1,7 @@
 # Advisor Agreement Pre-Signing Checklist (v5.2 P1-2)
 
+> **TEMPLATE STATUS:** This checklist references placeholder artifacts (Clerky template ID, governing-law choice, bg-check vendor). Do NOT use as the binding pre-signing gate until Jiaming fills in placeholders and removes this banner.
+
 Pre-signing control for every ML Advisor engagement at Push, Inc. Instrument of record: [`docs/week-0/legal/equity/RSA_TEMPLATE.md`](../week-0/legal/equity/RSA_TEMPLATE.md) (extended for advisor terms via Y Combinator FAST). Companion: [`advisor-sourcing-playbook.md`](./advisor-sourcing-playbook.md).
 
 **Owner:** Jiaming. **Counter-signer:** Counsel (corporate + employment). **Execution platform:** Clerky.

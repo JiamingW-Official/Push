@@ -101,7 +101,7 @@ Levers (ranked by Month-12 impact):
 - Average revenue per merchant (ARPM)
 - LTV / CAC ratio
 
-### 6.x Operations Metrics (v5.2)
+### 6.1 Operations Metrics (v5.2)
 
 - **Software Leverage Ratio (SLR):** active campaigns / ops FTE (monthly snapshot). North Star — see §1.
 - **Auto-verification accuracy:** ConversionOracle precision + recall. Target: precision ≥ 92%, recall ≥ 88% at Month 12.
@@ -109,7 +109,7 @@ Levers (ranked by Month-12 impact):
 - **DisclosureBot false-positive rate:** posts flagged but FTC-compliant / total flagged. Target: ≤ 5%.
 - **Ops FTE utilization:** hours worked / 160 per month. Target: 60–85% (outside → under- or over-staffed).
 
-### 6.x.1 Data Collection (Authoritative)
+### 6.2 Data Collection (Authoritative)
 SQL reference for computing monthly SLR (run on last business day):
 
 ```sql
@@ -132,7 +132,7 @@ FROM active, ops;
 
 Data owner: ops lead (until we hire a data analyst). Review cadence: weekly (Mon); formal monthly snapshot on last business day.
 
-### 6.x.2 Playbook — SLR below target
+### 6.3 Playbook — SLR below target
 Diagnose gap first (which lever is under-performing). Then:
 
 | Gap | First Lever | Action |
@@ -144,7 +144,7 @@ Diagnose gap first (which lever is under-performing). Then:
 
 If SLR < 50% of target for 2 consecutive months: **escalate to founder** for strategic review (is AI maturity insufficient? is hiring plan wrong?).
 
-### 6.x.3 Competitor Benchmarks (estimated, internal use only)
+### 6.4 Competitor Benchmarks (estimated, internal use only)
 | Company/Category | Est. SLR | Source/Method | Confidence |
 |---|---|---|---|
 | OpenTable (reservation ops) | ~300 | Reservations/month ÷ ops FTE, inferred from public financials | Low |
