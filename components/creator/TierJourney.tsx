@@ -26,7 +26,7 @@ const TIER_DATA = [
     minScore: 0,
     maxScore: 39,
     benefit: "Free product",
-    color: "#b8a99a",
+    color: "#669bbc",
   },
   {
     key: "explorer" as CreatorTier,
@@ -35,7 +35,7 @@ const TIER_DATA = [
     minScore: 40,
     maxScore: 54,
     benefit: "$12/campaign",
-    color: "#8c6239",
+    color: "#c9a96e",
   },
   {
     key: "operator" as CreatorTier,
@@ -44,7 +44,7 @@ const TIER_DATA = [
     minScore: 55,
     maxScore: 64,
     benefit: "$20 + 3%",
-    color: "#4a5568",
+    color: "#669bbc",
   },
   {
     key: "proven" as CreatorTier,
@@ -53,7 +53,7 @@ const TIER_DATA = [
     minScore: 65,
     maxScore: 77,
     benefit: "$32 + 5%",
-    color: "#c9a96e",
+    color: "#c1121f",
   },
   {
     key: "closer" as CreatorTier,
@@ -62,7 +62,7 @@ const TIER_DATA = [
     minScore: 78,
     maxScore: 87,
     benefit: "$55 + 7%",
-    color: "#9b111e",
+    color: "#780000",
   },
   {
     key: "partner" as CreatorTier,
@@ -71,7 +71,7 @@ const TIER_DATA = [
     minScore: 88,
     maxScore: 100,
     benefit: "$100 + 10%",
-    color: "#1a1a2e",
+    color: "#003049",
   },
 ];
 

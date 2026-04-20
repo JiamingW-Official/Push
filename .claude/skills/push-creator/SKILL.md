@@ -108,9 +108,20 @@ Summary:
 - Fake engagement: engagement capped at 10% of score
 - Verified customer fraud: -25 score + 30-day suspension + merchant refund
 
-## 6. Creator UI Tier Colors
+## 6. Creator UI Tier Colors (Path A adopted 2026-04-20)
 
-Pending P1-1 decision. Under review: Path A = collapse to 6 brand colors; Path B = 6 independent tier colors. This section defers to Design.md v5.2 design-token update post-P1-1 decision.
+Tier visuals are sourced from the 6-color brand palette, not from 6 independent hexes. Material names (Clay/Bronze/Steel/Gold/Ruby/Obsidian) are retained as tier identity. Differentiation = material name + icon + texture (per Design.md §Tier Identity System).
+
+| Tier | Material | Brand Color | CSS Variable |
+|------|----------|-------------|-------------|
+| T1 Seed | Clay | Steel Blue border on Pearl Stone bg | `var(--tertiary)` on `var(--surface)` |
+| T2 Explorer | Bronze | Champagne Gold | `var(--champagne)` |
+| T3 Operator | Steel | Steel Blue | `var(--tertiary)` |
+| T4 Proven | Gold | Flag Red (contracted tier signal) | `var(--primary)` |
+| T5 Closer | Ruby | Molten Lava | `var(--accent)` |
+| T6 Partner | Obsidian | Deep Space Blue | `var(--dark)` |
+
+"Gold" tier visual = Flag Red (not champagne) because T2 Bronze took the Champagne slot. The material name carries prestige meaning; the color signals "crossed the contracted bar." See Design.md §Tier Identity System for WCAG AA text-color rules + TierBadge component spec (P0-6).
 
 ## 7. v4.1 Historical Reference (DEPRECATED 2026-04-20)
 

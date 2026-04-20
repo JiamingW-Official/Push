@@ -28,12 +28,12 @@ const TIER_COLORS: Record<
   CreatorTier,
   { color: string; bg: string; accent: string }
 > = {
-  seed: { color: "#b8a99a", bg: "#f7f7f7", accent: "#718096" },
-  explorer: { color: "#8c6239", bg: "#eef5fb", accent: "#5a3e22" },
-  operator: { color: "#4a5568", bg: "#f2f4f5", accent: "#2d3748" },
-  proven: { color: "#c9a96e", bg: "#f5f2ec", accent: "#9b7a3e" },
-  closer: { color: "#9b111e", bg: "#f5f2ec", accent: "#6b0a14" },
-  partner: { color: "#1a1a2e", bg: "#fdf8ee", accent: "#0a0a1a" },
+  seed: { color: "#669bbc", bg: "#f7f7f7", accent: "#718096" },
+  explorer: { color: "#c9a96e", bg: "#eef5fb", accent: "#5a3e22" },
+  operator: { color: "#669bbc", bg: "#f2f4f5", accent: "#2d3748" },
+  proven: { color: "#c1121f", bg: "#f5f2ec", accent: "#9b7a3e" },
+  closer: { color: "#780000", bg: "#f5f2ec", accent: "#6b0a14" },
+  partner: { color: "#003049", bg: "#fdf8ee", accent: "#0a0a1a" },
 };
 
 // ── Tier icons & names ───────────────────────────────────────

@@ -1359,15 +1359,16 @@
   letter-spacing: 0.01em;
 }
 
-/* Tier-specific top border accents + progression opacity */
-.tier-card--clay    { border-top: 3px solid #b8a99a; opacity: 0.85; }
-.tier-card--bronze  { border-top: 3px solid #8c6239; opacity: 0.9; }
-.tier-card--steel   { border-top: 3px solid #4a5568; opacity: 0.95; }
-.tier-card--gold    { border-top: 3px solid var(--champagne); opacity: 1; }
-.tier-card--ruby    { border-top: 3px solid #9b1b30; opacity: 1; }
+/* Tier-specific top border accents + progression opacity
+   Path A (v5.2, 2026-04-20): tier colors sourced from 6-color brand palette. */
+.tier-card--clay    { border-top: 3px solid var(--tertiary);  opacity: 0.85; }
+.tier-card--bronze  { border-top: 3px solid var(--champagne); opacity: 0.9; }
+.tier-card--steel   { border-top: 3px solid var(--tertiary);  opacity: 0.95; }
+.tier-card--gold    { border-top: 3px solid var(--primary);   opacity: 1; }
+.tier-card--ruby    { border-top: 3px solid var(--accent);    opacity: 1; }
 .tier-card--obsidian {
-  border-top: 3px solid #1a1a2e;
-  background: #1a1a2e;
+  border-top: 3px solid var(--dark);
+  background: var(--dark);
   color: var(--surface);
   opacity: 1;
 }
@@ -1384,8 +1385,8 @@
 /* "Start here" badge on Clay tier */
 .tier-entry-badge {
   display: inline-block;
-  background: rgba(184, 169, 154, 0.15);
-  border: 1px solid rgba(184, 169, 154, 0.4);
+  background: rgba(102, 155, 188, 0.15);
+  border: 1px solid rgba(102, 155, 188, 0.4);
   font-family: var(--font-body);
   font-size: 9px;
   font-weight: 700;
@@ -3763,10 +3764,10 @@ section#faq             { padding-block: 120px; }
   display: block;
 }
 
-/* Clay: dark text on warm base */
+/* Clay: dark text on Pearl Stone base (Path A: Steel Blue border) */
 .tier-card--clay {
-  background: rgba(184, 169, 154, 0.14);
-  border-top-color: #b8a99a;
+  background: rgba(102, 155, 188, 0.08);
+  border-top-color: var(--tertiary);
 }
 .tier-card--clay .tier-showcase-material { color: var(--dark); }
 .tier-card--clay .tier-showcase-name     { color: rgba(0, 48, 73, 0.4); }
@@ -3774,17 +3775,17 @@ section#faq             { padding-block: 120px; }
 .tier-card--clay .tier-earn-range        { color: rgba(0, 48, 73, 0.35); }
 .tier-card--clay .tier-showcase-desc     { color: rgba(0, 48, 73, 0.48); }
 
-/* Gold: champagne warmth */
+/* Gold: Flag Red (Path A signals "contracted" tier) */
 .tier-card--gold {
-  background: rgba(201, 169, 110, 0.1);
-  border-top-color: #c9a96e;
+  background: rgba(193, 18, 31, 0.08);
+  border-top-color: var(--primary);
 }
-.tier-card--gold .tier-showcase-material { color: var(--champagne); }
+.tier-card--gold .tier-showcase-material { color: var(--primary); }
 
-/* Obsidian: void depth */
+/* Obsidian: Deep Space Blue void */
 .tier-card--obsidian {
-  background: rgba(26, 26, 46, 0.65);
-  border-top-color: #4a4a6e;
+  background: rgba(0, 48, 73, 0.85);
+  border-top-color: var(--dark);
 }
 
 /* Hover: subtle lift */

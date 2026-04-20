@@ -272,12 +272,12 @@ function QRVisual() {
 /* ── 6-tier progression bars ──────────────────────────────── */
 function TierVisual() {
   const tiers = [
-    { label: "Seed", h: 28, color: "#b8a99a", opacity: 0.7 },
-    { label: "Explorer", h: 52, color: "#8c6239", opacity: 0.8 },
-    { label: "Operator", h: 80, color: "#4a5568", opacity: 0.85 },
-    { label: "Proven", h: 112, color: "#c9a96e", opacity: 0.9 },
-    { label: "Closer", h: 148, color: "#9b111e", opacity: 0.95 },
-    { label: "Partner", h: 188, color: "#1a1a2e", opacity: 1 },
+    { label: "Seed", h: 28, color: "#669bbc", opacity: 0.7 },
+    { label: "Explorer", h: 52, color: "#c9a96e", opacity: 0.8 },
+    { label: "Operator", h: 80, color: "#669bbc", opacity: 0.85 },
+    { label: "Proven", h: 112, color: "#c1121f", opacity: 0.9 },
+    { label: "Closer", h: 148, color: "#780000", opacity: 0.95 },
+    { label: "Partner", h: 188, color: "#003049", opacity: 1 },
   ];
   const BAR_W = 26;
   const GAP = 10;
@@ -323,7 +323,7 @@ function TierVisual() {
 /* ── 6-tier showcase grid cards (v5.2 Two-Segment Economics) ── */
 const TIER_SHOWCASE_DATA = [
   {
-    color: "#b8a99a",
+    color: "#669bbc",
     material: "Clay",
     name: "Seed",
     earning: "$5 + free item",
@@ -332,7 +332,7 @@ const TIER_SHOWCASE_DATA = [
     highlight: false,
   },
   {
-    color: "#8c6239",
+    color: "#c9a96e",
     material: "Bronze",
     name: "Explorer",
     earning: "$15",
@@ -341,7 +341,7 @@ const TIER_SHOWCASE_DATA = [
     highlight: false,
   },
   {
-    color: "#4a5568",
+    color: "#669bbc",
     material: "Steel",
     name: "Operator",
     earning: "$20 + 3%",
@@ -350,7 +350,7 @@ const TIER_SHOWCASE_DATA = [
     highlight: true,
   },
   {
-    color: "#c9a96e",
+    color: "#c1121f",
     material: "Gold",
     name: "Proven",
     earning: "$800/mo + $25",
@@ -359,7 +359,7 @@ const TIER_SHOWCASE_DATA = [
     highlight: false,
   },
   {
-    color: "#9b111e",
+    color: "#780000",
     material: "Ruby",
     name: "Closer",
     earning: "$1,800/mo + $40",
@@ -368,7 +368,7 @@ const TIER_SHOWCASE_DATA = [
     highlight: false,
   },
   {
-    color: "#1a1a2e",
+    color: "#003049",
     material: "Obsidian",
     name: "Partner",
     earning: "$3,500/mo + $60",
@@ -1104,12 +1104,12 @@ export default function LandingPage() {
               <div className="split-visual visual-creator">
                 <TierVisual />
                 <div className="tier-strip">
-                  <span style={{ background: "#b8a99a" }} />
-                  <span style={{ background: "#8c6239" }} />
-                  <span style={{ background: "#4a5568" }} />
+                  <span style={{ background: "#669bbc" }} />
                   <span style={{ background: "#c9a96e" }} />
-                  <span style={{ background: "#9b111e" }} />
-                  <span style={{ background: "#1a1a2e" }} />
+                  <span style={{ background: "#669bbc" }} />
+                  <span style={{ background: "#c1121f" }} />
+                  <span style={{ background: "#780000" }} />
+                  <span style={{ background: "#003049" }} />
                 </div>
               </div>
 

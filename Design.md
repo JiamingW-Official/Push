@@ -299,50 +299,43 @@ Sections can include absolutely-positioned SVG decorative elements:
 
 ---
 
-## Tier Identity System (v4.1)
+## Tier Identity System (v5.2 — Path A adopted 2026-04-20)
 
-Creator tiers use a **material metaphor** inspired by airline loyalty programs. Each tier has a **spectrally unique color** that is instantly recognizable — no two tiers share the same hue family. Progression flows from earthy/muted → metallic/warm → jewel/intense.
+Creator tiers retain the **material metaphor** (Clay / Bronze / Steel / Gold / Ruby / Obsidian) but tier visuals are **sourced from the 6-color brand palette** instead of 6 unique hexes. Differentiation comes from material name + icon + texture in `TierBadge.tsx`, not from spectrally unique colors. Rationale: preserves "Six brand colors only — no additions" rule (see Core Principles above) and keeps design-token surface small.
 
-### Tier Color Mapping
+### Tier → Brand Color Mapping
 
-| Tier | Material | Hex / Treatment | CSS Variable | Badge Style | Shimmer |
-|------|----------|----------------|-------------|-------------|---------|
-| **Seed** | Clay | `#b8a99a` outlined | `--tier-clay` | Dashed border, `--dark` text | No |
-| **Explorer** | Bronze | `#8c6239` solid | `--tier-bronze` | Solid fill, white text | No |
-| **Operator** | Steel | `#4a5568` solid | `--tier-steel` | Solid fill, white text | No |
-| **Proven** | Gold | `#c9a96e` solid | `--tier-gold` | Solid fill, `--dark` text | No |
-| **Closer** | Ruby | `#9b111e` solid | `--tier-ruby` | Solid fill, white text, `badgeShimmer` | Yes (2.8s) |
-| **Partner** | Obsidian | `#1a1a2e` solid | `--tier-obsidian` | Solid fill, white text, `badgeShimmer` + `obsidianPulse` | Yes (2.4s) |
+| Tier | Material | Brand Color | CSS Variable | Badge Style | Shimmer |
+|------|----------|-------------|-------------|-------------|---------|
+| **Seed** | Clay | Steel Blue border on Pearl Stone bg (`#669bbc` + `#f5f2ec`) | `--tier-seed` → `var(--tertiary)` | Dashed border, `--dark` text | No |
+| **Explorer** | Bronze | Champagne Gold (`#c9a96e`) | `--tier-explorer` → `var(--champagne)` | Solid fill, `--dark` text | No |
+| **Operator** | Steel | Steel Blue (`#669bbc`) | `--tier-operator` → `var(--tertiary)` | Solid fill, `--dark` text | No |
+| **Proven** | Gold | Flag Red (`#c1121f`) | `--tier-proven` → `var(--primary)` | Solid fill, white text — signals "contracted tier" | No |
+| **Closer** | Ruby | Molten Lava (`#780000`) | `--tier-closer` → `var(--accent)` | Solid fill, white text, `badgeShimmer` | Yes (2.8s) |
+| **Partner** | Obsidian | Deep Space Blue (`#003049`) | `--tier-partner` → `var(--dark)` | Solid fill, white text, `badgeShimmer` + `obsidianPulse` | Yes (2.4s) |
 
-### Color Design Rationale
-- **Clay `#b8a99a`** — Warm taupe. Earthy, unfired, provisional. Distinct from Surface tones.
-- **Bronze `#8c6239`** — True copper-bronze. First "real" material color. Warm metallic.
-- **Steel `#4a5568`** — Graphite/gunmetal. Cool, industrial, serious. Uses `--graphite` from brand palette.
-- **Gold `#c9a96e`** — Champagne gold. Luxurious warmth. Uses `--champagne` from brand palette.
-- **Ruby `#9b111e`** — Vivid jewel red. Deeper than Flag Red, richer than Molten Lava. Unmistakably precious.
-- **Obsidian `#1a1a2e`** — Near-black volcanic glass with deep blue undertone. The ultimate — dark, mysterious, powerful.
+### Naming vs visuals
+"Gold" tier is visually Flag Red (not champagne) because T2 Bronze took the Champagne Gold slot. The material name carries prestige meaning; the color conveys "you've crossed the contracted-tier bar." Icon and texture differentiate T3 Steel from T1 Clay (both touch Steel Blue): T1 Clay uses Pearl Stone bg + Steel Blue border + clay/fabric texture; T3 Steel uses Steel Blue fill + brushed-steel texture. See TierBadge component spec below.
 
-### CSS Variables (add to `:root`)
+### WCAG AA text-color rules
+| Tier | Bg | Text | Contrast | Pass |
+|------|----|------|----------|------|
+| Seed | `#f5f2ec` Pearl | `#003049` Deep Space | ~13.1:1 | AAA |
+| Explorer | `#c9a96e` Champagne | `#003049` Deep Space | ~6.1:1 | AA |
+| Operator | `#669bbc` Steel Blue | `#003049` Deep Space (NOT white) | ~4.9:1 | AA normal |
+| Proven | `#c1121f` Flag Red | `#ffffff` White | ~7.1:1 | AA + AAA large |
+| Closer | `#780000` Molten Lava | `#ffffff` White | ~12.4:1 | AAA |
+| Partner | `#003049` Deep Space | `#ffffff` White | ~13.5:1 | AAA |
+
+### CSS Variables (canonical — defined in `app/globals.css`)
 ```css
-/* Tier Identity Colors — v4.1 unique spectrum */
---tier-clay: #b8a99a;
---tier-clay-text: #003049;
---tier-clay-border: rgba(184, 169, 154, 0.5);
-
---tier-bronze: #8c6239;
---tier-bronze-text: #ffffff;
-
---tier-steel: #4a5568;        /* = --graphite */
---tier-steel-text: #ffffff;
-
---tier-gold: #c9a96e;         /* = --champagne */
---tier-gold-text: #003049;
-
---tier-ruby: #9b111e;
---tier-ruby-text: #ffffff;
-
---tier-obsidian: #1a1a2e;
---tier-obsidian-text: #ffffff;
+/* Path A — tier tokens alias the 6-color brand palette */
+--tier-seed:     var(--tertiary);  /* Clay — Steel Blue border on Pearl Stone bg */
+--tier-explorer: var(--champagne); /* Bronze — Champagne Gold */
+--tier-operator: var(--tertiary);  /* Steel — Steel Blue */
+--tier-proven:   var(--primary);   /* Gold — Flag Red (contracted tier signal) */
+--tier-closer:   var(--accent);    /* Ruby — Molten Lava */
+--tier-partner:  var(--dark);      /* Obsidian — Deep Space Blue */
 ```
 
 ### Badge Component Spec
@@ -352,7 +345,7 @@ Creator tiers use a **material metaphor** inspired by airline loyalty programs. 
 - Format: `[Material] · [Tier Name]` — e.g., "Steel · Operator"
 - Icon: 14x14px SVG to the left of text (tier-specific)
 - Ruby + Obsidian badges include `badgeShimmer` animation (see Animation Tokens)
-- **Obsidian must retain `3px left-border` accent (`--primary` `#c1121f`):** Obsidian `#1a1a2e` and Steel `#4a5568` are both dark at small badge sizes — the red left-border is Obsidian's key differentiator and must not be omitted.
+- **Obsidian retains `3px left-border` accent (`--primary` `#c1121f`):** Obsidian (Deep Space Blue `#003049`) needs a differentiator — the red left-border distinguishes it from plain dark-surface elements.
 
 ### Badge Variants
 | Variant | Background | Text | Border | Special |
@@ -396,21 +389,21 @@ When displaying tier info in cards or profiles, use a `border-top` accent:
 ### Tier-Specific Animations (add to Animation Tokens)
 ```css
 @keyframes obsidianPulse {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(26, 26, 46, 0.3); }
-  50% { box-shadow: 0 0 0 8px rgba(26, 26, 46, 0); }
+  0%, 100% { box-shadow: 0 0 0 0 rgba(0, 48, 73, 0.3); }
+  50% { box-shadow: 0 0 0 8px rgba(0, 48, 73, 0); }
 }
 ```
 `obsidianPulse` applies only to Partner/Obsidian tier nodes and avatars.
 
-### Design Rationale
-- **Clay** (Seed): Warm taupe, dashed/outlined — communicates "provisional, not yet solidified," like unfired clay
-- **Bronze** (Explorer): True copper-bronze. First solid metallic. Signals "you're real now"
-- **Steel** (Operator): Gunmetal graphite. Industrial, serious. Matches the behavioral inflection point of earning commission
-- **Gold** (Proven): Champagne gold. Warm, luxurious. Connotes earned prestige without being garish
-- **Ruby** (Closer): Vivid jewel red. Premium, exclusive. Shimmer effect = rare gemstone
-- **Obsidian** (Partner): Near-black volcanic glass. Maximum intensity + animated shimmer + pulse = the pinnacle
+### Design Rationale (Path A semantics)
+- **Clay** (Seed): Pearl Stone on Steel Blue border — "provisional, trust-building" (same Steel Blue as T3 but subdued via transparent border and no fill)
+- **Bronze** (Explorer): Champagne Gold fill — "first metallic, first real earning tier"
+- **Steel** (Operator): Steel Blue fill — "reliable, scales volume" (same hue family as Clay but now solid — the T3 material has literally solidified from Clay's border treatment)
+- **Gold** (Proven): Flag Red fill — "contracted tier, primary brand signal" (the jump from per-customer to retainer+perf)
+- **Ruby** (Closer): Molten Lava fill — "deeper commitment, equity tier" (intensifies the red from Proven)
+- **Obsidian** (Partner): Deep Space Blue fill — "senior partner, the anchor color of the brand"
 
-The visual progression: earthy taupe → warm bronze → cool graphite → warm gold → jewel red → volcanic black. Each color occupies a unique hue family — instantly distinguishable at a glance.
+The progression: Pearl → Champagne → Steel Blue → Flag Red → Molten Lava → Deep Space Blue. Texture + icon carry the material metaphor; the brand palette carries visual identity.
 
 ---
 
@@ -425,7 +418,7 @@ Editorial navigation bar for creator-facing pages.
 - Nav links: CS Genio Mono, `0.8125rem`, weight `700`, uppercase, `letter-spacing: 0.06em`; active state uses left `3px` red border + tinted background
 - Right section: separated by `1px` vertical `var(--line)`; items spaced at `var(--space-2)`
 - Avatar: `36px` square, no border-radius, `2px` primary red outline ring on hover
-- Tier badge: Uses Tier Identity System badge variants (see above). Format: `[Material] · [Tier]`. Clay/Seed = dashed outline `#b8a99a`, Bronze/Explorer = `#8c6239`, Steel/Operator = `#4a5568`, Gold/Proven = `#c9a96e`, Ruby/Closer = `#9b111e` + shimmer, Obsidian/Partner = `#1a1a2e` + shimmer. `2px` left border accent in tier color.
+- Tier badge: Uses Tier Identity System badge variants (see above, Path A). Format: `[Material] · [Tier]`. Clay/Seed = Steel Blue dashed outline, Bronze/Explorer = Champagne Gold, Steel/Operator = Steel Blue solid, Gold/Proven = Flag Red, Ruby/Closer = Molten Lava + shimmer, Obsidian/Partner = Deep Space Blue + shimmer + 3px red left-border. `2px` left border accent in tier color (except Obsidian keeps red).
 - Mobile: collapses to hamburger at `768px`; logo Darky `1.5rem` italic in drawer
 
 ### Homepage Hero

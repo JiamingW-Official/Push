@@ -32,7 +32,7 @@ const TIER_REVEAL_CONFIG = {
   seed: {
     name: "Seed",
     symbol: "",
-    color: "#b8a99a",
+    color: "#669bbc",
     bg: "#001d2e",
     tagline: "Your journey starts here.",
     accentRgb: "184,169,154",
@@ -40,7 +40,7 @@ const TIER_REVEAL_CONFIG = {
   explorer: {
     name: "Explorer",
     symbol: "",
-    color: "#8c6239",
+    color: "#c9a96e",
     bg: "#001a2b",
     tagline: "You're getting paid.",
     accentRgb: "140,98,57",
@@ -56,7 +56,7 @@ const TIER_REVEAL_CONFIG = {
   proven: {
     name: "Proven",
     symbol: "",
-    color: "#c9a96e",
+    color: "#c1121f",
     bg: "#001520",
     tagline: "The market trusts you.",
     accentRgb: "201,169,110",
@@ -64,7 +64,7 @@ const TIER_REVEAL_CONFIG = {
   closer: {
     name: "Closer",
     symbol: "",
-    color: "#9b111e",
+    color: "#780000",
     bg: "#0a0008",
     tagline: "Merchants come to you.",
     accentRgb: "155,17,30",
@@ -72,7 +72,7 @@ const TIER_REVEAL_CONFIG = {
   partner: {
     name: "Partner",
     symbol: "",
-    color: "#1a1a2e",
+    color: "#003049",
     bg: "#120005",
     tagline: "You built something real.",
     accentRgb: "26,26,46",

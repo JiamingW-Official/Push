@@ -20,13 +20,13 @@
 .tier--seed {
   --tier-color:  #7a6b5d;
   --tier-bg:     #f0ece6;
-  --tier-accent: #b8a99a;
+  --tier-accent: #669bbc;
   --tier-label:  "SEED";
 }
 
 /* --- Explorer — curious, Steel Blue dominant, slight warmth -------------- */
 .tier--explorer {
-  --tier-color:  #8c6239;
+  --tier-color:  #c9a96e;
   --tier-bg:     #eef5fb;
   --tier-accent: #5a3d24;
   --tier-label:  "EXPLORER";
@@ -34,7 +34,7 @@
 
 /* --- Operator — competent, grounded, Deep Space Blue + warm gray --------- */
 .tier--operator {
-  --tier-color:  #4a5568;
+  --tier-color:  #669bbc;
   --tier-bg:     #f2f4f5;
   --tier-accent: #4a6273;
   --tier-label:  "OPERATOR";
@@ -42,7 +42,7 @@
 
 /* --- Proven — confident, Deep Space Blue + Flag Red accent on badges ----- */
 .tier--proven {
-  --tier-color:  #c9a96e;
+  --tier-color:  #c1121f;
   --tier-bg:     var(--surface);
   --tier-accent: #003049;
   --tier-label:  "PROVEN";
@@ -50,7 +50,7 @@
 
 /* --- Closer — driven, strong contrast, Flag Red as primary accent --------- */
 .tier--closer {
-  --tier-color:  #9b111e;
+  --tier-color:  #780000;
   --tier-bg:     var(--surface);
   --tier-accent: #6d0c15;
   --tier-label:  "CLOSER";
@@ -58,7 +58,7 @@
 
 /* --- Partner — elite, Molten Lava + gold, premium feel ------------------- */
 .tier--partner {
-  --tier-color:  #1a1a2e;
+  --tier-color:  #003049;
   --tier-bg:     #fdf8ee;
   --tier-accent: #b8860b;
   --tier-label:  "PARTNER";
@@ -83,7 +83,7 @@
   border-radius:   0;           /* Push: always 0 */
   border-left:     2px solid var(--tier-accent, #718096);
   background:      var(--tier-bg, #f7f7f7);
-  color:           var(--tier-color, #4a5568);
+  color:           var(--tier-color, #669bbc);
   line-height:     1.4;
   user-select:     none;
 }
@@ -93,35 +93,35 @@
 .tier-badge--seed {
   --tier-color:  #7a6b5d;
   --tier-bg:     #f0ece6;
-  --tier-accent: #b8a99a;
+  --tier-accent: #669bbc;
 }
 
 .tier-badge--explorer {
-  --tier-color:  #8c6239;
+  --tier-color:  #c9a96e;
   --tier-bg:     #eef5fb;
   --tier-accent: #5a3d24;
 }
 
 .tier-badge--operator {
-  --tier-color:  #4a5568;
+  --tier-color:  #669bbc;
   --tier-bg:     #f2f4f5;
   --tier-accent: #4a6273;
 }
 
 .tier-badge--proven {
-  --tier-color:  #c9a96e;
+  --tier-color:  #c1121f;
   --tier-bg:     var(--surface);
   --tier-accent: #003049;
 }
 
 .tier-badge--closer {
-  --tier-color:  #9b111e;
+  --tier-color:  #780000;
   --tier-bg:     var(--surface);
   --tier-accent: #6d0c15;
 }
 
 .tier-badge--partner {
-  --tier-color:  #1a1a2e;
+  --tier-color:  #003049;
   --tier-bg:     #fdf8ee;
   --tier-accent: #b8860b;
   animation:     shimmer-gold 2.4s ease-in-out infinite;
@@ -148,42 +148,42 @@
   border-radius:  0;
   border-left:    3px solid var(--tier-accent, #718096);
   background:     var(--tier-bg, #f7f7f7);
-  color:          var(--tier-color, #4a5568);
+  color:          var(--tier-color, #669bbc);
   line-height:    1.4;
 }
 
 .tier-pill--seed {
   --tier-color:  #7a6b5d;
   --tier-bg:     #f0ece6;
-  --tier-accent: #b8a99a;
+  --tier-accent: #669bbc;
 }
 
 .tier-pill--explorer {
-  --tier-color:  #8c6239;
+  --tier-color:  #c9a96e;
   --tier-bg:     #eef5fb;
   --tier-accent: #5a3d24;
 }
 
 .tier-pill--operator {
-  --tier-color:  #4a5568;
+  --tier-color:  #669bbc;
   --tier-bg:     #f2f4f5;
   --tier-accent: #4a6273;
 }
 
 .tier-pill--proven {
-  --tier-color:  #c9a96e;
+  --tier-color:  #c1121f;
   --tier-bg:     var(--surface);
   --tier-accent: #003049;
 }
 
 .tier-pill--closer {
-  --tier-color:  #9b111e;
+  --tier-color:  #780000;
   --tier-bg:     var(--surface);
   --tier-accent: #6d0c15;
 }
 
 .tier-pill--partner {
-  --tier-color:  #1a1a2e;
+  --tier-color:  #003049;
   --tier-bg:     #fdf8ee;
   --tier-accent: #b8860b;
 }
@@ -206,7 +206,7 @@
 .tier-progress--seed     { background-color: var(--tier-seed); }
 .tier-progress--explorer { background-color: var(--tier-explorer); }
 .tier-progress--operator { background-color: var(--tier-operator); }
-.tier-progress--proven   { background-color: #c9a96e; }
+.tier-progress--proven   { background-color: #c1121f; }
 .tier-progress--closer   { background-color: var(--tier-closer); }
 .tier-progress--partner  { background-color: var(--tier-partner); }
 
@@ -220,7 +220,7 @@
 .ring--seed     { --ring-fill: var(--tier-seed); }
 .ring--explorer { --ring-fill: var(--tier-explorer); }
 .ring--operator { --ring-fill: var(--tier-operator); }
-.ring--proven   { --ring-fill: #c9a96e; }
+.ring--proven   { --ring-fill: #c1121f; }
 .ring--closer   { --ring-fill: var(--tier-closer); }
 .ring--partner  { --ring-fill: var(--tier-partner); }
 
@@ -235,7 +235,7 @@
 .ring--operator > svg path     { stroke: var(--tier-operator); }
 
 .ring--proven   > svg circle,
-.ring--proven   > svg path     { stroke: #c9a96e; }
+.ring--proven   > svg path     { stroke: #c1121f; }
 
 .ring--closer   > svg circle,
 .ring--closer   > svg path     { stroke: var(--tier-closer); }
@@ -260,27 +260,27 @@
 }
 
 .tier-header--seed {
-  background: linear-gradient(90deg, #d4c8be 0%, #b8a99a 100%);
+  background: linear-gradient(90deg, #d4c8be 0%, #669bbc 100%);
 }
 
 .tier-header--explorer {
-  background: linear-gradient(90deg, #5a3d24 0%, #8c6239 100%);
+  background: linear-gradient(90deg, #5a3d24 0%, #c9a96e 100%);
 }
 
 .tier-header--operator {
-  background: linear-gradient(90deg, #4a6273 0%, #4a5568 100%);
+  background: linear-gradient(90deg, #4a6273 0%, #669bbc 100%);
 }
 
 .tier-header--proven {
-  background: linear-gradient(90deg, #003049 0%, #c9a96e 100%);
+  background: linear-gradient(90deg, #003049 0%, #c1121f 100%);
 }
 
 .tier-header--closer {
-  background: linear-gradient(90deg, #6d0c15 0%, #9b111e 100%);
+  background: linear-gradient(90deg, #6d0c15 0%, #780000 100%);
 }
 
 .tier-header--partner {
-  background: linear-gradient(90deg, #b8860b 0%, #1a1a2e 100%);
+  background: linear-gradient(90deg, #b8860b 0%, #003049 100%);
 }
 
 
@@ -367,8 +367,8 @@
 }
 
 .tier-stamp--proven {
-  border-color: #c9a96e;
-  color:        #c9a96e;
+  border-color: #c1121f;
+  color:        #c1121f;
 }
 
 .tier-stamp--closer {
@@ -396,42 +396,42 @@
   border-radius: 0;
   border-left:   4px solid var(--tier-accent, #718096);
   background:    var(--tier-bg, #f7f7f7);
-  color:         var(--tier-color, #4a5568);
+  color:         var(--tier-color, #669bbc);
   font-family:   'CS Genio Mono', 'SF Mono', 'Fira Code', monospace;
 }
 
 .tier-card--seed {
   --tier-color:  #7a6b5d;
   --tier-bg:     #f0ece6;
-  --tier-accent: #b8a99a;
+  --tier-accent: #669bbc;
 }
 
 .tier-card--explorer {
-  --tier-color:  #8c6239;
+  --tier-color:  #c9a96e;
   --tier-bg:     #eef5fb;
   --tier-accent: #5a3d24;
 }
 
 .tier-card--operator {
-  --tier-color:  #4a5568;
+  --tier-color:  #669bbc;
   --tier-bg:     #f2f4f5;
   --tier-accent: #4a6273;
 }
 
 .tier-card--proven {
-  --tier-color:  #c9a96e;
+  --tier-color:  #c1121f;
   --tier-bg:     var(--surface);
   --tier-accent: #003049;
 }
 
 .tier-card--closer {
-  --tier-color:  #9b111e;
+  --tier-color:  #780000;
   --tier-bg:     var(--surface);
   --tier-accent: #6d0c15;
 }
 
 .tier-card--partner {
-  --tier-color:  #1a1a2e;
+  --tier-color:  #003049;
   --tier-bg:     #fdf8ee;
   --tier-accent: #b8860b;
 }
