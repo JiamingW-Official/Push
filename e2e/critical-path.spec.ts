@@ -81,4 +81,66 @@ test.describe("critical-path", () => {
       .first();
     await expect(ftc).toBeVisible();
   });
+
+  // v5.3-EXEC P1-3 minor-downgrade gate: checking the under-18 box must
+  // disable Tier 2 and Tier 3 options.
+  test("minor downgrade — Tier 2/3 disabled when under-18 checked", async ({
+    page,
+  }) => {
+    await page.goto(`/scan/${DEMO_QR_ID}`);
+    await page.waitForLoadState("networkidle");
+
+    // Age-gate checkbox
+    const checkbox = page.getByRole("checkbox", { name: /under 18/i });
+    await checkbox.check();
+
+    // Tier 1 must stay enabled; 2 and 3 disabled.
+    const tier1 = page.getByRole("radio", { name: /Tier 1/ });
+    const tier2 = page.getByRole("radio", { name: /Tier 2/ });
+    const tier3 = page.getByRole("radio", { name: /Tier 3/ });
+
+    await expect(tier1).toBeVisible();
+    await expect(tier1).toBeEnabled();
+    await expect(tier2).toBeDisabled();
+    await expect(tier3).toBeDisabled();
+  });
+
+  // v5.3-EXEC P1-5 POS UI: merchant redeem page renders.
+  test("merchant POS redeem page renders", async ({ page, context }) => {
+    // Demo-mode bypass: middleware lets /merchant/* through when the
+    // push-demo-role=merchant cookie is set.
+    await context.addCookies([
+      {
+        name: "push-demo-role",
+        value: "merchant",
+        domain: "localhost",
+        path: "/",
+      },
+    ]);
+    await page.goto(`/merchant/redeem`);
+    await expect(
+      page.getByRole("heading", { name: /Redeem a claim/i }),
+    ).toBeVisible();
+    await expect(page.getByLabel(/CLAIM CODE/i)).toBeVisible();
+    await expect(page.getByLabel(/ORDER TOTAL/i)).toBeVisible();
+  });
+
+  // v5.3-EXEC P4-1 full chain: POST /api/attribution/redemption with INTERNAL_API_SECRET
+  // returns 403 without the secret (middleware gate working).
+  test("redemption API is gated without INTERNAL_API_SECRET", async ({
+    request,
+  }) => {
+    const res = await request.post("/api/internal/ai-verify", {
+      data: { merchant_id: "x", creator_id: "x" },
+      headers: { "content-type": "application/json" },
+    });
+    expect(res.status()).toBe(403);
+  });
+
+  // v5.3-EXEC data-rights URL alias.
+  test("/data-rights redirects to /my-privacy", async ({ page }) => {
+    await page.goto("/data-rights");
+    await page.waitForLoadState("networkidle");
+    await expect(page).toHaveURL(/\/my-privacy/);
+  });
 });

@@ -295,6 +295,40 @@ export class AIVerificationService {
   }
 
   /**
+   * v5.3 — write one row to `oracle_audit` linking the oracle decision
+   * to a specific push_transactions row. Safe to call from the inline
+   * redeem path (triggered_by="auto") or the admin rerun path
+   * (triggered_by="admin", with admin_user_id).
+   *
+   * Reasoning is parsed into per-signal numeric scores so the row is
+   * queryable without an extra string parse downstream.
+   */
+  async saveOracleAudit(
+    transactionId: string | null,
+    result: VerificationResult,
+    opts?: { triggeredBy?: "auto" | "admin" | "cron" | "api"; userId?: string },
+  ): Promise<void> {
+    const signalScores: Record<string, number> = {};
+    for (const part of result.reasoning.split(",")) {
+      const [name, value] = part
+        .trim()
+        .split(":")
+        .map((s) => s.trim());
+      const n = parseFloat(value ?? "");
+      if (name && Number.isFinite(n)) signalScores[name.toLowerCase()] = n;
+    }
+    await db.insert("oracle_audit", {
+      transaction_id: transactionId,
+      decision: result.status,
+      confidence_score: result.confidence_score,
+      signal_scores: signalScores,
+      reasoning: result.reasoning,
+      triggered_by: opts?.triggeredBy ?? "auto",
+      triggered_by_user_id: opts?.userId ?? null,
+    });
+  }
+
+  /**
    * Fetch the audit row for a given ISO week, or `null` if not yet recorded.
    */
   async getWeeklyAccuracyAudit(

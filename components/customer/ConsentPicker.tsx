@@ -11,6 +11,15 @@ interface ConsentPickerProps {
   onChange?: (tier: ConsentTier) => void;
   onDeclineAll?: () => void;
   onContinue?: (tier: ConsentTier) => void;
+  /**
+   * v5.3 minor-downgrade guard. When `true`, Tier 2 / Tier 3 become
+   * unselectable and the effective tier is clamped to 1. COPPA/CCPA both
+   * require that creators/operators not collect extra data from users
+   * known to be under 18 without verifiable parental consent — we simply
+   * refuse the extra tiers here rather than gating behind a parental
+   * consent flow we don't yet operate.
+   */
+  minor?: boolean;
 }
 
 const TIER_OPTIONS: Array<{
@@ -63,12 +72,19 @@ export default function ConsentPicker({
   onChange,
   onDeclineAll,
   onContinue,
+  minor = false,
 }: ConsentPickerProps) {
-  const [tier, setTier] = useState<ConsentTier>(initialTier);
+  // When minor, force the effective tier to 1 regardless of the incoming
+  // initialTier prop (which may be a restored localStorage value from when
+  // the same device was used by an adult).
+  const [tier, setTier] = useState<ConsentTier>(minor ? 1 : initialTier);
 
   const handleSelect = (newTier: ConsentTier) => {
-    setTier(newTier);
-    onChange?.(newTier);
+    // Minor guard: silently clamp — the disabled attribute on the button
+    // is the primary UX signal, this is the defensive server-safe floor.
+    const clamped: ConsentTier = minor && newTier > 1 ? 1 : newTier;
+    setTier(clamped);
+    onChange?.(clamped);
   };
 
   const handleDeclineAll = () => {
@@ -90,6 +106,26 @@ export default function ConsentPicker({
         </p>
       </header>
 
+      {minor && (
+        <div
+          style={{
+            padding: "12px 16px",
+            marginBottom: "24px",
+            border: "2px solid var(--primary)",
+            background: "rgba(193,18,31,0.06)",
+            color: "var(--primary)",
+            fontFamily: "var(--font-body)",
+            fontSize: "13px",
+            lineHeight: 1.5,
+          }}
+          role="note"
+        >
+          <strong>Under 18:</strong> your consent is locked to Tier 1 (basic
+          attribution only). Tier 2 and Tier 3 will become available on your
+          18th birthday. This is required by COPPA and CCPA for minors.
+        </div>
+      )}
+
       <div
         className={styles.options}
         role="radiogroup"
@@ -97,16 +133,22 @@ export default function ConsentPicker({
       >
         {TIER_OPTIONS.map((opt) => {
           const selected = tier === opt.tier;
+          const disabled = minor && opt.tier > 1;
           return (
             <button
               key={opt.tier}
               type="button"
               role="radio"
               aria-checked={selected}
+              aria-disabled={disabled}
+              disabled={disabled}
               onClick={() => handleSelect(opt.tier)}
               className={`${styles.option} ${
                 selected ? styles.optionSelected : ""
               }`}
+              style={
+                disabled ? { opacity: 0.4, cursor: "not-allowed" } : undefined
+              }
             >
               <div className={styles.optionHead}>
                 <span className={styles.optionTier}>Tier {opt.tier}</span>

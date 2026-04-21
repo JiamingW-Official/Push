@@ -1,69 +1,116 @@
-import { NextRequest, NextResponse } from "next/server";
+// POST /api/merchant/qr-codes — create a QR record for a campaign
+// GET  /api/merchant/qr-codes — list this merchant's QR codes
+//
+// v5.3-EXEC P1-1 wiring: real Supabase insert into public.qr_codes.
+// Owner scope enforced via requireMerchantSession → merchantId filter.
+
+import { NextRequest } from "next/server";
 import {
-  MOCK_QR_CODES,
-  type QRCodeRecord,
-} from "@/lib/attribution/mock-qr-codes-extended";
+  badRequest,
+  forbidden,
+  serverError,
+  success,
+} from "@/lib/api/responses";
+import { requireMerchantSession } from "@/lib/api/merchant-auth";
+import { supabase } from "@/lib/db";
 
-// TODO: wire to Supabase; generate signed QR payload
+const POSTER_TYPES = new Set([
+  "a4",
+  "table-tent",
+  "window-sticker",
+  "cash-register",
+]);
 
-// GET /api/merchant/qr-codes — list all QR codes for current merchant
-export async function GET(request: NextRequest) {
-  const { searchParams } = new URL(request.url);
-  const campaign_id = searchParams.get("campaign_id");
-  const poster_type = searchParams.get("poster_type");
-  const status = searchParams.get("status"); // "active" | "disabled"
-
-  let codes = [...MOCK_QR_CODES];
-
-  if (campaign_id) {
-    codes = codes.filter((q) => q.campaign_id === campaign_id);
-  }
-  if (poster_type) {
-    codes = codes.filter((q) => q.poster_type === poster_type);
-  }
-  if (status === "active") {
-    codes = codes.filter((q) => !q.disabled);
-  } else if (status === "disabled") {
-    codes = codes.filter((q) => q.disabled);
-  }
-
-  return NextResponse.json({ data: codes, total: codes.length });
+interface CreateBody {
+  campaign_id?: string;
+  poster_type?: string;
+  hero_message?: string;
+  sub_message?: string;
 }
 
-// POST /api/merchant/qr-codes — create a new QR code
+export async function GET(request: NextRequest) {
+  const gate = await requireMerchantSession();
+  if (!gate.ok) return gate.response;
+
+  const { searchParams } = new URL(request.url);
+  const campaignId = searchParams.get("campaign_id");
+  const posterType = searchParams.get("poster_type");
+  const status = searchParams.get("status");
+
+  let q = supabase
+    .from("qr_codes")
+    .select(
+      "id, campaign_id, poster_type, hero_message, sub_message, scan_count, conversion_count, disabled, created_at, last_active_at",
+    )
+    .eq("merchant_id", gate.merchantId);
+
+  if (campaignId) q = q.eq("campaign_id", campaignId);
+  if (posterType) q = q.eq("poster_type", posterType);
+  if (status === "active") q = q.eq("disabled", false);
+  else if (status === "disabled") q = q.eq("disabled", true);
+
+  const { data, error } = await q.order("created_at", { ascending: false });
+  if (error) return serverError("merchant-qr-codes-list", error);
+
+  return success({ qr_codes: data ?? [], total: (data ?? []).length });
+}
+
 export async function POST(request: NextRequest) {
-  let body: Partial<QRCodeRecord>;
+  const gate = await requireMerchantSession();
+  if (!gate.ok) return gate.response;
+
+  let body: CreateBody;
   try {
-    body = await request.json();
+    body = (await request.json()) as CreateBody;
   } catch {
-    return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
+    return badRequest("Body must be valid JSON");
   }
 
   const { campaign_id, poster_type, hero_message, sub_message } = body;
 
-  if (!campaign_id || !poster_type || !hero_message || !sub_message) {
-    return NextResponse.json(
-      { error: "campaign_id, poster_type, hero_message, sub_message required" },
-      { status: 400 },
-    );
+  if (!campaign_id || typeof campaign_id !== "string") {
+    return badRequest("`campaign_id` is required");
+  }
+  if (!poster_type || !POSTER_TYPES.has(poster_type)) {
+    return badRequest("`poster_type` invalid", {
+      allowed: Array.from(POSTER_TYPES),
+    });
+  }
+  if (!hero_message || typeof hero_message !== "string") {
+    return badRequest("`hero_message` is required");
+  }
+  if (!sub_message || typeof sub_message !== "string") {
+    return badRequest("`sub_message` is required");
   }
 
-  // TODO: generate real QR record in Supabase
-  // TODO: generate signed QR payload + store scan URL
-  const newCode: QRCodeRecord = {
-    id: `qr-${Date.now()}`,
-    campaign_id,
-    campaign_name: body.campaign_name ?? "Campaign",
-    poster_type,
-    hero_message,
-    sub_message,
-    scan_url: `/scan/qr-${Date.now()}`,
-    scan_count: 0,
-    conversion_count: 0,
-    created_at: new Date().toISOString(),
-    last_active_at: new Date().toISOString(),
-    disabled: false,
-  };
+  // Ownership check: campaign must belong to this merchant.
+  const { data: campaign, error: campErr } = await supabase
+    .from("campaigns")
+    .select("id, merchant_id")
+    .eq("id", campaign_id)
+    .eq("merchant_id", gate.merchantId)
+    .maybeSingle();
 
-  return NextResponse.json({ data: newCode }, { status: 201 });
+  if (campErr) return serverError("merchant-qr-codes-owner-check", campErr);
+  if (!campaign) return forbidden("Campaign not owned by this merchant");
+
+  const { data, error } = await supabase
+    .from("qr_codes")
+    .insert([
+      {
+        campaign_id,
+        merchant_id: gate.merchantId,
+        poster_type,
+        hero_message,
+        sub_message,
+      },
+    ])
+    .select(
+      "id, campaign_id, poster_type, hero_message, sub_message, scan_count, conversion_count, disabled, created_at",
+    )
+    .single();
+
+  if (error) return serverError("merchant-qr-codes-insert", error);
+
+  return success({ qr_code: data });
 }
