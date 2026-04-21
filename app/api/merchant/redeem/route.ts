@@ -155,9 +155,31 @@ export async function POST(req: Request): Promise<Response> {
   const now = new Date();
   const expiry = new Date(now.getTime() + 24 * 3600 * 1000);
 
+  // Resolve the creator who should be credited for this redemption.
+  //
+  // Strategy: pick the most recent ACCEPTED application for this campaign.
+  // Rationale: a creator must be accepted into a campaign before their
+  // scan surface can drive redemptions; the "most recent" tie-breaker
+  // handles the (rare) multi-creator case without returning ambiguous.
+  //
+  // If no accepted application exists, fall back to the merchant itself as
+  // the "creator" — this keeps the row insertable (creator_id is NOT NULL)
+  // while flagging it for manual review via the 0-value referral_chain_depth.
+  let creatorId: string = gate.merchantId;
+  const { data: appRows } = await supabase
+    .from("campaign_applications")
+    .select("creator_id, created_at")
+    .eq("campaign_id", qr.campaign_id)
+    .eq("status", "accepted")
+    .order("created_at", { ascending: false })
+    .limit(1);
+  if (appRows && appRows.length > 0) {
+    creatorId = (appRows[0] as { creator_id: string }).creator_id;
+  }
+
   const row: Record<string, unknown> = {
     device_id_hash: sha(deviceIn),
-    creator_id: gate.merchantId, // TODO: resolve real creator via QR → campaign_applications join
+    creator_id: creatorId,
     merchant_id: qr.merchant_id,
     campaign_id: qr.campaign_id,
     customer_id_hash: sha(customerIn),

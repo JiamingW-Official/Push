@@ -5,11 +5,18 @@
 //   time_to_redeem_sec, hour_of_week, claim_redeem_distance_m.
 // Do NOT pass those columns in the insert payload.
 //
-// Auth: internal service-role only — callers must supply INTERNAL_API_SECRET
-// via middleware (see middleware.ts). No per-route re-gating.
+// Auth: internal service-role only — callers MUST supply INTERNAL_API_SECRET
+// in the `x-internal-api-secret` header. Enforced in middleware.ts via the
+// `/api/attribution/:path*` matcher; no per-route re-gating.
+//
+// Rate limit: 60 requests / minute per IP. A single merchant POS terminal
+// rarely exceeds ~20/min; this ceiling absorbs bursts while rejecting
+// script-driven floods if the secret ever leaks.
 
 import { createHash } from "node:crypto";
+import { NextResponse } from "next/server";
 import { badRequest, serverError, success } from "@/lib/api/responses";
+import { getIP, rateLimit } from "@/lib/rate-limit";
 import { supabase } from "@/lib/db";
 
 // Enums mirrored from the push_transactions CHECK constraints in the migration.
@@ -53,6 +60,12 @@ function isUuid(s: unknown): s is string {
 
 export async function POST(req: Request): Promise<Response> {
   try {
+    // Rate limit — defense in depth behind the middleware secret gate.
+    const ip = getIP(req);
+    if (!rateLimit(`attribution-redemption:${ip}`, 60, 60_000)) {
+      return NextResponse.json({ error: "Too many requests" }, { status: 429 });
+    }
+
     let body: unknown;
     try {
       body = await req.json();
