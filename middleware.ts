@@ -70,8 +70,26 @@ function isMerchantProtected(pathname: string): boolean {
   );
 }
 
+// v5.3-EXEC P0-3: request-id correlation. Every non-static response carries
+// an `x-request-id` header — incoming ID is trusted if it looks safe, else
+// we mint a UUID. The ID then shows up in serverError logs and Sentry events
+// so a user-reported 500 can be traced to exactly one server log line.
+const REQUEST_ID_HEADER = "x-request-id";
+function resolveRequestId(req: NextRequest): string {
+  const incoming = req.headers.get(REQUEST_ID_HEADER);
+  if (incoming && /^[A-Za-z0-9-]{8,64}$/.test(incoming)) return incoming;
+  return typeof crypto !== "undefined" && "randomUUID" in crypto
+    ? crypto.randomUUID()
+    : `${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
+}
+
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
+
+  // Mint / carry-forward request-id and stamp it onto the inbound headers
+  // so route handlers can read it via `req.headers.get("x-request-id")`.
+  const requestId = resolveRequestId(request);
+  request.headers.set(REQUEST_ID_HEADER, requestId);
 
   // ── Internal API gate ────────────────────────────────────────────────────
   // /api/internal/*     — service-to-service, shared-secret required
