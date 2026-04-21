@@ -4,15 +4,14 @@
 // (and mirrored by GDPR Art. 15–20 / APRA pre-wiring per
 // /spec/consent-privacy-v1.md § 4).
 //
-// Intentionally minimal in v5.3: validate -> assign trace_id -> emit a
-// structured server log line and return the ticket ID. The downstream
-// pieces (privacy@push.nyc inbox, counsel-reviewed response templates,
-// `privacy_requests` table, 45-day SLA timer) are manual / ops artifacts
-// that Jiaming must stand up before pilot launch — see
-// /spec/consent-privacy-v1.md § 10. This route unblocks the CCPA-
-// mandated "submit a request" web form without waiting for that.
+// Validates the request, writes a row to `privacy_requests` (service-role),
+// and returns the ticket_id + SLA information. The downstream ops artifacts
+// (privacy@pushnyc.co inbox, counsel-reviewed response templates, 45-day
+// SLA timer) are described in /spec/consent-privacy-v1.md § 10.
 
+import { createHash } from "node:crypto";
 import { badRequest, serverError, success } from "@/lib/api/responses";
+import { supabase } from "@/lib/db";
 
 const MAX_EMAIL = 254;
 const MAX_DETAILS = 4000;
@@ -28,6 +27,9 @@ const REQUEST_TYPES = new Set([
 ]);
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+// CCPA 45-day SLA measured from the moment of receipt.
+const CCPA_SLA_DAYS = 45;
 
 interface DsarPayload {
   email: string;
@@ -99,30 +101,51 @@ export async function POST(req: Request): Promise<Response> {
       return badRequest("`verification_hint` must be a short string");
     }
 
-    // Ticket ID = trace_id; correlates server log with later ops follow-up.
-    const ticketId =
-      typeof crypto !== "undefined" && "randomUUID" in crypto
-        ? crypto.randomUUID()
-        : `${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
+    const emailLower = payload.email.toLowerCase();
+    // SHA256 of the lowercased email — allows future re-lookup without
+    // storing the plaintext after it has been deleted per a deletion request.
+    const emailHash = createHash("sha256").update(emailLower).digest("hex");
 
-    const receivedAt = new Date().toISOString();
+    const receivedAt = new Date();
+    const dueAt = new Date(receivedAt);
+    dueAt.setDate(dueAt.getDate() + CCPA_SLA_DAYS);
 
-    // Structured log line — greppable by [dsar-intake]. When the
-    // privacy_requests table and email ingest land, this log will be
-    // replaced with a DB write + mail send. Until then, ops grepping
-    // Vercel runtime logs is the source of truth for the SLA clock.
+    const { data, error } = await supabase
+      .from("privacy_requests")
+      .insert([
+        {
+          email_lower: emailLower,
+          email_hash: emailHash,
+          request_type: payload.request_type,
+          jurisdiction: payload.jurisdiction ?? null,
+          details: payload.details ?? null,
+          verification_hint: payload.verification_hint ?? null,
+          consent_ack: true,
+          status: "received",
+          received_at: receivedAt.toISOString(),
+          due_at: dueAt.toISOString(),
+        },
+      ])
+      .select("ticket_id, received_at")
+      .single();
+
+    if (error) {
+      return serverError("dsar-intake", error);
+    }
+
+    // Structured log — greppable by [dsar-intake]. Emitted after successful
+    // write so ticket_id is real. NEVER log the email local-part or details.
     console.error("[dsar-intake]", {
-      ticket_id: ticketId,
-      received_at: receivedAt,
-      email_domain: payload.email.split("@")[1] ?? "",
+      ticket_id: data.ticket_id,
+      received_at: data.received_at,
+      email_domain: emailLower.split("@")[1] ?? "",
       request_type: payload.request_type,
       jurisdiction: payload.jurisdiction ?? null,
-      has_details: Boolean(payload.details && payload.details.length > 0),
     });
 
     return success({
-      ticket_id: ticketId,
-      received_at: receivedAt,
+      ticket_id: data.ticket_id,
+      received_at: data.received_at,
       sla: "CCPA 45 days; GDPR 30 days",
       next_step:
         "We will email you from privacy@pushnyc.co to verify your identity before actioning the request.",
