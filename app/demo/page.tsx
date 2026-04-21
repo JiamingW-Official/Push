@@ -1,302 +1,186 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-import { enterDemoMode, exitDemoMode } from "@/lib/demo";
+import { enterDemoMode, type DemoAudience } from "@/lib/demo";
+import { DEMO_AUDIENCES } from "@/lib/nav/registry";
 
 export default function DemoRolePicker() {
-  const router = useRouter();
-
-  function handleSelect(role: "creator" | "merchant") {
-    const dest = role === "creator" ? "/demo/creator" : "/demo/merchant";
+  function handleSelect(role: DemoAudience, dest: string) {
     enterDemoMode(role, dest);
   }
 
   return (
-    <div
-      style={{
-        minHeight: "100svh",
-        background: "#f5f2ec",
-        display: "flex",
-        flexDirection: "column",
-      }}
-    >
-      {/* Top bar */}
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          padding: "24px 40px",
-          borderBottom: "1px solid rgba(0,48,73,0.12)",
-        }}
-      >
-        <span
-          style={{
-            fontFamily: "var(--font-display, 'Darky', sans-serif)",
-            fontSize: "28px",
-            fontWeight: 900,
-            fontStyle: "italic",
-            letterSpacing: "-0.06em",
-            color: "#003049",
-          }}
-        >
-          Push
-        </span>
-        <span
-          style={{
-            fontFamily: "var(--font-body, 'CS Genio Mono', monospace)",
-            fontSize: "10px",
-            fontWeight: 700,
-            letterSpacing: "0.14em",
-            textTransform: "uppercase",
-            color: "#c1121f",
-            border: "1px solid #c1121f",
-            padding: "4px 10px",
-          }}
-        >
-          Demo
-        </span>
-      </div>
+    <div style={S.page}>
+      <header style={S.topBar}>
+        <span style={S.brand}>Push</span>
+        <span style={S.brandTag}>Demo</span>
+      </header>
 
-      {/* Main content */}
-      <div
-        style={{
-          flex: 1,
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          padding: "64px 40px",
-          maxWidth: "1200px",
-          margin: "0 auto",
-          width: "100%",
-        }}
-      >
-        {/* Eyebrow */}
-        <p
-          style={{
-            fontFamily: "var(--font-body, 'CS Genio Mono', monospace)",
-            fontSize: "11px",
-            fontWeight: 700,
-            letterSpacing: "0.12em",
-            textTransform: "uppercase",
-            color: "rgba(0,48,73,0.45)",
-            marginBottom: "24px",
-          }}
-        >
-          Interactive Preview
+      <main style={S.main}>
+        <p style={S.eyebrow}>Playtest without sign-up</p>
+        <h1 style={S.title}>Who are you today?</h1>
+        <p style={S.lede}>
+          Pick an audience — every portal walks its real flow but actions are
+          simulated. Exit or switch roles anytime from the top banner.
         </p>
 
-        {/* Editorial headline */}
-        <h1
-          style={{
-            fontFamily: "var(--font-display, 'Darky', sans-serif)",
-            fontSize: "clamp(64px, 10vw, 140px)",
-            fontWeight: 900,
-            fontStyle: "italic",
-            letterSpacing: "-0.06em",
-            color: "#003049",
-            lineHeight: 0.9,
-            marginBottom: "56px",
-          }}
-        >
-          Who are
-          <br />
-          you today?
-        </h1>
-
-        {/* Role cards */}
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
-            gap: "2px",
-            background: "rgba(0,48,73,0.12)",
-          }}
-        >
-          {/* Creator card */}
-          <button
-            onClick={() => handleSelect("creator")}
-            style={{
-              background: "#003049",
-              border: "none",
-              padding: "56px 48px",
-              cursor: "pointer",
-              textAlign: "left",
-              display: "flex",
-              flexDirection: "column",
-              gap: "16px",
-              transition: "background 0.15s ease",
-            }}
-            onMouseEnter={(e) => (e.currentTarget.style.background = "#c1121f")}
-            onMouseLeave={(e) => (e.currentTarget.style.background = "#003049")}
-          >
-            <span
-              style={{
-                fontFamily: "var(--font-body, 'CS Genio Mono', monospace)",
-                fontSize: "10px",
-                fontWeight: 700,
-                letterSpacing: "0.14em",
-                textTransform: "uppercase",
-                color: "rgba(245,242,236,0.45)",
-              }}
+        <div style={S.grid}>
+          {DEMO_AUDIENCES.map((opt) => (
+            <button
+              key={opt.role}
+              type="button"
+              onClick={() => handleSelect(opt.role, opt.dest)}
+              style={{ ...S.card, borderColor: opt.accent }}
             >
-              01 — Creator
-            </span>
-            <span
-              style={{
-                fontFamily: "var(--font-display, 'Darky', sans-serif)",
-                fontSize: "clamp(48px, 6vw, 80px)",
-                fontWeight: 900,
-                fontStyle: "italic",
-                letterSpacing: "-0.05em",
-                color: "#f5f2ec",
-                lineHeight: 0.95,
-                display: "block",
-              }}
-            >
-              I am a
-              <br />
-              Creator
-            </span>
-            <span
-              style={{
-                fontFamily: "var(--font-body, 'CS Genio Mono', monospace)",
-                fontSize: "13px",
-                color: "rgba(245,242,236,0.55)",
-                lineHeight: 1.5,
-                maxWidth: "280px",
-              }}
-            >
-              Browse campaigns, apply, earn — see your dashboard, earnings, and
-              analytics.
-            </span>
-            <span
-              style={{
-                fontFamily: "var(--font-body, 'CS Genio Mono', monospace)",
-                fontSize: "12px",
-                fontWeight: 700,
-                letterSpacing: "0.08em",
-                textTransform: "uppercase",
-                color: "#f5f2ec",
-                marginTop: "8px",
-              }}
-            >
-              Enter &rarr;
-            </span>
-          </button>
-
-          {/* Merchant card */}
-          <button
-            onClick={() => handleSelect("merchant")}
-            style={{
-              background: "#f5f2ec",
-              border: "none",
-              padding: "56px 48px",
-              cursor: "pointer",
-              textAlign: "left",
-              display: "flex",
-              flexDirection: "column",
-              gap: "16px",
-              transition: "background 0.15s ease",
-            }}
-            onMouseEnter={(e) => (e.currentTarget.style.background = "#c9a96e")}
-            onMouseLeave={(e) => (e.currentTarget.style.background = "#f5f2ec")}
-          >
-            <span
-              style={{
-                fontFamily: "var(--font-body, 'CS Genio Mono', monospace)",
-                fontSize: "10px",
-                fontWeight: 700,
-                letterSpacing: "0.14em",
-                textTransform: "uppercase",
-                color: "rgba(0,48,73,0.4)",
-              }}
-            >
-              02 — Merchant
-            </span>
-            <span
-              style={{
-                fontFamily: "var(--font-display, 'Darky', sans-serif)",
-                fontSize: "clamp(48px, 6vw, 80px)",
-                fontWeight: 900,
-                fontStyle: "italic",
-                letterSpacing: "-0.05em",
-                color: "#003049",
-                lineHeight: 0.95,
-                display: "block",
-              }}
-            >
-              I am a
-              <br />
-              Merchant
-            </span>
-            <span
-              style={{
-                fontFamily: "var(--font-body, 'CS Genio Mono', monospace)",
-                fontSize: "13px",
-                color: "rgba(0,48,73,0.55)",
-                lineHeight: 1.5,
-                maxWidth: "280px",
-              }}
-            >
-              Post campaigns, review creator applications, track ROI and
-              attribution.
-            </span>
-            <span
-              style={{
-                fontFamily: "var(--font-body, 'CS Genio Mono', monospace)",
-                fontSize: "12px",
-                fontWeight: 700,
-                letterSpacing: "0.08em",
-                textTransform: "uppercase",
-                color: "#003049",
-                marginTop: "8px",
-              }}
-            >
-              Enter &rarr;
-            </span>
-          </button>
+              <span style={{ ...S.cardTag, background: opt.accent }}>
+                {opt.role.toUpperCase()}
+              </span>
+              <span style={S.cardLabel}>{opt.label}</span>
+              <span style={S.cardBlurb}>{opt.blurb}</span>
+              <span style={S.cardArrow}>→</span>
+            </button>
+          ))}
         </div>
 
-        {/* Exit demo */}
-        <div
-          style={{
-            marginTop: "40px",
-            display: "flex",
-            alignItems: "center",
-            gap: "24px",
-          }}
-        >
-          <button
-            onClick={() => exitDemoMode()}
-            style={{
-              background: "none",
-              border: "none",
-              cursor: "pointer",
-              fontFamily: "var(--font-body, 'CS Genio Mono', monospace)",
-              fontSize: "12px",
-              color: "rgba(0,48,73,0.4)",
-              letterSpacing: "0.04em",
-              padding: 0,
-              textDecoration: "underline",
-              textDecorationColor: "rgba(0,48,73,0.2)",
-              textUnderlineOffset: "3px",
-            }}
-          >
-            Exit demo
-          </button>
-          <span
-            style={{
-              fontFamily: "var(--font-body, 'CS Genio Mono', monospace)",
-              fontSize: "11px",
-              color: "rgba(0,48,73,0.3)",
-              letterSpacing: "0.02em",
-            }}
-          >
-            Sample data only — no real transactions
-          </span>
-        </div>
-      </div>
+        <p style={S.footNote}>
+          All demo data is local + simulated. Switching roles or exiting clears
+          the demo cookie. The real product (sign-up + real merchants) lives at{" "}
+          <a href="/for-merchants" style={S.footLink}>
+            /for-merchants
+          </a>{" "}
+          and{" "}
+          <a href="/for-creators" style={S.footLink}>
+            /for-creators
+          </a>
+          .
+        </p>
+      </main>
     </div>
   );
 }
+
+const S = {
+  page: {
+    minHeight: "100svh",
+    background: "#f5f2ec",
+    display: "flex",
+    flexDirection: "column" as const,
+  } as React.CSSProperties,
+  topBar: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+    padding: "24px 40px",
+    borderBottom: "1px solid rgba(0,48,73,0.12)",
+  } as React.CSSProperties,
+  brand: {
+    fontFamily: "var(--font-display, 'Darky', sans-serif)",
+    fontSize: "28px",
+    fontWeight: 900,
+    fontStyle: "italic" as const,
+    letterSpacing: "-0.06em",
+    color: "#003049",
+  } as React.CSSProperties,
+  brandTag: {
+    fontFamily: "var(--font-body, 'CS Genio Mono', monospace)",
+    fontSize: "10px",
+    fontWeight: 700,
+    letterSpacing: "0.14em",
+    textTransform: "uppercase" as const,
+    color: "#c1121f",
+    border: "1px solid #c1121f",
+    padding: "4px 10px",
+  } as React.CSSProperties,
+  main: {
+    flex: 1,
+    maxWidth: "1080px",
+    width: "100%",
+    margin: "0 auto",
+    padding: "64px 40px",
+  } as React.CSSProperties,
+  eyebrow: {
+    fontFamily: "var(--font-body, 'CS Genio Mono', monospace)",
+    fontSize: "11px",
+    fontWeight: 700,
+    letterSpacing: "0.12em",
+    textTransform: "uppercase" as const,
+    color: "#c1121f",
+    marginBottom: "16px",
+  } as React.CSSProperties,
+  title: {
+    fontFamily: "var(--font-display, 'Darky', sans-serif)",
+    fontSize: "clamp(36px, 7vw, 64px)",
+    fontWeight: 900,
+    letterSpacing: "-0.04em",
+    color: "#003049",
+    marginBottom: "16px",
+    lineHeight: 1.05,
+  } as React.CSSProperties,
+  lede: {
+    fontFamily: "var(--font-body, 'CS Genio Mono', monospace)",
+    fontSize: "15px",
+    color: "#003049",
+    opacity: 0.75,
+    maxWidth: "640px",
+    lineHeight: 1.5,
+    marginBottom: "48px",
+  } as React.CSSProperties,
+  grid: {
+    display: "grid",
+    gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
+    gap: "16px",
+    marginBottom: "48px",
+  } as React.CSSProperties,
+  card: {
+    position: "relative" as const,
+    display: "flex",
+    flexDirection: "column" as const,
+    alignItems: "flex-start",
+    gap: "12px",
+    padding: "24px",
+    background: "#ffffff",
+    border: "2px solid",
+    borderRadius: 0,
+    cursor: "pointer",
+    textAlign: "left" as const,
+    fontFamily: "var(--font-body, 'CS Genio Mono', monospace)",
+    transition: "transform 120ms ease, box-shadow 120ms ease",
+  } as React.CSSProperties,
+  cardTag: {
+    padding: "2px 8px",
+    fontSize: "10px",
+    fontWeight: 800,
+    letterSpacing: "0.1em",
+    color: "#ffffff",
+  } as React.CSSProperties,
+  cardLabel: {
+    fontFamily: "var(--font-display, 'Darky', sans-serif)",
+    fontSize: "24px",
+    fontWeight: 800,
+    letterSpacing: "-0.02em",
+    color: "#003049",
+  } as React.CSSProperties,
+  cardBlurb: {
+    fontSize: "13px",
+    color: "#003049",
+    opacity: 0.72,
+    lineHeight: 1.5,
+  } as React.CSSProperties,
+  cardArrow: {
+    marginTop: "auto",
+    fontSize: "24px",
+    fontWeight: 800,
+    color: "#c1121f",
+  } as React.CSSProperties,
+  footNote: {
+    fontFamily: "var(--font-body, 'CS Genio Mono', monospace)",
+    fontSize: "12px",
+    color: "#003049",
+    opacity: 0.6,
+    maxWidth: "640px",
+    lineHeight: 1.5,
+  } as React.CSSProperties,
+  footLink: {
+    color: "#c1121f",
+    textDecoration: "underline",
+  } as React.CSSProperties,
+};
