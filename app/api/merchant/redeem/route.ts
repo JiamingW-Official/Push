@@ -204,8 +204,38 @@ export async function POST(req: Request): Promise<Response> {
 
   if (error) return serverError("merchant-redeem-insert", error);
 
-  return success({
-    transaction_id: (inserted as { transaction_id: string }).transaction_id,
-    qr_id: qr.id,
-  });
+  const transactionId = (inserted as { transaction_id: string }).transaction_id;
+
+  // P1-FUNC-3: oracle_audit auto-write for the POS path too. Same fallback
+  // reasoning as the attribution route — this is a baseline decision, an
+  // admin rerun can enrich it later if disputed.
+  try {
+    const { AIVerificationService } =
+      await import("@/lib/services/AIVerificationService");
+    const oracle = new AIVerificationService();
+    const result = await oracle.verifyCustomerClaim({
+      merchant_id: qr.merchant_id,
+      creator_id: creatorId,
+      customer_name: "pos-redemption",
+      photo_url: "pos://redemption",
+      receipt_url: "pos://redemption",
+      merchant_lat: 40.7128,
+      merchant_lon: -74.006,
+      customer_lat: 40.7128,
+      customer_lon: -74.006,
+      claim_timestamp: now.toISOString(),
+      redeem_timestamp: now.toISOString(),
+      merchant_active: true,
+    });
+    await oracle.saveOracleAudit(transactionId, result, {
+      triggeredBy: "auto",
+    });
+  } catch (auditErr) {
+    console.error("[merchant-redeem-oracle-audit]", {
+      transactionId,
+      err: auditErr instanceof Error ? auditErr.message : String(auditErr),
+    });
+  }
+
+  return success({ transaction_id: transactionId, qr_id: qr.id });
 }

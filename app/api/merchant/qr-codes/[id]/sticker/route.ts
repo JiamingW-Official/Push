@@ -65,7 +65,12 @@ export async function GET(
     headers: {
       "content-type": "application/pdf",
       "content-disposition": `attachment; filename="push-sticker-${id}-${size}.pdf"`,
-      "cache-control": "private, max-age=0, must-revalidate",
+      // Sticker content is deterministic per (id, size, campaign title,
+      // business name). Short private-cache is safe and spares the CPU cost
+      // of re-rendering on every merchant hit. Vary on Authorization so
+      // cross-merchant cache collisions are impossible.
+      "cache-control": "private, max-age=3600, stale-while-revalidate=86400",
+      vary: "authorization",
     },
   });
 }
