@@ -46,13 +46,32 @@ const MERCHANT_PROTECTED_PREFIXES = [
   "/merchant/payments",
 ];
 
+// v5.3-EXEC demo-mode refactor: admin routes join the demo bypass. Without
+// this gate `/admin/*` was accessible to anyone who knew the URL, which
+// hid the admin audience from the /demo picker. Now middleware enforces
+// either a real admin session OR the `push-demo-role=admin` cookie.
+const ADMIN_PROTECTED_PREFIXES = ["/admin"];
+
+function isAdminProtected(pathname: string): boolean {
+  return ADMIN_PROTECTED_PREFIXES.some((p) => pathname.startsWith(p));
+}
+
 function isPublic(pathname: string): boolean {
   return PUBLIC_PREFIXES.some((p) => pathname.startsWith(p));
 }
 
-function getDemoRole(request: NextRequest): "creator" | "merchant" | null {
+type DemoRole = "creator" | "merchant" | "admin" | "consumer";
+
+function getDemoRole(request: NextRequest): DemoRole | null {
   const value = request.cookies.get("push-demo-role")?.value;
-  if (value === "creator" || value === "merchant") return value;
+  if (
+    value === "creator" ||
+    value === "merchant" ||
+    value === "admin" ||
+    value === "consumer"
+  ) {
+    return value;
+  }
   return null;
 }
 
@@ -119,9 +138,10 @@ export async function middleware(request: NextRequest) {
 
   const needsCreator = isCreatorProtected(pathname);
   const needsMerchant = isMerchantProtected(pathname);
+  const needsAdmin = isAdminProtected(pathname);
 
   // Neither protected — pass through
-  if (!needsCreator && !needsMerchant) {
+  if (!needsCreator && !needsMerchant && !needsAdmin) {
     return NextResponse.next({ request: { headers: request.headers } });
   }
 
@@ -131,6 +151,9 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next({ request: { headers: request.headers } });
   }
   if (demoRole === "merchant" && needsMerchant) {
+    return NextResponse.next({ request: { headers: request.headers } });
+  }
+  if (demoRole === "admin" && needsAdmin) {
     return NextResponse.next({ request: { headers: request.headers } });
   }
 
@@ -166,12 +189,8 @@ export async function middleware(request: NextRequest) {
     data: { session },
   } = await supabase.auth.getSession();
 
-  if (needsCreator && !session) {
+  if ((needsCreator || needsMerchant || needsAdmin) && !session) {
     // No real session and no demo cookie → send to demo role picker
-    return NextResponse.redirect(new URL("/demo", request.url));
-  }
-
-  if (needsMerchant && !session) {
     return NextResponse.redirect(new URL("/demo", request.url));
   }
 
@@ -182,6 +201,7 @@ export const config = {
   matcher: [
     "/creator/:path*",
     "/merchant/:path*",
+    "/admin/:path*",
     "/api/internal/:path*",
     "/api/attribution/:path*",
   ],

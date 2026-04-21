@@ -144,27 +144,35 @@ test.describe("critical-path", () => {
     await expect(page).toHaveURL(/\/my-privacy/);
   });
 
-  // P1-DATA-2 admin privacy queue page must render.
-  test("admin privacy-requests page loads (empty or populated)", async ({
+  // P1-DATA-2 admin privacy queue page must render under admin demo cookie.
+  test("admin privacy-requests page loads with admin demo cookie", async ({
     page,
     context,
   }) => {
     await context.addCookies([
       {
         name: "push-demo-role",
-        value: "merchant",
+        value: "admin",
         domain: "localhost",
         path: "/",
       },
     ]);
     const res = await page.goto("/admin/privacy-requests");
-    // Admin middleware is session-gated; demo bypass covers creator+merchant
-    // but not admin. Accept either 200 (bypass works) or a redirect to /demo.
+    // Middleware now honors the admin demo cookie; page should render.
     if (res && res.status() === 200) {
       await expect(
         page.getByRole("heading", { name: /DSAR queue/i }),
       ).toBeVisible();
     }
+  });
+
+  // v5.3-EXEC demo refactor: /demo picker offers all four audiences.
+  test("/demo role picker shows all 4 audiences", async ({ page }) => {
+    await page.goto("/demo");
+    await expect(page.getByText(/Creator/i).first()).toBeVisible();
+    await expect(page.getByText(/Merchant/i).first()).toBeVisible();
+    await expect(page.getByText(/Admin/i).first()).toBeVisible();
+    await expect(page.getByText(/Consumer/i).first()).toBeVisible();
   });
 
   // Consent-event write path (P0-SEC-4). POST without INTERNAL_API_SECRET

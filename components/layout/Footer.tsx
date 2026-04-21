@@ -86,19 +86,21 @@ const NAV_COLS = [
   {
     label: "Company",
     links: [
-      { label: "About", href: "#" },
-      { label: "Careers", href: "#" },
-      { label: "Press", href: "#" },
-      { label: "Contact", href: "#" },
+      { label: "About", href: "/about" },
+      { label: "Careers", href: "/careers" },
+      { label: "Press", href: "/press" },
+      { label: "Contact", href: "/contact" },
+      { label: "Changelog", href: "/changelog" },
     ],
   },
   {
     label: "Resources",
     links: [
-      { label: "Blog", href: "#" },
-      { label: "Help", href: "#" },
-      { label: "API", href: "#" },
-      { label: "Status", href: "#" },
+      { label: "Blog", href: "/blog" },
+      { label: "Help Center", href: "/help" },
+      { label: "FAQ", href: "/faq" },
+      { label: "API Docs", href: "/api-docs" },
+      { label: "Status", href: "/status" },
     ],
   },
   {

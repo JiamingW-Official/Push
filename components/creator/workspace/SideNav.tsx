@@ -56,6 +56,9 @@ const PRIMARY_ITEMS: PrimaryNavItem[] = [
     href: "/creator/portfolio/earnings",
     icon: ICONS.earnings,
   },
+  // v5.3-EXEC orphan rescue: these existed as pages but had no nav entry.
+  { label: "Analytics", href: "/creator/analytics", icon: "◉" },
+  { label: "Leaderboard", href: "/creator/leaderboard", icon: "★" },
 ];
 
 // ---------------------------------------------------------------------------
@@ -64,6 +67,9 @@ const PRIMARY_ITEMS: PrimaryNavItem[] = [
 
 const SECONDARY_ITEMS: SecondaryNavItem[] = [
   { label: "Profile", href: "/creator/portfolio/identity" },
+  { label: "Portfolio", href: "/creator/portfolio" },
+  { label: "Notifications", href: "/creator/notifications" },
+  { label: "Wallet", href: "/creator/wallet" },
   { label: "Settings", href: "/creator/settings" },
 ];
 
