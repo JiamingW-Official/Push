@@ -74,10 +74,14 @@ export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   // ── Internal API gate ────────────────────────────────────────────────────
-  // /api/internal/* is service-to-service only — reject any request missing
-  // the shared secret in `x-internal-api-secret`. Routes under this prefix
-  // MUST NOT re-gate (see CLAUDE.md).
-  if (pathname.startsWith("/api/internal/")) {
+  // /api/internal/*     — service-to-service, shared-secret required
+  // /api/attribution/*  — same gate; the redemption route writes directly to
+  //                       push_transactions and must never be publicly callable.
+  // Routes under these prefixes MUST NOT re-gate (see CLAUDE.md).
+  if (
+    pathname.startsWith("/api/internal/") ||
+    pathname.startsWith("/api/attribution/")
+  ) {
     const expected = process.env.INTERNAL_API_SECRET;
     const provided = request.headers.get("x-internal-api-secret");
 
@@ -157,5 +161,10 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/creator/:path*", "/merchant/:path*", "/api/internal/:path*"],
+  matcher: [
+    "/creator/:path*",
+    "/merchant/:path*",
+    "/api/internal/:path*",
+    "/api/attribution/:path*",
+  ],
 };

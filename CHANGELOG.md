@@ -6,6 +6,64 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) loosely;
 
 ---
 
+## [v5.3-EXEC] — 2026-04-21
+
+v5.3 execution sprint — converts the v5.3 spec track into runnable Next.js + Supabase code. PRs #18 (baseline), #19 (15-gap close-out), #20 (PostgREST logger fix) merged to `main`. See [`docs/v5.3-optimization-audit-2026-04-21.md`](./docs/v5.3-optimization-audit-2026-04-21.md) for the post-delivery review.
+
+### Added
+
+- **DB schema** — 3 new migrations, all applied to prod Supabase:
+  - `push_transactions` (32 fields, `hour_of_week` / `time_to_redeem_sec` / `claim_redeem_distance_m` auto-computed by trigger).
+  - `consent_events` (append-only CCPA/GDPR audit ledger, service-role only).
+  - `privacy_requests` (DSAR intake with 45-day `due_at` SLA).
+  - `oracle_audit` (per-run ConversionOracle decision log, signal scores in JSONB).
+  - `qr_codes` (per-poster record, RLS merchant-self-read).
+  - `campaigns.metadata` JSONB for marketplace-style fields (category / tier / commissionSplit / contentType / platform).
+- **API layer** — `lib/api/{creator-auth,merchant-auth}.ts` session guards; `lib/api/responses.ts` now surfaces PostgREST `{code, message, hint}` objects correctly.
+- **Routes**:
+  - `/api/merchant/redeem` (POS flow with short-prefix resolver, writes `push_transactions`).
+  - `/api/admin/oracle-trigger` (admin manual re-run of 5-signal oracle, writes `oracle_audit`).
+  - `/api/merchant/campaigns` (POST/GET now real DB, not mock).
+  - `/api/merchant/qr-codes` (POST/GET now real DB + ownership check).
+  - `/api/merchant/qr-codes/[id]/sticker` (print-ready PDF via `lib/services/qr-sticker.ts`).
+- **Pages**:
+  - `/merchant/redeem` (POS UI).
+  - `/admin/oracle-trigger` (admin ConversionOracle panel).
+  - `/data-rights` (308 redirect to `/my-privacy`, spec-mandated URL).
+  - `/legal/do-not-sell` (CCPA § 1798.120 / § 1798.135 opt-out page).
+- **Consumer flow**:
+  - FTC § 255 `#ad` disclosure banner above the fold on `/scan/[qrId]`.
+  - COPPA/CCPA minor age-gate (checkbox; clamps consent to Tier 1).
+  - `ConsentPicker.minor` prop disables Tier 2 / Tier 3 when set.
+- **ConversionOracle v1**: `AIVerificationService` extended to 5 signals (Vision/OCR/Geo + optional Timing + Merchant); backwards compatible with 3-signal callers.
+- **DisclosureBot**: `/api/creator/disclosure/check` now accepts `video_url` in addition to `caption` (fetches OG / meta description).
+- **Admin campaign decision gate**: approving a campaign requires a `disclosure_caption` that passes the FTC keyword engine (409 otherwise).
+- **Middleware security**:
+  - `INTERNAL_API_SECRET` gate covers both `/api/internal/*` and `/api/attribution/*` prefixes.
+  - Module-level production hard-throw if secret missing.
+- **Rate limit**: 60 req/min per IP on `/api/attribution/redemption`.
+- **E2E**: Playwright config + 9 critical-path specs (home / do-not-sell / my-privacy / scan+consent / FTC / minor-downgrade / merchant POS / API gate 403 / data-rights redirect).
+- **Docs**:
+  - `docs/deploy-checklist-pilot-2026-05-15.md` — T-3 / T-1 / T-0 Pilot launch runbook.
+  - `docs/v5.3-optimization-audit-2026-04-21.md` — post-delivery review (this file references it).
+
+### Fixed
+
+- Production `NEXT_PUBLIC_SUPABASE_URL` was pointing at `http://127.0.0.1:5432`; corrected to the real Supabase endpoint.
+- Production `SUPABASE_SERVICE_ROLE_KEY` was a stale `sb_secret_*` value returning "Invalid API key"; replaced with the legacy JWT that passes PostgREST auth. Migration to new-format keys tracked as P0-DATA-1 in the audit.
+- Merchant redeem `creator_id` was hardcoded to `merchantId`; now resolved via the most recent accepted `campaign_applications` row.
+- Cleaned 5 fake-UUID smoke-test rows from prod `push_transactions` (table returned to zero rows before Pilot).
+
+### Changed
+
+- Sticker PDF palette: pure grayscale fallback → strict 6-color Design.md palette (Deep Space Blue + Steel Blue).
+
+### Deprecated
+
+- `/api/merchant/campaigns` + `/api/merchant/qr-codes` mock-only responses — the real DB writers replaced the mocks in this version.
+
+---
+
 ## [v5.2] — 2026-04-20
 
 P1 wave landed on branch `creator-workspace-v1`. P0 (FTC compliance, landing-page truthing, Week 0 artifact templates) shipped 2026-04-19 and is included in this version. See [`docs/v5_2_status/P1_rollup.md`](./docs/v5_2_status/P1_rollup.md) for the investor/board summary.

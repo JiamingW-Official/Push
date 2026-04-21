@@ -93,11 +93,25 @@ Three audiences, three guards. Pick the right one at the top of every authentica
 | `requireCreatorSession(req)` | Authenticated creator | 401 if missing |
 | `requireMerchantSession(req)` | Authenticated merchant | 401 if missing |
 
-Internal service-to-service endpoints (`/api/internal/*`) are gated in `middleware.ts` via `INTERNAL_API_SECRET` — do not re-gate them in the route itself.
+Internal service-to-service endpoints (`/api/internal/*` **and `/api/attribution/*`**) are gated in `middleware.ts` via `INTERNAL_API_SECRET` — do not re-gate them in the route itself. Callers pass the secret in the `x-internal-api-secret` header.
 
 ### Service layer
 
 Domain logic lives in `lib/services/*.ts` as stateless modules (or classes of stateless methods). Routes are thin: parse input → call service → format response. Services do not import Next primitives.
+
+### v5.3 ground-truth tables
+
+The Physical-World Ground Truth Layer (v5.3-EXEC) adds five service-role-only tables on top of the v5.0 schema. All writes go through `lib/db/index.ts` (service role); RLS is enabled on every row but most carry no `authenticated`-role SELECT policy — backend code is the only intended reader.
+
+| Table | Primary purpose | Writer path |
+|---|---|---|
+| `push_transactions` | 32-field ground-truth row per ad → physical conversion | `/api/attribution/redemption` (secret-gated) or `/api/merchant/redeem` (merchant-session) |
+| `consent_events` | Append-only audit of consent-tier / disclosure events | (writer TBD — see P0-SEC-4 in the optimization audit) |
+| `privacy_requests` | CCPA/GDPR DSAR intake ledger, 45-day SLA via `due_at` | `/api/privacy/dsar` |
+| `oracle_audit` | One row per ConversionOracle decision, signal scores in JSONB | `AIVerificationService.saveOracleAudit()` (called from `/api/admin/oracle-trigger`) |
+| `qr_codes` | Per-poster QR record, owned by a merchant | `/api/merchant/qr-codes` |
+
+The existing v5.0 `ai_verifications` table is distinct — it's keyed to `qr_scans` (pre-v5.3 flow) and stays for compatibility. New code should use `oracle_audit`.
 
 ### Environment variables
 

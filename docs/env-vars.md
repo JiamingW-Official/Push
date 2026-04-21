@@ -9,11 +9,21 @@ Push uses Supabase for persistence and Vercel for hosting. Copy the template bel
 ```bash
 # ── Supabase (required) ──────────────────────────────────────────────
 # Dashboard → Project Settings → API
+# Prod project ref is apmibpiugvuutgpjkpng; the URL below is the public endpoint.
 NEXT_PUBLIC_SUPABASE_URL=https://YOUR_PROJECT.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=sb_publishable_xxxxxxxxxxxx
+NEXT_PUBLIC_SUPABASE_ANON_KEY=sb_publishable_xxxxxxxxxxxx        # legacy name; also accepts sb_publishable_*
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=sb_publishable_xxxxxxxxxxxx  # preferred new name (v5.3+)
 
 # Server-only. Bypasses RLS. Never expose to the browser.
-SUPABASE_SERVICE_ROLE_KEY=sb_secret_xxxxxxxxxxxx
+# Legacy JWT (eyJ…) and new sb_secret_* formats are both accepted by
+# @supabase/supabase-js; we currently run the legacy JWT in prod. Rotate
+# per the policy in docs/v5.3-optimization-audit-2026-04-21.md (P0-DATA-1).
+SUPABASE_SERVICE_ROLE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+
+# ── Internal API secret (v5.3-EXEC, required in prod) ────────────────
+# Gates /api/internal/* and /api/attribution/* in middleware.ts. Production
+# hard-throws at module load if missing (fail-closed). Rotate every 90 days.
+INTERNAL_API_SECRET=64_random_hex_characters
 
 # ── Site ─────────────────────────────────────────────────────────────
 # Used for OG images, OAuth callbacks, canonical URLs
