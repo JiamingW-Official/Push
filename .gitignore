@@ -12,7 +12,13 @@ out/
 
 # Build artifacts
 tsconfig.tsbuildinfo
+tsconfig.tsc.tsbuildinfo
 .open-next/
+
+# Playwright
+playwright-report/
+test-results/
+playwright/.cache/
 
 # OS
 .DS_Store
