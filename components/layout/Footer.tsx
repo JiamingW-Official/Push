@@ -52,10 +52,15 @@ const PLATFORM_LINKS = [
 ];
 
 const COMPANY_LINKS = [
-  { label: "About", href: "#" },
-  { label: "Contact", href: "#" },
-  { label: "Privacy Policy", href: "#" },
-  { label: "Terms of Service", href: "#" },
+  { label: "About", href: "/about" },
+  { label: "Contact", href: "/contact" },
+  { label: "Privacy Policy", href: "/legal/privacy" },
+  {
+    label: "Do Not Sell My Personal Information",
+    href: "/legal/privacy#do-not-sell",
+  },
+  { label: "Your Privacy Rights", href: "/legal/privacy#your-rights" },
+  { label: "Terms of Service", href: "/legal/terms" },
 ];
 
 export default function Footer() {
