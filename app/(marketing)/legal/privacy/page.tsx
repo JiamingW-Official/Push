@@ -459,6 +459,11 @@ export default function PrivacyPage() {
       <hr className="legal-divider" />
 
       {/* ── 10. Your Rights ──────────────────────────────────── */}
+      <span
+        id="your-rights"
+        style={{ display: "block", scrollMarginTop: "80px" }}
+        aria-hidden="true"
+      />
       <h2 id="s10" className="legal-section-heading">
         <span className="legal-section-heading__number">10 /</span>
         Your Privacy Rights
@@ -554,9 +559,14 @@ export default function PrivacyPage() {
       <hr className="legal-divider" />
 
       {/* ── 13. California ───────────────────────────────────── */}
+      <span
+        id="do-not-sell"
+        style={{ display: "block", scrollMarginTop: "80px" }}
+        aria-hidden="true"
+      />
       <h2 id="s13" className="legal-section-heading">
         <span className="legal-section-heading__number">13 /</span>
-        California Residents
+        California Residents &amp; Do Not Sell / Share
       </h2>
       <p>
         California residents have rights under the CCPA/CPRA including the right
