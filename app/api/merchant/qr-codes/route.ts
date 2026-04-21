@@ -12,7 +12,35 @@ import {
   success,
 } from "@/lib/api/responses";
 import { requireMerchantSession } from "@/lib/api/merchant-auth";
+import { demoShortCircuit } from "@/lib/api/demo-short-circuit";
 import { supabase } from "@/lib/db";
+
+const DEMO_QR_ROWS = [
+  {
+    id: "demo-qr-bsc-001",
+    campaign_id: "demo-campaign-001",
+    poster_type: "table-tent",
+    hero_message: "Free matcha latte",
+    sub_message: "Scan, film a 30s reel, redeem.",
+    scan_count: 48,
+    conversion_count: 31,
+    disabled: false,
+    created_at: "2026-04-01T10:00:00Z",
+    last_active_at: "2026-04-19T18:42:00Z",
+  },
+  {
+    id: "demo-qr-bsc-002",
+    campaign_id: "demo-campaign-001",
+    poster_type: "window-sticker",
+    hero_message: "15% off any drink",
+    sub_message: "Creators scan here to claim.",
+    scan_count: 22,
+    conversion_count: 17,
+    disabled: false,
+    created_at: "2026-04-02T09:00:00Z",
+    last_active_at: "2026-04-20T08:11:00Z",
+  },
+];
 
 const POSTER_TYPES = new Set([
   "a4",
@@ -29,6 +57,12 @@ interface CreateBody {
 }
 
 export async function GET(request: NextRequest) {
+  const demo = await demoShortCircuit("merchant", () => ({
+    qr_codes: DEMO_QR_ROWS,
+    total: DEMO_QR_ROWS.length,
+  }));
+  if (demo) return demo;
+
   const gate = await requireMerchantSession();
   if (!gate.ok) return gate.response;
 
@@ -56,6 +90,27 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
+  const demo = await demoShortCircuit("merchant", async () => {
+    const body = (await request.json().catch(() => ({}))) as Record<
+      string,
+      unknown
+    >;
+    return {
+      qr_code: {
+        id: `demo-qr-${Date.now().toString(36)}`,
+        campaign_id: body.campaign_id ?? "demo-campaign-001",
+        poster_type: body.poster_type ?? "table-tent",
+        hero_message: body.hero_message ?? "Demo QR",
+        sub_message: body.sub_message ?? "Created in demo mode",
+        scan_count: 0,
+        conversion_count: 0,
+        disabled: false,
+        created_at: new Date().toISOString(),
+      },
+    };
+  });
+  if (demo) return demo;
+
   const gate = await requireMerchantSession();
   if (!gate.ok) return gate.response;
 

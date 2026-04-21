@@ -24,6 +24,7 @@ import {
   success,
 } from "@/lib/api/responses";
 import { requireMerchantSession } from "@/lib/api/merchant-auth";
+import { demoShortCircuit } from "@/lib/api/demo-short-circuit";
 import { supabase } from "@/lib/db";
 
 const PRODUCT_CATEGORIES = new Set([
@@ -54,6 +55,14 @@ function sha(v: string): string {
 }
 
 export async function POST(req: Request): Promise<Response> {
+  // Demo merchants get a fake transaction_id so the POS UI shows the green
+  // "✓ REDEEMED" state without touching push_transactions in prod.
+  const demo = await demoShortCircuit("merchant", () => ({
+    transaction_id: randomUUID(),
+    qr_id: "demo-qr-" + randomUUID().slice(0, 8),
+  }));
+  if (demo) return demo;
+
   const gate = await requireMerchantSession();
   if (!gate.ok) return gate.response;
 

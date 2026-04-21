@@ -15,6 +15,7 @@ import {
   success,
 } from "@/lib/api/responses";
 import { requireAdminSession } from "@/lib/api/admin-auth";
+import { demoShortCircuit } from "@/lib/api/demo-short-circuit";
 import {
   AIVerificationService,
   type VerificationResult,
@@ -42,6 +43,29 @@ interface MerchantRow {
 const oracle = new AIVerificationService();
 
 export async function POST(req: Request): Promise<Response> {
+  // Demo admins get a deterministic-looking oracle decision without
+  // touching the real push_transactions / oracle_audit tables.
+  const demo = await demoShortCircuit("admin", async () => {
+    const body = (await req.json().catch(() => ({}))) as {
+      transaction_id?: string;
+    };
+    return {
+      transaction_id: body.transaction_id ?? "demo-txn-0000",
+      decision: "auto_verified",
+      confidence_score: 0.91,
+      signal_scores: {
+        vision: 0.88,
+        ocr: 0.92,
+        geo: 0.95,
+        timing: 0.87,
+        merchant: 0.95,
+      },
+      reasoning:
+        "Vision: 0.88, OCR: 0.92, Geo: 0.95, Timing: 0.87, Merchant: 0.95",
+    };
+  });
+  if (demo) return demo;
+
   const gate = await requireAdminSession();
   if (!gate.ok) return gate.response;
 

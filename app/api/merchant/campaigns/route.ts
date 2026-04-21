@@ -9,7 +9,51 @@
 import { NextRequest } from "next/server";
 import { badRequest, serverError, success } from "@/lib/api/responses";
 import { requireMerchantSession } from "@/lib/api/merchant-auth";
+import { demoShortCircuit } from "@/lib/api/demo-short-circuit";
 import { supabase } from "@/lib/db";
+
+const DEMO_CAMPAIGNS = [
+  {
+    id: "demo-campaign-001",
+    title: "Free matcha for a 30-second reel",
+    description:
+      "Drop in, order matcha, film a short vertical. Tag @blankstreet.",
+    payout: 5,
+    spots_total: 40,
+    spots_remaining: 22,
+    deadline: "2026-05-15",
+    status: "active",
+    metadata: {
+      category: "coffee",
+      tier: "t2",
+      commissionSplit: 0,
+      contentType: "reel",
+      platform: "tiktok",
+      budget: 200,
+    },
+    created_at: "2026-04-01T10:00:00Z",
+  },
+  {
+    id: "demo-campaign-002",
+    title: "Bagel before 10 — tip us on the best schmear",
+    description:
+      "Morning-rush pre-9am visit. Show us your top 3 in a carousel.",
+    payout: 4,
+    spots_total: 30,
+    spots_remaining: 30,
+    deadline: "2026-05-22",
+    status: "draft",
+    metadata: {
+      category: "bakery",
+      tier: "t1",
+      commissionSplit: 0,
+      contentType: "carousel",
+      platform: "instagram",
+      budget: 120,
+    },
+    created_at: "2026-04-18T14:00:00Z",
+  },
+];
 
 interface CreateBody {
   name?: string;
@@ -26,6 +70,11 @@ interface CreateBody {
 }
 
 export async function GET() {
+  const demo = await demoShortCircuit("merchant", () => ({
+    campaigns: DEMO_CAMPAIGNS,
+  }));
+  if (demo) return demo;
+
   const gate = await requireMerchantSession();
   if (!gate.ok) return gate.response;
 
@@ -42,6 +91,30 @@ export async function GET() {
 }
 
 export async function POST(req: NextRequest) {
+  const demo = await demoShortCircuit("merchant", async () => {
+    const body = (await req.json().catch(() => ({}))) as Record<
+      string,
+      unknown
+    >;
+    return {
+      campaign: {
+        id: `demo-campaign-${Date.now().toString(36)}`,
+        title: typeof body.name === "string" ? body.name : "Demo Campaign",
+        description:
+          typeof body.description === "string" ? body.description : "",
+        payout: typeof body.payout === "number" ? body.payout : 5,
+        spots_total:
+          typeof body.spots_total === "number" ? body.spots_total : 40,
+        deadline:
+          typeof body.dueDate === "string" ? body.dueDate : "2026-06-01",
+        status: "draft",
+        metadata: body,
+        created_at: new Date().toISOString(),
+      },
+    };
+  });
+  if (demo) return demo;
+
   const gate = await requireMerchantSession();
   if (!gate.ok) return gate.response;
 
