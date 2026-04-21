@@ -21,8 +21,36 @@
 
 import { NextRequest } from "next/server";
 import { requireAdminSession } from "@/lib/api/admin-auth";
+import { demoShortCircuit } from "@/lib/api/demo-short-circuit";
 import { supabase } from "@/lib/db";
 import { serverError, success } from "@/lib/api/responses";
+
+const DEMO_WEEKLY = [
+  {
+    week_start: "2026-04-14",
+    merchant_id: "demo-merch-1",
+    merchant_name: "Blank Street Coffee — SoHo",
+    verified_customers: 48,
+    revenue: 612.5,
+    roi: 3.8,
+  },
+  {
+    week_start: "2026-04-14",
+    merchant_id: "demo-merch-2",
+    merchant_name: "Ess-a-Bagel — 21st",
+    verified_customers: 37,
+    revenue: 443.25,
+    roi: 2.9,
+  },
+  {
+    week_start: "2026-04-07",
+    merchant_id: "demo-merch-1",
+    merchant_name: "Blank Street Coffee — SoHo",
+    verified_customers: 41,
+    revenue: 522.5,
+    roi: 3.4,
+  },
+];
 import type { MerchantMetricsWeekly } from "@/types/database";
 
 export const dynamic = "force-dynamic";
@@ -49,6 +77,9 @@ function clampLimit(raw: string | null): number {
 }
 
 export async function GET(request: NextRequest) {
+  const demo = await demoShortCircuit("admin", () => DEMO_WEEKLY);
+  if (demo) return demo;
+
   const gate = await requireAdminSession();
   if (!gate.ok) return gate.response;
 

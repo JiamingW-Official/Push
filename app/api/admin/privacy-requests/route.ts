@@ -6,7 +6,38 @@
 
 import { badRequest, serverError, success } from "@/lib/api/responses";
 import { requireAdminSession } from "@/lib/api/admin-auth";
+import { demoShortCircuit } from "@/lib/api/demo-short-circuit";
 import { supabase } from "@/lib/db";
+
+// Lightweight fake rows for the /admin/privacy-requests demo. Ops sees a
+// realistic queue with one overdue + one about-to-be-due ticket — enough
+// to click the Resolve / Deny buttons and verify the UI.
+const DEMO_ROWS = [
+  {
+    ticket_id: "demo-dsar-001",
+    received_at: "2026-03-10T14:00:00Z",
+    request_type: "access",
+    jurisdiction: "California / CCPA",
+    status: "received",
+    due_at: "2026-04-24T14:00:00Z",
+    resolved_at: null,
+    resolution_note: null,
+    overdue: false,
+    sec_until_due: 3 * 86400,
+  },
+  {
+    ticket_id: "demo-dsar-002",
+    received_at: "2026-02-20T09:00:00Z",
+    request_type: "deletion",
+    jurisdiction: "EU / GDPR",
+    status: "verifying",
+    due_at: "2026-04-06T09:00:00Z",
+    resolved_at: null,
+    resolution_note: null,
+    overdue: true,
+    sec_until_due: -15 * 86400,
+  },
+];
 
 const VALID_STATUSES = new Set([
   "received",
@@ -17,6 +48,14 @@ const VALID_STATUSES = new Set([
 ]);
 
 export async function GET(req: Request): Promise<Response> {
+  // Demo-mode short-circuit: admins-in-demo get fake rows so the UI is
+  // clickable without a real Supabase session.
+  const demo = await demoShortCircuit("admin", () => ({
+    rows: DEMO_ROWS,
+    total: DEMO_ROWS.length,
+  }));
+  if (demo) return demo;
+
   const gate = await requireAdminSession();
   if (!gate.ok) return gate.response;
 
@@ -71,6 +110,22 @@ export async function GET(req: Request): Promise<Response> {
 // PATCH /api/admin/privacy-requests — mark a row resolved / denied.
 // Body: { ticket_id: string; status: "resolved" | "denied"; resolution_note?: string }
 export async function PATCH(req: Request): Promise<Response> {
+  // Demo PATCH echoes "resolved" so the UI updates optimistically.
+  const demo = await demoShortCircuit("admin", async () => {
+    const body = (await req.json().catch(() => ({}))) as {
+      ticket_id?: string;
+      status?: string;
+    };
+    return {
+      row: {
+        ticket_id: body.ticket_id ?? "demo-dsar-000",
+        status: body.status ?? "resolved",
+        resolved_at: new Date().toISOString(),
+      },
+    };
+  });
+  if (demo) return demo;
+
   const gate = await requireAdminSession();
   if (!gate.ok) return gate.response;
 

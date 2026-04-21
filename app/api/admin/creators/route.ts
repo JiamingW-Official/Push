@@ -18,8 +18,36 @@
 
 import { NextRequest } from "next/server";
 import { requireAdminSession } from "@/lib/api/admin-auth";
+import { demoShortCircuit } from "@/lib/api/demo-short-circuit";
 import { supabase } from "@/lib/db";
 import { badRequest, serverError, success } from "@/lib/api/responses";
+
+const DEMO_FUNNEL_ROWS = [
+  {
+    id: "demo-creator-1",
+    tier: 2,
+    status: "active",
+    performance_score: 84,
+    recruitment_source: "instagram_reel",
+    signed_date: "2026-03-15",
+  },
+  {
+    id: "demo-creator-2",
+    tier: 1,
+    status: "prospect",
+    performance_score: 0,
+    recruitment_source: "referral",
+    signed_date: "2026-04-10",
+  },
+  {
+    id: "demo-creator-3",
+    tier: 3,
+    status: "active",
+    performance_score: 91,
+    recruitment_source: "cold_outreach",
+    signed_date: "2026-02-28",
+  },
+];
 import type {
   CreatorRecruitmentFunnel,
   CreatorRecruitmentStatus,
@@ -87,6 +115,9 @@ function clampLimit(raw: string | null): number {
 }
 
 export async function GET(request: NextRequest) {
+  const demo = await demoShortCircuit("admin", () => DEMO_FUNNEL_ROWS);
+  if (demo) return demo;
+
   const gate = await requireAdminSession();
   if (!gate.ok) return gate.response;
 

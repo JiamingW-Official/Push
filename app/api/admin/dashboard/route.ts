@@ -20,6 +20,7 @@
  */
 
 import { requireAdminSession } from "@/lib/api/admin-auth";
+import { demoShortCircuit } from "@/lib/api/demo-short-circuit";
 import { supabase } from "@/lib/db";
 import { serverError, success } from "@/lib/api/responses";
 
@@ -41,6 +42,15 @@ function getCurrentWeekStartISO(): string {
 }
 
 export async function GET() {
+  // Demo admins see a realistic snapshot without hitting OLTP.
+  const demo = await demoShortCircuit("admin", () => ({
+    merchants_count: 12,
+    creators_count: 143,
+    weekly_transactions: 287,
+    average_roi: 3.4,
+  }));
+  if (demo) return demo;
+
   const gate = await requireAdminSession();
   if (!gate.ok) return gate.response;
 
