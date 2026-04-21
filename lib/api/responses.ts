@@ -104,18 +104,33 @@ export function serverError(label: string, err: unknown): NextResponse {
       ? crypto.randomUUID()
       : `${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
 
-  const code = (err as { code?: unknown } | null)?.code;
+  const errObj = err as {
+    code?: unknown;
+    message?: unknown;
+    details?: unknown;
+    hint?: unknown;
+  } | null;
+
+  const code = errObj?.code;
   const isPgError = typeof code === "string" && PG_ERRCODE_RE.test(code);
 
   // For Postgres errors: log only the SQLSTATE (message leaks schema).
-  // For other errors: log the message but never the stack (cwd paths +
-  // node_modules internals).
+  // For other errors: Supabase PostgREST returns plain objects (not Error
+  // instances) with `code`, `message`, `details`, `hint`. `String(obj)`
+  // gives "[object Object]", swallowing the actual failure — so we
+  // explicitly surface code + message for non-pg errors too.
   const safe = isPgError
     ? { code }
-    : {
-        name: err instanceof Error ? err.name : undefined,
-        message: err instanceof Error ? err.message : String(err),
-      };
+    : err instanceof Error
+      ? { name: err.name, message: err.message }
+      : typeof errObj === "object" && errObj !== null
+        ? {
+            code: typeof errObj.code === "string" ? errObj.code : undefined,
+            message:
+              typeof errObj.message === "string" ? errObj.message : undefined,
+            hint: typeof errObj.hint === "string" ? errObj.hint : undefined,
+          }
+        : { message: String(err) };
 
   console.error(`[${label}]`, traceId, safe);
   return NextResponse.json(
