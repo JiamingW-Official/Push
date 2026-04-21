@@ -27,12 +27,17 @@ const SIZES: Record<StickerSize, { w: number; h: number }> = {
   small: { w: 212.6, h: 283.46 },
 };
 
-// Design.md palette
+// Design.md palette — strict six brand colors only.
+//   Flag Red      #c1121f — headline + tag band
+//   Pearl Stone   #f5f2ec — sticker background
+//   Deep Space    #003049 — body text
+//   Steel Blue    #669bbc — footer attribution / quieter text
+//   Molten Lava   #780000 — reserved for error/alarm states
+//   Champagne     #c9a96e — reserved for premium tier accents
 const COLOR_PEARL_STONE = rgb(0xf5 / 255, 0xf2 / 255, 0xec / 255);
 const COLOR_FLAG_RED = rgb(0xc1 / 255, 0x12 / 255, 0x1f / 255);
 const COLOR_DEEP_SPACE = rgb(0x00 / 255, 0x30 / 255, 0x49 / 255);
-const COLOR_GRAPHITE = rgb(0.35, 0.35, 0.35);
-const COLOR_MUTED = rgb(0.55, 0.55, 0.55);
+const COLOR_STEEL_BLUE = rgb(0x66 / 255, 0x9b / 255, 0xbc / 255);
 
 export interface StickerInput {
   /** Absolute URL the QR encodes, e.g. https://pushnyc.co/scan/qr-abc123 */
@@ -132,7 +137,7 @@ export async function generateStickerPDF({
     y: qrY - campaignSize - bizSize - 20,
     size: bizSize,
     font: monoFont,
-    color: COLOR_GRAPHITE,
+    color: COLOR_DEEP_SPACE,
   });
 
   // Footer attribution — Push brand + required FTC-style line
@@ -144,7 +149,7 @@ export async function generateStickerPDF({
     y: 18,
     size: footerSize,
     font: monoFont,
-    color: COLOR_MUTED,
+    color: COLOR_STEEL_BLUE,
   });
 
   return pdf.save();

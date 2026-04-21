@@ -63,6 +63,8 @@ export default function ScanLandingPage() {
   >("loading");
   const [scanRecorded, setScanRecorded] = useState(false);
   const [consentTier, setConsentTierState] = useState<ConsentTier>(2);
+  // v5.3 minor gate — when true, ConsentPicker clamps Tier 2 / 3 off.
+  const [isMinor, setIsMinor] = useState<boolean>(false);
   const trackFired = useRef(false);
 
   useEffect(() => {
@@ -264,8 +266,30 @@ export default function ScanLandingPage() {
 
       {/* ── Consent picker ── */}
       <section style={styles.consentSection}>
+        {/* Age gate: COPPA/CCPA require a downgrade path for minors. */}
+        <label style={styles.ageGate}>
+          <input
+            type="checkbox"
+            checked={isMinor}
+            onChange={(e) => {
+              setIsMinor(e.target.checked);
+              if (e.target.checked && consentTier > 1) {
+                handleConsentChange(1);
+              }
+            }}
+            style={styles.ageGateCheck}
+          />
+          <span style={styles.ageGateText}>
+            I am under 18 years old
+            <small style={styles.ageGateSmall}>
+              Required by COPPA / CCPA — locks consent to Tier 1 (attribution
+              only).
+            </small>
+          </span>
+        </label>
         <ConsentPicker
           initialTier={consentTier}
+          minor={isMinor}
           onChange={handleConsentChange}
           onDeclineAll={() => handleConsentChange(1)}
           onContinue={(tier) => {
@@ -682,6 +706,41 @@ const styles = {
     maxWidth: "720px",
     margin: "0 auto",
     width: "100%",
+  } as React.CSSProperties,
+
+  ageGate: {
+    display: "flex",
+    alignItems: "flex-start",
+    gap: "10px",
+    padding: "12px 16px",
+    marginBottom: "16px",
+    border: "1px solid var(--line)",
+    background: "var(--surface-elevated)",
+    cursor: "pointer",
+  } as React.CSSProperties,
+
+  ageGateCheck: {
+    marginTop: "2px",
+    width: "16px",
+    height: "16px",
+    accentColor: "var(--primary)",
+  } as React.CSSProperties,
+
+  ageGateText: {
+    display: "flex",
+    flexDirection: "column" as const,
+    fontFamily: "var(--font-body)",
+    fontSize: "13px",
+    fontWeight: 600,
+    color: "var(--dark)",
+    lineHeight: 1.4,
+  } as React.CSSProperties,
+
+  ageGateSmall: {
+    fontSize: "11px",
+    fontWeight: 500,
+    color: "var(--graphite)",
+    marginTop: "2px",
   } as React.CSSProperties,
 
   ctaSection: {
