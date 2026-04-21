@@ -1,0 +1,237 @@
+
+> push-app@0.1.0 build
+> next build
+
+▲ Next.js 16.2.3 (Turbopack)
+- Environments: .env.local
+
+⚠ The "middleware" file convention is deprecated. Please use "proxy" instead. Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
+  Creating an optimized production build ...
+✓ Compiled successfully in 4.8s
+  Running TypeScript ...
+  Finished TypeScript in 9.3s ...
+  Collecting page data using 11 workers ...
+⚠ Using edge runtime on a page currently disables static generation for that page
+  Generating static pages using 11 workers (0/212) ...
+  Generating static pages using 11 workers (53/212) 
+  Generating static pages using 11 workers (106/212) 
+  Generating static pages using 11 workers (159/212) 
+✓ Generating static pages using 11 workers (212/212) in 674ms
+  Finalizing page optimization ...
+
+Route (app)                                       Revalidate  Expire
+┌ ○ /
+├ ○ /_not-found
+├ ○ /about
+├ ○ /admin
+├ ○ /admin/audit-log
+├ ○ /admin/campaigns
+├ ƒ /admin/campaigns/[id]
+├ ○ /admin/cohorts
+├ ƒ /admin/cohorts/[id]
+├ ○ /admin/dashboard
+├ ○ /admin/disputes
+├ ƒ /admin/disputes/[id]
+├ ○ /admin/finance
+├ ○ /admin/fraud
+├ ○ /admin/users
+├ ƒ /admin/users/[id]
+├ ○ /admin/verifications
+├ ○ /api-docs
+├ ƒ /api/admin/audit-log
+├ ƒ /api/admin/campaigns
+├ ƒ /api/admin/campaigns/[id]
+├ ƒ /api/admin/campaigns/[id]/decision
+├ ƒ /api/admin/cohorts
+├ ƒ /api/admin/cohorts/[id]
+├ ƒ /api/admin/creators
+├ ƒ /api/admin/dashboard
+├ ƒ /api/admin/disputes
+├ ƒ /api/admin/disputes/[id]/decide
+├ ƒ /api/admin/finance/ledger
+├ ƒ /api/admin/fraud
+├ ƒ /api/admin/fraud/[id]/decision
+├ ƒ /api/admin/metrics
+├ ƒ /api/admin/reports/weekly
+├ ƒ /api/admin/users
+├ ƒ /api/admin/users/[id]
+├ ƒ /api/admin/users/[id]/impersonate
+├ ƒ /api/admin/verifications
+├ ƒ /api/admin/verifications/[id]/decision
+├ ƒ /api/attribution/scan
+├ ƒ /api/attribution/verify
+├ ƒ /api/contact
+├ ƒ /api/creator/apply
+├ ƒ /api/creator/disclosure/check
+├ ƒ /api/creator/messages
+├ ƒ /api/creator/messages/[threadId]
+├ ƒ /api/creator/score
+├ ƒ /api/disputes
+├ ƒ /api/disputes/[id]
+├ ƒ /api/disputes/[id]/events
+├ ƒ /api/disputes/[id]/evidence
+├ ƒ /api/health
+├ ƒ /api/internal/ai-verify
+├ ƒ /api/internal/recruitment-sync
+├ ƒ /api/merchant/api-keys
+├ ƒ /api/merchant/applicants
+├ ƒ /api/merchant/applicants/[id]
+├ ƒ /api/merchant/applicants/batch-decision
+├ ƒ /api/merchant/campaigns
+├ ƒ /api/merchant/dashboard
+├ ƒ /api/merchant/integrations
+├ ƒ /api/merchant/integrations/[slug]/connect
+├ ƒ /api/merchant/integrations/[slug]/disconnect
+├ ƒ /api/merchant/invoices
+├ ƒ /api/merchant/locations
+├ ƒ /api/merchant/locations/[id]
+├ ƒ /api/merchant/payments
+├ ƒ /api/merchant/qr-codes
+├ ƒ /api/merchant/qr-codes/[id]
+├ ƒ /api/merchant/reports/weekly
+├ ƒ /api/merchant/settings
+├ ƒ /api/merchant/subscription
+├ ƒ /api/merchant/team
+├ ƒ /api/merchant/topup
+├ ƒ /api/search
+├ ○ /api/status                                           1m      1y
+├ ƒ /api/threads
+├ ƒ /api/threads/[id]
+├ ƒ /api/threads/[id]/messages
+├ ○ /blog
+├ ● /blog/[slug]
+│ ├ /blog/qr-attribution-death-of-vanity-metrics
+│ ├ /blog/williamsburg-restaurant-case-study
+│ ├ /blog/creator-economy-nyc-micro-influencers
+│ └ [+12 more paths]
+├ ƒ /blog/[slug]/opengraph-image-yqks0s
+├ ● /c/[handle]
+│ ├ /c/maya-eats-nyc
+│ ├ /c/felix-brooklyn
+│ ├ /c/jess-uptown-bites
+│ └ [+17 more paths]
+├ ○ /careers
+├ ƒ /careers/[slug]
+├ ○ /case-studies
+├ ● /case-studies/[slug]
+│ ├ /case-studies/robertas-bed-stuy
+│ ├ /case-studies/bloom-florals-williamsburg
+│ ├ /case-studies/the-roast-room-chelsea
+│ └ [+2 more paths]
+├ ƒ /case-studies/[slug]/opengraph-image-kys12a
+├ ○ /changelog
+├ ƒ /changelog/feed.xml
+├ ○ /contact
+├ ○ /creator/analytics
+├ ○ /creator/calendar
+├ ● /creator/campaigns/[id]
+│ ├ /creator/campaigns/demo-campaign-001
+│ ├ /creator/campaigns/demo-campaign-002
+│ ├ /creator/campaigns/demo-campaign-003
+│ └ [+5 more paths]
+├ ○ /creator/dashboard
+├ ○ /creator/discover
+├ ○ /creator/disputes
+├ ƒ /creator/disputes/[id]
+├ ○ /creator/earnings
+├ ○ /creator/explore
+├ ○ /creator/inbox
+├ ƒ /creator/inbox/[threadId]
+├ ○ /creator/inbox/invites
+├ ○ /creator/inbox/messages
+├ ○ /creator/inbox/system
+├ ○ /creator/leaderboard
+├ ○ /creator/login
+├ ○ /creator/messages
+├ ○ /creator/notifications
+├ ○ /creator/onboarding
+├ ○ /creator/overview
+├ ○ /creator/portfolio
+├ ○ /creator/post-campaign
+├ ○ /creator/post-submit
+├ ○ /creator/profile
+├ ● /creator/public/[id]
+│ └ /creator/public/demo-creator-001
+├ ○ /creator/reset-password
+├ ○ /creator/settings
+├ ○ /creator/signup
+├ ○ /creator/verify
+├ ○ /creator/wallet
+├ ○ /creator/work
+├ ○ /creator/work/calendar
+├ ƒ /creator/work/campaign/[id]
+├ ƒ /creator/work/campaign/[id]/post
+├ ○ /creator/work/drafts
+├ ○ /creator/work/pipeline
+├ ○ /creator/work/today
+├ ƒ /customer/loyalty-card/[id]
+├ ○ /dashboard
+├ ○ /demo
+├ ○ /demo/admin
+├ ○ /demo/creator
+├ ○ /demo/merchant
+├ ○ /explore
+├ ○ /faq
+├ ƒ /feed.xml
+├ ○ /for-creators
+├ ○ /for-merchants
+├ ƒ /help
+├ ƒ /help/[slug]
+├ ○ /how-it-works
+├ ƒ /invite/[code]
+├ ○ /legal/acceptable-use
+├ ○ /legal/cookies
+├ ○ /legal/privacy
+├ ○ /legal/terms
+├ ● /m/[slug]
+│ ├ /m/blank-street-coffee-soho
+│ ├ /m/superiority-burger-east-village
+│ ├ /m/modelfit-flatiron
+│ └ [+17 more paths]
+├ ○ /merchant/analytics
+├ ○ /merchant/applicants
+├ ○ /merchant/billing
+├ ƒ /merchant/campaigns/[id]
+├ ○ /merchant/campaigns/new
+├ ○ /merchant/dashboard
+├ ○ /merchant/disputes
+├ ƒ /merchant/disputes/[id]
+├ ○ /merchant/integrations
+├ ƒ /merchant/integrations/[slug]
+├ ○ /merchant/locations
+├ ƒ /merchant/locations/[id]
+├ ○ /merchant/login
+├ ○ /merchant/messages
+├ ○ /merchant/notifications
+├ ○ /merchant/onboarding
+├ ○ /merchant/payments
+├ ○ /merchant/qr-codes
+├ ○ /merchant/settings
+├ ○ /merchant/signup
+├ ○ /neighborhoods
+├ ● /neighborhoods/[slug]
+│ ├ /neighborhoods/williamsburg
+│ ├ /neighborhoods/lower-east-side
+│ ├ /neighborhoods/soho
+│ └ [+30 more paths]
+├ ƒ /neighborhoods/[slug]/opengraph-image-127n40
+├ ƒ /opengraph-image
+├ ○ /press
+├ ○ /pricing
+├ ○ /referrals
+├ ○ /robots.txt
+├ ƒ /rss/merchants
+├ ƒ /scan/[qrId]
+├ ƒ /scan/[qrId]/verify
+├ ○ /security
+├ ○ /sitemap.xml
+├ ○ /status                                               1m      1y
+└ ○ /trust
+
+
+ƒ Proxy (Middleware)
+
+○  (Static)   prerendered as static content
+●  (SSG)      prerendered as static HTML (uses generateStaticParams)
+ƒ  (Dynamic)  server-rendered on demand
+

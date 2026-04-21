@@ -1,6 +1,14 @@
 /**
  * tier-config.ts
- * Single source of truth for Push's 6-Tier Creator System v4.1.
+ * Single source of truth for Push's 6-Tier Creator System.
+ *
+ * Colors: Path A (v5.2, 2026-04-20). Tier visuals use the 6-color brand
+ * palette — see Design.md §Tier Identity System. Tier differentiation is
+ * carried by material name, icon, and texture, not by unique hexes.
+ *
+ * Economics here are v4.1 data — scheduled for migration in P0-5; until then
+ * upstream callers should prefer the v5.2 SKILL docs for money quotes.
+ *
  * Import from here — do NOT hardcode tier data elsewhere.
  */
 
@@ -65,8 +73,8 @@ export const TIERS: Record<CreatorTier, TierConfig> = {
   Seed: {
     label: "Seed",
     icon: "",
-    color: "#b8a99a",
-    bg: "#f7f5f3",
+    color: "#669bbc",
+    bg: "#f5f2ec",
     accent: "#003049",
     minScore: 0,
     maxScore: 39,
@@ -89,9 +97,9 @@ export const TIERS: Record<CreatorTier, TierConfig> = {
   Explorer: {
     label: "Explorer",
     icon: "",
-    color: "#8c6239",
-    bg: "#f5f0eb",
-    accent: "#5a3d24",
+    color: "#c9a96e",
+    bg: "#faf6f0",
+    accent: "#003049",
     minScore: 40,
     maxScore: 54,
     baseRate: 12,
@@ -113,9 +121,9 @@ export const TIERS: Record<CreatorTier, TierConfig> = {
   Operator: {
     label: "Operator",
     icon: "",
-    color: "#4a5568",
-    bg: "#f2f3f5",
-    accent: "#2d3748",
+    color: "#669bbc",
+    bg: "#eef5f9",
+    accent: "#003049",
     minScore: 55,
     maxScore: 64,
     baseRate: 20,
@@ -138,9 +146,9 @@ export const TIERS: Record<CreatorTier, TierConfig> = {
   Proven: {
     label: "Proven",
     icon: "",
-    color: "#c9a96e",
-    bg: "#faf6f0",
-    accent: "#003049",
+    color: "#c1121f",
+    bg: "#fdeaec",
+    accent: "#ffffff",
     minScore: 65,
     maxScore: 77,
     baseRate: 32,
@@ -163,8 +171,8 @@ export const TIERS: Record<CreatorTier, TierConfig> = {
   Closer: {
     label: "Closer",
     icon: "",
-    color: "#9b111e",
-    bg: "#fdf3f3",
+    color: "#780000",
+    bg: "#faeaea",
     accent: "#6d0c15",
     minScore: 78,
     maxScore: 87,
@@ -189,8 +197,8 @@ export const TIERS: Record<CreatorTier, TierConfig> = {
   Partner: {
     label: "Partner",
     icon: "",
-    color: "#1a1a2e",
-    bg: "#f2f2f5",
+    color: "#003049",
+    bg: "#e8eef2",
     accent: "#0e0e1a",
     minScore: 88,
     maxScore: Infinity,

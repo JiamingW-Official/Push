@@ -1,0 +1,158 @@
+.invite-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 16px;
+  min-height: 64px;
+  border-bottom: 1px solid var(--line, rgba(0,48,73,0.12));
+  cursor: pointer;
+  position: relative;
+  background: var(--surface-elevated, #fff);
+  transition: background 200ms ease;
+}
+
+.invite-row:hover {
+  background: var(--surface-bright, #fafaf8);
+}
+
+.invite-row:focus {
+  outline: 2px solid var(--primary, #c1121f);
+  outline-offset: -2px;
+}
+
+.invite-row__status-bar {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: var(--line, rgba(0,48,73,0.12));
+}
+
+.invite-row--unread .invite-row__status-bar {
+  background: var(--primary, #c1121f);
+}
+
+.invite-row--urgent .invite-row__status-bar {
+  animation: inviteCountdownPulse 1.2s ease-in-out infinite;
+}
+
+@keyframes inviteCountdownPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.invite-row__avatar {
+  width: 40px;
+  height: 40px;
+  background: var(--dark, #003049);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: Darky, sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  flex-shrink: 0;
+  border-radius: 0;
+}
+
+.invite-row__content {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.invite-row__merchant {
+  font-family: Darky, sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--dark, #003049);
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.invite-row--unread .invite-row__merchant {
+  font-weight: 700;
+}
+
+.invite-row__campaign {
+  font-family: 'CS Genio Mono', monospace;
+  font-size: 13px;
+  color: var(--graphite, #4a5568);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.invite-row__meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.invite-row__payout {
+  font-family: Darky, sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--champagne, #c9a96e);
+}
+
+.invite-row__countdown {
+  font-family: 'CS Genio Mono', monospace;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--graphite, #4a5568);
+}
+
+.invite-row__countdown--urgent {
+  color: var(--primary, #c1121f);
+  animation: inviteCountdownPulse 1.2s ease-in-out infinite;
+}
+
+.invite-row__actions {
+  display: flex;
+  gap: 6px;
+}
+
+.invite-row__btn {
+  padding: 4px 10px;
+  font-family: 'CS Genio Mono', monospace;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  border-radius: 0;
+  transition: background 200ms ease, color 200ms ease, border-color 200ms ease;
+}
+
+.invite-row__btn--accept {
+  background: var(--primary, #c1121f);
+  color: #fff;
+  border: 1px solid var(--primary, #c1121f);
+}
+
+.invite-row__btn--accept:hover {
+  background: var(--accent, #780000);
+  border-color: var(--accent, #780000);
+}
+
+.invite-row__btn--decline {
+  background: transparent;
+  color: var(--graphite, #4a5568);
+  border: 1px solid var(--line, rgba(0,48,73,0.12));
+}
+
+.invite-row__btn--decline:hover {
+  border-color: var(--dark, #003049);
+  color: var(--dark, #003049);
+}

@@ -1,0 +1,67 @@
+/* ============================================================
+   Customer QRCodeDisplay — scannable code OR numeric fallback
+   Authority: Design.md (sharp corners)
+   ============================================================ */
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.qrImage {
+  width: 200px;
+  height: 200px;
+  border: 2px solid var(--line-strong);
+  border-radius: 0;
+  /* Ensure small QR payloads scale crisply. */
+  image-rendering: pixelated;
+  background: var(--surface-elevated);
+}
+
+.caption {
+  font-family: var(--font-body);
+  font-size: var(--text-caption);
+  color: var(--text-muted);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.numericWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-1);
+  width: 100%;
+}
+
+.numericCode {
+  font-family: var(--font-body);
+  font-size: clamp(20px, 4vw, 28px);
+  font-weight: 700;
+  color: var(--dark);
+  letter-spacing: 0.08em;
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+  word-break: break-all;
+  line-height: 1.2;
+  padding: var(--space-2) var(--space-3);
+  border: 2px dashed var(--line-strong);
+  background: var(--surface);
+  width: 100%;
+  max-width: 360px;
+}
+
+.numericHint {
+  font-family: var(--font-body);
+  font-size: var(--text-caption);
+  color: var(--text-muted);
+}
+
+.empty {
+  font-family: var(--font-body);
+  font-size: var(--text-caption);
+  color: var(--text-muted);
+  font-style: italic;
+}

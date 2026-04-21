@@ -1,0 +1,103 @@
+/* ============================================================
+   Customer LoyaltyCard — main card component
+   Authority: Design.md (sharp corners, brand colors, CSGenioMono)
+   ============================================================ */
+
+.card {
+  background: var(--surface-elevated);
+  border: 2px solid var(--line-strong);
+  border-radius: 0;
+  padding: var(--space-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  width: 100%;
+  max-width: 600px;
+}
+
+@media (max-width: 575px) {
+  .card {
+    padding: var(--space-3);
+    gap: var(--space-3);
+  }
+}
+
+.divider {
+  width: 100%;
+  height: 1px;
+  background: var(--line);
+  border: 0;
+  margin: 0;
+}
+
+/* ── Header ────────────────────────────────────────────────── */
+
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.merchantName {
+  font-family: var(--font-display);
+  font-size: clamp(28px, 5vw, 40px);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: var(--dark);
+}
+
+.creatorLine {
+  font-family: var(--font-body);
+  font-size: var(--text-small);
+  color: var(--graphite);
+}
+
+.creatorName {
+  color: var(--primary);
+  font-weight: 700;
+}
+
+/* ── Section wrappers ──────────────────────────────────────── */
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.sectionLabel {
+  font-family: var(--font-body);
+  font-size: var(--text-caption);
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.stampsSummary {
+  font-family: var(--font-body);
+  font-size: var(--text-small);
+  color: var(--graphite);
+}
+
+.stampsSummary__count {
+  color: var(--primary);
+  font-weight: 700;
+}
+
+.redeemedRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-2);
+  font-family: var(--font-body);
+  font-size: var(--text-caption);
+  color: var(--graphite);
+}
+
+.redeemedRow__value {
+  color: var(--dark);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}

@@ -1,50 +1,139 @@
-# Push — Workspace Rules
+# Push — Workspace Guidelines
 
-## Skills Architecture
-
-Push 的所有领域知识存储在 `.claude/skills/` 中。每次只加载需要的 skill，不要全部加载。
-
-**入口：** 先读 `push-hub` → 根据任务路由到对应 skill。
-
-| Skill | 领域 |
-|-------|------|
-| `push-hub` | 主路由器 + 快速参考数字 |
-| `push-strategy` | 战略定位、Agentic路线图、竞争分析 |
-| `push-creator` | 6-Tier v4.0、评分模型、招募 |
-| `push-pricing` | 定价$19.99/$69/$199、单位经济 |
-| `push-attribution` | QR码归因、验证、反欺诈 |
-| `push-campaign` | Campaign设计、工作流、SLA |
-| `push-gtm` | 冷启动12周、增长、扩张 |
-| `push-metrics` | KPI、仪表板、数据模型 |
-| `push-website` | 品牌视觉规范、内容标准 |
-| `push-brand-voice` | 品牌声音、文案、messaging模板 |
-| `push-ui-template` | SaaS模板提取：页面结构、交互行为、组件规范（子文件：sections/interactions/components） |
+Single source of truth for code standards on this repo. Design standards live in [Design.md](./Design.md); everything else is here.
 
 ---
 
-## Design System (MANDATORY)
+## Skills
 
-**任何 UI/前端代码修改前，必须读 [`Design.md`](./Design.md)。**
+Domain knowledge lives in `.claude/skills/`. Load only what a task needs. Start at `push-hub` and it routes to the right domain skill.
 
-### 核心约束
-1. **直角：** `border-radius: 0`（例外：map pins 50%、filter chips 50vh、back-to-top 50%）
-2. **品牌色（6色）：** Flag Red `#c1121f` / Molten Lava `#780000` / Pearl Stone `#f5f2ec` / Deep Space Blue `#003049` / Steel Blue `#669bbc` / Champagne Gold `#c9a96e` — 不得新增
-3. **字体：** Darky（标题/display）+ CS Genio Mono（正文/标签/UI）— 不得引入其他字体
-4. **间距：** 8px 基础网格
-5. **背景：** `#f5f2ec` (Pearl Stone)，三层surface: Surface `#f5f2ec` → Surface Bright `#fafaf8` → Surface Elevated `#ffffff`
-6. **模式：** 仅 Light Mode
-7. **交互：** GSAP ScrollTrigger + Lenis smooth scroll；参考 ashleybrookecs.com（编辑式大字）+ sanrita.ca（极简艺术感）+ Sticky Grid Scroll（渐进式展示网格）
-
-Design.md 包含完整组件规范、交互模式、动画 tokens，是 UI 实现的权威来源。
-
-第三方组件的圆角必须覆写为 0。如需偏离 Design.md，先问用户，再更新文档。
+| Skill | Domain |
+|---|---|
+| `push-hub` | Router + quick-reference numbers |
+| `push-strategy` | Positioning, agentic roadmap, competition |
+| `push-creator` | 6-tier system, scoring, recruitment |
+| `push-pricing` | Pricing tiers, unit economics |
+| `push-attribution` | QR attribution, verification, anti-fraud |
+| `push-campaign` | Campaign design, workflow, SLAs |
+| `push-gtm` | Cold-start plan, acquisition, expansion |
+| `push-metrics` | KPIs, dashboard, data model |
+| `push-website` | Brand visuals, content standards |
+| `push-brand-voice` | Voice, copy, messaging templates |
+| `push-ui-template` | Page / section / component specs |
 
 ---
 
-## Development Rules
+## Design system (MANDATORY)
 
-- 代码简洁可读，不过度工程化
-- 优先 vanilla CSS，除非用户指定框架
-- 仅在逻辑不明显时加注释
-- Commit: `feat:` / `fix:` / `style:` / `refactor:`
-- 每个任务结束后检查 Design.md 是否需要更新
+Before touching any UI code, read [Design.md](./Design.md). Non-negotiables:
+
+- Sharp corners — `border-radius: 0` everywhere. Exceptions are documented in Design.md (map pins, filter chips, back-to-top).
+- Six brand colors only — `#c1121f` Flag Red, `#780000` Molten Lava, `#f5f2ec` Pearl Stone, `#003049` Deep Space Blue, `#669bbc` Steel Blue, `#c9a96e` Champagne Gold. No additions.
+- Two fonts only — Darky (display/headings), CS Genio Mono (body/UI).
+- 8px base grid.
+- Light mode only.
+- Interactions use GSAP ScrollTrigger + Lenis smooth scroll.
+
+Override third-party component radii to 0. Deviations from Design.md require user sign-off and a doc update in the same PR.
+
+---
+
+## Backend standards
+
+### Supabase client usage
+
+One directory, three clients, each with a single responsibility. Do not create new client-init code elsewhere.
+
+| File | Key | Use from |
+|---|---|---|
+| `lib/db/browser.ts` → `createClient()` | anon/publishable | Client Components (`'use client'`) |
+| `lib/db/server.ts` → `createServerSupabaseClient()` | anon + cookie session | Server Components, Route Handlers, Server Actions |
+| `lib/db/index.ts` → `supabase`, `db.{select,insert,update,delete}` | service role (RLS bypass) | Server-only: cron, internal APIs, backend services |
+
+`lib/db/server.ts` imports `next/headers` — never import it from a Client Component; Next will throw at build.
+
+`lib/db/index.ts` hard-throws at boot in production if `SUPABASE_SERVICE_ROLE_KEY` is missing. This is intentional (fail closed, never silently downgrade to anon).
+
+### API route conventions
+
+All Route Handlers in `app/api/**/route.ts` follow the same shape. Use the helpers in [`lib/api/responses.ts`](./lib/api/responses.ts) — do not return raw `NextResponse.json(...)`.
+
+```ts
+import { success, badRequest, unauthorized, serverError } from "@/lib/api/responses";
+import { requireAdminSession } from "@/lib/api/admin-auth";
+import { db } from "@/lib/db";
+
+export async function GET(req: Request) {
+  const session = await requireAdminSession(req);
+  if (!session) return unauthorized();
+
+  try {
+    const merchants = await db.select("merchants");
+    return success({ merchants });
+  } catch (err) {
+    return serverError("admin-merchants", err);
+  }
+}
+```
+
+Response envelopes:
+- **Success (2xx):** `{ data, timestamp, ...extras }`
+- **Client error (400):** `{ error: "message", ...hints }`
+- **Auth errors (401/403/404):** `{ error: "message" }`
+- **Server error (500):** `{ error: "Internal error", trace_id }` — the `trace_id` correlates with server logs; never leak Postgres text / stack traces to clients.
+
+### Auth guards
+
+Three audiences, three guards. Pick the right one at the top of every authenticated route.
+
+| Guard | Gate | Returns |
+|---|---|---|
+| `requireAdminSession(req)` | Push internal team | 401 if missing |
+| `requireCreatorSession(req)` | Authenticated creator | 401 if missing |
+| `requireMerchantSession(req)` | Authenticated merchant | 401 if missing |
+
+Internal service-to-service endpoints (`/api/internal/*`) are gated in `middleware.ts` via `INTERNAL_API_SECRET` — do not re-gate them in the route itself.
+
+### Service layer
+
+Domain logic lives in `lib/services/*.ts` as stateless modules (or classes of stateless methods). Routes are thin: parse input → call service → format response. Services do not import Next primitives.
+
+### Environment variables
+
+Full contract in [docs/env-vars.md](./docs/env-vars.md). Rules:
+
+- All reads go through the client modules (`lib/db/*`). Do not `process.env.XXX` inline in feature code.
+- Production has hard throws for `SUPABASE_SERVICE_ROLE_KEY` (in `lib/db/index.ts`) and `INTERNAL_API_SECRET` (in `middleware.ts`). Never add silent fallbacks to these.
+- `NEXT_PUBLIC_USE_MOCK="1"` only gates demo data in non-production builds. Do not ship production code that reads it.
+
+### Logging
+
+Use `console.error` only for unexpected errors in route handlers (shows up in Vercel runtime logs). Do not `console.log` for debugging in committed code — leave it in dev only.
+
+---
+
+## Git workflow
+
+- **Branches:** `feat/*`, `fix/*`, `refactor/*`, `chore/*`, `docs/*`. Delete after merge.
+- **Commits:** Conventional Commits. Subject ≤70 chars. Body explains the *why*.
+- **PRs:** `npm run type-check && npm run test && npm run build` must pass locally before push.
+- **Never commit:** `.env.local`, `.next/`, `node_modules/`, `.claude/worktrees/`, `*-report.txt` (all gitignored).
+
+---
+
+## Development rules
+
+- Simple and readable over clever. Don't over-engineer.
+- Prefer vanilla CSS unless the user specifies a framework.
+- Comments explain **why**, not **what**. Skip them if a well-named identifier already explains.
+- Production builds must pass `build + type-check + tests`. If you're not running all three, you're not verifying.
+- When in doubt: ask the user. Do not guess at product decisions.
+
+---
+
+## Deployment
+
+See [docs/DEPLOYMENT.md](./docs/DEPLOYMENT.md) for the full runbook.
+
+Quick: `vercel --prod --yes` deploys current HEAD to production. `scripts/push-env-to-vercel.sh` syncs local env vars to Vercel production (idempotent).

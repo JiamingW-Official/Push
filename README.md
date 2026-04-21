@@ -1,36 +1,92 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Push
 
-## Getting Started
+Vertical AI for local commerce — coffee shops and neighborhood merchants pay creators only for verified customer acquisition.
 
-First, run the development server:
+## Stack
+
+| Layer | Technology |
+|---|---|
+| Framework | Next.js 16.2 (App Router + Turbopack) |
+| Runtime | React 19.2 |
+| Database | Supabase (PostgreSQL + Auth + Realtime) |
+| Auth | Supabase Auth + session cookies |
+| Deployment | Vercel (Edge middleware for auth + internal-API gating) |
+| Tests | Jest |
+| Styling | Vanilla CSS with design tokens (see [Design.md](./Design.md)) |
+
+## Quick start
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+cp .env.local.example .env.local    # fill in Supabase project + keys
+npm run dev                          # http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Scripts
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+npm run dev           # dev server (Turbopack)
+npm run build         # production build
+npm run type-check    # tsc --noEmit
+npm run lint          # ESLint
+npm run test          # Jest
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Project layout
 
-## Learn More
+```
+app/                    # Next.js App Router
+  (admin)/              # Admin portal (internal team)
+  (creator)/            # Creator workspace + dashboard
+  (merchant)/           # Merchant dashboard + campaigns
+  (marketing)/          # Public marketing pages
+  (public)/             # Public utility pages (scan, verify)
+  api/                  # Route handlers — see docs/API.md
+lib/
+  db/                   # Supabase clients — browser / server / service-role
+    browser.ts          #   Client Components
+    server.ts           #   Server Components, route handlers, Server Actions
+    index.ts            #   Service-role client + CRUD helpers (RLS bypass)
+  api/                  # API response helpers (success/badRequest/etc.)
+  services/             # Stateless domain services (AI verification, reports)
+components/             # React components
+middleware.ts           # Auth + internal-API secret gate (Edge)
+docs/
+  API.md                # Route reference
+  DEPLOYMENT.md         # Vercel + Supabase setup
+  env-vars.md           # Env var contract
+  project-structure.md  # Deeper architecture notes
+  schema.sql            # DB schema of record
+```
 
-To learn more about Next.js, take a look at the following resources:
+## Environment variables
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Production requires all of these set on Vercel. See [docs/env-vars.md](./docs/env-vars.md) for details.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+| Variable | Scope | Required | Notes |
+|---|---|---|---|
+| `NEXT_PUBLIC_SUPABASE_URL` | all | ✅ | Supabase project URL (public) |
+| `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | all | ✅ | Anon / publishable key (public) |
+| `SUPABASE_SERVICE_ROLE_KEY` | server | ✅ (prod) | RLS-bypass key — hard throws at boot if missing in production |
+| `INTERNAL_API_SECRET` | server | ✅ | Server-to-server secret for `/api/internal/*` |
+| `NEXT_PUBLIC_USE_MOCK` | build | optional | `"1"` enables mock data paths (non-prod only) |
 
-## Deploy on Vercel
+## Deployment
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```bash
+vercel --prod --yes                                  # deploy current branch to production
+bash scripts/push-env-to-vercel.sh                   # sync local .env.local → Vercel production
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+See [docs/DEPLOYMENT.md](./docs/DEPLOYMENT.md) for the full runbook including env var setup and post-deploy smoke tests.
+
+## Contributing
+
+- Conventional commits: `feat:` / `fix:` / `refactor:` / `chore:` / `docs:` / `style:`
+- Before touching UI: read [Design.md](./Design.md) (design system is enforced)
+- Before touching backend: read [CLAUDE.md](./CLAUDE.md) (backend standards)
+- All PRs: `npm run type-check && npm run test && npm run build` must pass
+
+## License
+
+Proprietary. © Push 2026.

@@ -1,0 +1,163 @@
+/* ApplicationList — application rows with filter chips */
+
+.al-root {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Filter chips — pill shape per Design.md exception for filter chips */
+.al-filters {
+  display: flex;
+  gap: 8px;
+  padding: 16px 24px;
+  border-bottom: 1px solid var(--line, rgba(0, 48, 73, 0.12));
+  flex-wrap: wrap;
+}
+
+.al-chip {
+  font-family: "CS Genio Mono", monospace;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 5px 14px;
+  border: 1px solid var(--line, rgba(0, 48, 73, 0.12));
+  border-radius: 50vh; /* pill — Design.md approved exception for filter chips */
+  background: transparent;
+  color: var(--graphite, #4a5568);
+  cursor: pointer;
+  transition: background 120ms ease, color 120ms ease, border-color 120ms ease;
+}
+
+.al-chip:hover {
+  background: var(--surface-bright, #fafaf8);
+  border-color: var(--dark, #003049);
+  color: var(--dark, #003049);
+}
+
+.al-chip--active {
+  background: var(--dark, #003049);
+  border-color: var(--dark, #003049);
+  color: var(--surface, #f5f2ec);
+}
+
+/* List */
+.al-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.al-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  min-height: 72px;
+  padding: 12px 24px;
+  border-bottom: 1px solid var(--line, rgba(0, 48, 73, 0.12));
+  transition: background 120ms ease;
+}
+
+.al-row:hover {
+  background: var(--surface-bright, #fafaf8);
+}
+
+/* Left column */
+.al-row__left {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.al-merchant {
+  font-family: "Darky", sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--dark, #003049);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.al-title {
+  font-family: "CS Genio Mono", monospace;
+  font-size: 13px;
+  color: var(--graphite, #4a5568);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.al-category {
+  font-family: "CS Genio Mono", monospace;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--tertiary, #669bbc);
+}
+
+/* Right column */
+.al-row__right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+/* Status badge */
+.al-status {
+  font-family: "CS Genio Mono", monospace;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 2px 8px;
+  border-radius: 0;
+}
+
+.al-status--pending {
+  background: color-mix(in srgb, var(--champagne, #c9a96e) 18%, transparent);
+  color: color-mix(in srgb, var(--champagne, #c9a96e) 70%, var(--dark, #003049));
+}
+
+.al-status--accepted {
+  background: color-mix(in srgb, var(--tertiary, #669bbc) 15%, transparent);
+  color: var(--tertiary, #669bbc);
+}
+
+.al-status--rejected,
+.al-status--withdrawn {
+  background: color-mix(in srgb, var(--graphite, #4a5568) 10%, transparent);
+  color: var(--graphite, #4a5568);
+}
+
+/* Milestone label */
+.al-milestone {
+  font-family: "CS Genio Mono", monospace;
+  font-size: 11px;
+  color: var(--graphite, #4a5568);
+}
+
+/* Payout */
+.al-payout {
+  font-family: "Darky", sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--champagne, #c9a96e);
+}
+
+/* Empty state */
+.al-empty {
+  padding: 32px 24px;
+}
+
+.al-empty__text {
+  font-family: "CS Genio Mono", monospace;
+  font-size: 13px;
+  color: var(--graphite, #4a5568);
+  margin: 0;
+}

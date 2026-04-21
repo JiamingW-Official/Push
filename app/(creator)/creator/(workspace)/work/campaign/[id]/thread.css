@@ -1,0 +1,1170 @@
+.thread-page {
+  max-width: 960px;
+  margin: 0 auto;
+  position: relative;
+}
+
+/* ── Thread Header ─────────────────────────────────────────── */
+.thread-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 24px 32px;
+  border-bottom: 1px solid var(--line, rgba(0,48,73,0.12));
+  background: var(--surface-elevated, #fff);
+  position: sticky;
+  top: 56px;
+  z-index: 50;
+}
+
+.thread-header__left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.thread-header__avatar {
+  width: 56px;
+  height: 56px;
+  background: var(--dark, #003049);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: Darky, sans-serif;
+  font-size: 24px;
+  font-weight: 700;
+  flex-shrink: 0;
+  border-radius: 0;
+}
+
+.thread-header__merchant {
+  font-family: Darky, sans-serif;
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--dark, #003049);
+  letter-spacing: -0.02em;
+}
+
+.thread-header__campaign {
+  font-family: 'CS Genio Mono', monospace;
+  font-size: 14px;
+  color: var(--graphite, #4a5568);
+  margin-top: 2px;
+}
+
+.thread-header__right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.thread-header__tier {
+  font-family: 'CS Genio Mono', monospace;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 4px 10px;
+  border: 1px solid var(--line, rgba(0,48,73,0.12));
+  color: var(--graphite, #4a5568);
+}
+
+.thread-header__status {
+  font-family: 'CS Genio Mono', monospace;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 4px 10px;
+  border-radius: 0;
+}
+
+.thread-header__status--active {
+  background: var(--tertiary, #669bbc);
+  color: #fff;
+}
+
+.thread-header__status--submitted {
+  background: var(--champagne, #c9a96e);
+  color: #fff;
+}
+
+.thread-header__status--verified,
+.thread-header__status--completed {
+  background: var(--dark, #003049);
+  color: #fff;
+}
+
+/* Earn amount — large champagne number */
+.thread-header__earn-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0;
+}
+
+.thread-header__earn-label {
+  font-family: 'CS Genio Mono', monospace;
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--graphite, #4a5568);
+}
+
+.thread-header__payout {
+  font-family: Darky, sans-serif;
+  font-size: 64px;
+  font-weight: 800;
+  color: var(--champagne, #c9a96e);
+  letter-spacing: -0.04em;
+  line-height: 1;
+}
+
+/* ── Mini Nav ──────────────────────────────────────────────── */
+.thread-mininav {
+  display: flex;
+  align-items: stretch;
+  height: 44px;
+  border-bottom: 1px solid var(--line, rgba(0,48,73,0.12));
+  background: var(--surface, #f5f2ec);
+  position: sticky;
+  top: 112px; /* 56px topnav + ~56px thread-header */
+  z-index: 40;
+  overflow-x: auto;
+}
+
+.thread-mininav__item {
+  padding: 0 16px;
+  font-family: 'CS Genio Mono', monospace;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--graphite, #4a5568);
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: color 200ms ease, border-color 200ms ease;
+}
+
+.thread-mininav__item:hover {
+  color: var(--dark, #003049);
+}
+
+.thread-mininav__item--active {
+  color: var(--primary, #c1121f);
+  border-bottom-color: var(--primary, #c1121f);
+}
+
+/* ── Thread Sections ───────────────────────────────────────── */
+.thread-body {
+  padding: 0 32px 80px;
+}
+
+.thread-section {
+  margin: 48px 0;
+  padding-left: 24px;
+  border-left: 1px solid var(--line, rgba(0,48,73,0.12));
+  scroll-margin-top: 170px; /* topnav 56 + thread-header 56 + mininav 44 + buffer */
+}
+
+.thread-section__label {
+  display: block;
+  font-family: 'CS Genio Mono', monospace;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--tertiary, #669bbc);
+  margin-bottom: 8px;
+}
+
+.thread-section__title {
+  font-family: Darky, sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--dark, #003049);
+  letter-spacing: -0.02em;
+  margin: 0 0 16px;
+}
+
+.thread-section__text {
+  font-family: 'CS Genio Mono', monospace;
+  font-size: 14px;
+  color: var(--dark, #003049);
+  line-height: 1.6;
+  margin: 0 0 16px;
+  max-width: 680px;
+}
+
+.thread-subsection__title {
+  font-family: 'CS Genio Mono', monospace;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--graphite, #4a5568);
+  margin: 24px 0 8px;
+}
+
+/* ── Brief — Requirements ──────────────────────────────────── */
+.thread-requirements {
+  list-style: none;
+  margin: 0 0 16px;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.thread-requirements__item {
+  font-family: 'CS Genio Mono', monospace;
+  font-size: 13px;
+  color: var(--dark, #003049);
+  padding-left: 16px;
+  position: relative;
+  line-height: 1.5;
+}
+
+.thread-requirements__item::before {
+  content: "—";
+  position: absolute;
+  left: 0;
+  color: var(--primary, #c1121f);
+}
+
+/* ── Brief — Hashtags ──────────────────────────────────────── */
+.thread-hashtags {
+  margin: 20px 0 16px;
+}
+
+.thread-hashtags__label {
+  display: block;
+  font-family: 'CS Genio Mono', monospace;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--graphite, #4a5568);
+  margin-bottom: 10px;
+}
+
+.thread-hashtags__list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.thread-hashtag {
+  font-family: 'CS Genio Mono', monospace;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--tertiary, #669bbc);
+  background: rgba(102,155,188,0.08);
+  border: 1px solid rgba(102,155,188,0.25);
+  padding: 4px 10px;
+  cursor: pointer;
+  transition: background 150ms ease;
+}
+
+.thread-hashtag:hover {
+  background: rgba(102,155,188,0.15);
+}
+
+/* ── Brief — Content Guidelines ───────────────────────────── */
+.thread-guidelines {
+  margin: 20px 0 20px;
+  padding: 16px;
+  background: var(--surface-bright, #fafaf8);
+  border: 1px solid var(--line, rgba(0,48,73,0.12));
+}
+
+.thread-guidelines__label {
+  display: block;
+  font-family: 'CS Genio Mono', monospace;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--graphite, #4a5568);
+  margin-bottom: 10px;
+}
+
+.thread-guidelines__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.thread-guidelines__item {
+  font-family: 'CS Genio Mono', monospace;
+  font-size: 13px;
+  color: var(--dark, #003049);
+  padding-left: 20px;
+  position: relative;
+  line-height: 1.5;
+}
+
+.thread-guidelines__item::before {
+  content: "↗";
+  position: absolute;
+  left: 0;
+  color: var(--champagne, #c9a96e);
+  font-size: 12px;
+}
+
+/* ── Deadline ──────────────────────────────────────────────── */
+.thread-deadline {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border: 1px solid var(--line, rgba(0,48,73,0.12));
+  background: var(--surface-bright, #fafaf8);
+  margin-top: 4px;
+}
+
+.thread-deadline__label {
+  font-family: 'CS Genio Mono', monospace;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--graphite, #4a5568);
+}
+
+.thread-deadline__value {
+  font-family: Darky, sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--dark, #003049);
+}
+
+/* ── Submission Status Bar ─────────────────────────────────── */
+.submission-status-bar {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  margin-bottom: 24px;
+  border: 1px solid var(--line, rgba(0,48,73,0.12));
+  background: var(--surface-bright, #fafaf8);
+}
+
+.submission-step {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border-right: 1px solid var(--line, rgba(0,48,73,0.12));
+}
+
+.submission-step:last-child {
+  border-right: none;
+}
+
+.submission-step__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  background: var(--line, rgba(0,48,73,0.12));
+}
+
+.submission-step--active .submission-step__dot {
+  background: var(--primary, #c1121f);
+  box-shadow: 0 0 0 3px rgba(193, 18, 31, 0.15);
+}
+
+.submission-step--done .submission-step__dot {
+  background: var(--tertiary, #669bbc);
+}
+
+.submission-step__label {
+  font-family: 'CS Genio Mono', monospace;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--graphite, #4a5568);
+}
+
+.submission-step--active .submission-step__label {
+  color: var(--primary, #c1121f);
+}
+
+.submission-step--done .submission-step__label {
+  color: var(--tertiary, #669bbc);
+}
+
+/* ── Submission Approved State ─────────────────────────────── */
+.submission-approved {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 16px;
+  background: rgba(102,155,188,0.06);
+  border: 1px solid rgba(102,155,188,0.25);
+  border-left: 4px solid var(--tertiary, #669bbc);
+  margin-bottom: 20px;
+}
+
+.submission-approved__icon {
+  font-size: 18px;
+  color: var(--tertiary, #669bbc);
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.submission-approved__title {
+  font-family: 'CS Genio Mono', monospace;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--dark, #003049);
+  margin-bottom: 4px;
+}
+
+.submission-approved__sub {
+  font-family: 'CS Genio Mono', monospace;
+  font-size: 12px;
+  color: var(--graphite, #4a5568);
+  line-height: 1.5;
+}
+
+/* ── Submit form ───────────────────────────────────────────── */
+.submit-form {
+  max-width: 560px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.submit-form__label {
+  font-family: 'CS Genio Mono', monospace;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--graphite, #4a5568);
+}
+
+.submit-form__input {
+  height: 48px;
+  padding: 0 16px;
+  font-family: 'CS Genio Mono', monospace;
+  font-size: 14px;
+  border: 1px solid var(--line, rgba(0,48,73,0.12));
+  background: var(--surface-elevated, #fff);
+  color: var(--dark, #003049);
+  border-radius: 0;
+  outline: none;
+  transition: border-color 200ms ease;
+}
+
+.submit-form__input:focus {
+  border-color: var(--primary, #c1121f);
+}
+
+.submit-form__input:disabled {
+  opacity: 0.6;
+  background: var(--surface-bright, #fafaf8);
+}
+
+.submit-form__dropzone {
+  height: 80px;
+  border: 1.5px dashed var(--line, rgba(0,48,73,0.12));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: border-color 200ms ease;
+}
+
+.submit-form__dropzone:hover {
+  border-color: var(--primary, #c1121f);
+}
+
+.submit-form__dropzone-text {
+  font-family: 'CS Genio Mono', monospace;
+  font-size: 12px;
+  color: var(--graphite, #4a5568);
+}
+
+.submit-form__btn {
+  height: 48px;
+  background: var(--primary, #c1121f);
+  color: #fff;
+  font-family: 'CS Genio Mono', monospace;
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  border: none;
+  cursor: pointer;
+  border-radius: 0;
+  box-shadow: 3px 3px 0 var(--accent, #780000);
+  transition: background 200ms ease, box-shadow 200ms ease;
+}
+
+.submit-form__btn:hover:not(:disabled) {
+  background: var(--accent, #780000);
+  box-shadow: 6px 6px 0 var(--dark, #003049);
+}
+
+.submit-form__btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.submit-form__submitted-note {
+  padding: 12px 16px;
+  background: rgba(201,169,110,0.08);
+  border: 1px solid rgba(201,169,110,0.3);
+  font-family: 'CS Genio Mono', monospace;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--champagne, #c9a96e);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+/* ── Verify status ─────────────────────────────────────────── */
+.verify-status {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  max-width: 480px;
+  border: 1px solid var(--line, rgba(0,48,73,0.12));
+}
+
+.verify-status__row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--line, rgba(0,48,73,0.12));
+}
+
+.verify-status__row:last-child {
+  border-bottom: none;
+}
+
+.verify-status__row--done .verify-status__check {
+  color: var(--tertiary, #669bbc);
+}
+
+.verify-status__row--done .verify-status__item {
+  color: var(--graphite, #4a5568);
+  text-decoration: line-through;
+  text-decoration-color: rgba(0,48,73,0.25);
+}
+
+.verify-status__check {
+  font-size: 16px;
+  color: var(--graphite, #4a5568);
+  width: 20px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.verify-status__item {
+  font-family: 'CS Genio Mono', monospace;
+  font-size: 13px;
+  color: var(--dark, #003049);
+}
+
+/* ── Attribution / QR ─────────────────────────────────────── */
+.qr-block {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 32px;
+  align-items: start;
+  max-width: 680px;
+}
+
+.qr-block__code {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.qr-placeholder {
+  width: 120px;
+  height: 120px;
+  background: var(--surface-elevated, #fff);
+  border: 1px solid var(--line, rgba(0,48,73,0.12));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--dark, #003049);
+  flex-shrink: 0;
+}
+
+.qr-placeholder__inner {
+  padding: 16px;
+}
+
+.qr-block__code-label {
+  font-family: 'CS Genio Mono', monospace;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--graphite, #4a5568);
+  text-align: center;
+}
+
+.qr-block__download {
+  margin-top: 8px;
+  padding: 8px 16px;
+  background: none;
+  border: 1px solid var(--line, rgba(0,48,73,0.12));
+  font-family: 'CS Genio Mono', monospace;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--dark, #003049);
+  cursor: pointer;
+  transition: background 150ms ease, border-color 150ms ease;
+  white-space: nowrap;
+}
+
+.qr-block__download:hover {
+  background: var(--dark, #003049);
+  color: #fff;
+  border-color: var(--dark, #003049);
+}
+
+.qr-how {
+  margin-bottom: 16px;
+}
+
+.qr-how__title {
+  font-family: 'CS Genio Mono', monospace;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--graphite, #4a5568);
+  margin-bottom: 12px;
+}
+
+.qr-how__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  counter-reset: qr-steps;
+}
+
+.qr-how__list li {
+  font-family: 'CS Genio Mono', monospace;
+  font-size: 13px;
+  color: var(--dark, #003049);
+  line-height: 1.5;
+  padding-left: 24px;
+  position: relative;
+  counter-increment: qr-steps;
+}
+
+.qr-how__list li::before {
+  content: counter(qr-steps);
+  position: absolute;
+  left: 0;
+  font-family: Darky, sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--primary, #c1121f);
+  line-height: 1.4;
+}
+
+/* ── Earnings Hero ─────────────────────────────────────────── */
+.earnings-hero {
+  padding: 24px;
+  background: var(--dark, #003049);
+  margin-bottom: 20px;
+  max-width: 360px;
+}
+
+.earnings-hero__label {
+  font-family: 'CS Genio Mono', monospace;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.10em;
+  color: rgba(245,242,236,0.55);
+  margin-bottom: 4px;
+}
+
+.earnings-hero__amount {
+  font-family: Darky, sans-serif;
+  font-size: clamp(56px, 8vw, 80px);
+  font-weight: 800;
+  color: var(--champagne, #c9a96e);
+  letter-spacing: -0.04em;
+  line-height: 1;
+  margin-bottom: 8px;
+}
+
+.earnings-hero__sub {
+  font-family: 'CS Genio Mono', monospace;
+  font-size: 12px;
+  color: rgba(245,242,236,0.55);
+  line-height: 1.4;
+}
+
+/* ── Earnings Table ────────────────────────────────────────── */
+.thread-earnings {
+  max-width: 360px;
+  border: 1px solid var(--line, rgba(0,48,73,0.12));
+}
+
+.thread-earnings__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--line, rgba(0,48,73,0.12));
+}
+
+.thread-earnings__row:last-child {
+  border-bottom: none;
+}
+
+.thread-earnings__row--total {
+  background: var(--surface-bright, #fafaf8);
+}
+
+.thread-earnings__label {
+  font-family: 'CS Genio Mono', monospace;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--graphite, #4a5568);
+}
+
+.thread-earnings__meta {
+  font-family: 'CS Genio Mono', monospace;
+  font-size: 10px;
+  color: var(--graphite, #4a5568);
+  margin-top: 2px;
+}
+
+.thread-earnings__amount {
+  font-family: Darky, sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--dark, #003049);
+}
+
+.thread-earnings__amount--total {
+  color: var(--champagne, #c9a96e);
+  font-size: 24px;
+}
+
+/* ── Key Dates ─────────────────────────────────────────────── */
+.thread-keydates {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0;
+  max-width: 600px;
+  border: 1px solid var(--line, rgba(0,48,73,0.12));
+  margin-bottom: 32px;
+}
+
+.keydate-item {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 14px 16px;
+  border-right: 1px solid var(--line, rgba(0,48,73,0.12));
+}
+
+.keydate-item:last-child {
+  border-right: none;
+}
+
+.keydate-item--accent {
+  background: rgba(201,169,110,0.05);
+}
+
+.keydate-item__label {
+  font-family: 'CS Genio Mono', monospace;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--graphite, #4a5568);
+}
+
+.keydate-item__value {
+  font-family: Darky, sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--dark, #003049);
+  letter-spacing: -0.02em;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.keydate-item--accent .keydate-item__value {
+  color: var(--champagne, #c9a96e);
+}
+
+.keydate-item__countdown {
+  font-family: 'CS Genio Mono', monospace;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--primary, #c1121f);
+}
+
+/* ── Milestone Rail ────────────────────────────────────────── */
+.milestone-rail {
+  display: flex;
+  align-items: flex-start;
+  gap: 0;
+  overflow-x: auto;
+  padding-bottom: 8px;
+}
+
+.milestone-node {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+  min-width: 64px;
+  position: relative;
+}
+
+.milestone-node:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  top: 7px;
+  left: 50%;
+  right: -50%;
+  height: 2px;
+  background: var(--line, rgba(0,48,73,0.12));
+}
+
+.milestone-node--done::after,
+.milestone-node--active::after {
+  background: var(--dark, #003049);
+}
+
+.milestone-node__dot {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  margin-bottom: 8px;
+  position: relative;
+  z-index: 1;
+  flex-shrink: 0;
+}
+
+.milestone-node--done .milestone-node__dot {
+  background: var(--dark, #003049);
+}
+
+.milestone-node--active .milestone-node__dot {
+  background: var(--primary, #c1121f);
+  box-shadow: 0 0 0 3px rgba(193, 18, 31, 0.2);
+}
+
+.milestone-node--upcoming .milestone-node__dot {
+  background: var(--surface-elevated, #fff);
+  border: 2px solid var(--line, rgba(0,48,73,0.12));
+}
+
+.milestone-node__label {
+  font-family: 'CS Genio Mono', monospace;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--graphite, #4a5568);
+  text-align: center;
+}
+
+.milestone-node--active .milestone-node__label {
+  color: var(--primary, #c1121f);
+}
+
+/* ── Inbox quick link ──────────────────────────────────────── */
+.thread-inbox-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  border: 1px solid var(--line, rgba(0,48,73,0.12));
+  background: var(--surface-bright, #fafaf8);
+  font-family: 'CS Genio Mono', monospace;
+  font-size: 13px;
+  color: var(--dark, #003049);
+  text-decoration: none;
+  margin-bottom: 20px;
+  transition: background 200ms ease, border-color 200ms ease;
+}
+
+.thread-inbox-link:hover {
+  background: var(--dark, #003049);
+  color: #fff;
+  border-color: var(--dark, #003049);
+}
+
+.thread-inbox-link__icon {
+  font-size: 16px;
+  opacity: 0.7;
+}
+
+.thread-inbox-link__arrow {
+  margin-left: auto;
+  font-family: 'CS Genio Mono', monospace;
+  font-size: 14px;
+  transition: transform 200ms ease;
+}
+
+.thread-inbox-link:hover .thread-inbox-link__arrow {
+  transform: translateX(4px);
+}
+
+/* ── Chat ──────────────────────────────────────────────────── */
+.thread-chat {
+  max-width: 560px;
+}
+
+.thread-chat__messages {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 16px;
+  padding: 16px;
+  background: var(--surface-bright, #fafaf8);
+  border: 1px solid var(--line, rgba(0,48,73,0.12));
+  min-height: 120px;
+}
+
+.thread-chat__message {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  max-width: 480px;
+}
+
+.thread-chat__message--merchant {
+  background: var(--surface-elevated, #fff);
+  padding: 12px;
+  border: 1px solid var(--line, rgba(0,48,73,0.12));
+  align-self: flex-start;
+}
+
+.thread-chat__message--creator {
+  background: rgba(0, 48, 73, 0.04);
+  padding: 12px;
+  align-self: flex-end;
+}
+
+.thread-chat__sender {
+  font-family: 'CS Genio Mono', monospace;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--tertiary, #669bbc);
+}
+
+.thread-chat__text {
+  font-family: 'CS Genio Mono', monospace;
+  font-size: 13px;
+  color: var(--dark, #003049);
+  line-height: 1.5;
+  margin: 0;
+}
+
+.thread-chat__time {
+  font-family: 'CS Genio Mono', monospace;
+  font-size: 10px;
+  color: var(--graphite, #4a5568);
+}
+
+.thread-chat__input-row {
+  display: flex;
+  gap: 8px;
+}
+
+.thread-chat__input {
+  flex: 1;
+  height: 40px;
+  padding: 0 12px;
+  font-family: 'CS Genio Mono', monospace;
+  font-size: 13px;
+  border: 1px solid var(--line, rgba(0,48,73,0.12));
+  background: var(--surface-elevated, #fff);
+  color: var(--dark, #003049);
+  border-radius: 0;
+  outline: none;
+  transition: border-color 200ms ease;
+}
+
+.thread-chat__input:focus {
+  border-color: var(--primary, #c1121f);
+}
+
+.thread-chat__send {
+  padding: 0 16px;
+  height: 40px;
+  background: var(--dark, #003049);
+  color: #fff;
+  font-family: 'CS Genio Mono', monospace;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  border: none;
+  cursor: pointer;
+  border-radius: 0;
+  transition: background 200ms ease;
+}
+
+.thread-chat__send:hover {
+  background: var(--primary, #c1121f);
+}
+
+.thread-chat__hint {
+  margin: 8px 0 0;
+}
+
+.thread-chat__suggest {
+  background: none;
+  border: 1px dashed var(--line, rgba(0,48,73,0.12));
+  padding: 4px 12px;
+  font-family: 'CS Genio Mono', monospace;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--graphite, #4a5568);
+  cursor: pointer;
+  border-radius: 0;
+  transition: border-color 200ms ease, color 200ms ease;
+}
+
+.thread-chat__suggest:hover {
+  border-color: var(--dark, #003049);
+  color: var(--dark, #003049);
+}
+
+/* ── Completion Overlay ────────────────────────────────────── */
+.thread-celebrate {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 48, 73, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 200;
+}
+
+.thread-celebrate__panel {
+  background: var(--surface-elevated, #fff);
+  border: 1px solid var(--line, rgba(0,48,73,0.12));
+  padding: 48px;
+  max-width: 480px;
+  width: 90%;
+  text-align: left;
+}
+
+.thread-celebrate__title {
+  font-family: Darky, sans-serif;
+  font-size: clamp(36px, 5vw, 56px);
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  color: var(--dark, #003049);
+  margin: 0 0 16px;
+}
+
+.thread-celebrate__body {
+  font-family: 'CS Genio Mono', monospace;
+  font-size: 14px;
+  color: var(--graphite, #4a5568);
+  line-height: 1.5;
+  margin: 0 0 32px;
+}
+
+.thread-celebrate__close {
+  padding: 12px 32px;
+  background: var(--primary, #c1121f);
+  color: #fff;
+  font-family: 'CS Genio Mono', monospace;
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  border: none;
+  cursor: pointer;
+  border-radius: 0;
+  box-shadow: 3px 3px 0 var(--accent, #780000);
+  transition: box-shadow 200ms ease;
+}
+
+.thread-celebrate__close:hover {
+  box-shadow: 6px 6px 0 var(--dark, #003049);
+}
+
+/* ── Responsive ────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .thread-header {
+    padding: 16px;
+    top: 0;
+    gap: 12px;
+  }
+
+  .thread-header__payout {
+    font-size: 40px;
+  }
+
+  .thread-body {
+    padding: 0 16px 64px;
+  }
+
+  .thread-section {
+    padding-left: 16px;
+  }
+
+  .qr-block {
+    grid-template-columns: 1fr;
+  }
+
+  .thread-keydates {
+    grid-template-columns: 1fr;
+  }
+
+  .keydate-item {
+    border-right: none;
+    border-bottom: 1px solid var(--line, rgba(0,48,73,0.12));
+  }
+
+  .keydate-item:last-child {
+    border-bottom: none;
+  }
+
+  .earnings-hero__amount {
+    font-size: 56px;
+  }
+}

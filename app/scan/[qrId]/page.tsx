@@ -11,6 +11,12 @@ import {
   type MockQRCode,
 } from "@/lib/attribution/mock-qr-codes";
 import { trackScan, hasScannedThisSession } from "@/lib/attribution/track";
+import {
+  getConsentTier,
+  setConsentTier,
+  type ConsentTier,
+} from "@/lib/attribution/consent";
+import ConsentPicker from "@/components/customer/ConsentPicker";
 
 // Leaflet map loaded client-side only
 const MapView = dynamic(() => import("@/components/layout/MapView"), {
@@ -56,7 +62,17 @@ export default function ScanLandingPage() {
     "loading" | "found" | "not-found" | "expired"
   >("loading");
   const [scanRecorded, setScanRecorded] = useState(false);
+  const [consentTier, setConsentTierState] = useState<ConsentTier>(2);
   const trackFired = useRef(false);
+
+  useEffect(() => {
+    setConsentTierState(getConsentTier(qrId));
+  }, [qrId]);
+
+  const handleConsentChange = (tier: ConsentTier) => {
+    setConsentTierState(tier);
+    setConsentTier(qrId, tier);
+  };
 
   useEffect(() => {
     const code = getQRCode(qrId);
@@ -235,6 +251,19 @@ export default function ScanLandingPage() {
           />
         </div>
         <p style={styles.mapAddress}>{qr.businessAddress}</p>
+      </section>
+
+      {/* ── Consent picker ── */}
+      <section style={styles.consentSection}>
+        <ConsentPicker
+          initialTier={consentTier}
+          onChange={handleConsentChange}
+          onDeclineAll={() => handleConsentChange(1)}
+          onContinue={(tier) => {
+            handleConsentChange(tier);
+            router.push(`/scan/${qrId}/verify`);
+          }}
+        />
       </section>
 
       {/* ── CTA: verify visit ── */}
@@ -611,6 +640,13 @@ const styles = {
   } as React.CSSProperties,
 
   /* CTA */
+  consentSection: {
+    padding: "0 24px 32px",
+    maxWidth: "720px",
+    margin: "0 auto",
+    width: "100%",
+  } as React.CSSProperties,
+
   ctaSection: {
     padding: "32px 24px 40px",
     maxWidth: "640px",

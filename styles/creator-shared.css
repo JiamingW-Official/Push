@@ -10,12 +10,12 @@
    Applied as border-left or background tints via CSS custom properties.
    -------------------------------------------------------------------------- */
 
-.tier-seed     { --tier-color: #b8a99a; --tier-bg: rgba(184,169,154,0.10); }
-.tier-explorer { --tier-color: #8c6239; --tier-bg: rgba(140,98,57,0.10); }
-.tier-operator { --tier-color: #4a5568; --tier-bg: rgba(74,85,104,0.10); }
-.tier-proven   { --tier-color: #c9a96e; --tier-bg: rgba(201,169,110,0.12); }
-.tier-closer   { --tier-color: #9b111e; --tier-bg: rgba(155,17,30,0.08); }
-.tier-partner  { --tier-color: #1a1a2e; --tier-bg: rgba(26,26,46,0.10); }
+.tier-seed     { --tier-color: #669bbc; --tier-bg: rgba(184,169,154,0.10); }
+.tier-explorer { --tier-color: #c9a96e; --tier-bg: rgba(140,98,57,0.10); }
+.tier-operator { --tier-color: #669bbc; --tier-bg: rgba(74,85,104,0.10); }
+.tier-proven   { --tier-color: #c1121f; --tier-bg: rgba(201,169,110,0.12); }
+.tier-closer   { --tier-color: #780000; --tier-bg: rgba(155,17,30,0.08); }
+.tier-partner  { --tier-color: #003049; --tier-bg: rgba(26,26,46,0.10); }
 
 
 /* --------------------------------------------------------------------------
@@ -58,12 +58,12 @@
 }
 
 /* Tier colors for ring fill */
-.score-ring-fill--seed     { stroke: #b8a99a; }
-.score-ring-fill--explorer { stroke: #8c6239; }
-.score-ring-fill--operator { stroke: #4a5568; }
-.score-ring-fill--proven   { stroke: #c9a96e; }
-.score-ring-fill--closer   { stroke: #9b111e; }
-.score-ring-fill--partner  { stroke: #1a1a2e; }
+.score-ring-fill--seed     { stroke: #669bbc; }
+.score-ring-fill--explorer { stroke: #c9a96e; }
+.score-ring-fill--operator { stroke: #669bbc; }
+.score-ring-fill--proven   { stroke: #c1121f; }
+.score-ring-fill--closer   { stroke: #780000; }
+.score-ring-fill--partner  { stroke: #003049; }
 
 
 /* --------------------------------------------------------------------------

@@ -1,0 +1,12 @@
+
+> push-app@0.1.0 lint
+> eslint app components lib hooks types proxy.ts
+
+
+Oops! Something went wrong! :(
+
+ESLint: 9.39.4
+
+No files matching the pattern "proxy.ts" were found.
+Please check for typing mistakes in the pattern.
+

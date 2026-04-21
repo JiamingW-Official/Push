@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
 import Link from "next/link";
-import { createClient } from "@/lib/supabase";
+import { createClient } from "@/lib/db/browser";
 import CampaignCard from "@/components/ui/CampaignCard";
 import type { CampaignPin } from "@/components/layout/MapView";
 import "./dashboard.css";

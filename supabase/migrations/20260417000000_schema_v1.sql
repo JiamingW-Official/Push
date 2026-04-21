@@ -1,0 +1,36 @@
+-- ═══════════════════════════════════════════════════════════════════
+-- Push — Schema v1 (DEPRECATED / NO-OP)
+-- ═══════════════════════════════════════════════════════════════════
+--
+-- This migration originally redefined the 6 core tables (profiles,
+-- creators, merchants, campaigns, qr_codes, scans) using a `profile_id`
+-- foreign-key design. The full-backend audit (2026-04-19) found that:
+--
+--   1. The initial_schema (20260412000000) already created creators /
+--      merchants / campaigns using a `user_id` FK design.
+--   2. All production code paths (creator/apply, merchant/signup,
+--      dashboard queries, etc.) use `.eq("user_id", user.id)` — i.e.
+--      they speak the initial_schema dialect, not the v1 dialect.
+--   3. Running v1 AFTER the initial schema would crash on
+--      `CREATE TABLE public.creators` (no IF NOT EXISTS) — the DB would
+--      stay on the initial_schema dialect, never reaching v1.
+--
+-- Rather than leave a broken-on-replay migration in the tree, we're
+-- blanking this file out. The canonical schema for users / creators /
+-- merchants / campaigns remains in:
+--   - 20260412000000_initial_schema.sql
+--   - 20260412000001_creator_extended.sql
+-- Week-3 additions (loyalty_cards, verified_customer_claims, the funnel,
+-- etc.) land in 20260419000000_week3_missing_tables.sql.
+--
+-- If an environment was unlucky enough to successfully apply a partial
+-- v1 (e.g. creating public.profiles / public.qr_codes / public.scans
+-- before hitting the first CREATE TABLE conflict), those tables are
+-- intentionally left in place — dropping them here would risk data loss
+-- on any env that adopted them. Run a manual cleanup from the DB console
+-- if needed.
+--
+-- Intentionally empty SQL below — idempotent on every re-run.
+-- ═══════════════════════════════════════════════════════════════════
+
+-- (intentionally empty)

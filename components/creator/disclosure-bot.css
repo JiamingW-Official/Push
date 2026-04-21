@@ -1,0 +1,378 @@
+/* ============================================================
+   DisclosureBot™ — FTC compliance scanner
+   Design system: Bloomberg Terminal × Push editorial
+   ============================================================ */
+
+.dbot {
+  background: var(--dark, #003049);
+  border: 1px solid rgba(245, 242, 236, 0.12);
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  position: relative;
+  overflow: hidden;
+  transition: border-color 300ms ease;
+}
+
+/* State-driven border accent */
+.dbot--verified { border-color: rgba(16, 185, 129, 0.4); }
+.dbot--flagged  { border-color: rgba(193, 18, 31, 0.5); }
+.dbot--scanning { border-color: rgba(201, 169, 110, 0.3); }
+
+/* Subtle scanline texture */
+.dbot::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 3px,
+    rgba(245, 242, 236, 0.008) 4px
+  );
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Ghost watermark */
+.dbot::after {
+  content: "DB";
+  position: absolute;
+  bottom: -16px;
+  right: -8px;
+  font-family: "Darky", sans-serif;
+  font-size: 120px;
+  font-weight: 900;
+  letter-spacing: -0.08em;
+  color: rgba(255, 255, 255, 0.018);
+  line-height: 1;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* All content above pseudo-elements */
+.dbot > * { position: relative; z-index: 1; }
+
+/* ── Header ───────────────────────────────────────────────── */
+
+.dbot-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.dbot-logo {
+  font-family: "Darky", sans-serif;
+  font-size: 1.125rem;
+  font-weight: 900;
+  font-style: italic;
+  letter-spacing: -0.04em;
+  color: var(--surface, #f5f2ec);
+}
+
+/* Badge variants */
+.dbot-badge-idle,
+.dbot-badge-scanning,
+.dbot-badge-ok,
+.dbot-badge-fail {
+  font-family: "CS Genio Mono", monospace;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  padding: 4px 10px;
+}
+
+.dbot-badge-idle {
+  color: rgba(245, 242, 236, 0.45);
+  border: 1px solid rgba(245, 242, 236, 0.15);
+}
+
+.dbot-badge-scanning {
+  color: var(--champagne, #c9a96e);
+  border: 1px solid rgba(201, 169, 110, 0.35);
+  animation: dbotPulse 1s ease-in-out infinite;
+}
+
+.dbot-badge-ok {
+  color: var(--success);
+  border: 1px solid rgba(16, 185, 129, 0.4);
+}
+
+.dbot-badge-fail {
+  color: var(--primary, #c1121f);
+  border: 1px solid rgba(193, 18, 31, 0.4);
+}
+
+@keyframes dbotPulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.5; }
+}
+
+/* ── Input section ────────────────────────────────────────── */
+
+.dbot-label {
+  display: block;
+  font-family: "CS Genio Mono", monospace;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  color: rgba(245, 242, 236, 0.4);
+  margin-bottom: 10px;
+}
+
+.dbot-textarea-wrap {
+  position: relative;
+}
+
+.dbot-textarea {
+  width: 100%;
+  box-sizing: border-box;
+  background: rgba(245, 242, 236, 0.04);
+  border: none;
+  border-bottom: 1.5px solid rgba(245, 242, 236, 0.18);
+  padding: 14px 56px 14px 14px;
+  font-family: "CS Genio Mono", monospace;
+  font-size: 13px;
+  line-height: 1.65;
+  color: var(--surface, #f5f2ec);
+  resize: vertical;
+  outline: none;
+  transition: border-color 200ms ease, background 200ms ease;
+  border-radius: 0;
+}
+
+.dbot-textarea::placeholder {
+  color: rgba(245, 242, 236, 0.28);
+}
+
+.dbot-textarea:focus {
+  background: rgba(245, 242, 236, 0.06);
+  border-bottom-color: rgba(245, 242, 236, 0.4);
+}
+
+.dbot-char-count {
+  position: absolute;
+  bottom: 10px;
+  right: 12px;
+  font-family: "CS Genio Mono", monospace;
+  font-size: 10px;
+  color: rgba(245, 242, 236, 0.3);
+}
+
+/* ── Scan button ──────────────────────────────────────────── */
+
+.dbot-scan-btn {
+  background: rgba(245, 242, 236, 0.06);
+  border: 1.5px solid rgba(245, 242, 236, 0.2);
+  color: var(--surface, #f5f2ec);
+  font-family: "CS Genio Mono", monospace;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  padding: 14px 24px;
+  cursor: pointer;
+  transition: background 200ms ease, border-color 200ms ease, transform 100ms ease;
+  text-align: left;
+  border-radius: 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.dbot-scan-btn:hover:not(:disabled) {
+  background: var(--primary, #c1121f);
+  border-color: var(--primary, #c1121f);
+}
+
+.dbot-scan-btn:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+.dbot-scan-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* Scanning progress bar */
+.dbot-scan-progress {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.dbot-scan-bar {
+  display: inline-block;
+  width: 80px;
+  height: 2px;
+  background: rgba(245, 242, 236, 0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+.dbot-scan-bar::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--champagne, #c9a96e);
+  animation: dbotScan 1.2s ease-in-out infinite;
+  transform-origin: left;
+}
+
+@keyframes dbotScan {
+  0%   { transform: scaleX(0) translateX(0); }
+  50%  { transform: scaleX(1) translateX(0); }
+  100% { transform: scaleX(0) translateX(100%); }
+}
+
+/* ── Result panel ─────────────────────────────────────────── */
+
+.dbot-result {
+  border-top: 1px solid rgba(245, 242, 236, 0.1);
+  padding-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  animation: dbotReveal 300ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes dbotReveal {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.dbot-result-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.dbot-status-icon {
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "CS Genio Mono", monospace;
+  font-size: 13px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.dbot-result--verified .dbot-status-icon { color: var(--success); }
+.dbot-result--flagged  .dbot-status-icon { color: var(--primary, #c1121f); }
+.dbot-result--error    .dbot-status-icon { color: var(--champagne, #c9a96e); }
+
+.dbot-status-text {
+  font-family: "Darky", sans-serif;
+  font-size: 1.0625rem;
+  font-weight: 700;
+  color: var(--surface, #f5f2ec);
+}
+
+.dbot-method-badge {
+  font-family: "CS Genio Mono", monospace;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  padding: 3px 8px;
+  background: rgba(201, 169, 110, 0.12);
+  border: 1px solid rgba(201, 169, 110, 0.25);
+  color: var(--champagne, #c9a96e);
+  margin-left: auto;
+}
+
+.dbot-result-reason {
+  font-family: "CS Genio Mono", monospace;
+  font-size: 13px;
+  line-height: 1.6;
+  color: rgba(245, 242, 236, 0.65);
+  margin: 0;
+}
+
+.dbot-disclosure-found {
+  display: inline-block;
+  font-family: "CS Genio Mono", monospace;
+  font-size: 13px;
+  padding: 6px 12px;
+  background: rgba(16, 185, 129, 0.1);
+  border: 1px solid rgba(16, 185, 129, 0.25);
+  color: var(--success);
+  letter-spacing: 0.04em;
+}
+
+/* ── Suggestions ──────────────────────────────────────────── */
+
+.dbot-suggestions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 16px;
+  background: rgba(193, 18, 31, 0.06);
+  border-left: 3px solid var(--primary, #c1121f);
+}
+
+.dbot-suggestions-label {
+  font-family: "CS Genio Mono", monospace;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: var(--primary, #c1121f);
+  margin: 0 0 4px;
+}
+
+.dbot-suggestions-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.dbot-suggestion {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  font-family: "CS Genio Mono", monospace;
+  font-size: 12px;
+  line-height: 1.6;
+  color: rgba(245, 242, 236, 0.75);
+}
+
+.dbot-suggestion-num {
+  color: var(--primary, #c1121f);
+  font-weight: 700;
+  flex-shrink: 0;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+}
+
+/* ── Footer ───────────────────────────────────────────────── */
+
+.dbot-footer {
+  font-family: "CS Genio Mono", monospace;
+  font-size: 11px;
+  line-height: 1.6;
+  color: rgba(245, 242, 236, 0.3);
+  margin: 0;
+  border-top: 1px solid rgba(245, 242, 236, 0.07);
+  padding-top: 16px;
+}
+
+.dbot-footer-link {
+  color: rgba(245, 242, 236, 0.5);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  text-decoration-color: rgba(245, 242, 236, 0.2);
+  transition: color 150ms ease;
+}
+
+.dbot-footer-link:hover { color: var(--surface, #f5f2ec); }
+
+/* ── Reduced motion ───────────────────────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  .dbot-badge-scanning { animation: none; opacity: 0.7; }
+  .dbot-scan-bar::after { animation: none; transform: scaleX(0.6); }
+  .dbot-result { animation: none; }
+}

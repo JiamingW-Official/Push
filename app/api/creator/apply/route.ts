@@ -1,6 +1,16 @@
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
+import {
+  unauthorized,
+  badRequest,
+  notFound,
+  serverError,
+} from "@/lib/api/responses";
+
+// Mutates DB (campaign_applications) + reads auth session. Opt out of
+// Next's route-level cache so every request sees current state.
+export const dynamic = "force-dynamic";
 
 // Tier rank order for eligibility comparison
 const TIER_RANK: Record<string, number> = {
@@ -24,23 +34,19 @@ export async function POST(request: NextRequest) {
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  if (!user)
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  if (!user) return unauthorized();
 
   // Parse and validate request body
   let body: { campaign_id?: string };
   try {
     body = await request.json();
   } catch {
-    return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
+    return badRequest("Invalid JSON body");
   }
 
   const { campaign_id } = body;
   if (!campaign_id || typeof campaign_id !== "string") {
-    return NextResponse.json(
-      { error: "campaign_id is required" },
-      { status: 400 },
-    );
+    return badRequest("campaign_id is required");
   }
 
   // Fetch creator record
@@ -50,8 +56,7 @@ export async function POST(request: NextRequest) {
     .eq("user_id", user.id)
     .single();
 
-  if (creatorErr || !creator)
-    return NextResponse.json({ error: "Creator not found" }, { status: 404 });
+  if (creatorErr || !creator) return notFound("Creator not found");
 
   // Fetch campaign — verify it exists, is active, and has open spots
   const { data: campaign, error: campaignErr } = await supabase
@@ -60,8 +65,7 @@ export async function POST(request: NextRequest) {
     .eq("id", campaign_id)
     .single();
 
-  if (campaignErr || !campaign)
-    return NextResponse.json({ error: "Campaign not found" }, { status: 404 });
+  if (campaignErr || !campaign) return notFound("Campaign not found");
 
   if (campaign.status !== "active")
     return NextResponse.json(
@@ -113,9 +117,9 @@ export async function POST(request: NextRequest) {
     .single();
 
   if (appErr || !application)
-    return NextResponse.json(
-      { error: appErr?.message ?? "Failed to create application" },
-      { status: 500 },
+    return serverError(
+      "creator-apply",
+      appErr ?? new Error("Failed to create application"),
     );
 
   // Insert submission record (milestone: accepted)
@@ -128,8 +132,7 @@ export async function POST(request: NextRequest) {
       milestone: "accepted",
     });
 
-  if (submissionErr)
-    return NextResponse.json({ error: submissionErr.message }, { status: 500 });
+  if (submissionErr) return serverError("creator-apply", submissionErr);
 
   // Decrement spots_remaining on campaign
   const { error: decrementErr } = await supabase
@@ -137,8 +140,7 @@ export async function POST(request: NextRequest) {
     .update({ spots_remaining: campaign.spots_remaining - 1 })
     .eq("id", campaign_id);
 
-  if (decrementErr)
-    return NextResponse.json({ error: decrementErr.message }, { status: 500 });
+  if (decrementErr) return serverError("creator-apply", decrementErr);
 
   return NextResponse.json({ application_id: application.id, success: true });
 }

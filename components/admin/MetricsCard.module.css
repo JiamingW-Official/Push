@@ -1,0 +1,39 @@
+/* ============================================================
+   Admin MetricsCard — KPI tile
+   Authority: Design.md (sharp corners, CSGenioMono + Darky)
+   ============================================================ */
+
+.card {
+  background: var(--surface-elevated);
+  border-style: solid;
+  border-width: 4px;
+  border-radius: 0;
+  padding: var(--space-3);
+  min-height: 140px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: var(--space-2);
+  transition: transform var(--t-base), box-shadow var(--t-base);
+}
+
+.card:hover {
+  transform: translate(-2px, -2px);
+}
+
+.label {
+  font-family: var(--font-body);
+  font-size: var(--text-caption);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.value {
+  font-family: var(--font-display);
+  font-size: clamp(32px, 4vw, 48px);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.02em;
+}

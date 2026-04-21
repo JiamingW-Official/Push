@@ -107,6 +107,29 @@
   --champagne-light:  rgba(201, 169, 110, 0.12);
   --champagne-border: rgba(201, 169, 110, 0.35);
 
+  /* Tier tokens — Path A (v5.2, 2026-04-20): sourced from 6-color brand palette.
+     Tier identity = material name + icon + texture (NOT unique hex).
+     Design.md §Tier Identity System documents mapping + text-color rules. */
+  --tier-seed:        var(--tertiary);  /* Clay — Steel Blue border on Pearl Stone bg */
+  --tier-explorer:    var(--champagne); /* Bronze — Champagne Gold */
+  --tier-operator:    var(--tertiary);  /* Steel — Steel Blue */
+  --tier-proven:      var(--primary);   /* Gold — Flag Red (contracted tier signal) */
+  --tier-closer:      var(--accent);    /* Ruby — Molten Lava */
+  --tier-partner:     var(--dark);      /* Obsidian — Deep Space Blue */
+
+  /* Semantic state colors (v5.2 Extended Color System) */
+  --success:          #22c55e;   /* verified, approved, positive delta */
+  --success-dark:     #155833;   /* success text on light surface */
+  --warning:          #e07b00;   /* pending, caution, needs attention */
+  --danger:           var(--tier-closer);  /* rejected, error — aliases Molten Lava (#780000) under Path A */
+
+  /* Neutral scale (v5.2 Extended Color System) */
+  --gray-50:          #f3f4f6;
+  --gray-200:         #e5e7eb;
+  --gray-400:         #9ca3af;
+  --gray-500:         #6b7280;
+  /* --gray-700 = --graphite (#4a5568), no duplicate token */
+
   /* Derived */
   --line:          rgba(0, 48, 73, 0.12);
   --line-strong:   rgba(0, 48, 73, 0.22);
@@ -179,6 +202,30 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
+}
+
+/* ── Focus visibility (WCAG 2.4.7) ─────────────────────────── */
+/* Wave 1 a11y audit flagged zero focus indicators across the app.
+   Apply a brand-colored outline on keyboard focus while preserving the
+   no-outline behavior for mouse clicks (`:focus-visible` only fires on
+   keyboard / accessibility tools). */
+:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+/* ── Screen-reader-only utility ────────────────────────────── */
+/* Removes content from visual layout but keeps it in the AT tree. */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 
 /* ── Custom Cursor ─────────────────────────────────────────── */
@@ -634,12 +681,12 @@ p  { font-size: var(--text-body); line-height: 1.6; }
    11j. Tier utility classes (CSS custom property approach)
    Sets --tier-color consumed by tier-aware components.
    ------------------------------------------------------------ */
-.tier-seed     { --tier-color: #b8a99a; }
-.tier-explorer { --tier-color: #8c6239; }
-.tier-operator { --tier-color: #4a5568; }
-.tier-proven   { --tier-color: #c9a96e; }
-.tier-closer   { --tier-color: #9b111e; }
-.tier-partner  { --tier-color: #1a1a2e; }
+.tier-seed     { --tier-color: var(--tier-seed); }
+.tier-explorer { --tier-color: var(--tier-explorer); }
+.tier-operator { --tier-color: var(--tier-operator); }
+.tier-proven   { --tier-color: var(--tier-proven); }
+.tier-closer   { --tier-color: var(--tier-closer); }
+.tier-partner  { --tier-color: var(--tier-partner); }
 
 /* ------------------------------------------------------------
    11k. CTA button variants (merchant & creator)

@@ -1,0 +1,599 @@
+/* ============================================================
+   Creator Discover — Premium Campaign Discovery
+   Design: restraint as luxury | Darky + CS Genio Mono
+   Colors: #003049 / #f5f2ec / #c1121f / #c9a96e / #669bbc
+   ============================================================ */
+
+/* ── Entry animation ─────────────────────────────────────── */
+
+@keyframes feedCardIn {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes disc-shimmer {
+  0%   { background-position: -600px 0; }
+  100% { background-position: 600px 0; }
+}
+
+/* ── Page shell ──────────────────────────────────────────── */
+
+.disc {
+  min-height: 100vh;
+  background: var(--surface);
+  color: var(--dark);
+  font-family: var(--font-body);
+}
+
+/* ── Hero header ─────────────────────────────────────────── */
+
+.disc-hero {
+  padding: 56px 48px 40px;
+  border-bottom: 1px solid var(--line);
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 32px;
+}
+
+.disc-hero-title {
+  font-family: var(--font-display);
+  font-size: 56px;
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: var(--dark);
+  margin: 0 0 12px;
+}
+
+.disc-hero-sub {
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: var(--text-muted);
+  letter-spacing: 0.04em;
+  margin: 0;
+}
+
+/* ── Toolbar: search + filter btn ───────────────────────── */
+
+.disc-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 20px 48px;
+  border-bottom: 1px solid var(--line);
+  background: var(--surface);
+  position: sticky;
+  top: 0;
+  z-index: 40;
+}
+
+.disc-search-wrap {
+  flex: 1;
+  position: relative;
+}
+
+.disc-search-icon {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 16px;
+  color: var(--text-muted);
+  pointer-events: none;
+  line-height: 1;
+}
+
+.disc-search-input {
+  width: 100%;
+  height: 40px;
+  padding: 0 16px 0 40px;
+  border: 1px solid var(--line);
+  border-radius: 0;
+  background: var(--surface-elevated);
+  color: var(--dark);
+  font-family: var(--font-body);
+  font-size: 13px;
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+.disc-search-input::placeholder {
+  color: var(--text-muted);
+}
+
+.disc-search-input:focus {
+  border-color: var(--dark);
+}
+
+/* Single filter button */
+.disc-filter-btn {
+  height: 40px;
+  padding: 0 16px;
+  border: 1px solid var(--line);
+  border-radius: 0;
+  background: transparent;
+  color: var(--dark);
+  font-family: var(--font-body);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.disc-filter-btn:hover {
+  border-color: var(--dark);
+  background: var(--surface-elevated);
+}
+
+.disc-filter-btn--active {
+  background: var(--dark);
+  color: #fff;
+  border-color: var(--dark);
+}
+
+.disc-filter-btn-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  background: var(--primary);
+  color: #fff;
+  font-size: 9px;
+  font-weight: 700;
+}
+
+/* Sort row */
+.disc-sort-row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.disc-sort-label {
+  font-size: 11px;
+  color: var(--text-muted);
+  letter-spacing: 0.04em;
+  margin-right: 4px;
+}
+
+.disc-sort-btn {
+  height: 40px;
+  padding: 0 12px;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  color: var(--text-muted);
+  font-family: var(--font-body);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition: color 0.15s;
+}
+
+.disc-sort-btn:hover { color: var(--dark); }
+
+.disc-sort-btn--active {
+  color: var(--dark);
+  font-weight: 700;
+  border-bottom: 2px solid var(--dark);
+}
+
+/* ── Filter panel (dropdown overlay) ────────────────────── */
+
+.disc-filter-panel {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  width: 320px;
+  background: var(--surface-elevated);
+  border: 1px solid var(--line);
+  z-index: 100;
+  padding: 24px;
+  box-shadow: 0 8px 32px rgba(0, 48, 73, 0.12);
+}
+
+.disc-filter-panel-title {
+  font-family: var(--font-body);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin: 0 0 16px;
+}
+
+.disc-filter-group {
+  margin-bottom: 20px;
+}
+
+.disc-filter-group-label {
+  font-family: var(--font-body);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+  display: block;
+}
+
+.disc-filter-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.disc-filter-option {
+  height: 30px;
+  padding: 0 12px;
+  border: 1px solid var(--line);
+  border-radius: 0;
+  background: transparent;
+  color: var(--dark);
+  font-family: var(--font-body);
+  font-size: 11px;
+  cursor: pointer;
+  transition: all 0.12s;
+}
+
+.disc-filter-option:hover {
+  border-color: var(--dark);
+}
+
+.disc-filter-option--active {
+  background: var(--dark);
+  color: #fff;
+  border-color: var(--dark);
+}
+
+.disc-filter-panel-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+  margin-top: 4px;
+}
+
+.disc-filter-clear {
+  height: 32px;
+  padding: 0 12px;
+  border: 1px solid var(--line);
+  border-radius: 0;
+  background: transparent;
+  color: var(--text-muted);
+  font-family: var(--font-body);
+  font-size: 11px;
+  cursor: pointer;
+}
+
+.disc-filter-apply {
+  height: 32px;
+  padding: 0 16px;
+  border: none;
+  border-radius: 0;
+  background: var(--dark);
+  color: #fff;
+  font-family: var(--font-body);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+}
+
+/* ── Main content ─────────────────────────────────────────── */
+
+.disc-content {
+  padding: 40px 48px 80px;
+}
+
+/* Results meta row */
+.disc-results-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 32px;
+}
+
+.disc-results-count {
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.disc-results-count strong {
+  color: var(--dark);
+  font-weight: 700;
+}
+
+/* ── Campaign grid ────────────────────────────────────────── */
+
+.disc-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+}
+
+/* ── Campaign card ────────────────────────────────────────── */
+
+.disc-card {
+  background: var(--surface-elevated);
+  border: 1px solid rgba(0, 48, 73, 0.1);
+  border-top: 3px solid var(--dark);
+  padding: 32px 28px;
+  cursor: pointer;
+  animation: feedCardIn 0.4s ease both;
+  transition: border-top-color 0.2s, box-shadow 0.2s;
+  position: relative;
+}
+
+.disc-card:hover {
+  border-top-color: var(--primary);
+  box-shadow: 0 4px 24px rgba(0, 48, 73, 0.08);
+}
+
+/* Card inner layout */
+.disc-card-inner {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.disc-card-merchant {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--dark);
+  line-height: 1.1;
+  margin: 0 0 4px;
+}
+
+.disc-card-title {
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: var(--graphite);
+  margin: 0 0 24px;
+}
+
+/* Bottom row */
+.disc-card-bottom {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-top: auto;
+}
+
+.disc-card-category {
+  font-family: var(--font-body);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.disc-card-neighborhood {
+  font-family: var(--font-body);
+  font-size: 10px;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+.disc-card-earn {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--champagne);
+  white-space: nowrap;
+}
+
+.disc-card-earn-arrow {
+  color: var(--champagne);
+  margin-left: 4px;
+  font-size: 14px;
+}
+
+/* Apply button (full width at bottom) */
+.disc-card-apply {
+  display: block;
+  width: 100%;
+  margin-top: 24px;
+  height: 40px;
+  border: 1px solid var(--dark);
+  border-radius: 0;
+  background: transparent;
+  color: var(--dark);
+  font-family: var(--font-body);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+
+.disc-card-apply:hover:not(:disabled) {
+  background: var(--dark);
+  color: #fff;
+}
+
+.disc-card-apply--applied {
+  border-color: #669bbc;
+  color: #669bbc;
+  cursor: default;
+}
+
+.disc-card-apply--pending {
+  border-color: var(--champagne);
+  color: var(--champagne);
+  cursor: default;
+}
+
+/* ── Scarcity tag (optional, minimal) ────────────────────── */
+
+.disc-card-scarcity {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  font-family: var(--font-body);
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--primary);
+}
+
+/* ── Loading skeletons ────────────────────────────────────── */
+
+.disc-skeleton {
+  background: linear-gradient(
+    90deg,
+    rgba(0, 48, 73, 0.04) 25%,
+    rgba(0, 48, 73, 0.08) 50%,
+    rgba(0, 48, 73, 0.04) 75%
+  );
+  background-size: 600px 100%;
+  animation: disc-shimmer 1.4s infinite linear;
+  border-radius: 0;
+}
+
+.disc-skeleton-card {
+  height: 160px;
+  border: 1px solid rgba(0, 48, 73, 0.06);
+  border-top: 3px solid rgba(0, 48, 73, 0.1);
+}
+
+/* ── Empty state ──────────────────────────────────────────── */
+
+.disc-empty {
+  grid-column: 1 / -1;
+  padding: 80px 0;
+  text-align: center;
+}
+
+.disc-empty-title {
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--dark);
+  margin: 0 0 12px;
+}
+
+.disc-empty-sub {
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: var(--text-muted);
+  margin: 0 0 32px;
+  max-width: 360px;
+  margin-inline: auto;
+}
+
+.disc-empty-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+.disc-empty-btn {
+  height: 40px;
+  padding: 0 20px;
+  border-radius: 0;
+  font-family: var(--font-body);
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+}
+
+.disc-empty-btn--primary {
+  background: var(--dark);
+  color: #fff;
+  border: none;
+}
+
+.disc-empty-btn--outline {
+  background: transparent;
+  color: var(--dark);
+  border: 1px solid var(--dark);
+}
+
+/* ── Toolbar relative wrapper ─────────────────────────────── */
+
+.disc-toolbar-right {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* ── Responsive ───────────────────────────────────────────── */
+
+@media (max-width: 900px) {
+  .disc-hero {
+    padding: 40px 24px 32px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+
+  .disc-hero-title { font-size: 40px; }
+
+  .disc-toolbar {
+    padding: 16px 24px;
+    flex-wrap: wrap;
+  }
+
+  .disc-content {
+    padding: 32px 24px 64px;
+  }
+
+  .disc-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .disc-results-meta {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .disc-sort-row { flex-wrap: wrap; }
+
+  .disc-filter-panel {
+    width: calc(100vw - 48px);
+    right: -24px;
+  }
+}
+
+@media (max-width: 480px) {
+  .disc-hero {
+    padding: 28px 16px 24px;
+    gap: 12px;
+  }
+
+  .disc-hero-title { font-size: clamp(28px, 8vw, 40px); }
+
+  .disc-toolbar {
+    padding: 12px 16px;
+    gap: 8px;
+  }
+
+  .disc-content {
+    padding: 24px 16px 48px;
+  }
+
+  .disc-card {
+    padding: 24px 20px;
+  }
+
+  .disc-filter-panel {
+    width: calc(100vw - 32px);
+    right: -16px;
+    padding: 16px;
+  }
+}

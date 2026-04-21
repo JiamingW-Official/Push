@@ -190,3 +190,58 @@ This is the highest-ROI AI investment — it's the largest ops cost AND it stren
 - Enables tracking of repeat purchases driven by initial creator content
 - Window resets if consumer uses a different creator's link (last-click attribution)
 - Creator dashboard shows: active referrals, days remaining in window, milestone progress
+
+## 11. Data Schema v1 (v5.3)
+
+**Authoritative spec**: [`/spec/data-schema-v1.md`](/spec/data-schema-v1.md)
+**Migration**: `supabase/migrations/20260506_push_transactions_v5_3.sql`
+**Table**: `public.push_transactions`
+
+Each verified attribution event becomes one row in `push_transactions`. This table is the **ground-truth label source** for the Physical-World Ground Truth Layer (v5.3 positioning) and the primary training substrate for any future Local Commerce World Model work. Every QR-scan redemption in production flows through this schema — skipping fields at intake means permanently losing them, because historical rows cannot be back-filled for opt-in data (consent, demographics, environment, location).
+
+### 32 字段 at a glance
+
+| Group | Count | Fields |
+|---|---|---|
+| Identity (first-party) | 5 | transaction_id, device_id_hash, creator_id, merchant_id, customer_id_hash |
+| Timing | 4 | claim_timestamp, redeem_timestamp, time_to_redeem_sec (auto), expiry_timestamp |
+| Location (opt-in) | 5 | claim_gps_lat/lng, redeem_gps_lat/lng, merchant_dwell_sec |
+| Commerce | 5 | product_category, product_sku_hash, order_total_cents, campaign_id, creative_content_hash |
+| Demo (opt-in) | 4 | demo_age_bucket, demo_gender, demo_zip_home (3-prefix), demo_ethnicity_bucket |
+| Behavioral | 3 | is_first_visit, cross_merchant_count, referral_chain_depth |
+| Environmental | 3 | weather_code, local_event_nearby, hour_of_week (auto) |
+| Compliance | 3 | consent_version, ftc_disclosure_shown, consent_tier (1/2/3) |
+
+### QR-scan redemption flow — required writes
+
+The redemption handler **must** populate every `NOT NULL` field. Treat any missing value as a bug, not a warning:
+
+- `device_id_hash` — SHA256 of first-party device identifier (never IDFA / GAID).
+- `creator_id`, `merchant_id`, `customer_id_hash` — resolved at scan time from the active referral link + merchant session + consumer webpage cookie.
+- `transaction_id` — server-generated UUID (default `gen_random_uuid()`).
+- `claim_timestamp`, `expiry_timestamp` — captured at the claim step (before scan).
+- `redeem_timestamp` — set at scan; `time_to_redeem_sec` is auto-computed by trigger from (redeem − claim).
+- `product_category` — constrained enum; must map to one of the 7 category tokens.
+- `order_total_cents`, `campaign_id`, `creative_content_hash` — from the POS / campaign / creator-post registry respectively.
+- `is_first_visit`, `cross_merchant_count`, `referral_chain_depth` — computed from the Push-internal history at scan time.
+- `consent_version`, `ftc_disclosure_shown`, `consent_tier` — stamped from the consumer webpage consent step.
+
+Opt-in fields (location, demo, environment) are NULL unless consumer granted permission at claim time. **`consent_tier=1` rows are excluded from all external data-licensing aggregations** — this is a hard rule, not a suggestion.
+
+### Index coverage (query hot paths)
+
+- `idx_creator_claim` — creator dashboard ("my claims over time")
+- `idx_merchant_redeem` — merchant dashboard ("my redemptions, only non-null")
+- `idx_campaign_performance` — campaign ops ("this campaign's redemption timeline")
+- `idx_device_cross_visit` — cross-merchant behavior, fraud detection
+
+### RLS posture
+
+RLS is ON. Creator reads only rows where their `creators.user_id = auth.uid()` ties to the row's `creator_id`; merchant reads only their own via `merchants.user_id = auth.uid()`. **Writes never go through anon/authenticated clients** — the redemption handler uses the service-role client (see [CLAUDE.md](../../../CLAUDE.md) § Supabase client usage).
+
+### When to update this section
+
+Any change to `push_transactions` schema (new field, new enum value, dropped field) must:
+1. Land a new migration file (do not edit the v1 migration).
+2. Append a changelog entry in `/spec/data-schema-v1.md`.
+3. Update the field count / grouping in this section if totals change.

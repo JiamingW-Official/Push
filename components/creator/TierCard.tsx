@@ -37,44 +37,46 @@ const TIER_CARD_STYLE: Record<
     name: string;
   }
 > = {
+  // Path A (v5.2, 2026-04-20): tier visuals sourced from 6-color brand palette.
+  // Design.md §Tier Identity System (Path A) documents the mapping.
   seed: {
     bg: "#f5f2ec",
-    accent: "#b8a99a",
+    accent: "#669bbc",
     textColor: "#003049",
     symbol: "",
     name: "Seed",
   },
   explorer: {
     bg: "#003049",
-    accent: "#8c6239",
+    accent: "#c9a96e",
     textColor: "#f5f2ec",
     symbol: "",
     name: "Explorer",
   },
   operator: {
     bg: "#001d2e",
-    accent: "#4a5568",
+    accent: "#669bbc",
     textColor: "#f5f2ec",
     symbol: "",
     name: "Operator",
   },
   proven: {
     bg: "#003049",
-    accent: "#c9a96e",
+    accent: "#c1121f",
     textColor: "#f5f2ec",
     symbol: "",
     name: "Proven",
   },
   closer: {
-    bg: "#0a0005",
-    accent: "#9b111e",
+    bg: "#3a0000",
+    accent: "#780000",
     textColor: "#f5f2ec",
     symbol: "",
     name: "Closer",
   },
   partner: {
-    bg: "linear-gradient(160deg, #1a1a2e 0%, #0a0005 100%)",
-    accent: "#1a1a2e",
+    bg: "linear-gradient(160deg, #003049 0%, #001020 100%)",
+    accent: "#003049",
     textColor: "#f5f2ec",
     symbol: "",
     name: "Partner",

@@ -1,0 +1,265 @@
+Retrieving project…
+Deploying jiamingws-projects/push
+Uploading [--------------------] (0.0B/1.6KB)
+Uploading [====================] (1.6KB/1.6KB)
+Inspect: https://vercel.com/jiamingws-projects/push/JAYao1QkdRE83TGCUFueaoq7Eb8d [2s]
+Production: https://push-mwrvc21kz-jiamingws-projects.vercel.app [2s]
+https://push-mwrvc21kz-jiamingws-projects.vercel.appBuilding...
+Building...
+Building: Running build in Washington, D.C., USA (East) – iad1
+Building: Build machine configuration: 2 cores, 8 GB
+Building: Retrieving list of deployment files...
+Building: Downloading 566 deployment files...
+Building: Restored build cache from previous deployment (ByPMts2tCLrbcci3sedvMjmAJefD)
+Building: Running "vercel build"
+Building: Vercel CLI 51.6.1
+Building: Installing dependencies...
+Building: npm warn deprecated inflight@1.0.6: This module is not supported, and leaks memory. Do not use it. Check out lru-cache if you want a good and tested way to coalesce async requests by a key value, which is much more comprehensive and powerful.
+Building: npm warn deprecated glob@7.2.3: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
+Building: npm warn deprecated glob@10.5.0: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
+Building: added 554 packages, and removed 5 packages in 8s
+Building: 171 packages are looking for funding
+Building: run `npm fund` for details
+Building: Detected Next.js version: 16.2.3
+Building: Running "npm run build"
+Building: > push-app@0.1.0 build
+Building: > next build
+Building: Applying modifyConfig from Vercel
+Building: ▲ Next.js 16.2.3 (Turbopack)
+Building: ⚠ The "middleware" file convention is deprecated. Please use "proxy" instead. Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
+Building: Creating an optimized production build ...
+Building: ✓ Compiled successfully in 26.4s
+Building: Running TypeScript ...
+Building: Finished TypeScript in 25.5s ...
+Building: Collecting page data using 1 worker ...
+Building: ⚠ Using edge runtime on a page currently disables static generation for that page
+Building: Generating static pages using 1 worker (0/212) ...
+Building: Generating static pages using 1 worker (53/212)
+Building: Generating static pages using 1 worker (106/212)
+Building: Generating static pages using 1 worker (159/212)
+Building: ✓ Generating static pages using 1 worker (212/212) in 3.4s
+Building: Finalizing page optimization ...
+Building: Running onBuildComplete from Vercel
+Building: Route (app)                                       Revalidate  Expire
+Building: ┌ ○ /
+Building: ├ ○ /_not-found
+Building: ├ ○ /about
+Building: ├ ○ /admin
+Building: ├ ○ /admin/audit-log
+Building: ├ ○ /admin/campaigns
+Building: ├ ƒ /admin/campaigns/[id]
+Building: ├ ○ /admin/cohorts
+Building: ├ ƒ /admin/cohorts/[id]
+Building: ├ ○ /admin/dashboard
+Building: ├ ○ /admin/disputes
+Building: ├ ƒ /admin/disputes/[id]
+Building: ├ ○ /admin/finance
+Building: ├ ○ /admin/fraud
+Building: ├ ○ /admin/users
+Building: ├ ƒ /admin/users/[id]
+Building: ├ ○ /admin/verifications
+Building: ├ ○ /api-docs
+Building: ├ ƒ /api/admin/audit-log
+Building: ├ ƒ /api/admin/campaigns
+Building: ├ ƒ /api/admin/campaigns/[id]
+Building: ├ ƒ /api/admin/campaigns/[id]/decision
+Building: ├ ƒ /api/admin/cohorts
+Building: ├ ƒ /api/admin/cohorts/[id]
+Building: ├ ƒ /api/admin/creators
+Building: ├ ƒ /api/admin/dashboard
+Building: ├ ƒ /api/admin/disputes
+Building: ├ ƒ /api/admin/disputes/[id]/decide
+Building: ├ ƒ /api/admin/finance/ledger
+Building: ├ ƒ /api/admin/fraud
+Building: ├ ƒ /api/admin/fraud/[id]/decision
+Building: ├ ƒ /api/admin/metrics
+Building: ├ ƒ /api/admin/reports/weekly
+Building: ├ ƒ /api/admin/users
+Building: ├ ƒ /api/admin/users/[id]
+Building: ├ ƒ /api/admin/users/[id]/impersonate
+Building: ├ ƒ /api/admin/verifications
+Building: ├ ƒ /api/admin/verifications/[id]/decision
+Building: ├ ƒ /api/attribution/scan
+Building: ├ ƒ /api/attribution/verify
+Building: ├ ƒ /api/contact
+Building: ├ ƒ /api/creator/apply
+Building: ├ ƒ /api/creator/disclosure/check
+Building: ├ ƒ /api/creator/messages
+Building: ├ ƒ /api/creator/messages/[threadId]
+Building: ├ ƒ /api/creator/score
+Building: ├ ƒ /api/disputes
+Building: ├ ƒ /api/disputes/[id]
+Building: ├ ƒ /api/disputes/[id]/events
+Building: ├ ƒ /api/disputes/[id]/evidence
+Building: ├ ƒ /api/health
+Building: ├ ƒ /api/internal/ai-verify
+Building: ├ ƒ /api/internal/recruitment-sync
+Building: ├ ƒ /api/merchant/api-keys
+Building: ├ ƒ /api/merchant/applicants
+Building: ├ ƒ /api/merchant/applicants/[id]
+Building: ├ ƒ /api/merchant/applicants/batch-decision
+Building: ├ ƒ /api/merchant/campaigns
+Building: ├ ƒ /api/merchant/dashboard
+Building: ├ ƒ /api/merchant/integrations
+Building: ├ ƒ /api/merchant/integrations/[slug]/connect
+Building: ├ ƒ /api/merchant/integrations/[slug]/disconnect
+Building: ├ ƒ /api/merchant/invoices
+Building: ├ ƒ /api/merchant/locations
+Building: ├ ƒ /api/merchant/locations/[id]
+Building: ├ ƒ /api/merchant/payments
+Building: ├ ƒ /api/merchant/qr-codes
+Building: ├ ƒ /api/merchant/qr-codes/[id]
+Building: ├ ƒ /api/merchant/reports/weekly
+Building: ├ ƒ /api/merchant/settings
+Building: ├ ƒ /api/merchant/subscription
+Building: ├ ƒ /api/merchant/team
+Building: ├ ƒ /api/merchant/topup
+Building: ├ ƒ /api/search
+Building: ├ ○ /api/status                                           1m      1y
+Building: ├ ƒ /api/threads
+Building: ├ ƒ /api/threads/[id]
+Building: ├ ƒ /api/threads/[id]/messages
+Building: ├ ○ /blog
+Building: ├ ● /blog/[slug]
+Building: │ ├ /blog/qr-attribution-death-of-vanity-metrics
+Building: │ ├ /blog/williamsburg-restaurant-case-study
+Building: │ ├ /blog/creator-economy-nyc-micro-influencers
+Building: │ └ [+12 more paths]
+Building: ├ ƒ /blog/[slug]/opengraph-image-yqks0s
+Building: ├ ● /c/[handle]
+Building: │ ├ /c/maya-eats-nyc
+Building: │ ├ /c/felix-brooklyn
+Building: │ ├ /c/jess-uptown-bites
+Building: │ └ [+17 more paths]
+Building: ├ ○ /careers
+Building: ├ ƒ /careers/[slug]
+Building: ├ ○ /case-studies
+Building: ├ ● /case-studies/[slug]
+Building: │ ├ /case-studies/robertas-bed-stuy
+Building: │ ├ /case-studies/bloom-florals-williamsburg
+Building: │ ├ /case-studies/the-roast-room-chelsea
+Building: │ └ [+2 more paths]
+Building: ├ ƒ /case-studies/[slug]/opengraph-image-kys12a
+Building: ├ ○ /changelog
+Building: ├ ƒ /changelog/feed.xml
+Building: ├ ○ /contact
+Building: ├ ○ /creator/analytics
+Building: ├ ○ /creator/calendar
+Building: ├ ● /creator/campaigns/[id]
+Building: │ ├ /creator/campaigns/demo-campaign-001
+Building: │ ├ /creator/campaigns/demo-campaign-002
+Building: │ ├ /creator/campaigns/demo-campaign-003
+Building: │ └ [+5 more paths]
+Building: ├ ○ /creator/dashboard
+Building: ├ ○ /creator/discover
+Building: ├ ○ /creator/disputes
+Building: ├ ƒ /creator/disputes/[id]
+Building: ├ ○ /creator/earnings
+Building: ├ ○ /creator/explore
+Building: ├ ○ /creator/inbox
+Building: ├ ƒ /creator/inbox/[threadId]
+Building: ├ ○ /creator/inbox/invites
+Building: ├ ○ /creator/inbox/messages
+Building: ├ ○ /creator/inbox/system
+Building: ├ ○ /creator/leaderboard
+Building: ├ ○ /creator/login
+Building: ├ ○ /creator/messages
+Building: ├ ○ /creator/notifications
+Building: ├ ○ /creator/onboarding
+Building: ├ ○ /creator/overview
+Building: ├ ○ /creator/portfolio
+Building: ├ ○ /creator/post-campaign
+Building: ├ ○ /creator/post-submit
+Building: ├ ○ /creator/profile
+Building: ├ ● /creator/public/[id]
+Building: │ └ /creator/public/demo-creator-001
+Building: ├ ○ /creator/reset-password
+Building: ├ ○ /creator/settings
+Building: ├ ○ /creator/signup
+Building: ├ ○ /creator/verify
+Building: ├ ○ /creator/wallet
+Building: ├ ○ /creator/work
+Building: ├ ○ /creator/work/calendar
+Building: ├ ƒ /creator/work/campaign/[id]
+Building: ├ ƒ /creator/work/campaign/[id]/post
+Building: ├ ○ /creator/work/drafts
+Building: ├ ○ /creator/work/pipeline
+Building: ├ ○ /creator/work/today
+Building: ├ ƒ /customer/loyalty-card/[id]
+Building: ├ ○ /dashboard
+Building: ├ ○ /demo
+Building: ├ ○ /demo/admin
+Building: ├ ○ /demo/creator
+Building: ├ ○ /demo/merchant
+Building: ├ ○ /explore
+Building: ├ ○ /faq
+Building: ├ ƒ /feed.xml
+Building: ├ ○ /for-creators
+Building: ├ ○ /for-merchants
+Building: ├ ƒ /help
+Building: ├ ƒ /help/[slug]
+Building: ├ ○ /how-it-works
+Building: ├ ƒ /invite/[code]
+Building: ├ ○ /legal/acceptable-use
+Building: ├ ○ /legal/cookies
+Building: ├ ○ /legal/privacy
+Building: ├ ○ /legal/terms
+Building: ├ ● /m/[slug]
+Building: │ ├ /m/blank-street-coffee-soho
+Building: │ ├ /m/superiority-burger-east-village
+Building: │ ├ /m/modelfit-flatiron
+Building: │ └ [+17 more paths]
+Building: ├ ○ /merchant/analytics
+Building: ├ ○ /merchant/applicants
+Building: ├ ○ /merchant/billing
+Building: ├ ƒ /merchant/campaigns/[id]
+Building: ├ ○ /merchant/campaigns/new
+Building: ├ ○ /merchant/dashboard
+Building: ├ ○ /merchant/disputes
+Building: ├ ƒ /merchant/disputes/[id]
+Building: ├ ○ /merchant/integrations
+Building: ├ ƒ /merchant/integrations/[slug]
+Building: ├ ○ /merchant/locations
+Building: ├ ƒ /merchant/locations/[id]
+Building: ├ ○ /merchant/login
+Building: ├ ○ /merchant/messages
+Building: ├ ○ /merchant/notifications
+Building: ├ ○ /merchant/onboarding
+Building: ├ ○ /merchant/payments
+Building: ├ ○ /merchant/qr-codes
+Building: ├ ○ /merchant/settings
+Building: ├ ○ /merchant/signup
+Building: ├ ○ /neighborhoods
+Building: ├ ● /neighborhoods/[slug]
+Building: │ ├ /neighborhoods/williamsburg
+Building: │ ├ /neighborhoods/lower-east-side
+Building: │ ├ /neighborhoods/soho
+Building: │ └ [+30 more paths]
+Building: ├ ƒ /neighborhoods/[slug]/opengraph-image-127n40
+Building: ├ ƒ /opengraph-image
+Building: ├ ○ /press
+Building: ├ ○ /pricing
+Building: ├ ○ /referrals
+Building: ├ ○ /robots.txt
+Building: ├ ƒ /rss/merchants
+Building: ├ ƒ /scan/[qrId]
+Building: ├ ƒ /scan/[qrId]/verify
+Building: ├ ○ /security
+Building: ├ ○ /sitemap.xml
+Building: ├ ○ /status                                               1m      1y
+Building: └ ○ /trust
+Building: ƒ Proxy (Middleware)
+Building: ○  (Static)   prerendered as static content
+Building: ●  (SSG)      prerendered as static HTML (uses generateStaticParams)
+Building: ƒ  (Dynamic)  server-rendered on demand
+Building: Build Completed in /vercel/output [1m]
+Building: Deploying outputs...
+Building: Deployment completed
+Building: Creating build cache...
+[2K[1A[2K[GProduction: https://push-mwrvc21kz-jiamingws-projects.vercel.app [2m]
+Completing...
+Aliased: https://push-six-flax.vercel.app [2m]
+
+Common next commands:
+- `vercel inspect push-mwrvc21kz-jiamingws-projects.vercel.app --logs`
+- `vercel redeploy push-mwrvc21kz-jiamingws-projects.vercel.app`

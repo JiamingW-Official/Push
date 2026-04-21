@@ -3,7 +3,7 @@
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import { useState, useEffect } from "react";
-import { createClient } from "@/lib/supabase";
+import { createClient } from "@/lib/db/browser";
 import { CampaignChecklist } from "@/components/creator/CampaignChecklist";
 import { TierBadge } from "@/components/creator/TierBadge";
 import "./campaign.css";

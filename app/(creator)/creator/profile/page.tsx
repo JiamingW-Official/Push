@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { createClient } from "@/lib/supabase";
+import { createClient } from "@/lib/db/browser";
 import { TierBadge } from "@/components/creator/TierBadge";
 import { TierJourney } from "@/components/creator/TierJourney";
 import { TierBenefitsPanel } from "@/components/creator/TierBenefitsPanel";

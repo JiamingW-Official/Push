@@ -1,0 +1,10 @@
+
+> push-app@0.1.0 test
+> jest --passWithNoTests
+
+
+Test Suites: 3 passed, 3 total
+Tests:       35 passed, 35 total
+Snapshots:   0 total
+Time:        0.226 s, estimated 1 s
+Ran all test suites.

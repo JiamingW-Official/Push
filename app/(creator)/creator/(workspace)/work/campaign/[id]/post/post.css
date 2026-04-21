@@ -1,0 +1,867 @@
+/* ═══════════════════════════════════════════════════════════
+   Post Workspace Page — /creator/work/campaign/[id]/post/
+   Design System: Design.md — strict compliance
+   ═══════════════════════════════════════════════════════════ */
+
+/* ── Page root ──────────────────────────────────────────────── */
+
+.post-page {
+  min-height: 100vh;
+  background: var(--surface, #f5f2ec);
+  font-family: "CS Genio Mono", "SF Mono", "Fira Code", monospace;
+  color: var(--dark, #003049);
+  padding-bottom: 80px;
+}
+
+/* ── Breadcrumb nav ─────────────────────────────────────────── */
+
+.post-nav {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 16px 32px;
+  border-bottom: 1px solid rgba(0, 48, 73, 0.12);
+  background: var(--surface-elevated, #ffffff);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.post-nav-crumb {
+  color: var(--graphite, #4a5568);
+  text-decoration: none;
+  transition: color 200ms ease;
+}
+
+.post-nav-crumb:hover {
+  color: var(--dark, #003049);
+}
+
+.post-nav-sep {
+  color: rgba(0, 48, 73, 0.3);
+  font-weight: 400;
+}
+
+.post-nav-current {
+  color: var(--primary, #c1121f);
+  font-weight: 700;
+}
+
+/* ── Page header ────────────────────────────────────────────── */
+
+.post-header {
+  padding: 40px 32px 32px;
+  border-bottom: 1px solid rgba(0, 48, 73, 0.12);
+  background: var(--surface-elevated, #ffffff);
+  display: flex;
+  align-items: flex-start;
+  gap: 40px;
+}
+
+.post-header-left {
+  flex-shrink: 0;
+}
+
+.post-eyebrow {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--graphite, #4a5568);
+  margin: 0 0 8px;
+}
+
+.post-headline {
+  font-family: "Darky", sans-serif;
+  font-size: 48px;
+  font-weight: 800;
+  letter-spacing: -0.05em;
+  color: var(--dark, #003049);
+  line-height: 1;
+  margin: 0 0 6px;
+}
+
+.post-subline {
+  font-size: 14px;
+  color: var(--graphite, #4a5568);
+  margin: 0;
+}
+
+/* Campaign summary card */
+.post-campaign-summary {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  background: var(--surface, #f5f2ec);
+  border: 1px solid rgba(0, 48, 73, 0.12);
+  padding: 20px 24px;
+  flex: 1;
+  max-width: 520px;
+  border-radius: 0;
+}
+
+.post-summary-logo {
+  width: 48px;
+  height: 48px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: #ffffff;
+  border-radius: 0;
+}
+
+.post-summary-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.post-summary-merchant {
+  font-family: "Darky", sans-serif;
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--dark, #003049);
+  margin: 0 0 6px;
+}
+
+.post-summary-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.post-summary-sep {
+  color: rgba(0, 48, 73, 0.3);
+}
+
+.post-summary-earn {
+  color: var(--dark, #003049);
+}
+
+.post-summary-deadline {
+  color: var(--graphite, #4a5568);
+}
+
+.post-summary-brief {
+  font-size: 13px;
+  color: var(--graphite, #4a5568);
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* ── Main form grid ─────────────────────────────────────────── */
+
+.post-main {
+  padding: 40px 32px 0;
+}
+
+.post-form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+  align-items: start;
+}
+
+/* ── Section wrapper ────────────────────────────────────────── */
+
+.post-section {
+  margin-bottom: 32px;
+}
+
+.post-section-upload {
+  /* upload section spans naturally */
+}
+
+.post-form-right {
+  display: flex;
+  flex-direction: column;
+}
+
+.post-section-header {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 16px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--dark, #003049);
+}
+
+.post-section-num {
+  font-family: "CS Genio Mono", monospace;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--graphite, #4a5568);
+  flex-shrink: 0;
+}
+
+.post-section-title {
+  font-family: "Darky", sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--dark, #003049);
+  margin: 0;
+  flex: 1;
+}
+
+.post-section-hint {
+  font-size: 11px;
+  color: var(--graphite, #4a5568);
+  letter-spacing: 0.02em;
+}
+
+/* ── Drop zone ──────────────────────────────────────────────── */
+
+.post-dropzone {
+  border: 2px dashed rgba(0, 48, 73, 0.3);
+  background: var(--surface, #f5f2ec);
+  min-height: 180px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition:
+    border-color 200ms ease,
+    background 200ms ease;
+  border-radius: 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.post-dropzone:focus-visible {
+  outline: 2px solid var(--primary, #c1121f);
+  outline-offset: 2px;
+}
+
+.post-dropzone:hover,
+.post-dropzone-over {
+  border-color: var(--primary, #c1121f);
+  background: rgba(193, 18, 31, 0.03);
+}
+
+.post-dropzone-has-files {
+  min-height: 64px;
+  border-style: solid;
+  border-color: rgba(0, 48, 73, 0.2);
+}
+
+.post-file-input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+  width: 0;
+  height: 0;
+}
+
+.post-dropzone-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 32px 24px;
+  text-align: center;
+}
+
+.post-dropzone-icon {
+  font-size: 32px;
+  color: var(--graphite, #4a5568);
+  line-height: 1;
+  transition: color 200ms ease;
+}
+
+.post-dropzone:hover .post-dropzone-icon,
+.post-dropzone-over .post-dropzone-icon {
+  color: var(--primary, #c1121f);
+}
+
+.post-dropzone-headline {
+  font-family: "Darky", sans-serif;
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--dark, #003049);
+  margin: 0;
+}
+
+.post-dropzone-formats {
+  font-size: 12px;
+  color: var(--graphite, #4a5568);
+  letter-spacing: 0.04em;
+  margin: 0;
+}
+
+.post-dropzone-add-more {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--graphite, #4a5568);
+  font-weight: 600;
+  padding: 16px 24px;
+}
+
+.post-dropzone-add-icon {
+  font-size: 20px;
+  color: var(--graphite, #4a5568);
+}
+
+/* ── Error ──────────────────────────────────────────────────── */
+
+.post-error {
+  font-size: 12px;
+  color: var(--primary, #c1121f);
+  font-weight: 600;
+  margin: 8px 0 0;
+  letter-spacing: 0.02em;
+}
+
+/* ── Thumbnails ─────────────────────────────────────────────── */
+
+.post-thumbs {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.post-thumb {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--surface-elevated, #ffffff);
+  border: 1px solid rgba(0, 48, 73, 0.12);
+  padding: 10px 12px;
+  border-radius: 0;
+  animation: fadeIn 300ms ease forwards;
+}
+
+.post-thumb-img {
+  width: 56px;
+  height: 56px;
+  object-fit: cover;
+  flex-shrink: 0;
+  display: block;
+  border-radius: 0;
+}
+
+.post-thumb-video-placeholder {
+  width: 56px;
+  height: 56px;
+  background: var(--dark, #003049);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border-radius: 0;
+}
+
+.post-thumb-video-icon {
+  font-size: 18px;
+  color: #ffffff;
+}
+
+.post-thumb-fallback {
+  width: 56px;
+  height: 56px;
+  background: rgba(0, 48, 73, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  color: var(--graphite, #4a5568);
+  flex-shrink: 0;
+  border-radius: 0;
+}
+
+.post-thumb-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.post-thumb-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--dark, #003049);
+  margin: 0 0 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.post-thumb-size {
+  font-size: 11px;
+  color: var(--graphite, #4a5568);
+  margin: 0;
+}
+
+.post-thumb-remove {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  color: var(--graphite, #4a5568);
+  padding: 4px 6px;
+  border-radius: 0;
+  transition: color 150ms ease;
+  flex-shrink: 0;
+  line-height: 1;
+}
+
+.post-thumb-remove:hover {
+  color: var(--primary, #c1121f);
+}
+
+/* ── Caption ────────────────────────────────────────────────── */
+
+.post-caption-wrap {
+  position: relative;
+}
+
+.post-caption-input {
+  width: 100%;
+  min-height: 120px;
+  padding: 14px 16px;
+  font-family: "CS Genio Mono", "SF Mono", "Fira Code", monospace;
+  font-size: 14px;
+  color: var(--dark, #003049);
+  background: var(--surface-elevated, #ffffff);
+  border: 1px solid rgba(0, 48, 73, 0.2);
+  border-radius: 0;
+  resize: vertical;
+  line-height: 1.55;
+  transition: border-color 200ms ease;
+  box-sizing: border-box;
+}
+
+.post-caption-input::placeholder {
+  color: rgba(0, 48, 73, 0.4);
+}
+
+.post-caption-input:focus {
+  outline: none;
+  border-color: var(--dark, #003049);
+}
+
+.post-caption-count {
+  font-size: 11px;
+  color: var(--graphite, #4a5568);
+  text-align: right;
+  margin: 4px 0 0;
+  letter-spacing: 0.02em;
+}
+
+.post-caption-count-limit {
+  color: var(--primary, #c1121f);
+  font-weight: 700;
+}
+
+/* ── Hashtag chips ──────────────────────────────────────────── */
+
+.post-hashtags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.post-hashtag-chip {
+  background: rgba(0, 48, 73, 0.06);
+  border: 1px solid rgba(0, 48, 73, 0.15);
+  color: var(--dark, #003049);
+  font-family: "CS Genio Mono", monospace;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  padding: 5px 12px;
+  border-radius: 50vh; /* filter chip exception per Design.md */
+  cursor: pointer;
+  transition:
+    background 150ms ease,
+    border-color 150ms ease,
+    color 150ms ease;
+}
+
+.post-hashtag-chip:hover {
+  background: rgba(193, 18, 31, 0.08);
+  border-color: rgba(193, 18, 31, 0.3);
+  color: var(--primary, #c1121f);
+}
+
+.post-hashtag-chip:focus-visible {
+  outline: 2px solid var(--primary, #c1121f);
+  outline-offset: 2px;
+}
+
+/* Attribution note */
+.post-attribution-note {
+  font-size: 12px;
+  color: var(--graphite, #4a5568);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+  padding: 10px 12px;
+  background: rgba(0, 48, 73, 0.04);
+  border-left: 2px solid var(--tertiary, #669bbc);
+}
+
+.post-attribution-icon {
+  color: var(--tertiary, #669bbc);
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+.post-attribution-code {
+  color: var(--dark, #003049);
+  font-weight: 700;
+}
+
+/* ── Platforms ──────────────────────────────────────────────── */
+
+.post-platforms {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  border: 1px solid rgba(0, 48, 73, 0.12);
+}
+
+.post-platform-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  cursor: pointer;
+  transition: background 150ms ease;
+  border-bottom: 1px solid rgba(0, 48, 73, 0.08);
+  position: relative;
+}
+
+.post-platform-item:last-child {
+  border-bottom: none;
+}
+
+.post-platform-item:hover {
+  background: rgba(0, 48, 73, 0.03);
+}
+
+.post-platform-checked {
+  background: rgba(193, 18, 31, 0.04);
+}
+
+.post-platform-checked:hover {
+  background: rgba(193, 18, 31, 0.07);
+}
+
+.post-platform-checkbox {
+  /* visually hidden but accessible */
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+
+.post-platform-icon {
+  font-size: 16px;
+  color: var(--graphite, #4a5568);
+  width: 20px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.post-platform-checked .post-platform-icon {
+  color: var(--primary, #c1121f);
+}
+
+.post-platform-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--dark, #003049);
+  flex: 1;
+}
+
+.post-platform-check {
+  font-size: 14px;
+  color: var(--primary, #c1121f);
+  font-weight: 700;
+  margin-left: auto;
+}
+
+/* ── Submit section ─────────────────────────────────────────── */
+
+.post-submit-section {
+  margin-top: 40px;
+  padding: 32px;
+  background: var(--dark, #003049);
+  border-radius: 0;
+}
+
+.post-submit-inner {
+  max-width: 680px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  text-align: center;
+}
+
+.post-submit-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.post-submit-oracle {
+  font-size: 13px;
+  color: rgba(245, 242, 236, 0.7);
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  justify-content: center;
+}
+
+.post-oracle-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%; /* decorative status dot exception */
+  background: var(--tertiary, #669bbc);
+  display: inline-block;
+  flex-shrink: 0;
+  animation: pulse 1.8s ease-in-out infinite;
+}
+
+.post-submit-earn {
+  font-size: 13px;
+  color: rgba(245, 242, 236, 0.55);
+  margin: 0;
+}
+
+.post-submit-earn-amount {
+  color: var(--champagne, #c9a96e);
+  font-weight: 700;
+}
+
+/* Submit button */
+.post-submit-btn {
+  background: var(--primary, #c1121f);
+  color: #ffffff;
+  border: none;
+  border-radius: 0;
+  font-family: "CS Genio Mono", monospace;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 18px 48px;
+  cursor: pointer;
+  transition:
+    background 200ms ease,
+    opacity 200ms ease;
+  min-width: 320px;
+}
+
+.post-submit-btn:hover:not(:disabled) {
+  background: var(--accent, #780000);
+}
+
+.post-submit-btn:disabled {
+  cursor: not-allowed;
+}
+
+.post-submit-loading {
+  background: var(--graphite, #4a5568);
+  opacity: 0.9;
+}
+
+.post-submit-pending {
+  background: var(--tertiary, #669bbc);
+}
+
+/* Animated dots */
+.post-submit-dots {
+  display: inline-flex;
+  align-items: center;
+  gap: 0;
+}
+
+.post-dot-1,
+.post-dot-2,
+.post-dot-3 {
+  animation: dotBlink 1.2s ease-in-out infinite;
+}
+
+.post-dot-2 {
+  animation-delay: 0.2s;
+}
+
+.post-dot-3 {
+  animation-delay: 0.4s;
+}
+
+@keyframes dotBlink {
+  0%,
+  80%,
+  100% {
+    opacity: 0.2;
+  }
+  40% {
+    opacity: 1;
+  }
+}
+
+/* ── Verified state ─────────────────────────────────────────── */
+
+.post-verified {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  text-align: left;
+  animation: fadeIn 300ms ease forwards;
+  width: 100%;
+  max-width: 600px;
+}
+
+.post-verified-check {
+  width: 56px;
+  height: 56px;
+  flex-shrink: 0;
+  background: var(--success);
+  color: #ffffff;
+  font-size: 24px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0;
+  animation: fadeIn 300ms ease forwards;
+}
+
+.post-verified-text {
+  flex: 1;
+}
+
+.post-verified-headline {
+  font-family: "Darky", sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: #ffffff;
+  margin: 0 0 6px;
+}
+
+.post-verified-sub {
+  font-size: 13px;
+  color: rgba(245, 242, 236, 0.65);
+  line-height: 1.5;
+  margin: 0;
+}
+
+.post-verified-back {
+  color: var(--champagne, #c9a96e);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-decoration: none;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: color 150ms ease;
+}
+
+.post-verified-back:hover {
+  color: #ffffff;
+}
+
+/* ── Animations ─────────────────────────────────────────────── */
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.4;
+  }
+}
+
+/* ── Responsive ─────────────────────────────────────────────── */
+
+@media (max-width: 900px) {
+  .post-header {
+    flex-direction: column;
+    gap: 24px;
+    padding: 24px 20px 20px;
+  }
+
+  .post-campaign-summary {
+    max-width: none;
+    width: 100%;
+  }
+
+  .post-main {
+    padding: 24px 20px 0;
+  }
+
+  .post-form-grid {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  .post-submit-section {
+    padding: 24px 20px;
+    margin-top: 32px;
+  }
+
+  .post-submit-btn {
+    width: 100%;
+    min-width: unset;
+  }
+
+  .post-verified {
+    flex-direction: column;
+    text-align: center;
+    gap: 16px;
+  }
+
+  .post-nav {
+    padding: 12px 20px;
+  }
+}
+
+@media (max-width: 600px) {
+  .post-headline {
+    font-size: 36px;
+  }
+
+  .post-submit-inner {
+    gap: 16px;
+  }
+
+  .post-verified-back {
+    margin-top: 4px;
+  }
+}

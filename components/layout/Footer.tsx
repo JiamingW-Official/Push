@@ -104,9 +104,14 @@ const NAV_COLS = [
   {
     label: "Legal",
     links: [
-      { label: "Privacy", href: "#" },
-      { label: "Terms", href: "#" },
-      { label: "Cookies", href: "#" },
+      { label: "Privacy", href: "/legal/privacy" },
+      { label: "Terms", href: "/legal/terms" },
+      { label: "Cookies", href: "/legal/cookies" },
+      {
+        label: "Do Not Sell My Personal Information",
+        href: "/legal/privacy#do-not-sell",
+      },
+      { label: "Your Privacy Rights", href: "/legal/privacy#your-rights" },
     ],
   },
 ];

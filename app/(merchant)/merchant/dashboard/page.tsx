@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
-import { createClient } from "@/lib/supabase";
+import { createClient } from "@/lib/db/browser";
 import "./dashboard.css";
 
 /* ── Demo mode ───────────────────────────────────────────── */

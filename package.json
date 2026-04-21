@@ -5,7 +5,17 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "dev:webpack": "mkdir -p .next/dev && next dev --webpack",
+    "typecheck": "tsc --noEmit -p tsconfig.tsc.json",
+    "type-check": "tsc --noEmit -p tsconfig.tsc.json",
+    "lint": "eslint app components lib hooks types middleware.ts",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "seed": "tsx scripts/seed-demo-data.ts",
+    "automate:may-4-8": "bash scripts/automate-may-4-8.sh",
+    "demo-day:prep": "bash scripts/automate-may-4-8.sh"
   },
   "dependencies": {
     "@supabase/ssr": "^0.10.2",
@@ -20,9 +30,15 @@
     "react-leaflet": "^5.0.0"
   },
   "devDependencies": {
+    "@types/jest": "30.0.0",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "eslint": "^9.39.4",
+    "eslint-config-next": "^16.2.3",
+    "jest": "30.3.0",
+    "jest-environment-node": "30.3.0",
+    "tsx": "^4.21.0",
     "typescript": "^5"
   }
 }

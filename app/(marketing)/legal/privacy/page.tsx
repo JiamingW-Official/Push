@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "Privacy Policy — Push",
@@ -223,6 +224,82 @@ export default function PrivacyPage() {
           Section 9).
         </li>
       </ul>
+
+      <hr className="legal-divider" />
+
+      {/* ── 3A. Your Consent Tier (v5.3) ─────────────────────── */}
+      <h2 id="s3a" className="legal-section-heading">
+        <span className="legal-section-heading__number">03A /</span>
+        Your Consent Tier
+      </h2>
+      <p>
+        Push offers three opt-in tiers that control how much data is collected
+        when you scan a QR code. Tier 2 is selected by default; you can change
+        your tier at any time. Aggregation that leaves Push for licensing
+        requires a minimum of 5 users per segment (k ≥ 5).
+      </p>
+
+      <div className="legal-table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Tier</th>
+              <th>What we collect</th>
+              <th>Used for</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <strong>Tier 1 — Basic</strong>
+              </td>
+              <td>
+                Device anonymous ID (SHA256, not IDFA), creator / merchant /
+                campaign IDs, claim + redeem timestamps, bucketed order total.
+              </td>
+              <td>
+                Attribution only. <strong>Never</strong> included in data
+                licensing aggregation.
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <strong>Tier 2 — Full Context</strong>{" "}
+                <em>(default, recommended)</em>
+              </td>
+              <td>
+                Tier 1 + opt-in GPS at claim and redeem, demo bucket (age /
+                gender / ZIP-3), product category, time-of-day, weather code.
+              </td>
+              <td>
+                Recommendations + aggregated neighborhood licensing (k ≥ 5).
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <strong>Tier 3 — Commercial</strong>
+              </td>
+              <td>
+                Tier 2 + cross-merchant visit history, product SKU (hashed),
+                ethnicity bucket (bias audit only, never shared).
+              </td>
+              <td>
+                Enterprise + media licensing aggregates (still k ≥ 5). Includes
+                a one-time $2 bonus discount.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p>
+        Change your tier anytime at{" "}
+        <Link href="/my-privacy" style={{ color: "var(--tertiary)" }}>
+          Your Privacy
+        </Link>
+        . Opting out of one tier propagates to any future scans on the same
+        device within 30 days.
+      </p>
 
       <hr className="legal-divider" />
 
@@ -459,6 +536,11 @@ export default function PrivacyPage() {
       <hr className="legal-divider" />
 
       {/* ── 10. Your Rights ──────────────────────────────────── */}
+      <span
+        id="your-rights"
+        style={{ display: "block", scrollMarginTop: "80px" }}
+        aria-hidden="true"
+      />
       <h2 id="s10" className="legal-section-heading">
         <span className="legal-section-heading__number">10 /</span>
         Your Privacy Rights
@@ -554,9 +636,14 @@ export default function PrivacyPage() {
       <hr className="legal-divider" />
 
       {/* ── 13. California ───────────────────────────────────── */}
+      <span
+        id="do-not-sell"
+        style={{ display: "block", scrollMarginTop: "80px" }}
+        aria-hidden="true"
+      />
       <h2 id="s13" className="legal-section-heading">
         <span className="legal-section-heading__number">13 /</span>
-        California Residents
+        California Residents &amp; Do Not Sell / Share
       </h2>
       <p>
         California residents have rights under the CCPA/CPRA including the right
