@@ -32,8 +32,9 @@ supabase/snippets
 .idea
 .DS_Store
 
-# Fonts source (already in public/)
-Fonts/
+# Fonts source (already in public/ — anchor to repo root so we don't
+# accidentally match public/fonts/ on case-insensitive matchers).
+/Fonts/
 
 # Logs
 *.log
