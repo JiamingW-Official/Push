@@ -344,9 +344,50 @@ export async function POST(req: Request): Promise<Response> {
       return serverError("redemption-insert", error);
     }
 
-    return success({
-      transaction_id: (data as { transaction_id: string }).transaction_id,
-    });
+    const transactionId = (data as { transaction_id: string }).transaction_id;
+
+    // P1-FUNC-3: auto-write oracle_audit for every redemption. Signal-score
+    // fidelity is low here (no customer GPS, no photo) so the row represents
+    // a "baseline geo/timing/merchant" decision; the admin rerun path
+    // re-computes with richer inputs when a dispute surfaces.
+    try {
+      const { AIVerificationService } =
+        await import("@/lib/services/AIVerificationService");
+      const oracle = new AIVerificationService();
+      const result = await oracle.verifyCustomerClaim({
+        merchant_id: p.merchant_id as string,
+        creator_id: p.creator_id as string,
+        customer_name: "auto-redemption",
+        photo_url: "auto://redemption",
+        receipt_url: "auto://redemption",
+        merchant_lat:
+          typeof p.claim_gps_lat === "number" ? p.claim_gps_lat : 40.7128,
+        merchant_lon:
+          typeof p.claim_gps_lng === "number" ? p.claim_gps_lng : -74.006,
+        customer_lat:
+          typeof p.redeem_gps_lat === "number" ? p.redeem_gps_lat : 40.7128,
+        customer_lon:
+          typeof p.redeem_gps_lng === "number" ? p.redeem_gps_lng : -74.006,
+        claim_timestamp: p.claim_timestamp as string,
+        redeem_timestamp:
+          typeof p.redeem_timestamp === "string"
+            ? p.redeem_timestamp
+            : undefined,
+        merchant_active: true,
+      });
+      await oracle.saveOracleAudit(transactionId, result, {
+        triggeredBy: "auto",
+      });
+    } catch (auditErr) {
+      // Audit failures must not 5xx the redemption — the ground-truth row
+      // already landed. Log for Sentry pickup and move on.
+      console.error("[redemption-oracle-audit]", {
+        transactionId,
+        err: auditErr instanceof Error ? auditErr.message : String(auditErr),
+      });
+    }
+
+    return success({ transaction_id: transactionId });
   } catch (err) {
     return serverError("redemption-insert", err);
   }

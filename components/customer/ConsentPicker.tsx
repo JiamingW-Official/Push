@@ -4,6 +4,46 @@ import { useState } from "react";
 import Link from "next/link";
 import styles from "./ConsentPicker.module.css";
 
+// Stable per-browser ID used as the consent_events device key. Generated
+// on first use, stored in localStorage so the same device = same hash.
+function getDeviceId(): string {
+  if (typeof window === "undefined") return "ssr-placeholder";
+  const KEY = "push-device-id";
+  const existing = window.localStorage.getItem(KEY);
+  if (existing) return existing;
+  const fresh =
+    typeof crypto !== "undefined" && "randomUUID" in crypto
+      ? crypto.randomUUID()
+      : `${Date.now()}-${Math.random().toString(36).slice(2, 12)}`;
+  window.localStorage.setItem(KEY, fresh);
+  return fresh;
+}
+
+async function postConsentEvent(args: {
+  prior: ConsentTier;
+  next: ConsentTier;
+}): Promise<void> {
+  try {
+    await fetch("/api/consent-event", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      // Fire-and-forget; the beacon API would be even cleaner but requires
+      // a FormData payload, and our API route takes JSON.
+      body: JSON.stringify({
+        device_id: getDeviceId(),
+        event_type: "tier_change",
+        prior_tier: args.prior,
+        new_tier: args.next,
+        consent_version: "v1.0",
+        source: "web",
+      }),
+      keepalive: true,
+    });
+  } catch {
+    // Never surface audit failures to the consumer UI.
+  }
+}
+
 export type ConsentTier = 1 | 2 | 3;
 
 interface ConsentPickerProps {
@@ -83,8 +123,13 @@ export default function ConsentPicker({
     // Minor guard: silently clamp — the disabled attribute on the button
     // is the primary UX signal, this is the defensive server-safe floor.
     const clamped: ConsentTier = minor && newTier > 1 ? 1 : newTier;
+    const prior = tier;
     setTier(clamped);
     onChange?.(clamped);
+    // P0-SEC-4: fire-and-forget consent event so legal audit has the full
+    // trail. Failures are logged but never block the UX — the picker is
+    // the compliance primary source, email_log / consent_events is audit.
+    void postConsentEvent({ prior, next: clamped });
   };
 
   const handleDeclineAll = () => {
