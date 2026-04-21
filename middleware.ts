@@ -1,6 +1,17 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextRequest, NextResponse } from "next/server";
 
+// Production must fail closed: missing INTERNAL_API_SECRET would either
+// un-gate internal endpoints or let the gate silently always-deny with a
+// blank expected value. Either failure is worse than the deploy failing.
+if (process.env.NODE_ENV === "production" && !process.env.INTERNAL_API_SECRET) {
+  throw new Error(
+    "middleware: INTERNAL_API_SECRET is not set in production — " +
+      "internal API endpoints would be un-gated. " +
+      "Set the env var in Vercel and redeploy.",
+  );
+}
+
 // Static/public prefixes that always pass through
 const PUBLIC_PREFIXES = [
   "/_next",
@@ -12,6 +23,17 @@ const PUBLIC_PREFIXES = [
   "/scan",
   "/explore",
 ];
+
+// Constant-time string compare for secret validation. Edge runtime has
+// Web Crypto but no `node:crypto.timingSafeEqual` — roll our own.
+function timingSafeEqStr(a: string, b: string): boolean {
+  if (a.length !== b.length) return false;
+  let out = 0;
+  for (let i = 0; i < a.length; i++) {
+    out |= a.charCodeAt(i) ^ b.charCodeAt(i);
+  }
+  return out === 0;
+}
 
 // Creator-protected route patterns
 const CREATOR_PROTECTED = ["/creator/dashboard", "/creator/profile"];
@@ -50,6 +72,23 @@ function isMerchantProtected(pathname: string): boolean {
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
+
+  // ── Internal API gate ────────────────────────────────────────────────────
+  // /api/internal/* is service-to-service only — reject any request missing
+  // the shared secret in `x-internal-api-secret`. Routes under this prefix
+  // MUST NOT re-gate (see CLAUDE.md).
+  if (pathname.startsWith("/api/internal/")) {
+    const expected = process.env.INTERNAL_API_SECRET;
+    const provided = request.headers.get("x-internal-api-secret");
+
+    if (!expected || !provided || !timingSafeEqStr(provided, expected)) {
+      return new NextResponse(JSON.stringify({ error: "Forbidden" }), {
+        status: 403,
+        headers: { "content-type": "application/json" },
+      });
+    }
+    return NextResponse.next({ request: { headers: request.headers } });
+  }
 
   // Pass static/public routes immediately
   if (isPublic(pathname)) {
@@ -118,5 +157,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/creator/:path*", "/merchant/:path*"],
+  matcher: ["/creator/:path*", "/merchant/:path*", "/api/internal/:path*"],
 };

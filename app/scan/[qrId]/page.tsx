@@ -155,6 +155,15 @@ export default function ScanLandingPage() {
         <span style={styles.topBarTag}>Community Attribution</span>
       </header>
 
+      {/* ── FTC §255 disclosure (must remain above the fold) ── */}
+      <div style={styles.ftcBanner} role="note" aria-label="Ad disclosure">
+        <span style={styles.ftcTag}>#ad</span>
+        <span style={styles.ftcText}>
+          Paid partnership with <strong>{qr.businessName}</strong>. This offer
+          is sponsored content — FTC §&nbsp;255 disclosure.
+        </span>
+      </div>
+
       {/* ── Activated banner ── */}
       {scanRecorded && (
         <div style={styles.activatedBanner}>
@@ -397,6 +406,34 @@ const styles = {
     letterSpacing: "0.06em",
     color: "var(--text-muted)",
     textTransform: "uppercase" as const,
+  } as React.CSSProperties,
+
+  /* FTC §255 disclosure banner */
+  ftcBanner: {
+    display: "flex",
+    alignItems: "center",
+    gap: "10px",
+    padding: "10px 24px",
+    background: "var(--primary)",
+    color: "#ffffff",
+    borderBottom: "2px solid var(--dark)",
+  } as React.CSSProperties,
+
+  ftcTag: {
+    fontFamily: "var(--font-display)",
+    fontSize: "12px",
+    fontWeight: 800,
+    letterSpacing: "0.04em",
+    padding: "2px 8px",
+    background: "#ffffff",
+    color: "var(--primary)",
+    flexShrink: 0,
+  } as React.CSSProperties,
+
+  ftcText: {
+    fontFamily: "var(--font-body)",
+    fontSize: "12px",
+    lineHeight: 1.4,
   } as React.CSSProperties,
 
   /* Activated banner */

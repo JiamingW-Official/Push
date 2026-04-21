@@ -1,19 +1,28 @@
 /**
- * Push v5.2 — AI Verification Service
+ * Push v5.3 — AI Verification Service / ConversionOracle
  *
- * Implements the 3-layer ConversionOracle™ verification pipeline:
- *   1. Vision  — photo quality + face / receipt presence (mocked in Week 2)
- *   2. OCR     — receipt text extraction + merchant-name match (mocked in Week 2)
- *   3. Geo     — customer GPS within ~500m of merchant via Haversine
+ * Implements the 5-signal ConversionOracle™ verification pipeline (v5.3
+ * EXEC-P1-4). The first three signals (Vision, OCR, Geo) are always
+ * scored; the remaining two (Timing, Merchant) are scored only when the
+ * corresponding inputs are provided, so v5.2 callers that still pass the
+ * 3-signal input shape keep the 3-layer behaviour unchanged.
  *
- * The three sub-scores are averaged into a final confidence_score in [0, 1]:
- *   ≥ 0.85   → auto_verified
+ *   1. Vision   — photo quality + face / receipt presence (mocked)
+ *   2. OCR      — receipt text extraction + merchant-name match (mocked)
+ *   3. Geo      — customer GPS within ~500m of merchant via Haversine
+ *   4. Timing   — claim→redeem elapsed in plausible window (<= 24h, >= 2 min)
+ *   5. Merchant — merchant_id exists and merchant is active
+ *
+ * Sub-scores are averaged (3, 4, or 5 signals depending on inputs) into a
+ * final confidence_score in [0, 1]:
+ *   ≥ 0.85    → auto_verified
  *   0.65-0.85 → manual_review_required
- *   < 0.65   → rejected
+ *   < 0.65    → rejected
  *
- * Week 2 ships with mocked sub-scorers so the rest of the pipeline (storage,
- * appeals, weekly audit) can be wired end-to-end without external API costs.
- * Week 3+ swaps the mocks for Google Cloud Vision / OCR + a real geo check.
+ * Week 2 shipped with mocked Vision / OCR scorers so the rest of the
+ * pipeline (storage, appeals, weekly audit) could be wired end-to-end
+ * without external API costs. Week 3+ swaps those mocks for Google Cloud
+ * Vision / OCR + a real geo check.
  *
  * Server-side only: imports `lib/db` which uses the service-role key.
  */
@@ -51,6 +60,21 @@ export interface VerifyClaimInput {
   customer_lat: number;
   /** Customer's GPS longitude at submission time. */
   customer_lon: number;
+  /**
+   * v5.3 optional: ISO-8601 claim timestamp. When paired with
+   * `redeem_timestamp`, enables the Timing signal.
+   */
+  claim_timestamp?: string;
+  /**
+   * v5.3 optional: ISO-8601 redeem timestamp. When paired with
+   * `claim_timestamp`, enables the Timing signal.
+   */
+  redeem_timestamp?: string;
+  /**
+   * v5.3 optional: whether the merchant row is active (not suspended /
+   * de-platformed). When provided, enables the Merchant signal.
+   */
+  merchant_active?: boolean;
 }
 
 /** Result returned by `verifyCustomerClaim`. */
@@ -101,7 +125,31 @@ export class AIVerificationService {
       claim.customer_lon,
     );
 
-    const finalScore = (visionScore + ocrScore + geoScore) / 3;
+    const scores: number[] = [visionScore, ocrScore, geoScore];
+    const parts: string[] = [
+      `Vision: ${visionScore.toFixed(2)}`,
+      `OCR: ${ocrScore.toFixed(2)}`,
+      `Geo: ${geoScore.toFixed(2)}`,
+    ];
+
+    // v5.3 optional Timing signal
+    if (claim.claim_timestamp && claim.redeem_timestamp) {
+      const timingScore = this.mockTimingAnalysis(
+        claim.claim_timestamp,
+        claim.redeem_timestamp,
+      );
+      scores.push(timingScore);
+      parts.push(`Timing: ${timingScore.toFixed(2)}`);
+    }
+
+    // v5.3 optional Merchant signal
+    if (typeof claim.merchant_active === "boolean") {
+      const merchantScore = this.mockMerchantAnalysis(claim.merchant_active);
+      scores.push(merchantScore);
+      parts.push(`Merchant: ${merchantScore.toFixed(2)}`);
+    }
+
+    const finalScore = scores.reduce((a, b) => a + b, 0) / scores.length;
 
     let status: VerificationStatus;
     if (finalScore >= AUTO_VERIFY_THRESHOLD) {
@@ -115,8 +163,37 @@ export class AIVerificationService {
     return {
       status,
       confidence_score: parseFloat(finalScore.toFixed(3)),
-      reasoning: `Vision: ${visionScore.toFixed(2)}, OCR: ${ocrScore.toFixed(2)}, Geo: ${geoScore.toFixed(2)}`,
+      reasoning: parts.join(", "),
     };
+  }
+
+  /**
+   * Timing signal — plausible window between claim and redeem.
+   *
+   *   < 2 min     → 0.40  (too fast — bot / pre-scan exploit)
+   *   2 min..6 h  → 0.95  (normal walk-in behaviour)
+   *   6 h..24 h   → 0.80  (delayed but plausible)
+   *   > 24 h      → 0.30  (stale — likely unrelated visit)
+   */
+  private mockTimingAnalysis(claimIso: string, redeemIso: string): number {
+    const claimMs = Date.parse(claimIso);
+    const redeemMs = Date.parse(redeemIso);
+    if (!Number.isFinite(claimMs) || !Number.isFinite(redeemMs)) return 0.5;
+    const deltaSec = Math.max(0, (redeemMs - claimMs) / 1000);
+    if (deltaSec < 120) return 0.4;
+    if (deltaSec <= 6 * 3600) return 0.95;
+    if (deltaSec <= 24 * 3600) return 0.8;
+    return 0.3;
+  }
+
+  /**
+   * Merchant signal — merchant row must be active to auto-verify.
+   *
+   *   active    → 0.95
+   *   inactive  → 0.30 (suspended / pending review — gate to manual path)
+   */
+  private mockMerchantAnalysis(active: boolean): number {
+    return active ? 0.95 : 0.3;
   }
 
   /**
