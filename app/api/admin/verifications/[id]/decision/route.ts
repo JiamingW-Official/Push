@@ -3,10 +3,6 @@ import {
   MOCK_VERIFICATIONS,
   type VerificationStatus,
 } from "@/lib/admin/mock-verifications";
-import { requireAdminSession } from "@/lib/api/admin-auth";
-import { notFound, badRequest } from "@/lib/api/responses";
-
-export const dynamic = "force-dynamic";
 
 type DecisionBody = {
   action: VerificationStatus;
@@ -18,21 +14,21 @@ export async function POST(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> },
 ) {
-  const gate = await requireAdminSession();
-  if (!gate.ok) return gate.response;
-
   const { id } = await params;
 
   const verification = MOCK_VERIFICATIONS.find((v) => v.id === id);
   if (!verification) {
-    return notFound("Verification not found");
+    return NextResponse.json(
+      { error: "Verification not found" },
+      { status: 404 },
+    );
   }
 
   let body: DecisionBody;
   try {
     body = await request.json();
   } catch {
-    return badRequest("Invalid JSON body");
+    return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
   }
 
   const { action, note } = body;
@@ -43,7 +39,10 @@ export async function POST(
     "pending",
   ];
   if (!action || !validActions.includes(action)) {
-    return badRequest(`action must be one of: ${validActions.join(", ")}`);
+    return NextResponse.json(
+      { error: `action must be one of: ${validActions.join(", ")}` },
+      { status: 400 },
+    );
   }
 
   // In production this would persist to DB — for mock we return the updated record

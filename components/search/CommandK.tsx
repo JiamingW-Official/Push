@@ -41,96 +41,17 @@ const GROUP_ORDER: SearchResultType[] = [
 ];
 
 // ---------------------------------------------------------------------------
-// Workspace quick-nav commands shown in empty state
-// Grouped by category for visual clarity
+// Popular pages shown in empty state
 // ---------------------------------------------------------------------------
 
-interface QuickCommand {
-  label: string;
-  url: string;
-  icon: string;
-  category: string;
-  shortcut?: string;
-}
-
-const WORKSPACE_COMMANDS: QuickCommand[] = [
-  // Work
-  {
-    label: "Dashboard",
-    url: "/creator/dashboard",
-    icon: "▦",
-    category: "Work",
-    shortcut: "D",
-  },
-  {
-    label: "Discover Campaigns",
-    url: "/creator/explore",
-    icon: "◈",
-    category: "Work",
-    shortcut: "E",
-  },
-  { label: "Calendar", url: "/creator/calendar", icon: "▣", category: "Work" },
-  {
-    label: "Analytics",
-    url: "/creator/analytics",
-    icon: "▲",
-    category: "Work",
-  },
-  // Inbox & Portfolio
-  {
-    label: "Inbox",
-    url: "/creator/messages",
-    icon: "◫",
-    category: "Inbox",
-    shortcut: "I",
-  },
-  {
-    label: "Notifications",
-    url: "/creator/notifications",
-    icon: "◎",
-    category: "Inbox",
-  },
-  {
-    label: "Portfolio",
-    url: "/creator/portfolio",
-    icon: "◉",
-    category: "Portfolio",
-    shortcut: "P",
-  },
-  {
-    label: "Earnings",
-    url: "/creator/earnings",
-    icon: "◇",
-    category: "Portfolio",
-  },
-  { label: "Wallet", url: "/creator/wallet", icon: "▷", category: "Portfolio" },
-  // Account
-  {
-    label: "My Profile",
-    url: "/creator/profile",
-    icon: "◐",
-    category: "Account",
-  },
-  {
-    label: "Settings",
-    url: "/creator/settings",
-    icon: "◌",
-    category: "Account",
-  },
-  {
-    label: "Leaderboard",
-    url: "/creator/leaderboard",
-    icon: "◆",
-    category: "Account",
-  },
+const POPULAR_PAGES = [
+  { label: "Explore Campaigns", url: "/explore", icon: "◈" },
+  { label: "Creator Dashboard", url: "/creator/dashboard", icon: "◉" },
+  { label: "Merchant Dashboard", url: "/merchant/dashboard", icon: "◎" },
+  { label: "How It Works", url: "/#how-it-works", icon: "◇" },
+  { label: "Pricing", url: "/#pricing", icon: "▷" },
+  { label: "Live Demo", url: "/demo", icon: "◆" },
 ];
-
-const COMMAND_CATEGORY_ORDER = [
-  "Work",
-  "Inbox",
-  "Portfolio",
-  "Account",
-] as const;
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -324,40 +245,24 @@ export default function CommandK({ isOpen, onClose }: CommandKProps) {
     return groups;
   };
 
-  // ----- Empty state: grouped workspace commands -----
-  const renderEmpty = () => {
-    const byCategory = COMMAND_CATEGORY_ORDER.map((cat) => ({
-      category: cat,
-      commands: WORKSPACE_COMMANDS.filter((c) => c.category === cat),
-    }));
-
-    return (
-      <div className="ck-empty">
-        <div className="ck-empty-sections">
-          {byCategory.map(({ category, commands }) => (
-            <div key={category} className="ck-empty-section">
-              <div className="ck-empty-label">{category}</div>
-              <div className="ck-cmd-list">
-                {commands.map((cmd) => (
-                  <button
-                    key={cmd.url}
-                    className="ck-cmd-item"
-                    onClick={() => navigate(cmd.url)}
-                  >
-                    <span className="ck-cmd-icon">{cmd.icon}</span>
-                    <span className="ck-cmd-label">{cmd.label}</span>
-                    {cmd.shortcut && (
-                      <kbd className="ck-cmd-shortcut">{cmd.shortcut}</kbd>
-                    )}
-                  </button>
-                ))}
-              </div>
-            </div>
-          ))}
-        </div>
+  // ----- Empty state -----
+  const renderEmpty = () => (
+    <div className="ck-empty">
+      <div className="ck-empty-label">Popular Pages</div>
+      <div className="ck-empty-grid">
+        {POPULAR_PAGES.map((p) => (
+          <button
+            key={p.url}
+            className="ck-shortcut-item"
+            onClick={() => navigate(p.url)}
+          >
+            <span className="ck-shortcut-icon">{p.icon}</span>
+            <span className="ck-shortcut-label">{p.label}</span>
+          </button>
+        ))}
       </div>
-    );
-  };
+    </div>
+  );
 
   return (
     <div

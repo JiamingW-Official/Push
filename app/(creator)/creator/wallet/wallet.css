@@ -34,54 +34,6 @@
   to { transform: rotate(360deg); }
 }
 
-/* ── Mini-nav (Back to Workspace) ────────────────────────── */
-
-.wallet-mini-nav {
-  height: 48px;
-  background: var(--dark, #003049);
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 0 24px;
-  font-family: 'CS Genio Mono', 'SF Mono', 'Fira Code', monospace;
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  position: sticky;
-  top: 0;
-  z-index: 200;
-}
-
-.wallet-mini-nav__back {
-  color: var(--surface, #f5f2ec);
-  text-decoration: none;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  font-weight: 700;
-  transition: opacity 150ms ease;
-}
-
-.wallet-mini-nav__back:hover {
-  opacity: 0.7;
-}
-
-.wallet-mini-nav__sep {
-  color: rgba(245, 242, 236, 0.3);
-  font-weight: 400;
-  user-select: none;
-}
-
-.wallet-mini-nav__brand {
-  color: var(--surface, #f5f2ec);
-  font-weight: 700;
-  letter-spacing: 0.04em;
-}
-
-.wallet-mini-nav__page {
-  color: rgba(245, 242, 236, 0.55);
-  font-weight: 400;
-}
-
 /* ── Root Shell ───────────────────────────────────────────── */
 
 .wallet {
@@ -98,10 +50,9 @@
   padding: 64px 48px 56px;
   display: grid;
   grid-template-columns: 1fr auto;
-  align-items: center;
+  align-items: start;
   gap: 32px;
   animation: wallet-fade-in 400ms ease forwards;
-  border-bottom: 3px solid rgba(201, 169, 110, 0.3);
 }
 
 .wallet-hero-left {}
@@ -110,9 +61,9 @@
   font-family: 'CS Genio Mono', monospace;
   font-size: 11px;
   font-weight: 700;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: rgba(201, 169, 110, 0.7);
+  color: rgba(245, 242, 236, 0.55);
   margin-bottom: 8px;
 }
 
@@ -121,7 +72,7 @@
   font-size: clamp(64px, 10vw, 96px);
   font-weight: 900;
   letter-spacing: -0.06em;
-  color: var(--champagne, #c9a96e);
+  color: var(--surface, #f5f2ec);
   line-height: 0.9;
   margin-bottom: 24px;
 }
@@ -149,9 +100,9 @@
 .wallet-hero-meta-value {
   font-family: Darky, sans-serif;
   font-size: 22px;
-  font-weight: 700;
+  font-weight: 300;
   letter-spacing: -0.02em;
-  color: rgba(245, 242, 236, 0.65);
+  color: rgba(245, 242, 236, 0.75);
 }
 
 .wallet-hero-right {
@@ -165,21 +116,21 @@
 .wallet-withdraw-btn {
   font-family: 'CS Genio Mono', monospace;
   font-size: 14px;
-  font-weight: 700;
-  letter-spacing: 0.06em;
+  font-weight: 600;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
-  background: var(--champagne, #c9a96e);
-  color: var(--dark, #003049);
+  background: var(--primary, #c1121f);
+  color: #fff;
   border: none;
   border-radius: 0;
-  padding: 20px 40px;
+  padding: 16px 32px;
   cursor: pointer;
   transition: background 200ms ease, transform 120ms ease;
   white-space: nowrap;
 }
 
 .wallet-withdraw-btn:hover {
-  background: #b8924a;
+  background: var(--accent, #780000);
 }
 
 .wallet-withdraw-btn:active {
@@ -187,8 +138,7 @@
 }
 
 .wallet-withdraw-btn:disabled {
-  background: rgba(201, 169, 110, 0.35);
-  color: rgba(0, 48, 73, 0.4);
+  background: rgba(193, 18, 31, 0.4);
   cursor: not-allowed;
 }
 
@@ -618,7 +568,7 @@
   font-size: clamp(48px, 7vw, 80px);
   font-weight: 900;
   letter-spacing: -0.05em;
-  color: var(--champagne, #c9a96e);
+  color: var(--dark, #003049);
   line-height: 0.9;
   margin-bottom: 8px;
 }
@@ -1042,7 +992,7 @@
   height: 16px;
   border: 2px solid rgba(255,255,255,0.3);
   border-top-color: #fff;
-  border-radius: 0; /* Design.md: no rounded corners; spinner uses border rotation for visual effect */
+  border-radius: 50%;
   display: inline-block;
   animation: wallet-spin 0.6s linear infinite;
   vertical-align: middle;
@@ -1109,63 +1059,6 @@
 
   .wallet-export-btn {
     margin-left: 0;
-  }
-}
-
-@media (max-width: 480px) {
-  .wallet-mini-nav {
-    padding: 0 16px;
-    font-size: 11px;
-  }
-
-  .wallet-hero {
-    padding: 32px 16px 28px;
-    gap: 20px;
-  }
-
-  .wallet-hero-balance {
-    font-size: clamp(48px, 12vw, 72px);
-  }
-
-  .wallet-hero-meta {
-    gap: 20px;
-  }
-
-  .wallet-tabs {
-    padding: 0 16px;
-  }
-
-  .wallet-tab-btn {
-    padding: 16px 16px;
-    font-size: 11px;
-  }
-
-  .wallet-tab-content {
-    padding: 24px 16px;
-  }
-
-  .wallet-withdraw-btn {
-    padding: 16px 24px;
-    font-size: 13px;
-    width: 100%;
-  }
-
-  .wallet-method-card {
-    padding: 16px;
-  }
-
-  .wallet-history-filters {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .wallet-export-btn {
-    width: 100%;
-    justify-content: center;
-  }
-
-  .wallet-tax-big {
-    font-size: clamp(40px, 10vw, 60px);
   }
 }
 

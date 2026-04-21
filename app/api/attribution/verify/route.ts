@@ -1,9 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 
-// Mutates DB (verified_customer_claims once wired). Opt out of Next's
-// route-level cache.
-export const dynamic = "force-dynamic";
-
 // POST /api/attribution/verify
 // Records a verification submission (customer uploads proof at merchant location).
 // Also handles conversion events when offer tier + amount are known.

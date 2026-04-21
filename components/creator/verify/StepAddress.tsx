@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef } from "react";
-import type { KycAddress } from "@/lib/verify/mock-kyc";
+import type { KycAddress, KycDocument } from "@/lib/verify/mock-kyc";
 
 interface Props {
   address: KycAddress;

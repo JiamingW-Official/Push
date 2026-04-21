@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import dynamic from "next/dynamic";
 import { MOCK_LOCATIONS, type Location } from "@/lib/merchant/mock-locations";
 import "../locations/locations.css";

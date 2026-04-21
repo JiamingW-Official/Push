@@ -233,10 +233,10 @@ export default function PrivacyPage() {
         Your Consent Tier
       </h2>
       <p>
-        When you scan a Push QR code, you choose one of three consent tiers. The
-        tier controls how much data we collect and whether it may appear in
-        aggregated licensing products (never row-level, minimum <em>k</em> = 5
-        per segment).
+        Push offers three opt-in tiers that control how much data is collected
+        when you scan a QR code. Tier 2 is selected by default; you can change
+        your tier at any time. Aggregation that leaves Push for licensing
+        requires a minimum of 5 users per segment (k ≥ 5).
       </p>
 
       <div className="legal-table-wrap">
@@ -244,60 +244,61 @@ export default function PrivacyPage() {
           <thead>
             <tr>
               <th>Tier</th>
-              <th>What we collect (in addition to the tier above)</th>
+              <th>What we collect</th>
               <th>Used for</th>
             </tr>
           </thead>
           <tbody>
             <tr>
               <td>
-                <strong>Tier 1 — Basic Attribution</strong>
+                <strong>Tier 1 — Basic</strong>
               </td>
               <td>
-                Device anonymous ID (not IDFA), Creator + Merchant IDs, claim +
-                redeem timestamps, bucketed order total, campaign ID.
+                Device anonymous ID (SHA256, not IDFA), creator / merchant /
+                campaign IDs, claim + redeem timestamps, bucketed order total.
               </td>
               <td>
-                Attribution only. <strong>Never</strong> used in data licensing
-                aggregation.
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <strong>Tier 2 — Full Context</strong> (default)
-              </td>
-              <td>
-                + GPS at claim and redeem, age bucket, gender, 3-digit home ZIP,
-                product category, hour-of-week, weather code.
-              </td>
-              <td>
-                Personalization + aggregated licensing (minimum <em>k</em> = 5
-                users per segment).
+                Attribution only. <strong>Never</strong> included in data
+                licensing aggregation.
               </td>
             </tr>
             <tr>
               <td>
-                <strong>Tier 3 — Commercial Data Sharing</strong>
+                <strong>Tier 2 — Full Context</strong>{" "}
+                <em>(default, recommended)</em>
               </td>
               <td>
-                + Cross-merchant visit count, hashed product SKU, ethnicity
-                bucket (bias-audit only, never shared externally).
+                Tier 1 + opt-in GPS at claim and redeem, demo bucket (age /
+                gender / ZIP-3), product category, time-of-day, weather code.
               </td>
               <td>
-                Enterprise + media licensing products (still aggregated, still{" "}
-                <em>k</em> &ge; 5). One-time $2 discount for opting in.
+                Recommendations + aggregated neighborhood licensing (k ≥ 5).
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <strong>Tier 3 — Commercial</strong>
+              </td>
+              <td>
+                Tier 2 + cross-merchant visit history, product SKU (hashed),
+                ethnicity bucket (bias audit only, never shared).
+              </td>
+              <td>
+                Enterprise + media licensing aggregates (still k ≥ 5). Includes
+                a one-time $2 bonus discount.
               </td>
             </tr>
           </tbody>
         </table>
       </div>
+
       <p>
-        Tier 2 is the default. You can change your tier anytime at{" "}
+        Change your tier anytime at{" "}
         <Link href="/my-privacy" style={{ color: "var(--tertiary)" }}>
           Your Privacy
         </Link>
-        . Minors (under 18) are automatically downgraded to Tier 1 and cannot
-        opt into Tier 2 or 3 regardless of selection.
+        . Opting out of one tier propagates to any future scans on the same
+        device within 30 days.
       </p>
 
       <hr className="legal-divider" />

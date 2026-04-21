@@ -10,7 +10,6 @@ import {
   MOCK_TAX_INFO,
   type PlanId,
 } from "@/lib/billing/mock-invoices";
-import { badRequest } from "@/lib/api/responses";
 
 export async function GET() {
   // TODO: authenticate via Supabase session
@@ -52,5 +51,5 @@ export async function PATCH(req: NextRequest) {
     });
   }
 
-  return badRequest("Invalid action");
+  return NextResponse.json({ error: "Invalid action" }, { status: 400 });
 }

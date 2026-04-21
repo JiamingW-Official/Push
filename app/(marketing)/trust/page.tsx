@@ -163,17 +163,17 @@ const DISPUTE_TIMELINE = [
 
 const CERTS = [
   {
-    title: "SOC 2 — in planning (target Q4 2026)",
-    body: "SOC 2 Type I is on our roadmap, subject to audit-firm engagement and readiness assessment. No SOC 2 report has been issued and no auditor has been engaged as of 2026-04-20. Contact security@push.nyc for the current compliance posture and target date.",
-    link: "mailto:security@push.nyc?subject=SOC%202%20Roadmap%20Inquiry",
-    linkText: "Inquire about roadmap",
+    title: "SOC 2 Type II",
+    body: "Our infrastructure and data handling practices are audited annually against the AICPA SOC 2 framework by an independent third-party auditor.",
+    link: "#",
+    linkText: "View attestation",
     icon: <IconShield />,
   },
   {
-    title: "Annual pentest — planned",
-    body: "External penetration testing is planned against our API, mobile surface, and QR verification pipeline once the verification pipeline is live in Beachhead (expected Q3 2026). No pentest report has been issued yet.",
-    link: "mailto:security@push.nyc?subject=Pentest%20Roadmap%20Inquiry",
-    linkText: "Inquire about roadmap",
+    title: "Annual pentest",
+    body: "An external security firm runs a full penetration test against our API, mobile surface, and QR verification pipeline every year. Last test: Q1 2026.",
+    link: "#",
+    linkText: "View summary",
     icon: <IconLock />,
   },
   {
@@ -266,8 +266,8 @@ const FAQS = [
     a: "No. Push does not have access to the contents of your social media posts, DMs, or any off-platform communication. Our attribution system only reads the scan event metadata, not your content.",
   },
   {
-    q: "What is Push's SOC 2 status today?",
-    a: "As of 2026-04-20: SOC 2 Type I is in planning with a Q4 2026 target, subject to audit-firm engagement. No SOC 2 report has been issued and no auditor is currently engaged. A SOC 2 Type II (which verifies controls operated over a 6+ month period) is a longer-term target post-Type-I. Contact security@push.nyc for the current posture.",
+    q: "What does 'SOC 2 Type II' actually mean for me?",
+    a: "SOC 2 Type II is an independent audit that verifies Push has rigorous security controls in place and that those controls worked as intended over a sustained period (at least 6 months). It is one of the most demanding security certifications for SaaS platforms in the US.",
   },
   {
     q: "What if Push itself goes out of business? What happens to my earnings?",

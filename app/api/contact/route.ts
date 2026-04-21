@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
-import { badRequest } from "@/lib/api/responses";
 
 // TODO: wire to email (Resend/Postmark) + Slack notification
 
@@ -17,7 +16,7 @@ export async function POST(req: NextRequest) {
   try {
     body = await req.json();
   } catch {
-    return badRequest("Invalid JSON");
+    return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
   }
 
   const { name, email, role, message } = body;

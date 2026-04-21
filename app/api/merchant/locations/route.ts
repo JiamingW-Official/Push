@@ -1,10 +1,6 @@
 import { NextResponse } from "next/server";
 import { MOCK_LOCATIONS, type Location } from "@/lib/merchant/mock-locations";
 
-// Mutating in-memory store; opt out of Next's route-level cache so callers
-// always see the current snapshot.
-export const dynamic = "force-dynamic";
-
 /* ── In-memory store for demo mutations ─────────────────────────────────── */
 let store: Location[] = [...MOCK_LOCATIONS];
 

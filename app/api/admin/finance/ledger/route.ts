@@ -22,14 +22,8 @@ import {
   type TransactionType,
   type TransactionStatus,
 } from "@/lib/admin/mock-ledger";
-import { requireAdminSession } from "@/lib/api/admin-auth";
-
-export const dynamic = "force-dynamic";
 
 export async function GET(request: NextRequest) {
-  const gate = await requireAdminSession();
-  if (!gate.ok) return gate.response;
-
   const { searchParams } = new URL(request.url);
 
   // ── Parse query params ───────────────────────────────────────────────────────

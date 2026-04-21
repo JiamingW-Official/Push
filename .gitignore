@@ -12,7 +12,6 @@ out/
 
 # Build artifacts
 tsconfig.tsbuildinfo
-tsconfig.tsc.tsbuildinfo
 .open-next/
 
 # OS
@@ -20,23 +19,11 @@ tsconfig.tsc.tsbuildinfo
 
 # Misc
 *.log
+.vercel
 
-# Claude Code workspace — agent worktrees produce 20k+ untracked files
+# Claude Code worktrees
 .claude/worktrees/
 
-# Duplicate build dirs that the harness creates
-.next 2/
-"*.next 2*"
-
-# Automation reports (regenerated each run)
-lint-report.txt
-type-check-report.txt
-build-report.txt
-test-report.txt
-vercel-deploy.txt
-automation-summary.txt
-automation-run.log
-.production-url
-
-# Coverage
-coverage/
+# Supabase CLI local state
+supabase/.branches/
+supabase/.temp/

@@ -1,7 +1,12 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import NeighborhoodsMap from "@/components/neighborhoods/NeighborhoodsMapLoader";
 import NeighborhoodsClient from "@/components/neighborhoods/NeighborhoodsClientLoader";
-import { NEIGHBORHOODS, ALL_BOROUGHS } from "@/lib/neighborhoods/mock-hoods";
+import {
+  NEIGHBORHOODS,
+  ALL_BOROUGHS,
+  type Borough,
+} from "@/lib/neighborhoods/mock-hoods";
 import "./neighborhoods.css";
 
 /* ── Metadata ──────────────────────────────────────────────── */

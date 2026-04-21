@@ -1,2747 +1,227 @@
 /* ============================================================
-   Landing Page — v3: Premium rhythm, dark hero, 10x interactions
+   Push Landing — v8.2
+   Dual-font · Bold weight · Tight panels · Apple-grade interaction
    ============================================================ */
 
-/* ------------------------------------------------------------
-   Hero — dark, cinematic
-   ------------------------------------------------------------ */
-.hero {
-  min-height: 100svh;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  padding-top: 80px; /* #13: reduced top padding, clears fixed nav */
-  padding-bottom: var(--space-8);
-  background: var(--dark);
-  position: relative;
-  overflow: hidden;
+/* ── Landing container override — tighter ────────────────── */
+.hero .container,
+.s .container,
+.cta .container,
+.proof .container {
+  max-width: 1080px;
 }
 
-/* Subtle ambient light — top-right cool, bottom-left warm */
-.hero::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background:
-    radial-gradient(ellipse 70% 55% at 78% 30%, rgba(102, 155, 188, 0.07) 0%, transparent 65%),
-    radial-gradient(ellipse 45% 35% at 15% 85%, rgba(193, 18, 31, 0.05) 0%, transparent 60%);
-  pointer-events: none;
-  z-index: 0;
-}
-
-.hero-inner {
-  padding-top: var(--space-6);
-  position: relative;
-  z-index: 1;
-}
-
-.hero-eyebrow {
-  margin-bottom: var(--space-4);
-  color: var(--tertiary);
-}
-
-.hero-headline {
-  font-family: var(--font-display);
-  font-size: clamp(64px, 12vw, 160px);
-  letter-spacing: -0.06em;
-  line-height: 0.88;
-  color: #fff;
-  margin-bottom: var(--space-6);
-}
-
-.hero-headline .line-black {
-  font-weight: 900;
-  display: block;
-}
-
-.hero-headline .line-light {
-  font-weight: 200;
-  display: block;
-  color: rgba(255, 255, 255, 0.45); /* #06: raised opacity for dim word readability */
-}
-
-.hero-headline em {
-  font-style: italic;
-  color: var(--primary);
-  font-weight: 900;
-}
-
-.hero-sub {
-  font-size: var(--text-body);
-  color: rgba(245, 242, 236, 0.80); /* WCAG: raised to 0.80 for AA compliance on dark bg */
-  max-width: 480px;
-  line-height: 1.6;
-  margin-bottom: var(--space-6);
-}
-
-.hero-ctas {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  align-items: flex-start;
-  margin-bottom: var(--space-12);
-}
-
-/* Override button colors in dark hero */
-.hero-ctas .btn-ghost {
-  color: rgba(255, 255, 255, 0.6);
-  border-color: rgba(255, 255, 255, 0.15);
-  box-shadow: 2px 2px 0 rgba(255,255,255,0.08);
-}
-
-.hero-ctas .btn-ghost:hover {
-  color: #fff;
-  border-color: rgba(255, 255, 255, 0.4);
-}
-
-/* Stats — integrated in dark hero */
-.hero-stats {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  border-top: 1px solid rgba(245, 242, 236, 0.12);
-  padding-top: var(--space-6);
-}
-
-.stat-item {
-  padding-right: var(--space-6);
-  border-right: 1px solid rgba(245, 242, 236, 0.15);
-}
-
-.stat-item:last-child {
-  border-right: none;
-  padding-right: 0;
-  padding-left: var(--space-6);
-}
-
-.stat-item:nth-child(2) {
-  padding-left: var(--space-6);
-}
-
-.stat-num {
-  font-family: var(--font-display);
-  font-size: clamp(40px, 4.5vw, 64px);
-  font-weight: 200;
-  letter-spacing: -0.05em;
-  line-height: 1;
-  color: #fff;
-  display: block;
-}
-
-.stat-label {
-  font-size: var(--text-caption);
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.3);
-  display: block;
-  margin-top: var(--space-1);
-}
-
-/* ------------------------------------------------------------
-   Shared section styles
-   ------------------------------------------------------------ */
-.section {
-  padding-block: 88px;
-}
-
-.section-bright {
-  background: var(--surface-bright);
-}
-
-.section-warm {
-  background:
-    radial-gradient(ellipse 70% 55% at 15% 50%, rgba(102, 155, 188, 0.06) 0%, transparent 65%),
-    radial-gradient(ellipse 50% 40% at 85% 20%, rgba(193, 18, 31, 0.04) 0%, transparent 60%),
-    var(--dark);
-  color: var(--surface);
-}
-
-.section-tag {
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
-  margin-bottom: var(--space-6);
-}
-
-.section-tag-num {
-  font-family: var(--font-display);
-  font-size: var(--text-eyebrow);
-  font-weight: 200;
-  letter-spacing: 0.02em;
-  color: var(--text-muted);
-}
-
-.section-warm .section-tag-num {
-  color: rgba(255, 255, 255, 0.25);
-}
-
-.section-tag-line {
+/* ── Shared: Red rule motif ──────────────────────────────── */
+.rule {
+  display: inline-block;
   width: 32px;
-  height: 2px;
+  height: 1.5px;
   background: var(--primary);
-}
-
-.section-warm .section-tag-line {
-  background: rgba(255, 255, 255, 0.1);
-}
-
-.section-tag-label {
-  font-family: var(--font-body);
-  font-size: var(--text-eyebrow);
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--tertiary);
-}
-
-.section-warm .section-tag-label {
-  color: rgba(245, 242, 236, 0.55); /* WCAG: muted label in dark section, sufficient for small caps */
-}
-
-/* ------------------------------------------------------------
-   Split layout
-   ------------------------------------------------------------ */
-.split {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: var(--space-12);
-  align-items: center;
-}
-
-.split-reverse {
-  direction: rtl;
-}
-
-.split-reverse > * {
-  direction: ltr;
-}
-
-.split-headline {
-  font-family: var(--font-display);
-  font-size: clamp(36px, 5vw, 64px);
-  font-weight: 800;
-  letter-spacing: -0.05em;
-  line-height: 1;
-  color: var(--dark);
-  margin-bottom: var(--space-4);
-}
-
-.split-headline .wt-900 { font-weight: 900; }
-.split-headline .wt-300 {
-  font-weight: 300;
-  color: var(--text-muted);
-  display: block;
-}
-
-/* Dark section overrides */
-.section-warm .split-headline {
-  color: #fff;
-}
-
-.section-warm .split-headline .wt-300 {
-  color: rgba(255, 255, 255, 0.3);
-}
-
-.split-body {
-  font-size: var(--text-body);
-  color: var(--text-muted);
-  line-height: 1.6;
-  margin-bottom: var(--space-5);
-  max-width: 420px;
-}
-
-.section-warm .split-body {
-  color: rgba(245, 242, 236, 0.82); /* WCAG: raised from 0.45 to 0.82 — minimum 0.65 on dark bg */
-}
-
-/* Font smoothing — premium mono rendering */
-.split-body,
-.feature-item,
-.how-step-body,
-.how-step-bullets li,
-.pricing-badge,
-.pricing-desc,
-.pricing-feature {
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-
-.feature-list {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-3);
-  margin-bottom: var(--space-6);
-}
-
-.feature-item {
-  display: flex;
-  align-items: flex-start;
-  gap: var(--space-2);
-}
-
-.feature-dot {
-  width: 5px;
-  height: 5px;
-  background: var(--primary);
+  vertical-align: middle;
   flex-shrink: 0;
-  margin-top: 7px;
 }
 
-.feature-text {
-  font-size: var(--text-small);
-  line-height: 1.7;
-  color: var(--dark);
+.rule--w {
+  background: rgba(255, 255, 255, 0.12);
 }
 
-.section-warm .feature-text {
-  color: rgba(255, 255, 255, 0.6);
-}
-
-/* Visual blocks — abstract, premium */
-.split-visual {
-  aspect-ratio: 4/3;
-  display: flex;
-  align-items: stretch;
-  justify-content: center;
-  position: relative;
-  overflow: hidden;
-  transition: transform 400ms cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-.split-visual:hover {
-  transform: scale(1.015);
-}
-
-.visual-label {
-  font-family: var(--font-display);
-  font-size: clamp(80px, 14vw, 160px);
-  font-weight: 100;
-  letter-spacing: -0.08em;
-  user-select: none;
-  line-height: 1;
-}
-
-/* ------------------------------------------------------------
-   Ticker / Marquee
-   ------------------------------------------------------------ */
-.ticker {
-  overflow: hidden;
-  border-top: 1px solid var(--line);
-  border-bottom: 1px solid var(--line);
-  background: var(--surface);
-  padding-block: 13px;
-  position: relative;
-  z-index: 2;
-  user-select: none;
-}
-
-.ticker-track {
-  display: flex;
-  width: max-content;
-  animation: ticker-scroll 28s linear infinite;
-}
-
-.ticker-track:hover {
-  animation-play-state: paused;
-}
-
-.ticker-content {
-  display: flex;
-  align-items: center;
-  white-space: nowrap;
-}
-
-.ticker-item {
+/* ── Shared: Section label (CS Genio Mono) ───────────────── */
+.s-label {
   display: inline-flex;
   align-items: center;
   gap: 10px;
   font-family: var(--font-body);
   font-size: 11px;
   font-weight: 700;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: rgba(0, 48, 73, 0.32);
-  padding-inline: 20px;
-  transition: color 200ms ease;
-}
-
-.ticker-item:hover {
-  color: var(--dark);
-}
-
-.ticker-dot {
-  width: 4px;
-  height: 4px;
-  background: var(--primary);
-  flex-shrink: 0;
-}
-
-@keyframes ticker-scroll {
-  from { transform: translateX(0); }
-  to   { transform: translateX(-50%); }
-}
-
-/* ------------------------------------------------------------
-   Visual blocks — SVG illustrations
-   ------------------------------------------------------------ */
-.visual-merchant {
-  background: var(--surface);
-  border: 1px solid var(--line);
-  border-top: 3px solid var(--primary);
-}
-
-.visual-merchant .visual-label {
-  color: rgba(0, 48, 73, 0.04);
-}
-
-.visual-creator {
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  border-top: 3px solid var(--tertiary);
-}
-
-.visual-creator .visual-label {
-  color: rgba(255, 255, 255, 0.04);
-}
-
-/* SVG visual commons */
-.visual-svg {
-  width: 60%;
-  max-width: 300px;
-  height: auto;
-  display: block;
-  position: relative;
-  z-index: 1;
-}
-
-/* Tier bars are landscape — let them breathe more */
-.tier-svg {
-  width: 72%;
-  max-width: 360px;
-}
-
-.visual-merchant .visual-svg { color: var(--dark); }
-.visual-creator  .visual-svg { color: #fff; }
-
-/* QR: subtle float animation */
-.qr-svg { animation: qr-float 6s ease-in-out infinite; }
-
-@keyframes qr-float {
-  0%, 100% { transform: translateY(0); }
-  50%       { transform: translateY(-6px); }
-}
-
-/* Tier bars: stagger reveal on hover */
-.visual-creator:hover .tier-svg rect {
-  transition: opacity 300ms ease, transform 300ms ease;
-}
-
-.tier-strip {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  display: flex;
-  height: 3px;
-}
-
-.tier-strip span {
-  flex: 1;
-}
-
-/* ------------------------------------------------------------
-   How it Works
-   ------------------------------------------------------------ */
-.how-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1px;
-  background: var(--line);
-  border: 1px solid var(--line);
-  margin-top: var(--space-8);
-}
-
-.how-step {
-  background: var(--surface-elevated);
-  padding: var(--space-8) var(--space-6);
-  position: relative;
-  overflow: visible;
-  transition: background 240ms ease, transform 240ms ease;
-  cursor: default;
-}
-
-.how-step:hover {
-  background: rgba(0, 48, 73, 0.025);
-  transform: translateY(-6px);
-}
-
-/* Left accent bar — grows on hover */
-.how-step::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  width: 3px;
-  background: var(--primary);
-  transform: scaleY(0);
-  transform-origin: bottom center;
-  transition: transform 300ms cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-.how-step:hover::before {
-  transform: scaleY(1);
-}
-
-/* Arrow connector between steps (horizontal 3-column grid) */
-.how-step:not(:last-child)::after {
-  content: '→';
-  position: absolute;
-  right: -14px;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 18px;
-  line-height: 1;
-  color: var(--primary);
-  opacity: 0.4;
-  z-index: 2;
-  pointer-events: none;
-}
-
-.how-step-num {
-  font-family: var(--font-display);
-  font-size: 80px;
-  font-weight: 100;
-  letter-spacing: -0.06em;
-  line-height: 1;
-  color: var(--dark);
-  opacity: 0.04;
-  margin-bottom: var(--space-3);
-  display: block;
-  user-select: none;
-  position: relative;
-}
-
-.how-step-index {
-  font-family: var(--font-body);
-  font-size: var(--text-eyebrow);
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--primary);
-  margin-bottom: var(--space-2);
-  display: block;
-}
-
-.how-step-title {
-  font-family: var(--font-display);
-  font-size: var(--text-h3);
-  font-weight: 700;
-  letter-spacing: -0.03em;
-  color: var(--dark);
-  margin-bottom: var(--space-3);
-  line-height: 1.1;
-}
-
-.how-step-body {
-  font-size: var(--text-small);
   color: var(--text-muted);
-  line-height: 1.6;
+  margin-bottom: var(--space-4);
 }
 
-.how-step-bullets {
-  list-style: none;
-  padding: 0;
-  margin: var(--space-4) 0 0;
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-2);
+.s-label--w {
+  color: rgba(245, 242, 236, 0.45);
 }
 
-.how-step-bullets li {
+/* ── Shared: Eyebrow (CS Genio Mono) ─────────────────────── */
+.eyebrow {
   font-family: var(--font-body);
-  font-size: 12px;
-  color: var(--primary);
-  padding-left: 16px;
-  position: relative;
-  line-height: 1.5;
-  opacity: 0.7;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  margin: 0;
 }
 
-.how-step-bullets li::before {
-  content: '—';
-  position: absolute;
-  left: 0;
-  color: var(--primary);
-  opacity: 0.5;
+/* ── Scroll reveal — Apple spring curve ──────────────────── */
+.reveal {
+  opacity: 0;
+  transform: translateY(16px);
+  transition:
+    opacity 600ms cubic-bezier(0.32, 0.72, 0, 1),
+    transform 600ms cubic-bezier(0.32, 0.72, 0, 1);
 }
 
-/* Bullet list item hover accent */
-.how-step-bullets li {
-  transition: opacity 200ms ease, transform 200ms ease;
-}
-.how-step:hover .how-step-bullets li {
+.reveal.visible {
   opacity: 1;
-}
-
-/* ------------------------------------------------------------
-   How-it-works: step number pulse on reveal + stagger
-   ------------------------------------------------------------ */
-
-/* Step num pulse — fires once when .visible is added by IntersectionObserver */
-.how-step-num::after {
-  content: '';
-  position: absolute;
-  inset: -4px;
-  border: 1px solid rgba(193, 18, 31, 0);
-  pointer-events: none;
-  transition: border-color 400ms ease;
-}
-.how-step.visible .how-step-num::after {
-  border-color: rgba(193, 18, 31, 0.15);
-  animation: stepNumPulse 2s ease-out 0.5s both;
-}
-@keyframes stepNumPulse {
-  0%   { border-color: rgba(193, 18, 31, 0.4); transform: scale(1.1); }
-  100% { border-color: rgba(193, 18, 31, 0.15); transform: scale(1); }
-}
-
-/* Step reveal stagger — CSS variable fallback when inline style is absent */
-.how-step:nth-child(1) { --stagger: 0ms; }
-.how-step:nth-child(2) { --stagger: 120ms; }
-.how-step:nth-child(3) { --stagger: 240ms; }
-.how-step:nth-child(4) { --stagger: 360ms; }
-
-/* Mobile single-column: vertical timeline connector on .how-grid */
-@media (max-width: 1024px) {
-  .how-grid {
-    position: relative;
-  }
-  .how-grid::before {
-    content: '';
-    position: absolute;
-    left: 20px;
-    top: 0;
-    bottom: 0;
-    width: 1px;
-    background: linear-gradient(
-      to bottom,
-      transparent,
-      rgba(0, 48, 73, 0.15) 10%,
-      rgba(0, 48, 73, 0.15) 90%,
-      transparent
-    );
-    pointer-events: none;
-    z-index: 0;
-  }
-}
-
-/* ------------------------------------------------------------
-   Pricing — bright section (trust-forward)
-   ------------------------------------------------------------ */
-.pricing-header {
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  margin-bottom: var(--space-8);
-  flex-wrap: wrap;
-  gap: var(--space-6);
-}
-
-/* Dark section heading overrides (For Creators, etc.) */
-.section-warm h2 {
-  color: #fff;
-}
-
-.section-warm h2 span[style] {
-  color: rgba(255, 255, 255, 0.25) !important;
-}
-
-.pricing-note {
-  font-size: var(--text-small);
-  color: var(--graphite);
-  line-height: 1.7;
-}
-
-.pricing-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1px;
-  background: var(--line);
-  border: 1px solid var(--line);
-}
-
-.pricing-card {
-  background: var(--surface-bright);
-  padding: var(--space-8) var(--space-6);
-  position: relative;
-  transition: background var(--t-base), transform 240ms ease, box-shadow 240ms ease;
-}
-
-.pricing-card:hover {
-  background: #fff;
-  transform: translateY(-4px);
-  box-shadow: 0 12px 40px rgba(0, 48, 73, 0.08);
-  z-index: 2;
-}
-
-.pricing-card-featured:hover {
-  box-shadow: 0 12px 40px rgba(0, 48, 73, 0.12), 0 0 0 1px var(--champagne, #c9a96e);
-}
-
-.pricing-card-featured {
-  border-top: 3px solid var(--champagne, #c9a96e);
-  background: #fff;
-  box-shadow: 0 0 0 1px rgba(201, 169, 110, 0.3), 0 8px 32px rgba(0, 48, 73, 0.10);
-}
-
-.pricing-badge {
-  font-size: var(--text-eyebrow);
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--champagne, #c9a96e);
-  display: block;
-  margin-bottom: var(--space-3);
-}
-
-.pricing-name {
-  font-family: var(--font-display);
-  font-size: var(--text-h3);
-  font-weight: 700;
-  letter-spacing: -0.03em;
-  color: var(--dark);
-  margin-bottom: var(--space-4);
-}
-
-.pricing-price {
-  display: flex;
-  align-items: baseline;
-  gap: 2px;
-  margin-bottom: var(--space-3);
-}
-
-.price-int {
-  font-family: var(--font-display);
-  font-size: clamp(44px, 4.5vw, 56px);
-  font-weight: 200;
-  letter-spacing: -0.05em;
-  color: var(--dark);
-  line-height: 1;
-}
-
-.price-dec {
-  font-family: var(--font-display);
-  font-size: 1.125rem;
-  font-weight: 300;
-  color: var(--graphite);
-  align-self: flex-start;
-  margin-top: 10px;
-}
-
-.price-period {
-  font-size: var(--text-caption);
-  color: var(--graphite);
-  letter-spacing: 0.04em;
-  margin-left: 4px;
-}
-
-.pricing-desc {
-  font-size: var(--text-small);
-  color: var(--graphite);
-  line-height: 1.7;
-  margin-bottom: var(--space-6);
-  padding-bottom: var(--space-6);
-  border-bottom: 1px solid var(--line);
-}
-
-.pricing-features {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-2);
-  margin-bottom: var(--space-8);
-}
-
-.pricing-feature {
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
-  font-size: var(--text-small);
-  color: var(--dark);
-}
-
-.pricing-feature::before {
-  content: '';
-  width: 4px;
-  height: 4px;
-  background: var(--primary);
-  flex-shrink: 0;
-}
-
-/* Pricing buttons on dark bg (Creator section etc.) */
-.section-warm .btn-secondary {
-  background: transparent;
-  color: rgba(255, 255, 255, 0.6);
-  border-color: rgba(255, 255, 255, 0.12);
-}
-
-.section-warm .btn-secondary:hover {
-  color: #fff;
-  border-color: rgba(255, 255, 255, 0.3);
-}
-
-.section-warm .btn-primary {
-  background: var(--primary);
-  color: #fff;
-  border-color: var(--primary);
-}
-
-/* ------------------------------------------------------------
-   Final CTA — bright, inverted
-   ------------------------------------------------------------ */
-.cta-section {
-  padding-block: var(--space-15);
-  background: var(--surface-bright);
-  position: relative;
-  overflow: hidden;
-}
-
-.cta-inner,
-.cta-panels {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0;
-  min-height: 480px;
-  position: relative;
-  z-index: 1;
-}
-
-.cta-panel {
-  padding: var(--space-10) var(--space-8);
-}
-
-.cta-panel-merchant {
-  background: var(--dark);
-  color: var(--pearl);
-  padding: var(--space-8);
-  position: relative;
-  overflow: hidden;
-}
-
-.cta-panel-merchant::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(ellipse 60% 50% at 100% 50%, rgba(193,18,31,0.08), transparent 70%);
-  pointer-events: none;
-}
-
-.cta-panel-creator {
-  background: var(--surface-bright);
-  border-left: 1px solid var(--line);
-  padding: var(--space-8);
-}
-
-.cta-tag {
-  font-family: var(--font-body);
-  font-size: var(--text-eyebrow);
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  margin-bottom: var(--space-5);
-  display: block;
-}
-
-.cta-urgency-badge {
-  display: inline-block;
-  font-family: var(--font-body);
-  font-size: 10px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  padding: 4px 10px;
-  border: 1px solid rgba(193,18,31,0.35);
-  background: rgba(193,18,31,0.08);
-  color: var(--primary);
-  margin-bottom: var(--space-4);
-}
-
-.cta-tag-merchant { color: var(--primary); }
-.cta-tag-creator  { color: var(--tertiary); }
-
-.cta-headline {
-  font-family: var(--font-display);
-  font-size: clamp(28px, 4vw, 48px);
-  letter-spacing: -0.04em;
-  line-height: 1.0;
-  margin-bottom: var(--space-4);
-}
-
-.cta-panel-merchant .cta-headline { color: var(--pearl); }
-
-.cta-panel-creator .cta-headline {
-  color: var(--dark);
-}
-
-.cta-headline .wt-900 {
-  font-size: clamp(24px, 3vw, 40px);
-  font-weight: 900;
-  display: block;
-}
-
-.cta-headline .wt-300 {
-  font-size: clamp(20px, 2.2vw, 32px);
-  font-weight: 300;
-  display: block;
-  margin-top: 4px;
-}
-
-.cta-panel-merchant .cta-headline .wt-300 {
-  color: rgba(255, 255, 255, 0.35);
-}
-
-.cta-panel-creator .cta-headline .wt-300 {
-  color: var(--text-muted);
-}
-
-.cta-body {
-  font-family: var(--font-body);
-  font-size: 14px;
-  line-height: 1.65;
-  opacity: 0.75;
-  margin: var(--space-4) 0 var(--space-6);
-}
-
-.cta-panel-merchant .cta-body {
-  color: rgba(245, 242, 236, 0.72);
-  opacity: 1;
-}
-
-.cta-panel-creator .cta-body {
-  color: var(--text-muted);
-}
-
-.btn-cta-merchant {
-  background: var(--primary);
-  color: #fff;
-  border: 1px solid var(--primary);
-}
-
-.btn-cta-merchant:hover {
-  background: var(--accent);
-  border-color: var(--accent);
-}
-
-.btn-cta-creator {
-  background: var(--dark);
-  color: #fff;
-  border: 1px solid var(--dark);
-}
-
-.btn-cta-creator:hover {
-  background: var(--primary);
-  border-color: var(--primary);
-}
-
-/* ------------------------------------------------------------
-   Responsive
-   ------------------------------------------------------------ */
-@media (max-width: 1024px) {
-  .how-grid,
-  .pricing-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .split {
-    gap: var(--space-6);
-  }
-}
-
-/* ── Tablet (≤ 768px) ──────────────────────────────────────── */
-@media (max-width: 768px) {
-  /* Section vertical rhythm */
-  .section          { padding-block: var(--space-8); }
-  .cta-section      { padding-block: 0; }
-
-  /* Hero: tighter padding, no full-viewport lock on mobile */
-  .hero {
-    padding-top: 100px;
-    padding-bottom: 60px;
-    min-height: 90vh;
-  }
-
-  /* Hero CTAs: stack vertically */
-  .hero-cta-group,
-  .hero-ctas {
-    flex-direction: column;
-    gap: 12px;
-  }
-
-  /* Hero buttons: full-width */
-  .hero .btn-primary,
-  .hero .btn-ghost {
-    width: 100%;
-    justify-content: center;
-    text-align: center;
-  }
-
-  /* Stats: vertical stack — #42: prevents 3rd item full-width on 375px */
-  .hero-stats {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-4);
-  }
-
-  .stat-item {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: var(--space-3);
-    border-right: none;
-    border-bottom: 1px solid rgba(245, 242, 236, 0.12);
-    padding-bottom: var(--space-3);
-    padding-right: 0;
-    padding-left: 0 !important;
-  }
-
-  .stat-item:last-child {
-    border-bottom: none;
-    border-right: none;
-    padding-left: 0;
-    padding-bottom: 0;
-  }
-
-  /* Split layout: single column, tighter gap */
-  .split,
-  .split-reverse {
-    grid-template-columns: 1fr;
-    direction: ltr;
-    gap: var(--space-4);
-  }
-
-  /* Visual block: fixed compact height — doesn't eat vertical space */
-  .split-visual {
-    aspect-ratio: auto;
-    height: 200px;
-  }
-
-  /* Split CTA buttons: full-width */
-  .split .btn {
-    display: flex;
-    width: 100%;
-    justify-content: center;
-    text-align: center;
-  }
-
-  /* Split headline: tighter on mobile */
-  .split-headline {
-    font-size: clamp(28px, 7vw, 40px);
-  }
-
-  /* Pricing */
-  .pricing-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: var(--space-3);
-  }
-
-  /* Final CTA: stacked panels */
-  .cta-inner,
-  .cta-panels {
-    grid-template-columns: 1fr;
-  }
-
-  .cta-panel-creator {
-    border-left: none;
-    border-top: 1px solid var(--line);
-  }
-
-  .cta-panel {
-    padding: var(--space-6) var(--space-4);
-  }
-
-  /* CTA panel buttons: full-width */
-  .cta-panel .btn {
-    display: flex;
-    width: 100%;
-    justify-content: center;
-    text-align: center;
-  }
-}
-
-/* ── Phone (≤ 640px) ───────────────────────────────────────── */
-@media (max-width: 640px) {
-  /* Section vertical rhythm: tighter on small phones */
-  .section {
-    padding: 60px 0;
-  }
-
-  /* Hero — #41: tighter clamp prevents 3-line break on 375px */
-  .hero-headline {
-    font-size: clamp(44px, 13vw, 68px);
-  }
-
-  .hero-sub { font-size: 14px; }
-
-  .hero-ctas {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 12px;
-  }
-
-  .hero-ctas .btn {
-    text-align: center;
-    justify-content: center;
-    width: 100%;
-  }
-
-  /* Split headline: larger clamp range on small phones */
-  .split-headline {
-    font-size: clamp(28px, 8vw, 48px);
-  }
-
-  /* Split layout: force single column stack */
-  .split-layout {
-    flex-direction: column;
-    gap: var(--space-8);
-  }
-
-  /* How-it-works ghost numbers */
-  .how-step-num { font-size: 48px; }
-
-  /* How-step padding */
-  .how-step { padding: var(--space-5) var(--space-4); }
-
-  /* Pricing card padding */
-  .pricing-card { padding: var(--space-5) var(--space-4); }
-}
-
-/* ── Very small phones (≤ 480px) — proof stats grid ────────── */
-@media (max-width: 480px) {
-  .proof-stats {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: var(--space-4);
-  }
-}
-
-/* ── Very small phones (≤ 400px) ──────────────────────────── */
-@media (max-width: 400px) {
-  .hero-headline {
-    font-size: clamp(38px, 11vw, 52px);
-  }
+  transform: translateY(0);
 }
 
 /* ============================================================
-   Hero — entrance animations
+   HERO
    ============================================================ */
-@keyframes hero-fade-up {
-  from { opacity: 0; transform: translateY(24px); }
-  to   { opacity: 1; transform: translateY(0); }
+.hero {
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 0;
+  background:
+    radial-gradient(
+      ellipse 60% 45% at 20% 75%,
+      rgba(193, 18, 31, 0.08) 0%,
+      transparent 70%
+    ),
+    radial-gradient(
+      ellipse 50% 40% at 80% 20%,
+      rgba(102, 155, 188, 0.10) 0%,
+      transparent 65%
+    ),
+    var(--dark);
+  position: relative;
+  overflow: hidden;
 }
 
-.hero-headline .line-black {
-  animation: hero-fade-up 0.8s ease-out both;
+.hero-inner {
+  position: relative;
+  z-index: 1;
+  padding: 0 0 var(--space-6);
 }
 
-.hero-headline .line-light {
-  animation: hero-fade-up 0.8s ease-out 0.2s both;
+.hero-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: var(--space-5);
 }
 
-.hero-sub {
-  animation: hero-fade-up 0.8s ease-out 0.4s both;
+.hero-label .eyebrow {
+  color: rgba(245, 242, 236, 0.45);
+}
+
+/* ── Headline: weight serves meaning ─────────────────────── */
+.hero-h {
+  font-family: var(--font-display);
+  line-height: 0.88;
+  letter-spacing: -0.05em;
+  margin-bottom: var(--space-6);
+}
+
+.hero-l1,
+.hero-l2 {
+  display: block;
+}
+
+.hero-l1 {
+  font-size: clamp(56px, 9vw, 140px);
+}
+
+.hero-l2 {
+  font-size: clamp(48px, 7.5vw, 120px);
+}
+
+/* Connectors: visible but recede — weight 300 */
+.hw-conn {
+  font-weight: 300;
+  color: rgba(255, 255, 255, 0.32);
+}
+
+/* Key words: max weight, command attention */
+.hw-key {
+  font-weight: 900;
+  color: #fff;
+}
+
+/* Accent: the payoff */
+.hw-accent {
+  font-weight: 900;
+  font-style: italic;
+  color: var(--primary);
+}
+
+/* Asymmetric bottom */
+.hero-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: var(--space-5);
 }
 
 .hero-ctas {
-  animation: hero-fade-up 0.8s ease-out 0.6s both;
-}
-
-.hero-stats .stat-item:nth-child(1) {
-  animation: hero-fade-up 0.8s ease-out 0.8s both;
-}
-
-.hero-stats .stat-item:nth-child(2) {
-  animation: hero-fade-up 0.8s ease-out 0.95s both;
-}
-
-.hero-stats .stat-item:nth-child(3) {
-  animation: hero-fade-up 0.8s ease-out 1.1s both;
-}
-
-/* ============================================================
-   Visual — Creator section enhancements
-   ============================================================ */
-.visual-creator {
-  background:
-    radial-gradient(ellipse 80% 60% at 50% 100%, rgba(102, 155, 188, 0.08) 0%, transparent 70%),
-    rgba(255, 255, 255, 0.03);
-}
-
-/* tier-strip: each span carries its own inline background (v4.1 tier colors) */
-
-/* ============================================================
-   Pricing — enhanced hover + featured glow (bright section)
-   ============================================================ */
-.pricing-card:hover {
-  background: #fff;
-  transform: translateY(-8px);
-  box-shadow: 0 20px 48px rgba(0, 48, 73, 0.1);
-  z-index: 2;
-}
-
-.pricing-card-featured {
-  border: 2px solid var(--primary);
-  box-shadow: 0 8px 32px rgba(0, 48, 73, 0.12), 4px 4px 0 var(--champagne, #c9a96e);
-  position: relative;
-  z-index: 1;
-  transform: translateY(-4px) scale(1.02);
-  animation: featured-pulse 3s ease-in-out infinite;
-}
-
-@keyframes featured-pulse {
-  0%, 100% { box-shadow: 0 8px 32px rgba(0, 48, 73, 0.12), 4px 4px 0 var(--champagne, #c9a96e); }
-  50%       { box-shadow: 0 8px 32px rgba(0, 48, 73, 0.18), 4px 4px 0 var(--champagne, #c9a96e), 0 0 0 4px rgba(193, 18, 31, 0.08); }
-}
-
-.pricing-card-featured:hover {
-  transform: translateY(-12px) scale(1.02);
-  box-shadow:
-    0 24px 56px rgba(0, 48, 73, 0.14),
-    4px 4px 0 var(--champagne, #c9a96e),
-    0 0 0 2px var(--primary);
-  animation: none;
-}
-
-.pricing-card-featured .pricing-badge {
-  color: var(--champagne, #c9a96e);
-  font-size: var(--text-small);
-  letter-spacing: 0.1em;
-}
-
-/* Staggered entrance animation when cards enter viewport */
-@keyframes pricingCardIn {
-  from { opacity: 0; transform: translateY(32px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-
-.pricing-card.visible {
-  animation: pricingCardIn 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
-}
-.pricing-grid .pricing-card:nth-child(1).visible { animation-delay: 0s; }
-.pricing-grid .pricing-card:nth-child(2).visible { animation-delay: 0.1s; }
-.pricing-grid .pricing-card:nth-child(3).visible { animation-delay: 0.2s; }
-
-/* Featured card keeps its elevated state after animation */
-.pricing-grid .pricing-card-featured.visible {
-  animation-delay: 0.1s;
-  transform: translateY(-4px) scale(1.02);
-}
-
-/* ============================================================
-   CTA panels — hover lift transition
-   (backgrounds defined in base styles above)
-   ============================================================ */
-.cta-panel-creator {
-  /* background: var(--surface-bright) — defined in base */
-  transition: transform 320ms cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-.cta-panel-merchant {
-  /* background: var(--dark) + radial pseudo-element — defined in base */
-  transition: transform 320ms cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-.cta-panel-creator:hover,
-.cta-panel-merchant:hover {
-  transform: translateY(-4px);
-}
-
-/* ============================================================
-   Tier Showcase — 6-tier visual in Creator section (02)
-   ============================================================ */
-.tier-showcase {
   display: flex;
-  gap: 12px;
-  padding: 24px 0;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;
+  gap: 10px;
+  align-items: center;
 }
 
-.tier-showcase::-webkit-scrollbar {
-  display: none;
-}
-
-@media (min-width: 769px) {
-  .tier-showcase {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    overflow-x: visible;
-  }
-}
-
-@media (min-width: 1025px) {
-  .tier-showcase {
-    grid-template-columns: repeat(6, 1fr);
-  }
-}
-
-/* Individual tier card */
-.tier-showcase-card {
-  background: rgba(0, 48, 73, 0.04);
-  border-left: 3px solid var(--tier-color, var(--primary));
-  padding: 16px;
-  border-radius: 0;
-  min-width: 140px;
-  flex-shrink: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  transition: transform 240ms cubic-bezier(0.22, 1, 0.36, 1),
-              box-shadow 240ms ease;
-  cursor: default;
-}
-
-.tier-showcase-card:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 8px 24px rgba(0, 48, 73, 0.1);
-}
-
-/* Material color swatch — replaces emoji icon */
-.tier-showcase-swatch {
-  display: block;
-  width: 100%;
-  height: 4px;
-  flex-shrink: 0;
-  margin-bottom: var(--space-2);
-}
-
-/* Material name label */
-.tier-showcase-material {
-  font-family: var(--font-body);
-  font-size: 9px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
-  opacity: 0.55;
-  margin-bottom: 2px;
-  display: block;
-}
-
-/* Tier name */
-.tier-showcase-name {
-  font-family: var(--font-display);
-  font-size: 14px;
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  color: var(--tier-color, var(--dark));
-  line-height: 1.2;
-}
-
-/* Earning rate */
-.tier-showcase-earn {
+.hero-sub {
   font-family: var(--font-body);
   font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  color: var(--primary);
-  line-height: 1.3;
-}
-
-/* Description */
-.tier-showcase-desc {
-  font-family: var(--font-body);
-  font-size: 11px;
-  font-weight: 400;
-  color: rgba(0, 48, 73, 0.5);
-  line-height: 1.5;
-  letter-spacing: 0.01em;
-}
-
-/* Tier-specific top border accents + progression opacity
-   Path A (v5.2, 2026-04-20): tier colors sourced from 6-color brand palette. */
-.tier-card--clay    { border-top: 3px solid var(--tertiary);  opacity: 0.85; }
-.tier-card--bronze  { border-top: 3px solid var(--champagne); opacity: 0.9; }
-.tier-card--steel   { border-top: 3px solid var(--tertiary);  opacity: 0.95; }
-.tier-card--gold    { border-top: 3px solid var(--primary);   opacity: 1; }
-.tier-card--ruby    { border-top: 3px solid var(--accent);    opacity: 1; }
-.tier-card--obsidian {
-  border-top: 3px solid var(--dark);
-  background: var(--dark);
-  color: var(--surface);
-  opacity: 1;
-}
-.tier-card--obsidian .tier-showcase-material,
-.tier-card--obsidian .tier-showcase-name,
-.tier-card--obsidian .tier-showcase-earn,
-.tier-card--obsidian .tier-showcase-desc {
-  color: var(--surface);
-}
-.tier-card--obsidian .tier-showcase-desc {
-  color: rgba(245, 242, 236, 0.6);
-}
-
-/* "Start here" badge on Clay tier */
-.tier-entry-badge {
-  display: inline-block;
-  background: rgba(102, 155, 188, 0.15);
-  border: 1px solid rgba(102, 155, 188, 0.4);
-  font-family: var(--font-body);
-  font-size: 9px;
-  font-weight: 700;
-  padding: 2px 6px;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: #8c7a6b;
-  margin-bottom: 4px;
-}
-
-/* ============================================================
-   Earning Preview — earning potential rows
-   ============================================================ */
-.earning-preview {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  margin-top: 24px;
-  border-top: 1px solid var(--line);
-  padding-top: 24px;
-}
-
-/* Individual earning row */
-.earning-tier {
-  font-family: var(--font-body);
-  font-size: 13px;
-  font-weight: 400;
-  padding: 8px 12px;
-  border-left: 2px solid transparent;
-  color: rgba(0, 48, 73, 0.6);
-  line-height: 1.4;
-  transition: background 180ms ease, border-color 180ms ease, color 180ms ease;
-}
-
-/* Highlighted row */
-.earning-tier.highlight {
-  border-left-color: var(--primary);
-  color: var(--dark);
-  font-weight: 700;
-  background: rgba(193, 18, 31, 0.04);
-}
-
-/* ============================================================
-   Hero — 2-column grid layout
-   ============================================================ */
-.hero-inner {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-template-rows: auto auto;
-  gap: var(--space-6) var(--space-10);
-  align-items: start;
-}
-
-.hero-content {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-}
-
-.hero-visual {
-  align-self: center;
-  padding-top: var(--space-5);
-}
-
-/* Stats span full grid width */
-.hero-stats {
-  grid-column: 1 / -1;
-}
-
-/* Demo link */
-.hero-demo-link {
-  display: block;
-  margin-top: 12px;
-  font-size: 13px;
-  color: rgba(255, 255, 255, 0.35);
-  text-decoration: underline;
-  text-underline-offset: 3px;
-  font-family: var(--font-body);
-  transition: color 200ms ease;
-}
-.hero-demo-link:hover {
-  color: rgba(255, 255, 255, 0.7);
-}
-
-/* Hero spotlight (injected by LandingInteractivity) */
-.hero-spotlight {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  z-index: 0;
-  opacity: 0;
-  transition: opacity 400ms ease;
-  background: radial-gradient(
-    circle 380px at var(--sx, 50%) var(--sy, 50%),
-    rgba(102, 155, 188, 0.10) 0%,
-    transparent 65%
-  );
-}
-
-/* ============================================================
-   Hero — Campaign Preview card (right column)
-   ============================================================ */
-.hero-preview {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-2);
-  animation: hero-fade-up 0.9s ease-out 0.35s both;
-}
-
-.hcp-card {
-  background: rgba(255, 255, 255, 0.045);
-  border: 1px solid rgba(255, 255, 255, 0.09);
-  border-top: 2px solid var(--primary);
-  padding: var(--space-4);
-}
-
-.hcp-live-row {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  margin-bottom: var(--space-3);
-}
-
-.hcp-live-dot {
-  width: 6px;
-  height: 6px;
-  background: #4ade80;
-  border-radius: 50%;
-  flex-shrink: 0;
-  animation: hcp-pulse 2.2s ease-in-out infinite;
-}
-
-@keyframes hcp-pulse {
-  0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(74, 222, 128, 0); }
-  50%       { opacity: 0.85; box-shadow: 0 0 0 4px rgba(74, 222, 128, 0.18); }
-}
-
-.hcp-live-text {
-  font-family: var(--font-body);
-  font-size: 9px;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  color: #4ade80;
-}
-
-.hcp-live-sep {
-  color: rgba(255, 255, 255, 0.18);
-}
-
-.hcp-live-title {
-  font-family: var(--font-body);
-  font-size: 11px;
-  color: rgba(255, 255, 255, 0.38);
-  letter-spacing: 0.04em;
-}
-
-.hcp-biz-name {
-  font-family: var(--font-display);
-  font-size: clamp(22px, 2.2vw, 30px);
-  font-weight: 700;
-  letter-spacing: -0.04em;
-  color: #fff;
-  line-height: 1.1;
-}
-
-.hcp-biz-loc {
-  font-family: var(--font-body);
-  font-size: 11px;
-  color: rgba(255, 255, 255, 0.32);
-  letter-spacing: 0.04em;
-  margin-top: 2px;
-  margin-bottom: var(--space-3);
-}
-
-.hcp-divider {
-  height: 1px;
-  background: rgba(255, 255, 255, 0.07);
-  margin-bottom: var(--space-3);
-}
-
-.hcp-payout-row {
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
-  margin-bottom: var(--space-3);
-}
-
-.hcp-payout-num {
-  font-family: var(--font-display);
-  font-size: clamp(32px, 3.2vw, 44px);
-  font-weight: 200;
-  letter-spacing: -0.06em;
-  color: var(--champagne);
-  line-height: 1;
-}
-
-.hcp-payout-label {
-  font-family: var(--font-body);
-  font-size: 11px;
-  color: rgba(255, 255, 255, 0.38);
-  line-height: 1.5;
-}
-
-.hcp-payout-label span {
-  color: var(--champagne);
-  font-weight: 700;
-  letter-spacing: 0.04em;
-}
-
-.hcp-progress-wrap {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.hcp-progress-bar {
-  height: 2px;
-  background: rgba(255, 255, 255, 0.07);
-  overflow: hidden;
-}
-
-.hcp-progress-fill {
-  height: 100%;
-  width: 0;
-  background: var(--primary);
-  animation: hcp-fill 1.4s cubic-bezier(0.22, 1, 0.36, 1) 1s forwards;
-}
-
-@keyframes hcp-fill {
-  to { width: 70%; }
-}
-
-.hcp-progress-meta {
-  display: flex;
-  justify-content: space-between;
-  font-family: var(--font-body);
-  font-size: 10px;
-  color: rgba(255, 255, 255, 0.28);
-  letter-spacing: 0.04em;
-}
-
-.hcp-progress-pct {
-  color: var(--primary);
-  font-weight: 700;
-}
-
-/* Stats strip */
-.hcp-stats-row {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  background: rgba(255, 255, 255, 0.025);
-  border: 1px solid rgba(255, 255, 255, 0.07);
-}
-
-.hcp-stat {
-  padding: 12px 14px;
-  border-right: 1px solid rgba(255, 255, 255, 0.06);
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.hcp-stat:last-child {
-  border-right: none;
-}
-
-.hcp-stat-num {
-  font-family: var(--font-display);
-  font-size: clamp(18px, 1.8vw, 24px);
-  font-weight: 200;
-  letter-spacing: -0.04em;
-  color: #fff;
-  line-height: 1;
-}
-
-.hcp-stat-label {
-  font-family: var(--font-body);
-  font-size: 9px;
-  color: rgba(255, 255, 255, 0.28);
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  line-height: 1.3;
-}
-
-/* Creator match notification */
-.hcp-match-card {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 10px var(--space-3);
-  background: rgba(74, 222, 128, 0.04);
-  border: 1px solid rgba(74, 222, 128, 0.14);
-  animation: hcp-slide-in 0.6s cubic-bezier(0.22, 1, 0.36, 1) 1.4s both;
-}
-
-@keyframes hcp-slide-in {
-  from { opacity: 0; transform: translateX(16px); }
-  to   { opacity: 1; transform: translateX(0); }
-}
-
-.hcp-match-check {
-  width: 20px;
-  height: 20px;
-  background: rgba(74, 222, 128, 0.18);
-  color: #4ade80;
-  font-size: 10px;
-  font-weight: 700;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-
-.hcp-match-info {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 1px;
-}
-
-.hcp-match-name {
-  font-family: var(--font-body);
-  font-size: 12px;
-  font-weight: 700;
-  color: rgba(255, 255, 255, 0.8);
-  letter-spacing: -0.01em;
-}
-
-.hcp-match-meta {
-  font-family: var(--font-body);
-  font-size: 10px;
-  color: rgba(255, 255, 255, 0.28);
-  letter-spacing: 0.03em;
-}
-
-.hcp-match-earn {
-  font-family: var(--font-display);
-  font-size: 18px;
-  font-weight: 700;
-  color: #4ade80;
-  letter-spacing: -0.03em;
-}
-
-/* ============================================================
-   Ghost section numbers — editorial decoration
-   ============================================================ */
-
-/* Already defined above; add position: relative for ghost anchor */
-.section-tag {
-  position: relative;
-}
-
-/* Absolutely positioned — removed from flex flow, renders as large
-   translucent watermark behind the section heading area */
-.section-ghost-num {
-  position: absolute;
-  top: 50%;
-  left: -4px;
-  transform: translateY(-44%);
-  font-family: var(--font-display);
-  font-size: clamp(72px, 10vw, 140px);
-  font-weight: 900;
-  letter-spacing: -0.07em;
-  line-height: 0.8;
-  color: var(--dark);
-  opacity: 0.04;
-  user-select: none;
-  pointer-events: none;
-  z-index: 0;
-  white-space: nowrap;
-}
-
-.section-warm .section-ghost-num {
-  color: #fff;
-  opacity: 0.05;
-}
-
-/* ============================================================
-   Hero responsive — collapse to 1 col on tablet
-   ============================================================ */
-@media (max-width: 860px) {
-  .hero-inner {
-    grid-template-columns: 1fr;
-    gap: var(--space-6);
-  }
-
-  .hero-visual {
-    display: none;
-  }
-
-  .hero-stats {
-    grid-column: 1;
-  }
-}
-
-/* ============================================================
-   Social Proof Strip
-   ============================================================ */
-.proof-strip {
-  background: var(--surface-elevated);
-  border: 1px solid var(--line);
-  border-left: 4px solid var(--primary);
-  padding: var(--space-5) var(--space-6);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--space-6);
-  flex-wrap: wrap;
-}
-
-.proof-strip-inner {
-  display: flex;
-  align-items: center;
-  gap: var(--space-4);
-  flex-wrap: wrap;
-}
-
-.proof-strip-label {
-  font-family: var(--font-body);
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--text-muted);
-  flex-shrink: 0;
-}
-
-.proof-logos {
-  display: flex;
-  gap: var(--space-2);
-  flex-wrap: wrap;
-  flex: 1;
-}
-
-.proof-logo-pill {
-  font-family: var(--font-body);
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  color: var(--dark);
-  padding: 4px 10px;
-  border: 1px solid var(--line);
-  background: var(--surface-elevated);
-  opacity: 0.7;
-}
-
-.proof-strip-note {
-  font-size: 10px;
-  color: var(--text-muted);
-  opacity: 0.6;
-  text-align: center;
-  display: block;
-  margin-top: var(--space-2);
-  letter-spacing: 0.04em;
-}
-
-/* Traction stats row */
-.proof-stats {
-  display: flex;
-  gap: var(--space-5);
-  flex-wrap: wrap;
-  width: 100%;
-  padding-block: var(--space-3);
-  border-top: 1px solid var(--line);
-  border-bottom: 1px solid var(--line);
-  margin-block: var(--space-2);
-}
-
-.proof-stat {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  gap: 2px;
-}
-
-.proof-stat-num {
-  font-family: var(--font-display) !important;
-  font-size: 36px !important;
-  font-weight: 900 !important;
-  color: var(--primary) !important;
-  line-height: 1 !important;
-  letter-spacing: -0.02em;
-}
-
-.proof-stat-label {
-  font-size: 11px;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--text-muted);
-  margin-top: 4px;
-}
-
-/* VC metrics bar — subtle data strip for investor scanning */
-.vc-metrics-bar {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 12px 24px;
-  padding: 12px 0;
-  border-top: 1px solid rgba(0, 48, 73, 0.08);
-  margin-top: var(--space-4);
-}
-.vcm-item {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-.vcm-label {
-  font-family: var(--font-body);
-  font-size: 10px;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: rgba(0, 48, 73, 0.55); /* WCAG: raised from 0.45 to 0.55 — minimum on light bg */
-}
-.vcm-value {
-  font-family: var(--font-body);
-  font-size: 12px;
-  color: rgba(0, 48, 73, 0.80); /* WCAG: raised from 0.75 to 0.80 for improved readability */
-}
-.vcm-divider {
-  color: rgba(0, 48, 73, 0.2);
-  font-size: 10px;
-}
-@media (max-width: 640px) {
-  .vcm-divider {
-    display: none;
-  }
-  .vc-metrics-bar {
-    gap: 8px;
-  }
-}
-
-/* NYC market scale hint */
-.market-hint {
-  font-family: var(--font-body);
-  font-size: 11px;
-  color: var(--text-muted);
-  text-align: center;
-  letter-spacing: 0.04em;
-  margin-top: var(--space-3);
-  opacity: 0.7;
-}
-
-/* ============================================================
-   FAQ Section
-   ============================================================ */
-.faq-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 0;
-  margin-top: var(--space-8);
-}
-
-.faq-item {
-  padding: var(--space-5) var(--space-6);
-  border-bottom: 1px solid rgba(0, 48, 73, 0.07);
-  border-right: 1px solid rgba(0, 48, 73, 0.07);
-}
-
-.faq-item:nth-child(even) {
-  border-right: none;
-}
-
-.faq-item:nth-last-child(-n+2) {
-  border-bottom: none;
-}
-
-.faq-q {
-  font-family: var(--font-body);
-  font-size: 13px;
-  font-weight: 700;
-  letter-spacing: 0.02em;
-  color: var(--dark);
-  margin: 0 0 var(--space-2);
-  line-height: 1.4;
-}
-
-.faq-a {
-  font-family: var(--font-body);
-  font-size: 13px;
-  color: rgba(0, 48, 73, 0.72); /* WCAG: raised from 0.65 to 0.72 for AA on Pearl Stone bg */
+  color: rgba(245, 242, 236, 0.45);
+  max-width: 300px;
   line-height: 1.7;
-  margin: 0;
-}
-
-@media (max-width: 640px) {
-  .faq-grid {
-    grid-template-columns: 1fr;
-  }
-  .faq-item {
-    border-right: none;
-  }
-  .faq-item:nth-last-child(-n+2) {
-    border-bottom: 1px solid rgba(0, 48, 73, 0.07);
-  }
-  .faq-item:last-child {
-    border-bottom: none;
-  }
-}
-
-@media (max-width: 768px) {
-  .proof-strip-inner {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: var(--space-2);
-  }
-}
-
-/* ------------------------------------------------------------
-   Merchant Attribution Visual — live dashboard widget
-   ------------------------------------------------------------ */
-.merch-attr-visual {
-  width: 100%;
-  align-self: stretch;
-  display: flex;
-  flex-direction: column;
-  gap: 0;
-  background: var(--surface-elevated);
-  border: 1px solid rgba(0, 48, 73, 0.12);
-  font-family: var(--font-mono);
-  overflow: hidden;
-}
-
-.mav-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 10px 14px;
-  background: var(--dark);
-  color: var(--pearl);
-  border-bottom: 1px solid rgba(245, 242, 236, 0.1);
-}
-
-.mav-header-left {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.mav-live-dot {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: #22c55e;
-  box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.5);
-  animation: mav-pulse 1.8s ease infinite;
-}
-
-@keyframes mav-pulse {
-  0%   { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.5); }
-  70%  { box-shadow: 0 0 0 6px rgba(34, 197, 94, 0); }
-  100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
-}
-
-.mav-title {
-  font-size: 10px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: rgba(245, 242, 236, 0.75);
-}
-
-.mav-campaign {
-  font-size: 10px;
-  letter-spacing: 0.04em;
-  color: var(--champagne);
-}
-
-/* Row table */
-.mav-rows {
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  padding: 6px 0;
-  overflow: hidden;
-}
-
-.mav-row {
-  display: grid;
-  grid-template-columns: 1fr auto auto auto;
-  align-items: center;
-  gap: 8px;
-  padding: 7px 14px;
-  border-bottom: 1px solid rgba(0, 48, 73, 0.06);
-  animation: mav-slide-in 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
-}
-
-.mav-row:last-child {
-  border-bottom: none;
-}
-
-@keyframes mav-slide-in {
-  from { opacity: 0; transform: translateX(-8px); }
-  to   { opacity: 1; transform: translateX(0); }
-}
-
-.mav-handle {
-  font-size: 11px;
-  color: var(--dark);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.mav-qr {
-  font-size: 10px;
-  color: var(--text-muted);
-  letter-spacing: 0.04em;
-}
-
-.mav-status {
-  font-size: 10px;
-  width: 28px;
-  text-align: center;
-}
-
-.mav-status--ok {
-  color: #22c55e;
-  font-weight: 700;
-}
-
-.mav-status--pending {
-  color: var(--text-muted);
-  letter-spacing: 0.15em;
-}
-
-.mav-amount {
-  font-size: 11px;
-  font-weight: 700;
   text-align: right;
-  color: var(--text-muted);
-  min-width: 36px;
+  letter-spacing: 0.01em;
+  -webkit-font-smoothing: antialiased;
 }
 
-.mav-amount--ok {
-  color: #22c55e;
-}
-
-/* Summary strip */
-.mav-summary {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  border-top: 1px solid rgba(0, 48, 73, 0.1);
-  background: rgba(0, 48, 73, 0.03);
-}
-
-.mav-sum-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 2px;
-  padding: 10px 8px;
-  border-right: 1px solid rgba(0, 48, 73, 0.08);
-}
-
-.mav-sum-item:last-child {
-  border-right: none;
-}
-
-.mav-sum-num {
-  font-size: 14px;
-  font-weight: 700;
-  color: var(--dark);
-  letter-spacing: -0.01em;
-}
-
-.mav-sum-label {
-  font-size: 9px;
-  text-transform: uppercase;
-  letter-spacing: 0.07em;
-  color: var(--text-muted);
-}
-
-/* ============================================================
-   Stagger support: apply --stagger CSS variable to .reveal
-   transition-delay so nth-child rules can sequence animations
-   ============================================================ */
-.reveal {
-  transition-delay: var(--stagger, 0ms);
-}
-
-/* ============================================================
-   Failsafe: ensure .reveal elements become visible after 2.5s
-   even if IntersectionObserver JS fails to fire (#01 #02)
-   ============================================================ */
-@keyframes revealFallback {
-  to { opacity: 1; transform: translateY(0) scale(1); }
-}
-.reveal:not(.visible) {
-  animation: revealFallback 0.6s cubic-bezier(0.22, 1, 0.36, 1) 2.5s forwards;
-}
-
-
-/* ============================================================
-   Audit fixes #19-#23
-   ============================================================ */
-
-/* #19 — Pricing section Pearl Stone background to break the
-   consecutive light-section run after How It Works (surface-bright) */
-#pricing {
-  background: var(--surface, #f5f2ec);
-}
-
-/* #20 — Champagne Gold on hero stat numbers */
-.stat-num {
-  color: var(--champagne, #c9a96e);
-}
-
-/* #21 — Steel Blue on feature-list bullet dots in light sections */
-.feature-dot {
-  background: var(--tertiary, #669bbc);
-}
-
-/* #22 — Ambient radial depth on all .section-warm dark sections */
-.section-warm {
-  background:
-    radial-gradient(ellipse 60% 50% at 80% 20%, rgba(102, 155, 188, 0.07) 0%, transparent 65%),
-    radial-gradient(ellipse 40% 35% at 10% 80%, rgba(193, 18, 31, 0.04) 0%, transparent 55%),
-    var(--dark);
-}
-
-/* #23 — Hard-edge print shadow on ghost / outlined buttons */
-.btn-ghost {
-  box-shadow: 2px 2px 0 rgba(0, 48, 73, 0.18);
-}
-.btn-ghost:hover {
-  box-shadow: 3px 3px 0 rgba(0, 48, 73, 0.22);
-}
-
-/* ============================================================
-   Audit fixes #33-#35 #38
-   ============================================================ */
-
-/* #33 — Button press feedback
-   Note: .btn:active is defined in globals.css; no duplicate needed here */
-
-/* #34 — Card hover lift: see .pricing-card:hover and .tier-showcase-card:hover above */
-
-/* #35 — Link underline slide-in animation */
-a:not(.btn):not([class*="btn"]):not(.skip-nav) {
-  position: relative;
-  text-decoration: none;
-}
-a:not(.btn):not([class*="btn"]):not(.skip-nav)::after {
-  content: '';
-  position: absolute;
-  bottom: -1px;
-  left: 0;
-  width: 0;
-  height: 1px;
-  background: currentColor;
-  transition: width 300ms ease;
-}
-a:not(.btn):not([class*="btn"]):not(.skip-nav):hover::after {
-  width: 100%;
-}
-
-/* #38 — Popular pricing card: see .pricing-card-featured above */
-
-/* ------------------------------------------------------------
-   Pricing — Creator free banner
-   ------------------------------------------------------------ */
-.pricing-creator-banner {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  background: linear-gradient(135deg, var(--surface) 0%, rgba(245, 242, 236, 0.5) 100%) !important;
-  border: 1px solid var(--line);
-  border-top: 3px solid var(--primary) !important;
-  padding: 20px 24px;
-  margin-top: var(--space-6);
-  font-family: var(--font-body);
-}
-
-.pricing-creator-banner .pcb-icon {
-  font-size: 24px;
-  color: var(--champagne);
-  flex-shrink: 0;
-}
-
-.pricing-creator-banner strong {
-  font-weight: 700;
-  color: var(--dark);
-  font-size: var(--text-base);
-}
-
-.pricing-creator-banner span {
-  font-size: var(--text-small);
-  color: var(--text-muted);
-}
-
-/* ------------------------------------------------------------
-   Trust signals strip
-   ------------------------------------------------------------ */
-.trust-signals {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 24px;
-  justify-content: center;
-  margin-top: var(--space-5);
+/* Stats bar (CS Genio Mono labels) */
+.hero-stats-wrap {
+  border-top: 1px solid rgba(245, 242, 236, 0.06);
   padding: var(--space-4) 0;
-  border-top: 1px solid var(--line);
-}
-
-.trust-signals span {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-family: var(--font-body);
-  font-size: 11px;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: var(--text-muted);
-}
-
-/* ------------------------------------------------------------
-   QR Attribution Flow
-   ------------------------------------------------------------ */
-.qr-flow {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-top: var(--space-5);
-  flex-wrap: wrap;
-}
-
-.qr-flow-step {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  background: var(--surface-elevated);
-  border: 1px solid var(--line);
-  padding: 8px 12px;
-}
-
-.qr-flow-num {
-  font-family: var(--font-body);
-  font-size: 11px;
-  font-weight: 700;
-  color: var(--primary);
-  background: rgba(193, 18, 31, 0.08);
-  width: 20px;
-  height: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-
-.qr-flow-text {
-  font-family: var(--font-body);
-  font-size: 11px;
-  color: var(--dark);
-}
-
-.qr-flow-arrow {
-  font-size: 16px;
-  color: var(--primary);
-  opacity: 0.5;
-}
-
-@media (max-width: 768px) {
-  .pricing-creator-banner {
-    flex-direction: column;
-    text-align: center;
-  }
-  .qr-flow {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-  .qr-flow-arrow {
-    transform: rotate(90deg);
-  }
-}
-
-/* ============================================================
-   Section depth enhancements — texture, transitions, dividers
-   ============================================================ */
-
-/* Fix 1 — How it Works section subtle diagonal texture */
-#how-it-works {
-  background:
-    repeating-linear-gradient(
-      -45deg,
-      transparent,
-      transparent 40px,
-      rgba(0, 48, 73, 0.015) 40px,
-      rgba(0, 48, 73, 0.015) 41px
-    ),
-    var(--surface-bright);
-}
-
-/* Fix 2 — Hero bottom gradient overlay for smooth dark-to-light transition */
-.hero::before {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 120px;
-  background: linear-gradient(to bottom, transparent, rgba(0, 48, 73, 0.3));
-  pointer-events: none;
+  position: relative;
   z-index: 1;
 }
 
-/* Fix 3 — Subtle top-border dividers between light sections */
-.section + .section {
-  border-top: 1px solid rgba(0, 48, 73, 0.06);
-}
-.section-warm + .section,
-.section + .section-warm {
-  border-top: none;
-}
-
-/* Fix 4 — Creator (dark) section ambient glow via pseudo-element */
-.section-warm {
-  position: relative;
-}
-.section-warm::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background:
-    radial-gradient(ellipse 50% 40% at 90% 10%, rgba(193, 18, 31, 0.06) 0%, transparent 60%),
-    radial-gradient(ellipse 40% 30% at 5% 90%, rgba(102, 155, 188, 0.05) 0%, transparent 55%);
-  pointer-events: none;
-  z-index: 0;
-}
-
-/* ============================================================
-   Wave 1 new components — CSS additions
-   ============================================================ */
-
-/* ------------------------------------------------------------
-   Hero — micro sub-headline & reassurance line
-   ------------------------------------------------------------ */
-.hero-sub--micro {
-  font-family: var(--font-body);
-  font-size: var(--text-small);
-  color: rgba(245, 242, 236, 0.6);
-  line-height: 1.5;
-  margin-top: calc(var(--space-2) * -1);
-  margin-bottom: var(--space-4);
-  letter-spacing: 0.02em;
-}
-
-.hero-reassurance {
-  font-family: var(--font-body);
-  font-size: 11px;
-  color: rgba(245, 242, 236, 0.5);
-  letter-spacing: 0.04em;
-  margin-top: var(--space-2);
-  margin-bottom: 0;
-  line-height: 1.5;
-}
-
-.hero-audience-line {
-  font-family: var(--font-body);
-  font-size: 12px;
-  letter-spacing: 0.06em;
-  color: rgba(245, 242, 236, 0.5);
-  margin-top: var(--space-3);
-  text-transform: uppercase;
-}
-
-/* ------------------------------------------------------------
-   Performance Score Explainer — mini dashboard widget
-   ------------------------------------------------------------ */
-.perf-score-explainer {
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  border-left: 3px solid rgba(201, 169, 110, 0.4);
-  padding: var(--space-4);
-  margin-top: var(--space-5);
-}
-
-.perf-score-explainer h4 {
-  font-family: var(--font-body);
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: rgba(245, 242, 236, 0.5);
-  margin: 0 0 var(--space-3);
-}
-
-.pse-items {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  gap: 8px 16px;
-  margin: 12px 0;
-}
-
-.pse-item {
-  display: contents;
-}
-
-.pse-metric {
-  font-family: var(--font-body);
-  font-size: 12px;
-  color: rgba(245, 242, 236, 0.75);
-  align-self: center;
-}
-
-.pse-weight {
-  font-family: var(--font-body);
-  font-size: 12px;
-  font-weight: 700;
-  color: var(--champagne, #c9a96e);
-  text-align: right;
-  align-self: center;
-}
-
-.pse-note {
-  font-family: var(--font-body);
-  font-size: 11px;
-  color: rgba(245, 242, 236, 0.35);
-  letter-spacing: 0.02em;
-  margin: 0;
-}
-
-/* ------------------------------------------------------------
-   Creator Workflow — ordered steps
-   ------------------------------------------------------------ */
-.creator-workflow {
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.07);
-  border-left: 3px solid var(--tertiary, #669bbc);
-  padding: var(--space-4);
-  margin-top: var(--space-5);
-}
-
-.creator-workflow h4 {
-  font-family: var(--font-body);
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.4);
-  margin: 0 0 var(--space-3);
-}
-
-.creator-workflow-steps {
-  list-style: none;
-  padding: 0;
-  margin: 0;
+.hero-stats {
   display: flex;
-  flex-direction: column;
-  gap: var(--space-2);
-  counter-reset: workflow-step;
+  gap: 0;
 }
 
-.creator-workflow-steps li {
-  counter-increment: workflow-step;
-  font-family: var(--font-body);
-  font-size: 13px;
-  color: rgba(255, 255, 255, 0.6);
-  line-height: 1.5;
+.h-stat {
+  flex: 1;
   display: flex;
   align-items: baseline;
-  gap: 10px;
+  gap: var(--space-2);
 }
 
-.creator-workflow-steps li::before {
-  content: counter(workflow-step, decimal-leading-zero);
+.h-stat + .h-stat {
+  padding-left: var(--space-5);
+  border-left: 1px solid rgba(245, 242, 236, 0.06);
+}
+
+.h-stat-n {
+  font-family: var(--font-display);
+  font-size: clamp(36px, 4vw, 52px);
+  font-weight: 100;
+  letter-spacing: -0.05em;
+  line-height: 1;
+  color: #fff;
+}
+
+.h-stat-l {
   font-family: var(--font-body);
   font-size: 10px;
-  font-weight: 700;
-  color: var(--tertiary, #669bbc);
-  letter-spacing: 0.06em;
-  flex-shrink: 0;
-}
-
-/* ------------------------------------------------------------
-   Creator Testimonial — blockquote pull-quote
-   ------------------------------------------------------------ */
-.creator-testimonial {
-  border-left: 3px solid var(--primary, #c1121f);
-  padding: var(--space-3) var(--space-4);
-  margin: var(--space-5) 0 0;
-  background: rgba(193, 18, 31, 0.03);
-}
-
-.creator-testimonial p {
-  font-family: var(--font-body);
-  font-style: italic;
-  color: rgba(245, 242, 236, 0.75);
-  font-size: var(--text-base, 15px);
-  line-height: 1.6;
-  margin: 0 0 var(--space-2);
-}
-
-.creator-testimonial cite {
-  font-family: var(--font-body);
-  font-size: 11px;
-  color: rgba(255, 255, 255, 0.3);
-  font-style: normal;
-  letter-spacing: 0.04em;
-}
-
-/* ------------------------------------------------------------
-   CTA Urgency Badge — founding cohort callout
-   ------------------------------------------------------------ */
-.cta-urgency-badge {
-  display: inline-block;
-  background: rgba(193, 18, 31, 0.1);
-  border: 1px solid rgba(193, 18, 31, 0.3);
-  color: var(--primary, #c1121f);
-  padding: 4px 10px;
-  font-family: var(--font-body);
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  margin-bottom: var(--space-4);
-}
-
-/* ------------------------------------------------------------
-   Tier showcase earning — align class name with JSX usage
-   (.tier-showcase-earning mirrors .tier-showcase-earn)
-   ------------------------------------------------------------ */
-.tier-showcase-earning {
-  font-family: var(--font-body);
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  color: var(--primary, #c1121f);
-  line-height: 1.3;
-}
-
-/* ============================================================
-   Wave 2 — Creator Workflow List
-   ============================================================ */
-.creator-workflow {
-  margin-top: var(--space-6);
-  padding: var(--space-4);
-  background: rgba(245, 242, 236, 0.04);
-  border: 1px solid rgba(245, 242, 236, 0.1);
-}
-
-.creator-workflow h4 {
-  font-family: var(--font-body);
-  font-size: 11px;
-  text-transform: uppercase;
+  font-weight: 600;
   letter-spacing: 0.1em;
-  color: rgba(245, 242, 236, 0.5);
-  margin-bottom: var(--space-3);
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.3);
 }
 
-.creator-workflow-steps {
-  list-style: none;
-  counter-reset: workflow;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.creator-workflow-steps li {
-  counter-increment: workflow;
-  display: flex;
-  gap: 12px;
-  align-items: flex-start;
-  font-size: 13px;
-  color: rgba(245, 242, 236, 0.75);
-}
-
-.creator-workflow-steps li::before {
-  content: counter(workflow, decimal-leading-zero);
-  font-family: var(--font-body);
-  font-size: 10px;
-  color: var(--primary);
-  font-weight: 700;
-  flex-shrink: 0;
-  padding-top: 2px;
-}
-
-/* ============================================================
-   Wave 2 — QR Flow Mobile (≤ 640px)
-   ============================================================ */
-@media (max-width: 640px) {
-  .qr-flow {
-    gap: 8px;
-  }
-  .qr-flow-step {
-    padding: 6px 10px;
-  }
-  .qr-flow-text {
-    font-size: 10px;
-  }
-}
-
-/* ============================================================
-   Hero — premium micro-interactions
-   ============================================================ */
-
-/* Fix 1: "results." word shimmer on hover
-   Target: .hero-headline em (italic "results." word, color: var(--primary))
-   Requires data-text attribute on the <em> element for pseudo-content.
-   Falls back gracefully if attribute absent (overlay still animates). */
-.hero-headline em {
-  position: relative;
-  display: inline-block;
-  cursor: default;
-}
-
-.hero-headline em::after {
-  content: attr(data-text);
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    105deg,
-    transparent 30%,
-    rgba(201, 169, 110, 0.6) 50%,
-    transparent 70%
-  );
-  background-size: 200% 100%;
-  background-position: -100% 0;
-  -webkit-background-clip: text;
-  background-clip: text;
-  opacity: 0;
-  transition: opacity 300ms ease;
-  pointer-events: none;
-}
-
-.hero-headline em:hover::after {
-  opacity: 1;
-  background-position: 200% 0;
-  transition: opacity 300ms ease, background-position 600ms ease;
-}
-
-/* Fix 2: Hero eyebrow letter-spacing reveal animation */
-@keyframes eyebrowReveal {
+/* Hero entrance — Apple spring */
+@keyframes h-in {
   from {
     opacity: 0;
-    letter-spacing: 0.2em;
-  }
-  to {
-    opacity: 1;
-    letter-spacing: 0.08em;
-  }
-}
-
-.hero .section-tag-label,
-.hero-eyebrow {
-  animation: eyebrowReveal 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.3s both;
-}
-
-/* Fix 3: Hero content load animation stagger
-   Applies to direct children of .hero-content.
-   Existing per-element animations (line-black, line-light, hero-sub, hero-ctas)
-   take precedence via specificity; these delays align with the existing sequence. */
-@keyframes heroFadeUp {
-  from {
-    opacity: 0;
-    transform: translateY(24px);
+    transform: translateY(20px);
   }
   to {
     opacity: 1;
@@ -2749,1356 +229,1570 @@ a:not(.btn):not([class*="btn"]):not(.skip-nav):hover::after {
   }
 }
 
-.hero-content > * {
-  animation: heroFadeUp 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+.hero-label {
+  animation: h-in 0.7s cubic-bezier(0.32, 0.72, 0, 1) 0.05s both;
 }
-
-.hero-content > *:nth-child(1) { animation-delay: 0.1s; }
-.hero-content > *:nth-child(2) { animation-delay: 0.2s; }
-.hero-content > *:nth-child(3) { animation-delay: 0.35s; }
-.hero-content > *:nth-child(4) { animation-delay: 0.5s; }
-
-/* ------------------------------------------------------------
-   Magnetic button — smooth transform base + CTA glow pulse
-   ------------------------------------------------------------ */
-.btn-primary,
-.btn-ghost {
-  transition: transform 300ms cubic-bezier(0.22, 1, 0.36, 1),
-              background 200ms ease,
-              color 200ms ease,
-              box-shadow 200ms ease;
-  will-change: transform;
-}
-
-@keyframes ctaGlow {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(193, 18, 31, 0); }
-  50%       { box-shadow: 0 0 20px 4px rgba(193, 18, 31, 0.18); }
-}
-
-/* ------------------------------------------------------------
-   Merchant ROI math + guarantee badge
-   ------------------------------------------------------------ */
-.roi-math {
-  padding: var(--space-3) var(--space-4);
-  background: rgba(201, 169, 110, 0.06);
-  border-left: 3px solid var(--champagne, #c9a96e);
-  margin-top: var(--space-4);
-}
-
-.roi-example {
-  font-family: var(--font-body);
-  font-size: 13px;
-  color: rgba(0, 48, 73, 0.7);
-  line-height: 1.5;
-}
-
-.roi-example strong {
-  color: var(--champagne, #c9a96e);
-  font-weight: 700;
-}
-
-.pricing-vs {
-  font-family: var(--font-body);
-  font-size: 12px;
-  color: rgba(0, 48, 73, 0.5);
-  text-align: center;
-  margin-top: var(--space-6);
-  letter-spacing: 0.02em;
-  font-style: italic;
-}
-
-.guarantee-badge {
-  display: flex;
-  align-items: flex-start;
-  gap: 10px;
-  padding: var(--space-3) var(--space-4);
-  border: 1px solid rgba(193, 18, 31, 0.15);
-  background: rgba(193, 18, 31, 0.04);
-  margin-top: var(--space-5);
-}
-
-.guarantee-icon {
-  font-family: var(--font-body);
-  font-size: 14px;
-  color: var(--primary);
-  font-weight: 700;
-  flex-shrink: 0;
-  margin-top: 1px;
-}
-
-.guarantee-badge span:last-child {
-  font-family: var(--font-body);
-  font-size: 13px;
-  color: rgba(0, 48, 73, 0.75);
-  line-height: 1.5;
-}
-
-.hero .btn-primary {
-  animation: ctaGlow 3s ease-in-out infinite;
-}
-
-.hero .btn-primary:hover {
-  animation: none;
-}
-
-/* ============================================================
-   Staggered scroll-reveal delays
-   Each group uses --stagger CSS variable consumed by .reveal
-   ============================================================ */
-
-/* --- How It Works steps (3 steps, 100ms apart) --- */
-.how-step:nth-child(1) { --stagger: 0ms; }
-.how-step:nth-child(2) { --stagger: 100ms; }
-.how-step:nth-child(3) { --stagger: 200ms; }
-
-/* --- Pricing cards (3 cards, 80ms apart)
-     Aligns with the existing pricingCardIn animation-delay above --- */
-.pricing-card:nth-child(1) { --stagger: 0ms; }
-.pricing-card:nth-child(2) { --stagger: 80ms; }
-.pricing-card:nth-child(3) { --stagger: 160ms; }
-
-.pricing-card.reveal {
-  transition-delay: var(--stagger, 0ms);
-}
-
-/* --- Tier showcase cards (6 tiers, 60ms apart) ---
-     tier-showcase-card doesn't use .reveal; apply opacity/transform
-     fade-up directly, triggered when parent .tier-showcase gets .visible */
-.tier-showcase-card {
-  opacity: 0;
-  transform: translateY(24px);
-  transition: opacity 0.55s cubic-bezier(0.22, 1, 0.36, 1),
-              transform 0.55s cubic-bezier(0.22, 1, 0.36, 1),
-              box-shadow 240ms ease;
-  transition-delay: var(--stagger, 0ms);
-}
-
-/* BUG FIX: ScrollRevealInit adds .visible to the .reveal WRAPPER div,
-   not to .tier-showcase itself. Use descendant selector from .reveal. */
-.reveal.visible .tier-showcase .tier-showcase-card {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.tier-showcase .tier-showcase-card:nth-child(1) { --stagger: 0ms; }
-.tier-showcase .tier-showcase-card:nth-child(2) { --stagger: 60ms; }
-.tier-showcase .tier-showcase-card:nth-child(3) { --stagger: 120ms; }
-.tier-showcase .tier-showcase-card:nth-child(4) { --stagger: 180ms; }
-.tier-showcase .tier-showcase-card:nth-child(5) { --stagger: 240ms; }
-.tier-showcase .tier-showcase-card:nth-child(6) { --stagger: 300ms; }
-
-/* Restore hover lift after reveal completes */
-.reveal.visible .tier-showcase .tier-showcase-card:hover {
-  transform: translateY(-8px);
-}
-
-/* --- Proof stats (3 stats, 60ms apart) ---
-     .proof-stats has no .reveal ancestor so .visible never fires.
-     Use CSS animation fallback that fires from page-load time. */
-.proof-stats .proof-stat {
-  opacity: 0;
-  transform: translateY(20px);
-  animation: revealFallback 0.55s cubic-bezier(0.22, 1, 0.36, 1)
-    calc(1.4s + var(--stagger, 0ms)) both;
-}
-
-.proof-stats .proof-stat:nth-child(1) { --stagger: 0ms; }
-.proof-stats .proof-stat:nth-child(2) { --stagger: 60ms; }
-.proof-stats .proof-stat:nth-child(3) { --stagger: 120ms; }
-.proof-stats .proof-stat:nth-child(4) { --stagger: 180ms; }
-
-/* --- Hero headline lines & sub copy ---
-     Override animation-delay on existing heroFadeUp keyframes */
-.hero-headline .line-black { --stagger: 0ms; }
-.hero-headline .line-light { --stagger: 120ms; }
-.hero-sub  { --stagger: 240ms; }
-.hero-ctas { --stagger: 360ms; }
-
-.hero-headline .line-black,
-.hero-headline .line-light,
-.hero-sub,
-.hero-ctas {
-  animation: heroFadeUp 0.7s cubic-bezier(0.22, 1, 0.36, 1) var(--stagger, 0ms) both;
-}
-
-/* ------------------------------------------------------------
-   Hero scroll hint — animated down indicator
-   ------------------------------------------------------------ */
-.hero-scroll-hint {
-  position: absolute;
-  bottom: 40px;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 6px;
-  opacity: 0.4;
-  animation: scrollHintBounce 2s ease-in-out infinite;
-  pointer-events: none;
-}
-
-.hero-scroll-hint-line {
-  width: 1px;
-  height: 32px;
-  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.6), transparent);
-}
-
-@keyframes scrollHintBounce {
-  0%, 100% { transform: translateX(-50%) translateY(0); opacity: 0.4; }
-  50% { transform: translateX(-50%) translateY(6px); opacity: 0.6; }
-}
-
-/* ------------------------------------------------------------
-   Tier earn range — per-visit earnings on tier showcase cards
-   ------------------------------------------------------------ */
-.tier-earn-range {
-  font-family: var(--font-body);
-  font-size: 12px;
-  font-weight: 700;
-  color: var(--champagne, #c9a96e);
-  letter-spacing: 0.04em;
-  margin-top: var(--space-2);
-}
-
-/* Override for obsidian (dark bg) — champagne reads fine */
-.tier-card--obsidian .tier-earn-range {
-  color: var(--champagne, #c9a96e);
-}
-
-/* ------------------------------------------------------------
-   Tier progression path — Start free to Top 1%
-   ------------------------------------------------------------ */
-.tier-progression {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 8px 12px;
-  padding: var(--space-4) 0;
-  border-top: 1px solid rgba(0, 48, 73, 0.1);
-  margin-top: var(--space-6);
-}
-
-.tp-step {
-  font-family: var(--font-body);
-  font-size: 12px;
-  letter-spacing: 0.04em;
-  color: rgba(0, 48, 73, 0.55);
-}
-
-.tp-step--highlight {
-  color: var(--champagne, #c9a96e);
-  font-weight: 700;
-}
-
-.tp-arrow {
-  color: rgba(0, 48, 73, 0.2);
-  font-size: 12px;
-}
-
-/* ============================================================
-   Global interaction refinements
-   ============================================================ */
-
-/* Button press feedback — translateY for tactile feel */
-.btn-primary:active { transform: translateY(1px); }
-.btn-ghost:active   { transform: translateY(1px); }
-
-/* Nav link underline slide */
-.nav a, .footer a {
-  position: relative;
-}
-.nav a::after, .footer a::after {
-  content: '';
-  position: absolute;
-  bottom: -2px;
-  left: 0;
-  width: 0;
-  height: 1px;
-  background: currentColor;
-  transition: width 250ms ease;
-}
-.nav a:hover::after, .footer a:hover::after {
-  width: 100%;
-}
-
-/* Card hover lift — consistent transition across all card types */
-.tier-card,
-.pricing-card,
-.how-step,
-.feature-item {
-  transition: transform 280ms cubic-bezier(0.22, 1, 0.36, 1),
-              box-shadow 280ms ease;
-}
-.tier-card:hover,
-.pricing-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 12px 32px rgba(0, 48, 73, 0.10);
-}
-
-/* Focus rings for keyboard navigation accessibility */
-button:focus-visible,
-a:focus-visible {
-  outline: 2px solid var(--primary);
-  outline-offset: 3px;
-}
-
-/* Stronger focus rings for primary CTA buttons */
-.btn-primary:focus-visible,
-.btn-ghost:focus-visible {
-  outline: 3px solid var(--primary);
-  outline-offset: 4px;
-}
-
-/* Image hover subtle zoom for cards */
-.tier-card img,
-.pricing-card img {
-  transition: transform 400ms ease;
-}
-.tier-card:hover img,
-.pricing-card:hover img {
-  transform: scale(1.03);
-}
-
-/* Smooth color transition on all interactive text */
-a {
-  transition: color 180ms ease;
+.hero-l1 {
+  animation: h-in 0.8s cubic-bezier(0.32, 0.72, 0, 1) 0.12s both;
 }
-
-/* Section eyebrow tag hover — letter-spacing breathe */
-.section-tag {
-  cursor: default;
-  transition: letter-spacing 200ms ease;
-}
-.section-tag:hover {
-  letter-spacing: 0.14em;
-}
-
-/* ============================================================
-   Creator sub-message — "Earn on results, not reach"
-   ============================================================ */
-.creator-sub-message {
-  font-family: var(--font-body);
-  font-size: 13px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--primary);
-  margin-top: var(--space-3);
-  margin-bottom: 0;
-}
-
-/* ============================================================
-   Platform Comparison — Push vs traditional
-   ============================================================ */
-.platform-compare {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1px;
-  background: rgba(245, 242, 236, 0.07);
-  margin-top: var(--space-7);
-}
-
-.pc-col {
-  padding: var(--space-5);
-  background: rgba(255, 255, 255, 0.02);
-}
-
-.pc-col--push {
-  background: rgba(193, 18, 31, 0.06);
-  border-left: 3px solid var(--primary);
-}
-
-.pc-header {
-  font-family: var(--font-body);
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: rgba(245, 242, 236, 0.5);
-  margin-bottom: var(--space-4);
-}
-
-.pc-col--push .pc-header {
-  color: rgba(245, 242, 236, 0.85);
-}
-
-.pc-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.pc-list li {
-  font-family: var(--font-body);
-  font-size: 13px;
-  color: rgba(245, 242, 236, 0.75);
-  line-height: 1.4;
-}
-
-.pc-list--others li {
-  color: rgba(245, 242, 236, 0.35);
-}
-
-@media (max-width: 640px) {
-  .platform-compare {
-    grid-template-columns: 1fr;
-  }
-}
-
-/* ============================================================
-   Testimonials Section
-   ============================================================ */
-.testimonials-section {
-  background: var(--surface-bright);
-}
-
-.testimonials-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1px;
-  background: rgba(0, 48, 73, 0.08);
-  margin-top: var(--space-8);
-}
-
-.testimonial-card {
-  background: var(--surface);
-  padding: var(--space-6);
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-4);
-  transition: background 200ms ease;
-}
-
-.testimonial-card:hover {
-  background: var(--surface-elevated);
-}
-
-.testimonial-card--merchant {
-  border-top: 3px solid var(--primary);
-}
-
-.testimonial-card--creator {
-  border-top: 3px solid var(--tertiary);
-}
-
-.testimonial-quote {
-  font-family: var(--font-body);
-  font-size: 14px;
-  line-height: 1.7;
-  color: rgba(0, 48, 73, 0.8);
-  font-style: italic;
-  margin: 0;
-  flex: 1;
-}
-
-.testimonial-footer {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
+.hero-l2 {
+  animation: h-in 0.8s cubic-bezier(0.32, 0.72, 0, 1) 0.24s both;
 }
-
-.testimonial-name {
-  font-family: var(--font-body);
-  font-size: 12px;
-  font-weight: 700;
-  color: var(--dark);
-  letter-spacing: 0.04em;
-}
-
-.testimonial-role {
-  font-family: var(--font-body);
-  font-size: 11px;
-  color: rgba(0, 48, 73, 0.45);
-  letter-spacing: 0.04em;
-}
-
-@media (max-width: 768px) {
-  .testimonials-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
-/* ============================================================
-   Attribution Explainer
-   ============================================================ */
-.attr-explainer {
-  padding: var(--space-6);
-  background: var(--surface-elevated);
-  border: 1px solid rgba(0, 48, 73, 0.08);
-  margin-top: var(--space-8);
-}
-
-.attr-explainer-title {
-  font-family: var(--font-body);
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: rgba(0, 48, 73, 0.45);
-  margin: 0 0 var(--space-5);
-}
-
-.attr-steps {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  flex-wrap: wrap;
-}
-
-.attr-step {
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
-  flex: 1;
-  min-width: 160px;
-}
-
-.attr-step-num {
-  font-family: var(--font-display);
-  font-size: 32px;
-  font-weight: 900;
-  color: rgba(0, 48, 73, 0.08);
-  line-height: 1;
-  flex-shrink: 0;
-}
-
-.attr-step-content {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.attr-step-content strong {
-  font-family: var(--font-body);
-  font-size: 13px;
-  font-weight: 700;
-  color: var(--dark);
+.hero-bottom {
+  animation: h-in 0.7s cubic-bezier(0.32, 0.72, 0, 1) 0.36s both;
 }
-
-.attr-step-content span {
-  font-family: var(--font-body);
-  font-size: 12px;
-  color: rgba(0, 48, 73, 0.6);
-  line-height: 1.5;
-}
-
-.attr-connector {
-  color: var(--primary);
-  font-size: 18px;
-  flex-shrink: 0;
-  opacity: 0.4;
-}
-
-.attr-note {
-  font-family: var(--font-body);
-  font-size: 12px;
-  color: rgba(0, 48, 73, 0.5);
-  margin: var(--space-5) 0 0;
-  border-top: 1px solid rgba(0, 48, 73, 0.06);
-  padding-top: var(--space-4);
-  font-style: italic;
-}
-
-@media (max-width: 640px) {
-  .attr-steps {
-    flex-direction: column;
-  }
-  .attr-connector {
-    transform: rotate(90deg);
-  }
-}
-
-/* ------------------------------------------------------------
-   Scroll anchor offsets — compensates for sticky 80px header
-   ------------------------------------------------------------ */
-#merchants,
-#creators,
-#how-it-works,
-#pricing,
-#faq {
-  scroll-margin-top: 80px;
+.h-stat:nth-child(1) {
+  animation: h-in 0.6s cubic-bezier(0.32, 0.72, 0, 1) 0.5s both;
 }
-
-/* ------------------------------------------------------------
-   WCAG AA — body copy line-height for optimal readability
-   ------------------------------------------------------------ */
-.split-body,
-.how-step-body,
-.faq-a,
-.testimonial-quote {
-  line-height: 1.7;
-}
-
-/* ------------------------------------------------------------
-   Cross-browser polish
-   ------------------------------------------------------------ */
-
-/* Safari font rendering fix */
-.hero-headline,
-.split-headline {
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-/* Prevent tap highlight on mobile */
-a, button {
-  -webkit-tap-highlight-color: transparent;
-}
-
-/* Better text selection color */
-::selection {
-  background: rgba(193, 18, 31, 0.2);
-  color: var(--dark);
+.h-stat:nth-child(2) {
+  animation: h-in 0.6s cubic-bezier(0.32, 0.72, 0, 1) 0.6s both;
 }
-
-/* ============================================================
-   PREMIUM VISUAL UPGRADE — gradients, depth, texture, perf
-   All overrides use later-cascade priority.
-   Colors: Design.md 6-color palette only. No border-radius.
-   ============================================================ */
-
-/* ── 1. Hero: replace weak ambient with cinematic mesh gradient ─ */
-.hero::after {
-  background:
-    radial-gradient(ellipse 90% 70% at 88%  -5%, rgba(102, 155, 188, 0.22) 0%, transparent 55%),
-    radial-gradient(ellipse 75% 65% at -8%  108%, rgba(193,  18,  31, 0.18) 0%, transparent 55%),
-    radial-gradient(ellipse 55% 45% at 50%  108%, rgba(  0,  20,  35, 0.38) 0%, transparent 58%),
-    radial-gradient(ellipse 35% 28% at 50%   50%, rgba(201, 169, 110, 0.03) 0%, transparent 50%);
-  will-change: transform;
+.h-stat:nth-child(3) {
+  animation: h-in 0.6s cubic-bezier(0.32, 0.72, 0, 1) 0.7s both;
 }
 
-/* ── 2. Hero: film-grain noise overlay — depth + premium texture ─ */
-/* Pseudo-element layered above gradient, below content          */
-.hero::before {
-  content: '';
+/* Hero spotlight */
+.hero-spotlight {
   position: absolute;
   inset: 0;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
-  background-size: 256px 256px;
-  opacity: 0.038;
-  mix-blend-mode: overlay;
   pointer-events: none;
-  z-index: 1;
-}
-/* Raise hero content above grain overlay */
-.hero-inner { z-index: 2; }
-
-/* ── 3. Hero typography: raise elements that are too faint ──── */
-/* Stat labels were 30% white — nearly invisible */
-.stat-label { color: rgba(255, 255, 255, 0.42); }
-/* Light headline word was 45% — marginal readability */
-.hero-headline .line-light { color: rgba(255, 255, 255, 0.56); }
-
-/* ── 4. Ghost numbers: make them a real design element ──────── */
-/* Was 4% — invisible. 6.5% = visible watermark, not distracting */
-.section-ghost-num              { opacity: 0.065; }
-.section-warm .section-ghost-num { opacity: 0.08;  }
-/* How-it-works step ghost numbers */
-.how-step-num                   { opacity: 0.065; }
-
-/* ── 5. Section warm: stronger atmospheric depth ──────────── */
-/* Three light sources: steel blue from left, red from right,   */
-/* champagne gold warmth from below — creates depth and warmth  */
-.section-warm {
-  background:
-    radial-gradient(ellipse 115% 55% at  -5%  50%, rgba(102, 155, 188, 0.14) 0%, transparent 50%),
-    radial-gradient(ellipse  85% 60% at 108%  72%, rgba(193,  18,  31, 0.12) 0%, transparent 50%),
-    radial-gradient(ellipse  60% 45% at  50% 108%, rgba(201, 169, 110, 0.07) 0%, transparent 50%),
-    var(--dark);
-}
-
-/* ── 6. Visual panels: gradient atmosphere ──────────────────── */
-/* Merchant panel: subtle depth gradient (light + dark surfaces) */
-.visual-merchant {
-  background:
-    radial-gradient(ellipse 100% 65% at 100%   0%, rgba(  0,  48,  73, 0.05) 0%, transparent 58%),
-    radial-gradient(ellipse  60% 45% at   0% 100%, rgba(193,  18,  31, 0.04) 0%, transparent 52%),
-    var(--surface);
-}
-/* Creator panel: steel blue base + champagne warmth */
-.visual-creator {
-  background:
-    radial-gradient(ellipse  90% 60% at  50% 100%, rgba(102, 155, 188, 0.13) 0%, transparent 65%),
-    radial-gradient(ellipse  70% 50% at 100%   0%, rgba(201, 169, 110, 0.06) 0%, transparent 55%),
-    rgba(0, 48, 73, 0.06);
-}
-
-/* ── 7. CTA merchant: volcanic urgency — red glow from corner ── */
-/* The conversion moment must have fire. Red glow bottom-right,  */
-/* cool blue top-left creates tension. Dark diagonal depth.      */
-.cta-panel-merchant {
-  background:
-    radial-gradient(ellipse 100% 90% at 115% 118%, rgba(193,  18,  31, 0.32) 0%, transparent 52%),
-    radial-gradient(ellipse  70% 50% at  -8%  28%, rgba(102, 155, 188, 0.10) 0%, transparent 50%),
-    linear-gradient(148deg, rgba(  0,  24,  38, 0.55) 0%, transparent 60%),
-    var(--dark);
-}
-/* Remove old faint pseudo-element radial (superseded by above) */
-.cta-panel-merchant::before { display: none; }
-
-/* ── 8. CTA creator: warm pearl with opportunity depth ──────── */
-/* Steel blue top-right (professional), champagne gold           */
-/* bottom-left (premium earnings) on white base                  */
-.cta-panel-creator {
-  background:
-    radial-gradient(ellipse  72% 60% at 108%  -5%, rgba(102, 155, 188, 0.09) 0%, transparent 55%),
-    radial-gradient(ellipse  62% 52% at  -8% 105%, rgba(201, 169, 110, 0.08) 0%, transparent 55%),
-    var(--surface-elevated);
-}
-
-/* ── 9. Pricing featured card: champagne warmth from above ──── */
-/* Gold glow at top reinforces "premium tier" identity           */
-.pricing-card-featured {
-  background:
-    radial-gradient(ellipse 95% 45% at 50% 0%, rgba(201, 169, 110, 0.10) 0%, transparent 55%),
-    #fff;
-}
-
-/* ── 10. Proof strip: elevated with gradient depth ──────────── */
-.proof-strip {
-  background:
-    radial-gradient(ellipse 80% 100% at 0% 50%, rgba(  0,  48,  73, 0.03) 0%, transparent 60%),
-    var(--surface-elevated);
-}
-
-/* ── 11. Ticker: fade edges for premium marquee feel ─────────── */
-/* Soft gradient fade-out masks the hard clip at container edges */
-.ticker::before,
-.ticker::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  width: 120px;
-  z-index: 3;
-  pointer-events: none;
-}
-.ticker::before {
-  left: 0;
-  background: linear-gradient(to right, var(--surface), transparent);
-}
-.ticker::after {
-  right: 0;
-  background: linear-gradient(to left, var(--surface), transparent);
-}
-
-/* ── 12. How-step hover: richer ambient on interaction ──────── */
-.how-step:hover {
-  background:
-    radial-gradient(ellipse 80% 55% at 0% 50%, rgba(193, 18, 31, 0.04) 0%, transparent 60%),
-    rgba(0, 48, 73, 0.025);
-}
-
-/* ── 13. Section separator: gradient line replaces hard line ── */
-/* Light gradient separator between same-tone sections          */
-.section + .section-bright::before,
-.section-bright + .section::before {
-  content: '';
-  display: block;
-  height: 1px;
-  background: linear-gradient(
-    to right,
-    transparent 0%,
-    rgba(0, 48, 73, 0.09) 25%,
-    rgba(0, 48, 73, 0.09) 75%,
-    transparent 100%
+  z-index: 0;
+  opacity: 0;
+  transition: opacity 500ms ease;
+  background: radial-gradient(
+    circle 500px at var(--sx, 50%) var(--sy, 50%),
+    rgba(102, 155, 188, 0.08) 0%,
+    transparent 65%
   );
 }
 
-/* ── 14. Typography: antialiasing on all display elements ───── */
-.cta-headline,
-.section-warm .split-headline,
-h1, h2, h3 {
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+/* ============================================================
+   BUTTONS — Apple spring hover + lift
+   ============================================================ */
+.btn-fill,
+.btn-outline,
+.btn-outline-light {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 13px 32px;
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: all 500ms cubic-bezier(0.32, 0.72, 0, 1);
 }
 
-/* ── 15. Performance: defer painting of deep below-fold sections */
-/* content-visibility skips layout/paint until near viewport     */
-.testimonials-section {
-  content-visibility: auto;
-  contain-intrinsic-block-size: 700px;
+.btn-fill {
+  color: #fff;
+  background: var(--primary);
+  border: 1px solid var(--primary);
 }
-/* FAQ: smaller containment estimate to avoid scroll jump        */
-section#faq {
-  content-visibility: auto;
-  contain-intrinsic-block-size: 500px;
+
+.btn-fill:hover {
+  background: #d4141f;
+  border-color: #d4141f;
+  box-shadow: 0 4px 20px rgba(193, 18, 31, 0.25);
+  transform: translateY(-1px);
+}
+
+.btn-fill:active {
+  transform: translateY(0) scale(0.97);
+  transition-duration: 100ms;
+}
+
+.btn-outline {
+  color: var(--dark);
+  background: transparent;
+  border: 1px solid var(--line);
+}
+
+.btn-outline:hover {
+  border-color: var(--dark);
+  background: rgba(0, 48, 73, 0.03);
+  transform: translateY(-1px);
+}
+
+.btn-outline:active {
+  transform: translateY(0) scale(0.97);
+  transition-duration: 100ms;
+}
+
+.btn-outline-light {
+  color: rgba(255, 255, 255, 0.5);
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.btn-outline-light:hover {
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 255, 0.04);
+  transform: translateY(-1px);
+}
+
+.btn-outline-light:active {
+  transform: translateY(0) scale(0.97);
+  transition-duration: 100ms;
 }
 
 /* ============================================================
-   20× EDITORIAL REDESIGN — v4
-   High-contrast editorial × luxury gradients × interactive depth.
-   Avant-garde typography with extreme weight contrast (900 vs 100).
-   Gradient text, atmospheric sections, physical hover feedback.
-   Palette: Design.md 6 colors only. border-radius: 0.
+   PROOF STRIP (CS Genio Mono)
    ============================================================ */
-
-/* ─────────────────────────────────────────────────────────────── */
-/* 1. HERO — extreme typographic drama                             */
-/* ─────────────────────────────────────────────────────────────── */
-
-/* Hero headline: editorial scale with breathing room */
-.hero-headline {
-  font-size: clamp(64px, 12vw, 160px);
-  letter-spacing: -0.06em;
-  line-height: 0.88;
-  margin-bottom: var(--space-8);
-  margin-top: var(--space-6);
+.proof {
+  border-top: 1px solid var(--line);
+  background: var(--surface);
+  padding: 16px 0;
 }
 
-/* "Turn creators" — ultra-black 900 */
-.hero-headline .line-black { font-weight: 900; }
-
-/* "into" — gossamer thin, Steel Blue tint */
-.hero-headline .line-light {
-  font-weight: 100;
-  color: rgba(102, 155, 188, 0.4);
-}
-
-/* "results." — solid Flag Red */
-.hero-headline em {
-  font-weight: 900;
-  font-style: italic;
-  color: var(--primary);
-}
-
-/* Hero sub: larger, more breathing */
-.hero-sub {
-  font-size: 17px;
-  line-height: 1.7;
-  max-width: 520px;
-  letter-spacing: 0.005em;
-  color: rgba(245, 242, 236, 0.78);
-}
-
-/* Hero CTAs: row layout for desktop */
-.hero-ctas {
-  flex-direction: row;
+.proof-inner {
+  display: flex;
   align-items: center;
-  gap: 12px;
-  margin-bottom: var(--space-8);
+  gap: var(--space-6);
+  flex-wrap: wrap;
 }
 
-/* Hero eyebrow: red accent dot before text */
-.hero-eyebrow::before {
-  content: '';
-  display: inline-block;
-  width: 6px;
-  height: 6px;
-  background: var(--primary);
-  margin-right: 10px;
-  vertical-align: middle;
+.proof-label {
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(0, 48, 73, 0.35);
+  flex-shrink: 0;
 }
 
-/* Hero stats: subtle weight, clean color */
-.stat-num {
-  font-size: clamp(40px, 4.5vw, 64px) !important;
-  font-weight: 300 !important;
-  color: rgba(245, 242, 236, 0.9) !important;
-  letter-spacing: -0.04em;
-}
-.stat-label {
-  color: rgba(255, 255, 255, 0.35) !important;
-  font-size: 11px;
-  letter-spacing: 0.06em;
+.proof-names {
+  display: flex;
+  gap: var(--space-4);
+  flex-wrap: wrap;
 }
 
-/* ─────────────────────────────────────────────────────────────── */
-/* 2. SECTION RHYTHM — dramatic vertical breathing                 */
-/* ─────────────────────────────────────────────────────────────── */
-.section                { padding-block: 140px; }
-.hero                   { min-height: 100svh; padding-top: 100px; padding-bottom: var(--space-8); padding-block: unset; }
-.testimonials-section   { padding-block: 120px; }
-.cta-section            { padding-block: 140px; }
-section#faq             { padding-block: 120px; }
-
-/* Ghost numbers: barely-there watermarks */
-.section-ghost-num {
-  font-size: clamp(120px, 18vw, 240px);
-  font-weight: 900;
-  opacity: 0.02;
-  letter-spacing: -0.11em;
+.proof-name {
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--dark);
+  opacity: 0.3;
+  transition: opacity 300ms cubic-bezier(0.32, 0.72, 0, 1);
 }
-.section-warm .section-ghost-num { opacity: 0.03; }
 
-/* Section tag line: subtle solid */
-.section-tag-line {
-  width: 48px;
-  height: 2px;
-  background: var(--primary);
+.proof-name:hover {
   opacity: 0.6;
 }
 
-/* Section separators: clean subtle hairline */
-.section + .section-bright::before,
-.section-bright + .section::before {
-  content: '';
-  display: block;
-  height: 1px;
-  background: rgba(0, 48, 73, 0.06);
+/* ============================================================
+   SECTION SYSTEM — generous breathing between, tight inside
+   ============================================================ */
+.s {
+  position: relative;
+  overflow: hidden;
+  padding: 160px 0;
 }
 
-/* ─────────────────────────────────────────────────────────────── */
-/* 3. SPLIT HEADLINES — extreme editorial weight contrast          */
-/*    wt-900 = massive black display                               */
-/*    wt-300 = overridden to weight 100, barely-there thin         */
-/* ─────────────────────────────────────────────────────────────── */
-.split-headline {
-  font-size: clamp(56px, 8vw, 120px);
-  letter-spacing: -0.07em;
-  line-height: 0.88;
-  margin-bottom: var(--space-5);
+.s--compact {
+  padding: 120px 0;
 }
-.split-headline .wt-900 { font-weight: 900; }
-.split-headline .wt-300 {
-  font-weight: 100;
-  color: rgba(0, 48, 73, 0.2);
+
+.s--light {
+  background: var(--surface);
+}
+
+.s--snow {
+  background:
+    radial-gradient(
+      ellipse 40% 30% at 85% 15%,
+      rgba(201, 169, 110, 0.03) 0%,
+      transparent 70%
+    ),
+    var(--surface-bright);
+}
+
+.s--dark {
+  padding: 180px 0;
+  background:
+    radial-gradient(
+      ellipse 55% 40% at 15% 65%,
+      rgba(102, 155, 188, 0.06) 0%,
+      transparent 65%
+    ),
+    radial-gradient(
+      ellipse 40% 35% at 80% 25%,
+      rgba(193, 18, 31, 0.04) 0%,
+      transparent 60%
+    ),
+    var(--dark);
+  color: var(--surface);
+}
+
+/* ── Display headline ────────────────────────────────────── */
+.d-head {
+  font-family: var(--font-display);
+  font-size: clamp(36px, 5vw, 72px);
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  line-height: 0.92;
+  color: var(--dark);
+  margin-bottom: var(--space-4);
+  max-width: 800px;
+}
+
+.d-head--w {
+  color: #fff;
+}
+
+.d-head--hero {
+  font-size: clamp(44px, 7vw, 108px);
+}
+
+/* Ghost text: READABLE but subdued — weight 300 not 100 */
+.d-ghost {
+  font-weight: 300;
+  color: rgba(0, 48, 73, 0.12);
   display: block;
 }
-.section-warm .split-headline .wt-300 {
+
+.d-ghost--w {
+  color: rgba(255, 255, 255, 0.16);
+}
+
+/* Section body (inherits CSGenioMono from global) */
+.s-body {
+  font-size: 13px;
+  color: var(--graphite);
+  line-height: 1.6;
+  max-width: 420px;
+  margin-bottom: var(--space-4);
+  -webkit-font-smoothing: antialiased;
+}
+
+.s-body--w {
+  color: rgba(245, 242, 236, 0.55);
+}
+
+/* ============================================================
+   MERCHANTS — tight asymmetric split
+   ============================================================ */
+.merch-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.4fr;
+  gap: var(--space-8);
+  align-items: start;
+}
+
+.feat-list {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  margin-bottom: var(--space-4);
+}
+
+.feat-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  font-size: 12px;
+  line-height: 1.7;
+  color: var(--dark);
+  -webkit-font-smoothing: antialiased;
+}
+
+.feat-dot {
+  width: 4px;
+  height: 4px;
+  background: var(--primary);
+  flex-shrink: 0;
+  margin-top: 7px;
+}
+
+/* Dashboard */
+.dash {
+  background: var(--surface-elevated);
+  border: 1px solid var(--line);
+  border-top: 2px solid var(--primary);
+  box-shadow: 0 20px 60px rgba(0, 48, 73, 0.06);
+  transition: transform 500ms cubic-bezier(0.32, 0.72, 0, 1), box-shadow 500ms cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+.dash:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 28px 80px rgba(0, 48, 73, 0.09);
+}
+
+.dash-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px var(--space-4);
+  border-bottom: 1px solid var(--line);
+}
+
+.dash-bar-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.dash-dot {
+  width: 6px;
+  height: 6px;
+  background: #4ade80;
+  border-radius: 50%;
+  animation: dot-p 2.2s ease-in-out infinite;
+}
+
+@keyframes dot-p {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.dash-title {
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--dark);
+}
+
+.dash-meta {
+  font-family: var(--font-body);
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.dash-rows {
+  padding: 2px 0;
+}
+
+.dash-row {
+  display: grid;
+  grid-template-columns: 1fr auto auto auto;
+  gap: var(--space-3);
+  padding: 8px var(--space-4);
+  font-size: 12px;
+  align-items: center;
+  border-bottom: 1px solid rgba(0, 48, 73, 0.04);
+  animation: row-in 0.5s cubic-bezier(0.32, 0.72, 0, 1) both;
+  transition: background 200ms ease;
+}
+
+.dash-row:hover {
+  background: rgba(0, 48, 73, 0.015);
+}
+
+@keyframes row-in {
+  from {
+    opacity: 0;
+    transform: translateX(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.dash-handle {
+  font-weight: 700;
+  color: var(--dark);
+}
+
+.dash-qr {
+  font-family: var(--font-body);
+  font-size: 11px;
+  color: var(--text-muted);
+  letter-spacing: 0.04em;
+}
+
+.dash-check {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.dash-check--ok {
+  color: #4ade80;
+}
+
+.dash-amt {
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 12px;
+  color: var(--text-muted);
+  text-align: right;
+  min-width: 40px;
+}
+
+.dash-amt--ok {
+  color: var(--primary);
+}
+
+.dash-footer {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  border-top: 1px solid var(--line);
+  padding: 10px var(--space-4);
+}
+
+.dash-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.dash-stat-n {
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  color: var(--dark);
+}
+
+.dash-stat-l {
+  font-family: var(--font-body);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+/* ============================================================
+   CREATORS — tier cards, Apple spring hover
+   ============================================================ */
+.tier-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  margin-bottom: var(--space-5);
+}
+
+.tier {
+  padding: var(--space-4) var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  border-left: 3px solid var(--tc, var(--tertiary));
+  background: rgba(255, 255, 255, 0.04);
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+  transition: all 500ms cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+.tier:hover {
+  background: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 0 40px rgba(102, 155, 188, 0.06);
+  transform: scale(1.015);
+}
+
+.tier:active {
+  transform: scale(0.99);
+  transition-duration: 100ms;
+}
+
+.tier--feat {
+  background: rgba(255, 255, 255, 0.07);
+  border-left-width: 4px;
+  border-left-color: var(--primary);
+  border-top-color: rgba(255, 255, 255, 0.08);
+}
+
+.tier-badge {
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 700;
+  padding: 3px 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  background: rgba(184, 169, 154, 0.14);
+  border: 1px solid rgba(184, 169, 154, 0.35);
+  color: #d4c4b3;
+  align-self: flex-start;
+}
+
+.tier-mat {
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.tier-name {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  color: #fff;
+}
+
+.tier-earn {
+  font-family: var(--font-display);
+  font-size: clamp(20px, 2vw, 28px);
+  font-weight: 300;
+  letter-spacing: -0.04em;
+  color: var(--champagne, #c9a96e);
+  line-height: 1;
+}
+
+.tier-desc {
+  font-family: var(--font-body);
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.45);
+  line-height: 1.5;
+  letter-spacing: 0.01em;
+}
+
+/* Progression (mono) */
+.tier-prog {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+  margin-bottom: var(--space-5);
+  font-family: var(--font-body);
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.tier-prog-a {
+  color: rgba(255, 255, 255, 0.15);
+}
+
+.tier-prog-hi {
+  color: var(--champagne);
+  font-weight: 700;
+}
+
+/* Pull quote */
+.quote {
+  border-left: 2px solid var(--primary);
+  padding-left: var(--space-5);
+  margin-bottom: var(--space-5);
+  max-width: 480px;
+}
+
+.quote p {
+  font-family: var(--font-display);
+  font-size: clamp(15px, 1.6vw, 22px);
+  font-weight: 300;
+  letter-spacing: -0.02em;
+  line-height: 1.4;
+  color: rgba(255, 255, 255, 0.6);
+  margin-bottom: var(--space-2);
+}
+
+.quote cite {
+  font-family: var(--font-body);
+  font-style: normal;
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.35);
+  letter-spacing: 0.04em;
+}
+
+/* ============================================================
+   HOW IT WORKS — editorial list, red-line reveal on hover
+   ============================================================ */
+.steps {
+  display: flex;
+  flex-direction: column;
+  max-width: 620px;
+}
+
+.step {
+  display: grid;
+  grid-template-columns: 64px 1fr;
+  gap: var(--space-4);
+  padding: var(--space-5) 0;
+  border-top: 1px solid var(--line);
+  align-items: start;
+  position: relative;
+}
+
+.step:last-child {
+  border-bottom: 1px solid var(--line);
+}
+
+/* Red line reveal on hover — Apple spring */
+.step::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--primary);
+  transform: scaleY(0);
+  transform-origin: top;
+  transition: transform 500ms cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+.step:hover::before {
+  transform: scaleY(1);
+}
+
+.step-content {
+  transition: transform 500ms cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+.step:hover .step-content {
+  transform: translateX(4px);
+}
+
+.step-n {
+  font-family: var(--font-display);
+  font-size: 44px;
+  font-weight: 100;
+  letter-spacing: -0.06em;
+  line-height: 1;
+  color: var(--dark);
+  opacity: 0.06;
+  user-select: none;
+  transition: opacity 500ms cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+.step:hover .step-n {
+  opacity: 0.14;
+}
+
+.step-t {
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  color: var(--dark);
+  margin-bottom: 2px;
+  line-height: 1.2;
+}
+
+.step-b {
+  font-size: 13px;
+  color: var(--graphite);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ============================================================
+   PRICING — vertical-rule, hover lift with spring
+   ============================================================ */
+.price-top {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: var(--space-6);
+  flex-wrap: wrap;
+  gap: var(--space-4);
+}
+
+.price-note {
+  font-size: 12px;
+  color: var(--graphite);
+  line-height: 1.6;
+}
+
+.price-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0;
+}
+
+.pc {
+  padding: var(--space-6) var(--space-5);
+  position: relative;
+  border-left: 1px solid var(--line);
+  transition: all 500ms cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+.pc:first-child {
+  border-left: none;
+  padding-left: 0;
+}
+
+.pc:last-child {
+  padding-right: 0;
+}
+
+.pc:hover {
+  background: rgba(0, 48, 73, 0.015);
+  transform: translateY(-3px);
+}
+
+.pc:active {
+  transform: translateY(0) scale(0.99);
+  transition-duration: 100ms;
+}
+
+.pc--feat {
+  border-top: 2px solid var(--primary);
+  margin-top: -2px;
+}
+
+.pc--feat:hover {
+  background: rgba(193, 18, 31, 0.02);
+}
+
+.pc-badge {
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--primary);
+  display: block;
+  margin-bottom: var(--space-2);
+}
+
+.pc-name {
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  color: var(--dark);
+  margin-bottom: var(--space-3);
+}
+
+.pc-price {
+  display: flex;
+  align-items: baseline;
+  gap: 2px;
+  margin-bottom: var(--space-3);
+}
+
+.pc-int {
+  font-family: var(--font-display);
+  font-size: clamp(36px, 3.5vw, 48px);
+  font-weight: 100;
+  letter-spacing: -0.05em;
+  color: var(--dark);
+  line-height: 1;
+}
+
+.pc-dec {
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 300;
+  color: var(--graphite);
+  align-self: flex-start;
+  margin-top: 6px;
+}
+
+.pc-per {
+  font-family: var(--font-body);
+  font-size: 11px;
+  color: var(--graphite);
+  letter-spacing: 0.04em;
+  margin-left: 3px;
+}
+
+.pc-desc {
+  font-size: 12px;
+  color: var(--graphite);
+  line-height: 1.6;
+  margin-bottom: var(--space-4);
+  padding-bottom: var(--space-4);
+  border-bottom: 1px solid var(--line);
+  -webkit-font-smoothing: antialiased;
+}
+
+.pc-feats {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  margin-bottom: var(--space-5);
+}
+
+.pc-feats li {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: 12px;
+  color: var(--dark);
+  -webkit-font-smoothing: antialiased;
+}
+
+.pc-feats li::before {
+  content: "";
+  width: 3px;
+  height: 3px;
+  background: var(--primary);
+  flex-shrink: 0;
+}
+
+.pc-btn {
+  width: 100%;
+}
+
+/* ============================================================
+   PULL QUOTE — editorial, Apple spring reveal
+   ============================================================ */
+.pull-quote {
+  max-width: 680px;
+  border-left: 2px solid var(--primary);
+  padding-left: var(--space-6);
+}
+
+.pull-quote p {
+  font-family: var(--font-display);
+  font-size: clamp(20px, 2.5vw, 36px);
+  font-weight: 300;
+  letter-spacing: -0.03em;
+  line-height: 1.2;
+  color: rgba(255, 255, 255, 0.65);
+  margin-bottom: var(--space-3);
+}
+
+.pull-quote footer {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.pull-quote-n {
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 900;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.pull-quote-r {
+  font-family: var(--font-body);
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.3);
+  letter-spacing: 0.02em;
+}
+
+/* ============================================================
+   FAQ — hover accent
+   ============================================================ */
+.faq-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-5) var(--space-10);
+  border-top: 1px solid var(--line);
+  padding-top: var(--space-6);
+}
+
+.faq-q {
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  color: var(--dark);
+  margin-bottom: 2px;
+  line-height: 1.3;
+  transition: color 400ms cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+.faq:hover .faq-q {
+  color: var(--primary);
+}
+
+.faq-a {
+  font-size: 13px;
+  color: var(--graphite);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ============================================================
+   CTA
+   ============================================================ */
+.cta {
+  padding: 200px 0;
+  background:
+    radial-gradient(
+      ellipse 50% 40% at 70% 55%,
+      rgba(193, 18, 31, 0.08) 0%,
+      transparent 65%
+    ),
+    radial-gradient(
+      ellipse 40% 35% at 25% 35%,
+      rgba(102, 155, 188, 0.06) 0%,
+      transparent 60%
+    ),
+    var(--dark);
+  text-align: left;
+  position: relative;
+}
+
+.cta-inner {
+  max-width: 1080px;
+}
+
+.cta-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(245, 242, 236, 0.45);
+  margin-bottom: var(--space-5);
+}
+
+.cta-h {
+  font-family: var(--font-display);
+  font-size: clamp(36px, 5.5vw, 88px);
+  font-weight: 300;
+  letter-spacing: -0.04em;
+  line-height: 0.92;
+  color: rgba(255, 255, 255, 0.6);
+  margin-bottom: var(--space-5);
+  max-width: 700px;
+}
+
+.cta-h-thin {
   font-weight: 100;
   color: rgba(255, 255, 255, 0.18);
 }
 
-/* Split body */
-.split-body {
-  font-size: 15px;
-  line-height: 1.8;
-  max-width: 480px;
-  color: rgba(0, 48, 73, 0.55);
-}
-.section-warm .split-body {
-  color: rgba(245, 242, 236, 0.7);
+.cta-body {
+  font-size: 13px;
+  line-height: 1.6;
+  color: rgba(245, 242, 236, 0.45);
+  margin-bottom: var(--space-6);
+  max-width: 400px;
 }
 
-/* Feature list */
-.feature-text { font-size: 13px; line-height: 1.7; }
-.section-warm .feature-text { color: rgba(255, 255, 255, 0.55); }
-
-/* ─────────────────────────────────────────────────────────────── */
-/* 4. TIER CARDS — glass material design with glow hover           */
-/* ─────────────────────────────────────────────────────────────── */
-.tier-showcase-card {
-  border-left: none;
-  border-top: 4px solid var(--tier-color, rgba(255, 255, 255, 0.12));
-  padding: 0;
-  overflow: hidden;
-  background: rgba(255, 255, 255, 0.03);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
-  min-height: 244px;
+.cta-btns {
   display: flex;
-  flex-direction: column;
-  gap: 0;
-  position: relative;
+  gap: var(--space-3);
+  justify-content: flex-start;
+  flex-wrap: wrap;
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 1024px) {
+  .s {
+    padding: 100px 0;
+  }
+  .s--dark {
+    padding: 120px 0;
+  }
+  .s--compact {
+    padding: 80px 0;
+  }
+
+  .merch-grid,
+  .tier-row,
+  .faq-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .price-grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-5);
+  }
+
+  .pc {
+    border-left: none;
+    padding: var(--space-5) 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .pc:first-child {
+    padding-left: 0;
+  }
+  .pc:last-child {
+    padding-right: 0;
+    border-bottom: none;
+  }
+
+  .hero-bottom {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-4);
+  }
+  .hero-sub {
+    text-align: left;
+    max-width: 360px;
+  }
+}
+
+@media (max-width: 768px) {
+  .s {
+    padding: 72px 0;
+  }
+  .s--dark {
+    padding: 80px 0;
+  }
+  .s--compact {
+    padding: 56px 0;
+  }
+
+  .hero {
+    min-height: 92vh;
+  }
+  .hero-l1 {
+    font-size: clamp(44px, 11vw, 100px);
+  }
+  .hero-l2 {
+    font-size: clamp(36px, 9vw, 84px);
+  }
+
+  .hero-ctas {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+
+  .btn-fill,
+  .btn-outline,
+  .btn-outline-light {
+    justify-content: center;
+    text-align: center;
+  }
+
+  .hero-stats {
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+  .h-stat + .h-stat {
+    padding-left: 0;
+    border-left: none;
+    border-top: 1px solid rgba(245, 242, 236, 0.06);
+    padding-top: var(--space-3);
+  }
+
+  .d-head {
+    font-size: clamp(28px, 7vw, 48px);
+  }
+  .d-head--hero {
+    font-size: clamp(32px, 9vw, 72px);
+  }
+
+  .price-top {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-3);
+  }
+
+  .cta {
+    padding: 88px 0;
+  }
+  .cta-btns {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .step {
+    grid-template-columns: 44px 1fr;
+  }
+  .step-n {
+    font-size: 32px;
+  }
+}
+
+@media (max-width: 640px) {
+  .s {
+    padding: 56px 0;
+  }
+  .s--dark {
+    padding: 64px 0;
+  }
+  .s--compact {
+    padding: 44px 0;
+  }
+
+  .hero-l1 {
+    font-size: clamp(36px, 10vw, 72px);
+  }
+  .hero-l2 {
+    font-size: clamp(30px, 8vw, 60px);
+  }
+
+  .tier {
+    padding: var(--space-4) var(--space-3);
+  }
+  .quote p {
+    font-size: 15px;
+  }
+  .pull-quote p {
+    font-size: clamp(18px, 5vw, 28px);
+  }
+  .cta {
+    padding: 64px 0;
+  }
+  .cta-h {
+    font-size: clamp(28px, 7vw, 56px);
+  }
+}
+
+@media (max-width: 400px) {
+  .hero-l1 {
+    font-size: clamp(28px, 9vw, 52px);
+  }
+  .hero-l2 {
+    font-size: clamp(24px, 7.5vw, 44px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ============================================================
+   v8.2 PREMIUM EDITORIAL POLISH — Part A: Micro-typography
+   & rhythm refinements
+   ============================================================ */
+
+/* ── A1. Letter-spacing & line-height audit fixes ────────────
+   Hero headline: -0.06em was correct for 160px. Confirmed.
+   Split headline: -0.07em fine for display. Add breathing below. */
+
+/* Long body copy: bump line-height to 1.8 for legibility */
+.split-body,
+.how-step-body,
+.faq-a {
+  line-height: 1.82;
+}
+
+/* Hero sub: comfortably loose for onboarding copy */
+.hero-sub {
+  line-height: 1.75;
+  letter-spacing: 0.008em;
+}
+
+/* Section eyebrow labels: tighten slightly for crispness */
+.section-tag-label {
+  letter-spacing: 0.072em;
+}
+
+/* ── A2. Ghost text opacity standardisation ──────────────────
+   Light sections: 0.12 / Dark sections: 0.16 per spec */
+.section-ghost-num {
+  opacity: 0.12;
+}
+.section-warm .section-ghost-num {
+  opacity: 0.16;
+}
+/* How-step watermarks: same dark-section rule */
+.how-step-num {
+  opacity: 0.12;
+}
+
+/* ── A3. Section padding rhythm ──────────────────────────────
+   160px light / 180px dark / 120px compact / 200px CTA */
+.section                { padding-block: 160px; }
+.section-bright         { padding-block: 160px; }
+.section-warm           { padding-block: 180px; }
+.testimonials-section   { padding-block: 120px; }
+section#faq             { padding-block: 120px; }
+.cta-section            { padding-block: 200px; }
+
+/* Hero preserves its own min-height logic */
+.hero {
+  padding-block: unset;
+  padding-top: 100px;
+  padding-bottom: var(--space-8);
+}
+
+/* ── A4. Hero → first section transition softener ────────────
+   Increase hero's bottom gradient height for smoother dark→light */
+.hero::before {
+  height: 160px;
+  background: linear-gradient(to bottom, transparent 0%, rgba(0, 48, 73, 0.45) 100%);
+}
+
+/* ── A5. Button consistency ──────────────────────────────────
+   Apple spring cubic-bezier on all btn variants */
+.btn-primary,
+.btn-ghost,
+.btn-secondary,
+.btn-cta-merchant,
+.btn-cta-creator,
+.btn-outline,
+.btn-outline-light {
   transition:
-    transform 320ms cubic-bezier(0.22, 1, 0.36, 1),
-    box-shadow 320ms ease,
+    transform 360ms cubic-bezier(0.32, 0.72, 0, 1),
+    background 200ms ease,
+    color 200ms ease,
+    border-color 200ms ease,
+    box-shadow 200ms ease;
+}
+
+/* .btn-outline on light bg */
+.btn-outline {
+  background: transparent;
+  color: var(--dark);
+  border: 1.5px solid rgba(0, 48, 73, 0.28);
+  box-shadow: 2px 2px 0 rgba(0, 48, 73, 0.1);
+}
+.btn-outline:hover {
+  border-color: var(--dark);
+  box-shadow: 3px 3px 0 rgba(0, 48, 73, 0.16);
+}
+
+/* .btn-outline-light on dark bg */
+.btn-outline-light {
+  background: transparent;
+  color: rgba(255, 255, 255, 0.72);
+  border: 1.5px solid rgba(255, 255, 255, 0.18);
+  box-shadow: 2px 2px 0 rgba(255, 255, 255, 0.06);
+}
+.btn-outline-light:hover {
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.5);
+  box-shadow: 3px 3px 0 rgba(255, 255, 255, 0.1);
+}
+
+/* Active press: Apple spring snap */
+.btn:active {
+  transform: scale(0.965) translateY(1px);
+  transition-duration: 80ms;
+}
+
+/* ── A6. Micro-interactions: stat number colour sweep ─────────
+   Stats scroll into view grey→champagne via CSS animation.
+   Triggered by .visible class added by IntersectionObserver. */
+@keyframes statColorIn {
+  from { color: rgba(245, 242, 236, 0.25); }
+  to   { color: rgba(245, 242, 236, 0.9); }
+}
+
+.stat-item.visible .stat-num {
+  animation: statColorIn 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* ── A7. Divider / section-rule reveal animation ─────────────
+   .section-tag-line grows left→right on parent .reveal.visible */
+.section-tag-line {
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.6s cubic-bezier(0.32, 0.72, 0, 1) 0.15s;
+}
+.reveal.visible .section-tag-line {
+  transform: scaleX(1);
+}
+
+/* ── A8. Pull-quote / testimonial fade-in ────────────────────
+   Testimonials already have transform in reveal; add opacity ramp */
+.testimonial-card {
+  transition:
+    opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.7s cubic-bezier(0.22, 1, 0.36, 1),
     background 260ms ease;
 }
 
-.tier-showcase-swatch {
-  width: 100%;
-  height: 60px;
-  flex-shrink: 0;
-  display: block;
-  margin-bottom: 0;
-  opacity: 0.88;
-}
-
-.tier-showcase-material {
-  font-family: var(--font-display);
-  font-size: clamp(20px, 2.8vw, 30px);
-  font-weight: 900;
-  letter-spacing: -0.05em;
-  line-height: 1;
-  color: #fff;
-  opacity: 1;
-  text-transform: none;
-  padding: 14px 16px 3px;
-  display: block;
-}
-
-.tier-showcase-name {
-  font-family: var(--font-body);
-  font-size: 9px;
+/* ── A9. Copy sharpening: creator testimonial voice ──────────
+   Pull-quote gets slightly larger italic weight for impact */
+.creator-testimonial p {
+  font-size: 15px;
   font-weight: 400;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.32);
-  padding: 0 16px 10px;
-  display: block;
-  font-style: normal;
+  line-height: 1.72;
+  color: rgba(245, 242, 236, 0.82);
 }
 
-.tier-showcase-earning {
-  font-family: var(--font-display);
-  font-size: clamp(17px, 2.2vw, 24px);
-  font-weight: 900;
-  letter-spacing: -0.04em;
-  color: var(--champagne);
-  padding: 0 16px 3px;
-  display: block;
+/* ── A10. Hero stat labels — consistent uppercase tracking ───  */
+.stat-label {
+  letter-spacing: 0.055em;
+  line-height: 1.45;
 }
 
-.tier-earn-range {
-  font-family: var(--font-body);
-  font-size: 10px;
-  color: rgba(255, 255, 255, 0.25);
-  padding: 0 16px 6px;
-  display: block;
+/* ── A11. Section tag number — subtle breathing ──────────────  */
+.section-tag-num {
+  letter-spacing: 0.04em;
 }
 
-.tier-showcase-desc {
-  font-family: var(--font-body);
-  font-size: 10px;
-  line-height: 1.55;
-  color: rgba(255, 255, 255, 0.35);
-  padding: 0 16px 16px;
-  margin-top: auto;
-  display: block;
+/* ============================================================
+   v8.2 MOBILE RESPONSIVE — Part B: breakpoint fixes
+   ============================================================ */
+
+/* ── B1. Spotlight / cursor: disable on touch devices ────────
+   Hero spotlight + magnetic buttons are pointer-only effects */
+@media (hover: none) {
+  .hero-spotlight { display: none !important; }
 }
 
-/* Clay: dark text on Pearl Stone base (Path A: Steel Blue border) */
-.tier-card--clay {
-  background: rgba(102, 155, 188, 0.08);
-  border-top-color: var(--tertiary);
-}
-.tier-card--clay .tier-showcase-material { color: var(--dark); }
-.tier-card--clay .tier-showcase-name     { color: rgba(0, 48, 73, 0.4); }
-.tier-card--clay .tier-showcase-earning  { color: var(--accent); }
-.tier-card--clay .tier-earn-range        { color: rgba(0, 48, 73, 0.35); }
-.tier-card--clay .tier-showcase-desc     { color: rgba(0, 48, 73, 0.48); }
-
-/* Gold: Flag Red (Path A signals "contracted" tier) */
-.tier-card--gold {
-  background: rgba(193, 18, 31, 0.08);
-  border-top-color: var(--primary);
-}
-.tier-card--gold .tier-showcase-material { color: var(--primary); }
-
-/* Obsidian: Deep Space Blue void */
-.tier-card--obsidian {
-  background: rgba(0, 48, 73, 0.85);
-  border-top-color: var(--dark);
+/* ── B2. Hero CTA stack: ensure vertical below 640px ─────────
+   Already handled at 768px; tighten button width at 640px */
+@media (max-width: 640px) {
+  .hero-ctas {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+    width: 100%;
+  }
+  .hero-ctas .btn {
+    width: 100%;
+    justify-content: center;
+    text-align: center;
+  }
 }
 
-/* Hover: subtle lift */
-.reveal.visible .tier-showcase .tier-showcase-card:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.2);
-  background: rgba(255, 255, 255, 0.05);
+/* ── B3. Section padding: 80px at 640px, 60px at 400px ──────  */
+@media (max-width: 640px) {
+  .section,
+  .section-bright,
+  .section-warm,
+  .testimonials-section,
+  section#faq {
+    padding-block: 80px;
+  }
+  .cta-section  { padding-block: 80px; }
+}
+@media (max-width: 400px) {
+  .section,
+  .section-bright,
+  .section-warm,
+  .testimonials-section,
+  section#faq {
+    padding-block: 60px;
+  }
+  .cta-section  { padding-block: 60px; }
 }
 
-/* Entry badge */
-.tier-entry-badge {
-  position: absolute;
-  top: 8px;
-  right: 8px;
-  font-family: var(--font-body);
-  font-size: 8px;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: var(--dark);
-  background: var(--champagne);
-  padding: 3px 8px;
-  z-index: 2;
-  font-weight: 700;
-}
-
-/* Current tier: steel-blue ambient glow */
-.tier-showcase-card--current {
-  background: rgba(102, 155, 188, 0.1);
-  border-top-width: 5px;
-  border-top-color: var(--tertiary);
-  box-shadow: 0 0 64px -18px rgba(102, 155, 188, 0.22);
-}
-
-/* ─────────────────────────────────────────────────────────────── */
-/* 5. HOW IT WORKS — oversized watermark step numbers              */
-/* ─────────────────────────────────────────────────────────────── */
-.how-step { overflow: hidden; }
-
-.how-step-num {
-  font-size: clamp(140px, 20vw, 220px);
-  font-weight: 900;
-  opacity: 0.025;
-  position: absolute;
-  top: -40px;
-  right: -20px;
-  line-height: 0.76;
-  letter-spacing: -0.12em;
-  z-index: 0;
-  pointer-events: none;
-  user-select: none;
-  color: var(--dark);
-}
-
-.how-step-index,
-.how-step-title,
-.how-step-body,
-.how-step-bullets { position: relative; z-index: 1; }
-
-/* Hover: subtle lift */
-.how-step:hover {
-  background: var(--surface-elevated);
-  transform: translateY(-6px);
-  box-shadow: 0 16px 40px rgba(0, 48, 73, 0.06);
-}
-
-/* ─────────────────────────────────────────────────────────────── */
-/* 6. PRICING — featured card gold glow + scale lift               */
-/* ─────────────────────────────────────────────────────────────── */
-.pricing-card-featured {
-  border: 1px solid rgba(0, 48, 73, 0.08);
-  border-top: 3px solid var(--dark);
-  box-shadow: 0 16px 48px rgba(0, 48, 73, 0.08);
-}
-.pricing-card-featured.visible {
-  transform: translateY(-8px) !important;
-}
-.pricing-card-featured:hover {
-  box-shadow: 0 24px 56px rgba(0, 48, 73, 0.12);
-  transform: translateY(-12px) !important;
-}
-
-.pricing-card:not(.pricing-card-featured) {
-  border-top: 2px solid rgba(0, 48, 73, 0.06);
-}
-.pricing-card:not(.pricing-card-featured):hover {
-  border-top-color: rgba(0, 48, 73, 0.2);
-  transform: translateY(-6px);
-  box-shadow: 0 12px 36px rgba(0, 48, 73, 0.06);
-}
-
-/* Price numbers: oversized display */
-.price-int {
-  font-size: clamp(52px, 6.5vw, 72px);
-  font-weight: 900;
-  letter-spacing: -0.06em;
-}
-
-/* ─────────────────────────────────────────────────────────────── */
-/* 7. TESTIMONIALS — dark editorial with decorative quotemarks     */
-/* ─────────────────────────────────────────────────────────────── */
-.testimonials-section {
-  background: var(--dark);
-  position: relative;
-}
-
-.testimonials-section::before { display: none; }
-.testimonials-section > .container { position: relative; z-index: 1; }
-
-.testimonial-card {
-  background: rgba(255, 255, 255, 0.035);
-  border-top: 3px solid rgba(255, 255, 255, 0.04);
-  padding: var(--space-8) var(--space-6);
-  position: relative;
-  transition:
-    background 260ms ease,
-    transform 300ms cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-/* Decorative oversized open-quotemark */
-.testimonial-card::before {
-  content: '\201C';
-  position: absolute;
-  top: 16px;
-  left: 14px;
-  font-family: var(--font-display);
-  font-size: 88px;
-  font-weight: 100;
-  line-height: 1;
-  color: rgba(255, 255, 255, 0.05);
-  pointer-events: none;
-}
-
-.testimonial-card:hover {
-  background: rgba(255, 255, 255, 0.07);
-  transform: translateY(-8px);
-}
-.testimonial-card--merchant { border-top-color: var(--primary); }
-.testimonial-card--creator  { border-top-color: var(--champagne); }
-
-.testimonial-quote {
-  font-family: var(--font-display);
-  font-size: clamp(18px, 2.6vw, 28px);
-  font-weight: 300;
-  letter-spacing: -0.03em;
-  line-height: 1.38;
-  color: rgba(255, 255, 255, 0.88);
-  font-style: normal;
-  margin-bottom: var(--space-5);
-}
-
-.testimonial-name { color: #fff; font-weight: 700; font-size: 13px; }
-.testimonial-role { color: rgba(255, 255, 255, 0.32); font-size: 11px; }
-
-/* ─────────────────────────────────────────────────────────────── */
-/* 8. PROOF STRIP — gold accent, champagne stat numbers            */
-/* ─────────────────────────────────────────────────────────────── */
-.vc-metrics-bar { display: none; }
-.market-hint    { display: none; }
-
-.proof-strip { border-left-color: rgba(0, 48, 73, 0.12); border-left-width: 3px; }
-
-.proof-stat-num {
-  font-size: 44px !important;
-  font-weight: 300 !important;
-  color: var(--dark) !important;
-  letter-spacing: -0.04em;
-}
-
-/* ─────────────────────────────────────────────────────────────── */
-/* 9. HERO STATS — Champagne Gold gradient dividers                */
-/* ─────────────────────────────────────────────────────────────── */
-.stat-item { position: relative; padding-left: var(--space-4); border-right: none; }
-.stat-item:first-child { padding-left: 0; }
-.stat-item:last-child  { border-right: none; padding-right: 0; }
-
-.stat-item:not(:last-child)::after {
-  content: '';
-  position: absolute;
-  right: 0;
-  top: 15%;
-  height: 70%;
-  width: 1px;
-  background: rgba(255, 255, 255, 0.1);
-}
-
-/* ─────────────────────────────────────────────────────────────── */
-/* 10. REVEAL ANIMATIONS — cinematic entrance choreography         */
-/* ─────────────────────────────────────────────────────────────── */
-.section-warm .reveal,
-.cta-section .reveal {
-  transform: translateY(56px);
-}
-
-.how-step.reveal {
-  transform: translateX(-36px) translateY(0);
-  transition:
-    opacity 0.75s cubic-bezier(0.22, 1, 0.36, 1),
-    transform 0.75s cubic-bezier(0.22, 1, 0.36, 1);
-}
-.how-step.reveal.visible {
-  transform: translateX(0) translateY(0) !important;
-  opacity: 1 !important;
-}
-
-/* ─────────────────────────────────────────────────────────────── */
-/* 11. INTERACTIONS — physical feedback + glow effects             */
-/* ─────────────────────────────────────────────────────────────── */
-.btn:active { transform: scale(0.97); }
-
-.btn-primary:hover {
-  box-shadow: var(--btn-shadow-hover);
-}
-
-.section-warm .btn-ghost:hover,
-.cta-panel-merchant .btn:hover {
-  border-color: rgba(255, 255, 255, 0.55);
-  color: #fff;
-}
-
-/* ─────────────────────────────────────────────────────────────── */
-/* 12. CTA SECTION — atmosphere + gradient text                    */
-/* ─────────────────────────────────────────────────────────────── */
-.cta-section { background: var(--dark); }
-.cta-inner   { align-items: stretch; }
-.cta-panel   { padding: var(--space-15) var(--space-8); }
-
-/* Merchant CTA headline: clean white */
-.cta-panel-merchant .cta-headline .wt-900 {
-  color: #fff;
-}
-
-/* ─────────────────────────────────────────────────────────────── */
-/* 13. TICKER — premium treatment                                  */
-/* ─────────────────────────────────────────────────────────────── */
-.ticker-dot {
-  background: var(--champagne);
-  opacity: 0.7;
-}
-
-/* ─────────────────────────────────────────────────────────────── */
-/* 14. FAQ — refined on dark                                       */
-/* ─────────────────────────────────────────────────────────────── */
-section#faq {
-  background: var(--surface);
-}
-.faq-q {
-  font-family: var(--font-display);
-  font-weight: 700;
-  letter-spacing: -0.03em;
-}
-.faq-a {
-  color: rgba(0, 48, 73, 0.6);
-}
-
-/* ─────────────────────────────────────────────────────────────── */
-/* FTC 16 CFR § 255 Disclosure                                     */
-/* ─────────────────────────────────────────────────────────────── */
-.compliance-disclosure {
-  background: #f5f2ec; /* Pearl Stone */
-  padding: 16px 24px;
-  border-top: 1px solid #003049; /* Deep Space Blue */
-  font-family: "CS Genio Mono", monospace;
-  font-size: 12px;
-  line-height: 1.5;
-  color: #003049;
-}
-.compliance-disclosure .disclosure-text {
-  margin: 0;
-}
-.compliance-disclosure .asterisk {
-  color: #c1121f; /* Flag Red */
-  font-weight: 700;
-  margin-right: 4px;
-}
-.compliance-disclosure a {
-  color: #003049;
-  text-decoration: underline;
-  text-underline-offset: 2px;
-}
-.disclosure-marker {
-  color: #c1121f; /* Flag Red */
-  font-weight: 700;
-  font-size: 0.7em;
-  vertical-align: super;
-  margin-left: 2px;
-  cursor: help;
-}
-.visually-hidden {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border: 0;
-}
-
-/* ─────────────────────────────────────────────────────────────── */
-/* MOBILE — responsive breakpoints                                 */
-/* ─────────────────────────────────────────────────────────────── */
+/* ── B4. Split layout: single column at 768px ────────────────
+   Already set; ensure visual comes second (below text) */
 @media (max-width: 768px) {
-  .section             { padding-block: 88px; }
-  .hero-headline       { font-size: clamp(56px, 14vw, 120px); }
-  .hero-ctas           { flex-direction: column; }
-  .split-headline      { font-size: clamp(44px, 11vw, 72px); }
-  .tier-showcase-card  { min-height: 195px; }
-  .how-step-num        { font-size: clamp(110px, 30vw, 180px); }
-  .cta-panel           { padding: var(--space-8) var(--space-4); }
-  .testimonial-quote   { font-size: 17px; }
-  .testimonial-card::before { font-size: 64px; }
-  .proof-stat-num      { font-size: 38px !important; }
-  .stat-num            { font-size: clamp(36px, 8vw, 52px) !important; }
-  .compliance-disclosure { padding: 16px; font-size: 11px; }
+  .split,
+  .split-reverse {
+    grid-template-columns: 1fr;
+    direction: ltr;
+    gap: var(--space-6);
+  }
+  /* Visual block after text column */
+  .split-visual {
+    order: 2;
+    aspect-ratio: auto;
+    height: 200px;
+    max-height: 220px;
+  }
+  /* Merchant attribution visual: cap height */
+  .visual-merchant {
+    max-height: 260px;
+    overflow: hidden;
+  }
+}
+
+/* ── B5. Hero responsive: headline folding ───────────────────  */
+@media (max-width: 1024px) {
+  .hero-headline {
+    font-size: clamp(52px, 11vw, 110px);
+    line-height: 0.9;
+  }
+  .split-headline {
+    font-size: clamp(40px, 9vw, 88px);
+  }
+}
+
+/* ── B6. Navigation: mobile hamburger ─────────────────────────
+   If a mobile nav toggle exists (.nav-toggle), show it.
+   Landing page relies on the global nav component; add
+   fallback visibility so the toggle is never hidden at mobile. */
+@media (max-width: 768px) {
+  .nav-toggle { display: flex !important; }
+  .nav-links  { display: none; }
+  .nav-links.open { display: flex; flex-direction: column; }
+}
+
+/* ── B7. How-grid: single column timeline on tablet+ ─────────
+   Already set at 1024px. At 640px tighten padding. */
+@media (max-width: 640px) {
+  .how-grid {
+    grid-template-columns: 1fr;
+    gap: 1px;
+  }
+  .how-step {
+    padding: var(--space-6) var(--space-4);
+  }
+  /* Arrow connectors: not applicable in single-col */
+  .how-step:not(:last-child)::after {
+    display: none;
+  }
+}
+
+/* ── B8. Tier showcase: 2-col at 640px, 1-col at 400px ──────  */
+@media (max-width: 640px) {
+  .tier-showcase {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    overflow-x: visible;
+    gap: 8px;
+  }
+  .tier-showcase-card {
+    min-width: unset;
+    min-height: 180px;
+  }
+}
+@media (max-width: 400px) {
+  .tier-showcase {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ── B9. Dashboard preview / merchant attribution: mobile ─────
+   MerchantAttributionVisual shown inside .visual-merchant,
+   hidden at 860px hero collapse. In merchants section ensure
+   it adapts cleanly. */
+@media (max-width: 768px) {
+  .merch-attr-visual {
+    max-height: 280px;
+    overflow: hidden;
+  }
+  /* Truncate row table to 3 rows on small screens */
+  .mav-rows .mav-row:nth-child(n+4) {
+    display: none;
+  }
+}
+
+/* ── B10. Pricing grid: single col at 1024px (already done).
+   At 640px: remove featured card scale lift (confusing in stack) */
+@media (max-width: 640px) {
+  .pricing-card-featured,
+  .pricing-card-featured.visible {
+    transform: translateY(0) !important;
+  }
+  .pricing-card {
+    padding: var(--space-5) var(--space-4);
+  }
+  .pricing-header {
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+}
+
+/* ── B11. CTA section: left-align preserved on mobile ────────
+   Headings stay left-aligned; buttons go full-width */
+@media (max-width: 640px) {
+  .cta-inner,
+  .cta-panels {
+    grid-template-columns: 1fr;
+  }
+  .cta-panel {
+    padding: var(--space-6) var(--space-4);
+    text-align: left;
+  }
+  .cta-panel .btn {
+    width: 100%;
+    justify-content: center;
+  }
+  .cta-panel-creator {
+    border-left: none;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+  }
+  .cta-headline {
+    font-size: clamp(26px, 9vw, 44px);
+  }
+}
+
+/* ── B12. Hero stats: left-align row layout on small mobile ──
+   At 400px collapse number+label to stacked, no row layout */
+@media (max-width: 400px) {
+  .hero-stats {
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+  .stat-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+    border-right: none;
+    border-bottom: 1px solid rgba(245, 242, 236, 0.1);
+    padding: 0 0 var(--space-3);
+  }
+  .stat-item:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+}
+
+/* ── B13. Testimonials: single column at 640px ───────────────
+   Already set at 768px, keep. Add padding tightening. */
+@media (max-width: 640px) {
+  .testimonials-grid {
+    grid-template-columns: 1fr;
+  }
+  .testimonial-card {
+    padding: var(--space-5) var(--space-4);
+  }
+}
+
+/* ── B14. FAQ grid: single column at 640px (already set).
+   Tighten item padding on 400px. */
+@media (max-width: 400px) {
+  .faq-item {
+    padding: var(--space-4) var(--space-3);
+  }
+}
+
+/* ── B15. Proof strip: vertical stack at 640px ───────────────  */
+@media (max-width: 640px) {
+  .proof-strip {
+    padding: var(--space-4) var(--space-3);
+  }
+  .proof-stats {
+    gap: var(--space-3);
+  }
+  .proof-stat-num {
+    font-size: 32px !important;
+  }
+}
+
+/* ── B16. Ticker: reduce padding on mobile ───────────────────  */
+@media (max-width: 640px) {
+  .ticker-item {
+    padding-inline: 12px;
+    font-size: 10px;
+  }
+}
+
+/* ── B17. Hero scroll hint: hide on very small screens ──────  */
+@media (max-width: 480px) {
+  .hero-scroll-hint { display: none; }
+}
+
+/* ── B18. Hero eyebrow: smaller letter-spacing on mobile ─────  */
+@media (max-width: 640px) {
+  .hero-eyebrow {
+    font-size: 10px;
+    letter-spacing: 0.06em;
+  }
+}
+
+/* ── B19. Prevent horizontal overflow on mobile ──────────────  */
+@media (max-width: 768px) {
+  .hero-inner,
+  .split,
+  .how-grid,
+  .pricing-grid {
+    min-width: 0;
+  }
+  /* Ghost section numbers: prevent bleed */
+  .section-ghost-num {
+    display: none;
+  }
+}
+
+/* ── B20. Attribution explainer: stack on mobile ─────────────  */
+@media (max-width: 640px) {
+  .attr-explainer {
+    padding: var(--space-4) var(--space-3);
+  }
+  .attr-steps {
+    gap: 12px;
+  }
+  .attr-step {
+    min-width: unset;
+  }
 }

@@ -8,10 +8,6 @@ import {
   MOCK_DISPUTES,
   getDisputesForRole,
 } from "@/lib/disputes/mock-disputes";
-
-// Role-scoped reads + state-mutating POST. Opt out of Next's route-level
-// cache so every request reflects current disputes state.
-export const dynamic = "force-dynamic";
 import type { Dispute } from "@/lib/disputes/types";
 
 export async function GET(req: NextRequest) {

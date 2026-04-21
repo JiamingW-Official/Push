@@ -1,6 +1,5 @@
 // TODO: wire to Supabase + notify creator via Realtime
 import { NextRequest, NextResponse } from "next/server";
-import { badRequest } from "@/lib/api/responses";
 
 type Decision = "accept" | "decline" | "shortlist";
 
@@ -12,11 +11,11 @@ export async function POST(req: NextRequest) {
   };
 
   if (!applicationIds || !Array.isArray(applicationIds) || !decision) {
-    return badRequest("Invalid payload");
+    return NextResponse.json({ error: "Invalid payload" }, { status: 400 });
   }
   const valid: Decision[] = ["accept", "decline", "shortlist"];
   if (!valid.includes(decision)) {
-    return badRequest("Invalid decision");
+    return NextResponse.json({ error: "Invalid decision" }, { status: 400 });
   }
 
   // TODO: batch update Supabase applications table + trigger realtime notification

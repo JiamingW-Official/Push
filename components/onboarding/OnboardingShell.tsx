@@ -1,12 +1,13 @@
 "use client";
 
 import { ReactNode } from "react";
+import { ProgressDots } from "./ProgressDots";
 import "./onboarding.css";
 
 interface OnboardingShellProps {
   /** "Creator" or "Merchant" — shown in the eyebrow */
   role: "Creator" | "Merchant";
-  /** Total number of steps */
+  /** Total number of checklist steps */
   totalSteps: number;
   /** Currently active step (1-based) */
   currentStep: number;
@@ -36,10 +37,12 @@ export function OnboardingShell({
           <div className="ob2-celebrate-rule" aria-hidden="true" />
 
           {/* Eyebrow */}
-          <p className="ob2-celebrate-eyebrow">{role} profile · all set</p>
+          <p className="ob2-celebrate-eyebrow">
+            {role} profile · {totalSteps}/{totalSteps} complete
+          </p>
 
           {/* Hero text */}
-          <h1 className="ob2-celebrate-hero">You're in.</h1>
+          <h1 className="ob2-celebrate-hero">You're live.</h1>
 
           {/* Decorative arrow — hand-drawn feel using CSS */}
           <div className="ob2-celebrate-arrow" aria-hidden="true">
@@ -70,8 +73,8 @@ export function OnboardingShell({
 
           {/* Sub copy */}
           <p className="ob2-celebrate-sub">
-            Your profile is ready. Campaigns in your neighborhood are waiting —
-            let&apos;s see what matches.
+            Your {role.toLowerCase()} profile is set up and ready. Everything
+            from here is upside.
           </p>
 
           {/* CTA */}
@@ -80,7 +83,7 @@ export function OnboardingShell({
             className="ob2-celebrate-cta"
             onClick={onDashboard}
           >
-            Take me in →
+            Go to dashboard →
           </button>
         </div>
       </div>
@@ -89,59 +92,54 @@ export function OnboardingShell({
 
   return (
     <div className="ob2-page">
-      {/* ── Single-step centered layout ────────────────────── */}
-      <div className="ob2-wizard">
-        {/* ── Top bar: brand + progress ─────────────────────── */}
-        <header className="ob2-wizard-header">
-          {/* Brand */}
-          <div className="ob2-wizard-brand">
-            <span className="ob2-wizard-brand-dot" aria-hidden="true" />
-            <span className="ob2-wizard-brand-name">Push</span>
+      <div className="ob2-layout">
+        {/* ── Sidebar ─────────────────────────────────────── */}
+        <aside className="ob2-sidebar">
+          {/* Brand mark */}
+          <div className="ob2-sidebar-brand">
+            <span className="ob2-sidebar-brand-dot" aria-hidden="true" />
+            <span className="ob2-sidebar-brand-name">Push</span>
           </div>
 
-          {/* Step counter */}
-          <p className="ob2-wizard-step-count" aria-live="polite">
-            {completedSteps} of {totalSteps}
-          </p>
-        </header>
+          {/* Role label */}
+          <p className="ob2-sidebar-role">{role} Setup</p>
 
-        {/* ── Progress bar ──────────────────────────────────── */}
-        <div
-          className="ob2-wizard-progress-track"
-          role="progressbar"
-          aria-valuenow={completedSteps}
-          aria-valuemin={0}
-          aria-valuemax={totalSteps}
-        >
-          <div
-            className="ob2-wizard-progress-fill"
-            style={{ width: `${(completedSteps / totalSteps) * 100}%` }}
-          />
-        </div>
-
-        {/* ── Step dots ─────────────────────────────────────── */}
-        <div className="ob2-wizard-dots" aria-hidden="true">
-          {Array.from({ length: totalSteps }, (_, i) => {
-            const n = i + 1;
-            const isDone = n <= completedSteps;
-            const isActive = n === currentStep;
-            return (
-              <span
-                key={n}
-                className={[
-                  "ob2-wizard-dot",
-                  isActive ? "ob2-wizard-dot--active" : "",
-                  isDone ? "ob2-wizard-dot--done" : "",
-                ]
-                  .filter(Boolean)
-                  .join(" ")}
+          {/* Progress summary */}
+          <div className="ob2-sidebar-progress">
+            <div className="ob2-sidebar-progress-track">
+              <div
+                className="ob2-sidebar-progress-fill"
+                style={{
+                  width: `${Math.round((completedSteps / totalSteps) * 100)}%`,
+                }}
               />
-            );
-          })}
-        </div>
+            </div>
+            <p className="ob2-sidebar-progress-label">
+              {completedSteps} of {totalSteps} complete
+            </p>
+          </div>
 
-        {/* ── Content area ──────────────────────────────────── */}
-        <main className="ob2-wizard-main">{children}</main>
+          {/* Editorial large number */}
+          <div className="ob2-sidebar-display" aria-hidden="true">
+            <span className="ob2-sidebar-num">{completedSteps}</span>
+            <span className="ob2-sidebar-denom">/{totalSteps}</span>
+          </div>
+        </aside>
+
+        {/* ── Main content ────────────────────────────────── */}
+        <main className="ob2-main">
+          {/* Top bar */}
+          <div className="ob2-topbar">
+            <span className="ob2-topbar-label">
+              <span className="ob2-topbar-dot" aria-hidden="true" />
+              Onboarding
+            </span>
+            <ProgressDots total={totalSteps} current={currentStep} />
+          </div>
+
+          {/* Step content */}
+          <div className="ob2-steps">{children}</div>
+        </main>
       </div>
     </div>
   );

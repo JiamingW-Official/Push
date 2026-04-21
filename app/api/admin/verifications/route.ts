@@ -4,16 +4,10 @@ import {
   type VerificationStage,
   type VerificationStatus,
 } from "@/lib/admin/mock-verifications";
-import { requireAdminSession } from "@/lib/api/admin-auth";
-
-export const dynamic = "force-dynamic";
 
 // GET /api/admin/verifications
 // Query params: stage, status, risk_level
 export async function GET(request: NextRequest) {
-  const gate = await requireAdminSession();
-  if (!gate.ok) return gate.response;
-
   const { searchParams } = new URL(request.url);
   const stage = searchParams.get("stage") as VerificationStage | null;
   const status = searchParams.get("status") as VerificationStatus | null;

@@ -2,7 +2,14 @@
 
 import Link from "next/link";
 import dynamic from "next/dynamic";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type ReactNode,
+} from "react";
 import "./explore.css";
 import { creatorMock, type ExploreFilters } from "@/lib/data/api-client";
 import type { CampaignGeo, CreatorTier } from "@/lib/data/demo-campaigns-geo";

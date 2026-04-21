@@ -1,8 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createHash } from "node:crypto";
 import { createClient } from "@supabase/supabase-js";
-import { serverError, badRequest } from "@/lib/api/responses";
-import { getIP, rateLimit } from "@/lib/rate-limit";
 
 // POST /api/attribution/scan
 // Records a QR-code scan event.
@@ -40,19 +38,11 @@ function getServiceClient() {
 }
 
 export async function POST(request: NextRequest) {
-  // Rate limit — QR scan events feed creator commission calcs, so a
-  // single attacker flooding this endpoint could inflate payouts.
-  // 30 scans/min per IP is generous for a real customer in a cafe.
-  const clientIp = getIP(request);
-  if (!rateLimit(`scan:${clientIp}`, 30, 60_000)) {
-    return NextResponse.json({ error: "Too many requests" }, { status: 429 });
-  }
-
   let body: Record<string, unknown>;
   try {
     body = await request.json();
   } catch {
-    return badRequest("Invalid JSON");
+    return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
   }
 
   const { qrId, campaignId, creatorId, merchantId, sessionId } = body as {
@@ -64,12 +54,19 @@ export async function POST(request: NextRequest) {
   };
 
   if (!qrId || !campaignId || !creatorId || !merchantId) {
-    return badRequest(
-      "Missing required fields: qrId, campaignId, creatorId, merchantId",
+    return NextResponse.json(
+      {
+        error:
+          "Missing required fields: qrId, campaignId, creatorId, merchantId",
+      },
+      { status: 400 },
     );
   }
   if (!sessionId) {
-    return badRequest("Missing required field: sessionId");
+    return NextResponse.json(
+      { error: "Missing required field: sessionId" },
+      { status: 400 },
+    );
   }
 
   const client = getServiceClient();
@@ -107,7 +104,10 @@ export async function POST(request: NextRequest) {
     .single();
 
   if (error) {
-    return serverError("attribution-scan", error);
+    return NextResponse.json(
+      { error: "Insert failed", detail: error.message },
+      { status: 500 },
+    );
   }
 
   return NextResponse.json({

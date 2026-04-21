@@ -5,7 +5,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getDisputeById } from "@/lib/disputes/mock-disputes";
 import type { DisputeEvent } from "@/lib/disputes/types";
-import { notFound } from "@/lib/api/responses";
 
 export async function POST(
   req: NextRequest,
@@ -16,7 +15,7 @@ export async function POST(
   const dispute = getDisputeById(id);
 
   if (!dispute) {
-    return notFound("Dispute not found");
+    return NextResponse.json({ error: "Dispute not found" }, { status: 404 });
   }
 
   const body = await req.json();

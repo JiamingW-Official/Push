@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect, useCallback, type ReactElement } from "react";
-import Link from "next/link";
 import "./wallet.css";
 import {
   MOCK_PAYOUT_METHODS,
@@ -1169,109 +1168,92 @@ export default function WalletPage() {
   ];
 
   return (
-    <>
-      {/* Mini-nav: Back to Workspace */}
-      <nav className="wallet-mini-nav" aria-label="Back to workspace">
-        <Link href="/creator/dashboard" className="wallet-mini-nav__back">
-          ← WORKSPACE
-        </Link>
-        <span className="wallet-mini-nav__sep" aria-hidden="true">
-          |
-        </span>
-        <span className="wallet-mini-nav__brand">Push</span>
-        <span className="wallet-mini-nav__sep" aria-hidden="true">
-          ·
-        </span>
-        <span className="wallet-mini-nav__page">Wallet</span>
-      </nav>
-
-      <div className="wallet">
-        {/* Hero */}
-        <section className="wallet-hero">
-          <div className="wallet-hero-left">
-            <div className="wallet-hero-label">Available to withdraw</div>
-            <div className="wallet-hero-balance">{fmt(balance.available)}</div>
-            <div className="wallet-hero-meta">
-              <div className="wallet-hero-meta-item">
-                <span className="wallet-hero-meta-label">Processing</span>
-                <span className="wallet-hero-meta-value">
-                  {fmt(balance.processing)}
-                </span>
-              </div>
-              <div className="wallet-hero-meta-item">
-                <span className="wallet-hero-meta-label">This year</span>
-                <span className="wallet-hero-meta-value">
-                  {fmt(balance.thisYear)}
-                </span>
-              </div>
+    <div className="wallet">
+      {/* Hero */}
+      <section className="wallet-hero">
+        <div className="wallet-hero-left">
+          <div className="wallet-hero-label">Available to withdraw</div>
+          <div className="wallet-hero-balance">{fmt(balance.available)}</div>
+          <div className="wallet-hero-meta">
+            <div className="wallet-hero-meta-item">
+              <span className="wallet-hero-meta-label">Processing</span>
+              <span className="wallet-hero-meta-value">
+                {fmt(balance.processing)}
+              </span>
+            </div>
+            <div className="wallet-hero-meta-item">
+              <span className="wallet-hero-meta-label">This year</span>
+              <span className="wallet-hero-meta-value">
+                {fmt(balance.thisYear)}
+              </span>
             </div>
           </div>
-
-          <div className="wallet-hero-right">
-            <button
-              className="wallet-withdraw-btn"
-              onClick={() => setShowWithdraw(true)}
-              disabled={balance.available <= 0}
-            >
-              Withdraw
-            </button>
-          </div>
-        </section>
-
-        {/* Tabs */}
-        <nav className="wallet-tabs" aria-label="Wallet sections">
-          {TAB_LABELS.map(({ key, label }) => (
-            <button
-              key={key}
-              className={`wallet-tab-btn ${tab === key ? "active" : ""}`}
-              onClick={() => setTab(key)}
-              aria-selected={tab === key}
-            >
-              {label}
-            </button>
-          ))}
-        </nav>
-
-        {/* Tab Content */}
-        <div className="wallet-tab-content" key={tab}>
-          {tab === "methods" && (
-            <PayoutMethodsTab
-              methods={methods}
-              onSetDefault={handleSetDefault}
-              onRemove={handleRemove}
-              onAddClick={() => setShowAddMethod(true)}
-            />
-          )}
-          {tab === "history" && (
-            <HistoryTab withdrawals={withdrawals} methods={methods} />
-          )}
-          {tab === "tax" && <TaxTab />}
         </div>
 
-        {/* Modals */}
-        {showWithdraw && (
-          <WithdrawModal
-            balance={balance.available}
+        <div className="wallet-hero-right">
+          <button
+            className="wallet-withdraw-btn"
+            onClick={() => setShowWithdraw(true)}
+            disabled={balance.available <= 0}
+          >
+            Withdraw
+          </button>
+        </div>
+      </section>
+
+      {/* Tabs */}
+      <nav className="wallet-tabs" aria-label="Wallet sections">
+        {TAB_LABELS.map(({ key, label }) => (
+          <button
+            key={key}
+            className={`wallet-tab-btn ${tab === key ? "active" : ""}`}
+            onClick={() => setTab(key)}
+            aria-selected={tab === key}
+          >
+            {label}
+          </button>
+        ))}
+      </nav>
+
+      {/* Tab Content */}
+      <div className="wallet-tab-content" key={tab}>
+        {tab === "methods" && (
+          <PayoutMethodsTab
             methods={methods}
-            onClose={() => setShowWithdraw(false)}
-            onConfirm={handleWithdrawConfirm}
+            onSetDefault={handleSetDefault}
+            onRemove={handleRemove}
+            onAddClick={() => setShowAddMethod(true)}
           />
         )}
-
-        {showAddMethod && (
-          <AddMethodModal
-            onClose={() => setShowAddMethod(false)}
-            onAdd={handleAddMethod}
-          />
+        {tab === "history" && (
+          <HistoryTab withdrawals={withdrawals} methods={methods} />
         )}
-
-        {/* Toast */}
-        {toast && (
-          <div className="wallet-toast" role="status">
-            {toast}
-          </div>
-        )}
+        {tab === "tax" && <TaxTab />}
       </div>
-    </>
+
+      {/* Modals */}
+      {showWithdraw && (
+        <WithdrawModal
+          balance={balance.available}
+          methods={methods}
+          onClose={() => setShowWithdraw(false)}
+          onConfirm={handleWithdrawConfirm}
+        />
+      )}
+
+      {showAddMethod && (
+        <AddMethodModal
+          onClose={() => setShowAddMethod(false)}
+          onAdd={handleAddMethod}
+        />
+      )}
+
+      {/* Toast */}
+      {toast && (
+        <div className="wallet-toast" role="status">
+          {toast}
+        </div>
+      )}
+    </div>
   );
 }

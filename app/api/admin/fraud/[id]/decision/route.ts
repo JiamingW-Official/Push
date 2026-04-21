@@ -1,9 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 import { MOCK_FRAUD_EVENTS, type FraudStatus } from "@/lib/admin/mock-fraud";
-import { requireAdminSession } from "@/lib/api/admin-auth";
-import { badRequest, notFound } from "@/lib/api/responses";
-
-export const dynamic = "force-dynamic";
 
 const VALID_DECISIONS: FraudStatus[] = [
   "approved",
@@ -18,23 +14,23 @@ export async function POST(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> },
 ) {
-  const gate = await requireAdminSession();
-  if (!gate.ok) return gate.response;
-
   const { id } = await params;
 
   let body: { decision?: string; note?: string; bulk?: string[] };
   try {
     body = await request.json();
   } catch {
-    return badRequest("Invalid JSON body");
+    return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
   }
 
   const { decision, note, bulk } = body;
 
   if (!decision || !VALID_DECISIONS.includes(decision as FraudStatus)) {
-    return badRequest(
-      `Invalid decision. Must be one of: ${VALID_DECISIONS.join(", ")}`,
+    return NextResponse.json(
+      {
+        error: `Invalid decision. Must be one of: ${VALID_DECISIONS.join(", ")}`,
+      },
+      { status: 400 },
     );
   }
 
@@ -65,7 +61,10 @@ export async function POST(
   // Single event decision
   const event = MOCK_FRAUD_EVENTS.find((e) => e.id === id);
   if (!event) {
-    return notFound(`Event '${id}' not found`);
+    return NextResponse.json(
+      { error: `Event '${id}' not found` },
+      { status: 404 },
+    );
   }
 
   event.status = decision as FraudStatus;

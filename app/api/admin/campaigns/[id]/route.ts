@@ -6,43 +6,33 @@ import {
   ADMIN_CAMPAIGNS,
   getAdminCampaignById,
 } from "@/lib/admin/mock-campaigns";
-import { requireAdminSession } from "@/lib/api/admin-auth";
-import { notFound, badRequest } from "@/lib/api/responses";
-
-export const dynamic = "force-dynamic";
 
 type RouteContext = { params: Promise<{ id: string }> };
 
 export async function GET(_req: NextRequest, { params }: RouteContext) {
-  const gate = await requireAdminSession();
-  if (!gate.ok) return gate.response;
-
   const { id } = await params;
   const campaign = getAdminCampaignById(id);
 
   if (!campaign) {
-    return notFound("Campaign not found");
+    return NextResponse.json({ error: "Campaign not found" }, { status: 404 });
   }
 
   return NextResponse.json({ campaign });
 }
 
 export async function PATCH(request: NextRequest, { params }: RouteContext) {
-  const gate = await requireAdminSession();
-  if (!gate.ok) return gate.response;
-
   const { id } = await params;
   const campaign = getAdminCampaignById(id);
 
   if (!campaign) {
-    return notFound("Campaign not found");
+    return NextResponse.json({ error: "Campaign not found" }, { status: 404 });
   }
 
   let body: Record<string, unknown>;
   try {
     body = await request.json();
   } catch {
-    return badRequest("Invalid JSON body");
+    return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
   }
 
   // Allowed PATCH fields

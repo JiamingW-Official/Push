@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
-import { createClient } from "@/lib/db/browser";
+import { createClient } from "@/lib/supabase";
 import { api } from "@/lib/messaging/api-client";
 import type { Thread, CreateThreadPayload } from "@/lib/messaging/types";
 import {

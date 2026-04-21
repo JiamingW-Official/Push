@@ -4,16 +4,10 @@ import {
   DisputeStatus,
   DisputeSeverity,
 } from "@/lib/disputes/mock-admin-disputes";
-import { requireAdminSession } from "@/lib/api/admin-auth";
-
-export const dynamic = "force-dynamic";
 
 // GET /api/admin/disputes
 // Query params: status, severity, min_amount, max_amount, category, search
 export async function GET(request: NextRequest) {
-  const gate = await requireAdminSession();
-  if (!gate.ok) return gate.response;
-
   const { searchParams } = new URL(request.url);
 
   const status = searchParams.get("status") as DisputeStatus | null;

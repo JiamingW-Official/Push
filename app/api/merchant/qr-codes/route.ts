@@ -3,7 +3,6 @@ import {
   MOCK_QR_CODES,
   type QRCodeRecord,
 } from "@/lib/attribution/mock-qr-codes-extended";
-import { badRequest } from "@/lib/api/responses";
 
 // TODO: wire to Supabase; generate signed QR payload
 
@@ -37,14 +36,15 @@ export async function POST(request: NextRequest) {
   try {
     body = await request.json();
   } catch {
-    return badRequest("Invalid JSON body");
+    return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
   }
 
   const { campaign_id, poster_type, hero_message, sub_message } = body;
 
   if (!campaign_id || !poster_type || !hero_message || !sub_message) {
-    return badRequest(
-      "campaign_id, poster_type, hero_message, sub_message required",
+    return NextResponse.json(
+      { error: "campaign_id, poster_type, hero_message, sub_message required" },
+      { status: 400 },
     );
   }
 

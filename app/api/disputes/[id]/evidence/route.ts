@@ -3,12 +3,8 @@
 // TODO: wire to Supabase storage + admin notification
 
 import { NextRequest, NextResponse } from "next/server";
-
-// Mutates dispute evidence; opt out of Next's route-level cache.
-export const dynamic = "force-dynamic";
 import { getDisputeById } from "@/lib/disputes/mock-disputes";
 import type { DisputeEvidence } from "@/lib/disputes/types";
-import { notFound } from "@/lib/api/responses";
 
 export async function POST(
   req: NextRequest,
@@ -19,7 +15,7 @@ export async function POST(
   const dispute = getDisputeById(id);
 
   if (!dispute) {
-    return notFound("Dispute not found");
+    return NextResponse.json({ error: "Dispute not found" }, { status: 404 });
   }
 
   const body = await req.json();

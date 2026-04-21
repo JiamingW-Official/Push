@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import type { KycState, KycStatus } from "@/lib/verify/mock-kyc";
 import { loadKyc, saveKyc, submitKyc, resetKyc } from "@/lib/verify/mock-kyc";
@@ -57,11 +57,8 @@ function canProceed(step: WizardStep, state: KycState): boolean {
 
 // ── Status badge ─────────────────────────────────────────────
 const STATUS_LABEL: Record<KycStatus, string> = {
-  idle: "Not Verified",
   unverified: "Not Verified",
-  pending: "In Review",
   in_review: "In Review",
-  approved: "Verified",
   verified: "Verified",
   rejected: "Rejected",
 };
@@ -227,13 +224,25 @@ export default function VerifyPage() {
   const [kycState, setKycState] = useState<KycState | null>(null);
   const [step, setStep] = useState<WizardStep>(1);
   const [submitting, setSubmitting] = useState(false);
+  const [slideDir, setSlideDir] = useState<"left" | "right">("right");
+  const [animating, setAnimating] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   // Load from localStorage on mount
   useEffect(() => {
-    setKycState(loadKyc());
+    const loaded = loadKyc();
+    setKycState(loaded);
+    // If previously submitted, show appropriate state without wizard
+    if (
+      loaded.status === "in_review" ||
+      loaded.status === "verified" ||
+      loaded.status === "rejected"
+    ) {
+      // status states bypass wizard
+    }
   }, []);
 
-  // Auto-poll for verified transition (mock 3s delay)
+  // Auto-poll localStorage for verified transition (mock 3s)
   useEffect(() => {
     if (!kycState || kycState.status !== "in_review") return;
     const interval = setInterval(() => {
@@ -248,7 +257,7 @@ export default function VerifyPage() {
 
   if (!kycState) return null;
 
-  // ── Status-based full-page renders ──────────────────────────
+  // ── State-based renders ──────────────────────────────────
   if (kycState.status === "verified") {
     return (
       <div className="kv-page">
@@ -272,11 +281,7 @@ export default function VerifyPage() {
           <RejectedState
             reason={kycState.rejectionReason}
             onResubmit={() => {
-              saveKyc({
-                ...kycState,
-                status: "unverified",
-                rejectionReason: undefined,
-              });
+              saveKyc({ status: "unverified", rejectionReason: undefined });
               setKycState(loadKyc());
               setStep(1);
             }}
@@ -296,17 +301,24 @@ export default function VerifyPage() {
     );
   }
 
-  // ── Wizard navigation ────────────────────────────────────────
+  // ── Wizard navigation ────────────────────────────────────
   function navigate(target: WizardStep) {
-    setStep(target);
+    if (animating) return;
+    const dir = target > step ? "right" : "left";
+    setSlideDir(dir);
+    setAnimating(true);
+    setTimeout(() => {
+      setStep(target);
+      setAnimating(false);
+    }, 400);
   }
 
   function handleNext() {
-    if (step < 4) setStep((s) => (s + 1) as WizardStep);
+    if (step < 4) navigate((step + 1) as WizardStep);
   }
 
   function handleBack() {
-    if (step > 1) setStep((s) => (s - 1) as WizardStep);
+    if (step > 1) navigate((step - 1) as WizardStep);
   }
 
   async function handleSubmit() {
@@ -320,10 +332,8 @@ export default function VerifyPage() {
   }
 
   function updateState(partial: Partial<KycState>) {
-    if (!kycState) return;
-    const merged = { ...kycState, ...partial };
-    saveKyc(merged);
-    setKycState(merged);
+    const next = saveKyc(partial);
+    setKycState(next);
   }
 
   const nextEnabled = canProceed(step, kycState);
@@ -336,22 +346,29 @@ export default function VerifyPage() {
           ← Dashboard
         </Link>
 
-        {/* Hero — "Verify Your Identity." */}
+        {/* Editorial hero */}
         <div className="kv-hero">
           <div className="kv-hero__text">
-            <h1 className="kv-hero__headline">Verify Your Identity.</h1>
+            <h1 className="kv-hero__headline">Get verified.</h1>
             <p className="kv-hero__sub">
               Three steps to unlock Operator-tier campaigns and higher payouts.
             </p>
           </div>
-          <StatusBadge status={kycState.status ?? "unverified"} />
+          <StatusBadge status={kycState.status} />
         </div>
 
-        {/* Horizontal progress stepper */}
+        {/* Progress rail */}
         <ProgressRail current={step} />
 
-        {/* Step card — border-top: red on active */}
-        <div className="kv-panel" aria-live="polite" aria-atomic="true">
+        {/* Step container */}
+        <div
+          className={["kv-panel", animating && `kv-panel--exit-${slideDir}`]
+            .filter(Boolean)
+            .join(" ")}
+          ref={containerRef}
+          aria-live="polite"
+          aria-atomic="true"
+        >
           {step === 1 && (
             <StepIdentity
               identity={kycState.identity}
@@ -388,6 +405,7 @@ export default function VerifyPage() {
                 type="button"
                 className="kv-btn kv-btn--ghost"
                 onClick={handleBack}
+                disabled={animating}
               >
                 ← Back
               </button>
@@ -404,7 +422,7 @@ export default function VerifyPage() {
                 .filter(Boolean)
                 .join(" ")}
               onClick={handleNext}
-              disabled={!nextEnabled}
+              disabled={!nextEnabled || animating}
               aria-disabled={!nextEnabled}
             >
               {step === 3 ? "Review →" : "Next →"}

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { cookies } from "next/headers";
 import Link from "next/link";
 import { resolveInvite } from "@/lib/referrals/mock-invites";
 import InviteReveal from "./InviteReveal";

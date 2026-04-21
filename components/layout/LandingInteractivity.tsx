@@ -4,11 +4,14 @@ import { useEffect } from "react";
 
 export default function LandingInteractivity() {
   useEffect(() => {
+    // Disable all pointer-only effects on touch devices
+    const isTouch = window.matchMedia("(hover: none)").matches;
+
     // ── Hero spotlight ──────────────────────────────────────
     const hero = document.querySelector<HTMLElement>(".hero");
     let spotlight: HTMLDivElement | null = null;
 
-    if (hero) {
+    if (hero && !isTouch) {
       spotlight = document.createElement("div");
       spotlight.className = "hero-spotlight";
       hero.appendChild(spotlight);

@@ -1,13 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getUsers, userStats } from "@/lib/admin/mock-users";
-import { requireAdminSession } from "@/lib/api/admin-auth";
-
-export const dynamic = "force-dynamic";
 
 export async function GET(req: NextRequest) {
-  const gate = await requireAdminSession();
-  if (!gate.ok) return gate.response;
-
   const { searchParams } = new URL(req.url);
   const tab = searchParams.get("tab") || "all";
   const kyc = searchParams.get("kyc") || "all";

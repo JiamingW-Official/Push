@@ -639,7 +639,7 @@ const styles = {
     marginTop: "6px",
   } as React.CSSProperties,
 
-  /* Consent picker wrap — keeps ConsentPicker's own layout width */
+  /* CTA */
   consentSection: {
     padding: "0 24px 32px",
     maxWidth: "720px",
@@ -647,7 +647,6 @@ const styles = {
     width: "100%",
   } as React.CSSProperties,
 
-  /* CTA */
   ctaSection: {
     padding: "32px 24px 40px",
     maxWidth: "640px",

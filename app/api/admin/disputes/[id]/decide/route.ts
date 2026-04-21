@@ -1,12 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import {
-  MOCK_DISPUTES,
-  DisputeOutcome,
-} from "@/lib/disputes/mock-admin-disputes";
-import { requireAdminSession } from "@/lib/api/admin-auth";
-import { notFound, badRequest } from "@/lib/api/responses";
-
-export const dynamic = "force-dynamic";
+import { MOCK_DISPUTES, DisputeOutcome } from "@/lib/disputes/mock-admin-disputes";
 
 type DecideBody = {
   outcome: DisputeOutcome;
@@ -19,14 +12,11 @@ export async function POST(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> },
 ) {
-  const gate = await requireAdminSession();
-  if (!gate.ok) return gate.response;
-
   const { id } = await params;
 
   const dispute = MOCK_DISPUTES.find((d) => d.id === id);
   if (!dispute) {
-    return notFound("Dispute not found");
+    return NextResponse.json({ error: "Dispute not found" }, { status: 404 });
   }
 
   if (["resolved", "dismissed"].includes(dispute.status)) {
@@ -40,13 +30,16 @@ export async function POST(
   try {
     body = await request.json();
   } catch {
-    return badRequest("Invalid JSON body");
+    return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
   }
 
   const { outcome, reasoning, split_pct } = body;
 
   if (!outcome || !reasoning) {
-    return badRequest("outcome and reasoning are required");
+    return NextResponse.json(
+      { error: "outcome and reasoning are required" },
+      { status: 400 },
+    );
   }
 
   const validOutcomes: DisputeOutcome[] = [
@@ -56,12 +49,15 @@ export async function POST(
     "dismiss",
   ];
   if (!validOutcomes.includes(outcome)) {
-    return badRequest("Invalid outcome");
+    return NextResponse.json({ error: "Invalid outcome" }, { status: 400 });
   }
 
   if (outcome === "split") {
     if (split_pct === undefined || split_pct < 0 || split_pct > 100) {
-      return badRequest("split_pct must be between 0 and 100");
+      return NextResponse.json(
+        { error: "split_pct must be between 0 and 100" },
+        { status: 400 },
+      );
     }
   }
 

@@ -228,8 +228,8 @@
 }
 
 .fraud-bulk-btn--approve {
-  border-color: var(--success);
-  color: var(--success);
+  border-color: #10b981;
+  color: #10b981;
 }
 
 .fraud-bulk-btn--approve:hover {
@@ -512,12 +512,12 @@
 }
 
 .fraud-action-btn--approve {
-  border-color: var(--success);
+  border-color: #10b981;
   color: #065f46;
 }
 
 .fraud-action-btn--approve:hover {
-  background: var(--success);
+  background: #10b981;
   color: #fff;
 }
 
@@ -839,7 +839,7 @@
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: var(--success);
+  background: #10b981;
   margin-top: 5px;
   flex-shrink: 0;
   animation: pulse 1.8s ease-in-out infinite;

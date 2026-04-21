@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 import { MOCK_QR_CODES } from "@/lib/attribution/mock-qr-codes-extended";
-import { notFound, badRequest } from "@/lib/api/responses";
 
 // TODO: wire to Supabase; generate signed QR payload
 
@@ -12,7 +11,7 @@ export async function GET(
   const { id } = await params;
   const code = MOCK_QR_CODES.find((q) => q.id === id);
   if (!code) {
-    return notFound("QR code not found");
+    return NextResponse.json({ error: "QR code not found" }, { status: 404 });
   }
   return NextResponse.json({ data: code });
 }
@@ -25,14 +24,14 @@ export async function PATCH(
   const { id } = await params;
   const code = MOCK_QR_CODES.find((q) => q.id === id);
   if (!code) {
-    return notFound("QR code not found");
+    return NextResponse.json({ error: "QR code not found" }, { status: 404 });
   }
 
   let body: { disabled?: boolean; regenerate?: boolean };
   try {
     body = await request.json();
   } catch {
-    return badRequest("Invalid JSON body");
+    return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
   }
 
   // TODO: update Supabase record
@@ -60,7 +59,7 @@ export async function DELETE(
   const { id } = await params;
   const exists = MOCK_QR_CODES.some((q) => q.id === id);
   if (!exists) {
-    return notFound("QR code not found");
+    return NextResponse.json({ error: "QR code not found" }, { status: 404 });
   }
   // TODO: delete from Supabase
   return NextResponse.json({ success: true });

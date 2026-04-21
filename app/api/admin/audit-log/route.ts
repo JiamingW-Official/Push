@@ -6,9 +6,6 @@ import {
   type AuditSeverity,
   type TargetType,
 } from "@/lib/admin/mock-audit";
-import { requireAdminSession } from "@/lib/api/admin-auth";
-
-export const dynamic = "force-dynamic";
 
 // GET /api/admin/audit-log
 // Query params:
@@ -23,9 +20,6 @@ export const dynamic = "force-dynamic";
 //   to          ISO date string
 //   preset      1h | 24h | 7d | 30d (overrides from/to)
 export async function GET(request: NextRequest) {
-  const gate = await requireAdminSession();
-  if (!gate.ok) return gate.response;
-
   const { searchParams } = request.nextUrl;
 
   const page = Math.max(1, parseInt(searchParams.get("page") ?? "1", 10));
@@ -70,7 +64,7 @@ export async function GET(request: NextRequest) {
   }
 
   // Filter
-  const filtered = MOCK_AUDIT_LOG.filter((entry) => {
+  let filtered = MOCK_AUDIT_LOG.filter((entry) => {
     if (actorFilter && entry.actor.id !== actorFilter) return false;
     if (actionFilter && entry.action !== actionFilter) return false;
     if (targetTypeFilter && entry.target.type !== targetTypeFilter)

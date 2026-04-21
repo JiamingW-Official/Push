@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
+import { createClient } from "@/lib/supabase";
 import { SettingsShell, NavItem } from "@/components/settings/SettingsShell";
 import { SettingsSection } from "@/components/settings/SettingsSection";
 import { ToggleRow, Channel } from "@/components/settings/ToggleRow";

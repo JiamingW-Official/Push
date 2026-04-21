@@ -9,10 +9,6 @@ import {
   type AdminCampaignStatus,
   type AdminFlag,
 } from "@/lib/admin/mock-campaigns";
-import { requireAdminSession } from "@/lib/api/admin-auth";
-import { notFound, badRequest } from "@/lib/api/responses";
-
-export const dynamic = "force-dynamic";
 
 type DecisionAction =
   | "approve"
@@ -32,14 +28,11 @@ const ACTION_STATUS_MAP: Record<DecisionAction, AdminCampaignStatus | null> = {
 };
 
 export async function POST(request: NextRequest, { params }: RouteContext) {
-  const gate = await requireAdminSession();
-  if (!gate.ok) return gate.response;
-
   const { id } = await params;
   const campaign = getAdminCampaignById(id);
 
   if (!campaign) {
-    return notFound("Campaign not found");
+    return NextResponse.json({ error: "Campaign not found" }, { status: 404 });
   }
 
   let body: {
@@ -51,7 +44,7 @@ export async function POST(request: NextRequest, { params }: RouteContext) {
   try {
     body = await request.json();
   } catch {
-    return badRequest("Invalid JSON body");
+    return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
   }
 
   const { action, note, flag_type, flag_description } = body;
@@ -64,14 +57,19 @@ export async function POST(request: NextRequest, { params }: RouteContext) {
     "force_refund",
   ];
   if (!action || !validActions.includes(action)) {
-    return badRequest(`action must be one of: ${validActions.join(", ")}`);
+    return NextResponse.json(
+      {
+        error: `action must be one of: ${validActions.join(", ")}`,
+      },
+      { status: 400 },
+    );
   }
 
   const now = new Date().toISOString();
   const idx = ADMIN_CAMPAIGNS.findIndex((c) => c.id === id);
 
   if (idx === -1) {
-    return notFound("Campaign not found");
+    return NextResponse.json({ error: "Campaign not found" }, { status: 404 });
   }
 
   const target = ADMIN_CAMPAIGNS[idx];

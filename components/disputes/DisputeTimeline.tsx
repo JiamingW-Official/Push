@@ -84,35 +84,29 @@ export function DisputeTimeline({ events }: DisputeTimelineProps) {
             {/* Evidence thumbnails */}
             {event.evidence && event.evidence.length > 0 && (
               <div className="dispute-timeline-evidence">
-                {event.evidence.map((ev) => {
-                  // Whitelist https:// only — rejects javascript: / data: URIs
-                  // that would otherwise execute on click (stored-XSS vector
-                  // flagged by Wave 1 audit). Anything else renders inert.
-                  const safeUrl = isSafeHttpsUrl(ev.url) ? ev.url : "#";
-                  return (
-                    <a
-                      key={ev.id}
-                      href={safeUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="dispute-evidence-thumb"
-                      title={ev.label}
-                    >
-                      {ev.type === "image" && isSafeHttpsUrl(ev.url) ? (
-                        <img
-                          src={ev.url}
-                          alt={ev.label}
-                          className="dispute-evidence-thumb__img"
-                        />
-                      ) : (
-                        <span style={{ fontSize: "20px" }}>🔗</span>
-                      )}
-                      <span className="dispute-evidence-thumb__label">
-                        {ev.label}
-                      </span>
-                    </a>
-                  );
-                })}
+                {event.evidence.map((ev) => (
+                  <a
+                    key={ev.id}
+                    href={ev.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="dispute-evidence-thumb"
+                    title={ev.label}
+                  >
+                    {ev.type === "image" ? (
+                      <img
+                        src={ev.url}
+                        alt={ev.label}
+                        className="dispute-evidence-thumb__img"
+                      />
+                    ) : (
+                      <span style={{ fontSize: "20px" }}>🔗</span>
+                    )}
+                    <span className="dispute-evidence-thumb__label">
+                      {ev.label}
+                    </span>
+                  </a>
+                ))}
               </div>
             )}
           </div>
@@ -120,18 +114,4 @@ export function DisputeTimeline({ events }: DisputeTimelineProps) {
       })}
     </div>
   );
-}
-
-/**
- * Only allow https:// URLs through to <a href> / <img src>. Rejects
- * `javascript:`, `data:`, `vbscript:`, bare strings, and protocol-relative
- * URLs. Used to sanitize evidence blobs ingested from user uploads.
- */
-function isSafeHttpsUrl(raw: string): boolean {
-  try {
-    const url = new URL(raw);
-    return url.protocol === "https:";
-  } catch {
-    return false;
-  }
 }

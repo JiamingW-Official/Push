@@ -1,7 +1,6 @@
 // TODO: wire to Supabase + notify creator via Realtime
 import { NextRequest, NextResponse } from "next/server";
 import { MOCK_APPLICATIONS } from "@/lib/data/mock-applications";
-import { notFound, badRequest } from "@/lib/api/responses";
 
 export async function GET(
   _req: NextRequest,
@@ -9,7 +8,7 @@ export async function GET(
 ) {
   const { id } = await params;
   const app = MOCK_APPLICATIONS.find((a) => a.id === id);
-  if (!app) return notFound("Not found");
+  if (!app) return NextResponse.json({ error: "Not found" }, { status: 404 });
   return NextResponse.json(app);
 }
 
@@ -22,7 +21,7 @@ export async function PATCH(
   const { status } = body as { status: string };
   const validStatuses = ["pending", "accepted", "declined", "shortlisted"];
   if (!status || !validStatuses.includes(status)) {
-    return badRequest("Invalid status");
+    return NextResponse.json({ error: "Invalid status" }, { status: 400 });
   }
 
   // TODO: update Supabase + trigger realtime push to creator

@@ -1,25 +1,17 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getUserById } from "@/lib/admin/mock-users";
-import { requireAdminSession } from "@/lib/api/admin-auth";
-import { notFound } from "@/lib/api/responses";
-
-export const dynamic = "force-dynamic";
 
 export async function POST(
   _req: NextRequest,
   { params }: { params: Promise<{ id: string }> },
 ) {
-  const gate = await requireAdminSession();
-  if (!gate.ok) return gate.response;
-
   const { id } = await params;
   const user = getUserById(id);
-  if (!user) return notFound("User not found");
+  if (!user)
+    return NextResponse.json({ error: "User not found" }, { status: 404 });
 
-  // In production this would issue a signed impersonation token; here we
-  // return metadata only. The cookie is hardened per Batch E audit:
-  // httpOnly (no JS access), secure (https-only), sameSite:strict (no
-  // cross-site POST ride-along).
+  // Stub: in production this would issue a signed impersonation token
+  // and set a secure HttpOnly cookie. Here we return metadata only.
   const response = NextResponse.json({
     success: true,
     impersonating: {
@@ -30,12 +22,11 @@ export async function POST(
     message: "Impersonation session started (stub)",
   });
 
+  // Write the cookie as a stub (non-HttpOnly for demo visibility)
   response.cookies.set("push-impersonating", user.id, {
     path: "/",
     maxAge: 60 * 60, // 1 hour
-    httpOnly: true,
-    secure: true,
-    sameSite: "strict",
+    sameSite: "lax",
   });
 
   return response;

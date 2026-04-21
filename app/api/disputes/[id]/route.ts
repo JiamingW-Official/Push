@@ -3,13 +3,8 @@
 // PATCH: update status / add outcome
 // TODO: wire to Supabase + admin notification
 
-// Reads role-scoped data and handles PATCH mutations; disable route-level
-// caching so every response reflects current state.
-export const dynamic = "force-dynamic";
-
 import { NextRequest, NextResponse } from "next/server";
 import { getDisputeById } from "@/lib/disputes/mock-disputes";
-import { notFound } from "@/lib/api/responses";
 
 export async function GET(
   _req: NextRequest,
@@ -19,7 +14,7 @@ export async function GET(
   const dispute = getDisputeById(id);
 
   if (!dispute) {
-    return notFound("Dispute not found");
+    return NextResponse.json({ error: "Dispute not found" }, { status: 404 });
   }
 
   return NextResponse.json({ dispute });
@@ -34,7 +29,7 @@ export async function PATCH(
   const dispute = getDisputeById(id);
 
   if (!dispute) {
-    return notFound("Dispute not found");
+    return NextResponse.json({ error: "Dispute not found" }, { status: 404 });
   }
 
   const body = await req.json();

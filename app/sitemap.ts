@@ -124,95 +124,7 @@ const MARKETING_PAGES: MetadataRoute.Sitemap = [
     changeFrequency: "monthly",
     priority: 0.8,
   },
-  // v5.1 Vertical AI for Local Commerce surfaces
-  {
-    url: `${BASE_URL}/merchant/pilot`,
-    lastModified: new Date(),
-    changeFrequency: "weekly",
-    priority: 0.9,
-  },
-  {
-    url: `${BASE_URL}/merchant/pilot/economics`,
-    lastModified: new Date(),
-    changeFrequency: "monthly",
-    priority: 0.7,
-  },
-  {
-    url: `${BASE_URL}/conversion-oracle`,
-    lastModified: new Date(),
-    changeFrequency: "monthly",
-    priority: 0.8,
-  },
-  {
-    url: `${BASE_URL}/conversion-oracle/accuracy`,
-    lastModified: new Date(),
-    changeFrequency: "weekly",
-    priority: 0.6,
-  },
-  {
-    url: `${BASE_URL}/trust`,
-    lastModified: new Date(),
-    changeFrequency: "monthly",
-    priority: 0.6,
-  },
-  {
-    url: `${BASE_URL}/trust/disclosure`,
-    lastModified: new Date(),
-    changeFrequency: "monthly",
-    priority: 0.6,
-  },
-  {
-    url: `${BASE_URL}/security`,
-    lastModified: new Date(),
-    changeFrequency: "monthly",
-    priority: 0.5,
-  },
-  {
-    url: `${BASE_URL}/neighborhood-playbook`,
-    lastModified: new Date(),
-    changeFrequency: "monthly",
-    priority: 0.7,
-  },
-  {
-    url: `${BASE_URL}/faq`,
-    lastModified: new Date(),
-    changeFrequency: "monthly",
-    priority: 0.5,
-  },
-  {
-    url: `${BASE_URL}/status`,
-    lastModified: new Date(),
-    changeFrequency: "daily",
-    priority: 0.4,
-  },
-  {
-    url: `${BASE_URL}/referrals`,
-    lastModified: new Date(),
-    changeFrequency: "monthly",
-    priority: 0.4,
-  },
-  {
-    url: `${BASE_URL}/how-it-works`,
-    lastModified: new Date(),
-    changeFrequency: "monthly",
-    priority: 0.6,
-  },
-  {
-    url: `${BASE_URL}/yc-2027`,
-    lastModified: new Date(),
-    changeFrequency: "monthly",
-    priority: 0.2,
-  },
 ];
-
-// v5.1 per-vertical pricing pages
-const PRICING_CATEGORIES = [
-  "coffee",
-  "coffee-plus",
-  "dessert",
-  "fitness",
-  "beauty",
-] as const;
 
 // Mock blog posts — replace with DB query when blog is live
 const BLOG_SLUGS = [
@@ -359,13 +271,6 @@ const CREATOR_IDS = [
 ] as const;
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const pricingPages: MetadataRoute.Sitemap = PRICING_CATEGORIES.map((cat) => ({
-    url: `${BASE_URL}/pricing/${cat}`,
-    lastModified: new Date(),
-    changeFrequency: "monthly" as const,
-    priority: 0.7,
-  }));
-
   const blogPages: MetadataRoute.Sitemap = BLOG_SLUGS.map((slug) => ({
     url: `${BASE_URL}/blog/${slug}`,
     lastModified: new Date(),
@@ -414,7 +319,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   return [
     ...MARKETING_PAGES,
-    ...pricingPages,
     ...blogPages,
     ...caseStudyPages,
     ...helpPages,

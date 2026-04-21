@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation";
 import {
   useNotifications,
   timeAgo,
-  type AppNotification as Notification,
+  type Notification,
 } from "@/lib/notifications/useNotifications";
 import "../inbox.css";
 
@@ -53,6 +53,10 @@ type SystemNotif = Notification & {
   /** Legacy role field on seeded rows — ignored by render but kept so
    *  the seed literal at line 57 remains valid. */
   role?: string;
+  /** Legacy seed-only field kept for backward compatibility with the
+   *  earlier notification shape; not consumed by the current render. */
+  type?: string;
+  icon?: string;
 };
 
 /* ── Seed with categories ────────────────────────────────────── */
