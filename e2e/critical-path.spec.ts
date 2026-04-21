@@ -64,10 +64,11 @@ test.describe("critical-path", () => {
     // Expect the happy path. If this fails, the seed QR mock needs updating.
     await expect(consentTitle).toBeVisible();
 
-    // Three tier options must render.
-    await expect(page.getByText(/Tier 1/)).toBeVisible();
-    await expect(page.getByText(/Tier 2/)).toBeVisible();
-    await expect(page.getByText(/Tier 3/)).toBeVisible();
+    // Three tier options must render (use role=radio to avoid matching the
+    // "Continue with Tier N" button label).
+    await expect(page.getByRole("radio", { name: /Tier 1/ })).toBeVisible();
+    await expect(page.getByRole("radio", { name: /Tier 2/ })).toBeVisible();
+    await expect(page.getByRole("radio", { name: /Tier 3/ })).toBeVisible();
   });
 
   test("FTC disclosure is visible on scan page", async ({ page }) => {
