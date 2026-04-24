@@ -8,6 +8,7 @@ import dynamic from "next/dynamic";
 import "./dashboard.css";
 import { FirstPaycheck } from "@/components/creator/FirstPaycheck";
 import { CampaignDetailPanel } from "@/components/creator/CampaignDetailPanel";
+import { TIERS } from "@/lib/tier-config";
 
 const MapView = dynamic(() => import("@/components/layout/MapView"), {
   ssr: false,
@@ -123,13 +124,18 @@ const TIER_ORDER: CreatorTier[] = [
   "partner",
 ];
 
+// Sourced from lib/tier-config.ts (single source of truth). The local
+// CreatorTier here is lowercase; tier-config keys are PascalCase, hence
+// the explicit map. Pre-v6 this file hardcoded 0/40/60/75/88/95 — off by
+// 5–10 points on the upper tiers, which silently bumped progression
+// math (e.g. score 70 read as Operator here but as Proven by the scorer).
 const TIER_SCORE_THRESHOLDS: Record<CreatorTier, number> = {
-  seed: 0,
-  explorer: 40,
-  operator: 60,
-  proven: 75,
-  closer: 88,
-  partner: 95,
+  seed: TIERS.Seed.minScore,
+  explorer: TIERS.Explorer.minScore,
+  operator: TIERS.Operator.minScore,
+  proven: TIERS.Proven.minScore,
+  closer: TIERS.Closer.minScore,
+  partner: TIERS.Partner.minScore,
 };
 
 const MILESTONES: Application["milestone"][] = [

@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+import { TIERS } from "@/lib/tier-config";
 
 export type CreatorTier =
   | "seed"
@@ -39,14 +40,16 @@ const TIER_LABELS: Record<CreatorTier, string> = {
   partner: "Partner",
 };
 
-// Points required to reach each tier (lower bound of next tier)
+// Sourced from lib/tier-config.ts. Pre-v6 had drift of 2–5 points on
+// upper tiers vs the canonical scoring engine. Partner.maxScore is capped
+// at 100 here for the progress-bar UI; tier-config declares Infinity.
 const TIER_THRESHOLDS: Record<CreatorTier, { min: number; max: number }> = {
-  seed: { min: 0, max: 39 },
-  explorer: { min: 40, max: 54 },
-  operator: { min: 55, max: 69 },
-  proven: { min: 70, max: 79 },
-  closer: { min: 80, max: 89 },
-  partner: { min: 90, max: 100 },
+  seed: { min: TIERS.Seed.minScore, max: TIERS.Seed.maxScore },
+  explorer: { min: TIERS.Explorer.minScore, max: TIERS.Explorer.maxScore },
+  operator: { min: TIERS.Operator.minScore, max: TIERS.Operator.maxScore },
+  proven: { min: TIERS.Proven.minScore, max: TIERS.Proven.maxScore },
+  closer: { min: TIERS.Closer.minScore, max: TIERS.Closer.maxScore },
+  partner: { min: TIERS.Partner.minScore, max: 100 },
 };
 
 const TIER_ORDER: CreatorTier[] = [
