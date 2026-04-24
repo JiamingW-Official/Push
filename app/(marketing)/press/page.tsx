@@ -313,6 +313,25 @@ export default function PressPage() {
         <div className="press-container">
           <p className="press-section-label">News &amp; Announcements</p>
           <h2 className="press-section-title">Press Releases</h2>
+          <p
+            style={{
+              fontFamily: "var(--font-body)",
+              fontSize: 12,
+              lineHeight: 1.65,
+              color: "var(--text-muted)",
+              maxWidth: 640,
+              margin: "0 0 32px",
+              padding: "12px 16px",
+              borderLeft: "3px solid var(--champagne)",
+              background: "rgba(201,169,110,0.06)",
+            }}
+          >
+            <strong>Sample release templates.</strong> Push is in pre-launch
+            (Phase 0 — Williamsburg, May 2026). The releases below illustrate
+            our communications cadence; actual press coverage will land here
+            after Phase 0 launches. For media inquiries, contact{" "}
+            <a href="mailto:press@pushnyc.co">press@pushnyc.co</a>.
+          </p>
           <div className="press-timeline">
             {PRESS_RELEASES.map((pr, i) => (
               <article

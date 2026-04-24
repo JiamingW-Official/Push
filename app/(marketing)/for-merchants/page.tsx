@@ -86,7 +86,7 @@ const PLANS = [
     ],
     featured: true,
     badge: "Most chosen",
-    cta: "Start Pro",
+    cta: "Talk to us about Pro",
     roi: "13.8x LTV/CAC at maturity",
   },
   {
