@@ -9,6 +9,7 @@ import {
   type CreatorTier,
   type ApplicantFilters,
 } from "@/lib/data/mock-applications";
+import { SegmentBadge } from "@/components/shared/SegmentBadge";
 import "./applicants.css";
 
 /* ── Constants ───────────────────────────────────────────── */
@@ -23,37 +24,12 @@ const ALL_TIERS: CreatorTier[] = [
 ];
 
 const TIER_DISPLAY: Record<CreatorTier, string> = {
-  seed: "Clay · Seed",
-  explorer: "Bronze · Explorer",
-  operator: "Steel · Operator",
-  proven: "Gold · Proven",
-  closer: "Ruby · Closer",
-  partner: "Obsidian · Partner",
-};
-
-type TierCfg = {
-  bg: string;
-  color: string;
-  border: string;
-  borderLeft?: string;
-};
-
-const TIER_CFG: Record<CreatorTier, TierCfg> = {
-  seed: {
-    bg: "transparent",
-    color: "#003049",
-    border: "1.5px dashed rgba(184,169,154,0.65)",
-  },
-  explorer: { bg: "#8c6239", color: "#fff", border: "1px solid #8c6239" },
-  operator: { bg: "#4a5568", color: "#fff", border: "1px solid #4a5568" },
-  proven: { bg: "#c9a96e", color: "#003049", border: "1px solid #c9a96e" },
-  closer: { bg: "#9b111e", color: "#fff", border: "1px solid #9b111e" },
-  partner: {
-    bg: "#1a1a2e",
-    color: "#fff",
-    border: "1px solid #1a1a2e",
-    borderLeft: "3px solid #c1121f",
-  },
+  seed: "Seed",
+  explorer: "Explorer",
+  operator: "Operator",
+  proven: "Proven",
+  closer: "Closer",
+  partner: "Partner",
 };
 
 type SortOption = "recent" | "score_desc" | "match_desc";
@@ -81,23 +57,6 @@ function relativeTime(iso: string): string {
 }
 
 /* ── Sub-components ──────────────────────────────────────── */
-
-function TierBadge({ tier }: { tier: CreatorTier }) {
-  const c = TIER_CFG[tier];
-  return (
-    <span
-      className="ap-creator__tier"
-      style={{
-        background: c.bg,
-        color: c.color,
-        border: c.border,
-        borderLeft: c.borderLeft ?? c.border,
-      }}
-    >
-      {TIER_DISPLAY[tier]}
-    </span>
-  );
-}
 
 function StatusBadge({ status }: { status: ApplicationStatus }) {
   if (status === "pending") return null;
@@ -217,7 +176,7 @@ function ApplicantRow({
           <div className="ap-creator__info">
             <div className="ap-creator__name">{app.creator.name}</div>
             <div className="ap-creator__handle">{app.creator.handle}</div>
-            <TierBadge tier={app.creator.tier} />
+            <SegmentBadge tier={app.creator.tier} />
           </div>
         </div>
 

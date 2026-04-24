@@ -1,5 +1,22 @@
 "use client";
 
+// Merchant-facing creator selector. v6 (2026-04-24): collapsed from 6-tier
+// (seed/explorer/operator/proven/closer/partner) to 2-segment (Community /
+// Studio) so the merchant view aligns with the v6 CANONICAL §8 narrative.
+// The 6-tier scoring system still drives creator dashboards and matching;
+// the merchant just picks an audience tier.
+//
+// Selector emits one of "" | "Community" | "Studio". Callers should expand
+// to a tier array via SEGMENT_TIERS before sending to the matching API.
+
+import {
+  type CreatorSegment,
+  SEGMENT_DESCRIPTIONS,
+} from "@/lib/services/creator-segment";
+
+// Legacy export — kept so existing imports of `CreatorTier` from this module
+// still type-check. No new code should depend on it; use CreatorSegment
+// from @/lib/services/creator-segment instead.
 export type CreatorTier =
   | "seed"
   | "explorer"
@@ -8,60 +25,35 @@ export type CreatorTier =
   | "closer"
   | "partner";
 
-const TIERS: {
-  id: CreatorTier;
+const SEGMENTS: {
+  id: "" | CreatorSegment;
   label: string;
-  followers: string;
-  score: string;
+  description: string;
   color: string;
 }[] = [
   {
-    id: "seed",
-    label: "Seed",
-    followers: "< 1K",
-    score: "0–199",
+    id: "",
+    label: "Any",
+    description: "Open to all creators — Push will match by score and fit.",
     color: "#669bbc",
   },
   {
-    id: "explorer",
-    label: "Explorer",
-    followers: "1K–5K",
-    score: "200–399",
+    id: "Community",
+    label: "Community",
+    description: SEGMENT_DESCRIPTIONS.Community,
     color: "#003049",
   },
   {
-    id: "operator",
-    label: "Operator",
-    followers: "5K–20K",
-    score: "400–599",
-    color: "#003049",
-  },
-  {
-    id: "proven",
-    label: "Proven",
-    followers: "20K–50K",
-    score: "600–749",
-    color: "#c1121f",
-  },
-  {
-    id: "closer",
-    label: "Closer",
-    followers: "50K–200K",
-    score: "750–899",
-    color: "#c1121f",
-  },
-  {
-    id: "partner",
-    label: "Partner",
-    followers: "200K+",
-    score: "900–1000",
-    color: "#c9a96e",
+    id: "Studio",
+    label: "Studio",
+    description: SEGMENT_DESCRIPTIONS.Studio,
+    color: "#780000",
   },
 ];
 
 interface TierSelectorProps {
   value: string;
-  onChange: (val: string) => void;
+  onChange: (val: "" | CreatorSegment) => void;
   error?: string;
 }
 
@@ -69,40 +61,29 @@ export function TierSelector({ value, onChange, error }: TierSelectorProps) {
   return (
     <div>
       <div className="cw-tier-grid">
-        {TIERS.map((tier) => {
-          const active = value === tier.id;
+        {SEGMENTS.map((seg) => {
+          const active = value === seg.id;
           return (
             <button
-              key={tier.id}
+              key={seg.id || "any"}
               type="button"
-              className={[
-                "cw-tier-card",
-                active ? "cw-tier-card--active" : "",
-                tier.id === "partner" ? "cw-tier-card--partner" : "",
-              ]
+              className={["cw-tier-card", active ? "cw-tier-card--active" : ""]
                 .filter(Boolean)
                 .join(" ")}
-              onClick={() => onChange(tier.id)}
+              onClick={() => onChange(seg.id)}
               aria-pressed={active}
               style={
                 active
                   ? {
-                      borderColor: tier.color,
-                      background:
-                        tier.id === "partner"
-                          ? "rgba(201,169,110,0.08)"
-                          : "rgba(0,48,73,0.04)",
+                      borderColor: seg.color,
+                      background: "rgba(0,48,73,0.04)",
                     }
                   : undefined
               }
             >
-              <span
-                className="cw-tier-dot"
-                style={{ background: tier.color }}
-              />
-              <span className="cw-tier-name">{tier.label}</span>
-              <span className="cw-tier-meta">{tier.followers} followers</span>
-              <span className="cw-tier-score">Score {tier.score}</span>
+              <span className="cw-tier-dot" style={{ background: seg.color }} />
+              <span className="cw-tier-name">{seg.label}</span>
+              <span className="cw-tier-meta">{seg.description}</span>
             </button>
           );
         })}

@@ -7,6 +7,7 @@ import {
   type ApplicationStatus,
   type CreatorTier,
 } from "@/lib/data/mock-applications";
+import { tierToSegment } from "@/lib/services/creator-segment";
 
 export async function GET(req: NextRequest) {
   const { searchParams } = req.nextUrl;
@@ -23,8 +24,19 @@ export async function GET(req: NextRequest) {
 
   const { data, total } = filterApplications(MOCK_APPLICATIONS, filters);
 
+  // v6: enrich each creator with a `segment` field so merchant-facing UI can
+  // display Community/Studio without doing the mapping client-side. `tier` is
+  // preserved for back-compat with any caller still keying off the 6-tier name.
+  const enriched = data.map((app) => ({
+    ...app,
+    creator: {
+      ...app.creator,
+      segment: tierToSegment(app.creator.tier),
+    },
+  }));
+
   return NextResponse.json({
-    data,
+    data: enriched,
     total,
     page: filters.page,
     limit: filters.limit,
