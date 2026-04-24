@@ -277,12 +277,12 @@ const TIER_COLORS: Record<CreatorTier, string> = {
 };
 
 const TIER_DISPLAY: Record<CreatorTier, string> = {
-  seed: "Clay · Seed",
-  explorer: "Bronze · Explorer",
-  operator: "Steel · Operator",
-  proven: "Gold · Proven",
-  closer: "Ruby · Closer",
-  partner: "Obsidian · Partner",
+  seed: "Seed",
+  explorer: "Explorer",
+  operator: "Operator",
+  proven: "Proven",
+  closer: "Closer",
+  partner: "Partner",
 };
 
 const MILESTONE_LABELS: Record<Milestone, string> = {

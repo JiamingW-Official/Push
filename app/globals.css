@@ -107,15 +107,17 @@
   --champagne-light:  rgba(201, 169, 110, 0.12);
   --champagne-border: rgba(201, 169, 110, 0.35);
 
-  /* Tier tokens — Path A (v5.2, 2026-04-20): sourced from 6-color brand palette.
-     Tier identity = material name + icon + texture (NOT unique hex).
-     Design.md §Tier Identity System documents mapping + text-color rules. */
-  --tier-seed:        var(--tertiary);  /* Clay — Steel Blue border on Pearl Stone bg */
-  --tier-explorer:    var(--champagne); /* Bronze — Champagne Gold */
-  --tier-operator:    var(--tertiary);  /* Steel — Steel Blue */
-  --tier-proven:      var(--primary);   /* Gold — Flag Red (contracted tier signal) */
-  --tier-closer:      var(--accent);    /* Ruby — Molten Lava */
-  --tier-partner:     var(--dark);      /* Obsidian — Deep Space Blue */
+  /* Tier tokens — Path A: sourced from 6-color brand palette.
+     v6 (2026-04-24): tier identity is the tier name only (Seed/Explorer/
+     Operator/Proven/Closer/Partner); the legacy v5.1 material-name decoration
+     (Clay/Bronze/Steel/Gold/Ruby/Obsidian) is dropped from user-facing copy.
+     Design.md §Tier Identity System documents the brand-palette mapping. */
+  --tier-seed:        var(--tertiary);  /* Steel Blue border on Pearl Stone bg */
+  --tier-explorer:    var(--champagne); /* Champagne Gold */
+  --tier-operator:    var(--tertiary);  /* Steel Blue */
+  --tier-proven:      var(--primary);   /* Flag Red (contracted tier signal) */
+  --tier-closer:      var(--accent);    /* Molten Lava */
+  --tier-partner:     var(--dark);      /* Deep Space Blue */
 
   /* Semantic state colors (v5.2 Extended Color System) */
   --success:          #22c55e;   /* verified, approved, positive delta */
