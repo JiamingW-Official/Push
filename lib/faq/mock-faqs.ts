@@ -70,7 +70,7 @@ export const FAQ_ITEMS: FaqItem[] = [
     category: "for-merchants",
     question: "What does a typical campaign cost?",
     answer:
-      "Your total campaign spend equals your per-visit payout multiplied by verified visits. There's no upfront campaign fee — you only pay when the QR code is scanned by a new customer. Our platform subscription starts at $19.99/month, which includes unlimited campaigns and full attribution reporting.",
+      "Your total campaign spend equals your per-visit payout multiplied by verified visits. There's no upfront campaign fee — you only pay when the QR code is scanned by a new customer. Our platform subscription starts at $0/month (Lite tier — 1 active campaign), with paid plans from $99/month for full attribution reporting.",
     helpful: 211,
     related: ["p-001", "p-002", "m-003"],
   },
@@ -115,7 +115,7 @@ export const FAQ_ITEMS: FaqItem[] = [
     category: "for-merchants",
     question: "Is there a contract or minimum commitment?",
     answer:
-      "No contracts, no minimums. Your $19.99/month subscription is month-to-month and can be cancelled anytime. Campaign budgets are pay-as-you-go. We earn when you earn — our incentives are fully aligned with driving real results for your business.",
+      "No contracts, no minimums. Lite is free forever; paid plans (Essentials $99/mo, Pro outcome-based, Advanced $349/mo) are month-to-month and can be cancelled anytime. Campaign budgets are pay-as-you-go. We earn when you earn — our incentives are fully aligned with driving real results for your business.",
     helpful: 198,
     related: ["p-001", "p-002", "m-007"],
   },
@@ -236,7 +236,7 @@ export const FAQ_ITEMS: FaqItem[] = [
     category: "pricing-payments",
     question: "What are Push's subscription plans?",
     answer:
-      "Push offers three merchant plans: Starter ($19.99/month) for up to 3 active campaigns with basic analytics; Growth ($69/month) for unlimited campaigns, advanced attribution, and priority creator matching; and Scale ($199/month) for enterprise features, dedicated account management, custom reporting, and early access to new features. Annual billing saves 20% on all plans.",
+      "Push offers four merchant plans: Lite ($0/month) for 1 active campaign with weekly summary; Essentials ($99/month) for 3 campaigns with QR + receipt attribution; Pro (outcome-based — 5% of attributed revenue, capped $179/month) for unlimited campaigns with three-signal attribution and priority support; and Advanced ($349/month) for multi-unit operators with API access and a dedicated CSM. Annual billing saves 20% on Essentials and Advanced.",
     helpful: 289,
     related: ["p-002", "m-005", "m-010"],
   },

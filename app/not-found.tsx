@@ -27,7 +27,7 @@ const SUGGESTIONS: { label: string; href: string; desc: string }[] = [
   {
     label: "Pilot economics",
     href: "/merchant/pilot/economics",
-    desc: "LTV/CAC 15.7x · Software Leverage Ratio (SLR) north-star 25",
+    desc: "13.8x LTV/CAC Year 1 (outcome-based) · 21.4x Year 2+ (flat)",
   },
 ];
 

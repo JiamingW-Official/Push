@@ -58,53 +58,52 @@ const TIERS = [
 /* ── Pricing plans ───────────────────────────────────────────── */
 const PLANS = [
   {
-    name: "Starter",
-    price: "$19.99",
+    name: "Essentials",
+    price: "$99",
     period: "/mo",
-    desc: "One location. Two campaigns. Real attribution from day one.",
+    desc: "Flat pricing for legacy neighborhood shops.",
     features: [
-      "2 active campaigns",
-      "3 creator slots per campaign",
-      "AI creator matching",
-      "QR attribution",
-      "Basic analytics",
+      "3 active campaigns",
+      "5 creator slots",
+      "QR + receipt attribution",
+      "Weekly ROI card",
     ],
     featured: false,
-    cta: "Get started",
-    roi: "Avg. $420 attributed revenue in month 1",
-  },
-  {
-    name: "Growth",
-    price: "$69",
-    period: "/mo",
-    desc: "Scale across your location. Better matching, deeper data.",
-    features: [
-      "4 active campaigns",
-      "5 creator slots",
-      "Priority creator matching",
-      "Full analytics dashboard",
-      "Campaign templates",
-    ],
-    featured: true,
-    badge: "Most Popular",
-    cta: "Get Growth",
-    roi: "Avg. 3.9× ROI on campaign spend",
+    badge: undefined as string | undefined,
+    cta: "Start Essentials",
+    roi: "Designed for $5K–$25K monthly revenue shops",
   },
   {
     name: "Pro",
-    price: "$199",
-    period: "/mo",
-    desc: "Multi-location operators running ongoing creator programs.",
+    price: "5%",
+    period: " of attributed revenue",
+    desc: "Outcome-based Year 1. Cap $179, floor $49 — pay only when Push works.",
     features: [
       "Unlimited campaigns",
-      "Unlimited creator slots",
-      "Dedicated account manager",
+      "Three-signal attribution",
+      "Live ROI dashboard",
+      "Priority support",
+    ],
+    featured: true,
+    badge: "Most chosen",
+    cta: "Start Pro",
+    roi: "13.8x LTV/CAC at maturity",
+  },
+  {
+    name: "Advanced",
+    price: "$349",
+    period: "/mo",
+    desc: "Multi-unit operators with API + dedicated CSM.",
+    features: [
+      "Everything in Pro, flat",
+      "Up to 5 locations",
       "Custom attribution rules",
       "API access",
     ],
     featured: false,
-    cta: "Get Pro",
-    roi: "Full white-glove setup included",
+    badge: undefined as string | undefined,
+    cta: "Talk to us",
+    roi: "For 2+ locations",
   },
 ];
 
@@ -128,10 +127,12 @@ export default function ForMerchantsPage() {
           </h1>
 
           <p className="fm-sub">
-            QR-verified attribution. Milestone payouts. No agency fees.
+            Push is the attribution rail for local commerce. Creator posts,
+            customer scans at the register, you pay per verified store visit.
             <br />
-            Know exactly which creator drove which customer — and pay only for
-            results.
+            <span className="fm-sub-light">
+              No vanity metrics. No agency retainers. Stripe Connect underneath.
+            </span>
           </p>
 
           <div className="fm-ctas">
@@ -215,7 +216,7 @@ export default function ForMerchantsPage() {
                 </li>
                 <li>
                   <span className="fm-ps-bullet fm-ps-bullet--solution" />
-                  Campaign live in 24 hours, from $19.99/mo
+                  Campaign live in 24 hours, free Lite tier — no card required
                 </li>
               </ul>
             </div>
@@ -341,7 +342,7 @@ export default function ForMerchantsPage() {
                 <span className="section-tag-label">Pricing</span>
               </div>
               <h2 className="fm-pricing-headline">
-                Flat monthly.
+                Flat or outcome-based.
                 <br />
                 <span className="fm-pricing-headline-light">
                   No hidden fees.
@@ -415,8 +416,8 @@ export default function ForMerchantsPage() {
                   Owner, Roberta&apos;s Bed-Stuy &mdash; Brooklyn, NYC
                 </cite>
                 <span className="fm-pull-quote-meta">
-                  Growth plan &nbsp;·&nbsp; 6 active creators &nbsp;·&nbsp;
-                  $69/mo
+                  Essentials plan &nbsp;·&nbsp; 6 active creators &nbsp;·&nbsp;
+                  $99/mo
                 </span>
               </footer>
             </blockquote>

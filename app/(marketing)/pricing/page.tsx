@@ -6,132 +6,169 @@ import "./pricing.css";
 /* ── Plan data ──────────────────────────────────────────────── */
 const PLANS = [
   {
-    name: "Starter",
-    price: "$19",
-    cents: ".99",
+    name: "Attribution Lite",
+    price: "$0",
+    cents: "",
     period: "/mo",
-    desc: "One location. Two campaigns. Real attribution from day one.",
+    desc: "Try Push attribution with no commitment. One QR code, one creator slot.",
     features: [
-      "2 active campaigns",
-      "3 creator slots per campaign",
-      "AI creator matching",
-      "QR code attribution",
-      "Basic analytics dashboard",
-      "Email support",
+      "1 active campaign",
+      "1 creator slot",
+      "QR attribution from day one",
+      "Weekly ROI summary",
+      "Community support",
     ],
     featured: false,
-    cta: "Start free trial",
-    href: "/merchant/signup?plan=starter",
-    roi: "Avg. $420 attributed revenue in month 1",
-    qrLimit: "50 QR scans/mo",
-    campaignLimit: "2 campaigns",
-    applicants: "15/mo",
-    analytics: "Basic",
+    cta: "Start free",
+    href: "/merchant/signup?plan=lite",
+    roi: "Acquisition tier — no card required",
+    qrLimit: "20 verified visits/mo",
+    campaignLimit: "1 campaign",
+    applicants: "5/mo",
+    analytics: "Weekly summary",
     priority: false,
     api: false,
   },
   {
-    name: "Growth",
-    price: "$69",
+    name: "Essentials",
+    price: "$99",
     cents: "",
     period: "/mo",
-    desc: "Scale across your location. Better matching, deeper data, stronger ROI.",
+    desc: "For Chinatown, Flushing, and Williamsburg legacy shops. Real attribution, flat pricing.",
     features: [
-      "4 active campaigns",
+      "3 active campaigns",
       "5 creator slots per campaign",
-      "Priority creator matching",
-      "Full analytics dashboard",
-      "Campaign templates library",
+      "QR + receipt-scan attribution",
+      "Weekly ROI card",
+      "Email support",
+    ],
+    featured: false,
+    cta: "Start Essentials",
+    href: "/merchant/signup?plan=essentials",
+    roi: "Designed for $5K–$25K monthly revenue shops",
+    qrLimit: "150 verified visits/mo",
+    campaignLimit: "3 campaigns",
+    applicants: "30/mo",
+    analytics: "Standard",
+    priority: false,
+    api: false,
+  },
+  {
+    name: "Pro",
+    price: "5%",
+    cents: "",
+    period: " of attributed revenue",
+    desc: "Outcome-based Year 1 — you only pay when Push drives revenue. Cap $179/mo, floor $49/mo.",
+    features: [
+      "Unlimited campaigns Year 1",
+      "8 creator slots per campaign",
+      "Three-signal attribution (QR + receipt + merchant confirm)",
+      "Live ROI dashboard",
       "Priority support",
+      "Auto-converts to $199 flat in Year 2 if you hit cap 50%+ of months",
     ],
     featured: true,
-    badge: "Most Popular",
-    cta: "Get Growth",
-    href: "/merchant/signup?plan=growth",
-    roi: "Avg. 3.9× ROI on campaign spend",
-    qrLimit: "250 QR scans/mo",
-    campaignLimit: "4 campaigns",
-    applicants: "60/mo",
-    analytics: "Full",
+    badge: "Most chosen",
+    cta: "Start Pro",
+    href: "/merchant/signup?plan=pro",
+    roi: "Pay only when verified visits land. Cap $179, floor $49.",
+    qrLimit: "Unlimited",
+    campaignLimit: "Unlimited",
+    applicants: "Unlimited",
+    analytics: "Live + export",
     priority: true,
     api: false,
   },
   {
-    name: "Scale",
-    price: "$199",
+    name: "Advanced",
+    price: "$349",
     cents: "",
     period: "/mo",
-    desc: "Multi-location operators running ongoing creator programs at full power.",
+    desc: "Multi-unit operators and chef-driven concepts running ongoing creator programs.",
     features: [
-      "Unlimited campaigns",
-      "Unlimited creator slots",
-      "Dedicated account manager",
+      "Everything in Pro, flat",
+      "Up to 5 locations",
       "Custom attribution rules",
+      "Dedicated account manager",
       "API access",
       "White-glove onboarding",
     ],
     featured: false,
-    cta: "Get Scale",
-    href: "/merchant/signup?plan=scale",
-    roi: "Full white-glove setup included",
+    cta: "Talk to us",
+    href: "/merchant/signup?plan=advanced",
+    roi: "For 2+ location operators",
     qrLimit: "Unlimited",
     campaignLimit: "Unlimited",
     applicants: "Unlimited",
-    analytics: "Advanced + Export",
+    analytics: "Advanced + export + API",
     priority: true,
     api: true,
   },
 ];
 
 /* ── Comparison table rows ──────────────────────────────────── */
-const COMPARE_ROWS = [
+const COMPARE_ROWS: Array<{
+  feature: string;
+  lite: string | boolean;
+  essentials: string | boolean;
+  pro: string | boolean;
+  advanced: string | boolean;
+}> = [
   {
-    feature: "QR scans / mo",
-    starter: "50",
-    growth: "250",
-    scale: "Unlimited",
+    feature: "Verified visits / mo",
+    lite: "20",
+    essentials: "150",
+    pro: "Unlimited",
+    advanced: "Unlimited",
   },
   {
     feature: "Active campaigns",
-    starter: "2",
-    growth: "4",
-    scale: "Unlimited",
+    lite: "1",
+    essentials: "3",
+    pro: "Unlimited",
+    advanced: "Unlimited",
   },
   {
     feature: "Creator applicants / mo",
-    starter: "15",
-    growth: "60",
-    scale: "Unlimited",
+    lite: "5",
+    essentials: "30",
+    pro: "Unlimited",
+    advanced: "Unlimited",
   },
   {
     feature: "Analytics",
-    starter: "Basic",
-    growth: "Full dashboard",
-    scale: "Advanced + Export",
+    lite: "Weekly summary",
+    essentials: "Standard",
+    pro: "Live + export",
+    advanced: "Advanced + export + API",
   },
   {
     feature: "Priority support",
-    starter: false,
-    growth: true,
-    scale: true,
+    lite: false,
+    essentials: false,
+    pro: true,
+    advanced: true,
   },
   {
     feature: "API access",
-    starter: false,
-    growth: false,
-    scale: true,
+    lite: false,
+    essentials: false,
+    pro: false,
+    advanced: true,
   },
   {
     feature: "Dedicated account manager",
-    starter: false,
-    growth: false,
-    scale: true,
+    lite: false,
+    essentials: false,
+    pro: false,
+    advanced: true,
   },
   {
     feature: "Custom attribution rules",
-    starter: false,
-    growth: false,
-    scale: true,
+    lite: false,
+    essentials: false,
+    pro: false,
+    advanced: true,
   },
 ];
 
@@ -139,11 +176,11 @@ const COMPARE_ROWS = [
 const FAQS = [
   {
     q: "What exactly am I paying for each month?",
-    a: "Your monthly plan covers platform access, campaign management tools, AI creator matching, and QR attribution infrastructure. Creator payouts are separate — you fund a campaign escrow per campaign, and creators are paid only after verified visits.",
+    a: "Your plan covers platform access, campaign management tools, AI creator matching, and QR attribution infrastructure. Creator payouts are separate — you fund a campaign escrow per campaign, and creators are paid only after verified visits.",
   },
   {
     q: "Are there fees on top of the subscription?",
-    a: "No hidden fees. Creator payouts are funded by you directly (you set the rate per campaign), and Push takes no commission on those. The subscription is flat — $19.99, $69, or $199 per month.",
+    a: "Pricing is tiered: $0 Lite / $99 Essentials / Pro outcome-based (5% of attributed revenue, capped $179/mo) / $349 Advanced. Creator payouts are funded by you per campaign — Push takes a 10–15% rev share on Stripe Connect payouts.",
   },
   {
     q: 'How does QR verification work and what counts as a "verified visit"?',
@@ -154,12 +191,12 @@ const FAQS = [
     a: "Yes. Upgrades take effect immediately. Downgrades apply at the start of the next billing cycle. No contracts, no cancellation fees.",
   },
   {
-    q: "What happens if I exceed my QR scan or campaign limits?",
-    a: "On Starter and Growth, active campaigns pause when limits are reached. You'll receive a notification and can upgrade mid-cycle. Prorated charges apply for mid-cycle upgrades.",
+    q: "What happens if I exceed my verified-visit or campaign limits?",
+    a: "On Lite and Essentials, active campaigns pause when limits are reached. Pro and Advanced are unlimited. You'll receive a notification and can upgrade mid-cycle — prorated charges apply.",
   },
   {
     q: "Do I need a credit card to start?",
-    a: "You can explore Push with a free trial on Starter — no card required for the first 14 days. To launch a live campaign, you'll add payment to fund creator escrow.",
+    a: "Lite is free forever — no card required. To run more than 1 campaign or 20 verified visits/month, upgrade to Essentials or Pro (Pro = pay only on attributed revenue).",
   },
   {
     q: "Is Push available outside New York City?",
@@ -167,7 +204,7 @@ const FAQS = [
   },
   {
     q: "What is the Enterprise plan and who is it for?",
-    a: "Enterprise is for multi-location chains (5+ locations), franchise operators, or brands running large-scale creator programs. Pricing is custom — includes volume QR allocations, dedicated CSM, SLA guarantees, and SSO/API integration.",
+    a: "Enterprise is for multi-location chains (5+ locations or franchises), franchise operators, or brands running large-scale creator programs. Pricing is custom — includes volume QR allocations, dedicated CSM, SLA guarantees, and SSO/API integration.",
   },
 ];
 
@@ -246,8 +283,9 @@ export default function PricingPage() {
             style={{ transitionDelay: "220ms" }}
           >
             <p className="pr-hero-sub">
-              Flat monthly subscription. Creator payouts only on verified foot
-              traffic. No agency retainers, no mystery fees.
+              Flat for Lite, Essentials, and Advanced. Outcome-based for Pro.
+              Creator payouts only on verified foot traffic. No agency
+              retainers, no mystery fees.
             </p>
             <div className="pr-hero-anchors">
               <a href="#plans" className="btn btn-primary">
@@ -393,9 +431,10 @@ export default function PricingPage() {
               <thead>
                 <tr>
                   <th className="pr-th-feature">Feature</th>
-                  <th className="pr-th-plan">Starter</th>
-                  <th className="pr-th-plan pr-th-featured">Growth</th>
-                  <th className="pr-th-plan">Scale</th>
+                  <th className="pr-th-plan">Lite</th>
+                  <th className="pr-th-plan">Essentials</th>
+                  <th className="pr-th-plan pr-th-featured">Pro</th>
+                  <th className="pr-th-plan">Advanced</th>
                 </tr>
               </thead>
               <tbody>
@@ -403,36 +442,47 @@ export default function PricingPage() {
                   <tr key={row.feature} className="pr-tr">
                     <td className="pr-td-feature">{row.feature}</td>
                     <td className="pr-td">
-                      {typeof row.starter === "boolean" ? (
+                      {typeof row.lite === "boolean" ? (
                         <span
-                          className={`pr-td-icon ${row.starter ? "pr-td-icon--yes" : "pr-td-icon--no"}`}
+                          className={`pr-td-icon ${row.lite ? "pr-td-icon--yes" : "pr-td-icon--no"}`}
                         >
-                          {row.starter ? <CheckIcon /> : <XIcon />}
+                          {row.lite ? <CheckIcon /> : <XIcon />}
                         </span>
                       ) : (
-                        row.starter
-                      )}
-                    </td>
-                    <td className="pr-td pr-td--featured">
-                      {typeof row.growth === "boolean" ? (
-                        <span
-                          className={`pr-td-icon ${row.growth ? "pr-td-icon--yes" : "pr-td-icon--no"}`}
-                        >
-                          {row.growth ? <CheckIcon /> : <XIcon />}
-                        </span>
-                      ) : (
-                        row.growth
+                        row.lite
                       )}
                     </td>
                     <td className="pr-td">
-                      {typeof row.scale === "boolean" ? (
+                      {typeof row.essentials === "boolean" ? (
                         <span
-                          className={`pr-td-icon ${row.scale ? "pr-td-icon--yes" : "pr-td-icon--no"}`}
+                          className={`pr-td-icon ${row.essentials ? "pr-td-icon--yes" : "pr-td-icon--no"}`}
                         >
-                          {row.scale ? <CheckIcon /> : <XIcon />}
+                          {row.essentials ? <CheckIcon /> : <XIcon />}
                         </span>
                       ) : (
-                        row.scale
+                        row.essentials
+                      )}
+                    </td>
+                    <td className="pr-td pr-td--featured">
+                      {typeof row.pro === "boolean" ? (
+                        <span
+                          className={`pr-td-icon ${row.pro ? "pr-td-icon--yes" : "pr-td-icon--no"}`}
+                        >
+                          {row.pro ? <CheckIcon /> : <XIcon />}
+                        </span>
+                      ) : (
+                        row.pro
+                      )}
+                    </td>
+                    <td className="pr-td">
+                      {typeof row.advanced === "boolean" ? (
+                        <span
+                          className={`pr-td-icon ${row.advanced ? "pr-td-icon--yes" : "pr-td-icon--no"}`}
+                        >
+                          {row.advanced ? <CheckIcon /> : <XIcon />}
+                        </span>
+                      ) : (
+                        row.advanced
                       )}
                     </td>
                   </tr>

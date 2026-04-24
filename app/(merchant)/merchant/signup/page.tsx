@@ -623,7 +623,7 @@ function BrandPanel() {
 
         <div className="brand-stats">
           {[
-            { label: "Monthly cost", value: "$19.99 / mo", pct: 10 },
+            { label: "Monthly cost", value: "$0 / mo (Lite)", pct: 5 },
             { label: "Median creator ROI", value: "35% margin", pct: 35 },
             { label: "How we track", value: "QR per creator", pct: 100 },
           ].map((s) => (

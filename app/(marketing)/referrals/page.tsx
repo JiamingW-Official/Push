@@ -109,7 +109,7 @@ const FAQS = [
   },
   {
     q: "What counts as a 'first month subscription' for the merchant reward?",
-    a: "The merchant must subscribe to either the Growth ($69/month) or Pro ($199/month) plan. Credits are based on the plan price at time of subscription, excluding taxes.",
+    a: "The merchant must subscribe to a paid Push plan: Essentials ($99/month), Pro (outcome-based, capped $179/mo), or Advanced ($349/month). Credits are based on the plan price at time of subscription, excluding taxes.",
   },
   {
     q: "How does the merchant-invites-merchant reward work?",
@@ -322,8 +322,8 @@ export default function ReferralsPage() {
               <p className="ref-reward-desc">
                 Send a merchant to Push and earn 10% of their first month's
                 subscription fee — recurring for three consecutive months. On
-                the Growth plan ($69/mo), that's $6.90/month. On Pro ($199/mo),
-                that's $19.90/month.
+                the Essentials plan ($99/mo), that's $9.90/month. On Advanced
+                ($349/mo), that's $34.90/month.
               </p>
               <p className="ref-reward-note">
                 Paid on: merchant's first successful billing cycle. Earned for 3
@@ -485,10 +485,10 @@ export default function ReferralsPage() {
             {/* Scenario B */}
             <div className="ref-calc-scenario reveal reveal--delay-1">
               <p className="ref-calc-scenario-label">
-                Scenario B — Creator → Merchant (Pro plan)
+                Scenario B — Creator → Merchant (Advanced plan)
               </p>
               <h3 className="ref-calc-scenario-title">
-                5 merchants referred, all on Pro ($199/mo)
+                5 merchants referred, all on Advanced ($349/mo)
               </h3>
 
               <div className="ref-calc-line">
@@ -499,28 +499,28 @@ export default function ReferralsPage() {
               </div>
               <div className="ref-calc-line">
                 <span className="ref-calc-line-label">
-                  10% × $199 per merchant
+                  10% × $349 per merchant
                 </span>
-                <span className="ref-calc-line-value">$19.90 / mo</span>
+                <span className="ref-calc-line-value">$34.90 / mo</span>
               </div>
               <div className="ref-calc-line">
                 <span className="ref-calc-line-label">Month 1 earnings</span>
                 <span className="ref-calc-line-value ref-calc-line-value--highlight">
-                  $99.50
+                  $174.50
                 </span>
               </div>
               <div className="ref-calc-line">
                 <span className="ref-calc-line-label">Month 2 earnings</span>
-                <span className="ref-calc-line-value">$99.50</span>
+                <span className="ref-calc-line-value">$174.50</span>
               </div>
               <div className="ref-calc-line">
                 <span className="ref-calc-line-label">Month 3 earnings</span>
-                <span className="ref-calc-line-value">$99.50</span>
+                <span className="ref-calc-line-value">$174.50</span>
               </div>
               <div className="ref-calc-line">
                 <span className="ref-calc-line-label">3-month total</span>
                 <span className="ref-calc-line-value ref-calc-line-value--highlight">
-                  $298.50
+                  $523.50
                 </span>
               </div>
             </div>
@@ -531,7 +531,7 @@ export default function ReferralsPage() {
               <span className="ref-calc-total-label">
                 Combined 3-month potential
               </span>
-              <div className="ref-calc-total-num">$548</div>
+              <div className="ref-calc-total-num">$773</div>
               <span className="ref-calc-total-period">
                 from 15 referrals, zero ad spend
               </span>

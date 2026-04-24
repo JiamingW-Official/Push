@@ -176,10 +176,29 @@
 
 .pr-plans-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 0;
   border: 1px solid var(--line);
   margin-bottom: var(--space-6);
+}
+
+/* Tablet — 2x2 grid */
+@media (max-width: 1140px) {
+  .pr-plans-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .pr-plan {
+    border-right: 1px solid var(--line);
+  }
+
+  .pr-plan:nth-child(2n) {
+    border-right: none;
+  }
+
+  .pr-plan:nth-child(-n + 2) {
+    border-bottom: 1px solid var(--line);
+  }
 }
 
 /* Individual card */

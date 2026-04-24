@@ -830,7 +830,7 @@ export default function MerchantSettingsPage() {
                       color: "var(--dark)",
                     }}
                   >
-                    Growth
+                    Essentials
                   </span>
                   <span
                     style={{
@@ -839,7 +839,7 @@ export default function MerchantSettingsPage() {
                       color: "var(--text-muted)",
                     }}
                   >
-                    $69/month · renews May 1, 2026
+                    $99/month · renews May 1, 2026
                   </span>
                 </div>
                 <button className="btn btn--ghost btn--sm">Change plan</button>

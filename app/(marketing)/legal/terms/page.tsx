@@ -116,8 +116,9 @@ export default function TermsPage() {
         </dd>
         <dt>Merchant</dt>
         <dd>
-          A business entity subscribed to a Push plan (Starter $19.99/mo, Growth
-          $69/mo, or Pro $199/mo) to run attribution campaigns.
+          A business entity subscribed to a Push plan (Lite $0/mo, Essentials
+          $99/mo, Pro outcome-based, or Advanced $349/mo) to run attribution
+          campaigns.
         </dd>
         <dt>Campaign</dt>
         <dd>
@@ -308,11 +309,14 @@ export default function TermsPage() {
 
       <h3>5.1 Subscription Plans</h3>
       <p>
-        Push offers three subscription tiers: Starter ($19.99/month), Growth
-        ($69/month), and Pro ($199/month). Plan features, campaign limits, and
-        Creator tier access are as specified on the pricing page at the time of
-        subscription. Push reserves the right to modify plan pricing with 30
-        days&apos; advance notice to existing subscribers.
+        Push offers four subscription tiers: Lite ($0/month), Essentials
+        ($99/month), Pro (outcome-based — 5% of attributed revenue, capped
+        $179/month, floor $49/month), and Advanced ($349/month). Plan features,
+        campaign limits, and Creator tier access are as specified on the pricing
+        page at the time of subscription. Push reserves the right to modify plan
+        pricing with 30 days&apos; advance notice to existing subscribers.
+        Legacy v4 cohorts (Starter, Growth, Scale) are honored per their
+        original subscription contract.
       </p>
       <p>
         Subscriptions are billed monthly on the anniversary of the subscription

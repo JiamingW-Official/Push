@@ -35,7 +35,16 @@ type Merchant = {
   address: string;
   contact_email: string;
   instagram?: string;
-  plan?: "starter" | "growth" | "pro";
+  // v6 4-tier (lite/essentials/pro/advanced) is the default for new signups.
+  // Legacy v4 tier names (starter/growth/scale) preserved for grandfathered cohorts.
+  plan?:
+    | "lite"
+    | "essentials"
+    | "pro"
+    | "advanced"
+    | "starter"
+    | "growth"
+    | "scale";
 };
 
 type Campaign = {
@@ -1096,8 +1105,25 @@ function AnalyticsTab({
 
 /* ── SettingsTab ─────────────────────────────────────────── */
 function SettingsTab({ merchant }: { merchant: Merchant | null }) {
-  const planNames = { starter: "Starter", growth: "Growth", pro: "Pro" };
-  const planPrices = { starter: "$19.99", growth: "$69", pro: "$199" };
+  const planNames: Record<string, string> = {
+    lite: "Lite",
+    essentials: "Essentials",
+    pro: "Pro",
+    advanced: "Advanced",
+    // Legacy v5 tier names — keep for grandfathered merchants
+    starter: "Essentials",
+    growth: "Essentials",
+    scale: "Advanced",
+  };
+  const planPrices: Record<string, string> = {
+    lite: "$0",
+    essentials: "$99",
+    pro: "5%",
+    advanced: "$349",
+    starter: "$99",
+    growth: "$99",
+    scale: "$349",
+  };
 
   return (
     <>
@@ -1437,19 +1463,26 @@ export default function MerchantDashboardPage() {
             <div className="db-plan-badge">
               <div className="db-plan-badge__label">Current Plan</div>
               <div className="db-plan-badge__name">
-                {merchant?.plan === "growth"
-                  ? "Growth"
+                {merchant?.plan === "advanced"
+                  ? "Advanced"
                   : merchant?.plan === "pro"
                     ? "Pro"
-                    : "Starter"}
+                    : merchant?.plan === "essentials" ||
+                        merchant?.plan === "growth" ||
+                        merchant?.plan === "starter"
+                      ? "Essentials"
+                      : "Lite"}
               </div>
               <div className="db-plan-badge__price">
-                {merchant?.plan === "growth"
-                  ? "$69"
+                {merchant?.plan === "advanced"
+                  ? "$349 / mo"
                   : merchant?.plan === "pro"
-                    ? "$199"
-                    : "$19.99"}{" "}
-                / mo
+                    ? "5% of revenue"
+                    : merchant?.plan === "essentials" ||
+                        merchant?.plan === "growth" ||
+                        merchant?.plan === "starter"
+                      ? "$99 / mo"
+                      : "$0 / mo"}
               </div>
               <a href="/merchant/upgrade" className="db-plan-badge__upgrade">
                 Upgrade plan →

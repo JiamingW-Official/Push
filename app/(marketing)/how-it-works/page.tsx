@@ -246,7 +246,7 @@ const COMPARE_ROWS = [
   {
     feature: "Monthly cost",
     traditional: "$500–$3,000+",
-    push: "From $19.99/mo",
+    push: "From $0/mo (Lite tier)",
   },
   {
     feature: "Payout speed",
@@ -1013,7 +1013,7 @@ export default function HowItWorksPage() {
               <p className="hiw-cta-body">
                 Post a campaign in 2 minutes. Push matches you with nearby
                 creators. Pay only when a verified customer walks through your
-                door. From $19.99/mo — cancel anytime.
+                door. Free Lite tier — cancel anytime.
               </p>
               <Link href="/merchant/signup" className="btn-hiw-merchant">
                 Start Free — $0 upfront

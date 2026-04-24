@@ -86,9 +86,13 @@
 .fm-sub {
   font-size: var(--text-body);
   color: rgba(245, 242, 236, 0.75);
-  max-width: 480px;
+  max-width: 540px;
   line-height: 1.7;
   margin-bottom: var(--space-6);
+}
+
+.fm-sub-light {
+  color: rgba(245, 242, 236, 0.5);
 }
 
 .fm-ctas {
