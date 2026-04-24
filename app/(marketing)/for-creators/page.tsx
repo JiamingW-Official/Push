@@ -7,23 +7,28 @@ import "../landing.css";
 import "./creators.css";
 
 /* ── Earnings Calculator ─────────────────────────────────── */
-const TIER_RATES: Record<string, { min: number; max: number }> = {
-  seed: { min: 2, max: 5 },
-  explorer: { min: 5, max: 12 },
-  operator: { min: 12, max: 25 },
-  proven: { min: 25, max: 45 },
-  closer: { min: 45, max: 80 },
-  partner: { min: 80, max: 150 },
+// v6 per-verified-visit model (R5): avg payout scales by creator tier.
+// min/max bracket a +/- 25% band around the tier's expected average so the
+// UI can show "est. $X–$Y" without promising a specific number.
+const TIER_CONVERSION_RATE: Record<string, { min: number; max: number }> = {
+  seed: { min: 4, max: 6 },
+  explorer: { min: 6, max: 10 },
+  operator: { min: 9, max: 15 },
+  proven: { min: 14, max: 22 },
+  closer: { min: 20, max: 30 },
+  partner: { min: 28, max: 42 },
 };
 
 function EarningsCalculator() {
   const [tier, setTier] = useState("operator");
-  const [campaigns, setCampaigns] = useState(4);
-  const [avgPayout, setAvgPayout] = useState(18);
+  const [campaigns, setCampaigns] = useState(2);
+  const [visitsPerWeek, setVisitsPerWeek] = useState(8);
 
-  const rate = TIER_RATES[tier];
-  const estMin = Math.round(campaigns * avgPayout * (rate.min / 100) * 30);
-  const estMax = Math.round(campaigns * avgPayout * (rate.max / 100) * 30);
+  const rate = TIER_CONVERSION_RATE[tier];
+  // Monthly = campaigns × visits/week/campaign × per-visit rate × 4.33 weeks
+  const weeks = 4.33;
+  const estMin = Math.round(campaigns * visitsPerWeek * rate.min * weeks);
+  const estMax = Math.round(campaigns * visitsPerWeek * rate.max * weeks);
 
   const tiers = [
     { id: "seed", label: "Seed", range: "1–5K" },
@@ -75,23 +80,23 @@ function EarningsCalculator() {
           </div>
         </div>
 
-        {/* Avg payout per visit */}
+        {/* Verified visits per week per campaign */}
         <div className="calc-field">
           <label className="calc-label">
-            Avg. payout per verified visit
-            <span className="calc-val">${avgPayout}</span>
+            Verified visits / campaign / week
+            <span className="calc-val">{visitsPerWeek}</span>
           </label>
           <input
             type="range"
-            min={5}
-            max={60}
-            value={avgPayout}
-            onChange={(e) => setAvgPayout(Number(e.target.value))}
+            min={1}
+            max={25}
+            value={visitsPerWeek}
+            onChange={(e) => setVisitsPerWeek(Number(e.target.value))}
             className="calc-slider"
           />
           <div className="calc-slider-ticks">
-            <span>$5</span>
-            <span>$60</span>
+            <span>1</span>
+            <span>25</span>
           </div>
         </div>
       </div>
@@ -107,9 +112,9 @@ function EarningsCalculator() {
           <span className="calc-num-val">{estMax.toLocaleString()}</span>
         </div>
         <p className="calc-output-note">
-          Based on {campaigns} campaign{campaigns !== 1 ? "s" : ""} · $
-          {avgPayout} avg payout · {TIER_RATES[tier].min}–{TIER_RATES[tier].max}
-          % commission rate
+          Based on {campaigns} campaign{campaigns !== 1 ? "s" : ""} ·{" "}
+          {visitsPerWeek} verified visits/wk · ${rate.min}–${rate.max} per visit
+          (tier rate). Payouts via Stripe Connect.
         </p>
         <Link href="/creator/signup" className="btn btn-primary calc-cta">
           Apply now — it&apos;s free
