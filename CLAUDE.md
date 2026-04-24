@@ -24,18 +24,21 @@ Domain knowledge lives in `.claude/skills/`. Load only what a task needs. Start 
 
 ---
 
-## Design system (MANDATORY)
+## Design system (MANDATORY · v7 2026-04-24)
 
 Before touching any UI code, read [Design.md](./Design.md). Non-negotiables:
 
-- Sharp corners — `border-radius: 0` everywhere. Exceptions are documented in Design.md (map pins, filter chips, back-to-top).
-- Six brand colors only — `#c1121f` Flag Red, `#780000` Molten Lava, `#f5f2ec` Pearl Stone, `#003049` Deep Space Blue, `#669bbc` Steel Blue, `#c9a96e` Champagne Gold. No additions.
-- Two fonts only — Darky (display/headings), CS Genio Mono (body/UI).
-- 8px base grid.
-- Light mode only.
-- Interactions use GSAP ScrollTrigger + Lenis smooth scroll.
+- **iOS 26 continuous corner** — radii from the `8 / 12 / 14 / 20 / 28 / 32 / pill / circle` scale. `border-radius: 0` is forbidden.
+- **Ink + 2 brand accents + 6 category colors only** — `#0a0a0a` Ink (text/UI) + `#c1121f` Flag Red (primary action, brand) + `#bfa170` Champagne Gold (ceremonial, Partner). Category: `#b8624a` Dining / `#4a7a8c` Travel / `#b5807f` Beauty / `#5d4a6b` Fashion / `#7a8d6e` Fitness / `#8b3a4c` Entertainment. No new brand colors without updating Design.md.
+- **Two fonts only** — Darky (display/headings) + CS Genio Mono (body/UI). Weight contrast is the core visual tool.
+- **8px base grid** — section padding 72–128px responsive.
+- **Background** — `#fbfaf7` Ivory Warm White. Never pure white, never Papaya Whip.
+- **Light mode only.**
+- **Interactions** — GSAP ScrollTrigger + Lenis. iOS 26 spring timing `cubic-bezier(0.34, 1.56, 0.64, 1)` on interactive press.
+- **Elevation** — iOS 26 three-layer soft shadow (`--shadow-1 / 2 / 3`). Glass morphism allowed on sticky nav, modal overlay, toast. Retired: hard-offset `3px 3px 0 ...` Brutalist shadows.
+- **Bold Modular** — few large 28–32px radius blocks per section, 96–128px breathing room. Not dense grids.
 
-Override third-party component radii to 0. Deviations from Design.md require user sign-off and a doc update in the same PR.
+Override third-party component radii to match this scale (not to 0). Deviations from Design.md require user sign-off and a doc update in the same PR.
 
 ---
 

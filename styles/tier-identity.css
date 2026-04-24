@@ -1,137 +1,157 @@
 /* ==========================================================================
-   tier-identity.css
+   tier-identity.css — v7 (2026-04-24)
    Push — Creator Tier Visual Identity System
+
    6 tiers: seed / explorer / operator / proven / closer / partner
-   Follows Push Design System (Design.md): no border-radius, brand colors,
-   Darky + CS Genio Mono fonts, 8px grid.
+
+   v7 Semantic Progression (Design.md §Tier Identity System):
+     Seed → Explorer → Operator → Proven → Closer → Partner
+
+     The first 4 tiers progress through the INK LADDER (cool grayscale
+     deepening — "earning gravity, still pre-contract").
+     Closer is the FIRST appearance of Flag Red ("crossed the contract
+     threshold, brand inner circle").
+     Partner closes with Ink deepest + Champagne capstone ("ceremonial
+     senior, the anchor").
+
+   Authority: Design.md §Tier Identity System + globals.css --tier-* tokens.
+
+   Legacy v5.1 material-name decoration (Clay / Bronze / Steel / Gold / Ruby /
+   Obsidian) is dropped from user-facing copy per canonical memory D19.
+   Material names appear ONLY in developer comments below as historical
+   mapping reference.
    ========================================================================== */
 
 
 /* ==========================================================================
    1. TIER CUSTOM PROPERTIES
    Each tier exposes four tokens consumed by all tier components below.
-   --tier-color   : primary text/foreground for this tier
+   All values resolve to v7 Ink ladder + brand signatures — no new hexes.
+
+   --tier-color   : foreground (text / icon) color on tier surface
    --tier-bg      : surface background
-   --tier-accent  : border accent / badge left-border
-   --tier-label   : display string (not used in attr() yet but available)
+   --tier-accent  : border accent / left-border strip color
+   --tier-label   : display string (all-caps tier name)
    ========================================================================== */
 
-/* --- Seed — Clay: warm taupe, earthy, provisional ---------------------- */
+/* --- Seed (legacy: Clay) — provisional, dashed hairline outline -------- */
 .tier--seed {
-  --tier-color:  #7a6b5d;
-  --tier-bg:     #f0ece6;
-  --tier-accent: #669bbc;
+  --tier-color:  var(--ink-4);
+  --tier-bg:     var(--surface-2);
+  --tier-accent: var(--hairline-2);
   --tier-label:  "SEED";
 }
 
-/* --- Explorer — curious, Steel Blue dominant, slight warmth -------------- */
+/* --- Explorer (legacy: Bronze) — lightest ink fill --------------------- */
 .tier--explorer {
-  --tier-color:  #c9a96e;
-  --tier-bg:     #eef5fb;
-  --tier-accent: #5a3d24;
+  --tier-color:  var(--ink-2);
+  --tier-bg:     var(--ink-6);
+  --tier-accent: var(--ink-6);
   --tier-label:  "EXPLORER";
 }
 
-/* --- Operator — competent, grounded, Deep Space Blue + warm gray --------- */
+/* --- Operator (legacy: Steel) — mid ink fill --------------------------- */
 .tier--operator {
-  --tier-color:  #669bbc;
-  --tier-bg:     #f2f4f5;
-  --tier-accent: #4a6273;
+  --tier-color:  #ffffff;
+  --tier-bg:     var(--ink-4);
+  --tier-accent: var(--ink-4);
   --tier-label:  "OPERATOR";
 }
 
-/* --- Proven — confident, Deep Space Blue + Flag Red accent on badges ----- */
+/* --- Proven (legacy: Gold) — dark ink, pre-contract end ---------------- */
 .tier--proven {
-  --tier-color:  #c1121f;
-  --tier-bg:     var(--surface);
-  --tier-accent: #003049;
+  --tier-color:  #ffffff;
+  --tier-bg:     var(--ink-2);
+  --tier-accent: var(--ink-2);
   --tier-label:  "PROVEN";
 }
 
-/* --- Closer — driven, strong contrast, Flag Red as primary accent --------- */
+/* --- Closer (legacy: Ruby) — first brand-red, commitment --------------- */
 .tier--closer {
-  --tier-color:  #780000;
-  --tier-bg:     var(--surface);
-  --tier-accent: #6d0c15;
+  --tier-color:  #ffffff;
+  --tier-bg:     var(--brand-red);
+  --tier-accent: var(--brand-red);
   --tier-label:  "CLOSER";
 }
 
-/* --- Partner — elite, Molten Lava + gold, premium feel ------------------- */
+/* --- Partner (legacy: Obsidian) — deepest ink + Champagne capstone ----- */
 .tier--partner {
-  --tier-color:  #003049;
-  --tier-bg:     #fdf8ee;
-  --tier-accent: #b8860b;
+  --tier-color:  #ffffff;
+  --tier-bg:     var(--ink);
+  --tier-accent: var(--champagne); /* v7 signature: 3px --champagne left-border */
   --tier-label:  "PARTNER";
 }
 
 
 /* ==========================================================================
    2. TIER BADGE   .tier-badge  +  .tier-badge--{tier}
-   Inline label rendered in CS Genio Mono, small/uppercase/tracked.
-   Left border 2px solid tier-accent — Push design language, no radius.
+   Inline label. CS Genio Mono, small/uppercase/tracked, --r-sm corner.
    ========================================================================== */
 
 .tier-badge {
   display:         inline-flex;
   align-items:     center;
-  font-family:     'CS Genio Mono', 'SF Mono', 'Fira Code', monospace;
+  font-family:     var(--font-body);
   font-size:       10px;
   font-weight:     700;
-  letter-spacing:  0.12em;
+  letter-spacing:  0.08em;
   text-transform:  uppercase;
-  padding:         3px 8px;
-  border-radius:   0;           /* Push: always 0 */
-  border-left:     2px solid var(--tier-accent, #718096);
-  background:      var(--tier-bg, #f7f7f7);
-  color:           var(--tier-color, #669bbc);
+  padding:         5px 12px;
+  border-radius:   var(--r-sm);
+  background:      var(--tier-bg, var(--surface-2));
+  color:           var(--tier-color, var(--ink));
   line-height:     1.4;
   user-select:     none;
 }
 
-/* Tier-specific badge modifiers — inherit properties from tier tokens */
+/* Tier-specific badge modifiers — v7 Ink ladder + capstones */
 
 .tier-badge--seed {
-  --tier-color:  #7a6b5d;
-  --tier-bg:     #f0ece6;
-  --tier-accent: #669bbc;
+  --tier-color:  var(--ink-4);
+  --tier-bg:     var(--surface-2);
+  --tier-accent: var(--hairline-2);
+  border:        1.5px dashed var(--hairline-2); /* provisional signal */
+  background:    transparent;
 }
 
 .tier-badge--explorer {
-  --tier-color:  #c9a96e;
-  --tier-bg:     #eef5fb;
-  --tier-accent: #5a3d24;
+  --tier-color:  var(--ink-2);
+  --tier-bg:     var(--ink-6);
+  --tier-accent: var(--ink-6);
 }
 
 .tier-badge--operator {
-  --tier-color:  #669bbc;
-  --tier-bg:     #f2f4f5;
-  --tier-accent: #4a6273;
+  --tier-color:  #ffffff;
+  --tier-bg:     var(--ink-4);
+  --tier-accent: var(--ink-4);
 }
 
 .tier-badge--proven {
-  --tier-color:  #c1121f;
-  --tier-bg:     var(--surface);
-  --tier-accent: #003049;
+  --tier-color:  #ffffff;
+  --tier-bg:     var(--ink-2);
+  --tier-accent: var(--ink-2);
 }
 
 .tier-badge--closer {
-  --tier-color:  #780000;
-  --tier-bg:     var(--surface);
-  --tier-accent: #6d0c15;
+  --tier-color:  #ffffff;
+  --tier-bg:     var(--brand-red);
+  --tier-accent: var(--brand-red);
+  animation:     badgeShimmer 2.8s linear infinite;
 }
 
 .tier-badge--partner {
-  --tier-color:  #003049;
-  --tier-bg:     #fdf8ee;
-  --tier-accent: #b8860b;
-  animation:     shimmer-gold 2.4s ease-in-out infinite;
+  --tier-color:  #ffffff;
+  --tier-bg:     var(--ink);
+  --tier-accent: var(--champagne);
+  border-left:   3px solid var(--champagne); /* v7 Obsidian signature */
+  animation:     badgeShimmer 2.4s linear infinite,
+                 obsidianPulse 2.4s ease-in-out infinite;
 }
 
 
 /* ==========================================================================
    3. TIER PILL   .tier-pill--{tier}
    Compact inline variant for lists/tables.
-   No border box — left 3px border strip on a minimal background.
    ========================================================================== */
 
 [class^="tier-pill--"],
@@ -139,197 +159,163 @@
   display:        inline-flex;
   align-items:    center;
   gap:            6px;
-  font-family:    'CS Genio Mono', 'SF Mono', 'Fira Code', monospace;
+  font-family:    var(--font-body);
   font-size:      11px;
   font-weight:    600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  padding:        2px 6px;
-  border-radius:  0;
-  border-left:    3px solid var(--tier-accent, #718096);
-  background:     var(--tier-bg, #f7f7f7);
-  color:          var(--tier-color, #669bbc);
+  padding:        2px 8px;
+  border-radius:  var(--r-sm);
+  border-left:    3px solid var(--tier-accent, var(--hairline));
+  background:     var(--tier-bg, var(--surface-2));
+  color:          var(--tier-color, var(--ink));
   line-height:    1.4;
 }
 
 .tier-pill--seed {
-  --tier-color:  #7a6b5d;
-  --tier-bg:     #f0ece6;
-  --tier-accent: #669bbc;
+  --tier-color:  var(--ink-4);
+  --tier-bg:     var(--surface-2);
+  --tier-accent: var(--hairline-2);
 }
 
 .tier-pill--explorer {
-  --tier-color:  #c9a96e;
-  --tier-bg:     #eef5fb;
-  --tier-accent: #5a3d24;
+  --tier-color:  var(--ink-2);
+  --tier-bg:     var(--ink-6);
+  --tier-accent: var(--ink-6);
 }
 
 .tier-pill--operator {
-  --tier-color:  #669bbc;
-  --tier-bg:     #f2f4f5;
-  --tier-accent: #4a6273;
+  --tier-color:  #ffffff;
+  --tier-bg:     var(--ink-4);
+  --tier-accent: var(--ink-4);
 }
 
 .tier-pill--proven {
-  --tier-color:  #c1121f;
-  --tier-bg:     var(--surface);
-  --tier-accent: #003049;
+  --tier-color:  #ffffff;
+  --tier-bg:     var(--ink-2);
+  --tier-accent: var(--ink-2);
 }
 
 .tier-pill--closer {
-  --tier-color:  #780000;
-  --tier-bg:     var(--surface);
-  --tier-accent: #6d0c15;
+  --tier-color:  #ffffff;
+  --tier-bg:     var(--brand-red);
+  --tier-accent: var(--brand-red);
 }
 
 .tier-pill--partner {
-  --tier-color:  #003049;
-  --tier-bg:     #fdf8ee;
-  --tier-accent: #b8860b;
+  --tier-color:  #ffffff;
+  --tier-bg:     var(--ink);
+  --tier-accent: var(--champagne); /* v7 capstone */
 }
 
 
 /* ==========================================================================
    4. PROGRESS BAR FILLS   .tier-progress--{tier}
-   Applied to the inner fill element of a progress bar.
-   Host element controls height / border-radius (keep 0 per Push rules).
    ========================================================================== */
 
 [class^="tier-progress--"],
 [class*=" tier-progress--"] {
   display:    block;
   height:     100%;
-  width:      0;            /* animated by JS via inline style */
+  width:      0;
   transition: width 0.5s ease-out;
 }
 
 .tier-progress--seed     { background-color: var(--tier-seed); }
 .tier-progress--explorer { background-color: var(--tier-explorer); }
 .tier-progress--operator { background-color: var(--tier-operator); }
-.tier-progress--proven   { background-color: #c1121f; }
+.tier-progress--proven   { background-color: var(--tier-proven); }
 .tier-progress--closer   { background-color: var(--tier-closer); }
 .tier-progress--partner  { background-color: var(--tier-partner); }
 
 
 /* ==========================================================================
    5. SCORE RING SVG OVERRIDES   .ring--{tier}
-   Exposes --ring-fill so SVG stroke can be driven from CSS.
-   Apply to the <svg> or wrapping element; set stroke="var(--ring-fill)" in SVG.
    ========================================================================== */
 
 .ring--seed     { --ring-fill: var(--tier-seed); }
 .ring--explorer { --ring-fill: var(--tier-explorer); }
 .ring--operator { --ring-fill: var(--tier-operator); }
-.ring--proven   { --ring-fill: #c1121f; }
+.ring--proven   { --ring-fill: var(--tier-proven); }
 .ring--closer   { --ring-fill: var(--tier-closer); }
 .ring--partner  { --ring-fill: var(--tier-partner); }
 
-/* Convenience: direct stroke override for inline SVG children */
 .ring--seed     > svg circle,
 .ring--seed     > svg path     { stroke: var(--tier-seed); }
-
 .ring--explorer > svg circle,
 .ring--explorer > svg path     { stroke: var(--tier-explorer); }
-
 .ring--operator > svg circle,
 .ring--operator > svg path     { stroke: var(--tier-operator); }
-
 .ring--proven   > svg circle,
-.ring--proven   > svg path     { stroke: #c1121f; }
-
+.ring--proven   > svg path     { stroke: var(--tier-proven); }
 .ring--closer   > svg circle,
 .ring--closer   > svg path     { stroke: var(--tier-closer); }
-
 .ring--partner  > svg circle,
 .ring--partner  > svg path     { stroke: var(--tier-partner); }
 
 
 /* ==========================================================================
    6. TIER HEADER BANDS   .tier-header--{tier}
-   Full-width 4px decorative line at the top of a card or section.
-   Gradient from tier-accent → tier-color.
+   Full-width 3-4px decorative line at top of a card/section.
+   Design.md §Tier Card Header: Clay dashed hairline-2; Bronze/Steel/Gold
+   solid ink steps; Ruby brand-red; Obsidian 4px champagne capstone.
    ========================================================================== */
 
 [class^="tier-header--"],
 [class*=" tier-header--"] {
-  display:       block;
-  width:         100%;
-  height:        4px;
-  border-radius: 0;
-  flex-shrink:   0;
+  display:     block;
+  width:       100%;
+  height:      4px;
+  flex-shrink: 0;
 }
 
-.tier-header--seed {
-  background: linear-gradient(90deg, #d4c8be 0%, #669bbc 100%);
-}
-
-.tier-header--explorer {
-  background: linear-gradient(90deg, #5a3d24 0%, #c9a96e 100%);
-}
-
-.tier-header--operator {
-  background: linear-gradient(90deg, #4a6273 0%, #669bbc 100%);
-}
-
-.tier-header--proven {
-  background: linear-gradient(90deg, #003049 0%, #c1121f 100%);
-}
-
-.tier-header--closer {
-  background: linear-gradient(90deg, #6d0c15 0%, #780000 100%);
-}
-
-.tier-header--partner {
-  background: linear-gradient(90deg, #b8860b 0%, #003049 100%);
-}
+.tier-header--seed     { height: 3px; border-top: 3px dashed var(--hairline-2); background: transparent; }
+.tier-header--explorer { height: 3px; background: var(--ink-6); }
+.tier-header--operator { height: 3px; background: var(--ink-4); }
+.tier-header--proven   { height: 3px; background: var(--ink-2); }
+.tier-header--closer   { height: 3px; background: var(--brand-red); }
+.tier-header--partner  { height: 4px; background: var(--champagne); } /* ceremonial capstone */
 
 
 /* ==========================================================================
-   7. TIER UNLOCK BURST ANIMATION   .tier-unlock-burst
-   Applied to a card/element when a new tier is reached.
-   scale 0.85 → 1.05 → 1, opacity 0 → 1 over 0.6s ease-out.
+   7. TIER UNLOCK BURST ANIMATION
    ========================================================================== */
 
 .tier-unlock-burst {
-  animation: tier-unlock-burst 0.6s ease-out both;
+  animation: tier-unlock-burst 0.6s var(--ease-spring) both;
 }
 
 @keyframes tier-unlock-burst {
-  0% {
-    transform: scale(0.85);
-    opacity:   0;
-  }
-  70% {
-    transform: scale(1.05);
-    opacity:   1;
-  }
-  100% {
-    transform: scale(1);
-    opacity:   1;
-  }
+  0%   { transform: scale(0.85); opacity: 0; }
+  70%  { transform: scale(1.05); opacity: 1; }
+  100% { transform: scale(1);    opacity: 1; }
 }
 
 
 /* ==========================================================================
-   8. PARTNER SHIMMER GOLD KEYFRAME
-   Used on .tier-badge--partner and .tier-stamp--partner.
-   Pulses a soft gold glow via box-shadow at 50% of the cycle.
+   8. BADGE SHIMMER KEYFRAMES (v7 — champagne glow, Ink pulse)
    ========================================================================== */
 
+@keyframes badgeShimmer {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(191, 161, 112, 0); }     /* Champagne */
+  50%      { box-shadow: 0 0 8px 2px rgba(191, 161, 112, 0.25); }
+}
+
+@keyframes obsidianPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(191, 161, 112, 0.4); }   /* v7 champagne halo */
+  50%      { box-shadow: 0 0 0 8px rgba(191, 161, 112, 0); }
+}
+
+/* Legacy alias (pre-v7 code may still reference shimmer-gold) */
 @keyframes shimmer-gold {
-  0%, 100% {
-    box-shadow: 0 0 0 0 rgba(184, 134, 11, 0);
-  }
-  50% {
-    box-shadow: 0 0 8px 2px rgba(184, 134, 11, 0.25);
-  }
+  0%, 100% { box-shadow: 0 0 0 0 rgba(191, 161, 112, 0); }
+  50%      { box-shadow: 0 0 8px 2px rgba(191, 161, 112, 0.25); }
 }
 
 
 /* ==========================================================================
    9. TIER STAMP / SEAL   .tier-stamp--{tier}
-   Circular 48×48 element (explicit exception to no-radius rule: 50%).
-   Border ring in tier-color; centered tier initial in Darky.
+   Circular 48×48 seal (border-radius: 50% exception per Design.md).
    ========================================================================== */
 
 [class^="tier-stamp--"],
@@ -339,11 +325,11 @@
   justify-content: center;
   width:           48px;
   height:          48px;
-  border-radius:   50%;           /* intentional circle — per spec exception */
+  border-radius:   50%;
   border-width:    2px;
   border-style:    solid;
   background:      transparent;
-  font-family:     Darky, sans-serif;
+  font-family:     var(--font-display);
   font-size:       20px;
   font-weight:     700;
   text-transform:  uppercase;
@@ -351,159 +337,112 @@
   flex-shrink:     0;
 }
 
-.tier-stamp--seed {
-  border-color: var(--tier-seed);
-  color:        #7a6b5d;
-}
-
-.tier-stamp--explorer {
-  border-color: var(--tier-explorer);
-  color:        var(--tier-explorer);
-}
-
-.tier-stamp--operator {
-  border-color: var(--tier-operator);
-  color:        var(--tier-operator);
-}
-
-.tier-stamp--proven {
-  border-color: #c1121f;
-  color:        #c1121f;
-}
-
-.tier-stamp--closer {
-  border-color: var(--tier-closer);
-  color:        var(--tier-closer);
-}
-
+.tier-stamp--seed     { border-color: var(--hairline-2); color: var(--ink-4); border-style: dashed; }
+.tier-stamp--explorer { border-color: var(--ink-6);      color: var(--ink-2); }
+.tier-stamp--operator { border-color: var(--ink-4);      color: var(--ink-4); }
+.tier-stamp--proven   { border-color: var(--ink-2);      color: var(--ink-2); }
+.tier-stamp--closer   { border-color: var(--brand-red);  color: var(--brand-red); }
 .tier-stamp--partner {
-  border-color: #b8860b;
-  color:        var(--tier-partner);
-  animation:    shimmer-gold 2.4s ease-in-out infinite;
+  border-color: var(--champagne); /* v7 capstone */
+  color:        var(--ink);
+  animation:    badgeShimmer 2.4s linear infinite,
+                obsidianPulse 2.4s ease-in-out infinite;
 }
 
 
 /* ==========================================================================
    10. TIER CARD   .tier-card--{tier}
-   Full benefit card surface. Left border 4px in tier-accent color.
-   Padding 24px (3× 8px grid unit). No border-radius per Push rules.
+   Benefit card surface. --r-xl radius + tier-color left-border.
    ========================================================================== */
 
 [class^="tier-card--"],
 [class*=" tier-card--"] {
   display:       block;
-  padding:       24px;
-  border-radius: 0;
-  border-left:   4px solid var(--tier-accent, #718096);
-  background:    var(--tier-bg, #f7f7f7);
-  color:         var(--tier-color, #669bbc);
-  font-family:   'CS Genio Mono', 'SF Mono', 'Fira Code', monospace;
+  padding:       var(--space-3);
+  border-radius: var(--r-xl);
+  border-left:   4px solid var(--tier-accent, var(--hairline));
+  background:    var(--tier-bg, var(--surface));
+  color:         var(--tier-color, var(--ink));
+  font-family:   var(--font-body);
 }
 
 .tier-card--seed {
-  --tier-color:  #7a6b5d;
-  --tier-bg:     #f0ece6;
-  --tier-accent: #669bbc;
+  --tier-color:  var(--ink-4);
+  --tier-bg:     var(--surface-2);
+  --tier-accent: var(--hairline-2);
 }
 
 .tier-card--explorer {
-  --tier-color:  #c9a96e;
-  --tier-bg:     #eef5fb;
-  --tier-accent: #5a3d24;
+  --tier-color:  var(--ink-2);
+  --tier-bg:     var(--surface);
+  --tier-accent: var(--ink-6);
 }
 
 .tier-card--operator {
-  --tier-color:  #669bbc;
-  --tier-bg:     #f2f4f5;
-  --tier-accent: #4a6273;
+  --tier-color:  var(--ink);
+  --tier-bg:     var(--surface);
+  --tier-accent: var(--ink-4);
 }
 
 .tier-card--proven {
-  --tier-color:  #c1121f;
+  --tier-color:  var(--ink);
   --tier-bg:     var(--surface);
-  --tier-accent: #003049;
+  --tier-accent: var(--ink-2);
 }
 
 .tier-card--closer {
-  --tier-color:  #780000;
+  --tier-color:  var(--ink);
   --tier-bg:     var(--surface);
-  --tier-accent: #6d0c15;
+  --tier-accent: var(--brand-red);
 }
 
 .tier-card--partner {
-  --tier-color:  #003049;
-  --tier-bg:     #fdf8ee;
-  --tier-accent: #b8860b;
+  --tier-color:  #ffffff;
+  --tier-bg:     var(--ink);
+  --tier-accent: var(--champagne); /* v7 capstone */
 }
 
 
 /* ==========================================================================
    11. TIER GLOW   .tier-glow--{tier}
-   Subtle box-shadow glow for active / current tier elements.
-   Seed: no glow. Explorer: soft blue. Operator: navy.
-   Proven: warm amber. Closer: Flag Red. Partner: gold shimmer keyframe.
    ========================================================================== */
 
-.tier-glow--seed {
-  box-shadow: 0 0 12px 2px rgba(184, 169, 154, 0.25);
-}
-
-.tier-glow--explorer {
-  box-shadow: 0 0 12px 2px rgba(102, 155, 188, 0.22);
-}
-
-.tier-glow--operator {
-  box-shadow: 0 0 12px 2px rgba(0, 48, 73, 0.18);
-}
-
-.tier-glow--proven {
-  box-shadow: 0 0 12px 2px rgba(193, 18, 31, 0.14);
-}
-
-.tier-glow--closer {
-  box-shadow: 0 0 12px 2px rgba(193, 18, 31, 0.28);
-}
-
+.tier-glow--seed     { box-shadow: 0 0 12px 2px rgba(10, 10, 10, 0.06); }
+.tier-glow--explorer { box-shadow: 0 0 12px 2px rgba(10, 10, 10, 0.08); }
+.tier-glow--operator { box-shadow: 0 0 12px 2px rgba(10, 10, 10, 0.15); }
+.tier-glow--proven   { box-shadow: 0 0 12px 2px rgba(10, 10, 10, 0.25); }
+.tier-glow--closer   { box-shadow: 0 0 12px 2px rgba(193, 18, 31, 0.22); }
 .tier-glow--partner {
-  animation: shimmer-gold 2.4s ease-in-out infinite;
+  animation: badgeShimmer 2.4s linear infinite,
+             obsidianPulse 2.4s ease-in-out infinite;
 }
 
 
 /* ==========================================================================
    12. CURRENT TIER INDICATOR   .tier-current
-   Pulsing left-border (3px) using the tier-accent custom property.
-   Layer on top of any .tier--{tier} or .tier-card--{tier} element.
    ========================================================================== */
 
 .tier-current {
-  position:     relative;
-  border-left:  3px solid var(--tier-accent, #718096);
-  animation:    tier-current-pulse 2s ease-in-out infinite;
+  position:    relative;
+  border-left: 3px solid var(--tier-accent, var(--brand-red));
+  animation:   tier-current-pulse 2s ease-in-out infinite;
 }
 
 @keyframes tier-current-pulse {
-  0%, 100% {
-    border-left-color: var(--tier-accent, #718096);
-    border-left-width: 3px;
-  }
-  50% {
-    border-left-color: var(--tier-accent, #718096);
-    border-left-width: 5px;
-  }
+  0%, 100% { border-left-width: 3px; }
+  50%      { border-left-width: 5px; }
 }
 
 
 /* ==========================================================================
    13. TIER LOCKED OVERLAY   .tier-locked
-   Semi-transparent overlay indicating a locked/unavailable tier.
-   Applies grayscale to all direct children. Uses a lock icon via ::after
-   pseudo-element as a visual placeholder.
    ========================================================================== */
 
 .tier-locked {
   position:   relative;
   overflow:   hidden;
   cursor:     not-allowed;
+  border-radius: var(--r-xl);
 }
 
 .tier-locked > * {
@@ -513,30 +452,28 @@
 }
 
 .tier-locked::after {
-  content:         "\1F512"; /* lock unicode placeholder */
+  content:         "\1F512";
   position:        absolute;
   inset:           0;
   display:         flex;
   align-items:     center;
   justify-content: center;
   font-size:       24px;
-  background:      rgba(245, 242, 236, 0.72); /* Pearl Stone semi-transparent */
+  background:      rgba(251, 250, 247, 0.72); /* Ivory semi-transparent */
   pointer-events:  none;
 }
 
 
 /* ==========================================================================
    14. TIER TRANSITION   .tier-transition
-   Smooth transition for all tier-related visual properties.
-   Apply when switching between tiers to avoid hard jumps.
    ========================================================================== */
 
 .tier-transition,
 .tier-transition * {
   transition:
-    color           0.3s ease,
-    background      0.3s ease,
+    color            0.3s ease,
+    background       0.3s ease,
     background-color 0.3s ease,
-    border-color    0.3s ease,
-    box-shadow      0.3s ease;
+    border-color     0.3s ease,
+    box-shadow       0.3s ease;
 }

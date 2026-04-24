@@ -53,6 +53,9 @@ export const SEGMENT_BADGE_COLORS: Record<
   CreatorSegment,
   { fg: string; bg: string }
 > = {
-  Community: { fg: "#003049", bg: "#eef5f9" }, // Steel Blue family
-  Studio: { fg: "#780000", bg: "#fdf0d5" }, // Molten Lava family
+  // Values are brand-palette tints (Design.md opacity-variation rule).
+  // Community: Deep Space Blue fg on Steel Blue light tint (rgba from --tertiary).
+  // Studio:    Molten Lava fg on Molten Lava light tint (rgba from --accent).
+  Community: { fg: "#003049", bg: "rgba(102, 155, 188, 0.10)" },
+  Studio: { fg: "#780000", bg: "rgba(120, 0, 0, 0.06)" },
 };
