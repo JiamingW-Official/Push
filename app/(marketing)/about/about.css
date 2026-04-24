@@ -87,6 +87,15 @@
   color: var(--primary);
 }
 
+.about-hero-mission {
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.65;
+  color: var(--graphite);
+  max-width: 560px;
+  margin: var(--space-2) 0 0;
+}
+
 .about-hero-rule {
   width: 64px;
   height: 3px;

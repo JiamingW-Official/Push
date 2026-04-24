@@ -132,6 +132,11 @@ export default function AboutPage() {
               was broken.
             </span>
           </h1>
+          <p className="about-hero-mission">
+            We&apos;re building the attribution rail between creator posts and
+            physical-store purchases. Five founders in NYC. Phase 0 live in
+            Williamsburg.
+          </p>
           <div className="about-hero-rule" aria-hidden="true" />
         </div>
       </section>
