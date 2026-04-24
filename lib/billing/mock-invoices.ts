@@ -1,6 +1,6 @@
 // Mock billing data — TODO: wire to Stripe Billing + Supabase
 
-export type PlanId = "starter" | "growth" | "pro";
+export type PlanId = "lite" | "essentials" | "pro" | "advanced";
 
 export type Invoice = {
   id: string;
@@ -50,43 +50,68 @@ export type Subscription = {
 };
 
 // ── Plan definitions ──────────────────────────────────────────────
+// price_cents: null means outcome-based (compute fee at month end from
+// attributed revenue, capped/floored — see spec/pro-billing-webhook-v1.md).
 export const PLANS: Record<
   PlanId,
-  { name: string; price_cents: number; features: string[] }
+  {
+    name: string;
+    price_cents: number | null;
+    pricing_model: "flat" | "outcome_based";
+    pricing_note?: string;
+    features: string[];
+  }
 > = {
-  starter: {
-    name: "Starter",
-    price_cents: 1999,
+  lite: {
+    name: "Attribution Lite",
+    price_cents: 0,
+    pricing_model: "flat",
     features: [
-      "Up to 2 active campaigns",
-      "10 creator slots / month",
-      "Basic QR attribution",
-      "Email support",
+      "1 active campaign",
+      "1 creator slot",
+      "QR attribution from day one",
+      "Weekly ROI summary",
+      "Community support",
     ],
   },
-  growth: {
-    name: "Growth",
-    price_cents: 6900,
+  essentials: {
+    name: "Essentials",
+    price_cents: 9900,
+    pricing_model: "flat",
     features: [
-      "Up to 10 active campaigns",
-      "50 creator slots / month",
-      "Advanced QR attribution",
-      "Priority email support",
-      "Campaign analytics",
-      "Creator tier filtering",
+      "3 active campaigns",
+      "5 creator slots per campaign",
+      "QR + receipt-scan attribution",
+      "Weekly ROI card",
+      "Email support",
     ],
   },
   pro: {
     name: "Pro",
-    price_cents: 19900,
+    price_cents: null,
+    pricing_model: "outcome_based",
+    pricing_note:
+      "5% of attributed revenue, cap $179/mo, floor $49/mo (Year 1)",
     features: [
-      "Unlimited campaigns",
-      "Unlimited creator slots",
-      "Full QR attribution + fraud protection",
+      "Unlimited campaigns Year 1",
+      "8 creator slots per campaign",
+      "Three-signal attribution (QR + receipt + merchant confirm)",
+      "Live ROI dashboard",
+      "Priority support",
+      "Auto-converts to $349 flat in Year 2 if cap hit 50%+ of months",
+    ],
+  },
+  advanced: {
+    name: "Advanced",
+    price_cents: 34900,
+    pricing_model: "flat",
+    features: [
+      "Everything in Pro, flat $349/mo",
+      "Up to 5 locations",
+      "Custom attribution rules",
       "Dedicated account manager",
       "API access",
-      "White-label reports",
-      "Multi-location support",
+      "White-glove onboarding",
     ],
   },
 };
@@ -94,7 +119,7 @@ export const PLANS: Record<
 // ── Mock subscription ─────────────────────────────────────────────
 export const MOCK_SUBSCRIPTION: Subscription = {
   id: "sub_demo_001",
-  plan: "growth",
+  plan: "essentials",
   status: "active",
   current_period_start: "2026-04-01T00:00:00Z",
   current_period_end: "2026-05-01T00:00:00Z",
@@ -130,7 +155,10 @@ export const MOCK_TAX_INFO: TaxInfo = {
 };
 
 // ── Helper: generate 12 months of monthly invoices ────────────────
-function makeInvoice(monthsAgo: number, plan: PlanId = "growth"): Invoice {
+// Outcome-based (Pro) plans get a placeholder amount that simulates a
+// month with attributed revenue ~$1,800; the production aggregator computes
+// real fee from push_transactions sums per spec/pro-billing-webhook-v1.md.
+function makeInvoice(monthsAgo: number, plan: PlanId = "essentials"): Invoice {
   const now = new Date("2026-04-01T00:00:00Z");
   const periodStart = new Date(now);
   periodStart.setMonth(periodStart.getMonth() - monthsAgo);
@@ -141,14 +169,17 @@ function makeInvoice(monthsAgo: number, plan: PlanId = "growth"): Invoice {
   const month = String(periodStart.getMonth() + 1).padStart(2, "0");
   const invoiceNum = `INV-${year}-${month}`;
 
+  const planDef = PLANS[plan];
+  const amount = planDef.price_cents !== null ? planDef.price_cents : 9000; // outcome-based mock: ~5% of $1,800 attributed revenue
+
   return {
     id: `inv_demo_${year}${month}`,
     number: invoiceNum,
     date: periodStart.toISOString().slice(0, 10),
     period_start: periodStart.toISOString().slice(0, 10),
     period_end: periodEnd.toISOString().slice(0, 10),
-    description: `Push ${PLANS[plan].name} Plan — ${periodStart.toLocaleDateString("en-US", { month: "long", year: "numeric" })}`,
-    amount_cents: PLANS[plan].price_cents,
+    description: `Push ${planDef.name} Plan — ${periodStart.toLocaleDateString("en-US", { month: "long", year: "numeric" })}`,
+    amount_cents: amount,
     status: monthsAgo === 0 ? "open" : "paid",
     pdf_url: null, // stub — print-based PDF
     hosted_url: null, // stub

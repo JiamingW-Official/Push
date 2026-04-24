@@ -19,6 +19,17 @@ function formatCents(cents: number): string {
   return `$${(cents / 100).toFixed(2)}`;
 }
 
+// Returns the price line for a plan as "$X/mo", or "5% of attributed revenue"
+// for outcome-based plans where price_cents is null. Use this everywhere a
+// plan's headline price is displayed.
+function formatPlanPrice(plan: {
+  price_cents: number | null;
+  pricing_model: "flat" | "outcome_based";
+}): string {
+  if (plan.pricing_model === "outcome_based") return "5% of attributed revenue";
+  return `${formatCents(plan.price_cents ?? 0)}/mo`;
+}
+
 function formatDate(iso: string): string {
   return new Date(iso).toLocaleDateString("en-US", {
     year: "numeric",
@@ -137,13 +148,14 @@ function InvoiceStatusBadge({ status }: { status: Invoice["status"] }) {
 
 /* ── Plan card labels ────────────────────────────────────────────── */
 const PLAN_LABELS: Record<PlanId, string> = {
-  starter: "Starter",
-  growth: "Growth",
+  lite: "Attribution Lite",
+  essentials: "Essentials",
   pro: "Pro",
+  advanced: "Advanced",
 };
 
 /* ── UpgradeModal ────────────────────────────────────────────────── */
-const PLAN_ORDER: PlanId[] = ["starter", "growth", "pro"];
+const PLAN_ORDER: PlanId[] = ["lite", "essentials", "pro", "advanced"];
 
 function UpgradeModal({
   currentPlan,
@@ -160,11 +172,17 @@ function UpgradeModal({
   const currentCents = PLANS[currentPlan].price_cents;
   const newCents = PLANS[selected].price_cents;
 
-  // Prorated charge for upgrading mid-cycle (approx 15 days remaining)
+  // Prorated charge for upgrading mid-cycle (approx 15 days remaining).
+  // Outcome-based plans (price_cents === null) skip proration entirely —
+  // their fee is settled at month close from attributed revenue, see
+  // spec/pro-billing-webhook-v1.md.
   const daysLeft = daysUntil(MOCK_SUBSCRIPTION.current_period_end);
   const daysInPeriod = 30;
   const proratedCents =
-    selected !== currentPlan && newCents > currentCents
+    selected !== currentPlan &&
+    currentCents !== null &&
+    newCents !== null &&
+    newCents > currentCents
       ? Math.round(((newCents - currentCents) / daysInPeriod) * daysLeft)
       : 0;
 
@@ -208,9 +226,25 @@ function UpgradeModal({
                       )}
                     </div>
                     <div className="bill-plan-option__price">
-                      {formatCents(plan.price_cents)}
-                      <span className="bill-plan-option__period">/mo</span>
+                      {plan.pricing_model === "outcome_based" ? (
+                        <>
+                          5%
+                          <span className="bill-plan-option__period">
+                            of attributed revenue
+                          </span>
+                        </>
+                      ) : (
+                        <>
+                          {formatCents(plan.price_cents ?? 0)}
+                          <span className="bill-plan-option__period">/mo</span>
+                        </>
+                      )}
                     </div>
+                    {plan.pricing_note && (
+                      <div className="bill-plan-option__note">
+                        {plan.pricing_note}
+                      </div>
+                    )}
                     <ul className="bill-plan-option__features">
                       {plan.features.map((f) => (
                         <li key={f}>{f}</li>
@@ -223,7 +257,14 @@ function UpgradeModal({
 
             {selected !== currentPlan && (
               <div className="bill-modal__prorate">
-                {newCents > currentCents ? (
+                {PLANS[selected].pricing_model === "outcome_based" ? (
+                  <span>
+                    Outcome-based plan — no charge today. First invoice settles
+                    at the end of the billing period from attributed revenue.
+                  </span>
+                ) : currentCents !== null &&
+                  newCents !== null &&
+                  newCents > currentCents ? (
                   <span>
                     Upgrading today — prorated charge of{" "}
                     <strong>{formatCents(proratedCents)}</strong> for the
@@ -270,8 +311,7 @@ function UpgradeModal({
               <div className="bill-modal__confirm-row">
                 <span>New plan</span>
                 <span>
-                  {PLANS[selected].name} —{" "}
-                  {formatCents(PLANS[selected].price_cents)}/mo
+                  {PLANS[selected].name} — {formatPlanPrice(PLANS[selected])}
                 </span>
               </div>
               {proratedCents > 0 && (
@@ -471,7 +511,7 @@ function CancelModal({
               <div className="bill-modal__confirm-row">
                 <span>Current plan</span>
                 <span>
-                  {PLANS[plan].name} — {formatCents(PLANS[plan].price_cents)}/mo
+                  {PLANS[plan].name} — {formatPlanPrice(PLANS[plan])}
                 </span>
               </div>
               <div className="bill-modal__confirm-row">
@@ -584,11 +624,23 @@ export default function MerchantBillingPage() {
               <div className="bill-hero__eyebrow">Billing Center</div>
               <h1 className="bill-hero__title">
                 {plan.name}
-                <span className="bill-hero__price">
-                  {" "}
-                  {formatCents(plan.price_cents)}
-                </span>
-                <span className="bill-hero__period">/mo</span>
+                {plan.pricing_model === "outcome_based" ? (
+                  <>
+                    <span className="bill-hero__price"> 5%</span>
+                    <span className="bill-hero__period">
+                      {" "}
+                      of attributed revenue
+                    </span>
+                  </>
+                ) : (
+                  <>
+                    <span className="bill-hero__price">
+                      {" "}
+                      {formatCents(plan.price_cents ?? 0)}
+                    </span>
+                    <span className="bill-hero__period">/mo</span>
+                  </>
+                )}
               </h1>
               {canceled ? (
                 <div className="bill-hero__cancel-notice">
@@ -600,7 +652,9 @@ export default function MerchantBillingPage() {
                 <div className="bill-hero__next">
                   Next billing{" "}
                   <strong>{formatDate(sub.current_period_end)}</strong> —{" "}
-                  {formatCents(plan.price_cents)}
+                  {plan.pricing_model === "outcome_based"
+                    ? "settled from attributed revenue"
+                    : formatCents(plan.price_cents ?? 0)}
                 </div>
               )}
             </div>
@@ -645,8 +699,13 @@ export default function MerchantBillingPage() {
                 <div className="bill-plan-details">
                   <div className="bill-plan-details__name">{plan.name}</div>
                   <div className="bill-plan-details__price">
-                    {formatCents(plan.price_cents)}/mo
+                    {formatPlanPrice(plan)}
                   </div>
+                  {plan.pricing_note && (
+                    <div className="bill-plan-details__note">
+                      {plan.pricing_note}
+                    </div>
+                  )}
                   <ul className="bill-plan-details__features">
                     {plan.features.map((f) => (
                       <li key={f}>
