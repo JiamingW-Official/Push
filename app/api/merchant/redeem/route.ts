@@ -26,6 +26,7 @@ import {
 import { requireMerchantSession } from "@/lib/api/merchant-auth";
 import { demoShortCircuit } from "@/lib/api/demo-short-circuit";
 import { supabase } from "@/lib/db";
+import { computeAttributionWeight } from "@/lib/services/attribution-decay";
 
 const PRODUCT_CATEGORIES = new Set([
   "coffee",
@@ -186,12 +187,35 @@ export async function POST(req: Request): Promise<Response> {
     creatorId = (appRows[0] as { creator_id: string }).creator_id;
   }
 
+  const customerHash = sha(customerIn);
+
+  // FTC 16 CFR Part 255 attribution decay: weight scales with time since the
+  // customer's FIRST attributed scan from this creator. New (customer, creator)
+  // pairs always get 1.0; repurchases inside the 120-day window decay piecewise.
+  const { data: priorRows } = await supabase
+    .from("push_transactions")
+    .select("claim_timestamp")
+    .eq("customer_id_hash", customerHash)
+    .eq("creator_id", creatorId)
+    .order("claim_timestamp", { ascending: true })
+    .limit(1);
+
+  const firstScanAt =
+    priorRows && priorRows.length > 0
+      ? new Date((priorRows[0] as { claim_timestamp: string }).claim_timestamp)
+      : now;
+
+  const attributionWeight = computeAttributionWeight(firstScanAt, now);
+  if (attributionWeight === 0) {
+    return badRequest("Attribution window expired (>120 days)");
+  }
+
   const row: Record<string, unknown> = {
     device_id_hash: sha(deviceIn),
     creator_id: creatorId,
     merchant_id: qr.merchant_id,
     campaign_id: qr.campaign_id,
-    customer_id_hash: sha(customerIn),
+    customer_id_hash: customerHash,
     claim_timestamp: now.toISOString(),
     redeem_timestamp: now.toISOString(),
     expiry_timestamp: expiry.toISOString(),
@@ -203,6 +227,7 @@ export async function POST(req: Request): Promise<Response> {
     consent_version: body.consent_version,
     ftc_disclosure_shown: body.ftc_disclosure_shown,
     consent_tier: tier,
+    attribution_weight: attributionWeight,
   };
 
   const { data: inserted, error } = await supabase
