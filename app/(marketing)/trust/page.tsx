@@ -320,12 +320,14 @@ export default function TrustPage() {
               Trust, <em>verified.</em>
             </h1>
             <p className="trust-hero-sub reveal" data-delay="1">
-              Why 340+ creators and 50+ NYC merchants put their money on Push.
-              Every payout, every scan, every identity — protected by the same
-              systems that process millions of dollars in verified visits.
+              Why creators and NYC merchants are choosing Push for verified
+              attribution. Every payout, every scan, every identity — protected
+              by the same Stripe Connect infrastructure that processes billions
+              of dollars in verified commerce.
             </p>
             <p className="trust-hero-footnote reveal" data-delay="2">
-              Figures reflect platform data as of April 2026.
+              Built by a 5-person NYC team. Phase 0 launching Williamsburg, May
+              2026.
             </p>
           </div>
         </div>
