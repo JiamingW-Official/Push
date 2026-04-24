@@ -90,7 +90,6 @@ const TIER_BENEFITS: Record<
     baseRate: string;
     slots: number;
     commission?: string;
-    milestone?: string;
   }
 > = {
   seed: {
@@ -107,52 +106,48 @@ const TIER_BENEFITS: Record<
     benefits: [
       "$20 per campaign",
       "3% commission",
-      "$15 milestone bonus",
+      "Higher per-visit rate ($12 avg)",
       "3 campaigns",
     ],
     baseRate: "$20",
     slots: 3,
     commission: "3%",
-    milestone: "$15",
   },
   proven: {
     benefits: [
       "$32 per campaign",
       "5% commission",
-      "$30 milestone bonus",
+      "Studio-tier eligibility",
       "4 campaigns",
       "Content reviews",
     ],
     baseRate: "$32",
     slots: 4,
     commission: "5%",
-    milestone: "$30",
   },
   closer: {
     benefits: [
       "$55 per campaign",
       "7% commission",
-      "$50 milestone bonus",
+      "Premium per-visit rate ($25 avg)",
       "5 campaigns",
       "Account manager",
     ],
     baseRate: "$55",
     slots: 5,
     commission: "7%",
-    milestone: "$50",
   },
   partner: {
     benefits: [
       "$100 per campaign",
       "10% commission",
-      "$80 milestone bonus",
+      "Top per-visit rate ($35 avg) + Studio anchor",
       "6 campaigns",
       "Advisory access",
     ],
     baseRate: "$100",
     slots: 6,
     commission: "10%",
-    milestone: "$80",
   },
 };
 
@@ -428,15 +423,6 @@ export function TierUpgradeReveal({
             label: "Commission",
             before: prevBenefits.commission ?? "None",
             after: newBenefits.commission,
-          },
-        ]
-      : []),
-    ...(newBenefits.milestone
-      ? [
-          {
-            label: "Milestone",
-            before: prevBenefits.milestone ?? "None",
-            after: newBenefits.milestone + " bonus",
           },
         ]
       : []),

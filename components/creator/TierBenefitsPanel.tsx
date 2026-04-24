@@ -56,27 +56,27 @@ const TIER_BENEFITS: Record<CreatorTier, string[]> = {
   ],
   operator: [
     "$20 base + 3% commission",
-    "$15 milestone bonus",
+    "Higher per-visit rate ($12 avg)",
     "3 active campaigns",
     "Campaign feedback form",
   ],
   proven: [
     "$32 base + 5% commission",
-    "$30 milestone bonus",
+    "Studio-tier eligibility (brand-partner pool)",
     "4 active campaigns",
     "Merchant preference setting",
     "Content review sessions",
   ],
   closer: [
     "$55 base + 7% commission",
-    "$50 milestone bonus",
+    "Premium per-visit rate ($25 avg)",
     "5 active campaigns",
     "Dedicated account manager",
     "Premium brand access",
   ],
   partner: [
     "$100 base + 10% commission",
-    "$80 milestone bonus",
+    "Top per-visit rate ($35 avg) + Studio anchor",
     "6 active campaigns",
     "Advisory access",
     "Custom campaign terms",
@@ -87,7 +87,6 @@ const TIER_BENEFITS: Record<CreatorTier, string[]> = {
 type TierStats = {
   baseRate: string;
   commission: string | null; // null = locked
-  milestoneBonus: string | null; // null = locked
   maxCampaigns: number;
 };
 
@@ -95,37 +94,31 @@ const TIER_STATS: Record<CreatorTier, TierStats> = {
   seed: {
     baseRate: "Free product",
     commission: null,
-    milestoneBonus: null,
     maxCampaigns: 1,
   },
   explorer: {
     baseRate: "$12/campaign",
     commission: null,
-    milestoneBonus: null,
     maxCampaigns: 2,
   },
   operator: {
     baseRate: "$20/campaign",
     commission: "3% per verified sale",
-    milestoneBonus: "$15 at 30 txns/mo",
     maxCampaigns: 3,
   },
   proven: {
     baseRate: "$32/campaign",
     commission: "5% per verified sale",
-    milestoneBonus: "$30 at 30 txns/mo",
     maxCampaigns: 4,
   },
   closer: {
     baseRate: "$55/campaign",
     commission: "7% per verified sale",
-    milestoneBonus: "$50 at 30 txns/mo",
     maxCampaigns: 5,
   },
   partner: {
     baseRate: "$100/campaign",
     commission: "10% per verified sale",
-    milestoneBonus: "$80 at 30 txns/mo",
     maxCampaigns: 6,
   },
 };
@@ -274,9 +267,8 @@ function TierColumn({ tier, role, currentScore }: TierColumnProps) {
   const lockedLabelForTier = (unlockTier: CreatorTier) =>
     `Unlocked at ${TIER_META[unlockTier].label}`;
 
-  // Commission and milestone bonus unlock at Operator+
+  // Commission unlocks at Operator+
   const commissionUnlockLabel = lockedLabelForTier("operator");
-  const bonusUnlockLabel = lockedLabelForTier("operator");
 
   return (
     <div className={cardClass} style={cssVars}>
@@ -293,11 +285,6 @@ function TierColumn({ tier, role, currentScore }: TierColumnProps) {
           label="Commission"
           value={stats.commission}
           lockedLabel={commissionUnlockLabel}
-        />
-        <StatRow
-          label="Milestone Bonus"
-          value={stats.milestoneBonus}
-          lockedLabel={bonusUnlockLabel}
         />
         <StatRow label="Max Campaigns" value={String(stats.maxCampaigns)} />
       </div>

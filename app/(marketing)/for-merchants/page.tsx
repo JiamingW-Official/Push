@@ -51,7 +51,7 @@ const TIERS = [
     followers: "100K+",
     campaignSize: "$100 – $200 + 10%",
     color: "#1a1a2e",
-    note: "Elite tier. Up to $80/mo milestone bonus.",
+    note: "Elite tier. Top per-visit rate ($35 avg) + Studio anchor status.",
   },
 ];
 
