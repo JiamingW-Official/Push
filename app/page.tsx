@@ -384,7 +384,7 @@ export default function HomePage() {
           available week of 2026-06-22 (Week 4 of Q2 2026). Creator compensation
           disclosed in full via{" "}
           <Link
-            href="/legal/creator-terms"
+            href="/legal/terms"
             style={{
               color: "#003049",
               textDecoration: "underline",

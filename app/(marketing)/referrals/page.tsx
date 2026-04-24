@@ -209,7 +209,7 @@ export default function ReferralsPage() {
           </p>
 
           <div className="ref-hero-cta reveal reveal--delay-3">
-            <Link href="/sign-in" className="ref-btn ref-btn--primary">
+            <Link href="/creator/login" className="ref-btn ref-btn--primary">
               Get My Link
             </Link>
             <a href="#how-it-works" className="ref-btn ref-btn--ghost">
@@ -677,10 +677,10 @@ export default function ReferralsPage() {
             </p>
 
             <div className="ref-cta-actions reveal reveal--delay-2">
-              <Link href="/sign-in" className="ref-btn ref-btn--primary">
+              <Link href="/creator/login" className="ref-btn ref-btn--primary">
                 Sign In to Get My Link
               </Link>
-              <Link href="/sign-up" className="ref-btn ref-btn--ghost">
+              <Link href="/creator/signup" className="ref-btn ref-btn--ghost">
                 Create Account
               </Link>
             </div>

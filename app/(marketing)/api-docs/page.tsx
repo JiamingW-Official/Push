@@ -479,8 +479,8 @@ export default function ApiDocsPage() {
                   <h3 className="api-step-title">Retrieve your API key</h3>
                   <p className="api-step-desc">
                     Navigate to{" "}
-                    <Link href="/settings/api" className="api-inline-code">
-                      Settings → API Keys
+                    <Link href="/merchant/settings" className="api-inline-code">
+                      Merchant Settings → API Keys
                     </Link>{" "}
                     and create a new key. Keys are prefixed{" "}
                     <code className="api-inline-code">sk_live_</code> for

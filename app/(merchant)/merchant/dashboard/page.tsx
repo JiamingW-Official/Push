@@ -1240,7 +1240,7 @@ function SettingsTab({ merchant }: { merchant: Merchant | null }) {
                     {planPrices[merchant.plan]} / mo
                   </div>
                   <a
-                    href="/merchant/upgrade"
+                    href="/merchant/billing"
                     style={{
                       fontSize: "var(--text-caption)",
                       fontWeight: 700,
@@ -1509,7 +1509,7 @@ export default function MerchantDashboardPage() {
                       ? "$99 / mo"
                       : "$0 / mo"}
               </div>
-              <a href="/merchant/upgrade" className="db-plan-badge__upgrade">
+              <a href="/merchant/billing" className="db-plan-badge__upgrade">
                 Upgrade plan →
               </a>
             </div>
