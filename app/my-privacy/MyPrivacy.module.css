@@ -186,7 +186,7 @@
   border: 1px solid var(--dark);
   background: var(--surface-elevated);
   color: var(--dark);
-  border-radius: 0;
+  border-radius: var(--r-lg);
   cursor: pointer;
   transition:
     background 200ms ease,
@@ -196,7 +196,7 @@
 
 .actionBtn:hover {
   background: var(--dark);
-  color: #ffffff;
+  color: #fff;
   border-color: var(--dark);
 }
 
@@ -219,7 +219,7 @@
 
 .dangerBtn:hover {
   background: var(--primary);
-  color: #ffffff;
+  color: #fff;
   border-color: var(--primary);
 }
 
@@ -227,14 +227,14 @@
 .primaryBtn {
   composes: actionBtn;
   background: var(--primary);
-  color: #ffffff;
+  color: #fff;
   border-color: var(--primary);
 }
 
 .primaryBtn:hover {
   background: var(--accent);
   border-color: var(--accent);
-  color: #ffffff;
+  color: #fff;
 }
 
 /* ── Form fields ──────────────────────────────────────────── */
@@ -277,7 +277,7 @@
   color: var(--dark);
   background: var(--surface-elevated);
   border: 1px solid var(--line);
-  border-radius: 0;
+  border-radius: var(--r-md);
   padding: 10px 12px;
   transition:
     border-color 200ms ease,
@@ -308,7 +308,7 @@
   width: 16px;
   height: 16px;
   margin-top: 2px;
-  border-radius: 0;
+  border-radius: var(--r-sm);
   accent-color: var(--primary);
   flex-shrink: 0;
 }

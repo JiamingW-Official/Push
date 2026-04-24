@@ -81,7 +81,7 @@ const TIER_CONFIG: Record<
     minScore: 0,
     maxScore: 39,
     nextTier: "explorer",
-    color: "#b8a99a",
+    color: "var(--tier-seed)",
   },
   explorer: {
     label: "Explorer",
@@ -89,7 +89,7 @@ const TIER_CONFIG: Record<
     minScore: 40,
     maxScore: 54,
     nextTier: "operator",
-    color: "#8c6239",
+    color: "var(--tier-explorer)",
   },
   operator: {
     label: "Operator",
@@ -97,7 +97,7 @@ const TIER_CONFIG: Record<
     minScore: 55,
     maxScore: 64,
     nextTier: "proven",
-    color: "#4a5568",
+    color: "var(--tier-operator)",
   },
   proven: {
     label: "Proven",
@@ -105,7 +105,7 @@ const TIER_CONFIG: Record<
     minScore: 65,
     maxScore: 77,
     nextTier: "closer",
-    color: "#c9a96e",
+    color: "var(--tier-proven)",
   },
   closer: {
     label: "Closer",
@@ -113,7 +113,7 @@ const TIER_CONFIG: Record<
     minScore: 78,
     maxScore: 87,
     nextTier: "partner",
-    color: "#9b111e",
+    color: "var(--tier-closer)",
   },
   partner: {
     label: "Partner",
@@ -121,7 +121,7 @@ const TIER_CONFIG: Record<
     minScore: 88,
     maxScore: 100,
     nextTier: null,
-    color: "#1a1a2e",
+    color: "var(--tier-partner)",
   },
 };
 

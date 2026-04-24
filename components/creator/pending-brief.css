@@ -80,9 +80,9 @@
 
 .pb-bar-fill {
   height: 100%;
-  background: #c1121f;
+  background: var(--primary);
   transition: width 1s ease;
-  border-radius: 0;
+  border-radius: var(--r-xl);
 }
 
 /* ── Wait bar fill – animated ──────────────────────────────────────────────── */
@@ -96,8 +96,8 @@
 .pb-dot {
   width: 7px;
   height: 7px;
-  background: #c1121f;
-  border-radius: 0;
+  background: var(--primary);
+  border-radius: var(--r-xl);
   display: inline-block;
   animation: pb-dot-bounce 1.4s ease-in-out infinite;
 }

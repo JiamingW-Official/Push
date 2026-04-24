@@ -8,10 +8,10 @@
 
 .tj,
 .tj-compact {
-  --tj-surface: #f5f2ec;
-  --tj-dark: #003049;
+  --tj-surface: var(--surface);
+  --tj-dark: var(--dark);
   --tj-line: rgba(0, 48, 73, 0.15);
-  --tj-line-filled: #003049;
+  --tj-line-filled: var(--dark);
   --tj-muted: rgba(0, 48, 73, 0.35);
   --tj-node-size: 36px;
   --tj-node-current-size: 48px;
@@ -66,7 +66,7 @@
   height: var(--tj-line-h);
   background: transparent;
   overflow: hidden;
-  border-radius: 0;
+  border-radius: var(--r-lg);
   z-index: 0;
 }
 
@@ -97,7 +97,7 @@
   inset-block: 0;
   left: 0;
   background: var(--tj-line-filled);
-  border-radius: 0;
+  border-radius: var(--r-lg);
   transition: width 800ms cubic-bezier(0.4, 0, 0.2, 1);
   animation: tj-progress-fill 800ms cubic-bezier(0.4, 0, 0.2, 1) both;
 }
@@ -208,9 +208,9 @@
 
 .tj__node-checkmark {
   font-size: 16px;
-  color: #f5f2ec;
+  color: var(--surface);
   font-weight: 700;
-  font-family: "CS Genio Mono", monospace;
+  font-family: var(--font-body);
 }
 
 .tj__node-lock {
@@ -250,12 +250,12 @@
 }
 
 .tj__current-tag {
-  font-family: "CS Genio Mono", "SF Mono", "Fira Code", monospace;
+  font-family: var(--font-body);
   font-size: 9px;
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: #c1121f;
+  color: var(--primary);
   margin-top: 2px;
 }
 
@@ -273,7 +273,7 @@
   gap: 24px;
   padding: 16px 0 0;
   border-top: 1px solid rgba(0, 48, 73, 0.1);
-  border-radius: 0;
+  border-radius: var(--r-lg);
 }
 
 .tj__footer--max {
@@ -281,11 +281,11 @@
 }
 
 .tj__max-label {
-  font-family: "CS Genio Mono", "SF Mono", "Fira Code", monospace;
+  font-family: var(--font-body);
   font-size: 12px;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: #780000;
+  color: var(--accent);
   font-weight: 600;
 }
 
@@ -301,15 +301,15 @@
   flex: 1;
   height: 4px;
   background: rgba(0, 48, 73, 0.1);
-  border-radius: 0; /* sharp — no rounding */
+  border-radius: var(--r-lg); /* sharp — no rounding */
   overflow: hidden;
   position: relative;
 }
 
 .tj__progress-fill {
   height: 100%;
-  background: #003049;
-  border-radius: 0;
+  background: var(--dark);
+  border-radius: var(--r-lg);
   transition: width 800ms cubic-bezier(0.4, 0, 0.2, 1);
   animation: tj-progress-fill 800ms cubic-bezier(0.4, 0, 0.2, 1) both;
 }
@@ -376,11 +376,11 @@
   width: 20px;
   height: 2px;
   flex-shrink: 0;
-  border-radius: 0;
+  border-radius: var(--r-lg);
 }
 
 .tj-compact__line--filled {
-  background: #003049;
+  background: var(--dark);
 }
 
 .tj-compact__line--dashed {
@@ -406,8 +406,8 @@
 }
 
 .tj-compact__dot--past {
-  background: #003049;
-  border-color: #003049;
+  background: var(--dark);
+  border-color: var(--dark);
 }
 
 .tj-compact__dot--current {
@@ -473,7 +473,7 @@
     height: calc(8px + 2px + var(--tj-node-size) / 2);
     background: transparent;
     overflow: hidden;
-    border-radius: 0;
+    border-radius: var(--r-lg);
   }
 
   /* Current step line adjustment for bigger node */

@@ -16,9 +16,9 @@ export function BigNumber({
 }: BigNumberProps) {
   const deltaColor =
     deltaDirection === "up"
-      ? "#2d7a3a"
+      ? "var(--success-dark)"
       : deltaDirection === "down"
-        ? "#c1121f"
+        ? "var(--primary)"
         : "var(--graphite)";
 
   return (

@@ -196,7 +196,7 @@ const S = {
     fontFamily: "var(--font-body)",
     fontSize: "15px",
     fontFamilyName: "monospace",
-    borderRadius: 0,
+    borderRadius: "var(--r-md)",
   } as React.CSSProperties,
   submit: {
     padding: "16px",
@@ -207,7 +207,7 @@ const S = {
     fontWeight: 700,
     letterSpacing: "0.08em",
     border: "none",
-    borderRadius: 0,
+    borderRadius: "var(--r-lg)",
     cursor: "pointer",
   } as React.CSSProperties,
   result: {

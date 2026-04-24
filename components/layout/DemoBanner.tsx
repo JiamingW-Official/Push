@@ -42,14 +42,14 @@ export function DemoBanner() {
           position: "sticky",
           top: 0,
           zIndex: 9999,
-          background: "#c1121f",
-          color: "#f5f2ec",
+          background: "var(--primary)",
+          color: "var(--surface)",
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
           padding: "8px 24px",
-          borderBottom: "2px solid #780000",
-          fontFamily: "var(--font-body, 'CS Genio Mono', monospace)",
+          borderBottom: "2px solid var(--accent)",
+          fontFamily: "var(--font-body)",
         }}
       >
         <span
@@ -67,8 +67,8 @@ export function DemoBanner() {
             style={{
               display: "inline-block",
               padding: "2px 8px",
-              background: "#ffffff",
-              color: "#c1121f",
+              background: "var(--surface-elevated)",
+              color: "var(--primary)",
               fontWeight: 800,
               letterSpacing: "0.1em",
             }}
@@ -93,7 +93,7 @@ export function DemoBanner() {
               padding: "4px 12px",
               background: "transparent",
               border: "1px solid rgba(245,242,236,0.4)",
-              color: "#f5f2ec",
+              color: "var(--surface)",
               fontSize: "10px",
               fontWeight: 700,
               letterSpacing: "0.1em",
@@ -109,7 +109,7 @@ export function DemoBanner() {
             style={{
               background: "rgba(245,242,236,0.15)",
               border: "1px solid rgba(245,242,236,0.4)",
-              color: "#f5f2ec",
+              color: "var(--surface)",
               fontFamily: "inherit",
               fontSize: "10px",
               fontWeight: 700,

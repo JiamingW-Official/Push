@@ -89,7 +89,7 @@
   height: 40px;
   padding: 0 16px 0 40px;
   border: 1px solid var(--line);
-  border-radius: 0;
+  border-radius: var(--r-xl);
   background: var(--surface-elevated);
   color: var(--dark);
   font-family: var(--font-body);
@@ -111,7 +111,7 @@
   height: 40px;
   padding: 0 16px;
   border: 1px solid var(--line);
-  border-radius: 0;
+  border-radius: var(--r-xl);
   background: transparent;
   color: var(--dark);
   font-family: var(--font-body);
@@ -167,7 +167,7 @@
   height: 40px;
   padding: 0 12px;
   border: none;
-  border-radius: 0;
+  border-radius: var(--r-xl);
   background: transparent;
   color: var(--text-muted);
   font-family: var(--font-body);
@@ -232,7 +232,7 @@
   height: 30px;
   padding: 0 12px;
   border: 1px solid var(--line);
-  border-radius: 0;
+  border-radius: var(--r-xl);
   background: transparent;
   color: var(--dark);
   font-family: var(--font-body);
@@ -264,7 +264,7 @@
   height: 32px;
   padding: 0 12px;
   border: 1px solid var(--line);
-  border-radius: 0;
+  border-radius: var(--r-xl);
   background: transparent;
   color: var(--text-muted);
   font-family: var(--font-body);
@@ -276,7 +276,7 @@
   height: 32px;
   padding: 0 16px;
   border: none;
-  border-radius: 0;
+  border-radius: var(--r-xl);
   background: var(--dark);
   color: #fff;
   font-family: var(--font-body);
@@ -403,7 +403,7 @@
   margin-top: 24px;
   height: 40px;
   border: 1px solid var(--dark);
-  border-radius: 0;
+  border-radius: var(--r-xl);
   background: transparent;
   color: var(--dark);
   font-family: var(--font-body);
@@ -455,7 +455,7 @@
   );
   background-size: 600px 100%;
   animation: disc-shimmer 1.4s infinite linear;
-  border-radius: 0;
+  border-radius: var(--r-xl);
 }
 
 .disc-skeleton-card {
@@ -498,7 +498,7 @@
 .disc-empty-btn {
   height: 40px;
   padding: 0 20px;
-  border-radius: 0;
+  border-radius: var(--r-xl);
   font-family: var(--font-body);
   font-size: 12px;
   letter-spacing: 0.06em;

@@ -139,7 +139,7 @@
   color: #fff;
   font-size: 9px;
   font-weight: 700;
-  border-radius: 0;
+  border-radius: var(--r-xl);
   letter-spacing: 0;
 }
 
@@ -205,7 +205,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 0;
+  border-radius: var(--r-xl);
 }
 
 /* Content */

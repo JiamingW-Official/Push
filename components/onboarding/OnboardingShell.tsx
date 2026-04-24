@@ -55,14 +55,14 @@ export function OnboardingShell({
             >
               <path
                 d="M4 12 C20 8, 36 4, 52 20 C62 30, 68 36, 76 38"
-                stroke="#c1121f"
+                stroke="var(--primary)"
                 strokeWidth="2.5"
                 strokeLinecap="round"
                 fill="none"
               />
               <path
                 d="M68 30 L76 38 L66 42"
-                stroke="#c1121f"
+                stroke="var(--primary)"
                 strokeWidth="2.5"
                 strokeLinecap="round"
                 strokeLinejoin="round"

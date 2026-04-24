@@ -1,7 +1,7 @@
 /* ============================================================
    Public Portfolio View — push.nyc/c/[handle]
    Editorial long-form. No edit controls. Sticky sidebar CTA.
-   Design.md authority: border-radius:0, 8px grid, 6 brand colors
+   Design.md authority: element-based --r-* radii, 8px grid, 6 brand colors
    ============================================================ */
 
 /* ── Page shell ──────────────────────────────────────────────── */
@@ -75,13 +75,19 @@
 .pub-tier-badge {
   display: inline-block;
   padding: 3px 10px;
-  background: var(--champagne);
+  background: var(--tier-color, var(--champagne));
   color: var(--dark);
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   font-family: var(--font-body);
+}
+/* Partner tier is Deep Space Blue on dark hero — needs white text */
+.tier-partner .pub-tier-badge,
+.tier-closer  .pub-tier-badge,
+.tier-proven  .pub-tier-badge {
+  color: var(--surface-elevated);
 }
 
 .pub-hero-location {
@@ -231,14 +237,10 @@
   margin-bottom: var(--space-5);
 }
 
+/* Layout-only; typography inherited from global .eyebrow utility */
 .pub-section-eyebrow {
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  color: var(--primary);
-  font-family: var(--font-body);
-  text-transform: uppercase;
   flex-shrink: 0;
+  font-size: 11px; /* override: local numbered eyebrow runs tighter than 13px global */
 }
 
 .pub-section-title {
@@ -541,13 +543,10 @@
   gap: var(--space-3);
 }
 
+/* Layout-only; typography inherited from global .eyebrow utility */
 .pub-cta-eyebrow {
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--primary);
   margin: 0;
+  font-size: 11px; /* override: sidebar CTA eyebrow tighter than 13px global */
 }
 
 .pub-cta-heading {
@@ -601,30 +600,12 @@
   font-weight: 600;
 }
 
+/* Layout overrides; visuals inherited from global .btn .btn-primary */
 .pub-cta-btn {
   display: block;
+  width: 100%;
   text-align: center;
   padding: 14px 24px;
-  background: var(--primary);
-  color: #fff;
-  font-family: var(--font-body);
-  font-size: var(--text-small);
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  text-decoration: none;
-  border: none;
-  cursor: pointer;
-  border-radius: 0;
-  box-shadow: var(--btn-shadow);
-  transition:
-    background var(--t-fast),
-    box-shadow var(--t-slow);
-}
-
-.pub-cta-btn:hover {
-  background: var(--accent);
-  box-shadow: var(--btn-shadow-hover);
 }
 
 .pub-cta-sub {

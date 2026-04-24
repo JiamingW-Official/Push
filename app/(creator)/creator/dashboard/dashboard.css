@@ -306,7 +306,7 @@
 }
 
 .dash-map .leaflet-container {
-  background: #ede9e3;
+  background: var(--surface);
   font-family: var(--font-body);
   height: 100%;
   width: 100%;
@@ -539,7 +539,7 @@
   padding: 12px;
   background: var(--surface);
   border: 1.5px solid var(--line);
-  border-radius: 0;
+  border-radius: var(--r-lg);
   cursor: pointer;
   /* Enhancement 6: smoother hover transitions */
   transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.2s cubic-bezier(0.22, 1, 0.36, 1);
@@ -677,7 +677,7 @@
   text-transform: uppercase;
   color: var(--text-muted);
   pointer-events: none;
-  border-radius: 0;
+  border-radius: var(--r-lg);
   white-space: nowrap;
 }
 
@@ -906,7 +906,7 @@
   border: none;
   cursor: pointer;
   transition: background 0.2s;
-  border-radius: 0;
+  border-radius: var(--r-lg);
   text-align: center;
 }
 
@@ -1040,22 +1040,22 @@
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  border-radius: 0;
+  border-radius: var(--r-lg);
 }
 
 .dash-payout-status--completed {
-  background: #d1fae5;
-  color: #065f46;
+  background: rgba(34, 197, 94, 0.15);
+  color: var(--success-dark);
 }
 
 .dash-payout-status--pending {
-  background: #fef3c7;
-  color: #92400e;
+  background: rgba(224, 123, 0, 0.12);
+  color: var(--warning);
 }
 
 .dash-payout-status--processing {
-  background: #dbeafe;
-  color: #1e40af;
+  background: rgba(102, 155, 188, 0.15);
+  color: var(--tertiary);
 }
 
 /* ── 12. My Campaigns View ────────────────────────────────── */
@@ -1186,9 +1186,9 @@
   align-self: flex-start;
 }
 
-.dash-app-status-badge--pending   { background: #fef3c7; color: #92400e; }
-.dash-app-status-badge--accepted  { background: #d1fae5; color: #065f46; }
-.dash-app-status-badge--rejected  { background: #fee2e2; color: #991b1b; }
+.dash-app-status-badge--pending   { background: rgba(224, 123, 0, 0.12); color: var(--warning); }
+.dash-app-status-badge--accepted  { background: rgba(34, 197, 94, 0.15); color: var(--success-dark); }
+.dash-app-status-badge--rejected  { background: rgba(193, 18, 31, 0.10); color: var(--primary); }
 .dash-app-status-badge--withdrawn {
   background: rgba(0, 48, 73, 0.06);
   color: var(--text-muted);
@@ -1206,7 +1206,7 @@
   height: 18px;
   background: var(--primary);
   border-radius: 50%;
-  border: 2.5px solid #fff;
+  border: 2.5px solid var(--surface-elevated);
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
   cursor: pointer;
   transition: transform 0.2s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.2s ease;
@@ -1230,7 +1230,7 @@
   align-items: center;
   justify-content: center;
   padding: 8px 12px;
-  background: #fff;
+  background: var(--surface-elevated);
   border: 1px solid rgba(0, 0, 0, 0.08);
   font-family: var(--font-body);
   font-size: 12px;
@@ -1242,7 +1242,7 @@
     0 1px 2px rgba(0, 0, 0, 0.06),
     0 2px 8px rgba(0, 0, 0, 0.04);
   transition: all 150ms cubic-bezier(0.22, 1, 0.36, 1);
-  border-radius: 0;
+  border-radius: var(--r-lg);
   user-select: none;
   z-index: 1;
 }

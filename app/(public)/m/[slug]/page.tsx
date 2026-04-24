@@ -111,13 +111,14 @@ function JsonLd({ merchant }: { merchant: MerchantPublic }) {
 // ---------------------------------------------------------------------------
 
 function TierBadge({ tier }: { tier: string }) {
+  // Tier chroma sourced from Path A brand tokens (see globals.css tier aliases).
   const tierColors: Record<string, { bg: string; color: string }> = {
-    Seed: { bg: "rgba(0,48,73,0.06)", color: "#7a6558" },
-    Explorer: { bg: "rgba(140,98,57,0.1)", color: "#8c6239" },
-    Operator: { bg: "rgba(74,85,104,0.1)", color: "#4a5568" },
-    Proven: { bg: "rgba(201,169,110,0.15)", color: "#8a6e2e" },
-    Closer: { bg: "rgba(193,18,31,0.1)", color: "#9b111e" },
-    Partner: { bg: "rgba(0,48,73,0.12)", color: "#003049" },
+    Seed: { bg: "rgba(0, 48, 73, 0.06)", color: "var(--graphite)" },
+    Explorer: { bg: "rgba(201, 169, 110, 0.18)", color: "var(--accent)" },
+    Operator: { bg: "rgba(74, 85, 104, 0.10)", color: "var(--graphite)" },
+    Proven: { bg: "rgba(193, 18, 31, 0.10)", color: "var(--primary)" },
+    Closer: { bg: "rgba(120, 0, 0, 0.10)", color: "var(--accent)" },
+    Partner: { bg: "rgba(0, 48, 73, 0.12)", color: "var(--dark)" },
   };
   const style = tierColors[tier] ?? tierColors.Seed;
 

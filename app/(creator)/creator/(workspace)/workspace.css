@@ -125,7 +125,7 @@
   padding: 0 12px;
   background: var(--surface-bright);
   border: 1px solid var(--line);
-  border-radius: 0;
+  border-radius: var(--r-md);
   cursor: pointer;
   max-width: 400px;
   width: 100%;
@@ -170,7 +170,7 @@
   color: var(--graphite);
   background: var(--surface);
   border: 1px solid var(--line);
-  border-radius: 0;
+  border-radius: var(--r-sm);
   padding: 2px 5px;
   line-height: 1.4;
   letter-spacing: 0.02em;
@@ -197,7 +197,7 @@
   letter-spacing: 0.08em;
   text-transform: uppercase;
   border: 1px solid currentColor;
-  border-radius: 0;
+  border-radius: var(--r-sm);
   white-space: nowrap;
   user-select: none;
   border-left-width: 2px;
@@ -242,7 +242,7 @@
   min-width: 14px;
   height: 14px;
   background: var(--primary);
-  border-radius: 50%;
+  border-radius: var(--r-full);
   font-family: var(--font-body);
   font-size: 9px;
   font-weight: 700;
@@ -259,7 +259,7 @@
 .ws-topnav__avatar {
   width: 32px;
   height: 32px;
-  border-radius: 50%;
+  border-radius: var(--r-full);
   background: var(--primary);
   display: flex;
   align-items: center;
@@ -428,7 +428,7 @@
   font-size: 10px;
   font-weight: 700;
   letter-spacing: 0.02em;
-  border-radius: 0;
+  border-radius: var(--r-sm);
   flex-shrink: 0;
   line-height: 1;
 }
@@ -469,7 +469,7 @@
 .ws-sidenav__user-avatar {
   width: 28px;
   height: 28px;
-  border-radius: 50%;
+  border-radius: var(--r-full);
   background: var(--primary);
   display: flex;
   align-items: center;
@@ -654,7 +654,7 @@
 }
 
 .ws-context__stat-delta--up {
-  color: #2d6a4f;
+  color: var(--success-dark);
 }
 
 /* Divider */
@@ -745,7 +745,7 @@
   background: var(--surface-elevated);
   color: var(--dark);
   cursor: pointer;
-  border-radius: 0;
+  border-radius: var(--r-lg);
   transition: background 200ms ease, border-color 200ms ease, color 200ms ease;
 }
 

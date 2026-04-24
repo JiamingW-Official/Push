@@ -267,13 +267,14 @@ const DEMO_ANALYTICS: Analytics = {
 };
 
 /* ── Tier config ─────────────────────────────────────────── */
+/* Path A: v5.1 material hex mapped to brand-palette tier aliases. */
 const TIER_COLORS: Record<CreatorTier, string> = {
-  seed: "#b8a99a",
-  explorer: "#8c6239",
-  operator: "#4a5568",
-  proven: "#c9a96e",
-  closer: "#9b111e",
-  partner: "#1a1a2e",
+  seed: "var(--tier-seed)",
+  explorer: "var(--tier-explorer)",
+  operator: "var(--tier-operator)",
+  proven: "var(--tier-proven)",
+  closer: "var(--tier-closer)",
+  partner: "var(--tier-partner)",
 };
 
 const TIER_DISPLAY: Record<CreatorTier, string> = {
@@ -450,34 +451,51 @@ function StatusBadge({ status }: { status: Campaign["status"] }) {
 /* ── TierBadge ── Design.md spec: "Material · Tier" ─────── */
 function TierBadge({ tier }: { tier: CreatorTier }) {
   type Cfg = { bg: string; color: string; border: string; borderLeft?: string };
+  /* Path A: v5.1 material hex mapped to brand-palette tier tokens. */
   const CFG: Record<CreatorTier, Cfg> = {
     seed: {
       bg: "transparent",
-      color: "#003049",
-      border: "1.5px dashed rgba(184,169,154,0.65)",
+      color: "var(--dark)",
+      border: "1.5px dashed var(--line-strong)",
     },
-    explorer: { bg: "#8c6239", color: "#fff", border: "1px solid #8c6239" },
-    operator: { bg: "#4a5568", color: "#fff", border: "1px solid #4a5568" },
-    proven: { bg: "#c9a96e", color: "#003049", border: "1px solid #c9a96e" },
-    closer: { bg: "#9b111e", color: "#fff", border: "1px solid #9b111e" },
-    partner: {
-      bg: "#1a1a2e",
+    explorer: {
+      bg: "var(--tier-explorer)",
+      color: "var(--dark)",
+      border: "1px solid var(--tier-explorer)",
+    },
+    operator: {
+      bg: "var(--tier-operator)",
       color: "#fff",
-      border: "1px solid #1a1a2e",
-      borderLeft: "3px solid #c1121f",
+      border: "1px solid var(--tier-operator)",
+    },
+    proven: {
+      bg: "var(--tier-proven)",
+      color: "#fff",
+      border: "1px solid var(--tier-proven)",
+    },
+    closer: {
+      bg: "var(--tier-closer)",
+      color: "#fff",
+      border: "1px solid var(--tier-closer)",
+    },
+    partner: {
+      bg: "var(--tier-partner)",
+      color: "#fff",
+      border: "1px solid var(--tier-partner)",
+      borderLeft: "3px solid var(--primary)",
     },
   };
   const c = CFG[tier];
   return (
     <span
       style={{
-        fontFamily: "var(--font-body,'CS Genio Mono',monospace)",
+        fontFamily: "var(--font-body)",
         fontSize: "10px",
         fontWeight: 700,
         textTransform: "uppercase" as const,
         letterSpacing: "0.08em",
         padding: "5px 12px",
-        borderRadius: 0,
+        borderRadius: "var(--r-sm)",
         background: c.bg,
         color: c.color,
         border: c.border,

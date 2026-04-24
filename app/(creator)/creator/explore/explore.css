@@ -120,7 +120,7 @@
   color: rgba(0, 48, 73, 0.45);
   border: none;
   cursor: pointer;
-  border-radius: 0;
+  border-radius: var(--r-xl);
   transition:
     background 180ms cubic-bezier(0.32, 0.72, 0, 1),
     color 180ms cubic-bezier(0.32, 0.72, 0, 1);
@@ -322,7 +322,7 @@
   background: transparent;
   color: rgba(0, 48, 73, 0.5);
   cursor: pointer;
-  border-radius: 0;
+  border-radius: var(--r-xl);
   transition:
     border-color 150ms ease,
     background 150ms ease,
@@ -338,7 +338,7 @@
 .exp-tier-btn--partner.exp-tier-btn--active {
   border-color: var(--champagne);
   background: rgba(201, 169, 110, 0.2);
-  color: #8b6914;
+  color: var(--champagne);
 }
 
 /* Range slider */
@@ -369,7 +369,7 @@
   background: rgba(0, 48, 73, 0.1);
   outline: none;
   cursor: pointer;
-  border-radius: 0;
+  border-radius: var(--r-xl);
 }
 
 .exp-range::-webkit-slider-thumb {
@@ -379,7 +379,7 @@
   height: 14px;
   background: var(--dark);
   cursor: pointer;
-  border-radius: 0;
+  border-radius: var(--r-xl);
   border: none;
 }
 
@@ -388,7 +388,7 @@
   height: 14px;
   background: var(--dark);
   cursor: pointer;
-  border-radius: 0;
+  border-radius: var(--r-xl);
   border: none;
 }
 
@@ -414,7 +414,7 @@
   background: transparent;
   color: rgba(0, 48, 73, 0.5);
   cursor: pointer;
-  border-radius: 0;
+  border-radius: var(--r-xl);
   transition:
     border-color 150ms ease,
     background 150ms ease,
@@ -507,7 +507,7 @@
   background: var(--dark);
   color: #fff;
   white-space: nowrap;
-  border-radius: 0;
+  border-radius: var(--r-xl);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
   cursor: pointer;
   transition:
@@ -528,7 +528,7 @@
 .exp-map-wrap .map-popup {
   width: 220px;
   background: var(--surface-elevated);
-  border-radius: 0;
+  border-radius: var(--r-xl);
   overflow: hidden;
   box-shadow: 0 4px 20px rgba(0, 48, 73, 0.15);
 }
@@ -592,7 +592,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 0;
+  border-radius: var(--r-xl);
 }
 
 .exp-map-wrap .map-popup-body {
@@ -659,7 +659,7 @@
   border: none;
   cursor: pointer;
   width: 100%;
-  border-radius: 0;
+  border-radius: var(--r-xl);
   transition: background 150ms cubic-bezier(0.32, 0.72, 0, 1);
 }
 
@@ -762,13 +762,13 @@
 
 .exp-gcard-tier--partner {
   border-color: var(--champagne);
-  color: #8b6914;
+  color: var(--champagne);
   background: rgba(201, 169, 110, 0.1);
 }
 
 .exp-gcard-tier--closer {
   border-color: var(--tertiary);
-  color: #2a5e7a;
+  color: var(--tertiary);
   background: rgba(102, 155, 188, 0.1);
 }
 
@@ -848,7 +848,7 @@
   color: #fff;
   border: none;
   cursor: pointer;
-  border-radius: 0;
+  border-radius: var(--r-xl);
   transition: background 150ms cubic-bezier(0.32, 0.72, 0, 1);
   opacity: 0;
   transform: translateY(4px);
@@ -997,12 +997,12 @@
 
 .exp-list-tier--partner {
   border-color: var(--champagne);
-  color: #8b6914;
+  color: var(--champagne);
 }
 
 .exp-list-tier--closer {
   border-color: var(--tertiary);
-  color: #2a5e7a;
+  color: var(--tertiary);
 }
 
 /* Payout */
@@ -1056,7 +1056,7 @@
   color: #fff;
   border: none;
   cursor: pointer;
-  border-radius: 0;
+  border-radius: var(--r-xl);
   white-space: nowrap;
   transition: background 150ms cubic-bezier(0.32, 0.72, 0, 1);
 }

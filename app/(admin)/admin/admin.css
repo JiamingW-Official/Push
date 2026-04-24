@@ -22,7 +22,7 @@
   left: 0;
   bottom: 0;
   width: 220px;
-  background: #003049; /* Deep Space Blue — admin dark contrast */
+  background: var(--dark); /* Deep Space Blue — admin dark contrast */
   border-right: 1px solid rgba(255, 255, 255, 0.06);
   display: flex;
   flex-direction: column;
@@ -97,7 +97,7 @@
   transition: color var(--t-fast), background var(--t-fast);
   text-decoration: none;
   letter-spacing: 0.01em;
-  border-radius: 0;
+  border-radius: var(--r-sm);
   position: relative;
 }
 
@@ -132,7 +132,7 @@
   padding: 2px 6px;
   min-width: 18px;
   text-align: center;
-  border-radius: 0;
+  border-radius: var(--r-sm);
   letter-spacing: 0;
 }
 
@@ -226,7 +226,7 @@
    ------------------------------------------------------------ */
 .adm-denied {
   min-height: 100svh;
-  background: #003049;
+  background: var(--dark);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -493,7 +493,7 @@
   letter-spacing: 0.1em;
   text-transform: uppercase;
   padding: 2px 6px;
-  border-radius: 0;
+  border-radius: var(--r-sm);
   flex-shrink: 0;
 }
 
@@ -636,7 +636,7 @@
   letter-spacing: 0.1em;
   text-transform: uppercase;
   padding: 2px 7px;
-  border-radius: 0;
+  border-radius: var(--r-sm);
   white-space: nowrap;
 }
 

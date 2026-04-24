@@ -165,13 +165,21 @@ export default function CreatorOverviewPage() {
 
       <main className="overview-main">
         <section className="overview-kpi-grid" aria-label="Key metrics">
-          <MetricsCard label="Weekly Referrals" value={24} color="#c1121f" />
+          <MetricsCard
+            label="Weekly Referrals"
+            value={24}
+            color="var(--primary)"
+          />
           <MetricsCard
             label="Weekly Earnings"
             value="$180.00"
-            color="#003049"
+            color="var(--dark)"
           />
-          <MetricsCard label="Performance Score" value="0.92" color="#669bbc" />
+          <MetricsCard
+            label="Performance Score"
+            value="0.92"
+            color="var(--tertiary)"
+          />
         </section>
 
         <section className="overview-section" aria-label="Referral details">

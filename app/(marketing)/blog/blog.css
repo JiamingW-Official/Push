@@ -331,7 +331,7 @@
   width: 220px;
   outline: none;
   transition: border-color var(--t-base), box-shadow var(--t-base);
-  border-radius: 0;
+  border-radius: var(--r-xl);
   -webkit-appearance: none;
 }
 
@@ -512,12 +512,7 @@
 }
 
 .blog-newsletter__eyebrow {
-  font-family: var(--font-body);
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--primary);
+  /* base typography comes from .eyebrow utility; this class adds spacing only */
   margin-bottom: var(--space-2);
 }
 
@@ -553,7 +548,7 @@
   background: rgba(245, 242, 236, 0.06);
   color: #fff;
   outline: none;
-  border-radius: 0;
+  border-radius: var(--r-xl);
   transition: border-color var(--t-base);
 }
 

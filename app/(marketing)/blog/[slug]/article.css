@@ -454,12 +454,7 @@
 }
 
 .article-comments__eyebrow {
-  font-family: var(--font-body);
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--primary);
+  /* base typography comes from .eyebrow utility; this class adds spacing only */
   margin-bottom: var(--space-2);
 }
 
@@ -505,12 +500,7 @@
 }
 
 .article-related__eyebrow {
-  font-family: var(--font-body);
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--primary);
+  /* base typography comes from .eyebrow utility */
 }
 
 .article-related__headline {
@@ -553,8 +543,8 @@
 }
 
 .related-card:hover {
-  transform: translateY(-6px);
-  box-shadow: 3px 3px 0 var(--dark);
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-2);
 }
 
 .related-card__link {

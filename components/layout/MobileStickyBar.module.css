@@ -30,12 +30,12 @@
   text-transform: uppercase;
   text-decoration: none;
   font-weight: 700;
-  border-radius: 0;
+  border-radius: var(--r-pill);
 }
 
 .btnMerchant {
   background: var(--primary);
-  color: #fff;
+  color: #fff; /* text-on-dark */
 }
 
 .btnCreator {

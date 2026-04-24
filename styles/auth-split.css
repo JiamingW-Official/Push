@@ -12,7 +12,7 @@
    Left panel — brand (dark)
    ------------------------------------------------------------ */
 .brand-panel {
-  background: linear-gradient(160deg, #003049 0%, #001d2e 55%, #00111a 100%);
+  background: linear-gradient(160deg, var(--dark) 0%, rgba(0, 29, 46, 1) 55%, rgba(0, 17, 26, 1) 100%);
   padding: var(--space-10) var(--space-8);
   display: flex;
   flex-direction: column;

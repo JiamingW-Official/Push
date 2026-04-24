@@ -1,6 +1,6 @@
 /* ── Public Creator Profile ─────────────────────────────────────────────────
    Design system: border-radius 0 everywhere (exceptions: avatar 50%, tier badge 50%)
-   Colors: #c1121f / #780000 / #003049 / #669bbc / #f5f2ec
+   Colors: var(--primary) / var(--accent) / var(--dark) / var(--tertiary) / var(--surface)
    Fonts: Darky (headlines), CS Genio Mono (all UI text)
    Grid: 8px base
 ────────────────────────────────────────────────────────────────────────────── */
@@ -13,7 +13,7 @@
   background: var(--surface);
   min-height: 100vh;
   font-family: "CS Genio Mono", "Courier New", monospace;
-  color: #003049;
+  color: var(--dark);
 }
 
 /* ── Fade-in animation ─────────────────────────────────────────────────────── */
@@ -36,25 +36,25 @@
 /* ── 1. Header strip ───────────────────────────────────────────────────────── */
 
 .profile-header-strip {
-  background: #003049;
+  background: var(--dark);
   padding: 12px 24px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border-radius: 0;
+  border-radius: var(--r-xl);
 }
 
 .header-back {
   font-family: "CS Genio Mono", monospace;
   font-size: 13px;
-  color: #669bbc;
+  color: var(--tertiary);
   text-decoration: none;
   letter-spacing: 0.02em;
   transition: color 0.15s ease;
 }
 
 .header-back:hover {
-  color: #f5f2ec;
+  color: var(--surface);
 }
 
 .header-label {
@@ -69,7 +69,7 @@
 /* ── 2. Hero ───────────────────────────────────────────────────────────────── */
 
 .pub-hero {
-  background: #ffffff;
+  background: var(--surface-elevated);
   padding: 64px 40px;
   border-bottom: 1px solid rgba(0, 48, 73, 0.12);
 }
@@ -92,7 +92,7 @@
   width: 160px;
   height: 160px;
   border-radius: 50%;
-  border: 4px solid #c1121f; /* overridden inline with tier color */
+  border: 4px solid var(--primary); /* overridden inline with tier color */
   background: var(--surface);
   display: flex;
   align-items: center;
@@ -126,7 +126,7 @@
   font-family: "Darky", serif;
   font-size: 48px;
   font-weight: 900;
-  color: #003049;
+  color: var(--dark);
   letter-spacing: -0.04em;
   margin: 0;
   line-height: 1.0;
@@ -165,7 +165,7 @@
   font-family: "CS Genio Mono", monospace;
   font-size: 15px;
   line-height: 1.65;
-  color: #003049;
+  color: var(--dark);
   margin: 4px 0 0;
   max-width: 480px;
 }
@@ -182,7 +182,7 @@
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: #2e7d32;
+  background: var(--success);
   flex-shrink: 0;
   animation: pulse-dot 2s ease-in-out infinite;
 }
@@ -198,7 +198,7 @@
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: #2e7d32;
+  color: var(--success);
 }
 
 /* Score rings side */
@@ -229,7 +229,7 @@
   grid-template-columns: repeat(4, 1fr);
   border-top: 1px solid rgba(0, 48, 73, 0.1);
   border-bottom: 1px solid rgba(0, 48, 73, 0.1);
-  background: #ffffff;
+  background: var(--surface-elevated);
   padding: 0;
 }
 
@@ -251,7 +251,7 @@
   font-family: "Darky", serif;
   font-size: 28px;
   font-weight: 700;
-  color: #003049;
+  color: var(--dark);
   letter-spacing: -0.03em;
   line-height: 1;
 }
@@ -277,7 +277,7 @@
 /* ── 5. Campaign history ───────────────────────────────────────────────────── */
 
 .pub-campaigns-section {
-  background: #ffffff;
+  background: var(--surface-elevated);
   padding: 40px;
   border-bottom: 1px solid rgba(0, 48, 73, 0.08);
 }
@@ -289,10 +289,10 @@
 }
 
 .pub-campaign-card {
-  border-left: 3px solid #c1121f; /* overridden inline with tier color */
+  border-left: 3px solid var(--primary); /* overridden inline with tier color */
   padding: 16px;
   background: var(--surface);
-  border-radius: 0;
+  border-radius: var(--r-xl);
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -314,7 +314,7 @@
   font-family: "CS Genio Mono", monospace;
   font-size: 14px;
   font-weight: 700;
-  color: #003049;
+  color: var(--dark);
 }
 
 .pub-campaign-category {
@@ -326,7 +326,7 @@
   color: rgba(0, 48, 73, 0.55);
   background: rgba(0, 48, 73, 0.08);
   padding: 2px 6px;
-  border-radius: 0;
+  border-radius: var(--r-xl);
 }
 
 .pub-campaign-footer {
@@ -346,7 +346,7 @@
   font-family: "CS Genio Mono", monospace;
   font-size: 11px;
   font-weight: 700;
-  color: #2e7d32;
+  color: var(--success);
   letter-spacing: 0.02em;
 }
 
@@ -358,10 +358,10 @@
 /* ── 6. CTA section ────────────────────────────────────────────────────────── */
 
 .pub-cta-section {
-  background: #003049;
+  background: var(--dark);
   padding: 64px 40px;
   text-align: center;
-  border-radius: 0;
+  border-radius: var(--r-xl);
 }
 
 .pub-cta-eyebrow {
@@ -378,7 +378,7 @@
   font-family: "Darky", serif;
   font-size: 40px;
   font-weight: 900;
-  color: #f5f2ec;
+  color: var(--surface);
   letter-spacing: -0.04em;
   margin: 0 0 12px;
   line-height: 1.05;
@@ -397,21 +397,21 @@
 
 .pub-cta-button {
   display: inline-block;
-  background: #c1121f;
-  color: #ffffff;
+  background: var(--primary);
+  color: var(--surface-elevated);
   font-family: "CS Genio Mono", monospace;
   font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.05em;
   text-transform: uppercase;
   padding: 16px 32px;
-  border-radius: 0;
+  border-radius: var(--r-xl);
   text-decoration: none;
   transition: background 0.15s ease;
 }
 
 .pub-cta-button:hover {
-  background: #780000;
+  background: var(--accent);
 }
 
 .pub-cta-note {
@@ -441,7 +441,7 @@
   display: inline-block;
   height: 12px;
   background: rgba(0, 48, 73, 0.1);
-  border-radius: 0;
+  border-radius: var(--r-xl);
   animation: skeletonPulse 1.4s ease-in-out infinite;
 }
 

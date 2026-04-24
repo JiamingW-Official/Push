@@ -61,12 +61,12 @@ const TIER_LABELS: Record<CreatorTier, string> = {
 };
 
 const TIER_COLORS: Record<CreatorTier, string> = {
-  seed: "#669bbc",
-  explorer: "#003049",
-  operator: "#c9a96e",
-  proven: "#c1121f",
-  closer: "#780000",
-  partner: "#c9a96e",
+  seed: "var(--tier-seed)",
+  explorer: "var(--tier-explorer)",
+  operator: "var(--tier-operator)",
+  proven: "var(--tier-proven)",
+  closer: "var(--tier-closer)",
+  partner: "var(--tier-partner)",
 };
 
 const STORAGE_KEY = "push-demo-applied-campaigns";
@@ -460,7 +460,7 @@ export function CampaignDetailPanel({
                     <circle cx="7" cy="7" r="7" fill="currentColor" />
                     <path
                       d="M4 7l2 2 4-4"
-                      stroke="#fff"
+                      stroke="var(--surface-elevated)"
                       strokeWidth="1.5"
                       strokeLinecap="round"
                       strokeLinejoin="round"

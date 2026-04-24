@@ -38,15 +38,15 @@
 
 .wallet {
   min-height: 100svh;
-  background: var(--surface, #f5f2ec);
-  font-family: 'CS Genio Mono', 'SF Mono', 'Fira Code', monospace;
-  color: var(--dark, #003049);
+  background: var(--surface);
+  font-family: var(--font-body);
+  color: var(--dark);
 }
 
 /* ── Hero Section ─────────────────────────────────────────── */
 
 .wallet-hero {
-  background: var(--dark, #003049);
+  background: var(--dark);
   padding: 64px 48px 56px;
   display: grid;
   grid-template-columns: 1fr auto;
@@ -68,11 +68,11 @@
 }
 
 .wallet-hero-balance {
-  font-family: Darky, sans-serif;
+  font-family: var(--font-display);
   font-size: clamp(64px, 10vw, 96px);
   font-weight: 900;
   letter-spacing: -0.06em;
-  color: var(--surface, #f5f2ec);
+  color: var(--surface);
   line-height: 0.9;
   margin-bottom: 24px;
 }
@@ -98,7 +98,7 @@
 }
 
 .wallet-hero-meta-value {
-  font-family: Darky, sans-serif;
+  font-family: var(--font-display);
   font-size: 22px;
   font-weight: 300;
   letter-spacing: -0.02em;
@@ -114,23 +114,25 @@
 }
 
 .wallet-withdraw-btn {
-  font-family: 'CS Genio Mono', monospace;
+  font-family: var(--font-body);
   font-size: 14px;
   font-weight: 600;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  background: var(--primary, #c1121f);
+  background: var(--primary);
   color: #fff;
   border: none;
-  border-radius: 0;
+  border-radius: var(--r-lg);
   padding: 16px 32px;
   cursor: pointer;
-  transition: background 200ms ease, transform 120ms ease;
+  transition: background 200ms ease, transform 120ms ease, box-shadow 200ms ease;
   white-space: nowrap;
+  box-shadow: var(--shadow-2);
 }
 
 .wallet-withdraw-btn:hover {
-  background: var(--accent, #780000);
+  background: var(--accent);
+  box-shadow: var(--shadow-3);
 }
 
 .wallet-withdraw-btn:active {
@@ -146,14 +148,14 @@
 
 .wallet-tabs {
   display: flex;
-  border-bottom: 2px solid rgba(0, 48, 73, 0.12);
-  background: var(--surface-bright, #fafaf8);
+  border-bottom: 2px solid var(--line);
+  background: var(--surface-bright);
   padding: 0 48px;
   gap: 0;
 }
 
 .wallet-tab-btn {
-  font-family: 'CS Genio Mono', monospace;
+  font-family: var(--font-body);
   font-size: 12px;
   font-weight: 700;
   letter-spacing: 0.06em;
@@ -169,12 +171,12 @@
 }
 
 .wallet-tab-btn:hover {
-  color: var(--dark, #003049);
+  color: var(--dark);
 }
 
 .wallet-tab-btn.active {
-  color: var(--primary, #c1121f);
-  border-bottom-color: var(--primary, #c1121f);
+  color: var(--primary);
+  border-bottom-color: var(--primary);
 }
 
 .wallet-tab-content {
@@ -188,8 +190,8 @@
   display: flex;
   flex-direction: column;
   gap: 0;
-  border: 1px solid rgba(0, 48, 73, 0.12);
-  background: var(--surface-elevated, #fff);
+  border: 1px solid var(--line);
+  background: var(--surface-elevated);
   margin-bottom: 24px;
 }
 
@@ -228,7 +230,7 @@
 .wallet-method-icon svg {
   width: 24px;
   height: 24px;
-  stroke: var(--dark, #003049);
+  stroke: var(--dark);
   fill: none;
   stroke-width: 1.5;
 }
@@ -249,7 +251,7 @@
 .wallet-method-name {
   font-size: 15px;
   font-weight: 600;
-  color: var(--dark, #003049);
+  color: var(--dark);
 }
 
 .wallet-method-detail {
@@ -273,13 +275,13 @@
 /* ── Badges ──────────────────────────────────────────────── */
 
 .wallet-badge {
-  font-family: 'CS Genio Mono', monospace;
+  font-family: var(--font-body);
   font-size: 10px;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
   padding: 3px 8px;
-  border-radius: 0;
+  border-radius: var(--r-sm);
   display: inline-flex;
   align-items: center;
   gap: 4px;
@@ -287,46 +289,46 @@
 
 .wallet-badge-verified {
   background: rgba(102, 155, 188, 0.15);
-  color: var(--tertiary, #669bbc);
+  color: var(--tertiary);
   border: 1px solid rgba(102, 155, 188, 0.3);
 }
 
 .wallet-badge-pending {
-  background: rgba(201, 169, 110, 0.12);
-  color: var(--champagne, #c9a96e);
-  border: 1px solid rgba(201, 169, 110, 0.35);
+  background: var(--champagne-light);
+  color: var(--champagne);
+  border: 1px solid var(--champagne-border);
 }
 
 .wallet-badge-disabled {
   background: rgba(0, 48, 73, 0.06);
   color: rgba(0, 48, 73, 0.4);
-  border: 1px solid rgba(0, 48, 73, 0.12);
+  border: 1px solid var(--line);
 }
 
 .wallet-badge-default {
-  background: var(--dark, #003049);
-  color: var(--surface, #f5f2ec);
+  background: var(--dark);
+  color: var(--surface);
 }
 
 .wallet-badge-recommended {
-  background: var(--primary, #c1121f);
+  background: var(--primary);
   color: #fff;
 }
 
 /* ── Action Buttons ──────────────────────────────────────── */
 
 .wallet-action-btn {
-  font-family: 'CS Genio Mono', monospace;
+  font-family: var(--font-body);
   font-size: 11px;
   font-weight: 600;
   letter-spacing: 0.04em;
   text-transform: uppercase;
   background: none;
   border: 1px solid rgba(0, 48, 73, 0.2);
-  border-radius: 0;
+  border-radius: var(--r-lg);
   padding: 6px 12px;
   cursor: pointer;
-  color: var(--dark, #003049);
+  color: var(--dark);
   transition: background 150ms ease, border-color 150ms ease;
 }
 
@@ -336,7 +338,7 @@
 }
 
 .wallet-action-btn.danger {
-  color: var(--primary, #c1121f);
+  color: var(--primary);
   border-color: rgba(193, 18, 31, 0.25);
 }
 
@@ -346,25 +348,25 @@
 }
 
 .wallet-action-btn.primary-fill {
-  background: var(--dark, #003049);
-  color: var(--surface, #f5f2ec);
-  border-color: var(--dark, #003049);
+  background: var(--dark);
+  color: var(--surface);
+  border-color: var(--dark);
 }
 
 .wallet-action-btn.primary-fill:hover {
-  background: var(--accent, #780000);
-  border-color: var(--accent, #780000);
+  background: var(--accent);
+  border-color: var(--accent);
 }
 
 .wallet-add-method-btn {
-  font-family: 'CS Genio Mono', monospace;
+  font-family: var(--font-body);
   font-size: 13px;
   font-weight: 600;
   letter-spacing: 0.04em;
   text-transform: uppercase;
   background: none;
   border: 2px dashed rgba(0, 48, 73, 0.2);
-  border-radius: 0;
+  border-radius: var(--r-md);
   padding: 20px 32px;
   cursor: pointer;
   color: rgba(0, 48, 73, 0.5);
@@ -377,8 +379,8 @@
 }
 
 .wallet-add-method-btn:hover {
-  border-color: var(--dark, #003049);
-  color: var(--dark, #003049);
+  border-color: var(--dark);
+  color: var(--dark);
   background: rgba(0, 48, 73, 0.02);
 }
 
@@ -393,15 +395,15 @@
 }
 
 .wallet-filter-select {
-  font-family: 'CS Genio Mono', monospace;
+  font-family: var(--font-body);
   font-size: 12px;
   font-weight: 600;
   letter-spacing: 0.04em;
-  background: var(--surface-elevated, #fff);
+  background: var(--surface-elevated);
   border: 1px solid rgba(0, 48, 73, 0.2);
-  border-radius: 0;
+  border-radius: var(--r-md);
   padding: 8px 12px;
-  color: var(--dark, #003049);
+  color: var(--dark);
   cursor: pointer;
   appearance: none;
   -webkit-appearance: none;
@@ -413,21 +415,21 @@
 
 .wallet-filter-select:focus {
   outline: none;
-  border-color: var(--dark, #003049);
+  border-color: var(--dark);
 }
 
 .wallet-export-btn {
-  font-family: 'CS Genio Mono', monospace;
+  font-family: var(--font-body);
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
   background: none;
   border: 1px solid rgba(0, 48, 73, 0.2);
-  border-radius: 0;
+  border-radius: var(--r-lg);
   padding: 8px 16px;
   cursor: pointer;
-  color: var(--dark, #003049);
+  color: var(--dark);
   margin-left: auto;
   transition: background 150ms ease;
   display: flex;
@@ -440,8 +442,8 @@
 }
 
 .wallet-table-wrap {
-  border: 1px solid rgba(0, 48, 73, 0.12);
-  background: var(--surface-elevated, #fff);
+  border: 1px solid var(--line);
+  background: var(--surface-elevated);
   overflow-x: auto;
 }
 
@@ -452,7 +454,7 @@
 }
 
 .wallet-table th {
-  font-family: 'CS Genio Mono', monospace;
+  font-family: var(--font-body);
   font-size: 10px;
   font-weight: 700;
   letter-spacing: 0.08em;
@@ -468,7 +470,7 @@
 .wallet-table td {
   padding: 16px 20px;
   border-bottom: 1px solid rgba(0, 48, 73, 0.06);
-  color: var(--dark, #003049);
+  color: var(--dark);
   white-space: nowrap;
 }
 
@@ -489,13 +491,13 @@
 }
 
 .wallet-table .amount-col {
-  font-family: Darky, sans-serif;
+  font-family: var(--font-display);
   font-weight: 600;
   letter-spacing: -0.01em;
 }
 
 .wallet-table .net-col {
-  font-family: Darky, sans-serif;
+  font-family: var(--font-display);
   font-weight: 700;
   letter-spacing: -0.01em;
 }
@@ -522,13 +524,13 @@
   flex-shrink: 0;
 }
 
-.wallet-status-dot.processing { background: var(--champagne, #c9a96e); }
-.wallet-status-dot.sent       { background: var(--tertiary, #669bbc); }
-.wallet-status-dot.failed     { background: var(--primary, #c1121f); }
+.wallet-status-dot.processing { background: var(--champagne); }
+.wallet-status-dot.sent       { background: var(--tertiary); }
+.wallet-status-dot.failed     { background: var(--primary); }
 
-.wallet-status.processing { color: var(--champagne, #c9a96e); }
-.wallet-status.sent       { color: var(--tertiary, #669bbc); }
-.wallet-status.failed     { color: var(--primary, #c1121f); }
+.wallet-status.processing { color: var(--champagne); }
+.wallet-status.sent       { color: var(--tertiary); }
+.wallet-status.failed     { color: var(--primary); }
 
 /* ── Failed Row Expand ────────────────────────────────────── */
 
@@ -542,7 +544,7 @@
 
 .wallet-failed-reason {
   font-size: 12px;
-  color: var(--primary, #c1121f);
+  color: var(--primary);
   margin-bottom: 8px;
 }
 
@@ -551,7 +553,7 @@
 .wallet-tax-hero {
   margin-bottom: 48px;
   padding-bottom: 48px;
-  border-bottom: 1px solid rgba(0, 48, 73, 0.12);
+  border-bottom: 1px solid var(--line);
 }
 
 .wallet-tax-year-label {
@@ -564,11 +566,11 @@
 }
 
 .wallet-tax-big {
-  font-family: Darky, sans-serif;
+  font-family: var(--font-display);
   font-size: clamp(48px, 7vw, 80px);
   font-weight: 900;
   letter-spacing: -0.05em;
-  color: var(--dark, #003049);
+  color: var(--dark);
   line-height: 0.9;
   margin-bottom: 8px;
 }
@@ -586,8 +588,8 @@
 }
 
 .wallet-tax-card {
-  background: var(--surface-elevated, #fff);
-  border: 1px solid rgba(0, 48, 73, 0.12);
+  background: var(--surface-elevated);
+  border: 1px solid var(--line);
   padding: 32px;
 }
 
@@ -612,7 +614,7 @@
 }
 
 .wallet-1099-title {
-  font-family: Darky, sans-serif;
+  font-family: var(--font-display);
   font-size: 22px;
   font-weight: 700;
   letter-spacing: -0.02em;
@@ -648,7 +650,7 @@
 
 .wallet-w9-val {
   font-size: 13px;
-  color: var(--dark, #003049);
+  color: var(--dark);
 }
 
 /* Chart Card — spans full width on second row */
@@ -676,13 +678,13 @@
 
 .wallet-bar {
   width: 100%;
-  background: var(--tertiary, #669bbc);
+  background: var(--tertiary);
   transition: height 800ms ease-out;
   min-height: 2px;
 }
 
 .wallet-bar.current-year {
-  background: var(--dark, #003049);
+  background: var(--dark);
 }
 
 .wallet-bar-month {
@@ -712,7 +714,7 @@
 }
 
 .wallet-estimate-value {
-  font-family: Darky, sans-serif;
+  font-family: var(--font-display);
   font-size: 18px;
   font-weight: 700;
   letter-spacing: -0.02em;
@@ -740,12 +742,14 @@
 }
 
 .wallet-modal {
-  background: var(--surface-elevated, #fff);
+  background: var(--surface-elevated);
   width: 100%;
   max-width: 520px;
   max-height: 90svh;
   overflow-y: auto;
   animation: wallet-modal-in 250ms ease forwards;
+  border-radius: var(--r-2xl);
+  box-shadow: var(--shadow-3);
 }
 
 .wallet-modal-header {
@@ -757,11 +761,11 @@
 }
 
 .wallet-modal-title {
-  font-family: Darky, sans-serif;
+  font-family: var(--font-display);
   font-size: 24px;
   font-weight: 700;
   letter-spacing: -0.02em;
-  color: var(--dark, #003049);
+  color: var(--dark);
 }
 
 .wallet-modal-close {
@@ -776,7 +780,7 @@
 }
 
 .wallet-modal-close:hover {
-  color: var(--dark, #003049);
+  color: var(--dark);
 }
 
 .wallet-modal-body {
@@ -801,46 +805,46 @@
 
 .wallet-form-input {
   width: 100%;
-  font-family: 'CS Genio Mono', monospace;
+  font-family: var(--font-body);
   font-size: 14px;
-  background: var(--surface, #f5f2ec);
+  background: var(--surface);
   border: 1px solid rgba(0, 48, 73, 0.2);
-  border-radius: 0;
+  border-radius: var(--r-md);
   padding: 12px 16px;
-  color: var(--dark, #003049);
+  color: var(--dark);
   transition: border-color 150ms ease;
   box-sizing: border-box;
 }
 
 .wallet-form-input:focus {
   outline: none;
-  border-color: var(--dark, #003049);
+  border-color: var(--dark);
 }
 
 .wallet-form-input.error {
-  border-color: var(--primary, #c1121f);
+  border-color: var(--primary);
   background: rgba(193, 18, 31, 0.03);
 }
 
 .wallet-form-input.error:focus {
-  border-color: var(--primary, #c1121f);
+  border-color: var(--primary);
 }
 
 .wallet-form-error {
   font-size: 12px;
-  color: var(--primary, #c1121f);
+  color: var(--primary);
   margin-top: 5px;
 }
 
 .wallet-form-select {
   width: 100%;
-  font-family: 'CS Genio Mono', monospace;
+  font-family: var(--font-body);
   font-size: 14px;
-  background: var(--surface, #f5f2ec);
+  background: var(--surface);
   border: 1px solid rgba(0, 48, 73, 0.2);
-  border-radius: 0;
+  border-radius: var(--r-md);
   padding: 12px 16px;
-  color: var(--dark, #003049);
+  color: var(--dark);
   appearance: none;
   -webkit-appearance: none;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none'%3E%3Cpath stroke='%23003049' stroke-width='1.5' d='M1 1.5l5 5 5-5'/%3E%3C/svg%3E");
@@ -852,7 +856,7 @@
 
 .wallet-form-select:focus {
   outline: none;
-  border-color: var(--dark, #003049);
+  border-color: var(--dark);
 }
 
 /* ── Withdraw Modal Specifics ─────────────────────────────── */
@@ -861,7 +865,7 @@
   margin: 24px 0;
   padding: 20px;
   background: rgba(0, 48, 73, 0.04);
-  border-left: 3px solid var(--dark, #003049);
+  border-left: 3px solid var(--dark);
 }
 
 .wallet-withdraw-net-label {
@@ -874,11 +878,11 @@
 }
 
 .wallet-withdraw-net-amount {
-  font-family: Darky, sans-serif;
+  font-family: var(--font-display);
   font-size: 40px;
   font-weight: 900;
   letter-spacing: -0.04em;
-  color: var(--dark, #003049);
+  color: var(--dark);
 }
 
 .wallet-withdraw-fee-note {
@@ -895,13 +899,13 @@
 }
 
 .wallet-modal-btn {
-  font-family: 'CS Genio Mono', monospace;
+  font-family: var(--font-body);
   font-size: 13px;
   font-weight: 700;
   letter-spacing: 0.04em;
   text-transform: uppercase;
   border: none;
-  border-radius: 0;
+  border-radius: var(--r-lg);
   padding: 14px 24px;
   cursor: pointer;
   transition: background 150ms ease, transform 120ms ease;
@@ -914,7 +918,7 @@
 
 .wallet-modal-btn.cancel {
   background: rgba(0, 48, 73, 0.08);
-  color: var(--dark, #003049);
+  color: var(--dark);
 }
 
 .wallet-modal-btn.cancel:hover {
@@ -922,12 +926,12 @@
 }
 
 .wallet-modal-btn.confirm {
-  background: var(--primary, #c1121f);
+  background: var(--primary);
   color: #fff;
 }
 
 .wallet-modal-btn.confirm:hover {
-  background: var(--accent, #780000);
+  background: var(--accent);
 }
 
 .wallet-modal-btn.confirm:disabled {
@@ -945,9 +949,9 @@
 }
 
 .wallet-method-type-btn {
-  background: var(--surface, #f5f2ec);
+  background: var(--surface);
   border: 2px solid rgba(0, 48, 73, 0.15);
-  border-radius: 0;
+  border-radius: var(--r-md);
   padding: 16px;
   cursor: pointer;
   text-align: left;
@@ -959,14 +963,14 @@
 }
 
 .wallet-method-type-btn.selected {
-  border-color: var(--dark, #003049);
+  border-color: var(--dark);
   background: rgba(0, 48, 73, 0.04);
 }
 
 .wallet-method-type-name {
   font-size: 13px;
   font-weight: 700;
-  color: var(--dark, #003049);
+  color: var(--dark);
   display: block;
   margin-bottom: 2px;
 }
@@ -978,7 +982,7 @@
 
 .wallet-stripe-info {
   background: rgba(0, 48, 73, 0.04);
-  border-left: 3px solid var(--tertiary, #669bbc);
+  border-left: 3px solid var(--tertiary);
   padding: 12px 16px;
   margin-bottom: 20px;
   font-size: 12px;
@@ -1004,8 +1008,8 @@
   position: fixed;
   bottom: 32px;
   right: 32px;
-  background: var(--dark, #003049);
-  color: var(--surface, #f5f2ec);
+  background: var(--dark);
+  color: var(--surface);
   font-size: 13px;
   font-weight: 600;
   padding: 14px 24px;

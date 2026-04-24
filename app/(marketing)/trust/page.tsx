@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useEffect, useRef } from "react";
 import "./trust.css";
 
-/* ─── Icon helpers (inline SVG — no extra deps) ─────────────── */
+/* ─── Inline SVG icons (no extra deps) ─────────────────────── */
 function IconShield() {
   return (
     <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -28,14 +28,6 @@ function IconGlobe() {
     <svg viewBox="0 0 24 24" aria-hidden="true">
       <circle cx="12" cy="12" r="10" />
       <path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
-    </svg>
-  );
-}
-
-function IconCheck() {
-  return (
-    <svg viewBox="0 0 24 24" aria-hidden="true">
-      <polyline points="20 6 9 17 4 12" />
     </svg>
   );
 }
@@ -76,210 +68,224 @@ function IconExternalLink() {
   );
 }
 
-/* ─── Data ───────────────────────────────────────────────────── */
+/* ─── Data ─────────────────────────────────────────────────── */
+// what we actually log on a scan — written as a plain ledger,
+// not a marketing list
+const WHAT_WE_LOG = [
+  {
+    title: "Device fingerprint hash",
+    body: "A SHA-256 of browser + screen + locale signals. We can tell two scans came from the same device. We cannot reverse it back to a person.",
+  },
+  {
+    title: "GPS coordinates at scan",
+    body: "Lat/lng at the moment the QR is decoded. Compared against the merchant's registered storefront. Discarded after 30 days.",
+  },
+  {
+    title: "Timestamp + campaign id",
+    body: "Unix ms and the campaign UUID. That's how we know visit #3 happened 18 minutes after visit #2 — and reject it if it's physically impossible.",
+  },
+  {
+    title: "What we don't log",
+    body: "No contacts, no microphone, no camera roll, no off-platform browsing. The QR scanner sees the QR — nothing else on the screen.",
+  },
+];
+
+// the four-stage verification stack — re-cast as scenes, not promises
 const VERIFY_STEPS = [
   {
     num: "01",
-    label: "Step 1",
-    title: "Real-time device fingerprinting",
-    body: "Every QR scan generates a unique device fingerprint. We cross-reference device ID, browser signature, and session token to ensure the same physical device isn't redeeming multiple payouts across different campaigns.",
+    label: "Step 01",
+    title: "Fingerprint check",
+    body: "Two scans, same device, same campaign — we keep the first and reject the rest. The fingerprint is a one-way hash of browser + screen + locale; nothing reverses to identity.",
   },
   {
     num: "02",
-    label: "Step 2",
-    title: "Geographic cross-check",
-    body: "The scan location is matched against the merchant's registered address. If the GPS coordinates of the scan diverge from the merchant's location by more than a safe radius, the visit is flagged automatically — no exceptions.",
+    label: "Step 02",
+    title: "Geo cross-check",
+    body: "GPS at scan time is compared against the merchant's registered address. Outside a sane radius, the scan goes to review — no exceptions, no overrides.",
   },
   {
     num: "03",
-    label: "Step 3",
-    title: "Temporal velocity detection",
-    body: "Physics can't lie. If a creator's QR code is scanned at two locations that are physically impossible to travel between in the elapsed time, our velocity engine flags it as \"impossible speed\" and holds the payout for review.",
+    label: "Step 03",
+    title: "Velocity check",
+    body: "If your QR shows up in two places that you can't physically travel between in the elapsed minutes, the second one is held. Buses don't teleport. Neither do people.",
   },
   {
     num: "04",
-    label: "Step 4",
-    title: "Human review for high-stakes",
-    body: "Payouts above a certain threshold, or anything our automated systems flag as anomalous, are reviewed by a real Trust & Safety analyst before funds are released. You always have a human backstop.",
+    label: "Step 04",
+    title: "Human review on flags",
+    body: "Anything our automated layers flag — and any payout above the per-creator threshold — gets read by a human on the trust desk before funds clear. Founder reviews the edge cases himself.",
   },
 ];
 
+// money handling — anchored on Stripe Connect custody, R11 / D9 facts
 const MONEY_ITEMS = [
   {
-    title: "Escrow-held payouts",
-    desc: "Creator earnings are held in an escrow account and only released after verification is complete. Your money never moves until we're certain a real visit happened.",
+    title: "Stripe Connect holds the money",
+    desc: "Push never touches creator earnings or merchant deposits. Funds sit in a Stripe Connect account scoped to the campaign. We're a routing layer, not a bank.",
   },
   {
-    title: "7-day merchant refund window",
-    desc: "If a verified visit is later disputed and confirmed fraudulent by our review team, merchants receive a full refund within 7 business days. No questions, no forms.",
+    title: "Pay-on-verified-visit",
+    desc: "A merchant's card is captured when the campaign goes live, but no charge clears until a QR scan passes the four-stage check. No verified visit, no charge.",
   },
   {
-    title: "100% payment guarantee",
-    desc: "On all verified visits, creators receive 100% of the agreed payout. Push never takes a hidden cut from creator earnings on confirmed campaigns.",
+    title: "7-day refund window",
+    desc: "If a verified visit is later overturned by the trust desk, the merchant is refunded inside 7 business days through Stripe — same rail as the original capture.",
   },
 ];
 
-const IDENTITY_RIGHTS = [
+// data-rights checklist — frameworks named explicitly
+const DATA_RIGHTS = [
   {
-    title: "KYC data encrypted at rest",
-    desc: "Identity documents submitted for verification are encrypted using AES-256 and stored separately from your profile data. Even our engineers can't read them in plain text.",
+    title: "CCPA right-to-know, right-to-delete",
+    desc: "California residents: we'll send you everything we have on you, or wipe it, inside the 45-day statutory window. File at /privacy or email privacy@push.nyc.",
+    framework: "CCPA · Cal. Civ. Code § 1798.100",
   },
   {
-    title: "Never sold, never shared",
-    desc: "Your personal information is never sold to third parties or shared with merchants beyond your public creator handle. Merchants only see what you choose to publish.",
+    title: "GDPR Article 15 + Article 17",
+    desc: "EU residents (we're not actively serving the EU yet, but we honor it on request): subject access requests fulfilled inside 30 days, erasure includes warm and cold backups.",
+    framework: "GDPR · Reg. (EU) 2016/679",
   },
   {
-    title: "GDPR right-to-delete",
-    desc: "Submit a deletion request at any time. We will permanently remove all personal data from our systems within 30 days, including backups, as required by GDPR Article 17.",
+    title: "FTC endorsement disclosure",
+    desc: "Every creator post Push pays for must carry a clear material connection disclosure. We audit our roster monthly and pull anyone who doesn't comply.",
+    framework: "FTC 16 CFR § 255",
   },
   {
-    title: "Minimal data collection",
-    desc: "We collect only what is necessary to run the platform. No behavioral tracking beyond what's needed for fraud detection. No ad profiles. No data brokers.",
+    title: "Stripe Identity for KYC",
+    desc: "Identity documents are submitted directly to Stripe Identity. Push receives a verification token, not the document. Engineers cannot read your ID.",
+    framework: "Stripe Identity · KYC tier 1",
   },
 ];
 
+// retention table — the actual numbers, not a vague paragraph
+const RETENTION = [
+  {
+    signal: "GPS coordinates",
+    window: "30 days rolling",
+    reason:
+      "Long enough to investigate disputes, short enough to avoid a tracking dataset.",
+  },
+  {
+    signal: "Device fingerprint hash",
+    window: "180 days",
+    reason: "Anti-fraud cross-campaign signal. Hash, not raw device IDs.",
+  },
+  {
+    signal: "Scan event metadata (campaign id, timestamp)",
+    window: "Lifetime of campaign + 24 mo",
+    reason: "Required for tax records and dispute reconciliation.",
+  },
+  {
+    signal: "KYC documents",
+    window: "Held by Stripe, not Push",
+    reason: "We never store the document. Stripe retains per their schedule.",
+  },
+  {
+    signal: "Account profile data",
+    window: "Until deletion + 30 days",
+    reason:
+      "Hard delete inside 30 days of a confirmed CCPA / GDPR request, including backups.",
+  },
+];
+
+// dispute timeline — what actually happens
 const DISPUTE_TIMELINE = [
   {
-    time: "Within 24 hours",
-    title: "You submit a dispute",
-    body: "Use the in-app dispute button on any campaign or payout. Include what happened and any supporting screenshots. We acknowledge receipt within 24 hours.",
+    time: "T + 0",
+    title: "You open a dispute",
+    body: "In-app button on any campaign or payout. Drop a screenshot. We acknowledge inside 24 hours — auto-reply with a ticket number, then a human follow-up.",
   },
   {
     time: "1–3 business days",
-    title: "Trust & Safety investigates",
-    body: "Our team reviews all available signals: scan logs, device fingerprints, geo data, velocity checks, and your account history. You'll receive status updates by email.",
+    title: "Trust desk pulls the logs",
+    body: "Scan record, fingerprint match, GPS delta, velocity flag, and your account history. Both sides see the same evidence file in the dispute thread.",
   },
   {
     time: "3–5 business days",
-    title: "Decision delivered",
-    body: "We notify you of the outcome with a full written explanation. If the dispute is resolved in your favor, funds or refunds are processed immediately.",
+    title: "Decision in writing",
+    body: "Outcome with a written explanation that cites the specific signal that drove the call. No 'our system determined' boilerplate.",
   },
   {
-    time: "Resolution",
-    title: "Funds or refund issued",
-    body: "Resolved disputes are settled within 2 business days of the final decision. Creators receive missed payouts; merchants receive full refunds on fraudulent visits.",
+    time: "Settlement",
+    title: "Funds move within 2 business days",
+    body: "If resolved in your favor, Stripe Connect releases the held funds — creators get the missed payout, merchants get the refund. Same rail as the original capture.",
   },
 ];
 
+// compliance / cert cards — honest about what's done vs. on the roadmap
 const CERTS = [
   {
     title: "SOC 2 Type II",
-    body: "Our infrastructure and data handling practices are audited annually against the AICPA SOC 2 framework by an independent third-party auditor.",
-    link: "#",
-    linkText: "View attestation",
+    body: "Target: Year 2 Q4 (Q4 2027) post-pilot. We're using the AICPA Trust Services Criteria as our internal control framework today, but we don't claim certification we haven't earned.",
+    status: "Target · Year 2 Q4",
+    link: "/security",
+    linkText: "Read the controls doc",
     icon: <IconShield />,
   },
   {
-    title: "Annual pentest",
-    body: "An external security firm runs a full penetration test against our API, mobile surface, and QR verification pipeline every year. Last test: Q1 2026.",
-    link: "#",
-    linkText: "View summary",
+    title: "Stripe Connect custody",
+    body: "All payment custody is delegated to Stripe Connect (PCI DSS Level 1, SOC 1 / 2 audited). Push never custodies user funds — we don't have a money-transmitter license, and we never need one.",
+    status: "Live · since v0.1",
+    link: "https://stripe.com/connect",
+    linkText: "Stripe Connect overview",
     icon: <IconLock />,
   },
   {
-    title: "Status page",
-    body: "Real-time uptime and incident history for all Push services. Subscribe to get notified the moment anything affects your payouts or campaign access.",
+    title: "Public status page",
+    body: "Real uptime numbers from real probes — API, scan ingestion, payout webhook. No 'industry-standard' marketing math. Subscribe to incident posts at the address below.",
+    status: "Live · status.push.nyc",
     link: "https://status.push.nyc",
-    linkText: "View status page",
+    linkText: "Open status page",
     icon: <IconGlobe />,
   },
 ];
 
-const TESTIMONIALS = [
-  {
-    quote:
-      "I was skeptical about the escrow model at first. Then my first payout hit exactly when they said it would, and I've never had a single issue with a disputed visit in 8 months.",
-    name: "Maya R.",
-    meta: "Food Creator · Operator Tier",
-    initial: "M",
-    type: "creator" as const,
-  },
-  {
-    quote:
-      "The geographic check saved me from a scam attempt in my first week. Someone tried to scan from New Jersey. Push flagged it before I even noticed. That's the system working.",
-    name: "Daniel K.",
-    meta: "Lifestyle Creator · Explorer Tier",
-    initial: "D",
-    type: "creator" as const,
-  },
-  {
-    quote:
-      "I deleted my account once and came back. Push actually deleted my data and when I signed up again I had to re-verify. That's real GDPR compliance, not just a checkbox.",
-    name: "Priya L.",
-    meta: "Fashion Creator · Proven Tier",
-    initial: "P",
-    type: "creator" as const,
-  },
-  {
-    quote:
-      "We had a disputed payout in month two. Push's team investigated within 48 hours, sent a written explanation, and refunded us the same day. That's the kind of speed I expect.",
-    name: "Marco T.",
-    meta: "Merchant · Ramen & Co., East Village",
-    initial: "M",
-    type: "merchant" as const,
-  },
-  {
-    quote:
-      "The attribution dashboard caught three fraudulent attempts in our first campaign. We didn't lose a dollar. The real-time flagging is genuinely impressive for a platform this size.",
-    name: "Sarah W.",
-    meta: "Merchant · The Daily Press, Williamsburg",
-    initial: "S",
-    type: "merchant" as const,
-  },
-  {
-    quote:
-      "I appreciate that Push tells me exactly what data they collect and why. No vague privacy policy — a clear list. As a small business owner, that transparency matters.",
-    name: "James O.",
-    meta: "Merchant · Uptown Barber Studio, Harlem",
-    initial: "J",
-    type: "merchant" as const,
-  },
-];
-
+// FAQ — re-written sober, no marketing clichés
 const FAQS = [
   {
-    q: "How does Push prevent a creator from scanning their own QR code multiple times?",
-    a: "Each QR code is linked to a unique campaign session. Once a device fingerprint registers a scan for a given campaign, subsequent scans from the same fingerprint are rejected. Additionally, temporal velocity checks make it impossible to claim visits at impossible speeds.",
+    q: "Does Push hold creator earnings or merchant deposits?",
+    a: "No. Stripe Connect holds funds in a campaign-scoped account. Push initiates transfers; Stripe moves the money. We are not a money transmitter, we don't custody user funds, and our terms are explicit about this.",
   },
   {
-    q: "What happens if a merchant disputes a payout that I know is legitimate?",
-    a: "Our Trust & Safety team reviews all disputes independently. We look at device fingerprint data, GPS verification logs, and scan timestamps. If the evidence supports your visit, you will be paid. We have resolved 94% of creator-filed disputes in the creator's favor.",
+    q: "What stops a creator from scanning their own QR repeatedly?",
+    a: "Each QR is bound to a campaign session. The first scan from a given device fingerprint registers; subsequent scans from the same fingerprint on the same campaign are rejected. Velocity checks reject impossible-speed travel between scans.",
   },
   {
-    q: "Is my bank account or payment information ever visible to merchants?",
-    a: "Never. Merchants see your creator handle and published profile only. Payment information is stored encrypted in our payment processor (Stripe) and is never accessible to merchants, Push staff, or any third party beyond payment processing.",
+    q: "What data does Push log when someone scans a QR?",
+    a: "Four fields: a SHA-256 device fingerprint, GPS coordinates, a unix timestamp, and the campaign UUID. We do not log identity, contacts, microphone, camera roll, or off-platform browsing. The scanner reads the QR and nothing else on the screen.",
   },
   {
-    q: "What data does Push collect when I scan a QR code?",
-    a: "We collect: (1) device fingerprint — a hash of device/browser signals, not personal identifiers; (2) GPS coordinates at time of scan; (3) timestamp; and (4) campaign ID. We do not collect contact list data, microphone access, camera feed beyond the QR scan, or browsing history.",
+    q: "Are merchants ever shown a customer's identity?",
+    a: "No. The merchant dashboard shows aggregate scan counts and a creator handle on the originating post. Individual scanners are never identified to merchants.",
   },
   {
-    q: "How long does Push retain my personal data after I delete my account?",
-    a: "We permanently delete all personal data within 30 days of a confirmed deletion request. Transactional records required for legal and tax compliance are retained for up to 7 years in anonymized form only, as required by law.",
+    q: "How long is GPS retained?",
+    a: "30 days rolling. After that the coordinate is deleted; only the boolean 'scan was inside the venue radius' is kept for the campaign reconciliation window.",
   },
   {
-    q: "What is the 99.97% uptime figure based on?",
-    a: "It reflects actual measured uptime of the Push API and QR verification pipeline over the trailing 12 months (April 2025 – April 2026), as tracked on our public status page. Planned maintenance windows are excluded by industry convention.",
+    q: "What is your CCPA / GDPR posture?",
+    a: "We honor CCPA right-to-know and right-to-delete on request, fulfilled inside 45 days as required by Cal. Civ. Code § 1798.130. GDPR Articles 15 and 17 are honored on request inside 30 days, including warm and cold backups. File at privacy@push.nyc.",
   },
   {
-    q: "Can Push see the content of my posts or messages?",
-    a: "No. Push does not have access to the contents of your social media posts, DMs, or any off-platform communication. Our attribution system only reads the scan event metadata, not your content.",
+    q: "Are you SOC 2 certified?",
+    a: "Not yet. SOC 2 Type II certification is a Year 2 Q4 target (Q4 2027). We're operating to the AICPA Trust Services Criteria today — controls in place, evidence collected — but we don't claim certification we haven't earned.",
   },
   {
-    q: "What does 'SOC 2 Type II' actually mean for me?",
-    a: "SOC 2 Type II is an independent audit that verifies Push has rigorous security controls in place and that those controls worked as intended over a sustained period (at least 6 months). It is one of the most demanding security certifications for SaaS platforms in the US.",
+    q: "How are creator endorsements disclosed?",
+    a: "Every paid post must carry a clear material-connection disclosure per FTC 16 CFR § 255. We audit the roster monthly and remove anyone who doesn't comply. Push pays for the visit, not for the post — but the relationship is disclosed.",
   },
   {
-    q: "What if Push itself goes out of business? What happens to my earnings?",
-    a: "Creator earnings held in escrow are held in a separate custodial account that is not commingled with Push operating funds. In the event of insolvency, escrowed creator funds are protected as segregated assets and would be returned to creators first.",
+    q: "What happens if Push shuts down?",
+    a: "Funds in Stripe Connect are held in segregated, FDIC-insured accounts under Stripe's banking-as-a-service partners. They are not commingled with Push operating capital and are returned to the originating party in an insolvency.",
   },
   {
-    q: "How do I report a security vulnerability in Push?",
-    a: "Email security@push.nyc with a clear description of the vulnerability. We operate a responsible disclosure policy with a 90-day remediation SLA. Confirmed high-severity reports are eligible for a thank-you credit. We never pursue legal action against good-faith security researchers.",
+    q: "How do I report a security issue?",
+    a: "Email security@push.nyc. We run responsible disclosure with a 90-day SLA. Confirmed high-severity reports get a thank-you credit on a future campaign. We do not pursue legal action against good-faith researchers.",
   },
 ];
 
-/* ─── Reveal hook ────────────────────────────────────────────── */
+/* ─── Reveal hook ──────────────────────────────────────────── */
 function useReveal() {
   const ref = useRef<HTMLDivElement>(null);
 
@@ -305,121 +311,103 @@ function useReveal() {
   return ref;
 }
 
-/* ─── Page component ─────────────────────────────────────────── */
+/* ─── Page component ───────────────────────────────────────── */
 export default function TrustPage() {
   const pageRef = useReveal();
 
   return (
     <div className="trust-page" ref={pageRef}>
-      {/* ── 1. Hero ────────────────────────────────────────────── */}
-      <section className="trust-hero" aria-labelledby="trust-hero-heading">
-        <div className="trust-container">
-          <div className="trust-hero-inner">
-            <span className="trust-hero-section-num">Trust Center</span>
-            <h1 id="trust-hero-heading" className="trust-hero-headline reveal">
-              Trust, <em>verified.</em>
-            </h1>
-            <p className="trust-hero-sub reveal" data-delay="1">
-              Why creators and NYC merchants are choosing Push for verified
-              attribution. Every payout, every scan, every identity — protected
-              by the same Stripe Connect infrastructure that processes billions
-              of dollars in verified commerce.
-            </p>
-            <p className="trust-hero-footnote reveal" data-delay="2">
-              Built by a 5-person NYC team. Phase 0 launching Williamsburg, May
-              2026.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* ── 2. Key Metrics Strip ─────────────────────────────── */}
-      <section className="trust-metrics" aria-label="Platform trust metrics">
-        <div className="trust-container">
-          <div className="trust-metrics-inner">
-            <div className="trust-metrics-grid">
-              <div className="trust-metric-item reveal">
-                <span className="trust-metric-number">
-                  99.97
-                  <span style={{ fontSize: "0.5em", fontWeight: 400 }}>%</span>
-                </span>
-                <span className="trust-metric-label">
-                  Uptime, last 12 months
-                </span>
-                <span className="trust-metric-note">
-                  API + QR verification pipeline
-                </span>
-              </div>
-              <div className="trust-metric-item reveal" data-delay="1">
-                <span className="trust-metric-number trust-metric-number--highlight">
-                  $0
-                </span>
-                <span className="trust-metric-label">
-                  Verified fraud payouts
-                </span>
-                <span className="trust-metric-note">
-                  Zero-tolerance fraud policy
-                </span>
-              </div>
-              <div className="trust-metric-item reveal" data-delay="2">
-                <span className="trust-metric-number">
-                  &lt;60
-                  <span
-                    style={{
-                      fontSize: "0.45em",
-                      fontWeight: 400,
-                      letterSpacing: 0,
-                    }}
-                  >
-                    s
-                  </span>
-                </span>
-                <span className="trust-metric-label">
-                  Average QR verification
-                </span>
-                <span className="trust-metric-note">
-                  Median time, all scan events
-                </span>
-              </div>
-              <div className="trust-metric-item reveal" data-delay="3">
-                <span className="trust-metric-number">
-                  100
-                  <span style={{ fontSize: "0.5em", fontWeight: 400 }}>%</span>
-                </span>
-                <span className="trust-metric-label">Payment guarantee</span>
-                <span className="trust-metric-note">
-                  On all verified visits
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ── 3. How We Verify ─────────────────────────────────── */}
+      {/* ═══════════ 01 — HERO ═══════════ */}
       <section
-        className="trust-verify trust-section"
+        className="bg-hero-ink grain-overlay bg-vignette trust-hero-v7"
+        aria-labelledby="trust-hero-heading"
+      >
+        <div className="trust-container trust-hero-inner">
+          <div className="trust-hero-top reveal">
+            <span className="pill-lux" style={{ color: "#fff" }}>
+              Pre-pilot · April 2026
+            </span>
+            <span className="eyebrow-lux" style={{ color: "var(--champagne)" }}>
+              Trust ledger
+            </span>
+          </div>
+
+          <div
+            className="section-marker reveal"
+            data-num="01"
+            style={{ color: "rgba(255,255,255,0.55)" }}
+          >
+            What we log
+          </div>
+
+          <h1 id="trust-hero-heading" className="trust-hero-h1 reveal">
+            Clean ledger
+            <span aria-hidden="true" className="trust-hero-h1-period">
+              .
+            </span>
+          </h1>
+          <div className="display-ghost trust-hero-ghost reveal">
+            no fine print.
+          </div>
+
+          <div className="trust-hero-body reveal">
+            <p>
+              A customer scans your QR. We log the scan. We don&apos;t log who
+              they are unless they explicitly opt in. Stripe Connect holds the
+              money — we never do. That&apos;s the whole arrangement.
+            </p>
+            <p className="trust-hero-body-muted">
+              We&apos;re pre-pilot. SOC 2 Type II is a Year 2 Q4 target — not a
+              certification we&apos;ve earned. CCPA, GDPR, and FTC 16 CFR § 255
+              are operating posture today. Below is the page-by-page accounting.
+            </p>
+          </div>
+
+          {/* what-we-log strip */}
+          <div className="trust-hero-strip reveal">
+            {WHAT_WE_LOG.map((item, i) => (
+              <div
+                key={item.title}
+                className="trust-hero-strip-item"
+                style={{ transitionDelay: `${i * 60}ms` }}
+              >
+                <div className="trust-hero-strip-num">{`0${i + 1}`}</div>
+                <div className="trust-hero-strip-title">{item.title}</div>
+                <p className="trust-hero-strip-body">{item.body}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ═══════════ 02 — VERIFICATION STACK ═══════════ */}
+      <section
+        className="trust-section trust-verify"
         aria-labelledby="trust-verify-heading"
       >
         <div className="trust-container">
           <div className="trust-verify-header reveal">
-            <span className="trust-eyebrow">How we verify</span>
-            <h2 id="trust-verify-heading" className="trust-verify-title">
-              Four layers.
+            <div className="section-marker" data-num="02">
+              Verification stack
+            </div>
+            <h2 id="trust-verify-heading" className="trust-section-title">
+              Four checks.
               <br />
-              Zero shortcuts.
+              <span className="display-ghost">Then the money moves.</span>
             </h2>
-            <p className="trust-verify-subtitle">
-              Every visit goes through the same four-stage verification stack,
-              in real time, before a single dollar moves.
+            <p className="trust-section-sub">
+              Every QR scan runs the same four-stage gate before a single dollar
+              clears Stripe. The signals are recorded; the decisions are written
+              down; both sides of a dispute see the same evidence file.
             </p>
           </div>
-          <div className="trust-verify-steps">
+
+          <div className="bento-grid trust-verify-bento">
             {VERIFY_STEPS.map((step, i) => (
               <div
                 key={step.num}
-                className="trust-verify-step reveal"
-                data-delay={String(i + 1)}
+                className="card-premium trust-verify-card bento-6x1 reveal"
+                style={{ transitionDelay: `${i * 80}ms` }}
               >
                 <span className="trust-verify-step-num" aria-hidden="true">
                   {step.num}
@@ -433,37 +421,52 @@ export default function TrustPage() {
         </div>
       </section>
 
-      {/* ── 4. Your Money is Safe ────────────────────────────── */}
-      <section className="trust-money" aria-labelledby="trust-money-heading">
+      {/* ═══════════ 03 — MONEY CUSTODY ═══════════ */}
+      <section
+        className="bg-hero-ink grain-overlay bg-vignette trust-section trust-money-v7"
+        aria-labelledby="trust-money-heading"
+      >
         <div className="trust-container">
           <div className="trust-money-layout">
-            <div>
-              <span className="trust-eyebrow trust-eyebrow--light reveal">
-                Financial protection
-              </span>
-              <h2
-                id="trust-money-heading"
-                className="trust-money-headline reveal"
-                data-delay="1"
+            <div className="trust-money-left reveal">
+              <div
+                className="section-marker"
+                data-num="03"
+                style={{ color: "rgba(255,255,255,0.55)" }}
               >
-                Your money
-                <span>is safe.</span>
+                Money custody
+              </div>
+              <h2 id="trust-money-heading" className="trust-money-h">
+                Stripe holds it
+                <span aria-hidden="true" className="trust-money-h-period">
+                  .
+                </span>
               </h2>
-              <p className="trust-money-body reveal" data-delay="2">
-                Creator earnings and merchant payments are protected at every
-                stage — from the moment a campaign goes live to the day funds
-                are settled.
+              <div className="display-ghost trust-money-ghost">
+                We never do.
+              </div>
+              <p className="trust-money-body">
+                Push is a routing layer. Funds sit in a Stripe Connect account
+                scoped to the campaign — captured when the campaign goes live,
+                cleared only after a QR scan passes the four-stage check, and
+                paid out on Friday via the same Stripe rail.
+              </p>
+              <p className="trust-money-body trust-money-body-muted">
+                We don&apos;t hold a money-transmitter license, and we
+                don&apos;t need one. We don&apos;t commingle funds with
+                operating capital. We never have access to a creator&apos;s bank
+                account or a merchant&apos;s card number.
               </p>
             </div>
-            <div className="trust-money-guarantees">
+            <div className="trust-money-right">
               {MONEY_ITEMS.map((item, i) => (
                 <div
                   key={item.title}
-                  className="trust-money-item reveal"
-                  data-delay={String(i + 1)}
+                  className="trust-money-card reveal"
+                  style={{ transitionDelay: `${i * 90}ms` }}
                 >
-                  <div className="trust-money-item-title">{item.title}</div>
-                  <div className="trust-money-item-desc">{item.desc}</div>
+                  <div className="trust-money-card-title">{item.title}</div>
+                  <div className="trust-money-card-desc">{item.desc}</div>
                 </div>
               ))}
             </div>
@@ -471,76 +474,92 @@ export default function TrustPage() {
         </div>
       </section>
 
-      {/* ── 5. Your Identity is Safe ─────────────────────────── */}
+      {/* ═══════════ 04 — DATA RIGHTS / FRAMEWORKS ═══════════ */}
       <section
-        className="trust-identity"
-        aria-labelledby="trust-identity-heading"
+        className="trust-section trust-rights"
+        aria-labelledby="trust-rights-heading"
       >
         <div className="trust-container">
-          <div className="trust-identity-layout">
-            <div>
-              <span className="trust-eyebrow reveal">
-                Privacy &amp; identity
-              </span>
-              <h2
-                id="trust-identity-heading"
-                className="trust-identity-title reveal"
-                data-delay="1"
+          <div className="trust-rights-header reveal">
+            <div className="section-marker" data-num="04">
+              Data rights
+            </div>
+            <h2 id="trust-rights-heading" className="trust-section-title">
+              The frameworks,
+              <br />
+              <span className="display-ghost">named on the page.</span>
+            </h2>
+            <p className="trust-section-sub">
+              Compliance posture by statute. CCPA and GDPR honored on request;
+              FTC § 255 enforced on every paid post; KYC delegated to Stripe
+              Identity so we never see the document.
+            </p>
+          </div>
+
+          <div className="bento-grid trust-rights-bento">
+            {DATA_RIGHTS.map((right, i) => (
+              <div
+                key={right.title}
+                className="card-premium trust-rights-card bento-6x1 reveal"
+                style={{ transitionDelay: `${i * 80}ms` }}
               >
-                Your identity
-                <em>is yours.</em>
-              </h2>
-              <p className="trust-identity-body reveal" data-delay="2">
-                KYC verification is required by financial regulations, not by
-                choice. We collect the minimum required, encrypt it, and give
-                you full control over deletion.
-              </p>
+                <span className="trust-rights-num">{`0${i + 1}`}</span>
+                <span className="trust-rights-framework">
+                  {right.framework}
+                </span>
+                <h3 className="trust-rights-card-title">{right.title}</h3>
+                <p className="trust-rights-card-desc">{right.desc}</p>
+              </div>
+            ))}
+          </div>
+
+          <div className="divider-lux">Retention table</div>
+
+          <div className="trust-retention reveal">
+            <div className="trust-retention-header">
+              <span>Signal</span>
+              <span>Window</span>
+              <span>Why</span>
             </div>
-            <div className="trust-identity-rights">
-              {IDENTITY_RIGHTS.map((right, i) => (
-                <div
-                  key={right.title}
-                  className="trust-identity-right reveal"
-                  data-delay={String(i + 1)}
-                >
-                  <div className="trust-identity-right-icon" aria-hidden="true">
-                    <IconCheck />
-                  </div>
-                  <div className="trust-identity-right-text">
-                    <strong>{right.title}</strong>
-                    {right.desc}
-                  </div>
-                </div>
-              ))}
-            </div>
+            {RETENTION.map((row) => (
+              <div key={row.signal} className="trust-retention-row">
+                <span className="trust-retention-signal">{row.signal}</span>
+                <span className="trust-retention-window">{row.window}</span>
+                <span className="trust-retention-reason">{row.reason}</span>
+              </div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* ── 6. If Something Goes Wrong ───────────────────────── */}
+      {/* ═══════════ 05 — DISPUTE FLOW ═══════════ */}
       <section
-        className="trust-dispute trust-section"
+        className="trust-section trust-dispute"
         aria-labelledby="trust-dispute-heading"
       >
         <div className="trust-container">
           <div className="trust-dispute-header reveal">
-            <span className="trust-eyebrow">Dispute resolution</span>
-            <h2 id="trust-dispute-heading" className="trust-dispute-title">
-              If something
+            <div className="section-marker" data-num="05">
+              When something is off
+            </div>
+            <h2 id="trust-dispute-heading" className="trust-section-title">
+              Open the ticket.
               <br />
-              goes wrong.
+              <span className="display-ghost">We pull the logs.</span>
             </h2>
-            <p className="trust-dispute-subtitle">
-              Disputes are rare. When they happen, here is exactly what happens
-              next — no vague promises, no waiting in the dark.
+            <p className="trust-section-sub">
+              Disputes are rare. When they happen, both sides read the same
+              evidence file. Decisions are written, citing the signal that drove
+              the call.
             </p>
           </div>
+
           <div className="trust-timeline">
             {DISPUTE_TIMELINE.map((item, i) => (
               <div
                 key={item.title}
                 className="trust-timeline-item reveal"
-                data-delay={String(i + 1)}
+                style={{ transitionDelay: `${i * 100}ms` }}
               >
                 <div className="trust-timeline-dot" aria-hidden="true" />
                 <span className="trust-timeline-time">{item.time}</span>
@@ -549,47 +568,52 @@ export default function TrustPage() {
               </div>
             ))}
           </div>
-          <div className="trust-dispute-cta reveal" data-delay="4">
-            <Link href="/disputes" className="trust-btn-primary">
+
+          <div className="trust-dispute-cta reveal">
+            <Link href="/disputes" className="btn btn-primary">
               Open a dispute
             </Link>
-            <Link href="/help" className="trust-btn-ghost">
+            <Link href="/help" className="btn btn-secondary">
               Help center
             </Link>
           </div>
         </div>
       </section>
 
-      {/* ── 7. Independent Verification ──────────────────────── */}
+      {/* ═══════════ 06 — COMPLIANCE / CERTS ═══════════ */}
       <section
-        className="trust-verification"
-        aria-labelledby="trust-verification-heading"
+        className="trust-section trust-certs"
+        aria-labelledby="trust-certs-heading"
       >
         <div className="trust-container">
-          <span className="trust-eyebrow reveal">Third-party attestation</span>
-          <h2
-            id="trust-verification-heading"
-            className="trust-verification-title reveal"
-            data-delay="1"
-          >
-            Don&rsquo;t take
-            <br />
-            our word for it.
-          </h2>
-          <p className="trust-verification-subtitle reveal" data-delay="2">
-            Our security posture is verified by independent third parties every
-            year. Here is the evidence.
-          </p>
-          <div className="trust-certs-grid">
+          <div className="trust-certs-header reveal">
+            <div className="section-marker" data-num="06">
+              Compliance posture
+            </div>
+            <h2 id="trust-certs-heading" className="trust-section-title">
+              The promises,
+              <br />
+              <span className="display-ghost">audited or aspirational.</span>
+            </h2>
+            <p className="trust-section-sub">
+              Some of these are live and contractual; others are targets
+              we&apos;re working toward. The status line on each card tells you
+              which is which. We don&apos;t claim certification we haven&apos;t
+              earned.
+            </p>
+          </div>
+
+          <div className="bento-grid trust-certs-bento">
             {CERTS.map((cert, i) => (
               <div
                 key={cert.title}
-                className="trust-cert-card reveal"
-                data-delay={String(i + 1)}
+                className={`${i === 1 ? "card-champagne" : "card-premium"} trust-cert-card bento-4x1 reveal`}
+                style={{ transitionDelay: `${i * 80}ms` }}
               >
                 <div className="trust-cert-icon" aria-hidden="true">
                   {cert.icon}
                 </div>
+                <span className="trust-cert-status">{cert.status}</span>
                 <div className="trust-cert-title">{cert.title}</div>
                 <p className="trust-cert-body">{cert.body}</p>
                 <Link href={cert.link} className="trust-cert-link">
@@ -601,62 +625,24 @@ export default function TrustPage() {
         </div>
       </section>
 
-      {/* ── 8. Testimonials ──────────────────────────────────── */}
+      {/* ═══════════ 07 — FAQ ═══════════ */}
       <section
-        className="trust-testimonials"
-        aria-labelledby="trust-testimonials-heading"
+        className="trust-section trust-faq"
+        aria-labelledby="trust-faq-heading"
       >
         <div className="trust-container">
-          <div className="trust-testimonials-header reveal">
-            <span className="trust-eyebrow">In their words</span>
-            <h2
-              id="trust-testimonials-heading"
-              className="trust-testimonials-title"
-            >
-              Creators and merchants
-              <br />
-              who trust Push.
-            </h2>
-          </div>
-          <div className="trust-testimonials-grid">
-            {TESTIMONIALS.map((t, i) => (
-              <article
-                key={t.name}
-                className={`trust-testimonial-card trust-testimonial-card--${t.type} reveal`}
-                data-delay={String((i % 3) + 1)}
-              >
-                <p className="trust-testimonial-quote">{t.quote}</p>
-                <div className="trust-testimonial-author">
-                  <div className="trust-testimonial-avatar" aria-hidden="true">
-                    {t.initial}
-                  </div>
-                  <div className="trust-testimonial-author-info">
-                    <span className="trust-testimonial-name">{t.name}</span>
-                    <span className="trust-testimonial-meta">{t.meta}</span>
-                  </div>
-                  <span
-                    className={`trust-testimonial-badge trust-testimonial-badge--${t.type}`}
-                  >
-                    {t.type === "creator" ? "Creator" : "Merchant"}
-                  </span>
-                </div>
-              </article>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── 9. FAQ ───────────────────────────────────────────── */}
-      <section className="trust-faq" aria-labelledby="trust-faq-heading">
-        <div className="trust-container">
           <div className="trust-faq-header reveal">
-            <span className="trust-eyebrow">Common questions</span>
-            <h2 id="trust-faq-heading" className="trust-faq-title">
-              FAQ
+            <div className="section-marker" data-num="07">
+              The questions we hear
+            </div>
+            <h2 id="trust-faq-heading" className="trust-section-title">
+              Ten answers,
+              <br />
+              <span className="display-ghost">no fine print.</span>
             </h2>
-            <p className="trust-faq-subtitle">
-              The ten questions we hear most often about trust, verification,
-              and privacy on Push.
+            <p className="trust-section-sub">
+              Custody, retention, frameworks, disputes. If we missed yours, the
+              email at the bottom of this page goes to a human.
             </p>
           </div>
           <div className="trust-faq-list" role="list">
@@ -673,51 +659,73 @@ export default function TrustPage() {
         </div>
       </section>
 
-      {/* ── 10. Contact ──────────────────────────────────────── */}
+      {/* ═══════════ 08 — FOUNDER ACCOUNTABILITY ═══════════ */}
       <section
-        className="trust-contact"
-        aria-labelledby="trust-contact-heading"
+        className="bg-hero-ink grain-overlay bg-vignette trust-section trust-founder"
+        aria-labelledby="trust-founder-heading"
       >
         <div className="trust-container">
-          <div className="trust-contact-layout">
-            <div>
-              <span className="trust-eyebrow trust-eyebrow--light reveal">
-                Reach us
-              </span>
-              <h2
-                id="trust-contact-heading"
-                className="trust-contact-headline reveal"
-                data-delay="1"
+          <div className="trust-founder-layout reveal">
+            <div className="trust-founder-left">
+              <div
+                className="section-marker"
+                data-num="08"
+                style={{ color: "rgba(255,255,255,0.55)" }}
               >
-                Questions?
-                <em>We answer.</em>
+                Founder accountability
+              </div>
+              <h2 id="trust-founder-heading" className="trust-founder-h">
+                If something
+                <br />
+                breaks
+                <span aria-hidden="true" className="trust-founder-h-period">
+                  ,
+                </span>
               </h2>
-              <p className="trust-contact-body reveal" data-delay="2">
-                Our Trust &amp; Safety team is staffed by humans who understand
-                what is at stake when your money or identity is on the line.
-                Responses within one business day.
+              <div className="display-ghost trust-founder-ghost">
+                that&apos;s on me.
+              </div>
+              <p className="trust-founder-body">
+                I&apos;m Jiaming. I run Push. The trust desk runs through me on
+                edge cases, and the email below is mine. If a creator misses a
+                payout or a merchant gets a charge they can&apos;t explain, I
+                want to hear it directly — not via a support form.
               </p>
-              <a
-                href="mailto:trust@push.nyc"
-                className="trust-contact-email reveal"
-                data-delay="3"
-              >
-                trust@push.nyc
-              </a>
+              <p className="trust-founder-body trust-founder-body-muted">
+                We&apos;re a five-person NYC team. Phase 0 opens in
+                Williamsburg, May 2026. You can read the build log on the
+                homepage; the roadmap is public.
+              </p>
+
+              <div className="trust-founder-sig">
+                <div className="trust-founder-sig-name">Jiaming Wang</div>
+                <div className="trust-founder-sig-meta">
+                  Founder · Push · NYC
+                </div>
+                <a
+                  href="mailto:jiaming@push.nyc"
+                  className="trust-founder-sig-email"
+                >
+                  jiaming@push.nyc
+                </a>
+              </div>
             </div>
-            <div className="trust-contact-links">
+
+            <div className="trust-founder-right">
               <Link
                 href="/security"
-                className="trust-contact-link reveal"
-                data-delay="1"
+                className="trust-founder-link reveal"
+                style={{ transitionDelay: "120ms" }}
               >
-                <div className="trust-contact-link-icon" aria-hidden="true">
+                <div className="trust-founder-link-icon" aria-hidden="true">
                   <IconShield />
                 </div>
-                <div className="trust-contact-link-text">
-                  <span className="trust-contact-link-label">Security</span>
-                  <span className="trust-contact-link-value">
-                    /security — full security policy and disclosure program
+                <div className="trust-founder-link-text">
+                  <span className="trust-founder-link-label">
+                    Security policy
+                  </span>
+                  <span className="trust-founder-link-value">
+                    /security — controls inventory, disclosure program
                   </span>
                 </div>
               </Link>
@@ -725,48 +733,48 @@ export default function TrustPage() {
                 href="https://status.push.nyc"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="trust-contact-link reveal"
-                data-delay="2"
+                className="trust-founder-link reveal"
+                style={{ transitionDelay: "180ms" }}
               >
-                <div className="trust-contact-link-icon" aria-hidden="true">
+                <div className="trust-founder-link-icon" aria-hidden="true">
                   <IconGlobe />
                 </div>
-                <div className="trust-contact-link-text">
-                  <span className="trust-contact-link-label">Status page</span>
-                  <span className="trust-contact-link-value">
-                    status.push.nyc — real-time uptime and incidents
+                <div className="trust-founder-link-text">
+                  <span className="trust-founder-link-label">Status page</span>
+                  <span className="trust-founder-link-value">
+                    status.push.nyc — uptime, incidents, post-mortems
                   </span>
                 </div>
               </a>
               <Link
                 href="/disputes"
-                className="trust-contact-link reveal"
-                data-delay="3"
+                className="trust-founder-link reveal"
+                style={{ transitionDelay: "240ms" }}
               >
-                <div className="trust-contact-link-icon" aria-hidden="true">
+                <div className="trust-founder-link-icon" aria-hidden="true">
                   <IconMail />
                 </div>
-                <div className="trust-contact-link-text">
-                  <span className="trust-contact-link-label">Disputes</span>
-                  <span className="trust-contact-link-value">
+                <div className="trust-founder-link-text">
+                  <span className="trust-founder-link-label">Disputes</span>
+                  <span className="trust-founder-link-value">
                     /disputes — open or track a payout dispute
                   </span>
                 </div>
               </Link>
               <a
                 href="mailto:security@push.nyc"
-                className="trust-contact-link reveal"
-                data-delay="4"
+                className="trust-founder-link reveal"
+                style={{ transitionDelay: "300ms" }}
               >
-                <div className="trust-contact-link-icon" aria-hidden="true">
+                <div className="trust-founder-link-icon" aria-hidden="true">
                   <IconExternalLink />
                 </div>
-                <div className="trust-contact-link-text">
-                  <span className="trust-contact-link-label">
-                    Report a vulnerability
+                <div className="trust-founder-link-text">
+                  <span className="trust-founder-link-label">
+                    Vulnerability report
                   </span>
-                  <span className="trust-contact-link-value">
-                    security@push.nyc — responsible disclosure
+                  <span className="trust-founder-link-value">
+                    security@push.nyc — 90-day SLA, no legal action
                   </span>
                 </div>
               </a>

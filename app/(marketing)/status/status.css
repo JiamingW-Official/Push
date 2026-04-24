@@ -447,7 +447,7 @@
   background: rgba(0, 48, 73, 0.06);
   color: var(--dark, #003049);
   border: 1px solid rgba(0, 48, 73, 0.12);
-  border-radius: 0; /* strict: no rounding */
+  border-radius: var(--r-sm);
 }
 
 .incident-severity-badge {
@@ -457,7 +457,7 @@
   letter-spacing: 0.08em;
   text-transform: uppercase;
   padding: 4px 10px;
-  border-radius: 0;
+  border-radius: var(--r-sm);
   flex-shrink: 0;
 }
 
@@ -766,7 +766,7 @@
   border-right: none;
   color: #fff;
   outline: none;
-  border-radius: 0;
+  border-radius: var(--r-md) 0 0 var(--r-md);
   transition: border-color 300ms ease, background 300ms ease;
 }
 
@@ -791,14 +791,14 @@
   color: #fff;
   border: 1px solid var(--primary, #c1121f);
   cursor: pointer;
-  border-radius: 0;
+  border-radius: 0 var(--r-lg) var(--r-lg) 0;
   transition: background 300ms ease, box-shadow 300ms ease;
   white-space: nowrap;
 }
 
 .subscribe-btn:hover {
   background: var(--accent, #780000);
-  box-shadow: 3px 3px 0 rgba(201, 169, 110, 0.4);
+  box-shadow: var(--shadow-2);
 }
 
 /* ── Scroll reveal animations ───────────────────────────────── */

@@ -102,12 +102,12 @@ const DEMO_PUBLIC_CREATOR: PublicCreator = {
 };
 
 const TIER_COLOR: Record<CreatorTier, string> = {
-  seed: "#b8a99a",
-  explorer: "#8c6239",
-  operator: "#4a5568",
-  proven: "#c9a96e",
-  closer: "#9b111e",
-  partner: "#1a1a2e",
+  seed: "var(--tier-seed)",
+  explorer: "var(--tier-explorer)",
+  operator: "var(--tier-operator)",
+  proven: "var(--tier-proven)",
+  closer: "var(--tier-closer)",
+  partner: "var(--tier-partner)",
 };
 
 function deriveDimensionScores(

@@ -18,7 +18,9 @@ import type { CampaignGeo, CreatorTier } from "@/lib/data/demo-campaigns-geo";
 const MapView = dynamic(() => import("@/components/layout/MapView"), {
   ssr: false,
   loading: () => (
-    <div style={{ width: "100%", height: "100%", background: "#eae6e1" }} />
+    <div
+      style={{ width: "100%", height: "100%", background: "var(--surface)" }}
+    />
   ),
 });
 

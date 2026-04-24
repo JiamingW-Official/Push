@@ -34,23 +34,23 @@
   --ws-space-xl:  48px;
   --ws-space-2xl: 64px;
 
-  /* ─── Color Semantic ───────────────────────────────────────── */
+  /* ─── Color Semantic (workspace aliases → brand tokens) ────── */
   /* Primary text: Deep Space Blue — headings, important content */
-  --ws-color-text-primary:   #003049;
+  --ws-color-text-primary:   var(--dark);
   /* Secondary text: muted body copy */
-  --ws-color-text-secondary: #4a5568;
+  --ws-color-text-secondary: var(--graphite);
   /* Muted: timestamps, captions, helper text */
-  --ws-color-text-muted:     #9ba3af;
+  --ws-color-text-muted:     var(--text-muted);
   /* Inverse: text on dark backgrounds */
-  --ws-color-text-inverse:   #f5f2ec;
+  --ws-color-text-inverse:   var(--surface);
   /* Action: Flag Red — primary CTAs only, use sparingly */
-  --ws-color-action:         #c1121f;
+  --ws-color-action:         var(--primary);
   /* Surface: Pearl Stone — default page bg */
-  --ws-color-surface:        #f5f2ec;
+  --ws-color-surface:        var(--surface);
   /* Surface elevated: cards, modals */
-  --ws-color-surface-elevated: #ffffff;
+  --ws-color-surface-elevated: var(--surface-elevated);
   /* Border: light separator line */
-  --ws-color-border:         rgba(0, 0, 0, 0.08);
+  --ws-color-border:         var(--line);
 
   /* Density scale */
   --density-compact-row:     40px;
@@ -68,8 +68,6 @@
   --anim-spring:      320ms cubic-bezier(0.22, 1, 0.36, 1);
   --anim-border-grow: 220ms cubic-bezier(0.4, 0, 0.2, 1);
 
-  /* Fallback for --text-muted if not defined globally */
-  --text-muted: var(--text-muted, #6b7280);
 }
 
 /* Improve text rendering for workspace shell */
@@ -127,7 +125,7 @@
   left: 8px;
   z-index: 9999;
   padding: 8px 16px;
-  background: var(--dark, #003049);
+  background: var(--dark);
   color: #fff;
   font-family: var(--font-body);
   font-size: 12px;
@@ -135,7 +133,7 @@
   letter-spacing: 0.06em;
   text-transform: uppercase;
   text-decoration: none;
-  border: 2px solid var(--primary, #c1121f);
+  border: 2px solid var(--primary);
   outline: none;
   transition: top 150ms ease;
 }
@@ -354,7 +352,7 @@
   padding: 0 10px;
   background: var(--surface);
   border: 1px solid var(--line);
-  border-radius: 0;
+  border-radius: var(--r-md);
   cursor: pointer;
   max-width: 400px; /* capped width — search stays compact and centered */
   width: 100%;
@@ -406,7 +404,7 @@
   color: var(--text-muted);
   background: var(--surface-elevated);
   border: 1px solid var(--line);
-  border-radius: 0;
+  border-radius: var(--r-sm);
   padding: 1px 5px;
   line-height: 1.5;
   letter-spacing: 0;
@@ -436,7 +434,7 @@
   text-transform: uppercase;
   border: 1px solid currentColor;
   border-left-width: 3px;
-  border-radius: 0;
+  border-radius: var(--r-sm);
   white-space: nowrap;
   user-select: none;
   opacity: 0.9;
@@ -462,7 +460,7 @@
     border-color var(--anim-base),
     color var(--anim-base);
   flex-shrink: 0;
-  border-radius: 0;
+  border-radius: var(--r-lg);
 }
 
 .ws-topnav__icon-btn:hover {
@@ -484,7 +482,7 @@
   min-width: 14px;
   height: 14px;
   background: var(--primary);
-  border-radius: 50%;
+  border-radius: var(--r-full);
   border: 1.5px solid var(--surface-elevated);
   font-family: var(--font-body);
   font-size: 8px;
@@ -503,7 +501,7 @@
 .ws-topnav__avatar {
   width: 28px;
   height: 28px;
-  border-radius: 50%;
+  border-radius: var(--r-full);
   background: var(--dark);
   display: flex;
   align-items: center;
@@ -754,7 +752,7 @@
   font-size: 9px;
   font-weight: 700;
   letter-spacing: 0.02em;
-  border-radius: 0;
+  border-radius: var(--r-sm);
   flex-shrink: 0;
   line-height: 1;
   animation: ws-badgePop 300ms var(--anim-spring) both;
@@ -909,15 +907,15 @@
   left: 34px;
   width: 7px;
   height: 7px;
-  background: #2d9148;
-  border-radius: 50%;
+  background: var(--success);
+  border-radius: var(--r-full);
   border: 1.5px solid var(--surface);
 }
 
 .ws-sidenav__user-avatar {
   width: 28px;
   height: 28px;
-  border-radius: 50%;
+  border-radius: var(--r-full);
   background: var(--dark);
   display: flex;
   align-items: center;
@@ -1047,7 +1045,7 @@
   line-height: 1;
   transition: color var(--anim-base);
   flex-shrink: 0;
-  border-radius: 0;
+  border-radius: var(--r-lg);
 }
 
 .ws-context__collapse-btn:hover { color: var(--dark); }
@@ -1145,7 +1143,7 @@
 }
 
 .ws-context__stat-delta--up {
-  color: #2d9148;
+  color: var(--success);
 }
 
 /* Divider */
@@ -1246,7 +1244,7 @@
   background: var(--surface-elevated);
   color: var(--dark);
   cursor: pointer;
-  border-radius: 0;
+  border-radius: var(--r-lg);
   transition:
     background var(--anim-base),
     border-color var(--anim-base),
@@ -1293,7 +1291,7 @@
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: rgba(245, 242, 236, 0.55);
+  color: rgba(255, 255, 255, 0.55);
 }
 
 .ws-context__earnings-value {
@@ -1310,12 +1308,12 @@
   font-family: var(--font-body);
   font-size: 10px;
   font-weight: 700;
-  color: rgba(245, 242, 236, 0.65);
+  color: rgba(255, 255, 255, 0.65);
   letter-spacing: 0.04em;
 }
 
 .ws-context__earnings-delta--up {
-  color: #4ade80;
+  color: var(--success);
 }
 
 /* ============================================================
@@ -1336,7 +1334,7 @@
   border: 1px solid transparent;
   cursor: pointer;
   flex-shrink: 0;
-  border-radius: 0;
+  border-radius: var(--r-lg);
   margin-right: 8px;
   transition: border-color var(--anim-base), background var(--anim-base);
 }
@@ -1356,7 +1354,7 @@
   width: 16px;
   height: 1.5px;
   background: var(--dark);
-  border-radius: 0;
+  border-radius: var(--r-lg);
   transition: background var(--anim-base);
 }
 
@@ -1440,7 +1438,7 @@
   font-family: var(--font-body);
   font-size: 12px;
   color: var(--graphite);
-  border-radius: 0;
+  border-radius: var(--r-lg);
   transition: background var(--anim-base), border-color var(--anim-base), color var(--anim-base);
 }
 
@@ -1520,7 +1518,7 @@
   right: 16%;
   height: 2px;
   background: var(--primary);
-  border-radius: 0 0 2px 2px;
+  border-radius: var(--r-lg);
 }
 
 .ws-mobile-nav__icon {
@@ -1539,7 +1537,7 @@
   width: 7px;
   height: 7px;
   background: var(--primary);
-  border-radius: 50%;
+  border-radius: var(--r-full);
   border: 1.5px solid var(--surface-elevated);
 }
 

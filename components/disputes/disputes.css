@@ -126,7 +126,7 @@
   padding: var(--space-1) var(--space-3);
   cursor: pointer;
   transition: background var(--t-base), color var(--t-base);
-  border-radius: 0;
+  border-radius: var(--r-lg);
   white-space: nowrap;
 }
 
@@ -161,7 +161,7 @@
   padding: var(--space-1) var(--space-3);
   cursor: pointer;
   transition: background var(--t-slow), box-shadow var(--t-slow);
-  border-radius: 0;
+  border-radius: var(--r-lg);
   box-shadow: var(--btn-shadow);
   white-space: nowrap;
 }
@@ -303,7 +303,7 @@
   letter-spacing: 0.07em;
   text-transform: uppercase;
   padding: 3px 8px;
-  border-radius: 0;
+  border-radius: var(--r-lg);
   white-space: nowrap;
 }
 
@@ -315,7 +315,7 @@
 
 .dispute-badge--under_review {
   background: rgba(201, 169, 110, 0.15);
-  color: #8a6a1a;
+  color: color-mix(in srgb, var(--champagne) 70%, var(--dark));
   border: 1px solid rgba(201, 169, 110, 0.4);
 }
 
@@ -327,7 +327,7 @@
 
 .dispute-badge--resolved {
   background: rgba(102, 155, 188, 0.12);
-  color: #2a6a8a;
+  color: color-mix(in srgb, var(--tertiary) 60%, var(--dark));
   border: 1px solid rgba(102, 155, 188, 0.3);
 }
 
@@ -697,7 +697,7 @@
   border: 1px solid var(--dark);
   padding: var(--space-1) var(--space-3);
   cursor: pointer;
-  border-radius: 0;
+  border-radius: var(--r-lg);
   transition: background var(--t-slow), color var(--t-slow);
   white-space: nowrap;
   align-self: center;
@@ -774,7 +774,7 @@
   letter-spacing: 0.07em;
   text-transform: uppercase;
   padding: 2px 8px;
-  border-radius: 0;
+  border-radius: var(--r-lg);
 }
 
 .dispute-timeline-event__role-pill--creator {
@@ -789,7 +789,7 @@
 
 .dispute-timeline-event__role-pill--admin {
   background: rgba(201, 169, 110, 0.15);
-  color: #8a6a1a;
+  color: color-mix(in srgb, var(--champagne) 70%, var(--dark));
 }
 
 .dispute-timeline-event__author-name {
@@ -853,7 +853,7 @@
   width: 40px;
   height: 40px;
   object-fit: cover;
-  border-radius: 0;
+  border-radius: var(--r-lg);
   flex-shrink: 0;
 }
 
@@ -897,7 +897,7 @@
   font-size: 14px;
   color: var(--dark);
   resize: vertical;
-  border-radius: 0;
+  border-radius: var(--r-lg);
   outline: none;
   transition: border-color var(--t-base);
 }
@@ -924,7 +924,7 @@
   border: 1px dashed var(--line);
   padding: 6px var(--space-2);
   cursor: pointer;
-  border-radius: 0;
+  border-radius: var(--r-lg);
   transition: border-color var(--t-fast), color var(--t-fast);
   display: flex;
   align-items: center;
@@ -947,7 +947,7 @@
   border: 1px solid var(--primary);
   padding: var(--space-1) var(--space-4);
   cursor: pointer;
-  border-radius: 0;
+  border-radius: var(--r-lg);
   box-shadow: var(--btn-shadow);
   transition: background var(--t-slow), box-shadow var(--t-slow);
 }
@@ -1018,7 +1018,7 @@
   font-family: var(--font-body);
   font-size: 13px;
   color: var(--dark);
-  border-radius: 0;
+  border-radius: var(--r-lg);
   outline: none;
   transition: border-color var(--t-base);
 }
@@ -1046,14 +1046,14 @@
   font-size: 24px;
   position: relative;
   overflow: hidden;
-  border-radius: 0;
+  border-radius: var(--r-lg);
 }
 
 .evidence-uploader__preview img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  border-radius: 0;
+  border-radius: var(--r-lg);
 }
 
 .evidence-uploader__preview-remove {
@@ -1065,7 +1065,7 @@
   background: var(--primary);
   color: #fff;
   border: none;
-  border-radius: 0;
+  border-radius: var(--r-lg);
   font-size: 10px;
   cursor: pointer;
   display: flex;
@@ -1093,7 +1093,7 @@
   max-width: 600px;
   background: var(--surface-elevated);
   border: 1px solid var(--line);
-  border-radius: 0;
+  border-radius: var(--r-lg);
   max-height: 90vh;
   overflow-y: auto;
   animation: disputeModalIn 250ms ease forwards;
@@ -1138,7 +1138,7 @@
   cursor: pointer;
   font-size: 16px;
   color: var(--graphite);
-  border-radius: 0;
+  border-radius: var(--r-lg);
   flex-shrink: 0;
   transition: background var(--t-fast), color var(--t-fast);
 }
@@ -1180,7 +1180,7 @@
   font-family: var(--font-body);
   font-size: 14px;
   color: var(--dark);
-  border-radius: 0;
+  border-radius: var(--r-lg);
   outline: none;
   transition: border-color var(--t-base);
   appearance: none;
@@ -1226,7 +1226,7 @@
   border: 1px solid var(--line);
   padding: var(--space-1) var(--space-3);
   cursor: pointer;
-  border-radius: 0;
+  border-radius: var(--r-lg);
   transition: border-color var(--t-fast), background var(--t-fast);
 }
 
@@ -1246,7 +1246,7 @@
   border: 1px solid var(--primary);
   padding: var(--space-1) var(--space-4);
   cursor: pointer;
-  border-radius: 0;
+  border-radius: var(--r-lg);
   box-shadow: var(--btn-shadow);
   transition: background var(--t-slow), box-shadow var(--t-slow);
 }

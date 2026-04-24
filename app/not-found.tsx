@@ -82,7 +82,7 @@ export default function NotFound() {
       <style>{`
         .nf-wrap {
           min-height: calc(100svh - 56px);
-          background: var(--surface, #f5f2ec);
+          background: var(--surface);
           padding: clamp(48px, 10vw, 120px) 24px;
           display: flex;
           align-items: center;
@@ -96,31 +96,31 @@ export default function NotFound() {
           display: inline-flex;
           align-items: center;
           gap: 10px;
-          font-family: 'CS Genio Mono', 'SF Mono', monospace;
+          font-family: var(--font-body);
           font-size: 11px;
           font-weight: 700;
           letter-spacing: 0.14em;
           text-transform: uppercase;
-          color: var(--primary, #c1121f);
+          color: var(--primary);
           margin-bottom: 32px;
         }
         .nf-dot {
           width: 6px;
           height: 6px;
-          background: var(--primary, #c1121f);
-          border-radius: 0;
+          background: var(--primary);
+          border-radius: 50%;
           display: inline-block;
         }
         .nf-status {
           color: rgba(0, 48, 73, 0.55);
         }
         .nf-h {
-          font-family: 'Darky', sans-serif;
+          font-family: var(--font-display);
           font-size: clamp(40px, 7vw, 96px);
           font-weight: 900;
           letter-spacing: -0.045em;
           line-height: 0.98;
-          color: var(--dark, #003049);
+          color: var(--dark);
           margin: 0 0 24px;
         }
         .nf-h-pre, .nf-h-post {
@@ -129,10 +129,10 @@ export default function NotFound() {
         }
         .nf-h-em {
           font-style: normal;
-          color: var(--dark, #003049);
+          color: var(--dark);
         }
         .nf-sub {
-          font-family: 'CS Genio Mono', 'SF Mono', monospace;
+          font-family: var(--font-body);
           font-size: 14px;
           line-height: 1.65;
           color: rgba(0, 48, 73, 0.65);
@@ -147,7 +147,9 @@ export default function NotFound() {
           grid-template-columns: 1fr 1fr;
           gap: 0;
           border: 1px solid rgba(0, 48, 73, 0.12);
-          background: #ffffff;
+          background: var(--surface-elevated);
+          border-radius: var(--r-xl);
+          overflow: hidden;
         }
         .nf-row {
           border-right: 1px solid rgba(0, 48, 73, 0.08);
@@ -163,24 +165,23 @@ export default function NotFound() {
           text-decoration: none;
           gap: 4px 16px;
           transition: background 200ms ease;
-          border-radius: 0;
         }
         .nf-row-link:hover {
           background: rgba(193, 18, 31, 0.04);
         }
         .nf-row-link:hover .nf-row-arrow {
           transform: translateX(4px);
-          color: var(--primary, #c1121f);
+          color: var(--primary);
         }
         .nf-row-label {
-          font-family: 'Darky', sans-serif;
+          font-family: var(--font-display);
           font-size: 17px;
           font-weight: 800;
           letter-spacing: -0.02em;
-          color: var(--dark, #003049);
+          color: var(--dark);
         }
         .nf-row-desc {
-          font-family: 'CS Genio Mono', 'SF Mono', monospace;
+          font-family: var(--font-body);
           font-size: 11px;
           line-height: 1.6;
           color: rgba(0, 48, 73, 0.55);
@@ -189,7 +190,7 @@ export default function NotFound() {
         .nf-row-arrow {
           grid-row: 1;
           grid-column: 2;
-          font-family: 'CS Genio Mono', 'SF Mono', monospace;
+          font-family: var(--font-body);
           font-size: 16px;
           color: rgba(0, 48, 73, 0.35);
           transition: transform 240ms cubic-bezier(0.22,1,0.36,1), color 200ms ease;
@@ -204,22 +205,22 @@ export default function NotFound() {
           border-top: 1px solid rgba(0, 48, 73, 0.08);
         }
         .nf-home {
-          font-family: 'CS Genio Mono', 'SF Mono', monospace;
+          font-family: var(--font-body);
           font-size: 12px;
           font-weight: 700;
           letter-spacing: 0.06em;
           text-transform: uppercase;
-          color: var(--dark, #003049);
+          color: var(--dark);
           text-decoration: none;
           border-bottom: 1px solid transparent;
           transition: border-color 200ms ease, color 200ms ease;
         }
         .nf-home:hover {
-          color: var(--primary, #c1121f);
-          border-bottom-color: var(--primary, #c1121f);
+          color: var(--primary);
+          border-bottom-color: var(--primary);
         }
         .nf-meta {
-          font-family: 'CS Genio Mono', 'SF Mono', monospace;
+          font-family: var(--font-body);
           font-size: 10px;
           letter-spacing: 0.08em;
           color: rgba(0, 48, 73, 0.35);

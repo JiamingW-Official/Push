@@ -35,19 +35,19 @@ const SEGMENTS: {
     id: "",
     label: "Any",
     description: "Open to all creators — Push will match by score and fit.",
-    color: "#669bbc",
+    color: "var(--tertiary)",
   },
   {
     id: "Community",
     label: "Community",
     description: SEGMENT_DESCRIPTIONS.Community,
-    color: "#003049",
+    color: "var(--dark)",
   },
   {
     id: "Studio",
     label: "Studio",
     description: SEGMENT_DESCRIPTIONS.Studio,
-    color: "#780000",
+    color: "var(--accent)",
   },
 ];
 

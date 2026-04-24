@@ -17,7 +17,7 @@ export default function DemoAdminEntry() {
     <div
       style={{
         minHeight: "100svh",
-        background: "#003049",
+        background: "var(--dark)",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
@@ -27,26 +27,26 @@ export default function DemoAdminEntry() {
     >
       <div
         style={{
-          fontFamily: "var(--font-display, 'Darky', sans-serif)",
+          fontFamily: "var(--font-display)",
           fontSize: "clamp(48px, 8vw, 80px)",
           fontWeight: 900,
           fontStyle: "italic",
           letterSpacing: "-0.06em",
-          color: "#f5f2ec",
+          color: "#ffffff",
           lineHeight: 1,
           marginBottom: 16,
         }}
       >
-        Push<span style={{ color: "#c1121f" }}>.</span>
+        Push<span style={{ color: "var(--primary)" }}>.</span>
       </div>
       <div
         style={{
-          fontFamily: "var(--font-body, 'CS Genio Mono', monospace)",
+          fontFamily: "var(--font-body)",
           fontSize: 11,
           fontWeight: 700,
           letterSpacing: "0.18em",
           textTransform: "uppercase",
-          color: "rgba(245,242,236,0.45)",
+          color: "rgba(255,255,255,0.45)",
         }}
       >
         Loading ops console...

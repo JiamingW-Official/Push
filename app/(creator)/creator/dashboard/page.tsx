@@ -13,7 +13,13 @@ import { TIERS } from "@/lib/tier-config";
 const MapView = dynamic(() => import("@/components/layout/MapView"), {
   ssr: false,
   loading: () => (
-    <div style={{ width: "100%", height: "100%", background: "#eae6e1" }} />
+    <div
+      style={{
+        width: "100%",
+        height: "100%",
+        background: "var(--surface)",
+      }}
+    />
   ),
 });
 
@@ -3365,8 +3371,8 @@ function DashboardContent() {
                           display: "flex",
                           justifyContent: "space-between",
                           fontSize: 11,
-                          fontFamily: "var(--font-mono)",
-                          color: "var(--ink-secondary, #666)",
+                          fontFamily: "var(--font-body)",
+                          color: "var(--text-muted)",
                           marginBottom: 6,
                           textTransform: "uppercase",
                           letterSpacing: "0.05em",
@@ -3381,7 +3387,7 @@ function DashboardContent() {
                         style={{
                           height: 6,
                           background: "rgba(0,0,0,0.08)",
-                          borderRadius: 0,
+                          borderRadius: "var(--r-sm)",
                           overflow: "hidden",
                         }}
                       >
@@ -3389,7 +3395,7 @@ function DashboardContent() {
                           style={{
                             width: `${takenPercent}%`,
                             height: "100%",
-                            background: "#c1121f",
+                            background: "var(--primary)",
                             transition: "width 0.4s ease",
                           }}
                         />
@@ -3420,20 +3426,22 @@ function DashboardContent() {
                         gridTemplateColumns: "1fr auto",
                         gap: "6px 12px",
                         fontSize: 13,
-                        fontFamily: "var(--font-mono)",
+                        fontFamily: "var(--font-body)",
                         marginBottom: 16,
                       }}
                     >
-                      <span style={{ color: "var(--ink-secondary, #666)" }}>
+                      <span style={{ color: "var(--text-muted)" }}>
                         Base payout
                       </span>
                       <span style={{ textAlign: "right" }}>
                         {formatCurrency(selectedCampaign.payout)}
                       </span>
-                      <span style={{ color: "var(--ink-secondary, #666)" }}>
+                      <span style={{ color: "var(--text-muted)" }}>
                         Est. commission (~15%)
                       </span>
-                      <span style={{ textAlign: "right", color: "#003049" }}>
+                      <span
+                        style={{ textAlign: "right", color: "var(--dark)" }}
+                      >
                         +{formatCurrency(selectedCampaign.payout * 0.15)}
                       </span>
                       <span
@@ -3449,7 +3457,7 @@ function DashboardContent() {
                         style={{
                           textAlign: "right",
                           fontWeight: 600,
-                          color: "#c1121f",
+                          color: "var(--primary)",
                           borderTop: "1px solid rgba(0,0,0,0.12)",
                           paddingTop: 6,
                         }}
@@ -3526,8 +3534,8 @@ function DashboardContent() {
                           alignItems: "center",
                           gap: 6,
                           fontSize: 12,
-                          fontFamily: "var(--font-mono)",
-                          color: "#2d7a2d",
+                          fontFamily: "var(--font-body)",
+                          color: "var(--success-dark)",
                           marginBottom: 10,
                         }}
                       >
@@ -3538,7 +3546,12 @@ function DashboardContent() {
                           fill="none"
                           aria-hidden="true"
                         >
-                          <circle cx="7" cy="7" r="7" fill="#2d7a2d" />
+                          <circle
+                            cx="7"
+                            cy="7"
+                            r="7"
+                            style={{ fill: "var(--success-dark)" }}
+                          />
                           <path
                             d="M4 7l2 2 4-4"
                             stroke="#fff"

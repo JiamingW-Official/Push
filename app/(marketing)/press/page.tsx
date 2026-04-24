@@ -3,137 +3,109 @@
 import { useEffect, useState } from "react";
 import "./press.css";
 
-/* ─── Data ───────────────────────────────────────────────────── */
+/* ─── Data ─────────────────────────────────────────────────────
+   Pre-pilot honesty: no fabricated press clips, no invented quotes.
+   Numbers and dates are the ones we have on paper.
+   ────────────────────────────────────────────────────────────── */
 
-const COMPANY_FACTS: { number: string; label: string; accent?: boolean }[] = [
-  { number: "2025", label: "Founded in New York" },
-  { number: "NYC", label: "Headquarters" },
-  { number: "5", label: "Founding team", accent: true },
-  { number: "Phase 0", label: "Williamsburg pilot, May 2026", accent: true },
-];
-
-const PRESS_RELEASES = [
+const COMPANY_FACTS: { label: string; value: string; sub?: string }[] = [
+  { label: "Company", value: "Push", sub: "Push Labs Inc." },
+  { label: "Founded", value: "2025", sub: "New York City" },
   {
-    date: "Apr 2026",
-    tag: "Product",
-    title: "Push Launches Real-Time QR Attribution Engine for NYC Restaurants",
-    excerpt:
-      "New verification layer gives merchants granular foot-traffic data tied to creator campaigns, closing the loop between social content and in-store revenue.",
-    pdf: "#",
+    label: "Headquarters",
+    value: "Lower Manhattan",
+    sub: "Mott Street, 10013",
+  },
+  { label: "Team size", value: "5", sub: "no titles, one shared doc" },
+  {
+    label: "Pilot launch",
+    value: "June 22, 2026",
+    sub: "SoHo · Tribeca · Chinatown",
   },
   {
-    date: "Mar 2026",
-    tag: "Growth",
-    title: "Push Expands Verified-Merchant Network Across Five NYC Boroughs",
-    excerpt:
-      "From Astoria to Bay Ridge, Push now powers creator marketing for independent restaurants, boutiques, and wellness studios citywide.",
-    pdf: "#",
-  },
-  {
-    date: "Feb 2026",
-    tag: "Milestone",
-    title:
-      "Push Creators Drive Measurable Revenue for Local Businesses — Beta Results",
-    excerpt:
-      "Early beta attribution data suggests creator-led campaigns outperform traditional local advertising on verified visits. Full metrics to be published after Phase 0 launch.",
-    pdf: "#",
-  },
-  {
-    date: "Jan 2026",
-    tag: "Platform",
-    title:
-      "Push Introduces 6-Tier Creator Ranking System: From Seed to Partner",
-    excerpt:
-      "New tier framework rewards creators based on verified attribution performance, replacing follower count as the primary ranking metric.",
-    pdf: "#",
-  },
-  {
-    date: "Dec 2025",
-    tag: "Community",
-    title: "Push Hosts First NYC Creator Summit — Invite-Only",
-    excerpt:
-      "The inaugural Push Summit connected top-performing creators with local merchants for live campaign pitching and community building.",
-    pdf: "#",
-  },
-  {
-    date: "Nov 2025",
-    tag: "Partnership",
-    title:
-      "Push Partners With NYC Small Business Services to Support Independent Retail",
-    excerpt:
-      "Collaboration brings Push's performance-based marketing model to underserved neighborhood commercial corridors across all five boroughs.",
-    pdf: "#",
-  },
-  {
-    date: "Sep 2025",
-    tag: "Product",
-    title: "Push Creator App Now Available on iOS and Android",
-    excerpt:
-      "Mobile-first creator dashboard lets influencers discover campaigns, submit content, and track attributed payouts in real time.",
-    pdf: "#",
-  },
-  {
-    date: "Jul 2025",
-    tag: "Launch",
-    title: "Push Emerges from Stealth to Reinvent Local Marketing",
-    excerpt:
-      "Backed by NYC-based operators and angels, Push launches its pay-per-verified-visit platform targeting the local advertising market.",
-    pdf: "#",
+    label: "Pilot scope",
+    value: "5 venues · 10 creators",
+    sub: "7-block radius",
   },
 ];
 
-const BRAND_ASSETS = [
+const PRODUCT_FACTS = [
+  {
+    label: "Model",
+    line: "Pay-per-verified-visit",
+    body: "Merchants pay only when a creator-attributed customer actually walks into the venue. The QR scan is the conversion event.",
+  },
+  {
+    label: "Creator structure",
+    line: "Six-tier ladder",
+    body: "Tiers are awarded on verified visits, not follower count. Movement between tiers is tracked monthly.",
+  },
+  {
+    label: "Custody",
+    line: "Stripe Connect",
+    body: "All funds sit in segregated Stripe Connect accounts. Push initiates transfers; Stripe moves money. We are not a money transmitter.",
+  },
+  {
+    label: "Footprint",
+    line: "SoHo · Tribeca · Chinatown",
+    body: "Pilot is a seven-block walking corridor in Lower Manhattan. We are not citywide. We are not multi-borough. Yet.",
+  },
+];
+
+const FOUNDER = {
+  name: "Jiaming Wang",
+  role: "Founder",
+  initials: "JW",
+  bio: "Mott Street-native. Watched the family restaurant lose $800/month on Instagram ads with nothing to show for it on Tuesday night. Started Push at the door, not in a deck — the first version was a taped-up QR on Doyers Street and a spreadsheet. Reads every press email himself.",
+  email: "jiaming@push.nyc",
+};
+
+const ASSETS = [
   {
     id: "wordmark-light",
     name: "Wordmark — Light Background",
-    formats: "SVG · PNG · 1×  2×  3×",
-    bg: "light",
-    previewType: "wordmark",
-    dark: false,
+    formats: "SVG · PNG · 1× 2× 3×",
+    bg: "light" as const,
+    type: "wordmark" as const,
   },
   {
     id: "wordmark-dark",
     name: "Wordmark — Dark Background",
-    formats: "SVG · PNG · 1×  2×  3×",
-    bg: "dark",
-    previewType: "wordmark",
-    dark: true,
+    formats: "SVG · PNG · 1× 2× 3×",
+    bg: "dark" as const,
+    type: "wordmark" as const,
   },
   {
     id: "icon-light",
     name: "App Icon — Light Background",
-    formats: "SVG · PNG · 1×  2×  3×",
-    bg: "light",
-    previewType: "icon",
-    dark: false,
+    formats: "SVG · PNG · 1× 2× 3×",
+    bg: "light" as const,
+    type: "icon" as const,
   },
   {
     id: "icon-dark",
     name: "App Icon — Dark Background",
-    formats: "SVG · PNG · 1×  2×  3×",
-    bg: "dark",
-    previewType: "icon",
-    dark: true,
+    formats: "SVG · PNG · 1× 2× 3×",
+    bg: "dark" as const,
+    type: "icon" as const,
   },
   {
     id: "mono-black",
     name: "Monochrome — Black",
-    formats: "SVG · PNG · 1×  2×  3×",
-    bg: "light",
-    previewType: "mono-black",
-    dark: false,
+    formats: "SVG · PNG · 1× 2× 3×",
+    bg: "light" as const,
+    type: "mono-black" as const,
   },
   {
     id: "mono-white",
     name: "Monochrome — White",
-    formats: "SVG · PNG · 1×  2×  3×",
-    bg: "dark",
-    previewType: "mono-white",
-    dark: true,
+    formats: "SVG · PNG · 1× 2× 3×",
+    bg: "dark" as const,
+    type: "mono-white" as const,
   },
 ];
 
-const BRAND_COLORS = [
+const COLORS = [
   { name: "Flag Red", hex: "#c1121f", usage: "Primary / CTA" },
   { name: "Molten Lava", hex: "#780000", usage: "Hover / Deep Accent" },
   { name: "Pearl Stone", hex: "#f5f2ec", usage: "Background" },
@@ -142,70 +114,7 @@ const BRAND_COLORS = [
   { name: "Champagne Gold", hex: "#c9a96e", usage: "Premium Identity" },
 ];
 
-const FOUNDERS = [
-  {
-    initials: "JW",
-    name: "Jiaming Wang",
-    title: "Co-Founder & CEO",
-    bio: "Jiaming built Push after watching his family's Queens restaurant struggle to compete with chains that had unlimited marketing budgets. A Columbia engineering graduate, he spent two years running growth at a Series B fintech before founding Push in 2025. His conviction: local businesses deserve the same performance-based tools as Fortune 500 brands. Under his leadership, Push has onboarded 340+ verified merchants and built the first QR-based foot-traffic attribution system purpose-built for independent businesses in New York City.",
-  },
-  {
-    initials: "CF",
-    name: "Chris Ferrante",
-    title: "Co-Founder & CTO",
-    bio: "Chris leads product and engineering at Push, having previously built real-time data pipelines at a Bloomberg spin-out. His obsession is closing the attribution gap — proving that a creator's TikTok actually drove someone through the door last Tuesday at 7 pm. He architected Push's anti-fraud verification stack, which cross-validates QR scans against POS timing windows to eliminate bot and replay attacks. Chris holds a BS in Computer Science from NYU and is a founding member of the NYC Tech Founders Council.",
-  },
-];
-
-const PHOTO_PLACEHOLDERS = [
-  { label: "Team — Brooklyn HQ" },
-  { label: "NYC Merchant Partners" },
-  { label: "Creator Summit 2025" },
-  { label: "Attribution Dashboard" },
-  { label: "Push App — iOS" },
-  { label: "Lower East Side Campaign" },
-];
-
-const COVERAGE = [
-  {
-    quote:
-      "Push is rewriting local marketing — performance-based attribution that actually works for the bodega on the corner.",
-    source: "TechCrunch",
-    date: "Mar 2026",
-  },
-  {
-    quote:
-      "The QR system is elegant. Merchants finally have proof that the Instagram post brought in the Tuesday dinner crowd.",
-    source: "Fast Company",
-    date: "Feb 2026",
-  },
-  {
-    quote:
-      "Push may be the first startup to make creator economics work for businesses with five tables and a standing reservation list.",
-    source: "New York Magazine",
-    date: "Jan 2026",
-  },
-  {
-    quote:
-      "A product born from a real problem. Every restaurant owner we spoke to said they'd been waiting for something exactly like this.",
-    source: "Gothamist",
-    date: "Dec 2025",
-  },
-  {
-    quote:
-      "Pay only for verified visits. That three-word pitch is disrupting a $14 billion local advertising industry that hasn't innovated in a decade.",
-    source: "Axios New York",
-    date: "Nov 2025",
-  },
-  {
-    quote:
-      "Push's creator tier system is surprisingly smart — it rewards foot-traffic results, not follower counts. That changes the entire game.",
-    source: "The Information",
-    date: "Oct 2025",
-  },
-];
-
-/* ─── Copy Button Component ──────────────────────────────────── */
+/* ─── Copy Button ────────────────────────────────────────────── */
 function CopyButton({
   text,
   label = "Copy",
@@ -233,7 +142,7 @@ function CopyButton({
   );
 }
 
-/* ─── Logo Preview ───────────────────────────────────────────── */
+/* ─── Logo Preview (visual placeholder until SVG assets land) ── */
 function LogoPreview({ type, dark }: { type: string; dark: boolean }) {
   if (type === "wordmark") {
     return (
@@ -251,7 +160,7 @@ function LogoPreview({ type, dark }: { type: string; dark: boolean }) {
   return <span className="logo-mono-preview on-dark">Push.</span>;
 }
 
-/* ─── Scroll Reveal Hook ─────────────────────────────────────── */
+/* ─── Scroll Reveal ──────────────────────────────────────────── */
 function useScrollReveal() {
   useEffect(() => {
     const els = document.querySelectorAll(".reveal");
@@ -276,136 +185,195 @@ export default function PressPage() {
   useScrollReveal();
 
   return (
-    <main>
-      {/* ── 1. Hero ─────────────────────────────────────────── */}
-      <section className="press-hero">
-        <div className="press-hero-inner">
-          <p className="press-hero-eyebrow">
-            Push — Media Kit &amp; Press Resources
-          </p>
-          <h1 className="press-hero-headline">Press.</h1>
-          <p className="press-hero-sub">
-            Resources for journalists, creators, and partners covering the
-            future of local marketing in New York City.
-          </p>
-        </div>
-      </section>
+    <main className="press-page">
+      {/* ═══════════════ 01 — HERO (ink) ═══════════════ */}
+      <section
+        className="bg-hero-ink grain-overlay bg-vignette press-hero-v7"
+        aria-labelledby="press-hero-heading"
+      >
+        <div className="press-container press-hero-inner">
+          <div className="press-hero-top reveal">
+            <span className="pill-lux" style={{ color: "#fff" }}>
+              Pre-pilot · April 2026
+            </span>
+            <span className="eyebrow-lux" style={{ color: "var(--champagne)" }}>
+              Press kit
+            </span>
+          </div>
 
-      {/* ── 2. Company Facts ────────────────────────────────── */}
-      <section className="press-section">
-        <div className="press-container">
-          <p className="press-section-label">At a Glance</p>
-          <div className="facts-grid reveal reveal-stagger">
-            {COMPANY_FACTS.map((f) => (
-              <div className="fact-item" key={f.label}>
-                <div className="fact-number">
-                  {f.accent ? <em>{f.number}</em> : f.number}
-                </div>
-                <div className="fact-label">{f.label}</div>
-              </div>
-            ))}
+          <div
+            className="section-marker reveal"
+            data-num="01"
+            style={{ color: "rgba(255,255,255,0.55)" }}
+          >
+            Press kit
+          </div>
+
+          <h1 id="press-hero-heading" className="press-hero-h1 reveal">
+            Nothing to quote
+            <span aria-hidden="true" className="press-hero-h1-period">
+              .
+            </span>
+          </h1>
+          <div className="display-ghost press-hero-ghost reveal">yet.</div>
+
+          <div className="press-hero-body reveal">
+            <p>
+              We have not launched yet, so there is no press to quote. The pilot
+              opens June 22, 2026, on a seven-block stretch of SoHo, Tribeca,
+              and Chinatown. Five venues, ten creators, one operator walking the
+              doors with them.
+            </p>
+            <p className="press-hero-body-muted">
+              This page is the press kit before the press — the facts on paper,
+              the assets you can actually download, and a direct line to the
+              founder. If you&apos;re writing about Push, write to
+              jiaming@push.nyc. He answers his own email.
+            </p>
           </div>
         </div>
       </section>
 
-      {/* ── 3. Press Releases ───────────────────────────────── */}
-      <section className="press-section press-section-alt">
+      {/* ═══════════════ 02 — FACT SHEET ═══════════════ */}
+      <section className="press-section press-facts-v7">
         <div className="press-container">
-          <p className="press-section-label">News &amp; Announcements</p>
-          <h2 className="press-section-title">Press Releases</h2>
-          <p
-            style={{
-              fontFamily: "var(--font-body)",
-              fontSize: 12,
-              lineHeight: 1.65,
-              color: "var(--text-muted)",
-              maxWidth: 640,
-              margin: "0 0 32px",
-              padding: "12px 16px",
-              borderLeft: "3px solid var(--champagne)",
-              background: "rgba(201,169,110,0.06)",
-            }}
-          >
-            <strong>Sample release templates.</strong> Push is in pre-launch
-            (Phase 0 — Williamsburg, May 2026). The releases below illustrate
-            our communications cadence; actual press coverage will land here
-            after Phase 0 launches. For media inquiries, contact{" "}
-            <a href="mailto:press@pushnyc.co">press@pushnyc.co</a>.
-          </p>
-          <div className="press-timeline">
-            {PRESS_RELEASES.map((pr, i) => (
+          <div className="reveal">
+            <div className="section-marker" data-num="02">
+              Fact sheet
+            </div>
+            <h2 className="press-section-title">
+              The numbers we have.
+              <br />
+              <span className="display-ghost">
+                Not the ones we wish we did.
+              </span>
+            </h2>
+            <p className="press-section-sub">
+              Everything below is on paper. We&apos;re pre-pilot — no
+              attribution dataset to publish, no merchant testimonials to quote,
+              no Series A to announce. When those exist, they&apos;ll be here
+              too.
+            </p>
+          </div>
+
+          {/* Bento — Company facts (4 cards) */}
+          <div className="bento-grid press-facts-bento">
+            {COMPANY_FACTS.map((fact, i) => (
               <article
-                className={`press-release-item reveal`}
-                style={{ transitionDelay: `${Math.min(i * 40, 200)}ms` }}
-                key={pr.title}
+                key={fact.label}
+                className="card-premium press-fact-card reveal bento-4x1"
+                style={{ transitionDelay: `${i * 60}ms` }}
               >
-                <div className="press-release-date">{pr.date}</div>
-                <div className="press-release-content">
-                  <span className="press-release-tag">{pr.tag}</span>
-                  <h3 className="press-release-title">{pr.title}</h3>
-                  <p className="press-release-excerpt">{pr.excerpt}</p>
-                </div>
-                <div className="press-release-action">
-                  <a
-                    href={pr.pdf}
-                    className="press-dl-link"
-                    aria-label={`Download PDF: ${pr.title}`}
-                  >
-                    <svg
-                      width="12"
-                      height="12"
-                      viewBox="0 0 12 12"
-                      fill="none"
-                      aria-hidden="true"
-                    >
-                      <path
-                        d="M6 1v7M3 5l3 3 3-3M1 10h10"
-                        stroke="currentColor"
-                        strokeWidth="1.5"
-                        strokeLinecap="square"
-                      />
-                    </svg>
-                    PDF
-                  </a>
-                </div>
+                <span className="press-fact-label">{fact.label}</span>
+                <h3 className="press-fact-value">{fact.value}</h3>
+                {fact.sub && <p className="press-fact-sub">{fact.sub}</p>}
+              </article>
+            ))}
+          </div>
+
+          {/* Product facts — long-form bento */}
+          <div className="press-product-header reveal">
+            <div
+              className="section-marker"
+              data-num="02·B"
+              style={{ marginTop: "clamp(64px, 8vw, 120px)" }}
+            >
+              What we&apos;re building
+            </div>
+          </div>
+          <div className="bento-grid press-product-bento">
+            {PRODUCT_FACTS.map((p, i) => (
+              <article
+                key={p.label}
+                className="card-premium press-product-card reveal bento-6x1"
+                style={{ transitionDelay: `${i * 70}ms` }}
+              >
+                <span className="press-product-label">{p.label}</span>
+                <h3 className="press-product-line">{p.line}</h3>
+                <p className="press-product-body">{p.body}</p>
               </article>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ── 4. Brand Assets ─────────────────────────────────── */}
-      <section className="press-section">
+      {/* ═══════════════ 03 — FOUNDER ═══════════════ */}
+      <section className="press-section press-founder-v7 bg-mesh-editorial">
         <div className="press-container">
-          <p className="press-section-label">Brand Assets</p>
-          <div className="brand-assets-header">
-            <h2 className="press-section-title" style={{ marginBottom: 0 }}>
-              Logo Downloads
+          <div className="reveal">
+            <div className="section-marker" data-num="03">
+              Founder
+            </div>
+            <h2 className="press-section-title">
+              One operator.
+              <br />
+              <span className="display-ghost">Walks the doors himself.</span>
             </h2>
-            <p className="brand-assets-note">
-              Do not modify, recolor, or distort the Push logo. Use only on
-              approved backgrounds. Minimum size: 24px height.
+          </div>
+
+          <article className="card-premium press-founder-card reveal">
+            <div className="press-founder-grid">
+              <div className="press-founder-portrait" aria-hidden="true">
+                <span className="press-founder-initials">
+                  {FOUNDER.initials}
+                </span>
+              </div>
+              <div className="press-founder-body">
+                <h3 className="press-founder-name">{FOUNDER.name}</h3>
+                <p className="press-founder-role">{FOUNDER.role}</p>
+                <p className="press-founder-bio">{FOUNDER.bio}</p>
+                <a
+                  href={`mailto:${FOUNDER.email}`}
+                  className="press-founder-email"
+                >
+                  {FOUNDER.email}
+                </a>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      {/* ═══════════════ 04 — BRAND ASSETS ═══════════════ */}
+      <section className="press-section press-assets-v7">
+        <div className="press-container">
+          <div className="reveal">
+            <div className="section-marker" data-num="04">
+              Brand assets
+            </div>
+            <h2 className="press-section-title">
+              Logo downloads.
+              <br />
+              <span className="display-ghost">Use them as drawn.</span>
+            </h2>
+            <p className="press-section-sub">
+              Do not modify, recolor, or distort the Push wordmark. Minimum size
+              24px in height. If you need a layout we don&apos;t ship, email
+              jiaming@push.nyc and we&apos;ll cut it for you.
             </p>
           </div>
-          <div className="brand-assets-grid reveal reveal-stagger">
-            {BRAND_ASSETS.map((asset) => (
+
+          <div className="press-assets-grid reveal">
+            {ASSETS.map((asset) => (
               <div
-                className={`brand-asset-card${asset.dark ? " dark-bg" : ""}`}
                 key={asset.id}
+                className={`press-asset-card${asset.bg === "dark" ? " dark-bg" : ""}`}
               >
                 <div
-                  className={`brand-asset-preview${asset.dark ? " dark-bg" : ""}`}
+                  className={`press-asset-preview${asset.bg === "dark" ? " dark-bg" : ""}`}
                 >
-                  <LogoPreview type={asset.previewType} dark={asset.dark} />
+                  <LogoPreview type={asset.type} dark={asset.bg === "dark"} />
                 </div>
-                <div className="brand-asset-meta">
-                  <span className="brand-asset-name">{asset.name}</span>
-                  <span className="brand-asset-formats">{asset.formats}</span>
+                <div className="press-asset-meta">
+                  <span className="press-asset-name">{asset.name}</span>
+                  <span className="press-asset-formats">{asset.formats}</span>
                 </div>
                 <a
-                  href="#"
-                  className="brand-asset-dl"
-                  aria-label={`Download ${asset.name}`}
+                  href={`mailto:jiaming@push.nyc?subject=Press%20asset%3A%20${encodeURIComponent(
+                    asset.name,
+                  )}`}
+                  className="press-asset-dl"
+                  aria-label={`Request ${asset.name}`}
                 >
                   <svg
                     width="11"
@@ -421,40 +389,36 @@ export default function PressPage() {
                       strokeLinecap="square"
                     />
                   </svg>
-                  Download
+                  Request file
                 </a>
               </div>
             ))}
           </div>
-          <div className="brand-zip-cta">
-            <a href="#" className="btn-zip">
-              <svg
-                width="14"
-                height="14"
-                viewBox="0 0 14 14"
-                fill="none"
-                aria-hidden="true"
-              >
-                <path
-                  d="M7 1v9M3.5 6l3.5 4 3.5-4M1 12h12"
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                  strokeLinecap="square"
-                />
-              </svg>
-              Download All Assets (.zip)
-            </a>
-          </div>
+
+          <p className="press-assets-note reveal">
+            The press archive zip is being assembled for the pilot launch. Until
+            then, request specific files by email and we&apos;ll send them
+            within one business day.
+          </p>
         </div>
       </section>
 
-      {/* ── 5. Color Palette ────────────────────────────────── */}
-      <section className="press-section press-section-alt">
+      {/* ═══════════════ 05 — COLOR PALETTE ═══════════════ */}
+      <section className="press-section press-colors-v7 bg-mesh-editorial">
         <div className="press-container">
-          <p className="press-section-label">Brand Colors</p>
-          <h2 className="press-section-title">Color Palette</h2>
-          <div className="color-palette-grid reveal reveal-stagger">
-            {BRAND_COLORS.map((c) => (
+          <div className="reveal">
+            <div className="section-marker" data-num="05">
+              Color palette
+            </div>
+            <h2 className="press-section-title">
+              Six colors.
+              <br />
+              <span className="display-ghost">No additions.</span>
+            </h2>
+          </div>
+
+          <div className="color-palette-grid reveal">
+            {COLORS.map((c) => (
               <div className="color-swatch-card" key={c.hex}>
                 <div
                   className="color-swatch"
@@ -464,6 +428,7 @@ export default function PressPage() {
                 <div className="color-swatch-body">
                   <span className="color-swatch-name">{c.name}</span>
                   <span className="color-swatch-hex">{c.hex}</span>
+                  <span className="color-swatch-usage">{c.usage}</span>
                   <CopyButton text={c.hex} label="Copy HEX" />
                 </div>
               </div>
@@ -472,13 +437,21 @@ export default function PressPage() {
         </div>
       </section>
 
-      {/* ── 6. Typography ───────────────────────────────────── */}
-      <section className="press-section">
+      {/* ═══════════════ 06 — TYPOGRAPHY ═══════════════ */}
+      <section className="press-section press-type-v7">
         <div className="press-container">
-          <p className="press-section-label">Brand Typography</p>
-          <h2 className="press-section-title">Type System</h2>
+          <div className="reveal">
+            <div className="section-marker" data-num="06">
+              Typography
+            </div>
+            <h2 className="press-section-title">
+              Two fonts.
+              <br />
+              <span className="display-ghost">That&apos;s the system.</span>
+            </h2>
+          </div>
+
           <div className="type-showcase reveal">
-            {/* Darky Panel */}
             <div className="type-panel">
               <div className="type-panel-label">
                 Darky — Display &amp; Headline
@@ -486,12 +459,12 @@ export default function PressPage() {
               <div className="type-darky-display">Push.</div>
               <div className="type-darky-weights">
                 {[
-                  { w: 900, name: "Black", sample: "Local. Proven." },
-                  { w: 800, name: "ExtraBold", sample: "NYC Verified." },
-                  { w: 700, name: "Bold", sample: "340+ Merchants" },
-                  { w: 600, name: "SemiBold", sample: "Press Resources" },
-                  { w: 300, name: "Light", sample: "Editorial partner tier" },
-                  { w: 200, name: "ExtraLight", sample: "$2,000,000" },
+                  { w: 900, name: "Black", sample: "Verified visits." },
+                  { w: 800, name: "ExtraBold", sample: "Lower Manhattan." },
+                  { w: 700, name: "Bold", sample: "June 22, 2026" },
+                  { w: 600, name: "SemiBold", sample: "Press kit" },
+                  { w: 300, name: "Light", sample: "Six-tier creator ladder" },
+                  { w: 200, name: "ExtraLight", sample: "Pre-pilot" },
                 ].map((row) => (
                   <div className="type-weight-row" key={row.w}>
                     <span
@@ -508,15 +481,14 @@ export default function PressPage() {
               </div>
             </div>
 
-            {/* CS Genio Mono Panel */}
             <div className="type-panel">
               <div className="type-panel-label">
                 CS Genio Mono — Body &amp; UI
               </div>
               <div className="type-mono-display">
-                Performance-based
+                Pay only for
                 <br />
-                local marketing.
+                verified visits.
               </div>
               <div className="type-mono-samples">
                 {[
@@ -543,110 +515,80 @@ export default function PressPage() {
         </div>
       </section>
 
-      {/* ── 7. Photography ──────────────────────────────────── */}
-      <section className="press-section press-section-alt">
+      {/* ═══════════════ 07 — BOILERPLATE ═══════════════ */}
+      <section className="press-section press-boiler-v7">
         <div className="press-container">
-          <p className="press-section-label">Photography</p>
-          <h2 className="press-section-title">Photo Library</h2>
-          <div className="photo-grid reveal reveal-stagger">
-            {PHOTO_PLACEHOLDERS.map((p, i) => (
-              <div className="photo-grid-item" key={i}>
-                <div className="photo-placeholder">
-                  <svg
-                    className="photo-placeholder-icon"
-                    viewBox="0 0 48 48"
-                    fill="none"
-                    aria-hidden="true"
-                  >
-                    <rect
-                      x="2"
-                      y="8"
-                      width="44"
-                      height="32"
-                      rx="0"
-                      stroke="#003049"
-                      strokeWidth="2"
-                    />
-                    <circle
-                      cx="16"
-                      cy="20"
-                      r="5"
-                      stroke="#003049"
-                      strokeWidth="2"
-                    />
-                    <path
-                      d="M2 36l12-12 8 8 8-8 16 16"
-                      stroke="#003049"
-                      strokeWidth="2"
-                      strokeLinecap="square"
-                    />
-                  </svg>
-                  <span className="photo-placeholder-label">{p.label}</span>
-                </div>
-                <div className="photo-overlay">
-                  <span className="photo-overlay-caption">{p.label}</span>
-                </div>
-              </div>
-            ))}
+          <div className="reveal">
+            <div className="section-marker" data-num="07">
+              Boilerplate
+            </div>
+            <h2 className="press-section-title">
+              For the bottom of your story.
+              <br />
+              <span className="display-ghost">Fifty words. Factual.</span>
+            </h2>
           </div>
+
+          <article className="card-premium press-boiler-card reveal">
+            <p className="press-boiler-text">
+              Push is a New York-based local marketing platform that pays
+              creators only when an attributed customer walks into a partner
+              venue. Founded in 2025 by Jiaming Wang in Lower Manhattan, Push
+              opens its pilot June 22, 2026 across SoHo, Tribeca, and Chinatown
+              with five merchants and ten creators. Funds custody is handled by
+              Stripe Connect.
+            </p>
+            <CopyButton
+              text={
+                "Push is a New York-based local marketing platform that pays creators only when an attributed customer walks into a partner venue. Founded in 2025 by Jiaming Wang in Lower Manhattan, Push opens its pilot June 22, 2026 across SoHo, Tribeca, and Chinatown with five merchants and ten creators. Funds custody is handled by Stripe Connect."
+              }
+              label="Copy boilerplate"
+            />
+          </article>
         </div>
       </section>
 
-      {/* ── 8. Founder Bios ─────────────────────────────────── */}
-      <section className="press-section">
-        <div className="press-container">
-          <p className="press-section-label">Leadership</p>
-          <h2 className="press-section-title">Founders</h2>
-          <div className="founder-grid reveal">
-            {FOUNDERS.map((f) => (
-              <div className="founder-card" key={f.name}>
-                <div className="founder-headshot">
-                  <span className="founder-headshot-placeholder">
-                    {f.initials}
-                  </span>
-                </div>
-                <div className="founder-info">
-                  <h3 className="founder-name">{f.name}</h3>
-                  <p className="founder-title">{f.title}</p>
-                  <p className="founder-bio">{f.bio}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      {/* ═══════════════ 08 — PRESS CONTACT (ink CTA) ═══════════════ */}
+      <section
+        className="bg-hero-ink grain-overlay bg-vignette press-contact-v7"
+        aria-labelledby="press-contact-heading"
+      >
+        <div className="press-container press-contact-inner">
+          <div className="reveal">
+            <div
+              className="section-marker"
+              data-num="08"
+              style={{ color: "rgba(255,255,255,0.55)" }}
+            >
+              Press contact
+            </div>
+            <h2 id="press-contact-heading" className="press-contact-headline">
+              <span className="wt-900">Write to the founder.</span>
+              <br />
+              <span className="wt-200">He reads every email.</span>
+            </h2>
+            <p className="press-contact-sub">
+              Interview requests, embargoed briefings, and asset permissions go
+              to one inbox. Average reply time is under 24 hours during business
+              days. If it&apos;s urgent, say so in the subject line.
+            </p>
 
-      {/* ── 9. Press Contact ────────────────────────────────── */}
-      <section className="press-contact-wrap">
-        <div className="press-contact-inner">
-          <p className="press-contact-label">Media Inquiries</p>
-          <h2 className="press-contact-headline">Talk to us.</h2>
-          <p className="press-contact-sub">
-            For interview requests, embargoed briefings, and asset permissions,
-            reach out directly. We respond within one business day.
-          </p>
-          <a href="mailto:press@push.nyc" className="press-contact-email">
-            press@push.nyc
-          </a>
-        </div>
-      </section>
+            <div className="press-contact-actions">
+              <a href="mailto:jiaming@push.nyc" className="press-contact-email">
+                jiaming@push.nyc
+              </a>
+              <span className="divider-lux press-contact-divider">or</span>
+              <a
+                href="mailto:press@push.nyc"
+                className="press-contact-email-alt"
+              >
+                press@push.nyc
+              </a>
+            </div>
 
-      {/* ── 10. Coverage ────────────────────────────────────── */}
-      <section className="press-section">
-        <div className="press-container">
-          <p className="press-section-label">In the News</p>
-          <h2 className="press-section-title">Coverage</h2>
-          <div className="coverage-grid reveal reveal-stagger">
-            {COVERAGE.map((c, i) => (
-              <div className="coverage-item" key={i}>
-                <blockquote className="coverage-quote">{c.quote}</blockquote>
-                <div className="coverage-source">
-                  <span className="coverage-source-name">{c.source}</span>
-                  <span className="coverage-source-dot" aria-hidden="true" />
-                  <span className="coverage-source-date">{c.date}</span>
-                </div>
-              </div>
-            ))}
+            <p className="press-contact-foot">
+              every email read by hand · 48-hour reply
+            </p>
           </div>
         </div>
       </section>

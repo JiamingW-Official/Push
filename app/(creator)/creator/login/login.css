@@ -207,7 +207,7 @@ form.form-loading {
 
 .forgot-link a {
   font-size: var(--text-caption);
-  color: #669bbc;
+  color: var(--tertiary);
   text-decoration: underline;
   text-underline-offset: 2px;
   transition: color var(--t-fast);
@@ -227,8 +227,8 @@ form.form-loading {
 }
 
 .submit-btn:hover {
-  box-shadow: 6px 6px 0 var(--dark);
-  transform: translateX(2px);
+  box-shadow: var(--shadow-3);
+  transform: translateY(-1px);
 }
 
 .submit-btn:active,

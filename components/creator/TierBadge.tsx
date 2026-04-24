@@ -85,7 +85,7 @@ export function TierBadge({
 
     return (
       <div
-        className={className}
+        className={`tier--${tierCssKey}${className ? ` ${className}` : ""}`}
         style={{
           display: "inline-flex",
           flexDirection: "column",
@@ -100,7 +100,7 @@ export function TierBadge({
                 : "transparent",
           border: `2px solid ${xlBorderColor}`,
           borderRadius: 0,
-          fontFamily: '"CS Genio Mono", monospace',
+          fontFamily: "var(--font-body)",
         }}
       >
         {showIcon && (
@@ -109,7 +109,7 @@ export function TierBadge({
         {showLabel && (
           <span
             style={{
-              fontFamily: '"Darky", sans-serif',
+              fontFamily: "var(--font-display)",
               fontWeight: 700,
               fontSize: "20px",
               color: config.color,
@@ -126,7 +126,7 @@ export function TierBadge({
             color: config.color,
             opacity: 0.75,
             letterSpacing: "0.06em",
-            fontFamily: '"CS Genio Mono", monospace',
+            fontFamily: "var(--font-body)",
           }}
         >
           {config.description}
@@ -137,7 +137,7 @@ export function TierBadge({
             color: config.accent,
             fontWeight: 700,
             letterSpacing: "0.06em",
-            fontFamily: '"CS Genio Mono", monospace',
+            fontFamily: "var(--font-body)",
           }}
         >
           {buildBenefitLine(tier)}
@@ -158,7 +158,7 @@ export function TierBadge({
 
     return (
       <div
-        className={className}
+        className={`tier--${tierCssKey}${className ? ` ${className}` : ""}`}
         style={{
           display: "inline-flex",
           flexDirection: "column",
@@ -168,7 +168,7 @@ export function TierBadge({
           backgroundColor: lgBg,
           border: `2px solid ${lgBorderColor}`,
           borderRadius: 0,
-          fontFamily: '"CS Genio Mono", monospace',
+          fontFamily: "var(--font-body)",
         }}
       >
         {showIcon && (
@@ -177,7 +177,7 @@ export function TierBadge({
         {showLabel && (
           <span
             style={{
-              fontFamily: '"Darky", sans-serif',
+              fontFamily: "var(--font-display)",
               fontWeight: 700,
               fontSize: "16px",
               color: config.color,
@@ -194,7 +194,7 @@ export function TierBadge({
             color: config.color,
             opacity: 0.8,
             letterSpacing: "0.06em",
-            fontFamily: '"CS Genio Mono", monospace',
+            fontFamily: "var(--font-body)",
           }}
         >
           {config.description}
@@ -212,7 +212,7 @@ export function TierBadge({
     // filled: solid bg in tier color, light text (overrides CSS defaults)
     variantStyle = {
       backgroundColor: config.color,
-      color: "#f5f2ec",
+      color: "var(--surface)",
       borderLeft: "none",
     };
   } else if (variant === "outlined") {

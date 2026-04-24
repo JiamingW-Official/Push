@@ -1,7 +1,6 @@
 /* =============================================================
    Push Creator — Campaign Detail Page — campaign.css
-   Design system: border-radius 0 everywhere
-   Colors: #c1121f / #780000 / #003049 / #669bbc / #f5f2ec
+   Design system v7: iOS 26 continuous corner + 3-layer elevation
    Fonts: var(--font-display) Darky, var(--font-body) CS Genio Mono
    Grid: 8px base (--space-1 … --space-10)
    ============================================================= */
@@ -27,14 +26,14 @@
   font-weight: 600;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: rgba(0, 48, 73, 0.5);
+  color: var(--text-muted);
   text-decoration: none;
   margin-bottom: var(--space-3, 24px);
   transition: color 150ms;
 }
 
 .campaign-back:hover {
-  color: #003049;
+  color: var(--dark);
 }
 
 /* ─────────────────────────────────────────
@@ -45,7 +44,7 @@
   height: 280px;
   position: relative;
   overflow: hidden;
-  border-radius: 0;
+  border-radius: var(--r-xl);
 }
 
 .campaign-hero-img {
@@ -53,7 +52,7 @@
   height: 100%;
   object-fit: cover;
   display: block;
-  border-radius: 0;
+  border-radius: var(--r-xl);
 }
 
 .campaign-hero-placeholder {
@@ -85,13 +84,13 @@
   background: rgba(0, 48, 73, 0.75);
   backdrop-filter: blur(4px);
   -webkit-backdrop-filter: blur(4px);
-  color: #f5f2ec;
+  color: var(--surface);
   font-family: var(--font-body, "CS Genio Mono", monospace);
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  border-radius: 0;
+  border-radius: var(--r-sm);
   line-height: 1.6;
 }
 
@@ -103,11 +102,12 @@
    5. CAMPAIGN HEADER (Premium dark header)
    ───────────────────────────────────────── */
 .cp-header {
-  background: var(--dark, #003049);
-  color: #f5f2ec;
+  background: var(--dark);
+  color: var(--surface);
   padding: 48px var(--space-5, 40px);
   margin-bottom: var(--space-4, 32px);
-  border-radius: 0;
+  border-radius: var(--r-2xl);
+  box-shadow: var(--shadow-2);
   position: relative;
   overflow: hidden;
 }
@@ -137,7 +137,7 @@
   font-size: clamp(28px, 4vw, 36px);
   font-weight: 800;
   letter-spacing: -0.03em;
-  color: #f5f2ec;
+  color: var(--surface);
   margin: 0 0 var(--space-1, 8px) 0;
   line-height: 1.1;
 }
@@ -177,25 +177,25 @@
   font-weight: 700;
   letter-spacing: 0.07em;
   text-transform: uppercase;
-  border-radius: 0;
+  border-radius: var(--r-sm);
 }
 
 .cp-meta-badge--category {
   background: rgba(102, 155, 188, 0.18);
   border-color: rgba(102, 155, 188, 0.35);
-  color: #669bbc;
+  color: var(--tertiary);
 }
 
 .cp-meta-badge--payout {
   background: rgba(193, 18, 31, 0.18);
   border-color: rgba(193, 18, 31, 0.35);
-  color: #f5f2ec;
+  color: var(--surface);
 }
 
 .cp-meta-badge--free {
   background: rgba(102, 155, 188, 0.18);
   border-color: rgba(102, 155, 188, 0.35);
-  color: #669bbc;
+  color: var(--tertiary);
 }
 
 .cp-meta-divider {
@@ -228,13 +228,13 @@
   font-family: var(--font-display, "Darky", serif);
   font-size: 32px;
   font-weight: 900;
-  color: #f5f2ec;
+  color: var(--surface);
   line-height: 1;
   letter-spacing: -0.04em;
 }
 
 .cp-countdown-number--urgent {
-  color: #c1121f;
+  color: var(--primary);
 }
 
 .cp-countdown-label {
@@ -273,23 +273,23 @@
 .cp-spots-bar {
   height: 4px;
   background: rgba(245, 242, 236, 0.1);
-  border-radius: 0;
+  border-radius: var(--r-pill);
   overflow: hidden;
 }
 
 .cp-spots-fill {
   height: 100%;
-  background: #c1121f;
-  border-radius: 0;
+  background: var(--primary);
+  border-radius: var(--r-pill);
   transition: width 400ms ease;
 }
 
 .cp-spots-fill--low {
-  background: #c1121f;
+  background: var(--primary);
 }
 
 .cp-spots-fill--mid {
-  background: #669bbc;
+  background: var(--tertiary);
 }
 
 /* ─────────────────────────────────────────
@@ -318,7 +318,7 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: #669bbc;
+  color: var(--tertiary);
   margin: 0 0 var(--space-1, 8px) 0;
 }
 
@@ -327,7 +327,7 @@
   font-size: clamp(24px, 4vw, 36px);
   font-weight: 800;
   letter-spacing: -0.03em;
-  color: #003049;
+  color: var(--dark);
   margin: 0;
   line-height: 1.1;
 }
@@ -355,10 +355,11 @@
    10. MILESTONE PROGRESS TRACKER
    ───────────────────────────────────────── */
 .cp-milestone-track {
-  background: #ffffff;
-  border: 1px solid rgba(0, 48, 73, 0.08);
+  background: var(--surface-elevated);
+  border: 1px solid var(--line);
   padding: var(--space-4, 32px) var(--space-3, 24px) var(--space-3, 24px);
-  border-radius: 0;
+  border-radius: var(--r-xl);
+  box-shadow: var(--shadow-1);
   overflow: hidden;
 }
 
@@ -395,12 +396,12 @@
   right: calc(-50% + 10px);
   height: 2px;
   background: rgba(0, 48, 73, 0.12);
-  border-radius: 0;
+  border-radius: var(--r-pill);
   z-index: 0;
 }
 
 .cp-milestone-line--done {
-  background: #003049;
+  background: var(--dark);
 }
 
 .cp-milestone-line--dashed {
@@ -412,7 +413,7 @@
 .cp-milestone-step {
   width: 20px;
   height: 20px;
-  border-radius: 0;
+  border-radius: var(--r-sm);
   border: 2px solid rgba(0, 48, 73, 0.2);
   background: var(--surface);
   display: flex;
@@ -426,23 +427,23 @@
 }
 
 .cp-milestone-step--done {
-  background: #003049;
-  border-color: #003049;
+  background: var(--dark);
+  border-color: var(--dark);
 }
 
 .cp-milestone-step--done::after {
   content: "";
   width: 6px;
   height: 4px;
-  border-left: 1.5px solid #f5f2ec;
-  border-bottom: 1.5px solid #f5f2ec;
+  border-left: 1.5px solid var(--surface);
+  border-bottom: 1.5px solid var(--surface);
   transform: rotate(-45deg) translateY(-1px);
   display: block;
 }
 
 .cp-milestone-step--active {
-  background: #c1121f;
-  border-color: #c1121f;
+  background: var(--primary);
+  border-color: var(--primary);
   animation: cp-pulse 2s ease-in-out infinite;
 }
 
@@ -450,8 +451,8 @@
   content: "";
   width: 6px;
   height: 6px;
-  background: #f5f2ec;
-  border-radius: 0;
+  background: var(--surface);
+  border-radius: var(--r-full);
   display: block;
 }
 
@@ -483,7 +484,7 @@
 }
 
 .cp-milestone-label--active {
-  color: #c1121f;
+  color: var(--primary);
   font-weight: 700;
 }
 
@@ -501,7 +502,7 @@
   align-items: center;
   gap: var(--space-2, 16px);
   padding: 14px 16px;
-  background: #ffffff;
+  background: var(--surface-elevated);
   border: 1px solid rgba(0, 48, 73, 0.07);
   border-bottom: none;
   font-family: var(--font-body, "CS Genio Mono", monospace);
@@ -519,25 +520,25 @@
   background: rgba(245, 242, 236, 0.6);
 }
 
-/* Square checkbox-style icon */
+/* Checkbox-style icon */
 .cp-req-icon {
   flex-shrink: 0;
   width: 18px;
   height: 18px;
-  border: 1.5px solid #c1121f;
+  border: 1.5px solid var(--primary);
   background: transparent;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 0;
+  border-radius: var(--r-sm);
 }
 
 .cp-req-icon--check::after {
   content: "";
   width: 7px;
   height: 4px;
-  border-left: 1.5px solid #c1121f;
-  border-bottom: 1.5px solid #c1121f;
+  border-left: 1.5px solid var(--primary);
+  border-bottom: 1.5px solid var(--primary);
   transform: rotate(-45deg) translateY(-1px);
   display: block;
 }
@@ -560,8 +561,9 @@
   flex-direction: column;
   gap: var(--space-2, 16px);
   padding: var(--space-3, 24px);
-  background: #003049;
-  border-radius: 0;
+  background: var(--dark);
+  border-radius: var(--r-xl);
+  box-shadow: var(--shadow-2);
   margin-top: var(--space-2, 16px);
 }
 
@@ -583,7 +585,7 @@
   letter-spacing: 0.06em;
   text-transform: uppercase;
   border: none;
-  border-radius: 0;
+  border-radius: var(--r-lg);
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -594,12 +596,12 @@
 }
 
 .cp-action-btn--primary {
-  background: #c1121f;
-  color: #f5f2ec;
+  background: var(--primary);
+  color: var(--surface);
 }
 
 .cp-action-btn--primary:hover {
-  background: #780000;
+  background: var(--accent);
 }
 
 .cp-action-btn--secondary {
@@ -637,14 +639,14 @@
   border-top: 1px solid rgba(0, 48, 73, 0.08);
 }
 
-/* 6×6 Flag Red square bullet — no border-radius */
+/* 6×6 Flag Red bullet */
 .campaign-req-bullet {
   display: inline-block;
   flex-shrink: 0;
   width: 6px;
   height: 6px;
-  background: #c1121f;
-  border-radius: 0;
+  background: var(--primary);
+  border-radius: var(--r-full);
   margin-top: 5px;
 }
 
@@ -688,7 +690,7 @@
 
 .campaign-biz-row dd {
   margin: 0;
-  color: #003049;
+  color: var(--dark);
   line-height: 1.5;
 }
 
@@ -698,7 +700,7 @@
   height: 80px;
   background: rgba(0, 48, 73, 0.04);
   border: 1px solid rgba(0, 48, 73, 0.08);
-  border-radius: 0;
+  border-radius: var(--r-xl);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -719,9 +721,9 @@
   display: flex;
   gap: var(--space-2, 16px);
   background: rgba(102, 155, 188, 0.08);
-  border-left: 3px solid #669bbc;
+  border-left: 3px solid var(--tertiary);
   padding: var(--space-2, 16px) var(--space-3, 24px);
-  border-radius: 0;
+  border-radius: var(--r-lg);
 }
 
 .campaign-qr-icon {
@@ -737,7 +739,7 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  color: #669bbc;
+  color: var(--tertiary);
   margin-bottom: 4px;
 }
 
@@ -755,10 +757,11 @@
 .campaign-sidebar-card {
   position: sticky;
   top: var(--space-4, 32px);
-  background: #ffffff;
-  border: 1px solid rgba(0, 48, 73, 0.08);
+  background: var(--surface-elevated);
+  border: 1px solid var(--line);
   padding: var(--space-4, 32px);
-  border-radius: 0;
+  border-radius: var(--r-2xl);
+  box-shadow: var(--shadow-3);
   display: flex;
   flex-direction: column;
   gap: var(--space-2, 16px);
@@ -777,14 +780,14 @@
   font-family: var(--font-display, "Darky", serif);
   font-size: 40px;
   font-weight: 900;
-  color: #003049;
+  color: var(--dark);
   line-height: 1;
   letter-spacing: -0.04em;
 }
 
 /* Free product payout — Steel Blue */
 .campaign-payout-amount--free {
-  color: #669bbc;
+  color: var(--tertiary);
 }
 
 .campaign-payout-label {
@@ -806,7 +809,7 @@
 
 .campaign-commission-pct {
   font-weight: 700;
-  color: #669bbc;
+  color: var(--tertiary);
 }
 
 /* ─────────────────────────────────────────
@@ -827,14 +830,14 @@
 .campaign-spots-bar {
   height: 3px;
   background: rgba(0, 48, 73, 0.1);
-  border-radius: 0;
+  border-radius: var(--r-pill);
   overflow: hidden;
 }
 
 .campaign-spots-fill {
   height: 100%;
-  background: #c1121f;
-  border-radius: 0;
+  background: var(--primary);
+  border-radius: var(--r-pill);
   transition: width 400ms ease;
 }
 
@@ -861,7 +864,7 @@
 
 .campaign-deadline-value {
   font-weight: 600;
-  color: #003049;
+  color: var(--dark);
 }
 
 /* ─────────────────────────────────────────
@@ -880,7 +883,7 @@
 }
 
 .campaign-elig-icon--ok {
-  color: #22a06b;
+  color: var(--success);
   font-weight: 700;
   font-size: 15px;
 }
@@ -902,7 +905,7 @@
   letter-spacing: 0.04em;
   text-transform: uppercase;
   border: none;
-  border-radius: 0;
+  border-radius: var(--r-lg);
   cursor: pointer;
   transition: background 150ms, color 150ms, opacity 150ms;
   line-height: 1;
@@ -910,18 +913,18 @@
 
 /* Default — Flag Red */
 .apply-btn--default {
-  background: #c1121f;
-  color: #f5f2ec;
+  background: var(--primary);
+  color: var(--surface);
 }
 
 .apply-btn--default:hover:not(:disabled) {
-  background: #780000;
+  background: var(--accent);
 }
 
 /* Applied — Steel Blue */
 .apply-btn--applied {
-  background: #669bbc;
-  color: #f5f2ec;
+  background: var(--tertiary);
+  color: var(--surface);
   cursor: default;
 }
 
@@ -958,7 +961,7 @@
 }
 
 .campaign-error {
-  color: #c1121f;
+  color: var(--primary);
 }
 
 /* ─────────────────────────────────────────
@@ -1000,7 +1003,7 @@
     flex-direction: row;
     align-items: center;
     gap: var(--space-2, 16px);
-    background: #ffffff;
+    background: var(--surface-elevated);
   }
 
   /* On mobile, hide non-essential sidebar items to keep the bar slim */

@@ -457,13 +457,13 @@ export default function VerifyPage() {
           onMouseEnter={(e) => {
             if (!file || pageState === "submitting") return;
             (e.currentTarget as HTMLButtonElement).style.boxShadow =
-              "6px 6px 0 var(--dark)";
+              "var(--shadow-3)";
             (e.currentTarget as HTMLButtonElement).style.transform =
               "translate(-2px, -2px)";
           }}
           onMouseLeave={(e) => {
             (e.currentTarget as HTMLButtonElement).style.boxShadow =
-              "3px 3px 0 var(--accent)";
+              "var(--shadow-2)";
             (e.currentTarget as HTMLButtonElement).style.transform = "none";
           }}
         >
@@ -705,7 +705,7 @@ const styles = {
     background: "var(--surface-elevated)",
     color: "var(--graphite)",
     cursor: "pointer",
-    borderRadius: "0",
+    borderRadius: "var(--r-pill)",
     transition: "all 150ms ease",
   } as React.CSSProperties,
 
@@ -718,6 +718,7 @@ const styles = {
   /* Drop zone */
   dropZone: {
     border: "2px dashed var(--line)",
+    borderRadius: "var(--r-xl)",
     padding: "48px 24px",
     textAlign: "center" as const,
     cursor: "pointer",
@@ -727,7 +728,7 @@ const styles = {
 
   dropZoneActive: {
     borderColor: "var(--dark)",
-    background: "rgba(0, 48, 73, 0.04)",
+    background: "var(--surface-muted)",
   } as React.CSSProperties,
 
   dropZoneIcon: {
@@ -755,6 +756,7 @@ const styles = {
   /* Preview */
   previewWrap: {
     border: "1px solid var(--line)",
+    borderRadius: "var(--r-xl)",
     background: "var(--surface-elevated)",
     overflow: "hidden",
   } as React.CSSProperties,
@@ -764,7 +766,6 @@ const styles = {
     maxHeight: "320px",
     objectFit: "cover" as const,
     display: "block",
-    borderRadius: "0",
   } as React.CSSProperties,
 
   previewBar: {
@@ -801,7 +802,7 @@ const styles = {
   /* Instructions */
   instructions: {
     padding: "16px 20px",
-    background: "rgba(0, 48, 73, 0.04)",
+    background: "var(--surface-muted)",
     border: "1px solid var(--line)",
   } as React.CSSProperties,
 
@@ -856,9 +857,9 @@ const styles = {
     fontWeight: 700,
     letterSpacing: "0.06em",
     border: "none",
-    borderRadius: "0",
+    borderRadius: "var(--r-lg)",
     cursor: "pointer",
-    boxShadow: "3px 3px 0 var(--accent)",
+    boxShadow: "var(--shadow-2)",
     transition: "box-shadow 150ms ease, transform 150ms ease",
   } as React.CSSProperties,
 
@@ -888,7 +889,7 @@ const styles = {
     fontWeight: 700,
     letterSpacing: "0.06em",
     border: "1px solid var(--dark)",
-    borderRadius: "0",
+    borderRadius: "var(--r-lg)",
     cursor: "pointer",
     textDecoration: "none",
     marginTop: "4px",
@@ -918,6 +919,7 @@ const styles = {
     fontSize: "28px",
     fontWeight: 800,
     flexShrink: 0,
+    borderRadius: "var(--r-full)", // icon circle — Design.md
   } as React.CSSProperties,
 
   successTitle: {
@@ -940,6 +942,7 @@ const styles = {
     width: "100%",
     background: "var(--surface-elevated)",
     border: "1px solid var(--line)",
+    borderRadius: "var(--r-xl)",
     padding: "20px 24px",
     textAlign: "left" as const,
   } as React.CSSProperties,

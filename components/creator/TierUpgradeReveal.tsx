@@ -294,7 +294,7 @@ function DeltaRow({
         style={{
           fontFamily: "'CS Genio Mono', 'Courier New', monospace",
           fontSize: 12,
-          color: "#f5f2ec",
+          color: "var(--surface)",
           fontWeight: 700,
         }}
       >
@@ -747,12 +747,12 @@ export function TierUpgradeReveal({
                     "opacity 0.35s ease, transform 0.35s cubic-bezier(0.16, 1, 0.3, 1)",
                 }}
               >
-                {/* Red square bullet — zero border-radius */}
+                {/* Flag Red square bullet — zero border-radius */}
                 <div
                   style={{
                     width: 6,
                     height: 6,
-                    background: "#c1121f",
+                    background: "var(--primary)",
                     borderRadius: 0,
                     flexShrink: 0,
                   }}
@@ -821,11 +821,11 @@ export function TierUpgradeReveal({
             style={{
               width: "100%",
               padding: "16px 24px",
-              background: "#c1121f",
-              color: "#f5f2ec",
+              background: "var(--primary)",
+              color: "var(--surface)",
               border: "none",
               borderRadius: 0,
-              fontFamily: "var(--font-display, Darky, serif)",
+              fontFamily: "var(--font-display)",
               fontSize: "18px",
               fontWeight: 700,
               letterSpacing: "0.04em",
@@ -837,11 +837,11 @@ export function TierUpgradeReveal({
             }}
             onMouseEnter={(e) => {
               (e.currentTarget as HTMLButtonElement).style.background =
-                "#780000";
+                "var(--accent)";
             }}
             onMouseLeave={(e) => {
               (e.currentTarget as HTMLButtonElement).style.background =
-                "#c1121f";
+                "var(--primary)";
             }}
           >
             Explore New Campaigns &rarr;

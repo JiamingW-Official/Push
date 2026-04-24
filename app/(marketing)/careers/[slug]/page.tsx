@@ -34,14 +34,14 @@ function ApplyForm({ jobTitle }: { jobTitle: string }) {
     return (
       <div className="job-apply-success">
         <p className="job-apply-success-label">Application received</p>
-        <h2 className="job-apply-success-headline">Received.</h2>
+        <h2 className="job-apply-success-headline">Got it.</h2>
         <p className="job-apply-success-body">
-          We read every application personally. If there&apos;s a fit, someone
-          from the team will reach out within 5 business days. Thanks for your
-          interest in <strong>{jobTitle}</strong>.
+          Jiaming reads every application by hand. If there&apos;s a fit,
+          someone from the team writes back within five business days. Thanks
+          for the note about <strong>{jobTitle}</strong>.
         </p>
         <Link href="/careers" className="job-btn-secondary">
-          Back to open roles
+          Back to the eight seats
         </Link>
       </div>
     );
@@ -83,7 +83,7 @@ function ApplyForm({ jobTitle }: { jobTitle: string }) {
         {/* LinkedIn */}
         <div className="job-form-field job-form-field--full">
           <label className="job-form-label" htmlFor="apply-linkedin">
-            LinkedIn URL
+            LinkedIn or portfolio URL
           </label>
           <input
             id="apply-linkedin"
@@ -109,7 +109,7 @@ function ApplyForm({ jobTitle }: { jobTitle: string }) {
               <span className="job-form-file-name">{fileName}</span>
             ) : (
               <>
-                <span className="job-form-file-icon">↑</span>
+                <span className="job-form-file-icon">&uarr;</span>
                 <span>Upload PDF or Word doc</span>
               </>
             )}
@@ -135,7 +135,7 @@ function ApplyForm({ jobTitle }: { jobTitle: string }) {
             id="apply-why"
             className="job-form-textarea"
             rows={6}
-            placeholder="Tell us why this role and why now. Skip the cover-letter boilerplate — we'd rather hear you think."
+            placeholder="Tell us what made you read this. Skip the cover-letter boilerplate. Plain words are fine."
             required
             disabled={state === "submitting"}
           />
@@ -151,14 +151,14 @@ function ApplyForm({ jobTitle }: { jobTitle: string }) {
           {state === "submitting" ? (
             <span className="job-btn-loading">
               <span className="job-btn-spinner" />
-              Sending…
+              Sending&hellip;
             </span>
           ) : (
             "Submit application"
           )}
         </button>
         <p className="job-form-disclaimer">
-          We read every application within 5 business days.
+          Reply within five business days. Read by hand.
         </p>
       </div>
     </form>
@@ -179,44 +179,165 @@ export default function JobDetailPage() {
     <>
       <ScrollRevealInit />
 
-      {/* ── Job header ──────────────────────────────────── */}
-      <section className="job-hero">
-        <div className="job-inner">
-          <Link href="/careers" className="job-back">
-            ← All open roles
+      {/* ═══════════════ 01 — HERO (ink) ═══════════════ */}
+      <section
+        className="bg-hero-ink grain-overlay bg-vignette job-hero-v7"
+        style={{
+          position: "relative",
+          minHeight: "70svh",
+          display: "flex",
+          flexDirection: "column",
+          padding: "clamp(24px, 4vw, 64px)",
+          paddingTop: "clamp(80px, 8vw, 120px)",
+          overflow: "hidden",
+        }}
+      >
+        {/* Top row: pill + back link */}
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            flexWrap: "wrap",
+            gap: 16,
+            position: "relative",
+            zIndex: 3,
+          }}
+        >
+          <span className="pill-lux" style={{ color: "#fff" }}>
+            {job.department} · {job.location}
+          </span>
+          <Link
+            href="/careers"
+            className="job-back-v7"
+            style={{ color: "rgba(255,255,255,0.55)" }}
+          >
+            &larr; All eight seats
           </Link>
-          <div className="job-hero-content">
-            <div className="job-meta-row reveal">
-              <span className="job-dept-tag">{job.department}</span>
-              <span className="job-divider">·</span>
-              <span className="job-location">{job.location}</span>
-              <span className="job-divider">·</span>
-              <span className="job-type">{job.type}</span>
-            </div>
-            <h1 className="job-title reveal">{job.title}</h1>
-            <p className="job-comp reveal">{job.compensation}</p>
+        </div>
+
+        {/* Hero content */}
+        <div
+          style={{
+            flex: 1,
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            position: "relative",
+            zIndex: 3,
+            maxWidth: 1180,
+            margin: "0 auto",
+            width: "100%",
+            paddingTop: "clamp(48px, 8vh, 96px)",
+            paddingBottom: "clamp(48px, 8vh, 96px)",
+          }}
+        >
+          <div
+            className="section-marker"
+            data-num="01"
+            style={{ color: "rgba(255,255,255,0.55)" }}
+          >
+            The role
           </div>
+          <span
+            className="eyebrow-lux"
+            style={{ color: "var(--champagne)", marginBottom: 24 }}
+          >
+            {job.type} · {job.compensation}
+          </span>
+
+          <h1
+            className="reveal"
+            style={{
+              fontFamily: "var(--font-display)",
+              fontSize: "clamp(48px, 9vw, 132px)",
+              fontWeight: 900,
+              letterSpacing: "-0.06em",
+              lineHeight: 0.9,
+              color: "#fff",
+              margin: "12px 0 0",
+            }}
+          >
+            {job.title}
+            <span
+              aria-hidden="true"
+              style={{
+                color: "var(--brand-red)",
+                marginLeft: "-0.04em",
+              }}
+            >
+              .
+            </span>
+          </h1>
+
+          <p
+            className="reveal"
+            style={{
+              marginTop: "clamp(24px, 4vw, 40px)",
+              maxWidth: 640,
+              fontFamily: "var(--font-body)",
+              fontSize: "clamp(15px, 1.15vw, 18px)",
+              lineHeight: 1.65,
+              color: "rgba(255,255,255,0.78)",
+            }}
+          >
+            {job.aboutRole}
+          </p>
+
+          <div
+            style={{
+              marginTop: "clamp(32px, 5vw, 48px)",
+              display: "flex",
+              gap: 16,
+              flexWrap: "wrap",
+            }}
+          >
+            <a href="#apply" className="btn btn-primary">
+              Apply for this seat
+            </a>
+            <Link
+              href="/careers"
+              className="btn btn-ghost"
+              style={{
+                color: "rgba(255,255,255,0.7)",
+                borderColor: "rgba(255,255,255,0.18)",
+              }}
+            >
+              See the other seats&nbsp;&rarr;
+            </Link>
+          </div>
+          <p
+            style={{
+              marginTop: 16,
+              fontFamily: "var(--font-body)",
+              fontSize: 11,
+              letterSpacing: "0.04em",
+              color: "rgba(255,255,255,0.34)",
+            }}
+          >
+            every application read by hand · 5 business-day reply
+          </p>
         </div>
       </section>
 
-      {/* ── Body ────────────────────────────────────────── */}
+      {/* ═══════════════ Body ═══════════════ */}
       <section className="job-body">
         <div className="job-inner job-body-grid">
           {/* Main content */}
           <div className="job-content">
-            {/* About the role */}
-            <div className="job-section reveal">
-              <h2 className="job-section-title">About the role</h2>
-              <p className="job-section-body">{job.aboutRole}</p>
-            </div>
-
             {/* You'll be */}
             <div className="job-section reveal">
-              <h2 className="job-section-title">You&apos;ll be</h2>
+              <div className="section-marker" data-num="02">
+                What you&apos;ll do
+              </div>
+              <h2 className="job-section-title">
+                <span className="wt-900">First-week work,</span>{" "}
+                <span className="wt-300">not a year-out promise.</span>
+              </h2>
               <ul className="job-list">
                 {job.youllBe.map((item) => (
                   <li key={item} className="job-list-item">
-                    <span className="job-list-bullet">→</span>
+                    <span className="job-list-bullet">&rarr;</span>
                     {item}
                   </li>
                 ))}
@@ -225,11 +346,17 @@ export default function JobDetailPage() {
 
             {/* You should have */}
             <div className="job-section reveal">
-              <h2 className="job-section-title">You should have</h2>
+              <div className="section-marker" data-num="03">
+                Who fits
+              </div>
+              <h2 className="job-section-title">
+                <span className="wt-900">The filters.</span>{" "}
+                <span className="wt-300">All real, none cosmetic.</span>
+              </h2>
               <ul className="job-list">
                 {job.youShouldHave.map((item) => (
                   <li key={item} className="job-list-item">
-                    <span className="job-list-bullet">→</span>
+                    <span className="job-list-bullet">&rarr;</span>
                     {item}
                   </li>
                 ))}
@@ -238,11 +365,17 @@ export default function JobDetailPage() {
 
             {/* Nice to have */}
             <div className="job-section reveal">
-              <h2 className="job-section-title">Nice to have</h2>
+              <div className="section-marker" data-num="04">
+                Bonus
+              </div>
+              <h2 className="job-section-title">
+                <span className="wt-900">Helpful,</span>{" "}
+                <span className="wt-300">not required.</span>
+              </h2>
               <ul className="job-list job-list--muted">
                 {job.niceToHave.map((item) => (
                   <li key={item} className="job-list-item">
-                    <span className="job-list-bullet">○</span>
+                    <span className="job-list-bullet">&deg;</span>
                     {item}
                   </li>
                 ))}
@@ -251,12 +384,18 @@ export default function JobDetailPage() {
 
             {/* What we offer */}
             <div className="job-section reveal">
-              <h2 className="job-section-title">What we offer</h2>
+              <div className="section-marker" data-num="05">
+                What you&apos;ll get
+              </div>
+              <h2 className="job-section-title">
+                <span className="wt-900">Plain comp.</span>{" "}
+                <span className="wt-300">Equity over cash.</span>
+              </h2>
               <ul className="job-list">
                 {job.whatWeOffer.map((item) => (
                   <li key={item} className="job-list-item">
                     <span className="job-list-bullet job-list-bullet--check">
-                      ✓
+                      &#10003;
                     </span>
                     {item}
                   </li>
@@ -266,7 +405,13 @@ export default function JobDetailPage() {
 
             {/* Apply form */}
             <div className="job-section job-section--apply reveal" id="apply">
-              <h2 className="job-section-title">Apply</h2>
+              <div className="section-marker" data-num="06">
+                Apply
+              </div>
+              <h2 className="job-section-title">
+                <span className="wt-900">No cover-letter theater.</span>{" "}
+                <span className="wt-300">Just send it.</span>
+              </h2>
               <ApplyForm jobTitle={job.title} />
             </div>
           </div>
@@ -297,7 +442,7 @@ export default function JobDetailPage() {
               Apply now
             </a>
             <Link href="/careers" className="job-sidebar-back">
-              View all roles
+              View all seats
             </Link>
           </aside>
         </div>

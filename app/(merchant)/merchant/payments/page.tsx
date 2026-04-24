@@ -61,15 +61,15 @@ function fmtDate(iso: string): string {
 }
 
 const STATUS_COLORS: Record<MerchantPayment["status"], string> = {
-  scheduled: "#669bbc",
-  processing: "#c9a96e",
-  completed: "#2d7a2d",
+  scheduled: "var(--tertiary)",
+  processing: "var(--champagne)",
+  completed: "var(--success-dark)",
 };
 
 const STATUS_BG: Record<MerchantPayment["status"], string> = {
   scheduled: "rgba(102,155,188,0.12)",
   processing: "rgba(201,169,110,0.15)",
-  completed: "rgba(45,122,45,0.10)",
+  completed: "rgba(34,197,94,0.10)",
 };
 
 /* ── Top-up Modal ────────────────────────────────────────── */
@@ -229,10 +229,10 @@ export default function MerchantPaymentsPage() {
                   width: `${budgetPct}%`,
                   background:
                     budgetPct >= 90
-                      ? "#c1121f"
+                      ? "var(--primary)"
                       : budgetPct >= 75
-                        ? "#c9a96e"
-                        : "#003049",
+                        ? "var(--champagne)"
+                        : "var(--dark)",
                 }}
               />
             </div>
@@ -331,7 +331,7 @@ export default function MerchantPaymentsPage() {
                     <span style={styles.campaignFigures}>
                       <span
                         style={{
-                          color: overBudget ? "#c1121f" : "#003049",
+                          color: overBudget ? "var(--primary)" : "var(--dark)",
                           fontWeight: 700,
                         }}
                       >
@@ -349,10 +349,10 @@ export default function MerchantPaymentsPage() {
                         ...styles.progressFill,
                         width: `${pct}%`,
                         background: overBudget
-                          ? "#c1121f"
+                          ? "var(--primary)"
                           : pct >= 80
-                            ? "#c9a96e"
-                            : "#003049",
+                            ? "var(--champagne)"
+                            : "var(--dark)",
                       }}
                     />
                   </div>
@@ -388,11 +388,11 @@ export default function MerchantPaymentsPage() {
                   style={{
                     ...styles.invoiceCell,
                     flex: 2,
-                    fontFamily: "Darky, sans-serif",
+                    fontFamily: "var(--font-display)",
                     fontSize: 18,
                     fontWeight: 800,
                     letterSpacing: "-0.02em",
-                    color: "#003049",
+                    color: "var(--dark)",
                   }}
                 >
                   ${fmt(inv.totalAmount)}
@@ -401,10 +401,13 @@ export default function MerchantPaymentsPage() {
                   <span
                     style={{
                       ...styles.statusBadge,
-                      color: inv.status === "available" ? "#2d7a2d" : "#669bbc",
+                      color:
+                        inv.status === "available"
+                          ? "var(--success-dark)"
+                          : "var(--tertiary)",
                       background:
                         inv.status === "available"
-                          ? "rgba(45,122,45,0.10)"
+                          ? "rgba(34,197,94,0.10)"
                           : "rgba(102,155,188,0.12)",
                     }}
                   >
@@ -461,8 +464,8 @@ export default function MerchantPaymentsPage() {
 const styles: Record<string, React.CSSProperties> = {
   page: {
     minHeight: "100vh",
-    background: "var(--surface, #f5f2ec)",
-    fontFamily: "'CS Genio Mono', 'SF Mono', monospace",
+    background: "var(--surface)",
+    fontFamily: "var(--font-body)",
   },
   nav: {
     display: "flex",
@@ -470,33 +473,33 @@ const styles: Record<string, React.CSSProperties> = {
     justifyContent: "space-between",
     padding: "16px 32px",
     borderBottom: "1px solid rgba(0,48,73,0.12)",
-    background: "#ffffff",
+    background: "var(--surface-elevated)",
     position: "sticky",
     top: 0,
     zIndex: 50,
   },
   navBack: {
-    fontFamily: "'CS Genio Mono', monospace",
+    fontFamily: "var(--font-body)",
     fontSize: 13,
-    color: "#003049",
+    color: "var(--dark)",
     textDecoration: "none",
     letterSpacing: "0.01em",
   },
   navTitle: {
-    fontFamily: "Darky, sans-serif",
+    fontFamily: "var(--font-display)",
     fontSize: 20,
     fontWeight: 700,
-    color: "#003049",
+    color: "var(--dark)",
     letterSpacing: "-0.02em",
   },
   addFundsBtn: {
-    fontFamily: "'CS Genio Mono', monospace",
+    fontFamily: "var(--font-body)",
     fontSize: 12,
     fontWeight: 700,
     letterSpacing: "0.04em",
     textTransform: "uppercase",
-    background: "#c1121f",
-    color: "#ffffff",
+    background: "var(--primary)",
+    color: "#fff",
     border: "none",
     padding: "10px 20px",
     cursor: "pointer",
@@ -522,7 +525,7 @@ const styles: Record<string, React.CSSProperties> = {
   },
   heroEyebrow: {
     display: "block",
-    fontFamily: "'CS Genio Mono', monospace",
+    fontFamily: "var(--font-body)",
     fontSize: 11,
     fontWeight: 700,
     letterSpacing: "0.08em",
@@ -530,10 +533,10 @@ const styles: Record<string, React.CSSProperties> = {
     marginBottom: 12,
   },
   heroAmount: {
-    fontFamily: "Darky, sans-serif",
+    fontFamily: "var(--font-display)",
     fontSize: "clamp(32px, 5vw, 64px)",
     fontWeight: 900,
-    color: "#003049",
+    color: "var(--dark)",
     letterSpacing: "-0.04em",
     lineHeight: 1.1,
     marginBottom: 20,
@@ -545,12 +548,12 @@ const styles: Record<string, React.CSSProperties> = {
     marginBottom: 8,
   },
   heroBudgetLabel: {
-    fontFamily: "'CS Genio Mono', monospace",
+    fontFamily: "var(--font-body)",
     fontSize: 12,
     color: "rgba(0,48,73,0.55)",
   },
   heroBudgetTotal: {
-    fontFamily: "'CS Genio Mono', monospace",
+    fontFamily: "var(--font-body)",
     fontSize: 12,
     color: "rgba(0,48,73,0.40)",
   },
@@ -572,7 +575,7 @@ const styles: Record<string, React.CSSProperties> = {
   },
   heroStatCard: {
     padding: "20px 24px",
-    background: "#ffffff",
+    background: "var(--surface-elevated)",
     border: "1px solid rgba(0,48,73,0.12)",
     display: "flex",
     flexDirection: "column",
@@ -580,17 +583,17 @@ const styles: Record<string, React.CSSProperties> = {
     minWidth: 160,
   },
   heroStatLabel: {
-    fontFamily: "'CS Genio Mono', monospace",
+    fontFamily: "var(--font-body)",
     fontSize: 11,
     color: "rgba(0,48,73,0.50)",
     textTransform: "uppercase",
     letterSpacing: "0.06em",
   },
   heroStatValue: {
-    fontFamily: "Darky, sans-serif",
+    fontFamily: "var(--font-display)",
     fontSize: 22,
     fontWeight: 800,
-    color: "#003049",
+    color: "var(--dark)",
     letterSpacing: "-0.03em",
   },
 
@@ -599,10 +602,10 @@ const styles: Record<string, React.CSSProperties> = {
     paddingTop: 48,
   },
   sectionTitle: {
-    fontFamily: "Darky, sans-serif",
+    fontFamily: "var(--font-display)",
     fontSize: 24,
     fontWeight: 700,
-    color: "#003049",
+    color: "var(--dark)",
     letterSpacing: "-0.03em",
     marginBottom: 24,
   },
@@ -616,7 +619,7 @@ const styles: Record<string, React.CSSProperties> = {
   },
   paymentCol: {
     borderRight: "1px solid rgba(0,48,73,0.12)",
-    background: "#ffffff",
+    background: "var(--surface-elevated)",
   },
   paymentColHeader: {
     display: "flex",
@@ -633,23 +636,23 @@ const styles: Record<string, React.CSSProperties> = {
     flexShrink: 0,
   },
   paymentColTitle: {
-    fontFamily: "'CS Genio Mono', monospace",
+    fontFamily: "var(--font-body)",
     fontSize: 11,
     fontWeight: 700,
     letterSpacing: "0.06em",
     textTransform: "uppercase",
-    color: "#003049",
+    color: "var(--dark)",
     flex: 1,
   },
   paymentColCount: {
-    fontFamily: "Darky, sans-serif",
+    fontFamily: "var(--font-display)",
     fontSize: 16,
     fontWeight: 800,
-    color: "#003049",
+    color: "var(--dark)",
   },
   emptyCol: {
     padding: "24px 16px",
-    fontFamily: "'CS Genio Mono', monospace",
+    fontFamily: "var(--font-body)",
     fontSize: 12,
     color: "rgba(0,48,73,0.30)",
   },
@@ -666,20 +669,20 @@ const styles: Record<string, React.CSSProperties> = {
     alignItems: "baseline",
   },
   paymentCreator: {
-    fontFamily: "'CS Genio Mono', monospace",
+    fontFamily: "var(--font-body)",
     fontSize: 13,
     fontWeight: 600,
-    color: "#003049",
+    color: "var(--dark)",
   },
   paymentAmount: {
-    fontFamily: "Darky, sans-serif",
+    fontFamily: "var(--font-display)",
     fontSize: 18,
     fontWeight: 800,
-    color: "#003049",
+    color: "var(--dark)",
     letterSpacing: "-0.02em",
   },
   paymentCampaign: {
-    fontFamily: "'CS Genio Mono', monospace",
+    fontFamily: "var(--font-body)",
     fontSize: 11,
     color: "rgba(0,48,73,0.50)",
     lineHeight: 1.4,
@@ -691,13 +694,13 @@ const styles: Record<string, React.CSSProperties> = {
     marginTop: 4,
   },
   paymentDate: {
-    fontFamily: "'CS Genio Mono', monospace",
+    fontFamily: "var(--font-body)",
     fontSize: 10,
     color: "rgba(0,48,73,0.40)",
   },
   statusBadge: {
     display: "inline-block",
-    fontFamily: "'CS Genio Mono', monospace",
+    fontFamily: "var(--font-body)",
     fontSize: 10,
     fontWeight: 700,
     letterSpacing: "0.06em",
@@ -708,7 +711,7 @@ const styles: Record<string, React.CSSProperties> = {
   // Campaign spend
   campaignList: {
     border: "1px solid rgba(0,48,73,0.12)",
-    background: "#ffffff",
+    background: "var(--surface-elevated)",
   },
   campaignRow: {
     padding: "20px 24px",
@@ -721,13 +724,13 @@ const styles: Record<string, React.CSSProperties> = {
     marginBottom: 10,
   },
   campaignName: {
-    fontFamily: "'CS Genio Mono', monospace",
+    fontFamily: "var(--font-body)",
     fontSize: 13,
     fontWeight: 600,
-    color: "#003049",
+    color: "var(--dark)",
   },
   campaignFigures: {
-    fontFamily: "'CS Genio Mono', monospace",
+    fontFamily: "var(--font-body)",
     fontSize: 13,
   },
   progressTrack: {
@@ -742,7 +745,7 @@ const styles: Record<string, React.CSSProperties> = {
     transition: "width 0.8s ease-out",
   },
   progressPct: {
-    fontFamily: "'CS Genio Mono', monospace",
+    fontFamily: "var(--font-body)",
     fontSize: 10,
     color: "rgba(0,48,73,0.40)",
     letterSpacing: "0.02em",
@@ -751,7 +754,7 @@ const styles: Record<string, React.CSSProperties> = {
   // Invoices
   invoiceList: {
     border: "1px solid rgba(0,48,73,0.12)",
-    background: "#ffffff",
+    background: "var(--surface-elevated)",
   },
   invoiceHead: {
     display: "flex",
@@ -767,21 +770,21 @@ const styles: Record<string, React.CSSProperties> = {
     borderBottom: "1px solid rgba(0,48,73,0.06)",
   },
   invoiceCell: {
-    fontFamily: "'CS Genio Mono', monospace",
+    fontFamily: "var(--font-body)",
     fontSize: 12,
-    color: "#003049",
+    color: "var(--dark)",
     letterSpacing: "0.01em",
     display: "flex",
     alignItems: "center",
   },
   downloadBtn: {
-    fontFamily: "'CS Genio Mono', monospace",
+    fontFamily: "var(--font-body)",
     fontSize: 10,
     fontWeight: 700,
     letterSpacing: "0.06em",
     textTransform: "uppercase",
     background: "transparent",
-    color: "#003049",
+    color: "var(--dark)",
     border: "1px solid rgba(0,48,73,0.25)",
     padding: "6px 12px",
     cursor: "pointer",
@@ -793,7 +796,7 @@ const styles: Record<string, React.CSSProperties> = {
   ctaSection: {
     marginTop: 48,
     padding: "32px",
-    background: "#003049",
+    background: "var(--dark)",
   },
   ctaInner: {
     display: "flex",
@@ -802,7 +805,7 @@ const styles: Record<string, React.CSSProperties> = {
     gap: 24,
   },
   ctaLabel: {
-    fontFamily: "'CS Genio Mono', monospace",
+    fontFamily: "var(--font-body)",
     fontSize: 11,
     fontWeight: 700,
     letterSpacing: "0.08em",
@@ -811,21 +814,21 @@ const styles: Record<string, React.CSSProperties> = {
     marginBottom: 6,
   },
   ctaAmount: {
-    fontFamily: "Darky, sans-serif",
+    fontFamily: "var(--font-display)",
     fontSize: "clamp(28px, 3.5vw, 44px)",
     fontWeight: 900,
-    color: "#ffffff",
+    color: "#fff",
     letterSpacing: "-0.04em",
     lineHeight: 1,
   },
   ctaBtn: {
-    fontFamily: "'CS Genio Mono', monospace",
+    fontFamily: "var(--font-body)",
     fontSize: 14,
     fontWeight: 700,
     letterSpacing: "0.04em",
     textTransform: "uppercase",
-    background: "#c1121f",
-    color: "#ffffff",
+    background: "var(--primary)",
+    color: "#fff",
     border: "none",
     padding: "18px 40px",
     cursor: "pointer",
@@ -833,7 +836,7 @@ const styles: Record<string, React.CSSProperties> = {
     whiteSpace: "nowrap",
   },
   ctaNote: {
-    fontFamily: "'CS Genio Mono', monospace",
+    fontFamily: "var(--font-body)",
     fontSize: 12,
     color: "rgba(255,255,255,0.40)",
     marginTop: 12,
@@ -850,29 +853,29 @@ const styles: Record<string, React.CSSProperties> = {
     zIndex: 200,
   },
   modal: {
-    background: "#ffffff",
+    background: "var(--surface-elevated)",
     padding: "40px",
     width: 440,
     maxWidth: "calc(100vw - 48px)",
     borderRadius: 0,
   },
   modalTitle: {
-    fontFamily: "Darky, sans-serif",
+    fontFamily: "var(--font-display)",
     fontSize: 28,
     fontWeight: 900,
-    color: "#003049",
+    color: "var(--dark)",
     letterSpacing: "-0.03em",
     marginBottom: 8,
   },
   modalBody: {
-    fontFamily: "'CS Genio Mono', monospace",
+    fontFamily: "var(--font-body)",
     fontSize: 14,
-    color: "#4a5568",
+    color: "var(--graphite)",
     lineHeight: 1.6,
     marginBottom: 24,
   },
   modalLabel: {
-    fontFamily: "'CS Genio Mono', monospace",
+    fontFamily: "var(--font-body)",
     fontSize: 11,
     fontWeight: 700,
     letterSpacing: "0.08em",
@@ -887,10 +890,10 @@ const styles: Record<string, React.CSSProperties> = {
     gap: 8,
   },
   presetBtn: {
-    fontFamily: "'CS Genio Mono', monospace",
+    fontFamily: "var(--font-body)",
     fontSize: 13,
     fontWeight: 600,
-    color: "#003049",
+    color: "var(--dark)",
     background: "transparent",
     border: "1px solid rgba(0,48,73,0.15)",
     padding: "12px 8px",
@@ -899,16 +902,16 @@ const styles: Record<string, React.CSSProperties> = {
     transition: "border-color 150ms ease, background 150ms ease",
   },
   presetBtnActive: {
-    border: "1.5px solid #c1121f",
+    border: "1.5px solid var(--primary)",
     background: "rgba(193,18,31,0.04)",
-    color: "#c1121f",
+    color: "var(--primary)",
   },
   input: {
     width: "100%",
-    fontFamily: "'CS Genio Mono', monospace",
+    fontFamily: "var(--font-body)",
     fontSize: 14,
-    color: "#003049",
-    background: "#ffffff",
+    color: "var(--dark)",
+    background: "var(--surface-elevated)",
     border: "1px solid rgba(0,48,73,0.20)",
     padding: "12px 14px",
     borderRadius: 0,
@@ -916,9 +919,9 @@ const styles: Record<string, React.CSSProperties> = {
     boxSizing: "border-box",
   },
   inputError: {
-    fontFamily: "'CS Genio Mono', monospace",
+    fontFamily: "var(--font-body)",
     fontSize: 11,
-    color: "#c1121f",
+    color: "var(--primary)",
     marginTop: 6,
   },
   modalActions: {
@@ -927,11 +930,11 @@ const styles: Record<string, React.CSSProperties> = {
   },
   modalPrimary: {
     flex: 1,
-    background: "#c1121f",
-    color: "#ffffff",
+    background: "var(--primary)",
+    color: "#fff",
     border: "none",
     padding: "16px",
-    fontFamily: "'CS Genio Mono', monospace",
+    fontFamily: "var(--font-body)",
     fontSize: 13,
     fontWeight: 700,
     letterSpacing: "0.04em",
@@ -942,10 +945,10 @@ const styles: Record<string, React.CSSProperties> = {
   modalSecondary: {
     flex: 1,
     background: "transparent",
-    color: "#003049",
+    color: "var(--dark)",
     border: "1px solid rgba(0,48,73,0.20)",
     padding: "16px",
-    fontFamily: "'CS Genio Mono', monospace",
+    fontFamily: "var(--font-body)",
     fontSize: 13,
     fontWeight: 600,
     letterSpacing: "0.04em",

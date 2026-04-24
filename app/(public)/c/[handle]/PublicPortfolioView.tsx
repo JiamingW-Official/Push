@@ -108,7 +108,7 @@ export function PublicPortfolioView({ profile }: { profile: CreatorProfile }) {
 
             {/* Identity block */}
             <div className="pub-hero-identity">
-              <div className="pub-hero-eyebrow">
+              <div className={`pub-hero-eyebrow tier-${tier.toLowerCase()}`}>
                 <span className="pub-tier-badge">{tier}</span>
                 <span className="pub-hero-location">
                   NYC — {profile.neighborhood}
@@ -181,7 +181,7 @@ export function PublicPortfolioView({ profile }: { profile: CreatorProfile }) {
           {/* Tier benefits */}
           <section className="pub-section">
             <div className="pub-section-header">
-              <span className="pub-section-eyebrow">02</span>
+              <span className="eyebrow pub-section-eyebrow">02</span>
               <h2 className="pub-section-title">Creator Tier</h2>
             </div>
             <div className="pub-tier-block">
@@ -204,7 +204,7 @@ export function PublicPortfolioView({ profile }: { profile: CreatorProfile }) {
           {visibleGallery.length > 0 && (
             <section className="pub-section">
               <div className="pub-section-header">
-                <span className="pub-section-eyebrow">03</span>
+                <span className="eyebrow pub-section-eyebrow">03</span>
                 <h2 className="pub-section-title">Content Gallery</h2>
               </div>
               <div className="pub-gallery-grid">
@@ -235,7 +235,7 @@ export function PublicPortfolioView({ profile }: { profile: CreatorProfile }) {
           {visibleCampaigns.length > 0 && (
             <section className="pub-section">
               <div className="pub-section-header">
-                <span className="pub-section-eyebrow">04</span>
+                <span className="eyebrow pub-section-eyebrow">04</span>
                 <h2 className="pub-section-title">Past Campaigns</h2>
               </div>
               <div className="pub-campaigns-list">
@@ -276,7 +276,7 @@ export function PublicPortfolioView({ profile }: { profile: CreatorProfile }) {
           {profile.testimonials.length > 0 && (
             <section className="pub-section">
               <div className="pub-section-header">
-                <span className="pub-section-eyebrow">05</span>
+                <span className="eyebrow pub-section-eyebrow">05</span>
                 <h2 className="pub-section-title">Merchant Testimonials</h2>
               </div>
               <div className="pub-testimonials">
@@ -304,7 +304,7 @@ export function PublicPortfolioView({ profile }: { profile: CreatorProfile }) {
         <aside className="pub-sidebar">
           <div className="pub-sidebar-inner">
             <div className="pub-cta-card">
-              <p className="pub-cta-eyebrow">Ready to collaborate?</p>
+              <p className="eyebrow pub-cta-eyebrow">Ready to collaborate?</p>
               <h3 className="pub-cta-heading">
                 Work with {profile.displayName.split(" ")[0]}
               </h3>
@@ -328,7 +328,7 @@ export function PublicPortfolioView({ profile }: { profile: CreatorProfile }) {
               </div>
               <a
                 href={`mailto:hello@push.nyc?subject=Campaign%20with%20${encodeURIComponent(profile.displayName)}`}
-                className="pub-cta-btn"
+                className="btn btn-primary pub-cta-btn"
               >
                 Start a Campaign
               </a>

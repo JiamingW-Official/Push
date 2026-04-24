@@ -197,7 +197,7 @@
   flex-wrap: wrap;
 }
 
-/* Pill buttons — direct-angle, no pill shape */
+/* Filter chip pill — v7 iOS 26 continuous corner */
 .ap-pill {
   font-family: var(--font-body);
   font-size: var(--text-caption);
@@ -206,7 +206,7 @@
   text-transform: uppercase;
   padding: 6px 14px;
   border: 1.5px solid var(--line-strong);
-  border-radius: 0;
+  border-radius: var(--r-pill);
   background: transparent;
   color: var(--graphite);
   cursor: pointer;
@@ -237,7 +237,7 @@
   letter-spacing: 0.04em;
   padding: 6px 12px;
   border: 1.5px solid var(--line-strong);
-  border-radius: 0;
+  border-radius: var(--r-md);
   background: var(--surface-elevated);
   color: var(--dark);
   cursor: pointer;
@@ -260,7 +260,7 @@
   font-size: var(--text-caption);
   padding: 6px 12px;
   border: 1.5px solid var(--line-strong);
-  border-radius: 0;
+  border-radius: var(--r-md);
   background: var(--surface-elevated);
   color: var(--dark);
   min-width: 180px;
@@ -371,7 +371,7 @@
   width: 16px;
   height: 16px;
   border: 1.5px solid var(--line-strong);
-  border-radius: 0;
+  border-radius: var(--r-sm);
   cursor: pointer;
   accent-color: var(--primary);
   flex-shrink: 0;
@@ -388,7 +388,7 @@
 .ap-creator__avatar {
   width: 36px;
   height: 36px;
-  border-radius: 0;
+  border-radius: var(--r-full);
   object-fit: cover;
   flex-shrink: 0;
   background: var(--surface);
@@ -423,7 +423,7 @@
   letter-spacing: 0.08em;
   text-transform: uppercase;
   padding: 3px 8px;
-  border-radius: 0;
+  border-radius: var(--r-sm);
   white-space: nowrap;
 }
 
@@ -487,7 +487,7 @@
   letter-spacing: 0.08em;
   text-transform: uppercase;
   padding: 5px 10px;
-  border-radius: 0;
+  border-radius: var(--r-lg);
   cursor: pointer;
   border: 1.5px solid transparent;
   transition: background var(--t-fast), color var(--t-fast), border-color var(--t-fast), transform 80ms ease;
@@ -537,7 +537,7 @@
   letter-spacing: 0.08em;
   text-transform: uppercase;
   padding: 4px 10px;
-  border-radius: 0;
+  border-radius: var(--r-sm);
   white-space: nowrap;
 }
 
@@ -555,7 +555,7 @@
 
 .ap-status-badge--shortlisted {
   background: var(--champagne-light);
-  color: #7a5e28;
+  color: var(--accent);
   border: 1px solid var(--champagne-border);
 }
 
@@ -632,7 +632,7 @@
   width: 80px;
   height: 80px;
   object-fit: cover;
-  border-radius: 0;
+  border-radius: var(--r-lg);
   background: var(--surface);
 }
 
@@ -660,9 +660,10 @@
   display: flex;
   align-items: center;
   gap: var(--space-3);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
+  box-shadow: var(--shadow-3);
   transition: transform 300ms cubic-bezier(0.22, 1, 0.36, 1);
   white-space: nowrap;
+  border-radius: var(--r-2xl);
 }
 
 .ap-bulk-bar--visible {
@@ -689,7 +690,7 @@
   letter-spacing: 0.1em;
   text-transform: uppercase;
   padding: 7px 16px;
-  border-radius: 0;
+  border-radius: var(--r-lg);
   cursor: pointer;
   border: 1.5px solid transparent;
   transition: background var(--t-fast), color var(--t-fast), border-color var(--t-fast);
@@ -775,7 +776,8 @@
   max-width: 480px;
   width: 90%;
   animation: modalSlideUp 250ms ease forwards;
-  border-radius: 0;
+  border-radius: var(--r-2xl);
+  box-shadow: var(--shadow-3);
 }
 
 .ap-modal__title {
@@ -808,7 +810,7 @@
   text-transform: uppercase;
   padding: 8px 20px;
   border: 1.5px solid var(--line-strong);
-  border-radius: 0;
+  border-radius: var(--r-lg);
   background: transparent;
   color: var(--graphite);
   cursor: pointer;
@@ -828,7 +830,7 @@
   text-transform: uppercase;
   padding: 8px 20px;
   border: 1.5px solid var(--primary);
-  border-radius: 0;
+  border-radius: var(--r-lg);
   background: var(--primary);
   color: #fff;
   cursor: pointer;

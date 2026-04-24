@@ -3,152 +3,19 @@
    Extends landing.css; no new design tokens introduced.
    ============================================================ */
 
-/* ── Hero ─────────────────────────────────────────────────── */
-.cr-hero {
-  min-height: 100svh;
-  background: var(--dark);
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  padding-top: 64px;
-  padding-bottom: var(--space-10);
-  position: relative;
-  overflow: hidden;
-}
-
-/* Ambient: tertiary top-right, primary bottom-left — inverted from merchants */
-.cr-hero::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background:
-    radial-gradient(
-      ellipse 60% 50% at 85% 15%,
-      rgba(102, 155, 188, 0.07) 0%,
-      transparent 65%
-    ),
-    radial-gradient(
-      ellipse 45% 35% at 10% 85%,
-      rgba(201, 169, 110, 0.05) 0%,
-      transparent 60%
-    );
-  pointer-events: none;
-  z-index: 0;
-}
-
-.cr-hero-inner {
-  position: relative;
-  z-index: 1;
-  padding-top: var(--space-10);
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: var(--space-10);
-  align-items: start;
-}
-
-.cr-hero-content {
-  max-width: 560px;
-}
-
-.cr-eyebrow {
-  color: var(--tertiary);
-  margin-bottom: var(--space-4);
-}
-
-.cr-headline {
-  font-family: var(--font-display);
-  font-size: clamp(56px, 9vw, 128px);
-  letter-spacing: -0.06em;
-  line-height: 0.9;
-  color: #fff;
-  margin-bottom: var(--space-5);
-}
-
-.cr-black {
-  font-weight: 900;
-  display: block;
-}
-
-.cr-light {
-  font-weight: 200;
-  display: block;
-  color: rgba(255, 255, 255, 0.3);
-}
-
-.cr-sub {
-  font-size: var(--text-body);
-  color: rgba(245, 242, 236, 0.82);
-  max-width: 460px;
-  line-height: 1.8;
-  margin-bottom: var(--space-5);
-}
-
-.cr-ctas {
-  display: flex;
-  gap: var(--space-2);
-  flex-wrap: wrap;
-  margin-bottom: var(--space-3);
-}
-
+/* ── Hero — v7 (inline-styled in page.tsx using .bg-hero-ink + .grain-overlay
+   + .bg-vignette + .pill-lux + .eyebrow-lux + .section-marker + .display-ghost
+   + .scroll-indicator + .category-strip from globals.css). Legacy .cr-hero*
+   rules removed when the hero was rebuilt for v7. .cr-ghost is kept for the
+   final-CTA "Run a venue?" link. ── */
 .cr-ghost {
   color: rgba(255, 255, 255, 0.55);
   border-color: rgba(255, 255, 255, 0.15);
 }
 
 .cr-ghost:hover {
-  color: #fff;
+  color: var(--surface-elevated);
   border-color: rgba(255, 255, 255, 0.4);
-}
-
-.cr-reassure {
-  font-size: var(--text-caption);
-  color: rgba(255, 255, 255, 0.25);
-  letter-spacing: 0.02em;
-}
-
-/* ── Hero stat cards ──────────────────────────────────────── */
-.cr-hero-stats {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: var(--space-2);
-  align-content: start;
-  padding-top: var(--space-5);
-}
-
-.cr-stat-card {
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.07);
-  border-top: 2px solid rgba(102, 155, 188, 0.3);
-  padding: var(--space-4);
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  transition: background var(--t-base);
-}
-
-.cr-stat-card:hover {
-  background: rgba(255, 255, 255, 0.07);
-}
-
-.cr-stat-num {
-  font-family: var(--font-display);
-  font-size: clamp(36px, 4vw, 52px);
-  font-weight: 200;
-  letter-spacing: -0.05em;
-  line-height: 1;
-  color: #fff;
-}
-
-.cr-stat-label {
-  font-size: var(--text-small);
-  color: rgba(255, 255, 255, 0.6);
-  line-height: 1.4;
-}
-
-.cr-stat-sub {
-  font-size: var(--text-caption);
-  color: rgba(255, 255, 255, 0.25);
-  letter-spacing: 0.02em;
 }
 
 /* ── Problem / Solution split ─────────────────────────────── */
@@ -214,7 +81,7 @@
 .cr-pain-dash {
   width: 16px;
   height: 2px;
-  background: rgba(0, 48, 73, 0.2);
+  background: var(--line-strong);
   flex-shrink: 0;
   margin-top: 9px;
 }
@@ -244,7 +111,7 @@
   width: 20px;
   height: 20px;
   background: var(--primary);
-  color: #fff;
+  color: var(--surface-elevated);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -279,7 +146,29 @@
 
 /* ── Tier section ─────────────────────────────────────────── */
 .cr-tiers-section {
-  /* inherits section-warm dark bg */
+  /* v7: ink bg so the rgba(255,255,255,0.04) tier cards have contrast. */
+  background:
+    radial-gradient(ellipse 60% 80% at 85% 15%, rgba(191, 161, 112, 0.16), transparent 60%),
+    radial-gradient(ellipse 50% 70% at 15% 85%, rgba(193, 18, 31, 0.10), transparent 65%),
+    var(--ink);
+  color: #ffffff;
+}
+
+.cr-tiers-section .section-tag-num,
+.cr-tiers-section .section-tag-label,
+.cr-tiers-section .split-headline,
+.cr-tiers-section .split-headline .wt-900,
+.cr-tiers-section .split-body {
+  color: #ffffff;
+}
+.cr-tiers-section .split-headline .wt-300 {
+  color: rgba(255, 255, 255, 0.4);
+}
+.cr-tiers-section .split-body {
+  color: rgba(255, 255, 255, 0.62);
+}
+.cr-tiers-section .section-tag-line {
+  background: rgba(255, 255, 255, 0.18);
 }
 
 .cr-tier-grid {
@@ -333,7 +222,7 @@
   letter-spacing: 0.08em;
   text-transform: uppercase;
   padding: 5px 12px;
-  border-radius: 0;
+  border-radius: var(--r-sm);
 }
 
 .badge-clay {
@@ -398,8 +287,9 @@
 }
 
 @keyframes obsidianPulse {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(26, 26, 46, 0.4); }
-  50% { box-shadow: 0 0 0 8px rgba(26, 26, 46, 0); }
+  /* Obsidian pulse ring — --dark (Deep Space Blue) rgb @ 40% → 0% alpha */
+  0%, 100% { box-shadow: 0 0 0 0 rgba(0, 48, 73, 0.4); }
+  50% { box-shadow: 0 0 0 8px rgba(0, 48, 73, 0); }
 }
 
 /* Tier body — reach + earning */
@@ -444,7 +334,7 @@
   font-size: clamp(28px, 3vw, 40px);
   font-weight: 800;
   letter-spacing: -0.04em;
-  color: #fff;
+  color: var(--surface-elevated);
   line-height: 1;
 }
 
@@ -499,7 +389,7 @@
 }
 
 .cr-how-step:hover {
-  background: rgba(0, 48, 73, 0.025);
+  background: var(--surface-muted);
   transform: translateY(-6px);
 }
 
@@ -527,6 +417,7 @@
   font-weight: 100;
   letter-spacing: -0.06em;
   line-height: 1;
+  /* ghost decorative numeral — --dark @ 8% alpha, lighter than --line (12%) */
   color: rgba(0, 48, 73, 0.08);
   display: block;
   margin-bottom: var(--space-4);
@@ -551,7 +442,29 @@
 
 /* ── Earnings Calculator ─────────────────────────────────── */
 .cr-calc-section {
-  /* inherits section-warm */
+  /* v7: ink bg so the rgba(255,255,255,*) sliders + tier buttons have contrast. */
+  background:
+    radial-gradient(ellipse 60% 80% at 15% 15%, rgba(191, 161, 112, 0.14), transparent 60%),
+    radial-gradient(ellipse 50% 70% at 85% 85%, rgba(193, 18, 31, 0.08), transparent 65%),
+    var(--ink);
+  color: #ffffff;
+}
+
+.cr-calc-section .section-tag-num,
+.cr-calc-section .section-tag-label,
+.cr-calc-section .split-headline,
+.cr-calc-section .split-headline .wt-900,
+.cr-calc-section .split-body {
+  color: #ffffff;
+}
+.cr-calc-section .split-headline .wt-300 {
+  color: rgba(255, 255, 255, 0.4);
+}
+.cr-calc-section .split-body {
+  color: rgba(255, 255, 255, 0.62);
+}
+.cr-calc-section .section-tag-line {
+  background: rgba(255, 255, 255, 0.18);
 }
 
 .calc-wrap {
@@ -591,7 +504,7 @@
   font-size: 20px;
   font-weight: 800;
   letter-spacing: -0.04em;
-  color: #fff;
+  color: var(--surface-elevated);
 }
 
 /* Tier grid buttons */
@@ -604,7 +517,7 @@
 .calc-tier-btn {
   background: rgba(255, 255, 255, 0.04);
   border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 0;
+  border-radius: var(--r-lg);
   padding: var(--space-2) var(--space-3);
   cursor: pointer;
   display: flex;
@@ -636,7 +549,7 @@
 }
 
 .calc-tier-btn--active .calc-tier-name {
-  color: #fff;
+  color: var(--surface-elevated);
 }
 
 .calc-tier-range {
@@ -655,7 +568,7 @@
   background: rgba(255, 255, 255, 0.12);
   outline: none;
   cursor: pointer;
-  border-radius: 0;
+  border-radius: var(--r-pill);
 }
 
 .calc-slider::-webkit-slider-thumb {
@@ -665,7 +578,7 @@
   height: 16px;
   background: var(--primary);
   cursor: pointer;
-  border-radius: 0;
+  border-radius: 50%;
   border: 2px solid rgba(255, 255, 255, 0.9);
   transition: transform var(--t-base);
 }
@@ -679,7 +592,7 @@
   height: 16px;
   background: var(--primary);
   cursor: pointer;
-  border-radius: 0;
+  border-radius: 50%;
   border: 2px solid rgba(255, 255, 255, 0.9);
 }
 
@@ -734,7 +647,7 @@
   font-size: clamp(40px, 5vw, 64px);
   font-weight: 900;
   letter-spacing: -0.05em;
-  color: #fff;
+  color: var(--surface-elevated);
   line-height: 1;
 }
 
@@ -781,6 +694,7 @@
   font-weight: 100;
   letter-spacing: -0.08em;
   line-height: 0.7;
+  /* ghost decorative quote — --dark @ 6% alpha */
   color: rgba(0, 48, 73, 0.06);
   user-select: none;
   margin-bottom: var(--space-4);
@@ -844,6 +758,12 @@
 /* ── Final CTA ─────────────────────────────────────────────── */
 .cr-final-cta {
   padding-block: var(--space-15);
+  /* v7: dark hero ink so the white CTA copy reads. */
+  background:
+    radial-gradient(ellipse 70% 80% at 85% 10%, rgba(191, 161, 112, 0.22), transparent 55%),
+    radial-gradient(ellipse 50% 70% at 10% 95%, rgba(193, 18, 31, 0.18), transparent 60%),
+    var(--ink);
+  color: #ffffff;
 }
 
 .cr-cta-inner {
@@ -855,7 +775,7 @@
   font-size: clamp(40px, 5vw, 72px);
   font-weight: 900;
   letter-spacing: -0.05em;
-  color: #fff;
+  color: var(--surface-elevated);
   line-height: 1;
   margin-bottom: var(--space-4);
   display: flex;
@@ -911,16 +831,6 @@
 }
 
 @media (max-width: 900px) {
-  .cr-hero-inner {
-    grid-template-columns: 1fr;
-    gap: var(--space-8);
-  }
-
-  .cr-hero-stats {
-    grid-template-columns: repeat(4, 1fr);
-    padding-top: 0;
-  }
-
   .cr-ps-grid {
     grid-template-columns: 1fr;
     gap: var(--space-6);
@@ -943,10 +853,6 @@
 }
 
 @media (max-width: 640px) {
-  .cr-hero-stats {
-    grid-template-columns: 1fr 1fr;
-  }
-
   .cr-tier-grid {
     grid-template-columns: 1fr;
   }

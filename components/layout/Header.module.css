@@ -45,7 +45,7 @@
   font-weight: 900;
   font-style: italic;
   letter-spacing: -0.06em;
-  color: #fff;
+  color: #fff; /* text-on-dark */
   flex-shrink: 0;
   text-decoration: none;
   margin-right: auto;
@@ -85,7 +85,7 @@
   font-weight: 600;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: #fff;
+  color: #fff; /* text-on-dark */
   background: rgba(255, 255, 255, 0.08);
   border: 1px solid rgba(255, 255, 255, 0.12);
   padding: 7px 20px;
@@ -111,7 +111,7 @@
   cursor: pointer;
   background: none;
   border: none;
-  border-radius: 0;
+  border-radius: var(--r-lg);
 }
 
 .hamburger span,
@@ -120,7 +120,7 @@
   width: 20px;
   height: 1.5px;
   background: rgba(245, 242, 236, 0.7);
-  border-radius: 0;
+  border-radius: var(--r-full);
   transform-origin: center;
   transform: translateY(0) rotate(0deg);
   opacity: 1;
@@ -219,7 +219,7 @@
   font-weight: 600;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: #fff;
+  color: #fff; /* text-on-dark */
   background: var(--primary);
   padding: 12px 24px;
   text-decoration: none;

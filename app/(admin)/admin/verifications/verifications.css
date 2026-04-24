@@ -364,12 +364,12 @@
   flex-shrink: 0;
 }
 
-.vq-check.complete .vq-check-dot { background: #22c55e; }
+.vq-check.complete .vq-check-dot { background: var(--success); }
 .vq-check.pending .vq-check-dot  { background: var(--champagne); }
 .vq-check.failed .vq-check-dot   { background: var(--primary); }
 .vq-check.not_submitted .vq-check-dot { background: var(--line-strong); }
 
-.vq-check.complete { color: #22c55e; }
+.vq-check.complete { color: var(--success); }
 .vq-check.pending  { color: var(--champagne); }
 .vq-check.failed   { color: var(--primary); }
 .vq-check.not_submitted { color: var(--text-muted); }
@@ -428,7 +428,7 @@
   padding: 6px 12px;
   border: 1.5px solid transparent;
   cursor: pointer;
-  border-radius: 0;
+  border-radius: var(--r-lg);
   transition: all var(--t-fast);
   white-space: nowrap;
 }
@@ -440,8 +440,8 @@
 }
 
 .vq-btn-approve:hover {
-  background: #005080;
-  border-color: #005080;
+  background: var(--accent);
+  border-color: var(--accent);
 }
 
 .vq-btn-more {
@@ -477,9 +477,9 @@
   padding: 4px 10px;
 }
 
-.vq-status-badge.approved { background: rgba(34, 197, 94, 0.12); color: #16a34a; }
+.vq-status-badge.approved { background: rgba(34, 197, 94, 0.12); color: var(--success-dark); }
 .vq-status-badge.rejected { background: rgba(193, 18, 31, 0.1); color: var(--primary); }
-.vq-status-badge.more_info { background: rgba(201, 169, 110, 0.15); color: #92610a; }
+.vq-status-badge.more_info { background: rgba(201, 169, 110, 0.15); color: var(--warning); }
 
 /* Empty state */
 .vq-empty {
@@ -713,7 +713,7 @@
 
 .vq-social-verified.yes {
   background: rgba(34, 197, 94, 0.1);
-  color: #16a34a;
+  color: var(--success-dark);
 }
 
 .vq-social-verified.no {
@@ -799,7 +799,7 @@
   border-left: 3px solid var(--line-strong);
 }
 
-.vq-history-entry.approved { border-color: #22c55e; }
+.vq-history-entry.approved { border-color: var(--success); }
 .vq-history-entry.rejected { border-color: var(--primary); }
 .vq-history-entry.more_info { border-color: var(--champagne); }
 

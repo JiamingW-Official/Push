@@ -29,7 +29,7 @@ function ChevronIcon({ className }: { className?: string }) {
       viewBox="0 0 20 20"
       fill="none"
       stroke="currentColor"
-      strokeWidth={1.8}
+      strokeWidth={1.6}
       strokeLinecap="round"
       strokeLinejoin="round"
     >
@@ -47,7 +47,7 @@ function SearchIcon() {
       viewBox="0 0 20 20"
       fill="none"
       stroke="currentColor"
-      strokeWidth={1.8}
+      strokeWidth={1.6}
       strokeLinecap="round"
     >
       <circle cx={8.5} cy={8.5} r={5.5} />
@@ -55,6 +55,38 @@ function SearchIcon() {
     </svg>
   );
 }
+
+/* ── Per-category headline pair (Darky 800 + ghost) ───────── */
+const CATEGORY_HEADLINES: Record<
+  FaqCategory,
+  { num: string; lead: string; ghost: string }
+> = {
+  "for-merchants": {
+    num: "02",
+    lead: "Merchant",
+    ghost: "questions, answered.",
+  },
+  "for-creators": {
+    num: "03",
+    lead: "Creator",
+    ghost: "questions, answered.",
+  },
+  "pricing-payments": {
+    num: "04",
+    lead: "Payment",
+    ghost: "questions, answered.",
+  },
+  "attribution-qr": {
+    num: "05",
+    lead: "Verification",
+    ghost: "questions, answered.",
+  },
+  "trust-safety": {
+    num: "06",
+    lead: "Legal",
+    ghost: "questions, answered.",
+  },
+};
 
 /* ── Accordion item ───────────────────────────────────────── */
 function FaqAccordionItem({
@@ -122,41 +154,36 @@ function FaqAccordionItem({
         aria-hidden={!open}
       >
         <div ref={innerRef} className="faq-item-body">
-          {/* Answer */}
           <div>
             <p className="faq-item-answer">{item.answer}</p>
 
-            {/* Helpful feedback */}
             <div className="faq-helpful">
-              <span className="faq-helpful-label">Was this helpful?</span>
+              <span className="faq-helpful-label">was this useful?</span>
               {vote === null ? (
                 <>
                   <button
                     className="faq-helpful-btn"
-                    data-voted={vote === "yes" ? "yes" : undefined}
                     onClick={() => handleVote("yes")}
                   >
-                    Yes
+                    yes
                   </button>
                   <button
                     className="faq-helpful-btn"
-                    data-voted={vote === "no" ? "no" : undefined}
                     onClick={() => handleVote("no")}
                   >
-                    No
+                    no
                   </button>
                 </>
               ) : (
                 <span className="faq-helpful-thanks">
                   {vote === "yes"
-                    ? "Thanks for your feedback!"
-                    : "We'll work on improving this answer."}
+                    ? "noted — thanks."
+                    : "we'll sharpen the answer."}
                 </span>
               )}
             </div>
           </div>
 
-          {/* Related questions — desktop only */}
           {relatedItems.length > 0 && (
             <aside className="faq-related">
               <p className="faq-related-label">Related</p>
@@ -165,30 +192,7 @@ function FaqAccordionItem({
                   <li key={rel.id}>
                     <button
                       className="faq-related-link"
-                      style={{
-                        background: "none",
-                        border: "none",
-                        width: "100%",
-                        textAlign: "left",
-                        cursor: "pointer",
-                        padding: "6px 0",
-                        borderBottom: "1px solid var(--line)",
-                        fontFamily: "var(--font-body)",
-                        fontSize: "var(--text-small)",
-                        color: "var(--dark)",
-                        lineHeight: 1.4,
-                        transition: "color var(--t-fast)",
-                        borderRadius: 0,
-                      }}
                       onClick={() => onRelatedClick(rel.id)}
-                      onMouseEnter={(e) => {
-                        (e.currentTarget as HTMLElement).style.color =
-                          "var(--primary)";
-                      }}
-                      onMouseLeave={(e) => {
-                        (e.currentTarget as HTMLElement).style.color =
-                          "var(--dark)";
-                      }}
                     >
                       {rel.question}
                     </button>
@@ -272,7 +276,6 @@ function FaqPageInner() {
       if (debounceRef.current) clearTimeout(debounceRef.current);
       debounceRef.current = setTimeout(() => {
         setDebouncedQuery(value);
-        // Sync URL
         const params = new URLSearchParams();
         if (value) params.set("q", value);
         if (activeCat !== "for-merchants") params.set("cat", activeCat);
@@ -302,7 +305,6 @@ function FaqPageInner() {
     (id: string) => {
       const item = FAQ_MAP.get(id);
       if (!item) return;
-      // Switch to correct tab if needed
       if (item.category !== activeCat) {
         setActiveCat(item.category);
         setQuery("");
@@ -320,7 +322,6 @@ function FaqPageInner() {
   const filtered = (() => {
     const q = debouncedQuery.trim().toLowerCase();
     if (q) {
-      // Search across ALL categories
       return FAQ_ITEMS.filter(
         (f) =>
           f.question.toLowerCase().includes(q) ||
@@ -331,29 +332,64 @@ function FaqPageInner() {
   })();
 
   const isSearching = debouncedQuery.trim().length > 0;
+  const heading = CATEGORY_HEADLINES[activeCat];
 
   return (
     <main className="faq-page">
-      {/* ── Hero ─────────────────────────────────────────────── */}
-      <section className="faq-hero">
+      {/* ── Hero — bg-hero-ink + grain + vignette ────────────── */}
+      <section className="faq-hero bg-hero-ink grain-overlay bg-vignette">
         <div className="faq-hero-inner">
-          <p className="faq-hero-eyebrow">Help Center</p>
+          {/* Top row: pill + eyebrow */}
+          <div className="faq-hero-top">
+            <span className="pill-lux" style={{ color: "#fff" }}>
+              Pilot · SoHo / Tribeca / Chinatown
+            </span>
+            <span className="eyebrow-lux" style={{ color: "var(--champagne)" }}>
+              Opens June&nbsp;22
+            </span>
+          </div>
+
+          {/* Section marker */}
+          <div
+            className="section-marker"
+            data-num="01"
+            style={{ color: "rgba(255,255,255,0.55)" }}
+          >
+            Common questions
+          </div>
+
+          {/* Headline: Darky 900 + ghost */}
           <h1 className="faq-hero-headline">
-            Common <em>questions.</em>
+            The stuff
+            <span aria-hidden="true" style={{ color: "var(--brand-red)" }}>
+              .
+            </span>
+            <br />
+            <span className="display-ghost faq-hero-ghost">
+              people ask, often.
+            </span>
           </h1>
+
+          <p className="faq-hero-sub">
+            Real questions from the venues and creators we've been on calls with
+            the last six weeks. No sales-deck answers — just what actually
+            happens during the pilot.
+          </p>
 
           {/* Search */}
           <div className="faq-search-wrap">
             <label htmlFor="faq-search" className="faq-search-label">
-              Search all topics
+              search across all topics
             </label>
             <div className="faq-search-field">
-              <SearchIcon />
+              <span className="faq-search-icon">
+                <SearchIcon />
+              </span>
               <input
                 id="faq-search"
                 type="search"
                 className="faq-search-input"
-                placeholder="e.g. how do payouts work?"
+                placeholder="e.g. when do creators get paid?"
                 value={query}
                 onChange={(e) => handleSearchChange(e.target.value)}
                 autoComplete="off"
@@ -371,7 +407,7 @@ function FaqPageInner() {
                     viewBox="0 0 14 14"
                     fill="none"
                     stroke="currentColor"
-                    strokeWidth={1.8}
+                    strokeWidth={1.6}
                     strokeLinecap="round"
                   >
                     <path d="M1 1l12 12M13 1L1 13" />
@@ -381,8 +417,8 @@ function FaqPageInner() {
             </div>
             <p className="faq-search-meta">
               {isSearching
-                ? `${filtered.length} result${filtered.length !== 1 ? "s" : ""} for "${debouncedQuery}"`
-                : ""}
+                ? `${filtered.length} match${filtered.length !== 1 ? "es" : ""} for "${debouncedQuery}"`
+                : `${FAQ_ITEMS.length} answers across ${ALL_CATEGORIES.length} categories.`}
             </p>
           </div>
         </div>
@@ -411,69 +447,42 @@ function FaqPageInner() {
 
       {/* ── Main content ──────────────────────────────────────── */}
       <div className="faq-content">
-        {/* Accordion list */}
         <div>
-          {/* Section header */}
           {!isSearching && (
-            <div
-              className="faq-reveal"
-              style={{ marginBottom: "var(--space-5)" }}
-            >
-              <p
-                style={{
-                  fontFamily: "var(--font-body)",
-                  fontSize: "var(--text-caption)",
-                  fontWeight: 700,
-                  letterSpacing: "0.08em",
-                  textTransform: "uppercase",
-                  color: "var(--text-muted)",
-                  marginBottom: "var(--space-1)",
-                }}
-              >
+            <div className="faq-section-head faq-reveal">
+              <div className="section-marker" data-num={heading.num}>
                 {CATEGORY_LABELS[activeCat]}
-              </p>
-              <h2
-                style={{
-                  fontFamily: "var(--font-display)",
-                  fontSize: "var(--text-h2)",
-                  fontWeight: 700,
-                  letterSpacing: "-0.03em",
-                  color: "var(--dark)",
-                }}
-              >
-                {activeCat === "for-merchants" &&
-                  "Everything merchants need to know"}
-                {activeCat === "for-creators" && "Creator earnings & platform"}
-                {activeCat === "pricing-payments" &&
-                  "Pricing & payment details"}
-                {activeCat === "attribution-qr" && "How attribution works"}
-                {activeCat === "trust-safety" && "Trust, safety & compliance"}
+              </div>
+              <h2 className="faq-section-title">
+                {heading.lead}
+                <span aria-hidden="true" style={{ color: "var(--brand-red)" }}>
+                  .
+                </span>
+                <br />
+                <span className="display-ghost faq-section-ghost">
+                  {heading.ghost}
+                </span>
               </h2>
             </div>
           )}
 
           {isSearching && filtered.length > 0 && (
-            <div
-              className="faq-reveal"
-              style={{ marginBottom: "var(--space-5)" }}
-            >
-              <p
-                style={{
-                  fontFamily: "var(--font-body)",
-                  fontSize: "var(--text-small)",
-                  color: "var(--graphite)",
-                }}
+            <div className="faq-reveal faq-search-banner">
+              <div
+                className="section-marker"
+                data-num="//"
+                style={{ marginBottom: 0 }}
               >
-                Showing results across all categories
-              </p>
+                results across all categories
+              </div>
             </div>
           )}
 
           {filtered.length === 0 ? (
             <div className="faq-empty faq-reveal">
-              <p className="faq-empty-title">No results found</p>
+              <p className="faq-empty-title">nothing matched.</p>
               <p className="faq-empty-sub">
-                Try a different search term, or browse a category above.
+                try a different word, or browse a category above.
               </p>
             </div>
           ) : (
@@ -501,41 +510,40 @@ function FaqPageInner() {
 
         {/* Sidebar — desktop only */}
         <aside className="faq-sidebar">
-          <div className="faq-sidebar-card">
-            <h3 className="faq-sidebar-title">Still have questions?</h3>
+          <div className="faq-sidebar-card card-premium">
+            <div
+              className="section-marker"
+              data-num="//"
+              style={{ marginBottom: "var(--space-3)" }}
+            >
+              Direct line
+            </div>
+            <h3 className="faq-sidebar-title">
+              still
+              <span style={{ color: "var(--brand-red)" }}>?</span>
+            </h3>
             <p className="faq-sidebar-sub">
-              Our team responds within 24 hours on business days.
+              email Jiaming directly. Replies usually inside the same business
+              day, never later than 24 hours.
             </p>
-            <Link href="/contact" className="faq-sidebar-link">
-              Contact Support
+            <a href="mailto:jiaming@push.nyc" className="faq-sidebar-link">
+              jiaming@push.nyc
               <svg
                 width={14}
                 height={14}
                 viewBox="0 0 14 14"
                 fill="none"
                 stroke="currentColor"
-                strokeWidth={1.8}
+                strokeWidth={1.6}
                 strokeLinecap="round"
               >
                 <path d="M2 7h10M7 2l5 5-5 5" />
               </svg>
-            </Link>
+            </a>
 
             <div className="faq-sidebar-divider" />
 
-            <p
-              style={{
-                fontFamily: "var(--font-body)",
-                fontSize: "var(--text-caption)",
-                fontWeight: 700,
-                letterSpacing: "0.08em",
-                textTransform: "uppercase",
-                color: "var(--text-muted)",
-                marginBottom: "var(--space-2)",
-              }}
-            >
-              Browse topics
-            </p>
+            <p className="faq-sidebar-topics-label">browse topics</p>
             <nav className="faq-sidebar-topics">
               {ALL_CATEGORIES.map((cat) => (
                 <button
@@ -552,34 +560,48 @@ function FaqPageInner() {
         </aside>
       </div>
 
-      {/* ── Still have questions CTA ──────────────────────────── */}
-      <section className="faq-cta">
+      {/* ── FTC divider ───────────────────────────────────────── */}
+      <div className="faq-divider-wrap">
+        <div className="divider-lux">FTC 16 CFR § 255 · enforced</div>
+      </div>
+
+      {/* ── Direct-line CTA ───────────────────────────────────── */}
+      <section className="faq-cta bg-hero-ink grain-overlay bg-vignette">
         <div className="faq-cta-inner faq-reveal">
-          <p className="faq-cta-eyebrow">Get in touch</p>
+          <div
+            className="section-marker"
+            data-num="07"
+            style={{ color: "rgba(255,255,255,0.55)" }}
+          >
+            Direct line
+          </div>
           <h2 className="faq-cta-headline">
-            Still have <span>questions?</span>
+            Still unsure
+            <span style={{ color: "var(--brand-red)" }}>?</span>
+            <br />
+            <span className="display-ghost faq-cta-ghost">email Jiaming.</span>
           </h2>
           <p className="faq-cta-body">
-            Our team of experts is ready to help you understand how Push can
-            work for your venue or creator profile. We respond within 24 hours.
+            One operator runs the inbox during the pilot. You'll get a real
+            answer, usually inside the same business day.
           </p>
           <div className="faq-cta-actions">
-            <Link href="/contact" className="faq-cta-btn-primary">
-              Contact us
+            <a href="mailto:jiaming@push.nyc" className="faq-cta-btn-primary">
+              jiaming@push.nyc
               <svg
                 width={14}
                 height={14}
                 viewBox="0 0 14 14"
                 fill="none"
                 stroke="currentColor"
-                strokeWidth={1.8}
+                strokeWidth={1.6}
                 strokeLinecap="round"
               >
                 <path d="M2 7h10M7 2l5 5-5 5" />
               </svg>
-            </Link>
+            </a>
             <Link href="/explore" className="faq-cta-btn-secondary">
-              Explore campaigns
+              browse live campaigns
             </Link>
           </div>
         </div>

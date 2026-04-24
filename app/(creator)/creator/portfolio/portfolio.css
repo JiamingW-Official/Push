@@ -1,6 +1,6 @@
 /* ============================================================
    Portfolio Page — Edit View
-   Design.md authority: border-radius:0, 8px grid, 6 brand colors
+   Design.md v7 authority: iOS 26 continuous corner, 8px grid
    ============================================================ */
 
 /* ── Page shell ─────────────────────────────────────────────── */
@@ -67,7 +67,7 @@
   text-decoration: none;
   display: inline-flex;
   align-items: center;
-  border-radius: 0;
+  border-radius: var(--r-lg);
   transition: background var(--t-fast), border-color var(--t-fast);
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -192,7 +192,7 @@
   padding: 4px 10px;
   cursor: pointer;
   font-family: var(--font-body);
-  border-radius: 0;
+  border-radius: var(--r-lg);
   white-space: nowrap;
   transition: border-color var(--t-fast), color var(--t-fast);
 }
@@ -264,7 +264,7 @@
   letter-spacing: 0.04em;
   text-transform: uppercase;
   cursor: pointer;
-  border-radius: 0;
+  border-radius: var(--r-lg);
   transition: background var(--t-fast);
 }
 
@@ -316,7 +316,7 @@
   background: var(--surface-elevated);
   border: 1px solid var(--line);
   padding: 10px 12px;
-  border-radius: 0;
+  border-radius: var(--r-md);
   outline: none;
   width: 100%;
   transition: border-color var(--t-fast);
@@ -391,7 +391,7 @@
   letter-spacing: 0.05em;
   text-transform: uppercase;
   cursor: pointer;
-  border-radius: 0;
+  border-radius: var(--r-lg);
   border: none;
   transition: background var(--t-fast);
 }
@@ -699,7 +699,7 @@
   background: var(--surface);
   color: var(--graphite);
   cursor: pointer;
-  border-radius: 0;
+  border-radius: var(--r-lg);
   transition: background var(--t-fast), color var(--t-fast);
 }
 
@@ -750,7 +750,7 @@
   letter-spacing: 0.04em;
   text-transform: uppercase;
   cursor: pointer;
-  border-radius: 0;
+  border-radius: var(--r-lg);
   transition: background var(--t-fast);
   white-space: nowrap;
 }
@@ -857,7 +857,7 @@
   letter-spacing: 0.05em;
   text-transform: uppercase;
   cursor: pointer;
-  border-radius: 0;
+  border-radius: var(--r-lg);
   border: 1px solid var(--dark);
   background: var(--dark);
   color: #fff;

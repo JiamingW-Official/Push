@@ -36,8 +36,8 @@
 }
 
 @keyframes obsidianPulse {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(26, 26, 46, 0.3); }
-  50%       { box-shadow: 0 0 0 8px rgba(26, 26, 46, 0); }
+  0%, 100% { box-shadow: 0 0 0 0 rgba(0, 48, 73, 0.3); }
+  50%       { box-shadow: 0 0 0 8px rgba(0, 48, 73, 0); }
 }
 
 /* ── Shell ────────────────────────────────────────────────── */
@@ -192,19 +192,19 @@
 .lb-hero-rank-label {
   font-size: 13px;
   font-weight: 400;
-  color: rgba(245, 242, 236, 0.55);
+  color: rgba(255, 255, 255, 0.55);
   letter-spacing: 0.02em;
 }
 
 .lb-hero-divider {
   width: 1px;
   height: 32px;
-  background: rgba(245, 242, 236, 0.15);
+  background: rgba(255, 255, 255, 0.15);
 }
 
 .lb-hero-total {
   font-size: 13px;
-  color: rgba(245, 242, 236, 0.55);
+  color: rgba(255, 255, 255, 0.55);
 }
 
 /* ── Content wrapper ──────────────────────────────────────── */
@@ -453,13 +453,13 @@
   color: var(--surface-bright);
 }
 
-/* Tier-specific chip colors when active */
-.lb-tier-chip--seed.lb-tier-chip--active   { background: #b8a99a; border-color: #b8a99a; color: var(--dark); }
-.lb-tier-chip--explorer.lb-tier-chip--active { background: #8c6239; border-color: #8c6239; color: #fff; }
-.lb-tier-chip--operator.lb-tier-chip--active { background: #4a5568; border-color: #4a5568; color: #fff; }
-.lb-tier-chip--proven.lb-tier-chip--active  { background: #c9a96e; border-color: #c9a96e; color: var(--dark); }
-.lb-tier-chip--closer.lb-tier-chip--active  { background: #9b111e; border-color: #9b111e; color: #fff; }
-.lb-tier-chip--partner.lb-tier-chip--active { background: #1a1a2e; border-color: #1a1a2e; color: #fff; }
+/* Tier-specific chip colors when active — Path A brand-palette mapping */
+.lb-tier-chip--seed.lb-tier-chip--active     { background: var(--tier-seed);     border-color: var(--tier-seed);     color: #fff; }
+.lb-tier-chip--explorer.lb-tier-chip--active { background: var(--tier-explorer); border-color: var(--tier-explorer); color: var(--dark); }
+.lb-tier-chip--operator.lb-tier-chip--active { background: var(--tier-operator); border-color: var(--tier-operator); color: #fff; }
+.lb-tier-chip--proven.lb-tier-chip--active   { background: var(--tier-proven);   border-color: var(--tier-proven);   color: #fff; }
+.lb-tier-chip--closer.lb-tier-chip--active   { background: var(--tier-closer);   border-color: var(--tier-closer);   color: #fff; }
+.lb-tier-chip--partner.lb-tier-chip--active  { background: var(--tier-partner);  border-color: var(--tier-partner);  color: #fff; }
 
 /* ── Leaderboard Table ────────────────────────────────────── */
 
@@ -581,7 +581,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 0;
+  border-radius: var(--r-lg);
 }
 
 .lb-creator-info {
@@ -617,22 +617,24 @@
   text-transform: uppercase;
   letter-spacing: 0.08em;
   padding: 3px 8px;
-  border-radius: 0;
+  border-radius: var(--r-lg);
   margin-top: 3px;
   width: fit-content;
 }
 
-.lb-tier-badge--seed     { background: transparent; color: #b8a99a; border: 1.5px dashed rgba(184,169,154,0.5); }
-.lb-tier-badge--explorer { background: #8c6239; color: #fff; }
-.lb-tier-badge--operator { background: #4a5568; color: #fff; }
-.lb-tier-badge--proven   { background: #c9a96e; color: var(--dark); }
+.lb-tier-badge--seed     { background: transparent; color: var(--tier-seed); border: 1.5px dashed var(--line-strong); }
+.lb-tier-badge--explorer { background: var(--tier-explorer); color: var(--dark); }
+.lb-tier-badge--operator { background: var(--tier-operator); color: #fff; }
+.lb-tier-badge--proven   { background: var(--tier-proven);   color: #fff; }
 .lb-tier-badge--closer   {
-  background: #9b111e; color: #fff;
+  background: var(--tier-closer); color: #fff;
   background-size: 200% auto;
 }
 .lb-tier-badge--partner  {
-  background: #1a1a2e; color: #fff;
-  border-left: 3px solid var(--primary);
+  background: var(--tier-partner); color: #fff;
+  /* v7 Design.md §Tier Identity System: Partner (Obsidian) = Ink bg +
+     3px --champagne left-border ceremonial capstone. */
+  border-left: 3px solid var(--champagne);
   animation: obsidianPulse 2.4s ease-in-out infinite;
 }
 
@@ -692,7 +694,7 @@
   gap: 2px;
 }
 
-.lb-delta--up   { color: #10b981; }
+.lb-delta--up   { color: var(--success); }
 .lb-delta--down { color: var(--primary); }
 .lb-delta--flat { color: var(--text-muted); }
 
@@ -727,7 +729,7 @@
 .lb-sticky-sep {
   width: 1px;
   height: 40px;
-  background: rgba(245, 242, 236, 0.15);
+  background: rgba(255, 255, 255, 0.15);
 }
 
 .lb-sticky-info {
@@ -744,7 +746,7 @@
 
 .lb-sticky-catchup {
   font-size: 12px;
-  color: rgba(245, 242, 236, 0.6);
+  color: rgba(255, 255, 255, 0.6);
   margin-top: 2px;
 }
 
@@ -767,7 +769,7 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  color: rgba(245, 242, 236, 0.45);
+  color: rgba(255, 255, 255, 0.45);
 }
 
 /* ── Share Badge ──────────────────────────────────────────── */
@@ -809,7 +811,7 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  color: rgba(245, 242, 236, 0.5);
+  color: rgba(255, 255, 255, 0.5);
 }
 
 .lb-share-badge-logo {
@@ -853,7 +855,7 @@
   border: none;
   padding: 10px 20px;
   cursor: pointer;
-  border-radius: 0;
+  border-radius: var(--r-lg);
   box-shadow: var(--btn-shadow);
   transition: box-shadow var(--t-slow), transform var(--t-fast);
 }

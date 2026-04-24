@@ -285,11 +285,11 @@ function AccountTab({ user }: { user: AdminUser }) {
             <div className="detail-field-label">Verification Docs</div>
             <div className="detail-field-value">
               {user.kyc_status === "verified" ? (
-                <span style={{ color: "#15803d", fontSize: 13 }}>
+                <span style={{ color: "var(--success-dark)", fontSize: 13 }}>
                   ✓ ID verified · Address verified
                 </span>
               ) : user.kyc_status === "pending" ? (
-                <span style={{ color: "#854d0e", fontSize: 13 }}>
+                <span style={{ color: "var(--warning)", fontSize: 13 }}>
                   Documents under review
                 </span>
               ) : (
@@ -495,7 +495,7 @@ function CampaignsTab({ user }: { user: AdminUser }) {
                         padding: "12px 16px",
                         textAlign: "right",
                         fontWeight: 700,
-                        color: "#15803d",
+                        color: "var(--success-dark)",
                       }}
                     >
                       {formatMoney(c.payout)}
@@ -531,7 +531,7 @@ function PaymentsTab({ user }: { user: AdminUser }) {
             <div className="detail-field-label">Total Earnings</div>
             <div
               className="detail-field-value"
-              style={{ fontWeight: 700, color: "#15803d" }}
+              style={{ fontWeight: 700, color: "var(--success-dark)" }}
             >
               {formatMoney(user.earnings_total)}
             </div>
@@ -677,7 +677,10 @@ function PaymentsTab({ user }: { user: AdminUser }) {
                         padding: "12px 16px",
                         textAlign: "right",
                         fontWeight: 700,
-                        color: t.amount < 0 ? "var(--primary)" : "#15803d",
+                        color:
+                          t.amount < 0
+                            ? "var(--primary)"
+                            : "var(--success-dark)",
                       }}
                     >
                       {t.amount < 0
@@ -1019,9 +1022,9 @@ export default function AdminUserDetailPage({
             <button
               className="btn-admin"
               style={{
-                background: "rgba(234,88,12,0.15)",
-                color: "#f97316",
-                border: "1px solid rgba(234,88,12,0.3)",
+                background: "rgba(224, 123, 0, 0.15)",
+                color: "var(--warning)",
+                border: "1px solid rgba(224, 123, 0, 0.3)",
               }}
               onClick={() => setModal("suspend")}
             >
@@ -1170,7 +1173,7 @@ export default function AdminUserDetailPage({
               background: "rgba(255,255,255,0.1)",
               color: "white",
               border: "1px solid rgba(255,255,255,0.2)",
-              borderRadius: 0,
+              borderRadius: "var(--r-lg)",
             }}
             onClick={() => {
               document.cookie = "push-impersonating=; max-age=0; path=/";

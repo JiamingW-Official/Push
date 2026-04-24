@@ -215,8 +215,8 @@ form.form-loading {
 }
 
 .submit-btn:hover {
-  box-shadow: 6px 6px 0 var(--dark);
-  transform: translateX(2px);
+  box-shadow: var(--shadow-3);
+  transform: translateY(-2px);
 }
 
 .submit-btn:active,

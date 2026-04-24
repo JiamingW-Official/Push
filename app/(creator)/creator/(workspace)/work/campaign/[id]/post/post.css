@@ -98,7 +98,7 @@
   padding: 20px 24px;
   flex: 1;
   max-width: 520px;
-  border-radius: 0;
+  border-radius: var(--r-xl);
 }
 
 .post-summary-logo {
@@ -112,7 +112,7 @@
   font-weight: 700;
   letter-spacing: 0.04em;
   color: #ffffff;
-  border-radius: 0;
+  border-radius: var(--r-xl);
 }
 
 .post-summary-info {
@@ -234,7 +234,7 @@
   transition:
     border-color 200ms ease,
     background 200ms ease;
-  border-radius: 0;
+  border-radius: var(--r-xl);
   position: relative;
   overflow: hidden;
 }
@@ -343,7 +343,7 @@
   background: var(--surface-elevated, #ffffff);
   border: 1px solid rgba(0, 48, 73, 0.12);
   padding: 10px 12px;
-  border-radius: 0;
+  border-radius: var(--r-xl);
   animation: fadeIn 300ms ease forwards;
 }
 
@@ -353,7 +353,7 @@
   object-fit: cover;
   flex-shrink: 0;
   display: block;
-  border-radius: 0;
+  border-radius: var(--r-xl);
 }
 
 .post-thumb-video-placeholder {
@@ -364,7 +364,7 @@
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  border-radius: 0;
+  border-radius: var(--r-xl);
 }
 
 .post-thumb-video-icon {
@@ -382,7 +382,7 @@
   font-size: 20px;
   color: var(--graphite, #4a5568);
   flex-shrink: 0;
-  border-radius: 0;
+  border-radius: var(--r-xl);
 }
 
 .post-thumb-info {
@@ -413,7 +413,7 @@
   font-size: 14px;
   color: var(--graphite, #4a5568);
   padding: 4px 6px;
-  border-radius: 0;
+  border-radius: var(--r-xl);
   transition: color 150ms ease;
   flex-shrink: 0;
   line-height: 1;
@@ -438,7 +438,7 @@
   color: var(--dark, #003049);
   background: var(--surface-elevated, #ffffff);
   border: 1px solid rgba(0, 48, 73, 0.2);
-  border-radius: 0;
+  border-radius: var(--r-xl);
   resize: vertical;
   line-height: 1.55;
   transition: border-color 200ms ease;
@@ -605,7 +605,7 @@
   margin-top: 40px;
   padding: 32px;
   background: var(--dark, #003049);
-  border-radius: 0;
+  border-radius: var(--r-xl);
 }
 
 .post-submit-inner {
@@ -660,7 +660,7 @@
   background: var(--primary, #c1121f);
   color: #ffffff;
   border: none;
-  border-radius: 0;
+  border-radius: var(--r-xl);
   font-family: "CS Genio Mono", monospace;
   font-size: 14px;
   font-weight: 700;
@@ -746,7 +746,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 0;
+  border-radius: var(--r-xl);
   animation: fadeIn 300ms ease forwards;
 }
 

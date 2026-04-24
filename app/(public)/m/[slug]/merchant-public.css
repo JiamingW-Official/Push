@@ -74,7 +74,7 @@
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.75);
+  color: rgba(255, 255, 255, 0.75); /* text on dark hero image — white ladder allowed */
 }
 
 /* ── Buttons ───────────────────────────────────────────────── */
@@ -87,7 +87,7 @@
   text-transform: uppercase;
   text-decoration: none;
   border: none;
-  border-radius: 0;
+  border-radius: var(--r-lg);
   padding: 14px 28px;
   cursor: none;
   transition: box-shadow var(--t-slow), transform var(--t-fast);
@@ -95,7 +95,7 @@
 
 .mp-btn--primary {
   background: var(--primary);
-  color: #fff;
+  color: #fff; /* text on primary bg */
   box-shadow: var(--btn-shadow);
   width: 100%;
   text-align: center;
@@ -109,11 +109,11 @@
 .mp-btn--cta {
   background: var(--surface-elevated);
   color: var(--dark);
-  box-shadow: 3px 3px 0 var(--primary);
+  box-shadow: var(--shadow-2);
 }
 
 .mp-btn--cta:hover {
-  box-shadow: 6px 6px 0 var(--accent);
+  box-shadow: var(--shadow-3);
   transform: translateY(-1px);
 }
 
@@ -151,7 +151,7 @@
     to bottom,
     rgba(0, 48, 73, 0.15) 0%,
     rgba(0, 48, 73, 0.72) 100%
-  );
+  ); /* --dark rgba tint on hero image */
 }
 
 .mp-hero-content {
@@ -182,7 +182,7 @@
 .mp-hero-tagline {
   font-family: var(--font-body);
   font-size: clamp(14px, 1.8vw, 18px);
-  color: rgba(255, 255, 255, 0.8);
+  color: rgba(255, 255, 255, 0.8); /* text on dark hero image */
   max-width: 560px;
 }
 
@@ -203,7 +203,7 @@
   font-size: var(--text-caption);
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.55);
+  color: rgba(255, 255, 255, 0.55); /* on dark hero */
   writing-mode: vertical-rl;
 }
 
@@ -211,7 +211,7 @@
   display: block;
   width: 1px;
   height: 48px;
-  background: rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.3); /* on dark hero */
   animation: mp-scroll-bob 2s ease-in-out infinite;
 }
 
@@ -276,14 +276,16 @@
 .mp-campaign-card {
   background: var(--surface-elevated);
   border: 1px solid var(--line);
+  border-radius: var(--r-xl);
   display: flex;
   flex-direction: column;
+  overflow: hidden;
   transition: transform var(--t-reveal), box-shadow var(--t-reveal);
 }
 
 .mp-campaign-card:hover {
   transform: translateY(-6px);
-  box-shadow: 0 12px 32px rgba(0, 48, 73, 0.1);
+  box-shadow: var(--shadow-1);
 }
 
 .mp-campaign-img {
@@ -417,6 +419,7 @@
   gap: var(--space-1);
   padding: var(--space-2);
   border: 1px solid var(--line);
+  border-radius: var(--r-lg);
   background: var(--surface-elevated);
   text-align: center;
   transition: border-color var(--t-base), transform var(--t-reveal);
@@ -460,7 +463,7 @@
 }
 
 .mp-stats .mp-section-label {
-  border-bottom-color: rgba(255, 255, 255, 0.15);
+  border-bottom-color: rgba(255, 255, 255, 0.15); /* on --dark stats bg */
 }
 
 .mp-stats .mp-section-num {
@@ -519,7 +522,7 @@
 .mp-stat-label {
   font-family: var(--font-body);
   font-size: var(--text-small);
-  color: rgba(255, 255, 255, 0.55);
+  color: rgba(255, 255, 255, 0.55); /* on --dark stats bg */
   text-transform: uppercase;
   letter-spacing: 0.06em;
 }
@@ -533,7 +536,7 @@
     display: block;
     width: 1px;
     height: 80px;
-    background: rgba(255, 255, 255, 0.12);
+    background: rgba(255, 255, 255, 0.12); /* on --dark stats bg */
     flex-shrink: 0;
   }
 }
@@ -565,6 +568,7 @@
   background: var(--surface-bright);
   border: 1px solid var(--line);
   border-left: 4px solid var(--primary);
+  border-radius: var(--r-xl);
   padding: var(--space-5);
   display: flex;
   flex-direction: column;
@@ -575,7 +579,7 @@
 
 .mp-review-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 8px 24px rgba(0, 48, 73, 0.08);
+  box-shadow: var(--shadow-1);
 }
 
 .mp-review-quote {
@@ -647,12 +651,13 @@
 .mp-map-wrap {
   height: 360px;
   border: 1px solid var(--line);
+  border-radius: var(--r-xl);
   overflow: hidden;
 }
 
-/* Override any Leaflet border-radius */
+/* Leaflet inherits container radius via overflow:hidden */
 .mp-map-wrap .leaflet-container {
-  border-radius: 0 !important;
+  border-radius: inherit;
 }
 
 .mp-visit-details {
@@ -767,7 +772,7 @@
     to bottom,
     transparent 30%,
     rgba(0, 48, 73, 0.78) 100%
-  );
+  ); /* --dark overlay gradient */
   transition: background var(--t-slow);
 }
 
@@ -800,7 +805,7 @@
 .mp-related-neighborhood {
   font-family: var(--font-body);
   font-size: var(--text-caption);
-  color: rgba(255, 255, 255, 0.65);
+  color: rgba(255, 255, 255, 0.65); /* on gradient-darkened card */
   text-transform: uppercase;
   letter-spacing: 0.06em;
   margin-bottom: 4px;
@@ -832,7 +837,7 @@
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.65);
+  color: rgba(255, 255, 255, 0.65); /* on --primary cta bg */
   margin-bottom: var(--space-2);
 }
 
@@ -849,7 +854,7 @@
 .mp-cta-sub {
   font-family: var(--font-body);
   font-size: var(--text-body);
-  color: rgba(255, 255, 255, 0.75);
+  color: rgba(255, 255, 255, 0.75); /* on --primary cta bg */
   line-height: 1.6;
   margin-bottom: var(--space-5);
 }

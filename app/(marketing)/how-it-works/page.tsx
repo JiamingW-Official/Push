@@ -5,9 +5,9 @@ import HowItWorksClient from "./HowItWorksClient";
 import "./how-it-works.css";
 
 export const metadata: Metadata = {
-  title: "How Push Works — Performance-Based Creator Marketing",
+  title: "How Push Works — Pay Per Verified Visit",
   description:
-    "Learn how Push connects NYC merchants with local creators. Pay only for verified foot traffic tracked by QR code. Dual-role explainer for merchants and creators.",
+    "Creator posts, customer scans the QR, oracle confirms, Stripe pays out on Friday. Push is a per-verified-visit creator system piloting in SoHo, Tribeca, and Chinatown.",
 };
 
 /* ── QR Diagram SVG ──────────────────────────────────────── */
@@ -86,12 +86,12 @@ function DemoPostCampaign() {
     <div className="demo-post">
       <div className="demo-post-header">
         <span className="demo-post-dot" />
-        Campaign active
+        Campaign live · SoHo
       </div>
       <div className="demo-post-card">
         <div className="demo-post-card-title">Ramen &amp; Co.</div>
         <div className="demo-post-card-meta">
-          Williamsburg, Brooklyn · Tonight
+          Mott St, Chinatown · open until 11
         </div>
         <div className="demo-post-payout">$32</div>
         <div className="demo-post-payout-label">
@@ -113,14 +113,14 @@ function DemoCreatorContent() {
         <div className="demo-creator-avatar" />
         <div className="demo-creator-info">
           <span className="demo-creator-handle">@maya.eats.nyc</span>
-          <span className="demo-creator-tier">Operator · Score 94</span>
+          <span className="demo-creator-tier">Operator · 38 verified</span>
         </div>
       </div>
       <div className="demo-creator-content-block">
-        <span className="demo-creator-content-label">Content published</span>
+        <span className="demo-creator-content-label">Post published</span>
       </div>
       <div className="demo-earn-badge">
-        <span>Verified earn</span>
+        <span>Friday payout</span>
         <span className="demo-earn-amount">+$32</span>
       </div>
     </div>
@@ -147,10 +147,12 @@ function AttributionDiagram() {
           </svg>
         </div>
         <span className="hiw-attr-node-label">Creator</span>
-        <span className="hiw-attr-node-sub">Posts content</span>
+        <span className="hiw-attr-node-sub">Posts a real spot</span>
       </div>
 
-      <span className="hiw-attr-arrow">→</span>
+      <span className="hiw-attr-arrow" aria-hidden="true">
+        →
+      </span>
 
       {/* Node 2 — Audience */}
       <div className="hiw-attr-node">
@@ -167,11 +169,13 @@ function AttributionDiagram() {
             />
           </svg>
         </div>
-        <span className="hiw-attr-node-label">Audience</span>
-        <span className="hiw-attr-node-sub">Sees campaign</span>
+        <span className="hiw-attr-node-label">Customer</span>
+        <span className="hiw-attr-node-sub">Walks in</span>
       </div>
 
-      <span className="hiw-attr-arrow">→</span>
+      <span className="hiw-attr-arrow" aria-hidden="true">
+        →
+      </span>
 
       {/* Node 3 — QR Scan */}
       <div className="hiw-attr-node">
@@ -192,11 +196,13 @@ function AttributionDiagram() {
             />
           </svg>
         </div>
-        <span className="hiw-attr-node-label">QR Scan</span>
-        <span className="hiw-attr-node-sub">At your door</span>
+        <span className="hiw-attr-node-label">QR scan</span>
+        <span className="hiw-attr-node-sub">At the door</span>
       </div>
 
-      <span className="hiw-attr-arrow">→</span>
+      <span className="hiw-attr-arrow" aria-hidden="true">
+        →
+      </span>
 
       {/* Node 4 — Verified */}
       <div className="hiw-attr-node">
@@ -214,89 +220,109 @@ function AttributionDiagram() {
             />
           </svg>
         </div>
-        <span className="hiw-attr-node-label">Verified</span>
-        <span className="hiw-attr-node-sub">Payout released</span>
+        <span className="hiw-attr-node-label">Friday payout</span>
+        <span className="hiw-attr-node-sub">Stripe Connect</span>
       </div>
     </div>
   );
 }
 
-/* ── Timeline comparison data ────────────────────────────── */
+/* ── Comparison rows — Push vs. impressions-based marketing ── */
 const COMPARE_ROWS = [
   {
-    feature: "Time to launch",
-    traditional: "2–6 weeks",
-    push: "Under 24 hours",
+    feature: "What you pay for",
+    traditional: "Impressions, reach, clicks",
+    push: "One verified physical visit",
   },
   {
-    feature: "Attribution",
-    traditional: "Estimated, opaque",
-    push: "QR-verified, per visit",
+    feature: "How attribution lands",
+    traditional: "Estimated, cookie-driven",
+    push: "QR scan timestamped at the door",
   },
   {
-    feature: "Payment model",
-    traditional: "Pay upfront, hope for results",
-    push: "Pay only on verified visits",
+    feature: "When the merchant pays",
+    traditional: "Upfront, then hope",
+    push: "After the customer walks in",
   },
   {
-    feature: "Creator requirements",
-    traditional: "10K+ followers minimum",
-    push: "Zero followers needed",
+    feature: "Creator entry bar",
+    traditional: "10K+ followers",
+    push: "Real local taste, no minimum",
   },
   {
-    feature: "Monthly cost",
-    traditional: "$500–$3,000+",
-    push: "From $0/mo (Lite tier)",
+    feature: "Cohort cost to start",
+    traditional: "$500–$3,000 / month retainer",
+    push: "Free to apply · per-visit pricing",
   },
   {
-    feature: "Payout speed",
-    traditional: "30–90 day delays",
-    push: "Weekly, automated",
+    feature: "Payout cadence",
+    traditional: "30–90 days, manual",
+    push: "Friday, Stripe Connect",
   },
   {
-    feature: "Local targeting",
+    feature: "Where it works",
     traditional: "ZIP-level estimates",
-    push: "2-mile radius, GPS-matched",
+    push: "SoHo, Tribeca, Chinatown — by foot",
   },
 ];
 
-/* ── Success metrics ─────────────────────────────────────── */
+/* ── Pilot numbers ──────────────────────────────────────── */
 const METRICS = [
   {
-    num: "87%",
-    label: "Creator match rate",
-    sub: "Within 2 miles of your business",
+    num: "5",
+    label: "Anchor venues",
+    sub: "lower manhattan, signed for cohort 01",
     primary: true,
   },
   {
-    num: "24h",
-    label: "Campaign launch time",
-    sub: "From signup to first creator matched",
+    num: "10",
+    label: "Creators on the roster",
+    sub: "every application read by Jiaming, 48-hour reply",
     primary: false,
   },
   {
-    num: "3.2×",
-    label: "Average ROI",
-    sub: "vs. traditional local advertising spend",
+    num: "72h",
+    label: "Oracle window",
+    sub: "scan → consensus → payout cleared for release",
     primary: false,
   },
   {
-    num: "$4",
-    label: "Average cost per verified visit",
-    sub: "Traditional ads: $15–$50 per click, no visit guarantee",
+    num: "Fri",
+    label: "Payout day",
+    sub: "Stripe Connect, end-of-week sweep",
     primary: false,
   },
   {
     num: "0",
     label: "Follower minimum",
-    sub: "Performance score is the only metric that matters",
+    sub: "tier rate is set by verified visits, not reach",
     primary: false,
   },
   {
-    num: "6",
-    label: "Creator tiers",
-    sub: "Seed → Explorer → Operator → Proven → Closer → Partner",
+    num: "06",
+    label: "Tiers, Seed → Partner",
+    sub: "you move up when the visits move up",
     primary: false,
+  },
+];
+
+/* ── Edge cases (FAQ-style prose) ─────────────────────────── */
+const EDGE_CASES = [
+  {
+    q: "What if the customer scans but doesn't actually visit?",
+    a: "The oracle holds the payout. A scan alone doesn't clear — it pairs with venue signal (POS receipt, dwell time, photo if the merchant opts in). No match in 72 hours, the payout drops and the creator is told why.",
+  },
+  {
+    q: "What if two creators drove the same person?",
+    a: "Whichever QR was scanned at the door wins the visit. No split, no negotiation. The other creator's post still counts toward their Score history, just not this payout.",
+  },
+  {
+    q: "What about scan-fraud — a creator scans their own QR?",
+    a: "Self-scans are filtered at the oracle. Repeat self-scans flag the account for review. The pilot is small enough that Jiaming reads every flag within a day.",
+  },
+  {
+    q: "What if the merchant disputes a visit?",
+    a: "Disputes go through the oracle audit — same signals, replayed. If the merchant signal disagrees with the QR scan, the case escalates and Push covers the creator's payout in good faith. Three of those in a campaign and the merchant's settings get reviewed.",
   },
 ];
 
@@ -307,26 +333,136 @@ export default function HowItWorksPage() {
       <ScrollRevealInit />
       <HowItWorksClient />
 
-      {/* ── Hero ──────────────────────────────────────────── */}
+      {/* ═══════════════ 01 — HERO (v7 ink + grain + vignette) ═══════════════ */}
       <section
-        className="hiw-hero"
+        className="bg-hero-ink grain-overlay bg-vignette"
         id="main-content"
         aria-labelledby="hiw-hero-heading"
+        style={{
+          position: "relative",
+          minHeight: "100vh",
+          display: "flex",
+          flexDirection: "column",
+          padding: "clamp(24px, 4vw, 64px)",
+          paddingTop: "clamp(80px, 8vw, 120px)",
+          overflow: "hidden",
+        }}
       >
-        <div className="container hiw-hero-inner">
-          <p className="hiw-eyebrow">HOW PUSH WORKS · DUAL-ROLE EXPLAINER</p>
+        {/* Top row: pill (cohort) + eyebrow (date) */}
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            flexWrap: "wrap",
+            gap: 16,
+            position: "relative",
+            zIndex: 3,
+          }}
+        >
+          <span className="pill-lux" style={{ color: "#fff" }}>
+            Cohort 01 · SoHo / Tribeca / Chinatown
+          </span>
+          <span className="eyebrow-lux" style={{ color: "var(--champagne)" }}>
+            Pilot opens June&nbsp;22
+          </span>
+        </div>
 
-          <h1 id="hiw-hero-heading" className="hiw-hero-headline reveal">
-            <span className="line-black">How Push</span>
-            <span className="line-light">works.</span>
+        {/* Hero center: ghost / display weight contrast */}
+        <div
+          style={{
+            flex: 1,
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            position: "relative",
+            zIndex: 3,
+            maxWidth: "1180px",
+            margin: "0 auto",
+            width: "100%",
+            paddingTop: "clamp(48px, 8vh, 96px)",
+            paddingBottom: "clamp(48px, 8vh, 96px)",
+          }}
+        >
+          <div
+            className="section-marker"
+            data-num="01"
+            style={{ color: "rgba(255,255,255,0.55)" }}
+          >
+            How the money flows
+          </div>
+
+          {/* Massive Darky 900 + Darky 200 ghost */}
+          <h1
+            id="hiw-hero-heading"
+            style={{
+              fontFamily: "var(--font-display)",
+              fontSize: "clamp(72px, 14vw, 220px)",
+              fontWeight: 900,
+              letterSpacing: "-0.08em",
+              lineHeight: 0.85,
+              color: "#fff",
+              margin: 0,
+            }}
+          >
+            Post. Walk. Pay
+            <span
+              aria-hidden="true"
+              style={{
+                color: "var(--brand-red)",
+                marginLeft: "-0.04em",
+              }}
+            >
+              .
+            </span>
           </h1>
+          <div
+            className="display-ghost"
+            style={{
+              fontSize: "clamp(44px, 8.5vw, 132px)",
+              color: "rgba(255,255,255,0.22)",
+              marginTop: "-0.04em",
+            }}
+          >
+            four steps, one receipt.
+          </div>
 
-          {/* Hero role tabs — interactivity in client component */}
+          <p
+            style={{
+              marginTop: "clamp(32px, 5vw, 56px)",
+              maxWidth: 620,
+              fontFamily: "var(--font-body)",
+              fontSize: "clamp(15px, 1.15vw, 18px)",
+              lineHeight: 1.65,
+              color: "rgba(255,255,255,0.74)",
+            }}
+          >
+            A creator posts a real recommendation. A customer who saw the post
+            scans the QR at the door. The oracle confirms inside 72 hours.
+            Stripe Connect sends the money on Friday. That is the whole loop.
+          </p>
+          <p
+            style={{
+              marginTop: "clamp(16px, 2vw, 24px)",
+              maxWidth: 620,
+              fontFamily: "var(--font-body)",
+              fontSize: "clamp(13px, 1vw, 15px)",
+              lineHeight: 1.65,
+              color: "rgba(255,255,255,0.46)",
+            }}
+          >
+            Below is each step laid out — what gets posted, what gets scanned,
+            what the oracle checks, when the money clears. The same loop seen
+            from a merchant&apos;s chair, then a creator&apos;s.
+          </p>
+
+          {/* Hero role tabs — drives panels in step section */}
           <div
             className="hiw-tabs"
             role="tablist"
             aria-label="Select your role"
             data-tab-group="hero"
+            style={{ marginTop: "clamp(32px, 5vw, 48px)" }}
           >
             <button
               className="hiw-tab active"
@@ -335,7 +471,7 @@ export default function HowItWorksPage() {
               data-tab="merchant"
               data-tab-group="hero"
             >
-              I&apos;m a Merchant
+              I run a venue
             </button>
             <button
               className="hiw-tab"
@@ -344,53 +480,72 @@ export default function HowItWorksPage() {
               data-tab="creator"
               data-tab-group="hero"
             >
-              I&apos;m a Creator
+              I post in my neighborhood
             </button>
           </div>
 
-          <p className="hiw-hero-sub reveal" data-hero-content="merchant">
-            Post a campaign in 2 minutes. Push matches you with nearby creators
-            scored on verified conversion history. Pay only when a customer
-            walks through your door — tracked by QR code, attributed to the
-            creator who drove them.
+          <p
+            className="reveal"
+            data-hero-content="merchant"
+            style={{
+              marginTop: 24,
+              maxWidth: 560,
+              fontFamily: "var(--font-body)",
+              fontSize: 14,
+              lineHeight: 1.65,
+              color: "rgba(255,255,255,0.62)",
+            }}
+          >
+            Set a per-visit rate. Push surfaces the campaign to local creators
+            scored on prior verified visits. You only pay after the door clears
+            the scan.
           </p>
           <p
-            className="hiw-hero-sub reveal"
+            className="reveal"
             data-hero-content="creator"
-            style={{ display: "none" }}
+            style={{
+              marginTop: 24,
+              maxWidth: 560,
+              fontFamily: "var(--font-body)",
+              fontSize: 14,
+              lineHeight: 1.65,
+              color: "rgba(255,255,255,0.62)",
+              display: "none",
+            }}
           >
-            Browse campaigns near you. Apply, visit, post authentic content.
-            Earn when your audience actually shows up. No follower minimum —
-            your performance score is the only thing that matters.
+            Browse the campaigns within walking distance. Post in your voice.
+            Your dashboard shows post → scan → visit → Friday payout, line by
+            line.
           </p>
         </div>
       </section>
 
-      {/* ── 3-Step Process ────────────────────────────────── */}
+      {/* ═══════════════ 02 — THE FOUR STEPS ═══════════════ */}
       <section
-        className="hiw-section hiw-section-bright"
+        className="hiw-section bg-mesh-editorial"
         aria-labelledby="hiw-steps-heading"
       >
         <div className="container">
           <div className="reveal">
-            <div className="hiw-section-tag">
-              <span className="hiw-section-num">01</span>
-              <span className="hiw-section-line" />
-              <span className="hiw-section-label">The Process</span>
+            <div className="section-marker" data-num="02">
+              The four steps
             </div>
-            <h2 id="hiw-steps-heading" className="hiw-steps-headline">
-              Three steps.
+            <h2
+              id="hiw-steps-heading"
+              className="hiw-steps-headline"
+              style={{ fontWeight: 900 }}
+            >
+              Four steps.
               <br />
-              <span style={{ fontWeight: 200, opacity: 0.4 }}>
-                Zero guesswork.
-              </span>
+              <span className="display-ghost">Nothing in between.</span>
             </h2>
             <p className="hiw-steps-sub">
-              See how Push works from each side of the platform.
+              Same loop, two angles. Toggle to read it from a venue chair or a
+              creator chair.
             </p>
           </div>
 
-          {/* Role tabs (light section) */}
+          {/* Role toggle (light section) */}
           <div
             className="hiw-role-tabs reveal"
             role="tablist"
@@ -424,17 +579,17 @@ export default function HowItWorksPage() {
             data-panel-group="steps"
           >
             <div
-              className="hiw-steps-grid reveal"
+              className="hiw-steps-grid four-col reveal"
               style={{ transitionDelay: "100ms" }}
             >
               <div className="hiw-step-card">
                 <div className="hiw-step-num">01</div>
-                <span className="hiw-step-label">Post</span>
-                <h3 className="hiw-step-title">Set your campaign</h3>
+                <span className="hiw-step-label">Step one · post</span>
+                <h3 className="hiw-step-title">Set a campaign</h3>
                 <p className="hiw-step-body">
-                  Define your goal, payout per visit, and target neighborhood.
-                  Push handles creator matching automatically — no manual
-                  outreach, no agency.
+                  Pick a per-visit payout, a date window, a block radius. Push
+                  surfaces it to creators scored on prior verified visits in
+                  your category. Live inside a day.
                 </p>
                 <div className="hiw-step-demo">
                   <DemoPostCampaign />
@@ -443,12 +598,12 @@ export default function HowItWorksPage() {
 
               <div className="hiw-step-card">
                 <div className="hiw-step-num">02</div>
-                <span className="hiw-step-label">Accept</span>
-                <h3 className="hiw-step-title">Creators are matched</h3>
+                <span className="hiw-step-label">Step two · match</span>
+                <h3 className="hiw-step-title">Pick the creator</h3>
                 <p className="hiw-step-body">
-                  Push surfaces creators scored on proximity, tier, and verified
-                  conversion history. You approve or let Push auto-match for
-                  fastest launch.
+                  See applicants ranked by Score and walking distance. Approve
+                  by hand, or let the auto-match pick the top three. Each match
+                  gets a creator-specific QR.
                 </p>
                 <div className="hiw-step-demo">
                   <div
@@ -492,7 +647,7 @@ export default function HowItWorksPage() {
                             fontSize: "10px",
                           }}
                         >
-                          Score 94 · Operator · 0.4mi away
+                          Operator · 38 visits · 0.4mi
                         </div>
                       </div>
                       <span
@@ -541,7 +696,7 @@ export default function HowItWorksPage() {
                             fontSize: "10px",
                           }}
                         >
-                          Score 88 · Proven · 0.8mi away
+                          Proven · 61 visits · 0.8mi
                         </div>
                       </div>
                       <span
@@ -564,15 +719,29 @@ export default function HowItWorksPage() {
 
               <div className="hiw-step-card">
                 <div className="hiw-step-num">03</div>
-                <span className="hiw-step-label">Pay on results</span>
-                <h3 className="hiw-step-title">Pay per verified visit</h3>
+                <span className="hiw-step-label">Step three · scan</span>
+                <h3 className="hiw-step-title">Door reads the QR</h3>
                 <p className="hiw-step-body">
-                  Every QR scan is timestamped and logged. Payouts release
-                  automatically after verification. No disputes. No manual
-                  tracking. No surprises.
+                  Customer arrives, scans the poster, your POS pings back. The
+                  oracle pairs scan + venue signal inside 72 hours. No match, no
+                  charge.
                 </p>
                 <div className="hiw-step-demo">
                   <QRMiniSVG />
+                </div>
+              </div>
+
+              <div className="hiw-step-card">
+                <div className="hiw-step-num">04</div>
+                <span className="hiw-step-label">Step four · pay</span>
+                <h3 className="hiw-step-title">Friday, Stripe sends it</h3>
+                <p className="hiw-step-body">
+                  Verified visits clear into a weekly invoice. Stripe Connect
+                  sweeps it Friday morning. The line items show creator, time,
+                  scan ID — auditable end of story.
+                </p>
+                <div className="hiw-step-demo">
+                  <DemoCreatorContent />
                 </div>
               </div>
             </div>
@@ -590,12 +759,13 @@ export default function HowItWorksPage() {
             >
               <div className="hiw-step-card">
                 <div className="hiw-step-num">01</div>
-                <span className="hiw-step-label">Discover</span>
-                <h3 className="hiw-step-title">Browse local campaigns</h3>
+                <span className="hiw-step-label">Step one · browse</span>
+                <h3 className="hiw-step-title">
+                  Find a campaign on your block
+                </h3>
                 <p className="hiw-step-body">
-                  See campaigns within 2 miles of you — restaurants, gyms,
-                  retail. Filtered by your tier eligibility and earning
-                  potential.
+                  Pilot map covers SoHo, Tribeca, Chinatown. Filter by category
+                  and your tier rate. Pick spots you would post about anyway.
                 </p>
                 <div className="hiw-step-demo">
                   <DemoPostCampaign />
@@ -604,12 +774,12 @@ export default function HowItWorksPage() {
 
               <div className="hiw-step-card">
                 <div className="hiw-step-num">02</div>
-                <span className="hiw-step-label">Apply</span>
-                <h3 className="hiw-step-title">Get accepted by score</h3>
+                <span className="hiw-step-label">Step two · apply</span>
+                <h3 className="hiw-step-title">Get matched on Score</h3>
                 <p className="hiw-step-body">
-                  Your performance score — not your follower count — determines
-                  which campaigns you access. Apply and get matched within
-                  hours.
+                  Score is your verified-visit history. No follower minimum.
+                  Apply, get a creator-specific QR within hours, post in your
+                  voice — no brand brief.
                 </p>
                 <div className="hiw-step-demo">
                   <div
@@ -631,7 +801,7 @@ export default function HowItWorksPage() {
                         fontWeight: 700,
                       }}
                     >
-                      Your profile
+                      Your roster card
                     </div>
                     <div
                       style={{
@@ -643,7 +813,7 @@ export default function HowItWorksPage() {
                       <span
                         style={{ color: "var(--graphite)", fontSize: "12px" }}
                       >
-                        Performance score
+                        Verified visits
                       </span>
                       <span
                         style={{
@@ -652,7 +822,7 @@ export default function HowItWorksPage() {
                           fontSize: "12px",
                         }}
                       >
-                        94
+                        38
                       </span>
                     </div>
                     <div
@@ -665,7 +835,7 @@ export default function HowItWorksPage() {
                       <span
                         style={{ color: "var(--graphite)", fontSize: "12px" }}
                       >
-                        Current tier
+                        Tier
                       </span>
                       <span
                         style={{
@@ -686,7 +856,7 @@ export default function HowItWorksPage() {
                       <span
                         style={{ color: "var(--graphite)", fontSize: "12px" }}
                       >
-                        Eligible campaigns
+                        Eligible nearby
                       </span>
                       <span
                         style={{
@@ -695,7 +865,7 @@ export default function HowItWorksPage() {
                           fontSize: "12px",
                         }}
                       >
-                        12 nearby
+                        12 venues
                       </span>
                     </div>
                   </div>
@@ -704,12 +874,12 @@ export default function HowItWorksPage() {
 
               <div className="hiw-step-card">
                 <div className="hiw-step-num">03</div>
-                <span className="hiw-step-label">Post content</span>
-                <h3 className="hiw-step-title">Visit. Create. Publish.</h3>
+                <span className="hiw-step-label">Step three · post</span>
+                <h3 className="hiw-step-title">Walk in, write it up</h3>
                 <p className="hiw-step-body">
-                  Experience the business authentically. Post content to your
-                  audience with your unique campaign link. No brand guidelines
-                  to follow — just your voice.
+                  Visit. Take the photo, write the caption you would write
+                  anyway. Drop your QR-tagged link. The post is on your feed —
+                  your audience, your voice, no brand asks.
                 </p>
                 <div className="hiw-step-demo">
                   <DemoCreatorContent />
@@ -718,11 +888,12 @@ export default function HowItWorksPage() {
 
               <div className="hiw-step-card">
                 <div className="hiw-step-num">04</div>
-                <span className="hiw-step-label">Earn</span>
-                <h3 className="hiw-step-title">Get paid per visit</h3>
+                <span className="hiw-step-label">Step four · paid</span>
+                <h3 className="hiw-step-title">Friday, Stripe sends it</h3>
                 <p className="hiw-step-body">
-                  When your audience scans the QR at the door, your earnings are
-                  logged. Weekly payout, no invoicing, no 30-day waits.
+                  When someone scans your QR and the venue confirms, that visit
+                  clears. Friday morning, Stripe Connect deposits the week. No
+                  invoice, no chase.
                 </p>
                 <div className="hiw-step-demo">
                   <QRMiniSVG />
@@ -733,17 +904,15 @@ export default function HowItWorksPage() {
         </div>
       </section>
 
-      {/* ── Detailed Explainer (numbered editorial) ───────── */}
+      {/* ═══════════════ 03 — INSIDE EVERY STEP (editorial) ═══════════════ */}
       <section
         className="hiw-detail-section"
         aria-labelledby="hiw-detail-heading"
       >
         <div className="container">
           <div className="reveal" style={{ marginBottom: "var(--space-10)" }}>
-            <div className="hiw-section-tag">
-              <span className="hiw-section-num">02</span>
-              <span className="hiw-section-line" />
-              <span className="hiw-section-label">Step by Step</span>
+            <div className="section-marker" data-num="03">
+              Inside every step
             </div>
             <h2
               id="hiw-detail-heading"
@@ -756,26 +925,41 @@ export default function HowItWorksPage() {
                 color: "var(--dark)",
               }}
             >
-              Inside
+              The receipt,
               <br />
-              <span style={{ fontWeight: 200, opacity: 0.4 }}>every step.</span>
+              <span className="display-ghost">unfolded.</span>
             </h2>
+            <p
+              style={{
+                marginTop: 16,
+                maxWidth: 560,
+                fontFamily: "var(--font-body)",
+                fontSize: 15,
+                lineHeight: 1.7,
+                color: "var(--graphite)",
+              }}
+            >
+              Each step has a thing it does and a thing it does not. Here is
+              what the data layer is actually doing while the loop runs.
+            </p>
           </div>
 
-          {/* Step 01 */}
+          {/* Step 01 — Campaign Launch */}
           <div className="hiw-detail-item reveal">
             <div>
               <span className="hiw-detail-num" aria-hidden="true">
                 01
               </span>
-              <span className="hiw-detail-label">Campaign Launch</span>
-              <h3 className="hiw-detail-title">A merchant posts a campaign.</h3>
+              <span className="hiw-detail-label">
+                Step one · campaign goes up
+              </span>
+              <h3 className="hiw-detail-title">A merchant posts a brief.</h3>
               <p className="hiw-detail-body">
-                A business sets a per-visit payout, target neighborhood, and
-                campaign duration. Push surfaces the campaign to eligible
-                creators scored on proximity to the location, tier level, and
-                verified conversion history from previous campaigns. No manual
-                outreach. No agency brief. Live in under 24 hours.
+                A venue sets a per-visit rate, a date window, and a block
+                radius. Push surfaces the brief to creators ranked on prior
+                verified visits in that category. There is no agency, no media
+                buyer, no SOW — the brief is one screen and goes live the same
+                day.
               </p>
             </div>
             <div className="hiw-detail-visual">
@@ -783,7 +967,7 @@ export default function HowItWorksPage() {
             </div>
           </div>
 
-          {/* Step 02 */}
+          {/* Step 02 — Creator Match */}
           <div
             className="hiw-detail-item reveal"
             style={{ transitionDelay: "100ms" }}
@@ -792,18 +976,14 @@ export default function HowItWorksPage() {
               <span className="hiw-detail-num" aria-hidden="true">
                 02
               </span>
-              <span className="hiw-detail-label">Creator Matching</span>
-              <h3 className="hiw-detail-title">
-                Push matches the right creator.
-              </h3>
+              <span className="hiw-detail-label">Step two · creator picks</span>
+              <h3 className="hiw-detail-title">Score does the matching.</h3>
               <p className="hiw-detail-body">
-                87% of creators are matched within 2 miles of the business.
-                Performance score — verified visits, content quality,
-                consistency — determines ranking, not follower count. A
-                micro-creator with 800 followers who drives 30 verified visits
-                outranks one with 50K followers who drives zero. The platform
-                assigns a unique QR code to each creator–campaign pair for
-                precise attribution.
+                Score is one number, set by verified-visit history. A creator
+                with 800 followers and 30 verified visits outranks a 50K-account
+                with zero. Push assigns a creator-specific QR for the campaign —
+                that QR is how every scan gets credited back to one post by one
+                person.
               </p>
             </div>
             <div className="hiw-detail-visual">
@@ -811,7 +991,7 @@ export default function HowItWorksPage() {
             </div>
           </div>
 
-          {/* Step 03 */}
+          {/* Step 03 — QR Scan + Oracle */}
           <div
             className="hiw-detail-item reveal"
             style={{ transitionDelay: "200ms" }}
@@ -820,58 +1000,81 @@ export default function HowItWorksPage() {
               <span className="hiw-detail-num" aria-hidden="true">
                 03
               </span>
-              <span className="hiw-detail-label">QR Verification</span>
+              <span className="hiw-detail-label">
+                Step three · oracle window
+              </span>
               <h3 className="hiw-detail-title">
-                Every visit is verified at the door.
+                The door confirms inside 72 hours.
               </h3>
               <p className="hiw-detail-body">
-                Customers who see the creator&apos;s post show up and scan the
-                QR code at the point of entry. Push logs the timestamp,
-                location, and creator attribution in real time. No scan, no
-                charge — the merchant pays only for physically confirmed foot
-                traffic. Payouts release automatically after each verified
-                batch. Weekly for creators. Instantaneous attribution for
-                merchants.
+                The customer scans the QR at the venue. The oracle pairs the
+                scan with at least one venue signal — POS receipt, dwell time,
+                staff confirmation. Match clears the visit. No match in 72
+                hours, the visit drops and nobody pays. That is the trust line.
               </p>
             </div>
             <div className="hiw-detail-visual">
               <QRMiniSVG />
             </div>
           </div>
+
+          {/* Step 04 — Friday Payout */}
+          <div
+            className="hiw-detail-item reveal"
+            style={{ transitionDelay: "300ms" }}
+          >
+            <div>
+              <span className="hiw-detail-num" aria-hidden="true">
+                04
+              </span>
+              <span className="hiw-detail-label">
+                Step four · payout cleared
+              </span>
+              <h3 className="hiw-detail-title">
+                Friday morning, Stripe sends the money.
+              </h3>
+              <p className="hiw-detail-body">
+                Every cleared visit lands in the weekly invoice — line items
+                show creator, time, scan ID, venue signal. Stripe Connect sweeps
+                Friday morning. Creator gets paid. Merchant sees the receipt.
+                Nothing manual, nothing approximated.
+              </p>
+            </div>
+            <div className="hiw-detail-visual">
+              <DemoCreatorContent />
+            </div>
+          </div>
         </div>
       </section>
 
-      {/* ── Attribution Explainer ─────────────────────────── */}
+      {/* ═══════════════ 04 — ATTRIBUTION DIAGRAM ═══════════════ */}
       <section className="hiw-attr-section" aria-labelledby="hiw-attr-heading">
         <div className="container">
           <div className="reveal">
-            <div className="hiw-section-tag">
-              <span
-                className="hiw-section-num"
-                style={{ color: "var(--primary)" }}
-              >
-                03
-              </span>
-              <span
-                className="hiw-section-line"
-                style={{ background: "rgba(255,255,255,0.15)" }}
-              />
-              <span
-                className="hiw-section-label"
-                style={{ color: "rgba(255,255,255,0.35)" }}
-              >
-                QR Attribution
-              </span>
+            <div
+              className="section-marker"
+              data-num="04"
+              style={{ color: "rgba(255,255,255,0.55)" }}
+            >
+              How attribution holds
             </div>
-            <h2 id="hiw-attr-heading" className="hiw-attr-headline">
-              How attribution
-              <span className="line-light">actually works.</span>
+            <h2
+              id="hiw-attr-heading"
+              className="hiw-attr-headline"
+              style={{ fontWeight: 900 }}
+            >
+              One scan,
+              <span
+                className="display-ghost"
+                style={{ display: "block", color: "rgba(255,255,255,0.28)" }}
+              >
+                one receipt.
+              </span>
             </h2>
             <p className="hiw-attr-sub">
-              Every QR code is unique to a creator–campaign pair. When a
-              customer scans it, Push records who drove them, when they arrived,
-              and how much is owed. No cookies. No pixels. Physical proof of
-              visit.
+              Every QR is bound to one creator and one campaign. When the door
+              reads it, Push records who drove the visit, when it landed, and
+              what it costs. No cookies, no pixels — physical proof on the door.
             </p>
           </div>
 
@@ -884,43 +1087,59 @@ export default function HowItWorksPage() {
             style={{ transitionDelay: "200ms" }}
           >
             <div className="hiw-attr-dp">
-              <span className="hiw-attr-dp-num">$4–12</span>
+              <span className="hiw-attr-dp-num">72h</span>
               <span className="hiw-attr-dp-label">
-                Avg cost per verified visit via Push
+                Oracle window — scan to cleared visit
               </span>
             </div>
             <div className="hiw-attr-dp">
-              <span className="hiw-attr-dp-num">$15–50</span>
+              <span className="hiw-attr-dp-num">Fri</span>
               <span className="hiw-attr-dp-label">
-                Traditional ad cost per click — with no visit guarantee
+                Stripe Connect sweep, weekly cadence
               </span>
             </div>
             <div className="hiw-attr-dp">
               <span className="hiw-attr-dp-num">100%</span>
               <span className="hiw-attr-dp-label">
-                Of payouts tied to QR-confirmed physical visits
+                Of payouts tied to a QR-confirmed physical visit
               </span>
             </div>
           </div>
         </div>
       </section>
 
-      {/* ── Timeline Comparison ───────────────────────────── */}
+      {/* ═══════════════ 05 — COMPARISON ═══════════════ */}
       <section
         className="hiw-timeline-section"
         aria-labelledby="hiw-timeline-heading"
       >
         <div className="container">
           <div className="reveal">
-            <div className="hiw-section-tag">
-              <span className="hiw-section-num">04</span>
-              <span className="hiw-section-line" />
-              <span className="hiw-section-label">Comparison</span>
+            <div className="section-marker" data-num="05">
+              The difference
             </div>
-            <h2 id="hiw-timeline-heading" className="hiw-timeline-headline">
-              Push vs. traditional
-              <span className="line-light">marketing.</span>
+            <h2
+              id="hiw-timeline-heading"
+              className="hiw-timeline-headline"
+              style={{ fontWeight: 900 }}
+            >
+              Push vs.
+              <span className="display-ghost">paying for impressions.</span>
             </h2>
+            <p
+              style={{
+                marginTop: 16,
+                marginBottom: "var(--space-8)",
+                maxWidth: 560,
+                fontFamily: "var(--font-body)",
+                fontSize: 15,
+                lineHeight: 1.7,
+                color: "var(--graphite)",
+              }}
+            >
+              Most creator marketing pays for the post. Push pays after the
+              door. Same screens, different unit of value.
+            </p>
           </div>
 
           <div
@@ -931,7 +1150,7 @@ export default function HowItWorksPage() {
               <thead>
                 <tr>
                   <th scope="col">What you&apos;re comparing</th>
-                  <th scope="col">Traditional Marketing</th>
+                  <th scope="col">Impressions-based</th>
                   <th scope="col">Push</th>
                 </tr>
               </thead>
@@ -940,11 +1159,21 @@ export default function HowItWorksPage() {
                   <tr key={row.feature}>
                     <td>{row.feature}</td>
                     <td>
-                      <span className="hiw-compare-icon--bad">✗ </span>
+                      <span
+                        className="hiw-compare-icon--bad"
+                        aria-hidden="true"
+                      >
+                        —{" "}
+                      </span>
                       {row.traditional}
                     </td>
                     <td>
-                      <span className="hiw-compare-icon--good">✓ </span>
+                      <span
+                        className="hiw-compare-icon--good"
+                        aria-hidden="true"
+                      >
+                        ·{" "}
+                      </span>
                       {row.push}
                     </td>
                   </tr>
@@ -955,22 +1184,38 @@ export default function HowItWorksPage() {
         </div>
       </section>
 
-      {/* ── Success Metrics ───────────────────────────────── */}
+      {/* ═══════════════ 06 — PILOT NUMBERS ═══════════════ */}
       <section
         className="hiw-metrics-section"
         aria-labelledby="hiw-metrics-heading"
       >
         <div className="container">
           <div className="reveal">
-            <div className="hiw-section-tag">
-              <span className="hiw-section-num">05</span>
-              <span className="hiw-section-line" />
-              <span className="hiw-section-label">By the Numbers</span>
+            <div className="section-marker" data-num="06">
+              The pilot, in numbers
             </div>
-            <h2 id="hiw-metrics-heading" className="hiw-metrics-headline">
-              Results
-              <span className="line-light">that speak.</span>
+            <h2
+              id="hiw-metrics-heading"
+              className="hiw-metrics-headline"
+              style={{ fontWeight: 900 }}
+            >
+              Cohort 01,
+              <span className="display-ghost">small on purpose.</span>
             </h2>
+            <p
+              style={{
+                marginTop: 16,
+                maxWidth: 560,
+                fontFamily: "var(--font-body)",
+                fontSize: 15,
+                lineHeight: 1.7,
+                color: "var(--graphite)",
+              }}
+            >
+              Five anchor venues, ten creators, one operator (Jiaming) walking
+              the doors. Numbers below are pilot-level — they get replaced with
+              measured rates after June&nbsp;22.
+            </p>
           </div>
 
           <div className="hiw-metrics-grid">
@@ -993,30 +1238,164 @@ export default function HowItWorksPage() {
         </div>
       </section>
 
-      {/* ── Dual CTA ──────────────────────────────────────── */}
+      {/* ═══════════════ 07 — EDGE CASES ═══════════════ */}
+      <section
+        className="hiw-section bg-mesh-editorial"
+        aria-labelledby="hiw-edge-heading"
+      >
+        <div className="container">
+          <div className="reveal" style={{ marginBottom: "var(--space-8)" }}>
+            <div className="section-marker" data-num="07">
+              Edge cases, asked plainly
+            </div>
+            <h2
+              id="hiw-edge-heading"
+              style={{
+                fontFamily: "var(--font-display)",
+                fontSize: "clamp(36px, 4vw, 56px)",
+                fontWeight: 900,
+                letterSpacing: "-0.05em",
+                lineHeight: 0.9,
+                color: "var(--dark)",
+              }}
+            >
+              When the loop
+              <br />
+              <span className="display-ghost">does not cooperate.</span>
+            </h2>
+            <p
+              style={{
+                marginTop: 16,
+                maxWidth: 560,
+                fontFamily: "var(--font-body)",
+                fontSize: 15,
+                lineHeight: 1.7,
+                color: "var(--graphite)",
+              }}
+            >
+              Not every visit is clean. Here is what Push does when something
+              breaks — written down, not buried in T&amp;Cs.
+            </p>
+          </div>
+
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))",
+              gap: "var(--space-3)",
+            }}
+          >
+            {EDGE_CASES.map((item, i) => (
+              <div
+                key={item.q}
+                className="card-premium reveal"
+                style={{
+                  padding: "var(--space-6) var(--space-5)",
+                  position: "relative",
+                  transitionDelay: `${i * 80}ms`,
+                }}
+              >
+                <div
+                  style={{
+                    fontFamily: "var(--font-body)",
+                    fontSize: 11,
+                    fontWeight: 700,
+                    letterSpacing: "0.14em",
+                    textTransform: "uppercase",
+                    color: "var(--brand-red)",
+                    marginBottom: 12,
+                  }}
+                >
+                  {String(i + 1).padStart(2, "0")} ·{" "}
+                  {
+                    [
+                      "the no-show",
+                      "the double-claim",
+                      "self-scan",
+                      "the dispute",
+                    ][i]
+                  }
+                </div>
+                <h3
+                  style={{
+                    fontFamily: "var(--font-display)",
+                    fontSize: "clamp(20px, 1.8vw, 24px)",
+                    fontWeight: 800,
+                    letterSpacing: "-0.02em",
+                    lineHeight: 1.2,
+                    color: "var(--dark)",
+                    marginBottom: 12,
+                  }}
+                >
+                  {item.q}
+                </h3>
+                <p
+                  style={{
+                    fontFamily: "var(--font-body)",
+                    fontSize: 14,
+                    lineHeight: 1.7,
+                    color: "var(--graphite)",
+                  }}
+                >
+                  {item.a}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ═══════════════ 08 — DUAL CTA (ink) ═══════════════ */}
       <section className="hiw-cta-section" aria-label="Get started">
         <div className="container">
+          <div className="reveal" style={{ marginBottom: "var(--space-8)" }}>
+            <div
+              className="section-marker"
+              data-num="08"
+              style={{ color: "rgba(255,255,255,0.55)" }}
+            >
+              Pick a chair
+            </div>
+            <h2
+              style={{
+                fontFamily: "var(--font-display)",
+                fontSize: "clamp(40px, 5vw, 72px)",
+                fontWeight: 900,
+                letterSpacing: "-0.05em",
+                lineHeight: 0.9,
+                color: "#fff",
+                marginBottom: "var(--space-3)",
+              }}
+            >
+              Two ways
+              <span
+                className="display-ghost"
+                style={{ display: "block", color: "rgba(255,255,255,0.28)" }}
+              >
+                onto the roster.
+              </span>
+            </h2>
+          </div>
+
           <div className="hiw-cta-grid">
             <div className="hiw-cta-panel hiw-cta-panel--merchant reveal">
               <span className="hiw-cta-tag hiw-cta-tag--merchant">
-                For Merchants
+                For venues
               </span>
               <h2 className="hiw-cta-headline">
-                Pay only for
+                Pay
                 <br />
-                <span
-                  style={{ fontWeight: 200, color: "rgba(255,255,255,0.35)" }}
-                >
-                  results.
+                <span className="display-ghost" style={{ color: "#fff" }}>
+                  after the door.
                 </span>
               </h2>
               <p className="hiw-cta-body">
-                Post a campaign in 2 minutes. Push matches you with nearby
-                creators. Pay only when a verified customer walks through your
-                door. Free Lite tier — cancel anytime.
+                Set a per-visit rate, pick the creators, watch the QR scans
+                land. Stripe sweeps your invoice on Friday. Pilot venues: Lower
+                Manhattan only.
               </p>
               <Link href="/merchant/signup" className="btn-hiw-merchant">
-                Start Free — $0 upfront
+                Apply as a venue
               </Link>
               <p
                 style={{
@@ -1026,7 +1405,7 @@ export default function HowItWorksPage() {
                   marginTop: "var(--space-1)",
                 }}
               >
-                No credit card required · Campaign live in 24 hours
+                free to apply · pilot opens June&nbsp;22
               </p>
             </div>
 
@@ -1035,24 +1414,22 @@ export default function HowItWorksPage() {
               style={{ transitionDelay: "120ms" }}
             >
               <span className="hiw-cta-tag hiw-cta-tag--creator">
-                For Creators
+                For creators
               </span>
               <h2 className="hiw-cta-headline">
-                Earn on
+                Get paid
                 <br />
-                <span
-                  style={{ fontWeight: 200, color: "rgba(255,255,255,0.35)" }}
-                >
-                  your terms.
+                <span className="display-ghost" style={{ color: "#fff" }}>
+                  on Friday.
                 </span>
               </h2>
               <p className="hiw-cta-body">
-                Zero follower minimum. Browse campaigns in your neighborhood.
-                Visit, post, and earn when your audience shows up. Weekly
-                payouts, no invoicing.
+                No follower minimum. Apply with your handle, recent posts, and
+                the blocks you walk. Every application read inside 48 hours.
+                Cohort 01 is ten seats.
               </p>
               <Link href="/creator/signup" className="btn-hiw-creator">
-                Apply as Creator — Free
+                Apply for the cohort
               </Link>
               <p
                 style={{
@@ -1062,7 +1439,7 @@ export default function HowItWorksPage() {
                   marginTop: "var(--space-1)",
                 }}
               >
-                30-second signup · No credit card
+                no exclusivity · keep your other deals
               </p>
             </div>
           </div>

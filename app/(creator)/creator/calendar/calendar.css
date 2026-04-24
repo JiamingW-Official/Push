@@ -117,6 +117,7 @@
   text-transform: uppercase;
   padding: 8px 16px;
   border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: var(--r-lg);
   background: transparent;
   color: rgba(255, 255, 255, 0.7);
   cursor: pointer;
@@ -351,6 +352,7 @@
   max-width: 100%;
   color: #fff;
   letter-spacing: 0.01em;
+  border-radius: var(--r-sm);
 }
 
 .cal-cell-event-more {
@@ -379,7 +381,8 @@
   width: 320px;
   max-height: 480px;
   overflow-y: auto;
-  box-shadow: 8px 8px 0 var(--dark);
+  border-radius: var(--r-2xl);
+  box-shadow: var(--shadow-3);
   animation: cal-popover-in 200ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 
@@ -493,6 +496,7 @@
   text-transform: uppercase;
   padding: 4px 10px;
   border: 1px solid rgba(0, 48, 73, 0.2);
+  border-radius: var(--r-lg);
   color: var(--dark);
   cursor: pointer;
   transition: background 150ms, border-color 150ms, color 150ms;
@@ -511,8 +515,8 @@
 }
 
 .cal-action-btn--primary:hover {
-  background: var(--accent, #780000);
-  border-color: var(--accent, #780000);
+  background: var(--accent);
+  border-color: var(--accent);
   color: #fff;
 }
 
@@ -679,6 +683,7 @@
   letter-spacing: 0.06em;
   text-transform: uppercase;
   padding: 3px 8px;
+  border-radius: var(--r-sm);
   background: var(--primary);
   color: #fff;
 }
@@ -783,6 +788,7 @@
   font-size: 12px;
   padding: 6px 10px;
   border: 1px solid rgba(0, 48, 73, 0.2);
+  border-radius: var(--r-md);
   background: var(--surface-bright);
   color: var(--dark);
   outline: none;

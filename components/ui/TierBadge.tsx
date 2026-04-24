@@ -36,10 +36,12 @@ const TIER_STYLES: Record<Tier, { bg: string; color: string; border: string }> =
       color: "var(--accent)",
       border: "rgba(120, 0, 0, 0.25)",
     },
+    // Partner (Obsidian) — v7 Ink capstone with Champagne ceremonial accent
+    // (Design.md §Tier Identity System).
     partner: {
-      bg: "var(--champagne-light)",
-      color: "#8a6730",
-      border: "var(--champagne-border)",
+      bg: "rgba(10, 10, 10, 0.08)",
+      color: "var(--ink)",
+      border: "rgba(191, 161, 112, 0.35)",
     },
   };
 

@@ -149,7 +149,7 @@ function VerifiedState({ onReset }: { onReset: () => void }) {
         <svg width="32" height="26" viewBox="0 0 11 9" fill="none">
           <path
             d="M1 4L4 7.5L10 1"
-            stroke="#c9a96e"
+            stroke="var(--champagne)"
             strokeWidth="1.8"
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -186,7 +186,7 @@ function RejectedState({
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
           <path
             d="M12 9v4m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"
-            stroke="#c1121f"
+            stroke="var(--primary)"
             strokeWidth="1.6"
             strokeLinecap="round"
             strokeLinejoin="round"

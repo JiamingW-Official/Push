@@ -92,12 +92,12 @@ const TIER_COMMISSION: Record<CreatorTier, number> = {
 };
 
 const CATEGORY_BG: Record<string, string> = {
-  "Food & Drink": "#003049",
-  Lifestyle: "#780000",
-  Beauty: "#c1121f",
-  Fashion: "#002035",
-  Fitness: "#003049",
-  Tech: "#002035",
+  "Food & Drink": "var(--dark)",
+  Lifestyle: "var(--accent)",
+  Beauty: "var(--primary)",
+  Fashion: "var(--dark)",
+  Fitness: "var(--dark)",
+  Tech: "var(--dark)",
 };
 
 const MILESTONES: { key: MilestoneStatus; label: string }[] = [
@@ -521,22 +521,18 @@ export default function CampaignDetailPage() {
     }
     try {
       const supabase = createClient();
-      await supabase
-        .from("campaign_applications")
-        .insert({
-          campaign_id: campaign.id,
-          creator_id: creator.id,
-          merchant_id: campaign.merchant_id,
-          status: "pending",
-          payout: campaign.payout,
-        });
-      await supabase
-        .from("creator_submissions")
-        .insert({
-          campaign_id: campaign.id,
-          creator_id: creator.id,
-          status: "pending",
-        });
+      await supabase.from("campaign_applications").insert({
+        campaign_id: campaign.id,
+        creator_id: creator.id,
+        merchant_id: campaign.merchant_id,
+        status: "pending",
+        payout: campaign.payout,
+      });
+      await supabase.from("creator_submissions").insert({
+        campaign_id: campaign.id,
+        creator_id: creator.id,
+        status: "pending",
+      });
       setApplied(true);
     } catch {
       setError("Failed to apply. Please try again.");
@@ -570,7 +566,7 @@ export default function CampaignDetailPage() {
     ((campaign.spots_total - campaign.spots_remaining) / campaign.spots_total) *
       100,
   );
-  const heroBg = CATEGORY_BG[campaign.category] ?? "#003049";
+  const heroBg = CATEGORY_BG[campaign.category] ?? "var(--dark)";
   const noCommission = creatorTier === "seed" || creatorTier === "explorer";
   const campaignsToOperator = Math.max(
     0,

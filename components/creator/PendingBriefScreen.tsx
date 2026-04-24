@@ -74,7 +74,7 @@ function RedSquareBullet() {
         display: "inline-block",
         width: 6,
         height: 6,
-        background: "#c1121f",
+        background: "var(--primary)",
         flexShrink: 0,
         marginTop: 6,
         borderRadius: 0,
@@ -143,8 +143,8 @@ function MatchingIndicator() {
         .pb-dot {
           width: 7px;
           height: 7px;
-          background: #c1121f;
-          border-radius: 0;
+          background: var(--primary);
+          border-radius: var(--r-xl);
           display: inline-block;
           animation: pb-dot-bounce 1.4s ease-in-out infinite;
         }
@@ -216,7 +216,7 @@ function EstimatedWait({
         style={{
           fontFamily: "CS Genio Mono, monospace",
           fontSize: 11,
-          color: remainingHours === 0 ? "#c1121f" : "rgba(0,48,73,0.5)",
+          color: remainingHours === 0 ? "var(--primary)" : "rgba(0,48,73,0.5)",
           flexShrink: 0,
           fontWeight: remainingHours === 0 ? 700 : 400,
         }}
@@ -243,7 +243,7 @@ function ProfileTipCard() {
       <div
         style={{
           width: 5,
-          background: "#c1121f",
+          background: "var(--primary)",
           alignSelf: "stretch",
           flexShrink: 0,
           borderRadius: 0,
@@ -256,7 +256,7 @@ function ProfileTipCard() {
             fontSize: 11,
             letterSpacing: "0.08em",
             textTransform: "uppercase",
-            color: "#c1121f",
+            color: "var(--primary)",
             margin: "0 0 5px",
           }}
         >
@@ -273,7 +273,7 @@ function ProfileTipCard() {
         >
           Complete your profile to improve matching accuracy. Creators with full
           profiles get approved{" "}
-          <strong style={{ color: "#003049" }}>2.4× faster</strong>.
+          <strong style={{ color: "var(--dark)" }}>2.4× faster</strong>.
         </p>
       </div>
     </div>
@@ -304,11 +304,11 @@ export default function PendingBriefScreen({
   const mapsUrl = `https://maps.apple.com/?q=${encodeURIComponent(businessAddress)}`;
 
   return (
-    <div className="pb-container" style={{ background: "#f5f2ec" }}>
+    <div className="pb-container" style={{ background: "var(--surface)" }}>
       {/* ── MATCHING HERO ────────────────────────────────────────────────── */}
       <div
         style={{
-          background: "#003049",
+          background: "var(--dark)",
           padding: "28px 24px 24px",
           display: "flex",
           flexDirection: "column",
@@ -327,7 +327,7 @@ export default function PendingBriefScreen({
             fontWeight: 800,
             fontSize: "clamp(22px, 5vw, 30px)",
             letterSpacing: "-0.03em",
-            color: "#f5f2ec",
+            color: "var(--surface)",
             margin: 0,
             lineHeight: 1.1,
           }}
@@ -389,7 +389,7 @@ export default function PendingBriefScreen({
           style={{
             width: 7,
             height: 7,
-            background: "#669bbc",
+            background: "var(--tertiary)",
             borderRadius: 0,
             flexShrink: 0,
           }}
@@ -400,7 +400,7 @@ export default function PendingBriefScreen({
             fontSize: 11,
             letterSpacing: "0.08em",
             textTransform: "uppercase",
-            color: "#669bbc",
+            color: "var(--tertiary)",
             margin: 0,
           }}
         >
@@ -432,7 +432,7 @@ export default function PendingBriefScreen({
             style={{
               border: "1px solid rgba(0,48,73,0.08)",
               padding: 16,
-              background: "#ffffff",
+              background: "var(--surface-elevated)",
             }}
           >
             <p
@@ -451,7 +451,7 @@ export default function PendingBriefScreen({
               style={{
                 fontFamily: "CS Genio Mono, monospace",
                 fontSize: 13,
-                color: "#003049",
+                color: "var(--dark)",
                 margin: "0 0 4px",
                 fontWeight: 700,
               }}
@@ -476,7 +476,7 @@ export default function PendingBriefScreen({
               style={{
                 fontFamily: "CS Genio Mono, monospace",
                 fontSize: 12,
-                color: "#c1121f",
+                color: "var(--primary)",
                 textDecoration: "none",
                 display: "inline-flex",
                 alignItems: "center",
@@ -493,7 +493,7 @@ export default function PendingBriefScreen({
             style={{
               border: "1px solid rgba(0,48,73,0.08)",
               padding: 16,
-              background: "#ffffff",
+              background: "var(--surface-elevated)",
             }}
           >
             <p
@@ -512,7 +512,7 @@ export default function PendingBriefScreen({
               style={{
                 fontFamily: "Darky, serif",
                 fontSize: 15,
-                color: "#003049",
+                color: "var(--dark)",
                 margin: "0 0 10px",
                 fontWeight: 700,
                 letterSpacing: "-0.02em",
@@ -611,7 +611,7 @@ export default function PendingBriefScreen({
         <div
           style={{
             background: "rgba(102,155,188,0.08)",
-            borderLeft: "3px solid #669bbc",
+            borderLeft: "3px solid var(--tertiary)",
             padding: 16,
           }}
         >
@@ -621,7 +621,7 @@ export default function PendingBriefScreen({
               fontSize: 11,
               letterSpacing: "0.08em",
               textTransform: "uppercase",
-              color: "#669bbc",
+              color: "var(--tertiary)",
               margin: "0 0 8px",
             }}
           >
@@ -631,7 +631,7 @@ export default function PendingBriefScreen({
             style={{
               fontFamily: "CS Genio Mono, monospace",
               fontSize: 13,
-              color: "#003049",
+              color: "var(--dark)",
               margin: "0 0 8px",
               fontWeight: 700,
             }}

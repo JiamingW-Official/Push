@@ -82,7 +82,7 @@ function A4Layout({
       style={{
         width: "100%",
         aspectRatio: "210/297",
-        background: "#f5f2ec",
+        background: "var(--surface)",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
@@ -96,11 +96,11 @@ function A4Layout({
       <div style={{ textAlign: "center" }}>
         <div
           style={{
-            fontFamily: "var(--font-display,'Darky',sans-serif)",
+            fontFamily: "var(--font-display)",
             fontWeight: 900,
             fontSize: "clamp(22px,6vw,40px)",
             letterSpacing: "-0.04em",
-            color: "#003049",
+            color: "var(--dark)",
             lineHeight: 1.05,
             marginBottom: 8,
           }}
@@ -112,7 +112,7 @@ function A4Layout({
       {/* QR centered */}
       <div
         style={{
-          background: "#ffffff",
+          background: "var(--surface-elevated)",
           padding: 16,
           border: "1px solid rgba(0,48,73,0.12)",
         }}
@@ -127,7 +127,7 @@ function A4Layout({
       {/* Sub text */}
       <div
         style={{
-          fontFamily: "var(--font-body,'CSGenioMono',monospace)",
+          fontFamily: "var(--font-body)",
           fontSize: 11,
           color: "rgba(0,48,73,0.6)",
           textAlign: "center",
@@ -153,20 +153,20 @@ function A4Layout({
       >
         <span
           style={{
-            fontFamily: "var(--font-display,'Darky',sans-serif)",
+            fontFamily: "var(--font-display)",
             fontWeight: 900,
             fontStyle: "italic",
             fontSize: 18,
-            color: "#003049",
+            color: "var(--dark)",
             letterSpacing: "-0.04em",
           }}
         >
           {BRAND.name}
-          <span style={{ color: "#c1121f" }}>.</span>
+          <span style={{ color: "var(--primary)" }}>.</span>
         </span>
         <span
           style={{
-            fontFamily: "var(--font-body,'CSGenioMono',monospace)",
+            fontFamily: "var(--font-body)",
             fontSize: 9,
             color: "rgba(0,48,73,0.45)",
             letterSpacing: "0.06em",
@@ -191,7 +191,7 @@ function TableTentLayout({
       style={{
         width: "100%",
         aspectRatio: "4/6",
-        background: "#003049",
+        background: "var(--dark)",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
@@ -204,10 +204,10 @@ function TableTentLayout({
     >
       <div
         style={{
-          fontFamily: "var(--font-display,'Darky',sans-serif)",
+          fontFamily: "var(--font-display)",
           fontWeight: 900,
           fontSize: "clamp(16px,4vw,28px)",
-          color: "#f5f2ec",
+          color: "var(--surface)",
           textAlign: "center",
           letterSpacing: "-0.04em",
           lineHeight: 1.05,
@@ -215,7 +215,7 @@ function TableTentLayout({
       >
         {heroMessage}
       </div>
-      <div style={{ background: "#ffffff", padding: 10 }}>
+      <div style={{ background: "var(--surface-elevated)", padding: 10 }}>
         {qrId ? (
           <QRImage qrId={qrId} size={120} />
         ) : (
@@ -224,7 +224,7 @@ function TableTentLayout({
       </div>
       <div
         style={{
-          fontFamily: "var(--font-body,'CSGenioMono',monospace)",
+          fontFamily: "var(--font-body)",
           fontSize: 9,
           color: "rgba(245,242,236,0.6)",
           textAlign: "center",
@@ -235,16 +235,16 @@ function TableTentLayout({
       </div>
       <div
         style={{
-          fontFamily: "var(--font-display,'Darky',sans-serif)",
+          fontFamily: "var(--font-display)",
           fontWeight: 900,
           fontStyle: "italic",
           fontSize: 14,
-          color: "#f5f2ec",
+          color: "var(--surface)",
           letterSpacing: "-0.04em",
         }}
       >
         {BRAND.name}
-        <span style={{ color: "#c1121f" }}>.</span>
+        <span style={{ color: "var(--primary)" }}>.</span>
       </div>
     </div>
   );
@@ -261,23 +261,23 @@ function WindowStickerLayout({
       style={{
         width: "100%",
         aspectRatio: "1/1",
-        background: "#ffffff",
+        background: "var(--surface-elevated)",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
         padding: 24,
         gap: 12,
-        border: "2px solid #003049",
+        border: "2px solid var(--dark)",
         boxSizing: "border-box",
       }}
     >
       <div
         style={{
-          fontFamily: "var(--font-display,'Darky',sans-serif)",
+          fontFamily: "var(--font-display)",
           fontWeight: 900,
           fontSize: "clamp(14px,3vw,22px)",
-          color: "#003049",
+          color: "var(--dark)",
           textAlign: "center",
           letterSpacing: "-0.04em",
           lineHeight: 1.05,
@@ -287,7 +287,7 @@ function WindowStickerLayout({
       </div>
       <div
         style={{
-          background: "#f5f2ec",
+          background: "var(--surface)",
           padding: 12,
           border: "1px solid rgba(0,48,73,0.15)",
         }}
@@ -300,7 +300,7 @@ function WindowStickerLayout({
       </div>
       <div
         style={{
-          fontFamily: "var(--font-body,'CSGenioMono',monospace)",
+          fontFamily: "var(--font-body)",
           fontSize: 9,
           color: "rgba(0,48,73,0.55)",
           textAlign: "center",
@@ -311,16 +311,16 @@ function WindowStickerLayout({
       </div>
       <div
         style={{
-          fontFamily: "var(--font-display,'Darky',sans-serif)",
+          fontFamily: "var(--font-display)",
           fontWeight: 900,
           fontStyle: "italic",
           fontSize: 13,
-          color: "#003049",
+          color: "var(--dark)",
           letterSpacing: "-0.04em",
         }}
       >
         {BRAND.name}
-        <span style={{ color: "#c1121f" }}>.</span>
+        <span style={{ color: "var(--primary)" }}>.</span>
       </div>
     </div>
   );
@@ -333,7 +333,7 @@ function CashRegisterLayout({ qrId }: { qrId?: string }) {
       style={{
         width: "100%",
         aspectRatio: "1/1",
-        background: "#ffffff",
+        background: "var(--surface-elevated)",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
@@ -347,10 +347,10 @@ function CashRegisterLayout({ qrId }: { qrId?: string }) {
       {qrId ? <QRImage qrId={qrId} size={120} /> : <QRPlaceholder size={120} />}
       <div
         style={{
-          fontFamily: "var(--font-body,'CSGenioMono',monospace)",
+          fontFamily: "var(--font-body)",
           fontSize: 10,
           fontWeight: 700,
-          color: "#003049",
+          color: "var(--dark)",
           letterSpacing: "0.08em",
           textTransform: "uppercase",
         }}

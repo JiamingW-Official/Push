@@ -1,6 +1,6 @@
 /* ============================================================
    Creator Analytics — analytics.css
-   Follows Design.md: 0 border-radius, 8px grid, 6-color palette
+   Design.md v7: iOS 26 continuous corner, 8px grid, Ink + accents
    ============================================================ */
 
 .an-page {
@@ -151,6 +151,8 @@
 .an-chart-card {
   background: var(--surface-elevated);
   padding: 24px;
+  border-radius: var(--r-xl);
+  box-shadow: var(--shadow-2);
 }
 
 .an-chart-card--wide {
@@ -337,11 +339,14 @@
   display: flex;
   flex-direction: column;
   gap: 12px;
-  transition: background 200ms ease;
+  border-radius: var(--r-xl);
+  box-shadow: var(--shadow-1);
+  transition: background 200ms ease, box-shadow 200ms ease;
 }
 
 .an-insight-card:hover {
   background: var(--surface-bright);
+  box-shadow: var(--shadow-2);
 }
 
 .an-insight-accent {

@@ -173,7 +173,7 @@
   font-weight: 700;
   background: rgba(0, 48, 73, 0.07);
   color: var(--graphite);
-  border-radius: 0;
+  border-radius: var(--r-xl);
 }
 
 .pl-tab-active .pl-tab-count {
@@ -227,7 +227,7 @@
   white-space: nowrap;
   transition: color 150ms ease, border-color 150ms ease;
   flex-shrink: 0;
-  border-radius: 0;
+  border-radius: var(--r-xl);
   padding-bottom: 0;
 }
 
@@ -257,7 +257,7 @@
   background: transparent;
   cursor: pointer;
   transition: background 150ms ease, border-left-color 200ms ease;
-  border-radius: 0;
+  border-radius: var(--r-xl);
   position: relative;
 }
 
@@ -294,7 +294,7 @@
   font-weight: 800;
   color: #fff;
   flex-shrink: 0;
-  border-radius: 0;
+  border-radius: var(--r-xl);
 }
 
 /* ── Card Info ────────────────────────────────────────────── */
@@ -492,7 +492,7 @@
   letter-spacing: 0.07em;
   text-transform: uppercase;
   padding: 9px 18px;
-  border-radius: 0;
+  border-radius: var(--r-xl);
   cursor: pointer;
   text-decoration: none;
   display: inline-flex;
@@ -529,7 +529,7 @@
   letter-spacing: 0.07em;
   text-transform: uppercase;
   cursor: pointer;
-  border-radius: 0;
+  border-radius: var(--r-xl);
   transition: opacity 150ms ease;
 }
 
@@ -584,7 +584,7 @@
   background: var(--primary);
   padding: 11px 28px;
   border: none;
-  border-radius: 0;
+  border-radius: var(--r-xl);
   cursor: pointer;
   margin-top: 8px;
   transition: background 150ms ease;
@@ -602,7 +602,7 @@
   color: var(--dark);
   border: 1px solid rgba(0, 48, 73, 0.2);
   padding: 10px 24px;
-  border-radius: 0;
+  border-radius: var(--r-xl);
   transition: border-color 150ms ease;
 }
 

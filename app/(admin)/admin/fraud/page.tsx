@@ -622,7 +622,7 @@ export default function FraudQueuePage() {
           <div>
             <input
               type="checkbox"
-              style={{ width: 16, height: 16, borderRadius: 0 }}
+              style={{ width: 16, height: 16, borderRadius: "var(--r-sm)" }}
               checked={
                 selected.size === pageEvents.length && pageEvents.length > 0
               }

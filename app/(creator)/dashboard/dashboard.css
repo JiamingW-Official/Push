@@ -49,9 +49,9 @@
 
 /* Leaflet popup override */
 .leaflet-popup-content-wrapper {
-  border-radius: 0 !important;
-  border: 1px solid var(--line);
-  box-shadow: 3px 3px 0 rgba(0, 48, 73, 0.12);
+  border-radius: var(--r-lg) !important;
+  border: 1px solid var(--hairline);
+  box-shadow: var(--shadow-2);
 }
 
 .leaflet-popup-tip-container {

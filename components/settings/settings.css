@@ -244,7 +244,7 @@
 }
 
 .settings-save-bar__status--saved {
-  color: #2d7d46;
+  color: var(--success-dark);
 }
 
 .settings-save-bar__actions {
@@ -428,7 +428,7 @@
   color: var(--dark);
   background: var(--surface-bright);
   border: 1px solid var(--line);
-  border-radius: 0;
+  border-radius: var(--r-lg);
   outline: none;
   transition: border-color var(--t-fast), box-shadow var(--t-fast);
   appearance: none;
@@ -478,7 +478,7 @@
   cursor: pointer;
   transition: box-shadow var(--t-slow), background var(--t-fast), transform 80ms;
   text-decoration: none;
-  border-radius: 0;
+  border-radius: var(--r-lg);
 }
 
 .btn:active {

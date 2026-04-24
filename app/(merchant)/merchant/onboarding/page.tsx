@@ -174,7 +174,7 @@ function BizProfileStep({
             style={{
               fontWeight: 400,
               marginLeft: 6,
-              color: "rgba(0,48,73,0.35)",
+              color: "var(--text-muted)",
             }}
           >
             (optional)

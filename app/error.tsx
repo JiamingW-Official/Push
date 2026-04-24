@@ -15,7 +15,6 @@ export default function GlobalError({
   reset: () => void;
 }) {
   useEffect(() => {
-     
     console.error("[push] unhandled route error", error);
   }, [error]);
 
@@ -71,7 +70,7 @@ export default function GlobalError({
       <style>{`
         .err-wrap {
           min-height: calc(100svh - 56px);
-          background: var(--surface, #f5f2ec);
+          background: var(--surface);
           padding: clamp(48px, 10vw, 120px) 24px;
           display: flex;
           align-items: center;
@@ -85,19 +84,19 @@ export default function GlobalError({
           display: inline-flex;
           align-items: center;
           gap: 10px;
-          font-family: 'CS Genio Mono', 'SF Mono', monospace;
+          font-family: var(--font-body);
           font-size: 11px;
           font-weight: 700;
           letter-spacing: 0.14em;
           text-transform: uppercase;
-          color: var(--primary, #c1121f);
+          color: var(--primary);
           margin-bottom: 32px;
         }
         .err-dot {
           width: 6px;
           height: 6px;
-          background: var(--primary, #c1121f);
-          border-radius: 0;
+          background: var(--primary);
+          border-radius: 50%;
           display: inline-block;
           animation: err-pulse 1.6s ease-in-out infinite;
         }
@@ -109,18 +108,18 @@ export default function GlobalError({
           color: rgba(0, 48, 73, 0.55);
         }
         .err-h {
-          font-family: 'Darky', sans-serif;
+          font-family: var(--font-display);
           font-size: clamp(36px, 6vw, 80px);
           font-weight: 900;
           letter-spacing: -0.045em;
           line-height: 1;
-          color: var(--dark, #003049);
+          color: var(--dark);
           margin: 0 0 24px;
         }
         .err-h-pre { font-weight: 300; color: rgba(0, 48, 73, 0.42); }
-        .err-h-em { font-style: normal; color: var(--primary, #c1121f); }
+        .err-h-em { font-style: normal; color: var(--primary); }
         .err-sub {
-          font-family: 'CS Genio Mono', 'SF Mono', monospace;
+          font-family: var(--font-body);
           font-size: 14px;
           line-height: 1.65;
           color: rgba(0, 48, 73, 0.65);
@@ -128,12 +127,12 @@ export default function GlobalError({
           margin: 0 0 24px;
         }
         .err-digest {
-          font-family: 'CS Genio Mono', 'SF Mono', monospace;
+          font-family: var(--font-body);
           font-size: 11px;
           margin: 0 0 32px;
           padding: 10px 14px;
           background: rgba(0, 48, 73, 0.04);
-          border-left: 3px solid var(--champagne, #c9a96e);
+          border-left: 3px solid var(--primary);
           color: rgba(0, 48, 73, 0.7);
           display: inline-flex;
           align-items: center;
@@ -143,7 +142,7 @@ export default function GlobalError({
           font-weight: 700;
           letter-spacing: 0.08em;
           text-transform: uppercase;
-          color: var(--champagne, #c9a96e);
+          color: var(--champagne);
         }
         .err-digest-code {
           font-size: 12px;
@@ -156,37 +155,38 @@ export default function GlobalError({
           margin-bottom: 48px;
         }
         .err-btn-fill {
-          font-family: 'CS Genio Mono', 'SF Mono', monospace;
+          font-family: var(--font-body);
           font-size: 11px;
           font-weight: 700;
           letter-spacing: 0.08em;
           text-transform: uppercase;
           padding: 12px 20px;
-          background: var(--primary, #c1121f);
+          background: var(--primary);
           color: #ffffff;
-          border: 1px solid var(--primary, #c1121f);
-          border-radius: 0;
+          border: 1px solid var(--primary);
+          border-radius: var(--r-lg);
           cursor: pointer;
           transition: background 200ms ease;
         }
-        .err-btn-fill:hover { background: var(--accent, #780000); }
+        .err-btn-fill:hover { background: var(--accent); }
         .err-btn-outline {
-          font-family: 'CS Genio Mono', 'SF Mono', monospace;
+          font-family: var(--font-body);
           font-size: 11px;
           font-weight: 700;
           letter-spacing: 0.08em;
           text-transform: uppercase;
           padding: 12px 20px;
           background: transparent;
-          color: var(--dark, #003049);
-          border: 1px solid var(--dark, #003049);
+          color: var(--dark);
+          border: 1px solid var(--dark);
+          border-radius: var(--r-lg);
           text-decoration: none;
           display: inline-flex;
           align-items: center;
           transition: background 200ms ease, color 200ms ease;
         }
         .err-btn-outline:hover {
-          background: var(--dark, #003049);
+          background: var(--dark);
           color: #ffffff;
         }
         .err-footer {
@@ -196,18 +196,18 @@ export default function GlobalError({
           gap: 12px;
           padding-top: 24px;
           border-top: 1px solid rgba(0, 48, 73, 0.08);
-          font-family: 'CS Genio Mono', 'SF Mono', monospace;
+          font-family: var(--font-body);
           font-size: 10px;
           letter-spacing: 0.08em;
           color: rgba(0, 48, 73, 0.35);
         }
         .err-mail {
-          color: var(--dark, #003049);
+          color: var(--dark);
           text-decoration: none;
           border-bottom: 1px solid transparent;
           transition: border-color 200ms ease;
         }
-        .err-mail:hover { border-bottom-color: var(--primary, #c1121f); color: var(--primary, #c1121f); }
+        .err-mail:hover { border-bottom-color: var(--primary); color: var(--primary); }
       `}</style>
     </main>
   );

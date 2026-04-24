@@ -324,7 +324,7 @@ form.form-loading {
 }
 
 .pw-fill--weak   { width: 33%;  background: var(--primary); }
-.pw-fill--fair   { width: 66%;  background: #e07b00; }
+.pw-fill--fair   { width: 66%;  background: var(--warning); }
 .pw-fill--strong { width: 100%; background: var(--tertiary); }
 
 .pw-label {
@@ -336,7 +336,7 @@ form.form-loading {
 }
 
 .pw-label--weak   { color: var(--primary); }
-.pw-label--fair   { color: #e07b00; }
+.pw-label--fair   { color: var(--warning); }
 .pw-label--strong { color: var(--tertiary); }
 
 /* ── Bio textarea ─────────────────────────────────────────── */
@@ -437,8 +437,8 @@ form.form-loading {
 }
 
 .submit-btn:hover {
-  box-shadow: 6px 6px 0 var(--dark);
-  transform: translateX(2px);
+  box-shadow: var(--shadow-3);
+  transform: translateY(-1px);
 }
 
 .submit-btn:active,

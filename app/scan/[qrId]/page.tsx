@@ -313,13 +313,13 @@ export default function ScanLandingPage() {
           onClick={() => router.push(`/scan/${qrId}/verify`)}
           onMouseEnter={(e) => {
             (e.currentTarget as HTMLButtonElement).style.boxShadow =
-              "6px 6px 0 var(--dark)";
+              "var(--shadow-3)";
             (e.currentTarget as HTMLButtonElement).style.transform =
               "translate(-2px, -2px)";
           }}
           onMouseLeave={(e) => {
             (e.currentTarget as HTMLButtonElement).style.boxShadow =
-              "3px 3px 0 var(--accent)";
+              "var(--shadow-2)";
             (e.currentTarget as HTMLButtonElement).style.transform = "none";
           }}
         >
@@ -346,7 +346,7 @@ export default function ScanLandingPage() {
 
 /* ── Styles ────────────────────────────────────────────────── */
 // All inline to keep scan pages self-contained and fast-loading
-// border-radius: 0 everywhere per Design.md
+// Radii follow Design.md element-to-radius mapping via var(--r-*)
 
 const styles = {
   page: {
@@ -449,7 +449,7 @@ const styles = {
     fontWeight: 800,
     letterSpacing: "0.04em",
     padding: "2px 8px",
-    background: "#ffffff",
+    background: "var(--surface-elevated)",
     color: "var(--primary)",
     flexShrink: 0,
   } as React.CSSProperties,
@@ -625,6 +625,7 @@ const styles = {
     padding: "16px 20px",
     background: "var(--surface-elevated)",
     border: "1px solid var(--line)",
+    borderRadius: "var(--r-xl)",
   } as React.CSSProperties,
 
   creatorAvatar: {
@@ -639,8 +640,7 @@ const styles = {
     fontSize: "20px",
     fontWeight: 800,
     flexShrink: 0,
-    // Map pins are 50% per Design.md, but this is an avatar — using square per rules
-    borderRadius: "0",
+    borderRadius: "var(--r-full)", // avatar — Design.md
   } as React.CSSProperties,
 
   creatorInfo: {
@@ -788,9 +788,9 @@ const styles = {
     fontWeight: 700,
     letterSpacing: "0.06em",
     border: "none",
-    borderRadius: "0",
+    borderRadius: "var(--r-lg)",
     cursor: "pointer",
-    boxShadow: "3px 3px 0 var(--accent)",
+    boxShadow: "var(--shadow-2)",
     transition: "box-shadow 150ms ease, transform 150ms ease",
     marginBottom: "12px",
   } as React.CSSProperties,

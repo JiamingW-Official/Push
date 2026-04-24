@@ -637,21 +637,21 @@ const SIGNUP_TIERS = [
     label: "Seed",
     rate: "Free",
     benefit: "Start free — zero followers needed",
-    color: "#669bbc",
+    color: "var(--tertiary)",
   },
   {
     icon: "◈",
     label: "Explorer",
     rate: "$12/campaign",
     benefit: "$12/campaign — 2 active campaigns",
-    color: "#f5f2ec",
+    color: "var(--surface)",
   },
   {
     icon: "◆",
     label: "Operator",
     rate: "$20 + 3%",
     benefit: "$20/campaign + 3% commission",
-    color: "#c1121f",
+    color: "var(--primary)",
   },
 ];
 

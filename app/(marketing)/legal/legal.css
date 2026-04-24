@@ -472,7 +472,7 @@
   border: 1px solid var(--line-strong);
   padding: var(--space-2) var(--space-3);
   cursor: pointer;
-  border-radius: 0;
+  border-radius: var(--r-lg);
   text-decoration: none;
   width: 100%;
   text-align: left;
@@ -543,7 +543,7 @@
   border: 1px solid var(--line-strong);
   padding: var(--space-2) var(--space-3);
   cursor: pointer;
-  border-radius: 0;
+  border-radius: var(--r-lg);
 }
 
 .legal-mobile-toc__list {

@@ -29,14 +29,14 @@
   height: 52px;
   padding: 0 24px;
 
-  background-color: #003049; /* Deep Space Blue */
-  color: #f5f2ec;            /* Pearl Stone */
+  background-color: var(--dark); /* Deep Space Blue */
+  color: var(--surface);         /* Pearl Stone */
 
-  font-family: "CS Genio Mono", "Courier New", monospace;
+  font-family: var(--font-body);
   font-size: 12px;
   letter-spacing: 0.02em;
 
-  border-radius: 0;
+  border-radius: var(--r-lg);
   border-top: 1px solid rgba(245, 242, 236, 0.1);
   box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.35);
 
@@ -58,7 +58,7 @@
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background-color: #c1121f; /* Flag Red */
+  background-color: var(--primary); /* Flag Red */
   flex-shrink: 0;
   animation: demo-pulse 2s ease-in-out infinite;
 }
@@ -66,7 +66,7 @@
 /* "Preview Mode" label */
 .demo-banner__label {
   font-weight: 700;
-  color: #f5f2ec;
+  color: var(--surface);
   white-space: nowrap;
   text-transform: uppercase;
   letter-spacing: 0.06em;
@@ -104,7 +104,7 @@
   font-size: 12px;
   letter-spacing: 0.02em;
   cursor: pointer;
-  border-radius: 0;
+  border-radius: var(--r-lg);
   transition: opacity 0.15s ease, background-color 0.15s ease;
   line-height: 1;
 }
@@ -112,16 +112,16 @@
 /* Primary CTA — Flag Red fill */
 .demo-banner__sign-up {
   padding: 6px 14px;
-  background-color: #c1121f;
+  background-color: var(--primary);
   color: #ffffff;
-  border: 1px solid #c1121f;
+  border: 1px solid var(--primary);
   font-weight: 600;
   white-space: nowrap;
 }
 
 .demo-banner__sign-up:hover {
-  background-color: #780000;
-  border-color: #780000;
+  background-color: var(--accent);
+  border-color: var(--accent);
 }
 
 .demo-banner__sign-up:active {
@@ -138,7 +138,7 @@
 }
 
 .demo-banner__exit:hover {
-  color: #f5f2ec;
+  color: var(--surface);
   border-color: rgba(245, 242, 236, 0.7);
   background-color: rgba(245, 242, 236, 0.06);
 }
@@ -162,7 +162,7 @@
 }
 
 .demo-banner__dismiss:hover {
-  color: #f5f2ec;
+  color: var(--surface);
 }
 
 /* =============================================
@@ -185,17 +185,17 @@
   height: 32px;
   padding: 0 16px;
 
-  background-color: #c1121f; /* Flag Red */
+  background-color: var(--primary); /* Flag Red */
   color: #ffffff;
 
-  font-family: "CSGenioMono", "CS Genio Mono", "Courier New", monospace;
+  font-family: var(--font-body);
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
 
-  border-radius: 0;
-  border-bottom: 1px solid #780000;
+  border-radius: var(--r-lg);
+  border-bottom: 1px solid var(--accent);
   box-shadow: 0 2px 8px rgba(193, 18, 31, 0.35);
 
   animation: demo-slide-down 0.25s cubic-bezier(0.22, 1, 0.36, 1) both;
@@ -233,14 +233,14 @@
 }
 
 .demo-banner--top .demo-banner__exit:hover {
-  color: #ffffff;
+  color: var(--surface-elevated);
   border-color: rgba(255, 255, 255, 0.80);
   background: rgba(255, 255, 255, 0.12);
 }
 
 /* Dot inside top bar — white pulse */
 .demo-banner--top .demo-banner__dot {
-  background-color: #ffffff;
+  background-color: var(--surface-elevated);
   width: 6px;
   height: 6px;
 }

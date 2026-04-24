@@ -1,4 +1,5 @@
 /* ── Onboarding Page ─────────────────────────────────────── */
+/* Authority: Design.md v7 + app/globals.css. Tokens only.      */
 
 .ob-page {
   min-height: 100svh;
@@ -6,15 +7,17 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: var(--space-4, 32px);
+  padding: var(--space-4);
 }
 
 .ob-card {
   max-width: 520px;
   width: 100%;
-  background: #ffffff;
-  border: 1px solid rgba(0, 48, 73, 0.08);
-  padding: var(--space-6, 48px);
+  background: var(--surface-elevated);
+  border: 1px solid var(--line);
+  border-radius: var(--r-2xl);
+  box-shadow: var(--shadow-2);
+  padding: var(--space-6);
 }
 
 /* ── Step Enter Animation ────────────────────────────────── */
@@ -39,21 +42,21 @@
 .ob-progress-dots {
   display: flex;
   gap: 8px;
-  margin-bottom: var(--space-5, 40px);
+  margin-bottom: var(--space-5);
 }
 
 .ob-dot {
   width: 8px;
   height: 8px;
-  border-radius: 0;
-  border: 2px solid rgba(0, 48, 73, 0.2);
+  border-radius: var(--r-sm);
+  border: 2px solid var(--line-strong);
   background: transparent;
   transition: background 200ms, border-color 200ms;
 }
 
 .ob-dot--active {
-  background: #003049;
-  border-color: #003049;
+  background: var(--dark);
+  border-color: var(--dark);
 }
 
 /* ── Step Label — styled like section-tag ───────────────── */
@@ -66,40 +69,40 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  color: #669bbc;
-  margin-bottom: var(--space-2, 16px);
-  font-family: "CS Genio Mono", monospace;
+  color: var(--tertiary);
+  margin-bottom: var(--space-2);
+  font-family: var(--font-body);
 }
 
 .ob-step-dot {
   display: inline-block;
   width: 6px;
   height: 6px;
-  border-radius: 0;
-  background: #c1121f;
+  border-radius: var(--r-full);
+  background: var(--primary);
   flex-shrink: 0;
 }
 
 /* ── Heading ────────────────────────────────────────────── */
 
 .ob-heading {
-  font-family: "Darky", serif;
+  font-family: var(--font-display);
   font-weight: 800;
   font-size: clamp(28px, 5vw, 40px);
   letter-spacing: -0.045em;
-  color: #003049;
-  margin-bottom: var(--space-2, 16px);
+  color: var(--dark);
+  margin-bottom: var(--space-2);
   line-height: 1.05;
 }
 
 /* ── Subtext ────────────────────────────────────────────── */
 
 .ob-subtext {
-  font-family: "CS Genio Mono", monospace;
+  font-family: var(--font-body);
   font-size: 14px;
-  color: rgba(0, 48, 73, 0.6);
+  color: var(--text-muted);
   line-height: 1.6;
-  margin-bottom: var(--space-5, 40px);
+  margin-bottom: var(--space-5);
 }
 
 /* ── Avatar Placeholder ──────────────────────────────────── */
@@ -108,15 +111,15 @@
   display: flex;
   align-items: center;
   gap: 16px;
-  margin-bottom: var(--space-4, 32px);
+  margin-bottom: var(--space-4);
 }
 
 .ob-avatar-placeholder {
   width: 80px;
   height: 80px;
   border-radius: 50%;
-  background: rgba(0, 48, 73, 0.05);
-  border: 2px dashed rgba(0, 48, 73, 0.2);
+  background: var(--surface-muted);
+  border: 2px dashed var(--line-strong);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -126,7 +129,7 @@
 }
 
 .ob-avatar-placeholder:hover {
-  border-color: #003049;
+  border-color: var(--dark);
   background: rgba(0, 48, 73, 0.08);
 }
 
@@ -136,17 +139,17 @@
 }
 
 .ob-avatar-hint-title {
-  font-family: "CS Genio Mono", monospace;
+  font-family: var(--font-body);
   font-size: 13px;
   font-weight: 700;
-  color: #003049;
+  color: var(--dark);
   margin-bottom: 4px;
 }
 
 .ob-avatar-hint-sub {
-  font-family: "CS Genio Mono", monospace;
+  font-family: var(--font-body);
   font-size: 12px;
-  color: rgba(0, 48, 73, 0.5);
+  color: var(--text-muted);
 }
 
 /* ── Profile Completeness Bar ───────────────────────────── */
@@ -155,7 +158,7 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  margin-bottom: var(--space-4, 32px);
+  margin-bottom: var(--space-4);
 }
 
 .ob-completeness-track {
@@ -168,15 +171,15 @@
 
 .ob-completeness-fill {
   height: 100%;
-  background: linear-gradient(90deg, #669bbc, #c1121f);
+  background: linear-gradient(90deg, var(--tertiary), var(--primary));
   transition: width 600ms ease;
 }
 
 .ob-completeness-label {
-  font-family: "CS Genio Mono", monospace;
+  font-family: var(--font-body);
   font-size: 11px;
   font-weight: 700;
-  color: rgba(0, 48, 73, 0.4);
+  color: var(--text-muted);
   white-space: nowrap;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -185,30 +188,30 @@
 /* ── Form Fields ─────────────────────────────────────────── */
 
 .ob-field {
-  margin-bottom: var(--space-3, 24px);
+  margin-bottom: var(--space-3);
 }
 
 .ob-label {
   display: block;
-  font-family: "CS Genio Mono", monospace;
+  font-family: var(--font-body);
   font-size: 11px;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: rgba(0, 48, 73, 0.5);
+  color: var(--text-muted);
   margin-bottom: 6px;
 }
 
 .ob-input,
 .ob-textarea {
   width: 100%;
-  border: 1.5px solid rgba(0, 48, 73, 0.15);
-  border-radius: 0;
+  border: 1.5px solid var(--line);
+  border-radius: var(--r-md);
   padding: 10px 12px;
-  font-family: "CS Genio Mono", monospace;
+  font-family: var(--font-body);
   font-size: 14px;
-  color: #003049;
-  background: #ffffff;
+  color: var(--dark);
+  background: var(--surface-elevated);
   transition: border-color 150ms;
   box-sizing: border-box;
   outline: none;
@@ -216,7 +219,7 @@
 
 .ob-input:focus,
 .ob-textarea:focus {
-  border-color: #003049;
+  border-color: var(--dark);
 }
 
 .ob-textarea {
@@ -226,7 +229,7 @@
 }
 
 .ob-char-count {
-  font-family: "CS Genio Mono", monospace;
+  font-family: var(--font-body);
   font-size: 11px;
   color: rgba(0, 48, 73, 0.35);
   text-align: right;
@@ -234,7 +237,7 @@
 }
 
 .ob-char-count--warning {
-  color: #c1121f;
+  color: var(--primary);
 }
 
 /* ── Chips ───────────────────────────────────────────────── */
@@ -243,7 +246,7 @@
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
-  margin-bottom: var(--space-4, 32px);
+  margin-bottom: var(--space-4);
 }
 
 .ob-chip {
@@ -252,13 +255,13 @@
   gap: 8px;
   padding: 10px 16px;
   min-height: 44px;
-  border: 2px solid rgba(0, 48, 73, 0.15);
+  border: 2px solid var(--line);
   border-radius: 50vh; /* pill — design system exception for filter chips */
   border-left-width: 2px;
-  font-family: "CS Genio Mono", monospace;
+  font-family: var(--font-body);
   font-size: 13px;
   font-weight: 600;
-  color: #003049;
+  color: var(--dark);
   cursor: pointer;
   transition: all 150ms ease;
   background: transparent;
@@ -267,14 +270,14 @@
 }
 
 .ob-chip:hover {
-  border-color: rgba(0, 48, 73, 0.4);
+  border-color: var(--line-strong);
 }
 
 .ob-chip--selected {
-  background: #003049;
-  color: #f5f2ec;
-  border-color: #003049;
-  border-left: 3px solid #c1121f;
+  background: var(--dark);
+  color: var(--surface);
+  border-color: var(--dark);
+  border-left: 3px solid var(--primary);
 }
 
 .ob-chip-icon {
@@ -287,35 +290,35 @@
 }
 
 .ob-chip-badge {
-  font-family: "CS Genio Mono", monospace;
+  font-family: var(--font-body);
   font-size: 9px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  color: #c1121f;
+  color: var(--primary);
   background: rgba(193, 18, 31, 0.08);
   padding: 2px 6px;
   border-radius: 50vh;
 }
 
 .ob-chip--selected .ob-chip-badge {
-  color: #f5f2ec;
+  color: var(--surface);
   background: rgba(245, 242, 236, 0.15);
 }
 
 /* ── Calendar Grid (Step 3) ──────────────────────────────── */
 
 .ob-calendar-section {
-  margin-bottom: var(--space-3, 24px);
+  margin-bottom: var(--space-3);
 }
 
 .ob-calendar-group-label {
-  font-family: "CS Genio Mono", monospace;
+  font-family: var(--font-body);
   font-size: 11px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  color: rgba(0, 48, 73, 0.4);
+  color: var(--text-muted);
   margin-bottom: 8px;
 }
 
@@ -330,12 +333,12 @@
   align-items: center;
   justify-content: center;
   min-height: 48px;
-  border: 1.5px solid rgba(0, 48, 73, 0.15);
-  border-radius: 0;
-  font-family: "CS Genio Mono", monospace;
+  border: 1.5px solid var(--line);
+  border-radius: var(--r-md);
+  font-family: var(--font-body);
   font-size: 12px;
   font-weight: 600;
-  color: #003049;
+  color: var(--dark);
   cursor: pointer;
   transition: all 150ms ease;
   background: transparent;
@@ -343,63 +346,63 @@
 }
 
 .ob-calendar-cell:hover {
-  border-color: rgba(0, 48, 73, 0.4);
-  background: rgba(0, 48, 73, 0.03);
+  border-color: var(--line-strong);
+  background: var(--surface-muted);
 }
 
 .ob-calendar-cell--selected {
-  background: #003049;
-  color: #f5f2ec;
-  border-color: #003049;
-  border-left: 3px solid #c1121f;
+  background: var(--dark);
+  color: var(--surface);
+  border-color: var(--dark);
+  border-left: 3px solid var(--primary);
 }
 
 /* ── Step 4 — Welcome Hero ───────────────────────────────── */
 
 .ob-welcome-hero {
-  margin-bottom: var(--space-4, 32px);
+  margin-bottom: var(--space-4);
 }
 
 .ob-welcome-eyebrow {
-  font-family: "CS Genio Mono", monospace;
+  font-family: var(--font-body);
   font-size: 11px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.12em;
-  color: #c1121f;
+  color: var(--primary);
   margin-bottom: 8px;
 }
 
 /* ── Step 4 — TierJourney Preview ───────────────────────── */
 
 .ob-tier-preview {
-  background: rgba(0, 48, 73, 0.03);
-  border: 1px solid rgba(0, 48, 73, 0.08);
-  padding: var(--space-3, 24px) var(--space-3, 24px);
-  margin-bottom: var(--space-3, 24px);
+  background: var(--surface-muted);
+  border: 1px solid var(--line);
+  padding: var(--space-3) var(--space-3);
+  margin-bottom: var(--space-3);
 }
 
 /* ── Step 4 — Seed Callout ───────────────────────────────── */
 
 .ob-seed-callout {
   background: rgba(102, 155, 188, 0.07);
-  border-left: 4px solid #669bbc;
+  border-left: 4px solid var(--tertiary);
   padding: 16px 20px;
-  margin-bottom: var(--space-4, 32px);
+  margin-bottom: var(--space-4);
 }
 
 .ob-seed-callout-title {
-  font-family: "CS Genio Mono", monospace;
+  font-family: var(--font-body);
   font-size: 13px;
   font-weight: 700;
-  color: #003049;
+  color: var(--dark);
   margin-bottom: 4px;
 }
 
 .ob-seed-callout-desc {
-  font-family: "CS Genio Mono", monospace;
+  font-family: var(--font-body);
   font-size: 12px;
-  color: rgba(0, 48, 73, 0.6);
+  color: var(--text-muted);
   margin-bottom: 12px;
 }
 
@@ -407,14 +410,14 @@
   display: flex;
   align-items: flex-start;
   gap: 8px;
-  font-family: "CS Genio Mono", monospace;
+  font-family: var(--font-body);
   font-size: 12px;
   color: rgba(0, 48, 73, 0.75);
   line-height: 1.5;
 }
 
 .ob-seed-path-arrow {
-  color: #c1121f;
+  color: var(--primary);
   font-weight: 800;
   flex-shrink: 0;
   margin-top: 1px;
@@ -423,16 +426,16 @@
 /* ── Step 4 — Tier Cards ─────────────────────────────────── */
 
 .ob-unlock-section {
-  margin-bottom: var(--space-4, 32px);
+  margin-bottom: var(--space-4);
 }
 
 .ob-unlock-heading {
-  font-family: "CS Genio Mono", monospace;
+  font-family: var(--font-body);
   font-size: 11px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  color: rgba(0, 48, 73, 0.4);
+  color: var(--text-muted);
   margin-bottom: 12px;
 }
 
@@ -448,12 +451,12 @@
   display: flex;
   flex-direction: column;
   gap: 4px;
-  background: #ffffff;
+  background: var(--surface-elevated);
   position: relative;
 }
 
 .ob-tier-card--current {
-  border-color: #c1121f;
+  border-color: var(--primary);
   background: rgba(193, 18, 31, 0.03);
 }
 
@@ -470,51 +473,51 @@
 }
 
 .ob-tier-card-name {
-  font-family: "CS Genio Mono", monospace;
+  font-family: var(--font-body);
   font-size: 11px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  color: #003049;
+  color: var(--dark);
   flex: 1;
 }
 
 .ob-tier-card-now {
-  font-family: "CS Genio Mono", monospace;
+  font-family: var(--font-body);
   font-size: 9px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  color: #c1121f;
+  color: var(--primary);
   background: rgba(193, 18, 31, 0.1);
   padding: 2px 5px;
 }
 
 .ob-tier-card-benefit {
-  font-family: "Darky", serif;
+  font-family: var(--font-display);
   font-size: 14px;
   font-weight: 700;
-  color: #003049;
+  color: var(--dark);
   letter-spacing: -0.02em;
 }
 
 .ob-tier-card-detail {
-  font-family: "CS Genio Mono", monospace;
+  font-family: var(--font-body);
   font-size: 11px;
   color: rgba(0, 48, 73, 0.55);
 }
 
 .ob-tier-card-unlock {
-  font-family: "CS Genio Mono", monospace;
+  font-family: var(--font-body);
   font-size: 10px;
-  color: rgba(0, 48, 73, 0.4);
+  color: var(--text-muted);
   margin-top: 4px;
   padding-top: 6px;
   border-top: 1px solid rgba(0, 48, 73, 0.07);
 }
 
 .ob-tier-card--current .ob-tier-card-unlock {
-  color: #c1121f;
+  color: var(--primary);
   border-top-color: rgba(193, 18, 31, 0.12);
 }
 
@@ -522,35 +525,35 @@
 
 .ob-promise-box {
   background: rgba(102, 155, 188, 0.08);
-  border-left: 4px solid #669bbc;
-  padding: var(--space-3, 24px);
-  margin: var(--space-4, 32px) 0;
+  border-left: 4px solid var(--tertiary);
+  padding: var(--space-3);
+  margin: var(--space-4) 0;
 }
 
 .ob-promise-label {
-  font-family: "CS Genio Mono", monospace;
+  font-family: var(--font-body);
   font-size: 11px;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  color: #669bbc;
+  color: var(--tertiary);
   margin-bottom: 8px;
 }
 
 .ob-promise-text {
-  font-family: "CS Genio Mono", monospace;
+  font-family: var(--font-body);
   font-size: 14px;
-  color: #003049;
+  color: var(--dark);
   line-height: 1.6;
 }
 
 /* ── Countdown ───────────────────────────────────────────── */
 
 .ob-countdown {
-  font-family: "Darky", serif;
+  font-family: var(--font-display);
   font-size: 36px;
   font-weight: 900;
-  color: #003049;
+  color: var(--dark);
   letter-spacing: -0.04em;
   margin-top: 12px;
   display: block;
@@ -560,8 +563,8 @@
 
 .ob-tier-strip {
   display: flex;
-  gap: var(--space-2, 16px);
-  margin: var(--space-4, 32px) 0;
+  gap: var(--space-2);
+  margin: var(--space-4) 0;
   flex-wrap: wrap;
 }
 
@@ -575,16 +578,16 @@
 .ob-tier-dot {
   width: 10px;
   height: 10px;
-  border-radius: 0;
+  border-radius: var(--r-sm);
   background: rgba(0, 48, 73, 0.12);
 }
 
 .ob-tier-dot--active {
-  background: #c1121f;
+  background: var(--primary);
 }
 
 .ob-tier-name {
-  font-family: "CS Genio Mono", monospace;
+  font-family: var(--font-body);
   font-size: 10px;
   font-weight: 600;
   text-transform: uppercase;
@@ -593,7 +596,7 @@
 }
 
 .ob-tier-name--active {
-  color: #c1121f;
+  color: var(--primary);
 }
 
 /* ── What Happens Next ───────────────────────────────────── */
@@ -601,11 +604,11 @@
 .ob-next-list {
   list-style: none;
   padding: 0;
-  margin: 0 0 var(--space-4, 32px);
+  margin: 0 0 var(--space-4);
 }
 
 .ob-next-list li {
-  font-family: "CS Genio Mono", monospace;
+  font-family: var(--font-body);
   font-size: 14px;
   color: rgba(0, 48, 73, 0.75);
   line-height: 1.6;
@@ -622,7 +625,7 @@
 
 .ob-next-list li .ob-step-num {
   font-weight: 800;
-  color: #c1121f;
+  color: var(--primary);
   min-width: 16px;
 }
 
@@ -632,14 +635,14 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: var(--space-5, 40px);
+  margin-top: var(--space-5);
 }
 
 .ob-back-btn {
-  font-family: "CS Genio Mono", monospace;
+  font-family: var(--font-body);
   font-size: 13px;
   font-weight: 600;
-  color: rgba(0, 48, 73, 0.4);
+  color: var(--text-muted);
   background: none;
   border: none;
   cursor: pointer;
@@ -649,18 +652,18 @@
 }
 
 .ob-back-btn:hover {
-  color: #003049;
+  color: var(--dark);
 }
 
 .ob-next-btn {
   padding: 12px 32px;
-  background: #c1121f;
+  background: var(--primary);
   color: #ffffff;
-  font-family: "CS Genio Mono", monospace;
+  font-family: var(--font-body);
   font-weight: 700;
   font-size: 14px;
   border: none;
-  border-radius: 0;
+  border-radius: var(--r-lg);
   cursor: pointer;
   transition: background 150ms;
   letter-spacing: 0.02em;
@@ -670,11 +673,11 @@
 }
 
 .ob-next-btn:hover {
-  background: #780000;
+  background: var(--accent);
 }
 
 .ob-next-btn:disabled {
-  background: rgba(0, 48, 73, 0.15);
+  background: var(--line);
   cursor: not-allowed;
 }
 
@@ -686,9 +689,9 @@
 /* ── Error message ───────────────────────────────────────── */
 
 .ob-error {
-  font-family: "CS Genio Mono", monospace;
+  font-family: var(--font-body);
   font-size: 12px;
-  color: #c1121f;
+  color: var(--primary);
   margin-top: 8px;
 }
 
@@ -703,8 +706,9 @@
   .ob-card {
     max-width: 100%;
     border: none;
-    border-radius: 0;
-    padding: 32px 24px 48px;
+    border-radius: var(--r-lg); /* mobile full-bleed sheet — exception */
+    box-shadow: none;
+    padding: var(--space-4) var(--space-3) var(--space-6);
     min-height: 100svh;
   }
 

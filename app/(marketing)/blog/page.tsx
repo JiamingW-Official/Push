@@ -129,7 +129,7 @@ function Newsletter() {
     <section className="blog-newsletter">
       <div className="blog-newsletter__inner">
         <div className="blog-newsletter__text">
-          <p className="blog-newsletter__eyebrow">Push Notes Weekly</p>
+          <p className="eyebrow blog-newsletter__eyebrow">Push Notes Weekly</p>
           <h2 className="blog-newsletter__headline">
             <span className="wt-900">Field reports.</span>
             <br />

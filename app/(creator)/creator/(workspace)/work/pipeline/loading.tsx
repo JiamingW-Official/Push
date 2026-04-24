@@ -122,7 +122,7 @@ export default function PipelineLoading() {
               ...skel,
               height: "28px",
               width: `${w}px`,
-              borderRadius: "50vh",
+              borderRadius: "var(--r-pill)",
             }}
           />
         ))}
@@ -161,7 +161,7 @@ export default function PipelineLoading() {
                   ...skel,
                   height: "8px",
                   width: "8px",
-                  borderRadius: "50%",
+                  borderRadius: "var(--r-full)",
                 }}
               />
               <div style={{ ...skel, height: "11px", width: "70px" }} />

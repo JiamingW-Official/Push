@@ -44,7 +44,7 @@ function EarningsCalculator() {
       <div className="calc-controls">
         {/* Tier selector */}
         <div className="calc-field">
-          <label className="calc-label">Your Tier</label>
+          <label className="calc-label">Your tier</label>
           <div className="calc-tier-grid">
             {tiers.map((t) => (
               <button
@@ -103,7 +103,7 @@ function EarningsCalculator() {
 
       {/* Output */}
       <div className="calc-output">
-        <p className="calc-output-label">Estimated monthly earnings</p>
+        <p className="calc-output-label">Estimated monthly payout</p>
         <div className="calc-output-num">
           <span className="calc-num-prefix">$</span>
           <span className="calc-num-val">{estMin.toLocaleString()}</span>
@@ -112,12 +112,12 @@ function EarningsCalculator() {
           <span className="calc-num-val">{estMax.toLocaleString()}</span>
         </div>
         <p className="calc-output-note">
-          Based on {campaigns} campaign{campaigns !== 1 ? "s" : ""} ·{" "}
-          {visitsPerWeek} verified visits/wk · ${rate.min}–${rate.max} per visit
-          (tier rate). Payouts via Stripe Connect.
+          {campaigns} campaign{campaigns !== 1 ? "s" : ""} · {visitsPerWeek}{" "}
+          verified visits/wk · ${rate.min}–${rate.max} per visit (your tier
+          rate). We pay on Friday via Stripe Connect.
         </p>
         <Link href="/creator/signup" className="btn btn-primary calc-cta">
-          Apply now — it&apos;s free
+          Apply for the cohort
         </Link>
       </div>
     </div>
@@ -136,8 +136,7 @@ const TIERS = [
     color: "var(--tier-clay)",
     textColor: "var(--tier-clay-text)",
     borderStyle: "dashed",
-    levelUp:
-      "Complete 3 verified visits — your score unlocks Explorer in 30 days.",
+    levelUp: "Three verified visits in your first 30 days unlocks Explorer.",
     badge: "badge-clay",
   },
   {
@@ -148,9 +147,9 @@ const TIERS = [
     earning: "$200–600",
     period: "/mo",
     color: "var(--tier-bronze)",
-    textColor: "#fff",
+    textColor: "var(--surface-elevated)",
     borderStyle: "solid",
-    levelUp: "Hit 10 verified visits in a rolling 60-day window.",
+    levelUp: "Ten verified visits in any rolling 60-day window.",
     badge: "badge-bronze",
   },
   {
@@ -161,9 +160,9 @@ const TIERS = [
     earning: "$600–1,500",
     period: "/mo",
     color: "var(--tier-steel)",
-    textColor: "#fff",
+    textColor: "var(--surface-elevated)",
     borderStyle: "solid",
-    levelUp: "Maintain a 4.2+ performance score across 25+ visits.",
+    levelUp: "Hold a 4.2+ score across 25 visits.",
     badge: "badge-steel",
   },
   {
@@ -176,7 +175,7 @@ const TIERS = [
     color: "var(--tier-gold)",
     textColor: "var(--tier-gold-text)",
     borderStyle: "solid",
-    levelUp: "50+ lifetime verified visits · 4.5 score · invited by Push team.",
+    levelUp: "50 lifetime visits, 4.5 score, an invite from Jiaming.",
     badge: "badge-gold",
   },
   {
@@ -187,9 +186,9 @@ const TIERS = [
     earning: "$4K–10K",
     period: "/mo",
     color: "var(--tier-ruby)",
-    textColor: "#fff",
+    textColor: "var(--surface-elevated)",
     borderStyle: "solid",
-    levelUp: "Top 5% performer · Direct campaign access · No apply queue.",
+    levelUp: "Top 5% of the roster. You skip the apply queue.",
     badge: "badge-ruby",
     shimmer: true,
   },
@@ -201,7 +200,7 @@ const TIERS = [
     earning: "$10K+",
     period: "/mo",
     color: "var(--tier-obsidian)",
-    textColor: "#fff",
+    textColor: "var(--surface-elevated)",
     borderStyle: "solid",
     levelUp: "Invite-only. Revenue share. Co-creation rights.",
     badge: "badge-obsidian",
@@ -213,7 +212,7 @@ const TIERS = [
 /* ── Pull quote ──────────────────────────────────────────── */
 const TESTIMONIAL = {
   quote:
-    "I earned $320 last month just from my regular neighbourhood content. I was already walking past these spots — now I get paid every time someone follows through.",
+    "I post the corner spots I already walk past. Last month $320 hit my account because people followed through. The number is the number — no inflated reach, no negotiation.",
   name: "Maya R.",
   handle: "@mayawalksnyc",
   tier: "Operator",
@@ -226,99 +225,333 @@ const HOW_STEPS = [
   {
     n: "01",
     title: "Apply",
-    body: "Submit your creator profile. Push reviews your content, audience, and neighbourhood fit. Most creators hear back within 48 hours.",
+    body: "Send your handle, a couple of recent posts, and the blocks you walk. We read every application within 48 hours.",
   },
   {
     n: "02",
-    title: "Get verified",
-    body: "We confirm your reach, content quality, and location coverage. You receive your tier assignment and a unique creator QR identity.",
+    title: "Get a tier + a QR",
+    body: "Push assigns your starting tier and a creator-specific QR. That QR is how a scan ties back to your post.",
   },
   {
     n: "03",
-    title: "Start earning",
-    body: "Browse open campaigns, apply for the ones that fit. When a customer scans your QR and visits the merchant, the payout hits your dashboard instantly.",
+    title: "Post, then get paid",
+    body: "Pick a campaign that fits your block. When someone scans your QR and walks in, the visit clears and the payout lands Friday.",
   },
 ];
 
 /* ── Problem/Solution data ───────────────────────────────── */
 const PAIN_POINTS = [
-  "Brands pay upfront, you prove nothing — and get ghosted",
-  "Flat-rate sponsored posts disconnect effort from income",
-  "Zero visibility into whether your content actually drove visits",
-  "Platform algorithms tank your reach the week you need it most",
+  "Brands pay for impressions. You delivered 80K — they paid you for the post, not the people who showed up.",
+  "Flat-rate sponsored fees disconnect the work from the result.",
+  "No way to point at a specific visit and say: that one was mine.",
+  "The week your reach drops is the week your income drops.",
 ];
 
 const PUSH_SOLUTIONS = [
-  "Every payout anchored to a real, verified customer visit",
-  "Commission rate scales with your tier — better work earns more",
-  "Your QR dashboard shows exactly which posts drove which visits",
-  "Foot traffic is algorithm-proof — QR scans don't depend on reach",
+  "Every payout traces to one verified visit by one real person.",
+  "Tier rate goes up as your verified-visit history goes up.",
+  "Your dashboard shows: post → scan → visit → payout, line by line.",
+  "Foot traffic is algorithm-proof. A door doesn't care about reach.",
 ];
 
 /* ── Page ────────────────────────────────────────────────── */
 export default function ForCreatorsPage() {
+  const heroStats = [
+    {
+      num: "$320",
+      label: "Operator-tier month",
+      sub: "median, pre-pilot model",
+      tint: "var(--brand-red)",
+    },
+    {
+      num: "48h",
+      label: "Reply on applications",
+      sub: "every one read by hand",
+      tint: "var(--champagne)",
+    },
+    {
+      num: "06",
+      label: "Tiers, Seed → Partner",
+      sub: "earned on visits, not vibes",
+      tint: "var(--cat-travel)",
+    },
+    {
+      num: "100%",
+      label: "Visit-verified",
+      sub: "no impression fees here",
+      tint: "var(--cat-fitness)",
+    },
+  ];
+
   return (
     <>
       <ScrollRevealInit />
 
-      {/* ── 1. Hero ──────────────────────────────────────────── */}
-      <section className="cr-hero">
-        <div className="container cr-hero-inner">
-          <div className="cr-hero-content">
-            <p className="eyebrow cr-eyebrow">Push for Creators</p>
-            <h1 className="cr-headline">
-              <span className="cr-black">Get paid for traffic</span>
-              <span className="cr-light">you already drive.</span>
-            </h1>
-            <p className="cr-sub">
-              Push connects NYC creators with local merchants. Post about the
-              spots you love. Every verified customer visit earns you a payout —
-              no fake metrics, no guesswork, no hidden fees.
-            </p>
-            <div className="cr-ctas">
-              <Link href="/creator/signup" className="btn btn-primary">
-                Apply to create
-              </Link>
-              <Link href="/demo/creator" className="btn btn-ghost cr-ghost">
-                See how it works →
-              </Link>
-            </div>
-            <p className="cr-reassure">
-              Free to join · No exclusivity required · Keep your other brand
-              deals
-            </p>
+      {/* ── 1. Hero — v7 ink + grain + vignette ────────────────── */}
+      <section
+        className="bg-hero-ink grain-overlay bg-vignette"
+        style={{
+          position: "relative",
+          minHeight: "100vh",
+          display: "flex",
+          flexDirection: "column",
+          padding: "clamp(24px, 4vw, 64px)",
+          paddingTop: "clamp(80px, 8vw, 120px)",
+          overflow: "hidden",
+        }}
+      >
+        {/* Top row: pill (location) + eyebrow (date) */}
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            flexWrap: "wrap",
+            gap: 16,
+            position: "relative",
+            zIndex: 3,
+          }}
+        >
+          <span className="pill-lux" style={{ color: "#fff" }}>
+            Cohort 01 · SoHo / Tribeca / Chinatown
+          </span>
+          <span className="eyebrow-lux" style={{ color: "var(--champagne)" }}>
+            Pilot opens June&nbsp;22
+          </span>
+        </div>
+
+        {/* Hero center: ghost/display weight contrast */}
+        <div
+          style={{
+            flex: 1,
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            position: "relative",
+            zIndex: 3,
+            maxWidth: "1180px",
+            margin: "0 auto",
+            width: "100%",
+            paddingTop: "clamp(48px, 8vh, 96px)",
+            paddingBottom: "clamp(48px, 8vh, 96px)",
+          }}
+        >
+          <div
+            className="section-marker"
+            data-num="01"
+            style={{ color: "rgba(255,255,255,0.55)" }}
+          >
+            What we pay for
           </div>
 
-          {/* Hero stats */}
-          <div className="cr-hero-stats">
-            {[
-              {
-                num: "$320",
-                label: "Avg. creator month-1 payout",
-                sub: "Operator tier",
-              },
-              {
-                num: "48h",
-                label: "Approval turnaround",
-                sub: "From apply to active",
-              },
-              { num: "6", label: "Tiers to climb", sub: "Seed → Partner" },
-              {
-                num: "100%",
-                label: "Visit-verified payouts",
-                sub: "No fake impressions",
-              },
-            ].map((s, i) => (
+          {/* Massive Darky 900 headline + Darky 200 ghost subline */}
+          <h1
+            style={{
+              fontFamily: "var(--font-display)",
+              fontSize: "clamp(80px, 16vw, 240px)",
+              fontWeight: 900,
+              letterSpacing: "-0.08em",
+              lineHeight: 0.85,
+              color: "#fff",
+              margin: 0,
+            }}
+          >
+            Walks
+            <span
+              aria-hidden="true"
+              style={{
+                color: "var(--brand-red)",
+                marginLeft: "-0.04em",
+              }}
+            >
+              .
+            </span>
+          </h1>
+          <div
+            className="display-ghost"
+            style={{
+              fontSize: "clamp(48px, 9.5vw, 148px)",
+              color: "rgba(255,255,255,0.22)",
+              marginTop: "-0.04em",
+            }}
+          >
+            not impressions
+          </div>
+
+          <p
+            style={{
+              marginTop: "clamp(32px, 5vw, 56px)",
+              maxWidth: 620,
+              fontFamily: "var(--font-body)",
+              fontSize: "clamp(15px, 1.15vw, 18px)",
+              lineHeight: 1.65,
+              color: "rgba(255,255,255,0.74)",
+            }}
+          >
+            You post about a corner spot. Someone who saw it walks in. The spot
+            pays per verified visit. We do the verification — the QR, the
+            timestamp, the receipt match — and we pay you on Friday.
+          </p>
+          <p
+            style={{
+              marginTop: "clamp(16px, 2vw, 24px)",
+              maxWidth: 620,
+              fontFamily: "var(--font-body)",
+              fontSize: "clamp(13px, 1vw, 15px)",
+              lineHeight: 1.65,
+              color: "rgba(255,255,255,0.46)",
+            }}
+          >
+            Pilot opens June&nbsp;22. Seven blocks of Lower Manhattan.
+            <br />
+            Five anchored venues. Ten creators on the roster. One operator
+            (Jiaming) walking the doors with you.
+          </p>
+
+          {/* Hero stats — color-accented borders, Darky 200 numerals */}
+          <div
+            style={{
+              marginTop: "clamp(40px, 6vw, 72px)",
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))",
+              gap: "clamp(16px, 3vw, 40px)",
+              borderTop: "1px solid rgba(255,255,255,0.12)",
+              paddingTop: "clamp(24px, 3vw, 40px)",
+              maxWidth: 960,
+            }}
+          >
+            {heroStats.map((s) => (
               <div
-                key={s.num}
-                className="cr-stat-card reveal"
-                style={{ transitionDelay: `${i * 80}ms` }}
+                key={s.label}
+                style={{
+                  paddingLeft: 18,
+                  borderLeft: `2px solid ${s.tint}`,
+                }}
               >
-                <span className="cr-stat-num">{s.num}</span>
-                <span className="cr-stat-label">{s.label}</span>
-                <span className="cr-stat-sub">{s.sub}</span>
+                <div
+                  style={{
+                    fontFamily: "var(--font-display)",
+                    fontSize: "clamp(40px, 4vw, 60px)",
+                    fontWeight: 200,
+                    letterSpacing: "-0.05em",
+                    lineHeight: 0.9,
+                    color: "#fff",
+                  }}
+                >
+                  {s.num}
+                </div>
+                <div
+                  style={{
+                    marginTop: 10,
+                    fontFamily: "var(--font-body)",
+                    fontSize: 12,
+                    fontWeight: 600,
+                    color: "rgba(255,255,255,0.78)",
+                  }}
+                >
+                  {s.label}
+                </div>
+                <div
+                  style={{
+                    marginTop: 4,
+                    fontFamily: "var(--font-body)",
+                    fontSize: 10,
+                    letterSpacing: "0.08em",
+                    color: "rgba(255,255,255,0.38)",
+                  }}
+                >
+                  {s.sub}
+                </div>
               </div>
             ))}
+          </div>
+
+          {/* Inline CTAs — keep apply path, no marketing-cliche copy */}
+          <div
+            style={{
+              marginTop: "clamp(32px, 5vw, 48px)",
+              display: "flex",
+              gap: 16,
+              flexWrap: "wrap",
+            }}
+          >
+            <Link href="/creator/signup" className="btn btn-primary">
+              Apply for the cohort
+            </Link>
+            <Link
+              href="/demo/creator"
+              className="btn btn-ghost"
+              style={{
+                color: "rgba(255,255,255,0.7)",
+                borderColor: "rgba(255,255,255,0.18)",
+              }}
+            >
+              See the dashboard&nbsp;→
+            </Link>
+          </div>
+          <p
+            style={{
+              marginTop: 16,
+              fontFamily: "var(--font-body)",
+              fontSize: 11,
+              letterSpacing: "0.04em",
+              color: "rgba(255,255,255,0.34)",
+            }}
+          >
+            free to apply · keep your other deals · no exclusivity
+          </p>
+        </div>
+
+        {/* Bottom: scroll indicator + category strip */}
+        <div
+          style={{
+            position: "relative",
+            zIndex: 3,
+            display: "flex",
+            alignItems: "flex-end",
+            justifyContent: "space-between",
+            flexWrap: "wrap",
+            gap: 32,
+          }}
+        >
+          <div
+            className="scroll-indicator"
+            style={{ color: "rgba(255,255,255,0.7)" }}
+          >
+            Scroll
+          </div>
+          <div style={{ flex: 1, minWidth: 240, maxWidth: 480 }}>
+            <div
+              className="category-strip"
+              aria-hidden="true"
+              style={{ marginBottom: 12 }}
+            >
+              <span />
+              <span />
+              <span />
+              <span />
+              <span />
+              <span />
+            </div>
+            <div
+              style={{
+                fontFamily: "var(--font-body)",
+                fontSize: 10,
+                fontWeight: 700,
+                letterSpacing: "0.14em",
+                textTransform: "uppercase",
+                color: "rgba(255,255,255,0.45)",
+                display: "flex",
+                justifyContent: "space-between",
+              }}
+            >
+              <span>Food</span>
+              <span>Stay</span>
+              <span>Care</span>
+              <span>Wear</span>
+              <span>Sweat</span>
+              <span>After-hours</span>
+            </div>
           </div>
         </div>
       </section>
@@ -328,17 +561,17 @@ export default function ForCreatorsPage() {
         <div className="container">
           <div className="reveal">
             <div className="section-tag">
-              <span className="section-tag-num">01</span>
+              <span className="section-tag-num">02</span>
               <span className="section-tag-line" />
-              <span className="section-tag-label">The Problem</span>
+              <span className="section-tag-label">The honest part</span>
             </div>
           </div>
           <div className="cr-ps-grid">
             {/* Left — Pain */}
             <div className="cr-ps-col cr-ps-pain reveal">
               <h2 className="cr-ps-headline">
-                <span className="wt-900">Traditional sponsored posts</span>
-                <span className="wt-300">don&apos;t pay you fairly.</span>
+                <span className="wt-900">Sponsored posts</span>
+                <span className="wt-300">pay for the post.</span>
               </h2>
               <ul className="cr-pain-list">
                 {PAIN_POINTS.map((p) => (
@@ -363,8 +596,8 @@ export default function ForCreatorsPage() {
               style={{ transitionDelay: "160ms" }}
             >
               <h2 className="cr-ps-headline cr-ps-headline--push">
-                <span className="wt-900">Push anchors</span>
-                <span className="wt-300">every payment to a real visit.</span>
+                <span className="wt-900">Push pays</span>
+                <span className="wt-300">for the walk-in.</span>
               </h2>
               <ul className="cr-solution-list">
                 {PUSH_SOLUTIONS.map((s) => (
@@ -399,18 +632,17 @@ export default function ForCreatorsPage() {
         <div className="container">
           <div className="reveal">
             <div className="section-tag">
-              <span className="section-tag-num">02</span>
+              <span className="section-tag-num">03</span>
               <span className="section-tag-line" />
-              <span className="section-tag-label">Creator Tiers</span>
+              <span className="section-tag-label">The ladder</span>
             </div>
             <h2 className="split-headline">
               <span className="wt-900">Six tiers.</span>
-              <span className="wt-300">One clear path up.</span>
+              <span className="wt-300">One way up — verified visits.</span>
             </h2>
             <p className="split-body">
-              Every tier unlocks higher commission rates, priority campaign
-              access, and faster payouts. You advance by driving real, verified
-              foot traffic — nothing else.
+              Tier rate is your $/visit. It moves up when your verified-visit
+              record moves up. Nothing else changes the math.
             </p>
           </div>
 
@@ -468,13 +700,13 @@ export default function ForCreatorsPage() {
         <div className="container">
           <div className="reveal">
             <div className="section-tag">
-              <span className="section-tag-num">03</span>
+              <span className="section-tag-num">04</span>
               <span className="section-tag-line" />
-              <span className="section-tag-label">How to Start</span>
+              <span className="section-tag-label">How it starts</span>
             </div>
             <h2 className="split-headline">
               <span className="wt-900">Three steps.</span>
-              <span className="wt-300">Then you&apos;re earning.</span>
+              <span className="wt-300">Then you're on the roster.</span>
             </h2>
           </div>
 
@@ -499,17 +731,17 @@ export default function ForCreatorsPage() {
         <div className="container">
           <div className="reveal">
             <div className="section-tag">
-              <span className="section-tag-num">04</span>
+              <span className="section-tag-num">05</span>
               <span className="section-tag-line" />
-              <span className="section-tag-label">Earnings Calculator</span>
+              <span className="section-tag-label">Run your numbers</span>
             </div>
             <h2 className="split-headline">
-              <span className="wt-900">What could you earn</span>
-              <span className="wt-300">this month?</span>
+              <span className="wt-900">What it pays,</span>
+              <span className="wt-300">in your shoes.</span>
             </h2>
             <p className="split-body">
-              Slide the inputs to your situation. Estimates are based on real
-              Push payout data from active NYC creators.
+              Slide the inputs. Bands come from the v6 per-verified-visit model
+              — the pilot replaces these with measured rates on June 22.
             </p>
           </div>
 
@@ -548,30 +780,29 @@ export default function ForCreatorsPage() {
         <div className="container">
           <div className="cr-cta-inner reveal">
             <p className="eyebrow" style={{ color: "var(--tertiary)" }}>
-              Applications open now
+              Cohort 01 · ten seats
             </p>
             <h2 className="cr-cta-headline">
-              Join the NYC cohort.
+              June 22.
               <span className="cr-cta-sub">
-                Your neighbourhood. Your content. Your payout.
+                Seven blocks. Ten creators. One operator at the door.
               </span>
             </h2>
             <p className="cr-cta-body">
-              Push is live across Brooklyn, Manhattan, Queens, and the Bronx. We
-              review every application within 48 hours. No exclusivity, no
-              minimum posts — just real earnings for real visits.
+              Pilot opens in SoHo, Tribeca, and Chinatown. We read every
+              application within 48 hours. No exclusivity, no minimum posts —
+              just a tier rate that moves with your verified-visit record.
             </p>
             <div className="cr-cta-actions">
               <Link href="/creator/signup" className="btn btn-primary">
-                Apply to create — free
+                Apply for the cohort
               </Link>
               <Link href="/for-merchants" className="btn btn-ghost cr-ghost">
-                Are you a merchant? →
+                Run a venue?&nbsp;→
               </Link>
             </div>
             <p className="cr-cta-note">
-              No minimum follower count for Seed tier · Payouts weekly via
-              Stripe
+              Seed has no follower minimum · We pay on Friday via Stripe
             </p>
           </div>
         </div>

@@ -292,8 +292,8 @@
 }
 
 .btn-fill:hover {
-  background: #d4141f;
-  border-color: #d4141f;
+  background: var(--accent);
+  border-color: var(--accent);
   box-shadow: 0 4px 20px rgba(193, 18, 31, 0.25);
   transform: translateY(-1px);
 }
@@ -541,7 +541,7 @@
 .dash-dot {
   width: 6px;
   height: 6px;
-  background: #4ade80;
+  background: var(--success);
   border-radius: 50%;
   animation: dot-p 2.2s ease-in-out infinite;
 }
@@ -620,7 +620,7 @@
 }
 
 .dash-check--ok {
-  color: #4ade80;
+  color: var(--success);
 }
 
 .dash-amt {
@@ -712,9 +712,9 @@
   padding: 3px 8px;
   text-transform: uppercase;
   letter-spacing: 0.12em;
-  background: rgba(184, 169, 154, 0.14);
-  border: 1px solid rgba(184, 169, 154, 0.35);
-  color: #d4c4b3;
+  background: var(--champagne-light);
+  border: 1px solid var(--champagne-border);
+  color: var(--champagne);
   align-self: flex-start;
 }
 
@@ -1436,11 +1436,11 @@ section#faq             { padding-block: 120px; }
   background: transparent;
   color: var(--dark);
   border: 1.5px solid rgba(0, 48, 73, 0.28);
-  box-shadow: 2px 2px 0 rgba(0, 48, 73, 0.1);
+  box-shadow: var(--shadow-1);
 }
 .btn-outline:hover {
   border-color: var(--dark);
-  box-shadow: 3px 3px 0 rgba(0, 48, 73, 0.16);
+  box-shadow: var(--shadow-2);
 }
 
 /* .btn-outline-light on dark bg */
@@ -1448,12 +1448,12 @@ section#faq             { padding-block: 120px; }
   background: transparent;
   color: rgba(255, 255, 255, 0.72);
   border: 1.5px solid rgba(255, 255, 255, 0.18);
-  box-shadow: 2px 2px 0 rgba(255, 255, 255, 0.06);
+  box-shadow: var(--shadow-1);
 }
 .btn-outline-light:hover {
   color: #fff;
   border-color: rgba(255, 255, 255, 0.5);
-  box-shadow: 3px 3px 0 rgba(255, 255, 255, 0.1);
+  box-shadow: var(--shadow-2);
 }
 
 /* Active press: Apple spring snap */

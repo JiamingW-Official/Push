@@ -276,8 +276,11 @@
 
 .man-tier-badge--partner {
   background: var(--champagne-light);
-  border-color: var(--champagne-border);
-  color: #7a5e2a;
+  border-left: 3px solid var(--primary);
+  border-top: 1px solid var(--champagne-border);
+  border-right: 1px solid var(--champagne-border);
+  border-bottom: 1px solid var(--champagne-border);
+  color: var(--accent);
 }
 
 .man-tier-badge--proven {
@@ -289,7 +292,7 @@
 .man-tier-badge--operator {
   background: rgba(102, 155, 188, 0.1);
   border-color: rgba(102, 155, 188, 0.3);
-  color: #2a5a7a;
+  color: var(--dark);
 }
 
 .man-tier-badge--explorer {
@@ -313,14 +316,14 @@
 }
 
 .man-status-badge--active {
-  background: rgba(45, 122, 45, 0.1);
-  color: #2d7a2d;
-  border: 1px solid rgba(45, 122, 45, 0.25);
+  background: rgba(34, 197, 94, 0.1);
+  color: var(--success-dark);
+  border: 1px solid rgba(34, 197, 94, 0.25);
 }
 
 .man-status-badge--paused {
   background: var(--champagne-light);
-  color: #7a5e2a;
+  color: var(--accent);
   border: 1px solid var(--champagne-border);
 }
 

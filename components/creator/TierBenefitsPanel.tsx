@@ -410,7 +410,7 @@ export function TierBenefitsPanel({
 
   return (
     <div
-      className={`tbp-panel${className ? ` ${className}` : ""}`}
+      className={`tbp-panel tier--${currentTier}${className ? ` ${className}` : ""}`}
       style={panelVars}
     >
       <div className="tbp-grid">

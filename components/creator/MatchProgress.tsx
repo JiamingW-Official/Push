@@ -194,7 +194,7 @@ function PulsingDot() {
           display: "inline-block",
           width: 7,
           height: 7,
-          background: "#c1121f",
+          background: "var(--primary)",
           marginRight: 7,
           flexShrink: 0,
           verticalAlign: "middle",
@@ -229,7 +229,7 @@ function StageNode({ stage, isLast }: { stage: Stage; isLast: boolean }) {
             left: "calc(50% + 7px)",
             right: "calc(-50% + 7px)",
             height: 1,
-            background: isPast ? "#003049" : "rgba(0,48,73,0.15)",
+            background: isPast ? "var(--dark)" : "rgba(0,48,73,0.15)",
             transition: "background 400ms ease",
             zIndex: 0,
           }}
@@ -243,7 +243,11 @@ function StageNode({ stage, isLast }: { stage: Stage; isLast: boolean }) {
           height: 14,
           borderRadius: 0,
           flexShrink: 0,
-          background: isPast ? "#003049" : isActive ? "#c1121f" : "transparent",
+          background: isPast
+            ? "var(--dark)"
+            : isActive
+              ? "var(--primary)"
+              : "transparent",
           border: isPast
             ? "none"
             : isActive
@@ -273,7 +277,7 @@ function StageNode({ stage, isLast }: { stage: Stage; isLast: boolean }) {
               style={{
                 position: "absolute",
                 inset: -2,
-                border: "1.5px solid #c1121f",
+                border: "1.5px solid var(--primary)",
                 borderRadius: 0,
               }}
             />
@@ -295,7 +299,7 @@ function StageNode({ stage, isLast }: { stage: Stage; isLast: boolean }) {
           >
             <path
               d="M3 7L6 10L11 4"
-              stroke="#f5f2ec"
+              stroke="var(--surface)"
               strokeWidth="1.6"
               strokeLinecap="square"
               strokeLinejoin="miter"
@@ -312,9 +316,9 @@ function StageNode({ stage, isLast }: { stage: Stage; isLast: boolean }) {
           textTransform: "uppercase",
           letterSpacing: "0.06em",
           color: isPast
-            ? "#003049"
+            ? "var(--dark)"
             : isActive
-              ? "#c1121f"
+              ? "var(--primary)"
               : "rgba(0,48,73,0.3)",
           fontWeight: isActive ? 700 : 400,
           marginTop: 6,
@@ -350,7 +354,7 @@ function CheckIcon() {
     >
       <polyline
         points="2,6 5,9 10,3"
-        stroke="#003049"
+        stroke="var(--dark)"
         strokeWidth="1.8"
         strokeLinecap="square"
         strokeLinejoin="miter"
@@ -370,7 +374,7 @@ function BellIcon() {
     >
       <path
         d="M6 1C4.343 1 3 2.343 3 4v3L1 9h10L9 7V4c0-1.657-1.343-3-3-3z"
-        stroke="#003049"
+        stroke="var(--dark)"
         strokeWidth="1.4"
         strokeLinecap="square"
       />
@@ -379,7 +383,7 @@ function BellIcon() {
         y1="10.5"
         x2="7"
         y2="10.5"
-        stroke="#003049"
+        stroke="var(--dark)"
         strokeWidth="1.4"
         strokeLinecap="square"
       />
@@ -398,7 +402,7 @@ function MapPinIcon() {
     >
       <path
         d="M6 1C4.067 1 2.5 2.567 2.5 4.5 2.5 7.5 6 11 6 11s3.5-3.5 3.5-6.5C9.5 2.567 7.933 1 6 1z"
-        stroke="#003049"
+        stroke="var(--dark)"
         strokeWidth="1.4"
         strokeLinecap="square"
       />
@@ -407,7 +411,7 @@ function MapPinIcon() {
         y="3.25"
         width="2.5"
         height="2.5"
-        stroke="#003049"
+        stroke="var(--dark)"
         strokeWidth="1.2"
       />
     </svg>
@@ -467,7 +471,7 @@ export function MatchProgress({
     <div
       style={{
         fontFamily: "'CS Genio Mono', monospace",
-        background: "#f5f2ec",
+        background: "var(--surface)",
         border: "1px solid rgba(0,48,73,0.14)",
         width: "100%",
         boxSizing: "border-box",
@@ -477,7 +481,7 @@ export function MatchProgress({
       {/* ── Header ──────────────────────────────────────────────────────── */}
       <div
         style={{
-          background: "#003049",
+          background: "var(--dark)",
           padding: "16px 20px",
           display: "flex",
           alignItems: "center",
@@ -494,7 +498,7 @@ export function MatchProgress({
             fontFamily: "'CS Genio Mono', monospace",
             textTransform: "uppercase",
             letterSpacing: "0.1em",
-            color: "#f5f2ec",
+            color: "var(--surface)",
             fontWeight: 700,
           }}
         >
@@ -527,7 +531,7 @@ export function MatchProgress({
             fontFamily: "'CS Genio Mono', monospace",
             textTransform: "uppercase",
             letterSpacing: "0.06em",
-            color: isComplete ? "#c1121f" : "rgba(245,242,236,0.45)",
+            color: isComplete ? "var(--primary)" : "rgba(245,242,236,0.45)",
             fontWeight: isComplete ? 700 : 400,
           }}
         >
@@ -551,7 +555,7 @@ export function MatchProgress({
             style={{
               height: "100%",
               width: `${progress}%`,
-              background: isComplete ? "#003049" : "#c1121f",
+              background: isComplete ? "var(--dark)" : "var(--primary)",
               transition: "width 0.5s ease, background 0.5s ease",
               borderRadius: 0,
             }}
@@ -595,7 +599,7 @@ export function MatchProgress({
           style={{
             fontSize: 12,
             fontFamily: "'CS Genio Mono', monospace",
-            color: "#003049",
+            color: "var(--dark)",
             lineHeight: 1.6,
             padding: "12px 14px",
             background: "rgba(0,48,73,0.04)",
@@ -625,7 +629,7 @@ export function MatchProgress({
             <span
               style={{
                 fontWeight: 700,
-                color: "#c1121f",
+                color: "var(--primary)",
                 textTransform: "uppercase",
                 fontSize: 9,
                 letterSpacing: "0.1em",
@@ -662,11 +666,11 @@ export function MatchProgress({
                 borderRadius: 0,
                 fontSize: 10,
                 fontFamily: "'CS Genio Mono', monospace",
-                color: "#003049",
+                color: "var(--dark)",
                 display: "flex",
                 alignItems: "center",
                 gap: 6,
-                background: "#f5f2ec",
+                background: "var(--surface)",
               }}
             >
               {icon}
@@ -720,9 +724,9 @@ export function StageSquare({
   };
 
   if (state === "past")
-    return <div style={{ ...base, background: "#003049" }} />;
+    return <div style={{ ...base, background: "var(--dark)" }} />;
   if (state === "active")
-    return <div style={{ ...base, background: "#c1121f" }} />;
+    return <div style={{ ...base, background: "var(--primary)" }} />;
   return (
     <div
       style={{

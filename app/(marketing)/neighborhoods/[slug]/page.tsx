@@ -146,6 +146,25 @@ const TIER_LABELS: Record<string, string> = {
   partner: "Partner",
 };
 
+/* ── Per-neighborhood scene subline ────────────────────────── */
+// Memorized scene for the three pilot blocks; everything else falls back
+// to a generic two-stat subline. Specific over generic — friend telling
+// you where to go, not a tourist board.
+const SCENE_BY_SLUG: Record<string, { ghost: string; lede: string }> = {
+  soho: {
+    ghost: "9 cafés. 3 galleries.",
+    lede: "Cast-iron facades, denim shops at street level. Walk Greene from Prince south — that is the route.",
+  },
+  tribeca: {
+    ghost: "Quieter than the rest.",
+    lede: "The good restaurants don't post a sign. Greenwich & Franklin is where you start.",
+  },
+  chinatown: {
+    ghost: "One poster per door.",
+    lede: "Two blocks of dumpling shops. Walk Mott south from Canal. Go before 8pm or you wait outside.",
+  },
+};
+
 /* ── Time ago helper ───────────────────────────────────────── */
 
 function timeAgo(iso: string): string {
@@ -206,13 +225,18 @@ export default async function NeighborhoodDetailPage({
     },
   ];
 
+  const scene = SCENE_BY_SLUG[hood.slug] ?? {
+    ghost: `${hood.stats.activeMerchants} venues. ${hood.stats.activeCreators} creators.`,
+    lede: hood.description,
+  };
+
   return (
     <>
       <NeighborhoodJsonLd hood={hood} />
 
       <main className="nh-page">
-        {/* ── Hero ──────────────────────────────────────────── */}
-        <section className="nhd-hero">
+        {/* ═══════════════ 01 — HERO ═══════════════ */}
+        <section className="nhd-hero bg-hero-ink grain-overlay bg-vignette">
           <div className="container nhd-hero-inner">
             <nav className="nhd-breadcrumb" aria-label="Breadcrumb">
               <Link href="/">Push</Link>
@@ -224,13 +248,52 @@ export default async function NeighborhoodDetailPage({
               </span>
             </nav>
 
-            <p className="nhd-hero-borough">{hood.borough}</p>
-            <h1 className="nhd-hero-name">{hood.name}</h1>
-            <p className="nhd-hero-desc">{hood.description}</p>
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                flexWrap: "wrap",
+                gap: 16,
+                marginBottom: "var(--space-8)",
+              }}
+            >
+              <span className="pill-lux" style={{ color: "#fff" }}>
+                {hood.borough} · Lower Manhattan pilot
+              </span>
+              <span
+                className="eyebrow-lux"
+                style={{ color: "var(--champagne)" }}
+              >
+                June 22 launch
+              </span>
+            </div>
+
+            <div
+              className="section-marker"
+              data-num="01"
+              style={{ color: "rgba(255,255,255,0.55)" }}
+            >
+              {hood.name}
+            </div>
+
+            <h1 className="nhd-hero-name">
+              {hood.name}
+              <span
+                aria-hidden="true"
+                style={{ color: "var(--brand-red)", marginLeft: "-0.04em" }}
+              >
+                .
+              </span>
+            </h1>
+
+            <div className="nhd-hero-ghost display-ghost">{scene.ghost}</div>
+
+            <p className="nhd-hero-desc">{scene.lede}</p>
           </div>
         </section>
 
-        {/* ── Stats block ───────────────────────────────────── */}
+        {/* ═══════════════ 02 — STATS ═══════════════ */}
         <section className="nhd-stats">
           <div className="container">
             <div className="nhd-stats-grid">
@@ -238,31 +301,36 @@ export default async function NeighborhoodDetailPage({
                 <div className="nhd-stat-value">
                   {hood.stats.totalVerifiedVisits.toLocaleString()}
                 </div>
-                <div className="nhd-stat-label">Total verified visits</div>
+                <div className="nhd-stat-label">verified visits</div>
               </div>
               <div className="nhd-stat">
                 <div className="nhd-stat-value">
                   {hood.stats.activeCampaigns}
                 </div>
-                <div className="nhd-stat-label">Active campaigns</div>
+                <div className="nhd-stat-label">live campaigns</div>
               </div>
               <div className="nhd-stat">
                 <div className="nhd-stat-value">
                   {hood.stats.activeCreators}
                 </div>
-                <div className="nhd-stat-label">
-                  Top tier creators operating here
-                </div>
+                <div className="nhd-stat-label">creators on the block</div>
               </div>
             </div>
           </div>
         </section>
 
-        {/* ── Featured merchants ─────────────────────────────── */}
+        {/* ═══════════════ 03 — MERCHANTS ═══════════════ */}
         <section className="nhd-section">
           <div className="container">
-            <p className="nhd-section-label">Active on Push</p>
-            <h2 className="nhd-section-heading">Featured merchants</h2>
+            <div className="section-marker" data-num="02">
+              The doors
+            </div>
+            <h2 className="nhd-section-heading">
+              Where creators walk in.{" "}
+              <span className="display-ghost">
+                Real venues. Real addresses.
+              </span>
+            </h2>
 
             <div className="nhd-merchants-grid">
               {hood.featuredMerchants.map((m) => (
@@ -276,14 +344,14 @@ export default async function NeighborhoodDetailPage({
                       <span className="nhd-merchant-meta-value">
                         {m.activeCampaigns}
                       </span>
-                      <span className="nhd-merchant-meta-label">Campaigns</span>
+                      <span className="nhd-merchant-meta-label">campaigns</span>
                     </div>
                     <div className="nhd-merchant-meta-item">
                       <span className="nhd-merchant-meta-value">
                         {m.avgPayout === 0 ? "Free" : `$${m.avgPayout}`}
                       </span>
                       <span className="nhd-merchant-meta-label">
-                        Avg payout
+                        avg payout
                       </span>
                     </div>
                   </div>
@@ -293,14 +361,19 @@ export default async function NeighborhoodDetailPage({
           </div>
         </section>
 
-        {/* ── Featured creators ──────────────────────────────── */}
+        {/* ═══════════════ 04 — CREATORS ═══════════════ */}
         <section
           className="nhd-section"
           style={{ background: "var(--surface-bright)" }}
         >
           <div className="container">
-            <p className="nhd-section-label">Operating in {hood.name}</p>
-            <h2 className="nhd-section-heading">Featured creators</h2>
+            <div className="section-marker" data-num="03">
+              On the roster
+            </div>
+            <h2 className="nhd-section-heading">
+              Creators working {hood.name}.{" "}
+              <span className="display-ghost">Tier badge tells the rest.</span>
+            </h2>
 
             <div className="nhd-creators-grid">
               {hood.featuredCreators.map((c) => (
@@ -335,7 +408,7 @@ export default async function NeighborhoodDetailPage({
                         <div className="nhd-creator-score">
                           {c.campaignsCompleted}
                         </div>
-                        <div className="nhd-creator-score-label">Campaigns</div>
+                        <div className="nhd-creator-score-label">campaigns</div>
                       </div>
                     </div>
                   </div>
@@ -345,11 +418,16 @@ export default async function NeighborhoodDetailPage({
           </div>
         </section>
 
-        {/* ── Recent activity ────────────────────────────────── */}
+        {/* ═══════════════ 05 — RECENT ACTIVITY ═══════════════ */}
         <section className="nhd-section">
           <div className="container">
-            <p className="nhd-section-label">Live data</p>
-            <h2 className="nhd-section-heading">Recent verified visits</h2>
+            <div className="section-marker" data-num="04">
+              Right now
+            </div>
+            <h2 className="nhd-section-heading">
+              Last visits scanned.{" "}
+              <span className="display-ghost">No guessing.</span>
+            </h2>
 
             <div className="nhd-timeline">
               {hood.recentVisits.map((v) => (
@@ -379,14 +457,19 @@ export default async function NeighborhoodDetailPage({
           </div>
         </section>
 
-        {/* ── Local leaderboard ──────────────────────────────── */}
+        {/* ═══════════════ 06 — LEADERBOARD ═══════════════ */}
         <section
           className="nhd-section"
           style={{ background: "var(--surface-bright)" }}
         >
           <div className="container">
-            <p className="nhd-section-label">{hood.name}</p>
-            <h2 className="nhd-section-heading">Local leaderboard</h2>
+            <div className="section-marker" data-num="05">
+              {hood.name} top ten
+            </div>
+            <h2 className="nhd-section-heading">
+              Who's running this block.{" "}
+              <span className="display-ghost">Push score, no shortcut.</span>
+            </h2>
 
             <div className="nhd-leaderboard" style={{ maxWidth: 640 }}>
               {leaderboard.map((c, i) => (
@@ -411,12 +494,19 @@ export default async function NeighborhoodDetailPage({
           </div>
         </section>
 
-        {/* ── Map ───────────────────────────────────────────── */}
+        {/* ═══════════════ 07 — MAP ═══════════════ */}
         <section className="nhd-map-section">
           <div className="container">
-            <p className="nhd-section-label">Geography</p>
-            <h2 className="nhd-section-heading">{hood.name} on the map</h2>
-            <div className="nhd-map-container">
+            <div className="section-marker" data-num="06">
+              The pin
+            </div>
+            <h2 className="nhd-section-heading">
+              {hood.name} on the map.{" "}
+              <span className="display-ghost">
+                Walk it once before you scan.
+              </span>
+            </h2>
+            <div className="nhd-map-container photo-frame">
               <NeighborhoodDetailMap
                 center={[hood.lat, hood.lng]}
                 pins={mapPins}
@@ -426,12 +516,19 @@ export default async function NeighborhoodDetailPage({
           </div>
         </section>
 
-        {/* ── Nearby neighborhoods ───────────────────────────── */}
+        {/* ═══════════════ 08 — NEARBY ═══════════════ */}
         {nearby.length > 0 && (
           <section className="nhd-section">
             <div className="container">
-              <p className="nhd-section-label">Keep exploring</p>
-              <h2 className="nhd-section-heading">Nearby neighborhoods</h2>
+              <div className="section-marker" data-num="07">
+                Walk east
+              </div>
+              <h2 className="nhd-section-heading">
+                Next block over.{" "}
+                <span className="display-ghost">
+                  Different door, same rules.
+                </span>
+              </h2>
 
               <div className="nhd-nearby-grid">
                 {nearby.slice(0, 3).map((n) => (
@@ -443,7 +540,7 @@ export default async function NeighborhoodDetailPage({
                     <div className="nhd-nearby-name">{n.name}</div>
                     <div className="nhd-nearby-borough">{n.borough}</div>
                     <div className="nhd-nearby-campaigns">
-                      {n.stats.activeCampaigns} active campaigns
+                      {n.stats.activeCampaigns} live campaigns
                     </div>
                   </Link>
                 ))}
@@ -452,28 +549,36 @@ export default async function NeighborhoodDetailPage({
           </section>
         )}
 
-        {/* ── CTA ───────────────────────────────────────────── */}
-        <section className="nhd-cta-section">
+        {/* ═══════════════ 09 — CTA ═══════════════ */}
+        <section className="nhd-cta-section bg-hero-ink grain-overlay">
           <div className="container nhd-cta-inner">
+            <div
+              className="section-marker"
+              data-num="08"
+              style={{ color: "rgba(255,255,255,0.55)" }}
+            >
+              Your move
+            </div>
             <h2 className="nhd-cta-headline">
-              Run campaigns in
+              Run {hood.name}.
               <br />
-              <em>{hood.name}.</em>
+              <span className="display-ghost nhd-cta-ghost">
+                One block. One QR. One verified visit at a time.
+              </span>
             </h2>
             <p className="nhd-cta-sub">
-              Join the creators and merchants already building verified foot
-              traffic in {hood.name}, {hood.borough}. QR attribution means every
-              visit is provable.
+              The pilot opens June 22. Same operator (Jiaming) walking every
+              door. Pay only when the visit is real.
             </p>
             <div className="nhd-cta-actions">
               <Link
                 href={`/creator/explore?neighborhood=${hood.slug}`}
                 className="btn btn-primary"
               >
-                Explore campaigns in {hood.name}
+                See campaigns in {hood.name}
               </Link>
               <Link href="/merchant/signup" className="btn btn-ghost">
-                List your business
+                List your door
               </Link>
             </div>
           </div>

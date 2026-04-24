@@ -130,9 +130,9 @@ export default function CampaignDetailPage() {
       <style>{`
         .cd-page {
           min-height: 100svh;
-          background: #f5f2ec;
-          font-family: var(--font-mono, "CS Genio Mono", monospace);
-          color: #003049;
+          background: var(--surface);
+          font-family: var(--font-body);
+          color: var(--dark);
         }
         .cd-inner {
           max-width: 720px;
@@ -141,7 +141,7 @@ export default function CampaignDetailPage() {
         }
         .cd-loading {
           font-size: 0.875rem;
-          color: #669bbc;
+          color: var(--tertiary);
           margin-top: 60px;
         }
         .cd-back {
@@ -150,14 +150,14 @@ export default function CampaignDetailPage() {
           gap: 6px;
           font-size: 0.8125rem;
           font-weight: 500;
-          color: #669bbc;
+          color: var(--tertiary);
           text-decoration: none;
           letter-spacing: 0.04em;
           text-transform: uppercase;
           margin-bottom: 32px;
           transition: color 0.15s;
         }
-        .cd-back:hover { color: #003049; }
+        .cd-back:hover { color: var(--dark); }
         .cd-live-row {
           display: flex;
           align-items: center;
@@ -167,8 +167,8 @@ export default function CampaignDetailPage() {
         .cd-live-dot {
           width: 8px;
           height: 8px;
-          background: #c1121f;
-          border-radius: 50%;
+          background: var(--primary);
+          border-radius: var(--r-lg);
           animation: pulse 1.8s ease-in-out infinite;
         }
         @keyframes pulse {
@@ -180,15 +180,15 @@ export default function CampaignDetailPage() {
           font-weight: 700;
           letter-spacing: 0.1em;
           text-transform: uppercase;
-          color: #c1121f;
+          color: var(--primary);
         }
         .cd-title {
-          font-family: var(--font-display, "Darky", serif);
+          font-family: var(--font-display);
           font-size: clamp(1.75rem, 5vw, 3rem);
           font-weight: 900;
           font-style: italic;
           letter-spacing: -0.04em;
-          color: #003049;
+          color: var(--dark);
           line-height: 1.05;
           margin: 0 0 8px;
         }
@@ -197,14 +197,14 @@ export default function CampaignDetailPage() {
           font-weight: 600;
           letter-spacing: 0.08em;
           text-transform: uppercase;
-          color: #669bbc;
+          color: var(--tertiary);
           margin: 0 0 32px;
         }
         .cd-stats {
           display: flex;
           align-items: stretch;
-          border: 1.5px solid #003049;
-          box-shadow: 4px 4px 0 #003049;
+          border: 1.5px solid var(--dark);
+          box-shadow: 4px 4px 0 var(--dark);
           margin-bottom: 32px;
           overflow-x: auto;
         }
@@ -218,15 +218,15 @@ export default function CampaignDetailPage() {
         }
         .cd-stat-val {
           font-size: 0.75rem;
-          color: #669bbc;
+          color: var(--tertiary);
           font-weight: 600;
         }
         .cd-stat-num {
-          font-family: var(--font-display, "Darky", serif);
+          font-family: var(--font-display);
           font-size: 1.75rem;
           font-weight: 900;
           font-style: italic;
-          color: #003049;
+          color: var(--dark);
           line-height: 1;
         }
         .cd-stat-label {
@@ -234,27 +234,28 @@ export default function CampaignDetailPage() {
           font-weight: 600;
           letter-spacing: 0.06em;
           text-transform: uppercase;
-          color: #669bbc;
+          color: var(--tertiary);
           margin-top: 4px;
         }
         .cd-stat-divider {
           width: 1px;
-          background: rgba(0, 48, 73, 0.12);
+          background: var(--line);
           align-self: stretch;
         }
         .cd-panel {
-          background: #fff;
-          border: 1.5px solid #003049;
-          box-shadow: 3px 3px 0 rgba(0, 48, 73, 0.15);
+          background: var(--surface-elevated);
+          border: 1px solid var(--hairline);
+          border-radius: var(--r-xl);
+          box-shadow: var(--shadow-2);
           padding: 28px;
           margin-bottom: 16px;
         }
         .cd-panel-heading {
-          font-family: var(--font-display, "Darky", serif);
+          font-family: var(--font-display);
           font-size: 1rem;
           font-weight: 900;
           font-style: italic;
-          color: #003049;
+          color: var(--dark);
           margin: 0 0 16px;
           padding-bottom: 12px;
           border-bottom: 1px solid rgba(0, 48, 73, 0.1);
@@ -262,7 +263,7 @@ export default function CampaignDetailPage() {
         .cd-desc {
           font-size: 0.9375rem;
           line-height: 1.65;
-          color: #003049;
+          color: var(--dark);
           margin: 0;
         }
         .cd-detail-grid {
@@ -283,15 +284,15 @@ export default function CampaignDetailPage() {
           font-weight: 700;
           letter-spacing: 0.09em;
           text-transform: uppercase;
-          color: #669bbc;
+          color: var(--tertiary);
         }
         .cd-detail-val {
           font-size: 0.9375rem;
-          color: #003049;
+          color: var(--dark);
           font-weight: 500;
         }
         .cd-detail-val--live {
-          color: #c1121f;
+          color: var(--primary);
           font-weight: 700;
         }
         .cd-cta {
@@ -299,23 +300,23 @@ export default function CampaignDetailPage() {
           align-items: center;
           gap: 8px;
           margin-top: 32px;
-          padding: 12px 24px;
-          font-family: var(--font-mono, "CS Genio Mono", monospace);
+          padding: 14px 24px;
+          font-family: var(--font-body);
           font-size: 0.8125rem;
-          font-weight: 700;
-          letter-spacing: 0.08em;
-          text-transform: uppercase;
-          background: #003049;
-          color: #f5f2ec;
-          border: 1.5px solid #003049;
-          box-shadow: 3px 3px 0 #c1121f;
+          font-weight: 600;
+          letter-spacing: 0.03em;
+          background: var(--ink);
+          color: #fff;
+          border: 1px solid var(--ink);
+          border-radius: var(--r-lg);
+          box-shadow: var(--shadow-2);
           text-decoration: none;
-          transition: background 0.15s, box-shadow 0.15s;
+          transition: background 180ms var(--ease-spring), box-shadow 180ms var(--ease-spring);
         }
         .cd-cta:hover {
-          background: #c1121f;
-          border-color: #c1121f;
-          box-shadow: 3px 3px 0 #780000;
+          background: var(--brand-red);
+          border-color: var(--brand-red);
+          box-shadow: var(--shadow-3);
         }
       `}</style>
     </div>

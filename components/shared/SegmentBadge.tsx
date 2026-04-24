@@ -35,7 +35,7 @@ export function SegmentBadge({ segment, tier, className }: Props) {
         textTransform: "uppercase",
         color: colors.fg,
         background: colors.bg,
-        borderRadius: 0,
+        borderRadius: "var(--r-sm)",
       }}
     >
       {seg}

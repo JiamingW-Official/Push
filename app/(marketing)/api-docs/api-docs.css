@@ -67,7 +67,7 @@
   padding: 4px 10px;
   background: var(--primary);
   color: #fff;
-  border-radius: 0;
+  border-radius: var(--r-sm);
 }
 
 .api-status-dot {
@@ -264,7 +264,7 @@
   letter-spacing: 0.06em;
   text-transform: uppercase;
   padding: 3px 8px;
-  border-radius: 0;
+  border-radius: var(--r-sm);
   flex-shrink: 0;
 }
 
@@ -375,7 +375,7 @@
 /* ── Code Blocks ─────────────────────────────────────────── */
 .api-code-block {
   background: var(--dark);
-  border-radius: 0;
+  border-radius: var(--r-lg);
   overflow: hidden;
   margin-bottom: var(--space-3);
   border: 1px solid rgba(102, 155, 188, 0.15);
@@ -411,7 +411,7 @@
   cursor: pointer;
   padding: 2px 6px;
   transition: color var(--t-fast);
-  border-radius: 0;
+  border-radius: var(--r-sm);
 }
 
 .api-code-copy:hover {
@@ -503,7 +503,7 @@
   cursor: pointer;
   transition: color var(--t-fast), border-color var(--t-fast);
   margin-bottom: -1px;
-  border-radius: 0;
+  border-radius: var(--r-sm);
 }
 
 .api-tab:hover {
@@ -551,7 +551,7 @@
   background: rgba(0, 48, 73, 0.07);
   color: var(--dark);
   padding: 1px 5px;
-  border-radius: 0;
+  border-radius: var(--r-sm);
 }
 
 /* ── Info / Note boxes ───────────────────────────────────── */

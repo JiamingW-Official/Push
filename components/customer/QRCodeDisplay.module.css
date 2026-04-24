@@ -14,7 +14,7 @@
   width: 200px;
   height: 200px;
   border: 2px solid var(--line-strong);
-  border-radius: 0;
+  border-radius: var(--r-lg);
   /* Ensure small QR payloads scale crisply. */
   image-rendering: pixelated;
   background: var(--surface-elevated);

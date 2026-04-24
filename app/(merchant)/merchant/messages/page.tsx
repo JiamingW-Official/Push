@@ -102,10 +102,10 @@ export default function MerchantMessagesPage() {
           alignItems: "center",
           justifyContent: "center",
           height: "calc(100vh - 64px)",
-          fontFamily: "CS Genio Mono, monospace",
+          fontFamily: "var(--font-body)",
           fontSize: 13,
-          color: "rgba(0,48,73,0.35)",
-          background: "#f5f2ec",
+          color: "var(--text-muted)",
+          background: "var(--surface)",
         }}
       >
         Loading…

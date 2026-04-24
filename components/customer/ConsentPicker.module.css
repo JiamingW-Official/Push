@@ -10,7 +10,7 @@
   color: var(--dark);
   padding: 40px 24px;
   border: 1px solid var(--line);
-  border-radius: 0;
+  border-radius: var(--r-lg);
   max-width: 720px;
   margin: 0 auto;
 }
@@ -63,7 +63,7 @@
   padding: 20px;
   background: var(--surface-elevated);
   border: 1px solid var(--line);
-  border-radius: 0;
+  border-radius: var(--r-lg);
   transition:
     border-color 200ms ease,
     background 200ms ease;
@@ -178,7 +178,7 @@
   letter-spacing: 0.08em;
   text-transform: uppercase;
   border: 1px solid var(--line);
-  border-radius: 0;
+  border-radius: var(--r-lg);
   cursor: pointer;
   transition:
     background 200ms ease,

@@ -384,7 +384,7 @@ export default async function ArticlePage({
       <section className="article-comments">
         <div className="container">
           <div className="article-comments__inner">
-            <div className="article-comments__eyebrow">Discussion</div>
+            <div className="eyebrow article-comments__eyebrow">Discussion</div>
             <h2 className="article-comments__headline">
               <span className="wt-900">Comments</span>{" "}
               <span className="wt-300">coming soon.</span>
@@ -409,7 +409,9 @@ export default async function ArticlePage({
         <section className="article-related">
           <div className="container">
             <div className="article-related__header">
-              <p className="article-related__eyebrow">Continue reading</p>
+              <p className="eyebrow article-related__eyebrow">
+                Continue reading
+              </p>
               <h2 className="article-related__headline">
                 Related field reports
               </h2>

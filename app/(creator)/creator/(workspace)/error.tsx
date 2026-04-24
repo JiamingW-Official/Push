@@ -18,12 +18,12 @@ export default function WorkspaceError({
     <div
       style={{
         minHeight: "100vh",
-        background: "#f5f2ec",
+        background: "var(--surface)",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
         padding: "48px 24px",
-        fontFamily: "'CS Genio Mono', monospace",
+        fontFamily: "var(--font-body)",
       }}
     >
       <div
@@ -39,7 +39,7 @@ export default function WorkspaceError({
             height: 48,
             background: "rgba(193, 18, 31, 0.08)",
             border: "1.5px solid rgba(193, 18, 31, 0.3)",
-            borderRadius: 0,
+            borderRadius: "var(--r-sm)",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
@@ -51,7 +51,7 @@ export default function WorkspaceError({
             height="22"
             viewBox="0 0 24 24"
             fill="none"
-            stroke="#c1121f"
+            stroke="var(--primary)"
             strokeWidth="2"
             strokeLinecap="square"
           >
@@ -62,10 +62,10 @@ export default function WorkspaceError({
         {/* Title */}
         <h1
           style={{
-            fontFamily: "'Darky', serif",
+            fontFamily: "var(--font-display)",
             fontSize: 28,
             fontWeight: 700,
-            color: "#003049",
+            color: "var(--dark)",
             letterSpacing: "-0.02em",
             margin: "0 0 12px 0",
             lineHeight: 1.2,
@@ -78,7 +78,7 @@ export default function WorkspaceError({
         <p
           style={{
             fontSize: 14,
-            color: "#4a5568",
+            color: "var(--graphite)",
             margin: "0 0 32px 0",
             lineHeight: 1.6,
           }}
@@ -94,11 +94,11 @@ export default function WorkspaceError({
             style={{
               height: 40,
               padding: "0 20px",
-              background: "#c1121f",
+              background: "var(--primary)",
               color: "#ffffff",
               border: "none",
-              borderRadius: 0,
-              fontFamily: "'CS Genio Mono', monospace",
+              borderRadius: "var(--r-lg)",
+              fontFamily: "var(--font-body)",
               fontSize: 13,
               fontWeight: 600,
               letterSpacing: "0.04em",
@@ -115,10 +115,10 @@ export default function WorkspaceError({
               height: 40,
               padding: "0 20px",
               background: "transparent",
-              color: "#003049",
-              border: "1.5px solid rgba(0, 48, 73, 0.25)",
-              borderRadius: 0,
-              fontFamily: "'CS Genio Mono', monospace",
+              color: "var(--dark)",
+              border: "1.5px solid var(--line-strong)",
+              borderRadius: "var(--r-lg)",
+              fontFamily: "var(--font-body)",
               fontSize: 13,
               fontWeight: 600,
               letterSpacing: "0.04em",

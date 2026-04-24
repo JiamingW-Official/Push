@@ -22,17 +22,17 @@ export default function DemoCreatorEntry() {
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
-        background: "#003049",
+        background: "var(--dark)",
       }}
     >
       <span
         style={{
-          fontFamily: "var(--font-display, 'Darky', sans-serif)",
+          fontFamily: "var(--font-display)",
           fontSize: "clamp(72px, 14vw, 180px)",
           fontWeight: 900,
           fontStyle: "italic",
           letterSpacing: "-0.06em",
-          color: "#f5f2ec",
+          color: "#ffffff",
           lineHeight: 0.9,
           userSelect: "none",
         }}
@@ -43,18 +43,18 @@ export default function DemoCreatorEntry() {
         style={{
           width: "64px",
           height: "3px",
-          background: "#c1121f",
+          background: "var(--primary)",
           marginTop: "32px",
         }}
       />
       <p
         style={{
-          fontFamily: "var(--font-body, 'CS Genio Mono', monospace)",
+          fontFamily: "var(--font-body)",
           fontSize: "11px",
           fontWeight: 700,
           letterSpacing: "0.14em",
           textTransform: "uppercase",
-          color: "rgba(245,242,236,0.4)",
+          color: "rgba(255,255,255,0.4)",
           marginTop: "24px",
         }}
       >

@@ -3,14 +3,15 @@ import ScrollRevealInit from "@/components/layout/ScrollRevealInit";
 import "../landing.css";
 import "./pricing.css";
 
-/* ── Plan data ──────────────────────────────────────────────── */
+/* ── Plan data — pricing values UNCHANGED (fact-preserving) ─── */
 const PLANS = [
   {
-    name: "Attribution Lite",
+    slug: "lite",
+    name: "Lite",
+    scene: "kicking the tires.",
     price: "$0",
-    cents: "",
     period: "/mo",
-    desc: "Try Push attribution with no commitment. One QR code, one creator slot.",
+    desc: "One QR, one creator slot, twenty verified visits a month. No card, no clock.",
     features: [
       "1 active campaign",
       "1 creator slot",
@@ -19,9 +20,10 @@ const PLANS = [
       "Community support",
     ],
     featured: false,
-    cta: "Start free",
+    variant: "card-premium" as const,
+    cta: "start →",
     href: "/merchant/signup?plan=lite",
-    roi: "Acquisition tier — no card required",
+    fine: "no card required",
     qrLimit: "20 verified visits/mo",
     campaignLimit: "1 campaign",
     applicants: "5/mo",
@@ -30,11 +32,12 @@ const PLANS = [
     api: false,
   },
   {
+    slug: "essentials",
     name: "Essentials",
+    scene: "for the corner shop.",
     price: "$99",
-    cents: "",
     period: "/mo",
-    desc: "For Chinatown, Flushing, and Williamsburg legacy shops. Real attribution, flat pricing.",
+    desc: "Flat for legacy spots in Chinatown, Flushing, Williamsburg. Three campaigns, real attribution.",
     features: [
       "3 active campaigns",
       "5 creator slots per campaign",
@@ -43,9 +46,10 @@ const PLANS = [
       "Email support",
     ],
     featured: false,
-    cta: "Start Essentials",
+    variant: "card-premium" as const,
+    cta: "start →",
     href: "/merchant/signup?plan=essentials",
-    roi: "Designed for $5K–$25K monthly revenue shops",
+    fine: "for $5K – $25K monthly revenue shops",
     qrLimit: "150 verified visits/mo",
     campaignLimit: "3 campaigns",
     applicants: "30/mo",
@@ -54,24 +58,26 @@ const PLANS = [
     api: false,
   },
   {
+    slug: "pro",
     name: "Pro",
+    scene: "pay only when it works.",
     price: "5%",
-    cents: "",
-    period: " of attributed revenue",
-    desc: "Outcome-based Year 1 — you only pay when Push drives revenue. Cap $179/mo, floor $49/mo.",
+    period: "of attributed revenue",
+    desc: "Outcome-based Year 1. Cap $179/mo, floor $49/mo — when the door doesn't open, you don't pay.",
     features: [
       "Unlimited campaigns Year 1",
       "8 creator slots per campaign",
       "Three-signal attribution (QR + receipt + merchant confirm)",
       "Live ROI dashboard",
       "Priority support",
-      "Auto-converts to $199 flat in Year 2 if you hit cap 50%+ of months",
+      "Auto-converts to $199 flat in Year 2 if cap hits 50%+ of months",
     ],
     featured: true,
+    variant: "card-ink" as const,
     badge: "Most chosen",
-    cta: "Talk to us about Pro",
+    cta: "talk →",
     href: "/contact?inquiry=pro",
-    roi: "Pay only when verified visits land. Cap $179, floor $49.",
+    fine: "cap $179, floor $49",
     qrLimit: "Unlimited",
     campaignLimit: "Unlimited",
     applicants: "Unlimited",
@@ -80,9 +86,10 @@ const PLANS = [
     api: false,
   },
   {
+    slug: "advanced",
     name: "Advanced",
+    scene: "two doors and counting.",
     price: "$349",
-    cents: "",
     period: "/mo",
     desc: "Multi-unit operators and chef-driven concepts running ongoing creator programs.",
     features: [
@@ -94,9 +101,10 @@ const PLANS = [
       "White-glove onboarding",
     ],
     featured: false,
-    cta: "Talk to us",
+    variant: "card-champagne" as const,
+    cta: "talk →",
     href: "/merchant/signup?plan=advanced",
-    roi: "For 2+ location operators",
+    fine: "for 2+ location operators",
     qrLimit: "Unlimited",
     campaignLimit: "Unlimited",
     applicants: "Unlimited",
@@ -175,36 +183,36 @@ const COMPARE_ROWS: Array<{
 /* ── FAQ data ───────────────────────────────────────────────── */
 const FAQS = [
   {
-    q: "What exactly am I paying for each month?",
-    a: "Your plan covers platform access, campaign management tools, AI creator matching, and QR attribution infrastructure. Creator payouts are separate — you fund a campaign escrow per campaign, and creators are paid only after verified visits.",
+    q: "What am I actually paying for each month?",
+    a: "Plan access — campaign tooling, QR attribution, creator matching. Creator payouts are separate: you fund a campaign escrow per campaign, and creators get paid only after a verified visit clears.",
   },
   {
     q: "Are there fees on top of the subscription?",
-    a: "Pricing is tiered: $0 Lite / $99 Essentials / Pro outcome-based (5% of attributed revenue, capped $179/mo) / $349 Advanced. Creator payouts are funded by you per campaign — Push takes a 10–15% rev share on Stripe Connect payouts.",
+    a: "Four prices: $0 Lite, $99 Essentials, Pro at 5% of attributed revenue (cap $179/mo, floor $49/mo), and $349 Advanced. Creator payouts are funded by you per campaign — Push takes a 10–15% rev share on Stripe Connect payouts.",
   },
   {
-    q: 'How does QR verification work and what counts as a "verified visit"?',
-    a: "Each creator gets a unique QR code linked to your campaign. When a customer they referred scans in-store, the visit is logged with timestamp, creator ID, and location. Fraud filters run within 60 seconds — only clean visits count.",
+    q: "What counts as a verified visit?",
+    a: "Each creator gets a unique QR tied to your campaign. When someone they referred scans in-store, the visit is logged with timestamp, creator ID, and location. Fraud filters run within 60 seconds — only clean visits count toward billing.",
   },
   {
-    q: "Can I upgrade or downgrade my plan anytime?",
+    q: "Can I upgrade or downgrade anytime?",
     a: "Yes. Upgrades take effect immediately. Downgrades apply at the start of the next billing cycle. No contracts, no cancellation fees.",
   },
   {
-    q: "What happens if I exceed my verified-visit or campaign limits?",
-    a: "On Lite and Essentials, active campaigns pause when limits are reached. Pro and Advanced are unlimited. You'll receive a notification and can upgrade mid-cycle — prorated charges apply.",
+    q: "What if I exceed my visit or campaign limits?",
+    a: "On Lite and Essentials, active campaigns pause when limits hit. Pro and Advanced are uncapped on volume. You'll get a notification — upgrade mid-cycle and we prorate.",
   },
   {
-    q: "Do I need a credit card to start?",
-    a: "Lite is free forever — no card required. To run more than 1 campaign or 20 verified visits/month, upgrade to Essentials or Pro (Pro = pay only on attributed revenue).",
+    q: "Do I need a card to start?",
+    a: "No. Lite is free forever, no card required. To run more than 1 campaign or 20 verified visits/month, upgrade to Essentials or Pro (Pro = pay only on attributed revenue).",
   },
   {
-    q: "Is Push available outside New York City?",
-    a: "Push is currently invite-only in NYC. Expansion to Chicago, LA, and Miami is planned for Q3 2026. Join the waitlist if you're outside NYC.",
+    q: "Is Push live outside NYC?",
+    a: "Pre-pilot, Lower Manhattan only. Pilot opens June 22 in SoHo, Tribeca, and Chinatown. Chicago, LA, and Miami are on the 2026 list — join the waitlist if you're outside NYC.",
   },
   {
-    q: "What is the Enterprise plan and who is it for?",
-    a: "Enterprise is for multi-location chains (5+ locations or franchises), franchise operators, or brands running large-scale creator programs. Pricing is custom — includes volume QR allocations, dedicated CSM, SLA guarantees, and SSO/API integration.",
+    q: "What about Enterprise?",
+    a: "For 5+ locations, franchise operators, or brands running large creator programs. Pricing is custom — volume QR allocations, dedicated CSM, SLA terms, SSO/API. Talk to us.",
   },
 ];
 
@@ -253,93 +261,301 @@ export default function PricingPage() {
     <>
       <ScrollRevealInit />
 
-      {/* ══ 1. EDITORIAL HERO ══════════════════════════════════ */}
-      <section className="pr-hero">
-        <div className="container pr-hero-inner">
-          <div className="pr-hero-label reveal">
-            <span className="eyebrow pr-hero-eyebrow">Push Pricing</span>
-            <span className="rule" />
-            <span className="pr-hero-eyebrow-sub">For Merchants · NYC</span>
+      {/* ═══════════════ 01 — HERO ═══════════════ */}
+      <section
+        className="bg-hero-ink grain-overlay bg-vignette pr-hero"
+        style={{
+          position: "relative",
+          minHeight: "100vh",
+          display: "flex",
+          flexDirection: "column",
+          padding: "clamp(24px, 4vw, 64px)",
+          paddingTop: "clamp(80px, 8vw, 120px)",
+          overflow: "hidden",
+        }}
+      >
+        {/* Top row: pill + date */}
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            flexWrap: "wrap",
+            gap: 16,
+            position: "relative",
+            zIndex: 3,
+          }}
+        >
+          <span className="pill-lux" style={{ color: "#fff" }}>
+            Pre-pilot pricing · Lower Manhattan
+          </span>
+          <span className="eyebrow-lux" style={{ color: "var(--champagne)" }}>
+            Pilot opens June&nbsp;22
+          </span>
+        </div>
+
+        {/* Hero center */}
+        <div
+          style={{
+            flex: 1,
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            position: "relative",
+            zIndex: 3,
+            maxWidth: 1180,
+            margin: "0 auto",
+            width: "100%",
+            paddingTop: "clamp(48px, 10vh, 120px)",
+            paddingBottom: "clamp(48px, 10vh, 120px)",
+          }}
+        >
+          <div
+            className="section-marker"
+            data-num="01"
+            style={{ color: "rgba(255,255,255,0.55)" }}
+          >
+            What it costs
           </div>
 
-          {/* Asymmetric headline: 900 + 300 */}
-          <h1 className="pr-hero-h">
+          {/* Massive Darky 900 headline + brand-red period */}
+          <h1
+            style={{
+              fontFamily: "var(--font-display)",
+              fontSize: "clamp(72px, 14vw, 220px)",
+              fontWeight: 900,
+              letterSpacing: "-0.07em",
+              lineHeight: 0.86,
+              color: "#fff",
+              margin: 0,
+            }}
+          >
+            Two prices
             <span
-              className="pr-h-bold reveal"
-              style={{ transitionDelay: "60ms" }}
+              aria-hidden="true"
+              style={{ color: "var(--brand-red)", marginLeft: "-0.04em" }}
             >
-              Pricing that pays
-            </span>
-            <span
-              className="pr-h-light reveal"
-              style={{ transitionDelay: "140ms" }}
-            >
-              only when it works.
+              .
             </span>
           </h1>
-
           <div
-            className="pr-hero-bottom reveal"
-            style={{ transitionDelay: "220ms" }}
+            className="display-ghost"
+            style={{
+              fontSize: "clamp(40px, 8vw, 124px)",
+              color: "rgba(255,255,255,0.22)",
+              marginTop: "-0.04em",
+            }}
           >
-            <p className="pr-hero-sub">
-              Flat for Lite, Essentials, and Advanced. Outcome-based for Pro.
-              Creator payouts only on verified foot traffic. No agency
-              retainers, no mystery fees.
-            </p>
-            <div className="pr-hero-anchors">
-              <a href="#plans" className="btn btn-primary">
-                See plans
-              </a>
-              <a href="#compare" className="btn btn-secondary">
-                Compare features
-              </a>
-            </div>
+            Pay per visit. Clean math.
           </div>
 
-          {/* Ambient decorative number */}
-          <span className="pr-hero-ghost" aria-hidden="true">
-            $0
-          </span>
+          <p
+            style={{
+              marginTop: "clamp(32px, 5vw, 56px)",
+              maxWidth: 620,
+              fontFamily: "var(--font-body)",
+              fontSize: "clamp(15px, 1.15vw, 18px)",
+              lineHeight: 1.6,
+              color: "rgba(255,255,255,0.75)",
+            }}
+          >
+            Flat for Lite, Essentials, and Advanced. Outcome-based for Pro — 5%
+            of attributed revenue, capped at $179/mo, floored at $49/mo. Creator
+            payouts release only after a QR-verified visit. No agency retainers,
+            no impression fees, no clawbacks.
+          </p>
+          <p
+            style={{
+              marginTop: "clamp(16px, 2vw, 24px)",
+              maxWidth: 620,
+              fontFamily: "var(--font-body)",
+              fontSize: "clamp(13px, 1vw, 15px)",
+              lineHeight: 1.6,
+              color: "rgba(255,255,255,0.46)",
+            }}
+          >
+            Push is pre-pilot — five anchored venues, ten creators on the
+            roster, Lower Manhattan only. The numbers below are the numbers we
+            quote operators on the phone.
+          </p>
+
+          {/* Inline CTAs */}
+          <div
+            style={{
+              marginTop: "clamp(32px, 4vw, 48px)",
+              display: "flex",
+              gap: 16,
+              flexWrap: "wrap",
+              alignItems: "center",
+            }}
+          >
+            <a href="#plans" className="btn btn-primary">
+              See the math
+            </a>
+            <a href="#compare" className="btn pr-outline-btn">
+              Compare side by side
+            </a>
+          </div>
+
+          {/* Hero KPI strip */}
+          <div
+            style={{
+              marginTop: "clamp(40px, 6vw, 72px)",
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
+              gap: "clamp(16px, 3vw, 48px)",
+              borderTop: "1px solid rgba(255,255,255,0.12)",
+              paddingTop: "clamp(24px, 3vw, 40px)",
+              maxWidth: 960,
+            }}
+          >
+            {[
+              {
+                value: "$0",
+                label: "to start",
+                note: "Lite is free, no card",
+                tint: "var(--brand-red)",
+              },
+              {
+                value: "$5–35",
+                label: "per verified visit",
+                note: "by creator tier",
+                tint: "var(--champagne)",
+              },
+              {
+                value: "$49",
+                label: "Pro floor",
+                note: "$179 cap, 5% in between",
+                tint: "var(--cat-fitness)",
+              },
+            ].map((s) => (
+              <div
+                key={s.label}
+                style={{ paddingLeft: 18, borderLeft: `2px solid ${s.tint}` }}
+              >
+                <div
+                  style={{
+                    fontFamily: "var(--font-display)",
+                    fontSize: "clamp(40px, 4vw, 60px)",
+                    fontWeight: 200,
+                    letterSpacing: "-0.05em",
+                    lineHeight: 0.9,
+                    color: "#fff",
+                  }}
+                >
+                  {s.value}
+                </div>
+                <div
+                  style={{
+                    marginTop: 10,
+                    fontFamily: "var(--font-body)",
+                    fontSize: 12,
+                    fontWeight: 600,
+                    color: "rgba(255,255,255,0.78)",
+                  }}
+                >
+                  {s.label}
+                </div>
+                <div
+                  style={{
+                    marginTop: 4,
+                    fontFamily: "var(--font-body)",
+                    fontSize: 10,
+                    letterSpacing: "0.08em",
+                    color: "rgba(255,255,255,0.4)",
+                  }}
+                >
+                  {s.note}
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
-      {/* ══ 2. PRICING CARDS ═══════════════════════════════════ */}
+      {/* ═══════════════ 02 — PRICING TIERS ═══════════════ */}
       <section id="plans" className="section pr-plans-section">
         <div className="container">
-          <div className="pr-section-tag reveal">
-            <span className="section-tag-num">01</span>
-            <span className="section-tag-line" />
-            <span className="section-tag-label">Merchant Plans</span>
+          <div
+            className="reveal"
+            style={{ marginBottom: "clamp(40px, 6vw, 72px)" }}
+          >
+            <div className="section-marker" data-num="02">
+              The four tiers
+            </div>
+            <h2
+              style={{
+                fontFamily: "var(--font-display)",
+                fontSize: "clamp(36px, 5vw, 64px)",
+                fontWeight: 800,
+                letterSpacing: "-0.05em",
+                lineHeight: 1,
+                color: "var(--ink)",
+                margin: "0 0 16px",
+              }}
+            >
+              Pick what fits
+              <span aria-hidden="true" style={{ color: "var(--brand-red)" }}>
+                .
+              </span>
+              <br />
+              <span className="display-ghost">
+                Switch when it doesn&apos;t.
+              </span>
+            </h2>
+            <p
+              style={{
+                fontFamily: "var(--font-body)",
+                fontSize: 14,
+                color: "var(--ink-4)",
+                maxWidth: 540,
+                lineHeight: 1.6,
+                margin: "16px 0 0",
+              }}
+            >
+              Start free. Upgrade the second month it makes sense. Downgrade at
+              the next billing cycle. No contracts, no cancellation fees.
+            </p>
           </div>
 
-          <div className="pr-plans-grid">
+          <div className="pr-plans-grid reveal">
             {PLANS.map((plan, i) => (
-              <div
-                key={plan.name}
-                className={`pr-plan reveal${plan.featured ? " pr-plan--featured" : ""}`}
-                style={{ transitionDelay: `${i * 100}ms` }}
+              <article
+                key={plan.slug}
+                className={`pr-plan ${plan.variant} ${plan.featured ? "pr-plan--featured" : ""}`}
+                style={{ transitionDelay: `${i * 90}ms` }}
               >
                 {plan.badge && (
-                  <div className="pr-plan-badge">{plan.badge}</div>
+                  <span className="pr-plan-badge">{plan.badge}</span>
                 )}
 
-                <div className="pr-plan-header">
-                  <h2 className="pr-plan-name">{plan.name}</h2>
-                  <div className="pr-plan-price-row">
-                    <span className="pr-plan-price-int">{plan.price}</span>
-                    {plan.cents && (
-                      <span className="pr-plan-price-cents">{plan.cents}</span>
-                    )}
-                    <span className="pr-plan-price-period">{plan.period}</span>
-                  </div>
-                  <p className="pr-plan-desc">{plan.desc}</p>
+                <div className="pr-plan-tag">
+                  <span className="pr-plan-tag-num">
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                  <span className="pr-plan-tag-line" aria-hidden="true" />
+                  <span className="pr-plan-tag-label">Tier</span>
                 </div>
+
+                <h3 className="pr-plan-name">
+                  {plan.name}
+                  <span aria-hidden="true" className="pr-plan-name-dot">
+                    .
+                  </span>
+                </h3>
+                <p className="pr-plan-scene">{plan.scene}</p>
+
+                <div className="pr-plan-price-row">
+                  <span className="pr-plan-price-int">{plan.price}</span>
+                  <span className="pr-plan-price-period">{plan.period}</span>
+                </div>
+
+                <p className="pr-plan-desc">{plan.desc}</p>
 
                 <ul className="pr-plan-features">
                   {plan.features.map((f) => (
                     <li key={f} className="pr-plan-feature">
-                      <span className="pr-plan-check">
+                      <span className="pr-plan-check" aria-hidden="true">
                         <CheckIcon />
                       </span>
                       {f}
@@ -348,7 +564,7 @@ export default function PricingPage() {
                 </ul>
 
                 <div className="pr-plan-footer">
-                  <p className="pr-plan-roi">{plan.roi}</p>
+                  <p className="pr-plan-fine">{plan.fine}</p>
                   <Link
                     href={plan.href}
                     className={`btn ${plan.featured ? "btn-primary" : "btn-secondary"} pr-plan-cta`}
@@ -356,30 +572,46 @@ export default function PricingPage() {
                     {plan.cta}
                   </Link>
                 </div>
-              </div>
+              </article>
             ))}
           </div>
 
           <p className="pr-plans-note reveal">
-            All plans include a 14-day free trial. No credit card required to
-            explore. Creator payouts funded per-campaign, billed separately.
+            Every plan: QR attribution from day one, fraud filter under 60s,
+            creator payouts billed separately per campaign.
           </p>
         </div>
       </section>
 
-      {/* ══ 3. ENTERPRISE ROW ═════════════════════════════════ */}
-      <section className="section-bright pr-enterprise-section reveal">
+      {/* ═══════════════ 03 — ENTERPRISE ═══════════════ */}
+      <section className="section section-bright pr-enterprise-section reveal">
         <div className="container pr-enterprise-inner">
           <div className="pr-enterprise-left">
-            <p className="eyebrow pr-enterprise-eyebrow">Enterprise</p>
-            <h2 className="pr-enterprise-h">
-              Running 5+ locations?{" "}
-              <span className="pr-enterprise-h-light">Let&apos;s talk.</span>
+            <div className="section-marker" data-num="03">
+              Five locations or more
+            </div>
+            <h2
+              style={{
+                fontFamily: "var(--font-display)",
+                fontSize: "clamp(36px, 5vw, 64px)",
+                fontWeight: 800,
+                letterSpacing: "-0.05em",
+                lineHeight: 1,
+                color: "var(--ink)",
+                margin: "0 0 16px",
+              }}
+            >
+              Talk to us
+              <span aria-hidden="true" style={{ color: "var(--brand-red)" }}>
+                .
+              </span>
+              <br />
+              <span className="display-ghost">We&apos;ll write the math.</span>
             </h2>
             <p className="pr-enterprise-desc">
-              Custom QR allocations, dedicated Customer Success Manager, SLA
-              guarantees, SSO + API integration, and volume campaign pricing.
-              Built for franchise operators and multi-location chains.
+              Volume QR allocations, a dedicated Customer Success Manager, SLA
+              terms, SSO + API integration. For franchise operators and
+              multi-location chains running ongoing creator programs.
             </p>
           </div>
           <div className="pr-enterprise-right">
@@ -406,31 +638,47 @@ export default function PricingPage() {
               </li>
             </ul>
             <Link href="/contact" className="btn btn-primary">
-              Contact sales
+              talk to us →
             </Link>
           </div>
         </div>
       </section>
 
-      {/* ══ 4. COMPARISON TABLE ════════════════════════════════ */}
+      {/* ═══════════════ 04 — COMPARISON TABLE ═══════════════ */}
       <section id="compare" className="section pr-compare-section">
         <div className="container">
-          <div className="pr-section-tag reveal">
-            <span className="section-tag-num">02</span>
-            <span className="section-tag-line" />
-            <span className="section-tag-label">Feature Comparison</span>
+          <div
+            className="reveal"
+            style={{ marginBottom: "clamp(40px, 6vw, 64px)" }}
+          >
+            <div className="section-marker" data-num="04">
+              Side by side
+            </div>
+            <h2
+              style={{
+                fontFamily: "var(--font-display)",
+                fontSize: "clamp(36px, 5vw, 64px)",
+                fontWeight: 800,
+                letterSpacing: "-0.05em",
+                lineHeight: 1,
+                color: "var(--ink)",
+                margin: 0,
+              }}
+            >
+              Every tier
+              <span aria-hidden="true" style={{ color: "var(--brand-red)" }}>
+                .
+              </span>
+              <br />
+              <span className="display-ghost">Every line item.</span>
+            </h2>
           </div>
-
-          <h2 className="pr-compare-h reveal">
-            Every plan,{" "}
-            <span className="pr-compare-h-light">side by side.</span>
-          </h2>
 
           <div className="pr-compare-wrap reveal">
             <table className="pr-compare-table">
               <thead>
                 <tr>
-                  <th className="pr-th-feature">Feature</th>
+                  <th className="pr-th-feature">Line item</th>
                   <th className="pr-th-plan">Lite</th>
                   <th className="pr-th-plan">Essentials</th>
                   <th className="pr-th-plan pr-th-featured">Pro</th>
@@ -493,13 +741,34 @@ export default function PricingPage() {
         </div>
       </section>
 
-      {/* ══ 5. FAQ INLINE ═════════════════════════════════════ */}
-      <section className="section-bright pr-faq-section">
+      {/* ═══════════════ 05 — FAQ ═══════════════ */}
+      <section className="section section-bright pr-faq-section">
         <div className="container">
-          <div className="pr-section-tag reveal">
-            <span className="section-tag-num">03</span>
-            <span className="section-tag-line" />
-            <span className="section-tag-label">FAQ</span>
+          <div
+            className="reveal"
+            style={{ marginBottom: "clamp(40px, 6vw, 64px)" }}
+          >
+            <div className="section-marker" data-num="05">
+              Common questions
+            </div>
+            <h2
+              style={{
+                fontFamily: "var(--font-display)",
+                fontSize: "clamp(36px, 5vw, 64px)",
+                fontWeight: 800,
+                letterSpacing: "-0.05em",
+                lineHeight: 1,
+                color: "var(--ink)",
+                margin: 0,
+              }}
+            >
+              Eight answers
+              <span aria-hidden="true" style={{ color: "var(--brand-red)" }}>
+                .
+              </span>
+              <br />
+              <span className="display-ghost">Nothing fancy.</span>
+            </h2>
           </div>
 
           <div className="pr-faq-grid">
@@ -509,6 +778,9 @@ export default function PricingPage() {
                 className="pr-faq-item reveal"
                 style={{ transitionDelay: `${(i % 2) * 80}ms` }}
               >
+                <span className="pr-faq-num">
+                  {String(i + 1).padStart(2, "0")}
+                </span>
                 <h3 className="pr-faq-q">{item.q}</h3>
                 <p className="pr-faq-a">{item.a}</p>
               </div>
@@ -517,35 +789,35 @@ export default function PricingPage() {
         </div>
       </section>
 
-      {/* ══ 6. GUARANTEE ══════════════════════════════════════ */}
+      {/* ═══════════════ 06 — GUARANTEE ═══════════════ */}
       <section className="pr-guarantee-section">
         <div className="container pr-guarantee-inner">
-          <p className="eyebrow pr-guarantee-eyebrow reveal">Our Promise</p>
-          <h2 className="pr-guarantee-h">
-            <span
-              className="pr-guarantee-h-bold reveal"
-              style={{ transitionDelay: "60ms" }}
-            >
-              Pay only for
-            </span>
-            <span
-              className="pr-guarantee-h-light reveal"
-              style={{ transitionDelay: "140ms" }}
-            >
-              verified visits.
-            </span>
-          </h2>
+          <div
+            className="reveal"
+            style={{ marginBottom: "clamp(40px, 5vw, 56px)" }}
+          >
+            <div className="section-marker" data-num="06">
+              The promise
+            </div>
+            <h2 className="pr-guarantee-h">
+              <span className="pr-guarantee-h-bold">Door open</span>
+              <span aria-hidden="true" className="pr-guarantee-h-period">
+                .
+              </span>
+              <span className="pr-guarantee-h-light">Money on results.</span>
+            </h2>
+          </div>
           <p
             className="pr-guarantee-body reveal"
-            style={{ transitionDelay: "200ms" }}
+            style={{ transitionDelay: "120ms" }}
           >
             Every creator payout requires a QR-confirmed, fraud-filtered visit.
-            If it doesn&apos;t scan, it doesn&apos;t pay. Your budget only moves
-            when real customers walk through the door.
+            If it doesn&apos;t scan, it doesn&apos;t pay. Your budget moves only
+            when a real customer walks in.
           </p>
           <div
             className="pr-guarantee-stats reveal"
-            style={{ transitionDelay: "260ms" }}
+            style={{ transitionDelay: "200ms" }}
           >
             <div className="pr-g-stat">
               <span className="pr-g-stat-n">100%</span>
@@ -563,48 +835,105 @@ export default function PricingPage() {
             </div>
           </div>
         </div>
-
-        {/* Decorative ghost text */}
-        <span className="pr-guarantee-ghost" aria-hidden="true">
-          Verified
-        </span>
       </section>
 
-      {/* ══ 7. BOTTOM CTA ════════════════════════════════════ */}
-      <section className="pr-cta-section">
-        <div className="container pr-cta-inner">
-          <div className="pr-cta-content reveal">
-            <div className="pr-cta-label">
-              <span className="rule rule--w" />
-              <span className="eyebrow pr-cta-eyebrow">Get started today</span>
-            </div>
-            <h2 className="pr-cta-h">
-              Launch your first
-              <br />
-              <em className="pr-cta-h-em">creator campaign</em>
-              <br />
-              in 24 hours.
-            </h2>
-            <p className="pr-cta-sub">
-              No agency. No guesswork. Just verified foot traffic.
-            </p>
-          </div>
+      {/* ═══════════════ 07 — FINAL CTA ═══════════════ */}
+      <section
+        className="bg-hero-ink grain-overlay bg-vignette pr-cta-section"
+        style={{
+          position: "relative",
+          padding: "clamp(120px, 16vw, 200px) clamp(24px, 4vw, 64px)",
+          overflow: "hidden",
+        }}
+      >
+        <div
+          className="reveal"
+          style={{
+            position: "relative",
+            zIndex: 3,
+            maxWidth: 1180,
+            margin: "0 auto",
+          }}
+        >
           <div
-            className="pr-cta-actions reveal"
-            style={{ transitionDelay: "100ms" }}
+            className="section-marker"
+            data-num="07"
+            style={{ color: "rgba(255,255,255,0.55)" }}
           >
-            <Link
-              href="/merchant/signup"
-              className="btn btn-primary pr-cta-btn-primary"
+            Open the door
+          </div>
+
+          <h2
+            style={{
+              fontFamily: "var(--font-display)",
+              fontSize: "clamp(56px, 11vw, 168px)",
+              fontWeight: 900,
+              letterSpacing: "-0.07em",
+              lineHeight: 0.86,
+              color: "#fff",
+              margin: 0,
+              maxWidth: 1100,
+            }}
+          >
+            Start free
+            <span
+              aria-hidden="true"
+              style={{ color: "var(--brand-red)", marginLeft: "-0.04em" }}
             >
-              Start free — $0 today
+              .
+            </span>
+          </h2>
+          <div
+            className="display-ghost"
+            style={{
+              fontSize: "clamp(40px, 8vw, 112px)",
+              color: "rgba(255,255,255,0.22)",
+              marginTop: "-0.04em",
+            }}
+          >
+            Pay when it works.
+          </div>
+
+          <p
+            style={{
+              marginTop: "clamp(28px, 4vw, 48px)",
+              maxWidth: 540,
+              fontFamily: "var(--font-body)",
+              fontSize: "clamp(15px, 1.15vw, 17px)",
+              lineHeight: 1.6,
+              color: "rgba(255,255,255,0.7)",
+            }}
+          >
+            Ten minutes to write the brief. First scan inside twenty-four hours.
+            The pilot opens June&nbsp;22 in SoHo, Tribeca, and Chinatown —
+            Jiaming walks the doors himself.
+          </p>
+
+          <div
+            style={{
+              marginTop: "clamp(28px, 4vw, 40px)",
+              display: "flex",
+              gap: 16,
+              flexWrap: "wrap",
+              alignItems: "center",
+            }}
+          >
+            <Link href="/merchant/signup" className="btn btn-primary">
+              start free →
             </Link>
-            <Link href="/contact" className="btn pr-cta-btn-ghost">
-              Talk to sales
+            <Link href="/contact" className="btn pr-outline-btn">
+              talk to us →
             </Link>
-            <p className="pr-cta-fine">
-              14-day trial · No credit card · Cancel anytime
-            </p>
+            <span
+              style={{
+                fontFamily: "var(--font-body)",
+                fontSize: 11,
+                letterSpacing: "0.04em",
+                color: "rgba(255,255,255,0.34)",
+              }}
+            >
+              no card · cancel anytime
+            </span>
           </div>
         </div>
       </section>

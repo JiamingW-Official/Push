@@ -77,15 +77,15 @@ function fmtDate(iso: string): string {
 }
 
 const STATUS_COLORS: Record<TransactionStatus, string> = {
-  pending: "#669bbc",
-  cleared: "#2d7a2d",
-  processing: "#c9a96e",
-  paid: "#003049",
+  pending: "var(--tertiary)",
+  cleared: "var(--success-dark)",
+  processing: "var(--champagne)",
+  paid: "var(--dark)",
 };
 
 const STATUS_BG: Record<TransactionStatus, string> = {
   pending: "rgba(102,155,188,0.12)",
-  cleared: "rgba(45,122,45,0.10)",
+  cleared: "rgba(34,197,94,0.10)",
   processing: "rgba(201,169,110,0.15)",
   paid: "rgba(0,48,73,0.08)",
 };
@@ -205,25 +205,25 @@ export default function CreatorEarningsPage() {
       label: "Pending",
       sublabel: "In campaign",
       value: balances.pending,
-      color: "#669bbc",
+      color: "var(--tertiary)",
     },
     {
       label: "Cleared",
       sublabel: "Ready to cash out",
       value: balances.cleared,
-      color: "#2d7a2d",
+      color: "var(--success-dark)",
     },
     {
       label: "Processing",
       sublabel: "Transfer in flight",
       value: balances.processing,
-      color: "#c9a96e",
+      color: "var(--champagne)",
     },
     {
       label: "Paid out",
       sublabel: "Total disbursed",
       value: balances.paidOut,
-      color: "#003049",
+      color: "var(--dark)",
     },
   ];
 
@@ -252,9 +252,11 @@ export default function CreatorEarningsPage() {
                 style={{
                   ...styles.heroDeltaBadge,
                   background: deltaPositive
-                    ? "rgba(45,122,45,0.10)"
+                    ? "rgba(34,197,94,0.10)"
                     : "rgba(193,18,31,0.10)",
-                  color: deltaPositive ? "#2d7a2d" : "#c1121f",
+                  color: deltaPositive
+                    ? "var(--success-dark)"
+                    : "var(--primary)",
                 }}
               >
                 {deltaPositive ? "+" : ""}${fmt(Math.abs(delta))} vs last month
@@ -270,7 +272,9 @@ export default function CreatorEarningsPage() {
             </div>
             <div style={styles.heroStatCard}>
               <span style={styles.heroStatLabel}>Expected next</span>
-              <span style={{ ...styles.heroStatValue, color: "#669bbc" }}>
+              <span
+                style={{ ...styles.heroStatValue, color: "var(--tertiary)" }}
+              >
                 ${fmt(PENDING_NEXT)}
               </span>
             </div>
@@ -321,10 +325,10 @@ export default function CreatorEarningsPage() {
                           style={{
                             ...styles.milestoneDot,
                             background: step.done
-                              ? "#c1121f"
+                              ? "var(--primary)"
                               : "rgba(0,48,73,0.12)",
                             borderColor: step.done
-                              ? "#c1121f"
+                              ? "var(--primary)"
                               : "rgba(0,48,73,0.20)",
                           }}
                         >

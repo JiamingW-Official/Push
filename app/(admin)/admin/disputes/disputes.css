@@ -74,7 +74,7 @@
   text-transform: uppercase;
   padding: 4px 10px;
   background: rgba(193, 18, 31, 0.2);
-  color: #ff6b6b;
+  color: var(--primary);
   border: 1px solid rgba(193, 18, 31, 0.4);
 }
 
@@ -148,7 +148,7 @@
 }
 
 .adm-hero__stat-num--warn {
-  color: #ff9f43;
+  color: var(--warning);
 }
 
 .adm-hero__stat-num--crit {
@@ -322,7 +322,7 @@
   border-left-color: var(--primary);
 }
 .dsp-row--high {
-  border-left-color: #ff9f43;
+  border-left-color: var(--warning);
 }
 .dsp-row--escalated {
   background: rgba(193, 18, 31, 0.03);
@@ -454,7 +454,7 @@
 }
 .badge--status-under_review {
   background: rgba(201, 169, 110, 0.12);
-  color: #b8860b;
+  color: var(--champagne);
   border: 1px solid var(--champagne-border);
 }
 .badge--status-awaiting_evidence {
@@ -485,7 +485,7 @@
 }
 .badge--sev-high {
   background: rgba(255, 159, 67, 0.12);
-  color: #c17d11;
+  color: var(--warning);
   border: 1px solid rgba(255, 159, 67, 0.3);
 }
 .badge--sev-medium {
@@ -784,7 +784,7 @@
   text-transform: uppercase;
   padding: 1px 6px;
   background: rgba(201, 169, 110, 0.15);
-  color: #b8860b;
+  color: var(--champagne);
   border: 1px solid var(--champagne-border);
 }
 
@@ -971,7 +971,7 @@
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: #b8860b;
+  color: var(--champagne);
   padding: var(--space-2) var(--space-3);
   border-bottom: 1px solid var(--champagne-border);
 }
@@ -992,7 +992,7 @@
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: #b8860b;
+  color: var(--champagne);
 }
 
 .adp__party-text {
@@ -1199,7 +1199,7 @@
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: #b8860b;
+  color: var(--champagne);
 }
 
 .adm-note__time {
@@ -1250,7 +1250,7 @@
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: #b8860b;
+  color: var(--champagne);
   cursor: pointer;
   transition:
     background var(--t-fast),

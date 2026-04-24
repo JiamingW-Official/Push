@@ -60,7 +60,7 @@
 .save-toast {
   font-family: var(--font-body);
   font-size: 13px;
-  color: #2a9d8f;
+  color: var(--success);
   font-weight: 700;
   letter-spacing: 0.04em;
   text-align: center;
@@ -95,7 +95,7 @@
   display: flex;
   align-items: flex-start;
   gap: 24px;
-  background: #fff;
+  background: var(--surface-elevated);
   border: 1px solid rgba(0, 48, 73, 0.08);
   padding: var(--space-4);
   margin-bottom: var(--space-4);
@@ -223,7 +223,7 @@
   letter-spacing: 0.06em;
   text-transform: uppercase;
   border: 1.5px solid var(--dark);
-  border-radius: 0;
+  border-radius: var(--r-lg);
   cursor: pointer;
   transition: background var(--t-fast), color var(--t-fast),
     border-color var(--t-fast);
@@ -246,7 +246,7 @@
 
 .pf-stat-card {
   padding: 20px;
-  background: #fff;
+  background: var(--surface-elevated);
   border: 1px solid rgba(0, 48, 73, 0.08);
   border-left: 3px solid var(--tertiary);
 }
@@ -286,7 +286,7 @@
 /* ── Earnings Section ────────────────────────────────────────── */
 
 .pf-earnings-section {
-  background: #fff;
+  background: var(--surface-elevated);
   border: 1px solid rgba(0, 48, 73, 0.08);
   padding: var(--space-4);
   margin-bottom: var(--space-4);
@@ -345,7 +345,7 @@
 /* ── Form card ───────────────────────────────────────────────── */
 
 .profile-form-card {
-  background: #fff;
+  background: var(--surface-elevated);
   border: 1px solid rgba(0, 48, 73, 0.08);
   padding: var(--space-4);
 }
@@ -393,7 +393,7 @@
   padding: 10px var(--space-2);
   background: var(--surface-muted);
   border: 1px solid var(--line-strong);
-  border-radius: 0;
+  border-radius: var(--r-md);
   font-family: var(--font-body);
   font-size: var(--text-body);
   color: var(--dark);
@@ -409,7 +409,7 @@
 
 .form-input:focus {
   border-color: var(--dark);
-  background: #fff;
+  background: var(--surface-elevated);
 }
 
 .form-textarea {
@@ -457,14 +457,14 @@
 .profile-avatar-sm {
   width: 40px;
   height: 40px;
-  background: #003049;
+  background: var(--dark);
   display: flex;
   align-items: center;
   justify-content: center;
   font-family: var(--font-display);
   font-weight: 900;
   font-size: 16px;
-  color: #f5f2ec;
+  color: var(--surface);
   letter-spacing: -0.02em;
   flex-shrink: 0;
 }
@@ -495,7 +495,7 @@
   letter-spacing: 0.08em;
   text-transform: uppercase;
   border: none;
-  border-radius: 0;
+  border-radius: var(--r-lg);
   cursor: pointer;
   box-shadow: var(--btn-shadow);
   transition: box-shadow var(--t-fast), background var(--t-fast);
@@ -523,7 +523,7 @@
   letter-spacing: 0.06em;
   text-transform: uppercase;
   border: 1.5px solid rgba(0, 48, 73, 0.25);
-  border-radius: 0;
+  border-radius: var(--r-lg);
   cursor: pointer;
   transition: border-color var(--t-fast), background var(--t-fast);
 }

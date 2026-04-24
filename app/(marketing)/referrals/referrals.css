@@ -859,7 +859,7 @@
   letter-spacing: 0.04em;
   padding: 14px 28px;
   border: none;
-  border-radius: 0;
+  border-radius: var(--r-lg);
   cursor: pointer;
   transition: box-shadow var(--t-slow), transform var(--t-slow);
   display: inline-flex;

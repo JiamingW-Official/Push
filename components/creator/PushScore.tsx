@@ -22,13 +22,18 @@ export type PushScoreProps = {
   showTierInfo?: boolean;
 };
 
+// Path A brand-palette mapping per Design.md §Tier Identity System.
+// These hex values correspond 1:1 to brand tokens in globals.css — they are
+// kept as literals here because the values are consumed by SVG stroke +
+// inline style paths (not CSS-resolved). Change these only by editing the
+// brand tokens they mirror.
 const TIER_COLORS: Record<CreatorTier, string> = {
-  seed: "#b8a99a",
-  explorer: "#8c6239",
-  operator: "#4a5568",
-  proven: "#c9a96e",
-  closer: "#9b111e",
-  partner: "#1a1a2e",
+  seed: "#669bbc", // --tertiary Steel Blue
+  explorer: "#c9a96e", // --champagne Champagne Gold
+  operator: "#669bbc", // --tertiary Steel Blue
+  proven: "#c1121f", // --primary Flag Red
+  closer: "#780000", // --accent Molten Lava
+  partner: "#003049", // --dark Deep Space Blue
 };
 
 const TIER_LABELS: Record<CreatorTier, string> = {
@@ -177,11 +182,11 @@ export function PushScore({
   };
 
   const labelStyle: React.CSSProperties = {
-    fontFamily: '"CS Genio Mono", monospace',
+    fontFamily: "var(--font-body)",
     fontSize: 10,
     fontWeight: 600,
     letterSpacing: "0.12em",
-    color: "#003049",
+    color: "var(--dark)",
     textTransform: "uppercase",
     lineHeight: 1,
   };
@@ -193,7 +198,7 @@ export function PushScore({
 
   const trackStyle: React.CSSProperties = {
     fill: "none",
-    stroke: "rgba(0,48,73,0.12)",
+    stroke: "var(--line)",
     strokeWidth,
   };
 
@@ -212,7 +217,7 @@ export function PushScore({
   };
 
   const scoreTextStyle: React.CSSProperties = {
-    fontFamily: '"Darky", serif',
+    fontFamily: "var(--font-display)",
     fontWeight: 700,
     // Use tier color for the score number
     fontSize: size * 0.26,
@@ -223,7 +228,7 @@ export function PushScore({
   };
 
   const tierTextStyle: React.CSSProperties = {
-    fontFamily: '"CS Genio Mono", monospace',
+    fontFamily: "var(--font-body)",
     fontWeight: 600,
     fontSize: size * 0.09,
     fill: color,
@@ -281,18 +286,20 @@ export function PushScore({
         >
           {/* Tier badge */}
           <div
+            className={`tier-badge tier-badge--${tier}`}
             style={{
               display: "inline-flex",
               alignItems: "center",
               gap: 5,
               padding: "3px 8px",
               backgroundColor: color,
-              color: "#f5f2ec",
+              color: "var(--surface)",
+              borderLeft: "none",
             }}
           >
             <span
               style={{
-                fontFamily: '"CS Genio Mono", monospace',
+                fontFamily: "var(--font-body)",
                 fontWeight: 700,
                 fontSize: 10,
                 letterSpacing: "0.12em",
@@ -315,7 +322,7 @@ export function PushScore({
             <div
               style={{
                 height: 3,
-                backgroundColor: "rgba(0,48,73,0.10)",
+                backgroundColor: "var(--line)",
                 position: "relative",
                 overflow: "hidden",
                 width: "100%",
@@ -347,16 +354,16 @@ export function PushScore({
               >
                 <span
                   style={{
-                    fontFamily: '"CS Genio Mono", monospace',
+                    fontFamily: "var(--font-body)",
                     fontSize: 9,
-                    color: "rgba(0,48,73,0.45)",
+                    color: "var(--text-muted)",
                   }}
                 >
                   {TIER_LABELS[tier]}
                 </span>
                 <span
                   style={{
-                    fontFamily: '"CS Genio Mono", monospace',
+                    fontFamily: "var(--font-body)",
                     fontSize: 9,
                     fontWeight: 700,
                     color: color,
@@ -371,7 +378,7 @@ export function PushScore({
               <div style={{ textAlign: "center" }}>
                 <span
                   style={{
-                    fontFamily: '"CS Genio Mono", monospace',
+                    fontFamily: "var(--font-body)",
                     fontSize: 9,
                     fontWeight: 700,
                     color: color,
@@ -390,15 +397,15 @@ export function PushScore({
             style={{
               width: "100%",
               padding: "6px 8px",
-              backgroundColor: "rgba(193,18,31,0.05)",
-              borderLeft: "2px solid #c1121f",
+              backgroundColor: "rgba(193, 18, 31, 0.05)",
+              borderLeft: "2px solid var(--primary)",
             }}
           >
             <span
               style={{
-                fontFamily: '"CS Genio Mono", monospace',
+                fontFamily: "var(--font-body)",
                 fontSize: 9,
-                color: "rgba(0,48,73,0.65)",
+                color: "var(--graphite)",
                 lineHeight: 1.4,
                 display: "block",
               }}

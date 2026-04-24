@@ -93,7 +93,7 @@ export default function DraftsLoading() {
               ...skel,
               height: "28px",
               width: `${w}px`,
-              borderRadius: "50vh",
+              borderRadius: "var(--r-pill)",
             }}
           />
         ))}

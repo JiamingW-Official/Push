@@ -124,7 +124,7 @@ function CheckSVG() {
         cx="32"
         cy="32"
         r="28"
-        stroke="#f5f2ec"
+        stroke="var(--surface)"
         strokeWidth="2"
         opacity="0.3"
       />
@@ -132,7 +132,7 @@ function CheckSVG() {
       <path
         className="pc-check-path"
         d="M20 33 L28 41 L44 25"
-        stroke="#f5f2ec"
+        stroke="var(--surface)"
         strokeWidth="2"
         strokeLinecap="square"
         strokeLinejoin="miter"

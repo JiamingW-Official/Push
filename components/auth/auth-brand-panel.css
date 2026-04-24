@@ -5,11 +5,11 @@
 .abp-panel {
   display: flex;
   flex-direction: column;
-  background: var(--dark, #003049);
-  padding: 64px 48px;
+  background: var(--dark);
+  padding: var(--space-8) var(--space-6);
   min-height: 100vh;
   box-sizing: border-box;
-  color: var(--surface, #f5f2ec);
+  color: var(--surface);
   position: relative;
 }
 
@@ -22,14 +22,14 @@
 }
 
 .abp-logo {
-  font-family: "Darky", sans-serif;
+  font-family: var(--font-display);
   font-size: 1.625rem;
   font-weight: 900;
   font-style: italic;
   letter-spacing: -0.06em;
-  color: var(--surface, #f5f2ec);
+  color: var(--surface);
   text-decoration: none;
-  margin-bottom: 48px;
+  margin-bottom: var(--space-6);
   display: inline-block;
 }
 .abp-logo::after {
@@ -37,29 +37,29 @@
   display: block;
   width: 3px;
   height: 3px;
-  background: var(--primary, #c1121f);
+  background: var(--primary);
   margin-top: 2px;
 }
 
 .abp-eyebrow {
-  font-family: "CS Genio Mono", "SF Mono", monospace;
+  font-family: var(--font-body);
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.18em;
   text-transform: uppercase;
   color: rgba(245, 242, 236, 0.55);
   display: block;
-  margin-bottom: 16px;
+  margin-bottom: var(--space-2);
 }
 
 .abp-headline {
-  font-family: "Darky", sans-serif;
+  font-family: var(--font-display);
   font-size: clamp(36px, 4vw, 64px);
   font-weight: 700;
   line-height: 1.05;
   letter-spacing: -0.03em;
-  color: var(--surface, #f5f2ec);
-  margin: 0 0 32px;
+  color: var(--surface);
+  margin: 0 0 var(--space-4);
 }
 
 /* 32px rule divider */
@@ -68,13 +68,13 @@
   width: 32px;
   height: 1px;
   background: rgba(245, 242, 236, 0.18);
-  margin-bottom: 32px;
+  margin-bottom: var(--space-4);
 }
 
 /* ── Moving signal variants ───────────────────────────────── */
 
 .abp-quote {
-  font-family: "CS Genio Mono", "SF Mono", monospace;
+  font-family: var(--font-body);
   font-size: 14px;
   line-height: 1.7;
   color: rgba(245, 242, 236, 0.75);
@@ -87,7 +87,7 @@
 }
 
 .abp-live-stat {
-  font-family: "CS Genio Mono", "SF Mono", monospace;
+  font-family: var(--font-body);
   font-size: 14px;
   color: rgba(245, 242, 236, 0.75);
   margin: 0;
@@ -97,25 +97,25 @@
 
 .abp-editorial {
   margin-top: auto;
-  padding-top: 40px;
+  padding-top: var(--space-5);
   border-top: 1px solid rgba(245, 242, 236, 0.18);
-  margin-bottom: 40px;
+  margin-bottom: var(--space-5);
 }
 
 .abp-big-number {
   display: block;
-  font-family: "Darky", sans-serif;
+  font-family: var(--font-display);
   font-size: clamp(72px, 10vw, 120px);
   font-weight: 700;
   line-height: 1;
-  color: var(--surface, #f5f2ec);
+  color: var(--surface);
 }
 
 .abp-big-label {
-  font-family: "CS Genio Mono", "SF Mono", monospace;
+  font-family: var(--font-body);
   font-size: 13px;
   color: rgba(245, 242, 236, 0.55);
-  margin: 8px 0 0;
+  margin: var(--space-1) 0 0;
   max-width: 200px;
   line-height: 1.5;
 }
@@ -126,33 +126,33 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding-top: 24px;
+  padding-top: var(--space-3);
   border-top: 1px solid rgba(245, 242, 236, 0.1);
 }
 
 .abp-cta-link {
-  font-family: "CS Genio Mono", "SF Mono", monospace;
+  font-family: var(--font-body);
   font-size: 13px;
   font-weight: 600;
-  color: var(--surface, #f5f2ec);
+  color: var(--surface);
   text-decoration: none;
   border-bottom: 1px solid rgba(245, 242, 236, 0.4);
   padding-bottom: 1px;
   transition: border-color 200ms ease;
 }
 .abp-cta-link:hover {
-  border-color: var(--surface, #f5f2ec);
+  border-color: var(--surface);
 }
 
 .abp-back {
-  font-family: "CS Genio Mono", "SF Mono", monospace;
+  font-family: var(--font-body);
   font-size: 13px;
   color: rgba(245, 242, 236, 0.55);
   text-decoration: none;
   transition: color 200ms ease;
 }
 .abp-back:hover {
-  color: var(--surface, #f5f2ec);
+  color: var(--surface);
 }
 
 /* ── Responsive ───────────────────────────────────────────── */

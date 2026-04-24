@@ -18,6 +18,8 @@ export type CreatorTier =
 // Tier data — inline so this file has no external dependency on tier-config
 // ---------------------------------------------------------------------------
 
+// Tier colors reference brand tokens via var() — resolved at paint time from
+// globals.css + tier-identity.css (Path A). No new hex values introduced.
 const TIER_DATA = [
   {
     key: "seed" as CreatorTier,
@@ -26,7 +28,7 @@ const TIER_DATA = [
     minScore: 0,
     maxScore: 39,
     benefit: "Free product",
-    color: "#669bbc",
+    color: "var(--tertiary)",
   },
   {
     key: "explorer" as CreatorTier,
@@ -35,7 +37,7 @@ const TIER_DATA = [
     minScore: 40,
     maxScore: 54,
     benefit: "$12/campaign",
-    color: "#c9a96e",
+    color: "var(--champagne)",
   },
   {
     key: "operator" as CreatorTier,
@@ -44,7 +46,7 @@ const TIER_DATA = [
     minScore: 55,
     maxScore: 64,
     benefit: "$20 + 3%",
-    color: "#669bbc",
+    color: "var(--tertiary)",
   },
   {
     key: "proven" as CreatorTier,
@@ -53,7 +55,7 @@ const TIER_DATA = [
     minScore: 65,
     maxScore: 77,
     benefit: "$32 + 5%",
-    color: "#c1121f",
+    color: "var(--primary)",
   },
   {
     key: "closer" as CreatorTier,
@@ -62,7 +64,7 @@ const TIER_DATA = [
     minScore: 78,
     maxScore: 87,
     benefit: "$55 + 7%",
-    color: "#780000",
+    color: "var(--accent)",
   },
   {
     key: "partner" as CreatorTier,
@@ -71,7 +73,7 @@ const TIER_DATA = [
     minScore: 88,
     maxScore: 100,
     benefit: "$100 + 10%",
-    color: "#003049",
+    color: "var(--dark)",
   },
 ];
 
@@ -217,7 +219,7 @@ export function TierJourney({
                   ${tier.key === "partner" ? "tj__node--partner" : ""}
                 `}
                 style={{
-                  borderColor: isFuture ? "rgba(0,48,73,0.2)" : tier.color,
+                  borderColor: isFuture ? "var(--line-strong)" : tier.color,
                   backgroundColor: isCurrent
                     ? tier.color
                     : isPast
@@ -248,7 +250,7 @@ export function TierJourney({
                 <span
                   className="tj__tier-name"
                   style={{
-                    color: isFuture ? "rgba(0,48,73,0.35)" : tier.color,
+                    color: isFuture ? "var(--text-muted)" : tier.color,
                   }}
                 >
                   {tier.label}
@@ -256,9 +258,7 @@ export function TierJourney({
                 <span
                   className="tj__tier-benefit"
                   style={{
-                    color: isFuture
-                      ? "rgba(0,48,73,0.3)"
-                      : "rgba(0,48,73,0.65)",
+                    color: isFuture ? "var(--text-muted)" : "var(--graphite)",
                   }}
                 >
                   {tier.benefit}

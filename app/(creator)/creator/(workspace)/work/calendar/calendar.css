@@ -932,7 +932,7 @@
   outline: none;
   resize: none;
   transition: border-color 150ms;
-  border-radius: 0;
+  border-radius: var(--r-lg);
 }
 
 .cal-note-input:focus {

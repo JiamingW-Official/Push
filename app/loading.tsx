@@ -31,7 +31,7 @@ export default function RootLoading() {
       <style>{`
         .ld-wrap {
           min-height: calc(100svh - 56px);
-          background: var(--surface, #f5f2ec);
+          background: var(--surface);
           display: flex;
           align-items: center;
           justify-content: center;
@@ -48,18 +48,18 @@ export default function RootLoading() {
           display: inline-flex;
           align-items: center;
           gap: 10px;
-          font-family: 'CS Genio Mono', 'SF Mono', monospace;
+          font-family: var(--font-body);
           font-size: 11px;
           font-weight: 700;
           letter-spacing: 0.14em;
           text-transform: uppercase;
-          color: var(--primary, #c1121f);
+          color: var(--primary);
         }
         .ld-dot {
           width: 6px;
           height: 6px;
-          background: var(--primary, #c1121f);
-          border-radius: 0;
+          background: var(--primary);
+          border-radius: 50%;
           display: inline-block;
           animation: ld-pulse 1.4s ease-in-out infinite;
         }
@@ -68,12 +68,12 @@ export default function RootLoading() {
           50% { opacity: 0.3; transform: scale(0.8); }
         }
         .ld-title {
-          font-family: 'Darky', sans-serif;
+          font-family: var(--font-display);
           font-size: clamp(48px, 8vw, 96px);
           font-weight: 900;
           letter-spacing: -0.045em;
           line-height: 0.95;
-          color: var(--dark, #003049);
+          color: var(--dark);
           display: inline-flex;
           align-items: baseline;
           gap: 10px;
@@ -83,7 +83,7 @@ export default function RootLoading() {
           animation: ld-word-in 680ms cubic-bezier(0.22,1,0.36,1) both;
         }
         .ld-word-1 { animation-delay: 0ms; }
-        .ld-word-2 { animation-delay: 140ms; color: var(--primary, #c1121f); }
+        .ld-word-2 { animation-delay: 140ms; color: var(--primary); }
         .ld-word-3 { animation-delay: 240ms; font-weight: 200; color: rgba(0,48,73,0.45); }
         @keyframes ld-word-in {
           from { opacity: 0; transform: translateY(16px); }
@@ -102,7 +102,7 @@ export default function RootLoading() {
           top: 0;
           height: 100%;
           width: 28%;
-          background: var(--champagne, #c9a96e);
+          background: var(--champagne);
           animation: ld-bar-move 1.4s ease-in-out infinite;
         }
         @keyframes ld-bar-move {
@@ -111,7 +111,7 @@ export default function RootLoading() {
           100% { transform: translateX(380%); }
         }
         .ld-meta {
-          font-family: 'CS Genio Mono', 'SF Mono', monospace;
+          font-family: var(--font-body);
           font-size: 11px;
           letter-spacing: 0.06em;
           color: rgba(0, 48, 73, 0.45);

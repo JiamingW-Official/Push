@@ -142,9 +142,9 @@ function CheckboxIcon({ status }: { status: StepStatus }) {
         border: isDone
           ? "none"
           : isCurrent
-            ? "2px solid #c1121f"
+            ? "2px solid var(--primary)"
             : "2px solid rgba(0,48,73,0.18)",
-        background: isDone ? "#003049" : "transparent",
+        background: isDone ? "var(--dark)" : "transparent",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
@@ -155,7 +155,7 @@ function CheckboxIcon({ status }: { status: StepStatus }) {
         <svg width="12" height="10" viewBox="0 0 12 10" fill="none">
           <path
             d="M1 5L4.5 8.5L11 1.5"
-            stroke="#f5f2ec"
+            stroke="var(--surface)"
             strokeWidth="1.8"
             strokeLinecap="square"
             strokeLinejoin="miter"
@@ -167,7 +167,7 @@ function CheckboxIcon({ status }: { status: StepStatus }) {
           style={{
             width: 8,
             height: 8,
-            background: "#c1121f",
+            background: "var(--primary)",
             borderRadius: 0,
           }}
         />
@@ -187,7 +187,7 @@ function StatusBadge({ status }: { status: StepStatus }) {
           fontSize: 9,
           letterSpacing: "0.08em",
           textTransform: "uppercase",
-          color: "#003049",
+          color: "var(--dark)",
           background: "rgba(0,48,73,0.08)",
           padding: "2px 6px",
           borderRadius: 0,
@@ -205,7 +205,7 @@ function StatusBadge({ status }: { status: StepStatus }) {
           fontSize: 9,
           letterSpacing: "0.08em",
           textTransform: "uppercase",
-          color: "#c1121f",
+          color: "var(--primary)",
           background: "rgba(193,18,31,0.07)",
           padding: "2px 6px",
           borderRadius: 0,
@@ -247,7 +247,7 @@ function ChecklistCard({
           ? "rgba(193,18,31,0.03)"
           : isDone
             ? "rgba(0,48,73,0.02)"
-            : "#ffffff",
+            : "var(--surface-elevated)",
         transition: "border-color 200ms ease, background 200ms ease",
         opacity: isUpcoming ? 0.55 : 1,
       }}
@@ -257,7 +257,7 @@ function ChecklistCard({
         <div
           style={{
             height: 2,
-            background: isDone ? "#003049" : "#c1121f",
+            background: isDone ? "var(--dark)" : "var(--primary)",
             transition: "background 300ms ease",
           }}
         />
@@ -294,7 +294,7 @@ function ChecklistCard({
               color: isDone
                 ? "rgba(0,48,73,0.35)"
                 : isCurrent
-                  ? "#c1121f"
+                  ? "var(--primary)"
                   : "rgba(0,48,73,0.3)",
               letterSpacing: "0.04em",
               flexShrink: 0,
@@ -315,7 +315,7 @@ function ChecklistCard({
               fontFamily: "'CS Genio Mono', monospace",
               fontSize: 13,
               fontWeight: 600,
-              color: isDone ? "rgba(0,48,73,0.35)" : "#003049",
+              color: isDone ? "rgba(0,48,73,0.35)" : "var(--dark)",
               textDecoration: isDone ? "line-through" : "none",
               letterSpacing: "0.01em",
               transition: "color 200ms ease",
@@ -333,7 +333,7 @@ function ChecklistCard({
               style={{
                 width: 5,
                 height: 5,
-                background: isDone ? "rgba(0,48,73,0.25)" : "#c1121f",
+                background: isDone ? "rgba(0,48,73,0.25)" : "var(--primary)",
                 borderRadius: 0,
                 flexShrink: 0,
                 transition: "background 200ms ease",
@@ -378,7 +378,7 @@ function ChecklistCard({
               cursor: "pointer",
               fontFamily: "'CS Genio Mono', monospace",
               fontSize: 10,
-              color: "#669bbc",
+              color: "var(--tertiary)",
               letterSpacing: "0.06em",
               textTransform: "uppercase",
               display: "flex",
@@ -399,7 +399,7 @@ function ChecklistCard({
                 color: "rgba(0,48,73,0.65)",
                 background: "rgba(102,155,188,0.06)",
                 padding: "8px 12px 10px",
-                borderLeft: "2px solid #669bbc",
+                borderLeft: "2px solid var(--tertiary)",
                 lineHeight: "18px",
                 marginBottom: 2,
               }}
@@ -441,7 +441,7 @@ function ProgressIndicator({
           style={{
             fontFamily: "'CS Genio Mono', monospace",
             fontSize: 12,
-            color: "#003049",
+            color: "var(--dark)",
             fontWeight: 700,
             letterSpacing: "0.02em",
           }}
@@ -453,7 +453,7 @@ function ProgressIndicator({
             style={{
               fontFamily: "'CS Genio Mono', monospace",
               fontSize: 10,
-              color: "#003049",
+              color: "var(--dark)",
               letterSpacing: "0.06em",
               textTransform: "uppercase",
               background: "rgba(0,48,73,0.06)",
@@ -478,7 +478,7 @@ function ProgressIndicator({
         <div
           style={{
             height: "100%",
-            background: pct === 100 ? "#003049" : "#c1121f",
+            background: pct === 100 ? "var(--dark)" : "var(--primary)",
             width: `${pct}%`,
             transition: "width 400ms cubic-bezier(0.16, 1, 0.3, 1)",
           }}
@@ -501,7 +501,7 @@ function ProgressIndicator({
               width: 4,
               height: 4,
               borderRadius: 0,
-              background: i < checked ? "#003049" : "rgba(0,48,73,0.12)",
+              background: i < checked ? "var(--dark)" : "rgba(0,48,73,0.12)",
               transition: "background 300ms ease",
             }}
           />
@@ -540,7 +540,7 @@ export function CampaignChecklist({
   return (
     <div
       style={{
-        background: "#fafaf7",
+        background: "var(--surface-bright)",
         border: "1px solid rgba(0,48,73,0.1)",
         maxWidth: 500,
         width: "100%",
@@ -555,7 +555,7 @@ export function CampaignChecklist({
             position: "absolute",
             top: 12,
             right: 12,
-            background: "#f5f2ec",
+            background: "var(--surface)",
             border: "1px solid rgba(0,48,73,0.12)",
             padding: "2px 8px",
             fontSize: 10,
@@ -574,7 +574,7 @@ export function CampaignChecklist({
         style={{
           padding: "18px 20px 16px",
           borderBottom: "1px solid rgba(0,48,73,0.08)",
-          background: "#f5f2ec",
+          background: "var(--surface)",
         }}
       >
         <p
@@ -583,7 +583,7 @@ export function CampaignChecklist({
             fontSize: 11,
             letterSpacing: "0.08em",
             textTransform: "uppercase",
-            color: "#669bbc",
+            color: "var(--tertiary)",
             fontFamily: "'CS Genio Mono', monospace",
             display: "flex",
             alignItems: "center",
@@ -598,7 +598,7 @@ export function CampaignChecklist({
             fontFamily: "Darky, Georgia, serif",
             fontWeight: 700,
             fontSize: 22,
-            color: "#003049",
+            color: "var(--dark)",
             lineHeight: 1.15,
             letterSpacing: "-0.02em",
           }}
@@ -619,7 +619,7 @@ export function CampaignChecklist({
                   fontFamily: "'CS Genio Mono', monospace",
                   letterSpacing: "0.04em",
                   textTransform: "uppercase",
-                  color: "#c1121f",
+                  color: "var(--primary)",
                   background: "rgba(193,18,31,0.06)",
                   padding: "3px 8px",
                   border: "1px solid rgba(193,18,31,0.15)",
@@ -691,8 +691,8 @@ export function CampaignChecklist({
             style={{
               width: "100%",
               height: 48,
-              background: "#c1121f",
-              color: "#f5f2ec",
+              background: "var(--primary)",
+              color: "var(--surface)",
               border: "none",
               borderRadius: 0,
               cursor: "pointer",
@@ -709,11 +709,11 @@ export function CampaignChecklist({
             }}
             onMouseEnter={(e) => {
               (e.currentTarget as HTMLButtonElement).style.background =
-                "#780000";
+                "var(--accent)";
             }}
             onMouseLeave={(e) => {
               (e.currentTarget as HTMLButtonElement).style.background =
-                "#c1121f";
+                "var(--primary)";
             }}
           >
             Submit proof when ready →

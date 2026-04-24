@@ -1,33 +1,35 @@
 /* ============================================================
-   Job Detail Page — Premium editorial
-   Design.md compliant: 0 border-radius / 6 brand colors /
-   Darky + CS Genio Mono / 8px grid / Light mode only
+   Job Detail — v7 Bold Modular treatment
+   Design.md authority: border-radius:0 (except v7 utility classes
+   that explicitly set --r-*), 6 brand colors, Darky + CS Genio Mono,
+   8px grid, light mode only
    ============================================================ */
 
 /* ------------------------------------------------------------
-   Hero
+   Hero — uses .bg-hero-ink utility
    ------------------------------------------------------------ */
-.job-hero {
-  background: var(--dark);
-  padding-top: 96px; /* clear fixed nav */
-  padding-bottom: var(--space-10);
-  position: relative;
-  overflow: hidden;
+.job-hero-v7 {
+  /* Visual treatment from utility classes; reserved hook. */
 }
 
-.job-hero::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(
-    ellipse 60% 50% at 85% 20%,
-    rgba(102, 155, 188, 0.07) 0%,
-    transparent 65%
-  );
-  pointer-events: none;
-  z-index: 0;
+.job-back-v7 {
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(245, 242, 236, 0.55);
+  text-decoration: none;
+  transition: color 250ms ease;
 }
 
+.job-back-v7:hover {
+  color: #fff;
+}
+
+/* ------------------------------------------------------------
+   Body layout
+   ------------------------------------------------------------ */
 .job-inner {
   max-width: var(--content-width);
   margin: 0 auto;
@@ -36,79 +38,9 @@
   z-index: 1;
 }
 
-.job-back {
-  display: inline-block;
-  font-family: var(--font-body);
-  font-size: var(--text-small);
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: rgba(245, 242, 236, 0.55);
-  text-decoration: none;
-  margin-bottom: var(--space-8);
-  transition: color 250ms ease;
-}
-
-.job-back:hover {
-  color: #fff;
-}
-
-.job-hero-content {
-  max-width: 800px;
-}
-
-.job-meta-row {
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
-  margin-bottom: var(--space-3);
-  flex-wrap: wrap;
-}
-
-.job-dept-tag {
-  font-family: var(--font-body);
-  font-size: var(--text-eyebrow);
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--tertiary);
-}
-
-.job-divider {
-  color: rgba(255, 255, 255, 0.2);
-  font-family: var(--font-body);
-}
-
-.job-location,
-.job-type {
-  font-family: var(--font-body);
-  font-size: var(--text-small);
-  color: rgba(245, 242, 236, 0.55);
-}
-
-.job-title {
-  font-family: var(--font-display);
-  font-size: clamp(40px, 6vw, 88px);
-  font-weight: 900;
-  letter-spacing: -0.05em;
-  line-height: 0.95;
-  color: #fff;
-  margin-bottom: var(--space-4);
-}
-
-.job-comp {
-  font-family: var(--font-body);
-  font-size: var(--text-body);
-  color: var(--champagne);
-  letter-spacing: 0.02em;
-}
-
-/* ------------------------------------------------------------
-   Body layout
-   ------------------------------------------------------------ */
 .job-body {
   background: var(--surface);
-  padding: var(--space-10) 0 var(--space-15);
+  padding: var(--space-15) 0 var(--space-15);
 }
 
 .job-body-grid {
@@ -124,12 +56,12 @@
 .job-content {
   display: flex;
   flex-direction: column;
-  gap: var(--space-8);
+  gap: var(--space-10);
 }
 
 .job-section {
   padding-bottom: var(--space-8);
-  border-bottom: 1px solid var(--line);
+  border-bottom: 1px solid var(--hairline-2);
 }
 
 .job-section:last-child {
@@ -137,27 +69,33 @@
   padding-bottom: 0;
 }
 
+.job-section .section-marker {
+  margin-bottom: var(--space-3);
+}
+
 .job-section--apply {
   background: var(--surface-bright);
   padding: var(--space-8);
-  border: 1px solid var(--line);
-  border-bottom: 1px solid var(--line);
+  border: 1px solid var(--hairline-2);
 }
 
 .job-section-title {
   font-family: var(--font-display);
-  font-size: var(--text-h2);
-  font-weight: 700;
-  letter-spacing: -0.03em;
-  color: var(--dark);
-  margin-bottom: var(--space-4);
+  font-size: clamp(28px, 3.5vw, 44px);
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  line-height: 1.05;
+  color: var(--ink);
+  margin: var(--space-2) 0 var(--space-5);
 }
 
-.job-section-body {
-  font-family: var(--font-body);
-  font-size: var(--text-body);
-  line-height: 1.75;
-  color: var(--graphite);
+.job-section-title .wt-900 {
+  font-weight: 900;
+}
+
+.job-section-title .wt-300 {
+  font-weight: 300;
+  color: var(--ink-4);
 }
 
 /* ------------------------------------------------------------
@@ -166,38 +104,41 @@
 .job-list {
   display: flex;
   flex-direction: column;
-  gap: var(--space-2);
+  gap: var(--space-3);
+  list-style: none;
+  margin: 0;
+  padding: 0;
 }
 
 .job-list-item {
   display: grid;
   grid-template-columns: 24px 1fr;
-  gap: var(--space-1);
+  gap: var(--space-2);
   font-family: var(--font-body);
-  font-size: var(--text-body);
-  line-height: 1.65;
-  color: var(--graphite);
+  font-size: 16px;
+  line-height: 1.7;
+  color: var(--ink-3);
 }
 
 .job-list--muted .job-list-item {
-  color: var(--text-muted);
+  color: var(--ink-4);
 }
 
 .job-list-bullet {
   font-family: var(--font-body);
-  font-size: var(--text-small);
+  font-size: 14px;
   font-weight: 700;
-  color: var(--primary);
-  padding-top: 2px;
+  color: var(--brand-red);
+  padding-top: 4px;
   flex-shrink: 0;
 }
 
 .job-list-bullet--check {
-  color: #22a665; /* success green — only exception to 6-color rule, used for checkmarks */
+  color: var(--success);
 }
 
 .job-list--muted .job-list-bullet {
-  color: var(--text-muted);
+  color: var(--ink-5);
 }
 
 /* ------------------------------------------------------------
@@ -205,34 +146,35 @@
    ------------------------------------------------------------ */
 .job-sidebar {
   position: sticky;
-  top: 96px; /* below fixed header */
+  top: 96px;
   display: flex;
   flex-direction: column;
   gap: 0;
-  border: 1px solid var(--line);
+  border: 1px solid var(--hairline-2);
   background: var(--surface-elevated);
 }
 
 .job-sidebar-card {
   padding: var(--space-3) var(--space-4);
-  border-bottom: 1px solid var(--line);
+  border-bottom: 1px solid var(--hairline-2);
 }
 
 .job-sidebar-label {
   font-family: var(--font-body);
-  font-size: var(--text-caption);
+  font-size: 10px;
   font-weight: 700;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--text-muted);
-  margin-bottom: 4px;
+  color: var(--ink-4);
+  margin: 0 0 4px;
 }
 
 .job-sidebar-value {
   font-family: var(--font-body);
-  font-size: var(--text-small);
-  color: var(--dark);
+  font-size: 14px;
+  color: var(--ink);
   font-weight: 600;
+  margin: 0;
 }
 
 .job-sidebar-cta {
@@ -245,18 +187,18 @@
   display: block;
   text-align: center;
   font-family: var(--font-body);
-  font-size: var(--text-caption);
+  font-size: 10px;
   font-weight: 700;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: var(--text-muted);
+  color: var(--ink-4);
   text-decoration: none;
   padding-bottom: var(--space-4);
   transition: color 250ms ease;
 }
 
 .job-sidebar-back:hover {
-  color: var(--dark);
+  color: var(--ink);
 }
 
 /* ------------------------------------------------------------
@@ -286,21 +228,21 @@
 
 .job-form-label {
   font-family: var(--font-body);
-  font-size: var(--text-small);
+  font-size: 13px;
   font-weight: 700;
   letter-spacing: 0.04em;
-  color: var(--dark);
+  color: var(--ink);
 }
 
 .job-form-input,
 .job-form-textarea {
   padding: 14px 16px;
   background: var(--surface-elevated);
-  border: 1px solid var(--line-strong);
-  border-radius: 0;
+  border: 1px solid var(--hairline-2);
+  border-radius: var(--r-lg);
   font-family: var(--font-body);
-  font-size: var(--text-body);
-  color: var(--dark);
+  font-size: 15px;
+  color: var(--ink);
   outline: none;
   transition: border-color 200ms ease, box-shadow 200ms ease;
   resize: vertical;
@@ -308,13 +250,13 @@
 
 .job-form-input::placeholder,
 .job-form-textarea::placeholder {
-  color: var(--text-muted);
+  color: var(--ink-5);
 }
 
 .job-form-input:focus,
 .job-form-textarea:focus {
-  border-color: var(--dark);
-  box-shadow: 0 0 0 3px rgba(0, 48, 73, 0.08);
+  border-color: var(--ink);
+  box-shadow: 0 0 0 3px rgba(10, 10, 10, 0.06);
 }
 
 .job-form-input:disabled,
@@ -334,19 +276,19 @@
   gap: var(--space-2);
   padding: 14px 16px;
   background: var(--surface-elevated);
-  border: 1px dashed var(--line-strong);
-  border-radius: 0;
+  border: 1px dashed var(--hairline-2);
+  border-radius: var(--r-lg);
   font-family: var(--font-body);
-  font-size: var(--text-small);
-  color: var(--graphite);
+  font-size: 14px;
+  color: var(--ink-3);
   cursor: pointer;
   transition: border-color 200ms ease, background 200ms ease;
   text-align: left;
 }
 
 .job-form-file-trigger:hover {
-  border-color: var(--dark);
-  background: rgba(0, 48, 73, 0.03);
+  border-color: var(--ink);
+  background: rgba(10, 10, 10, 0.02);
 }
 
 .job-form-file-trigger:disabled {
@@ -356,12 +298,12 @@
 
 .job-form-file-icon {
   font-size: 18px;
-  color: var(--primary);
+  color: var(--brand-red);
   font-weight: 900;
 }
 
 .job-form-file-name {
-  color: var(--dark);
+  color: var(--ink);
   font-weight: 600;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -378,12 +320,12 @@
 
 .job-form-disclaimer {
   font-family: var(--font-body);
-  font-size: var(--text-caption);
-  color: var(--text-muted);
+  font-size: 12px;
+  color: var(--ink-4);
 }
 
 /* ------------------------------------------------------------
-   Buttons
+   Buttons (kept for form internals)
    ------------------------------------------------------------ */
 .job-btn-primary {
   display: inline-flex;
@@ -391,18 +333,18 @@
   justify-content: center;
   gap: var(--space-2);
   padding: 16px 32px;
-  background: var(--primary);
+  background: var(--brand-red);
   color: #fff;
   font-family: var(--font-body);
-  font-size: var(--text-small);
+  font-size: 13px;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
   text-decoration: none;
-  border-radius: 0;
+  border-radius: var(--r-lg);
   border: none;
   cursor: pointer;
-  box-shadow: 4px 4px 0 var(--accent);
+  box-shadow: var(--shadow-2);
   transition:
     box-shadow 300ms ease,
     transform 120ms ease,
@@ -411,12 +353,12 @@
 }
 
 .job-btn-primary:hover:not(:disabled) {
-  box-shadow: 6px 6px 0 var(--dark);
+  box-shadow: var(--shadow-3);
+  transform: translateY(-2px);
 }
 
 .job-btn-primary:active:not(:disabled) {
   transform: scale(0.97);
-  box-shadow: 2px 2px 0 var(--accent);
 }
 
 .job-btn-primary:disabled {
@@ -431,21 +373,21 @@
   gap: var(--space-2);
   padding: 14px 28px;
   background: transparent;
-  color: var(--dark);
+  color: var(--ink);
   font-family: var(--font-body);
-  font-size: var(--text-small);
+  font-size: 13px;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
   text-decoration: none;
-  border-radius: 0;
-  border: 1px solid var(--dark);
+  border-radius: var(--r-lg);
+  border: 1px solid var(--ink);
   cursor: pointer;
   transition: background 300ms ease, color 300ms ease;
 }
 
 .job-btn-secondary:hover {
-  background: var(--dark);
+  background: var(--ink);
   color: #fff;
 }
 
@@ -482,11 +424,11 @@
 
 .job-apply-success-label {
   font-family: var(--font-body);
-  font-size: var(--text-eyebrow);
+  font-size: 11px;
   font-weight: 700;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: var(--tertiary);
+  color: var(--brand-red);
 }
 
 .job-apply-success-headline {
@@ -495,19 +437,19 @@
   font-weight: 900;
   letter-spacing: -0.05em;
   line-height: 0.9;
-  color: var(--dark);
+  color: var(--ink);
 }
 
 .job-apply-success-body {
   font-family: var(--font-body);
-  font-size: var(--text-body);
+  font-size: 16px;
   line-height: 1.7;
-  color: var(--graphite);
+  color: var(--ink-3);
   max-width: 520px;
 }
 
 .job-apply-success-body strong {
-  color: var(--dark);
+  color: var(--ink);
 }
 
 /* ------------------------------------------------------------
@@ -536,7 +478,7 @@
 
   .job-sidebar {
     position: static;
-    order: -1; /* show above content on mobile */
+    order: -1;
   }
 
   .job-form-grid {
@@ -563,9 +505,12 @@
     width: 100%;
     justify-content: center;
   }
+}
 
-  .job-meta-row {
-    flex-wrap: wrap;
-    gap: var(--space-1);
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
   }
 }

@@ -1,13 +1,13 @@
 /* ============================================================
    Post-Campaign Summary — post-campaign.css
-   Design System: border-radius: 0, Push brand colors
+   Design System v7: iOS 26 continuous corner + soft elevation
    ============================================================ */
 
 /* ── Page shell ──────────────────────────────────────────── */
 
 .pc-page {
   min-height: 100svh;
-  background: #fafaf7;
+  background: var(--surface-bright);
   display: flex;
   flex-direction: column;
   font-family: var(--font-body, "CS Genio Mono", monospace);
@@ -16,7 +16,7 @@
 /* ── Hero panel ──────────────────────────────────────────── */
 
 .pc-hero {
-  background: linear-gradient(160deg, #003049 0%, #780000 100%);
+  background: linear-gradient(160deg, var(--dark) 0%, var(--accent) 100%);
   padding: var(--space-8, 64px) var(--space-4, 32px) var(--space-6, 48px);
   text-align: center;
   width: 100%;
@@ -69,7 +69,7 @@
 }
 
 .pc-hero-eyebrow {
-  color: #669bbc;
+  color: var(--tertiary);
   font-size: 11px;
   text-transform: uppercase;
   letter-spacing: 0.1em;
@@ -83,7 +83,7 @@
   font-family: var(--font-display, "Darky", serif);
   font-weight: 800;
   font-size: clamp(32px, 7vw, 52px);
-  color: #f5f2ec;
+  color: var(--surface);
   letter-spacing: -0.04em;
   margin: 0 0 12px;
   line-height: 1.0;
@@ -101,7 +101,7 @@
 }
 
 .pc-merchant-name {
-  color: #f5f2ec;
+  color: var(--surface);
   font-size: 14px;
   opacity: 0.8;
   font-family: var(--font-body, "CS Genio Mono", monospace);
@@ -110,14 +110,14 @@
 .pc-category-chip {
   background: rgba(102, 155, 188, 0.2);
   border: 1px solid rgba(102, 155, 188, 0.4);
-  color: #669bbc;
+  color: var(--tertiary);
   font-size: 11px;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   padding: 3px 8px;
   font-family: var(--font-body, "CS Genio Mono", monospace);
   font-weight: 700;
-  border-radius: 0;
+  border-radius: var(--r-sm);
 }
 
 /* Hero payout callout — large celebratory number */
@@ -140,7 +140,7 @@
   font-family: var(--font-display, "Darky", serif);
   font-weight: 900;
   font-size: clamp(48px, 10vw, 80px);
-  color: #f5f2ec;
+  color: var(--surface);
   letter-spacing: -0.06em;
   line-height: 1;
   display: block;
@@ -184,7 +184,7 @@
 
 .pc-section {
   margin-bottom: var(--space-5, 40px);
-  background: white;
+  background: var(--surface-elevated);
   border: 1px solid rgba(0, 48, 73, 0.08);
   padding: var(--space-4, 32px);
 }
@@ -197,7 +197,7 @@
 .pc-section:nth-child(5) { animation: pc-fade-up 500ms ease 500ms both; }
 
 .pc-section-eyebrow {
-  color: #669bbc;
+  color: var(--tertiary);
   font-size: 11px;
   text-transform: uppercase;
   letter-spacing: 0.1em;
@@ -235,7 +235,7 @@
   font-family: var(--font-display, "Darky", serif);
   font-weight: 800;
   font-size: 28px;
-  color: #003049;
+  color: var(--dark);
   letter-spacing: -0.04em;
   line-height: 1;
   display: block;
@@ -306,17 +306,17 @@
 .pc-timeline-dot {
   width: 12px;
   height: 12px;
-  border-radius: 0;
+  border-radius: var(--r-full);
   flex-shrink: 0;
   margin-top: 3px;
 }
 
 .pc-timeline-dot--done {
-  background: #c1121f;
+  background: var(--primary);
 }
 
 .pc-timeline-dot--current {
-  background: #c1121f;
+  background: var(--primary);
   box-shadow: 0 0 0 4px rgba(193, 18, 31, 0.15);
   animation: pulse-dot 2s infinite;
 }
@@ -352,13 +352,13 @@
 .pc-timeline-label {
   font-size: 14px;
   font-weight: 700;
-  color: #003049;
+  color: var(--dark);
   margin-bottom: 2px;
   font-family: var(--font-body, "CS Genio Mono", monospace);
 }
 
 .pc-timeline-label--done {
-  color: #c1121f;
+  color: var(--primary);
 }
 
 .pc-timeline-label--pending {
@@ -387,7 +387,7 @@
   font-family: var(--font-display, "Darky", serif);
   font-weight: 900;
   font-size: 40px;
-  color: #2a9d8f;
+  color: var(--success);
   letter-spacing: -0.04em;
   line-height: 1;
   flex-shrink: 0;
@@ -401,7 +401,7 @@
   font-family: var(--font-body, "CS Genio Mono", monospace);
   font-size: 13px;
   font-weight: 700;
-  color: #003049;
+  color: var(--dark);
   display: block;
   margin-bottom: 2px;
 }
@@ -427,13 +427,13 @@
 }
 
 .pc-score-arrow {
-  color: #2a9d8f;
+  color: var(--success);
   font-size: 16px;
 }
 
 .pc-score-after {
   font-weight: 700;
-  color: #003049;
+  color: var(--dark);
   font-size: 15px;
 }
 
@@ -448,7 +448,7 @@
 
 .pc-score-fill {
   height: 100%;
-  background: linear-gradient(90deg, #c1121f, #780000);
+  background: linear-gradient(90deg, var(--primary), var(--accent));
   transition: width 1.2s cubic-bezier(0.22, 1, 0.36, 1) 500ms;
 }
 
@@ -465,7 +465,7 @@
   font-family: var(--font-display, "Darky", serif);
   font-weight: 900;
   font-size: 32px;
-  color: #2a9d8f;
+  color: var(--success);
   letter-spacing: -0.04em;
   line-height: 1;
   margin: 4px 0 8px;
@@ -482,11 +482,11 @@
 .pc-tier-progress {
   margin-top: 12px;
   font-size: 13px;
-  color: #003049;
+  color: var(--dark);
   font-family: var(--font-body, "CS Genio Mono", monospace);
   background: rgba(0, 48, 73, 0.04);
   padding: 10px 12px;
-  border-left: 3px solid #c1121f;
+  border-left: 3px solid var(--primary);
 }
 
 /* Mini tier journey */
@@ -511,7 +511,7 @@
 .pc-tier-node-dot {
   width: 12px;
   height: 12px;
-  border-radius: 0;
+  border-radius: var(--r-full);
   background: rgba(0, 48, 73, 0.12);
   border: 2px solid transparent;
   flex-shrink: 0;
@@ -520,20 +520,20 @@
 }
 
 .pc-tier-node-dot--done {
-  background: #c1121f;
-  border-color: #c1121f;
+  background: var(--primary);
+  border-color: var(--primary);
 }
 
 .pc-tier-node-dot--current {
-  background: #003049;
-  border-color: #003049;
+  background: var(--dark);
+  border-color: var(--dark);
   box-shadow: 0 0 0 3px rgba(0, 48, 73, 0.2);
   animation: pulse-dot 2s infinite;
 }
 
 .pc-tier-node-dot--next {
   background: transparent;
-  border-color: #c1121f;
+  border-color: var(--primary);
   animation: pc-border-pulse 2s ease-in-out infinite;
 }
 
@@ -552,12 +552,12 @@
 }
 
 .pc-tier-node-label--current {
-  color: #003049;
+  color: var(--dark);
   font-weight: 700;
 }
 
 .pc-tier-node-label--next {
-  color: #c1121f;
+  color: var(--primary);
   font-weight: 700;
 }
 
@@ -570,14 +570,14 @@
 }
 
 .pc-tier-connector--done {
-  background: #c1121f;
+  background: var(--primary);
 }
 
 .pc-tier-urgency {
   margin-top: 12px;
   font-family: var(--font-body, "CS Genio Mono", monospace);
   font-size: 12px;
-  color: #c1121f;
+  color: var(--primary);
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.06em;
@@ -591,7 +591,7 @@
   display: inline-block;
   width: 6px;
   height: 6px;
-  background: #c1121f;
+  background: var(--primary);
   flex-shrink: 0;
   animation: pulse-dot 1.5s infinite;
 }
@@ -625,16 +625,16 @@
   width: 8px;
   height: 8px;
   box-shadow:
-    10vw 5vh 0 0 #c1121f,
-    20vw 8vh 0 0 #f5f2ec,
-    35vw 3vh 0 0 #669bbc,
-    50vw 12vh 0 0 #c1121f,
-    65vw 6vh 0 0 #f5f2ec,
-    80vw 10vh 0 0 #669bbc,
-    90vw 4vh 0 0 #c1121f,
-    15vw 15vh 0 0 #f5f2ec,
-    45vw 18vh 0 0 #c1121f,
-    75vw 7vh 0 0 #f5f2ec;
+    10vw 5vh 0 0 var(--primary),
+    20vw 8vh 0 0 var(--surface),
+    35vw 3vh 0 0 var(--tertiary),
+    50vw 12vh 0 0 var(--primary),
+    65vw 6vh 0 0 var(--surface),
+    80vw 10vh 0 0 var(--tertiary),
+    90vw 4vh 0 0 var(--primary),
+    15vw 15vh 0 0 var(--surface),
+    45vw 18vh 0 0 var(--primary),
+    75vw 7vh 0 0 var(--surface);
   animation: pc-cele-fall 2.5s linear infinite;
 }
 
@@ -642,13 +642,13 @@
   width: 5px;
   height: 5px;
   box-shadow:
-    5vw 10vh 0 0 #f5f2ec,
-    25vw 20vh 0 0 #c1121f,
-    55vw 5vh 0 0 #669bbc,
-    70vw 15vh 0 0 #f5f2ec,
-    85vw 9vh 0 0 #c1121f,
-    40vw 22vh 0 0 #669bbc,
-    60vw 3vh 0 0 #f5f2ec;
+    5vw 10vh 0 0 var(--surface),
+    25vw 20vh 0 0 var(--primary),
+    55vw 5vh 0 0 var(--tertiary),
+    70vw 15vh 0 0 var(--surface),
+    85vw 9vh 0 0 var(--primary),
+    40vw 22vh 0 0 var(--tertiary),
+    60vw 3vh 0 0 var(--surface);
   animation: pc-cele-fall 3.5s linear 0.8s infinite;
 }
 
@@ -662,7 +662,7 @@
   font-size: 11px;
   text-transform: uppercase;
   letter-spacing: 0.12em;
-  color: #669bbc;
+  color: var(--tertiary);
   margin-bottom: 16px;
   position: relative;
   z-index: 1;
@@ -672,7 +672,7 @@
   font-family: var(--font-display, "Darky", serif);
   font-weight: 900;
   font-size: clamp(36px, 8vw, 64px);
-  color: #f5f2ec;
+  color: var(--surface);
   letter-spacing: -0.04em;
   line-height: 1.0;
   margin-bottom: 8px;
@@ -684,7 +684,7 @@
   font-family: var(--font-display, "Darky", serif);
   font-weight: 900;
   font-size: clamp(28px, 6vw, 48px);
-  color: #c1121f;
+  color: var(--primary);
   letter-spacing: -0.02em;
   margin-bottom: 24px;
   position: relative;
@@ -708,19 +708,19 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: #f5f2ec;
-  background: #c1121f;
+  color: var(--surface);
+  background: var(--primary);
   border: none;
   padding: 14px 28px;
   cursor: pointer;
-  border-radius: 0;
+  border-radius: var(--r-lg);
   position: relative;
   z-index: 1;
   transition: background 150ms ease;
 }
 
 .pc-celebration-dismiss:hover {
-  background: #780000;
+  background: var(--accent);
 }
 
 /* ── Payout ──────────────────────────────────────────────── */
@@ -729,7 +729,7 @@
   font-family: var(--font-display, "Darky", serif);
   font-weight: 900;
   font-size: 48px;
-  color: #003049;
+  color: var(--dark);
   letter-spacing: -0.06em;
   line-height: 1;
   margin-bottom: 8px;
@@ -746,14 +746,14 @@
   display: inline-block;
   background: rgba(0, 48, 73, 0.06);
   border: 1px solid rgba(0, 48, 73, 0.12);
-  color: #003049;
+  color: var(--dark);
   font-size: 11px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   padding: 4px 10px;
   font-family: var(--font-body, "CS Genio Mono", monospace);
-  border-radius: 0;
+  border-radius: var(--r-sm);
 }
 
 /* ── Next Steps CTA grid ─────────────────────────────────── */
@@ -784,13 +784,13 @@
 
 .pc-next-step-card--primary {
   grid-column: 1 / -1;
-  background: #003049;
-  border-color: #003049;
+  background: var(--dark);
+  border-color: var(--dark);
 }
 
 .pc-next-step-card--primary:hover {
-  background: #780000;
-  border-color: #780000;
+  background: var(--accent);
+  border-color: var(--accent);
 }
 
 .pc-next-step-icon {
@@ -804,11 +804,11 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  color: #003049;
+  color: var(--dark);
 }
 
 .pc-next-step-card--primary .pc-next-step-title {
-  color: #f5f2ec;
+  color: var(--surface);
   font-size: 13px;
 }
 
@@ -838,22 +838,22 @@
   justify-content: center;
   width: 100%;
   height: 52px;
-  background: #c1121f;
-  color: white;
+  background: var(--primary);
+  color: var(--surface-elevated);
   font-family: var(--font-body, "CS Genio Mono", monospace);
   font-weight: 700;
   font-size: 14px;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   text-decoration: none;
-  border-radius: 0;
+  border-radius: var(--r-lg);
   border: none;
   cursor: pointer;
   transition: background 150ms ease;
 }
 
 .pc-primary-btn:hover {
-  background: #780000;
+  background: var(--accent);
 }
 
 .pc-secondary-btn {
@@ -864,14 +864,14 @@
   height: 44px;
   border: 2px solid rgba(0, 48, 73, 0.2);
   background: transparent;
-  color: #003049;
+  color: var(--dark);
   font-family: var(--font-body, "CS Genio Mono", monospace);
   font-weight: 700;
   font-size: 13px;
   text-transform: uppercase;
   letter-spacing: 0.05em;
   text-decoration: none;
-  border-radius: 0;
+  border-radius: var(--r-lg);
   cursor: pointer;
   transition: border-color 150ms ease, background 150ms ease;
 }
@@ -903,7 +903,7 @@
 .pc-feedback-waiting-dot {
   width: 8px;
   height: 8px;
-  background: #669bbc;
+  background: var(--tertiary);
   flex-shrink: 0;
   animation: pulse-dot 2s infinite;
 }
@@ -927,13 +927,13 @@
 }
 
 .pc-feedback-star--filled {
-  color: #c1121f;
+  color: var(--primary);
 }
 
 .pc-feedback-comment {
   font-family: var(--font-body, "CS Genio Mono", monospace);
   font-size: 13px;
-  color: #003049;
+  color: var(--dark);
   line-height: 1.6;
   border-left: 3px solid rgba(0, 48, 73, 0.12);
   padding-left: 12px;
@@ -953,7 +953,7 @@
 
 .pc-motivation-count {
   font-weight: 700;
-  color: #003049;
+  color: var(--dark);
   margin-bottom: 6px;
 }
 

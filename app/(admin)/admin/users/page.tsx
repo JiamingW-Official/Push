@@ -334,7 +334,10 @@ export default function AdminUsersPage() {
             </div>
             <div className="users-hero-stat-divider" />
             <div className="users-hero-stat">
-              <div className="users-hero-stat-num" style={{ color: "#f87171" }}>
+              <div
+                className="users-hero-stat-num"
+                style={{ color: "var(--primary)" }}
+              >
                 {stats?.suspended ?? 0}
               </div>
               <div className="users-hero-stat-label">Suspended</div>
@@ -500,7 +503,7 @@ export default function AdminUsersPage() {
                             fontWeight: 700,
                             color:
                               user.push_score >= 80
-                                ? "#15803d"
+                                ? "var(--success-dark)"
                                 : user.push_score >= 50
                                   ? "var(--dark)"
                                   : "var(--graphite)",

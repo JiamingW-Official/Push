@@ -112,75 +112,323 @@ export default function ForMerchantsPage() {
     <>
       <ScrollRevealInit />
 
-      {/* ── Hero ─────────────────────────────────────────────── */}
-      <section className="fm-hero">
-        <div className="container fm-hero-inner">
-          <p className="eyebrow fm-eyebrow">Push for Merchants · NYC</p>
+      {/* ═══════════════ 01 — HERO ═══════════════ */}
+      <section
+        className="bg-hero-ink grain-overlay bg-vignette fm-hero"
+        style={{
+          position: "relative",
+          minHeight: "100vh",
+          display: "flex",
+          flexDirection: "column",
+          padding: "clamp(24px, 4vw, 64px)",
+          overflow: "hidden",
+        }}
+      >
+        {/* Top row: pill + date */}
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            flexWrap: "wrap",
+            gap: 16,
+            position: "relative",
+            zIndex: 3,
+          }}
+        >
+          <span className="pill-lux" style={{ color: "#fff" }}>
+            For venues in SoHo / Tribeca / Chinatown
+          </span>
+          <span className="eyebrow-lux" style={{ color: "var(--champagne)" }}>
+            Pilot opens June 22
+          </span>
+        </div>
 
-          <h1 className="fm-headline">
-            <span className="fm-headline-black">Find creators who</span>
-            <span className="fm-headline-ghost" aria-hidden="true">
-              Find creators who
+        {/* Hero center */}
+        <div
+          style={{
+            flex: 1,
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            position: "relative",
+            zIndex: 3,
+            maxWidth: 1180,
+            margin: "0 auto",
+            width: "100%",
+            paddingTop: "clamp(48px, 10vh, 120px)",
+            paddingBottom: "clamp(48px, 10vh, 120px)",
+          }}
+        >
+          <div
+            className="section-marker"
+            data-num="01"
+            style={{ color: "rgba(255,255,255,0.55)" }}
+          >
+            The deal
+          </div>
+
+          {/* Massive Darky 900 headline + brand-red period */}
+          <h1
+            style={{
+              fontFamily: "var(--font-display)",
+              fontSize: "clamp(72px, 14vw, 220px)",
+              fontWeight: 900,
+              letterSpacing: "-0.07em",
+              lineHeight: 0.86,
+              color: "#fff",
+              margin: 0,
+            }}
+          >
+            Pay per visit
+            <span
+              aria-hidden="true"
+              style={{
+                color: "var(--brand-red)",
+                marginLeft: "-0.04em",
+              }}
+            >
+              .
             </span>
-            <em className="fm-headline-em">actually</em>
-            <span className="fm-headline-light">drive foot traffic.</span>
           </h1>
+          <div
+            className="display-ghost"
+            style={{
+              fontSize: "clamp(40px, 8vw, 124px)",
+              color: "rgba(255,255,255,0.22)",
+              marginTop: "-0.04em",
+            }}
+          >
+            Real foot traffic.
+          </div>
 
-          <p className="fm-sub">
-            Push is the attribution rail for local commerce. Creator posts,
-            customer scans at the register, you pay per verified store visit.
-            <br />
-            <span className="fm-sub-light">
-              No vanity metrics. No agency retainers. Stripe Connect underneath.
-            </span>
+          <p
+            style={{
+              marginTop: "clamp(32px, 5vw, 56px)",
+              maxWidth: 620,
+              fontFamily: "var(--font-body)",
+              fontSize: "clamp(15px, 1.15vw, 18px)",
+              lineHeight: 1.6,
+              color: "rgba(255,255,255,0.75)",
+            }}
+          >
+            A creator posts about your spot. Someone who saw the post walks
+            through your door. We time-stamp the visit at your register. You pay
+            only after that — never before. That&apos;s it.
+          </p>
+          <p
+            style={{
+              marginTop: "clamp(16px, 2vw, 24px)",
+              maxWidth: 620,
+              fontFamily: "var(--font-body)",
+              fontSize: "clamp(13px, 1vw, 15px)",
+              lineHeight: 1.6,
+              color: "rgba(255,255,255,0.46)",
+            }}
+          >
+            Lower Manhattan pilot opens June&nbsp;22. Five anchored venues, ten
+            creators on the roster. Jiaming, the founder, walks the doors
+            himself.
           </p>
 
-          <div className="fm-ctas">
+          {/* CTAs */}
+          <div
+            style={{
+              marginTop: "clamp(32px, 4vw, 48px)",
+              display: "flex",
+              gap: 16,
+              flexWrap: "wrap",
+              alignItems: "center",
+            }}
+          >
             <Link href="/merchant/signup" className="btn btn-primary">
-              Launch a campaign
+              Open my venue
             </Link>
             <Link href="#pricing" className="btn fm-outline-btn">
-              See pricing
+              See the numbers
             </Link>
           </div>
 
-          <p className="fm-reassure">
-            No credit card to explore &nbsp;·&nbsp; Campaign live in 24h
-            &nbsp;·&nbsp; Cancel anytime
-          </p>
+          {/* Stats / KPI row */}
+          <div
+            style={{
+              marginTop: "clamp(40px, 6vw, 72px)",
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
+              gap: "clamp(16px, 3vw, 48px)",
+              borderTop: "1px solid rgba(255,255,255,0.12)",
+              paddingTop: "clamp(24px, 3vw, 40px)",
+              maxWidth: 960,
+            }}
+          >
+            {[
+              {
+                value: "$8–35",
+                label: "per verified visit",
+                note: "by tier — you set ceiling",
+                tint: "var(--brand-red)",
+              },
+              {
+                value: "0",
+                label: "monthly retainer",
+                note: "while we earn it",
+                tint: "var(--champagne)",
+              },
+              {
+                value: "24h",
+                label: "campaign live",
+                note: "from signup to first scan",
+                tint: "var(--cat-fitness)",
+              },
+            ].map((s) => (
+              <div
+                key={s.label}
+                style={{
+                  paddingLeft: 18,
+                  borderLeft: `2px solid ${s.tint}`,
+                }}
+              >
+                <div
+                  style={{
+                    fontFamily: "var(--font-display)",
+                    fontSize: "clamp(40px, 4vw, 60px)",
+                    fontWeight: 200,
+                    letterSpacing: "-0.05em",
+                    lineHeight: 0.9,
+                    color: "#fff",
+                  }}
+                >
+                  {s.value}
+                </div>
+                <div
+                  style={{
+                    marginTop: 10,
+                    fontFamily: "var(--font-body)",
+                    fontSize: 12,
+                    fontWeight: 600,
+                    color: "rgba(255,255,255,0.78)",
+                  }}
+                >
+                  {s.label}
+                </div>
+                <div
+                  style={{
+                    marginTop: 4,
+                    fontFamily: "var(--font-body)",
+                    fontSize: 10,
+                    letterSpacing: "0.08em",
+                    color: "rgba(255,255,255,0.4)",
+                  }}
+                >
+                  {s.note}
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
 
-        {/* Ambient light layer */}
-        <div className="fm-hero-ambient" aria-hidden="true" />
+        {/* Bottom: scroll indicator + category strip */}
+        <div
+          style={{
+            position: "relative",
+            zIndex: 3,
+            display: "flex",
+            alignItems: "flex-end",
+            justifyContent: "space-between",
+            flexWrap: "wrap",
+            gap: 32,
+          }}
+        >
+          <div
+            className="scroll-indicator"
+            style={{ color: "rgba(255,255,255,0.7)" }}
+          >
+            Scroll
+          </div>
+          <div style={{ flex: 1, minWidth: 240, maxWidth: 480 }}>
+            <div
+              className="category-strip"
+              aria-hidden="true"
+              style={{ marginBottom: 12 }}
+            >
+              <span />
+              <span />
+              <span />
+              <span />
+              <span />
+              <span />
+            </div>
+            <div
+              style={{
+                fontFamily: "var(--font-body)",
+                fontSize: 10,
+                fontWeight: 700,
+                letterSpacing: "0.14em",
+                textTransform: "uppercase",
+                color: "rgba(255,255,255,0.45)",
+                display: "flex",
+                justifyContent: "space-between",
+              }}
+            >
+              <span>Coffee</span>
+              <span>Bakery</span>
+              <span>Studio</span>
+              <span>Wear</span>
+              <span>Bar</span>
+              <span>After-hours</span>
+            </div>
+          </div>
+        </div>
       </section>
 
-      {/* ── Problem / Solution split ──────────────────────────── */}
+      {/* ═══════════════ 02 — PROBLEM / SOLUTION ═══════════════ */}
       <section className="section section-bright fm-ps-section">
         <div className="container">
+          <div className="reveal" style={{ marginBottom: 64 }}>
+            <div className="section-marker" data-num="02">
+              What you&apos;re replacing
+            </div>
+            <h2
+              style={{
+                fontFamily: "var(--font-display)",
+                fontSize: "clamp(36px, 5vw, 64px)",
+                fontWeight: 800,
+                letterSpacing: "-0.05em",
+                lineHeight: 1,
+                color: "var(--ink)",
+                margin: 0,
+              }}
+            >
+              The before
+              <br />
+              <span className="display-ghost">and the after.</span>
+            </h2>
+          </div>
+
           <div className="fm-ps-grid">
             {/* Left: Problem */}
             <div className="fm-ps-col reveal">
-              <p className="fm-ps-label fm-ps-label--problem">The Problem</p>
+              <p className="fm-ps-label fm-ps-label--problem">Right now</p>
               <p className="fm-ps-statement">
-                <strong>Paying for views</strong>
+                <strong>You pay for views</strong>
                 <span className="fm-ps-ghost" aria-hidden="true">
-                  Paying for views
+                  You pay for views
                 </span>
                 <br />
-                you can&apos;t verify.
+                that never come in.
               </p>
               <ul className="fm-ps-list">
                 <li>
                   <span className="fm-ps-bullet" />
-                  Agencies: $3,000+/mo + long-term contracts
+                  Agency retainers: $3,000+ a month, locked in for a year
                 </li>
                 <li>
                   <span className="fm-ps-bullet" />
-                  Paid social: CPM model — no foot-traffic guarantee
+                  Instagram ads: charged per impression, no door check
                 </li>
                 <li>
                   <span className="fm-ps-bullet" />
-                  Influencer posts: zero attribution, zero ROI tracking
+                  Influencer one-offs: a tagged story, then silence
                 </li>
               </ul>
             </div>
@@ -193,30 +441,30 @@ export default function ForMerchantsPage() {
               className="fm-ps-col reveal"
               style={{ transitionDelay: "120ms" }}
             >
-              <p className="fm-ps-label fm-ps-label--solution">The Push Way</p>
+              <p className="fm-ps-label fm-ps-label--solution">With Push</p>
               <p className="fm-ps-statement fm-ps-statement--solution">
-                <strong>QR-verified foot traffic.</strong>
+                <strong>You pay only when</strong>
                 <span
                   className="fm-ps-ghost fm-ps-ghost--solution"
                   aria-hidden="true"
                 >
-                  QR-verified foot traffic.
+                  You pay only when
                 </span>
                 <br />
-                Milestone payouts.
+                someone walks in.
               </p>
               <ul className="fm-ps-list fm-ps-list--solution">
                 <li>
                   <span className="fm-ps-bullet fm-ps-bullet--solution" />
-                  Every scan logged — transaction-level attribution
+                  Every visit time-stamped at your register, in the receipt log
                 </li>
                 <li>
                   <span className="fm-ps-bullet fm-ps-bullet--solution" />
-                  Pay only after verification — no disputed clicks
+                  Payouts release after the scan, not before
                 </li>
                 <li>
                   <span className="fm-ps-bullet fm-ps-bullet--solution" />
-                  Campaign live in 24 hours, free Lite tier — no card required
+                  First campaign live in 24 hours. No card required to look.
                 </li>
               </ul>
             </div>
@@ -224,38 +472,74 @@ export default function ForMerchantsPage() {
         </div>
       </section>
 
-      {/* ── How it works ─────────────────────────────────────── */}
+      {/* ═══════════════ 03 — HOW IT WORKS ═══════════════ */}
       <section className="section fm-how-section">
         <div className="container">
-          <div className="reveal">
-            <div className="section-tag">
-              <span className="section-tag-num">01</span>
-              <span className="section-tag-line" />
-              <span className="section-tag-label">How It Works</span>
+          <div
+            className="reveal"
+            style={{
+              display: "flex",
+              alignItems: "flex-end",
+              justifyContent: "space-between",
+              flexWrap: "wrap",
+              gap: 24,
+              marginBottom: "clamp(40px, 6vw, 80px)",
+            }}
+          >
+            <div>
+              <div className="section-marker" data-num="03">
+                How it works
+              </div>
+              <h2
+                style={{
+                  fontFamily: "var(--font-display)",
+                  fontSize: "clamp(36px, 5vw, 64px)",
+                  fontWeight: 800,
+                  letterSpacing: "-0.05em",
+                  lineHeight: 1,
+                  color: "var(--ink)",
+                  margin: 0,
+                }}
+              >
+                Three steps.
+                <br />
+                <span className="display-ghost">Zero guesswork.</span>
+              </h2>
             </div>
-            <h2 className="fm-how-headline">
-              Three steps.
+            <p
+              style={{
+                fontFamily: "var(--font-body)",
+                fontSize: 13,
+                color: "var(--ink-4)",
+                maxWidth: 320,
+                lineHeight: 1.55,
+                margin: 0,
+              }}
+            >
+              From signup to first verified visit
               <br />
-              <span className="fm-how-headline-light">Zero guesswork.</span>
-            </h2>
+              is usually under a week. We move
+              <br />
+              at the speed you can handle.
+            </p>
           </div>
 
           <ol className="fm-how-list">
             {[
               {
                 n: "01",
-                title: "Post a campaign brief",
-                body: "Set your goal, payout structure, and creator requirements. Takes 10 minutes. Push handles creator matching, QR generation, and attribution from there.",
+                title: "Write the brief",
+                body: "Tell us your spot, your budget ceiling per visit, what you want creators to mention. Ten minutes. We handle the matching, QR posters, and the receipt-side wiring after that.",
               },
               {
                 n: "02",
-                title: "Accept applicants from verified tiers",
-                body: "Push surfaces creators ranked by performance score, proximity, and tier. You approve or auto-accept — every creator is verified before they post.",
+                title: "Approve the creators",
+                body: "Push surfaces a shortlist by tier and proximity — we know which ones are within a six-block walk of your door. You approve, or set auto-accept above a tier threshold. Every creator is vetted before they post.",
               },
               {
                 n: "03",
-                title: "Pay on milestones, not promises",
-                body: "Payouts release automatically after QR-verified visits. No manual tracking, no invoice disputes, no agency overhead — just clean, verified results.",
+                title: "Pay after the door opens",
+                body: "Payouts release on QR-verified visits, never on impressions. We invoice weekly with the full ledger — every scan, every receipt, every cent. No agency markup, no clawbacks.",
               },
             ].map((step, i) => (
               <li
@@ -274,25 +558,33 @@ export default function ForMerchantsPage() {
         </div>
       </section>
 
-      {/* ── Creator tier showcase ─────────────────────────────── */}
+      {/* ═══════════════ 04 — CREATOR TIERS ═══════════════ */}
       <section className="section section-bright fm-tiers-section">
         <div className="container">
-          <div className="reveal">
-            <div className="section-tag">
-              <span className="section-tag-num">02</span>
-              <span className="section-tag-line" />
-              <span className="section-tag-label">Creator Tiers</span>
+          <div className="reveal" style={{ marginBottom: 48 }}>
+            <div className="section-marker" data-num="04">
+              Who you&apos;re hiring
             </div>
-            <h2 className="fm-tiers-headline">
+            <h2
+              style={{
+                fontFamily: "var(--font-display)",
+                fontSize: "clamp(36px, 5vw, 64px)",
+                fontWeight: 800,
+                letterSpacing: "-0.05em",
+                lineHeight: 1,
+                color: "var(--ink)",
+                margin: "0 0 16px",
+              }}
+            >
               Six tiers.
               <br />
-              <span className="fm-tiers-headline-light">
-                Every creator verified.
-              </span>
+              <span className="display-ghost">Every creator vetted.</span>
             </h2>
             <p className="fm-tiers-sub">
-              From zero-follower newcomers to 100K+ partners — every creator on
-              Push is ranked by verified performance, not vanity metrics.
+              From zero-follower newcomers walking the neighborhood to
+              hundred-thousand-strong partners. Everyone is ranked by what
+              actually happened — visits driven, retention rate — not how many
+              followers they bought.
             </p>
           </div>
 
@@ -328,25 +620,31 @@ export default function ForMerchantsPage() {
         </div>
       </section>
 
-      {/* ── Pricing teaser ───────────────────────────────────── */}
+      {/* ═══════════════ 05 — PRICING ═══════════════ */}
       <section id="pricing" className="section fm-pricing-section">
         <div className="container">
-          <div className="fm-pricing-header reveal">
+          <div
+            className="fm-pricing-header reveal"
+            style={{ marginBottom: "clamp(40px, 6vw, 72px)" }}
+          >
             <div>
-              <div
-                className="section-tag"
-                style={{ marginBottom: "var(--space-3)" }}
-              >
-                <span className="section-tag-num">03</span>
-                <span className="section-tag-line" />
-                <span className="section-tag-label">Pricing</span>
+              <div className="section-marker" data-num="05">
+                What it costs
               </div>
-              <h2 className="fm-pricing-headline">
+              <h2
+                style={{
+                  fontFamily: "var(--font-display)",
+                  fontSize: "clamp(36px, 5vw, 64px)",
+                  fontWeight: 800,
+                  letterSpacing: "-0.05em",
+                  lineHeight: 1,
+                  color: "var(--ink)",
+                  margin: 0,
+                }}
+              >
                 Flat or outcome-based.
                 <br />
-                <span className="fm-pricing-headline-light">
-                  No hidden fees.
-                </span>
+                <span className="display-ghost">No hidden fees.</span>
               </h2>
             </div>
             <p className="fm-pricing-note">
@@ -395,20 +693,25 @@ export default function ForMerchantsPage() {
 
           <p className="fm-pricing-full-link">
             <Link href="/pricing" className="fm-link-underline">
-              Full pricing details, including per-visit rates →
+              Full pricing — including per-visit rates by tier →
             </Link>
           </p>
         </div>
       </section>
 
-      {/* ── Case study pull-quote ─────────────────────────────── */}
+      {/* ═══════════════ 06 — PULL QUOTE ═══════════════ */}
       <section className="section section-bright fm-quote-section">
         <div className="container">
+          <div className="reveal" style={{ marginBottom: 48 }}>
+            <div className="section-marker" data-num="06">
+              From a venue owner
+            </div>
+          </div>
           <div className="fm-quote-wrap reveal">
             <span className="fm-quote-rule" aria-hidden="true" />
             <blockquote className="fm-pull-quote">
               <p className="fm-pull-quote-text">
-                &ldquo;We got 340 verified walk-ins in 6 weeks. We never paid
+                &ldquo;We got 340 verified walk-ins in six weeks. We never paid
                 for a single click.&rdquo;
               </p>
               <footer className="fm-pull-quote-footer">
@@ -425,25 +728,97 @@ export default function ForMerchantsPage() {
         </div>
       </section>
 
-      {/* ── Final CTA ─────────────────────────────────────────── */}
-      <section className="fm-final-cta">
-        <div className="container">
-          <div className="fm-final-inner reveal">
-            <p className="eyebrow fm-final-eyebrow">Ready to start</p>
-            <h2 className="fm-final-headline">
-              Start getting verified
-              <br />
-              <span className="fm-final-headline-light">customers.</span>
-            </h2>
-            <p className="fm-final-sub">
-              Launch a campaign in 10 minutes. Pay only for QR-verified visits.
-              No agency fees. No long-term contracts.
-            </p>
+      {/* ═══════════════ 07 — FINAL CTA ═══════════════ */}
+      <section
+        className="bg-hero-ink grain-overlay bg-vignette fm-final-cta"
+        style={{
+          position: "relative",
+          padding: "clamp(120px, 16vw, 200px) clamp(24px, 4vw, 64px)",
+          overflow: "hidden",
+        }}
+      >
+        <div
+          className="reveal"
+          style={{
+            position: "relative",
+            zIndex: 3,
+            maxWidth: 1180,
+            margin: "0 auto",
+          }}
+        >
+          <div
+            className="section-marker"
+            data-num="07"
+            style={{ color: "rgba(255,255,255,0.55)" }}
+          >
+            Open the door
+          </div>
+
+          <h2
+            style={{
+              fontFamily: "var(--font-display)",
+              fontSize: "clamp(56px, 11vw, 168px)",
+              fontWeight: 900,
+              letterSpacing: "-0.07em",
+              lineHeight: 0.86,
+              color: "#fff",
+              margin: 0,
+              maxWidth: 1100,
+            }}
+          >
+            Door open
+            <span
+              aria-hidden="true"
+              style={{
+                color: "var(--brand-red)",
+                marginLeft: "-0.04em",
+              }}
+            >
+              .
+            </span>
+          </h2>
+          <div
+            className="display-ghost"
+            style={{
+              fontSize: "clamp(40px, 8vw, 112px)",
+              color: "rgba(255,255,255,0.22)",
+              marginTop: "-0.04em",
+            }}
+          >
+            Money on results.
+          </div>
+
+          <p
+            style={{
+              marginTop: "clamp(28px, 4vw, 48px)",
+              maxWidth: 540,
+              fontFamily: "var(--font-body)",
+              fontSize: "clamp(15px, 1.15vw, 17px)",
+              lineHeight: 1.6,
+              color: "rgba(255,255,255,0.7)",
+            }}
+          >
+            Ten minutes to write the brief. Twenty-four hours to first scan.
+            Pilot opens June&nbsp;22 in SoHo, Tribeca, and Chinatown — Jiaming
+            walks the doors himself.
+          </p>
+
+          <div
+            style={{
+              marginTop: "clamp(28px, 4vw, 40px)",
+              display: "flex",
+              gap: 16,
+              flexWrap: "wrap",
+            }}
+          >
             <Link
               href="/merchant/signup"
               className="btn btn-primary fm-final-btn"
             >
-              Create account
+              Open my venue
+            </Link>
+            <Link href="#pricing" className="btn fm-outline-btn">
+              See the numbers
             </Link>
           </div>
         </div>

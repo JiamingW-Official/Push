@@ -157,7 +157,7 @@ export function EvidenceUploader({
             border: "1px solid var(--line)",
             padding: "8px 16px",
             cursor: "pointer",
-            borderRadius: 0,
+            borderRadius: "var(--r-lg)",
             whiteSpace: "nowrap",
             color: "var(--dark)",
           }}

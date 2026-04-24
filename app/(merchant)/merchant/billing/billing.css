@@ -237,6 +237,8 @@
   background: var(--surface-elevated);
   border: 1px solid var(--line);
   padding: var(--space-4);
+  border-radius: var(--r-xl);
+  box-shadow: var(--shadow-2);
 }
 
 .bill-card__header {
@@ -378,6 +380,7 @@
   padding: var(--space-3);
   background: var(--surface);
   border: 1px solid var(--line);
+  border-radius: var(--r-lg);
   margin-bottom: var(--space-3);
 }
 
@@ -446,7 +449,7 @@
   background: var(--surface);
   border: 1px solid var(--line);
   padding: 10px var(--space-2);
-  border-radius: 0;
+  border-radius: var(--r-md);
   outline: none;
   transition: border-color 200ms ease;
 }
@@ -556,7 +559,7 @@
   border: 1px solid var(--line);
   padding: 6px 10px;
   cursor: pointer;
-  border-radius: 0;
+  border-radius: var(--r-lg);
   transition:
     background 150ms ease,
     border-color 150ms ease,
@@ -582,7 +585,7 @@
   letter-spacing: 0.08em;
   text-transform: uppercase;
   padding: 4px 10px;
-  border-radius: 0;
+  border-radius: var(--r-sm);
   white-space: nowrap;
 }
 
@@ -594,7 +597,7 @@
 
 .bill-badge--open {
   background: rgba(201, 169, 110, 0.12);
-  color: #9a7340;
+  color: var(--accent);
   border: 1px solid var(--champagne-border);
 }
 
@@ -622,15 +625,15 @@
   border: none;
   padding: 12px var(--space-3);
   cursor: pointer;
-  border-radius: 0;
-  box-shadow: 3px 3px 0 var(--accent);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-2);
   transition:
     box-shadow 200ms ease,
     transform 100ms ease;
 }
 
 .bill-btn-primary:hover:not(:disabled) {
-  box-shadow: 5px 5px 0 var(--accent);
+  box-shadow: var(--shadow-3);
 }
 
 .bill-btn-primary:active:not(:disabled) {
@@ -657,7 +660,7 @@
   border: 1.5px solid var(--dark);
   padding: 11px var(--space-3);
   cursor: pointer;
-  border-radius: 0;
+  border-radius: var(--r-lg);
   transition:
     background 150ms ease,
     color 150ms ease;
@@ -683,7 +686,7 @@
   border: 1px solid var(--line);
   padding: 12px var(--space-3);
   cursor: pointer;
-  border-radius: 0;
+  border-radius: var(--r-lg);
   transition:
     background 150ms ease,
     color 150ms ease;
@@ -705,13 +708,13 @@
   border: none;
   padding: 12px var(--space-3);
   cursor: pointer;
-  border-radius: 0;
-  box-shadow: 3px 3px 0 var(--accent);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-2);
   transition: box-shadow 200ms ease;
 }
 
 .bill-btn-danger:hover {
-  box-shadow: 5px 5px 0 var(--accent);
+  box-shadow: var(--shadow-3);
 }
 
 .bill-btn-danger-outline {
@@ -725,7 +728,7 @@
   border: 1.5px solid var(--primary);
   padding: 12px var(--space-3);
   cursor: pointer;
-  border-radius: 0;
+  border-radius: var(--r-lg);
   transition:
     background 150ms ease,
     color 150ms ease;
@@ -757,6 +760,8 @@
 .bill-modal {
   background: var(--surface-elevated);
   border: 1px solid var(--line);
+  border-radius: var(--r-2xl);
+  box-shadow: var(--shadow-3);
   width: 100%;
   max-width: 680px;
   max-height: 90svh;
@@ -812,7 +817,7 @@
   background: var(--surface);
   border: 1.5px solid var(--line);
   cursor: pointer;
-  border-radius: 0;
+  border-radius: var(--r-xl);
   text-align: left;
   transition:
     border-color 150ms ease,
@@ -918,6 +923,7 @@
 /* Confirm summary table */
 .bill-modal__confirm-summary {
   border: 1px solid var(--line);
+  border-radius: var(--r-lg);
   margin-bottom: var(--space-4);
 }
 
@@ -967,7 +973,7 @@
   background: var(--surface);
   border: 1.5px solid var(--line);
   cursor: pointer;
-  border-radius: 0;
+  border-radius: var(--r-lg);
   text-align: left;
   transition:
     border-color 150ms ease,
@@ -1002,7 +1008,7 @@
   background: var(--surface);
   border: 1px solid var(--line);
   padding: var(--space-2) var(--space-3);
-  border-radius: 0;
+  border-radius: var(--r-md);
   width: 100%;
   resize: vertical;
   margin-bottom: var(--space-3);

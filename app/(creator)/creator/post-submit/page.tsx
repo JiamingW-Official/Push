@@ -55,7 +55,7 @@ function CheckmarkSVG() {
           <path
             className="ps-check-path"
             d="M10 21 L16 27 L30 13"
-            stroke="#c1121f"
+            stroke="var(--primary)"
             strokeWidth="2.5"
             strokeLinecap="square"
             strokeLinejoin="miter"
