@@ -125,7 +125,6 @@ const TIERS = [
     id: "seed",
     num: "01",
     name: "Seed",
-    material: "Clay",
     followers: "1K–5K",
     earning: "$50–200",
     period: "/mo",
@@ -140,7 +139,6 @@ const TIERS = [
     id: "explorer",
     num: "02",
     name: "Explorer",
-    material: "Bronze",
     followers: "5K–20K",
     earning: "$200–600",
     period: "/mo",
@@ -154,7 +152,6 @@ const TIERS = [
     id: "operator",
     num: "03",
     name: "Operator",
-    material: "Steel",
     followers: "20K–50K",
     earning: "$600–1,500",
     period: "/mo",
@@ -168,7 +165,6 @@ const TIERS = [
     id: "proven",
     num: "04",
     name: "Proven",
-    material: "Gold",
     followers: "50K–150K",
     earning: "$1,500–4K",
     period: "/mo",
@@ -182,7 +178,6 @@ const TIERS = [
     id: "closer",
     num: "05",
     name: "Closer",
-    material: "Ruby",
     followers: "150K–500K",
     earning: "$4K–10K",
     period: "/mo",
@@ -197,7 +192,6 @@ const TIERS = [
     id: "partner",
     num: "06",
     name: "Partner",
-    material: "Obsidian",
     followers: "500K+",
     earning: "$10K+",
     period: "/mo",
@@ -218,7 +212,6 @@ const TESTIMONIAL = {
   name: "Maya R.",
   handle: "@mayawalksnyc",
   tier: "Operator",
-  material: "Steel",
   badge: "badge-steel",
   location: "Bushwick, Brooklyn",
 };
@@ -432,7 +425,7 @@ export default function ForCreatorsPage() {
                   <span
                     className={`cr-tier-badge ${t.badge} ${t.shimmer ? "badge-shimmer" : ""}`}
                   >
-                    {t.material} · {t.name}
+                    {t.name}
                   </span>
                 </div>
 
@@ -536,7 +529,7 @@ export default function ForCreatorsPage() {
               </div>
               <div className="cr-quote-right">
                 <span className={`cr-tier-badge ${TESTIMONIAL.badge}`}>
-                  {TESTIMONIAL.material} · {TESTIMONIAL.tier}
+                  {TESTIMONIAL.tier}
                 </span>
                 <span className="cr-quote-loc">{TESTIMONIAL.location}</span>
               </div>

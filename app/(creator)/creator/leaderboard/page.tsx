@@ -39,15 +39,6 @@ const NEIGHBORHOOD_FILTERS: { key: NeighborhoodKey | "all"; label: string }[] =
     })),
   ];
 
-const TIER_MATERIAL: Record<CreatorTier, string> = {
-  seed: "Clay",
-  explorer: "Bronze",
-  operator: "Steel",
-  proven: "Gold",
-  closer: "Ruby",
-  partner: "Obsidian",
-};
-
 /* ── Helpers ─────────────────────────────────────────────── */
 
 function formatEarnings(n: number): string {
@@ -91,7 +82,7 @@ function downloadBadge(rank: number, name: string, score: number): void {
 function TierBadge({ tier }: { tier: CreatorTier }) {
   return (
     <span className={`lb-tier-badge lb-tier-badge--${tier}`}>
-      {TIER_MATERIAL[tier]} · {tier.charAt(0).toUpperCase() + tier.slice(1)}
+      {tier.charAt(0).toUpperCase() + tier.slice(1)}
     </span>
   );
 }
