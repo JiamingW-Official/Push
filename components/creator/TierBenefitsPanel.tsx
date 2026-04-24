@@ -2,6 +2,7 @@
 
 import "./tier-benefits.css";
 import type { CreatorTier } from "./TierBadge";
+import { TIERS } from "@/lib/tier-config";
 
 // ── Tier ordering ────────────────────────────────────────────
 const TIER_ORDER: CreatorTier[] = [
@@ -13,28 +14,44 @@ const TIER_ORDER: CreatorTier[] = [
   "partner",
 ];
 
-// ── Score thresholds (min score to reach each tier) ──────────
+// Convert lowercase wire-format tier ("seed") to the PascalCase key the
+// lib/tier-config.ts TIERS record is indexed by ("Seed").
+function toConfigKey(
+  tier: CreatorTier,
+): "Seed" | "Explorer" | "Operator" | "Proven" | "Closer" | "Partner" {
+  return (tier.charAt(0).toUpperCase() + tier.slice(1)) as
+    | "Seed"
+    | "Explorer"
+    | "Operator"
+    | "Proven"
+    | "Closer"
+    | "Partner";
+}
+
+// ── Score thresholds ─ SOURCED FROM lib/tier-config.ts ───────
+// Pulled from the single source of truth so the "N points to next tier"
+// math matches what the scoring engine actually uses. Pre-v6 this file
+// hardcoded 200/500/1000/2000/4000 — a 5–25× mismatch against the real
+// 0/40/55/65/78/88 Push Score scale that silently miscalculated progress.
 const TIER_THRESHOLDS: Record<CreatorTier, number> = {
-  seed: 0,
-  explorer: 200,
-  operator: 500,
-  proven: 1000,
-  closer: 2000,
-  partner: 4000,
+  seed: TIERS.Seed.minScore,
+  explorer: TIERS.Explorer.minScore,
+  operator: TIERS.Operator.minScore,
+  proven: TIERS.Proven.minScore,
+  closer: TIERS.Closer.minScore,
+  partner: TIERS.Partner.minScore,
 };
 
-// ── Tier colors ──────────────────────────────────────────────
+// ── Tier colors ─ SOURCED FROM lib/tier-config.ts ────────────
 const TIER_COLORS: Record<
   CreatorTier,
   { color: string; bg: string; accent: string }
-> = {
-  seed: { color: "#669bbc", bg: "#f7f7f7", accent: "#718096" },
-  explorer: { color: "#c9a96e", bg: "#eef5fb", accent: "#5a3e22" },
-  operator: { color: "#669bbc", bg: "#f2f4f5", accent: "#2d3748" },
-  proven: { color: "#c1121f", bg: "#f5f2ec", accent: "#9b7a3e" },
-  closer: { color: "#780000", bg: "#f5f2ec", accent: "#6b0a14" },
-  partner: { color: "#003049", bg: "#fdf8ee", accent: "#0a0a1a" },
-};
+> = Object.fromEntries(
+  TIER_ORDER.map((t) => {
+    const cfg = TIERS[toConfigKey(t)];
+    return [t, { color: cfg.color, bg: cfg.bg, accent: cfg.accent }];
+  }),
+) as Record<CreatorTier, { color: string; bg: string; accent: string }>;
 
 // ── Tier icons & names ───────────────────────────────────────
 const TIER_META: Record<CreatorTier, { icon: string; label: string }> = {
