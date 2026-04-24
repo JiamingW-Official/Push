@@ -135,7 +135,7 @@ export default function MerchantSignupPage() {
     const t = setInterval(() => {
       setCountdown((n) => {
         if (n <= 1) {
-          router.push("/merchant/dashboard");
+          router.push("/merchant/onboarding");
           return 0;
         }
         return n - 1;
@@ -229,7 +229,7 @@ export default function MerchantSignupPage() {
       if (profileError) throw profileError;
 
       if (authData.session) {
-        router.push("/merchant/dashboard");
+        router.push("/merchant/onboarding");
       } else {
         setSuccess(true);
       }

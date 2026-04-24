@@ -186,7 +186,7 @@ export default function CreatorSignupPage() {
       if (profileError) throw profileError;
 
       if (data.session) {
-        router.push("/explore");
+        router.push("/creator/onboarding");
       } else {
         setSuccess(true);
       }
