@@ -296,7 +296,7 @@ function getPageContext(pathname: string): PageContext {
           delta: "+8% this week",
           deltaPositive: true,
         },
-        { label: "Current Tier", value: "Silver", delta: "→ Gold" },
+        { label: "Current Tier", value: "Operator", delta: "→ Proven" },
       ],
       deadlines: [
         {
