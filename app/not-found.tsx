@@ -10,24 +10,24 @@ export const metadata: Metadata = {
 
 const SUGGESTIONS: { label: string; href: string; desc: string }[] = [
   {
-    label: "Start $0 Pilot",
-    href: "/merchant/pilot",
-    desc: "Williamsburg Coffee+ merchants — apply for the first-10 cohort",
+    label: "Start free with Lite",
+    href: "/merchant/signup?plan=lite",
+    desc: "$0/mo — 1 campaign, 1 creator slot, QR attribution from day one",
   },
   {
-    label: "Join the operator network",
+    label: "Join the creator network",
     href: "/creator/signup",
-    desc: "Two-Segment Creator Economics · T1–T3 per-customer / T4–T6 retainer",
+    desc: "v6 Community + Studio segments — per-verified-visit payouts via Stripe Connect",
   },
   {
-    label: "See ConversionOracle™",
-    href: "/conversion-oracle",
-    desc: "The 3-layer verification stack — QR + Claude Vision + geo-match",
+    label: "See verified attribution",
+    href: "/trust",
+    desc: "FTC §255 disclosure, three-signal verification (QR + receipt + merchant confirm)",
   },
   {
-    label: "Pilot economics",
-    href: "/merchant/pilot/economics",
-    desc: "13.8x LTV/CAC Year 1 (outcome-based) · 21.4x Year 2+ (flat)",
+    label: "Pricing",
+    href: "/pricing",
+    desc: "Lite $0 / Essentials $99 / Pro outcome-based / Advanced $349",
   },
 ];
 

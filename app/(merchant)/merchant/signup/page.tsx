@@ -583,7 +583,7 @@ export default function MerchantSignupPage() {
             </form>
 
             <p className="form-footer">
-              Already signed up? <Link href="/merchant/dashboard">Log in</Link>
+              Already signed up? <Link href="/merchant/login">Log in</Link>
               <br />
               Are you a creator?{" "}
               <Link href="/creator/signup">Creator signup →</Link>

@@ -70,7 +70,7 @@ const PLANS = [
     featured: true,
     badge: "Most chosen",
     cta: "Talk to us about Pro",
-    href: "/merchant/enterprise?inquiry=pro",
+    href: "/contact?inquiry=pro",
     roi: "Pay only when verified visits land. Cap $179, floor $49.",
     qrLimit: "Unlimited",
     campaignLimit: "Unlimited",
@@ -405,7 +405,7 @@ export default function PricingPage() {
                 Volume creator network access
               </li>
             </ul>
-            <Link href="/merchant/enterprise" className="btn btn-primary">
+            <Link href="/contact" className="btn btn-primary">
               Contact sales
             </Link>
           </div>
@@ -599,7 +599,7 @@ export default function PricingPage() {
             >
               Start free — $0 today
             </Link>
-            <Link href="/merchant/enterprise" className="btn pr-cta-btn-ghost">
+            <Link href="/contact" className="btn pr-cta-btn-ghost">
               Talk to sales
             </Link>
             <p className="pr-cta-fine">
