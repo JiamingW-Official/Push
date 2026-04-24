@@ -4,10 +4,11 @@ import CustomCursor from "@/components/layout/CustomCursor";
 import SmoothScroll from "@/components/layout/SmoothScroll";
 import BackToTop from "@/components/layout/BackToTop";
 import { CommandKProvider } from "@/components/search/CommandKProvider";
+import { BRAND } from "@/lib/constants/brand";
 
 export const metadata: Metadata = {
   title: {
-    template: "%s | Push",
+    template: `%s | ${BRAND.name}`,
     default:
       "Push — Pay Per Verified Visit | Creator Marketing for NYC Businesses",
   },
@@ -15,16 +16,22 @@ export const metadata: Metadata = {
     "Push connects NYC businesses with local creators. You only pay when a creator drives a verified visit — tracked by QR code. No followers minimum. No upfront fees.",
   keywords:
     "creator marketing, local marketing NYC, foot traffic, QR attribution, pay per visit, influencer marketing NYC",
-  metadataBase: new URL("https://pushnyc.co"),
+  metadataBase: new URL(`https://${BRAND.domain}`),
   alternates: {
     canonical: "/",
     types: {
       "application/rss+xml": [
-        { url: "/feed.xml", title: "Push Blog RSS Feed" },
-        { url: "/rss/merchants", title: "Push Merchants Directory RSS" },
+        { url: "/feed.xml", title: `${BRAND.name} Blog RSS Feed` },
+        {
+          url: "/rss/merchants",
+          title: `${BRAND.name} Merchants Directory RSS`,
+        },
       ],
       "application/atom+xml": [
-        { url: "/changelog/feed.xml", title: "Push Changelog Atom Feed" },
+        {
+          url: "/changelog/feed.xml",
+          title: `${BRAND.name} Changelog Atom Feed`,
+        },
       ],
     },
   },
@@ -33,10 +40,10 @@ export const metadata: Metadata = {
       "Push — Pay Per Verified Visit | Creator Marketing for NYC Businesses",
     description:
       "Push connects NYC businesses with local creators. You only pay when a creator drives a verified visit — tracked by QR code.",
-    siteName: "Push",
+    siteName: BRAND.name,
     locale: "en_US",
     type: "website",
-    url: "https://pushnyc.co",
+    url: `https://${BRAND.domain}`,
     images: [
       {
         url: "/opengraph-image",
@@ -52,8 +59,8 @@ export const metadata: Metadata = {
       "Push — Pay Per Verified Visit | Creator Marketing for NYC Businesses",
     description:
       "Push connects NYC businesses with local creators. You only pay when a creator drives a verified visit.",
-    creator: "@pushnyc",
-    site: "@pushnyc",
+    creator: BRAND.twitter,
+    site: BRAND.twitter,
     images: ["/opengraph-image"],
   },
   robots: {

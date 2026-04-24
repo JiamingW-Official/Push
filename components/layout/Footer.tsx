@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useRef } from "react";
 import styles from "./Footer.module.css";
+import { BRAND } from "@/lib/constants/brand";
 
 /* ---- Social Icons (outline stroke only) ---- */
 const IconInstagram = () => (
@@ -180,8 +181,12 @@ export default function Footer() {
       <div className={styles.inner}>
         {/* ---- Big editorial brand word ---- */}
         <div className={styles.bigBrand}>
-          <span ref={bigTextRef} className={styles.bigText} aria-label="Push.">
-            Push.
+          <span
+            ref={bigTextRef}
+            className={styles.bigText}
+            aria-label={`${BRAND.name}.`}
+          >
+            {BRAND.name}.
           </span>
         </div>
 
@@ -205,7 +210,9 @@ export default function Footer() {
 
         {/* ---- Bottom bar ---- */}
         <div className={styles.bottomBar}>
-          <p className={styles.copy}>&copy; 2026 Push Inc. Built in NYC.</p>
+          <p className={styles.copy}>
+            &copy; 2026 {BRAND.legalName} Built in NYC.
+          </p>
 
           {/* Language toggle */}
           <div className={styles.langToggle}>

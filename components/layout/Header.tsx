@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import styles from "./Header.module.css";
+import { BRAND } from "@/lib/constants/brand";
 
 const NAV_LINKS = [
   { label: "Product", href: "/#merchants" },
@@ -51,7 +52,7 @@ export default function Header() {
       <div className={`container ${styles.inner}`}>
         {/* Logo */}
         <Link href="/" className={styles.logo}>
-          Push
+          {BRAND.name}
         </Link>
 
         {/* Desktop nav */}
