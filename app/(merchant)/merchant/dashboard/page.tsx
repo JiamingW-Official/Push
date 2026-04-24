@@ -62,6 +62,11 @@ type Campaign = {
   applications_count?: number;
   qr_scans?: number;
   attributed_revenue?: number;
+  // gross_attributed_revenue is the un-weighted sum; attributed_revenue is the
+  // weight-applied figure that rolls up to billing. When the two differ, the
+  // delta is from repeat-customer attribution share decreasing over time
+  // (FTC 16 CFR Part 255 — see lib/services/attribution-decay.ts).
+  gross_attributed_revenue?: number;
 };
 
 type Application = {
@@ -154,6 +159,7 @@ const DEMO_CAMPAIGNS: Campaign[] = [
     applications_count: 4,
     qr_scans: 0,
     attributed_revenue: 640,
+    gross_attributed_revenue: 720,
   },
 ];
 
@@ -1007,6 +1013,11 @@ function AnalyticsTab({
         style={{ marginTop: "var(--space-2)" }}
       >
         <div className="db-section-header__title">Campaign Performance</div>
+        <span className="analytics-perf-attribution-note">
+          Est. Revenue is weighted by repeat-customer attribution share. First
+          scan counts 100%; same customer returning after 30/60/90 days counts
+          50% / 30% / 10%. After 120 days, no credit.
+        </span>
       </div>
 
       <div
@@ -1043,6 +1054,20 @@ function AnalyticsTab({
                 {c.attributed_revenue
                   ? `$${c.attributed_revenue.toLocaleString()}`
                   : "—"}
+                {c.attributed_revenue &&
+                  c.gross_attributed_revenue &&
+                  c.gross_attributed_revenue > c.attributed_revenue && (
+                    <div
+                      className="analytics-perf-row__rev-note"
+                      title={`Gross: $${c.gross_attributed_revenue.toLocaleString()}. Repeat-customer attribution share decreases over time per FTC 16 CFR §255.`}
+                    >
+                      $
+                      {(
+                        c.gross_attributed_revenue - c.attributed_revenue
+                      ).toLocaleString()}{" "}
+                      from repeat-visit share
+                    </div>
+                  )}
               </div>
             </div>
           );
