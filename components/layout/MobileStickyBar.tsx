@@ -19,10 +19,10 @@ export default function MobileStickyBar() {
       className={`${styles.bar} ${visible ? styles.barVisible : ""}`}
       aria-hidden={!visible}
     >
-      <a href="#pricing" className={styles.btnMerchant}>
+      <a href="/for-merchants" className={styles.btnMerchant}>
         For Businesses
       </a>
-      <a href="#creators" className={styles.btnCreator}>
+      <a href="/for-creators" className={styles.btnCreator}>
         For Creators
       </a>
     </div>

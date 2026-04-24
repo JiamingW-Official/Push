@@ -6,9 +6,9 @@ import styles from "./Header.module.css";
 import { BRAND } from "@/lib/constants/brand";
 
 const NAV_LINKS = [
-  { label: "Product", href: "/#merchants" },
-  { label: "Creators", href: "/#creators" },
-  { label: "Pricing", href: "/#pricing" },
+  { label: "Product", href: "/for-merchants" },
+  { label: "Creators", href: "/for-creators" },
+  { label: "Pricing", href: "/pricing" },
 ];
 
 export default function Header() {

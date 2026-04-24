@@ -78,10 +78,10 @@ const NAV_COLS = [
   {
     label: "Product",
     links: [
-      { label: "For Creators", href: "/#for-creators" },
+      { label: "For Creators", href: "/for-creators" },
       { label: "For Merchants", href: "/for-merchants" },
-      { label: "Pricing", href: "/#pricing" },
-      { label: "Attribution", href: "/#attribution" },
+      { label: "Pricing", href: "/pricing" },
+      { label: "Attribution", href: "/trust" },
     ],
   },
   {
@@ -112,7 +112,7 @@ const NAV_COLS = [
       { label: "Cookies", href: "/legal/cookies" },
       {
         label: "Do Not Sell My Personal Information",
-        href: "/legal/privacy#do-not-sell",
+        href: "/legal/do-not-sell",
       },
       { label: "Your Privacy Rights", href: "/legal/privacy#your-rights" },
     ],
