@@ -1,6 +1,7 @@
 "use client";
 
 import type { PosterType } from "@/lib/attribution/mock-qr-codes-extended";
+import { BRAND } from "@/lib/constants/brand";
 
 // TODO: use server-side QR generation
 function QRImage({ qrId, size }: { qrId: string; size: number }) {
@@ -160,7 +161,8 @@ function A4Layout({
             letterSpacing: "-0.04em",
           }}
         >
-          Push<span style={{ color: "#c1121f" }}>.</span>
+          {BRAND.name}
+          <span style={{ color: "#c1121f" }}>.</span>
         </span>
         <span
           style={{
@@ -171,7 +173,7 @@ function A4Layout({
             textTransform: "uppercase",
           }}
         >
-          Creator Marketing
+          {BRAND.posterTagline}
         </span>
       </div>
     </div>
@@ -241,7 +243,8 @@ function TableTentLayout({
           letterSpacing: "-0.04em",
         }}
       >
-        Push<span style={{ color: "#c1121f" }}>.</span>
+        {BRAND.name}
+        <span style={{ color: "#c1121f" }}>.</span>
       </div>
     </div>
   );
@@ -316,7 +319,8 @@ function WindowStickerLayout({
           letterSpacing: "-0.04em",
         }}
       >
-        Push<span style={{ color: "#c1121f" }}>.</span>
+        {BRAND.name}
+        <span style={{ color: "#c1121f" }}>.</span>
       </div>
     </div>
   );

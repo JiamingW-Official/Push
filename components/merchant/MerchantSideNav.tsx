@@ -7,6 +7,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { MERCHANT_PRIMARY, MERCHANT_SECONDARY } from "@/lib/nav/registry";
+import { BRAND } from "@/lib/constants/brand";
 
 function isActive(href: string, pathname: string, prefix?: boolean): boolean {
   if (prefix) return pathname.startsWith(href);
@@ -18,7 +19,8 @@ export function MerchantSideNav() {
   return (
     <aside style={S.shell} aria-label="Merchant navigation">
       <Link href="/merchant/dashboard" style={S.brand}>
-        Push<span style={S.brandTag}>Merchant</span>
+        {BRAND.name}
+        <span style={S.brandTag}>Merchant</span>
       </Link>
 
       <nav style={S.nav}>

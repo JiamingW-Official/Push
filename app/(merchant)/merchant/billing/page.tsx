@@ -12,6 +12,7 @@ import {
   type PlanId,
   type Invoice,
 } from "@/lib/billing/mock-invoices";
+import { formatBillingFooter } from "@/lib/constants/brand";
 
 /* ── Helpers ─────────────────────────────────────────────────────── */
 function formatCents(cents: number): string {
@@ -113,7 +114,7 @@ function triggerPrintForInvoice(inv: Invoice) {
         <span>${formatCents(inv.amount_cents)}</span>
       </div>
       <div class="print-invoice__footer">
-        Push Inc. · 284 W Broadway, New York, NY 10013 · billing@pushapp.co
+        ${formatBillingFooter()}
       </div>
     </div>
   `;
