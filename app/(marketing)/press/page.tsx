@@ -8,8 +8,8 @@ import "./press.css";
 const COMPANY_FACTS: { number: string; label: string; accent?: boolean }[] = [
   { number: "2025", label: "Founded in New York" },
   { number: "NYC", label: "Headquarters" },
-  { number: "340+", label: "Merchants verified", accent: true },
-  { number: "$2M+", label: "Attributed GMV", accent: true },
+  { number: "5", label: "Founding team", accent: true },
+  { number: "Phase 0", label: "Williamsburg pilot, May 2026", accent: true },
 ];
 
 const PRESS_RELEASES = [
@@ -24,7 +24,7 @@ const PRESS_RELEASES = [
   {
     date: "Mar 2026",
     tag: "Growth",
-    title: "Push Expands to 340+ Verified Merchants Across Five NYC Boroughs",
+    title: "Push Expands Verified-Merchant Network Across Five NYC Boroughs",
     excerpt:
       "From Astoria to Bay Ridge, Push now powers creator marketing for independent restaurants, boutiques, and wellness studios citywide.",
     pdf: "#",
@@ -33,9 +33,9 @@ const PRESS_RELEASES = [
     date: "Feb 2026",
     tag: "Milestone",
     title:
-      "$2M in Attributed GMV: Push Creators Drive Measurable Revenue for Local Businesses",
+      "Push Creators Drive Measurable Revenue for Local Businesses — Beta Results",
     excerpt:
-      "Platform-wide attribution data confirms creator-led campaigns outperform traditional local advertising by a 4:1 ROI ratio on verified visits.",
+      "Early beta attribution data suggests creator-led campaigns outperform traditional local advertising on verified visits. Full metrics to be published after Phase 0 launch.",
     pdf: "#",
   },
   {
@@ -50,8 +50,7 @@ const PRESS_RELEASES = [
   {
     date: "Dec 2025",
     tag: "Community",
-    title:
-      "Push Hosts First NYC Creator Summit — 200 Creators, 50 Merchants, One Evening",
+    title: "Push Hosts First NYC Creator Summit — Invite-Only",
     excerpt:
       "The inaugural Push Summit connected top-performing creators with local merchants for live campaign pitching and community building.",
     pdf: "#",
@@ -76,10 +75,9 @@ const PRESS_RELEASES = [
   {
     date: "Jul 2025",
     tag: "Launch",
-    title:
-      "Push Emerges from Stealth with $1.2M Pre-Seed Round to Reinvent Local Marketing",
+    title: "Push Emerges from Stealth to Reinvent Local Marketing",
     excerpt:
-      "Backed by NYC-based operators and angels, Push launches its pay-per-verified-visit platform targeting the $14B local advertising market.",
+      "Backed by NYC-based operators and angels, Push launches its pay-per-verified-visit platform targeting the local advertising market.",
     pdf: "#",
   },
 ];

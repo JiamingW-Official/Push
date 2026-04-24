@@ -122,8 +122,10 @@ export default function PrivacyPage() {
         </dd>
         <dt>Merchant</dt>
         <dd>
-          A business entity that subscribes to Push under the Starter, Growth,
-          or Pro plan to run performance-based marketing campaigns.
+          A business entity that subscribes to Push under any plan (Lite,
+          Essentials, Pro, or Advanced) to run performance-based marketing
+          campaigns. Legacy v4 cohorts (Starter, Growth, Scale) are honored per
+          their original subscription contract.
         </dd>
         <dt>QR Attribution Event</dt>
         <dd>
