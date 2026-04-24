@@ -212,7 +212,7 @@ export function SideNav({
       {/* ── Footer: user identity row ── */}
       <div className="ws-sidenav__footer">
         <Link
-          href="/creator/portfolio/identity"
+          href="/creator/profile"
           className="ws-sidenav__user"
           aria-label={`Profile — ${displayName} (${tierLabel(tierKey)})`}
         >
