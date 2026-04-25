@@ -372,7 +372,7 @@ export default function CampaignNewPage() {
               <div className="cn-nav cn-nav--end">
                 <button
                   type="button"
-                  className="cn-btn cn-btn--primary"
+                  className="btn-primary click-shift"
                   onClick={handleNext}
                 >
                   Next: Budget &amp; Tier →
@@ -481,14 +481,14 @@ export default function CampaignNewPage() {
               <div className="cn-nav">
                 <button
                   type="button"
-                  className="cn-btn cn-btn--ghost"
+                  className="btn-ghost click-shift"
                   onClick={handleBack}
                 >
                   ← Back
                 </button>
                 <button
                   type="button"
-                  className="cn-btn cn-btn--primary"
+                  className="btn-primary click-shift"
                   onClick={handleNext}
                 >
                   Next: Deliverables →
@@ -578,14 +578,14 @@ export default function CampaignNewPage() {
               <div className="cn-nav">
                 <button
                   type="button"
-                  className="cn-btn cn-btn--ghost"
+                  className="btn-ghost click-shift"
                   onClick={handleBack}
                 >
                   ← Back
                 </button>
                 <button
                   type="button"
-                  className="cn-btn cn-btn--primary"
+                  className="btn-primary click-shift"
                   onClick={handleNext}
                 >
                   Next: Review →
@@ -672,7 +672,7 @@ export default function CampaignNewPage() {
               <div className="cn-nav">
                 <button
                   type="button"
-                  className="cn-btn cn-btn--ghost"
+                  className="btn-ghost click-shift"
                   onClick={handleBack}
                   disabled={loading}
                 >
@@ -680,7 +680,7 @@ export default function CampaignNewPage() {
                 </button>
                 <button
                   type="button"
-                  className="cn-btn cn-btn--publish"
+                  className="btn-primary click-shift"
                   onClick={handlePublish}
                   disabled={loading}
                 >

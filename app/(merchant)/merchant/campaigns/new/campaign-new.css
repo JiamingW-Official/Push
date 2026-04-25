@@ -29,7 +29,7 @@
   font-family: var(--font-body);
   font-size: 0.8125rem;
   font-weight: 500;
-  color: var(--tertiary);
+  color: var(--ink-3);
   text-decoration: none;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -55,7 +55,7 @@
 
 .cn-subtitle {
   font-size: 0.875rem;
-  color: var(--tertiary);
+  color: var(--ink-3);
   margin: 0 0 32px;
 }
 
@@ -81,7 +81,7 @@
   font-weight: 600;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: var(--tertiary);
+  color: var(--ink-3);
   background: transparent;
   border: none;
   border-right: 1.5px solid var(--dark);
@@ -99,7 +99,7 @@
 }
 
 .cn-step--done {
-  background: var(--tertiary);
+  background: var(--ink-3);
   color: var(--surface);
 }
 
@@ -121,8 +121,8 @@
 }
 
 .cn-step--active .cn-step__num {
-  background: var(--primary);
-  border-color: var(--primary);
+  background: var(--brand-red);
+  border-color: var(--brand-red);
   color: var(--surface);
 }
 
@@ -173,7 +173,7 @@
   font-weight: 600;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--tertiary);
+  color: var(--ink-3);
   margin: 0 0 8px;
 }
 
@@ -203,11 +203,11 @@
 }
 
 .cn-rail-line--done {
-  background: var(--tertiary);
+  background: var(--ink-3);
 }
 
 .cn-rail-line--active {
-  background: var(--primary);
+  background: var(--brand-red);
 }
 
 .cn-rail-desc {
@@ -303,14 +303,14 @@
 .cn-field input:focus,
 .cn-field textarea:focus,
 .cn-field select:focus {
-  border-color: var(--primary);
+  border-color: var(--brand-red);
   box-shadow: 0 0 0 3px rgba(193, 18, 31, 0.1);
 }
 
 .cn-field input.cn-input--error,
 .cn-field textarea.cn-input--error,
 .cn-field select.cn-input--error {
-  border-color: var(--primary);
+  border-color: var(--brand-red);
   box-shadow: 0 0 0 2px rgba(193, 18, 31, 0.12);
 }
 
@@ -330,23 +330,23 @@
 .cn-char-counter {
   font-size: 0.6875rem;
   font-weight: 500;
-  color: var(--tertiary);
+  color: var(--ink-3);
   letter-spacing: 0.03em;
 }
 
 .cn-char-counter--warn {
-  color: var(--primary);
+  color: var(--brand-red);
 }
 
 .cn-field-hint {
   font-size: 0.75rem;
-  color: var(--tertiary);
+  color: var(--ink-3);
   line-height: 1.5;
 }
 
 .cn-error-msg {
   font-size: 0.75rem;
-  color: var(--primary);
+  color: var(--brand-red);
   font-weight: 600;
 }
 
@@ -362,7 +362,7 @@
   transform: translateY(-50%);
   font-family: var(--font-body);
   font-size: 0.9375rem;
-  color: var(--tertiary);
+  color: var(--ink-3);
   pointer-events: none;
 }
 
@@ -390,7 +390,7 @@
   -webkit-appearance: none;
   width: 18px;
   height: 18px;
-  background: var(--primary);
+  background: var(--brand-red);
   border: 2px solid var(--dark);
   border-radius: var(--r-full);
   cursor: pointer;
@@ -400,7 +400,7 @@
 .cn-range::-moz-range-thumb {
   width: 18px;
   height: 18px;
-  background: var(--primary);
+  background: var(--brand-red);
   border: 2px solid var(--dark);
   border-radius: var(--r-full);
   cursor: pointer;
@@ -417,7 +417,7 @@
   font-size: 1.5rem;
   font-weight: 900;
   font-style: italic;
-  color: var(--primary);
+  color: var(--brand-red);
   min-width: 52px;
   text-align: right;
 }
@@ -439,7 +439,7 @@
   font-weight: 600;
   letter-spacing: 0.05em;
   text-transform: uppercase;
-  color: var(--tertiary);
+  color: var(--ink-3);
   background: transparent;
   border: none;
   border-right: 1.5px solid var(--dark);
@@ -494,9 +494,9 @@
 }
 
 .cw-cat-card--active {
-  border-color: var(--primary);
+  border-color: var(--brand-red);
   background: rgba(193, 18, 31, 0.06);
-  box-shadow: inset 0 0 0 1px var(--primary);
+  box-shadow: inset 0 0 0 1px var(--brand-red);
 }
 
 .cw-cat-icon {
@@ -567,7 +567,7 @@
 
 .cw-tier-meta {
   font-size: 0.6875rem;
-  color: var(--tertiary);
+  color: var(--ink-3);
   letter-spacing: 0.02em;
 }
 
@@ -579,7 +579,7 @@
 
 .cw-error-msg {
   font-size: 0.75rem;
-  color: var(--primary);
+  color: var(--brand-red);
   font-weight: 600;
   margin-top: 6px;
   display: block;
@@ -633,15 +633,15 @@
 }
 
 .cn-btn--primary:hover:not(:disabled) {
-  background: var(--primary);
-  border-color: var(--primary);
+  background: var(--brand-red);
+  border-color: var(--brand-red);
   box-shadow: var(--shadow-3);
 }
 
 .cn-btn--publish {
-  background: var(--primary);
+  background: var(--brand-red);
   color: var(--surface);
-  border-color: var(--primary);
+  border-color: var(--brand-red);
   box-shadow: var(--shadow-2);
 }
 
@@ -704,7 +704,7 @@
   font-weight: 700;
   letter-spacing: 0.09em;
   text-transform: uppercase;
-  color: var(--tertiary);
+  color: var(--ink-3);
 }
 
 .cn-summary-value {
@@ -717,11 +717,11 @@
 /* ── Global form error banner ───────────────────────────────── */
 .cn-form-error {
   background: rgba(193, 18, 31, 0.07);
-  border: 1.5px solid var(--primary);
+  border: 1.5px solid var(--brand-red);
   padding: 12px 16px;
   margin-bottom: 20px;
   font-size: 0.875rem;
-  color: var(--primary);
+  color: var(--brand-red);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -735,7 +735,7 @@
   font-family: var(--font-body);
   font-size: 0.75rem;
   font-weight: 700;
-  color: var(--primary);
+  color: var(--brand-red);
   cursor: pointer;
   text-transform: uppercase;
   letter-spacing: 0.06em;

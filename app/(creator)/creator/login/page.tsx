@@ -4,6 +4,8 @@ import { useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/db/browser";
+import Header from "@/components/layout/Header";
+import Footer from "@/components/layout/Footer";
 import "@/styles/auth-split.css";
 import "./login.css";
 
@@ -100,139 +102,138 @@ export default function CreatorLoginPage() {
       <a href="#login-form" className="skip-link">
         Skip to form
       </a>
-      <div className="page">
-        <BrandPanel />
-        <div className="form-panel">
-          <div className="form-wrap" id="login-form">
-            <div className="form-header">
-              <span className="form-eyebrow">Creator Login</span>
-              <h1 className="form-title">Welcome back.</h1>
-              <p className="form-subtitle">Your campaigns are waiting.</p>
-            </div>
-
-            {formError && (
-              <div
-                className="form-error"
-                role="alert"
-                style={{ marginBottom: "var(--space-4)" }}
-              >
-                <span>{formError}</span>
-                <button
-                  type="button"
-                  className="error-retry-btn"
-                  onClick={handleRetry}
-                >
-                  Try again
-                </button>
-              </div>
-            )}
-
-            <form
-              onSubmit={handleSubmit}
-              noValidate
-              className={loading ? "form-loading" : ""}
-            >
-              <div className="form-grid">
-                {/* ── Email ──────────────────────────────────── */}
-                <div className="form-field">
-                  <label htmlFor="email">Email</label>
-                  <div className="field-wrap">
-                    <input
-                      id="email"
-                      type="email"
-                      value={fields.email}
-                      onChange={set("email")}
-                      onBlur={() => handleBlur("email")}
-                      placeholder="you@example.com"
-                      autoComplete="email"
-                      aria-describedby={errors.email ? "err-email" : undefined}
-                    />
-                    {fieldStatus.email === "valid" && (
-                      <span className="field-dot" aria-hidden="true" />
-                    )}
-                  </div>
-                  {errors.email && (
-                    <span className="error-msg" id="err-email">
-                      {errors.email}
-                    </span>
-                  )}
-                </div>
-
-                {/* ── Password ───────────────────────────────── */}
-                <div className="form-field">
-                  <label htmlFor="password">Password</label>
-                  <div className="input-with-action">
-                    <input
-                      id="password"
-                      type={showPw ? "text" : "password"}
-                      value={fields.password}
-                      onChange={set("password")}
-                      onBlur={() => handleBlur("password")}
-                      placeholder="Your password"
-                      autoComplete="current-password"
-                      aria-describedby={
-                        errors.password ? "err-password" : undefined
-                      }
-                    />
-                    <button
-                      type="button"
-                      className="input-action-btn"
-                      onClick={() => setShowPw((v) => !v)}
-                      aria-label={showPw ? "Hide password" : "Show password"}
-                    >
-                      {showPw ? "Hide" : "Show"}
-                    </button>
-                  </div>
-                  {errors.password && (
-                    <span className="error-msg" id="err-password">
-                      {errors.password}
-                    </span>
-                  )}
-                </div>
-
-                {/* ── Forgot password ────────────────────────── */}
-                <div className="forgot-link">
-                  <Link href="/creator/reset-password">Forgot password?</Link>
-                </div>
-
-                <button
-                  ref={submitBtnRef}
-                  type="submit"
-                  className="btn btn-primary submit-btn"
-                  disabled={loading}
-                  aria-busy={loading}
-                  data-pressed={isPressed}
-                >
-                  {loading ? (
-                    <>
-                      <span className="loader-dots" aria-hidden="true">
-                        <span className="dot" />
-                        <span className="dot" />
-                        <span className="dot" />
-                      </span>
-                      <span className="sr-only">Signing in&hellip;</span>
-                    </>
-                  ) : (
-                    "Sign In"
-                  )}
-                </button>
-              </div>
-            </form>
-
-            <p className="form-footer">
-              Don&apos;t have an account?{" "}
-              <Link href="/creator/signup">Join as Creator &rarr;</Link>
-              <br />
-              Are you a merchant?{" "}
-              <Link href="/merchant/login">Merchant login &rarr;</Link>
-            </p>
-
-            <Link href="/demo/creator" className="auth-demo-link">
-              Try Demo Mode &mdash; no account needed &rarr;
-            </Link>
+      <Header />
+      <main className="login-page-main">
+        <div className="login-card" id="login-form">
+          <div className="form-header">
+            <span className="form-eyebrow login-eyebrow">CREATOR LOGIN</span>
+            <h1 className="form-title">Welcome back.</h1>
+            <p className="form-subtitle">Your campaigns are waiting.</p>
           </div>
+
+          {formError && (
+            <div
+              className="form-error"
+              role="alert"
+              style={{ marginBottom: "var(--space-4)" }}
+            >
+              <span>{formError}</span>
+              <button
+                type="button"
+                className="error-retry-btn"
+                onClick={handleRetry}
+              >
+                Try again
+              </button>
+            </div>
+          )}
+
+          <form
+            onSubmit={handleSubmit}
+            noValidate
+            className={loading ? "form-loading" : ""}
+          >
+            <div className="form-grid">
+              {/* ── Email ──────────────────────────────────── */}
+              <div className="form-field">
+                <label htmlFor="email">Email</label>
+                <div className="field-wrap">
+                  <input
+                    id="email"
+                    type="email"
+                    value={fields.email}
+                    onChange={set("email")}
+                    onBlur={() => handleBlur("email")}
+                    placeholder="you@example.com"
+                    autoComplete="email"
+                    aria-describedby={errors.email ? "err-email" : undefined}
+                  />
+                  {fieldStatus.email === "valid" && (
+                    <span className="field-dot" aria-hidden="true" />
+                  )}
+                </div>
+                {errors.email && (
+                  <span className="error-msg" id="err-email">
+                    {errors.email}
+                  </span>
+                )}
+              </div>
+
+              {/* ── Password ───────────────────────────────── */}
+              <div className="form-field">
+                <label htmlFor="password">Password</label>
+                <div className="input-with-action">
+                  <input
+                    id="password"
+                    type={showPw ? "text" : "password"}
+                    value={fields.password}
+                    onChange={set("password")}
+                    onBlur={() => handleBlur("password")}
+                    placeholder="Your password"
+                    autoComplete="current-password"
+                    aria-describedby={
+                      errors.password ? "err-password" : undefined
+                    }
+                  />
+                  <button
+                    type="button"
+                    className="input-action-btn"
+                    onClick={() => setShowPw((v) => !v)}
+                    aria-label={showPw ? "Hide password" : "Show password"}
+                  >
+                    {showPw ? "Hide" : "Show"}
+                  </button>
+                </div>
+                {errors.password && (
+                  <span className="error-msg" id="err-password">
+                    {errors.password}
+                  </span>
+                )}
+              </div>
+
+              {/* ── Forgot password ────────────────────────── */}
+              <div className="forgot-link">
+                <Link href="/creator/reset-password">Forgot password?</Link>
+              </div>
+
+              <button
+                ref={submitBtnRef}
+                type="submit"
+                className="btn-primary submit-btn"
+                disabled={loading}
+                aria-busy={loading}
+                data-pressed={isPressed}
+              >
+                {loading ? (
+                  <>
+                    <span className="loader-dots" aria-hidden="true">
+                      <span className="dot" />
+                      <span className="dot" />
+                      <span className="dot" />
+                    </span>
+                    <span className="sr-only">Signing in&hellip;</span>
+                  </>
+                ) : (
+                  "Sign In"
+                )}
+              </button>
+            </div>
+          </form>
+
+          <p className="form-footer">
+            Don&apos;t have an account?{" "}
+            <Link href="/creator/signup">Join as Creator &rarr;</Link>
+            <br />
+            Are you a merchant?{" "}
+            <Link href="/merchant/login">Merchant login &rarr;</Link>
+          </p>
+
+          <Link href="/demo/creator" className="auth-demo-link">
+            Try Demo Mode &mdash; no account needed &rarr;
+          </Link>
         </div>
-      </div>
+      </main>
+      <Footer />
     </>
   );
 }

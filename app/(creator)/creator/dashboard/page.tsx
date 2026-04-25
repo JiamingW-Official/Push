@@ -2835,6 +2835,20 @@ function DashboardContent() {
         <Link href="/" className="dash-logo">
           Push
         </Link>
+        <Link
+          href="/creator/work/today"
+          className="dash-topbar-btn"
+          title="Go to Workspace"
+          style={{
+            fontSize: 11,
+            letterSpacing: "0.06em",
+            textTransform: "uppercase",
+            textDecoration: "none",
+            padding: "0 12px",
+          }}
+        >
+          Workspace →
+        </Link>
 
         {/* Center: view switcher */}
         <div className="dash-topbar-center">
@@ -2868,9 +2882,9 @@ function DashboardContent() {
             <span
               className="dash-filter-chip dash-filter-chip--active"
               style={{
-                background: "var(--primary)",
-                borderColor: "var(--primary)",
-                color: "#fff",
+                background: "var(--brand-red)",
+                borderColor: "var(--brand-red)",
+                color: "var(--snow)",
                 fontSize: 9,
                 cursor: "default",
               }}
@@ -2942,7 +2956,7 @@ function DashboardContent() {
               <div className="dash-panel-header">
                 <span className="dash-panel-title">Discover</span>
                 <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                  <span style={{ fontSize: 11, color: "var(--text-muted)" }}>
+                  <span style={{ fontSize: 11, color: "var(--ink-3)" }}>
                     {campaigns.length} near you &middot; {eligibleCount}{" "}
                     eligible
                   </span>
@@ -3090,12 +3104,12 @@ function DashboardContent() {
                               </span>
                             )}
                             {!eligible && (
-                              <span style={{ color: "var(--primary)" }}>
+                              <span style={{ color: "var(--brand-red)" }}>
                                 {TIER_LABELS[c.tier_required]}+
                               </span>
                             )}
                             {applied && (
-                              <span style={{ color: "var(--tertiary)" }}>
+                              <span style={{ color: "var(--ink-3)" }}>
                                 Applied
                               </span>
                             )}
@@ -3122,7 +3136,7 @@ function DashboardContent() {
             <>
               <div className="dash-panel-header">
                 <span className="dash-panel-title">My Campaigns</span>
-                <span style={{ fontSize: 11, color: "var(--text-muted)" }}>
+                <span style={{ fontSize: 11, color: "var(--ink-3)" }}>
                   {activeApps} active
                 </span>
               </div>
@@ -3303,7 +3317,7 @@ function DashboardContent() {
                   style={{ padding: 16, borderTop: "1px solid var(--line)" }}
                 >
                   <button
-                    className="dash-detail-apply-btn"
+                    className="dash-detail-apply-btn click-shift"
                     onClick={() => setShowPaycheck(true)}
                   >
                     Simulate First Paycheck
@@ -3372,7 +3386,7 @@ function DashboardContent() {
                           justifyContent: "space-between",
                           fontSize: 11,
                           fontFamily: "var(--font-body)",
-                          color: "var(--text-muted)",
+                          color: "var(--ink-3)",
                           marginBottom: 6,
                           textTransform: "uppercase",
                           letterSpacing: "0.05em",
@@ -3395,7 +3409,7 @@ function DashboardContent() {
                           style={{
                             width: `${takenPercent}%`,
                             height: "100%",
-                            background: "var(--primary)",
+                            background: "var(--brand-red)",
                             transition: "width 0.4s ease",
                           }}
                         />
@@ -3430,17 +3444,15 @@ function DashboardContent() {
                         marginBottom: 16,
                       }}
                     >
-                      <span style={{ color: "var(--text-muted)" }}>
-                        Base payout
-                      </span>
+                      <span style={{ color: "var(--ink-3)" }}>Base payout</span>
                       <span style={{ textAlign: "right" }}>
                         {formatCurrency(selectedCampaign.payout)}
                       </span>
-                      <span style={{ color: "var(--text-muted)" }}>
+                      <span style={{ color: "var(--ink-3)" }}>
                         Est. commission (~15%)
                       </span>
                       <span
-                        style={{ textAlign: "right", color: "var(--dark)" }}
+                        style={{ textAlign: "right", color: "var(--graphite)" }}
                       >
                         +{formatCurrency(selectedCampaign.payout * 0.15)}
                       </span>
@@ -3457,7 +3469,7 @@ function DashboardContent() {
                         style={{
                           textAlign: "right",
                           fontWeight: 600,
-                          color: "var(--primary)",
+                          color: "var(--brand-red)",
                           borderTop: "1px solid rgba(0,0,0,0.12)",
                           paddingTop: 6,
                         }}
@@ -3563,7 +3575,7 @@ function DashboardContent() {
                         You&apos;re eligible for this campaign
                       </div>
                       <button
-                        className="dash-detail-apply-btn"
+                        className="dash-detail-apply-btn click-shift"
                         onClick={() => handleApply(selectedCampaign.id)}
                       >
                         Apply Now

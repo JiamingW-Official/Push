@@ -89,14 +89,30 @@
   margin-bottom: var(--space-3);
 }
 
+/* ── Page header: eyebrow ────────────────────────────────────── */
+
+.pf-page-header {
+  margin-bottom: var(--space-3);
+}
+
+.pf-eyebrow {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-3, #61605c);
+  display: block;
+}
+
 /* ── Hero Section ────────────────────────────────────────────── */
 
 .pf-hero {
   display: flex;
   align-items: flex-start;
   gap: 24px;
-  background: var(--surface-elevated);
-  border: 1px solid rgba(0, 48, 73, 0.08);
+  background: var(--surface-2, #f5f3ee);
+  border-radius: var(--r-md);
   padding: var(--space-4);
   margin-bottom: var(--space-4);
 }
@@ -212,27 +228,9 @@
   color: var(--text-muted);
 }
 
-/* Edit Profile button — secondary ghost style */
+/* Edit button — white-space nowrap supplement to .btn-ghost */
 .pf-edit-btn {
-  padding: 8px 20px;
-  background: transparent;
-  color: var(--dark);
-  font-family: var(--font-body);
-  font-size: var(--text-small);
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  border: 1.5px solid var(--dark);
-  border-radius: var(--r-lg);
-  cursor: pointer;
-  transition: background var(--t-fast), color var(--t-fast),
-    border-color var(--t-fast);
   white-space: nowrap;
-}
-
-.pf-edit-btn:hover {
-  background: var(--dark);
-  color: var(--surface);
 }
 
 /* ── Stats Grid ──────────────────────────────────────────────── */
@@ -245,9 +243,9 @@
 }
 
 .pf-stat-card {
-  padding: 20px;
-  background: var(--surface-elevated);
-  border: 1px solid rgba(0, 48, 73, 0.08);
+  padding: 24px;
+  background: var(--surface-2, #f5f3ee);
+  border-radius: var(--r-md);
   border-left: 3px solid var(--tertiary);
 }
 
@@ -286,8 +284,8 @@
 /* ── Earnings Section ────────────────────────────────────────── */
 
 .pf-earnings-section {
-  background: var(--surface-elevated);
-  border: 1px solid rgba(0, 48, 73, 0.08);
+  background: var(--surface-2, #f5f3ee);
+  border-radius: var(--r-md);
   padding: var(--space-4);
   margin-bottom: var(--space-4);
 }
@@ -345,8 +343,8 @@
 /* ── Form card ───────────────────────────────────────────────── */
 
 .profile-form-card {
-  background: var(--surface-elevated);
-  border: 1px solid rgba(0, 48, 73, 0.08);
+  background: var(--surface-2, #f5f3ee);
+  border-radius: var(--r-md);
   padding: var(--space-4);
 }
 
@@ -484,59 +482,7 @@
   justify-content: flex-end;
 }
 
-/* Save button — primary */
-.save-btn {
-  padding: 12px var(--space-4);
-  background: var(--primary);
-  color: #fff;
-  font-family: var(--font-body);
-  font-size: var(--text-small);
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  border: none;
-  border-radius: var(--r-lg);
-  cursor: pointer;
-  box-shadow: var(--btn-shadow);
-  transition: box-shadow var(--t-fast), background var(--t-fast);
-}
-
-.save-btn:hover:not(:disabled) {
-  background: var(--accent);
-  box-shadow: var(--btn-shadow-hover);
-}
-
-.save-btn:disabled {
-  opacity: 0.55;
-  cursor: not-allowed;
-  box-shadow: none;
-}
-
-/* Cancel button — ghost */
-.pf-cancel-btn {
-  padding: 12px var(--space-3);
-  background: transparent;
-  color: var(--dark);
-  font-family: var(--font-body);
-  font-size: var(--text-small);
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  border: 1.5px solid rgba(0, 48, 73, 0.25);
-  border-radius: var(--r-lg);
-  cursor: pointer;
-  transition: border-color var(--t-fast), background var(--t-fast);
-}
-
-.pf-cancel-btn:hover:not(:disabled) {
-  border-color: var(--dark);
-  background: rgba(0, 48, 73, 0.04);
-}
-
-.pf-cancel-btn:disabled {
-  opacity: 0.55;
-  cursor: not-allowed;
-}
+/* Save / Cancel — handled by global .btn-primary / .btn-ghost */
 
 /* ── Mobile ──────────────────────────────────────────────────── */
 
@@ -592,8 +538,9 @@
     gap: var(--space-2);
   }
 
-  .save-btn,
-  .pf-cancel-btn {
+  /* Full-width buttons on mobile */
+  .pf-form-actions .btn-primary,
+  .pf-form-actions .btn-ghost {
     width: 100%;
     text-align: center;
   }

@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { createClient } from "@/lib/db/browser";
 import "./dashboard.css";
 
@@ -736,7 +737,8 @@ function ApplicationsTab({
         {(["all", "pending", "active", "done"] as AppFilter[]).map((f) => (
           <button
             key={f}
-            className={`app-filter-btn${filter === f ? " active" : ""}`}
+            className="btn-pill"
+            aria-pressed={filter === f}
             onClick={() => setFilter(f)}
           >
             {f === "all" && `All (${applications.length})`}
@@ -1411,159 +1413,147 @@ export default function MerchantDashboardPage() {
     : "M";
 
   return (
-    <div className="db-shell">
-      {/* Demo banner */}
-      {isDemo && (
-        <div className="db-demo-banner">
-          Demo Mode —{" "}
-          <a href="/demo" style={{ color: "inherit", fontWeight: 700 }}>
-            Switch perspective
-          </a>
-        </div>
-      )}
-
-      {/* Top Nav */}
-      <nav className="db-nav" style={isDemo ? { top: 32 } : undefined}>
-        <a href="/" className="db-nav__logo">
-          Push<span>.</span>
-        </a>
-        <div className="db-nav__center">
-          <span className="db-nav__title">Merchant Dashboard</span>
-        </div>
-        <div className="db-nav__right">
-          {merchant && (
-            <span className="db-nav__email">{merchant.business_name}</span>
-          )}
-          <div className="db-nav__avatar" aria-label={userEmail}>
-            {avatarInitials}
-          </div>
-          <button className="db-nav__signout" onClick={handleSignOut}>
-            {isDemo ? "Exit demo" : "Sign out"}
-          </button>
-        </div>
+    <>
+      {/* Top nav */}
+      <nav
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: 24,
+          padding: "0 48px",
+          height: 48,
+          borderBottom: "1px solid var(--line)",
+          background: "var(--surface-elevated)",
+          position: "sticky",
+          top: 0,
+          zIndex: 20,
+        }}
+      >
+        <span
+          style={{
+            fontFamily: "var(--font-display)",
+            fontWeight: 700,
+            fontSize: 16,
+            color: "var(--dark)",
+            letterSpacing: "-0.02em",
+          }}
+        >
+          Push
+        </span>
+        <span style={{ width: 1, height: 20, background: "var(--line)" }} />
+        {[
+          { href: "/merchant/dashboard", label: "Dashboard" },
+          { href: "/merchant/campaigns/new", label: "New Campaign" },
+          { href: "/merchant/qr-codes", label: "QR Codes" },
+          { href: "/merchant/redeem", label: "Redeem" },
+          { href: "/merchant/locations", label: "Locations" },
+        ].map(({ href, label }) => (
+          <Link
+            key={href}
+            href={href}
+            style={{
+              fontSize: 12,
+              fontWeight: 600,
+              letterSpacing: "0.04em",
+              textTransform: "uppercase",
+              color: "var(--text-muted)",
+              textDecoration: "none",
+              transition: "color 0.12s",
+            }}
+            onMouseEnter={(e) => (e.currentTarget.style.color = "var(--dark)")}
+            onMouseLeave={(e) =>
+              (e.currentTarget.style.color = "var(--text-muted)")
+            }
+          >
+            {label}
+          </Link>
+        ))}
+        <span style={{ flex: 1 }} />
+        <button
+          onClick={handleSignOut}
+          style={{
+            fontSize: 11,
+            color: "var(--text-muted)",
+            background: "none",
+            border: "none",
+            cursor: "pointer",
+            letterSpacing: "0.04em",
+          }}
+        >
+          Sign out
+        </button>
       </nav>
 
-      {/* Body */}
+      {/* Tab strip — replaces the old dark sidebar */}
       <div
-        className="db-body"
-        style={isDemo ? { marginTop: 60 + 32 } : undefined}
+        className="db-action-strip"
+        style={{
+          padding: "0 48px",
+          marginBottom: 0,
+          position: "sticky",
+          top: 48,
+          zIndex: 10,
+          background: "var(--surface, #f5f2ec)",
+        }}
       >
-        {/* Sidebar */}
-        <aside
-          className="db-sidebar"
-          style={
-            isDemo
-              ? { top: 60 + 32, height: `calc(100svh - ${60 + 32}px)` }
-              : undefined
-          }
+        <button
+          className={`db-strip-tab${activeTab === "campaigns" ? " db-strip-tab--active" : ""}`}
+          onClick={() => setActiveTab("campaigns")}
         >
-          <nav className="db-sidebar__nav">
-            <div className="db-nav-section">
-              <div className="db-nav-section__label">Menu</div>
-              <button
-                className={`db-nav-item${activeTab === "campaigns" ? " active" : ""}`}
-                onClick={() => setActiveTab("campaigns")}
-              >
-                <IconCampaigns />
-                Campaigns
-              </button>
-              <button
-                className={`db-nav-item${activeTab === "applications" ? " active" : ""}`}
-                onClick={() => setActiveTab("applications")}
-              >
-                <IconApplications />
-                Applications
-                {pendingCount > 0 && (
-                  <span className="db-nav-badge">{pendingCount}</span>
-                )}
-              </button>
-              <button
-                className={`db-nav-item${activeTab === "analytics" ? " active" : ""}`}
-                onClick={() => setActiveTab("analytics")}
-              >
-                <IconAnalytics />
-                Analytics
-              </button>
-              <a
-                href="/merchant/locations"
-                className="db-nav-item"
-                style={{ textDecoration: "none" }}
-              >
-                <IconLocations />
-                Locations
-              </a>
-              <button
-                className={`db-nav-item${activeTab === "settings" ? " active" : ""}`}
-                onClick={() => setActiveTab("settings")}
-              >
-                <IconSettings />
-                Settings
-              </button>
-            </div>
-          </nav>
-
-          <div className="db-sidebar__footer">
-            <div className="db-plan-badge">
-              <div className="db-plan-badge__label">Current Plan</div>
-              <div className="db-plan-badge__name">
-                {merchant?.plan === "advanced"
-                  ? "Advanced"
-                  : merchant?.plan === "pro"
-                    ? "Pro"
-                    : merchant?.plan === "essentials" ||
-                        merchant?.plan === "growth" ||
-                        merchant?.plan === "starter"
-                      ? "Essentials"
-                      : "Lite"}
-              </div>
-              <div className="db-plan-badge__price">
-                {merchant?.plan === "advanced"
-                  ? "$349 / mo"
-                  : merchant?.plan === "pro"
-                    ? "5% of revenue"
-                    : merchant?.plan === "essentials" ||
-                        merchant?.plan === "growth" ||
-                        merchant?.plan === "starter"
-                      ? "$99 / mo"
-                      : "$0 / mo"}
-              </div>
-              <a href="/merchant/billing" className="db-plan-badge__upgrade">
-                Upgrade plan →
-              </a>
-            </div>
-          </div>
-        </aside>
-
-        {/* Main */}
-        <main className="db-main">
-          {activeTab === "campaigns" && (
-            <CampaignsTab
-              campaigns={campaigns}
-              applications={applications}
-              loading={campaignsLoading}
-              error={error}
-              isDemo={isDemo}
-            />
+          <IconCampaigns /> Campaigns
+        </button>
+        <button
+          className={`db-strip-tab${activeTab === "applications" ? " db-strip-tab--active" : ""}`}
+          onClick={() => setActiveTab("applications")}
+        >
+          <IconApplications /> Applications
+          {pendingCount > 0 && (
+            <span className="db-strip-badge">{pendingCount}</span>
           )}
-          {activeTab === "applications" && (
-            <ApplicationsTab
-              applications={applications}
-              onAccept={handleAccept}
-              onReject={handleReject}
-              onApprove={handleApprove}
-            />
-          )}
-          {activeTab === "analytics" && (
-            <AnalyticsTab
-              campaigns={campaigns}
-              applications={applications}
-              analytics={analytics}
-              isDemo={isDemo}
-            />
-          )}
-          {activeTab === "settings" && <SettingsTab merchant={merchant} />}
-        </main>
+        </button>
+        <button
+          className={`db-strip-tab${activeTab === "analytics" ? " db-strip-tab--active" : ""}`}
+          onClick={() => setActiveTab("analytics")}
+        >
+          <IconAnalytics /> Analytics
+        </button>
+        <button
+          className={`db-strip-tab${activeTab === "settings" ? " db-strip-tab--active" : ""}`}
+          onClick={() => setActiveTab("settings")}
+        >
+          <IconSettings /> Settings
+        </button>
       </div>
-    </div>
+
+      {/* Content */}
+      <div className="db-main">
+        {activeTab === "campaigns" && (
+          <CampaignsTab
+            campaigns={campaigns}
+            applications={applications}
+            loading={campaignsLoading}
+            error={error}
+            isDemo={isDemo}
+          />
+        )}
+        {activeTab === "applications" && (
+          <ApplicationsTab
+            applications={applications}
+            onAccept={handleAccept}
+            onReject={handleReject}
+            onApprove={handleApprove}
+          />
+        )}
+        {activeTab === "analytics" && (
+          <AnalyticsTab
+            campaigns={campaigns}
+            applications={applications}
+            analytics={analytics}
+            isDemo={isDemo}
+          />
+        )}
+        {activeTab === "settings" && <SettingsTab merchant={merchant} />}
+      </div>
+    </>
   );
 }

@@ -178,14 +178,18 @@ function ConfirmModal({
           </div>
         )}
         <div className="confirm-modal__actions">
-          <button className="btn btn--ghost" onClick={onCancel}>
+          <button className="btn-ghost" onClick={onCancel}>
             Cancel
           </button>
           <button
-            className="btn btn--danger"
+            className="btn-ghost"
             disabled={!ready}
             onClick={onConfirm}
-            style={{ opacity: ready ? 1 : 0.4 }}
+            style={{
+              opacity: ready ? 1 : 0.4,
+              color: "var(--brand-red)",
+              borderColor: "var(--brand-red)",
+            }}
           >
             {confirmLabel}
           </button>
@@ -353,10 +357,7 @@ export default function CreatorSettingsPage() {
                   <span className="avatar-upload__hint">
                     JPG or PNG, max 4 MB
                   </span>
-                  <button
-                    className="btn btn--ghost btn--sm"
-                    style={{ marginTop: 8 }}
-                  >
+                  <button className="btn-ghost" style={{ marginTop: 8 }}>
                     Upload photo
                   </button>
                 </div>
@@ -447,7 +448,7 @@ export default function CreatorSettingsPage() {
                 disabled
               />
               <div style={{ paddingTop: 12 }}>
-                <button className="btn btn--ghost btn--sm">Change email</button>
+                <button className="btn-ghost">Change email</button>
               </div>
             </SettingsSection>
             <SettingsSection title="Password">
@@ -460,9 +461,7 @@ export default function CreatorSettingsPage() {
               >
                 We will send a password reset link to your email address.
               </p>
-              <button className="btn btn--ghost btn--sm">
-                Send reset link
-              </button>
+              <button className="btn-ghost">Send reset link</button>
             </SettingsSection>
           </>
         );
@@ -592,9 +591,7 @@ export default function CreatorSettingsPage() {
               >
                 No bank account connected. Add one to receive ACH payouts.
               </p>
-              <button className="btn btn--primary btn--sm">
-                Connect bank account
-              </button>
+              <button className="btn-primary">Connect bank account</button>
             </SettingsSection>
           </>
         );
@@ -630,9 +627,7 @@ export default function CreatorSettingsPage() {
                 onChange={(v) => patchPrivacy("adPreferences", v)}
               />
               <div style={{ paddingTop: 16 }}>
-                <button className="btn btn--ghost btn--sm">
-                  Export my data
-                </button>
+                <button className="btn-ghost">Export my data</button>
               </div>
             </SettingsSection>
           </>
@@ -659,7 +654,7 @@ export default function CreatorSettingsPage() {
                   </span>
                 </div>
                 <button
-                  className="btn btn--ghost btn--sm"
+                  className="btn-ghost"
                   onClick={() => setModal("deactivate")}
                 >
                   Deactivate
@@ -675,7 +670,11 @@ export default function CreatorSettingsPage() {
                   </span>
                 </div>
                 <button
-                  className="btn btn--danger btn--sm"
+                  className="btn-ghost"
+                  style={{
+                    color: "var(--brand-red)",
+                    borderColor: "var(--brand-red)",
+                  }}
                   onClick={() => setModal("delete")}
                 >
                   Delete
@@ -704,7 +703,7 @@ export default function CreatorSettingsPage() {
           </span>
           <div className="settings-save-bar__actions">
             <button
-              className="btn btn--ghost btn--sm"
+              className="btn-ghost"
               onClick={() => {
                 setSettings(DEFAULT_SETTINGS);
                 setDirty(false);
@@ -713,7 +712,7 @@ export default function CreatorSettingsPage() {
               Discard
             </button>
             <button
-              className="btn btn--primary btn--sm"
+              className="btn-primary"
               onClick={save}
               disabled={saveStatus === "saving"}
             >

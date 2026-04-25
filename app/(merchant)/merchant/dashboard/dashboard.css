@@ -412,15 +412,7 @@
   color: rgba(0, 48, 73, 0.45);
 }
 
-/* Stagger KPI cards */
-.kpi-grid .kpi-card {
-  animation: db-slideInUp 520ms cubic-bezier(0.22, 1, 0.36, 1) both;
-}
-
-.kpi-grid .kpi-card:nth-child(1) { animation-delay: 40ms; }
-.kpi-grid .kpi-card:nth-child(2) { animation-delay: 100ms; }
-.kpi-grid .kpi-card:nth-child(3) { animation-delay: 160ms; }
-.kpi-grid .kpi-card:nth-child(4) { animation-delay: 220ms; }
+/* KPI cards — no stagger animation (React re-renders reset fill-mode:both) */
 
 /* ------------------------------------------------------------
    Action strip (tab bar + new campaign CTA)
@@ -512,7 +504,6 @@
    Tab content area
    ------------------------------------------------------------ */
 .db-tab-content {
-  animation: db-fadeIn 280ms ease both;
 }
 
 /* Tab internal header (inside a tab, not the greeting) */
@@ -747,17 +738,7 @@
   letter-spacing: 0.02em;
 }
 
-/* Stagger campaign cards */
-.campaign-grid .campaign-card {
-  animation: db-slideInUp 440ms cubic-bezier(0.22, 1, 0.36, 1) both;
-}
-
-.campaign-grid .campaign-card:nth-child(1) { animation-delay: 30ms; }
-.campaign-grid .campaign-card:nth-child(2) { animation-delay: 80ms; }
-.campaign-grid .campaign-card:nth-child(3) { animation-delay: 130ms; }
-.campaign-grid .campaign-card:nth-child(4) { animation-delay: 180ms; }
-.campaign-grid .campaign-card:nth-child(5) { animation-delay: 230ms; }
-.campaign-grid .campaign-card:nth-child(6) { animation-delay: 280ms; }
+/* Campaign cards — no stagger animation */
 
 /* ------------------------------------------------------------
    Status Badges
@@ -938,7 +919,6 @@
   padding: var(--space-3, 24px) var(--space-4, 32px) var(--space-4, 32px) calc(40px + var(--space-3) + var(--space-4));
   border-top: 1px solid rgba(0, 48, 73, 0.06);
   background: var(--surface-bright, #fafaf8);
-  animation: db-slideInUp 260ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 .applicant-row__detail-grid {
@@ -973,15 +953,7 @@
   margin-bottom: var(--space-2, 16px);
 }
 
-/* Stagger applicant rows */
-.applicant-list .applicant-row {
-  animation: db-slideInUp 400ms cubic-bezier(0.22, 1, 0.36, 1) both;
-}
-
-.applicant-list .applicant-row:nth-child(1) { animation-delay: 30ms; }
-.applicant-list .applicant-row:nth-child(2) { animation-delay: 70ms; }
-.applicant-list .applicant-row:nth-child(3) { animation-delay: 110ms; }
-.applicant-list .applicant-row:nth-child(4) { animation-delay: 150ms; }
+/* Applicant rows — no stagger animation */
 .applicant-list .applicant-row:nth-child(5) { animation-delay: 190ms; }
 .applicant-list .applicant-row:nth-child(6) { animation-delay: 230ms; }
 .applicant-list .applicant-row:nth-child(7) { animation-delay: 270ms; }
@@ -1110,6 +1082,121 @@
 
 .app-btn--view:hover {
   background: rgba(102, 155, 188, 0.08);
+}
+
+/* app-card: horizontal card for each creator application */
+.app-card {
+  display: grid;
+  grid-template-columns: 1fr 1fr auto;
+  gap: 24px;
+  align-items: center;
+  padding: 20px 24px;
+  border-bottom: 1px solid rgba(0, 48, 73, 0.06);
+  background: var(--surface-elevated, #fff);
+  transition: background 150ms;
+}
+
+.app-card:last-child {
+  border-bottom: none;
+}
+
+.app-card:hover {
+  background: rgba(245, 242, 236, 0.6);
+}
+
+.app-card--rejected {
+  opacity: 0.55;
+}
+
+.app-card__creator {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.app-card__avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+  background: rgba(0, 48, 73, 0.06);
+}
+
+.app-card__creator-info {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.app-card__creator-name {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--dark, #003049);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.app-card__creator-meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: rgba(0, 48, 73, 0.55);
+}
+
+.app-card__handle { font-weight: 600; }
+.app-card__dot { opacity: 0.4; }
+.app-card__followers {}
+
+.app-card__badges {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 2px;
+}
+
+.app-card__score {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: rgba(0, 48, 73, 0.45);
+}
+
+.app-card__middle {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.app-card__campaign {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--dark, #003049);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.app-card__milestone-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.app-card__date {
+  font-size: 11px;
+  color: rgba(0, 48, 73, 0.45);
+}
+
+.app-card__actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
 }
 
 .app-card__done {
@@ -1798,4 +1885,160 @@
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+/* ------------------------------------------------------------
+   Page header (eyebrow + title + CTA row)
+   ------------------------------------------------------------ */
+.db-page-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: var(--space-5, 40px);
+}
+
+.db-page-header__left {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.db-page-header__eyebrow {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--primary, #c1121f);
+}
+
+.db-page-header__title {
+  font-family: var(--font-display, Darky, sans-serif);
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: var(--dark, #003049);
+  line-height: 1.1;
+}
+
+/* ------------------------------------------------------------
+   Stat cards row
+   ------------------------------------------------------------ */
+.db-stats-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-3, 24px);
+  margin-bottom: var(--space-5, 40px);
+}
+
+@media (max-width: 900px) {
+  .db-stats-row {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .db-stats-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+.db-stat-card {
+  background: var(--surface-elevated, #fff);
+  border: 1px solid rgba(0, 48, 73, 0.1);
+  border-radius: var(--r-xl, 16px);
+  padding: var(--space-4, 32px) var(--space-3, 24px);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.db-stat-card--accent {
+  border-left: 3px solid var(--primary, #c1121f);
+}
+
+.db-stat-card__label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(0, 48, 73, 0.5);
+}
+
+.db-stat-card__number {
+  font-family: var(--font-display, Darky, sans-serif);
+  font-size: clamp(40px, 5vw, 72px);
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  color: var(--dark, #003049);
+  line-height: 1;
+}
+
+.db-stat-card__trend {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--success-dark, #1a7a4a);
+}
+
+.db-stat-card__trend.neutral {
+  color: rgba(0, 48, 73, 0.45);
+}
+
+/* ------------------------------------------------------------
+   Campaign list table
+   ------------------------------------------------------------ */
+.db-table-header {
+  display: grid;
+  grid-template-columns: 1fr 100px 80px 90px 110px;
+  gap: 16px;
+  padding: 12px 24px;
+  background: rgba(0, 48, 73, 0.03);
+  border-bottom: 1px solid rgba(0, 48, 73, 0.08);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(0, 48, 73, 0.45);
+  min-width: 560px;
+}
+
+.db-campaign-list--demo .db-table-header {
+  grid-template-columns: 1fr 100px 80px 90px 70px 80px 110px;
+}
+
+.db-campaign-row {
+  display: grid;
+  grid-template-columns: 1fr 100px 80px 90px 110px;
+  gap: 16px;
+  padding: 20px 24px;
+  border-bottom: 1px solid rgba(0, 48, 73, 0.06);
+  align-items: center;
+  min-width: 560px;
+  transition: background 150ms;
+}
+
+.db-campaign-row:last-child {
+  border-bottom: none;
+}
+
+.db-campaign-row:hover {
+  background: rgba(245, 242, 236, 0.6);
+}
+
+.db-campaign-list--demo .db-campaign-row {
+  grid-template-columns: 1fr 100px 80px 90px 70px 80px 110px;
+}
+
+.db-campaign-row__cell {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--dark, #003049);
+}
+
+.db-campaign-row__payout {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--dark, #003049);
+  font-family: var(--font-display, Darky, sans-serif);
+  letter-spacing: -0.01em;
 }

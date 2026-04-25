@@ -1,5 +1,53 @@
 /* ============================================================
-   Creator Login — Component Styles
+   Creator Login — v11 Product Register
+   Centered card layout; no split-panel, no auth-split.css dependency.
+   ============================================================ */
+
+/* ── Page shell ───────────────────────────────────────────── */
+
+.login-page-main {
+  min-height: calc(100svh - 64px);
+  background: var(--surface);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 24px;
+}
+
+/* ── Login card ───────────────────────────────────────────── */
+
+.login-card {
+  width: 100%;
+  max-width: 480px;
+  background: var(--surface-2, #f5f3ee);
+  border-radius: var(--r-3xl);
+  padding: 48px;
+}
+
+/* ── Eyebrow (canonical, no brackets) ────────────────────── */
+
+.login-eyebrow {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-3, #61605c);
+  display: block;
+  margin-bottom: 16px;
+}
+
+/* ── Mobile ───────────────────────────────────────────────── */
+
+@media (max-width: 480px) {
+  .login-card {
+    padding: 32px 24px;
+    border-radius: var(--r-xl);
+  }
+}
+
+/* ============================================================
+   Original component styles below
    ============================================================ */
 
 /* ── Page load entrance animations ───────────────────────── */
@@ -215,26 +263,12 @@ form.form-loading {
 
 .forgot-link a:hover { color: var(--dark); }
 
-/* ── Submit button ────────────────────────────────────────── */
+/* ── Submit button — extends .btn-primary with full width ─── */
 
 .submit-btn {
   width: 100%;
   justify-content: center;
-  padding-block: var(--space-3);
   min-height: 52px;
-  font-size: var(--text-body);
-  transition: background var(--t-base), box-shadow 200ms ease, transform 150ms ease;
-}
-
-.submit-btn:hover {
-  box-shadow: var(--shadow-3);
-  transform: translateY(-1px);
-}
-
-.submit-btn:active,
-.submit-btn[data-pressed="true"] {
-  transform: scale(0.98);
-  opacity: 0.9;
 }
 
 /* ── Loading dots ─────────────────────────────────────────── */
