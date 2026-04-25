@@ -27,7 +27,7 @@ const PLANS = [
   {
     id: "growth",
     eyebrow: "(MOST POPULAR)",
-    eyebrowColor: "var(--ga-orange)" as const,
+    eyebrowColor: "var(--brand-red)" as const,
     name: "Growth",
     price: "$49",
     priceSub: "/ month",
