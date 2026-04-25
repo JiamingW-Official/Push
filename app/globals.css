@@ -85,6 +85,27 @@
   font-style: italic;
   font-display: swap;
 }
+@font-face {
+  font-family: 'Mystic Dream';
+  src: url('/fonts/MysticDream-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Magvix';
+  src: url('/fonts/Magvix-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Magvix';
+  src: url('/fonts/Magvix-Italic.ttf') format('truetype');
+  font-weight: normal;
+  font-style: italic;
+  font-display: swap;
+}
 
 /* ------------------------------------------------------------
    2. Design Tokens  (Design.md canonical names)
@@ -101,13 +122,13 @@
   /* ---- Foundation — Ink Ladder (text, icons, hairlines) ---- */
   --ink:             #0a0a0a;   /* Primary text, headings, icon strokes */
   --ink-2:           #1f1f1f;   /* Secondary heading, dark panel bg */
-  --ink-3:           #3a3a3a;   /* Body copy */
+  --ink-3:           #61605c;   /* Body copy — v11 warm gray */
   --ink-4:           #6a6a6a;   /* Secondary label, metadata */
   --ink-5:           #9a9a9a;   /* Tertiary metadata, icon-secondary */
   --ink-6:           #cfcfcf;   /* Placeholder, disabled, lightest chip fill */
 
   /* ---- Foundation — Surface Ladder (Ivory base, not pure white) ---- */
-  --surface:         #fbfaf7;   /* Ivory Warm White — default page bg */
+  --surface:         #f8f4e8;   /* Ivory Cream — default page bg (v11) */
   --surface-2:       #f5f3ee;   /* Pearl Stone — nested cards on surface */
   --surface-3:       #ece9e0;   /* Bone — button hover, muted block */
 
@@ -148,6 +169,83 @@
   --cat-ent-tint:     rgba(139,  58,  76, 0.12);
   --cat-ent-deep:     #5c242f;
 
+  /* ---- v9 · Candy Panel Fills (N2W reference DNA) ---- */
+  --panel-butter:       #fff2d5;
+  --panel-butter-tint:  rgba(255,242,213,0.22);
+  --panel-butter-deep:  #e6c87a;
+
+  --panel-peach:        #fdbc97;
+  --panel-peach-tint:   rgba(253,188,151,0.26);
+  --panel-peach-deep:   #e09a72;
+
+  --panel-blush:        #f9ebe4;
+  --panel-blush-tint:   rgba(249,235,228,0.32);
+  --panel-blush-deep:   #e0c0b0;
+
+  --panel-sky:          #c8e2ff;
+  --panel-sky-tint:     rgba(200,226,255,0.30);
+  --panel-sky-deep:     #93c5fd;
+
+  /* ---- v9 · Editorial Moment Colors (OFFTRAIL reference DNA — rare, ≤1 per page) ---- */
+  --editorial-blue:      #1e5fad;
+  --editorial-blue-deep: #144a8a;
+  --editorial-blue-tint: rgba(30, 95, 173, 0.10);
+
+  --editorial-pink:      #e8447d;
+  --editorial-pink-deep: #c8336a;
+  --editorial-pink-tint: rgba(232, 68, 125, 0.10);
+
+  /* ---- v11 NEW — GA Tri-Color Nav (nav-only, forbidden elsewhere) ---- */
+  --ga-orange:      #ff5e2b;
+  --ga-orange-deep: #d94215;
+  --ga-orange-tint: rgba(255,94,43,0.12);
+  --ga-green:       #4ade80;
+  --ga-sky:         #93c5fd;
+
+  /* ---- v11 NEW — N2W Blue (secondary CTA) ---- */
+  --accent-blue:       #0085ff;
+  --accent-blue-deep:  #0077b5;
+  --accent-blue-tint:  rgba(0,133,255,0.10);
+
+  /* ---- v11 NEW — Warm-gray ladder additions ---- */
+  --mist: #d8d4c8;   /* card frame border, divider band, rest-state scrollbar */
+  --char: #3a3835;   /* dark panel alternative; softer warm dark panel */
+
+  /* ---- v11 NEW — Candy Panel accent ---- */
+  --panel-bright-yellow: #ffe083;   /* hero stat tile accent only */
+
+  /* ---- v11 NEW — Dotted hairline (Editorial Table + Ticket Panel perforation) ---- */
+  --hairline-dotted: repeating-linear-gradient(
+    to right,
+    rgba(10,10,10,0.20) 0 4px,
+    transparent 4px 8px
+  );
+
+  /* ---- v11 font alias ---- */
+  --font-mono: 'CSGenioMono', 'SF Mono', 'Fira Code', monospace;
+
+  /* ---- v9 · Glass Tokens (warm/deep Candy Panel variants) ---- */
+  --glass-bg-warm:    rgba(255, 255, 255, 0.72);
+  --glass-bg-deep:    rgba(20, 74, 138, 0.14);
+  --glass-blur-deep:  40px;
+  --glass-border-warm: 1px solid rgba(255, 255, 255, 0.72);
+  --glass-border-deep: 1px solid rgba(255, 255, 255, 0.22);
+
+  /* ---- v8.1 · Volt Indigo (cool vibrant — the only cool accent) ---- */
+  --volt:             #2d3aff;   /* Live-now, fresh-drop, kinetic moment */
+  --volt-deep:        #1c26d6;   /* Hover / pressed */
+  --volt-tint:        rgba(45, 58, 255, 0.10);  /* Live-now badge bg */
+  --volt-focus:       rgba(45, 58, 255, 0.22);  /* Focus ring on volt buttons */
+
+  /* ---- v8.1 · Obsidian + Snow (extreme-contrast pair — 1 per page) ---- */
+  --obsidian:         #000000;   /* Editorial poster backdrop — colder than Ink */
+  --snow:             #ffffff;   /* Text on obsidian only — colder than Ivory */
+
+  /* ---- v8.1 · Mystic Dream type scale ---- */
+  --text-mystic-hero:    clamp(80px, 16vw, 240px);   /* Marketing hero billboard */
+  --text-mystic-section: clamp(56px, 8vw, 120px);    /* Editorial section title */
+  --text-mystic-tag:     clamp(28px, 3vw, 40px);     /* Tag / accent label */
+
   /* ---- Semantic (iOS SF-inspired) ---- */
   --success:          #34c759;
   --success-dark:     #1f7a39;
@@ -170,17 +268,21 @@
   --shadow-3:   0 0 0 1px rgba(10, 10, 10, 0.04),
                 0 12px 32px rgba(10, 10, 10, 0.10),
                 0 4px 12px rgba(10, 10, 10, 0.06);
+  --shadow-glass: inset 0 1px 0 rgba(255,255,255,0.5),
+                  0 8px 32px rgba(10,10,10,0.08);
   --shadow-focus: 0 0 0 4px var(--brand-red-focus);
 
-  /* ---- Radius (iOS 26 continuous corner scale — border-radius: 0 retired) ---- */
-  --r-sm:    8px;     /* badges, tags, status pills */
-  --r-md:    12px;    /* inputs (text/textarea/select), tooltips */
-  --r-lg:    14px;    /* buttons (square), dropdown menus, small cards */
-  --r-xl:    20px;    /* standard cards (listing, content), image containers */
-  --r-2xl:   28px;    /* modals, drawers, sheets, booking panels */
-  --r-3xl:   32px;    /* hero blocks, large modular sections */
-  --r-pill:  50vh;    /* pill buttons, filter chips, status tags */
-  --r-full:  50%;     /* avatars, icon circles, map pins */
+  /* ---- Radius (v11 iOS 26 continuous corner scale) ---- */
+  --r-xs:   4px;     /* toggles, micro-indicators */
+  --r-sm:   8px;     /* buttons, badges, status pills, inputs */
+  --r-md:   10px;    /* standard cards, tooltips, Ticket Panel */
+  --r-lg:   12px;    /* dropdown menus, icon tiles (40×40) */
+  --r-xl:   16px;    /* floating liquid-glass tiles, mid panels */
+  --r-2xl:  20px;    /* modals, drawers, sheets, photo containers */
+  --r-3xl:  28px;    /* standard Candy Panel */
+  --r-4xl:  40px;    /* footer rounded-top, oversized hero panel */
+  --r-pill: 50vh;    /* pill buttons, GA nav pills, filter chips */
+  --r-full: 50%;     /* avatars, icon circles, Ticket Panel grommets */
 
   /* ---- Motion (iOS 26 spring timing) ---- */
   --ease-spring:    cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -217,7 +319,7 @@
   --primary:          var(--brand-red);
   --accent:           var(--brand-red-deep);
   --dark:             var(--ink);
-  --graphite:         var(--ink-4);
+  --graphite:         #2c2a26;   /* v11 proper graphite — mid-strong heading color */
   --tertiary:         var(--ink-4);           /* Steel Blue retired; legacy callers get ink-4 */
   --surface-bright:   var(--surface);
   --surface-elevated: #ffffff;
@@ -233,7 +335,9 @@
   --gray-500:         var(--ink-4);
 
   /* ---- Typography ---- */
+  --font-hero:    'Magvix', serif;              /* v9 — hero/wordmark/signature, max 1 per page */
   --font-display: 'Darky', sans-serif;
+  --font-poster:  'Mystic Dream', sans-serif;   /* v8.1 retired — use --font-hero (Magvix) */
   --font-body:    'CSGenioMono', 'SF Mono', 'Fira Code', monospace;
 
   /* ---- Type Scale (v7 — bigger, bolder, tighter) ---- */
@@ -245,7 +349,7 @@
   --text-body:    16px;
   --text-small:   14px;
   --text-caption: 12px;
-  --text-eyebrow: 11px;
+  --text-eyebrow: 12px;   /* v9 floor: was 11px */
 
   /* ---- Spacing (8px grid, extended to 128px for v7 bold modular) ---- */
   --space-1:  8px;
@@ -541,38 +645,20 @@ p  { font-size: var(--text-body); line-height: 1.6; color: var(--ink-3); }
   white-space: nowrap;
   text-transform: none;
 }
-/* Primary Filled — core CTA (Apply / Launch / Reserve) */
-.btn-primary {
-  background: var(--brand-red);
-  color: #fff;
-  border: 1px solid var(--brand-red);
-}
-.btn-primary:hover {
-  background: var(--brand-red-deep);
-  border-color: var(--brand-red-deep);
-  box-shadow: var(--shadow-1);
-}
-/* Ink Filled — non-brand main action (Save / Submit / Next) */
-.btn-ink {
-  background: var(--ink);
-  color: #fff;
-  border: 1px solid var(--ink);
-}
-.btn-ink:hover {
-  background: var(--ink-2);
-  border-color: var(--ink-2);
-  box-shadow: var(--shadow-1);
-}
-/* Champagne Filled — premium moment (Partner invite / Featured action) */
+/* v11: btn-primary/secondary/ink/ghost/pill/editorial now defined in v11 Unified Button System
+   section at end of file (§ 9). Kept .btn base + champagne + glass for legacy callers. */
 .btn-champagne {
   background: var(--champagne);
   color: var(--ink);
   border: 1px solid var(--champagne);
+  border-radius: var(--r-sm);
 }
 .btn-champagne:hover {
+  transform: translate(1px,1px); /* v11: hover never darkens — shift only */
+}
+.btn-champagne:active {
+  transform: translate(2px,2px) scale(0.98);
   background: var(--champagne-deep);
-  border-color: var(--champagne-deep);
-  color: #fff;
 }
 /* Glass Secondary — overlay, floating */
 .btn-glass {
@@ -581,35 +667,9 @@ p  { font-size: var(--text-body); line-height: 1.6; color: var(--ink-3); }
   -webkit-backdrop-filter: blur(24px) saturate(1.8);
   color: var(--ink);
   border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: var(--r-sm);
 }
-/* Ghost Tertiary — cancel, secondary, inline */
-.btn-ghost {
-  background: transparent;
-  color: var(--ink);
-  border: 1px solid var(--hairline-2);
-  padding: 12px 20px;
-}
-.btn-ghost:hover {
-  border-color: var(--ink);
-  background: var(--surface-3);
-}
-/* Pill Primary — mobile bottom-fixed CTA, sticky floating */
-.btn-pill {
-  border-radius: var(--r-pill);
-  padding: 14px 28px;
-}
-/* Legacy secondary — aliased to ghost style for backward-compat */
-.btn-secondary {
-  background: var(--surface);
-  color: var(--ink);
-  border: 1px solid var(--ink);
-}
-.btn-secondary:hover {
-  background: var(--ink);
-  color: var(--surface);
-}
-.btn:active { transform: scale(0.97); transition: transform 120ms var(--ease-spring); }
-.btn-primary:active, .btn-ink:active { transform: scale(0.96); }
+.btn-glass:hover { transform: translate(1px,1px); }
 .btn:focus-visible { box-shadow: var(--shadow-focus); outline: none; }
 .btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none !important; }
 
@@ -1216,19 +1276,82 @@ p  { font-size: var(--text-body); line-height: 1.6; color: var(--ink-3); }
 }
 
 /* ------------------------------------------------------------
-   11g. Premium webkit scrollbar
+   11g. v11 Custom Scrollbar System (§ 8.11 — STRICT)
+   Refined warm-neutral; almost invisible at rest.
+   System-default scrollbars forbidden.
    ------------------------------------------------------------ */
+
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--mist) transparent;
+}
+
+/* Chromium / WebKit */
 ::-webkit-scrollbar {
-  width: 6px;
+  width: 8px;
+  height: 8px;
 }
 ::-webkit-scrollbar-track {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: var(--line-strong);
+  background: var(--mist);
+  border-radius: var(--r-pill);
+  border: 1.5px solid transparent;
+  background-clip: padding-box;
+  transition: background 180ms ease;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--text-muted);
+  background: var(--ink-4);
+  background-clip: padding-box;
+}
+::-webkit-scrollbar-thumb:active {
+  background: var(--ink-3);
+  background-clip: padding-box;
+}
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+/* Dark variant — for scrollable panels over Editorial Blue / Ink / Char */
+.scrollbar--dark {
+  scrollbar-color: rgba(255,255,255,0.25) transparent;
+}
+.scrollbar--dark::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.25);
+  background-clip: padding-box;
+}
+.scrollbar--dark::-webkit-scrollbar-thumb:hover {
+  background: rgba(255,255,255,0.45);
+  background-clip: padding-box;
+}
+.scrollbar--dark::-webkit-scrollbar-thumb:active {
+  background: rgba(255,255,255,0.60);
+  background-clip: padding-box;
+}
+
+/* Horizontal variant — Sticky Filter Rail, sideways photo strip, code blocks */
+.scrollbar--horizontal {
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+.scrollbar--horizontal::-webkit-scrollbar {
+  height: 6px;
+}
+
+/* Hidden variant — Photo Card interiors, Liquid Glass tiles */
+.scrollbar--hidden {
+  scrollbar-width: none;
+}
+.scrollbar--hidden::-webkit-scrollbar {
+  display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::-webkit-scrollbar-thumb {
+    transition: none;
+  }
 }
 
 /* ------------------------------------------------------------
@@ -1383,5 +1506,547 @@ a, button {
   a[href]:after {
     content: " (" attr(href) ")";
     font-size: 10px;
+  }
+}
+
+/* ============================================================
+   v8.1 — Mystic Dream utility classes
+   Use sparingly: 1 per page max. Obsidian backdrop only for
+   white variant. Never at < 28px.
+   ============================================================ */
+
+.poster-hero {
+  font-family: var(--font-poster);
+  font-size: var(--text-mystic-hero);
+  font-weight: normal;
+  letter-spacing: -0.02em;
+  line-height: 0.9;
+  color: var(--ink);
+}
+
+.poster-section {
+  font-family: var(--font-poster);
+  font-size: var(--text-mystic-section);
+  font-weight: normal;
+  letter-spacing: -0.015em;
+  line-height: 0.92;
+  color: var(--ink);
+}
+
+.poster-tag {
+  font-family: var(--font-poster);
+  font-size: var(--text-mystic-tag);
+  font-weight: normal;
+  letter-spacing: 0;
+  line-height: 1;
+  color: var(--ink);
+}
+
+/* Obsidian section block — 1 per page, snow text, editorial moment */
+.obsidian-block {
+  background: var(--obsidian);
+  color: var(--snow);
+  border-radius: var(--r-3xl);
+}
+
+.obsidian-block .poster-hero,
+.obsidian-block .poster-section,
+.obsidian-block .poster-tag {
+  color: var(--snow);
+}
+
+/* Volt pill — live-now / fresh-drop signal */
+.pill-volt {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  background: var(--volt-tint);
+  color: var(--volt);
+  border-radius: var(--r-pill);
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.pill-volt::before {
+  content: '';
+  width: 5px;
+  height: 5px;
+  background: var(--volt);
+  border-radius: 50%;
+  animation: pulse 1.8s ease-in-out infinite;
+}
+
+/* Editorial divider — thin red rule across full width */
+.divider-editorial {
+  width: 100%;
+  height: 1px;
+  background: var(--hairline-2);
+  position: relative;
+  margin: 0;
+}
+
+.divider-editorial::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 32px;
+  height: 2px;
+  background: var(--brand-red);
+  transform: translateY(-50%);
+}
+
+/* Oversized ghost numeral — Darky 100 Thin decorative */
+.numeral-ghost {
+  font-family: var(--font-display);
+  font-weight: 100;
+  font-size: clamp(120px, 20vw, 320px);
+  letter-spacing: -0.06em;
+  line-height: 0.85;
+  color: rgba(10, 10, 10, 0.06);
+  pointer-events: none;
+  user-select: none;
+  position: absolute;
+}
+
+/* Wide editorial section — full bleed Ivory with max breathing room */
+.section-editorial {
+  padding: clamp(80px, 12vw, 160px) clamp(24px, 5vw, 80px);
+  position: relative;
+  overflow: hidden;
+}
+
+/* ============================================================
+   v9 — Bottom-right hover shift (brand interaction signature)
+   Apply to every clickable element: buttons, cards, badges,
+   icon-circles, footer social pills, nav links.
+   Exempt: forms, static badges, hairlines, paragraphs, images.
+   ============================================================ */
+.click-shift {
+  transition:
+    transform 220ms cubic-bezier(0.34, 1.56, 0.64, 1),
+    box-shadow 220ms ease,
+    background-color 220ms ease;
+  will-change: transform;
+}
+.click-shift:hover  { transform: translate(2px, 2px); }
+.click-shift:active { transform: translate(3px, 3px) scale(0.98); transition-duration: 120ms; }
+.click-shift:focus-visible { outline: none; box-shadow: var(--shadow-focus); }
+.click-shift:disabled { transform: none; cursor: not-allowed; opacity: 0.4; }
+@media (prefers-reduced-motion: reduce) {
+  .click-shift { transition: none !important; transform: none !important; }
+}
+
+/* ============================================================
+   v9 — Magvix utility classes
+   ============================================================ */
+.magvix-wordmark {
+  font-family: var(--font-hero);
+  font-style: italic;
+  font-weight: normal;
+  font-size: clamp(56px, 10vw, 160px);
+  letter-spacing: -0.015em;
+  line-height: 0.9;
+}
+.magvix-hero {
+  font-family: var(--font-hero);
+  font-style: normal;
+  font-weight: normal;
+  font-size: clamp(96px, 16vw, 240px);
+  letter-spacing: -0.02em;
+  line-height: 0.88;
+}
+
+/* ============================================================
+   v9 — Icon tile utility (40×40, --r-md, centered)
+   ============================================================ */
+.icon-tile {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--r-md);
+  flex-shrink: 0;
+}
+.icon-tile-sm { width: 32px; height: 32px; }
+.icon-tile-lg { width: 48px; height: 48px; }
+
+/* ============================================================
+   v11 — Liquid Glass System (§ 8.9 iOS 26 Liquid Glass)
+   ============================================================ */
+
+/* Light variant — for surfaces over Ivory Cream / Pearl Stone / light photos */
+.lg-surface {
+  background:
+    radial-gradient(ellipse at 25% 0%, rgba(255,255,255,0.55) 0%, rgba(255,255,255,0) 55%),
+    radial-gradient(ellipse at 90% 100%, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0) 60%),
+    rgba(255,255,255,0.22);
+  -webkit-backdrop-filter: blur(32px) saturate(180%);
+  backdrop-filter: blur(32px) saturate(180%);
+  border: 0.5px solid rgba(255,255,255,0.40);
+  border-radius: var(--r-xl);
+  box-shadow:
+    0 8px 24px rgba(10,10,10,0.08),
+    0 2px 6px rgba(10,10,10,0.05),
+    inset 0 1px 0 rgba(255,255,255,0.50),
+    inset 0 -1px 0 rgba(10,10,10,0.05);
+  color: var(--ink);
+}
+
+/* Dark variant — for surfaces over photos / Editorial Blue / Ink / Char */
+.lg-surface--dark {
+  background:
+    radial-gradient(ellipse at 25% 0%, rgba(255,255,255,0.22) 0%, rgba(255,255,255,0) 55%),
+    radial-gradient(ellipse at 90% 100%, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0) 60%),
+    rgba(40,36,32,0.32);
+  -webkit-backdrop-filter: blur(36px) saturate(160%);
+  backdrop-filter: blur(36px) saturate(160%);
+  border: 0.5px solid rgba(255,255,255,0.20);
+  border-radius: var(--r-xl);
+  box-shadow:
+    0 12px 32px rgba(0,0,0,0.22),
+    0 4px 8px rgba(0,0,0,0.12),
+    inset 0 1px 0 rgba(255,255,255,0.22),
+    inset 0 -1px 0 rgba(0,0,0,0.18);
+  color: var(--snow);
+}
+
+/* Footer Tile Pair variant — picks up Editorial Blue tint */
+.lg-surface--footer-tile {
+  background:
+    radial-gradient(ellipse at 25% 0%, rgba(255,255,255,0.20) 0%, rgba(255,255,255,0) 55%),
+    radial-gradient(ellipse at 90% 100%, rgba(0,0,0,0.14) 0%, rgba(0,0,0,0) 60%),
+    rgba(30,95,173,0.18);
+  -webkit-backdrop-filter: blur(36px) saturate(160%);
+  backdrop-filter: blur(36px) saturate(160%);
+  border: 0.5px solid rgba(255,255,255,0.20);
+  border-radius: var(--r-xl);
+  box-shadow:
+    0 16px 40px rgba(0,0,0,0.26),
+    0 4px 8px rgba(0,0,0,0.14),
+    inset 0 1px 0 rgba(255,255,255,0.22),
+    inset 0 -1px 0 rgba(0,0,0,0.18);
+  color: var(--snow);
+}
+
+/* Photo Card Floating Badge variant */
+.lg-surface--badge {
+  background:
+    radial-gradient(ellipse at 25% 0%, rgba(255,255,255,0.22) 0%, rgba(255,255,255,0) 55%),
+    radial-gradient(ellipse at 90% 100%, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0) 60%),
+    rgba(40,36,32,0.32);
+  -webkit-backdrop-filter: blur(36px) saturate(160%);
+  backdrop-filter: blur(36px) saturate(160%);
+  border: 0.5px solid rgba(255,255,255,0.20);
+  border-radius: var(--r-pill);
+  box-shadow:
+    0 4px 16px rgba(0,0,0,0.20),
+    0 1px 4px rgba(0,0,0,0.12),
+    inset 0 1px 0 rgba(255,255,255,0.22),
+    inset 0 -1px 0 rgba(0,0,0,0.18);
+  color: var(--snow);
+}
+
+/* Pill variant — for Sticky Filter Rail */
+.lg-surface--pill {
+  background:
+    radial-gradient(ellipse at 25% 0%, rgba(255,255,255,0.55) 0%, rgba(255,255,255,0) 55%),
+    radial-gradient(ellipse at 90% 100%, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0) 60%),
+    rgba(255,255,255,0.22);
+  -webkit-backdrop-filter: blur(32px) saturate(180%);
+  backdrop-filter: blur(32px) saturate(180%);
+  border: 0.5px solid rgba(255,255,255,0.40);
+  border-radius: var(--r-pill);
+  box-shadow:
+    0 8px 24px rgba(10,10,10,0.08),
+    0 2px 6px rgba(10,10,10,0.05),
+    inset 0 1px 0 rgba(255,255,255,0.50),
+    inset 0 -1px 0 rgba(10,10,10,0.05);
+  color: var(--ink);
+}
+
+/* Reduced-transparency accessibility fallback */
+@media (prefers-reduced-transparency: reduce) {
+  .lg-surface { background: var(--surface-2); backdrop-filter: none; -webkit-backdrop-filter: none; }
+  .lg-surface--dark,
+  .lg-surface--footer-tile { background: var(--char); backdrop-filter: none; -webkit-backdrop-filter: none; color: var(--snow); }
+}
+/* Browser support fallback */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .lg-surface { background: rgba(255,255,255,0.85); }
+  .lg-surface--dark,
+  .lg-surface--footer-tile { background: rgba(40,36,32,0.92); }
+}
+
+/* ============================================================
+   v11 — Unified Button System (§ 9 — 5 variants, STRICT)
+   Every button on every page uses these classes identically.
+   ============================================================ */
+
+/* Hover-vs-Press Direction Rule (§ 9.0): hover NEVER darkens.
+   Hover = transform shift (or brightness lighten for nav pills).
+   Active = transform deeper + darken to *-deep token. */
+
+.btn-primary {
+  background: var(--brand-red);
+  color: var(--snow);
+  font-family: var(--font-mono, var(--font-body));
+  font-size: 16px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 14px 28px;
+  border: none;
+  border-radius: var(--r-sm);
+  cursor: pointer;
+  transition: transform 180ms cubic-bezier(0.34,1.56,0.64,1), background 180ms ease;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  line-height: 1;
+}
+.btn-primary:hover  { transform: translate(1px,1px); }
+.btn-primary:active { transform: translate(2px,2px) scale(0.98); background: var(--brand-red-deep); }
+.btn-primary:focus-visible { outline: 4px solid var(--brand-red-focus); outline-offset: 2px; }
+.btn-primary:disabled { background: var(--ink-6); color: var(--ink-4); cursor: not-allowed; transform: none; }
+@media (max-width: 768px) { .btn-primary { padding: 12px 24px; font-size: 14px; } }
+
+.btn-secondary {
+  background: var(--accent-blue);
+  color: var(--snow);
+  font-family: var(--font-mono, var(--font-body));
+  font-size: 16px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 14px 28px;
+  border: none;
+  border-radius: var(--r-sm);
+  cursor: pointer;
+  transition: transform 180ms cubic-bezier(0.34,1.56,0.64,1), background 180ms ease;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  line-height: 1;
+}
+.btn-secondary:hover  { transform: translate(1px,1px); }
+.btn-secondary:active { transform: translate(2px,2px) scale(0.98); background: var(--accent-blue-deep); }
+.btn-secondary:disabled { background: var(--ink-6); color: var(--ink-4); cursor: not-allowed; transform: none; }
+@media (max-width: 768px) { .btn-secondary { padding: 12px 24px; font-size: 14px; } }
+
+.btn-ink {
+  background: var(--ink);
+  color: var(--snow);
+  font-family: var(--font-mono, var(--font-body));
+  font-size: 16px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 14px 28px;
+  border: none;
+  border-radius: var(--r-sm);
+  cursor: pointer;
+  transition: transform 180ms cubic-bezier(0.34,1.56,0.64,1), background 180ms ease;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  line-height: 1;
+}
+.btn-ink:hover  { transform: translate(1px,1px); }
+.btn-ink:active { transform: translate(2px,2px) scale(0.98); background: var(--char); }
+.btn-ink:disabled { background: var(--ink-6); color: var(--ink-4); cursor: not-allowed; transform: none; }
+@media (max-width: 768px) { .btn-ink { padding: 12px 24px; font-size: 14px; } }
+
+.btn-ghost {
+  background: transparent;
+  color: var(--ink);
+  border: 1px solid var(--ink);
+  font-family: var(--font-mono, var(--font-body));
+  font-size: 16px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 14px 28px;
+  border-radius: var(--r-sm);
+  cursor: pointer;
+  transition: transform 180ms cubic-bezier(0.34,1.56,0.64,1), background 180ms ease;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  line-height: 1;
+}
+.btn-ghost:hover  { transform: translate(1px,1px); }
+.btn-ghost:active { transform: translate(2px,2px) scale(0.98); background: var(--surface-3); }
+.btn-ghost:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+@media (max-width: 768px) { .btn-ghost { padding: 12px 24px; font-size: 14px; } }
+
+.btn-pill {
+  background: var(--surface-3);
+  color: var(--ink);
+  font-family: var(--font-mono, var(--font-body));
+  font-size: 14px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 8px 18px;
+  border: none;
+  border-radius: var(--r-pill);
+  cursor: pointer;
+  transition: transform 180ms cubic-bezier(0.34,1.56,0.64,1), background 180ms ease, filter 180ms ease;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  line-height: 1;
+}
+.btn-pill:hover  { transform: translate(1px,1px); }
+.btn-pill:active { transform: translate(2px,2px) scale(0.98); background: var(--mist); }
+.btn-pill[aria-pressed="true"] { background: var(--ink); color: var(--snow); }
+.btn-pill[aria-pressed="true"]:hover  { transform: translate(1px,1px); }
+.btn-pill[aria-pressed="true"]:active { transform: translate(2px,2px) scale(0.98); background: var(--char); }
+
+/* GA Tri-Color nav pill — NO shift, brightness only */
+.btn-pill--nav { transition: filter 180ms ease; }
+.btn-pill--nav.btn-pill--home   { background: var(--ga-orange); color: var(--snow); }
+.btn-pill--nav.btn-pill--active { background: var(--ga-green);  color: var(--ink); }
+.btn-pill--nav.btn-pill--last   { background: var(--ga-sky);    color: var(--ink); }
+.btn-pill--nav:hover  { transform: none; filter: brightness(1.08); }
+.btn-pill--nav:active { transform: none; filter: brightness(0.92); }
+
+.btn-editorial {
+  background: var(--editorial-pink);
+  color: var(--snow);
+  font-family: var(--font-mono, var(--font-body));
+  font-size: 16px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 14px 28px;
+  border: none;
+  border-radius: var(--r-sm);
+  cursor: pointer;
+  transition: transform 180ms cubic-bezier(0.34,1.56,0.64,1), background 180ms ease;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  line-height: 1;
+}
+.btn-editorial:hover  { transform: translate(1px,1px); }
+.btn-editorial:active { transform: translate(2px,2px) scale(0.98); background: var(--editorial-pink-deep); }
+@media (max-width: 768px) { .btn-editorial { padding: 12px 24px; font-size: 14px; } }
+
+/* ============================================================
+   v11 — Hover / Interaction signature (§ 16)
+   .click-shift = bottom-right hover shift on clickable elements
+   ============================================================ */
+.click-shift {
+  transition: transform 180ms cubic-bezier(0.34,1.56,0.64,1);
+}
+.click-shift:hover  { transform: translate(1px,1px); }
+.click-shift:active { transform: translate(2px,2px) scale(0.98); }
+
+/* ============================================================
+   v11 — Eyebrow utility (§ 8.4)
+   ============================================================ */
+.eyebrow {
+  font-family: var(--font-mono, var(--font-body));
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--ink-3);
+  margin: 0 0 16px;
+  display: block;
+}
+
+/* ============================================================
+   v11 — Magvix Italic Signature Divider (§ 8.5)
+   ============================================================ */
+.sig-divider {
+  text-align: center;
+  font-family: var(--font-hero);
+  font-style: italic;
+  font-size: clamp(28px,3vw,40px);
+  font-weight: normal;
+  line-height: 1.15;
+  letter-spacing: -0.005em;
+  color: var(--ink-3);
+  padding: 64px 0;
+  display: block;
+  user-select: none;
+  pointer-events: none;
+}
+@media (max-width: 1023px) { .sig-divider { padding: 48px 0; } }
+@media (max-width: 767px) { .sig-divider { padding: 32px 0; } }
+
+/* ============================================================
+   v11 — Candy Panel base (§ 8.8)
+   ============================================================ */
+.candy-panel {
+  border-radius: var(--r-3xl);
+  padding: 96px;
+  box-shadow: var(--shadow-1);
+  position: relative;
+  overflow: hidden;
+}
+@media (max-width: 1023px) { .candy-panel { padding: 64px; } }
+@media (max-width: 767px)  { .candy-panel { padding: 48px; border-radius: var(--r-2xl); } }
+
+/* ============================================================
+   v11 — Ticket Panel (§ 8.2)
+   ============================================================ */
+.ticket-panel {
+  background: var(--ga-orange);
+  border-radius: var(--r-md);
+  padding: 64px 96px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: none;
+  text-align: center;
+}
+.ticket-panel::before {
+  content: '';
+  position: absolute;
+  top: 14px; left: 24px; right: 24px;
+  height: 0;
+  border-top: 2px dashed rgba(10,10,10,0.55);
+  pointer-events: none;
+}
+.ticket-panel::after {
+  content: '';
+  position: absolute;
+  bottom: 14px; left: 24px; right: 24px;
+  height: 0;
+  border-top: 2px dashed rgba(10,10,10,0.55);
+  pointer-events: none;
+}
+@media (max-width: 1023px) { .ticket-panel { padding: 48px 56px; } }
+@media (max-width: 767px)  { .ticket-panel { padding: 32px 24px; } }
+
+/* Mixed-headline inline Magvix accent (§ 3.5) */
+.mixed-headline em {
+  font-family: var(--font-hero);
+  font-style: italic;
+  font-weight: normal;
+  font-size: 1.08em;
+  letter-spacing: -0.025em;
+  vertical-align: baseline;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .click-shift,
+  .btn-primary, .btn-secondary, .btn-ink, .btn-ghost, .btn-pill, .btn-editorial {
+    transition: none;
+    transform: none;
   }
 }

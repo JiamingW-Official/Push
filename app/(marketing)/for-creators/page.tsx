@@ -1,15 +1,12 @@
 "use client";
 
-import Link from "next/link";
 import { useState } from "react";
-import ScrollRevealInit from "@/components/layout/ScrollRevealInit";
-import "../landing.css";
+import Link from "next/link";
+import Header from "@/components/layout/Header";
+import Footer from "@/components/layout/Footer";
 import "./creators.css";
 
-/* ── Earnings Calculator ─────────────────────────────────── */
-// v6 per-verified-visit model (R5): avg payout scales by creator tier.
-// min/max bracket a +/- 25% band around the tier's expected average so the
-// UI can show "est. $X–$Y" without promising a specific number.
+/* ── Earnings Calculator data ─────────────────────────────── */
 const TIER_CONVERSION_RATE: Record<string, { min: number; max: number }> = {
   seed: { min: 4, max: 6 },
   explorer: { min: 6, max: 10 },
@@ -19,53 +16,142 @@ const TIER_CONVERSION_RATE: Record<string, { min: number; max: number }> = {
   partner: { min: 28, max: 42 },
 };
 
+const TIERS = [
+  { id: "seed", label: "Seed" },
+  { id: "explorer", label: "Explorer" },
+  { id: "operator", label: "Operator" },
+  { id: "proven", label: "Proven" },
+  { id: "closer", label: "Closer" },
+  { id: "partner", label: "Partner" },
+];
+
+/* ── Tier node data ───────────────────────────────────────── */
+const TIER_NODES = [
+  {
+    id: "seed",
+    name: "Seed",
+    range: "1K–5K",
+    earn: "$50–200/mo",
+    detail:
+      "No follower minimum. We measure engagement consistency over 90 days, not vanity numbers. Your first verified scans build the permanent record that drives every future rate.",
+    unlock: "10 verified scans → Explorer review",
+  },
+  {
+    id: "explorer",
+    name: "Explorer",
+    range: "5K–20K",
+    earn: "$200–600/mo",
+    detail:
+      "Your audience converts. Brands start requesting you for specific neighborhoods. Scan rate and trust score both climb as your record proves itself.",
+    unlock: "25 scans + 8% conversion rate → Operator",
+  },
+  {
+    id: "operator",
+    name: "Operator",
+    range: "20K–50K",
+    earn: "$600–1.5K/mo",
+    detail:
+      "You run campaigns like a business. Multiple concurrent deals, high weekly scan volume. Push's algorithm weights your reliability score heavily at this tier.",
+    unlock: "50 scans/mo for 60 consecutive days → Proven",
+  },
+  {
+    id: "proven",
+    name: "Proven",
+    range: "50K–150K",
+    earn: "$1.5K–4K/mo",
+    detail:
+      "Your verified conversion history speaks louder than any follower count. Brands reference your record directly when selecting creators. You skip the generic brief.",
+    unlock: "100 scans/mo + 60% merchant re-request rate → Closer",
+  },
+  {
+    id: "closer",
+    name: "Closer",
+    range: "150K–500K",
+    earn: "$4K–10K/mo",
+    detail:
+      "You bypass the apply queue. Merchants reach out directly. You co-create briefs, choose categories, and negotiate terms — campaign ownership shifts your way.",
+    unlock: "200 scans/mo + 3 long-term merchant partnerships → Partner",
+  },
+  {
+    id: "partner",
+    name: "Partner",
+    range: "500K+",
+    earn: "$10K+/mo",
+    detail:
+      "Invitation only. You sit inside the campaign strategy layer, not just the execution layer. Equity-style revenue splits on flagship campaigns. First access to every new market.",
+    unlock: "Invitation only · reviewed quarterly",
+    isPartner: true,
+  },
+];
+
+/* Tier background shades — progressively darker for sky panel */
+const TIER_BG = [
+  "rgba(255,255,255,0.55)",
+  "rgba(255,255,255,0.46)",
+  "rgba(255,255,255,0.37)",
+  "rgba(255,255,255,0.26)",
+  "rgba(255,255,255,0.14)",
+  "rgba(10,10,10,0.08)",
+];
+
+/* ── Earnings Calculator component ───────────────────────── */
 function EarningsCalculator() {
   const [tier, setTier] = useState("operator");
   const [campaigns, setCampaigns] = useState(2);
   const [visitsPerWeek, setVisitsPerWeek] = useState(8);
 
   const rate = TIER_CONVERSION_RATE[tier];
-  // Monthly = campaigns × visits/week/campaign × per-visit rate × 4.33 weeks
   const weeks = 4.33;
   const estMin = Math.round(campaigns * visitsPerWeek * rate.min * weeks);
   const estMax = Math.round(campaigns * visitsPerWeek * rate.max * weeks);
 
-  const tiers = [
-    { id: "seed", label: "Seed", range: "1–5K" },
-    { id: "explorer", label: "Explorer", range: "5–20K" },
-    { id: "operator", label: "Operator", range: "20–50K" },
-    { id: "proven", label: "Proven", range: "50–150K" },
-    { id: "closer", label: "Closer", range: "150–500K" },
-    { id: "partner", label: "Partner", range: "500K+" },
-  ];
-
   return (
-    <div className="calc-wrap">
-      <div className="calc-controls">
-        {/* Tier selector */}
-        <div className="calc-field">
-          <label className="calc-label">Your tier</label>
-          <div className="calc-tier-grid">
-            {tiers.map((t) => (
-              <button
-                key={t.id}
-                className={`calc-tier-btn ${tier === t.id ? "calc-tier-btn--active" : ""}`}
-                onClick={() => setTier(t.id)}
-                type="button"
-              >
-                <span className="calc-tier-name">{t.label}</span>
-                <span className="calc-tier-range">{t.range}</span>
-              </button>
-            ))}
-          </div>
-        </div>
+    <div className="calc-editorial">
+      {/* Output number — visual hero of this panel */}
+      <div className="calc-result" aria-live="polite">
+        <span className="calc-result-prefix">$</span>
+        <span className="calc-result-num">{estMin.toLocaleString()}</span>
+        <span className="calc-result-dash">–</span>
+        <span className="calc-result-prefix">$</span>
+        <span className="calc-result-num">{estMax.toLocaleString()}</span>
+        <span className="calc-result-unit">/ mo</span>
+      </div>
 
-        {/* Campaigns per month */}
-        <div className="calc-field">
-          <label className="calc-label">
-            Active campaigns / mo
-            <span className="calc-val">{campaigns}</span>
-          </label>
+      {/* Tier selector — btn-pill row */}
+      <div
+        role="group"
+        aria-label="Creator tier"
+        style={{ display: "flex", flexWrap: "wrap", gap: 8 }}
+      >
+        {TIERS.map((t) => (
+          <button
+            key={t.id}
+            type="button"
+            className="btn-pill"
+            aria-pressed={tier === t.id}
+            onClick={() => setTier(t.id)}
+            style={
+              tier === t.id
+                ? {
+                    background: "var(--ink)",
+                    color: "var(--snow)",
+                    borderColor: "var(--ink)",
+                  }
+                : undefined
+            }
+          >
+            {t.label}
+          </button>
+        ))}
+      </div>
+
+      {/* Sliders */}
+      <div className="calc-sliders">
+        <div className="calc-slider-row">
+          <div className="calc-slider-label">
+            <span>Campaigns / mo</span>
+            <span className="calc-slider-val">{campaigns}</span>
+          </div>
           <input
             type="range"
             min={1}
@@ -73,19 +159,18 @@ function EarningsCalculator() {
             value={campaigns}
             onChange={(e) => setCampaigns(Number(e.target.value))}
             className="calc-slider"
+            aria-label="Active campaigns per month"
           />
           <div className="calc-slider-ticks">
             <span>1</span>
             <span>12</span>
           </div>
         </div>
-
-        {/* Verified visits per week per campaign */}
-        <div className="calc-field">
-          <label className="calc-label">
-            Verified visits / campaign / week
-            <span className="calc-val">{visitsPerWeek}</span>
-          </label>
+        <div className="calc-slider-row">
+          <div className="calc-slider-label">
+            <span>Visits / wk</span>
+            <span className="calc-slider-val">{visitsPerWeek}</span>
+          </div>
           <input
             type="range"
             min={1}
@@ -93,6 +178,7 @@ function EarningsCalculator() {
             value={visitsPerWeek}
             onChange={(e) => setVisitsPerWeek(Number(e.target.value))}
             className="calc-slider"
+            aria-label="Verified visits per week"
           />
           <div className="calc-slider-ticks">
             <span>1</span>
@@ -101,712 +187,774 @@ function EarningsCalculator() {
         </div>
       </div>
 
-      {/* Output */}
-      <div className="calc-output">
-        <p className="calc-output-label">Estimated monthly payout</p>
-        <div className="calc-output-num">
-          <span className="calc-num-prefix">$</span>
-          <span className="calc-num-val">{estMin.toLocaleString()}</span>
-          <span className="calc-num-sep">–</span>
-          <span className="calc-num-prefix">$</span>
-          <span className="calc-num-val">{estMax.toLocaleString()}</span>
-        </div>
-        <p className="calc-output-note">
-          {campaigns} campaign{campaigns !== 1 ? "s" : ""} · {visitsPerWeek}{" "}
-          verified visits/wk · ${rate.min}–${rate.max} per visit (your tier
-          rate). We pay on Friday via Stripe Connect.
-        </p>
-        <Link href="/creator/signup" className="btn btn-primary calc-cta">
-          Apply for the cohort
-        </Link>
-      </div>
+      <p className="calc-fine">
+        ${rate.min}–${rate.max} per verified visit · paid Fridays via Stripe
+        Connect
+      </p>
+
+      <Link
+        href="/creator/signup"
+        className="btn-primary click-shift"
+        style={{ alignSelf: "flex-start" }}
+      >
+        Apply for the cohort →
+      </Link>
     </div>
   );
 }
 
-/* ── 6 Tier showcase data ────────────────────────────────── */
-const TIERS = [
-  {
-    id: "seed",
-    num: "01",
-    name: "Seed",
-    followers: "1K–5K",
-    earning: "$50–200",
-    period: "/mo",
-    color: "var(--tier-clay)",
-    textColor: "var(--tier-clay-text)",
-    borderStyle: "dashed",
-    levelUp: "Three verified visits in your first 30 days unlocks Explorer.",
-    badge: "badge-clay",
-  },
-  {
-    id: "explorer",
-    num: "02",
-    name: "Explorer",
-    followers: "5K–20K",
-    earning: "$200–600",
-    period: "/mo",
-    color: "var(--tier-bronze)",
-    textColor: "var(--surface-elevated)",
-    borderStyle: "solid",
-    levelUp: "Ten verified visits in any rolling 60-day window.",
-    badge: "badge-bronze",
-  },
-  {
-    id: "operator",
-    num: "03",
-    name: "Operator",
-    followers: "20K–50K",
-    earning: "$600–1,500",
-    period: "/mo",
-    color: "var(--tier-steel)",
-    textColor: "var(--surface-elevated)",
-    borderStyle: "solid",
-    levelUp: "Hold a 4.2+ score across 25 visits.",
-    badge: "badge-steel",
-  },
-  {
-    id: "proven",
-    num: "04",
-    name: "Proven",
-    followers: "50K–150K",
-    earning: "$1,500–4K",
-    period: "/mo",
-    color: "var(--tier-gold)",
-    textColor: "var(--tier-gold-text)",
-    borderStyle: "solid",
-    levelUp: "50 lifetime visits, 4.5 score, an invite from Jiaming.",
-    badge: "badge-gold",
-  },
-  {
-    id: "closer",
-    num: "05",
-    name: "Closer",
-    followers: "150K–500K",
-    earning: "$4K–10K",
-    period: "/mo",
-    color: "var(--tier-ruby)",
-    textColor: "var(--surface-elevated)",
-    borderStyle: "solid",
-    levelUp: "Top 5% of the roster. You skip the apply queue.",
-    badge: "badge-ruby",
-    shimmer: true,
-  },
-  {
-    id: "partner",
-    num: "06",
-    name: "Partner",
-    followers: "500K+",
-    earning: "$10K+",
-    period: "/mo",
-    color: "var(--tier-obsidian)",
-    textColor: "var(--surface-elevated)",
-    borderStyle: "solid",
-    levelUp: "Invite-only. Revenue share. Co-creation rights.",
-    badge: "badge-obsidian",
-    shimmer: true,
-    pulse: true,
-  },
-];
-
-/* ── Pull quote ──────────────────────────────────────────── */
-const TESTIMONIAL = {
-  quote:
-    "I post the corner spots I already walk past. Last month $320 hit my account because people followed through. The number is the number — no inflated reach, no negotiation.",
-  name: "Maya R.",
-  handle: "@mayawalksnyc",
-  tier: "Operator",
-  badge: "badge-steel",
-  location: "Bushwick, Brooklyn",
-};
-
-/* ── How to start steps ──────────────────────────────────── */
-const HOW_STEPS = [
-  {
-    n: "01",
-    title: "Apply",
-    body: "Send your handle, a couple of recent posts, and the blocks you walk. We read every application within 48 hours.",
-  },
-  {
-    n: "02",
-    title: "Get a tier + a QR",
-    body: "Push assigns your starting tier and a creator-specific QR. That QR is how a scan ties back to your post.",
-  },
-  {
-    n: "03",
-    title: "Post, then get paid",
-    body: "Pick a campaign that fits your block. When someone scans your QR and walks in, the visit clears and the payout lands Friday.",
-  },
-];
-
-/* ── Problem/Solution data ───────────────────────────────── */
-const PAIN_POINTS = [
-  "Brands pay for impressions. You delivered 80K — they paid you for the post, not the people who showed up.",
-  "Flat-rate sponsored fees disconnect the work from the result.",
-  "No way to point at a specific visit and say: that one was mine.",
-  "The week your reach drops is the week your income drops.",
-];
-
-const PUSH_SOLUTIONS = [
-  "Every payout traces to one verified visit by one real person.",
-  "Tier rate goes up as your verified-visit history goes up.",
-  "Your dashboard shows: post → scan → visit → payout, line by line.",
-  "Foot traffic is algorithm-proof. A door doesn't care about reach.",
-];
-
-/* ── Page ────────────────────────────────────────────────── */
+/* ── Page ─────────────────────────────────────────────────── */
 export default function ForCreatorsPage() {
-  const heroStats = [
-    {
-      num: "$320",
-      label: "Operator-tier month",
-      sub: "median, pre-pilot model",
-      tint: "var(--brand-red)",
-    },
-    {
-      num: "48h",
-      label: "Reply on applications",
-      sub: "every one read by hand",
-      tint: "var(--champagne)",
-    },
-    {
-      num: "06",
-      label: "Tiers, Seed → Partner",
-      sub: "earned on visits, not vibes",
-      tint: "var(--cat-travel)",
-    },
-    {
-      num: "100%",
-      label: "Visit-verified",
-      sub: "no impression fees here",
-      tint: "var(--cat-fitness)",
-    },
-  ];
-
   return (
     <>
-      <ScrollRevealInit />
+      <Header />
 
-      {/* ── 1. Hero — v7 ink + grain + vignette ────────────────── */}
+      {/* ════════════════════════════════════════════════════
+          HERO — Full-Bleed Pattern A, border-radius: 0 (allowed)
+          ════════════════════════════════════════════════════ */}
       <section
-        className="bg-hero-ink grain-overlay bg-vignette"
+        aria-label="Hero"
         style={{
           position: "relative",
-          minHeight: "100vh",
-          display: "flex",
-          flexDirection: "column",
-          padding: "clamp(24px, 4vw, 64px)",
-          paddingTop: "clamp(80px, 8vw, 120px)",
           overflow: "hidden",
+          height: "clamp(560px,80vh,880px)",
+          borderRadius: 0,
+          background: `
+            linear-gradient(180deg, rgba(0,0,0,0.10) 0%, rgba(0,0,0,0.60) 100%),
+            radial-gradient(ellipse 100% 80% at 60% 20%, rgba(193,18,31,0.18) 0%, transparent 60%),
+            radial-gradient(ellipse 80% 100% at 10% 90%, rgba(30,95,173,0.20) 0%, transparent 50%),
+            linear-gradient(160deg, #1c1a18 0%, #2e2b27 50%, #1a1816 100%)
+          `,
         }}
       >
-        {/* Top row: pill (location) + eyebrow (date) */}
+        {/* Right-top peek tile — hidden on mobile */}
         <div
+          className="lg-surface--dark"
           style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            flexWrap: "wrap",
-            gap: 16,
-            position: "relative",
-            zIndex: 3,
-          }}
-        >
-          <span className="pill-lux" style={{ color: "#fff" }}>
-            Cohort 01 · SoHo / Tribeca / Chinatown
-          </span>
-          <span className="eyebrow-lux" style={{ color: "var(--champagne)" }}>
-            Pilot opens June&nbsp;22
-          </span>
-        </div>
-
-        {/* Hero center: ghost/display weight contrast */}
-        <div
-          style={{
-            flex: 1,
+            position: "absolute",
+            top: 96,
+            right: 64,
+            padding: 32,
+            borderRadius: 16,
             display: "flex",
             flexDirection: "column",
-            justifyContent: "center",
-            position: "relative",
-            zIndex: 3,
-            maxWidth: "1180px",
-            margin: "0 auto",
-            width: "100%",
-            paddingTop: "clamp(48px, 8vh, 96px)",
-            paddingBottom: "clamp(48px, 8vh, 96px)",
+            gap: 8,
+            minWidth: 180,
           }}
+          // Hide below 768px via inline media — CSS class handles it
+          aria-hidden="true"
         >
           <div
-            className="section-marker"
-            data-num="01"
-            style={{ color: "rgba(255,255,255,0.55)" }}
-          >
-            What we pay for
-          </div>
-
-          {/* Massive Darky 900 headline + Darky 200 ghost subline */}
-          <h1
             style={{
               fontFamily: "var(--font-display)",
-              fontSize: "clamp(80px, 16vw, 240px)",
-              fontWeight: 900,
-              letterSpacing: "-0.08em",
-              lineHeight: 0.85,
-              color: "#fff",
+              fontSize: "clamp(40px,5vw,72px)",
+              fontWeight: 700,
+              lineHeight: 1,
+              color: "var(--snow)",
+            }}
+          >
+            87%
+          </div>
+          <div
+            style={{
+              fontFamily: "var(--font-body)",
+              fontSize: 14,
+              color: "rgba(255,255,255,0.75)",
+              textTransform: "uppercase",
+              letterSpacing: "0.06em",
+              fontWeight: 600,
+            }}
+          >
+            Creator retention
+          </div>
+        </div>
+
+        {/* Bottom-left copy block — v11 corner-anchored */}
+        <div
+          style={{
+            position: "absolute",
+            bottom: "clamp(56px,8vw,96px)",
+            left: "clamp(24px,5vw,64px)",
+            maxWidth: 700,
+          }}
+        >
+          <span
+            className="eyebrow"
+            style={{
+              color: "rgba(255,255,255,0.75)",
+              display: "block",
+              marginBottom: 16,
+            }}
+          >
+            (FOR CREATORS)
+          </span>
+
+          <h1
+            style={{
+              fontFamily: "var(--font-hero)",
+              fontStyle: "italic",
+              fontSize: "clamp(64px,9vw,160px)",
+              fontWeight: 400,
+              letterSpacing: "-0.03em",
+              lineHeight: 0.88,
+              color: "var(--snow)",
               margin: 0,
             }}
           >
-            Walks
-            <span
-              aria-hidden="true"
+            Perform.
+            <br />
+            Get paid.
+          </h1>
+
+          <p
+            style={{
+              fontFamily: "var(--font-body)",
+              fontSize: 18,
+              lineHeight: 1.65,
+              color: "rgba(255,255,255,0.72)",
+              marginTop: 32,
+              maxWidth: "60ch",
+            }}
+          >
+            Turn your neighborhood presence into verified income.
+          </p>
+
+          {/* CTA cluster */}
+          <div
+            style={{
+              display: "flex",
+              gap: 16,
+              marginTop: 48,
+              flexWrap: "wrap",
+              alignItems: "center",
+            }}
+          >
+            <Link href="/creator/signup" className="btn-primary click-shift">
+              Apply Now
+            </Link>
+            <Link
+              href="/how-it-works"
+              className="btn-ghost click-shift"
               style={{
-                color: "var(--brand-red)",
-                marginLeft: "-0.04em",
+                background: "transparent",
+                color: "var(--snow)",
+                border: "1px solid rgba(255,255,255,0.6)",
               }}
             >
-              .
-            </span>
-          </h1>
-          <div
-            className="display-ghost"
-            style={{
-              fontSize: "clamp(48px, 9.5vw, 148px)",
-              color: "rgba(255,255,255,0.22)",
-              marginTop: "-0.04em",
-            }}
-          >
-            not impressions
+              How It Works
+            </Link>
           </div>
+        </div>
+      </section>
 
-          <p
-            style={{
-              marginTop: "clamp(32px, 5vw, 56px)",
-              maxWidth: 620,
-              fontFamily: "var(--font-body)",
-              fontSize: "clamp(15px, 1.15vw, 18px)",
-              lineHeight: 1.65,
-              color: "rgba(255,255,255,0.74)",
-            }}
-          >
-            You post about a corner spot. Someone who saw it walks in. The spot
-            pays per verified visit. We do the verification — the QR, the
-            timestamp, the receipt match — and we pay you on Friday.
-          </p>
-          <p
-            style={{
-              marginTop: "clamp(16px, 2vw, 24px)",
-              maxWidth: 620,
-              fontFamily: "var(--font-body)",
-              fontSize: "clamp(13px, 1vw, 15px)",
-              lineHeight: 1.65,
-              color: "rgba(255,255,255,0.46)",
-            }}
-          >
-            Pilot opens June&nbsp;22. Seven blocks of Lower Manhattan.
-            <br />
-            Five anchored venues. Ten creators on the roster. One operator
-            (Jiaming) walking the doors with you.
-          </p>
+      {/* ════════════════════════════════════════════════════
+          SIGNATURE DIVIDER
+          ════════════════════════════════════════════════════ */}
+      <div style={{ textAlign: "center" }}>
+        <span className="sig-divider">Merchant · Creator · Customer ·</span>
+      </div>
 
-          {/* Hero stats — color-accented borders, Darky 200 numerals */}
+      {/* ════════════════════════════════════════════════════
+          EARNINGS PANEL — Candy Butter
+          ════════════════════════════════════════════════════ */}
+      <section
+        className="candy-panel"
+        aria-label="Earnings calculator"
+        id="calculator"
+        style={{
+          background: "var(--panel-butter)",
+          position: "relative",
+          overflow: "hidden",
+        }}
+      >
+        {/* Floating glass tile — top right */}
+        <div
+          className="lg-surface"
+          style={{
+            position: "absolute",
+            top: 32,
+            right: 32,
+            padding: 32,
+            borderRadius: 16,
+            display: "flex",
+            flexDirection: "column",
+            gap: 8,
+            minWidth: 200,
+          }}
+          aria-hidden="true"
+        >
           <div
             style={{
-              marginTop: "clamp(40px, 6vw, 72px)",
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))",
-              gap: "clamp(16px, 3vw, 40px)",
-              borderTop: "1px solid rgba(255,255,255,0.12)",
-              paddingTop: "clamp(24px, 3vw, 40px)",
-              maxWidth: 960,
+              fontFamily: "var(--font-display)",
+              fontSize: "clamp(28px,3vw,40px)",
+              fontWeight: 700,
+              letterSpacing: "-0.04em",
+              color: "var(--ink)",
+              lineHeight: 1,
             }}
           >
-            {heroStats.map((s) => (
+            Up to $4,200/mo
+          </div>
+          <div
+            style={{
+              fontFamily: "var(--font-body)",
+              fontSize: 12,
+              fontWeight: 600,
+              textTransform: "uppercase",
+              letterSpacing: "0.06em",
+              color: "var(--ink-3)",
+            }}
+          >
+            Partner tier
+          </div>
+        </div>
+
+        {/* Panel content */}
+        <div style={{ maxWidth: "var(--content-width)", margin: "0 auto" }}>
+          <span
+            className="eyebrow"
+            style={{ display: "block", marginBottom: 16 }}
+          >
+            (THE MATH)
+          </span>
+          <h2
+            style={{
+              fontFamily: "var(--font-display)",
+              fontSize: 40,
+              fontWeight: 700,
+              letterSpacing: "-0.04em",
+              lineHeight: 1.1,
+              color: "var(--ink)",
+              margin: "0 0 48px",
+            }}
+          >
+            What you actually earn.
+          </h2>
+
+          <EarningsCalculator />
+        </div>
+      </section>
+
+      {/* ════════════════════════════════════════════════════
+          TIERS PANEL — Candy Sky + 6 tier cards
+          ════════════════════════════════════════════════════ */}
+      <section
+        className="candy-panel"
+        aria-label="Creator tiers"
+        style={{ background: "var(--panel-sky)" }}
+      >
+        <div style={{ maxWidth: "var(--content-width)", margin: "0 auto" }}>
+          <span
+            className="eyebrow"
+            style={{ display: "block", marginBottom: 16 }}
+          >
+            (6 TIERS)
+          </span>
+          <h2
+            style={{
+              fontFamily: "var(--font-display)",
+              fontSize: 40,
+              fontWeight: 700,
+              letterSpacing: "-0.04em",
+              lineHeight: 1.1,
+              color: "var(--ink)",
+              margin: "0 0 48px",
+            }}
+          >
+            Progress that
+            <br />
+            compounds.
+          </h2>
+
+          {/* 6-column grid */}
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(6, 1fr)",
+              gap: 16,
+            }}
+            className="tiers-grid"
+          >
+            {TIER_NODES.map((t, i) => (
               <div
-                key={s.label}
+                key={t.id}
+                className="click-shift"
                 style={{
-                  paddingLeft: 18,
-                  borderLeft: `2px solid ${s.tint}`,
+                  background: TIER_BG[i],
+                  borderRadius: "var(--r-xl)",
+                  padding: 24,
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: 12,
+                  cursor: "default",
                 }}
               >
                 <div
                   style={{
                     fontFamily: "var(--font-display)",
-                    fontSize: "clamp(40px, 4vw, 60px)",
-                    fontWeight: 200,
-                    letterSpacing: "-0.05em",
-                    lineHeight: 0.9,
-                    color: "#fff",
+                    fontSize: 20,
+                    fontWeight: 700,
+                    color: t.isPartner ? "var(--champagne)" : "var(--ink)",
+                    letterSpacing: "-0.03em",
                   }}
                 >
-                  {s.num}
+                  {t.name}
                 </div>
                 <div
                   style={{
-                    marginTop: 10,
                     fontFamily: "var(--font-body)",
                     fontSize: 12,
-                    fontWeight: 600,
-                    color: "rgba(255,255,255,0.78)",
+                    color: "var(--ink-3)",
+                    lineHeight: 1.6,
                   }}
                 >
-                  {s.label}
+                  {t.range} followers
                 </div>
                 <div
                   style={{
-                    marginTop: 4,
-                    fontFamily: "var(--font-body)",
-                    fontSize: 10,
-                    letterSpacing: "0.08em",
-                    color: "rgba(255,255,255,0.38)",
+                    fontFamily: "var(--font-display)",
+                    fontSize: 16,
+                    fontWeight: 700,
+                    color: "var(--ink)",
+                    letterSpacing: "-0.02em",
+                    marginTop: "auto",
                   }}
                 >
-                  {s.sub}
+                  {t.earn}
                 </div>
               </div>
             ))}
           </div>
 
-          {/* Inline CTAs — keep apply path, no marketing-cliche copy */}
-          <div
-            style={{
-              marginTop: "clamp(32px, 5vw, 48px)",
-              display: "flex",
-              gap: 16,
-              flexWrap: "wrap",
-            }}
-          >
-            <Link href="/creator/signup" className="btn btn-primary">
-              Apply for the cohort
-            </Link>
-            <Link
-              href="/demo/creator"
-              className="btn btn-ghost"
-              style={{
-                color: "rgba(255,255,255,0.7)",
-                borderColor: "rgba(255,255,255,0.18)",
-              }}
-            >
-              See the dashboard&nbsp;→
-            </Link>
-          </div>
           <p
             style={{
-              marginTop: 16,
               fontFamily: "var(--font-body)",
-              fontSize: 11,
+              fontSize: 12,
+              color: "var(--ink-4)",
               letterSpacing: "0.04em",
-              color: "rgba(255,255,255,0.34)",
+              marginTop: 32,
             }}
           >
-            free to apply · keep your other deals · no exclusivity
+            Rate rises with verified-visit record. No cap. Paid every Friday.
           </p>
         </div>
 
-        {/* Bottom: scroll indicator + category strip */}
-        <div
-          style={{
-            position: "relative",
-            zIndex: 3,
-            display: "flex",
-            alignItems: "flex-end",
-            justifyContent: "space-between",
-            flexWrap: "wrap",
-            gap: 32,
-          }}
-        >
-          <div
-            className="scroll-indicator"
-            style={{ color: "rgba(255,255,255,0.7)" }}
+        {/* Responsive override — inline style cannot do media queries;
+            CSS class tiers-grid is defined in creators.css responsive section */}
+      </section>
+
+      {/* ════════════════════════════════════════════════════
+          SIGNATURE DIVIDER
+          ════════════════════════════════════════════════════ */}
+      <div style={{ textAlign: "center" }}>
+        <span className="sig-divider">Story · Scan · Pay ·</span>
+      </div>
+
+      {/* ════════════════════════════════════════════════════
+          PHOTO GRID PANEL — 3-up Photo Cards
+          ════════════════════════════════════════════════════ */}
+      <section
+        aria-label="Real campaigns"
+        style={{
+          background: "var(--surface)",
+          padding: "96px clamp(24px,4vw,64px)",
+        }}
+      >
+        <div style={{ maxWidth: "var(--content-width)", margin: "0 auto" }}>
+          <span
+            className="eyebrow"
+            style={{ display: "block", marginBottom: 16 }}
           >
-            Scroll
-          </div>
-          <div style={{ flex: 1, minWidth: 240, maxWidth: 480 }}>
+            (WHAT IT LOOKS LIKE)
+          </span>
+          <h2
+            style={{
+              fontFamily: "var(--font-display)",
+              fontSize: 40,
+              fontWeight: 700,
+              letterSpacing: "-0.04em",
+              lineHeight: 1.1,
+              color: "var(--ink)",
+              margin: "0 0 48px",
+            }}
+          >
+            Real campaigns.
+            <br />
+            Real neighborhoods.
+          </h2>
+
+          {/* 3-up Photo Card grid */}
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(3,1fr)",
+              gap: 24,
+            }}
+            className="photo-grid"
+          >
+            {/* Card 1 */}
             <div
-              className="category-strip"
-              aria-hidden="true"
-              style={{ marginBottom: 12 }}
-            >
-              <span />
-              <span />
-              <span />
-              <span />
-              <span />
-              <span />
-            </div>
-            <div
+              className="click-shift"
               style={{
-                fontFamily: "var(--font-body)",
-                fontSize: 10,
-                fontWeight: 700,
-                letterSpacing: "0.14em",
-                textTransform: "uppercase",
-                color: "rgba(255,255,255,0.45)",
-                display: "flex",
-                justifyContent: "space-between",
+                position: "relative",
+                overflow: "hidden",
+                borderRadius: "var(--r-md)",
+                aspectRatio: "4/5",
+                cursor: "pointer",
               }}
             >
-              <span>Food</span>
-              <span>Stay</span>
-              <span>Care</span>
-              <span>Wear</span>
-              <span>Sweat</span>
-              <span>After-hours</span>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ── 2. Problem / Solution split ──────────────────────── */}
-      <section className="section section-bright">
-        <div className="container">
-          <div className="reveal">
-            <div className="section-tag">
-              <span className="section-tag-num">02</span>
-              <span className="section-tag-line" />
-              <span className="section-tag-label">The honest part</span>
-            </div>
-          </div>
-          <div className="cr-ps-grid">
-            {/* Left — Pain */}
-            <div className="cr-ps-col cr-ps-pain reveal">
-              <h2 className="cr-ps-headline">
-                <span className="wt-900">Sponsored posts</span>
-                <span className="wt-300">pay for the post.</span>
-              </h2>
-              <ul className="cr-pain-list">
-                {PAIN_POINTS.map((p) => (
-                  <li key={p} className="cr-pain-item">
-                    <span className="cr-pain-dash" />
-                    <span>{p}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            {/* Divider */}
-            <div className="cr-ps-divider" aria-hidden="true">
-              <div className="cr-ps-line" />
-              <span className="cr-ps-vs">vs</span>
-              <div className="cr-ps-line" />
-            </div>
-
-            {/* Right — Push */}
-            <div
-              className="cr-ps-col cr-ps-push reveal"
-              style={{ transitionDelay: "160ms" }}
-            >
-              <h2 className="cr-ps-headline cr-ps-headline--push">
-                <span className="wt-900">Push pays</span>
-                <span className="wt-300">for the walk-in.</span>
-              </h2>
-              <ul className="cr-solution-list">
-                {PUSH_SOLUTIONS.map((s) => (
-                  <li key={s} className="cr-solution-item">
-                    <span className="cr-solution-check">
-                      <svg
-                        width="12"
-                        height="12"
-                        viewBox="0 0 12 12"
-                        fill="none"
-                      >
-                        <path
-                          d="M2 6L5 9L10 3.5"
-                          stroke="currentColor"
-                          strokeWidth="1.8"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                      </svg>
-                    </span>
-                    <span>{s}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ── 3. 6 Tier showcase ───────────────────────────────── */}
-      <section className="section section-warm cr-tiers-section">
-        <div className="container">
-          <div className="reveal">
-            <div className="section-tag">
-              <span className="section-tag-num">03</span>
-              <span className="section-tag-line" />
-              <span className="section-tag-label">The ladder</span>
-            </div>
-            <h2 className="split-headline">
-              <span className="wt-900">Six tiers.</span>
-              <span className="wt-300">One way up — verified visits.</span>
-            </h2>
-            <p className="split-body">
-              Tier rate is your $/visit. It moves up when your verified-visit
-              record moves up. Nothing else changes the math.
-            </p>
-          </div>
-
-          <div className="cr-tier-grid">
-            {TIERS.map((t, i) => (
               <div
-                key={t.id}
-                className={`cr-tier-card reveal ${t.pulse ? "cr-tier-card--pulse" : ""}`}
                 style={{
-                  borderTopColor: t.color,
-                  borderTopStyle: t.borderStyle as "solid" | "dashed",
-                  transitionDelay: `${i * 80}ms`,
+                  position: "absolute",
+                  inset: 0,
+                  background:
+                    "linear-gradient(160deg, #2c2a26 0%, #4a2020 60%, #1a1816 100%)",
+                }}
+              />
+              <div
+                className="lg-surface--badge"
+                style={{
+                  position: "absolute",
+                  top: 16,
+                  right: 16,
+                  padding: "8px 14px",
+                  fontSize: 12,
+                  fontFamily: "var(--font-body)",
+                  fontWeight: 600,
+                  textTransform: "uppercase",
+                  letterSpacing: "0.04em",
                 }}
               >
-                <div className="cr-tier-header">
-                  <span className="cr-tier-num">{t.num}</span>
-                  <span
-                    className={`cr-tier-badge ${t.badge} ${t.shimmer ? "badge-shimmer" : ""}`}
-                  >
-                    {t.name}
-                  </span>
-                </div>
-
-                <div className="cr-tier-body">
-                  <div className="cr-tier-reach">
-                    <span className="cr-tier-reach-label">Followers</span>
-                    <span className="cr-tier-reach-val">{t.followers}</span>
-                  </div>
-                  <div className="cr-tier-earning">
-                    <span
-                      className="cr-tier-earn-num"
-                      style={{
-                        color:
-                          t.id === "partner" ? "var(--champagne)" : undefined,
-                      }}
-                    >
-                      {t.earning}
-                    </span>
-                    <span className="cr-tier-earn-period">{t.period}</span>
-                  </div>
-                </div>
-
-                <div className="cr-tier-levelup">
-                  <span className="cr-tier-levelup-label">How to level up</span>
-                  <p className="cr-tier-levelup-body">{t.levelUp}</p>
-                </div>
+                Active
               </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── 4. How to start — 3 steps ─────────────────────────── */}
-      <section className="section section-bright">
-        <div className="container">
-          <div className="reveal">
-            <div className="section-tag">
-              <span className="section-tag-num">04</span>
-              <span className="section-tag-line" />
-              <span className="section-tag-label">How it starts</span>
-            </div>
-            <h2 className="split-headline">
-              <span className="wt-900">Three steps.</span>
-              <span className="wt-300">Then you're on the roster.</span>
-            </h2>
-          </div>
-
-          <div className="cr-how-grid">
-            {HOW_STEPS.map((step, i) => (
               <div
-                key={step.n}
-                className="cr-how-step reveal"
-                style={{ transitionDelay: `${i * 120}ms` }}
+                style={{
+                  position: "absolute",
+                  inset: "auto 0 0 0",
+                  height: "35%",
+                  background:
+                    "linear-gradient(to bottom, transparent, rgba(0,0,0,0.78))",
+                }}
+              />
+              <div
+                style={{
+                  position: "absolute",
+                  bottom: 0,
+                  left: 0,
+                  right: 0,
+                  padding: 24,
+                }}
               >
-                <span className="cr-how-n">{step.n}</span>
-                <h3 className="cr-how-title">{step.title}</h3>
-                <p className="cr-how-body">{step.body}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── 5. Earnings calculator ───────────────────────────── */}
-      <section className="section section-warm cr-calc-section">
-        <div className="container">
-          <div className="reveal">
-            <div className="section-tag">
-              <span className="section-tag-num">05</span>
-              <span className="section-tag-line" />
-              <span className="section-tag-label">Run your numbers</span>
-            </div>
-            <h2 className="split-headline">
-              <span className="wt-900">What it pays,</span>
-              <span className="wt-300">in your shoes.</span>
-            </h2>
-            <p className="split-body">
-              Slide the inputs. Bands come from the v6 per-verified-visit model
-              — the pilot replaces these with measured rates on June 22.
-            </p>
-          </div>
-
-          <div className="reveal" style={{ transitionDelay: "120ms" }}>
-            <EarningsCalculator />
-          </div>
-        </div>
-      </section>
-
-      {/* ── 6. Creator testimonial ───────────────────────────── */}
-      <section className="section section-bright cr-quote-section">
-        <div className="container">
-          <div className="cr-quote-wrap reveal">
-            <div className="cr-quote-mark">&ldquo;</div>
-            <blockquote className="cr-quote-text">
-              {TESTIMONIAL.quote}
-            </blockquote>
-            <div className="cr-quote-meta">
-              <div className="cr-quote-author">
-                <span className="cr-quote-name">{TESTIMONIAL.name}</span>
-                <span className="cr-quote-handle">{TESTIMONIAL.handle}</span>
-              </div>
-              <div className="cr-quote-right">
-                <span className={`cr-tier-badge ${TESTIMONIAL.badge}`}>
-                  {TESTIMONIAL.tier}
-                </span>
-                <span className="cr-quote-loc">{TESTIMONIAL.location}</span>
+                <div
+                  style={{
+                    fontFamily: "var(--font-display)",
+                    fontSize: 20,
+                    fontWeight: 700,
+                    color: "var(--snow)",
+                  }}
+                >
+                  Williamsburg Market
+                </div>
+                <div
+                  style={{
+                    fontFamily: "var(--font-body)",
+                    fontSize: 12,
+                    fontWeight: 500,
+                    textTransform: "uppercase",
+                    letterSpacing: "0.04em",
+                    color: "rgba(255,255,255,0.85)",
+                    marginTop: 8,
+                  }}
+                >
+                  Food &amp; Bev · 24 scans
+                </div>
               </div>
             </div>
+
+            {/* Card 2 */}
+            <div
+              className="click-shift"
+              style={{
+                position: "relative",
+                overflow: "hidden",
+                borderRadius: "var(--r-md)",
+                aspectRatio: "4/5",
+                cursor: "pointer",
+              }}
+            >
+              <div
+                style={{
+                  position: "absolute",
+                  inset: 0,
+                  background:
+                    "linear-gradient(160deg, #1a2c26 0%, #0d2840 60%, #1a1816 100%)",
+                }}
+              />
+              <div
+                className="lg-surface--badge"
+                style={{
+                  position: "absolute",
+                  top: 16,
+                  right: 16,
+                  padding: "8px 14px",
+                  fontSize: 12,
+                  fontFamily: "var(--font-body)",
+                  fontWeight: 600,
+                  textTransform: "uppercase",
+                  letterSpacing: "0.04em",
+                }}
+              >
+                Verified
+              </div>
+              <div
+                style={{
+                  position: "absolute",
+                  inset: "auto 0 0 0",
+                  height: "35%",
+                  background:
+                    "linear-gradient(to bottom, transparent, rgba(0,0,0,0.78))",
+                }}
+              />
+              <div
+                style={{
+                  position: "absolute",
+                  bottom: 0,
+                  left: 0,
+                  right: 0,
+                  padding: 24,
+                }}
+              >
+                <div
+                  style={{
+                    fontFamily: "var(--font-display)",
+                    fontSize: 20,
+                    fontWeight: 700,
+                    color: "var(--snow)",
+                  }}
+                >
+                  Brooklyn Coffee
+                </div>
+                <div
+                  style={{
+                    fontFamily: "var(--font-body)",
+                    fontSize: 12,
+                    fontWeight: 500,
+                    textTransform: "uppercase",
+                    letterSpacing: "0.04em",
+                    color: "rgba(255,255,255,0.85)",
+                    marginTop: 8,
+                  }}
+                >
+                  Beauty · 18 scans
+                </div>
+              </div>
+            </div>
+
+            {/* Card 3 */}
+            <div
+              className="click-shift"
+              style={{
+                position: "relative",
+                overflow: "hidden",
+                borderRadius: "var(--r-md)",
+                aspectRatio: "4/5",
+                cursor: "pointer",
+              }}
+            >
+              <div
+                style={{
+                  position: "absolute",
+                  inset: 0,
+                  background:
+                    "linear-gradient(160deg, #2a1c10 0%, #3a2a0a 60%, #1a1816 100%)",
+                }}
+              />
+              <div
+                className="lg-surface--badge"
+                style={{
+                  position: "absolute",
+                  top: 16,
+                  right: 16,
+                  padding: "8px 14px",
+                  fontSize: 12,
+                  fontFamily: "var(--font-body)",
+                  fontWeight: 600,
+                  textTransform: "uppercase",
+                  letterSpacing: "0.04em",
+                }}
+              >
+                Trending
+              </div>
+              <div
+                style={{
+                  position: "absolute",
+                  inset: "auto 0 0 0",
+                  height: "35%",
+                  background:
+                    "linear-gradient(to bottom, transparent, rgba(0,0,0,0.78))",
+                }}
+              />
+              <div
+                style={{
+                  position: "absolute",
+                  bottom: 0,
+                  left: 0,
+                  right: 0,
+                  padding: 24,
+                }}
+              >
+                <div
+                  style={{
+                    fontFamily: "var(--font-display)",
+                    fontSize: 20,
+                    fontWeight: 700,
+                    color: "var(--snow)",
+                  }}
+                >
+                  Park Slope Kitchen
+                </div>
+                <div
+                  style={{
+                    fontFamily: "var(--font-body)",
+                    fontSize: 12,
+                    fontWeight: 500,
+                    textTransform: "uppercase",
+                    letterSpacing: "0.04em",
+                    color: "rgba(255,255,255,0.85)",
+                    marginTop: 8,
+                  }}
+                >
+                  Dining · 31 scans
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* ── 7. Final CTA — dark ───────────────────────────────── */}
-      <section className="cr-final-cta section-warm">
-        <div className="container">
-          <div className="cr-cta-inner reveal">
-            <p className="eyebrow" style={{ color: "var(--tertiary)" }}>
-              Cohort 01 · ten seats
-            </p>
-            <h2 className="cr-cta-headline">
-              June 22.
-              <span className="cr-cta-sub">
-                Seven blocks. Ten creators. One operator at the door.
-              </span>
-            </h2>
-            <p className="cr-cta-body">
-              Pilot opens in SoHo, Tribeca, and Chinatown. We read every
-              application within 48 hours. No exclusivity, no minimum posts —
-              just a tier rate that moves with your verified-visit record.
-            </p>
-            <div className="cr-cta-actions">
-              <Link href="/creator/signup" className="btn btn-primary">
-                Apply for the cohort
-              </Link>
-              <Link href="/for-merchants" className="btn btn-ghost cr-ghost">
-                Run a venue?&nbsp;→
-              </Link>
-            </div>
-            <p className="cr-cta-note">
-              Seed has no follower minimum · We pay on Friday via Stripe
-            </p>
-          </div>
+      {/* ════════════════════════════════════════════════════
+          TICKET PANEL — GA Orange CTA
+          ════════════════════════════════════════════════════ */}
+      <section
+        className="ticket-panel"
+        aria-label="Apply CTA"
+        style={{
+          margin: "0 clamp(24px,4vw,64px)",
+          position: "relative",
+        }}
+      >
+        {/* Four grommet circles — corner anchored */}
+        <div
+          aria-hidden="true"
+          style={{
+            position: "absolute",
+            top: 24,
+            left: 24,
+            width: 16,
+            height: 16,
+            borderRadius: "50%",
+            background: "var(--ink)",
+          }}
+        />
+        <div
+          aria-hidden="true"
+          style={{
+            position: "absolute",
+            top: 24,
+            right: 24,
+            width: 16,
+            height: 16,
+            borderRadius: "50%",
+            background: "var(--ink)",
+          }}
+        />
+        <div
+          aria-hidden="true"
+          style={{
+            position: "absolute",
+            bottom: 24,
+            left: 24,
+            width: 16,
+            height: 16,
+            borderRadius: "50%",
+            background: "var(--ink)",
+          }}
+        />
+        <div
+          aria-hidden="true"
+          style={{
+            position: "absolute",
+            bottom: 24,
+            right: 24,
+            width: 16,
+            height: 16,
+            borderRadius: "50%",
+            background: "var(--ink)",
+          }}
+        />
+
+        {/* Centered content */}
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            textAlign: "center",
+            gap: 24,
+          }}
+        >
+          <h2
+            style={{
+              fontFamily: "var(--font-hero)",
+              fontStyle: "italic",
+              fontSize: "clamp(40px,5vw,56px)",
+              fontWeight: 400,
+              letterSpacing: "-0.02em",
+              lineHeight: 1.1,
+              color: "var(--ink)",
+              margin: 0,
+            }}
+          >
+            Ready to
+            <br />
+            start scanning?
+          </h2>
+
+          <p
+            style={{
+              fontFamily: "var(--font-body)",
+              fontSize: 16,
+              lineHeight: 1.65,
+              color: "var(--ink)",
+              maxWidth: 480,
+              margin: 0,
+            }}
+          >
+            Applications reviewed weekly. NYC creators only.
+          </p>
+
+          <Link href="/creator/signup" className="btn-ink click-shift">
+            Apply Now
+          </Link>
         </div>
       </section>
+
+      {/* Spacer below ticket panel */}
+      <div style={{ height: 64 }} aria-hidden="true" />
+
+      <Footer />
+
+      {/* Responsive overrides — tiers grid + photo grid + peek tile */}
+      <style>{`
+        @media (max-width: 1024px) {
+          .tiers-grid  { grid-template-columns: repeat(3, 1fr) !important; }
+          .photo-grid  { grid-template-columns: repeat(2, 1fr) !important; }
+        }
+        @media (max-width: 767px) {
+          .tiers-grid  { grid-template-columns: repeat(2, 1fr) !important; }
+          .photo-grid  { grid-template-columns: 1fr !important; }
+        }
+      `}</style>
     </>
   );
 }

@@ -1,533 +1,685 @@
+// v11 About Page — Marketing editorial register
+// No about.css import — all layout via global tokens + inline styles
+
 import Link from "next/link";
-import ScrollRevealInit from "@/components/layout/ScrollRevealInit";
-import "./about.css";
+import Header from "@/components/layout/Header";
+import Footer from "@/components/layout/Footer";
 
 /* ── Team data ─────────────────────────────────────────────── */
-// Five operators. Pre-pilot, Lower Manhattan-anchored.
-// Only Jiaming's name is canonical here; teammate names will be added
-// before the June 22 pilot opens. Until then, roles stand in.
 const TEAM = [
   {
-    num: "01",
+    initial: "J",
     name: "Jiaming Wang",
-    role: "Founder · runs the doors",
-    tie: "Born and raised on Mott Street. Knows which restaurants close on Mondays.",
+    role: "FOUNDER · CEO",
+    origin: "Mott Street native · Built Push from a restaurant booth",
   },
   {
-    num: "02",
+    initial: "?",
     name: "—",
-    role: "Engineering · attribution",
-    tie: "Builds the QR → scan → payout rail. Introduced by the Mott Street block.",
+    role: "ENGINEERING · ATTRIBUTION",
+    origin: "QR → scan → payout rail · Previously Square",
   },
   {
-    num: "03",
+    initial: "?",
     name: "—",
-    role: "Operations · creator side",
-    tie: "Reads every creator application by hand. Walks Tribeca on weekends.",
+    role: "OPERATIONS · CREATOR SIDE",
+    origin: "Reads every application · Walks Tribeca on weekends",
   },
   {
-    num: "04",
+    initial: "?",
     name: "—",
-    role: "Design · the whole surface",
-    tie: "Sets the type, the color, the line weight. The only non-Chinese seat at the table.",
+    role: "DESIGN · BRAND SURFACE",
+    origin: "Sets the type, the color, the weight",
   },
   {
-    num: "05",
+    initial: "?",
     name: "—",
-    role: "Engineering · merchant tools",
-    tie: "Ships the poster generator and the dashboard. Eats at Joe's Shanghai.",
+    role: "GROWTH · MERCHANT SIDE",
+    origin: "Cold-opens new neighborhoods · Brooklyn-born",
   },
 ];
 
-/* ── Story / history data ─────────────────────────────────── */
-// Honest, dated. Pre-pilot, so no claims of revenue or scale.
-const STORY = [
+/* ── Values data ──────────────────────────────────────────── */
+const VALUES = [
   {
-    period: "2025, late",
-    title: "The walk",
-    body: 'Jiaming spends a week walking from Canal to Worth Street, talking to restaurant owners. Same answer every time: "I tried Instagram ads. $800 in. Couldn\'t tell you who showed up."',
+    title: "Verified scans only",
+    body: "Every verified visit is confirmed by QR scan, device GPS dwell, and timestamp alignment. If all three don't match, it doesn't count. No impressions, no reach, no estimates — only physical presence.",
+    icon: (
+      <svg
+        width="22"
+        height="22"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="white"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+        <polyline points="9 12 11 14 15 10" />
+      </svg>
+    ),
   },
   {
-    period: "2026 · January",
-    title: "The first QR",
-    body: "We tape one QR on the door of a noodle shop on Doyers Street. A friend posts about it. Two people scan. We have a rail.",
+    title: "Real creators, real blocks",
+    body: "We launched in Brooklyn because hyper-local trust is built block by block. Our creator network lives in the neighborhoods they promote. We expand only when we can verify that same ground-level density in the next market.",
+    icon: (
+      <svg
+        width="22"
+        height="22"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="white"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+        <circle cx="12" cy="10" r="3" />
+      </svg>
+    ),
   },
   {
-    period: "2026 · April",
-    title: "Five seats around the table",
-    body: "Four more people join — two from Jiaming's Mott Street block, one from a midtown fintech, one from SVA. Five people, one shared doc, no titles.",
-  },
-  {
-    period: "2026 · June 22",
-    title: "Pilot opens",
-    body: "Seven blocks of Lower Manhattan. Five anchored venues. Ten creators on the roster. We will know if this works because the door tells us.",
-  },
-];
-
-/* ── Beliefs (Apple-style declarative) ─────────────────────── */
-const BELIEFS = [
-  {
-    line: "A door is honest.",
-    body: "It opens or it doesn't. We pay for the opening, not for the post.",
-  },
-  {
-    line: "Reach is a vanity.",
-    body: "Eighty thousand impressions and an empty restaurant on Tuesday is the same as zero.",
-  },
-  {
-    line: "Local is small on purpose.",
-    body: "Seven blocks done well is worth more than five boroughs done thinly.",
-  },
-  {
-    line: "The smallest shop matters.",
-    body: "We built this for the corner spot, not the chain. The math has to work for $800/mo, not just for $80K.",
+    title: "Physical presence counts",
+    body: "Push is incorporated as a Public Benefit Corporation. Creator payouts are structured so that the value generated by foot traffic flows back to the people who walked those blocks — not to an ad intermediary's margin.",
+    icon: (
+      <svg
+        width="22"
+        height="22"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="white"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <line x1="5" y1="12" x2="19" y2="12" />
+        <line x1="5" y1="8" x2="19" y2="8" />
+        <line x1="5" y1="16" x2="19" y2="16" />
+      </svg>
+    ),
   },
 ];
 
 export default function AboutPage() {
   return (
     <>
-      <ScrollRevealInit />
+      <Header />
 
-      {/* ═══════════════ 01 — HERO (ink) ═══════════════ */}
-      <section
-        className="bg-hero-ink grain-overlay bg-vignette about-hero-v7"
-        style={{
-          position: "relative",
-          minHeight: "100vh",
-          display: "flex",
-          flexDirection: "column",
-          padding: "clamp(24px, 4vw, 64px)",
-          paddingTop: "clamp(80px, 8vw, 120px)",
-          overflow: "hidden",
-        }}
-      >
-        {/* Top row: pill + eyebrow */}
-        <div
+      <main>
+        {/* ═══════════════════════════════════════════════════════
+            HERO Panel — full-bleed dark gradient, bottom-left title
+            ═══════════════════════════════════════════════════════ */}
+        <section
           style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            flexWrap: "wrap",
-            gap: 16,
             position: "relative",
-            zIndex: 3,
-          }}
-        >
-          <span className="pill-lux" style={{ color: "#fff" }}>
-            Five people · Lower Manhattan
-          </span>
-          <span className="eyebrow-lux" style={{ color: "var(--champagne)" }}>
-            Pre-pilot · June&nbsp;22
-          </span>
-        </div>
-
-        {/* Hero center */}
-        <div
-          style={{
-            flex: 1,
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            position: "relative",
-            zIndex: 3,
-            maxWidth: 1180,
-            margin: "0 auto",
             width: "100%",
-            paddingTop: "clamp(48px, 8vh, 96px)",
-            paddingBottom: "clamp(48px, 8vh, 96px)",
+            height: "clamp(480px, 70vh, 720px)",
+            borderRadius: 0,
+            overflow: "hidden",
+            background: `
+              linear-gradient(180deg, rgba(0,0,0,0.10) 0%, rgba(0,0,0,0.65) 100%),
+              radial-gradient(ellipse 100% 80% at 65% 25%, rgba(30,95,173,0.22) 0%, transparent 55%),
+              radial-gradient(ellipse 70% 90% at 15% 85%, rgba(193,18,31,0.12) 0%, transparent 50%),
+              linear-gradient(170deg, #1e1c19 0%, #2c2a26 100%)
+            `,
           }}
         >
-          <div
-            className="section-marker"
-            data-num="01"
-            style={{ color: "rgba(255,255,255,0.55)" }}
-          >
-            Who we are
-          </div>
-
-          {/* Massive Darky 900 + Darky 200 ghost */}
-          <h1
-            style={{
-              fontFamily: "var(--font-display)",
-              fontSize: "clamp(72px, 13vw, 200px)",
-              fontWeight: 900,
-              letterSpacing: "-0.07em",
-              lineHeight: 0.86,
-              color: "#fff",
-              margin: 0,
-            }}
-          >
-            Built by locals
-            <span
-              aria-hidden="true"
-              style={{
-                color: "var(--brand-red)",
-                marginLeft: "-0.04em",
-              }}
-            >
-              .
-            </span>
-          </h1>
-          <div
-            className="display-ghost"
-            style={{
-              fontSize: "clamp(40px, 8vw, 124px)",
-              color: "rgba(255,255,255,0.22)",
-              marginTop: "-0.04em",
-            }}
-          >
-            walked, not pitched
-          </div>
-
-          <p
-            style={{
-              marginTop: "clamp(32px, 5vw, 56px)",
-              maxWidth: 640,
-              fontFamily: "var(--font-body)",
-              fontSize: "clamp(15px, 1.15vw, 18px)",
-              lineHeight: 1.65,
-              color: "rgba(255,255,255,0.78)",
-            }}
-          >
-            Jiaming grew up on Mott Street. He watched restaurants on his block
-            spend $800 on Instagram ads and have nothing to show for it on
-            Tuesday night. Push started there — at the door, not in a pitch
-            deck.
-          </p>
-          <p
-            style={{
-              marginTop: "clamp(16px, 2vw, 24px)",
-              maxWidth: 640,
-              fontFamily: "var(--font-body)",
-              fontSize: "clamp(13px, 1vw, 15px)",
-              lineHeight: 1.65,
-              color: "rgba(255,255,255,0.46)",
-            }}
-          >
-            Five people built this. Four are 华人 from the Manhattan-Brooklyn
-            corridor; one is from Bangkok. We're pre-pilot. We don't have a
-            Series A, a national roster, or a press tour. We have seven blocks,
-            five venues, ten creators, and one operator (Jiaming) walking the
-            doors with them.
-          </p>
-
-          {/* Three small facts strip — borderless, factual */}
+          {/* Bottom-left content anchor */}
           <div
             style={{
-              marginTop: "clamp(40px, 6vw, 72px)",
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
-              gap: "clamp(16px, 3vw, 40px)",
-              borderTop: "1px solid rgba(255,255,255,0.12)",
-              paddingTop: "clamp(24px, 3vw, 40px)",
-              maxWidth: 880,
+              position: "absolute",
+              bottom: 96,
+              left: 64,
+              maxWidth: 720,
+              zIndex: 2,
             }}
           >
-            <div
+            <p
+              className="eyebrow"
               style={{
-                paddingLeft: 18,
-                borderLeft: "2px solid var(--brand-red)",
+                color: "rgba(255,255,255,0.75)",
+                marginBottom: 16,
               }}
             >
-              <div
-                style={{
-                  fontFamily: "var(--font-display)",
-                  fontSize: "clamp(40px, 4vw, 60px)",
-                  fontWeight: 200,
-                  letterSpacing: "-0.05em",
-                  lineHeight: 0.9,
-                  color: "#fff",
-                }}
-              >
-                05
-              </div>
-              <div
-                style={{
-                  marginTop: 10,
-                  fontFamily: "var(--font-body)",
-                  fontSize: 12,
-                  fontWeight: 600,
-                  color: "rgba(255,255,255,0.78)",
-                }}
-              >
-                People building it
-              </div>
-              <div
-                style={{
-                  marginTop: 4,
-                  fontFamily: "var(--font-body)",
-                  fontSize: 10,
-                  letterSpacing: "0.08em",
-                  color: "rgba(255,255,255,0.38)",
-                }}
-              >
-                no titles, one shared doc
-              </div>
-            </div>
-            <div
-              style={{
-                paddingLeft: 18,
-                borderLeft: "2px solid var(--champagne)",
-              }}
-            >
-              <div
-                style={{
-                  fontFamily: "var(--font-display)",
-                  fontSize: "clamp(40px, 4vw, 60px)",
-                  fontWeight: 200,
-                  letterSpacing: "-0.05em",
-                  lineHeight: 0.9,
-                  color: "#fff",
-                }}
-              >
-                07
-              </div>
-              <div
-                style={{
-                  marginTop: 10,
-                  fontFamily: "var(--font-body)",
-                  fontSize: 12,
-                  fontWeight: 600,
-                  color: "rgba(255,255,255,0.78)",
-                }}
-              >
-                Blocks of Lower Manhattan
-              </div>
-              <div
-                style={{
-                  marginTop: 4,
-                  fontFamily: "var(--font-body)",
-                  fontSize: 10,
-                  letterSpacing: "0.08em",
-                  color: "rgba(255,255,255,0.38)",
-                }}
-              >
-                SoHo · Tribeca · Chinatown
-              </div>
-            </div>
-            <div
-              style={{
-                paddingLeft: 18,
-                borderLeft: "2px solid var(--cat-travel)",
-              }}
-            >
-              <div
-                style={{
-                  fontFamily: "var(--font-display)",
-                  fontSize: "clamp(40px, 4vw, 60px)",
-                  fontWeight: 200,
-                  letterSpacing: "-0.05em",
-                  lineHeight: 0.9,
-                  color: "#fff",
-                }}
-              >
-                Jun&nbsp;22
-              </div>
-              <div
-                style={{
-                  marginTop: 10,
-                  fontFamily: "var(--font-body)",
-                  fontSize: 12,
-                  fontWeight: 600,
-                  color: "rgba(255,255,255,0.78)",
-                }}
-              >
-                Pilot opens
-              </div>
-              <div
-                style={{
-                  marginTop: 4,
-                  fontFamily: "var(--font-body)",
-                  fontSize: 10,
-                  letterSpacing: "0.08em",
-                  color: "rgba(255,255,255,0.38)",
-                }}
-              >
-                first QR scanned
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Bottom: scroll indicator */}
-        <div
-          style={{
-            position: "relative",
-            zIndex: 3,
-            display: "flex",
-            alignItems: "flex-end",
-            justifyContent: "space-between",
-            flexWrap: "wrap",
-            gap: 32,
-          }}
-        >
-          <div
-            className="scroll-indicator"
-            style={{ color: "rgba(255,255,255,0.7)" }}
-          >
-            Read on
-          </div>
-        </div>
-      </section>
-
-      {/* ═══════════════ 02 — TEAM (bento + card-premium) ═══════════════ */}
-      <section className="section section-bright about-team-v7">
-        <div className="container">
-          <div className="reveal">
-            <div className="section-marker" data-num="02">
-              Five people
-            </div>
-            <h2 className="split-headline">
-              <span className="wt-900">No titles.</span>{" "}
-              <span className="wt-300">One shared doc.</span>
-            </h2>
-            <p className="split-body">
-              Four 华人 from the Manhattan-Brooklyn corridor, one designer from
-              Bangkok. We meet on Wednesdays in a back room on Mott Street. We
-              answer email by hand.
+              (OUR STORY)
             </p>
-          </div>
 
-          <div className="bento-grid about-team-bento">
-            {TEAM.map((m, i) => (
-              <article
-                key={m.name}
-                className="card-premium about-team-card-v7 reveal"
-                style={{
-                  gridColumn: i === 0 ? "span 6" : "span 3",
-                  gridRow: i === 0 ? "span 2" : "span 1",
-                  transitionDelay: `${i * 80}ms`,
-                }}
-              >
-                <div className="about-team-card-inner">
-                  <span className="about-team-card-num">{m.num}</span>
-                  <h3 className="about-team-card-name">{m.name}</h3>
-                  <p className="about-team-card-role">{m.role}</p>
-                  <p className="about-team-card-tie">{m.tie}</p>
-                </div>
-              </article>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ═══════════════ 03 — STORY (timeline) ═══════════════ */}
-      <section className="section about-story-v7">
-        <div className="container">
-          <div className="reveal">
-            <div className="section-marker" data-num="03">
-              The start
-            </div>
-            <h2 className="split-headline">
-              <span className="wt-900">From the door,</span>{" "}
-              <span className="wt-300">not the deck.</span>
-            </h2>
-            <p className="split-body">
-              Push didn't start with a slide. It started with one taped-up QR on
-              Doyers Street, and the question of whether two people would scan
-              it.
-            </p>
-          </div>
-
-          <div className="about-timeline-v7">
-            {STORY.map((s, i) => (
-              <div
-                key={s.period}
-                className="about-timeline-row reveal"
-                style={{ transitionDelay: `${i * 100}ms` }}
-              >
-                <div className="about-timeline-period">{s.period}</div>
-                <div className="about-timeline-mark" aria-hidden="true" />
-                <div className="about-timeline-content">
-                  <h3 className="about-timeline-title">{s.title}</h3>
-                  <p className="about-timeline-body">{s.body}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ═══════════════ 04 — BELIEFS (declarative) ═══════════════ */}
-      <section className="section section-bright about-beliefs-v7">
-        <div className="container">
-          <div className="reveal">
-            <div className="section-marker" data-num="04">
-              What we believe
-            </div>
-            <h2 className="split-headline">
-              <span className="wt-900">Four lines.</span>{" "}
-              <span className="wt-300">No slogans.</span>
-            </h2>
-          </div>
-
-          <div className="about-beliefs-grid">
-            {BELIEFS.map((b, i) => (
-              <div
-                key={b.line}
-                className="about-belief-row reveal"
-                style={{ transitionDelay: `${i * 100}ms` }}
-              >
-                <div className="about-belief-num">
-                  {String(i + 1).padStart(2, "0")}
-                </div>
-                <div className="about-belief-text">
-                  <h3 className="about-belief-line">{b.line}</h3>
-                  <p className="about-belief-body">{b.body}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ═══════════════ 05 — CTA (dark) ═══════════════ */}
-      <section className="about-cta-v7" aria-labelledby="about-cta-heading">
-        <div className="container">
-          <div className="about-cta-inner reveal">
-            <div
-              className="section-marker"
-              data-num="05"
-              style={{ color: "rgba(255,255,255,0.55)" }}
+            <h1
+              style={{
+                fontFamily: "var(--font-hero)",
+                fontStyle: "normal",
+                fontWeight: 400,
+                fontSize: "clamp(64px, 9vw, 160px)",
+                letterSpacing: "-0.022em",
+                lineHeight: 0.88,
+                color: "var(--snow)",
+                margin: 0,
+              }}
             >
-              Come find us
-            </div>
-            <h2 id="about-cta-heading" className="about-cta-headline">
-              <span className="wt-900">June 22.</span>
+              Built in
               <br />
-              <span className="wt-200">Seven blocks.</span>
-            </h2>
-            <p className="about-cta-body">
-              We're not running a waitlist for hype. If you run a venue in SoHo,
-              Tribeca, or Chinatown — or you post about food within walking
-              distance of Canal Street — say hello.
-            </p>
-            <div className="about-cta-actions">
-              <Link href="/merchant/signup" className="btn btn-primary">
-                Run a venue
-              </Link>
-              <Link
-                href="/creator/signup"
-                className="btn btn-ghost about-cta-ghost"
-              >
-                Apply as creator&nbsp;→
-              </Link>
-            </div>
+              Brooklyn.
+            </h1>
+
             <p
               style={{
-                marginTop: 16,
                 fontFamily: "var(--font-body)",
-                fontSize: 11,
-                letterSpacing: "0.04em",
-                color: "rgba(255,255,255,0.34)",
+                fontSize: 18,
+                color: "rgba(255,255,255,0.70)",
+                lineHeight: 1.6,
+                maxWidth: "48ch",
+                marginTop: 32,
+                marginBottom: 0,
               }}
             >
-              every email read by hand · 48-hour reply
+              Push started in Williamsburg because that&rsquo;s where we live,
+              eat, and know by name.
             </p>
+
+            <div style={{ marginTop: 48 }}>
+              <Link href="/creator/signup" className="btn-primary click-shift">
+                Join Push
+              </Link>
+            </div>
+          </div>
+        </section>
+
+        {/* ═══════════════════════════════════════════════════════
+            STORY Panel — Candy Butter + floating stat tiles
+            ═══════════════════════════════════════════════════════ */}
+        <section
+          className="candy-panel"
+          style={{
+            background: "var(--panel-butter)",
+            position: "relative",
+          }}
+        >
+          {/* Top-left heading block */}
+          <p
+            className="eyebrow"
+            style={{
+              color: "var(--ink-3)",
+              marginBottom: 16,
+            }}
+          >
+            (WHY THIS EXISTS)
+          </p>
+
+          <h2
+            style={{
+              fontFamily: "var(--font-display)",
+              fontWeight: 800,
+              fontSize: 40,
+              letterSpacing: "-0.04em",
+              lineHeight: 1.1,
+              color: "var(--ink)",
+              margin: "0 0 32px",
+              maxWidth: "20ch",
+            }}
+          >
+            Performance marketing
+            <br />
+            that lives on the street.
+          </h2>
+
+          <p
+            style={{
+              fontFamily: "var(--font-body)",
+              fontSize: 18,
+              color: "var(--ink-3)",
+              lineHeight: 1.55,
+              maxWidth: "60ch",
+              marginBottom: 32,
+            }}
+          >
+            We built Push because digital ads stopped working for local
+            businesses. Impressions don&rsquo;t mean foot traffic. Reach
+            doesn&rsquo;t mean revenue. We measure exactly one thing: verified
+            physical visits.
+          </p>
+
+          <p
+            style={{
+              fontFamily: "var(--font-body)",
+              fontSize: 18,
+              color: "var(--ink-3)",
+              lineHeight: 1.55,
+              maxWidth: "60ch",
+              marginBottom: 48,
+            }}
+          >
+            Every scan is confirmed by QR scan + GPS dwell + timestamp. If all
+            three don&rsquo;t match, it doesn&rsquo;t count. That&rsquo;s the
+            standard we hold ourselves to.
+          </p>
+
+          {/* Floating stat tiles — 3 columns */}
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(3, 1fr)",
+              gap: 24,
+            }}
+          >
+            {[
+              { num: "1.4M+", label: "Verified visits" },
+              { num: "100+", label: "NYC merchants" },
+              { num: "87%", label: "Creator retention" },
+            ].map((stat) => (
+              <div
+                key={stat.label}
+                className="lg-surface"
+                style={{
+                  borderRadius: 16,
+                  padding: 32,
+                }}
+              >
+                <p
+                  style={{
+                    fontFamily: "var(--font-display)",
+                    fontWeight: 800,
+                    fontSize: "clamp(32px, 4vw, 48px)",
+                    letterSpacing: "-0.04em",
+                    lineHeight: 1,
+                    color: "var(--ink)",
+                    margin: "0 0 8px",
+                  }}
+                >
+                  {stat.num}
+                </p>
+                <p
+                  className="eyebrow"
+                  style={{
+                    color: "var(--ink-3)",
+                    margin: 0,
+                  }}
+                >
+                  {stat.label}
+                </p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* ═══════════════════════════════════════════════════════
+            Sig Divider
+            ═══════════════════════════════════════════════════════ */}
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            padding: "0 64px",
+          }}
+        >
+          <span className="sig-divider">Real · Local · Verified ·</span>
+        </div>
+
+        {/* ═══════════════════════════════════════════════════════
+            VALUES Panel — Candy Sky
+            ═══════════════════════════════════════════════════════ */}
+        <section
+          className="candy-panel"
+          style={{
+            background: "var(--panel-sky)",
+          }}
+        >
+          <p
+            className="eyebrow"
+            style={{
+              color: "var(--ink-3)",
+              marginBottom: 16,
+            }}
+          >
+            (WHAT WE BELIEVE)
+          </p>
+
+          <h2
+            style={{
+              fontFamily: "var(--font-display)",
+              fontWeight: 800,
+              fontSize: 40,
+              letterSpacing: "-0.04em",
+              lineHeight: 1.1,
+              color: "var(--ink)",
+              margin: "0 0 48px",
+            }}
+          >
+            Three rules
+            <br />
+            we don&rsquo;t break.
+          </h2>
+
+          {/* Value cards */}
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(3, 1fr)",
+              gap: 24,
+            }}
+          >
+            {VALUES.map((v) => (
+              <div
+                key={v.title}
+                className="click-shift"
+                style={{
+                  background: "rgba(255,255,255,0.55)",
+                  borderRadius: 16,
+                  padding: 24,
+                }}
+              >
+                {/* Icon tile */}
+                <div
+                  style={{
+                    width: 40,
+                    height: 40,
+                    borderRadius: 12,
+                    background: "var(--ink)",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    marginBottom: 16,
+                    flexShrink: 0,
+                  }}
+                >
+                  {v.icon}
+                </div>
+
+                <h3
+                  style={{
+                    fontFamily: "var(--font-display)",
+                    fontWeight: 700,
+                    fontSize: 20,
+                    letterSpacing: "-0.02em",
+                    lineHeight: 1.2,
+                    color: "var(--ink)",
+                    margin: "0 0 12px",
+                  }}
+                >
+                  {v.title}
+                </h3>
+
+                <p
+                  style={{
+                    fontFamily: "var(--font-body)",
+                    fontSize: 16,
+                    color: "var(--ink-3)",
+                    lineHeight: 1.6,
+                    margin: 0,
+                  }}
+                >
+                  {v.body}
+                </p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* ═══════════════════════════════════════════════════════
+            TEAM Panel — Surface-2 Pearl Stone
+            ═══════════════════════════════════════════════════════ */}
+        <section
+          style={{
+            background: "var(--surface-2)",
+            padding: "96px 64px",
+          }}
+        >
+          <div style={{ maxWidth: "var(--content-width)", margin: "0 auto" }}>
+            <p
+              className="eyebrow"
+              style={{
+                color: "var(--ink-3)",
+                marginBottom: 16,
+              }}
+            >
+              (THE TEAM)
+            </p>
+
+            <h2
+              style={{
+                fontFamily: "var(--font-display)",
+                fontWeight: 800,
+                fontSize: 40,
+                letterSpacing: "-0.04em",
+                lineHeight: 1.1,
+                color: "var(--ink)",
+                margin: "0 0 48px",
+              }}
+            >
+              The people
+              <br />
+              behind the scans.
+            </h2>
+
+            {/* 5-col desktop team grid */}
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(5, 1fr)",
+                gap: 24,
+              }}
+            >
+              {TEAM.map((member) => (
+                <div
+                  key={member.name + member.role}
+                  style={{ display: "flex", flexDirection: "column", gap: 8 }}
+                >
+                  {/* Avatar circle */}
+                  <div
+                    style={{
+                      width: 40,
+                      height: 40,
+                      borderRadius: "50%",
+                      background: "var(--ink)",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      marginBottom: 8,
+                      flexShrink: 0,
+                    }}
+                  >
+                    <span
+                      style={{
+                        fontFamily: "var(--font-display)",
+                        fontWeight: 700,
+                        fontSize: 16,
+                        color: "var(--snow)",
+                        lineHeight: 1,
+                      }}
+                    >
+                      {member.initial}
+                    </span>
+                  </div>
+
+                  <p
+                    style={{
+                      fontFamily: "var(--font-display)",
+                      fontWeight: 700,
+                      fontSize: 18,
+                      letterSpacing: "-0.02em",
+                      color: "var(--ink)",
+                      margin: 0,
+                      lineHeight: 1.2,
+                    }}
+                  >
+                    {member.name}
+                  </p>
+
+                  <p
+                    className="eyebrow"
+                    style={{
+                      color: "var(--ink-3)",
+                      margin: 0,
+                    }}
+                  >
+                    {member.role}
+                  </p>
+
+                  <p
+                    style={{
+                      fontFamily: "var(--font-body)",
+                      fontSize: 14,
+                      fontStyle: "italic",
+                      color: "var(--ink-3)",
+                      lineHeight: 1.5,
+                      margin: 0,
+                    }}
+                  >
+                    {member.origin}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ═══════════════════════════════════════════════════════
+            TICKET Panel — GA Orange CTA
+            ═══════════════════════════════════════════════════════ */}
+        <div
+          className="ticket-panel"
+          style={{
+            position: "relative",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            textAlign: "center",
+            padding: "96px 64px",
+          }}
+        >
+          {/* Grommet circles — four corners */}
+          <div
+            aria-hidden="true"
+            style={{
+              position: "absolute",
+              top: 24,
+              left: 24,
+              width: 16,
+              height: 16,
+              borderRadius: "50%",
+              background: "var(--ink)",
+            }}
+          />
+          <div
+            aria-hidden="true"
+            style={{
+              position: "absolute",
+              top: 24,
+              right: 24,
+              width: 16,
+              height: 16,
+              borderRadius: "50%",
+              background: "var(--ink)",
+            }}
+          />
+          <div
+            aria-hidden="true"
+            style={{
+              position: "absolute",
+              bottom: 24,
+              left: 24,
+              width: 16,
+              height: 16,
+              borderRadius: "50%",
+              background: "var(--ink)",
+            }}
+          />
+          <div
+            aria-hidden="true"
+            style={{
+              position: "absolute",
+              bottom: 24,
+              right: 24,
+              width: 16,
+              height: 16,
+              borderRadius: "50%",
+              background: "var(--ink)",
+            }}
+          />
+
+          {/* Dashed perforation top */}
+          <div
+            aria-hidden="true"
+            style={{
+              position: "absolute",
+              top: 40,
+              left: 48,
+              right: 48,
+              height: 0,
+              borderTop: "2px dashed rgba(10,10,10,0.20)",
+            }}
+          />
+
+          {/* Dashed perforation bottom */}
+          <div
+            aria-hidden="true"
+            style={{
+              position: "absolute",
+              bottom: 40,
+              left: 48,
+              right: 48,
+              height: 0,
+              borderTop: "2px dashed rgba(10,10,10,0.20)",
+            }}
+          />
+
+          {/* Headline */}
+          <h2
+            style={{
+              fontFamily: "var(--font-hero)",
+              fontStyle: "italic",
+              fontWeight: 400,
+              fontSize: "clamp(40px, 5vw, 56px)",
+              letterSpacing: "-0.02em",
+              lineHeight: 1.1,
+              color: "var(--ink)",
+              margin: "0 0 24px",
+            }}
+          >
+            Our mission is
+            <br />
+            the walk-in.
+          </h2>
+
+          <p
+            style={{
+              fontFamily: "var(--font-body)",
+              fontSize: 16,
+              color: "var(--ink)",
+              lineHeight: 1.6,
+              maxWidth: 480,
+              margin: "0 0 32px",
+            }}
+          >
+            Build a business worth visiting. We&rsquo;ll find the creators
+            who&rsquo;ll tell people about it.
+          </p>
+
+          {/* CTA row */}
+          <div
+            style={{
+              display: "flex",
+              gap: 16,
+              flexWrap: "wrap",
+              justifyContent: "center",
+            }}
+          >
+            <Link href="/creator/signup" className="btn-ink click-shift">
+              Join as Creator
+            </Link>
+            <Link
+              href="/merchant/signup"
+              className="btn-ghost click-shift"
+              style={{ color: "var(--ink)", borderColor: "var(--ink)" }}
+            >
+              For Merchants
+            </Link>
           </div>
         </div>
-      </section>
+      </main>
+
+      <Footer />
     </>
   );
 }
