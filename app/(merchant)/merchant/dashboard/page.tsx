@@ -466,22 +466,22 @@ function TierBadge({ tier }: { tier: CreatorTier }) {
     },
     operator: {
       bg: "var(--tier-operator)",
-      color: "#fff",
+      color: "var(--snow)",
       border: "1px solid var(--tier-operator)",
     },
     proven: {
       bg: "var(--tier-proven)",
-      color: "#fff",
+      color: "var(--snow)",
       border: "1px solid var(--tier-proven)",
     },
     closer: {
       bg: "var(--tier-closer)",
-      color: "#fff",
+      color: "var(--snow)",
       border: "1px solid var(--tier-closer)",
     },
     partner: {
       bg: "var(--tier-partner)",
-      color: "#fff",
+      color: "var(--snow)",
       border: "1px solid var(--tier-partner)",
       borderLeft: "3px solid var(--primary)",
     },
