@@ -12,10 +12,12 @@ const MIDDLE_PILLS: { pattern: RegExp; label: string; href: string }[] = [
   { pattern: /^\/for-creators/, label: "CREATORS", href: "/for-creators" },
   { pattern: /^\/pricing/, label: "PRICING", href: "/pricing" },
   { pattern: /^\/how-it-works/, label: "HOW IT WORKS", href: "/how-it-works" },
+  { pattern: /^\/about/, label: "ABOUT", href: "/about" },
 ];
 const DEFAULT_MIDDLE = { label: "PRODUCT", href: "/for-merchants" };
 
-const LAST_PILL = { label: "CREATORS", href: "/for-creators" };
+// Last pill is always PRICING — distinct from any MIDDLE_PILLS to avoid duplicates
+const LAST_PILL = { label: "PRICING", href: "/pricing" };
 
 /* ---- Inline style helpers ---- */
 const S = {
@@ -233,6 +235,12 @@ export default function Header() {
   const middlePill =
     MIDDLE_PILLS.find((p) => p.pattern.test(pathname)) ?? DEFAULT_MIDDLE;
 
+  // Last pill avoids duplicating the middle pill's destination
+  const lastPill =
+    middlePill.href === LAST_PILL.href
+      ? { label: "CREATORS", href: "/for-creators" }
+      : LAST_PILL;
+
   useEffect(() => {
     const onScroll = () => {
       const y = window.scrollY;
@@ -310,7 +318,7 @@ export default function Header() {
               {middlePill.label}
             </Link>
             <Link
-              href={LAST_PILL.href}
+              href={lastPill.href}
               style={pillStyle("last")}
               onMouseEnter={(e) =>
                 (e.currentTarget.style.filter = "brightness(1.08)")
@@ -321,7 +329,7 @@ export default function Header() {
               }
               onMouseUp={(e) => (e.currentTarget.style.filter = "")}
             >
-              {LAST_PILL.label}
+              {lastPill.label}
             </Link>
           </div>
 
@@ -386,7 +394,7 @@ export default function Header() {
           {middlePill.label}
         </Link>
         <Link
-          href={LAST_PILL.href}
+          href={lastPill.href}
           style={{
             ...S.mobilePillBase,
             background: "var(--ga-sky)",
@@ -394,7 +402,7 @@ export default function Header() {
           }}
           onClick={() => setMenuOpen(false)}
         >
-          {LAST_PILL.label}
+          {lastPill.label}
         </Link>
         <Link
           href="/merchant/signup"

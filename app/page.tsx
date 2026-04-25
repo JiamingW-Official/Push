@@ -326,7 +326,7 @@ export default function HomePage() {
         </section>
 
         {/* ═══════════════════════════════════════════════════════
-            PANEL 2 — ADVENTURE · Candy Peach · 3-route cards
+            PANEL 2 — ADVENTURE · Candy Peach · editorial 2-pathway
             ═══════════════════════════════════════════════════════ */}
         <section
           className="candy-panel"
@@ -336,231 +336,178 @@ export default function HomePage() {
             overflow: "hidden",
           }}
         >
-          {/* Eyebrow + H2 — top-left anchor */}
-          <div style={{ marginBottom: "clamp(40px, 5vw, 56px)" }}>
-            <span
-              style={{
-                fontFamily: "var(--font-body)",
-                fontSize: "12px",
-                fontWeight: 700,
-                letterSpacing: "0.18em",
-                textTransform: "uppercase",
-                color: "var(--ink-4)",
-                display: "block",
-                marginBottom: "16px",
-              }}
-            >
-              (HOW IT WORKS)
-            </span>
-            <h2
-              style={{
-                fontFamily: "var(--font-display)",
-                fontWeight: 900,
-                fontSize: "clamp(32px, 4vw, 40px)",
-                letterSpacing: "-0.045em",
-                lineHeight: 1.1,
-                color: "var(--ink)",
-                margin: 0,
-              }}
-            >
-              Choose your
-              <br />
-              path forward.
-            </h2>
-          </div>
+          {/* Top label */}
+          <p
+            className="eyebrow"
+            style={{ color: "var(--ink-4)", marginBottom: 48 }}
+          >
+            (HOW IT WORKS)
+          </p>
 
-          {/* 3-column route cards — 4+4+4 grid */}
+          {/* Editorial 2-pathway split — dark ink vs warm surface */}
           <div
             style={{
               display: "grid",
-              gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
-              gap: "24px",
+              gridTemplateColumns: "1fr 1fr",
+              gap: 24,
+              alignItems: "stretch",
             }}
           >
-            {/* Card 1 — For Merchants */}
+            {/* Pathway A — Merchants: dark ink tile */}
             <Link
               href="/for-merchants"
               className="click-shift"
               style={{
-                background: "rgba(255,255,255,0.55)",
-                borderRadius: "var(--r-xl)",
-                padding: "24px",
+                background: "var(--ink)",
+                borderRadius: "var(--r-2xl)",
+                padding: "56px 48px",
                 display: "flex",
                 flexDirection: "column",
-                gap: "16px",
-                textDecoration: "none",
-                minHeight: "240px",
                 justifyContent: "space-between",
+                textDecoration: "none",
+                minHeight: 340,
+                color: "var(--snow)",
               }}
             >
               <div>
-                <div
-                  style={{
-                    width: "40px",
-                    height: "40px",
-                    borderRadius: "var(--r-md)",
-                    background: "var(--surface-3)",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    color: "var(--ink)",
-                    marginBottom: "16px",
-                  }}
+                <p
+                  className="eyebrow"
+                  style={{ color: "rgba(255,255,255,0.45)", marginBottom: 24 }}
                 >
-                  <StorefrontIcon />
-                </div>
-                <div
+                  FOR MERCHANTS
+                </p>
+                <h2
                   style={{
                     fontFamily: "var(--font-display)",
-                    fontWeight: 700,
-                    fontSize: "20px",
-                    letterSpacing: "-0.025em",
-                    color: "var(--ink)",
-                    marginBottom: "12px",
+                    fontWeight: 900,
+                    fontSize: "clamp(32px, 4vw, 52px)",
+                    letterSpacing: "-0.04em",
+                    lineHeight: 1.05,
+                    color: "var(--snow)",
+                    margin: "0 0 24px",
                   }}
                 >
-                  For Merchants
-                </div>
+                  Pay only
+                  <br />
+                  for the
+                  <br />
+                  walk-in.
+                </h2>
                 <p
                   style={{
                     fontFamily: "var(--font-body)",
-                    fontSize: "14px",
+                    fontSize: 16,
+                    color: "rgba(255,255,255,0.60)",
                     lineHeight: 1.6,
-                    color: "var(--ink-3)",
+                    maxWidth: "30ch",
                     margin: 0,
                   }}
                 >
-                  Drive verified foot traffic. Pay only when a creator&apos;s
-                  scan converts to a real store visit.
+                  No impressions. No reach. You pay exactly once — when a
+                  verified creator scan converts to a real store visit.
                 </p>
               </div>
-              <span className="btn-ghost" style={{ alignSelf: "flex-start" }}>
+              <span
+                style={{
+                  fontFamily: "var(--font-body)",
+                  fontSize: 13,
+                  fontWeight: 700,
+                  letterSpacing: "0.08em",
+                  textTransform: "uppercase" as const,
+                  color: "rgba(255,255,255,0.50)",
+                  marginTop: 40,
+                  display: "block",
+                }}
+              >
                 Learn more →
               </span>
             </Link>
 
-            {/* Card 2 — For Creators */}
+            {/* Pathway B — Creators: translucent warm tile */}
             <Link
               href="/for-creators"
               className="click-shift"
               style={{
-                background: "rgba(255,255,255,0.55)",
-                borderRadius: "var(--r-xl)",
-                padding: "24px",
+                background: "rgba(255,255,255,0.70)",
+                borderRadius: "var(--r-2xl)",
+                padding: "56px 48px",
                 display: "flex",
                 flexDirection: "column",
-                gap: "16px",
-                textDecoration: "none",
-                minHeight: "240px",
                 justifyContent: "space-between",
+                textDecoration: "none",
+                minHeight: 340,
               }}
             >
               <div>
-                <div
-                  style={{
-                    width: "40px",
-                    height: "40px",
-                    borderRadius: "var(--r-md)",
-                    background: "var(--surface-3)",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    color: "var(--ink)",
-                    marginBottom: "16px",
-                  }}
+                <p
+                  className="eyebrow"
+                  style={{ color: "var(--ink-4)", marginBottom: 24 }}
                 >
-                  <MicIcon />
-                </div>
-                <div
+                  FOR CREATORS
+                </p>
+                <h2
                   style={{
                     fontFamily: "var(--font-display)",
-                    fontWeight: 700,
-                    fontSize: "20px",
-                    letterSpacing: "-0.025em",
+                    fontWeight: 900,
+                    fontSize: "clamp(32px, 4vw, 52px)",
+                    letterSpacing: "-0.04em",
+                    lineHeight: 1.05,
                     color: "var(--ink)",
-                    marginBottom: "12px",
+                    margin: "0 0 24px",
                   }}
                 >
-                  For Creators
-                </div>
+                  Perform.
+                  <br />
+                  Get paid.
+                  <br />
+                  Repeat.
+                </h2>
                 <p
                   style={{
                     fontFamily: "var(--font-body)",
-                    fontSize: "14px",
-                    lineHeight: 1.6,
+                    fontSize: 16,
                     color: "var(--ink-3)",
+                    lineHeight: 1.6,
+                    maxWidth: "30ch",
                     margin: 0,
                   }}
                 >
-                  Earn per verified visit. Post your favorite local spots, let
-                  your audience discover them, get paid when they show up.
+                  Post your neighborhood spots. Let your audience discover them.
+                  Earn per verified visit — no sponsorship minimum.
                 </p>
               </div>
-              <span className="btn-ghost" style={{ alignSelf: "flex-start" }}>
+              <span
+                style={{
+                  fontFamily: "var(--font-body)",
+                  fontSize: 13,
+                  fontWeight: 700,
+                  letterSpacing: "0.08em",
+                  textTransform: "uppercase" as const,
+                  color: "var(--ink-4)",
+                  marginTop: 40,
+                  display: "block",
+                }}
+              >
                 Join as creator →
               </span>
             </Link>
+          </div>
 
-            {/* Card 3 — How Scans Work */}
+          {/* Sub-link */}
+          <div style={{ marginTop: 32, textAlign: "center" }}>
             <Link
               href="/how-it-works"
-              className="click-shift"
               style={{
-                background: "rgba(255,255,255,0.55)",
-                borderRadius: "var(--r-xl)",
-                padding: "24px",
-                display: "flex",
-                flexDirection: "column",
-                gap: "16px",
+                fontFamily: "var(--font-body)",
+                fontSize: 13,
+                fontWeight: 600,
+                letterSpacing: "0.06em",
+                textTransform: "uppercase",
+                color: "var(--ink-3)",
                 textDecoration: "none",
-                minHeight: "240px",
-                justifyContent: "space-between",
               }}
             >
-              <div>
-                <div
-                  style={{
-                    width: "40px",
-                    height: "40px",
-                    borderRadius: "var(--r-md)",
-                    background: "var(--surface-3)",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    color: "var(--ink)",
-                    marginBottom: "16px",
-                  }}
-                >
-                  <ScanIcon />
-                </div>
-                <div
-                  style={{
-                    fontFamily: "var(--font-display)",
-                    fontWeight: 700,
-                    fontSize: "20px",
-                    letterSpacing: "-0.025em",
-                    color: "var(--ink)",
-                    marginBottom: "12px",
-                  }}
-                >
-                  How Scans Work
-                </div>
-                <p
-                  style={{
-                    fontFamily: "var(--font-body)",
-                    fontSize: "14px",
-                    lineHeight: 1.6,
-                    color: "var(--ink-3)",
-                    margin: 0,
-                  }}
-                >
-                  Creator posts a QR. Audience scans it. Visit is verified
-                  on-site. Merchant pays. Transparent, fraud-resistant, local.
-                </p>
-              </div>
-              <span className="btn-ghost" style={{ alignSelf: "flex-start" }}>
-                See the flow →
-              </span>
+              How scans are verified →
             </Link>
           </div>
         </section>
@@ -650,49 +597,50 @@ export default function HomePage() {
             </h2>
           </div>
 
-          {/* 3 stat tiles */}
+          {/* Raw KPI row — no card frame, raw numbers breathe */}
           <div
             style={{
               display: "grid",
-              gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
-              gap: "24px",
-              marginBottom: "clamp(40px, 5vw, 56px)",
+              gridTemplateColumns: "repeat(3, 1fr)",
+              gap: 0,
+              marginBottom: "clamp(56px, 7vw, 80px)",
+              borderTop: "1px solid rgba(10,10,10,0.10)",
+              borderBottom: "1px solid rgba(10,10,10,0.10)",
+              paddingTop: 48,
+              paddingBottom: 48,
             }}
           >
             {[
               { num: "1.4M+", label: "Verified scans to date" },
               { num: "87%", label: "Creator retention rate" },
               { num: "$0", label: "Cost per unverified visit" },
-            ].map((stat) => (
+            ].map((stat, i) => (
               <div
                 key={stat.num}
-                className="lg-surface"
-                style={{ padding: "24px 32px", textAlign: "center" }}
+                style={{
+                  paddingLeft: i > 0 ? 40 : 0,
+                  borderLeft: i > 0 ? "1px solid rgba(10,10,10,0.10)" : "none",
+                }}
               >
-                <div
+                <p
                   style={{
                     fontFamily: "var(--font-display)",
-                    fontWeight: 700,
-                    fontSize: "clamp(40px, 5vw, 72px)",
-                    lineHeight: 1,
-                    letterSpacing: "-0.045em",
+                    fontWeight: 900,
+                    fontSize: "clamp(56px, 8vw, 112px)",
+                    lineHeight: 0.9,
+                    letterSpacing: "-0.05em",
                     color: "var(--ink)",
-                    marginBottom: "8px",
+                    margin: "0 0 16px",
                   }}
                 >
                   {stat.num}
-                </div>
-                <div
-                  style={{
-                    fontFamily: "var(--font-body)",
-                    fontSize: "13px",
-                    fontWeight: 600,
-                    color: "var(--ink-3)",
-                    letterSpacing: "0.02em",
-                  }}
+                </p>
+                <p
+                  className="eyebrow"
+                  style={{ color: "var(--ink-3)", margin: 0 }}
                 >
                   {stat.label}
-                </div>
+                </p>
               </div>
             ))}
           </div>

@@ -2,8 +2,6 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import Header from "@/components/layout/Header";
-import Footer from "@/components/layout/Footer";
 import "./creators.css";
 
 /* ── Earnings Calculator data ─────────────────────────────── */
@@ -207,8 +205,6 @@ function EarningsCalculator() {
 export default function ForCreatorsPage() {
   return (
     <>
-      <Header />
-
       {/* ════════════════════════════════════════════════════
           HERO — Full-Bleed Pattern A, border-radius: 0 (allowed)
           ════════════════════════════════════════════════════ */}
@@ -941,8 +937,6 @@ export default function ForCreatorsPage() {
 
       {/* Spacer below ticket panel */}
       <div style={{ height: 64 }} aria-hidden="true" />
-
-      <Footer />
 
       {/* Responsive overrides — tiers grid + photo grid + peek tile */}
       <style>{`

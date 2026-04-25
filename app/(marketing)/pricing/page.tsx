@@ -151,6 +151,61 @@ export default function PricingPage() {
             physically visits your location.
           </p>
         </div>
+
+        {/* Right editorial anchor — free-to-start callout */}
+        <div
+          style={{
+            position: "absolute",
+            right: 64,
+            bottom: 64,
+            zIndex: 2,
+            textAlign: "right",
+          }}
+        >
+          <p
+            style={{
+              fontFamily: "var(--font-display)",
+              fontWeight: 900,
+              fontSize: "clamp(72px, 10vw, 140px)",
+              letterSpacing: "-0.06em",
+              lineHeight: 0.85,
+              color: "rgba(255,255,255,0.06)",
+              margin: 0,
+              userSelect: "none",
+            }}
+          >
+            $0
+          </p>
+          <div
+            className="lg-surface--badge"
+            style={{
+              display: "inline-flex",
+              flexDirection: "column",
+              alignItems: "flex-end",
+              padding: "16px 24px",
+              marginTop: 12,
+            }}
+          >
+            <span
+              style={{
+                fontFamily: "var(--font-display)",
+                fontWeight: 900,
+                fontSize: "clamp(28px, 3.5vw, 48px)",
+                letterSpacing: "-0.04em",
+                lineHeight: 1,
+                color: "var(--snow)",
+              }}
+            >
+              Start free
+            </span>
+            <span
+              className="pv11-eyebrow"
+              style={{ marginTop: 8, textAlign: "right" }}
+            >
+              No card required
+            </span>
+          </div>
+        </div>
       </section>
 
       {/* ═══════════════════════════════════════════════════════
