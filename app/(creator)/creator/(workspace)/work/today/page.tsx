@@ -34,7 +34,7 @@ const INITIAL_TIMELINE_TASKS: TimelineTask[] = [
     category: "Coffee",
     earnBadge: "$18",
     logoInitials: "BS",
-    logoColor: "#003049",
+    logoColor: "#3a3835",
   },
   {
     id: "t2",
@@ -82,7 +82,7 @@ const INITIAL_TIMELINE_TASKS: TimelineTask[] = [
     category: "Coffee",
     earnBadge: "$34",
     logoInitials: "CC",
-    logoColor: "#669bbc",
+    logoColor: "#0085ff",
   },
 ];
 
@@ -266,7 +266,7 @@ export default function WorkTodayPage() {
       category: "Other",
       earnBadge: "$0",
       logoInitials: "+",
-      logoColor: "#669bbc",
+      logoColor: "#0085ff",
     };
     setTasks((prev) => {
       const next = [...prev, newTask];
@@ -282,41 +282,57 @@ export default function WorkTodayPage() {
   /* ── Render ─────────────────────────────────────────────────── */
 
   return (
-    <div className="wt-page">
-      {/* ── Nav ─────────────────────────────────────────────── */}
-      <nav className="wt-nav">
-        <Link href="/creator/dashboard" className="wt-nav-back">
-          ← WORKSPACE
-        </Link>
-        <span className="wt-nav-sep">|</span>
-        <span className="wt-nav-title">TODAY</span>
-        <div className="wt-nav-right">
-          <Link href="/creator/work/pipeline" className="wt-nav-link">
+    <div className="cw-page wt-page">
+      <header className="cw-header">
+        <div className="cw-header__left">
+          <p className="cw-eyebrow cw-eyebrow--live">
+            {getDayName(nowTime)} · {getMonthDay(nowTime)}
+            {upcomingCount > 0
+              ? ` · ${upcomingCount} SHOOT${upcomingCount > 1 ? "S" : ""} · $${totalPotential}`
+              : ""}
+          </p>
+          <h1 className="cw-title">Today&apos;s work</h1>
+        </div>
+        <div className="cw-header__right">
+          <Link href="/creator/work/pipeline" className="cw-pill">
             Pipeline →
           </Link>
-        </div>
-      </nav>
-
-      {/* ── Hero — editorial, clean ──────────────────────────── */}
-      <header className="wt-hero">
-        <div className="wt-hero-inner">
-          <h1 className="wt-date-day">{getDayName(nowTime)}</h1>
-          <p className="wt-date-month">{getMonthDay(nowTime)}</p>
-          <div className="wt-hero-divider" />
-          <p className="wt-hero-summary">
-            {upcomingCount > 0
-              ? `You have ${upcomingCount} shoot${upcomingCount > 1 ? "s" : ""} today. Potential: $${totalPotential}.`
-              : "No shoots scheduled. Browse campaigns to get started."}
-          </p>
+          <Link href="/creator/discover" className="cw-pill cw-pill--urgent">
+            + Browse campaigns
+          </Link>
         </div>
       </header>
+
+      {/* ── Quick stats row ──────────────────────────────────── */}
+      <div className="wt-stats-row">
+        <div className="wt-stat-chip">
+          <span className="wt-stat-val">
+            {
+              tasks.filter(
+                (t) => t.status === "upcoming" || t.status === "active",
+              ).length
+            }
+          </span>
+          <span className="wt-stat-lbl eyebrow">Due Today</span>
+        </div>
+        <div className="wt-stat-chip">
+          <span className="wt-stat-val">
+            {tasks.filter((t) => t.status === "active").length}
+          </span>
+          <span className="wt-stat-lbl eyebrow">Active Now</span>
+        </div>
+        <div className="wt-stat-chip">
+          <span className="wt-stat-val">${totalPotential}</span>
+          <span className="wt-stat-lbl eyebrow">Potential</span>
+        </div>
+      </div>
 
       {/* ── Main Layout ─────────────────────────────────────── */}
       <div className="wt-body">
         {/* ── Timeline ──────────────────────────────────────── */}
         <section className="wt-timeline-section">
           <div className="wt-section-header">
-            <h2 className="wt-section-title">TODAY&apos;S SCHEDULE</h2>
+            <h2 className="wt-section-title eyebrow">TODAY&apos;S SCHEDULE</h2>
             <Link href="/creator/campaigns" className="wt-section-link">
               Browse more →
             </Link>
@@ -338,7 +354,7 @@ export default function WorkTodayPage() {
 
             {groups.map(({ label, tasks: groupTasks }) => (
               <div key={label} className="wt-time-group">
-                <div className="wt-time-group-label">
+                <div className="wt-time-group-label eyebrow">
                   <span>{label}</span>
                 </div>
 
@@ -474,18 +490,18 @@ export default function WorkTodayPage() {
                               {!isDone && task.status === "active" && (
                                 <Link
                                   href="/creator/campaigns/demo-campaign-001/post"
-                                  className="wt-action-btn wt-action-primary"
+                                  className="wt-action-btn wt-action-primary btn-primary click-shift"
                                 >
                                   Submit Content
                                 </Link>
                               )}
                               {!isDone && task.status === "upcoming" && (
-                                <button className="wt-action-btn wt-action-secondary">
+                                <button className="wt-action-btn wt-action-secondary btn-ghost click-shift">
                                   Mark Arrived
                                 </button>
                               )}
                               <button
-                                className={`wt-action-btn ${isDone ? "wt-action-ghost" : "wt-action-secondary"}`}
+                                className={`wt-action-btn ${isDone ? "wt-action-ghost" : "wt-action-secondary"} btn-ghost click-shift`}
                                 onClick={(e) => {
                                   e.stopPropagation();
                                   toggleComplete(task.id);
@@ -495,13 +511,13 @@ export default function WorkTodayPage() {
                               </button>
                               <Link
                                 href="/creator/campaigns/demo-campaign-001"
-                                className="wt-action-btn wt-action-ghost"
+                                className="wt-action-btn wt-action-ghost btn-ghost click-shift"
                               >
                                 View Details
                               </Link>
                               <Link
                                 href="/creator/messages"
-                                className="wt-action-btn wt-action-ghost"
+                                className="wt-action-btn wt-action-ghost btn-ghost click-shift"
                               >
                                 Message Merchant
                               </Link>
@@ -548,14 +564,14 @@ export default function WorkTodayPage() {
                   />
                   <button
                     type="submit"
-                    className="wt-add-submit-btn"
+                    className="wt-add-submit-btn btn-primary"
                     disabled={!addText.trim()}
                   >
                     Add
                   </button>
                   <button
                     type="button"
-                    className="wt-add-cancel-btn"
+                    className="wt-add-cancel-btn btn-ghost"
                     onClick={() => {
                       setShowAddForm(false);
                       setAddText("");
@@ -582,14 +598,14 @@ export default function WorkTodayPage() {
         <aside className="wt-sidebar">
           {/* Active campaign CTA — primary action */}
           {activeCampaign && !completedIds.has(activeCampaign.id) ? (
-            <div className="wt-cta-card">
-              <p className="wt-cta-eyebrow">ACTIVE NOW</p>
+            <div className="wt-cta-card candy-panel">
+              <p className="wt-cta-eyebrow eyebrow">ACTIVE NOW</p>
               <p className="wt-cta-title">{activeCampaign.merchantName}</p>
               <p className="wt-cta-desc">{activeCampaign.campaignName}</p>
               <p className="wt-cta-earn">{activeCampaign.earnBadge} est.</p>
               <Link
                 href="/creator/campaigns/demo-campaign-001/post"
-                className="wt-cta-btn"
+                className="btn-primary click-shift wt-cta-btn"
               >
                 Submit Content →
               </Link>
@@ -598,10 +614,10 @@ export default function WorkTodayPage() {
             /* Pipeline shortcut when no active campaign */
             <Link
               href="/creator/work/pipeline"
-              className="wt-pipeline-shortcut"
+              className="wt-pipeline-shortcut click-shift"
             >
               <div className="wt-pipeline-shortcut-left">
-                <p className="wt-pipeline-shortcut-label">PIPELINE</p>
+                <p className="wt-pipeline-shortcut-label eyebrow">PIPELINE</p>
                 <p className="wt-pipeline-shortcut-sub">
                   12 campaigns · $2,100 potential
                 </p>
@@ -619,7 +635,10 @@ export default function WorkTodayPage() {
           <p className="wt-empty-sub">
             Take a break, or find your next opportunity
           </p>
-          <Link href="/creator/explore" className="wt-empty-cta">
+          <Link
+            href="/creator/explore"
+            className="btn-primary click-shift wt-empty-cta"
+          >
             Browse campaigns →
           </Link>
         </div>

@@ -168,25 +168,25 @@ const PIPELINE_STAGES: {
     key: "in_progress",
     label: "In Progress",
     countClass: "drafts-pipeline-count--in-progress",
-    dot: "rgba(0,48,73,0.35)",
+    dot: "var(--ink-3)",
   },
   {
     key: "ready",
     label: "Ready to Submit",
     countClass: "drafts-pipeline-count--ready",
-    dot: "#669bbc",
+    dot: "var(--accent-blue)",
   },
   {
     key: "submitted",
     label: "Submitted",
     countClass: "drafts-pipeline-count--submitted",
-    dot: "#c9a96e",
+    dot: "#bfa170",
   },
   {
     key: "overdue",
     label: "Overdue",
     countClass: "drafts-pipeline-count--overdue",
-    dot: "#c1121f",
+    dot: "var(--brand-red)",
   },
 ];
 
@@ -231,17 +231,31 @@ function previewAccentBg(hue: number): string {
   return `hsl(${hue}, 44%, 58%)`;
 }
 
-/* ── Status badge component ──────────────────────────────── */
+/* ── Status badge ──────────────────────────────────────────── */
 
 function StatusBadge({ status }: { status: DraftStatus }) {
-  const map: Record<DraftStatus, string> = {
-    in_progress: "status--in-progress",
-    ready: "status--ready",
-    submitted: "status--submitted",
-    overdue: "status--overdue",
+  const styles: Record<DraftStatus, { bg: string; color: string }> = {
+    in_progress: { bg: "var(--surface-2)", color: "var(--ink-3)" },
+    ready: { bg: "var(--accent-blue)", color: "var(--snow)" },
+    submitted: { bg: "#bfa170", color: "var(--snow)" },
+    overdue: { bg: "var(--brand-red)", color: "var(--snow)" },
   };
+  const s = styles[status];
   return (
-    <span className={`draft-list-status ${map[status]}`}>
+    <span
+      style={{
+        padding: "3px 10px",
+        borderRadius: 4,
+        background: s.bg,
+        color: s.color,
+        fontFamily: "var(--font-body)",
+        fontSize: 11,
+        fontWeight: 700,
+        textTransform: "uppercase",
+        letterSpacing: "0.05em",
+        whiteSpace: "nowrap",
+      }}
+    >
       {STATUS_LABELS[status]}
     </span>
   );
@@ -252,84 +266,175 @@ function StatusBadge({ status }: { status: DraftStatus }) {
 function DraftCard({ draft, index }: { draft: DraftItem; index: number }) {
   const dcls = deadlineClass(draft.status, draft.deadlineDate);
   const pct = progressPct(draft.wordCount, draft.wordTarget);
-
-  const badgeClass: Record<DraftStatus, string> = {
-    in_progress: "draft-card-status-badge--in-progress",
-    ready: "draft-card-status-badge--ready",
-    submitted: "draft-card-status-badge--submitted",
-    overdue: "draft-card-status-badge--overdue",
-  };
-
   const isEditable = draft.status !== "submitted";
+  const deadlineColor =
+    dcls === "overdue"
+      ? "var(--brand-red)"
+      : dcls === "soon"
+        ? "#bfa170"
+        : "var(--ink-4)";
 
   return (
     <div
-      className={`draft-card${draft.status === "overdue" ? " draft-card--overdue" : ""}`}
-      style={{ animationDelay: `${index * 60}ms` }}
+      style={{
+        background: "var(--surface-2)",
+        border:
+          draft.status === "overdue"
+            ? "1px solid var(--brand-red)"
+            : "1px solid var(--hairline)",
+        borderRadius: 10,
+        overflow: "hidden",
+        display: "flex",
+        flexDirection: "column",
+        animationDelay: `${index * 60}ms`,
+      }}
     >
       {/* Preview */}
-      <div className="draft-card-preview">
+      <div
+        style={{
+          position: "relative",
+          height: 120,
+          background: previewBg(draft.previewHue),
+          overflow: "hidden",
+          flexShrink: 0,
+        }}
+      >
         <div
-          className="draft-card-preview-bg"
-          style={{ background: previewBg(draft.previewHue) }}
+          style={{
+            position: "absolute",
+            top: "-20%",
+            right: "-15%",
+            width: "65%",
+            height: "120%",
+            background: previewAccentBg(draft.previewHue),
+            opacity: 0.18,
+          }}
+        />
+        <div
+          style={{
+            position: "absolute",
+            bottom: 0,
+            left: 0,
+            width: "35%",
+            height: "45%",
+            background: previewAccentBg(draft.previewHue),
+            opacity: 0.1,
+          }}
+        />
+        {/* Overlay badges */}
+        <div
+          style={{
+            position: "absolute",
+            inset: "8px",
+            display: "flex",
+            alignItems: "flex-start",
+            justifyContent: "space-between",
+          }}
         >
-          <div className="draft-card-preview-art">
-            <div
+          <span
+            style={{
+              padding: "3px 8px",
+              borderRadius: 4,
+              background: "rgba(255,255,255,0.88)",
+              fontFamily: "var(--font-body)",
+              fontSize: 10,
+              fontWeight: 700,
+              color: "var(--ink)",
+              textTransform: "uppercase",
+              letterSpacing: "0.05em",
+            }}
+          >
+            {CONTENT_TYPE_LABELS[draft.contentType]}
+          </span>
+          <div style={{ display: "flex", gap: 4 }}>
+            <span
               style={{
-                position: "absolute",
-                top: "-20%",
-                right: "-15%",
-                width: "65%",
-                height: "120%",
-                background: previewAccentBg(draft.previewHue),
-                opacity: 0.18,
+                padding: "3px 8px",
+                borderRadius: 4,
+                background: "rgba(255,255,255,0.88)",
+                fontFamily: "var(--font-body)",
+                fontSize: 10,
+                fontWeight: 700,
+                color: "var(--ink)",
               }}
-            />
-            <div
-              style={{
-                position: "absolute",
-                bottom: 0,
-                left: 0,
-                width: "35%",
-                height: "45%",
-                background: previewAccentBg(draft.previewHue),
-                opacity: 0.1,
-              }}
-            />
+            >
+              {PLATFORM_LABELS[draft.platform]}
+            </span>
           </div>
         </div>
-
-        <span className="draft-card-type-badge">
-          {CONTENT_TYPE_LABELS[draft.contentType]}
-        </span>
-        <span className="draft-card-platform">
-          {PLATFORM_LABELS[draft.platform]}
-        </span>
-        <span className={`draft-card-status-badge ${badgeClass[draft.status]}`}>
-          {STATUS_LABELS[draft.status]}
-        </span>
+        <StatusBadge status={draft.status} />
+        {/* Bottom-left status overlay */}
+        <div style={{ position: "absolute", bottom: 8, left: 8 }}>
+          <StatusBadge status={draft.status} />
+        </div>
       </div>
 
       {/* Body */}
-      <div className="draft-card-body">
-        <div className="draft-card-name">{draft.name}</div>
-
-        <div className="draft-card-meta-row">
-          <span className="draft-card-merchant-chip">{draft.merchantName}</span>
+      <div
+        style={{
+          padding: "16px",
+          flex: 1,
+          display: "flex",
+          flexDirection: "column",
+          gap: 8,
+        }}
+      >
+        <div
+          style={{
+            fontFamily: "var(--font-display)",
+            fontWeight: 700,
+            fontSize: 14,
+            color: "var(--ink)",
+            lineHeight: 1.3,
+          }}
+        >
+          {draft.name}
         </div>
-        <div className="draft-card-campaign">{draft.campaignTitle}</div>
+
+        <div
+          style={{
+            display: "inline-flex",
+            padding: "3px 10px",
+            borderRadius: 20,
+            background: "var(--surface-2)",
+            border: "1px solid var(--hairline)",
+            fontFamily: "var(--font-body)",
+            fontSize: 11,
+            color: "var(--ink-3)",
+            alignSelf: "flex-start",
+          }}
+        >
+          {draft.merchantName}
+        </div>
+
+        <div
+          style={{
+            fontFamily: "var(--font-body)",
+            fontSize: 12,
+            color: "var(--ink-3)",
+          }}
+        >
+          {draft.campaignTitle}
+        </div>
 
         {/* Deadline */}
-        <div className={`draft-card-deadline draft-card-deadline--${dcls}`}>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 6,
+            fontFamily: "var(--font-body)",
+            fontSize: 12,
+            color: deadlineColor,
+          }}
+        >
           <span
-            className="draft-card-deadline-dot"
             style={{
-              background:
-                dcls === "overdue"
-                  ? "var(--primary)"
-                  : dcls === "soon"
-                    ? "var(--champagne, #c9a96e)"
-                    : "rgba(0,48,73,0.3)",
+              width: 6,
+              height: 6,
+              borderRadius: "50%",
+              background: deadlineColor,
+              flexShrink: 0,
             }}
           />
           {deadlineLabel(draft.status, draft.deadlineDate)}
@@ -338,48 +443,98 @@ function DraftCard({ draft, index }: { draft: DraftItem; index: number }) {
         {/* Progress */}
         {draft.status !== "submitted" && (
           <>
-            <div className="draft-card-progress-label">
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                fontFamily: "var(--font-body)",
+                fontSize: 11,
+                color: "var(--ink-4)",
+              }}
+            >
               <span>Draft progress</span>
               <span>
                 {draft.wordCount}/{draft.wordTarget} words
               </span>
             </div>
-            <div className="draft-card-progress-track">
+            <div
+              style={{
+                height: 4,
+                borderRadius: 2,
+                background: "var(--hairline)",
+                overflow: "hidden",
+              }}
+            >
               <div
-                className="draft-card-progress-fill"
-                style={{ width: `${pct}%` }}
+                style={{
+                  height: "100%",
+                  borderRadius: 2,
+                  width: `${pct}%`,
+                  background:
+                    pct === 100 ? "var(--accent-blue)" : "var(--ink-3)",
+                }}
               />
             </div>
           </>
         )}
       </div>
 
-      {/* Footer with actions */}
-      <div className="draft-card-footer">
-        <span className="draft-card-merchant">{draft.merchantName}</span>
-        <div className="draft-card-actions">
+      {/* Footer */}
+      <div
+        style={{
+          padding: "12px 16px",
+          borderTop: "1px solid var(--hairline)",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          gap: 8,
+        }}
+      >
+        <span
+          style={{
+            fontFamily: "var(--font-body)",
+            fontSize: 11,
+            color: "var(--ink-4)",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            whiteSpace: "nowrap",
+          }}
+        >
+          {draft.merchantName}
+        </span>
+        <div style={{ display: "flex", gap: 8 }}>
           {isEditable && (
-            <Link href={draft.postUrl} className="draft-card-btn">
+            <Link
+              href={draft.postUrl}
+              className="btn-ghost click-shift"
+              style={{ fontSize: 12, padding: "4px 12px" }}
+            >
               Edit
             </Link>
           )}
           {draft.status === "ready" && (
             <Link
               href={draft.postUrl}
-              className="draft-card-btn draft-card-btn--primary"
+              className="btn-primary click-shift"
+              style={{ fontSize: 12, padding: "4px 12px" }}
             >
               Submit
             </Link>
           )}
           {draft.status === "submitted" && (
-            <Link href={draft.postUrl} className="draft-card-cta">
-              View <span aria-hidden="true">→</span>
+            <Link
+              href={draft.postUrl}
+              className="btn-ghost click-shift"
+              style={{ fontSize: 12, padding: "4px 12px" }}
+            >
+              View →
             </Link>
           )}
           {draft.status === "overdue" && (
             <Link
               href={draft.postUrl}
-              className="draft-card-btn draft-card-btn--primary"
+              className="btn-primary click-shift"
+              style={{ fontSize: 12, padding: "4px 12px" }}
             >
               Submit now
             </Link>
@@ -395,16 +550,42 @@ function DraftCard({ draft, index }: { draft: DraftItem; index: number }) {
 function DraftListRow({ draft, index }: { draft: DraftItem; index: number }) {
   const dcls = deadlineClass(draft.status, draft.deadlineDate);
   const pct = progressPct(draft.wordCount, draft.wordTarget);
+  const deadlineColor =
+    dcls === "overdue"
+      ? "var(--brand-red)"
+      : dcls === "soon"
+        ? "#bfa170"
+        : "var(--ink-4)";
 
   return (
     <div
-      className={`draft-list-row${draft.status === "overdue" ? " draft-list-row--overdue" : ""}`}
-      style={{ animationDelay: `${index * 40}ms` }}
+      style={{
+        display: "grid",
+        gridTemplateColumns: "40px 1fr auto auto 160px auto",
+        alignItems: "center",
+        gap: 16,
+        padding: "14px 16px",
+        borderRadius: 10,
+        border:
+          draft.status === "overdue"
+            ? "1px solid var(--brand-red)"
+            : "1px solid var(--hairline)",
+        background: "var(--surface-2)",
+        marginBottom: 8,
+        animationDelay: `${index * 40}ms`,
+      }}
     >
       {/* Color swatch */}
       <div
-        className="draft-list-swatch"
-        style={{ background: previewBg(draft.previewHue) }}
+        style={{
+          width: 40,
+          height: 40,
+          borderRadius: 8,
+          background: previewBg(draft.previewHue),
+          position: "relative",
+          overflow: "hidden",
+          flexShrink: 0,
+        }}
       >
         <div
           style={{
@@ -417,50 +598,119 @@ function DraftListRow({ draft, index }: { draft: DraftItem; index: number }) {
       </div>
 
       {/* Name + merchant + campaign */}
-      <div className="draft-list-name">
-        {draft.name}
-        <span className="draft-list-merchant-name">{draft.merchantName}</span>
-        <span className="draft-list-campaign-name">{draft.campaignTitle}</span>
+      <div style={{ minWidth: 0 }}>
+        <div
+          style={{
+            fontFamily: "var(--font-body)",
+            fontWeight: 700,
+            fontSize: 14,
+            color: "var(--ink)",
+            whiteSpace: "nowrap",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+          }}
+        >
+          {draft.name}
+        </div>
+        <div
+          style={{
+            fontFamily: "var(--font-body)",
+            fontSize: 12,
+            color: "var(--ink-3)",
+            whiteSpace: "nowrap",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+          }}
+        >
+          {draft.merchantName}
+        </div>
+        <div
+          style={{
+            fontFamily: "var(--font-body)",
+            fontSize: 11,
+            color: "var(--ink-4)",
+            whiteSpace: "nowrap",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+          }}
+        >
+          {draft.campaignTitle}
+        </div>
       </div>
 
       {/* Status */}
       <StatusBadge status={draft.status} />
 
       {/* Deadline */}
-      <span className={`draft-list-deadline draft-list-deadline--${dcls}`}>
+      <span
+        style={{
+          fontFamily: "var(--font-body)",
+          fontSize: 12,
+          color: deadlineColor,
+          whiteSpace: "nowrap",
+          fontWeight: dcls !== "ok" ? 700 : 400,
+        }}
+      >
         {deadlineLabel(draft.status, draft.deadlineDate)}
       </span>
 
       {/* Progress bar */}
-      <div className="draft-list-progress">
-        <div className="draft-list-progress-bar">
+      <div>
+        <div
+          style={{
+            height: 4,
+            borderRadius: 2,
+            background: "var(--hairline)",
+            overflow: "hidden",
+            marginBottom: 4,
+          }}
+        >
           <div
-            className="draft-list-progress-fill"
-            style={{ width: `${pct}%` }}
+            style={{
+              height: "100%",
+              borderRadius: 2,
+              width: `${pct}%`,
+              background: pct === 100 ? "var(--accent-blue)" : "var(--ink-3)",
+            }}
           />
         </div>
-        <span className="draft-list-progress-label">
+        <span
+          style={{
+            fontFamily: "var(--font-body)",
+            fontSize: 11,
+            color: "var(--ink-4)",
+          }}
+        >
           {draft.wordCount}/{draft.wordTarget} words
         </span>
       </div>
 
       {/* Actions */}
-      <div className="draft-list-actions">
+      <div style={{ display: "flex", gap: 8 }}>
         {draft.status !== "submitted" && (
-          <Link href={draft.postUrl} className="draft-list-cta">
+          <Link
+            href={draft.postUrl}
+            className="btn-ghost click-shift"
+            style={{ fontSize: 12, padding: "4px 10px" }}
+          >
             Edit
           </Link>
         )}
         {(draft.status === "ready" || draft.status === "overdue") && (
           <Link
             href={draft.postUrl}
-            className="draft-list-cta draft-list-cta--submit"
+            className="btn-primary click-shift"
+            style={{ fontSize: 12, padding: "4px 10px" }}
           >
             Submit
           </Link>
         )}
         {draft.status === "submitted" && (
-          <Link href={draft.postUrl} className="draft-list-cta">
+          <Link
+            href={draft.postUrl}
+            className="btn-ghost click-shift"
+            style={{ fontSize: 12, padding: "4px 10px" }}
+          >
             View →
           </Link>
         )}
@@ -473,20 +723,55 @@ function DraftListRow({ draft, index }: { draft: DraftItem; index: number }) {
 
 function EmptyState({ tabLabel }: { tabLabel: string }) {
   return (
-    <div className="drafts-empty">
-      <div className="drafts-empty-art">
-        <div className="drafts-empty-inner" />
+    <div
+      style={{
+        padding: "64px 24px",
+        textAlign: "center",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        gap: 16,
+      }}
+    >
+      <div
+        style={{
+          width: 64,
+          height: 64,
+          borderRadius: 10,
+          background: "var(--surface-2)",
+          border: "1px solid var(--hairline)",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          fontSize: 24,
+          color: "var(--ink-4)",
+        }}
+      >
+        ◻
       </div>
-      <div className="drafts-empty-text">
-        <div className="drafts-empty-title">
+      <div>
+        <div
+          style={{
+            fontFamily: "var(--font-display)",
+            fontWeight: 700,
+            fontSize: 18,
+            color: "var(--ink)",
+            marginBottom: 6,
+          }}
+        >
           No {tabLabel.toLowerCase()} drafts
         </div>
-        <div className="drafts-empty-sub">
+        <div
+          style={{
+            fontFamily: "var(--font-body)",
+            fontSize: 13,
+            color: "var(--ink-3)",
+          }}
+        >
           Check your active campaigns to start a new one
         </div>
       </div>
-      <Link href="/creator/campaigns" className="drafts-empty-cta">
-        <span className="drafts-hero-cta-plus">+</span>
+      <Link href="/creator/campaigns" className="btn-primary click-shift">
         Browse campaigns
       </Link>
     </div>
@@ -514,7 +799,6 @@ export default function DraftsPage() {
   const readyCount = counts["ready"] ?? 0;
   const overdueCount = counts["overdue"] ?? 0;
   const inProgressCount = counts["in_progress"] ?? 0;
-  const submittedCount = counts["submitted"] ?? 0;
 
   /* Filtered + sorted */
   const drafts = useMemo(() => {
@@ -538,53 +822,34 @@ export default function DraftsPage() {
   const tabLabel = STATUS_TABS.find((t) => t.key === activeTab)?.label ?? "All";
 
   return (
-    <div className="drafts">
-      {/* ── Hero ──────────────────────────────────────── */}
-      <section className="drafts-hero">
-        <p className="drafts-hero-eyebrow">Content Studio</p>
-        <h1 className="drafts-hero-title">DRAFTS</h1>
-        <div className="drafts-hero-meta">
-          <div className="drafts-hero-stats">
-            <div className="drafts-hero-stat">
-              <span className="drafts-hero-stat-num drafts-hero-stat-num--white">
-                {totalDrafts}
-              </span>
-              <span className="drafts-hero-stat-label">Total Drafts</span>
-            </div>
-            <div className="drafts-hero-stat">
-              <span className="drafts-hero-stat-num drafts-hero-stat-num--blue">
-                {inProgressCount}
-              </span>
-              <span className="drafts-hero-stat-label">In Progress</span>
-            </div>
-            <div className="drafts-hero-stat">
-              <span className="drafts-hero-stat-num drafts-hero-stat-num--gold">
-                {readyCount}
-              </span>
-              <span className="drafts-hero-stat-label">Ready to Submit</span>
-            </div>
-            {overdueCount > 0 && (
-              <div className="drafts-hero-stat">
-                <span className="drafts-hero-stat-num drafts-hero-stat-num--primary">
-                  {overdueCount}
-                </span>
-                <span className="drafts-hero-stat-label">Overdue</span>
-              </div>
-            )}
-          </div>
-
-          <Link href="/creator/campaigns" className="drafts-hero-cta">
-            <span className="drafts-hero-cta-plus" aria-hidden="true">
-              +
-            </span>
-            New Draft
+    <div className="cw-page">
+      <header className="cw-header">
+        <div className="cw-header__left">
+          <p className="cw-eyebrow cw-eyebrow--live">
+            CONTENT STUDIO · {totalDrafts} TOTAL · {inProgressCount} IN PROGRESS
+            · {readyCount} READY
+            {overdueCount > 0 ? ` · ${overdueCount} OVERDUE` : ""}
+          </p>
+          <h1 className="cw-title">Drafts</h1>
+        </div>
+        <div className="cw-header__right">
+          <Link href="/creator/campaigns" className="cw-pill cw-pill--urgent">
+            + New Draft
           </Link>
         </div>
-      </section>
+      </header>
 
-      {/* ── Status Pipeline header ─────────────────────── */}
+      {/* ── Status Pipeline header ─────────────────── */}
       <div
-        className="drafts-pipeline"
+        style={{
+          display: "flex",
+          alignItems: "center",
+          padding: "16px 24px",
+          gap: 8,
+          overflowX: "auto",
+          borderBottom: "1px solid var(--hairline)",
+          background: "var(--surface-2)",
+        }}
         role="navigation"
         aria-label="Filter by stage"
       >
@@ -594,12 +859,14 @@ export default function DraftsPage() {
           return (
             <div key={stage.key} style={{ display: "contents" }}>
               {i > 0 && (
-                <div className="drafts-pipeline-arrow" aria-hidden="true">
+                <span
+                  style={{ color: "var(--ink-4)", fontSize: 12, flexShrink: 0 }}
+                  aria-hidden
+                >
                   ›
-                </div>
+                </span>
               )}
               <div
-                className={`drafts-pipeline-stage${isActive ? " drafts-pipeline-stage--active" : ""}`}
                 onClick={() => setActiveTab(stage.key)}
                 role="button"
                 tabIndex={0}
@@ -608,18 +875,60 @@ export default function DraftsPage() {
                   if (e.key === "Enter" || e.key === " ")
                     setActiveTab(stage.key);
                 }}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 8,
+                  padding: "6px 14px",
+                  borderRadius: 8,
+                  border: "1px solid var(--hairline)",
+                  background: isActive ? "var(--ink)" : "var(--surface)",
+                  cursor: "pointer",
+                  flexShrink: 0,
+                }}
               >
-                <div className={`drafts-pipeline-count ${stage.countClass}`}>
-                  {count}
-                </div>
-                <div
-                  className={`drafts-pipeline-label${isActive ? " drafts-pipeline-label--active" : ""}`}
+                <span
+                  style={{
+                    fontFamily: "var(--font-display)",
+                    fontWeight: 800,
+                    fontSize: 18,
+                    color: isActive ? "var(--snow)" : "var(--ink)",
+                    lineHeight: 1,
+                  }}
                 >
-                  <span
-                    className="drafts-pipeline-dot"
-                    style={{ background: stage.dot }}
-                  />
-                  {stage.label}
+                  {count}
+                </span>
+                <div>
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 4,
+                    }}
+                  >
+                    <span
+                      style={{
+                        width: 6,
+                        height: 6,
+                        borderRadius: "50%",
+                        background: stage.dot,
+                        flexShrink: 0,
+                      }}
+                    />
+                    <span
+                      style={{
+                        fontFamily: "var(--font-body)",
+                        fontSize: 11,
+                        fontWeight: 600,
+                        color: isActive ? "var(--snow)" : "var(--ink-3)",
+                        textTransform: "uppercase",
+                        letterSpacing: "0.05em",
+                        whiteSpace: "nowrap",
+                      }}
+                    >
+                      {stage.label}
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -627,52 +936,117 @@ export default function DraftsPage() {
         })}
 
         {/* All drafts */}
-        <div style={{ display: "contents" }}>
-          <div className="drafts-pipeline-arrow" aria-hidden="true">
-            ·
-          </div>
-          <div
-            className={`drafts-pipeline-stage${activeTab === "all" ? " drafts-pipeline-stage--active" : ""}`}
-            onClick={() => setActiveTab("all")}
-            role="button"
-            tabIndex={0}
-            aria-pressed={activeTab === "all"}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" || e.key === " ") setActiveTab("all");
+        <span
+          style={{ color: "var(--ink-4)", fontSize: 12, flexShrink: 0 }}
+          aria-hidden
+        >
+          ·
+        </span>
+        <div
+          onClick={() => setActiveTab("all")}
+          role="button"
+          tabIndex={0}
+          aria-pressed={activeTab === "all"}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") setActiveTab("all");
+          }}
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 8,
+            padding: "6px 14px",
+            borderRadius: 8,
+            border: "1px solid var(--hairline)",
+            background: activeTab === "all" ? "var(--ink)" : "var(--surface)",
+            cursor: "pointer",
+            flexShrink: 0,
+          }}
+        >
+          <span
+            style={{
+              fontFamily: "var(--font-display)",
+              fontWeight: 800,
+              fontSize: 18,
+              color: activeTab === "all" ? "var(--snow)" : "var(--ink)",
+              lineHeight: 1,
             }}
           >
-            <div className="drafts-pipeline-count drafts-pipeline-count--in-progress">
-              {totalDrafts}
-            </div>
-            <div
-              className={`drafts-pipeline-label${activeTab === "all" ? " drafts-pipeline-label--active" : ""}`}
-            >
-              <span
-                className="drafts-pipeline-dot"
-                style={{ background: "rgba(0,48,73,0.2)" }}
-              />
-              All Drafts
-            </div>
-          </div>
+            {totalDrafts}
+          </span>
+          <span
+            style={{
+              fontFamily: "var(--font-body)",
+              fontSize: 11,
+              fontWeight: 600,
+              color: activeTab === "all" ? "var(--snow)" : "var(--ink-3)",
+              textTransform: "uppercase",
+              letterSpacing: "0.05em",
+            }}
+          >
+            All Drafts
+          </span>
         </div>
       </div>
 
-      {/* ── Status tabs ───────────────────────────────── */}
-      <nav className="drafts-tabs" aria-label="Draft status filter">
+      {/* ── Status tabs ───────────────────────────── */}
+      <nav
+        style={{
+          display: "flex",
+          gap: 0,
+          padding: "0 24px",
+          borderBottom: "1px solid var(--hairline)",
+          background: "var(--snow)",
+        }}
+        aria-label="Draft status filter"
+      >
         {STATUS_TABS.map((tab) => {
           const count = counts[tab.key] ?? 0;
           const isOverdue = tab.key === "overdue" && count > 0;
+          const isActive = activeTab === tab.key;
           return (
             <button
               key={tab.key}
-              className={`drafts-tab${activeTab === tab.key ? " drafts-tab--active" : ""}`}
               onClick={() => setActiveTab(tab.key)}
-              aria-pressed={activeTab === tab.key}
+              aria-pressed={isActive}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 6,
+                padding: "12px 16px",
+                fontFamily: "var(--font-body)",
+                fontSize: 12,
+                fontWeight: isActive ? 700 : 400,
+                color: isActive ? "var(--ink)" : "var(--ink-3)",
+                background: "none",
+                border: "none",
+                borderBottom: isActive
+                  ? "2px solid var(--brand-red)"
+                  : "2px solid transparent",
+                marginBottom: -1,
+                cursor: "pointer",
+                textTransform: "uppercase",
+                letterSpacing: "0.06em",
+              }}
             >
               {tab.label}
               {count > 0 && (
                 <span
-                  className={`drafts-tab-badge${isOverdue ? " drafts-tab-badge--overdue" : ""}`}
+                  style={{
+                    minWidth: 18,
+                    height: 18,
+                    borderRadius: 9,
+                    background: isOverdue
+                      ? "var(--brand-red)"
+                      : "var(--surface-2)",
+                    color: isOverdue ? "var(--snow)" : "var(--ink-3)",
+                    border: isOverdue ? "none" : "1px solid var(--hairline)",
+                    fontSize: 10,
+                    fontWeight: 700,
+                    display: "inline-flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    padding: "0 5px",
+                  }}
                 >
                   {count}
                 </span>
@@ -682,59 +1056,135 @@ export default function DraftsPage() {
         })}
       </nav>
 
-      {/* ── Toolbar ───────────────────────────────────── */}
-      <div className="drafts-toolbar">
-        <div className="drafts-toolbar-left">
-          <span className="drafts-sort-label">Sort</span>
+      {/* ── Toolbar ──────────────────────────────── */}
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          padding: "16px 24px",
+        }}
+      >
+        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+          <span
+            style={{
+              fontFamily: "var(--font-body)",
+              fontSize: 12,
+              color: "var(--ink-4)",
+              textTransform: "uppercase",
+              letterSpacing: "0.05em",
+            }}
+          >
+            Sort
+          </span>
           {(["deadline", "campaign", "status"] as SortKey[]).map((s) => (
             <button
               key={s}
-              className={`drafts-sort-btn${sort === s ? " drafts-sort-btn--active" : ""}`}
               onClick={() => setSort(s)}
+              style={{
+                padding: "5px 12px",
+                borderRadius: 6,
+                border: "1px solid var(--hairline)",
+                background: sort === s ? "var(--ink)" : "var(--surface-2)",
+                color: sort === s ? "var(--snow)" : "var(--ink-3)",
+                fontFamily: "var(--font-body)",
+                fontSize: 11,
+                fontWeight: 600,
+                cursor: "pointer",
+                textTransform: "uppercase",
+                letterSpacing: "0.05em",
+              }}
             >
               {s.charAt(0).toUpperCase() + s.slice(1)}
-              {sort === s && <span aria-hidden="true">↑</span>}
+              {sort === s && <span aria-hidden="true"> ↑</span>}
             </button>
           ))}
         </div>
 
-        <div className="drafts-view-toggle" role="group" aria-label="View mode">
+        <div
+          role="group"
+          aria-label="View mode"
+          style={{ display: "flex", gap: 4 }}
+        >
           <button
-            className={`drafts-view-btn${view === "grid" ? " drafts-view-btn--active" : ""}`}
             onClick={() => setView("grid")}
             aria-label="Grid view"
+            style={{
+              width: 32,
+              height: 32,
+              borderRadius: 6,
+              border: "1px solid var(--hairline)",
+              background: view === "grid" ? "var(--ink)" : "var(--surface-2)",
+              color: view === "grid" ? "var(--snow)" : "var(--ink-3)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              cursor: "pointer",
+              fontSize: 14,
+            }}
           >
             ⊞
           </button>
           <button
-            className={`drafts-view-btn${view === "list" ? " drafts-view-btn--active" : ""}`}
             onClick={() => setView("list")}
             aria-label="List view"
+            style={{
+              width: 32,
+              height: 32,
+              borderRadius: 6,
+              border: "1px solid var(--hairline)",
+              background: view === "list" ? "var(--ink)" : "var(--surface-2)",
+              color: view === "list" ? "var(--snow)" : "var(--ink-3)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              cursor: "pointer",
+              fontSize: 14,
+            }}
           >
             ☰
           </button>
         </div>
       </div>
 
-      {/* ── Content ───────────────────────────────────── */}
-      <div className="drafts-body">
+      {/* ── Content ──────────────────────────────── */}
+      <div style={{ padding: "0 24px 32px" }}>
         {drafts.length === 0 ? (
           <EmptyState tabLabel={tabLabel} />
         ) : view === "grid" ? (
-          <div className="drafts-grid">
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))",
+              gap: 16,
+            }}
+          >
             {drafts.map((d, i) => (
               <DraftCard key={d.id} draft={d} index={i} />
             ))}
           </div>
         ) : (
-          <div className="drafts-list">
-            <div className="drafts-list-header">
-              <div className="drafts-list-header-cell" />
-              <div className="drafts-list-header-cell">Draft</div>
-              <div className="drafts-list-header-cell">Status</div>
-              <div className="drafts-list-header-cell">Deadline</div>
-              <div className="drafts-list-header-cell">Progress</div>
-              <div className="drafts-list-header-cell">Actions</div>
+          <div>
+            {/* List header */}
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "40px 1fr auto auto 160px auto",
+                gap: 16,
+                padding: "8px 16px",
+                fontFamily: "var(--font-body)",
+                fontSize: 11,
+                color: "var(--ink-4)",
+                textTransform: "uppercase",
+                letterSpacing: "0.06em",
+              }}
+            >
+              <div />
+              <div>Draft</div>
+              <div>Status</div>
+              <div>Deadline</div>
+              <div>Progress</div>
+              <div>Actions</div>
             </div>
             {drafts.map((d, i) => (
               <DraftListRow key={d.id} draft={d} index={i} />

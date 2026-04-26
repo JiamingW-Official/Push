@@ -151,53 +151,45 @@ export default function InboxPage() {
   const systemUnread = unreadCount;
 
   return (
-    <div className="inbox-page">
-      {/* Nav */}
-      <header className="inbox-nav">
-        <Link href="/creator/dashboard" className="inbox-nav-back">
-          ← Dashboard
-        </Link>
-        <span className="inbox-nav-title">Inbox.</span>
-        <div className="inbox-live-indicator">
-          <span className="inbox-live-dot" />
-          <span className="inbox-live-label">Live</span>
+    <div className="cw-page inbox-page">
+      <header className="cw-header">
+        <div className="cw-header__left">
+          <p className="cw-eyebrow cw-eyebrow--live">INBOX · LIVE</p>
+          <h1 className="cw-title">Inbox.</h1>
+        </div>
+        <div className="cw-header__right">
+          <span className="cw-date">{unreadCount} UNREAD</span>
+          <div className="cw-chip-row">
+            <Link
+              href="/creator/inbox"
+              className={
+                "cw-chip" +
+                (pathname === "/creator/inbox" || pathname?.endsWith("/inbox")
+                  ? " is-active"
+                  : "")
+              }
+            >
+              Messages{unreadThreads > 0 ? ` · ${unreadThreads}` : ""}
+            </Link>
+            <Link
+              href="/creator/inbox/invites"
+              className={
+                "cw-chip" + (pathname?.endsWith("/invites") ? " is-active" : "")
+              }
+            >
+              Invites{totalInvites > 0 ? ` · ${totalInvites}` : ""}
+            </Link>
+            <Link
+              href="/creator/inbox/system"
+              className={
+                "cw-chip" + (pathname?.endsWith("/system") ? " is-active" : "")
+              }
+            >
+              System{systemUnread > 0 ? ` · ${systemUnread}` : ""}
+            </Link>
+          </div>
         </div>
       </header>
-
-      {/* Tabs */}
-      <nav className="inbox-tabs">
-        <Link
-          href="/creator/inbox"
-          className={`inbox-tab${
-            pathname === "/creator/inbox" || pathname?.endsWith("/inbox")
-              ? " inbox-tab--active"
-              : ""
-          }`}
-        >
-          Messages
-          {unreadThreads > 0 && (
-            <span className="inbox-tab-badge">{unreadThreads}</span>
-          )}
-        </Link>
-        <Link
-          href="/creator/inbox/invites"
-          className={`inbox-tab${pathname?.endsWith("/invites") ? " inbox-tab--active" : ""}`}
-        >
-          Invites
-          {totalInvites > 0 && (
-            <span className="inbox-tab-badge">{totalInvites}</span>
-          )}
-        </Link>
-        <Link
-          href="/creator/inbox/system"
-          className={`inbox-tab${pathname?.endsWith("/system") ? " inbox-tab--active" : ""}`}
-        >
-          System
-          {systemUnread > 0 && (
-            <span className="inbox-tab-badge">{systemUnread}</span>
-          )}
-        </Link>
-      </nav>
 
       {/* Thread list */}
       <div className="inbox-list">
@@ -250,7 +242,7 @@ export default function InboxPage() {
                 {/* Hover tooltip */}
                 {isHovered && (
                   <div className="inbox-row-tooltip">
-                    <div className="inbox-row-tooltip-sender">
+                    <div className="inbox-row-tooltip-sender eyebrow">
                       {thread.sender}
                     </div>
                     <div className="inbox-row-tooltip-text">
@@ -273,7 +265,7 @@ export default function InboxPage() {
           >
             <span className="inbox-toast-dot" />
             <div className="inbox-toast-body">
-              <div className="inbox-toast-label">New message</div>
+              <div className="inbox-toast-label eyebrow">New message</div>
               <div className="inbox-toast-text">{toast.text}</div>
             </div>
             <button

@@ -49,7 +49,7 @@ const MOCK_CAMPAIGNS: PipelineCampaign[] = [
     contentRequired: 3,
     contentSubmitted: 2,
     logoInitials: "BS",
-    logoColor: "#003049",
+    logoColor: "#3a3835",
     appliedDate: "Apr 12",
     brief:
       "Create 3 authentic morning-routine Stories featuring your Blank Street order. Focus on the ritual, not the product. Tag @blankstreetcoffee.",
@@ -113,7 +113,7 @@ const MOCK_CAMPAIGNS: PipelineCampaign[] = [
     contentRequired: 3,
     contentSubmitted: 0,
     logoInitials: "CC",
-    logoColor: "#669bbc",
+    logoColor: "#0085ff",
     appliedDate: "Apr 16",
     brief:
       "Capture the vibe at Cha Cha Matcha — the space, the drink, the crowd. 3 posts across Feed and Stories. Aesthetic: downtown calm.",
@@ -154,7 +154,7 @@ const MOCK_CAMPAIGNS: PipelineCampaign[] = [
     contentRequired: 2,
     contentSubmitted: 0,
     logoInitials: "ES",
-    logoColor: "#003049",
+    logoColor: "#3a3835",
     appliedDate: "Apr 17",
     brief:
       "Cover Saturday brunch at Egg Shop in 2 posts — the wait, the plate, the vibe. Make it feel like the best morning someone almost missed.",
@@ -174,7 +174,7 @@ const MOCK_CAMPAIGNS: PipelineCampaign[] = [
     contentRequired: 4,
     contentSubmitted: 4,
     logoInitials: "AN",
-    logoColor: "#003049",
+    logoColor: "#3a3835",
     completedDate: "Apr 10",
     brief:
       "4-piece Spring collection showcase. Shoot in-store and on Williamsburg streets. Editorial, not commercial.",
@@ -194,7 +194,7 @@ const MOCK_CAMPAIGNS: PipelineCampaign[] = [
     contentRequired: 3,
     contentSubmitted: 3,
     logoInitials: "AW",
-    logoColor: "#669bbc",
+    logoColor: "#0085ff",
     completedDate: "Apr 5",
     brief:
       "Document the Saturday run club starting from the Asics store. Capture energy, community, and the gear in action.",
@@ -214,7 +214,7 @@ const MOCK_CAMPAIGNS: PipelineCampaign[] = [
     contentRequired: 2,
     contentSubmitted: 2,
     logoInitials: "MC",
-    logoColor: "#003049",
+    logoColor: "#3a3835",
     completedDate: "Mar 28",
     brief:
       "2 close-up product shots of the seasonal matcha latte. Warm tones, morning light. No text overlays.",
@@ -259,14 +259,14 @@ function ExpandedPanel({ campaign }: { campaign: PipelineCampaign }) {
     <div className="pl-expand-panel">
       {campaign.brief && (
         <div className="pl-expand-section">
-          <p className="pl-expand-label">CAMPAIGN BRIEF</p>
+          <p className="pl-expand-label eyebrow">CAMPAIGN BRIEF</p>
           <p className="pl-expand-text">{campaign.brief}</p>
         </div>
       )}
 
       <div className="pl-expand-row">
         <div className="pl-expand-section">
-          <p className="pl-expand-label">SUBMISSION STATUS</p>
+          <p className="pl-expand-label eyebrow">SUBMISSION STATUS</p>
           <p className="pl-expand-stat">
             {campaign.contentSubmitted} of {campaign.contentRequired} posts
             submitted
@@ -280,14 +280,14 @@ function ExpandedPanel({ campaign }: { campaign: PipelineCampaign }) {
 
         {campaign.attributionNote && (
           <div className="pl-expand-section">
-            <p className="pl-expand-label">ATTRIBUTION</p>
+            <p className="pl-expand-label eyebrow">ATTRIBUTION</p>
             <p className="pl-expand-text">{campaign.attributionNote}</p>
           </div>
         )}
 
         {campaign.merchantContact && (
           <div className="pl-expand-section">
-            <p className="pl-expand-label">MERCHANT</p>
+            <p className="pl-expand-label eyebrow">MERCHANT</p>
             <Link
               href={campaign.merchantContact}
               className="pl-expand-contact"
@@ -304,7 +304,7 @@ function ExpandedPanel({ campaign }: { campaign: PipelineCampaign }) {
         {campaign.status === "active" && (
           <Link
             href={`/creator/campaigns/${campaign.id}/post`}
-            className="pl-action-btn pl-action-primary"
+            className="pl-action-btn pl-action-primary btn-primary click-shift"
             onClick={(e) => e.stopPropagation()}
           >
             Submit Content ↑
@@ -312,7 +312,7 @@ function ExpandedPanel({ campaign }: { campaign: PipelineCampaign }) {
         )}
         <Link
           href={`/creator/campaigns/${campaign.id}`}
-          className="pl-action-btn pl-action-ghost"
+          className="pl-action-btn pl-action-ghost btn-ghost click-shift"
           onClick={(e) => e.stopPropagation()}
         >
           View Details
@@ -460,53 +460,44 @@ export default function WorkPipelinePage() {
   }
 
   return (
-    <div className="pl-page">
-      {/* ── Nav ─────────────────────────────────────────────── */}
-      <nav className="pl-nav">
-        <Link href="/creator/dashboard" className="pl-nav-back">
-          ← WORKSPACE
-        </Link>
-        <span className="pl-nav-sep">|</span>
-        <span className="pl-nav-title">PIPELINE</span>
-        <div className="pl-nav-right">
-          <Link href="/creator/work/today" className="pl-nav-link">
+    <div className="cw-page pl-page">
+      <header className="cw-header">
+        <div className="cw-header__left">
+          <p className="cw-eyebrow cw-eyebrow--live">
+            PIPELINE ·{" "}
+            {MOCK_CAMPAIGNS.filter((c) => c.status !== "completed").length}{" "}
+            CAMPAIGNS · ${totalPotential.toLocaleString()} POTENTIAL
+          </p>
+          <h1 className="cw-title">Pipeline</h1>
+        </div>
+        <div className="cw-header__right">
+          <Link href="/creator/work/today" className="cw-pill">
             Today →
           </Link>
-        </div>
-      </nav>
-
-      {/* ── Hero ────────────────────────────────────────────── */}
-      <header className="pl-hero">
-        <div className="pl-hero-inner">
-          <h1 className="pl-headline">Your Pipeline</h1>
-          <p className="pl-hero-sub">
-            {MOCK_CAMPAIGNS.filter((c) => c.status !== "completed").length}{" "}
-            campaigns · ${totalPotential.toLocaleString()} potential
-          </p>
-        </div>
-
-        {/* Tabs */}
-        <div className="pl-tabs">
-          {TAB_ORDER.map((tab) => (
-            <button
-              key={tab}
-              className={`pl-tab${activeTab === tab ? " pl-tab-active" : ""}`}
-              onClick={() => setActiveTab(tab)}
-            >
-              {TAB_LABELS[tab]}
-              <span className="pl-tab-count">{tabCount(tab)}</span>
-            </button>
-          ))}
+          <div className="cw-chip-row" role="tablist">
+            {TAB_ORDER.map((tab) => (
+              <button
+                key={tab}
+                type="button"
+                role="tab"
+                className={"cw-chip" + (activeTab === tab ? " is-active" : "")}
+                onClick={() => setActiveTab(tab)}
+              >
+                {TAB_LABELS[tab]}
+                {tabCount(tab) > 0 ? ` · ${tabCount(tab)}` : ""}
+              </button>
+            ))}
+          </div>
         </div>
       </header>
 
       {/* ── Sort toolbar ────────────────────────────────────── */}
       <div className="pl-toolbar">
-        <span className="pl-sort-label">Sort</span>
+        <span className="pl-sort-label eyebrow">Sort</span>
         {SORT_OPTIONS.map((s) => (
           <button
             key={s.value}
-            className={`pl-chip${sortMode === s.value ? " pl-chip-active" : ""}`}
+            className={`pl-chip btn-pill${sortMode === s.value ? " pl-chip-active" : ""}`}
             onClick={() => setSortMode(s.value)}
           >
             {s.label}
@@ -530,14 +521,14 @@ export default function WorkPipelinePage() {
           {activeTab === "active" ? (
             <Link
               href="/creator/explore"
-              className="pl-empty-discover pl-empty-discover-primary"
+              className="pl-empty-discover pl-empty-discover-primary btn-primary click-shift"
             >
               Browse Discover →
             </Link>
           ) : (
             <>
               <button
-                className="pl-empty-reset"
+                className="pl-empty-reset btn-ghost click-shift"
                 onClick={() => {
                   setActiveTab("all");
                   setSortMode("deadline");
@@ -545,7 +536,10 @@ export default function WorkPipelinePage() {
               >
                 Reset filters
               </button>
-              <Link href="/creator/explore" className="pl-empty-discover">
+              <Link
+                href="/creator/explore"
+                className="pl-empty-discover btn-ghost click-shift"
+              >
                 Discover campaigns →
               </Link>
             </>
