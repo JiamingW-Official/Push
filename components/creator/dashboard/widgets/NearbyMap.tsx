@@ -18,13 +18,14 @@ export interface NearbyMapProps {
   className?: string;
 }
 
-const DEFAULT_CENTER: [number, number] = [-73.9442, 40.7081]; // Williamsburg
+/* Leaflet expects [lat, lng] order. Williamsburg, Brooklyn. */
+const DEFAULT_CENTER: [number, number] = [40.7081, -73.9442];
 
 export function NearbyMap({ campaigns, className = "" }: NearbyMapProps) {
   const [expanded, setExpanded] = useState(false);
 
   const center: [number, number] = campaigns[0]
-    ? [campaigns[0].lng, campaigns[0].lat]
+    ? [campaigns[0].lat, campaigns[0].lng]
     : DEFAULT_CENTER;
 
   return (

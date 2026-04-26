@@ -68,6 +68,34 @@ function Recenter({ lat, lng }: { lat: number; lng: number }) {
   return null;
 }
 
+/* Resize observer — Leaflet calculates tile positions from container size at
+   mount, so any post-mount resize (dynamic-import settle, parent reflow,
+   container query breakpoint) leaves the tile grid offset. invalidateSize()
+   tells Leaflet to recompute. Without this, tiles render at wrong x/y and
+   the map appears empty even though tiles loaded. */
+function ResizeFix() {
+  const map = useMap();
+  useEffect(() => {
+    /* Initial fix — settle 50ms after mount when container has its real size */
+    const t1 = setTimeout(() => map.invalidateSize(), 50);
+    const t2 = setTimeout(() => map.invalidateSize(), 250);
+
+    /* Observe container resizes for container-query breakpoints */
+    const container = map.getContainer();
+    const ro = new ResizeObserver(() => {
+      map.invalidateSize();
+    });
+    ro.observe(container);
+
+    return () => {
+      clearTimeout(t1);
+      clearTimeout(t2);
+      ro.disconnect();
+    };
+  }, [map]);
+  return null;
+}
+
 // Custom zoom controls using Leaflet control API
 function ZoomControls() {
   const map = useMap();
@@ -143,7 +171,7 @@ function CampaignMarker({
               ) : (
                 <div
                   className="map-popup-img"
-                  style={{ background: "var(--dark)" }}
+                  style={{ background: "var(--ink)" }}
                 />
               )}
               <button
@@ -220,6 +248,7 @@ export default function MapView({
     >
       <Recenter lat={center[0]} lng={center[1]} />
       <ZoomControls />
+      <ResizeFix />
 
       <TileLayer attribution={tileAttr} url={tileUrl} />
 
