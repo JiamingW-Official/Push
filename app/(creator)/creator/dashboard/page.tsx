@@ -156,15 +156,14 @@ export default function CreatorDashboardPage() {
       />
 
       <div className="dh-grid">
-        {/* ── HERO ROW ── */}
-        {/* Dark Balance card anchors top-left, spans 4 cols × 5 rows */}
+        {/* ── HERO ROW ── 4 + 8 (rebalanced from 4×5 + 8×3 to 4×3 + 8×3) */}
         <BalanceCard
           creator={creator}
           payouts={payouts}
-          className="dh-span-4-5"
+          className="dh-span-4-3"
         />
 
-        {/* Today's Work hero (or Onboarding for new creators) — 8×3 */}
+        {/* Today's Work hero (or Onboarding for new creators) */}
         {isNew || active.length === 0 ? (
           <OnboardingHero
             picks={recommended}
@@ -179,42 +178,36 @@ export default function CreatorDashboardPage() {
           />
         )}
 
-        {/* New Matches (4×2) sits to the right under TodaysWork */}
-        <NewMatches
-          recommended={recommended}
-          creatorTier={creator.tier}
-          className="dh-span-4-2"
-        />
-
-        {/* Map (4×2) — completes the right column under NewMatches */}
-        <NearbyMap campaigns={campaigns} className="dh-span-4-2" />
-
-        {/* ── STATUS ROW: 3 small cards across full width ── */}
+        {/* ── STATUS / DISCOVERY ROW ── 4 + 8 */}
+        {/* Status stack on the left — Tier or Pipeline + small KPI peek */}
         {isPro ? (
-          <>
-            <PipelineHealth
-              applications={applications}
-              className="dh-span-4-2"
-            />
-            <TierRing creator={creator} className="dh-span-4-2" />
-          </>
+          <PipelineHealth applications={applications} className="dh-span-4-2" />
         ) : (
-          <>
-            <TierRing creator={creator} className="dh-span-4-2" />
-            <PipelineHealth
-              applications={applications}
-              className="dh-span-4-2"
-            />
-          </>
+          <TierRing creator={creator} className="dh-span-4-2" />
+        )}
+
+        {/* Map promoted: 8 cols wide, 2 rows tall — proper map presence */}
+        <NearbyMap campaigns={campaigns} className="dh-span-8-2" />
+
+        {/* ── INSIGHT ROW ── 4 + 4 + 4 */}
+        {isPro ? (
+          <TierRing creator={creator} className="dh-span-4-1" />
+        ) : (
+          <PipelineHealth applications={applications} className="dh-span-4-1" />
         )}
 
         <AnalyticsPeek
-          /* TODO wire to analytics service when available */
           reach={isNew ? undefined : 3200}
           scans={isNew ? undefined : 28}
           convPct={isNew ? undefined : 12}
           ctrPct={isNew ? undefined : 0.4}
-          className="dh-span-4-2"
+          className="dh-span-4-1"
+        />
+
+        <NewMatches
+          recommended={recommended}
+          creatorTier={creator.tier}
+          className="dh-span-4-1"
         />
 
         {/* ── HISTORY ROW ── */}

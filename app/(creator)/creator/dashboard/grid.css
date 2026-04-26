@@ -193,7 +193,7 @@ html { scroll-behavior: smooth; }
   display: grid;
   grid-template-columns: repeat(12, 1fr);
   gap: 16px;
-  grid-auto-rows: 92px;
+  grid-auto-rows: 110px;
   grid-auto-flow: dense;
 }
 
@@ -202,6 +202,7 @@ html { scroll-behavior: smooth; }
 .dh-span-3-2  { grid-column: span 3;  grid-row: span 2; }
 .dh-span-3-3  { grid-column: span 3;  grid-row: span 3; }
 .dh-span-3-5  { grid-column: span 3;  grid-row: span 5; }
+.dh-span-4-1  { grid-column: span 4;  grid-row: span 1; }
 .dh-span-4-2  { grid-column: span 4;  grid-row: span 2; }
 .dh-span-4-3  { grid-column: span 4;  grid-row: span 3; }
 .dh-span-4-5  { grid-column: span 4;  grid-row: span 5; }
@@ -209,6 +210,8 @@ html { scroll-behavior: smooth; }
 .dh-span-6-2  { grid-column: span 6;  grid-row: span 2; }
 .dh-span-6-3  { grid-column: span 6;  grid-row: span 3; }
 .dh-span-6-5  { grid-column: span 6;  grid-row: span 5; }
+.dh-span-8-1  { grid-column: span 8;  grid-row: span 1; }
+.dh-span-8-2  { grid-column: span 8;  grid-row: span 2; }
 .dh-span-8-3  { grid-column: span 8;  grid-row: span 3; }
 .dh-span-8-5  { grid-column: span 8;  grid-row: span 5; }
 .dh-span-9-2  { grid-column: span 9;  grid-row: span 2; }
@@ -365,11 +368,11 @@ a.dh-card:active { transform: translate(3px, 3px) scale(0.99); }
     var(--ink-2);
   color: var(--snow);
   border: 1px solid rgba(255, 255, 255, 0.06);
-  border-radius: 16px;                    /* spec § 8.14 KPI card */
-  padding: 28px;
+  border-radius: 16px;
+  padding: 22px 22px 18px;                 /* tighter than before */
   display: flex;
   flex-direction: column;
-  gap: 22px;
+  gap: 16px;                                /* was 22 */
   position: relative;
   overflow: hidden;
   box-shadow:
@@ -392,6 +395,13 @@ a.dh-card:active { transform: translate(3px, 3px) scale(0.99); }
   color: rgba(255, 255, 255, 0.55);
 }
 
+/* Hero block — number + sparkline + delta stacked vertically */
+.dh-balance__hero {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
 .dh-balance__num {
   display: flex;
   align-items: baseline;
@@ -403,68 +413,28 @@ a.dh-card:active { transform: translate(3px, 3px) scale(0.99); }
   line-height: 1;
 }
 .dh-balance__dollar {
-  font-size: 32px;
+  font-size: 26px;
   font-weight: 700;
   color: rgba(255, 255, 255, 0.65);
   margin-right: 4px;
 }
 .dh-balance__main {
-  font-size: clamp(56px, 7vw, 88px);
+  font-size: clamp(48px, 5.6vw, 72px);
   font-weight: 800;
 }
 .dh-balance__cents {
-  font-size: 28px;
+  font-size: 22px;
   font-weight: 700;
   color: rgba(255, 255, 255, 0.55);
   margin-left: 2px;
 }
 
-/* Action quad */
-.dh-balance__quad {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 10px;
-}
-.dh-balance__action {
-  height: 44px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.10);
-  border-radius: 8px;
-  color: rgba(255, 255, 255, 0.85);
-  text-decoration: none;
-  transition:
-    background 180ms ease,
-    color 180ms ease,
-    transform 180ms cubic-bezier(0.22, 1, 0.36, 1),
-    border-color 180ms ease;
-}
-.dh-balance__action:hover {
-  background: rgba(255, 255, 255, 0.12);
-  color: var(--snow);
-  border-color: rgba(255, 255, 255, 0.20);
-  transform: translate(1px, 1px);
+.dh-balance__spark {
+  width: 100%;
+  height: 32px;
+  display: block;
 }
 
-/* Cycle progress */
-.dh-balance__cycle {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-.dh-balance__cycle-label {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-family: var(--font-mono);
-  font-size: 11px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: rgba(255, 255, 255, 0.62);
-}
 .dh-balance__delta {
   display: inline-flex;
   align-items: center;
@@ -476,12 +446,86 @@ a.dh-card:active { transform: translate(3px, 3px) scale(0.99); }
   padding: 3px 8px;
   border-radius: 999px;
   border: 1px solid;
+  align-self: flex-start;
 }
 .dh-balance__delta.is-up   { color: #4ade80; background: rgba(34, 197, 94, 0.14); border-color: rgba(34, 197, 94, 0.32); }
 .dh-balance__delta.is-down { color: #fca5a5; background: rgba(193, 18, 31, 0.18); border-color: rgba(193, 18, 31, 0.36); }
 
+/* Action quad — labeled */
+.dh-balance__quad {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+}
+.dh-balance__action {
+  height: 56px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  border-radius: 8px;
+  color: rgba(255, 255, 255, 0.85);
+  text-decoration: none;
+  font-family: var(--font-display);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: -0.005em;
+  transition:
+    background 180ms ease,
+    color 180ms ease,
+    transform 180ms cubic-bezier(0.34, 1.56, 0.64, 1),
+    border-color 180ms ease;
+}
+.dh-balance__action:hover {
+  background: rgba(255, 255, 255, 0.14);
+  color: var(--snow);
+  border-color: rgba(255, 255, 255, 0.24);
+  transform: translate(2px, 2px);
+}
+.dh-balance__action:active { transform: translate(3px, 3px) scale(0.98); }
+
+/* 3-cell metrics split */
+.dh-balance__split {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 8px;
+  overflow: hidden;
+}
+.dh-balance__split-cell {
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  border-right: 1px solid rgba(255, 255, 255, 0.06);
+}
+.dh-balance__split-cell:last-child { border-right: none; }
+.dh-balance__split-label {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: rgba(255, 255, 255, 0.50);
+  text-transform: uppercase;
+}
+.dh-balance__split-value {
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--snow);
+  letter-spacing: -0.01em;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+/* Cycle bar */
 .dh-balance__bar {
-  height: 6px;
+  height: 4px;
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.08);
   overflow: hidden;
@@ -495,70 +539,13 @@ a.dh-card:active { transform: translate(3px, 3px) scale(0.99); }
   transition: width 800ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.dh-balance__cycle-foot {
-  display: flex;
-  align-items: baseline;
-  gap: 8px;
-}
-.dh-balance__cycle-amt {
-  font-family: var(--font-display);
-  font-size: 18px;
-  font-weight: 800;
-  color: var(--snow);
-  letter-spacing: -0.01em;
-}
-.dh-balance__cycle-target {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  font-weight: 500;
-  color: rgba(255, 255, 255, 0.50);
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-}
-
-/* Verified / Pending rows */
-.dh-balance__rows {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  padding-top: 16px;
-  border-top: 1px solid rgba(255, 255, 255, 0.10);
-}
-.dh-balance__row {
-  display: grid;
-  grid-template-columns: 28px 1fr auto;
-  align-items: center;
-  gap: 12px;
-  padding: 10px 12px;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  border-radius: 8px;
-}
-.dh-balance__row-icon {
-  width: 28px;
-  height: 28px;
-  border-radius: 8px;
-  background: rgba(255, 255, 255, 0.08);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: var(--font-display);
-  font-weight: 800;
-  color: rgba(255, 255, 255, 0.78);
-}
-.dh-balance__row-amt {
-  font-family: var(--font-display);
-  font-size: 16px;
-  font-weight: 800;
-  color: var(--snow);
-  letter-spacing: -0.005em;
-}
-.dh-balance__row-label {
-  font-family: var(--font-mono);
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  color: rgba(255, 255, 255, 0.42);
+/* Legacy classes from old BalanceCard markup — no longer used but kept
+   declared (empty) to avoid CSS errors if cached HTML still references them. */
+.dh-balance__cycle, .dh-balance__cycle-label, .dh-balance__cycle-foot,
+.dh-balance__cycle-amt, .dh-balance__cycle-target,
+.dh-balance__rows, .dh-balance__row,
+.dh-balance__row-icon, .dh-balance__row-amt, .dh-balance__row-label {
+  /* unused */
 }
 
 
