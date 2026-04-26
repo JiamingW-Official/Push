@@ -50,6 +50,7 @@ export function NearbyMap({ campaigns, className = "" }: NearbyMapProps) {
             center={center}
             onPinClick={() => {}}
             showPricePills
+            mono
           />
         </div>
       </div>
@@ -84,6 +85,7 @@ export function NearbyMap({ campaigns, className = "" }: NearbyMapProps) {
                 onPinClick={() => {}}
                 showPricePills
                 showPopups
+                mono
               />
             </div>
           </div>

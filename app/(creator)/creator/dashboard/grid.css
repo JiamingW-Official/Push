@@ -30,7 +30,31 @@
   font-variant-numeric: tabular-nums;
   container-type: inline-size;
   container-name: dh;
+  scroll-behavior: smooth;
+  scrollbar-gutter: stable;
 }
+
+/* Smooth scroll on the html so anchor jumps + browser hot-keys feel premium */
+html { scroll-behavior: smooth; }
+
+/* Modern scrollbar — thin, hairline-tinted, ink on hover */
+.dh-page,
+.dh-main {
+  scrollbar-width: thin;
+  scrollbar-color: var(--hairline-2) transparent;
+}
+.dh-page::-webkit-scrollbar,
+.dh-main::-webkit-scrollbar { width: 8px; height: 8px; }
+.dh-page::-webkit-scrollbar-thumb,
+.dh-main::-webkit-scrollbar-thumb {
+  background: var(--hairline-2);
+  border-radius: 999px;
+  transition: background 180ms ease;
+}
+.dh-page::-webkit-scrollbar-thumb:hover,
+.dh-main::-webkit-scrollbar-thumb:hover { background: var(--ink-4); }
+.dh-page::-webkit-scrollbar-track,
+.dh-main::-webkit-scrollbar-track { background: transparent; }
 
 
 /* ════════════════════════════════════════════════════════════

@@ -3,8 +3,10 @@
 /* Repo target: components/creator/dashboard/widgets/PipelineHealth.tsx
    3×1 — runway gauge for Closer+ creators. State-aware substitute for TierRing. */
 
+import Link from "next/link";
 import { getPipelineRunway } from "@/lib/creator/widget-helpers";
 import type { Application } from "../types";
+import { ArrowUpRight } from "../CircleArrow";
 
 export interface PipelineHealthProps {
   applications: Application[];
@@ -32,7 +34,10 @@ export function PipelineHealth({
   );
 
   return (
-    <div className={`dh-card ${className}`.trim()}>
+    <Link
+      href="/creator/work/pipeline"
+      className={`dh-card is-clickable ${className}`.trim()}
+    >
       <div className="dh-card__header">
         <span className="dh-card__eyebrow">PIPELINE · RUNWAY</span>
         <span className="dh-gauge__chip" data-health={health}>
@@ -65,6 +70,6 @@ export function PipelineHealth({
 
         <span className="dh-gauge__hint">{hint}</span>
       </div>
-    </div>
+    </Link>
   );
 }
