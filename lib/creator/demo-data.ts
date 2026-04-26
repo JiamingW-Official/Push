@@ -286,3 +286,30 @@ export const DEMO_PAYOUTS: Payout[] = [
     created_at: "2026-04-09T00:00:00Z",
   },
 ];
+
+export const DEMO_INBOX_THREADS = [
+  {
+    id: "th-1",
+    sender_name: "Flamingo Estate",
+    sender_initial: "F",
+    preview: "Verification complete — payout queued for Friday.",
+    unread: true,
+    created_at: new Date(Date.now() - 5 * 3600_000).toISOString(),
+  },
+  {
+    id: "th-2",
+    sender_name: "Roosevelt Bakery",
+    sender_initial: "R",
+    preview: "New invite · sourdough loaf review · $40 + 5% commission",
+    unread: true,
+    created_at: new Date(Date.now() - 86_400_000).toISOString(),
+  },
+  {
+    id: "th-3",
+    sender_name: "Push system",
+    sender_initial: "P",
+    preview: "Weekly digest · 3 new merchants matched your audience.",
+    unread: false,
+    created_at: new Date(Date.now() - 3 * 86_400_000).toISOString(),
+  },
+];

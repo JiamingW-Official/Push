@@ -1,0 +1,1302 @@
+/* ─────────────────────────────────────────────────────────────────────
+ * Creator Home v2 — premium SaaS chrome
+ *
+ * Repo target: app/(creator)/creator/dashboard/grid.css
+ *
+ * Authority: Design.md v11
+ *   §0    3-Tier Rule Classification (STRICT identity / STRUCTURED comp / OPEN voice)
+ *   §2    Closed Allowed-Color List
+ *   §5    8px atomic grid + 12-col vocabulary
+ *   §6    Negative-space tokens
+ *   §8.13 Sidebar shell
+ *   §8.14 KPI Card spec (16px radius, surface-2 fill, shadow-1, 24px pad)
+ *   §1 r9 Product UI register — canonical eyebrow, no Magvix, no GA Orange
+ *   §9    5-variant button system
+ *
+ * SaaS register notes (premium polish layered on top of v11 spec):
+ *  - All numerals tabular (`font-variant-numeric: tabular-nums`) for column align
+ *  - KPI card depth = subtle inset highlight + 1px hairline + soft shadow-1
+ *    (NOT heavy drop shadow — keep low-contrast like Linear/Stripe dashboard)
+ *  - Single signature interaction: bottom-right shift `translate(1px,1px)` on
+ *    hover, `translate(2px,2px) scale(0.99)` on active, 180ms ease-spring
+ *  - First-paint cascade: cards rise 6px + fade 180ms staggered 40ms each
+ *  - Micro-glow on live indicators (pulsing dots, sparkline last-point)
+ * ───────────────────────────────────────────────────────────────────── */
+
+
+/* ════════════════════════════════════════════════════════════
+   PAGE — container-query host (workspace sidebar+context eat
+   ~400px of viewport, so we breakpoint on container width, not
+   viewport width)
+   ════════════════════════════════════════════════════════════ */
+
+.dh-page {
+  padding: 32px 32px 96px;
+  max-width: 1400px;
+  margin: 0 auto;
+  font-family: var(--font-mono);
+  color: var(--ink-3);
+  font-variant-numeric: tabular-nums;
+  container-type: inline-size;
+  container-name: dh;
+}
+
+
+/* ════════════════════════════════════════════════════════════
+   HEADER ZONE — name + ambient pulse strip
+   ════════════════════════════════════════════════════════════ */
+
+.dh-header {
+  display: grid;
+  grid-template-columns: minmax(0, auto) 1fr;
+  align-items: end;
+  gap: 48px;
+  margin-bottom: 32px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--hairline);
+}
+
+.dh-header__left { min-width: 0; }
+
+.dh-header__greeting {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--ink-3);
+  margin-bottom: 12px;
+}
+
+.dh-header__greeting::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #22c55e;
+  box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.18);
+  animation: dh-pulse 2.4s ease-in-out infinite;
+}
+
+@keyframes dh-pulse {
+  0%, 100% { box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.18); }
+  50%      { box-shadow: 0 0 0 6px rgba(34, 197, 94, 0.06); }
+}
+
+.dh-header__title {
+  font-family: var(--font-display);
+  font-size: clamp(40px, 5vw, 64px);
+  font-weight: 800;
+  line-height: 1.0;
+  letter-spacing: -0.025em;
+  color: var(--ink);
+}
+
+.dh-header__pulse {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.dh-header__date {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+  align-self: flex-start;
+  width: 100%;
+  text-align: right;
+  margin-bottom: 12px;
+}
+
+/* ── Pulse pill (PulsePill component) ───────────────────────── */
+
+.dh-pulse {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 14px;
+  background: var(--snow);
+  border: 1px solid var(--hairline);
+  border-radius: 999px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--ink);
+  text-decoration: none;
+  white-space: nowrap;
+  box-shadow: 0 1px 2px rgba(10, 10, 10, 0.04);
+  transition:
+    transform 180ms cubic-bezier(0.22, 1, 0.36, 1),
+    background 180ms ease,
+    border-color 180ms ease,
+    box-shadow 180ms ease;
+  cursor: pointer;
+  font-variant-numeric: tabular-nums;
+}
+.dh-pulse:hover {
+  transform: translate(1px, 1px);
+  border-color: var(--hairline-2);
+  box-shadow: 0 2px 4px rgba(10, 10, 10, 0.06);
+}
+.dh-pulse:active {
+  transform: translate(2px, 2px) scale(0.98);
+}
+.dh-pulse__icon {
+  font-size: 13px;
+  line-height: 1;
+  display: inline-flex;
+  opacity: 0.85;
+}
+
+.dh-pulse--urgent {
+  background: var(--brand-red);
+  border-color: var(--brand-red);
+  color: var(--snow);
+  box-shadow:
+    0 1px 2px rgba(193, 18, 31, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.18);
+}
+.dh-pulse--urgent:hover {
+  background: var(--brand-red-deep);
+  border-color: var(--brand-red-deep);
+}
+
+.dh-pulse--success {
+  background: rgba(34, 197, 94, 0.08);
+  border-color: rgba(34, 197, 94, 0.22);
+  color: #15803d;
+}
+.dh-pulse--success .dh-pulse__icon { color: #15803d; opacity: 1; }
+
+.dh-pulse--ceremony {
+  background: rgba(191, 161, 112, 0.10);
+  border-color: rgba(191, 161, 112, 0.30);
+  color: #6b4d1f;
+}
+.dh-pulse--ceremony .dh-pulse__icon { color: #946b2c; opacity: 1; }
+
+
+/* ════════════════════════════════════════════════════════════
+   GRID — 9 cols × variable rows, mixed cell aspect
+   ════════════════════════════════════════════════════════════ */
+
+.dh-grid {
+  display: grid;
+  grid-template-columns: repeat(9, 1fr);
+  gap: 20px;
+  grid-auto-rows: 168px;
+  grid-auto-flow: dense;
+}
+
+/* Cell-span vocabulary (audit § 4.1) */
+.dh-span-3-1 { grid-column: span 3; grid-row: span 1; }
+.dh-span-3-2 { grid-column: span 3; grid-row: span 2; }
+.dh-span-3-3 { grid-column: span 3; grid-row: span 3; }
+.dh-span-6-1 { grid-column: span 6; grid-row: span 1; }
+.dh-span-6-2 { grid-column: span 6; grid-row: span 2; }
+.dh-span-6-3 { grid-column: span 6; grid-row: span 3; }
+.dh-span-9-1 { grid-column: span 9; grid-row: span 1; }
+.dh-span-9-2 { grid-column: span 9; grid-row: span 2; }
+
+
+/* ════════════════════════════════════════════════════════════
+   KPI CARD shell — Design.md § 8.14 + premium SaaS chrome
+   ════════════════════════════════════════════════════════════ */
+
+.dh-card {
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.55) 0%, rgba(255,255,255,0) 60%),
+    var(--surface-2);
+  border: 1px solid var(--hairline);
+  border-radius: 16px;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.6),
+    0 1px 2px rgba(10, 10, 10, 0.04);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+  transition:
+    transform 200ms cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 200ms ease,
+    border-color 200ms ease;
+  text-decoration: none;
+  color: inherit;
+  animation: dh-rise 380ms cubic-bezier(0.22, 1, 0.36, 1) backwards;
+}
+
+.dh-card.is-clickable { cursor: pointer; }
+
+.dh-card.is-clickable:hover {
+  transform: translate(1px, 1px);
+  border-color: var(--hairline-2);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.6),
+    0 4px 12px rgba(10, 10, 10, 0.06);
+}
+.dh-card.is-clickable:active {
+  transform: translate(2px, 2px) scale(0.99);
+}
+
+@keyframes dh-rise {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Stagger first-paint reveal */
+.dh-grid > .dh-card:nth-child(1),
+.dh-grid > .dh-onboard:nth-child(1) { animation-delay: 0ms; }
+.dh-grid > .dh-card:nth-child(2),
+.dh-grid > .dh-onboard:nth-child(2) { animation-delay: 40ms; }
+.dh-grid > .dh-card:nth-child(3),
+.dh-grid > .dh-onboard:nth-child(3) { animation-delay: 80ms; }
+.dh-grid > .dh-card:nth-child(4)  { animation-delay: 120ms; }
+.dh-grid > .dh-card:nth-child(5)  { animation-delay: 160ms; }
+.dh-grid > .dh-card:nth-child(6)  { animation-delay: 200ms; }
+.dh-grid > .dh-card:nth-child(7)  { animation-delay: 240ms; }
+.dh-grid > .dh-card:nth-child(8)  { animation-delay: 280ms; }
+.dh-grid > .dh-card:nth-child(9)  { animation-delay: 320ms; }
+.dh-grid > .dh-card:nth-child(10) { animation-delay: 360ms; }
+
+/* Optional dark variant — used by the onboarding hero only */
+.dh-card--dark {
+  background:
+    radial-gradient(120% 80% at 100% 0%, rgba(193, 18, 31, 0.18) 0%, transparent 60%),
+    radial-gradient(80% 100% at 0% 100%, rgba(58, 79, 216, 0.10) 0%, transparent 50%),
+    var(--char);
+  color: var(--snow);
+  border-color: rgba(255, 255, 255, 0.08);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 1px 2px rgba(10, 10, 10, 0.18);
+}
+.dh-card--dark .dh-card__eyebrow   { color: rgba(255, 255, 255, 0.55); }
+.dh-card--dark .dh-card__view-all  { color: rgba(255, 255, 255, 0.65); }
+.dh-card--dark .dh-card__view-all:hover {
+  background: rgba(255, 255, 255, 0.10);
+  color: var(--snow);
+}
+
+.dh-card__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 14px;
+  gap: 12px;
+}
+
+.dh-card__eyebrow {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--ink-3);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.dh-card__view-all {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--ink-4);
+  text-decoration: none;
+  padding: 4px 10px;
+  border-radius: 6px;
+  border: 1px solid transparent;
+  transition: background 180ms ease, color 180ms ease, border-color 180ms ease;
+  white-space: nowrap;
+  background: none;
+  cursor: pointer;
+}
+.dh-card__view-all:hover {
+  background: var(--surface-3);
+  color: var(--ink);
+  border-color: var(--hairline);
+}
+
+
+/* ════════════════════════════════════════════════════════════
+   TODAY'S WORK widget — milestone pipeline rows
+   ════════════════════════════════════════════════════════════ */
+
+.dh-work-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  flex: 1;
+  margin-top: 4px;
+}
+
+.dh-work-row {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 18px 18px 18px 22px;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,1) 0%, rgba(255,255,255,0.85) 100%),
+    var(--snow);
+  border: 1px solid var(--hairline);
+  border-left: 3px solid var(--cat, var(--ink-5));
+  border-radius: 10px;
+  flex: 1;
+  justify-content: space-between;
+  text-decoration: none;
+  color: inherit;
+  position: relative;
+  box-shadow: 0 1px 1px rgba(10, 10, 10, 0.02);
+  transition:
+    transform 180ms cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 180ms ease,
+    box-shadow 180ms ease;
+}
+.dh-work-row:hover {
+  transform: translate(1px, 1px);
+  border-color: var(--hairline-2);
+  box-shadow: 0 4px 10px rgba(10, 10, 10, 0.06);
+}
+.dh-work-row:active {
+  transform: translate(2px, 2px) scale(0.995);
+}
+
+.dh-work-row__top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.dh-work-row__title {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+}
+
+.dh-work-row__merchant {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--ink-4);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-top: 4px;
+}
+
+.dh-work-row__pay {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--ink);
+  letter-spacing: -0.015em;
+  font-variant-numeric: tabular-nums;
+}
+
+.dh-work-row__deadline {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--ink-5);
+  text-align: right;
+  margin-top: 4px;
+}
+.dh-work-row__deadline--urgent {
+  color: var(--brand-red);
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+.dh-work-row__deadline--urgent::before {
+  content: "";
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--brand-red);
+  box-shadow: 0 0 0 3px rgba(193, 18, 31, 0.16);
+  animation: dh-pulse-red 1.6s ease-in-out infinite;
+}
+@keyframes dh-pulse-red {
+  0%, 100% { box-shadow: 0 0 0 3px rgba(193, 18, 31, 0.16); }
+  50%      { box-shadow: 0 0 0 5px rgba(193, 18, 31, 0.06); }
+}
+
+/* Pipeline dots */
+.dh-pipeline { display: flex; align-items: center; gap: 4px; }
+.dh-pipeline__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--ink-6);
+  flex-shrink: 0;
+  transition: transform 200ms ease, box-shadow 200ms ease;
+}
+.dh-pipeline__dot--done { background: var(--ink-3); }
+.dh-pipeline__dot--active {
+  background: var(--cat, var(--ink-3));
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--cat, var(--ink-3)) 20%, transparent);
+  transform: scale(1.15);
+}
+.dh-pipeline__line {
+  flex: 1 0 8px;
+  max-width: 16px;
+  height: 1px;
+  background: var(--hairline-2);
+}
+.dh-pipeline__label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--ink-3);
+  margin-left: auto;
+  padding: 3px 8px;
+  background: var(--surface-2);
+  border-radius: 999px;
+}
+
+
+/* ════════════════════════════════════════════════════════════
+   NEW MATCHES widget — 3 stacked recommended cards
+   ════════════════════════════════════════════════════════════ */
+
+.dh-match-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex: 1;
+  margin-top: 4px;
+}
+.dh-match-item {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 14px 14px 14px 18px;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,1) 0%, rgba(255,255,255,0.85) 100%),
+    var(--snow);
+  border: 1px solid var(--hairline);
+  border-left: 3px solid var(--cat, var(--ink-5));
+  border-radius: 10px;
+  text-decoration: none;
+  color: inherit;
+  box-shadow: 0 1px 1px rgba(10, 10, 10, 0.02);
+  transition:
+    transform 180ms cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 180ms ease,
+    box-shadow 180ms ease;
+  flex: 1;
+  justify-content: space-between;
+}
+.dh-match-item:hover {
+  transform: translate(1px, 1px);
+  border-color: var(--hairline-2);
+  box-shadow: 0 4px 10px rgba(10, 10, 10, 0.06);
+}
+.dh-match-item__top {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  align-items: flex-start;
+}
+.dh-match-item__name {
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1.25;
+  letter-spacing: -0.005em;
+}
+.dh-match-item__pay {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--ink);
+  letter-spacing: -0.015em;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.dh-match-item__bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+.dh-match-item__bar {
+  flex: 1;
+  height: 4px;
+  background: var(--surface-3);
+  border-radius: 999px;
+  overflow: hidden;
+  position: relative;
+}
+.dh-match-item__fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--cat, var(--ink-5)), color-mix(in srgb, var(--cat, var(--ink-5)) 70%, var(--ink-3)));
+  border-radius: 999px;
+  transition: width 600ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.dh-match-item__meta {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--ink-4);
+  white-space: nowrap;
+}
+
+
+/* ════════════════════════════════════════════════════════════
+   MAP widget — wraps MapView component
+   ════════════════════════════════════════════════════════════ */
+
+.dh-map-wrap {
+  flex: 1;
+  margin-top: 12px;
+  border-radius: 10px;
+  overflow: hidden;
+  background: var(--mist);
+  position: relative;
+  border: 1px solid var(--hairline);
+  min-height: 200px;
+}
+.dh-map-wrap::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: 10px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6);
+}
+
+
+/* ════════════════════════════════════════════════════════════
+   EARNINGS ambient widget
+   ════════════════════════════════════════════════════════════ */
+
+.dh-earn {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  flex: 1;
+}
+.dh-earn__top {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.dh-earn__num {
+  font-family: var(--font-display);
+  font-size: 40px;
+  font-weight: 800;
+  color: var(--ink);
+  line-height: 1;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+}
+.dh-earn__num--muted { color: var(--ink-5); }
+
+.dh-earn__delta {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  color: #15803d;
+  background: rgba(34, 197, 94, 0.08);
+  border: 1px solid rgba(34, 197, 94, 0.22);
+  padding: 3px 8px;
+  border-radius: 999px;
+  letter-spacing: 0.04em;
+}
+
+.dh-earn__sparkline {
+  height: 56px;
+  width: 100%;
+  margin-top: 4px;
+  display: block;
+}
+.dh-earn__sparkline--placeholder {
+  background: repeating-linear-gradient(
+    90deg, var(--surface-3) 0 12px, transparent 12px 24px
+  );
+  opacity: 0.6;
+  border-radius: 4px;
+  height: 56px;
+}
+
+.dh-earn__split {
+  display: flex;
+  gap: 24px;
+  padding-top: 14px;
+  margin-top: auto;
+  border-top: 1px solid var(--hairline);
+}
+.dh-earn__sub {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.dh-earn__sub-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--ink-4);
+}
+.dh-earn__sub-value {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--ink);
+  letter-spacing: -0.01em;
+  font-variant-numeric: tabular-nums;
+}
+.dh-earn__hint {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--ink-4);
+  margin-top: auto;
+  padding-top: 12px;
+  border-top: 1px dashed var(--hairline-2);
+  line-height: 1.5;
+}
+.dh-earn__hint strong { color: var(--ink); font-weight: 700; }
+.dh-earn__lead {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--ink-4);
+  line-height: 1.5;
+}
+
+
+/* ════════════════════════════════════════════════════════════
+   TIER RING widget
+   ════════════════════════════════════════════════════════════ */
+
+.dh-tier {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin-top: 4px;
+  flex: 1;
+  position: relative;
+}
+.dh-tier__svg {
+  width: 88px;
+  height: 88px;
+  flex-shrink: 0;
+  filter: drop-shadow(0 2px 6px rgba(10, 10, 10, 0.06));
+}
+.dh-tier__info {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+.dh-tier__name {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.015em;
+  line-height: 1;
+}
+.dh-tier__next {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--ink-4);
+}
+
+
+/* ════════════════════════════════════════════════════════════
+   PIPELINE HEALTH widget — segmented runway gauge
+   ════════════════════════════════════════════════════════════ */
+
+.dh-gauge {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-top: 4px;
+  flex: 1;
+}
+.dh-gauge__top {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+.dh-gauge__num {
+  font-family: var(--font-display);
+  font-size: 40px;
+  font-weight: 800;
+  color: var(--ink);
+  line-height: 1;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+}
+.dh-gauge__num em {
+  font-style: normal;
+  font-size: 14px;
+  color: var(--ink-3);
+  font-weight: 700;
+  margin-left: 6px;
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+.dh-gauge__chip {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border-radius: 999px;
+  border: 1px solid;
+}
+.dh-gauge__chip[data-health="low"]    { background: rgba(193, 18, 31, 0.08); color: var(--brand-red); border-color: rgba(193, 18, 31, 0.22); }
+.dh-gauge__chip[data-health="medium"] { background: rgba(234, 88, 12, 0.08); color: #c2410c;        border-color: rgba(234, 88, 12, 0.22); }
+.dh-gauge__chip[data-health="high"]   { background: rgba(34, 197, 94, 0.08); color: #15803d;        border-color: rgba(34, 197, 94, 0.22); }
+
+.dh-gauge__segments {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 4px;
+  margin-top: auto;
+}
+.dh-gauge__seg {
+  height: 6px;
+  border-radius: 3px;
+  background: var(--surface-3);
+  transition: background 220ms ease;
+}
+.dh-gauge__seg--low    { background: var(--brand-red); }
+.dh-gauge__seg--medium { background: #ea580c; }
+.dh-gauge__seg--high   { background: #22c55e; }
+
+.dh-gauge__hint {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--ink-3);
+  line-height: 1.4;
+}
+.dh-gauge__hint strong { color: var(--ink); font-weight: 700; }
+
+
+/* ════════════════════════════════════════════════════════════
+   ANALYTICS PEEK widget — 4 KPI mini-row
+   ════════════════════════════════════════════════════════════ */
+
+.dh-peek {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  margin-top: 4px;
+  flex: 1;
+  align-items: center;
+}
+.dh-peek__cell {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 8px 0;
+  border-right: 1px solid var(--hairline);
+}
+.dh-peek__cell:last-child { border-right: none; }
+.dh-peek__label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--ink-4);
+}
+.dh-peek__value {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--ink);
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+.dh-peek__delta {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  color: #15803d;
+}
+
+
+/* ════════════════════════════════════════════════════════════
+   ACTIVITY TIMELINE widget — vertical rail
+   ════════════════════════════════════════════════════════════ */
+
+.dh-timeline {
+  display: flex;
+  flex-direction: column;
+  margin-top: 4px;
+  flex: 1;
+  overflow-y: auto;
+  position: relative;
+}
+.dh-timeline::before {
+  content: "";
+  position: absolute;
+  left: 7px;
+  top: 18px;
+  bottom: 18px;
+  width: 1px;
+  background: var(--hairline-2);
+  pointer-events: none;
+}
+.dh-timeline__item {
+  display: grid;
+  grid-template-columns: 16px 1fr;
+  gap: 14px;
+  padding: 12px 0;
+  border-bottom: 1px dashed var(--hairline);
+  position: relative;
+}
+.dh-timeline__item:last-child { border-bottom: none; }
+.dh-timeline__rail {
+  padding-top: 6px;
+  position: relative;
+  z-index: 1;
+}
+.dh-timeline__dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--ink-3);
+  margin-left: 3px;
+  border: 2px solid var(--surface-2);
+  box-shadow: 0 0 0 1px var(--hairline-2);
+}
+.dh-timeline__dot--success { background: #22c55e; box-shadow: 0 0 0 1px rgba(34, 197, 94, 0.30); }
+.dh-timeline__dot--pending { background: #c9a96e; box-shadow: 0 0 0 1px rgba(201, 169, 110, 0.30); }
+.dh-timeline__dot--brand   { background: var(--brand-red); box-shadow: 0 0 0 1px rgba(193, 18, 31, 0.30); }
+
+.dh-timeline__title {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink);
+  line-height: 1.4;
+}
+.dh-timeline__meta {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink-4);
+  margin-top: 4px;
+}
+
+
+/* ════════════════════════════════════════════════════════════
+   INBOX PEEK widget
+   ════════════════════════════════════════════════════════════ */
+
+.dh-inbox {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 4px;
+  flex: 1;
+}
+.dh-inbox__row {
+  display: grid;
+  grid-template-columns: 36px 1fr auto;
+  gap: 12px;
+  padding: 12px;
+  background: var(--snow);
+  border: 1px solid var(--hairline);
+  border-radius: 10px;
+  text-decoration: none;
+  color: inherit;
+  align-items: center;
+  transition:
+    transform 180ms cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 180ms ease,
+    box-shadow 180ms ease;
+  position: relative;
+}
+.dh-inbox__row:hover {
+  transform: translate(1px, 1px);
+  border-color: var(--hairline-2);
+  box-shadow: 0 2px 6px rgba(10, 10, 10, 0.04);
+}
+.dh-inbox__row--unread {
+  border-left: 3px solid var(--brand-red);
+  padding-left: 10px;
+}
+.dh-inbox__row--unread .dh-inbox__top::after {
+  content: "";
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--brand-red);
+  margin-left: 6px;
+  vertical-align: middle;
+  box-shadow: 0 0 0 3px rgba(193, 18, 31, 0.16);
+  animation: dh-pulse-red 2s ease-in-out infinite;
+}
+
+.dh-inbox__avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--ink-2) 0%, var(--graphite) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--snow);
+  letter-spacing: 0.02em;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.10),
+    0 1px 2px rgba(10, 10, 10, 0.10);
+}
+.dh-inbox__body { min-width: 0; }
+.dh-inbox__top {
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--ink);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  letter-spacing: -0.005em;
+}
+.dh-inbox__preview {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--ink-4);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-top: 2px;
+}
+.dh-inbox__time {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink-4);
+  white-space: nowrap;
+}
+
+
+/* ════════════════════════════════════════════════════════════
+   ONBOARDING-state variants (Day 0–7 lifecycle)
+   ════════════════════════════════════════════════════════════ */
+
+.dh-onboard {
+  background:
+    radial-gradient(120% 80% at 100% 0%, rgba(193, 18, 31, 0.20) 0%, transparent 55%),
+    radial-gradient(80% 100% at 0% 100%, rgba(58, 79, 216, 0.14) 0%, transparent 50%),
+    var(--char);
+  color: var(--snow);
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 1px 2px rgba(10, 10, 10, 0.18);
+  position: relative;
+  overflow: hidden;
+  animation: dh-rise 380ms cubic-bezier(0.22, 1, 0.36, 1) backwards;
+}
+
+.dh-onboard::after {
+  content: "PUSH";
+  position: absolute;
+  bottom: -28px;
+  right: -16px;
+  font-family: var(--font-display);
+  font-size: 220px;
+  font-weight: 800;
+  color: rgba(255, 255, 255, 0.03);
+  letter-spacing: -0.04em;
+  pointer-events: none;
+  line-height: 1;
+}
+
+.dh-onboard__eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: rgba(255, 255, 255, 0.65);
+  margin-bottom: 14px;
+  position: relative;
+  z-index: 1;
+}
+.dh-onboard__eyebrow::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--brand-red);
+  box-shadow: 0 0 0 3px rgba(193, 18, 31, 0.30);
+}
+
+.dh-onboard__title {
+  font-family: var(--font-display);
+  font-size: clamp(28px, 3.5vw, 40px);
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  color: var(--snow);
+  margin-bottom: 12px;
+  position: relative;
+  z-index: 1;
+}
+.dh-onboard__sub {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.78);
+  margin-bottom: 24px;
+  max-width: 56ch;
+  line-height: 1.55;
+  position: relative;
+  z-index: 1;
+}
+
+.dh-onboard__steps {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 24px;
+  position: relative;
+  z-index: 1;
+}
+.dh-onboard__step {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: rgba(255, 255, 255, 0.60);
+  white-space: nowrap;
+}
+.dh-onboard__step-num {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--snow);
+}
+.dh-onboard__step--active .dh-onboard__step-num {
+  background: var(--brand-red);
+  border-color: var(--brand-red);
+  box-shadow: 0 0 0 3px rgba(193, 18, 31, 0.22);
+}
+.dh-onboard__step--active { color: var(--snow); }
+.dh-onboard__step-line {
+  flex: 0 0 24px;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.18);
+}
+
+.dh-onboard__picks {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  flex: 1;
+  position: relative;
+  z-index: 1;
+}
+.dh-onboard__pick {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.04) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-left: 3px solid var(--cat, var(--brand-red));
+  border-radius: 10px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  justify-content: space-between;
+  text-decoration: none;
+  color: inherit;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  transition:
+    transform 180ms cubic-bezier(0.22, 1, 0.36, 1),
+    background 180ms ease,
+    border-color 180ms ease;
+}
+.dh-onboard__pick:hover {
+  transform: translate(1px, 1px);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.14) 0%, rgba(255, 255, 255, 0.08) 100%);
+  border-color: rgba(255, 255, 255, 0.28);
+}
+.dh-onboard__pick-name {
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--snow);
+  line-height: 1.25;
+  letter-spacing: -0.005em;
+}
+.dh-onboard__pick-merchant {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: rgba(255, 255, 255, 0.58);
+  margin-top: 4px;
+}
+.dh-onboard__pick-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+.dh-onboard__pick-pay {
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--snow);
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+}
+.dh-onboard__pick-cta {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: rgba(255, 255, 255, 0.72);
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  transition: color 180ms ease, transform 180ms ease;
+}
+.dh-onboard__pick:hover .dh-onboard__pick-cta {
+  color: var(--snow);
+  transform: translateX(2px);
+}
+
+
+/* ════════════════════════════════════════════════════════════
+   RESPONSIVE — container-query driven so the dashboard adapts
+   to its true content area, not the raw viewport. Workspace
+   chrome (sidebar+context) can eat 400-460px of viewport, so
+   we flip layouts based on the page's own inline size.
+   ════════════════════════════════════════════════════════════ */
+
+/* < 1100px container → fold to 6-col */
+@container dh (max-width: 1100px) {
+  .dh-grid {
+    grid-template-columns: repeat(6, 1fr);
+    gap: 16px;
+    grid-auto-rows: 160px;
+  }
+  .dh-span-6-1, .dh-span-6-2, .dh-span-6-3,
+  .dh-span-9-1, .dh-span-9-2 { grid-column: span 6; }
+  .dh-span-3-1, .dh-span-3-2, .dh-span-3-3 { grid-column: span 3; }
+  .dh-header__title { font-size: clamp(36px, 5vw, 56px); }
+  .dh-onboard__picks { grid-template-columns: 1fr; }
+  .dh-onboard::after { font-size: 160px; }
+}
+
+/* < 720px container → single column */
+@container dh (max-width: 720px) {
+  .dh-grid {
+    grid-template-columns: 1fr;
+    grid-auto-rows: auto;
+    gap: 14px;
+  }
+  .dh-span-3-1, .dh-span-3-2, .dh-span-3-3,
+  .dh-span-6-1, .dh-span-6-2, .dh-span-6-3,
+  .dh-span-9-1, .dh-span-9-2 {
+    grid-column: span 1;
+    grid-row: auto;
+  }
+  .dh-card { padding: 20px; }
+  .dh-header { grid-template-columns: 1fr; gap: 16px; }
+  .dh-header__pulse { justify-content: flex-start; }
+  .dh-header__date { text-align: left; }
+  .dh-work-row__title { font-size: 16px; }
+  .dh-work-row__pay { font-size: 18px; }
+  .dh-onboard { padding: 24px; }
+  .dh-onboard__title { font-size: clamp(24px, 6vw, 32px); }
+  .dh-peek { grid-template-columns: repeat(2, 1fr); }
+  .dh-peek__cell:nth-child(2) { border-right: none; }
+}
+
+/* Page padding adapts to viewport (not container) so the gutter
+   feels right even when the workspace shrinks the content area */
+@media (max-width: 1024px) { .dh-page { padding: 24px 24px 80px; } }
+@media (max-width: 768px)  { .dh-page { padding: 20px 16px 80px; } }
+
+
+/* ════════════════════════════════════════════════════════════
+   PREFERS-REDUCED-MOTION — kill animation cascade
+   ════════════════════════════════════════════════════════════ */
+
+@media (prefers-reduced-motion: reduce) {
+  .dh-card, .dh-onboard, .dh-pulse,
+  .dh-work-row, .dh-match-item, .dh-inbox__row,
+  .dh-pipeline__dot, .dh-onboard__pick {
+    animation: none !important;
+    transition: none !important;
+  }
+  .dh-header__greeting::before,
+  .dh-work-row__deadline--urgent::before,
+  .dh-inbox__row--unread .dh-inbox__top::after {
+    animation: none !important;
+  }
+}
