@@ -156,44 +156,53 @@ export default function CreatorDashboardPage() {
       />
 
       <div className="dh-grid">
-        {/* ── HERO ROW ── 4 + 8 (rebalanced from 4×5 + 8×3 to 4×3 + 8×3) */}
+        {/* ── ROW 1: BalanceCard 4 | TodaysWork 8 ── */}
         <BalanceCard
           creator={creator}
           payouts={payouts}
-          className="dh-span-4-3"
+          className="dh-span-4-auto"
         />
 
-        {/* Today's Work hero (or Onboarding for new creators) */}
         {isNew || active.length === 0 ? (
           <OnboardingHero
             picks={recommended}
             creatorTier={creator.tier}
-            className="dh-span-8-3"
+            className="dh-span-8-auto"
           />
         ) : (
           <TodaysWork
             applications={applications}
             creatorTier={creator.tier}
-            className="dh-span-8-3"
+            className="dh-span-8-auto"
           />
         )}
 
-        {/* ── STATUS / DISCOVERY ROW ── 4 + 8 */}
-        {/* Status stack on the left — Tier or Pipeline + small KPI peek */}
-        {isPro ? (
-          <PipelineHealth applications={applications} className="dh-span-4-2" />
-        ) : (
-          <TierRing creator={creator} className="dh-span-4-2" />
-        )}
+        {/* ── ROW 2: NewMatches 4 | Map 8 ── */}
+        <NewMatches
+          recommended={recommended}
+          creatorTier={creator.tier}
+          className="dh-span-4-auto"
+        />
 
-        {/* Map promoted: 8 cols wide, 2 rows tall — proper map presence */}
-        <NearbyMap campaigns={campaigns} className="dh-span-8-2" />
+        <NearbyMap campaigns={campaigns} className="dh-span-8-auto" />
 
-        {/* ── INSIGHT ROW ── 4 + 4 + 4 */}
+        {/* ── ROW 3: TierRing 4 | PipelineHealth 4 | AnalyticsPeek 4 ── */}
         {isPro ? (
-          <TierRing creator={creator} className="dh-span-4-1" />
+          <>
+            <PipelineHealth
+              applications={applications}
+              className="dh-span-4-auto"
+            />
+            <TierRing creator={creator} className="dh-span-4-auto" />
+          </>
         ) : (
-          <PipelineHealth applications={applications} className="dh-span-4-1" />
+          <>
+            <TierRing creator={creator} className="dh-span-4-auto" />
+            <PipelineHealth
+              applications={applications}
+              className="dh-span-4-auto"
+            />
+          </>
         )}
 
         <AnalyticsPeek
@@ -201,18 +210,12 @@ export default function CreatorDashboardPage() {
           scans={isNew ? undefined : 28}
           convPct={isNew ? undefined : 12}
           ctrPct={isNew ? undefined : 0.4}
-          className="dh-span-4-1"
+          className="dh-span-4-auto"
         />
 
-        <NewMatches
-          recommended={recommended}
-          creatorTier={creator.tier}
-          className="dh-span-4-1"
-        />
-
-        {/* ── HISTORY ROW ── */}
-        <ActivityTimeline entries={activity} className="dh-span-8-3" />
-        <InboxPeek threads={threads} className="dh-span-4-3" />
+        {/* ── ROW 4: ActivityTimeline 8 | InboxPeek 4 ── */}
+        <ActivityTimeline entries={activity} className="dh-span-8-auto" />
+        <InboxPeek threads={threads} className="dh-span-4-auto" />
       </div>
     </div>
   );

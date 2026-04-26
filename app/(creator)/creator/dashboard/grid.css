@@ -193,8 +193,13 @@ html { scroll-behavior: smooth; }
   display: grid;
   grid-template-columns: repeat(12, 1fr);
   gap: 16px;
-  grid-auto-rows: 110px;
+  /* Content-aware rows: each track can grow up to content's natural height
+     but won't shrink below the floor. Avoids the "card too tall + neighbor
+     too short" problem the fixed 110px caused. Spans still control the
+     compositional weight, content controls the height within that. */
+  grid-auto-rows: minmax(120px, auto);
   grid-auto-flow: dense;
+  align-items: stretch;
 }
 
 /* Cell-span vocabulary */
@@ -216,6 +221,19 @@ html { scroll-behavior: smooth; }
 .dh-span-8-5  { grid-column: span 8;  grid-row: span 5; }
 .dh-span-9-2  { grid-column: span 9;  grid-row: span 2; }
 .dh-span-12-2 { grid-column: span 12; grid-row: span 2; }
+
+/* Content-sized rows — column span fixed, row height grows to content.
+   Pair these with align-items: start so the card sits naturally rather
+   than stretching to fill an arbitrary row. */
+.dh-span-4-auto  { grid-column: span 4;  grid-row: auto; align-self: start; }
+.dh-span-6-auto  { grid-column: span 6;  grid-row: auto; align-self: start; }
+.dh-span-8-auto  { grid-column: span 8;  grid-row: auto; align-self: start; }
+.dh-span-12-auto { grid-column: span 12; grid-row: auto; align-self: start; }
+
+/* Make the map widget have a real minimum so it stays usable when
+   row-auto-sizing collapses neighbors to short heights */
+.dh-span-8-auto .dh-map-wrap,
+.dh-span-12-auto .dh-map-wrap { min-height: 320px; }
 
 
 /* ════════════════════════════════════════════════════════════
