@@ -511,6 +511,85 @@ a.cw-card:active { transform: translate(3px, 3px) scale(0.98); }
 
 
 /* ════════════════════════════════════════════════════════════
+   SECTION RHYTHM — every "h2-style" page section uses these
+   primitives so the vertical rhythm is consistent across pages.
+   Replaces the page-specific 40-72px h2 headlines that were
+   dominating bodies and competing with the page title.
+   ════════════════════════════════════════════════════════════ */
+
+.cw-section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 32px;
+}
+.cw-section-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  padding-bottom: 8px;
+}
+.cw-section-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--ink-3);
+}
+.cw-section-title {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  line-height: 1.1;
+}
+.cw-section-link {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+  text-decoration: none;
+  transition: color 180ms ease;
+}
+.cw-section-link:hover { color: var(--ink); }
+
+
+/* ════════════════════════════════════════════════════════════
+   EMPTY STATE
+   ════════════════════════════════════════════════════════════ */
+
+.cw-empty {
+  background: var(--surface-2);
+  border: 1px dashed var(--hairline-2);
+  border-radius: 12px;
+  padding: 40px 24px;
+  text-align: center;
+  color: var(--ink-4);
+}
+.cw-empty__title {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 8px;
+  letter-spacing: -0.01em;
+}
+.cw-empty__body {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--ink-4);
+  max-width: 42ch;
+  margin: 0 auto 16px;
+}
+
+
+/* ════════════════════════════════════════════════════════════
    GRID HELPERS — generic auto-fit grid for any page
    ════════════════════════════════════════════════════════════ */
 
@@ -539,6 +618,54 @@ a.cw-card:active { transform: translate(3px, 3px) scale(0.98); }
   .cw-header { grid-template-columns: 1fr; gap: 16px; }
   .cw-header__right { align-items: flex-start; }
   .cw-header__pills { justify-content: flex-start; }
+}
+
+
+/* ════════════════════════════════════════════════════════════
+   LEGACY SECTION-TITLE NORMALIZATION
+   Only the page TITLE (.cw-title) should be giant; in-page
+   section h2/h3s must scale down so they don't compete. These
+   selectors target legacy class names used by individual pages
+   so we get visual consistency without rewriting each body.
+   ════════════════════════════════════════════════════════════ */
+
+.cw-page :is(
+  .an-section-title,
+  .earn-section-title,
+  .lb-section-title,
+  .pf-section-title,
+  .wt-section-title,
+  .pl-section-title,
+  .ix-section-title,
+  .notif-section-title,
+  .wallet-section-title,
+  .drafts-section-title,
+  .cal-section-title,
+  .dispute-section-title,
+  .disc-section-title
+) {
+  font-family: var(--font-display);
+  font-size: 22px !important;
+  font-weight: 800 !important;
+  letter-spacing: -0.02em !important;
+  color: var(--ink) !important;
+  line-height: 1.1 !important;
+  margin: 0 0 16px !important;
+}
+
+/* Constrain any oversized H1/H2 inside legacy page bodies (but
+   not inside the .cw-header which has its own giant title). */
+.cw-page > div h2:not([class*="cw-"]):not([class*="hero"]):not([class*="badge"]) {
+  font-size: clamp(20px, 2.6vw, 28px);
+  font-weight: 800;
+  letter-spacing: -0.015em;
+  line-height: 1.15;
+}
+.cw-page > div h3:not([class*="cw-"]):not([class*="badge"]) {
+  font-size: clamp(16px, 2vw, 20px);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
 }
 
 

@@ -465,27 +465,6 @@ export default function DiscoverPage() {
           />
         </div>
 
-        {/* View toggle */}
-        <div className="disc-view-toggle">
-          <button
-            className={`disc-view-btn${viewMode === "grid" ? " disc-view-btn--active" : ""}`}
-            onClick={() => {
-              setViewMode("grid");
-              setActiveId(null);
-            }}
-            aria-label="Grid view"
-          >
-            Grid
-          </button>
-          <button
-            className={`disc-view-btn${viewMode === "split" ? " disc-view-btn--active" : ""}`}
-            onClick={() => setViewMode("split")}
-            aria-label="Map view"
-          >
-            Map
-          </button>
-        </div>
-
         <div className="disc-toolbar-right" ref={filterRef}>
           <button
             className={`disc-filter-btn btn-pill${filterOpen || activeFilterCount > 0 ? " disc-filter-btn--active" : ""}`}
