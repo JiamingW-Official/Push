@@ -1,26 +1,10 @@
 // Push — Creator Dashboard layout
 //
-// Lumin-style premium SaaS shell: a single collapsible glass rail (64→200px
-// on hover) and a generous main column. Replaces the heavier workspace shell
-// (TopNav + SideNav + ContextPanel) used elsewhere — the dashboard's content
-// IS the experience here, not the navigation chrome.
+// Re-exports the (workspace)/layout — the dashboard route lives outside
+// the (workspace) route group historically, but the chrome is identical
+// (Lumin glass rail + main column + shared cw-* card system).
 //
-// Authority:
-//   creator_home_mockup_day0_7.html (rail spec)
-//   Design.md v11 § 1 r9 Product UI register
-//   CREATOR_PSYCHOLOGY_v1.md § 5 (5-zone composition)
+// This is the single source of truth for the creator chrome:
+//   app/(creator)/creator/(workspace)/layout.tsx
 
-import type { ReactNode } from "react";
-import { RailNav } from "@/components/creator/dashboard/RailNav";
-import "./shell.css";
-
-export default function DashboardLayout({ children }: { children: ReactNode }) {
-  return (
-    <div className="dh-shell">
-      <RailNav />
-      <main className="dh-main" id="dh-main-content">
-        {children}
-      </main>
-    </div>
-  );
-}
+export { default } from "@/app/(creator)/creator/(workspace)/layout";

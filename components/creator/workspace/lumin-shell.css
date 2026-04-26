@@ -1,17 +1,19 @@
 /* ─────────────────────────────────────────────────────────────────────
- * Creator Dashboard — shell (rail + main column)
+ * Push — Creator Workspace · Lumin shell
  *
- * The dashboard route runs OUTSIDE the workspace (TopNav+SideNav+Context)
- * shell so the chrome stays minimal and the content can breathe.
- * Layout = collapsible glass rail (64→200px hover) + generous main col.
+ * Shared by the (workspace)/layout AND the standalone /dashboard route.
+ * Provides: collapsible glass rail (72→248px on hover), a sticky main
+ * column, and skip-link styling. Extracted from the dashboard's shell.css
+ * so every creator page inherits the same chrome.
  *
- * Authority: creator_home_mockup_day0_7.html
+ * Authority: push-design-spec § 8.13 sidebar (248px, glass blur 32+sat180)
+ *            + creator_home_mockup_day0_7.html (collapse interaction)
  * ───────────────────────────────────────────────────────────────────── */
 
 :root {
   --rl-w-collapsed: 72px;
-  --rl-w-expanded:  220px;
-  --rl-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --rl-w-expanded:  248px;          /* spec § 8.13 = 248px */
+  --rl-ease:   cubic-bezier(0.22, 1, 0.36, 1);
   --rl-t-fast: 180ms;
   --rl-t-base: 240ms;
 }
@@ -37,8 +39,10 @@
   display: block;
 }
 
+
 /* ════════════════════════════════════════════════════════════
    RAIL — glass blur, two states (collapsed / expanded)
+   Authority: push-design-spec § 8.13 + Liquid Glass Surface specs
    ════════════════════════════════════════════════════════════ */
 
 .rl {
@@ -53,7 +57,7 @@
   scrollbar-width: none;
 
   background:
-    radial-gradient(120% 60% at 20% 0%,   rgba(255, 255, 255, 0.62) 0%, rgba(255, 255, 255, 0) 55%),
+    radial-gradient(120% 60% at 20% 0%,    rgba(255, 255, 255, 0.62) 0%, rgba(255, 255, 255, 0) 55%),
     radial-gradient(80%  100% at 95% 100%, rgba(255, 255, 255, 0.22) 0%, rgba(255, 255, 255, 0) 60%),
     rgba(255, 255, 255, 0.62);
   backdrop-filter: blur(32px) saturate(180%);
@@ -183,7 +187,7 @@
   gap: 12px;
   padding: 9px 12px;
   margin: 1px 12px;
-  border-radius: 10px;
+  border-radius: 8px;                 /* spec § 8.13 — 8px on nav items */
   text-decoration: none;
   color: var(--ink-3);
   font-family: var(--font-mono);
@@ -235,6 +239,27 @@
   border-top: 1px solid var(--hairline);
   flex-shrink: 0;
 }
+
+
+/* Skip link */
+.dh-skip {
+  position: absolute;
+  left: -9999px;
+  top: -9999px;
+  z-index: 1000;
+}
+.dh-skip:focus {
+  left: 12px;
+  top: 12px;
+  background: var(--ink);
+  color: var(--snow);
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  text-decoration: none;
+}
+
 
 /* ════════════════════════════════════════════════════════════
    RESPONSIVE
