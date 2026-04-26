@@ -168,12 +168,16 @@
    ════════════════════════════════════════════════════════════ */
 
 .cw-card {
-  background: var(--snow);
+  /* Subtle top-light gradient layered on snow — depth without a glow */
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.6) 0%, rgba(255, 255, 255, 0) 28%),
+    var(--snow);
   border: 1px solid var(--hairline);
   border-radius: 8px;                               /* spec § panel = 8px */
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.6),
-    0 1px 2px rgba(10, 10, 10, 0.04);
+    inset 0 1px 0 rgba(255, 255, 255, 0.7),
+    0 1px 2px rgba(10, 10, 10, 0.05),
+    0 1px 1px rgba(10, 10, 10, 0.02);
   padding: 24px;
   display: flex;
   flex-direction: column;
@@ -193,22 +197,41 @@ a.cw-card:hover {
   transform: translate(2px, 2px);                  /* spec hover-shift */
   border-color: var(--hairline-2);
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.6),
-    0 4px 12px rgba(10, 10, 10, 0.06);
+    inset 0 1px 0 rgba(255, 255, 255, 0.7),
+    0 6px 18px rgba(10, 10, 10, 0.08);
 }
 .cw-card.is-clickable:active,
 a.cw-card:active { transform: translate(3px, 3px) scale(0.98); }
 
-.cw-card--surface { background: var(--surface-2); }     /* warmer fill */
+.cw-card--surface {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.45) 0%, rgba(255, 255, 255, 0) 32%),
+    var(--surface-2);
+}
 .cw-card--kpi     { border-radius: 16px; padding: 24px; }   /* spec KPI = 16px */
 .cw-card--candy   { border-radius: 28px; padding: 40px; }   /* spec Candy = 28px */
+.cw-card--lift {
+  /* Higher elevation — used for hero/feature cards */
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.8),
+    0 2px 6px rgba(10, 10, 10, 0.06),
+    0 12px 32px rgba(10, 10, 10, 0.08);
+}
+.cw-card--quiet {
+  /* Whisper card — for secondary content blocks */
+  background: var(--surface-2);
+  box-shadow: none;
+  border-color: var(--hairline);
+}
 .cw-card--dark {
-  background: var(--ink-2);
+  background:
+    radial-gradient(120% 80% at 100% 0%, rgba(255, 255, 255, 0.08) 0%, transparent 55%),
+    var(--ink-2);
   color: var(--snow);
   border-color: rgba(255, 255, 255, 0.08);
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.06),
-    0 8px 28px rgba(10, 10, 10, 0.20);
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 8px 28px rgba(10, 10, 10, 0.22);
 }
 .cw-card--dark .cw-card__eyebrow { color: rgba(255, 255, 255, 0.55); }
 
@@ -590,6 +613,161 @@ a.cw-card:active { transform: translate(3px, 3px) scale(0.98); }
 
 
 /* ════════════════════════════════════════════════════════════
+   STAT — single metric block (replaces page-specific KPI styles)
+   ════════════════════════════════════════════════════════════ */
+
+.cw-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-variant-numeric: tabular-nums;
+}
+.cw-stat__label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+}
+.cw-stat__value {
+  font-family: var(--font-display);
+  font-size: clamp(28px, 3.5vw, 40px);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: var(--ink);
+  line-height: 1;
+}
+.cw-stat__value--brand { color: var(--brand-red); }
+.cw-stat__value--muted { color: var(--ink-5); }
+.cw-stat__delta {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+.cw-stat__delta--up   { color: #15803d; }
+.cw-stat__delta--down { color: var(--brand-red); }
+.cw-stat__delta--flat { color: var(--ink-4); }
+
+
+/* ════════════════════════════════════════════════════════════
+   STRIP — horizontal KPI strip (replaces an-kpi-grid, earn-strip,
+   wallet-summary, etc.). Cells share dotted hairline dividers.
+   ════════════════════════════════════════════════════════════ */
+
+.cw-strip {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 0;
+  background: var(--snow);
+  border: 1px solid var(--hairline);
+  border-radius: 8px;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.7),
+    0 1px 2px rgba(10, 10, 10, 0.04);
+  overflow: hidden;
+}
+.cw-strip__cell {
+  padding: 18px 22px;
+  border-right: 1px solid var(--hairline);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-variant-numeric: tabular-nums;
+}
+.cw-strip__cell:last-child { border-right: none; }
+.cw-strip__cell .cw-stat__value { font-size: clamp(24px, 2.8vw, 32px); }
+
+
+/* ════════════════════════════════════════════════════════════
+   METRIC — small inline metric (used in card bodies, side stats)
+   ════════════════════════════════════════════════════════════ */
+
+.cw-metric {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.cw-metric__label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+}
+.cw-metric__value {
+  font-family: var(--font-display);
+  font-size: 17px;
+  font-weight: 800;
+  letter-spacing: -0.015em;
+  color: var(--ink);
+  line-height: 1.1;
+  font-variant-numeric: tabular-nums;
+}
+
+
+/* ════════════════════════════════════════════════════════════
+   TABS — modernized inline tabs (replaces page-specific tab CSS)
+   Use as: <nav className="cw-tabs"> <a className="cw-tab is-active">...
+   ════════════════════════════════════════════════════════════ */
+
+.cw-tabs {
+  display: inline-flex;
+  align-items: center;
+  gap: 0;
+  border-bottom: 1px solid var(--hairline);
+  margin-bottom: 24px;
+}
+.cw-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: -0.005em;
+  color: var(--ink-4);
+  text-decoration: none;
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  cursor: pointer;
+  transition: color 160ms ease, border-color 160ms ease;
+  white-space: nowrap;
+}
+.cw-tab:hover { color: var(--ink-2); }
+.cw-tab.is-active {
+  color: var(--ink);
+  border-bottom-color: var(--brand-red);
+  font-weight: 700;
+}
+.cw-tab__count {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  padding: 2px 7px;
+  border-radius: 999px;
+  background: var(--surface-3);
+  color: var(--ink-3);
+  border: 1px solid var(--hairline-2);
+  font-variant-numeric: tabular-nums;
+}
+.cw-tab.is-active .cw-tab__count {
+  background: var(--ink);
+  color: var(--snow);
+  border-color: var(--ink);
+}
+
+
+/* ════════════════════════════════════════════════════════════
    GRID HELPERS — generic auto-fit grid for any page
    ════════════════════════════════════════════════════════════ */
 
@@ -608,16 +786,177 @@ a.cw-card:active { transform: translate(3px, 3px) scale(0.98); }
   grid-template-columns: repeat(2, 1fr);
   gap: 16px;
 }
+.cw-grid-4 {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
 
 @container cw (max-width: 1100px) {
-  .cw-grid-3 { grid-template-columns: repeat(2, 1fr); }
+  .cw-grid-3, .cw-grid-4 { grid-template-columns: repeat(2, 1fr); }
 }
 @container cw (max-width: 720px) {
-  .cw-grid-3, .cw-grid-2 { grid-template-columns: 1fr; }
+  .cw-grid-3, .cw-grid-2, .cw-grid-4 { grid-template-columns: 1fr; }
   .cw-page { padding: 24px 16px 80px; }
   .cw-header { grid-template-columns: 1fr; gap: 16px; }
   .cw-header__right { align-items: flex-start; }
   .cw-header__pills { justify-content: flex-start; }
+  .cw-strip { grid-template-columns: 1fr; }
+  .cw-strip__cell { border-right: none; border-bottom: 1px solid var(--hairline); }
+  .cw-strip__cell:last-child { border-bottom: none; }
+}
+
+
+/* ════════════════════════════════════════════════════════════
+   LEGACY TAB NORMALIZATION
+   Auto-modernize page-specific tab navigation so every page's
+   tab bar inherits the .cw-tabs underline-on-active treatment
+   without each page needing a rewrite.
+   ════════════════════════════════════════════════════════════ */
+
+/* Tab containers — match .cw-tabs */
+.cw-page :is(.notif-tabs, .pl-tabs, .wallet-tabs, .ix-tabs, .pf-tabs) {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 0 !important;
+  border-bottom: 1px solid var(--hairline) !important;
+  padding: 0 !important;
+  background: none !important;
+  margin-bottom: 24px !important;
+}
+
+/* Tab buttons — match .cw-tab */
+.cw-page :is(.notif-tab, .pl-tab, .wallet-tab, .ix-tab, .pf-tab) {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  padding: 12px 16px !important;
+  font-family: var(--font-display) !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  letter-spacing: -0.005em !important;
+  color: var(--ink-4) !important;
+  text-decoration: none !important;
+  background: none !important;
+  border: none !important;
+  border-bottom: 2px solid transparent !important;
+  margin-bottom: -1px !important;
+  cursor: pointer !important;
+  transition: color 160ms ease, border-color 160ms ease !important;
+  white-space: nowrap !important;
+  text-transform: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+.cw-page :is(.notif-tab, .pl-tab, .wallet-tab, .ix-tab, .pf-tab):hover {
+  color: var(--ink-2) !important;
+}
+.cw-page :is(
+  .notif-tab--active,
+  .pl-tab-active,
+  .wallet-tab--active,
+  .ix-tab--active,
+  .pf-tab--active
+) {
+  color: var(--ink) !important;
+  border-bottom-color: var(--brand-red) !important;
+  font-weight: 700 !important;
+  background: none !important;
+}
+
+
+/* ════════════════════════════════════════════════════════════
+   LEGACY KPI-CARD NORMALIZATION
+   Many pages have their own KPI grid (analytics, earnings, leaderboard,
+   profile, drafts). Force them to share the .cw-card surface treatment
+   so the page bodies feel cohesive — gradient highlight, hairline,
+   subtle shadow, tabular numerals.
+   ════════════════════════════════════════════════════════════ */
+
+.cw-page :is(
+  .an-kpi-card,
+  .earn-balance-card,
+  .lb-stat-card,
+  .pf-stat-card,
+  .wt-stat-chip,
+  .drafts-stat,
+  .wallet-stat-card
+) {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.6) 0%, rgba(255, 255, 255, 0) 28%),
+    var(--snow);
+  border: 1px solid var(--hairline);
+  border-radius: 8px;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.7),
+    0 1px 2px rgba(10, 10, 10, 0.05);
+  font-variant-numeric: tabular-nums;
+}
+
+
+/* ════════════════════════════════════════════════════════════
+   LEGACY DATA-ROW NORMALIZATION
+   Apply consistent hover-shift + hairline + 8px radius to row-style
+   line items across pages. Keeps each page's internal markup intact
+   but unifies the interaction signature.
+   ════════════════════════════════════════════════════════════ */
+
+.cw-page :is(
+  .ix-thread,
+  .notif-row,
+  .pl-card,
+  .lb-row,
+  .wallet-method-card,
+  .wallet-row,
+  .draft-card,
+  .dispute-row
+) {
+  transition:
+    transform 180ms cubic-bezier(0.34, 1.56, 0.64, 1),
+    border-color 180ms ease,
+    box-shadow 180ms ease !important;
+}
+.cw-page :is(
+  .ix-thread:hover,
+  .notif-row:hover,
+  .pl-card:hover,
+  .lb-row:hover,
+  .wallet-method-card:hover,
+  .wallet-row:hover,
+  .draft-card:hover,
+  .dispute-row:hover
+) {
+  transform: translate(2px, 2px) !important;
+  border-color: var(--hairline-2) !important;
+  box-shadow: 0 4px 12px rgba(10, 10, 10, 0.06) !important;
+}
+
+
+/* ════════════════════════════════════════════════════════════
+   GLOBAL TYPOGRAPHY POLISH inside .cw-page
+   Squeeze body type back into the system — many pages had inline
+   font-size/weight/letter-spacing styles that drift from the spec.
+   ════════════════════════════════════════════════════════════ */
+
+.cw-page :is(
+  .an-page-eyebrow,
+  .earn-page-eyebrow,
+  .lb-eyebrow,
+  .pf-eyebrow,
+  .wt-page-eyebrow,
+  .pl-eyebrow,
+  .ix-eyebrow,
+  .notif-eyebrow,
+  .wallet-eyebrow,
+  .drafts-eyebrow
+) {
+  font-family: var(--font-mono) !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.14em !important;
+  text-transform: uppercase !important;
+  color: var(--ink-3) !important;
+  margin: 0 0 8px !important;
 }
 
 
