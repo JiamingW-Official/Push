@@ -10,6 +10,7 @@ import {
   formatCurrencyExact,
 } from "@/lib/creator/widget-helpers";
 import type { Creator, Payout } from "../types";
+import { ArrowUpRight } from "../CircleArrow";
 
 export interface EarningsAmbientProps {
   creator: Creator;
@@ -42,7 +43,6 @@ export function EarningsAmbient({
       <div className={`dh-card ${className}`.trim()}>
         <div className="dh-card__header">
           <span className="dh-card__eyebrow">EARNINGS</span>
-          <span className="dh-card__view-all">·</span>
         </div>
         <div className="dh-earn">
           <div className="dh-earn__top">
@@ -66,7 +66,9 @@ export function EarningsAmbient({
     >
       <div className="dh-card__header">
         <span className="dh-card__eyebrow">EARNINGS · THIS CYCLE</span>
-        <span className="dh-card__view-all">→</span>
+        <span className="dh-circle-arrow" aria-hidden="true">
+          <ArrowUpRight />
+        </span>
       </div>
 
       <div className="dh-earn">

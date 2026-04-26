@@ -10,6 +10,7 @@ import {
   TIER_COLORS,
 } from "@/lib/creator/widget-helpers";
 import type { Campaign, CreatorTier } from "../types";
+import { ArrowUpRight } from "../CircleArrow";
 
 export interface NewMatchesProps {
   recommended: Campaign[];
@@ -28,8 +29,12 @@ export function NewMatches({
         <span className="dh-card__eyebrow">
           NEW MATCHES · {recommended.length}
         </span>
-        <Link href="/creator/discover" className="dh-card__view-all">
-          BROWSE →
+        <Link
+          href="/creator/discover"
+          className="dh-circle-arrow"
+          aria-label="Browse all matches"
+        >
+          <ArrowUpRight />
         </Link>
       </div>
 

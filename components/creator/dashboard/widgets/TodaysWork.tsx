@@ -1,8 +1,8 @@
 "use client";
 
 /* Repo target: components/creator/dashboard/widgets/TodaysWork.tsx
-   HERO 6×3 — milestone pipeline rows for active campaigns.
-   Empty state: substitutes the OnboardingHero (rendered by parent). */
+   8×3 — milestone pipeline rows for active campaigns. Empty state:
+   substitutes the OnboardingHero (rendered by parent). */
 
 import Link from "next/link";
 import {
@@ -14,6 +14,7 @@ import {
   TIER_COLORS,
 } from "@/lib/creator/widget-helpers";
 import type { Application, CreatorTier } from "../types";
+import { ArrowUpRight } from "../CircleArrow";
 
 export interface TodaysWorkProps {
   applications: Application[];
@@ -36,8 +37,12 @@ export function TodaysWork({
         <span className="dh-card__eyebrow">
           TODAY&rsquo;S WORK · {active.length} ACTIVE
         </span>
-        <Link href="/creator/work/today" className="dh-card__view-all">
-          VIEW ALL →
+        <Link
+          href="/creator/work/today"
+          className="dh-circle-arrow"
+          aria-label="View all work"
+        >
+          <ArrowUpRight />
         </Link>
       </div>
 
@@ -54,44 +59,45 @@ export function TodaysWork({
               className="dh-work-row"
               style={{ ["--cat" as string]: cat }}
             >
-              <div className="dh-work-row__top">
-                <div>
+              <div className="dh-work-row__main">
+                <div className="dh-work-row__head">
                   <div className="dh-work-row__title">{app.campaign_title}</div>
                   <div className="dh-work-row__merchant">
                     {app.merchant_name}
                     {app.category ? ` · ${app.category}` : ""}
                   </div>
                 </div>
-                <div style={{ textAlign: "right" }}>
-                  <div className="dh-work-row__pay">
-                    {formatCurrencyExact(app.payout)}
-                  </div>
-                  {days !== null && (
-                    <div
-                      className={
-                        "dh-work-row__deadline" +
-                        (days <= 1 ? " dh-work-row__deadline--urgent" : "")
+
+                <div className="dh-pipeline">
+                  {PIPELINE.map((step, i) => (
+                    <PipelineSegment
+                      key={step}
+                      last={i === PIPELINE.length - 1}
+                      state={
+                        i < stepIdx ? "done" : i === stepIdx ? "active" : "todo"
                       }
-                    >
-                      {days <= 0 ? "TODAY" : `${days}D LEFT`}
-                    </div>
-                  )}
+                    />
+                  ))}
+                  <span className="dh-pipeline__label">
+                    {MILESTONE_LABELS[app.milestone]}
+                  </span>
                 </div>
               </div>
 
-              <div className="dh-pipeline">
-                {PIPELINE.map((step, i) => (
-                  <PipelineSegment
-                    key={step}
-                    last={i === PIPELINE.length - 1}
-                    state={
-                      i < stepIdx ? "done" : i === stepIdx ? "active" : "todo"
+              <div className="dh-work-row__side">
+                <div className="dh-work-row__pay">
+                  {formatCurrencyExact(app.payout)}
+                </div>
+                {days !== null && (
+                  <div
+                    className={
+                      "dh-work-row__deadline" +
+                      (days <= 1 ? " dh-work-row__deadline--urgent" : "")
                     }
-                  />
-                ))}
-                <span className="dh-pipeline__label">
-                  {MILESTONE_LABELS[app.milestone]}
-                </span>
+                  >
+                    {days <= 0 ? "TODAY" : `${days}D LEFT`}
+                  </div>
+                )}
               </div>
             </Link>
           );

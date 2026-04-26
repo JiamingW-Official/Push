@@ -5,6 +5,7 @@
    Empty state at Day 0–7 shown as muted placeholders. */
 
 import Link from "next/link";
+import { ArrowUpRight } from "../CircleArrow";
 
 export interface AnalyticsPeekProps {
   reach?: number;
@@ -34,14 +35,26 @@ export function AnalyticsPeek({
     >
       <div className="dh-card__header">
         <span className="dh-card__eyebrow">LAST 7 DAYS</span>
-        <span className="dh-card__view-all">REPORT →</span>
+        <span className="dh-circle-arrow" aria-hidden="true">
+          <ArrowUpRight />
+        </span>
       </div>
 
       <div className="dh-peek">
-        <Cell label="REACH"  value={reach}    fmt={(n) => fmtK(n)} dim={!hasData} />
-        <Cell label="SCANS"  value={scans}    fmt={(n) => `${n}`} dim={!hasData} />
-        <Cell label="CONV"   value={convPct}  fmt={(n) => `${n}%`} dim={!hasData} />
-        <Cell label="CTR"    value={ctrPct}   fmt={(n) => `${n.toFixed(1)}%`} dim={!hasData} />
+        <Cell label="REACH" value={reach} fmt={(n) => fmtK(n)} dim={!hasData} />
+        <Cell label="SCANS" value={scans} fmt={(n) => `${n}`} dim={!hasData} />
+        <Cell
+          label="CONV"
+          value={convPct}
+          fmt={(n) => `${n}%`}
+          dim={!hasData}
+        />
+        <Cell
+          label="CTR"
+          value={ctrPct}
+          fmt={(n) => `${n.toFixed(1)}%`}
+          dim={!hasData}
+        />
       </div>
     </Link>
   );
@@ -63,7 +76,9 @@ function Cell({
       <span className="dh-peek__label">{label}</span>
       <span
         className="dh-peek__value"
-        style={dim || value === undefined ? { color: "var(--ink-5)" } : undefined}
+        style={
+          dim || value === undefined ? { color: "var(--ink-5)" } : undefined
+        }
       >
         {value === undefined ? "—" : fmt(value)}
       </span>

@@ -5,19 +5,27 @@
 
 import Link from "next/link";
 import type { ActivityEntry } from "../types";
+import { ArrowUpRight } from "../CircleArrow";
 
 export interface ActivityTimelineProps {
   entries: ActivityEntry[];
   className?: string;
 }
 
-export function ActivityTimeline({ entries, className = "" }: ActivityTimelineProps) {
+export function ActivityTimeline({
+  entries,
+  className = "",
+}: ActivityTimelineProps) {
   return (
     <div className={`dh-card ${className}`.trim()}>
       <div className="dh-card__header">
         <span className="dh-card__eyebrow">ACTIVITY</span>
-        <Link href="/creator/inbox" className="dh-card__view-all">
-          FULL FEED →
+        <Link
+          href="/creator/inbox"
+          className="dh-circle-arrow"
+          aria-label="Full activity feed"
+        >
+          <ArrowUpRight />
         </Link>
       </div>
 
@@ -46,10 +54,15 @@ export function ActivityTimeline({ entries, className = "" }: ActivityTimelinePr
 
 function dotClass(kind: ActivityEntry["kind"]): string {
   switch (kind) {
-    case "payout_settled":         return "dh-timeline__dot--success";
-    case "proof_verified":         return "dh-timeline__dot--success";
-    case "invite_received":        return "dh-timeline__dot--brand";
-    case "awaiting_verification":  return "dh-timeline__dot--pending";
-    default:                       return "";
+    case "payout_settled":
+      return "dh-timeline__dot--success";
+    case "proof_verified":
+      return "dh-timeline__dot--success";
+    case "invite_received":
+      return "dh-timeline__dot--brand";
+    case "awaiting_verification":
+      return "dh-timeline__dot--pending";
+    default:
+      return "";
   }
 }

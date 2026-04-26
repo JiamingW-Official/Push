@@ -6,6 +6,7 @@
 import Link from "next/link";
 import { timeAgo } from "@/lib/creator/widget-helpers";
 import type { InboxThread } from "../types";
+import { ArrowUpRight } from "../CircleArrow";
 
 export interface InboxPeekProps {
   threads: InboxThread[];
@@ -21,8 +22,12 @@ export function InboxPeek({ threads, className = "" }: InboxPeekProps) {
         <span className="dh-card__eyebrow">
           INBOX{unreadCount > 0 ? ` · ${unreadCount} UNREAD` : ""}
         </span>
-        <Link href="/creator/inbox" className="dh-card__view-all">
-          OPEN →
+        <Link
+          href="/creator/inbox"
+          className="dh-circle-arrow"
+          aria-label="Open inbox"
+        >
+          <ArrowUpRight />
         </Link>
       </div>
 

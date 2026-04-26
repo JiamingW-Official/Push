@@ -11,6 +11,7 @@ import {
   TIER_LABELS,
 } from "@/lib/creator/widget-helpers";
 import type { Creator } from "../types";
+import { ArrowUpRight } from "../CircleArrow";
 
 const RING_R = 38;
 const RING_CIRC = 2 * Math.PI * RING_R; // ≈ 238.76
@@ -35,7 +36,9 @@ export function TierRing({ creator, className = "" }: TierRingProps) {
         <span className="dh-card__eyebrow">
           TIER · {tierLabel.toUpperCase()}
         </span>
-        <span className="dh-card__view-all">→</span>
+        <span className="dh-circle-arrow" aria-hidden="true">
+          <ArrowUpRight />
+        </span>
       </div>
 
       <div className="dh-tier">

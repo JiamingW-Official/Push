@@ -4,9 +4,9 @@
    6×2 — wraps the existing MapView component with KPI Card chrome. */
 
 import dynamic from "next/dynamic";
-import Link from "next/link";
 import { useState } from "react";
 import type { Campaign } from "../types";
+import { ArrowUpRight } from "../CircleArrow";
 
 const MapView = dynamic(() => import("@/components/layout/MapView"), {
   ssr: false,
@@ -35,11 +35,12 @@ export function NearbyMap({ campaigns, className = "" }: NearbyMapProps) {
             CAMPAIGNS NEAR YOU · {campaigns.length} within 1 mi
           </span>
           <button
-            className="dh-card__view-all"
+            className="dh-circle-arrow"
             onClick={() => setExpanded(true)}
             type="button"
+            aria-label="Expand map"
           >
-            EXPAND →
+            <ArrowUpRight />
           </button>
         </div>
         <div className="dh-map-wrap">

@@ -1,24 +1,21 @@
 "use client";
 
 /* ─────────────────────────────────────────────────────────────────────
- * Push — Creator Home (v2)
+ * Push — Creator Home (v2 · Lumin)
  *
- * Repo target: app/(creator)/creator/dashboard/page.tsx
- * Replaces the 3,226-line v3 monolith. Goal: ≤ 200 LOC, all rendering
- * delegated to widget components in components/creator/dashboard/widgets/.
+ * Layout (12-col grid, mockup-aligned):
  *
- * Authority:
- *   Design.md v11 (§ 8.13 sidebar / § 8.14 KPI grid / § 9 buttons)
- *   CREATOR_PSYCHOLOGY_v1.md (5-zone composition, state-aware widgets)
+ *   row 1: BalanceCard 4×5 | TodaysWork or OnboardingHero 8×3
+ *   row 2: ……………………… | NewMatches      4×2
+ *   row 3: ……………………… | NearbyMap       4×2
+ *   row 4: TierRing 4 | PipelineHealth 4 | AnalyticsPeek 4
+ *   row 5: ActivityTimeline 8×3 | InboxPeek 4×3
  *
  * State-aware lifecycle branching:
- *   - Day 0–7:   OnboardingHero replaces TodaysWork
- *   - Day 90+ (Closer/Partner): PipelineHealth replaces TierRing
+ *   - Day 0–7 OR active.length === 0  → OnboardingHero replaces TodaysWork
+ *   - Closer/Partner tier              → PipelineHealth + TierRing swap order
  *
- * Data:
- *   - Pulls from Supabase via existing pattern; falls back to demo data
- *     when the demo cookie is set or live fetch returns empty.
- *   - All formatters / derived data live in lib/creator/widget-helpers.ts.
+ * Authority: creator_home_mockup_day0_7.html · Lumin refs · Design.md v11
  * ───────────────────────────────────────────────────────────────────── */
 
 import { useEffect, useState } from "react";
@@ -30,39 +27,41 @@ import {
   getRecommended,
 } from "@/lib/creator/widget-helpers";
 
-import { HomeHeader }        from "@/components/creator/dashboard/HomeHeader";
-import { TodaysWork }        from "@/components/creator/dashboard/widgets/TodaysWork";
-import { OnboardingHero }    from "@/components/creator/dashboard/widgets/OnboardingHero";
-import { NewMatches }        from "@/components/creator/dashboard/widgets/NewMatches";
-import { NearbyMap }         from "@/components/creator/dashboard/widgets/NearbyMap";
-import { EarningsAmbient }   from "@/components/creator/dashboard/widgets/EarningsAmbient";
-import { TierRing }          from "@/components/creator/dashboard/widgets/TierRing";
-import { PipelineHealth }    from "@/components/creator/dashboard/widgets/PipelineHealth";
-import { AnalyticsPeek }     from "@/components/creator/dashboard/widgets/AnalyticsPeek";
-import { ActivityTimeline }  from "@/components/creator/dashboard/widgets/ActivityTimeline";
-import { InboxPeek }         from "@/components/creator/dashboard/widgets/InboxPeek";
+import { HomeHeader } from "@/components/creator/dashboard/HomeHeader";
+import { BalanceCard } from "@/components/creator/dashboard/widgets/BalanceCard";
+import { TodaysWork } from "@/components/creator/dashboard/widgets/TodaysWork";
+import { OnboardingHero } from "@/components/creator/dashboard/widgets/OnboardingHero";
+import { NewMatches } from "@/components/creator/dashboard/widgets/NewMatches";
+import { NearbyMap } from "@/components/creator/dashboard/widgets/NearbyMap";
+import { TierRing } from "@/components/creator/dashboard/widgets/TierRing";
+import { PipelineHealth } from "@/components/creator/dashboard/widgets/PipelineHealth";
+import { AnalyticsPeek } from "@/components/creator/dashboard/widgets/AnalyticsPeek";
+import { ActivityTimeline } from "@/components/creator/dashboard/widgets/ActivityTimeline";
+import { InboxPeek } from "@/components/creator/dashboard/widgets/InboxPeek";
 
 import type {
-  Application, Campaign, Creator, InboxThread, Payout,
+  Application,
+  Campaign,
+  Creator,
+  InboxThread,
+  Payout,
 } from "@/components/creator/dashboard/types";
 
 import "./grid.css";
 
-/* ── Demo cookie detection (kept from v3) ─────────────────────────── */
 function checkDemoMode(): boolean {
   if (typeof document === "undefined") return false;
   return document.cookie.includes("push-demo-role=creator");
 }
 
 export default function CreatorDashboardPage() {
-  const [creator,      setCreator]      = useState<Creator | null>(null);
-  const [campaigns,    setCampaigns]    = useState<Campaign[]>([]);
+  const [creator, setCreator] = useState<Creator | null>(null);
+  const [campaigns, setCampaigns] = useState<Campaign[]>([]);
   const [applications, setApplications] = useState<Application[]>([]);
-  const [payouts,      setPayouts]      = useState<Payout[]>([]);
-  const [threads,      setThreads]      = useState<InboxThread[]>([]);
-  const [loading,      setLoading]      = useState(true);
+  const [payouts, setPayouts] = useState<Payout[]>([]);
+  const [threads, setThreads] = useState<InboxThread[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  /* ── Fetch (or fall back to demo data) ──────────────────────────── */
   useEffect(() => {
     const isDemo = checkDemoMode();
     let cancelled = false;
@@ -87,13 +86,26 @@ export default function CreatorDashboardPage() {
         return;
       }
 
-      // Fetch in parallel — same queries as v3 page
       const [c, ca, ap, po, th] = await Promise.all([
-        supabase.from("creators").select("*").eq("id", session.session.user.id).single(),
+        supabase
+          .from("creators")
+          .select("*")
+          .eq("id", session.session.user.id)
+          .single(),
         supabase.from("campaigns").select("*").eq("status", "active").limit(50),
-        supabase.from("applications").select("*").eq("creator_id", session.session.user.id),
-        supabase.from("payouts").select("*").eq("creator_id", session.session.user.id),
-        supabase.from("inbox_threads").select("*").eq("creator_id", session.session.user.id).limit(10),
+        supabase
+          .from("applications")
+          .select("*")
+          .eq("creator_id", session.session.user.id),
+        supabase
+          .from("payouts")
+          .select("*")
+          .eq("creator_id", session.session.user.id),
+        supabase
+          .from("inbox_threads")
+          .select("*")
+          .eq("creator_id", session.session.user.id)
+          .limit(10),
       ]);
 
       if (cancelled) return;
@@ -106,7 +118,9 @@ export default function CreatorDashboardPage() {
     }
 
     load();
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   if (loading) {
@@ -126,12 +140,12 @@ export default function CreatorDashboardPage() {
   }
 
   /* ── Derived data ───────────────────────────────────────────────── */
-  const stage    = getLifecycleStage(creator);
-  const isNew    = stage === "day_0_7";
-  const isPro    = creator.tier === "closer" || creator.tier === "partner";
-  const active   = applications.filter((a) => a.status === "accepted");
+  const stage = getLifecycleStage(creator);
+  const isNew = stage === "day_0_7";
+  const isPro = creator.tier === "closer" || creator.tier === "partner";
+  const active = applications.filter((a) => a.status === "accepted");
   const recommended = getRecommended(campaigns, applications, creator.tier, 3);
-  const activity    = buildActivityFeed(applications, payouts, 6);
+  const activity = buildActivityFeed(applications, payouts, 6);
 
   return (
     <div className="dh-page">
@@ -142,64 +156,56 @@ export default function CreatorDashboardPage() {
       />
 
       <div className="dh-grid">
+        {/* ── HERO ROW ── */}
+        {/* Dark Balance card anchors top-left, spans 4 cols × 5 rows */}
+        <BalanceCard
+          creator={creator}
+          payouts={payouts}
+          className="dh-span-4-5"
+        />
 
-        {/* ── ACTION ZONE ── */}
+        {/* Today's Work hero (or Onboarding for new creators) — 8×3 */}
         {isNew || active.length === 0 ? (
           <OnboardingHero
             picks={recommended}
             creatorTier={creator.tier}
-            className="dh-span-6-3"
+            className="dh-span-8-3"
           />
         ) : (
           <TodaysWork
             applications={applications}
             creatorTier={creator.tier}
-            className="dh-span-6-3"
+            className="dh-span-8-3"
           />
         )}
 
+        {/* New Matches (4×2) sits to the right under TodaysWork */}
         <NewMatches
           recommended={recommended}
           creatorTier={creator.tier}
-          className="dh-span-3-3"
+          className="dh-span-4-2"
         />
 
-        {/* ── DISCOVERY ZONE ── */}
-        <NearbyMap
-          campaigns={campaigns}
-          className="dh-span-6-2"
-        />
+        {/* Map (4×2) — completes the right column under NewMatches */}
+        <NearbyMap campaigns={campaigns} className="dh-span-4-2" />
 
-        <EarningsAmbient
-          creator={creator}
-          payouts={payouts}
-          className="dh-span-3-2"
-        />
-
-        {/* ── STATUS ZONE — state-aware: Tier vs Pipeline ── */}
+        {/* ── STATUS ROW: 3 small cards across full width ── */}
         {isPro ? (
-          <PipelineHealth
-            applications={applications}
-            className="dh-span-3-1"
-          />
+          <>
+            <PipelineHealth
+              applications={applications}
+              className="dh-span-4-2"
+            />
+            <TierRing creator={creator} className="dh-span-4-2" />
+          </>
         ) : (
-          <TierRing
-            creator={creator}
-            className="dh-span-3-1"
-          />
-        )}
-
-        {/* When pro user, show TierRing too (smaller weight); else PipelineHealth */}
-        {isPro ? (
-          <TierRing
-            creator={creator}
-            className="dh-span-3-1"
-          />
-        ) : (
-          <PipelineHealth
-            applications={applications}
-            className="dh-span-3-1"
-          />
+          <>
+            <TierRing creator={creator} className="dh-span-4-2" />
+            <PipelineHealth
+              applications={applications}
+              className="dh-span-4-2"
+            />
+          </>
         )}
 
         <AnalyticsPeek
@@ -208,20 +214,12 @@ export default function CreatorDashboardPage() {
           scans={isNew ? undefined : 28}
           convPct={isNew ? undefined : 12}
           ctrPct={isNew ? undefined : 0.4}
-          className="dh-span-3-1"
+          className="dh-span-4-2"
         />
 
-        {/* ── HISTORY ZONE ── */}
-        <ActivityTimeline
-          entries={activity}
-          className="dh-span-6-2"
-        />
-
-        <InboxPeek
-          threads={threads}
-          className="dh-span-3-2"
-        />
-
+        {/* ── HISTORY ROW ── */}
+        <ActivityTimeline entries={activity} className="dh-span-8-3" />
+        <InboxPeek threads={threads} className="dh-span-4-3" />
       </div>
     </div>
   );
