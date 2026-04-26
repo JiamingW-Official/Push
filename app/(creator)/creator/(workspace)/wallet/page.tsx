@@ -1200,36 +1200,15 @@ export default function WalletPage() {
         </div>
       </header>
 
-      {/* Tabs */}
-      <nav
-        style={{
-          padding: "0 40px",
-          borderBottom: "2px solid var(--ink)",
-          display: "flex",
-          gap: 0,
-          background: "var(--snow)",
-        }}
-        aria-label="Wallet sections"
-      >
+      {/* Tabs — unified Liquid Glass pill (spec § 8.12) */}
+      <nav className="cw-chip-row" aria-label="Wallet sections">
         {TAB_LABELS.map(({ key, label }) => (
           <button
             key={key}
+            type="button"
             onClick={() => setTab(key)}
             aria-selected={tab === key}
-            style={{
-              padding: "14px 20px",
-              fontFamily: "var(--font-body)",
-              fontSize: 13,
-              fontWeight: 600,
-              color: tab === key ? "var(--ink)" : "var(--ink-4)",
-              background: "none",
-              border: "none",
-              borderBottom:
-                tab === key ? "2px solid var(--ink)" : "2px solid transparent",
-              cursor: "pointer",
-              letterSpacing: "0.02em",
-              transition: "color 0.15s",
-            }}
+            className={"cw-chip" + (tab === key ? " is-active" : "")}
           >
             {label}
           </button>

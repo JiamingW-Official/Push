@@ -326,23 +326,29 @@ a.cw-card:active { transform: translate(3px, 3px) scale(0.98); }
    ════════════════════════════════════════════════════════════ */
 
 /* Liquid-glass pill segmented control — the canonical Push horizontal
-   selector. Use everywhere a user picks one option from a small set
-   (analytics period, sort order, status filter, tab nav). */
+   selector. Authority: design-spec § 8.12 Nav Float Liquid Glass
+   (matches Push Marketing Nav). Same surface treatment everywhere a
+   user picks one option from a small set: analytics period, sort
+   order, wallet/inbox/notifications tabs, etc. */
 .cw-chip-row {
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  /* Liquid glass surface */
-  background: rgba(255, 255, 255, 0.62);
-  -webkit-backdrop-filter: blur(12px) saturate(180%);
-  backdrop-filter: blur(12px) saturate(180%);
-  border: 1px solid rgba(255, 255, 255, 0.46);
-  border-radius: 999px;
   padding: 4px;
+  /* Spec § 8.12 nav-float surface — full liquid-glass treatment */
+  background:
+    radial-gradient(ellipse at 25% 0%, rgba(255, 255, 255, 0.55) 0%, rgba(255, 255, 255, 0) 55%),
+    radial-gradient(ellipse at 90% 100%, rgba(255, 255, 255, 0.18) 0%, rgba(255, 255, 255, 0) 60%),
+    rgba(255, 255, 255, 0.22);
+  -webkit-backdrop-filter: blur(32px) saturate(180%);
+  backdrop-filter: blur(32px) saturate(180%);
+  border: 0.5px solid rgba(255, 255, 255, 0.40);
+  border-radius: 999px;
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.55),
-    0 1px 2px rgba(10, 10, 10, 0.05),
-    0 4px 12px rgba(10, 10, 10, 0.04);
+    0 8px 24px rgba(10, 10, 10, 0.08),
+    0 2px 6px rgba(10, 10, 10, 0.05),
+    inset 0 1px 0 rgba(255, 255, 255, 0.50),
+    inset 0 -1px 0 rgba(10, 10, 10, 0.05);
 }
 
 .cw-chip {
@@ -745,17 +751,22 @@ a.cw-card:active { transform: translate(3px, 3px) scale(0.98); }
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  background: rgba(255, 255, 255, 0.62);
-  -webkit-backdrop-filter: blur(12px) saturate(180%);
-  backdrop-filter: blur(12px) saturate(180%);
-  border: 1px solid rgba(255, 255, 255, 0.46);
-  border-radius: 999px;
   padding: 4px;
   margin-bottom: 24px;
+  /* Spec § 8.12 nav-float */
+  background:
+    radial-gradient(ellipse at 25% 0%, rgba(255, 255, 255, 0.55) 0%, rgba(255, 255, 255, 0) 55%),
+    radial-gradient(ellipse at 90% 100%, rgba(255, 255, 255, 0.18) 0%, rgba(255, 255, 255, 0) 60%),
+    rgba(255, 255, 255, 0.22);
+  -webkit-backdrop-filter: blur(32px) saturate(180%);
+  backdrop-filter: blur(32px) saturate(180%);
+  border: 0.5px solid rgba(255, 255, 255, 0.40);
+  border-radius: 999px;
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.55),
-    0 1px 2px rgba(10, 10, 10, 0.05),
-    0 4px 12px rgba(10, 10, 10, 0.04);
+    0 8px 24px rgba(10, 10, 10, 0.08),
+    0 2px 6px rgba(10, 10, 10, 0.05),
+    inset 0 1px 0 rgba(255, 255, 255, 0.50),
+    inset 0 -1px 0 rgba(10, 10, 10, 0.05);
 }
 .cw-tab {
   display: inline-flex;
@@ -858,7 +869,7 @@ a.cw-card:active { transform: translate(3px, 3px) scale(0.98); }
    called ugly. Every horizontal menu now matches the spec screenshot.
    ════════════════════════════════════════════════════════════ */
 
-/* Containers — adopt .cw-chip-row look */
+/* Containers — adopt spec § 8.12 nav-float look */
 .cw-page :is(
   .notif-tabs, .pl-tabs, .wallet-tabs, .ix-tabs, .pf-tabs,
   .pl-toolbar, .wt-stats-row, .an-period-row,
@@ -869,18 +880,22 @@ a.cw-card:active { transform: translate(3px, 3px) scale(0.98); }
   display: inline-flex !important;
   align-items: center !important;
   gap: 4px !important;
-  background: rgba(255, 255, 255, 0.62) !important;
-  backdrop-filter: blur(12px) saturate(180%) !important;
-  -webkit-backdrop-filter: blur(12px) saturate(180%) !important;
-  border: 1px solid rgba(255, 255, 255, 0.46) !important;
-  border-radius: 999px !important;
   padding: 4px !important;
   margin-bottom: 16px !important;
+  background:
+    radial-gradient(ellipse at 25% 0%, rgba(255, 255, 255, 0.55) 0%, rgba(255, 255, 255, 0) 55%),
+    radial-gradient(ellipse at 90% 100%, rgba(255, 255, 255, 0.18) 0%, rgba(255, 255, 255, 0) 60%),
+    rgba(255, 255, 255, 0.22) !important;
+  backdrop-filter: blur(32px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(32px) saturate(180%) !important;
+  border: 0.5px solid rgba(255, 255, 255, 0.40) !important;
+  border-radius: 999px !important;
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.55),
-    0 1px 2px rgba(10, 10, 10, 0.05),
-    0 4px 12px rgba(10, 10, 10, 0.04) !important;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.46) !important;
+    0 8px 24px rgba(10, 10, 10, 0.08),
+    0 2px 6px rgba(10, 10, 10, 0.05),
+    inset 0 1px 0 rgba(255, 255, 255, 0.50),
+    inset 0 -1px 0 rgba(10, 10, 10, 0.05) !important;
+  border-bottom: 0.5px solid rgba(255, 255, 255, 0.40) !important;
 }
 
 /* Items — adopt .cw-chip look */
