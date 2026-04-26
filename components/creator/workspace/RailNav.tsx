@@ -1,17 +1,28 @@
 "use client";
 
-/* Repo target: components/creator/dashboard/RailNav.tsx
-   Lumin-style collapsible glass rail — 64px collapsed, 200px on hover.
-   Replaces the heavier workspace SideNav for the dashboard shell. */
+/* Repo target: components/creator/workspace/RailNav.tsx
+   Modernized collapsible glass rail. Mixes Darky display weights with
+   monospace meta rather than mono-everywhere typewriter feel. Live data
+   badges (campaigns / unread / payout amount) pulled from demo data so
+   the rail has personality instead of being a generic AI nav. */
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+import { useDashboardCounts } from "./useDashboardCounts";
 
 type RailItem = {
   href: string;
   label: string;
   icon: React.ReactNode;
+  badgeKey?:
+    | "today"
+    | "active"
+    | "matches"
+    | "earnings"
+    | "scans"
+    | "unread"
+    | "rank";
 };
 
 type RailSection = {
@@ -21,28 +32,59 @@ type RailSection = {
 
 const SECTIONS: RailSection[] = [
   {
-    label: "EARN",
+    label: "Earn",
     items: [
-      { href: "/creator/dashboard", label: "Home", icon: <IconHome /> },
-      { href: "/creator/work", label: "Work", icon: <IconWork /> },
-      { href: "/creator/discover", label: "Discover", icon: <IconSearch /> },
+      {
+        href: "/creator/dashboard",
+        label: "Home",
+        icon: <IconHome />,
+        badgeKey: "today",
+      },
+      {
+        href: "/creator/work",
+        label: "Work",
+        icon: <IconWork />,
+        badgeKey: "active",
+      },
+      {
+        href: "/creator/discover",
+        label: "Discover",
+        icon: <IconCompass />,
+        badgeKey: "matches",
+      },
     ],
   },
   {
-    label: "MONEY",
+    label: "Money",
     items: [
-      { href: "/creator/earnings", label: "Earnings", icon: <IconDollar /> },
-      { href: "/creator/analytics", label: "Analytics", icon: <IconChart /> },
+      {
+        href: "/creator/earnings",
+        label: "Earnings",
+        icon: <IconWallet />,
+        badgeKey: "earnings",
+      },
+      {
+        href: "/creator/analytics",
+        label: "Analytics",
+        icon: <IconChart />,
+        badgeKey: "scans",
+      },
     ],
   },
   {
-    label: "COMMUNITY",
+    label: "Community",
     items: [
-      { href: "/creator/inbox", label: "Inbox", icon: <IconInbox /> },
+      {
+        href: "/creator/inbox",
+        label: "Inbox",
+        icon: <IconInbox />,
+        badgeKey: "unread",
+      },
       {
         href: "/creator/leaderboard",
         label: "Leaderboard",
-        icon: <IconStar />,
+        icon: <IconTrophy />,
+        badgeKey: "rank",
       },
     ],
   },
@@ -59,6 +101,7 @@ export function RailNav() {
   const expandTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const collapseTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const searchRef = useRef<HTMLInputElement>(null);
+  const counts = useDashboardCounts();
 
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
@@ -98,7 +141,7 @@ export function RailNav() {
         aria-label="Push home"
       >
         <span className="rl__monogram">P</span>
-        <span className="rl__wordmark">PUSH</span>
+        <span className="rl__wordmark">Push</span>
       </Link>
 
       <div className="rl__search">
@@ -109,29 +152,44 @@ export function RailNav() {
           ref={searchRef}
           type="search"
           className="rl__search-input"
-          placeholder="Search ( / )"
+          placeholder="Search"
           aria-label="Search"
         />
+        <kbd className="rl__search-hint" aria-hidden="true">
+          /
+        </kbd>
       </div>
 
       <nav className="rl__sections" aria-label="Primary">
         {SECTIONS.map((section) => (
           <div key={section.label} className="rl__section">
             <span className="rl__section-label">{section.label}</span>
-            {section.items.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={
-                  "rl__item" + (isActive(item.href) ? " is-active" : "")
-                }
-              >
-                <span className="rl__item-icon" aria-hidden="true">
-                  {item.icon}
-                </span>
-                <span className="rl__item-label">{item.label}</span>
-              </Link>
-            ))}
+            {section.items.map((item) => {
+              const active = isActive(item.href);
+              const badge = item.badgeKey ? counts[item.badgeKey] : undefined;
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={"rl__item" + (active ? " is-active" : "")}
+                >
+                  <span className="rl__item-icon" aria-hidden="true">
+                    {item.icon}
+                  </span>
+                  <span className="rl__item-label">{item.label}</span>
+                  {badge && (
+                    <span
+                      className={
+                        "rl__badge" +
+                        (badge.tone ? ` rl__badge--${badge.tone}` : "")
+                      }
+                    >
+                      {badge.label}
+                    </span>
+                  )}
+                </Link>
+              );
+            })}
           </div>
         ))}
       </nav>
@@ -149,12 +207,22 @@ export function RailNav() {
             <span className="rl__item-label">{item.label}</span>
           </Link>
         ))}
+
+        <div className="rl__avatar-row">
+          <span className="rl__avatar" aria-hidden="true">
+            A
+          </span>
+          <div className="rl__avatar-meta">
+            <span className="rl__avatar-name">Alex Chen</span>
+            <span className="rl__avatar-tier">Operator · 71</span>
+          </div>
+        </div>
       </div>
     </aside>
   );
 }
 
-/* ── Inline icons (Lucide-style, 20×20 stroke 2) ─────────────────── */
+/* ── Inline icons (Lucide-style, 20×20 stroke 1.75) ─────────────── */
 
 function svgProps() {
   return {
@@ -163,7 +231,7 @@ function svgProps() {
     viewBox: "0 0 24 24",
     fill: "none" as const,
     stroke: "currentColor",
-    strokeWidth: 2,
+    strokeWidth: 1.75,
     strokeLinecap: "round" as const,
     strokeLinejoin: "round" as const,
   };
@@ -182,6 +250,19 @@ function IconWork() {
     <svg {...svgProps()}>
       <rect x="3" y="6" width="18" height="14" rx="2" />
       <path d="M3 10h18" />
+      <path d="M9 6V4h6v2" />
+    </svg>
+  );
+}
+function IconCompass() {
+  return (
+    <svg {...svgProps()}>
+      <circle cx="12" cy="12" r="9" />
+      <polygon
+        points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"
+        fill="currentColor"
+        fillOpacity="0.18"
+      />
     </svg>
   );
 }
@@ -193,20 +274,21 @@ function IconSearch() {
     </svg>
   );
 }
-function IconDollar() {
+function IconWallet() {
   return (
     <svg {...svgProps()}>
-      <line x1="12" y1="2" x2="12" y2="22" />
-      <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+      <rect x="3" y="6" width="18" height="14" rx="3" />
+      <path d="M3 10h18" />
+      <circle cx="17" cy="15" r="1.5" fill="currentColor" />
     </svg>
   );
 }
 function IconChart() {
   return (
     <svg {...svgProps()}>
-      <line x1="18" y1="20" x2="18" y2="10" />
-      <line x1="12" y1="20" x2="12" y2="4" />
-      <line x1="6" y1="20" x2="6" y2="14" />
+      <path d="M4 19V5" />
+      <path d="M4 19h16" />
+      <path d="M7 16l4-4 3 3 5-7" />
     </svg>
   );
 }
@@ -218,10 +300,13 @@ function IconInbox() {
     </svg>
   );
 }
-function IconStar() {
+function IconTrophy() {
   return (
     <svg {...svgProps()}>
-      <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+      <path d="M6 4h12v6a6 6 0 0 1-12 0V4z" />
+      <path d="M6 6H3v2a3 3 0 0 0 3 3" />
+      <path d="M18 6h3v2a3 3 0 0 1-3 3" />
+      <path d="M9 16h6l-1 4h-4l-1-4z" />
     </svg>
   );
 }
