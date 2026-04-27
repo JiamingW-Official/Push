@@ -1,0 +1,480 @@
+/* ─────────────────────────────────────────────────────────────────────
+ * Push — Unified Sidebar (per-item pill flyout, fixed full-height rail)
+ *
+ * Default state: a 72px column pinned to the viewport (position: fixed,
+ * never scrolls). No rail chrome — only floating dark-ink icons over the
+ * page surface.
+ *
+ * Hover state: ONLY the hovered item's pill expands rightward into a
+ * dark liquid-glass capsule that reveals its label. Other items remain
+ * collapsed. The expanded pill overlays main content via z-index.
+ *
+ * Authority: Design.md v11 § 8.9 (Liquid Glass), § 9 (no per-page custom),
+ *            globals.css `--ease-spring` (cubic-bezier(0.34, 1.56, 0.64, 1))
+ * ───────────────────────────────────────────────────────────────────── */
+
+:root {
+  --us-w:        72px;
+  --us-tile:     48px;
+  --us-icon:     22px;
+  --us-pad-x:    12px;
+  --us-pill-max: 320px;
+  /* Premium, deliberate timings. Hover-in is unhurried (Apple's smooth
+     ease) so the pill "settles" rather than springs. Hover-out is a touch
+     quicker so leaving feels light. */
+  --us-t-in:     260ms;
+  --us-t-out:    180ms;
+  --us-t-fast:   160ms;
+  --us-t-base:   var(--us-t-in);
+  /* Apple "Material" smooth — no overshoot, heavier deceleration. */
+  --us-ease:     cubic-bezier(0.16, 1, 0.3, 1);
+  --us-ease-out: cubic-bezier(0.4, 0, 0.2, 1);
+  /* Light dark-glass tint — matches design-system --lg-surface-dark token.
+     Subtle, premium iOS 26 frosted feel; no heavy black blob. */
+  --us-glass-bg:
+    radial-gradient(ellipse at 30% 0%,    rgba(255, 255, 255, 0.10) 0%, rgba(255, 255, 255, 0) 55%),
+    rgba(40, 36, 32, 0.32);
+}
+
+/* ════════════════════════════════════════════════════════════
+   RAIL — fixed full-viewport-height column
+   ════════════════════════════════════════════════════════════ */
+
+.us-rail {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: var(--us-w);
+  height: 100vh;
+  z-index: 100;
+
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  padding: 14px 0 16px;
+
+  background: transparent;
+  pointer-events: none;       /* let main content receive events outside items */
+}
+
+/* Each interactive child re-enables pointer events */
+.us-rail .us-item,
+.us-rail .us-nav,
+.us-rail .us-foot {
+  pointer-events: auto;
+}
+
+/* ════════════════════════════════════════════════════════════
+   NAV — primary stack, scrolls internally if many items
+   ════════════════════════════════════════════════════════════ */
+
+.us-nav {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  padding-top: 4px;
+  /* MUST stay visible — any non-visible axis forces both axes to clip per
+     CSS spec, which would chop off the per-item flyout pills horizontally. */
+  overflow: visible;
+}
+
+/* ════════════════════════════════════════════════════════════
+   ITEM — 48×48 hit slot, holds the absolutely-positioned pill
+   ════════════════════════════════════════════════════════════ */
+
+.us-item {
+  position: relative;
+  width: var(--us-tile);
+  height: var(--us-tile);
+  margin: 2px var(--us-pad-x);
+  flex-shrink: 0;
+  text-decoration: none;
+  /* Keep stacking context for the absolute pill child */
+  display: block;
+}
+.us-item:hover {
+  z-index: 200;
+}
+
+/* Pill — the actual visible capsule, anchored to item's top-left */
+.us-item__pill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: var(--us-tile);
+  display: flex;
+  align-items: center;
+
+  width: max-content;
+  max-width: var(--us-tile);
+  border-radius: var(--r-lg, 12px);
+  overflow: hidden;
+
+  background: transparent;
+  color: var(--ink);
+
+  -webkit-backdrop-filter: blur(0) saturate(100%);
+  backdrop-filter:         blur(0) saturate(100%);
+  box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
+
+  /* Hover-out timing (mouse leaves) — quick, light. Overridden on
+     :hover to a smoother, slightly slower ease-in so the pill settles. */
+  transition:
+    max-width        var(--us-t-out) var(--us-ease-out),
+    background       var(--us-t-out) var(--us-ease-out),
+    color            var(--us-t-out) var(--us-ease-out),
+    box-shadow       var(--us-t-out) var(--us-ease-out),
+    backdrop-filter  var(--us-t-out) var(--us-ease-out),
+    border-color     var(--us-t-out) var(--us-ease-out);
+}
+
+/* Hover — only THIS item's pill expands into a frosted glass capsule.
+   Smooth Apple ease-in plus slight stagger lets the pill "settle". */
+.us-item:hover .us-item__pill {
+  max-width: var(--us-pill-max);
+  background: var(--us-glass-bg);
+  color: var(--snow);
+  border: 0.5px solid rgba(255, 255, 255, 0.16);
+  box-shadow:
+    0 6px 20px rgba(0, 0, 0, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.16);
+  -webkit-backdrop-filter: blur(36px) saturate(180%);
+  backdrop-filter:         blur(36px) saturate(180%);
+  transition:
+    max-width        var(--us-t-in)   var(--us-ease),
+    background       var(--us-t-fast) var(--us-ease) 40ms,
+    color            var(--us-t-fast) var(--us-ease) 60ms,
+    box-shadow       var(--us-t-in)   var(--us-ease),
+    backdrop-filter  var(--us-t-fast) var(--us-ease) 30ms,
+    border-color     var(--us-t-fast) var(--us-ease) 40ms;
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .us-item:hover .us-item__pill {
+    background: var(--char, #3a3835);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+}
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .us-item:hover .us-item__pill { background: rgba(28, 24, 20, 0.96); }
+}
+
+/* ICON — 48×48 slot inside the pill, SVG centered */
+.us-item__icon {
+  position: relative;
+  width: var(--us-tile);
+  height: var(--us-tile);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: inherit;
+  opacity: 0.62;
+  transition: opacity var(--us-t-fast) ease-out;
+}
+.us-item__icon svg {
+  width: var(--us-icon);
+  height: var(--us-icon);
+  color: inherit;
+}
+.us-item:hover .us-item__icon {
+  opacity: 1;
+  /* No scale — premium feels comes from steady, not jumpy. */
+}
+
+/* LABEL — always present in the DOM, simply unveiled by the pill's
+   expanding max-width clipping. No opacity tween, no translate, no
+   delay — the smoothest reveal is no transition at all.
+   Darky display per Design.md typographic intent for product chrome. */
+.us-item__label {
+  flex: 0 0 auto;
+  padding: 0 22px 0 6px;
+  font-family: var(--font-display, 'Darky', sans-serif);
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: -0.012em;
+  color: inherit;
+  white-space: nowrap;
+  line-height: 1;
+}
+
+/* ACTIVE — current page gets a subtle resting tile (Instagram-style) */
+.us-item.is-active .us-item__pill {
+  background: rgba(40, 36, 32, 0.10);
+}
+.us-item.is-active .us-item__icon { opacity: 1; }
+.us-item.is-active .us-item__label { font-weight: 700; }
+
+/* Active + hover — explicit override so the glass treatment wins
+   (otherwise .us-item.is-active rule beats .us-item:hover by specificity) */
+.us-item.is-active:hover .us-item__pill {
+  max-width: var(--us-pill-max);
+  background: var(--us-glass-bg);
+  color: var(--snow);
+  border: 0.5px solid rgba(255, 255, 255, 0.16);
+  box-shadow:
+    0 6px 20px rgba(0, 0, 0, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.16);
+  -webkit-backdrop-filter: blur(36px) saturate(180%);
+  backdrop-filter:         blur(36px) saturate(180%);
+}
+
+/* Pressed — extremely subtle, no spring */
+.us-item:active .us-item__pill {
+  background: rgba(40, 36, 32, 0.42);
+}
+
+/* ════════════════════════════════════════════════════════════
+   LOGO — first slot, monogram in 48 tile
+   ════════════════════════════════════════════════════════════ */
+
+.us-item--logo { margin-bottom: 6px; }
+.us-logo__mark {
+  font-family: var(--font-display, 'Darky', sans-serif);
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  color: inherit;
+}
+.us-item--logo .us-item__label {
+  font-family: var(--font-display, 'Darky', sans-serif);
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  text-transform: none;
+}
+
+/* ════════════════════════════════════════════════════════════
+   BADGE — notification count on bell icon
+   ════════════════════════════════════════════════════════════ */
+
+.us-badge {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  min-width: 16px;
+  height: 16px;
+  padding: 0 4px;
+  border-radius: 999px;
+  background: var(--brand-red, #c1121f);
+  color: var(--snow);
+  font-family: var(--font-mono, monospace);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1.5px solid #ffffff;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.18);
+  font-variant-numeric: tabular-nums;
+  pointer-events: none;
+  transition: border-color var(--us-t-fast) ease-out;
+}
+.us-item:hover .us-badge {
+  border-color: rgba(40, 36, 32, 0.86);
+}
+
+/* ════════════════════════════════════════════════════════════
+   FOOT — Notifications → Settings → Avatar
+   ════════════════════════════════════════════════════════════ */
+
+.us-foot {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding-top: 8px;
+  margin-top: 6px;
+  flex-shrink: 0;
+}
+.us-foot::before {
+  content: "";
+  display: block;
+  height: 0.5px;
+  margin: 0 var(--us-pad-x) 6px;
+  background: rgba(40, 36, 32, 0.18);
+}
+
+/* ════════════════════════════════════════════════════════════
+   AVATAR — circular monogram inside the icon slot
+   ════════════════════════════════════════════════════════════ */
+
+.us-avatar-circle {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, rgba(40, 36, 32, 0.20) 0%, rgba(40, 36, 32, 0.06) 100%);
+  border: 0.5px solid rgba(40, 36, 32, 0.22);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18);
+  transition:
+    background var(--us-t-fast) ease-out,
+    border-color var(--us-t-fast) ease-out;
+}
+.us-item:hover .us-avatar-circle {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.20) 0%, rgba(255, 255, 255, 0.06) 100%);
+  border-color: rgba(255, 255, 255, 0.28);
+}
+.us-avatar-circle__initial {
+  font-family: var(--font-display, 'Darky', sans-serif);
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: inherit;
+}
+.us-avatar-circle__img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+/* ════════════════════════════════════════════════════════════
+   RESPONSIVE — mobile bottom dock
+   ════════════════════════════════════════════════════════════ */
+
+@media (max-width: 768px) {
+  .us-rail {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    top: auto;
+    width: 100%;
+    height: 56px;
+    flex-direction: row;
+    align-items: center;
+    padding: 6px 12px;
+    background: var(--us-glass-bg);
+    -webkit-backdrop-filter: blur(40px) saturate(180%);
+    backdrop-filter:         blur(40px) saturate(180%);
+    border-top: 0.5px solid rgba(255, 255, 255, 0.10);
+    box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.18);
+    pointer-events: auto;
+    overflow-x: auto;
+    overflow-y: hidden;
+  }
+  .us-nav {
+    flex-direction: row;
+    flex: 1;
+    padding: 0;
+    gap: 2px;
+    align-items: center;
+    overflow-x: auto;
+    overflow-y: hidden;
+  }
+  .us-foot {
+    flex-direction: row;
+    margin-top: 0;
+    padding-top: 0;
+    gap: 2px;
+  }
+  .us-foot::before { display: none; }
+  .us-item { margin: 0 1px; }
+  .us-item__pill {
+    color: var(--snow);
+  }
+  .us-item__icon { color: inherit; }
+  .us-item__label,
+  .us-item:hover .us-item__label { display: none; }
+  .us-item:hover .us-item__pill { max-width: var(--us-tile); border: none; box-shadow: none; }
+  .us-item.is-active .us-item__pill { background: rgba(255, 255, 255, 0.16); }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .us-item__pill, .us-item__icon, .us-avatar-circle, .us-badge {
+    transition: none !important;
+  }
+}
+
+/* ════════════════════════════════════════════════════════════
+   PURE-WHITE PAGE BG + 30% L/R GUTTER FRAME
+   When the unified sidebar is mounted:
+     1. html / body / shells / mains are pure #ffffff
+     2. ALL `*-page` wrappers (.cw-page, .an-page, .in-page, etc.)
+        drop their cream/Pearl-Stone fill so the white passes through
+     3. The first child of <main> gets a 30% L/R gutter so content
+        sits as an editorial center column with airy whitespace
+   ════════════════════════════════════════════════════════════ */
+
+html:has(.us-rail),
+body:has(.us-rail) {
+  background: #ffffff !important;
+}
+body:has(.us-rail) .adm-shell,
+body:has(.us-rail) .adm-main,
+body:has(.us-rail) .ms-shell,
+body:has(.us-rail) .ms-main-content,
+body:has(.us-rail) .dh-shell,
+body:has(.us-rail) .dh-main {
+  background: #ffffff !important;
+}
+
+/* Strip all page-wrapper bgs — let main's white pass through.
+   Targets every product page wrapper class ending in `-page`. */
+body:has(.us-rail) main [class*="-page"] {
+  background: transparent !important;
+}
+
+/* 30% L/R gutter on the main content column.
+   We push padding onto <main> directly; existing inner page wrappers
+   already strip their own padding via the -page rule above. */
+body:has(.us-rail) .adm-main,
+body:has(.us-rail) .ms-main-content,
+body:has(.us-rail) .dh-main {
+  padding-left: 30%;
+  padding-right: 30%;
+  padding-top: 56px;
+  padding-bottom: 96px;
+}
+
+/* Inner page wrappers should fill the gutter-defined column without
+   adding their own L/R padding (which would double-up the gutters). */
+body:has(.us-rail) main [class*="-page"] {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  max-width: none !important;
+  width: 100% !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+
+/* Responsive — wide gutters work on big screens, scale down sensibly */
+@media (max-width: 1600px) {
+  body:has(.us-rail) .adm-main,
+  body:has(.us-rail) .ms-main-content,
+  body:has(.us-rail) .dh-main {
+    padding-left: 22%;
+    padding-right: 22%;
+  }
+}
+@media (max-width: 1280px) {
+  body:has(.us-rail) .adm-main,
+  body:has(.us-rail) .ms-main-content,
+  body:has(.us-rail) .dh-main {
+    padding-left: 12%;
+    padding-right: 12%;
+  }
+}
+@media (max-width: 1024px) {
+  body:has(.us-rail) .adm-main,
+  body:has(.us-rail) .ms-main-content,
+  body:has(.us-rail) .dh-main {
+    padding-left: 6%;
+    padding-right: 6%;
+  }
+}
+@media (max-width: 768px) {
+  body:has(.us-rail) .adm-main,
+  body:has(.us-rail) .ms-main-content,
+  body:has(.us-rail) .dh-main {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+}

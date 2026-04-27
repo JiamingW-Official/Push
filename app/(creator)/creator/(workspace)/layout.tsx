@@ -1,29 +1,30 @@
-// Push — Creator Workspace layout (Lumin shell)
+// Push — Creator Workspace layout
 //
-// Replaces the heavy TopNav + SideNav + ContextPanel + MobileNav stack with
-// a single collapsible glass rail (72→248px on hover). Every creator page
-// in (workspace)/ inherits this chrome and the shared `.cw-*` card system.
-//
-// Authority:
-//   push-design-spec § 8.13 sidebar (248px, glass blur 32+sat180)
-//   creator_home_mockup_day0_7.html (collapse interaction)
-//   Design.md v11 § 1 r9 Product UI register
+// 2-column portal: [72px icon rail] [1fr main content]
+// The icon rail is the shared UnifiedSidebar; main scrolls independently.
 
 import type { ReactNode } from "react";
-import { RailNav } from "@/components/creator/workspace/RailNav";
+import { UnifiedSidebar } from "@/components/shell/UnifiedSidebar";
 import { CommandKProvider } from "@/components/search/CommandKProvider";
+import { DEMO_CREATOR } from "@/lib/creator/demo-data";
 
 import "@/components/creator/workspace/lumin-shell.css";
 import "@/components/creator/workspace/lumin-cards.css";
 
 export default function WorkspaceLayout({ children }: { children: ReactNode }) {
+  const initial = DEMO_CREATOR.name.charAt(0).toUpperCase();
+
   return (
     <CommandKProvider>
       <a href="#cw-main-content" className="dh-skip">
         Skip to main content
       </a>
       <div className="dh-shell">
-        <RailNav />
+        <UnifiedSidebar
+          role="creator"
+          userInitial={initial}
+          userName={DEMO_CREATOR.name}
+        />
         <main id="cw-main-content" className="dh-main">
           {children}
         </main>
