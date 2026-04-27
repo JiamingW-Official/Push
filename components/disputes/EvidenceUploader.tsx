@@ -154,12 +154,12 @@ export function EvidenceUploader({
             letterSpacing: "0.05em",
             textTransform: "uppercase",
             background: "var(--surface)",
-            border: "1px solid var(--line)",
+            border: "1px solid var(--mist)",
             padding: "8px 16px",
             cursor: "pointer",
-            borderRadius: "var(--r-lg)",
+            borderRadius: "8px",
             whiteSpace: "nowrap",
-            color: "var(--dark)",
+            color: "var(--ink)",
           }}
         >
           Add link

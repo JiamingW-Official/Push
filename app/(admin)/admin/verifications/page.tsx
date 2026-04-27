@@ -54,12 +54,19 @@ function Avatar({
 }) {
   return (
     <div
-      className="vq-avatar"
       style={{
-        background: color,
         width: size,
         height: size,
+        borderRadius: "50%",
+        background: color,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
         fontSize: size * 0.36,
+        fontWeight: 800,
+        fontFamily: "var(--font-display)",
+        color: "var(--snow)",
+        flexShrink: 0,
       }}
     >
       {initials}
@@ -78,25 +85,86 @@ function ChecklistCell({
     address: "ADR",
   };
   return (
-    <div className="vq-checklist">
-      {checklist.map((item) => (
-        <span key={item.stage} className={`vq-check ${item.status}`}>
-          <span className="vq-check-dot" />
-          {ABBR[item.stage]}
-        </span>
-      ))}
+    <div style={{ display: "flex", gap: 6 }}>
+      {checklist.map((item) => {
+        const done = item.status === "complete";
+        const pending = item.status === "pending";
+        return (
+          <span
+            key={item.stage}
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 4,
+              padding: "2px 7px",
+              borderRadius: 4,
+              fontSize: 10,
+              fontWeight: 700,
+              fontFamily: "var(--font-body)",
+              letterSpacing: "0.05em",
+              background: done
+                ? "rgba(0,133,255,0.08)"
+                : pending
+                  ? "var(--panel-butter)"
+                  : "var(--surface-3)",
+              color: done
+                ? "var(--accent-blue)"
+                : pending
+                  ? "var(--ink-3)"
+                  : "var(--ink-4)",
+            }}
+          >
+            <span
+              style={{
+                width: 6,
+                height: 6,
+                borderRadius: "50%",
+                background: done
+                  ? "var(--accent-blue)"
+                  : pending
+                    ? "var(--ink-3)"
+                    : "var(--ink-4)",
+                display: "inline-block",
+              }}
+            />
+            {ABBR[item.stage]}
+          </span>
+        );
+      })}
     </div>
   );
 }
 
 function RiskFlags({ flags }: { flags: RiskFlag[] }) {
   if (flags.length === 0) {
-    return <span className="vq-flag-none">—</span>;
+    return (
+      <span
+        style={{
+          fontSize: 12,
+          fontFamily: "var(--font-body)",
+          color: "var(--ink-4)",
+        }}
+      >
+        —
+      </span>
+    );
   }
   return (
-    <div className="vq-flags">
+    <div style={{ display: "flex", flexWrap: "wrap", gap: 4 }}>
       {flags.map((f) => (
-        <span key={f} className="vq-flag">
+        <span
+          key={f}
+          style={{
+            padding: "2px 7px",
+            borderRadius: 4,
+            fontSize: 10,
+            fontWeight: 700,
+            fontFamily: "var(--font-body)",
+            background: "rgba(193,18,31,0.07)",
+            color: "var(--brand-red)",
+            textTransform: "capitalize",
+          }}
+        >
           {formatRiskFlag(f)}
         </span>
       ))}
@@ -112,7 +180,27 @@ function StatusBadge({ status }: { status: VerificationStatus }) {
     more_info: "More Info",
   };
   if (status === "pending") return null;
-  return <span className={`vq-status-badge ${status}`}>{labels[status]}</span>;
+  const colors: Record<string, { bg: string; color: string }> = {
+    approved: { bg: "rgba(0,133,255,0.08)", color: "var(--accent-blue)" },
+    rejected: { bg: "rgba(193,18,31,0.08)", color: "var(--brand-red)" },
+    more_info: { bg: "var(--panel-butter)", color: "var(--ink-3)" },
+  };
+  const c = colors[status] ?? { bg: "var(--surface-3)", color: "var(--ink-4)" };
+  return (
+    <span
+      style={{
+        padding: "2px 8px",
+        borderRadius: 4,
+        fontSize: 11,
+        fontWeight: 700,
+        fontFamily: "var(--font-body)",
+        background: c.bg,
+        color: c.color,
+      }}
+    >
+      {labels[status]}
+    </span>
+  );
 }
 
 // ---------------------------------------------------------------------------
@@ -160,28 +248,92 @@ function DetailPanel({
     address: "Address",
   };
 
+  const sectionHead: React.CSSProperties = {
+    fontSize: 11,
+    fontWeight: 700,
+    letterSpacing: "0.07em",
+    fontFamily: "var(--font-body)",
+    color: "var(--ink-4)",
+    textTransform: "uppercase",
+    marginBottom: 10,
+    paddingBottom: 8,
+    borderBottom: "1px solid var(--hairline)",
+  };
+
   return (
     <>
       {/* Overlay */}
-      <div className="vq-overlay" onClick={onClose} />
+      <div
+        style={{
+          position: "fixed",
+          inset: 0,
+          background: "rgba(0,0,0,0.3)",
+          zIndex: 100,
+        }}
+        onClick={onClose}
+      />
 
       {/* Panel */}
       <aside
-        className="vq-panel"
+        style={{
+          position: "fixed",
+          top: 0,
+          right: 0,
+          width: "min(480px, 95vw)",
+          height: "100vh",
+          background: "var(--surface-2)",
+          borderLeft: "1px solid var(--hairline)",
+          boxShadow: "var(--shadow-3)",
+          zIndex: 101,
+          display: "flex",
+          flexDirection: "column",
+          overflow: "hidden",
+        }}
         role="dialog"
         aria-label="Verification detail"
       >
         {/* Header */}
-        <div className="vq-panel-header">
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 12,
+            padding: "20px 24px",
+            borderBottom: "1px solid var(--hairline)",
+            flexShrink: 0,
+          }}
+        >
           <Avatar
             initials={v.applicant_initials}
             color={v.avatar_color}
             size={40}
           />
-          <div className="vq-panel-title">{v.applicant_display}</div>
+          <div
+            style={{
+              flex: 1,
+              fontFamily: "var(--font-display)",
+              fontSize: 16,
+              fontWeight: 700,
+              color: "var(--ink)",
+            }}
+          >
+            {v.applicant_display}
+          </div>
           {v.status !== "pending" && <StatusBadge status={v.status} />}
           <button
-            className="vq-panel-close"
+            style={{
+              width: 32,
+              height: 32,
+              border: "1px solid var(--hairline)",
+              borderRadius: 6,
+              background: "var(--surface-3)",
+              cursor: "pointer",
+              fontSize: 14,
+              color: "var(--ink-4)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
             onClick={onClose}
             aria-label="Close panel"
           >
@@ -190,219 +342,419 @@ function DetailPanel({
         </div>
 
         {/* Body */}
-        <div className="vq-panel-body">
-          {/* Risk flags (if any) */}
+        <div
+          style={{
+            flex: 1,
+            overflowY: "auto",
+            padding: "20px 24px",
+            display: "flex",
+            flexDirection: "column",
+            gap: 20,
+          }}
+        >
+          {/* Risk flags */}
           {v.risk_flags.length > 0 && (
-            <div className="vq-section">
-              <div className="vq-section-head">Risk Flags</div>
-              <div className="vq-section-body">
-                <div className="vq-flags" style={{ gap: "var(--space-1)" }}>
-                  {v.risk_flags.map((f) => (
-                    <span key={f} className="vq-flag">
-                      {formatRiskFlag(f)}
-                    </span>
-                  ))}
-                </div>
+            <div>
+              <div style={sectionHead}>Risk Flags</div>
+              <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+                {v.risk_flags.map((f) => (
+                  <span
+                    key={f}
+                    style={{
+                      padding: "3px 10px",
+                      borderRadius: 4,
+                      fontSize: 11,
+                      fontWeight: 700,
+                      fontFamily: "var(--font-body)",
+                      background: "rgba(193,18,31,0.08)",
+                      color: "var(--brand-red)",
+                      textTransform: "capitalize",
+                    }}
+                  >
+                    {formatRiskFlag(f)}
+                  </span>
+                ))}
               </div>
             </div>
           )}
 
-          {/* Identity — ID card preview + selfie */}
-          <div className="vq-section">
-            <div className="vq-section-head">Identity Documents</div>
-            <div className="vq-section-body">
-              <div className="vq-id-compare">
-                <div className="vq-id-card">
-                  <div className="vq-id-card-label">Government ID</div>
-                  <div className="vq-id-placeholder">
-                    <span className="vq-id-placeholder-text">ID Redacted</span>
-                  </div>
-                </div>
-                <div className="vq-id-card">
-                  <div className="vq-id-card-label">Selfie with ID</div>
-                  <div className="vq-id-placeholder">
-                    <span className="vq-id-placeholder-text">
-                      Photo Redacted
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Checklist status for identity */}
-              <div
-                style={{
-                  marginTop: "var(--space-2)",
-                  display: "flex",
-                  gap: "var(--space-3)",
-                }}
-              >
-                {v.checklist.map((item) => (
+          {/* Identity documents */}
+          <div>
+            <div style={sectionHead}>Identity Documents</div>
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "1fr 1fr",
+                gap: 12,
+                marginBottom: 12,
+              }}
+            >
+              {["Government ID", "Selfie with ID"].map((label) => (
+                <div
+                  key={label}
+                  style={{
+                    border: "1px solid var(--hairline)",
+                    borderRadius: 8,
+                    overflow: "hidden",
+                  }}
+                >
                   <div
-                    key={item.stage}
-                    className={`vq-check ${item.status}`}
-                    style={{ fontSize: "var(--text-caption)" }}
+                    style={{
+                      fontSize: 10,
+                      fontWeight: 700,
+                      letterSpacing: "0.06em",
+                      fontFamily: "var(--font-body)",
+                      color: "var(--ink-4)",
+                      padding: "6px 10px",
+                      background: "var(--surface-3)",
+                      textTransform: "uppercase",
+                    }}
                   >
-                    <span className="vq-check-dot" />
-                    {CHECKLIST_LABELS[item.stage]}:{" "}
-                    {item.status.replace("_", " ")}
+                    {label}
                   </div>
-                ))}
-              </div>
+                  <div
+                    style={{
+                      height: 64,
+                      background: "var(--surface-3)",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      fontSize: 11,
+                      fontFamily: "var(--font-body)",
+                      color: "var(--ink-4)",
+                    }}
+                  >
+                    Redacted
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div style={{ display: "flex", gap: 10 }}>
+              {v.checklist.map((item) => (
+                <div
+                  key={item.stage}
+                  style={{
+                    fontSize: 12,
+                    fontFamily: "var(--font-body)",
+                    color: "var(--ink-3)",
+                  }}
+                >
+                  <strong>{CHECKLIST_LABELS[item.stage]}:</strong>{" "}
+                  {item.status.replace("_", " ")}
+                </div>
+              ))}
             </div>
           </div>
 
           {/* Social accounts */}
-          <div className="vq-section">
-            <div className="vq-section-head">Social Verification</div>
-            <div className="vq-section-body">
-              {v.social_accounts.length === 0 ? (
-                <p className="vq-history-empty">
-                  No social accounts submitted.
-                </p>
-              ) : (
-                <div className="vq-social-list">
-                  {v.social_accounts.map((s) => (
-                    <div
-                      key={`${s.platform}-${s.handle}`}
-                      className="vq-social-row"
+          <div>
+            <div style={sectionHead}>Social Verification</div>
+            {v.social_accounts.length === 0 ? (
+              <p
+                style={{
+                  fontSize: 13,
+                  fontFamily: "var(--font-body)",
+                  color: "var(--ink-4)",
+                }}
+              >
+                No social accounts submitted.
+              </p>
+            ) : (
+              <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                {v.social_accounts.map((s) => (
+                  <div
+                    key={`${s.platform}-${s.handle}`}
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 10,
+                      padding: "8px 12px",
+                      background: "var(--surface-3)",
+                      borderRadius: 6,
+                      border: "1px solid var(--hairline)",
+                    }}
+                  >
+                    <span
+                      style={{
+                        fontSize: 10,
+                        fontWeight: 700,
+                        fontFamily: "var(--font-body)",
+                        color: "var(--ink-3)",
+                        letterSpacing: "0.06em",
+                        width: 32,
+                        flexShrink: 0,
+                      }}
                     >
-                      <span className="vq-social-platform">
-                        {PLATFORM_LABELS[s.platform] ?? s.platform}
-                      </span>
-                      <span className="vq-social-handle">{s.handle}</span>
-                      <div className="vq-social-meta">
-                        <span>{formatSocialCount(s.followers)} followers</span>
-                        {s.engagement_rate != null && (
-                          <span>{s.engagement_rate.toFixed(1)}% eng.</span>
-                        )}
-                      </div>
-                      <span
-                        className={`vq-social-verified ${s.verified ? "yes" : "no"}`}
-                      >
-                        {s.verified ? "Verified" : "Unverified"}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
+                      {PLATFORM_LABELS[s.platform] ?? s.platform}
+                    </span>
+                    <span
+                      style={{
+                        flex: 1,
+                        fontSize: 13,
+                        fontFamily: "var(--font-body)",
+                        color: "var(--ink)",
+                        fontWeight: 600,
+                      }}
+                    >
+                      {s.handle}
+                    </span>
+                    <span
+                      style={{
+                        fontSize: 11,
+                        fontFamily: "var(--font-body)",
+                        color: "var(--ink-4)",
+                      }}
+                    >
+                      {formatSocialCount(s.followers)}
+                      {s.engagement_rate != null
+                        ? ` · ${s.engagement_rate.toFixed(1)}%`
+                        : ""}
+                    </span>
+                    <span
+                      style={{
+                        fontSize: 11,
+                        fontWeight: 700,
+                        fontFamily: "var(--font-body)",
+                        color: s.verified
+                          ? "var(--accent-blue)"
+                          : "var(--ink-4)",
+                      }}
+                    >
+                      {s.verified ? "Verified" : "Unverified"}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
 
           {/* Address */}
-          <div className="vq-section">
-            <div className="vq-section-head">Address Verification</div>
-            <div className="vq-address-map">
-              <div className="vq-map-pin" />
+          <div>
+            <div style={sectionHead}>Address Verification</div>
+            <div
+              style={{
+                height: 64,
+                background: "var(--surface-3)",
+                border: "1px solid var(--hairline)",
+                borderRadius: 8,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                marginBottom: 8,
+                position: "relative",
+              }}
+            >
+              <div
+                style={{
+                  width: 10,
+                  height: 10,
+                  borderRadius: "50%",
+                  background: "var(--brand-red)",
+                  boxShadow: "0 0 0 4px rgba(193,18,31,0.2)",
+                }}
+              />
             </div>
-            <div className="vq-address-info">
-              <span className="vq-address-text">
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
+              <span
+                style={{
+                  fontSize: 13,
+                  fontFamily: "var(--font-body)",
+                  color: "var(--ink)",
+                  fontWeight: 600,
+                }}
+              >
                 {v.address_city}, {v.address_state}
               </span>
               <span
-                className={`vq-social-verified ${v.address_verified ? "yes" : "no"}`}
+                style={{
+                  fontSize: 12,
+                  fontWeight: 700,
+                  fontFamily: "var(--font-body)",
+                  color: v.address_verified
+                    ? "var(--accent-blue)"
+                    : "var(--ink-4)",
+                }}
               >
                 {v.address_verified ? "Verified" : "Not Verified"}
               </span>
             </div>
           </div>
 
-          {/* SLA info */}
-          <div className="vq-section">
-            <div className="vq-section-head">SLA</div>
-            <div className="vq-section-body">
-              <span className={`vq-sla ${v.hours_open > 24 ? "overdue" : ""}`}>
-                Opened {formatHoursAgo(v.hours_open)}
-                {v.hours_open > 24 ? " — SLA BREACH" : ""}
-              </span>
-            </div>
+          {/* SLA */}
+          <div>
+            <div style={sectionHead}>SLA</div>
+            <span
+              style={{
+                fontSize: 13,
+                fontFamily: "var(--font-body)",
+                color: v.hours_open > 24 ? "var(--brand-red)" : "var(--ink-3)",
+                fontWeight: v.hours_open > 24 ? 700 : 400,
+              }}
+            >
+              Opened {formatHoursAgo(v.hours_open)}
+              {v.hours_open > 24 ? " — SLA BREACH" : ""}
+            </span>
           </div>
 
           {/* Internal note */}
-          <div className="vq-section">
-            <div className="vq-section-head">Internal Note</div>
-            <div className="vq-section-body">
-              <div className="vq-panel-note-row">
-                <textarea
-                  className="vq-note-area"
-                  placeholder="Add internal notes visible only to admin team..."
-                  value={note}
-                  onChange={(e) => setNote(e.target.value)}
-                />
-              </div>
-            </div>
+          <div>
+            <div style={sectionHead}>Internal Note</div>
+            <textarea
+              style={{
+                width: "100%",
+                padding: "10px 12px",
+                border: "1px solid var(--hairline)",
+                borderRadius: 8,
+                background: "var(--surface)",
+                color: "var(--ink)",
+                fontFamily: "var(--font-body)",
+                fontSize: 13,
+                outline: "none",
+                resize: "vertical",
+                boxSizing: "border-box",
+              }}
+              rows={3}
+              placeholder="Add internal notes visible only to admin team..."
+              value={note}
+              onChange={(e) => setNote(e.target.value)}
+            />
           </div>
 
           {/* Decision history */}
-          <div className="vq-section">
-            <div className="vq-section-head">Decision History</div>
-            <div className="vq-section-body">
-              {v.decision_history.length === 0 ? (
-                <p className="vq-history-empty">No decisions recorded yet.</p>
-              ) : (
-                <div className="vq-history">
-                  {v.decision_history.map((entry) => (
+          <div>
+            <div style={sectionHead}>Decision History</div>
+            {v.decision_history.length === 0 ? (
+              <p
+                style={{
+                  fontSize: 12,
+                  fontFamily: "var(--font-body)",
+                  color: "var(--ink-4)",
+                }}
+              >
+                No decisions recorded yet.
+              </p>
+            ) : (
+              <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                {v.decision_history.map((entry) => (
+                  <div
+                    key={entry.id}
+                    style={{
+                      padding: "10px 12px",
+                      background: "var(--surface-3)",
+                      borderRadius: 6,
+                      border: "1px solid var(--hairline)",
+                    }}
+                  >
                     <div
-                      key={entry.id}
-                      className={`vq-history-entry ${entry.action}`}
+                      style={{
+                        display: "flex",
+                        gap: 10,
+                        marginBottom: entry.note ? 6 : 0,
+                        fontSize: 11,
+                        fontFamily: "var(--font-body)",
+                      }}
                     >
-                      <div className="vq-history-meta">
-                        <span className="vq-history-action">
-                          {entry.action.replace("_", " ")}
-                        </span>
-                        <span>by {entry.reviewer}</span>
-                        <span>
-                          {new Date(entry.timestamp).toLocaleDateString(
-                            "en-US",
-                            {
-                              month: "short",
-                              day: "numeric",
-                              hour: "2-digit",
-                              minute: "2-digit",
-                            },
-                          )}
-                        </span>
-                      </div>
-                      {entry.note && (
-                        <p className="vq-history-note">{entry.note}</p>
-                      )}
+                      <span
+                        style={{
+                          fontWeight: 700,
+                          color: "var(--ink)",
+                          textTransform: "capitalize",
+                        }}
+                      >
+                        {entry.action.replace("_", " ")}
+                      </span>
+                      <span style={{ color: "var(--ink-4)" }}>
+                        by {entry.reviewer}
+                      </span>
+                      <span
+                        style={{ color: "var(--ink-4)", marginLeft: "auto" }}
+                      >
+                        {new Date(entry.timestamp).toLocaleDateString("en-US", {
+                          month: "short",
+                          day: "numeric",
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        })}
+                      </span>
                     </div>
-                  ))}
-                </div>
-              )}
-            </div>
+                    {entry.note && (
+                      <p
+                        style={{
+                          fontSize: 12,
+                          fontFamily: "var(--font-body)",
+                          color: "var(--ink-3)",
+                          margin: 0,
+                          lineHeight: 1.5,
+                        }}
+                      >
+                        {entry.note}
+                      </p>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         </div>
 
         {/* Footer — decision buttons */}
-        {v.status === "pending" || v.status === "more_info" ? (
-          <div className="vq-panel-footer">
-            <button
-              className="vq-btn vq-btn-approve"
-              disabled={submitting}
-              onClick={() => handleDecision("approved")}
-            >
-              Approve
-            </button>
-            <button
-              className="vq-btn vq-btn-more"
-              disabled={submitting}
-              onClick={() => handleDecision("more_info")}
-            >
-              Request More
-            </button>
-            <button
-              className="vq-btn vq-btn-reject"
-              disabled={submitting}
-              onClick={() => handleDecision("rejected")}
-            >
-              Reject
-            </button>
-          </div>
-        ) : (
-          <div className="vq-panel-footer">
-            <StatusBadge status={v.status} />
-          </div>
-        )}
+        <div
+          style={{
+            padding: "16px 24px",
+            borderTop: "1px solid var(--hairline)",
+            flexShrink: 0,
+          }}
+        >
+          {v.status === "pending" || v.status === "more_info" ? (
+            <div style={{ display: "flex", gap: 8 }}>
+              <button
+                className="btn-primary click-shift"
+                style={{ flex: 1 }}
+                disabled={submitting}
+                onClick={() => handleDecision("approved")}
+              >
+                Approve
+              </button>
+              <button
+                className="btn-ghost click-shift"
+                style={{ flex: 1 }}
+                disabled={submitting}
+                onClick={() => handleDecision("more_info")}
+              >
+                Request More
+              </button>
+              <button
+                style={{
+                  flex: 1,
+                  padding: "12px 14px",
+                  border: "1px solid rgba(193,18,31,0.25)",
+                  borderRadius: 8,
+                  background: "rgba(193,18,31,0.06)",
+                  color: "var(--brand-red)",
+                  fontFamily: "var(--font-body)",
+                  fontSize: 14,
+                  fontWeight: 700,
+                  cursor: submitting ? "not-allowed" : "pointer",
+                }}
+                disabled={submitting}
+                onClick={() => handleDecision("rejected")}
+                className="click-shift"
+              >
+                Reject
+              </button>
+            </div>
+          ) : (
+            <div style={{ display: "flex", justifyContent: "center" }}>
+              <StatusBadge status={v.status} />
+            </div>
+          )}
+        </div>
       </aside>
     </>
   );
@@ -426,7 +778,21 @@ function QueueRow({
 
   return (
     <div
-      className={`vq-row ${isSLABreach ? "sla-breach" : ""} ${isHighRisk ? "high-risk" : ""}`}
+      style={{
+        display: "grid",
+        gridTemplateColumns: "200px 160px 1fr 80px 200px",
+        gap: 16,
+        alignItems: "center",
+        padding: "12px 24px",
+        borderBottom: "1px solid var(--hairline)",
+        background: isSLABreach
+          ? "rgba(193,18,31,0.02)"
+          : isHighRisk
+            ? "rgba(193,18,31,0.01)"
+            : "transparent",
+        cursor: "pointer",
+        transition: "background 0.15s",
+      }}
       onClick={() => onOpen(v)}
       role="button"
       tabIndex={0}
@@ -434,11 +800,28 @@ function QueueRow({
       aria-label={`Open verification for ${v.applicant_display}`}
     >
       {/* Applicant */}
-      <div className="vq-applicant">
+      <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
         <Avatar initials={v.applicant_initials} color={v.avatar_color} />
-        <div className="vq-applicant-info">
-          <div className="vq-applicant-name">{v.applicant_display}</div>
-          <div className={`vq-applicant-time ${isSLABreach ? "overdue" : ""}`}>
+        <div>
+          <div
+            style={{
+              fontWeight: 700,
+              fontSize: 13,
+              fontFamily: "var(--font-body)",
+              color: "var(--ink)",
+              marginBottom: 2,
+            }}
+          >
+            {v.applicant_display}
+          </div>
+          <div
+            style={{
+              fontSize: 11,
+              fontFamily: "var(--font-body)",
+              color: isSLABreach ? "var(--brand-red)" : "var(--ink-4)",
+              fontWeight: isSLABreach ? 700 : 400,
+            }}
+          >
             {isSLABreach ? "OVERDUE — " : ""}
             {formatHoursAgo(v.hours_open)}
           </div>
@@ -452,28 +835,68 @@ function QueueRow({
       <RiskFlags flags={v.risk_flags} />
 
       {/* SLA */}
-      <span className={`vq-sla ${isSLABreach ? "overdue" : ""}`}>
+      <span
+        style={{
+          fontSize: 12,
+          fontFamily: "var(--font-body)",
+          color: isSLABreach ? "var(--brand-red)" : "var(--ink-4)",
+          fontWeight: isSLABreach ? 700 : 400,
+        }}
+      >
         {formatHoursAgo(v.hours_open)}
       </span>
 
       {/* Actions */}
       <div
-        className="vq-actions"
-        onClick={(e) => e.stopPropagation()} // prevent row click on button interactions
+        style={{ display: "flex", gap: 6 }}
+        onClick={(e) => e.stopPropagation()}
       >
         {v.status === "pending" || v.status === "more_info" ? (
           <>
             <button
-              className="vq-btn vq-btn-approve"
+              style={{
+                padding: "5px 10px",
+                border: "1px solid rgba(0,133,255,0.2)",
+                borderRadius: 6,
+                background: "rgba(0,133,255,0.08)",
+                color: "var(--accent-blue)",
+                fontFamily: "var(--font-body)",
+                fontSize: 11,
+                fontWeight: 700,
+                cursor: "pointer",
+              }}
               onClick={() => onQuickDecision(v.id, "approved")}
             >
               Approve
             </button>
-            <button className="vq-btn vq-btn-more" onClick={() => onOpen(v)}>
+            <button
+              style={{
+                padding: "5px 10px",
+                border: "1px solid var(--hairline)",
+                borderRadius: 6,
+                background: "var(--surface-3)",
+                color: "var(--ink-3)",
+                fontFamily: "var(--font-body)",
+                fontSize: 11,
+                fontWeight: 700,
+                cursor: "pointer",
+              }}
+              onClick={() => onOpen(v)}
+            >
               Review
             </button>
             <button
-              className="vq-btn vq-btn-reject"
+              style={{
+                padding: "5px 10px",
+                border: "1px solid rgba(193,18,31,0.2)",
+                borderRadius: 6,
+                background: "rgba(193,18,31,0.06)",
+                color: "var(--brand-red)",
+                fontFamily: "var(--font-body)",
+                fontSize: 11,
+                fontWeight: 700,
+                cursor: "pointer",
+              }}
               onClick={() => onQuickDecision(v.id, "rejected")}
             >
               Reject
@@ -619,150 +1042,335 @@ export default function VerificationsPage() {
     { value: "low", label: "Low" },
   ];
 
+  const chipStyle = (
+    active: boolean,
+    danger?: boolean,
+  ): React.CSSProperties => ({
+    padding: "6px 14px",
+    border: "1px solid var(--hairline)",
+    borderRadius: 6,
+    background: active
+      ? danger
+        ? "rgba(193,18,31,0.1)"
+        : "var(--ink)"
+      : "var(--surface-3)",
+    color: active
+      ? danger
+        ? "var(--brand-red)"
+        : "var(--snow)"
+      : "var(--ink-3)",
+    fontFamily: "var(--font-body)",
+    fontSize: 12,
+    fontWeight: 700,
+    cursor: "pointer",
+    transition: "background 0.15s",
+  });
+
   return (
-    <div className="vq-shell">
-      {/* Nav */}
-      <nav className="vq-nav">
-        <Link href="/" className="vq-nav-logo">
-          Push
-        </Link>
-        <div className="vq-nav-sep" />
-        <span className="vq-nav-title">Admin</span>
-        <div className="vq-nav-spacer" />
-        {stats.pending > 0 && (
-          <span className="vq-nav-badge">{stats.pending} pending</span>
-        )}
-      </nav>
-
-      {/* Hero */}
-      <section className="vq-hero">
-        <div className="vq-hero-inner">
-          <div>
-            <p className="vq-hero-eyebrow">KYC Review Queue</p>
-            <h1 className="vq-hero-title">
-              Identity
-              <br />
-              verifications.
-            </h1>
-            <p className="vq-hero-sub">
-              Review and action incoming creator KYC submissions. High-risk and
-              overdue cases are surfaced first.
-            </p>
-          </div>
-          <div className="vq-hero-stats">
-            <div className="vq-hero-stat">
-              <div
-                className={`vq-hero-stat-num ${stats.pending > 0 ? "urgent" : ""}`}
-              >
-                {stats.pending}
-              </div>
-              <div className="vq-hero-stat-label">Pending</div>
-            </div>
-            <div className="vq-hero-stat">
-              <div
-                className={`vq-hero-stat-num ${stats.sla_breach > 0 ? "urgent" : ""}`}
-              >
-                {stats.sla_breach}
-              </div>
-              <div className="vq-hero-stat-label">SLA breach</div>
-            </div>
-            <div className="vq-hero-stat">
-              <div className="vq-hero-stat-num">{stats.avg_hours}h</div>
-              <div className="vq-hero-stat-label">Avg decision</div>
-            </div>
-          </div>
+    <div
+      style={{
+        minHeight: "100vh",
+        background: "var(--surface)",
+        paddingBottom: 64,
+      }}
+    >
+      {/* Page header */}
+      <div style={{ padding: "40px 40px 32px" }}>
+        <div className="eyebrow" style={{ marginBottom: 8 }}>
+          ADMIN · PUSH INTERNAL · KYC REVIEW QUEUE
         </div>
-      </section>
+        <h1
+          style={{
+            fontFamily: "var(--font-display)",
+            fontSize: "clamp(32px,4vw,56px)",
+            fontWeight: 800,
+            color: "var(--ink)",
+            letterSpacing: "-0.03em",
+            lineHeight: 1,
+            marginBottom: 8,
+          }}
+        >
+          Identity verifications
+        </h1>
+        <p
+          style={{
+            fontSize: 14,
+            fontFamily: "var(--font-body)",
+            color: "var(--ink-4)",
+            marginBottom: 32,
+            maxWidth: 520,
+          }}
+        >
+          Review and action incoming creator KYC submissions. High-risk and
+          overdue cases are surfaced first.
+        </p>
 
-      {/* Filters */}
-      <div className="vq-filters">
-        <div className="vq-filters-inner">
-          <span className="vq-filter-label">Stage</span>
-          <div className="vq-filter-group">
-            {STAGE_OPTIONS.map((opt) => (
-              <button
-                key={opt.value}
-                className={`vq-chip ${filters.stage === opt.value ? "active" : ""}`}
-                onClick={() => setFilter("stage", opt.value)}
+        {/* KPI strip */}
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(3, 1fr)",
+            gap: 16,
+          }}
+        >
+          {[
+            {
+              label: "Pending",
+              value: stats.pending,
+              urgent: stats.pending > 0,
+            },
+            {
+              label: "SLA breach",
+              value: stats.sla_breach,
+              urgent: stats.sla_breach > 0,
+            },
+            {
+              label: "Avg decision",
+              value: `${stats.avg_hours}h`,
+              urgent: false,
+            },
+          ].map(({ label, value, urgent }) => (
+            <div
+              key={label}
+              style={{
+                background: "var(--surface-2)",
+                border: "1px solid var(--hairline)",
+                borderRadius: 10,
+                padding: "20px 24px",
+              }}
+            >
+              <div
+                style={{
+                  fontSize: 11,
+                  fontWeight: 700,
+                  letterSpacing: "0.07em",
+                  fontFamily: "var(--font-body)",
+                  color: "var(--ink-4)",
+                  textTransform: "uppercase",
+                  marginBottom: 8,
+                }}
               >
-                {opt.label}
-              </button>
-            ))}
-          </div>
-
-          <div className="vq-filter-sep" />
-
-          <span className="vq-filter-label">Status</span>
-          <div className="vq-filter-group">
-            {STATUS_OPTIONS.map((opt) => (
-              <button
-                key={opt.value}
-                className={`vq-chip ${filters.status === opt.value ? "active" : ""}`}
-                onClick={() => setFilter("status", opt.value)}
+                {label}
+              </div>
+              <div
+                style={{
+                  fontFamily: "var(--font-display)",
+                  fontSize: "clamp(22px,2.5vw,36px)",
+                  fontWeight: 800,
+                  color: urgent ? "var(--brand-red)" : "var(--ink)",
+                  lineHeight: 1,
+                }}
               >
-                {opt.label}
-              </button>
-            ))}
-          </div>
-
-          <div className="vq-filter-sep" />
-
-          <span className="vq-filter-label">Risk</span>
-          <div className="vq-filter-group">
-            {RISK_OPTIONS.map((opt) => (
-              <button
-                key={opt.value}
-                className={`vq-chip ${opt.value !== "all" ? "risk" : ""} ${filters.risk === opt.value ? "active" : ""}`}
-                onClick={() => setFilter("risk", opt.value)}
-              >
-                {opt.label}
-              </button>
-            ))}
-          </div>
-
-          <span className="vq-count">
-            {verifications.length} record{verifications.length !== 1 ? "s" : ""}
-          </span>
+                {value}
+              </div>
+            </div>
+          ))}
         </div>
       </div>
 
-      {/* Queue */}
-      <main className="vq-main">
-        <div className="vq-queue">
-          {/* Table header */}
-          <div className="vq-queue-header">
-            <span className="vq-col-label">Applicant</span>
-            <span className="vq-col-label">Checklist</span>
-            <span className="vq-col-label">Risk flags</span>
-            <span className="vq-col-label">Opened</span>
-            <span className="vq-col-label right vq-col-actions">Actions</span>
-          </div>
+      {/* Filters */}
+      <div
+        style={{
+          padding: "12px 40px",
+          background: "var(--surface-2)",
+          borderTop: "1px solid var(--hairline)",
+          borderBottom: "1px solid var(--hairline)",
+          display: "flex",
+          flexWrap: "wrap",
+          alignItems: "center",
+          gap: 8,
+        }}
+      >
+        <span
+          style={{
+            fontSize: 11,
+            fontWeight: 700,
+            letterSpacing: "0.06em",
+            fontFamily: "var(--font-body)",
+            color: "var(--ink-4)",
+            textTransform: "uppercase",
+            marginRight: 4,
+          }}
+        >
+          Stage
+        </span>
+        {STAGE_OPTIONS.map((opt) => (
+          <button
+            key={opt.value}
+            style={chipStyle(filters.stage === opt.value)}
+            onClick={() => setFilter("stage", opt.value)}
+          >
+            {opt.label}
+          </button>
+        ))}
 
-          {/* Rows */}
-          {loading ? (
-            <>
-              {[...Array(6)].map((_, i) => (
-                <div key={i} className="vq-skeleton" />
-              ))}
-            </>
-          ) : verifications.length === 0 ? (
-            <div className="vq-empty">
-              <div className="vq-empty-title">No verifications found.</div>
-              <p className="vq-empty-body">
-                Adjust filters or check back later.
-              </p>
-            </div>
-          ) : (
-            verifications.map((v) => (
-              <QueueRow
-                key={v.id}
-                v={v}
-                onOpen={setSelected}
-                onQuickDecision={handleQuickDecision}
-              />
-            ))
+        <div
+          style={{
+            width: 1,
+            height: 20,
+            background: "var(--hairline)",
+            margin: "0 8px",
+          }}
+        />
+
+        <span
+          style={{
+            fontSize: 11,
+            fontWeight: 700,
+            letterSpacing: "0.06em",
+            fontFamily: "var(--font-body)",
+            color: "var(--ink-4)",
+            textTransform: "uppercase",
+            marginRight: 4,
+          }}
+        >
+          Status
+        </span>
+        {STATUS_OPTIONS.map((opt) => (
+          <button
+            key={opt.value}
+            style={chipStyle(filters.status === opt.value)}
+            onClick={() => setFilter("status", opt.value)}
+          >
+            {opt.label}
+          </button>
+        ))}
+
+        <div
+          style={{
+            width: 1,
+            height: 20,
+            background: "var(--hairline)",
+            margin: "0 8px",
+          }}
+        />
+
+        <span
+          style={{
+            fontSize: 11,
+            fontWeight: 700,
+            letterSpacing: "0.06em",
+            fontFamily: "var(--font-body)",
+            color: "var(--ink-4)",
+            textTransform: "uppercase",
+            marginRight: 4,
+          }}
+        >
+          Risk
+        </span>
+        {RISK_OPTIONS.map((opt) => (
+          <button
+            key={opt.value}
+            style={chipStyle(
+              filters.risk === opt.value,
+              opt.value === "high" && filters.risk === "high",
+            )}
+            onClick={() => setFilter("risk", opt.value)}
+          >
+            {opt.label}
+          </button>
+        ))}
+
+        <span
+          style={{
+            marginLeft: "auto",
+            fontSize: 12,
+            fontFamily: "var(--font-body)",
+            color: "var(--ink-4)",
+          }}
+        >
+          {verifications.length} record{verifications.length !== 1 ? "s" : ""}
+        </span>
+      </div>
+
+      {/* Queue */}
+      <main style={{ padding: "0 40px 40px" }}>
+        {/* Table header */}
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "200px 160px 1fr 80px 200px",
+            gap: 16,
+            padding: "10px 24px",
+            borderBottom: "2px solid var(--hairline)",
+            marginTop: 8,
+          }}
+        >
+          {["Applicant", "Checklist", "Risk flags", "Opened", "Actions"].map(
+            (h, i) => (
+              <span
+                key={h}
+                style={{
+                  fontSize: 11,
+                  fontWeight: 700,
+                  letterSpacing: "0.07em",
+                  fontFamily: "var(--font-body)",
+                  color: "var(--ink-4)",
+                  textTransform: "uppercase",
+                  textAlign: i === 4 ? "right" : "left",
+                }}
+              >
+                {h}
+              </span>
+            ),
           )}
         </div>
+
+        {/* Rows */}
+        {loading ? (
+          <>
+            {[...Array(6)].map((_, i) => (
+              <div
+                key={i}
+                style={{
+                  height: 64,
+                  background: "var(--surface-3)",
+                  borderRadius: 6,
+                  margin: "8px 24px",
+                  opacity: 1 - i * 0.1,
+                  animation: "pulse 1.5s ease infinite",
+                }}
+              />
+            ))}
+          </>
+        ) : verifications.length === 0 ? (
+          <div
+            style={{
+              padding: "48px 24px",
+              textAlign: "center",
+            }}
+          >
+            <div
+              style={{
+                fontFamily: "var(--font-display)",
+                fontSize: 18,
+                fontWeight: 700,
+                color: "var(--ink)",
+                marginBottom: 8,
+              }}
+            >
+              No verifications found.
+            </div>
+            <p
+              style={{
+                fontSize: 13,
+                fontFamily: "var(--font-body)",
+                color: "var(--ink-4)",
+              }}
+            >
+              Adjust filters or check back later.
+            </p>
+          </div>
+        ) : (
+          verifications.map((v) => (
+            <QueueRow
+              key={v.id}
+              v={v}
+              onOpen={setSelected}
+              onQuickDecision={handleQuickDecision}
+            />
+          ))
+        )}
       </main>
 
       {/* Detail panel */}

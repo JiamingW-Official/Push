@@ -67,17 +67,17 @@ export default function AdminDashboardPage() {
           <MetricsCard
             label="Merchants"
             value={metrics?.merchants_count ?? "—"}
-            color="var(--primary)"
+            color="var(--brand-red)"
           />
           <MetricsCard
             label="Creators"
             value={metrics?.creators_count ?? "—"}
-            color="var(--dark)"
+            color="var(--ink)"
           />
           <MetricsCard
             label="Weekly Transactions"
             value={metrics?.weekly_transactions ?? "—"}
-            color="var(--tertiary)"
+            color="var(--accent-blue)"
           />
           <MetricsCard
             label="Average ROI"

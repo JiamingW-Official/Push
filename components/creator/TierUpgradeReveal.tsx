@@ -752,7 +752,7 @@ export function TierUpgradeReveal({
                   style={{
                     width: 6,
                     height: 6,
-                    background: "var(--primary)",
+                    background: "var(--brand-red)",
                     borderRadius: 0,
                     flexShrink: 0,
                   }}
@@ -821,7 +821,7 @@ export function TierUpgradeReveal({
             style={{
               width: "100%",
               padding: "16px 24px",
-              background: "var(--primary)",
+              background: "var(--brand-red)",
               color: "var(--surface)",
               border: "none",
               borderRadius: 0,
@@ -841,7 +841,7 @@ export function TierUpgradeReveal({
             }}
             onMouseLeave={(e) => {
               (e.currentTarget as HTMLButtonElement).style.background =
-                "var(--primary)";
+                "var(--brand-red)";
             }}
           >
             Explore New Campaigns &rarr;

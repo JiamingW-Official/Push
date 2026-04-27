@@ -51,7 +51,7 @@ export default function WorkspaceError({
             height="22"
             viewBox="0 0 24 24"
             fill="none"
-            stroke="var(--primary)"
+            stroke="var(--brand-red)"
             strokeWidth="2"
             strokeLinecap="square"
           >
@@ -65,7 +65,7 @@ export default function WorkspaceError({
             fontFamily: "var(--font-display)",
             fontSize: 28,
             fontWeight: 700,
-            color: "var(--dark)",
+            color: "var(--ink)",
             letterSpacing: "-0.02em",
             margin: "0 0 12px 0",
             lineHeight: 1.2,
@@ -94,10 +94,10 @@ export default function WorkspaceError({
             style={{
               height: 40,
               padding: "0 20px",
-              background: "var(--primary)",
-              color: "#ffffff",
+              background: "var(--brand-red)",
+              color: "var(--snow)",
               border: "none",
-              borderRadius: "var(--r-lg)",
+              borderRadius: "var(--r-sm)",
               fontFamily: "var(--font-body)",
               fontSize: 13,
               fontWeight: 600,
@@ -115,9 +115,9 @@ export default function WorkspaceError({
               height: 40,
               padding: "0 20px",
               background: "transparent",
-              color: "var(--dark)",
-              border: "1.5px solid var(--line-strong)",
-              borderRadius: "var(--r-lg)",
+              color: "var(--ink)",
+              border: "1px solid var(--ink)",
+              borderRadius: "var(--r-sm)",
               fontFamily: "var(--font-body)",
               fontSize: 13,
               fontWeight: 600,

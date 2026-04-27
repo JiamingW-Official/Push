@@ -1,1204 +1,12 @@
 /* ============================================================
-   Pricing Page — v9.1 Y2K Art Pop Cinematic
-   4-panel stack: Hero(Butter/Gold) / Pricing(Sky/Blue) /
-   Proof(DustyRose) / FAQ(Blush)
-   Matches for-merchants cinematic language exactly.
-   ============================================================ */
-
-/* ── Local token ───────────────────────────────────────────── */
-:root {
-  --dusty-rose: #b5807f;
-}
-
-/* ── Page wrapper ──────────────────────────────────────────── */
-.pr-page-wrapper {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  padding: 0 clamp(8px, 1.5vw, 16px);
-}
-
-/* ── Panel base ────────────────────────────────────────────── */
-.pr-panel {
-  width: 100%;
-  position: relative;
-}
-
-.pr-panel-inner {
-  max-width: var(--content-width);
-  margin: 0 auto;
-  padding: clamp(72px, 9vw, 120px) clamp(40px, 5.5vw, 88px);
-  position: relative;
-  z-index: 2;
-}
-
-/* ── Eyebrow — 12px min, tracked 0.20em, rule suffix ──────── */
-.pr-eyebrow {
-  font-family: var(--font-body);
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.20em;
-  text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.30);
-  margin: 0 0 32px;
-  display: flex;
-  align-items: center;
-  gap: 14px;
-}
-.pr-eyebrow::after {
-  content: '';
-  display: block;
-  width: 40px;
-  height: 1px;
-  background: rgba(255, 255, 255, 0.14);
-  flex-shrink: 0;
-}
-
-/* Ink eyebrow for light panels */
-.pr-eyebrow--ink {
-  color: rgba(10, 10, 10, 0.38);
-}
-.pr-eyebrow--ink::after {
-  background: rgba(10, 10, 10, 0.12);
-}
-
-/* ── Click-shift interaction (Push signature) ──────────────── */
-.click-shift {
-  transition: transform 120ms cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 200ms ease;
-}
-.click-shift:hover {
-  transform: translate(2px, 2px);
-}
-.click-shift:active {
-  transform: translate(3px, 3px) scale(0.98);
-}
-
-/* ============================================================
-   PANEL 1 — HERO · Butter/Gold light source on ultra-dark base
-   ============================================================ */
-
-.pr-panel--hero {
-  background:
-    radial-gradient(ellipse at 30% 112%, rgba(240, 200, 50, 1.0) 0%, rgba(180, 135, 20, 0.54) 26%, transparent 54%),
-    radial-gradient(ellipse at 78% 60%, rgba(255, 220, 80, 0.06) 0%, transparent 40%),
-    linear-gradient(205deg, #020200 0%, #060500 36%, #0e0c00 66%, #1a1500 100%);
-  border-radius: var(--r-4xl);
-  min-height: 90vh;
-  padding: clamp(36px, 4.5vw, 60px);
-  padding-top: clamp(72px, 8.5vw, 108px);
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-}
-
-/* Film-grain overlay */
-.pr-hero-grain {
-  position: absolute;
-  inset: 0;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.90' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.048'/%3E%3C/svg%3E");
-  background-size: 180px 180px;
-  pointer-events: none;
-  z-index: 0;
-}
-
-/* Single champagne accent stripe — no rainbow */
-.pr-hero-iris {
-  position: absolute;
-  top: 38%;
-  left: 0;
-  right: 0;
-  z-index: 1;
-  pointer-events: none;
-}
-.pr-hero-iris::before {
-  content: '';
-  display: block;
-  height: 1px;
-  background: linear-gradient(90deg,
-    transparent 0%,
-    rgba(191, 161, 112, 0.18) 20%,
-    rgba(255, 220, 140, 0.28) 50%,
-    rgba(191, 161, 112, 0.18) 80%,
-    transparent 100%
-  );
-}
-
-/* Magvix Italic wordmark */
-.pr-hero-wordmark {
-  font-family: var(--font-hero);
-  font-style: italic;
-  font-size: clamp(26px, 2.8vw, 34px);
-  letter-spacing: 0.008em;
-  color: var(--brand-red);
-  margin-bottom: clamp(48px, 6.5vw, 88px);
-  position: relative;
-  z-index: 2;
-  user-select: none;
-  display: block;
-  line-height: 1;
-}
-
-/* Hero copy container */
-.pr-hero-copy {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  position: relative;
-  z-index: 2;
-  max-width: 82%;
-}
-
-/* Art Pop split headline container */
-.pr-hero-h1 {
-  margin: 0 0 clamp(32px, 4.5vw, 56px);
-  display: flex;
-  flex-direction: column;
-}
-
-/* Line 1: ultra-tracked ghost — thin intro */
-.pr-hero-h1-intro {
-  display: block;
-  font-family: var(--font-display);
-  font-size: clamp(22px, 3.5vw, 56px);
-  font-weight: 200;
-  letter-spacing: 0.24em;
-  text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.26);
-  line-height: 1.3;
-  margin-bottom: clamp(2px, 0.4vw, 8px);
-}
-
-/* Line 2: 900-weight stamp — snow */
-.pr-hero-h1-bold {
-  display: block;
-  font-family: var(--font-display);
-  font-size: clamp(64px, 12vw, 176px);
-  font-weight: 900;
-  letter-spacing: -0.075em;
-  color: var(--snow);
-  line-height: 0.83;
-  margin-bottom: clamp(4px, 0.5vw, 10px);
-}
-
-/* Line 3: warm gold metallic gradient */
-.pr-hero-h1-stamp {
-  display: block;
-  font-family: var(--font-display);
-  font-size: clamp(64px, 12vw, 176px);
-  font-weight: 900;
-  letter-spacing: -0.075em;
-  line-height: 0.83;
-  padding-bottom: 0.06em;
-  background: linear-gradient(
-    142deg,
-    rgba(255, 255, 255, 0.97) 0%,
-    rgba(255, 215, 120, 0.93) 38%,
-    rgba(235, 170, 40, 0.88) 78%,
-    rgba(200, 130, 20, 0.84) 100%
-  );
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-/* Secondary stamp line under headline */
-.pr-hero-sub-stamp {
-  font-family: var(--font-display);
-  font-size: clamp(28px, 4vw, 60px);
-  font-weight: 300;
-  letter-spacing: -0.04em;
-  color: rgba(255, 255, 255, 0.38);
-  line-height: 1.1;
-  margin: 0 0 clamp(28px, 3.5vw, 44px);
-}
-
-/* Subhead */
-.pr-hero-subhead {
-  font-family: var(--font-body);
-  font-size: clamp(13px, 1.12vw, 16px);
-  line-height: 1.84;
-  color: rgba(255, 255, 255, 0.52);
-  max-width: 460px;
-  margin: 0 0 clamp(40px, 5.5vw, 64px);
-  letter-spacing: 0.012em;
-}
-
-/* Ghost numeral $ bleeds off edge */
-.pr-hero-ghost {
-  position: absolute;
-  bottom: -5%;
-  right: -3%;
-  font-family: var(--font-display);
-  font-size: clamp(200px, 32vw, 440px);
-  font-weight: 900;
-  letter-spacing: -0.08em;
-  line-height: 0.88;
-  color: rgba(255, 255, 255, 0.016);
-  pointer-events: none;
-  user-select: none;
-  z-index: 0;
-}
-
-/* iOS 26 liquid-glass stat tile — bottom-right absolute */
-.pr-hero-glass-tile {
-  position: absolute;
-  right: clamp(32px, 5vw, 72px);
-  bottom: clamp(44px, 6vw, 80px);
-  background: rgba(255, 255, 255, 0.052);
-  backdrop-filter: blur(56px) saturate(2.4) brightness(1.14);
-  -webkit-backdrop-filter: blur(56px) saturate(2.4) brightness(1.14);
-  border: 0.5px solid rgba(255, 255, 255, 0.14);
-  border-radius: 26px;
-  padding: clamp(20px, 2.6vw, 30px) clamp(22px, 2.8vw, 36px);
-  display: flex;
-  flex-direction: column;
-  gap: 0;
-  z-index: 3;
-  min-width: 192px;
-  box-shadow:
-    inset 0 1.5px 0 rgba(255, 255, 255, 0.22),
-    inset 0 -1px 0 rgba(255, 255, 255, 0.04),
-    inset 1px 0 0 rgba(255, 255, 255, 0.08),
-    0 32px 96px rgba(0, 0, 0, 0.78),
-    0 8px 28px rgba(0, 0, 0, 0.50),
-    0 0 0 0.5px rgba(255, 210, 80, 0.10);
-}
-
-/* LIVE badge in tile */
-.pr-glass-live {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  margin-bottom: 16px;
-}
-
-.pr-glass-live-dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: #c1121f;
-  flex-shrink: 0;
-  animation: pr-live-pulse 2.4s ease-in-out infinite;
-}
-
-@keyframes pr-live-pulse {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(193, 18, 31, 0.28); }
-  50%       { box-shadow: 0 0 0 5px rgba(193, 18, 31, 0.05); }
-}
-
-.pr-glass-live-label {
-  font-family: var(--font-body);
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.30);
-}
-
-/* Icon tile inside glass */
-.pr-glass-icon {
-  width: 40px;
-  height: 40px;
-  border-radius: var(--r-md);
-  background: rgba(255, 210, 80, 0.10);
-  border: 0.5px solid rgba(255, 210, 80, 0.20);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: rgba(255, 215, 100, 0.86);
-  margin-bottom: 10px;
-  flex-shrink: 0;
-}
-
-/* Warm metallic numeral */
-.pr-glass-numeral {
-  font-family: var(--font-display);
-  font-size: clamp(52px, 6vw, 78px);
-  font-weight: 300;
-  line-height: 0.92;
-  letter-spacing: -0.05em;
-  background: linear-gradient(
-    150deg,
-    rgba(255, 255, 255, 0.97) 0%,
-    rgba(255, 218, 145, 0.92) 48%,
-    rgba(224, 170, 58, 0.86) 100%
-  );
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  margin-bottom: 10px;
-}
-
-.pr-glass-caption {
-  font-family: var(--font-body);
-  font-size: 12px;
-  color: rgba(255, 255, 255, 0.36);
-  letter-spacing: 0.06em;
-  line-height: 1.58;
-  max-width: 130px;
-}
-
-/* ============================================================
-   PANEL 2 — PRICING · Sky/Blue light source on dark base
-   ============================================================ */
-
-.pr-panel--pricing {
-  background:
-    radial-gradient(ellipse at 50% 115%, rgba(130, 195, 235, 0.42) 0%, rgba(75, 140, 185, 0.16) 35%, transparent 58%),
-    radial-gradient(ellipse at 8% 18%, rgba(100, 165, 215, 0.05) 0%, transparent 42%),
-    linear-gradient(200deg, #010305 0%, #030810 36%, #040c16 66%, #060f1c 100%);
-  border-radius: var(--r-4xl);
-  overflow: hidden;
-  position: relative;
-}
-
-/* Ghost "02" numeral — top-right */
-.pr-pricing-ghost {
-  position: absolute;
-  top: clamp(-24px, -2.5vw, -40px);
-  right: -4%;
-  font-family: var(--font-display);
-  font-size: clamp(220px, 34vw, 440px);
-  font-weight: 900;
-  line-height: 0.80;
-  letter-spacing: -0.06em;
-  color: rgba(255, 255, 255, 0.020);
-  user-select: none;
-  pointer-events: none;
-  z-index: 0;
-}
-
-/* ── Billing toggle ────────────────────────────────────────── */
-.pr-toggle-wrap {
-  display: flex;
-  justify-content: flex-start;
-  margin-bottom: clamp(40px, 5vw, 64px);
-  position: relative;
-  z-index: 3;
-}
-
-.pr-toggle-group {
-  display: inline-flex;
-  background: rgba(255, 255, 255, 0.07);
-  border: 0.5px solid rgba(255, 255, 255, 0.14);
-  border-radius: var(--r-pill);
-  padding: 4px;
-  gap: 0;
-}
-
-.pr-toggle-btn {
-  font-family: var(--font-body);
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  border: none;
-  cursor: pointer;
-  border-radius: var(--r-pill);
-  height: 44px;
-  padding: 0 20px;
-  transition: background 180ms ease, color 180ms ease;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  white-space: nowrap;
-}
-
-.pr-toggle-btn--active {
-  background: rgba(255, 255, 255, 0.88);
-  color: var(--ink);
-}
-
-.pr-toggle-btn--inactive {
-  background: transparent;
-  color: rgba(255, 255, 255, 0.45);
-}
-.pr-toggle-btn--inactive:hover {
-  color: rgba(255, 255, 255, 0.72);
-}
-
-/* Save 16% badge */
-.pr-toggle-save-badge {
-  font-family: var(--font-body);
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--champagne);
-  background: rgba(191, 161, 112, 0.22);
-  border: 0.5px solid rgba(191, 161, 112, 0.34);
-  border-radius: var(--r-pill);
-  padding: 2px 8px;
-  line-height: 1.4;
-}
-
-/* ── Plan card grid ────────────────────────────────────────── */
-.pr-plans-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
-  align-items: stretch;
-  position: relative;
-  z-index: 3;
-}
-
-/* Base dark glass plan card */
-.pr-plan-card {
-  background: rgba(255, 255, 255, 0.052);
-  backdrop-filter: blur(28px) saturate(1.4);
-  -webkit-backdrop-filter: blur(28px) saturate(1.4);
-  border: 0.5px solid rgba(255, 255, 255, 0.10);
-  border-radius: var(--r-2xl);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.14),
-    inset 0 -1px 0 rgba(255, 255, 255, 0.03),
-    0 10px 48px rgba(0, 0, 0, 0.58);
-  padding: clamp(28px, 3.5vw, 40px);
-  display: flex;
-  flex-direction: column;
-  position: relative;
-  overflow: hidden;
-  transition: box-shadow 250ms ease, transform 120ms cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-.pr-plan-card:hover {
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.20),
-    inset 0 -1px 0 rgba(255, 255, 255, 0.04),
-    0 16px 72px rgba(0, 0, 0, 0.72);
-  transform: translate(-1px, -2px);
-}
-
-/* Growth card — champagne border, no rainbow */
-.pr-plan-card--growth {
-  border: 1px solid rgba(255, 215, 100, 0.38);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 215, 130, 0.24),
-    inset 0 -1px 0 rgba(255, 255, 255, 0.04),
-    0 14px 64px rgba(0, 0, 0, 0.68);
-}
-
-/* Growth card top accent — champagne only */
-.pr-plan-card--growth::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    rgba(255, 215, 100, 0.68) 50%,
-    transparent 100%
-  );
-  border-radius: var(--r-2xl) var(--r-2xl) 0 0;
-  pointer-events: none;
-  z-index: 1;
-}
-
-/* Scale card — champagne border */
-.pr-plan-card--scale {
-  border: 1.5px solid rgba(191, 161, 112, 0.50);
-  position: relative;
-}
-
-/* Champagne top accent stripe on Scale */
-.pr-plan-card--scale::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 3px;
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    rgba(191, 161, 112, 0.72) 50%,
-    transparent 100%
-  );
-  border-radius: var(--r-2xl) var(--r-2xl) 0 0;
-  pointer-events: none;
-  z-index: 1;
-}
-
-/* Plan eyebrow */
-.pr-plan-eyebrow {
-  font-family: var(--font-body);
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.32);
-  margin-bottom: 20px;
-  position: relative;
-  z-index: 1;
-}
-
-/* Growth card eyebrow: champagne only */
-.pr-plan-card--growth .pr-plan-eyebrow {
-  color: var(--champagne);
-}
-
-/* Scale card eyebrow: champagne gradient */
-.pr-plan-card--scale .pr-plan-eyebrow {
-  background: linear-gradient(
-    90deg,
-    rgba(191, 161, 112, 0.92) 0%,
-    rgba(240, 210, 150, 0.88) 100%
-  );
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-/* Plan name */
-.pr-plan-name {
-  font-family: var(--font-display);
-  font-size: 22px;
-  font-weight: 800;
-  letter-spacing: -0.03em;
-  color: var(--snow);
-  margin: 0 0 4px;
-  position: relative;
-  z-index: 1;
-}
-
-/* Price block */
-.pr-price-block {
-  display: flex;
-  align-items: baseline;
-  gap: 4px;
-  margin-bottom: 6px;
-  position: relative;
-  z-index: 1;
-}
-
-/* Price — warm metallic gradient */
-.pr-price-main {
-  font-family: var(--font-display);
-  font-size: clamp(40px, 4.5vw, 60px);
-  font-weight: 900;
-  letter-spacing: -0.055em;
-  line-height: 1;
-  background: linear-gradient(
-    148deg,
-    rgba(255, 255, 255, 0.97) 0%,
-    rgba(255, 225, 155, 0.92) 50%,
-    rgba(225, 175, 65, 0.86) 100%
-  );
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-.pr-price-period {
-  font-family: var(--font-body);
-  font-size: 13px;
-  color: rgba(255, 255, 255, 0.34);
-  line-height: 1;
-  letter-spacing: 0.04em;
-  margin-bottom: 2px;
-}
-
-.pr-price-annual-row {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 8px;
-  min-height: 20px;
-  position: relative;
-  z-index: 1;
-}
-
-.pr-price-strike {
-  font-family: var(--font-body);
-  font-size: 13px;
-  color: rgba(255, 255, 255, 0.28);
-  text-decoration: line-through;
-  text-decoration-color: rgba(255, 255, 255, 0.20);
-}
-
-.pr-price-annual-note {
-  font-family: var(--font-body);
-  font-size: 12px;
-  color: rgba(255, 255, 255, 0.38);
-}
-
-/* Cap line */
-.pr-plan-cap {
-  font-family: var(--font-body);
-  font-size: 12px;
-  color: rgba(255, 255, 255, 0.34);
-  margin: 0 0 24px;
-  padding-bottom: 20px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-  line-height: 1.45;
-  position: relative;
-  z-index: 1;
-}
-
-/* Feature list */
-.pr-feature-list {
-  list-style: none;
-  padding: 0;
-  margin: 0 0 32px;
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  position: relative;
-  z-index: 1;
-}
-
-.pr-feature-item {
-  display: flex;
-  align-items: flex-start;
-  gap: 10px;
-  font-family: var(--font-body);
-  font-size: 13px;
-  line-height: 1.50;
-  color: rgba(255, 255, 255, 0.55);
-  letter-spacing: 0.008em;
-}
-
-/* Green-tinted checkmark for dark background */
-.pr-feature-check {
-  flex-shrink: 0;
-  color: rgba(145, 220, 140, 0.80);
-  margin-top: 2px;
-  font-size: 14px;
-  line-height: 1;
-  font-weight: 700;
-}
-
-/* Ghost CTA — Trial */
-.pr-cta-ghost {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  height: 48px;
-  width: 100%;
-  font-family: var(--font-body);
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  text-decoration: none;
-  background: rgba(255, 255, 255, 0.055);
-  color: rgba(255, 255, 255, 0.72);
-  border: 0.5px solid rgba(255, 255, 255, 0.18);
-  border-radius: var(--r-pill);
-  cursor: pointer;
-  margin-top: auto;
-  position: relative;
-  z-index: 1;
-  transition: background 180ms ease, color 180ms ease, transform 120ms cubic-bezier(0.34, 1.56, 0.64, 1);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.10);
-}
-.pr-cta-ghost:hover {
-  background: rgba(255, 255, 255, 0.09);
-  color: rgba(255, 255, 255, 0.90);
-  transform: translate(2px, 2px);
-}
-.pr-cta-ghost:active {
-  transform: translate(3px, 3px) scale(0.98);
-}
-
-/* Growth CTA — brand red */
-.pr-cta-growth {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  height: 52px;
-  width: 100%;
-  font-family: var(--font-body);
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  text-decoration: none;
-  background: var(--brand-red);
-  color: var(--snow);
-  border: none;
-  border-radius: var(--r-pill);
-  box-shadow: 0 4px 24px rgba(193, 18, 31, 0.46);
-  cursor: pointer;
-  margin-top: auto;
-  position: relative;
-  z-index: 1;
-  transition: box-shadow 200ms ease, transform 120ms cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-.pr-cta-growth:hover {
-  box-shadow: 0 8px 40px rgba(193, 18, 31, 0.64);
-  transform: translate(2px, 2px);
-}
-.pr-cta-growth:active {
-  transform: translate(3px, 3px) scale(0.98);
-}
-
-/* Scale CTA — editorial pink */
-.pr-cta-scale {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  height: 52px;
-  width: 100%;
-  font-family: var(--font-body);
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  text-decoration: none;
-  background: var(--editorial-pink);
-  color: var(--snow);
-  border: none;
-  border-radius: var(--r-pill);
-  box-shadow: 0 6px 36px rgba(232, 68, 125, 0.56);
-  cursor: pointer;
-  margin-top: auto;
-  position: relative;
-  z-index: 1;
-  transition: box-shadow 200ms ease, transform 120ms cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-.pr-cta-scale:hover {
-  box-shadow: 0 10px 56px rgba(232, 68, 125, 0.76);
-  transform: translate(2px, 2px);
-}
-.pr-cta-scale:active {
-  transform: translate(3px, 3px) scale(0.98);
-}
-
-/* Below-cards rows */
-.pr-cards-summary {
-  font-family: var(--font-body);
-  font-size: 14px;
-  color: rgba(255, 255, 255, 0.32);
-  text-align: center;
-  margin-top: 20px;
-  position: relative;
-  z-index: 3;
-}
-
-.pr-cards-fine {
-  font-family: var(--font-body);
-  font-size: 12px;
-  color: rgba(255, 255, 255, 0.20);
-  text-align: center;
-  margin-top: 10px;
-  position: relative;
-  z-index: 3;
-  letter-spacing: 0.07em;
-  line-height: 1.6;
-}
-
-/* ============================================================
-   PANEL 3 — PROOF · Dusty Rose as light source on ultra-dark
-   ============================================================ */
-
-.pr-panel--proof {
-  background:
-    radial-gradient(ellipse at 68% 108%, rgba(200, 110, 100, 0.90) 0%, rgba(155, 75, 70, 0.50) 28%, transparent 55%),
-    radial-gradient(ellipse at 12% 18%, rgba(220, 130, 120, 0.06) 0%, transparent 42%),
-    linear-gradient(200deg, #030101 0%, #080303 36%, #120606 66%, #1c0a0a 100%);
-  border-radius: var(--r-3xl);
-  overflow: hidden;
-  position: relative;
-}
-
-/* Ghost numeral "03" — right-bottom */
-.pr-proof-ghost {
-  position: absolute;
-  bottom: -8%;
-  right: -3%;
-  font-family: var(--font-display);
-  font-size: clamp(200px, 30vw, 400px);
-  font-weight: 900;
-  line-height: 0.80;
-  letter-spacing: -0.06em;
-  color: rgba(255, 255, 255, 0.018);
-  user-select: none;
-  pointer-events: none;
-  z-index: 0;
-}
-
-/* Proof split layout */
-.pr-proof-grid {
-  display: grid;
-  grid-template-columns: 60% auto;
-  gap: clamp(40px, 6vw, 80px);
-  align-items: center;
-  position: relative;
-  z-index: 2;
-}
-
-/* Left column */
-.pr-proof-left {
-  display: flex;
-  flex-direction: column;
-  position: relative;
-}
-
-/* Ghost opening quotemark via ::before */
-.pr-proof-left::before {
-  content: '\201C';
-  position: absolute;
-  top: -10px;
-  left: -4px;
-  font-family: var(--font-display);
-  font-size: clamp(80px, 10vw, 140px);
-  font-weight: 900;
-  line-height: 1;
-  color: rgba(255, 255, 255, 0.06);
-  pointer-events: none;
-  user-select: none;
-  z-index: 0;
-}
-
-.pr-proof-quote {
-  font-family: var(--font-display);
-  font-size: clamp(20px, 2.4vw, 30px);
-  font-weight: 300;
-  font-style: italic;
-  line-height: 1.50;
-  color: var(--snow);
-  margin: 0 0 20px;
-  position: relative;
-  z-index: 1;
-}
-
-.pr-proof-attribution {
-  font-family: var(--font-body);
-  font-size: 12px;
-  color: rgba(255, 255, 255, 0.45);
-  margin: 0 0 36px;
-  letter-spacing: 0.04em;
-  position: relative;
-  z-index: 1;
-}
-
-/* Thin rule separator */
-.pr-proof-rule {
-  width: 100%;
-  height: 1px;
-  background: rgba(255, 255, 255, 0.12);
-  margin-bottom: 28px;
-  position: relative;
-  z-index: 1;
-}
-
-/* Stat number — warm metallic gradient */
-.pr-proof-stat-num {
-  font-family: var(--font-display);
-  font-size: clamp(52px, 6vw, 80px);
-  font-weight: 200;
-  letter-spacing: -0.05em;
-  line-height: 1;
-  display: block;
-  margin-bottom: 8px;
-  position: relative;
-  z-index: 1;
-  background: linear-gradient(
-    150deg,
-    rgba(255, 255, 255, 0.97) 0%,
-    rgba(255, 218, 145, 0.92) 48%,
-    rgba(224, 170, 58, 0.86) 100%
-  );
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-.pr-proof-stat-label {
-  font-family: var(--font-body);
-  font-size: 14px;
-  color: rgba(255, 255, 255, 0.45);
-  line-height: 1.55;
-  display: block;
-  position: relative;
-  z-index: 1;
-}
-
-/* Photo card — saffron-tinted dark treatment */
-.pr-proof-photo-card {
-  aspect-ratio: 4 / 5;
-  border-radius: var(--r-2xl);
-  box-shadow:
-    inset 0 2px 0 rgba(255, 255, 255, 0.10),
-    0 24px 72px rgba(0, 0, 0, 0.72);
-  background:
-    linear-gradient(168deg, rgba(184, 98, 74, 0.30) 0%, rgba(10, 10, 10, 0.80) 100%),
-    #1c0e0a;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  overflow: hidden;
-  position: relative;
-  min-width: 180px;
-  max-width: 260px;
-}
-
-.pr-proof-photo-label {
-  padding: clamp(16px, 2vw, 24px);
-  position: relative;
-  z-index: 1;
-}
-
-.pr-proof-photo-name {
-  font-family: var(--font-display);
-  font-size: 18px;
-  font-weight: 800;
-  color: var(--snow);
-  letter-spacing: -0.02em;
-  display: block;
-  margin-bottom: 4px;
-}
-
-.pr-proof-photo-sub {
-  font-family: var(--font-body);
-  font-size: 12px;
-  color: rgba(255, 255, 255, 0.46);
-  text-transform: uppercase;
-  letter-spacing: 0.10em;
-  display: block;
-}
-
-/* ============================================================
-   PANEL 4 — FAQ · Blush as light source on ultra-dark
-   ============================================================ */
-
-.pr-panel--faq {
-  background:
-    radial-gradient(ellipse at 70% 110%, rgba(245, 175, 175, 0.38) 0%, rgba(195, 115, 115, 0.14) 35%, transparent 58%),
-    radial-gradient(ellipse at 8% 16%, rgba(255, 160, 160, 0.04) 0%, transparent 40%),
-    linear-gradient(205deg, #030101 0%, #070303 36%, #0c0404 66%, #120606 100%);
-  border-radius: var(--r-3xl);
-  overflow: hidden;
-  position: relative;
-}
-
-/* Ghost numeral "04" */
-.pr-faq-ghost {
-  position: absolute;
-  bottom: -8%;
-  right: -3%;
-  font-family: var(--font-display);
-  font-size: clamp(200px, 30vw, 400px);
-  font-weight: 900;
-  line-height: 0.80;
-  letter-spacing: -0.06em;
-  color: rgba(255, 255, 255, 0.016);
-  user-select: none;
-  pointer-events: none;
-  z-index: 0;
-}
-
-/* FAQ heading */
-.pr-faq-h2 {
-  font-family: var(--font-display);
-  font-size: clamp(36px, 5vw, 64px);
-  font-weight: 800;
-  letter-spacing: -0.044em;
-  line-height: 1.0;
-  color: var(--snow);
-  margin: 0 0 clamp(40px, 5vw, 64px);
-  position: relative;
-  z-index: 2;
-}
-
-/* Accordion container */
-.pr-faq-list {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  position: relative;
-  z-index: 2;
-}
-
-/* Accordion item — dark glass */
-.pr-faq-item {
-  background: rgba(255, 255, 255, 0.052);
-  backdrop-filter: blur(24px) saturate(1.4);
-  -webkit-backdrop-filter: blur(24px) saturate(1.4);
-  border: 0.5px solid rgba(255, 255, 255, 0.095);
-  border-radius: var(--r-md);
-  overflow: hidden;
-  transition: border-color 200ms ease;
-}
-
-.pr-faq-item--open {
-  border-color: rgba(255, 255, 255, 0.16);
-}
-
-/* Accordion header button */
-.pr-faq-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 20px 24px;
-  cursor: pointer;
-  font-family: var(--font-body);
-  font-size: 14px;
-  font-weight: 700;
-  color: var(--snow);
-  user-select: none;
-  background: none;
-  border: none;
-  width: 100%;
-  text-align: left;
-  gap: 16px;
-  letter-spacing: 0.012em;
-  transition: transform 120ms cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-.pr-faq-header:hover {
-  transform: translate(2px, 2px);
-}
-.pr-faq-header:active {
-  transform: translate(3px, 3px) scale(0.98);
-}
-
-/* Arrow icon */
-.pr-faq-arrow {
-  flex-shrink: 0;
-  font-size: 14px;
-  color: rgba(255, 255, 255, 0.38);
-  transition: transform 300ms cubic-bezier(0.34, 1.56, 0.64, 1);
-  line-height: 1;
-}
-
-.pr-faq-arrow--open {
-  transform: rotate(90deg);
-}
-
-/* Accordion body */
-.pr-faq-body {
-  max-height: 0;
-  overflow: hidden;
-  transition: max-height 350ms cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-.pr-faq-body--open {
-  max-height: 320px;
-}
-
-/* Answer text */
-.pr-faq-answer {
-  font-family: var(--font-body);
-  font-size: 16px;
-  line-height: 1.78;
-  color: rgba(255, 255, 255, 0.60);
-  padding: 0 24px 20px;
-  margin: 0;
-}
-
-/* ============================================================
-   Responsive breakpoints
-   ============================================================ */
-
-@media (max-width: 960px) {
-  .pr-plans-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .pr-proof-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .pr-proof-photo-card {
-    aspect-ratio: 16 / 7;
-    max-width: 100%;
-    min-width: unset;
-  }
-
-  .pr-hero-glass-tile {
-    position: static;
-    align-self: flex-end;
-    margin-top: clamp(32px, 5vw, 56px);
-  }
-}
-
-@media (max-width: 768px) {
-  .pr-page-wrapper { padding: 0 8px; gap: 8px; }
-  .pr-hero-copy { max-width: 100%; }
-}
-
-@media (max-width: 640px) {
-  .pr-panel--hero,
-  .pr-panel--pricing {
-    border-radius: var(--r-2xl);
-  }
-  .pr-panel--proof,
-  .pr-panel--faq {
-    border-radius: var(--r-2xl);
-  }
-
-  .pr-hero-ghost {
-    font-size: clamp(140px, 50vw, 220px);
-  }
-
-  .pr-toggle-group {
-    width: 100%;
-  }
-
-  .pr-toggle-btn {
-    flex: 1;
-    justify-content: center;
-  }
-
-  .pr-hero-h1-intro {
-    font-size: clamp(20px, 5vw, 40px);
-    letter-spacing: 0.16em;
-  }
-
-  .pr-hero-h1-bold,
-  .pr-hero-h1-stamp {
-    font-size: clamp(56px, 14vw, 100px);
-  }
-
-  .pr-hero-sub-stamp {
-    font-size: clamp(22px, 5vw, 40px);
-  }
-
-  .pr-faq-answer {
-    font-size: 14px;
-  }
-}
-
-@media (max-width: 480px) {
-  .pr-proof-left::before {
-    font-size: clamp(60px, 12vw, 90px);
-  }
-}
-
-/* Reduced motion */
-@media (prefers-reduced-motion: reduce) {
-  .pr-faq-body {
-    transition: none;
-  }
-  .pr-faq-arrow {
-    transition: none;
-  }
-  .pr-glass-live-dot {
-    animation: none;
-  }
-  .click-shift:hover,
-  .click-shift:active,
-  .pr-plan-card:hover,
-  .pr-cta-ghost:hover,
-  .pr-cta-ghost:active,
-  .pr-cta-growth:hover,
-  .pr-cta-growth:active,
-  .pr-cta-scale:hover,
-  .pr-cta-scale:active,
-  .pr-faq-header:hover,
-  .pr-faq-header:active {
-    transform: none;
-  }
-}
-
-/* ============================================================
-   v11 Pricing page — new layout classes
-   (v9 classes above preserved for reference; v11 uses pv11-* namespace)
+   Pricing Page — v11 Grain-Archive Editorial
+   5-panel stack:
+     1. Hero (dark Char/Ink)
+     2. KPI strip (Graphite)
+     3. Plans Candy Panel (Butter warm)
+     4. Comparison Table (Surface-2 cool)
+     5. Ticket CTA (GA Orange)
+   Design.md authority — all tokens, spacing, radii locked.
    ============================================================ */
 
 /* ── Page wrapper ──────────────────────────────────────────── */
@@ -1206,29 +14,55 @@
   display: flex;
   flex-direction: column;
   gap: 0;
+  background: var(--surface);
 }
 
-/* Sig-divider row (centers the global .sig-divider span) */
-.pv11-sig-wrap {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 0;
+/* ── Click-shift signature (🔒 STRICT) ────────────────────── */
+.click-shift {
+  transition:
+    transform 180ms cubic-bezier(0.34, 1.56, 0.64, 1),
+    box-shadow 200ms ease;
+}
+.click-shift:hover  { transform: translate(2px, 2px); }
+.click-shift:active { transform: translate(2px, 2px) scale(0.98); }
+
+@media (prefers-reduced-motion: reduce) {
+  .click-shift:hover,
+  .click-shift:active { transform: none; }
 }
 
-/* ── SUB-HERO ──────────────────────────────────────────────── */
+/* ============================================================
+   PANEL 1 — HERO
+   Dark char/ink bg, Darky Display hero h1, bottom-left anchored
+   ============================================================ */
+
 .pv11-hero {
-  height: clamp(360px, 50vh, 480px);
   position: relative;
+  min-height: clamp(520px, 80vh, 840px);
   overflow: hidden;
   background:
-    linear-gradient(180deg, rgba(0,0,0,0.10) 0%, rgba(0,0,0,0.65) 100%),
-    radial-gradient(ellipse 100% 80% at 50% 30%, rgba(193,18,31,0.15) 0%, transparent 60%),
-    linear-gradient(160deg, #1a1816 0%, #2c2a26 100%);
-  display: flex;
-  align-items: flex-end;
+    radial-gradient(ellipse 80% 60% at 20% 100%, rgba(193,18,31,0.18) 0%, transparent 55%),
+    radial-gradient(ellipse 60% 80% at 85% 20%, rgba(0,133,255,0.08) 0%, transparent 50%),
+    linear-gradient(160deg, var(--char) 0%, var(--ink) 100%);
 }
 
+/* Ghost "$0" decorative numeral — top right bleeds off */
+.pv11-hero-ghost {
+  position: absolute;
+  top: -8%;
+  right: -4%;
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(200px, 32vw, 480px);
+  letter-spacing: -0.08em;
+  line-height: 0.85;
+  color: rgba(255, 255, 255, 0.04);
+  pointer-events: none;
+  user-select: none;
+  z-index: 0;
+}
+
+/* Bottom-left anchored hero content block (🔒 STRICT — corner-anchored) */
 .pv11-hero-inner {
   position: absolute;
   bottom: 96px;
@@ -1237,133 +71,360 @@
   z-index: 2;
 }
 
+/* Eyebrow (parenthetical — marketing surface) */
 .pv11-eyebrow {
-  font-family: var(--font-body);
+  font-family: var(--font-mono);
   font-size: 12px;
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.75);
+  color: rgba(255, 255, 255, 0.65);
   margin: 0 0 16px;
 }
 
+/* Hero H1 — Darky Display (🔒 STRICT — clamp 64-160, weight 900) */
 .pv11-hero-h1 {
-  font-family: var(--font-hero);
-  font-style: normal;
-  font-weight: 400;
-  font-size: clamp(56px, 8vw, 128px);
-  letter-spacing: -0.03em;
-  line-height: 0.96;
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(64px, 9vw, 160px);
+  letter-spacing: -0.035em;
+  line-height: 0.9;
   color: var(--snow);
-  margin: 0 0 24px;
+  margin: 0 0 32px;
 }
 
+/* Hero subtitle */
 .pv11-hero-sub {
-  font-family: var(--font-body);
-  font-size: 18px;
-  line-height: 1.65;
-  color: rgba(255, 255, 255, 0.72);
+  font-family: var(--font-mono);
+  font-size: 20px;
+  line-height: 1.40;
+  letter-spacing: -0.1em;
+  color: rgba(255, 255, 255, 0.65);
   max-width: 52ch;
   margin: 0;
 }
 
-/* ── PLANS PANEL ───────────────────────────────────────────── */
-.pv11-plans-panel {
-  /* candy-panel provides bg + radius + padding */
+/* Liquid-glass badge — bottom right absolute (iOS 26 spec) */
+.pv11-hero-badge {
+  position: absolute;
+  right: 64px;
+  bottom: 96px;
+  z-index: 3;
+  background: rgba(255, 255, 255, 0.072);
+  backdrop-filter: blur(40px) saturate(2.0) brightness(1.12);
+  -webkit-backdrop-filter: blur(40px) saturate(2.0) brightness(1.12);
+  border: 0.5px solid rgba(255, 255, 255, 0.18);
+  border-radius: var(--r-xl);
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+  min-width: 176px;
+  box-shadow:
+    inset 0 1.5px 0 rgba(255, 255, 255, 0.20),
+    0 24px 64px rgba(0, 0, 0, 0.56),
+    0 8px 24px rgba(0, 0, 0, 0.32);
 }
 
-.pv11-section-eyebrow {
-  font-family: var(--font-body);
+.pv11-badge-num {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(40px, 5vw, 72px);
+  letter-spacing: -0.04em;
+  line-height: 1.0;
+  color: var(--snow);
+}
+
+.pv11-badge-label {
+  font-family: var(--font-mono);
   font-size: 12px;
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.65);
+  text-align: right;
+}
+
+/* ============================================================
+   SIG DIVIDER wrapper (🔒 STRICT — 64px above+below)
+   ============================================================ */
+.pv11-sig-wrap {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 64px 0;
+  background: var(--surface);
+}
+
+/* ============================================================
+   PANEL 2 — KPI STRIP (dark graphite/char)
+   ============================================================ */
+.pv11-kpi-strip {
+  background: var(--graphite);
+  padding: 56px 64px;
+}
+
+.pv11-kpi-inner {
+  max-width: 1140px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.pv11-kpi-item {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.pv11-kpi-num {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(40px, 5vw, 72px);
+  letter-spacing: -0.02em;
+  line-height: 1.0;
+  color: var(--snow);
+}
+
+.pv11-kpi-label {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: rgba(255, 255, 255, 0.56);
+  line-height: 1.45;
+}
+
+.pv11-kpi-divider {
+  width: 1px;
+  height: 56px;
+  background: rgba(255, 255, 255, 0.12);
+  flex-shrink: 0;
+}
+
+/* ============================================================
+   PANEL 3 — PRICING PLANS (Candy Butter warm)
+   Uses global .candy-panel class (bg + radius + padding)
+   + overrides for plan-card grid
+   ============================================================ */
+
+.pv11-plans-panel {
+  /* candy-panel supplies: background, radius, padding 96px, shadow */
+  position: relative;
+}
+
+/* Ghost "02" behind panel content */
+.pv11-plans-ghost {
+  position: absolute;
+  top: -24px;
+  right: -2%;
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(160px, 28vw, 400px);
+  letter-spacing: -0.06em;
+  line-height: 0.85;
+  color: rgba(10, 10, 10, 0.03);
+  pointer-events: none;
+  user-select: none;
+  z-index: 0;
+}
+
+.pv11-plans-header {
+  position: relative;
+  z-index: 1;
+}
+
+.pv11-section-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-3);
   margin: 0 0 16px;
 }
 
+/* H2 (🔒 STRICT — 40px, Darky 800, -0.02em) */
 .pv11-section-h2 {
   font-family: var(--font-display);
   font-size: 40px;
-  font-weight: 700;
-  letter-spacing: -0.03em;
+  font-weight: 800;
+  letter-spacing: -0.02em;
   line-height: 1.05;
   color: var(--ink);
   margin: 0 0 56px;
 }
 
-/* Cards grid */
+/* Plan cards grid */
 .pv11-plans-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 24px;
   align-items: stretch;
+  position: relative;
+  z-index: 1;
 }
 
+/* ── Base plan card (📐 STRUCTURED — r-2xl = 20px, 40px padding) */
 .pv11-plan-card {
-  /* lg-surface provides bg + blur + border */
-  border-radius: var(--r-xl);
-  padding: 32px;
+  background: rgba(255, 255, 255, 0.64);
+  backdrop-filter: blur(20px) saturate(1.6);
+  -webkit-backdrop-filter: blur(20px) saturate(1.6);
+  border: 1px solid var(--mist);
+  border-radius: var(--r-2xl); /* 20px — pricing plan card spec */
+  padding: 40px;               /* hero card spec */
   display: flex;
   flex-direction: column;
   position: relative;
+  overflow: hidden;
+  box-shadow: var(--shadow-2);
+  transition: transform 180ms cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 200ms ease;
+}
+.pv11-plan-card:hover {
+  transform: translate(2px, 2px);
+  box-shadow: var(--shadow-3);
 }
 
+/* Ghost plan-name watermark behind card content */
+.pv11-plan-card::before {
+  content: attr(data-plan);
+  position: absolute;
+  bottom: -16px;
+  right: -8px;
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(80px, 10vw, 128px);
+  letter-spacing: -0.05em;
+  line-height: 0.85;
+  color: var(--ink);
+  opacity: 0.04;
+  pointer-events: none;
+  user-select: none;
+  z-index: 0;
+  text-transform: uppercase;
+}
+
+/* ── Highlighted (Growth) card — dark ink bg */
 .pv11-plan-card--highlight {
-  transform: scale(1.02);
-  z-index: 1;
-  border-color: rgba(193, 18, 31, 0.28) !important;
+  background: var(--ink);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  border-color: rgba(255, 255, 255, 0.10);
+  box-shadow:
+    0 24px 80px rgba(0, 0, 0, 0.32),
+    0 8px 24px rgba(0, 0, 0, 0.20);
+}
+.pv11-plan-card--highlight:hover {
+  transform: translate(2px, 2px);
+  box-shadow:
+    0 32px 96px rgba(0, 0, 0, 0.40),
+    0 8px 24px rgba(0, 0, 0, 0.24);
 }
 
+/* Watermark on dark card */
+.pv11-plan-card--highlight::before {
+  color: var(--snow);
+  opacity: 0.06;
+}
+
+/* Text overrides for dark card */
+.pv11-plan-card--highlight .pv11-plan-eyebrow {
+  color: var(--brand-red) !important;
+}
+.pv11-plan-card--highlight .pv11-plan-name {
+  color: var(--snow);
+}
+.pv11-plan-card--highlight .pv11-price-main {
+  color: var(--snow);
+}
+.pv11-plan-card--highlight .pv11-price-sub {
+  color: rgba(255, 255, 255, 0.56);
+}
+.pv11-plan-card--highlight .pv11-price-note {
+  color: rgba(255, 255, 255, 0.48);
+  border-bottom-color: rgba(255, 255, 255, 0.10);
+}
+.pv11-plan-card--highlight .pv11-feature-item {
+  color: rgba(255, 255, 255, 0.72);
+}
+.pv11-plan-card--highlight .pv11-check {
+  color: var(--brand-red);
+}
+
+/* Plan eyebrow */
 .pv11-plan-eyebrow {
-  font-family: var(--font-body);
+  font-family: var(--font-mono);
   font-size: 12px;
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
+  color: var(--ink-3);
   margin: 0 0 16px;
+  position: relative;
+  z-index: 1;
 }
 
+/* Plan name (H3 — 28px, Darky 700) */
 .pv11-plan-name {
   font-family: var(--font-display);
-  font-size: 24px;
+  font-size: 28px;
   font-weight: 700;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.015em;
+  line-height: 1.15;
   color: var(--ink);
   margin: 0 0 16px;
+  position: relative;
+  z-index: 1;
 }
 
+/* Price row */
 .pv11-price-row {
   display: flex;
   align-items: baseline;
-  gap: 6px;
+  gap: 8px;
   margin-bottom: 8px;
+  position: relative;
+  z-index: 1;
 }
 
+/* Big editorial price numeral (🔒 STRICT — massive) */
 .pv11-price-main {
   font-family: var(--font-display);
-  font-size: clamp(40px, 5vw, 72px);
-  font-weight: 700;
-  letter-spacing: -0.04em;
-  line-height: 1;
+  font-weight: 900;
+  font-size: clamp(72px, 10vw, 120px);
+  letter-spacing: -0.045em;
+  line-height: 0.9;
   color: var(--ink);
 }
 
 .pv11-price-sub {
-  font-family: var(--font-body);
+  font-family: var(--font-mono);
   font-size: 14px;
+  font-weight: 500;
   color: var(--ink-3);
-  line-height: 1;
+  line-height: 1.45;
+  letter-spacing: 0.01em;
+  margin-bottom: 4px;
 }
 
 .pv11-price-note {
-  font-family: var(--font-body);
+  font-family: var(--font-mono);
   font-size: 12px;
   color: var(--ink-3);
   margin: 0 0 24px;
   padding-bottom: 24px;
   border-bottom: 1px solid var(--surface-3);
+  line-height: 1.4;
+  letter-spacing: 0.02em;
+  position: relative;
+  z-index: 1;
 }
 
+/* Feature list */
 .pv11-feature-list {
   list-style: none;
   padding: 0;
@@ -1372,61 +433,85 @@
   display: flex;
   flex-direction: column;
   gap: 12px;
+  position: relative;
+  z-index: 1;
 }
 
+/* Feature items — CS Genio Mono 16px (body small) */
 .pv11-feature-item {
   display: flex;
   align-items: flex-start;
-  gap: 10px;
-  font-family: var(--font-body);
-  font-size: 14px;
-  line-height: 1.55;
+  gap: 12px;
+  font-family: var(--font-mono);
+  font-size: 16px;
+  line-height: 1.5;
   color: var(--ink-3);
 }
 
+/* Brand red checkmark */
 .pv11-check {
   flex-shrink: 0;
   color: var(--brand-red);
   font-weight: 700;
   font-size: 14px;
-  margin-top: 1px;
+  margin-top: 2px;
 }
 
+/* CTA at bottom — body → CTA gap = 32px (from plan list margin) */
 .pv11-card-cta {
   width: 100%;
   justify-content: center;
   margin-top: auto;
+  position: relative;
+  z-index: 1;
 }
 
 .pv11-plans-fine {
-  font-family: var(--font-body);
+  font-family: var(--font-mono);
   font-size: 12px;
   color: var(--ink-4);
   text-align: center;
   margin: 32px 0 0;
   letter-spacing: 0.06em;
+  position: relative;
+  z-index: 1;
 }
 
-/* ── EDITORIAL TABLE PANEL ─────────────────────────────────── */
+/* ============================================================
+   PANEL 4 — EDITORIAL TABLE (Cinema-Selects comparison)
+   (📐 STRUCTURED — surface-2 bg, r-md, 48/56 padding)
+   ============================================================ */
 .pv11-table-panel {
   background: var(--surface-2);
   border-radius: var(--r-md);
   padding: 48px 56px;
-  margin: 0 clamp(8px, 1.5vw, 16px);
+  margin: 0 64px;
+}
+
+/* Table title — Darky clamp(40,5vw,64)px weight 800, top-left */
+.pv11-table-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin: 0 0 16px;
+  text-align: left;
 }
 
 .pv11-table-h2 {
   font-family: var(--font-display);
-  font-size: 40px;
-  font-weight: 700;
-  letter-spacing: -0.03em;
-  line-height: 1.05;
+  font-size: clamp(40px, 5vw, 64px);
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  line-height: 1.0;
   color: var(--ink);
   margin: 0 0 56px;
   text-align: left;
 }
 
-/* CSS-grid table: 5 columns — feature 2fr + 4×1fr */
+/* Grid table — 5 cols: feature 2fr + 4×1fr */
 .pv11-comp-table {
   display: flex;
   flex-direction: column;
@@ -1441,29 +526,33 @@
   padding: 20px 0;
 }
 
+/* Header row — stronger dotted divider */
 .pv11-trow--head {
   border-bottom: 1px dotted rgba(10, 10, 10, 0.30);
-  padding: 0 0 16px;
-  margin-bottom: 8px;
+  padding: 0 0 24px;
+  margin-bottom: 0;
 }
 
-/* All cells */
+/* All cells — base style */
 .pv11-tcell {
-  font-family: var(--font-body);
+  font-family: var(--font-mono);
   font-size: 16px;
+  font-weight: 400;
   color: var(--ink-3);
   padding: 0 8px 0 0;
   display: flex;
   align-items: center;
+  line-height: 1.5;
 }
 
-/* Header cells */
+/* Header cells — CS Genio Mono 12px 700 uppercase parenthetical */
 .pv11-trow--head .pv11-tcell {
   font-size: 12px;
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--ink-3);
+  line-height: 1.3;
 }
 
 /* Feature column — Darky 20px 700 */
@@ -1475,22 +564,22 @@
   letter-spacing: -0.01em;
 }
 
+/* Header feature cell — reverts to mono eyebrow */
 .pv11-trow--head .pv11-tcell--feature {
-  font-family: var(--font-body);
+  font-family: var(--font-mono);
   font-size: 12px;
   font-weight: 700;
   color: var(--ink-3);
   letter-spacing: 0.12em;
 }
 
-/* Push column highlight */
+/* Push column — value color set via inline style */
 .pv11-tcell--push {
-  font-family: var(--font-body);
+  font-family: var(--font-mono);
   font-size: 16px;
-  font-weight: 400;
 }
 
-/* Last column — right aligned */
+/* Last column — right-aligned */
 .pv11-tcell--last {
   justify-content: flex-end;
   text-align: right;
@@ -1501,34 +590,21 @@
   justify-content: flex-end;
 }
 
-/* Mobile: table → card stack */
-@media (max-width: 767px) {
-  .pv11-table-panel {
-    padding: 32px 24px;
-    margin: 0 8px;
-  }
+/* ============================================================
+   SIG DIVIDER 2 — between table and ticket
+   ============================================================ */
 
-  .pv11-comp-table {
-    display: none; /* hide grid table, show mobile version */
-  }
+/* Uses global .pv11-sig-wrap + .sig-divider */
 
-  /* Mobile card per row */
-  .pv11-table-mobile {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-  }
-}
-
-@media (min-width: 768px) {
-  .pv11-table-mobile {
-    display: none;
-  }
-}
-
-/* ── TICKET PANEL ──────────────────────────────────────────── */
+/* ============================================================
+   PANEL 5 — TICKET CTA (GA Orange)
+   (🔒 STRICT — ga-orange bg, r-md, grommets, perf edges, Magvix italic centered)
+   ============================================================ */
 .pv11-ticket {
-  margin: 0 clamp(8px, 1.5vw, 16px);
+  /* ticket-panel class provides bg + radius + padding */
+  /* Override margin for page placement */
+  margin: 0 64px 96px;
+  position: relative;
 }
 
 .pv11-ticket-content {
@@ -1537,26 +613,32 @@
   align-items: center;
   gap: 0;
   text-align: center;
-  padding: 16px 0;
+  padding: 0;
+  position: relative;
+  z-index: 1;
 }
 
+/* Magvix Italic centered headline (🔒 STRICT — centered is allowed in Ticket Panel) */
 .pv11-ticket-h2 {
   font-family: var(--font-hero);
   font-style: italic;
   font-weight: normal;
   font-size: clamp(40px, 5vw, 56px);
-  letter-spacing: -0.025em;
-  line-height: 1.05;
+  letter-spacing: -0.02em;
+  line-height: 0.95;
   color: var(--ink);
   margin: 0 0 16px;
 }
 
+/* CS Genio Mono 16px body — body-small, Ticket Panel interior */
 .pv11-ticket-sub {
-  font-family: var(--font-body);
+  font-family: var(--font-mono);
   font-size: 16px;
+  font-weight: 400;
   color: var(--ink-3);
   max-width: 480px;
-  line-height: 1.6;
+  line-height: 1.40;
+  letter-spacing: -0.04em;
   margin: 0 0 32px;
 }
 
@@ -1567,61 +649,168 @@
   justify-content: center;
 }
 
-/* ── Responsive ────────────────────────────────────────────── */
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+
+/* iPad (768–1023px) */
 @media (max-width: 1023px) {
+  .pv11-hero-inner {
+    bottom: 80px;
+    left: 48px;
+    right: 48px;
+  }
+
+  .pv11-hero-badge {
+    right: 48px;
+    bottom: 80px;
+  }
+
   .pv11-plans-grid {
     grid-template-columns: repeat(2, 1fr);
   }
 
-  .pv11-plan-card--highlight {
-    transform: none;
+  .pv11-kpi-strip {
+    padding: 56px 48px;
   }
 
-  .pv11-trow {
-    grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+  .pv11-table-panel {
+    padding: 40px;
+    margin: 0 48px;
+  }
+
+  .pv11-ticket {
+    margin: 0 48px 80px;
+  }
+
+  .pv11-sig-wrap {
+    padding: 48px 0;
+  }
+
+  .pv11-kpi-divider {
+    display: none;
+  }
+
+  .pv11-kpi-inner {
+    gap: 32px;
+    justify-content: center;
   }
 }
 
+/* Mobile (<768px) */
 @media (max-width: 767px) {
+  .pv11-hero {
+    min-height: clamp(480px, 75vh, 640px);
+  }
+
   .pv11-hero-inner {
     bottom: 48px;
     left: 24px;
     right: 24px;
   }
 
+  /* On mobile the badge becomes inline below hero content */
+  .pv11-hero-badge {
+    position: static;
+    align-self: flex-end;
+    margin: 32px 24px 0;
+    align-items: flex-start;
+  }
+
   .pv11-hero-sub {
-    font-size: 16px;
+    font-size: 18px;
   }
 
   .pv11-plans-grid {
     grid-template-columns: 1fr;
   }
 
+  .pv11-kpi-strip {
+    padding: 48px 24px;
+  }
+
+  .pv11-kpi-inner {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 32px;
+  }
+
+  .pv11-kpi-divider {
+    display: none;
+  }
+
+  .pv11-table-panel {
+    padding: 32px 24px;
+    margin: 0 8px;
+    border-radius: var(--r-sm);
+  }
+
+  /* Mobile: hide comparison columns, show only feature + push */
+  .pv11-trow {
+    grid-template-columns: 2fr 1fr;
+    padding: 16px 0;
+  }
+
+  /* Hide yelp, influencer, groupon columns */
+  .pv11-tcell:nth-child(n+3) {
+    display: none;
+  }
+
+  /* But show push column (2nd child) */
+  .pv11-tcell:nth-child(2) {
+    display: flex;
+  }
+
+  .pv11-tcell--last {
+    justify-content: flex-start;
+    text-align: left;
+  }
+
+  .pv11-ticket {
+    margin: 0 8px 56px;
+    border-radius: var(--r-sm) !important;
+  }
+
   .pv11-ticket-ctas {
     flex-direction: column;
-    gap: 12px;
     width: 100%;
+    gap: 12px;
   }
 
   .pv11-ticket-ctas .btn {
     width: 100%;
     justify-content: center;
   }
+
+  .pv11-sig-wrap {
+    padding: 32px 0;
+  }
+
+  .pv11-section-h2 {
+    font-size: 32px;
+  }
+
+  .pv11-table-h2 {
+    font-size: clamp(32px, 8vw, 48px);
+    margin: 0 0 40px;
+  }
 }
 
-@media (max-width: 640px) {
-  .pv11-trow {
-    grid-template-columns: 1fr 1fr 1fr;
+/* Small mobile (<480px) */
+@media (max-width: 480px) {
+  .pv11-hero-h1 {
+    font-size: clamp(56px, 14vw, 96px);
   }
 
-  /* Hide influencer + groupon columns on small screens */
-  .pv11-tcell:nth-child(4),
-  .pv11-tcell:nth-child(5) {
-    display: none;
+  .pv11-plan-card {
+    padding: 24px;
   }
 
-  .pv11-tcell--last {
-    justify-content: flex-start;
-    text-align: left;
+  .pv11-price-main {
+    font-size: clamp(56px, 14vw, 96px);
+  }
+
+  .pv11-plans-fine {
+    font-size: 12px;
   }
 }

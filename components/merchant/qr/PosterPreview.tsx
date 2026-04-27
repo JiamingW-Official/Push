@@ -88,7 +88,7 @@ function A4Layout({
         alignItems: "center",
         justifyContent: "space-between",
         padding: "40px 32px 28px",
-        border: "1px solid rgba(0,48,73,0.12)",
+        border: "1px solid rgba(10,10,10,0.12)",
         boxSizing: "border-box",
       }}
     >
@@ -100,7 +100,7 @@ function A4Layout({
             fontWeight: 900,
             fontSize: "clamp(22px,6vw,40px)",
             letterSpacing: "-0.04em",
-            color: "var(--dark)",
+            color: "var(--ink)",
             lineHeight: 1.05,
             marginBottom: 8,
           }}
@@ -112,9 +112,9 @@ function A4Layout({
       {/* QR centered */}
       <div
         style={{
-          background: "var(--surface-elevated)",
+          background: "var(--surface-2)",
           padding: 16,
-          border: "1px solid rgba(0,48,73,0.12)",
+          border: "1px solid rgba(10,10,10,0.12)",
         }}
       >
         {qrId ? (
@@ -129,7 +129,7 @@ function A4Layout({
         style={{
           fontFamily: "var(--font-body)",
           fontSize: 11,
-          color: "rgba(0,48,73,0.6)",
+          color: "rgba(10,10,10,0.6)",
           textAlign: "center",
           letterSpacing: "0.04em",
           lineHeight: 1.5,
@@ -145,7 +145,7 @@ function A4Layout({
           display: "flex",
           alignItems: "center",
           gap: 6,
-          borderTop: "1px solid rgba(0,48,73,0.1)",
+          borderTop: "1px solid rgba(10,10,10,0.1)",
           paddingTop: 12,
           width: "100%",
           justifyContent: "center",
@@ -157,18 +157,18 @@ function A4Layout({
             fontWeight: 900,
             fontStyle: "italic",
             fontSize: 18,
-            color: "var(--dark)",
+            color: "var(--ink)",
             letterSpacing: "-0.04em",
           }}
         >
           {BRAND.name}
-          <span style={{ color: "var(--primary)" }}>.</span>
+          <span style={{ color: "var(--brand-red)" }}>.</span>
         </span>
         <span
           style={{
             fontFamily: "var(--font-body)",
             fontSize: 9,
-            color: "rgba(0,48,73,0.45)",
+            color: "rgba(10,10,10,0.45)",
             letterSpacing: "0.06em",
             textTransform: "uppercase",
           }}
@@ -191,14 +191,14 @@ function TableTentLayout({
       style={{
         width: "100%",
         aspectRatio: "4/6",
-        background: "var(--dark)",
+        background: "var(--ink)",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
         padding: "24px 20px",
         gap: 16,
-        border: "1px solid rgba(0,48,73,0.12)",
+        border: "1px solid rgba(10,10,10,0.12)",
         boxSizing: "border-box",
       }}
     >
@@ -215,7 +215,7 @@ function TableTentLayout({
       >
         {heroMessage}
       </div>
-      <div style={{ background: "var(--surface-elevated)", padding: 10 }}>
+      <div style={{ background: "var(--surface-2)", padding: 10 }}>
         {qrId ? (
           <QRImage qrId={qrId} size={120} />
         ) : (
@@ -244,7 +244,7 @@ function TableTentLayout({
         }}
       >
         {BRAND.name}
-        <span style={{ color: "var(--primary)" }}>.</span>
+        <span style={{ color: "var(--brand-red)" }}>.</span>
       </div>
     </div>
   );
@@ -261,14 +261,14 @@ function WindowStickerLayout({
       style={{
         width: "100%",
         aspectRatio: "1/1",
-        background: "var(--surface-elevated)",
+        background: "var(--surface-2)",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
         padding: 24,
         gap: 12,
-        border: "2px solid var(--dark)",
+        border: "2px solid var(--ink)",
         boxSizing: "border-box",
       }}
     >
@@ -277,7 +277,7 @@ function WindowStickerLayout({
           fontFamily: "var(--font-display)",
           fontWeight: 900,
           fontSize: "clamp(14px,3vw,22px)",
-          color: "var(--dark)",
+          color: "var(--ink)",
           textAlign: "center",
           letterSpacing: "-0.04em",
           lineHeight: 1.05,
@@ -289,7 +289,7 @@ function WindowStickerLayout({
         style={{
           background: "var(--surface)",
           padding: 12,
-          border: "1px solid rgba(0,48,73,0.15)",
+          border: "1px solid rgba(10,10,10,0.15)",
         }}
       >
         {qrId ? (
@@ -302,7 +302,7 @@ function WindowStickerLayout({
         style={{
           fontFamily: "var(--font-body)",
           fontSize: 9,
-          color: "rgba(0,48,73,0.55)",
+          color: "rgba(10,10,10,0.55)",
           textAlign: "center",
           letterSpacing: "0.05em",
         }}
@@ -315,12 +315,12 @@ function WindowStickerLayout({
           fontWeight: 900,
           fontStyle: "italic",
           fontSize: 13,
-          color: "var(--dark)",
+          color: "var(--ink)",
           letterSpacing: "-0.04em",
         }}
       >
         {BRAND.name}
-        <span style={{ color: "var(--primary)" }}>.</span>
+        <span style={{ color: "var(--brand-red)" }}>.</span>
       </div>
     </div>
   );
@@ -333,14 +333,14 @@ function CashRegisterLayout({ qrId }: { qrId?: string }) {
       style={{
         width: "100%",
         aspectRatio: "1/1",
-        background: "var(--surface-elevated)",
+        background: "var(--surface-2)",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
         padding: 16,
         gap: 10,
-        border: "1px solid rgba(0,48,73,0.2)",
+        border: "1px solid rgba(10,10,10,0.2)",
         boxSizing: "border-box",
       }}
     >
@@ -350,7 +350,7 @@ function CashRegisterLayout({ qrId }: { qrId?: string }) {
           fontFamily: "var(--font-body)",
           fontSize: 10,
           fontWeight: 700,
-          color: "var(--dark)",
+          color: "var(--ink)",
           letterSpacing: "0.08em",
           textTransform: "uppercase",
         }}

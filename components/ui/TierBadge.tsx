@@ -18,17 +18,17 @@ const TIER_STYLES: Record<Tier, { bg: string; color: string; border: string }> =
     },
     explorer: {
       bg: "rgba(102, 155, 188, 0.12)",
-      color: "var(--tertiary)",
+      color: "var(--accent-blue)",
       border: "rgba(102, 155, 188, 0.35)",
     },
     operator: {
       bg: "rgba(193, 18, 31, 0.08)",
-      color: "var(--primary)",
+      color: "var(--brand-red)",
       border: "rgba(193, 18, 31, 0.22)",
     },
     proven: {
       bg: "rgba(0, 48, 73, 0.10)",
-      color: "var(--dark)",
+      color: "var(--ink)",
       border: "rgba(0, 48, 73, 0.28)",
     },
     closer: {

@@ -603,53 +603,54 @@ export default function MerchantBillingPage() {
       <div id="billing-print-frame" aria-hidden="true" />
 
       <div className="bill-shell">
-        {/* Top Nav */}
-        <nav className="bill-nav">
-          <a href="/merchant/dashboard" className="bill-nav__back">
-            <IconChevronLeft />
-            Dashboard
-          </a>
-          <a href="/" className="bill-nav__logo">
-            Push<span>.</span>
-          </a>
-          <div className="bill-nav__right">
-            <span className="bill-nav__label">Billing & Invoices</span>
+        {/* Page Header */}
+        <header className="bill-header">
+          <div className="bill-header__left">
+            <span className="bill-header__eyebrow">Merchant Dashboard</span>
+            <h2 className="bill-header__title">Billing</h2>
           </div>
-        </nav>
+          <div className="bill-header__right">
+            <button
+              className="bill-btn-primary"
+              onClick={() => setShowUpgrade(true)}
+              disabled={canceled}
+            >
+              Add Payment Method
+            </button>
+          </div>
+        </header>
 
         <div className="bill-body">
-          {/* ── Section: Hero ──────────────────────────────────────── */}
-          <section className="bill-hero">
-            <div className="bill-hero__left">
-              <div className="bill-hero__eyebrow">Billing Center</div>
-              <h1 className="bill-hero__title">
+          {/* Plan card — wide */}
+          <div className="bill-plan-card">
+            <div className="bill-plan-card__left">
+              <span className="bill-plan-card__label">Current Plan</span>
+              <div className="bill-plan-card__name">
                 {plan.name}
                 {plan.pricing_model === "outcome_based" ? (
                   <>
-                    <span className="bill-hero__price"> 5%</span>
-                    <span className="bill-hero__period">
-                      {" "}
+                    <span className="bill-plan-card__price">5%</span>
+                    <span className="bill-plan-card__period">
                       of attributed revenue
                     </span>
                   </>
                 ) : (
                   <>
-                    <span className="bill-hero__price">
-                      {" "}
+                    <span className="bill-plan-card__price">
                       {formatCents(plan.price_cents ?? 0)}
                     </span>
-                    <span className="bill-hero__period">/mo</span>
+                    <span className="bill-plan-card__period">/mo</span>
                   </>
                 )}
-              </h1>
+              </div>
               {canceled ? (
-                <div className="bill-hero__cancel-notice">
+                <div className="bill-plan-card__cancel-notice">
                   <IconWarning />
                   Subscription canceled — access until{" "}
                   {formatDate(sub.current_period_end)}
                 </div>
               ) : (
-                <div className="bill-hero__next">
+                <div className="bill-plan-card__next">
                   Next billing{" "}
                   <strong>{formatDate(sub.current_period_end)}</strong> —{" "}
                   {plan.pricing_model === "outcome_based"
@@ -658,91 +659,97 @@ export default function MerchantBillingPage() {
                 </div>
               )}
             </div>
-            <div className="bill-hero__right">
-              <div className="bill-hero__stat">
-                <div className="bill-hero__stat-label">Status</div>
-                <div className="bill-hero__stat-value">
+
+            <div className="bill-plan-card__right">
+              <div className="bill-plan-stat">
+                <span className="bill-plan-stat__label">Status</span>
+                <span className="bill-plan-stat__value">
                   {canceled ? "Cancels soon" : "Active"}
-                </div>
+                </span>
               </div>
-              <div className="bill-hero__stat">
-                <div className="bill-hero__stat-label">Days until renewal</div>
-                <div className="bill-hero__stat-value">
+              <div className="bill-plan-divider" />
+              <div className="bill-plan-stat">
+                <span className="bill-plan-stat__label">Days left</span>
+                <span className="bill-plan-stat__value">
                   {daysUntil(sub.current_period_end)}
-                </div>
+                </span>
               </div>
-              <div className="bill-hero__stat">
-                <div className="bill-hero__stat-label">Since</div>
-                <div className="bill-hero__stat-value">
+              <div className="bill-plan-divider" />
+              <div className="bill-plan-stat">
+                <span className="bill-plan-stat__label">Member since</span>
+                <span className="bill-plan-stat__value">
                   {formatDate(sub.current_period_start)}
-                </div>
+                </span>
               </div>
+              {!canceled && (
+                <div className="bill-plan-card__actions">
+                  <button
+                    className="bill-btn-primary"
+                    onClick={() => setShowUpgrade(true)}
+                  >
+                    {currentPlan === "pro" ? "Downgrade" : "Upgrade"}
+                  </button>
+                  <button
+                    className="bill-btn-ghost"
+                    onClick={() => setShowCancel(true)}
+                  >
+                    Cancel plan
+                  </button>
+                </div>
+              )}
             </div>
-          </section>
+          </div>
 
           {planChanged && (
             <div className="bill-toast">Plan updated successfully.</div>
           )}
 
-          <div className="bill-grid">
-            {/* ── Left column ───────────────────────────────────────── */}
-            <div className="bill-col bill-col--main">
-              {/* Plan card */}
-              <div className="bill-card">
-                <div className="bill-card__header">
-                  <div className="bill-card__icon">
-                    <IconCard />
-                  </div>
-                  <h2 className="bill-card__title">Current Plan</h2>
+          {/* Usage Summary */}
+          <div className="bill-card">
+            <div className="bill-card__header">
+              <span className="bill-card__title">Usage This Month</span>
+            </div>
+            <div className="bill-usage-row">
+              <div className="bill-usage-stat">
+                <span className="bill-usage-stat__label">Visits</span>
+                <span className="bill-usage-stat__value">340</span>
+                <div className="bill-usage-stat__bar-track">
+                  <div
+                    className="bill-usage-stat__bar-fill"
+                    style={{ width: "68%" }}
+                  />
                 </div>
-
-                <div className="bill-plan-details">
-                  <div className="bill-plan-details__name">{plan.name}</div>
-                  <div className="bill-plan-details__price">
-                    {formatPlanPrice(plan)}
-                  </div>
-                  {plan.pricing_note && (
-                    <div className="bill-plan-details__note">
-                      {plan.pricing_note}
-                    </div>
-                  )}
-                  <ul className="bill-plan-details__features">
-                    {plan.features.map((f) => (
-                      <li key={f}>
-                        <span className="bill-plan-details__check">
-                          <IconCheck />
-                        </span>
-                        {f}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-
-                {!canceled && (
-                  <div className="bill-card__actions">
-                    <button
-                      className="bill-btn-primary"
-                      onClick={() => setShowUpgrade(true)}
-                    >
-                      {currentPlan === "pro" ? "Downgrade" : "Upgrade"}
-                    </button>
-                    <button
-                      className="bill-btn-ghost"
-                      onClick={() => setShowCancel(true)}
-                    >
-                      Cancel plan
-                    </button>
-                  </div>
-                )}
+                <span className="bill-usage-stat__sub">340 / 500 visits</span>
               </div>
+              <div className="bill-usage-stat">
+                <span className="bill-usage-stat__label">Active Campaigns</span>
+                <span className="bill-usage-stat__value">3</span>
+                <div className="bill-usage-stat__bar-track">
+                  <div
+                    className="bill-usage-stat__bar-fill"
+                    style={{ width: "60%" }}
+                  />
+                </div>
+                <span className="bill-usage-stat__sub">3 of 5 allowed</span>
+              </div>
+              <div className="bill-usage-stat">
+                <span className="bill-usage-stat__label">Cost per Visit</span>
+                <span className="bill-usage-stat__value">$6.91</span>
+                <span className="bill-usage-stat__sub">avg this period</span>
+              </div>
+            </div>
+          </div>
 
-              {/* Invoice history */}
+          {/* Main grid: invoices + right sidebar */}
+          <div className="bill-grid">
+            {/* Left: invoice history */}
+            <div>
               <div className="bill-card">
                 <div className="bill-card__header">
                   <div className="bill-card__icon">
                     <IconReceipt />
                   </div>
-                  <h2 className="bill-card__title">Invoice History</h2>
+                  <span className="bill-card__title">Invoice History</span>
                   <span className="bill-card__meta">
                     {MOCK_INVOICES.length} invoices
                   </span>
@@ -796,15 +803,15 @@ export default function MerchantBillingPage() {
               </div>
             </div>
 
-            {/* ── Right column ──────────────────────────────────────── */}
-            <div className="bill-col bill-col--side">
+            {/* Right sidebar */}
+            <div>
               {/* Payment method */}
               <div className="bill-card">
                 <div className="bill-card__header">
                   <div className="bill-card__icon">
                     <IconCard />
                   </div>
-                  <h2 className="bill-card__title">Payment Method</h2>
+                  <span className="bill-card__title">Payment Method</span>
                 </div>
 
                 <div className="bill-payment-method">
@@ -836,7 +843,7 @@ export default function MerchantBillingPage() {
               {/* Billing address */}
               <div className="bill-card">
                 <div className="bill-card__header">
-                  <h2 className="bill-card__title">Billing Address</h2>
+                  <span className="bill-card__title">Billing Address</span>
                   {!editingAddr && (
                     <button
                       className="bill-card__edit-btn"
@@ -910,7 +917,7 @@ export default function MerchantBillingPage() {
               {/* Tax info */}
               <div className="bill-card">
                 <div className="bill-card__header">
-                  <h2 className="bill-card__title">Tax Information</h2>
+                  <span className="bill-card__title">Tax Information</span>
                   {!editingTax && (
                     <button
                       className="bill-card__edit-btn"

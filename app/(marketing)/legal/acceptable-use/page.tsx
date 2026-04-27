@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "Acceptable Use Policy — Push",
@@ -6,601 +7,599 @@ export const metadata: Metadata = {
     "Standards of conduct governing all users of the Push creator attribution platform.",
 };
 
+const TOC = [
+  { id: "s1", label: "01 / Scope" },
+  { id: "s2", label: "02 / Attribution Integrity" },
+  { id: "s3", label: "03 / Content Standards" },
+  { id: "s4", label: "04 / Platform Integrity" },
+  { id: "s5", label: "05 / Merchant Conduct" },
+  { id: "s6", label: "06 / Creator Conduct" },
+  { id: "s7", label: "07 / Reporting Violations" },
+  { id: "s8", label: "08 / Enforcement" },
+  { id: "s9", label: "09 / Appeal Process" },
+  { id: "s10", label: "10 / Changes" },
+  { id: "s11", label: "11 / Contact" },
+];
+
+function SectionH2({
+  id,
+  num,
+  children,
+}: {
+  id: string;
+  num: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <h2 id={id} className="legal-section-h2">
+      <span className="legal-section-num">{num}</span>
+      {children}
+    </h2>
+  );
+}
+
+function SectionH3({ children }: { children: React.ReactNode }) {
+  return <h3 className="legal-section-h3">{children}</h3>;
+}
+
+function Divider() {
+  return <hr className="legal-divider" />;
+}
+
 export default function AcceptableUsePage() {
   return (
     <>
-      {/* Page Header */}
-      <header className="legal-header">
-        <p className="legal-header__eyebrow">Legal / Acceptable Use</p>
-        <h1 className="legal-header__title">Acceptable Use Policy</h1>
-        <div className="legal-header__meta">
-          <span className="legal-header__meta-item">
-            <strong>Last updated:</strong>&nbsp;April 15, 2026
-          </span>
-          <span className="legal-header__meta-divider" aria-hidden="true" />
-          <span className="legal-header__meta-item">Version 2.0</span>
-          <span className="legal-header__meta-divider" aria-hidden="true" />
-          <span className="legal-header__meta-item">
-            <svg
-              width="13"
-              height="13"
-              viewBox="0 0 13 13"
-              fill="none"
-              aria-hidden="true"
-              style={{ flexShrink: 0 }}
-            >
-              <circle
-                cx="6.5"
-                cy="6.5"
-                r="5.5"
-                stroke="currentColor"
-                strokeWidth="1.2"
-              />
-              <path
-                d="M6.5 4v3l2 1.5"
-                stroke="currentColor"
-                strokeWidth="1.2"
-                strokeLinecap="square"
-              />
-            </svg>
-            &nbsp;Estimated reading time:&nbsp;<strong>7 min</strong>
-          </span>
+      {/* ── HERO ─────────────────────────────────────────────────── */}
+      <section className="legal-hero">
+        <div className="legal-hero__inner">
+          <Link href="/legal" className="legal-hero__back">
+            &larr; Legal Hub
+          </Link>
+          <p className="legal-hero__eyebrow">(ACCEPTABLE USE POLICY)</p>
+          <h1 className="legal-hero__h1">Acceptable Use Policy</h1>
+          <div className="legal-hero__meta">
+            <span className="legal-hero__badge legal-hero__badge--strong">
+              Last updated: April 15, 2026
+            </span>
+            <span className="legal-hero__sep">/</span>
+            <span className="legal-hero__badge">Version 2.0</span>
+            <span className="legal-hero__sep">/</span>
+            <span className="legal-hero__badge">7 min read</span>
+          </div>
         </div>
-      </header>
+      </section>
 
-      {/* Introduction */}
-      <div className="legal-infobox">
-        <p className="legal-infobox__title">Purpose</p>
-        <p>
-          This Acceptable Use Policy (&ldquo;AUP&rdquo;) defines the standards
-          of conduct that apply to all users of the Push Platform — Creators,
-          Merchants, and any other parties accessing our services. Violations
-          may result in suspension, termination, and legal action. This AUP is
-          incorporated by reference into the{" "}
-          <a href="/legal/terms" style={{ color: "var(--tertiary)" }}>
-            Terms of Service
-          </a>
-          .
-        </p>
+      {/* ── DOCUMENT LAYOUT ──────────────────────────────────────── */}
+      <div className="legal-doc-wrap">
+        {/* LEFT — sticky TOC */}
+        <aside className="legal-toc">
+          <span className="legal-toc__label">(ON THIS PAGE)</span>
+          <ul className="legal-toc__list">
+            {TOC.map((item) => (
+              <li key={item.id} className="legal-toc__item">
+                <a href={`#${item.id}`} className="legal-toc__link">
+                  {item.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </aside>
+
+        {/* RIGHT — article */}
+        <article className="legal-article">
+          {/* Purpose notice */}
+          <div className="legal-notice legal-notice--warning">
+            <span className="legal-notice__eyebrow">Purpose</span>
+            <p>
+              This Acceptable Use Policy (&ldquo;AUP&rdquo;) defines the
+              standards of conduct that apply to all users of the Push Platform
+              — Creators, Merchants, and any other parties accessing our
+              services. Violations may result in suspension, termination, and
+              legal action. This AUP is incorporated by reference into the{" "}
+              <a href="/legal/terms">Terms of Service</a>.
+            </p>
+          </div>
+
+          {/* ── 1. Scope ── */}
+          <SectionH2 id="s1" num="01 /">
+            Scope &amp; Application
+          </SectionH2>
+          <p>This AUP applies to all access and use of:</p>
+          <ul>
+            <li>The Push web and mobile application at pushnyc.co;</li>
+            <li>The Push API and any integrations built on top of it;</li>
+            <li>
+              Content created, published, or submitted in connection with Push
+              campaigns, including content posted on third-party platforms
+              (Instagram, TikTok, YouTube) that references or promotes a
+              Push-attributed campaign;
+            </li>
+            <li>
+              QR codes, attribution links, and campaign materials generated by
+              the Platform; and
+            </li>
+            <li>
+              Any communication conducted through Push-provided messaging
+              features.
+            </li>
+          </ul>
+          <p>
+            This policy applies regardless of whether access occurs via browser,
+            mobile app, API, or any other interface.
+          </p>
+
+          <Divider />
+
+          {/* ── 2. Attribution Integrity ── */}
+          <SectionH2 id="s2" num="02 /">
+            Attribution Integrity
+          </SectionH2>
+          <p>
+            The integrity of QR attribution data is foundational to the Push
+            platform. Any attempt to artificially inflate, manipulate, or
+            misrepresent Attribution Events is a serious violation. Prohibited
+            conduct includes but is not limited to:
+          </p>
+          <ul>
+            <li>
+              Using bots, scripts, automated tools, or emulators to generate QR
+              scans;
+            </li>
+            <li>
+              Employing click farms, paid scan services, or any form of
+              organized inauthentic scanning;
+            </li>
+            <li>
+              Sharing, transferring, duplicating, or republishing a
+              Creator-specific QR code to any party other than genuine potential
+              customers;
+            </li>
+            <li>
+              Instructing, incentivizing, or coercing individuals to scan QR
+              codes without genuine intent to visit or purchase at the Merchant
+              location;
+            </li>
+            <li>
+              Using VPNs, proxy servers, or IP spoofing to circumvent geographic
+              validation in the attribution engine;
+            </li>
+            <li>
+              Creating fictitious customer visits through any technical or
+              social means;
+            </li>
+            <li>
+              Colluding with Merchant staff to falsely confirm visits that did
+              not occur; and
+            </li>
+            <li>
+              Submitting false or fabricated campaign performance data in any
+              dispute or reporting context.
+            </li>
+          </ul>
+
+          {/* Enforcement callout — warning tone */}
+          <div className="legal-notice legal-notice--warning">
+            <span className="legal-notice__eyebrow">Enforcement</span>
+            <p>
+              Push operates a real-time anti-fraud engine that monitors scan
+              velocity, device fingerprint anomalies, GPS cell consistency, and
+              IP reputation. Flagged events are reviewed by our Trust &amp;
+              Safety team within 24 hours. Confirmed fraud results in immediate
+              payout hold, account suspension, and clawback of previously paid
+              earnings.
+            </p>
+          </div>
+
+          <Divider />
+
+          {/* ── 3. Content Standards ── */}
+          <SectionH2 id="s3" num="03 /">
+            Content Standards
+          </SectionH2>
+          <p>
+            All Content created in connection with Push campaigns — whether
+            posted on Instagram, TikTok, YouTube, or any other platform — must
+            comply with the following standards:
+          </p>
+
+          <SectionH3>3.1 Accuracy &amp; Honesty</SectionH3>
+          <ul>
+            <li>
+              Content must accurately represent the Merchant&apos;s products,
+              services, and offers. False or misleading claims about pricing,
+              availability, quality, or features are prohibited.
+            </li>
+            <li>
+              Creators must disclose the paid/sponsored nature of all Campaign
+              content in compliance with FTC guidelines (16 CFR Part 255) and
+              any applicable platform rules. Accepted disclosures include
+              &ldquo;#ad,&rdquo; &ldquo;#sponsored,&rdquo; or a clearly visible
+              &ldquo;Paid partnership&rdquo; tag.
+            </li>
+            <li>
+              Creators may not claim personal experience with a product or
+              service they have not genuinely used or visited.
+            </li>
+          </ul>
+
+          <SectionH3>3.2 Prohibited Content Categories</SectionH3>
+          <p>The following content is strictly prohibited:</p>
+          <ul>
+            {[
+              [
+                "Hate speech:",
+                "content that promotes violence, discrimination, or dehumanization based on race, ethnicity, national origin, religion, gender, sexual orientation, disability, age, or immigration status;",
+              ],
+              [
+                "Harassment and abuse:",
+                "targeted harassment, threats, doxxing, or coordinated campaigns against individuals;",
+              ],
+              [
+                "Sexually explicit content:",
+                "nudity or sexual content in any Campaign material;",
+              ],
+              [
+                "Dangerous content:",
+                "glorification or instruction in violence, self-harm, eating disorders, or dangerous challenges;",
+              ],
+              [
+                "Illegal products or services:",
+                "promotion of illegal firearms, controlled substances (unless licensed), counterfeit goods, or services that violate applicable law;",
+              ],
+              [
+                "Misinformation:",
+                "health misinformation, election misinformation, or fabricated news presented as factual;",
+              ],
+              [
+                "Privacy violations:",
+                "sharing personal data, private images, or location information of others without consent; and",
+              ],
+              [
+                "Intellectual property infringement:",
+                "unauthorized use of copyrighted music, imagery, or brand marks in Campaign content.",
+              ],
+            ].map(([label, desc], i) => (
+              <li key={i}>
+                <strong>{label}</strong> {desc}
+              </li>
+            ))}
+          </ul>
+
+          <SectionH3>3.3 Age-Restricted Categories</SectionH3>
+          <p>
+            Campaigns promoting age-restricted products (alcohol, tobacco,
+            cannabis where legal, gambling) are subject to additional
+            restrictions:
+          </p>
+          <ul>
+            <li>
+              Merchants must confirm compliance with applicable New York State
+              licensing requirements before campaign activation;
+            </li>
+            <li>
+              Creators promoting age-restricted products must be 21+ (alcohol,
+              cannabis) or 18+ (tobacco, gambling) and must not target content
+              at underage audiences;
+            </li>
+            <li>
+              Content must include required legal disclaimers (e.g.,
+              &ldquo;Drink responsibly. Must be 21+&rdquo;); and
+            </li>
+            <li>
+              Platform campaign pages for age-restricted Merchants will display
+              an age-gate interstitial.
+            </li>
+          </ul>
+
+          <Divider />
+
+          {/* ── 4. Platform Integrity ── */}
+          <SectionH2 id="s4" num="04 /">
+            Platform Integrity
+          </SectionH2>
+          <p>
+            Users must not take any action that compromises the security,
+            availability, or integrity of the Platform. Prohibited technical
+            conduct includes:
+          </p>
+          <ol>
+            {[
+              "Attempting to gain unauthorized access to any account, system, or network associated with the Platform;",
+              "Introducing malware, ransomware, spyware, or any other malicious code;",
+              "Conducting or facilitating denial-of-service (DoS) or distributed denial-of-service (DDoS) attacks;",
+              "Exploiting vulnerabilities without prior written authorization from Push security (responsible disclosure: security@pushnyc.co);",
+              "Reverse-engineering, decompiling, or disassembling any part of the Platform software or QR attribution system;",
+              "Scraping, harvesting, or systematically extracting data from the Platform without a valid API authorization;",
+              "Circumventing rate limits, access controls, or IP-based restrictions; and",
+              "Impersonating Push infrastructure, endpoints, or security certificates.",
+            ].map((item, i) => (
+              <li key={i}>{item}</li>
+            ))}
+          </ol>
+
+          <Divider />
+
+          {/* ── 5. Merchant Conduct ── */}
+          <SectionH2 id="s5" num="05 /">
+            Merchant Conduct Standards
+          </SectionH2>
+          <p>Merchants must adhere to the following conduct standards:</p>
+          <ul>
+            {[
+              [
+                "Honest campaign briefs:",
+                "Campaign descriptions, payout structures, and product/service claims must be accurate and not misleading to Creators or customers.",
+              ],
+              [
+                "Timely payment commitments:",
+                "Merchants must ensure sufficient campaign budget is committed before activation. Underfunding a campaign after Creator content has been published is a material breach.",
+              ],
+              [
+                "No off-platform solicitation:",
+                "Merchants may not contact Creators outside the Platform to negotiate alternative arrangements that circumvent Push fees or attribution tracking.",
+              ],
+              [
+                "Non-discrimination:",
+                "Merchants may not exclude Creators from campaigns on grounds of race, ethnicity, gender, religion, sexual orientation, disability, age, or national origin.",
+              ],
+              [
+                "No abusive campaign terms:",
+                "Merchants may not require Creators to make personal purchases, provide personal services, or meet unreasonable content revision demands as conditions of payout.",
+              ],
+              [
+                "Regulatory compliance:",
+                "Merchants are solely responsible for ensuring their campaigns comply with all applicable federal, New York State, and NYC municipal regulations, including those governing advertising, food safety, licensing, and consumer protection.",
+              ],
+            ].map(([label, desc], i) => (
+              <li key={i}>
+                <strong>{label}</strong> {desc}
+              </li>
+            ))}
+          </ul>
+
+          <Divider />
+
+          {/* ── 6. Creator Conduct ── */}
+          <SectionH2 id="s6" num="06 /">
+            Creator Conduct Standards
+          </SectionH2>
+          <p>Creators must adhere to the following conduct standards:</p>
+          <ul>
+            {[
+              [
+                "Authentic audience:",
+                "Creator follower counts, engagement rates, and audience demographics submitted to Push must reflect genuine organic audiences. Purchased followers, engagement pods used to artificially boost metrics, and fake accounts are prohibited and may trigger tier reassignment or account termination.",
+              ],
+              [
+                "Genuine promotion:",
+                "Creators must personally publish all Campaign content from their own accounts. Ghost-posting, account sharing, or using a third-party to publish content on your behalf is prohibited.",
+              ],
+              [
+                "Content ownership:",
+                "Creators warrant that they own or have obtained all necessary rights (including music licenses, image rights, and location releases) for any Content submitted through the Platform.",
+              ],
+              [
+                "Timely delivery:",
+                "Creators accept Campaign deliverable timelines at the time of application. Repeated failure to deliver on time may result in tier demotion.",
+              ],
+              [
+                "No negative campaigning:",
+                "Creators may not publish content disparaging a Merchant competitor as part of a Push campaign.",
+              ],
+              [
+                "Tax compliance:",
+                "Creators are independent contractors responsible for their own tax obligations. Push provides 1099-NEC forms for earnings above $600/year but makes no tax withholdings.",
+              ],
+            ].map(([label, desc], i) => (
+              <li key={i}>
+                <strong>{label}</strong> {desc}
+              </li>
+            ))}
+          </ul>
+
+          <Divider />
+
+          {/* ── 7. Reporting Violations ── */}
+          <SectionH2 id="s7" num="07 /">
+            Reporting Violations
+          </SectionH2>
+          <p>
+            If you observe conduct that violates this AUP, we encourage you to
+            report it promptly. Reports are investigated by our Trust &amp;
+            Safety team and treated with appropriate confidentiality.
+          </p>
+          <ul>
+            <li>
+              <strong>In-platform reporting:</strong> use the
+              &ldquo;Report&rdquo; flag on any campaign, Creator profile, or
+              Merchant listing.
+            </li>
+            <li>
+              <strong>Email:</strong>{" "}
+              <a href="mailto:trust@pushnyc.co">trust@pushnyc.co</a>
+            </li>
+            <li>
+              <strong>Anti-fraud hotline:</strong> for suspected attribution
+              fraud, email{" "}
+              <a href="mailto:antifraud@pushnyc.co">antifraud@pushnyc.co</a>{" "}
+              with campaign ID and description of the suspected activity.
+            </li>
+          </ul>
+          <p>
+            False or malicious reports submitted in bad faith are themselves a
+            violation of this AUP and may result in account suspension.
+          </p>
+
+          <Divider />
+
+          {/* ── 8. Enforcement ── */}
+          <SectionH2 id="s8" num="08 /">
+            Enforcement &amp; Consequences
+          </SectionH2>
+          <p>
+            Push takes AUP violations seriously. Enforcement actions are
+            proportional to the severity and frequency of violations:
+          </p>
+          <div className="legal-table-wrap" style={{ marginTop: "16px" }}>
+            <table className="legal-table">
+              <thead>
+                <tr>
+                  {[
+                    "Violation Severity",
+                    "Typical Action",
+                    "Appeal Window",
+                  ].map((h) => (
+                    <th key={h}>{h}</th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {[
+                  [
+                    "Minor (first offense, no harm)",
+                    "Written warning; content removal request",
+                    "Not applicable",
+                  ],
+                  [
+                    "Moderate (repeat offense or material harm to one party)",
+                    "Temporary suspension (7–30 days); campaign disqualification; payout hold",
+                    "14 days",
+                  ],
+                  [
+                    "Severe (fraud, harassment, illegal content)",
+                    "Permanent account termination; payout clawback; referral to law enforcement",
+                    "14 days",
+                  ],
+                  [
+                    "Critical (systematic fraud, platform attack)",
+                    "Immediate permanent ban; civil and/or criminal legal action; public disclosure where required by law",
+                    "None",
+                  ],
+                ].map(([severity, action, appeal], i) => (
+                  <tr key={i}>
+                    <td>{severity}</td>
+                    <td style={{ fontWeight: "normal", color: "var(--ink-3)" }}>
+                      {action}
+                    </td>
+                    <td style={{ whiteSpace: "nowrap" }}>{appeal}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <p style={{ marginTop: "16px" }}>
+            Push reserves the right to take any action it deems appropriate,
+            including actions not listed above, to protect the Platform, its
+            users, and the integrity of the attribution ecosystem.
+          </p>
+
+          <Divider />
+
+          {/* ── 9. Appeals ── */}
+          <SectionH2 id="s9" num="09 /">
+            Appeal Process
+          </SectionH2>
+          <p>
+            Users subject to enforcement actions (except Critical violations)
+            may submit an appeal within the applicable appeal window. To appeal:
+          </p>
+          <ol>
+            <li>
+              Email <a href="mailto:appeals@pushnyc.co">appeals@pushnyc.co</a>{" "}
+              with subject line &ldquo;AUP Appeal — [your username]&rdquo;;
+            </li>
+            <li>
+              Include your account email, the enforcement action received, and a
+              clear statement of why you believe the action was incorrect or
+              disproportionate;
+            </li>
+            <li>
+              Attach any supporting evidence (screenshots, timestamps,
+              third-party verification).
+            </li>
+          </ol>
+          <p>
+            Our Trust &amp; Safety team will review appeals within 10 business
+            days and issue a written decision. Appeal decisions are final.
+            During an active appeal, account suspension remains in effect unless
+            Push determines a temporary lift is warranted.
+          </p>
+
+          <Divider />
+
+          {/* ── 10. Changes ── */}
+          <SectionH2 id="s10" num="10 /">
+            Changes to This Policy
+          </SectionH2>
+          <p>
+            Push may update this AUP to address new threats, platform features,
+            or regulatory requirements. Material changes will be communicated
+            via email with at least 14 days&apos; notice. Continued use of the
+            Platform after the effective date constitutes acceptance of the
+            updated AUP.
+          </p>
+
+          <Divider />
+
+          {/* ── 11. Contact ── */}
+          <SectionH2 id="s11" num="11 /">
+            Contact
+          </SectionH2>
+          <ul>
+            <li>
+              <strong>Trust &amp; Safety:</strong>{" "}
+              <a href="mailto:trust@pushnyc.co">trust@pushnyc.co</a>
+            </li>
+            <li>
+              <strong>Anti-Fraud:</strong>{" "}
+              <a href="mailto:antifraud@pushnyc.co">antifraud@pushnyc.co</a>
+            </li>
+            <li>
+              <strong>Appeals:</strong>{" "}
+              <a href="mailto:appeals@pushnyc.co">appeals@pushnyc.co</a>
+            </li>
+            <li>
+              <strong>Legal:</strong>{" "}
+              <a href="mailto:legal@pushnyc.co">legal@pushnyc.co</a>
+            </li>
+            <li>
+              <strong>Post:</strong> Push NYC, Inc., Attn: Trust &amp; Safety,
+              28 West 23rd St, New York, NY 10010
+            </li>
+          </ul>
+
+          {/* Responsible disclosure callout — positive */}
+          <div
+            className="legal-notice legal-notice--positive"
+            style={{ marginTop: "32px" }}
+          >
+            <span className="legal-notice__eyebrow">
+              Responsible Disclosure
+            </span>
+            <p>
+              If you discover a security vulnerability in the Push Platform,
+              please report it confidentially to{" "}
+              <a href="mailto:security@pushnyc.co">security@pushnyc.co</a>{" "}
+              before public disclosure. We commit to acknowledging reports
+              within 48 hours and resolving critical issues within 30 days.
+            </p>
+          </div>
+        </article>
       </div>
 
-      {/* ── 1. Scope ──────────────────────────────────────────── */}
-      <h2 id="s1" className="legal-section-heading">
-        <span className="legal-section-heading__number">01 /</span>
-        Scope &amp; Application
-      </h2>
-      <p>This AUP applies to all access and use of:</p>
-      <ul>
-        <li>The Push web and mobile application at pushnyc.co;</li>
-        <li>The Push API and any integrations built on top of it;</li>
-        <li>
-          Content created, published, or submitted in connection with Push
-          campaigns, including content posted on third-party platforms
-          (Instagram, TikTok, YouTube) that references or promotes a
-          Push-attributed campaign;
-        </li>
-        <li>
-          QR codes, attribution links, and campaign materials generated by the
-          Platform; and
-        </li>
-        <li>
-          Any communication conducted through Push-provided messaging features.
-        </li>
-      </ul>
-      <p>
-        This policy applies regardless of whether access occurs via browser,
-        mobile app, API, or any other interface.
-      </p>
-
-      <hr className="legal-divider" />
-
-      {/* ── 2. Attribution Integrity ──────────────────────────── */}
-      <h2 id="s2" className="legal-section-heading">
-        <span className="legal-section-heading__number">02 /</span>
-        Attribution Integrity
-      </h2>
-      <p>
-        The integrity of QR attribution data is foundational to the Push
-        platform. Any attempt to artificially inflate, manipulate, or
-        misrepresent Attribution Events is a serious violation. Prohibited
-        conduct includes but is not limited to:
-      </p>
-      <ul>
-        <li>
-          Using bots, scripts, automated tools, or emulators to generate QR
-          scans;
-        </li>
-        <li>
-          Employing click farms, paid scan services, or any form of organized
-          inauthentic scanning;
-        </li>
-        <li>
-          Sharing, transferring, duplicating, or republishing a Creator-specific
-          QR code to any party other than genuine potential customers;
-        </li>
-        <li>
-          Instructing, incentivizing, or coercing individuals to scan QR codes
-          without genuine intent to visit or purchase at the Merchant location;
-        </li>
-        <li>
-          Using VPNs, proxy servers, or IP spoofing to circumvent geographic
-          validation in the attribution engine;
-        </li>
-        <li>
-          Creating fictitious customer visits through any technical or social
-          means;
-        </li>
-        <li>
-          Colluding with Merchant staff to falsely confirm visits that did not
-          occur; and
-        </li>
-        <li>
-          Submitting false or fabricated campaign performance data in any
-          dispute or reporting context.
-        </li>
-      </ul>
-
-      <div className="legal-callout">
-        <p>
-          <strong>Enforcement:</strong> Push operates a real-time anti-fraud
-          engine that monitors scan velocity, device fingerprint anomalies, GPS
-          cell consistency, and IP reputation. Flagged events are reviewed by
-          our Trust &amp; Safety team within 24 hours. Confirmed fraud results
-          in immediate payout hold, account suspension, and clawback of
-          previously paid earnings.
-        </p>
-      </div>
-
-      <hr className="legal-divider" />
-
-      {/* ── 3. Content Standards ──────────────────────────────── */}
-      <h2 id="s3" className="legal-section-heading">
-        <span className="legal-section-heading__number">03 /</span>
-        Content Standards
-      </h2>
-      <p>
-        All Content created in connection with Push campaigns — whether posted
-        on Instagram, TikTok, YouTube, or any other platform — must comply with
-        the following standards:
-      </p>
-
-      <h3>3.1 Accuracy &amp; Honesty</h3>
-      <ul>
-        <li>
-          Content must accurately represent the Merchant&apos;s products,
-          services, and offers. False or misleading claims about pricing,
-          availability, quality, or features are prohibited.
-        </li>
-        <li>
-          Creators must disclose the paid/sponsored nature of all Campaign
-          content in compliance with FTC guidelines (16 CFR Part 255) and any
-          applicable platform rules. Accepted disclosures include
-          &ldquo;#ad,&rdquo; &ldquo;#sponsored,&rdquo; or a clearly visible
-          &ldquo;Paid partnership&rdquo; tag.
-        </li>
-        <li>
-          Creators may not claim personal experience with a product or service
-          they have not genuinely used or visited.
-        </li>
-      </ul>
-
-      <h3>3.2 Prohibited Content Categories</h3>
-      <p>The following content is strictly prohibited:</p>
-      <ul>
-        <li>
-          <strong>Hate speech:</strong> content that promotes violence,
-          discrimination, or dehumanization based on race, ethnicity, national
-          origin, religion, gender, sexual orientation, disability, age, or
-          immigration status;
-        </li>
-        <li>
-          <strong>Harassment and abuse:</strong> targeted harassment, threats,
-          doxxing, or coordinated campaigns against individuals;
-        </li>
-        <li>
-          <strong>Sexually explicit content:</strong> nudity or sexual content
-          in any Campaign material;
-        </li>
-        <li>
-          <strong>Dangerous content:</strong> glorification or instruction in
-          violence, self-harm, eating disorders, or dangerous challenges;
-        </li>
-        <li>
-          <strong>Illegal products or services:</strong> promotion of illegal
-          firearms, controlled substances (unless licensed), counterfeit goods,
-          or services that violate applicable law;
-        </li>
-        <li>
-          <strong>Misinformation:</strong> health misinformation, election
-          misinformation, or fabricated news presented as factual;
-        </li>
-        <li>
-          <strong>Privacy violations:</strong> sharing personal data, private
-          images, or location information of others without consent; and
-        </li>
-        <li>
-          <strong>Intellectual property infringement:</strong> unauthorized use
-          of copyrighted music, imagery, or brand marks in Campaign content.
-        </li>
-      </ul>
-
-      <h3>3.3 Age-Restricted Categories</h3>
-      <p>
-        Campaigns promoting age-restricted products (alcohol, tobacco, cannabis
-        where legal, gambling) are subject to additional restrictions:
-      </p>
-      <ul>
-        <li>
-          Merchants must confirm compliance with applicable New York State
-          licensing requirements before campaign activation;
-        </li>
-        <li>
-          Creators promoting age-restricted products must be 21+ (alcohol,
-          cannabis) or 18+ (tobacco, gambling) and must not target content at
-          underage audiences;
-        </li>
-        <li>
-          Content must include required legal disclaimers (e.g., &ldquo;Drink
-          responsibly. Must be 21+&rdquo;); and
-        </li>
-        <li>
-          Platform campaign pages for age-restricted Merchants will display an
-          age-gate interstitial.
-        </li>
-      </ul>
-
-      <hr className="legal-divider" />
-
-      {/* ── 4. Platform Integrity ─────────────────────────────── */}
-      <h2 id="s4" className="legal-section-heading">
-        <span className="legal-section-heading__number">04 /</span>
-        Platform Integrity
-      </h2>
-      <p>
-        Users must not take any action that compromises the security,
-        availability, or integrity of the Platform. Prohibited technical conduct
-        includes:
-      </p>
-      <ol>
-        <li>
-          Attempting to gain unauthorized access to any account, system, or
-          network associated with the Platform;
-        </li>
-        <li>
-          Introducing malware, ransomware, spyware, or any other malicious code;
-        </li>
-        <li>
-          Conducting or facilitating denial-of-service (DoS) or distributed
-          denial-of-service (DDoS) attacks;
-        </li>
-        <li>
-          Exploiting vulnerabilities without prior written authorization from
-          Push security (responsible disclosure: security@pushnyc.co);
-        </li>
-        <li>
-          Reverse-engineering, decompiling, or disassembling any part of the
-          Platform software or QR attribution system;
-        </li>
-        <li>
-          Scraping, harvesting, or systematically extracting data from the
-          Platform without a valid API authorization;
-        </li>
-        <li>
-          Circumventing rate limits, access controls, or IP-based restrictions;
-          and
-        </li>
-        <li>
-          Impersonating Push infrastructure, endpoints, or security
-          certificates.
-        </li>
-      </ol>
-
-      <hr className="legal-divider" />
-
-      {/* ── 5. Merchant Conduct ───────────────────────────────── */}
-      <h2 id="s5" className="legal-section-heading">
-        <span className="legal-section-heading__number">05 /</span>
-        Merchant Conduct Standards
-      </h2>
-      <p>Merchants must adhere to the following conduct standards:</p>
-      <ul>
-        <li>
-          <strong>Honest campaign briefs:</strong> Campaign descriptions, payout
-          structures, and product/service claims must be accurate and not
-          misleading to Creators or customers.
-        </li>
-        <li>
-          <strong>Timely payment commitments:</strong> Merchants must ensure
-          sufficient campaign budget is committed before activation.
-          Underfunding a campaign after Creator content has been published is a
-          material breach.
-        </li>
-        <li>
-          <strong>No off-platform solicitation:</strong> Merchants may not
-          contact Creators outside the Platform to negotiate alternative
-          arrangements that circumvent Push fees or attribution tracking.
-        </li>
-        <li>
-          <strong>Non-discrimination:</strong> Merchants may not exclude
-          Creators from campaigns on grounds of race, ethnicity, gender,
-          religion, sexual orientation, disability, age, or national origin.
-        </li>
-        <li>
-          <strong>No abusive campaign terms:</strong> Merchants may not require
-          Creators to make personal purchases, provide personal services, or
-          meet unreasonable content revision demands as conditions of payout.
-        </li>
-        <li>
-          <strong>Regulatory compliance:</strong> Merchants are solely
-          responsible for ensuring their campaigns comply with all applicable
-          federal, New York State, and NYC municipal regulations, including
-          those governing advertising, food safety, licensing, and consumer
-          protection.
-        </li>
-      </ul>
-
-      <hr className="legal-divider" />
-
-      {/* ── 6. Creator Conduct ────────────────────────────────── */}
-      <h2 id="s6" className="legal-section-heading">
-        <span className="legal-section-heading__number">06 /</span>
-        Creator Conduct Standards
-      </h2>
-      <p>Creators must adhere to the following conduct standards:</p>
-      <ul>
-        <li>
-          <strong>Authentic audience:</strong> Creator follower counts,
-          engagement rates, and audience demographics submitted to Push must
-          reflect genuine organic audiences. Purchased followers, engagement
-          pods used to artificially boost metrics, and fake accounts are
-          prohibited and may trigger tier reassignment or account termination.
-        </li>
-        <li>
-          <strong>Genuine promotion:</strong> Creators must personally publish
-          all Campaign content from their own accounts. Ghost-posting, account
-          sharing, or using a third-party to publish content on your behalf is
-          prohibited.
-        </li>
-        <li>
-          <strong>Content ownership:</strong> Creators warrant that they own or
-          have obtained all necessary rights (including music licenses, image
-          rights, and location releases) for any Content submitted through the
-          Platform.
-        </li>
-        <li>
-          <strong>Timely delivery:</strong> Creators accept Campaign deliverable
-          timelines at the time of application. Repeated failure to deliver on
-          time may result in tier demotion.
-        </li>
-        <li>
-          <strong>No negative campaigning:</strong> Creators may not publish
-          content disparaging a Merchant competitor as part of a Push campaign.
-        </li>
-        <li>
-          <strong>Tax compliance:</strong> Creators are independent contractors
-          responsible for their own tax obligations. Push provides 1099-NEC
-          forms for earnings above $600/year but makes no tax withholdings.
-        </li>
-      </ul>
-
-      <hr className="legal-divider" />
-
-      {/* ── 7. Reporting Violations ───────────────────────────── */}
-      <h2 id="s7" className="legal-section-heading">
-        <span className="legal-section-heading__number">07 /</span>
-        Reporting Violations
-      </h2>
-      <p>
-        If you observe conduct that violates this AUP, we encourage you to
-        report it promptly. Reports are investigated by our Trust &amp; Safety
-        team and treated with appropriate confidentiality.
-      </p>
-      <ul>
-        <li>
-          <strong>In-platform reporting:</strong> use the &ldquo;Report&rdquo;
-          flag on any campaign, Creator profile, or Merchant listing.
-        </li>
-        <li>
-          <strong>Email:</strong>{" "}
-          <a
-            href="mailto:trust@pushnyc.co"
-            style={{ color: "var(--tertiary)" }}
-          >
-            trust@pushnyc.co
-          </a>
-        </li>
-        <li>
-          <strong>Anti-fraud hotline:</strong> for suspected attribution fraud,
-          email{" "}
-          <a
-            href="mailto:antifraud@pushnyc.co"
-            style={{ color: "var(--tertiary)" }}
-          >
-            antifraud@pushnyc.co
-          </a>{" "}
-          with campaign ID and description of the suspected activity.
-        </li>
-      </ul>
-      <p>
-        False or malicious reports submitted in bad faith are themselves a
-        violation of this AUP and may result in account suspension.
-      </p>
-
-      <hr className="legal-divider" />
-
-      {/* ── 8. Enforcement ────────────────────────────────────── */}
-      <h2 id="s8" className="legal-section-heading">
-        <span className="legal-section-heading__number">08 /</span>
-        Enforcement &amp; Consequences
-      </h2>
-      <p>
-        Push takes AUP violations seriously. Enforcement actions are
-        proportional to the severity and frequency of violations:
-      </p>
-      <div className="legal-table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>Violation Severity</th>
-              <th>Typical Action</th>
-              <th>Appeal Window</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Minor (first offense, no harm)</td>
-              <td>Written warning; content removal request</td>
-              <td>Not applicable</td>
-            </tr>
-            <tr>
-              <td>Moderate (repeat offense or material harm to one party)</td>
-              <td>
-                Temporary suspension (7–30 days); campaign disqualification;
-                payout hold
-              </td>
-              <td>14 days</td>
-            </tr>
-            <tr>
-              <td>Severe (fraud, harassment, illegal content)</td>
-              <td>
-                Permanent account termination; payout clawback; referral to law
-                enforcement
-              </td>
-              <td>14 days</td>
-            </tr>
-            <tr>
-              <td>Critical (systematic fraud, platform attack)</td>
-              <td>
-                Immediate permanent ban; civil and/or criminal legal action;
-                public disclosure where required by law
-              </td>
-              <td>None</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <p>
-        Push reserves the right to take any action it deems appropriate,
-        including actions not listed above, to protect the Platform, its users,
-        and the integrity of the attribution ecosystem.
-      </p>
-
-      <hr className="legal-divider" />
-
-      {/* ── 9. Appeals ────────────────────────────────────────── */}
-      <h2 id="s9" className="legal-section-heading">
-        <span className="legal-section-heading__number">09 /</span>
-        Appeal Process
-      </h2>
-      <p>
-        Users subject to enforcement actions (except Critical violations) may
-        submit an appeal within the applicable appeal window. To appeal:
-      </p>
-      <ol>
-        <li>
-          Email{" "}
-          <a
-            href="mailto:appeals@pushnyc.co"
-            style={{ color: "var(--tertiary)" }}
-          >
-            appeals@pushnyc.co
-          </a>{" "}
-          with subject line &ldquo;AUP Appeal — [your username]&rdquo;;
-        </li>
-        <li>
-          Include your account email, the enforcement action received, and a
-          clear statement of why you believe the action was incorrect or
-          disproportionate;
-        </li>
-        <li>
-          Attach any supporting evidence (screenshots, timestamps, third-party
-          verification).
-        </li>
-      </ol>
-      <p>
-        Our Trust &amp; Safety team will review appeals within 10 business days
-        and issue a written decision. Appeal decisions are final. During an
-        active appeal, account suspension remains in effect unless Push
-        determines a temporary lift is warranted.
-      </p>
-
-      <hr className="legal-divider" />
-
-      {/* ── 10. Changes ───────────────────────────────────────── */}
-      <h2 id="s10" className="legal-section-heading">
-        <span className="legal-section-heading__number">10 /</span>
-        Changes to This Policy
-      </h2>
-      <p>
-        Push may update this AUP to address new threats, platform features, or
-        regulatory requirements. Material changes will be communicated via email
-        with at least 14 days&apos; notice. Continued use of the Platform after
-        the effective date constitutes acceptance of the updated AUP.
-      </p>
-
-      <hr className="legal-divider" />
-
-      {/* ── 11. Contact ───────────────────────────────────────── */}
-      <h2 id="s11" className="legal-section-heading">
-        <span className="legal-section-heading__number">11 /</span>
-        Contact
-      </h2>
-      <ul>
-        <li>
-          <strong>Trust &amp; Safety:</strong>{" "}
-          <a
-            href="mailto:trust@pushnyc.co"
-            style={{ color: "var(--tertiary)" }}
-          >
-            trust@pushnyc.co
-          </a>
-        </li>
-        <li>
-          <strong>Anti-Fraud:</strong>{" "}
-          <a
-            href="mailto:antifraud@pushnyc.co"
-            style={{ color: "var(--tertiary)" }}
-          >
-            antifraud@pushnyc.co
-          </a>
-        </li>
-        <li>
-          <strong>Appeals:</strong>{" "}
-          <a
-            href="mailto:appeals@pushnyc.co"
-            style={{ color: "var(--tertiary)" }}
-          >
-            appeals@pushnyc.co
-          </a>
-        </li>
-        <li>
-          <strong>Legal:</strong>{" "}
-          <a
-            href="mailto:legal@pushnyc.co"
-            style={{ color: "var(--tertiary)" }}
-          >
-            legal@pushnyc.co
-          </a>
-        </li>
-        <li>
-          <strong>Post:</strong> Push NYC, Inc., Attn: Trust &amp; Safety, 28
-          West 23rd St, New York, NY 10010
-        </li>
-      </ul>
-
-      <div className="legal-callout">
-        <p>
-          <strong>Responsible disclosure:</strong> If you discover a security
-          vulnerability in the Push Platform, please report it confidentially to{" "}
-          <a
-            href="mailto:security@pushnyc.co"
-            style={{ color: "var(--primary)" }}
-          >
-            security@pushnyc.co
-          </a>{" "}
-          before public disclosure. We commit to acknowledging reports within 48
-          hours and resolving critical issues within 30 days.
-        </p>
+      {/* ── DOCUMENT FOOTER BAR ──────────────────────────────────── */}
+      <div className="legal-footer-bar">
+        <div className="legal-footer-bar__inner">
+          <p className="legal-footer-bar__text">
+            Questions? <a href="mailto:legal@pushnyc.co">legal@pushnyc.co</a>
+          </p>
+          <div className="legal-footer-bar__actions">
+            <Link href="/legal" className="legal-footer-bar__back-link">
+              &larr; Legal Hub
+            </Link>
+            <button className="legal-btn-ghost">Download PDF</button>
+          </div>
+        </div>
       </div>
     </>
   );

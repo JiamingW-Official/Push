@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 
 export interface NavItem {
   key: string;
@@ -15,6 +16,7 @@ interface SettingsShellProps {
   activeSection: string;
   onSectionChange: (key: string) => void;
   children: React.ReactNode;
+  backHref?: string;
 }
 
 export function SettingsShell({
@@ -23,6 +25,7 @@ export function SettingsShell({
   activeSection,
   onSectionChange,
   children,
+  backHref = "/creator/dashboard",
 }: SettingsShellProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -49,6 +52,9 @@ export function SettingsShell({
         className={`settings-sidebar${mobileOpen ? " settings-sidebar--open" : ""}`}
       >
         <div className="settings-sidebar__header">
+          <Link href={backHref} className="settings-sidebar__back">
+            ← Dashboard
+          </Link>
           <span className="settings-sidebar__label">SETTINGS</span>
           <span className="settings-sidebar__title">{title}</span>
         </div>

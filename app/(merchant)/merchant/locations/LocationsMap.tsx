@@ -97,7 +97,7 @@ export default function LocationsMap({
               width: 28px;
               height: 28px;
               border-radius: 50%;
-              background: ${isOpen ? "var(--primary)" : "var(--graphite)"};
+              background: ${isOpen ? "var(--brand-red)" : "var(--graphite)"};
               border: 3px solid #fff;
               box-shadow: 0 2px 8px rgba(0,0,0,0.25);
               cursor: pointer;

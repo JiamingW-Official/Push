@@ -14,8 +14,8 @@ export interface CreatorTableProps {
 }
 
 const STATUS_COLORS: Record<CreatorRow["status"], string> = {
-  active: "var(--primary)", // Flag Red
-  prospect: "var(--tertiary)", // Steel Blue
+  active: "var(--brand-red)", // Flag Red
+  prospect: "var(--accent-blue)", // Steel Blue
   early_operator: "var(--accent)", // Molten Lava
   churn: "var(--accent)", // Molten Lava
 };

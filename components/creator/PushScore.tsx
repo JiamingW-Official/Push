@@ -186,7 +186,7 @@ export function PushScore({
     fontSize: 10,
     fontWeight: 600,
     letterSpacing: "0.12em",
-    color: "var(--dark)",
+    color: "var(--ink)",
     textTransform: "uppercase",
     lineHeight: 1,
   };
@@ -356,7 +356,7 @@ export function PushScore({
                   style={{
                     fontFamily: "var(--font-body)",
                     fontSize: 9,
-                    color: "var(--text-muted)",
+                    color: "var(--ink-4)",
                   }}
                 >
                   {TIER_LABELS[tier]}
@@ -398,7 +398,7 @@ export function PushScore({
               width: "100%",
               padding: "6px 8px",
               backgroundColor: "rgba(193, 18, 31, 0.05)",
-              borderLeft: "2px solid var(--primary)",
+              borderLeft: "2px solid var(--brand-red)",
             }}
           >
             <span

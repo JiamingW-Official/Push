@@ -1,620 +1,322 @@
-"use client";
-
+import type { Metadata } from "next";
 import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
-import {
-  useState,
-  useEffect,
-  useRef,
-  useCallback,
-  Suspense,
-  useLayoutEffect,
-} from "react";
-import {
-  FAQ_ITEMS,
-  CATEGORY_LABELS,
-  type FaqCategory,
-  type FaqItem,
-} from "@/lib/faq/mock-faqs";
 import "./faq.css";
 
-/* ── Types ───────────────────────────────────────────────── */
-type HelpfulVote = "yes" | "no" | null;
-
-/* ── Chevron icon ─────────────────────────────────────────── */
-function ChevronIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      className={className}
-      viewBox="0 0 20 20"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={1.6}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M5 7.5l5 5 5-5" />
-    </svg>
-  );
-}
-
-/* ── Search icon ──────────────────────────────────────────── */
-function SearchIcon() {
-  return (
-    <svg
-      width={18}
-      height={18}
-      viewBox="0 0 20 20"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={1.6}
-      strokeLinecap="round"
-    >
-      <circle cx={8.5} cy={8.5} r={5.5} />
-      <path d="M15 15l-3-3" />
-    </svg>
-  );
-}
-
-/* ── Per-category headline pair (Darky 800 + ghost) ───────── */
-const CATEGORY_HEADLINES: Record<
-  FaqCategory,
-  { num: string; lead: string; ghost: string }
-> = {
-  "for-merchants": {
-    num: "02",
-    lead: "Merchant",
-    ghost: "questions, answered.",
-  },
-  "for-creators": {
-    num: "03",
-    lead: "Creator",
-    ghost: "questions, answered.",
-  },
-  "pricing-payments": {
-    num: "04",
-    lead: "Payment",
-    ghost: "questions, answered.",
-  },
-  "attribution-qr": {
-    num: "05",
-    lead: "Verification",
-    ghost: "questions, answered.",
-  },
-  "trust-safety": {
-    num: "06",
-    lead: "Legal",
-    ghost: "questions, answered.",
-  },
+export const metadata: Metadata = {
+  title: "FAQ — Push",
+  description:
+    "Straight answers about how Push works — pricing, creator payouts, QR verification, attribution, and account questions.",
 };
 
-/* ── Accordion item ───────────────────────────────────────── */
-function FaqAccordionItem({
-  item,
-  relatedItems,
-  defaultOpen,
-  onRelatedClick,
-}: {
-  item: FaqItem;
-  relatedItems: FaqItem[];
-  defaultOpen?: boolean;
-  onRelatedClick: (id: string) => void;
-}) {
-  const [open, setOpen] = useState(defaultOpen ?? false);
-  const [vote, setVote] = useState<HelpfulVote>(null);
-  const panelRef = useRef<HTMLDivElement>(null);
-  const innerRef = useRef<HTMLDivElement>(null);
-
-  // Spring-like accordion — animate height via measured content height
-  useLayoutEffect(() => {
-    const panel = panelRef.current;
-    const inner = innerRef.current;
-    if (!panel || !inner) return;
-
-    if (open) {
-      panel.style.height = inner.scrollHeight + "px";
-    } else {
-      panel.style.height = "0px";
-    }
-  }, [open]);
-
-  // Re-measure on resize
-  useEffect(() => {
-    if (!open) return;
-    const panel = panelRef.current;
-    const inner = innerRef.current;
-    if (!panel || !inner) return;
-    const ro = new ResizeObserver(() => {
-      panel.style.height = inner.scrollHeight + "px";
-    });
-    ro.observe(inner);
-    return () => ro.disconnect();
-  }, [open]);
-
-  function handleVote(v: "yes" | "no") {
-    if (vote !== null) return;
-    setVote(v);
-  }
-
-  return (
-    <div className="faq-item" data-open={open} id={`faq-${item.id}`}>
-      <button
-        className="faq-item-trigger"
-        aria-expanded={open}
-        onClick={() => setOpen((prev) => !prev)}
-      >
-        <span className="faq-item-question">{item.question}</span>
-        <ChevronIcon className="faq-item-chevron" />
-      </button>
-
-      <div
-        ref={panelRef}
-        className="faq-item-panel"
-        style={{ height: defaultOpen ? undefined : "0px" }}
-        aria-hidden={!open}
-      >
-        <div ref={innerRef} className="faq-item-body">
-          <div>
-            <p className="faq-item-answer">{item.answer}</p>
-
-            <div className="faq-helpful">
-              <span className="faq-helpful-label">was this useful?</span>
-              {vote === null ? (
-                <>
-                  <button
-                    className="faq-helpful-btn"
-                    onClick={() => handleVote("yes")}
-                  >
-                    yes
-                  </button>
-                  <button
-                    className="faq-helpful-btn"
-                    onClick={() => handleVote("no")}
-                  >
-                    no
-                  </button>
-                </>
-              ) : (
-                <span className="faq-helpful-thanks">
-                  {vote === "yes"
-                    ? "noted — thanks."
-                    : "we'll sharpen the answer."}
-                </span>
-              )}
-            </div>
-          </div>
-
-          {relatedItems.length > 0 && (
-            <aside className="faq-related">
-              <p className="faq-related-label">Related</p>
-              <ul className="faq-related-list">
-                {relatedItems.map((rel) => (
-                  <li key={rel.id}>
-                    <button
-                      className="faq-related-link"
-                      onClick={() => onRelatedClick(rel.id)}
-                    >
-                      {rel.question}
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            </aside>
-          )}
-        </div>
-      </div>
-    </div>
-  );
-}
-
-/* ── All categories ordered ───────────────────────────────── */
-const ALL_CATEGORIES: FaqCategory[] = [
-  "for-merchants",
-  "for-creators",
-  "pricing-payments",
-  "attribution-qr",
-  "trust-safety",
+/* ── FAQ data ─────────────────────────────────────────────── */
+const FAQ_SECTIONS = [
+  {
+    id: "general",
+    label: "General",
+    num: "01",
+    items: [
+      {
+        q: "What is Push?",
+        a: "Push is a performance-based local marketing platform. Merchants run campaigns, creators promote them, and every conversion is tracked through a unique QR code tied to the creator's profile. You only pay when a real person walks in.",
+      },
+      {
+        q: "Where does Push operate?",
+        a: "We are currently live in Brooklyn and Lower Manhattan. Expansion to Chicago, Los Angeles, and Miami is planned for Q3 2026. Join the waitlist on the homepage to get early access in your city.",
+      },
+      {
+        q: "Is Push free to use?",
+        a: "Creators pay nothing to join or participate. Merchants have a free Lite plan (one campaign, one creator) and paid plans starting at $99/month. There are no setup fees and no retainers — you only pay for verified visits.",
+      },
+      {
+        q: "How is Push different from traditional influencer marketing?",
+        a: "Traditional deals pay a flat rate for posting. Push pays only for verified footfall — a real person who walked into the location and scanned at the door. No impressions, no follower counts, no guesswork.",
+      },
+    ],
+  },
+  {
+    id: "merchants",
+    label: "For Merchants",
+    num: "02",
+    items: [
+      {
+        q: "How does pricing work?",
+        a: "You set a per-visit rate when you create a campaign. There is no monthly retainer or upfront spend. You only pay after a customer walks in and the visit is verified by our three-signal oracle.",
+      },
+      {
+        q: "When do I actually pay?",
+        a: "Payments are swept weekly on Fridays via Stripe. Each line item shows the creator, scan ID, visit timestamp, and per-visit rate. You can audit every charge.",
+      },
+      {
+        q: "Can I set a daily or total budget cap?",
+        a: "Yes. When you create or edit a campaign you can set a daily visit cap and a total campaign cap. Once the cap is hit, the campaign pauses automatically and any unused budget is fully refunded.",
+      },
+      {
+        q: "What if I dispute a visit?",
+        a: "Open a dispute in the dashboard within 72 hours. The oracle replays all three signals. If the visit does not hold up, the charge is reversed and the creator is notified with a reason code.",
+      },
+      {
+        q: "How fast can I go live?",
+        a: "Most merchants are live within 3 days of signup. Campaign review takes under 24 hours. QR poster assets are generated automatically — no design work required.",
+      },
+    ],
+  },
+  {
+    id: "creators",
+    label: "For Creators",
+    num: "03",
+    items: [
+      {
+        q: "How do I get paid?",
+        a: "Stripe Connect deposits your verified visits every Friday morning. You connect your bank account during onboarding — no invoicing, no chasing.",
+      },
+      {
+        q: "What counts as a verified visit?",
+        a: "A customer who saw your post, walked to the venue, and scanned your unique QR. The oracle checks GPS coordinates, timestamp, and venue signal before clearing the payout.",
+      },
+      {
+        q: "Is there a follower minimum?",
+        a: "No. Your tier rate is set by your verified-visit history, not your follower count. A creator with 500 hyper-local followers who drives real visits earns more than one with 50K idle ones.",
+      },
+      {
+        q: "Can I work with multiple campaigns at once?",
+        a: "Yes. Your dashboard shows all campaigns you are approved for. Each one has a separate QR. You post, track, and get paid per campaign independently.",
+      },
+      {
+        q: "What if my visit did not verify?",
+        a: "You will receive a reason code — most common are GPS mismatch or scan outside open hours. You can appeal within 48 hours and a human reviews it.",
+      },
+    ],
+  },
+  {
+    id: "attribution",
+    label: "Attribution",
+    num: "04",
+    items: [
+      {
+        q: "How does the QR code work?",
+        a: "Each creator gets a unique QR per campaign. Scanning it logs the creator ID, campaign ID, device signal, and exact timestamp. One scan = one attribution attempt. No ambiguity.",
+      },
+      {
+        q: "Can visits be faked?",
+        a: "Three signals must align independently: QR scan, GPS presence at the venue, and timestamp within open hours. Spoofing all three simultaneously is effectively not possible at the campaign scale we run.",
+      },
+      {
+        q: "What if two creators drove the same customer?",
+        a: "The QR that was scanned at the door wins the attribution. There is no split. The other creator's post is recorded in their history but does not generate a payout for that visit.",
+      },
+      {
+        q: "What happens if a creator scans their own QR?",
+        a: "Self-scans are filtered by the oracle. Repeat self-scans flag the account for review. Every flagged case is read by a human within one business day.",
+      },
+    ],
+  },
 ];
 
-/* ── Category counts ──────────────────────────────────────── */
-const CATEGORY_COUNTS = ALL_CATEGORIES.reduce(
-  (acc, cat) => {
-    acc[cat] = FAQ_ITEMS.filter((f) => f.category === cat).length;
-    return acc;
-  },
-  {} as Record<FaqCategory, number>,
-);
-
-/* ── FAQ lookup map ───────────────────────────────────────── */
-const FAQ_MAP = new Map(FAQ_ITEMS.map((f) => [f.id, f]));
-
-/* ── Scroll-reveal hook ───────────────────────────────────── */
-function useScrollReveal() {
-  useEffect(() => {
-    const els = document.querySelectorAll<HTMLElement>(".faq-reveal");
-    if (!els.length) return;
-
-    const io = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            (entry.target as HTMLElement).classList.add("visible");
-            io.unobserve(entry.target);
-          }
-        });
-      },
-      { threshold: 0.12 },
-    );
-
-    els.forEach((el) => io.observe(el));
-    return () => io.disconnect();
-  }, []);
-}
-
-/* ── Inner page component (reads searchParams) ─────────────── */
-function FaqPageInner() {
-  const router = useRouter();
-  const searchParams = useSearchParams();
-
-  // Derive initial state from URL
-  const initialQuery = searchParams.get("q") ?? "";
-  const initialCat =
-    (searchParams.get("cat") as FaqCategory | null) ?? "for-merchants";
-
-  const [query, setQuery] = useState(initialQuery);
-  const [activeCat, setActiveCat] = useState<FaqCategory>(initialCat);
-
-  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const [debouncedQuery, setDebouncedQuery] = useState(initialQuery);
-
-  useScrollReveal();
-
-  // Debounce search query — 200ms
-  const handleSearchChange = useCallback(
-    (value: string) => {
-      setQuery(value);
-      if (debounceRef.current) clearTimeout(debounceRef.current);
-      debounceRef.current = setTimeout(() => {
-        setDebouncedQuery(value);
-        const params = new URLSearchParams();
-        if (value) params.set("q", value);
-        if (activeCat !== "for-merchants") params.set("cat", activeCat);
-        const qs = params.toString();
-        router.replace(`/faq${qs ? `?${qs}` : ""}`, { scroll: false });
-      }, 200);
-    },
-    [activeCat, router],
-  );
-
-  // Tab switch — clear search, update URL
-  const handleTabChange = useCallback(
-    (cat: FaqCategory) => {
-      setActiveCat(cat);
-      setQuery("");
-      setDebouncedQuery("");
-      const params = new URLSearchParams();
-      if (cat !== "for-merchants") params.set("cat", cat);
-      const qs = params.toString();
-      router.replace(`/faq${qs ? `?${qs}` : ""}`, { scroll: false });
-    },
-    [router],
-  );
-
-  // Scroll to a specific FAQ (used by related links)
-  const scrollToFaq = useCallback(
-    (id: string) => {
-      const item = FAQ_MAP.get(id);
-      if (!item) return;
-      if (item.category !== activeCat) {
-        setActiveCat(item.category);
-        setQuery("");
-        setDebouncedQuery("");
-      }
-      setTimeout(() => {
-        const el = document.getElementById(`faq-${id}`);
-        el?.scrollIntoView({ behavior: "smooth", block: "start" });
-      }, 60);
-    },
-    [activeCat],
-  );
-
-  // Filter items
-  const filtered = (() => {
-    const q = debouncedQuery.trim().toLowerCase();
-    if (q) {
-      return FAQ_ITEMS.filter(
-        (f) =>
-          f.question.toLowerCase().includes(q) ||
-          f.answer.toLowerCase().includes(q),
-      );
-    }
-    return FAQ_ITEMS.filter((f) => f.category === activeCat);
-  })();
-
-  const isSearching = debouncedQuery.trim().length > 0;
-  const heading = CATEGORY_HEADLINES[activeCat];
+/* ── Page ─────────────────────────────────────────────────── */
+export default function FaqPage() {
+  const totalQ = FAQ_SECTIONS.reduce((sum, s) => sum + s.items.length, 0);
 
   return (
-    <main className="faq-page">
-      {/* ── Hero — bg-hero-ink + grain + vignette ────────────── */}
-      <section className="faq-hero bg-hero-ink grain-overlay bg-vignette">
+    <main>
+      {/* ═══ 01 — HERO (dark, bottom-left anchored) ══════════ */}
+      <section aria-labelledby="faq-hero-heading" className="faq-hero">
+        {/* Decorative ghost "?" */}
+        <span aria-hidden="true" className="faq-hero-ghost-deco">
+          ?
+        </span>
+
         <div className="faq-hero-inner">
-          {/* Top row: pill + eyebrow */}
-          <div className="faq-hero-top">
-            <span className="pill-lux" style={{ color: "#fff" }}>
-              Pilot · SoHo / Tribeca / Chinatown
-            </span>
-            <span className="eyebrow-lux" style={{ color: "var(--champagne)" }}>
-              Opens June&nbsp;22
-            </span>
-          </div>
+          <div className="faq-hero-content">
+            <p
+              className="eyebrow"
+              style={{ color: "rgba(255,255,255,0.45)", marginBottom: 16 }}
+            >
+              (FREQUENTLY ASKED)
+            </p>
+            <h1 id="faq-hero-heading" className="faq-hero-title">
+              Answers.
+            </h1>
+            <p className="faq-hero-sub">
+              Real questions from merchants and creators during the pilot. No
+              sales-deck answers — just what actually happens.
+            </p>
 
-          {/* Section marker */}
-          <div
-            className="section-marker"
-            data-num="01"
-            style={{ color: "rgba(255,255,255,0.55)" }}
-          >
-            Common questions
-          </div>
-
-          {/* Headline: Darky 900 + ghost */}
-          <h1 className="faq-hero-headline">
-            The stuff
-            <span aria-hidden="true" style={{ color: "var(--brand-red)" }}>
-              .
-            </span>
-            <br />
-            <span className="display-ghost faq-hero-ghost">
-              people ask, often.
-            </span>
-          </h1>
-
-          <p className="faq-hero-sub">
-            Real questions from the venues and creators we've been on calls with
-            the last six weeks. No sales-deck answers — just what actually
-            happens during the pilot.
-          </p>
-
-          {/* Search */}
-          <div className="faq-search-wrap">
-            <label htmlFor="faq-search" className="faq-search-label">
-              search across all topics
-            </label>
-            <div className="faq-search-field">
-              <span className="faq-search-icon">
-                <SearchIcon />
-              </span>
-              <input
-                id="faq-search"
-                type="search"
-                className="faq-search-input"
-                placeholder="e.g. when do creators get paid?"
-                value={query}
-                onChange={(e) => handleSearchChange(e.target.value)}
-                autoComplete="off"
-                spellCheck={false}
-              />
-              {query && (
-                <button
-                  className="faq-search-clear"
-                  aria-label="Clear search"
-                  onClick={() => handleSearchChange("")}
-                >
-                  <svg
-                    width={14}
-                    height={14}
-                    viewBox="0 0 14 14"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth={1.6}
-                    strokeLinecap="round"
-                  >
-                    <path d="M1 1l12 12M13 1L1 13" />
-                  </svg>
-                </button>
-              )}
+            {/* Category filter pills */}
+            <div className="faq-hero-pills">
+              {FAQ_SECTIONS.map((s) => (
+                <a key={s.id} href={`#${s.id}`} className="btn-pill">
+                  {s.label}
+                </a>
+              ))}
             </div>
-            <p className="faq-search-meta">
-              {isSearching
-                ? `${filtered.length} match${filtered.length !== 1 ? "es" : ""} for "${debouncedQuery}"`
-                : `${FAQ_ITEMS.length} answers across ${ALL_CATEGORIES.length} categories.`}
+          </div>
+
+          {/* Stats badge */}
+          <div
+            className="lg-surface--badge faq-hero-badge"
+            aria-label={`${totalQ} questions answered`}
+          >
+            <div
+              style={{
+                fontFamily: "var(--font-display)",
+                fontWeight: 900,
+                fontSize: "clamp(40px, 5vw, 72px)",
+                letterSpacing: "-0.05em",
+                lineHeight: 0.85,
+                color: "var(--snow)",
+              }}
+            >
+              {totalQ}
+            </div>
+            <p
+              className="eyebrow"
+              style={{ color: "rgba(255,255,255,0.5)", marginTop: 8 }}
+            >
+              (ANSWERS)
             </p>
           </div>
         </div>
       </section>
 
-      {/* ── Category tabs (hidden during search) ─────────────── */}
-      {!isSearching && (
-        <nav className="faq-tabs-section" aria-label="FAQ categories">
-          <div className="faq-tabs-inner" role="tablist">
-            {ALL_CATEGORIES.map((cat) => (
-              <button
-                key={cat}
-                role="tab"
-                aria-selected={activeCat === cat}
-                className="faq-tab-btn"
-                data-active={activeCat === cat}
-                onClick={() => handleTabChange(cat)}
-              >
-                {CATEGORY_LABELS[cat]}
-                <span className="faq-tab-count">{CATEGORY_COUNTS[cat]}</span>
-              </button>
-            ))}
-          </div>
-        </nav>
-      )}
-
-      {/* ── Main content ──────────────────────────────────────── */}
-      <div className="faq-content">
-        <div>
-          {!isSearching && (
-            <div className="faq-section-head faq-reveal">
-              <div className="section-marker" data-num={heading.num}>
-                {CATEGORY_LABELS[activeCat]}
-              </div>
-              <h2 className="faq-section-title">
-                {heading.lead}
-                <span aria-hidden="true" style={{ color: "var(--brand-red)" }}>
-                  .
-                </span>
-                <br />
-                <span className="display-ghost faq-section-ghost">
-                  {heading.ghost}
-                </span>
-              </h2>
-            </div>
-          )}
-
-          {isSearching && filtered.length > 0 && (
-            <div className="faq-reveal faq-search-banner">
-              <div
-                className="section-marker"
-                data-num="//"
-                style={{ marginBottom: 0 }}
-              >
-                results across all categories
-              </div>
-            </div>
-          )}
-
-          {filtered.length === 0 ? (
-            <div className="faq-empty faq-reveal">
-              <p className="faq-empty-title">nothing matched.</p>
-              <p className="faq-empty-sub">
-                try a different word, or browse a category above.
-              </p>
-            </div>
-          ) : (
-            <div className="faq-accordion-list">
-              {filtered.map((item, i) => {
-                const relatedItems = item.related
-                  .map((id) => FAQ_MAP.get(id))
-                  .filter((r): r is FaqItem => r !== undefined)
-                  .slice(0, 3);
-
-                return (
-                  <div key={item.id} className="faq-reveal">
-                    <FaqAccordionItem
-                      item={item}
-                      relatedItems={relatedItems}
-                      defaultOpen={i === 0}
-                      onRelatedClick={scrollToFaq}
-                    />
-                  </div>
-                );
-              })}
-            </div>
-          )}
-        </div>
-
-        {/* Sidebar — desktop only */}
-        <aside className="faq-sidebar">
-          <div className="faq-sidebar-card card-premium">
+      {/* ═══ 02 — FAQ SECTIONS ════════════════════════════════ */}
+      <section
+        aria-label="FAQ"
+        style={{
+          background: "var(--surface)",
+          padding: "96px 0",
+        }}
+      >
+        <div className="faq-content-inner">
+          {FAQ_SECTIONS.map((section, si) => (
             <div
-              className="section-marker"
-              data-num="//"
-              style={{ marginBottom: "var(--space-3)" }}
+              key={section.id}
+              id={section.id}
+              className="faq-section"
+              style={{
+                background: si % 2 === 1 ? "var(--surface-2)" : "transparent",
+                borderRadius: si % 2 === 1 ? 10 : 0,
+                padding: si % 2 === 1 ? "48px 56px" : "0",
+              }}
             >
-              Direct line
-            </div>
-            <h3 className="faq-sidebar-title">
-              still
-              <span style={{ color: "var(--brand-red)" }}>?</span>
-            </h3>
-            <p className="faq-sidebar-sub">
-              email Jiaming directly. Replies usually inside the same business
-              day, never later than 24 hours.
-            </p>
-            <a href="mailto:jiaming@push.nyc" className="faq-sidebar-link">
-              jiaming@push.nyc
-              <svg
-                width={14}
-                height={14}
-                viewBox="0 0 14 14"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth={1.6}
-                strokeLinecap="round"
-              >
-                <path d="M2 7h10M7 2l5 5-5 5" />
-              </svg>
-            </a>
-
-            <div className="faq-sidebar-divider" />
-
-            <p className="faq-sidebar-topics-label">browse topics</p>
-            <nav className="faq-sidebar-topics">
-              {ALL_CATEGORIES.map((cat) => (
-                <button
-                  key={cat}
-                  className="faq-sidebar-topic-btn"
-                  data-active={!isSearching && activeCat === cat}
-                  onClick={() => handleTabChange(cat)}
+              {/* Section header */}
+              <div className="faq-section-header">
+                <span
+                  aria-hidden
+                  style={{
+                    fontFamily: "var(--font-display)",
+                    fontWeight: 900,
+                    fontSize: "clamp(48px, 6vw, 80px)",
+                    letterSpacing: "-0.05em",
+                    lineHeight: 0.9,
+                    color: "var(--brand-red)",
+                    opacity: 0.15,
+                    userSelect: "none",
+                  }}
                 >
-                  {CATEGORY_LABELS[cat]}
-                </button>
-              ))}
-            </nav>
-          </div>
-        </aside>
+                  {section.num}
+                </span>
+                <h2 className="faq-section-title">{section.label}</h2>
+                <span
+                  className="eyebrow"
+                  style={{ color: "var(--ink-3)", marginLeft: "auto" }}
+                >
+                  {section.items.length} questions
+                </span>
+              </div>
+
+              {/* Q&A items — two-column editorial layout */}
+              <div className="faq-items">
+                {section.items.map((item, idx) => (
+                  <div key={idx} className="faq-item">
+                    {/* Question */}
+                    <div className="faq-item-q-col">
+                      <span aria-hidden className="faq-item-dot" />
+                      <h3 className="faq-item-question">{item.q}</h3>
+                    </div>
+                    {/* Answer */}
+                    <p className="faq-item-answer">{item.a}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ═══ SIG DIVIDER ══════════════════════════════════════ */}
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          padding: "80px 64px",
+          background: "var(--surface)",
+        }}
+      >
+        <span className="sig-divider">Real · Local · Verified ·</span>
       </div>
 
-      {/* ── FTC divider ───────────────────────────────────────── */}
-      <div className="faq-divider-wrap">
-        <div className="divider-lux">FTC 16 CFR § 255 · enforced</div>
-      </div>
-
-      {/* ── Direct-line CTA ───────────────────────────────────── */}
-      <section className="faq-cta bg-hero-ink grain-overlay bg-vignette">
-        <div className="faq-cta-inner faq-reveal">
-          <div
-            className="section-marker"
-            data-num="07"
-            style={{ color: "rgba(255,255,255,0.55)" }}
-          >
-            Direct line
-          </div>
-          <h2 className="faq-cta-headline">
-            Still unsure
-            <span style={{ color: "var(--brand-red)" }}>?</span>
-            <br />
-            <span className="display-ghost faq-cta-ghost">email Jiaming.</span>
-          </h2>
-          <p className="faq-cta-body">
-            One operator runs the inbox during the pilot. You'll get a real
-            answer, usually inside the same business day.
-          </p>
-          <div className="faq-cta-actions">
-            <a href="mailto:jiaming@push.nyc" className="faq-cta-btn-primary">
-              jiaming@push.nyc
-              <svg
-                width={14}
-                height={14}
-                viewBox="0 0 14 14"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth={1.6}
-                strokeLinecap="round"
+      {/* ═══ 03 — TICKET CTA ══════════════════════════════════ */}
+      <section
+        aria-label="Still have questions"
+        style={{
+          background: "var(--surface)",
+          padding: "0 64px 96px",
+        }}
+      >
+        <div style={{ maxWidth: 1140, margin: "0 auto" }}>
+          <div className="ticket-panel">
+            <p
+              className="eyebrow"
+              style={{
+                color: "rgba(255,255,255,0.65)",
+                marginBottom: 24,
+                textAlign: "center",
+              }}
+            >
+              (STILL HAVE QUESTIONS)
+            </p>
+            <h2
+              style={{
+                fontFamily: "var(--font-hero)",
+                fontStyle: "italic",
+                fontWeight: 400,
+                fontSize: "clamp(40px, 5vw, 72px)",
+                lineHeight: 0.92,
+                color: "var(--snow)",
+                margin: "0 0 40px",
+                textAlign: "center",
+                letterSpacing: "-0.02em",
+              }}
+            >
+              Still have questions?
+              <br />
+              Talk to us.
+            </h2>
+            <div
+              style={{
+                display: "flex",
+                gap: 16,
+                justifyContent: "center",
+                flexWrap: "wrap",
+              }}
+            >
+              <Link href="/contact" className="btn-ink click-shift">
+                Contact us
+              </Link>
+              <a
+                href="mailto:hello@pushnyc.com"
+                className="btn-ghost click-shift"
+                style={{
+                  borderColor: "rgba(255,255,255,0.4)",
+                  color: "var(--snow)",
+                }}
               >
-                <path d="M2 7h10M7 2l5 5-5 5" />
-              </svg>
-            </a>
-            <Link href="/explore" className="faq-cta-btn-secondary">
-              browse live campaigns
-            </Link>
+                hello@pushnyc.com
+              </a>
+            </div>
           </div>
         </div>
       </section>
     </main>
-  );
-}
-
-/* ── Page export — wraps with Suspense for useSearchParams ──── */
-export default function FaqPage() {
-  return (
-    <Suspense fallback={null}>
-      <FaqPageInner />
-    </Suspense>
   );
 }

@@ -1,21 +1,160 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import NeighborhoodDetailMap from "@/components/neighborhoods/NeighborhoodDetailMapLoader";
-import {
-  NEIGHBORHOODS,
-  getNeighborhoodBySlug,
-  getNearbyNeighborhoods,
-  getLocalLeaderboard,
-} from "@/lib/neighborhoods/mock-hoods";
-import "../neighborhoods.css";
+
+/* ── Static neighborhood data ──────────────────────────────── */
+
+const HOOD_DATA: Record<
+  string,
+  {
+    name: string;
+    borough: string;
+    creators: number;
+    campaigns: number;
+    verifiedVisits: number;
+    avgEarnings: string;
+    campaigns_list: { merchant: string; type: string; payout: string }[];
+    top_creators: {
+      initials: string;
+      name: string;
+      category: string;
+      visits: number;
+    }[];
+    nearby: { slug: string; name: string; borough: string }[];
+  }
+> = {
+  williamsburg: {
+    name: "Williamsburg",
+    borough: "Brooklyn",
+    creators: 189,
+    campaigns: 24,
+    verifiedVisits: 4820,
+    avgEarnings: "$47",
+    campaigns_list: [
+      {
+        merchant: "Mable's Smokehouse",
+        type: "Dine-in visit",
+        payout: "$8/visit",
+      },
+      {
+        merchant: "Rough Trade NYC",
+        type: "Browse + scan",
+        payout: "$5/visit",
+      },
+      {
+        merchant: "Nitehawk Cinema",
+        type: "Show attendance",
+        payout: "$12/visit",
+      },
+      { merchant: "Marlow & Sons", type: "Lunch service", payout: "$9/visit" },
+    ],
+    top_creators: [
+      {
+        initials: "JK",
+        name: "Jordan Kim",
+        category: "Food & Drink",
+        visits: 312,
+      },
+      { initials: "AL", name: "Ava Lee", category: "Lifestyle", visits: 287 },
+      {
+        initials: "MS",
+        name: "Marcus Shaw",
+        category: "Music & Culture",
+        visits: 241,
+      },
+      { initials: "PR", name: "Priya Rao", category: "Fashion", visits: 198 },
+      {
+        initials: "TW",
+        name: "Tyler Wu",
+        category: "Food & Drink",
+        visits: 176,
+      },
+    ],
+    nearby: [
+      { slug: "greenpoint", name: "Greenpoint", borough: "Brooklyn" },
+      { slug: "bushwick", name: "Bushwick", borough: "Brooklyn" },
+      { slug: "les", name: "LES", borough: "Manhattan" },
+    ],
+  },
+};
+
+/* Fallback for any slug not in the table above */
+function getHood(slug: string) {
+  if (HOOD_DATA[slug]) return HOOD_DATA[slug];
+  // Generic fallback so static pages don't 404
+  const name = slug
+    .split("-")
+    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+    .join(" ");
+  return {
+    name,
+    borough: "NYC",
+    creators: 88,
+    campaigns: 11,
+    verifiedVisits: 1240,
+    avgEarnings: "$38",
+    campaigns_list: [
+      { merchant: "Local Café", type: "Morning visit", payout: "$6/visit" },
+      { merchant: "Corner Store", type: "Browse + scan", payout: "$4/visit" },
+      {
+        merchant: "Neighborhood Bar",
+        type: "Evening visit",
+        payout: "$10/visit",
+      },
+    ],
+    top_creators: [
+      {
+        initials: "AJ",
+        name: "Alex Johnson",
+        category: "Lifestyle",
+        visits: 142,
+      },
+      {
+        initials: "SK",
+        name: "Sam Kim",
+        category: "Food & Drink",
+        visits: 118,
+      },
+      { initials: "RE", name: "Riley Evans", category: "Culture", visits: 97 },
+      {
+        initials: "MN",
+        name: "Morgan Nguyen",
+        category: "Fashion",
+        visits: 84,
+      },
+      { initials: "CL", name: "Casey Lee", category: "Music", visits: 71 },
+    ],
+    nearby: [
+      { slug: "williamsburg", name: "Williamsburg", borough: "Brooklyn" },
+      { slug: "greenpoint", name: "Greenpoint", borough: "Brooklyn" },
+    ],
+  };
+}
 
 /* ── Static params ─────────────────────────────────────────── */
 
 export function generateStaticParams() {
-  return NEIGHBORHOODS.map((n) => ({ slug: n.slug }));
+  return [
+    "williamsburg",
+    "greenpoint",
+    "park-slope",
+    "dumbo",
+    "crown-heights",
+    "cobble-hill",
+    "bushwick",
+    "red-hook",
+    "les",
+    "chinatown",
+    "nolita",
+    "greenwich-village",
+    "soho",
+    "tribeca",
+    "astoria",
+    "long-island-city",
+    "ridgewood",
+  ].map((slug) => ({ slug }));
 }
 
-/* ── Dynamic metadata ──────────────────────────────────────── */
+/* ── Metadata ──────────────────────────────────────────────── */
 
 export async function generateMetadata({
   params,
@@ -23,567 +162,613 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const hood = getNeighborhoodBySlug(slug);
-  if (!hood) return {};
-
-  const title = `${hood.name} — Creator marketing for verified foot traffic | Push`;
-  const description = `Push connects creators and merchants in ${hood.name}, ${hood.borough}. ${hood.stats.activeCampaigns} active campaigns, ${hood.stats.activeCreators} creators, and ${hood.stats.totalVerifiedVisits.toLocaleString()} verified visits powered by QR verification. Join creator marketing in ${hood.name}.`;
-
+  const hood = getHood(slug);
   return {
-    title,
-    description,
-    openGraph: {
-      title,
-      description,
-      type: "website",
-      url: `https://withpush.co/neighborhoods/${slug}`,
-    },
-    twitter: {
-      card: "summary_large_image",
-      title,
-      description,
-    },
-    alternates: {
-      canonical: `https://withpush.co/neighborhoods/${slug}`,
-    },
+    title: `${hood.name}, ${hood.borough} | Push`,
+    description: `${hood.creators} creators. ${hood.campaigns} active campaigns. ${hood.verifiedVisits.toLocaleString()} verified visits in ${hood.name}. Pay only when the visit is real.`,
   };
 }
 
-/* ── JSON-LD ───────────────────────────────────────────────── */
+/* ── Page ──────────────────────────────────────────────────── */
 
-function NeighborhoodJsonLd({
-  hood,
-}: {
-  hood: NonNullable<ReturnType<typeof getNeighborhoodBySlug>>;
-}) {
-  const jsonLd = [
-    {
-      "@context": "https://schema.org",
-      "@type": "Place",
-      name: hood.name,
-      description: hood.description.slice(0, 200),
-      url: `https://withpush.co/neighborhoods/${hood.slug}`,
-      geo: {
-        "@type": "GeoCoordinates",
-        latitude: hood.lat,
-        longitude: hood.lng,
-      },
-      address: {
-        "@type": "PostalAddress",
-        addressLocality: hood.name,
-        addressRegion: "NY",
-        addressCountry: "US",
-      },
-      containedInPlace: {
-        "@type": "City",
-        name: "New York City",
-      },
-    },
-    {
-      "@context": "https://schema.org",
-      "@type": "FAQPage",
-      mainEntity: [
-        {
-          "@type": "Question",
-          name: `How does Push work in ${hood.name}?`,
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: `Push connects local creators with merchants in ${hood.name}, ${hood.borough}. Creators visit participating businesses, scan a QR code to verify their visit, then publish content. Merchants pay only for verified foot traffic — no guessing required.`,
-          },
-        },
-        {
-          "@type": "Question",
-          name: `How many campaigns are active in ${hood.name} right now?`,
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: `${hood.name} currently has ${hood.stats.activeCampaigns} active creator campaigns across ${hood.stats.activeMerchants} merchants, with ${hood.stats.activeCreators} creators operating in this neighborhood.`,
-          },
-        },
-        {
-          "@type": "Question",
-          name: `What is the average campaign payout in ${hood.name}?`,
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: `The average campaign payout in ${hood.name} is $${hood.stats.avgPayout} per verified visit. Total verified visits in this neighborhood have reached ${hood.stats.totalVerifiedVisits.toLocaleString()}.`,
-          },
-        },
-      ],
-    },
-    {
-      "@context": "https://schema.org",
-      "@type": "ItemList",
-      name: `Featured Merchants in ${hood.name}`,
-      numberOfItems: hood.featuredMerchants.length,
-      itemListElement: hood.featuredMerchants.map((m, i) => ({
-        "@type": "ListItem",
-        position: i + 1,
-        item: {
-          "@type": "LocalBusiness",
-          name: m.name,
-          address: m.address,
-          description: `${m.category} business in ${hood.name} with ${m.activeCampaigns} active Push campaign${m.activeCampaigns !== 1 ? "s" : ""}.`,
-        },
-      })),
-    },
-  ];
-
-  return (
-    <script
-      type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-    />
-  );
-}
-
-/* ── Tier label display ────────────────────────────────────── */
-
-const TIER_LABELS: Record<string, string> = {
-  seed: "Seed",
-  explorer: "Explorer",
-  operator: "Operator",
-  proven: "Proven",
-  closer: "Closer",
-  partner: "Partner",
-};
-
-/* ── Per-neighborhood scene subline ────────────────────────── */
-// Memorized scene for the three pilot blocks; everything else falls back
-// to a generic two-stat subline. Specific over generic — friend telling
-// you where to go, not a tourist board.
-const SCENE_BY_SLUG: Record<string, { ghost: string; lede: string }> = {
-  soho: {
-    ghost: "9 cafés. 3 galleries.",
-    lede: "Cast-iron facades, denim shops at street level. Walk Greene from Prince south — that is the route.",
-  },
-  tribeca: {
-    ghost: "Quieter than the rest.",
-    lede: "The good restaurants don't post a sign. Greenwich & Franklin is where you start.",
-  },
-  chinatown: {
-    ghost: "One poster per door.",
-    lede: "Two blocks of dumpling shops. Walk Mott south from Canal. Go before 8pm or you wait outside.",
-  },
-};
-
-/* ── Time ago helper ───────────────────────────────────────── */
-
-function timeAgo(iso: string): string {
-  const diff = Date.now() - new Date(iso).getTime();
-  const h = Math.floor(diff / 3_600_000);
-  if (h < 1) return "< 1h ago";
-  if (h < 24) return `${h}h ago`;
-  return `${Math.floor(h / 24)}d ago`;
-}
-
-/* ── Page ─────────────────────────────────────────────────── */
-
-export default async function NeighborhoodDetailPage({
+export default async function NeighborhoodSlugPage({
   params,
 }: {
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const hood = getNeighborhoodBySlug(slug);
+  const hood = getHood(slug);
 
-  if (!hood) {
-    return (
-      <main
-        className="nh-page"
-        style={{ display: "flex", alignItems: "center", minHeight: "60vh" }}
+  return (
+    <main style={{ background: "var(--surface)", minHeight: "100vh" }}>
+      {/* ═══ 01 — HERO (dark) ═══ */}
+      <section
+        style={{
+          background: "var(--ink)",
+          color: "var(--snow)",
+          padding: "clamp(96px,12vw,160px) clamp(24px,6vw,96px)",
+        }}
+        aria-labelledby="nhd-hero-heading"
       >
-        <div className="container" style={{ textAlign: "center" }}>
+        <div style={{ maxWidth: 1140, margin: "0 auto", width: "100%" }}>
+          {/* eyebrow row */}
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              flexWrap: "wrap",
+              gap: 16,
+              marginBottom: 64,
+            }}
+          >
+            <span
+              className="eyebrow"
+              style={{
+                color: "rgba(255,255,255,0.45)",
+                border: "1px solid rgba(255,255,255,0.12)",
+                borderRadius: 8,
+                padding: "6px 16px",
+              }}
+            >
+              (NYC · {hood.name.toUpperCase()})
+            </span>
+            {/* RIGHT badge */}
+            <div style={{ textAlign: "right" }}>
+              <div
+                style={{
+                  fontFamily: "var(--font-display)",
+                  fontSize: "clamp(40px,5vw,72px)",
+                  fontWeight: 900,
+                  color: "var(--snow)",
+                  lineHeight: 0.9,
+                }}
+              >
+                {hood.creators}
+              </div>
+              <div
+                className="eyebrow"
+                style={{ color: "rgba(255,255,255,0.45)", marginTop: 8 }}
+              >
+                CREATORS · {hood.campaigns} CAMPAIGNS
+              </div>
+            </div>
+          </div>
+
+          {/* Breadcrumb */}
+          <nav aria-label="Breadcrumb" style={{ marginBottom: 32 }}>
+            <span
+              style={{
+                fontFamily: "var(--font-body)",
+                fontSize: 13,
+                color: "rgba(255,255,255,0.3)",
+              }}
+            >
+              <Link
+                href="/"
+                style={{
+                  color: "rgba(255,255,255,0.3)",
+                  textDecoration: "none",
+                }}
+              >
+                Push
+              </Link>
+              {" / "}
+              <Link
+                href="/neighborhoods"
+                style={{
+                  color: "rgba(255,255,255,0.3)",
+                  textDecoration: "none",
+                }}
+              >
+                Neighborhoods
+              </Link>
+              {" / "}
+              <span style={{ color: "rgba(255,255,255,0.6)" }}>
+                {hood.name}
+              </span>
+            </span>
+          </nav>
+
+          {/* H1 Darky — bottom-left anchored */}
+          <h1
+            id="nhd-hero-heading"
+            style={{
+              fontFamily: "var(--font-display)",
+              fontSize: "clamp(48px,7vw,120px)",
+              fontWeight: 900,
+              color: "var(--snow)",
+              lineHeight: 0.92,
+              margin: "0 0 48px",
+            }}
+          >
+            {hood.name}.
+          </h1>
+
           <p
             style={{
               fontFamily: "var(--font-body)",
-              color: "var(--graphite)",
-              marginBottom: "var(--space-4)",
+              fontSize: 18,
+              color: "rgba(255,255,255,0.5)",
+              maxWidth: 560,
+              lineHeight: 1.7,
+              margin: 0,
             }}
           >
-            Neighborhood not found.
+            {hood.borough} · {hood.verifiedVisits.toLocaleString()} verified
+            visits · average creator earnings {hood.avgEarnings}/month. Pay only
+            when the visit is real.
           </p>
-          <Link href="/neighborhoods" className="btn btn-primary">
-            Browse all neighborhoods
-          </Link>
         </div>
-      </main>
-    );
-  }
+      </section>
 
-  const nearby = getNearbyNeighborhoods(slug);
-  const leaderboard = getLocalLeaderboard(hood);
+      {/* ═══ 02 — STATS ROW ═══ */}
+      <section
+        style={{
+          background: "var(--surface-2)",
+          borderBottom: "1px solid var(--hairline)",
+          padding: "0 clamp(24px,6vw,96px)",
+        }}
+        aria-label="Neighborhood stats"
+      >
+        <div
+          style={{
+            maxWidth: 1140,
+            margin: "0 auto",
+            display: "grid",
+            gridTemplateColumns: "repeat(4,1fr)",
+            gap: 0,
+          }}
+        >
+          {[
+            { value: hood.creators.toString(), label: "Active Creators" },
+            { value: hood.campaigns.toString(), label: "Campaigns" },
+            {
+              value: hood.verifiedVisits.toLocaleString(),
+              label: "Verified Visits",
+            },
+            { value: hood.avgEarnings, label: "Avg. Creator Earnings" },
+          ].map((stat, i) => (
+            <div
+              key={stat.label}
+              style={{
+                padding: "40px 0",
+                borderRight: i < 3 ? "1px solid var(--hairline)" : "none",
+                paddingRight: i < 3 ? 32 : 0,
+                paddingLeft: i > 0 ? 32 : 0,
+              }}
+            >
+              <div
+                style={{
+                  fontFamily: "var(--font-display)",
+                  fontSize: "clamp(32px,4vw,56px)",
+                  fontWeight: 900,
+                  color: "var(--ink)",
+                  lineHeight: 1,
+                  marginBottom: 8,
+                }}
+              >
+                {stat.value}
+              </div>
+              <div className="eyebrow" style={{ color: "var(--ink-4)" }}>
+                {stat.label}
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
 
-  // Build map pins: center + merchant approximations
-  const mapPins = [
-    {
-      id: hood.slug,
-      title: hood.name,
-      business_name: hood.borough,
-      payout: 0,
-      lat: hood.lat,
-      lng: hood.lng,
-      spots_remaining: hood.stats.activeCampaigns,
-    },
-  ];
+      {/* ═══ 03 — FEATURED CAMPAIGNS (candy-panel) ═══ */}
+      <section
+        className="candy-panel"
+        style={{
+          background: "var(--panel-butter)",
+          padding: "clamp(80px,10vw,128px) clamp(24px,6vw,96px)",
+          borderBottom: "1px solid var(--hairline)",
+        }}
+        aria-labelledby="nhd-campaigns-heading"
+      >
+        <div style={{ maxWidth: 1140, margin: "0 auto" }}>
+          <span
+            className="eyebrow"
+            style={{
+              color: "var(--ink-4)",
+              display: "block",
+              marginBottom: 16,
+            }}
+          >
+            (FEATURED CAMPAIGNS)
+          </span>
+          <h2
+            id="nhd-campaigns-heading"
+            style={{
+              fontFamily: "var(--font-display)",
+              fontSize: "clamp(40px,5.5vw,72px)",
+              fontWeight: 900,
+              color: "var(--ink)",
+              lineHeight: 1.05,
+              margin: "0 0 64px",
+            }}
+          >
+            Active in {hood.name}.
+          </h2>
 
-  const scene = SCENE_BY_SLUG[hood.slug] ?? {
-    ghost: `${hood.stats.activeMerchants} venues. ${hood.stats.activeCreators} creators.`,
-    lede: hood.description,
-  };
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(2,1fr)",
+              gap: 24,
+            }}
+          >
+            {hood.campaigns_list.map((campaign) => (
+              <div
+                key={campaign.merchant}
+                className="click-shift"
+                style={{
+                  background: "var(--surface)",
+                  border: "1px solid var(--hairline)",
+                  borderRadius: 10,
+                  padding: "32px",
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: 12,
+                  cursor: "pointer",
+                }}
+              >
+                <span className="eyebrow" style={{ color: "var(--ink-4)" }}>
+                  {campaign.type}
+                </span>
+                <h3
+                  style={{
+                    fontFamily: "var(--font-display)",
+                    fontSize: 22,
+                    fontWeight: 800,
+                    color: "var(--ink)",
+                    margin: 0,
+                    lineHeight: 1.2,
+                  }}
+                >
+                  {campaign.merchant}
+                </h3>
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    marginTop: 8,
+                    paddingTop: 16,
+                    borderTop: "1px solid var(--hairline)",
+                  }}
+                >
+                  <span
+                    style={{
+                      fontFamily: "var(--font-display)",
+                      fontSize: 18,
+                      fontWeight: 700,
+                      color: "var(--brand-red)",
+                    }}
+                  >
+                    {campaign.payout}
+                  </span>
+                  <span
+                    style={{
+                      fontFamily: "var(--font-body)",
+                      fontSize: 13,
+                      color: "var(--accent-blue)",
+                      fontWeight: 600,
+                    }}
+                  >
+                    Claim campaign →
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
 
-  return (
-    <>
-      <NeighborhoodJsonLd hood={hood} />
+      {/* ═══ 04 — TOP CREATORS (dark ink) ═══ */}
+      <section
+        style={{
+          background: "var(--ink)",
+          color: "var(--snow)",
+          padding: "clamp(80px,10vw,128px) clamp(24px,6vw,96px)",
+          borderBottom: "1px solid rgba(255,255,255,0.06)",
+        }}
+        aria-labelledby="nhd-creators-heading"
+      >
+        <div style={{ maxWidth: 1140, margin: "0 auto" }}>
+          <span
+            className="eyebrow"
+            style={{
+              color: "rgba(255,255,255,0.35)",
+              display: "block",
+              marginBottom: 16,
+            }}
+          >
+            (TOP CREATORS)
+          </span>
+          <h2
+            id="nhd-creators-heading"
+            style={{
+              fontFamily: "var(--font-display)",
+              fontSize: "clamp(40px,5.5vw,72px)",
+              fontWeight: 900,
+              color: "var(--snow)",
+              lineHeight: 1.05,
+              margin: "0 0 64px",
+            }}
+          >
+            Running {hood.name} this month.
+          </h2>
 
-      <main className="nh-page">
-        {/* ═══════════════ 01 — HERO ═══════════════ */}
-        <section className="nhd-hero bg-hero-ink grain-overlay bg-vignette">
-          <div className="container nhd-hero-inner">
-            <nav className="nhd-breadcrumb" aria-label="Breadcrumb">
-              <Link href="/">Push</Link>
-              <span className="nhd-breadcrumb-sep">/</span>
-              <Link href="/neighborhoods">Neighborhoods</Link>
-              <span className="nhd-breadcrumb-sep">/</span>
-              <span style={{ color: "rgba(245,242,236,0.75)" }}>
-                {hood.name}
-              </span>
-            </nav>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              borderTop: "1px solid rgba(255,255,255,0.08)",
+            }}
+          >
+            {hood.top_creators.map((creator, i) => (
+              <div
+                key={creator.name}
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "48px 48px 1fr auto",
+                  gap: "0 24px",
+                  padding: "24px 0",
+                  borderBottom: "1px solid rgba(255,255,255,0.06)",
+                  alignItems: "center",
+                }}
+              >
+                {/* rank */}
+                <span
+                  style={{
+                    fontFamily: "var(--font-display)",
+                    fontSize: 13,
+                    fontWeight: 700,
+                    color:
+                      i === 0 ? "var(--brand-red)" : "rgba(255,255,255,0.2)",
+                    letterSpacing: "0.04em",
+                  }}
+                >
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+                {/* avatar */}
+                <div
+                  aria-hidden="true"
+                  style={{
+                    width: 48,
+                    height: 48,
+                    borderRadius: "50%",
+                    background: "rgba(255,255,255,0.08)",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    fontFamily: "var(--font-display)",
+                    fontSize: 16,
+                    fontWeight: 700,
+                    color: "var(--snow)",
+                  }}
+                >
+                  {creator.initials}
+                </div>
+                {/* name + category */}
+                <div>
+                  <div
+                    style={{
+                      fontFamily: "var(--font-display)",
+                      fontSize: 18,
+                      fontWeight: 700,
+                      color: "var(--snow)",
+                      marginBottom: 4,
+                    }}
+                  >
+                    {creator.name}
+                  </div>
+                  <span
+                    className="eyebrow"
+                    style={{ color: "rgba(255,255,255,0.3)" }}
+                  >
+                    {creator.category}
+                  </span>
+                </div>
+                {/* visits */}
+                <div style={{ textAlign: "right" }}>
+                  <div
+                    style={{
+                      fontFamily: "var(--font-display)",
+                      fontSize: 22,
+                      fontWeight: 700,
+                      color: "var(--snow)",
+                      lineHeight: 1,
+                      marginBottom: 4,
+                    }}
+                  >
+                    {creator.visits}
+                  </div>
+                  <span
+                    className="eyebrow"
+                    style={{ color: "rgba(255,255,255,0.25)" }}
+                  >
+                    visits this month
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ═══ 05 — NEARBY NEIGHBORHOODS ═══ */}
+      {hood.nearby.length > 0 && (
+        <section
+          style={{
+            background: "var(--surface-2)",
+            padding: "clamp(80px,10vw,128px) clamp(24px,6vw,96px)",
+            borderBottom: "1px solid var(--hairline)",
+          }}
+          aria-labelledby="nhd-nearby-heading"
+        >
+          <div style={{ maxWidth: 1140, margin: "0 auto" }}>
+            <span
+              className="eyebrow"
+              style={{
+                color: "var(--ink-4)",
+                display: "block",
+                marginBottom: 16,
+              }}
+            >
+              (NEARBY)
+            </span>
+            <h2
+              id="nhd-nearby-heading"
+              style={{
+                fontFamily: "var(--font-display)",
+                fontSize: "clamp(32px,4vw,56px)",
+                fontWeight: 900,
+                color: "var(--ink)",
+                lineHeight: 1.05,
+                margin: "0 0 48px",
+              }}
+            >
+              Next block over.
+            </h2>
 
             <div
               style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-                flexWrap: "wrap",
-                gap: 16,
-                marginBottom: "var(--space-8)",
+                display: "grid",
+                gridTemplateColumns: "repeat(3,1fr)",
+                gap: 24,
               }}
             >
-              <span className="pill-lux" style={{ color: "#fff" }}>
-                {hood.borough} · Lower Manhattan pilot
-              </span>
-              <span
-                className="eyebrow-lux"
-                style={{ color: "var(--champagne)" }}
-              >
-                June 22 launch
-              </span>
+              {hood.nearby.map((n) => (
+                <Link
+                  key={n.slug}
+                  href={`/neighborhoods/${n.slug}`}
+                  className="click-shift"
+                  style={{
+                    background: "var(--surface)",
+                    border: "1px solid var(--hairline)",
+                    borderRadius: 10,
+                    padding: "32px",
+                    textDecoration: "none",
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: 8,
+                  }}
+                >
+                  <span className="eyebrow" style={{ color: "var(--ink-4)" }}>
+                    {n.borough}
+                  </span>
+                  <span
+                    style={{
+                      fontFamily: "var(--font-display)",
+                      fontSize: 22,
+                      fontWeight: 800,
+                      color: "var(--ink)",
+                      lineHeight: 1.2,
+                    }}
+                  >
+                    {n.name}
+                  </span>
+                  <span
+                    style={{
+                      fontFamily: "var(--font-body)",
+                      fontSize: 14,
+                      color: "var(--brand-red)",
+                      fontWeight: 600,
+                      marginTop: 8,
+                    }}
+                  >
+                    Explore →
+                  </span>
+                </Link>
+              ))}
             </div>
+          </div>
+        </section>
+      )}
 
-            <div
-              className="section-marker"
-              data-num="01"
-              style={{ color: "rgba(255,255,255,0.55)" }}
-            >
-              {hood.name}
-            </div>
-
-            <h1 className="nhd-hero-name">
-              {hood.name}
-              <span
+      {/* ═══ 06 — TICKET CTA ═══ */}
+      <section
+        style={{
+          background: "var(--surface)",
+          padding: "clamp(80px,10vw,128px) clamp(24px,6vw,96px)",
+        }}
+      >
+        <div style={{ maxWidth: 1140, margin: "0 auto" }}>
+          <div
+            className="ticket-panel"
+            style={{
+              background: "var(--ga-orange)",
+              borderRadius: 10,
+              padding: "clamp(48px,6vw,80px) clamp(32px,4vw,64px)",
+              position: "relative",
+              overflow: "hidden",
+              textAlign: "center",
+            }}
+          >
+            {/* grommet circles */}
+            {[
+              { top: "50%", left: 24, transform: "translateY(-50%)" },
+              { top: "50%", right: 24, transform: "translateY(-50%)" },
+            ].map((pos, i) => (
+              <div
+                key={i}
                 aria-hidden="true"
-                style={{ color: "var(--brand-red)", marginLeft: "-0.04em" }}
-              >
-                .
-              </span>
-            </h1>
-
-            <div className="nhd-hero-ghost display-ghost">{scene.ghost}</div>
-
-            <p className="nhd-hero-desc">{scene.lede}</p>
-          </div>
-        </section>
-
-        {/* ═══════════════ 02 — STATS ═══════════════ */}
-        <section className="nhd-stats">
-          <div className="container">
-            <div className="nhd-stats-grid">
-              <div className="nhd-stat">
-                <div className="nhd-stat-value">
-                  {hood.stats.totalVerifiedVisits.toLocaleString()}
-                </div>
-                <div className="nhd-stat-label">verified visits</div>
-              </div>
-              <div className="nhd-stat">
-                <div className="nhd-stat-value">
-                  {hood.stats.activeCampaigns}
-                </div>
-                <div className="nhd-stat-label">live campaigns</div>
-              </div>
-              <div className="nhd-stat">
-                <div className="nhd-stat-value">
-                  {hood.stats.activeCreators}
-                </div>
-                <div className="nhd-stat-label">creators on the block</div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* ═══════════════ 03 — MERCHANTS ═══════════════ */}
-        <section className="nhd-section">
-          <div className="container">
-            <div className="section-marker" data-num="02">
-              The doors
-            </div>
-            <h2 className="nhd-section-heading">
-              Where creators walk in.{" "}
-              <span className="display-ghost">
-                Real venues. Real addresses.
-              </span>
-            </h2>
-
-            <div className="nhd-merchants-grid">
-              {hood.featuredMerchants.map((m) => (
-                <div key={m.id} className="nhd-merchant-card reveal">
-                  <p className="nhd-merchant-category">{m.category}</p>
-                  <h3 className="nhd-merchant-name">{m.name}</h3>
-                  <p className="nhd-merchant-address">{m.address}</p>
-
-                  <div className="nhd-merchant-meta">
-                    <div className="nhd-merchant-meta-item">
-                      <span className="nhd-merchant-meta-value">
-                        {m.activeCampaigns}
-                      </span>
-                      <span className="nhd-merchant-meta-label">campaigns</span>
-                    </div>
-                    <div className="nhd-merchant-meta-item">
-                      <span className="nhd-merchant-meta-value">
-                        {m.avgPayout === 0 ? "Free" : `$${m.avgPayout}`}
-                      </span>
-                      <span className="nhd-merchant-meta-label">
-                        avg payout
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* ═══════════════ 04 — CREATORS ═══════════════ */}
-        <section
-          className="nhd-section"
-          style={{ background: "var(--surface-bright)" }}
-        >
-          <div className="container">
-            <div className="section-marker" data-num="03">
-              On the roster
-            </div>
-            <h2 className="nhd-section-heading">
-              Creators working {hood.name}.{" "}
-              <span className="display-ghost">Tier badge tells the rest.</span>
-            </h2>
-
-            <div className="nhd-creators-grid">
-              {hood.featuredCreators.map((c) => (
-                <Link
-                  key={c.id}
-                  href={`/c/${c.handle}`}
-                  className="nhd-creator-card reveal"
-                >
-                  <div className="nhd-creator-avatar" aria-hidden="true">
-                    {c.name.charAt(0)}
-                  </div>
-                  <div className="nhd-creator-info">
-                    <span className={`nhd-tier-badge ${c.tier}`}>
-                      {TIER_LABELS[c.tier]}
-                    </span>
-                    <div className="nhd-creator-name">{c.name}</div>
-                    <div className="nhd-creator-handle">@{c.handle}</div>
-                    <div
-                      style={{
-                        display: "flex",
-                        gap: "var(--space-4)",
-                        marginTop: 4,
-                      }}
-                    >
-                      <div>
-                        <div className="nhd-creator-score">{c.pushScore}</div>
-                        <div className="nhd-creator-score-label">
-                          Push score
-                        </div>
-                      </div>
-                      <div>
-                        <div className="nhd-creator-score">
-                          {c.campaignsCompleted}
-                        </div>
-                        <div className="nhd-creator-score-label">campaigns</div>
-                      </div>
-                    </div>
-                  </div>
-                </Link>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* ═══════════════ 05 — RECENT ACTIVITY ═══════════════ */}
-        <section className="nhd-section">
-          <div className="container">
-            <div className="section-marker" data-num="04">
-              Right now
-            </div>
-            <h2 className="nhd-section-heading">
-              Last visits scanned.{" "}
-              <span className="display-ghost">No guessing.</span>
-            </h2>
-
-            <div className="nhd-timeline">
-              {hood.recentVisits.map((v) => (
-                <div key={v.id} className="nhd-timeline-item">
-                  <div className="nhd-timeline-dot" aria-hidden="true" />
-                  <div className="nhd-timeline-content">
-                    <div className="nhd-timeline-handle">
-                      @{v.creatorHandle}
-                    </div>
-                    <div className="nhd-timeline-meta">
-                      {v.merchantName} · {v.campaignTitle}
-                    </div>
-                  </div>
-                  <div className="nhd-timeline-right">
-                    <div
-                      className={`nhd-timeline-payout${v.payout === 0 ? " free" : ""}`}
-                    >
-                      {v.payout === 0 ? "Free" : `$${v.payout}`}
-                    </div>
-                    <div className="nhd-timeline-time">
-                      {timeAgo(v.verifiedAt)}
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* ═══════════════ 06 — LEADERBOARD ═══════════════ */}
-        <section
-          className="nhd-section"
-          style={{ background: "var(--surface-bright)" }}
-        >
-          <div className="container">
-            <div className="section-marker" data-num="05">
-              {hood.name} top ten
-            </div>
-            <h2 className="nhd-section-heading">
-              Who's running this block.{" "}
-              <span className="display-ghost">Push score, no shortcut.</span>
-            </h2>
-
-            <div className="nhd-leaderboard" style={{ maxWidth: 640 }}>
-              {leaderboard.map((c, i) => (
-                <Link
-                  key={c.id}
-                  href={`/c/${c.handle}`}
-                  className="nhd-leaderboard-row"
-                >
-                  <div
-                    className={`nhd-leaderboard-rank${i === 0 ? " top" : ""}`}
-                  >
-                    {String(i + 1).padStart(2, "0")}
-                  </div>
-                  <div>
-                    <div className="nhd-leaderboard-name">{c.name}</div>
-                    <div className="nhd-leaderboard-handle">@{c.handle}</div>
-                  </div>
-                  <div className="nhd-leaderboard-score">{c.pushScore}</div>
-                </Link>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* ═══════════════ 07 — MAP ═══════════════ */}
-        <section className="nhd-map-section">
-          <div className="container">
-            <div className="section-marker" data-num="06">
-              The pin
-            </div>
-            <h2 className="nhd-section-heading">
-              {hood.name} on the map.{" "}
-              <span className="display-ghost">
-                Walk it once before you scan.
-              </span>
-            </h2>
-            <div className="nhd-map-container photo-frame">
-              <NeighborhoodDetailMap
-                center={[hood.lat, hood.lng]}
-                pins={mapPins}
-                neighborhoodName={hood.name}
+                style={{
+                  position: "absolute",
+                  width: 16,
+                  height: 16,
+                  borderRadius: "50%",
+                  background: "var(--ink)",
+                  ...pos,
+                }}
               />
-            </div>
-          </div>
-        </section>
-
-        {/* ═══════════════ 08 — NEARBY ═══════════════ */}
-        {nearby.length > 0 && (
-          <section className="nhd-section">
-            <div className="container">
-              <div className="section-marker" data-num="07">
-                Walk east
-              </div>
-              <h2 className="nhd-section-heading">
-                Next block over.{" "}
-                <span className="display-ghost">
-                  Different door, same rules.
-                </span>
-              </h2>
-
-              <div className="nhd-nearby-grid">
-                {nearby.slice(0, 3).map((n) => (
-                  <Link
-                    key={n.slug}
-                    href={`/neighborhoods/${n.slug}`}
-                    className="nhd-nearby-card"
-                  >
-                    <div className="nhd-nearby-name">{n.name}</div>
-                    <div className="nhd-nearby-borough">{n.borough}</div>
-                    <div className="nhd-nearby-campaigns">
-                      {n.stats.activeCampaigns} live campaigns
-                    </div>
-                  </Link>
-                ))}
-              </div>
-            </div>
-          </section>
-        )}
-
-        {/* ═══════════════ 09 — CTA ═══════════════ */}
-        <section className="nhd-cta-section bg-hero-ink grain-overlay">
-          <div className="container nhd-cta-inner">
+            ))}
+            {/* perforation lines */}
             <div
-              className="section-marker"
-              data-num="08"
-              style={{ color: "rgba(255,255,255,0.55)" }}
+              aria-hidden="true"
+              style={{
+                position: "absolute",
+                top: 0,
+                left: 48,
+                right: 48,
+                height: 0,
+                borderTop: "2px dashed rgba(0,0,0,0.15)",
+              }}
+            />
+            <div
+              aria-hidden="true"
+              style={{
+                position: "absolute",
+                bottom: 0,
+                left: 48,
+                right: 48,
+                height: 0,
+                borderBottom: "2px dashed rgba(0,0,0,0.15)",
+              }}
+            />
+
+            <h2
+              style={{
+                fontFamily: "var(--font-hero)",
+                fontStyle: "italic",
+                fontSize: "clamp(40px,5vw,56px)",
+                color: "var(--snow)",
+                margin: "0 0 32px",
+                lineHeight: 1.1,
+              }}
             >
-              Your move
-            </div>
-            <h2 className="nhd-cta-headline">
-              Run {hood.name}.
-              <br />
-              <span className="display-ghost nhd-cta-ghost">
-                One block. One QR. One verified visit at a time.
-              </span>
+              Claim your spot in {hood.name}.
             </h2>
-            <p className="nhd-cta-sub">
-              The pilot opens June 22. Same operator (Jiaming) walking every
-              door. Pay only when the visit is real.
-            </p>
-            <div className="nhd-cta-actions">
-              <Link
-                href={`/creator/explore?neighborhood=${hood.slug}`}
-                className="btn btn-primary"
-              >
-                See campaigns in {hood.name}
-              </Link>
-              <Link href="/merchant/signup" className="btn btn-ghost">
-                List your door
-              </Link>
-            </div>
+            <Link href="/creator/signup" className="btn-ink click-shift">
+              Apply to the roster
+            </Link>
           </div>
-        </section>
-      </main>
-    </>
+        </div>
+      </section>
+    </main>
   );
 }

@@ -35,13 +35,13 @@ const SEGMENTS: {
     id: "",
     label: "Any",
     description: "Open to all creators — Push will match by score and fit.",
-    color: "var(--tertiary)",
+    color: "var(--accent-blue)",
   },
   {
     id: "Community",
     label: "Community",
     description: SEGMENT_DESCRIPTIONS.Community,
-    color: "var(--dark)",
+    color: "var(--ink)",
   },
   {
     id: "Studio",
@@ -76,7 +76,7 @@ export function TierSelector({ value, onChange, error }: TierSelectorProps) {
                 active
                   ? {
                       borderColor: seg.color,
-                      background: "rgba(0,48,73,0.04)",
+                      background: "rgba(10,10,10,0.04)",
                     }
                   : undefined
               }

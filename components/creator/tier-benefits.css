@@ -29,7 +29,7 @@
 .tbp-card {
   padding: 24px;
   border-radius: var(--r-lg);
-  border-left: 4px solid var(--tbp-accent, var(--dark));
+  border-left: 4px solid var(--tbp-accent, var(--ink));
   position: relative;
   overflow: hidden;
 }
@@ -37,13 +37,13 @@
 /* Current tier card: tinted background */
 .tbp-card--current {
   background-color: var(--tbp-bg, var(--surface));
-  border-color: var(--tbp-accent, var(--dark));
+  border-color: var(--tbp-accent, var(--ink));
 }
 
 /* Next tier card: neutral with subtle overlay */
 .tbp-card--next {
-  background-color: var(--surface-bright);
-  border-color: var(--tbp-next-accent, var(--tertiary));
+  background-color: var(--surface-3);
+  border-color: var(--tbp-next-accent, var(--accent-blue));
   opacity: 0.88;
 }
 
@@ -66,7 +66,7 @@
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--text-muted);
+  color: var(--ink-4);
   margin-bottom: 16px;
 }
 
@@ -91,7 +91,7 @@
   letter-spacing: -0.02em;
   line-height: 1;
   text-transform: uppercase;
-  color: var(--tbp-color, var(--dark));
+  color: var(--tbp-color, var(--ink));
 }
 
 /* ── Stat rows ───────────────────────────────────────────── */
@@ -113,7 +113,7 @@
 
 .tbp-stat-label {
   font-size: 11px;
-  color: var(--text-muted);
+  color: var(--ink-4);
   letter-spacing: 0.04em;
   text-transform: uppercase;
   flex-shrink: 0;
@@ -122,14 +122,14 @@
 .tbp-stat-value {
   font-size: 13px;
   font-weight: 600;
-  color: var(--dark);
+  color: var(--ink);
   text-align: right;
 }
 
 .tbp-stat-value--locked {
   font-size: 11px;
   font-weight: 400;
-  color: var(--text-muted);
+  color: var(--ink-4);
   font-style: italic;
 }
 
@@ -139,7 +139,7 @@
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--text-muted);
+  color: var(--ink-4);
   margin-bottom: 10px;
 }
 
@@ -174,11 +174,11 @@
 }
 
 .tbp-benefit-item--available {
-  color: var(--dark);
+  color: var(--ink);
 }
 
 .tbp-benefit-item--locked {
-  color: var(--text-muted);
+  color: var(--ink-4);
 }
 
 .tbp-benefit-marker {
@@ -190,11 +190,11 @@
 }
 
 .tbp-benefit-marker--check {
-  color: var(--dark);
+  color: var(--ink);
 }
 
 .tbp-benefit-marker--lock {
-  color: var(--text-muted);
+  color: var(--ink-4);
 }
 
 /* ── CTA footer ──────────────────────────────────────────── */
@@ -207,14 +207,14 @@
 .tbp-cta-points {
   font-size: 13px;
   font-weight: 600;
-  color: var(--tbp-next-accent, var(--tertiary));
+  color: var(--tbp-next-accent, var(--accent-blue));
   margin-bottom: 8px;
   letter-spacing: 0.01em;
 }
 
 .tbp-cta-sub {
   font-size: 11px;
-  color: var(--text-muted);
+  color: var(--ink-4);
   letter-spacing: 0.02em;
 }
 
@@ -237,7 +237,7 @@
 
 .tbp-top-sub {
   font-size: 12px;
-  color: var(--text-muted);
+  color: var(--ink-4);
   letter-spacing: 0.02em;
   line-height: 1.5;
 }
@@ -255,7 +255,7 @@
 .tbp-progress-fill {
   height: 100%;
   border-radius: var(--r-lg);
-  background: var(--tbp-accent, var(--dark));
+  background: var(--tbp-accent, var(--ink));
   transition: width 600ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
@@ -265,8 +265,8 @@
   align-items: center;
   gap: 16px;
   padding: 16px;
-  background: var(--surface-bright);
-  border-left: 4px solid var(--tbp-accent, var(--dark));
+  background: var(--surface-3);
+  border-left: 4px solid var(--tbp-accent, var(--ink));
   border-radius: var(--r-lg);
 }
 
@@ -283,7 +283,7 @@
   align-items: center;
   gap: 6px;
   padding: 4px 10px;
-  background: var(--tbp-color, var(--dark));
+  background: var(--tbp-color, var(--ink));
   color: var(--surface);
   font-family: var(--font-body);
   font-size: 11px;
@@ -300,7 +300,7 @@
   font-weight: 700;
   font-size: 20px;
   letter-spacing: -0.02em;
-  color: var(--dark);
+  color: var(--ink);
   line-height: 1;
 }
 
@@ -317,7 +317,7 @@
 
 .tbp-compact-progress-label {
   font-size: 10px;
-  color: var(--text-muted);
+  color: var(--ink-4);
   letter-spacing: 0.04em;
   text-transform: uppercase;
 }
@@ -332,14 +332,14 @@
   font-weight: 600;
   font-size: 14px;
   letter-spacing: -0.01em;
-  color: var(--tbp-next-accent, var(--tertiary));
+  color: var(--tbp-next-accent, var(--accent-blue));
   text-transform: uppercase;
   white-space: nowrap;
 }
 
 .tbp-compact-next-pts {
   font-size: 10px;
-  color: var(--text-muted);
+  color: var(--ink-4);
   letter-spacing: 0.04em;
   margin-top: 2px;
 }

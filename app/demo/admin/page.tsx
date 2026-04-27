@@ -17,7 +17,7 @@ export default function DemoAdminEntry() {
     <div
       style={{
         minHeight: "100svh",
-        background: "var(--dark)",
+        background: "var(--ink)",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
@@ -37,7 +37,7 @@ export default function DemoAdminEntry() {
           marginBottom: 16,
         }}
       >
-        Push<span style={{ color: "var(--primary)" }}>.</span>
+        Push<span style={{ color: "var(--brand-red)" }}>.</span>
       </div>
       <div
         style={{

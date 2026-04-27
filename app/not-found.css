@@ -1,0 +1,219 @@
+/* ============================================================
+   not-found.tsx — v11 404 page
+   Full-page var(--surface) bg. Giant ghost "404" Darky 900 opacity
+   0.06. Overlay "Lost in the city." Magvix italic. 3 route cards
+   with candy panel fills. No dark hero — uses light bg per spec.
+   ALL colors via tokens — zero hardcoded hex.
+   ============================================================ */
+
+/* ------------------------------------------------------------
+   Page shell — full-page centered, var(--surface) bg
+   ------------------------------------------------------------ */
+.nf-page {
+  background: var(--surface);
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  padding: 96px clamp(24px, 5vw, 64px);
+}
+
+/* ------------------------------------------------------------
+   Ghost "404" — Darky 900 var(--ink) opacity 0.06
+   Full-page decorative background text
+   ------------------------------------------------------------ */
+.nf-ghost {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-size: clamp(200px, 30vw, 400px);
+  font-weight: 900;
+  letter-spacing: -0.06em;
+  line-height: 1;
+  color: var(--ink);
+  opacity: 0.06;
+  pointer-events: none;
+  user-select: none;
+  white-space: nowrap;
+  z-index: 0;
+}
+
+/* ------------------------------------------------------------
+   Content stack — above ghost
+   ------------------------------------------------------------ */
+.nf-content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 0;
+  width: 100%;
+  max-width: 1140px;
+}
+
+/* ------------------------------------------------------------
+   Eyebrow + title block
+   ------------------------------------------------------------ */
+.nf-eyebrow {
+  color: var(--ink-3) !important;
+  margin-bottom: 16px;
+}
+
+/* Magvix italic — centered (centered allowed in special page) */
+.nf-title {
+  font-family: var(--font-hero);
+  font-style: italic;
+  font-weight: normal;
+  font-size: clamp(40px, 6vw, 80px);
+  letter-spacing: -0.02em;
+  line-height: 0.95;
+  color: var(--ink);
+  margin: 0 0 24px;
+}
+
+.nf-sub {
+  font-family: var(--font-body);
+  font-size: 18px;
+  line-height: 1.6;
+  color: var(--ink-3);
+  max-width: 480px;
+  margin: 0 auto 48px;
+}
+
+/* ------------------------------------------------------------
+   Route cards — 3 suggestion cards in a row
+   Each gets a different candy panel fill.
+   10px radius, 24px padding, hover click-shift.
+   ------------------------------------------------------------ */
+.nf-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  width: 100%;
+  margin-bottom: 40px;
+}
+
+@media (max-width: 767px) {
+  .nf-cards {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+}
+
+@media (max-width: 1023px) and (min-width: 768px) {
+  .nf-cards {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .nf-card:last-child {
+    grid-column: 1 / -1;
+    max-width: 400px;
+    margin: 0 auto;
+    width: 100%;
+  }
+}
+
+.nf-card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 32px;
+  border-radius: var(--r-md);
+  text-decoration: none;
+  color: inherit;
+  transition: transform 200ms cubic-bezier(0.34, 1.56, 0.64, 1),
+    box-shadow 200ms ease;
+  text-align: left;
+}
+
+.nf-card:hover {
+  transform: translate(2px, 2px);
+  box-shadow: var(--shadow-1);
+}
+
+.nf-card:active {
+  transform: translate(3px, 3px) scale(0.98);
+}
+
+/* Three distinct candy panel fills — one per card */
+.nf-card--butter {
+  background: var(--panel-butter);
+  border: 1px solid var(--mist);
+}
+
+.nf-card--sky {
+  background: var(--panel-sky);
+  border: 1px solid var(--mist);
+}
+
+.nf-card--peach {
+  background: var(--panel-peach);
+  border: 1px solid var(--mist);
+}
+
+/* Card eyebrow */
+.nf-card-eyebrow {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+  margin: 0;
+}
+
+/* H3 — exactly 28px per v11 spec */
+.nf-card-title {
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  color: var(--ink);
+  margin: 0;
+}
+
+.nf-card-desc {
+  font-family: var(--font-body);
+  font-size: 18px;
+  line-height: 1.55;
+  color: var(--ink-3);
+  margin: 0;
+  flex: 1;
+}
+
+/* CTA row — btn-ghost bottom of card */
+.nf-card-cta {
+  align-self: flex-start;
+  margin-top: 8px;
+}
+
+/* ------------------------------------------------------------
+   Back link — btn-ghost below cards, centered
+   ------------------------------------------------------------ */
+.nf-back {
+  margin-top: 8px;
+}
+
+/* ------------------------------------------------------------
+   Responsive — mobile
+   ------------------------------------------------------------ */
+@media (max-width: 767px) {
+  .nf-page {
+    padding: 64px 24px;
+    justify-content: flex-start;
+    padding-top: 80px;
+  }
+
+  .nf-ghost {
+    font-size: clamp(120px, 40vw, 200px);
+  }
+}

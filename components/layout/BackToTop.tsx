@@ -39,7 +39,7 @@ export default function BackToTop() {
         width: `${size}px`,
         height: `${size}px`,
         borderRadius: "50%",
-        background: "var(--dark)",
+        background: "var(--ink)",
         border: "none",
         color: "#fff",
         display: "flex",
@@ -77,7 +77,7 @@ export default function BackToTop() {
           cy={size / 2}
           r={radius}
           fill="none"
-          stroke="var(--primary)"
+          stroke="var(--brand-red)"
           strokeWidth={strokeWidth}
           strokeLinecap="butt"
           strokeDasharray={circumference}

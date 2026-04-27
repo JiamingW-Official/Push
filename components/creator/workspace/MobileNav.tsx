@@ -27,7 +27,7 @@ const MOBILE_TABS: MobileTab[] = [
     id: "pipeline",
     label: "Pipeline",
     icon: "◇",
-    href: "/creator/campaigns",
+    href: "/creator/work/pipeline",
     matchPrefix: true,
   },
   {

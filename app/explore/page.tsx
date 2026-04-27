@@ -49,8 +49,8 @@ const TIER_COLORS: Record<string, { bg: string; text: string }> = {
   Explorer: { bg: "rgba(201, 169, 110, 0.18)", text: "var(--champagne)" },
   Operator: { bg: "rgba(102, 155, 188, 0.16)", text: "var(--graphite)" },
   Proven: { bg: "rgba(201, 169, 110, 0.22)", text: "var(--champagne)" },
-  Closer: { bg: "rgba(193, 18, 31, 0.12)", text: "var(--primary)" },
-  Partner: { bg: "rgba(0, 48, 73, 0.12)", text: "var(--dark)" },
+  Closer: { bg: "rgba(193, 18, 31, 0.12)", text: "var(--brand-red)" },
+  Partner: { bg: "rgba(0, 48, 73, 0.12)", text: "var(--ink)" },
 };
 
 /* ── Sort options ─────────────────────────────────────────── */
@@ -64,12 +64,12 @@ type SortKey = (typeof SORT_OPTIONS)[number]["key"];
 
 /* ── Category colors ──────────────────────────────────────── */
 const CATEGORY_DOT_COLOR: Record<string, string> = {
-  Food: "var(--primary)",
+  Food: "var(--brand-red)",
   Coffee: "var(--accent)",
-  Beauty: "var(--tertiary)",
-  Retail: "var(--dark)",
-  Lifestyle: "var(--tertiary)",
-  Fitness: "var(--dark)",
+  Beauty: "var(--accent-blue)",
+  Retail: "var(--ink)",
+  Lifestyle: "var(--accent-blue)",
+  Fitness: "var(--ink)",
 };
 
 const DEMO_CAMPAIGNS: Campaign[] = [
@@ -447,7 +447,7 @@ export default function ExplorePage() {
                       <span
                         className="exp-cat-dot"
                         style={{
-                          background: CATEGORY_DOT_COLOR[cat] ?? "var(--dark)",
+                          background: CATEGORY_DOT_COLOR[cat] ?? "var(--ink)",
                         }}
                       />
                       <span className="exp-stats-cat-name">{cat}</span>
@@ -471,7 +471,7 @@ export default function ExplorePage() {
                   <span
                     className="filter-tab-dot"
                     style={{
-                      background: CATEGORY_DOT_COLOR[cat] ?? "var(--dark)",
+                      background: CATEGORY_DOT_COLOR[cat] ?? "var(--ink)",
                     }}
                   />
                 )}
@@ -551,13 +551,13 @@ export default function ExplorePage() {
                         cx="24"
                         cy="24"
                         r="20"
-                        stroke="var(--dark)"
+                        stroke="var(--ink)"
                         strokeOpacity="0.12"
                         strokeWidth="2"
                       />
                       <path
                         d="M16 24h16M24 16v16"
-                        stroke="var(--dark)"
+                        stroke="var(--ink)"
                         strokeOpacity="0.2"
                         strokeWidth="2"
                         strokeLinecap="square"
@@ -642,7 +642,7 @@ function ExploreCard({
   const deadlineLabel = formatDeadline(c.deadline);
 
   const tierColors = c.tier_required ? TIER_COLORS[c.tier_required] : null;
-  const catDotColor = CATEGORY_DOT_COLOR[c.category ?? ""] ?? "var(--dark)";
+  const catDotColor = CATEGORY_DOT_COLOR[c.category ?? ""] ?? "var(--ink)";
 
   return (
     <div

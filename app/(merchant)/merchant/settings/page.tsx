@@ -209,16 +209,22 @@ function ConfirmModal({
 
   return (
     <div className="confirm-modal-backdrop">
-      <div className="confirm-modal" role="dialog" aria-modal="true">
-        <h3 className="confirm-modal__title">{title}</h3>
-        <p className="confirm-modal__desc">{description}</p>
+      <div
+        className="confirm-modal settings-modal-v11"
+        role="dialog"
+        aria-modal="true"
+      >
+        {/* H3 28px Darky 700 */}
+        <h3 className="settings-modal-v11__title">{title}</h3>
+        {/* Body 18px CS Genio Mono */}
+        <p className="settings-modal-v11__desc">{description}</p>
         {confirmWord && (
-          <div>
-            <label className="confirm-modal__input-label">
+          <div className="settings-modal-v11__confirm-field">
+            <label className="settings-modal-v11__label">
               Type <strong>{confirmWord}</strong> to confirm
             </label>
             <input
-              className="push-input"
+              className="settings-modal-v11__input"
               value={input}
               onChange={(e) => setInput(e.target.value)}
               placeholder={confirmWord}
@@ -226,15 +232,18 @@ function ConfirmModal({
             />
           </div>
         )}
-        <div className="confirm-modal__actions">
-          <button className="btn btn--ghost" onClick={onCancel}>
+        <div className="settings-modal-v11__actions">
+          <button className="btn-ghost click-shift" onClick={onCancel}>
             Cancel
           </button>
           <button
-            className="btn btn--danger"
+            className={
+              ready
+                ? "btn-primary click-shift"
+                : "settings-modal-v11__confirm-disabled"
+            }
             disabled={!ready}
             onClick={onConfirm}
-            style={{ opacity: ready ? 1 : 0.4 }}
           >
             {confirmLabel}
           </button>
@@ -258,16 +267,20 @@ function InviteModal({
 
   return (
     <div className="confirm-modal-backdrop">
-      <div className="confirm-modal" role="dialog" aria-modal="true">
-        <h3 className="confirm-modal__title">Invite team member</h3>
-        <p className="confirm-modal__desc">
+      <div
+        className="confirm-modal settings-modal-v11"
+        role="dialog"
+        aria-modal="true"
+      >
+        <h3 className="settings-modal-v11__title">Invite team member</h3>
+        <p className="settings-modal-v11__desc">
           They will receive an email invitation to join your Push workspace.
         </p>
-        <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-          <div>
-            <label className="confirm-modal__input-label">Email address</label>
+        <div className="settings-modal-v11__fields">
+          <div className="settings-modal-v11__field">
+            <label className="settings-modal-v11__label">Email address</label>
             <input
-              className="push-input"
+              className="settings-modal-v11__input"
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -275,10 +288,10 @@ function InviteModal({
               autoFocus
             />
           </div>
-          <div>
-            <label className="confirm-modal__input-label">Role</label>
+          <div className="settings-modal-v11__field">
+            <label className="settings-modal-v11__label">Role</label>
             <select
-              className="push-select"
+              className="settings-modal-v11__select"
               value={role}
               onChange={(e) => setRole(e.target.value as TeamMember["role"])}
             >
@@ -287,15 +300,14 @@ function InviteModal({
             </select>
           </div>
         </div>
-        <div className="confirm-modal__actions">
-          <button className="btn btn--ghost" onClick={onCancel}>
+        <div className="settings-modal-v11__actions">
+          <button className="btn-ghost click-shift" onClick={onCancel}>
             Cancel
           </button>
           <button
-            className="btn btn--primary"
+            className="btn-primary click-shift"
             disabled={!email.includes("@")}
             onClick={() => onInvite(email, role)}
-            style={{ opacity: email.includes("@") ? 1 : 0.4 }}
           >
             Send invite
           </button>
@@ -327,35 +339,35 @@ function NewKeyModal({
 
   return (
     <div className="confirm-modal-backdrop">
-      <div className="confirm-modal" role="dialog" aria-modal="true">
-        <h3 className="confirm-modal__title">Generate API key</h3>
-        <p className="confirm-modal__desc">
+      <div
+        className="confirm-modal settings-modal-v11"
+        role="dialog"
+        aria-modal="true"
+      >
+        <h3 className="settings-modal-v11__title">Generate API key</h3>
+        <p className="settings-modal-v11__desc">
           The full key is shown once. Store it securely — we cannot retrieve it
           later.
         </p>
-        <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-          <div>
-            <label className="confirm-modal__input-label">Key name</label>
+        <div className="settings-modal-v11__fields">
+          <div className="settings-modal-v11__field">
+            <label className="settings-modal-v11__label">Key name</label>
             <input
-              className="push-input"
+              className="settings-modal-v11__input"
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="e.g. Production, Zapier integration"
               autoFocus
             />
           </div>
-          <div>
-            <label
-              className="confirm-modal__input-label"
-              style={{ marginBottom: 8 }}
-            >
-              Permissions
-            </label>
-            <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+          <div className="settings-modal-v11__field">
+            <label className="settings-modal-v11__label">Permissions</label>
+            <div className="settings-modal-v11__scopes">
               {ALL_SCOPES.map((scope) => (
                 <button
                   key={scope}
-                  className={`channel-chip${selectedScopes.includes(scope) ? " channel-chip--on" : ""}`}
+                  className="btn-pill click-shift"
+                  aria-pressed={selectedScopes.includes(scope)}
                   onClick={() => toggleScope(scope)}
                 >
                   {scope}
@@ -364,17 +376,18 @@ function NewKeyModal({
             </div>
           </div>
         </div>
-        <div className="confirm-modal__actions">
-          <button className="btn btn--ghost" onClick={onCancel}>
+        <div className="settings-modal-v11__actions">
+          <button className="btn-ghost click-shift" onClick={onCancel}>
             Cancel
           </button>
           <button
-            className="btn btn--primary"
+            className={
+              name.trim() && selectedScopes.length > 0
+                ? "btn-primary click-shift"
+                : "settings-modal-v11__confirm-disabled"
+            }
             disabled={!name.trim() || selectedScopes.length === 0}
             onClick={() => onCreate(name.trim(), selectedScopes)}
-            style={{
-              opacity: name.trim() && selectedScopes.length > 0 ? 1 : 0.4,
-            }}
           >
             Generate key
           </button>
@@ -567,6 +580,17 @@ export default function MerchantSettingsPage() {
     .toUpperCase()
     .slice(0, 2);
 
+  /* ── Shared section heading ─────────────────────────────── */
+  function SectionHeading({ title, sub }: { title: string; sub: string }) {
+    return (
+      <div className="settings-section-heading">
+        {/* H2 — exactly 40px Darky 800, lineHeight 1.05, letterSpacing -0.02em */}
+        <h2 className="settings-section-heading__title">{title}</h2>
+        <p className="settings-section-heading__sub">{sub}</p>
+      </div>
+    );
+  }
+
   /* ── Render sections ────────────────────────────────────── */
 
   const renderSection = () => {
@@ -574,12 +598,10 @@ export default function MerchantSettingsPage() {
       case "business":
         return (
           <>
-            <div className="settings-page-heading">
-              <h1 className="settings-page-heading__title">Business Profile</h1>
-              <p className="settings-page-heading__sub">
-                Your legal and public business information
-              </p>
-            </div>
+            <SectionHeading
+              title="Business Profile"
+              sub="Your legal and public business information"
+            />
 
             <SettingsSection title="Logo">
               <div className="avatar-upload">
@@ -597,10 +619,7 @@ export default function MerchantSettingsPage() {
                   <span className="avatar-upload__hint">
                     PNG or SVG, min 200×200px
                   </span>
-                  <button
-                    className="btn btn--ghost btn--sm"
-                    style={{ marginTop: 8 }}
-                  >
+                  <button className="btn-ghost click-shift settings-upload-btn">
                     Upload logo
                   </button>
                 </div>
@@ -653,17 +672,15 @@ export default function MerchantSettingsPage() {
       case "team":
         return (
           <>
-            <div className="settings-page-heading">
-              <h1 className="settings-page-heading__title">Team</h1>
-              <p className="settings-page-heading__sub">
-                Manage who has access to your Push workspace
-              </p>
-            </div>
+            <SectionHeading
+              title="Team"
+              sub="Manage who has access to your Push workspace"
+            />
             <SettingsSection
               title="Members"
               description={`${team.length} member${team.length !== 1 ? "s" : ""}`}
             >
-              <div style={{ overflowX: "auto" }}>
+              <div className="settings-table-scroll">
                 <table className="team-table">
                   <thead>
                     <tr>
@@ -691,18 +708,13 @@ export default function MerchantSettingsPage() {
                             {member.role}
                           </span>
                         </td>
-                        <td
-                          style={{
-                            color: "var(--text-muted)",
-                            fontSize: "var(--text-caption)",
-                          }}
-                        >
+                        <td className="settings-table__date">
                           {formatDate(member.lastActive)}
                         </td>
                         <td>
                           {member.role !== "owner" && (
                             <button
-                              className="btn btn--ghost btn--sm"
+                              className="btn-ghost click-shift"
                               onClick={() =>
                                 setModal({
                                   type: "remove",
@@ -719,9 +731,9 @@ export default function MerchantSettingsPage() {
                   </tbody>
                 </table>
               </div>
-              <div style={{ marginTop: 16 }}>
+              <div className="settings-action-row">
                 <button
-                  className="btn btn--primary btn--sm"
+                  className="btn-primary click-shift"
                   onClick={() => setModal("invite")}
                 >
                   + Invite member
@@ -734,12 +746,10 @@ export default function MerchantSettingsPage() {
       case "notifications":
         return (
           <>
-            <div className="settings-page-heading">
-              <h1 className="settings-page-heading__title">Notifications</h1>
-              <p className="settings-page-heading__sub">
-                Choose how Push contacts you about campaign activity
-              </p>
-            </div>
+            <SectionHeading
+              title="Notifications"
+              sub="Choose how Push contacts you about campaign activity"
+            />
             <SettingsSection
               title="Campaign Activity"
               description="Creator applications, milestones, and deadlines"
@@ -805,59 +815,29 @@ export default function MerchantSettingsPage() {
       case "billing":
         return (
           <>
-            <div className="settings-page-heading">
-              <h1 className="settings-page-heading__title">Billing</h1>
-              <p className="settings-page-heading__sub">
-                Manage your Push plan and invoices
-              </p>
-            </div>
+            <SectionHeading
+              title="Billing"
+              sub="Manage your Push plan and invoices"
+            />
             <SettingsSection title="Current Plan">
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  padding: "16px 0",
-                  borderBottom: "1px solid var(--line)",
-                }}
-              >
+              <div className="settings-billing-row">
                 <div>
-                  <span
-                    style={{
-                      fontFamily: "var(--font-display)",
-                      fontSize: 20,
-                      fontWeight: 700,
-                      color: "var(--dark)",
-                    }}
-                  >
-                    Essentials
-                  </span>
-                  <span
-                    style={{
-                      display: "block",
-                      fontSize: "var(--text-small)",
-                      color: "var(--text-muted)",
-                    }}
-                  >
+                  {/* H4 24px Darky 700 */}
+                  <span className="settings-billing-plan-name">Essentials</span>
+                  <span className="settings-billing-plan-price">
                     $99/month · renews May 1, 2026
                   </span>
                 </div>
-                <button className="btn btn--ghost btn--sm">Change plan</button>
+                <button className="btn-ghost click-shift">Change plan</button>
               </div>
             </SettingsSection>
             <SettingsSection title="Invoices">
-              <p
-                style={{
-                  fontSize: "var(--text-small)",
-                  color: "var(--graphite)",
-                  padding: "16px 0",
-                }}
-              >
+              <p className="settings-billing-desc">
                 Billing history is managed through Stripe. Visit the billing
                 portal to view invoices, update payment methods, or download
                 receipts.
               </p>
-              <button className="btn btn--ghost btn--sm">
+              <button className="btn-ghost click-shift">
                 Open billing portal
               </button>
             </SettingsSection>
@@ -867,35 +847,36 @@ export default function MerchantSettingsPage() {
       case "api-keys":
         return (
           <>
-            <div className="settings-page-heading">
-              <h1 className="settings-page-heading__title">API Keys</h1>
-              <p className="settings-page-heading__sub">
-                Programmatic access to your Push data
-              </p>
-            </div>
+            <SectionHeading
+              title="API Keys"
+              sub="Programmatic access to your Push data"
+            />
 
             {/* Newly revealed key */}
             {newKeyRevealed && (
-              <div className="api-key-reveal">
-                <span className="api-key-reveal__warning">
+              <div className="settings-key-revealed">
+                <span className="settings-key-revealed__warning">
                   Copy this key now — it will not be shown again.
                 </span>
-                <code className="api-key-reveal__value">{newKeyRevealed}</code>
-                <button
-                  className="btn btn--ghost btn--sm"
-                  onClick={() => {
-                    navigator.clipboard.writeText(newKeyRevealed);
-                  }}
-                >
-                  Copy key
-                </button>
-                <button
-                  className="btn btn--ghost btn--sm"
-                  style={{ marginTop: 4 }}
-                  onClick={() => setNewKeyRevealed(null)}
-                >
-                  Dismiss
-                </button>
+                <code className="settings-key-revealed__code">
+                  {newKeyRevealed}
+                </code>
+                <div className="settings-key-revealed__actions">
+                  <button
+                    className="btn-secondary click-shift"
+                    onClick={() => {
+                      navigator.clipboard.writeText(newKeyRevealed);
+                    }}
+                  >
+                    Copy key
+                  </button>
+                  <button
+                    className="btn-ghost click-shift"
+                    onClick={() => setNewKeyRevealed(null)}
+                  >
+                    Dismiss
+                  </button>
+                </div>
               </div>
             )}
 
@@ -909,7 +890,7 @@ export default function MerchantSettingsPage() {
                     <span className="api-key-row__name">{key.name}</span>
                     <div className="api-key-actions">
                       <button
-                        className="btn btn--danger btn--sm"
+                        className="settings-revoke-btn click-shift"
                         onClick={() =>
                           setModal({ type: "revoke", keyId: key.id })
                         }
@@ -918,9 +899,7 @@ export default function MerchantSettingsPage() {
                       </button>
                     </div>
                   </div>
-                  <div
-                    style={{ display: "flex", alignItems: "center", gap: 8 }}
-                  >
+                  <div className="api-key-row__prefix">
                     <code className="api-key-row__value">{key.prefix}</code>
                   </div>
                   <div className="api-key-row__meta">
@@ -936,9 +915,9 @@ export default function MerchantSettingsPage() {
                   </div>
                 </div>
               ))}
-              <div style={{ marginTop: 16 }}>
+              <div className="settings-action-row">
                 <button
-                  className="btn btn--primary btn--sm"
+                  className="btn-primary click-shift"
                   onClick={() => setModal("new-key")}
                 >
                   Generate new key
@@ -951,12 +930,10 @@ export default function MerchantSettingsPage() {
       case "privacy":
         return (
           <>
-            <div className="settings-page-heading">
-              <h1 className="settings-page-heading__title">Privacy</h1>
-              <p className="settings-page-heading__sub">
-                Control your business data and public presence
-              </p>
-            </div>
+            <SectionHeading
+              title="Privacy"
+              sub="Control your business data and public presence"
+            />
             <SettingsSection title="Visibility">
               <ToggleRow
                 label="Show on Push business directory"
@@ -972,8 +949,8 @@ export default function MerchantSettingsPage() {
                 checked={settings.privacy.adPreferences}
                 onChange={(v) => patchPrivacy("adPreferences", v)}
               />
-              <div style={{ paddingTop: 16 }}>
-                <button className="btn btn--ghost btn--sm">
+              <div className="settings-action-row">
+                <button className="btn-ghost click-shift">
                   Export business data
                 </button>
               </div>
@@ -984,12 +961,10 @@ export default function MerchantSettingsPage() {
       case "danger":
         return (
           <>
-            <div className="settings-page-heading">
-              <h1 className="settings-page-heading__title">Danger Zone</h1>
-              <p className="settings-page-heading__sub">
-                Irreversible actions — proceed carefully
-              </p>
-            </div>
+            <SectionHeading
+              title="Danger Zone"
+              sub="Irreversible actions — proceed carefully"
+            />
             <SettingsSection danger title="Account Actions">
               <div className="danger-action">
                 <div className="danger-action__text">
@@ -1003,7 +978,7 @@ export default function MerchantSettingsPage() {
                   </span>
                 </div>
                 <button
-                  className="btn btn--ghost btn--sm"
+                  className="btn-ghost click-shift"
                   onClick={() => setModal("deactivate")}
                 >
                   Deactivate
@@ -1019,7 +994,7 @@ export default function MerchantSettingsPage() {
                   </span>
                 </div>
                 <button
-                  className="btn btn--danger btn--sm"
+                  className="btn-primary click-shift"
                   onClick={() => setModal("delete")}
                 >
                   Delete
@@ -1037,6 +1012,7 @@ export default function MerchantSettingsPage() {
       navItems={NAV_ITEMS}
       activeSection={activeSection}
       onSectionChange={setActiveSection}
+      backHref="/merchant/dashboard"
     >
       {renderSection()}
 
@@ -1048,7 +1024,7 @@ export default function MerchantSettingsPage() {
           </span>
           <div className="settings-save-bar__actions">
             <button
-              className="btn btn--ghost btn--sm"
+              className="btn-ghost click-shift"
               onClick={() => {
                 setSettings(DEFAULT_SETTINGS);
                 setDirty(false);
@@ -1057,7 +1033,7 @@ export default function MerchantSettingsPage() {
               Discard
             </button>
             <button
-              className="btn btn--primary btn--sm"
+              className="btn-primary click-shift"
               onClick={save}
               disabled={saveStatus === "saving"}
             >

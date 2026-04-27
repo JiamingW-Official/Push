@@ -64,16 +64,16 @@ const CATEGORY_BG: Record<string, string> = {
   Food: "rgba(193,18,31,0.12)",
   Coffee: "rgba(102,155,188,0.15)",
   Beauty: "rgba(120,0,0,0.08)",
-  Retail: "rgba(0,48,73,0.10)",
-  Fitness: "rgba(0,48,73,0.08)",
+  Retail: "rgba(10,10,10,0.10)",
+  Fitness: "rgba(10,10,10,0.08)",
 };
 
 const CATEGORY_COLOR: Record<string, string> = {
-  Food: "var(--primary)",
-  Coffee: "var(--dark)",
+  Food: "var(--brand-red)",
+  Coffee: "var(--ink)",
   Beauty: "var(--accent)",
-  Retail: "var(--dark)",
-  Fitness: "var(--dark)",
+  Retail: "var(--ink)",
+  Fitness: "var(--ink)",
 };
 
 const DIFFICULTY_LABEL: Record<CampaignDifficulty, string> = {
@@ -131,7 +131,7 @@ export function CreatorCampaignCard({
 
   const thumbBg = campaign.image
     ? undefined
-    : (CATEGORY_BG[campaign.category ?? ""] ?? "rgba(0,48,73,0.07)");
+    : (CATEGORY_BG[campaign.category ?? ""] ?? "rgba(10,10,10,0.07)");
 
   const tierLabel =
     TIER_CONFIG[campaign.tier_required]?.label ?? campaign.tier_required;
@@ -164,19 +164,19 @@ export function CreatorCampaignCard({
   }
 
   // --- Apply button state ---
-  let applyBg = "var(--primary)";
+  let applyBg = "var(--brand-red)";
   let applyColor = "var(--surface)";
   let applyLabel = "Apply";
   let applyDisabled = false;
 
   if (applied) {
-    applyBg = "var(--tertiary)";
+    applyBg = "var(--accent-blue)";
     applyColor = "var(--surface)";
     applyLabel = "Applied";
     applyDisabled = true;
   } else if (!isEligible) {
     applyBg = "rgba(0,0,0,0.08)";
-    applyColor = "rgba(0,48,73,0.35)";
+    applyColor = "rgba(10,10,10,0.35)";
     applyLabel = "Locked";
     applyDisabled = true;
   }
@@ -191,8 +191,8 @@ export function CreatorCampaignCard({
         flexDirection: "column",
         backgroundColor: "var(--surface)",
         border: active
-          ? "2px solid var(--primary)"
-          : "1.5px solid rgba(0,48,73,0.14)",
+          ? "2px solid var(--brand-red)"
+          : "1.5px solid rgba(10,10,10,0.14)",
         borderRadius: 0,
         overflow: "hidden",
         cursor: onCardClick ? "pointer" : "default",
@@ -203,15 +203,15 @@ export function CreatorCampaignCard({
       onMouseEnter={(e) => {
         if (!active) {
           const el = e.currentTarget as HTMLDivElement;
-          el.style.borderColor = "rgba(0,48,73,0.30)";
-          el.style.boxShadow = "0 4px 16px rgba(0,48,73,0.10)";
+          el.style.borderColor = "rgba(10,10,10,0.30)";
+          el.style.boxShadow = "0 4px 16px rgba(10,10,10,0.10)";
           el.style.transform = "translateY(-4px)";
         }
       }}
       onMouseLeave={(e) => {
         if (!active) {
           const el = e.currentTarget as HTMLDivElement;
-          el.style.borderColor = "rgba(0,48,73,0.14)";
+          el.style.borderColor = "rgba(10,10,10,0.14)";
           el.style.boxShadow = "none";
           el.style.transform = "translateY(0)";
         }
@@ -257,7 +257,7 @@ export function CreatorCampaignCard({
               fontSize: "11px",
               letterSpacing: "0.10em",
               textTransform: "uppercase",
-              color: "rgba(0,48,73,0.35)",
+              color: "rgba(10,10,10,0.35)",
               userSelect: "none",
             }}
           >
@@ -311,7 +311,7 @@ export function CreatorCampaignCard({
             top: 8,
             right: 8,
             padding: "4px 10px",
-            backgroundColor: "var(--dark)",
+            backgroundColor: "var(--ink)",
             color: "var(--surface)",
             fontFamily: '"CS Genio Mono", monospace',
             fontSize: campaign.payout === 0 ? "11px" : "13px",
@@ -352,12 +352,12 @@ export function CreatorCampaignCard({
                 width="9"
                 height="7"
                 rx="0"
-                stroke="var(--primary)"
+                stroke="var(--brand-red)"
                 strokeWidth="1.4"
               />
               <path
                 d="M3 5.5V3.5a2.5 2.5 0 0 1 5 0v2"
-                stroke="var(--primary)"
+                stroke="var(--brand-red)"
                 strokeWidth="1.4"
                 strokeLinecap="square"
               />
@@ -391,7 +391,7 @@ export function CreatorCampaignCard({
               fontSize: "10px",
               letterSpacing: "0.10em",
               textTransform: "uppercase",
-              color: "var(--tertiary)",
+              color: "var(--accent-blue)",
               lineHeight: 1,
             }}
           >
@@ -404,8 +404,8 @@ export function CreatorCampaignCard({
               style={{
                 padding: "2px 6px",
                 backgroundColor:
-                  CATEGORY_BG[campaign.category] ?? "rgba(0,48,73,0.07)",
-                color: CATEGORY_COLOR[campaign.category] ?? "var(--dark)",
+                  CATEGORY_BG[campaign.category] ?? "rgba(10,10,10,0.07)",
+                color: CATEGORY_COLOR[campaign.category] ?? "var(--ink)",
                 fontFamily: '"CS Genio Mono", monospace',
                 fontSize: "9px",
                 fontWeight: 700,
@@ -429,7 +429,7 @@ export function CreatorCampaignCard({
             fontWeight: 700,
             fontSize: "16px",
             lineHeight: 1.3,
-            color: "var(--dark)",
+            color: "var(--ink)",
             display: "-webkit-box",
             WebkitLineClamp: 2,
             WebkitBoxOrient: "vertical",
@@ -486,12 +486,12 @@ export function CreatorCampaignCard({
                   width="9"
                   height="7"
                   rx="0"
-                  stroke="var(--primary)"
+                  stroke="var(--brand-red)"
                   strokeWidth="1.4"
                 />
                 <path
                   d="M3 5.5V3.5a2.5 2.5 0 0 1 5 0v2"
-                  stroke="var(--primary)"
+                  stroke="var(--brand-red)"
                   strokeWidth="1.4"
                   strokeLinecap="square"
                 />
@@ -500,7 +500,7 @@ export function CreatorCampaignCard({
                 style={{
                   fontFamily: '"CS Genio Mono", monospace',
                   fontSize: "11px",
-                  color: "var(--primary)",
+                  color: "var(--brand-red)",
                   letterSpacing: "0.04em",
                 }}
               >
@@ -516,7 +516,7 @@ export function CreatorCampaignCard({
             style={{
               width: "100%",
               height: "3px",
-              backgroundColor: "rgba(0,48,73,0.10)",
+              backgroundColor: "rgba(10,10,10,0.10)",
               borderRadius: 0,
               overflow: "hidden",
             }}
@@ -558,7 +558,7 @@ export function CreatorCampaignCard({
             style={{
               fontFamily: '"CS Genio Mono", monospace',
               fontSize: "11px",
-              color: "rgba(0,48,73,0.50)",
+              color: "rgba(10,10,10,0.50)",
               letterSpacing: "0.04em",
               lineHeight: 1,
               flexShrink: 0,

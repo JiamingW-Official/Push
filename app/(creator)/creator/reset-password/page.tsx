@@ -4,10 +4,32 @@ import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/db/browser";
-import "@/styles/auth-split.css";
-import "./reset-password.css";
 
 type FieldStatus = "valid" | "error" | undefined;
+
+const inputStyle: React.CSSProperties = {
+  fontFamily: "var(--font-body)",
+  fontSize: 16,
+  padding: "12px 16px",
+  border: "1px solid var(--hairline)",
+  borderRadius: 8,
+  background: "var(--surface)",
+  width: "100%",
+  boxSizing: "border-box",
+  color: "var(--ink)",
+  outline: "none",
+};
+
+const labelStyle: React.CSSProperties = {
+  display: "block",
+  fontFamily: "var(--font-body)",
+  fontSize: 12,
+  fontWeight: 600,
+  letterSpacing: "0.08em",
+  textTransform: "uppercase",
+  color: "var(--ink-3)",
+  marginBottom: 8,
+};
 
 export default function CreatorResetPasswordPage() {
   const router = useRouter(); // eslint-disable-line @typescript-eslint/no-unused-vars
@@ -65,219 +87,334 @@ export default function CreatorResetPasswordPage() {
 
   return (
     <>
-      <a href="#reset-form" className="skip-link">
+      <a
+        href="#reset-form"
+        style={{
+          position: "absolute",
+          top: -40,
+          left: 0,
+          background: "var(--brand-red)",
+          color: "var(--snow)",
+          padding: "8px 16px",
+          zIndex: 100,
+          textDecoration: "none",
+          fontFamily: "var(--font-body)",
+          fontSize: 14,
+        }}
+        onFocus={(e) => {
+          (e.target as HTMLAnchorElement).style.top = "0";
+        }}
+        onBlur={(e) => {
+          (e.target as HTMLAnchorElement).style.top = "-40px";
+        }}
+      >
         Skip to form
       </a>
-      <div className="page">
-        <BrandPanel />
-        <div className="form-panel">
-          <div className="form-wrap" id="reset-form">
-            {sent ? (
-              <SentState email={email} />
-            ) : (
-              <RequestState
-                email={email}
-                setEmail={setEmail}
-                emailStatus={emailStatus}
-                emailError={emailError}
-                formError={formError}
-                loading={loading}
-                onBlur={handleBlur}
-                onSubmit={handleSubmit}
-              />
-            )}
-          </div>
-        </div>
-      </div>
-    </>
-  );
-}
 
-/* ── Request state (default) ───────────────────────────────── */
-
-type RequestStateProps = {
-  email: string;
-  setEmail: (v: string) => void;
-  emailStatus: FieldStatus;
-  emailError: string;
-  formError: string;
-  loading: boolean;
-  onBlur: () => void;
-  onSubmit: (e: React.FormEvent) => void;
-};
-
-function RequestState({
-  email,
-  setEmail,
-  emailStatus,
-  emailError,
-  formError,
-  loading,
-  onBlur,
-  onSubmit,
-}: RequestStateProps) {
-  return (
-    <>
-      <div className="form-header">
-        <span className="form-eyebrow">Password Reset</span>
-        <h1 className="form-title">Forgot your password?</h1>
-        <p className="form-subtitle">
-          No worries. Enter your email and we&apos;ll send you a secure reset
-          link.
-        </p>
-      </div>
-
-      {formError && (
-        <div
-          className="form-error"
-          role="alert"
-          style={{ marginBottom: "var(--space-4)" }}
-        >
-          <span>{formError}</span>
-        </div>
-      )}
-
-      <form
-        onSubmit={onSubmit}
-        noValidate
-        className={loading ? "form-loading" : ""}
+      <div
+        style={{
+          minHeight: "100vh",
+          background: "var(--surface)",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          padding: "48px 24px",
+        }}
       >
-        <div className="form-grid">
-          {/* ── Email ──────────────────────────────────── */}
-          <div className="form-field">
-            <label htmlFor="email">Email</label>
-            <div className="field-wrap">
-              <input
-                id="email"
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                onBlur={onBlur}
-                placeholder="you@example.com"
-                autoComplete="email"
-                aria-describedby={emailError ? "err-email" : undefined}
-              />
-              {emailStatus === "valid" && (
-                <span className="field-dot" aria-hidden="true" />
-              )}
-            </div>
-            {emailError && (
-              <span className="error-msg" id="err-email">
-                {emailError}
-              </span>
+        <div style={{ maxWidth: 480, width: "100%" }} id="reset-form">
+          {/* Brand header */}
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 12,
+              marginBottom: 32,
+            }}
+          >
+            <Link
+              href="/"
+              style={{
+                fontFamily: "var(--font-display)",
+                fontWeight: 800,
+                fontSize: 24,
+                color: "var(--ink)",
+                textDecoration: "none",
+                letterSpacing: "-0.02em",
+              }}
+            >
+              PUSH
+            </Link>
+            <span style={{ color: "var(--hairline)", fontSize: 20 }}>·</span>
+            <span
+              style={{
+                fontFamily: "var(--font-body)",
+                fontSize: 12,
+                fontWeight: 600,
+                letterSpacing: "0.08em",
+                textTransform: "uppercase",
+                color: "var(--ink-4)",
+              }}
+            >
+              Password Reset
+            </span>
+          </div>
+
+          {/* Form card */}
+          <div
+            style={{
+              background: "var(--snow)",
+              border: "1px solid var(--hairline)",
+              borderRadius: 16,
+              padding: "40px 48px",
+            }}
+          >
+            {sent ? (
+              /* ── Sent confirmation state ── */
+              <div
+                role="status"
+                aria-live="polite"
+                style={{ textAlign: "center" }}
+              >
+                {/* Envelope icon */}
+                <div
+                  style={{
+                    width: 56,
+                    height: 56,
+                    borderRadius: "50%",
+                    border: "2px solid var(--brand-red)",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    margin: "0 auto 24px",
+                    color: "var(--brand-red)",
+                  }}
+                  aria-hidden="true"
+                >
+                  <svg width="24" height="20" viewBox="0 0 24 20" fill="none">
+                    <rect
+                      x="1"
+                      y="1"
+                      width="22"
+                      height="18"
+                      rx="2"
+                      stroke="currentColor"
+                      strokeWidth="1.8"
+                    />
+                    <path
+                      d="M1 4L12 12L23 4"
+                      stroke="currentColor"
+                      strokeWidth="1.8"
+                      strokeLinecap="round"
+                    />
+                  </svg>
+                </div>
+
+                <h1
+                  style={{
+                    fontFamily: "var(--font-display)",
+                    fontSize: 32,
+                    fontWeight: 900,
+                    color: "var(--ink)",
+                    letterSpacing: "-0.02em",
+                    marginBottom: 16,
+                  }}
+                >
+                  Check your email.
+                </h1>
+                <p
+                  style={{
+                    fontFamily: "var(--font-body)",
+                    fontSize: 16,
+                    color: "var(--ink-3)",
+                    lineHeight: 1.6,
+                    marginBottom: 32,
+                  }}
+                >
+                  We sent a reset link to{" "}
+                  <strong style={{ color: "var(--ink)" }}>{email}</strong>. The
+                  link expires in 60 minutes.
+                </p>
+                <Link
+                  href="/creator/login"
+                  className="btn-ghost click-shift"
+                  style={{ display: "inline-flex", textDecoration: "none" }}
+                >
+                  ← Back to login
+                </Link>
+              </div>
+            ) : (
+              /* ── Request state ── */
+              <>
+                <h1
+                  style={{
+                    fontFamily: "var(--font-display)",
+                    fontSize: 40,
+                    fontWeight: 900,
+                    color: "var(--ink)",
+                    letterSpacing: "-0.02em",
+                    marginBottom: 8,
+                    lineHeight: 1.1,
+                  }}
+                >
+                  Forgot your password?
+                </h1>
+                <p
+                  style={{
+                    fontFamily: "var(--font-body)",
+                    fontSize: 16,
+                    color: "var(--ink-3)",
+                    marginBottom: 32,
+                    lineHeight: 1.5,
+                  }}
+                >
+                  No worries. Enter your email and we&apos;ll send you a secure
+                  reset link.
+                </p>
+
+                {/* Form-level error */}
+                {formError && (
+                  <div
+                    role="alert"
+                    style={{
+                      background: "#fff0f0",
+                      border: "1px solid #fca5a5",
+                      borderRadius: 8,
+                      padding: "12px 16px",
+                      marginBottom: 24,
+                    }}
+                  >
+                    <span
+                      style={{
+                        fontFamily: "var(--font-body)",
+                        fontSize: 14,
+                        color: "var(--ink)",
+                      }}
+                    >
+                      {formError}
+                    </span>
+                  </div>
+                )}
+
+                <form
+                  onSubmit={handleSubmit}
+                  noValidate
+                  className={loading ? "form-loading" : ""}
+                >
+                  {/* Email field */}
+                  <div style={{ marginBottom: 24 }}>
+                    <label
+                      htmlFor="email"
+                      style={{
+                        ...labelStyle,
+                        color:
+                          emailStatus === "valid"
+                            ? "var(--brand-red)"
+                            : emailStatus === "error"
+                              ? "#ef4444"
+                              : "var(--ink-3)",
+                      }}
+                    >
+                      Email
+                    </label>
+                    <input
+                      id="email"
+                      type="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      onBlur={handleBlur}
+                      placeholder="you@example.com"
+                      autoComplete="email"
+                      aria-describedby={emailError ? "err-email" : undefined}
+                      style={{
+                        ...inputStyle,
+                        borderColor:
+                          emailStatus === "error"
+                            ? "#fca5a5"
+                            : emailStatus === "valid"
+                              ? "var(--brand-red)"
+                              : "var(--hairline)",
+                      }}
+                    />
+                    {emailError && (
+                      <span
+                        id="err-email"
+                        style={{
+                          fontFamily: "var(--font-body)",
+                          fontSize: 12,
+                          color: "#ef4444",
+                          marginTop: 6,
+                          display: "block",
+                        }}
+                      >
+                        {emailError}
+                      </span>
+                    )}
+                  </div>
+
+                  {/* Submit */}
+                  <button
+                    type="submit"
+                    className="btn-primary click-shift"
+                    disabled={loading}
+                    aria-busy={loading}
+                    style={{ width: "100%", justifyContent: "center" }}
+                  >
+                    {loading ? (
+                      <>
+                        <span
+                          aria-hidden="true"
+                          style={{
+                            display: "flex",
+                            gap: 4,
+                            justifyContent: "center",
+                          }}
+                        >
+                          {[0, 1, 2].map((i) => (
+                            <span
+                              key={i}
+                              style={{
+                                width: 6,
+                                height: 6,
+                                borderRadius: "50%",
+                                background: "currentColor",
+                                opacity: 0.6,
+                              }}
+                            />
+                          ))}
+                        </span>
+                        <span className="sr-only">Sending&hellip;</span>
+                      </>
+                    ) : (
+                      "Send Reset Link"
+                    )}
+                  </button>
+                </form>
+              </>
             )}
           </div>
 
-          <button
-            type="submit"
-            className="btn btn-primary submit-btn"
-            disabled={loading}
-            aria-busy={loading}
-          >
-            {loading ? (
-              <>
-                <span className="loader-dots" aria-hidden="true">
-                  <span className="dot" />
-                  <span className="dot" />
-                  <span className="dot" />
-                </span>
-                <span className="sr-only">Sending&hellip;</span>
-              </>
-            ) : (
-              "Send Reset Link"
-            )}
-          </button>
+          {/* Footer link */}
+          {!sent && (
+            <p
+              style={{
+                fontFamily: "var(--font-body)",
+                fontSize: 14,
+                color: "var(--ink-4)",
+                textAlign: "center",
+                marginTop: 24,
+              }}
+            >
+              Remember it?{" "}
+              <Link
+                href="/creator/login"
+                style={{ color: "var(--ink-3)", textDecoration: "underline" }}
+              >
+                Log in →
+              </Link>
+            </p>
+          )}
         </div>
-      </form>
-
-      <p className="form-footer">
-        Remember it? <Link href="/creator/login">Log in &rarr;</Link>
-      </p>
+      </div>
     </>
-  );
-}
-
-/* ── Sent state ─────────────────────────────────────────────── */
-
-function SentState({ email }: { email: string }) {
-  return (
-    <div className="sent-state" role="status" aria-live="polite">
-      <div className="sent-icon" aria-hidden="true">
-        <svg
-          width="40"
-          height="40"
-          viewBox="0 0 40 40"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <circle
-            cx="20"
-            cy="20"
-            r="19"
-            stroke="currentColor"
-            strokeWidth="2"
-          />
-          <polyline
-            points="12,21 18,27 29,14"
-            stroke="currentColor"
-            strokeWidth="2.5"
-            strokeLinecap="square"
-            strokeLinejoin="miter"
-          />
-        </svg>
-      </div>
-      <h1 className="sent-title">Check your email</h1>
-      <p className="sent-message">
-        We sent a reset link to <strong>{email}</strong>.
-      </p>
-      <Link href="/creator/login" className="sent-back">
-        &larr; Back to login
-      </Link>
-    </div>
-  );
-}
-
-/* ── Brand panel ────────────────────────────────────────────── */
-
-function BrandPanel() {
-  return (
-    <div className="brand-panel">
-      <div className="brand-top">
-        <Link href="/" className="brand-logo">
-          Push
-        </Link>
-
-        <div>
-          <h2 className="brand-headline">
-            Password
-            <br />
-            <em>reset.</em>
-          </h2>
-          <p className="brand-tagline">
-            We&apos;ll send you a secure link. Your campaigns and score are
-            safely stored.
-          </p>
-        </div>
-
-        <div className="brand-stats">
-          {[
-            { label: "Link expires in", value: "60 minutes", pct: 100 },
-            { label: "Accounts secured", value: "100%", pct: 100 },
-          ].map((s) => (
-            <div key={s.label} className="stat-bar">
-              <span className="stat-bar-label">{s.label}</span>
-              <div className="stat-bar-track">
-                <div className="stat-bar-fill" style={{ width: `${s.pct}%` }} />
-              </div>
-              <span className="stat-bar-value">{s.value}</span>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      <Link href="/creator/login" className="brand-back">
-        &larr; Creator login
-      </Link>
-    </div>
   );
 }

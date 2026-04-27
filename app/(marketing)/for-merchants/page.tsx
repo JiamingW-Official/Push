@@ -1,828 +1,478 @@
+import type { Metadata } from "next";
 import Link from "next/link";
-import ScrollRevealInit from "@/components/layout/ScrollRevealInit";
-import "../landing.css";
 import "./merchants.css";
 
-/* ── Creator tier data ───────────────────────────────────────── */
-const TIERS = [
+export const metadata: Metadata = {
+  title: "For Merchants — Push NYC",
+  description:
+    "Pay only when a customer walks in. Push connects your storefront to local creators — verified foot traffic, no upfront spend, real-time dashboard.",
+};
+
+/* ── Comparison table data ───────────────────────────────── */
+const COMPARE_ROWS = [
   {
-    slug: "seed",
-    name: "Seed",
-    followers: "Any — 0 minimum",
-    campaignSize: "$0 — Free product",
-    color: "#b8a99a",
-    note: "Entry tier. No followers required.",
+    feature: "Verified visits",
+    push: true,
+    yelp: false,
+    agency: false,
+    groupon: false,
   },
   {
-    slug: "explorer",
-    name: "Explorer",
-    followers: "500 – 2K",
-    campaignSize: "$12 – $18 / visit",
-    color: "#8c6239",
-    note: "Proven consistency over 3+ campaigns.",
+    feature: "Pay per visit",
+    push: true,
+    yelp: false,
+    agency: false,
+    groupon: false,
   },
   {
-    slug: "operator",
-    name: "Operator",
-    followers: "2K – 8K",
-    campaignSize: "$20 – $35 + 3%",
-    color: "#4a5568",
-    note: "Commission unlocked. Bonus at 30 tx/mo.",
+    feature: "No upfront spend",
+    push: true,
+    yelp: false,
+    agency: false,
+    groupon: false,
   },
   {
-    slug: "proven",
-    name: "Proven",
-    followers: "8K – 25K",
-    campaignSize: "$32 – $55 + 5%",
-    color: "#c9a96e",
-    note: "Trusted track record. Higher-value campaigns.",
+    feature: "Real-time dashboard",
+    push: true,
+    yelp: true,
+    agency: false,
+    groupon: false,
   },
   {
-    slug: "closer",
-    name: "Closer",
-    followers: "25K – 100K",
-    campaignSize: "$55 – $80 + 7%",
-    color: "#9b111e",
-    note: "Top performers. Priority campaign access.",
-  },
-  {
-    slug: "partner",
-    name: "Partner",
-    followers: "100K+",
-    campaignSize: "$100 – $200 + 10%",
-    color: "#1a1a2e",
-    note: "Elite tier. Top per-visit rate ($35 avg) + Studio anchor status.",
+    feature: "Fraud prevention",
+    push: true,
+    yelp: false,
+    agency: false,
+    groupon: false,
   },
 ];
 
-/* ── Pricing plans ───────────────────────────────────────────── */
-const PLANS = [
-  {
-    name: "Essentials",
-    price: "$99",
-    period: "/mo",
-    desc: "Flat pricing for legacy neighborhood shops.",
-    features: [
-      "3 active campaigns",
-      "5 creator slots",
-      "QR + receipt attribution",
-      "Weekly ROI card",
-    ],
-    featured: false,
-    badge: undefined as string | undefined,
-    cta: "Start Essentials",
-    roi: "Designed for $5K–$25K monthly revenue shops",
-  },
-  {
-    name: "Pro",
-    price: "5%",
-    period: " of attributed revenue",
-    desc: "Outcome-based Year 1. Cap $179, floor $49 — pay only when Push works.",
-    features: [
-      "Unlimited campaigns",
-      "Three-signal attribution",
-      "Live ROI dashboard",
-      "Priority support",
-    ],
-    featured: true,
-    badge: "Most chosen",
-    cta: "Talk to us about Pro",
-    roi: "13.8x LTV/CAC at maturity",
-  },
-  {
-    name: "Advanced",
-    price: "$349",
-    period: "/mo",
-    desc: "Multi-unit operators with API + dedicated CSM.",
-    features: [
-      "Everything in Pro, flat",
-      "Up to 5 locations",
-      "Custom attribution rules",
-      "API access",
-    ],
-    featured: false,
-    badge: undefined as string | undefined,
-    cta: "Talk to us",
-    roi: "For 2+ locations",
-  },
-];
+const COMPARE_COLS = ["Push", "Yelp Ads", "Influencer Agency", "Groupon"];
 
+/* ── Page ─────────────────────────────────────────────────── */
 export default function ForMerchantsPage() {
   return (
-    <>
-      <ScrollRevealInit />
+    <main>
+      {/* ═══ 01 — HERO (dark panel, bottom-left title) ══════ */}
+      <section aria-label="Hero" className="mn-hero">
+        {/* Ghost "NYC" watermark — opacity 0.03 */}
+        <span aria-hidden="true" className="mn-hero-watermark">
+          NYC
+        </span>
 
-      {/* ═══════════════ 01 — HERO ═══════════════ */}
-      <section
-        className="bg-hero-ink grain-overlay bg-vignette fm-hero"
-        style={{
-          position: "relative",
-          minHeight: "100vh",
-          display: "flex",
-          flexDirection: "column",
-          padding: "clamp(24px, 4vw, 64px)",
-          overflow: "hidden",
-        }}
-      >
-        {/* Top row: pill + date */}
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            flexWrap: "wrap",
-            gap: 16,
-            position: "relative",
-            zIndex: 3,
-          }}
-        >
-          <span className="pill-lux" style={{ color: "#fff" }}>
-            For venues in SoHo / Tribeca / Chinatown
-          </span>
-          <span className="eyebrow-lux" style={{ color: "var(--champagne)" }}>
-            Pilot opens June 22
-          </span>
-        </div>
-
-        {/* Hero center */}
-        <div
-          style={{
-            flex: 1,
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            position: "relative",
-            zIndex: 3,
-            maxWidth: 1180,
-            margin: "0 auto",
-            width: "100%",
-            paddingTop: "clamp(48px, 10vh, 120px)",
-            paddingBottom: "clamp(48px, 10vh, 120px)",
-          }}
-        >
-          <div
-            className="section-marker"
-            data-num="01"
-            style={{ color: "rgba(255,255,255,0.55)" }}
-          >
-            The deal
-          </div>
-
-          {/* Massive Darky 900 headline + brand-red period */}
-          <h1
-            style={{
-              fontFamily: "var(--font-display)",
-              fontSize: "clamp(72px, 14vw, 220px)",
-              fontWeight: 900,
-              letterSpacing: "-0.07em",
-              lineHeight: 0.86,
-              color: "#fff",
-              margin: 0,
-            }}
-          >
-            Pay per visit
-            <span
-              aria-hidden="true"
-              style={{
-                color: "var(--brand-red)",
-                marginLeft: "-0.04em",
-              }}
-            >
-              .
-            </span>
-          </h1>
-          <div
-            className="display-ghost"
-            style={{
-              fontSize: "clamp(40px, 8vw, 124px)",
-              color: "rgba(255,255,255,0.22)",
-              marginTop: "-0.04em",
-            }}
-          >
-            Real foot traffic.
-          </div>
-
-          <p
-            style={{
-              marginTop: "clamp(32px, 5vw, 56px)",
-              maxWidth: 620,
-              fontFamily: "var(--font-body)",
-              fontSize: "clamp(15px, 1.15vw, 18px)",
-              lineHeight: 1.6,
-              color: "rgba(255,255,255,0.75)",
-            }}
-          >
-            A creator posts about your spot. Someone who saw the post walks
-            through your door. We time-stamp the visit at your register. You pay
-            only after that — never before. That&apos;s it.
-          </p>
-          <p
-            style={{
-              marginTop: "clamp(16px, 2vw, 24px)",
-              maxWidth: 620,
-              fontFamily: "var(--font-body)",
-              fontSize: "clamp(13px, 1vw, 15px)",
-              lineHeight: 1.6,
-              color: "rgba(255,255,255,0.46)",
-            }}
-          >
-            Lower Manhattan pilot opens June&nbsp;22. Five anchored venues, ten
-            creators on the roster. Jiaming, the founder, walks the doors
-            himself.
-          </p>
-
-          {/* CTAs */}
-          <div
-            style={{
-              marginTop: "clamp(32px, 4vw, 48px)",
-              display: "flex",
-              gap: 16,
-              flexWrap: "wrap",
-              alignItems: "center",
-            }}
-          >
-            <Link href="/merchant/signup" className="btn btn-primary">
-              Open my venue
-            </Link>
-            <Link href="#pricing" className="btn fm-outline-btn">
-              See the numbers
-            </Link>
-          </div>
-
-          {/* Stats / KPI row */}
-          <div
-            style={{
-              marginTop: "clamp(40px, 6vw, 72px)",
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
-              gap: "clamp(16px, 3vw, 48px)",
-              borderTop: "1px solid rgba(255,255,255,0.12)",
-              paddingTop: "clamp(24px, 3vw, 40px)",
-              maxWidth: 960,
-            }}
-          >
-            {[
-              {
-                value: "$8–35",
-                label: "per verified visit",
-                note: "by tier — you set ceiling",
-                tint: "var(--brand-red)",
-              },
-              {
-                value: "0",
-                label: "monthly retainer",
-                note: "while we earn it",
-                tint: "var(--champagne)",
-              },
-              {
-                value: "24h",
-                label: "campaign live",
-                note: "from signup to first scan",
-                tint: "var(--cat-fitness)",
-              },
-            ].map((s) => (
-              <div
-                key={s.label}
-                style={{
-                  paddingLeft: 18,
-                  borderLeft: `2px solid ${s.tint}`,
-                }}
-              >
-                <div
-                  style={{
-                    fontFamily: "var(--font-display)",
-                    fontSize: "clamp(40px, 4vw, 60px)",
-                    fontWeight: 200,
-                    letterSpacing: "-0.05em",
-                    lineHeight: 0.9,
-                    color: "#fff",
-                  }}
-                >
-                  {s.value}
-                </div>
-                <div
-                  style={{
-                    marginTop: 10,
-                    fontFamily: "var(--font-body)",
-                    fontSize: 12,
-                    fontWeight: 600,
-                    color: "rgba(255,255,255,0.78)",
-                  }}
-                >
-                  {s.label}
-                </div>
-                <div
-                  style={{
-                    marginTop: 4,
-                    fontFamily: "var(--font-body)",
-                    fontSize: 10,
-                    letterSpacing: "0.08em",
-                    color: "rgba(255,255,255,0.4)",
-                  }}
-                >
-                  {s.note}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Bottom: scroll indicator + category strip */}
-        <div
-          style={{
-            position: "relative",
-            zIndex: 3,
-            display: "flex",
-            alignItems: "flex-end",
-            justifyContent: "space-between",
-            flexWrap: "wrap",
-            gap: 32,
-          }}
-        >
-          <div
-            className="scroll-indicator"
-            style={{ color: "rgba(255,255,255,0.7)" }}
-          >
-            Scroll
-          </div>
-          <div style={{ flex: 1, minWidth: 240, maxWidth: 480 }}>
-            <div
-              className="category-strip"
-              aria-hidden="true"
-              style={{ marginBottom: 12 }}
-            >
-              <span />
-              <span />
-              <span />
-              <span />
-              <span />
-              <span />
-            </div>
-            <div
-              style={{
-                fontFamily: "var(--font-body)",
-                fontSize: 10,
-                fontWeight: 700,
-                letterSpacing: "0.14em",
-                textTransform: "uppercase",
-                color: "rgba(255,255,255,0.45)",
-                display: "flex",
-                justifyContent: "space-between",
-              }}
-            >
-              <span>Coffee</span>
-              <span>Bakery</span>
-              <span>Studio</span>
-              <span>Wear</span>
-              <span>Bar</span>
-              <span>After-hours</span>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ═══════════════ 02 — PROBLEM / SOLUTION ═══════════════ */}
-      <section className="section section-bright fm-ps-section">
-        <div className="container">
-          <div className="reveal" style={{ marginBottom: 64 }}>
-            <div className="section-marker" data-num="02">
-              What you&apos;re replacing
-            </div>
-            <h2
-              style={{
-                fontFamily: "var(--font-display)",
-                fontSize: "clamp(36px, 5vw, 64px)",
-                fontWeight: 800,
-                letterSpacing: "-0.05em",
-                lineHeight: 1,
-                color: "var(--ink)",
-                margin: 0,
-              }}
-            >
-              The before
-              <br />
-              <span className="display-ghost">and the after.</span>
-            </h2>
-          </div>
-
-          <div className="fm-ps-grid">
-            {/* Left: Problem */}
-            <div className="fm-ps-col reveal">
-              <p className="fm-ps-label fm-ps-label--problem">Right now</p>
-              <p className="fm-ps-statement">
-                <strong>You pay for views</strong>
-                <span className="fm-ps-ghost" aria-hidden="true">
-                  You pay for views
-                </span>
-                <br />
-                that never come in.
-              </p>
-              <ul className="fm-ps-list">
-                <li>
-                  <span className="fm-ps-bullet" />
-                  Agency retainers: $3,000+ a month, locked in for a year
-                </li>
-                <li>
-                  <span className="fm-ps-bullet" />
-                  Instagram ads: charged per impression, no door check
-                </li>
-                <li>
-                  <span className="fm-ps-bullet" />
-                  Influencer one-offs: a tagged story, then silence
-                </li>
-              </ul>
-            </div>
-
-            {/* Vertical rule */}
-            <div className="fm-ps-divider" aria-hidden="true" />
-
-            {/* Right: Solution */}
-            <div
-              className="fm-ps-col reveal"
-              style={{ transitionDelay: "120ms" }}
-            >
-              <p className="fm-ps-label fm-ps-label--solution">With Push</p>
-              <p className="fm-ps-statement fm-ps-statement--solution">
-                <strong>You pay only when</strong>
-                <span
-                  className="fm-ps-ghost fm-ps-ghost--solution"
-                  aria-hidden="true"
-                >
-                  You pay only when
-                </span>
-                <br />
-                someone walks in.
-              </p>
-              <ul className="fm-ps-list fm-ps-list--solution">
-                <li>
-                  <span className="fm-ps-bullet fm-ps-bullet--solution" />
-                  Every visit time-stamped at your register, in the receipt log
-                </li>
-                <li>
-                  <span className="fm-ps-bullet fm-ps-bullet--solution" />
-                  Payouts release after the scan, not before
-                </li>
-                <li>
-                  <span className="fm-ps-bullet fm-ps-bullet--solution" />
-                  First campaign live in 24 hours. No card required to look.
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ═══════════════ 03 — HOW IT WORKS ═══════════════ */}
-      <section className="section fm-how-section">
-        <div className="container">
-          <div
-            className="reveal"
-            style={{
-              display: "flex",
-              alignItems: "flex-end",
-              justifyContent: "space-between",
-              flexWrap: "wrap",
-              gap: 24,
-              marginBottom: "clamp(40px, 6vw, 80px)",
-            }}
-          >
-            <div>
-              <div className="section-marker" data-num="03">
-                How it works
-              </div>
-              <h2
-                style={{
-                  fontFamily: "var(--font-display)",
-                  fontSize: "clamp(36px, 5vw, 64px)",
-                  fontWeight: 800,
-                  letterSpacing: "-0.05em",
-                  lineHeight: 1,
-                  color: "var(--ink)",
-                  margin: 0,
-                }}
-              >
-                Three steps.
-                <br />
-                <span className="display-ghost">Zero guesswork.</span>
-              </h2>
-            </div>
+        <div className="mn-hero-inner">
+          {/* Left — title block, bottom-left anchored */}
+          <div className="mn-hero-copy">
             <p
-              style={{
-                fontFamily: "var(--font-body)",
-                fontSize: 13,
-                color: "var(--ink-4)",
-                maxWidth: 320,
-                lineHeight: 1.55,
-                margin: 0,
-              }}
+              className="eyebrow"
+              style={{ color: "rgba(255,255,255,0.45)", marginBottom: 16 }}
             >
-              From signup to first verified visit
-              <br />
-              is usually under a week. We move
-              <br />
-              at the speed you can handle.
+              (FOR MERCHANTS)
             </p>
-          </div>
 
-          <ol className="fm-how-list">
-            {[
-              {
-                n: "01",
-                title: "Write the brief",
-                body: "Tell us your spot, your budget ceiling per visit, what you want creators to mention. Ten minutes. We handle the matching, QR posters, and the receipt-side wiring after that.",
-              },
-              {
-                n: "02",
-                title: "Approve the creators",
-                body: "Push surfaces a shortlist by tier and proximity — we know which ones are within a six-block walk of your door. You approve, or set auto-accept above a tier threshold. Every creator is vetted before they post.",
-              },
-              {
-                n: "03",
-                title: "Pay after the door opens",
-                body: "Payouts release on QR-verified visits, never on impressions. We invoice weekly with the full ledger — every scan, every receipt, every cent. No agency markup, no clawbacks.",
-              },
-            ].map((step, i) => (
-              <li
-                key={step.n}
-                className="fm-how-item reveal"
-                style={{ transitionDelay: `${i * 110}ms` }}
-              >
-                <span className="fm-how-num">{step.n}</span>
-                <div className="fm-how-content">
-                  <h3 className="fm-how-title">{step.title}</h3>
-                  <p className="fm-how-body">{step.body}</p>
-                </div>
-              </li>
-            ))}
-          </ol>
-        </div>
-      </section>
-
-      {/* ═══════════════ 04 — CREATOR TIERS ═══════════════ */}
-      <section className="section section-bright fm-tiers-section">
-        <div className="container">
-          <div className="reveal" style={{ marginBottom: 48 }}>
-            <div className="section-marker" data-num="04">
-              Who you&apos;re hiring
-            </div>
-            <h2
-              style={{
-                fontFamily: "var(--font-display)",
-                fontSize: "clamp(36px, 5vw, 64px)",
-                fontWeight: 800,
-                letterSpacing: "-0.05em",
-                lineHeight: 1,
-                color: "var(--ink)",
-                margin: "0 0 16px",
-              }}
-            >
-              Six tiers.
+            <h1 className="mn-hero-title">
+              Bring customers
               <br />
-              <span className="display-ghost">Every creator vetted.</span>
-            </h2>
-            <p className="fm-tiers-sub">
-              From zero-follower newcomers walking the neighborhood to
-              hundred-thousand-strong partners. Everyone is ranked by what
-              actually happened — visits driven, retention rate — not how many
-              followers they bought.
+              through the <span className="mn-hero-title-accent">door.</span>
+            </h1>
+
+            <p className="mn-hero-body">
+              Push ties your storefront to local creators. Customers scan a QR
+              at checkout — you pay per verified walk-in, not per impression. No
+              retainer. No setup fees. No guesswork.
             </p>
-          </div>
 
-          <div
-            className="fm-tier-grid reveal"
-            style={{ transitionDelay: "80ms" }}
-          >
-            {TIERS.map((tier) => (
-              <div
-                key={tier.slug}
-                className={`fm-tier-card fm-tier-card--${tier.slug}`}
-              >
-                <span
-                  className="fm-tier-swatch"
-                  style={{ background: tier.color }}
-                  aria-hidden="true"
-                />
-                <span className="fm-tier-name">{tier.name}</span>
-                <div className="fm-tier-row">
-                  <span className="fm-tier-meta-label">Followers</span>
-                  <span className="fm-tier-meta-val">{tier.followers}</span>
-                </div>
-                <div className="fm-tier-row">
-                  <span className="fm-tier-meta-label">Campaign size</span>
-                  <span className="fm-tier-meta-val fm-tier-meta-val--price">
-                    {tier.campaignSize}
-                  </span>
-                </div>
-                <p className="fm-tier-note">{tier.note}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ═══════════════ 05 — PRICING ═══════════════ */}
-      <section id="pricing" className="section fm-pricing-section">
-        <div className="container">
-          <div
-            className="fm-pricing-header reveal"
-            style={{ marginBottom: "clamp(40px, 6vw, 72px)" }}
-          >
-            <div>
-              <div className="section-marker" data-num="05">
-                What it costs
-              </div>
-              <h2
+            <div className="mn-hero-actions">
+              <Link href="/merchant/signup" className="btn-primary click-shift">
+                Get started free
+              </Link>
+              <Link
+                href="#how-it-works"
+                className="btn-ghost click-shift"
                 style={{
-                  fontFamily: "var(--font-display)",
-                  fontSize: "clamp(36px, 5vw, 64px)",
-                  fontWeight: 800,
-                  letterSpacing: "-0.05em",
-                  lineHeight: 1,
-                  color: "var(--ink)",
-                  margin: 0,
+                  borderColor: "rgba(255,255,255,0.30)",
+                  color: "rgba(255,255,255,0.75)",
                 }}
               >
-                Flat or outcome-based.
-                <br />
-                <span className="display-ghost">No hidden fees.</span>
-              </h2>
+                See how it works
+              </Link>
             </div>
-            <p className="fm-pricing-note">
-              Cancel anytime. No setup fees.
-              <br />
-              Creator payouts billed separately per campaign.
-            </p>
           </div>
 
-          <div className="fm-plans">
-            {PLANS.map((plan, i) => (
-              <div
-                key={plan.name}
-                className={`fm-plan reveal${plan.featured ? " fm-plan--featured" : ""}`}
-                style={{ transitionDelay: `${i * 90}ms` }}
-              >
-                {i < PLANS.length - 1 && (
-                  <div className="fm-plan-rule" aria-hidden="true" />
-                )}
-                {plan.badge && (
-                  <span className="fm-plan-badge">{plan.badge}</span>
-                )}
-                <h3 className="fm-plan-name">{plan.name}</h3>
-                <div className="fm-plan-price">
-                  <span className="fm-plan-price-int">{plan.price}</span>
-                  <span className="fm-plan-price-period">{plan.period}</span>
-                </div>
-                <p className="fm-plan-desc">{plan.desc}</p>
-                <ul className="fm-plan-features">
-                  {plan.features.map((f) => (
-                    <li key={f} className="fm-plan-feature">
-                      {f}
-                    </li>
-                  ))}
-                </ul>
-                <p className="fm-plan-roi">{plan.roi}</p>
-                <Link
-                  href="/merchant/signup"
-                  className={`btn ${plan.featured ? "btn-primary" : "btn-secondary"} fm-plan-cta`}
-                >
-                  {plan.cta}
-                </Link>
+          {/* Right — liquid glass stat badge */}
+          <div
+            className="lg-surface--dark mn-hero-badge"
+            aria-label="1.4M+ verified visits"
+          >
+            <div className="mn-hero-live">
+              <span className="mn-hero-live-dot" />
+              <span className="mn-hero-live-label">Live</span>
+            </div>
+            <div className="mn-hero-badge-num">1.4M+</div>
+            <p className="mn-hero-badge-label">Verified visits</p>
+          </div>
+        </div>
+      </section>
+
+      {/* ═══ Sig divider ══════════════════════════════════════ */}
+      <span className="sig-divider" aria-hidden="true">
+        Pay for visits · Not impressions · Verified ·
+      </span>
+
+      {/* ═══ 02 — VALUE PROP (3 numbered editorial rows, dark bg) */}
+      <section aria-label="Why Push" className="mn-value">
+        <div className="mn-value-inner">
+          <div className="mn-value-header">
+            <p className="eyebrow" style={{ color: "rgba(255,255,255,0.40)" }}>
+              (WHY THIS EXISTS)
+            </p>
+            <h2 className="mn-value-title">
+              The only platform
+              <br />
+              that ties ads to visits.
+            </h2>
+          </div>
+
+          <div className="mn-value-rows">
+            {[
+              {
+                num: "01",
+                title: "Zero upfront risk.",
+                body: "Post a campaign with no setup fee and no monthly retainer. Your first dollar only moves when a real customer scans at your door.",
+              },
+              {
+                num: "02",
+                title: "Creators you trust.",
+                body: "Push surfaces your campaign to verified local creators — people who actually live, eat, and shop in your neighborhood. Not bots. Not influencer farms.",
+              },
+              {
+                num: "03",
+                title: "Every visit, proven.",
+                body: "GPS timestamp + QR oracle verification on every scan. The dashboard shows you each walk-in in real time. No modeled lift. No impressions that might have driven traffic.",
+              },
+            ].map((row) => (
+              <div key={row.num} className="mn-value-row">
+                <div className="mn-value-num">{row.num}</div>
+                <h3 className="mn-value-row-title">{row.title}</h3>
+                <p className="mn-value-row-body">{row.body}</p>
               </div>
             ))}
           </div>
-
-          <p className="fm-pricing-full-link">
-            <Link href="/pricing" className="fm-link-underline">
-              Full pricing — including per-visit rates by tier →
-            </Link>
-          </p>
         </div>
       </section>
 
-      {/* ═══════════════ 06 — PULL QUOTE ═══════════════ */}
-      <section className="section section-bright fm-quote-section">
-        <div className="container">
-          <div className="reveal" style={{ marginBottom: 48 }}>
-            <div className="section-marker" data-num="06">
-              From a venue owner
+      {/* ═══ 03 — HOW IT WORKS (oversized step numbers) ════════ */}
+      <section id="how-it-works" aria-label="How it works" className="mn-how">
+        <div className="mn-how-inner">
+          <div className="mn-how-header">
+            <p
+              className="eyebrow"
+              style={{ color: "var(--ink-3)", marginBottom: 16 }}
+            >
+              (THREE STEPS)
+            </p>
+            <h2 className="mn-how-title">
+              Up and running
+              <br />
+              in three moves.
+            </h2>
+          </div>
+
+          <div className="mn-steps">
+            {[
+              {
+                num: "01",
+                title: "Post a campaign.",
+                body: "Set your offer, daily budget cap, and block radius. Push surfaces your campaign to nearby creators — live inside 24 hours.",
+              },
+              {
+                num: "02",
+                title: "Creator promotes.",
+                body: "A local creator shares your QR poster to their audience. Each creator gets a unique code tied to their account — no two scans ever look alike.",
+              },
+              {
+                num: "03",
+                title: "Pay per walk-in.",
+                body: "Customer scans at the door — GPS + timestamp oracle-verified. No fraud, no replay attacks. Every visit lands in your dashboard in real time.",
+              },
+            ].map((step) => (
+              <div key={step.num} className="mn-step click-shift">
+                <div className="mn-step-num" aria-hidden="true">
+                  {step.num}
+                </div>
+                <h3 className="mn-step-title">{step.title}</h3>
+                <p className="mn-step-body">{step.body}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ═══ Sig divider ══════════════════════════════════════ */}
+      <span className="sig-divider" aria-hidden="true">
+        Scan verified · Merchant pays · Creator earns ·
+      </span>
+
+      {/* ═══ 04 — PRICING TEASER (Butter Candy Panel) ══════════ */}
+      <section aria-label="Pricing overview" className="mn-pricing">
+        <div className="mn-pricing-inner">
+          <div className="candy-panel mn-pricing-candy">
+            <p
+              className="eyebrow"
+              style={{ color: "var(--ink-3)", marginBottom: 16 }}
+            >
+              (THE MATH)
+            </p>
+            <h2 className="mn-pricing-title">
+              You pay only when
+              <br />
+              they walk in.
+            </h2>
+            <p className="mn-pricing-sub">
+              Three plans. All cost-per-visit. No setup fee, no minimum spend,
+              no long-term contract. Cancel anytime.
+            </p>
+
+            <div className="mn-plan-grid">
+              {[
+                {
+                  name: "Starter",
+                  price: "$3.50",
+                  unit: "per visit",
+                  desc: "Up to 200 verified visits / mo. Best for new merchants testing the channel.",
+                  features: [
+                    "5 active creators",
+                    "1 location",
+                    "Real-time dashboard",
+                    "Basic fraud detection",
+                  ],
+                  featured: false,
+                },
+                {
+                  name: "Growth",
+                  price: "$3.00",
+                  unit: "per visit",
+                  desc: "Up to 1,000 verified visits / mo. The most popular plan for scaling merchants.",
+                  features: [
+                    "25 active creators",
+                    "3 locations",
+                    "Priority placement",
+                    "Oracle fraud prevention",
+                    "Campaign analytics",
+                  ],
+                  featured: true,
+                },
+                {
+                  name: "Scale",
+                  price: "$2.50",
+                  unit: "per visit",
+                  desc: "Unlimited visits. Custom creator matching, dedicated account manager.",
+                  features: [
+                    "Unlimited creators",
+                    "Unlimited locations",
+                    "Custom bid strategy",
+                    "Dedicated support",
+                    "API access",
+                  ],
+                  featured: false,
+                },
+              ].map((plan) => (
+                <div
+                  key={plan.name}
+                  className={`mn-plan-card${plan.featured ? " mn-plan-card--featured" : ""}`}
+                >
+                  <p className="mn-plan-name">{plan.name}</p>
+                  <div className="mn-plan-price">{plan.price}</div>
+                  <p className="mn-plan-desc">
+                    <span
+                      style={{
+                        fontFamily: "var(--font-body)",
+                        fontSize: 12,
+                        color: "var(--ink-4)",
+                        letterSpacing: "0.08em",
+                      }}
+                    >
+                      {plan.unit}
+                    </span>
+                    {" — "}
+                    {plan.desc}
+                  </p>
+                  <ul className="mn-plan-features">
+                    {plan.features.map((f) => (
+                      <li key={f} className="mn-plan-feature">
+                        <span
+                          className="mn-plan-feature-check"
+                          aria-hidden="true"
+                        >
+                          ✓
+                        </span>
+                        {f}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
             </div>
-          </div>
-          <div className="fm-quote-wrap reveal">
-            <span className="fm-quote-rule" aria-hidden="true" />
-            <blockquote className="fm-pull-quote">
-              <p className="fm-pull-quote-text">
-                &ldquo;We got 340 verified walk-ins in six weeks. We never paid
-                for a single click.&rdquo;
-              </p>
-              <footer className="fm-pull-quote-footer">
-                <cite className="fm-pull-quote-cite">
-                  Owner, Roberta&apos;s Bed-Stuy &mdash; Brooklyn, NYC
-                </cite>
-                <span className="fm-pull-quote-meta">
-                  Essentials plan &nbsp;·&nbsp; 6 active creators &nbsp;·&nbsp;
-                  $99/mo
-                </span>
-              </footer>
-            </blockquote>
+
+            <p className="mn-pricing-fine">
+              No setup fee · No minimum spend · Cancel anytime ·{" "}
+              <Link
+                href="/pricing"
+                className="click-shift"
+                style={{ color: "var(--brand-red)", fontWeight: 700 }}
+              >
+                See full pricing &rarr;
+              </Link>
+            </p>
           </div>
         </div>
       </section>
 
-      {/* ═══════════════ 07 — FINAL CTA ═══════════════ */}
-      <section
-        className="bg-hero-ink grain-overlay bg-vignette fm-final-cta"
-        style={{
-          position: "relative",
-          padding: "clamp(120px, 16vw, 200px) clamp(24px, 4vw, 64px)",
-          overflow: "hidden",
-        }}
-      >
-        <div
-          className="reveal"
-          style={{
-            position: "relative",
-            zIndex: 3,
-            maxWidth: 1180,
-            margin: "0 auto",
-          }}
-        >
-          <div
-            className="section-marker"
-            data-num="07"
-            style={{ color: "rgba(255,255,255,0.55)" }}
-          >
-            Open the door
-          </div>
-
-          <h2
-            style={{
-              fontFamily: "var(--font-display)",
-              fontSize: "clamp(56px, 11vw, 168px)",
-              fontWeight: 900,
-              letterSpacing: "-0.07em",
-              lineHeight: 0.86,
-              color: "#fff",
-              margin: 0,
-              maxWidth: 1100,
-            }}
-          >
-            Door open
-            <span
-              aria-hidden="true"
-              style={{
-                color: "var(--brand-red)",
-                marginLeft: "-0.04em",
-              }}
-            >
-              .
-            </span>
-          </h2>
-          <div
-            className="display-ghost"
-            style={{
-              fontSize: "clamp(40px, 8vw, 112px)",
-              color: "rgba(255,255,255,0.22)",
-              marginTop: "-0.04em",
-            }}
-          >
-            Money on results.
-          </div>
-
+      {/* ═══ 05 — TESTIMONIAL PULL QUOTE (brand-red full-width) */}
+      <section aria-label="Merchant testimonial" className="mn-quote-strip">
+        <span aria-hidden="true" className="mn-quote-ghost">
+          &ldquo;
+        </span>
+        <div className="mn-quote-inner">
           <p
-            style={{
-              marginTop: "clamp(28px, 4vw, 48px)",
-              maxWidth: 540,
-              fontFamily: "var(--font-body)",
-              fontSize: "clamp(15px, 1.15vw, 17px)",
-              lineHeight: 1.6,
-              color: "rgba(255,255,255,0.7)",
-            }}
+            className="eyebrow"
+            style={{ color: "rgba(255,255,255,0.50)", marginBottom: 24 }}
           >
-            Ten minutes to write the brief. Twenty-four hours to first scan.
-            Pilot opens June&nbsp;22 in SoHo, Tribeca, and Chinatown — Jiaming
-            walks the doors himself.
+            (FREEHOLD BROOKLYN · WILLIAMSBURG)
           </p>
+          <blockquote className="mn-quote-text">
+            &ldquo;Push gave us 340% better ROI than our paid social campaign —
+            and every visit was verified at the door. We know exactly which
+            creator drove each customer.&rdquo;
+          </blockquote>
+          <div className="mn-quote-attr">
+            <div className="mn-quote-dash" aria-hidden="true" />
+            <p className="mn-quote-name">
+              Marcus Lee · General Manager, Freehold Brooklyn
+            </p>
+          </div>
+        </div>
+      </section>
 
-          <div
-            style={{
-              marginTop: "clamp(28px, 4vw, 40px)",
-              display: "flex",
-              gap: 16,
-              flexWrap: "wrap",
-            }}
-          >
-            <Link
-              href="/merchant/signup"
-              className="btn btn-primary fm-final-btn"
+      {/* ═══ 06 — METRICS STRIP (dark panel, massive Darky numbers) */}
+      <section aria-label="Platform metrics" className="mn-metrics">
+        <div className="mn-metrics-inner">
+          <div className="mn-metrics-header">
+            <p
+              className="eyebrow"
+              style={{ color: "rgba(255,255,255,0.40)", marginBottom: 16 }}
             >
-              Open my venue
-            </Link>
-            <Link href="#pricing" className="btn fm-outline-btn">
-              See the numbers
+              (THE NUMBERS)
+            </p>
+            <h2 className="mn-metrics-title">The platform in numbers.</h2>
+          </div>
+
+          <div className="mn-metrics-row">
+            {[
+              { num: "1.4M+", label: "Verified visits" },
+              { num: "100+", label: "Active merchants" },
+              { num: "$3.50", label: "Avg cost per visit" },
+            ].map((m) => (
+              <div key={m.num} className="mn-metric-item">
+                <div className="mn-metric-num">{m.num}</div>
+                <p className="mn-metric-label">{m.label}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ═══ 07 — COMPARISON TABLE (editorial) ═════════════════ */}
+      <section aria-label="Comparison" className="mn-compare">
+        <div className="mn-compare-inner">
+          <p
+            className="eyebrow"
+            style={{ color: "var(--ink-3)", marginBottom: 16 }}
+          >
+            (THE COMPARISON)
+          </p>
+          <h2 className="mn-compare-title">Push vs. the rest.</h2>
+
+          <div style={{ overflowX: "auto" }}>
+            <table className="mn-compare-table">
+              <thead>
+                <tr>
+                  <th scope="col" style={{ color: "var(--ink-3)" }}>
+                    (FEATURE)
+                  </th>
+                  {COMPARE_COLS.map((col, i) => (
+                    <th
+                      key={col}
+                      scope="col"
+                      className={i === 0 ? "col-push" : "col-other"}
+                    >
+                      {col}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {COMPARE_ROWS.map((row) => (
+                  <tr key={row.feature}>
+                    <td className="col-feature">{row.feature}</td>
+                    {[row.push, row.yelp, row.agency, row.groupon].map(
+                      (val, i) => (
+                        <td
+                          key={i}
+                          className={
+                            i === 0 ? "col-check-push" : "col-check-other"
+                          }
+                        >
+                          {val ? "✓" : "—"}
+                        </td>
+                      ),
+                    )}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      {/* ═══ 08 — TICKET CTA ════════════════════════════════════ */}
+      <section
+        aria-label="Start your first campaign"
+        className="mn-ticket-wrap"
+      >
+        <div className="mn-ticket-inner">
+          <div className="ticket-panel">
+            {/* Four corner grommets */}
+            <span
+              className="ticket-grommet ticket-grommet--tl"
+              aria-hidden="true"
+            />
+            <span
+              className="ticket-grommet ticket-grommet--tr"
+              aria-hidden="true"
+            />
+            <span
+              className="ticket-grommet ticket-grommet--bl"
+              aria-hidden="true"
+            />
+            <span
+              className="ticket-grommet ticket-grommet--br"
+              aria-hidden="true"
+            />
+
+            <p
+              className="eyebrow"
+              style={{ color: "rgba(255,255,255,0.60)", marginBottom: 24 }}
+            >
+              (YOUR FIRST CAMPAIGN)
+            </p>
+            <h2 className="mn-ticket-headline">Launch your first campaign.</h2>
+            <Link href="/merchant/signup" className="btn-ink click-shift">
+              Get started — no upfront cost
             </Link>
           </div>
         </div>
       </section>
-    </>
+    </main>
   );
 }

@@ -1,0 +1,3 @@
+{
+  "/api/merchant/applicants/batch-decision/route": "app/api/merchant/applicants/batch-decision/route.js"
+}

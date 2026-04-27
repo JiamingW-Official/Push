@@ -312,10 +312,10 @@ export default function MyPrivacyPage() {
         <span className={styles.topBarTag}>Privacy controls</span>
       </header>
 
-      {/* Page header */}
+      {/* Page header — v11: H1 "Your data rights." corner-anchored */}
       <section className={styles.header}>
-        <p className={styles.eyebrow}>Self-serve</p>
-        <h1 className={styles.title}>Your Privacy</h1>
+        <p className={`${styles.eyebrow} eyebrow`}>(SELF-SERVE)</p>
+        <h1 className={styles.title}>Your data rights.</h1>
         <p className={styles.lede}>
           Change what Push collects, export what you have, or file a formal data
           request. For the full policy see our{" "}
@@ -328,7 +328,9 @@ export default function MyPrivacyPage() {
 
       {/* ── 1. Current choice ──────────────────────────────── */}
       <section className={styles.section} aria-labelledby="s1-title">
-        <p className={styles.sectionEyebrow}>01 / Your current choice</p>
+        <p className={`${styles.sectionEyebrow} eyebrow`}>
+          01 / Your current choice
+        </p>
         <h2 id="s1-title" className={styles.sectionTitle}>
           What we collect from you today
         </h2>
@@ -357,7 +359,9 @@ export default function MyPrivacyPage() {
 
       {/* ── 2. Change tier via ConsentPicker ───────────────── */}
       <section className={styles.section} aria-labelledby="s2-title">
-        <p className={styles.sectionEyebrow}>02 / Change your tier</p>
+        <p className={`${styles.sectionEyebrow} eyebrow`}>
+          02 / Change your tier
+        </p>
         <h2 id="s2-title" className={styles.sectionTitle}>
           Adjust how much we collect
         </h2>
@@ -378,7 +382,9 @@ export default function MyPrivacyPage() {
 
       {/* ── 3. Export ──────────────────────────────────────── */}
       <section className={styles.section} aria-labelledby="s3-title">
-        <p className={styles.sectionEyebrow}>03 / Export my data</p>
+        <p className={`${styles.sectionEyebrow} eyebrow`}>
+          03 / Export my data
+        </p>
         <h2 id="s3-title" className={styles.sectionTitle}>
           Download what we have locally
         </h2>
@@ -391,7 +397,7 @@ export default function MyPrivacyPage() {
         </p>
         <button
           type="button"
-          className={styles.actionBtn}
+          className={`${styles.actionBtn} btn-ghost`}
           onClick={handleExport}
         >
           Download my data (JSON)
@@ -400,7 +406,9 @@ export default function MyPrivacyPage() {
 
       {/* ── 4. Delete ──────────────────────────────────────── */}
       <section className={styles.section} aria-labelledby="s4-title">
-        <p className={styles.sectionEyebrow}>04 / Delete my data</p>
+        <p className={`${styles.sectionEyebrow} eyebrow`}>
+          04 / Delete my data
+        </p>
         <h2 id="s4-title" className={styles.sectionTitle}>
           Clear this browser + file a deletion request
         </h2>
@@ -452,7 +460,7 @@ export default function MyPrivacyPage() {
 
       {/* ── 5. Formal DSAR form ────────────────────────────── */}
       <section className={styles.section} aria-labelledby="s5-title">
-        <p className={styles.sectionEyebrow}>
+        <p className={`${styles.sectionEyebrow} eyebrow`}>
           05 / Submit a formal data request
         </p>
         <h2 id="s5-title" className={styles.sectionTitle}>
@@ -565,7 +573,7 @@ export default function MyPrivacyPage() {
           <div>
             <button
               type="submit"
-              className={styles.primaryBtn}
+              className={`${styles.primaryBtn} btn-primary click-shift`}
               disabled={
                 !formAck || !formEmail || formStatus.kind === "submitting"
               }

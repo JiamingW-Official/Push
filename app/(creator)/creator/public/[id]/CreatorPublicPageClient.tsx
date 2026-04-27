@@ -185,16 +185,19 @@ export default function CreatorPublicPage() {
 
   return (
     <div className="public-profile page-fade-in">
+      {/* Header strip — breadcrumb nav */}
       <div className="profile-header-strip">
         <Link href="/explore" className="header-back">
           ← Creators
         </Link>
-        <span className="header-label">Push Creator Profile</span>
+        <span className="header-label eyebrow">(PUSH CREATOR PROFILE)</span>
       </div>
 
+      {/* ── Hero — dark panel, corner-anchored ──────────────── */}
       <div className="pub-hero">
         <div className="pub-hero-inner">
           <div className="pub-hero-left">
+            {/* Avatar */}
             <div
               className="pub-avatar"
               style={{ borderColor: tierColor }}
@@ -216,6 +219,8 @@ export default function CreatorPublicPage() {
                 </span>
               )}
             </div>
+
+            {/* Identity */}
             <div className="pub-identity">
               <h1 className="pub-name">{creator.name}</h1>
               <div className="pub-badge-row">
@@ -229,14 +234,16 @@ export default function CreatorPublicPage() {
               <p className="pub-bio">{creator.bio}</p>
               <div className="pub-available">
                 <span className="pub-available-dot" />
-                <span className="pub-available-label">
+                <span className="pub-available-label eyebrow">
                   Available for campaigns
                 </span>
               </div>
             </div>
           </div>
+
+          {/* Push Score rings */}
           <div className="pub-score-section">
-            <p className="pub-section-eyebrow">Push Score</p>
+            <p className="pub-section-eyebrow eyebrow">Push Score</p>
             <ScoreRings
               scores={dimensionScores}
               totalScore={creator.push_score}
@@ -249,39 +256,42 @@ export default function CreatorPublicPage() {
         </div>
       </div>
 
+      {/* ── Stats strip ─────────────────────────────────────── */}
       <div className="pub-stats-strip">
         <div className="pub-stat">
           <div className="pub-stat-value" style={{ color: tierColor }}>
             {creator.push_score}
           </div>
-          <div className="pub-stat-label">Push Score</div>
+          <div className="pub-stat-label eyebrow">Push Score</div>
         </div>
         <div className="pub-stat">
           <div className="pub-stat-value">{creator.campaigns_completed}</div>
-          <div className="pub-stat-label">Campaigns Done</div>
+          <div className="pub-stat-label eyebrow">Campaigns Done</div>
         </div>
         <div className="pub-stat">
           <div className="pub-stat-value">{creator.completion_rate}%</div>
-          <div className="pub-stat-label">Completion Rate</div>
+          <div className="pub-stat-label eyebrow">Completion Rate</div>
         </div>
         <div className="pub-stat">
           <div className="pub-stat-value">
             {creator.merchant_satisfaction.toFixed(1)}
           </div>
-          <div className="pub-stat-label">Merchant Rating</div>
+          <div className="pub-stat-label eyebrow">Merchant Rating</div>
         </div>
       </div>
 
+      {/* ── Tier Journey ────────────────────────────────────── */}
       <div className="pub-tier-section">
-        <p className="pub-section-eyebrow">Tier Journey</p>
+        <p className="pub-section-eyebrow eyebrow">Tier Journey</p>
         <TierJourney
           currentTier={creator.tier}
           currentScore={creator.push_score}
         />
       </div>
 
+      {/* ── Campaign History ─────────────────────────────────── */}
       <div className="pub-campaigns-section">
-        <p className="pub-section-eyebrow">Campaign History</p>
+        <p className="pub-section-eyebrow eyebrow">Campaign History</p>
         <div className="pub-campaigns">
           {creator.campaign_history.map((c) => (
             <div
@@ -291,7 +301,9 @@ export default function CreatorPublicPage() {
             >
               <div className="pub-campaign-header">
                 <span className="pub-campaign-business">{c.business}</span>
-                <span className="pub-campaign-category">{c.category}</span>
+                <span className="pub-campaign-category btn-pill">
+                  {c.category}
+                </span>
               </div>
               <div className="pub-campaign-footer">
                 <span className="pub-campaign-date">{c.date}</span>
@@ -310,13 +322,17 @@ export default function CreatorPublicPage() {
         </div>
       </div>
 
-      <div className="pub-cta-section">
-        <p className="pub-cta-eyebrow">Work with this creator</p>
+      {/* ── CTA section ─────────────────────────────────────── */}
+      <div className="pub-cta-section candy-panel">
+        <p className="pub-cta-eyebrow eyebrow">(WORK WITH THIS CREATOR)</p>
         <h2 className="pub-cta-headline">Work with {firstName}</h2>
         <p className="pub-cta-sub">
           Launch a campaign on Push and invite local creators like {firstName}.
         </p>
-        <Link href="/merchant/signup" className="pub-cta-button">
+        <Link
+          href="/merchant/signup"
+          className="pub-cta-button btn-primary click-shift"
+        >
           Start a Campaign →
         </Link>
         <p className="pub-cta-note">

@@ -263,64 +263,207 @@ export default function SystemPage() {
   const pendingInvites = 3;
 
   return (
-    <div className="system-page">
+    <div
+      style={{
+        background: "var(--surface)",
+        minHeight: "100%",
+        fontFamily: "var(--font-body)",
+      }}
+    >
       {/* Top nav */}
-      <header className="inbox-nav">
-        <Link href="/creator/dashboard" className="inbox-nav-back">
+      <header
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: 16,
+          padding: "16px 24px",
+          borderBottom: "1px solid var(--hairline)",
+          background: "var(--snow)",
+        }}
+      >
+        <Link
+          href="/creator/dashboard"
+          className="click-shift"
+          style={{
+            fontFamily: "var(--font-body)",
+            fontSize: 12,
+            color: "var(--ink-3)",
+            textDecoration: "none",
+            textTransform: "uppercase",
+            letterSpacing: "0.06em",
+          }}
+        >
           ← Dashboard
         </Link>
-        <span className="inbox-nav-title">Inbox.</span>
-        <div className="inbox-live-indicator">
-          <span className="inbox-live-dot" />
-          <span className="inbox-live-label">Live</span>
+        <span
+          style={{
+            fontFamily: "var(--font-display)",
+            fontWeight: 700,
+            fontSize: 20,
+            color: "var(--ink)",
+          }}
+        >
+          Inbox
+        </span>
+        <div
+          style={{
+            marginLeft: "auto",
+            display: "flex",
+            alignItems: "center",
+            gap: 6,
+          }}
+        >
+          <span
+            style={{
+              width: 8,
+              height: 8,
+              borderRadius: "50%",
+              background: "#22c55e",
+              display: "inline-block",
+            }}
+          />
+          <span
+            style={{
+              fontFamily: "var(--font-body)",
+              fontSize: 11,
+              color: "var(--ink-3)",
+              textTransform: "uppercase",
+              letterSpacing: "0.06em",
+            }}
+          >
+            Live
+          </span>
         </div>
       </header>
 
       {/* Section tabs */}
-      <nav className="inbox-tabs">
-        <Link
-          href="/creator/inbox"
-          className={`inbox-tab${!pathname?.endsWith("/invites") && !pathname?.endsWith("/system") ? " inbox-tab--active" : ""}`}
-        >
-          Messages
-          {unreadMessages > 0 && (
-            <span className="inbox-tab-badge">{unreadMessages}</span>
-          )}
-        </Link>
-        <Link
-          href="/creator/inbox/invites"
-          className={`inbox-tab${pathname?.endsWith("/invites") ? " inbox-tab--active" : ""}`}
-        >
-          Invites
-          {pendingInvites > 0 && (
-            <span className="inbox-tab-badge">{pendingInvites}</span>
-          )}
-        </Link>
-        <Link
-          href="/creator/inbox/system"
-          className={`inbox-tab${pathname?.endsWith("/system") ? " inbox-tab--active" : ""}`}
-        >
-          System
-          {totalUnread > 0 && (
-            <span className="inbox-tab-badge">{totalUnread}</span>
-          )}
-        </Link>
+      <nav
+        style={{
+          display: "flex",
+          borderBottom: "1px solid var(--hairline)",
+          background: "var(--snow)",
+          padding: "0 24px",
+        }}
+      >
+        {[
+          { href: "/creator/inbox", label: "Messages", badge: unreadMessages },
+          {
+            href: "/creator/inbox/invites",
+            label: "Invites",
+            badge: pendingInvites,
+          },
+          {
+            href: "/creator/inbox/system",
+            label: "System",
+            badge: totalUnread,
+          },
+        ].map(({ href, label, badge }) => {
+          const isActive =
+            label === "System"
+              ? pathname?.endsWith("/system")
+              : label === "Invites"
+                ? pathname?.endsWith("/invites")
+                : !pathname?.endsWith("/invites") &&
+                  !pathname?.endsWith("/system");
+          return (
+            <Link
+              key={href}
+              href={href}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 6,
+                padding: "14px 16px",
+                fontFamily: "var(--font-body)",
+                fontSize: 12,
+                fontWeight: isActive ? 700 : 400,
+                color: isActive ? "var(--ink)" : "var(--ink-3)",
+                textDecoration: "none",
+                borderBottom: isActive
+                  ? "2px solid var(--brand-red)"
+                  : "2px solid transparent",
+                marginBottom: -1,
+                textTransform: "uppercase",
+                letterSpacing: "0.06em",
+              }}
+            >
+              {label}
+              {badge > 0 && (
+                <span
+                  style={{
+                    minWidth: 18,
+                    height: 18,
+                    borderRadius: 9,
+                    background: "var(--brand-red)",
+                    color: "var(--snow)",
+                    fontSize: 10,
+                    fontWeight: 700,
+                    display: "inline-flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    padding: "0 5px",
+                  }}
+                >
+                  {badge}
+                </span>
+              )}
+            </Link>
+          );
+        })}
       </nav>
 
       {/* Category filters */}
-      <div className="system-filters">
+      <div
+        style={{
+          display: "flex",
+          flexWrap: "wrap",
+          gap: 8,
+          padding: "16px 24px 8px",
+        }}
+      >
         {CATEGORIES.map((cat) => {
           const count = countFor(cat.id);
+          const isActive = activeCategory === cat.id;
           return (
             <button
               key={cat.id}
-              className={`system-filter-chip${activeCategory === cat.id ? " system-filter-chip--active" : ""}`}
               onClick={() => setActiveCategory(cat.id)}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 6,
+                padding: "6px 14px",
+                borderRadius: 20,
+                border: "1px solid var(--hairline)",
+                background: isActive ? "var(--ink)" : "var(--surface-2)",
+                color: isActive ? "var(--snow)" : "var(--ink-3)",
+                fontFamily: "var(--font-body)",
+                fontSize: 12,
+                fontWeight: 600,
+                cursor: "pointer",
+                textTransform: "uppercase",
+                letterSpacing: "0.05em",
+              }}
             >
               {cat.icon && <span>{cat.icon}</span>}
               {cat.label}
               {count > 0 && (
-                <span className="system-filter-chip-count">({count})</span>
+                <span
+                  style={{
+                    background: isActive
+                      ? "rgba(255,255,255,0.25)"
+                      : "var(--brand-red)",
+                    color: "var(--snow)",
+                    borderRadius: 8,
+                    fontSize: 10,
+                    fontWeight: 700,
+                    padding: "1px 5px",
+                    minWidth: 16,
+                    textAlign: "center",
+                  }}
+                >
+                  {count}
+                </span>
               )}
             </button>
           );
@@ -329,49 +472,181 @@ export default function SystemPage() {
 
       {/* Mark all read */}
       {totalUnread > 0 && (
-        <div className="system-mark-bar">
-          <button className="system-mark-all-btn" onClick={markAllSystemRead}>
+        <div
+          style={{
+            padding: "8px 24px",
+            display: "flex",
+            justifyContent: "flex-end",
+          }}
+        >
+          <button
+            className="btn-ghost click-shift"
+            onClick={markAllSystemRead}
+            style={{ fontSize: 12 }}
+          >
             Mark all read
           </button>
         </div>
       )}
 
       {/* Notification list */}
-      <div className="system-list">
+      <div style={{ padding: "0 24px 24px" }}>
         {groups.length === 0 ? (
-          <div className="system-empty">
-            <p className="system-empty-title">
+          <div style={{ padding: "48px 0", textAlign: "center" }}>
+            <p
+              style={{
+                fontFamily: "var(--font-display)",
+                fontWeight: 700,
+                fontSize: 20,
+                color: "var(--ink)",
+                margin: "0 0 8px",
+              }}
+            >
               {EMPTY_MESSAGES[activeCategory].title}
             </p>
-            <p className="system-empty-body">
+            <p
+              style={{
+                fontFamily: "var(--font-body)",
+                fontSize: 14,
+                color: "var(--ink-3)",
+                margin: 0,
+              }}
+            >
               {EMPTY_MESSAGES[activeCategory].body}
             </p>
           </div>
         ) : (
           groups.map((group) => (
             <div key={group.label}>
-              <div className="system-date-divider">{group.label}</div>
+              {/* Date divider */}
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 12,
+                  padding: "16px 0 8px",
+                }}
+              >
+                <span
+                  style={{
+                    fontFamily: "var(--font-body)",
+                    fontSize: 11,
+                    color: "var(--ink-4)",
+                    textTransform: "uppercase",
+                    letterSpacing: "0.06em",
+                    flexShrink: 0,
+                  }}
+                >
+                  {group.label}
+                </span>
+                <div
+                  style={{ flex: 1, height: 1, background: "var(--hairline)" }}
+                />
+              </div>
+
               {group.items.map((notif, idx) => (
                 <Link
                   key={notif.id}
                   href={notif.href}
-                  className={`system-item${notif.category === "payments" && notif.priority ? " system-item--payment" : ""}${notif.read ? " system-item--read" : ""}`}
                   onClick={() => markRead(notif.id)}
-                  style={{ animationDelay: `${idx * 25}ms` }}
+                  style={{
+                    display: "flex",
+                    alignItems: "flex-start",
+                    gap: 12,
+                    padding: "14px 16px",
+                    borderRadius: 10,
+                    border: "1px solid var(--hairline)",
+                    background: notif.read ? "var(--surface)" : "var(--snow)",
+                    marginBottom: 8,
+                    textDecoration: "none",
+                    opacity: notif.read ? 0.75 : 1,
+                    animationDelay: `${idx * 25}ms`,
+                    borderLeft: !notif.read
+                      ? notif.category === "payments" && notif.priority
+                        ? "3px solid var(--accent-blue)"
+                        : "3px solid var(--brand-red)"
+                      : "3px solid transparent",
+                  }}
                 >
-                  <div className="system-item-icon">
+                  {/* Icon tile */}
+                  <div
+                    style={{
+                      width: 40,
+                      height: 40,
+                      borderRadius: 10,
+                      background: "var(--surface-2)",
+                      border: "1px solid var(--hairline)",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      fontSize: 18,
+                      flexShrink: 0,
+                    }}
+                  >
                     {CATEGORY_ICONS[notif.category as Category]}
                   </div>
-                  <div className="system-item-body">
-                    <div className="system-item-header">
-                      <span className="system-item-title">{notif.title}</span>
-                      <span className="system-item-time">
+
+                  {/* Body */}
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "baseline",
+                        justifyContent: "space-between",
+                        gap: 8,
+                        marginBottom: 4,
+                      }}
+                    >
+                      <span
+                        style={{
+                          fontFamily: "var(--font-body)",
+                          fontWeight: notif.read ? 400 : 700,
+                          fontSize: 14,
+                          color: "var(--ink)",
+                          whiteSpace: "nowrap",
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
+                        }}
+                      >
+                        {notif.title}
+                      </span>
+                      <span
+                        style={{
+                          fontFamily: "var(--font-body)",
+                          fontSize: 11,
+                          color: "var(--ink-4)",
+                          flexShrink: 0,
+                        }}
+                      >
                         {timeAgo(notif.createdAt)}
                       </span>
                     </div>
-                    <p className="system-item-text">{notif.body}</p>
+                    <p
+                      style={{
+                        fontFamily: "var(--font-body)",
+                        fontSize: 13,
+                        color: "var(--ink-3)",
+                        margin: 0,
+                        lineHeight: 1.4,
+                      }}
+                    >
+                      {notif.body}
+                    </p>
                   </div>
-                  {!notif.read && <span className="system-item-unread-dot" />}
+
+                  {/* Unread dot */}
+                  {!notif.read && (
+                    <span
+                      style={{
+                        width: 8,
+                        height: 8,
+                        borderRadius: "50%",
+                        background: "var(--brand-red)",
+                        flexShrink: 0,
+                        marginTop: 6,
+                      }}
+                    />
+                  )}
                 </Link>
               ))}
             </div>

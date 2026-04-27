@@ -61,7 +61,7 @@
 
 .pb-tip-item {
   padding: 10px 0;
-  border-bottom: 1px solid rgba(0, 48, 73, 0.06);
+  border-bottom: 1px solid var(--surface-3);
   display: flex;
   gap: 10px;
   align-items: flex-start;
@@ -71,7 +71,7 @@
 
 .pb-bar-track {
   height: 6px;
-  background: rgba(0, 48, 73, 0.08);
+  background: var(--surface-3);
   flex: 1;
   overflow: hidden;
 }
@@ -80,7 +80,7 @@
 
 .pb-bar-fill {
   height: 100%;
-  background: var(--primary);
+  background: var(--brand-red);
   transition: width 1s ease;
   border-radius: var(--r-xl);
 }
@@ -96,7 +96,7 @@
 .pb-dot {
   width: 7px;
   height: 7px;
-  background: var(--primary);
+  background: var(--brand-red);
   border-radius: var(--r-xl);
   display: inline-block;
   animation: pb-dot-bounce 1.4s ease-in-out infinite;

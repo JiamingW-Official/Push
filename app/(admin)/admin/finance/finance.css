@@ -10,7 +10,7 @@
   min-height: 100svh;
   background: var(--surface);
   font-family: var(--font-body);
-  color: var(--dark);
+  color: var(--ink);
 }
 
 /* ------------------------------------------------------------
@@ -21,7 +21,7 @@
   top: 0;
   z-index: 200;
   height: 56px;
-  background: var(--dark);
+  background: var(--ink);
   display: flex;
   align-items: center;
   padding: 0 var(--space-4);
@@ -41,7 +41,7 @@
 }
 
 .fin-nav__logo span {
-  color: var(--primary);
+  color: var(--brand-red);
 }
 
 .fin-nav__sep {
@@ -93,7 +93,7 @@
    ------------------------------------------------------------ */
 .fin-hero {
   padding: var(--space-6) 0 var(--space-5);
-  border-bottom: 2px solid var(--dark);
+  border-bottom: 2px solid var(--ink);
 }
 
 .fin-hero__eyebrow {
@@ -102,7 +102,7 @@
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--text-muted);
+  color: var(--ink-4);
   margin-bottom: var(--space-2);
 }
 
@@ -111,7 +111,7 @@
   font-size: clamp(64px, 10vw, 120px);
   font-weight: 900;
   letter-spacing: -0.05em;
-  color: var(--dark);
+  color: var(--ink);
   line-height: 0.9;
   margin-bottom: var(--space-5);
 }
@@ -144,7 +144,7 @@
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--text-muted);
+  color: var(--ink-4);
   margin-bottom: var(--space-1);
 }
 
@@ -153,12 +153,12 @@
   font-size: clamp(36px, 4vw, 56px);
   font-weight: 200;
   letter-spacing: -0.04em;
-  color: var(--dark);
+  color: var(--ink);
   line-height: 1;
 }
 
 .fin-stat__value--red {
-  color: var(--primary);
+  color: var(--brand-red);
 }
 
 .fin-stat__value--gold {
@@ -193,13 +193,13 @@
   font-size: 24px;
   font-weight: 700;
   letter-spacing: -0.02em;
-  color: var(--dark);
+  color: var(--ink);
 }
 
 .fin-section-head__sub {
   font-family: var(--font-body);
   font-size: var(--text-caption);
-  color: var(--text-muted);
+  color: var(--ink-4);
   letter-spacing: 0.02em;
 }
 
@@ -211,7 +211,7 @@
    Live Ledger Stream
    ------------------------------------------------------------ */
 .fin-stream {
-  background: var(--dark);
+  background: var(--ink);
   padding: var(--space-4);
   position: relative;
   overflow: hidden;
@@ -227,7 +227,7 @@
 .fin-stream__live-dot {
   width: 8px;
   height: 8px;
-  background: var(--primary);
+  background: var(--brand-red);
   border-radius: 50%;
   animation: pulse 1.8s ease-in-out infinite;
   flex-shrink: 0;
@@ -269,7 +269,7 @@
 }
 
 .fin-stream__item--subscription {
-  border-left-color: var(--tertiary);
+  border-left-color: var(--accent-blue);
 }
 
 .fin-stream__item--payout {
@@ -277,7 +277,7 @@
 }
 
 .fin-stream__item--platform_fee {
-  border-left-color: var(--primary);
+  border-left-color: var(--brand-red);
 }
 
 .fin-stream__item--refund {
@@ -316,7 +316,7 @@
 }
 
 .fin-stream__type--subscription {
-  color: var(--tertiary);
+  color: var(--accent-blue);
   background: rgba(102, 155, 188, 0.12);
 }
 
@@ -326,7 +326,7 @@
 }
 
 .fin-stream__type--platform_fee {
-  color: var(--primary);
+  color: var(--brand-red);
   background: rgba(193, 18, 31, 0.12);
 }
 
@@ -376,7 +376,7 @@
   gap: var(--space-2);
   align-items: flex-end;
   padding: var(--space-3);
-  background: var(--surface-elevated);
+  background: var(--surface-2);
   border: 1px solid var(--line);
 }
 
@@ -392,14 +392,14 @@
   font-weight: 700;
   letter-spacing: 0.09em;
   text-transform: uppercase;
-  color: var(--text-muted);
+  color: var(--ink-4);
 }
 
 .fin-filter-group input,
 .fin-filter-group select {
   font-family: var(--font-body);
   font-size: var(--text-caption);
-  color: var(--dark);
+  color: var(--ink);
   background: var(--surface);
   border: 1px solid var(--line);
   border-radius: var(--r-md);
@@ -411,7 +411,7 @@
 
 .fin-filter-group input:focus,
 .fin-filter-group select:focus {
-  border-color: var(--dark);
+  border-color: var(--ink);
 }
 
 .fin-filter-group input[type="number"] {
@@ -444,12 +444,12 @@
 }
 
 .fin-btn--primary {
-  background: var(--dark);
+  background: var(--ink);
   color: var(--surface);
 }
 
 .fin-btn--primary:hover {
-  background: var(--primary);
+  background: var(--brand-red);
 }
 
 .fin-btn--ghost {
@@ -460,17 +460,17 @@
 
 .fin-btn--ghost:hover {
   background: var(--surface-muted);
-  color: var(--dark);
+  color: var(--ink);
 }
 
 .fin-btn--danger {
   background: transparent;
-  color: var(--primary);
+  color: var(--brand-red);
   border: 1px solid rgba(193, 18, 31, 0.3);
 }
 
 .fin-btn--danger:hover {
-  background: var(--primary);
+  background: var(--brand-red);
   color: #fff;
 }
 
@@ -485,7 +485,7 @@
 .fin-table-wrap {
   overflow-x: auto;
   border: 1px solid var(--line);
-  background: var(--surface-elevated);
+  background: var(--surface-2);
 }
 
 .fin-table {
@@ -496,7 +496,7 @@
 }
 
 .fin-table thead {
-  background: var(--dark);
+  background: var(--ink);
   color: var(--surface);
   position: sticky;
   top: 56px;
@@ -537,12 +537,12 @@
 
 .fin-table__ts {
   font-size: 11px;
-  color: var(--text-muted);
+  color: var(--ink-4);
   letter-spacing: 0.02em;
 }
 
 .fin-table__party {
-  color: var(--dark);
+  color: var(--ink);
   font-weight: 600;
   max-width: 220px;
   overflow: hidden;
@@ -571,7 +571,7 @@
 }
 
 .fin-table__amount--neg {
-  color: var(--primary);
+  color: var(--brand-red);
 }
 
 /* Type badge */
@@ -588,7 +588,7 @@
 }
 
 .fin-badge--subscription {
-  color: var(--tertiary);
+  color: var(--accent-blue);
   background: rgba(102, 155, 188, 0.12);
   border: 1px solid rgba(102, 155, 188, 0.2);
 }
@@ -606,7 +606,7 @@
 }
 
 .fin-badge--platform_fee {
-  color: var(--primary);
+  color: var(--brand-red);
   background: rgba(193, 18, 31, 0.07);
   border: 1px solid rgba(193, 18, 31, 0.15);
 }
@@ -645,12 +645,12 @@
 }
 
 .fin-status--processing::before {
-  background: var(--tertiary);
+  background: var(--accent-blue);
   animation: pulse 1.8s ease-in-out infinite;
 }
 
 .fin-status--failed::before {
-  background: var(--primary);
+  background: var(--brand-red);
 }
 
 .fin-status--reversed::before {
@@ -666,11 +666,11 @@
 }
 
 .fin-status--processing {
-  color: var(--tertiary);
+  color: var(--accent-blue);
 }
 
 .fin-status--failed {
-  color: var(--primary);
+  color: var(--brand-red);
 }
 
 .fin-status--reversed {
@@ -683,14 +683,14 @@
   align-items: center;
   gap: var(--space-2);
   padding: var(--space-2) var(--space-3);
-  background: var(--surface-elevated);
+  background: var(--surface-2);
   border: 1px solid var(--line);
   border-top: none;
 }
 
 .fin-pagination__info {
   font-size: var(--text-caption);
-  color: var(--text-muted);
+  color: var(--ink-4);
   flex: 1;
 }
 
@@ -698,7 +698,7 @@
   font-family: var(--font-body);
   font-size: var(--text-caption);
   font-weight: 700;
-  color: var(--dark);
+  color: var(--ink);
   background: none;
   border: 1px solid var(--line);
   border-radius: var(--r-lg);
@@ -731,7 +731,7 @@
 
 /* Panel card */
 .fin-panel {
-  background: var(--surface-elevated);
+  background: var(--surface-2);
   border: 1px solid var(--line);
   padding: var(--space-4);
   display: flex;
@@ -744,7 +744,7 @@
   font-size: 18px;
   font-weight: 700;
   letter-spacing: -0.02em;
-  color: var(--dark);
+  color: var(--ink);
   padding-bottom: var(--space-2);
   border-bottom: 1px solid var(--line);
 }
@@ -759,7 +759,7 @@
 .fin-panel__key {
   font-family: var(--font-body);
   font-size: var(--text-caption);
-  color: var(--text-muted);
+  color: var(--ink-4);
   letter-spacing: 0.02em;
 }
 
@@ -768,7 +768,7 @@
   font-size: 20px;
   font-weight: 300;
   letter-spacing: -0.03em;
-  color: var(--dark);
+  color: var(--ink);
 }
 
 .fin-panel__val--pos {
@@ -776,7 +776,7 @@
 }
 
 .fin-panel__val--neg {
-  color: var(--primary);
+  color: var(--brand-red);
 }
 
 .fin-panel__val--gold {
@@ -805,14 +805,14 @@
 }
 
 .fin-panel__tag--error {
-  color: var(--primary);
+  color: var(--brand-red);
   background: rgba(193, 18, 31, 0.07);
   border: 1px solid rgba(193, 18, 31, 0.15);
 }
 
 .fin-panel__note {
   font-size: 11px;
-  color: var(--text-muted);
+  color: var(--ink-4);
   margin-top: 2px;
 }
 
@@ -845,7 +845,7 @@
 }
 
 .fin-chart__bar--revenue {
-  fill: var(--dark);
+  fill: var(--ink);
   opacity: 0.8;
   transition: opacity 200ms ease;
 }
@@ -864,7 +864,7 @@
 .fin-chart__label {
   font-family: var(--font-body);
   font-size: 9px;
-  fill: var(--text-muted);
+  fill: var(--ink-4);
   text-anchor: middle;
 }
 
@@ -872,7 +872,7 @@
   display: flex;
   gap: var(--space-3);
   font-size: 11px;
-  color: var(--text-muted);
+  color: var(--ink-4);
 }
 
 .fin-chart__legend-item {
@@ -888,7 +888,7 @@
 }
 
 .fin-chart__legend-dot--revenue {
-  background: var(--dark);
+  background: var(--ink);
   opacity: 0.8;
 }
 
@@ -911,13 +911,13 @@
   font-size: 36px;
   font-weight: 200;
   letter-spacing: -0.04em;
-  color: var(--dark);
+  color: var(--ink);
   line-height: 1;
 }
 
 .fin-scheduler__sub {
   font-size: var(--text-caption);
-  color: var(--text-muted);
+  color: var(--ink-4);
   margin-top: 2px;
 }
 
@@ -931,7 +931,7 @@
    Manual Actions
    ------------------------------------------------------------ */
 .fin-actions {
-  background: var(--surface-elevated);
+  background: var(--surface-2);
   border: 1px solid var(--line);
   padding: var(--space-4);
 }
@@ -957,12 +957,12 @@
 }
 
 .fin-action-card:hover {
-  border-color: var(--dark);
-  background: var(--surface-bright);
+  border-color: var(--ink);
+  background: var(--surface-3);
 }
 
 .fin-action-card--danger:hover {
-  border-color: var(--primary);
+  border-color: var(--brand-red);
 }
 
 .fin-action-card__icon {
@@ -974,18 +974,18 @@
   font-family: var(--font-body);
   font-size: var(--text-small);
   font-weight: 700;
-  color: var(--dark);
+  color: var(--ink);
   letter-spacing: -0.01em;
 }
 
 .fin-action-card--danger .fin-action-card__label {
-  color: var(--primary);
+  color: var(--brand-red);
 }
 
 .fin-action-card__desc {
   font-family: var(--font-body);
   font-size: 11px;
-  color: var(--text-muted);
+  color: var(--ink-4);
   line-height: 1.4;
 }
 
@@ -1004,7 +1004,7 @@
 }
 
 .fin-modal {
-  background: var(--surface-elevated);
+  background: var(--surface-2);
   border: 1px solid var(--line-strong);
   width: 100%;
   max-width: 480px;
@@ -1020,7 +1020,7 @@
   font-size: 22px;
   font-weight: 700;
   letter-spacing: -0.02em;
-  color: var(--dark);
+  color: var(--ink);
 }
 
 .fin-modal__field {
@@ -1034,7 +1034,7 @@
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--text-muted);
+  color: var(--ink-4);
 }
 
 .fin-modal__field input,
@@ -1042,7 +1042,7 @@
 .fin-modal__field select {
   font-family: var(--font-body);
   font-size: var(--text-small);
-  color: var(--dark);
+  color: var(--ink);
   background: var(--surface);
   border: 1px solid var(--line);
   border-radius: var(--r-md);
@@ -1056,7 +1056,7 @@
 .fin-modal__field input:focus,
 .fin-modal__field textarea:focus,
 .fin-modal__field select:focus {
-  border-color: var(--dark);
+  border-color: var(--ink);
 }
 
 .fin-modal__actions {
@@ -1069,7 +1069,7 @@
 
 .fin-modal__note {
   font-size: 11px;
-  color: var(--text-muted);
+  color: var(--ink-4);
   background: var(--surface-muted);
   padding: var(--space-2);
   border-left: 3px solid var(--champagne);
@@ -1082,14 +1082,14 @@
   position: fixed;
   bottom: var(--space-4);
   right: var(--space-4);
-  background: var(--dark);
+  background: var(--ink);
   color: var(--surface);
   font-family: var(--font-body);
   font-size: var(--text-caption);
   font-weight: 600;
   letter-spacing: 0.02em;
   padding: var(--space-2) var(--space-3);
-  border-left: 3px solid var(--primary);
+  border-left: 3px solid var(--brand-red);
   z-index: 600;
   animation: slideInRight 200ms ease forwards;
   max-width: 320px;
@@ -1111,16 +1111,16 @@
 .fin-empty {
   text-align: center;
   padding: var(--space-6);
-  color: var(--text-muted);
+  color: var(--ink-4);
   font-size: var(--text-small);
-  background: var(--surface-elevated);
+  background: var(--surface-2);
 }
 
 .fin-loading {
   padding: var(--space-4);
   text-align: center;
   font-size: var(--text-caption);
-  color: var(--text-muted);
+  color: var(--ink-4);
   letter-spacing: 0.06em;
   animation: shimmer 1.5s linear infinite;
 }

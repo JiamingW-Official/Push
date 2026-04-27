@@ -1,7 +1,7 @@
 const S = {
   skel: {
     background:
-      "linear-gradient(90deg,rgba(0,48,73,0.05) 25%,rgba(0,48,73,0.10) 50%,rgba(0,48,73,0.05) 75%)",
+      "linear-gradient(90deg,var(--surface-3) 25%,var(--mist) 50%,var(--surface-3) 75%)",
     backgroundSize: "200% 100%",
     animation: "shimmer 1.5s infinite linear",
   } as React.CSSProperties,
@@ -24,7 +24,7 @@ export default function TodayLoading() {
       <div
         style={{
           height: "48px",
-          borderBottom: "1px solid rgba(0,48,73,0.12)",
+          borderBottom: "1px solid var(--hairline)",
           display: "flex",
           alignItems: "center",
           gap: "12px",
@@ -116,11 +116,11 @@ export default function TodayLoading() {
           gridTemplateColumns: "1fr 1fr 1fr",
           gap: "1px",
           margin: "24px 32px",
-          border: "1px solid rgba(0,48,73,0.12)",
+          border: "1px solid var(--hairline)",
         }}
       >
         {[0, 1, 2].map((i) => (
-          <div key={i} style={{ padding: "20px 16px", background: "#fff" }}>
+          <div key={i} style={{ padding: "20px 16px", background: "var(--surface-2)" }}>
             <div
               style={{
                 ...S.skel,
@@ -173,8 +173,8 @@ export default function TodayLoading() {
                 gap: "12px",
                 marginBottom: "2px",
                 padding: "12px 16px",
-                background: "#fff",
-                border: "1px solid rgba(0,48,73,0.06)",
+                background: "var(--surface-2)",
+                border: "1px solid var(--hairline)",
               }}
             >
               <div

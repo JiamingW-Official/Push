@@ -1,6 +1,14 @@
-// v11 About Page — editorial register, asymmetric compositions, no card grids
+// v11 About Page — editorial register, Grain-Archive voice, 8px grid, closed color list
+// Audit pass 2026-04-25: hero bottom-left anchor, KPI scale, token-only colors, 96px section padding
 
+import type { Metadata } from "next";
 import Link from "next/link";
+
+export const metadata: Metadata = {
+  title: "About Push — Built in Brooklyn",
+  description:
+    "Push started on Mott Street because that's where we live, eat, and know by name. Performance marketing on the street — pay per verified visit.",
+};
 
 /* ── Team data ─────────────────────────────────────────────── */
 const TEAM = [
@@ -40,50 +48,72 @@ export default function AboutPage() {
   return (
     <main>
       {/* ═══════════════════════════════════════════════════════
-          HERO — Asymmetric split: title left, giant pull stat right
+          HERO — Dark panel, bottom-left anchored title (§ 7.1)
+          Background: decorative gradient exempt from closed-color list
           ═══════════════════════════════════════════════════════ */}
       <section
         style={{
           position: "relative",
           width: "100%",
-          minHeight: "clamp(520px, 80vh, 840px)",
+          minHeight: "clamp(560px, 82vh, 880px)",
           borderRadius: 0,
           overflow: "hidden",
+          // Decorative gradient — SVG visual effect, exempt from closed-color list per § 2.7 rule 1
           background: `
-            radial-gradient(ellipse 80% 70% at 75% 30%, rgba(193,18,31,0.08) 0%, transparent 60%),
-            radial-gradient(ellipse 60% 80% at 20% 80%, rgba(0,133,255,0.06) 0%, transparent 55%),
-            linear-gradient(160deg, #1a1816 0%, #2c2a26 55%, #1e1c19 100%)
+            radial-gradient(ellipse 80% 70% at 75% 30%, var(--brand-red-tint) 0%, transparent 60%),
+            radial-gradient(ellipse 60% 80% at 20% 80%, var(--accent-blue-tint) 0%, transparent 55%),
+            linear-gradient(160deg, var(--ink) 0%, var(--graphite) 55%, var(--ink-2) 100%)
           `,
           display: "flex",
           alignItems: "flex-end",
         }}
       >
-        {/* Left anchor — title block */}
+        {/* Ghost NYC watermark — decorative, pointerEvents none */}
+        <span
+          aria-hidden="true"
+          style={{
+            position: "absolute",
+            right: "-0.02em",
+            bottom: "-0.12em",
+            fontFamily: "var(--font-display)",
+            fontWeight: 900,
+            fontSize: "clamp(200px, 38vw, 560px)",
+            letterSpacing: "-0.08em",
+            lineHeight: 0.8,
+            color: "rgba(255,255,255,0.04)",
+            pointerEvents: "none",
+            userSelect: "none",
+          }}
+        >
+          NYC
+        </span>
+
+        {/* Bottom-left anchored title block (§ 7.1 — 96px bottom, 64px left) */}
         <div
           style={{
             position: "relative",
             zIndex: 2,
             padding: "0 64px 96px",
-            flex: "0 0 55%",
+            flex: "0 0 58%",
           }}
         >
           <p
             className="eyebrow"
-            style={{ color: "rgba(255,255,255,0.55)", marginBottom: 24 }}
+            style={{ color: "rgba(255,255,255,0.65)", marginBottom: 16 }}
           >
             (OUR STORY)
           </p>
 
+          {/* Darky Display Hero — clamp(56,8vw,128) per § 3.1 */}
           <h1
             style={{
-              fontFamily: "var(--font-hero)",
-              fontStyle: "italic",
-              fontWeight: 400,
-              fontSize: "clamp(64px, 9vw, 144px)",
-              letterSpacing: "-0.03em",
+              fontFamily: "var(--font-display)",
+              fontWeight: 900,
+              fontSize: "clamp(72px, 11vw, 180px)",
+              letterSpacing: "-0.045em",
               lineHeight: 0.88,
               color: "var(--snow)",
-              margin: "0 0 40px",
+              margin: "0 0 32px",
             }}
           >
             Built in
@@ -93,10 +123,12 @@ export default function AboutPage() {
 
           <p
             style={{
-              fontFamily: "var(--font-body)",
-              fontSize: 18,
-              color: "rgba(255,255,255,0.60)",
-              lineHeight: 1.6,
+              fontFamily: "var(--font-mono)",
+              fontSize: 20,
+              color: "var(--snow)",
+              opacity: 0.72,
+              lineHeight: 1.4,
+              letterSpacing: "-0.1em",
               maxWidth: "36ch",
               margin: "0 0 48px",
             }}
@@ -110,47 +142,31 @@ export default function AboutPage() {
           </Link>
         </div>
 
-        {/* Right anchor — giant editorial stat */}
+        {/* Right anchor — floating glass stat badge */}
         <div
           style={{
             position: "absolute",
             right: 64,
-            bottom: 64,
+            bottom: 96,
             zIndex: 2,
             textAlign: "right",
           }}
         >
-          <p
-            style={{
-              fontFamily: "var(--font-display)",
-              fontWeight: 900,
-              fontSize: "clamp(96px, 14vw, 220px)",
-              letterSpacing: "-0.06em",
-              lineHeight: 0.85,
-              color: "rgba(255,255,255,0.07)",
-              margin: 0,
-              userSelect: "none",
-              pointerEvents: "none",
-            }}
-          >
-            NYC
-          </p>
           <div
             className="lg-surface--badge"
             style={{
               display: "inline-flex",
               flexDirection: "column",
               alignItems: "flex-end",
-              padding: "20px 28px",
-              marginTop: 16,
+              padding: "24px 32px",
             }}
           >
             <span
               style={{
                 fontFamily: "var(--font-display)",
                 fontWeight: 900,
-                fontSize: "clamp(40px, 5vw, 64px)",
-                letterSpacing: "-0.04em",
+                fontSize: "clamp(40px, 5vw, 72px)",
+                letterSpacing: "-0.045em",
                 lineHeight: 1,
                 color: "var(--snow)",
               }}
@@ -159,7 +175,7 @@ export default function AboutPage() {
             </span>
             <span
               className="eyebrow"
-              style={{ color: "rgba(255,255,255,0.60)", marginTop: 8 }}
+              style={{ color: "rgba(255,255,255,0.65)", marginTop: 8 }}
             >
               VERIFIED VISITS
             </span>
@@ -168,115 +184,124 @@ export default function AboutPage() {
       </section>
 
       {/* ═══════════════════════════════════════════════════════
-          STORY Panel — 2-column: manifesto left, giant KPIs right
+          STORY Candy Panel — manifesto left, giant KPIs right
+          Candy Panel: bg var(--panel-butter), r-3xl 28px, 96px all sides
           ═══════════════════════════════════════════════════════ */}
       <section
         style={{
-          background: "var(--panel-butter)",
-          padding: "120px 64px",
+          background: "var(--surface)",
+          padding: "96px 64px",
         }}
       >
         <div
           style={{
             maxWidth: "var(--content-width)",
             margin: "0 auto",
-            display: "grid",
-            gridTemplateColumns: "1fr 1fr",
-            gap: "80px",
-            alignItems: "center",
+            background: "var(--panel-butter)",
+            borderRadius: "var(--r-3xl)",
+            padding: "96px",
           }}
         >
-          {/* Left: manifesto */}
-          <div>
-            <p
-              className="eyebrow"
-              style={{ color: "var(--ink-3)", marginBottom: 24 }}
-            >
-              (WHY THIS EXISTS)
-            </p>
-            <h2
-              style={{
-                fontFamily: "var(--font-display)",
-                fontWeight: 900,
-                fontSize: "clamp(40px, 5vw, 72px)",
-                letterSpacing: "-0.04em",
-                lineHeight: 1.0,
-                color: "var(--ink)",
-                margin: "0 0 32px",
-              }}
-            >
-              Performance
-              <br />
-              marketing
-              <br />
-              that lives
-              <br />
-              on the street.
-            </h2>
-            <p
-              style={{
-                fontFamily: "var(--font-body)",
-                fontSize: 20,
-                color: "var(--ink-3)",
-                lineHeight: 1.55,
-                maxWidth: "38ch",
-                margin: 0,
-              }}
-            >
-              Impressions don&rsquo;t mean foot traffic. We measure exactly one
-              thing: a real person physically entering your door.
-            </p>
-          </div>
-
-          {/* Right: giant stacked KPIs */}
           <div
             style={{
-              display: "flex",
-              flexDirection: "column",
-              gap: 48,
-              borderLeft: "1px solid rgba(10,10,10,0.12)",
-              paddingLeft: 64,
+              display: "grid",
+              gridTemplateColumns: "1fr 1fr",
+              gap: 80,
+              alignItems: "center",
             }}
           >
-            {[
-              { num: "1.4M+", label: "Verified visits to date" },
-              { num: "100+", label: "NYC merchants active" },
-              { num: "87%", label: "Creator retention rate" },
-            ].map((stat) => (
-              <div key={stat.label}>
-                <p
-                  style={{
-                    fontFamily: "var(--font-display)",
-                    fontWeight: 900,
-                    fontSize: "clamp(56px, 7vw, 96px)",
-                    letterSpacing: "-0.05em",
-                    lineHeight: 0.9,
-                    color: "var(--ink)",
-                    margin: "0 0 12px",
-                  }}
-                >
-                  {stat.num}
-                </p>
-                <p
-                  className="eyebrow"
-                  style={{ color: "var(--ink-3)", margin: 0 }}
-                >
-                  {stat.label}
-                </p>
-              </div>
-            ))}
+            {/* Left: manifesto — top-left anchor (section panel) */}
+            <div>
+              <p
+                className="eyebrow"
+                style={{ color: "var(--ink-3)", marginBottom: 16 }}
+              >
+                (WHY THIS EXISTS)
+              </p>
+              {/* H2 = exactly 40px per § 3.1 */}
+              <h2
+                style={{
+                  fontFamily: "var(--font-display)",
+                  fontWeight: 800,
+                  fontSize: 40,
+                  letterSpacing: "-0.02em",
+                  lineHeight: 1.05,
+                  color: "var(--ink)",
+                  margin: "0 0 56px",
+                }}
+              >
+                Performance
+                <br />
+                marketing
+                <br />
+                on the street.
+              </h2>
+              <p
+                style={{
+                  fontFamily: "var(--font-mono)",
+                  fontSize: 20,
+                  color: "var(--ink-3)",
+                  lineHeight: 1.4,
+                  letterSpacing: "-0.1em",
+                  maxWidth: "38ch",
+                  margin: 0,
+                }}
+              >
+                Impressions don&rsquo;t mean foot traffic. We measure exactly
+                one thing: a real person physically entering your door.
+              </p>
+            </div>
+
+            {/* Right: giant stacked KPIs — clamp(80,12vw,200) per brief */}
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                gap: 48,
+                borderLeft: "1px solid var(--hairline)",
+                paddingLeft: 64,
+              }}
+            >
+              {[
+                { num: "1.4M+", label: "Verified visits to date" },
+                { num: "100+", label: "NYC merchants active" },
+                { num: "87%", label: "Creator retention rate" },
+              ].map((stat) => (
+                <div key={stat.label}>
+                  <p
+                    style={{
+                      fontFamily: "var(--font-display)",
+                      fontWeight: 900,
+                      fontSize: "clamp(80px, 12vw, 200px)",
+                      letterSpacing: "-0.06em",
+                      lineHeight: 0.85,
+                      color: "var(--ink)",
+                      margin: "0 0 16px",
+                    }}
+                  >
+                    {stat.num}
+                  </p>
+                  <p
+                    className="eyebrow"
+                    style={{ color: "var(--ink-3)", margin: 0 }}
+                  >
+                    {stat.label}
+                  </p>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </section>
 
       {/* ═══════════════════════════════════════════════════════
-          Sig Divider
+          Sig Divider — approved phrase per § 3.1 Magvix Italic Signature Divider
           ═══════════════════════════════════════════════════════ */}
       <div
         style={{
           display: "flex",
           justifyContent: "center",
-          padding: "80px 64px",
+          padding: "64px",
           background: "var(--surface)",
         }}
       >
@@ -284,12 +309,13 @@ export default function AboutPage() {
       </div>
 
       {/* ═══════════════════════════════════════════════════════
-          VALUES — Editorial numbered list, no cards
+          VALUES — Editorial numbered rows, no cards
+          Section padding: 96px top+bottom, 64px horizontal (§ 6.1)
           ═══════════════════════════════════════════════════════ */}
       <section
         style={{
           background: "var(--surface)",
-          padding: "0 64px 160px",
+          padding: "0 64px 96px",
         }}
       >
         <div style={{ maxWidth: "var(--content-width)", margin: "0 auto" }}>
@@ -299,15 +325,16 @@ export default function AboutPage() {
           >
             (WHAT WE BELIEVE)
           </p>
+          {/* H2 exactly 40px */}
           <h2
             style={{
               fontFamily: "var(--font-display)",
-              fontWeight: 900,
-              fontSize: "clamp(40px, 5vw, 64px)",
-              letterSpacing: "-0.04em",
-              lineHeight: 1.0,
+              fontWeight: 800,
+              fontSize: 40,
+              letterSpacing: "-0.02em",
+              lineHeight: 1.05,
               color: "var(--ink)",
-              margin: "0 0 96px",
+              margin: "0 0 56px",
             }}
           >
             Three rules
@@ -315,7 +342,7 @@ export default function AboutPage() {
             we don&rsquo;t break.
           </h2>
 
-          {/* Numbered editorial rows */}
+          {/* Numbered editorial rows: 120px number col, 1fr title, 2fr body */}
           {[
             {
               n: "01",
@@ -338,31 +365,33 @@ export default function AboutPage() {
               style={{
                 display: "grid",
                 gridTemplateColumns: "120px 1fr 2fr",
-                gap: "40px",
+                gap: 40,
                 alignItems: "baseline",
                 paddingBottom: 64,
                 borderBottom:
-                  i < arr.length - 1 ? "1px solid rgba(10,10,10,0.10)" : "none",
+                  i < arr.length - 1 ? "1px solid var(--hairline)" : "none",
                 marginBottom: i < arr.length - 1 ? 64 : 0,
               }}
             >
+              {/* Number marker — CS Genio Mono 14px per § 3.1 Numbered Section marker */}
               <span
                 style={{
-                  fontFamily: "var(--font-body)",
-                  fontSize: 13,
-                  fontWeight: 700,
-                  letterSpacing: "0.12em",
+                  fontFamily: "var(--font-mono)",
+                  fontSize: 14,
+                  fontWeight: 600,
+                  letterSpacing: "0.04em",
                   color: "var(--ink-4)",
                 }}
               >
                 {item.n}
               </span>
+              {/* H3 exactly 28px per § 3.1 */}
               <h3
                 style={{
                   fontFamily: "var(--font-display)",
-                  fontWeight: 800,
-                  fontSize: "clamp(22px, 2.5vw, 32px)",
-                  letterSpacing: "-0.03em",
+                  fontWeight: 700,
+                  fontSize: 28,
+                  letterSpacing: "-0.015em",
                   lineHeight: 1.15,
                   color: "var(--ink)",
                   margin: 0,
@@ -372,10 +401,11 @@ export default function AboutPage() {
               </h3>
               <p
                 style={{
-                  fontFamily: "var(--font-body)",
-                  fontSize: 18,
+                  fontFamily: "var(--font-mono)",
+                  fontSize: 20,
                   color: "var(--ink-3)",
-                  lineHeight: 1.6,
+                  lineHeight: 1.4,
+                  letterSpacing: "-0.1em",
                   margin: 0,
                 }}
               >
@@ -387,12 +417,14 @@ export default function AboutPage() {
       </section>
 
       {/* ═══════════════════════════════════════════════════════
-          TEAM — Editorial card row, big initials
+          TEAM — Cool panel, editorial 5-column grid
+          Panel sky (cool) alternates with surface (warm) above (§ 2.4 Candy Panel Rules)
+          Section padding: 96px top+bottom (§ 6.1)
           ═══════════════════════════════════════════════════════ */}
       <section
         style={{
           background: "var(--panel-sky)",
-          padding: "120px 64px",
+          padding: "96px 64px",
         }}
       >
         <div style={{ maxWidth: "var(--content-width)", margin: "0 auto" }}>
@@ -402,15 +434,16 @@ export default function AboutPage() {
           >
             (THE TEAM)
           </p>
+          {/* H2 exactly 40px */}
           <h2
             style={{
               fontFamily: "var(--font-display)",
-              fontWeight: 900,
-              fontSize: "clamp(40px, 5vw, 64px)",
-              letterSpacing: "-0.04em",
-              lineHeight: 1.0,
+              fontWeight: 800,
+              fontSize: 40,
+              letterSpacing: "-0.02em",
+              lineHeight: 1.05,
               color: "var(--ink)",
-              margin: "0 0 80px",
+              margin: "0 0 56px",
             }}
           >
             The people
@@ -418,11 +451,12 @@ export default function AboutPage() {
             behind the scans.
           </h2>
 
+          {/* 5-column grid, gap 24px (§ 6.6 card grid gap) */}
           <div
             style={{
               display: "grid",
               gridTemplateColumns: "repeat(5, 1fr)",
-              gap: 32,
+              gap: 24,
             }}
           >
             {TEAM.map((member) => (
@@ -431,10 +465,9 @@ export default function AboutPage() {
                 style={{
                   display: "flex",
                   flexDirection: "column",
-                  gap: 0,
                 }}
               >
-                {/* Big initial tile */}
+                {/* Icon tile: 64×64, r-lg 12px (§ 4.3 icon tiles) */}
                 <div
                   style={{
                     width: 64,
@@ -444,7 +477,7 @@ export default function AboutPage() {
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
-                    marginBottom: 20,
+                    marginBottom: 16,
                     flexShrink: 0,
                   }}
                 >
@@ -462,6 +495,7 @@ export default function AboutPage() {
                   </span>
                 </div>
 
+                {/* Darky 18px 800 per brief */}
                 <p
                   style={{
                     fontFamily: "var(--font-display)",
@@ -469,23 +503,25 @@ export default function AboutPage() {
                     fontSize: 18,
                     letterSpacing: "-0.02em",
                     color: "var(--ink)",
-                    margin: "0 0 6px",
+                    margin: "0 0 8px",
                     lineHeight: 1.2,
                   }}
                 >
                   {member.name}
                 </p>
 
+                {/* Eyebrow 12px role label */}
                 <p
                   className="eyebrow"
-                  style={{ color: "var(--ink-3)", margin: "0 0 10px" }}
+                  style={{ color: "var(--ink-3)", margin: "0 0 8px" }}
                 >
                   {member.role}
                 </p>
 
+                {/* CS Genio Mono 14px italic bio per brief */}
                 <p
                   style={{
-                    fontFamily: "var(--font-body)",
+                    fontFamily: "var(--font-mono)",
                     fontSize: 14,
                     fontStyle: "italic",
                     color: "var(--ink-3)",
@@ -502,87 +538,97 @@ export default function AboutPage() {
       </section>
 
       {/* ═══════════════════════════════════════════════════════
-          TICKET CTA Panel
+          TICKET CTA Panel (§ 8.2)
+          ga-orange bg, r-md 10px, 64px 96px padding, grommets, perf lines
+          Magvix Italic centered headline, btn-ink CTA, flat no-shadow
           ═══════════════════════════════════════════════════════ */}
-      <div
-        className="ticket-panel"
+      <section
         style={{
-          position: "relative",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
-          textAlign: "center",
-          padding: "112px 64px",
-          margin: "80px 64px",
+          background: "var(--surface-2)",
+          padding: "96px 64px",
         }}
       >
-        {/* Grommet corners */}
-        {[
-          { top: 24, left: 24 },
-          { top: 24, right: 24 },
-          { bottom: 24, left: 24 },
-          { bottom: 24, right: 24 },
-        ].map((pos, i) => (
-          <div
-            key={i}
-            aria-hidden="true"
-            style={{
-              position: "absolute",
-              width: 16,
-              height: 16,
-              borderRadius: "50%",
-              border: "2px solid var(--ink)",
-              ...pos,
-            }}
-          />
-        ))}
+        <div style={{ maxWidth: "var(--content-width)", margin: "0 auto" }}>
+          <div className="ticket-panel" style={{ position: "relative" }}>
+            {/* Grommet corners — 16px circles, 24px inset (§ 8.2) */}
+            {[
+              { top: 24, left: 24 },
+              { top: 24, right: 24 },
+              { bottom: 24, left: 24 },
+              { bottom: 24, right: 24 },
+            ].map((pos, i) => (
+              <div
+                key={i}
+                aria-hidden="true"
+                style={{
+                  position: "absolute",
+                  width: 16,
+                  height: 16,
+                  borderRadius: "var(--r-full)",
+                  background: "var(--ink)",
+                  ...pos,
+                }}
+              />
+            ))}
 
-        <h2
-          style={{
-            fontFamily: "var(--font-hero)",
-            fontStyle: "italic",
-            fontWeight: 400,
-            fontSize: "clamp(40px, 5vw, 72px)",
-            letterSpacing: "-0.03em",
-            lineHeight: 1.0,
-            color: "var(--ink)",
-            margin: "0 0 24px",
-          }}
-        >
-          Join the walk-in economy.
-        </h2>
+            <p
+              className="eyebrow"
+              style={{ color: "rgba(10,10,10,0.55)", marginBottom: 24 }}
+            >
+              (JOIN US)
+            </p>
 
-        <p
-          style={{
-            fontFamily: "var(--font-body)",
-            fontSize: 18,
-            color: "var(--ink-3)",
-            maxWidth: "40ch",
-            lineHeight: 1.55,
-            margin: "0 0 48px",
-          }}
-        >
-          We&rsquo;re building in NYC right now. Merchants get early access.
-          Creators get first-mover territory.
-        </p>
+            {/* Magvix Italic clamp(40,5vw,56) centered (§ 8.2) */}
+            <h2
+              style={{
+                fontFamily: "var(--font-hero)",
+                fontStyle: "italic",
+                fontWeight: 400,
+                fontSize: "clamp(40px, 5vw, 56px)",
+                letterSpacing: "-0.03em",
+                lineHeight: 0.95,
+                color: "var(--ink)",
+                margin: "0 0 16px",
+                textAlign: "center",
+              }}
+            >
+              Join the walk-in economy.
+            </h2>
 
-        <div
-          style={{
-            display: "flex",
-            gap: 16,
-            flexWrap: "wrap",
-            justifyContent: "center",
-          }}
-        >
-          <Link href="/merchant/signup" className="btn-ink click-shift">
-            For Merchants
-          </Link>
-          <Link href="/creator/signup" className="btn-ghost click-shift">
-            For Creators
-          </Link>
+            <p
+              style={{
+                fontFamily: "var(--font-mono)",
+                fontSize: 16,
+                color: "var(--ink)",
+                opacity: 0.72,
+                maxWidth: "40ch",
+                lineHeight: 1.55,
+                margin: "0 auto 32px",
+                textAlign: "center",
+              }}
+            >
+              We&rsquo;re building in NYC right now. Merchants get early access.
+              Creators get first-mover territory.
+            </p>
+
+            <div
+              style={{
+                display: "flex",
+                gap: 16,
+                flexWrap: "wrap",
+                justifyContent: "center",
+              }}
+            >
+              <Link href="/merchant/signup" className="btn-ink click-shift">
+                For Merchants
+              </Link>
+              <Link href="/creator/signup" className="btn-ghost click-shift">
+                For Creators
+              </Link>
+            </div>
+          </div>
         </div>
-      </div>
+      </section>
     </main>
   );
 }

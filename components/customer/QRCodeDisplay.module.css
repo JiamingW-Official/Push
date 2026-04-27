@@ -17,13 +17,13 @@
   border-radius: var(--r-lg);
   /* Ensure small QR payloads scale crisply. */
   image-rendering: pixelated;
-  background: var(--surface-elevated);
+  background: var(--surface-2);
 }
 
 .caption {
   font-family: var(--font-body);
   font-size: var(--text-caption);
-  color: var(--text-muted);
+  color: var(--ink-4);
   letter-spacing: 0.06em;
   text-transform: uppercase;
 }
@@ -40,7 +40,7 @@
   font-family: var(--font-body);
   font-size: clamp(20px, 4vw, 28px);
   font-weight: 700;
-  color: var(--dark);
+  color: var(--ink);
   letter-spacing: 0.08em;
   font-variant-numeric: tabular-nums;
   text-align: center;
@@ -56,12 +56,12 @@
 .numericHint {
   font-family: var(--font-body);
   font-size: var(--text-caption);
-  color: var(--text-muted);
+  color: var(--ink-4);
 }
 
 .empty {
   font-family: var(--font-body);
   font-size: var(--text-caption);
-  color: var(--text-muted);
+  color: var(--ink-4);
   font-style: italic;
 }

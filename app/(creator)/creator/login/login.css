@@ -107,7 +107,7 @@
 .error-retry-btn {
   background: none;
   border: none;
-  color: var(--primary);
+  color: var(--brand-red);
   font-size: var(--text-caption);
   font-weight: 700;
   letter-spacing: 0.05em;
@@ -121,7 +121,7 @@
 }
 
 .error-retry-btn:hover { opacity: 0.7; }
-.error-retry-btn:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
+.error-retry-btn:focus-visible { outline: 2px solid var(--brand-red); outline-offset: 2px; }
 
 /* ── Form loading state ───────────────────────────────────── */
 
@@ -149,7 +149,7 @@ form.form-loading {
   transform: translateY(-50%);
   width: 5px;
   height: 5px;
-  background: var(--tertiary);
+  background: var(--accent-blue);
   border-radius: 50%;
   pointer-events: none;
   animation: dotPop 200ms cubic-bezier(0.22,1,0.36,1) both;
@@ -166,14 +166,14 @@ form.form-loading {
   display: block;
   margin-top: var(--space-1);
   font-size: var(--text-caption);
-  color: var(--primary);
+  color: var(--brand-red);
   font-weight: 500;
 }
 
 /* ── Input enhancements ───────────────────────────────────── */
 
 .form-field input::placeholder {
-  color: rgba(0, 48, 73, 0.30);
+  color: var(--ink-4);
   font-weight: 400;
 }
 
@@ -183,23 +183,23 @@ form.form-loading {
 }
 
 .form-field input:focus {
-  border-color: var(--primary);
-  box-shadow: inset 2px 0 0 var(--primary);
+  border-color: var(--brand-red);
+  box-shadow: inset 2px 0 0 var(--brand-red);
   outline: none;
 }
 
 .form-field input:not(:placeholder-shown) {
-  border-color: rgba(0, 48, 73, 0.35);
+  border-color: var(--ink-4);
 }
 
 .form-field input:not(:placeholder-shown):focus {
-  border-color: var(--primary);
-  box-shadow: inset 2px 0 0 var(--primary);
+  border-color: var(--brand-red);
+  box-shadow: inset 2px 0 0 var(--brand-red);
 }
 
 .form-field:has(.error-msg) input {
-  border-color: var(--primary);
-  box-shadow: inset 2px 0 0 var(--primary);
+  border-color: var(--brand-red);
+  box-shadow: inset 2px 0 0 var(--brand-red);
 }
 
 /* ── Password + show/hide ─────────────────────────────────── */
@@ -207,13 +207,13 @@ form.form-loading {
 .input-with-action {
   display: flex;
   align-items: stretch;
-  border: 1px solid var(--line);
+  border: 1px solid var(--mist)
   transition: border-color var(--t-base), box-shadow var(--t-base);
 }
 
 .input-with-action:focus-within {
-  border-color: var(--primary);
-  box-shadow: inset 2px 0 0 var(--primary);
+  border-color: var(--brand-red);
+  box-shadow: inset 2px 0 0 var(--brand-red);
 }
 
 .input-with-action input {
@@ -233,17 +233,17 @@ form.form-loading {
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: var(--text-muted);
+  color: var(--ink-4);
   background: var(--surface);
   border: none;
-  border-left: 1px solid var(--line);
+  border-left: 1px solid var(--mist)
   cursor: pointer;
   flex-shrink: 0;
   transition: color var(--t-fast);
 }
 
-.input-action-btn:hover { color: var(--dark); }
-.input-action-btn:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
+.input-action-btn:hover { color: var(--ink); }
+.input-action-btn:focus-visible { outline: 2px solid var(--brand-red); outline-offset: 2px; }
 
 /* ── Forgot password link ─────────────────────────────────── */
 
@@ -255,13 +255,13 @@ form.form-loading {
 
 .forgot-link a {
   font-size: var(--text-caption);
-  color: var(--tertiary);
+  color: var(--accent-blue);
   text-decoration: underline;
   text-underline-offset: 2px;
   transition: color var(--t-fast);
 }
 
-.forgot-link a:hover { color: var(--dark); }
+.forgot-link a:hover { color: var(--ink); }
 
 /* ── Submit button — extends .btn-primary with full width ─── */
 
@@ -301,7 +301,7 @@ form.form-loading {
   position: absolute;
   top: -48px;
   left: var(--space-3);
-  background: var(--primary);
+  background: var(--brand-red);
   color: #fff;
   padding: var(--space-1) var(--space-3);
   font-size: var(--text-small);
@@ -341,17 +341,17 @@ form.form-loading {
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: var(--text-muted);
+  color: var(--ink-4);
   text-decoration: none;
-  border: 1px solid var(--line);
+  border: 1px solid var(--mist)
   padding: var(--space-2) var(--space-3);
   transition: color var(--t-fast), border-color var(--t-fast), background var(--t-fast);
 }
 
 .auth-demo-link:hover {
-  color: var(--dark);
-  border-color: var(--dark);
-  background: rgba(0, 48, 73, 0.04);
+  color: var(--ink);
+  border-color: var(--ink);
+  background: var(--surface-3);
 }
 
 /* ── Tier preview (brand panel) ───────────────────────────── */
@@ -401,7 +401,7 @@ form.form-loading {
 }
 
 .auth-tier-item[data-active="true"] .auth-tier-icon {
-  color: var(--primary);
+  color: var(--brand-red);
 }
 
 .auth-tier-info {

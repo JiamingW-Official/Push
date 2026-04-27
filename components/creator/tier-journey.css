@@ -9,10 +9,10 @@
 .tj,
 .tj-compact {
   --tj-surface: var(--surface);
-  --tj-dark: var(--dark);
-  --tj-line: rgba(0, 48, 73, 0.15);
-  --tj-line-filled: var(--dark);
-  --tj-muted: rgba(0, 48, 73, 0.35);
+  --tj-dark: var(--ink);
+  --tj-line: var(--hairline);
+  --tj-line-filled: var(--ink);
+  --tj-muted: var(--ink-4);
   --tj-node-size: 36px;
   --tj-node-current-size: 48px;
   --tj-line-h: 2px;
@@ -132,7 +132,7 @@
 .tj__node--current {
   width: var(--tj-node-current-size);
   height: var(--tj-node-current-size);
-  box-shadow: 0 0 0 4px rgba(0, 48, 73, 0.12);
+  box-shadow: 0 0 0 4px var(--hairline);
   animation: tj-pulse 2s ease-in-out infinite;
 }
 
@@ -140,11 +140,11 @@
   0%,
   100% {
     transform: scale(1);
-    box-shadow: 0 0 0 4px rgba(0, 48, 73, 0.12);
+    box-shadow: 0 0 0 4px var(--hairline);
   }
   50% {
     transform: scale(1.03);
-    box-shadow: 0 0 0 6px rgba(0, 48, 73, 0.08);
+    box-shadow: 0 0 0 6px var(--surface-3);
   }
 }
 
@@ -255,7 +255,7 @@
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--primary);
+  color: var(--brand-red);
   margin-top: 2px;
 }
 
@@ -272,7 +272,7 @@
   align-items: center;
   gap: 24px;
   padding: 16px 0 0;
-  border-top: 1px solid rgba(0, 48, 73, 0.1);
+  border-top: 1px solid var(--hairline);
   border-radius: var(--r-lg);
 }
 
@@ -300,7 +300,7 @@
 .tj__progress-bar {
   flex: 1;
   height: 4px;
-  background: rgba(0, 48, 73, 0.1);
+  background: var(--hairline);
   border-radius: var(--r-lg); /* sharp — no rounding */
   overflow: hidden;
   position: relative;
@@ -308,7 +308,7 @@
 
 .tj__progress-fill {
   height: 100%;
-  background: var(--dark);
+  background: var(--ink);
   border-radius: var(--r-lg);
   transition: width 800ms cubic-bezier(0.4, 0, 0.2, 1);
   animation: tj-progress-fill 800ms cubic-bezier(0.4, 0, 0.2, 1) both;
@@ -318,7 +318,7 @@
   font-family: "CS Genio Mono", "SF Mono", "Fira Code", monospace;
   font-size: 11px;
   letter-spacing: 0.04em;
-  color: rgba(0, 48, 73, 0.55);
+  color: var(--ink-4);
   white-space: nowrap;
   flex-shrink: 0;
 }
@@ -339,7 +339,7 @@
 .tj__cta-text {
   font-family: "CS Genio Mono", "SF Mono", "Fira Code", monospace;
   font-size: 12px;
-  color: rgba(0, 48, 73, 0.7);
+  color: var(--ink-3);
   letter-spacing: 0.01em;
 }
 
@@ -348,7 +348,7 @@
 }
 
 .tj__cta-pts {
-  color: rgba(0, 48, 73, 0.5);
+  color: var(--ink-4);
 }
 
 /* ============================================================
@@ -380,14 +380,14 @@
 }
 
 .tj-compact__line--filled {
-  background: var(--dark);
+  background: var(--ink);
 }
 
 .tj-compact__line--dashed {
   background: repeating-linear-gradient(
     to right,
-    rgba(0, 48, 73, 0.25) 0px,
-    rgba(0, 48, 73, 0.25) 4px,
+    var(--mist) 0px,
+    var(--mist) 4px,
     transparent 4px,
     transparent 8px
   );
@@ -406,8 +406,8 @@
 }
 
 .tj-compact__dot--past {
-  background: var(--dark);
-  border-color: var(--dark);
+  background: var(--ink);
+  border-color: var(--ink);
 }
 
 .tj-compact__dot--current {
@@ -421,17 +421,17 @@
   0%,
   100% {
     transform: scale(1);
-    box-shadow: 0 0 0 2px rgba(0, 48, 73, 0.15);
+    box-shadow: 0 0 0 2px var(--hairline);
   }
   50% {
     transform: scale(1.08);
-    box-shadow: 0 0 0 3px rgba(0, 48, 73, 0.08);
+    box-shadow: 0 0 0 3px var(--surface-3);
   }
 }
 
 .tj-compact__dot--future {
   background: transparent;
-  border-color: rgba(0, 48, 73, 0.2);
+  border-color: var(--mist);
   border-style: dashed;
 }
 

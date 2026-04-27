@@ -1,1798 +1,690 @@
 /* ============================================================
-   Push Landing — v8.2
-   Dual-font · Bold weight · Tight panels · Apple-grade interaction
+   Push Homepage — landing.css  |  v11 2026-04-25
+   Authority: Design.md v11 — all rules STRICT unless tagged.
+   All colors = CSS tokens only. All spacing = 8px grid.
    ============================================================ */
 
-/* ── Landing container override — tighter ────────────────── */
-.hero .container,
-.s .container,
-.cta .container,
-.proof .container {
-  max-width: 1080px;
-}
-
-/* ── Shared: Red rule motif ──────────────────────────────── */
-.rule {
-  display: inline-block;
-  width: 32px;
-  height: 1.5px;
-  background: var(--primary);
-  vertical-align: middle;
-  flex-shrink: 0;
-}
-
-.rule--w {
-  background: rgba(255, 255, 255, 0.12);
-}
-
-/* ── Shared: Section label (CS Genio Mono) ───────────────── */
-.s-label {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  font-family: var(--font-body);
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--text-muted);
-  margin-bottom: var(--space-4);
-}
-
-.s-label--w {
-  color: rgba(245, 242, 236, 0.45);
-}
-
-/* ── Shared: Eyebrow (CS Genio Mono) ─────────────────────── */
-.eyebrow {
-  font-family: var(--font-body);
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  margin: 0;
-}
-
-/* ── Scroll reveal — Apple spring curve ──────────────────── */
-.reveal {
-  opacity: 0;
-  transform: translateY(16px);
-  transition:
-    opacity 600ms cubic-bezier(0.32, 0.72, 0, 1),
-    transform 600ms cubic-bezier(0.32, 0.72, 0, 1);
-}
-
-.reveal.visible {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-/* ============================================================
-   HERO
-   ============================================================ */
-.hero {
-  min-height: 100svh;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  padding: 0;
-  background:
-    radial-gradient(
-      ellipse 60% 45% at 20% 75%,
-      rgba(193, 18, 31, 0.08) 0%,
-      transparent 70%
-    ),
-    radial-gradient(
-      ellipse 50% 40% at 80% 20%,
-      rgba(102, 155, 188, 0.10) 0%,
-      transparent 65%
-    ),
-    var(--dark);
-  position: relative;
+/* ── Root wrapper ──────────────────────────────────────────── */
+.hp-root {
   overflow: hidden;
-}
-
-.hero-inner {
-  position: relative;
-  z-index: 1;
-  padding: 0 0 var(--space-6);
-}
-
-.hero-label {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: var(--space-5);
-}
-
-.hero-label .eyebrow {
-  color: rgba(245, 242, 236, 0.45);
-}
-
-/* ── Headline: weight serves meaning ─────────────────────── */
-.hero-h {
-  font-family: var(--font-display);
-  line-height: 0.88;
-  letter-spacing: -0.05em;
-  margin-bottom: var(--space-6);
-}
-
-.hero-l1,
-.hero-l2 {
-  display: block;
-}
-
-.hero-l1 {
-  font-size: clamp(56px, 9vw, 140px);
-}
-
-.hero-l2 {
-  font-size: clamp(48px, 7.5vw, 120px);
-}
-
-/* Connectors: visible but recede — weight 300 */
-.hw-conn {
-  font-weight: 300;
-  color: rgba(255, 255, 255, 0.32);
-}
-
-/* Key words: max weight, command attention */
-.hw-key {
-  font-weight: 900;
-  color: #fff;
-}
-
-/* Accent: the payoff */
-.hw-accent {
-  font-weight: 900;
-  font-style: italic;
-  color: var(--primary);
-}
-
-/* Asymmetric bottom */
-.hero-bottom {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-  gap: var(--space-5);
-}
-
-.hero-ctas {
-  display: flex;
-  gap: 10px;
-  align-items: center;
-}
-
-.hero-sub {
-  font-family: var(--font-body);
-  font-size: 12px;
-  color: rgba(245, 242, 236, 0.45);
-  max-width: 300px;
-  line-height: 1.7;
-  text-align: right;
-  letter-spacing: 0.01em;
-  -webkit-font-smoothing: antialiased;
-}
-
-/* Stats bar (CS Genio Mono labels) */
-.hero-stats-wrap {
-  border-top: 1px solid rgba(245, 242, 236, 0.06);
-  padding: var(--space-4) 0;
-  position: relative;
-  z-index: 1;
-}
-
-.hero-stats {
-  display: flex;
-  gap: 0;
-}
-
-.h-stat {
-  flex: 1;
-  display: flex;
-  align-items: baseline;
-  gap: var(--space-2);
-}
-
-.h-stat + .h-stat {
-  padding-left: var(--space-5);
-  border-left: 1px solid rgba(245, 242, 236, 0.06);
-}
-
-.h-stat-n {
-  font-family: var(--font-display);
-  font-size: clamp(36px, 4vw, 52px);
-  font-weight: 100;
-  letter-spacing: -0.05em;
-  line-height: 1;
-  color: #fff;
-}
-
-.h-stat-l {
-  font-family: var(--font-body);
-  font-size: 10px;
-  font-weight: 600;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.3);
-}
-
-/* Hero entrance — Apple spring */
-@keyframes h-in {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.hero-label {
-  animation: h-in 0.7s cubic-bezier(0.32, 0.72, 0, 1) 0.05s both;
-}
-.hero-l1 {
-  animation: h-in 0.8s cubic-bezier(0.32, 0.72, 0, 1) 0.12s both;
-}
-.hero-l2 {
-  animation: h-in 0.8s cubic-bezier(0.32, 0.72, 0, 1) 0.24s both;
-}
-.hero-bottom {
-  animation: h-in 0.7s cubic-bezier(0.32, 0.72, 0, 1) 0.36s both;
-}
-.h-stat:nth-child(1) {
-  animation: h-in 0.6s cubic-bezier(0.32, 0.72, 0, 1) 0.5s both;
-}
-.h-stat:nth-child(2) {
-  animation: h-in 0.6s cubic-bezier(0.32, 0.72, 0, 1) 0.6s both;
-}
-.h-stat:nth-child(3) {
-  animation: h-in 0.6s cubic-bezier(0.32, 0.72, 0, 1) 0.7s both;
-}
-
-/* Hero spotlight */
-.hero-spotlight {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  z-index: 0;
-  opacity: 0;
-  transition: opacity 500ms ease;
-  background: radial-gradient(
-    circle 500px at var(--sx, 50%) var(--sy, 50%),
-    rgba(102, 155, 188, 0.08) 0%,
-    transparent 65%
-  );
-}
-
-/* ============================================================
-   BUTTONS — Apple spring hover + lift
-   ============================================================ */
-.btn-fill,
-.btn-outline,
-.btn-outline-light {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 13px 32px;
-  font-family: var(--font-body);
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  text-decoration: none;
-  transition: all 500ms cubic-bezier(0.32, 0.72, 0, 1);
-}
-
-.btn-fill {
-  color: #fff;
-  background: var(--primary);
-  border: 1px solid var(--primary);
-}
-
-.btn-fill:hover {
-  background: var(--accent);
-  border-color: var(--accent);
-  box-shadow: 0 4px 20px rgba(193, 18, 31, 0.25);
-  transform: translateY(-1px);
-}
-
-.btn-fill:active {
-  transform: translateY(0) scale(0.97);
-  transition-duration: 100ms;
-}
-
-.btn-outline {
-  color: var(--dark);
-  background: transparent;
-  border: 1px solid var(--line);
-}
-
-.btn-outline:hover {
-  border-color: var(--dark);
-  background: rgba(0, 48, 73, 0.03);
-  transform: translateY(-1px);
-}
-
-.btn-outline:active {
-  transform: translateY(0) scale(0.97);
-  transition-duration: 100ms;
-}
-
-.btn-outline-light {
-  color: rgba(255, 255, 255, 0.5);
-  background: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-}
-
-.btn-outline-light:hover {
-  color: #fff;
-  border-color: rgba(255, 255, 255, 0.4);
-  background: rgba(255, 255, 255, 0.04);
-  transform: translateY(-1px);
-}
-
-.btn-outline-light:active {
-  transform: translateY(0) scale(0.97);
-  transition-duration: 100ms;
-}
-
-/* ============================================================
-   PROOF STRIP (CS Genio Mono)
-   ============================================================ */
-.proof {
-  border-top: 1px solid var(--line);
-  background: var(--surface);
-  padding: 16px 0;
-}
-
-.proof-inner {
-  display: flex;
-  align-items: center;
-  gap: var(--space-6);
-  flex-wrap: wrap;
-}
-
-.proof-label {
-  font-family: var(--font-body);
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: rgba(0, 48, 73, 0.35);
-  flex-shrink: 0;
-}
-
-.proof-names {
-  display: flex;
-  gap: var(--space-4);
-  flex-wrap: wrap;
-}
-
-.proof-name {
-  font-family: var(--font-display);
-  font-size: 13px;
-  font-weight: 700;
-  letter-spacing: -0.01em;
-  color: var(--dark);
-  opacity: 0.3;
-  transition: opacity 300ms cubic-bezier(0.32, 0.72, 0, 1);
-}
-
-.proof-name:hover {
-  opacity: 0.6;
-}
-
-/* ============================================================
-   SECTION SYSTEM — generous breathing between, tight inside
-   ============================================================ */
-.s {
-  position: relative;
-  overflow: hidden;
-  padding: 160px 0;
-}
-
-.s--compact {
-  padding: 120px 0;
-}
-
-.s--light {
   background: var(--surface);
 }
 
-.s--snow {
-  background:
-    radial-gradient(
-      ellipse 40% 30% at 85% 15%,
-      rgba(201, 169, 110, 0.03) 0%,
-      transparent 70%
-    ),
-    var(--surface-bright);
-}
-
-.s--dark {
-  padding: 180px 0;
-  background:
-    radial-gradient(
-      ellipse 55% 40% at 15% 65%,
-      rgba(102, 155, 188, 0.06) 0%,
-      transparent 65%
-    ),
-    radial-gradient(
-      ellipse 40% 35% at 80% 25%,
-      rgba(193, 18, 31, 0.04) 0%,
-      transparent 60%
-    ),
-    var(--dark);
-  color: var(--surface);
-}
-
-/* ── Display headline ────────────────────────────────────── */
-.d-head {
-  font-family: var(--font-display);
-  font-size: clamp(36px, 5vw, 72px);
-  font-weight: 900;
-  letter-spacing: -0.04em;
-  line-height: 0.92;
-  color: var(--dark);
-  margin-bottom: var(--space-4);
-  max-width: 800px;
-}
-
-.d-head--w {
-  color: #fff;
-}
-
-.d-head--hero {
-  font-size: clamp(44px, 7vw, 108px);
-}
-
-/* Ghost text: READABLE but subdued — weight 300 not 100 */
-.d-ghost {
-  font-weight: 300;
-  color: rgba(0, 48, 73, 0.12);
-  display: block;
-}
-
-.d-ghost--w {
-  color: rgba(255, 255, 255, 0.16);
-}
-
-/* Section body (inherits CSGenioMono from global) */
-.s-body {
-  font-size: 13px;
-  color: var(--graphite);
-  line-height: 1.6;
-  max-width: 420px;
-  margin-bottom: var(--space-4);
-  -webkit-font-smoothing: antialiased;
-}
-
-.s-body--w {
-  color: rgba(245, 242, 236, 0.55);
-}
-
-/* ============================================================
-   MERCHANTS — tight asymmetric split
-   ============================================================ */
-.merch-grid {
-  display: grid;
-  grid-template-columns: 1fr 1.4fr;
-  gap: var(--space-8);
-  align-items: start;
-}
-
-.feat-list {
-  list-style: none;
-  padding: 0;
+/* ── Panel stack — 8px gap, 8px outer (near full-bleed for editorial) */
+.hp-panels {
   display: flex;
   flex-direction: column;
-  gap: var(--space-1);
-  margin-bottom: var(--space-4);
-}
-
-.feat-list li {
-  display: flex;
-  align-items: flex-start;
-  gap: var(--space-2);
-  font-size: 12px;
-  line-height: 1.7;
-  color: var(--dark);
-  -webkit-font-smoothing: antialiased;
-}
-
-.feat-dot {
-  width: 4px;
-  height: 4px;
-  background: var(--primary);
-  flex-shrink: 0;
-  margin-top: 7px;
-}
-
-/* Dashboard */
-.dash {
-  background: var(--surface-elevated);
-  border: 1px solid var(--line);
-  border-top: 2px solid var(--primary);
-  box-shadow: 0 20px 60px rgba(0, 48, 73, 0.06);
-  transition: transform 500ms cubic-bezier(0.32, 0.72, 0, 1), box-shadow 500ms cubic-bezier(0.32, 0.72, 0, 1);
-}
-
-.dash:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 28px 80px rgba(0, 48, 73, 0.09);
-}
-
-.dash-bar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 10px var(--space-4);
-  border-bottom: 1px solid var(--line);
-}
-
-.dash-bar-left {
-  display: flex;
-  align-items: center;
   gap: 8px;
-}
-
-.dash-dot {
-  width: 6px;
-  height: 6px;
-  background: var(--success);
-  border-radius: 50%;
-  animation: dot-p 2.2s ease-in-out infinite;
-}
-
-@keyframes dot-p {
-  0%,
-  100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.5;
-  }
-}
-
-.dash-title {
-  font-family: var(--font-body);
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--dark);
-}
-
-.dash-meta {
-  font-family: var(--font-body);
-  font-size: 11px;
-  color: var(--text-muted);
-}
-
-.dash-rows {
-  padding: 2px 0;
-}
-
-.dash-row {
-  display: grid;
-  grid-template-columns: 1fr auto auto auto;
-  gap: var(--space-3);
-  padding: 8px var(--space-4);
-  font-size: 12px;
-  align-items: center;
-  border-bottom: 1px solid rgba(0, 48, 73, 0.04);
-  animation: row-in 0.5s cubic-bezier(0.32, 0.72, 0, 1) both;
-  transition: background 200ms ease;
-}
-
-.dash-row:hover {
-  background: rgba(0, 48, 73, 0.015);
-}
-
-@keyframes row-in {
-  from {
-    opacity: 0;
-    transform: translateX(-6px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-.dash-handle {
-  font-weight: 700;
-  color: var(--dark);
-}
-
-.dash-qr {
-  font-family: var(--font-body);
-  font-size: 11px;
-  color: var(--text-muted);
-  letter-spacing: 0.04em;
-}
-
-.dash-check {
-  font-size: 12px;
-  color: var(--text-muted);
-}
-
-.dash-check--ok {
-  color: var(--success);
-}
-
-.dash-amt {
-  font-family: var(--font-body);
-  font-weight: 700;
-  font-size: 12px;
-  color: var(--text-muted);
-  text-align: right;
-  min-width: 40px;
-}
-
-.dash-amt--ok {
-  color: var(--primary);
-}
-
-.dash-footer {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  border-top: 1px solid var(--line);
-  padding: 10px var(--space-4);
-}
-
-.dash-stat {
-  display: flex;
-  flex-direction: column;
-  gap: 1px;
-}
-
-.dash-stat-n {
-  font-family: var(--font-display);
-  font-size: 16px;
-  font-weight: 900;
-  letter-spacing: -0.03em;
-  color: var(--dark);
-}
-
-.dash-stat-l {
-  font-family: var(--font-body);
-  font-size: 10px;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--text-muted);
+  padding: 0 8px 8px;
 }
 
 /* ============================================================
-   CREATORS — tier cards, Apple spring hover
+   HERO PANEL
+   Full-viewport dark panel. Title bottom-left anchored (STRICT).
+   border-radius: 0 — allowed for full-bleed hero (§ 4.2 case a).
    ============================================================ */
-.tier-row {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1px;
-  margin-bottom: var(--space-5);
-}
-
-.tier {
-  padding: var(--space-4) var(--space-4);
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-  border-left: 3px solid var(--tc, var(--tertiary));
-  background: rgba(255, 255, 255, 0.04);
-  border-top: 1px solid rgba(255, 255, 255, 0.06);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.03);
-  transition: all 500ms cubic-bezier(0.32, 0.72, 0, 1);
-}
-
-.tier:hover {
-  background: rgba(255, 255, 255, 0.08);
-  box-shadow: 0 0 40px rgba(102, 155, 188, 0.06);
-  transform: scale(1.015);
-}
-
-.tier:active {
-  transform: scale(0.99);
-  transition-duration: 100ms;
-}
-
-.tier--feat {
-  background: rgba(255, 255, 255, 0.07);
-  border-left-width: 4px;
-  border-left-color: var(--primary);
-  border-top-color: rgba(255, 255, 255, 0.08);
-}
-
-.tier-badge {
-  font-family: var(--font-body);
-  font-size: 10px;
-  font-weight: 700;
-  padding: 3px 8px;
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
-  background: var(--champagne-light);
-  border: 1px solid var(--champagne-border);
-  color: var(--champagne);
-  align-self: flex-start;
-}
-
-.tier-mat {
-  font-family: var(--font-body);
-  font-size: 10px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.14em;
-  color: rgba(255, 255, 255, 0.4);
-}
-
-.tier-name {
-  font-family: var(--font-display);
-  font-size: 18px;
-  font-weight: 900;
-  letter-spacing: -0.02em;
-  color: #fff;
-}
-
-.tier-earn {
-  font-family: var(--font-display);
-  font-size: clamp(20px, 2vw, 28px);
-  font-weight: 300;
-  letter-spacing: -0.04em;
-  color: var(--champagne, #c9a96e);
-  line-height: 1;
-}
-
-.tier-desc {
-  font-family: var(--font-body);
-  font-size: 11px;
-  color: rgba(255, 255, 255, 0.45);
-  line-height: 1.5;
-  letter-spacing: 0.01em;
-}
-
-/* Progression (mono) */
-.tier-prog {
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
-  flex-wrap: wrap;
-  margin-bottom: var(--space-5);
-  font-family: var(--font-body);
-  font-size: 11px;
-  color: rgba(255, 255, 255, 0.4);
-}
-
-.tier-prog-a {
-  color: rgba(255, 255, 255, 0.15);
-}
-
-.tier-prog-hi {
-  color: var(--champagne);
-  font-weight: 700;
-}
-
-/* Pull quote */
-.quote {
-  border-left: 2px solid var(--primary);
-  padding-left: var(--space-5);
-  margin-bottom: var(--space-5);
-  max-width: 480px;
-}
-
-.quote p {
-  font-family: var(--font-display);
-  font-size: clamp(15px, 1.6vw, 22px);
-  font-weight: 300;
-  letter-spacing: -0.02em;
-  line-height: 1.4;
-  color: rgba(255, 255, 255, 0.6);
-  margin-bottom: var(--space-2);
-}
-
-.quote cite {
-  font-family: var(--font-body);
-  font-style: normal;
-  font-size: 11px;
-  color: rgba(255, 255, 255, 0.35);
-  letter-spacing: 0.04em;
-}
-
-/* ============================================================
-   HOW IT WORKS — editorial list, red-line reveal on hover
-   ============================================================ */
-.steps {
-  display: flex;
-  flex-direction: column;
-  max-width: 620px;
-}
-
-.step {
-  display: grid;
-  grid-template-columns: 64px 1fr;
-  gap: var(--space-4);
-  padding: var(--space-5) 0;
-  border-top: 1px solid var(--line);
-  align-items: start;
+.hp-hero {
   position: relative;
+  min-height: clamp(520px, 70vh, 760px);
+  border-radius: 0;
+  overflow: hidden;
+  /* Anthropic-style ambient gradient — subtle warm glow, not flat */
+  background:
+    radial-gradient(ellipse at 20% 0%, rgba(193, 18, 31, 0.10) 0%, rgba(193, 18, 31, 0) 50%),
+    radial-gradient(ellipse at 100% 100%, rgba(191, 161, 112, 0.06) 0%, rgba(191, 161, 112, 0) 50%),
+    var(--char);
 }
 
-.step:last-child {
-  border-bottom: 1px solid var(--line);
+/* Film grain — removed */
+.hp-hero-grain { display: none; }
+
+/* Bottom vignette — removed */
+.hp-hero-vignette { display: none; }
+
+/* Ghost watermark — hidden (noise reduction) */
+.hp-hero-watermark {
+  display: none;
 }
 
-/* Red line reveal on hover — Apple spring */
-.step::before {
-  content: "";
+/* Top-right stat — bare editorial number, no card frame */
+.hp-hero-stat-tile {
   position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  width: 2px;
-  background: var(--primary);
-  transform: scaleY(0);
-  transform-origin: top;
-  transition: transform 500ms cubic-bezier(0.32, 0.72, 0, 1);
+  top: clamp(32px, 4vw, 56px);
+  right: clamp(32px, 5vw, 64px);
+  padding: 0 0 12px 0;
+  min-width: auto;
+  text-align: right;
+  /* Strip all lg-surface--dark glass */
+  background: transparent !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+  border: none !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.22) !important;
 }
 
-.step:hover::before {
-  transform: scaleY(1);
-}
-
-.step-content {
-  transition: transform 500ms cubic-bezier(0.32, 0.72, 0, 1);
-}
-
-.step:hover .step-content {
-  transform: translateX(4px);
-}
-
-.step-n {
-  font-family: var(--font-display);
-  font-size: 44px;
-  font-weight: 100;
-  letter-spacing: -0.06em;
-  line-height: 1;
-  color: var(--dark);
-  opacity: 0.06;
-  user-select: none;
-  transition: opacity 500ms cubic-bezier(0.32, 0.72, 0, 1);
-}
-
-.step:hover .step-n {
-  opacity: 0.14;
-}
-
-.step-t {
-  font-family: var(--font-display);
-  font-size: 15px;
-  font-weight: 900;
-  letter-spacing: -0.02em;
-  color: var(--dark);
-  margin-bottom: 2px;
-  line-height: 1.2;
-}
-
-.step-b {
-  font-size: 13px;
-  color: var(--graphite);
-  line-height: 1.6;
-  -webkit-font-smoothing: antialiased;
-}
-
-/* ============================================================
-   PRICING — vertical-rule, hover lift with spring
-   ============================================================ */
-.price-top {
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  margin-bottom: var(--space-6);
-  flex-wrap: wrap;
-  gap: var(--space-4);
-}
-
-.price-note {
-  font-size: 12px;
-  color: var(--graphite);
-  line-height: 1.6;
-}
-
-.price-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 0;
-}
-
-.pc {
-  padding: var(--space-6) var(--space-5);
-  position: relative;
-  border-left: 1px solid var(--line);
-  transition: all 500ms cubic-bezier(0.32, 0.72, 0, 1);
-}
-
-.pc:first-child {
-  border-left: none;
-  padding-left: 0;
-}
-
-.pc:last-child {
-  padding-right: 0;
-}
-
-.pc:hover {
-  background: rgba(0, 48, 73, 0.015);
-  transform: translateY(-3px);
-}
-
-.pc:active {
-  transform: translateY(0) scale(0.99);
-  transition-duration: 100ms;
-}
-
-.pc--feat {
-  border-top: 2px solid var(--primary);
-  margin-top: -2px;
-}
-
-.pc--feat:hover {
-  background: rgba(193, 18, 31, 0.02);
-}
-
-.pc-badge {
-  font-family: var(--font-body);
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--primary);
+/* KPI numeral: AI-SaaS dashboard scale — Darky 40px weight 700 */
+.hp-hero-stat-num {
   display: block;
-  margin-bottom: var(--space-2);
-}
-
-.pc-name {
   font-family: var(--font-display);
-  font-size: 16px;
-  font-weight: 900;
+  font-weight: 700;
+  font-size: clamp(32px, 3.5vw, 44px);
+  line-height: 1.0;
   letter-spacing: -0.02em;
-  color: var(--dark);
-  margin-bottom: var(--space-3);
+  color: var(--snow);
 }
 
-.pc-price {
-  display: flex;
-  align-items: baseline;
-  gap: 2px;
-  margin-bottom: var(--space-3);
-}
-
-.pc-int {
-  font-family: var(--font-display);
-  font-size: clamp(36px, 3.5vw, 48px);
-  font-weight: 100;
-  letter-spacing: -0.05em;
-  color: var(--dark);
-  line-height: 1;
-}
-
-.pc-dec {
-  font-family: var(--font-display);
-  font-size: 14px;
-  font-weight: 300;
-  color: var(--graphite);
-  align-self: flex-start;
+/* KPI label */
+.hp-hero-stat-label {
+  display: block;
+  font-family: var(--font-mono, var(--font-body));
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.50);
   margin-top: 6px;
 }
 
-.pc-per {
-  font-family: var(--font-body);
-  font-size: 11px;
-  color: var(--graphite);
-  letter-spacing: 0.04em;
-  margin-left: 3px;
+/* Hero content block — bottom-left anchored, AI-SaaS tighter */
+.hp-hero-content {
+  position: absolute;
+  bottom: clamp(48px, 6vw, 72px);
+  left: clamp(24px, 4vw, 56px);
+  right: clamp(24px, 4vw, 56px);
+  z-index: 1;
+  max-width: 760px;
 }
 
-.pc-desc {
+/* Hero eyebrow — refined */
+.hp-hero-eyebrow {
+  font-family: var(--font-mono, var(--font-body));
   font-size: 12px;
-  color: var(--graphite);
-  line-height: 1.6;
-  margin-bottom: var(--space-4);
-  padding-bottom: var(--space-4);
-  border-bottom: 1px solid var(--line);
-  -webkit-font-smoothing: antialiased;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.45);
+  margin: 0 0 16px;
 }
 
-.pc-feats {
-  list-style: none;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-1);
-  margin-bottom: var(--space-5);
+/* Magvix Hero — v12 spec: clamp(64px, 9vw, 200px), lh 0.85, ls -0.02em */
+.hp-hero-title {
+  font-family: var(--font-hero);
+  font-weight: normal;
+  font-size: clamp(64px, 9vw, 200px);
+  letter-spacing: -0.02em;
+  line-height: 0.85;
+  color: var(--snow);
+  margin: 0 0 24px;
 }
 
-.pc-feats li {
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
-  font-size: 12px;
-  color: var(--dark);
-  -webkit-font-smoothing: antialiased;
+/* Subtitle wrapper */
+.hp-hero-sub-wrap {
+  display: block;
+  margin-bottom: 32px;
 }
 
-.pc-feats li::before {
-  content: "";
-  width: 3px;
-  height: 3px;
-  background: var(--primary);
-  flex-shrink: 0;
-}
-
-.pc-btn {
-  width: 100%;
-}
-
-/* ============================================================
-   PULL QUOTE — editorial, Apple spring reveal
-   ============================================================ */
-.pull-quote {
-  max-width: 680px;
-  border-left: 2px solid var(--primary);
-  padding-left: var(--space-6);
-}
-
-.pull-quote p {
-  font-family: var(--font-display);
-  font-size: clamp(20px, 2.5vw, 36px);
-  font-weight: 300;
-  letter-spacing: -0.03em;
-  line-height: 1.2;
+/* Hero subtitle — v12 spec: 20px, lh 1.40, ls -0.1em */
+.hp-hero-sub {
+  font-family: var(--font-mono, var(--font-body));
+  font-size: 20px;
+  line-height: 1.40;
+  letter-spacing: -0.1em;
   color: rgba(255, 255, 255, 0.65);
-  margin-bottom: var(--space-3);
+  margin: 0;
+  max-width: 52ch;
 }
 
-.pull-quote footer {
+/* Hero CTA row */
+.hp-hero-ctas {
   display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
   align-items: center;
-  gap: var(--space-2);
 }
 
-.pull-quote-n {
-  font-family: var(--font-display);
-  font-size: 13px;
-  font-weight: 900;
-  color: rgba(255, 255, 255, 0.55);
+/* Ghost button on dark bg — snow border + snow text override */
+.hp-hero-btn-ghost {
+  color: var(--snow) !important;
+  border-color: rgba(255, 255, 255, 0.40) !important;
 }
-
-.pull-quote-r {
-  font-family: var(--font-body);
-  font-size: 11px;
-  color: rgba(255, 255, 255, 0.3);
-  letter-spacing: 0.02em;
+.hp-hero-btn-ghost:hover {
+  background: rgba(255, 255, 255, 0.06) !important;
 }
 
 /* ============================================================
-   FAQ — hover accent
+   PANEL 2 — TWO-PATHWAY ADVENTURE ROUTER
+   Surface-2 — clean neutral after dark hero.
+   .candy-panel provides r-3xl (28px) + padding 96px.
    ============================================================ */
-.faq-grid {
+.hp-adventure {
+  background: var(--surface-2);
+  border: 1px solid var(--hairline);
+}
+
+.hp-adventure-eyebrow {
+  color: var(--ink-4);
+  margin-bottom: 48px;
+}
+
+/* 6+6 split grid — STRUCTURED vocabulary allows 6+6 */
+.hp-adventure-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: var(--space-5) var(--space-10);
-  border-top: 1px solid var(--line);
-  padding-top: var(--space-6);
+  gap: 24px;
+  align-items: stretch;
 }
 
-.faq-q {
+/* Base tile — compact: enough to breathe, not enough to overwhelm */
+.hp-adventure-tile {
+  border-radius: 8px;
+  padding: 48px 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  text-decoration: none;
+  min-height: 280px;
+}
+
+/* Ink tile — merchants */
+.hp-adventure-tile--ink {
+  background: var(--ink);
+  color: var(--snow);
+}
+
+/* Warm tile — creators: snow with bold ink border (editorial) */
+.hp-adventure-tile--warm {
+  background: var(--snow);
+  border: 2px solid var(--ink);
+  color: var(--ink);
+}
+
+/* Tile H2 — 32px compact (tiles are shorter now) */
+.hp-tile-h2-snow {
   font-family: var(--font-display);
-  font-size: 14px;
-  font-weight: 900;
+  font-weight: 800;
+  font-size: 32px;
   letter-spacing: -0.02em;
-  color: var(--dark);
-  margin-bottom: 2px;
-  line-height: 1.3;
-  transition: color 400ms cubic-bezier(0.32, 0.72, 0, 1);
+  line-height: 1.05;
+  color: var(--snow);
+  margin: 0 0 16px;
 }
 
-.faq:hover .faq-q {
-  color: var(--primary);
+.hp-tile-h2-ink {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 32px;
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+  color: var(--ink);
+  margin: 0 0 16px;
 }
 
-.faq-a {
-  font-size: 13px;
-  color: var(--graphite);
-  line-height: 1.6;
-  -webkit-font-smoothing: antialiased;
+/* Tile eyebrows */
+.hp-tile-eyebrow-snow {
+  font-family: var(--font-mono, var(--font-body));
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.45);
+  margin: 0 0 16px;
+}
+
+.hp-tile-eyebrow-ink {
+  font-family: var(--font-mono, var(--font-body));
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+  margin: 0 0 16px;
+}
+
+/* Body on tiles — v12 spec: 20px, lh 1.40, ls -0.1em */
+.hp-tile-body-snow {
+  font-family: var(--font-mono, var(--font-body));
+  font-size: 20px;
+  color: rgba(255, 255, 255, 0.60);
+  line-height: 1.40;
+  letter-spacing: -0.1em;
+  max-width: 28ch;
+  margin: 0;
+}
+
+.hp-tile-body-ink {
+  font-family: var(--font-mono, var(--font-body));
+  font-size: 20px;
+  color: var(--ink-3);
+  line-height: 1.40;
+  letter-spacing: -0.1em;
+  max-width: 28ch;
+  margin: 0;
+}
+
+/* Tile CTAs — link labels at bottom of tile */
+.hp-tile-cta-snow {
+  font-family: var(--font-mono, var(--font-body));
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.45);
+  margin-top: 24px;
+  display: block;
+}
+
+.hp-tile-cta-ink {
+  font-family: var(--font-mono, var(--font-body));
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+  margin-top: 24px;
+  display: block;
 }
 
 /* ============================================================
-   CTA
+   PANEL 3 — PROOF NUMBERS
+   Char dark — maximum editorial contrast after the light pathway.
+   .candy-panel provides r-3xl (28px) + padding 96px.
    ============================================================ */
-.cta {
-  padding: 200px 0;
-  background:
-    radial-gradient(
-      ellipse 50% 40% at 70% 55%,
-      rgba(193, 18, 31, 0.08) 0%,
-      transparent 65%
-    ),
-    radial-gradient(
-      ellipse 40% 35% at 25% 35%,
-      rgba(102, 155, 188, 0.06) 0%,
-      transparent 60%
-    ),
-    var(--dark);
-  text-align: left;
+.hp-proof {
+  background: var(--char);
+  border: none;
   position: relative;
 }
 
-.cta-inner {
-  max-width: 1080px;
+/* Section eyebrow — dark panel inherits snow via .hp-proof override */
+.hp-section-eyebrow {
+  color: var(--ink-4);
+  margin-bottom: 16px;
+}
+.hp-proof .hp-section-eyebrow {
+  color: rgba(255, 255, 255, 0.36);
 }
 
-.cta-label {
-  display: inline-flex;
-  align-items: center;
-  gap: 14px;
-  font-family: var(--font-body);
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: rgba(245, 242, 236, 0.45);
-  margin-bottom: var(--space-5);
+/* 8+4 asymmetric grid */
+.hp-proof-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 48px;
+  align-items: flex-start;
+  margin-bottom: 0;
 }
 
-.cta-h {
+/* Left 8-col: giant KPI + ghost behind */
+.hp-proof-left {
+  position: relative;
+}
+
+/* Proof ghost — hidden */
+.hp-proof-ghost {
+  display: none;
+}
+
+/* KPI numeral — compressed, anchored */
+.hp-kpi-num {
   font-family: var(--font-display);
-  font-size: clamp(36px, 5.5vw, 88px);
-  font-weight: 300;
+  font-weight: 700;
+  font-size: clamp(56px, 9vw, 112px);
   letter-spacing: -0.04em;
-  line-height: 0.92;
-  color: rgba(255, 255, 255, 0.6);
-  margin-bottom: var(--space-5);
-  max-width: 700px;
+  line-height: 0.9;
+  color: var(--snow);
+  margin: 0 0 16px;
+  position: relative;
+  z-index: 1;
 }
 
-.cta-h-thin {
-  font-weight: 100;
-  color: rgba(255, 255, 255, 0.18);
+/* KPI eyebrow label */
+.hp-kpi-label {
+  font-family: var(--font-mono, var(--font-body));
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.40);
+  margin: 0;
+  position: relative;
+  z-index: 1;
 }
 
-.cta-body {
-  font-size: 13px;
-  line-height: 1.6;
-  color: rgba(245, 242, 236, 0.45);
-  margin-bottom: var(--space-6);
-  max-width: 400px;
+/* Right 4-col: proof heading + secondary stats */
+.hp-proof-right {
+  border-left: 1px solid rgba(255, 255, 255, 0.14);
+  padding-left: 56px;
 }
 
-.cta-btns {
+/* H2 on dark proof panel — snow */
+.hp-proof-heading {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 32px;
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+  color: var(--snow);
+  margin: 0 0 32px;
+}
+
+/* Secondary stats stack */
+.hp-proof-stats {
   display: flex;
-  gap: var(--space-3);
-  justify-content: flex-start;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.hp-proof-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* Secondary stat numeral — snow on dark */
+.hp-proof-stat-num {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(40px, 5vw, 72px);
+  letter-spacing: -0.02em;
+  line-height: 1.0;
+  color: var(--snow);
+}
+
+.hp-proof-stat-label {
+  color: rgba(255, 255, 255, 0.40);
+  margin: 0;
+}
+
+/* ============================================================
+   PANEL 4 — HOW IT WORKS
+   Surface-2 background — cool alternative to warm candy panels.
+   Numbered 3-column editorial rows: number / H3 title / body.
+   ============================================================ */
+.hp-how {
+  background: var(--surface-2);
+  border-radius: var(--r-sm);
+  padding: clamp(56px, 8vw, 112px) clamp(32px, 5vw, 80px);
+}
+
+/* H2 — STRICT: 40px Darky 800 lh 1.05 */
+.hp-how-heading {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 40px;
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+  color: var(--ink);
+  margin: 0 0 96px;
+}
+
+.hp-how-rows {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Each row: 3 columns — number / title / body */
+.hp-how-row {
+  display: grid;
+  grid-template-columns: 80px 1fr 2fr;
+  gap: 40px;
+  align-items: baseline;
+  padding-bottom: 64px;
+}
+
+.hp-how-row--border {
+  border-bottom: 1px solid var(--mist);
+  margin-bottom: 64px;
+}
+
+/* Row number — mono eyebrow style */
+.hp-how-num {
+  font-family: var(--font-mono, var(--font-body));
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: var(--ink-4);
+}
+
+/* H3 — STRICT: 28px Darky 700 lh 1.15 */
+.hp-how-step-title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 28px;
+  letter-spacing: -0.015em;
+  line-height: 1.15;
+  color: var(--ink);
+  margin: 0;
+}
+
+/* Body — v12 spec: 20px, lh 1.40, ls -0.1em */
+.hp-how-step-body {
+  font-family: var(--font-mono, var(--font-body));
+  font-size: 20px;
+  color: var(--ink-3);
+  line-height: 1.40;
+  letter-spacing: -0.1em;
+  margin: 0;
+}
+
+/* CTA row — 16px gap, marginTop 64px (§ 6 body→CTA = 32px, section→CTA = 64px) */
+.hp-how-ctas {
+  margin-top: 64px;
+  display: flex;
+  gap: 16px;
   flex-wrap: wrap;
 }
 
 /* ============================================================
-   RESPONSIVE
+   TICKET PANEL — GA Orange
+   Grommets + perforation from .ticket-panel class in globals.
+   Headline: Magvix Italic clamp(40px,5vw,56px) centered.
    ============================================================ */
-@media (max-width: 1024px) {
-  .s {
-    padding: 100px 0;
-  }
-  .s--dark {
-    padding: 120px 0;
-  }
-  .s--compact {
-    padding: 80px 0;
-  }
+.hp-ticket {
+  /* .ticket-panel from globals provides: bg, radius, padding, perforation */
+  position: relative;
+}
 
-  .merch-grid,
-  .tier-row,
-  .faq-grid {
+/* Grommet circles — 16px diameter, 24px inset, border-radius 50% (--r-full)
+   Design.md §Ticket Panel: solid ink fill (NOT outline circles) */
+.hp-grommet {
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  border-radius: var(--r-full);
+  background: var(--ink);
+}
+.hp-grommet--tl { top: 24px;    left: 24px; }
+.hp-grommet--tr { top: 24px;    right: 24px; }
+.hp-grommet--bl { bottom: 24px; left: 24px; }
+.hp-grommet--br { bottom: 24px; right: 24px; }
+
+/* Ticket inner content — centered */
+.hp-ticket-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  text-align: center;
+  padding: 16px 0;
+  position: relative;
+  z-index: 1;
+}
+
+/* Ticket H2 — Magvix Italic, centered (allowed inside Ticket Panel §5 note) */
+.hp-ticket-title {
+  font-family: var(--font-hero);
+  font-style: italic;
+  font-weight: normal;
+  font-size: clamp(40px, 5vw, 56px);
+  letter-spacing: -0.025em;
+  line-height: 1.0;
+  color: var(--ink);
+  margin: 0;
+}
+
+/* Ticket body — v12 spec: 20px, lh 1.40, ls -0.1em */
+.hp-ticket-body {
+  font-family: var(--font-mono, var(--font-body));
+  font-size: 20px;
+  line-height: 1.40;
+  letter-spacing: -0.1em;
+  color: var(--ink-3);
+  max-width: 480px;
+  margin: 0;
+}
+
+/* ============================================================
+   NEWSLETTER FORM
+   ============================================================ */
+.hp-newsletter-form {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  flex-wrap: wrap;
+  width: 100%;
+  max-width: 480px;
+}
+
+.hp-newsletter-input {
+  flex: 1;
+  min-width: 200px;
+  height: 48px;
+  padding: 0 16px;
+  font-family: var(--font-mono, var(--font-body));
+  font-size: 16px;
+  color: var(--ink);
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid var(--hairline-2);
+  border-radius: var(--r-sm);
+  outline: none;
+  transition: border-color 180ms ease;
+}
+.hp-newsletter-input:focus {
+  border-color: var(--ink);
+  box-shadow: var(--shadow-focus);
+}
+
+/* Submit confirmation */
+.hp-submit-confirm {
+  font-family: var(--font-mono, var(--font-body));
+  font-size: 18px;
+  color: var(--ink);
+  text-align: center;
+}
+
+/* ============================================================
+   RESPONSIVE — Mobile + iPad naturally adaptive (§ 14 STRICT)
+   Same composition, same hierarchy; only spacing + column count.
+   Desktop 12-col / iPad 8-col / Mobile 4-col.
+   Section V padding: 96px desktop → 80px iPad → 56px mobile.
+   ============================================================ */
+
+/* ── iPad (≤1023px) ─────────────────────────────────────────── */
+@media (max-width: 1023px) {
+  .hp-proof-grid {
     grid-template-columns: 1fr;
+    gap: 48px;
   }
-
-  .price-grid {
-    grid-template-columns: 1fr;
-    gap: var(--space-5);
-  }
-
-  .pc {
+  .hp-proof-right {
     border-left: none;
-    padding: var(--space-5) 0;
-    border-bottom: 1px solid var(--line);
-  }
-  .pc:first-child {
     padding-left: 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.14);
+    padding-top: 48px;
   }
-  .pc:last-child {
-    padding-right: 0;
-    border-bottom: none;
+  .hp-how-row {
+    grid-template-columns: 56px 1fr;
+    grid-template-rows: auto auto;
   }
-
-  .hero-bottom {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: var(--space-4);
-  }
-  .hero-sub {
-    text-align: left;
-    max-width: 360px;
+  .hp-how-step-body {
+    grid-column: 2 / 3;
+    margin-top: 16px;
   }
 }
 
+/* ── Tablet (≤768px) ────────────────────────────────────────── */
 @media (max-width: 768px) {
-  .s {
-    padding: 72px 0;
+  .hp-adventure-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
   }
-  .s--dark {
-    padding: 80px 0;
+  .hp-adventure-tile {
+    min-height: 320px;
+    padding: 48px 40px;
   }
-  .s--compact {
-    padding: 56px 0;
-  }
-
-  .hero {
-    min-height: 92vh;
-  }
-  .hero-l1 {
-    font-size: clamp(44px, 11vw, 100px);
-  }
-  .hero-l2 {
-    font-size: clamp(36px, 9vw, 84px);
-  }
-
-  .hero-ctas {
+  .hp-hero-ctas {
     flex-direction: column;
     align-items: stretch;
-    gap: 8px;
   }
+  .hp-how-row {
+    grid-template-columns: 1fr;
+  }
+  .hp-how-num {
+    display: none;
+  }
+  .hp-how-step-body {
+    grid-column: auto;
+    margin-top: 8px;
+  }
+}
 
-  .btn-fill,
-  .btn-outline,
-  .btn-outline-light {
+/* ── Mobile (≤640px) ────────────────────────────────────────── */
+@media (max-width: 640px) {
+  .hp-panels {
+    gap: 8px;
+    padding: 0 8px 8px;
+  }
+  .hp-hero-watermark {
+    /* Hide oversized ghost on mobile — prevent bleed */
+    display: none;
+  }
+  .hp-adventure-tile {
+    padding: 40px 32px;
+  }
+  .hp-hero-sub-wrap {
+    padding: 16px;
+  }
+  /* Section-level eyebrow: base stays 12px (at floor) */
+  .hp-newsletter-form {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .hp-newsletter-input {
+    min-width: unset;
+    width: 100%;
+  }
+  .hp-how-ctas {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .hp-how-ctas .btn-primary,
+  .hp-how-ctas .btn-ghost {
     justify-content: center;
     text-align: center;
   }
+}
 
-  .hero-stats {
-    flex-direction: column;
-    gap: var(--space-3);
+/* ── Small mobile (≤480px) ────────────────────────────────────── */
+@media (max-width: 480px) {
+  .hp-hero-stat-tile {
+    top: 16px;
+    right: 16px;
   }
-  .h-stat + .h-stat {
-    padding-left: 0;
-    border-left: none;
-    border-top: 1px solid rgba(245, 242, 236, 0.06);
-    padding-top: var(--space-3);
+  .hp-tile-h2-snow,
+  .hp-tile-h2-ink {
+    font-size: 32px;
   }
-
-  .d-head {
-    font-size: clamp(28px, 7vw, 48px);
-  }
-  .d-head--hero {
-    font-size: clamp(32px, 9vw, 72px);
-  }
-
-  .price-top {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: var(--space-3);
-  }
-
-  .cta {
-    padding: 88px 0;
-  }
-  .cta-btns {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .step {
-    grid-template-columns: 44px 1fr;
-  }
-  .step-n {
+  .hp-proof-heading {
     font-size: 32px;
   }
 }
 
-@media (max-width: 640px) {
-  .s {
-    padding: 56px 0;
-  }
-  .s--dark {
-    padding: 64px 0;
-  }
-  .s--compact {
-    padding: 44px 0;
-  }
-
-  .hero-l1 {
-    font-size: clamp(36px, 10vw, 72px);
-  }
-  .hero-l2 {
-    font-size: clamp(30px, 8vw, 60px);
-  }
-
-  .tier {
-    padding: var(--space-4) var(--space-3);
-  }
-  .quote p {
-    font-size: 15px;
-  }
-  .pull-quote p {
-    font-size: clamp(18px, 5vw, 28px);
-  }
-  .cta {
-    padding: 64px 0;
-  }
-  .cta-h {
-    font-size: clamp(28px, 7vw, 56px);
-  }
-}
-
-@media (max-width: 400px) {
-  .hero-l1 {
-    font-size: clamp(28px, 9vw, 52px);
-  }
-  .hero-l2 {
-    font-size: clamp(24px, 7.5vw, 44px);
-  }
-}
-
+/* ── Reduced motion ─────────────────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-  }
-}
-
-/* ============================================================
-   v8.2 PREMIUM EDITORIAL POLISH — Part A: Micro-typography
-   & rhythm refinements
-   ============================================================ */
-
-/* ── A1. Letter-spacing & line-height audit fixes ────────────
-   Hero headline: -0.06em was correct for 160px. Confirmed.
-   Split headline: -0.07em fine for display. Add breathing below. */
-
-/* Long body copy: bump line-height to 1.8 for legibility */
-.split-body,
-.how-step-body,
-.faq-a {
-  line-height: 1.82;
-}
-
-/* Hero sub: comfortably loose for onboarding copy */
-.hero-sub {
-  line-height: 1.75;
-  letter-spacing: 0.008em;
-}
-
-/* Section eyebrow labels: tighten slightly for crispness */
-.section-tag-label {
-  letter-spacing: 0.072em;
-}
-
-/* ── A2. Ghost text opacity standardisation ──────────────────
-   Light sections: 0.12 / Dark sections: 0.16 per spec */
-.section-ghost-num {
-  opacity: 0.12;
-}
-.section-warm .section-ghost-num {
-  opacity: 0.16;
-}
-/* How-step watermarks: same dark-section rule */
-.how-step-num {
-  opacity: 0.12;
-}
-
-/* ── A3. Section padding rhythm ──────────────────────────────
-   160px light / 180px dark / 120px compact / 200px CTA */
-.section                { padding-block: 160px; }
-.section-bright         { padding-block: 160px; }
-.section-warm           { padding-block: 180px; }
-.testimonials-section   { padding-block: 120px; }
-section#faq             { padding-block: 120px; }
-.cta-section            { padding-block: 200px; }
-
-/* Hero preserves its own min-height logic */
-.hero {
-  padding-block: unset;
-  padding-top: 100px;
-  padding-bottom: var(--space-8);
-}
-
-/* ── A4. Hero → first section transition softener ────────────
-   Increase hero's bottom gradient height for smoother dark→light */
-.hero::before {
-  height: 160px;
-  background: linear-gradient(to bottom, transparent 0%, rgba(0, 48, 73, 0.45) 100%);
-}
-
-/* ── A5. Button consistency ──────────────────────────────────
-   Apple spring cubic-bezier on all btn variants */
-.btn-primary,
-.btn-ghost,
-.btn-secondary,
-.btn-cta-merchant,
-.btn-cta-creator,
-.btn-outline,
-.btn-outline-light {
-  transition:
-    transform 360ms cubic-bezier(0.32, 0.72, 0, 1),
-    background 200ms ease,
-    color 200ms ease,
-    border-color 200ms ease,
-    box-shadow 200ms ease;
-}
-
-/* .btn-outline on light bg */
-.btn-outline {
-  background: transparent;
-  color: var(--dark);
-  border: 1.5px solid rgba(0, 48, 73, 0.28);
-  box-shadow: var(--shadow-1);
-}
-.btn-outline:hover {
-  border-color: var(--dark);
-  box-shadow: var(--shadow-2);
-}
-
-/* .btn-outline-light on dark bg */
-.btn-outline-light {
-  background: transparent;
-  color: rgba(255, 255, 255, 0.72);
-  border: 1.5px solid rgba(255, 255, 255, 0.18);
-  box-shadow: var(--shadow-1);
-}
-.btn-outline-light:hover {
-  color: #fff;
-  border-color: rgba(255, 255, 255, 0.5);
-  box-shadow: var(--shadow-2);
-}
-
-/* Active press: Apple spring snap */
-.btn:active {
-  transform: scale(0.965) translateY(1px);
-  transition-duration: 80ms;
-}
-
-/* ── A6. Micro-interactions: stat number colour sweep ─────────
-   Stats scroll into view grey→champagne via CSS animation.
-   Triggered by .visible class added by IntersectionObserver. */
-@keyframes statColorIn {
-  from { color: rgba(245, 242, 236, 0.25); }
-  to   { color: rgba(245, 242, 236, 0.9); }
-}
-
-.stat-item.visible .stat-num {
-  animation: statColorIn 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
-}
-
-/* ── A7. Divider / section-rule reveal animation ─────────────
-   .section-tag-line grows left→right on parent .reveal.visible */
-.section-tag-line {
-  transform: scaleX(0);
-  transform-origin: left center;
-  transition: transform 0.6s cubic-bezier(0.32, 0.72, 0, 1) 0.15s;
-}
-.reveal.visible .section-tag-line {
-  transform: scaleX(1);
-}
-
-/* ── A8. Pull-quote / testimonial fade-in ────────────────────
-   Testimonials already have transform in reveal; add opacity ramp */
-.testimonial-card {
-  transition:
-    opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
-    transform 0.7s cubic-bezier(0.22, 1, 0.36, 1),
-    background 260ms ease;
-}
-
-/* ── A9. Copy sharpening: creator testimonial voice ──────────
-   Pull-quote gets slightly larger italic weight for impact */
-.creator-testimonial p {
-  font-size: 15px;
-  font-weight: 400;
-  line-height: 1.72;
-  color: rgba(245, 242, 236, 0.82);
-}
-
-/* ── A10. Hero stat labels — consistent uppercase tracking ───  */
-.stat-label {
-  letter-spacing: 0.055em;
-  line-height: 1.45;
-}
-
-/* ── A11. Section tag number — subtle breathing ──────────────  */
-.section-tag-num {
-  letter-spacing: 0.04em;
-}
-
-/* ============================================================
-   v8.2 MOBILE RESPONSIVE — Part B: breakpoint fixes
-   ============================================================ */
-
-/* ── B1. Spotlight / cursor: disable on touch devices ────────
-   Hero spotlight + magnetic buttons are pointer-only effects */
-@media (hover: none) {
-  .hero-spotlight { display: none !important; }
-}
-
-/* ── B2. Hero CTA stack: ensure vertical below 640px ─────────
-   Already handled at 768px; tighten button width at 640px */
-@media (max-width: 640px) {
-  .hero-ctas {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 10px;
-    width: 100%;
-  }
-  .hero-ctas .btn {
-    width: 100%;
-    justify-content: center;
-    text-align: center;
-  }
-}
-
-/* ── B3. Section padding: 80px at 640px, 60px at 400px ──────  */
-@media (max-width: 640px) {
-  .section,
-  .section-bright,
-  .section-warm,
-  .testimonials-section,
-  section#faq {
-    padding-block: 80px;
-  }
-  .cta-section  { padding-block: 80px; }
-}
-@media (max-width: 400px) {
-  .section,
-  .section-bright,
-  .section-warm,
-  .testimonials-section,
-  section#faq {
-    padding-block: 60px;
-  }
-  .cta-section  { padding-block: 60px; }
-}
-
-/* ── B4. Split layout: single column at 768px ────────────────
-   Already set; ensure visual comes second (below text) */
-@media (max-width: 768px) {
-  .split,
-  .split-reverse {
-    grid-template-columns: 1fr;
-    direction: ltr;
-    gap: var(--space-6);
-  }
-  /* Visual block after text column */
-  .split-visual {
-    order: 2;
-    aspect-ratio: auto;
-    height: 200px;
-    max-height: 220px;
-  }
-  /* Merchant attribution visual: cap height */
-  .visual-merchant {
-    max-height: 260px;
-    overflow: hidden;
-  }
-}
-
-/* ── B5. Hero responsive: headline folding ───────────────────  */
-@media (max-width: 1024px) {
-  .hero-headline {
-    font-size: clamp(52px, 11vw, 110px);
-    line-height: 0.9;
-  }
-  .split-headline {
-    font-size: clamp(40px, 9vw, 88px);
-  }
-}
-
-/* ── B6. Navigation: mobile hamburger ─────────────────────────
-   If a mobile nav toggle exists (.nav-toggle), show it.
-   Landing page relies on the global nav component; add
-   fallback visibility so the toggle is never hidden at mobile. */
-@media (max-width: 768px) {
-  .nav-toggle { display: flex !important; }
-  .nav-links  { display: none; }
-  .nav-links.open { display: flex; flex-direction: column; }
-}
-
-/* ── B7. How-grid: single column timeline on tablet+ ─────────
-   Already set at 1024px. At 640px tighten padding. */
-@media (max-width: 640px) {
-  .how-grid {
-    grid-template-columns: 1fr;
-    gap: 1px;
-  }
-  .how-step {
-    padding: var(--space-6) var(--space-4);
-  }
-  /* Arrow connectors: not applicable in single-col */
-  .how-step:not(:last-child)::after {
+  .hp-hero-grain,
+  .hp-hero-watermark,
+  .hp-proof-ghost {
     display: none;
   }
 }
 
-/* ── B8. Tier showcase: 2-col at 640px, 1-col at 400px ──────  */
-@media (max-width: 640px) {
-  .tier-showcase {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    overflow-x: visible;
-    gap: 8px;
-  }
-  .tier-showcase-card {
-    min-width: unset;
-    min-height: 180px;
-  }
-}
-@media (max-width: 400px) {
-  .tier-showcase {
-    grid-template-columns: 1fr;
-  }
-}
-
-/* ── B9. Dashboard preview / merchant attribution: mobile ─────
-   MerchantAttributionVisual shown inside .visual-merchant,
-   hidden at 860px hero collapse. In merchants section ensure
-   it adapts cleanly. */
-@media (max-width: 768px) {
-  .merch-attr-visual {
-    max-height: 280px;
-    overflow: hidden;
-  }
-  /* Truncate row table to 3 rows on small screens */
-  .mav-rows .mav-row:nth-child(n+4) {
-    display: none;
-  }
-}
-
-/* ── B10. Pricing grid: single col at 1024px (already done).
-   At 640px: remove featured card scale lift (confusing in stack) */
-@media (max-width: 640px) {
-  .pricing-card-featured,
-  .pricing-card-featured.visible {
-    transform: translateY(0) !important;
-  }
-  .pricing-card {
-    padding: var(--space-5) var(--space-4);
-  }
-  .pricing-header {
-    flex-direction: column;
-    gap: var(--space-3);
-  }
-}
-
-/* ── B11. CTA section: left-align preserved on mobile ────────
-   Headings stay left-aligned; buttons go full-width */
-@media (max-width: 640px) {
-  .cta-inner,
-  .cta-panels {
-    grid-template-columns: 1fr;
-  }
-  .cta-panel {
-    padding: var(--space-6) var(--space-4);
-    text-align: left;
-  }
-  .cta-panel .btn {
-    width: 100%;
-    justify-content: center;
-  }
-  .cta-panel-creator {
-    border-left: none;
-    border-top: 1px solid rgba(255, 255, 255, 0.08);
-  }
-  .cta-headline {
-    font-size: clamp(26px, 9vw, 44px);
-  }
-}
-
-/* ── B12. Hero stats: left-align row layout on small mobile ──
-   At 400px collapse number+label to stacked, no row layout */
-@media (max-width: 400px) {
-  .hero-stats {
-    flex-direction: column;
-    gap: var(--space-3);
-  }
-  .stat-item {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 2px;
-    border-right: none;
-    border-bottom: 1px solid rgba(245, 242, 236, 0.1);
-    padding: 0 0 var(--space-3);
-  }
-  .stat-item:last-child {
-    border-bottom: none;
-    padding-bottom: 0;
-  }
-}
-
-/* ── B13. Testimonials: single column at 640px ───────────────
-   Already set at 768px, keep. Add padding tightening. */
-@media (max-width: 640px) {
-  .testimonials-grid {
-    grid-template-columns: 1fr;
-  }
-  .testimonial-card {
-    padding: var(--space-5) var(--space-4);
-  }
-}
-
-/* ── B14. FAQ grid: single column at 640px (already set).
-   Tighten item padding on 400px. */
-@media (max-width: 400px) {
-  .faq-item {
-    padding: var(--space-4) var(--space-3);
-  }
-}
-
-/* ── B15. Proof strip: vertical stack at 640px ───────────────  */
-@media (max-width: 640px) {
-  .proof-strip {
-    padding: var(--space-4) var(--space-3);
-  }
-  .proof-stats {
-    gap: var(--space-3);
-  }
-  .proof-stat-num {
-    font-size: 32px !important;
-  }
-}
-
-/* ── B16. Ticker: reduce padding on mobile ───────────────────  */
-@media (max-width: 640px) {
-  .ticker-item {
-    padding-inline: 12px;
-    font-size: 10px;
-  }
-}
-
-/* ── B17. Hero scroll hint: hide on very small screens ──────  */
-@media (max-width: 480px) {
-  .hero-scroll-hint { display: none; }
-}
-
-/* ── B18. Hero eyebrow: smaller letter-spacing on mobile ─────  */
-@media (max-width: 640px) {
-  .hero-eyebrow {
-    font-size: 10px;
-    letter-spacing: 0.06em;
-  }
-}
-
-/* ── B19. Prevent horizontal overflow on mobile ──────────────  */
-@media (max-width: 768px) {
-  .hero-inner,
-  .split,
-  .how-grid,
-  .pricing-grid {
-    min-width: 0;
-  }
-  /* Ghost section numbers: prevent bleed */
-  .section-ghost-num {
-    display: none;
-  }
-}
-
-/* ── B20. Attribution explainer: stack on mobile ─────────────  */
-@media (max-width: 640px) {
-  .attr-explainer {
-    padding: var(--space-4) var(--space-3);
-  }
-  .attr-steps {
-    gap: 12px;
-  }
-  .attr-step {
-    min-width: unset;
-  }
-}

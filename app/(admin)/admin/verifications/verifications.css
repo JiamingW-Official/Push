@@ -20,8 +20,8 @@
   position: sticky;
   top: 0;
   z-index: 100;
-  background: var(--dark);
-  color: var(--surface-bright);
+  background: var(--ink);
+  color: var(--surface-3);
   display: flex;
   align-items: center;
   gap: var(--space-4);
@@ -35,7 +35,7 @@
   font-weight: 900;
   font-size: 20px;
   letter-spacing: -0.04em;
-  color: var(--surface-bright);
+  color: var(--surface-3);
 }
 
 .vq-nav-sep {
@@ -63,7 +63,7 @@
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  background: var(--primary);
+  background: var(--brand-red);
   color: #fff;
   padding: 3px 8px;
 }
@@ -72,10 +72,10 @@
    Hero Section
    ------------------------------------------------------------ */
 .vq-hero {
-  background: var(--dark);
-  color: var(--surface-bright);
+  background: var(--ink);
+  color: var(--surface-3);
   padding: var(--space-8) var(--space-5) var(--space-7);
-  border-bottom: 3px solid var(--primary);
+  border-bottom: 3px solid var(--brand-red);
 }
 
 .vq-hero-inner {
@@ -93,7 +93,7 @@
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--primary);
+  color: var(--brand-red);
   margin-bottom: var(--space-2);
 }
 
@@ -103,7 +103,7 @@
   font-size: clamp(48px, 6vw, 80px);
   letter-spacing: -0.05em;
   line-height: 0.95;
-  color: var(--surface-bright);
+  color: var(--surface-3);
   margin-bottom: var(--space-3);
 }
 
@@ -130,11 +130,11 @@
   font-size: clamp(40px, 5vw, 64px);
   letter-spacing: -0.04em;
   line-height: 1;
-  color: var(--surface-bright);
+  color: var(--surface-3);
 }
 
 .vq-hero-stat-num.urgent {
-  color: var(--primary);
+  color: var(--brand-red);
 }
 
 .vq-hero-stat-label {
@@ -151,7 +151,7 @@
    Filter Bar
    ------------------------------------------------------------ */
 .vq-filters {
-  background: var(--surface-elevated);
+  background: var(--surface-2);
   border-bottom: 1px solid var(--line);
   padding: var(--space-3) var(--space-5);
   position: sticky;
@@ -174,7 +174,7 @@
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--text-muted);
+  color: var(--ink-4);
   flex-shrink: 0;
 }
 
@@ -200,19 +200,19 @@
 }
 
 .vq-chip:hover {
-  border-color: var(--dark);
-  color: var(--dark);
+  border-color: var(--ink);
+  color: var(--ink);
 }
 
 .vq-chip.active {
-  background: var(--dark);
-  border-color: var(--dark);
-  color: var(--surface-bright);
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--surface-3);
 }
 
 .vq-chip.active.risk {
-  background: var(--primary);
-  border-color: var(--primary);
+  background: var(--brand-red);
+  border-color: var(--brand-red);
 }
 
 .vq-filter-sep {
@@ -225,7 +225,7 @@
 .vq-count {
   font-family: var(--font-body);
   font-size: var(--text-caption);
-  color: var(--text-muted);
+  color: var(--ink-4);
   margin-left: auto;
 }
 
@@ -241,7 +241,7 @@
 }
 
 .vq-queue {
-  background: var(--surface-elevated);
+  background: var(--surface-2);
   border: 1px solid var(--line);
 }
 
@@ -260,7 +260,7 @@
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--text-muted);
+  color: var(--ink-4);
 }
 
 .vq-col-label.right {
@@ -288,7 +288,7 @@
 }
 
 .vq-row.sla-breach {
-  border-left: 3px solid var(--primary);
+  border-left: 3px solid var(--brand-red);
 }
 
 .vq-row.high-risk {
@@ -323,7 +323,7 @@
   font-family: var(--font-body);
   font-size: var(--text-small);
   font-weight: 600;
-  color: var(--dark);
+  color: var(--ink);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -332,12 +332,12 @@
 .vq-applicant-time {
   font-family: var(--font-body);
   font-size: var(--text-caption);
-  color: var(--text-muted);
+  color: var(--ink-4);
   margin-top: 2px;
 }
 
 .vq-applicant-time.overdue {
-  color: var(--primary);
+  color: var(--brand-red);
   font-weight: 700;
 }
 
@@ -366,13 +366,13 @@
 
 .vq-check.complete .vq-check-dot { background: var(--success); }
 .vq-check.pending .vq-check-dot  { background: var(--champagne); }
-.vq-check.failed .vq-check-dot   { background: var(--primary); }
+.vq-check.failed .vq-check-dot   { background: var(--brand-red); }
 .vq-check.not_submitted .vq-check-dot { background: var(--line-strong); }
 
 .vq-check.complete { color: var(--success); }
 .vq-check.pending  { color: var(--champagne); }
-.vq-check.failed   { color: var(--primary); }
-.vq-check.not_submitted { color: var(--text-muted); }
+.vq-check.failed   { color: var(--brand-red); }
+.vq-check.not_submitted { color: var(--ink-4); }
 
 /* Risk flags cell */
 .vq-flags {
@@ -389,7 +389,7 @@
   text-transform: uppercase;
   padding: 2px 6px;
   background: rgba(193, 18, 31, 0.08);
-  color: var(--primary);
+  color: var(--brand-red);
   border: 1px solid rgba(193, 18, 31, 0.2);
   white-space: nowrap;
 }
@@ -397,18 +397,18 @@
 .vq-flag-none {
   font-family: var(--font-body);
   font-size: var(--text-caption);
-  color: var(--text-muted);
+  color: var(--ink-4);
 }
 
 /* SLA cell */
 .vq-sla {
   font-family: var(--font-body);
   font-size: var(--text-caption);
-  color: var(--text-muted);
+  color: var(--ink-4);
 }
 
 .vq-sla.overdue {
-  color: var(--primary);
+  color: var(--brand-red);
   font-weight: 700;
 }
 
@@ -434,9 +434,9 @@
 }
 
 .vq-btn-approve {
-  background: var(--dark);
-  color: var(--surface-bright);
-  border-color: var(--dark);
+  background: var(--ink);
+  color: var(--surface-3);
+  border-color: var(--ink);
 }
 
 .vq-btn-approve:hover {
@@ -451,20 +451,20 @@
 }
 
 .vq-btn-more:hover {
-  border-color: var(--dark);
-  color: var(--dark);
+  border-color: var(--ink);
+  color: var(--ink);
 }
 
 .vq-btn-reject {
   background: transparent;
-  color: var(--primary);
+  color: var(--brand-red);
   border-color: rgba(193, 18, 31, 0.3);
 }
 
 .vq-btn-reject:hover {
-  background: var(--primary);
+  background: var(--brand-red);
   color: #fff;
-  border-color: var(--primary);
+  border-color: var(--brand-red);
 }
 
 /* Status badge in reviewed rows */
@@ -478,7 +478,7 @@
 }
 
 .vq-status-badge.approved { background: rgba(34, 197, 94, 0.12); color: var(--success-dark); }
-.vq-status-badge.rejected { background: rgba(193, 18, 31, 0.1); color: var(--primary); }
+.vq-status-badge.rejected { background: rgba(193, 18, 31, 0.1); color: var(--brand-red); }
 .vq-status-badge.more_info { background: rgba(201, 169, 110, 0.15); color: var(--warning); }
 
 /* Empty state */
@@ -491,14 +491,14 @@
   font-family: var(--font-display);
   font-weight: 700;
   font-size: var(--text-h3);
-  color: var(--dark);
+  color: var(--ink);
   margin-bottom: var(--space-2);
 }
 
 .vq-empty-body {
   font-family: var(--font-body);
   font-size: var(--text-body);
-  color: var(--text-muted);
+  color: var(--ink-4);
 }
 
 /* ------------------------------------------------------------
@@ -523,7 +523,7 @@
   right: 0;
   bottom: 0;
   width: min(680px, 100vw);
-  background: var(--surface-elevated);
+  background: var(--surface-2);
   z-index: 201;
   overflow-y: auto;
   display: flex;
@@ -540,13 +540,13 @@
 .vq-panel-header {
   position: sticky;
   top: 0;
-  background: var(--dark);
-  color: var(--surface-bright);
+  background: var(--ink);
+  color: var(--surface-3);
   padding: var(--space-3) var(--space-4);
   display: flex;
   align-items: center;
   gap: var(--space-3);
-  border-bottom: 2px solid var(--primary);
+  border-bottom: 2px solid var(--brand-red);
   z-index: 10;
 }
 
@@ -565,7 +565,7 @@
   align-items: center;
   justify-content: center;
   background: rgba(255, 255, 255, 0.08);
-  color: var(--surface-bright);
+  color: var(--surface-3);
   font-size: 18px;
   cursor: pointer;
   border: none;
@@ -625,7 +625,7 @@
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: var(--text-muted);
+  color: var(--ink-4);
   padding: var(--space-1) var(--space-2);
   border-bottom: 1px solid var(--line);
 }
@@ -639,8 +639,8 @@
     45deg,
     var(--surface),
     var(--surface) 8px,
-    var(--surface-bright) 8px,
-    var(--surface-bright) 16px
+    var(--surface-3) 8px,
+    var(--surface-3) 16px
   );
   filter: blur(2px);
   position: relative;
@@ -652,7 +652,7 @@
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: var(--text-muted);
+  color: var(--ink-4);
   filter: blur(0); /* unblur label on top of blurred bg */
   position: absolute;
   background: rgba(245, 242, 236, 0.85);
@@ -689,14 +689,14 @@
 .vq-social-handle {
   font-family: var(--font-body);
   font-size: var(--text-small);
-  color: var(--dark);
+  color: var(--ink);
   flex: 1;
 }
 
 .vq-social-meta {
   font-family: var(--font-body);
   font-size: var(--text-caption);
-  color: var(--text-muted);
+  color: var(--ink-4);
   display: flex;
   gap: var(--space-3);
   align-items: center;
@@ -718,7 +718,7 @@
 
 .vq-social-verified.no {
   background: rgba(193, 18, 31, 0.08);
-  color: var(--primary);
+  color: var(--brand-red);
 }
 
 /* Address */
@@ -748,7 +748,7 @@
 .vq-map-pin {
   width: 16px;
   height: 16px;
-  background: var(--primary);
+  background: var(--brand-red);
   border-radius: 50%; /* map pin exception */
   box-shadow: 0 0 0 4px rgba(193, 18, 31, 0.2);
 }
@@ -763,7 +763,7 @@
 .vq-address-text {
   font-family: var(--font-body);
   font-size: var(--text-small);
-  color: var(--dark);
+  color: var(--ink);
   font-weight: 500;
 }
 
@@ -772,7 +772,7 @@
   width: 100%;
   font-family: var(--font-body);
   font-size: var(--text-small);
-  color: var(--dark);
+  color: var(--ink);
   background: var(--surface);
   border: 1px solid var(--line);
   padding: var(--space-2) var(--space-3);
@@ -783,7 +783,7 @@
 }
 
 .vq-note-area:focus {
-  border-color: var(--dark);
+  border-color: var(--ink);
 }
 
 /* Decision history */
@@ -800,13 +800,13 @@
 }
 
 .vq-history-entry.approved { border-color: var(--success); }
-.vq-history-entry.rejected { border-color: var(--primary); }
+.vq-history-entry.rejected { border-color: var(--brand-red); }
 .vq-history-entry.more_info { border-color: var(--champagne); }
 
 .vq-history-meta {
   font-family: var(--font-body);
   font-size: var(--text-caption);
-  color: var(--text-muted);
+  color: var(--ink-4);
   display: flex;
   gap: var(--space-2);
   align-items: center;
@@ -822,14 +822,14 @@
 .vq-history-note {
   font-family: var(--font-body);
   font-size: var(--text-small);
-  color: var(--dark);
+  color: var(--ink);
   line-height: 1.5;
 }
 
 .vq-history-empty {
   font-family: var(--font-body);
   font-size: var(--text-small);
-  color: var(--text-muted);
+  color: var(--ink-4);
   font-style: italic;
 }
 
@@ -837,7 +837,7 @@
 .vq-panel-footer {
   position: sticky;
   bottom: 0;
-  background: var(--surface-elevated);
+  background: var(--surface-2);
   border-top: 1px solid var(--line);
   padding: var(--space-3) var(--space-4);
   display: flex;
@@ -875,7 +875,7 @@
   background: linear-gradient(
     90deg,
     var(--surface) 25%,
-    var(--surface-bright) 50%,
+    var(--surface-3) 50%,
     var(--surface) 75%
   );
   background-size: 200% 100%;

@@ -27,7 +27,7 @@ export function EmptyState({ title, subtitle, cta }: EmptyStateProps) {
           fontSize: "clamp(40px, 6vw, 80px)",
           lineHeight: 1.05,
           letterSpacing: "-0.04em",
-          color: "var(--dark)",
+          color: "var(--ink)",
           margin: 0,
         }}
       >
@@ -39,7 +39,7 @@ export function EmptyState({ title, subtitle, cta }: EmptyStateProps) {
           style={{
             fontFamily: "var(--font-body)",
             fontSize: "var(--text-body)",
-            color: "var(--text-muted)",
+            color: "var(--ink-4)",
             margin: 0,
             maxWidth: 480,
             lineHeight: 1.6,

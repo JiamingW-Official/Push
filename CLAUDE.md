@@ -24,21 +24,55 @@ Domain knowledge lives in `.claude/skills/`. Load only what a task needs. Start 
 
 ---
 
-## Design system (MANDATORY · v7 2026-04-24)
+## Design system (MANDATORY · v11 2026-04-25 late evening — Liquid-Glass Expansion + Image-First + 3-Tier Rule Classification)
 
-Before touching any UI code, read [Design.md](./Design.md). Non-negotiables:
+Before touching any UI code, read [Design.md](./Design.md). **First read § 0 — Three-Tier Rule Classification.** Every rule in Design.md carries one of three tags: **🔒 STRICT** (identity — cross-page invariant, cannot deviate), **📐 STRUCTURED** (composition — pick one variant from the allowed set), **🎨 OPEN** (voice — editorial judgment within bounds). Implement top-down: obey STRICT, pick STRUCTURED variants, improvise within OPEN bounds.
 
-- **iOS 26 continuous corner** — radii from the `8 / 12 / 14 / 20 / 28 / 32 / pill / circle` scale. `border-radius: 0` is forbidden.
-- **Ink + 2 brand accents + 6 category colors only** — `#0a0a0a` Ink (text/UI) + `#c1121f` Flag Red (primary action, brand) + `#bfa170` Champagne Gold (ceremonial, Partner). Category: `#b8624a` Dining / `#4a7a8c` Travel / `#b5807f` Beauty / `#5d4a6b` Fashion / `#7a8d6e` Fitness / `#8b3a4c` Entertainment. No new brand colors without updating Design.md.
-- **Two fonts only** — Darky (display/headings) + CS Genio Mono (body/UI). Weight contrast is the core visual tool.
-- **8px base grid** — section padding 72–128px responsive.
-- **Background** — `#fbfaf7` Ivory Warm White. Never pure white, never Papaya Whip.
-- **Light mode only.**
-- **Interactions** — GSAP ScrollTrigger + Lenis. iOS 26 spring timing `cubic-bezier(0.34, 1.56, 0.64, 1)` on interactive press.
-- **Elevation** — iOS 26 three-layer soft shadow (`--shadow-1 / 2 / 3`). Glass morphism allowed on sticky nav, modal overlay, toast. Retired: hard-offset `3px 3px 0 ...` Brutalist shadows.
-- **Bold Modular** — few large 28–32px radius blocks per section, 96–128px breathing room. Not dense grids.
+v11 layers a Grain-Archive editorial register on top of the v10 N2W foundation; evening passes tightened grid / negative-space / button / color discipline; this late-evening pass added 3-Tier Classification, expanded Liquid Glass to 6 use cases, added Image-First Layout Patterns (4 modes). Every v10 N2W token preserved. **Marketing vs Product registers must NOT mix in the same viewport.** Every dimension snaps to 8px grid; every button uses one of the 5 unified variants in § 9; every color comes from the closed Allowed-Color List in § 2. Non-negotiables:
 
-Override third-party component radii to match this scale (not to 0). Deviations from Design.md require user sign-off and a doc update in the same PR.
+- **Closed Allowed-Color List** — production CSS may only use color tokens listed in Design.md § 2. Photos and SVG visual effects exempt. New colors require a documented PR update.
+- **11-stop warm-gray ladder (v11 adds 3 new neutrals):** snow `#fff` → surface `#f8f4e8` → surface-2 `#f5f3ee` → surface-3 `#ece9e0` → **`--mist #d8d4c8`** (NEW) → ink-6 → ink-5 → ink-4 → ink-3 `#61605c` (body locked) → **`--char #3a3835`** (NEW — softer warm dark panel alternative) → **`--graphite #2c2a26`** (NEW — mid-strong heading color) → ink-2 → ink → obsidian `#000`. All UI text / dividers / dark surfaces sample only from this ladder.
+- **3 brand colors, role-locked:** Brand Red `#c1121f` primary CTA / N2W Blue `#0085ff` secondary CTA / Champagne `#bfa170` ceremonial (≤3 instances per viewport).
+- **3 editorial moments (≤1 per viewport):** Editorial Blue `#1e5fad` (footer-only) / Editorial Pink `#e8447d` (single CTA stamp) / GA Orange `#ff5e2b` (Ticket Panel + nav Home pill).
+- **GA Tri-Color (nav-only):** Orange / `--ga-green #4ade80` / `--ga-sky #93c5fd`. Forbidden in section content / button / card.
+- **iOS 26 continuous corner + selective `border-radius: 0`:** standard card 10px, button 8px, input 8px, Candy Panel 28px, Ticket Panel 10px, footer 40px rounded-top. **`border-radius: 0` permitted in 3 places only:** full-bleed Photo Card Hero, Editorial Hero Tile billboard, image-collage card. All other surfaces use the radii scale.
+- **Strict 8px grid.** Every width / height / padding / margin / gap / top / left / right snaps to 8px. Half-grid (4px) only for hairlines and chip gaps. No `padding: 22px` / no eyeball spacing.
+- **Column grid:** desktop 12 cols / 24px gutter / 64px outer margin / 1140px container max; iPad 8 cols / 20px / 48px; mobile 4 cols / 16px / 24px. Cell-span vocabulary in § 5.5 — no custom 7+5 splits.
+- **Negative-space tokens locked per container** (§ 6 full table). Use values directly; never eyeball:
+  - Hero title → subtitle 32px / subtitle → CTA 48px (desktop)
+  - Eyebrow → H1/H2 16px / H1 → body 24px / body → CTA 32px
+  - Card title → body 12px / body → footer 16px / card grid gap 24px
+  - Icon (40px tile) → text 16px / inline icon (24px) → text 12px / eyebrow icon (12px) → text 8px
+  - Adjacent buttons in row 16px desktop / 12px mobile
+- **Corner-anchored titles (NEW v11):** Hero title hugs panel **bottom-left** (NOT centered); section titles hug **top-left**; footer Giant Wordmark hugs **bottom-left**. Centered titles only allowed inside Ticket Panel + Photo Card overlay + Modal.
+- **v11 type scale — pushed larger this pass:** Magvix Hero `clamp(64,9vw,160)px` (was 96 max), Darky Display `clamp(56,8vw,128)px`, **Footer Giant Wordmark `clamp(140,18vw,320)px`** (was 240), H1 `clamp(40,5vw,72)px`, H2 `40px` (was 36), KPI numeral `clamp(40,5vw,72)px`. Body 18px / Caption 12px / Eyebrow 12px unchanged. Vertical rhythm = 8px-grid line-heights.
+- **Three fonts, role-locked:** Magvix (Regular + Italic) hero / wordmark / Signature Divider (≤1 hero block per page). Darky display / heading / numerals / **Giant Footer Wordmark**. CS Genio Mono body / UI / labels / parenthetical eyebrow. Magvix never below 28px.
+- **Unified button system — 5 variants, mandatory:**
+  - **Filled Primary** — Brand Red fill + Snow text + 8px radius + 14×28 padding + mono 16px 600 uppercase 0.04em (mobile 12×24 + 14px)
+  - **Filled Secondary** — N2W Blue fill + Snow text (other props identical to Primary)
+  - **Filled Ink** — Ink fill + Snow text (Ticket Panel + dark surface only)
+  - **Ghost** — transparent + 1px ink border + Ink text
+  - **Pill** — surface-3 + Ink text + pill radius + 8×18 padding (filter chip / status / GA nav)
+  - All buttons get bottom-right hover shift `translate(2px,2px)` → `translate(3px,3px) scale(0.98)`. **Sole exception: GA Tri-Color nav pill** (color-state only).
+  - Editorial Pink is an optional 6th variant, ≤1 per page.
+  - **Per-page custom buttons forbidden.** Every button on every page renders identically.
+- **Page bg `#f8f4e8` Ivory Cream / body `#61605c` warm gray / Light Mode only** (v10 lock).
+- **Bottom-right hover shift** is the Push interaction signature on every clickable element. **Does NOT shift:** GA Tri-Color nav pills, Ticket Panel grommets + perforation, Footer Giant Wordmark, Magvix Italic Signature Divider, static badges, body text.
+- **Modular Panel Discipline:** Marketing pages = 3-5 stacked panels, alternating warm/cool tone, ≤1 floating liquid-glass tile + ≤1 image card + ≤1 saturated editorial moment per panel.
+- **Footer:** Editorial Blue rounded-top panel + 2 floating liquid-glass tiles peeking above + 3-column parenthetical eyebrow grid + **Darky 800 giant `clamp(140,18vw,320)px` "PUSH" bottom-left** (replaces v10 Magvix Italic wordmark).
+- **GA Tri-Color Nav (global chrome every page):** sticky top, 32×32 Ink monogram (left) + 3 pills center (Home Orange / Active Green / Last Sky), CS Genio Mono 14px 600 uppercase 0.04em, no hover shift on pills.
+- **Ticket Panel:** GA Orange fill + 10px radius + 4 ink-solid grommet circles (16px, 24px inset) + dashed 2px perforation lines top + bottom + Magvix Italic `clamp(40,5vw,56)px` centered headline + Filled Ink CTA + flat no-shadow + ≤1 per page + Marketing-only.
+- **Mono Eyebrow with Parenthetical:** Marketing surfaces use `(LINKS)` `(CONNECT)` `(WHY THIS EXISTS)`; Product UI uses canonical `LINKS`. Two registers do not mix in the same viewport.
+- **Magvix Italic Signature Divider:** between sections — `End of campaign · Fin ·` / `Posted · Scanned · Verified ·` style, 28-40px italic `--ink-3` + middle-dot separators, ≤2 per page, no hover.
+- **Editorial Table (Cinema-Selects style):** mono 12px 700 uppercase parenthetical headers + Darky 18-20px 700 first column + mono 16px other columns + last column right-aligned + dotted hairline rows + table title top-left. Marketing-only; Dashboard tables keep v10 card-grid.
+- **Photo Card with Bottom Gradient Overlay:** 4:5 or 1:1 image + 35% transparent→`rgba(0,0,0,0.78)` gradient + Darky 20px snow title + mono 12px snow metadata. Marketing-only; hover bodily shifts (no image zoom).
+- **Min font size = 12px.** Documented exceptions: Footer Wordmark ≤320px, Hero Magvix ≤160px, KPI numeral ≤72px.
+- **Mobile + iPad responsive — naturally adaptive, not redrawn:** same composition + same hierarchy across breakpoints, only spacing scale + column count adjust (mobile 4-col / iPad 8-col / desktop 12-col; section V padding 56→80→96px). Touch targets ≥44×44.
+- **Icon system:** one icon family per page, every icon in 40×40 `--r-lg` (12px) tile with surface or ink background, internal icon 20-24px. Naked SVG on Candy Panel or Ticket Panel forbidden.
+- **Motion:** GSAP ScrollTrigger + Lenis, iOS 26 spring `cubic-bezier(0.34, 1.56, 0.64, 1)`. Ticket Panel + Magvix Italic Divider + Giant Wordmark + GA nav do NOT animate.
+- **Elevation:** iOS 26 three-layer soft shadow (`--shadow-1 / 2 / 3`) + glass morphism on sticky nav / modal / floating liquid-glass tile. **Flat (no shadow):** Ticket Panel, GA nav pills, Giant Wordmark, Editorial Hero Tile billboard.
+
+**Marketing vs Product registers must NOT mix in the same viewport.** Override third-party component radii to match this scale (not to 0). Deviations from Design.md require user sign-off and a doc update in the same PR.
 
 ---
 

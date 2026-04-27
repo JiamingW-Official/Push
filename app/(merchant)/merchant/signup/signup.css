@@ -79,7 +79,7 @@
 .error-retry-btn {
   background: none;
   border: none;
-  color: var(--primary);
+  color: var(--brand-red);
   font-size: var(--text-caption);
   font-weight: 700;
   letter-spacing: 0.05em;
@@ -93,7 +93,7 @@
 }
 
 .error-retry-btn:hover { opacity: 0.7; }
-.error-retry-btn:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
+.error-retry-btn:focus-visible { outline: 2px solid var(--brand-red); outline-offset: 2px; }
 
 /* ── Success state ────────────────────────────────────────── */
 
@@ -107,7 +107,7 @@
   padding: var(--space-6) var(--space-4);
   background: rgba(102,155,188,0.07);
   border: 1px solid rgba(102,155,188,0.25);
-  border-left: 4px solid var(--tertiary);
+  border-left: 4px solid var(--accent-blue);
 }
 
 @keyframes scaleIn {
@@ -138,13 +138,13 @@
   font-size: var(--text-h3);
   font-weight: 700;
   letter-spacing: -0.02em;
-  color: var(--dark);
+  color: var(--ink);
   margin: 0;
 }
 
 .success-body {
   font-size: var(--text-small);
-  color: var(--dark);
+  color: var(--ink);
   line-height: 1.6;
   max-width: 380px;
   margin: 0;
@@ -152,7 +152,7 @@
 
 .success-redirect {
   font-size: var(--text-caption);
-  color: var(--text-muted);
+  color: var(--ink-4);
   margin: 0;
 }
 
@@ -160,14 +160,14 @@
 
 .fomo-badge {
   display: inline-block;
-  border: 1px solid var(--line);
+  border: 1px solid var(--mist)
   padding: 4px 10px;
   font-family: var(--font-body);
   font-size: 10px;
   font-weight: 700;
   letter-spacing: 0.07em;
   text-transform: uppercase;
-  color: var(--dark);
+  color: var(--ink);
   margin-bottom: var(--space-2);
 }
 
@@ -197,7 +197,7 @@ form.form-loading {
   transform: translateY(-50%);
   width: 5px;
   height: 5px;
-  background: var(--tertiary);
+  background: var(--accent-blue);
   border-radius: 50%;
   pointer-events: none;
   animation: dotPop 200ms cubic-bezier(0.22,1,0.36,1) both;
@@ -221,8 +221,8 @@ form.form-loading {
 }
 
 .form-field input:focus {
-  border-color: var(--primary);
-  box-shadow: inset 2px 0 0 var(--primary);
+  border-color: var(--brand-red);
+  box-shadow: inset 2px 0 0 var(--brand-red);
   outline: none;
 }
 
@@ -232,20 +232,20 @@ form.form-loading {
 }
 
 .form-field input:not(:placeholder-shown):focus {
-  border-color: var(--primary);
-  box-shadow: inset 2px 0 0 var(--primary);
+  border-color: var(--brand-red);
+  box-shadow: inset 2px 0 0 var(--brand-red);
 }
 
 /* Error state on input */
 .form-field:has(.error-msg) input {
-  border-color: var(--primary);
-  box-shadow: inset 2px 0 0 var(--primary);
+  border-color: var(--brand-red);
+  box-shadow: inset 2px 0 0 var(--brand-red);
 }
 
 /* ── Label ────────────────────────────────────────────────── */
 
 .label-optional {
-  color: var(--text-muted);
+  color: var(--ink-4);
   font-weight: 400;
 }
 
@@ -253,7 +253,7 @@ form.form-loading {
 
 .field-hint {
   font-size: 11px;
-  color: var(--text-muted);
+  color: var(--ink-4);
   line-height: 1.4;
   margin-top: 4px;
   display: block;
@@ -264,7 +264,7 @@ form.form-loading {
 .security-note {
   display: block;
   font-size: 10px;
-  color: var(--text-muted);
+  color: var(--ink-4);
   margin-top: 6px;
 }
 
@@ -273,13 +273,13 @@ form.form-loading {
 .input-with-action {
   display: flex;
   align-items: stretch;
-  border: 1px solid var(--line);
+  border: 1px solid var(--mist)
   transition: border-color var(--t-base), box-shadow var(--t-base);
 }
 
 .input-with-action:focus-within {
-  border-color: var(--primary);
-  box-shadow: inset 2px 0 0 var(--primary);
+  border-color: var(--brand-red);
+  box-shadow: inset 2px 0 0 var(--brand-red);
 }
 
 .input-with-action input {
@@ -299,17 +299,17 @@ form.form-loading {
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: var(--text-muted);
+  color: var(--ink-4);
   background: var(--surface);
   border: none;
-  border-left: 1px solid var(--line);
+  border-left: 1px solid var(--mist)
   cursor: pointer;
   flex-shrink: 0;
   transition: color var(--t-fast);
 }
 
-.input-action-btn:hover { color: var(--dark); }
-.input-action-btn:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
+.input-action-btn:hover { color: var(--ink); }
+.input-action-btn:focus-visible { outline: 2px solid var(--brand-red); outline-offset: 2px; }
 
 /* ── Password strength ────────────────────────────────────── */
 
@@ -323,7 +323,7 @@ form.form-loading {
 .pw-bar {
   flex: 1;
   height: 3px;
-  background: var(--line);
+  background: var(--mist)
   position: relative;
 }
 
@@ -335,9 +335,9 @@ form.form-loading {
   transition: width 300ms ease, background 300ms ease;
 }
 
-.pw-fill--weak   { width: 33%; background: var(--primary); }
+.pw-fill--weak   { width: 33%; background: var(--brand-red); }
 .pw-fill--fair   { width: 66%; background: var(--warning); }
-.pw-fill--strong { width: 100%; background: var(--tertiary); }
+.pw-fill--strong { width: 100%; background: var(--accent-blue); }
 
 .pw-label {
   font-size: 10px;
@@ -347,9 +347,9 @@ form.form-loading {
   white-space: nowrap;
 }
 
-.pw-label--weak   { color: var(--primary); }
+.pw-label--weak   { color: var(--brand-red); }
 .pw-label--fair   { color: var(--warning); }
-.pw-label--strong { color: var(--tertiary); }
+.pw-label--strong { color: var(--accent-blue); }
 
 /* ── Goal cards ───────────────────────────────────────────── */
 
@@ -365,7 +365,7 @@ form.form-loading {
   align-items: flex-start;
   gap: 6px;
   padding: var(--space-3) var(--space-2);
-  border: 1px solid var(--line);
+  border: 1px solid var(--mist)
   background: transparent;
   cursor: pointer;
   position: relative;
@@ -397,7 +397,7 @@ form.form-loading {
   position: absolute;
   top: 0; left: 0; right: 0;
   height: 3px;
-  background: var(--primary);
+  background: var(--brand-red);
   transform: scaleX(0);
   transform-origin: left;
   transition: transform 300ms cubic-bezier(0.22, 1, 0.36, 1);
@@ -408,12 +408,12 @@ form.form-loading {
   background: repeating-linear-gradient(
     45deg,
     transparent, transparent 10px,
-    rgba(0,48,73,0.015) 10px, rgba(0,48,73,0.015) 20px
+    rgba(10,10,10,0.015) 10px, rgba(10,10,10,0.015) 20px
   );
 }
 
 .goal-card--active {
-  border: 2px solid var(--primary);
+  border: 2px solid var(--brand-red);
   background: rgba(193, 18, 31, 0.035);
 }
 
@@ -426,7 +426,7 @@ form.form-loading {
 }
 
 .goal-card:focus-visible {
-  outline: 2px solid var(--primary);
+  outline: 2px solid var(--brand-red);
   outline-offset: 2px;
 }
 
@@ -436,14 +436,14 @@ form.form-loading {
   flex-shrink: 0;
   display: flex;
   align-items: center;
-  color: var(--dark);
+  color: var(--ink);
   transition: color var(--t-fast), transform 300ms cubic-bezier(0.22,1,0.36,1);
 }
 
 .goal-icon svg { width: 100%; height: 100%; }
 
 .goal-card--active .goal-icon {
-  color: var(--primary);
+  color: var(--brand-red);
   transform: scale(1.15);
 }
 
@@ -453,13 +453,13 @@ form.form-loading {
   font-weight: 700;
   letter-spacing: 0.03em;
   text-transform: uppercase;
-  color: var(--dark);
+  color: var(--ink);
   line-height: 1.2;
 }
 
 .goal-desc {
   font-size: 11px;
-  color: var(--text-muted);
+  color: var(--ink-4);
   line-height: 1.4;
 }
 
@@ -467,9 +467,9 @@ form.form-loading {
 
 .trust-line {
   font-size: 11px;
-  color: var(--text-muted);
+  color: var(--ink-4);
   text-align: center;
-  border-top: 1px solid var(--line);
+  border-top: 1px solid var(--mist)
   padding-top: var(--space-2);
   letter-spacing: 0.02em;
 }
@@ -526,8 +526,8 @@ form.form-loading {
   position: absolute;
   top: -48px;
   left: var(--space-3);
-  background: var(--primary);
-  color: #fff;
+  background: var(--brand-red);
+  color: var(--snow);
   padding: var(--space-1) var(--space-3);
   font-size: var(--text-small);
   font-weight: 700;

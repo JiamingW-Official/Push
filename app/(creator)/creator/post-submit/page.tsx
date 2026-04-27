@@ -55,7 +55,7 @@ function CheckmarkSVG() {
           <path
             className="ps-check-path"
             d="M10 21 L16 27 L30 13"
-            stroke="var(--primary)"
+            stroke="var(--brand-red)"
             strokeWidth="2.5"
             strokeLinecap="square"
             strokeLinejoin="miter"
@@ -102,11 +102,12 @@ export default function PostSubmitPage() {
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            fontFamily: "CS Genio Mono, monospace",
-            fontSize: 11,
-            letterSpacing: "0.1em",
+            fontFamily: "var(--font-body)",
+            fontSize: 12,
+            letterSpacing: "0.08em",
             textTransform: "uppercase",
-            color: "rgba(0,48,73,0.4)",
+            color: "var(--ink-4)",
+            background: "var(--surface)",
           }}
         >
           Loading…
@@ -141,103 +142,430 @@ function PostSubmitContent() {
       };
 
   return (
-    <div className="ps-page">
-      {/* ── Hero: instant positive feedback ─────────────── */}
-      <div className="ps-hero">
-        <CheckmarkSVG />
-
-        <p className="ps-hero-eyebrow">Submission Received</p>
-        <h1 className="ps-hero-title">SUBMISSION RECEIVED</h1>
-
-        <div className="ps-hero-status">
-          <span className="ps-hero-status-dot" />
-          Under review
-        </div>
-        <p className="ps-hero-time-estimate">
-          Usually 24–48 hours · We'll notify you
-        </p>
-      </div>
-
-      {/* ── Body ────────────────────────────────────────── */}
-      <div className="ps-body">
-        {/* ── 1. Submission preview ──────────────────── */}
-        <div className="ps-section">
-          <p className="ps-section-eyebrow">Your Submission</p>
-
-          <div className="ps-submission-row">
-            <div className="ps-submission-thumb" aria-hidden="true">
-              <span className="ps-submission-thumb-icon">▶</span>
+    <div
+      style={{
+        background: "var(--surface-2)",
+        minHeight: "100svh",
+        paddingBottom: 96,
+      }}
+    >
+      {/* Dark editorial hero */}
+      <header
+        style={{
+          background: "var(--char)",
+          borderBottom: "2px solid var(--ink)",
+          padding: "64px 40px 56px",
+        }}
+      >
+        <div style={{ maxWidth: 640, margin: "0 auto" }}>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "flex-start",
+              gap: 16,
+            }}
+          >
+            {/* Checkmark circle */}
+            <div
+              style={{
+                width: 56,
+                height: 56,
+                borderRadius: "50%",
+                background: "var(--brand-red)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                marginBottom: 8,
+                boxShadow: "0 8px 24px rgba(193,18,31,0.32)",
+              }}
+              aria-hidden="true"
+            >
+              <svg
+                viewBox="0 0 40 40"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                style={{ width: 28, height: 28 }}
+              >
+                <path
+                  d="M10 21 L16 27 L30 13"
+                  stroke="white"
+                  strokeWidth="2.5"
+                  strokeLinecap="square"
+                  strokeLinejoin="miter"
+                  fill="none"
+                />
+              </svg>
             </div>
-            <div className="ps-submission-info">
-              <p className="ps-submission-title">{data.campaign_name}</p>
-              <div className="ps-submission-meta">
-                <span>{data.merchant}</span>
-                <span>
+
+            <div>
+              <span
+                style={{
+                  fontFamily: "var(--font-mono)",
+                  fontSize: 12,
+                  color: "rgba(255,255,255,0.38)",
+                  letterSpacing: "0.10em",
+                  textTransform: "uppercase",
+                  display: "block",
+                  marginBottom: 8,
+                }}
+              >
+                SUBMISSION RECEIVED
+              </span>
+              <h1
+                style={{
+                  fontFamily: "var(--font-display)",
+                  fontSize: "clamp(48px,6vw,72px)",
+                  fontWeight: 900,
+                  color: "var(--snow)",
+                  margin: 0,
+                  lineHeight: 1,
+                  letterSpacing: "-0.04em",
+                }}
+              >
+                Submitted!
+              </h1>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <div style={{ maxWidth: 640, margin: "0 auto", padding: "32px 40px 0" }}>
+        <div
+          style={{
+            paddingBottom: 24,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "flex-start",
+            gap: 16,
+          }}
+        >
+          <div style={{ display: "none" }}></div>
+
+          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+            <span
+              style={{
+                width: 8,
+                height: 8,
+                borderRadius: "50%",
+                background: "var(--ink-4)",
+                flexShrink: 0,
+              }}
+            />
+            <span
+              style={{
+                fontFamily: "var(--font-body)",
+                fontSize: 13,
+                color: "var(--ink-4)",
+              }}
+            >
+              Under review · Usually 24–48 hours · We&apos;ll notify you
+            </span>
+          </div>
+        </div>
+
+        {/* ── 1. Submission preview ────────────────────────── */}
+        <div
+          style={{
+            background: "var(--surface-2)",
+            border: "1px solid var(--hairline)",
+            borderRadius: 10,
+            padding: 24,
+            marginBottom: 16,
+          }}
+        >
+          <span
+            style={{
+              fontFamily: "var(--font-body)",
+              fontSize: 11,
+              color: "var(--ink-4)",
+              letterSpacing: "0.08em",
+              textTransform: "uppercase",
+              display: "block",
+              marginBottom: 16,
+            }}
+          >
+            YOUR SUBMISSION
+          </span>
+
+          <div style={{ display: "flex", gap: 16, alignItems: "flex-start" }}>
+            {/* Thumbnail placeholder */}
+            <div
+              style={{
+                width: 64,
+                height: 64,
+                background: "var(--surface-3)",
+                border: "1px solid var(--hairline)",
+                borderRadius: 8,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                fontSize: 20,
+                color: "var(--ink-4)",
+                flexShrink: 0,
+              }}
+              aria-hidden="true"
+            >
+              ▶
+            </div>
+
+            <div
+              style={{
+                flex: 1,
+                display: "flex",
+                flexDirection: "column",
+                gap: 6,
+              }}
+            >
+              <p
+                style={{
+                  fontFamily: "var(--font-display)",
+                  fontSize: 16,
+                  fontWeight: 700,
+                  color: "var(--ink)",
+                  margin: 0,
+                }}
+              >
+                {data.campaign_name}
+              </p>
+              <div
+                style={{
+                  display: "flex",
+                  gap: 8,
+                  flexWrap: "wrap",
+                  alignItems: "center",
+                }}
+              >
+                <span
+                  style={{
+                    fontFamily: "var(--font-body)",
+                    fontSize: 12,
+                    color: "var(--ink-3)",
+                  }}
+                >
+                  {data.merchant}
+                </span>
+                <span style={{ color: "var(--hairline)" }}>·</span>
+                <span
+                  style={{
+                    fontFamily: "var(--font-body)",
+                    fontSize: 12,
+                    color: "var(--ink-4)",
+                  }}
+                >
                   {data.platform} · {data.content_type}
                 </span>
-                {data.content_url && (
-                  <a
-                    href={data.content_url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="ps-submission-link"
-                  >
-                    {data.content_url}
-                  </a>
-                )}
               </div>
+              {data.content_url && (
+                <a
+                  href={data.content_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{
+                    fontFamily: "var(--font-body)",
+                    fontSize: 12,
+                    color: "var(--accent-blue)",
+                    textDecoration: "none",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                    whiteSpace: "nowrap",
+                  }}
+                >
+                  {data.content_url}
+                </a>
+              )}
             </div>
           </div>
 
-          <div className="ps-submission-timestamp">
+          <p
+            style={{
+              fontFamily: "var(--font-body)",
+              fontSize: 11,
+              color: "var(--ink-4)",
+              margin: "16px 0 0",
+              letterSpacing: "0.02em",
+            }}
+          >
             Submitted {data.submitted_at}
-          </div>
+          </p>
         </div>
 
-        {/* ── 2. What happens next ────────────────────── */}
-        <div className="ps-section">
-          <p className="ps-section-eyebrow">What Happens Next</p>
-          <div className="ps-steps">
-            {NEXT_STEPS.map((step) => (
-              <div key={step.num} className="ps-step">
-                <div className="ps-step-num-wrap">
-                  <span className="ps-step-dot" />
-                  <span className="ps-step-num">{step.num}</span>
+        {/* ── 2. What happens next ─────────────────────────── */}
+        <div
+          style={{
+            background: "var(--surface-2)",
+            border: "1px solid var(--hairline)",
+            borderRadius: 10,
+            padding: 24,
+            marginBottom: 16,
+          }}
+        >
+          <span
+            style={{
+              fontFamily: "var(--font-body)",
+              fontSize: 11,
+              color: "var(--ink-4)",
+              letterSpacing: "0.08em",
+              textTransform: "uppercase",
+              display: "block",
+              marginBottom: 24,
+            }}
+          >
+            WHAT HAPPENS NEXT
+          </span>
+
+          <div style={{ display: "flex", flexDirection: "column", gap: 0 }}>
+            {NEXT_STEPS.map((step, i) => (
+              <div
+                key={step.num}
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "40px 1fr",
+                  gap: 16,
+                  paddingBottom: i < NEXT_STEPS.length - 1 ? 24 : 0,
+                  position: "relative",
+                }}
+              >
+                {/* Connector line */}
+                {i < NEXT_STEPS.length - 1 && (
+                  <div
+                    style={{
+                      position: "absolute",
+                      left: 19,
+                      top: 36,
+                      width: 2,
+                      height: "calc(100% - 12px)",
+                      background: "var(--hairline)",
+                    }}
+                  />
+                )}
+                {/* Step number badge */}
+                <div
+                  style={{
+                    width: 40,
+                    height: 40,
+                    borderRadius: "50%",
+                    background:
+                      i === 0 ? "var(--brand-red)" : "var(--surface-3)",
+                    border: "1px solid var(--hairline)",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    flexShrink: 0,
+                    zIndex: 1,
+                  }}
+                >
+                  <span
+                    style={{
+                      fontFamily: "var(--font-body)",
+                      fontSize: 11,
+                      fontWeight: 700,
+                      color: i === 0 ? "var(--snow)" : "var(--ink-4)",
+                      letterSpacing: "0.04em",
+                    }}
+                  >
+                    {step.num}
+                  </span>
                 </div>
-                <div className="ps-step-content">
-                  <p className="ps-step-title">{step.title}</p>
-                  <p className="ps-step-desc">{step.desc}</p>
-                  <p className="ps-step-time">{step.time}</p>
+                {/* Content */}
+                <div style={{ paddingTop: 8 }}>
+                  <p
+                    style={{
+                      fontFamily: "var(--font-body)",
+                      fontSize: 14,
+                      fontWeight: 600,
+                      color: "var(--ink)",
+                      margin: "0 0 4px",
+                    }}
+                  >
+                    {step.title}
+                  </p>
+                  <p
+                    style={{
+                      fontFamily: "var(--font-body)",
+                      fontSize: 13,
+                      color: "var(--ink-4)",
+                      lineHeight: 1.5,
+                      margin: "0 0 6px",
+                    }}
+                  >
+                    {step.desc}
+                  </p>
+                  <span
+                    style={{
+                      fontFamily: "var(--font-body)",
+                      fontSize: 11,
+                      color: "var(--ink-4)",
+                      background: "var(--surface-3)",
+                      border: "1px solid var(--hairline)",
+                      borderRadius: 4,
+                      padding: "2px 8px",
+                      letterSpacing: "0.02em",
+                    }}
+                  >
+                    {step.time}
+                  </span>
                 </div>
               </div>
             ))}
           </div>
         </div>
 
-        {/* ── Tip ─────────────────────────────────────── */}
-        <div className="ps-tip">
-          <p className="ps-tip-label">Pro tip</p>
-          <p className="ps-tip-text">
+        {/* ── Tip ──────────────────────────────────────────── */}
+        <div
+          style={{
+            background: "var(--surface-2)",
+            border: "1px solid var(--hairline)",
+            borderRadius: 10,
+            padding: 20,
+            marginBottom: 24,
+            display: "flex",
+            gap: 12,
+            alignItems: "flex-start",
+          }}
+        >
+          <span
+            style={{
+              fontFamily: "var(--font-body)",
+              fontSize: 11,
+              fontWeight: 700,
+              color: "var(--ink-4)",
+              letterSpacing: "0.06em",
+              textTransform: "uppercase",
+              whiteSpace: "nowrap",
+              paddingTop: 2,
+            }}
+          >
+            PRO TIP
+          </span>
+          <p
+            style={{
+              fontFamily: "var(--font-body)",
+              fontSize: 13,
+              color: "var(--ink-3)",
+              lineHeight: 1.6,
+              margin: 0,
+            }}
+          >
             Share your content on your stories and tag {data.merchant} to
             increase walk-in conversions. Every verified visit in the 30-day
             window adds to your payout.
           </p>
         </div>
 
-        {/* ── 3. CTAs ─────────────────────────────────── */}
-        <div className="ps-cta-section">
-          <Link
-            href={`/creator/campaigns/${data.campaign_id}`}
-            className="ps-primary-btn"
-          >
-            Back to Campaign
-            <span className="ps-primary-btn-arrow">→</span>
-          </Link>
+        {/* ── 3. CTAs ──────────────────────────────────────── */}
+        <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
           <Link
             href="/creator/dashboard?tab=discover"
-            className="ps-secondary-btn"
+            className="btn-primary click-shift"
           >
-            Find More Campaigns
+            View My Work
+          </Link>
+          <Link
+            href={`/creator/campaigns/${data.campaign_id}`}
+            className="btn-ghost click-shift"
+          >
+            Back to Campaign
           </Link>
         </div>
       </div>

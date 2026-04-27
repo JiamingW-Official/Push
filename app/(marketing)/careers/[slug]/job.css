@@ -1,225 +1,517 @@
 /* ============================================================
-   Job Detail — v7 Bold Modular treatment
-   Design.md authority: border-radius:0 (except v7 utility classes
-   that explicitly set --r-*), 6 brand colors, Darky + CS Genio Mono,
-   8px grid, light mode only
+   careers/[slug]/page.tsx — v11 Job detail page
+   Marketing register: dark hero, 2-col details, candy benefits,
+   static apply form, ticket panel CTA.
+   ALL colors via tokens — zero hardcoded hex.
    ============================================================ */
 
 /* ------------------------------------------------------------
-   Hero — uses .bg-hero-ink utility
+   Page shell
    ------------------------------------------------------------ */
-.job-hero-v7 {
-  /* Visual treatment from utility classes; reserved hook. */
+.job-page {
+  background: var(--surface);
+  min-height: 100vh;
 }
 
-.job-back-v7 {
-  font-family: var(--font-body);
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: rgba(245, 242, 236, 0.55);
-  text-decoration: none;
-  transition: color 250ms ease;
-}
-
-.job-back-v7:hover {
-  color: #fff;
+.job-container {
+  max-width: 1140px;
+  margin: 0 auto;
+  padding: 0 clamp(24px, 5vw, 64px);
 }
 
 /* ------------------------------------------------------------
-   Body layout
+   01 — HERO
+   Dark editorial hero, Darky 900 H1 bottom-left, ghost team text.
+   Role badges above title. Intro + apply CTA row.
    ------------------------------------------------------------ */
-.job-inner {
-  max-width: var(--content-width);
-  margin: 0 auto;
-  padding: 0 var(--space-4);
+.job-hero {
   position: relative;
+  min-height: clamp(480px, 70vh, 700px);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: clamp(56px, 8vw, 96px) clamp(24px, 5vw, 64px);
+  overflow: hidden;
+  background: var(--char);
+  background-image:
+    radial-gradient(ellipse 70% 60% at 80% 10%, rgba(191,161,112,0.12), transparent 55%),
+    radial-gradient(ellipse 50% 70% at 5% 90%, rgba(193,18,31,0.10), transparent 55%);
+}
+
+/* Ghost department text decoration */
+.job-hero-ghost {
+  position: absolute;
+  right: -0.02em;
+  bottom: -0.1em;
+  font-family: var(--font-display);
+  font-weight: 100;
+  font-size: clamp(140px, 26vw, 440px);
+  letter-spacing: -0.06em;
+  line-height: 0.8;
+  color: rgba(255, 255, 255, 0.04);
+  pointer-events: none;
+  user-select: none;
   z-index: 1;
 }
 
-.job-body {
-  background: var(--surface);
-  padding: var(--space-15) 0 var(--space-15);
+.job-hero-inner {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  max-width: 1140px;
+  margin: 0 auto;
+  width: 100%;
 }
 
-.job-body-grid {
+/* Back link — top of hero */
+.job-back-link {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.45);
+  text-decoration: none;
+  align-self: flex-start;
+  transition: color 200ms ease, transform 200ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.job-back-link:hover {
+  color: rgba(255, 255, 255, 0.8);
+  transform: translate(-2px, 0);
+}
+
+/* Bottom-left content group */
+.job-hero-content {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Badge row above title */
+.job-hero-badges {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.job-hero-badge {
+  font-size: 12px !important;
+  padding: 6px 14px !important;
+  color: rgba(255, 255, 255, 0.6) !important;
+  border-color: rgba(255, 255, 255, 0.2) !important;
+}
+
+/* H1 — clamp(40px,5vw,72px) Darky 800 per v11 spec */
+.job-hero-title {
+  font-family: var(--font-display);
+  font-size: clamp(40px, 6vw, 80px);
+  font-weight: 900;
+  letter-spacing: -0.05em;
+  line-height: 0.92;
+  color: var(--snow);
+  margin: 0;
+}
+
+.job-hero-dot {
+  color: var(--brand-red);
+}
+
+.job-hero-about {
+  font-family: var(--font-body);
+  font-size: 20px;
+  line-height: 1.40;
+  letter-spacing: -0.1em;
+  color: rgba(255, 255, 255, 0.62);
+  max-width: 600px;
+  margin: 0;
+}
+
+.job-hero-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+/* Ghost button on dark hero */
+.job-all-btn {
+  color: rgba(255, 255, 255, 0.62) !important;
+  border-color: rgba(255, 255, 255, 0.22) !important;
+}
+
+/* ------------------------------------------------------------
+   Sig divider — page-scoped
+   ------------------------------------------------------------ */
+.job-sig {
+  background: var(--surface);
+  margin: 0;
+}
+
+/* ------------------------------------------------------------
+   02 — JOB DETAILS
+   2-column: requirements list left (8 col equiv),
+   about Push + KPIs right (4 col equiv, sticky).
+   Max reading width 72ch on body text.
+   ------------------------------------------------------------ */
+.job-details-section {
+  padding: clamp(80px, 10vw, 120px) 0;
+  background: var(--surface);
+}
+
+.job-details-grid {
   display: grid;
-  grid-template-columns: 1fr 280px;
-  gap: var(--space-10);
+  grid-template-columns: 1fr 380px;
+  gap: 80px;
   align-items: start;
 }
 
-/* ------------------------------------------------------------
-   Content sections
-   ------------------------------------------------------------ */
-.job-content {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-10);
+@media (max-width: 1023px) {
+  .job-details-grid {
+    grid-template-columns: 1fr;
+    gap: 64px;
+  }
 }
 
-.job-section {
-  padding-bottom: var(--space-8);
-  border-bottom: 1px solid var(--hairline-2);
-}
-
-.job-section:last-child {
-  border-bottom: none;
-  padding-bottom: 0;
-}
-
-.job-section .section-marker {
-  margin-bottom: var(--space-3);
-}
-
-.job-section--apply {
-  background: var(--surface-bright);
-  padding: var(--space-8);
-  border: 1px solid var(--hairline-2);
-}
-
-.job-section-title {
-  font-family: var(--font-display);
-  font-size: clamp(28px, 3.5vw, 44px);
-  font-weight: 900;
-  letter-spacing: -0.04em;
-  line-height: 1.05;
-  color: var(--ink);
-  margin: var(--space-2) 0 var(--space-5);
-}
-
-.job-section-title .wt-900 {
-  font-weight: 900;
-}
-
-.job-section-title .wt-300 {
-  font-weight: 300;
-  color: var(--ink-4);
-}
-
-/* ------------------------------------------------------------
-   Lists
-   ------------------------------------------------------------ */
-.job-list {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-3);
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
-.job-list-item {
-  display: grid;
-  grid-template-columns: 24px 1fr;
-  gap: var(--space-2);
-  font-family: var(--font-body);
-  font-size: 16px;
-  line-height: 1.7;
-  color: var(--ink-3);
-}
-
-.job-list--muted .job-list-item {
-  color: var(--ink-4);
-}
-
-.job-list-bullet {
-  font-family: var(--font-body);
-  font-size: 14px;
-  font-weight: 700;
-  color: var(--brand-red);
-  padding-top: 4px;
-  flex-shrink: 0;
-}
-
-.job-list-bullet--check {
-  color: var(--success);
-}
-
-.job-list--muted .job-list-bullet {
-  color: var(--ink-5);
-}
-
-/* ------------------------------------------------------------
-   Sidebar
-   ------------------------------------------------------------ */
-.job-sidebar {
-  position: sticky;
-  top: 96px;
+/* Left — Requirements */
+.job-requirements {
   display: flex;
   flex-direction: column;
   gap: 0;
-  border: 1px solid var(--hairline-2);
-  background: var(--surface-elevated);
+  max-width: 72ch;
 }
 
-.job-sidebar-card {
-  padding: var(--space-3) var(--space-4);
-  border-bottom: 1px solid var(--hairline-2);
-}
-
-.job-sidebar-label {
-  font-family: var(--font-body);
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--ink-4);
-  margin: 0 0 4px;
-}
-
-.job-sidebar-value {
-  font-family: var(--font-body);
-  font-size: 14px;
+/* H2 — 40px per v11 spec */
+.job-details-title {
+  font-family: var(--font-display);
+  font-size: 40px;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 1.05;
   color: var(--ink);
-  font-weight: 600;
+  margin: 16px 0 40px;
+}
+
+.job-details-title-ghost {
+  color: var(--ink-5);
+  font-weight: 300;
+}
+
+/* Numbered req list — editorial table rows */
+.job-req-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid var(--hairline);
+}
+
+.job-req-item {
+  display: grid;
+  grid-template-columns: 48px 1fr;
+  gap: 16px;
+  align-items: start;
+  padding: 24px 0;
+  border-bottom: 1px solid var(--hairline);
+}
+
+.job-req-num {
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  color: var(--ink-5);
+  padding-top: 2px;
+}
+
+.job-req-text {
+  font-family: var(--font-body);
+  font-size: 20px;
+  line-height: 1.40;
+  letter-spacing: -0.1em;
+  color: var(--ink-3);
   margin: 0;
 }
 
-.job-sidebar-cta {
-  margin: var(--space-3) var(--space-4) var(--space-2);
-  justify-content: center;
-  text-align: center;
+/* Nice to have */
+.job-nice-to-have {
+  margin-top: 48px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 
-.job-sidebar-back {
-  display: block;
-  text-align: center;
+.job-nth-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.job-nth-item {
   font-family: var(--font-body);
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
+  font-size: 16px;
+  line-height: 1.40;
+  letter-spacing: -0.125em;
   color: var(--ink-4);
-  text-decoration: none;
-  padding-bottom: var(--space-4);
-  transition: color 250ms ease;
 }
 
-.job-sidebar-back:hover {
+/* Right — About Push sidebar (sticky) */
+.job-about-push {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  position: sticky;
+  top: 96px;
+}
+
+.job-about-body {
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.65;
+  color: var(--ink-3);
+  margin: 0;
+}
+
+/* KPI cards stack */
+.job-kpi-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.job-kpi-card {
+  background: var(--surface-2);
+  border-radius: var(--r-md);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  border: 1px solid var(--hairline);
+}
+
+.job-kpi-num {
+  font-family: var(--font-display);
+  font-size: clamp(32px, 4vw, 48px);
+  font-weight: 900;
+  letter-spacing: -0.05em;
+  line-height: 0.9;
   color: var(--ink);
 }
 
-/* ------------------------------------------------------------
-   Apply form
-   ------------------------------------------------------------ */
-.job-apply-form {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-5);
+.job-kpi-label {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink);
+  margin-top: 4px;
 }
 
+.job-kpi-sub {
+  font-family: var(--font-body);
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  color: var(--ink-4);
+}
+
+/* Sidebar meta rows */
+.job-sidebar-meta {
+  border-top: 1px solid var(--hairline);
+  padding-top: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.job-meta-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 16px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--hairline);
+}
+
+.job-meta-label {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+}
+
+.job-meta-value {
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink);
+  text-align: right;
+}
+
+/* ------------------------------------------------------------
+   03 — BENEFITS (Candy Panel butter)
+   3×2 grid of benefit cards. Each has 40×40 icon tile (--r-lg),
+   H3 28px title, body 18px. Hover click-shift.
+   ------------------------------------------------------------ */
+.job-benefits-section {
+  background: var(--panel-butter);
+  margin: 0 clamp(24px, 5vw, 64px);
+  border-radius: var(--r-3xl);
+}
+
+/* H2 — 40px per spec */
+.job-benefits-title {
+  font-family: var(--font-display);
+  font-size: 40px;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 1.05;
+  color: var(--ink);
+  margin: 16px 0 48px;
+}
+
+.job-benefits-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+@media (max-width: 1023px) {
+  .job-benefits-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 639px) {
+  .job-benefits-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.job-benefit-card {
+  background: var(--surface);
+  border-radius: var(--r-md);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  border: 1px solid var(--mist);
+  transition: transform 200ms cubic-bezier(0.34, 1.56, 0.64, 1),
+    box-shadow 200ms ease;
+}
+
+.job-benefit-card:hover {
+  transform: translate(1px, 1px);
+  box-shadow: var(--shadow-1);
+}
+
+.job-benefit-card:active {
+  transform: translate(2px, 2px) scale(0.98);
+}
+
+/* Icon tile — 40×40 with --r-lg (12px) per icon spec */
+.job-benefit-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--r-lg);
+  background: var(--surface-3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--ink);
+  margin-bottom: 8px;
+  flex-shrink: 0;
+}
+
+/* H3 — exactly 28px per v11 spec */
+.job-benefit-title {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.2;
+  color: var(--ink);
+  margin: 0;
+}
+
+.job-benefit-desc {
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.40;
+  letter-spacing: -0.125em;
+  color: var(--ink-3);
+  margin: 0;
+}
+
+/* ------------------------------------------------------------
+   04 — APPLY section
+   Static form. 2-col grid. 72ch max reading width.
+   ------------------------------------------------------------ */
+.job-apply-section {
+  padding: clamp(80px, 10vw, 120px) 0;
+  background: var(--surface);
+}
+
+.job-apply-inner {
+  max-width: 800px;
+}
+
+.job-apply-header {
+  margin-bottom: 56px;
+}
+
+/* H2 — 40px */
+.job-apply-title {
+  font-family: var(--font-display);
+  font-size: 40px;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 1.05;
+  color: var(--ink);
+  margin: 16px 0 16px;
+}
+
+.job-apply-title-ghost {
+  color: var(--ink-5);
+  font-weight: 300;
+}
+
+.job-apply-sub {
+  font-family: var(--font-body);
+  font-size: 20px;
+  line-height: 1.40;
+  letter-spacing: -0.1em;
+  color: var(--ink-3);
+  margin: 0;
+}
+
+/* Form grid */
 .job-form-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: var(--space-4);
+  gap: 24px;
+}
+
+@media (max-width: 639px) {
+  .job-form-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 .job-form-field {
   display: flex;
   flex-direction: column;
-  gap: var(--space-1);
+  gap: 8px;
 }
 
 .job-form-field--full {
@@ -228,24 +520,28 @@
 
 .job-form-label {
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 700;
-  letter-spacing: 0.04em;
-  color: var(--ink);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-4);
 }
 
 .job-form-input,
 .job-form-textarea {
-  padding: 14px 16px;
-  background: var(--surface-elevated);
-  border: 1px solid var(--hairline-2);
-  border-radius: var(--r-lg);
   font-family: var(--font-body);
-  font-size: 15px;
+  font-size: 16px;
+  line-height: 1.5;
   color: var(--ink);
-  outline: none;
+  background: var(--surface);
+  border: 1px solid var(--mist);
+  border-radius: var(--r-sm);
+  padding: 14px 16px;
+  width: 100%;
+  box-sizing: border-box;
   transition: border-color 200ms ease, box-shadow 200ms ease;
-  resize: vertical;
+  outline: none;
+  -webkit-appearance: none;
 }
 
 .job-form-input::placeholder,
@@ -255,262 +551,119 @@
 
 .job-form-input:focus,
 .job-form-textarea:focus {
-  border-color: var(--ink);
-  box-shadow: 0 0 0 3px rgba(10, 10, 10, 0.06);
-}
-
-.job-form-input:disabled,
-.job-form-textarea:disabled {
-  opacity: 0.55;
-  cursor: not-allowed;
+  border-color: var(--brand-red);
+  box-shadow: 0 0 0 3px var(--brand-red-focus);
 }
 
 .job-form-textarea {
-  min-height: 140px;
+  resize: vertical;
+  min-height: 144px;
 }
 
-/* File upload trigger */
-.job-form-file-trigger {
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
-  padding: 14px 16px;
-  background: var(--surface-elevated);
-  border: 1px dashed var(--hairline-2);
-  border-radius: var(--r-lg);
-  font-family: var(--font-body);
-  font-size: 14px;
-  color: var(--ink-3);
-  cursor: pointer;
-  transition: border-color 200ms ease, background 200ms ease;
-  text-align: left;
-}
-
-.job-form-file-trigger:hover {
-  border-color: var(--ink);
-  background: rgba(10, 10, 10, 0.02);
-}
-
-.job-form-file-trigger:disabled {
-  opacity: 0.55;
-  cursor: not-allowed;
-}
-
-.job-form-file-icon {
-  font-size: 18px;
-  color: var(--brand-red);
-  font-weight: 900;
-}
-
-.job-form-file-name {
-  color: var(--ink);
-  font-weight: 600;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  max-width: 280px;
-}
-
-/* Form footer */
 .job-form-footer {
+  margin-top: 32px;
   display: flex;
   align-items: center;
-  gap: var(--space-4);
+  gap: 24px;
+  flex-wrap: wrap;
 }
 
-.job-form-disclaimer {
+.job-form-note {
   font-family: var(--font-body);
   font-size: 12px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
   color: var(--ink-4);
+  margin: 0;
 }
 
 /* ------------------------------------------------------------
-   Buttons (kept for form internals)
+   05 — TICKET CTA section wrapper
    ------------------------------------------------------------ */
-.job-btn-primary {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: var(--space-2);
-  padding: 16px 32px;
-  background: var(--brand-red);
-  color: #fff;
-  font-family: var(--font-body);
-  font-size: 13px;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  text-decoration: none;
-  border-radius: var(--r-lg);
-  border: none;
-  cursor: pointer;
-  box-shadow: var(--shadow-2);
-  transition:
-    box-shadow 300ms ease,
-    transform 120ms ease,
-    opacity 200ms ease;
-  white-space: nowrap;
+.job-ticket-section {
+  background: var(--surface);
+  padding: clamp(64px, 8vw, 96px) 0;
 }
 
-.job-btn-primary:hover:not(:disabled) {
-  box-shadow: var(--shadow-3);
-  transform: translateY(-2px);
+.job-ticket {
+  /* inherits .ticket-panel from globals */
+  text-align: center;
 }
 
-.job-btn-primary:active:not(:disabled) {
-  transform: scale(0.97);
-}
-
-.job-btn-primary:disabled {
-  opacity: 0.65;
-  cursor: not-allowed;
-  box-shadow: none;
-}
-
-.job-btn-secondary {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-2);
-  padding: 14px 28px;
-  background: transparent;
-  color: var(--ink);
-  font-family: var(--font-body);
-  font-size: 13px;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  text-decoration: none;
-  border-radius: var(--r-lg);
-  border: 1px solid var(--ink);
-  cursor: pointer;
-  transition: background 300ms ease, color 300ms ease;
-}
-
-.job-btn-secondary:hover {
-  background: var(--ink);
-  color: #fff;
-}
-
-/* Button loading state */
-.job-btn-loading {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.job-btn-spinner {
-  width: 14px;
-  height: 14px;
-  border: 2px solid rgba(255, 255, 255, 0.3);
-  border-top-color: #fff;
-  border-radius: 50%; /* spinner is the one exception */
-  animation: job-spin 0.7s linear infinite;
-  flex-shrink: 0;
-}
-
-@keyframes job-spin {
-  to { transform: rotate(360deg); }
-}
-
-/* ------------------------------------------------------------
-   Success state
-   ------------------------------------------------------------ */
-.job-apply-success {
+.job-ticket-inner {
+  position: relative;
+  z-index: 2;
   display: flex;
   flex-direction: column;
-  gap: var(--space-4);
-  padding: var(--space-8) 0;
+  align-items: center;
+  gap: 16px;
 }
 
-.job-apply-success-label {
+.job-ticket-eyebrow {
+  color: rgba(10, 10, 10, 0.55) !important;
+}
+
+/* Magvix italic — ticket panel headline rule */
+.job-ticket-title {
+  font-family: var(--font-hero);
+  font-style: italic;
+  font-weight: normal;
+  font-size: clamp(40px, 5vw, 56px);
+  letter-spacing: -0.02em;
+  line-height: 1.0;
+  color: var(--ink);
+  margin: 8px 0;
+}
+
+.job-ticket-btn {
+  margin-top: 8px;
+}
+
+.job-ticket-back {
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 700;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--brand-red);
+  color: rgba(10, 10, 10, 0.45);
+  text-decoration: none;
+  transition: color 200ms ease;
 }
 
-.job-apply-success-headline {
-  font-family: var(--font-display);
-  font-size: clamp(64px, 10vw, 120px);
-  font-weight: 900;
-  letter-spacing: -0.05em;
-  line-height: 0.9;
-  color: var(--ink);
-}
-
-.job-apply-success-body {
-  font-family: var(--font-body);
-  font-size: 16px;
-  line-height: 1.7;
-  color: var(--ink-3);
-  max-width: 520px;
-}
-
-.job-apply-success-body strong {
+.job-ticket-back:hover {
   color: var(--ink);
 }
 
 /* ------------------------------------------------------------
-   Scroll reveal
+   Ticket grommet circles
    ------------------------------------------------------------ */
-.reveal {
-  opacity: 0;
-  transform: translateY(28px);
-  transition:
-    opacity 600ms cubic-bezier(0.22, 1, 0.36, 1),
-    transform 600ms cubic-bezier(0.22, 1, 0.36, 1);
+.ticket-grommet {
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--ink);
+  z-index: 3;
 }
 
-.reveal.visible {
-  opacity: 1;
-  transform: none;
-}
+.ticket-grommet--tl { top: 24px; left: 24px; }
+.ticket-grommet--tr { top: 24px; right: 24px; }
+.ticket-grommet--bl { bottom: 24px; left: 24px; }
+.ticket-grommet--br { bottom: 24px; right: 24px; }
 
 /* ------------------------------------------------------------
-   Responsive
+   Responsive — mobile
    ------------------------------------------------------------ */
-@media (max-width: 900px) {
-  .job-body-grid {
-    grid-template-columns: 1fr;
+@media (max-width: 767px) {
+  .job-benefits-section {
+    margin: 0 16px;
   }
 
-  .job-sidebar {
+  .job-hero-inner {
+    gap: 32px;
+  }
+
+  .job-about-push {
     position: static;
-    order: -1;
-  }
-
-  .job-form-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .job-form-field--full {
-    grid-column: 1;
-  }
-
-  .job-section--apply {
-    padding: var(--space-5) var(--space-4);
-  }
-}
-
-@media (max-width: 640px) {
-  .job-form-footer {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: var(--space-2);
-  }
-
-  .job-btn-primary {
-    width: 100%;
-    justify-content: center;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .reveal {
-    opacity: 1;
-    transform: none;
-    transition: none;
   }
 }

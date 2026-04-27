@@ -22,7 +22,7 @@ export default function DemoMerchantEntry() {
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
-        background: "var(--dark)",
+        background: "var(--ink)",
       }}
     >
       <span
@@ -43,7 +43,7 @@ export default function DemoMerchantEntry() {
         style={{
           width: "64px",
           height: "3px",
-          background: "var(--primary)",
+          background: "var(--brand-red)",
           marginTop: "32px",
         }}
       />

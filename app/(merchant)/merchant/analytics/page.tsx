@@ -1,9 +1,10 @@
 "use client";
 
 import Link from "next/link";
+import { useState } from "react";
 import "./analytics.css";
 
-/* ── Mock data ─────────────────────────────────────────────── */
+/* ── Mock data ─────────────────────────────────────────────────── */
 
 const SPEND_VS_CONV = [
   { week: "W1", spend: 420, conversions: 38 },
@@ -58,10 +59,10 @@ const CAMPAIGN_MATRIX = [
 ];
 
 const TIER_ROI = [
-  { tier: "Seed", roi: 1.1, fill: "var(--line-strong)" },
-  { tier: "Explorer", roi: 1.8, fill: "var(--tertiary)" },
-  { tier: "Operator", roi: 2.4, fill: "var(--dark)", opacity: 0.6 },
-  { tier: "Proven", roi: 3.1, fill: "var(--dark)" },
+  { tier: "Seed", roi: 1.1, fill: "var(--mist)" },
+  { tier: "Explorer", roi: 1.8, fill: "var(--accent-blue)", opacity: 0.5 },
+  { tier: "Operator", roi: 2.4, fill: "var(--ink)", opacity: 0.4 },
+  { tier: "Proven", roi: 3.1, fill: "var(--ink)", opacity: 0.75 },
   { tier: "Partner", roi: 4.5, fill: "var(--champagne)" },
 ];
 
@@ -93,7 +94,7 @@ const INSIGHTS = [
     body: "The peak conversion window is 3–6 hours post-content. Consider running campaigns before lunch to maximize same-day foot traffic.",
     cta: "View campaign timing",
     ctaHref: "/merchant/campaigns",
-    accent: "var(--tertiary)",
+    accent: "var(--accent-blue)",
   },
   {
     id: 3,
@@ -103,7 +104,7 @@ const INSIGHTS = [
     body: "Your Spring Launch campaign has hit the halfway mark. At current velocity you'll reach full capacity 6 days before deadline.",
     cta: "Manage campaign",
     ctaHref: "/merchant/campaigns",
-    accent: "var(--primary)",
+    accent: "var(--brand-red)",
   },
 ];
 
@@ -160,7 +161,7 @@ function DualAxisLine({
             y1={y}
             x2={pad.left + innerW}
             y2={y}
-            stroke="var(--line)"
+            stroke="var(--hairline)"
             strokeWidth="1"
           />
         );
@@ -175,7 +176,7 @@ function DualAxisLine({
           textAnchor="end"
           fontSize="9"
           fontFamily="var(--font-body)"
-          fill="var(--dark)"
+          fill="var(--ink-4)"
         >
           ${v >= 1000 ? `${(v / 1000).toFixed(1)}k` : v}
         </text>
@@ -190,17 +191,17 @@ function DualAxisLine({
           textAnchor="start"
           fontSize="9"
           fontFamily="var(--font-body)"
-          fill="var(--tertiary)"
+          fill="var(--accent-blue)"
         >
           {Math.round(v)}
         </text>
       ))}
 
-      {/* Spend line — dark */}
+      {/* Spend line — ink */}
       <path
         d={spendPath}
         fill="none"
-        stroke="var(--dark)"
+        stroke="var(--ink)"
         strokeWidth="1.5"
         strokeLinecap="square"
       />
@@ -211,15 +212,15 @@ function DualAxisLine({
           y={p.y - 3}
           width="6"
           height="6"
-          fill="var(--dark)"
+          fill="var(--ink)"
         />
       ))}
 
-      {/* Conversions line — tertiary */}
+      {/* Conversions line — accent-blue */}
       <path
         d={convPath}
         fill="none"
-        stroke="var(--tertiary)"
+        stroke="var(--accent-blue)"
         strokeWidth="1.5"
         strokeLinecap="square"
         strokeDasharray="4 2"
@@ -231,7 +232,7 @@ function DualAxisLine({
           y={p.y - 3}
           width="6"
           height="6"
-          fill="var(--tertiary)"
+          fill="var(--accent-blue)"
         />
       ))}
 
@@ -244,7 +245,7 @@ function DualAxisLine({
           textAnchor="middle"
           fontSize="10"
           fontFamily="var(--font-body)"
-          fill="var(--graphite)"
+          fill="var(--ink-4)"
         >
           {d.week}
         </text>
@@ -256,14 +257,14 @@ function DualAxisLine({
         y={pad.top - 12}
         width="10"
         height="3"
-        fill="var(--dark)"
+        fill="var(--ink)"
       />
       <text
         x={pad.left + 14}
         y={pad.top - 7}
         fontSize="9"
         fontFamily="var(--font-body)"
-        fill="var(--dark)"
+        fill="var(--ink-4)"
       >
         Spend
       </text>
@@ -272,14 +273,14 @@ function DualAxisLine({
         y={pad.top - 12}
         width="10"
         height="3"
-        fill="var(--tertiary)"
+        fill="var(--accent-blue)"
       />
       <text
         x={pad.left + 74}
         y={pad.top - 7}
         fontSize="9"
         fontFamily="var(--font-body)"
-        fill="var(--tertiary)"
+        fill="var(--ink-4)"
       >
         Conversions
       </text>
@@ -329,7 +330,7 @@ function TierROIBar({
               textAnchor="middle"
               fontSize="9"
               fontFamily="var(--font-body)"
-              fill="var(--graphite)"
+              fill="var(--ink-4)"
             >
               {d.tier}
             </text>
@@ -339,7 +340,7 @@ function TierROIBar({
               textAnchor="middle"
               fontSize="10"
               fontFamily="var(--font-body)"
-              fill="var(--dark)"
+              fill="var(--ink)"
               fontWeight="600"
             >
               {d.roi}×
@@ -382,7 +383,7 @@ function Histogram({
               y1={y}
               x2={pad.left + innerW}
               y2={y}
-              stroke="var(--line)"
+              stroke="var(--hairline)"
               strokeWidth="1"
             />
             <text
@@ -391,7 +392,7 @@ function Histogram({
               textAnchor="end"
               fontSize="9"
               fontFamily="var(--font-body)"
-              fill="var(--graphite)"
+              fill="var(--ink-4)"
             >
               {Math.round((1 - t) * maxCount)}
             </text>
@@ -402,7 +403,7 @@ function Histogram({
         const barH = (d.count / maxCount) * innerH;
         const x = pad.left + i * (innerW / data.length) + 2;
         const y = pad.top + innerH - barH;
-        // Peak bar gets primary color
+        // Peak bar gets brand-red
         const isPeak = d.count === maxCount;
         return (
           <g key={d.bin}>
@@ -411,8 +412,8 @@ function Histogram({
               y={y}
               width={barW}
               height={barH}
-              fill={isPeak ? "var(--primary)" : "var(--dark)"}
-              fillOpacity={isPeak ? 1 : 0.35}
+              fill={isPeak ? "var(--brand-red)" : "var(--ink)"}
+              fillOpacity={isPeak ? 1 : 0.25}
             />
             <text
               x={x + barW / 2}
@@ -420,7 +421,7 @@ function Histogram({
               textAnchor="middle"
               fontSize="9"
               fontFamily="var(--font-body)"
-              fill="var(--graphite)"
+              fill="var(--ink-4)"
             >
               {d.bin}
             </text>
@@ -433,164 +434,252 @@ function Histogram({
 
 /* ── Page ───────────────────────────────────────────────────── */
 
+const DATE_RANGES = ["Last 7d", "Last 30d", "Last 90d"] as const;
+
 export default function MerchantAnalyticsPage() {
+  const [activeRange, setActiveRange] = useState<string>("Last 30d");
+
   return (
     <div className="man-page">
-      {/* Nav */}
-      <header className="man-nav">
-        <Link href="/merchant/dashboard" className="man-nav-back">
-          ← Dashboard
-        </Link>
-        <span className="man-nav-title">Analytics</span>
-        <span className="man-nav-date">Apr 2026</span>
+      {/* Page Header */}
+      <header className="man-header">
+        <div className="man-header__left">
+          <span className="man-header__eyebrow">Merchant Dashboard</span>
+          <h1 className="man-header__title">Analytics</h1>
+        </div>
+        <div className="man-header__right">
+          <div className="man-range-tabs" role="tablist">
+            {DATE_RANGES.map((r) => (
+              <button
+                key={r}
+                role="tab"
+                aria-selected={activeRange === r}
+                className={`man-range-tab${activeRange === r ? " man-range-tab--active" : ""}`}
+                onClick={() => setActiveRange(r)}
+              >
+                {r}
+              </button>
+            ))}
+          </div>
+          <button className="btn-ghost click-shift">Export</button>
+        </div>
       </header>
 
-      {/* Hero */}
-      <section className="man-hero">
-        <p className="man-hero-eyebrow">Campaign performance</p>
-        <h1 className="man-hero-headline">
-          <span className="man-hero-number">340</span> verified walk-ins.{" "}
-          <span className="man-hero-roi">$4,120</span>{" "}
-          <span className="man-hero-light">ROI.</span>
-        </h1>
-        <div className="man-hero-stats">
-          <div className="man-hero-stat">
-            <span className="man-hero-stat-value">$2,350</span>
-            <span className="man-hero-stat-label">Total Spend</span>
-          </div>
-          <div className="man-hero-stat-div" />
-          <div className="man-hero-stat">
-            <span className="man-hero-stat-value">1.75×</span>
-            <span className="man-hero-stat-label">Avg ROI</span>
-          </div>
-          <div className="man-hero-stat-div" />
-          <div className="man-hero-stat">
-            <span className="man-hero-stat-value">5</span>
-            <span className="man-hero-stat-label">Campaigns</span>
-          </div>
-          <div className="man-hero-stat-div" />
-          <div className="man-hero-stat">
-            <span className="man-hero-stat-value">24</span>
-            <span className="man-hero-stat-label">Creators</span>
-          </div>
+      {/* KPI Row — 4 cards */}
+      <div className="man-kpi-row">
+        <div className="man-kpi-card">
+          <span className="man-kpi-card__label">Verified Visits</span>
+          <span className="man-kpi-card__value">340</span>
+          <span className="man-kpi-card__delta man-kpi-card__delta--up">
+            +18% vs prior period
+          </span>
         </div>
-      </section>
+        <div className="man-kpi-card">
+          <span className="man-kpi-card__label">New Unique Visitors</span>
+          <span className="man-kpi-card__value">4,120</span>
+          <span className="man-kpi-card__delta man-kpi-card__delta--up">
+            +24% vs prior period
+          </span>
+        </div>
+        <div className="man-kpi-card">
+          <span className="man-kpi-card__label">Total Campaigns</span>
+          <span className="man-kpi-card__value">5</span>
+          <span className="man-kpi-card__delta man-kpi-card__delta--neutral">
+            — stable
+          </span>
+        </div>
+        <div className="man-kpi-card">
+          <span className="man-kpi-card__label">Avg Cost per Visit</span>
+          <span className="man-kpi-card__value">$6.91</span>
+          <span className="man-kpi-card__delta man-kpi-card__delta--up">
+            −12% vs prior period
+          </span>
+        </div>
+      </div>
 
-      {/* Charts grid */}
-      <section className="man-charts">
-        {/* Spend vs conversions */}
-        <div className="man-chart-card man-chart-card--wide">
+      {/* Main Content */}
+      <div className="man-content">
+        {/* Spend vs Conversions — full width */}
+        <div className="man-chart-card">
           <div className="man-chart-header">
-            <span className="man-chart-label">
-              Spend vs. verified conversions
-            </span>
+            <div>
+              <div className="man-chart-label">Performance Over Time</div>
+            </div>
             <div className="man-chart-legend">
               <span className="man-chart-legend-item man-chart-legend-item--dark">
                 Spend ($)
               </span>
               <span className="man-chart-legend-item man-chart-legend-item--blue">
-                Conversions (dashed)
+                Conversions
               </span>
             </div>
           </div>
-          <DualAxisLine data={SPEND_VS_CONV} />
-        </div>
-
-        {/* Creator tier ROI */}
-        <div className="man-chart-card">
-          <div className="man-chart-header">
-            <span className="man-chart-label">Creator tier ROI</span>
-            <span className="man-chart-sublabel">Return multiplier</span>
+          <div className="man-chart-body">
+            <DualAxisLine data={SPEND_VS_CONV} />
           </div>
-          <TierROIBar data={TIER_ROI} />
         </div>
 
-        {/* Time to conversion */}
-        <div className="man-chart-card">
-          <div className="man-chart-header">
-            <span className="man-chart-label">Time-to-conversion</span>
-            <span className="man-chart-sublabel">Hours after content</span>
-          </div>
-          <Histogram data={TIME_TO_CONV_HIST} />
-        </div>
-      </section>
-
-      {/* Campaign performance matrix */}
-      <section className="man-matrix-section">
-        <div className="man-matrix-header">
-          <span className="man-chart-label">Campaign performance matrix</span>
-        </div>
-        <div className="man-matrix-wrap">
-          <table className="man-matrix">
-            <thead>
-              <tr>
-                <th>Campaign</th>
-                <th>Tier</th>
-                <th>Spend</th>
-                <th>Conversions</th>
-                <th>ROI</th>
-                <th>Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              {CAMPAIGN_MATRIX.map((row) => (
-                <tr key={row.name}>
-                  <td className="man-matrix-name">{row.name}</td>
-                  <td>
-                    <span
-                      className={`man-tier-badge man-tier-badge--${row.tier.toLowerCase()}`}
-                    >
-                      {row.tier}
-                    </span>
-                  </td>
-                  <td>${row.spend}</td>
-                  <td>{row.conversions}</td>
-                  <td className="man-matrix-roi">{row.roi}×</td>
-                  <td>
-                    <span
-                      className={`man-status-badge man-status-badge--${row.status.toLowerCase()}`}
-                    >
-                      {row.status}
-                    </span>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </section>
-
-      {/* Insights */}
-      <section className="man-insights">
-        <div className="man-insights-header">
-          <p className="man-insights-eyebrow">Auto-generated</p>
-          <h2 className="man-insights-title">Insights</h2>
-        </div>
-        <div className="man-insights-grid">
-          {INSIGHTS.map((ins) => (
-            <div key={ins.id} className="man-insight-card">
-              <div
-                className="man-insight-accent"
-                style={{ background: ins.accent }}
-              />
-              <div className="man-insight-stat-row">
-                <span
-                  className="man-insight-stat"
-                  style={{ color: ins.accent }}
-                >
-                  {ins.stat}
-                </span>
-                <span className="man-insight-context">{ins.context}</span>
+        {/* Charts 2-col */}
+        <div className="man-charts-grid">
+          <div className="man-chart-card">
+            <div className="man-chart-header">
+              <div>
+                <div className="man-chart-label">Creator Tier ROI</div>
+                <div className="man-chart-sublabel">Return multiplier</div>
               </div>
-              <h3 className="man-insight-headline">{ins.headline}</h3>
-              <p className="man-insight-body">{ins.body}</p>
-              <Link href={ins.ctaHref} className="man-insight-cta">
-                {ins.cta} →
-              </Link>
             </div>
-          ))}
+            <div className="man-chart-body">
+              <TierROIBar data={TIER_ROI} />
+            </div>
+          </div>
+
+          <div className="man-chart-card">
+            <div className="man-chart-header">
+              <div>
+                <div className="man-chart-label">Time-to-Conversion</div>
+                <div className="man-chart-sublabel">Hours after content</div>
+              </div>
+            </div>
+            <div className="man-chart-body">
+              <Histogram data={TIME_TO_CONV_HIST} />
+            </div>
+          </div>
         </div>
-      </section>
+
+        {/* Bottom 2-col: Top Campaigns + Top Creators */}
+        <div className="man-bottom-grid">
+          {/* Top Campaigns */}
+          <div className="man-chart-card">
+            <div className="man-chart-header">
+              <div className="man-chart-label">Top Campaigns</div>
+            </div>
+            <table className="man-table">
+              <thead>
+                <tr>
+                  <th>Campaign</th>
+                  <th>Tier</th>
+                  <th>Conv.</th>
+                  <th>ROI</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                {CAMPAIGN_MATRIX.map((row) => (
+                  <tr key={row.name}>
+                    <td className="man-table__name">{row.name}</td>
+                    <td>
+                      <span
+                        className={`man-tier-badge man-tier-badge--${row.tier.toLowerCase()}`}
+                      >
+                        {row.tier}
+                      </span>
+                    </td>
+                    <td>{row.conversions}</td>
+                    <td className="man-table__roi">{row.roi}×</td>
+                    <td>
+                      <span
+                        className={`man-status-badge man-status-badge--${row.status.toLowerCase()}`}
+                      >
+                        {row.status}
+                      </span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          {/* Top Creators */}
+          <div className="man-chart-card">
+            <div className="man-chart-header">
+              <div className="man-chart-label">Top Creators</div>
+            </div>
+            <table className="man-table">
+              <thead>
+                <tr>
+                  <th>Creator</th>
+                  <th>Tier</th>
+                  <th>Verified Visits</th>
+                  <th>ROI</th>
+                </tr>
+              </thead>
+              <tbody>
+                {[
+                  {
+                    name: "@parkslope.eats",
+                    tier: "Partner",
+                    visits: 178,
+                    roi: 4.8,
+                  },
+                  {
+                    name: "@brooklyn.bites",
+                    tier: "Partner",
+                    visits: 142,
+                    roi: 4.2,
+                  },
+                  {
+                    name: "@fortgreene.co",
+                    tier: "Proven",
+                    visits: 87,
+                    roi: 2.9,
+                  },
+                  {
+                    name: "@nyclaunch",
+                    tier: "Explorer",
+                    visits: 52,
+                    roi: 2.1,
+                  },
+                  {
+                    name: "@bedstuy.daily",
+                    tier: "Operator",
+                    visits: 41,
+                    roi: 1.8,
+                  },
+                ].map((row) => (
+                  <tr key={row.name}>
+                    <td className="man-table__name">{row.name}</td>
+                    <td>
+                      <span
+                        className={`man-tier-badge man-tier-badge--${row.tier.toLowerCase()}`}
+                      >
+                        {row.tier}
+                      </span>
+                    </td>
+                    <td>{row.visits}</td>
+                    <td className="man-table__roi">{row.roi}×</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      {/* Insights section */}
+      <div className="man-insights-header">
+        <span className="man-chart-label">Auto-Generated Insights</span>
+      </div>
+      <div className="man-insights-grid">
+        {INSIGHTS.map((ins) => (
+          <div key={ins.id} className="man-insight-card">
+            <div
+              className="man-insight-accent"
+              style={{ background: ins.accent }}
+            />
+            <div className="man-insight-stat-row">
+              <span className="man-insight-stat" style={{ color: ins.accent }}>
+                {ins.stat}
+              </span>
+              <span className="man-insight-context">{ins.context}</span>
+            </div>
+            <h3 className="man-insight-headline">{ins.headline}</h3>
+            <p className="man-insight-body">{ins.body}</p>
+            <Link href={ins.ctaHref} className="man-insight-cta">
+              {ins.cta} →
+            </Link>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }

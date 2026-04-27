@@ -27,51 +27,62 @@ const TIERS = [
 const TIER_NODES = [
   {
     id: "seed",
+    num: "01",
     name: "Seed",
     range: "1K–5K",
     earn: "$50–200/mo",
     detail:
       "No follower minimum. We measure engagement consistency over 90 days, not vanity numbers. Your first verified scans build the permanent record that drives every future rate.",
     unlock: "10 verified scans → Explorer review",
+    isPartner: false,
   },
   {
     id: "explorer",
+    num: "02",
     name: "Explorer",
     range: "5K–20K",
     earn: "$200–600/mo",
     detail:
       "Your audience converts. Brands start requesting you for specific neighborhoods. Scan rate and trust score both climb as your record proves itself.",
     unlock: "25 scans + 8% conversion rate → Operator",
+    isPartner: false,
   },
   {
     id: "operator",
+    num: "03",
     name: "Operator",
     range: "20K–50K",
     earn: "$600–1.5K/mo",
     detail:
       "You run campaigns like a business. Multiple concurrent deals, high weekly scan volume. Push's algorithm weights your reliability score heavily at this tier.",
     unlock: "50 scans/mo for 60 consecutive days → Proven",
+    isPartner: false,
   },
   {
     id: "proven",
+    num: "04",
     name: "Proven",
     range: "50K–150K",
     earn: "$1.5K–4K/mo",
     detail:
       "Your verified conversion history speaks louder than any follower count. Brands reference your record directly when selecting creators. You skip the generic brief.",
     unlock: "100 scans/mo + 60% merchant re-request rate → Closer",
+    isPartner: false,
   },
   {
     id: "closer",
+    num: "05",
     name: "Closer",
     range: "150K–500K",
     earn: "$4K–10K/mo",
     detail:
       "You bypass the apply queue. Merchants reach out directly. You co-create briefs, choose categories, and negotiate terms — campaign ownership shifts your way.",
     unlock: "200 scans/mo + 3 long-term merchant partnerships → Partner",
+    isPartner: false,
   },
   {
     id: "partner",
+    num: "06",
     name: "Partner",
     range: "500K+",
     earn: "$10K+/mo",
@@ -80,16 +91,6 @@ const TIER_NODES = [
     unlock: "Invitation only · reviewed quarterly",
     isPartner: true,
   },
-];
-
-/* Tier background shades — progressively darker for sky panel */
-const TIER_BG = [
-  "rgba(255,255,255,0.55)",
-  "rgba(255,255,255,0.46)",
-  "rgba(255,255,255,0.37)",
-  "rgba(255,255,255,0.26)",
-  "rgba(255,255,255,0.14)",
-  "rgba(10,10,10,0.08)",
 ];
 
 /* ── Earnings Calculator component ───────────────────────── */
@@ -128,15 +129,6 @@ function EarningsCalculator() {
             className="btn-pill"
             aria-pressed={tier === t.id}
             onClick={() => setTier(t.id)}
-            style={
-              tier === t.id
-                ? {
-                    background: "var(--ink)",
-                    color: "var(--snow)",
-                    borderColor: "var(--ink)",
-                  }
-                : undefined
-            }
           >
             {t.label}
           </button>
@@ -206,136 +198,43 @@ export default function ForCreatorsPage() {
   return (
     <>
       {/* ════════════════════════════════════════════════════
-          HERO — Full-Bleed Pattern A, border-radius: 0 (allowed)
+          HERO — Full-Bleed Pattern A (border-radius: 0 allowed)
+          Dark ink with radial accent glow
           ════════════════════════════════════════════════════ */}
-      <section
-        aria-label="Hero"
-        style={{
-          position: "relative",
-          overflow: "hidden",
-          height: "clamp(560px,80vh,880px)",
-          borderRadius: 0,
-          background: `
-            linear-gradient(180deg, rgba(0,0,0,0.10) 0%, rgba(0,0,0,0.60) 100%),
-            radial-gradient(ellipse 100% 80% at 60% 20%, rgba(193,18,31,0.18) 0%, transparent 60%),
-            radial-gradient(ellipse 80% 100% at 10% 90%, rgba(30,95,173,0.20) 0%, transparent 50%),
-            linear-gradient(160deg, #1c1a18 0%, #2e2b27 50%, #1a1816 100%)
-          `,
-        }}
-      >
-        {/* Right-top peek tile — hidden on mobile */}
-        <div
-          className="lg-surface--dark"
-          style={{
-            position: "absolute",
-            top: 96,
-            right: 64,
-            padding: 32,
-            borderRadius: 16,
-            display: "flex",
-            flexDirection: "column",
-            gap: 8,
-            minWidth: 180,
-          }}
-          // Hide below 768px via inline media — CSS class handles it
-          aria-hidden="true"
-        >
-          <div
-            style={{
-              fontFamily: "var(--font-display)",
-              fontSize: "clamp(40px,5vw,72px)",
-              fontWeight: 700,
-              lineHeight: 1,
-              color: "var(--snow)",
-            }}
-          >
-            87%
-          </div>
-          <div
-            style={{
-              fontFamily: "var(--font-body)",
-              fontSize: 14,
-              color: "rgba(255,255,255,0.75)",
-              textTransform: "uppercase",
-              letterSpacing: "0.06em",
-              fontWeight: 600,
-            }}
-          >
-            Creator retention
-          </div>
+      <section className="fc-hero" aria-label="For Creators Hero">
+        {/* Ghost watermark stat — architectural ghost digit */}
+        <div className="fc-hero-ghost" aria-hidden="true">
+          87%
+        </div>
+
+        {/* Floating glass stat tile — top right, hidden on mobile */}
+        <div className="lg-surface--dark fc-hero-peek" aria-hidden="true">
+          <div className="fc-peek-num">200+</div>
+          <div className="fc-peek-label">Creators active</div>
         </div>
 
         {/* Bottom-left copy block — v11 corner-anchored */}
-        <div
-          style={{
-            position: "absolute",
-            bottom: "clamp(56px,8vw,96px)",
-            left: "clamp(24px,5vw,64px)",
-            maxWidth: 700,
-          }}
-        >
-          <span
-            className="eyebrow"
-            style={{
-              color: "rgba(255,255,255,0.75)",
-              display: "block",
-              marginBottom: 16,
-            }}
-          >
-            (FOR CREATORS)
-          </span>
+        <div className="fc-hero-copy">
+          <span className="eyebrow fc-hero-eyebrow">(FOR CREATORS)</span>
 
-          <h1
-            style={{
-              fontFamily: "var(--font-hero)",
-              fontStyle: "italic",
-              fontSize: "clamp(64px,9vw,160px)",
-              fontWeight: 400,
-              letterSpacing: "-0.03em",
-              lineHeight: 0.88,
-              color: "var(--snow)",
-              margin: 0,
-            }}
-          >
+          <h1 className="fc-hero-h1">
             Perform.
             <br />
             Get paid.
           </h1>
 
-          <p
-            style={{
-              fontFamily: "var(--font-body)",
-              fontSize: 18,
-              lineHeight: 1.65,
-              color: "rgba(255,255,255,0.72)",
-              marginTop: 32,
-              maxWidth: "60ch",
-            }}
-          >
-            Turn your neighborhood presence into verified income.
+          <p className="fc-hero-sub">
+            Your audience walks in. You get paid. No agency, no retainer — just
+            verified foot traffic turned into income.
           </p>
 
-          {/* CTA cluster */}
-          <div
-            style={{
-              display: "flex",
-              gap: 16,
-              marginTop: 48,
-              flexWrap: "wrap",
-              alignItems: "center",
-            }}
-          >
+          <div className="fc-hero-actions">
             <Link href="/creator/signup" className="btn-primary click-shift">
               Apply Now
             </Link>
             <Link
               href="/how-it-works"
-              className="btn-ghost click-shift"
-              style={{
-                background: "transparent",
-                color: "var(--snow)",
-                border: "1px solid rgba(255,255,255,0.6)",
-              }}
+              className="btn-ghost click-shift fc-hero-ghost-btn"
             >
               How It Works
             </Link>
@@ -344,86 +243,219 @@ export default function ForCreatorsPage() {
       </section>
 
       {/* ════════════════════════════════════════════════════
-          SIGNATURE DIVIDER
+          EDITORIAL STATEMENT — Dark Ink, KPI trio
+          Asymmetric 8+4 composition
           ════════════════════════════════════════════════════ */}
-      <div style={{ textAlign: "center" }}>
-        <span className="sig-divider">Merchant · Creator · Customer ·</span>
+      <section className="fc-kpi-section" aria-label="Earnings potential">
+        {/* Ghost architectural dollar */}
+        <div className="fc-kpi-ghost" aria-hidden="true">
+          $
+        </div>
+
+        <div className="fc-kpi-inner">
+          {/* Left 8-col: headline + KPI trio */}
+          <div className="fc-kpi-left">
+            <p className="fc-kpi-eyebrow">(PARTNER TIER · MONTHLY POTENTIAL)</p>
+
+            <div className="fc-kpi-row">
+              <div className="fc-kpi-block">
+                <p className="fc-kpi-num">$10K+</p>
+                <p className="fc-kpi-cap">per month</p>
+              </div>
+              <div className="fc-kpi-divider" aria-hidden="true" />
+              <div className="fc-kpi-block">
+                <p className="fc-kpi-num">$3.50</p>
+                <p className="fc-kpi-cap">avg per visit</p>
+              </div>
+              <div className="fc-kpi-divider" aria-hidden="true" />
+              <div className="fc-kpi-block">
+                <p className="fc-kpi-num">87%</p>
+                <p className="fc-kpi-cap">creator retention</p>
+              </div>
+            </div>
+
+            <p className="fc-kpi-fine">
+              No agency. No retainer. Paid Fridays via Stripe Connect.
+            </p>
+          </div>
+
+          {/* Right 4-col: CTA tile */}
+          <div className="fc-kpi-right">
+            <div className="fc-kpi-tile">
+              <p className="fc-kpi-tile-eyebrow">(READY?)</p>
+              <p className="fc-kpi-tile-head">Join the next cohort</p>
+              <p className="fc-kpi-tile-body">
+                NYC creators only. Applications reviewed weekly.
+              </p>
+              <Link href="/creator/signup" className="btn-ink click-shift">
+                Apply Now
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ════════════════════════════════════════════════════
+          SIGNATURE DIVIDER 1
+          ════════════════════════════════════════════════════ */}
+      <div className="fc-sig-wrap">
+        <span className="sig-divider">Posted · Scanned · Verified ·</span>
       </div>
 
       {/* ════════════════════════════════════════════════════
-          EARNINGS PANEL — Candy Butter
+          HOW IT WORKS — Numbered editorial rows, 3-column grid
+          Warm butter candy panel
           ════════════════════════════════════════════════════ */}
       <section
-        className="candy-panel"
-        aria-label="Earnings calculator"
-        id="calculator"
-        style={{
-          background: "var(--panel-butter)",
-          position: "relative",
-          overflow: "hidden",
-        }}
+        className="candy-panel fc-how-section"
+        aria-label="How it works"
+        style={{ background: "var(--panel-butter)" }}
       >
-        {/* Floating glass tile — top right */}
-        <div
-          className="lg-surface"
-          style={{
-            position: "absolute",
-            top: 32,
-            right: 32,
-            padding: 32,
-            borderRadius: 16,
-            display: "flex",
-            flexDirection: "column",
-            gap: 8,
-            minWidth: 200,
-          }}
-          aria-hidden="true"
-        >
-          <div
-            style={{
-              fontFamily: "var(--font-display)",
-              fontSize: "clamp(28px,3vw,40px)",
-              fontWeight: 700,
-              letterSpacing: "-0.04em",
-              color: "var(--ink)",
-              lineHeight: 1,
-            }}
-          >
-            Up to $4,200/mo
-          </div>
-          <div
-            style={{
-              fontFamily: "var(--font-body)",
-              fontSize: 12,
-              fontWeight: 600,
-              textTransform: "uppercase",
-              letterSpacing: "0.06em",
-              color: "var(--ink-3)",
-            }}
-          >
-            Partner tier
-          </div>
+        {/* Floating glass stat tile */}
+        <div className="lg-surface fc-how-tile" aria-hidden="true">
+          <div className="fc-how-tile-num">3</div>
+          <div className="fc-how-tile-cap">steps to first payout</div>
         </div>
 
-        {/* Panel content */}
-        <div style={{ maxWidth: "var(--content-width)", margin: "0 auto" }}>
+        <div className="fc-section-inner">
+          <span
+            className="eyebrow"
+            style={{ display: "block", marginBottom: 16 }}
+          >
+            (HOW IT WORKS)
+          </span>
+          <h2 className="fc-h2">
+            Walk in.
+            <br />
+            Scan. Earn.
+          </h2>
+
+          {/* Numbered editorial rows — 3-col grid */}
+          <div className="fc-how-grid">
+            <div className="fc-how-row click-shift">
+              <span className="fc-how-num">01</span>
+              <div className="fc-how-body">
+                <h3 className="fc-h3">Apply once</h3>
+                <p className="fc-how-text">
+                  No follower floor. We review your engagement consistency over
+                  90 days. No agency, no exclusivity clause.
+                </p>
+              </div>
+            </div>
+            <div className="fc-how-row click-shift">
+              <span className="fc-how-num">02</span>
+              <div className="fc-how-body">
+                <h3 className="fc-h3">Pick a campaign</h3>
+                <p className="fc-how-text">
+                  Browse merchant campaigns by neighborhood, category, and rate.
+                  Accept what fits your audience and schedule.
+                </p>
+              </div>
+            </div>
+            <div className="fc-how-row click-shift">
+              <span className="fc-how-num">03</span>
+              <div className="fc-how-body">
+                <h3 className="fc-h3">Drive foot traffic</h3>
+                <p className="fc-how-text">
+                  Post your content. Your audience scans the QR. Every verified
+                  visit triggers a payout — no chasing invoices.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ════════════════════════════════════════════════════
+          TIERS PANEL — Dark Ink + numbered editorial rows
+          Cool panel (dark ink counts as cool counterweight)
+          ════════════════════════════════════════════════════ */}
+      <section className="fc-tiers-section" aria-label="Creator tiers">
+        {/* Ghost architectural numeral */}
+        <div className="fc-tiers-ghost" aria-hidden="true">
+          6
+        </div>
+
+        <div className="fc-section-inner fc-tiers-inner">
+          <span
+            className="eyebrow fc-eyebrow-light"
+            style={{ display: "block", marginBottom: 16 }}
+          >
+            (6 TIERS)
+          </span>
+          <h2 className="fc-h2 fc-h2-light">
+            Progress that
+            <br />
+            compounds.
+          </h2>
+
+          {/* Numbered editorial tier rows */}
+          <div className="fc-tiers-grid">
+            {TIER_NODES.map((t) => (
+              <div
+                key={t.id}
+                className={`fc-tier-row click-shift${t.isPartner ? " fc-tier-row--partner" : ""}`}
+              >
+                <span className="fc-tier-row-num">{t.num}</span>
+                <div className="fc-tier-row-body">
+                  <div className="fc-tier-row-head">
+                    <span
+                      className={`fc-tier-row-name${t.isPartner ? " fc-tier-row-name--partner" : ""}`}
+                    >
+                      {t.name}
+                    </span>
+                    <span className="fc-tier-row-range">
+                      {t.range} followers
+                    </span>
+                  </div>
+                  <p className="fc-tier-row-detail">{t.detail}</p>
+                  <p className="fc-tier-row-unlock">{t.unlock}</p>
+                </div>
+                <div
+                  className={`fc-tier-row-earn${t.isPartner ? " fc-tier-row-earn--partner" : ""}`}
+                >
+                  {t.earn}
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <p className="fc-tiers-note">
+            Rate rises with verified-visit record. No cap. Paid every Friday.
+          </p>
+        </div>
+      </section>
+
+      {/* ════════════════════════════════════════════════════
+          SIGNATURE DIVIDER 2
+          ════════════════════════════════════════════════════ */}
+      <div className="fc-sig-wrap">
+        <span className="sig-divider">Story · Scan · Pay ·</span>
+      </div>
+
+      {/* ════════════════════════════════════════════════════
+          EARNINGS PANEL — Warm butter, calculator + glass tile
+          ════════════════════════════════════════════════════ */}
+      <section
+        className="candy-panel fc-calc-section"
+        aria-label="Earnings calculator"
+        id="calculator"
+        style={{ background: "var(--panel-butter)" }}
+      >
+        {/* Floating glass stat tile — top right */}
+        <div className="lg-surface fc-calc-tile" aria-hidden="true">
+          <div className="fc-calc-tile-num">Up to $4,200/mo</div>
+          <div className="fc-calc-tile-cap">Operator tier</div>
+        </div>
+
+        <div className="fc-section-inner">
           <span
             className="eyebrow"
             style={{ display: "block", marginBottom: 16 }}
           >
             (THE MATH)
           </span>
-          <h2
-            style={{
-              fontFamily: "var(--font-display)",
-              fontSize: 40,
-              fontWeight: 700,
-              letterSpacing: "-0.04em",
-              lineHeight: 1.1,
-              color: "var(--ink)",
-              margin: "0 0 48px",
-            }}
-          >
+          <h2 className="fc-h2" style={{ marginBottom: 48 }}>
             What you actually earn.
           </h2>
 
@@ -432,396 +464,96 @@ export default function ForCreatorsPage() {
       </section>
 
       {/* ════════════════════════════════════════════════════
-          TIERS PANEL — Candy Sky + 6 tier cards
+          PULL QUOTE — Brand Red full-width editorial moment
           ════════════════════════════════════════════════════ */}
-      <section
-        className="candy-panel"
-        aria-label="Creator tiers"
-        style={{ background: "var(--panel-sky)" }}
-      >
-        <div style={{ maxWidth: "var(--content-width)", margin: "0 auto" }}>
-          <span
-            className="eyebrow"
-            style={{ display: "block", marginBottom: 16 }}
-          >
-            (6 TIERS)
-          </span>
-          <h2
-            style={{
-              fontFamily: "var(--font-display)",
-              fontSize: 40,
-              fontWeight: 700,
-              letterSpacing: "-0.04em",
-              lineHeight: 1.1,
-              color: "var(--ink)",
-              margin: "0 0 48px",
-            }}
-          >
-            Progress that
-            <br />
-            compounds.
-          </h2>
-
-          {/* 6-column grid */}
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(6, 1fr)",
-              gap: 16,
-            }}
-            className="tiers-grid"
-          >
-            {TIER_NODES.map((t, i) => (
-              <div
-                key={t.id}
-                className="click-shift"
-                style={{
-                  background: TIER_BG[i],
-                  borderRadius: "var(--r-xl)",
-                  padding: 24,
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: 12,
-                  cursor: "default",
-                }}
-              >
-                <div
-                  style={{
-                    fontFamily: "var(--font-display)",
-                    fontSize: 20,
-                    fontWeight: 700,
-                    color: t.isPartner ? "var(--champagne)" : "var(--ink)",
-                    letterSpacing: "-0.03em",
-                  }}
-                >
-                  {t.name}
-                </div>
-                <div
-                  style={{
-                    fontFamily: "var(--font-body)",
-                    fontSize: 12,
-                    color: "var(--ink-3)",
-                    lineHeight: 1.6,
-                  }}
-                >
-                  {t.range} followers
-                </div>
-                <div
-                  style={{
-                    fontFamily: "var(--font-display)",
-                    fontSize: 16,
-                    fontWeight: 700,
-                    color: "var(--ink)",
-                    letterSpacing: "-0.02em",
-                    marginTop: "auto",
-                  }}
-                >
-                  {t.earn}
-                </div>
-              </div>
-            ))}
-          </div>
-
-          <p
-            style={{
-              fontFamily: "var(--font-body)",
-              fontSize: 12,
-              color: "var(--ink-4)",
-              letterSpacing: "0.04em",
-              marginTop: 32,
-            }}
-          >
-            Rate rises with verified-visit record. No cap. Paid every Friday.
-          </p>
+      <section className="fc-quote-section" aria-label="Creator testimonial">
+        {/* Decorative quote mark ghost */}
+        <div className="fc-quote-ghost" aria-hidden="true">
+          &ldquo;
         </div>
 
-        {/* Responsive override — inline style cannot do media queries;
-            CSS class tiers-grid is defined in creators.css responsive section */}
+        <div className="fc-quote-inner">
+          <blockquote className="fc-quote-text">
+            &ldquo;I made more in my first month than four months of sponsored
+            posts combined. The QR doesn&rsquo;t lie.&rdquo;
+          </blockquote>
+          <div className="fc-quote-attr">
+            <span className="fc-quote-name">Maria V.</span>
+            <span className="fc-quote-sep">/</span>
+            <span className="fc-quote-meta">Operator Tier · Brooklyn</span>
+          </div>
+        </div>
       </section>
 
       {/* ════════════════════════════════════════════════════
-          SIGNATURE DIVIDER
-          ════════════════════════════════════════════════════ */}
-      <div style={{ textAlign: "center" }}>
-        <span className="sig-divider">Story · Scan · Pay ·</span>
-      </div>
-
-      {/* ════════════════════════════════════════════════════
           PHOTO GRID PANEL — 3-up Photo Cards
+          Cool sky panel (alternates after red quote)
           ════════════════════════════════════════════════════ */}
       <section
+        className="fc-photo-section"
         aria-label="Real campaigns"
-        style={{
-          background: "var(--surface)",
-          padding: "96px clamp(24px,4vw,64px)",
-        }}
+        style={{ background: "var(--surface)" }}
       >
-        <div style={{ maxWidth: "var(--content-width)", margin: "0 auto" }}>
+        <div className="fc-section-inner">
           <span
             className="eyebrow"
             style={{ display: "block", marginBottom: 16 }}
           >
             (WHAT IT LOOKS LIKE)
           </span>
-          <h2
-            style={{
-              fontFamily: "var(--font-display)",
-              fontSize: 40,
-              fontWeight: 700,
-              letterSpacing: "-0.04em",
-              lineHeight: 1.1,
-              color: "var(--ink)",
-              margin: "0 0 48px",
-            }}
-          >
+          <h2 className="fc-h2" style={{ marginBottom: 48 }}>
             Real campaigns.
             <br />
             Real neighborhoods.
           </h2>
 
           {/* 3-up Photo Card grid */}
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(3,1fr)",
-              gap: 24,
-            }}
-            className="photo-grid"
-          >
-            {/* Card 1 */}
+          <div className="fc-photo-grid">
+            {/* Card 1 — warm earth tone */}
             <div
-              className="click-shift"
+              className="fc-photo-card click-shift"
               style={{
-                position: "relative",
-                overflow: "hidden",
-                borderRadius: "var(--r-md)",
-                aspectRatio: "4/5",
-                cursor: "pointer",
+                background:
+                  "linear-gradient(160deg, var(--char) 0%, var(--cat-food) 60%, var(--ink) 100%)",
               }}
             >
-              <div
-                style={{
-                  position: "absolute",
-                  inset: 0,
-                  background:
-                    "linear-gradient(160deg, #2c2a26 0%, #4a2020 60%, #1a1816 100%)",
-                }}
-              />
-              <div
-                className="lg-surface--badge"
-                style={{
-                  position: "absolute",
-                  top: 16,
-                  right: 16,
-                  padding: "8px 14px",
-                  fontSize: 12,
-                  fontFamily: "var(--font-body)",
-                  fontWeight: 600,
-                  textTransform: "uppercase",
-                  letterSpacing: "0.04em",
-                }}
-              >
-                Active
-              </div>
-              <div
-                style={{
-                  position: "absolute",
-                  inset: "auto 0 0 0",
-                  height: "35%",
-                  background:
-                    "linear-gradient(to bottom, transparent, rgba(0,0,0,0.78))",
-                }}
-              />
-              <div
-                style={{
-                  position: "absolute",
-                  bottom: 0,
-                  left: 0,
-                  right: 0,
-                  padding: 24,
-                }}
-              >
-                <div
-                  style={{
-                    fontFamily: "var(--font-display)",
-                    fontSize: 20,
-                    fontWeight: 700,
-                    color: "var(--snow)",
-                  }}
-                >
-                  Williamsburg Market
-                </div>
-                <div
-                  style={{
-                    fontFamily: "var(--font-body)",
-                    fontSize: 12,
-                    fontWeight: 500,
-                    textTransform: "uppercase",
-                    letterSpacing: "0.04em",
-                    color: "rgba(255,255,255,0.85)",
-                    marginTop: 8,
-                  }}
-                >
-                  Food &amp; Bev · 24 scans
-                </div>
+              <div className="lg-surface--badge fc-photo-badge">Active</div>
+              <div className="fc-photo-overlay" />
+              <div className="fc-photo-copy">
+                <div className="fc-photo-title">Williamsburg Market</div>
+                <div className="fc-photo-meta">Food &amp; Bev · 24 scans</div>
               </div>
             </div>
 
-            {/* Card 2 */}
+            {/* Card 2 — cool blue tone */}
             <div
-              className="click-shift"
+              className="fc-photo-card click-shift"
               style={{
-                position: "relative",
-                overflow: "hidden",
-                borderRadius: "var(--r-md)",
-                aspectRatio: "4/5",
-                cursor: "pointer",
+                background:
+                  "linear-gradient(160deg, var(--graphite) 0%, var(--cat-travel) 60%, var(--ink) 100%)",
               }}
             >
-              <div
-                style={{
-                  position: "absolute",
-                  inset: 0,
-                  background:
-                    "linear-gradient(160deg, #1a2c26 0%, #0d2840 60%, #1a1816 100%)",
-                }}
-              />
-              <div
-                className="lg-surface--badge"
-                style={{
-                  position: "absolute",
-                  top: 16,
-                  right: 16,
-                  padding: "8px 14px",
-                  fontSize: 12,
-                  fontFamily: "var(--font-body)",
-                  fontWeight: 600,
-                  textTransform: "uppercase",
-                  letterSpacing: "0.04em",
-                }}
-              >
-                Verified
-              </div>
-              <div
-                style={{
-                  position: "absolute",
-                  inset: "auto 0 0 0",
-                  height: "35%",
-                  background:
-                    "linear-gradient(to bottom, transparent, rgba(0,0,0,0.78))",
-                }}
-              />
-              <div
-                style={{
-                  position: "absolute",
-                  bottom: 0,
-                  left: 0,
-                  right: 0,
-                  padding: 24,
-                }}
-              >
-                <div
-                  style={{
-                    fontFamily: "var(--font-display)",
-                    fontSize: 20,
-                    fontWeight: 700,
-                    color: "var(--snow)",
-                  }}
-                >
-                  Brooklyn Coffee
-                </div>
-                <div
-                  style={{
-                    fontFamily: "var(--font-body)",
-                    fontSize: 12,
-                    fontWeight: 500,
-                    textTransform: "uppercase",
-                    letterSpacing: "0.04em",
-                    color: "rgba(255,255,255,0.85)",
-                    marginTop: 8,
-                  }}
-                >
-                  Beauty · 18 scans
-                </div>
+              <div className="lg-surface--badge fc-photo-badge">Verified</div>
+              <div className="fc-photo-overlay" />
+              <div className="fc-photo-copy">
+                <div className="fc-photo-title">Brooklyn Coffee</div>
+                <div className="fc-photo-meta">Beauty · 18 scans</div>
               </div>
             </div>
 
-            {/* Card 3 */}
+            {/* Card 3 — warm amber tone */}
             <div
-              className="click-shift"
+              className="fc-photo-card click-shift"
               style={{
-                position: "relative",
-                overflow: "hidden",
-                borderRadius: "var(--r-md)",
-                aspectRatio: "4/5",
-                cursor: "pointer",
+                background:
+                  "linear-gradient(160deg, var(--char) 0%, var(--cat-food) 60%, var(--ink) 100%)",
               }}
             >
-              <div
-                style={{
-                  position: "absolute",
-                  inset: 0,
-                  background:
-                    "linear-gradient(160deg, #2a1c10 0%, #3a2a0a 60%, #1a1816 100%)",
-                }}
-              />
-              <div
-                className="lg-surface--badge"
-                style={{
-                  position: "absolute",
-                  top: 16,
-                  right: 16,
-                  padding: "8px 14px",
-                  fontSize: 12,
-                  fontFamily: "var(--font-body)",
-                  fontWeight: 600,
-                  textTransform: "uppercase",
-                  letterSpacing: "0.04em",
-                }}
-              >
-                Trending
-              </div>
-              <div
-                style={{
-                  position: "absolute",
-                  inset: "auto 0 0 0",
-                  height: "35%",
-                  background:
-                    "linear-gradient(to bottom, transparent, rgba(0,0,0,0.78))",
-                }}
-              />
-              <div
-                style={{
-                  position: "absolute",
-                  bottom: 0,
-                  left: 0,
-                  right: 0,
-                  padding: 24,
-                }}
-              >
-                <div
-                  style={{
-                    fontFamily: "var(--font-display)",
-                    fontSize: 20,
-                    fontWeight: 700,
-                    color: "var(--snow)",
-                  }}
-                >
-                  Park Slope Kitchen
-                </div>
-                <div
-                  style={{
-                    fontFamily: "var(--font-body)",
-                    fontSize: 12,
-                    fontWeight: 500,
-                    textTransform: "uppercase",
-                    letterSpacing: "0.04em",
-                    color: "rgba(255,255,255,0.85)",
-                    marginTop: 8,
-                  }}
-                >
-                  Dining · 31 scans
-                </div>
+              <div className="lg-surface--badge fc-photo-badge">Trending</div>
+              <div className="fc-photo-overlay" />
+              <div className="fc-photo-copy">
+                <div className="fc-photo-title">Park Slope Kitchen</div>
+                <div className="fc-photo-meta">Dining · 31 scans</div>
               </div>
             </div>
           </div>
@@ -829,103 +561,24 @@ export default function ForCreatorsPage() {
       </section>
 
       {/* ════════════════════════════════════════════════════
-          TICKET PANEL — GA Orange CTA
+          TICKET PANEL — GA Orange final CTA
           ════════════════════════════════════════════════════ */}
-      <section
-        className="ticket-panel"
-        aria-label="Apply CTA"
-        style={{
-          margin: "0 clamp(24px,4vw,64px)",
-          position: "relative",
-        }}
-      >
+      <section className="ticket-panel fc-ticket" aria-label="Apply CTA">
         {/* Four grommet circles — corner anchored */}
-        <div
-          aria-hidden="true"
-          style={{
-            position: "absolute",
-            top: 24,
-            left: 24,
-            width: 16,
-            height: 16,
-            borderRadius: "50%",
-            background: "var(--ink)",
-          }}
-        />
-        <div
-          aria-hidden="true"
-          style={{
-            position: "absolute",
-            top: 24,
-            right: 24,
-            width: 16,
-            height: 16,
-            borderRadius: "50%",
-            background: "var(--ink)",
-          }}
-        />
-        <div
-          aria-hidden="true"
-          style={{
-            position: "absolute",
-            bottom: 24,
-            left: 24,
-            width: 16,
-            height: 16,
-            borderRadius: "50%",
-            background: "var(--ink)",
-          }}
-        />
-        <div
-          aria-hidden="true"
-          style={{
-            position: "absolute",
-            bottom: 24,
-            right: 24,
-            width: 16,
-            height: 16,
-            borderRadius: "50%",
-            background: "var(--ink)",
-          }}
-        />
+        <div className="fc-grommet fc-grommet--tl" aria-hidden="true" />
+        <div className="fc-grommet fc-grommet--tr" aria-hidden="true" />
+        <div className="fc-grommet fc-grommet--bl" aria-hidden="true" />
+        <div className="fc-grommet fc-grommet--br" aria-hidden="true" />
 
         {/* Centered content */}
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            textAlign: "center",
-            gap: 24,
-          }}
-        >
-          <h2
-            style={{
-              fontFamily: "var(--font-hero)",
-              fontStyle: "italic",
-              fontSize: "clamp(40px,5vw,56px)",
-              fontWeight: 400,
-              letterSpacing: "-0.02em",
-              lineHeight: 1.1,
-              color: "var(--ink)",
-              margin: 0,
-            }}
-          >
+        <div className="fc-ticket-content">
+          <h2 className="fc-ticket-h2">
             Ready to
             <br />
             start scanning?
           </h2>
 
-          <p
-            style={{
-              fontFamily: "var(--font-body)",
-              fontSize: 16,
-              lineHeight: 1.65,
-              color: "var(--ink)",
-              maxWidth: 480,
-              margin: 0,
-            }}
-          >
+          <p className="fc-ticket-body">
             Applications reviewed weekly. NYC creators only.
           </p>
 
@@ -935,20 +588,8 @@ export default function ForCreatorsPage() {
         </div>
       </section>
 
-      {/* Spacer below ticket panel */}
+      {/* Bottom spacer */}
       <div style={{ height: 64 }} aria-hidden="true" />
-
-      {/* Responsive overrides — tiers grid + photo grid + peek tile */}
-      <style>{`
-        @media (max-width: 1024px) {
-          .tiers-grid  { grid-template-columns: repeat(3, 1fr) !important; }
-          .photo-grid  { grid-template-columns: repeat(2, 1fr) !important; }
-        }
-        @media (max-width: 767px) {
-          .tiers-grid  { grid-template-columns: repeat(2, 1fr) !important; }
-          .photo-grid  { grid-template-columns: 1fr !important; }
-        }
-      `}</style>
     </>
   );
 }

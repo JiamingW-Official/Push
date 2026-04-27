@@ -7,7 +7,7 @@
 
 .root {
   background: var(--surface);
-  color: var(--dark);
+  color: var(--ink);
   padding: 40px 24px;
   border: 1px solid var(--line);
   border-radius: var(--r-lg);
@@ -25,7 +25,7 @@
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--primary);
+  color: var(--brand-red);
   margin: 0 0 12px;
 }
 
@@ -34,7 +34,7 @@
   font-size: 36px;
   font-weight: 800;
   letter-spacing: -0.03em;
-  color: var(--dark);
+  color: var(--ink);
   margin: 0 0 12px;
   line-height: 1.05;
 }
@@ -61,7 +61,7 @@
   display: block;
   cursor: pointer;
   padding: 20px;
-  background: var(--surface-elevated);
+  background: var(--surface-2);
   border: 1px solid var(--line);
   border-radius: var(--r-lg);
   transition:
@@ -70,16 +70,16 @@
 }
 
 .option:hover {
-  border-color: var(--tertiary);
+  border-color: var(--accent-blue);
 }
 
 .option:focus-visible {
-  outline: 2px solid var(--primary);
+  outline: 2px solid var(--brand-red);
   outline-offset: 2px;
 }
 
 .optionSelected {
-  border-color: var(--primary);
+  border-color: var(--brand-red);
   background: rgba(193, 18, 31, 0.04);
 }
 
@@ -104,14 +104,14 @@
   font-family: var(--font-display);
   font-size: 20px;
   font-weight: 700;
-  color: var(--dark);
+  color: var(--ink);
   letter-spacing: -0.02em;
 }
 
 .optionTagline {
   font-family: var(--font-body);
   font-size: 12px;
-  color: var(--tertiary);
+  color: var(--accent-blue);
   font-weight: 600;
   letter-spacing: 0.01em;
 }
@@ -153,14 +153,14 @@
 .moreLink {
   font-family: var(--font-body);
   font-size: 12px;
-  color: var(--tertiary);
+  color: var(--accent-blue);
   text-decoration: none;
   letter-spacing: 0.01em;
   transition: color 200ms ease;
 }
 
 .moreLink:hover {
-  color: var(--dark);
+  color: var(--ink);
 }
 
 .actions {
@@ -193,13 +193,13 @@
 
 .declineBtn:hover {
   border-color: var(--graphite);
-  color: var(--dark);
+  color: var(--ink);
 }
 
 .continueBtn {
-  background: var(--primary);
+  background: var(--brand-red);
   color: #fff;
-  border-color: var(--primary);
+  border-color: var(--brand-red);
 }
 
 .continueBtn:hover {

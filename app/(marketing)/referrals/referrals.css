@@ -15,7 +15,7 @@
 }
 
 .ref-section--dark {
-  background: var(--dark);
+  background: var(--ink);
   color: #fff;
 }
 
@@ -31,13 +31,13 @@
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--primary);
+  color: var(--brand-red);
   display: block;
   margin-bottom: var(--space-3);
 }
 
 .ref-eyebrow--light {
-  color: var(--tertiary);
+  color: var(--accent-blue);
 }
 
 /* ── reveal animation ── */
@@ -61,7 +61,7 @@
    01 — HERO
    ============================================================ */
 .ref-hero {
-  background: var(--dark);
+  background: var(--ink);
   min-height: 100svh;
   display: flex;
   flex-direction: column;
@@ -112,7 +112,7 @@
 
 .ref-hero-headline em {
   font-style: italic;
-  color: var(--primary);
+  color: var(--brand-red);
   font-weight: 900;
 }
 
@@ -155,7 +155,7 @@
    02 — TRIPLE REWARD EXPLAINER
    ============================================================ */
 .ref-rewards {
-  background: var(--surface-bright);
+  background: var(--surface-3);
 }
 
 .ref-rewards-intro {
@@ -168,13 +168,13 @@
   font-weight: 800;
   letter-spacing: -0.05em;
   line-height: 1;
-  color: var(--dark);
+  color: var(--ink);
   margin-bottom: var(--space-3);
 }
 
 .ref-rewards-intro h2 em {
   font-style: italic;
-  color: var(--primary);
+  color: var(--brand-red);
 }
 
 .ref-rewards-intro p {
@@ -195,7 +195,7 @@
 }
 
 .ref-reward-card {
-  background: var(--surface-elevated);
+  background: var(--surface-2);
   padding: var(--space-6);
   display: flex;
   flex-direction: column;
@@ -230,7 +230,7 @@
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--tertiary);
+  color: var(--accent-blue);
 }
 
 .ref-reward-actors {
@@ -247,13 +247,13 @@
   padding: 4px 10px;
   background: var(--surface);
   border: 1px solid var(--line);
-  color: var(--dark);
+  color: var(--ink);
 }
 
 .ref-actor-arrow {
   font-family: var(--font-body);
   font-size: var(--text-small);
-  color: var(--primary);
+  color: var(--brand-red);
   font-weight: 700;
 }
 
@@ -262,7 +262,7 @@
   font-size: var(--text-h2);
   font-weight: 700;
   letter-spacing: -0.03em;
-  color: var(--dark);
+  color: var(--ink);
   line-height: 1.1;
 }
 
@@ -271,7 +271,7 @@
   font-size: clamp(40px, 5vw, 64px);
   font-weight: 900;
   letter-spacing: -0.05em;
-  color: var(--primary);
+  color: var(--brand-red);
   line-height: 1;
 }
 
@@ -292,7 +292,7 @@
 .ref-reward-note {
   font-family: var(--font-body);
   font-size: var(--text-caption);
-  color: var(--text-muted);
+  color: var(--ink-4);
   border-top: 1px solid var(--line);
   padding-top: var(--space-3);
   line-height: 1.5;
@@ -315,7 +315,7 @@
   font-weight: 800;
   letter-spacing: -0.05em;
   line-height: 1;
-  color: var(--dark);
+  color: var(--ink);
 }
 
 .ref-steps {
@@ -327,7 +327,7 @@
 }
 
 .ref-step {
-  background: var(--surface-bright);
+  background: var(--surface-3);
   padding: var(--space-5) var(--space-4);
   display: flex;
   flex-direction: column;
@@ -339,7 +339,7 @@
   font-size: clamp(64px, 8vw, 100px);
   font-weight: 200;
   letter-spacing: -0.05em;
-  color: var(--primary);
+  color: var(--brand-red);
   line-height: 0.9;
 }
 
@@ -349,7 +349,7 @@
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--tertiary);
+  color: var(--accent-blue);
 }
 
 .ref-step-title {
@@ -357,7 +357,7 @@
   font-size: var(--text-h3);
   font-weight: 700;
   letter-spacing: -0.02em;
-  color: var(--dark);
+  color: var(--ink);
 }
 
 .ref-step-desc {
@@ -372,7 +372,7 @@
    04 — EXAMPLE CALCULATIONS
    ============================================================ */
 .ref-calc {
-  background: var(--dark);
+  background: var(--ink);
   color: #fff;
 }
 
@@ -423,7 +423,7 @@
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--tertiary);
+  color: var(--accent-blue);
   margin-bottom: var(--space-3);
 }
 
@@ -507,7 +507,7 @@
    05 — FAQ
    ============================================================ */
 .ref-faq {
-  background: var(--surface-bright);
+  background: var(--surface-3);
 }
 
 .ref-faq-layout {
@@ -523,7 +523,7 @@
   font-weight: 800;
   letter-spacing: -0.05em;
   line-height: 0.95;
-  color: var(--dark);
+  color: var(--ink);
   margin-bottom: var(--space-4);
 }
 
@@ -557,7 +557,7 @@
 }
 
 .ref-faq-trigger:focus-visible {
-  outline: 2px solid var(--primary);
+  outline: 2px solid var(--brand-red);
   outline-offset: 2px;
 }
 
@@ -565,7 +565,7 @@
   font-family: var(--font-body);
   font-size: var(--text-body);
   font-weight: 600;
-  color: var(--dark);
+  color: var(--ink);
   line-height: 1.4;
   flex: 1;
 }
@@ -582,14 +582,14 @@
 }
 
 .ref-faq-item.open .ref-faq-icon {
-  background: var(--primary);
-  border-color: var(--primary);
+  background: var(--brand-red);
+  border-color: var(--brand-red);
 }
 
 .ref-faq-icon svg {
   width: 12px;
   height: 12px;
-  stroke: var(--dark);
+  stroke: var(--ink);
   transition: transform var(--t-base), stroke var(--t-base);
 }
 
@@ -639,7 +639,7 @@
   font-weight: 800;
   letter-spacing: -0.05em;
   line-height: 0.95;
-  color: var(--dark);
+  color: var(--ink);
 }
 
 .ref-leaderboard-period {
@@ -652,7 +652,7 @@
 
 .ref-lb-table {
   border: 1px solid var(--line);
-  background: var(--surface-elevated);
+  background: var(--surface-2);
 }
 
 .ref-lb-row {
@@ -695,7 +695,7 @@
   font-size: 20px;
   font-weight: 700;
   letter-spacing: -0.02em;
-  color: var(--dark);
+  color: var(--ink);
 }
 
 .ref-lb-rank--gold {
@@ -708,7 +708,7 @@
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: var(--text-muted);
+  color: var(--ink-4);
 }
 
 .ref-lb-user {
@@ -720,7 +720,7 @@
 .ref-lb-avatar {
   width: 32px;
   height: 32px;
-  background: var(--dark);
+  background: var(--ink);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -739,13 +739,13 @@
   font-family: var(--font-body);
   font-size: var(--text-small);
   font-weight: 600;
-  color: var(--dark);
+  color: var(--ink);
 }
 
 .ref-lb-tier {
   font-family: var(--font-body);
   font-size: var(--text-caption);
-  color: var(--tertiary);
+  color: var(--accent-blue);
   margin-top: 2px;
 }
 
@@ -754,7 +754,7 @@
   font-size: 20px;
   font-weight: 700;
   letter-spacing: -0.02em;
-  color: var(--dark);
+  color: var(--ink);
 }
 
 .ref-lb-earned {
@@ -762,14 +762,14 @@
   font-size: 20px;
   font-weight: 900;
   letter-spacing: -0.02em;
-  color: var(--primary);
+  color: var(--brand-red);
 }
 
 .ref-lb-footer {
   margin-top: var(--space-5);
   font-family: var(--font-body);
   font-size: var(--text-caption);
-  color: var(--text-muted);
+  color: var(--ink-4);
   text-align: center;
 }
 
@@ -777,7 +777,7 @@
    07 — CTA
    ============================================================ */
 .ref-cta {
-  background: var(--primary);
+  background: var(--brand-red);
   padding: var(--space-15) 0;
   position: relative;
   overflow: hidden;
@@ -869,7 +869,7 @@
 }
 
 .ref-btn--primary {
-  background: var(--dark);
+  background: var(--ink);
   color: #fff;
   box-shadow: var(--btn-shadow);
 }
@@ -893,12 +893,12 @@
 
 .ref-btn--outline-dark {
   background: transparent;
-  color: var(--dark);
-  border: 1px solid var(--dark);
+  color: var(--ink);
+  border: 1px solid var(--ink);
 }
 
 .ref-btn--outline-dark:hover {
-  background: var(--dark);
+  background: var(--ink);
   color: #fff;
 }
 

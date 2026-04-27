@@ -89,13 +89,13 @@ export default function GlobalError({
           font-weight: 700;
           letter-spacing: 0.14em;
           text-transform: uppercase;
-          color: var(--primary);
+          color: var(--brand-red);
           margin-bottom: 32px;
         }
         .err-dot {
           width: 6px;
           height: 6px;
-          background: var(--primary);
+          background: var(--brand-red);
           border-radius: 50%;
           display: inline-block;
           animation: err-pulse 1.6s ease-in-out infinite;
@@ -113,11 +113,11 @@ export default function GlobalError({
           font-weight: 900;
           letter-spacing: -0.045em;
           line-height: 1;
-          color: var(--dark);
+          color: var(--ink);
           margin: 0 0 24px;
         }
         .err-h-pre { font-weight: 300; color: rgba(0, 48, 73, 0.42); }
-        .err-h-em { font-style: normal; color: var(--primary); }
+        .err-h-em { font-style: normal; color: var(--brand-red); }
         .err-sub {
           font-family: var(--font-body);
           font-size: 14px;
@@ -132,7 +132,7 @@ export default function GlobalError({
           margin: 0 0 32px;
           padding: 10px 14px;
           background: rgba(0, 48, 73, 0.04);
-          border-left: 3px solid var(--primary);
+          border-left: 3px solid var(--brand-red);
           color: rgba(0, 48, 73, 0.7);
           display: inline-flex;
           align-items: center;
@@ -161,9 +161,9 @@ export default function GlobalError({
           letter-spacing: 0.08em;
           text-transform: uppercase;
           padding: 12px 20px;
-          background: var(--primary);
+          background: var(--brand-red);
           color: #ffffff;
-          border: 1px solid var(--primary);
+          border: 1px solid var(--brand-red);
           border-radius: var(--r-lg);
           cursor: pointer;
           transition: background 200ms ease;
@@ -177,8 +177,8 @@ export default function GlobalError({
           text-transform: uppercase;
           padding: 12px 20px;
           background: transparent;
-          color: var(--dark);
-          border: 1px solid var(--dark);
+          color: var(--ink);
+          border: 1px solid var(--ink);
           border-radius: var(--r-lg);
           text-decoration: none;
           display: inline-flex;
@@ -186,7 +186,7 @@ export default function GlobalError({
           transition: background 200ms ease, color 200ms ease;
         }
         .err-btn-outline:hover {
-          background: var(--dark);
+          background: var(--ink);
           color: #ffffff;
         }
         .err-footer {
@@ -202,12 +202,12 @@ export default function GlobalError({
           color: rgba(0, 48, 73, 0.35);
         }
         .err-mail {
-          color: var(--dark);
+          color: var(--ink);
           text-decoration: none;
           border-bottom: 1px solid transparent;
           transition: border-color 200ms ease;
         }
-        .err-mail:hover { border-bottom-color: var(--primary); color: var(--primary); }
+        .err-mail:hover { border-bottom-color: var(--brand-red); color: var(--brand-red); }
       `}</style>
     </main>
   );

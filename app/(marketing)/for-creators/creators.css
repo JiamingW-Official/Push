@@ -1,571 +1,696 @@
 /* ============================================================
-   For Creators — Page-specific styles
-   Extends landing.css; no new design tokens introduced.
+   For Creators — v11 Design System Compliant
+   Grain-Archive editorial register · strict 8px grid
+   Panel alternation: Hero dark → KPI dark → How butter →
+   Tiers dark → Calc butter → Quote red → Photo surface →
+   Ticket orange
    ============================================================ */
 
-/* ── Hero — v7 (inline-styled in page.tsx using .bg-hero-ink + .grain-overlay
-   + .bg-vignette + .pill-lux + .eyebrow-lux + .section-marker + .display-ghost
-   + .scroll-indicator + .category-strip from globals.css). Legacy .cr-hero*
-   rules removed when the hero was rebuilt for v7. .cr-ghost is kept for the
-   final-CTA "Run a venue?" link. ── */
-.cr-ghost {
-  color: rgba(255, 255, 255, 0.55);
-  border-color: rgba(255, 255, 255, 0.15);
+/* ── Section shared inner container ──────────────────────── */
+.fc-section-inner {
+  max-width: 1140px;
+  margin: 0 auto;
 }
 
-.cr-ghost:hover {
-  color: var(--surface-elevated);
-  border-color: rgba(255, 255, 255, 0.4);
-}
-
-/* ── Problem / Solution split ─────────────────────────────── */
-.cr-ps-grid {
-  display: grid;
-  grid-template-columns: 1fr 48px 1fr;
-  gap: var(--space-8);
-  align-items: start;
-  margin-top: var(--space-8);
-}
-
-.cr-ps-col {
+/* ── Signature divider wrapper (centered) ─────────────────── */
+.fc-sig-wrap {
   display: flex;
-  flex-direction: column;
-  gap: var(--space-5);
-}
-
-.cr-ps-headline {
-  font-family: var(--font-display);
-  font-size: clamp(24px, 3vw, 40px);
-  font-weight: 800;
-  letter-spacing: -0.04em;
-  line-height: 1.05;
-  color: var(--dark);
-  margin-bottom: var(--space-4);
-}
-
-.cr-ps-headline .wt-900 {
-  font-weight: 900;
-  display: block;
-}
-
-.cr-ps-headline .wt-300 {
-  font-weight: 300;
-  color: var(--text-muted);
-  display: block;
-}
-
-.cr-ps-headline--push .wt-900 {
-  color: var(--primary);
-}
-
-/* Pain list */
-.cr-pain-list {
-  list-style: none;
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-3);
-  margin: 0;
-  padding: 0;
-}
-
-.cr-pain-item {
-  display: flex;
-  align-items: flex-start;
-  gap: var(--space-3);
-  font-size: var(--text-small);
-  color: var(--graphite);
-  line-height: 1.7;
-  -webkit-font-smoothing: antialiased;
-}
-
-.cr-pain-dash {
-  width: 16px;
-  height: 2px;
-  background: var(--line-strong);
-  flex-shrink: 0;
-  margin-top: 9px;
-}
-
-/* Solution list */
-.cr-solution-list {
-  list-style: none;
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-3);
-  margin: 0;
-  padding: 0;
-}
-
-.cr-solution-item {
-  display: flex;
-  align-items: flex-start;
-  gap: var(--space-3);
-  font-size: var(--text-small);
-  color: var(--dark);
-  line-height: 1.7;
-  font-weight: 500;
-  -webkit-font-smoothing: antialiased;
-}
-
-.cr-solution-check {
-  width: 20px;
-  height: 20px;
-  background: var(--primary);
-  color: var(--surface-elevated);
-  display: flex;
-  align-items: center;
   justify-content: center;
-  flex-shrink: 0;
-  margin-top: 2px;
 }
 
-/* Vertical divider */
-.cr-ps-divider {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding-top: 80px;
-  gap: var(--space-3);
-}
-
-.cr-ps-line {
-  flex: 1;
-  width: 1px;
-  background: var(--line);
-}
-
-.cr-ps-vs {
-  font-family: var(--font-body);
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--text-muted);
-  writing-mode: horizontal-tb;
-}
-
-/* ── Tier section ─────────────────────────────────────────── */
-.cr-tiers-section {
-  /* v7: ink bg so the rgba(255,255,255,0.04) tier cards have contrast. */
-  background:
-    radial-gradient(ellipse 60% 80% at 85% 15%, rgba(191, 161, 112, 0.16), transparent 60%),
-    radial-gradient(ellipse 50% 70% at 15% 85%, rgba(193, 18, 31, 0.10), transparent 65%),
-    var(--ink);
-  color: #ffffff;
-}
-
-.cr-tiers-section .section-tag-num,
-.cr-tiers-section .section-tag-label,
-.cr-tiers-section .split-headline,
-.cr-tiers-section .split-headline .wt-900,
-.cr-tiers-section .split-body {
-  color: #ffffff;
-}
-.cr-tiers-section .split-headline .wt-300 {
-  color: rgba(255, 255, 255, 0.4);
-}
-.cr-tiers-section .split-body {
-  color: rgba(255, 255, 255, 0.62);
-}
-.cr-tiers-section .section-tag-line {
-  background: rgba(255, 255, 255, 0.18);
-}
-
-.cr-tier-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: var(--space-4);
-  margin-top: var(--space-8);
-}
-
-.cr-tier-card {
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-top-width: 3px;
-  padding: var(--space-5);
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-4);
-  transition: background var(--t-base), transform 360ms cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-.cr-tier-card:hover {
-  background: rgba(255, 255, 255, 0.07);
-  transform: translateY(-6px);
-}
-
-.cr-tier-card--pulse {
-  animation: obsidianPulse 2.4s ease-in-out infinite;
-}
-
-.cr-tier-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--space-2);
-}
-
-.cr-tier-num {
-  font-family: var(--font-display);
-  font-size: 40px;
-  font-weight: 100;
-  letter-spacing: -0.06em;
-  line-height: 1;
-  color: rgba(255, 255, 255, 0.15);
-}
-
-/* Tier badge — shared badge system */
-.cr-tier-badge {
-  font-family: var(--font-body);
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  padding: 5px 12px;
-  border-radius: var(--r-sm);
-}
-
-.badge-clay {
-  background: transparent;
-  color: var(--tier-clay-text);
-  border: 1.5px dashed var(--tier-clay-border, rgba(184, 169, 154, 0.5));
-}
-
-.badge-bronze {
-  background: var(--tier-bronze);
-  color: var(--tier-bronze-text);
-}
-
-.badge-steel {
-  background: var(--tier-steel);
-  color: var(--tier-steel-text);
-}
-
-.badge-gold {
-  background: var(--tier-gold);
-  color: var(--tier-gold-text);
-}
-
-.badge-ruby {
-  background: var(--tier-ruby);
-  color: var(--tier-ruby-text);
-}
-
-.badge-obsidian {
-  background: var(--tier-obsidian);
-  color: var(--tier-obsidian-text);
-  border-left: 3px solid var(--primary);
-}
-
-.badge-shimmer {
-  animation: badgeShimmer 2.8s linear infinite;
-  background-size: 200% auto;
-}
-
-.badge-ruby.badge-shimmer {
-  background-image: linear-gradient(
-    90deg,
-    var(--tier-ruby) 0%,
-    rgba(193, 18, 31, 0.6) 50%,
-    var(--tier-ruby) 100%
-  );
-}
-
-.badge-obsidian.badge-shimmer {
-  background-image: linear-gradient(
-    90deg,
-    var(--tier-obsidian) 0%,
-    rgba(74, 85, 104, 0.5) 50%,
-    var(--tier-obsidian) 100%
-  );
-  animation-duration: 2.4s;
-}
-
-@keyframes badgeShimmer {
-  0% { background-position: 0% center; }
-  100% { background-position: 200% center; }
-}
-
-@keyframes obsidianPulse {
-  /* Obsidian pulse ring — --dark (Deep Space Blue) rgb @ 40% → 0% alpha */
-  0%, 100% { box-shadow: 0 0 0 0 rgba(0, 48, 73, 0.4); }
-  50% { box-shadow: 0 0 0 8px rgba(0, 48, 73, 0); }
-}
-
-/* Tier body — reach + earning */
-.cr-tier-body {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-2);
-}
-
-.cr-tier-reach {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.cr-tier-reach-label {
-  font-family: var(--font-body);
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.3);
-}
-
-.cr-tier-reach-val {
-  font-family: var(--font-body);
-  font-size: var(--text-small);
-  font-weight: 600;
-  color: rgba(255, 255, 255, 0.6);
-  letter-spacing: 0.02em;
-}
-
-.cr-tier-earning {
-  display: flex;
-  align-items: baseline;
-  gap: 4px;
-  margin-top: var(--space-1);
-}
-
-.cr-tier-earn-num {
-  font-family: var(--font-display);
-  font-size: clamp(28px, 3vw, 40px);
-  font-weight: 800;
-  letter-spacing: -0.04em;
-  color: var(--surface-elevated);
-  line-height: 1;
-}
-
-.cr-tier-earn-period {
-  font-family: var(--font-body);
-  font-size: var(--text-small);
-  color: rgba(255, 255, 255, 0.35);
-}
-
-/* Level up block */
-.cr-tier-levelup {
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
-  padding-top: var(--space-3);
-  margin-top: auto;
-}
-
-.cr-tier-levelup-label {
-  font-family: var(--font-body);
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--tertiary);
-  display: block;
-  margin-bottom: var(--space-2);
-}
-
-.cr-tier-levelup-body {
-  font-family: var(--font-body);
-  font-size: var(--text-caption);
-  color: rgba(255, 255, 255, 0.45);
-  line-height: 1.7;
-  -webkit-font-smoothing: antialiased;
-}
-
-/* ── How to start ─────────────────────────────────────────── */
-.cr-how-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1px;
-  background: var(--line);
-  border: 1px solid var(--line);
-  margin-top: var(--space-8);
-}
-
-.cr-how-step {
-  background: var(--surface-elevated);
-  padding: var(--space-8) var(--space-6);
+/* ══════════════════════════════════════════════════════════
+   HERO — Full-Bleed, border-radius: 0 (allowed for full-bleed)
+   ══════════════════════════════════════════════════════════ */
+.fc-hero {
   position: relative;
-  overflow: visible;
-  transition: background 240ms ease, transform 240ms ease;
+  overflow: hidden;
+  min-height: clamp(520px, 80vh, 840px);
+  border-radius: 0;
+  background:
+    linear-gradient(180deg, rgba(0,0,0,0.10) 0%, rgba(0,0,0,0.62) 100%),
+    radial-gradient(ellipse 100% 80% at 60% 20%, rgba(193,18,31,0.18) 0%, transparent 60%),
+    radial-gradient(ellipse 80% 100% at 10% 90%, rgba(30,95,173,0.18) 0%, transparent 50%),
+    var(--ink);
 }
 
-.cr-how-step:hover {
-  background: var(--surface-muted);
-  transform: translateY(-6px);
-}
-
-/* Left accent — primary red, grows on hover */
-.cr-how-step::before {
-  content: "";
+/* Ghost watermark — huge architectural stat in background */
+.fc-hero-ghost {
   position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  width: 3px;
-  background: var(--primary);
-  transform: scaleY(0);
-  transform-origin: bottom center;
-  transition: transform 300ms cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-.cr-how-step:hover::before {
-  transform: scaleY(1);
-}
-
-.cr-how-n {
+  right: -4vw;
+  bottom: -12%;
   font-family: var(--font-display);
-  font-size: clamp(56px, 6vw, 80px);
-  font-weight: 100;
-  letter-spacing: -0.06em;
-  line-height: 1;
-  /* ghost decorative numeral — --dark @ 8% alpha, lighter than --line (12%) */
-  color: rgba(0, 48, 73, 0.08);
+  font-weight: 900;
+  font-size: clamp(320px, 48vw, 640px);
+  letter-spacing: -0.08em;
+  line-height: 0.8;
+  color: rgba(255, 255, 255, 0.06);
+  pointer-events: none;
+  user-select: none;
+  z-index: 0;
+}
+
+/* Floating glass peek tile — desktop only, top-right */
+.fc-hero-peek {
+  position: absolute;
+  top: 96px;
+  right: 64px;
+  padding: 32px;
+  border-radius: var(--r-xl);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 184px;
+  z-index: 2;
+}
+
+.fc-peek-num {
+  font-family: var(--font-display);
+  font-size: clamp(40px, 5vw, 72px);
+  font-weight: 700;
+  line-height: 1.0;
+  letter-spacing: -0.025em;
+  color: var(--snow);
+}
+
+.fc-peek-label {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: rgba(255, 255, 255, 0.72);
+}
+
+/* Bottom-left corner-anchored copy block */
+.fc-hero-copy {
+  position: absolute;
+  bottom: 96px;
+  left: 64px;
+  max-width: 720px;
+  z-index: 2;
+}
+
+.fc-hero-eyebrow {
+  color: rgba(255, 255, 255, 0.72);
   display: block;
-  margin-bottom: var(--space-4);
+  margin-bottom: 16px;
+}
+
+/* Darky Display hero — v11 spec: clamp(56px,8vw,128px) 900 lh 0.9 ls -0.035em */
+.fc-hero-h1 {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(56px, 8vw, 128px);
+  letter-spacing: -0.035em;
+  line-height: 0.9;
+  color: var(--snow);
+  margin: 0;
+}
+
+.fc-hero-sub {
+  font-family: var(--font-body);
+  font-size: 20px;
+  line-height: 1.40;
+  letter-spacing: -0.1em;
+  color: rgba(255, 255, 255, 0.72);
+  margin-top: 40px;
+  max-width: 42ch;
+}
+
+.fc-hero-actions {
+  display: flex;
+  gap: 16px;
+  margin-top: 48px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+/* Ghost button on dark hero — override border/color for dark surface */
+.fc-hero-ghost-btn {
+  background: transparent !important;
+  color: var(--snow) !important;
+  border-color: rgba(255, 255, 255, 0.56) !important;
+}
+
+/* ══════════════════════════════════════════════════════════
+   KPI SECTION — Dark ink, asymmetric 8+4 composition
+   ══════════════════════════════════════════════════════════ */
+.fc-kpi-section {
+  background: var(--ink);
+  padding: clamp(96px, 14vw, 192px) 64px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Ghost architectural dollar */
+.fc-kpi-ghost {
+  position: absolute;
+  right: -4vw;
+  bottom: -16%;
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(280px, 42vw, 560px);
+  letter-spacing: -0.08em;
+  line-height: 0.8;
+  color: rgba(255, 255, 255, 0.025);
+  pointer-events: none;
   user-select: none;
 }
 
-.cr-how-title {
-  font-family: var(--font-display);
-  font-size: var(--text-h3);
-  font-weight: 700;
-  color: var(--dark);
-  letter-spacing: -0.02em;
-  margin-bottom: var(--space-3);
-}
-
-.cr-how-body {
-  font-size: var(--text-small);
-  color: var(--graphite);
-  line-height: 1.7;
-  -webkit-font-smoothing: antialiased;
-}
-
-/* ── Earnings Calculator ─────────────────────────────────── */
-.cr-calc-section {
-  /* v7: ink bg so the rgba(255,255,255,*) sliders + tier buttons have contrast. */
-  background:
-    radial-gradient(ellipse 60% 80% at 15% 15%, rgba(191, 161, 112, 0.14), transparent 60%),
-    radial-gradient(ellipse 50% 70% at 85% 85%, rgba(193, 18, 31, 0.08), transparent 65%),
-    var(--ink);
-  color: #ffffff;
-}
-
-.cr-calc-section .section-tag-num,
-.cr-calc-section .section-tag-label,
-.cr-calc-section .split-headline,
-.cr-calc-section .split-headline .wt-900,
-.cr-calc-section .split-body {
-  color: #ffffff;
-}
-.cr-calc-section .split-headline .wt-300 {
-  color: rgba(255, 255, 255, 0.4);
-}
-.cr-calc-section .split-body {
-  color: rgba(255, 255, 255, 0.62);
-}
-.cr-calc-section .section-tag-line {
-  background: rgba(255, 255, 255, 0.18);
-}
-
-.calc-wrap {
+/* 8+4 asymmetric grid */
+.fc-kpi-inner {
+  max-width: 1140px;
+  margin: 0 auto;
   display: grid;
-  grid-template-columns: 1fr 380px;
-  gap: var(--space-10);
-  align-items: start;
-  margin-top: var(--space-8);
-}
-
-/* Controls */
-.calc-controls {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-6);
-}
-
-.calc-field {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-2);
-}
-
-.calc-label {
-  font-family: var(--font-body);
-  font-size: var(--text-small);
-  font-weight: 600;
-  color: rgba(255, 255, 255, 0.6);
-  letter-spacing: 0.02em;
-  display: flex;
+  grid-template-columns: 2fr 1fr;
+  gap: 64px;
   align-items: center;
-  justify-content: space-between;
+  position: relative;
+  z-index: 1;
 }
 
-.calc-val {
+.fc-kpi-left {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.fc-kpi-eyebrow {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.38);
+  margin: 0;
+}
+
+/* KPI trio row */
+.fc-kpi-row {
+  display: flex;
+  align-items: flex-end;
+  gap: 40px;
+  flex-wrap: wrap;
+}
+
+.fc-kpi-block {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* KPI numerals — Darky clamp(80px,12vw,200px) per brief; capped at 72px per spec */
+.fc-kpi-num {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(56px, 8vw, 128px);
+  letter-spacing: -0.05em;
+  line-height: 0.9;
+  color: var(--snow);
+  margin: 0;
+}
+
+.fc-kpi-cap {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.40);
+  margin: 0;
+}
+
+.fc-kpi-divider {
+  width: 1px;
+  height: 64px;
+  background: rgba(255, 255, 255, 0.12);
+  flex-shrink: 0;
+  align-self: center;
+}
+
+.fc-kpi-fine {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.32);
+  margin: 0;
+}
+
+/* Right 4-col: CTA tile */
+.fc-kpi-right {
+  display: flex;
+  align-items: stretch;
+}
+
+.fc-kpi-tile {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  border-radius: var(--r-3xl);
+  padding: 48px 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+}
+
+.fc-kpi-tile-eyebrow {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.38);
+  margin: 0;
+}
+
+.fc-kpi-tile-head {
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  line-height: 1.15;
+  color: var(--snow);
+  margin: 0;
+}
+
+.fc-kpi-tile-body {
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.40;
+  letter-spacing: -0.125em;
+  color: rgba(255, 255, 255, 0.56);
+  margin: 0 0 8px;
+}
+
+/* ══════════════════════════════════════════════════════════
+   HOW IT WORKS — Warm butter candy panel
+   Numbered editorial rows, 3-col grid
+   ══════════════════════════════════════════════════════════ */
+.fc-how-section {
+  position: relative;
+}
+
+/* Floating glass stat tile — top right corner of candy panel */
+.fc-how-tile {
+  position: absolute;
+  top: 32px;
+  right: 32px;
+  padding: 32px;
+  border-radius: var(--r-xl);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 184px;
+}
+
+.fc-how-tile-num {
+  font-family: var(--font-display);
+  font-size: clamp(40px, 5vw, 72px);
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  line-height: 1.0;
+  color: var(--ink);
+}
+
+.fc-how-tile-cap {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--ink-3);
+}
+
+/* H2 and H3 shared — Darky, v11 spec */
+.fc-h2 {
+  font-family: var(--font-display);
+  font-size: 40px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+  color: var(--ink);
+  margin: 0 0 48px;
+}
+
+.fc-h2-light {
+  color: var(--snow);
+}
+
+.fc-h3 {
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  line-height: 1.15;
+  color: var(--ink);
+  margin: 0 0 12px;
+}
+
+/* 3-column editorial row grid */
+.fc-how-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+/* Each numbered row — number | body */
+.fc-how-row {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 40px 24px;
+  background: rgba(255, 255, 255, 0.42);
+  border-radius: var(--r-sm); /* 8px — standard card per v12 spec */
+  border: 1px solid var(--hairline);
+  cursor: default;
+}
+
+.fc-how-num {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+  line-height: 1.3;
+}
+
+.fc-how-body {
+  display: flex;
+  flex-direction: column;
+}
+
+.fc-how-text {
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.40;
+  letter-spacing: -0.125em;
+  color: var(--ink-3);
+  margin: 0;
+}
+
+/* ══════════════════════════════════════════════════════════
+   TIERS SECTION — Dark ink
+   Numbered editorial rows, full-width table-like layout
+   ══════════════════════════════════════════════════════════ */
+.fc-tiers-section {
+  background: var(--ink);
+  padding: 96px 64px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Ghost architectural 6 */
+.fc-tiers-ghost {
+  position: absolute;
+  right: -4vw;
+  top: -8%;
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(280px, 40vw, 480px);
+  letter-spacing: -0.06em;
+  line-height: 0.85;
+  color: rgba(255, 255, 255, 0.022);
+  pointer-events: none;
+  user-select: none;
+}
+
+.fc-tiers-inner {
+  position: relative;
+  z-index: 1;
+}
+
+.fc-eyebrow-light {
+  color: rgba(255, 255, 255, 0.40) !important;
+}
+
+/* Tier rows grid — stacked editorial list */
+.fc-tiers-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin-bottom: 32px;
+}
+
+/* Each tier row — number | body | earn */
+.fc-tier-row {
+  display: grid;
+  grid-template-columns: 48px 1fr auto;
+  gap: 24px;
+  align-items: start;
+  padding: 32px 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 0; /* table-row layout — 4px was off 8px grid */
+  cursor: default;
+  transition: background 200ms ease;
+}
+
+.fc-tier-row:last-child {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.fc-tier-row:hover {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.fc-tier-row-num {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.24);
+  padding-top: 4px;
+}
+
+.fc-tier-row-body {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+.fc-tier-row-head {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.fc-tier-row-name {
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  line-height: 1.15;
+  color: var(--snow);
+}
+
+.fc-tier-row-name--partner {
+  color: var(--champagne);
+}
+
+.fc-tier-row-range {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: rgba(255, 255, 255, 0.32);
+  white-space: nowrap;
+}
+
+.fc-tier-row-detail {
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.40;
+  letter-spacing: -0.125em;
+  color: rgba(255, 255, 255, 0.52);
+  margin: 0;
+  max-width: 72ch;
+}
+
+.fc-tier-row-unlock {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(191, 161, 112, 0.72);
+  margin: 0;
+}
+
+.fc-tier-row-earn {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: rgba(255, 255, 255, 0.80);
+  white-space: nowrap;
+  padding-top: 4px;
+}
+
+.fc-tier-row-earn--partner {
+  color: var(--champagne);
+}
+
+.fc-tier-row--partner .fc-tier-row-name {
+  color: var(--champagne);
+}
+
+.fc-tiers-note {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: rgba(255, 255, 255, 0.28);
+  margin: 0;
+}
+
+/* ══════════════════════════════════════════════════════════
+   EARNINGS CALCULATOR — Warm butter candy panel
+   ══════════════════════════════════════════════════════════ */
+.fc-calc-section {
+  position: relative;
+}
+
+/* Floating glass stat tile — top right */
+.fc-calc-tile {
+  position: absolute;
+  top: 32px;
+  right: 32px;
+  padding: 32px;
+  border-radius: var(--r-xl);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 200px;
+}
+
+.fc-calc-tile-num {
+  font-family: var(--font-display);
+  font-size: clamp(28px, 3vw, 40px);
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  line-height: 1.0;
+  color: var(--ink);
+}
+
+.fc-calc-tile-cap {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--ink-3);
+}
+
+/* ── Shared calculator styles ─────────────────────────────── */
+.calc-editorial {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+/* Big payout number — the visual hero */
+.calc-result {
+  display: flex;
+  align-items: baseline;
+  gap: 8px; /* 8px grid — was 6px (off-grid) */
+  flex-wrap: wrap;
+  line-height: 1;
+}
+
+.calc-result-prefix {
+  font-family: var(--font-display);
+  font-size: clamp(22px, 2.8vw, 36px);
+  font-weight: 300;
+  color: var(--ink-4);
+  letter-spacing: -0.03em;
+  align-self: flex-start;
+  padding-top: 6px;
+}
+
+.calc-result-num {
+  font-family: var(--font-display);
+  font-size: clamp(56px, 8vw, 104px);
+  font-weight: 900;
+  letter-spacing: -0.055em;
+  color: var(--ink);
+  line-height: 1;
+}
+
+.calc-result-dash {
+  font-family: var(--font-display);
+  font-size: clamp(40px, 5vw, 64px);
+  font-weight: 100;
+  color: var(--ink-5);
+  padding: 0 4px;
+  align-self: center;
+}
+
+.calc-result-unit {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+  align-self: flex-end;
+  padding-bottom: 10px;
+  flex-basis: 100%;
+}
+
+/* Sliders */
+.calc-sliders {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.calc-slider-row {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.calc-slider-label {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+}
+
+.calc-slider-val {
   font-family: var(--font-display);
   font-size: 20px;
   font-weight: 800;
   letter-spacing: -0.04em;
-  color: var(--surface-elevated);
+  color: var(--ink);
 }
 
-/* Tier grid buttons */
-.calc-tier-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: var(--space-1);
-}
-
-.calc-tier-btn {
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: var(--r-lg);
-  padding: var(--space-2) var(--space-3);
-  cursor: pointer;
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  transition: background var(--t-base), border-color var(--t-base);
-  text-align: left;
-}
-
-.calc-tier-btn:hover {
-  background: rgba(255, 255, 255, 0.08);
-  border-color: rgba(255, 255, 255, 0.2);
-}
-
-.calc-tier-btn--active {
-  background: rgba(193, 18, 31, 0.12);
-  border-color: var(--primary);
-  border-width: 1px;
-  border-left-width: 3px;
-}
-
-.calc-tier-name {
+.calc-fine {
   font-family: var(--font-body);
   font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  color: rgba(255, 255, 255, 0.7);
-  text-transform: uppercase;
-}
-
-.calc-tier-btn--active .calc-tier-name {
-  color: var(--surface-elevated);
-}
-
-.calc-tier-range {
-  font-family: var(--font-body);
-  font-size: 10px;
-  color: rgba(255, 255, 255, 0.3);
+  color: var(--ink-5);
+  line-height: 1.6;
   letter-spacing: 0.02em;
+  margin: 0;
 }
 
-/* Range sliders */
+/* Range slider */
 .calc-slider {
   -webkit-appearance: none;
   appearance: none;
   width: 100%;
   height: 2px;
-  background: rgba(255, 255, 255, 0.12);
+  background: var(--hairline-2);
   outline: none;
   cursor: pointer;
   border-radius: var(--r-pill);
@@ -576,297 +701,383 @@
   appearance: none;
   width: 16px;
   height: 16px;
-  background: var(--primary);
+  background: var(--brand-red);
   cursor: pointer;
   border-radius: 50%;
-  border: 2px solid rgba(255, 255, 255, 0.9);
+  border: 2px solid var(--surface);
+  box-shadow: 0 1px 4px rgba(10, 10, 10, 0.15);
   transition: transform var(--t-base);
 }
 
-.calc-slider::-webkit-slider-thumb:hover {
-  transform: scale(1.2);
-}
+.calc-slider::-webkit-slider-thumb:hover { transform: scale(1.25); }
 
 .calc-slider::-moz-range-thumb {
   width: 16px;
   height: 16px;
-  background: var(--primary);
+  background: var(--brand-red);
   cursor: pointer;
   border-radius: 50%;
-  border: 2px solid rgba(255, 255, 255, 0.9);
+  border: 2px solid var(--surface);
+  box-shadow: 0 1px 4px rgba(10, 10, 10, 0.15);
 }
 
 .calc-slider-ticks {
   display: flex;
   justify-content: space-between;
   font-family: var(--font-body);
-  font-size: 10px;
-  color: rgba(255, 255, 255, 0.25);
+  font-size: 12px;
+  color: var(--ink-5);
   letter-spacing: 0.04em;
 }
 
-/* Output panel */
-.calc-output {
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-top: 3px solid var(--primary);
-  padding: var(--space-6);
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-4);
-  position: sticky;
-  top: 80px;
+/* ══════════════════════════════════════════════════════════
+   PULL QUOTE — Brand Red editorial moment
+   ≤1 saturated moment per page; full-width punch
+   ══════════════════════════════════════════════════════════ */
+.fc-quote-section {
+  background: var(--brand-red);
+  padding: 96px 64px;
+  position: relative;
+  overflow: hidden;
 }
 
-.calc-output-label {
-  font-family: var(--font-body);
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.4);
-}
-
-.calc-output-num {
-  display: flex;
-  align-items: baseline;
-  gap: 4px;
-  flex-wrap: wrap;
-}
-
-.calc-num-prefix {
+/* Ghost quotation mark */
+.fc-quote-ghost {
+  position: absolute;
+  left: 32px;
+  top: -8%;
   font-family: var(--font-display);
-  font-size: 24px;
-  font-weight: 300;
-  color: rgba(255, 255, 255, 0.5);
-  letter-spacing: -0.04em;
-}
-
-.calc-num-val {
-  font-family: var(--font-display);
-  font-size: clamp(40px, 5vw, 64px);
   font-weight: 900;
-  letter-spacing: -0.05em;
-  color: var(--surface-elevated);
+  font-size: clamp(240px, 36vw, 480px);
   line-height: 1;
+  color: rgba(255, 255, 255, 0.07);
+  pointer-events: none;
+  user-select: none;
 }
 
-.calc-num-sep {
-  font-family: var(--font-display);
-  font-size: 32px;
-  font-weight: 200;
-  color: rgba(255, 255, 255, 0.2);
-  align-self: center;
-  padding: 0 4px;
-}
-
-.calc-output-note {
-  font-family: var(--font-body);
-  font-size: var(--text-caption);
-  color: rgba(255, 255, 255, 0.3);
-  line-height: 1.6;
-  border-top: 1px solid rgba(255, 255, 255, 0.06);
-  padding-top: var(--space-3);
-}
-
-.calc-cta {
-  width: 100%;
-  justify-content: center;
-}
-
-/* ── Testimonial pull quote ───────────────────────────────── */
-.cr-quote-section {
-  /* inherits section-bright */
-}
-
-.cr-quote-wrap {
-  max-width: 800px;
+.fc-quote-inner {
+  max-width: 1140px;
   margin: 0 auto;
   position: relative;
-  padding: var(--space-8) 0;
-  border-top: 1px solid var(--line);
-  border-bottom: 1px solid var(--line);
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
 }
 
-.cr-quote-mark {
+/* Massive pull-quote text — Darky, editorial scale */
+.fc-quote-text {
   font-family: var(--font-display);
-  font-size: clamp(80px, 12vw, 140px);
-  font-weight: 100;
-  letter-spacing: -0.08em;
-  line-height: 0.7;
-  /* ghost decorative quote — --dark @ 6% alpha */
-  color: rgba(0, 48, 73, 0.06);
-  user-select: none;
-  margin-bottom: var(--space-4);
+  font-weight: 800;
+  font-size: clamp(40px, 5vw, 64px);
+  letter-spacing: -0.025em;
+  line-height: 1.0;
+  color: var(--snow);
+  margin: 0;
 }
 
-.cr-quote-text {
-  font-family: var(--font-display);
-  font-size: clamp(22px, 3vw, 36px);
-  font-weight: 300;
-  letter-spacing: -0.03em;
-  color: var(--dark);
-  line-height: 1.35;
-  margin: 0 0 var(--space-6) 0;
-}
-
-.cr-quote-meta {
+.fc-quote-attr {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: var(--space-4);
+  gap: 16px;
   flex-wrap: wrap;
 }
 
-.cr-quote-author {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.cr-quote-name {
+.fc-quote-name {
   font-family: var(--font-body);
-  font-size: var(--text-small);
+  font-size: 14px;
   font-weight: 700;
-  color: var(--dark);
-  letter-spacing: 0.02em;
-}
-
-.cr-quote-handle {
-  font-family: var(--font-body);
-  font-size: var(--text-caption);
-  color: var(--tertiary);
-  letter-spacing: 0.02em;
-}
-
-.cr-quote-right {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: var(--space-2);
-}
-
-.cr-quote-loc {
-  font-family: var(--font-body);
-  font-size: var(--text-caption);
-  color: var(--text-muted);
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  font-weight: 600;
+  color: var(--snow);
 }
 
-/* ── Final CTA ─────────────────────────────────────────────── */
-.cr-final-cta {
-  padding-block: var(--space-15);
-  /* v7: dark hero ink so the white CTA copy reads. */
-  background:
-    radial-gradient(ellipse 70% 80% at 85% 10%, rgba(191, 161, 112, 0.22), transparent 55%),
-    radial-gradient(ellipse 50% 70% at 10% 95%, rgba(193, 18, 31, 0.18), transparent 60%),
-    var(--ink);
-  color: #ffffff;
-}
-
-.cr-cta-inner {
-  max-width: 640px;
-}
-
-.cr-cta-headline {
+.fc-quote-sep {
   font-family: var(--font-display);
-  font-size: clamp(40px, 5vw, 72px);
-  font-weight: 900;
-  letter-spacing: -0.05em;
-  color: var(--surface-elevated);
-  line-height: 1;
-  margin-bottom: var(--space-4);
+  font-size: 16px;
+  font-weight: 100;
+  color: rgba(255, 255, 255, 0.40);
+}
+
+.fc-quote-meta {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.64);
+}
+
+/* ══════════════════════════════════════════════════════════
+   PHOTO GRID — Surface background, 3-up Photo Cards
+   ══════════════════════════════════════════════════════════ */
+.fc-photo-section {
+  padding: 96px 64px;
+}
+
+/* 3-up photo grid */
+.fc-photo-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+/* Photo card — 4:5 ratio, full-bleed gradient bg */
+.fc-photo-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--r-sm); /* 8px — standard card per v12 spec */
+  aspect-ratio: 4/5;
+  cursor: pointer;
+}
+
+/* Floating badge — top right */
+.fc-photo-badge {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  padding: 8px 16px;
+  font-size: 12px;
+  font-family: var(--font-body);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  border-radius: var(--r-sm);
+}
+
+/* 35% bottom gradient overlay per spec */
+.fc-photo-overlay {
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 35%;
+  background: linear-gradient(to bottom, transparent, rgba(0, 0, 0, 0.78));
+}
+
+/* Copy at bottom of photo card */
+.fc-photo-copy {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 24px;
+}
+
+.fc-photo-title {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -0.005em;
+  line-height: 1.25;
+  color: var(--snow);
+}
+
+.fc-photo-meta {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: rgba(255, 255, 255, 0.85);
+  margin-top: 8px;
+}
+
+/* ══════════════════════════════════════════════════════════
+   TICKET PANEL — GA Orange, positioned with margin
+   ══════════════════════════════════════════════════════════ */
+.fc-ticket {
+  margin: 0 64px;
+}
+
+/* Grommet circles — 16px solid ink, 24px inset per § 8.2 */
+.fc-grommet {
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--ink);
+}
+
+.fc-grommet--tl { top: 24px;    left: 24px;  }
+.fc-grommet--tr { top: 24px;    right: 24px; }
+.fc-grommet--bl { bottom: 24px; left: 24px;  }
+.fc-grommet--br { bottom: 24px; right: 24px; }
+
+/* Centered ticket content */
+.fc-ticket-content {
   display: flex;
   flex-direction: column;
-  gap: var(--space-1);
+  align-items: center;
+  text-align: center;
+  gap: 24px;
 }
 
-.cr-cta-sub {
-  font-weight: 200;
-  color: rgba(255, 255, 255, 0.3);
-  font-size: clamp(24px, 3vw, 40px);
-  display: block;
+/* Magvix Italic centered headline per spec */
+.fc-ticket-h2 {
+  font-family: var(--font-hero);
+  font-style: italic;
+  font-size: clamp(40px, 5vw, 56px);
+  font-weight: normal;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  color: var(--ink);
+  margin: 0;
 }
 
-.cr-cta-body {
-  font-size: var(--text-body);
-  color: rgba(255, 255, 255, 0.5);
+.fc-ticket-body {
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.40;
+  letter-spacing: -0.125em;
+  color: var(--ink);
   max-width: 480px;
-  line-height: 1.8;
-  margin-bottom: var(--space-6);
+  margin: 0;
 }
 
-.cr-cta-actions {
-  display: flex;
-  gap: var(--space-2);
-  flex-wrap: wrap;
-  margin-bottom: var(--space-3);
-}
+/* ══════════════════════════════════════════════════════════
+   RESPONSIVE — tablet + mobile
+   ══════════════════════════════════════════════════════════ */
 
-.cr-cta-note {
-  font-size: var(--text-caption);
-  color: rgba(255, 255, 255, 0.25);
-  letter-spacing: 0.02em;
-}
-
-/* ── Responsive ───────────────────────────────────────────── */
-@media (max-width: 1024px) {
-  .cr-tier-grid {
-    grid-template-columns: repeat(2, 1fr);
+/* Tablet: ≤ 1023px */
+@media (max-width: 1023px) {
+  /* Hero adjustments */
+  .fc-hero-copy {
+    bottom: 80px;
+    left: 48px;
   }
 
-  .calc-wrap {
+  .fc-hero-peek {
+    top: 48px;
+    right: 48px;
+  }
+
+  /* KPI — stack to single column */
+  .fc-kpi-section {
+    padding: 80px 48px;
+  }
+
+  .fc-kpi-inner {
+    grid-template-columns: 1fr;
+    gap: 48px;
+  }
+
+  /* How it works — 3 to 1 column */
+  .fc-how-grid {
     grid-template-columns: 1fr;
   }
 
-  .calc-output {
+  .fc-how-tile {
     position: static;
+    align-self: flex-end;
+    margin-bottom: 32px;
   }
 
-  .calc-tier-grid {
-    grid-template-columns: repeat(3, 1fr);
-  }
-}
-
-@media (max-width: 900px) {
-  .cr-ps-grid {
-    grid-template-columns: 1fr;
-    gap: var(--space-6);
+  /* Tiers */
+  .fc-tiers-section {
+    padding: 80px 48px;
   }
 
-  .cr-ps-divider {
-    flex-direction: row;
-    padding-top: 0;
+  .fc-tier-row {
+    grid-template-columns: 40px 1fr auto;
+    gap: 16px;
   }
 
-  .cr-ps-line {
-    flex: 1;
-    width: auto;
-    height: 1px;
-  }
-
-  .cr-how-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
-@media (max-width: 640px) {
-  .cr-tier-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .calc-tier-grid {
+  /* Photo grid — 3 to 2 */
+  .fc-photo-grid {
     grid-template-columns: repeat(2, 1fr);
   }
 
-  .cr-quote-meta {
-    flex-direction: column;
-    align-items: flex-start;
+  .fc-photo-section {
+    padding: 80px 48px;
   }
 
-  .cr-quote-right {
-    align-items: flex-start;
+  /* Quote */
+  .fc-quote-section {
+    padding: 80px 48px;
+  }
+
+  /* Ticket */
+  .fc-ticket {
+    margin: 0 48px;
+  }
+
+  /* Calc tile */
+  .fc-calc-tile {
+    position: static;
+    align-self: flex-end;
+    margin-bottom: 32px;
+  }
+}
+
+/* Mobile: ≤ 767px */
+@media (max-width: 767px) {
+  /* Hero */
+  .fc-hero-copy {
+    bottom: 56px;
+    left: 24px;
+    right: 24px;
+    max-width: none;
+  }
+
+  /* Hide peek tile on mobile */
+  .fc-hero-peek {
+    display: none;
+  }
+
+  /* KPI */
+  .fc-kpi-section {
+    padding: 56px 24px;
+  }
+
+  .fc-kpi-row {
+    gap: 24px;
+  }
+
+  .fc-kpi-divider {
+    display: none;
+  }
+
+  /* How */
+  .fc-how-tile {
+    display: none;
+  }
+
+  /* Tiers */
+  .fc-tiers-section {
+    padding: 56px 24px;
+  }
+
+  .fc-tier-row {
+    grid-template-columns: 1fr;
+    gap: 8px;
+    padding: 24px 8px;
+  }
+
+  .fc-tier-row-earn {
+    padding-top: 0;
+    font-size: 16px;
+  }
+
+  /* Photo grid — 2 to 1 */
+  .fc-photo-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .fc-photo-section {
+    padding: 56px 24px;
+  }
+
+  /* Quote */
+  .fc-quote-section {
+    padding: 56px 24px;
+  }
+
+  /* Ticket */
+  .fc-ticket {
+    margin: 0 24px;
+  }
+
+  /* Section inner padding on mobile */
+  .fc-kpi-inner {
+    gap: 32px;
   }
 }

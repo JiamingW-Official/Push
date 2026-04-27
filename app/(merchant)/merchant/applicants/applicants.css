@@ -22,7 +22,7 @@
   left: 0;
   right: 0;
   height: 60px;
-  background: var(--dark);
+  background: var(--ink);
   display: flex;
   align-items: center;
   padding: 0 var(--space-3);
@@ -43,7 +43,7 @@
 }
 
 .ap-nav__logo span {
-  color: var(--primary);
+  color: var(--brand-red);
 }
 
 .ap-nav__back {
@@ -94,7 +94,7 @@
    Editorial Hero
    ------------------------------------------------------------ */
 .ap-hero {
-  background: var(--dark);
+  background: var(--ink);
   padding: var(--space-10) var(--space-6) var(--space-8);
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
@@ -110,7 +110,7 @@
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--primary);
+  color: var(--brand-red);
   margin-bottom: var(--space-2);
 }
 
@@ -133,7 +133,7 @@
   font-size: clamp(56px, 8vw, 84px);
   font-weight: 900;
   letter-spacing: -0.05em;
-  color: var(--surface-bright);
+  color: var(--surface-3);
   line-height: 0.9;
 }
 
@@ -183,8 +183,8 @@
   position: sticky;
   top: 60px;
   z-index: 100;
-  background: var(--surface-elevated);
-  border-bottom: 1px solid var(--line);
+  background: var(--surface-2);
+  border-bottom: 1px solid var(--mist)
   padding: 12px var(--space-6);
 }
 
@@ -215,13 +215,13 @@
 }
 
 .ap-pill:hover {
-  border-color: var(--dark);
-  color: var(--dark);
+  border-color: var(--ink);
+  color: var(--ink);
 }
 
 .ap-pill--active {
-  background: var(--dark);
-  border-color: var(--dark);
+  background: var(--ink);
+  border-color: var(--ink);
   color: var(--surface);
 }
 
@@ -238,8 +238,8 @@
   padding: 6px 12px;
   border: 1.5px solid var(--line-strong);
   border-radius: var(--r-md);
-  background: var(--surface-elevated);
-  color: var(--dark);
+  background: var(--surface-2);
+  color: var(--ink);
   cursor: pointer;
   appearance: none;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23003049' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
@@ -250,7 +250,7 @@
 }
 
 .ap-select:focus {
-  outline: 2px solid var(--primary);
+  outline: 2px solid var(--brand-red);
   outline-offset: 0;
 }
 
@@ -261,39 +261,39 @@
   padding: 6px 12px;
   border: 1.5px solid var(--line-strong);
   border-radius: var(--r-md);
-  background: var(--surface-elevated);
-  color: var(--dark);
+  background: var(--surface-2);
+  color: var(--ink);
   min-width: 180px;
   transition: border-color var(--t-fast);
 }
 
 .ap-search:focus {
   outline: none;
-  border-color: var(--dark);
+  border-color: var(--ink);
 }
 
 .ap-search::placeholder {
-  color: var(--text-muted);
+  color: var(--ink-4);
 }
 
 /* Result count */
 .ap-filters__count {
   margin-left: auto;
   font-size: var(--text-caption);
-  color: var(--text-muted);
+  color: var(--ink-4);
   letter-spacing: 0.04em;
   white-space: nowrap;
 }
 
 .ap-filters__count strong {
-  color: var(--dark);
+  color: var(--ink);
   font-weight: 700;
 }
 
 .ap-filters__sep {
   width: 1px;
   height: 20px;
-  background: var(--line);
+  background: var(--mist)
   flex-shrink: 0;
 }
 
@@ -303,7 +303,7 @@
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--text-muted);
+  color: var(--ink-4);
   white-space: nowrap;
 }
 
@@ -332,12 +332,12 @@
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--text-muted);
+  color: var(--ink-4);
 }
 
 /* Application row */
 .ap-row-wrap {
-  border-bottom: 1px solid var(--line);
+  border-bottom: 1px solid var(--mist)
 }
 
 .ap-row {
@@ -346,7 +346,7 @@
   align-items: center;
   gap: var(--space-2);
   padding: 14px var(--space-3);
-  background: var(--surface-elevated);
+  background: var(--surface-2);
   cursor: pointer;
   transition: background var(--t-fast), border-color var(--t-fast);
   border-left: 3px solid transparent;
@@ -354,11 +354,11 @@
 }
 
 .ap-row:hover {
-  background: var(--surface-bright);
+  background: var(--surface-3);
 }
 
 .ap-row--selected {
-  border-left-color: var(--primary);
+  border-left-color: var(--brand-red);
   background: rgba(193, 18, 31, 0.03);
 }
 
@@ -373,7 +373,7 @@
   border: 1.5px solid var(--line-strong);
   border-radius: var(--r-sm);
   cursor: pointer;
-  accent-color: var(--primary);
+  accent-color: var(--brand-red);
   flex-shrink: 0;
 }
 
@@ -401,7 +401,7 @@
 .ap-creator__name {
   font-size: var(--text-small);
   font-weight: 700;
-  color: var(--dark);
+  color: var(--ink);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -409,7 +409,7 @@
 
 .ap-creator__handle {
   font-size: var(--text-caption);
-  color: var(--text-muted);
+  color: var(--ink-4);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -433,18 +433,18 @@
   font-size: 22px;
   font-weight: 900;
   letter-spacing: -0.03em;
-  color: var(--dark);
+  color: var(--ink);
   text-align: center;
 }
 
 .ap-score--high {
-  color: var(--primary);
+  color: var(--brand-red);
 }
 
 /* Campaign name */
 .ap-campaign {
   font-size: var(--text-caption);
-  color: var(--dark);
+  color: var(--ink);
   text-decoration: none;
   border-bottom: 1px solid transparent;
   transition: border-color var(--t-fast);
@@ -452,7 +452,7 @@
 }
 
 .ap-campaign:hover {
-  border-bottom-color: var(--dark);
+  border-bottom-color: var(--ink);
 }
 
 /* Match % */
@@ -461,14 +461,14 @@
   font-size: 18px;
   font-weight: 700;
   letter-spacing: -0.02em;
-  color: var(--tertiary);
+  color: var(--accent-blue);
   text-align: center;
 }
 
 /* Last active */
 .ap-active {
   font-size: var(--text-caption);
-  color: var(--text-muted);
+  color: var(--ink-4);
   letter-spacing: 0.02em;
 }
 
@@ -499,9 +499,9 @@
 }
 
 .ap-btn--accept {
-  background: var(--primary);
-  color: #fff;
-  border-color: var(--primary);
+  background: var(--brand-red);
+  color: var(--snow);
+  border-color: var(--brand-red);
 }
 
 .ap-btn--accept:hover {
@@ -517,17 +517,17 @@
 
 .ap-btn--decline:hover {
   background: var(--accent);
-  color: #fff;
+  color: var(--snow);
 }
 
 .ap-btn--message {
   background: transparent;
-  color: var(--dark);
+  color: var(--ink);
   border-color: var(--line-strong);
 }
 
 .ap-btn--message:hover {
-  border-color: var(--dark);
+  border-color: var(--ink);
 }
 
 /* Status badge (for accepted/declined/shortlisted rows) */
@@ -543,7 +543,7 @@
 
 .ap-status-badge--accepted {
   background: rgba(0, 48, 73, 0.08);
-  color: var(--dark);
+  color: var(--ink);
   border: 1px solid var(--line-strong);
 }
 
@@ -566,8 +566,8 @@
   overflow: hidden;
   max-height: 0;
   transition: max-height 340ms cubic-bezier(0.22, 1, 0.36, 1);
-  background: var(--surface-bright);
-  border-left: 3px solid var(--line);
+  background: var(--surface-3);
+  border-left: 3px solid var(--mist)
 }
 
 .ap-accordion--open {
@@ -586,7 +586,7 @@
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--text-muted);
+  color: var(--ink-4);
   margin-bottom: 6px;
 }
 
@@ -614,12 +614,12 @@
   font-size: 20px;
   font-weight: 800;
   letter-spacing: -0.03em;
-  color: var(--dark);
+  color: var(--ink);
 }
 
 .ap-accordion__stat-label {
   font-size: var(--text-caption);
-  color: var(--text-muted);
+  color: var(--ink-4);
   letter-spacing: 0.02em;
 }
 
@@ -642,7 +642,7 @@
   line-height: 1.6;
   font-style: italic;
   padding-left: var(--space-2);
-  border-left: 2px solid var(--primary);
+  border-left: 2px solid var(--brand-red);
 }
 
 /* ------------------------------------------------------------
@@ -654,7 +654,7 @@
   left: 50%;
   transform: translateX(-50%) translateY(120%);
   z-index: 300;
-  background: var(--dark);
+  background: var(--ink);
   border: 1px solid rgba(255, 255, 255, 0.12);
   padding: 14px var(--space-4);
   display: flex;
@@ -697,9 +697,9 @@
 }
 
 .ap-bulk-btn--accept {
-  background: var(--primary);
-  color: #fff;
-  border-color: var(--primary);
+  background: var(--brand-red);
+  color: var(--snow);
+  border-color: var(--brand-red);
 }
 
 .ap-bulk-btn--accept:hover {
@@ -715,7 +715,7 @@
 
 .ap-bulk-btn--decline:hover {
   border-color: rgba(245, 242, 236, 0.8);
-  color: #fff;
+  color: var(--snow);
 }
 
 .ap-bulk-btn--shortlist {
@@ -769,7 +769,7 @@
 }
 
 .ap-modal {
-  background: var(--surface-elevated);
+  background: var(--surface-2);
   border: 1px solid var(--line-strong);
   padding: var(--space-5);
   min-width: 340px;
@@ -785,7 +785,7 @@
   font-size: var(--text-h3);
   font-weight: 800;
   letter-spacing: -0.03em;
-  color: var(--dark);
+  color: var(--ink);
   margin-bottom: var(--space-2);
 }
 
@@ -818,8 +818,8 @@
 }
 
 .ap-modal__cancel:hover {
-  border-color: var(--dark);
-  color: var(--dark);
+  border-color: var(--ink);
+  color: var(--ink);
 }
 
 .ap-modal__confirm {
@@ -829,10 +829,10 @@
   letter-spacing: 0.08em;
   text-transform: uppercase;
   padding: 8px 20px;
-  border: 1.5px solid var(--primary);
+  border: 1.5px solid var(--brand-red);
   border-radius: var(--r-lg);
-  background: var(--primary);
-  color: #fff;
+  background: var(--brand-red);
+  color: var(--snow);
   cursor: pointer;
   transition: background var(--t-fast), border-color var(--t-fast);
 }
@@ -859,12 +859,12 @@
   font-size: var(--text-h3);
   font-weight: 800;
   letter-spacing: -0.03em;
-  color: var(--dark);
+  color: var(--ink);
 }
 
 .ap-empty__sub {
   font-size: var(--text-small);
-  color: var(--text-muted);
+  color: var(--ink-4);
   max-width: 320px;
   line-height: 1.6;
 }

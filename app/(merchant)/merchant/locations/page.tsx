@@ -1,16 +1,24 @@
 "use client";
 
-import { useState, useCallback, useEffect, useRef } from "react";
+import { useState, useCallback, useEffect } from "react";
+import Link from "next/link";
 import dynamic from "next/dynamic";
 import { MOCK_LOCATIONS, type Location } from "@/lib/merchant/mock-locations";
-import "../locations/locations.css";
+import "./locations.css";
 
-/* ── Leaflet map — dynamic import (no SSR) ──────────────────────────────── */
+/* -- Leaflet map — dynamic import (no SSR) ---------------------------------------- */
 const LocationsMap = dynamic(() => import("./LocationsMap"), { ssr: false });
 
-/* ── SVG Icons ──────────────────────────────────────────────────────────── */
+/* -- SVG Icons -------------------------------------------------------------------- */
 const IconGrid = () => (
-  <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5">
+  <svg
+    width="14"
+    height="14"
+    viewBox="0 0 16 16"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="1.5"
+  >
     <rect x="1" y="1" width="6" height="6" />
     <rect x="9" y="1" width="6" height="6" />
     <rect x="1" y="9" width="6" height="6" />
@@ -19,58 +27,49 @@ const IconGrid = () => (
 );
 
 const IconMap = () => (
-  <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5">
+  <svg
+    width="14"
+    height="14"
+    viewBox="0 0 16 16"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="1.5"
+  >
     <polygon points="1,3 6,1 10,3 15,1 15,13 10,15 6,13 1,15" />
     <line x1="6" y1="1" x2="6" y2="13" />
     <line x1="10" y1="3" x2="10" y2="15" />
   </svg>
 );
 
-const IconPlus = () => (
-  <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2">
-    <line x1="8" y1="2" x2="8" y2="14" />
-    <line x1="2" y1="8" x2="14" y2="8" />
-  </svg>
-);
-
 const IconQR = () => (
-  <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5">
+  <svg
+    width="14"
+    height="14"
+    viewBox="0 0 16 16"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="1.5"
+  >
     <rect x="1" y="1" width="5" height="5" />
     <rect x="2" y="2" width="3" height="3" fill="currentColor" stroke="none" />
     <rect x="10" y="1" width="5" height="5" />
     <rect x="11" y="2" width="3" height="3" fill="currentColor" stroke="none" />
     <rect x="1" y="10" width="5" height="5" />
     <rect x="2" y="11" width="3" height="3" fill="currentColor" stroke="none" />
-    <line x1="10" y1="10" x2="10" y2="10" strokeWidth="2.5" />
-    <line x1="13" y1="10" x2="13" y2="10" strokeWidth="2.5" />
-    <line x1="15" y1="13" x2="15" y2="13" strokeWidth="2.5" />
-    <line x1="10" y1="13" x2="12" y2="13" />
+    <line x1="10" y1="10" x2="12" y2="10" />
     <line x1="10" y1="10" x2="10" y2="12" />
     <line x1="13" y1="10" x2="15" y2="10" />
     <line x1="13" y1="12" x2="15" y2="12" />
+    <line x1="10" y1="13" x2="12" y2="13" />
     <line x1="12" y1="15" x2="15" y2="15" />
   </svg>
 );
 
-/* ── LocationCard ────────────────────────────────────────────────────────── */
-function LocationCard({
-  location,
-  style,
-}: {
-  location: Location;
-  style?: React.CSSProperties;
-}) {
-  const campaignStatusClass = location.primary_campaign_status
-    ? `loc-card__campaign--${location.primary_campaign_status}`
-    : "loc-card__campaign--closed";
-
-  const dotClass = location.primary_campaign_status
-    ? `loc-card__campaign-dot--${location.primary_campaign_status}`
-    : "loc-card__campaign-dot--closed";
-
+/* -- Location card ---------------------------------------------------------------- */
+function LocationCard({ location }: { location: Location }) {
   return (
-    <div className="loc-card" style={style}>
-      {/* Store image */}
+    <div className="loc-card">
+      {/* Image */}
       <div className="loc-card__img-wrap">
         {location.image_url ? (
           <img
@@ -80,100 +79,142 @@ function LocationCard({
             loading="lazy"
           />
         ) : (
-          <div
-            style={{
-              width: "100%",
-              height: "100%",
-              background: "rgba(0,48,73,0.06)",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              color: "rgba(0,48,73,0.25)",
-              fontSize: "12px",
-              fontWeight: 700,
-              letterSpacing: "0.08em",
-              textTransform: "uppercase",
-            }}
-          >
-            No Image
+          <div className="loc-card__img-placeholder">
+            <span>No Image</span>
           </div>
         )}
-        <span
-          className={`loc-card__status-badge loc-card__status-badge--${location.status}`}
-        >
-          {location.status === "open" ? "Open" : "Closed"}
-        </span>
+        <div className="loc-card__status-badge">
+          <span
+            className={`loc-status-chip loc-status-chip--${location.status}`}
+          >
+            {location.status === "open" ? "Open" : "Closed"}
+          </span>
+        </div>
       </div>
 
       {/* Body */}
       <div className="loc-card__body">
-        <div className="loc-card__header">
-          <div>
-            <div className="loc-card__name">{location.name}</div>
-            <div className="loc-card__neighborhood">
-              {location.neighborhood}
-            </div>
-          </div>
+        <div>
+          <div className="loc-card__name">{location.name}</div>
+          <div className="loc-card__neighborhood">{location.neighborhood}</div>
         </div>
 
         {/* Stats */}
         <div className="loc-card__stats">
-          <div className="loc-card__stat">
-            <div className="loc-card__stat-value">{location.scans_7d}</div>
-            <div className="loc-card__stat-label">7d Scans</div>
-          </div>
-          <div className="loc-card__stat">
-            <div className="loc-card__stat-value">
-              {location.conversions_30d}
+          {[
+            { value: location.scans_7d, label: "7d Scans" },
+            { value: location.conversions_30d, label: "30d Conv." },
+            { value: location.staff_count, label: "Staff" },
+          ].map((s) => (
+            <div key={s.label}>
+              <div className="loc-card__stat-value">{s.value}</div>
+              <div className="loc-card__stat-label">{s.label}</div>
             </div>
-            <div className="loc-card__stat-label">30d Conv.</div>
-          </div>
-          <div className="loc-card__stat">
-            <div className="loc-card__stat-value">{location.staff_count}</div>
-            <div className="loc-card__stat-label">Staff</div>
-          </div>
+          ))}
         </div>
 
-        {/* Primary campaign */}
-        {location.primary_campaign_title ? (
-          <div className={`loc-card__campaign ${campaignStatusClass}`}>
-            <div className={`loc-card__campaign-dot ${dotClass}`} />
+        {/* Campaign */}
+        <div className="loc-card__campaign">
+          <div className="loc-card__campaign-eyebrow">Campaign</div>
+          {location.primary_campaign_title ? (
             <div className="loc-card__campaign-title">
               {location.primary_campaign_title}
             </div>
-            <div className="loc-card__campaign-status">
-              {location.primary_campaign_status}
-            </div>
-          </div>
-        ) : (
-          <div className="loc-card__campaign loc-card__campaign--closed">
-            <div className="loc-card__campaign-dot loc-card__campaign-dot--closed" />
+          ) : null}
+          {location.primary_campaign_status ? (
             <div
-              className="loc-card__campaign-title"
-              style={{ color: "rgba(0,48,73,0.35)" }}
+              className={`loc-campaign-chip loc-campaign-chip--${
+                location.primary_campaign_status === "active"
+                  ? "active"
+                  : "inactive"
+              }`}
+            >
+              <span className="loc-campaign-chip__dot" />
+              {location.primary_campaign_status.charAt(0).toUpperCase() +
+                location.primary_campaign_status.slice(1)}
+            </div>
+          ) : (
+            <span
+              style={{
+                fontFamily: "var(--font-body)",
+                fontSize: 12,
+                color: "var(--ink-4)",
+              }}
             >
               No active campaign
-            </div>
-          </div>
-        )}
+            </span>
+          )}
+        </div>
 
         {/* Actions */}
         <div className="loc-card__actions">
           <a
             href={`/merchant/locations/${location.id}`}
-            className="loc-card__action-btn loc-card__action-btn--primary"
+            className="click-shift"
+            style={{
+              flex: 1,
+              padding: "10px",
+              fontSize: 12,
+              fontFamily: "var(--font-body)",
+              fontWeight: 700,
+              letterSpacing: "0.04em",
+              textTransform: "uppercase",
+              cursor: "pointer",
+              borderRadius: 8,
+              border: "none",
+              background: "var(--brand-red)",
+              color: "var(--snow)",
+              textDecoration: "none",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              transition: "transform 180ms",
+            }}
           >
             View
           </a>
           <a
             href={`/merchant/locations/${location.id}?tab=edit`}
-            className="loc-card__action-btn loc-card__action-btn--secondary"
+            className="click-shift"
+            style={{
+              flex: 1,
+              padding: "10px",
+              fontSize: 12,
+              fontFamily: "var(--font-body)",
+              fontWeight: 700,
+              letterSpacing: "0.04em",
+              textTransform: "uppercase",
+              cursor: "pointer",
+              borderRadius: 8,
+              border: "1px solid var(--hairline)",
+              background: "transparent",
+              color: "var(--ink)",
+              textDecoration: "none",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              transition: "transform 180ms",
+            }}
           >
             Edit
           </a>
           <button
-            className="loc-card__action-btn loc-card__action-btn--qr"
             title="Add QR Code"
+            className="click-shift"
+            style={{
+              width: 40,
+              height: 40,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              borderRadius: 8,
+              border: "1px solid var(--hairline)",
+              background: "transparent",
+              color: "var(--ink-4)",
+              cursor: "pointer",
+              flexShrink: 0,
+              transition: "transform 180ms",
+            }}
           >
             <IconQR />
           </button>
@@ -183,7 +224,7 @@ function LocationCard({
   );
 }
 
-/* ── AddLocationModal ────────────────────────────────────────────────────── */
+/* -- Add Location Modal ----------------------------------------------------------- */
 function AddLocationModal({
   onClose,
   onAdd,
@@ -224,14 +265,12 @@ function AddLocationModal({
       if (data.location) onAdd(data.location);
       onClose();
     } catch {
-      // stub — close anyway
       onClose();
     } finally {
       setSubmitting(false);
     }
   };
 
-  // Close on Escape
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
@@ -254,13 +293,13 @@ function AddLocationModal({
         aria-labelledby="modal-title"
       >
         <div className="loc-modal__header">
-          <div className="loc-modal__title" id="modal-title">
+          <span id="modal-title" className="loc-modal__title">
             Add Location
-          </div>
+          </span>
           <button
-            className="loc-modal__close"
             onClick={onClose}
             aria-label="Close"
+            className="loc-modal__close"
           >
             ×
           </button>
@@ -422,15 +461,46 @@ function AddLocationModal({
           <div className="loc-modal__footer">
             <button
               type="button"
-              className="loc-modal__cancel"
               onClick={onClose}
+              className="click-shift"
+              style={{
+                flex: 1,
+                padding: "12px",
+                fontSize: 13,
+                fontFamily: "var(--font-body)",
+                fontWeight: 700,
+                letterSpacing: "0.04em",
+                textTransform: "uppercase",
+                cursor: "pointer",
+                borderRadius: 8,
+                border: "1px solid var(--hairline)",
+                background: "transparent",
+                color: "var(--ink)",
+                transition: "transform 180ms",
+              }}
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="loc-modal__submit"
               disabled={submitting}
+              className="click-shift"
+              style={{
+                flex: 1,
+                padding: "12px",
+                fontSize: 13,
+                fontFamily: "var(--font-body)",
+                fontWeight: 700,
+                letterSpacing: "0.04em",
+                textTransform: "uppercase",
+                cursor: "pointer",
+                borderRadius: 8,
+                border: "none",
+                background: "var(--brand-red)",
+                color: "var(--snow)",
+                opacity: submitting ? 0.7 : 1,
+                transition: "transform 180ms",
+              }}
             >
               {submitting ? "Adding…" : "Add Location"}
             </button>
@@ -441,7 +511,7 @@ function AddLocationModal({
   );
 }
 
-/* ── Main Page ───────────────────────────────────────────────────────────── */
+/* -- Main Page -------------------------------------------------------------------- */
 export default function LocationsPage() {
   const [view, setView] = useState<"grid" | "map">("grid");
   const [locations, setLocations] = useState<Location[]>(MOCK_LOCATIONS);
@@ -450,6 +520,9 @@ export default function LocationsPage() {
 
   const openCount = locations.filter((l) => l.status === "open").length;
   const totalScans = locations.reduce((s, l) => s + l.scans_7d, 0);
+  const activeCampaigns = locations.filter(
+    (l) => l.primary_campaign_status === "active",
+  ).length;
 
   const handleAdd = useCallback((loc: Location) => {
     setLocations((prev) => [loc, ...prev]);
@@ -457,54 +530,72 @@ export default function LocationsPage() {
 
   return (
     <div className="loc-page">
-      {/* Hero */}
-      <div className="loc-hero">
-        <div className="loc-hero__eyebrow">Multi-Location</div>
-        <div>
-          <span className="loc-hero__title">Locations.</span>
-          <span className="loc-hero__count">{locations.length}</span>
-        </div>
-        <div className="loc-hero__meta">
-          <span className="loc-hero__stat">
-            <strong>{openCount}</strong> open now
-          </span>
-          <span className="loc-hero__stat">
-            <strong>{totalScans}</strong> scans this week
-          </span>
-          <span className="loc-hero__stat">
-            <strong>
-              {
-                locations.filter((l) => l.primary_campaign_status === "active")
-                  .length
-              }
-            </strong>{" "}
-            active campaigns
-          </span>
-        </div>
-      </div>
+      {/* Back nav */}
+      <nav className="loc-back-nav">
+        <Link href="/merchant/dashboard" className="loc-back-link">
+          ← Dashboard
+        </Link>
+      </nav>
 
-      {/* Toolbar */}
+      {/* Page header */}
+      <header className="loc-header">
+        <div className="loc-header__inner">
+          <div className="loc-header__row">
+            <h1 className="loc-header__title">
+              Locations
+              <span className="loc-header__count">{locations.length}</span>
+            </h1>
+            <button
+              className="click-shift"
+              onClick={() => setShowModal(true)}
+              style={{
+                padding: "12px 24px",
+                fontSize: 13,
+                fontFamily: "var(--font-body)",
+                fontWeight: 700,
+                letterSpacing: "0.04em",
+                textTransform: "uppercase",
+                cursor: "pointer",
+                borderRadius: 8,
+                border: "none",
+                background: "var(--brand-red)",
+                color: "var(--snow)",
+                transition: "transform 180ms",
+              }}
+            >
+              + Add Location
+            </button>
+          </div>
+
+          {/* Stats */}
+          <div className="loc-stats">
+            {[
+              { value: openCount, label: "Open now" },
+              { value: totalScans, label: "Scans this week" },
+              { value: activeCampaigns, label: "Active campaigns" },
+            ].map((s) => (
+              <div key={s.label} className="loc-stat-card">
+                <div className="loc-stat-card__value">{s.value}</div>
+                <div className="loc-stat-card__label">{s.label}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </header>
+
+      {/* View toggle */}
       <div className="loc-toolbar">
-        <div className="loc-view-toggle" role="group" aria-label="View mode">
+        {(["grid", "map"] as const).map((v) => (
           <button
-            className={`loc-view-toggle__btn${view === "grid" ? " active" : ""}`}
-            onClick={() => setView("grid")}
-            aria-pressed={view === "grid"}
+            key={v}
+            onClick={() => setView(v)}
+            aria-pressed={view === v}
+            className="loc-view-btn"
           >
-            <IconGrid /> Grid
+            {v === "grid" ? <IconGrid /> : <IconMap />}
+            {v === "grid" ? "Grid" : "Map"}
           </button>
-          <button
-            className={`loc-view-toggle__btn${view === "map" ? " active" : ""}`}
-            onClick={() => setView("map")}
-            aria-pressed={view === "map"}
-          >
-            <IconMap /> Map
-          </button>
-        </div>
-
-        <button className="loc-add-btn" onClick={() => setShowModal(true)}>
-          <IconPlus /> Add Location
-        </button>
+        ))}
       </div>
 
       {/* Map view */}
@@ -521,12 +612,8 @@ export default function LocationsPage() {
       {/* Grid view */}
       <div className="loc-grid-section">
         <div className="loc-grid">
-          {locations.map((loc, i) => (
-            <LocationCard
-              key={loc.id}
-              location={loc}
-              style={{ animationDelay: `${i * 60}ms` }}
-            />
+          {locations.map((loc) => (
+            <LocationCard key={loc.id} location={loc} />
           ))}
         </div>
       </div>

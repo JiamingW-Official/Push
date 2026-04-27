@@ -112,9 +112,11 @@ export default function CreatorMessagesPage() {
           justifyContent: "center",
           height: "calc(100vh - 64px)",
           fontFamily: "var(--font-body)",
-          fontSize: 13,
-          color: "rgba(0,48,73,0.35)",
+          fontSize: 12,
+          color: "var(--ink-4)",
           background: "var(--surface)",
+          letterSpacing: "0.08em",
+          textTransform: "uppercase",
         }}
       >
         Loading…

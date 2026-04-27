@@ -1,6 +1,6 @@
 /* ============================================================
    Portfolio Page — Edit View
-   Design.md v7 authority: iOS 26 continuous corner, 8px grid
+   Design.md v11: 8px grid, closed token set, product register
    ============================================================ */
 
 /* ── Page shell ─────────────────────────────────────────────── */
@@ -15,36 +15,37 @@
   position: sticky;
   top: 0;
   z-index: 50;
-  background: var(--dark);
+  background: var(--ink);
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .pf-share-bar-inner {
-  max-width: var(--content-width);
+  max-width: 1140px;
   margin: 0 auto;
-  padding: 12px var(--space-4);
+  padding: 12px 64px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: var(--space-4);
+  gap: 24px;
 }
 
 .pf-share-url-group {
   display: flex;
   align-items: center;
-  gap: var(--space-2);
+  gap: 16px;
 }
 
 .pf-share-label {
-  font-size: var(--text-caption);
+  font-size: 12px;
   color: rgba(255, 255, 255, 0.5);
   text-transform: uppercase;
   letter-spacing: 0.08em;
   font-weight: 700;
+  font-family: var(--font-body);
 }
 
 .pf-share-url {
-  font-size: var(--text-small);
+  font-size: 13px;
   color: rgba(255, 255, 255, 0.9);
   font-family: var(--font-body);
 }
@@ -52,23 +53,23 @@
 .pf-share-actions {
   display: flex;
   align-items: center;
-  gap: var(--space-2);
+  gap: 8px;
 }
 
 .pf-btn-copy,
 .pf-btn-preview {
-  font-size: var(--text-caption);
+  font-size: 12px;
   padding: 6px 14px;
   border: 1px solid rgba(255, 255, 255, 0.25);
   background: transparent;
-  color: #fff;
+  color: var(--snow);
   cursor: pointer;
   font-family: var(--font-body);
   text-decoration: none;
   display: inline-flex;
   align-items: center;
-  border-radius: var(--r-lg);
-  transition: background var(--t-fast), border-color var(--t-fast);
+  border-radius: 8px;
+  transition: background 0.15s, border-color 0.15s;
   letter-spacing: 0.04em;
   text-transform: uppercase;
 }
@@ -79,73 +80,77 @@
 }
 
 .pf-btn-preview {
-  background: var(--primary);
-  border-color: var(--primary);
+  background: var(--brand-red);
+  border-color: var(--brand-red);
 }
 
 .pf-btn-preview:hover {
-  background: var(--accent);
-  border-color: var(--accent);
+  background: var(--brand-red);
+  border-color: var(--brand-red);
 }
 
 .pf-save-toast {
   text-align: center;
   padding: 6px;
-  font-size: var(--text-caption);
+  font-size: 12px;
   color: var(--champagne);
-  background: rgba(201, 169, 110, 0.1);
+  background: rgba(191, 161, 112, 0.1);
   margin: 0;
+  font-family: var(--font-body);
 }
 
 /* ── Sections ────────────────────────────────────────────────── */
 .pf-section {
-  border-bottom: 1px solid var(--line);
+  border-bottom: 1px solid var(--mist);
 }
 
 .pf-section-inner {
-  max-width: var(--content-width);
+  max-width: 1140px;
   margin: 0 auto;
-  padding: var(--space-10) var(--space-4);
+  padding: 64px 64px;
 }
 
 .pf-section-heading {
-  margin-bottom: var(--space-6);
+  margin-bottom: 40px;
 }
 
 .pf-eyebrow {
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 700;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--primary);
+  color: var(--brand-red);
   font-family: var(--font-body);
-  margin-bottom: var(--space-1);
+  margin-bottom: 8px;
 }
 
 .pf-section-title {
   font-family: var(--font-display);
-  font-size: var(--text-h2);
+  font-size: 40px;
   font-weight: 700;
-  color: var(--dark);
-  letter-spacing: -0.03em;
-  margin: 0 0 var(--space-1);
+  color: var(--ink);
+  letter-spacing: -0.02em;
+  margin: 0 0 8px;
+  line-height: 1.1;
 }
 
 .pf-section-sub {
-  font-size: var(--text-small);
+  font-size: 18px;
   color: var(--graphite);
-  margin: var(--space-1) 0 0;
+  margin: 8px 0 0;
+  font-family: var(--font-body);
+  line-height: 1.55;
 }
 
 /* ── Header section ──────────────────────────────────────────── */
 .pf-header-section {
-  background: var(--surface-bright);
+  background: var(--surface-3);
 }
 
 .pf-creator-header {
   display: grid;
   grid-template-columns: auto 1fr;
-  gap: var(--space-6);
+  gap: 40px;
   align-items: start;
 }
 
@@ -154,16 +159,17 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: var(--space-2);
+  gap: 16px;
 }
 
 .pf-avatar {
   width: 120px;
   height: 120px;
-  border: 2px solid var(--dark);
+  border: 2px solid var(--mist);
   background: var(--surface);
   overflow: hidden;
   flex-shrink: 0;
+  border-radius: 50%;
 }
 
 .pf-avatar-img {
@@ -181,39 +187,39 @@
   font-family: var(--font-display);
   font-size: 36px;
   font-weight: 800;
-  color: var(--dark);
+  color: var(--ink);
 }
 
 .pf-avatar-upload-btn {
   font-size: 11px;
   color: var(--graphite);
   background: none;
-  border: 1px solid var(--line);
+  border: 1px solid var(--mist);
   padding: 4px 10px;
   cursor: pointer;
   font-family: var(--font-body);
-  border-radius: var(--r-lg);
+  border-radius: 8px;
   white-space: nowrap;
-  transition: border-color var(--t-fast), color var(--t-fast);
+  transition: border-color 0.15s, color 0.15s;
 }
 
 .pf-avatar-upload-btn:hover {
-  border-color: var(--dark);
-  color: var(--dark);
+  border-color: var(--ink);
+  color: var(--ink);
 }
 
 /* Identity display */
 .pf-creator-identity-display {
   display: flex;
   flex-direction: column;
-  gap: var(--space-2);
+  gap: 16px;
 }
 
 .pf-creator-name {
   font-family: var(--font-display);
   font-size: clamp(36px, 5vw, 64px);
   font-weight: 800;
-  color: var(--dark);
+  color: var(--ink);
   letter-spacing: -0.04em;
   line-height: 1;
   margin: 0;
@@ -222,61 +228,63 @@
 .pf-creator-meta {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--space-1);
-  margin-top: var(--space-1);
+  gap: 8px;
+  margin-top: 8px;
 }
 
 .pf-meta-chip {
   font-size: 11px;
   font-weight: 600;
   letter-spacing: 0.04em;
-  padding: 3px 8px;
-  background: var(--surface-elevated);
-  border: 1px solid var(--line);
+  padding: 4px 12px;
+  background: var(--surface-2);
+  border: 1px solid var(--mist);
   color: var(--graphite);
   font-family: var(--font-body);
+  border-radius: 40px;
 }
 
 .pf-meta-chip--handle {
-  border-color: var(--dark);
-  color: var(--dark);
+  border-color: var(--ink);
+  color: var(--ink);
   background: var(--surface);
 }
 
 .pf-creator-bio {
-  font-size: var(--text-body);
-  color: var(--dark);
-  line-height: 1.65;
+  font-size: 18px;
+  color: var(--ink-3);
+  line-height: 1.55;
   max-width: 640px;
-  margin: var(--space-2) 0 0;
+  margin: 8px 0 0;
+  font-family: var(--font-body);
 }
 
 .pf-btn-edit-header {
   align-self: flex-start;
-  margin-top: var(--space-2);
+  margin-top: 16px;
   padding: 8px 20px;
-  background: var(--dark);
-  color: #fff;
+  background: var(--ink);
+  color: var(--snow);
   border: none;
   font-family: var(--font-body);
-  font-size: var(--text-small);
+  font-size: 13px;
   font-weight: 600;
   letter-spacing: 0.04em;
   text-transform: uppercase;
   cursor: pointer;
-  border-radius: var(--r-lg);
-  transition: background var(--t-fast);
+  border-radius: 8px;
+  transition: background 0.15s;
 }
 
 .pf-btn-edit-header:hover {
-  background: var(--accent);
+  background: var(--brand-red);
 }
 
 /* Header form */
 .pf-header-form {
   display: flex;
   flex-direction: column;
-  gap: var(--space-3);
+  gap: 24px;
 }
 
 .pf-form-row {
@@ -288,11 +296,11 @@
 .pf-form-row--2col {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: var(--space-3);
+  gap: 24px;
 }
 
 .pf-form-label {
-  font-size: var(--text-caption);
+  font-size: 12px;
   font-weight: 700;
   letter-spacing: 0.05em;
   text-transform: uppercase;
@@ -300,30 +308,32 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  font-family: var(--font-body);
 }
 
 .pf-char-count {
   font-weight: 400;
-  color: var(--text-muted);
+  color: var(--ink-4);
   letter-spacing: 0;
   text-transform: none;
 }
 
 .pf-input {
   font-family: var(--font-body);
-  font-size: var(--text-body);
-  color: var(--dark);
-  background: var(--surface-elevated);
-  border: 1px solid var(--line);
+  font-size: 16px;
+  color: var(--ink);
+  background: var(--surface-2);
+  border: 1px solid var(--mist);
   padding: 10px 12px;
-  border-radius: var(--r-md);
+  border-radius: 8px;
   outline: none;
   width: 100%;
-  transition: border-color var(--t-fast);
+  transition: border-color 0.15s;
+  box-sizing: border-box;
 }
 
 .pf-input:focus {
-  border-color: var(--dark);
+  border-color: var(--ink);
 }
 
 .pf-input--large {
@@ -341,23 +351,26 @@
 .pf-input-prefix-wrap {
   display: flex;
   align-items: center;
-  border: 1px solid var(--line);
-  background: var(--surface-elevated);
-  transition: border-color var(--t-fast);
+  border: 1px solid var(--mist);
+  background: var(--surface-2);
+  transition: border-color 0.15s;
+  border-radius: 8px;
+  overflow: hidden;
 }
 
 .pf-input-prefix-wrap:focus-within {
-  border-color: var(--dark);
+  border-color: var(--ink);
 }
 
 .pf-input-prefix {
   padding: 10px 10px 10px 12px;
-  font-size: var(--text-small);
+  font-size: 13px;
   color: var(--graphite);
   background: var(--surface);
-  border-right: 1px solid var(--line);
+  border-right: 1px solid var(--mist);
   white-space: nowrap;
   flex-shrink: 0;
+  font-family: var(--font-body);
 }
 
 .pf-input--prefixed {
@@ -371,48 +384,48 @@
 }
 
 .pf-input:disabled {
-  background: var(--surface-muted);
-  color: var(--text-muted);
+  background: var(--surface-3);
+  color: var(--ink-4);
   cursor: not-allowed;
 }
 
 .pf-form-actions {
   display: flex;
-  gap: var(--space-2);
-  margin-top: var(--space-1);
+  gap: 16px;
+  margin-top: 8px;
 }
 
 .pf-btn-save,
 .pf-btn-cancel {
   padding: 10px 24px;
   font-family: var(--font-body);
-  font-size: var(--text-small);
+  font-size: 13px;
   font-weight: 700;
   letter-spacing: 0.05em;
   text-transform: uppercase;
   cursor: pointer;
-  border-radius: var(--r-lg);
+  border-radius: 8px;
   border: none;
-  transition: background var(--t-fast);
+  transition: background 0.15s;
 }
 
 .pf-btn-save {
-  background: var(--primary);
-  color: #fff;
+  background: var(--brand-red);
+  color: var(--snow);
 }
 
 .pf-btn-save:hover {
-  background: var(--accent);
+  background: var(--brand-red);
 }
 
 .pf-btn-cancel {
-  background: var(--surface-muted);
+  background: var(--surface-3);
   color: var(--graphite);
-  border: 1px solid var(--line);
+  border: 1px solid var(--mist);
 }
 
 .pf-btn-cancel:hover {
-  background: var(--line);
+  background: var(--mist);
 }
 
 /* ── Tier section ────────────────────────────────────────────── */
@@ -423,7 +436,7 @@
 .pf-tier-showcase {
   display: grid;
   grid-template-columns: 200px 1fr;
-  gap: var(--space-8);
+  gap: 48px;
   align-items: start;
 }
 
@@ -432,9 +445,10 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: var(--space-1);
-  padding: var(--space-5) var(--space-4);
-  background: var(--dark);
+  gap: 8px;
+  padding: 32px 24px;
+  background: var(--ink);
+  border-radius: 10px;
   text-align: center;
 }
 
@@ -448,16 +462,17 @@
 }
 
 .pf-tier-badge-desc {
-  font-size: var(--text-caption);
+  font-size: 12px;
   color: rgba(255, 255, 255, 0.6);
   text-transform: uppercase;
   letter-spacing: 0.06em;
+  font-family: var(--font-body);
 }
 
 .pf-tier-progress-wrap {
   display: flex;
   flex-direction: column;
-  gap: var(--space-4);
+  gap: 24px;
 }
 
 /* Progress bar */
@@ -465,38 +480,43 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: var(--space-1);
+  margin-bottom: 8px;
 }
 
 .pf-tier-label {
   font-weight: 700;
-  font-size: var(--text-small);
-  color: var(--dark);
+  font-size: 13px;
+  color: var(--ink);
   text-transform: uppercase;
   letter-spacing: 0.04em;
+  font-family: var(--font-body);
 }
 
 .pf-tier-next {
-  font-size: var(--text-caption);
+  font-size: 12px;
   color: var(--graphite);
+  font-family: var(--font-body);
 }
 
 .pf-tier-bar-track {
   height: 6px;
-  background: var(--line);
+  background: var(--surface-3);
   position: relative;
+  border-radius: 3px;
+  overflow: hidden;
 }
 
 .pf-tier-bar-fill {
   height: 100%;
-  background: var(--primary);
+  background: var(--brand-red);
+  border-radius: 3px;
   transition: width 800ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .pf-tier-tiers-row {
   display: flex;
   justify-content: space-between;
-  margin-top: var(--space-2);
+  margin-top: 16px;
 }
 
 .pf-tier-pip {
@@ -509,34 +529,37 @@
 .pf-tier-pip-dot {
   width: 8px;
   height: 8px;
-  border: 2px solid var(--line);
-  background: var(--surface-elevated);
+  border-radius: 50%;
+  border: 1px solid var(--mist);
+  background: var(--surface-2);
 }
 
 .pf-tier-pip--active .pf-tier-pip-dot {
-  background: var(--primary);
-  border-color: var(--primary);
+  background: var(--brand-red);
+  border-color: var(--brand-red);
 }
 
 .pf-tier-pip-label {
   font-size: 10px;
-  color: var(--text-muted);
+  color: var(--ink-4);
   letter-spacing: 0.03em;
+  font-family: var(--font-body);
 }
 
 .pf-tier-pip--active .pf-tier-pip-label {
-  color: var(--dark);
+  color: var(--ink-3);
   font-weight: 600;
 }
 
 /* Benefits */
 .pf-tier-benefits-heading {
-  font-size: var(--text-caption);
+  font-size: 12px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: var(--graphite);
-  margin: 0 0 var(--space-2);
+  margin: 0 0 16px;
+  font-family: var(--font-body);
 }
 
 .pf-tier-benefits-list {
@@ -551,35 +574,38 @@
 .pf-tier-benefit-item {
   display: flex;
   align-items: center;
-  gap: var(--space-2);
-  font-size: var(--text-small);
-  color: var(--dark);
+  gap: 16px;
+  font-size: 13px;
+  color: var(--ink-3);
+  font-family: var(--font-body);
 }
 
 .pf-tier-benefit-dot {
   width: 4px;
   height: 4px;
-  background: var(--primary);
+  background: var(--brand-red);
   flex-shrink: 0;
+  border-radius: 50%;
 }
 
 .pf-tier-upgrade-hint {
-  margin-top: var(--space-3);
-  padding: var(--space-3);
-  background: var(--champagne-light);
+  margin-top: 24px;
+  padding: 16px;
+  background: rgba(191, 161, 112, 0.08);
   border-left: 3px solid var(--champagne);
-  font-size: var(--text-small);
-  color: var(--dark);
-  line-height: 1.5;
+  font-size: 13px;
+  color: var(--ink-3);
+  line-height: 1.55;
+  font-family: var(--font-body);
 }
 
 /* ── Stats strip ─────────────────────────────────────────────── */
 .pf-stats-section {
-  background: var(--dark);
+  background: var(--ink);
 }
 
 .pf-stats-section .pf-section-title {
-  color: #fff;
+  color: var(--snow);
 }
 
 .pf-stats-section .pf-eyebrow {
@@ -595,48 +621,50 @@
 }
 
 .pf-stat-block {
-  padding: var(--space-6) var(--space-4);
-  background: var(--dark);
+  padding: 40px 24px;
+  background: var(--ink);
   text-align: center;
   display: flex;
   flex-direction: column;
-  gap: var(--space-1);
+  gap: 8px;
 }
 
 .pf-stat-number {
   font-family: var(--font-display);
   font-size: clamp(36px, 5vw, 56px);
   font-weight: 900;
-  color: #fff;
+  color: var(--snow);
   letter-spacing: -0.04em;
   line-height: 1;
 }
 
 .pf-stat-label {
-  font-size: var(--text-caption);
+  font-size: 12px;
   color: rgba(255, 255, 255, 0.5);
   text-transform: uppercase;
   letter-spacing: 0.06em;
   font-weight: 600;
+  font-family: var(--font-body);
 }
 
 /* ── Gallery editor ──────────────────────────────────────────── */
 .pf-gallery-section {
-  background: var(--surface-bright);
+  background: var(--surface-3);
 }
 
 .pf-gallery-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: var(--space-3);
-  margin-bottom: var(--space-6);
+  gap: 24px;
+  margin-bottom: 40px;
 }
 
 .pf-gallery-item {
   position: relative;
-  border: 1px solid var(--line);
-  background: var(--surface-elevated);
+  border: 1px solid var(--mist);
+  background: var(--surface-2);
   overflow: hidden;
+  border-radius: 10px;
 }
 
 .pf-gallery-item--hidden {
@@ -653,12 +681,12 @@
 .pf-gallery-video-placeholder {
   width: 100%;
   aspect-ratio: 4/3;
-  background: var(--dark);
+  background: var(--char);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: var(--space-1);
+  gap: 8px;
 }
 
 .pf-gallery-video-icon {
@@ -667,24 +695,26 @@
 }
 
 .pf-gallery-video-label {
-  font-size: var(--text-caption);
+  font-size: 12px;
   color: rgba(255, 255, 255, 0.4);
   text-transform: uppercase;
   letter-spacing: 0.06em;
+  font-family: var(--font-body);
 }
 
 .pf-gallery-caption {
   padding: 8px 10px;
-  font-size: var(--text-caption);
+  font-size: 12px;
   color: var(--graphite);
   margin: 0;
-  border-top: 1px solid var(--line);
+  border-top: 1px solid var(--mist);
   line-height: 1.4;
+  font-family: var(--font-body);
 }
 
 .pf-gallery-item-actions {
   display: flex;
-  border-top: 1px solid var(--line);
+  border-top: 1px solid var(--mist);
 }
 
 .pf-gallery-action-btn {
@@ -699,64 +729,65 @@
   background: var(--surface);
   color: var(--graphite);
   cursor: pointer;
-  border-radius: var(--r-lg);
-  transition: background var(--t-fast), color var(--t-fast);
+  transition: background 0.15s, color 0.15s;
 }
 
 .pf-gallery-action-btn:hover {
-  background: var(--dark);
-  color: #fff;
+  background: var(--ink);
+  color: var(--snow);
 }
 
 .pf-gallery-action-btn--danger:hover {
-  background: var(--primary);
-  color: #fff;
+  background: var(--brand-red);
+  color: var(--snow);
 }
 
 .pf-gallery-action-btn + .pf-gallery-action-btn {
-  border-left: 1px solid var(--line);
+  border-left: 1px solid var(--mist);
 }
 
 /* Gallery add */
 .pf-gallery-add {
-  border: 1px dashed var(--line);
-  padding: var(--space-4);
+  border: 1px dashed var(--mist);
+  padding: 24px;
+  border-radius: 10px;
 }
 
 .pf-gallery-add-label {
-  font-size: var(--text-caption);
+  font-size: 12px;
   color: var(--graphite);
   text-transform: uppercase;
   letter-spacing: 0.05em;
   font-weight: 600;
-  margin: 0 0 var(--space-2);
+  margin: 0 0 16px;
+  font-family: var(--font-body);
 }
 
 .pf-gallery-add-row {
   display: grid;
   grid-template-columns: 1fr 1fr auto;
-  gap: var(--space-2);
+  gap: 16px;
   align-items: end;
 }
 
 .pf-btn-add {
   padding: 10px 20px;
-  background: var(--primary);
-  color: #fff;
+  background: var(--brand-red);
+  color: var(--snow);
   border: none;
   font-family: var(--font-body);
-  font-size: var(--text-small);
+  font-size: 13px;
   font-weight: 700;
   letter-spacing: 0.04em;
   text-transform: uppercase;
   cursor: pointer;
-  border-radius: var(--r-lg);
-  transition: background var(--t-fast);
+  border-radius: 8px;
+  transition: background 0.15s;
   white-space: nowrap;
 }
 
 .pf-btn-add:hover {
-  background: var(--accent);
+  background: var(--brand-red);
 }
 
 /* ── Campaigns editor ────────────────────────────────────────── */
@@ -768,22 +799,24 @@
   display: flex;
   flex-direction: column;
   gap: 1px;
-  background: var(--line);
-  border: 1px solid var(--line);
+  background: var(--mist);
+  border: 1px solid var(--mist);
+  border-radius: 10px;
+  overflow: hidden;
 }
 
 .pf-campaign-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: var(--space-3);
-  padding: var(--space-3) var(--space-4);
-  background: var(--surface-elevated);
-  transition: background var(--t-fast);
+  gap: 24px;
+  padding: 24px;
+  background: var(--surface-2);
+  transition: background 0.15s;
 }
 
 .pf-campaign-row:hover {
-  background: var(--surface-bright);
+  background: var(--surface-3);
 }
 
 .pf-campaign-row--hidden {
@@ -795,7 +828,7 @@
   flex: 1;
   display: flex;
   align-items: center;
-  gap: var(--space-4);
+  gap: 24px;
   flex-wrap: wrap;
 }
 
@@ -805,22 +838,24 @@
 
 .pf-campaign-brand {
   display: block;
-  font-size: var(--text-body);
+  font-size: 16px;
   font-weight: 700;
-  color: var(--dark);
+  color: var(--ink);
+  font-family: var(--font-body);
 }
 
 .pf-campaign-location {
   display: block;
-  font-size: var(--text-caption);
+  font-size: 12px;
   color: var(--graphite);
   margin-top: 2px;
+  font-family: var(--font-body);
 }
 
 .pf-campaign-row-stats {
   display: flex;
   align-items: center;
-  gap: var(--space-4);
+  gap: 24px;
   flex-wrap: wrap;
 }
 
@@ -832,21 +867,24 @@
 
 .pf-campaign-stat-label {
   font-size: 10px;
-  color: var(--text-muted);
+  color: var(--ink-4);
   text-transform: uppercase;
   letter-spacing: 0.05em;
   font-weight: 600;
+  font-family: var(--font-body);
 }
 
 .pf-campaign-stat-value {
-  font-size: var(--text-small);
+  font-size: 13px;
   font-weight: 700;
-  color: var(--dark);
+  color: var(--ink);
+  font-family: var(--font-body);
 }
 
 .pf-campaign-date {
-  font-size: var(--text-caption);
-  color: var(--text-muted);
+  font-size: 12px;
+  color: var(--ink-4);
+  font-family: var(--font-body);
 }
 
 .pf-campaign-toggle {
@@ -857,45 +895,46 @@
   letter-spacing: 0.05em;
   text-transform: uppercase;
   cursor: pointer;
-  border-radius: var(--r-lg);
-  border: 1px solid var(--dark);
-  background: var(--dark);
-  color: #fff;
+  border-radius: 8px;
+  border: 1px solid var(--ink);
+  background: var(--ink);
+  color: var(--snow);
   flex-shrink: 0;
-  transition: background var(--t-fast), border-color var(--t-fast);
+  transition: background 0.15s, border-color 0.15s;
 }
 
 .pf-campaign-toggle--off {
   background: transparent;
   color: var(--graphite);
-  border-color: var(--line);
+  border-color: var(--mist);
 }
 
 .pf-campaign-toggle:hover {
-  background: var(--primary);
-  border-color: var(--primary);
-  color: #fff;
+  background: var(--brand-red);
+  border-color: var(--brand-red);
+  color: var(--snow);
 }
 
 /* ── Testimonials ────────────────────────────────────────────── */
 .pf-testimonials-section {
-  background: var(--surface-bright);
+  background: var(--surface-3);
 }
 
 .pf-testimonials-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: var(--space-4);
+  gap: 24px;
 }
 
 .pf-testimonial-card {
-  padding: var(--space-5);
-  background: var(--surface-elevated);
-  border: 1px solid var(--line);
-  border-top: 3px solid var(--primary);
+  padding: 24px;
+  background: var(--surface-2);
+  border: 1px solid var(--mist);
+  border-top: 3px solid var(--brand-red);
   display: flex;
   flex-direction: column;
-  gap: var(--space-3);
+  gap: 16px;
+  border-radius: 10px;
 }
 
 .pf-testimonial-stars {
@@ -905,11 +944,12 @@
 }
 
 .pf-testimonial-quote {
-  font-size: var(--text-body);
-  color: var(--dark);
-  line-height: 1.65;
+  font-size: 18px;
+  color: var(--ink-3);
+  line-height: 1.55;
   margin: 0;
   font-style: italic;
+  font-family: var(--font-body);
 }
 
 .pf-testimonial-attribution {
@@ -917,19 +957,21 @@
   flex-direction: column;
   gap: 2px;
   margin-top: auto;
-  padding-top: var(--space-2);
-  border-top: 1px solid var(--line);
+  padding-top: 16px;
+  border-top: 1px solid var(--mist);
 }
 
 .pf-testimonial-name {
-  font-size: var(--text-small);
+  font-size: 13px;
   font-weight: 700;
-  color: var(--dark);
+  color: var(--ink);
+  font-family: var(--font-body);
 }
 
 .pf-testimonial-role {
-  font-size: var(--text-caption);
+  font-size: 12px;
   color: var(--graphite);
+  font-family: var(--font-body);
 }
 
 /* ── Responsive ──────────────────────────────────────────────── */
@@ -963,7 +1005,8 @@
   .pf-share-bar-inner {
     flex-direction: column;
     align-items: flex-start;
-    gap: var(--space-2);
+    gap: 16px;
+    padding: 12px 24px;
   }
 
   .pf-form-row--2col {
@@ -976,7 +1019,7 @@
   }
 
   .pf-section-inner {
-    padding: var(--space-6) var(--space-3);
+    padding: 40px 24px;
   }
 }
 

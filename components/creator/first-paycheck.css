@@ -48,20 +48,20 @@
   height: 10px;
   box-shadow:
     /* Flag Red */
-    8vw   -10px 0 0 #c1121f,
-    22vw  -10px 0 0 #c1121f,
-    38vw  -10px 0 0 #c1121f,
-    53vw  -10px 0 0 #c1121f,
-    67vw  -10px 0 0 #c1121f,
-    81vw  -10px 0 0 #c1121f,
-    94vw  -10px 0 0 #c1121f,
+    8vw   -10px 0 0 var(--brand-red),
+    22vw  -10px 0 0 var(--brand-red),
+    38vw  -10px 0 0 var(--brand-red),
+    53vw  -10px 0 0 var(--brand-red),
+    67vw  -10px 0 0 var(--brand-red),
+    81vw  -10px 0 0 var(--brand-red),
+    94vw  -10px 0 0 var(--brand-red),
     /* Steel Blue */
-    14vw  -10px 0 0 #669bbc,
-    30vw  -10px 0 0 #669bbc,
-    46vw  -10px 0 0 #669bbc,
-    62vw  -10px 0 0 #669bbc,
-    75vw  -10px 0 0 #669bbc,
-    88vw  -10px 0 0 #669bbc,
+    14vw  -10px 0 0 var(--accent-blue),
+    30vw  -10px 0 0 var(--accent-blue),
+    46vw  -10px 0 0 var(--accent-blue),
+    62vw  -10px 0 0 var(--accent-blue),
+    75vw  -10px 0 0 var(--accent-blue),
+    88vw  -10px 0 0 var(--accent-blue),
     /* Papaya Whip */
     4vw   -10px 0 0 #f5f2ec,
     18vw  -10px 0 0 #f5f2ec,
@@ -80,19 +80,19 @@
   height: 6px;
   box-shadow:
     /* Flag Red */
-    11vw  -10px 0 0 #c1121f,
-    27vw  -10px 0 0 #c1121f,
-    43vw  -10px 0 0 #c1121f,
-    59vw  -10px 0 0 #c1121f,
-    77vw  -10px 0 0 #c1121f,
-    93vw  -10px 0 0 #c1121f,
+    11vw  -10px 0 0 var(--brand-red),
+    27vw  -10px 0 0 var(--brand-red),
+    43vw  -10px 0 0 var(--brand-red),
+    59vw  -10px 0 0 var(--brand-red),
+    77vw  -10px 0 0 var(--brand-red),
+    93vw  -10px 0 0 var(--brand-red),
     /* Steel Blue */
-    5vw   -10px 0 0 #669bbc,
-    20vw  -10px 0 0 #669bbc,
-    36vw  -10px 0 0 #669bbc,
-    50vw  -10px 0 0 #669bbc,
-    65vw  -10px 0 0 #669bbc,
-    84vw  -10px 0 0 #669bbc,
+    5vw   -10px 0 0 var(--accent-blue),
+    20vw  -10px 0 0 var(--accent-blue),
+    36vw  -10px 0 0 var(--accent-blue),
+    50vw  -10px 0 0 var(--accent-blue),
+    65vw  -10px 0 0 var(--accent-blue),
+    84vw  -10px 0 0 var(--accent-blue),
     /* Papaya Whip */
     16vw  -10px 0 0 #f5f2ec,
     32vw  -10px 0 0 #f5f2ec,
@@ -116,13 +116,13 @@
   width: 8px;
   height: 8px;
   box-shadow:
-    3vw   -10px 0 0 #c1121f,
+    3vw   -10px 0 0 var(--brand-red),
     25vw  -10px 0 0 #f5f2ec,
-    40vw  -10px 0 0 #669bbc,
-    55vw  -10px 0 0 #c1121f,
+    40vw  -10px 0 0 var(--accent-blue),
+    55vw  -10px 0 0 var(--brand-red),
     68vw  -10px 0 0 #f5f2ec,
-    82vw  -10px 0 0 #669bbc,
-    96vw  -10px 0 0 #c1121f;
+    82vw  -10px 0 0 var(--accent-blue),
+    96vw  -10px 0 0 var(--brand-red);
   animation: fp-fall-1 4.4s linear 0.5s infinite;
 }
 
@@ -220,7 +220,7 @@
 .fp-tier-badge-dot {
   width: 6px;
   height: 6px;
-  background: var(--primary);
+  background: var(--brand-red);
   flex-shrink: 0;
 }
 
@@ -262,7 +262,7 @@
   max-width: 400px;
   width: 100%;
   background: var(--surface);
-  border: 3px solid var(--dark);
+  border: 3px solid var(--ink);
   padding: 32px;
   margin: 8px 0 20px;
   animation: fp-card-rise 600ms cubic-bezier(0.22, 1, 0.36, 1) both;
@@ -272,7 +272,7 @@
 .fp-card::before {
   content: "";
   display: block;
-  border-top: 4px double var(--dark);
+  border-top: 4px double var(--ink);
   margin-bottom: 20px;
 }
 
@@ -280,7 +280,7 @@
 .fp-card::after {
   content: "";
   display: block;
-  border-top: 4px double var(--dark);
+  border-top: 4px double var(--ink);
   margin-top: 20px;
 }
 
@@ -295,7 +295,7 @@
   font-family: var(--font-display);
   font-weight: 900;
   font-size: 18px;
-  color: var(--dark);
+  color: var(--ink);
   letter-spacing: 0.04em;
 }
 
@@ -303,7 +303,7 @@
   font-family: var(--font-body);
   font-size: 10px;
   letter-spacing: 0.08em;
-  color: var(--dark);
+  color: var(--ink);
   opacity: 0.6;
   text-transform: uppercase;
 }
@@ -318,7 +318,7 @@
   font-size: 10px;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--dark);
+  color: var(--ink);
   opacity: 0.5;
   display: block;
   margin-bottom: 4px;
@@ -328,14 +328,14 @@
   font-family: var(--font-display);
   font-weight: 700;
   font-size: 22px;
-  color: var(--dark);
+  color: var(--ink);
   display: block;
 }
 
 .fp-card-amount-words {
   font-family: var(--font-body);
   font-size: 12px;
-  color: var(--dark);
+  color: var(--ink);
   letter-spacing: 0.04em;
   display: block;
   border-bottom: 1px solid var(--line-strong);
@@ -346,14 +346,14 @@
   font-family: var(--font-display);
   font-weight: 700;
   font-size: 14px;
-  color: var(--dark);
+  color: var(--ink);
   display: block;
 }
 
 .fp-card-merchant {
   font-family: var(--font-body);
   font-size: 11px;
-  color: var(--dark);
+  color: var(--ink);
   opacity: 0.6;
   display: block;
   margin-top: 2px;
@@ -395,7 +395,7 @@
 
 .fp-timer-fill {
   height: 100%;
-  background: var(--primary);
+  background: var(--brand-red);
   /* Width animated via inline style + CSS transition */
   transition: width 5000ms linear;
 }
@@ -429,9 +429,9 @@
 }
 
 .fp-share-btn {
-  background: var(--primary);
+  background: var(--brand-red);
   color: var(--surface);
-  border: 2px solid var(--primary);
+  border: 2px solid var(--brand-red);
 }
 
 .fp-continue-btn {

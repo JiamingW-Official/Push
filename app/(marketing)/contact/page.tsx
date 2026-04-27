@@ -1,127 +1,36 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
+import Link from "next/link";
 import "./contact.css";
 
-/* ── Types ──────────────────────────────────────────────────── */
-type Role = "merchant" | "creator" | "press" | "investor" | "other";
-type FollowUp = "email" | "phone";
-type FormState = "idle" | "submitting" | "success" | "error";
-
-/* ── Outline SVG icons ─────────────────────────────────────── */
-const IconArrow = () => (
-  <svg viewBox="0 0 24 24" aria-hidden="true">
-    <line x1="5" y1="12" x2="19" y2="12" />
-    <polyline points="12 5 19 12 12 19" />
-  </svg>
-);
-
-const IconCheck = () => (
-  <svg viewBox="0 0 24 24" aria-hidden="true">
-    <polyline points="20 6 9 17 4 12" />
-  </svg>
-);
-
-const IconMail = () => (
-  <svg viewBox="0 0 24 24" aria-hidden="true">
-    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
-    <polyline points="22,6 12,13 2,6" />
-  </svg>
-);
-
-const IconPhone = () => (
-  <svg viewBox="0 0 24 24" aria-hidden="true">
-    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.62 3.37 2 2 0 0 1 3.6 1.18h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.91 8.82a16 16 0 0 0 6.18 6.18l.91-.91a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
-  </svg>
-);
-
-/* ── Social SVG icons (filled) ─────────────────────────────── */
-const IconIG = () => (
-  <svg viewBox="0 0 24 24" aria-label="Instagram">
-    <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
-  </svg>
-);
-
-const IconTikTok = () => (
-  <svg viewBox="0 0 24 24" aria-label="TikTok">
-    <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.27 6.27 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.18 8.18 0 0 0 4.78 1.52V6.75a4.85 4.85 0 0 1-1.01-.06z" />
-  </svg>
-);
-
-const IconX = () => (
-  <svg viewBox="0 0 24 24" aria-label="X / Twitter">
-    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
-  </svg>
-);
-
-const IconLinkedIn = () => (
-  <svg viewBox="0 0 24 24" aria-label="LinkedIn">
-    <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6zM2 9h4v12H2z" />
-    <circle cx="4" cy="4" r="2" />
-  </svg>
-);
-
-/* ── Scroll-reveal hook ─────────────────────────────────────── */
-function useReveal() {
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("in-view");
-            observer.unobserve(entry.target);
-          }
-        });
-      },
-      { threshold: 0.12 },
-    );
-
-    document.querySelectorAll(".reveal").forEach((el) => observer.observe(el));
-    return () => observer.disconnect();
-  }, []);
-}
-
-/* ── Contact Form ───────────────────────────────────────────── */
-const ROLES: { value: Role; label: string }[] = [
-  { value: "merchant", label: "Merchant" },
-  { value: "creator", label: "Creator" },
-  { value: "press", label: "Press" },
-  { value: "investor", label: "Investor" },
-  { value: "other", label: "Other" },
-];
-
+/* ── Contact Form ─────────────────────────────────────────── */
 function ContactForm() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [role, setRole] = useState<Role>("merchant");
+  const [subject, setSubject] = useState("General");
   const [message, setMessage] = useState("");
-  const [followUp, setFollowUp] = useState<FollowUp | undefined>(undefined);
-  const [state, setState] = useState<FormState>("idle");
+  const [state, setState] = useState<
+    "idle" | "submitting" | "success" | "error"
+  >("idle");
   const [errorMsg, setErrorMsg] = useState("");
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (state === "submitting") return;
-
     setState("submitting");
     setErrorMsg("");
-
     try {
       const res = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email, role, message, followUp }),
+        body: JSON.stringify({ name, email, subject, message }),
       });
-
-      // Simulate minimum 1.5s so the spinner is visible
-      await new Promise((r) => setTimeout(r, 1500));
-
+      await new Promise((r) => setTimeout(r, 1200));
       if (!res.ok) {
         const data = await res.json().catch(() => ({}));
         throw new Error(data?.error ?? "Something went wrong");
       }
-
       setState("success");
     } catch (err) {
       setState("error");
@@ -133,138 +42,108 @@ function ContactForm() {
     }
   }
 
+  /* ── Success state ──────────────────────────────────────── */
   if (state === "success") {
     return (
-      <div className="contact-success" role="status" aria-live="polite">
-        <div className="contact-success-check">
-          <IconCheck />
+      <div role="status" aria-live="polite" className="contact-success">
+        <div className="contact-success-icon" aria-hidden>
+          <svg
+            width={28}
+            height={28}
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth={2}
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <polyline points="20 6 9 17 4 12" />
+          </svg>
         </div>
-        <p className="contact-success-headline">
-          got it.
-          <br />
-          <span className="display-ghost">we&apos;ll write back.</span>
-        </p>
-        <p className="contact-success-sub">
-          Jiaming reads everything that lands in this inbox. Usually you hear
-          back within a business day — sometimes the same hour.
+        <h3 className="contact-success-headline">Got it.</h3>
+        <p className="contact-success-body">
+          Jiaming reads every message and replies within one business day —
+          often the same hour.
         </p>
       </div>
     );
   }
 
+  /* ── Form ───────────────────────────────────────────────── */
   return (
-    <form className="contact-form-card" onSubmit={handleSubmit} noValidate>
+    <form onSubmit={handleSubmit} noValidate className="contact-form">
       {/* Name + Email row */}
       <div className="contact-field-row">
         <div className="contact-field">
-          <label htmlFor="cf-name">name</label>
+          <label htmlFor="cf-name" className="contact-label">
+            Full Name
+          </label>
           <input
             id="cf-name"
             type="text"
-            placeholder="how should we call you"
+            placeholder="Your name"
             autoComplete="name"
             required
             value={name}
             onChange={(e) => setName(e.target.value)}
+            className="contact-input"
           />
         </div>
         <div className="contact-field">
-          <label htmlFor="cf-email">email</label>
+          <label htmlFor="cf-email" className="contact-label">
+            Email
+          </label>
           <input
             id="cf-email"
             type="email"
-            placeholder="where we should reply"
+            placeholder="you@example.com"
             autoComplete="email"
             required
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            className="contact-input"
           />
         </div>
       </div>
 
-      {/* Role */}
-      <div className="contact-role-group">
-        <div className="contact-role-label" id="role-group-label">
-          you&apos;re writing as
-        </div>
-        <div
-          className="contact-role-options"
-          role="group"
-          aria-labelledby="role-group-label"
-        >
-          {ROLES.map(({ value, label }) => (
-            <div className="role-option" key={value}>
-              <input
-                type="radio"
-                id={`role-${value}`}
-                name="role"
-                value={value}
-                checked={role === value}
-                onChange={() => setRole(value)}
-              />
-              <label className="role-option-label" htmlFor={`role-${value}`}>
-                {label}
-              </label>
-            </div>
-          ))}
+      {/* Subject */}
+      <div className="contact-field">
+        <label htmlFor="cf-subject" className="contact-label">
+          Subject
+        </label>
+        <div className="contact-select-wrap">
+          <select
+            id="cf-subject"
+            value={subject}
+            onChange={(e) => setSubject(e.target.value)}
+            className="contact-input contact-select"
+          >
+            <option>General</option>
+            <option>Merchant</option>
+            <option>Creator</option>
+            <option>Press</option>
+            <option>Partnership</option>
+          </select>
+          <span className="contact-select-arrow" aria-hidden>
+            ↓
+          </span>
         </div>
       </div>
 
       {/* Message */}
       <div className="contact-field">
-        <label htmlFor="cf-message">message</label>
+        <label htmlFor="cf-message" className="contact-label">
+          Message
+        </label>
         <textarea
           id="cf-message"
-          placeholder="what's on your mind. one paragraph is fine."
+          placeholder="What's on your mind — one paragraph is fine."
           required
+          rows={6}
           value={message}
           onChange={(e) => setMessage(e.target.value)}
+          className="contact-input contact-textarea"
         />
-      </div>
-
-      {/* Preferred follow-up (optional) */}
-      <div className="contact-followup-group">
-        <div className="contact-followup-label" id="followup-group-label">
-          easiest way to reach you
-        </div>
-        <div
-          className="followup-options"
-          role="group"
-          aria-labelledby="followup-group-label"
-        >
-          <div className="followup-option">
-            <input
-              type="radio"
-              id="followup-email"
-              name="followUp"
-              value="email"
-              checked={followUp === "email"}
-              onChange={() =>
-                setFollowUp(followUp === "email" ? undefined : "email")
-              }
-            />
-            <label className="followup-option-label" htmlFor="followup-email">
-              <IconMail />
-              email
-            </label>
-          </div>
-          <div className="followup-option">
-            <input
-              type="radio"
-              id="followup-phone"
-              name="followUp"
-              value="phone"
-              checked={followUp === "phone"}
-              onChange={() =>
-                setFollowUp(followUp === "phone" ? undefined : "phone")
-              }
-            />
-            <label className="followup-option-label" htmlFor="followup-phone">
-              <IconPhone />
-              phone
-            </label>
-          </div>
-        </div>
       </div>
 
       {/* Error */}
@@ -273,11 +152,12 @@ function ContactForm() {
           role="alert"
           style={{
             fontFamily: "var(--font-body)",
-            fontSize: "var(--text-small)",
+            fontSize: 14,
             color: "var(--brand-red)",
-            marginBottom: "var(--space-3)",
-            paddingLeft: "12px",
+            paddingLeft: 12,
             borderLeft: "2px solid var(--brand-red)",
+            margin: 0,
+            lineHeight: 1.55,
           }}
         >
           {errorMsg}
@@ -287,506 +167,350 @@ function ContactForm() {
       {/* Submit */}
       <button
         type="submit"
-        className="contact-submit-btn"
+        className="btn-primary click-shift"
         disabled={state === "submitting"}
         aria-busy={state === "submitting"}
+        style={{ alignSelf: "flex-start" }}
       >
-        {state === "submitting" ? (
-          <>
-            <span className="btn-spinner" aria-hidden="true" />
-            sending
-          </>
-        ) : (
-          <>
-            send it
-            <IconArrow />
-          </>
-        )}
+        {state === "submitting" ? "Sending…" : "Send message"}
       </button>
     </form>
   );
 }
 
-/* ── Page ───────────────────────────────────────────────────── */
+/* ── Page ─────────────────────────────────────────────────── */
 export default function ContactPage() {
-  useReveal();
-
   return (
     <main>
-      {/* ═══════════════ 01 — HERO ═══════════════ */}
+      {/* ═══ 01 — HERO (dark, bottom-left anchored) ══════════ */}
+      <section aria-label="Hero" className="contact-hero">
+        {/* Decorative ghost text */}
+        <span aria-hidden="true" className="contact-hero-ghost">
+          hi
+        </span>
+
+        <div className="contact-hero-inner">
+          <p
+            className="eyebrow"
+            style={{ color: "rgba(255,255,255,0.45)", marginBottom: 16 }}
+          >
+            (GET IN TOUCH)
+          </p>
+          <h1 className="contact-hero-title">{"Let's"} talk.</h1>
+          <p className="contact-hero-sub">
+            Push is small. Jiaming reads everything and writes back himself —
+            usually within a business day, often the same hour. No bots, no
+            ticket numbers.
+          </p>
+        </div>
+      </section>
+
+      {/* ═══ 02 — CONTACT METHODS GRID ════════════════════════ */}
       <section
-        className="bg-hero-ink grain-overlay bg-vignette contact-hero-v7"
+        aria-label="Contact methods"
         style={{
-          position: "relative",
-          minHeight: "82vh",
-          display: "flex",
-          flexDirection: "column",
-          padding: "clamp(24px, 4vw, 64px)",
-          overflow: "hidden",
+          background: "var(--surface-2)",
+          padding: "96px 0",
         }}
       >
-        {/* Top row: lux pill + eyebrow */}
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            flexWrap: "wrap",
-            gap: 16,
-            position: "relative",
-            zIndex: 3,
-          }}
-        >
-          <span className="pill-lux" style={{ color: "#fff" }}>
-            Direct line · jiaming@push.nyc
-          </span>
-          <span className="eyebrow-lux" style={{ color: "var(--champagne)" }}>
-            we reply within 1 business day
-          </span>
-        </div>
-
-        {/* Hero center: ghost/display weight contrast */}
-        <div
-          style={{
-            flex: 1,
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            position: "relative",
-            zIndex: 3,
-            maxWidth: "1180px",
-            margin: "0 auto",
-            width: "100%",
-            paddingTop: "clamp(48px, 8vh, 96px)",
-            paddingBottom: "clamp(48px, 8vh, 96px)",
-          }}
-        >
-          <div
-            className="section-marker"
-            data-num="01"
-            style={{ color: "rgba(255,255,255,0.55)" }}
-          >
-            Say hi
-          </div>
-
-          {/* Massive Darky 900 headline + Darky 200 ghost */}
-          <h1
-            style={{
-              fontFamily: "var(--font-display)",
-              fontSize: "clamp(80px, 15vw, 220px)",
-              fontWeight: 900,
-              letterSpacing: "-0.07em",
-              lineHeight: 0.85,
-              color: "#fff",
-              margin: 0,
-            }}
-          >
-            Email us
-            <span
-              aria-hidden="true"
-              style={{
-                color: "var(--brand-red)",
-                marginLeft: "-0.04em",
-              }}
-            >
-              .
-            </span>
-          </h1>
-          <div
-            className="display-ghost"
-            style={{
-              fontSize: "clamp(56px, 11vw, 168px)",
-              color: "rgba(255,255,255,0.22)",
-              marginTop: "-0.04em",
-            }}
-          >
-            we answer.
-          </div>
-
+        <div className="contact-section-inner">
           <p
-            style={{
-              marginTop: "clamp(32px, 5vw, 56px)",
-              maxWidth: 620,
-              fontFamily: "var(--font-body)",
-              fontSize: "clamp(15px, 1.15vw, 18px)",
-              lineHeight: 1.65,
-              color: "rgba(255,255,255,0.74)",
-            }}
+            className="eyebrow"
+            style={{ color: "var(--ink-3)", marginBottom: 16 }}
           >
-            Push is small. Most messages land in Jiaming&apos;s inbox and he
-            writes back himself — usually within a business day, often the same
-            hour. Pick the route below or use the form. No bots, no ticket
-            numbers, no &quot;your call is important to us.&quot;
+            (DIRECT LINES)
           </p>
-          <p
-            style={{
-              marginTop: "clamp(16px, 2vw, 24px)",
-              maxWidth: 620,
-              fontFamily: "var(--font-body)",
-              fontSize: "clamp(13px, 1vw, 15px)",
-              lineHeight: 1.65,
-              color: "rgba(255,255,255,0.46)",
-            }}
-          >
-            No office yet — we walk Lower Manhattan. If you&apos;re in SoHo,
-            Tribeca, or Chinatown, coffee is on us.
-          </p>
-        </div>
+          <h2 className="contact-section-h2">
+            Four inboxes.
+            <br />
+            One human per lane.
+          </h2>
 
-        {/* Bottom: scroll indicator + category strip */}
-        <div
-          style={{
-            position: "relative",
-            zIndex: 3,
-            display: "flex",
-            alignItems: "flex-end",
-            justifyContent: "space-between",
-            flexWrap: "wrap",
-            gap: 32,
-          }}
-        >
-          <div
-            className="scroll-indicator"
-            style={{ color: "rgba(255,255,255,0.7)" }}
-          >
-            Scroll
-          </div>
-          <div style={{ flex: 1, minWidth: 240, maxWidth: 480 }}>
-            <div
-              className="category-strip"
-              aria-hidden="true"
-              style={{ marginBottom: 12 }}
-            >
-              <span />
-              <span />
-              <span />
-              <span />
-              <span />
-              <span />
-            </div>
-            <div
-              style={{
-                fontFamily: "var(--font-body)",
-                fontSize: 10,
-                fontWeight: 700,
-                letterSpacing: "0.14em",
-                textTransform: "uppercase",
-                color: "rgba(255,255,255,0.45)",
-                display: "flex",
-                justifyContent: "space-between",
-              }}
-            >
-              <span>Merchant</span>
-              <span>Creator</span>
-              <span>Press</span>
-              <span>Legal</span>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ═══════════════ 02 — ROUTES (Bento) ═══════════════ */}
-      <section className="bg-mesh-editorial contact-routes-v7">
-        <div className="contact-routes-inner-v7">
-          <div className="contact-routes-head reveal">
-            <div className="section-marker" data-num="02">
-              Pick a lane
-            </div>
-            <h2 className="contact-routes-headline">
-              four inboxes
-              <br />
-              <span className="display-ghost">one human per lane.</span>
-            </h2>
-            <p className="contact-routes-sub">
-              These are role-based addresses. Mail to any of them lands with
-              someone who actually owns that work — not a queue.
-            </p>
-          </div>
-
-          <div className="bento-grid contact-routes-grid-v7">
-            {/* Merchant */}
-            <article
-              className="card-premium route-card-v7 bento-6x1 reveal"
-              style={{ transitionDelay: "60ms" }}
-            >
-              <div className="route-card-v7-head">
-                <div className="section-marker" data-num="01">
-                  Merchant
-                </div>
-                <span className="route-card-v7-sla">replies same day</span>
-              </div>
-              <h3 className="route-card-v7-title">
-                you run a venue
-                <br />
-                <span className="display-ghost">and want walks.</span>
-              </h3>
-              <p className="route-card-v7-desc">
-                Pricing, founders&apos; cohort, what a campaign actually costs,
-                whether your block is open. Tell us the storefront and what
-                you&apos;re trying to fill.
-              </p>
-              <a
-                className="route-card-v7-email"
-                href="mailto:merchants@push.nyc"
-              >
-                merchants@push.nyc
-              </a>
-              <a className="route-card-v7-cta" href="mailto:merchants@push.nyc">
-                start a thread <IconArrow />
-              </a>
-            </article>
-
-            {/* Creator */}
-            <article
-              className="card-premium route-card-v7 bento-6x1 reveal"
-              style={{ transitionDelay: "120ms" }}
-            >
-              <div className="route-card-v7-head">
-                <div className="section-marker" data-num="02">
-                  Creator
-                </div>
-                <span className="route-card-v7-sla">replies same day</span>
-              </div>
-              <h3 className="route-card-v7-title">
-                you post
-                <br />
-                <span className="display-ghost">and people show up.</span>
-              </h3>
-              <p className="route-card-v7-desc">
-                Tier questions, application status, payout snags, anything that
-                belongs to your roster file. If your visit didn&apos;t verify or
-                Friday looked light, write here.
-              </p>
-              <a
-                className="route-card-v7-email"
-                href="mailto:creators@push.nyc"
-              >
-                creators@push.nyc
-              </a>
-              <a className="route-card-v7-cta" href="mailto:creators@push.nyc">
-                write a note <IconArrow />
-              </a>
-            </article>
-
-            {/* Press */}
-            <article
-              className="card-premium route-card-v7 bento-6x1 reveal"
-              style={{ transitionDelay: "180ms" }}
-            >
-              <div className="route-card-v7-head">
-                <div className="section-marker" data-num="03">
-                  Press
-                </div>
-                <span className="route-card-v7-sla">24h on weekdays</span>
-              </div>
-              <h3 className="route-card-v7-title">
-                you&apos;re writing
-                <br />
-                <span className="display-ghost">about local commerce.</span>
-              </h3>
-              <p className="route-card-v7-desc">
-                Tell us your outlet, the angle, and your deadline. Founder is
-                available for on-record interviews about pay-per-walk, NYC
-                pilot, creator economics.
-              </p>
-              <a className="route-card-v7-email" href="mailto:press@push.nyc">
-                press@push.nyc
-              </a>
-              <a className="route-card-v7-cta" href="mailto:press@push.nyc">
-                pitch the story <IconArrow />
-              </a>
-            </article>
-
-            {/* Legal / everything else → Jiaming */}
-            <article
-              className="card-premium route-card-v7 bento-6x1 reveal"
-              style={{ transitionDelay: "240ms" }}
-            >
-              <div className="route-card-v7-head">
-                <div className="section-marker" data-num="04">
-                  Legal &middot; founder
-                </div>
-                <span className="route-card-v7-sla">jiaming reads it</span>
-              </div>
-              <h3 className="route-card-v7-title">
-                anything sharp.
-                <br />
-                <span className="display-ghost">edge cases. mistakes.</span>
-              </h3>
-              <p className="route-card-v7-desc">
-                Privacy and DSAR requests, contract questions, disputes, payouts
-                that look wrong, security disclosures. Goes straight to Jiaming.
-                No filter.
-              </p>
-              <a className="route-card-v7-email" href="mailto:jiaming@push.nyc">
-                jiaming@push.nyc
-              </a>
-              <a className="route-card-v7-cta" href="mailto:jiaming@push.nyc">
-                write the founder <IconArrow />
-              </a>
-            </article>
-          </div>
-        </div>
-      </section>
-
-      {/* ═══════════════ 03 — FORM ═══════════════ */}
-      <section className="bg-mesh-warm contact-form-section-v7">
-        <div className="contact-form-inner-v7">
-          {/* Lead copy */}
-          <div className="contact-form-lead-v7 reveal">
-            <div className="section-marker" data-num="03">
-              Or just write
-            </div>
-            <h2 className="contact-form-headline-v7">
-              a letter,
-              <br />
-              <span className="display-ghost">not a form.</span>
-            </h2>
-            <p className="contact-form-tagline-v7">
-              If you&apos;re not sure which lane fits, drop a line here. It
-              routes to whichever inbox owns it. Real human on the other side,
-              every time.
-            </p>
-            <div className="divider-lux">what we promise</div>
-            <ul className="contact-form-promise">
-              <li>one reply, one human, no auto-acknowledgement</li>
-              <li>1 business day or sooner — often the same hour</li>
-              <li>founder reads anything tagged sharp</li>
-            </ul>
-          </div>
-
-          {/* Form */}
-          <div className="reveal" style={{ transitionDelay: "100ms" }}>
-            <ContactForm />
-          </div>
-        </div>
-      </section>
-
-      {/* ═══════════════ 04 — LOCATION (no office) ═══════════════ */}
-      <section className="bg-mesh-editorial contact-location-v7">
-        <div className="contact-location-inner-v7">
-          <div className="contact-location-text reveal">
-            <div className="section-marker" data-num="04">
-              Where we are
-            </div>
-            <h2 className="contact-location-headline">
-              no office yet.
-              <br />
-              <span className="display-ghost">we walk the block.</span>
-            </h2>
-            <p className="contact-location-body">
-              Push is five people based out of Lower Manhattan. We don&apos;t
-              have a lobby to wave you into — the work happens on the sidewalk,
-              in the venues, at the counter. If you&apos;re in SoHo, Tribeca, or
-              Chinatown and want to meet, say so in the email and we&apos;ll
-              walk over. Coffee&apos;s on us.
-            </p>
-
-            <div className="contact-location-meta">
-              <div className="contact-location-meta-row">
-                <span className="contact-location-meta-key">Pilot zone</span>
-                <span className="contact-location-meta-val">
-                  SoHo · Tribeca · Chinatown
-                </span>
-              </div>
-              <div className="contact-location-meta-row">
-                <span className="contact-location-meta-key">Hours</span>
-                <span className="contact-location-meta-val">
-                  Mon–Fri, 9–7 ET · weekend on edge cases
-                </span>
-              </div>
-              <div className="contact-location-meta-row">
-                <span className="contact-location-meta-key">Pilot opens</span>
-                <span className="contact-location-meta-val">
-                  June 22, seven blocks
-                </span>
-              </div>
-              <div className="contact-location-meta-row">
-                <span className="contact-location-meta-key">Status page</span>
+          <div className="contact-routes-grid">
+            {[
+              {
+                lane: "General",
+                email: "hello@pushnyc.com",
+                sla: "Reply in 1 business day",
+                desc: "Anything that does not fit another lane. We route it to the right person.",
+              },
+              {
+                lane: "Merchants",
+                email: "merchants@pushnyc.com",
+                sla: "Same-day on weekdays",
+                desc: "Pricing, campaign setup, block availability, platform questions.",
+              },
+              {
+                lane: "Creators",
+                email: "creators@pushnyc.com",
+                sla: "Same-day on weekdays",
+                desc: "Application status, tier questions, payout issues, verification disputes.",
+              },
+              {
+                lane: "Press",
+                email: "press@pushnyc.com",
+                sla: "24h with deadline noted",
+                desc: "Story pitches, founder interviews, data requests, embargoed releases.",
+              },
+            ].map((card) => (
+              <div key={card.lane} className="contact-route-card">
+                <p className="eyebrow" style={{ color: "var(--ink-3)" }}>
+                  {card.lane}
+                </p>
                 <a
-                  href="https://status.push.nyc"
-                  className="contact-location-meta-val contact-location-meta-link"
+                  href={`mailto:${card.email}`}
+                  className="contact-route-email"
                 >
-                  status.push.nyc
+                  {card.email}
+                </a>
+                <p className="contact-route-desc">{card.desc}</p>
+                <div className="contact-route-sla">
+                  <span className="eyebrow" style={{ color: "var(--ink-4)" }}>
+                    {card.sla}
+                  </span>
+                </div>
+                <a
+                  href={`mailto:${card.email}`}
+                  className="btn-ghost click-shift"
+                  style={{ alignSelf: "flex-start", fontSize: 14 }}
+                >
+                  Send email
                 </a>
               </div>
-            </div>
+            ))}
           </div>
+        </div>
+      </section>
 
-          <aside className="card-premium contact-location-card reveal">
-            <div className="eyebrow-lux">In the neighborhood?</div>
-            <p className="contact-location-card-headline">
-              tell us when
+      {/* ═══ 03 — CONTACT FORM ════════════════════════════════ */}
+      <section
+        aria-label="Contact form"
+        style={{
+          background: "var(--surface)",
+          padding: "96px 0",
+        }}
+      >
+        <div className="contact-section-inner contact-form-layout">
+          {/* Left — lead copy + promises */}
+          <div className="contact-form-lead">
+            <p
+              className="eyebrow"
+              style={{ color: "var(--ink-3)", marginBottom: 16 }}
+            >
+              (OR JUST WRITE)
+            </p>
+            <h2 className="contact-section-h2" style={{ marginBottom: 24 }}>
+              Not sure which
               <br />
-              <span className="display-ghost">we&apos;ll be there.</span>
-            </p>
-            <p className="contact-location-card-body">
-              Walk-ins, soft launches, second-location scouts. Send a date and
-              the address — we&apos;ll either swing by or send a creator who
-              already knows the block.
-            </p>
-            <a
-              className="contact-location-card-cta"
-              href="mailto:jiaming@push.nyc?subject=Walk%20with%20me"
+              inbox to use?
+            </h2>
+            <p
+              style={{
+                fontFamily: "var(--font-body)",
+                fontSize: 18,
+                lineHeight: 1.55,
+                color: "var(--ink-3)",
+                marginBottom: 40,
+              }}
             >
-              walk with me <IconArrow />
-            </a>
-          </aside>
+              Drop a line here. It routes to the right person automatically.
+              Real human on the other side, every time.
+            </p>
+
+            {/* Promise list */}
+            <div className="contact-promises">
+              {[
+                "One reply, one human — no auto-acknowledgement",
+                "1 business day or sooner, often the same hour",
+                "Founder reads anything marked urgent",
+              ].map((promise) => (
+                <div key={promise} className="contact-promise-item">
+                  <span className="contact-promise-dash" aria-hidden>
+                    —
+                  </span>
+                  <span>{promise}</span>
+                </div>
+              ))}
+            </div>
+
+            {/* Contact info editorial table */}
+            <div className="contact-info-table">
+              {[
+                { key: "Email", val: "hello@pushnyc.com" },
+                { key: "Response time", val: "1 business day or sooner" },
+                { key: "Availability", val: "Mon–Fri, 9 AM – 7 PM ET" },
+                { key: "Pilot zone", val: "Brooklyn · Lower Manhattan" },
+              ].map((row) => (
+                <div key={row.key} className="contact-info-row">
+                  <span className="contact-info-key">{row.key}</span>
+                  <span className="contact-info-val">{row.val}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Right — form */}
+          <ContactForm />
         </div>
       </section>
 
-      {/* ═══════════════ 05 — SOCIAL ═══════════════ */}
-      <section className="contact-social-v7">
-        <div className="contact-social-inner-v7">
-          <div className="contact-social-text">
-            <div className="section-marker" data-num="05">
-              Following along
+      {/* ═══ 04 — LOCATION STRIP (dark) ═══════════════════════ */}
+      <section
+        aria-label="Location"
+        style={{
+          background: "var(--char)",
+          padding: "96px 0",
+        }}
+      >
+        <div className="contact-section-inner">
+          <div className="contact-location-layout">
+            <div>
+              <p
+                className="eyebrow"
+                style={{ color: "rgba(255,255,255,0.4)", marginBottom: 16 }}
+              >
+                (WHERE WE ARE)
+              </p>
+              <h2
+                style={{
+                  fontFamily: "var(--font-display)",
+                  fontWeight: 900,
+                  fontSize: "clamp(36px, 4.5vw, 64px)",
+                  letterSpacing: "-0.025em",
+                  lineHeight: 1.0,
+                  color: "var(--snow)",
+                  margin: "0 0 24px",
+                }}
+              >
+                No office yet.
+                <br />
+                <span
+                  style={{
+                    fontWeight: 200,
+                    color: "rgba(255,255,255,0.4)",
+                  }}
+                >
+                  We walk the block.
+                </span>
+              </h2>
+              <p
+                style={{
+                  fontFamily: "var(--font-body)",
+                  fontSize: 18,
+                  lineHeight: 1.55,
+                  color: "rgba(255,255,255,0.55)",
+                  maxWidth: 480,
+                }}
+              >
+                Push is based in Brooklyn. The work happens on the sidewalk, in
+                the venues, at the counter. Coffee is on us if you are in the
+                neighborhood.
+              </p>
             </div>
-            <p className="contact-social-line">
-              build log, walks, weekly numbers. quieter than email but it&apos;s
-              real-time.
-            </p>
-          </div>
-          <div className="contact-social-links-v7">
-            <a
-              className="social-icon-link-v7"
-              href="https://instagram.com/push.nyc"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Push on Instagram"
-            >
-              <IconIG />
-            </a>
-            <a
-              className="social-icon-link-v7"
-              href="https://tiktok.com/@push.nyc"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Push on TikTok"
-            >
-              <IconTikTok />
-            </a>
-            <a
-              className="social-icon-link-v7"
-              href="https://x.com/push_nyc"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Push on X"
-            >
-              <IconX />
-            </a>
-            <a
-              className="social-icon-link-v7"
-              href="https://linkedin.com/company/push-nyc"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Push on LinkedIn"
-            >
-              <IconLinkedIn />
-            </a>
+
+            <div className="contact-location-meta">
+              {[
+                {
+                  key: "Pilot zone",
+                  val: "Brooklyn · SoHo · Tribeca · Chinatown",
+                },
+                { key: "Hours", val: "Mon–Fri, 9–7 ET" },
+                { key: "Email", val: "hello@pushnyc.com" },
+                { key: "Status", val: "status.push.nyc" },
+              ].map((row) => (
+                <div key={row.key} className="contact-location-row">
+                  <span className="contact-location-key">{row.key}</span>
+                  <span className="contact-location-val">{row.val}</span>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </section>
+
+      {/* ═══ SIG DIVIDER ══════════════════════════════════════ */}
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          padding: "80px 64px",
+          background: "var(--surface)",
+        }}
+      >
+        <span className="sig-divider">Story · Scan · Pay ·</span>
+      </div>
+
+      {/* ═══ TICKET CTA ═══════════════════════════════════════ */}
+      <div
+        style={{
+          maxWidth: 1140,
+          margin: "0 auto",
+          padding: "0 64px 120px",
+        }}
+      >
+        <div className="ticket-panel">
+          <p
+            className="eyebrow"
+            style={{
+              color: "rgba(255,255,255,0.65)",
+              marginBottom: 24,
+              textAlign: "center",
+            }}
+          >
+            (READY TO START)
+          </p>
+          <h2
+            style={{
+              fontFamily: "var(--font-hero)",
+              fontStyle: "italic",
+              fontWeight: 400,
+              fontSize: "clamp(40px, 5vw, 56px)",
+              color: "var(--snow)",
+              marginBottom: 24,
+              textAlign: "center",
+              letterSpacing: "-0.02em",
+              lineHeight: 0.95,
+            }}
+          >
+            Join the pilot.
+          </h2>
+          <p
+            style={{
+              fontFamily: "var(--font-body)",
+              fontSize: 16,
+              color: "rgba(255,255,255,0.7)",
+              marginBottom: 32,
+              textAlign: "center",
+              lineHeight: 1.55,
+            }}
+          >
+            Merchants and creators in Brooklyn and Lower Manhattan — we are
+            accepting applications now.
+          </p>
+          <div
+            style={{
+              display: "flex",
+              gap: 16,
+              justifyContent: "center",
+              flexWrap: "wrap",
+            }}
+          >
+            <Link href="/for-merchants" className="btn-ink click-shift">
+              I am a Merchant
+            </Link>
+            <Link
+              href="/for-creators"
+              className="btn-ghost click-shift"
+              style={{
+                borderColor: "rgba(255,255,255,0.4)",
+                color: "var(--snow)",
+              }}
+            >
+              I am a Creator
+            </Link>
+          </div>
+        </div>
+      </div>
     </main>
   );
 }

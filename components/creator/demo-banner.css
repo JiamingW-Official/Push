@@ -29,7 +29,7 @@
   height: 52px;
   padding: 0 24px;
 
-  background-color: var(--dark); /* Deep Space Blue */
+  background-color: var(--ink); /* Deep Space Blue */
   color: var(--surface);         /* Pearl Stone */
 
   font-family: var(--font-body);
@@ -58,7 +58,7 @@
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background-color: var(--primary); /* Flag Red */
+  background-color: var(--brand-red); /* Flag Red */
   flex-shrink: 0;
   animation: demo-pulse 2s ease-in-out infinite;
 }
@@ -112,9 +112,9 @@
 /* Primary CTA — Flag Red fill */
 .demo-banner__sign-up {
   padding: 6px 14px;
-  background-color: var(--primary);
-  color: #ffffff;
-  border: 1px solid var(--primary);
+  background-color: var(--brand-red);
+  color: var(--snow);
+  border: 1px solid var(--brand-red);
   font-weight: 600;
   white-space: nowrap;
 }
@@ -185,8 +185,8 @@
   height: 32px;
   padding: 0 16px;
 
-  background-color: var(--primary); /* Flag Red */
-  color: #ffffff;
+  background-color: var(--brand-red); /* Flag Red */
+  color: var(--snow);
 
   font-family: var(--font-body);
   font-size: 11px;
@@ -208,7 +208,7 @@
 
 /* "DEMO MODE" label inside top bar */
 .demo-banner--top .demo-banner__label {
-  color: #ffffff;
+  color: var(--snow);
   font-size: 11px;
   letter-spacing: 0.10em;
 }
@@ -233,14 +233,14 @@
 }
 
 .demo-banner--top .demo-banner__exit:hover {
-  color: var(--surface-elevated);
+  color: var(--surface-2);
   border-color: rgba(255, 255, 255, 0.80);
   background: rgba(255, 255, 255, 0.12);
 }
 
 /* Dot inside top bar — white pulse */
 .demo-banner--top .demo-banner__dot {
-  background-color: var(--surface-elevated);
+  background-color: var(--surface-2);
   width: 6px;
   height: 6px;
 }

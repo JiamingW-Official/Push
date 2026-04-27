@@ -41,6 +41,7 @@ Push is an AI-native local customer acquisition engine that turns creators into 
 | `push-website` | Website design system, brand guidelines, UI rules, portal content, copy | Design.md |
 | `push-brand-voice` | Brand voice, tone, messaging templates, copy guidelines, email templates, social media | — (new) |
 | `push-ui-template` | SaaS template extraction — page structures, section layouts, interaction behaviors, component specs. Sub-files: sections.md, interactions.md, components.md | saas-company-website-template |
+| `push-design-spec` | **Figma v12 source of truth** — exact CSS for every component. Load BEFORE any UI work. Covers: typography scale, button system, panel types, liquid glass, KPI cards, ticket panel, footer, sidebar, article cards. Sub-files: tokens.md, components.md, panels.md | design-spec.html |
 
 ## How to Use
 1. User describes task → match to domain skill above

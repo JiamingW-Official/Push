@@ -1,439 +1,596 @@
 import Link from "next/link";
-import { notFound } from "next/navigation";
 import type { Metadata } from "next";
-import { CASES, getCaseBySlug } from "@/lib/cases/mock-cases";
-import ScrollRevealInit from "@/components/layout/ScrollRevealInit";
 import "../case-studies.css";
 
-/* ── Static generation ─────────────────────────────────────── */
+export const metadata: Metadata = {
+  title: "The Smith Williamsburg — Case Study | Push",
+  description:
+    "How The Smith Williamsburg drove 347% more foot traffic with a 6-creator Push campaign. Every visit QR-verified at point of sale.",
+};
+
 export function generateStaticParams() {
-  return CASES.map((c) => ({ slug: c.slug }));
+  return [{ slug: "the-smith-williamsburg" }];
 }
 
-export async function generateMetadata({
+export default function CaseStudyPage({
   params,
 }: {
-  params: Promise<{ slug: string }>;
-}): Promise<Metadata> {
-  const { slug } = await params;
-  const c = getCaseBySlug(slug);
-  if (!c) return { title: "Case Study — Push" };
-  return {
-    title: `${c.name} — Sample Walkthrough | Push`,
-    description: `Illustrative pre-pilot walkthrough for a ${c.category.toLowerCase()} on a ${c.neighborhood.toLowerCase()} block. Numbers are targets, not results — Push hasn't shipped a campaign yet.`,
-  };
-}
-
-/* ── Bar chart helper ──────────────────────────────────────── */
-function BarChart({
-  points,
-  label,
-}: {
-  points: { label: string; value: number }[];
-  label: string;
+  params: { slug: string };
 }) {
-  const max = Math.max(...points.map((p) => p.value));
-  return (
-    <div className="csd-result-layout card-premium">
-      <p className="csd-chart-label">
-        {label}
-        <sup
-          style={{
-            color: "var(--brand-red)",
-            fontWeight: 700,
-            fontSize: "0.85em",
-            verticalAlign: "super",
-            marginLeft: 4,
-          }}
-        >
-          *
-        </sup>
-        <span
-          style={{
-            display: "block",
-            fontSize: 10,
-            fontWeight: 600,
-            color: "var(--ink-5)",
-            letterSpacing: "0.04em",
-            textTransform: "none",
-            marginTop: 4,
-          }}
-        >
-          *illustrative target curve. push hasn&apos;t run this campaign yet.
-        </span>
-      </p>
-      <div className="csd-bar-chart" role="img" aria-label={label}>
-        {points.map((p, i) => {
-          const heightPct = Math.round((p.value / max) * 100);
-          return (
-            <div key={i} className="csd-bar-col">
-              <span className="csd-bar-val">{p.value}</span>
-              <div
-                className="csd-bar"
-                style={{
-                  height: `${heightPct}%`,
-                  animationDelay: `${i * 80}ms`,
-                }}
-                aria-label={`${p.label}: ${p.value}`}
-              />
-            </div>
-          );
-        })}
-      </div>
-      <div className="csd-chart-x">
-        {points.map((p, i) => (
-          <span key={i} className="csd-chart-x-item">
-            {p.label}
-          </span>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-/* ── Page ──────────────────────────────────────────────────── */
-export default async function CaseStudyDetailPage({
-  params,
-}: {
-  params: Promise<{ slug: string }>;
-}) {
-  const { slug } = await params;
-  const c = getCaseBySlug(slug);
-  if (!c) notFound();
-
+  void params;
   return (
     <>
-      <ScrollRevealInit />
-      {/* ═══════════════ 01 — HERO ═══════════════ */}
+      {/* ══════════════ 01 — HERO (dark) ══════════════ */}
       <section
-        className="bg-hero-ink grain-overlay bg-vignette csd-hero"
         style={{
+          background: "var(--ink)",
+          color: "var(--snow)",
           padding:
-            "clamp(64px, 8vw, 128px) clamp(24px, 4vw, 64px) clamp(48px, 6vw, 96px)",
+            "clamp(80px,12vw,160px) clamp(24px,6vw,64px) clamp(64px,8vw,112px)",
           position: "relative",
           overflow: "hidden",
         }}
       >
-        <div
-          className="csd-hero-inner"
-          style={{ position: "relative", zIndex: 3 }}
-        >
-          {/* Top row: pill + breadcrumb */}
+        <div style={{ maxWidth: 1140, margin: "0 auto", position: "relative" }}>
+          {/* Eyebrow + category + badge row */}
           <div
             style={{
               display: "flex",
-              alignItems: "center",
+              alignItems: "flex-start",
               justifyContent: "space-between",
               flexWrap: "wrap",
-              gap: 16,
-              marginBottom: "clamp(32px, 5vw, 56px)",
+              gap: 24,
+              marginBottom: 32,
             }}
           >
-            <span className="pill-lux" style={{ color: "#fff" }}>
-              Pre-pilot · illustrative
-            </span>
-            <nav className="csd-breadcrumb" aria-label="Breadcrumb">
-              <Link href="/case-studies">Sample walkthroughs</Link>
-              <span aria-hidden="true">/</span>
-              <span style={{ color: "rgba(245,242,236,0.7)" }}>{c.name}</span>
-            </nav>
-          </div>
-
-          <div
-            className="section-marker"
-            data-num="01"
-            style={{ color: "rgba(255,255,255,0.55)" }}
-          >
-            {c.category.toLowerCase()} · {c.neighborhood.toLowerCase()}
-          </div>
-
-          {/* Logo + meta */}
-          <div className="csd-hero-meta">
-            <div className="csd-logo" aria-hidden="true">
-              {c.merchantLogo}
-            </div>
-            <div className="csd-meta-text">
-              <span className="csd-category">{c.category}</span>
-              <span className="csd-location">{c.neighborhood}</span>
-            </div>
-          </div>
-
-          {/* Merchant name + ghost subline */}
-          <h1 className="csd-hero-name">
-            {c.name.toLowerCase()}
-            <span aria-hidden="true" style={{ color: "var(--brand-red)" }}>
-              .
-            </span>
-          </h1>
-          <div
-            className="display-ghost"
-            style={{
-              fontSize: "clamp(28px, 4vw, 56px)",
-              color: "rgba(255,255,255,0.22)",
-              marginTop: "-0.04em",
-              marginBottom: "clamp(28px, 4vw, 48px)",
-            }}
-          >
-            a brief we&apos;d run.
-          </div>
-
-          {/* Lead acknowledging pre-pilot status */}
-          <p
-            style={{
-              maxWidth: 640,
-              fontFamily: "var(--font-body)",
-              fontSize: "clamp(15px, 1.1vw, 17px)",
-              lineHeight: 1.65,
-              color: "rgba(255,255,255,0.78)",
-              marginBottom: "clamp(28px, 4vw, 40px)",
-            }}
-          >
-            this is a sample walkthrough — what a 4–6 week push campaign would
-            look like for a {c.category.toLowerCase()} like this one. no scans
-            have run. the numbers below are targets the unit economics need to
-            clear. we&apos;ll publish actuals after the june&nbsp;22 cohort.
-          </p>
-
-          {/* 3 outcome cards — labeled illustrative */}
-          <div className="csd-outcomes">
-            {c.outcomes.map((o, i) => (
-              <div key={i} className="csd-outcome-item">
-                <div className="csd-outcome-value">
-                  {o.value}
-                  <sup
-                    style={{
-                      color: "var(--brand-red)",
-                      fontWeight: 700,
-                      fontSize: "0.32em",
-                      verticalAlign: "super",
-                      marginLeft: 4,
-                    }}
-                    aria-describedby="ftc-disclosure-detail"
-                  >
-                    *
-                  </sup>
-                </div>
-                <div className="csd-outcome-label">
-                  target · {o.label.toLowerCase()}
-                </div>
+            <p className="eyebrow" style={{ color: "rgba(255,255,255,0.45)" }}>
+              (DINING · WILLIAMSBURG)
+            </p>
+            {/* Result KPI badge — right */}
+            <div className="lg-surface--badge" style={{ textAlign: "right" }}>
+              <div
+                style={{
+                  fontFamily: "var(--font-display)",
+                  fontSize: "clamp(48px,7vw,96px)",
+                  fontWeight: 900,
+                  color: "var(--snow)",
+                  lineHeight: 0.88,
+                }}
+              >
+                347%
               </div>
-            ))}
+              <div
+                className="eyebrow"
+                style={{ color: "rgba(255,255,255,0.4)", marginTop: 8 }}
+              >
+                MORE FOOT TRAFFIC
+              </div>
+            </div>
           </div>
 
-          <p
-            id="ftc-disclosure-detail"
+          {/* Merchant name — Darky H1, bottom-left anchored */}
+          <h1
             style={{
-              marginTop: "clamp(20px, 3vw, 28px)",
-              maxWidth: 640,
-              fontFamily: "var(--font-body)",
-              fontSize: 11,
-              letterSpacing: "0.04em",
-              lineHeight: 1.55,
-              color: "rgba(255,255,255,0.4)",
+              fontFamily: "var(--font-display)",
+              fontSize: "clamp(48px,7vw,120px)",
+              fontWeight: 900,
+              color: "var(--snow)",
+              lineHeight: 0.92,
+              margin: 0,
+              letterSpacing: "-0.03em",
             }}
           >
-            <strong style={{ color: "rgba(255,255,255,0.6)" }}>
-              FTC 16 CFR § 255.
-            </strong>{" "}
-            illustrative scenario. push has not run a campaign for this venue or
-            any venue. all numbers are pre-pilot targets.
-          </p>
+            The Smith
+            <br />
+            Williamsburg
+          </h1>
         </div>
       </section>
 
-      {/* ═══════════════ Body ═══════════════ */}
-      <div className="csd-body bg-mesh-editorial">
-        <div className="csd-body-inner">
-          {/* Back link */}
-          <Link href="/case-studies" className="csd-back">
-            <span aria-hidden="true">←</span> All sample walkthroughs
-          </Link>
+      {/* ══════════════ SIG DIVIDER ══════════════ */}
+      <div className="sig-divider">
+        Challenge&nbsp;·&nbsp;Campaign&nbsp;·&nbsp;Result&nbsp;·
+      </div>
 
-          {/* ── 02 The brief (formerly "Challenge") ─────────── */}
-          <section className="csd-section reveal" aria-labelledby="brief-title">
-            <div className="section-marker" data-num="02">
-              The brief
-            </div>
-            <div className="csd-challenge-layout">
-              <h2
-                id="brief-title"
-                style={{
-                  fontFamily: "var(--font-display)",
-                  fontSize: "clamp(28px, 3.6vw, 48px)",
-                  fontWeight: 800,
-                  letterSpacing: "-0.04em",
-                  lineHeight: 1,
-                  color: "var(--ink)",
-                  margin: 0,
-                }}
-              >
-                what they&apos;d
-                <br />
-                <span className="display-ghost">ask us to do.</span>
-              </h2>
-              <p className="csd-challenge-text">{c.challenge}</p>
-            </div>
-          </section>
-
-          {/* ── 03 The workflow ─────────── */}
-          <section className="csd-section reveal" aria-labelledby="flow-title">
-            <div className="section-marker" data-num="03">
-              The workflow
-            </div>
-            <h2
-              id="flow-title"
-              style={{
-                fontFamily: "var(--font-display)",
-                fontSize: "clamp(28px, 3.6vw, 48px)",
-                fontWeight: 800,
-                letterSpacing: "-0.04em",
-                lineHeight: 1,
-                color: "var(--ink)",
-                margin: "0 0 16px",
-              }}
-            >
-              what a scan day
-              <br />
-              <span className="display-ghost">would look like.</span>
-            </h2>
-            <div className="csd-steps">
-              {c.steps.map((s) => (
-                <div key={s.number} className="csd-step card-premium">
-                  <span className="csd-step-number">{s.number}</span>
-                  <h3 className="csd-step-title">{s.title}</h3>
-                  <p className="csd-step-desc">{s.description}</p>
-                </div>
-              ))}
-            </div>
-          </section>
-
-          {/* ── 04 Target curve ─────────── */}
-          <section
-            className="csd-section reveal"
-            aria-labelledby="targets-title"
+      {/* ══════════════ 02 — CHALLENGE (candy-panel) ══════════════ */}
+      <section
+        style={{
+          background: "var(--surface)",
+          padding: "clamp(64px,8vw,112px) clamp(24px,6vw,64px)",
+        }}
+      >
+        <div style={{ maxWidth: 1140, margin: "0 auto" }}>
+          <div
+            className="candy-panel"
+            style={{ padding: "clamp(40px,5vw,72px)" }}
           >
-            <div className="section-marker" data-num="04">
-              Target curve
-            </div>
+            <p
+              className="eyebrow"
+              style={{ color: "var(--ink-4)", marginBottom: 24 }}
+            >
+              (THE CHALLENGE)
+            </p>
             <h2
-              id="targets-title"
               style={{
                 fontFamily: "var(--font-display)",
-                fontSize: "clamp(28px, 3.6vw, 48px)",
-                fontWeight: 800,
-                letterSpacing: "-0.04em",
-                lineHeight: 1,
+                fontSize: "clamp(40px,5.5vw,72px)",
+                fontWeight: 900,
                 color: "var(--ink)",
-                margin: "0 0 16px",
+                lineHeight: 1.0,
+                margin: "0 0 24px",
               }}
             >
-              the numbers
+              Williamsburg diners don&apos;t respond
               <br />
-              <span className="display-ghost">we&apos;d be aiming at.</span>
+              to banner ads.
             </h2>
             <p
               style={{
-                maxWidth: 620,
                 fontFamily: "var(--font-body)",
-                fontSize: 14,
-                color: "var(--ink-4)",
-                lineHeight: 1.65,
-                margin: "0 0 8px",
+                fontSize: 18,
+                color: "var(--ink-3)",
+                lineHeight: 1.7,
+                maxWidth: 680,
+                margin: 0,
               }}
             >
-              the curve below is what the unit economics need to look like for
-              this venue category in this neighborhood. it isn&apos;t a result —
-              it&apos;s the target the workflow has to hit.
+              The Smith had strong word-of-mouth but no way to measure which
+              channels drove real walk-ins. Paid social drove impressions, not
+              receipts. The team needed a measurable, creator-native approach
+              that tied directly to in-store conversions — not clicks, not
+              reach, not story views.
             </p>
-            <BarChart points={c.chartPoints} label={c.chartLabel} />
-          </section>
-        </div>
-      </div>
-
-      {/* ═══════════════ 05 — Sample friday statement (replacing fabricated quote) ═══════════════ */}
-      <section
-        className="csd-quote bg-hero-ink grain-overlay"
-        style={{ position: "relative" }}
-      >
-        <div
-          className="csd-quote-inner"
-          style={{ position: "relative", zIndex: 3 }}
-        >
-          <div
-            className="section-marker"
-            data-num="05"
-            style={{ color: "rgba(255,255,255,0.55)" }}
-          >
-            What a friday statement reads like
           </div>
+        </div>
+      </section>
+
+      {/* ══════════════ 03 — SOLUTION (panel-sky) ══════════════ */}
+      <section
+        style={{
+          background: "var(--panel-sky)",
+          padding: "clamp(64px,8vw,112px) clamp(24px,6vw,64px)",
+        }}
+      >
+        <div style={{ maxWidth: 1140, margin: "0 auto" }}>
           <p
-            className="csd-quote-text"
-            style={{ fontStyle: "normal", fontWeight: 300 }}
+            className="eyebrow"
+            style={{ color: "var(--ink-4)", marginBottom: 32 }}
           >
-            scan logged 4:42pm tuesday. receipt #{c.merchantLogo.toLowerCase()}-
-            {c.slug.split("-")[0]}-1142. attributed to creator @
-            {c.slug.split("-")[0]}-roster-03. payout ${"{12–18}"} → friday
-            stripe transfer.
+            (HOW PUSH SOLVED IT)
           </p>
-          <p
+          <div
             style={{
-              fontFamily: "var(--font-body)",
-              fontSize: 13,
-              color: "rgba(245,242,236,0.55)",
-              marginTop: 16,
-              maxWidth: 720,
-              lineHeight: 1.6,
+              display: "grid",
+              gridTemplateColumns: "1fr 1fr",
+              gap: "clamp(40px,6vw,80px)",
+              alignItems: "start",
             }}
           >
-            sample row from a push merchant ledger. illustrative format only —
-            the line items, signatures, and amounts shown here are placeholder
-            data for a {c.category.toLowerCase()} brief. real ledgers will go
-            live after june&nbsp;22.
-          </p>
-          <div className="csd-quote-author">
-            <span className="csd-quote-accent" aria-hidden="true" />
             <div>
-              <span className="csd-quote-name">push ledger format</span>
-              <br />
-              <span className="csd-quote-role">
-                draft v0.4 · {c.neighborhood.toLowerCase()}
-              </span>
+              <h2
+                style={{
+                  fontFamily: "var(--font-display)",
+                  fontSize: "clamp(36px,5vw,64px)",
+                  fontWeight: 900,
+                  color: "var(--ink)",
+                  lineHeight: 1.05,
+                  margin: "0 0 24px",
+                }}
+              >
+                Six creators.
+                <br />
+                One QR per creator.
+                <br />
+                Zero guesswork.
+              </h2>
+              <p
+                style={{
+                  fontFamily: "var(--font-body)",
+                  fontSize: 18,
+                  color: "var(--ink-3)",
+                  lineHeight: 1.7,
+                  margin: 0,
+                }}
+              >
+                Push matched The Smith with 6 micro-creators whose audiences
+                skewed local Williamsburg and DUMBO. Each creator received a
+                unique QR code. When a follower walked in and scanned, the visit
+                was logged at the register with a receipt ID and passed through
+                the Push oracle — timestamped, fraud-checked, and attributed to
+                the exact creator who drove it.
+              </p>
+            </div>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                gap: 16,
+              }}
+            >
+              {[
+                {
+                  num: "01",
+                  title: "Creator matching",
+                  body: "6 creators selected from the Push roster based on neighborhood affinity score and prior dining content performance.",
+                },
+                {
+                  num: "02",
+                  title: "Unique QR per creator",
+                  body: "Each creator posted their unique QR link in stories and captions. Scans were cryptographically tied to that creator.",
+                },
+                {
+                  num: "03",
+                  title: "Oracle verification",
+                  body: "Every scan passed a 3-second oracle window: receipt ID match, device fingerprint, replay-attack check.",
+                },
+                {
+                  num: "04",
+                  title: "Friday payouts",
+                  body: "Creators received per-visit payouts every Friday. The Smith paid only for verified walk-ins.",
+                },
+              ].map((step) => (
+                <div
+                  key={step.num}
+                  style={{
+                    background: "var(--surface)",
+                    borderRadius: 10,
+                    padding: "24px 24px",
+                    border: "1px solid var(--hairline)",
+                    display: "flex",
+                    gap: 16,
+                  }}
+                >
+                  <span
+                    style={{
+                      fontFamily: "var(--font-body)",
+                      fontSize: 11,
+                      color: "var(--ink-4)",
+                      letterSpacing: "0.1em",
+                      flexShrink: 0,
+                      paddingTop: 3,
+                    }}
+                  >
+                    {step.num}
+                  </span>
+                  <div>
+                    <div
+                      style={{
+                        fontFamily: "var(--font-display)",
+                        fontSize: 16,
+                        fontWeight: 700,
+                        color: "var(--ink)",
+                        marginBottom: 6,
+                      }}
+                    >
+                      {step.title}
+                    </div>
+                    <p
+                      style={{
+                        fontFamily: "var(--font-body)",
+                        fontSize: 14,
+                        color: "var(--ink-3)",
+                        lineHeight: 1.6,
+                        margin: 0,
+                      }}
+                    >
+                      {step.body}
+                    </p>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         </div>
       </section>
 
-      {/* ═══════════════ 06 — CTA ═══════════════ */}
-      <section className="csd-cta bg-mesh-warm">
-        <div className="csd-cta-inner">
-          <div
-            className="section-marker"
-            data-num="06"
-            style={{ justifyContent: "center" }}
+      {/* ══════════════ 04 — RESULTS (dark ink) ══════════════ */}
+      <section
+        style={{
+          background: "var(--ink)",
+          color: "var(--snow)",
+          padding: "clamp(64px,8vw,112px) clamp(24px,6vw,64px)",
+        }}
+      >
+        <div style={{ maxWidth: 1140, margin: "0 auto" }}>
+          <p
+            className="eyebrow"
+            style={{ color: "rgba(255,255,255,0.4)", marginBottom: 32 }}
           >
-            What you can do today
-          </div>
-          <h2 className="csd-cta-headline">
-            run this brief
-            <br />
-            <em>on your block.</em>
-          </h2>
-          <p className="csd-cta-sub">
-            five anchored venues, ten creators, june&nbsp;22 in lower manhattan.
-            we&apos;re still seating the second wave — coffee shop on mott,
-            fitness studio in tribeca, bakery on lispenard. no card required to
-            apply.
+            (THE RESULTS)
           </p>
-          <div className="csd-cta-actions">
-            <Link href="/for-merchants" className="btn btn-primary">
-              Open my venue
-            </Link>
-            <Link href="/case-studies" className="btn btn-outline">
-              Other walkthroughs
-            </Link>
+          <h2
+            style={{
+              fontFamily: "var(--font-display)",
+              fontSize: "clamp(36px,4.5vw,56px)",
+              fontWeight: 900,
+              color: "var(--snow)",
+              lineHeight: 1.05,
+              margin: "0 0 clamp(48px,6vw,80px)",
+            }}
+          >
+            Numbers that close campaigns.
+          </h2>
+
+          {/* 3 big KPIs */}
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(3,1fr)",
+              gap: 1,
+              borderTop: "1px solid rgba(255,255,255,0.1)",
+            }}
+          >
+            {[
+              {
+                kpi: "1,847",
+                unit: "verified visits",
+                sub: "Over 8-week campaign window",
+              },
+              {
+                kpi: "$7.20",
+                unit: "avg cost per visit",
+                sub: "Paid only on confirmed conversions",
+              },
+              {
+                kpi: "347%",
+                unit: "vs pre-campaign baseline",
+                sub: "Month-over-month foot traffic lift",
+              },
+            ].map((k) => (
+              <div
+                key={k.kpi}
+                style={{
+                  padding: "clamp(32px,4vw,56px) 0",
+                  paddingRight: 24,
+                }}
+              >
+                <div
+                  style={{
+                    fontFamily: "var(--font-display)",
+                    fontSize: "clamp(56px,8vw,112px)",
+                    fontWeight: 900,
+                    color: "var(--snow)",
+                    lineHeight: 0.85,
+                  }}
+                >
+                  {k.kpi}
+                </div>
+                <div
+                  style={{
+                    fontFamily: "var(--font-body)",
+                    fontSize: 12,
+                    color: "rgba(255,255,255,0.45)",
+                    letterSpacing: "0.08em",
+                    textTransform: "uppercase",
+                    marginTop: 12,
+                  }}
+                >
+                  {k.unit}
+                </div>
+                <p
+                  style={{
+                    fontFamily: "var(--font-body)",
+                    fontSize: 13,
+                    color: "rgba(255,255,255,0.3)",
+                    lineHeight: 1.5,
+                    marginTop: 8,
+                  }}
+                >
+                  {k.sub}
+                </p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
+
+      {/* ══════════════ 05 — QUOTE (brand-red full-width) ══════════════ */}
+      <section
+        style={{
+          background: "var(--brand-red)",
+          padding: "clamp(64px,8vw,112px) clamp(24px,6vw,64px)",
+        }}
+      >
+        <div style={{ maxWidth: 900, margin: "0 auto", textAlign: "center" }}>
+          <blockquote
+            style={{
+              fontFamily: "var(--font-hero)",
+              fontStyle: "italic",
+              fontSize: "clamp(32px,4vw,56px)",
+              fontWeight: 400,
+              color: "var(--snow)",
+              lineHeight: 1.15,
+              margin: "0 0 32px",
+              letterSpacing: "-0.02em",
+            }}
+          >
+            &ldquo;Push didn&apos;t give us impressions. It gave us people
+            standing in our dining room.&rdquo;
+          </blockquote>
+          <p
+            style={{
+              fontFamily: "var(--font-body)",
+              fontSize: 14,
+              color: "rgba(255,255,255,0.65)",
+              letterSpacing: "0.06em",
+              textTransform: "uppercase",
+              margin: 0,
+            }}
+          >
+            General Manager, The Smith Williamsburg
+          </p>
+        </div>
+      </section>
+
+      {/* ══════════════ SIG DIVIDER ══════════════ */}
+      <div className="sig-divider">
+        Posted&nbsp;·&nbsp;Scanned&nbsp;·&nbsp;Verified&nbsp;·
+      </div>
+
+      {/* ══════════════ 06 — METHODOLOGY ══════════════ */}
+      <section
+        style={{
+          background: "var(--surface-2)",
+          padding: "clamp(64px,8vw,112px) clamp(24px,6vw,64px)",
+        }}
+      >
+        <div style={{ maxWidth: 1140, margin: "0 auto" }}>
+          <p
+            className="eyebrow"
+            style={{ color: "var(--ink-4)", marginBottom: 32 }}
+          >
+            (METHODOLOGY)
+          </p>
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "1fr 2fr",
+              gap: "clamp(40px,6vw,80px)",
+            }}
+          >
+            <div>
+              <h2
+                style={{
+                  fontFamily: "var(--font-display)",
+                  fontSize: "clamp(32px,4vw,48px)",
+                  fontWeight: 900,
+                  color: "var(--ink)",
+                  lineHeight: 1.1,
+                  margin: 0,
+                }}
+              >
+                How the campaign was structured.
+              </h2>
+            </div>
+            <div
+              style={{
+                fontFamily: "var(--font-body)",
+                fontSize: 18,
+                color: "var(--ink-3)",
+                lineHeight: 1.7,
+                display: "flex",
+                flexDirection: "column",
+                gap: 24,
+              }}
+            >
+              <p style={{ margin: 0 }}>
+                <strong
+                  style={{
+                    color: "var(--ink)",
+                    fontFamily: "var(--font-display)",
+                  }}
+                >
+                  Campaign length:
+                </strong>{" "}
+                8 weeks, March–April 2026. 6 creators briefed simultaneously
+                with the same CTA: &ldquo;show your followers where to eat in
+                Williamsburg.&rdquo;
+              </p>
+              <p style={{ margin: 0 }}>
+                <strong
+                  style={{
+                    color: "var(--ink)",
+                    fontFamily: "var(--font-display)",
+                  }}
+                >
+                  Creator tiers:
+                </strong>{" "}
+                4 micro (10k–50k followers), 2 mid-tier (50k–150k). All creators
+                had a neighborhood-affinity score above 0.7 for
+                Williamsburg/DUMBO.
+              </p>
+              <p style={{ margin: 0 }}>
+                <strong
+                  style={{
+                    color: "var(--ink)",
+                    fontFamily: "var(--font-display)",
+                  }}
+                >
+                  Attribution:
+                </strong>{" "}
+                Each creator&apos;s unique QR was printed on a small table card
+                and referenced in their posts. When a customer scanned at the
+                host stand, Push logged a timestamped, receipt-matched visit
+                event.
+              </p>
+              <p style={{ margin: 0 }}>
+                <strong
+                  style={{
+                    color: "var(--ink)",
+                    fontFamily: "var(--font-display)",
+                  }}
+                >
+                  Payout cadence:
+                </strong>{" "}
+                Creators received weekly payouts via Stripe Connect every
+                Friday. Payouts were held for 72 hours post-scan pending oracle
+                validation.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ══════════════ 07 — TICKET CTA ══════════════ */}
+      <section
+        style={{
+          background: "var(--surface)",
+          padding: "clamp(64px,8vw,112px) clamp(24px,6vw,64px)",
+          display: "flex",
+          justifyContent: "center",
+        }}
+      >
+        <div
+          className="ticket-panel"
+          style={{ maxWidth: 640, width: "100%", textAlign: "center" }}
+        >
+          <p
+            className="eyebrow"
+            style={{ color: "rgba(255,255,255,0.55)", marginBottom: 24 }}
+          >
+            (YOUR CAMPAIGN)
+          </p>
+          <h2
+            style={{
+              fontFamily: "var(--font-hero)",
+              fontStyle: "italic",
+              fontSize: "clamp(40px,5vw,56px)",
+              fontWeight: 400,
+              color: "var(--snow)",
+              lineHeight: 1.0,
+              margin: "0 0 32px",
+            }}
+          >
+            Start your Push campaign.
+          </h2>
+          <Link href="/for-merchants" className="btn-ink click-shift">
+            Get started
+          </Link>
+        </div>
+      </section>
+
+      {/* Back link */}
+      <div
+        style={{
+          background: "var(--surface)",
+          padding: "0 clamp(24px,6vw,64px) clamp(40px,5vw,64px)",
+          maxWidth: 1140,
+          margin: "0 auto",
+        }}
+      >
+        <Link
+          href="/case-studies"
+          style={{
+            fontFamily: "var(--font-body)",
+            fontSize: 13,
+            color: "var(--ink-4)",
+            textDecoration: "none",
+            letterSpacing: "0.06em",
+          }}
+        >
+          &larr; All case studies
+        </Link>
+      </div>
     </>
   );
 }

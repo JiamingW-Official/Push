@@ -65,22 +65,22 @@ function groupThreadsByDate(
 /* ── Avatar color ──────────────────────────────────────────── */
 function avatarBg(initial: string): string {
   const map: Record<string, string> = {
-    B: "var(--primary)",
-    H: "var(--primary)",
-    N: "var(--primary)",
-    T: "var(--primary)",
-    C: "var(--tertiary)",
-    I: "var(--tertiary)",
-    O: "var(--tertiary)",
-    U: "var(--tertiary)",
-    E: "var(--champagne)",
-    K: "var(--champagne)",
-    W: "var(--champagne)",
-    F: "#780000",
-    L: "#780000",
-    R: "#780000",
+    B: "var(--brand-red)",
+    H: "var(--brand-red)",
+    N: "var(--brand-red)",
+    T: "var(--brand-red)",
+    C: "var(--accent-blue)",
+    I: "var(--accent-blue)",
+    O: "var(--accent-blue)",
+    U: "var(--accent-blue)",
+    E: "#bfa170",
+    K: "#bfa170",
+    W: "#bfa170",
+    F: "var(--ink)",
+    L: "var(--ink)",
+    R: "var(--ink)",
   };
-  return map[initial] ?? "var(--dark)";
+  return map[initial] ?? "var(--ink-3)";
 }
 
 export default function InboxMessagesPage() {
@@ -157,42 +157,129 @@ export default function InboxMessagesPage() {
   const dateGroups = groupThreadsByDate(filtered);
 
   return (
-    <div className="inbox-page">
+    <div
+      style={{
+        background: "var(--surface)",
+        minHeight: "100%",
+        fontFamily: "var(--font-body)",
+      }}
+    >
       {/* Top bar */}
-      <header className="inbox-topbar">
-        <div className="inbox-topbar__left">
-          <span className="inbox-topbar__title">Messages</span>
-          {unreadCount > 0 && (
-            <span className="inbox-topbar__badge">{unreadCount}</span>
-          )}
-        </div>
+      <header
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: 12,
+          padding: "16px 24px",
+          borderBottom: "1px solid var(--hairline)",
+          background: "var(--snow)",
+        }}
+      >
+        <span
+          style={{
+            fontFamily: "var(--font-display)",
+            fontWeight: 700,
+            fontSize: 20,
+            color: "var(--ink)",
+          }}
+        >
+          Messages
+        </span>
+        {unreadCount > 0 && (
+          <span
+            style={{
+              minWidth: 20,
+              height: 20,
+              borderRadius: 10,
+              background: "var(--brand-red)",
+              color: "var(--snow)",
+              fontSize: 11,
+              fontWeight: 700,
+              display: "inline-flex",
+              alignItems: "center",
+              justifyContent: "center",
+              padding: "0 6px",
+            }}
+          >
+            {unreadCount}
+          </span>
+        )}
       </header>
 
       {/* Tabs */}
-      <nav className="inbox-tabs" aria-label="Inbox sections">
-        <Link href="/creator/inbox" className="inbox-tab">
-          All
-        </Link>
-        <Link
-          href="/creator/inbox/messages"
-          className="inbox-tab inbox-tab--active"
-        >
-          Messages
-          {unreadCount > 0 && (
-            <span className="inbox-tab__count">{unreadCount}</span>
-          )}
-        </Link>
-        <Link href="/creator/inbox/invites" className="inbox-tab">
-          Invites
-        </Link>
-        <Link href="/creator/inbox/system" className="inbox-tab">
-          System
-        </Link>
+      <nav
+        aria-label="Inbox sections"
+        style={{
+          display: "flex",
+          borderBottom: "1px solid var(--hairline)",
+          background: "var(--snow)",
+          padding: "0 24px",
+        }}
+      >
+        {[
+          { href: "/creator/inbox", label: "All" },
+          {
+            href: "/creator/inbox/messages",
+            label: "Messages",
+            active: true,
+            count: unreadCount,
+          },
+          { href: "/creator/inbox/invites", label: "Invites" },
+          { href: "/creator/inbox/system", label: "System" },
+        ].map(({ href, label, active, count }) => (
+          <Link
+            key={href}
+            href={href}
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 6,
+              padding: "14px 14px",
+              fontFamily: "var(--font-body)",
+              fontSize: 12,
+              fontWeight: active ? 700 : 400,
+              color: active ? "var(--ink)" : "var(--ink-3)",
+              textDecoration: "none",
+              borderBottom: active
+                ? "2px solid var(--brand-red)"
+                : "2px solid transparent",
+              marginBottom: -1,
+              textTransform: "uppercase",
+              letterSpacing: "0.06em",
+              whiteSpace: "nowrap",
+            }}
+          >
+            {label}
+            {count != null && count > 0 && (
+              <span
+                style={{
+                  minWidth: 16,
+                  height: 16,
+                  borderRadius: 8,
+                  background: "var(--brand-red)",
+                  color: "var(--snow)",
+                  fontSize: 10,
+                  fontWeight: 700,
+                  display: "inline-flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  padding: "0 4px",
+                }}
+              >
+                {count}
+              </span>
+            )}
+          </Link>
+        ))}
       </nav>
 
       {/* Filter chips */}
       <div
-        className="inbox-filter-row"
+        style={{
+          display: "flex",
+          gap: 8,
+          padding: "16px 24px 8px",
+        }}
         role="group"
         aria-label="Filter threads"
       >
@@ -200,9 +287,21 @@ export default function InboxMessagesPage() {
           <button
             key={f}
             onClick={() => setFilter(f)}
-            className={`inbox-filter-chip ${filter === f ? "inbox-filter-chip--active" : ""}`}
             type="button"
             aria-pressed={filter === f}
+            style={{
+              padding: "6px 16px",
+              borderRadius: 20,
+              border: "1px solid var(--hairline)",
+              background: filter === f ? "var(--ink)" : "var(--surface-2)",
+              color: filter === f ? "var(--snow)" : "var(--ink-3)",
+              fontFamily: "var(--font-body)",
+              fontSize: 12,
+              fontWeight: 600,
+              textTransform: "uppercase",
+              letterSpacing: "0.06em",
+              cursor: "pointer",
+            }}
           >
             {f === "all" ? "All" : f === "unread" ? "Unread" : "Campaigns"}
             {f === "unread" && unreadCount > 0 && (
@@ -215,54 +314,90 @@ export default function InboxMessagesPage() {
       </div>
 
       {/* Search */}
-      <div className="inbox-search-bar">
-        <div className="inbox-search-inner">
-          <span className="inbox-search-icon" aria-hidden>
+      <div style={{ padding: "8px 24px 16px" }}>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 10,
+            border: "1px solid var(--hairline)",
+            borderRadius: 8,
+            background: "var(--snow)",
+            padding: "10px 14px",
+          }}
+        >
+          <span style={{ color: "var(--ink-4)", flexShrink: 0 }} aria-hidden>
             <SearchIcon />
           </span>
           <input
             type="search"
-            className="inbox-search-input"
             placeholder="Search conversations…"
             value={query}
             onChange={(e) => handleSearch(e.target.value)}
             aria-label="Search conversations"
+            style={{
+              flex: 1,
+              border: "none",
+              outline: "none",
+              background: "transparent",
+              fontFamily: "var(--font-body)",
+              fontSize: 14,
+              color: "var(--ink)",
+            }}
           />
         </div>
       </div>
 
       {/* Section count */}
-      <div className="inbox-section-header">
-        <span className="inbox-section-label">
-          {filter === "all"
-            ? "All Conversations"
-            : filter === "unread"
-              ? "Unread"
-              : "Campaigns"}
-          {ready && ` · ${filtered.length}`}
-        </span>
+      <div
+        style={{
+          padding: "0 24px 12px",
+          fontFamily: "var(--font-body)",
+          fontSize: 11,
+          color: "var(--ink-4)",
+          textTransform: "uppercase",
+          letterSpacing: "0.06em",
+        }}
+      >
+        {filter === "all"
+          ? "All Conversations"
+          : filter === "unread"
+            ? "Unread"
+            : "Campaigns"}
+        {ready && ` · ${filtered.length}`}
       </div>
 
       {/* Thread list */}
       {!ready ? (
-        <div className="inbox-rows">
+        <div style={{ padding: "0 24px" }}>
           {[1, 2, 3, 4, 5].map((i) => (
             <div
               key={i}
-              className="inbox-row"
-              style={{ opacity: 0.1 + i * 0.04, pointerEvents: "none" }}
+              style={{
+                display: "flex",
+                gap: 12,
+                padding: "12px 0",
+                borderBottom: "1px solid var(--hairline)",
+                opacity: 0.1 + i * 0.04,
+                pointerEvents: "none",
+              }}
             >
               <div
-                className="inbox-row__avatar"
-                style={{ background: "rgba(0,48,73,0.07)" }}
+                style={{
+                  width: 40,
+                  height: 40,
+                  borderRadius: "50%",
+                  background: "var(--hairline)",
+                  flexShrink: 0,
+                }}
               />
-              <div className="inbox-row__body">
-                <span
+              <div style={{ flex: 1 }}>
+                <div
                   style={{
-                    display: "block",
                     width: 60 + i * 14,
                     height: 9,
-                    background: "rgba(0,48,73,0.06)",
+                    background: "var(--hairline)",
+                    borderRadius: 4,
                   }}
                 />
               </div>
@@ -270,12 +405,41 @@ export default function InboxMessagesPage() {
           ))}
         </div>
       ) : filtered.length === 0 ? (
-        <div className="inbox-empty">
-          <div className="inbox-empty__icon" aria-hidden>
+        <div
+          style={{
+            padding: "48px 24px",
+            textAlign: "center",
+          }}
+        >
+          <div
+            style={{
+              fontSize: 32,
+              marginBottom: 16,
+              color: "var(--ink-4)",
+            }}
+            aria-hidden
+          >
             ✉
           </div>
-          <p className="inbox-empty__title">No conversations found</p>
-          <p className="inbox-empty__body">
+          <p
+            style={{
+              fontFamily: "var(--font-display)",
+              fontWeight: 700,
+              fontSize: 20,
+              color: "var(--ink)",
+              margin: "0 0 8px",
+            }}
+          >
+            No conversations found
+          </p>
+          <p
+            style={{
+              fontFamily: "var(--font-body)",
+              fontSize: 14,
+              color: "var(--ink-3)",
+              margin: 0,
+            }}
+          >
             {query
               ? `No results for "${query}"`
               : "Your messages will appear here."}
@@ -284,14 +448,34 @@ export default function InboxMessagesPage() {
       ) : (
         /* Date-grouped thread rows */
         dateGroups.map((group) => (
-          <div key={group.label} className="inbox-date-group">
-            <div className="inbox-date-group__label">
-              <span className="inbox-date-group__label-text">
+          <div key={group.label}>
+            {/* Date group label */}
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 12,
+                padding: "16px 24px 8px",
+              }}
+            >
+              <span
+                style={{
+                  fontFamily: "var(--font-body)",
+                  fontSize: 11,
+                  color: "var(--ink-4)",
+                  textTransform: "uppercase",
+                  letterSpacing: "0.06em",
+                  flexShrink: 0,
+                }}
+              >
                 {group.label}
               </span>
-              <span className="inbox-date-group__line" />
+              <div
+                style={{ flex: 1, height: 1, background: "var(--hairline)" }}
+              />
             </div>
-            <div className="inbox-rows" role="list">
+
+            <div role="list" style={{ padding: "0 24px" }}>
               {group.threads.map((thread) => {
                 const other = selfUserId
                   ? getOtherParticipant(thread, selfUserId)
@@ -302,37 +486,131 @@ export default function InboxMessagesPage() {
                   <Link
                     key={thread.id}
                     href={`/creator/inbox/${thread.id}`}
-                    className={`inbox-row ${hasUnread ? "inbox-row--unread" : ""}`}
                     role="listitem"
                     aria-label={`Thread with ${other.name}`}
+                    style={{
+                      display: "flex",
+                      alignItems: "flex-start",
+                      gap: 12,
+                      padding: "12px 0",
+                      borderBottom: "1px solid var(--hairline)",
+                      textDecoration: "none",
+                    }}
                   >
+                    {/* Avatar */}
                     <div
-                      className="inbox-row__avatar"
+                      style={{
+                        width: 40,
+                        height: 40,
+                        borderRadius: "50%",
+                        background: avatarBg(initial),
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        fontFamily: "var(--font-display)",
+                        fontWeight: 700,
+                        fontSize: 16,
+                        color: "var(--snow)",
+                        flexShrink: 0,
+                      }}
                       data-initial={initial}
-                      style={{ background: avatarBg(initial) }}
                       aria-hidden
                     >
                       {initial}
                     </div>
-                    <div className="inbox-row__body">
-                      <span className="inbox-row__sender">{other.name}</span>
-                      {thread.campaignTitle && (
-                        <span className="inbox-row__campaign-tag">
-                          {thread.campaignTitle}
+
+                    {/* Body */}
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: 8,
+                          marginBottom: 4,
+                        }}
+                      >
+                        <span
+                          style={{
+                            fontFamily: "var(--font-body)",
+                            fontWeight: hasUnread ? 700 : 400,
+                            fontSize: 14,
+                            color: "var(--ink)",
+                            whiteSpace: "nowrap",
+                            overflow: "hidden",
+                            textOverflow: "ellipsis",
+                          }}
+                        >
+                          {other.name}
                         </span>
-                      )}
-                      <span className="inbox-row__preview">
+                        {thread.campaignTitle && (
+                          <span
+                            style={{
+                              padding: "2px 8px",
+                              borderRadius: 4,
+                              background: "var(--surface-2)",
+                              border: "1px solid var(--hairline)",
+                              fontFamily: "var(--font-body)",
+                              fontSize: 10,
+                              color: "var(--ink-3)",
+                              textTransform: "uppercase",
+                              letterSpacing: "0.04em",
+                              flexShrink: 0,
+                            }}
+                          >
+                            {thread.campaignTitle}
+                          </span>
+                        )}
+                      </div>
+                      <span
+                        style={{
+                          fontFamily: "var(--font-body)",
+                          fontSize: 13,
+                          color: "var(--ink-3)",
+                          display: "block",
+                          whiteSpace: "nowrap",
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
+                        }}
+                      >
                         {thread.lastMessage.content}
                       </span>
                     </div>
-                    <div className="inbox-row__meta">
-                      <span className="inbox-row__time">
+
+                    {/* Meta */}
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "flex-end",
+                        gap: 4,
+                        flexShrink: 0,
+                      }}
+                    >
+                      <span
+                        style={{
+                          fontFamily: "var(--font-body)",
+                          fontSize: 11,
+                          color: "var(--ink-4)",
+                        }}
+                      >
                         {formatRelativeTime(thread.updatedAt)}
                       </span>
                       {hasUnread && (
                         <span
-                          className="inbox-row__unread-badge"
                           aria-label={`${thread.unreadCount} unread`}
+                          style={{
+                            minWidth: 18,
+                            height: 18,
+                            borderRadius: 9,
+                            background: "var(--brand-red)",
+                            color: "var(--snow)",
+                            fontSize: 10,
+                            fontWeight: 700,
+                            display: "inline-flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            padding: "0 5px",
+                          }}
                         >
                           {thread.unreadCount}
                         </span>

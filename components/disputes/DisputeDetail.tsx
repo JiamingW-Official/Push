@@ -299,7 +299,7 @@ export function DisputeDetail({
                     background: "rgba(201, 169, 110, 0.15)",
                     borderColor: "rgba(201, 169, 110, 0.4)",
                     color:
-                      "color-mix(in srgb, var(--champagne) 70%, var(--dark))",
+                      "color-mix(in srgb, var(--champagne) 70%, var(--graphite))",
                     fontSize: "12px",
                   }}
                 >

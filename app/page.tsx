@@ -4,63 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import Footer from "@/components/layout/Footer";
 import Header from "@/components/layout/Header";
-
-/* ── SVG Icons ──────────────────────────────────────────────── */
-const StorefrontIcon = () => (
-  <svg
-    width="24"
-    height="24"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="1.5"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    aria-hidden="true"
-  >
-    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-    <polyline points="9 22 9 12 15 12 15 22" />
-  </svg>
-);
-
-const MicIcon = () => (
-  <svg
-    width="24"
-    height="24"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="1.5"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    aria-hidden="true"
-  >
-    <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z" />
-    <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
-    <line x1="12" y1="19" x2="12" y2="23" />
-    <line x1="8" y1="23" x2="16" y2="23" />
-  </svg>
-);
-
-const ScanIcon = () => (
-  <svg
-    width="24"
-    height="24"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="1.5"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    aria-hidden="true"
-  >
-    <path d="M3 7V5a2 2 0 0 1 2-2h2" />
-    <path d="M17 3h2a2 2 0 0 1 2 2v2" />
-    <path d="M21 17v2a2 2 0 0 1-2 2h-2" />
-    <path d="M7 21H5a2 2 0 0 1-2-2v-2" />
-    <line x1="7" y1="12" x2="17" y2="12" />
-  </svg>
-);
+import "./(marketing)/landing.css";
 
 /* ── Newsletter form component ─────────────────────────────── */
 function NewsletterForm() {
@@ -69,63 +13,28 @@ function NewsletterForm() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (email.trim()) {
-      setSubmitted(true);
-    }
+    if (email.trim()) setSubmitted(true);
   };
 
   if (submitted) {
     return (
-      <p
-        style={{
-          fontFamily: "var(--font-body)",
-          fontSize: "16px",
-          color: "var(--ink)",
-          textAlign: "center",
-        }}
-      >
+      <p className="hp-submit-confirm">
         You&apos;re on the list. We&apos;ll be in touch.
       </p>
     );
   }
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      style={{
-        display: "flex",
-        gap: "12px",
-        justifyContent: "center",
-        flexWrap: "wrap",
-        width: "100%",
-        maxWidth: "480px",
-      }}
-    >
+    <form onSubmit={handleSubmit} className="hp-newsletter-form">
       <input
         type="email"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
         placeholder="your@email.com"
         required
-        style={{
-          flex: 1,
-          minWidth: "200px",
-          height: "48px",
-          padding: "0 16px",
-          fontFamily: "var(--font-body)",
-          fontSize: "14px",
-          color: "var(--ink)",
-          background: "rgba(255,255,255,0.72)",
-          border: "1px solid var(--hairline-2)",
-          borderRadius: "var(--r-sm)",
-          outline: "none",
-        }}
+        className="hp-newsletter-input"
       />
-      <button
-        type="submit"
-        className="btn-ink"
-        style={{ height: "48px", whiteSpace: "nowrap" }}
-      >
+      <button type="submit" className="btn-ink click-shift">
         Join the signal
       </button>
     </form>
@@ -135,835 +44,251 @@ function NewsletterForm() {
 /* ── Page component ─────────────────────────────────────────── */
 export default function HomePage() {
   return (
-    <div
-      style={{ overflow: "hidden", background: "var(--surface)" }}
-      id="main-content"
-    >
+    <div className="hp-root" id="main-content">
       <Header />
 
-      {/* ── Panel stack: 16px outer padding, 12px gap ─────────── */}
-      <div
-        style={{
-          padding: "16px",
-          display: "flex",
-          flexDirection: "column",
-          gap: "12px",
-        }}
-      >
+      <div className="hp-panels">
         {/* ═══════════════════════════════════════════════════════
-            PANEL 1 — HERO · Full-bleed gradient, bottom-left title
-            border-radius: 0 (allowed exception: Full-Bleed Photo Card Hero)
+            PANEL 1 — HERO
+            Full-viewport ink panel. Title bottom-left anchored.
+            Magvix Hero clamp(64px,9vw,160px) — STRICT spec.
+            border-radius: 0 — allowed (full-bleed editorial hero).
             ═══════════════════════════════════════════════════════ */}
-        <section
-          style={{
-            position: "relative",
-            height: "clamp(560px, 80vh, 880px)",
-            borderRadius: 0,
-            overflow: "hidden",
-            background: `
-              linear-gradient(160deg, rgba(10,10,10,0.02) 0%, transparent 40%),
-              radial-gradient(ellipse 120% 80% at 70% 30%, rgba(193,18,31,0.12) 0%, transparent 60%),
-              radial-gradient(ellipse 80% 100% at 20% 80%, rgba(30,95,173,0.15) 0%, transparent 50%),
-              linear-gradient(180deg, #1a1816 0%, #2c2a26 100%)
-            `,
-          }}
-        >
-          {/* Noise overlay */}
-          <div
-            aria-hidden="true"
-            style={{
-              position: "absolute",
-              inset: 0,
-              opacity: 0.04,
-              backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`,
-              backgroundSize: "256px 256px",
-              pointerEvents: "none",
-            }}
-          />
+        <section className="hp-hero" aria-label="Hero">
+          {/* Film grain */}
+          <div className="hp-hero-grain" aria-hidden="true" />
 
-          {/* Dark gradient overlay bottom */}
-          <div
-            aria-hidden="true"
-            style={{
-              position: "absolute",
-              inset: 0,
-              background:
-                "linear-gradient(180deg, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.55) 100%)",
-              pointerEvents: "none",
-            }}
-          />
+          {/* Bottom vignette */}
+          <div className="hp-hero-vignette" aria-hidden="true" />
 
-          {/* Right-upper liquid glass stat tile */}
-          <div
-            className="lg-surface--dark"
-            style={{
-              position: "absolute",
-              top: "clamp(32px, 4vw, 56px)",
-              right: "clamp(32px, 5vw, 64px)",
-              padding: "24px 32px",
-              minWidth: "160px",
-              textAlign: "center",
-            }}
-          >
-            <div
-              style={{
-                fontFamily: "var(--font-display)",
-                fontWeight: 700,
-                fontSize: "clamp(40px, 5vw, 56px)",
-                lineHeight: 1,
-                letterSpacing: "-0.04em",
-                color: "var(--snow)",
-              }}
-            >
-              1.4M
-            </div>
-            <div
-              style={{
-                fontFamily: "var(--font-body)",
-                fontSize: "11px",
-                fontWeight: 700,
-                letterSpacing: "0.16em",
-                textTransform: "uppercase",
-                color: "rgba(255,255,255,0.55)",
-                marginTop: "8px",
-              }}
-            >
-              verified scans
-            </div>
+          {/* Ghost watermark — Darky 100, opacity 0.05 */}
+          <div className="hp-hero-watermark" aria-hidden="true">
+            PUSH
           </div>
 
-          {/* Bottom-left: eyebrow + title + subtitle + CTAs */}
-          <div
-            style={{
-              position: "absolute",
-              bottom: "clamp(56px, 8vw, 96px)",
-              left: "clamp(24px, 5vw, 64px)",
-              right: "clamp(24px, 5vw, 64px)",
-              maxWidth: "760px",
-            }}
-          >
-            {/* Eyebrow parenthetical */}
-            <div
-              style={{
-                fontFamily: "var(--font-body)",
-                fontSize: "12px",
-                fontWeight: 700,
-                letterSpacing: "0.18em",
-                textTransform: "uppercase",
-                color: "rgba(255,255,255,0.45)",
-                marginBottom: "16px",
-              }}
-            >
-              (NYC LOCAL)
-            </div>
+          {/* Top-right: liquid-glass stat tile */}
+          <div className="hp-hero-stat-tile lg-surface--dark">
+            <span className="hp-hero-stat-num">1.4M</span>
+            <span className="hp-hero-stat-label">(VERIFIED SCANS)</span>
+          </div>
 
-            {/* Magvix hero title — bottom-left anchor */}
-            <h1
-              style={{
-                fontFamily: "var(--font-hero)",
-                fontWeight: "normal",
-                fontSize: "clamp(64px, 9vw, 160px)",
-                letterSpacing: "-0.03em",
-                lineHeight: 0.9,
-                color: "var(--snow)",
-                margin: "0 0 32px 0",
-              }}
-            >
-              Local performance
+          {/* Bottom-left: eyebrow + title + CTAs — STRICTLY bottom-left */}
+          <div className="hp-hero-content">
+            <p className="hp-hero-eyebrow">(NYC LOCAL)</p>
+
+            {/* Magvix Hero — clamp(64px,9vw,160px), max 1 hero per page */}
+            <h1 className="hp-hero-title">
+              Pay per
               <br />
-              marketing.
+              walk-in.
             </h1>
 
-            {/* Subtitle */}
-            <p
-              style={{
-                fontFamily: "var(--font-body)",
-                fontSize: "18px",
-                lineHeight: 1.6,
-                color: "rgba(255,255,255,0.72)",
-                maxWidth: "480px",
-                margin: "0 0 48px 0",
-              }}
-            >
-              Push connects NYC local businesses with neighborhood creators. You
-              pay only for verified store visits — not impressions.
-            </p>
+            {/* Subtitle in frosted glass badge */}
+            <div className="hp-hero-sub-wrap">
+              <p className="hp-hero-sub">
+                Push connects NYC local businesses with neighborhood creators.
+                You pay only for verified store visits — not impressions, not
+                reach.
+              </p>
+            </div>
 
-            {/* CTA cluster */}
-            <div style={{ display: "flex", gap: "16px", flexWrap: "wrap" }}>
-              <Link
-                href="/merchant/signup"
-                className="btn-primary click-shift"
-                style={{ textDecoration: "none" }}
-              >
-                Get Started
+            <div className="hp-hero-ctas">
+              <Link href="/merchant/signup" className="btn-primary click-shift">
+                Get Started Free
               </Link>
-              {/* Ghost white variant on dark bg */}
               <Link
-                href="/how-it-works"
-                className="click-shift"
-                style={{
-                  display: "inline-flex",
-                  alignItems: "center",
-                  height: "52px",
-                  padding: "0 28px",
-                  background: "transparent",
-                  color: "var(--snow)",
-                  border: "1px solid rgba(255,255,255,0.45)",
-                  borderRadius: "var(--r-sm)",
-                  fontFamily: "var(--font-body)",
-                  fontSize: "16px",
-                  fontWeight: 600,
-                  letterSpacing: "0.04em",
-                  textTransform: "uppercase",
-                  textDecoration: "none",
-                }}
+                href="/for-creators"
+                className="btn-ghost click-shift hp-hero-btn-ghost"
               >
-                See how it works
+                For Creators
               </Link>
             </div>
           </div>
         </section>
 
         {/* ═══════════════════════════════════════════════════════
-            PANEL 2 — ADVENTURE · Candy Peach · editorial 2-pathway
+            PANEL 2 — TWO-PATHWAY ROUTER · Candy Peach (warm)
+            Two full-height tiles: Ink tile (merchants) + glass tile (creators)
             ═══════════════════════════════════════════════════════ */}
         <section
-          className="candy-panel"
-          style={{
-            background: "var(--panel-peach)",
-            position: "relative",
-            overflow: "hidden",
-          }}
+          className="candy-panel hp-adventure"
+          aria-label="Choose your path"
         >
-          {/* Top label */}
-          <p
-            className="eyebrow"
-            style={{ color: "var(--ink-4)", marginBottom: 48 }}
-          >
-            (HOW IT WORKS)
-          </p>
+          <p className="eyebrow hp-adventure-eyebrow">(TWO WAYS IN)</p>
 
-          {/* Editorial 2-pathway split — dark ink vs warm surface */}
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "1fr 1fr",
-              gap: 24,
-              alignItems: "stretch",
-            }}
-          >
-            {/* Pathway A — Merchants: dark ink tile */}
+          <div className="hp-adventure-grid">
+            {/* Merchants: dark ink tile */}
             <Link
               href="/for-merchants"
-              className="click-shift"
-              style={{
-                background: "var(--ink)",
-                borderRadius: "var(--r-2xl)",
-                padding: "56px 48px",
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "space-between",
-                textDecoration: "none",
-                minHeight: 340,
-                color: "var(--snow)",
-              }}
+              className="hp-adventure-tile hp-adventure-tile--ink click-shift"
             >
               <div>
-                <p
-                  className="eyebrow"
-                  style={{ color: "rgba(255,255,255,0.45)", marginBottom: 24 }}
-                >
-                  FOR MERCHANTS
-                </p>
-                <h2
-                  style={{
-                    fontFamily: "var(--font-display)",
-                    fontWeight: 900,
-                    fontSize: "clamp(32px, 4vw, 52px)",
-                    letterSpacing: "-0.04em",
-                    lineHeight: 1.05,
-                    color: "var(--snow)",
-                    margin: "0 0 24px",
-                  }}
-                >
+                <p className="hp-tile-eyebrow-snow">(FOR MERCHANTS)</p>
+                <h2 className="hp-tile-h2-snow">
                   Pay only
                   <br />
                   for the
                   <br />
                   walk-in.
                 </h2>
-                <p
-                  style={{
-                    fontFamily: "var(--font-body)",
-                    fontSize: 16,
-                    color: "rgba(255,255,255,0.60)",
-                    lineHeight: 1.6,
-                    maxWidth: "30ch",
-                    margin: 0,
-                  }}
-                >
+                <p className="hp-tile-body-snow">
                   No impressions. No reach. You pay exactly once — when a
                   verified creator scan converts to a real store visit.
                 </p>
               </div>
-              <span
-                style={{
-                  fontFamily: "var(--font-body)",
-                  fontSize: 13,
-                  fontWeight: 700,
-                  letterSpacing: "0.08em",
-                  textTransform: "uppercase" as const,
-                  color: "rgba(255,255,255,0.50)",
-                  marginTop: 40,
-                  display: "block",
-                }}
-              >
-                Learn more →
-              </span>
+              <span className="hp-tile-cta-snow">See merchant plans →</span>
             </Link>
 
-            {/* Pathway B — Creators: translucent warm tile */}
+            {/* Creators: warm translucent tile */}
             <Link
               href="/for-creators"
-              className="click-shift"
-              style={{
-                background: "rgba(255,255,255,0.70)",
-                borderRadius: "var(--r-2xl)",
-                padding: "56px 48px",
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "space-between",
-                textDecoration: "none",
-                minHeight: 340,
-              }}
+              className="hp-adventure-tile hp-adventure-tile--warm click-shift"
             >
               <div>
-                <p
-                  className="eyebrow"
-                  style={{ color: "var(--ink-4)", marginBottom: 24 }}
-                >
-                  FOR CREATORS
-                </p>
-                <h2
-                  style={{
-                    fontFamily: "var(--font-display)",
-                    fontWeight: 900,
-                    fontSize: "clamp(32px, 4vw, 52px)",
-                    letterSpacing: "-0.04em",
-                    lineHeight: 1.05,
-                    color: "var(--ink)",
-                    margin: "0 0 24px",
-                  }}
-                >
+                <p className="hp-tile-eyebrow-ink">(FOR CREATORS)</p>
+                <h2 className="hp-tile-h2-ink">
                   Perform.
                   <br />
                   Get paid.
                   <br />
                   Repeat.
                 </h2>
-                <p
-                  style={{
-                    fontFamily: "var(--font-body)",
-                    fontSize: 16,
-                    color: "var(--ink-3)",
-                    lineHeight: 1.6,
-                    maxWidth: "30ch",
-                    margin: 0,
-                  }}
-                >
+                <p className="hp-tile-body-ink">
                   Post your neighborhood spots. Let your audience discover them.
                   Earn per verified visit — no sponsorship minimum.
                 </p>
               </div>
-              <span
-                style={{
-                  fontFamily: "var(--font-body)",
-                  fontSize: 13,
-                  fontWeight: 700,
-                  letterSpacing: "0.08em",
-                  textTransform: "uppercase" as const,
-                  color: "var(--ink-4)",
-                  marginTop: 40,
-                  display: "block",
-                }}
-              >
-                Join as creator →
-              </span>
-            </Link>
-          </div>
-
-          {/* Sub-link */}
-          <div style={{ marginTop: 32, textAlign: "center" }}>
-            <Link
-              href="/how-it-works"
-              style={{
-                fontFamily: "var(--font-body)",
-                fontSize: 13,
-                fontWeight: 600,
-                letterSpacing: "0.06em",
-                textTransform: "uppercase",
-                color: "var(--ink-3)",
-                textDecoration: "none",
-              }}
-            >
-              How scans are verified →
+              <span className="hp-tile-cta-ink">Join as creator →</span>
             </Link>
           </div>
         </section>
 
-        {/* ── Signature Divider 1 ─────────────────────────────── */}
-        <div style={{ display: "flex", justifyContent: "center" }}>
-          <span className="sig-divider">Posted · Scanned · Verified ·</span>
-        </div>
+        {/* ═══════════════════════════════════════════════════════
+            PANEL 3 — PROOF
+            Giant KPI left (8-col) + secondary stats right (4-col)
+            ═══════════════════════════════════════════════════════ */}
+        <section className="candy-panel hp-proof" aria-label="Proof numbers">
+          <p className="eyebrow hp-section-eyebrow">(THE NUMBERS)</p>
+
+          {/* Asymmetric 8+4 grid */}
+          <div className="hp-proof-grid">
+            {/* Left 8-col: giant KPI */}
+            <div className="hp-proof-left">
+              {/* Ghost watermark numeral behind KPI */}
+              <div className="hp-proof-ghost" aria-hidden="true">
+                1.4M
+              </div>
+              <p className="hp-kpi-num">1.4M+</p>
+              <p className="hp-kpi-label">(VERIFIED WALK-INS TO DATE)</p>
+            </div>
+
+            {/* Right 4-col: headline + 2 secondary stats */}
+            <div className="hp-proof-right">
+              <h2 className="hp-proof-heading">
+                Physical proof,
+                <br />
+                not digital
+                <br />
+                promises.
+              </h2>
+
+              <div className="hp-proof-stats">
+                {[
+                  { num: "87%", label: "(CREATOR RETENTION)" },
+                  { num: "$0", label: "(COST PER UNVERIFIED VISIT)" },
+                ].map((s) => (
+                  <div key={s.num} className="hp-proof-stat">
+                    <span className="hp-proof-stat-num">{s.num}</span>
+                    <span className="eyebrow hp-proof-stat-label">
+                      {s.label}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
 
         {/* ═══════════════════════════════════════════════════════
-            PANEL 3 — PROOF · Candy Blush · stats + merchant quotes
+            PANEL 4 — HOW IT WORKS · Surface-2
+            Numbered editorial rows — 3-column grid: number / title / body
             ═══════════════════════════════════════════════════════ */}
-        <section
-          className="candy-panel"
-          style={{
-            background: "var(--panel-blush)",
-            position: "relative",
-            overflow: "hidden",
-          }}
-        >
-          {/* Floating status badge — top right */}
-          <div
-            className="lg-surface--badge"
-            style={{
-              position: "absolute",
-              top: "clamp(24px, 3vw, 40px)",
-              right: "clamp(24px, 3vw, 40px)",
-              display: "flex",
-              alignItems: "center",
-              gap: "8px",
-            }}
-          >
-            <span
-              style={{
-                width: "8px",
-                height: "8px",
-                borderRadius: "50%",
-                background: "var(--ga-green)",
-                display: "inline-block",
-                flexShrink: 0,
-              }}
-            />
-            <span
-              style={{
-                fontFamily: "var(--font-body)",
-                fontSize: "12px",
-                fontWeight: 700,
-                letterSpacing: "0.1em",
-                color: "var(--ink)",
-                whiteSpace: "nowrap",
-              }}
-            >
-              Live now · Williamsburg ·
-            </span>
-          </div>
+        <section className="hp-how" aria-label="How it works">
+          <p className="eyebrow hp-section-eyebrow">(HOW IT WORKS)</p>
 
-          {/* Eyebrow + H2 */}
-          <div style={{ marginBottom: "clamp(40px, 5vw, 56px)" }}>
-            <span
-              style={{
-                fontFamily: "var(--font-body)",
-                fontSize: "12px",
-                fontWeight: 700,
-                letterSpacing: "0.18em",
-                textTransform: "uppercase",
-                color: "var(--ink-4)",
-                display: "block",
-                marginBottom: "16px",
-              }}
-            >
-              (THE NUMBERS)
-            </span>
-            <h2
-              style={{
-                fontFamily: "var(--font-display)",
-                fontWeight: 900,
-                fontSize: "clamp(32px, 4vw, 40px)",
-                letterSpacing: "-0.045em",
-                lineHeight: 1.1,
-                color: "var(--ink)",
-                margin: 0,
-              }}
-            >
-              Physical proof,
-              <br />
-              not digital promises.
-            </h2>
-          </div>
+          <h2 className="hp-how-heading">
+            Three steps
+            <br />
+            to a verified visit.
+          </h2>
 
-          {/* Raw KPI row — no card frame, raw numbers breathe */}
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(3, 1fr)",
-              gap: 0,
-              marginBottom: "clamp(56px, 7vw, 80px)",
-              borderTop: "1px solid rgba(10,10,10,0.10)",
-              borderBottom: "1px solid rgba(10,10,10,0.10)",
-              paddingTop: 48,
-              paddingBottom: 48,
-            }}
-          >
+          <div className="hp-how-rows">
             {[
-              { num: "1.4M+", label: "Verified scans to date" },
-              { num: "87%", label: "Creator retention rate" },
-              { num: "$0", label: "Cost per unverified visit" },
-            ].map((stat, i) => (
+              {
+                n: "01",
+                title: "Creator picks up your campaign.",
+                body: "A local creator in your neighborhood finds your Push campaign and collects a QR poster — no agency, no retainer, no upfront fee.",
+              },
+              {
+                n: "02",
+                title: "Their audience walks through the door.",
+                body: "Story is posted, audience scans the QR at your entrance. Our system logs GPS + timestamp. The visit is live in your dashboard within seconds.",
+              },
+              {
+                n: "03",
+                title: "You pay per verified visit only.",
+                body: "ConversionOracle confirms every scan: GPS dwell + QR match + timestamp. You're billed only for real foot traffic — zero impressions counted.",
+              },
+            ].map((item, i, arr) => (
               <div
-                key={stat.num}
-                style={{
-                  paddingLeft: i > 0 ? 40 : 0,
-                  borderLeft: i > 0 ? "1px solid rgba(10,10,10,0.10)" : "none",
-                }}
+                key={item.n}
+                className={`hp-how-row${i < arr.length - 1 ? " hp-how-row--border" : ""}`}
               >
-                <p
-                  style={{
-                    fontFamily: "var(--font-display)",
-                    fontWeight: 900,
-                    fontSize: "clamp(56px, 8vw, 112px)",
-                    lineHeight: 0.9,
-                    letterSpacing: "-0.05em",
-                    color: "var(--ink)",
-                    margin: "0 0 16px",
-                  }}
-                >
-                  {stat.num}
-                </p>
-                <p
-                  className="eyebrow"
-                  style={{ color: "var(--ink-3)", margin: 0 }}
-                >
-                  {stat.label}
-                </p>
+                <span className="hp-how-num">{item.n}</span>
+                <h3 className="hp-how-step-title">{item.title}</h3>
+                <p className="hp-how-step-body">{item.body}</p>
               </div>
             ))}
           </div>
 
-          {/* 2×2 merchant proof quotes */}
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
-              gap: "24px",
-            }}
-          >
-            {[
-              {
-                quote:
-                  "We had 47 first-time customers walk in with a Push QR in week 2. CAC dropped to $14.",
-                attribution: "NYC café owner · Wave 1",
-              },
-              {
-                quote:
-                  "No agency fees. No impression metrics. Just real people walking through the door.",
-                attribution: "Brooklyn retail merchant · Wave 1",
-              },
-              {
-                quote:
-                  "My audience started discovering places they&apos;d walked past for years. It feels genuine.",
-                attribution: "Local food creator · Williamsburg",
-              },
-              {
-                quote:
-                  "The QR scan verification removes all the guesswork. I know exactly what I&apos;m paying for.",
-                attribution: "Lower East Side bar owner · Wave 1",
-              },
-            ].map((item, i) => (
-              <blockquote
-                key={i}
-                style={{
-                  background: "rgba(255,255,255,0.6)",
-                  borderRadius: "var(--r-xl)",
-                  padding: "24px",
-                  margin: 0,
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: "16px",
-                }}
-              >
-                <p
-                  style={{
-                    fontFamily: "var(--font-display)",
-                    fontWeight: 700,
-                    fontSize: "clamp(15px, 1.6vw, 18px)",
-                    letterSpacing: "-0.02em",
-                    lineHeight: 1.3,
-                    color: "var(--ink)",
-                    margin: 0,
-                  }}
-                >
-                  &ldquo;{item.quote}&rdquo;
-                </p>
-                <footer
-                  style={{
-                    fontFamily: "var(--font-body)",
-                    fontSize: "12px",
-                    color: "var(--ink-4)",
-                    letterSpacing: "0.04em",
-                  }}
-                >
-                  — {item.attribution}
-                </footer>
-              </blockquote>
-            ))}
+          <div className="hp-how-ctas">
+            <Link href="/merchant/signup" className="btn-primary click-shift">
+              Get Started Free
+            </Link>
+            <Link href="/pricing" className="btn-ghost click-shift">
+              See Pricing
+            </Link>
           </div>
         </section>
 
-        {/* ── Signature Divider 2 ─────────────────────────────── */}
-        <div style={{ display: "flex", justifyContent: "center" }}>
-          <span className="sig-divider">End of receipt · Fin ·</span>
-        </div>
-
         {/* ═══════════════════════════════════════════════════════
-            PANEL 4 — EDITORIAL TABLE · Surface-2 · comparison
+            PANEL 5 — TICKET PANEL · GA Orange
+            Newsletter sign-up. ≤1 per page. Marketing-only.
+            Grommets: 16px circles, 24px inset from corners.
+            Perforation: via .ticket-panel::before/after in globals.
             ═══════════════════════════════════════════════════════ */}
-        <section
-          style={{
-            background: "var(--surface-2)",
-            borderRadius: "var(--r-md)",
-            padding: "clamp(32px, 4vw, 48px) clamp(24px, 4vw, 56px)",
-            overflowX: "auto",
-          }}
-        >
-          <h2
-            style={{
-              fontFamily: "var(--font-display)",
-              fontWeight: 900,
-              fontSize: "clamp(28px, 3.5vw, 40px)",
-              letterSpacing: "-0.045em",
-              lineHeight: 1.1,
-              color: "var(--ink)",
-              margin: "0 0 56px 0",
-              textAlign: "left",
-            }}
-          >
-            Why Push beats the
-            <br />
-            alternatives.
-          </h2>
+        <div className="ticket-panel hp-ticket" role="complementary">
+          {/* 4 grommet circles — 16px diameter, 24px inset */}
+          <div className="hp-grommet hp-grommet--tl" aria-hidden="true" />
+          <div className="hp-grommet hp-grommet--tr" aria-hidden="true" />
+          <div className="hp-grommet hp-grommet--bl" aria-hidden="true" />
+          <div className="hp-grommet hp-grommet--br" aria-hidden="true" />
 
-          <table
-            style={{
-              width: "100%",
-              borderCollapse: "collapse",
-              minWidth: "560px",
-            }}
-          >
-            <thead>
-              <tr>
-                {[
-                  "(PLATFORM)",
-                  "(VERIFIED VISITS)",
-                  "(LOCAL CREATORS)",
-                  "(COST MODEL)",
-                ].map((col, i) => (
-                  <th
-                    key={col}
-                    style={{
-                      fontFamily: "var(--font-body)",
-                      fontSize: "12px",
-                      fontWeight: 700,
-                      letterSpacing: "0.14em",
-                      textTransform: "uppercase",
-                      color: "var(--ink-4)",
-                      textAlign: i === 3 ? "right" : "left",
-                      paddingBottom: "16px",
-                      borderBottom: "1px dotted rgba(10,10,10,0.30)",
-                    }}
-                  >
-                    {col}
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {[
-                {
-                  platform: "Push",
-                  verified: "✓",
-                  creators: "✓",
-                  cost: "Pay per visit",
-                  isPush: true,
-                },
-                {
-                  platform: "Yelp Ads",
-                  verified: "✗",
-                  creators: "✗",
-                  cost: "CPM",
-                  isPush: false,
-                },
-                {
-                  platform: "Influencer Agency",
-                  verified: "Partial",
-                  creators: "✗",
-                  cost: "Retainer",
-                  isPush: false,
-                },
-                {
-                  platform: "Groupon",
-                  verified: "✗",
-                  creators: "✗",
-                  cost: "Revenue share",
-                  isPush: false,
-                },
-              ].map((row, i, arr) => (
-                <tr key={row.platform}>
-                  <td
-                    style={{
-                      fontFamily: "var(--font-display)",
-                      fontWeight: 700,
-                      fontSize: "clamp(16px, 1.8vw, 20px)",
-                      letterSpacing: "-0.02em",
-                      color: row.isPush ? "var(--ink)" : "var(--ink-3)",
-                      padding: "20px 0",
-                      borderBottom:
-                        i < arr.length - 1
-                          ? "1px dotted rgba(10,10,10,0.18)"
-                          : "none",
-                    }}
-                  >
-                    {row.platform}
-                  </td>
-                  <td
-                    style={{
-                      fontFamily: "var(--font-body)",
-                      fontSize: "16px",
-                      color:
-                        row.verified === "✓"
-                          ? "var(--ga-green)"
-                          : row.verified === "Partial"
-                            ? "var(--ink-3)"
-                            : "var(--ink-5)",
-                      padding: "20px 0",
-                      borderBottom:
-                        i < arr.length - 1
-                          ? "1px dotted rgba(10,10,10,0.18)"
-                          : "none",
-                    }}
-                  >
-                    {row.verified}
-                  </td>
-                  <td
-                    style={{
-                      fontFamily: "var(--font-body)",
-                      fontSize: "16px",
-                      color:
-                        row.creators === "✓"
-                          ? "var(--ga-green)"
-                          : "var(--ink-5)",
-                      padding: "20px 0",
-                      borderBottom:
-                        i < arr.length - 1
-                          ? "1px dotted rgba(10,10,10,0.18)"
-                          : "none",
-                    }}
-                  >
-                    {row.creators}
-                  </td>
-                  <td
-                    style={{
-                      fontFamily: "var(--font-body)",
-                      fontSize: "16px",
-                      color: "var(--ink-3)",
-                      padding: "20px 0",
-                      textAlign: "right",
-                      borderBottom:
-                        i < arr.length - 1
-                          ? "1px dotted rgba(10,10,10,0.18)"
-                          : "none",
-                      fontWeight: row.isPush ? 700 : 400,
-                    }}
-                  >
-                    {row.cost}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </section>
-
-        {/* ═══════════════════════════════════════════════════════
-            PANEL 5 — TICKET · GA Orange · newsletter
-            ═══════════════════════════════════════════════════════ */}
-        <div className="ticket-panel" style={{ position: "relative" }}>
-          {/* Grommet circles — 4 corners */}
-          {[
-            { top: "24px", left: "24px" },
-            { top: "24px", right: "24px" },
-            { bottom: "24px", left: "24px" },
-            { bottom: "24px", right: "24px" },
-          ].map((pos, i) => (
-            <div
-              key={i}
-              aria-hidden="true"
-              style={{
-                position: "absolute",
-                ...pos,
-                width: "16px",
-                height: "16px",
-                borderRadius: "50%",
-                border: "2px solid var(--ink)",
-                background: "transparent",
-              }}
-            />
-          ))}
-
-          {/* Central content */}
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              gap: "24px",
-              textAlign: "center",
-              padding: "16px 0",
-            }}
-          >
-            <h2
-              style={{
-                fontFamily: "var(--font-hero)",
-                fontStyle: "italic",
-                fontWeight: "normal",
-                fontSize: "clamp(40px, 5vw, 56px)",
-                letterSpacing: "-0.025em",
-                lineHeight: 1.05,
-                color: "var(--ink)",
-                margin: 0,
-              }}
-            >
+          <div className="hp-ticket-inner">
+            <h2 className="hp-ticket-title">
               Tune into
               <br />
               the signal.
             </h2>
-
-            <p
-              style={{
-                fontFamily: "var(--font-body)",
-                fontSize: "16px",
-                lineHeight: 1.6,
-                color: "var(--ink-3)",
-                maxWidth: "480px",
-                margin: 0,
-              }}
-            >
+            <p className="hp-ticket-body">
               Get early access updates, Wave 1 results, and local commerce
               insights — straight to your inbox.
             </p>
-
             <NewsletterForm />
           </div>
         </div>
       </div>
 
-      {/* ═══════════════════════════════════════════════════════
-          FOOTER — Editorial Blue, floating glass tiles
-          ═══════════════════════════════════════════════════════ */}
       <Footer />
     </div>
   );

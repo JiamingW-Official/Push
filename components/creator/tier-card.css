@@ -194,7 +194,7 @@
   font-size: 13px;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  background: var(--primary);
+  background: var(--brand-red);
   color: var(--surface);
   border: none;
   border-radius: var(--r-xl);

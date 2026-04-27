@@ -22,13 +22,13 @@
   font-size: 0.75rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--tertiary);
+  color: var(--accent-blue);
   text-decoration: none;
   margin-bottom: var(--space-5);
 }
 
 .kv-back:hover {
-  color: var(--dark);
+  color: var(--ink);
 }
 
 /* ── Editorial hero ──────────────────────────────────────── */
@@ -48,7 +48,7 @@
   font-family: var(--font-display);
   font-size: clamp(3rem, 7vw, 5.5rem);
   font-weight: 700;
-  color: var(--dark);
+  color: var(--ink);
   line-height: 0.95;
   margin: 0 0 var(--space-2);
   letter-spacing: -0.02em;
@@ -57,7 +57,7 @@
 .kv-hero__sub {
   font-family: var(--font-body);
   font-size: 0.875rem;
-  color: var(--tertiary);
+  color: var(--accent-blue);
   margin: 0;
   max-width: 440px;
   line-height: 1.6;
@@ -80,23 +80,23 @@
 
 .kv-status-badge--unverified {
   background: var(--surface);
-  color: var(--tertiary);
-  border: 1px solid var(--line);
+  color: var(--accent-blue);
+  border: 1px solid var(--mist)
 }
 
 .kv-status-badge--in_review {
-  background: var(--dark);
+  background: var(--ink);
   color: var(--surface);
 }
 
 .kv-status-badge--verified {
   background: var(--champagne);
-  color: var(--dark);
+  color: var(--ink);
   font-weight: 700;
 }
 
 .kv-status-badge--rejected {
-  background: var(--primary);
+  background: var(--brand-red);
   color: var(--surface);
 }
 
@@ -121,7 +121,7 @@
 .kv-progress__indicator {
   width: 32px;
   height: 32px;
-  border: 1.5px solid var(--line);
+  border: 1.5px solid var(--mist)
   display: flex;
   align-items: center;
   justify-content: center;
@@ -136,7 +136,7 @@
 .kv-progress__num {
   font-family: var(--font-display);
   font-size: 0.875rem;
-  color: var(--dark);
+  color: var(--ink);
   line-height: 1;
 }
 
@@ -153,14 +153,14 @@
 .kv-progress__connector {
   flex: 1;
   height: 1px;
-  background: var(--line);
+  background: var(--mist)
   margin: 0 var(--space-1);
 }
 
 /* Active step */
 .kv-progress__step--active .kv-progress__indicator {
-  background: var(--dark);
-  border-color: var(--dark);
+  background: var(--ink);
+  border-color: var(--ink);
 }
 
 .kv-progress__step--active .kv-progress__num {
@@ -168,7 +168,7 @@
 }
 
 .kv-progress__step--active .kv-progress__label {
-  color: var(--dark);
+  color: var(--ink);
 }
 
 /* Done step */
@@ -178,17 +178,17 @@
 }
 
 .kv-progress__step--done .kv-progress__num {
-  color: var(--dark);
+  color: var(--ink);
 }
 
 .kv-progress__step--done .kv-progress__label {
-  color: var(--tertiary);
+  color: var(--accent-blue);
 }
 
 /* ── Wizard panel ────────────────────────────────────────── */
 .kv-panel {
-  background: var(--surface-elevated);
-  border: 1px solid var(--line);
+  background: var(--surface-2);
+  border: 1px solid var(--mist)
   padding: var(--space-5);
   min-height: 400px;
   border-radius: var(--r-2xl);
@@ -220,7 +220,7 @@
   font-family: var(--font-display);
   font-size: clamp(1.75rem, 3.5vw, 2.5rem);
   font-weight: 700;
-  color: var(--dark);
+  color: var(--ink);
   margin: 0 0 var(--space-1);
   letter-spacing: -0.02em;
 }
@@ -228,7 +228,7 @@
 .kv-step-sub {
   font-family: var(--font-body);
   font-size: 0.8125rem;
-  color: var(--tertiary);
+  color: var(--accent-blue);
   margin: 0 0 var(--space-4);
   line-height: 1.6;
 }
@@ -246,13 +246,13 @@
   font-size: 0.6875rem;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--dark);
+  color: var(--ink);
 }
 
 .kv-optional {
   font-family: var(--font-body);
   font-size: 0.6875rem;
-  color: var(--tertiary);
+  color: var(--accent-blue);
   text-transform: none;
   letter-spacing: 0;
   font-style: italic;
@@ -261,7 +261,7 @@
 .kv-field-hint {
   font-family: var(--font-body);
   font-size: 0.75rem;
-  color: var(--tertiary);
+  color: var(--accent-blue);
   margin: 0;
   line-height: 1.5;
 }
@@ -269,9 +269,9 @@
 .kv-input {
   font-family: var(--font-body);
   font-size: 0.875rem;
-  color: var(--dark);
-  background: var(--surface-bright);
-  border: 1px solid var(--line);
+  color: var(--ink);
+  background: var(--surface-3);
+  border: 1px solid var(--mist)
   border-radius: var(--r-md);
   padding: 10px 12px;
   width: 100%;
@@ -283,11 +283,11 @@
 }
 
 .kv-input:focus {
-  border-color: var(--dark);
+  border-color: var(--ink);
 }
 
 .kv-input--warn {
-  border-color: var(--primary);
+  border-color: var(--brand-red);
 }
 
 .kv-select {
@@ -329,18 +329,18 @@
   gap: 8px;
   font-family: var(--font-body);
   font-size: 0.8125rem;
-  color: var(--dark);
+  color: var(--ink);
   cursor: pointer;
   padding: 8px 14px;
-  border: 1px solid var(--line);
+  border: 1px solid var(--mist)
   border-radius: var(--r-md);
-  background: var(--surface-bright);
+  background: var(--surface-3);
   transition: border-color 0.2s, background 0.2s;
 }
 
 .kv-radio:has(input:checked) {
-  border-color: var(--dark);
-  background: var(--dark);
+  border-color: var(--ink);
+  background: var(--ink);
   color: var(--surface);
 }
 
@@ -360,21 +360,21 @@
 }
 
 .kv-dropzone {
-  border: 1px dashed var(--line);
+  border: 1px dashed var(--mist)
   border-radius: var(--r-lg);
   min-height: 120px;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--surface-bright);
+  background: var(--surface-3);
   transition: border-color 0.2s, background 0.2s;
   outline: none;
 }
 
 .kv-dropzone:hover,
 .kv-dropzone:focus-visible {
-  border-color: var(--tertiary);
+  border-color: var(--accent-blue);
   background: var(--surface);
 }
 
@@ -393,14 +393,14 @@
 .kv-dropzone__label {
   font-family: var(--font-body);
   font-size: 0.75rem;
-  color: var(--dark);
+  color: var(--ink);
   letter-spacing: 0.05em;
 }
 
 .kv-dropzone__hint {
   font-family: var(--font-body);
   font-size: 0.625rem;
-  color: var(--tertiary);
+  color: var(--accent-blue);
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
@@ -425,7 +425,7 @@
 .kv-dropzone__filename {
   font-family: var(--font-body);
   font-size: 0.6875rem;
-  color: var(--dark);
+  color: var(--ink);
   word-break: break-all;
   text-align: center;
 }
@@ -433,7 +433,7 @@
 .kv-dropzone__replace {
   font-family: var(--font-body);
   font-size: 0.625rem;
-  color: var(--tertiary);
+  color: var(--accent-blue);
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
@@ -445,7 +445,7 @@
   gap: 8px;
   font-family: var(--font-body);
   font-size: 0.6875rem;
-  color: var(--tertiary);
+  color: var(--accent-blue);
   margin-top: 8px;
 }
 
@@ -458,16 +458,16 @@
 }
 
 .kv-social-card {
-  border: 1px solid var(--line);
+  border: 1px solid var(--mist)
   border-radius: var(--r-xl);
   padding: var(--space-2);
-  background: var(--surface-bright);
+  background: var(--surface-3);
   transition: border-color 0.2s;
 }
 
 .kv-social-card--connected {
   border-color: var(--champagne);
-  background: var(--surface-elevated);
+  background: var(--surface-2);
 }
 
 .kv-social-card__header {
@@ -502,13 +502,13 @@
 .kv-social-handle {
   font-family: var(--font-body);
   font-size: 0.8125rem;
-  color: var(--dark);
+  color: var(--ink);
 }
 
 .kv-social-followers {
   font-family: var(--font-body);
   font-size: 0.75rem;
-  color: var(--tertiary);
+  color: var(--accent-blue);
 }
 
 .kv-badge {
@@ -521,17 +521,17 @@
 }
 
 .kv-badge--muted {
-  background: var(--line);
-  color: var(--tertiary);
+  background: var(--mist)
+  color: var(--accent-blue);
 }
 
 .kv-oauth-btn {
   font-family: var(--font-body);
   font-size: 0.75rem;
   letter-spacing: 0.06em;
-  color: var(--dark);
+  color: var(--ink);
   background: transparent;
-  border: 1px solid var(--dark);
+  border: 1px solid var(--ink);
   border-radius: var(--r-lg);
   padding: 8px var(--space-2);
   cursor: pointer;
@@ -543,7 +543,7 @@
 }
 
 .kv-oauth-btn:hover:not(:disabled) {
-  background: var(--dark);
+  background: var(--ink);
   color: var(--surface);
 }
 
@@ -564,13 +564,13 @@
   content: "";
   flex: 1;
   height: 1px;
-  background: var(--line);
+  background: var(--mist)
 }
 
 .kv-optional-divider span {
   font-family: var(--font-body);
   font-size: 0.6875rem;
-  color: var(--tertiary);
+  color: var(--accent-blue);
   letter-spacing: 0.08em;
   white-space: nowrap;
 }
@@ -620,13 +620,13 @@
   gap: 12px;
   padding: 10px 12px;
   border: 1px solid var(--champagne);
-  background: var(--surface-bright);
+  background: var(--surface-3);
 }
 
 .kv-proof-name {
   font-family: var(--font-body);
   font-size: 0.8125rem;
-  color: var(--dark);
+  color: var(--ink);
   flex: 1;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -636,7 +636,7 @@
 .kv-proof-replace {
   font-family: var(--font-body);
   font-size: 0.6875rem;
-  color: var(--tertiary);
+  color: var(--accent-blue);
   background: none;
   border: none;
   cursor: pointer;
@@ -651,24 +651,24 @@
   align-items: center;
   gap: 8px;
   padding: 10px 12px;
-  border: 1px solid var(--primary);
+  border: 1px solid var(--brand-red);
   background: rgba(193, 18, 31, 0.04);
   font-family: var(--font-body);
   font-size: 0.8125rem;
-  color: var(--primary);
+  color: var(--brand-red);
   margin-top: 4px;
 }
 
 .kv-warn-inline {
   font-family: var(--font-body);
   font-size: 0.8125rem;
-  color: var(--primary);
+  color: var(--brand-red);
   margin-top: 8px;
 }
 
 /* ── Review section ──────────────────────────────────────── */
 .kv-review-section {
-  border-bottom: 1px solid var(--line);
+  border-bottom: 1px solid var(--mist)
   padding-bottom: var(--space-3);
   margin-bottom: var(--space-3);
 }
@@ -688,7 +688,7 @@
   font-family: var(--font-display);
   font-size: 1.125rem;
   font-weight: 700;
-  color: var(--dark);
+  color: var(--ink);
   letter-spacing: -0.01em;
 }
 
@@ -697,7 +697,7 @@
   font-size: 0.6875rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--tertiary);
+  color: var(--accent-blue);
   background: none;
   border: none;
   cursor: pointer;
@@ -706,7 +706,7 @@
 }
 
 .kv-edit-link:hover {
-  color: var(--dark);
+  color: var(--ink);
 }
 
 .kv-review-grid {
@@ -730,13 +730,13 @@
   font-size: 0.625rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--tertiary);
+  color: var(--accent-blue);
 }
 
 .kv-review-val {
   font-family: var(--font-body);
   font-size: 0.875rem;
-  color: var(--dark);
+  color: var(--ink);
 }
 
 .kv-review-socials {
@@ -754,7 +754,7 @@
 .kv-review-empty {
   font-family: var(--font-body);
   font-size: 0.8125rem;
-  color: var(--tertiary);
+  color: var(--accent-blue);
 }
 
 /* ── Submit ──────────────────────────────────────────────── */
@@ -771,7 +771,7 @@
   font-size: 0.8125rem;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  background: var(--dark);
+  background: var(--ink);
   color: var(--surface);
   border: none;
   border-radius: var(--r-lg);
@@ -784,7 +784,7 @@
 }
 
 .kv-submit-btn:hover:not(:disabled) {
-  background: var(--accent);
+  background: var(--brand-red);
 }
 
 .kv-submit-btn:disabled {
@@ -795,7 +795,7 @@
 .kv-submit-note {
   font-family: var(--font-body);
   font-size: 0.6875rem;
-  color: var(--tertiary);
+  color: var(--accent-blue);
   margin: 0;
   line-height: 1.6;
 }
@@ -823,23 +823,23 @@
 }
 
 .kv-btn--primary {
-  background: var(--dark);
+  background: var(--ink);
   color: var(--surface);
 }
 
 .kv-btn--primary:hover:not(:disabled) {
-  background: var(--accent);
+  background: var(--brand-red);
 }
 
 .kv-btn--ghost {
   background: transparent;
-  color: var(--tertiary);
-  border: 1px solid var(--line);
+  color: var(--accent-blue);
+  border: 1px solid var(--mist)
 }
 
 .kv-btn--ghost:hover:not(:disabled) {
-  color: var(--dark);
-  border-color: var(--dark);
+  color: var(--ink);
+  border-color: var(--ink);
 }
 
 .kv-btn--disabled {
@@ -883,7 +883,7 @@
 .kv-verified__mark {
   width: 72px;
   height: 72px;
-  background: var(--dark);
+  background: var(--ink);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -895,7 +895,7 @@
   font-family: var(--font-display);
   font-size: clamp(4rem, 10vw, 8rem);
   font-weight: 700;
-  color: var(--dark);
+  color: var(--ink);
   margin: 0 0 var(--space-2);
   line-height: 0.9;
   letter-spacing: -0.03em;
@@ -904,7 +904,7 @@
 .kv-verified__sub {
   font-family: var(--font-body);
   font-size: 0.9375rem;
-  color: var(--tertiary);
+  color: var(--accent-blue);
   margin: 0 0 var(--space-4);
   max-width: 440px;
   line-height: 1.7;
@@ -918,7 +918,7 @@
   text-transform: uppercase;
   padding: 8px var(--space-2);
   background: var(--champagne);
-  color: var(--dark);
+  color: var(--ink);
   font-weight: 700;
   margin-bottom: var(--space-4);
   border-radius: var(--r-sm);
@@ -929,7 +929,7 @@
   font-size: 0.875rem;
   letter-spacing: 0.06em;
   color: var(--surface);
-  background: var(--dark);
+  background: var(--ink);
   padding: 14px var(--space-4);
   text-decoration: none;
   display: inline-block;
@@ -939,13 +939,13 @@
 }
 
 .kv-verified__cta:hover {
-  background: var(--accent);
+  background: var(--brand-red);
 }
 
 .kv-verified__reset {
   font-family: var(--font-body);
   font-size: 0.6875rem;
-  color: var(--tertiary);
+  color: var(--accent-blue);
   background: none;
   border: none;
   cursor: pointer;
@@ -972,7 +972,7 @@
   font-family: var(--font-display);
   font-size: clamp(2.5rem, 6vw, 4rem);
   font-weight: 700;
-  color: var(--primary);
+  color: var(--brand-red);
   margin: 0;
   letter-spacing: -0.02em;
 }
@@ -980,7 +980,7 @@
 .kv-rejected__reason {
   font-family: var(--font-body);
   font-size: 0.875rem;
-  color: var(--tertiary);
+  color: var(--accent-blue);
   margin: 0 0 var(--space-2);
   line-height: 1.6;
   max-width: 440px;
@@ -999,7 +999,7 @@
   width: 16px;
   height: 16px;
   border-radius: 50%;
-  background: var(--dark);
+  background: var(--ink);
   position: relative;
   margin-bottom: var(--space-3);
 }
@@ -1009,7 +1009,7 @@
   position: absolute;
   inset: -8px;
   border-radius: 50%;
-  border: 1.5px solid var(--dark);
+  border: 1.5px solid var(--ink);
   animation: kv-pulse-ring 2s cubic-bezier(0.32, 0.72, 0, 1) infinite;
 }
 
@@ -1022,7 +1022,7 @@
   font-family: var(--font-display);
   font-size: clamp(2.5rem, 6vw, 4.5rem);
   font-weight: 700;
-  color: var(--dark);
+  color: var(--ink);
   margin: 0;
   letter-spacing: -0.02em;
 }
@@ -1030,7 +1030,7 @@
 .kv-in-review__sub {
   font-family: var(--font-body);
   font-size: 0.875rem;
-  color: var(--tertiary);
+  color: var(--accent-blue);
   margin: 0;
   line-height: 1.7;
   max-width: 440px;

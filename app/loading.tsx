@@ -53,12 +53,12 @@ export default function RootLoading() {
           font-weight: 700;
           letter-spacing: 0.14em;
           text-transform: uppercase;
-          color: var(--primary);
+          color: var(--brand-red);
         }
         .ld-dot {
           width: 6px;
           height: 6px;
-          background: var(--primary);
+          background: var(--brand-red);
           border-radius: 50%;
           display: inline-block;
           animation: ld-pulse 1.4s ease-in-out infinite;
@@ -73,7 +73,7 @@ export default function RootLoading() {
           font-weight: 900;
           letter-spacing: -0.045em;
           line-height: 0.95;
-          color: var(--dark);
+          color: var(--ink);
           display: inline-flex;
           align-items: baseline;
           gap: 10px;
@@ -83,8 +83,8 @@ export default function RootLoading() {
           animation: ld-word-in 680ms cubic-bezier(0.22,1,0.36,1) both;
         }
         .ld-word-1 { animation-delay: 0ms; }
-        .ld-word-2 { animation-delay: 140ms; color: var(--primary); }
-        .ld-word-3 { animation-delay: 240ms; font-weight: 200; color: rgba(0,48,73,0.45); }
+        .ld-word-2 { animation-delay: 140ms; color: var(--brand-red); }
+        .ld-word-3 { animation-delay: 240ms; font-weight: 200; color: rgba(10,10,10,0.45); }
         @keyframes ld-word-in {
           from { opacity: 0; transform: translateY(16px); }
           to { opacity: 1; transform: translateY(0); }

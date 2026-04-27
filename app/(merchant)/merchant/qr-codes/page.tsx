@@ -33,10 +33,11 @@ function HourlyHeatmap({ totalScans }: { totalScans: number }) {
         {HOURLY_SCAN_WEIGHTS.map((w, i) => {
           const intensity = maxWeight > 0 ? w / maxWeight : 0;
           const scans = Math.round(intensity * totalScans * 0.6);
+          // Use var(--ink) at computed opacity — avoids hardcoded hex
           const bg =
             intensity === 0
-              ? "var(--surface)"
-              : `rgba(0,48,73,${0.08 + intensity * 0.72})`;
+              ? "var(--surface-3)"
+              : `rgba(10,10,10,${0.08 + intensity * 0.72})`;
           return (
             <div
               key={i}
@@ -111,14 +112,7 @@ function DetailPanel({
 
         <HourlyHeatmap totalScans={qr.scan_count} />
 
-        <div
-          style={{
-            fontSize: "var(--text-caption)",
-            color: "var(--text-muted)",
-            paddingTop: "var(--space-3)",
-            borderTop: "1px solid var(--line)",
-          }}
-        >
+        <div className="qr-detail__meta">
           <div>
             Created:{" "}
             {new Date(qr.created_at).toLocaleDateString("en-US", {
@@ -134,13 +128,10 @@ function DetailPanel({
               day: "numeric",
             })}
           </div>
-          <div style={{ marginTop: 8, wordBreak: "break-all" }}>
-            URL:{" "}
-            <span style={{ color: "var(--tertiary)" }}>
-              {typeof window !== "undefined"
-                ? `${window.location.origin}${qr.scan_url}`
-                : qr.scan_url}
-            </span>
+          <div className="qr-detail__url">
+            {typeof window !== "undefined"
+              ? `${window.location.origin}${qr.scan_url}`
+              : qr.scan_url}
           </div>
         </div>
       </div>
@@ -193,13 +184,7 @@ function QRCard({
           <span
             className={`qr-card__status-dot${qr.disabled ? " qr-card__status-dot--disabled" : ""}`}
           />
-          <span
-            style={{
-              fontSize: 10,
-              color: "var(--text-muted)",
-              letterSpacing: "0.04em",
-            }}
-          >
+          <span className="qr-status-text">
             {qr.disabled ? "Disabled" : "Active"}
           </span>
         </div>
@@ -380,46 +365,54 @@ export default function QRCodesPage() {
 
   return (
     <div className="qr-shell">
-      {/* Nav */}
-      <nav className="qr-nav">
-        <a href="/" className="qr-nav__logo">
-          Push<span>.</span>
-        </a>
-        <div className="qr-nav__center">
-          <span className="qr-nav__title">QR Code Manager</span>
+      {/* Page Header */}
+      <header className="qr-header">
+        <div className="qr-header__left">
+          <span className="qr-header__eyebrow">Merchant Dashboard</span>
+          <h2 className="qr-header__title">QR Codes</h2>
         </div>
-        <a href="/merchant/dashboard" className="qr-nav__back">
-          ← Dashboard
-        </a>
-      </nav>
+        <div className="qr-header__right">
+          <button
+            className="btn-primary click-shift"
+            onClick={handleGenerate}
+            disabled={!selectedCampaignId || isGenerating}
+          >
+            {isGenerating ? "Generating..." : "Generate New QR"}
+          </button>
+        </div>
+      </header>
 
-      {/* Hero */}
-      <section className="qr-hero">
-        <div className="qr-hero__eyebrow">Merchant · QR Attribution</div>
-        <div className="qr-hero__numbers">
-          <div className="qr-big-number">
-            <div className="qr-big-number__label">QR Codes Generated</div>
-            <div className="qr-big-number__value">{codes.length}</div>
-          </div>
-          <div className="qr-hero__divider" />
-          <div className="qr-big-number">
-            <div className="qr-big-number__label">Scans This Month</div>
-            <div className="qr-big-number__value qr-big-number__value--accent">
-              {QR_STATS.scans_this_month}
-            </div>
-          </div>
+      {/* Stats row */}
+      <div className="qr-stats-row">
+        <div className="qr-stat-chip">
+          <span className="qr-stat-chip__label">Total Scans</span>
+          <span className="qr-stat-chip__value qr-stat-chip__value--accent">
+            {QR_STATS.scans_this_month}
+          </span>
         </div>
-        <div className="qr-hero__verified">
-          Verified conversions this month:{" "}
-          <strong>{QR_STATS.verified_conversions_month}</strong>
+        <div className="qr-stat-chip">
+          <span className="qr-stat-chip__label">Active Codes</span>
+          <span className="qr-stat-chip__value">
+            {codes.filter((q) => !q.disabled).length}
+          </span>
         </div>
-      </section>
+        <div className="qr-stat-chip">
+          <span className="qr-stat-chip__label">Verified Conversions</span>
+          <span className="qr-stat-chip__value">
+            {QR_STATS.verified_conversions_month}
+          </span>
+        </div>
+        <div className="qr-stat-chip">
+          <span className="qr-stat-chip__label">Total Codes</span>
+          <span className="qr-stat-chip__value">{codes.length}</span>
+        </div>
+      </div>
 
-      {/* Body */}
+      {/* Body — generator sidebar + list */}
       <div className="qr-body">
-        {/* Left: Generator */}
+        {/* Left: Generator sidebar */}
         <aside className="qr-generator">
-          <div className="qr-generator__title">Generate QR</div>
+          <div className="qr-generator__title">Generate QR Code</div>
 
           {/* Step 1: Campaign */}
           <div className="qr-step">
@@ -470,16 +463,6 @@ export default function QRCodesPage() {
             <div className="qr-step__label">
               <span className="qr-step__num">3</span>
               Custom Copy
-              <span
-                style={{
-                  fontWeight: 400,
-                  letterSpacing: "0.02em",
-                  textTransform: "none",
-                  fontSize: 9,
-                }}
-              >
-                (optional)
-              </span>
             </div>
             <input
               className="qr-input"
@@ -500,7 +483,7 @@ export default function QRCodesPage() {
           <div className="qr-step">
             <div className="qr-step__label">
               <span className="qr-step__num">4</span>
-              Generate &amp; Download
+              Generate
             </div>
             <button
               className="qr-generate-btn"
@@ -532,16 +515,11 @@ export default function QRCodesPage() {
           )}
         </aside>
 
-        {/* Right: Active QR list */}
+        {/* Right: QR codes table */}
         <main className="qr-list-panel">
           <div className="qr-list-header">
-            <div className="qr-list-title">Active QR Codes</div>
-            <span
-              style={{
-                fontSize: "var(--text-caption)",
-                color: "var(--text-muted)",
-              }}
-            >
+            <span className="qr-list-title">Active QR Codes</span>
+            <span className="qr-list-count">
               {filteredCodes.length} showing
             </span>
           </div>
@@ -594,30 +572,110 @@ export default function QRCodesPage() {
             </button>
           </div>
 
-          {/* List */}
+          {/* Table or empty state */}
           {filteredCodes.length === 0 ? (
             <div className="qr-empty">
               <div className="qr-empty__title">No QR codes found</div>
-              <div
-                style={{
-                  fontSize: "var(--text-small)",
-                  color: "var(--text-muted)",
-                  marginTop: 8,
-                }}
-              >
+              <div className="qr-empty__sub">
                 Adjust filters or generate a new QR code.
               </div>
             </div>
           ) : (
-            filteredCodes.map((qr) => (
-              <QRCard
-                key={qr.id}
-                qr={qr}
-                onView={() => setDetailQr(qr)}
-                onToggle={() => handleToggle(qr.id)}
-                onRegenerate={() => handleRegenerate(qr.id)}
-              />
-            ))
+            <table className="qr-table">
+              <thead>
+                <tr>
+                  <th style={{ width: 56 }}>Code</th>
+                  <th>Campaign</th>
+                  <th>Scans</th>
+                  <th>Status</th>
+                  <th>Created</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredCodes.map((qr) => {
+                  const cvr =
+                    qr.scan_count > 0
+                      ? Math.round((qr.conversion_count / qr.scan_count) * 100)
+                      : 0;
+                  const created = new Date(qr.created_at).toLocaleDateString(
+                    "en-US",
+                    {
+                      month: "short",
+                      day: "numeric",
+                      year: "numeric",
+                    },
+                  );
+                  return (
+                    <tr
+                      key={qr.id}
+                      className={qr.disabled ? "qr-row--disabled" : ""}
+                    >
+                      <td className="qr-table__thumb">
+                        <img
+                          src={qrImageUrl(qr.id)}
+                          alt="QR"
+                          width={40}
+                          height={40}
+                          style={{ imageRendering: "pixelated" }}
+                        />
+                      </td>
+                      <td>
+                        <div className="qr-table__name">{qr.campaign_name}</div>
+                        <div className="qr-table__meta">
+                          <span className="qr-poster-tag">
+                            {POSTER_TYPE_LABELS[qr.poster_type]}
+                          </span>
+                        </div>
+                      </td>
+                      <td>
+                        <div className="qr-table__scans">{qr.scan_count}</div>
+                        <div className="qr-table__cvr">{cvr}% CVR</div>
+                      </td>
+                      <td>
+                        <span
+                          className={`qr-status-badge qr-status-badge--${qr.disabled ? "disabled" : "active"}`}
+                        >
+                          {qr.disabled ? "Disabled" : "Active"}
+                        </span>
+                      </td>
+                      <td className="qr-table__date">{created}</td>
+                      <td>
+                        <div className="qr-table__actions">
+                          <button
+                            className="qr-action-btn"
+                            onClick={() => setDetailQr(qr)}
+                          >
+                            View
+                          </button>
+                          {qr.disabled ? (
+                            <button
+                              className="qr-action-btn qr-action-btn--enable"
+                              onClick={() => handleToggle(qr.id)}
+                            >
+                              Enable
+                            </button>
+                          ) : (
+                            <button
+                              className="qr-action-btn qr-action-btn--danger"
+                              onClick={() => handleToggle(qr.id)}
+                            >
+                              Disable
+                            </button>
+                          )}
+                          <button
+                            className="qr-action-btn"
+                            onClick={() => handleRegenerate(qr.id)}
+                          >
+                            Regenerate
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
           )}
         </main>
       </div>

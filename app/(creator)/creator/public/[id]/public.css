@@ -1,6 +1,6 @@
 /* ── Public Creator Profile ─────────────────────────────────────────────────
    Design system: border-radius 0 everywhere (exceptions: avatar 50%, tier badge 50%)
-   Colors: var(--primary) / var(--accent) / var(--dark) / var(--tertiary) / var(--surface)
+   Colors: var(--brand-red) / var(--brand-red) / var(--ink) / var(--accent-blue) / var(--surface)
    Fonts: Darky (headlines), CS Genio Mono (all UI text)
    Grid: 8px base
 ────────────────────────────────────────────────────────────────────────────── */
@@ -13,7 +13,7 @@
   background: var(--surface);
   min-height: 100vh;
   font-family: "CS Genio Mono", "Courier New", monospace;
-  color: var(--dark);
+  color: var(--ink);
 }
 
 /* ── Fade-in animation ─────────────────────────────────────────────────────── */
@@ -36,7 +36,7 @@
 /* ── 1. Header strip ───────────────────────────────────────────────────────── */
 
 .profile-header-strip {
-  background: var(--dark);
+  background: var(--ink);
   padding: 12px 24px;
   display: flex;
   align-items: center;
@@ -47,7 +47,7 @@
 .header-back {
   font-family: "CS Genio Mono", monospace;
   font-size: 13px;
-  color: var(--tertiary);
+  color: var(--accent-blue);
   text-decoration: none;
   letter-spacing: 0.02em;
   transition: color 0.15s ease;
@@ -69,9 +69,9 @@
 /* ── 2. Hero ───────────────────────────────────────────────────────────────── */
 
 .pub-hero {
-  background: var(--surface-elevated);
+  background: var(--surface-2);
   padding: 64px 40px;
-  border-bottom: 1px solid rgba(0, 48, 73, 0.12);
+  border-bottom: 1px solid var(--hairline);
 }
 
 .pub-hero-inner {
@@ -92,7 +92,7 @@
   width: 160px;
   height: 160px;
   border-radius: 50%;
-  border: 4px solid var(--primary); /* overridden inline with tier color */
+  border: 4px solid var(--brand-red); /* overridden inline with tier color */
   background: var(--surface);
   display: flex;
   align-items: center;
@@ -126,7 +126,7 @@
   font-family: "Darky", serif;
   font-size: 48px;
   font-weight: 900;
-  color: var(--dark);
+  color: var(--ink);
   letter-spacing: -0.04em;
   margin: 0;
   line-height: 1.0;
@@ -141,7 +141,7 @@
 .pub-location {
   font-family: "CS Genio Mono", monospace;
   font-size: 13px;
-  color: rgba(0, 48, 73, 0.6);
+  color: var(--ink-3);
   margin: 0;
   display: flex;
   align-items: center;
@@ -150,13 +150,13 @@
 
 .pub-location-icon {
   font-size: 11px;
-  color: rgba(0, 48, 73, 0.4);
+  color: var(--ink-4);
 }
 
 .pub-handle {
   font-family: "CS Genio Mono", monospace;
   font-size: 13px;
-  color: rgba(0, 48, 73, 0.55);
+  color: var(--ink-4);
   margin: 0;
   letter-spacing: 0.01em;
 }
@@ -165,7 +165,7 @@
   font-family: "CS Genio Mono", monospace;
   font-size: 15px;
   line-height: 1.65;
-  color: var(--dark);
+  color: var(--ink);
   margin: 4px 0 0;
   max-width: 480px;
 }
@@ -218,7 +218,7 @@
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: rgba(0, 48, 73, 0.45);
+  color: var(--ink-4);
   margin: 0 0 16px;
 }
 
@@ -227,9 +227,9 @@
 .pub-stats-strip {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  border-top: 1px solid rgba(0, 48, 73, 0.1);
-  border-bottom: 1px solid rgba(0, 48, 73, 0.1);
-  background: var(--surface-elevated);
+  border-top: 1px solid var(--hairline);
+  border-bottom: 1px solid var(--hairline);
+  background: var(--surface-2);
   padding: 0;
 }
 
@@ -239,7 +239,7 @@
   align-items: center;
   justify-content: center;
   padding: 24px 16px;
-  border-right: 1px solid rgba(0, 48, 73, 0.08);
+  border-right: 1px solid var(--surface-3);
   text-align: center;
 }
 
@@ -251,7 +251,7 @@
   font-family: "Darky", serif;
   font-size: 28px;
   font-weight: 700;
-  color: var(--dark);
+  color: var(--ink);
   letter-spacing: -0.03em;
   line-height: 1;
 }
@@ -262,7 +262,7 @@
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: rgba(0, 48, 73, 0.45);
+  color: var(--ink-4);
   margin-top: 6px;
 }
 
@@ -271,15 +271,15 @@
 .pub-tier-section {
   background: var(--surface);
   padding: 40px;
-  border-bottom: 1px solid rgba(0, 48, 73, 0.1);
+  border-bottom: 1px solid var(--hairline);
 }
 
 /* ── 5. Campaign history ───────────────────────────────────────────────────── */
 
 .pub-campaigns-section {
-  background: var(--surface-elevated);
+  background: var(--surface-2);
   padding: 40px;
-  border-bottom: 1px solid rgba(0, 48, 73, 0.08);
+  border-bottom: 1px solid var(--surface-3);
 }
 
 .pub-campaigns {
@@ -289,7 +289,7 @@
 }
 
 .pub-campaign-card {
-  border-left: 3px solid var(--primary); /* overridden inline with tier color */
+  border-left: 3px solid var(--brand-red); /* overridden inline with tier color */
   padding: 16px;
   background: var(--surface);
   border-radius: var(--r-xl);
@@ -314,7 +314,7 @@
   font-family: "CS Genio Mono", monospace;
   font-size: 14px;
   font-weight: 700;
-  color: var(--dark);
+  color: var(--ink);
 }
 
 .pub-campaign-category {
@@ -323,8 +323,8 @@
   font-weight: 700;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  color: rgba(0, 48, 73, 0.55);
-  background: rgba(0, 48, 73, 0.08);
+  color: var(--ink-4);
+  background: var(--surface-3);
   padding: 2px 6px;
   border-radius: var(--r-xl);
 }
@@ -339,7 +339,7 @@
 .pub-campaign-date {
   font-family: "CS Genio Mono", monospace;
   font-size: 11px;
-  color: rgba(0, 48, 73, 0.45);
+  color: var(--ink-4);
 }
 
 .pub-campaign-payout {
@@ -351,14 +351,14 @@
 }
 
 .pub-campaign-payout--product {
-  color: rgba(0, 48, 73, 0.45);
+  color: var(--ink-4);
   font-weight: 400;
 }
 
 /* ── 6. CTA section ────────────────────────────────────────────────────────── */
 
 .pub-cta-section {
-  background: var(--dark);
+  background: var(--ink);
   padding: 64px 40px;
   text-align: center;
   border-radius: var(--r-xl);
@@ -397,8 +397,8 @@
 
 .pub-cta-button {
   display: inline-block;
-  background: var(--primary);
-  color: var(--surface-elevated);
+  background: var(--brand-red);
+  color: var(--surface-2);
   font-family: "CS Genio Mono", monospace;
   font-size: 14px;
   font-weight: 700;
@@ -411,7 +411,7 @@
 }
 
 .pub-cta-button:hover {
-  background: var(--accent);
+  background: var(--brand-red);
 }
 
 .pub-cta-note {
@@ -430,9 +430,9 @@
   text-align: center;
   font-family: "CS Genio Mono", monospace;
   font-size: 11px;
-  color: rgba(0, 48, 73, 0.35);
+  color: var(--ink-4);
   letter-spacing: 0.04em;
-  border-top: 1px solid rgba(0, 48, 73, 0.08);
+  border-top: 1px solid var(--surface-3);
 }
 
 /* ── Skeleton states ───────────────────────────────────────────────────────── */
@@ -440,13 +440,13 @@
 .skeleton-line {
   display: inline-block;
   height: 12px;
-  background: rgba(0, 48, 73, 0.1);
+  background: var(--hairline);
   border-radius: var(--r-xl);
   animation: skeletonPulse 1.4s ease-in-out infinite;
 }
 
 .skeleton-block {
-  background: rgba(0, 48, 73, 0.06);
+  background: var(--surface-3);
   margin-bottom: 2px;
   animation: skeletonPulse 1.4s ease-in-out infinite;
 }
@@ -468,7 +468,7 @@
   text-align: center;
   font-family: "CS Genio Mono", monospace;
   font-size: 14px;
-  color: rgba(0, 48, 73, 0.55);
+  color: var(--ink-4);
 }
 
 /* ── Mobile ────────────────────────────────────────────────────────────────── */
@@ -510,11 +510,11 @@
   }
 
   .pub-stat {
-    border-bottom: 1px solid rgba(0, 48, 73, 0.08);
+    border-bottom: 1px solid var(--surface-3);
   }
 
   .pub-stat:nth-child(odd) {
-    border-right: 1px solid rgba(0, 48, 73, 0.08);
+    border-right: 1px solid var(--surface-3);
   }
 
   .pub-stat:nth-child(even) {

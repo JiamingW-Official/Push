@@ -44,8 +44,8 @@ export default function MerchantMap({ lat, lng, name }: Props) {
       const pinIcon = L.default.divIcon({
         html: `<div style="
           width:14px;height:14px;
-          background:var(--primary);
-          border:3px solid var(--dark);
+          background:var(--brand-red);
+          border:3px solid var(--ink);
           border-radius:50%;
           box-shadow:0 2px 8px rgba(0, 48, 73, 0.3);
         "></div>`,

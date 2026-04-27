@@ -17,7 +17,7 @@
 .cl-hero {
   padding: var(--space-15) 0 var(--space-10);
   border-bottom: 1px solid var(--line);
-  background: var(--surface-bright);
+  background: var(--surface-3);
 }
 
 .cl-hero-inner {
@@ -32,7 +32,7 @@
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--primary);
+  color: var(--brand-red);
   margin-bottom: var(--space-3);
   display: flex;
   align-items: center;
@@ -44,7 +44,7 @@
   display: inline-block;
   width: 24px;
   height: 2px;
-  background: var(--primary);
+  background: var(--brand-red);
   flex-shrink: 0;
 }
 
@@ -54,7 +54,7 @@
   font-weight: 900;
   letter-spacing: -0.055em;
   line-height: 0.9;
-  color: var(--dark);
+  color: var(--ink);
   margin-bottom: var(--space-5);
 }
 
@@ -91,8 +91,8 @@
 }
 
 .cl-rss-link:hover {
-  color: var(--primary);
-  border-color: var(--primary);
+  color: var(--brand-red);
+  border-color: var(--brand-red);
   background: rgba(193, 18, 31, 0.04);
 }
 
@@ -105,7 +105,7 @@
 .cl-entry-count {
   font-family: var(--font-body);
   font-size: 12px;
-  color: var(--text-muted);
+  color: var(--ink-4);
   letter-spacing: 0.04em;
 }
 
@@ -116,8 +116,8 @@
   position: sticky;
   top: 64px; /* below fixed header */
   z-index: 40;
-  background: var(--surface-elevated);
-  border-bottom: 2px solid var(--dark);
+  background: var(--surface-2);
+  border-bottom: 2px solid var(--ink);
   padding: 0;
 }
 
@@ -143,7 +143,7 @@
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--text-muted);
+  color: var(--ink-4);
   white-space: nowrap;
   flex-shrink: 0;
 }
@@ -169,7 +169,7 @@
   font-weight: 700;
   letter-spacing: 0.05em;
   text-transform: uppercase;
-  color: var(--dark);
+  color: var(--ink);
   background: transparent;
   border: 1px solid var(--line);
   border-radius: 50vh;
@@ -180,31 +180,31 @@
 }
 
 .cl-chip:hover {
-  border-color: var(--dark);
-  color: var(--dark);
+  border-color: var(--ink);
+  color: var(--ink);
 }
 
 .cl-chip.active {
-  background: var(--dark);
-  border-color: var(--dark);
+  background: var(--ink);
+  border-color: var(--ink);
   color: #fff;
 }
 
-.cl-chip.active[data-variant='Attribution'] { background: var(--tertiary); border-color: var(--tertiary); }
-.cl-chip.active[data-variant='Payments']    { background: var(--champagne); border-color: var(--champagne); color: var(--dark); }
-.cl-chip.active[data-variant='Creator']     { background: var(--primary); border-color: var(--primary); color: #fff; }
-.cl-chip.active[data-variant='Merchant']    { background: var(--dark); border-color: var(--dark); color: #fff; }
+.cl-chip.active[data-variant='Attribution'] { background: var(--accent-blue); border-color: var(--accent-blue); }
+.cl-chip.active[data-variant='Payments']    { background: var(--champagne); border-color: var(--champagne); color: var(--ink); }
+.cl-chip.active[data-variant='Creator']     { background: var(--brand-red); border-color: var(--brand-red); color: #fff; }
+.cl-chip.active[data-variant='Merchant']    { background: var(--ink); border-color: var(--ink); color: #fff; }
 .cl-chip.active[data-variant='Platform']    { background: var(--graphite); border-color: var(--graphite); color: #fff; }
 
 /* Version type chips */
-.cl-chip.active[data-variant='major'] { background: var(--primary); border-color: var(--primary); color: #fff; }
-.cl-chip.active[data-variant='minor'] { background: var(--tertiary); border-color: var(--tertiary); color: #fff; }
+.cl-chip.active[data-variant='major'] { background: var(--brand-red); border-color: var(--brand-red); color: #fff; }
+.cl-chip.active[data-variant='minor'] { background: var(--accent-blue); border-color: var(--accent-blue); color: #fff; }
 .cl-chip.active[data-variant='patch'] { background: var(--graphite); border-color: var(--graphite); color: #fff; }
 
 /* All chip (reset) */
 .cl-chip-all.active {
-  background: var(--dark);
-  border-color: var(--dark);
+  background: var(--ink);
+  border-color: var(--ink);
   color: #fff;
 }
 
@@ -266,7 +266,7 @@
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: var(--text-muted);
+  color: var(--ink-4);
   white-space: nowrap;
 }
 
@@ -282,20 +282,20 @@
 .cl-entry-dot {
   width: 8px;
   height: 8px;
-  background: var(--dark);
+  background: var(--ink);
   flex-shrink: 0;
   margin-top: 6px;
 }
 
 .cl-entry-dot.major {
-  background: var(--primary);
+  background: var(--brand-red);
   width: 12px;
   height: 12px;
   margin-top: 4px;
 }
 
 .cl-entry-dot.minor {
-  background: var(--tertiary);
+  background: var(--accent-blue);
 }
 
 .cl-entry-dot.patch {
@@ -349,7 +349,7 @@
    Entry card
    ------------------------------------------------------------ */
 .cl-card {
-  background: var(--surface-elevated);
+  background: var(--surface-2);
   border: 1px solid var(--line);
   overflow: hidden;
   transition: border-color var(--t-slow);
@@ -372,7 +372,7 @@
 
 /* Major release gets a left accent bar */
 .cl-card.major {
-  border-left: 3px solid var(--primary);
+  border-left: 3px solid var(--brand-red);
 }
 
 /* Card header (meta row) */
@@ -404,12 +404,12 @@
 }
 
 .cl-version-badge.major {
-  background: var(--primary);
+  background: var(--brand-red);
   color: #fff;
 }
 
 .cl-version-badge.minor {
-  background: var(--tertiary);
+  background: var(--accent-blue);
   color: #fff;
 }
 
@@ -424,7 +424,7 @@
   font-family: var(--font-body);
   font-size: 11px;
   font-weight: 700;
-  color: var(--text-muted);
+  color: var(--ink-4);
   letter-spacing: 0.04em;
 }
 
@@ -439,10 +439,10 @@
   border-radius: var(--r-sm);
 }
 
-.cl-area-badge[data-area='Attribution'] { background: rgba(102,155,188,0.12); color: var(--tertiary); }
-.cl-area-badge[data-area='Payments']    { background: var(--champagne-light); color: var(--dark); }
-.cl-area-badge[data-area='Creator']     { background: rgba(193,18,31,0.08); color: var(--primary); }
-.cl-area-badge[data-area='Merchant']    { background: rgba(0,48,73,0.08); color: var(--dark); }
+.cl-area-badge[data-area='Attribution'] { background: rgba(102,155,188,0.12); color: var(--accent-blue); }
+.cl-area-badge[data-area='Payments']    { background: var(--champagne-light); color: var(--ink); }
+.cl-area-badge[data-area='Creator']     { background: rgba(193,18,31,0.08); color: var(--brand-red); }
+.cl-area-badge[data-area='Merchant']    { background: rgba(10,10,10,0.08); color: var(--ink); }
 .cl-area-badge[data-area='Platform']   { background: rgba(74,85,104,0.10); color: var(--graphite); }
 
 /* Card image placeholder */
@@ -473,7 +473,7 @@
 .cl-image-icon {
   width: 40px;
   height: 40px;
-  color: var(--dark);
+  color: var(--ink);
 }
 
 .cl-image-label {
@@ -482,7 +482,7 @@
   font-weight: 600;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: var(--dark);
+  color: var(--ink);
   text-align: center;
   max-width: 280px;
   line-height: 1.5;
@@ -513,7 +513,7 @@
   font-weight: 900;
   letter-spacing: -0.03em;
   line-height: 1.05;
-  color: var(--dark);
+  color: var(--ink);
   margin-bottom: var(--space-3);
 }
 
@@ -530,7 +530,7 @@
   font-family: var(--font-body);
   font-size: 14px;
   line-height: 1.7;
-  color: var(--text-muted);
+  color: var(--ink-4);
   overflow: hidden;
   max-height: 0;
   transition: max-height 500ms cubic-bezier(0.22, 1, 0.36, 1);
@@ -558,7 +558,7 @@
   font-family: var(--font-body);
   font-size: 13px;
   line-height: 1.55;
-  color: var(--dark);
+  color: var(--ink);
 }
 
 .cl-bullet-item::before {
@@ -566,7 +566,7 @@
   display: inline-block;
   width: 6px;
   height: 6px;
-  background: var(--primary);
+  background: var(--brand-red);
   flex-shrink: 0;
   margin-top: 6px;
 }
@@ -578,7 +578,7 @@
   font-weight: 700;
   letter-spacing: 0.05em;
   text-transform: uppercase;
-  color: var(--tertiary);
+  color: var(--accent-blue);
   background: none;
   border: none;
   cursor: pointer;
@@ -591,7 +591,7 @@
 }
 
 .cl-read-more-btn:hover {
-  color: var(--dark);
+  color: var(--ink);
 }
 
 .cl-read-more-chevron {
@@ -624,7 +624,7 @@
 .cl-author-avatar {
   width: 28px;
   height: 28px;
-  background: var(--dark);
+  background: var(--ink);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -649,20 +649,20 @@
   font-family: var(--font-body);
   font-size: 12px;
   font-weight: 700;
-  color: var(--dark);
+  color: var(--ink);
   letter-spacing: 0.01em;
 }
 
 .cl-author-role {
   font-family: var(--font-body);
   font-size: 11px;
-  color: var(--text-muted);
+  color: var(--ink-4);
 }
 
 .cl-coded-by {
   font-family: var(--font-body);
   font-size: 11px;
-  color: var(--text-muted);
+  color: var(--ink-4);
   letter-spacing: 0.03em;
 }
 
@@ -683,14 +683,14 @@
   font-family: var(--font-display);
   font-size: var(--text-h3);
   font-weight: 700;
-  color: var(--dark);
+  color: var(--ink);
   margin-bottom: var(--space-2);
 }
 
 .cl-empty-sub {
   font-family: var(--font-body);
   font-size: var(--text-small);
-  color: var(--text-muted);
+  color: var(--ink-4);
 }
 
 /* ------------------------------------------------------------

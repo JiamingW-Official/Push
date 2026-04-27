@@ -36,7 +36,7 @@
   width: 100%;
   max-width: 680px;
   max-height: 70vh;
-  background: var(--surface-elevated); /* Pure White */
+  background: var(--surface-2); /* Pure White */
   border-radius: var(--r-2xl);         /* iOS 26 modal */
   box-shadow: var(--shadow-3);
   display: flex;
@@ -96,16 +96,16 @@
   font-size: 22px;
   font-weight: 700;
   letter-spacing: -0.02em;
-  color: var(--dark);
+  color: var(--ink);
   background: transparent;
   border: none;
   outline: none;
-  caret-color: var(--primary);
+  caret-color: var(--brand-red);
   line-height: 1.2;
 }
 
 .ck-input::placeholder {
-  color: var(--text-muted);
+  color: var(--ink-4);
   font-weight: 400;
 }
 
@@ -163,7 +163,7 @@
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--text-muted);
+  color: var(--ink-4);
   padding: 12px 24px 6px;
 }
 
@@ -206,7 +206,7 @@
 
 .ck-item--active .ck-item-icon {
   background: rgba(193, 18, 31, 0.08); /* Flag Red tint */
-  color: var(--primary);
+  color: var(--brand-red);
 }
 
 .ck-item-text {
@@ -218,7 +218,7 @@
   font-family: var(--font-body);
   font-size: 14px;
   font-weight: 600;
-  color: var(--dark);
+  color: var(--ink);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -226,7 +226,7 @@
 }
 
 .ck-item--active .ck-item-title {
-  color: var(--primary);
+  color: var(--brand-red);
 }
 
 .ck-item-sub {
@@ -252,11 +252,11 @@
   flex-shrink: 0;
 }
 
-.ck-badge--campaign { background: rgba(193, 18, 31, 0.08); color: var(--primary); }
-.ck-badge--creator  { background: rgba(102, 155, 188, 0.12); color: var(--tertiary); }
+.ck-badge--campaign { background: rgba(193, 18, 31, 0.08); color: var(--brand-red); }
+.ck-badge--creator  { background: rgba(102, 155, 188, 0.12); color: var(--accent-blue); }
 .ck-badge--merchant { background: rgba(201, 169, 110, 0.12); color: var(--champagne); }
 .ck-badge--article  { background: var(--surface); color: var(--graphite); }
-.ck-badge--page     { background: rgba(0, 48, 73, 0.06); color: var(--dark); }
+.ck-badge--page     { background: rgba(0, 48, 73, 0.06); color: var(--ink); }
 
 /* ----------------------------------------------------------------- Divider */
 
@@ -278,7 +278,7 @@
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--text-muted);
+  color: var(--ink-4);
   margin-bottom: 12px;
 }
 
@@ -301,7 +301,7 @@
 }
 
 .ck-shortcut-item:hover {
-  background: var(--surface-bright);
+  background: var(--surface-3);
   border-color: var(--line-strong);
 }
 
@@ -314,7 +314,7 @@
   font-family: var(--font-body);
   font-size: 13px;
   font-weight: 500;
-  color: var(--dark);
+  color: var(--ink);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -332,7 +332,7 @@
   font-family: var(--font-display);
   font-size: 20px;
   font-weight: 700;
-  color: var(--dark);
+  color: var(--ink);
   letter-spacing: -0.02em;
   margin-bottom: 8px;
 }
@@ -363,7 +363,7 @@
   gap: 4px;
   font-family: var(--font-body);
   font-size: 11px;
-  color: var(--text-muted);
+  color: var(--ink-4);
   letter-spacing: 0.01em;
 }
 
@@ -372,7 +372,7 @@
   font-size: 10px;
   font-weight: 600;
   color: var(--graphite);
-  background: var(--surface-elevated);
+  background: var(--surface-2);
   border: 1px solid var(--line);
   border-radius: var(--r-2xl);
   padding: 2px 5px;

@@ -12,9 +12,9 @@
 
 /* Hero */
 .api-hero {
-  background: var(--dark);
+  background: var(--ink);
   padding: var(--space-10) var(--space-4) var(--space-8);
-  border-bottom: 2px solid var(--primary);
+  border-bottom: 2px solid var(--brand-red);
 }
 
 .api-hero-inner {
@@ -28,7 +28,7 @@
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--primary);
+  color: var(--brand-red);
   margin-bottom: var(--space-2);
 }
 
@@ -38,7 +38,7 @@
   font-weight: 900;
   letter-spacing: -0.05em;
   line-height: 0.92;
-  color: var(--surface-bright);
+  color: var(--surface-3);
   margin-bottom: var(--space-3);
 }
 
@@ -65,7 +65,7 @@
   letter-spacing: 0.06em;
   text-transform: uppercase;
   padding: 4px 10px;
-  background: var(--primary);
+  background: var(--brand-red);
   color: #fff;
   border-radius: var(--r-sm);
 }
@@ -85,7 +85,7 @@
   width: 7px;
   height: 7px;
   border-radius: 50%;
-  background: #4ade80;
+  background: var(--ga-green);
   animation: pulse 1.8s ease-in-out infinite;
 }
 
@@ -126,7 +126,7 @@
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--text-muted);
+  color: var(--ink-4);
   padding: var(--space-2) var(--space-3) var(--space-1);
   display: block;
 }
@@ -144,13 +144,13 @@
 }
 
 .api-toc a:hover {
-  color: var(--dark);
+  color: var(--ink);
   background: rgba(0, 48, 73, 0.04);
 }
 
 .api-toc a.active {
-  color: var(--primary);
-  border-left-color: var(--primary);
+  color: var(--brand-red);
+  border-left-color: var(--brand-red);
   background: rgba(193, 18, 31, 0.05);
   font-weight: 600;
 }
@@ -189,7 +189,7 @@
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--text-muted);
+  color: var(--ink-4);
   margin-bottom: var(--space-1);
 }
 
@@ -198,7 +198,7 @@
   font-size: 32px;
   font-weight: 800;
   letter-spacing: -0.03em;
-  color: var(--dark);
+  color: var(--ink);
   margin-bottom: var(--space-3);
   line-height: 1.1;
 }
@@ -229,7 +229,7 @@
   font-size: 20px;
   font-weight: 700;
   letter-spacing: -0.02em;
-  color: var(--dark);
+  color: var(--ink);
   margin-bottom: var(--space-2);
 }
 
@@ -245,7 +245,7 @@
 .api-endpoint {
   margin-bottom: var(--space-6);
   border: 1px solid var(--line);
-  background: var(--surface-elevated);
+  background: var(--surface-2);
 }
 
 .api-endpoint-header {
@@ -254,7 +254,7 @@
   gap: var(--space-2);
   padding: var(--space-2) var(--space-3);
   border-bottom: 1px solid var(--line);
-  background: var(--surface-bright);
+  background: var(--surface-3);
 }
 
 .api-method {
@@ -268,15 +268,15 @@
   flex-shrink: 0;
 }
 
-.api-method--get    { background: rgba(102, 155, 188, 0.15); color: #1d6fa4; }
-.api-method--post   { background: rgba(74, 222, 128, 0.12); color: #166534; }
-.api-method--patch  { background: rgba(201, 169, 110, 0.18); color: #7c5c1e; }
-.api-method--delete { background: rgba(193, 18, 31, 0.10); color: var(--primary); }
+.api-method--get    { background: var(--accent-blue-tint); color: var(--accent-blue); }
+.api-method--post   { background: rgba(0,133,255,0.10); color: var(--accent-blue); }
+.api-method--patch  { background: var(--champagne-tint); color: var(--champagne-deep); }
+.api-method--delete { background: rgba(193, 18, 31, 0.10); color: var(--brand-red); }
 
 .api-endpoint-path {
   font-family: var(--font-body);
   font-size: var(--text-small);
-  color: var(--dark);
+  color: var(--ink);
   font-weight: 500;
 }
 
@@ -311,7 +311,7 @@
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--text-muted);
+  color: var(--ink-4);
   padding: var(--space-1) var(--space-2);
   border-bottom: 1px solid var(--line);
   background: var(--surface);
@@ -322,7 +322,7 @@
   padding: 10px var(--space-2);
   border-bottom: 1px solid var(--line);
   vertical-align: top;
-  color: var(--dark);
+  color: var(--ink);
   line-height: 1.5;
 }
 
@@ -337,7 +337,7 @@
 .api-param-name {
   font-family: var(--font-body);
   font-size: var(--text-caption);
-  color: var(--dark);
+  color: var(--ink);
   font-weight: 600;
   white-space: nowrap;
 }
@@ -345,7 +345,7 @@
 .api-param-type {
   font-family: var(--font-body);
   font-size: var(--text-caption);
-  color: var(--tertiary);
+  color: var(--accent-blue);
   background: rgba(102, 155, 188, 0.1);
   padding: 2px 6px;
   white-space: nowrap;
@@ -357,13 +357,13 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: var(--primary);
+  color: var(--brand-red);
 }
 
 .api-param-optional {
   font-family: var(--font-body);
   font-size: 10px;
-  color: var(--text-muted);
+  color: var(--ink-4);
 }
 
 .api-param-desc {
@@ -374,11 +374,11 @@
 
 /* ── Code Blocks ─────────────────────────────────────────── */
 .api-code-block {
-  background: var(--dark);
+  background: var(--ink);
   border-radius: var(--r-lg);
   overflow: hidden;
   margin-bottom: var(--space-3);
-  border: 1px solid rgba(102, 155, 188, 0.15);
+  border: 1px solid var(--accent-blue-tint);
 }
 
 .api-code-header {
@@ -415,11 +415,11 @@
 }
 
 .api-code-copy:hover {
-  color: var(--surface-bright);
+  color: var(--surface-3);
 }
 
 .api-code-copy.copied {
-  color: #4ade80;
+  color: var(--ga-green);
 }
 
 .api-code-body {
@@ -446,23 +446,23 @@
   font-family: var(--font-body);
   font-size: 13px;
   line-height: 1.7;
-  color: var(--surface-bright);
+  color: var(--surface-3);
   white-space: pre;
   tab-size: 2;
 }
 
 /* Syntax tokens */
-.tok-key     { color: #7dd3fc; }   /* JSON key / flag */
-.tok-str     { color: #86efac; }   /* string value */
-.tok-num     { color: #fbbf24; }   /* number */
-.tok-bool    { color: #f472b6; }   /* boolean / null */
+.tok-key     { color: var(--ga-sky); }   /* JSON key / flag */
+.tok-str     { color: var(--ga-green); }   /* string value */
+.tok-num     { color: var(--champagne); }   /* number */
+.tok-bool    { color: var(--editorial-pink); }   /* boolean / null */
 .tok-comment { color: rgba(245, 242, 236, 0.35); font-style: italic; }
 .tok-method  { color: #c4b5fd; }   /* HTTP method */
-.tok-url     { color: #7dd3fc; }   /* URL */
-.tok-header  { color: #fbbf24; }   /* header name */
-.tok-kw      { color: #f472b6; }   /* language keyword */
-.tok-fn      { color: #86efac; }   /* function name */
-.tok-prop    { color: #7dd3fc; }   /* property */
+.tok-url     { color: var(--ga-sky); }   /* URL */
+.tok-header  { color: var(--champagne); }   /* header name */
+.tok-kw      { color: var(--editorial-pink); }   /* language keyword */
+.tok-fn      { color: var(--ga-green); }   /* function name */
+.tok-prop    { color: var(--ga-sky); }   /* property */
 .tok-punct   { color: rgba(245, 242, 236, 0.55); }
 
 /* ── Right Panel (code examples) ────────────────────────── */
@@ -471,7 +471,7 @@
   top: 72px;
   height: calc(100vh - 72px);
   overflow-y: auto;
-  background: var(--dark);
+  background: var(--ink);
   padding: var(--space-5) var(--space-3) var(--space-5) var(--space-3);
   scrollbar-width: none;
 }
@@ -484,7 +484,7 @@
 .api-tabs {
   display: flex;
   gap: 0;
-  border-bottom: 1px solid rgba(102, 155, 188, 0.15);
+  border-bottom: 1px solid var(--accent-blue-tint);
   margin-bottom: var(--space-3);
   flex-wrap: wrap;
 }
@@ -511,8 +511,8 @@
 }
 
 .api-tab.active {
-  color: var(--surface-bright);
-  border-bottom-color: var(--primary);
+  color: var(--surface-3);
+  border-bottom-color: var(--brand-red);
 }
 
 .api-example-panel {
@@ -549,14 +549,14 @@
   font-family: var(--font-body);
   font-size: 0.875em;
   background: rgba(0, 48, 73, 0.07);
-  color: var(--dark);
+  color: var(--ink);
   padding: 1px 5px;
   border-radius: var(--r-sm);
 }
 
 /* ── Info / Note boxes ───────────────────────────────────── */
 .api-note {
-  border-left: 3px solid var(--tertiary);
+  border-left: 3px solid var(--accent-blue);
   background: rgba(102, 155, 188, 0.07);
   padding: var(--space-2) var(--space-3);
   margin-bottom: var(--space-3);
@@ -568,7 +568,7 @@
 }
 
 .api-note--error {
-  border-left-color: var(--primary);
+  border-left-color: var(--brand-red);
   background: rgba(193, 18, 31, 0.06);
 }
 
@@ -579,11 +579,11 @@
   letter-spacing: 0.08em;
   text-transform: uppercase;
   margin-bottom: 4px;
-  color: var(--tertiary);
+  color: var(--accent-blue);
 }
 
 .api-note--warn  .api-note-label { color: var(--champagne); }
-.api-note--error .api-note-label { color: var(--primary); }
+.api-note--error .api-note-label { color: var(--brand-red); }
 
 .api-note-body {
   font-family: var(--font-body);
@@ -609,7 +609,7 @@
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--text-muted);
+  color: var(--ink-4);
   padding: var(--space-1) var(--space-2);
   border-bottom: 1px solid var(--line);
 }
@@ -617,7 +617,7 @@
 .api-rate-table td {
   padding: 10px var(--space-2);
   border-bottom: 1px solid var(--line);
-  color: var(--dark);
+  color: var(--ink);
   vertical-align: top;
 }
 
@@ -636,7 +636,7 @@
 }
 
 .api-error-table th {
-  background: var(--dark);
+  background: var(--ink);
   text-align: left;
   font-size: 10px;
   font-weight: 700;
@@ -644,7 +644,7 @@
   text-transform: uppercase;
   color: rgba(245, 242, 236, 0.5);
   padding: var(--space-1) var(--space-2);
-  border-bottom: 1px solid rgba(102, 155, 188, 0.15);
+  border-bottom: 1px solid var(--accent-blue-tint);
 }
 
 .api-error-table td {
@@ -661,14 +661,14 @@
   font-family: var(--font-body);
   font-size: var(--text-caption);
   font-weight: 700;
-  color: var(--primary);
+  color: var(--brand-red);
   white-space: nowrap;
 }
 
 .api-http-status {
   font-family: var(--font-body);
   font-size: var(--text-caption);
-  color: var(--tertiary);
+  color: var(--accent-blue);
   font-weight: 600;
 }
 
@@ -682,7 +682,7 @@
 }
 
 .api-event-item {
-  background: var(--surface-elevated);
+  background: var(--surface-2);
   border: 1px solid var(--line);
   padding: var(--space-2) var(--space-2);
 }
@@ -691,7 +691,7 @@
   font-family: var(--font-body);
   font-size: var(--text-caption);
   font-weight: 600;
-  color: var(--tertiary);
+  color: var(--accent-blue);
   display: block;
   margin-bottom: 4px;
 }
@@ -713,7 +713,7 @@
 
 .api-sdk-card {
   border: 1px solid var(--line);
-  background: var(--surface-elevated);
+  background: var(--surface-2);
   padding: var(--space-3);
   display: flex;
   flex-direction: column;
@@ -723,8 +723,8 @@
 }
 
 .api-sdk-card:hover {
-  border-color: var(--dark);
-  background: var(--surface-bright);
+  border-color: var(--ink);
+  background: var(--surface-3);
 }
 
 .api-sdk-lang {
@@ -732,13 +732,13 @@
   font-size: 18px;
   font-weight: 800;
   letter-spacing: -0.02em;
-  color: var(--dark);
+  color: var(--ink);
 }
 
 .api-sdk-pkg {
   font-family: var(--font-body);
   font-size: var(--text-caption);
-  color: var(--tertiary);
+  color: var(--accent-blue);
 }
 
 .api-sdk-status {
@@ -747,7 +747,7 @@
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: var(--text-muted);
+  color: var(--ink-4);
   margin-top: auto;
 }
 
@@ -759,7 +759,7 @@
   font-family: var(--font-body);
   font-size: var(--text-small);
   font-weight: 600;
-  color: var(--dark);
+  color: var(--ink);
   text-decoration: none;
   padding: var(--space-2) var(--space-3);
   border: 1px solid var(--line-strong);
@@ -769,7 +769,7 @@
 
 .api-changelog-link:hover {
   background: rgba(0, 48, 73, 0.05);
-  border-color: var(--dark);
+  border-color: var(--ink);
 }
 
 .api-changelog-link-arrow {
@@ -801,7 +801,7 @@
   font-size: 28px;
   font-weight: 900;
   letter-spacing: -0.04em;
-  color: var(--primary);
+  color: var(--brand-red);
   line-height: 1;
   padding-top: 4px;
 }
@@ -812,7 +812,7 @@
   font-family: var(--font-display);
   font-size: 18px;
   font-weight: 700;
-  color: var(--dark);
+  color: var(--ink);
   margin-bottom: 6px;
   letter-spacing: -0.02em;
 }
@@ -835,14 +835,14 @@
 .api-scope-item {
   border: 1px solid var(--line);
   padding: var(--space-2) var(--space-2);
-  background: var(--surface-elevated);
+  background: var(--surface-2);
 }
 
 .api-scope-name {
   font-family: var(--font-body);
   font-size: var(--text-caption);
   font-weight: 600;
-  color: var(--dark);
+  color: var(--ink);
   display: block;
   margin-bottom: 4px;
 }

@@ -70,10 +70,64 @@ function formatMoney(n: number): string {
   return `$${n.toLocaleString("en-US", { minimumFractionDigits: 0 })}`;
 }
 
+/* ── Shared styles ──────────────────────────────────── */
+const cardStyle: React.CSSProperties = {
+  background: "var(--surface-2)",
+  border: "1px solid var(--hairline)",
+  borderRadius: 10,
+  padding: "20px 24px",
+  marginBottom: 16,
+};
+
+const sectionTitleStyle: React.CSSProperties = {
+  fontFamily: "var(--font-body)",
+  fontSize: 11,
+  fontWeight: 700,
+  letterSpacing: "0.07em",
+  textTransform: "uppercase",
+  color: "var(--ink-4)",
+  marginBottom: 16,
+};
+
+const fieldLabelStyle: React.CSSProperties = {
+  fontFamily: "var(--font-body)",
+  fontSize: 10,
+  fontWeight: 700,
+  letterSpacing: "0.07em",
+  textTransform: "uppercase",
+  color: "var(--ink-4)",
+  marginBottom: 3,
+};
+
+const fieldValueStyle: React.CSSProperties = {
+  fontFamily: "var(--font-body)",
+  fontSize: 14,
+  color: "var(--ink)",
+};
+
 /* ── Badge components ──────────────────────────────── */
 function RoleBadge({ role }: { role: UserRole }) {
+  const styles: Record<UserRole, { bg: string; color: string }> = {
+    creator: { bg: "rgba(0,133,255,0.10)", color: "var(--accent-blue)" },
+    merchant: { bg: "var(--panel-butter)", color: "var(--ink-3)" },
+    admin: { bg: "var(--surface-3)", color: "var(--ink-4)" },
+  };
+  const s = styles[role];
   return (
-    <span className={`badge badge-role-${role}`}>
+    <span
+      style={{
+        fontFamily: "var(--font-body)",
+        fontSize: 10,
+        fontWeight: 700,
+        letterSpacing: "0.05em",
+        textTransform: "uppercase",
+        borderRadius: 4,
+        padding: "2px 6px",
+        background: s.bg,
+        color: s.color,
+        display: "inline-block",
+      }}
+    >
       {role === "creator"
         ? "Creator"
         : role === "merchant"
@@ -85,11 +139,52 @@ function RoleBadge({ role }: { role: UserRole }) {
 
 function TierBadge({ tier }: { tier?: string }) {
   if (!tier) return null;
-  return <span className={`badge badge-tier-${tier}`}>{tier}</span>;
+  return (
+    <span
+      style={{
+        fontFamily: "var(--font-body)",
+        fontSize: 10,
+        fontWeight: 700,
+        letterSpacing: "0.05em",
+        textTransform: "uppercase",
+        borderRadius: 4,
+        padding: "2px 6px",
+        background: "var(--surface-3)",
+        color: "var(--ink-4)",
+        display: "inline-block",
+      }}
+    >
+      {tier}
+    </span>
+  );
 }
 
 function StatusBadge({ status }: { status: AdminUser["status"] }) {
-  return <span className={`badge badge-status-${status}`}>{status}</span>;
+  const styles: Record<string, { bg: string; color: string }> = {
+    active: { bg: "rgba(0,133,255,0.10)", color: "var(--accent-blue)" },
+    pending: { bg: "var(--panel-butter)", color: "var(--ink-3)" },
+    suspended: { bg: "rgba(193,18,31,0.10)", color: "var(--brand-red)" },
+    banned: { bg: "rgba(193,18,31,0.15)", color: "var(--brand-red)" },
+  };
+  const s = styles[status] ?? { bg: "var(--surface-3)", color: "var(--ink-4)" };
+  return (
+    <span
+      style={{
+        fontFamily: "var(--font-body)",
+        fontSize: 10,
+        fontWeight: 700,
+        letterSpacing: "0.05em",
+        textTransform: "uppercase",
+        borderRadius: 4,
+        padding: "2px 6px",
+        background: s.bg,
+        color: s.color,
+        display: "inline-block",
+      }}
+    >
+      {status}
+    </span>
+  );
 }
 
 function KYCBadge({ status }: { status: KYCStatus }) {
@@ -99,7 +194,31 @@ function KYCBadge({ status }: { status: KYCStatus }) {
     rejected: "KYC Rejected",
     not_submitted: "No KYC",
   };
-  return <span className={`badge badge-kyc-${status}`}>{labels[status]}</span>;
+  const styles: Record<KYCStatus, { bg: string; color: string }> = {
+    verified: { bg: "rgba(0,133,255,0.10)", color: "var(--accent-blue)" },
+    pending: { bg: "var(--panel-butter)", color: "var(--ink-3)" },
+    rejected: { bg: "rgba(193,18,31,0.10)", color: "var(--brand-red)" },
+    not_submitted: { bg: "var(--surface-3)", color: "var(--ink-4)" },
+  };
+  const s = styles[status];
+  return (
+    <span
+      style={{
+        fontFamily: "var(--font-body)",
+        fontSize: 10,
+        fontWeight: 700,
+        letterSpacing: "0.05em",
+        textTransform: "uppercase",
+        borderRadius: 4,
+        padding: "2px 6px",
+        background: s.bg,
+        color: s.color,
+        display: "inline-block",
+      }}
+    >
+      {labels[status]}
+    </span>
+  );
 }
 
 /* ── Confirm Modal ──────────────────────────────────── */
@@ -119,27 +238,91 @@ function ConfirmModal({
   danger?: boolean;
 }) {
   return (
-    <div className="modal-overlay" onClick={onCancel}>
-      <div className="modal-box" onClick={(e) => e.stopPropagation()}>
-        <div className="modal-header">
-          <div className="modal-title">{title}</div>
-          <button className="modal-close" onClick={onCancel}>
+    <div
+      style={{
+        position: "fixed",
+        inset: 0,
+        background: "rgba(0,0,0,0.4)",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        zIndex: 9999,
+      }}
+      onClick={onCancel}
+    >
+      <div
+        style={{
+          background: "var(--surface)",
+          border: "1px solid var(--hairline)",
+          borderRadius: 12,
+          padding: "24px",
+          maxWidth: 420,
+          width: "90%",
+          boxShadow: "0 8px 32px rgba(0,0,0,0.18)",
+        }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            marginBottom: 16,
+          }}
+        >
+          <span
+            style={{
+              fontFamily: "var(--font-display)",
+              fontSize: 18,
+              fontWeight: 700,
+              color: "var(--ink)",
+            }}
+          >
+            {title}
+          </span>
+          <button
+            style={{
+              background: "none",
+              border: "none",
+              cursor: "pointer",
+              fontSize: 18,
+              color: "var(--ink-4)",
+            }}
+            onClick={onCancel}
+          >
             ×
           </button>
         </div>
-        <div className="modal-body">
-          <p
-            style={{ fontSize: 14, color: "var(--graphite)", lineHeight: 1.6 }}
-          >
-            {message}
-          </p>
-        </div>
-        <div className="modal-footer">
-          <button className="btn-admin btn-admin-ghost" onClick={onCancel}>
+        <p
+          style={{
+            fontFamily: "var(--font-body)",
+            fontSize: 14,
+            color: "var(--ink-3)",
+            lineHeight: 1.6,
+            marginBottom: 20,
+          }}
+        >
+          {message}
+        </p>
+        <div style={{ display: "flex", gap: 8, justifyContent: "flex-end" }}>
+          <button className="btn-ghost click-shift" onClick={onCancel}>
             Cancel
           </button>
           <button
-            className={`btn-admin ${danger ? "btn-admin-danger" : "btn-admin-primary"}`}
+            className="click-shift"
+            style={{
+              fontFamily: "var(--font-body)",
+              fontSize: 13,
+              fontWeight: 700,
+              letterSpacing: "0.04em",
+              textTransform: "uppercase",
+              background: danger ? "var(--brand-red)" : "var(--ink)",
+              color: "var(--snow)",
+              border: "none",
+              borderRadius: 8,
+              padding: "10px 20px",
+              cursor: "pointer",
+            }}
             onClick={onConfirm}
           >
             {confirmLabel}
@@ -150,150 +333,92 @@ function ConfirmModal({
   );
 }
 
-/* ── Admin Sidebar ──────────────────────────────────── */
-function AdminSidebar({ active }: { active: string }) {
-  const navItems = [
-    { href: "/admin", icon: "◈", label: "Dashboard" },
-    { href: "/admin/users", icon: "◉", label: "Users" },
-    { href: "/admin/campaigns", icon: "◆", label: "Campaigns" },
-    { href: "/admin/payments", icon: "◐", label: "Payments" },
-    { href: "/admin/kyc", icon: "◑", label: "KYC Review" },
-    { href: "/admin/flags", icon: "⚑", label: "Flags" },
-    { href: "/admin/settings", icon: "◈", label: "Settings" },
-  ];
-
-  return (
-    <aside className="admin-sidebar">
-      <div className="admin-sidebar-logo">
-        <div className="admin-sidebar-logo-text">Push</div>
-        <div className="admin-sidebar-logo-sub">Admin Console</div>
-      </div>
-      <nav className="admin-nav">
-        <div className="admin-nav-section">
-          <div className="admin-nav-label">Navigation</div>
-          {navItems.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={`admin-nav-item ${active === item.href ? "active" : ""}`}
-            >
-              <span className="admin-nav-icon">{item.icon}</span>
-              {item.label}
-            </Link>
-          ))}
-        </div>
-      </nav>
-      <div className="admin-sidebar-footer">
-        <div className="admin-sidebar-user">
-          <div className="admin-sidebar-avatar">A</div>
-          <div>
-            <div className="admin-sidebar-user-name">Admin Alex</div>
-            <div className="admin-sidebar-user-role">Super Admin</div>
-          </div>
-        </div>
-      </div>
-    </aside>
-  );
-}
-
 /* ── Tab Content Components ──────────────────────────── */
 function AccountTab({ user }: { user: AdminUser }) {
   return (
-    <div className="detail-content">
-      <div className="detail-section">
-        <div className="detail-section-header">
-          <div className="detail-section-title">Identity</div>
-        </div>
-        <div className="detail-section-body">
-          <div className="detail-field">
-            <div className="detail-field-label">Full Name</div>
-            <div className="detail-field-value">{user.name}</div>
-          </div>
-          <div className="detail-field">
-            <div className="detail-field-label">Handle</div>
-            <div
-              className="detail-field-value"
-              style={{ color: "var(--tertiary)" }}
-            >
-              {user.handle}
+    <div>
+      <div style={cardStyle}>
+        <div style={sectionTitleStyle}>Identity</div>
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "1fr 1fr",
+            gap: "14px 24px",
+          }}
+        >
+          {[
+            { label: "Full Name", val: user.name },
+            { label: "Handle", val: user.handle },
+            { label: "Email", val: user.email },
+            ...(user.phone ? [{ label: "Phone", val: user.phone }] : []),
+            ...(user.address ? [{ label: "Location", val: user.address }] : []),
+            ...(user.business_name
+              ? [{ label: "Business", val: user.business_name }]
+              : []),
+          ].map(({ label, val }) => (
+            <div key={label}>
+              <div style={fieldLabelStyle}>{label}</div>
+              <div
+                style={{
+                  ...fieldValueStyle,
+                  color:
+                    label === "Handle" ? "var(--accent-blue)" : "var(--ink)",
+                }}
+              >
+                {val}
+              </div>
             </div>
-          </div>
-          <div className="detail-field">
-            <div className="detail-field-label">Email</div>
-            <div className="detail-field-value">{user.email}</div>
-          </div>
-          {user.phone && (
-            <div className="detail-field">
-              <div className="detail-field-label">Phone</div>
-              <div className="detail-field-value">{user.phone}</div>
-            </div>
-          )}
-          {user.address && (
-            <div className="detail-field">
-              <div className="detail-field-label">Location</div>
-              <div className="detail-field-value">{user.address}</div>
-            </div>
-          )}
-          {user.business_name && (
-            <div className="detail-field">
-              <div className="detail-field-label">Business</div>
-              <div className="detail-field-value">{user.business_name}</div>
-            </div>
-          )}
+          ))}
         </div>
       </div>
 
-      <div className="detail-section">
-        <div className="detail-section-header">
-          <div className="detail-section-title">Verification</div>
-        </div>
-        <div className="detail-section-body">
-          <div className="detail-field">
-            <div className="detail-field-label">KYC Status</div>
-            <div className="detail-field-value">
-              <KYCBadge status={user.kyc_status} />
+      <div style={cardStyle}>
+        <div style={sectionTitleStyle}>Verification</div>
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "1fr 1fr",
+            gap: "14px 24px",
+          }}
+        >
+          <div>
+            <div style={fieldLabelStyle}>KYC Status</div>
+            <KYCBadge status={user.kyc_status} />
+          </div>
+          <div>
+            <div style={fieldLabelStyle}>Account Status</div>
+            <StatusBadge status={user.status} />
+          </div>
+          <div>
+            <div style={fieldLabelStyle}>Role</div>
+            <div style={{ display: "flex", gap: 6 }}>
+              <RoleBadge role={user.role} />
+              <TierBadge tier={user.tier} />
             </div>
           </div>
-          <div className="detail-field">
-            <div className="detail-field-label">Account Status</div>
-            <div className="detail-field-value">
-              <StatusBadge status={user.status} />
-            </div>
+          <div>
+            <div style={fieldLabelStyle}>Joined</div>
+            <div style={fieldValueStyle}>{formatDateTime(user.joined_at)}</div>
           </div>
-          <div className="detail-field">
-            <div className="detail-field-label">Role</div>
-            <div className="detail-field-value">
-              <div style={{ display: "flex", gap: 6 }}>
-                <RoleBadge role={user.role} />
-                <TierBadge tier={user.tier} />
-              </div>
-            </div>
-          </div>
-          <div className="detail-field">
-            <div className="detail-field-label">Joined</div>
-            <div className="detail-field-value">
-              {formatDateTime(user.joined_at)}
-            </div>
-          </div>
-          <div className="detail-field">
-            <div className="detail-field-label">Last Active</div>
-            <div className="detail-field-value">
+          <div>
+            <div style={fieldLabelStyle}>Last Active</div>
+            <div style={fieldValueStyle}>
               {formatDateTime(user.last_active)}
             </div>
           </div>
-          <div className="detail-field">
-            <div className="detail-field-label">Verification Docs</div>
-            <div className="detail-field-value">
+          <div>
+            <div style={fieldLabelStyle}>Verification Docs</div>
+            <div style={{ fontFamily: "var(--font-body)", fontSize: 13 }}>
               {user.kyc_status === "verified" ? (
-                <span style={{ color: "var(--success-dark)", fontSize: 13 }}>
+                <span style={{ color: "var(--accent-blue)" }}>
                   ✓ ID verified · Address verified
                 </span>
               ) : user.kyc_status === "pending" ? (
-                <span style={{ color: "var(--warning)", fontSize: 13 }}>
+                <span style={{ color: "var(--ink-3)" }}>
                   Documents under review
                 </span>
               ) : (
-                <span style={{ color: "var(--text-muted)", fontSize: 13 }}>
+                <span style={{ color: "var(--ink-4)" }}>
                   No documents submitted
                 </span>
               )}
@@ -318,389 +443,385 @@ function ActivityTab({ user }: { user: AdminUser }) {
   };
 
   return (
-    <div className="detail-content">
-      <div className="detail-section">
-        <div className="detail-section-header">
-          <div className="detail-section-title">Recent Activity (last 50)</div>
+    <div style={cardStyle}>
+      <div style={sectionTitleStyle}>Recent Activity (last 50)</div>
+      {user.activity.length === 0 ? (
+        <div
+          style={{
+            fontFamily: "var(--font-body)",
+            fontSize: 13,
+            color: "var(--ink-4)",
+            textAlign: "center",
+            padding: "24px 0",
+          }}
+        >
+          No activity recorded.
         </div>
-        <div className="detail-section-body" style={{ padding: 0 }}>
-          {user.activity.length === 0 ? (
+      ) : (
+        <div style={{ display: "flex", flexDirection: "column", gap: 0 }}>
+          {user.activity.map((event) => (
             <div
+              key={event.id}
               style={{
-                padding: "var(--space-4)",
-                color: "var(--text-muted)",
-                fontSize: 13,
-                textAlign: "center",
+                display: "flex",
+                gap: 12,
+                padding: "10px 0",
+                borderBottom: "1px solid var(--hairline)",
+                alignItems: "flex-start",
               }}
             >
-              No activity recorded.
-            </div>
-          ) : (
-            <div className="timeline" style={{ padding: "0 var(--space-3)" }}>
-              {user.activity.map((event) => (
-                <div key={event.id} className="timeline-item">
-                  <div className={`timeline-dot type-${event.type}`} />
-                  <div className="timeline-body">
-                    <div className="timeline-desc">
-                      <span style={{ marginRight: 6, opacity: 0.5 }}>
-                        {typeIcon[event.type] || "·"}
-                      </span>
-                      {event.description}
-                    </div>
-                    <div className="timeline-time">
-                      {formatDateTime(event.timestamp)}
-                    </div>
-                    {event.metadata && (
-                      <div className="timeline-meta">
-                        {Object.entries(event.metadata)
-                          .map(([k, v]) => `${k}: ${v}`)
-                          .join(" · ")}
-                      </div>
-                    )}
-                  </div>
+              <div
+                style={{
+                  width: 24,
+                  height: 24,
+                  borderRadius: 6,
+                  background: "var(--surface-3)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  flexShrink: 0,
+                  fontFamily: "var(--font-body)",
+                  fontSize: 11,
+                  color: "var(--ink-4)",
+                }}
+              >
+                {typeIcon[event.type] || "·"}
+              </div>
+              <div style={{ flex: 1 }}>
+                <div
+                  style={{
+                    fontFamily: "var(--font-body)",
+                    fontSize: 13,
+                    color: "var(--ink)",
+                  }}
+                >
+                  {event.description}
                 </div>
-              ))}
+                <div
+                  style={{
+                    fontFamily: "var(--font-body)",
+                    fontSize: 11,
+                    color: "var(--ink-4)",
+                    marginTop: 2,
+                  }}
+                >
+                  {formatDateTime(event.timestamp)}
+                </div>
+                {event.metadata && (
+                  <div
+                    style={{
+                      fontFamily: "var(--font-body)",
+                      fontSize: 11,
+                      color: "var(--ink-4)",
+                      marginTop: 2,
+                    }}
+                  >
+                    {Object.entries(event.metadata)
+                      .map(([k, v]) => `${k}: ${v}`)
+                      .join(" · ")}
+                  </div>
+                )}
+              </div>
             </div>
-          )}
+          ))}
         </div>
-      </div>
+      )}
     </div>
   );
 }
 
 function CampaignsTab({ user }: { user: AdminUser }) {
   return (
-    <div className="detail-content">
-      <div className="detail-section">
-        <div className="detail-section-header">
-          <div className="detail-section-title">
-            Campaigns ({user.campaigns_total} total)
-          </div>
+    <div style={cardStyle}>
+      <div style={sectionTitleStyle}>
+        Campaigns ({user.campaigns_total} total)
+      </div>
+      {user.campaigns.length === 0 ? (
+        <div
+          style={{
+            fontFamily: "var(--font-body)",
+            fontSize: 13,
+            color: "var(--ink-4)",
+            textAlign: "center",
+            padding: "24px 0",
+          }}
+        >
+          No campaigns found.
         </div>
-        <div className="detail-section-body" style={{ padding: 0 }}>
-          {user.campaigns.length === 0 ? (
-            <div
+      ) : (
+        <table
+          style={{
+            width: "100%",
+            borderCollapse: "collapse",
+            fontFamily: "var(--font-body)",
+            fontSize: 13,
+          }}
+        >
+          <thead>
+            <tr
               style={{
-                padding: "var(--space-4)",
-                color: "var(--text-muted)",
-                fontSize: 13,
-                textAlign: "center",
+                borderBottom: "1px solid var(--hairline)",
+                background: "var(--surface-3)",
               }}
             >
-              No campaigns found.
-            </div>
-          ) : (
-            <table
-              style={{
-                width: "100%",
-                borderCollapse: "collapse",
-                fontSize: 13,
-              }}
-            >
-              <thead>
-                <tr
+              {["Campaign", "Merchant", "Status", "Payout", "Date"].map((h) => (
+                <th
+                  key={h}
                   style={{
-                    borderBottom: "1px solid var(--line)",
-                    background: "var(--surface)",
+                    padding: "8px 12px",
+                    textAlign: "left",
+                    fontSize: 10,
+                    fontWeight: 700,
+                    letterSpacing: "0.07em",
+                    textTransform: "uppercase",
+                    color: "var(--ink-4)",
                   }}
                 >
-                  <th
+                  {h}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {user.campaigns.map((c) => (
+              <tr
+                key={c.id}
+                style={{ borderBottom: "1px solid var(--hairline)" }}
+              >
+                <td
+                  style={{
+                    padding: "10px 12px",
+                    fontWeight: 600,
+                    color: "var(--ink)",
+                  }}
+                >
+                  {c.title}
+                </td>
+                <td style={{ padding: "10px 12px", color: "var(--ink-3)" }}>
+                  {c.merchant}
+                </td>
+                <td style={{ padding: "10px 12px" }}>
+                  <span
                     style={{
-                      padding: "10px 16px",
-                      textAlign: "left",
-                      fontSize: 11,
+                      fontFamily: "var(--font-body)",
+                      fontSize: 10,
                       fontWeight: 700,
-                      letterSpacing: "0.06em",
+                      letterSpacing: "0.05em",
                       textTransform: "uppercase",
-                      color: "var(--text-muted)",
+                      borderRadius: 4,
+                      padding: "2px 6px",
+                      background:
+                        c.status === "active"
+                          ? "rgba(0,133,255,0.10)"
+                          : "var(--surface-3)",
+                      color:
+                        c.status === "active"
+                          ? "var(--accent-blue)"
+                          : "var(--ink-4)",
                     }}
                   >
-                    Campaign
-                  </th>
-                  <th
-                    style={{
-                      padding: "10px 16px",
-                      textAlign: "left",
-                      fontSize: 11,
-                      fontWeight: 700,
-                      letterSpacing: "0.06em",
-                      textTransform: "uppercase",
-                      color: "var(--text-muted)",
-                    }}
-                  >
-                    Merchant
-                  </th>
-                  <th
-                    style={{
-                      padding: "10px 16px",
-                      textAlign: "left",
-                      fontSize: 11,
-                      fontWeight: 700,
-                      letterSpacing: "0.06em",
-                      textTransform: "uppercase",
-                      color: "var(--text-muted)",
-                    }}
-                  >
-                    Status
-                  </th>
-                  <th
-                    style={{
-                      padding: "10px 16px",
-                      textAlign: "right",
-                      fontSize: 11,
-                      fontWeight: 700,
-                      letterSpacing: "0.06em",
-                      textTransform: "uppercase",
-                      color: "var(--text-muted)",
-                    }}
-                  >
-                    Payout
-                  </th>
-                  <th
-                    style={{
-                      padding: "10px 16px",
-                      textAlign: "left",
-                      fontSize: 11,
-                      fontWeight: 700,
-                      letterSpacing: "0.06em",
-                      textTransform: "uppercase",
-                      color: "var(--text-muted)",
-                    }}
-                  >
-                    Date
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {user.campaigns.map((c) => (
-                  <tr
-                    key={c.id}
-                    style={{ borderBottom: "1px solid var(--line)" }}
-                  >
-                    <td style={{ padding: "12px 16px", fontWeight: 600 }}>
-                      {c.title}
-                    </td>
-                    <td
-                      style={{ padding: "12px 16px", color: "var(--graphite)" }}
-                    >
-                      {c.merchant}
-                    </td>
-                    <td style={{ padding: "12px 16px" }}>
-                      <span className={`badge badge-status-${c.status}`}>
-                        {c.status}
-                      </span>
-                    </td>
-                    <td
-                      style={{
-                        padding: "12px 16px",
-                        textAlign: "right",
-                        fontWeight: 700,
-                        color: "var(--success-dark)",
-                      }}
-                    >
-                      {formatMoney(c.payout)}
-                    </td>
-                    <td
-                      style={{
-                        padding: "12px 16px",
-                        color: "var(--text-muted)",
-                      }}
-                    >
-                      {formatDate(c.date)}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          )}
-        </div>
-      </div>
+                    {c.status}
+                  </span>
+                </td>
+                <td
+                  style={{
+                    padding: "10px 12px",
+                    textAlign: "right",
+                    fontWeight: 700,
+                    color: "var(--accent-blue)",
+                  }}
+                >
+                  {formatMoney(c.payout)}
+                </td>
+                <td style={{ padding: "10px 12px", color: "var(--ink-4)" }}>
+                  {formatDate(c.date)}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
     </div>
   );
 }
 
 function PaymentsTab({ user }: { user: AdminUser }) {
   return (
-    <div className="detail-content">
-      <div className="detail-section">
-        <div className="detail-section-header">
-          <div className="detail-section-title">Financial Summary</div>
-        </div>
-        <div className="detail-section-body">
-          <div className="detail-field">
-            <div className="detail-field-label">Total Earnings</div>
-            <div
-              className="detail-field-value"
-              style={{ fontWeight: 700, color: "var(--success-dark)" }}
-            >
-              {formatMoney(user.earnings_total)}
+    <div>
+      <div style={cardStyle}>
+        <div style={sectionTitleStyle}>Financial Summary</div>
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(3,1fr)",
+            gap: 16,
+          }}
+        >
+          {[
+            {
+              label: "Total Earnings",
+              val: formatMoney(user.earnings_total),
+              accent: true,
+            },
+            {
+              label: "Total Campaigns",
+              val: String(user.campaigns_total),
+              accent: false,
+            },
+            {
+              label: "Avg Per Campaign",
+              val:
+                user.campaigns_total > 0
+                  ? formatMoney(
+                      Math.round(user.earnings_total / user.campaigns_total),
+                    )
+                  : "—",
+              accent: false,
+            },
+          ].map(({ label, val, accent }) => (
+            <div key={label}>
+              <div style={fieldLabelStyle}>{label}</div>
+              <div
+                style={{
+                  fontFamily: "var(--font-display)",
+                  fontSize: 22,
+                  fontWeight: 900,
+                  color: accent ? "var(--accent-blue)" : "var(--ink)",
+                }}
+              >
+                {val}
+              </div>
             </div>
-          </div>
-          <div className="detail-field">
-            <div className="detail-field-label">Total Campaigns</div>
-            <div className="detail-field-value">{user.campaigns_total}</div>
-          </div>
-          <div className="detail-field">
-            <div className="detail-field-label">Avg Per Campaign</div>
-            <div className="detail-field-value">
-              {user.campaigns_total > 0
-                ? formatMoney(
-                    Math.round(user.earnings_total / user.campaigns_total),
-                  )
-                : "—"}
-            </div>
-          </div>
+          ))}
         </div>
       </div>
 
-      <div className="detail-section">
-        <div className="detail-section-header">
-          <div className="detail-section-title">Recent Transactions</div>
-        </div>
-        <div className="detail-section-body" style={{ padding: 0 }}>
-          {user.transactions.length === 0 ? (
-            <div
-              style={{
-                padding: "var(--space-4)",
-                color: "var(--text-muted)",
-                fontSize: 13,
-                textAlign: "center",
-              }}
-            >
-              No transactions.
-            </div>
-          ) : (
-            <table
-              style={{
-                width: "100%",
-                borderCollapse: "collapse",
-                fontSize: 13,
-              }}
-            >
-              <thead>
-                <tr
-                  style={{
-                    borderBottom: "1px solid var(--line)",
-                    background: "var(--surface)",
-                  }}
-                >
-                  <th
-                    style={{
-                      padding: "10px 16px",
-                      textAlign: "left",
-                      fontSize: 11,
-                      fontWeight: 700,
-                      letterSpacing: "0.06em",
-                      textTransform: "uppercase",
-                      color: "var(--text-muted)",
-                    }}
-                  >
-                    Description
-                  </th>
-                  <th
-                    style={{
-                      padding: "10px 16px",
-                      textAlign: "left",
-                      fontSize: 11,
-                      fontWeight: 700,
-                      letterSpacing: "0.06em",
-                      textTransform: "uppercase",
-                      color: "var(--text-muted)",
-                    }}
-                  >
-                    Type
-                  </th>
-                  <th
-                    style={{
-                      padding: "10px 16px",
-                      textAlign: "left",
-                      fontSize: 11,
-                      fontWeight: 700,
-                      letterSpacing: "0.06em",
-                      textTransform: "uppercase",
-                      color: "var(--text-muted)",
-                    }}
-                  >
-                    Status
-                  </th>
-                  <th
-                    style={{
-                      padding: "10px 16px",
-                      textAlign: "right",
-                      fontSize: 11,
-                      fontWeight: 700,
-                      letterSpacing: "0.06em",
-                      textTransform: "uppercase",
-                      color: "var(--text-muted)",
-                    }}
-                  >
-                    Amount
-                  </th>
-                  <th
-                    style={{
-                      padding: "10px 16px",
-                      textAlign: "left",
-                      fontSize: 11,
-                      fontWeight: 700,
-                      letterSpacing: "0.06em",
-                      textTransform: "uppercase",
-                      color: "var(--text-muted)",
-                    }}
-                  >
-                    Date
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {user.transactions.map((t) => (
-                  <tr
-                    key={t.id}
-                    style={{ borderBottom: "1px solid var(--line)" }}
-                  >
-                    <td style={{ padding: "12px 16px" }}>{t.description}</td>
-                    <td style={{ padding: "12px 16px" }}>
-                      <span
-                        className={`badge badge-role-${t.type === "payout" ? "creator" : t.type === "deduction" ? "merchant" : "admin"}`}
-                      >
-                        {t.type}
-                      </span>
-                    </td>
-                    <td style={{ padding: "12px 16px" }}>
-                      <span
-                        className={`badge badge-status-${t.status === "completed" ? "active" : t.status === "pending" ? "pending" : "suspended"}`}
-                      >
-                        {t.status}
-                      </span>
-                    </td>
-                    <td
+      <div style={cardStyle}>
+        <div style={sectionTitleStyle}>Recent Transactions</div>
+        {user.transactions.length === 0 ? (
+          <div
+            style={{
+              fontFamily: "var(--font-body)",
+              fontSize: 13,
+              color: "var(--ink-4)",
+              textAlign: "center",
+              padding: "24px 0",
+            }}
+          >
+            No transactions.
+          </div>
+        ) : (
+          <table
+            style={{
+              width: "100%",
+              borderCollapse: "collapse",
+              fontFamily: "var(--font-body)",
+              fontSize: 13,
+            }}
+          >
+            <thead>
+              <tr
+                style={{
+                  borderBottom: "1px solid var(--hairline)",
+                  background: "var(--surface-3)",
+                }}
+              >
+                {["Description", "Type", "Status", "Amount", "Date"].map(
+                  (h) => (
+                    <th
+                      key={h}
                       style={{
-                        padding: "12px 16px",
-                        textAlign: "right",
+                        padding: "8px 12px",
+                        textAlign: h === "Amount" ? "right" : "left",
+                        fontSize: 10,
                         fontWeight: 700,
-                        color:
-                          t.amount < 0
-                            ? "var(--primary)"
-                            : "var(--success-dark)",
+                        letterSpacing: "0.07em",
+                        textTransform: "uppercase",
+                        color: "var(--ink-4)",
                       }}
                     >
-                      {t.amount < 0
-                        ? `-${formatMoney(Math.abs(t.amount))}`
-                        : formatMoney(t.amount)}
-                    </td>
-                    <td
+                      {h}
+                    </th>
+                  ),
+                )}
+              </tr>
+            </thead>
+            <tbody>
+              {user.transactions.map((t) => (
+                <tr
+                  key={t.id}
+                  style={{ borderBottom: "1px solid var(--hairline)" }}
+                >
+                  <td style={{ padding: "10px 12px", color: "var(--ink)" }}>
+                    {t.description}
+                  </td>
+                  <td style={{ padding: "10px 12px" }}>
+                    <span
                       style={{
-                        padding: "12px 16px",
-                        color: "var(--text-muted)",
+                        fontFamily: "var(--font-body)",
+                        fontSize: 10,
+                        fontWeight: 700,
+                        letterSpacing: "0.05em",
+                        textTransform: "uppercase",
+                        borderRadius: 4,
+                        padding: "2px 6px",
+                        background: "var(--surface-3)",
+                        color: "var(--ink-4)",
                       }}
                     >
-                      {formatDate(t.date)}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          )}
-        </div>
+                      {t.type}
+                    </span>
+                  </td>
+                  <td style={{ padding: "10px 12px" }}>
+                    <span
+                      style={{
+                        fontFamily: "var(--font-body)",
+                        fontSize: 10,
+                        fontWeight: 700,
+                        letterSpacing: "0.05em",
+                        textTransform: "uppercase",
+                        borderRadius: 4,
+                        padding: "2px 6px",
+                        background:
+                          t.status === "completed"
+                            ? "rgba(0,133,255,0.10)"
+                            : t.status === "pending"
+                              ? "var(--panel-butter)"
+                              : "rgba(193,18,31,0.10)",
+                        color:
+                          t.status === "completed"
+                            ? "var(--accent-blue)"
+                            : t.status === "pending"
+                              ? "var(--ink-3)"
+                              : "var(--brand-red)",
+                      }}
+                    >
+                      {t.status}
+                    </span>
+                  </td>
+                  <td
+                    style={{
+                      padding: "10px 12px",
+                      textAlign: "right",
+                      fontWeight: 700,
+                      color:
+                        t.amount < 0
+                          ? "var(--brand-red)"
+                          : "var(--accent-blue)",
+                    }}
+                  >
+                    {t.amount < 0
+                      ? `-${formatMoney(Math.abs(t.amount))}`
+                      : formatMoney(t.amount)}
+                  </td>
+                  <td style={{ padding: "10px 12px", color: "var(--ink-4)" }}>
+                    {formatDate(t.date)}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
       </div>
     </div>
   );
@@ -722,140 +843,221 @@ function NotesTab({
   }
 
   return (
-    <div className="detail-content">
-      <div className="detail-section">
-        <div className="detail-section-header">
-          <div className="detail-section-title">Admin Notes</div>
+    <div style={cardStyle}>
+      <div style={sectionTitleStyle}>Admin Notes</div>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          gap: 8,
+          marginBottom: 20,
+        }}
+      >
+        <textarea
+          placeholder="Add an internal note about this user…"
+          value={draft}
+          onChange={(e) => setDraft(e.target.value)}
+          style={{
+            fontFamily: "var(--font-body)",
+            fontSize: 13,
+            color: "var(--ink)",
+            background: "var(--surface-3)",
+            border: "1px solid var(--hairline)",
+            borderRadius: 8,
+            padding: "10px 12px",
+            resize: "vertical",
+            minHeight: 80,
+            outline: "none",
+          }}
+        />
+        <button
+          className="btn-primary click-shift"
+          onClick={handleSubmit}
+          style={{ alignSelf: "flex-start" }}
+        >
+          Add Note
+        </button>
+      </div>
+      {user.notes.length === 0 ? (
+        <div
+          style={{
+            fontFamily: "var(--font-body)",
+            fontSize: 13,
+            color: "var(--ink-4)",
+            textAlign: "center",
+            padding: "16px 0",
+          }}
+        >
+          No notes yet.
         </div>
-        <div className="note-composer">
-          <textarea
-            className="note-textarea"
-            placeholder="Add an internal note about this user…"
-            value={draft}
-            onChange={(e) => setDraft(e.target.value)}
-          />
-          <button
-            className="btn-admin btn-admin-primary"
-            onClick={handleSubmit}
-          >
-            Add Note
-          </button>
-        </div>
-        <div>
-          {user.notes.length === 0 ? (
+      ) : (
+        <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+          {user.notes.map((note) => (
             <div
+              key={note.id}
               style={{
-                padding: "var(--space-4)",
-                color: "var(--text-muted)",
-                fontSize: 13,
-                textAlign: "center",
+                background: "var(--surface-3)",
+                borderRadius: 8,
+                padding: "12px 14px",
               }}
             >
-              No notes yet.
-            </div>
-          ) : (
-            user.notes.map((note) => (
-              <div key={note.id} className="note-item">
-                <div>
-                  <span className="note-author">{note.author}</span>
-                  <span className="note-date">
-                    {formatDateTime(note.created_at)}
-                  </span>
-                </div>
-                <div className="note-content">{note.content}</div>
+              <div style={{ display: "flex", gap: 12, marginBottom: 6 }}>
+                <span
+                  style={{
+                    fontFamily: "var(--font-body)",
+                    fontSize: 12,
+                    fontWeight: 700,
+                    color: "var(--ink)",
+                  }}
+                >
+                  {note.author}
+                </span>
+                <span
+                  style={{
+                    fontFamily: "var(--font-body)",
+                    fontSize: 11,
+                    color: "var(--ink-4)",
+                  }}
+                >
+                  {formatDateTime(note.created_at)}
+                </span>
               </div>
-            ))
-          )}
+              <div
+                style={{
+                  fontFamily: "var(--font-body)",
+                  fontSize: 13,
+                  color: "var(--ink-3)",
+                  lineHeight: 1.6,
+                }}
+              >
+                {note.content}
+              </div>
+            </div>
+          ))}
         </div>
-      </div>
+      )}
     </div>
   );
 }
 
 function FlagsTab({ user }: { user: AdminUser }) {
-  const severityLabel: Record<string, string> = {
-    low: "Low",
-    medium: "Medium",
-    high: "High",
-  };
-
   return (
-    <div className="detail-content">
-      <div className="detail-section">
-        <div className="detail-section-header">
-          <div className="detail-section-title">
-            Disputes / Fraud Flags / Complaints
-          </div>
+    <div style={cardStyle}>
+      <div style={sectionTitleStyle}>Disputes / Fraud Flags / Complaints</div>
+      {user.flags.length === 0 ? (
+        <div
+          style={{
+            fontFamily: "var(--font-body)",
+            fontSize: 13,
+            color: "var(--ink-4)",
+            textAlign: "center",
+            padding: "24px 0",
+          }}
+        >
+          No flags on this account.
         </div>
-        <div style={{ padding: 0 }}>
-          {user.flags.length === 0 ? (
-            <div
-              style={{
-                padding: "var(--space-4)",
-                color: "var(--text-muted)",
-                fontSize: 13,
-                textAlign: "center",
-              }}
-            >
-              No flags on this account.
-            </div>
-          ) : (
-            user.flags.map((flag) => (
-              <div key={flag.id} className="flag-item">
-                <div className={`flag-severity ${flag.severity}`} />
-                <div style={{ flex: 1 }}>
-                  <div
+      ) : (
+        <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+          {user.flags.map((flag) => {
+            const sevColor =
+              flag.severity === "high"
+                ? "var(--brand-red)"
+                : flag.severity === "medium"
+                  ? "#d97706"
+                  : "var(--ink-4)";
+            const sevBg =
+              flag.severity === "high"
+                ? "rgba(193,18,31,0.08)"
+                : flag.severity === "medium"
+                  ? "var(--panel-butter)"
+                  : "var(--surface-3)";
+            return (
+              <div
+                key={flag.id}
+                style={{
+                  background: sevBg,
+                  border: "1px solid var(--hairline)",
+                  borderRadius: 8,
+                  padding: "12px 16px",
+                }}
+              >
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 8,
+                    marginBottom: 6,
+                  }}
+                >
+                  <span
                     style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: 8,
-                      marginBottom: 4,
+                      fontFamily: "var(--font-body)",
+                      fontSize: 13,
+                      fontWeight: 700,
+                      color: "var(--ink)",
                     }}
                   >
-                    <span
-                      style={{
-                        fontSize: 13,
-                        fontWeight: 700,
-                        color: "var(--dark)",
-                      }}
-                    >
-                      {flag.type
-                        .replace(/_/g, " ")
-                        .replace(/\b\w/g, (c) => c.toUpperCase())}
-                    </span>
-                    <span
-                      className={`badge badge-status-${flag.status === "open" ? "suspended" : "active"}`}
-                    >
-                      {flag.status}
-                    </span>
-                    <span
-                      style={{
-                        fontSize: 11,
-                        color: "var(--text-muted)",
-                        marginLeft: "auto",
-                      }}
-                    >
-                      {severityLabel[flag.severity]} severity
-                    </span>
-                  </div>
-                  <div style={{ fontSize: 13, color: "var(--graphite)" }}>
-                    {flag.description}
-                  </div>
-                  <div
+                    {flag.type
+                      .replace(/_/g, " ")
+                      .replace(/\b\w/g, (c) => c.toUpperCase())}
+                  </span>
+                  <span
                     style={{
-                      fontSize: 11,
-                      color: "var(--text-muted)",
-                      marginTop: 4,
+                      fontFamily: "var(--font-body)",
+                      fontSize: 10,
+                      fontWeight: 700,
+                      letterSpacing: "0.05em",
+                      textTransform: "uppercase",
+                      borderRadius: 4,
+                      padding: "2px 6px",
+                      background:
+                        flag.status === "open"
+                          ? "rgba(193,18,31,0.10)"
+                          : "rgba(0,133,255,0.10)",
+                      color:
+                        flag.status === "open"
+                          ? "var(--brand-red)"
+                          : "var(--accent-blue)",
                     }}
                   >
-                    {formatDateTime(flag.created_at)}
-                  </div>
+                    {flag.status}
+                  </span>
+                  <span
+                    style={{
+                      marginLeft: "auto",
+                      fontFamily: "var(--font-body)",
+                      fontSize: 10,
+                      fontWeight: 700,
+                      color: sevColor,
+                    }}
+                  >
+                    {flag.severity} severity
+                  </span>
+                </div>
+                <div
+                  style={{
+                    fontFamily: "var(--font-body)",
+                    fontSize: 13,
+                    color: "var(--ink-3)",
+                  }}
+                >
+                  {flag.description}
+                </div>
+                <div
+                  style={{
+                    fontFamily: "var(--font-body)",
+                    fontSize: 11,
+                    color: "var(--ink-4)",
+                    marginTop: 4,
+                  }}
+                >
+                  {formatDateTime(flag.created_at)}
                 </div>
               </div>
-            ))
-          )}
+            );
+          })}
         </div>
-      </div>
+      )}
     </div>
   );
 }
@@ -930,20 +1132,15 @@ export default function AdminUserDetailPage({
 
   if (loading || !user) {
     return (
-      <div className="admin-shell">
-        <AdminSidebar active="/admin/users" />
-        <main className="admin-main">
-          <div
-            style={{
-              padding: "var(--space-12)",
-              textAlign: "center",
-              color: "var(--text-muted)",
-              fontSize: 14,
-            }}
-          >
-            Loading user…
-          </div>
-        </main>
+      <div
+        style={{
+          fontFamily: "var(--font-body)",
+          color: "var(--ink)",
+          padding: "48px 0",
+          textAlign: "center",
+        }}
+      >
+        <div style={{ color: "var(--ink-4)", fontSize: 14 }}>Loading user…</div>
       </div>
     );
   }
@@ -958,222 +1155,395 @@ export default function AdminUserDetailPage({
   ];
 
   return (
-    <div className="admin-shell">
-      <AdminSidebar active="/admin/users" />
+    <div style={{ fontFamily: "var(--font-body)", color: "var(--ink)" }}>
+      {/* Back link */}
+      <Link
+        href="/admin/users"
+        style={{
+          fontFamily: "var(--font-body)",
+          fontSize: 13,
+          color: "var(--ink-4)",
+          textDecoration: "none",
+          display: "inline-block",
+          marginBottom: 16,
+        }}
+      >
+        ← Back to Users
+      </Link>
 
-      <main className="admin-main">
-        {/* Topbar */}
-        <div className="admin-topbar">
-          <div className="admin-topbar-breadcrumb">
-            Admin <span>/</span>{" "}
-            <Link
-              href="/admin/users"
-              style={{ color: "var(--text-muted)", textDecoration: "none" }}
-            >
-              Users
-            </Link>{" "}
-            <span>/</span> <span>{user.name}</span>
-          </div>
-        </div>
-
-        {/* User Hero */}
-        <div className="user-detail-hero">
-          <Link href="/admin/users" className="user-detail-back">
-            ← Back to Users
-          </Link>
-          <div className="user-detail-identity">
-            <div className="user-detail-avatar">
-              {user.avatar ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img src={user.avatar} alt={user.name} />
-              ) : (
-                <div className="user-detail-avatar-fallback">
-                  {initials(user.name)}
-                </div>
-              )}
-            </div>
-            <div className="user-detail-info">
-              <h1 className="user-detail-name">{user.name}</h1>
-              <div className="user-detail-meta">
-                <span className="user-detail-handle">{user.handle}</span>
-                <span className="user-detail-handle">·</span>
-                <span className="user-detail-handle">{user.email}</span>
-              </div>
-              <div className="user-detail-badges" style={{ marginTop: 10 }}>
-                <RoleBadge role={user.role} />
-                <TierBadge tier={user.tier} />
-                <StatusBadge status={user.status} />
-              </div>
-            </div>
-          </div>
-
-          <div className="user-detail-actions">
-            <button
-              className="btn-admin btn-admin-outline"
-              onClick={handleImpersonate}
+      {/* User Hero */}
+      <div
+        style={{
+          background: "var(--surface-2)",
+          border: "1px solid var(--hairline)",
+          borderRadius: 10,
+          padding: "20px 24px",
+          marginBottom: 24,
+          display: "flex",
+          alignItems: "center",
+          gap: 20,
+        }}
+      >
+        <div
+          style={{
+            width: 64,
+            height: 64,
+            borderRadius: 12,
+            overflow: "hidden",
+            flexShrink: 0,
+            background: "var(--surface-3)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          {user.avatar ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={user.avatar}
+              alt={user.name}
+              style={{ width: "100%", height: "100%", objectFit: "cover" }}
+            />
+          ) : (
+            <span
               style={{
-                background: "rgba(255,255,255,0.08)",
-                color: "rgba(255,255,255,0.85)",
-                borderColor: "rgba(255,255,255,0.2)",
+                fontFamily: "var(--font-display)",
+                fontSize: 22,
+                fontWeight: 900,
+                color: "var(--ink-4)",
               }}
             >
-              Impersonate
-            </button>
-            <button
-              className="btn-admin"
+              {initials(user.name)}
+            </span>
+          )}
+        </div>
+
+        <div style={{ flex: 1 }}>
+          <h1
+            style={{
+              fontFamily: "var(--font-display)",
+              fontSize: "clamp(22px,2.5vw,32px)",
+              fontWeight: 900,
+              letterSpacing: "-0.02em",
+              color: "var(--ink)",
+              margin: "0 0 4px",
+            }}
+          >
+            {user.name}
+          </h1>
+          <div
+            style={{
+              fontFamily: "var(--font-body)",
+              fontSize: 13,
+              color: "var(--ink-4)",
+              marginBottom: 10,
+            }}
+          >
+            {user.handle} · {user.email}
+          </div>
+          <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
+            <RoleBadge role={user.role} />
+            <TierBadge tier={user.tier} />
+            <StatusBadge status={user.status} />
+          </div>
+        </div>
+
+        <div style={{ display: "flex", gap: 8, flexShrink: 0 }}>
+          <button className="btn-ghost click-shift" onClick={handleImpersonate}>
+            Impersonate
+          </button>
+          <button
+            className="click-shift"
+            style={{
+              fontFamily: "var(--font-body)",
+              fontSize: 13,
+              fontWeight: 700,
+              letterSpacing: "0.04em",
+              textTransform: "uppercase",
+              background: "rgba(193,18,31,0.10)",
+              color: "var(--brand-red)",
+              border: "1px solid rgba(193,18,31,0.2)",
+              borderRadius: 8,
+              padding: "10px 16px",
+              cursor: "pointer",
+            }}
+            onClick={() => setModal("suspend")}
+          >
+            {user.status === "suspended" ? "Unsuspend" : "Suspend"}
+          </button>
+        </div>
+      </div>
+
+      {/* Quick Stats */}
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(4,1fr)",
+          gap: 16,
+          marginBottom: 24,
+        }}
+      >
+        {[
+          { label: "Account Age", val: accountAge(user.joined_at) },
+          { label: "Total Campaigns", val: String(user.campaigns_total) },
+          { label: "Total Earnings", val: formatMoney(user.earnings_total) },
+          {
+            label: "Push Score",
+            val: user.push_score > 0 ? String(user.push_score) : "—",
+          },
+        ].map(({ label, val }) => (
+          <div
+            key={label}
+            style={{
+              background: "var(--surface-2)",
+              border: "1px solid var(--hairline)",
+              borderRadius: 10,
+              padding: "16px 20px",
+            }}
+          >
+            <div
               style={{
-                background: "rgba(224, 123, 0, 0.15)",
-                color: "var(--warning)",
-                border: "1px solid rgba(224, 123, 0, 0.3)",
+                fontFamily: "var(--font-display)",
+                fontSize: 24,
+                fontWeight: 900,
+                color: "var(--ink)",
+                lineHeight: 1,
+                marginBottom: 4,
               }}
-              onClick={() => setModal("suspend")}
             >
-              {user.status === "suspended" ? "Unsuspend" : "Suspend"}
-            </button>
-          </div>
-        </div>
-
-        {/* Quick Stats */}
-        <div className="user-quick-stats">
-          <div className="quick-stat">
-            <div className="quick-stat-num">{accountAge(user.joined_at)}</div>
-            <div className="quick-stat-label">Account Age</div>
-          </div>
-          <div className="quick-stat">
-            <div className="quick-stat-num">{user.campaigns_total}</div>
-            <div className="quick-stat-label">Total Campaigns</div>
-          </div>
-          <div className="quick-stat">
-            <div className="quick-stat-num">
-              {formatMoney(user.earnings_total)}
+              {val}
             </div>
-            <div className="quick-stat-label">Total Earnings</div>
-          </div>
-          <div className="quick-stat">
-            <div className="quick-stat-num">
-              {user.push_score > 0 ? user.push_score : "—"}
+            <div
+              style={{
+                fontFamily: "var(--font-body)",
+                fontSize: 10,
+                fontWeight: 700,
+                letterSpacing: "0.06em",
+                textTransform: "uppercase",
+                color: "var(--ink-4)",
+              }}
+            >
+              {label}
             </div>
-            <div className="quick-stat-label">Push Score</div>
           </div>
-        </div>
+        ))}
+      </div>
 
-        {/* Detail Tabs */}
-        <div className="detail-tabs">
-          {detailTabs.map((t) => (
+      {/* Detail Tabs */}
+      <div
+        style={{ display: "flex", gap: 4, marginBottom: 16, flexWrap: "wrap" }}
+      >
+        {detailTabs.map((t) => {
+          const isActive = activeTab === t.key;
+          return (
             <button
               key={t.key}
-              className={`detail-tab ${activeTab === t.key ? "active" : ""}`}
               onClick={() => setActiveTab(t.key)}
+              className="click-shift"
+              style={{
+                fontFamily: "var(--font-body)",
+                fontSize: 12,
+                fontWeight: 700,
+                letterSpacing: "0.04em",
+                textTransform: "uppercase",
+                border: "1px solid",
+                borderRadius: 8,
+                padding: "5px 12px",
+                cursor: "pointer",
+                background: isActive ? "var(--ink)" : "var(--surface-2)",
+                borderColor: isActive ? "var(--ink)" : "var(--hairline)",
+                color: isActive ? "var(--snow)" : "var(--ink-3)",
+              }}
             >
               {t.label}
               {t.count !== undefined && t.count > 0 && (
-                <span style={{ marginLeft: 6, fontSize: 11, opacity: 0.6 }}>
+                <span style={{ marginLeft: 6, fontSize: 10, opacity: 0.7 }}>
                   ({t.count})
                 </span>
               )}
             </button>
-          ))}
-        </div>
+          );
+        })}
+      </div>
 
-        {/* Tab content */}
-        {activeTab === "account" && <AccountTab user={user} />}
-        {activeTab === "activity" && <ActivityTab user={user} />}
-        {activeTab === "campaigns" && <CampaignsTab user={user} />}
-        {activeTab === "payments" && <PaymentsTab user={user} />}
-        {activeTab === "notes" && (
-          <NotesTab user={user} onAddNote={handleAddNote} />
-        )}
-        {activeTab === "flags" && <FlagsTab user={user} />}
+      {/* Tab content */}
+      {activeTab === "account" && <AccountTab user={user} />}
+      {activeTab === "activity" && <ActivityTab user={user} />}
+      {activeTab === "campaigns" && <CampaignsTab user={user} />}
+      {activeTab === "payments" && <PaymentsTab user={user} />}
+      {activeTab === "notes" && (
+        <NotesTab user={user} onAddNote={handleAddNote} />
+      )}
+      {activeTab === "flags" && <FlagsTab user={user} />}
 
-        {/* Danger Zone */}
-        <div className="danger-zone">
-          <div className="danger-zone-header">
-            <div className="danger-zone-title">Danger Zone</div>
-          </div>
-          <div className="danger-zone-body">
-            <div className="danger-action">
-              <div className="danger-action-desc">
-                <div className="danger-action-title">
-                  {user.status === "suspended"
-                    ? "Unsuspend Account"
-                    : "Suspend Account"}
-                </div>
-                <div className="danger-action-sub">
-                  {user.status === "suspended"
-                    ? "Restore this user's access to the platform."
-                    : "Temporarily block this user from accessing Push."}
-                </div>
-              </div>
-              <button
-                className="btn-admin btn-admin-ghost"
-                onClick={() => setModal("suspend")}
-              >
-                {user.status === "suspended" ? "Unsuspend" : "Suspend"}
-              </button>
-            </div>
-
-            <div className="danger-action">
-              <div className="danger-action-desc">
-                <div className="danger-action-title">Ban Account</div>
-                <div className="danger-action-sub">
-                  Permanently ban this user. They will not be able to create a
-                  new account.
-                </div>
-              </div>
-              <button
-                className="btn-admin btn-admin-danger"
-                onClick={() => setModal("ban")}
-              >
-                Ban User
-              </button>
-            </div>
-
-            <div className="danger-action">
-              <div className="danger-action-desc">
-                <div className="danger-action-title">Delete Account</div>
-                <div className="danger-action-sub">
-                  Permanently delete all data associated with this account. This
-                  cannot be undone.
-                </div>
-              </div>
-              <button
-                className="btn-admin btn-admin-danger"
-                onClick={() => setModal("delete")}
-              >
-                Delete
-              </button>
-            </div>
-          </div>
-        </div>
-
-        {/* Last active footer */}
+      {/* Danger Zone */}
+      <div
+        style={{
+          background: "rgba(193,18,31,0.04)",
+          border: "1px solid rgba(193,18,31,0.20)",
+          borderRadius: 10,
+          padding: "20px 24px",
+          marginTop: 24,
+        }}
+      >
         <div
           style={{
-            padding: "var(--space-3) var(--space-5)",
-            color: "var(--text-muted)",
-            fontSize: 12,
+            fontFamily: "var(--font-body)",
+            fontSize: 11,
+            fontWeight: 700,
+            letterSpacing: "0.07em",
+            textTransform: "uppercase",
+            color: "var(--brand-red)",
+            marginBottom: 16,
           }}
         >
-          Last active {timeAgo(user.last_active)} · User ID: {user.id}
+          Danger Zone
         </div>
-      </main>
+        <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+          {[
+            {
+              title:
+                user.status === "suspended"
+                  ? "Unsuspend Account"
+                  : "Suspend Account",
+              sub:
+                user.status === "suspended"
+                  ? "Restore this user's access to the platform."
+                  : "Temporarily block this user from accessing Push.",
+              action: () => setModal("suspend"),
+              label: user.status === "suspended" ? "Unsuspend" : "Suspend",
+              danger: false,
+            },
+            {
+              title: "Ban Account",
+              sub: "Permanently ban this user. They will not be able to create a new account.",
+              action: () => setModal("ban"),
+              label: "Ban User",
+              danger: true,
+            },
+            {
+              title: "Delete Account",
+              sub: "Permanently delete all data associated with this account. This cannot be undone.",
+              action: () => setModal("delete"),
+              label: "Delete",
+              danger: true,
+            },
+          ].map(({ title, sub, action, label, danger }) => (
+            <div
+              key={title}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                gap: 16,
+                paddingBottom: 14,
+                borderBottom: "1px solid rgba(193,18,31,0.10)",
+              }}
+            >
+              <div>
+                <div
+                  style={{
+                    fontFamily: "var(--font-body)",
+                    fontSize: 14,
+                    fontWeight: 600,
+                    color: "var(--ink)",
+                    marginBottom: 2,
+                  }}
+                >
+                  {title}
+                </div>
+                <div
+                  style={{
+                    fontFamily: "var(--font-body)",
+                    fontSize: 12,
+                    color: "var(--ink-4)",
+                  }}
+                >
+                  {sub}
+                </div>
+              </div>
+              <button
+                className="click-shift"
+                onClick={action}
+                style={{
+                  fontFamily: "var(--font-body)",
+                  fontSize: 12,
+                  fontWeight: 700,
+                  letterSpacing: "0.04em",
+                  textTransform: "uppercase",
+                  background: danger ? "var(--brand-red)" : "transparent",
+                  color: danger ? "var(--snow)" : "var(--brand-red)",
+                  border: danger ? "none" : "1px solid var(--brand-red)",
+                  borderRadius: 8,
+                  padding: "8px 16px",
+                  cursor: "pointer",
+                  flexShrink: 0,
+                }}
+              >
+                {label}
+              </button>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Last active footer */}
+      <div
+        style={{
+          padding: "12px 0",
+          fontFamily: "var(--font-body)",
+          color: "var(--ink-4)",
+          fontSize: 12,
+          marginTop: 8,
+        }}
+      >
+        Last active {timeAgo(user.last_active)} · User ID: {user.id}
+      </div>
 
       {/* Impersonating banner */}
       {impersonating && (
-        <div className="impersonate-banner">
-          <div className="impersonate-banner-dot" />
-          Impersonating <strong style={{ margin: "0 4px" }}>
-            {user.name}
-          </strong>{" "}
+        <div
+          style={{
+            position: "fixed",
+            bottom: 0,
+            left: 0,
+            right: 0,
+            background: "var(--ink)",
+            color: "var(--snow)",
+            display: "flex",
+            alignItems: "center",
+            gap: 12,
+            padding: "14px 24px",
+            fontFamily: "var(--font-body)",
+            fontSize: 13,
+            fontWeight: 600,
+            zIndex: 9999,
+          }}
+        >
+          <div
+            style={{
+              width: 8,
+              height: 8,
+              borderRadius: "50%",
+              background: "var(--accent-blue)",
+              flexShrink: 0,
+            }}
+          />
+          Impersonating <strong style={{ margin: "0 4px" }}>{user.name}</strong>{" "}
           — session active
           <button
-            className="btn-admin"
+            className="click-shift"
             style={{
               marginLeft: "auto",
               background: "rgba(255,255,255,0.1)",
-              color: "white",
+              color: "var(--snow)",
               border: "1px solid rgba(255,255,255,0.2)",
-              borderRadius: "var(--r-lg)",
+              borderRadius: 6,
+              padding: "5px 12px",
+              fontFamily: "var(--font-body)",
+              fontSize: 12,
+              fontWeight: 700,
+              cursor: "pointer",
             }}
             onClick={() => {
               document.cookie = "push-impersonating=; max-age=0; path=/";

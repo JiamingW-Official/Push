@@ -284,6 +284,309 @@ function getPageContext(pathname: string): PageContext {
     };
   }
 
+  // /creator/wallet
+  if (pathname.startsWith("/creator/wallet")) {
+    return {
+      title: "Wallet Summary",
+      earnings: {
+        value: "$1,247.50",
+        delta: "Available to withdraw",
+        deltaPositive: true,
+      },
+      stats: [
+        { label: "Processing", value: "$200", delta: "5 day" },
+        {
+          label: "This Year",
+          value: "$3,040",
+          delta: "+18%",
+          deltaPositive: true,
+        },
+        { label: "Avg Payout", value: "$85", delta: "30d" },
+      ],
+      deadlines: [
+        {
+          label: "Stripe verification",
+          date: "PENDING",
+          urgent: true,
+          href: "/creator/wallet",
+        },
+        { label: "April payout", date: "APR 30", href: "/creator/wallet" },
+      ],
+      actions: [
+        {
+          label: "Withdraw Funds",
+          href: "/creator/wallet",
+          variant: "primary",
+        },
+        { label: "Add Method", href: "/creator/wallet", variant: "secondary" },
+      ],
+    };
+  }
+
+  // /creator/earnings
+  if (pathname.startsWith("/creator/earnings")) {
+    return {
+      title: "Earnings Snapshot",
+      earnings: {
+        value: "$14,285",
+        delta: "Total earned",
+        deltaPositive: true,
+      },
+      stats: [
+        {
+          label: "This Month",
+          value: "$2,847",
+          delta: "+23%",
+          deltaPositive: true,
+        },
+        { label: "Last Month", value: "$2,310", delta: "MoM" },
+        { label: "Avg per Scan", value: "$0.05", delta: "rate" },
+      ],
+      deadlines: [
+        {
+          label: "Brow Theory · payout",
+          date: "+$50",
+          href: "/creator/earnings",
+        },
+        {
+          label: "Flamingo · pending",
+          date: "+$75",
+          href: "/creator/earnings",
+        },
+      ],
+      actions: [
+        {
+          label: "Request Payout",
+          href: "/creator/wallet",
+          variant: "primary",
+        },
+        {
+          label: "Export Report",
+          href: "/creator/earnings",
+          variant: "secondary",
+        },
+      ],
+    };
+  }
+
+  // /creator/analytics
+  if (pathname.startsWith("/creator/analytics")) {
+    return {
+      title: "Performance",
+      earnings: { value: "12,847", delta: "Total scans", deltaPositive: true },
+      stats: [
+        {
+          label: "Push Score",
+          value: "71",
+          delta: "+3 pts",
+          deltaPositive: true,
+        },
+        { label: "Active Campaigns", value: "5", delta: "live" },
+        {
+          label: "Best Conversion",
+          value: "68%",
+          delta: "+4%",
+          deltaPositive: true,
+        },
+      ],
+      deadlines: [
+        { label: "Brow Theory · top", date: "$92", href: "/creator/analytics" },
+        {
+          label: "Superiority · 2nd",
+          date: "$148",
+          href: "/creator/analytics",
+        },
+      ],
+      actions: [
+        {
+          label: "Export Report",
+          href: "/creator/analytics",
+          variant: "primary",
+        },
+        {
+          label: "Share Snapshot",
+          href: "/creator/analytics",
+          variant: "secondary",
+        },
+      ],
+    };
+  }
+
+  // /creator/leaderboard
+  if (pathname.startsWith("/creator/leaderboard")) {
+    return {
+      title: "Your Standing",
+      earnings: { value: "#11", delta: "of 89 creators", deltaPositive: true },
+      stats: [
+        {
+          label: "Push Score",
+          value: "847",
+          delta: "+12",
+          deltaPositive: true,
+        },
+        {
+          label: "Rank Move",
+          value: "↑ 4",
+          delta: "this wk",
+          deltaPositive: true,
+        },
+        { label: "Tier", value: "Operator", delta: "→ Proven" },
+      ],
+      deadlines: [
+        {
+          label: "Climb to top 10",
+          date: "+24 PTS",
+          href: "/creator/leaderboard",
+        },
+        {
+          label: "Beat Maya · #10",
+          date: "+18 PTS",
+          href: "/creator/leaderboard",
+        },
+      ],
+      actions: [
+        { label: "Boost Score", href: "/creator/discover", variant: "primary" },
+        {
+          label: "View Tier Path",
+          href: "/creator/profile",
+          variant: "secondary",
+        },
+      ],
+    };
+  }
+
+  // /creator/notifications
+  if (pathname.startsWith("/creator/notifications")) {
+    return {
+      title: "Notifications",
+      stats: [
+        { label: "Unread", value: "3", delta: "today", deltaPositive: true },
+        { label: "This Week", value: "12", delta: "total" },
+      ],
+      deadlines: [
+        {
+          label: "Application accepted",
+          date: "3h",
+          urgent: true,
+          href: "/creator/notifications",
+        },
+        {
+          label: "Milestone reached",
+          date: "5h",
+          href: "/creator/notifications",
+        },
+        {
+          label: "Campaign deadline",
+          date: "Tomorrow",
+          urgent: true,
+          href: "/creator/notifications",
+        },
+      ],
+      actions: [
+        {
+          label: "Mark All Read",
+          href: "/creator/notifications",
+          variant: "primary",
+        },
+        {
+          label: "Notification Settings",
+          href: "/creator/settings",
+          variant: "secondary",
+        },
+      ],
+    };
+  }
+
+  // /creator/disputes
+  if (pathname.startsWith("/creator/disputes")) {
+    return {
+      title: "Disputes",
+      earnings: { value: "2", delta: "Open disputes", deltaPositive: false },
+      stats: [
+        { label: "Resolved", value: "4", delta: "30d", deltaPositive: true },
+        { label: "Avg Time", value: "4d", delta: "to resolve" },
+        { label: "Win Rate", value: "75%", delta: "+5%", deltaPositive: true },
+      ],
+      deadlines: [
+        {
+          label: "D-2026-001 · Replied",
+          date: "2d ago",
+          href: "/creator/disputes",
+        },
+        {
+          label: "D-2026-004 · Awaiting",
+          date: "5d",
+          urgent: true,
+          href: "/creator/disputes",
+        },
+      ],
+      actions: [
+        {
+          label: "Open Dispute",
+          href: "/creator/disputes",
+          variant: "primary",
+        },
+        {
+          label: "Disputes Help",
+          href: "/creator/disputes",
+          variant: "secondary",
+        },
+      ],
+    };
+  }
+
+  // /creator/profile
+  if (pathname.startsWith("/creator/profile")) {
+    return {
+      title: "Profile Strength",
+      earnings: { value: "847", delta: "Push Score", deltaPositive: true },
+      stats: [
+        {
+          label: "Profile Complete",
+          value: "72%",
+          delta: "+8%",
+          deltaPositive: true,
+        },
+        { label: "Current Tier", value: "Operator", delta: "→ Proven" },
+        {
+          label: "Public Views",
+          value: "184",
+          delta: "30d",
+          deltaPositive: true,
+        },
+      ],
+      deadlines: [
+        {
+          label: "Add portfolio link",
+          date: "+12 pts",
+          href: "/creator/profile",
+        },
+        {
+          label: "Verify phone number",
+          date: "+8 pts",
+          href: "/creator/profile",
+        },
+        {
+          label: "Add bio (160 char)",
+          date: "+5 pts",
+          href: "/creator/profile",
+        },
+      ],
+      actions: [
+        {
+          label: "Edit Profile",
+          href: "/creator/profile",
+          variant: "primary",
+        },
+        {
+          label: "View Public Profile",
+          href: "/creator/public/demo-creator",
+          variant: "secondary",
+        },
+      ],
+    };
+  }
+
   // /creator/portfolio (and sub-pages)
   if (pathname.startsWith("/creator/portfolio")) {
     return {

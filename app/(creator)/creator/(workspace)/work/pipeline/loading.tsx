@@ -2,7 +2,7 @@ import React from "react";
 
 const skel: React.CSSProperties = {
   background:
-    "linear-gradient(90deg,rgba(0,48,73,0.05) 25%,rgba(0,48,73,0.10) 50%,rgba(0,48,73,0.05) 75%)",
+    "linear-gradient(90deg,var(--surface-3) 25%,var(--mist) 50%,var(--surface-3) 75%)",
   backgroundSize: "200% 100%",
   animation: "shimmer 1.5s infinite linear",
 };
@@ -21,7 +21,7 @@ export default function PipelineLoading() {
       <div
         style={{
           height: "48px",
-          borderBottom: "1px solid rgba(0,48,73,0.12)",
+          borderBottom: "1px solid var(--hairline)",
           display: "flex",
           alignItems: "center",
           gap: "12px",
@@ -98,7 +98,7 @@ export default function PipelineLoading() {
           display: "flex",
           gap: "1px",
           margin: "20px 32px 0",
-          borderBottom: "1px solid rgba(0,48,73,0.12)",
+          borderBottom: "1px solid var(--hairline)",
         }}
       >
         {[80, 80, 80, 100].map((w, i) => (
@@ -112,7 +112,7 @@ export default function PipelineLoading() {
           display: "flex",
           gap: "8px",
           padding: "12px 32px",
-          borderBottom: "1px solid rgba(0,48,73,0.12)",
+          borderBottom: "1px solid var(--hairline)",
         }}
       >
         {[90, 70, 80, 70, 90, 80].map((w, i) => (
@@ -138,7 +138,7 @@ export default function PipelineLoading() {
           gridTemplateColumns: "1fr 1fr 1fr",
           gap: "1px",
           padding: "24px 32px",
-          background: "rgba(0,48,73,0.06)",
+          background: "var(--hairline)",
         }}
       >
         {(["applied", "active", "completed"] as const).map((col) => (
@@ -153,7 +153,7 @@ export default function PipelineLoading() {
                 alignItems: "center",
                 gap: "8px",
                 padding: "12px 16px",
-                borderBottom: "1px solid rgba(0,48,73,0.10)",
+                borderBottom: "1px solid var(--mist)",
               }}
             >
               <div
@@ -184,8 +184,8 @@ export default function PipelineLoading() {
                   alignItems: "center",
                   gap: "10px",
                   padding: "12px 16px",
-                  borderBottom: "1px solid rgba(0,48,73,0.06)",
-                  background: "#fff",
+                  borderBottom: "1px solid var(--hairline)",
+                  background: "var(--surface-2)",
                   margin: "2px 0",
                 }}
               >

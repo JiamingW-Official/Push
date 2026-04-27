@@ -1,6 +1,6 @@
 /* ============================================================
-   Inbox — Clean message list, Gmail/Linear quality
-   Design.md: border-radius:0, 8px grid, 6-color palette
+   Inbox — Clean message list  (v11 token pass)
+   v11: all legacy rgba / var(--dark/--line/--primary/--text-muted) replaced
    ============================================================ */
 
 /* ── Keyframes ───────────────────────────────────────────── */
@@ -29,8 +29,8 @@
 
 .inbox-page {
   min-height: 100vh;
-  background: var(--surface);
-  color: var(--dark);
+  background: var(--surface-2);
+  color: var(--ink);
   font-family: var(--font-body);
 }
 
@@ -40,10 +40,10 @@
   display: flex;
   align-items: center;
   gap: 16px;
-  padding: 0 24px;
-  height: 56px;
-  border-bottom: 1px solid var(--line);
-  background: var(--surface-elevated);
+  padding: 0 40px;
+  height: 72px;
+  border-bottom: 2px solid var(--ink);
+  background: var(--char);
   position: sticky;
   top: 0;
   z-index: 50;
@@ -51,19 +51,22 @@
 
 .inbox-nav-back {
   font-family: var(--font-body);
-  font-size: 13px;
-  color: var(--graphite);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.35);
   text-decoration: none;
   transition: color 0.15s;
 }
 
-.inbox-nav-back:hover { color: var(--dark); }
+.inbox-nav-back:hover { color: rgba(255,255,255,0.70); }
 
 .inbox-nav-title {
   font-family: var(--font-display);
-  font-size: 28px;
-  font-weight: 700;
-  color: var(--dark);
+  font-size: clamp(32px, 4vw, 48px);
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  color: var(--snow);
   flex: 1;
 }
 
@@ -83,10 +86,11 @@
 }
 
 .inbox-live-label {
+  font-family: var(--font-body);
   font-size: 11px;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: var(--text-muted);
+  color: rgba(255,255,255,0.38);
 }
 
 /* ── Tabs ─────────────────────────────────────────────────── */
@@ -95,9 +99,9 @@
   display: flex;
   align-items: flex-end;
   gap: 0;
-  padding: 0 24px;
-  border-bottom: 1px solid var(--line);
-  background: var(--surface);
+  padding: 0 40px;
+  border-bottom: 2px solid var(--ink);
+  background: var(--snow);
 }
 
 .inbox-tab {
@@ -107,7 +111,7 @@
   border: none;
   border-bottom: 2px solid transparent;
   background: transparent;
-  color: var(--text-muted);
+  color: var(--ink-4);
   font-family: var(--font-body);
   font-size: 13px;
   font-weight: 600;
@@ -121,11 +125,11 @@
   margin-bottom: -1px;
 }
 
-.inbox-tab:hover { color: var(--dark); }
+.inbox-tab:hover { color: var(--ink); }
 
 .inbox-tab--active {
-  color: var(--dark);
-  border-bottom-color: var(--primary);
+  color: var(--ink);
+  border-bottom-color: var(--brand-red);
 }
 
 .inbox-tab-badge {
@@ -135,61 +139,50 @@
   min-width: 16px;
   height: 16px;
   padding: 0 4px;
-  background: var(--primary);
-  color: #fff;
-  font-size: 9px;
+  background: var(--brand-red);
+  color: var(--snow);
+  font-size: 10px;
   font-weight: 700;
-  border-radius: var(--r-xl);
+  border-radius: var(--r-pill);
   letter-spacing: 0;
 }
 
 /* ── Thread list ─────────────────────────────────────────── */
 
-.inbox-list {
-  background: var(--surface);
-}
+.inbox-list { background: var(--snow); }
 
 /* ── Thread row ──────────────────────────────────────────── */
 
-.inbox-row-tooltip-wrap {
-  position: relative;
-  animation: inboxRowEnter 0.3s ease both;
-}
+.inbox-row-tooltip-wrap { position: relative; }
 
 .inbox-row {
   display: flex;
   align-items: center;
   gap: 14px;
-  padding: 0 24px;
+  padding: 0 40px;
   height: 72px;
-  border-bottom: 1px solid rgba(0, 48, 73, 0.06);
-  background: var(--surface);
+  border-bottom: 1px solid var(--surface-3);
+  background: var(--snow);
   cursor: pointer;
   transition: background 0.12s;
   position: relative;
 }
 
-.inbox-row:hover {
-  background: var(--surface-elevated);
-}
+.inbox-row:hover { background: var(--surface-2); }
 
-.inbox-row--unread {
-  background: var(--surface-elevated);
-}
+.inbox-row--unread { background: rgba(193,18,31,0.03); }
 
-.inbox-row--new {
-  animation: inboxRowEnter 0.35s ease both;
-}
+.inbox-row--new { animation: inboxRowEnter 0.35s ease both; }
 
-/* Unread indicator bar */
+/* Unread indicator bar — 4px brand-red per spec */
 .inbox-row--unread::before {
   content: "";
   position: absolute;
   left: 0;
   top: 0;
   bottom: 0;
-  width: 3px;
-  background: var(--primary);
+  width: 4px;
+  background: var(--brand-red);
 }
 
 /* Avatar */
@@ -197,15 +190,15 @@
   flex-shrink: 0;
   width: 40px;
   height: 40px;
-  background: var(--dark);
-  color: #fff;
+  background: var(--ink);
+  color: var(--snow);
   font-family: var(--font-display);
   font-size: 14px;
   font-weight: 700;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: var(--r-xl);
+  border-radius: var(--r-sm);
 }
 
 /* Content */
@@ -221,20 +214,20 @@
   font-family: var(--font-body);
   font-size: 14px;
   font-weight: 400;
-  color: var(--dark);
+  color: var(--ink);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
 .inbox-row--unread .inbox-row-sender {
-  font-weight: 600;
+  font-weight: 700;
 }
 
 .inbox-row-preview {
   font-family: var(--font-body);
   font-size: 13px;
-  color: var(--text-muted);
+  color: var(--ink-4);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -251,8 +244,8 @@
 
 .inbox-row-time {
   font-family: var(--font-body);
-  font-size: 11px;
-  color: var(--text-muted);
+  font-size: 12px;
+  color: var(--ink-4);
   white-space: nowrap;
 }
 
@@ -260,14 +253,14 @@
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: var(--primary);
+  background: var(--brand-red);
 }
 
 .inbox-row-mark-read {
   font-family: var(--font-body);
-  font-size: 10px;
+  font-size: 11px;
   letter-spacing: 0.04em;
-  color: var(--text-muted);
+  color: var(--ink-4);
   background: none;
   border: none;
   cursor: pointer;
@@ -275,7 +268,7 @@
   transition: color 0.12s;
 }
 
-.inbox-row-mark-read:hover { color: var(--dark); }
+.inbox-row-mark-read:hover { color: var(--ink); }
 
 /* ── Hover tooltip ───────────────────────────────────────── */
 
@@ -285,12 +278,13 @@
   top: 50%;
   transform: translateY(-50%);
   width: 280px;
-  background: var(--dark);
-  color: #fff;
+  background: var(--char);
+  color: var(--snow);
   padding: 16px 18px;
   z-index: 60;
-  box-shadow: 0 8px 24px rgba(0, 48, 73, 0.2);
+  box-shadow: var(--shadow-3);
   pointer-events: none;
+  border-radius: var(--r-md);
 }
 
 .inbox-row-tooltip-sender {
@@ -319,14 +313,14 @@
   font-family: var(--font-display);
   font-size: 22px;
   font-weight: 700;
-  color: var(--dark);
+  color: var(--ink);
   margin: 0 0 8px;
 }
 
 .inbox-empty-body {
   font-family: var(--font-body);
   font-size: 13px;
-  color: var(--text-muted);
+  color: var(--ink-4);
   margin: 0;
 }
 
@@ -348,18 +342,17 @@
   align-items: center;
   gap: 12px;
   padding: 12px 16px;
-  background: var(--dark);
-  color: #fff;
+  background: var(--char);
+  color: var(--snow);
   min-width: 280px;
   max-width: 360px;
-  box-shadow: 0 4px 20px rgba(0, 48, 73, 0.25);
+  box-shadow: var(--shadow-3);
+  border-radius: var(--r-md);
   animation: toastSlideIn 0.25s ease both;
   pointer-events: all;
 }
 
-.inbox-toast--out {
-  animation: toastFadeOut 0.25s ease forwards;
-}
+.inbox-toast--out { animation: toastFadeOut 0.25s ease forwards; }
 
 .inbox-toast-dot {
   width: 6px;
@@ -394,7 +387,7 @@
 .inbox-toast-dismiss {
   background: none;
   border: none;
-  color: rgba(255, 255, 255, 0.5);
+  color: rgba(255,255,255,0.5);
   font-size: 18px;
   cursor: pointer;
   padding: 0;
@@ -403,59 +396,27 @@
   transition: color 0.12s;
 }
 
-.inbox-toast-dismiss:hover { color: #fff; }
+.inbox-toast-dismiss:hover { color: var(--snow); }
 
 /* ── Responsive ──────────────────────────────────────────── */
 
 @media (max-width: 768px) {
   .inbox-nav-title { font-size: 22px; }
-
   .inbox-tab { padding: 0 14px; font-size: 12px; }
-
   .inbox-row { padding: 0 16px; gap: 12px; }
-
   .inbox-row-tooltip { display: none; }
-
   .inbox-toast-container { right: 16px; bottom: 16px; }
-
   .inbox-toast { min-width: 0; max-width: calc(100vw - 32px); }
 }
 
 @media (max-width: 480px) {
-  .inbox-nav {
-    padding: 0 16px;
-    height: 48px;
-  }
-
+  .inbox-nav { padding: 0 16px; height: 48px; }
   .inbox-nav-title { font-size: 18px; }
-
-  .inbox-tabs {
-    padding: 0 16px;
-  }
-
-  .inbox-tab {
-    padding: 0 10px;
-    font-size: 11px;
-  }
-
-  .inbox-row {
-    padding: 0 12px;
-    height: 64px;
-    gap: 10px;
-  }
-
-  /* Hide timestamp on very small screens to save space */
-  .inbox-row-time {
-    display: none;
-  }
-
-  .inbox-row-avatar {
-    width: 34px;
-    height: 34px;
-    font-size: 12px;
-  }
-
+  .inbox-tabs { padding: 0 16px; }
+  .inbox-tab { padding: 0 10px; font-size: 11px; }
+  .inbox-row { padding: 0 12px; height: 64px; gap: 10px; }
+  .inbox-row-time { display: none; }
+  .inbox-row-avatar { width: 34px; height: 34px; font-size: 12px; }
   .inbox-row-sender { font-size: 13px; }
-
   .inbox-row-preview { font-size: 12px; }
 }

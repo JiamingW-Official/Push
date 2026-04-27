@@ -254,32 +254,86 @@ export default function ExplorePage() {
   /* ── Filter Rail ────────────────────────────────────────── */
 
   const filterRail = (
-    <aside className="exp-rail">
-      <div className="exp-rail-header">
-        <span className="exp-rail-title">Explore</span>
-        <span className="exp-rail-count">
-          Showing{" "}
-          <span className="exp-rail-count-num">
-            {loading ? "—" : allCampaigns.length}
-          </span>{" "}
-          of {loading ? "—" : total} campaigns
-        </span>
+    <aside
+      style={{
+        width: 240,
+        flexShrink: 0,
+        background: "var(--surface-2)",
+        borderRight: "1px solid var(--hairline)",
+        overflowY: "auto",
+        padding: "24px 16px",
+        display: "flex",
+        flexDirection: "column",
+        gap: 24,
+      }}
+    >
+      {/* Header */}
+      <div>
+        <p
+          className="eyebrow"
+          style={{ color: "var(--ink-4)", marginBottom: 4 }}
+        >
+          EXPLORE CAMPAIGNS
+        </p>
+        <p
+          style={{
+            fontFamily: "var(--font-body)",
+            fontSize: 12,
+            color: "var(--ink-4)",
+            margin: 0,
+          }}
+        >
+          {loading ? "—" : allCampaigns.length} of {loading ? "—" : total} shown
+        </p>
         {activeFilterCount > 0 && (
-          <button className="exp-rail-clear" onClick={clearFilters}>
+          <button
+            onClick={clearFilters}
+            style={{
+              marginTop: 8,
+              fontFamily: "var(--font-body)",
+              fontSize: 11,
+              fontWeight: 600,
+              color: "var(--brand-red)",
+              background: "none",
+              border: "none",
+              cursor: "pointer",
+              padding: 0,
+              textDecoration: "underline",
+            }}
+          >
             Clear all ({activeFilterCount})
           </button>
         )}
       </div>
 
       {/* Category */}
-      <div className="exp-filter-section">
-        <span className="exp-filter-label">Category</span>
-        <div className="exp-chips">
+      <div>
+        <p
+          className="eyebrow"
+          style={{ color: "var(--ink-4)", marginBottom: 8 }}
+        >
+          CATEGORY
+        </p>
+        <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
           {CATEGORIES.map((cat) => (
             <button
               key={cat}
-              className={`exp-chip${categories.includes(cat) ? " exp-chip--active" : ""}`}
               onClick={() => toggleCategory(cat)}
+              style={{
+                padding: "4px 12px",
+                borderRadius: 8,
+                border: "1px solid var(--hairline)",
+                background: categories.includes(cat)
+                  ? "var(--ink)"
+                  : "var(--surface)",
+                color: categories.includes(cat)
+                  ? "var(--snow)"
+                  : "var(--ink-3)",
+                fontFamily: "var(--font-body)",
+                fontSize: 12,
+                cursor: "pointer",
+                transition: "all 0.15s",
+              }}
             >
               {cat}
             </button>
@@ -288,9 +342,14 @@ export default function ExplorePage() {
       </div>
 
       {/* Tier */}
-      <div className="exp-filter-section">
-        <span className="exp-filter-label">Max Tier Required</span>
-        <div className="exp-tier-row">
+      <div>
+        <p
+          className="eyebrow"
+          style={{ color: "var(--ink-4)", marginBottom: 8 }}
+        >
+          MAX TIER REQUIRED
+        </p>
+        <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
           {TIERS.map((t) => (
             <button
               key={t}
@@ -304,8 +363,13 @@ export default function ExplorePage() {
       </div>
 
       {/* Budget */}
-      <div className="exp-filter-section">
-        <span className="exp-filter-label">Payout Range</span>
+      <div>
+        <p
+          className="eyebrow"
+          style={{ color: "var(--ink-4)", marginBottom: 8 }}
+        >
+          PAYOUT RANGE
+        </p>
         <div className="exp-range-wrap">
           <div className="exp-range-vals">
             <span>
@@ -349,8 +413,13 @@ export default function ExplorePage() {
       </div>
 
       {/* Distance */}
-      <div className="exp-filter-section">
-        <span className="exp-filter-label">Distance from NYC center</span>
+      <div>
+        <p
+          className="eyebrow"
+          style={{ color: "var(--ink-4)", marginBottom: 8 }}
+        >
+          DISTANCE FROM NYC
+        </p>
         <div className="exp-range-wrap">
           <div className="exp-range-vals">
             <span>
@@ -373,9 +442,14 @@ export default function ExplorePage() {
       </div>
 
       {/* Deadline */}
-      <div className="exp-filter-section">
-        <span className="exp-filter-label">Deadline Within</span>
-        <div className="exp-deadline-row">
+      <div>
+        <p
+          className="eyebrow"
+          style={{ color: "var(--ink-4)", marginBottom: 8 }}
+        >
+          DEADLINE WITHIN
+        </p>
+        <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
           {(
             [
               ["", "Any"],
@@ -386,8 +460,18 @@ export default function ExplorePage() {
           ).map(([val, label]) => (
             <button
               key={String(val)}
-              className={`exp-deadline-btn${deadline === val ? " exp-deadline-btn--active" : ""}`}
               onClick={() => setDeadline(val)}
+              style={{
+                padding: "4px 10px",
+                borderRadius: 8,
+                border: "1px solid var(--hairline)",
+                background: deadline === val ? "var(--ink)" : "var(--surface)",
+                color: deadline === val ? "var(--snow)" : "var(--ink-3)",
+                fontFamily: "var(--font-body)",
+                fontSize: 11,
+                cursor: "pointer",
+                transition: "all 0.15s",
+              }}
             >
               {label}
             </button>
@@ -436,45 +520,140 @@ export default function ExplorePage() {
     const urgent = isUrgent(c.deadline);
 
     return (
-      <article className="exp-gcard">
+      <article
+        style={{
+          background: "var(--surface-2)",
+          border: "1px solid var(--hairline)",
+          borderRadius: 10,
+          overflow: "hidden",
+          display: "flex",
+          flexDirection: "column",
+          cursor: "pointer",
+          transition: "transform 0.15s, box-shadow 0.15s",
+        }}
+        className="click-shift"
+      >
         {c.image ? (
           <img
             src={c.image}
             alt={c.title}
-            className="exp-gcard-img"
+            style={{
+              width: "100%",
+              height: 140,
+              objectFit: "cover",
+              display: "block",
+            }}
             loading="lazy"
           />
         ) : (
-          <div className="exp-gcard-img exp-gcard-img--placeholder">
+          <div
+            style={{
+              width: "100%",
+              height: 140,
+              background: "var(--surface-3, #ece9e0)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              fontFamily: "var(--font-display)",
+              fontSize: 32,
+              fontWeight: 900,
+              color: "var(--ink-4)",
+            }}
+          >
             {c.business_name[0]}
           </div>
         )}
-        <div className="exp-gcard-body">
-          <div className="exp-gcard-meta">
+        <div
+          style={{
+            padding: "16px",
+            flex: 1,
+            display: "flex",
+            flexDirection: "column",
+            gap: 8,
+          }}
+        >
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+            }}
+          >
             <span
               className={`exp-gcard-tier${tc ? ` exp-gcard-tier--${tc}` : ""}`}
             >
               {TIER_LABELS[c.tier_required]}
             </span>
             <span
-              className={`exp-gcard-payout${free ? " exp-gcard-payout--free" : ""}`}
+              style={{
+                fontFamily: "var(--font-display)",
+                fontWeight: 900,
+                fontSize: 16,
+                color: free ? "var(--ink-3)" : "var(--ink)",
+                letterSpacing: "-0.02em",
+              }}
             >
               {formatPayout(c.payout)}
             </span>
           </div>
-          <h3 className="exp-gcard-title">{c.title}</h3>
-          <p className="exp-gcard-merchant">{c.business_name}</p>
-          <div className="exp-gcard-footer">
-            <span className="exp-gcard-neighborhood">{c.neighborhood}</span>
+          <h3
+            style={{
+              fontFamily: "var(--font-display)",
+              fontWeight: 700,
+              fontSize: 15,
+              color: "var(--ink)",
+              margin: 0,
+              lineHeight: 1.3,
+            }}
+          >
+            {c.title}
+          </h3>
+          <p
+            style={{
+              fontFamily: "var(--font-body)",
+              fontSize: 12,
+              color: "var(--ink-4)",
+              margin: 0,
+            }}
+          >
+            {c.business_name}
+          </p>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              marginTop: "auto",
+            }}
+          >
+            <span
+              style={{
+                fontFamily: "var(--font-body)",
+                fontSize: 11,
+                color: "var(--ink-4)",
+              }}
+            >
+              {c.neighborhood}
+            </span>
             {dl && (
               <span
-                className={`exp-gcard-deadline${urgent ? " exp-gcard-deadline--urgent" : ""}`}
+                style={{
+                  fontFamily: "var(--font-body)",
+                  fontSize: 11,
+                  color: urgent ? "var(--brand-red)" : "var(--ink-4)",
+                  fontWeight: urgent ? 600 : 400,
+                }}
               >
                 {urgent ? `${daysLeft(c.deadline)}d left` : dl}
               </span>
             )}
           </div>
-          <button className="exp-gcard-apply">Apply</button>
+          <button
+            className="btn-primary click-shift"
+            style={{ marginTop: 4, fontSize: 12, padding: "8px 16px" }}
+          >
+            Apply
+          </button>
         </div>
       </article>
     );
@@ -485,18 +664,70 @@ export default function ExplorePage() {
   const gridContent = (
     <div className="exp-grid-scroll">
       {loading ? (
-        <div className="exp-empty">
-          <div className="exp-empty-icon">—</div>
-          <p className="exp-empty-title">Loading campaigns</p>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            padding: "64px 24px",
+            gap: 12,
+          }}
+        >
+          <p
+            style={{
+              fontFamily: "var(--font-display)",
+              fontWeight: 700,
+              fontSize: 18,
+              color: "var(--ink)",
+              margin: 0,
+            }}
+          >
+            Loading campaigns
+          </p>
         </div>
       ) : allCampaigns.length === 0 ? (
-        <div className="exp-empty">
-          <div className="exp-empty-icon">0</div>
-          <p className="exp-empty-title">No campaigns found</p>
-          <p className="exp-empty-sub">Try adjusting your filters.</p>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            padding: "64px 24px",
+            gap: 12,
+          }}
+        >
+          <p
+            style={{
+              fontFamily: "var(--font-display)",
+              fontWeight: 700,
+              fontSize: 18,
+              color: "var(--ink)",
+              margin: 0,
+            }}
+          >
+            No campaigns found
+          </p>
+          <p
+            style={{
+              fontFamily: "var(--font-body)",
+              fontSize: 13,
+              color: "var(--ink-4)",
+              margin: 0,
+            }}
+          >
+            Try adjusting your filters.
+          </p>
         </div>
       ) : (
-        <div className="exp-grid">
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fill, minmax(240px, 1fr))",
+            gap: 16,
+            padding: "24px",
+          }}
+        >
           {allCampaigns.map((c, i) => (
             <div
               key={c.id}
@@ -550,7 +781,7 @@ export default function ExplorePage() {
                   fontFamily: "var(--font-display)",
                   fontSize: 18,
                   fontWeight: 900,
-                  color: "rgba(0,48,73,0.2)",
+                  color: "var(--ink-4)",
                 }}
               >
                 {c.business_name[0]}
@@ -564,7 +795,7 @@ export default function ExplorePage() {
         </td>
         <td
           className="exp-list-td"
-          style={{ color: "rgba(0,48,73,0.5)", fontSize: 12 }}
+          style={{ color: "var(--ink-4)", fontSize: 12 }}
         >
           {c.neighborhood}
         </td>
@@ -575,14 +806,25 @@ export default function ExplorePage() {
         </td>
         <td className="exp-list-td">
           <span
-            className={`exp-list-payout${free ? " exp-list-payout--free" : ""}`}
+            style={{
+              fontFamily: "var(--font-display)",
+              fontWeight: 700,
+              fontSize: 14,
+              color: free ? "var(--ink-4)" : "var(--ink)",
+            }}
           >
             {formatPayout(c.payout)}
           </span>
         </td>
         <td className="exp-list-td">
           <span
-            className={`exp-list-spots${c.spots_remaining <= 2 ? " exp-list-spots--urgent" : ""}`}
+            style={{
+              fontFamily: "var(--font-body)",
+              fontSize: 13,
+              fontWeight: c.spots_remaining <= 2 ? 700 : 400,
+              color:
+                c.spots_remaining <= 2 ? "var(--brand-red)" : "var(--ink-3)",
+            }}
           >
             {c.spots_remaining}
           </span>
@@ -590,16 +832,26 @@ export default function ExplorePage() {
         <td className="exp-list-td">
           {dl ? (
             <span
-              className={`exp-list-deadline${urgent ? " exp-list-deadline--urgent" : ""}`}
+              style={{
+                fontFamily: "var(--font-body)",
+                fontSize: 12,
+                color: urgent ? "var(--brand-red)" : "var(--ink-4)",
+                fontWeight: urgent ? 600 : 400,
+              }}
             >
               {urgent ? `${daysLeft(c.deadline)}d` : dl}
             </span>
           ) : (
-            <span style={{ color: "rgba(0,48,73,0.3)" }}>—</span>
+            <span style={{ color: "var(--ink-4)" }}>—</span>
           )}
         </td>
         <td className="exp-list-td">
-          <button className="exp-list-apply">Apply</button>
+          <button
+            className="btn-primary click-shift"
+            style={{ fontSize: 11, padding: "6px 14px" }}
+          >
+            Apply
+          </button>
         </td>
       </tr>
     );
@@ -610,15 +862,47 @@ export default function ExplorePage() {
   const listContent = (
     <div className="exp-list-scroll">
       {loading ? (
-        <div className="exp-empty">
-          <div className="exp-empty-icon">—</div>
-          <p className="exp-empty-title">Loading campaigns</p>
+        <div
+          style={{
+            padding: "64px 24px",
+            textAlign: "center",
+          }}
+        >
+          <p
+            style={{
+              fontFamily: "var(--font-display)",
+              fontWeight: 700,
+              fontSize: 18,
+              color: "var(--ink)",
+              margin: 0,
+            }}
+          >
+            Loading campaigns
+          </p>
         </div>
       ) : allCampaigns.length === 0 ? (
-        <div className="exp-empty">
-          <div className="exp-empty-icon">0</div>
-          <p className="exp-empty-title">No campaigns found</p>
-          <p className="exp-empty-sub">Try adjusting your filters.</p>
+        <div style={{ padding: "64px 24px", textAlign: "center" }}>
+          <p
+            style={{
+              fontFamily: "var(--font-display)",
+              fontWeight: 700,
+              fontSize: 18,
+              color: "var(--ink)",
+              margin: "0 0 8px",
+            }}
+          >
+            No campaigns found
+          </p>
+          <p
+            style={{
+              fontFamily: "var(--font-body)",
+              fontSize: 13,
+              color: "var(--ink-4)",
+              margin: 0,
+            }}
+          >
+            Try adjusting your filters.
+          </p>
         </div>
       ) : (
         <table className="exp-list-table">
@@ -647,15 +931,60 @@ export default function ExplorePage() {
   /* ── Render ─────────────────────────────────────────────── */
 
   return (
-    <div className="exp">
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        height: "100vh",
+        background: "var(--surface)",
+        fontFamily: "var(--font-body)",
+      }}
+    >
       {/* Top Bar */}
-      <header className="exp-topbar">
-        <Link href="/" className="exp-logo">
+      <header
+        style={{
+          height: 56,
+          borderBottom: "1px solid var(--hairline)",
+          display: "flex",
+          alignItems: "center",
+          padding: "0 24px",
+          gap: 16,
+          background: "var(--surface-2)",
+          flexShrink: 0,
+        }}
+      >
+        <Link
+          href="/"
+          style={{
+            fontFamily: "var(--font-display)",
+            fontWeight: 900,
+            fontSize: 18,
+            color: "var(--ink)",
+            textDecoration: "none",
+            letterSpacing: "-0.04em",
+          }}
+        >
           Push
         </Link>
 
-        <div className="exp-topbar-center">
-          <div className="exp-view-tabs">
+        {/* View switcher — center */}
+        <div
+          style={{
+            flex: 1,
+            display: "flex",
+            justifyContent: "center",
+          }}
+        >
+          <div
+            style={{
+              display: "flex",
+              gap: 4,
+              background: "var(--surface)",
+              border: "1px solid var(--hairline)",
+              borderRadius: 10,
+              padding: 4,
+            }}
+          >
             {(
               [
                 ["map", "Map"],
@@ -665,8 +994,19 @@ export default function ExplorePage() {
             ).map(([v, label]) => (
               <button
                 key={v}
-                className={`exp-view-tab${view === v ? " exp-view-tab--active" : ""}`}
                 onClick={() => switchView(v)}
+                style={{
+                  padding: "5px 16px",
+                  borderRadius: 7,
+                  border: "none",
+                  background: view === v ? "var(--ink)" : "transparent",
+                  color: view === v ? "var(--snow)" : "var(--ink-3)",
+                  fontFamily: "var(--font-body)",
+                  fontSize: 13,
+                  fontWeight: 600,
+                  cursor: "pointer",
+                  transition: "all 0.15s",
+                }}
               >
                 {label}
               </button>
@@ -674,20 +1014,43 @@ export default function ExplorePage() {
           </div>
         </div>
 
-        <div className="exp-topbar-right">
-          <Link href="/creator/dashboard" className="exp-topbar-back">
-            Dashboard &rarr;
-          </Link>
-        </div>
+        <Link
+          href="/creator/dashboard"
+          style={{
+            fontFamily: "var(--font-body)",
+            fontSize: 12,
+            fontWeight: 600,
+            color: "var(--ink-3)",
+            textDecoration: "none",
+            display: "flex",
+            alignItems: "center",
+            gap: 4,
+          }}
+        >
+          Dashboard &rarr;
+        </Link>
       </header>
 
       {/* Body */}
-      <div className="exp-body">
-        {/* Filter rail — always visible across all views */}
+      <div
+        style={{
+          flex: 1,
+          display: "flex",
+          overflow: "hidden",
+        }}
+      >
+        {/* Filter rail — always visible */}
         {filterRail}
 
-        {/* Main content area */}
-        <main className="exp-main">
+        {/* Main content */}
+        <main
+          style={{
+            flex: 1,
+            overflow: "hidden",
+            display: "flex",
+            flexDirection: "column",
+          }}
+        >
           {view === "map" && mapContent}
           {view === "grid" && gridContent}
           {view === "list" && listContent}

@@ -115,6 +115,14 @@ function formatDate(iso?: string): string {
   });
 }
 
+/* ── Shared card style ───────────────────────────────────── */
+const cardStyle: React.CSSProperties = {
+  background: "var(--surface-2)",
+  border: "1px solid var(--hairline)",
+  borderRadius: 10,
+  padding: "20px 24px",
+};
+
 interface Props {
   params: Promise<{ id: string }>;
 }
@@ -160,44 +168,190 @@ export default function CampaignThreadPage({ params }: Props) {
     campaign.walkinEarned +
     (submissionStatus === "approved" ? campaign.payout : 0);
 
+  const statusColors: Record<string, { bg: string; color: string }> = {
+    active: { bg: "var(--accent-blue)", color: "var(--snow)" },
+    submitted: { bg: "#bfa170", color: "var(--snow)" },
+    verified: { bg: "#22c55e", color: "var(--snow)" },
+    completed: { bg: "var(--ink-3)", color: "var(--snow)" },
+  };
+  const statusStyle = statusColors[campaign.status] ?? statusColors.active;
+
   return (
-    <div className="thread-page">
-      {/* ── Thread Header ───────────────────────────────────────── */}
-      <div className="thread-header">
-        <div className="thread-header__left">
-          <div className="thread-header__avatar">
-            {campaign.merchantName[0]}
-          </div>
-          <div>
-            <div className="thread-header__merchant">
-              {campaign.merchantName}
+    <div
+      style={{
+        background: "var(--surface)",
+        minHeight: "100%",
+        fontFamily: "var(--font-body)",
+      }}
+    >
+      {/* ── Campaign Header ─────────────────────────────────────── */}
+      <div
+        style={{
+          background: "var(--snow)",
+          borderBottom: "1px solid var(--hairline)",
+          padding: "24px",
+        }}
+      >
+        <div
+          style={{
+            display: "flex",
+            alignItems: "flex-start",
+            justifyContent: "space-between",
+            gap: 16,
+            flexWrap: "wrap",
+          }}
+        >
+          {/* Left */}
+          <div style={{ display: "flex", gap: 16, alignItems: "flex-start" }}>
+            <div
+              style={{
+                width: 48,
+                height: 48,
+                borderRadius: 10,
+                background: "var(--ink)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                fontFamily: "var(--font-display)",
+                fontWeight: 700,
+                fontSize: 20,
+                color: "var(--snow)",
+                flexShrink: 0,
+              }}
+            >
+              {campaign.merchantName[0]}
             </div>
-            <div className="thread-header__campaign">
-              {campaign.campaignTitle}
+            <div>
+              <div
+                style={{
+                  fontFamily: "var(--font-body)",
+                  fontSize: 12,
+                  color: "var(--ink-4)",
+                  textTransform: "uppercase",
+                  letterSpacing: "0.06em",
+                  marginBottom: 4,
+                }}
+              >
+                {campaign.merchantName}
+              </div>
+              <div
+                style={{
+                  fontFamily: "var(--font-display)",
+                  fontWeight: 700,
+                  fontSize: 22,
+                  color: "var(--ink)",
+                  lineHeight: 1.2,
+                }}
+              >
+                {campaign.campaignTitle}
+              </div>
             </div>
           </div>
-        </div>
-        <div className="thread-header__right">
-          <span className="thread-header__tier">{campaign.tier}</span>
-          <span
-            className={`thread-header__status thread-header__status--${campaign.status}`}
+
+          {/* Right */}
+          <div
+            style={{
+              display: "flex",
+              gap: 12,
+              alignItems: "center",
+              flexWrap: "wrap",
+            }}
           >
-            {campaign.status}
-          </span>
-          <div className="thread-header__earn-wrap">
-            <span className="thread-header__earn-label">Earn up to</span>
-            <span className="thread-header__payout">${campaign.payout}</span>
+            <span
+              style={{
+                padding: "4px 12px",
+                borderRadius: 6,
+                background: "var(--surface-2)",
+                border: "1px solid var(--hairline)",
+                fontFamily: "var(--font-body)",
+                fontSize: 12,
+                color: "var(--ink-3)",
+                textTransform: "uppercase",
+                letterSpacing: "0.05em",
+              }}
+            >
+              {campaign.tier}
+            </span>
+            <span
+              style={{
+                padding: "4px 12px",
+                borderRadius: 6,
+                background: statusStyle.bg,
+                color: statusStyle.color,
+                fontFamily: "var(--font-body)",
+                fontSize: 12,
+                fontWeight: 700,
+                textTransform: "uppercase",
+                letterSpacing: "0.05em",
+              }}
+            >
+              {campaign.status}
+            </span>
+            <div style={{ textAlign: "right" }}>
+              <div
+                style={{
+                  fontFamily: "var(--font-body)",
+                  fontSize: 11,
+                  color: "var(--ink-4)",
+                  marginBottom: 2,
+                }}
+              >
+                Earn up to
+              </div>
+              <div
+                style={{
+                  fontFamily: "var(--font-display)",
+                  fontWeight: 800,
+                  fontSize: 28,
+                  color: "var(--ink)",
+                  lineHeight: 1,
+                }}
+              >
+                ${campaign.payout}
+              </div>
+            </div>
           </div>
         </div>
       </div>
 
       {/* ── Sticky Mini Nav ─────────────────────────────────────── */}
-      <nav className="thread-mininav" aria-label="Thread sections">
+      <nav
+        className="thread-mininav"
+        aria-label="Thread sections"
+        style={{
+          display: "flex",
+          padding: "0 24px",
+          borderBottom: "1px solid var(--hairline)",
+          background: "var(--snow)",
+          overflowX: "auto",
+          gap: 0,
+          position: "sticky",
+          top: 0,
+          zIndex: 10,
+        }}
+      >
         {SECTIONS.map((s) => (
           <button
             key={s}
-            className={`thread-mininav__item${activeSection === s ? " thread-mininav__item--active" : ""}`}
             onClick={() => scrollToSection(s)}
+            style={{
+              padding: "12px 16px",
+              fontFamily: "var(--font-body)",
+              fontSize: 12,
+              fontWeight: activeSection === s ? 700 : 400,
+              color: activeSection === s ? "var(--ink)" : "var(--ink-3)",
+              background: "none",
+              border: "none",
+              borderBottom:
+                activeSection === s
+                  ? "2px solid var(--brand-red)"
+                  : "2px solid transparent",
+              marginBottom: -1,
+              cursor: "pointer",
+              textTransform: "uppercase",
+              letterSpacing: "0.06em",
+              whiteSpace: "nowrap",
+            }}
           >
             {SECTION_LABELS[s]}
           </button>
@@ -205,20 +359,102 @@ export default function CampaignThreadPage({ params }: Props) {
       </nav>
 
       {/* ── Thread Body ─────────────────────────────────────────── */}
-      <div className="thread-body">
+      <div
+        style={{
+          padding: "24px",
+          display: "flex",
+          flexDirection: "column",
+          gap: 24,
+          maxWidth: 800,
+        }}
+      >
         {/* 01 / Brief */}
-        <section id="section-brief" className="thread-section">
-          <span className="thread-section__label">01 / Brief</span>
-          <h2 className="thread-section__title">What to post</h2>
-          <p className="thread-section__text">{campaign.brief}</p>
+        <section id="section-brief" style={cardStyle}>
+          <span
+            className="eyebrow"
+            style={{ display: "block", marginBottom: 8 }}
+          >
+            01 / Brief
+          </span>
+          <h2
+            style={{
+              fontFamily: "var(--font-display)",
+              fontWeight: 700,
+              fontSize: 22,
+              color: "var(--ink)",
+              margin: "0 0 12px",
+            }}
+          >
+            What to post
+          </h2>
+          <p
+            style={{
+              fontFamily: "var(--font-body)",
+              fontSize: 14,
+              color: "var(--ink-3)",
+              lineHeight: 1.6,
+              margin: "0 0 20px",
+            }}
+          >
+            {campaign.brief}
+          </p>
 
           {/* Requirements */}
           {campaign.requirements && campaign.requirements.length > 0 && (
             <>
-              <h3 className="thread-subsection__title">Requirements</h3>
-              <ul className="thread-requirements">
+              <h3
+                style={{
+                  fontFamily: "var(--font-display)",
+                  fontWeight: 700,
+                  fontSize: 14,
+                  color: "var(--ink)",
+                  margin: "0 0 10px",
+                  textTransform: "uppercase",
+                  letterSpacing: "0.05em",
+                }}
+              >
+                Requirements
+              </h3>
+              <ul
+                style={{
+                  listStyle: "none",
+                  padding: 0,
+                  margin: "0 0 20px",
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: 8,
+                }}
+              >
                 {campaign.requirements.map((r, i) => (
-                  <li key={i} className="thread-requirements__item">
+                  <li
+                    key={i}
+                    style={{
+                      display: "flex",
+                      alignItems: "flex-start",
+                      gap: 10,
+                      fontFamily: "var(--font-body)",
+                      fontSize: 14,
+                      color: "var(--ink)",
+                    }}
+                  >
+                    <span
+                      style={{
+                        width: 20,
+                        height: 20,
+                        borderRadius: "50%",
+                        border: "1px solid var(--hairline)",
+                        background: "var(--surface)",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        fontSize: 10,
+                        color: "var(--ink-4)",
+                        flexShrink: 0,
+                        marginTop: 2,
+                      }}
+                    >
+                      {i + 1}
+                    </span>
                     {r}
                   </li>
                 ))}
@@ -228,11 +464,33 @@ export default function CampaignThreadPage({ params }: Props) {
 
           {/* Hashtags */}
           {campaign.hashtags && campaign.hashtags.length > 0 && (
-            <div className="thread-hashtags">
-              <span className="thread-hashtags__label">Required hashtags</span>
-              <div className="thread-hashtags__list">
+            <div style={{ marginBottom: 20 }}>
+              <div
+                style={{
+                  fontFamily: "var(--font-body)",
+                  fontSize: 11,
+                  color: "var(--ink-4)",
+                  textTransform: "uppercase",
+                  letterSpacing: "0.06em",
+                  marginBottom: 8,
+                }}
+              >
+                Required hashtags
+              </div>
+              <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
                 {campaign.hashtags.map((tag) => (
-                  <span key={tag} className="thread-hashtag">
+                  <span
+                    key={tag}
+                    style={{
+                      padding: "4px 12px",
+                      borderRadius: 20,
+                      background: "var(--surface)",
+                      border: "1px solid var(--hairline)",
+                      fontFamily: "var(--font-body)",
+                      fontSize: 13,
+                      color: "var(--ink-3)",
+                    }}
+                  >
                     {tag}
                   </span>
                 ))}
@@ -243,13 +501,50 @@ export default function CampaignThreadPage({ params }: Props) {
           {/* Content guidelines */}
           {campaign.contentGuidelines &&
             campaign.contentGuidelines.length > 0 && (
-              <div className="thread-guidelines">
-                <span className="thread-guidelines__label">
+              <div style={{ marginBottom: 20 }}>
+                <div
+                  style={{
+                    fontFamily: "var(--font-body)",
+                    fontSize: 11,
+                    color: "var(--ink-4)",
+                    textTransform: "uppercase",
+                    letterSpacing: "0.06em",
+                    marginBottom: 8,
+                  }}
+                >
                   Content guidelines
-                </span>
-                <ul className="thread-guidelines__list">
+                </div>
+                <ul
+                  style={{
+                    listStyle: "none",
+                    padding: 0,
+                    margin: 0,
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: 6,
+                  }}
+                >
                   {campaign.contentGuidelines.map((g, i) => (
-                    <li key={i} className="thread-guidelines__item">
+                    <li
+                      key={i}
+                      style={{
+                        display: "flex",
+                        alignItems: "flex-start",
+                        gap: 8,
+                        fontFamily: "var(--font-body)",
+                        fontSize: 13,
+                        color: "var(--ink-3)",
+                      }}
+                    >
+                      <span
+                        style={{
+                          color: "var(--ink-4)",
+                          marginTop: 1,
+                          flexShrink: 0,
+                        }}
+                      >
+                        ·
+                      </span>
                       {g}
                     </li>
                   ))}
@@ -257,77 +552,267 @@ export default function CampaignThreadPage({ params }: Props) {
               </div>
             )}
 
-          <div className="thread-deadline">
-            <span className="thread-deadline__label">Deadline</span>
-            <span className="thread-deadline__value">
+          {/* Deadline */}
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 12,
+              padding: "12px 16px",
+              background: "var(--surface)",
+              border: "1px solid var(--hairline)",
+              borderRadius: 8,
+            }}
+          >
+            <span
+              style={{
+                fontFamily: "var(--font-body)",
+                fontSize: 12,
+                color: "var(--ink-4)",
+                textTransform: "uppercase",
+                letterSpacing: "0.06em",
+              }}
+            >
+              Deadline
+            </span>
+            <span
+              style={{
+                fontFamily: "var(--font-display)",
+                fontWeight: 700,
+                fontSize: 16,
+                color: "var(--brand-red)",
+              }}
+            >
               {formatDeadline(campaign.deadline)}
             </span>
           </div>
         </section>
 
         {/* 02 / My Submission */}
-        <section id="section-submission" className="thread-section">
-          <span className="thread-section__label">02 / Submit</span>
-          <h2 className="thread-section__title">My submission</h2>
+        <section id="section-submission" style={cardStyle}>
+          <span
+            className="eyebrow"
+            style={{ display: "block", marginBottom: 8 }}
+          >
+            02 / Submit
+          </span>
+          <h2
+            style={{
+              fontFamily: "var(--font-display)",
+              fontWeight: 700,
+              fontSize: 22,
+              color: "var(--ink)",
+              margin: "0 0 16px",
+            }}
+          >
+            My submission
+          </h2>
 
-          {/* Status badge */}
-          <div className="submission-status-bar">
+          {/* Status bar */}
+          <div
+            style={{
+              display: "flex",
+              gap: 0,
+              marginBottom: 20,
+              borderRadius: 8,
+              overflow: "hidden",
+              border: "1px solid var(--hairline)",
+            }}
+          >
             {(["draft", "submitted", "approved"] as SubmissionStatus[]).map(
-              (s, i) => (
-                <div
-                  key={s}
-                  className={`submission-step${submissionStatus === s ? " submission-step--active" : i < ["draft", "submitted", "approved"].indexOf(submissionStatus) ? " submission-step--done" : ""}`}
-                >
-                  <span className="submission-step__dot" />
-                  <span className="submission-step__label">
-                    {s.charAt(0).toUpperCase() + s.slice(1)}
-                  </span>
-                </div>
-              ),
+              (s, i) => {
+                const isDone =
+                  i <
+                  ["draft", "submitted", "approved"].indexOf(submissionStatus);
+                const isActive = submissionStatus === s;
+                return (
+                  <div
+                    key={s}
+                    style={{
+                      flex: 1,
+                      padding: "10px 12px",
+                      background: isActive
+                        ? "var(--accent-blue)"
+                        : isDone
+                          ? "var(--surface-2)"
+                          : "var(--surface)",
+                      borderRight: i < 2 ? "1px solid var(--hairline)" : "none",
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 8,
+                    }}
+                  >
+                    <span
+                      style={{
+                        width: 8,
+                        height: 8,
+                        borderRadius: "50%",
+                        background: isActive
+                          ? "var(--snow)"
+                          : isDone
+                            ? "#22c55e"
+                            : "var(--hairline)",
+                        flexShrink: 0,
+                      }}
+                    />
+                    <span
+                      style={{
+                        fontFamily: "var(--font-body)",
+                        fontSize: 12,
+                        fontWeight: isActive ? 700 : 400,
+                        color: isActive
+                          ? "var(--snow)"
+                          : isDone
+                            ? "var(--ink-3)"
+                            : "var(--ink-4)",
+                        textTransform: "uppercase",
+                        letterSpacing: "0.05em",
+                      }}
+                    >
+                      {s.charAt(0).toUpperCase() + s.slice(1)}
+                    </span>
+                  </div>
+                );
+              },
             )}
           </div>
 
           {submissionStatus === "approved" ? (
-            <div className="submission-approved">
-              <span className="submission-approved__icon">✓</span>
+            <div
+              style={{
+                display: "flex",
+                alignItems: "flex-start",
+                gap: 16,
+                padding: "16px",
+                background: "var(--surface)",
+                border: "1px solid var(--hairline)",
+                borderRadius: 8,
+                borderLeft: "3px solid #22c55e",
+                marginBottom: 16,
+              }}
+            >
+              <span
+                style={{
+                  width: 32,
+                  height: 32,
+                  borderRadius: "50%",
+                  background: "#22c55e",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  color: "var(--snow)",
+                  fontSize: 16,
+                  fontWeight: 700,
+                  flexShrink: 0,
+                }}
+              >
+                ✓
+              </span>
               <div>
-                <div className="submission-approved__title">
+                <div
+                  style={{
+                    fontFamily: "var(--font-body)",
+                    fontWeight: 700,
+                    fontSize: 14,
+                    color: "var(--ink)",
+                    marginBottom: 4,
+                  }}
+                >
                   Submission approved
                 </div>
-                <div className="submission-approved__sub">
+                <div
+                  style={{
+                    fontFamily: "var(--font-body)",
+                    fontSize: 13,
+                    color: "var(--ink-3)",
+                  }}
+                >
                   Your content passed DisclosureBot verification. Payout is
                   processing.
                 </div>
               </div>
             </div>
           ) : (
-            <div className="submit-form">
-              <label className="submit-form__label" htmlFor="submit-url">
+            <div style={{ marginBottom: 16 }}>
+              <label
+                htmlFor="submit-url"
+                style={{
+                  display: "block",
+                  fontFamily: "var(--font-body)",
+                  fontSize: 12,
+                  color: "var(--ink-3)",
+                  textTransform: "uppercase",
+                  letterSpacing: "0.06em",
+                  marginBottom: 8,
+                }}
+              >
                 Content URL (Instagram, TikTok, YouTube…)
               </label>
               <input
                 id="submit-url"
-                className="submit-form__input"
                 type="url"
                 placeholder="https://www.instagram.com/p/..."
                 value={submitUrl}
                 onChange={(e) => setSubmitUrl(e.target.value)}
                 disabled={submissionStatus === "submitted"}
+                style={{
+                  width: "100%",
+                  border: "1px solid var(--hairline)",
+                  borderRadius: 8,
+                  padding: "10px 14px",
+                  fontFamily: "var(--font-body)",
+                  fontSize: 14,
+                  color: "var(--ink)",
+                  background: "var(--snow)",
+                  outline: "none",
+                  boxSizing: "border-box",
+                  marginBottom: 12,
+                }}
               />
-              <div className="submit-form__dropzone">
-                <span className="submit-form__dropzone-text">
+              <div
+                style={{
+                  border: "1px dashed var(--hairline)",
+                  borderRadius: 8,
+                  padding: "20px",
+                  textAlign: "center",
+                  background: "var(--surface)",
+                  marginBottom: 16,
+                  cursor: "pointer",
+                }}
+              >
+                <span
+                  style={{
+                    fontFamily: "var(--font-body)",
+                    fontSize: 13,
+                    color: "var(--ink-4)",
+                  }}
+                >
                   Drop screenshots here, or click to upload
                 </span>
               </div>
               {submissionStatus === "submitted" ? (
-                <div className="submit-form__submitted-note">
+                <div
+                  style={{
+                    padding: "12px 16px",
+                    borderRadius: 8,
+                    background: "var(--surface)",
+                    border: "1px solid var(--hairline)",
+                    fontFamily: "var(--font-body)",
+                    fontSize: 13,
+                    color: "var(--ink-3)",
+                  }}
+                >
                   Submitted — awaiting merchant review
                 </div>
               ) : (
                 <button
-                  className="submit-form__btn"
+                  className="btn-primary click-shift"
                   disabled={!submitUrl}
                   onClick={handleSubmit}
+                  style={{
+                    opacity: submitUrl ? 1 : 0.5,
+                    cursor: submitUrl ? "pointer" : "not-allowed",
+                  }}
                 >
                   Submit for verification
                 </button>
@@ -336,262 +821,551 @@ export default function CampaignThreadPage({ params }: Props) {
           )}
 
           {/* DisclosureBot checklist */}
-          <div className="verify-status">
-            <div
-              className={`verify-status__row${submissionStatus !== "draft" ? " verify-status__row--done" : ""}`}
-            >
-              <span className="verify-status__check">
-                {submissionStatus !== "draft" ? "✓" : "◯"}
-              </span>
-              <span className="verify-status__item">Content URL submitted</span>
-            </div>
-            <div
-              className={`verify-status__row${submissionStatus === "approved" ? " verify-status__row--done" : ""}`}
-            >
-              <span className="verify-status__check">
-                {submissionStatus === "approved" ? "✓" : "◯"}
-              </span>
-              <span className="verify-status__item">
-                Disclosure check (DisclosureBot™)
-              </span>
-            </div>
-            <div
-              className={`verify-status__row${submissionStatus === "approved" ? " verify-status__row--done" : ""}`}
-            >
-              <span className="verify-status__check">
-                {submissionStatus === "approved" ? "✓" : "◯"}
-              </span>
-              <span className="verify-status__item">
-                QR attribution matched
-              </span>
-            </div>
-            <div className="verify-status__row">
-              <span className="verify-status__check">◯</span>
-              <span className="verify-status__item">Payout approved</span>
-            </div>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: 8,
+            }}
+          >
+            {[
+              {
+                label: "Content URL submitted",
+                done: submissionStatus !== "draft",
+              },
+              {
+                label: "Disclosure check (DisclosureBot™)",
+                done: submissionStatus === "approved",
+              },
+              {
+                label: "QR attribution matched",
+                done: submissionStatus === "approved",
+              },
+              { label: "Payout approved", done: false },
+            ].map(({ label, done }) => (
+              <div
+                key={label}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 10,
+                  fontFamily: "var(--font-body)",
+                  fontSize: 13,
+                  color: done ? "var(--ink)" : "var(--ink-4)",
+                }}
+              >
+                <span
+                  style={{
+                    width: 20,
+                    height: 20,
+                    borderRadius: "50%",
+                    border: done ? "none" : "1px solid var(--hairline)",
+                    background: done ? "#22c55e" : "var(--surface)",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    fontSize: 10,
+                    color: done ? "var(--snow)" : "var(--ink-4)",
+                    flexShrink: 0,
+                    fontWeight: 700,
+                  }}
+                >
+                  {done ? "✓" : "○"}
+                </span>
+                {label}
+              </div>
+            ))}
           </div>
         </section>
 
         {/* 03 / Attribution */}
-        <section id="section-attribution" className="thread-section">
-          <span className="thread-section__label">03 / QR Attribution</span>
-          <h2 className="thread-section__title">Drive walk-ins</h2>
-          <p className="thread-section__text">
+        <section id="section-attribution" style={cardStyle}>
+          <span
+            className="eyebrow"
+            style={{ display: "block", marginBottom: 8 }}
+          >
+            03 / QR Attribution
+          </span>
+          <h2
+            style={{
+              fontFamily: "var(--font-display)",
+              fontWeight: 700,
+              fontSize: 22,
+              color: "var(--ink)",
+              margin: "0 0 12px",
+            }}
+          >
+            Drive walk-ins
+          </h2>
+          <p
+            style={{
+              fontFamily: "var(--font-body)",
+              fontSize: 14,
+              color: "var(--ink-3)",
+              lineHeight: 1.6,
+              margin: "0 0 20px",
+            }}
+          >
             Every customer who scans your unique QR code and walks into{" "}
             {campaign.merchantName} is counted as your attribution. The more
             walk-ins, the more you earn.
           </p>
 
-          {/* QR display */}
-          <div className="qr-block">
-            <div className="qr-block__code">
-              <div className="qr-placeholder" aria-label="QR Code">
-                <div className="qr-placeholder__inner">
-                  <svg width="80" height="80" viewBox="0 0 80 80" fill="none">
-                    {/* Simulated QR corners */}
-                    <rect
-                      x="4"
-                      y="4"
-                      width="28"
-                      height="28"
-                      rx="0"
-                      stroke="currentColor"
-                      strokeWidth="3"
-                      fill="none"
-                    />
-                    <rect
-                      x="10"
-                      y="10"
-                      width="16"
-                      height="16"
-                      fill="currentColor"
-                    />
-                    <rect
-                      x="48"
-                      y="4"
-                      width="28"
-                      height="28"
-                      rx="0"
-                      stroke="currentColor"
-                      strokeWidth="3"
-                      fill="none"
-                    />
-                    <rect
-                      x="54"
-                      y="10"
-                      width="16"
-                      height="16"
-                      fill="currentColor"
-                    />
-                    <rect
-                      x="4"
-                      y="48"
-                      width="28"
-                      height="28"
-                      rx="0"
-                      stroke="currentColor"
-                      strokeWidth="3"
-                      fill="none"
-                    />
-                    <rect
-                      x="10"
-                      y="54"
-                      width="16"
-                      height="16"
-                      fill="currentColor"
-                    />
-                    {/* Dots grid */}
-                    <rect
-                      x="48"
-                      y="48"
-                      width="5"
-                      height="5"
-                      fill="currentColor"
-                    />
-                    <rect
-                      x="56"
-                      y="48"
-                      width="5"
-                      height="5"
-                      fill="currentColor"
-                    />
-                    <rect
-                      x="64"
-                      y="48"
-                      width="5"
-                      height="5"
-                      fill="currentColor"
-                    />
-                    <rect
-                      x="48"
-                      y="56"
-                      width="5"
-                      height="5"
-                      fill="currentColor"
-                    />
-                    <rect
-                      x="64"
-                      y="56"
-                      width="5"
-                      height="5"
-                      fill="currentColor"
-                    />
-                    <rect
-                      x="56"
-                      y="64"
-                      width="5"
-                      height="5"
-                      fill="currentColor"
-                    />
-                    <rect
-                      x="48"
-                      y="64"
-                      width="5"
-                      height="5"
-                      fill="currentColor"
-                    />
-                  </svg>
-                </div>
+          {/* QR block */}
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "auto 1fr",
+              gap: 24,
+              alignItems: "start",
+            }}
+          >
+            <div style={{ textAlign: "center" }}>
+              <div
+                aria-label="QR Code"
+                style={{
+                  width: 120,
+                  height: 120,
+                  borderRadius: 10,
+                  border: "1px solid var(--hairline)",
+                  background: "var(--snow)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  color: "var(--ink)",
+                  marginBottom: 8,
+                }}
+              >
+                <svg width="80" height="80" viewBox="0 0 80 80" fill="none">
+                  {/* Simulated QR corners */}
+                  <rect
+                    x="4"
+                    y="4"
+                    width="28"
+                    height="28"
+                    rx="0"
+                    stroke="currentColor"
+                    strokeWidth="3"
+                    fill="none"
+                  />
+                  <rect
+                    x="10"
+                    y="10"
+                    width="16"
+                    height="16"
+                    fill="currentColor"
+                  />
+                  <rect
+                    x="48"
+                    y="4"
+                    width="28"
+                    height="28"
+                    rx="0"
+                    stroke="currentColor"
+                    strokeWidth="3"
+                    fill="none"
+                  />
+                  <rect
+                    x="54"
+                    y="10"
+                    width="16"
+                    height="16"
+                    fill="currentColor"
+                  />
+                  <rect
+                    x="4"
+                    y="48"
+                    width="28"
+                    height="28"
+                    rx="0"
+                    stroke="currentColor"
+                    strokeWidth="3"
+                    fill="none"
+                  />
+                  <rect
+                    x="10"
+                    y="54"
+                    width="16"
+                    height="16"
+                    fill="currentColor"
+                  />
+                  {/* Dots grid */}
+                  <rect
+                    x="48"
+                    y="48"
+                    width="5"
+                    height="5"
+                    fill="currentColor"
+                  />
+                  <rect
+                    x="56"
+                    y="48"
+                    width="5"
+                    height="5"
+                    fill="currentColor"
+                  />
+                  <rect
+                    x="64"
+                    y="48"
+                    width="5"
+                    height="5"
+                    fill="currentColor"
+                  />
+                  <rect
+                    x="48"
+                    y="56"
+                    width="5"
+                    height="5"
+                    fill="currentColor"
+                  />
+                  <rect
+                    x="64"
+                    y="56"
+                    width="5"
+                    height="5"
+                    fill="currentColor"
+                  />
+                  <rect
+                    x="56"
+                    y="64"
+                    width="5"
+                    height="5"
+                    fill="currentColor"
+                  />
+                  <rect
+                    x="48"
+                    y="64"
+                    width="5"
+                    height="5"
+                    fill="currentColor"
+                  />
+                </svg>
               </div>
-              <div className="qr-block__code-label">{campaign.qrCode}</div>
+              <div
+                style={{
+                  fontFamily: "var(--font-body)",
+                  fontSize: 11,
+                  color: "var(--ink-4)",
+                  letterSpacing: "0.04em",
+                }}
+              >
+                {campaign.qrCode}
+              </div>
             </div>
-            <div className="qr-block__info">
-              <div className="qr-how">
-                <div className="qr-how__title">How it works</div>
-                <ol className="qr-how__list">
-                  <li>Share your QR code in your post caption or Stories</li>
-                  <li>
-                    Followers scan → get a discount at {campaign.merchantName}
-                  </li>
-                  <li>
-                    Each verified walk-in earns you a bonus on top of base pay
-                  </li>
-                  <li>
-                    ConversionOracle™ matches scans to real in-store visits
-                  </li>
-                </ol>
+
+            <div>
+              <div
+                style={{
+                  fontFamily: "var(--font-body)",
+                  fontWeight: 700,
+                  fontSize: 13,
+                  color: "var(--ink)",
+                  textTransform: "uppercase",
+                  letterSpacing: "0.06em",
+                  marginBottom: 10,
+                }}
+              >
+                How it works
               </div>
-              <button className="qr-block__download">Download QR PNG</button>
+              <ol
+                style={{
+                  listStyle: "none",
+                  padding: 0,
+                  margin: "0 0 16px",
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: 8,
+                }}
+              >
+                {[
+                  "Share your QR code in your post caption or Stories",
+                  `Followers scan → get a discount at ${campaign.merchantName}`,
+                  "Each verified walk-in earns you a bonus on top of base pay",
+                  "ConversionOracle™ matches scans to real in-store visits",
+                ].map((item, i) => (
+                  <li
+                    key={i}
+                    style={{
+                      display: "flex",
+                      gap: 10,
+                      fontFamily: "var(--font-body)",
+                      fontSize: 13,
+                      color: "var(--ink-3)",
+                      lineHeight: 1.4,
+                    }}
+                  >
+                    <span
+                      style={{
+                        width: 20,
+                        height: 20,
+                        borderRadius: "50%",
+                        background: "var(--accent-blue)",
+                        color: "var(--snow)",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        fontSize: 10,
+                        fontWeight: 700,
+                        flexShrink: 0,
+                        marginTop: 1,
+                      }}
+                    >
+                      {i + 1}
+                    </span>
+                    {item}
+                  </li>
+                ))}
+              </ol>
+              <button
+                className="btn-ghost click-shift"
+                style={{ fontSize: 12, padding: "6px 14px" }}
+              >
+                Download QR PNG
+              </button>
             </div>
           </div>
         </section>
 
-        {/* 04 / Earnings tracker */}
-        <section id="section-earnings" className="thread-section">
-          <span className="thread-section__label">04 / Earnings</span>
-          <h2 className="thread-section__title">Your payout</h2>
+        {/* 04 / Earnings */}
+        <section id="section-earnings" style={cardStyle}>
+          <span
+            className="eyebrow"
+            style={{ display: "block", marginBottom: 8 }}
+          >
+            04 / Earnings
+          </span>
+          <h2
+            style={{
+              fontFamily: "var(--font-display)",
+              fontWeight: 700,
+              fontSize: 22,
+              color: "var(--ink)",
+              margin: "0 0 20px",
+            }}
+          >
+            Your payout
+          </h2>
 
-          {/* Big earn-so-far number */}
-          <div className="earnings-hero">
-            <div className="earnings-hero__label">Earned so far</div>
-            <div className="earnings-hero__amount">${totalEarned}</div>
-            <div className="earnings-hero__sub">
+          {/* Big earn number */}
+          <div
+            style={{
+              padding: "20px 24px",
+              background: "var(--surface)",
+              border: "1px solid var(--hairline)",
+              borderRadius: 10,
+              marginBottom: 20,
+              textAlign: "center",
+            }}
+          >
+            <div
+              style={{
+                fontFamily: "var(--font-body)",
+                fontSize: 12,
+                color: "var(--ink-4)",
+                textTransform: "uppercase",
+                letterSpacing: "0.06em",
+                marginBottom: 4,
+              }}
+            >
+              Earned so far
+            </div>
+            <div
+              style={{
+                fontFamily: "var(--font-display)",
+                fontWeight: 800,
+                fontSize: 48,
+                color: "var(--ink)",
+                lineHeight: 1,
+                marginBottom: 4,
+              }}
+            >
+              ${totalEarned}
+            </div>
+            <div
+              style={{
+                fontFamily: "var(--font-body)",
+                fontSize: 13,
+                color: "var(--ink-3)",
+              }}
+            >
               from {campaign.walkinCount} walk-ins attributed to you
             </div>
           </div>
 
-          <div className="thread-earnings">
-            <div className="thread-earnings__row">
-              <div>
-                <span className="thread-earnings__label">Walk-in bonus</span>
-                <div className="thread-earnings__meta">
-                  {campaign.walkinCount} verified walk-ins
+          {/* Earnings breakdown */}
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: 0,
+              border: "1px solid var(--hairline)",
+              borderRadius: 10,
+              overflow: "hidden",
+            }}
+          >
+            {[
+              {
+                label: "Walk-in bonus",
+                meta: `${campaign.walkinCount} verified walk-ins`,
+                amount: `$${campaign.walkinEarned}`,
+                total: false,
+              },
+              {
+                label: "Base payout",
+                meta: "Unlocks on approval",
+                amount:
+                  submissionStatus === "approved" ? `$${campaign.payout}` : "—",
+                total: false,
+              },
+              {
+                label: "Potential total",
+                meta: "",
+                amount: `$${campaign.walkinEarned + campaign.payout}`,
+                total: true,
+              },
+            ].map(({ label, meta, amount, total }, i) => (
+              <div
+                key={label}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  padding: "14px 16px",
+                  background: total ? "var(--surface-2)" : "var(--snow)",
+                  borderTop: i > 0 ? "1px solid var(--hairline)" : "none",
+                }}
+              >
+                <div>
+                  <div
+                    style={{
+                      fontFamily: "var(--font-body)",
+                      fontWeight: total ? 700 : 400,
+                      fontSize: 14,
+                      color: "var(--ink)",
+                      marginBottom: meta ? 2 : 0,
+                    }}
+                  >
+                    {label}
+                  </div>
+                  {meta && (
+                    <div
+                      style={{
+                        fontFamily: "var(--font-body)",
+                        fontSize: 12,
+                        color: "var(--ink-4)",
+                      }}
+                    >
+                      {meta}
+                    </div>
+                  )}
                 </div>
+                <span
+                  style={{
+                    fontFamily: "var(--font-display)",
+                    fontWeight: 700,
+                    fontSize: total ? 20 : 16,
+                    color: total ? "var(--ink)" : "var(--ink-3)",
+                  }}
+                >
+                  {amount}
+                </span>
               </div>
-              <span className="thread-earnings__amount">
-                ${campaign.walkinEarned}
-              </span>
-            </div>
-            <div className="thread-earnings__row">
-              <div>
-                <span className="thread-earnings__label">Base payout</span>
-                <div className="thread-earnings__meta">Unlocks on approval</div>
-              </div>
-              <span className="thread-earnings__amount">
-                ${submissionStatus === "approved" ? campaign.payout : "—"}
-              </span>
-            </div>
-            <div className="thread-earnings__row thread-earnings__row--total">
-              <span className="thread-earnings__label">Potential total</span>
-              <span className="thread-earnings__amount thread-earnings__amount--total">
-                ${campaign.walkinEarned + campaign.payout}
-              </span>
-            </div>
+            ))}
           </div>
         </section>
 
         {/* 05 / Timeline */}
-        <section id="section-timeline" className="thread-section">
-          <span className="thread-section__label">05 / Timeline</span>
-          <h2 className="thread-section__title">Key dates</h2>
+        <section id="section-timeline" style={cardStyle}>
+          <span
+            className="eyebrow"
+            style={{ display: "block", marginBottom: 8 }}
+          >
+            05 / Timeline
+          </span>
+          <h2
+            style={{
+              fontFamily: "var(--font-display)",
+              fontWeight: 700,
+              fontSize: 22,
+              color: "var(--ink)",
+              margin: "0 0 20px",
+            }}
+          >
+            Key dates
+          </h2>
 
           {/* Key dates row */}
-          <div className="thread-keydates">
-            <div className="keydate-item">
-              <span className="keydate-item__label">Campaign start</span>
-              <span className="keydate-item__value">
-                {formatDate(campaign.campaignStart)}
-              </span>
-            </div>
-            <div className="keydate-item keydate-item--accent">
-              <span className="keydate-item__label">Submission due</span>
-              <span className="keydate-item__value">
-                {formatDate(campaign.submissionDue)}
-                <span className="keydate-item__countdown">
-                  {formatDeadline(campaign.submissionDue)}
-                </span>
-              </span>
-            </div>
-            <div className="keydate-item">
-              <span className="keydate-item__label">Payment date</span>
-              <span className="keydate-item__value">
-                {formatDate(campaign.paymentDate)}
-              </span>
-            </div>
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(3, 1fr)",
+              gap: 12,
+              marginBottom: 24,
+            }}
+          >
+            {[
+              {
+                label: "Campaign start",
+                value: formatDate(campaign.campaignStart),
+                accent: false,
+              },
+              {
+                label: "Submission due",
+                value: `${formatDate(campaign.submissionDue)} · ${formatDeadline(campaign.submissionDue)}`,
+                accent: true,
+              },
+              {
+                label: "Payment date",
+                value: formatDate(campaign.paymentDate),
+                accent: false,
+              },
+            ].map(({ label, value, accent }) => (
+              <div
+                key={label}
+                style={{
+                  padding: "12px 16px",
+                  borderRadius: 8,
+                  background: accent ? "var(--surface)" : "var(--surface)",
+                  border: accent
+                    ? "1px solid var(--brand-red)"
+                    : "1px solid var(--hairline)",
+                }}
+              >
+                <div
+                  style={{
+                    fontFamily: "var(--font-body)",
+                    fontSize: 11,
+                    color: "var(--ink-4)",
+                    textTransform: "uppercase",
+                    letterSpacing: "0.06em",
+                    marginBottom: 4,
+                  }}
+                >
+                  {label}
+                </div>
+                <div
+                  style={{
+                    fontFamily: "var(--font-display)",
+                    fontWeight: 700,
+                    fontSize: 14,
+                    color: accent ? "var(--brand-red)" : "var(--ink)",
+                  }}
+                >
+                  {value}
+                </div>
+              </div>
+            ))}
           </div>
 
           {/* Milestone rail */}
-          <div className="milestone-rail">
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 0,
+              overflowX: "auto",
+            }}
+          >
             {MILESTONES.map((m, idx) => {
               const state =
                 idx < currentMilestoneIdx
@@ -602,10 +1376,77 @@ export default function CampaignThreadPage({ params }: Props) {
               return (
                 <div
                   key={m.id}
-                  className={`milestone-node milestone-node--${state}`}
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    flex: 1,
+                    position: "relative",
+                    minWidth: 64,
+                  }}
                 >
-                  <div className="milestone-node__dot" />
-                  <span className="milestone-node__label">{m.label}</span>
+                  {/* Connector line */}
+                  {idx > 0 && (
+                    <div
+                      style={{
+                        position: "absolute",
+                        left: "-50%",
+                        top: 10,
+                        width: "100%",
+                        height: 2,
+                        background:
+                          state === "upcoming"
+                            ? "var(--hairline)"
+                            : "var(--accent-blue)",
+                        zIndex: 0,
+                      }}
+                    />
+                  )}
+                  <div
+                    style={{
+                      width: 20,
+                      height: 20,
+                      borderRadius: "50%",
+                      background:
+                        state === "done"
+                          ? "var(--accent-blue)"
+                          : state === "active"
+                            ? "var(--brand-red)"
+                            : "var(--surface-2)",
+                      border:
+                        state === "upcoming"
+                          ? "1px solid var(--hairline)"
+                          : "none",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      color: "var(--snow)",
+                      fontSize: 10,
+                      fontWeight: 700,
+                      zIndex: 1,
+                      position: "relative",
+                      marginBottom: 6,
+                    }}
+                  >
+                    {state === "done" ? "✓" : ""}
+                  </div>
+                  <span
+                    style={{
+                      fontFamily: "var(--font-body)",
+                      fontSize: 10,
+                      color:
+                        state === "active"
+                          ? "var(--brand-red)"
+                          : state === "done"
+                            ? "var(--ink-3)"
+                            : "var(--ink-4)",
+                      fontWeight: state === "active" ? 700 : 400,
+                      textAlign: "center",
+                      whiteSpace: "nowrap",
+                    }}
+                  >
+                    {m.label}
+                  </span>
                 </div>
               );
             })}
@@ -613,46 +1454,178 @@ export default function CampaignThreadPage({ params }: Props) {
         </section>
 
         {/* 06 / Chat */}
-        <section id="section-chat" className="thread-section">
-          <span className="thread-section__label">06 / Chat</span>
-          <h2 className="thread-section__title">
+        <section id="section-chat" style={cardStyle}>
+          <span
+            className="eyebrow"
+            style={{ display: "block", marginBottom: 8 }}
+          >
+            06 / Chat
+          </span>
+          <h2
+            style={{
+              fontFamily: "var(--font-display)",
+              fontWeight: 700,
+              fontSize: 22,
+              color: "var(--ink)",
+              margin: "0 0 16px",
+            }}
+          >
             Message {campaign.merchantName}
           </h2>
 
           {/* Quick CTA to inbox */}
           <Link
             href={`/creator/messages?merchant=${encodeURIComponent(campaign.merchantName)}&campaign=${campaignId ?? campaign.id}`}
-            className="thread-inbox-link"
+            className="click-shift"
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 12,
+              padding: "12px 16px",
+              borderRadius: 8,
+              border: "1px solid var(--hairline)",
+              background: "var(--surface)",
+              textDecoration: "none",
+              marginBottom: 16,
+            }}
           >
-            <span className="thread-inbox-link__icon">✉</span>
-            <span>Open inbox thread with {campaign.merchantName}</span>
-            <span className="thread-inbox-link__arrow">→</span>
+            <span style={{ fontSize: 18 }}>✉</span>
+            <span
+              style={{
+                fontFamily: "var(--font-body)",
+                fontSize: 14,
+                color: "var(--ink)",
+                flex: 1,
+              }}
+            >
+              Open inbox thread with {campaign.merchantName}
+            </span>
+            <span style={{ color: "var(--ink-4)" }}>→</span>
           </Link>
 
-          <div className="thread-chat">
-            <div className="thread-chat__messages">
-              <div className="thread-chat__message thread-chat__message--merchant">
-                <span className="thread-chat__sender">
-                  {campaign.merchantName}
-                </span>
-                <p className="thread-chat__text">
-                  Hey! Looking forward to having you visit. Morning light is
-                  best around 8–9am — feel free to grab a window seat.
-                </p>
-                <span className="thread-chat__time">2 days ago</span>
+          {/* Inline chat preview */}
+          <div
+            style={{
+              border: "1px solid var(--hairline)",
+              borderRadius: 10,
+              overflow: "hidden",
+            }}
+          >
+            <div
+              style={{
+                padding: "16px",
+                background: "var(--surface)",
+                borderBottom: "1px solid var(--hairline)",
+              }}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  gap: 8,
+                  alignItems: "flex-start",
+                  marginBottom: 8,
+                }}
+              >
+                <div
+                  style={{
+                    width: 32,
+                    height: 32,
+                    borderRadius: "50%",
+                    background: "var(--ink)",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    fontFamily: "var(--font-display)",
+                    fontWeight: 700,
+                    fontSize: 13,
+                    color: "var(--snow)",
+                    flexShrink: 0,
+                  }}
+                >
+                  {campaign.merchantName[0]}
+                </div>
+                <div>
+                  <div
+                    style={{
+                      fontFamily: "var(--font-body)",
+                      fontWeight: 700,
+                      fontSize: 13,
+                      color: "var(--ink)",
+                      marginBottom: 4,
+                    }}
+                  >
+                    {campaign.merchantName}
+                  </div>
+                  <p
+                    style={{
+                      fontFamily: "var(--font-body)",
+                      fontSize: 14,
+                      color: "var(--ink-3)",
+                      margin: 0,
+                      lineHeight: 1.5,
+                    }}
+                  >
+                    Hey! Looking forward to having you visit. Morning light is
+                    best around 8–9am — feel free to grab a window seat.
+                  </p>
+                  <span
+                    style={{
+                      fontFamily: "var(--font-body)",
+                      fontSize: 11,
+                      color: "var(--ink-4)",
+                      marginTop: 4,
+                      display: "block",
+                    }}
+                  >
+                    2 days ago
+                  </span>
+                </div>
               </div>
             </div>
-            <div className="thread-chat__input-row">
+            <div
+              style={{
+                padding: "12px",
+                display: "flex",
+                gap: 8,
+                background: "var(--snow)",
+              }}
+            >
               <input
-                className="thread-chat__input"
                 type="text"
                 placeholder="Message merchant..."
+                style={{
+                  flex: 1,
+                  border: "1px solid var(--hairline)",
+                  borderRadius: 8,
+                  padding: "8px 12px",
+                  fontFamily: "var(--font-body)",
+                  fontSize: 14,
+                  color: "var(--ink)",
+                  background: "var(--surface-2)",
+                  outline: "none",
+                }}
               />
-              <button className="thread-chat__send">Send</button>
+              <button
+                className="btn-primary click-shift"
+                style={{ padding: "8px 16px" }}
+              >
+                Send
+              </button>
             </div>
-            <p className="thread-chat__hint">
-              <button className="thread-chat__suggest">Suggest reply</button>
-            </p>
+            <div
+              style={{
+                padding: "8px 12px",
+                borderTop: "1px solid var(--hairline)",
+                background: "var(--snow)",
+              }}
+            >
+              <button
+                className="btn-ghost click-shift"
+                style={{ fontSize: 12, padding: "4px 10px" }}
+              >
+                Suggest reply
+              </button>
+            </div>
           </div>
         </section>
       </div>
@@ -660,17 +1633,52 @@ export default function CampaignThreadPage({ params }: Props) {
       {/* ── Completion Overlay ──────────────────────────────────── */}
       {showCelebrate && (
         <div
-          className="thread-celebrate"
           role="dialog"
           aria-label="Campaign completed"
+          style={{
+            position: "fixed",
+            inset: 0,
+            background: "rgba(0,0,0,0.6)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            zIndex: 100,
+            padding: 24,
+          }}
         >
-          <div className="thread-celebrate__panel">
-            <h2 className="thread-celebrate__title">Campaign complete.</h2>
-            <p className="thread-celebrate__body">
+          <div
+            style={{
+              background: "var(--snow)",
+              borderRadius: 10,
+              padding: "40px 48px",
+              textAlign: "center",
+              maxWidth: 400,
+              width: "100%",
+            }}
+          >
+            <h2
+              style={{
+                fontFamily: "var(--font-display)",
+                fontWeight: 800,
+                fontSize: 28,
+                color: "var(--ink)",
+                margin: "0 0 12px",
+              }}
+            >
+              Campaign complete.
+            </h2>
+            <p
+              style={{
+                fontFamily: "var(--font-body)",
+                fontSize: 16,
+                color: "var(--ink-3)",
+                margin: "0 0 24px",
+              }}
+            >
               ${campaign.payout} is on its way to your account.
             </p>
             <button
-              className="thread-celebrate__close"
+              className="btn-primary click-shift"
               onClick={() => setShowCelebrate(false)}
             >
               Done

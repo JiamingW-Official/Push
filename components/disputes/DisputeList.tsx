@@ -76,7 +76,7 @@ export function DisputeList({ disputes, basePath }: DisputeListProps) {
               style={{
                 fontFamily: "var(--font-body)",
                 fontSize: "11px",
-                color: "var(--text-muted)",
+                color: "var(--ink-4)",
                 marginTop: "3px",
                 display: "block",
               }}

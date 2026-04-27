@@ -11,7 +11,7 @@ import {
 } from "@/lib/integrations/mock-integrations";
 import "./integrations.css";
 
-/* ── Logo placeholder ───────────────────────────────────────── */
+/* -- Integration logo placeholder ------------------------------------------------- */
 function IntegrationLogo({
   integration,
   size = 48,
@@ -43,36 +43,42 @@ function IntegrationLogo({
   );
 }
 
-/* ── Status badge ───────────────────────────────────────────── */
-function StatusBadge({ status }: { status: Integration["status"] }) {
-  const map = {
-    available: { cls: "int-card__status--available", label: "Available" },
-    connected: { cls: "int-card__status--connected", label: "Connected" },
-    coming_soon: { cls: "int-card__status--coming-soon", label: "Coming soon" },
-  };
-  const { cls, label } = map[status];
-  return <span className={`int-card__status ${cls}`}>{label}</span>;
+/* -- Status chip ------------------------------------------------------------------ */
+function StatusChip({ status }: { status: Integration["status"] }) {
+  return (
+    <span
+      className={`int-status-chip int-status-chip--${status.replace("_", "-")}`}
+    >
+      {status === "coming_soon"
+        ? "COMING SOON"
+        : status === "connected"
+          ? "CONNECTED"
+          : "AVAILABLE"}
+    </span>
+  );
 }
 
-/* ── Integration card ───────────────────────────────────────── */
+/* -- Integration card ------------------------------------------------------------- */
 function IntegrationCard({ integration }: { integration: Integration }) {
   const isComingSoon = integration.status === "coming_soon";
+  const isConnected = integration.status === "connected";
 
-  const card = (
-    <article
-      className={`int-card ${isComingSoon ? "int-card--coming-soon" : ""}`}
-    >
+  const cardContent = (
+    <div className={`int-card${isComingSoon ? " int-card--coming-soon" : ""}`}>
       <div className="int-card__top">
         <IntegrationLogo integration={integration} />
-        <StatusBadge status={integration.status} />
+        <StatusChip status={integration.status} />
       </div>
 
-      <h3 className="int-card__name">{integration.name}</h3>
-      <p className="int-card__description">{integration.description}</p>
+      <div>
+        <h3 className="int-card__name">{integration.name}</h3>
+        <p className="int-card__description">{integration.description}</p>
+      </div>
 
       <ul className="int-card__benefits">
         {integration.benefits.map((b, i) => (
           <li key={i} className="int-card__benefit">
+            <span className="int-card__benefit-arrow">→</span>
             {b}
           </li>
         ))}
@@ -82,24 +88,30 @@ function IntegrationCard({ integration }: { integration: Integration }) {
         <span className="int-card__category">
           {CATEGORY_LABELS[integration.category]}
         </span>
-        {!isComingSoon && <span className="int-card__arrow">→</span>}
+        {!isComingSoon && (
+          <span
+            className={`int-card__cta ${isConnected ? "int-card__cta--manage" : "int-card__cta--connect"}`}
+          >
+            {isConnected ? "Manage →" : "Connect →"}
+          </span>
+        )}
       </div>
-    </article>
+    </div>
   );
 
-  if (isComingSoon) return card;
+  if (isComingSoon) return cardContent;
 
   return (
     <Link
       href={`/merchant/integrations/${integration.slug}`}
-      style={{ textDecoration: "none" }}
+      style={{ textDecoration: "none", display: "flex" }}
     >
-      {card}
+      {cardContent}
     </Link>
   );
 }
 
-/* ── Category tabs ──────────────────────────────────────────── */
+/* -- Category tabs ---------------------------------------------------------------- */
 const ALL_CATEGORY = "__all__";
 
 function CategoryTabs({
@@ -110,11 +122,7 @@ function CategoryTabs({
   onChange: (cat: string) => void;
 }) {
   const categories = [
-    {
-      key: ALL_CATEGORY,
-      label: "All",
-      count: INTEGRATIONS.length,
-    },
+    { key: ALL_CATEGORY, label: "All", count: INTEGRATIONS.length },
     ...Object.entries(CATEGORY_LABELS).map(([key, label]) => ({
       key,
       label,
@@ -123,107 +131,66 @@ function CategoryTabs({
   ];
 
   return (
-    <nav className="int-tabs" aria-label="Filter by category">
-      <div className="int-tabs__inner">
-        {categories.map((cat) => (
-          <button
-            key={cat.key}
-            className={`int-tab ${active === cat.key ? "int-tab--active" : ""}`}
-            onClick={() => onChange(cat.key)}
-            aria-pressed={active === cat.key}
-          >
-            {cat.label}
-            <span className="int-tab__count">{cat.count}</span>
-          </button>
-        ))}
-      </div>
-    </nav>
+    <div className="int-tabs" role="tablist">
+      {categories.map((cat) => (
+        <button
+          key={cat.key}
+          role="tab"
+          aria-pressed={active === cat.key}
+          onClick={() => onChange(cat.key)}
+          className="int-tab"
+        >
+          {cat.label}
+          <span className="int-tab__count">{cat.count}</span>
+        </button>
+      ))}
+    </div>
   );
 }
 
-/* ── Featured carousel ──────────────────────────────────────── */
-function FeaturedCarousel() {
+/* -- Featured strip --------------------------------------------------------------- */
+function FeaturedStrip() {
   const featured = getFeaturedIntegrations();
 
   return (
-    <section className="int-featured">
-      <div className="int-featured__inner">
-        <p className="int-featured__eyebrow">Featured</p>
-        <h2 className="int-featured__heading">Popular integrations</h2>
+    <div className="int-featured">
+      <div className="int-featured__eyebrow">Featured</div>
+      <div className="int-featured__track">
+        {featured.map((integration) => {
+          const initials = integration.name
+            .split(" ")
+            .map((w) => w[0])
+            .join("")
+            .slice(0, 2)
+            .toUpperCase();
 
-        <div className="int-featured__track-wrapper">
-          <div className="int-featured__track">
-            {featured.map((integration) => {
-              const initials = integration.name
-                .split(" ")
-                .map((w) => w[0])
-                .join("")
-                .slice(0, 2)
-                .toUpperCase();
-
-              return (
-                <Link
-                  key={integration.slug}
-                  href={`/merchant/integrations/${integration.slug}`}
-                  className="int-featured-card"
-                >
-                  <div
-                    className="int-featured-card__logo"
-                    style={{
-                      background: integration.logoColor,
-                      color: integration.logoTextColor,
-                    }}
-                  >
-                    {initials}
-                  </div>
-                  <h3 className="int-featured-card__name">
-                    {integration.name}
-                  </h3>
-                  <p className="int-featured-card__tagline">
-                    {integration.tagline}
-                  </p>
-                  <span className="int-featured-card__link">
-                    View integration →
-                  </span>
-                </Link>
-              );
-            })}
-          </div>
-        </div>
+          return (
+            <Link
+              key={integration.slug}
+              href={`/merchant/integrations/${integration.slug}`}
+              className="int-featured-item click-shift"
+            >
+              <div
+                className="int-featured-item__logo"
+                style={{
+                  background: integration.logoColor,
+                  color: integration.logoTextColor,
+                }}
+              >
+                {initials}
+              </div>
+              <span className="int-featured-item__name">
+                {integration.name}
+              </span>
+            </Link>
+          );
+        })}
       </div>
-    </section>
+    </div>
   );
 }
 
-/* ── Can't find it CTA ──────────────────────────────────────── */
-function CannotFindCta() {
-  return (
-    <section className="int-cta">
-      <div className="int-cta__inner">
-        <p className="int-cta__eyebrow">Missing something?</p>
-        <h2 className="int-cta__heading">Can't find your tool?</h2>
-        <p className="int-cta__body">
-          Push connects to thousands of apps via Zapier — no code required. Or
-          tell us what you need and we'll prioritize the next native
-          integration.
-        </p>
-        <div className="int-cta__actions">
-          <Link
-            href="/merchant/integrations/zapier"
-            className="int-btn int-btn--primary"
-          >
-            Use Zapier instead
-          </Link>
-          <Link href="/contact" className="int-btn int-btn--outline">
-            Request an integration
-          </Link>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-/* ── Page ───────────────────────────────────────────────────── */
+/* -- Page ------------------------------------------------------------------------- */
 export default function IntegrationsPage() {
   const [activeCategory, setActiveCategory] = useState(ALL_CATEGORY);
 
@@ -239,80 +206,162 @@ export default function IntegrationsPage() {
 
   return (
     <div className="int-shell">
-      {/* Top nav */}
-      <header className="int-nav">
-        <Link href="/merchant/dashboard" className="int-nav__logo">
-          Push<span>.</span>
+      {/* Back nav */}
+      <nav
+        style={{
+          padding: "12px 64px",
+          borderBottom: "1px solid var(--hairline)",
+          background: "var(--surface)",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+        }}
+      >
+        <Link
+          href="/merchant/dashboard"
+          style={{
+            fontFamily: "var(--font-body)",
+            fontSize: 12,
+            fontWeight: 700,
+            letterSpacing: "0.06em",
+            textTransform: "uppercase",
+            color: "var(--ink-4)",
+            textDecoration: "none",
+          }}
+        >
+          ← Dashboard
         </Link>
-        <div className="int-nav__center">
-          <span className="int-nav__title">Integrations</span>
-        </div>
-        <div className="int-nav__right">
-          <Link href="/merchant/dashboard" className="int-nav__back">
-            ← Dashboard
-          </Link>
-        </div>
-      </header>
+        <span
+          style={{
+            fontFamily: "var(--font-display)",
+            fontSize: 14,
+            fontWeight: 700,
+            color: "var(--ink-4)",
+            letterSpacing: "0.08em",
+            textTransform: "uppercase",
+          }}
+        >
+          Integrations
+        </span>
+        <div style={{ width: 80 }} />
+      </nav>
 
-      <main className="int-main">
-        {/* Hero */}
-        <section className="int-hero">
-          <div className="int-hero__inner">
+      <main
+        style={{ maxWidth: 1140, margin: "0 auto", padding: "40px 64px 96px" }}
+      >
+        {/* Page header */}
+        <div className="int-header__inner" style={{ marginBottom: 40 }}>
+          <div className="int-header__row">
             <div>
-              <p className="int-hero__eyebrow">Marketplace</p>
-              <h1 className="int-hero__title">Integrations.</h1>
-              <p className="int-hero__subtitle">
+              <h1 className="int-header__title">Integrations</h1>
+              <p className="int-header__subtitle">
                 Connect Push to the tools you already use. Sync data, automate
                 workflows, and close the loop on creator campaign ROI.
               </p>
             </div>
-            <div className="int-hero__stat">
-              <span className="int-hero__stat-number">
+            <div className="int-header__stat-card">
+              <div className="int-header__stat-value">
                 {INTEGRATIONS.length}
-              </span>
-              <span className="int-hero__stat-label">Integrations</span>
+              </div>
+              <div className="int-header__stat-label">Integrations</div>
             </div>
           </div>
-        </section>
-
-        {/* Category tabs */}
-        <CategoryTabs active={activeCategory} onChange={setActiveCategory} />
-
-        {/* Grid */}
-        <div className="int-grid-section">
-          <div className="int-grid-section__header">
-            <h2 className="int-grid-section__heading">{sectionLabel}</h2>
-            <span className="int-grid-section__count">
-              {filtered.length} integration{filtered.length !== 1 ? "s" : ""}
-            </span>
-          </div>
-
-          {filtered.length === 0 ? (
-            <p
-              style={{
-                color: "var(--text-muted)",
-                fontSize: "var(--text-small)",
-              }}
-            >
-              No integrations in this category yet.
-            </p>
-          ) : (
-            <div className="int-grid">
-              {filtered.map((integration) => (
-                <IntegrationCard
-                  key={integration.slug}
-                  integration={integration}
-                />
-              ))}
-            </div>
-          )}
         </div>
 
-        {/* Featured carousel */}
-        <FeaturedCarousel />
+        {/* Featured strip */}
+        <FeaturedStrip />
 
-        {/* CTA */}
-        <CannotFindCta />
+        {/* Category filter */}
+        <CategoryTabs active={activeCategory} onChange={setActiveCategory} />
+
+        {/* Grid header */}
+        <div className="int-section-header">
+          <h2 className="int-section-heading">{sectionLabel}</h2>
+          <span className="int-section-count">
+            {filtered.length} integration{filtered.length !== 1 ? "s" : ""}
+          </span>
+        </div>
+
+        {/* Grid */}
+        {filtered.length === 0 ? (
+          <p
+            style={{
+              color: "var(--ink-4)",
+              fontSize: 13,
+              fontFamily: "var(--font-body)",
+            }}
+          >
+            No integrations in this category yet.
+          </p>
+        ) : (
+          <div className="int-grid">
+            {filtered.map((integration) => (
+              <IntegrationCard
+                key={integration.slug}
+                integration={integration}
+              />
+            ))}
+          </div>
+        )}
+
+        {/* Bottom CTA panel */}
+        <div className="int-cta-panel">
+          <div className="int-cta-panel__eyebrow">Missing something?</div>
+          <h2 className="int-cta-panel__title">Can&apos;t find your tool?</h2>
+          <p className="int-cta-panel__body">
+            Push connects to thousands of apps via Zapier — no code required. Or
+            tell us what you need and we&apos;ll prioritize the next native
+            integration.
+          </p>
+          <div className="int-cta-panel__actions">
+            <Link
+              href="/merchant/integrations/zapier"
+              className="click-shift"
+              style={{
+                padding: "12px 24px",
+                fontSize: 13,
+                fontFamily: "var(--font-body)",
+                fontWeight: 700,
+                letterSpacing: "0.04em",
+                textTransform: "uppercase",
+                cursor: "pointer",
+                borderRadius: 8,
+                border: "none",
+                background: "var(--brand-red)",
+                color: "var(--snow)",
+                textDecoration: "none",
+                display: "inline-flex",
+                alignItems: "center",
+                transition: "transform 180ms",
+              }}
+            >
+              Use Zapier instead
+            </Link>
+            <Link
+              href="/contact"
+              className="click-shift"
+              style={{
+                padding: "12px 24px",
+                fontSize: 13,
+                fontFamily: "var(--font-body)",
+                fontWeight: 700,
+                letterSpacing: "0.04em",
+                textTransform: "uppercase",
+                cursor: "pointer",
+                borderRadius: 8,
+                border: "1px solid var(--hairline)",
+                background: "transparent",
+                color: "var(--ink)",
+                textDecoration: "none",
+                display: "inline-flex",
+                alignItems: "center",
+                transition: "transform 180ms",
+              }}
+            >
+              Request an integration
+            </Link>
+          </div>
+        </div>
       </main>
     </div>
   );

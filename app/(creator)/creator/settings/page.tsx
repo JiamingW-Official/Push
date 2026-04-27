@@ -357,7 +357,10 @@ export default function CreatorSettingsPage() {
                   <span className="avatar-upload__hint">
                     JPG or PNG, max 4 MB
                   </span>
-                  <button className="btn-ghost" style={{ marginTop: 8 }}>
+                  <button
+                    className="btn-ghost click-shift"
+                    style={{ marginTop: 8 }}
+                  >
                     Upload photo
                   </button>
                 </div>
@@ -448,20 +451,21 @@ export default function CreatorSettingsPage() {
                 disabled
               />
               <div style={{ paddingTop: 12 }}>
-                <button className="btn-ghost">Change email</button>
+                <button className="btn-ghost click-shift">Change email</button>
               </div>
             </SettingsSection>
             <SettingsSection title="Password">
               <p
                 style={{
-                  fontSize: "var(--text-small)",
-                  color: "var(--graphite)",
+                  fontFamily: "var(--font-body)",
+                  fontSize: 13,
+                  color: "var(--ink-4)",
                   marginBottom: 12,
                 }}
               >
                 We will send a password reset link to your email address.
               </p>
-              <button className="btn-ghost">Send reset link</button>
+              <button className="btn-ghost click-shift">Send reset link</button>
             </SettingsSection>
           </>
         );
@@ -584,14 +588,17 @@ export default function CreatorSettingsPage() {
             <SettingsSection title="Bank Account">
               <p
                 style={{
-                  fontSize: "var(--text-small)",
-                  color: "var(--graphite)",
+                  fontFamily: "var(--font-body)",
+                  fontSize: 13,
+                  color: "var(--ink-4)",
                   padding: "12px 0",
                 }}
               >
                 No bank account connected. Add one to receive ACH payouts.
               </p>
-              <button className="btn-primary">Connect bank account</button>
+              <button className="btn-primary click-shift">
+                Connect bank account
+              </button>
             </SettingsSection>
           </>
         );
@@ -627,7 +634,9 @@ export default function CreatorSettingsPage() {
                 onChange={(v) => patchPrivacy("adPreferences", v)}
               />
               <div style={{ paddingTop: 16 }}>
-                <button className="btn-ghost">Export my data</button>
+                <button className="btn-ghost click-shift">
+                  Export my data
+                </button>
               </div>
             </SettingsSection>
           </>
@@ -654,7 +663,7 @@ export default function CreatorSettingsPage() {
                   </span>
                 </div>
                 <button
-                  className="btn-ghost"
+                  className="btn-ghost click-shift"
                   onClick={() => setModal("deactivate")}
                 >
                   Deactivate
@@ -670,7 +679,7 @@ export default function CreatorSettingsPage() {
                   </span>
                 </div>
                 <button
-                  className="btn-ghost"
+                  className="btn-ghost click-shift"
                   style={{
                     color: "var(--brand-red)",
                     borderColor: "var(--brand-red)",
@@ -703,7 +712,7 @@ export default function CreatorSettingsPage() {
           </span>
           <div className="settings-save-bar__actions">
             <button
-              className="btn-ghost"
+              className="btn-ghost click-shift"
               onClick={() => {
                 setSettings(DEFAULT_SETTINGS);
                 setDirty(false);
@@ -712,7 +721,7 @@ export default function CreatorSettingsPage() {
               Discard
             </button>
             <button
-              className="btn-primary"
+              className="btn-primary click-shift"
               onClick={save}
               disabled={saveStatus === "saving"}
             >

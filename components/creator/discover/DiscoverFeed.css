@@ -6,8 +6,8 @@
 
 .discover-agent-banner {
   padding: 12px 24px;
-  background: rgba(0, 48, 73, 0.04);
-  border-bottom: 1px solid var(--line, rgba(0, 48, 73, 0.12));
+  background: var(--surface-3);
+  border-bottom: 1px solid var(--line, var(--hairline));
 }
 
 .discover-agent-banner__text {
@@ -27,7 +27,7 @@
   display: flex;
   flex-direction: column;
   overflow-y: auto;
-  border-right: 1px solid var(--line, rgba(0, 48, 73, 0.12));
+  border-right: 1px solid var(--line, var(--hairline));
 }
 
 .discover-filters {
@@ -35,7 +35,7 @@
   align-items: center;
   gap: 8px;
   padding: 12px 16px;
-  border-bottom: 1px solid var(--line, rgba(0, 48, 73, 0.12));
+  border-bottom: 1px solid var(--line, var(--hairline));
   flex-wrap: wrap;
 }
 
@@ -53,9 +53,9 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.04em;
-  color: var(--dark);
+  color: var(--ink);
   background: none;
-  border: 1px solid var(--line, rgba(0, 48, 73, 0.12));
+  border: 1px solid var(--line, var(--hairline));
   border-radius: 50vh;
   cursor: pointer;
   transition:
@@ -65,13 +65,13 @@
 }
 
 .discover-chip:hover {
-  border-color: var(--dark);
+  border-color: var(--ink);
 }
 
 .discover-chip--active {
-  background: var(--primary);
-  color: #fff;
-  border-color: var(--primary);
+  background: var(--brand-red);
+  color: var(--snow);
+  border-color: var(--brand-red);
 }
 
 .discover-sort {
@@ -79,9 +79,9 @@
   font-family: "CS Genio Mono", monospace;
   font-size: 11px;
   font-weight: 600;
-  color: var(--dark);
-  border: 1px solid var(--line, rgba(0, 48, 73, 0.12));
-  background: var(--surface-elevated);
+  color: var(--ink);
+  border: 1px solid var(--line, var(--hairline));
+  background: var(--surface-2);
   border-radius: var(--r-xl);
   cursor: pointer;
   outline: none;
@@ -92,14 +92,14 @@
   display: flex;
   align-items: baseline;
   gap: 6px;
-  border-bottom: 1px solid var(--line, rgba(0, 48, 73, 0.12));
+  border-bottom: 1px solid var(--line, var(--hairline));
 }
 
 .discover-count__num {
   font-family: Darky, sans-serif;
   font-size: 20px;
   font-weight: 800;
-  color: var(--dark);
+  color: var(--ink);
 }
 
 .discover-count__label {
@@ -108,7 +108,7 @@
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  color: var(--tertiary);
+  color: var(--accent-blue);
 }
 
 .discover-list {
@@ -124,14 +124,14 @@
   justify-content: space-between;
   gap: 12px;
   padding: 12px 16px;
-  border-bottom: 1px solid var(--line, rgba(0, 48, 73, 0.12));
-  background: var(--surface-elevated);
+  border-bottom: 1px solid var(--line, var(--hairline));
+  background: var(--surface-2);
   transition: background 200ms ease;
   cursor: pointer;
 }
 
 .discover-row--hover {
-  background: var(--surface-bright);
+  background: var(--surface-3);
 }
 
 .discover-row__body {
@@ -147,14 +147,14 @@
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  color: var(--tertiary);
+  color: var(--accent-blue);
 }
 
 .discover-row__title {
   font-family: Darky, sans-serif;
   font-size: 15px;
   font-weight: 700;
-  color: var(--dark);
+  color: var(--ink);
   letter-spacing: -0.02em;
   white-space: nowrap;
   overflow: hidden;
@@ -190,8 +190,8 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.04em;
-  color: var(--dark);
-  border: 1px solid var(--dark);
+  color: var(--ink);
+  border: 1px solid var(--ink);
   text-decoration: none;
   border-radius: var(--r-xl);
   transition:
@@ -200,8 +200,8 @@
 }
 
 .discover-row__cta:hover {
-  background: var(--dark);
-  color: #fff;
+  background: var(--ink);
+  color: var(--snow);
 }
 
 .discover-map {
@@ -225,7 +225,7 @@
   font-weight: 900;
   font-size: clamp(28px, 4vw, 40px);
   letter-spacing: -0.03em;
-  color: var(--dark);
+  color: var(--ink);
   margin: 0;
 }
 

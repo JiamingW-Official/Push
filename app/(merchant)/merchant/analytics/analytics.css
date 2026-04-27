@@ -1,452 +1,517 @@
 /* ============================================================
-   Merchant Analytics — analytics.css
-   Follows Design.md: 0 border-radius, 8px grid, 6-color palette
+   Merchant Analytics — v11 Product Register
+   Design.md: 8px grid, v11 tokens, product dashboard register
+   No Ticket Panel / No Sig Divider / No Parenthetical eyebrows
    ============================================================ */
+
+/* ── Shell ──────────────────────────────────────────────────── */
 
 .man-page {
   min-height: 100vh;
   background: var(--surface);
-  color: var(--dark);
+  color: var(--ink);
   font-family: var(--font-body);
+  padding-bottom: 96px;
 }
 
-/* ── Nav ─────────────────────────────────────────────────── */
+/* ── Page Header ─────────────────────────────────────────────── */
 
-.man-nav {
+.man-header {
   display: flex;
-  align-items: center;
-  gap: 16px;
-  padding: 16px 32px;
-  border-bottom: 1px solid var(--line);
-  background: var(--surface-elevated);
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 32px 40px 24px;
+  border-bottom: 1px solid var(--hairline);
+  background: var(--surface);
   position: sticky;
   top: 0;
-  z-index: 50;
+  z-index: 40;
 }
 
-.man-nav-back {
-  font-family: var(--font-body);
-  font-size: 13px;
-  color: var(--graphite);
-  text-decoration: none;
-  letter-spacing: 0.01em;
-  transition: color 200ms ease;
-}
-
-.man-nav-back:hover {
-  color: var(--dark);
-}
-
-.man-nav-title {
-  font-family: var(--font-display);
-  font-size: 18px;
-  font-weight: 700;
-  color: var(--dark);
-  letter-spacing: -0.02em;
-  flex: 1;
-}
-
-.man-nav-date {
-  font-family: var(--font-body);
-  font-size: 12px;
-  color: var(--graphite);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-
-/* ── Hero ─────────────────────────────────────────────────── */
-
-.man-hero {
-  padding: 64px 32px 48px;
-  border-bottom: 1px solid var(--line);
-  background: var(--dark);
-}
-
-.man-hero-eyebrow {
-  font-family: var(--font-body);
-  font-size: 11px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: rgba(245, 242, 236, 0.55);
-  margin: 0 0 16px;
-}
-
-.man-hero-headline {
-  font-family: var(--font-display);
-  font-size: clamp(36px, 5vw, 72px);
-  font-weight: 900;
-  letter-spacing: -0.05em;
-  line-height: 1;
-  color: var(--surface-bright);
-  margin: 0 0 40px;
-}
-
-.man-hero-number {
-  color: var(--surface-elevated);
-  font-weight: 900;
-}
-
-.man-hero-roi {
-  color: var(--champagne);
-}
-
-.man-hero-light {
-  font-weight: 200;
-  color: rgba(245, 242, 236, 0.55);
-}
-
-.man-hero-stats {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-}
-
-.man-hero-stat {
+.man-header__left {
   display: flex;
   flex-direction: column;
   gap: 4px;
-  padding: 0 24px;
 }
 
-.man-hero-stat:first-child {
-  padding-left: 0;
-}
-
-.man-hero-stat-value {
-  font-family: var(--font-display);
-  font-size: 28px;
-  font-weight: 800;
-  letter-spacing: -0.03em;
-  color: var(--surface-elevated);
-}
-
-.man-hero-stat-label {
+.man-header__eyebrow {
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
+  color: var(--ink-4);
+}
+
+/* H2 — exactly 40px Darky 800, lineHeight 1.05, letterSpacing -0.02em */
+.man-header__title {
+  font-family: var(--font-display);
+  font-size: 40px;
+  font-weight: 800;
+  color: var(--ink);
+  line-height: 1.05;
+  margin: 0;
+  letter-spacing: -0.02em;
+}
+
+.man-header__right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-top: 8px;
+}
+
+/* Date range tabs — btn-pill pattern */
+.man-range-tabs {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: var(--surface-2);
+  border: 1px solid var(--hairline);
+  border-radius: 8px;
+  padding: 4px;
+}
+
+.man-range-tab {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 600;
   letter-spacing: 0.06em;
-  color: rgba(245, 242, 236, 0.55);
+  text-transform: uppercase;
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: none;
+  background: transparent;
+  color: var(--ink-4);
+  cursor: pointer;
+  transition: all 140ms ease;
 }
 
-.man-hero-stat-div {
-  width: 1px;
-  height: 40px;
-  background: rgba(245, 242, 236, 0.18);
+.man-range-tab--active,
+.man-range-tab:hover {
+  background: var(--snow);
+  color: var(--ink);
+  box-shadow: 0 1px 3px var(--hairline);
 }
 
-/* ── Charts ───────────────────────────────────────────────── */
+/* ── KPI Row — 4 cards ───────────────────────────────────────── */
 
-.man-charts {
+.man-kpi-row {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1px;
-  background: var(--line);
-  border-bottom: 1px solid var(--line);
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  padding: 24px 40px;
 }
 
-@media (max-width: 900px) {
-  .man-charts {
-    grid-template-columns: 1fr;
-  }
+.man-kpi-card {
+  background: var(--snow);
+  border: 1px solid var(--hairline);
+  border-radius: 10px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
+
+/* Eyebrow — 12px 700 uppercase 0.12em, no parens in product */
+.man-kpi-card__label {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+}
+
+/* KPI stat — Darky clamp(40px,5vw,72px) 700 */
+.man-kpi-card__value {
+  font-family: var(--font-display);
+  font-size: clamp(40px, 5vw, 72px);
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+.man-kpi-card__delta {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 8px;
+  border-radius: 4px;
+  width: fit-content;
+}
+
+.man-kpi-card__delta--up {
+  background: rgba(74, 222, 128, 0.12);
+  color: var(--accent-blue);
+}
+
+.man-kpi-card__delta--neutral {
+  background: rgba(10, 10, 10, 0.06);
+  color: var(--ink-3);
+}
+
+/* ── Main Content Area ──────────────────────────────────────── */
+
+.man-content {
+  padding: 0 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* ── Chart Card ─────────────────────────────────────────────── */
 
 .man-chart-card {
-  background: var(--surface-elevated);
-  padding: 24px;
-}
-
-.man-chart-card--wide {
-  grid-column: 1 / -1;
+  background: var(--snow);
+  border: 1px solid var(--hairline);
+  border-radius: 10px;
+  overflow: hidden;
 }
 
 .man-chart-header {
   display: flex;
-  align-items: baseline;
+  align-items: center;
   justify-content: space-between;
-  margin-bottom: 16px;
-  flex-wrap: wrap;
-  gap: 8px;
+  padding: 20px 24px 16px;
+  border-bottom: 1px solid var(--hairline);
 }
 
+/* Chart section title — H3 28px Darky 700 */
+.man-chart-title {
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1.15;
+  letter-spacing: -0.015em;
+  margin: 0;
+}
+
+/* Eyebrow label for chart headers */
 .man-chart-label {
   font-family: var(--font-body);
-  font-size: 13px;
-  font-weight: 600;
-  letter-spacing: 0.01em;
-  color: var(--dark);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
+  color: var(--ink-4);
 }
 
 .man-chart-sublabel {
   font-family: var(--font-body);
-  font-size: 11px;
-  color: var(--graphite);
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--ink-4);
+}
+
+.man-chart-body {
+  padding: 24px;
 }
 
 .man-chart-legend {
   display: flex;
+  align-items: center;
   gap: 16px;
 }
 
 .man-chart-legend-item {
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: var(--ink-4);
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 
-.man-chart-legend-item--dark {
-  color: var(--dark);
+.man-chart-legend-item::before {
+  content: "";
+  display: inline-block;
+  width: 16px;
+  height: 2px;
 }
 
-.man-chart-legend-item--blue {
-  color: var(--tertiary);
+.man-chart-legend-item--dark::before {
+  background: var(--ink);
 }
 
-/* ── Campaign matrix ──────────────────────────────────────── */
-
-.man-matrix-section {
-  border-bottom: 1px solid var(--line);
-  background: var(--surface-elevated);
+.man-chart-legend-item--blue::before {
+  background: var(--accent-blue);
+  border-top: 2px dashed var(--accent-blue);
+  height: 0;
 }
 
-.man-matrix-header {
-  padding: 24px 24px 0;
+/* ── 2-col bottom grid ───────────────────────────────────────── */
+
+.man-bottom-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
 }
 
-.man-matrix-wrap {
-  overflow-x: auto;
-  padding: 16px 24px 24px;
+/* ── Charts 2-col grid ───────────────────────────────────────── */
+
+.man-charts-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
 }
 
-.man-matrix {
+/* ── Data Table ─────────────────────────────────────────────── */
+
+.man-table {
   width: 100%;
   border-collapse: collapse;
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: 14px;
 }
 
-.man-matrix th {
+.man-table thead tr {
+  border-bottom: 1px solid var(--hairline);
+}
+
+/* Table headers — 12px uppercase per spec */
+.man-table th {
+  padding: 12px 16px;
   text-align: left;
-  padding: 8px 12px;
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 700;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: var(--graphite);
-  border-bottom: 1px solid var(--line-strong);
-  white-space: nowrap;
+  color: var(--ink-4);
 }
 
-.man-matrix td {
-  padding: 12px 12px;
-  border-bottom: 1px solid var(--line);
-  color: var(--dark);
-  vertical-align: middle;
+.man-table td {
+  padding: 14px 16px;
+  color: var(--ink-3);
+  border-bottom: 1px solid var(--hairline);
 }
 
-.man-matrix tr:last-child td {
+.man-table tbody tr:last-child td {
   border-bottom: none;
 }
 
-.man-matrix tr:hover td {
-  background: var(--surface);
+.man-table tbody tr:hover td {
+  background: var(--surface-2);
 }
 
-.man-matrix-name {
-  font-weight: 500;
+.man-table__name {
+  font-weight: 600;
+  color: var(--ink);
 }
 
-.man-matrix-roi {
+.man-table__roi {
   font-family: var(--font-display);
-  font-size: 16px;
-  font-weight: 800;
-  letter-spacing: -0.02em;
-  color: var(--dark);
-}
-
-.man-tier-badge {
-  display: inline-block;
-  font-size: 10px;
   font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  padding: 2px 6px;
-  border: 1px solid var(--line);
+  color: var(--ink);
 }
 
-.man-tier-badge--partner {
-  background: var(--champagne-light);
-  border-left: 3px solid var(--primary);
-  border-top: 1px solid var(--champagne-border);
-  border-right: 1px solid var(--champagne-border);
-  border-bottom: 1px solid var(--champagne-border);
-  color: var(--accent);
-}
-
-.man-tier-badge--proven {
-  background: rgba(0, 48, 73, 0.08);
-  border-color: rgba(0, 48, 73, 0.2);
-  color: var(--dark);
-}
-
-.man-tier-badge--operator {
-  background: rgba(102, 155, 188, 0.1);
-  border-color: rgba(102, 155, 188, 0.3);
-  color: var(--dark);
-}
-
-.man-tier-badge--explorer {
-  background: var(--surface-muted);
-  color: var(--graphite);
-}
-
-.man-tier-badge--seed {
-  background: var(--surface-muted);
-  color: var(--graphite);
-  opacity: 0.7;
-}
+/* ── Status / Tier Badges (btn-pill pattern) ────────────────── */
 
 .man-status-badge {
-  display: inline-block;
-  font-size: 10px;
-  font-weight: 700;
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
-  padding: 2px 6px;
+  padding: 4px 10px;
+  border-radius: 40px;
+  background: var(--surface-3);
+  color: var(--ink);
 }
 
 .man-status-badge--active {
-  background: rgba(34, 197, 94, 0.1);
-  color: var(--success-dark);
-  border: 1px solid rgba(34, 197, 94, 0.25);
-}
-
-.man-status-badge--paused {
-  background: var(--champagne-light);
-  color: var(--accent);
-  border: 1px solid var(--champagne-border);
+  background: rgba(74, 222, 128, 0.12);
+  color: var(--accent-blue);
 }
 
 .man-status-badge--ended {
-  background: var(--surface-muted);
-  color: var(--graphite);
-  border: 1px solid var(--line);
+  background: var(--surface-3);
+  color: var(--ink-4);
 }
 
-/* ── Insights ─────────────────────────────────────────────── */
-
-.man-insights {
-  padding: 64px 32px;
+.man-status-badge--paused {
+  background: rgba(191, 161, 112, 0.15);
+  color: var(--champagne-deep, #9d8256);
 }
+
+.man-tier-badge {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border-radius: 40px;
+  background: var(--surface-2);
+  color: var(--ink-3);
+}
+
+.man-tier-badge--partner {
+  background: rgba(191, 161, 112, 0.15);
+  color: var(--champagne-deep, #9d8256);
+}
+
+/* ── Insights section ────────────────────────────────────────── */
 
 .man-insights-header {
-  margin-bottom: 40px;
-}
-
-.man-insights-eyebrow {
-  font-family: var(--font-body);
-  font-size: 11px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--graphite);
-  margin: 0 0 8px;
-}
-
-.man-insights-title {
-  font-family: var(--font-display);
-  font-size: clamp(36px, 4vw, 56px);
-  font-weight: 900;
-  letter-spacing: -0.04em;
-  color: var(--dark);
-  margin: 0;
+  padding: 32px 40px 16px;
 }
 
 .man-insights-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 1px;
-  background: var(--line);
-  border: 1px solid var(--line);
-}
-
-@media (max-width: 900px) {
-  .man-insights-grid {
-    grid-template-columns: 1fr;
-  }
+  gap: 16px;
+  padding: 0 40px 40px;
 }
 
 .man-insight-card {
-  background: var(--surface-elevated);
-  padding: 32px 24px;
+  background: var(--snow);
+  border: 1px solid var(--hairline);
+  border-radius: 10px;
+  padding: 24px;
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  transition: background 200ms ease;
+  gap: 8px;
+  position: relative;
+  overflow: hidden;
+  transition: transform 140ms ease;
 }
 
 .man-insight-card:hover {
-  background: var(--surface-bright);
+  transform: translate(2px, 2px);
 }
 
 .man-insight-accent {
-  width: 32px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
   height: 3px;
-  margin-bottom: 4px;
 }
 
 .man-insight-stat-row {
   display: flex;
   align-items: baseline;
   gap: 8px;
+  margin-top: 8px;
 }
 
+/* Insight stat — Darky, prominent */
 .man-insight-stat {
   font-family: var(--font-display);
   font-size: 40px;
-  font-weight: 900;
-  letter-spacing: -0.04em;
+  font-weight: 700;
   line-height: 1;
+  letter-spacing: -0.02em;
 }
 
 .man-insight-context {
   font-family: var(--font-body);
   font-size: 12px;
-  color: var(--graphite);
+  color: var(--ink-4);
 }
 
+/* H3 28px Darky 700 */
 .man-insight-headline {
   font-family: var(--font-display);
-  font-size: 22px;
+  font-size: 28px;
   font-weight: 700;
-  letter-spacing: -0.02em;
-  color: var(--dark);
+  color: var(--ink);
+  line-height: 1.15;
+  letter-spacing: -0.015em;
   margin: 0;
 }
 
+/* Body — CS Genio Mono 18px */
 .man-insight-body {
   font-family: var(--font-body);
-  font-size: 14px;
-  color: var(--graphite);
-  line-height: 1.6;
+  font-size: 18px;
+  color: var(--ink-3);
+  line-height: 1.55;
   margin: 0;
   flex: 1;
 }
 
 .man-insight-cta {
   font-family: var(--font-body);
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--dark);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--brand-red);
   text-decoration: none;
-  border-bottom: 1px solid var(--line-strong);
-  padding-bottom: 2px;
-  display: inline-block;
-  transition: border-color 200ms ease, color 200ms ease;
-  align-self: flex-start;
+  margin-top: 8px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  transition: transform 140ms ease;
 }
 
 .man-insight-cta:hover {
-  color: var(--primary);
-  border-color: var(--primary);
+  transform: translate(2px, 2px);
+}
+
+/* ── Responsive ─────────────────────────────────────────────── */
+
+@media (max-width: 900px) {
+  .man-kpi-row {
+    grid-template-columns: repeat(2, 1fr);
+    padding: 24px;
+  }
+
+  .man-header {
+    padding: 24px;
+    flex-direction: column;
+    position: static;
+  }
+
+  .man-header__title {
+    font-size: 32px;
+  }
+
+  .man-content {
+    padding: 0 24px;
+  }
+
+  .man-bottom-grid,
+  .man-charts-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .man-insights-grid {
+    grid-template-columns: 1fr;
+    padding: 0 24px 40px;
+  }
+
+  .man-insights-header {
+    padding: 24px 24px 16px;
+  }
+}
+
+@media (max-width: 600px) {
+  .man-kpi-row {
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    padding: 16px;
+  }
+
+  .man-header__title {
+    font-size: 28px;
+  }
+
+  .man-header__right {
+    flex-wrap: wrap;
+  }
+
+  .man-kpi-card__value {
+    font-size: 32px;
+  }
 }

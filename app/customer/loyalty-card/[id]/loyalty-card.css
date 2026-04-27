@@ -6,7 +6,7 @@
 .loyalty-shell {
   min-height: 100vh;
   background: var(--surface);
-  color: var(--dark);
+  color: var(--ink);
   font-family: var(--font-body);
   display: flex;
   flex-direction: column;
@@ -27,7 +27,7 @@
   font-family: var(--font-body);
   font-size: var(--text-small);
   font-weight: 700;
-  color: var(--dark);
+  color: var(--ink);
   text-decoration: none;
   padding: 6px 0;
   border-bottom: 1px solid transparent;
@@ -35,15 +35,15 @@
 }
 
 .loyalty-back:hover {
-  color: var(--primary);
-  border-bottom-color: var(--primary);
+  color: var(--brand-red);
+  border-bottom-color: var(--brand-red);
 }
 
 .loyalty-footer {
   margin-top: var(--space-4);
   font-family: var(--font-body);
   font-size: var(--text-caption);
-  color: var(--text-muted);
+  color: var(--ink-4);
   text-align: center;
   max-width: 600px;
 }

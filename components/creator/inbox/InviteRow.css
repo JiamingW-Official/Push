@@ -4,19 +4,19 @@
   gap: 12px;
   padding: 0 16px;
   min-height: 64px;
-  border-bottom: 1px solid var(--line, rgba(0,48,73,0.12));
+  border-bottom: 1px solid var(--line, var(--ink));
   cursor: pointer;
   position: relative;
-  background: var(--surface-elevated);
+  background: var(--surface-2);
   transition: background 200ms ease;
 }
 
 .invite-row:hover {
-  background: var(--surface-bright);
+  background: var(--surface-3);
 }
 
 .invite-row:focus {
-  outline: 2px solid var(--primary);
+  outline: 2px solid var(--brand-red);
   outline-offset: -2px;
 }
 
@@ -26,11 +26,11 @@
   top: 0;
   bottom: 0;
   width: 3px;
-  background: var(--line, rgba(0,48,73,0.12));
+  background: var(--line, var(--ink));
 }
 
 .invite-row--unread .invite-row__status-bar {
-  background: var(--primary);
+  background: var(--brand-red);
 }
 
 .invite-row--urgent .invite-row__status-bar {
@@ -45,8 +45,8 @@
 .invite-row__avatar {
   width: 40px;
   height: 40px;
-  background: var(--dark);
-  color: #fff;
+  background: var(--ink);
+  color: var(--snow);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -69,7 +69,7 @@
   font-family: Darky, sans-serif;
   font-size: 15px;
   font-weight: 600;
-  color: var(--dark);
+  color: var(--ink);
   letter-spacing: -0.01em;
   white-space: nowrap;
   overflow: hidden;
@@ -114,7 +114,7 @@
 }
 
 .invite-row__countdown--urgent {
-  color: var(--primary);
+  color: var(--brand-red);
   animation: inviteCountdownPulse 1.2s ease-in-out infinite;
 }
 
@@ -136,9 +136,9 @@
 }
 
 .invite-row__btn--accept {
-  background: var(--primary);
-  color: #fff;
-  border: 1px solid var(--primary);
+  background: var(--brand-red);
+  color: var(--snow);
+  border: 1px solid var(--brand-red);
 }
 
 .invite-row__btn--accept:hover {
@@ -149,10 +149,10 @@
 .invite-row__btn--decline {
   background: transparent;
   color: var(--graphite);
-  border: 1px solid var(--line, rgba(0,48,73,0.12));
+  border: 1px solid var(--line, var(--ink));
 }
 
 .invite-row__btn--decline:hover {
-  border-color: var(--dark);
-  color: var(--dark);
+  border-color: var(--ink);
+  color: var(--ink);
 }

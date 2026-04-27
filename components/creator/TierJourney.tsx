@@ -28,7 +28,7 @@ const TIER_DATA = [
     minScore: 0,
     maxScore: 39,
     benefit: "Free product",
-    color: "var(--tertiary)",
+    color: "var(--accent-blue)",
   },
   {
     key: "explorer" as CreatorTier,
@@ -46,7 +46,7 @@ const TIER_DATA = [
     minScore: 55,
     maxScore: 64,
     benefit: "$20 + 3%",
-    color: "var(--tertiary)",
+    color: "var(--accent-blue)",
   },
   {
     key: "proven" as CreatorTier,
@@ -55,7 +55,7 @@ const TIER_DATA = [
     minScore: 65,
     maxScore: 77,
     benefit: "$32 + 5%",
-    color: "var(--primary)",
+    color: "var(--brand-red)",
   },
   {
     key: "closer" as CreatorTier,
@@ -73,7 +73,7 @@ const TIER_DATA = [
     minScore: 88,
     maxScore: 100,
     benefit: "$100 + 10%",
-    color: "var(--dark)",
+    color: "var(--ink)",
   },
 ];
 
@@ -250,7 +250,7 @@ export function TierJourney({
                 <span
                   className="tj__tier-name"
                   style={{
-                    color: isFuture ? "var(--text-muted)" : tier.color,
+                    color: isFuture ? "var(--ink-4)" : tier.color,
                   }}
                 >
                   {tier.label}
@@ -258,7 +258,7 @@ export function TierJourney({
                 <span
                   className="tj__tier-benefit"
                   style={{
-                    color: isFuture ? "var(--text-muted)" : "var(--graphite)",
+                    color: isFuture ? "var(--ink-4)" : "var(--graphite)",
                   }}
                 >
                   {tier.benefit}

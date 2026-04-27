@@ -201,12 +201,12 @@ export default function MapView({
           font-family: inherit;
         }
 
-        /* Popup: no border-radius, surface-elevated bg */
+        /* Popup: no border-radius, surface-2 bg */
         .push-leaflet-wrap .leaflet-popup-content-wrapper {
           border-radius: 0 !important;
-          background: #ffffff !important;
-          border: 1px solid rgba(0,48,73,0.12) !important;
-          box-shadow: 0 8px 32px rgba(0,48,73,0.14) !important;
+          background: var(--surface-2) !important;
+          border: 1px solid var(--hairline) !important;
+          box-shadow: 0 8px 32px rgba(0,0,0,0.12) !important;
           padding: 0 !important;
         }
 
@@ -215,7 +215,7 @@ export default function MapView({
         }
 
         .push-leaflet-wrap .leaflet-popup-close-button {
-          color: rgba(0,48,73,0.4) !important;
+          color: var(--ink-4) !important;
           font-size: 16px !important;
           top: 8px !important;
           right: 10px !important;
@@ -279,7 +279,7 @@ export default function MapView({
           font-weight: 700;
           letter-spacing: 0.1em;
           text-transform: uppercase;
-          color: rgba(0,48,73,0.38);
+          color: var(--ink-4);
           margin-bottom: 4px;
         }
 
@@ -287,7 +287,7 @@ export default function MapView({
           font-size: 14px;
           font-weight: 700;
           letter-spacing: -0.02em;
-          color: #003049;
+          color: var(--ink);
           margin-bottom: 2px;
           line-height: 1.3;
         }
@@ -297,7 +297,7 @@ export default function MapView({
           font-weight: 700;
           letter-spacing: 0.05em;
           text-transform: uppercase;
-          color: rgba(0,48,73,0.38);
+          color: var(--ink-4);
           margin-bottom: 12px;
         }
 
@@ -317,7 +317,7 @@ export default function MapView({
         }
 
         .push-map-popup-amount--free {
-          color: #669bbc;
+          color: var(--accent-blue);
           font-size: 18px;
         }
 
@@ -331,7 +331,7 @@ export default function MapView({
         .push-map-popup-slots {
           font-size: 10px;
           font-weight: 700;
-          color: rgba(0,48,73,0.4);
+          color: var(--ink-4);
           letter-spacing: 0.03em;
           margin-bottom: 12px;
         }
@@ -348,25 +348,29 @@ export default function MapView({
           font-weight: 700;
           letter-spacing: 0.08em;
           text-transform: uppercase;
-          background: #c1121f;
-          color: #fff;
+          background: var(--brand-red);
+          color: var(--snow);
           border: none;
           cursor: pointer;
-          transition: background 150ms ease;
+          border-radius: var(--r-sm);
+          transition: transform 0.15s, box-shadow 0.15s;
         }
 
         .push-map-popup-apply:hover {
-          background: #780000;
+          transform: translate(2px, 2px);
+          box-shadow: 2px 2px 0 rgba(0,0,0,0.4);
         }
 
         .push-map-popup-apply--applied {
-          background: rgba(0,48,73,0.08);
-          color: rgba(0,48,73,0.45);
+          background: var(--surface-3);
+          color: var(--ink-4);
           cursor: default;
+          border: 1px solid var(--hairline);
         }
 
         .push-map-popup-apply--applied:hover {
-          background: rgba(0,48,73,0.08);
+          transform: none;
+          box-shadow: none;
         }
 
         .push-map-popup-apply--pending {
@@ -383,7 +387,7 @@ export default function MapView({
 
       <div
         className="push-leaflet-wrap"
-        style={{ height: 480, border: "1px solid rgba(0,48,73,0.1)" }}
+        style={{ height: 480, border: "1px solid var(--hairline)" }}
       >
         <MapContainer
           center={[40.7278, -74.0]}

@@ -186,7 +186,7 @@ export default function ConversationView({
             style={{
               fontFamily: "var(--font-body)",
               fontSize: 12,
-              color: "rgba(0,48,73,0.3)",
+              color: "var(--ink-4)",
               textAlign: "center",
               margin: "auto",
             }}

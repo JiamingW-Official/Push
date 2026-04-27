@@ -10,7 +10,7 @@
   display: flex;
   gap: 8px;
   padding: 16px 24px;
-  border-bottom: 1px solid var(--line, rgba(0, 48, 73, 0.12));
+  border-bottom: 1px solid var(--line, var(--hairline));
   flex-wrap: wrap;
 }
 
@@ -21,7 +21,7 @@
   letter-spacing: 0.08em;
   text-transform: uppercase;
   padding: 5px 14px;
-  border: 1px solid var(--line, rgba(0, 48, 73, 0.12));
+  border: 1px solid var(--line, var(--hairline));
   border-radius: 50vh; /* pill — Design.md approved exception for filter chips */
   background: transparent;
   color: var(--graphite);
@@ -30,14 +30,14 @@
 }
 
 .al-chip:hover {
-  background: var(--surface-bright);
-  border-color: var(--dark);
-  color: var(--dark);
+  background: var(--surface-3);
+  border-color: var(--ink);
+  color: var(--ink);
 }
 
 .al-chip--active {
-  background: var(--dark);
-  border-color: var(--dark);
+  background: var(--ink);
+  border-color: var(--ink);
   color: var(--surface);
 }
 
@@ -55,12 +55,12 @@
   gap: 16px;
   min-height: 72px;
   padding: 12px 24px;
-  border-bottom: 1px solid var(--line, rgba(0, 48, 73, 0.12));
+  border-bottom: 1px solid var(--line, var(--hairline));
   transition: background 120ms ease;
 }
 
 .al-row:hover {
-  background: var(--surface-bright);
+  background: var(--surface-3);
 }
 
 /* Left column */
@@ -75,7 +75,7 @@
   font-family: "Darky", sans-serif;
   font-size: 15px;
   font-weight: 700;
-  color: var(--dark);
+  color: var(--ink);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -96,7 +96,7 @@
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--tertiary);
+  color: var(--accent-blue);
 }
 
 /* Right column */
@@ -121,12 +121,12 @@
 
 .al-status--pending {
   background: color-mix(in srgb, var(--champagne) 18%, transparent);
-  color: color-mix(in srgb, var(--champagne) 70%, var(--dark));
+  color: color-mix(in srgb, var(--champagne) 70%, var(--ink));
 }
 
 .al-status--accepted {
-  background: color-mix(in srgb, var(--tertiary) 15%, transparent);
-  color: var(--tertiary);
+  background: color-mix(in srgb, var(--accent-blue) 15%, transparent);
+  color: var(--accent-blue);
 }
 
 .al-status--rejected,

@@ -5,7 +5,7 @@
 .abp-panel {
   display: flex;
   flex-direction: column;
-  background: var(--dark);
+  background: var(--ink);
   padding: var(--space-8) var(--space-6);
   min-height: 100vh;
   box-sizing: border-box;
@@ -37,7 +37,7 @@
   display: block;
   width: 3px;
   height: 3px;
-  background: var(--primary);
+  background: var(--brand-red);
   margin-top: 2px;
 }
 

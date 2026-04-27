@@ -1,0 +1,3 @@
+{
+  "/api/creator/payout-methods/[id]/route": "app/api/creator/payout-methods/[id]/route.js"
+}

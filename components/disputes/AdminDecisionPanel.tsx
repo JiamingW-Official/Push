@@ -169,7 +169,9 @@ export function AdminDecisionPanel({ dispute, onDecisionPosted }: Props) {
             <strong
               style={{
                 color:
-                  creatorReceives > 0 ? "var(--tertiary)" : "var(--graphite)",
+                  creatorReceives > 0
+                    ? "var(--accent-blue)"
+                    : "var(--graphite)",
               }}
             >
               ${creatorReceives.toFixed(2)}
@@ -180,7 +182,7 @@ export function AdminDecisionPanel({ dispute, onDecisionPosted }: Props) {
             <strong
               style={{
                 color:
-                  merchantCredited > 0 ? "var(--primary)" : "var(--graphite)",
+                  merchantCredited > 0 ? "var(--brand-red)" : "var(--graphite)",
               }}
             >
               ${merchantCredited.toFixed(2)}

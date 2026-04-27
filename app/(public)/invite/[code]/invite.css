@@ -1,57 +1,58 @@
 /* ============================================================
    Push — Invite Landing Page
-   Authority: Design.md
+   Design.md v11 · Product register (invite/auth flow)
+   No Ticket Panel, no Parenthetical Eyebrows → product voice
    ============================================================ */
 
-/* ------------------------------------------------------------
-   Page wrapper
-   ------------------------------------------------------------ */
+/* ── Page wrapper ────────────────────────────────────────────── */
 .invite-page {
   background-color: var(--surface);
   min-height: 100vh;
   font-family: var(--font-body);
-  color: var(--dark);
+  color: var(--ink-3);
 }
 
-/* ------------------------------------------------------------
-   Shared section utilities
-   ------------------------------------------------------------ */
+/* ── Shared section utilities ────────────────────────────────── */
 .invite-container {
   max-width: 720px;
   margin: 0 auto;
-  padding: 0 var(--space-3);
+  padding: 0 24px;
+}
+
+@media (min-width: 768px) {
+  .invite-container {
+    padding: 0 48px;
+  }
 }
 
 .invite-eyebrow {
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 700;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--primary);
+  color: var(--ink-4);
 }
 
 .invite-rule {
   border: none;
-  border-top: 1px solid var(--line);
+  border-top: 1px solid var(--mist);
   margin: 0;
 }
 
-/* ============================================================
-   1. Hero
-   ============================================================ */
+/* ── 1. Hero (dark panel, corner-anchored) ──────────────────── */
 .invite-hero {
-  background-color: var(--dark);
-  padding: var(--space-10) 0 var(--space-8);
+  background-color: var(--ink);
+  padding: 64px 0 56px;
   position: relative;
   overflow: hidden;
 }
 
-/* Decorative background text */
+/* Decorative background text — ghost PUSH watermark */
 .invite-hero::before {
   content: "PUSH";
   position: absolute;
-  bottom: -0.15em;
+  bottom: -0.1em;
   right: -0.05em;
   font-family: var(--font-display);
   font-weight: 900;
@@ -66,22 +67,28 @@
 .invite-hero-inner {
   max-width: 720px;
   margin: 0 auto;
-  padding: 0 var(--space-3);
+  padding: 0 24px;
+}
+
+@media (min-width: 768px) {
+  .invite-hero-inner {
+    padding: 0 48px;
+  }
 }
 
 /* Inviter row */
 .invite-inviter-row {
   display: flex;
   align-items: center;
-  gap: var(--space-2);
-  margin-bottom: var(--space-4);
+  gap: 12px;
+  margin-bottom: 32px;
 }
 
 .invite-avatar {
   width: 48px;
   height: 48px;
-  background-color: var(--primary);
-  color: #fff;
+  background-color: var(--brand-red);
+  color: var(--snow);
   font-family: var(--font-display);
   font-weight: 700;
   font-size: 18px;
@@ -89,7 +96,7 @@
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  border-radius: var(--r-full); /* avatar — Design.md */
+  border-radius: 50%;
   letter-spacing: -0.02em;
 }
 
@@ -101,38 +108,38 @@
 
 .invite-inviter-name {
   font-family: var(--font-body);
-  font-size: var(--text-small);
+  font-size: 16px;
   font-weight: 600;
-  color: var(--surface-elevated);
+  color: var(--snow);
   letter-spacing: 0.01em;
 }
 
 .invite-inviter-handle {
   font-family: var(--font-body);
-  font-size: var(--text-caption);
-  color: var(--tertiary);
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.5);
   letter-spacing: 0.02em;
 }
 
-/* Main headline */
+/* Main headline — corner-anchored, Darky display */
 .invite-hero-headline {
   font-family: var(--font-display);
   font-weight: 900;
   font-size: clamp(40px, 7vw, 80px);
   line-height: 1.0;
   letter-spacing: -0.05em;
-  color: var(--surface-elevated);
-  margin-bottom: var(--space-3);
+  color: var(--snow);
+  margin-bottom: 24px;
 }
 
-.invite-hero-headline .invite-red {
-  color: var(--primary);
+.invite-hero-push {
+  color: var(--brand-red);
 }
 
 .invite-hero-subline {
   font-family: var(--font-body);
-  font-size: var(--text-body);
-  line-height: 1.6;
+  font-size: 18px;
+  line-height: 1.55;
   color: rgba(255, 255, 255, 0.65);
   max-width: 520px;
 }
@@ -142,69 +149,108 @@
   font-weight: 600;
 }
 
-/* ============================================================
-   2. What's Push
-   ============================================================ */
+/* ── 2. What's Push ─────────────────────────────────────────── */
 .invite-whats-push {
-  background-color: var(--surface-bright);
-  padding: var(--space-10) 0;
-  border-top: 1px solid var(--line);
+  background-color: var(--surface-2);
+  padding: 64px 0;
+  border-top: 1px solid var(--mist);
 }
 
 .invite-whats-push .invite-eyebrow {
-  margin-bottom: var(--space-3);
+  margin-bottom: 16px;
 }
 
 .invite-pitch {
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: clamp(22px, 3.5vw, 36px);
+  font-size: clamp(22px, 3.5vw, 40px);
   line-height: 1.15;
   letter-spacing: -0.03em;
-  color: var(--dark);
-  margin-bottom: var(--space-4);
+  color: var(--ink);
+  margin-bottom: 24px;
 }
 
 .invite-pitch-bullets {
   list-style: none;
   display: flex;
   flex-direction: column;
-  gap: var(--space-2);
+  gap: 12px;
+  padding: 0;
 }
 
 .invite-pitch-bullets li {
   display: flex;
   align-items: flex-start;
-  gap: var(--space-2);
+  gap: 12px;
   font-family: var(--font-body);
-  font-size: var(--text-body);
-  line-height: 1.5;
-  color: var(--graphite);
+  font-size: 18px;
+  line-height: 1.55;
+  color: var(--ink-3);
 }
 
 .invite-pitch-bullets li::before {
   content: "";
   display: block;
-  width: 6px;
-  height: 6px;
-  background-color: var(--primary);
+  width: 4px;
+  height: 4px;
+  background-color: var(--brand-red);
   flex-shrink: 0;
-  margin-top: 8px;
+  margin-top: 10px;
+  border-radius: 50%;
 }
 
-/* ============================================================
-   3. Bonus Reveal
-   ============================================================ */
+/* ── 3. Referral code block ─────────────────────────────────── */
+.invite-code-section {
+  padding: 48px 0;
+  background: var(--surface);
+  border-top: 1px solid var(--mist);
+}
+
+.invite-code-block {
+  background: var(--surface-2);
+  border: 1px solid var(--mist);
+  border-radius: 10px;
+  padding: 32px 24px;
+}
+
+.invite-code-eyebrow {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+  margin-bottom: 12px;
+}
+
+.invite-code-value {
+  font-family: var(--font-display);
+  font-size: clamp(32px, 5vw, 56px);
+  font-weight: 900;
+  color: var(--ink);
+  letter-spacing: -0.02em;
+  margin-bottom: 8px;
+}
+
+.invite-code-note {
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: var(--ink-4);
+  line-height: 1.4;
+}
+
+/* ── 4. Bonus Reveal ────────────────────────────────────────── */
 .invite-bonus {
-  background-color: var(--dark);
-  padding: var(--space-10) 0;
+  background-color: var(--char, #3a3835);
+  padding: 64px 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
 }
 
 .invite-bonus-card {
   background-color: rgba(255, 255, 255, 0.04);
   border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: var(--r-xl);
-  padding: var(--space-5) var(--space-4);
+  border-radius: 28px;
+  padding: 40px 32px;
   position: relative;
   overflow: hidden;
 }
@@ -220,14 +266,14 @@
   background-color: var(--champagne);
 }
 
-.invite-bonus-label {
+.invite-bonus-eyebrow {
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 700;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--champagne);
-  margin-bottom: var(--space-2);
+  margin-bottom: 8px;
 }
 
 .invite-bonus-amount {
@@ -236,38 +282,36 @@
   font-size: clamp(52px, 9vw, 96px);
   line-height: 0.9;
   letter-spacing: -0.06em;
-  color: var(--surface-elevated);
-  margin-bottom: var(--space-2);
+  color: var(--snow);
+  margin-bottom: 8px;
 }
 
 .invite-bonus-title {
   font-family: var(--font-display);
   font-weight: 600;
-  font-size: var(--text-h4);
+  font-size: 24px;
   color: var(--champagne);
-  margin-bottom: var(--space-2);
+  margin-bottom: 12px;
   letter-spacing: -0.02em;
 }
 
 .invite-bonus-detail {
   font-family: var(--font-body);
-  font-size: var(--text-small);
+  font-size: 18px;
   line-height: 1.55;
   color: rgba(255, 255, 255, 0.55);
   max-width: 480px;
 }
 
-/* ============================================================
-   4. How it works
-   ============================================================ */
+/* ── 5. How it works ────────────────────────────────────────── */
 .invite-how {
   background-color: var(--surface);
-  padding: var(--space-10) 0;
-  border-top: 1px solid var(--line);
+  padding: 64px 0;
+  border-top: 1px solid var(--mist);
 }
 
 .invite-how .invite-eyebrow {
-  margin-bottom: var(--space-5);
+  margin-bottom: 32px;
 }
 
 .invite-steps {
@@ -279,9 +323,9 @@
 .invite-step {
   display: grid;
   grid-template-columns: 56px 1fr;
-  gap: var(--space-3);
-  padding: var(--space-4) 0;
-  border-bottom: 1px solid var(--line);
+  gap: 16px;
+  padding: 24px 0;
+  border-bottom: 1px solid var(--mist);
   align-items: start;
 }
 
@@ -295,35 +339,32 @@
   font-size: 48px;
   line-height: 1;
   letter-spacing: -0.06em;
-  color: var(--primary);
+  color: var(--brand-red);
   margin-top: -4px;
 }
-
-.invite-step-body {}
 
 .invite-step-title {
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: var(--text-h3);
+  font-size: 28px;
   letter-spacing: -0.02em;
-  color: var(--dark);
-  margin-bottom: var(--space-1);
+  color: var(--ink);
+  margin-bottom: 8px;
+  line-height: 1.1;
 }
 
 .invite-step-desc {
   font-family: var(--font-body);
-  font-size: var(--text-small);
+  font-size: 18px;
   line-height: 1.55;
-  color: var(--graphite);
+  color: var(--ink-3);
 }
 
-/* ============================================================
-   5. Role Selector
-   ============================================================ */
+/* ── 6. Role Selector ───────────────────────────────────────── */
 .invite-roles {
-  background-color: var(--surface-bright);
-  padding: var(--space-10) 0;
-  border-top: 1px solid var(--line);
+  background-color: var(--surface-2);
+  padding: 64px 0;
+  border-top: 1px solid var(--mist);
 }
 
 .invite-section-title {
@@ -331,22 +372,23 @@
   font-weight: 800;
   font-size: clamp(28px, 4vw, 44px);
   letter-spacing: -0.04em;
-  color: var(--dark);
-  margin-bottom: var(--space-2);
+  color: var(--ink);
+  margin-bottom: 8px;
   line-height: 1.05;
 }
 
 .invite-section-sub {
   font-family: var(--font-body);
-  font-size: var(--text-small);
-  color: var(--graphite);
-  margin-bottom: var(--space-5);
+  font-size: 18px;
+  color: var(--ink-4);
+  margin-bottom: 32px;
+  line-height: 1.4;
 }
 
 .invite-role-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: var(--space-2);
+  gap: 16px;
 }
 
 @media (max-width: 540px) {
@@ -358,41 +400,36 @@
 .invite-role-card {
   display: flex;
   flex-direction: column;
-  padding: var(--space-4);
-  background-color: var(--surface-elevated);
-  border: 1px solid var(--line);
-  border-radius: var(--r-xl);
+  padding: 24px;
+  background-color: var(--surface);
+  border: 1px solid var(--mist);
+  border-radius: 10px;
   text-decoration: none;
-  color: var(--dark);
-  transition: border-color var(--t-base), box-shadow var(--t-slow);
-  position: relative;
-  overflow: hidden;
+  color: var(--ink);
+  transition: transform 150ms cubic-bezier(0.34, 1.56, 0.64, 1),
+    border-color 150ms ease;
 }
 
 .invite-role-card:hover {
-  border-color: var(--primary);
-  box-shadow: var(--shadow-1);
-}
-
-.invite-role-card:hover .invite-role-arrow {
-  transform: translate(4px, -4px);
+  transform: translate(2px, 2px);
+  border-color: var(--brand-red);
 }
 
 .invite-role-tag {
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 700;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  margin-bottom: var(--space-3);
+  margin-bottom: 12px;
 }
 
 .invite-role-card--creator .invite-role-tag {
-  color: var(--primary);
+  color: var(--brand-red);
 }
 
 .invite-role-card--merchant .invite-role-tag {
-  color: var(--tertiary);
+  color: var(--ink-4);
 }
 
 .invite-role-name {
@@ -401,90 +438,75 @@
   font-size: 28px;
   letter-spacing: -0.04em;
   line-height: 1;
-  margin-bottom: var(--space-2);
+  margin-bottom: 12px;
 }
 
 .invite-role-desc {
   font-family: var(--font-body);
-  font-size: var(--text-caption);
+  font-size: 18px;
   line-height: 1.55;
-  color: var(--graphite);
+  color: var(--ink-3);
   flex: 1;
-  margin-bottom: var(--space-4);
+  margin-bottom: 24px;
 }
 
 .invite-role-cta {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: var(--space-2) var(--space-2);
-  font-family: var(--font-body);
-  font-size: var(--text-small);
-  font-weight: 600;
-  letter-spacing: 0.01em;
+  display: block;
 }
 
-.invite-role-card--creator .invite-role-cta {
-  background-color: var(--primary);
-  color: #fff;
-}
-
-.invite-role-card--merchant .invite-role-cta {
-  background-color: var(--dark);
-  color: #fff;
-}
-
-.invite-role-arrow {
-  font-size: 18px;
-  transition: transform var(--t-base);
+.invite-role-btn {
   display: inline-block;
+  padding: 12px 24px;
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border-radius: 8px;
 }
 
-/* ============================================================
-   6. Social Proof
-   ============================================================ */
+/* ── 7. Social Proof ────────────────────────────────────────── */
 .invite-social-proof {
   background-color: var(--surface);
-  padding: var(--space-6) 0;
-  border-top: 1px solid var(--line);
+  padding: 32px 0;
+  border-top: 1px solid var(--mist);
   text-align: center;
 }
 
 .invite-social-proof-text {
   font-family: var(--font-body);
-  font-size: var(--text-small);
-  color: var(--text-muted);
+  font-size: 18px;
+  color: var(--ink-4);
   letter-spacing: 0.01em;
 }
 
 .invite-social-proof-text strong {
-  color: var(--dark);
-  font-weight: 600;
+  color: var(--ink);
+  font-weight: 700;
 }
 
-/* ============================================================
-   7. Inviter Profile Preview
-   ============================================================ */
+/* ── 8. Inviter Profile Preview ─────────────────────────────── */
 .invite-profile-preview {
-  background-color: var(--surface-bright);
-  padding: var(--space-8) 0;
-  border-top: 1px solid var(--line);
+  background-color: var(--surface-2);
+  padding: 48px 0;
+  border-top: 1px solid var(--mist);
 }
 
 .invite-profile-card {
-  background-color: var(--surface-elevated);
-  border: 1px solid var(--line);
-  padding: var(--space-4);
+  background-color: var(--surface);
+  border: 1px solid var(--mist);
+  border-radius: 10px;
+  padding: 24px;
   display: flex;
   align-items: flex-start;
-  gap: var(--space-3);
+  gap: 16px;
 }
 
 .invite-profile-avatar-lg {
   width: 64px;
   height: 64px;
-  background-color: var(--dark);
-  color: var(--surface-elevated);
+  background-color: var(--ink);
+  color: var(--snow);
   font-family: var(--font-display);
   font-weight: 800;
   font-size: 22px;
@@ -492,7 +514,7 @@
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  border-radius: var(--r-full); /* avatar — Design.md */
+  border-radius: 50%;
   letter-spacing: -0.03em;
 }
 
@@ -503,61 +525,38 @@
 .invite-profile-name {
   font-family: var(--font-display);
   font-weight: 800;
-  font-size: var(--text-h3);
+  font-size: 28px;
   letter-spacing: -0.03em;
-  color: var(--dark);
+  color: var(--ink);
   margin-bottom: 2px;
+  line-height: 1;
 }
 
 .invite-profile-handle {
   font-family: var(--font-body);
-  font-size: var(--text-caption);
-  color: var(--tertiary);
-  margin-bottom: var(--space-2);
+  font-size: 12px;
+  color: var(--ink-4);
+  margin-bottom: 12px;
   letter-spacing: 0.01em;
 }
 
 .invite-profile-badges {
   display: flex;
-  gap: var(--space-1);
+  gap: 8px;
   flex-wrap: wrap;
 }
 
-.invite-badge {
-  font-family: var(--font-body);
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  padding: 4px 8px;
-  border-radius: var(--r-sm);
-}
-
-.invite-badge--tier {
-  background-color: var(--champagne-light);
-  color: var(--champagne);
-  border: 1px solid var(--champagne-border);
-}
-
-.invite-badge--location {
-  background-color: var(--surface-muted);
-  color: var(--graphite);
-  border: 1px solid var(--line);
-}
-
-/* ============================================================
-   8. Expiry Notice
-   ============================================================ */
+/* ── 9. Expiry Notice ───────────────────────────────────────── */
 .invite-expiry {
   background-color: var(--surface);
-  padding: var(--space-5) 0;
-  border-top: 1px solid var(--line);
+  padding: 24px 0;
+  border-top: 1px solid var(--mist);
 }
 
 .invite-expiry-inner {
   display: flex;
   align-items: center;
-  gap: var(--space-2);
+  gap: 16px;
 }
 
 .invite-expiry-icon {
@@ -569,34 +568,56 @@
   justify-content: center;
   flex-shrink: 0;
   font-size: 16px;
+  border-radius: 8px;
 }
 
 .invite-expiry-text {
   font-family: var(--font-body);
-  font-size: var(--text-small);
-  color: var(--graphite);
+  font-size: 18px;
+  color: var(--ink-3);
   line-height: 1.4;
 }
 
 .invite-expiry-text strong {
-  color: var(--primary);
-  font-weight: 600;
+  color: var(--brand-red);
+  font-weight: 700;
 }
 
-/* ============================================================
-   9. Bottom / Already have account
-   ============================================================ */
+/* ── 10. Ticket CTA ─────────────────────────────────────────── */
+.invite-ticket-section {
+  padding: 64px 0;
+  background: var(--surface-3);
+}
+
+.invite-ticket {
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+.invite-ticket-eyebrow {
+  margin-bottom: 16px;
+}
+
+.invite-ticket-headline {
+  margin-bottom: 16px;
+}
+
+.invite-ticket-btn {
+  margin-top: 8px;
+}
+
+/* ── 11. Bottom / Already have account ──────────────────────── */
 .invite-bottom {
-  background-color: var(--dark);
-  padding: var(--space-8) 0;
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  background-color: var(--ink);
+  padding: 48px 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
 }
 
 .invite-bottom-inner {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: var(--space-3);
+  gap: 16px;
   text-align: center;
 }
 
@@ -605,37 +626,35 @@
   font-weight: 900;
   font-size: 32px;
   letter-spacing: -0.06em;
-  color: var(--surface-elevated);
+  color: var(--snow);
 }
 
 .invite-bottom-brand span {
-  color: var(--primary);
+  color: var(--brand-red);
 }
 
 .invite-already {
   font-family: var(--font-body);
-  font-size: var(--text-small);
+  font-size: 18px;
   color: rgba(255, 255, 255, 0.5);
   letter-spacing: 0.01em;
 }
 
 .invite-already a {
-  color: var(--tertiary);
+  color: rgba(255, 255, 255, 0.8);
   text-decoration: underline;
   text-underline-offset: 3px;
-  transition: color var(--t-fast);
+  transition: color 150ms ease;
 }
 
 .invite-already a:hover {
-  color: var(--surface-elevated);
+  color: var(--snow);
 }
 
-/* ============================================================
-   Scroll reveal (matches Design.md scrollReveal token)
-   ============================================================ */
+/* ── Scroll reveal ───────────────────────────────────────────── */
 .invite-reveal {
   opacity: 0;
-  transform: translateY(40px);
+  transform: translateY(32px);
   transition:
     opacity 600ms cubic-bezier(0.22, 1, 0.36, 1),
     transform 600ms cubic-bezier(0.22, 1, 0.36, 1);

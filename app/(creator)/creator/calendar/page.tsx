@@ -150,32 +150,41 @@ function ActionButtons({
   onAddNote,
 }: ActionButtonsProps) {
   return (
-    <div className="cal-popover-actions">
+    <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginTop: 8 }}>
       {event.postUrl && !event.done && (
         <Link
           href={event.postUrl}
-          className="cal-action-btn cal-action-btn--primary"
+          className="btn-primary click-shift"
+          style={{ fontSize: 12, padding: "6px 14px" }}
         >
           Submit content
         </Link>
       )}
       <button
-        className={
-          event.done ? "cal-action-btn cal-action-btn--done" : "cal-action-btn"
-        }
+        className="btn-ghost click-shift"
         onClick={() => onMarkDone(event.id)}
         disabled={event.done}
+        style={{
+          fontSize: 12,
+          padding: "6px 14px",
+          opacity: event.done ? 0.5 : 1,
+        }}
       >
         {event.done ? "Done" : "Mark done"}
       </button>
       {!event.done && (
         <>
-          <button className="cal-action-btn" onClick={() => onSnooze(event.id)}>
+          <button
+            className="btn-ghost click-shift"
+            onClick={() => onSnooze(event.id)}
+            style={{ fontSize: 12, padding: "6px 14px" }}
+          >
             Snooze
           </button>
           <button
-            className="cal-action-btn"
+            className="btn-ghost click-shift"
             onClick={() => onAddNote(event.id)}
+            style={{ fontSize: 12, padding: "6px 14px" }}
           >
             Add note
           </button>
@@ -237,63 +246,178 @@ function DayPopover({
 
   return (
     <>
-      <div className="cal-popover-backdrop" onClick={onClose} />
+      <div
+        style={{
+          position: "fixed",
+          inset: 0,
+          zIndex: 100,
+        }}
+        onClick={onClose}
+      />
       <div
         ref={popRef}
-        className="cal-popover"
-        style={{ top: pos.top, left: pos.left }}
+        style={{
+          position: "fixed",
+          top: pos.top,
+          left: pos.left,
+          zIndex: 101,
+          width: 320,
+          background: "var(--surface)",
+          border: "1px solid var(--hairline)",
+          borderRadius: 10,
+          boxShadow: "0 8px 32px rgba(0,0,0,0.12)",
+        }}
         role="dialog"
         aria-label={`Events for ${formatDisplayDate(dateStr)}`}
       >
-        <div className="cal-popover-header">
-          <span className="cal-popover-date">{formatDisplayDate(dateStr)}</span>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            padding: "16px 20px",
+            borderBottom: "1px solid var(--hairline)",
+          }}
+        >
+          <span
+            style={{
+              fontFamily: "var(--font-body)",
+              fontSize: 13,
+              fontWeight: 600,
+              color: "var(--ink)",
+            }}
+          >
+            {formatDisplayDate(dateStr)}
+          </span>
           <button
-            className="cal-popover-close"
             onClick={onClose}
             aria-label="Close"
+            style={{
+              background: "none",
+              border: "none",
+              cursor: "pointer",
+              fontSize: 18,
+              color: "var(--ink-4)",
+              lineHeight: 1,
+              padding: 0,
+            }}
           >
             &times;
           </button>
         </div>
 
-        <div className="cal-popover-events">
+        <div
+          style={{
+            padding: "12px 20px 20px",
+            maxHeight: 400,
+            overflowY: "auto",
+          }}
+        >
           {events.length === 0 ? (
-            <p className="cal-popover-empty">No events today.</p>
+            <p
+              style={{
+                fontFamily: "var(--font-body)",
+                fontSize: 13,
+                color: "var(--ink-4)",
+                margin: 0,
+              }}
+            >
+              No events today.
+            </p>
           ) : (
             events.map((ev) => (
-              <div key={ev.id} className="cal-popover-event">
-                <div className="cal-popover-event-top">
+              <div
+                key={ev.id}
+                style={{
+                  borderBottom: "1px dotted var(--hairline)",
+                  paddingBottom: 12,
+                  marginBottom: 12,
+                }}
+              >
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 8,
+                    marginBottom: 4,
+                  }}
+                >
                   <span
-                    className="cal-popover-type-dot"
-                    style={{ background: dotColor(ev.type) }}
+                    style={{
+                      width: 8,
+                      height: 8,
+                      borderRadius: "50%",
+                      background: dotColor(ev.type),
+                      flexShrink: 0,
+                    }}
                   />
-                  <span className="cal-popover-event-title">{ev.title}</span>
+                  <span
+                    style={{
+                      fontFamily: "var(--font-body)",
+                      fontSize: 13,
+                      fontWeight: 600,
+                      color: "var(--ink)",
+                    }}
+                  >
+                    {ev.title}
+                  </span>
                 </div>
                 {ev.time && (
-                  <div className="cal-popover-event-time">{ev.time}</div>
+                  <div
+                    style={{
+                      fontFamily: "var(--font-body)",
+                      fontSize: 11,
+                      color: "var(--ink-4)",
+                      marginLeft: 16,
+                      marginBottom: 2,
+                    }}
+                  >
+                    {ev.time}
+                  </div>
                 )}
-                <div className="cal-popover-event-campaign">
+                <div
+                  style={{
+                    fontFamily: "var(--font-body)",
+                    fontSize: 12,
+                    color: "var(--ink-4)",
+                    marginLeft: 16,
+                    marginBottom: 4,
+                  }}
+                >
                   {ev.merchantName} · {ev.campaignTitle}
                 </div>
-                <ActionButtons
-                  event={ev}
-                  onMarkDone={onMarkDone}
-                  onSnooze={onSnooze}
-                  onAddNote={onAddNote}
-                />
+                <div style={{ marginLeft: 16 }}>
+                  <ActionButtons
+                    event={ev}
+                    onMarkDone={onMarkDone}
+                    onSnooze={onSnooze}
+                    onAddNote={onAddNote}
+                  />
+                </div>
                 {noteTarget === ev.id && (
-                  <div style={{ paddingLeft: 17, marginTop: 8 }}>
+                  <div style={{ marginLeft: 16, marginTop: 8 }}>
                     <textarea
-                      className="cal-note-input"
                       rows={2}
                       placeholder="Add a note..."
                       value={noteValue}
                       onChange={(e) => onNoteChange(e.target.value)}
                       autoFocus
+                      style={{
+                        width: "100%",
+                        fontFamily: "var(--font-body)",
+                        fontSize: 13,
+                        color: "var(--ink)",
+                        background: "var(--surface-2)",
+                        border: "1px solid var(--hairline)",
+                        borderRadius: 8,
+                        padding: "8px 12px",
+                        resize: "vertical",
+                        outline: "none",
+                      }}
                     />
                     <button
-                      className="cal-action-btn"
-                      style={{ marginTop: 6 }}
+                      className="btn-ghost click-shift"
+                      style={{ marginTop: 6, fontSize: 12 }}
                       onClick={onNoteSave}
                     >
                       Save note
@@ -301,7 +425,18 @@ function DayPopover({
                   </div>
                 )}
                 {ev.note && noteTarget !== ev.id && (
-                  <p className="cal-note-saved">Note: {ev.note}</p>
+                  <p
+                    style={{
+                      fontFamily: "var(--font-body)",
+                      fontSize: 12,
+                      color: "var(--ink-4)",
+                      marginLeft: 16,
+                      marginTop: 4,
+                      fontStyle: "italic",
+                    }}
+                  >
+                    Note: {ev.note}
+                  </p>
                 )}
               </div>
             ))
@@ -462,391 +597,824 @@ export default function CreatorCalendarPage() {
         })()
       : `${MONTH_NAMES[month]} ${year}`;
 
+  /* ── Shared styles ───────────────────────────────────── */
+
+  const cardStyle = {
+    background: "var(--surface-2)",
+    border: "1px solid var(--hairline)",
+    borderRadius: 10,
+    padding: 24,
+  } as React.CSSProperties;
+
   /* ── Render ──────────────────────────────────────────── */
 
   return (
-    <div className="cal">
-      {/* ── Hero ─────────────────────────────────────── */}
-      <section className="cal-hero">
-        <p className="cal-hero-eyebrow">Creator Portal</p>
-        <h1 className="cal-hero-title">Your calendar.</h1>
-        <div className="cal-hero-meta">
-          <span className="cal-hero-month">
-            {MONTH_NAMES[month]} {year}
-          </span>
-          <span className="cal-hero-stat">
-            <strong>{deadlineCount}</strong>{" "}
-            {deadlineCount === 1 ? "deadline" : "deadlines"} this month
-          </span>
-          <div className="cal-hero-actions">
+    <div
+      style={{
+        background: "var(--surface)",
+        minHeight: "100vh",
+        paddingBottom: 96,
+      }}
+    >
+      <div style={{ maxWidth: 1140, margin: "0 auto", padding: "0 64px" }}>
+        {/* ── Page header ────────────────────────────────── */}
+        <div
+          style={{
+            display: "flex",
+            alignItems: "flex-end",
+            justifyContent: "space-between",
+            paddingTop: 40,
+            paddingBottom: 32,
+          }}
+        >
+          <div>
+            <span
+              style={{
+                fontFamily: "var(--font-body)",
+                fontSize: 12,
+                color: "var(--ink-4)",
+                letterSpacing: "0.08em",
+                textTransform: "uppercase",
+                display: "block",
+                marginBottom: 8,
+              }}
+            >
+              CREATOR PORTAL
+            </span>
+            <h1
+              style={{
+                fontFamily: "var(--font-display)",
+                fontSize: 40,
+                fontWeight: 700,
+                color: "var(--ink)",
+                margin: 0,
+                lineHeight: 1.1,
+              }}
+            >
+              Your Calendar
+            </h1>
+            <p
+              style={{
+                fontFamily: "var(--font-body)",
+                fontSize: 13,
+                color: "var(--ink-4)",
+                margin: "8px 0 0",
+              }}
+            >
+              {MONTH_NAMES[month]} {year} ·{" "}
+              <strong style={{ color: "var(--ink-3)" }}>{deadlineCount}</strong>{" "}
+              {deadlineCount === 1 ? "deadline" : "deadlines"} this month
+            </p>
+          </div>
+
+          {/* Export / Subscribe */}
+          <div style={{ display: "flex", gap: 8 }}>
             <button
-              className="cal-hero-btn"
+              className="btn-ghost click-shift"
               onClick={() => downloadICS(events)}
-              title="Export .ics calendar file"
             >
               Export .ics
             </button>
             <a
-              className="cal-hero-btn"
+              className="btn-ghost click-shift"
               href="webcal://push.nyc/api/creator/calendar/feed"
-              title="Subscribe to calendar"
             >
               Subscribe
             </a>
           </div>
         </div>
-      </section>
 
-      {/* ── Controls bar ─────────────────────────────── */}
-      <div className="cal-controls">
-        <div className="cal-nav">
-          <button
-            className="cal-nav-btn"
-            onClick={prevPeriod}
-            aria-label="Previous period"
-          >
-            &#8249;
-          </button>
-          <button
-            className="cal-nav-label"
-            onClick={goToday}
-            title="Go to today"
-            style={{ cursor: "pointer", background: "none", border: "none" }}
-          >
-            {periodLabel}
-          </button>
-          <button
-            className="cal-nav-btn"
-            onClick={nextPeriod}
-            aria-label="Next period"
-          >
-            &#8250;
-          </button>
-        </div>
-
-        <div className="cal-view-tabs">
-          {(["month", "week", "list"] as CalView[]).map((v) => (
+        {/* ── Controls bar ───────────────────────────────── */}
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            marginBottom: 16,
+          }}
+        >
+          {/* Nav */}
+          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
             <button
-              key={v}
-              className={`cal-view-tab${view === v ? " cal-view-tab--active" : ""}`}
-              onClick={() => setView(v)}
+              className="btn-ghost click-shift"
+              onClick={prevPeriod}
+              aria-label="Previous period"
+              style={{ padding: "8px 14px", fontSize: 16 }}
             >
-              {v.charAt(0).toUpperCase() + v.slice(1)}
+              ‹
             </button>
-          ))}
-        </div>
-      </div>
+            <button
+              onClick={goToday}
+              title="Go to today"
+              style={{
+                fontFamily: "var(--font-display)",
+                fontSize: 18,
+                fontWeight: 700,
+                color: "var(--ink)",
+                background: "none",
+                border: "none",
+                cursor: "pointer",
+                padding: "0 8px",
+                minWidth: 220,
+                textAlign: "center",
+              }}
+            >
+              {periodLabel}
+            </button>
+            <button
+              className="btn-ghost click-shift"
+              onClick={nextPeriod}
+              aria-label="Next period"
+              style={{ padding: "8px 14px", fontSize: 16 }}
+            >
+              ›
+            </button>
+          </div>
 
-      {/* ── Legend ───────────────────────────────────── */}
-      <div className="cal-legend">
-        {(Object.entries(EVENT_TYPE_LABELS) as [EventType, string][]).map(
-          ([type, label]) => (
-            <span key={type} className="cal-legend-item">
+          {/* View tabs */}
+          <div
+            style={{
+              display: "flex",
+              background: "var(--surface-2)",
+              border: "1px solid var(--hairline)",
+              borderRadius: 8,
+              padding: 4,
+              gap: 2,
+            }}
+          >
+            {(["month", "week", "list"] as CalView[]).map((v) => (
+              <button
+                key={v}
+                onClick={() => setView(v)}
+                style={{
+                  fontFamily: "var(--font-body)",
+                  fontSize: 12,
+                  fontWeight: view === v ? 600 : 400,
+                  color: view === v ? "var(--ink)" : "var(--ink-4)",
+                  background: view === v ? "var(--surface)" : "none",
+                  border:
+                    view === v
+                      ? "1px solid var(--hairline)"
+                      : "1px solid transparent",
+                  borderRadius: 6,
+                  padding: "6px 14px",
+                  cursor: "pointer",
+                  letterSpacing: "0.04em",
+                  textTransform: "uppercase",
+                  transition: "all 0.15s",
+                }}
+              >
+                {v.charAt(0).toUpperCase() + v.slice(1)}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* ── Legend ─────────────────────────────────────── */}
+        <div
+          style={{
+            display: "flex",
+            gap: 16,
+            flexWrap: "wrap",
+            marginBottom: 16,
+          }}
+        >
+          {(Object.entries(EVENT_TYPE_LABELS) as [EventType, string][]).map(
+            ([type, label]) => (
               <span
-                className="cal-legend-dot"
-                style={{ background: EVENT_TYPE_COLORS[type] }}
-              />
-              {label}
-            </span>
-          ),
+                key={type}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 6,
+                  fontFamily: "var(--font-body)",
+                  fontSize: 11,
+                  color: "var(--ink-4)",
+                  letterSpacing: "0.04em",
+                }}
+              >
+                <span
+                  style={{
+                    width: 8,
+                    height: 8,
+                    borderRadius: "50%",
+                    background: EVENT_TYPE_COLORS[type],
+                    flexShrink: 0,
+                  }}
+                />
+                {label}
+              </span>
+            ),
+          )}
+        </div>
+
+        {/* ── Month view ─────────────────────────────────── */}
+        {view === "month" && (
+          <div
+            style={{
+              background: "var(--surface-2)",
+              border: "1px solid var(--hairline)",
+              borderRadius: 10,
+              overflow: "hidden",
+            }}
+          >
+            {/* Day-of-week headers */}
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(7, 1fr)",
+                borderBottom: "1px solid var(--hairline)",
+              }}
+            >
+              {DOW_LABELS.map((d) => (
+                <div
+                  key={d}
+                  style={{
+                    fontFamily: "var(--font-body)",
+                    fontSize: 11,
+                    color: "var(--ink-4)",
+                    letterSpacing: "0.06em",
+                    textTransform: "uppercase",
+                    textAlign: "center",
+                    padding: "12px 0",
+                  }}
+                >
+                  {d}
+                </div>
+              ))}
+            </div>
+
+            {/* Grid */}
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(7, 1fr)",
+              }}
+            >
+              {monthGrid.map((date, i) => {
+                if (!date) {
+                  return (
+                    <div
+                      key={`empty-${i}`}
+                      style={{
+                        minHeight: 88,
+                        borderRight: "1px solid var(--hairline)",
+                        borderBottom: "1px solid var(--hairline)",
+                        background: "var(--surface)",
+                        opacity: 0.4,
+                      }}
+                    />
+                  );
+                }
+
+                const dateStr = toYMD(date);
+                const isToday = dateStr === todayStr;
+                const dayEvents = eventsByDate[dateStr] ?? [];
+                const shown = dayEvents.slice(0, 2);
+                const extra = dayEvents.length - shown.length;
+
+                return (
+                  <div
+                    key={dateStr}
+                    style={{
+                      minHeight: 88,
+                      borderRight: "1px solid var(--hairline)",
+                      borderBottom: "1px solid var(--hairline)",
+                      padding: "8px 6px",
+                      cursor: "pointer",
+                      background: isToday
+                        ? "rgba(193,18,31,0.04)"
+                        : "transparent",
+                      transition: "background 0.12s",
+                    }}
+                    onClick={(e) => openPopover(dateStr, e.currentTarget)}
+                    role="button"
+                    aria-label={`${formatDisplayDate(dateStr)}, ${dayEvents.length} events`}
+                    tabIndex={0}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" || e.key === " ")
+                        openPopover(dateStr, e.currentTarget);
+                    }}
+                  >
+                    <span
+                      style={{
+                        fontFamily: "var(--font-body)",
+                        fontSize: 13,
+                        fontWeight: isToday ? 700 : 400,
+                        color: isToday ? "var(--brand-red)" : "var(--ink)",
+                        display: "block",
+                        marginBottom: 4,
+                      }}
+                    >
+                      {date.getDate()}
+                    </span>
+
+                    {/* Dot row */}
+                    <div
+                      style={{
+                        display: "flex",
+                        gap: 3,
+                        flexWrap: "wrap",
+                        marginBottom: 4,
+                      }}
+                    >
+                      {dayEvents.slice(0, 6).map((ev) => (
+                        <span
+                          key={ev.id}
+                          style={{
+                            width: 6,
+                            height: 6,
+                            borderRadius: "50%",
+                            background: dotColor(ev.type),
+                            opacity: ev.done ? 0.3 : 1,
+                            flexShrink: 0,
+                          }}
+                        />
+                      ))}
+                    </div>
+
+                    {/* Compact pills */}
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: 2,
+                      }}
+                    >
+                      {shown.map((ev) => (
+                        <span
+                          key={ev.id}
+                          style={{
+                            fontFamily: "var(--font-body)",
+                            fontSize: 10,
+                            color: "var(--snow)",
+                            background: dotColor(ev.type),
+                            borderRadius: 4,
+                            padding: "1px 5px",
+                            opacity: ev.done ? 0.4 : 1,
+                            overflow: "hidden",
+                            textOverflow: "ellipsis",
+                            whiteSpace: "nowrap",
+                          }}
+                        >
+                          {ev.title}
+                        </span>
+                      ))}
+                      {extra > 0 && (
+                        <span
+                          style={{
+                            fontFamily: "var(--font-body)",
+                            fontSize: 10,
+                            color: "var(--ink-4)",
+                          }}
+                        >
+                          +{extra} more
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
+        {/* ── Week view ──────────────────────────────────── */}
+        {view === "week" && (
+          <div
+            style={{
+              background: "var(--surface-2)",
+              border: "1px solid var(--hairline)",
+              borderRadius: 10,
+              overflow: "hidden",
+            }}
+          >
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(7, 1fr)",
+              }}
+            >
+              {weekDates.map((date) => {
+                const dateStr = toYMD(date);
+                const isToday = dateStr === todayStr;
+                const dayEvents = eventsByDate[dateStr] ?? [];
+
+                return (
+                  <div
+                    key={dateStr}
+                    style={{
+                      borderRight: "1px solid var(--hairline)",
+                      minHeight: 200,
+                    }}
+                  >
+                    <div
+                      style={{
+                        padding: "12px 12px 8px",
+                        borderBottom: "1px solid var(--hairline)",
+                        background: isToday
+                          ? "rgba(193,18,31,0.04)"
+                          : "transparent",
+                      }}
+                    >
+                      <span
+                        style={{
+                          fontFamily: "var(--font-body)",
+                          fontSize: 11,
+                          color: "var(--ink-4)",
+                          letterSpacing: "0.06em",
+                          textTransform: "uppercase",
+                          display: "block",
+                        }}
+                      >
+                        {DOW_LABELS_FULL[date.getDay()]}
+                      </span>
+                      <span
+                        style={{
+                          fontFamily: "var(--font-display)",
+                          fontSize: 22,
+                          fontWeight: 700,
+                          color: isToday ? "var(--brand-red)" : "var(--ink)",
+                        }}
+                      >
+                        {date.getDate()}
+                      </span>
+                    </div>
+
+                    <div
+                      style={{
+                        padding: "8px 8px",
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: 4,
+                      }}
+                    >
+                      {dayEvents.length === 0 ? (
+                        <span
+                          style={{
+                            fontFamily: "var(--font-body)",
+                            fontSize: 12,
+                            color: "var(--ink-4)",
+                          }}
+                        >
+                          —
+                        </span>
+                      ) : (
+                        dayEvents.map((ev) => (
+                          <div
+                            key={ev.id}
+                            style={{
+                              fontFamily: "var(--font-body)",
+                              fontSize: 11,
+                              color: "var(--snow)",
+                              background: dotColor(ev.type),
+                              borderRadius: 4,
+                              padding: "4px 8px",
+                              opacity: ev.done ? 0.4 : 1,
+                              cursor: "pointer",
+                            }}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              openPopover(dateStr, e.currentTarget);
+                            }}
+                            role="button"
+                            tabIndex={0}
+                            title={ev.title}
+                          >
+                            <div
+                              style={{
+                                overflow: "hidden",
+                                textOverflow: "ellipsis",
+                                whiteSpace: "nowrap",
+                              }}
+                            >
+                              {ev.title}
+                            </div>
+                            {ev.time && (
+                              <div style={{ opacity: 0.85, fontSize: 10 }}>
+                                {ev.time}
+                              </div>
+                            )}
+                          </div>
+                        ))
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
+        {/* ── List view ──────────────────────────────────── */}
+        {view === "list" && (
+          <div style={{ display: "flex", flexDirection: "column", gap: 0 }}>
+            {listGroups.length === 0 ? (
+              <div
+                style={{
+                  ...cardStyle,
+                  textAlign: "center",
+                  padding: 48,
+                }}
+              >
+                <div
+                  style={{
+                    fontFamily: "var(--font-display)",
+                    fontSize: 64,
+                    fontWeight: 700,
+                    color: "var(--hairline)",
+                    lineHeight: 1,
+                    marginBottom: 8,
+                  }}
+                >
+                  0
+                </div>
+                <p
+                  style={{
+                    fontFamily: "var(--font-body)",
+                    fontSize: 14,
+                    color: "var(--ink-4)",
+                    margin: 0,
+                  }}
+                >
+                  No events in {MONTH_NAMES[month]}.
+                </p>
+              </div>
+            ) : (
+              listGroups.map(([dateStr, dayEvents]) => {
+                const [y, m, d] = dateStr.split("-").map(Number);
+                const date = new Date(y, m - 1, d);
+                const isToday = dateStr === todayStr;
+
+                return (
+                  <div key={dateStr} style={{ marginBottom: 8 }}>
+                    {/* Date header */}
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 12,
+                        padding: "12px 0 8px",
+                        borderBottom: "1px solid var(--hairline)",
+                        marginBottom: 4,
+                      }}
+                    >
+                      <span
+                        style={{
+                          fontFamily: "var(--font-display)",
+                          fontSize: 16,
+                          fontWeight: 700,
+                          color: "var(--ink)",
+                        }}
+                      >
+                        {MONTH_NAMES[date.getMonth()]} {date.getDate()}
+                      </span>
+                      <span
+                        style={{
+                          fontFamily: "var(--font-body)",
+                          fontSize: 12,
+                          color: "var(--ink-4)",
+                        }}
+                      >
+                        {DOW_LABELS_FULL[date.getDay()]}
+                      </span>
+                      {isToday && (
+                        <span
+                          style={{
+                            fontFamily: "var(--font-body)",
+                            fontSize: 11,
+                            color: "var(--snow)",
+                            background: "var(--brand-red)",
+                            borderRadius: 4,
+                            padding: "2px 8px",
+                            letterSpacing: "0.04em",
+                          }}
+                        >
+                          Today
+                        </span>
+                      )}
+                    </div>
+
+                    {dayEvents.map((ev) => (
+                      <div
+                        key={ev.id}
+                        style={{
+                          display: "grid",
+                          gridTemplateColumns: "56px 1fr auto",
+                          gap: 16,
+                          padding: "12px 0",
+                          borderBottom: "1px dotted var(--hairline)",
+                          opacity: ev.done ? 0.5 : 1,
+                        }}
+                      >
+                        {/* Time column */}
+                        <div
+                          style={{
+                            fontFamily: "var(--font-body)",
+                            fontSize: 12,
+                            color: "var(--ink-4)",
+                            paddingTop: 2,
+                          }}
+                        >
+                          {ev.time ?? "—"}
+                        </div>
+
+                        {/* Content column */}
+                        <div
+                          style={{
+                            display: "flex",
+                            flexDirection: "column",
+                            gap: 4,
+                          }}
+                        >
+                          <div
+                            style={{
+                              display: "flex",
+                              alignItems: "center",
+                              gap: 6,
+                            }}
+                          >
+                            <span
+                              style={{
+                                width: 8,
+                                height: 8,
+                                borderRadius: "50%",
+                                background: dotColor(ev.type),
+                                flexShrink: 0,
+                              }}
+                            />
+                            <span
+                              style={{
+                                fontFamily: "var(--font-body)",
+                                fontSize: 11,
+                                color: "var(--ink-4)",
+                                letterSpacing: "0.04em",
+                                textTransform: "uppercase",
+                              }}
+                            >
+                              {EVENT_TYPE_LABELS[ev.type]}
+                            </span>
+                            {ev.payout ? (
+                              <span
+                                style={{
+                                  fontFamily: "var(--font-body)",
+                                  fontSize: 11,
+                                  color: "var(--ink-3)",
+                                  fontWeight: 700,
+                                }}
+                              >
+                                ${ev.payout}
+                              </span>
+                            ) : null}
+                          </div>
+
+                          <span
+                            style={{
+                              fontFamily: "var(--font-body)",
+                              fontSize: 14,
+                              fontWeight: 600,
+                              color: "var(--ink)",
+                            }}
+                          >
+                            {ev.title}
+                          </span>
+
+                          <Link
+                            href={
+                              ev.postUrl ??
+                              `/creator/campaigns/${ev.campaignId}/post`
+                            }
+                            style={{
+                              fontFamily: "var(--font-body)",
+                              fontSize: 12,
+                              color: "var(--accent-blue)",
+                              textDecoration: "none",
+                            }}
+                          >
+                            {ev.campaignTitle}
+                          </Link>
+
+                          <span
+                            style={{
+                              fontFamily: "var(--font-body)",
+                              fontSize: 12,
+                              color: "var(--ink-4)",
+                            }}
+                          >
+                            {ev.merchantName}
+                          </span>
+
+                          {/* Note textarea */}
+                          {noteTarget === ev.id && (
+                            <div style={{ marginTop: 8 }}>
+                              <textarea
+                                rows={2}
+                                placeholder="Add a note..."
+                                value={noteValue}
+                                onChange={(e) => setNoteValue(e.target.value)}
+                                autoFocus
+                                style={{
+                                  width: "100%",
+                                  fontFamily: "var(--font-body)",
+                                  fontSize: 13,
+                                  color: "var(--ink)",
+                                  background: "var(--surface-2)",
+                                  border: "1px solid var(--hairline)",
+                                  borderRadius: 8,
+                                  padding: "8px 12px",
+                                  resize: "vertical",
+                                  outline: "none",
+                                }}
+                              />
+                              <button
+                                className="btn-ghost click-shift"
+                                style={{ marginTop: 6, fontSize: 12 }}
+                                onClick={saveNote}
+                              >
+                                Save note
+                              </button>
+                            </div>
+                          )}
+                          {ev.note && noteTarget !== ev.id && (
+                            <p
+                              style={{
+                                fontFamily: "var(--font-body)",
+                                fontSize: 12,
+                                color: "var(--ink-4)",
+                                fontStyle: "italic",
+                                margin: 0,
+                              }}
+                            >
+                              Note: {ev.note}
+                            </p>
+                          )}
+                        </div>
+
+                        {/* Actions column */}
+                        <div
+                          style={{
+                            display: "flex",
+                            flexDirection: "column",
+                            gap: 6,
+                            alignItems: "flex-end",
+                          }}
+                        >
+                          {ev.postUrl && !ev.done && (
+                            <Link
+                              href={ev.postUrl}
+                              className="btn-primary click-shift"
+                              style={{
+                                fontSize: 12,
+                                padding: "6px 14px",
+                                whiteSpace: "nowrap",
+                              }}
+                            >
+                              Submit
+                            </Link>
+                          )}
+                          <button
+                            className="btn-ghost click-shift"
+                            onClick={() => markDone(ev.id)}
+                            disabled={ev.done}
+                            style={{
+                              fontSize: 12,
+                              padding: "6px 14px",
+                              opacity: ev.done ? 0.5 : 1,
+                              whiteSpace: "nowrap",
+                            }}
+                          >
+                            {ev.done ? "Done" : "Mark done"}
+                          </button>
+                          {!ev.done && (
+                            <>
+                              <button
+                                className="btn-ghost click-shift"
+                                onClick={() => snooze(ev.id)}
+                                style={{ fontSize: 12, padding: "6px 14px" }}
+                              >
+                                Snooze
+                              </button>
+                              <button
+                                className="btn-ghost click-shift"
+                                onClick={() => addNote(ev.id)}
+                                style={{ fontSize: 12, padding: "6px 14px" }}
+                              >
+                                Note
+                              </button>
+                            </>
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                );
+              })
+            )}
+          </div>
         )}
       </div>
 
-      {/* ── Month view ───────────────────────────────── */}
-      {view === "month" && (
-        <div className="cal-month">
-          {/* Day-of-week headers */}
-          <div className="cal-month-header">
-            {DOW_LABELS.map((d) => (
-              <div key={d} className="cal-month-dow">
-                {d}
-              </div>
-            ))}
-          </div>
-
-          {/* Grid */}
-          <div className="cal-month-grid">
-            {monthGrid.map((date, i) => {
-              if (!date) {
-                return (
-                  <div
-                    key={`empty-${i}`}
-                    className="cal-cell cal-cell--other-month"
-                  />
-                );
-              }
-
-              const dateStr = toYMD(date);
-              const isToday = dateStr === todayStr;
-              const dayEvents = eventsByDate[dateStr] ?? [];
-              const shown = dayEvents.slice(0, 2);
-              const extra = dayEvents.length - shown.length;
-
-              return (
-                <div
-                  key={dateStr}
-                  className={["cal-cell", isToday ? "cal-cell--today" : ""]
-                    .filter(Boolean)
-                    .join(" ")}
-                  onClick={(e) => openPopover(dateStr, e.currentTarget)}
-                  role="button"
-                  aria-label={`${formatDisplayDate(dateStr)}, ${dayEvents.length} events`}
-                  tabIndex={0}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter" || e.key === " ")
-                      openPopover(dateStr, e.currentTarget);
-                  }}
-                >
-                  <span className="cal-cell-num">{date.getDate()}</span>
-
-                  {/* Dot row */}
-                  <div className="cal-cell-dots">
-                    {dayEvents.slice(0, 6).map((ev) => (
-                      <span
-                        key={ev.id}
-                        className="cal-dot"
-                        style={{
-                          background: dotColor(ev.type),
-                          opacity: ev.done ? 0.3 : 1,
-                        }}
-                      />
-                    ))}
-                  </div>
-
-                  {/* Compact pills — hide on small */}
-                  <div className="cal-cell-events">
-                    {shown.map((ev) => (
-                      <span
-                        key={ev.id}
-                        className="cal-cell-event-pill"
-                        style={{
-                          background: dotColor(ev.type),
-                          opacity: ev.done ? 0.4 : 1,
-                        }}
-                      >
-                        {ev.title}
-                      </span>
-                    ))}
-                    {extra > 0 && (
-                      <span className="cal-cell-event-more">+{extra} more</span>
-                    )}
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      )}
-
-      {/* ── Week view ────────────────────────────────── */}
-      {view === "week" && (
-        <div className="cal-week">
-          <div className="cal-week-grid">
-            {weekDates.map((date) => {
-              const dateStr = toYMD(date);
-              const isToday = dateStr === todayStr;
-              const dayEvents = eventsByDate[dateStr] ?? [];
-
-              return (
-                <div
-                  key={dateStr}
-                  className={`cal-week-col${isToday ? " cal-week-col--today" : ""}`}
-                >
-                  <div className="cal-week-col-header">
-                    <span className="cal-week-col-dow">
-                      {DOW_LABELS_FULL[date.getDay()]}
-                    </span>
-                    <span className="cal-week-col-num">{date.getDate()}</span>
-                  </div>
-
-                  <div className="cal-week-col-events">
-                    {dayEvents.length === 0 ? (
-                      <span className="cal-week-col-empty">—</span>
-                    ) : (
-                      dayEvents.map((ev) => (
-                        <div
-                          key={ev.id}
-                          className={`cal-week-event${ev.done ? " cal-week-event-done" : ""}`}
-                          style={{ background: dotColor(ev.type) }}
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            openPopover(dateStr, e.currentTarget);
-                          }}
-                          role="button"
-                          tabIndex={0}
-                          title={ev.title}
-                        >
-                          <span className="cal-week-event-title">
-                            {ev.title}
-                          </span>
-                          {ev.time && (
-                            <span className="cal-week-event-time">
-                              {ev.time}
-                            </span>
-                          )}
-                        </div>
-                      ))
-                    )}
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      )}
-
-      {/* ── List view ────────────────────────────────── */}
-      {view === "list" && (
-        <div className="cal-list">
-          {listGroups.length === 0 ? (
-            <div className="cal-empty">
-              <div className="cal-empty-num">0</div>
-              <p className="cal-empty-msg">
-                No events in {MONTH_NAMES[month]}.
-              </p>
-            </div>
-          ) : (
-            listGroups.map(([dateStr, dayEvents]) => {
-              const [y, m, d] = dateStr.split("-").map(Number);
-              const date = new Date(y, m - 1, d);
-              const isToday = dateStr === todayStr;
-
-              return (
-                <div key={dateStr} className="cal-list-group">
-                  <div className="cal-list-group-header">
-                    <span className="cal-list-group-date">
-                      {MONTH_NAMES[date.getMonth()]} {date.getDate()}
-                    </span>
-                    <span className="cal-list-group-dow">
-                      {DOW_LABELS_FULL[date.getDay()]}
-                    </span>
-                    {isToday && (
-                      <span className="cal-list-group-today-badge">Today</span>
-                    )}
-                  </div>
-
-                  {dayEvents.map((ev) => (
-                    <div
-                      key={ev.id}
-                      className={`cal-list-row${ev.done ? " cal-list-row--done" : ""}`}
-                    >
-                      {/* Time column */}
-                      <div className="cal-list-time-col">{ev.time ?? "—"}</div>
-
-                      {/* Content column */}
-                      <div className="cal-list-content">
-                        <div className="cal-list-type-row">
-                          <span
-                            className="cal-list-type-dot"
-                            style={{ background: dotColor(ev.type) }}
-                          />
-                          <span className="cal-list-type-label">
-                            {EVENT_TYPE_LABELS[ev.type]}
-                          </span>
-                          {ev.payout ? (
-                            <span
-                              style={{
-                                fontSize: 10,
-                                fontFamily: "var(--font-body)",
-                                color: "var(--champagne)",
-                                fontWeight: 700,
-                                marginLeft: 4,
-                              }}
-                            >
-                              ${ev.payout}
-                            </span>
-                          ) : null}
-                        </div>
-
-                        <span className="cal-list-title">{ev.title}</span>
-
-                        <Link
-                          href={
-                            ev.postUrl ??
-                            `/creator/campaigns/${ev.campaignId}/post`
-                          }
-                          className="cal-list-campaign"
-                        >
-                          {ev.campaignTitle}
-                        </Link>
-
-                        <span className="cal-list-merchant">
-                          {ev.merchantName}
-                        </span>
-
-                        {/* Note textarea */}
-                        {noteTarget === ev.id && (
-                          <div style={{ marginTop: 8 }}>
-                            <textarea
-                              className="cal-note-input"
-                              rows={2}
-                              placeholder="Add a note..."
-                              value={noteValue}
-                              onChange={(e) => setNoteValue(e.target.value)}
-                              autoFocus
-                            />
-                            <button
-                              className="cal-action-btn"
-                              style={{ marginTop: 6 }}
-                              onClick={saveNote}
-                            >
-                              Save note
-                            </button>
-                          </div>
-                        )}
-                        {ev.note && noteTarget !== ev.id && (
-                          <p className="cal-note-saved">Note: {ev.note}</p>
-                        )}
-                      </div>
-
-                      {/* Actions column */}
-                      <div className="cal-list-actions-col">
-                        {ev.postUrl && !ev.done && (
-                          <Link
-                            href={ev.postUrl}
-                            className="cal-action-btn cal-action-btn--primary"
-                          >
-                            Submit
-                          </Link>
-                        )}
-                        <button
-                          className={
-                            ev.done
-                              ? "cal-action-btn cal-action-btn--done"
-                              : "cal-action-btn"
-                          }
-                          onClick={() => markDone(ev.id)}
-                          disabled={ev.done}
-                        >
-                          {ev.done ? "Done" : "Mark done"}
-                        </button>
-                        {!ev.done && (
-                          <>
-                            <button
-                              className="cal-action-btn"
-                              onClick={() => snooze(ev.id)}
-                            >
-                              Snooze
-                            </button>
-                            <button
-                              className="cal-action-btn"
-                              onClick={() => addNote(ev.id)}
-                            >
-                              Note
-                            </button>
-                          </>
-                        )}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              );
-            })
-          )}
-        </div>
-      )}
-
-      {/* ── Day popover ───────────────────────────────── */}
+      {/* ── Day popover ──────────────────────────────────── */}
       {popoverDate && (
         <DayPopover
           dateStr={popoverDate}

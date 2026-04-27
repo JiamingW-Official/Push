@@ -194,7 +194,7 @@ function PulsingDot() {
           display: "inline-block",
           width: 7,
           height: 7,
-          background: "var(--primary)",
+          background: "var(--brand-red)",
           marginRight: 7,
           flexShrink: 0,
           verticalAlign: "middle",
@@ -229,7 +229,7 @@ function StageNode({ stage, isLast }: { stage: Stage; isLast: boolean }) {
             left: "calc(50% + 7px)",
             right: "calc(-50% + 7px)",
             height: 1,
-            background: isPast ? "var(--dark)" : "rgba(0,48,73,0.15)",
+            background: isPast ? "var(--ink)" : "rgba(10,10,10,0.15)",
             transition: "background 400ms ease",
             zIndex: 0,
           }}
@@ -244,15 +244,15 @@ function StageNode({ stage, isLast }: { stage: Stage; isLast: boolean }) {
           borderRadius: 0,
           flexShrink: 0,
           background: isPast
-            ? "var(--dark)"
+            ? "var(--ink)"
             : isActive
-              ? "var(--primary)"
+              ? "var(--brand-red)"
               : "transparent",
           border: isPast
             ? "none"
             : isActive
               ? "none"
-              : "1.5px solid rgba(0,48,73,0.25)",
+              : "1.5px solid rgba(10,10,10,0.25)",
           boxSizing: "border-box",
           transition: "background 400ms ease, border-color 400ms ease",
           position: "relative",
@@ -277,7 +277,7 @@ function StageNode({ stage, isLast }: { stage: Stage; isLast: boolean }) {
               style={{
                 position: "absolute",
                 inset: -2,
-                border: "1.5px solid var(--primary)",
+                border: "1.5px solid var(--brand-red)",
                 borderRadius: 0,
               }}
             />
@@ -316,10 +316,10 @@ function StageNode({ stage, isLast }: { stage: Stage; isLast: boolean }) {
           textTransform: "uppercase",
           letterSpacing: "0.06em",
           color: isPast
-            ? "var(--dark)"
+            ? "var(--ink)"
             : isActive
-              ? "var(--primary)"
-              : "rgba(0,48,73,0.3)",
+              ? "var(--brand-red)"
+              : "rgba(10,10,10,0.3)",
           fontWeight: isActive ? 700 : 400,
           marginTop: 6,
           textAlign: "center",
@@ -354,7 +354,7 @@ function CheckIcon() {
     >
       <polyline
         points="2,6 5,9 10,3"
-        stroke="var(--dark)"
+        stroke="var(--ink)"
         strokeWidth="1.8"
         strokeLinecap="square"
         strokeLinejoin="miter"
@@ -374,7 +374,7 @@ function BellIcon() {
     >
       <path
         d="M6 1C4.343 1 3 2.343 3 4v3L1 9h10L9 7V4c0-1.657-1.343-3-3-3z"
-        stroke="var(--dark)"
+        stroke="var(--ink)"
         strokeWidth="1.4"
         strokeLinecap="square"
       />
@@ -383,7 +383,7 @@ function BellIcon() {
         y1="10.5"
         x2="7"
         y2="10.5"
-        stroke="var(--dark)"
+        stroke="var(--ink)"
         strokeWidth="1.4"
         strokeLinecap="square"
       />
@@ -402,7 +402,7 @@ function MapPinIcon() {
     >
       <path
         d="M6 1C4.067 1 2.5 2.567 2.5 4.5 2.5 7.5 6 11 6 11s3.5-3.5 3.5-6.5C9.5 2.567 7.933 1 6 1z"
-        stroke="var(--dark)"
+        stroke="var(--ink)"
         strokeWidth="1.4"
         strokeLinecap="square"
       />
@@ -411,7 +411,7 @@ function MapPinIcon() {
         y="3.25"
         width="2.5"
         height="2.5"
-        stroke="var(--dark)"
+        stroke="var(--ink)"
         strokeWidth="1.2"
       />
     </svg>
@@ -472,7 +472,7 @@ export function MatchProgress({
       style={{
         fontFamily: "'CS Genio Mono', monospace",
         background: "var(--surface)",
-        border: "1px solid rgba(0,48,73,0.14)",
+        border: "1px solid rgba(10,10,10,0.14)",
         width: "100%",
         boxSizing: "border-box",
         borderRadius: 0,
@@ -481,7 +481,7 @@ export function MatchProgress({
       {/* ── Header ──────────────────────────────────────────────────────── */}
       <div
         style={{
-          background: "var(--dark)",
+          background: "var(--ink)",
           padding: "16px 20px",
           display: "flex",
           alignItems: "center",
@@ -531,7 +531,7 @@ export function MatchProgress({
             fontFamily: "'CS Genio Mono', monospace",
             textTransform: "uppercase",
             letterSpacing: "0.06em",
-            color: isComplete ? "var(--primary)" : "rgba(245,242,236,0.45)",
+            color: isComplete ? "var(--brand-red)" : "rgba(245,242,236,0.45)",
             fontWeight: isComplete ? 700 : 400,
           }}
         >
@@ -545,7 +545,7 @@ export function MatchProgress({
           style={{
             width: "100%",
             height: 6,
-            background: "rgba(0,48,73,0.08)",
+            background: "rgba(10,10,10,0.08)",
             borderRadius: 0,
             overflow: "hidden",
             marginBottom: 6,
@@ -555,7 +555,7 @@ export function MatchProgress({
             style={{
               height: "100%",
               width: `${progress}%`,
-              background: isComplete ? "var(--dark)" : "var(--primary)",
+              background: isComplete ? "var(--ink)" : "var(--brand-red)",
               transition: "width 0.5s ease, background 0.5s ease",
               borderRadius: 0,
             }}
@@ -567,7 +567,7 @@ export function MatchProgress({
             display: "flex",
             justifyContent: "space-between",
             fontSize: 9,
-            color: "rgba(0,48,73,0.45)",
+            color: "rgba(10,10,10,0.45)",
             fontFamily: "'CS Genio Mono', monospace",
             marginBottom: 24,
             letterSpacing: "0.04em",
@@ -599,11 +599,11 @@ export function MatchProgress({
           style={{
             fontSize: 12,
             fontFamily: "'CS Genio Mono', monospace",
-            color: "var(--dark)",
+            color: "var(--ink)",
             lineHeight: 1.6,
             padding: "12px 14px",
-            background: "rgba(0,48,73,0.04)",
-            border: "1px solid rgba(0,48,73,0.08)",
+            background: "rgba(10,10,10,0.04)",
+            border: "1px solid rgba(10,10,10,0.08)",
             borderRadius: 0,
             marginBottom: tierContext ? 10 : 20,
           }}
@@ -618,7 +618,7 @@ export function MatchProgress({
             style={{
               fontSize: 11,
               fontFamily: "'CS Genio Mono', monospace",
-              color: "rgba(0,48,73,0.65)",
+              color: "rgba(10,10,10,0.65)",
               lineHeight: 1.55,
               padding: "10px 14px",
               background: "rgba(193,18,31,0.03)",
@@ -629,7 +629,7 @@ export function MatchProgress({
             <span
               style={{
                 fontWeight: 700,
-                color: "var(--primary)",
+                color: "var(--brand-red)",
                 textTransform: "uppercase",
                 fontSize: 9,
                 letterSpacing: "0.1em",
@@ -661,12 +661,12 @@ export function MatchProgress({
               key={label}
               style={{
                 flex: "1 1 120px",
-                border: "1px solid rgba(0,48,73,0.1)",
+                border: "1px solid rgba(10,10,10,0.1)",
                 padding: "9px 10px",
                 borderRadius: 0,
                 fontSize: 10,
                 fontFamily: "'CS Genio Mono', monospace",
-                color: "var(--dark)",
+                color: "var(--ink)",
                 display: "flex",
                 alignItems: "center",
                 gap: 6,
@@ -692,7 +692,7 @@ export function MatchProgress({
               cursor: "pointer",
               fontSize: 10,
               fontFamily: "'CS Genio Mono', monospace",
-              color: "rgba(0,48,73,0.4)",
+              color: "rgba(10,10,10,0.4)",
               textTransform: "uppercase",
               letterSpacing: "0.08em",
               padding: "4px 0",
@@ -724,15 +724,15 @@ export function StageSquare({
   };
 
   if (state === "past")
-    return <div style={{ ...base, background: "var(--dark)" }} />;
+    return <div style={{ ...base, background: "var(--ink)" }} />;
   if (state === "active")
-    return <div style={{ ...base, background: "var(--primary)" }} />;
+    return <div style={{ ...base, background: "var(--brand-red)" }} />;
   return (
     <div
       style={{
         ...base,
         background: "transparent",
-        border: "1.5px solid rgba(0,48,73,0.3)",
+        border: "1.5px solid rgba(10,10,10,0.3)",
         boxSizing: "border-box",
       }}
     />

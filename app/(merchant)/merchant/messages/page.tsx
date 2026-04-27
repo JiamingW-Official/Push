@@ -104,7 +104,7 @@ export default function MerchantMessagesPage() {
           height: "calc(100vh - 64px)",
           fontFamily: "var(--font-body)",
           fontSize: 13,
-          color: "var(--text-muted)",
+          color: "var(--ink-4)",
           background: "var(--surface)",
         }}
       >

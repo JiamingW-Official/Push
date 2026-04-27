@@ -243,7 +243,7 @@ function RingTooltip({
         left,
         top,
         width: tipWidth,
-        background: "var(--dark)",
+        background: "var(--ink)",
         color: "var(--surface)",
         padding: "8px 10px",
         pointerEvents: "none",
@@ -518,7 +518,7 @@ export function ScoreRings({
               fontWeight: 900,
               fontSize: resolvedSize * cfg.centerScaleFactor,
               lineHeight: 1,
-              color: "var(--dark)",
+              color: "var(--ink)",
               letterSpacing: "-0.02em",
             }}
           >
@@ -566,7 +566,7 @@ export function ScoreRings({
                 fontFamily: "var(--font-body)",
                 fontSize: isCompact ? 7 : cfg.labelFontSize,
                 fontWeight: 600,
-                color: "var(--tertiary)",
+                color: "var(--accent-blue)",
                 letterSpacing: "0.12em",
                 textTransform: "uppercase",
                 marginTop: 4,
@@ -631,7 +631,7 @@ export function ScoreRings({
                         fontFamily: "var(--font-body)",
                         fontWeight: 700,
                         fontSize: 12,
-                        color: "var(--dark)",
+                        color: "var(--ink)",
                       }}
                     >
                       {dim.nameCn}
@@ -640,7 +640,7 @@ export function ScoreRings({
                       style={{
                         fontFamily: "var(--font-body)",
                         fontSize: 10,
-                        color: "var(--text-muted)",
+                        color: "var(--ink-4)",
                       }}
                     >
                       {dim.nameEn}
@@ -649,7 +649,7 @@ export function ScoreRings({
                       style={{
                         fontFamily: "var(--font-body)",
                         fontSize: 9,
-                        color: "var(--text-muted)",
+                        color: "var(--ink-4)",
                         marginLeft: "auto",
                       }}
                     >
@@ -690,7 +690,7 @@ export function ScoreRings({
                     fontFamily: "var(--font-body)",
                     fontWeight: 700,
                     fontSize: 12,
-                    color: "var(--dark)",
+                    color: "var(--ink)",
                     whiteSpace: "nowrap",
                     minWidth: 48,
                     textAlign: "right",
@@ -713,7 +713,7 @@ export function ScoreRings({
                   marginTop: 4,
                   padding: "8px 10px",
                   backgroundColor: "rgba(193, 18, 31, 0.05)",
-                  borderLeft: "2px solid var(--primary)",
+                  borderLeft: "2px solid var(--brand-red)",
                   display: "flex",
                   flexDirection: "column",
                   gap: 2,
@@ -724,7 +724,7 @@ export function ScoreRings({
                     fontFamily: "var(--font-body)",
                     fontSize: 9,
                     fontWeight: 700,
-                    color: "var(--primary)",
+                    color: "var(--brand-red)",
                     textTransform: "uppercase",
                     letterSpacing: "0.1em",
                   }}

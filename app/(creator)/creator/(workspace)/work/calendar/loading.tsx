@@ -2,7 +2,7 @@ import React from "react";
 
 const skel: React.CSSProperties = {
   background:
-    "linear-gradient(90deg,rgba(0,48,73,0.05) 25%,rgba(0,48,73,0.10) 50%,rgba(0,48,73,0.05) 75%)",
+    "linear-gradient(90deg,var(--surface-3) 25%,var(--mist) 50%,var(--surface-3) 75%)",
   backgroundSize: "200% 100%",
   animation: "shimmer 1.5s infinite linear",
 };
@@ -16,7 +16,7 @@ export default function CalendarLoading() {
       <div
         style={{
           height: "48px",
-          borderBottom: "1px solid rgba(0,48,73,0.12)",
+          borderBottom: "1px solid var(--hairline)",
           display: "flex",
           alignItems: "center",
           padding: "0 24px",
@@ -42,7 +42,7 @@ export default function CalendarLoading() {
         <div
           style={{
             padding: "24px 24px 0",
-            borderRight: "1px solid rgba(0,48,73,0.12)",
+            borderRight: "1px solid var(--hairline)",
           }}
         >
           {/* Month header + nav */}
@@ -102,7 +102,7 @@ export default function CalendarLoading() {
               display: "grid",
               gridTemplateColumns: "repeat(7, 1fr)",
               gap: "1px",
-              background: "rgba(0,48,73,0.06)",
+              background: "var(--hairline)",
             }}
           >
             {Array.from({ length: 35 }).map((_, i) => (
@@ -110,7 +110,7 @@ export default function CalendarLoading() {
                 key={i}
                 style={{
                   height: "80px",
-                  background: i % 9 === 0 ? "rgba(0,48,73,0.03)" : "#fff",
+                  background: i % 9 === 0 ? "var(--surface-3)" : "var(--surface-2)",
                   padding: "6px",
                   display: "flex",
                   flexDirection: "column",

@@ -42,7 +42,7 @@ export function DemoBanner() {
           position: "sticky",
           top: 0,
           zIndex: 9999,
-          background: "var(--primary)",
+          background: "var(--brand-red)",
           color: "var(--surface)",
           display: "flex",
           alignItems: "center",
@@ -67,8 +67,8 @@ export function DemoBanner() {
             style={{
               display: "inline-block",
               padding: "2px 8px",
-              background: "var(--surface-elevated)",
-              color: "var(--primary)",
+              background: "var(--surface-2)",
+              color: "var(--brand-red)",
               fontWeight: 800,
               letterSpacing: "0.1em",
             }}

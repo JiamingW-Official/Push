@@ -268,16 +268,6 @@ const DEMO_ANALYTICS: Analytics = {
 };
 
 /* ── Tier config ─────────────────────────────────────────── */
-/* Path A: v5.1 material hex mapped to brand-palette tier aliases. */
-const TIER_COLORS: Record<CreatorTier, string> = {
-  seed: "var(--tier-seed)",
-  explorer: "var(--tier-explorer)",
-  operator: "var(--tier-operator)",
-  proven: "var(--tier-proven)",
-  closer: "var(--tier-closer)",
-  partner: "var(--tier-partner)",
-};
-
 const TIER_DISPLAY: Record<CreatorTier, string> = {
   seed: "Seed",
   explorer: "Explorer",
@@ -363,19 +353,6 @@ const IconSettings = () => (
   </svg>
 );
 
-const IconLocations = () => (
-  <svg
-    className="db-nav-item__icon"
-    viewBox="0 0 16 16"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="1.5"
-  >
-    <path d="M8 1C5.791 1 4 2.791 4 5c0 3.5 4 9 4 9s4-5.5 4-9c0-2.209-1.791-4-4-4Z" />
-    <circle cx="8" cy="5" r="1.5" />
-  </svg>
-);
-
 const IconGhost = () => (
   <svg
     className="db-empty-state__icon"
@@ -396,10 +373,10 @@ function SkeletonScreen() {
     <div className="db-skeleton-shell">
       <div className="db-skeleton-nav" />
       <div className="db-skeleton-body">
-        <div className="db-skeleton-sidebar" />
         <div className="db-skeleton-main">
           <div className="db-skeleton-block db-skeleton-header skeleton" />
           <div className="db-skeleton-stats">
+            <div className="db-skeleton-block db-skeleton-stat skeleton" />
             <div className="db-skeleton-block db-skeleton-stat skeleton" />
             <div className="db-skeleton-block db-skeleton-stat skeleton" />
             <div className="db-skeleton-block db-skeleton-stat skeleton" />
@@ -411,27 +388,65 @@ function SkeletonScreen() {
   );
 }
 
-/* ── StatCard ────────────────────────────────────────────── */
-function StatCard({
-  label,
+/* ── KPICard — v11 product-register stat card ────────────── */
+function KPICard({
+  eyebrow,
   value,
-  trend,
+  sub,
   accent = false,
-  neutral = false,
 }: {
-  label: string;
+  eyebrow: string;
   value: number | string;
-  trend: string;
+  sub: string;
   accent?: boolean;
-  neutral?: boolean;
 }) {
   return (
-    <div className={`db-stat-card${accent ? " db-stat-card--accent" : ""}`}>
-      <div className="db-stat-card__label">{label}</div>
-      <div className="db-stat-card__number">{value}</div>
-      <div className={`db-stat-card__trend${neutral ? " neutral" : ""}`}>
-        {trend}
-      </div>
+    <div
+      style={{
+        background: accent ? "var(--char)" : "var(--surface-2)",
+        border: `1px solid ${accent ? "transparent" : "var(--hairline)"}`,
+        borderTop: `2px solid ${accent ? "var(--brand-red)" : "var(--hairline)"}`,
+        borderRadius: "var(--r-md)",
+        padding: "24px",
+        display: "flex",
+        flexDirection: "column",
+        gap: 8,
+      }}
+    >
+      <span
+        style={{
+          fontFamily: "var(--font-body)",
+          fontSize: 12,
+          fontWeight: 700,
+          letterSpacing: "0.12em",
+          textTransform: "uppercase" as const,
+          color: accent ? "rgba(255,255,255,0.48)" : "var(--ink-4)",
+        }}
+      >
+        {eyebrow}
+      </span>
+      <span
+        style={{
+          fontFamily: "var(--font-display)",
+          fontWeight: 700,
+          fontSize: "clamp(40px,5vw,64px)",
+          lineHeight: 1,
+          color: accent ? "var(--snow)" : "var(--ink)",
+          letterSpacing: "-0.025em",
+        }}
+      >
+        {value}
+      </span>
+      <span
+        style={{
+          fontFamily: "var(--font-body)",
+          fontSize: 12,
+          color: accent ? "var(--champagne)" : "var(--ink-3)",
+          lineHeight: 1.5,
+        }}
+      >
+        {sub}
+      </span>
     </div>
   );
 }
@@ -456,12 +471,12 @@ function TierBadge({ tier }: { tier: CreatorTier }) {
   const CFG: Record<CreatorTier, Cfg> = {
     seed: {
       bg: "transparent",
-      color: "var(--dark)",
-      border: "1.5px dashed var(--line-strong)",
+      color: "var(--ink)",
+      border: "1.5px dashed var(--hairline)",
     },
     explorer: {
       bg: "var(--tier-explorer)",
-      color: "var(--dark)",
+      color: "var(--ink)",
       border: "1px solid var(--tier-explorer)",
     },
     operator: {
@@ -483,7 +498,7 @@ function TierBadge({ tier }: { tier: CreatorTier }) {
       bg: "var(--tier-partner)",
       color: "var(--snow)",
       border: "1px solid var(--tier-partner)",
-      borderLeft: "3px solid var(--primary)",
+      borderLeft: "3px solid var(--brand-red)",
     },
   };
   const c = CFG[tier];
@@ -491,11 +506,11 @@ function TierBadge({ tier }: { tier: CreatorTier }) {
     <span
       style={{
         fontFamily: "var(--font-body)",
-        fontSize: "10px",
+        fontSize: 11,
         fontWeight: 700,
         textTransform: "uppercase" as const,
         letterSpacing: "0.08em",
-        padding: "5px 12px",
+        padding: "4px 10px",
         borderRadius: "var(--r-sm)",
         background: c.bg,
         color: c.color,
@@ -536,6 +551,119 @@ function MilestoneProgress({ milestone }: { milestone: Milestone }) {
   );
 }
 
+/* ── SectionLabel ────────────────────────────────────────── */
+function SectionLabel({
+  children,
+  count,
+}: {
+  children: React.ReactNode;
+  count?: number;
+}) {
+  return (
+    <div
+      style={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+        marginBottom: 16,
+        paddingBottom: 12,
+        borderBottom: "1px solid var(--hairline)",
+      }}
+    >
+      <span
+        style={{
+          fontFamily: "var(--font-body)",
+          fontSize: 12,
+          fontWeight: 700,
+          letterSpacing: "0.12em",
+          textTransform: "uppercase" as const,
+          color: "var(--ink-4)",
+        }}
+      >
+        {children}
+      </span>
+      {count !== undefined && (
+        <span
+          style={{
+            fontFamily: "var(--font-body)",
+            fontSize: 12,
+            color: "var(--ink-5)",
+          }}
+        >
+          {count} total
+        </span>
+      )}
+    </div>
+  );
+}
+
+/* ── TabHeader ───────────────────────────────────────────── */
+function TabHeader({
+  eyebrow,
+  title,
+  action,
+  badge,
+}: {
+  eyebrow: string;
+  title: string;
+  action?: React.ReactNode;
+  badge?: React.ReactNode;
+}) {
+  return (
+    <div
+      style={{
+        display: "flex",
+        alignItems: "flex-end",
+        justifyContent: "space-between",
+        marginBottom: 32,
+        flexWrap: "wrap",
+        gap: 16,
+      }}
+    >
+      <div>
+        <span
+          style={{
+            fontFamily: "var(--font-body)",
+            fontSize: 12,
+            fontWeight: 700,
+            letterSpacing: "0.12em",
+            textTransform: "uppercase" as const,
+            color: "var(--ink-4)",
+            display: "block",
+            marginBottom: 8,
+          }}
+        >
+          {eyebrow}
+        </span>
+        <h2
+          style={{
+            fontFamily: "var(--font-display)",
+            fontWeight: 800,
+            fontSize: 40,
+            letterSpacing: "-0.02em",
+            lineHeight: 1.05,
+            color: "var(--ink)",
+            margin: 0,
+          }}
+        >
+          {title}
+        </h2>
+      </div>
+      <div
+        style={{
+          display: "flex",
+          gap: 12,
+          alignItems: "center",
+          flexWrap: "wrap",
+        }}
+      >
+        {badge}
+        {action}
+      </div>
+    </div>
+  );
+}
+
 /* ── CampaignsTab ────────────────────────────────────────── */
 function CampaignsTab({
   campaigns,
@@ -558,124 +686,290 @@ function CampaignsTab({
 
   return (
     <>
-      <div className="db-page-header">
-        <div className="db-page-header__left">
-          <div className="db-page-header__eyebrow">Overview</div>
-          <div className="db-page-header__title">Campaigns</div>
-        </div>
-        <a href="/merchant/campaigns/new" className="btn btn-primary">
-          + New Campaign
-        </a>
-      </div>
+      <TabHeader
+        eyebrow="Campaigns"
+        title="Campaigns"
+        action={
+          <a href="/merchant/campaigns/new" className="btn-primary click-shift">
+            + New Campaign
+          </a>
+        }
+      />
 
-      {error && <div className="db-error">{error}</div>}
-
-      <div className="db-stats-row">
-        <StatCard
-          label="Active Campaigns"
-          value={activeCampaigns}
-          trend={`${campaigns.length} total created`}
-          neutral
-        />
-        <StatCard
-          label="Total Applications"
-          value={totalApplications}
-          trend={isDemo ? "+2 pending review" : "— no data yet"}
-          neutral={!isDemo}
-        />
-        <StatCard
-          label="QR Scans This Month"
-          value={totalQrScans}
-          trend={isDemo ? "+12 vs last month" : "— attribution tracking"}
-          neutral={!isDemo}
-        />
-      </div>
-
-      <div className="db-section-header">
-        <div className="db-section-header__title">All Campaigns</div>
-        <span
+      {error && (
+        <div
           style={{
-            fontSize: "var(--text-caption)",
-            color: "var(--text-muted)",
+            background: "var(--brand-red-tint)",
+            border: "1px solid var(--brand-red-focus)",
+            borderRadius: "var(--r-sm)",
+            padding: "12px 16px",
+            color: "var(--brand-red)",
+            fontFamily: "var(--font-body)",
+            fontSize: 14,
+            marginBottom: 24,
           }}
         >
-          {campaigns.length} total
-        </span>
+          {error}
+        </div>
+      )}
+
+      {/* KPI strip — 3 col for campaigns tab */}
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(3,1fr)",
+          gap: 24,
+          marginBottom: 40,
+        }}
+      >
+        <KPICard
+          eyebrow="Active Campaigns"
+          value={activeCampaigns}
+          sub={`${campaigns.length} total created`}
+        />
+        <KPICard
+          eyebrow="Total Applications"
+          value={totalApplications}
+          sub={isDemo ? "+2 pending review" : "— no data yet"}
+        />
+        <KPICard
+          eyebrow="QR Scans This Month"
+          value={totalQrScans}
+          sub={isDemo ? "+12 vs last month" : "— attribution tracking"}
+        />
       </div>
 
+      <SectionLabel count={campaigns.length}>All Campaigns</SectionLabel>
+
       {loading ? (
-        <div className="skeleton" style={{ height: 200 }} />
+        <div
+          className="skeleton"
+          style={{ height: 200, borderRadius: "var(--r-md)" }}
+        />
       ) : campaigns.length === 0 ? (
         <div className="db-empty-state">
           <IconGhost />
           <div className="db-empty-state__title">No campaigns yet</div>
-          <div className="db-empty-state__sub">
+          <p className="db-empty-state__sub">
             Create your first campaign to start connecting with creators in your
             area.
-          </div>
-          <a href="/merchant/campaigns/new" className="btn btn-primary">
+          </p>
+          <a href="/merchant/campaigns/new" className="btn-primary click-shift">
             Create your first campaign
           </a>
         </div>
       ) : (
         <div
-          className={`db-campaign-list${isDemo ? " db-campaign-list--demo" : ""}`}
+          style={{
+            background: "var(--surface-2)",
+            border: "1px solid var(--hairline)",
+            borderRadius: "var(--r-md)",
+            overflow: "hidden",
+          }}
         >
-          <div className="db-table-header">
-            <div className="db-table-header__cell">Campaign</div>
-            <div className="db-table-header__cell">Status</div>
-            <div className="db-table-header__cell">Spots</div>
-            <div className="db-table-header__cell">Payout</div>
-            {isDemo && <div className="db-table-header__cell">QR Scans</div>}
-            {isDemo && <div className="db-table-header__cell">Applicants</div>}
-            <div className="db-table-header__cell">Deadline</div>
+          {/* Table header */}
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: isDemo
+                ? "2fr 96px 80px 80px 72px 72px 96px"
+                : "2fr 96px 80px 80px 96px",
+              padding: "10px 24px",
+              borderBottom: "1px solid var(--hairline)",
+              background: "var(--surface)",
+              gap: 16,
+            }}
+          >
+            {["Campaign", "Status", "Spots", "Payout"].map((h) => (
+              <span
+                key={h}
+                style={{
+                  fontFamily: "var(--font-body)",
+                  fontSize: 11,
+                  fontWeight: 700,
+                  letterSpacing: "0.10em",
+                  textTransform: "uppercase" as const,
+                  color: "var(--ink-4)",
+                }}
+              >
+                {h}
+              </span>
+            ))}
+            {isDemo && (
+              <span
+                style={{
+                  fontFamily: "var(--font-body)",
+                  fontSize: 11,
+                  fontWeight: 700,
+                  letterSpacing: "0.10em",
+                  textTransform: "uppercase" as const,
+                  color: "var(--ink-4)",
+                }}
+              >
+                QR Scans
+              </span>
+            )}
+            {isDemo && (
+              <span
+                style={{
+                  fontFamily: "var(--font-body)",
+                  fontSize: 11,
+                  fontWeight: 700,
+                  letterSpacing: "0.10em",
+                  textTransform: "uppercase" as const,
+                  color: "var(--ink-4)",
+                }}
+              >
+                Apps
+              </span>
+            )}
+            <span
+              style={{
+                fontFamily: "var(--font-body)",
+                fontSize: 11,
+                fontWeight: 700,
+                letterSpacing: "0.10em",
+                textTransform: "uppercase" as const,
+                color: "var(--ink-4)",
+              }}
+            >
+              Deadline
+            </span>
           </div>
-          {campaigns.map((campaign) => (
-            <div key={campaign.id} className="db-campaign-row">
-              <div>
-                <div className="db-campaign-row__title">{campaign.title}</div>
+
+          {/* Table rows */}
+          {campaigns.map((campaign, idx) => (
+            <div
+              key={campaign.id}
+              style={{
+                display: "grid",
+                gridTemplateColumns: isDemo
+                  ? "2fr 96px 80px 80px 72px 72px 96px"
+                  : "2fr 96px 80px 80px 96px",
+                padding: "16px 24px",
+                gap: 16,
+                borderBottom:
+                  idx < campaigns.length - 1
+                    ? "1px solid var(--hairline)"
+                    : "none",
+                alignItems: "center",
+                transition: "background 120ms",
+              }}
+              onMouseEnter={(e) =>
+                (e.currentTarget.style.background = "var(--surface-3)")
+              }
+              onMouseLeave={(e) =>
+                (e.currentTarget.style.background = "transparent")
+              }
+            >
+              {/* Title + description */}
+              <div style={{ minWidth: 0 }}>
+                <div
+                  style={{
+                    fontFamily: "var(--font-body)",
+                    fontSize: 14,
+                    fontWeight: 700,
+                    color: "var(--ink)",
+                    marginBottom: 4,
+                    whiteSpace: "nowrap",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                  }}
+                >
+                  {campaign.title}
+                </div>
                 {campaign.description && (
-                  <div className="db-campaign-row__desc">
+                  <div
+                    style={{
+                      fontSize: 12,
+                      color: "var(--ink-4)",
+                      fontFamily: "var(--font-body)",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      whiteSpace: "nowrap",
+                    }}
+                  >
                     {campaign.description}
                   </div>
                 )}
               </div>
-              <div className="db-campaign-row__cell">
+
+              {/* Status */}
+              <div>
                 <StatusBadge status={campaign.status} />
               </div>
-              <div className="db-campaign-row__cell">
+
+              {/* Spots */}
+              <div
+                style={{
+                  fontFamily: "var(--font-body)",
+                  fontSize: 14,
+                  color: "var(--ink)",
+                }}
+              >
                 {campaign.spots_remaining}
-                <span style={{ color: "var(--text-muted)" }}>
+                <span style={{ color: "var(--ink-4)" }}>
                   &nbsp;/ {campaign.spots_total}
                 </span>
               </div>
-              <div className="db-campaign-row__payout">
+
+              {/* Payout */}
+              <div
+                style={{
+                  fontFamily: "var(--font-body)",
+                  fontSize: 14,
+                  fontWeight: 700,
+                  color: "var(--brand-red)",
+                }}
+              >
                 {campaign.payout === 0
                   ? "Product"
                   : `$${Number(campaign.payout).toFixed(0)}`}
               </div>
+
+              {/* QR scans (demo only) */}
               {isDemo && (
-                <div className="db-campaign-row__cell">
-                  <span style={{ fontWeight: 700, color: "var(--dark)" }}>
-                    {campaign.qr_scans ?? 0}
-                  </span>
+                <div
+                  style={{
+                    fontFamily: "var(--font-body)",
+                    fontSize: 14,
+                    fontWeight: 700,
+                    color: "var(--ink)",
+                  }}
+                >
+                  {campaign.qr_scans ?? 0}
                 </div>
               )}
+
+              {/* Applicants (demo only) */}
               {isDemo && (
-                <div className="db-campaign-row__cell">
-                  <span style={{ fontWeight: 700, color: "var(--dark)" }}>
-                    {campaign.applications_count ?? 0}
-                  </span>
+                <div
+                  style={{
+                    fontFamily: "var(--font-body)",
+                    fontSize: 14,
+                    fontWeight: 700,
+                    color: "var(--ink)",
+                  }}
+                >
+                  {campaign.applications_count ?? 0}
                 </div>
               )}
-              <div className="db-campaign-row__cell">
+
+              {/* Deadline */}
+              <div
+                style={{
+                  fontFamily: "var(--font-body)",
+                  fontSize: 12,
+                  color: "var(--ink-3)",
+                }}
+              >
                 {campaign.deadline ? (
                   new Date(campaign.deadline).toLocaleDateString("en-US", {
                     month: "short",
                     day: "numeric",
                   })
                 ) : (
-                  <span style={{ color: "var(--text-muted)" }}>—</span>
+                  <span style={{ color: "var(--ink-5)" }}>—</span>
                 )}
               </div>
             </div>
@@ -718,28 +1012,47 @@ function ApplicationsTab({
 
   return (
     <>
-      <div className="db-page-header">
-        <div className="db-page-header__left">
-          <div className="db-page-header__eyebrow">Creator Workflow</div>
-          <div className="db-page-header__title">Applications</div>
-        </div>
-        {(pendingCount > 0 || actionCount > 0) && (
-          <div className="app-attention-badge">
-            {pendingCount > 0 && `${pendingCount} pending`}
-            {pendingCount > 0 && actionCount > 0 && " · "}
-            {actionCount > 0 && `${actionCount} needs review`}
-          </div>
-        )}
-      </div>
+      <TabHeader
+        eyebrow="Creator Workflow"
+        title="Applications"
+        badge={
+          pendingCount > 0 || actionCount > 0 ? (
+            <span
+              style={{
+                background: "var(--brand-red)",
+                color: "var(--snow)",
+                fontFamily: "var(--font-body)",
+                fontSize: 12,
+                fontWeight: 700,
+                letterSpacing: "0.04em",
+                padding: "6px 16px",
+                borderRadius: "var(--r-sm)",
+                whiteSpace: "nowrap" as const,
+              }}
+            >
+              {pendingCount > 0 && `${pendingCount} pending`}
+              {pendingCount > 0 && actionCount > 0 && " · "}
+              {actionCount > 0 && `${actionCount} needs review`}
+            </span>
+          ) : undefined
+        }
+      />
 
       {/* Filter row */}
-      <div className="app-filter-row">
+      <div
+        style={{ display: "flex", gap: 8, marginBottom: 24, flexWrap: "wrap" }}
+      >
         {(["all", "pending", "active", "done"] as AppFilter[]).map((f) => (
           <button
             key={f}
-            className="btn-pill"
+            className={`btn-pill click-shift${filter === f ? " btn-pill--active" : ""}`}
             aria-pressed={filter === f}
             onClick={() => setFilter(f)}
+            style={
+              filter === f
+                ? { background: "var(--ink)", color: "var(--snow)" }
+                : {}
+            }
           >
             {f === "all" && `All (${applications.length})`}
             {f === "pending" && `Pending (${pendingCount})`}
@@ -749,54 +1062,101 @@ function ApplicationsTab({
         ))}
       </div>
 
-      {/* Application list */}
+      {/* Application cards */}
       <div className="app-list">
         {filtered.length === 0 ? (
-          <div className="db-empty-state" style={{ minHeight: 240 }}>
-            <div
-              className="db-empty-state__title"
-              style={{ fontSize: "var(--text-h4)" }}
-            >
-              No applications here
-            </div>
-            <div className="db-empty-state__sub">
-              {filter === "pending"
-                ? "No creators waiting for your response."
-                : "Nothing in this category yet."}
-            </div>
+          <div
+            style={{
+              textAlign: "center",
+              padding: "48px 24px",
+              color: "var(--ink-4)",
+              fontFamily: "var(--font-body)",
+              fontSize: 14,
+              background: "var(--surface-2)",
+              border: "1px solid var(--hairline)",
+              borderRadius: "var(--r-md)",
+            }}
+          >
+            {filter === "pending"
+              ? "No creators waiting for your response."
+              : "Nothing in this category yet."}
           </div>
         ) : (
           filtered.map((app) => (
             <div
               key={app.id}
-              className={`app-card${app.status === "rejected" ? " app-card--rejected" : ""}`}
+              style={{
+                background:
+                  app.status === "rejected"
+                    ? "var(--surface)"
+                    : "var(--surface-2)",
+                border: "1px solid var(--hairline)",
+                borderRadius: "var(--r-md)",
+                padding: "24px",
+                opacity: app.status === "rejected" ? 0.6 : 1,
+                display: "flex",
+                gap: 24,
+                alignItems: "flex-start",
+                flexWrap: "wrap",
+              }}
             >
               {/* Creator identity */}
-              <div className="app-card__creator">
+              <div
+                style={{
+                  display: "flex",
+                  gap: 16,
+                  flex: "1 1 240px",
+                  minWidth: 0,
+                }}
+              >
                 <img
                   src={app.creator_avatar}
                   alt={app.creator_name}
-                  className="app-card__avatar"
+                  style={{
+                    width: 48,
+                    height: 48,
+                    borderRadius: "var(--r-full)",
+                    flexShrink: 0,
+                    border: "1px solid var(--hairline)",
+                  }}
                 />
-                <div className="app-card__creator-info">
-                  <div className="app-card__creator-name">
+                <div style={{ minWidth: 0 }}>
+                  <div
+                    style={{
+                      fontFamily: "var(--font-body)",
+                      fontSize: 14,
+                      fontWeight: 700,
+                      color: "var(--ink)",
+                      marginBottom: 4,
+                    }}
+                  >
                     {app.creator_name}
                   </div>
-                  <div className="app-card__creator-meta">
-                    <span className="app-card__handle">
-                      {app.creator_handle}
-                    </span>
-                    <span className="app-card__dot">·</span>
-                    <span className="app-card__followers">
-                      {app.creator_followers >= 1000
-                        ? `${(app.creator_followers / 1000).toFixed(1)}K`
-                        : app.creator_followers}{" "}
-                      followers
-                    </span>
+                  <div
+                    style={{
+                      fontSize: 12,
+                      color: "var(--ink-3)",
+                      fontFamily: "var(--font-body)",
+                      marginBottom: 8,
+                    }}
+                  >
+                    {app.creator_handle} ·{" "}
+                    {app.creator_followers >= 1000
+                      ? `${(app.creator_followers / 1000).toFixed(1)}K`
+                      : app.creator_followers}{" "}
+                    followers
                   </div>
-                  <div className="app-card__badges">
+                  <div
+                    style={{ display: "flex", gap: 8, alignItems: "center" }}
+                  >
                     <TierBadge tier={app.creator_tier} />
-                    <span className="app-card__score">
+                    <span
+                      style={{
+                        fontFamily: "var(--font-body)",
+                        fontSize: 11,
+                        color: "var(--ink-4)",
+                      }}
+                    >
                       Score {app.creator_score}
                     </span>
                   </div>
@@ -804,11 +1164,33 @@ function ApplicationsTab({
               </div>
 
               {/* Campaign + milestone */}
-              <div className="app-card__middle">
-                <div className="app-card__campaign">{app.campaign_title}</div>
-                <div className="app-card__milestone-row">
+              <div style={{ flex: "2 1 280px", minWidth: 0 }}>
+                <div
+                  style={{
+                    fontFamily: "var(--font-body)",
+                    fontSize: 13,
+                    color: "var(--ink-3)",
+                    marginBottom: 8,
+                  }}
+                >
+                  {app.campaign_title}
+                </div>
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 12,
+                    marginBottom: 12,
+                  }}
+                >
                   <MilestoneTag milestone={app.milestone} />
-                  <span className="app-card__date">
+                  <span
+                    style={{
+                      fontFamily: "var(--font-body)",
+                      fontSize: 11,
+                      color: "var(--ink-4)",
+                    }}
+                  >
                     Applied{" "}
                     {new Date(app.applied_at).toLocaleDateString("en-US", {
                       month: "short",
@@ -820,17 +1202,27 @@ function ApplicationsTab({
               </div>
 
               {/* Actions */}
-              <div className="app-card__actions">
+              <div
+                style={{
+                  display: "flex",
+                  gap: 8,
+                  alignItems: "center",
+                  flexShrink: 0,
+                  flexWrap: "wrap",
+                }}
+              >
                 {app.status === "pending" && (
                   <>
                     <button
-                      className="app-btn app-btn--accept"
+                      className="btn-primary click-shift"
+                      style={{ padding: "8px 20px", fontSize: 13 }}
                       onClick={() => onAccept(app.id)}
                     >
                       Accept
                     </button>
                     <button
-                      className="app-btn app-btn--reject"
+                      className="btn-ghost click-shift"
+                      style={{ padding: "8px 20px", fontSize: 13 }}
                       onClick={() => onReject(app.id)}
                     >
                       Reject
@@ -845,13 +1237,15 @@ function ApplicationsTab({
                           href={app.proof_url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="app-btn app-btn--view"
+                          className="btn-ghost click-shift"
+                          style={{ padding: "8px 20px", fontSize: 13 }}
                         >
                           View Proof
                         </a>
                       )}
                       <button
-                        className="app-btn app-btn--approve"
+                        className="btn-secondary click-shift"
+                        style={{ padding: "8px 20px", fontSize: 13 }}
                         onClick={() => onApprove(app.id)}
                       >
                         Approve
@@ -865,16 +1259,24 @@ function ApplicationsTab({
                       href={app.content_url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="app-btn app-btn--view"
+                      className="btn-ghost click-shift"
+                      style={{ padding: "8px 20px", fontSize: 13 }}
                     >
                       View Post
                     </a>
                   )}
                 {app.status === "accepted" && app.milestone === "settled" && (
-                  <div className="app-card__done">
+                  <div
+                    style={{
+                      fontFamily: "var(--font-body)",
+                      fontSize: 13,
+                      color: "var(--success-dark)",
+                      fontWeight: 700,
+                    }}
+                  >
                     Paid out
                     {app.merchant_rating && (
-                      <span className="app-card__rating">
+                      <span style={{ color: "var(--ink-4)", fontWeight: 400 }}>
                         {" "}
                         · {app.merchant_rating}/5
                       </span>
@@ -882,7 +1284,15 @@ function ApplicationsTab({
                   </div>
                 )}
                 {app.status === "rejected" && (
-                  <div className="app-card__rejected-label">Declined</div>
+                  <span
+                    style={{
+                      fontFamily: "var(--font-body)",
+                      fontSize: 12,
+                      color: "var(--ink-4)",
+                    }}
+                  >
+                    Declined
+                  </span>
                 )}
               </div>
             </div>
@@ -901,42 +1311,157 @@ const CHART_MAX = Math.max(...WEEKLY_SCANS);
 
 function AnalyticsBarChart() {
   return (
-    <div className="analytics-chart">
-      <div className="analytics-chart__header">
-        <div className="analytics-chart__title">
-          QR Scans &amp; Visits — Apr 2026
-        </div>
-        <div className="analytics-chart__legend">
-          <span>
-            <span
-              className="analytics-chart__legend-dot"
-              style={{ background: "var(--tertiary)" }}
-            />
-            Scans
+    <div
+      style={{
+        background: "var(--surface-2)",
+        border: "1px solid var(--hairline)",
+        borderRadius: "var(--r-md)",
+        padding: "24px",
+        marginBottom: 32,
+      }}
+    >
+      {/* Chart header */}
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          marginBottom: 24,
+          gap: 16,
+        }}
+      >
+        <div>
+          <span
+            style={{
+              fontFamily: "var(--font-body)",
+              fontSize: 12,
+              fontWeight: 700,
+              letterSpacing: "0.12em",
+              textTransform: "uppercase" as const,
+              color: "var(--ink-4)",
+              display: "block",
+              marginBottom: 8,
+            }}
+          >
+            Analytics
           </span>
-          <span>
+          <span
+            style={{
+              fontFamily: "var(--font-display)",
+              fontSize: 28,
+              fontWeight: 700,
+              letterSpacing: "-0.015em",
+              color: "var(--ink)",
+              lineHeight: 1.15,
+            }}
+          >
+            QR Scans &amp; Visits
+          </span>
+        </div>
+        <div style={{ display: "flex", gap: 16, alignItems: "center" }}>
+          {[
+            { color: "var(--brand-red)", label: "Scans" },
+            { color: "var(--ink-4)", label: "Visits" },
+          ].map((l) => (
             <span
-              className="analytics-chart__legend-dot"
-              style={{ background: "var(--champagne)" }}
-            />
-            Visits
+              key={l.label}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 6,
+                fontFamily: "var(--font-body)",
+                fontSize: 12,
+                color: "var(--ink-3)",
+              }}
+            >
+              <span
+                style={{
+                  width: 8,
+                  height: 8,
+                  borderRadius: "var(--r-full)",
+                  background: l.color,
+                  display: "inline-block",
+                }}
+              />
+              {l.label}
+            </span>
+          ))}
+          <span
+            style={{
+              fontFamily: "var(--font-body)",
+              fontSize: 12,
+              color: "var(--ink-4)",
+              letterSpacing: "0.04em",
+            }}
+          >
+            Apr 2026
           </span>
         </div>
       </div>
-      <div className="analytics-bars">
+
+      {/* Bars */}
+      <div
+        style={{
+          display: "flex",
+          gap: 8,
+          alignItems: "flex-end",
+          height: 128,
+          borderBottom: "1px solid var(--hairline)",
+        }}
+      >
         {WEEK_LABELS.map((label, i) => (
-          <div key={label} className="analytics-bar-group">
-            <div className="analytics-bar-group__bars">
+          <div
+            key={label}
+            style={{
+              flex: 1,
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              gap: 4,
+              height: "100%",
+              justifyContent: "flex-end",
+            }}
+          >
+            <div
+              style={{
+                width: "100%",
+                display: "flex",
+                gap: 2,
+                alignItems: "flex-end",
+                flex: 1,
+              }}
+            >
               <div
-                className="analytics-bar analytics-bar--scans"
-                style={{ height: `${(WEEKLY_SCANS[i] / CHART_MAX) * 100}%` }}
+                style={{
+                  flex: 1,
+                  background: "var(--brand-red)",
+                  borderRadius: "3px 3px 0 0",
+                  height: `${(WEEKLY_SCANS[i] / CHART_MAX) * 100}%`,
+                  opacity: 0.85,
+                  transition: "opacity 120ms",
+                }}
               />
               <div
-                className="analytics-bar analytics-bar--visits"
-                style={{ height: `${(WEEKLY_VISITS[i] / CHART_MAX) * 100}%` }}
+                style={{
+                  flex: 1,
+                  background: "var(--ink-4)",
+                  borderRadius: "3px 3px 0 0",
+                  height: `${(WEEKLY_VISITS[i] / CHART_MAX) * 100}%`,
+                  opacity: 0.5,
+                  transition: "opacity 120ms",
+                }}
               />
             </div>
-            <div className="analytics-bar-group__label">{label}</div>
+            <span
+              style={{
+                fontFamily: "var(--font-body)",
+                fontSize: 11,
+                color: "var(--ink-5)",
+                paddingTop: 8,
+              }}
+            >
+              {label}
+            </span>
           </div>
         ))}
       </div>
@@ -959,133 +1484,300 @@ function AnalyticsTab({
   if (!isDemo || !analytics) {
     return (
       <>
-        <div className="db-page-header">
-          <div className="db-page-header__left">
-            <div className="db-page-header__eyebrow">Insights</div>
-            <div className="db-page-header__title">Analytics</div>
-          </div>
-        </div>
-        <div className="db-placeholder">
-          <div className="db-placeholder__label">Coming soon</div>
-          <div className="db-placeholder__title">Analytics Dashboard</div>
-          <div className="db-placeholder__body">
+        <TabHeader eyebrow="Insights" title="Analytics" />
+        <div
+          style={{
+            background: "var(--surface-2)",
+            border: "1px solid var(--hairline)",
+            borderRadius: "var(--r-md)",
+            padding: "64px 48px",
+          }}
+        >
+          <span
+            style={{
+              fontFamily: "var(--font-body)",
+              fontSize: 12,
+              fontWeight: 700,
+              letterSpacing: "0.12em",
+              textTransform: "uppercase" as const,
+              color: "var(--ink-4)",
+              display: "block",
+              marginBottom: 16,
+            }}
+          >
+            Coming Soon
+          </span>
+          <h3
+            style={{
+              fontFamily: "var(--font-display)",
+              fontWeight: 700,
+              fontSize: 28,
+              color: "var(--ink)",
+              margin: "0 0 12px",
+              letterSpacing: "-0.015em",
+            }}
+          >
+            Analytics Dashboard
+          </h3>
+          <p
+            style={{
+              fontFamily: "var(--font-body)",
+              fontSize: 16,
+              color: "var(--ink-3)",
+              maxWidth: 400,
+              margin: 0,
+              lineHeight: 1.55,
+            }}
+          >
             QR scan attribution, creator performance, and campaign ROI —
             available after your first campaign completes.
-          </div>
+          </p>
         </div>
       </>
     );
   }
 
-  // Active creators from applications
   const activeCreators = applications.filter(
     (a) => a.status === "accepted" && a.milestone !== "settled",
   );
 
   return (
     <>
-      <div className="db-page-header">
-        <div className="db-page-header__left">
-          <div className="db-page-header__eyebrow">Insights</div>
-          <div className="db-page-header__title">Analytics</div>
-        </div>
-        <div className="db-page-header__period">Apr 2026</div>
-      </div>
+      <TabHeader
+        eyebrow="Insights"
+        title="Analytics"
+        action={
+          <span
+            style={{
+              fontFamily: "var(--font-body)",
+              fontSize: 12,
+              color: "var(--ink-4)",
+              fontWeight: 700,
+              letterSpacing: "0.08em",
+              textTransform: "uppercase" as const,
+            }}
+          >
+            Apr 2026
+          </span>
+        }
+      />
 
-      {/* ROI strip — editorial three-number treatment */}
-      <div className="analytics-roi-strip">
-        <div className="analytics-roi-cell">
-          <div className="analytics-roi-cell__label">QR Scans This Month</div>
-          <div className="analytics-roi-cell__value">
-            {analytics.qr_scans_month}
-          </div>
-          <div className="analytics-roi-cell__sub">
-            +{analytics.qr_scans_delta} vs last month
-          </div>
-        </div>
-        <div className="analytics-roi-cell">
-          <div className="analytics-roi-cell__label">
-            New Customers Attributed
-          </div>
-          <div className="analytics-roi-cell__value">
-            {analytics.new_customers}
-          </div>
-          <div className="analytics-roi-cell__sub">verified via QR scan</div>
-        </div>
-        <div className="analytics-roi-cell analytics-roi-cell--dark">
-          <div className="analytics-roi-cell__label">Return on Spend</div>
-          <div className="analytics-roi-cell__value">
-            {analytics.roi_multiple}×
-          </div>
-          <div className="analytics-roi-cell__sub">
-            ${analytics.total_spend} spend → $
-            {analytics.estimated_revenue.toLocaleString()} est.
-          </div>
-        </div>
+      {/* KPI strip — 4 col */}
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(4,1fr)",
+          gap: 24,
+          marginBottom: 40,
+        }}
+      >
+        <KPICard
+          eyebrow="QR Scans"
+          value={analytics.qr_scans_month}
+          sub={`+${analytics.qr_scans_delta} vs last month`}
+        />
+        <KPICard
+          eyebrow="New Customers"
+          value={analytics.new_customers}
+          sub="verified via QR scan"
+        />
+        <KPICard
+          eyebrow="Total Spend"
+          value={`$${analytics.total_spend}`}
+          sub={`${analytics.active_creators} active creators`}
+        />
+        <KPICard
+          eyebrow="Return on Spend"
+          value={`${analytics.roi_multiple}×`}
+          sub={`$${analytics.estimated_revenue.toLocaleString()} est. revenue`}
+          accent
+        />
       </div>
 
       {/* Bar chart */}
       <AnalyticsBarChart />
 
-      {/* Campaign performance */}
+      {/* Campaign performance table */}
+      <SectionLabel>Campaign Performance</SectionLabel>
+
       <div
-        className="db-section-header"
-        style={{ marginTop: "var(--space-2)" }}
+        style={{
+          fontFamily: "var(--font-body)",
+          fontSize: 11,
+          color: "var(--ink-5)",
+          marginBottom: 12,
+          lineHeight: 1.55,
+          maxWidth: 560,
+        }}
       >
-        <div className="db-section-header__title">Campaign Performance</div>
-        <span className="analytics-perf-attribution-note">
-          Est. Revenue is weighted by repeat-customer attribution share. First
-          scan counts 100%; same customer returning after 30/60/90 days counts
-          50% / 30% / 10%. After 120 days, no credit.
-        </span>
+        Est. revenue weighted by repeat-customer attribution share per FTC 16
+        CFR §255.
       </div>
 
       <div
-        className="db-campaign-list"
-        style={{ marginBottom: "var(--space-5)" }}
+        style={{
+          background: "var(--surface-2)",
+          border: "1px solid var(--hairline)",
+          borderRadius: "var(--r-md)",
+          overflow: "hidden",
+          marginBottom: 32,
+        }}
       >
-        <div className="analytics-perf-header">
-          <div>Campaign</div>
-          <div>Status</div>
-          <div>QR Scans</div>
-          <div>Creators</div>
-          <div>Spend</div>
-          <div>Est. Revenue</div>
+        {/* Table header */}
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "2fr 96px 80px 72px 80px 112px",
+            padding: "10px 24px",
+            gap: 16,
+            borderBottom: "1px solid var(--hairline)",
+            background: "var(--surface)",
+          }}
+        >
+          {[
+            "Campaign",
+            "Status",
+            "QR Scans",
+            "Creators",
+            "Spend",
+            "Est. Revenue",
+          ].map((h) => (
+            <span
+              key={h}
+              style={{
+                fontFamily: "var(--font-body)",
+                fontSize: 11,
+                fontWeight: 700,
+                letterSpacing: "0.10em",
+                textTransform: "uppercase" as const,
+                color: "var(--ink-4)",
+              }}
+            >
+              {h}
+            </span>
+          ))}
         </div>
-        {campaigns.map((c) => {
+
+        {campaigns.map((c, idx) => {
           const campApps = applications.filter((a) => a.campaign_id === c.id);
           return (
-            <div key={c.id} className="analytics-perf-row">
-              <div>
-                <div className="db-campaign-row__title">{c.title}</div>
-                <div className="db-campaign-row__desc">{c.category}</div>
+            <div
+              key={c.id}
+              style={{
+                display: "grid",
+                gridTemplateColumns: "2fr 96px 80px 72px 80px 112px",
+                padding: "16px 24px",
+                gap: 16,
+                borderBottom:
+                  idx < campaigns.length - 1
+                    ? "1px solid var(--hairline)"
+                    : "none",
+                alignItems: "center",
+                transition: "background 120ms",
+              }}
+              onMouseEnter={(e) =>
+                (e.currentTarget.style.background = "var(--surface-3)")
+              }
+              onMouseLeave={(e) =>
+                (e.currentTarget.style.background = "transparent")
+              }
+            >
+              <div style={{ minWidth: 0 }}>
+                <div
+                  style={{
+                    fontFamily: "var(--font-body)",
+                    fontSize: 14,
+                    fontWeight: 700,
+                    color: "var(--ink)",
+                    marginBottom: 2,
+                    whiteSpace: "nowrap",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                  }}
+                >
+                  {c.title}
+                </div>
+                {c.category && (
+                  <div
+                    style={{
+                      fontSize: 12,
+                      color: "var(--ink-4)",
+                      fontFamily: "var(--font-body)",
+                    }}
+                  >
+                    {c.category}
+                  </div>
+                )}
               </div>
+
               <div>
                 <StatusBadge status={c.status} />
               </div>
-              <div className="analytics-perf-row__num">{c.qr_scans ?? 0}</div>
-              <div className="analytics-perf-row__num">{campApps.length}</div>
-              <div className="analytics-perf-row__num">
+
+              <div
+                style={{
+                  fontFamily: "var(--font-body)",
+                  fontSize: 14,
+                  fontWeight: 700,
+                  color: "var(--ink)",
+                }}
+              >
+                {c.qr_scans ?? 0}
+              </div>
+
+              <div
+                style={{
+                  fontFamily: "var(--font-body)",
+                  fontSize: 14,
+                  color: "var(--ink)",
+                }}
+              >
+                {campApps.length}
+              </div>
+
+              <div
+                style={{
+                  fontFamily: "var(--font-body)",
+                  fontSize: 14,
+                  color: "var(--ink)",
+                }}
+              >
                 {c.payout === 0
                   ? "—"
                   : `$${(c.payout * (c.spots_total - c.spots_remaining)).toFixed(0)}`}
               </div>
-              <div className="analytics-perf-row__rev">
-                {c.attributed_revenue
-                  ? `$${c.attributed_revenue.toLocaleString()}`
-                  : "—"}
+
+              <div>
+                <div
+                  style={{
+                    fontFamily: "var(--font-body)",
+                    fontSize: 14,
+                    fontWeight: 700,
+                    color: "var(--brand-red)",
+                  }}
+                >
+                  {c.attributed_revenue
+                    ? `$${c.attributed_revenue.toLocaleString()}`
+                    : "—"}
+                </div>
                 {c.attributed_revenue &&
                   c.gross_attributed_revenue &&
                   c.gross_attributed_revenue > c.attributed_revenue && (
                     <div
-                      className="analytics-perf-row__rev-note"
+                      style={{
+                        fontSize: 11,
+                        color: "var(--ink-5)",
+                        fontFamily: "var(--font-body)",
+                        marginTop: 2,
+                        cursor: "help",
+                      }}
                       title={`Gross: $${c.gross_attributed_revenue.toLocaleString()}. Repeat-customer attribution share decreases over time per FTC 16 CFR §255.`}
                     >
                       $
                       {(
                         c.gross_attributed_revenue - c.attributed_revenue
                       ).toLocaleString()}{" "}
-                      from repeat-visit share
+                      repeat
                     </div>
                   )}
               </div>
@@ -1095,50 +1787,113 @@ function AnalyticsTab({
       </div>
 
       {/* Creator roster */}
-      <div className="db-section-header">
-        <div className="db-section-header__title">Active Creators</div>
-        <span
-          style={{
-            fontSize: "var(--text-caption)",
-            color: "var(--text-muted)",
-          }}
-        >
-          {activeCreators.length} working now
-        </span>
-      </div>
+      <SectionLabel count={activeCreators.length}>Active Creators</SectionLabel>
 
-      <div className="db-campaign-list">
+      <div
+        style={{
+          background: "var(--surface-2)",
+          border: "1px solid var(--hairline)",
+          borderRadius: "var(--r-md)",
+          overflow: "hidden",
+        }}
+      >
         {activeCreators.length === 0 ? (
           <div
             style={{
-              padding: "var(--space-5)",
+              padding: "32px",
               textAlign: "center",
-              color: "var(--text-muted)",
-              fontSize: "var(--text-small)",
+              color: "var(--ink-4)",
+              fontSize: 13,
+              fontFamily: "var(--font-body)",
             }}
           >
             No active creators right now
           </div>
         ) : (
-          activeCreators.map((app) => (
-            <div key={app.id} className="roster-row">
+          activeCreators.map((app, idx) => (
+            <div
+              key={app.id}
+              style={{
+                display: "flex",
+                gap: 16,
+                padding: "16px 24px",
+                alignItems: "center",
+                borderBottom:
+                  idx < activeCreators.length - 1
+                    ? "1px solid var(--hairline)"
+                    : "none",
+                transition: "background 120ms",
+              }}
+              onMouseEnter={(e) =>
+                (e.currentTarget.style.background = "var(--surface-3)")
+              }
+              onMouseLeave={(e) =>
+                (e.currentTarget.style.background = "transparent")
+              }
+            >
               <img
                 src={app.creator_avatar}
                 alt={app.creator_name}
-                className="roster-row__avatar"
+                style={{
+                  width: 40,
+                  height: 40,
+                  borderRadius: "var(--r-full)",
+                  border: "1px solid var(--hairline)",
+                  flexShrink: 0,
+                }}
               />
-              <div className="roster-row__info">
-                <div className="roster-row__name">{app.creator_name}</div>
-                <div className="roster-row__handle">{app.creator_handle}</div>
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div
+                  style={{
+                    fontFamily: "var(--font-body)",
+                    fontSize: 14,
+                    fontWeight: 700,
+                    color: "var(--ink)",
+                  }}
+                >
+                  {app.creator_name}
+                </div>
+                <div
+                  style={{
+                    fontSize: 12,
+                    color: "var(--ink-4)",
+                    fontFamily: "var(--font-body)",
+                  }}
+                >
+                  {app.creator_handle}
+                </div>
               </div>
               <TierBadge tier={app.creator_tier} />
-              <div className="roster-row__score">
-                <span className="roster-row__score-label">Score</span>
-                <span className="roster-row__score-val">
+              <div
+                style={{
+                  fontFamily: "var(--font-body)",
+                  fontSize: 12,
+                  color: "var(--ink-3)",
+                  textAlign: "right",
+                  flexShrink: 0,
+                }}
+              >
+                <span style={{ color: "var(--ink-4)", marginRight: 4 }}>
+                  Score
+                </span>
+                <span style={{ fontWeight: 700, color: "var(--ink)" }}>
                   {app.creator_score}
                 </span>
               </div>
-              <div className="roster-row__campaign">{app.campaign_title}</div>
+              <div
+                style={{
+                  fontFamily: "var(--font-body)",
+                  fontSize: 12,
+                  color: "var(--ink-3)",
+                  maxWidth: 200,
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  whiteSpace: "nowrap",
+                  flexShrink: 0,
+                }}
+              >
+                {app.campaign_title}
+              </div>
               <MilestoneTag milestone={app.milestone} />
             </div>
           ))
@@ -1172,23 +1927,23 @@ function SettingsTab({ merchant }: { merchant: Merchant | null }) {
 
   return (
     <>
-      <div className="db-page-header">
-        <div className="db-page-header__left">
-          <div className="db-page-header__eyebrow">Account</div>
-          <div className="db-page-header__title">Settings</div>
-        </div>
-      </div>
+      <TabHeader eyebrow="Account" title="Settings" />
 
       {merchant && (
         <div
-          className="db-campaign-list"
-          style={{ padding: "var(--space-4)", marginBottom: "var(--space-4)" }}
+          style={{
+            background: "var(--surface-2)",
+            border: "1px solid var(--hairline)",
+            borderRadius: "var(--r-md)",
+            padding: "32px",
+            marginBottom: 24,
+          }}
         >
           <div
             style={{
               display: "flex",
               flexDirection: "column",
-              gap: "var(--space-3)",
+              gap: 24,
             }}
           >
             {[
@@ -1200,77 +1955,89 @@ function SettingsTab({ merchant }: { merchant: Merchant | null }) {
                 : []),
             ].map(({ label, value }) => (
               <div key={label}>
-                <div
+                <span
                   style={{
-                    fontSize: "var(--text-caption)",
+                    fontFamily: "var(--font-body)",
+                    fontSize: 11,
                     fontWeight: 700,
-                    letterSpacing: "0.08em",
+                    letterSpacing: "0.12em",
                     textTransform: "uppercase" as const,
-                    color: "var(--text-muted)",
+                    color: "var(--ink-4)",
+                    display: "block",
                     marginBottom: 6,
                   }}
                 >
                   {label}
-                </div>
-                <div
+                </span>
+                <span
                   style={{
-                    fontSize: "var(--text-body)",
+                    fontFamily: "var(--font-body)",
+                    fontSize: 16,
                     fontWeight: 600,
-                    color: "var(--dark)",
+                    color: "var(--ink)",
                   }}
                 >
                   {value}
-                </div>
+                </span>
                 <div
-                  className="db-divider"
-                  style={{ marginTop: "var(--space-3)", marginBottom: 0 }}
+                  style={{
+                    height: 1,
+                    background: "var(--hairline)",
+                    marginTop: 16,
+                  }}
                 />
               </div>
             ))}
             {merchant.plan && (
               <div>
-                <div
+                <span
                   style={{
-                    fontSize: "var(--text-caption)",
+                    fontFamily: "var(--font-body)",
+                    fontSize: 11,
                     fontWeight: 700,
-                    letterSpacing: "0.08em",
+                    letterSpacing: "0.12em",
                     textTransform: "uppercase" as const,
-                    color: "var(--text-muted)",
+                    color: "var(--ink-4)",
+                    display: "block",
                     marginBottom: 6,
                   }}
                 >
                   Current Plan
-                </div>
+                </span>
                 <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-                  <div
+                  <span
                     style={{
-                      fontSize: "var(--text-body)",
+                      fontFamily: "var(--font-body)",
+                      fontSize: 16,
                       fontWeight: 700,
-                      color: "var(--dark)",
+                      color: "var(--ink)",
                     }}
                   >
                     {planNames[merchant.plan]}
-                  </div>
-                  <div
+                  </span>
+                  <span
                     style={{
-                      fontSize: "var(--text-caption)",
-                      color: "var(--text-muted)",
+                      fontFamily: "var(--font-body)",
+                      fontSize: 12,
+                      color: "var(--ink-4)",
                     }}
                   >
                     {planPrices[merchant.plan]} / mo
-                  </div>
+                  </span>
                   <a
                     href="/merchant/billing"
+                    className="click-shift"
                     style={{
-                      fontSize: "var(--text-caption)",
+                      fontSize: 12,
                       fontWeight: 700,
-                      letterSpacing: "0.06em",
+                      letterSpacing: "0.08em",
                       textTransform: "uppercase" as const,
-                      color: "var(--tertiary)",
+                      color: "var(--accent-blue)",
                       textDecoration: "none",
+                      fontFamily: "var(--font-body)",
                     }}
                   >
-                    Upgrade →
+                    Upgrade
                   </a>
                 </div>
               </div>
@@ -1279,12 +2046,51 @@ function SettingsTab({ merchant }: { merchant: Merchant | null }) {
         </div>
       )}
 
-      <div className="db-placeholder">
-        <div className="db-placeholder__label">Coming soon</div>
-        <div className="db-placeholder__title">Edit Profile &amp; Billing</div>
-        <div className="db-placeholder__body">
+      <div
+        style={{
+          background: "var(--surface-2)",
+          border: "1px solid var(--hairline)",
+          borderRadius: "var(--r-md)",
+          padding: "40px 32px",
+        }}
+      >
+        <span
+          style={{
+            fontFamily: "var(--font-body)",
+            fontSize: 11,
+            fontWeight: 700,
+            letterSpacing: "0.12em",
+            textTransform: "uppercase" as const,
+            color: "var(--ink-4)",
+            display: "block",
+            marginBottom: 16,
+          }}
+        >
+          Coming Soon
+        </span>
+        <h3
+          style={{
+            fontFamily: "var(--font-display)",
+            fontWeight: 700,
+            fontSize: 28,
+            color: "var(--ink)",
+            margin: "0 0 8px",
+            letterSpacing: "-0.015em",
+          }}
+        >
+          Edit Profile &amp; Billing
+        </h3>
+        <p
+          style={{
+            fontFamily: "var(--font-body)",
+            fontSize: 16,
+            color: "var(--ink-3)",
+            lineHeight: 1.55,
+            margin: 0,
+          }}
+        >
           Full account management, notification preferences, and plan upgrades.
-        </div>
+        </p>
       </div>
     </>
   );
@@ -1408,39 +2214,60 @@ export default function MerchantDashboardPage() {
   const pendingCount = applications.filter(
     (a) => a.status === "pending",
   ).length;
-  const avatarInitials = merchant?.business_name
+
+  /* ── Business name initial for avatar ───────────────────── */
+  const initials = merchant?.business_name
     ? merchant.business_name.slice(0, 2).toUpperCase()
     : "M";
 
   return (
-    <>
-      {/* Top nav */}
+    <div
+      style={{
+        minHeight: "100vh",
+        background: "var(--surface)",
+        fontFamily: "var(--font-body)",
+      }}
+    >
+      {/* ── Product nav — 64px, snow bg, ink text, 8px grid ── */}
       <nav
         style={{
           display: "flex",
           alignItems: "center",
           gap: 24,
           padding: "0 48px",
-          height: 48,
-          borderBottom: "1px solid var(--line)",
-          background: "var(--surface-elevated)",
+          height: 64,
+          borderBottom: "1px solid var(--hairline)",
+          background: "var(--snow)",
           position: "sticky",
           top: 0,
           zIndex: 20,
         }}
       >
+        {/* Wordmark */}
         <span
           style={{
             fontFamily: "var(--font-display)",
-            fontWeight: 700,
-            fontSize: 16,
-            color: "var(--dark)",
+            fontWeight: 800,
+            fontSize: 18,
+            color: "var(--ink)",
             letterSpacing: "-0.02em",
+            flexShrink: 0,
           }}
         >
-          Push
+          PUSH
         </span>
-        <span style={{ width: 1, height: 20, background: "var(--line)" }} />
+
+        {/* Divider */}
+        <span
+          style={{
+            width: 1,
+            height: 24,
+            background: "var(--hairline-2)",
+            flexShrink: 0,
+          }}
+        />
+
+        {/* Nav links */}
         {[
           { href: "/merchant/dashboard", label: "Dashboard" },
           { href: "/merchant/campaigns/new", label: "New Campaign" },
@@ -1452,81 +2279,248 @@ export default function MerchantDashboardPage() {
             key={href}
             href={href}
             style={{
+              fontFamily: "var(--font-body)",
               fontSize: 12,
-              fontWeight: 600,
-              letterSpacing: "0.04em",
-              textTransform: "uppercase",
-              color: "var(--text-muted)",
+              fontWeight: 700,
+              letterSpacing: "0.08em",
+              textTransform: "uppercase" as const,
+              color: "var(--graphite)",
               textDecoration: "none",
               transition: "color 0.12s",
             }}
-            onMouseEnter={(e) => (e.currentTarget.style.color = "var(--dark)")}
+            onMouseEnter={(e) => (e.currentTarget.style.color = "var(--ink)")}
             onMouseLeave={(e) =>
-              (e.currentTarget.style.color = "var(--text-muted)")
+              (e.currentTarget.style.color = "var(--graphite)")
             }
           >
             {label}
           </Link>
         ))}
+
         <span style={{ flex: 1 }} />
+
+        {/* Email */}
+        {userEmail && (
+          <span
+            style={{
+              fontSize: 12,
+              color: "var(--ink-4)",
+              fontFamily: "var(--font-body)",
+              maxWidth: 200,
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              whiteSpace: "nowrap" as const,
+            }}
+          >
+            {userEmail}
+          </span>
+        )}
+
+        {/* Avatar monogram */}
+        <span
+          style={{
+            width: 32,
+            height: 32,
+            borderRadius: "var(--r-sm)",
+            background: "var(--brand-red)",
+            color: "var(--snow)",
+            fontFamily: "var(--font-body)",
+            fontSize: 12,
+            fontWeight: 700,
+            letterSpacing: "0.04em",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            flexShrink: 0,
+          }}
+        >
+          {initials}
+        </span>
+
+        {/* Sign out */}
         <button
           onClick={handleSignOut}
           style={{
-            fontSize: 11,
-            color: "var(--text-muted)",
+            fontFamily: "var(--font-body)",
+            fontSize: 12,
+            fontWeight: 700,
+            letterSpacing: "0.08em",
+            textTransform: "uppercase" as const,
+            color: "var(--graphite)",
             background: "none",
-            border: "none",
+            border: "1px solid var(--hairline-2)",
+            borderRadius: "var(--r-sm)",
             cursor: "pointer",
-            letterSpacing: "0.04em",
+            padding: "6px 12px",
+            transition: "color 0.12s, border-color 0.12s",
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.color = "var(--ink)";
+            e.currentTarget.style.borderColor = "var(--mist)";
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.color = "var(--graphite)";
+            e.currentTarget.style.borderColor = "var(--hairline-2)";
           }}
         >
           Sign out
         </button>
       </nav>
 
-      {/* Tab strip — replaces the old dark sidebar */}
+      {/* ── Tab strip — sticky below nav, 48px tall ────────── */}
       <div
-        className="db-action-strip"
         style={{
+          display: "flex",
+          gap: 0,
           padding: "0 48px",
-          marginBottom: 0,
+          borderBottom: "1px solid var(--hairline)",
+          background: "var(--snow)",
           position: "sticky",
-          top: 48,
+          top: 64,
           zIndex: 10,
-          background: "var(--surface, #f5f2ec)",
         }}
       >
-        <button
-          className={`db-strip-tab${activeTab === "campaigns" ? " db-strip-tab--active" : ""}`}
-          onClick={() => setActiveTab("campaigns")}
-        >
-          <IconCampaigns /> Campaigns
-        </button>
-        <button
-          className={`db-strip-tab${activeTab === "applications" ? " db-strip-tab--active" : ""}`}
-          onClick={() => setActiveTab("applications")}
-        >
-          <IconApplications /> Applications
-          {pendingCount > 0 && (
-            <span className="db-strip-badge">{pendingCount}</span>
-          )}
-        </button>
-        <button
-          className={`db-strip-tab${activeTab === "analytics" ? " db-strip-tab--active" : ""}`}
-          onClick={() => setActiveTab("analytics")}
-        >
-          <IconAnalytics /> Analytics
-        </button>
-        <button
-          className={`db-strip-tab${activeTab === "settings" ? " db-strip-tab--active" : ""}`}
-          onClick={() => setActiveTab("settings")}
-        >
-          <IconSettings /> Settings
-        </button>
+        {(
+          [
+            {
+              id: "campaigns" as SidebarTab,
+              icon: <IconCampaigns />,
+              label: "Campaigns",
+            },
+            {
+              id: "applications" as SidebarTab,
+              icon: <IconApplications />,
+              label: "Applications",
+              badge: pendingCount,
+            },
+            {
+              id: "analytics" as SidebarTab,
+              icon: <IconAnalytics />,
+              label: "Analytics",
+            },
+            {
+              id: "settings" as SidebarTab,
+              icon: <IconSettings />,
+              label: "Settings",
+            },
+          ] as Array<{
+            id: SidebarTab;
+            icon: React.ReactNode;
+            label: string;
+            badge?: number;
+          }>
+        ).map(({ id, icon, label, badge }) => (
+          <button
+            key={id}
+            onClick={() => setActiveTab(id)}
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 8,
+              padding: "0 24px",
+              height: 48,
+              fontFamily: "var(--font-body)",
+              fontSize: 12,
+              fontWeight: 700,
+              letterSpacing: "0.08em",
+              textTransform: "uppercase" as const,
+              color: activeTab === id ? "var(--ink)" : "var(--graphite)",
+              background: "none",
+              border: "none",
+              borderBottom:
+                activeTab === id
+                  ? "2px solid var(--brand-red)"
+                  : "2px solid transparent",
+              cursor: "pointer",
+              transition: "color 0.12s, border-color 0.12s",
+              position: "relative",
+            }}
+            onMouseEnter={(e) => {
+              if (activeTab !== id) e.currentTarget.style.color = "var(--ink)";
+            }}
+            onMouseLeave={(e) => {
+              if (activeTab !== id)
+                e.currentTarget.style.color = "var(--graphite)";
+            }}
+          >
+            {icon}
+            {label}
+            {badge != null && badge > 0 && (
+              <span
+                style={{
+                  background: "var(--brand-red)",
+                  color: "var(--snow)",
+                  fontFamily: "var(--font-body)",
+                  fontSize: 10,
+                  fontWeight: 700,
+                  padding: "2px 6px",
+                  borderRadius: "var(--r-sm)",
+                  lineHeight: 1.4,
+                }}
+              >
+                {badge}
+              </span>
+            )}
+          </button>
+        ))}
       </div>
 
-      {/* Content */}
-      <div className="db-main">
+      {/* ── Page header strip — merchant name + quick links ── */}
+      {merchant && (
+        <div
+          style={{
+            background: "var(--surface)",
+            borderBottom: "1px solid var(--hairline)",
+            padding: "16px 48px",
+            display: "flex",
+            alignItems: "center",
+            gap: 16,
+          }}
+        >
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <span
+              style={{
+                fontFamily: "var(--font-display)",
+                fontWeight: 700,
+                fontSize: 20,
+                color: "var(--ink)",
+                letterSpacing: "-0.02em",
+              }}
+            >
+              {merchant.business_name}
+            </span>
+            {merchant.address && (
+              <span
+                style={{
+                  fontFamily: "var(--font-body)",
+                  fontSize: 12,
+                  color: "var(--ink-4)",
+                  marginLeft: 12,
+                }}
+              >
+                {merchant.address}
+              </span>
+            )}
+          </div>
+          <div style={{ display: "flex", gap: 8, flexShrink: 0 }}>
+            <a href="/merchant/qr-codes" className="btn-pill click-shift">
+              QR Codes
+            </a>
+            <a href="/merchant/redeem" className="btn-pill click-shift">
+              Redeem
+            </a>
+          </div>
+        </div>
+      )}
+
+      {/* ── Main content ─────────────────────────────────────── */}
+      <div
+        style={{
+          maxWidth: 1140,
+          margin: "0 auto",
+          padding: "48px 64px 96px",
+        }}
+      >
         {activeTab === "campaigns" && (
           <CampaignsTab
             campaigns={campaigns}
@@ -1554,6 +2548,6 @@ export default function MerchantDashboardPage() {
         )}
         {activeTab === "settings" && <SettingsTab merchant={merchant} />}
       </div>
-    </>
+    </div>
   );
 }

@@ -139,7 +139,7 @@ function ActivationFunnel({ cohort }: { cohort: Cohort }) {
   // Colors for stepped bars — use opacity variants of brand colors
   const colors = [
     "#003049",
-    "rgba(0,48,73,0.72)",
+    "rgba(10,10,10,0.72)",
     "rgba(102,155,188,0.85)",
     "#c1121f",
   ];
@@ -168,7 +168,7 @@ function ActivationFunnel({ cohort }: { cohort: Cohort }) {
         style={{
           fontFamily: "var(--font-body)",
           fontSize: "var(--text-caption)",
-          color: "var(--text-muted)",
+          color: "var(--ink-4)",
           marginTop: "var(--space-3)",
         }}
       >
@@ -222,7 +222,7 @@ function MemberList({ cohort }: { cohort: Cohort }) {
           <tbody>
             {paged.map((m) => (
               <tr key={m.id}>
-                <td style={{ fontWeight: 600, color: "var(--dark)" }}>
+                <td style={{ fontWeight: 600, color: "var(--ink)" }}>
                   {m.name}
                   {m.handle && (
                     <span
@@ -230,7 +230,7 @@ function MemberList({ cohort }: { cohort: Cohort }) {
                         display: "block",
                         fontFamily: "var(--font-body)",
                         fontSize: "11px",
-                        color: "var(--tertiary)",
+                        color: "var(--accent-blue)",
                         fontWeight: 400,
                       }}
                     >
@@ -263,7 +263,7 @@ function MemberList({ cohort }: { cohort: Cohort }) {
                   style={{
                     fontVariantNumeric: "tabular-nums",
                     fontWeight: 600,
-                    color: "var(--dark)",
+                    color: "var(--ink)",
                   }}
                 >
                   {formatGmv(m.gmv)}
@@ -272,7 +272,7 @@ function MemberList({ cohort }: { cohort: Cohort }) {
                   style={{
                     fontVariantNumeric: "tabular-nums",
                     fontWeight: 600,
-                    color: m.ltv > 3000 ? "var(--primary)" : "var(--dark)",
+                    color: m.ltv > 3000 ? "var(--brand-red)" : "var(--ink)",
                   }}
                 >
                   {formatGmv(m.ltv)}
@@ -582,7 +582,7 @@ export default function CohortDetailPage({
                   letterSpacing: "0.07em",
                   textTransform: "uppercase",
                   padding: "3px 10px",
-                  background: "rgba(0,48,73,0.06)",
+                  background: "rgba(10,10,10,0.06)",
                   border: "1px solid var(--line)",
                   color: "var(--graphite)",
                 }}

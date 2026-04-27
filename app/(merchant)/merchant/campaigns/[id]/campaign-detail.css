@@ -1,0 +1,339 @@
+/* ============================================================
+   Merchant Campaign Detail — v11 Product Register
+   Design.md: 8px grid, v11 tokens, product dashboard register
+   No Ticket Panel / No Sig Divider / No Parenthetical eyebrows
+   ============================================================ */
+
+/* ── Shell ──────────────────────────────────────────────────── */
+
+.cd-shell {
+  min-height: 100svh;
+  background: var(--surface);
+  font-family: var(--font-body);
+  color: var(--ink);
+  padding-bottom: 96px;
+}
+
+/* ── Inner container ─────────────────────────────────────────── */
+
+.cd-inner {
+  max-width: 1140px;
+  margin: 0 auto;
+  padding: 40px 64px 80px;
+}
+
+/* ── Back nav ────────────────────────────────────────────────── */
+
+.cd-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+  text-decoration: none;
+  margin-bottom: 32px;
+  transition: color 140ms ease, transform 140ms ease;
+}
+
+.cd-back:hover {
+  color: var(--ink);
+  transform: translateX(-2px);
+}
+
+/* ── Page header row ─────────────────────────────────────────── */
+
+.cd-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 8px;
+}
+
+.cd-header__left {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* Eyebrow — 12px 700 uppercase 0.12em, no parens in product */
+.cd-eyebrow {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+}
+
+/* H1 — Darky clamp(40px,5vw,72px) 800 */
+.cd-title {
+  font-family: var(--font-display);
+  font-size: clamp(40px, 5vw, 72px);
+  font-weight: 800;
+  color: var(--ink);
+  line-height: 1.0;
+  letter-spacing: -0.025em;
+  margin: 0;
+}
+
+.cd-header__actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+  margin-top: 8px;
+}
+
+/* Status badge — btn-pill variant */
+.cd-status-badge {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 8px 18px;
+  border-radius: 40px;
+  background: var(--surface-3);
+  color: var(--ink);
+}
+
+.cd-status-badge--active {
+  background: rgba(0, 133, 255, 0.10);
+  color: var(--accent-blue);
+}
+
+.cd-status-badge--ended {
+  background: var(--surface-3);
+  color: var(--ink-4);
+}
+
+.cd-status-badge--paused {
+  background: rgba(193, 18, 31, 0.08);
+  color: var(--brand-red);
+}
+
+/* ── KPI Stats Row — 4 cards ─────────────────────────────────── */
+
+.cd-kpi-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-top: 32px;
+  margin-bottom: 32px;
+}
+
+.cd-kpi-card {
+  background: var(--snow);
+  border: 1px solid var(--hairline);
+  border-radius: 10px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.cd-kpi-card__label {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+}
+
+/* KPI stat — Darky clamp(40px,5vw,72px) 700 */
+.cd-kpi-card__value {
+  font-family: var(--font-display);
+  font-size: clamp(40px, 5vw, 72px);
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+/* ── Content card ─────────────────────────────────────────────── */
+
+.cd-card {
+  background: var(--snow);
+  border: 1px solid var(--hairline);
+  border-radius: 10px;
+  padding: 24px;
+  margin-bottom: 16px;
+}
+
+/* Card section eyebrow */
+.cd-card__eyebrow {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+  margin-bottom: 16px;
+  display: block;
+}
+
+/* Card body text — CS Genio Mono 18px */
+.cd-card__body {
+  font-family: var(--font-body);
+  font-size: 18px;
+  line-height: 1.55;
+  color: var(--ink-3);
+  margin: 0;
+}
+
+/* ── Deliverables grid ───────────────────────────────────────── */
+
+.cd-deliverables-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px 24px;
+}
+
+.cd-deliverable {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.cd-deliverable__label {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+}
+
+/* Label text — 14px 500 */
+.cd-deliverable__value {
+  font-family: var(--font-body);
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--ink);
+}
+
+/* ── Campaign Actions (bottom card) ──────────────────────────── */
+
+.cd-actions-card {
+  background: var(--surface-2);
+  border: 1px solid var(--hairline);
+  border-radius: 10px;
+  padding: 24px;
+  margin-top: 32px;
+}
+
+.cd-actions-card__eyebrow {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+  margin-bottom: 16px;
+  display: block;
+}
+
+.cd-actions-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+/* Danger zone card */
+.cd-danger-btn {
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 14px 28px;
+  border-radius: 8px;
+  border: 1px solid rgba(193, 18, 31, 0.3);
+  background: var(--brand-red-tint, rgba(193, 18, 31, 0.06));
+  color: var(--brand-red);
+  cursor: pointer;
+  transition: all 140ms ease;
+}
+
+.cd-danger-btn:hover {
+  transform: translate(2px, 2px);
+  background: rgba(193, 18, 31, 0.12);
+}
+
+.cd-danger-btn:active {
+  transform: translate(3px, 3px) scale(0.98);
+}
+
+/* ── CTA strip ───────────────────────────────────────────────── */
+
+.cd-cta-strip {
+  margin-top: 32px;
+}
+
+/* ── Loading state ───────────────────────────────────────────── */
+
+.cd-loading {
+  min-height: 100svh;
+  background: var(--surface);
+  font-family: var(--font-body);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cd-loading__text {
+  font-size: 16px;
+  color: var(--ink-4);
+  font-family: var(--font-body);
+}
+
+/* ── Responsive ─────────────────────────────────────────────── */
+
+@media (max-width: 900px) {
+  .cd-inner {
+    padding: 32px 24px 80px;
+  }
+
+  .cd-kpi-row {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .cd-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .cd-deliverables-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .cd-inner {
+    padding: 24px 16px 64px;
+  }
+
+  .cd-kpi-row {
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  .cd-kpi-card__value {
+    font-size: 32px;
+  }
+
+  .cd-title {
+    font-size: 32px;
+  }
+
+  .cd-actions-row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

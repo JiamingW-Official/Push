@@ -334,7 +334,7 @@
 }
 
 .trust-money-card:nth-child(3) {
-  border-left-color: var(--cat-fitness, #669bbc);
+  border-left-color: var(--cat-fitness);
 }
 
 .trust-money-card-title {
@@ -956,8 +956,8 @@
 }
 
 .trust-dispute-cta .btn-primary:hover {
-  background: var(--accent, #780000);
-  border-color: var(--accent, #780000);
+  background: var(--accent, var(--brand-red));
+  border-color: var(--accent, var(--brand-red));
 }
 
 .trust-dispute-cta .btn-secondary {

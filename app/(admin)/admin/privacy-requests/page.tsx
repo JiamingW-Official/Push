@@ -36,6 +36,19 @@ function formatDueBadge(sec: number, overdue: boolean): string {
   return `${daysLeft}d`;
 }
 
+function statusChip(status: string): { bg: string; color: string } {
+  switch (status) {
+    case "resolved":
+      return { bg: "rgba(0,133,255,0.08)", color: "var(--accent-blue)" };
+    case "denied":
+      return { bg: "rgba(193,18,31,0.08)", color: "var(--brand-red)" };
+    case "verifying":
+      return { bg: "var(--panel-butter)", color: "var(--ink-3)" };
+    default:
+      return { bg: "var(--surface-3)", color: "var(--ink-4)" };
+  }
+}
+
 export default function AdminPrivacyRequestsPage() {
   const [rows, setRows] = useState<Row[] | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -87,202 +100,389 @@ export default function AdminPrivacyRequestsPage() {
     }
   }
 
+  const cardStyle: React.CSSProperties = {
+    background: "var(--surface-2)",
+    border: "1px solid var(--hairline)",
+    borderRadius: 10,
+    padding: "20px 24px",
+  };
+
   return (
-    <div style={S.page}>
-      <header style={S.header}>
-        <p style={S.eyebrow}>ADMIN / PRIVACY</p>
-        <h1 style={S.title}>DSAR queue</h1>
-        <p style={S.lede}>
+    <div
+      style={{
+        minHeight: "100vh",
+        background: "var(--surface)",
+        paddingBottom: 64,
+      }}
+    >
+      {/* Page header */}
+      <div style={{ padding: "40px 40px 32px" }}>
+        <div className="eyebrow" style={{ marginBottom: 8 }}>
+          ADMIN · PUSH INTERNAL · PRIVACY
+        </div>
+        <h1
+          style={{
+            fontFamily: "var(--font-display)",
+            fontSize: "clamp(32px,4vw,56px)",
+            fontWeight: 800,
+            color: "var(--ink)",
+            letterSpacing: "-0.03em",
+            lineHeight: 1,
+            marginBottom: 12,
+          }}
+        >
+          DSAR queue
+        </h1>
+        <p
+          style={{
+            fontSize: 14,
+            fontFamily: "var(--font-body)",
+            color: "var(--ink-4)",
+            lineHeight: 1.6,
+            maxWidth: 560,
+          }}
+        >
           CCPA § 1798.130 deadline is 45 calendar days from receipt. Rows below
-          are sorted by <code>due_at</code> ascending — the top row is the most
-          urgent.
+          are sorted by{" "}
+          <code
+            style={{
+              fontFamily: "var(--font-body)",
+              fontSize: 13,
+              background: "var(--surface-3)",
+              padding: "1px 6px",
+              borderRadius: 4,
+              border: "1px solid var(--hairline)",
+            }}
+          >
+            due_at
+          </code>{" "}
+          ascending — the top row is the most urgent.
         </p>
-      </header>
+      </div>
 
-      {error && <div style={S.err}>{error}</div>}
+      <div style={{ padding: "0 40px" }}>
+        {/* Error banner */}
+        {error && (
+          <div
+            style={{
+              padding: "12px 16px",
+              background: "rgba(193,18,31,0.05)",
+              border: "1px solid rgba(193,18,31,0.2)",
+              borderRadius: 8,
+              color: "var(--brand-red)",
+              fontSize: 13,
+              fontFamily: "var(--font-body)",
+              marginBottom: 20,
+            }}
+          >
+            {error}
+          </div>
+        )}
 
-      {rows === null ? (
-        <p style={S.loading}>Loading…</p>
-      ) : rows.length === 0 ? (
-        <p style={S.empty}>No open privacy requests.</p>
-      ) : (
-        <table style={S.table}>
-          <thead>
-            <tr>
-              <th style={S.th}>TICKET</th>
-              <th style={S.th}>TYPE</th>
-              <th style={S.th}>RECEIVED</th>
-              <th style={S.th}>DUE</th>
-              <th style={S.th}>STATUS</th>
-              <th style={S.th}>ACTIONS</th>
-            </tr>
-          </thead>
-          <tbody>
-            {rows.map((r) => (
-              <tr key={r.ticket_id} style={r.overdue ? S.rowOverdue : S.row}>
-                <td style={S.td}>
-                  <code style={S.mono}>{r.ticket_id.slice(0, 8)}</code>
-                </td>
-                <td style={S.td}>{r.request_type}</td>
-                <td style={S.td}>
-                  <code style={S.mono}>{r.received_at.slice(0, 10)}</code>
-                </td>
-                <td style={S.td}>
-                  <span style={r.overdue ? S.dueOverdue : S.dueOK}>
-                    {formatDueBadge(r.sec_until_due, r.overdue)}
-                  </span>
-                </td>
-                <td style={S.td}>{r.status}</td>
-                <td style={S.td}>
-                  {r.status === "received" || r.status === "verifying" ? (
-                    <>
-                      <button
-                        type="button"
-                        style={S.btnResolve}
-                        disabled={acting === r.ticket_id}
-                        onClick={() => resolve(r.ticket_id, "resolved")}
+        {rows === null ? (
+          <div
+            style={{
+              padding: "48px 0",
+              textAlign: "center",
+              fontSize: 14,
+              fontFamily: "var(--font-body)",
+              color: "var(--ink-4)",
+            }}
+          >
+            Loading…
+          </div>
+        ) : rows.length === 0 ? (
+          <div style={cardStyle}>
+            <div
+              style={{
+                padding: "32px 0",
+                textAlign: "center",
+                fontSize: 14,
+                fontFamily: "var(--font-body)",
+                color: "var(--ink-4)",
+              }}
+            >
+              No open privacy requests.
+            </div>
+          </div>
+        ) : (
+          <div style={cardStyle}>
+            {/* Table header */}
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "100px 120px 100px 100px 100px 200px",
+                gap: 12,
+                padding: "8px 0",
+                borderBottom: "2px solid var(--hairline)",
+                marginBottom: 0,
+              }}
+            >
+              {["TICKET", "TYPE", "RECEIVED", "DUE", "STATUS", "ACTIONS"].map(
+                (h) => (
+                  <div
+                    key={h}
+                    style={{
+                      fontSize: 11,
+                      fontWeight: 700,
+                      letterSpacing: "0.07em",
+                      fontFamily: "var(--font-body)",
+                      color: "var(--ink-4)",
+                      textTransform: "uppercase",
+                    }}
+                  >
+                    {h}
+                  </div>
+                ),
+              )}
+            </div>
+
+            {/* Rows */}
+            {rows.map((r) => {
+              const sc = statusChip(r.status);
+              return (
+                <div
+                  key={r.ticket_id}
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns: "100px 120px 100px 100px 100px 200px",
+                    gap: 12,
+                    alignItems: "center",
+                    padding: "12px 0",
+                    borderBottom: "1px solid var(--hairline)",
+                    background: r.overdue
+                      ? "rgba(193,18,31,0.02)"
+                      : "transparent",
+                  }}
+                >
+                  {/* Ticket ID */}
+                  <div>
+                    <code
+                      style={{
+                        fontFamily: "var(--font-body)",
+                        fontSize: 12,
+                        color: "var(--ink)",
+                        background: "var(--surface-3)",
+                        padding: "2px 6px",
+                        borderRadius: 4,
+                        border: "1px solid var(--hairline)",
+                      }}
+                    >
+                      {r.ticket_id.slice(0, 8)}
+                    </code>
+                  </div>
+
+                  {/* Type */}
+                  <div
+                    style={{
+                      fontSize: 13,
+                      fontFamily: "var(--font-body)",
+                      color: "var(--ink)",
+                      fontWeight: 500,
+                    }}
+                  >
+                    {r.request_type}
+                  </div>
+
+                  {/* Received */}
+                  <div>
+                    <code
+                      style={{
+                        fontFamily: "var(--font-body)",
+                        fontSize: 12,
+                        color: "var(--ink-4)",
+                      }}
+                    >
+                      {r.received_at.slice(0, 10)}
+                    </code>
+                  </div>
+
+                  {/* Due */}
+                  <div>
+                    <span
+                      style={{
+                        display: "inline-block",
+                        padding: "3px 8px",
+                        borderRadius: 4,
+                        fontSize: 11,
+                        fontWeight: 700,
+                        fontFamily: "var(--font-body)",
+                        background: r.overdue
+                          ? "var(--brand-red)"
+                          : "var(--surface-3)",
+                        color: r.overdue ? "var(--snow)" : "var(--ink-3)",
+                        letterSpacing: "0.04em",
+                      }}
+                    >
+                      {formatDueBadge(r.sec_until_due, r.overdue)}
+                    </span>
+                  </div>
+
+                  {/* Status */}
+                  <div>
+                    <span
+                      style={{
+                        display: "inline-block",
+                        padding: "3px 8px",
+                        borderRadius: 4,
+                        fontSize: 11,
+                        fontWeight: 700,
+                        fontFamily: "var(--font-body)",
+                        background: sc.bg,
+                        color: sc.color,
+                        textTransform: "capitalize",
+                      }}
+                    >
+                      {r.status}
+                    </span>
+                  </div>
+
+                  {/* Actions */}
+                  <div style={{ display: "flex", gap: 8 }}>
+                    {r.status === "received" || r.status === "verifying" ? (
+                      <>
+                        <button
+                          style={{
+                            padding: "6px 14px",
+                            border: "none",
+                            borderRadius: 6,
+                            background: "var(--ink)",
+                            color: "var(--snow)",
+                            fontFamily: "var(--font-body)",
+                            fontSize: 11,
+                            fontWeight: 700,
+                            letterSpacing: "0.04em",
+                            cursor:
+                              acting === r.ticket_id
+                                ? "not-allowed"
+                                : "pointer",
+                            opacity: acting === r.ticket_id ? 0.5 : 1,
+                          }}
+                          disabled={acting === r.ticket_id}
+                          onClick={() => resolve(r.ticket_id, "resolved")}
+                          className="click-shift"
+                        >
+                          Resolve
+                        </button>
+                        <button
+                          style={{
+                            padding: "6px 14px",
+                            border: "1px solid rgba(193,18,31,0.25)",
+                            borderRadius: 6,
+                            background: "rgba(193,18,31,0.05)",
+                            color: "var(--brand-red)",
+                            fontFamily: "var(--font-body)",
+                            fontSize: 11,
+                            fontWeight: 700,
+                            letterSpacing: "0.04em",
+                            cursor:
+                              acting === r.ticket_id
+                                ? "not-allowed"
+                                : "pointer",
+                            opacity: acting === r.ticket_id ? 0.5 : 1,
+                          }}
+                          disabled={acting === r.ticket_id}
+                          onClick={() => resolve(r.ticket_id, "denied")}
+                          className="click-shift"
+                        >
+                          Deny
+                        </button>
+                      </>
+                    ) : (
+                      <span
+                        style={{
+                          fontSize: 12,
+                          fontFamily: "var(--font-body)",
+                          color: "var(--ink-4)",
+                        }}
                       >
-                        Resolve
-                      </button>
-                      <button
-                        type="button"
-                        style={S.btnDeny}
-                        disabled={acting === r.ticket_id}
-                        onClick={() => resolve(r.ticket_id, "denied")}
-                      >
-                        Deny
-                      </button>
-                    </>
-                  ) : (
-                    <span style={S.muted}>—</span>
-                  )}
-                </td>
-              </tr>
+                        —
+                      </span>
+                    )}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
+
+        {/* Info card */}
+        <div
+          style={{
+            ...cardStyle,
+            marginTop: 24,
+            background: "var(--surface-3)",
+          }}
+        >
+          <div
+            style={{
+              fontSize: 11,
+              fontWeight: 700,
+              letterSpacing: "0.07em",
+              fontFamily: "var(--font-body)",
+              color: "var(--ink-4)",
+              textTransform: "uppercase",
+              marginBottom: 10,
+            }}
+          >
+            SLA reference
+          </div>
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(3, 1fr)",
+              gap: 16,
+            }}
+          >
+            {[
+              { label: "CCPA deadline", value: "45 days", sub: "§ 1798.130" },
+              { label: "GDPR deadline", value: "30 days", sub: "Art. 12(3)" },
+              {
+                label: "Extension allowed",
+                value: "+45 days",
+                sub: "With notice to user",
+              },
+            ].map(({ label, value, sub }) => (
+              <div key={label}>
+                <div
+                  style={{
+                    fontSize: 11,
+                    fontFamily: "var(--font-body)",
+                    color: "var(--ink-4)",
+                    marginBottom: 4,
+                    textTransform: "uppercase",
+                    letterSpacing: "0.06em",
+                    fontWeight: 700,
+                  }}
+                >
+                  {label}
+                </div>
+                <div
+                  style={{
+                    fontFamily: "var(--font-display)",
+                    fontSize: 20,
+                    fontWeight: 800,
+                    color: "var(--ink)",
+                    lineHeight: 1,
+                    marginBottom: 2,
+                  }}
+                >
+                  {value}
+                </div>
+                <div
+                  style={{
+                    fontSize: 11,
+                    fontFamily: "var(--font-body)",
+                    color: "var(--ink-4)",
+                  }}
+                >
+                  {sub}
+                </div>
+              </div>
             ))}
-          </tbody>
-        </table>
-      )}
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
-
-const S = {
-  page: {
-    minHeight: "100vh",
-    background: "var(--surface)",
-    color: "var(--dark)",
-    fontFamily: "var(--font-body)",
-    padding: "40px 24px",
-    maxWidth: "1080px",
-    margin: "0 auto",
-  } as React.CSSProperties,
-  header: { marginBottom: "24px" } as React.CSSProperties,
-  eyebrow: {
-    fontSize: "11px",
-    fontWeight: 700,
-    letterSpacing: "0.08em",
-    color: "var(--primary)",
-    marginBottom: "8px",
-  } as React.CSSProperties,
-  title: {
-    fontFamily: "var(--font-display)",
-    fontSize: "32px",
-    fontWeight: 800,
-    letterSpacing: "-0.02em",
-    marginBottom: "8px",
-  } as React.CSSProperties,
-  lede: {
-    fontSize: "13px",
-    color: "var(--graphite)",
-    lineHeight: 1.6,
-  } as React.CSSProperties,
-  loading: {
-    color: "var(--text-muted)",
-    fontSize: "13px",
-  } as React.CSSProperties,
-  empty: {
-    color: "var(--text-muted)",
-    fontSize: "13px",
-  } as React.CSSProperties,
-  err: {
-    padding: "12px 16px",
-    background: "rgba(193,18,31,0.06)",
-    border: "1px solid var(--primary)",
-    color: "var(--primary)",
-    marginBottom: "16px",
-    fontSize: "13px",
-  } as React.CSSProperties,
-  table: {
-    width: "100%",
-    borderCollapse: "collapse" as const,
-    fontSize: "13px",
-    background: "var(--surface-elevated)",
-    border: "1px solid var(--line)",
-  } as React.CSSProperties,
-  th: {
-    textAlign: "left" as const,
-    padding: "12px 16px",
-    fontSize: "11px",
-    fontWeight: 700,
-    letterSpacing: "0.08em",
-    color: "var(--text-muted)",
-    borderBottom: "2px solid var(--line)",
-  } as React.CSSProperties,
-  row: {
-    borderBottom: "1px solid var(--line)",
-  } as React.CSSProperties,
-  rowOverdue: {
-    borderBottom: "1px solid var(--line)",
-    background: "rgba(193,18,31,0.04)",
-  } as React.CSSProperties,
-  td: { padding: "12px 16px" } as React.CSSProperties,
-  mono: {
-    fontFamily: "var(--font-mono, monospace)",
-    fontSize: "12px",
-    color: "var(--dark)",
-  } as React.CSSProperties,
-  dueOK: {
-    display: "inline-block",
-    padding: "2px 8px",
-    background: "var(--surface)",
-    border: "1px solid var(--line)",
-    fontSize: "11px",
-    fontWeight: 600,
-  } as React.CSSProperties,
-  dueOverdue: {
-    display: "inline-block",
-    padding: "2px 8px",
-    background: "var(--primary)",
-    color: "#ffffff",
-    fontSize: "11px",
-    fontWeight: 700,
-    letterSpacing: "0.04em",
-  } as React.CSSProperties,
-  btnResolve: {
-    padding: "6px 12px",
-    background: "var(--dark)",
-    color: "#ffffff",
-    border: "none",
-    fontFamily: "var(--font-body)",
-    fontSize: "11px",
-    fontWeight: 700,
-    letterSpacing: "0.04em",
-    cursor: "pointer",
-    marginRight: "8px",
-  } as React.CSSProperties,
-  btnDeny: {
-    padding: "6px 12px",
-    background: "var(--surface-elevated)",
-    color: "var(--primary)",
-    border: "1px solid var(--primary)",
-    fontFamily: "var(--font-body)",
-    fontSize: "11px",
-    fontWeight: 700,
-    letterSpacing: "0.04em",
-    cursor: "pointer",
-  } as React.CSSProperties,
-  muted: {
-    color: "var(--text-muted)",
-    fontSize: "12px",
-  } as React.CSSProperties,
-};

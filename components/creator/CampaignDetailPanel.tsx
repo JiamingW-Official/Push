@@ -460,7 +460,7 @@ export function CampaignDetailPanel({
                     <circle cx="7" cy="7" r="7" fill="currentColor" />
                     <path
                       d="M4 7l2 2 4-4"
-                      stroke="var(--surface-elevated)"
+                      stroke="var(--surface-2)"
                       strokeWidth="1.5"
                       strokeLinecap="round"
                       strokeLinejoin="round"

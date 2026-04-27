@@ -15,8 +15,8 @@ export interface ReferralTableProps {
 }
 
 const STATUS_BG: Record<ReferralRow["status"], string> = {
-  verified: "var(--primary)", // Flag Red
-  pending: "var(--tertiary)", // Steel Blue
+  verified: "var(--brand-red)", // Flag Red
+  pending: "var(--accent-blue)", // Steel Blue
   rejected: "var(--accent)", // Molten Lava
 };
 

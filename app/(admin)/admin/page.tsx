@@ -60,7 +60,6 @@ function Sparkline({
     })
     .join(" ");
 
-  // Area fill path
   const areaPoints = [
     `0,${H}`,
     ...data.map((v, i) => {
@@ -73,14 +72,13 @@ function Sparkline({
 
   return (
     <svg
-      className="adm-chart__svg"
       viewBox={`0 0 ${W} ${H}`}
       preserveAspectRatio="none"
-      style={{ height }}
+      style={{ height, width: "100%", display: "block" }}
     >
       <defs>
         <linearGradient
-          id={`grad-${color.replace("#", "")}`}
+          id={`grad-${color.replace(/[^a-z0-9]/gi, "")}`}
           x1="0"
           y1="0"
           x2="0"
@@ -92,7 +90,7 @@ function Sparkline({
       </defs>
       <polygon
         points={areaPoints}
-        fill={`url(#grad-${color.replace("#", "")})`}
+        fill={`url(#grad-${color.replace(/[^a-z0-9]/gi, "")})`}
       />
       <polyline
         points={points}
@@ -102,7 +100,6 @@ function Sparkline({
         strokeLinejoin="round"
         strokeLinecap="round"
       />
-      {/* Last value dot */}
       {(() => {
         const last = data[data.length - 1];
         const x = (data.length - 1) * step;
@@ -111,6 +108,30 @@ function Sparkline({
       })()}
     </svg>
   );
+}
+
+/* ── Event type pill label ───────────────────────────────────── */
+const EVENT_LABELS: Record<string, string> = {
+  scan: "Scan",
+  verify: "Verify",
+  apply: "Apply",
+  payment: "Payment",
+  dispute: "Dispute",
+  fraud_flag: "FRAUD",
+  kyc_submit: "KYC",
+};
+
+function eventPillClass(type: string): string {
+  const map: Record<string, string> = {
+    scan: "adm-event-pill adm-event-pill--scan",
+    verify: "adm-event-pill adm-event-pill--verify",
+    apply: "adm-event-pill adm-event-pill--apply",
+    payment: "adm-event-pill adm-event-pill--payment",
+    dispute: "adm-event-pill adm-event-pill--dispute",
+    fraud_flag: "adm-event-pill adm-event-pill--fraud_flag",
+    kyc_submit: "adm-event-pill adm-event-pill--kyc_submit",
+  };
+  return map[type] ?? "adm-event-pill adm-event-pill--apply";
 }
 
 /* ── KPI Card ────────────────────────────────────────────────── */
@@ -127,42 +148,138 @@ function KpiCard({
 }) {
   return (
     <div className={`adm-kpi-card${alert ? " adm-kpi-card--alert" : ""}`}>
-      <div className="adm-kpi-card__label">{label}</div>
+      <div className="adm-kpi-card__eyebrow">{label}</div>
       <div className="adm-kpi-card__value">{value}</div>
       <div className="adm-kpi-card__sub">{sub}</div>
     </div>
   );
 }
 
-/* ── Event type pill label ───────────────────────────────────── */
-const EVENT_LABELS: Record<string, string> = {
-  scan: "Scan",
-  verify: "Verify",
-  apply: "Apply",
-  payment: "Payment",
-  dispute: "Dispute",
-  fraud_flag: "FRAUD",
-  kyc_submit: "KYC",
-};
-
 /* ── Alert strip ─────────────────────────────────────────────── */
 function AlertStrip({ alerts }: { alerts: AlertItem[] }) {
+  const severityColor: Record<string, string> = {
+    critical: "var(--brand-red)",
+    high: "var(--brand-red)",
+    medium: "var(--champagne)",
+    low: "var(--ink-5)",
+  };
+
+  const severityBg: Record<string, string> = {
+    critical: "rgba(193,18,31,0.06)",
+    high: "rgba(193,18,31,0.06)",
+    medium: "var(--panel-butter)",
+    low: "var(--surface-2)",
+  };
+
+  const catColors: Record<string, { bg: string; color: string }> = {
+    fraud: { bg: "var(--brand-red-tint)", color: "var(--brand-red)" },
+    kyc: { bg: "var(--panel-butter)", color: "var(--ink-3)" },
+    dispute: { bg: "var(--accent-blue-tint)", color: "var(--accent-blue)" },
+  };
+
   return (
-    <div className="adm-alerts">
-      <div className="adm-alerts__header">
-        <div className="adm-alerts__title">Action Required</div>
-        <div className="adm-alerts__count">{alerts.length}</div>
+    <div
+      style={{
+        background: "var(--surface-2)",
+        border: "1px solid var(--hairline)",
+        borderRadius: 10,
+        overflow: "hidden",
+        marginBottom: 16,
+      }}
+    >
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          padding: "12px 16px",
+          borderBottom: "1px solid var(--hairline)",
+        }}
+      >
+        <span
+          style={{
+            fontFamily: "var(--font-body)",
+            fontSize: 12,
+            fontWeight: 700,
+            letterSpacing: "0.12em",
+            textTransform: "uppercase",
+            color: "var(--ink-5)",
+          }}
+        >
+          Action Required
+        </span>
+        <span
+          style={{
+            fontFamily: "var(--font-body)",
+            fontSize: 12,
+            fontWeight: 700,
+            background: "var(--brand-red)",
+            color: "var(--snow)",
+            borderRadius: 99,
+            padding: "2px 8px",
+          }}
+        >
+          {alerts.length}
+        </span>
       </div>
       {alerts.map((a) => (
-        <div key={a.id} className="adm-alert-item">
-          <div className={`adm-alert-dot adm-alert-dot--${a.severity}`} />
-          <div className="adm-alert-item__body">
-            <div className="adm-alert-item__title">{a.title}</div>
-            <div className="adm-alert-item__meta">
+        <div
+          key={a.id}
+          style={{
+            display: "flex",
+            alignItems: "flex-start",
+            gap: 10,
+            padding: "12px 16px",
+            borderBottom: "1px solid var(--hairline)",
+            background: severityBg[a.severity] ?? "var(--surface-2)",
+          }}
+        >
+          <div
+            style={{
+              width: 6,
+              height: 6,
+              borderRadius: "50%",
+              background: severityColor[a.severity] ?? "var(--ink-5)",
+              marginTop: 6,
+              flexShrink: 0,
+            }}
+          />
+          <div style={{ flex: 1 }}>
+            <div
+              style={{
+                fontFamily: "var(--font-body)",
+                fontSize: 13,
+                fontWeight: 600,
+                color: "var(--ink)",
+                marginBottom: 2,
+              }}
+            >
+              {a.title}
+            </div>
+            <div
+              style={{
+                fontFamily: "var(--font-body)",
+                fontSize: 12,
+                color: "var(--ink-5)",
+              }}
+            >
               {a.actor} · {timeAgo(a.created_at)}
             </div>
           </div>
-          <span className={`adm-alert-cat adm-alert-cat--${a.category}`}>
+          <span
+            style={{
+              fontFamily: "var(--font-body)",
+              fontSize: 12,
+              fontWeight: 700,
+              letterSpacing: "0.06em",
+              textTransform: "uppercase",
+              borderRadius: 4,
+              padding: "2px 6px",
+              flexShrink: 0,
+              background: catColors[a.category]?.bg ?? "var(--surface-3)",
+              color: catColors[a.category]?.color ?? "var(--ink-5)",
+            }}
+          >
             {a.category}
           </span>
         </div>
@@ -174,18 +291,30 @@ function AlertStrip({ alerts }: { alerts: AlertItem[] }) {
 /* ── Mini charts panel ───────────────────────────────────────── */
 function MiniCharts({ trend }: { trend: AdminMetrics["trend_7d"] }) {
   const charts = [
-    { label: "7-Day Scans", data: trend.scans, color: "#669bbc" },
-    { label: "7-Day Verifies", data: trend.verifies, color: "#003049" },
-    { label: "7-Day Conversions", data: trend.conversions, color: "#c9a96e" },
+    {
+      label: "7-Day Scans",
+      data: trend.scans,
+      color: "var(--accent-blue)",
+    },
+    {
+      label: "7-Day Verifies",
+      data: trend.verifies,
+      color: "var(--ink-3)",
+    },
+    {
+      label: "7-Day Conversions",
+      data: trend.conversions,
+      color: "var(--brand-red)",
+    },
   ];
 
   return (
-    <div className="adm-charts">
+    <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
       {charts.map(({ label, data, color }) => (
-        <div key={label} className="adm-chart">
-          <div className="adm-chart__header">
-            <div className="adm-chart__label">{label}</div>
-            <div className="adm-chart__latest">{data[data.length - 1]}</div>
+        <div key={label} className="adm-chart-card">
+          <div className="adm-chart-eyebrow">
+            <span>{label}</span>
+            <span>{data[data.length - 1]}</span>
           </div>
           <Sparkline data={data} color={color} />
         </div>
@@ -196,36 +325,129 @@ function MiniCharts({ trend }: { trend: AdminMetrics["trend_7d"] }) {
 
 /* ── Activity feed ───────────────────────────────────────────── */
 function ActivityFeed({ events }: { events: LiveEvent[] }) {
+  const cols = ["Time", "Type", "Actor", "Target", "Location", "Amount"];
+
   return (
-    <div className="adm-feed">
-      <div className="adm-feed__header">
-        <div className="adm-feed__title">Live Activity</div>
-        <div className="adm-feed__sub">Last 50 events</div>
+    <div className="adm-feed-wrap">
+      {/* Header */}
+      <div className="adm-feed-header">
+        <span className="adm-feed-title">Live Activity</span>
+        <span className="adm-feed-meta">Last {events.length} events</span>
       </div>
-      <div className="adm-feed__table-head">
-        <span>Time</span>
-        <span>Type</span>
-        <span>Actor</span>
-        <span>Target</span>
-        <span>Location</span>
-        <span>Amount</span>
+
+      {/* Table head */}
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns:
+            "64px 80px minmax(100px,1fr) minmax(100px,1fr) minmax(100px,1fr) 80px",
+          padding: "8px 20px",
+          borderBottom: "1px solid var(--hairline)",
+          background: "var(--surface-3)",
+        }}
+      >
+        {cols.map((c) => (
+          <span
+            key={c}
+            style={{
+              fontFamily: "var(--font-body)",
+              fontSize: 12,
+              fontWeight: 700,
+              letterSpacing: "0.12em",
+              textTransform: "uppercase",
+              color: "var(--ink-5)",
+            }}
+          >
+            {c}
+          </span>
+        ))}
       </div>
-      {events.map((evt) => (
-        <div key={evt.id} className="adm-feed__row">
-          <div className="adm-feed__time">{formatTime(evt.timestamp)}</div>
-          <div>
-            <span className={`adm-event-pill adm-event-pill--${evt.type}`}>
+
+      {/* Rows */}
+      <div style={{ maxHeight: 480, overflowY: "auto" }}>
+        {events.map((evt) => (
+          <div
+            key={evt.id}
+            style={{
+              display: "grid",
+              gridTemplateColumns:
+                "64px 80px minmax(100px,1fr) minmax(100px,1fr) minmax(100px,1fr) 80px",
+              padding: "10px 20px",
+              borderBottom: "1px solid var(--hairline)",
+              alignItems: "center",
+              transition: "background 0.1s",
+            }}
+            onMouseEnter={(e) =>
+              (e.currentTarget.style.background = "var(--surface-3)")
+            }
+            onMouseLeave={(e) =>
+              (e.currentTarget.style.background = "transparent")
+            }
+          >
+            <span
+              style={{
+                fontFamily: "var(--font-body)",
+                fontSize: 12,
+                color: "var(--ink-5)",
+              }}
+            >
+              {formatTime(evt.timestamp)}
+            </span>
+            <span className={eventPillClass(evt.type)}>
               {EVENT_LABELS[evt.type] ?? evt.type}
             </span>
+            <span
+              style={{
+                fontFamily: "var(--font-body)",
+                fontSize: 13,
+                color: "var(--ink)",
+                fontWeight: 600,
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                whiteSpace: "nowrap",
+              }}
+            >
+              {evt.actor}
+            </span>
+            <span
+              style={{
+                fontFamily: "var(--font-body)",
+                fontSize: 13,
+                color: "var(--ink-3)",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                whiteSpace: "nowrap",
+              }}
+            >
+              {evt.target}
+            </span>
+            <span
+              style={{
+                fontFamily: "var(--font-body)",
+                fontSize: 12,
+                color: "var(--ink-5)",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                whiteSpace: "nowrap",
+              }}
+            >
+              {evt.location}
+            </span>
+            <span
+              style={{
+                fontFamily: "var(--font-body)",
+                fontSize: 13,
+                fontWeight: 700,
+                color:
+                  evt.amount != null ? "var(--accent-blue)" : "var(--ink-5)",
+                textAlign: "right",
+              }}
+            >
+              {evt.amount != null ? `$${evt.amount}` : "—"}
+            </span>
           </div>
-          <div className="adm-feed__actor">{evt.actor}</div>
-          <div className="adm-feed__target">{evt.target}</div>
-          <div className="adm-feed__location">{evt.location}</div>
-          <div className="adm-feed__amount">
-            {evt.amount != null ? `$${evt.amount}` : "—"}
-          </div>
-        </div>
-      ))}
+        ))}
+      </div>
     </div>
   );
 }
@@ -237,7 +459,6 @@ export default function AdminOverviewPage() {
   const [alerts, setAlerts] = useState<AlertItem[]>(MOCK_ALERTS);
   const [lastFetch, setLastFetch] = useState<Date>(new Date());
 
-  // Fetch from API route on mount and every 30s
   useEffect(() => {
     async function refresh() {
       try {
@@ -263,48 +484,86 @@ export default function AdminOverviewPage() {
     metrics.alerts.disputes_open;
 
   return (
-    <>
-      {/* Hero */}
-      <div className="adm-hero">
-        <div className="adm-hero__eyebrow">
-          Push Ops ·{" "}
-          {lastFetch.toLocaleDateString("en-US", {
-            month: "long",
-            day: "numeric",
-            year: "numeric",
-          })}
+    <div style={{ fontFamily: "var(--font-body)", color: "var(--ink)" }}>
+      {/* Critical alert bar */}
+      {totalAlerts > 0 && (
+        <div className="adm-alert-bar">
+          <span className="adm-alert-bar__label">Attention</span>
+          {metrics.alerts.fraud_suspected > 0 && (
+            <span>
+              {metrics.alerts.fraud_suspected} fraud events pending review
+            </span>
+          )}
+          {metrics.alerts.kyc_pending > 0 && (
+            <span>{metrics.alerts.kyc_pending} KYC submissions awaiting</span>
+          )}
+          {metrics.alerts.disputes_open > 0 && (
+            <span>{metrics.alerts.disputes_open} open disputes</span>
+          )}
         </div>
-        <div className="adm-hero__title">Push Ops Console.</div>
+      )}
 
-        <div className="adm-hero__metrics">
-          <div className="adm-hero__metric">
-            <div className="adm-hero__metric-label">Scans · 24h</div>
-            <div className="adm-hero__metric-val">
-              {metrics.last24h.scans.toLocaleString()}
-            </div>
-          </div>
-          <div className="adm-hero__metric">
-            <div className="adm-hero__metric-label">Verifications · 24h</div>
-            <div className="adm-hero__metric-val">
-              {metrics.last24h.verifications}
-            </div>
-          </div>
-          <div className="adm-hero__metric">
-            <div className="adm-hero__metric-label">Applications · 24h</div>
-            <div className="adm-hero__metric-val">
-              {metrics.last24h.applications}
-            </div>
-          </div>
-          <div className="adm-hero__metric">
-            <div className="adm-hero__metric-label">GMV · 24h</div>
-            <div className="adm-hero__metric-val adm-hero__metric-val--accent">
-              {formatCurrency(metrics.last24h.gmv)}
-            </div>
-          </div>
+      {/* Page header */}
+      <div className="adm-page-header">
+        <div>
+          <div className="adm-page-eyebrow">PUSH INTERNAL</div>
+          <h1 className="adm-page-title">Ops Console</h1>
+        </div>
+        <div
+          style={{
+            fontFamily: "var(--font-body)",
+            fontSize: 12,
+            color: "var(--ink-5)",
+            marginTop: 4,
+            whiteSpace: "nowrap",
+            alignSelf: "center",
+          }}
+        >
+          Refreshed{" "}
+          {lastFetch.toLocaleTimeString("en-US", {
+            hour: "2-digit",
+            minute: "2-digit",
+          })}
         </div>
       </div>
 
-      {/* 4 KPI cards */}
+      {/* 24h quick stats row */}
+      <div className="adm-stats-bar" style={{ marginBottom: 32 }}>
+        {[
+          {
+            label: "Scans · 24h",
+            val: metrics.last24h.scans.toLocaleString(),
+            accent: false,
+          },
+          {
+            label: "Verifications · 24h",
+            val: String(metrics.last24h.verifications),
+            accent: false,
+          },
+          {
+            label: "Applications · 24h",
+            val: String(metrics.last24h.applications),
+            accent: false,
+          },
+          {
+            label: "GMV · 24h",
+            val: formatCurrency(metrics.last24h.gmv),
+            accent: true,
+          },
+        ].map(({ label, val, accent }) => (
+          <div key={label} className="adm-stat-item">
+            <div className="adm-stat-item__eyebrow">{label}</div>
+            <div
+              className="adm-stat-item__value"
+              style={{ color: accent ? "var(--accent-blue)" : "var(--ink)" }}
+            >
+              {val}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* KPI row */}
       <div className="adm-kpi-grid">
         <KpiCard
           label="Total GMV — This Month"
@@ -330,17 +589,24 @@ export default function AdminOverviewPage() {
       </div>
 
       {/* Two-column: feed left, alerts+charts right */}
-      <div className="adm-grid">
-        {/* Left: activity feed */}
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "1fr 320px",
+          gap: 24,
+          alignItems: "start",
+        }}
+      >
         <ActivityFeed events={events} />
 
-        {/* Right: alert strip + mini charts */}
         <div>
           <AlertStrip alerts={alerts} />
-          <div className="adm-section-head">7-Day Trends</div>
+          <div className="adm-section-head" style={{ marginTop: 16 }}>
+            7-Day Trends
+          </div>
           <MiniCharts trend={metrics.trend_7d} />
         </div>
       </div>
-    </>
+    </div>
   );
 }

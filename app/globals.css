@@ -351,6 +351,10 @@
   --text-caption: 12px;
   --text-eyebrow: 12px;   /* v9 floor: was 11px */
 
+  /* ---- Grid base unit ---- */
+  --grid:      8px;   /* 8px grid base — all spacing must snap to multiples */
+  --grid-half: 4px;   /* Half-grid for hairlines and chip gaps only */
+
   /* ---- Spacing (8px grid, extended to 128px for v7 bold modular) ---- */
   --space-1:  8px;
   --space-2:  16px;
@@ -368,7 +372,7 @@
   --space-15: 120px;
 
   /* ---- Layout ---- */
-  --content-width: 1180px;
+  --content-width: 1140px;
   --content-width-wide: 1440px;
 
   /* ---- Button shadow — v7 soft elevation (Brutalist 3px hard-edge retired) ---- */
@@ -410,8 +414,10 @@ body {
     radial-gradient(ellipse 800px 400px at 70% 85%, rgba(93, 74, 107, 0.05), transparent 70%),
     linear-gradient(180deg, var(--surface) 0%, var(--surface) 40%, var(--surface-2) 100%);
   background-attachment: fixed;
+  font-size: 20px;
   color: var(--ink-3);
-  line-height: 1.6;
+  line-height: 1.40;
+  letter-spacing: -0.1em;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
@@ -565,7 +571,7 @@ h1 { font-size: var(--text-h1);  font-weight: 800; letter-spacing: -0.06em; }
 h2 { font-size: var(--text-h2);  font-weight: 800; letter-spacing: -0.04em; }
 h3 { font-size: var(--text-h3);  font-weight: 700; letter-spacing: -0.03em; }
 h4 { font-size: var(--text-h4);  font-weight: 600; letter-spacing: -0.02em; }
-p  { font-size: var(--text-body); line-height: 1.6; color: var(--ink-3); }
+p  { font-size: 20px; line-height: 1.40; letter-spacing: -0.1em; color: var(--ink-3); }
 
 /* Display — editorial Black */
 .display-text {
@@ -1621,25 +1627,12 @@ a, button {
 }
 
 /* ============================================================
-   v9 — Bottom-right hover shift (brand interaction signature)
+   v9/v11 — Bottom-right hover shift (brand interaction signature)
    Apply to every clickable element: buttons, cards, badges,
    icon-circles, footer social pills, nav links.
    Exempt: forms, static badges, hairlines, paragraphs, images.
+   Canonical definition is in the v11 Unified Button System section below.
    ============================================================ */
-.click-shift {
-  transition:
-    transform 220ms cubic-bezier(0.34, 1.56, 0.64, 1),
-    box-shadow 220ms ease,
-    background-color 220ms ease;
-  will-change: transform;
-}
-.click-shift:hover  { transform: translate(2px, 2px); }
-.click-shift:active { transform: translate(3px, 3px) scale(0.98); transition-duration: 120ms; }
-.click-shift:focus-visible { outline: none; box-shadow: var(--shadow-focus); }
-.click-shift:disabled { transform: none; cursor: not-allowed; opacity: 0.4; }
-@media (prefers-reduced-motion: reduce) {
-  .click-shift { transition: none !important; transform: none !important; }
-}
 
 /* ============================================================
    v9 — Magvix utility classes
@@ -1952,8 +1945,8 @@ a, button {
 .click-shift {
   transition: transform 180ms cubic-bezier(0.34,1.56,0.64,1);
 }
-.click-shift:hover  { transform: translate(1px,1px); }
-.click-shift:active { transform: translate(2px,2px) scale(0.98); }
+.click-shift:hover  { transform: translate(2px,2px); }
+.click-shift:active { transform: translate(3px,3px) scale(0.98); }
 
 /* ============================================================
    v11 — Eyebrow utility (§ 8.4)

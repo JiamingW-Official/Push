@@ -18,7 +18,7 @@ export function BigNumber({
     deltaDirection === "up"
       ? "var(--success-dark)"
       : deltaDirection === "down"
-        ? "var(--primary)"
+        ? "var(--brand-red)"
         : "var(--graphite)";
 
   return (
@@ -30,7 +30,7 @@ export function BigNumber({
           fontSize: "clamp(48px, 8vw, 120px)",
           lineHeight: 1,
           letterSpacing: "-0.05em",
-          color: "var(--dark)",
+          color: "var(--ink)",
         }}
       >
         {value}

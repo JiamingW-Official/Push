@@ -243,15 +243,40 @@ export default function CampaignNewPage() {
   // ── Render ────────────────────────────────────────────────────
   return (
     <div className="cn-page">
-      <div className="cn-inner cn-inner--wide">
-        <Link href="/merchant/dashboard" className="cn-back">
-          ← Back to dashboard
-        </Link>
+      <div className="cn-inner">
+        {/* ── Page Header ──────────────────────────────────────── */}
+        <div className="cn-page-header">
+          <Link href="/merchant/dashboard" className="cn-back click-shift">
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 16 16"
+              fill="none"
+              aria-hidden="true"
+            >
+              <path
+                d="M10 3L5 8L10 13"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+            Dashboard
+          </Link>
 
-        <h1 className="cn-title">New Campaign</h1>
-        <p className="cn-subtitle">
-          Four steps to launch your creator campaign.
-        </p>
+          <div className="cn-header-title-row">
+            <div>
+              <p className="eyebrow">CAMPAIGN WIZARD</p>
+              <h1 className="cn-title">New Campaign</h1>
+            </div>
+            <div className="cn-step-counter">
+              <span className="cn-step-counter__current">{step}</span>
+              <span className="cn-step-counter__sep">/</span>
+              <span className="cn-step-counter__total">4</span>
+            </div>
+          </div>
+        </div>
 
         <StepIndicator current={step} />
 
@@ -264,51 +289,80 @@ export default function CampaignNewPage() {
           </div>
         )}
 
-        {/* ── Layout: left progress + right form ─────────── */}
+        {/* ── Layout: left rail + right form ───────────────────── */}
         <div className="cn-wizard-layout">
           {/* Left rail — step context */}
-          <aside className="cn-wizard-rail">
-            <div className="cn-rail-inner">
-              <p className="cn-rail-step-label">Step {step} of 4</p>
-              <h2 className="cn-rail-heading">{STEP_LABELS[step]}</h2>
-              <div className="cn-rail-lines">
-                {([1, 2, 3, 4] as Step[]).map((n) => (
-                  <div
-                    key={n}
-                    className={[
-                      "cn-rail-line",
-                      n === step ? "cn-rail-line--active" : "",
-                      n < step ? "cn-rail-line--done" : "",
-                    ]
-                      .filter(Boolean)
-                      .join(" ")}
-                  />
-                ))}
-              </div>
-              <div className="cn-rail-desc">
-                {step === 1 &&
-                  "Name your campaign, pick a category, and describe what creators should do."}
-                {step === 2 &&
-                  "Set your budget, target creator tier, and commission structure."}
-                {step === 3 &&
-                  "Define content type, platform, and when it's due."}
-                {step === 4 && "Review everything before going live."}
-              </div>
+          <aside className="cn-wizard-rail candy-panel">
+            <p
+              className="eyebrow"
+              style={{ color: "var(--ink-3)", marginBottom: 8 }}
+            >
+              STEP {step} OF 4
+            </p>
+            <h2 className="cn-rail-heading">{STEP_LABELS[step]}</h2>
+
+            <div className="cn-rail-lines">
+              {([1, 2, 3, 4] as Step[]).map((n) => (
+                <div
+                  key={n}
+                  className={[
+                    "cn-rail-line",
+                    n === step ? "cn-rail-line--active" : "",
+                    n < step ? "cn-rail-line--done" : "",
+                  ]
+                    .filter(Boolean)
+                    .join(" ")}
+                />
+              ))}
             </div>
+
+            <p className="cn-rail-desc">
+              {step === 1 &&
+                "Name your campaign, pick a category, and describe what creators should do."}
+              {step === 2 &&
+                "Set your budget, target creator tier, and commission structure."}
+              {step === 3 &&
+                "Define content type, platform, and when it's due."}
+              {step === 4 && "Review everything before going live."}
+            </p>
+
+            {/* Mini step list */}
+            <ul className="cn-rail-step-list">
+              {([1, 2, 3, 4] as Step[]).map((n) => (
+                <li
+                  key={n}
+                  className={[
+                    "cn-rail-step-item",
+                    n === step ? "cn-rail-step-item--active" : "",
+                    n < step ? "cn-rail-step-item--done" : "",
+                  ]
+                    .filter(Boolean)
+                    .join(" ")}
+                >
+                  <span className="cn-rail-step-dot" aria-hidden="true" />
+                  {STEP_LABELS[n]}
+                </li>
+              ))}
+            </ul>
           </aside>
 
           {/* Right — form panel */}
-          <div className="cn-panel">
-            {/* ── Step 1: Basics ─────────────────────────── */}
+          <div className="cn-panel candy-panel">
+            {/* ── Step 1: Basics ─────────────────────────────── */}
             <section
               className={`cn-step-section${step === 1 ? " cn-step-section--visible" : ""}`}
               aria-label="Step 1: Basics"
             >
-              <h2 className="cn-section-heading">Campaign Basics</h2>
+              <div className="cn-section-header">
+                <p className="eyebrow">STEP 1</p>
+                <h2 className="cn-section-heading">Campaign Basics</h2>
+              </div>
 
               {/* Campaign Name */}
               <div className="cn-field">
-                <label htmlFor="cw-name">Campaign Name</label>
+                <label className="cn-label" htmlFor="cw-name">
+                  CAMPAIGN NAME
+                </label>
                 <input
                   id="cw-name"
                   type="text"
@@ -335,7 +389,7 @@ export default function CampaignNewPage() {
 
               {/* Category */}
               <div className="cn-field">
-                <label>Category</label>
+                <label className="cn-label">CATEGORY</label>
                 <CategoryPicker
                   value={form.category}
                   onChange={(v) => setField("category", v)}
@@ -345,7 +399,9 @@ export default function CampaignNewPage() {
 
               {/* Description */}
               <div className="cn-field">
-                <label htmlFor="cw-desc">Description</label>
+                <label className="cn-label" htmlFor="cw-desc">
+                  DESCRIPTION
+                </label>
                 <textarea
                   id="cw-desc"
                   maxLength={400}
@@ -375,21 +431,26 @@ export default function CampaignNewPage() {
                   className="btn-primary click-shift"
                   onClick={handleNext}
                 >
-                  Next: Budget &amp; Tier →
+                  Next: Budget &amp; Tier
                 </button>
               </div>
             </section>
 
-            {/* ── Step 2: Budget & Tier ───────────────────── */}
+            {/* ── Step 2: Budget & Tier ───────────────────────── */}
             <section
               className={`cn-step-section${step === 2 ? " cn-step-section--visible" : ""}`}
               aria-label="Step 2: Budget and Tier"
             >
-              <h2 className="cn-section-heading">Budget &amp; Tier</h2>
+              <div className="cn-section-header">
+                <p className="eyebrow">STEP 2</p>
+                <h2 className="cn-section-heading">Budget &amp; Tier</h2>
+              </div>
 
               {/* Budget */}
               <div className="cn-field">
-                <label htmlFor="cw-budget">Campaign Budget ($)</label>
+                <label className="cn-label" htmlFor="cw-budget">
+                  CAMPAIGN BUDGET
+                </label>
                 <div className="cn-input-prefix-wrap">
                   <span className="cn-input-prefix">$</span>
                   <input
@@ -416,8 +477,8 @@ export default function CampaignNewPage() {
 
               {/* Commission Split */}
               <div className="cn-field">
-                <label htmlFor="cw-split">
-                  Creator Commission Split (% of budget to creators)
+                <label className="cn-label" htmlFor="cw-split">
+                  CREATOR COMMISSION SPLIT
                 </label>
                 <div className="cn-split-row">
                   <input
@@ -441,36 +502,48 @@ export default function CampaignNewPage() {
                     {errors.commissionSplit}
                   </span>
                 ) : (
-                  <span className="cn-field-hint">
-                    Creators receive{" "}
-                    <strong>
-                      $
-                      {form.budget
-                        ? (
-                            (parseFloat(form.budget) *
-                              parseInt(form.commissionSplit, 10)) /
-                            100
-                          ).toFixed(0)
-                        : "—"}
-                    </strong>{" "}
-                    · Platform retains{" "}
-                    <strong>
-                      $
-                      {form.budget
-                        ? (
-                            (parseFloat(form.budget) *
-                              (100 - parseInt(form.commissionSplit, 10))) /
-                            100
-                          ).toFixed(0)
-                        : "—"}
-                    </strong>
-                  </span>
+                  <div className="cn-split-summary">
+                    <div className="cn-split-summary-item">
+                      <span className="cn-split-summary-label">
+                        CREATORS RECEIVE
+                      </span>
+                      <span className="cn-split-summary-value">
+                        $
+                        {form.budget
+                          ? (
+                              (parseFloat(form.budget) *
+                                parseInt(form.commissionSplit, 10)) /
+                              100
+                            ).toFixed(0)
+                          : "—"}
+                      </span>
+                    </div>
+                    <div
+                      className="cn-split-summary-divider"
+                      aria-hidden="true"
+                    />
+                    <div className="cn-split-summary-item">
+                      <span className="cn-split-summary-label">
+                        PLATFORM RETAINS
+                      </span>
+                      <span className="cn-split-summary-value">
+                        $
+                        {form.budget
+                          ? (
+                              (parseFloat(form.budget) *
+                                (100 - parseInt(form.commissionSplit, 10))) /
+                              100
+                            ).toFixed(0)
+                          : "—"}
+                      </span>
+                    </div>
+                  </div>
                 )}
               </div>
 
               {/* Creator Tier */}
               <div className="cn-field">
-                <label>Target Creator Tier</label>
+                <label className="cn-label">TARGET CREATOR TIER</label>
                 <TierSelector
                   value={form.tier}
                   onChange={(v) => setField("tier", v)}
@@ -484,29 +557,36 @@ export default function CampaignNewPage() {
                   className="btn-ghost click-shift"
                   onClick={handleBack}
                 >
-                  ← Back
+                  Back
                 </button>
                 <button
                   type="button"
                   className="btn-primary click-shift"
                   onClick={handleNext}
                 >
-                  Next: Deliverables →
+                  Next: Deliverables
                 </button>
               </div>
             </section>
 
-            {/* ── Step 3: Deliverables ────────────────────── */}
+            {/* ── Step 3: Deliverables ──────────────────────────── */}
             <section
               className={`cn-step-section${step === 3 ? " cn-step-section--visible" : ""}`}
               aria-label="Step 3: Deliverables"
             >
-              <h2 className="cn-section-heading">Deliverables</h2>
+              <div className="cn-section-header">
+                <p className="eyebrow">STEP 3</p>
+                <h2 className="cn-section-heading">Deliverables</h2>
+              </div>
 
               {/* Content Type */}
               <div className="cn-field">
-                <label>Content Type</label>
-                <div className="cn-toggle-group">
+                <label className="cn-label">CONTENT TYPE</label>
+                <div
+                  className="cn-toggle-group"
+                  role="group"
+                  aria-label="Content type"
+                >
                   {CONTENT_TYPES.map((ct) => (
                     <button
                       key={ct}
@@ -533,8 +613,12 @@ export default function CampaignNewPage() {
 
               {/* Platform */}
               <div className="cn-field">
-                <label>Platform</label>
-                <div className="cn-toggle-group">
+                <label className="cn-label">PLATFORM</label>
+                <div
+                  className="cn-toggle-group"
+                  role="group"
+                  aria-label="Platform"
+                >
                   {PLATFORMS.map((p) => (
                     <button
                       key={p}
@@ -561,7 +645,9 @@ export default function CampaignNewPage() {
 
               {/* Due Date */}
               <div className="cn-field">
-                <label htmlFor="cw-due">Content Due Date</label>
+                <label className="cn-label" htmlFor="cw-due">
+                  CONTENT DUE DATE
+                </label>
                 <input
                   id="cw-due"
                   type="date"
@@ -581,51 +667,64 @@ export default function CampaignNewPage() {
                   className="btn-ghost click-shift"
                   onClick={handleBack}
                 >
-                  ← Back
+                  Back
                 </button>
                 <button
                   type="button"
                   className="btn-primary click-shift"
                   onClick={handleNext}
                 >
-                  Next: Review →
+                  Review Campaign
                 </button>
               </div>
             </section>
 
-            {/* ── Step 4: Review & Launch ──────────────────── */}
+            {/* ── Step 4: Review & Launch ───────────────────────── */}
             <section
               className={`cn-step-section${step === 4 ? " cn-step-section--visible" : ""}`}
               aria-label="Step 4: Review and Launch"
             >
-              <h2 className="cn-section-heading">Review &amp; Launch</h2>
+              <div className="cn-section-header">
+                <p className="eyebrow">STEP 4</p>
+                <h2 className="cn-section-heading">Review &amp; Launch</h2>
+              </div>
 
+              {/* Summary card */}
               <div className="cn-summary">
-                <p className="cn-summary-heading">Campaign Summary</p>
+                <p
+                  className="eyebrow"
+                  style={{ marginBottom: 16, color: "var(--ink-3)" }}
+                >
+                  CAMPAIGN SUMMARY
+                </p>
 
                 <div className="cn-summary-grid">
                   <div className="cn-summary-item cn-summary-item--full">
-                    <span className="cn-summary-label">Campaign Name</span>
-                    <span className="cn-summary-value">{form.name || "—"}</span>
+                    <span className="cn-summary-label">CAMPAIGN NAME</span>
+                    <span className="cn-summary-value cn-summary-value--large">
+                      {form.name || "—"}
+                    </span>
                   </div>
 
                   <div className="cn-summary-item cn-summary-item--full">
-                    <span className="cn-summary-label">Description</span>
+                    <span className="cn-summary-label">DESCRIPTION</span>
                     <span className="cn-summary-value">
                       {form.description || "—"}
                     </span>
                   </div>
 
+                  <div className="cn-summary-divider" />
+
                   <div className="cn-summary-item">
-                    <span className="cn-summary-label">Category</span>
+                    <span className="cn-summary-label">CATEGORY</span>
                     <span className="cn-summary-value">
                       {form.category ? capitalize(form.category) : "—"}
                     </span>
                   </div>
 
                   <div className="cn-summary-item">
-                    <span className="cn-summary-label">Budget</span>
-                    <span className="cn-summary-value">
+                    <span className="cn-summary-label">BUDGET</span>
+                    <span className="cn-summary-value cn-summary-value--accent">
                       {form.budget
                         ? `$${parseFloat(form.budget).toLocaleString()}`
                         : "—"}
@@ -633,35 +732,35 @@ export default function CampaignNewPage() {
                   </div>
 
                   <div className="cn-summary-item">
-                    <span className="cn-summary-label">Creator Tier</span>
+                    <span className="cn-summary-label">CREATOR TIER</span>
                     <span className="cn-summary-value">
                       {form.tier ? capitalize(form.tier) : "—"}
                     </span>
                   </div>
 
                   <div className="cn-summary-item">
-                    <span className="cn-summary-label">Commission Split</span>
+                    <span className="cn-summary-label">COMMISSION SPLIT</span>
                     <span className="cn-summary-value">
                       {form.commissionSplit}% to creators
                     </span>
                   </div>
 
                   <div className="cn-summary-item">
-                    <span className="cn-summary-label">Content Type</span>
+                    <span className="cn-summary-label">CONTENT TYPE</span>
                     <span className="cn-summary-value">
                       {form.contentType ? capitalize(form.contentType) : "—"}
                     </span>
                   </div>
 
                   <div className="cn-summary-item">
-                    <span className="cn-summary-label">Platform</span>
+                    <span className="cn-summary-label">PLATFORM</span>
                     <span className="cn-summary-value">
                       {form.platform || "—"}
                     </span>
                   </div>
 
                   <div className="cn-summary-item cn-summary-item--full">
-                    <span className="cn-summary-label">Content Due</span>
+                    <span className="cn-summary-label">CONTENT DUE</span>
                     <span className="cn-summary-value">
                       {form.dueDate || "—"}
                     </span>
@@ -676,7 +775,7 @@ export default function CampaignNewPage() {
                   onClick={handleBack}
                   disabled={loading}
                 >
-                  ← Edit
+                  Edit
                 </button>
                 <button
                   type="button"
@@ -694,7 +793,7 @@ export default function CampaignNewPage() {
                       <span className="sr-only">Launching…</span>
                     </>
                   ) : (
-                    "Launch Campaign →"
+                    "Launch Campaign"
                   )}
                 </button>
               </div>

@@ -8,20 +8,7 @@ import {
 } from "@/lib/merchant/mock-locations";
 import "../locations.css";
 
-/* ── SVG Icons ──────────────────────────────────────────────────────────── */
-const IconBack = () => (
-  <svg
-    width="14"
-    height="14"
-    viewBox="0 0 16 16"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="1.5"
-  >
-    <polyline points="10,2 4,8 10,14" />
-  </svg>
-);
-
+/* -- SVG Icons -------------------------------------------------------------------- */
 const IconQR = () => (
   <svg
     width="16"
@@ -46,16 +33,7 @@ const IconQR = () => (
   </svg>
 );
 
-const IconSquare = () => (
-  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-    <rect x="3" y="3" width="18" height="18" rx="2" />
-    <rect x="7" y="7" width="4" height="4" fill="white" />
-    <rect x="13" y="7" width="4" height="4" fill="white" />
-    <rect x="7" y="13" width="4" height="4" fill="white" />
-  </svg>
-);
-
-/* ── Scans by Hour data (mock) ──────────────────────────────────────────── */
+/* -- Mock scan data --------------------------------------------------------------- */
 const HOUR_LABELS = [
   "6a",
   "7a",
@@ -80,25 +58,25 @@ const DOW_LABELS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 const DOW_DATA = [22, 18, 24, 27, 41, 38, 19];
 const DOW_MAX = Math.max(...DOW_DATA);
 
-/* ── StatusBadge ────────────────────────────────────────────────────────── */
-function CampaignStatusBadge({
+/* -- Campaign status chip --------------------------------------------------------- */
+function CampaignStatusChip({
   status,
 }: {
   status: "active" | "closed" | "paused";
 }) {
   return (
-    <span className={`loc-status-badge loc-status-badge--${status}`}>
-      {status}
+    <span className={`loc-campaign-status loc-campaign-status--${status}`}>
+      {status.toUpperCase()}
     </span>
   );
 }
 
-/* ── MiniBarChart ───────────────────────────────────────────────────────── */
+/* -- Mini bar chart --------------------------------------------------------------- */
 function MiniBarChart({
   data,
   labels,
   maxVal,
-  color = "var(--tertiary)",
+  color = "var(--ink-4)",
 }: {
   data: number[];
   labels: string[];
@@ -112,18 +90,18 @@ function MiniBarChart({
           <div
             className="loc-mini-bar"
             style={{
-              height: `${Math.round((v / maxVal) * 100)}%`,
               background: color,
+              height: `${Math.round((v / maxVal) * 100)}%`,
             }}
           />
-          <div className="loc-mini-bar-tick">{labels[i]}</div>
+          <span className="loc-mini-bar-tick">{labels[i]}</span>
         </div>
       ))}
     </div>
   );
 }
 
-/* ── HoursTable (editable) ──────────────────────────────────────────────── */
+/* -- Hours table (editable) ------------------------------------------------------- */
 function HoursTable({ initialHours }: { initialHours: BusinessHours[] }) {
   const [hours, setHours] = useState<BusinessHours[]>(initialHours);
   const [saved, setSaved] = useState(false);
@@ -147,32 +125,72 @@ function HoursTable({ initialHours }: { initialHours: BusinessHours[] }) {
 
   return (
     <div>
-      <div className="loc-hours-table">
+      <div className="loc-table">
         {hours.map((row, i) => (
-          <div key={row.day} className="loc-hours-row">
-            <div className="loc-hours-row__day">{row.day}</div>
+          <div
+            key={row.day}
+            className="loc-hours-row"
+            style={{
+              background: row.closed ? "var(--surface-2)" : "var(--surface)",
+            }}
+          >
+            <span
+              style={{
+                fontFamily: "var(--font-body)",
+                fontSize: 12,
+                fontWeight: 600,
+                color: row.closed ? "var(--ink-4)" : "var(--ink)",
+                width: 40,
+                flexShrink: 0,
+              }}
+            >
+              {row.day}
+            </span>
             <input
               type="time"
               className="loc-hours-input"
+              style={{ opacity: row.closed ? 0.4 : 1 }}
               value={row.open}
               disabled={row.closed}
               onChange={(e) => update(i, "open", e.target.value)}
               aria-label={`${row.day} open time`}
             />
+            <span
+              style={{
+                fontFamily: "var(--font-body)",
+                fontSize: 11,
+                color: "var(--ink-4)",
+              }}
+            >
+              –
+            </span>
             <input
               type="time"
               className="loc-hours-input"
+              style={{ opacity: row.closed ? 0.4 : 1 }}
               value={row.close}
               disabled={row.closed}
               onChange={(e) => update(i, "close", e.target.value)}
               aria-label={`${row.day} close time`}
             />
-            <label className="loc-hours-closed-toggle">
+            <label
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 6,
+                marginLeft: "auto",
+                fontFamily: "var(--font-body)",
+                fontSize: 12,
+                color: "var(--ink-4)",
+                cursor: "pointer",
+              }}
+            >
               <input
                 type="checkbox"
                 checked={row.closed}
                 onChange={(e) => update(i, "closed", e.target.checked)}
                 aria-label={`${row.day} closed`}
+                style={{ accentColor: "var(--ink)", cursor: "pointer" }}
               />
               Closed
             </label>
@@ -180,9 +198,23 @@ function HoursTable({ initialHours }: { initialHours: BusinessHours[] }) {
         ))}
       </div>
       <button
-        className="loc-hours-save-btn"
+        className="click-shift"
         onClick={handleSave}
-        style={saved ? { background: "var(--tertiary)" } : undefined}
+        style={{
+          marginTop: 12,
+          padding: "10px 20px",
+          fontSize: 12,
+          fontFamily: "var(--font-body)",
+          fontWeight: 700,
+          letterSpacing: "0.04em",
+          textTransform: "uppercase",
+          cursor: "pointer",
+          borderRadius: 8,
+          border: "none",
+          background: saved ? "var(--ink-4)" : "var(--brand-red)",
+          color: "var(--snow)",
+          transition: "background 0.2s, transform 180ms",
+        }}
       >
         {saved ? "Saved" : "Save Hours"}
       </button>
@@ -190,7 +222,32 @@ function HoursTable({ initialHours }: { initialHours: BusinessHours[] }) {
   );
 }
 
-/* ── Main Detail Page ───────────────────────────────────────────────────── */
+/* -- Section card wrapper --------------------------------------------------------- */
+function Card({ children }: { children: React.ReactNode }) {
+  return <div className="loc-card-section">{children}</div>;
+}
+
+function SectionHeader({
+  eyebrow,
+  title,
+  action,
+}: {
+  eyebrow: string;
+  title: string;
+  action?: React.ReactNode;
+}) {
+  return (
+    <div className="loc-section-header">
+      <div>
+        <div className="loc-section-eyebrow">{eyebrow}</div>
+        <div className="loc-section-title">{title}</div>
+      </div>
+      {action}
+    </div>
+  );
+}
+
+/* -- Main detail page ------------------------------------------------------------- */
 export default function LocationDetailPage({
   params,
 }: {
@@ -201,41 +258,59 @@ export default function LocationDetailPage({
   const [scanCount, setScanCount] = useState(0);
   const [editMode, setEditMode] = useState(false);
 
-  /* Load location */
   useEffect(() => {
     const loc = MOCK_LOCATIONS.find((l) => l.id === id) ?? null;
     setLocation(loc);
     if (loc) setScanCount(loc.qr_codes.reduce((s, q) => s + q.scans_today, 0));
   }, [id]);
 
-  /* Simulate real-time counter tick */
+  /* Simulate live scan counter */
   useEffect(() => {
     if (!location || location.status !== "open") return;
     const interval = setInterval(() => {
-      /* Random tick every 4–8s to simulate live scans */
-      if (Math.random() > 0.6) {
-        setScanCount((n) => n + 1);
-      }
+      if (Math.random() > 0.6) setScanCount((n) => n + 1);
     }, 5000);
     return () => clearInterval(interval);
   }, [location]);
 
   if (!location) {
     return (
-      <div className="loc-detail">
-        <div
+      <div
+        style={{
+          minHeight: "100svh",
+          background: "var(--surface)",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          flexDirection: "column",
+          gap: 16,
+          fontFamily: "var(--font-body)",
+          padding: "80px 40px",
+          textAlign: "center",
+        }}
+      >
+        <span
           style={{
-            padding: "80px 40px",
-            textAlign: "center",
-            color: "var(--graphite)",
-            fontFamily: "var(--font-body)",
+            fontFamily: "var(--font-display)",
+            fontSize: 24,
+            fontWeight: 700,
+            color: "var(--ink)",
           }}
         >
-          Location not found.{" "}
-          <a href="/merchant/locations" style={{ color: "var(--primary)" }}>
-            Back to locations
-          </a>
-        </div>
+          Location not found.
+        </span>
+        <a
+          href="/merchant/locations"
+          style={{
+            fontFamily: "var(--font-body)",
+            fontSize: 14,
+            color: "var(--accent-blue)",
+            textDecoration: "none",
+            fontWeight: 600,
+          }}
+        >
+          Back to locations
+        </a>
       </div>
     );
   }
@@ -248,273 +323,508 @@ export default function LocationDetailPage({
       {/* Back nav */}
       <div className="loc-back-nav">
         <a href="/merchant/locations" className="loc-back-link">
-          <IconBack /> All Locations
+          ← All Locations
         </a>
       </div>
 
-      {/* Detail Hero */}
-      <div className="loc-detail-hero">
-        <div className="loc-detail-hero__left">
-          <div className="loc-detail-hero__eyebrow">
-            {location.neighborhood} ·{" "}
-            <span
-              style={{
-                color:
-                  location.status === "open"
-                    ? "rgba(245,242,236,0.7)"
-                    : "rgba(245,242,236,0.35)",
-              }}
-            >
-              {location.status === "open" ? "Open Now" : "Currently Closed"}
-            </span>
+      {/* Location header */}
+      <div className="loc-detail-header">
+        <div className="loc-detail-header__inner">
+          <div>
+            <div className="loc-detail-header__eyebrow">
+              {location.neighborhood} ·{" "}
+              <span
+                style={{
+                  color:
+                    location.status === "open"
+                      ? "var(--accent-blue)"
+                      : "var(--ink-4)",
+                }}
+              >
+                {location.status === "open" ? "Open Now" : "Currently Closed"}
+              </span>
+            </div>
+            <h1 className="loc-detail-header__name">{location.name}</h1>
+            <p className="loc-detail-header__address">
+              {location.address}, {location.city}, {location.state}{" "}
+              {location.zip}
+            </p>
           </div>
-          <div className="loc-detail-hero__name">{location.name}</div>
-          <div className="loc-detail-hero__address">
-            {location.address}, {location.city}, {location.state} {location.zip}
-          </div>
-        </div>
-        <div className="loc-detail-hero__actions">
           <button
-            className="loc-edit-btn"
+            className="click-shift"
             onClick={() => setEditMode((v) => !v)}
+            style={{
+              padding: "10px 20px",
+              fontSize: 12,
+              fontFamily: "var(--font-body)",
+              fontWeight: 700,
+              letterSpacing: "0.04em",
+              textTransform: "uppercase",
+              cursor: "pointer",
+              borderRadius: 8,
+              border: "1px solid var(--hairline)",
+              background: editMode ? "var(--ink)" : "transparent",
+              color: editMode ? "var(--snow)" : "var(--ink)",
+              transition: "all 0.15s, transform 180ms",
+            }}
           >
             {editMode ? "Done" : "Edit"}
           </button>
         </div>
       </div>
 
-      {/* Body — two-column layout */}
+      {/* Body — two-column */}
       <div className="loc-detail-body">
-        {/* ── Main column ─────────────────────────────────────────────── */}
+        {/* Main column */}
         <div className="loc-detail-main">
           {/* 1. Live Operations */}
-          <section>
-            <div className="loc-section-header">
-              <div>
-                <div className="loc-section-eyebrow">Real-time</div>
-                <div className="loc-section-title">
-                  <span className="loc-live-dot" />
-                  Live Operations
-                </div>
-              </div>
-            </div>
-
+          <Card>
+            <SectionHeader eyebrow="Real-time" title="Live Operations" />
             <div className="loc-ops-grid">
-              <div className="loc-ops-cell">
-                <div className="loc-ops-cell__label">Today&apos;s Scans</div>
-                <div className="loc-ops-cell__value loc-ops-cell__value--live">
-                  {scanCount}
-                </div>
-                <div className="loc-ops-cell__sub">updating live</div>
-              </div>
-              <div className="loc-ops-cell">
-                <div className="loc-ops-cell__label">Active QR Codes</div>
-                <div className="loc-ops-cell__value">{activeQRs.length}</div>
-                <div className="loc-ops-cell__sub">
-                  of {location.qr_codes.length} total
-                </div>
-              </div>
-              <div className="loc-ops-cell">
-                <div className="loc-ops-cell__label">On Shift Now</div>
-                <div className="loc-ops-cell__value">{onShiftStaff.length}</div>
-                <div className="loc-ops-cell__sub">
-                  of {location.staff_count} staff
-                </div>
-              </div>
-            </div>
-          </section>
-
-          {/* 2. Active QR Codes */}
-          <section>
-            <div className="loc-section-header">
-              <div>
-                <div className="loc-section-eyebrow">Attribution</div>
-                <div className="loc-section-title">QR Codes</div>
-              </div>
-              <button
-                className="loc-card__action-btn loc-card__action-btn--qr"
-                style={{ padding: "8px 14px", fontSize: "11px" }}
-                title="Add new QR Code"
-              >
-                + Add QR
-              </button>
-            </div>
-
-            <div className="loc-qr-list">
-              {location.qr_codes.map((qr) => (
-                <div key={qr.id} className="loc-qr-item">
-                  <div className="loc-qr-item__left">
-                    <div className="loc-qr-icon">
-                      <IconQR />
-                    </div>
-                    <div>
-                      <div className="loc-qr-item__label">{qr.label}</div>
-                      <span
-                        className={`loc-qr-item__active-badge loc-qr-item__active-badge--${qr.active ? "on" : "off"}`}
-                      >
-                        {qr.active ? "Active" : "Inactive"}
-                      </span>
-                    </div>
+              {[
+                {
+                  label: "Today's Scans",
+                  value: scanCount,
+                  sub: "updating live",
+                  live: true,
+                },
+                {
+                  label: "Active QR Codes",
+                  value: activeQRs.length,
+                  sub: `of ${location.qr_codes.length} total`,
+                },
+                {
+                  label: "On Shift Now",
+                  value: onShiftStaff.length,
+                  sub: `of ${location.staff_count} staff`,
+                },
+              ].map((cell) => (
+                <div key={cell.label} className="loc-ops-cell">
+                  <div className="loc-ops-cell__label">{cell.label}</div>
+                  <div
+                    className={`loc-ops-cell__value${cell.live ? " loc-ops-cell__value--live" : ""}`}
+                  >
+                    {cell.live && <span className="loc-live-dot" />}
+                    {cell.value}
                   </div>
-                  <div className="loc-qr-item__right">
-                    <div className="loc-qr-item__today">{qr.scans_today}</div>
-                    <div className="loc-qr-item__total">
+                  <div className="loc-ops-cell__sub">{cell.sub}</div>
+                </div>
+              ))}
+            </div>
+          </Card>
+
+          {/* 2. QR Codes */}
+          <Card>
+            <SectionHeader
+              eyebrow="Attribution"
+              title="QR Codes"
+              action={
+                <button
+                  className="click-shift"
+                  style={{
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: 6,
+                    padding: "8px 14px",
+                    fontSize: 12,
+                    fontFamily: "var(--font-body)",
+                    fontWeight: 700,
+                    letterSpacing: "0.04em",
+                    textTransform: "uppercase",
+                    cursor: "pointer",
+                    borderRadius: 6,
+                    border: "1px solid var(--hairline)",
+                    background: "transparent",
+                    color: "var(--ink-4)",
+                    transition: "transform 180ms",
+                  }}
+                >
+                  + Add QR
+                </button>
+              }
+            />
+            <div className="loc-table">
+              {location.qr_codes.map((qr) => (
+                <div key={qr.id} className="loc-table__row">
+                  <div
+                    style={{
+                      width: 32,
+                      height: 32,
+                      borderRadius: 6,
+                      background: "var(--surface-2)",
+                      border: "1px solid var(--hairline)",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      color: "var(--ink-4)",
+                      flexShrink: 0,
+                    }}
+                  >
+                    <IconQR />
+                  </div>
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div
+                      style={{
+                        fontFamily: "var(--font-body)",
+                        fontSize: 13,
+                        fontWeight: 600,
+                        color: "var(--ink)",
+                        marginBottom: 4,
+                      }}
+                    >
+                      {qr.label}
+                    </div>
+                    <span
+                      className={`loc-qr-badge loc-qr-badge--${qr.active ? "active" : "inactive"}`}
+                    >
+                      {qr.active ? "ACTIVE" : "INACTIVE"}
+                    </span>
+                  </div>
+                  <div style={{ textAlign: "right", flexShrink: 0 }}>
+                    <div
+                      style={{
+                        fontFamily: "var(--font-display)",
+                        fontSize: 20,
+                        fontWeight: 700,
+                        color: "var(--ink)",
+                        lineHeight: 1,
+                      }}
+                    >
+                      {qr.scans_today}
+                    </div>
+                    <div
+                      style={{
+                        fontFamily: "var(--font-body)",
+                        fontSize: 11,
+                        color: "var(--ink-4)",
+                      }}
+                    >
                       {qr.scans_total} total
                     </div>
                   </div>
                 </div>
               ))}
             </div>
-          </section>
+          </Card>
 
-          {/* 3. Campaign History */}
-          <section>
-            <div className="loc-section-header">
-              <div>
-                <div className="loc-section-eyebrow">History</div>
-                <div className="loc-section-title">Campaign History</div>
-              </div>
-              <span
+          {/* 3. Campaign history */}
+          <Card>
+            <SectionHeader
+              eyebrow="History"
+              title="Campaign History"
+              action={
+                <span
+                  style={{
+                    fontFamily: "var(--font-body)",
+                    fontSize: 12,
+                    color: "var(--ink-4)",
+                  }}
+                >
+                  {location.campaign_history.length} campaigns
+                </span>
+              }
+            />
+            <div className="loc-table">
+              {/* Header */}
+              <div
                 style={{
-                  fontSize: "var(--text-caption)",
-                  color: "var(--graphite)",
+                  display: "grid",
+                  gridTemplateColumns: "1fr 100px 80px 80px 100px",
+                  gap: 16,
+                  padding: "10px 16px",
+                  borderBottom: "1px solid var(--hairline)",
+                  background: "var(--surface)",
                 }}
               >
-                {location.campaign_history.length} campaigns
-              </span>
-            </div>
-
-            <div className="loc-campaign-table">
-              <div className="loc-campaign-table__head">
-                <div className="loc-campaign-table__head-cell">Campaign</div>
-                <div className="loc-campaign-table__head-cell">Status</div>
-                <div className="loc-campaign-table__head-cell">Creators</div>
-                <div className="loc-campaign-table__head-cell">Scans</div>
-                <div className="loc-campaign-table__head-cell">Revenue</div>
+                {["Campaign", "Status", "Creators", "Scans", "Revenue"].map(
+                  (h) => (
+                    <div
+                      key={h}
+                      style={{
+                        fontFamily: "var(--font-body)",
+                        fontSize: 12,
+                        fontWeight: 700,
+                        letterSpacing: "0.08em",
+                        textTransform: "uppercase",
+                        color: "var(--ink-4)",
+                      }}
+                    >
+                      {h}
+                    </div>
+                  ),
+                )}
               </div>
               {location.campaign_history.map((c) => (
-                <div key={c.id} className="loc-campaign-table__row">
+                <div
+                  key={c.id}
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns: "1fr 100px 80px 80px 100px",
+                    gap: 16,
+                    padding: "14px 16px",
+                    borderBottom: "1px solid var(--hairline)",
+                    alignItems: "center",
+                    background: "var(--surface)",
+                  }}
+                >
                   <div>
-                    <div className="loc-campaign-table__title">{c.title}</div>
-                    <div className="loc-campaign-table__period">{c.period}</div>
+                    <div
+                      style={{
+                        fontFamily: "var(--font-body)",
+                        fontSize: 13,
+                        fontWeight: 600,
+                        color: "var(--ink)",
+                        marginBottom: 2,
+                      }}
+                    >
+                      {c.title}
+                    </div>
+                    <div
+                      style={{
+                        fontFamily: "var(--font-body)",
+                        fontSize: 11,
+                        color: "var(--ink-4)",
+                      }}
+                    >
+                      {c.period}
+                    </div>
                   </div>
                   <div>
-                    <CampaignStatusBadge status={c.status} />
+                    <CampaignStatusChip status={c.status} />
                   </div>
-                  <div className="loc-campaign-table__num">{c.creators}</div>
-                  <div className="loc-campaign-table__num">{c.scans}</div>
-                  <div className="loc-campaign-table__rev">
+                  <div
+                    style={{
+                      fontFamily: "var(--font-body)",
+                      fontSize: 13,
+                      fontWeight: 600,
+                      color: "var(--ink)",
+                    }}
+                  >
+                    {c.creators}
+                  </div>
+                  <div
+                    style={{
+                      fontFamily: "var(--font-body)",
+                      fontSize: 13,
+                      fontWeight: 600,
+                      color: "var(--ink)",
+                    }}
+                  >
+                    {c.scans}
+                  </div>
+                  <div
+                    style={{
+                      fontFamily: "var(--font-display)",
+                      fontSize: 16,
+                      fontWeight: 700,
+                      color: "var(--ink)",
+                    }}
+                  >
                     ${c.revenue.toLocaleString()}
                   </div>
                 </div>
               ))}
             </div>
-          </section>
+          </Card>
 
           {/* 4. Analytics */}
-          <section>
-            <div className="loc-section-header">
-              <div>
-                <div className="loc-section-eyebrow">Insights</div>
-                <div className="loc-section-title">Analytics</div>
-              </div>
+          <Card>
+            <SectionHeader eyebrow="Insights" title="Analytics" />
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "1fr 1fr",
+                gap: 24,
+              }}
+            >
+              {[
+                {
+                  label: "Scans by Hour",
+                  data: HOUR_DATA,
+                  labels: HOUR_LABELS,
+                  max: HOUR_MAX,
+                  color: "var(--ink-4)",
+                },
+                {
+                  label: "Scans by Day of Week",
+                  data: DOW_DATA,
+                  labels: DOW_LABELS,
+                  max: DOW_MAX,
+                  color: "var(--accent-blue)",
+                },
+              ].map((chart) => (
+                <div
+                  key={chart.label}
+                  style={{
+                    background: "var(--surface)",
+                    border: "1px solid var(--hairline)",
+                    borderRadius: 8,
+                    padding: 16,
+                  }}
+                >
+                  <div
+                    style={{
+                      fontFamily: "var(--font-body)",
+                      fontSize: 12,
+                      fontWeight: 700,
+                      letterSpacing: "0.08em",
+                      textTransform: "uppercase",
+                      color: "var(--ink-4)",
+                      marginBottom: 12,
+                    }}
+                  >
+                    {chart.label}
+                  </div>
+                  <MiniBarChart
+                    data={chart.data}
+                    labels={chart.labels}
+                    maxVal={chart.max}
+                    color={chart.color}
+                  />
+                </div>
+              ))}
             </div>
+          </Card>
 
-            <div className="loc-analytics-row">
-              <div className="loc-chart-box">
-                <div className="loc-chart-box__label">Scans by Hour</div>
-                <MiniBarChart
-                  data={HOUR_DATA}
-                  labels={HOUR_LABELS}
-                  maxVal={HOUR_MAX}
-                  color="var(--tertiary)"
-                />
-              </div>
-              <div className="loc-chart-box">
-                <div className="loc-chart-box__label">Scans by Day of Week</div>
-                <MiniBarChart
-                  data={DOW_DATA}
-                  labels={DOW_LABELS}
-                  maxVal={DOW_MAX}
-                  color="var(--champagne)"
-                />
-              </div>
-            </div>
-          </section>
-
-          {/* 5. Hours */}
-          <section>
-            <div className="loc-section-header">
-              <div>
-                <div className="loc-section-eyebrow">Operations</div>
-                <div className="loc-section-title">Business Hours</div>
-              </div>
-            </div>
+          {/* 5. Business hours */}
+          <Card>
+            <SectionHeader eyebrow="Operations" title="Business Hours" />
             <HoursTable initialHours={location.hours} />
-          </section>
+          </Card>
         </div>
 
-        {/* ── Aside column ─────────────────────────────────────────────── */}
+        {/* Aside column */}
         <div className="loc-detail-aside">
-          {/* Staff on shift */}
-          <section>
-            <div className="loc-section-header">
-              <div>
-                <div className="loc-section-eyebrow">People</div>
-                <div className="loc-section-title">Staff</div>
-              </div>
-            </div>
-
-            <div className="loc-staff-list">
+          {/* Staff */}
+          <Card>
+            <SectionHeader eyebrow="People" title="Staff" />
+            <div className="loc-table" style={{ marginBottom: 12 }}>
               {location.staff.map((member) => (
-                <div key={member.id} className="loc-staff-item">
+                <div key={member.id} className="loc-table__row">
                   <img
                     src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${member.avatar_seed}`}
                     alt={member.name}
-                    className="loc-staff-item__avatar"
-                    width={32}
-                    height={32}
+                    style={{
+                      width: 28,
+                      height: 28,
+                      borderRadius: "50%",
+                      flexShrink: 0,
+                    }}
+                    width={28}
+                    height={28}
                   />
-                  <div className="loc-staff-item__info">
-                    <div className="loc-staff-item__name">{member.name}</div>
-                    <div className="loc-staff-item__role">{member.role}</div>
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div
+                      style={{
+                        fontFamily: "var(--font-body)",
+                        fontSize: 12,
+                        fontWeight: 600,
+                        color: "var(--ink)",
+                        whiteSpace: "nowrap",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                      }}
+                    >
+                      {member.name}
+                    </div>
+                    <div
+                      style={{
+                        fontFamily: "var(--font-body)",
+                        fontSize: 11,
+                        color: "var(--ink-4)",
+                      }}
+                    >
+                      {member.role}
+                    </div>
                   </div>
                   <span
-                    className={`loc-staff-item__shift loc-staff-item__shift--${member.on_shift ? "on" : "off"}`}
+                    className={`loc-shift-chip loc-shift-chip--${member.on_shift ? "on" : "off"}`}
                   >
-                    {member.on_shift ? "On shift" : "Off"}
+                    {member.on_shift ? "ON" : "OFF"}
                   </span>
                 </div>
               ))}
             </div>
-
-            <div className="loc-staff-actions">
-              <button className="loc-staff-btn loc-staff-btn--invite">
-                Invite Staff
-              </button>
-            </div>
-          </section>
+            <button
+              className="click-shift"
+              style={{
+                width: "100%",
+                padding: "10px",
+                fontSize: 12,
+                fontFamily: "var(--font-body)",
+                fontWeight: 700,
+                letterSpacing: "0.04em",
+                textTransform: "uppercase",
+                cursor: "pointer",
+                borderRadius: 8,
+                border: "1px solid var(--hairline)",
+                background: "transparent",
+                color: "var(--ink)",
+                transition: "transform 180ms",
+              }}
+            >
+              Invite Staff
+            </button>
+          </Card>
 
           {/* POS Integration */}
-          <section>
-            <div className="loc-section-header">
-              <div>
-                <div className="loc-section-eyebrow">Integrations</div>
-                <div className="loc-section-title">POS</div>
-              </div>
-            </div>
-
-            <div className="loc-pos-list">
+          <Card>
+            <SectionHeader eyebrow="Integrations" title="POS" />
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                gap: 12,
+                marginBottom: 12,
+              }}
+            >
               {location.pos_integrations.map((pos) => (
-                <div key={pos.name} className="loc-pos-item">
+                <div
+                  key={pos.name}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    gap: 12,
+                    padding: "12px 16px",
+                    background: "var(--surface)",
+                    border: "1px solid var(--hairline)",
+                    borderRadius: 8,
+                  }}
+                >
                   <div>
-                    <div className="loc-pos-item__name">
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 6,
+                        fontFamily: "var(--font-body)",
+                        fontSize: 13,
+                        fontWeight: 600,
+                        color: "var(--ink)",
+                        marginBottom: 3,
+                      }}
+                    >
                       {pos.connected && (
-                        <span className="loc-pos-connected-dot" />
+                        <span
+                          style={{
+                            width: 6,
+                            height: 6,
+                            borderRadius: "50%",
+                            background: "var(--accent-blue)",
+                            flexShrink: 0,
+                          }}
+                        />
                       )}
                       {pos.name}
                     </div>
-                    <div className="loc-pos-item__sync">
+                    <div
+                      style={{
+                        fontFamily: "var(--font-body)",
+                        fontSize: 11,
+                        color: "var(--ink-4)",
+                      }}
+                    >
                       {pos.connected && pos.last_sync
                         ? `Last sync ${new Date(pos.last_sync).toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" })}`
                         : pos.connected
@@ -523,12 +833,27 @@ export default function LocationDetailPage({
                     </div>
                   </div>
                   <button
-                    className={`loc-pos-connect-btn loc-pos-connect-btn--${pos.connected ? "connected" : "disconnected"}`}
-                    onClick={() => {
-                      /* Stub — would open OAuth flow */
-                      alert(
-                        `Connect to ${pos.name} — integration coming soon.`,
-                      );
+                    onClick={() =>
+                      alert(`Connect to ${pos.name} — integration coming soon.`)
+                    }
+                    className="click-shift"
+                    style={{
+                      padding: "7px 14px",
+                      fontSize: 11,
+                      fontFamily: "var(--font-body)",
+                      fontWeight: 700,
+                      letterSpacing: "0.06em",
+                      textTransform: "uppercase",
+                      cursor: "pointer",
+                      borderRadius: 6,
+                      border: pos.connected
+                        ? "1px solid var(--hairline)"
+                        : "none",
+                      background: pos.connected
+                        ? "var(--surface-2)"
+                        : "var(--brand-red)",
+                      color: pos.connected ? "var(--ink-4)" : "var(--snow)",
+                      transition: "transform 180ms",
                     }}
                   >
                     {pos.connected ? "Connected" : "Connect"}
@@ -536,39 +861,24 @@ export default function LocationDetailPage({
                 </div>
               ))}
             </div>
-
-            <div
+            <p
               style={{
-                marginTop: 12,
-                fontSize: "var(--text-caption)",
-                color: "var(--graphite)",
+                fontFamily: "var(--font-body)",
+                fontSize: 12,
+                color: "var(--ink-4)",
                 lineHeight: 1.5,
+                margin: 0,
               }}
             >
               Connect your POS to sync revenue data and attribution
               automatically.
-            </div>
-          </section>
+            </p>
+          </Card>
 
-          {/* Store info card */}
-          <section>
-            <div className="loc-section-header">
-              <div>
-                <div className="loc-section-eyebrow">Contact</div>
-                <div className="loc-section-title">Store Info</div>
-              </div>
-            </div>
-
-            <div
-              style={{
-                background: "var(--surface-elevated)",
-                border: "1px solid rgba(0,48,73,0.1)",
-                padding: "16px",
-                display: "flex",
-                flexDirection: "column",
-                gap: "12px",
-              }}
-            >
+          {/* Store info */}
+          <Card>
+            <SectionHeader eyebrow="Contact" title="Store Info" />
+            <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
               {[
                 { label: "Phone", value: location.phone },
                 { label: "Email", value: location.email },
@@ -580,11 +890,12 @@ export default function LocationDetailPage({
                 <div key={label}>
                   <div
                     style={{
-                      fontSize: "10px",
+                      fontFamily: "var(--font-body)",
+                      fontSize: 10,
                       fontWeight: 700,
-                      letterSpacing: "0.1em",
+                      letterSpacing: "0.12em",
                       textTransform: "uppercase",
-                      color: "var(--graphite)",
+                      color: "var(--ink-4)",
                       marginBottom: 3,
                     }}
                   >
@@ -592,8 +903,9 @@ export default function LocationDetailPage({
                   </div>
                   <div
                     style={{
-                      fontSize: "var(--text-small)",
-                      color: "var(--dark)",
+                      fontFamily: "var(--font-body)",
+                      fontSize: 13,
+                      color: "var(--ink)",
                       fontWeight: 500,
                     }}
                   >
@@ -602,7 +914,7 @@ export default function LocationDetailPage({
                 </div>
               ))}
             </div>
-          </section>
+          </Card>
         </div>
       </div>
     </div>
