@@ -243,20 +243,23 @@ body:has(.us-rail) .dh-main:has(> .cd-page) {
    ══════════════════════════════════════════════════════════ */
 
 .cd-card {
+  /* White-bg panel: warm taupe-gray tint makes every card a distinct surface.
+     Outer hairline (box-shadow spread) + specular inset = iOS 26 glass language. */
   background:
-    radial-gradient(ellipse at 25% 0%, rgba(255, 255, 255, 0.55) 0%, rgba(255, 255, 255, 0) 55%),
-    radial-gradient(ellipse at 90% 100%, rgba(255, 255, 255, 0.18) 0%, rgba(255, 255, 255, 0) 60%),
-    rgba(255, 255, 255, 0.22);
-  -webkit-backdrop-filter: blur(32px) saturate(180%);
-  backdrop-filter: blur(32px) saturate(180%);
-  border: 0.5px solid rgba(255, 255, 255, 0.40);
+    radial-gradient(ellipse at 22% 0%, rgba(255, 255, 255, 0.72) 0%, rgba(255, 255, 255, 0) 50%),
+    rgba(192, 187, 180, 0.13);
+  -webkit-backdrop-filter: blur(20px) saturate(130%);
+  backdrop-filter: blur(20px) saturate(130%);
+  border: 0.5px solid rgba(255, 255, 255, 0.78);
   border-radius: var(--r-xl);
   padding: 24px;
   position: relative;
   box-shadow:
-    0 2px 6px rgba(10, 10, 10, 0.05),
-    inset 0 1px 0 rgba(255, 255, 255, 0.50),
-    inset 0 -1px 0 rgba(10, 10, 10, 0.04);
+    0 0 0 0.5px rgba(0, 0, 0, 0.06),
+    0 4px 16px rgba(0, 0, 0, 0.08),
+    0 1px 4px rgba(0, 0, 0, 0.04),
+    inset 0 1.5px 0 rgba(255, 255, 255, 0.92),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.04);
   display: flex;
   flex-direction: column;
   min-height: 0;
@@ -474,17 +477,8 @@ body:has(.us-rail) .dh-main:has(> .cd-page) {
   margin-top: auto;
 }
 
-.cd-live-card--overdue::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 4px;
-  background: var(--brand-red);
-  border-radius: var(--r-xl) var(--r-xl) 0 0;
-  pointer-events: none;
-}
+/* overdue top-bar removed per design — overdue state communicated via
+   eyebrow text + dot color only */
 
 /* Eyebrow — canonical Mono for LIVE; Magvix Italic for OVERDUE */
 .cd-live-eyebrow {
@@ -2315,9 +2309,9 @@ body:has(.us-rail) .dh-main:has(> .cd-page) {
 /* ── OVERDUE card halo flash ────────────────────────────── */
 
 @keyframes cd-live-halo {
-  0%   { box-shadow: 0 2px 6px rgba(10,10,10,0.05), inset 0 1px 0 rgba(255,255,255,0.50), inset 0 -1px 0 rgba(10,10,10,0.04), 0 0 0 0   rgba(193, 18, 31, 0.3); }
-  50%  { box-shadow: 0 2px 6px rgba(10,10,10,0.05), inset 0 1px 0 rgba(255,255,255,0.50), inset 0 -1px 0 rgba(10,10,10,0.04), 0 0 0 8px  rgba(193, 18, 31, 0.1); }
-  100% { box-shadow: 0 2px 6px rgba(10,10,10,0.05), inset 0 1px 0 rgba(255,255,255,0.50), inset 0 -1px 0 rgba(10,10,10,0.04), 0 0 0 12px rgba(193, 18, 31, 0);   }
+  0%   { box-shadow: 0 0 0 0.5px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.08), 0 1px 4px rgba(0,0,0,0.04), inset 0 1.5px 0 rgba(255,255,255,0.92), inset 0 -1px 0 rgba(0,0,0,0.04), 0 0 0 0   rgba(193,18,31,0.28); }
+  50%  { box-shadow: 0 0 0 0.5px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.08), 0 1px 4px rgba(0,0,0,0.04), inset 0 1.5px 0 rgba(255,255,255,0.92), inset 0 -1px 0 rgba(0,0,0,0.04), 0 0 0 8px  rgba(193,18,31,0.10); }
+  100% { box-shadow: 0 0 0 0.5px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.08), 0 1px 4px rgba(0,0,0,0.04), inset 0 1.5px 0 rgba(255,255,255,0.92), inset 0 -1px 0 rgba(0,0,0,0.04), 0 0 0 12px rgba(193,18,31,0);   }
 }
 
 .cd-live-card--halo {
