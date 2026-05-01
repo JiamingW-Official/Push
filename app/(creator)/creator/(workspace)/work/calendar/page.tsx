@@ -1,13 +1,12 @@
 "use client";
 
-import { useState, useMemo, useRef, useCallback } from "react";
+import { useState, useMemo, useRef, useCallback, useEffect } from "react";
 import Link from "next/link";
 import "./calendar.css";
 import {
   MOCK_EVENTS,
   CalendarEvent,
   EventType,
-  EVENT_TYPE_COLORS,
   EVENT_TYPE_LABELS,
   countDeadlinesInMonth,
 } from "@/lib/calendar/mock-events";
@@ -47,7 +46,10 @@ const MONTH_NAMES = [
 /* ── Helpers ─────────────────────────────────────────────── */
 
 function toYMD(d: Date): string {
-  return d.toISOString().slice(0, 10);
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${y}-${m}-${day}`;
 }
 
 function todayYMD(): string {
@@ -62,7 +64,7 @@ function buildMonthGrid(year: number, month: number): (Date | null)[] {
   const first = new Date(year, month, 1);
   const last = new Date(year, month + 1, 0);
   const cells: (Date | null)[] = [];
-  // week starts Monday: offset = (getDay() + 6) % 7
+  // Week starts Monday: offset = (getDay() + 6) % 7
   const offset = (first.getDay() + 6) % 7;
   for (let i = 0; i < offset; i++) cells.push(null);
   for (let d = 1; d <= last.getDate(); d++)
@@ -73,7 +75,9 @@ function buildMonthGrid(year: number, month: number): (Date | null)[] {
 
 function buildWeekDates(anchorDate: Date): Date[] {
   const start = new Date(anchorDate);
-  start.setDate(anchorDate.getDate() - anchorDate.getDay());
+  // Week starts Monday
+  const offset = (anchorDate.getDay() + 6) % 7;
+  start.setDate(anchorDate.getDate() - offset);
   return Array.from({ length: 7 }, (_, i) => {
     const d = new Date(start);
     d.setDate(start.getDate() + i);
@@ -101,6 +105,24 @@ function getDOW(dateStr: string): string {
   const [y, m, d] = dateStr.split("-").map(Number);
   const date = new Date(y, m - 1, d);
   return DOW_LABELS_FULL[date.getDay()];
+}
+
+/* Locked 12-hour time format for consistency across all views.
+   Source data uses 24h "HH:MM"; UI always renders "h:mm a". */
+function fmtTime(time?: string): string {
+  if (!time) return "All day";
+  const [hh, mm] = time.split(":").map(Number);
+  if (Number.isNaN(hh)) return time;
+  const period = hh >= 12 ? "PM" : "AM";
+  const h12 = hh % 12 === 0 ? 12 : hh % 12;
+  const minutes = String(mm ?? 0).padStart(2, "0");
+  return `${h12}:${minutes} ${period}`;
+}
+
+/* Truncate event titles for tight contexts (cell pills, week chips). */
+function truncate(text: string, max: number): string {
+  if (text.length <= max) return text;
+  return text.slice(0, Math.max(0, max - 1)).trimEnd() + "…";
 }
 
 function downloadICS(events: CalendarEvent[]) {
@@ -138,34 +160,6 @@ function estimateMonthEarnings(events: CalendarEvent[], ym: string): number {
     .reduce((sum, e) => sum + (e.payout ?? 0), 0);
 }
 
-function dotColor(type: EventType): string {
-  return EVENT_TYPE_COLORS[type];
-}
-
-/* v11 event pill color mapping — deadlines use brand-red, active campaigns use accent-blue */
-function eventPillStyle(type: EventType): React.CSSProperties {
-  const map: Record<EventType, { bg: string; color: string }> = {
-    deadline: { bg: "var(--brand-red)", color: "var(--snow)" },
-    review: { bg: "var(--surface-2)", color: "var(--ink-3)" },
-    payment: { bg: "#bfa170", color: "var(--snow)" },
-    milestone: { bg: "var(--accent-blue)", color: "var(--snow)" },
-  };
-  return {
-    background: map[type].bg,
-    color: map[type].color,
-    fontSize: 10,
-    fontFamily: "var(--font-body)",
-    fontWeight: 600,
-    padding: "2px 6px",
-    borderRadius: 4,
-    overflow: "hidden",
-    textOverflow: "ellipsis",
-    whiteSpace: "nowrap",
-    display: "block",
-    marginBottom: 2,
-  };
-}
-
 /* ── Side Panel ──────────────────────────────────────────── */
 
 interface SidePanelProps {
@@ -195,32 +189,13 @@ function SidePanel({
 }: SidePanelProps) {
   if (!selectedDate) {
     return (
-      <div
-        style={{
-          background: "var(--surface-2)",
-          border: "1px solid var(--hairline)",
-          borderRadius: 10,
-          padding: "32px 24px",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          minHeight: 200,
-        }}
-      >
-        <p
-          style={{
-            fontFamily: "var(--font-body)",
-            fontSize: 13,
-            color: "var(--ink-4)",
-            textAlign: "center",
-            lineHeight: 1.6,
-          }}
-        >
-          Click any day
+      <aside className="cal-side cal-side--empty">
+        <p className="cal-side__hint">
+          Select any day
           <br />
-          to see events
+          to view events
         </p>
-      </div>
+      </aside>
     );
   }
 
@@ -228,192 +203,88 @@ function SidePanel({
   const isToday = selectedDate === todayStr;
 
   return (
-    <div
-      style={{
-        background: "var(--surface-2)",
-        border: "1px solid var(--hairline)",
-        borderRadius: 10,
-        overflow: "hidden",
-        minWidth: 260,
-      }}
+    <aside
+      className="cal-side"
+      aria-label={`Events on ${formatDisplayDate(selectedDate)}`}
     >
-      {/* Header */}
-      <div
-        style={{
-          padding: "16px 20px",
-          borderBottom: "1px solid var(--hairline)",
-          background: "var(--snow)",
-        }}
-      >
-        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-          <span
-            style={{
-              fontFamily: "var(--font-display)",
-              fontWeight: 700,
-              fontSize: 18,
-              color: "var(--ink)",
-            }}
-          >
+      <header className="cal-side__head">
+        <div className="cal-side__date-row">
+          <span className="cal-side__date">
             {formatShortDate(selectedDate)}
           </span>
-          {isToday && (
-            <span
-              style={{
-                padding: "2px 8px",
-                borderRadius: 4,
-                background: "var(--brand-red)",
-                color: "var(--snow)",
-                fontFamily: "var(--font-body)",
-                fontSize: 10,
-                fontWeight: 700,
-                textTransform: "uppercase",
-                letterSpacing: "0.06em",
-              }}
-            >
-              Today
-            </span>
-          )}
+          {isToday && <span className="cal-tag cal-tag--today">Today</span>}
         </div>
-        <div
-          style={{
-            fontFamily: "var(--font-body)",
-            fontSize: 12,
-            color: "var(--ink-4)",
-            marginTop: 2,
-          }}
-        >
-          {getDOW(selectedDate)}
-        </div>
-      </div>
+        <div className="cal-side__dow">{getDOW(selectedDate)}</div>
+      </header>
 
-      {/* Events */}
-      <div style={{ padding: "12px 20px" }}>
+      <div className="cal-side__body">
         {dayEvents.length === 0 ? (
-          <p
-            style={{
-              fontFamily: "var(--font-body)",
-              fontSize: 13,
-              color: "var(--ink-4)",
-              padding: "16px 0",
-              textAlign: "center",
-            }}
-          >
-            No events scheduled.
-            <br />
-            <span style={{ opacity: 0.6 }}>Free day!</span>
-          </p>
+          <div className="cal-side__empty">
+            <p className="cal-side__empty-line">No events scheduled</p>
+            <p className="cal-side__empty-sub">
+              Free day &mdash; rest, reset, repeat
+            </p>
+          </div>
         ) : (
           dayEvents.map((ev) => (
-            <div
+            <article
               key={ev.id}
-              style={{
-                padding: "12px 0",
-                borderBottom: "1px solid var(--hairline)",
-              }}
+              className={`cal-side__event event-type--${ev.type}${ev.done ? " is-done" : ""}`}
             >
-              {/* Type chip */}
-              <span
-                style={{
-                  display: "inline-block",
-                  padding: "2px 8px",
-                  borderRadius: 4,
-                  background: dotColor(ev.type),
-                  color: "var(--snow)",
-                  fontFamily: "var(--font-body)",
-                  fontSize: 10,
-                  fontWeight: 700,
-                  textTransform: "uppercase",
-                  letterSpacing: "0.06em",
-                  marginBottom: 6,
-                }}
-              >
-                {EVENT_TYPE_LABELS[ev.type]}
-              </span>
+              <header className="cal-side__event-head">
+                <span className={`cal-chip event-type--${ev.type}`}>
+                  {EVENT_TYPE_LABELS[ev.type]}
+                </span>
+                {ev.time && (
+                  <span className="cal-side__event-time">
+                    {fmtTime(ev.time)}
+                  </span>
+                )}
+              </header>
 
-              <div
-                style={{
-                  fontFamily: "var(--font-body)",
-                  fontWeight: 700,
-                  fontSize: 14,
-                  color: "var(--ink)",
-                  marginBottom: 4,
-                }}
-              >
-                {ev.title}
-              </div>
+              <h3 className="cal-side__event-title">{ev.title}</h3>
 
-              {ev.time && (
-                <div
-                  style={{
-                    fontFamily: "var(--font-body)",
-                    fontSize: 12,
-                    color: "var(--ink-3)",
-                    marginBottom: 2,
-                  }}
-                >
-                  {ev.time}
-                </div>
-              )}
-              <div
-                style={{
-                  fontFamily: "var(--font-body)",
-                  fontSize: 12,
-                  color: "var(--ink-3)",
-                  marginBottom: 4,
-                }}
-              >
-                {ev.merchantName} · {ev.campaignTitle}
-              </div>
+              <p className="cal-side__event-meta">
+                {ev.merchantName} <span className="cal-dot-sep">&middot;</span>{" "}
+                {ev.campaignTitle}
+              </p>
+
               {ev.payout ? (
-                <div
-                  style={{
-                    fontFamily: "var(--font-display)",
-                    fontWeight: 700,
-                    fontSize: 16,
-                    color: "var(--ink)",
-                    marginBottom: 8,
-                  }}
-                >
-                  ${ev.payout}
-                </div>
+                <p className="cal-side__event-payout">
+                  <span className="cal-side__event-payout-eyebrow">PAYOUT</span>
+                  <span className="cal-side__event-payout-num">
+                    ${ev.payout}
+                  </span>
+                </p>
               ) : null}
 
-              {/* Actions */}
-              <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+              <div className="cal-side__actions">
                 {ev.postUrl && !ev.done && (
                   <Link
                     href={ev.postUrl}
-                    className="btn-primary click-shift"
-                    style={{ fontSize: 12, padding: "4px 12px" }}
+                    className="btn-primary click-shift cal-btn-sm"
                   >
                     Submit
                   </Link>
                 )}
                 <button
-                  className={ev.done ? "btn-ghost" : "btn-ghost click-shift"}
+                  className="btn-ghost click-shift cal-btn-sm"
                   onClick={() => onMarkDone(ev.id)}
                   disabled={ev.done}
-                  style={{
-                    fontSize: 12,
-                    padding: "4px 12px",
-                    opacity: ev.done ? 0.5 : 1,
-                  }}
                 >
                   {ev.done ? "Done" : "Mark done"}
                 </button>
                 {!ev.done && (
                   <>
                     <button
-                      className="btn-ghost click-shift"
+                      className="btn-ghost click-shift cal-btn-sm"
                       onClick={() => onSnooze(ev.id)}
-                      style={{ fontSize: 12, padding: "4px 12px" }}
                     >
                       Snooze
                     </button>
                     <button
-                      className="btn-ghost click-shift"
+                      className="btn-ghost click-shift cal-btn-sm"
                       onClick={() => onAddNote(ev.id)}
-                      style={{ fontSize: 12, padding: "4px 12px" }}
                     >
                       Note
                     </button>
@@ -422,7 +293,7 @@ function SidePanel({
               </div>
 
               {noteTarget === ev.id && (
-                <div style={{ marginTop: 8 }}>
+                <div className="cal-note-wrap">
                   <textarea
                     className="cal-note-input"
                     rows={2}
@@ -430,23 +301,9 @@ function SidePanel({
                     value={noteValue}
                     onChange={(e) => onNoteChange(e.target.value)}
                     autoFocus
-                    style={{
-                      width: "100%",
-                      border: "1px solid var(--hairline)",
-                      borderRadius: 8,
-                      padding: "8px 12px",
-                      fontFamily: "var(--font-body)",
-                      fontSize: 13,
-                      color: "var(--ink)",
-                      background: "var(--snow)",
-                      resize: "none",
-                      outline: "none",
-                      boxSizing: "border-box",
-                    }}
                   />
                   <button
-                    className="btn-secondary click-shift"
-                    style={{ marginTop: 6, fontSize: 12, padding: "4px 12px" }}
+                    className="btn-secondary click-shift cal-btn-sm"
                     onClick={onNoteSave}
                   >
                     Save note
@@ -454,27 +311,13 @@ function SidePanel({
                 </div>
               )}
               {ev.note && noteTarget !== ev.id && (
-                <p
-                  style={{
-                    fontFamily: "var(--font-body)",
-                    fontSize: 12,
-                    color: "var(--ink-3)",
-                    fontStyle: "italic",
-                    marginTop: 6,
-                    padding: "6px 10px",
-                    background: "var(--surface)",
-                    borderRadius: 6,
-                    border: "1px solid var(--hairline)",
-                  }}
-                >
-                  Note: {ev.note}
-                </p>
+                <p className="cal-note-saved">Note: {ev.note}</p>
               )}
-            </div>
+            </article>
           ))
         )}
       </div>
-    </div>
+    </aside>
   );
 }
 
@@ -494,43 +337,35 @@ function ActionButtons({
   onAddNote,
 }: ActionButtonsProps) {
   return (
-    <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginTop: 8 }}>
+    <div className="cal-actions-row">
       {event.postUrl && !event.done && (
         <Link
           href={event.postUrl}
-          className="btn-primary click-shift"
-          style={{ fontSize: 11, padding: "3px 10px" }}
+          className="btn-primary click-shift cal-btn-sm"
         >
-          Submit content
+          Submit
         </Link>
       )}
       <button
-        className={event.done ? "btn-ghost" : "btn-ghost click-shift"}
+        className="btn-ghost click-shift cal-btn-sm"
         onClick={() => onMarkDone(event.id)}
         disabled={event.done}
-        style={{
-          fontSize: 11,
-          padding: "3px 10px",
-          opacity: event.done ? 0.5 : 1,
-        }}
       >
         {event.done ? "Done" : "Mark done"}
       </button>
       {!event.done && (
         <>
           <button
-            className="btn-ghost click-shift"
+            className="btn-ghost click-shift cal-btn-sm"
             onClick={() => onSnooze(event.id)}
-            style={{ fontSize: 11, padding: "3px 10px" }}
           >
             Snooze
           </button>
           <button
-            className="btn-ghost click-shift"
+            className="btn-ghost click-shift cal-btn-sm"
             onClick={() => onAddNote(event.id)}
-            style={{ fontSize: 11, padding: "3px 10px" }}
           >
-            Add note
+            Note
           </button>
         </>
       )}
@@ -577,161 +412,85 @@ function DayPopover({
     return { top: Math.max(8, top), left: Math.max(8, left) };
   });
 
+  // Esc closes; trap stays light.
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [onClose]);
+
   return (
     <>
-      <div
-        className="cal-popover-backdrop"
-        onClick={onClose}
-        style={{
-          position: "fixed",
-          inset: 0,
-          zIndex: 40,
-        }}
-      />
+      <div className="cal-pop__backdrop" onClick={onClose} />
       <div
         ref={popRef}
+        className="cal-pop"
         role="dialog"
         aria-label={`Events for ${formatDisplayDate(dateStr)}`}
-        style={{
-          position: "fixed",
-          top: pos.top,
-          left: pos.left,
-          width: 320,
-          zIndex: 50,
-          background: "var(--snow)",
-          border: "1px solid var(--hairline)",
-          borderRadius: 10,
-          boxShadow: "0 8px 32px rgba(0,0,0,0.12)",
-          overflow: "hidden",
-        }}
+        style={{ top: pos.top, left: pos.left }}
       >
-        {/* Popover header */}
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            padding: "14px 16px",
-            borderBottom: "1px solid var(--hairline)",
-          }}
-        >
-          <span
-            style={{
-              fontFamily: "var(--font-display)",
-              fontWeight: 700,
-              fontSize: 15,
-              color: "var(--ink)",
-            }}
-          >
-            {formatDisplayDate(dateStr)}
-          </span>
+        <header className="cal-pop__head">
+          <span className="cal-pop__date">{formatDisplayDate(dateStr)}</span>
           <button
+            type="button"
             onClick={onClose}
             aria-label="Close"
-            style={{
-              width: 28,
-              height: 28,
-              borderRadius: 6,
-              border: "1px solid var(--hairline)",
-              background: "var(--surface-2)",
-              color: "var(--ink)",
-              cursor: "pointer",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              fontFamily: "var(--font-body)",
-              fontSize: 14,
-            }}
+            className="cal-pop__close"
           >
-            &times;
-          </button>
-        </div>
-
-        <div
-          style={{ padding: "12px 16px", maxHeight: 400, overflowY: "auto" }}
-        >
-          {events.length === 0 ? (
-            <p
-              style={{
-                fontFamily: "var(--font-body)",
-                fontSize: 13,
-                color: "var(--ink-4)",
-                textAlign: "center",
-                padding: "16px 0",
-              }}
+            <svg
+              width="14"
+              height="14"
+              viewBox="0 0 14 14"
+              fill="none"
+              aria-hidden
             >
-              No events today.
-            </p>
+              <path
+                d="M3 3 L11 11 M11 3 L3 11"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+              />
+            </svg>
+          </button>
+        </header>
+
+        <div className="cal-pop__body">
+          {events.length === 0 ? (
+            <p className="cal-pop__empty">No events today.</p>
           ) : (
             events.map((ev) => (
-              <div
+              <article
                 key={ev.id}
-                style={{
-                  paddingBottom: 12,
-                  marginBottom: 12,
-                  borderBottom: "1px solid var(--hairline)",
-                }}
+                className={`cal-pop__event event-type--${ev.type}${ev.done ? " is-done" : ""}`}
               >
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 8,
-                    marginBottom: 4,
-                  }}
-                >
+                <header className="cal-pop__event-head">
                   <span
-                    style={{
-                      width: 8,
-                      height: 8,
-                      borderRadius: "50%",
-                      background: dotColor(ev.type),
-                      flexShrink: 0,
-                    }}
+                    className={`cal-dot event-type--${ev.type}`}
+                    aria-hidden
                   />
-                  <span
-                    style={{
-                      fontFamily: "var(--font-body)",
-                      fontWeight: 700,
-                      fontSize: 13,
-                      color: "var(--ink)",
-                    }}
-                  >
-                    {ev.title}
-                  </span>
-                </div>
+                  <h3 className="cal-pop__event-title">{ev.title}</h3>
+                </header>
+
                 {ev.time && (
-                  <div
-                    style={{
-                      fontFamily: "var(--font-body)",
-                      fontSize: 12,
-                      color: "var(--ink-3)",
-                      marginBottom: 2,
-                      paddingLeft: 16,
-                    }}
-                  >
-                    {ev.time}
-                  </div>
+                  <p className="cal-pop__event-time">{fmtTime(ev.time)}</p>
                 )}
-                <div
-                  style={{
-                    fontFamily: "var(--font-body)",
-                    fontSize: 12,
-                    color: "var(--ink-3)",
-                    paddingLeft: 16,
-                    marginBottom: 4,
-                  }}
-                >
-                  {ev.merchantName} · {ev.campaignTitle}
-                </div>
+                <p className="cal-pop__event-meta">
+                  {ev.merchantName}{" "}
+                  <span className="cal-dot-sep">&middot;</span>{" "}
+                  {ev.campaignTitle}
+                </p>
+
                 <ActionButtons
                   event={ev}
                   onMarkDone={onMarkDone}
                   onSnooze={onSnooze}
                   onAddNote={onAddNote}
                 />
+
                 {noteTarget === ev.id && (
-                  <div style={{ paddingLeft: 17, marginTop: 8 }}>
+                  <div className="cal-note-wrap">
                     <textarea
                       className="cal-note-input"
                       rows={2}
@@ -739,27 +498,9 @@ function DayPopover({
                       value={noteValue}
                       onChange={(e) => onNoteChange(e.target.value)}
                       autoFocus
-                      style={{
-                        width: "100%",
-                        border: "1px solid var(--hairline)",
-                        borderRadius: 8,
-                        padding: "8px 12px",
-                        fontFamily: "var(--font-body)",
-                        fontSize: 13,
-                        color: "var(--ink)",
-                        background: "var(--snow)",
-                        resize: "none",
-                        outline: "none",
-                        boxSizing: "border-box",
-                      }}
                     />
                     <button
-                      className="btn-secondary click-shift"
-                      style={{
-                        marginTop: 6,
-                        fontSize: 12,
-                        padding: "4px 12px",
-                      }}
+                      className="btn-secondary click-shift cal-btn-sm"
                       onClick={onNoteSave}
                     >
                       Save note
@@ -767,20 +508,9 @@ function DayPopover({
                   </div>
                 )}
                 {ev.note && noteTarget !== ev.id && (
-                  <p
-                    style={{
-                      fontFamily: "var(--font-body)",
-                      fontSize: 12,
-                      color: "var(--ink-3)",
-                      fontStyle: "italic",
-                      marginTop: 6,
-                      paddingLeft: 16,
-                    }}
-                  >
-                    Note: {ev.note}
-                  </p>
+                  <p className="cal-note-saved">Note: {ev.note}</p>
                 )}
-              </div>
+              </article>
             ))
           )}
         </div>
@@ -814,6 +544,9 @@ export default function CreatorCalendarPage() {
   const [noteTarget, setNoteTarget] = useState<string | null>(null);
   const [noteValue, setNoteValue] = useState("");
 
+  // Grid ref for arrow-key navigation
+  const gridRef = useRef<HTMLDivElement>(null);
+
   /* ── Derived ─────────────────────────────────────────── */
 
   const ym = formatYearMonth(year, month);
@@ -845,9 +578,30 @@ export default function CreatorCalendarPage() {
     return Object.entries(grouped).sort(([a], [b]) => a.localeCompare(b));
   }, [events, ym]);
 
+  // Week-ahead spotlight: next 7 days starting today
+  const weekAheadStats = useMemo(() => {
+    const start = new Date();
+    start.setHours(0, 0, 0, 0);
+    const end = new Date(start);
+    end.setDate(end.getDate() + 6);
+    const range = events.filter((e) => {
+      const d = new Date(e.date + "T00:00:00");
+      return d >= start && d <= end && !e.done;
+    });
+    return {
+      total: range.length,
+      deadlines: range.filter((e) => e.type === "deadline").length,
+      next:
+        range
+          .slice()
+          .sort((a, b) => a.date.localeCompare(b.date))
+          .find((e) => e.type === "deadline") ?? null,
+    };
+  }, [events]);
+
   /* ── Handlers ────────────────────────────────────────── */
 
-  function prevPeriod() {
+  const prevPeriod = useCallback(() => {
     if (view === "week") {
       const d = new Date(weekAnchor);
       d.setDate(d.getDate() - 7);
@@ -858,9 +612,9 @@ export default function CreatorCalendarPage() {
         setMonth(11);
       } else setMonth((m) => m - 1);
     }
-  }
+  }, [view, weekAnchor, month]);
 
-  function nextPeriod() {
+  const nextPeriod = useCallback(() => {
     if (view === "week") {
       const d = new Date(weekAnchor);
       d.setDate(d.getDate() + 7);
@@ -871,7 +625,7 @@ export default function CreatorCalendarPage() {
         setMonth(0);
       } else setMonth((m) => m + 1);
     }
-  }
+  }, [view, weekAnchor, month]);
 
   function goToday() {
     setYear(today.getFullYear());
@@ -894,13 +648,64 @@ export default function CreatorCalendarPage() {
   }
 
   function handleCellClick(dateStr: string, el: HTMLElement) {
-    // On large screens: use side panel. On small: popover.
-    if (window.innerWidth >= 1024) {
+    // Large screens: side panel toggle. Small: popover.
+    if (typeof window !== "undefined" && window.innerWidth >= 1024) {
       setSelectedDate((prev) => (prev === dateStr ? null : dateStr));
     } else {
       openPopover(dateStr, el);
     }
   }
+
+  // Arrow-key navigation across month grid
+  const handleGridKeyDown = useCallback(
+    (e: React.KeyboardEvent<HTMLDivElement>) => {
+      if (view !== "month") return;
+      const focused = document.activeElement as HTMLElement | null;
+      const cellAttr = focused?.getAttribute("data-date");
+      if (!cellAttr) return;
+
+      let delta = 0;
+      switch (e.key) {
+        case "ArrowLeft":
+          delta = -1;
+          break;
+        case "ArrowRight":
+          delta = 1;
+          break;
+        case "ArrowUp":
+          delta = -7;
+          break;
+        case "ArrowDown":
+          delta = 7;
+          break;
+        default:
+          return;
+      }
+      e.preventDefault();
+      const [y, m, d] = cellAttr.split("-").map(Number);
+      const next = new Date(y, m - 1, d);
+      next.setDate(next.getDate() + delta);
+      const nextStr = toYMD(next);
+
+      // If the next date is in another month, jump month
+      if (next.getMonth() !== month || next.getFullYear() !== year) {
+        setYear(next.getFullYear());
+        setMonth(next.getMonth());
+        // Defer focus; cell will exist after render
+        requestAnimationFrame(() => {
+          gridRef.current
+            ?.querySelector<HTMLElement>(`[data-date="${nextStr}"]`)
+            ?.focus();
+        });
+      } else {
+        gridRef.current
+          ?.querySelector<HTMLElement>(`[data-date="${nextStr}"]`)
+          ?.focus();
+      }
+      setSelectedDate(nextStr);
+    },
+    [view, month, year],
+  );
 
   const markDone = useCallback((id: string) => {
     setEvents((prev) =>
@@ -947,38 +752,31 @@ export default function CreatorCalendarPage() {
         })()
       : `${MONTH_NAMES[month]} ${year}`;
 
-  /* ── Shared note textarea style ──────────────────────── */
-  const noteTextareaStyle: React.CSSProperties = {
-    width: "100%",
-    border: "1px solid var(--hairline)",
-    borderRadius: 8,
-    padding: "8px 12px",
-    fontFamily: "var(--font-body)",
-    fontSize: 13,
-    color: "var(--ink)",
-    background: "var(--snow)",
-    resize: "none",
-    outline: "none",
-    boxSizing: "border-box",
-  };
+  /* Eyebrow content — Product canonical (no parentheticals) */
+  const eyebrowParts = [
+    "CALENDAR",
+    `${MONTH_NAMES[month].toUpperCase()} ${year}`,
+    `${deadlineCount} ${deadlineCount === 1 ? "DEADLINE" : "DEADLINES"}`,
+  ];
+  if (estEarnings > 0) {
+    eyebrowParts.push(`$${estEarnings.toLocaleString()} EST.`);
+  }
 
   /* ── Render ──────────────────────────────────────────── */
 
   return (
-    <div className="cw-page">
+    <div className="cw-page cal">
       <header className="cw-header">
         <div className="cw-header__left">
           <p className="cw-eyebrow cw-eyebrow--live">
-            CALENDAR · {MONTH_NAMES[month]} {year} · {deadlineCount}{" "}
-            {deadlineCount === 1 ? "DEADLINE" : "DEADLINES"}
-            {estEarnings > 0 ? ` · $${estEarnings.toLocaleString()} EST.` : ""}
+            {eyebrowParts.join(" · ")}
           </p>
           <h1 className="cw-title">Calendar</h1>
         </div>
         <div className="cw-header__right">
           <button
             type="button"
-            className="cw-pill"
+            className="btn-ghost click-shift cal-btn-sm"
             onClick={() => downloadICS(events)}
             title="Export .ics calendar file"
           >
@@ -986,107 +784,131 @@ export default function CreatorCalendarPage() {
           </button>
           <a
             href="webcal://push.nyc/api/creator/calendar/feed"
-            className="cw-pill cw-pill--urgent"
+            className="btn-secondary click-shift cal-btn-sm"
             title="Subscribe to calendar"
           >
-            Subscribe →
+            Subscribe
           </a>
         </div>
       </header>
 
+      {/* ── Liquid-glass spotlight tile ──────────────── */}
+      <section className="cal-spotlight" aria-label="Week ahead">
+        <div className="lg-surface cal-spotlight__tile">
+          <p className="cal-spotlight__eyebrow">THIS WEEK</p>
+          <div className="cal-spotlight__row">
+            <div className="cal-spotlight__stat">
+              <span className="cal-spotlight__num">{weekAheadStats.total}</span>
+              <span className="cal-spotlight__label">
+                {weekAheadStats.total === 1 ? "EVENT" : "EVENTS"} AHEAD
+              </span>
+            </div>
+            <div className="cal-spotlight__divider" aria-hidden />
+            <div className="cal-spotlight__stat">
+              <span className="cal-spotlight__num cal-spotlight__num--accent">
+                {weekAheadStats.deadlines}
+              </span>
+              <span className="cal-spotlight__label">
+                {weekAheadStats.deadlines === 1 ? "DEADLINE" : "DEADLINES"}
+              </span>
+            </div>
+            {weekAheadStats.next && (
+              <>
+                <div className="cal-spotlight__divider" aria-hidden />
+                <div className="cal-spotlight__next">
+                  <p className="cal-spotlight__next-eyebrow">NEXT DEADLINE</p>
+                  <p className="cal-spotlight__next-title">
+                    {truncate(weekAheadStats.next.title, 38)}
+                  </p>
+                  <p className="cal-spotlight__next-meta">
+                    {formatShortDate(weekAheadStats.next.date)}
+                    {weekAheadStats.next.time && (
+                      <>
+                        {" "}
+                        <span className="cal-dot-sep">&middot;</span>{" "}
+                        {fmtTime(weekAheadStats.next.time)}
+                      </>
+                    )}
+                  </p>
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+      </section>
+
       {/* ── Controls bar ─────────────────────────────── */}
       <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          padding: "16px 24px",
-          borderBottom: "1px solid var(--hairline)",
-          background: "var(--surface-2)",
-          gap: 16,
-          flexWrap: "wrap",
-        }}
+        className="cal-controls"
+        role="toolbar"
+        aria-label="Calendar navigation"
       >
-        {/* Nav */}
-        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+        {/* Period nav */}
+        <div className="cal-nav">
           <button
+            type="button"
             onClick={prevPeriod}
             aria-label="Previous period"
-            style={{
-              width: 32,
-              height: 32,
-              borderRadius: 6,
-              border: "1px solid var(--hairline)",
-              background: "var(--snow)",
-              color: "var(--ink)",
-              cursor: "pointer",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              fontSize: 18,
-            }}
+            className="cal-nav__btn"
           >
-            &#8249;
+            <svg
+              width="14"
+              height="14"
+              viewBox="0 0 14 14"
+              fill="none"
+              aria-hidden
+            >
+              <path
+                d="M9 2 L4 7 L9 12"
+                stroke="currentColor"
+                strokeWidth="1.6"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
           </button>
           <button
+            type="button"
             onClick={goToday}
-            title="Go to today"
-            style={{
-              padding: "6px 16px",
-              borderRadius: 6,
-              border: "1px solid var(--hairline)",
-              background: "var(--snow)",
-              color: "var(--ink)",
-              fontFamily: "var(--font-body)",
-              fontWeight: 600,
-              fontSize: 13,
-              cursor: "pointer",
-              minWidth: 160,
-              textAlign: "center",
-            }}
+            title="Jump to today"
+            className="cal-nav__label"
           >
             {periodLabel}
           </button>
           <button
+            type="button"
             onClick={nextPeriod}
             aria-label="Next period"
-            style={{
-              width: 32,
-              height: 32,
-              borderRadius: 6,
-              border: "1px solid var(--hairline)",
-              background: "var(--snow)",
-              color: "var(--ink)",
-              cursor: "pointer",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              fontSize: 18,
-            }}
+            className="cal-nav__btn"
           >
-            &#8250;
+            <svg
+              width="14"
+              height="14"
+              viewBox="0 0 14 14"
+              fill="none"
+              aria-hidden
+            >
+              <path
+                d="M5 2 L10 7 L5 12"
+                stroke="currentColor"
+                strokeWidth="1.6"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
           </button>
         </div>
 
-        {/* View tabs */}
-        <div style={{ display: "flex", gap: 4 }}>
+        {/* Segmented view switcher (iOS 26 pill) */}
+        <div className="cal-seg" role="tablist" aria-label="Calendar view">
           {(["month", "week", "list"] as CalView[]).map((v) => (
             <button
               key={v}
+              role="tab"
+              aria-selected={view === v}
+              type="button"
               onClick={() => setView(v)}
-              style={{
-                padding: "6px 16px",
-                borderRadius: 6,
-                border: "1px solid var(--hairline)",
-                background: view === v ? "var(--ink)" : "var(--snow)",
-                color: view === v ? "var(--snow)" : "var(--ink-3)",
-                fontFamily: "var(--font-body)",
-                fontSize: 12,
-                fontWeight: 600,
-                cursor: "pointer",
-                textTransform: "uppercase",
-                letterSpacing: "0.05em",
-              }}
+              className={`cal-seg__opt${view === v ? " is-active" : ""}`}
             >
               {v.charAt(0).toUpperCase() + v.slice(1)}
             </button>
@@ -1095,38 +917,12 @@ export default function CreatorCalendarPage() {
       </div>
 
       {/* ── Legend ───────────────────────────────────── */}
-      <div
-        style={{
-          display: "flex",
-          gap: 16,
-          padding: "12px 24px",
-          borderBottom: "1px solid var(--hairline)",
-          flexWrap: "wrap",
-        }}
-      >
+      <div className="cal-legend" aria-label="Event type legend">
         {(Object.entries(EVENT_TYPE_LABELS) as [EventType, string][]).map(
           ([type, label]) => (
-            <span
-              key={type}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: 6,
-                fontFamily: "var(--font-body)",
-                fontSize: 12,
-                color: "var(--ink-3)",
-              }}
-            >
-              <span
-                style={{
-                  width: 8,
-                  height: 8,
-                  borderRadius: "50%",
-                  background: EVENT_TYPE_COLORS[type],
-                  flexShrink: 0,
-                }}
-              />
-              {label}
+            <span key={type} className="cal-legend__item">
+              <span className={`cal-dot event-type--${type}`} aria-hidden />
+              <span className="cal-legend__label">{label}</span>
             </span>
           ),
         )}
@@ -1134,62 +930,30 @@ export default function CreatorCalendarPage() {
 
       {/* ── Month view ───────────────────────────────── */}
       {view === "month" && (
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "1fr auto",
-            gap: 24,
-            padding: "24px",
-            alignItems: "start",
-          }}
-        >
-          <div>
-            {/* Day-of-week headers */}
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "repeat(7, 1fr)",
-                gap: 2,
-                marginBottom: 4,
-              }}
-            >
+        <div className="cal-month-layout">
+          <div className="cal-month">
+            <div className="cal-month__dow-row" aria-hidden>
               {DOW_LABELS.map((d) => (
-                <div
-                  key={d}
-                  style={{
-                    fontFamily: "var(--font-body)",
-                    fontSize: 11,
-                    color: "var(--ink-4)",
-                    textTransform: "uppercase",
-                    letterSpacing: "0.06em",
-                    textAlign: "center",
-                    padding: "4px 0",
-                  }}
-                >
+                <div key={d} className="cal-month__dow">
                   {d}
                 </div>
               ))}
             </div>
 
-            {/* Grid */}
             <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "repeat(7, 1fr)",
-                gap: 2,
-              }}
+              ref={gridRef}
+              className="cal-month__grid"
+              role="grid"
+              aria-label={`${MONTH_NAMES[month]} ${year}`}
+              onKeyDown={handleGridKeyDown}
             >
               {monthGrid.map((date, i) => {
                 if (!date) {
                   return (
                     <div
                       key={`empty-${i}`}
-                      style={{
-                        minHeight: 80,
-                        background: "var(--surface)",
-                        borderRadius: 6,
-                        opacity: 0.3,
-                      }}
+                      className="cal-cell cal-cell--empty"
+                      aria-hidden
                     />
                   );
                 }
@@ -1200,107 +964,66 @@ export default function CreatorCalendarPage() {
                 const dayEvents = eventsByDate[dateStr] ?? [];
                 const shown = dayEvents.slice(0, 3);
                 const extra = dayEvents.length - shown.length;
+                const hasEvents = dayEvents.length > 0;
+                const cellLabel = hasEvents
+                  ? `${formatDisplayDate(dateStr)}, ${dayEvents.length} ${dayEvents.length === 1 ? "event" : "events"}`
+                  : `${formatDisplayDate(dateStr)}, no events`;
 
                 return (
                   <div
                     key={dateStr}
+                    data-date={dateStr}
                     onClick={(e) => handleCellClick(dateStr, e.currentTarget)}
-                    role="button"
-                    aria-label={`${formatDisplayDate(dateStr)}, ${dayEvents.length} events`}
-                    aria-pressed={isSelected}
-                    tabIndex={0}
+                    role="gridcell"
+                    aria-label={cellLabel}
+                    aria-selected={isSelected}
+                    tabIndex={isSelected ? 0 : -1}
                     onKeyDown={(e) => {
-                      if (e.key === "Enter" || e.key === " ")
+                      if (e.key === "Enter" || e.key === " ") {
+                        e.preventDefault();
                         handleCellClick(dateStr, e.currentTarget);
+                      }
                     }}
-                    style={{
-                      minHeight: 80,
-                      padding: "6px",
-                      borderRadius: 8,
-                      border: isSelected
-                        ? "2px solid var(--brand-red)"
-                        : "1px solid var(--hairline)",
-                      background: isToday
-                        ? "var(--snow)"
-                        : isSelected
-                          ? "var(--surface-2)"
-                          : "var(--surface-2)",
-                      cursor: "pointer",
-                      position: "relative",
-                      boxSizing: "border-box",
-                    }}
+                    className={[
+                      "cal-cell",
+                      isToday && "cal-cell--today",
+                      isSelected && "cal-cell--selected",
+                      hasEvents && "cal-cell--has-events",
+                    ]
+                      .filter(Boolean)
+                      .join(" ")}
                   >
-                    {/* Day number */}
-                    <div
-                      style={{
-                        display: "flex",
-                        justifyContent: "flex-end",
-                        marginBottom: 4,
-                      }}
-                    >
-                      <span
-                        style={{
-                          width: 24,
-                          height: 24,
-                          borderRadius: "50%",
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          fontFamily: "var(--font-body)",
-                          fontWeight: isToday ? 700 : 400,
-                          fontSize: 12,
-                          background: isToday
-                            ? "var(--brand-red)"
-                            : "transparent",
-                          color: isToday ? "var(--snow)" : "var(--ink)",
-                        }}
-                      >
-                        {date.getDate()}
-                      </span>
-                    </div>
-
-                    {/* Event pills — desktop */}
-                    <div className="cal-cell-events">
-                      {shown.map((ev) => (
-                        <span
-                          key={ev.id}
-                          style={{
-                            ...eventPillStyle(ev.type),
-                            opacity: ev.done ? 0.4 : 1,
-                          }}
-                        >
-                          {ev.title}
-                        </span>
-                      ))}
-                      {extra > 0 && (
-                        <span
-                          style={{
-                            fontSize: 10,
-                            fontFamily: "var(--font-body)",
-                            color: "var(--ink-4)",
-                          }}
-                        >
-                          +{extra} more
+                    <div className="cal-cell__num-row">
+                      <span className="cal-cell__num">{date.getDate()}</span>
+                      {dayEvents.length > 0 && (
+                        <span className="cal-cell__count" aria-hidden>
+                          {dayEvents.length}
                         </span>
                       )}
                     </div>
 
+                    {/* Event pills — desktop */}
+                    <div className="cal-cell__events">
+                      {shown.map((ev) => (
+                        <span
+                          key={ev.id}
+                          className={`cal-pill-event event-type--${ev.type}${ev.done ? " is-done" : ""}`}
+                          title={ev.title}
+                        >
+                          {truncate(ev.title, 22)}
+                        </span>
+                      ))}
+                      {extra > 0 && (
+                        <span className="cal-cell__more">+{extra} more</span>
+                      )}
+                    </div>
+
                     {/* Dot strip — mobile fallback */}
-                    <div
-                      className="cal-cell-dots"
-                      style={{ display: "flex", gap: 2, marginTop: 2 }}
-                    >
+                    <div className="cal-cell__dots" aria-hidden>
                       {dayEvents.slice(0, 6).map((ev) => (
                         <span
                           key={ev.id}
-                          style={{
-                            width: 5,
-                            height: 5,
-                            borderRadius: "50%",
-                            background: dotColor(ev.type),
-                            opacity: ev.done ? 0.3 : 1,
-                            flexShrink: 0,
-                          }}
+                          className={`cal-dot event-type--${ev.type}${ev.done ? " is-done" : ""}`}
                         />
                       ))}
                     </div>
@@ -1310,15 +1033,12 @@ export default function CreatorCalendarPage() {
             </div>
           </div>
 
-          {/* Side panel */}
           <SidePanel
             selectedDate={selectedDate}
             events={events}
             todayStr={todayStr}
             onMarkDone={markDone}
-            onSnooze={(id) => {
-              snooze(id);
-            }}
+            onSnooze={snooze}
             onAddNote={addNote}
             noteTarget={noteTarget}
             noteValue={noteValue}
@@ -1330,14 +1050,8 @@ export default function CreatorCalendarPage() {
 
       {/* ── Week view ────────────────────────────────── */}
       {view === "week" && (
-        <div style={{ padding: 24 }}>
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(7, 1fr)",
-              gap: 8,
-            }}
-          >
+        <div className="cal-week">
+          <div className="cal-week__grid">
             {weekDates.map((date) => {
               const dateStr = toYMD(date);
               const isToday = dateStr === todayStr;
@@ -1346,108 +1060,39 @@ export default function CreatorCalendarPage() {
               return (
                 <div
                   key={dateStr}
-                  style={{
-                    background: isToday ? "var(--snow)" : "var(--surface-2)",
-                    border: isToday
-                      ? "2px solid var(--brand-red)"
-                      : "1px solid var(--hairline)",
-                    borderRadius: 10,
-                    overflow: "hidden",
-                  }}
+                  className={`cal-week__col${isToday ? " cal-week__col--today" : ""}`}
                 >
-                  {/* Column header */}
-                  <div
-                    style={{
-                      padding: "10px 12px",
-                      borderBottom: "1px solid var(--hairline)",
-                      textAlign: "center",
-                    }}
-                  >
-                    <div
-                      style={{
-                        fontFamily: "var(--font-body)",
-                        fontSize: 10,
-                        color: "var(--ink-4)",
-                        textTransform: "uppercase",
-                        letterSpacing: "0.06em",
-                        marginBottom: 2,
-                      }}
-                    >
-                      {DOW_LABELS_FULL[date.getDay()].slice(0, 3)}
-                    </div>
-                    <div
-                      style={{
-                        fontFamily: "var(--font-display)",
-                        fontWeight: 700,
-                        fontSize: 18,
-                        color: isToday ? "var(--brand-red)" : "var(--ink)",
-                      }}
-                    >
-                      {date.getDate()}
-                    </div>
-                  </div>
+                  <header className="cal-week__col-head">
+                    <span className="cal-week__dow">
+                      {DOW_LABELS_FULL[date.getDay()].slice(0, 3).toUpperCase()}
+                    </span>
+                    <span className="cal-week__num">{date.getDate()}</span>
+                  </header>
 
-                  {/* Events */}
-                  <div style={{ padding: "8px" }}>
+                  <div className="cal-week__events">
                     {dayEvents.length === 0 ? (
-                      <span
-                        style={{
-                          fontFamily: "var(--font-body)",
-                          fontSize: 12,
-                          color: "var(--ink-4)",
-                          display: "block",
-                          textAlign: "center",
-                          padding: "8px 0",
-                        }}
-                      >
-                        —
-                      </span>
+                      <span className="cal-week__empty">&mdash;</span>
                     ) : (
                       dayEvents.map((ev) => (
-                        <div
+                        <button
                           key={ev.id}
+                          type="button"
                           onClick={(e) => {
                             e.stopPropagation();
                             openPopover(dateStr, e.currentTarget);
                           }}
-                          role="button"
-                          tabIndex={0}
                           title={ev.title}
-                          style={{
-                            padding: "4px 8px",
-                            borderRadius: 6,
-                            background: dotColor(ev.type),
-                            marginBottom: 4,
-                            cursor: "pointer",
-                            opacity: ev.done ? 0.4 : 1,
-                          }}
+                          className={`cal-week__event event-type--${ev.type}${ev.done ? " is-done" : ""}`}
                         >
-                          <span
-                            style={{
-                              fontFamily: "var(--font-body)",
-                              fontSize: 11,
-                              fontWeight: 600,
-                              color: "var(--snow)",
-                              display: "block",
-                              overflow: "hidden",
-                              textOverflow: "ellipsis",
-                              whiteSpace: "nowrap",
-                            }}
-                          >
-                            {ev.title}
+                          <span className="cal-week__event-title">
+                            {truncate(ev.title, 22)}
                           </span>
                           {ev.time && (
-                            <span
-                              style={{
-                                fontFamily: "var(--font-body)",
-                                fontSize: 10,
-                                color: "rgba(255,255,255,0.75)",
-                              }}
-                            >
-                              {ev.time}
+                            <span className="cal-week__event-time">
+                              {fmtTime(ev.time)}
                             </span>
                           )}
-                        </div>
+                        </button>
                       ))
                     )}
                   </div>
@@ -1460,33 +1105,16 @@ export default function CreatorCalendarPage() {
 
       {/* ── List view ────────────────────────────────── */}
       {view === "list" && (
-        <div style={{ padding: 24 }}>
+        <div className="cal-list">
           {listGroups.length === 0 ? (
-            <div
-              style={{
-                textAlign: "center",
-                padding: "48px 0",
-              }}
-            >
-              <div
-                style={{
-                  fontFamily: "var(--font-display)",
-                  fontWeight: 800,
-                  fontSize: 48,
-                  color: "var(--ink-4)",
-                  marginBottom: 8,
-                }}
-              >
-                0
-              </div>
-              <p
-                style={{
-                  fontFamily: "var(--font-body)",
-                  fontSize: 14,
-                  color: "var(--ink-3)",
-                }}
-              >
-                No events in {MONTH_NAMES[month]}.
+            <div className="cal-list__empty">
+              <p className="cal-list__empty-num">0</p>
+              <p className="cal-list__empty-msg">
+                No events in {MONTH_NAMES[month]} {year}.
+              </p>
+              <p className="cal-list__empty-sub">
+                Browse open campaigns in Discover &mdash; new deadlines land
+                daily.
               </p>
             </div>
           ) : (
@@ -1496,180 +1124,63 @@ export default function CreatorCalendarPage() {
               const isToday = dateStr === todayStr;
 
               return (
-                <div key={dateStr} style={{ marginBottom: 24 }}>
-                  {/* Date header */}
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: 12,
-                      marginBottom: 12,
-                    }}
-                  >
-                    <div>
-                      <span
-                        style={{
-                          fontFamily: "var(--font-display)",
-                          fontWeight: 700,
-                          fontSize: 16,
-                          color: "var(--ink)",
-                        }}
-                      >
-                        {MONTH_NAMES[date.getMonth()]} {date.getDate()}
-                      </span>
-                      <span
-                        style={{
-                          fontFamily: "var(--font-body)",
-                          fontSize: 12,
-                          color: "var(--ink-3)",
-                          marginLeft: 8,
-                        }}
-                      >
-                        {DOW_LABELS_FULL[date.getDay()]}
-                      </span>
-                    </div>
+                <section key={dateStr} className="cal-list__group">
+                  <header className="cal-list__group-head">
+                    <h2 className="cal-list__group-date">
+                      {MONTH_NAMES[date.getMonth()]} {date.getDate()}
+                    </h2>
+                    <span className="cal-list__group-dow">
+                      {DOW_LABELS_FULL[date.getDay()]}
+                    </span>
                     {isToday && (
-                      <span
-                        style={{
-                          padding: "2px 8px",
-                          borderRadius: 4,
-                          background: "var(--brand-red)",
-                          color: "var(--snow)",
-                          fontFamily: "var(--font-body)",
-                          fontSize: 10,
-                          fontWeight: 700,
-                          textTransform: "uppercase",
-                          letterSpacing: "0.06em",
-                        }}
-                      >
-                        Today
-                      </span>
+                      <span className="cal-tag cal-tag--today">Today</span>
                     )}
-                    <div
-                      style={{
-                        flex: 1,
-                        height: 1,
-                        background: "var(--hairline)",
-                      }}
-                    />
-                  </div>
+                    <span className="cal-list__group-rule" aria-hidden />
+                  </header>
 
-                  {/* Event rows */}
                   {dayEvents.map((ev) => (
-                    <div
+                    <article
                       key={ev.id}
-                      style={{
-                        display: "grid",
-                        gridTemplateColumns: "56px 1fr auto",
-                        gap: 16,
-                        alignItems: "start",
-                        padding: "12px 16px",
-                        borderRadius: 10,
-                        border: "1px solid var(--hairline)",
-                        background: ev.done
-                          ? "var(--surface)"
-                          : "var(--surface-2)",
-                        marginBottom: 8,
-                        opacity: ev.done ? 0.6 : 1,
-                      }}
+                      className={`cal-list__row event-type--${ev.type}${ev.done ? " is-done" : ""}`}
                     >
-                      {/* Time col */}
-                      <div
-                        style={{
-                          fontFamily: "var(--font-body)",
-                          fontSize: 12,
-                          color: "var(--ink-4)",
-                          paddingTop: 2,
-                        }}
-                      >
-                        {ev.time ?? "—"}
-                      </div>
+                      <div className="cal-list__time">{fmtTime(ev.time)}</div>
 
-                      {/* Content */}
-                      <div>
-                        <div
-                          style={{
-                            display: "flex",
-                            alignItems: "center",
-                            gap: 8,
-                            marginBottom: 4,
-                          }}
-                        >
+                      <div className="cal-list__content">
+                        <header className="cal-list__type-row">
                           <span
-                            style={{
-                              width: 8,
-                              height: 8,
-                              borderRadius: "50%",
-                              background: dotColor(ev.type),
-                              flexShrink: 0,
-                            }}
+                            className={`cal-dot event-type--${ev.type}`}
+                            aria-hidden
                           />
-                          <span
-                            style={{
-                              fontFamily: "var(--font-body)",
-                              fontSize: 11,
-                              color: "var(--ink-4)",
-                              textTransform: "uppercase",
-                              letterSpacing: "0.06em",
-                            }}
-                          >
+                          <span className="cal-list__type-label">
                             {EVENT_TYPE_LABELS[ev.type]}
                           </span>
                           {ev.payout ? (
-                            <span
-                              style={{
-                                fontFamily: "var(--font-display)",
-                                fontWeight: 700,
-                                fontSize: 14,
-                                color: "var(--ink)",
-                              }}
-                            >
+                            <span className="cal-list__payout">
                               ${ev.payout}
                             </span>
                           ) : null}
-                        </div>
+                        </header>
 
-                        <div
-                          style={{
-                            fontFamily: "var(--font-body)",
-                            fontWeight: 700,
-                            fontSize: 14,
-                            color: "var(--ink)",
-                            marginBottom: 4,
-                          }}
-                        >
-                          {ev.title}
-                        </div>
+                        <h3 className="cal-list__title">{ev.title}</h3>
 
-                        <Link
-                          href={
-                            ev.postUrl ??
-                            `/creator/campaigns/${ev.campaignId}/post`
-                          }
-                          style={{
-                            fontFamily: "var(--font-body)",
-                            fontSize: 12,
-                            color: "var(--accent-blue)",
-                            display: "block",
-                            marginBottom: 2,
-                            textDecoration: "none",
-                          }}
-                        >
-                          {ev.campaignTitle}
-                        </Link>
-
-                        <span
-                          style={{
-                            fontFamily: "var(--font-body)",
-                            fontSize: 12,
-                            color: "var(--ink-3)",
-                          }}
-                        >
-                          {ev.merchantName}
-                        </span>
+                        <p className="cal-list__meta">
+                          <Link
+                            href={
+                              ev.postUrl ??
+                              `/creator/campaigns/${ev.campaignId}/post`
+                            }
+                            className="cal-list__campaign"
+                          >
+                            {ev.campaignTitle}
+                          </Link>{" "}
+                          <span className="cal-dot-sep">&middot;</span>{" "}
+                          <span className="cal-list__merchant">
+                            {ev.merchantName}
+                          </span>
+                        </p>
 
                         {noteTarget === ev.id && (
-                          <div style={{ marginTop: 8 }}>
+                          <div className="cal-note-wrap">
                             <textarea
                               className="cal-note-input"
                               rows={2}
@@ -1677,15 +1188,9 @@ export default function CreatorCalendarPage() {
                               value={noteValue}
                               onChange={(e) => setNoteValue(e.target.value)}
                               autoFocus
-                              style={noteTextareaStyle}
                             />
                             <button
-                              className="btn-secondary click-shift"
-                              style={{
-                                marginTop: 6,
-                                fontSize: 12,
-                                padding: "4px 12px",
-                              }}
+                              className="btn-secondary click-shift cal-btn-sm"
                               onClick={saveNote}
                             >
                               Save note
@@ -1693,77 +1198,46 @@ export default function CreatorCalendarPage() {
                           </div>
                         )}
                         {ev.note && noteTarget !== ev.id && (
-                          <p
-                            style={{
-                              fontFamily: "var(--font-body)",
-                              fontSize: 12,
-                              color: "var(--ink-3)",
-                              fontStyle: "italic",
-                              marginTop: 6,
-                              padding: "6px 10px",
-                              background: "var(--surface)",
-                              borderRadius: 6,
-                              border: "1px solid var(--hairline)",
-                            }}
-                          >
-                            Note: {ev.note}
-                          </p>
+                          <p className="cal-note-saved">Note: {ev.note}</p>
                         )}
                       </div>
 
-                      {/* Actions col */}
-                      <div
-                        style={{
-                          display: "flex",
-                          flexDirection: "column",
-                          gap: 6,
-                        }}
-                      >
+                      <div className="cal-list__actions">
                         {ev.postUrl && !ev.done && (
                           <Link
                             href={ev.postUrl}
-                            className="btn-primary click-shift"
-                            style={{ fontSize: 11, padding: "4px 10px" }}
+                            className="btn-primary click-shift cal-btn-sm"
                           >
                             Submit
                           </Link>
                         )}
                         <button
-                          className={
-                            ev.done ? "btn-ghost" : "btn-ghost click-shift"
-                          }
+                          className="btn-ghost click-shift cal-btn-sm"
                           onClick={() => markDone(ev.id)}
                           disabled={ev.done}
-                          style={{
-                            fontSize: 11,
-                            padding: "4px 10px",
-                            opacity: ev.done ? 0.5 : 1,
-                          }}
                         >
                           {ev.done ? "Done" : "Mark done"}
                         </button>
                         {!ev.done && (
                           <>
                             <button
-                              className="btn-ghost click-shift"
+                              className="btn-ghost click-shift cal-btn-sm"
                               onClick={() => snooze(ev.id)}
-                              style={{ fontSize: 11, padding: "4px 10px" }}
                             >
                               Snooze
                             </button>
                             <button
-                              className="btn-ghost click-shift"
+                              className="btn-ghost click-shift cal-btn-sm"
                               onClick={() => addNote(ev.id)}
-                              style={{ fontSize: 11, padding: "4px 10px" }}
                             >
                               Note
                             </button>
                           </>
                         )}
                       </div>
-                    </div>
+                    </article>
                   ))}
-                </div>
+                </section>
               );
             })
           )}

@@ -56,6 +56,7 @@ function formatTime(iso: string): string {
   });
 }
 
+// Kept for potential future use; currently color logic lives in CSS classes.
 function sevColor(sev: AuditSeverity): { bg: string; color: string } {
   switch (sev) {
     case "critical":
@@ -97,26 +98,15 @@ const TARGET_OPTIONS: Array<{ value: TargetFilter; label: string }> = [
 // Sub-components
 // ---------------------------------------------------------------------------
 
+/** v11 severity badge — color coded via CSS: INFO/WARN/ERROR. */
 function SeverityBadge({ sev }: { sev: AuditSeverity }) {
-  const c = sevColor(sev);
-  return (
-    <span
-      style={{
-        padding: "2px 8px",
-        borderRadius: 4,
-        fontSize: 11,
-        fontWeight: 700,
-        letterSpacing: "0.05em",
-        fontFamily: "var(--font-body)",
-        background: c.bg,
-        color: c.color,
-        textTransform: "capitalize",
-        whiteSpace: "nowrap",
-      }}
-    >
-      {sev}
-    </span>
-  );
+  const modClass =
+    sev === "critical"
+      ? "al-sev--critical"
+      : sev === "warning"
+        ? "al-sev--warning"
+        : "al-sev--info";
+  return <span className={`al-sev ${modClass}`}>{sev}</span>;
 }
 
 function PinnedStrip({
@@ -128,86 +118,30 @@ function PinnedStrip({
 }) {
   if (items.length === 0) return null;
   return (
-    <div
-      style={{
-        margin: "0 40px 24px",
-        background: "rgba(193,18,31,0.03)",
-        border: "1px solid rgba(193,18,31,0.15)",
-        borderRadius: 10,
-        overflow: "hidden",
-      }}
-    >
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          gap: 12,
-          padding: "12px 20px",
-          borderBottom: "1px solid rgba(193,18,31,0.1)",
-        }}
-      >
-        <div
-          style={{
-            fontSize: 11,
-            fontWeight: 700,
-            letterSpacing: "0.07em",
-            fontFamily: "var(--font-body)",
-            color: "var(--brand-red)",
-            textTransform: "uppercase",
-          }}
-        >
-          Pinned Alerts
-        </div>
-        <div
-          style={{
-            fontSize: 12,
-            fontFamily: "var(--font-body)",
-            color: "var(--ink-4)",
-          }}
-        >
+    <div className="al-pinned">
+      <div className="al-pinned__header">
+        <div className="al-pinned__label">Pinned Alerts</div>
+        <div className="al-pinned__count">
           {items.length} high-impact event{items.length !== 1 ? "s" : ""}
         </div>
       </div>
-      <div style={{ display: "flex", flexDirection: "column" }}>
+      <div className="al-pinned__list">
         {items.slice(0, 6).map((e) => (
           <div
             key={e.id}
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 12,
-              padding: "10px 20px",
-              borderBottom: "1px solid rgba(193,18,31,0.06)",
-              cursor: "pointer",
-            }}
+            className="al-pinned__item"
             role="button"
             tabIndex={0}
             onClick={() => onOpen(e)}
             onKeyDown={(k) => k.key === "Enter" && onOpen(e)}
           >
             <SeverityBadge sev={e.severity} />
-            <div
-              style={{
-                flex: 1,
-                fontSize: 13,
-                fontFamily: "var(--font-body)",
-                color: "var(--ink)",
-              }}
-            >
+            <div className="al-pinned__text">
               <strong>{e.actor.name}</strong> {e.actionLabel}{" "}
               <strong>{e.target.label}</strong>
               {e.notes ? ` — ${e.notes}` : ""}
             </div>
-            <div
-              style={{
-                fontSize: 11,
-                fontFamily: "var(--font-body)",
-                color: "var(--ink-4)",
-                whiteSpace: "nowrap",
-              }}
-            >
-              {timeAgo(e.timestamp)}
-            </div>
+            <div className="al-pinned__time">{timeAgo(e.timestamp)}</div>
           </div>
         ))}
       </div>
@@ -215,6 +149,7 @@ function PinnedStrip({
   );
 }
 
+/** Log entry row — mono 12px, alternating surface via CSS nth-child. */
 function Row({
   entry,
   onOpen,
@@ -224,122 +159,42 @@ function Row({
 }) {
   return (
     <div
-      style={{
-        display: "grid",
-        gridTemplateColumns: "120px 80px 160px 1fr 100px 20px",
-        gap: 12,
-        alignItems: "center",
-        padding: "10px 24px",
-        borderBottom: "1px solid var(--hairline)",
-        background: entry.pinned ? "rgba(193,18,31,0.02)" : "transparent",
-        cursor: "pointer",
-        transition: "background 0.1s",
-      }}
+      className={`al-row${entry.pinned ? " al-row--pinned" : ""}`}
       role="button"
       tabIndex={0}
       onClick={() => onOpen(entry)}
       onKeyDown={(k) => k.key === "Enter" && onOpen(entry)}
       aria-label={`Open audit entry ${entry.id}`}
     >
+      {/* Timestamp column — mono, ink-3, nowrap */}
       <div>
-        <div
-          style={{
-            fontSize: 12,
-            fontFamily: "var(--font-body)",
-            color: "var(--ink)",
-            fontWeight: 500,
-          }}
-        >
-          {formatTime(entry.timestamp)}
-        </div>
-        <div
-          style={{
-            fontSize: 10,
-            fontFamily: "var(--font-body)",
-            color: "var(--ink-4)",
-          }}
-        >
-          {timeAgo(entry.timestamp)} ago
-        </div>
+        <div className="al-row__time-main">{formatTime(entry.timestamp)}</div>
+        <div className="al-row__time-ago">{timeAgo(entry.timestamp)} ago</div>
       </div>
+
+      {/* Severity badge */}
       <SeverityBadge sev={entry.severity} />
-      <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-        <span
-          style={{
-            width: 26,
-            height: 26,
-            borderRadius: "50%",
-            background: "var(--surface-3)",
-            border: "1px solid var(--hairline)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            fontSize: 10,
-            fontWeight: 700,
-            fontFamily: "var(--font-body)",
-            color: "var(--ink-3)",
-            flexShrink: 0,
-          }}
-        >
-          {entry.actor.initials}
-        </span>
-        <span
-          style={{
-            fontSize: 12,
-            fontFamily: "var(--font-body)",
-            color: "var(--ink)",
-            fontWeight: 500,
-          }}
-        >
-          {entry.actor.name}
-        </span>
+
+      {/* Actor column — 600 weight ink per v11 spec */}
+      <div className="al-row__actor">
+        <span className="al-row__initials">{entry.actor.initials}</span>
+        <span className="al-row__actor-name">{entry.actor.name}</span>
       </div>
+
+      {/* Event description */}
       <div>
-        <span
-          style={{
-            fontSize: 13,
-            fontFamily: "var(--font-body)",
-            color: "var(--ink)",
-            fontWeight: 600,
-          }}
-        >
-          {entry.actionLabel}
-        </span>{" "}
-        <span
-          style={{
-            fontSize: 11,
-            fontFamily: "var(--font-body)",
-            color: "var(--ink-4)",
-            textTransform: "uppercase",
-            letterSpacing: "0.05em",
-          }}
-        >
-          {entry.target.type}
-        </span>{" "}
-        <span
-          style={{
-            fontSize: 13,
-            fontFamily: "var(--font-body)",
-            color: "var(--ink-3)",
-          }}
-        >
-          {entry.target.label}
-        </span>
+        <span className="al-row__action">{entry.actionLabel}</span>{" "}
+        <span className="al-row__target-type">{entry.target.type}</span>{" "}
+        <span className="al-row__target-label">{entry.target.label}</span>
       </div>
+
+      {/* IP column — mono */}
+      <div className="al-row__ip">{entry.ip}</div>
+
+      {/* Pin indicator */}
       <div
-        style={{
-          fontSize: 11,
-          fontFamily: "var(--font-body)",
-          color: "var(--ink-4)",
-        }}
-      >
-        {entry.ip}
-      </div>
-      <div
-        style={{
-          fontSize: 14,
-          color: entry.pinned ? "var(--brand-red)" : "transparent",
-        }}
+        className="al-row__pin"
+        style={{ color: entry.pinned ? "var(--brand-red)" : "transparent" }}
       >
         ●
       </div>
@@ -366,97 +221,22 @@ function Drawer({
   const afterKeys = entry.after ? Object.keys(entry.after) : [];
   const hasDiff = beforeKeys.length > 0 || afterKeys.length > 0;
 
-  const sectionHead: React.CSSProperties = {
-    fontSize: 11,
-    fontWeight: 700,
-    letterSpacing: "0.07em",
-    fontFamily: "var(--font-body)",
-    color: "var(--ink-4)",
-    textTransform: "uppercase",
-    marginBottom: 10,
-    paddingBottom: 8,
-    borderBottom: "1px solid var(--hairline)",
-  };
-
-  const metaRow: React.CSSProperties = {
-    display: "grid",
-    gridTemplateColumns: "100px 1fr",
-    gap: 8,
-    padding: "6px 0",
-    borderBottom: "1px solid var(--hairline)",
-    fontSize: 13,
-    fontFamily: "var(--font-body)",
-  };
-
   return (
     <>
-      <div
-        style={{
-          position: "fixed",
-          inset: 0,
-          background: "rgba(0,0,0,0.3)",
-          zIndex: 100,
-        }}
-        onClick={onClose}
-      />
+      <div className="al-overlay" onClick={onClose} />
       <aside
-        style={{
-          position: "fixed",
-          top: 0,
-          right: 0,
-          width: "min(480px, 95vw)",
-          height: "100vh",
-          background: "var(--surface-2)",
-          borderLeft: "1px solid var(--hairline)",
-          boxShadow: "var(--shadow-3)",
-          zIndex: 101,
-          display: "flex",
-          flexDirection: "column",
-          overflow: "hidden",
-        }}
+        className="al-drawer"
         role="dialog"
         aria-label="Audit entry detail"
       >
         {/* Header */}
-        <div
-          style={{
-            padding: "20px 24px",
-            borderBottom: "1px solid var(--hairline)",
-            display: "flex",
-            alignItems: "flex-start",
-            gap: 12,
-            flexShrink: 0,
-          }}
-        >
-          <div style={{ flex: 1 }}>
-            <div
-              style={{
-                fontFamily: "var(--font-display)",
-                fontSize: 15,
-                fontWeight: 700,
-                color: "var(--ink)",
-                lineHeight: 1.4,
-              }}
-            >
-              {entry.actor.name} {entry.actionLabel} {entry.target.label}
-            </div>
+        <div className="al-drawer__header">
+          <div className="al-drawer__title">
+            {entry.actor.name} {entry.actionLabel} {entry.target.label}
           </div>
           <SeverityBadge sev={entry.severity} />
           <button
-            style={{
-              width: 32,
-              height: 32,
-              border: "1px solid var(--hairline)",
-              borderRadius: 6,
-              background: "var(--surface-3)",
-              cursor: "pointer",
-              fontSize: 14,
-              color: "var(--ink-4)",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              flexShrink: 0,
-            }}
+            className="al-drawer__close"
             onClick={onClose}
             aria-label="Close"
           >
@@ -465,19 +245,10 @@ function Drawer({
         </div>
 
         {/* Body */}
-        <div
-          style={{
-            flex: 1,
-            overflowY: "auto",
-            padding: "20px 24px",
-            display: "flex",
-            flexDirection: "column",
-            gap: 20,
-          }}
-        >
+        <div className="al-drawer__body">
           {/* Event meta */}
           <div>
-            <div style={sectionHead}>Event</div>
+            <div className="al-section__head">Event</div>
             <div>
               {[
                 { key: "Event ID", val: entry.id, mono: true },
@@ -496,17 +267,10 @@ function Drawer({
                   mono: false,
                 },
               ].map(({ key, val, mono }) => (
-                <div key={key} style={metaRow}>
-                  <span style={{ color: "var(--ink-4)", fontSize: 12 }}>
-                    {key}
-                  </span>
+                <div key={key} className="al-meta-row">
+                  <span className="al-meta-row__key">{key}</span>
                   <span
-                    style={{
-                      color: "var(--ink)",
-                      fontFamily: mono ? "var(--font-body)" : undefined,
-                      fontSize: mono ? 12 : 13,
-                      wordBreak: "break-all",
-                    }}
+                    className={`al-meta-row__val${mono ? " al-meta-row__val--mono" : ""}`}
                   >
                     {val}
                   </span>
@@ -517,23 +281,17 @@ function Drawer({
 
           {/* Actor */}
           <div>
-            <div style={sectionHead}>Actor</div>
+            <div className="al-section__head">Actor</div>
             <div>
               {[
                 { key: "Name", val: entry.actor.name, mono: false },
                 { key: "Email", val: entry.actor.email, mono: true },
                 { key: "Admin ID", val: entry.actor.id, mono: true },
               ].map(({ key, val, mono }) => (
-                <div key={key} style={metaRow}>
-                  <span style={{ color: "var(--ink-4)", fontSize: 12 }}>
-                    {key}
-                  </span>
+                <div key={key} className="al-meta-row">
+                  <span className="al-meta-row__key">{key}</span>
                   <span
-                    style={{
-                      color: "var(--ink)",
-                      fontFamily: mono ? "var(--font-body)" : undefined,
-                      fontSize: mono ? 12 : 13,
-                    }}
+                    className={`al-meta-row__val${mono ? " al-meta-row__val--mono" : ""}`}
                   >
                     {val}
                   </span>
@@ -545,14 +303,8 @@ function Drawer({
           {/* State diff */}
           {hasDiff && (
             <div>
-              <div style={sectionHead}>State Change</div>
-              <div
-                style={{
-                  display: "grid",
-                  gridTemplateColumns: "1fr 1fr",
-                  gap: 12,
-                }}
-              >
+              <div className="al-section__head">State Change</div>
+              <div className="al-diff">
                 {(
                   [
                     { label: "Before", keys: beforeKeys, data: entry.before },
@@ -561,62 +313,18 @@ function Drawer({
                 ).map(({ label, keys, data }) => (
                   <div
                     key={label}
-                    style={{
-                      padding: "12px",
-                      background:
-                        label === "Before"
-                          ? "rgba(193,18,31,0.03)"
-                          : "rgba(0,133,255,0.03)",
-                      border: `1px solid ${label === "Before" ? "rgba(193,18,31,0.1)" : "rgba(0,133,255,0.1)"}`,
-                      borderRadius: 6,
-                    }}
+                    className={`al-diff__col al-diff__col--${label.toLowerCase()}`}
                   >
-                    <div
-                      style={{
-                        fontSize: 10,
-                        fontWeight: 700,
-                        letterSpacing: "0.07em",
-                        fontFamily: "var(--font-body)",
-                        color:
-                          label === "Before"
-                            ? "var(--brand-red)"
-                            : "var(--accent-blue)",
-                        textTransform: "uppercase",
-                        marginBottom: 8,
-                      }}
-                    >
-                      {label}
-                    </div>
+                    <div className="al-diff__label">{label}</div>
                     {keys.length === 0 ? (
-                      <span
-                        style={{
-                          fontSize: 12,
-                          fontFamily: "var(--font-body)",
-                          color: "var(--ink-4)",
-                        }}
-                      >
+                      <span style={{ fontSize: 12, color: "var(--ink-4)" }}>
                         —
                       </span>
                     ) : (
                       keys.map((k) => (
-                        <div
-                          key={k}
-                          style={{
-                            display: "flex",
-                            gap: 8,
-                            marginBottom: 4,
-                            fontSize: 12,
-                            fontFamily: "var(--font-body)",
-                          }}
-                        >
-                          <span
-                            style={{ color: "var(--ink-4)", flexShrink: 0 }}
-                          >
-                            {k}
-                          </span>
-                          <span
-                            style={{ color: "var(--ink)", fontWeight: 600 }}
-                          >
+                        <div key={k} className="al-diff__kv">
+                          <span className="al-diff__k">{k}</span>
+                          <span className="al-diff__v">
                             {String((data as Record<string, unknown>)?.[k])}
                           </span>
                         </div>
@@ -631,43 +339,24 @@ function Drawer({
           {/* Note */}
           {entry.notes && (
             <div>
-              <div style={sectionHead}>Internal Note</div>
-              <div
-                style={{
-                  padding: "12px 14px",
-                  background: "var(--surface-3)",
-                  borderRadius: 6,
-                  border: "1px solid var(--hairline)",
-                  fontSize: 13,
-                  fontFamily: "var(--font-body)",
-                  color: "var(--ink)",
-                  lineHeight: 1.6,
-                }}
-              >
-                {entry.notes}
-              </div>
+              <div className="al-section__head">Internal Note</div>
+              <div className="al-note-box">{entry.notes}</div>
             </div>
           )}
 
           {/* Request */}
           <div>
-            <div style={sectionHead}>Request</div>
+            <div className="al-section__head">Request</div>
             <div>
               {[
                 { key: "IP Address", val: entry.ip, mono: true },
                 { key: "User Agent", val: entry.userAgent, mono: false },
               ].map(({ key, val, mono }) => (
-                <div key={key} style={metaRow}>
-                  <span style={{ color: "var(--ink-4)", fontSize: 12 }}>
-                    {key}
-                  </span>
+                <div key={key} className="al-meta-row">
+                  <span className="al-meta-row__key">{key}</span>
                   <span
-                    style={{
-                      color: "var(--ink)",
-                      fontFamily: mono ? "var(--font-body)" : undefined,
-                      fontSize: mono ? 12 : 13,
-                      wordBreak: "break-word",
-                    }}
+                    className={`al-meta-row__val${mono ? " al-meta-row__val--mono" : ""}`}
+                    style={{ wordBreak: "break-word" }}
                   >
                     {val}
                   </span>
@@ -797,33 +486,19 @@ export default function AuditLogPage() {
   const filtered = data?.summary;
   const pagination = data?.pagination;
 
-  const chipStyle = (
+  /** Builds className string for filter chip buttons. */
+  function chipClass(
     active: boolean,
     variant?: "critical" | "warning",
-  ): React.CSSProperties => ({
-    padding: "5px 12px",
-    border: "1px solid var(--hairline)",
-    borderRadius: 6,
-    background: active
-      ? variant === "critical"
-        ? "rgba(193,18,31,0.1)"
-        : variant === "warning"
-          ? "rgba(191,161,112,0.14)"
-          : "var(--ink)"
-      : "var(--surface-3)",
-    color: active
-      ? variant === "critical"
-        ? "var(--brand-red)"
-        : variant === "warning"
-          ? "#8a6a2a"
-          : "var(--snow)"
-      : "var(--ink-3)",
-    fontFamily: "var(--font-body)",
-    fontSize: 12,
-    fontWeight: 700,
-    cursor: "pointer",
-    whiteSpace: "nowrap" as const,
-  });
+  ): string {
+    let cls = "al-chip";
+    if (active) {
+      cls += " active";
+      if (variant === "critical") cls += " sev-critical";
+      if (variant === "warning") cls += " sev-warning";
+    }
+    return cls;
+  }
 
   return (
     <div
@@ -833,175 +508,76 @@ export default function AuditLogPage() {
         paddingBottom: 64,
       }}
     >
-      {/* Page header */}
-      <div style={{ padding: "40px 40px 32px" }}>
-        <div className="eyebrow" style={{ marginBottom: 8 }}>
-          ADMIN · PUSH INTERNAL · COMPLIANCE · AUDIT TRAIL
-        </div>
-        <h1
-          style={{
-            fontFamily: "var(--font-display)",
-            fontSize: "clamp(32px,4vw,56px)",
-            fontWeight: 800,
-            color: "var(--ink)",
-            letterSpacing: "-0.03em",
-            lineHeight: 1,
-            marginBottom: 32,
-          }}
-        >
-          Admin audit log
-        </h1>
+      {/* ── Page header ── */}
+      <div className="al-header">
+        {/* v11 product eyebrow: parenthetical mono */}
+        <div className="al-eyebrow">(AUDIT·LOG)</div>
+        <h1 className="al-title">Admin audit log</h1>
 
-        {/* KPI strip */}
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(4, 1fr)",
-            gap: 16,
-          }}
-        >
+        {/* KPI stat chips — 3 small chips at top of page */}
+        <div className="al-kpi-strip">
           {[
             {
               label: "Total events",
               value: global?.total?.toLocaleString() ?? "—",
               sub: "Last 30 days",
-              accent: false,
+              mod: "",
             },
             {
               label: "Critical",
               value: global?.critical ?? "—",
               sub: "Policy, payouts, roles",
-              accent: true,
+              mod: "al-kpi-chip__value--error",
             },
             {
               label: "Warning",
               value: global?.warning ?? "—",
               sub: "PII, rejections, flags",
-              accent: false,
+              mod: "al-kpi-chip__value--warn",
             },
             {
               label: "Pinned",
               value: global?.pinned ?? "—",
               sub: "High-impact events",
-              accent: false,
+              mod: "",
             },
-          ].map(({ label, value, sub, accent }) => (
-            <div
-              key={label}
-              style={{
-                background: "var(--surface-2)",
-                border: "1px solid var(--hairline)",
-                borderRadius: 10,
-                padding: "20px 24px",
-              }}
-            >
-              <div
-                style={{
-                  fontSize: 11,
-                  fontWeight: 700,
-                  letterSpacing: "0.07em",
-                  fontFamily: "var(--font-body)",
-                  color: "var(--ink-4)",
-                  textTransform: "uppercase",
-                  marginBottom: 8,
-                }}
-              >
-                {label}
-              </div>
-              <div
-                style={{
-                  fontFamily: "var(--font-display)",
-                  fontSize: "clamp(22px,2.5vw,36px)",
-                  fontWeight: 800,
-                  color: accent ? "var(--brand-red)" : "var(--ink)",
-                  lineHeight: 1,
-                  marginBottom: 4,
-                }}
-              >
+          ].map(({ label, value, sub, mod }) => (
+            <div key={label} className="al-kpi-chip">
+              <div className="al-kpi-chip__label">{label}</div>
+              <div className={`al-kpi-chip__value${mod ? ` ${mod}` : ""}`}>
                 {value}
               </div>
-              <div
-                style={{
-                  fontSize: 11,
-                  fontFamily: "var(--font-body)",
-                  color: "var(--ink-4)",
-                }}
-              >
-                {sub}
-              </div>
+              <div className="al-kpi-chip__sub">{sub}</div>
             </div>
           ))}
         </div>
       </div>
 
-      {/* Pinned strip */}
+      {/* ── Pinned strip ── */}
       {data?.pinnedAlerts && (
         <PinnedStrip items={data.pinnedAlerts} onOpen={setSelected} />
       )}
 
-      {/* Filters */}
-      <div
-        style={{
-          padding: "12px 40px",
-          background: "var(--surface-2)",
-          borderTop: "1px solid var(--hairline)",
-          borderBottom: "1px solid var(--hairline)",
-          display: "flex",
-          flexWrap: "wrap",
-          alignItems: "center",
-          gap: 8,
-          marginBottom: 0,
-        }}
-      >
-        <span
-          style={{
-            fontSize: 11,
-            fontWeight: 700,
-            letterSpacing: "0.06em",
-            fontFamily: "var(--font-body)",
-            color: "var(--ink-4)",
-            textTransform: "uppercase",
-            marginRight: 4,
-          }}
-        >
-          Time
-        </span>
+      {/* ── Filter / export bar ── */}
+      <div className="al-filters">
+        <span className="al-filter-label">Time</span>
         {PRESET_OPTIONS.map((opt) => (
           <button
             key={opt.value}
-            style={chipStyle(preset === opt.value)}
+            className={chipClass(preset === opt.value)}
             onClick={() => handlePreset(opt.value)}
           >
             {opt.label}
           </button>
         ))}
 
-        <div
-          style={{
-            width: 1,
-            height: 20,
-            background: "var(--hairline)",
-            margin: "0 8px",
-          }}
-        />
+        <div className="al-filter-sep" />
 
-        <span
-          style={{
-            fontSize: 11,
-            fontWeight: 700,
-            letterSpacing: "0.06em",
-            fontFamily: "var(--font-body)",
-            color: "var(--ink-4)",
-            textTransform: "uppercase",
-            marginRight: 4,
-          }}
-        >
-          Severity
-        </span>
+        <span className="al-filter-label">Severity</span>
         {SEVERITY_OPTIONS.map((opt) => (
           <button
             key={opt.value}
-            style={chipStyle(
+            className={chipClass(
               severity === opt.value,
               opt.value === "critical"
                 ? "critical"
@@ -1015,140 +591,69 @@ export default function AuditLogPage() {
           </button>
         ))}
 
-        <div
-          style={{
-            width: 1,
-            height: 20,
-            background: "var(--hairline)",
-            margin: "0 8px",
-          }}
-        />
+        <div className="al-filter-sep" />
 
-        <span
-          style={{
-            fontSize: 11,
-            fontWeight: 700,
-            letterSpacing: "0.06em",
-            fontFamily: "var(--font-body)",
-            color: "var(--ink-4)",
-            textTransform: "uppercase",
-            marginRight: 4,
-          }}
-        >
-          Target
-        </span>
+        <span className="al-filter-label">Target</span>
         {TARGET_OPTIONS.map((opt) => (
           <button
             key={opt.value}
-            style={chipStyle(targetType === opt.value)}
+            className={chipClass(targetType === opt.value)}
             onClick={() => handleTarget(opt.value)}
           >
             {opt.label}
           </button>
         ))}
 
+        {/* Search — 8px radius per v11 spec */}
         <input
-          style={{
-            marginLeft: 8,
-            padding: "6px 12px",
-            border: "1px solid var(--hairline)",
-            borderRadius: 6,
-            background: "var(--surface)",
-            color: "var(--ink)",
-            fontFamily: "var(--font-body)",
-            fontSize: 13,
-            outline: "none",
-            minWidth: 220,
-          }}
+          className="al-search"
           type="text"
           placeholder="Search action, target, actor, note…"
           value={search}
           onChange={(e) => handleSearch(e.target.value)}
         />
 
-        <span
-          style={{
-            marginLeft: "auto",
-            fontSize: 12,
-            fontFamily: "var(--font-body)",
-            color: "var(--ink-4)",
+        {/* Export button — btn-secondary (N2W blue) */}
+        <button
+          className="al-export-btn"
+          onClick={() => {
+            // Export stub — wire to real endpoint when available
+            alert("Export triggered");
           }}
         >
+          Export CSV
+        </button>
+
+        <span className="al-count">
           {filtered?.total?.toLocaleString() ?? 0} match
           {filtered?.total === 1 ? "" : "es"}
         </span>
       </div>
 
-      {/* Table */}
-      <div style={{ padding: "0 40px" }}>
-        {/* Header */}
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "120px 80px 160px 1fr 100px 20px",
-            gap: 12,
-            padding: "10px 24px",
-            borderBottom: "2px solid var(--hairline)",
-            marginTop: 8,
-          }}
-        >
+      {/* ── Log table ── */}
+      <div className="al-table">
+        {/* Column headers */}
+        <div className="al-table-head">
           {["Time", "Severity", "Actor", "Event", "IP", ""].map((h) => (
-            <span
-              key={h}
-              style={{
-                fontSize: 11,
-                fontWeight: 700,
-                letterSpacing: "0.07em",
-                fontFamily: "var(--font-body)",
-                color: "var(--ink-4)",
-                textTransform: "uppercase",
-              }}
-            >
-              {h}
-            </span>
+            <span key={h}>{h}</span>
           ))}
         </div>
 
         {loading && !data ? (
+          /* Skeleton loader */
           <>
             {[...Array(8)].map((_, i) => (
               <div
                 key={i}
-                style={{
-                  height: 52,
-                  background: "var(--surface-3)",
-                  borderRadius: 4,
-                  margin: "4px 0",
-                  opacity: 1 - i * 0.08,
-                }}
+                className="al-skeleton"
+                style={{ opacity: 1 - i * 0.08 }}
               />
             ))}
           </>
         ) : !data || data.items.length === 0 ? (
-          <div
-            style={{
-              padding: "48px 24px",
-              textAlign: "center",
-            }}
-          >
-            <div
-              style={{
-                fontFamily: "var(--font-display)",
-                fontSize: 18,
-                fontWeight: 700,
-                color: "var(--ink)",
-                marginBottom: 8,
-              }}
-            >
-              No events match.
-            </div>
-            <div
-              style={{
-                fontSize: 13,
-                fontFamily: "var(--font-body)",
-                color: "var(--ink-4)",
-              }}
-            >
+          <div className="al-empty">
+            <div className="al-empty__title">No events match.</div>
+            <div className="al-empty__body">
               Try widening the time range or clearing filters.
             </div>
           </div>
@@ -1159,59 +664,23 @@ export default function AuditLogPage() {
         )}
       </div>
 
-      {/* Pagination */}
+      {/* ── Pagination ── */}
       {pagination && pagination.totalPages > 1 && (
-        <div
-          style={{
-            padding: "16px 40px",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            borderTop: "1px solid var(--hairline)",
-            marginTop: 16,
-          }}
-        >
-          <div
-            style={{
-              fontSize: 12,
-              fontFamily: "var(--font-body)",
-              color: "var(--ink-4)",
-            }}
-          >
+        <div className="al-pagination">
+          <div className="al-pagination__info">
             Page {pagination.page} of {pagination.totalPages} ·{" "}
             {pagination.total.toLocaleString()} total
           </div>
-          <div style={{ display: "flex", gap: 8 }}>
+          <div className="al-pagination__controls">
             <button
-              style={{
-                padding: "6px 16px",
-                border: "1px solid var(--hairline)",
-                borderRadius: 6,
-                background: "var(--surface)",
-                fontFamily: "var(--font-body)",
-                fontSize: 13,
-                cursor: pagination.page <= 1 ? "not-allowed" : "pointer",
-                opacity: pagination.page <= 1 ? 0.4 : 1,
-              }}
+              className="al-page-btn"
               disabled={pagination.page <= 1}
               onClick={() => setPage((p) => Math.max(1, p - 1))}
             >
               Prev
             </button>
             <button
-              style={{
-                padding: "6px 16px",
-                border: "1px solid var(--hairline)",
-                borderRadius: 6,
-                background: "var(--surface)",
-                fontFamily: "var(--font-body)",
-                fontSize: 13,
-                cursor:
-                  pagination.page >= pagination.totalPages
-                    ? "not-allowed"
-                    : "pointer",
-                opacity: pagination.page >= pagination.totalPages ? 0.4 : 1,
-              }}
+              className="al-page-btn"
               disabled={pagination.page >= pagination.totalPages}
               onClick={() =>
                 setPage((p) => Math.min(pagination.totalPages, p + 1))
@@ -1223,7 +692,7 @@ export default function AuditLogPage() {
         </div>
       )}
 
-      {/* Detail drawer */}
+      {/* ── Detail drawer ── */}
       {selected && (
         <Drawer entry={selected} onClose={() => setSelected(null)} />
       )}

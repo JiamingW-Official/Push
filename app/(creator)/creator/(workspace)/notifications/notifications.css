@@ -1,227 +1,210 @@
 /* ============================================================
    Notifications — notifications.css
    Design v11: product register, 8px grid, v11 tokens
-   Shared by creator and merchant notification pages
+   Composes with .cw-page / .cw-header / .cw-chip-row / .cw-pill
    ============================================================ */
 
 /* ── Page shell ──────────────────────────────────────────── */
 
 .notif-page {
-  min-height: 100vh;
+  /* cw-page provides layout + padding + tabular numerals.
+     We only override the page background to surface-2 so unread
+     cards can use the brighter snow surface for contrast. */
   background: var(--surface-2);
-  color: var(--ink);
-  font-family: var(--font-body);
 }
 
-/* ── Page header — dark editorial ─────────────────────── */
+/* ── Today Summary glass tile ─────────────────────────────────
+   Single floating liquid-glass tile per Design v11 § 8.12 rule
+   "≤1 floating liquid-glass tile per panel". Composes inside
+   .cw-page after the header. */
 
-.notif-header {
-  background: var(--char);
-  border-bottom: 2px solid var(--ink);
-  padding: 24px 64px 32px;
-  max-width: none;
+.notif-summary-glass {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  padding: 16px 24px;
+  margin-bottom: 24px;
+  border-radius: var(--r-lg);
+  background:
+    radial-gradient(ellipse at 18% 0%, rgba(255, 255, 255, 0.62) 0%, rgba(255, 255, 255, 0) 55%),
+    rgba(248, 244, 232, 0.48);
+  -webkit-backdrop-filter: blur(24px) saturate(160%);
+  backdrop-filter: blur(24px) saturate(160%);
+  border: 0.5px solid rgba(255, 255, 255, 0.50);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.65),
+    0 4px 16px rgba(10, 10, 10, 0.05);
 }
 
-.notif-back {
+.notif-summary-eyebrow {
   display: inline-flex;
   align-items: center;
   gap: 8px;
   font-family: var(--font-mono);
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.10em;
-  color: rgba(255,255,255,0.45);
-  text-decoration: none;
-  transition: color 160ms ease, transform 160ms ease;
-  margin-bottom: 24px;
+  letter-spacing: 0.14em;
+  color: var(--ink-3);
+  flex-shrink: 0;
 }
 
-.notif-back:hover {
-  color: var(--snow);
-  transform: translate(1px, 1px);
+.notif-summary-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--brand-red);
+  box-shadow: 0 0 0 3px var(--brand-red-tint);
 }
 
-.notif-title-row {
+.notif-summary-stats {
   display: flex;
   align-items: baseline;
-  gap: 16px;
+  gap: 32px;
   flex-wrap: wrap;
-  margin-bottom: 0;
+  min-width: 0;
 }
 
-.notif-title {
+.notif-summary-stat {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 8px;
+  white-space: nowrap;
+}
+
+.notif-summary-num {
   font-family: var(--font-display);
-  font-size: clamp(40px, 5vw, 72px);
-  font-weight: 900;
-  letter-spacing: -0.04em;
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--ink);
+  letter-spacing: -0.02em;
   line-height: 1;
-  color: var(--snow);
-  margin: 0;
+  font-variant-numeric: tabular-nums;
 }
 
-.notif-unread-badge {
+.notif-summary-key {
   font-family: var(--font-mono);
-  font-size: 12px;
-  font-weight: 700;
+  font-size: 11px;
+  font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--snow);
-  background: var(--brand-red);
-  padding: 4px 12px;
-  border-radius: var(--r-pill);
-  line-height: 1.3;
-  white-space: nowrap;
-}
-
-/* ── Filter tabs ─────────────────────────────────────────── */
-
-.notif-tabs-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  padding: 0 64px;
-  max-width: 900px;
-  border-bottom: 1px solid var(--hairline);
-  margin-bottom: 0;
-}
-
-.notif-tabs {
-  display: flex;
-  gap: 4px;
-  padding: 12px 0;
-}
-
-.notif-tab {
-  font-family: var(--font-mono);
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
+  letter-spacing: 0.10em;
   color: var(--ink-4);
-  background: var(--surface-3);
-  border: 1px solid var(--hairline);
-  border-radius: var(--r-pill);
-  padding: 8px 18px;
-  cursor: pointer;
-  transition: background 150ms ease, color 150ms ease, border-color 150ms ease, transform 150ms ease;
-  white-space: nowrap;
-}
-
-.notif-tab:hover {
-  background: var(--mist);
-  color: var(--ink);
-  transform: translate(1px, 1px);
-}
-
-.notif-tab--active {
-  background: var(--ink);
-  color: var(--snow);
-  border-color: var(--ink);
-}
-
-.notif-tab--active:hover {
-  background: var(--graphite);
-  border-color: var(--graphite);
-}
-
-.notif-mark-all-btn {
-  font-family: var(--font-mono);
-  font-size: 12px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: var(--ink-4);
-  background: none;
-  border: 1px solid var(--hairline);
-  border-radius: var(--r-sm);
-  padding: 8px 16px;
-  cursor: pointer;
-  transition: color 160ms ease, border-color 160ms ease, transform 160ms ease;
-  flex-shrink: 0;
-  white-space: nowrap;
-}
-
-.notif-mark-all-btn:hover {
-  color: var(--ink);
-  border-color: var(--mist);
-  transform: translate(1px, 1px);
 }
 
 /* ── Main content ─────────────────────────────────────────── */
 
 .notif-main {
   max-width: 900px;
-  padding: 0 64px 96px;
+  padding: 0 0 96px;
 }
 
-/* ── Group ───────────────────────────────────────────────── */
+/* ── Group header ─────────────────────────────────────────── */
 
 .notif-group {
   margin-top: 32px;
 }
 
+.notif-group:first-child {
+  margin-top: 0;
+}
+
 .notif-group-label {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
   font-family: var(--font-mono);
   font-size: 12px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.12em;
   color: var(--ink-4);
-  padding: 0 0 12px;
+  padding: 0 0 16px;
   border-bottom: 1px solid var(--hairline);
+  margin-bottom: 16px;
+}
+
+.notif-group-count {
+  color: var(--ink-4);
+  opacity: 0.6;
+  font-weight: 500;
 }
 
 .notif-list {
   display: flex;
   flex-direction: column;
+  gap: 8px;
 }
 
-/* ── Notification item ────────────────────────────────────── */
+/* ── Notification item — card with 10px radius (spec) ─────── */
 
 .notif-item {
-  display: flex;
+  display: grid;
+  grid-template-columns: 40px 1fr auto;
   align-items: flex-start;
   gap: 16px;
-  padding: 16px 24px;
-  border-bottom: 1px solid var(--hairline);
+  padding: 16px;
+  border-radius: 10px;
+  border: 1px solid var(--hairline);
   text-decoration: none;
-  transition: background 160ms ease, transform 160ms ease;
+  color: inherit;
   position: relative;
   cursor: pointer;
-  border-left: 4px solid transparent;
+  /* iOS 26 spring on hover-shift signature */
+  transition:
+    background 220ms cubic-bezier(0.34, 1.56, 0.64, 1),
+    border-color 220ms ease,
+    box-shadow 220ms ease,
+    transform 220ms cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-.notif-item:last-child {
-  border-bottom: none;
-}
-
-/* Unread state */
-.notif-item--unread {
+/* Read state — quieter surface-2 with hairline */
+.notif-item--read {
   background: var(--surface-2);
-  border-left-color: var(--brand-red);
+  border-color: var(--hairline);
+}
+
+/* Unread state — surface-3 with stronger left rail in brand red */
+.notif-item--unread {
+  background: var(--surface-3);
+  border-color: var(--hairline-2);
+  box-shadow: inset 4px 0 0 0 var(--brand-red);
   padding-left: 20px;
 }
 
-/* Read state */
-.notif-item--read {
-  background: var(--surface);
-  border-left-color: transparent;
-}
-
-/* Hover shift */
+/* Hover-shift signature (Push interaction) */
 .notif-item:hover {
+  transform: translate(2px, 2px);
+  border-color: var(--hairline-2);
+  box-shadow:
+    inset 4px 0 0 0 var(--brand-red),
+    0 2px 6px rgba(10, 10, 10, 0.06);
+}
+.notif-item--read:hover {
   background: var(--surface-3);
-  transform: translate(1px, 1px);
+  box-shadow: 0 2px 6px rgba(10, 10, 10, 0.06);
+}
+.notif-item:active {
+  transform: translate(3px, 3px) scale(0.98);
 }
 
-/* Icon tile — 40x40, 12px radius per spec */
+/* a11y focus — brand red focus halo */
+.notif-item:focus-visible {
+  outline: none;
+  box-shadow: var(--shadow-focus);
+}
+.notif-item--unread:focus-visible {
+  box-shadow:
+    inset 4px 0 0 0 var(--brand-red),
+    var(--shadow-focus);
+}
+
+/* Icon tile — 40×40, --r-lg (12px) per v11 mandatory rule */
 .notif-item-icon {
   width: 40px;
   height: 40px;
-  border-radius: 12px;
-  background: var(--surface-3);
+  border-radius: var(--r-lg);
+  background: var(--surface);
+  border: 1px solid var(--hairline);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -229,19 +212,36 @@
   color: var(--ink-3);
 }
 
-.notif-item--unread .notif-item-icon {
-  background: var(--brand-red-tint);
-  color: var(--brand-red);
-}
-
-/* SVG icon */
 .notif-item-icon svg {
   width: 20px;
   height: 20px;
   flex-shrink: 0;
 }
 
-/* Body */
+/* Per-kind icon tinting (unread state only — keeps read items quiet) */
+.notif-item--unread.notif-item--payouts .notif-item-icon {
+  background: var(--brand-red-tint);
+  border-color: rgba(193, 18, 31, 0.18);
+  color: var(--brand-red);
+}
+.notif-item--unread.notif-item--invites .notif-item-icon {
+  background: rgba(34, 197, 94, 0.08);
+  border-color: rgba(34, 197, 94, 0.22);
+  color: #15803d;
+}
+.notif-item--unread.notif-item--tasks .notif-item-icon {
+  background: var(--surface);
+  border-color: var(--hairline-2);
+  color: var(--ink);
+}
+.notif-item--unread.notif-item--system .notif-item-icon {
+  background: rgba(191, 161, 112, 0.10);
+  border-color: rgba(191, 161, 112, 0.30);
+  color: #6b4d1f;
+}
+
+/* ── Item body ──────────────────────────────────────────── */
+
 .notif-item-body {
   flex: 1;
   min-width: 0;
@@ -250,23 +250,50 @@
   gap: 4px;
 }
 
-.notif-item-header {
-  display: flex;
+/* Mono meta line — kind · time */
+.notif-item-meta {
+  display: inline-flex;
   align-items: baseline;
-  justify-content: space-between;
-  gap: 16px;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.10em;
+  color: var(--ink-4);
+  margin-bottom: 4px;
 }
 
+.notif-item-kind {
+  color: var(--ink-3);
+}
+
+.notif-item--unread .notif-item-kind {
+  color: var(--brand-red);
+}
+
+.notif-item-meta-sep {
+  opacity: 0.4;
+}
+
+.notif-item-time {
+  font-weight: 500;
+  letter-spacing: 0.04em;
+}
+
+/* Title — Darky display 16px for unread, mono 14px for read */
 .notif-item-title {
   font-family: var(--font-display);
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 700;
   color: var(--ink);
-  letter-spacing: -0.015em;
+  letter-spacing: -0.012em;
   line-height: 1.3;
-  white-space: nowrap;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  line-clamp: 1;
+  -webkit-box-orient: vertical;
   overflow: hidden;
-  text-overflow: ellipsis;
 }
 
 .notif-item--read .notif-item-title {
@@ -277,23 +304,25 @@
   letter-spacing: 0;
 }
 
-.notif-item-time {
-  font-family: var(--font-mono);
-  font-size: 12px;
-  color: var(--ink-4);
-  flex-shrink: 0;
-  white-space: nowrap;
-}
-
 .notif-item-text {
   font-family: var(--font-mono);
-  font-size: 14px;
+  font-size: 13px;
   color: var(--ink-3);
-  line-height: 1.55;
+  line-height: 1.5;
   margin: 0;
+  /* Two-line clamp keeps card rhythm scannable */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
-/* Unread dot */
+.notif-item--read .notif-item-text {
+  color: var(--ink-4);
+}
+
+/* Unread dot — brand red (right-aligned) */
 .notif-unread-dot {
   width: 8px;
   height: 8px;
@@ -301,6 +330,7 @@
   border-radius: 50%;
   flex-shrink: 0;
   margin-top: 8px;
+  box-shadow: 0 0 0 3px var(--brand-red-tint);
 }
 
 /* ── Empty state ─────────────────────────────────────────── */
@@ -311,13 +341,15 @@
   flex-direction: column;
   align-items: flex-start;
   gap: 16px;
+  max-width: 480px;
 }
 
 .notif-empty-icon {
   width: 40px;
   height: 40px;
-  border-radius: 12px;
-  background: var(--surface-3);
+  border-radius: var(--r-lg);
+  background: var(--surface);
+  border: 1px solid var(--hairline);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -345,7 +377,6 @@
   color: var(--ink-3);
   margin: 0;
   line-height: 1.55;
-  max-width: 360px;
 }
 
 /* ── Load more ───────────────────────────────────────────── */
@@ -359,23 +390,33 @@
 /* ── Loading skeleton ────────────────────────────────────── */
 
 .notif-skeleton {
-  padding: 32px 64px 96px;
+  padding: 32px 0 96px;
   max-width: 900px;
 }
 
 .notif-skeleton-title {
-  width: 200px;
-  height: 40px;
+  width: 240px;
+  height: 48px;
   background: var(--hairline);
-  border-radius: 8px;
+  border-radius: var(--r-sm);
+  margin-bottom: 24px;
+  animation: notif-pulse 1.4s ease-in-out infinite;
+}
+
+.notif-skeleton-summary {
+  width: 100%;
+  max-width: 480px;
+  height: 64px;
+  background: var(--hairline);
+  border-radius: var(--r-lg);
   margin-bottom: 32px;
   animation: notif-pulse 1.4s ease-in-out infinite;
 }
 
 .notif-skeleton-item {
-  height: 72px;
+  height: 80px;
   background: var(--hairline);
-  border-radius: 8px;
+  border-radius: 10px;
   margin-bottom: 8px;
   animation: notif-pulse 1.4s ease-in-out infinite;
 }
@@ -390,71 +431,70 @@
   }
 }
 
+/* ── Reduced motion — kill spring + pulse ─────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  .notif-item,
+  .notif-item:hover,
+  .notif-item:active {
+    transition: none;
+    transform: none;
+  }
+  .notif-skeleton-title,
+  .notif-skeleton-summary,
+  .notif-skeleton-item {
+    animation: none;
+  }
+}
+
 /* ── Responsive ──────────────────────────────────────────── */
 
 @media (max-width: 1024px) {
-  .notif-header,
-  .notif-skeleton {
-    padding-left: 48px;
-    padding-right: 48px;
+  .notif-summary-glass {
+    gap: 24px;
   }
-
-  .notif-tabs-row {
-    padding-left: 48px;
-    padding-right: 48px;
-  }
-
-  .notif-main {
-    padding-left: 48px;
-    padding-right: 48px;
+  .notif-summary-stats {
+    gap: 24px;
   }
 }
 
 @media (max-width: 768px) {
-  .notif-header,
-  .notif-skeleton {
-    padding-left: 24px;
-    padding-right: 24px;
-  }
-
-  .notif-tabs-row {
-    padding-left: 24px;
-    padding-right: 24px;
-    gap: 8px;
-  }
-
-  .notif-tabs {
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-    padding-right: 8px;
-  }
-
-  .notif-tabs::-webkit-scrollbar {
-    display: none;
-  }
-
-  .notif-main {
-    padding-left: 24px;
-    padding-right: 24px;
-    padding-bottom: 56px;
-  }
-
-  .notif-item {
+  .notif-summary-glass {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
     padding: 16px;
   }
 
-  .notif-item--unread {
-    padding-left: 12px;
+  .notif-summary-stats {
+    gap: 24px;
   }
 
-  .notif-title {
-    font-size: 32px;
+  .notif-item {
+    grid-template-columns: 40px 1fr auto;
+    gap: 12px;
+    padding: 12px;
+  }
+
+  .notif-item--unread {
+    padding-left: 16px;
+  }
+
+  .notif-item-title {
+    font-size: 15px;
   }
 }
 
 @media (max-width: 480px) {
-  .notif-mark-all-btn {
-    display: none;
+  .notif-summary-num {
+    font-size: 20px;
+  }
+
+  .notif-item {
+    padding: 12px;
+  }
+
+  .notif-item--unread {
+    padding-left: 16px;
   }
 }

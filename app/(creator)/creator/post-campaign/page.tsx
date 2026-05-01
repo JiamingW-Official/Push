@@ -167,92 +167,42 @@ function Timeline() {
   ];
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: 0 }}>
+    <div className="pc-timeline">
       {steps.map((step, i) => (
         <div
           key={step.label}
-          style={{
-            display: "grid",
-            gridTemplateColumns: "32px 1fr",
-            gap: 16,
-            paddingBottom: i < steps.length - 1 ? 24 : 0,
-            position: "relative",
-          }}
+          className={`pc-timeline-item${i < steps.length - 1 ? " pc-timeline-item--spaced" : ""}`}
         >
-          {/* Line */}
+          {/* Connector line */}
           {i < steps.length - 1 && (
             <div
-              style={{
-                position: "absolute",
-                left: 15,
-                top: 28,
-                width: 2,
-                height: "calc(100% - 8px)",
-                background: step.done ? "var(--brand-red)" : "var(--hairline)",
-              }}
+              className={`pc-timeline-connector${step.done ? " pc-timeline-connector--done" : ""}`}
             />
           )}
-          {/* Dot */}
+
+          {/* Icon tile — 40×40 with surface-3 bg + 10px radius */}
           <div
-            style={{
-              width: 32,
-              height: 32,
-              borderRadius: "50%",
-              background: step.done
-                ? "var(--brand-red)"
+            className={`pc-timeline-icon-tile${
+              step.done
+                ? " pc-timeline-icon-tile--done"
                 : step.current
-                  ? "var(--surface)"
-                  : "var(--surface-3)",
-              border: step.done
-                ? "2px solid var(--brand-red)"
-                : step.current
-                  ? "2px solid var(--brand-red)"
-                  : "2px solid var(--hairline)",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              flexShrink: 0,
-              zIndex: 1,
-            }}
+                  ? " pc-timeline-icon-tile--current"
+                  : " pc-timeline-icon-tile--pending"
+            }`}
           >
-            {step.done && (
-              <span style={{ color: "var(--snow)", fontSize: 14 }}>✓</span>
-            )}
-            {step.current && (
-              <span
-                style={{
-                  width: 10,
-                  height: 10,
-                  borderRadius: "50%",
-                  background: "var(--brand-red)",
-                }}
-              />
-            )}
+            {step.done && <span className="pc-timeline-check">✓</span>}
+            {step.current && <span className="pc-timeline-pulse" />}
           </div>
+
           {/* Content */}
-          <div style={{ paddingTop: 4 }}>
+          <div className="pc-timeline-content">
             <div
-              style={{
-                fontFamily: "var(--font-body)",
-                fontSize: 14,
-                fontWeight: 600,
-                color: step.pending ? "var(--ink-4)" : "var(--ink)",
-                marginBottom: 4,
-              }}
+              className={`pc-timeline-label${step.pending ? " pc-timeline-label--pending" : ""}`}
             >
               {step.label}
               {step.suffix && ` ${step.suffix}`}
             </div>
-            <div
-              style={{
-                fontFamily: "var(--font-body)",
-                fontSize: 13,
-                color: "var(--ink-4)",
-                lineHeight: 1.5,
-              }}
-            >
-              {step.desc}
-            </div>
+            <div className="pc-timeline-desc">{step.desc}</div>
           </div>
         </div>
       ))}
@@ -270,70 +220,26 @@ function ResultsSummary({
   metrics: DemoMetrics;
 }) {
   return (
-    <div
-      style={{
-        background: "var(--surface-2)",
-        border: "1px solid var(--hairline)",
-        borderRadius: 10,
-        padding: 24,
-      }}
-    >
-      <span
-        style={{
-          fontFamily: "var(--font-body)",
-          fontSize: 11,
-          color: "var(--ink-4)",
-          letterSpacing: "0.08em",
-          textTransform: "uppercase",
-          display: "block",
-          marginBottom: 16,
-        }}
-      >
-        CAMPAIGN RESULTS
-      </span>
+    <div className="pc-section">
+      <span className="pc-section-eyebrow">CAMPAIGN RESULTS</span>
 
       {/* Content thumbnails */}
-      <div style={{ display: "flex", gap: 8, marginBottom: 12 }}>
+      <div className="pc-results-thumbs">
         {[0, 1, 2].map((i) => (
           <div
             key={i}
-            style={{
-              width: 72,
-              height: 72,
-              background: "var(--surface-3)",
-              border: "1px solid var(--hairline)",
-              borderRadius: 8,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              fontSize: 20,
-              color: "var(--ink-4)",
-            }}
+            className="pc-content-thumb"
             aria-label="Content image placeholder"
           >
             ▶
           </div>
         ))}
       </div>
-      <p
-        style={{
-          fontFamily: "var(--font-body)",
-          fontSize: 12,
-          color: "var(--ink-4)",
-          marginBottom: 16,
-        }}
-      >
-        Content submitted for {data.merchant}
-      </p>
+
+      <p className="pc-results-meta">Content submitted for {data.merchant}</p>
 
       {/* Metrics grid */}
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(4, 1fr)",
-          gap: 12,
-        }}
-      >
+      <div className="pc-metrics-grid">
         {[
           {
             label: "Engagement",
@@ -352,49 +258,10 @@ function ResultsSummary({
             sub: "+ 3% on walk-ins",
           },
         ].map((cell) => (
-          <div
-            key={cell.label}
-            style={{
-              background: "var(--surface)",
-              border: "1px solid var(--hairline)",
-              borderRadius: 8,
-              padding: 16,
-              display: "flex",
-              flexDirection: "column",
-              gap: 4,
-            }}
-          >
-            <span
-              style={{
-                fontFamily: "var(--font-body)",
-                fontSize: 11,
-                color: "var(--ink-4)",
-                letterSpacing: "0.06em",
-                textTransform: "uppercase",
-              }}
-            >
-              {cell.label}
-            </span>
-            <span
-              style={{
-                fontFamily: "var(--font-display)",
-                fontSize: 24,
-                fontWeight: 700,
-                color: "var(--ink)",
-                lineHeight: 1,
-              }}
-            >
-              {cell.value}
-            </span>
-            <span
-              style={{
-                fontFamily: "var(--font-body)",
-                fontSize: 11,
-                color: "var(--ink-4)",
-              }}
-            >
-              {cell.sub}
-            </span>
+          <div key={cell.label} className="pc-metric-cell">
+            <span className="pc-metric-label">{cell.label}</span>
+            <span className="pc-metric-value">{cell.value}</span>
+            <span className="pc-metric-sub">{cell.sub}</span>
           </div>
         ))}
       </div>
@@ -423,195 +290,61 @@ function ScoreImpact({ data }: { data: PageData }) {
   }, [fillPct]);
 
   return (
-    <div
-      style={{
-        background: "var(--surface-2)",
-        border: "1px solid var(--hairline)",
-        borderRadius: 10,
-        padding: 24,
-      }}
-    >
-      <span
-        style={{
-          fontFamily: "var(--font-body)",
-          fontSize: 11,
-          color: "var(--ink-4)",
-          letterSpacing: "0.08em",
-          textTransform: "uppercase",
-          display: "block",
-          marginBottom: 16,
-        }}
-      >
-        SCORE IMPACT
-      </span>
+    <div className="pc-section">
+      <span className="pc-section-eyebrow">SCORE IMPACT</span>
 
-      {/* +X pts impact callout */}
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          gap: 16,
-          marginBottom: 16,
-          padding: 16,
-          background: "var(--surface)",
-          border: "1px solid var(--hairline)",
-          borderRadius: 8,
-        }}
-      >
-        <span
-          style={{
-            fontFamily: "var(--font-display)",
-            fontSize: 40,
-            fontWeight: 700,
-            color: "var(--brand-red)",
-            lineHeight: 1,
-          }}
-        >
+      {/* +X pts impact callout — champagne accent for score delta */}
+      <div className="pc-score-impact-callout">
+        <span className="pc-score-delta-number">
           +{data.score_delta.toFixed(1)}
         </span>
-        <div style={{ display: "flex", flexDirection: "column", gap: 2 }}>
-          <span
-            style={{
-              fontFamily: "var(--font-body)",
-              fontSize: 13,
-              color: "var(--ink)",
-              fontWeight: 600,
-            }}
-          >
+        <div className="pc-score-impact-info">
+          <span className="pc-score-impact-label">
             Points earned this campaign
           </span>
-          <span
-            style={{
-              fontFamily: "var(--font-body)",
-              fontSize: 12,
-              color: "var(--ink-4)",
-            }}
-          >
+          <span className="pc-score-impact-sub">
             Based on similar campaigns at your tier
           </span>
         </div>
       </div>
 
       {/* Before → After */}
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          gap: 12,
-          marginBottom: 12,
-        }}
-      >
-        <span
-          style={{
-            fontFamily: "var(--font-body)",
-            fontSize: 14,
-            color: "var(--ink-4)",
-          }}
-        >
-          {scoreBefore.toFixed(1)} pts
-        </span>
-        <span style={{ color: "var(--ink-4)", fontSize: 14 }}>→</span>
-        <span
-          style={{
-            fontFamily: "var(--font-body)",
-            fontSize: 14,
-            fontWeight: 700,
-            color: "var(--ink)",
-          }}
-        >
-          {data.score.toFixed(1)} pts
-        </span>
+      <div className="pc-score-transition">
+        <span className="pc-score-before">{scoreBefore.toFixed(1)} pts</span>
+        <span className="pc-score-arrow">→</span>
+        <span className="pc-score-after">{data.score.toFixed(1)} pts</span>
       </div>
 
-      {/* Progress bar */}
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          marginBottom: 4,
-        }}
-      >
-        <span
-          style={{
-            fontFamily: "var(--font-body)",
-            fontSize: 11,
-            color: "var(--ink-4)",
-          }}
-        >
-          0
-        </span>
-        <span
-          style={{
-            fontFamily: "var(--font-body)",
-            fontSize: 11,
-            color: "var(--ink-4)",
-          }}
-        >
-          {maxScore}
-        </span>
+      {/* Progress bar labels */}
+      <div className="pc-score-bar-labels">
+        <span className="pc-score-bar-label">0</span>
+        <span className="pc-score-bar-label">{maxScore}</span>
       </div>
-      <div
-        style={{
-          height: 8,
-          background: "var(--surface-3)",
-          borderRadius: 4,
-          overflow: "hidden",
-          marginBottom: 8,
-        }}
-      >
+
+      {/* Tier progress bar — spec I */}
+      <div className="pc-tier-bar-track">
         <div
           ref={fillRef}
-          style={{
-            width: "0%",
-            height: "100%",
-            background: "var(--brand-red)",
-            borderRadius: 4,
-            transition: "width 0.8s cubic-bezier(0.34,1.56,0.64,1)",
-          }}
+          className="pc-tier-bar-fill"
+          style={{ width: "0%" }}
           role="progressbar"
           aria-valuenow={data.score}
           aria-valuemax={maxScore}
         />
       </div>
 
-      <p
-        style={{
-          fontFamily: "var(--font-body)",
-          fontSize: 11,
-          color: "var(--ink-4)",
-          fontStyle: "italic",
-          margin: "0 0 12px",
-        }}
-      >
+      <p className="pc-score-disclaimer">
         Estimated — final score updates after merchant approval
       </p>
 
-      <div
-        style={{
-          fontFamily: "var(--font-body)",
-          fontSize: 13,
-          color: "var(--ink-3)",
-        }}
-      >
+      <div className="pc-score-next-info">
         {remaining > 0
           ? `${data.score.toFixed(0)} → ${nextTier.target} pts — ${remaining} more points to reach ${nextTier.label}`
           : `${nextTier.label} tier reached!`}
       </div>
 
       {isClose && (
-        <div
-          style={{
-            marginTop: 12,
-            padding: "8px 16px",
-            background: "rgba(193,18,31,0.08)",
-            border: "1px solid rgba(193,18,31,0.2)",
-            borderRadius: 8,
-            fontFamily: "var(--font-body)",
-            fontSize: 13,
-            color: "var(--brand-red)",
-            fontWeight: 600,
-          }}
-        >
+        <div className="pc-score-close-alert">
           Just {remaining} points away from {nextTier.label}!
         </div>
       )}
@@ -627,35 +360,12 @@ function TierProgress({ data }: { data: PageData }) {
   const remaining = Math.max(0, nextTier.target - data.score);
 
   return (
-    <div
-      style={{
-        background: "var(--surface-2)",
-        border: "1px solid var(--hairline)",
-        borderRadius: 10,
-        padding: 24,
-      }}
-    >
-      <span
-        style={{
-          fontFamily: "var(--font-body)",
-          fontSize: 11,
-          color: "var(--ink-4)",
-          letterSpacing: "0.08em",
-          textTransform: "uppercase",
-          display: "block",
-          marginBottom: 16,
-        }}
-      >
-        TIER PROGRESS
-      </span>
+    <div className="pc-section">
+      <span className="pc-section-eyebrow">TIER PROGRESS</span>
 
       {/* Mini tier journey */}
       <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          gap: 0,
-        }}
+        className="pc-tier-journey"
         role="list"
         aria-label="Tier progression"
       >
@@ -666,62 +376,38 @@ function TierProgress({ data }: { data: PageData }) {
           const isLast = i === ALL_TIERS.length - 1;
 
           return (
-            <div key={t} style={{ display: "contents" }}>
+            <div key={t} className="pc-tier-node-wrapper">
               <div
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                  gap: 6,
-                }}
+                className="pc-tier-node"
                 role="listitem"
                 aria-label={`${t}${isCurrent ? " (current)" : ""}${isDone ? " (completed)" : ""}`}
               >
                 <div
-                  style={{
-                    width: isCurrent ? 16 : 12,
-                    height: isCurrent ? 16 : 12,
-                    borderRadius: "50%",
-                    background: isDone
-                      ? "var(--brand-red)"
+                  className={`pc-tier-dot${
+                    isDone
+                      ? " pc-tier-dot--done"
                       : isCurrent
-                        ? "var(--brand-red)"
-                        : "var(--surface-3)",
-                    border: isCurrent
-                      ? "3px solid var(--brand-red)"
-                      : "2px solid var(--hairline)",
-                    flexShrink: 0,
-                  }}
+                        ? " pc-tier-dot--current"
+                        : ""
+                  }`}
                 />
                 <span
-                  style={{
-                    fontFamily: "var(--font-body)",
-                    fontSize: isCurrent ? 11 : 10,
-                    fontWeight: isCurrent ? 700 : 400,
-                    color: isCurrent
-                      ? "var(--brand-red)"
+                  className={`pc-tier-label${
+                    isCurrent
+                      ? " pc-tier-label--current"
                       : isNext
-                        ? "var(--ink-3)"
+                        ? " pc-tier-label--next"
                         : isDone
-                          ? "var(--ink-3)"
-                          : "var(--ink-4)",
-                    letterSpacing: "0.04em",
-                    textTransform: "uppercase",
-                    whiteSpace: "nowrap",
-                  }}
+                          ? " pc-tier-label--done"
+                          : ""
+                  }`}
                 >
                   {t.charAt(0).toUpperCase() + t.slice(1)}
                 </span>
               </div>
               {!isLast && (
                 <div
-                  style={{
-                    flex: 1,
-                    height: 2,
-                    background: isDone ? "var(--brand-red)" : "var(--hairline)",
-                    marginBottom: 22,
-                    minWidth: 16,
-                  }}
+                  className={`pc-tier-connector${isDone ? " pc-tier-connector--done" : ""}`}
                 />
               )}
             </div>
@@ -729,17 +415,10 @@ function TierProgress({ data }: { data: PageData }) {
         })}
       </div>
 
-      {/* Next tier perk */}
+      {/* Next tier perk — tier upgrade indicator uses champagne */}
       {data.tier !== "partner" && (
-        <div
-          style={{
-            marginTop: 16,
-            fontFamily: "var(--font-body)",
-            fontSize: 13,
-            color: "var(--ink-3)",
-          }}
-        >
-          <strong>{nextTier.label}:</strong>{" "}
+        <div className="pc-tier-perk">
+          <strong className="pc-tier-upgrade-text">{nextTier.label}:</strong>{" "}
           {TIER_PERKS[ALL_TIERS[currentIdx + 1] as Tier]}
           {remaining > 0 && ` — ${remaining} pts away`}
         </div>
@@ -752,64 +431,16 @@ function TierProgress({ data }: { data: PageData }) {
 
 function PayoutPanel({ data }: { data: PageData }) {
   return (
-    <div
-      style={{
-        background: "var(--surface-2)",
-        border: "1px solid var(--hairline)",
-        borderRadius: 10,
-        padding: 24,
-      }}
-    >
-      <span
-        style={{
-          fontFamily: "var(--font-body)",
-          fontSize: 11,
-          color: "var(--ink-4)",
-          letterSpacing: "0.08em",
-          textTransform: "uppercase",
-          display: "block",
-          marginBottom: 16,
-        }}
-      >
-        YOUR ESTIMATED PAYOUT
-      </span>
+    <div className="pc-section">
+      <span className="pc-section-eyebrow">YOUR ESTIMATED PAYOUT</span>
 
-      <div
-        style={{
-          fontFamily: "var(--font-display)",
-          fontSize: 48,
-          fontWeight: 700,
-          color: "var(--ink)",
-          lineHeight: 1,
-          marginBottom: 8,
-        }}
-      >
-        ${data.amount}
-      </div>
+      <div className="pc-payout-panel-amount">${data.amount}</div>
 
-      <p
-        style={{
-          fontFamily: "var(--font-body)",
-          fontSize: 13,
-          color: "var(--ink-4)",
-          margin: "0 0 12px",
-        }}
-      >
+      <p className="pc-payout-commission">
         Plus 3% on every verified walk-in (30-day window)
       </p>
 
-      <span
-        style={{
-          display: "inline-block",
-          fontFamily: "var(--font-body)",
-          fontSize: 12,
-          color: "var(--ink-3)",
-          background: "var(--surface-3)",
-          border: "1px solid var(--hairline)",
-          borderRadius: 40,
-          padding: "4px 12px",
-        }}
-      >
+      <span className="pc-payout-speed-badge">
         {data.tier.charAt(0).toUpperCase() + data.tier.slice(1)} tier:{" "}
         {PAYOUT_SPEED[data.tier]}
       </span>
@@ -821,74 +452,23 @@ function PayoutPanel({ data }: { data: PageData }) {
 
 function MerchantFeedback({ hasFeedback }: { hasFeedback: boolean }) {
   return (
-    <div
-      style={{
-        background: "var(--surface-2)",
-        border: "1px solid var(--hairline)",
-        borderRadius: 10,
-        padding: 24,
-      }}
-    >
-      <span
-        style={{
-          fontFamily: "var(--font-body)",
-          fontSize: 11,
-          color: "var(--ink-4)",
-          letterSpacing: "0.08em",
-          textTransform: "uppercase",
-          display: "block",
-          marginBottom: 16,
-        }}
-      >
-        MERCHANT REVIEW
-      </span>
+    <div className="pc-section">
+      <span className="pc-section-eyebrow">MERCHANT REVIEW</span>
 
       {!hasFeedback ? (
-        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-          <span
-            style={{
-              width: 8,
-              height: 8,
-              borderRadius: "50%",
-              background: "var(--ink-4)",
-              flexShrink: 0,
-              animation: "pulse 2s infinite",
-            }}
-          />
-          <span
-            style={{
-              fontFamily: "var(--font-body)",
-              fontSize: 13,
-              color: "var(--ink-4)",
-            }}
-          >
+        <div className="pc-feedback-waiting">
+          <span className="pc-feedback-dot" />
+          <span className="pc-feedback-waiting-text">
             Waiting for merchant review — typically 24–48 hours after
             submission.
           </span>
         </div>
       ) : (
         <>
-          <div
-            style={{
-              color: "var(--brand-red)",
-              fontSize: 18,
-              letterSpacing: 2,
-              marginBottom: 12,
-            }}
-            aria-label="5 out of 5 stars"
-          >
+          <div className="pc-feedback-stars" aria-label="5 out of 5 stars">
             ★★★★★
           </div>
-          <blockquote
-            style={{
-              fontFamily: "var(--font-body)",
-              fontSize: 14,
-              color: "var(--ink-3)",
-              lineHeight: 1.6,
-              fontStyle: "italic",
-              margin: 0,
-            }}
-          >
+          <blockquote className="pc-feedback-quote">
             &ldquo;Great energy and authentic content. The post drove real foot
             traffic — we noticed the spike same day. Would love to work with you
             again.&rdquo;
@@ -918,171 +498,41 @@ function NextSteps({ data }: { data: PageData }) {
   };
 
   return (
-    <div
-      style={{
-        background: "var(--surface-2)",
-        border: "1px solid var(--hairline)",
-        borderRadius: 10,
-        padding: 24,
-      }}
-    >
-      <span
-        style={{
-          fontFamily: "var(--font-body)",
-          fontSize: 11,
-          color: "var(--ink-4)",
-          letterSpacing: "0.08em",
-          textTransform: "uppercase",
-          display: "block",
-          marginBottom: 16,
-        }}
-      >
-        WHAT&apos;S NEXT
-      </span>
+    <div className="pc-section">
+      <span className="pc-section-eyebrow">WHAT&apos;S NEXT</span>
 
-      <div
-        style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 12 }}
-      >
-        {/* Primary CTA */}
+      <div className="pc-next-steps-grid">
+        {/* Primary CTA — Find Next Campaign → btn btn-primary */}
         <Link
           href="/creator/dashboard?tab=discover"
-          className="click-shift"
-          style={{
-            background: "var(--brand-red)",
-            border: "1px solid var(--brand-red)",
-            borderRadius: 10,
-            padding: 20,
-            textDecoration: "none",
-            display: "flex",
-            flexDirection: "column",
-            gap: 8,
-          }}
+          className="pc-next-step-card pc-next-step-card--primary click-shift"
         >
-          <span
-            style={{
-              fontFamily: "var(--font-display)",
-              fontSize: 24,
-              fontWeight: 700,
-              color: "var(--snow)",
-              lineHeight: 1,
-            }}
-          >
-            +
-          </span>
-          <span
-            style={{
-              fontFamily: "var(--font-body)",
-              fontSize: 13,
-              fontWeight: 600,
-              color: "var(--snow)",
-            }}
-          >
-            Find your next campaign
-          </span>
-          <span
-            style={{
-              fontFamily: "var(--font-body)",
-              fontSize: 12,
-              color: "rgba(255,255,255,0.75)",
-            }}
-          >
+          <span className="pc-next-step-icon">+</span>
+          <span className="pc-next-step-title">Find your next campaign</span>
+          <span className="pc-next-step-desc">
             New campaigns are added daily. Apply now to keep your score
             climbing.
           </span>
         </Link>
 
-        {/* Share results */}
+        {/* Share results — Share on Instagram → btn btn-ghost */}
         <button
-          className="click-shift"
+          className="pc-next-step-card click-shift"
           onClick={handleShare}
           type="button"
-          style={{
-            background: "var(--surface)",
-            border: "1px solid var(--hairline)",
-            borderRadius: 10,
-            padding: 20,
-            cursor: "pointer",
-            display: "flex",
-            flexDirection: "column",
-            gap: 8,
-            textAlign: "left",
-          }}
         >
-          <span
-            style={{
-              fontFamily: "var(--font-display)",
-              fontSize: 24,
-              fontWeight: 700,
-              color: "var(--ink)",
-              lineHeight: 1,
-            }}
-          >
-            ↑
-          </span>
-          <span
-            style={{
-              fontFamily: "var(--font-body)",
-              fontSize: 13,
-              fontWeight: 600,
-              color: "var(--ink)",
-            }}
-          >
-            Share results
-          </span>
-          <span
-            style={{
-              fontFamily: "var(--font-body)",
-              fontSize: 12,
-              color: "var(--ink-4)",
-            }}
-          >
+          <span className="pc-next-step-icon">↑</span>
+          <span className="pc-next-step-title">Share results</span>
+          <span className="pc-next-step-desc">
             Tell your network you&apos;re on Push.
           </span>
         </button>
 
         {/* View profile */}
-        <Link
-          href="/creator/profile"
-          className="click-shift"
-          style={{
-            background: "var(--surface)",
-            border: "1px solid var(--hairline)",
-            borderRadius: 10,
-            padding: 20,
-            textDecoration: "none",
-            display: "flex",
-            flexDirection: "column",
-            gap: 8,
-          }}
-        >
-          <span
-            style={{
-              fontFamily: "var(--font-display)",
-              fontSize: 24,
-              fontWeight: 700,
-              color: "var(--ink)",
-              lineHeight: 1,
-            }}
-          >
-            ◉
-          </span>
-          <span
-            style={{
-              fontFamily: "var(--font-body)",
-              fontSize: 13,
-              fontWeight: 600,
-              color: "var(--ink)",
-            }}
-          >
-            View profile
-          </span>
-          <span
-            style={{
-              fontFamily: "var(--font-body)",
-              fontSize: 12,
-              color: "var(--ink-4)",
-            }}
-          >
+        <Link href="/creator/profile" className="pc-next-step-card click-shift">
+          <span className="pc-next-step-icon">◉</span>
+          <span className="pc-next-step-title">View profile</span>
+          <span className="pc-next-step-desc">
             See your updated score and tier.
           </span>
         </Link>
@@ -1175,7 +625,6 @@ function PostCampaignContent() {
 
     // Check if a tier boundary was crossed
     const scoreBefore = resolved.score - resolved.score_delta;
-    const prevTierTarget = TIER_NEXT[resolved.tier]?.target ?? 999;
     const currentIdx = tierIndex(resolved.tier);
     if (currentIdx < ALL_TIERS.length - 1) {
       // Detect if score_delta pushed score past a threshold
@@ -1195,24 +644,7 @@ function PostCampaignContent() {
   }, [searchParams]);
 
   if (!data) {
-    return (
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          minHeight: "100vh",
-          background: "var(--surface)",
-          fontFamily: "var(--font-body)",
-          fontSize: 12,
-          color: "var(--ink-4)",
-          letterSpacing: "0.08em",
-          textTransform: "uppercase",
-        }}
-      >
-        LOADING...
-      </div>
-    );
+    return <div className="pc-loading">LOADING...</div>;
   }
 
   const nextTier = TIER_NEXT[data.tier];
@@ -1228,153 +660,47 @@ function PostCampaignContent() {
         />
       )}
 
-      <div
-        style={{
-          background: "var(--surface)",
-          minHeight: "100vh",
-          paddingBottom: 96,
-        }}
-      >
-        <div style={{ maxWidth: 800, margin: "0 auto", padding: "0 64px" }}>
+      <div className="pc-page-shell">
+        <div className="pc-container">
           {/* ── 1. Hero celebration ──────────────────────── */}
-          <div
-            style={{
-              paddingTop: 56,
-              paddingBottom: 40,
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "flex-start",
-              gap: 16,
-            }}
-          >
-            {/* Check icon */}
-            <div
-              style={{
-                width: 56,
-                height: 56,
-                borderRadius: "50%",
-                background: "var(--brand-red)",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
+          <div className="pc-hero">
+            {/* Check icon tile */}
+            <div className="pc-check-icon-tile">
               <CheckSVG />
             </div>
 
-            <div>
-              <span
-                style={{
-                  fontFamily: "var(--font-body)",
-                  fontSize: 12,
-                  color: "var(--ink-4)",
-                  letterSpacing: "0.08em",
-                  textTransform: "uppercase",
-                  display: "block",
-                  marginBottom: 8,
-                }}
-              >
-                CAMPAIGN COMPLETE
-              </span>
-              <h1
-                style={{
-                  fontFamily: "var(--font-display)",
-                  fontSize: 56,
-                  fontWeight: 700,
-                  color: "var(--ink)",
-                  margin: 0,
-                  lineHeight: 1.05,
-                }}
-              >
-                Well done.
-              </h1>
+            <div className="pc-hero-heading">
+              <span className="pc-hero-eyebrow">CAMPAIGN COMPLETE</span>
+              <h1 className="pc-hero-title">Well done.</h1>
             </div>
 
-            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-              <span
-                style={{
-                  fontFamily: "var(--font-body)",
-                  fontSize: 14,
-                  color: "var(--ink-3)",
-                }}
-              >
-                {data.merchant}
-              </span>
+            <div className="pc-hero-meta">
+              <span className="pc-merchant-name">{data.merchant}</span>
               {data.category && (
-                <span
-                  style={{
-                    fontFamily: "var(--font-body)",
-                    fontSize: 12,
-                    color: "var(--ink-4)",
-                    background: "var(--surface-3)",
-                    border: "1px solid var(--hairline)",
-                    borderRadius: 40,
-                    padding: "2px 10px",
-                  }}
-                >
-                  {data.category}
-                </span>
+                <span className="pc-category-chip">{data.category}</span>
               )}
             </div>
 
-            {/* Big celebratory payout */}
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                gap: 4,
-              }}
-            >
-              <span
-                style={{
-                  fontFamily: "var(--font-body)",
-                  fontSize: 11,
-                  color: "var(--ink-4)",
-                  letterSpacing: "0.06em",
-                  textTransform: "uppercase",
-                }}
-              >
-                Estimated payout
-              </span>
-              <span
-                style={{
-                  fontFamily: "var(--font-display)",
-                  fontSize: 48,
-                  fontWeight: 700,
-                  color: "var(--brand-red)",
-                  lineHeight: 1,
-                }}
-              >
-                ${data.amount}
-              </span>
+            {/* Liquid-glass celebration payout tile */}
+            <div className="pc-payout-tile">
+              <span className="pc-payout-label">Estimated payout</span>
+              <span className="pc-payout-amount">${data.amount}</span>
             </div>
           </div>
 
+          {/* Magvix Italic Signature Divider #1 */}
+          <p className="pc-divider">
+            Campaign complete · Payout processing · Verified ·
+          </p>
+
           {/* ── Body sections ─────────────────────────────── */}
-          <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+          <div className="pc-body-sections">
             {/* 2. Results Summary */}
             <ResultsSummary data={data} metrics={DEMO_METRICS} />
 
             {/* 3. What happens next */}
-            <div
-              style={{
-                background: "var(--surface-2)",
-                border: "1px solid var(--hairline)",
-                borderRadius: 10,
-                padding: 24,
-              }}
-            >
-              <span
-                style={{
-                  fontFamily: "var(--font-body)",
-                  fontSize: 11,
-                  color: "var(--ink-4)",
-                  letterSpacing: "0.08em",
-                  textTransform: "uppercase",
-                  display: "block",
-                  marginBottom: 24,
-                }}
-              >
+            <div className="pc-section">
+              <span className="pc-section-eyebrow pc-section-eyebrow--wide-mb">
                 WHAT HAPPENS NEXT
               </span>
               <Timeline />
@@ -1394,36 +720,12 @@ function PostCampaignContent() {
           </div>
 
           {/* ── Bottom motivation ──────────────────────────── */}
-          <div
-            style={{
-              marginTop: 40,
-              paddingTop: 24,
-              borderTop: "1px solid var(--hairline)",
-              display: "flex",
-              flexDirection: "column",
-              gap: 4,
-            }}
-          >
-            <div
-              style={{
-                fontFamily: "var(--font-body)",
-                fontSize: 13,
-                color: "var(--ink-4)",
-              }}
-            >
+          <div className="pc-motivation">
+            <div className="pc-motivation-count">
               {DEMO_CAMPAIGNS_COMPLETED} campaigns completed.{" "}
               {remaining.toFixed(0)} more points to {nextTier.label}.
             </div>
-            <div
-              style={{
-                fontFamily: "var(--font-display)",
-                fontSize: 18,
-                fontWeight: 700,
-                color: "var(--ink)",
-              }}
-            >
-              {tagline}
-            </div>
+            <div className="pc-motivation-tagline">{tagline}</div>
           </div>
         </div>
       </div>

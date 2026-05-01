@@ -11,6 +11,7 @@ import {
 import { DisputeList } from "@/components/disputes/DisputeList";
 import { NewDisputeModal } from "@/components/disputes/NewDisputeModal";
 import "@/components/disputes/disputes.css";
+import "./disputes.css";
 
 /* ── Demo mode ───────────────────────────────────────────── */
 function checkDemoMode(): boolean {
@@ -69,7 +70,7 @@ export default function CreatorDisputesPage() {
     <div className="cw-page">
       <header className="cw-header">
         <div className="cw-header__left">
-          <p className="cw-eyebrow">DISPUTES</p>
+          <p className="cw-eyebrow">(MY&middot;DISPUTES)</p>
           <h1 className="cw-title">Disputes</h1>
         </div>
         <div className="cw-header__right">
@@ -85,75 +86,36 @@ export default function CreatorDisputesPage() {
 
       <div>
         {/* ── Stats row ────────────────────────────────────── */}
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(3, 1fr)",
-            gap: 16,
-            marginBottom: 32,
-          }}
-        >
+        <div className="cdp-stats">
           {[
             {
               value: stats.open,
               label: "Open",
-              accent: stats.open > 0 ? "var(--brand-red)" : "var(--ink)",
+              mod:
+                stats.open > 0
+                  ? "cdp-stat__value--open"
+                  : "cdp-stat__value--neutral",
             },
-            { value: stats.resolved, label: "Resolved", accent: "var(--ink)" },
+            {
+              value: stats.resolved,
+              label: "Resolved",
+              mod: "cdp-stat__value--neutral",
+            },
             {
               value: stats.avgDays > 0 ? `${stats.avgDays}d` : "—",
               label: "Avg to Resolve",
-              accent: "var(--ink)",
+              mod: "cdp-stat__value--neutral",
             },
           ].map((stat) => (
-            <div
-              key={stat.label}
-              style={{
-                background: "var(--surface-2)",
-                border: "1px solid var(--hairline)",
-                borderRadius: 10,
-                padding: 24,
-              }}
-            >
-              <div
-                style={{
-                  fontFamily: "var(--font-display)",
-                  fontSize: 40,
-                  fontWeight: 700,
-                  color: stat.accent,
-                  lineHeight: 1,
-                  marginBottom: 8,
-                }}
-              >
-                {stat.value}
-              </div>
-              <div
-                style={{
-                  fontFamily: "var(--font-body)",
-                  fontSize: 11,
-                  color: "var(--ink-4)",
-                  letterSpacing: "0.06em",
-                  textTransform: "uppercase",
-                }}
-              >
-                {stat.label}
-              </div>
+            <div key={stat.label} className="cdp-stat-card">
+              <div className={`cdp-stat__value ${stat.mod}`}>{stat.value}</div>
+              <div className="cdp-stat__label">{stat.label}</div>
             </div>
           ))}
         </div>
 
         {/* ── Tab bar ──────────────────────────────────────── */}
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: 4,
-            marginBottom: 24,
-            borderBottom: "1px solid var(--hairline)",
-            paddingBottom: 0,
-          }}
-          role="tablist"
-        >
+        <div className="cdp-tabs" role="tablist">
           {ALL_TABS.map((tab) => {
             const isActive = activeTab === tab;
             return (
@@ -163,23 +125,7 @@ export default function CreatorDisputesPage() {
                 aria-selected={isActive}
                 type="button"
                 onClick={() => setActiveTab(tab)}
-                style={{
-                  fontFamily: "var(--font-body)",
-                  fontSize: 12,
-                  color: isActive ? "var(--ink)" : "var(--ink-4)",
-                  background: "none",
-                  border: "none",
-                  borderBottom: isActive
-                    ? "2px solid var(--brand-red)"
-                    : "2px solid transparent",
-                  padding: "8px 16px",
-                  cursor: "pointer",
-                  letterSpacing: "0.04em",
-                  textTransform: "uppercase",
-                  fontWeight: isActive ? 600 : 400,
-                  transition: "color 0.15s",
-                  marginBottom: -1,
-                }}
+                className={`cdp-tab${isActive ? " cdp-tab--active" : ""}`}
               >
                 {TAB_LABELS[tab]}
               </button>

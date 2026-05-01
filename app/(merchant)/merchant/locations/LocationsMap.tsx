@@ -1,55 +1,78 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import type { Location } from "@/lib/merchant/mock-locations";
 
-/* ── Leaflet types ──────────────────────────────────────────────────────── */
-type LeafletMap = {
-  remove: () => void;
-  setView: (center: [number, number], zoom: number) => LeafletMap;
-  flyTo: (center: [number, number], zoom: number) => void;
+type LeafletLib = typeof import("leaflet");
+type LeafletMap = import("leaflet").Map;
+type LeafletMarker = import("leaflet").Marker;
+type DivIcon = import("leaflet").DivIcon;
+
+type LocationRecord = {
+  id: string;
+  name: string;
+  address: string;
+  city: string;
+  lat: number;
+  lng: number;
+  status: "open" | "closed";
 };
-
-type LeafletMarker = {
-  addTo: (map: LeafletMap) => LeafletMarker;
-  on: (event: string, handler: () => void) => LeafletMarker;
-  bindPopup: (html: string) => LeafletMarker;
-  openPopup: () => LeafletMarker;
-};
-
-declare global {
-  interface Window {
-    L: {
-      map: (el: HTMLElement, opts?: object) => LeafletMap;
-      tileLayer: (
-        url: string,
-        opts?: object,
-      ) => { addTo: (m: LeafletMap) => void };
-      divIcon: (opts: object) => object;
-      marker: (latlng: [number, number], opts?: object) => LeafletMarker;
-    };
-  }
-}
 
 type Props = {
-  locations: Location[];
-  selectedId: string | null;
-  onSelect: (id: string) => void;
+  locations: LocationRecord[];
+  selectedId?: string | null;
+  onSelect?: (id: string) => void;
 };
+
+function getPinIcon(
+  leaflet: LeafletLib,
+  status: LocationRecord["status"],
+  isSelected: boolean,
+): DivIcon {
+  const selectedClass = isSelected ? " loc-map-pin--selected" : "";
+
+  return leaflet.divIcon({
+    className: "loc-map-pin-wrap",
+    html: `<div class="loc-map-pin loc-map-pin--${status}${selectedClass}" aria-label="${status === "open" ? "Active venue" : "Closed venue"}"></div>`,
+    iconSize: [28, 28],
+    iconAnchor: [14, 14],
+    popupAnchor: [0, -16],
+  });
+}
+
+function escapeHtml(value: string): string {
+  return value.replace(/[&<>"']/g, (char) => {
+    switch (char) {
+      case "&":
+        return "&amp;";
+      case "<":
+        return "&lt;";
+      case ">":
+        return "&gt;";
+      case '"':
+        return "&quot;";
+      default:
+        return "&#39;";
+    }
+  });
+}
 
 export default function LocationsMap({
   locations,
-  selectedId,
+  selectedId = null,
   onSelect,
 }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<LeafletMap | null>(null);
+  const leafletRef = useRef<LeafletLib | null>(null);
+  const markerMapRef = useRef<Map<string, LeafletMarker>>(new Map());
 
   useEffect(() => {
-    if (!containerRef.current) return;
+    if (!containerRef.current || locations.length === 0 || mapRef.current)
+      return;
 
-    /* Load Leaflet CSS + JS */
-    const loadLeaflet = async () => {
+    let mounted = true;
+
+    const mount = async () => {
       if (!document.getElementById("leaflet-css")) {
         const link = document.createElement("link");
         link.id = "leaflet-css";
@@ -58,105 +81,107 @@ export default function LocationsMap({
         document.head.appendChild(link);
       }
 
-      await import("leaflet").then((L) => {
-        const leaflet = L.default || L;
-        if (mapRef.current) return;
+      const L = await import("leaflet");
+      if (!mounted || mapRef.current || !containerRef.current) return;
 
-        /* Calculate center from locations */
-        const avgLat =
-          locations.reduce((s, l) => s + l.lat, 0) / locations.length;
-        const avgLng =
-          locations.reduce((s, l) => s + l.lng, 0) / locations.length;
+      leafletRef.current = L;
 
-        const map = leaflet.map(containerRef.current!, {
-          center: [avgLat, avgLng] as [number, number],
-          zoom: 12,
-          zoomControl: true,
-        });
+      const avgLat =
+        locations.reduce((sum, location) => sum + location.lat, 0) /
+        locations.length;
+      const avgLng =
+        locations.reduce((sum, location) => sum + location.lng, 0) /
+        locations.length;
 
-        mapRef.current = map as unknown as LeafletMap;
+      const isSingleLocation = locations.length === 1;
 
-        /* Tile layer — CartoDB Positron for clean minimal look */
-        (leaflet as unknown as typeof window.L)
-          .tileLayer(
-            "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
+      const map = L.map(containerRef.current, {
+        center: [avgLat, avgLng],
+        zoom: isSingleLocation ? 14 : 12,
+        zoomControl: !isSingleLocation,
+        scrollWheelZoom: !isSingleLocation,
+        attributionControl: true,
+      });
+      mapRef.current = map;
+
+      L.tileLayer(
+        "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
+        {
+          attribution: '&copy; <a href="https://carto.com/">CARTO</a>',
+          subdomains: "abcd",
+          maxZoom: 19,
+        },
+      ).addTo(map);
+
+      locations.forEach((location) => {
+        const safeName = escapeHtml(location.name);
+        const safeAddress = escapeHtml(`${location.address}, ${location.city}`);
+        const safeId = encodeURIComponent(location.id);
+
+        const marker = L.marker([location.lat, location.lng], {
+          icon: getPinIcon(L, location.status, location.id === selectedId),
+          keyboard: true,
+          riseOnHover: true,
+          title: location.name,
+        })
+          .addTo(map)
+          .bindPopup(
+            `<div class="loc-map-popup"><p class="loc-map-popup__name">${safeName}</p><p class="loc-map-popup__address">${safeAddress}</p><a class="loc-map-popup__link" href="/merchant/locations/${safeId}">View location</a></div>`,
             {
-              attribution: '&copy; <a href="https://carto.com/">CARTO</a>',
-              subdomains: "abcd",
-              maxZoom: 19,
+              closeButton: false,
+              autoPan: true,
+              minWidth: 200,
+              maxWidth: 260,
+              offset: [0, -4],
             },
           )
-          .addTo(map as unknown as LeafletMap);
+          .on("click", () => onSelect?.(location.id));
 
-        /* Add markers */
-        locations.forEach((loc) => {
-          const isOpen = loc.status === "open";
-          const icon = (leaflet as unknown as typeof window.L).divIcon({
-            className: "",
-            html: `<div style="
-              width: 28px;
-              height: 28px;
-              border-radius: 50%;
-              background: ${isOpen ? "var(--brand-red)" : "var(--graphite)"};
-              border: 3px solid #fff;
-              box-shadow: 0 2px 8px rgba(0,0,0,0.25);
-              cursor: pointer;
-              display: flex;
-              align-items: center;
-              justify-content: center;
-            "></div>`,
-            iconSize: [28, 28],
-            iconAnchor: [14, 14],
-          });
-
-          const popupHtml = `
-            <div class="loc-map-popup">
-              <div class="loc-map-popup__name">${loc.name}</div>
-              <div class="loc-map-popup__hood">${loc.neighborhood} · ${loc.address}</div>
-              <a class="loc-map-popup__link" href="/merchant/locations/${loc.id}">View location →</a>
-            </div>
-          `;
-
-          const marker = (leaflet as unknown as typeof window.L)
-            .marker([loc.lat, loc.lng] as [number, number], { icon })
-            .addTo(map as unknown as LeafletMap)
-            .bindPopup(popupHtml)
-            .on("click", () => {
-              onSelect(loc.id);
-            });
-
-          if (loc.id === selectedId) {
-            marker.openPopup();
-          }
-        });
+        markerMapRef.current.set(location.id, marker);
       });
     };
 
-    loadLeaflet();
+    void mount();
 
     return () => {
+      mounted = false;
+      markerMapRef.current.clear();
       if (mapRef.current) {
         mapRef.current.remove();
         mapRef.current = null;
       }
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [locations, onSelect, selectedId]);
 
-  /* Fly to selected location */
   useEffect(() => {
-    if (!mapRef.current || !selectedId) return;
-    const loc = locations.find((l) => l.id === selectedId);
-    if (loc) {
-      mapRef.current.flyTo([loc.lat, loc.lng], 15);
+    const map = mapRef.current;
+    const L = leafletRef.current;
+    if (!map || !L) return;
+
+    // Sync marker icons with the current selection. We avoid auto-opening the
+    // popup when the page already shows a liquid-glass detail peek (multi-
+    // location case) — the popup is reserved for direct marker click.
+    markerMapRef.current.forEach((marker, id) => {
+      const location = locations.find((item) => item.id === id);
+      if (!location) return;
+      marker.setIcon(getPinIcon(L, location.status, id === selectedId));
+    });
+
+    if (!selectedId) return;
+    const selected = locations.find((location) => location.id === selectedId);
+    if (selected) {
+      map.flyTo([selected.lat, selected.lng], Math.max(map.getZoom(), 14), {
+        duration: 0.6,
+        easeLinearity: 0.25,
+      });
     }
-  }, [selectedId, locations]);
+  }, [locations, selectedId]);
 
   return (
     <div
       ref={containerRef}
-      style={{ width: "100%", height: "100%" }}
-      aria-label="Store locations map"
+      className="loc-map-canvas"
+      aria-label="Locations map"
     />
   );
 }

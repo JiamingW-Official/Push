@@ -1,0 +1,54 @@
+/* FilterTabs — v11 spec aligned (2026-04-30)
+ * - Composes the unified `.btn-pill` (§ 9.1) — base styling lives in globals.
+ *   Don't duplicate radius/padding/spring/focus here.
+ * - Active state uses `aria-pressed="true"` (handled by globals .btn-pill rule)
+ *   plus a class-based fallback for non-aria callers.
+ * - Min-height 40px for touch + keyboard arrow navigation in TSX.
+ * - Count chip uses tabular numerals so digits column-align.
+ */
+
+.ms-filter-tabs {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.ms-filter-tabs-btn {
+  min-height: 40px;
+}
+
+.ms-filter-tabs-btn--active {
+  background: var(--ink);
+  color: var(--snow);
+}
+
+.ms-filter-tabs-btn--active:hover {
+  transform: translate(1px, 1px);
+}
+
+.ms-filter-tabs-btn--active:active {
+  background: var(--char);
+  transform: translate(2px, 2px) scale(0.98);
+}
+
+.ms-filter-tabs-count {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  opacity: 0.68;
+}
+
+@media (max-width: 768px) {
+  .ms-filter-tabs {
+    gap: 6px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ms-filter-tabs-btn--active:hover,
+  .ms-filter-tabs-btn--active:active {
+    transform: none;
+  }
+}

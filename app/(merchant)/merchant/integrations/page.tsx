@@ -1,6 +1,22 @@
 "use client";
 
-import { useState, useMemo } from "react";
+/* ============================================================
+   Push — Merchant Integrations — v11 Product Register
+   - canonical UPPERCASE eyebrow (no parenthetical)
+   - liquid-glass stat tile (≤1 per page) shows connected count
+   - integration card: surface-2 default, snow + brand-red top
+     accent line on connected
+   - 40×40 r-lg tile for third-party logo (brand colors preserved
+     per § 2.5 — photos/SVG exempt from closed list)
+   - status chip: 3 states from closed list
+   - Filled Primary "Connect" / Ghost "Manage" on card link
+   - Disconnect via secondary confirm dialog (Ghost trigger,
+     Filled Primary confirm)
+   - hover shift via transform; focus-visible outlines
+   - empty state friendly copy
+   ============================================================ */
+
+import { useState, useMemo, useCallback } from "react";
 import Link from "next/link";
 import {
   INTEGRATIONS,
@@ -11,14 +27,8 @@ import {
 } from "@/lib/integrations/mock-integrations";
 import "./integrations.css";
 
-/* -- Integration logo placeholder ------------------------------------------------- */
-function IntegrationLogo({
-  integration,
-  size = 48,
-}: {
-  integration: Integration;
-  size?: number;
-}) {
+/* -- Logo tile — 40×40 r-lg, third-party brand color preserved ------------------- */
+function IntegrationLogo({ integration }: { integration: Integration }) {
   const initials = integration.name
     .split(" ")
     .map((w) => w[0])
@@ -30,11 +40,8 @@ function IntegrationLogo({
     <div
       className="int-card__logo"
       style={{
-        width: size,
-        height: size,
         background: integration.logoColor,
         color: integration.logoTextColor,
-        fontSize: size * 0.38,
       }}
       aria-label={`${integration.name} logo`}
     >
@@ -45,32 +52,97 @@ function IntegrationLogo({
 
 /* -- Status chip ------------------------------------------------------------------ */
 function StatusChip({ status }: { status: Integration["status"] }) {
+  const label =
+    status === "coming_soon"
+      ? "COMING SOON"
+      : status === "connected"
+        ? "CONNECTED"
+        : "AVAILABLE";
+
   return (
     <span
       className={`int-status-chip int-status-chip--${status.replace("_", "-")}`}
     >
-      {status === "coming_soon"
-        ? "COMING SOON"
-        : status === "connected"
-          ? "CONNECTED"
-          : "AVAILABLE"}
+      <span className="int-status-chip__dot" aria-hidden="true" />
+      {label}
     </span>
   );
 }
 
+/* -- Disconnect confirmation dialog (in-page modal) ------------------------------- */
+function DisconnectConfirm({
+  integration,
+  onConfirm,
+  onCancel,
+}: {
+  integration: Integration;
+  onConfirm: () => void;
+  onCancel: () => void;
+}) {
+  return (
+    <div
+      className="int-confirm-overlay"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="int-confirm-title"
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onCancel();
+      }}
+    >
+      <div className="int-confirm">
+        <div className="int-confirm__eyebrow">CONFIRM</div>
+        <h2 id="int-confirm-title" className="int-confirm__title">
+          Disconnect {integration.name}?
+        </h2>
+        <p className="int-confirm__body">
+          Push will stop syncing data from {integration.name}. Existing campaign
+          attribution stays intact. You can reconnect any time.
+        </p>
+        <div className="int-confirm__actions">
+          <button
+            type="button"
+            className="btn-ghost"
+            onClick={onCancel}
+            autoFocus
+          >
+            Cancel
+          </button>
+          <button type="button" className="btn-primary" onClick={onConfirm}>
+            Disconnect
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 /* -- Integration card ------------------------------------------------------------- */
-function IntegrationCard({ integration }: { integration: Integration }) {
+function IntegrationCard({
+  integration,
+  onDisconnect,
+}: {
+  integration: Integration;
+  onDisconnect: (i: Integration) => void;
+}) {
   const isComingSoon = integration.status === "coming_soon";
   const isConnected = integration.status === "connected";
 
-  const cardContent = (
-    <div className={`int-card${isComingSoon ? " int-card--coming-soon" : ""}`}>
+  const cardClasses = [
+    "int-card",
+    isConnected ? "int-card--connected" : "",
+    isComingSoon ? "int-card--coming-soon" : "",
+  ]
+    .filter(Boolean)
+    .join(" ");
+
+  const cardInner = (
+    <>
       <div className="int-card__top">
         <IntegrationLogo integration={integration} />
         <StatusChip status={integration.status} />
       </div>
 
-      <div>
+      <div className="int-card__body">
         <h3 className="int-card__name">{integration.name}</h3>
         <p className="int-card__description">{integration.description}</p>
       </div>
@@ -78,11 +150,20 @@ function IntegrationCard({ integration }: { integration: Integration }) {
       <ul className="int-card__benefits">
         {integration.benefits.map((b, i) => (
           <li key={i} className="int-card__benefit">
-            <span className="int-card__benefit-arrow">→</span>
+            <span className="int-card__benefit-arrow" aria-hidden="true">
+              →
+            </span>
             {b}
           </li>
         ))}
       </ul>
+
+      {isConnected && (
+        <div className="int-card__sync">
+          <span className="int-card__sync-dot" aria-hidden="true" />
+          Last synced 2 min ago
+        </div>
+      )}
 
       <div className="int-card__footer">
         <span className="int-card__category">
@@ -90,23 +171,60 @@ function IntegrationCard({ integration }: { integration: Integration }) {
         </span>
         {!isComingSoon && (
           <span
-            className={`int-card__cta ${isConnected ? "int-card__cta--manage" : "int-card__cta--connect"}`}
+            className={`int-card__cta ${
+              isConnected ? "int-card__cta--manage" : "int-card__cta--connect"
+            }`}
           >
-            {isConnected ? "Manage →" : "Connect →"}
+            {isConnected ? "Manage" : "Connect"}
+            <span className="int-card__cta-arrow" aria-hidden="true">
+              →
+            </span>
           </span>
         )}
       </div>
-    </div>
+    </>
   );
 
-  if (isComingSoon) return cardContent;
+  // Coming soon — non-interactive presentation
+  if (isComingSoon) {
+    return (
+      <div className={cardClasses} aria-disabled="true">
+        {cardInner}
+      </div>
+    );
+  }
 
+  // Connected — Link wraps card; disconnect button is rendered alongside (outside link)
+  if (isConnected) {
+    return (
+      <div className="int-card-wrap">
+        <Link
+          href={`/merchant/integrations/${integration.slug}`}
+          className={cardClasses}
+          aria-label={`Manage ${integration.name} integration`}
+        >
+          {cardInner}
+        </Link>
+        <button
+          type="button"
+          className="int-card__disconnect"
+          onClick={() => onDisconnect(integration)}
+          aria-label={`Disconnect ${integration.name}`}
+        >
+          Disconnect
+        </button>
+      </div>
+    );
+  }
+
+  // Available — Link wraps card
   return (
     <Link
       href={`/merchant/integrations/${integration.slug}`}
-      style={{ textDecoration: "none", display: "flex" }}
+      className={cardClasses}
+      aria-label={`Connect ${integration.name} integration`}
     >
-      {cardContent}
+      {cardInner}
     </Link>
   );
 }
@@ -131,12 +249,18 @@ function CategoryTabs({
   ];
 
   return (
-    <div className="int-tabs" role="tablist">
+    <div
+      className="int-tabs"
+      role="tablist"
+      aria-label="Integration categories"
+    >
       {categories.map((cat) => (
         <button
           key={cat.key}
+          type="button"
           role="tab"
           aria-pressed={active === cat.key}
+          aria-selected={active === cat.key}
           onClick={() => onChange(cat.key)}
           className="int-tab"
         >
@@ -151,10 +275,11 @@ function CategoryTabs({
 /* -- Featured strip --------------------------------------------------------------- */
 function FeaturedStrip() {
   const featured = getFeaturedIntegrations();
+  if (featured.length === 0) return null;
 
   return (
-    <div className="int-featured">
-      <div className="int-featured__eyebrow">Featured</div>
+    <section className="int-featured" aria-label="Featured integrations">
+      <div className="int-featured__eyebrow">FEATURED</div>
       <div className="int-featured__track">
         {featured.map((integration) => {
           const initials = integration.name
@@ -168,7 +293,8 @@ function FeaturedStrip() {
             <Link
               key={integration.slug}
               href={`/merchant/integrations/${integration.slug}`}
-              className="int-featured-item click-shift"
+              className="int-featured-item"
+              aria-label={`Open ${integration.name}`}
             >
               <div
                 className="int-featured-item__logo"
@@ -176,6 +302,7 @@ function FeaturedStrip() {
                   background: integration.logoColor,
                   color: integration.logoTextColor,
                 }}
+                aria-hidden="true"
               >
                 {initials}
               </div>
@@ -186,13 +313,15 @@ function FeaturedStrip() {
           );
         })}
       </div>
-    </div>
+    </section>
   );
 }
 
 /* -- Page ------------------------------------------------------------------------- */
 export default function IntegrationsPage() {
   const [activeCategory, setActiveCategory] = useState(ALL_CATEGORY);
+  const [pendingDisconnect, setPendingDisconnect] =
+    useState<Integration | null>(null);
 
   const filtered = useMemo(() => {
     if (activeCategory === ALL_CATEGORY) return INTEGRATIONS;
@@ -204,77 +333,64 @@ export default function IntegrationsPage() {
       ? "All integrations"
       : CATEGORY_LABELS[activeCategory as IntegrationCategory];
 
+  const connectedCount = useMemo(
+    () => INTEGRATIONS.filter((i) => i.status === "connected").length,
+    [],
+  );
+
+  const handleDisconnect = useCallback((i: Integration) => {
+    setPendingDisconnect(i);
+  }, []);
+
+  const confirmDisconnect = useCallback(() => {
+    // Mock data — real impl would call DELETE /api/merchant/integrations/:slug
+    setPendingDisconnect(null);
+  }, []);
+
   return (
     <div className="int-shell">
-      {/* Back nav */}
-      <nav
-        style={{
-          padding: "12px 64px",
-          borderBottom: "1px solid var(--hairline)",
-          background: "var(--surface)",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-        }}
-      >
-        <Link
-          href="/merchant/dashboard"
-          style={{
-            fontFamily: "var(--font-body)",
-            fontSize: 12,
-            fontWeight: 700,
-            letterSpacing: "0.06em",
-            textTransform: "uppercase",
-            color: "var(--ink-4)",
-            textDecoration: "none",
-          }}
-        >
+      {/* Sub-nav (Product chrome) */}
+      <nav className="int-subnav" aria-label="Page navigation">
+        <Link href="/merchant/dashboard" className="int-subnav__back">
           ← Dashboard
         </Link>
-        <span
-          style={{
-            fontFamily: "var(--font-display)",
-            fontSize: 14,
-            fontWeight: 700,
-            color: "var(--ink-4)",
-            letterSpacing: "0.08em",
-            textTransform: "uppercase",
-          }}
-        >
-          Integrations
-        </span>
-        <div style={{ width: 80 }} />
+        <span className="int-subnav__label">INTEGRATIONS</span>
+        <span className="int-subnav__spacer" aria-hidden="true" />
       </nav>
 
-      <main
-        style={{ maxWidth: 1140, margin: "0 auto", padding: "40px 64px 96px" }}
-      >
-        {/* Page header */}
-        <div className="int-header__inner" style={{ marginBottom: 40 }}>
+      <main className="int-main">
+        {/* Page header — canonical eyebrow + liquid-glass stat tile */}
+        <header className="int-header__inner">
           <div className="int-header__row">
             <div>
+              <p className="int-header__eyebrow">CONNECTED TOOLS</p>
               <h1 className="int-header__title">Integrations</h1>
               <p className="int-header__subtitle">
                 Connect Push to the tools you already use. Sync data, automate
                 workflows, and close the loop on creator campaign ROI.
               </p>
             </div>
-            <div className="int-header__stat-card">
-              <div className="int-header__stat-value">
-                {INTEGRATIONS.length}
+            <div
+              className="int-header__stat-tile lg-surface"
+              role="status"
+              aria-label={`${connectedCount} of ${INTEGRATIONS.length} integrations connected`}
+            >
+              <div className="int-header__stat-row">
+                <div className="int-header__stat-value">{connectedCount}</div>
+                <div className="int-header__stat-divider">/</div>
+                <div className="int-header__stat-total">
+                  {INTEGRATIONS.length}
+                </div>
               </div>
-              <div className="int-header__stat-label">Integrations</div>
+              <div className="int-header__stat-label">CONNECTED</div>
             </div>
           </div>
-        </div>
+        </header>
 
-        {/* Featured strip */}
         <FeaturedStrip />
 
-        {/* Category filter */}
         <CategoryTabs active={activeCategory} onChange={setActiveCategory} />
 
-        {/* Grid header */}
         <div className="int-section-header">
           <h2 className="int-section-heading">{sectionLabel}</h2>
           <span className="int-section-count">
@@ -282,31 +398,29 @@ export default function IntegrationsPage() {
           </span>
         </div>
 
-        {/* Grid */}
         {filtered.length === 0 ? (
-          <p
-            style={{
-              color: "var(--ink-4)",
-              fontSize: 13,
-              fontFamily: "var(--font-body)",
-            }}
-          >
-            No integrations in this category yet.
-          </p>
+          <div className="int-empty" role="status">
+            <h3 className="int-empty__title">Nothing here yet</h3>
+            <p className="int-empty__body">
+              No integrations in this category right now. Try another category
+              or request the tool you need below.
+            </p>
+          </div>
         ) : (
           <div className="int-grid">
             {filtered.map((integration) => (
               <IntegrationCard
                 key={integration.slug}
                 integration={integration}
+                onDisconnect={handleDisconnect}
               />
             ))}
           </div>
         )}
 
-        {/* Bottom CTA panel */}
-        <div className="int-cta-panel">
-          <div className="int-cta-panel__eyebrow">Missing something?</div>
+        {/* Bottom CTA panel — Filled Primary + Ghost */}
+        <section className="int-cta-panel" aria-label="Request an integration">
+          <div className="int-cta-panel__eyebrow">MISSING SOMETHING</div>
           <h2 className="int-cta-panel__title">Can&apos;t find your tool?</h2>
           <p className="int-cta-panel__body">
             Push connects to thousands of apps via Zapier — no code required. Or
@@ -314,55 +428,23 @@ export default function IntegrationsPage() {
             integration.
           </p>
           <div className="int-cta-panel__actions">
-            <Link
-              href="/merchant/integrations/zapier"
-              className="click-shift"
-              style={{
-                padding: "12px 24px",
-                fontSize: 13,
-                fontFamily: "var(--font-body)",
-                fontWeight: 700,
-                letterSpacing: "0.04em",
-                textTransform: "uppercase",
-                cursor: "pointer",
-                borderRadius: 8,
-                border: "none",
-                background: "var(--brand-red)",
-                color: "var(--snow)",
-                textDecoration: "none",
-                display: "inline-flex",
-                alignItems: "center",
-                transition: "transform 180ms",
-              }}
-            >
-              Use Zapier instead
+            <Link href="/merchant/integrations/zapier" className="btn-primary">
+              Use Zapier
             </Link>
-            <Link
-              href="/contact"
-              className="click-shift"
-              style={{
-                padding: "12px 24px",
-                fontSize: 13,
-                fontFamily: "var(--font-body)",
-                fontWeight: 700,
-                letterSpacing: "0.04em",
-                textTransform: "uppercase",
-                cursor: "pointer",
-                borderRadius: 8,
-                border: "1px solid var(--hairline)",
-                background: "transparent",
-                color: "var(--ink)",
-                textDecoration: "none",
-                display: "inline-flex",
-                alignItems: "center",
-                transition: "transform 180ms",
-              }}
-            >
-              Request an integration
+            <Link href="/contact" className="btn-ghost">
+              Request integration
             </Link>
           </div>
-        </div>
+        </section>
       </main>
+
+      {pendingDisconnect && (
+        <DisconnectConfirm
+          integration={pendingDisconnect}
+          onConfirm={confirmDisconnect}
+          onCancel={() => setPendingDisconnect(null)}
+        />
+      )}
     </div>
   );
 }

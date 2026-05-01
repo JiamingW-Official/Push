@@ -1,6 +1,8 @@
 /* ============================================================
    Creator Analytics — analytics.css
    Design v11: product register, 8px grid, v11 tokens
+   Refinement pass: liquid-glass spotlight, unified hover shift,
+   editorial moment ≤1 / page, a11y focus rings, dense-but-airy.
    ============================================================ */
 
 .an-page {
@@ -11,7 +13,46 @@
   padding-bottom: 96px;
 }
 
-/* ── Period selector pills ──────────────────────────────── */
+/* iOS 26 spring used for KPI numerals + bars + chips */
+.an-page {
+  --spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* ── Section spacing ─────────────────────────────────────── */
+
+.an-section {
+  padding: 24px 64px 0;
+}
+
+.an-section-header {
+  padding: 32px 64px 0;
+}
+
+.an-section-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+  margin: 0 0 8px;
+}
+
+.an-section-title {
+  font-family: var(--font-display);
+  font-size: 40px;
+  font-weight: 800;
+  color: var(--ink);
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+  margin: 0 0 24px;
+}
+
+.an-section-title--tight {
+  margin-bottom: 16px;
+}
+
+/* ── Period selector pills (legacy fallback) ─────────────── */
 
 .an-period-row {
   display: flex;
@@ -29,17 +70,21 @@
   padding: 8px 18px;
   border-radius: var(--r-pill);
   border: 1px solid var(--hairline);
-  cursor: pointer;
-  transition: background 150ms ease, border-color 150ms ease, color 150ms ease, transform 150ms ease;
   background: var(--surface-3);
   color: var(--ink-3);
   white-space: nowrap;
+  cursor: pointer;
+  transition: background 150ms ease, color 150ms ease, transform 150ms var(--spring);
 }
 
 .an-period-pill:hover {
   background: var(--mist);
   color: var(--ink);
-  transform: translate(1px, 1px);
+  transform: translate(2px, 2px);
+}
+
+.an-period-pill:active {
+  transform: translate(3px, 3px) scale(0.98);
 }
 
 .an-period-pill--active {
@@ -52,7 +97,7 @@
   background: var(--graphite);
 }
 
-/* ── KPI strip cards ────────────────────────────────────── */
+/* ── KPI strip cards ─────────────────────────────────────── */
 
 .an-kpi-grid {
   display: grid;
@@ -61,30 +106,38 @@
 }
 
 .an-kpi-card {
+  position: relative;
   background: var(--snow);
   border: 1px solid var(--mist);
   border-radius: 10px;
   padding: 24px;
-  transition: transform 200ms ease;
+  transition: transform 200ms var(--spring), box-shadow 200ms ease,
+    border-color 200ms ease;
   cursor: default;
 }
 
 .an-kpi-card:hover {
-  transform: translate(1px, 1px);
+  transform: translate(2px, 2px);
+  box-shadow: var(--shadow-1);
 }
 
 .an-kpi-card:active {
-  transform: translate(2px, 2px) scale(0.98);
+  transform: translate(3px, 3px) scale(0.98);
+}
+
+.an-kpi-card:focus-visible {
+  outline: 2px solid var(--brand-red);
+  outline-offset: 2px;
 }
 
 .an-kpi-eyebrow {
   font-family: var(--font-mono);
   font-size: 12px;
   font-weight: 700;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--ink-4);
-  margin: 0 0 8px;
+  margin: 0 0 12px;
 }
 
 .an-kpi-value {
@@ -95,23 +148,61 @@
   line-height: 1;
   letter-spacing: -0.02em;
   margin: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+.an-kpi-unit {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink-3);
+  letter-spacing: 0;
+  margin-left: 4px;
 }
 
 .an-kpi-delta {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   font-family: var(--font-mono);
   font-size: 12px;
   color: var(--ink-4);
-  margin: 8px 0 0;
   letter-spacing: 0.02em;
+  margin: 12px 0 0;
 }
 
-/* ── Chart section ──────────────────────────────────────── */
+.an-kpi-delta__arrow {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: 0;
+  line-height: 1;
+}
+
+.an-kpi-delta--up .an-kpi-delta__arrow {
+  color: var(--accent-blue);
+}
+
+.an-kpi-delta--down .an-kpi-delta__arrow {
+  color: var(--brand-red);
+}
+
+.an-kpi-delta--neutral .an-kpi-delta__arrow {
+  color: var(--ink-4);
+}
+
+/* ── Chart card ──────────────────────────────────────────── */
 
 .an-chart-card {
   background: var(--snow);
   border: 1px solid var(--mist);
   border-radius: 10px;
   padding: 24px;
+  transition: box-shadow 200ms ease;
+}
+
+.an-chart-card:hover {
+  box-shadow: var(--shadow-1);
 }
 
 .an-chart-header {
@@ -123,16 +214,82 @@
   gap: 16px;
 }
 
+.an-chart-meta {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--ink-4);
+  margin: 4px 0 0;
+}
+
 .an-chart-total {
   font-family: var(--font-display);
-  font-size: 28px;
+  font-size: clamp(28px, 3vw, 40px);
   font-weight: 800;
   color: var(--ink);
   letter-spacing: -0.02em;
-  line-height: 1.15;
+  line-height: 1.05;
+  font-variant-numeric: tabular-nums;
 }
 
-/* ── Campaign table ─────────────────────────────────────── */
+/* CSS bar chart bars now own their own hover */
+.an-bar-chart {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  height: 160px;
+  padding: 0 0 8px;
+}
+
+.an-bar-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  height: 100%;
+}
+
+.an-bar-track {
+  flex: 1;
+  display: flex;
+  align-items: flex-end;
+  width: 100%;
+}
+
+.an-bar-fill {
+  width: 100%;
+  min-height: 4px;
+  background: var(--mist);
+  border: 1px solid var(--hairline);
+  border-radius: 4px 4px 0 0;
+  transition: background 200ms ease, transform 200ms var(--spring);
+}
+
+.an-bar-col:hover .an-bar-fill {
+  background: var(--ink-5);
+  transform: translateY(-2px);
+}
+
+.an-bar-fill--current {
+  background: var(--brand-red);
+  border-color: var(--brand-red);
+}
+
+.an-bar-col:hover .an-bar-fill--current {
+  background: var(--brand-red);
+  filter: brightness(0.95);
+}
+
+.an-bar-label {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--ink-4);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+
+/* ── Campaign table ──────────────────────────────────────── */
 
 .an-table-card {
   background: var(--snow);
@@ -153,7 +310,7 @@
   font-family: var(--font-mono);
   font-size: 12px;
   font-weight: 700;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.04em;
   color: var(--ink-4);
   text-transform: uppercase;
 }
@@ -193,6 +350,7 @@
   font-weight: 700;
   color: var(--ink);
   letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
 }
 
 .an-table-earnings {
@@ -201,6 +359,7 @@
   font-weight: 700;
   color: var(--brand-red);
   letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
 }
 
 .an-table-period {
@@ -209,20 +368,20 @@
   color: var(--ink-4);
 }
 
-/* ── Status chip ────────────────────────────────────────── */
+/* ── Status chip ─────────────────────────────────────────── */
 
 .an-status-chip {
   display: inline-block;
   font-family: var(--font-mono);
   font-size: 12px;
   font-weight: 700;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
   padding: 4px 8px;
   border-radius: var(--r-sm);
 }
 
-/* ── Bottom stats row ───────────────────────────────────── */
+/* ── Bottom stats row ────────────────────────────────────── */
 
 .an-bottom-grid {
   display: grid;
@@ -235,9 +394,125 @@
   border: 1px solid var(--mist);
   border-radius: 10px;
   padding: 24px;
+  transition: transform 200ms var(--spring), box-shadow 200ms ease,
+    border-color 200ms ease;
 }
 
-/* ── Tier progress ──────────────────────────────────────── */
+.an-stat-card:hover {
+  transform: translate(2px, 2px);
+  box-shadow: var(--shadow-1);
+}
+
+.an-stat-card:active {
+  transform: translate(3px, 3px) scale(0.98);
+}
+
+.an-stat-card--column {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Best-campaign card (single liquid-glass spotlight tile, 1 / page) */
+.an-stat-card--spotlight {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.74) 0%, rgba(255, 255, 255, 0.58) 100%);
+  backdrop-filter: blur(18px) saturate(1.05);
+  -webkit-backdrop-filter: blur(18px) saturate(1.05);
+  border: 1px solid rgba(255, 255, 255, 0.65);
+  box-shadow: var(--shadow-1);
+  position: relative;
+}
+
+.an-stat-card--spotlight::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 10px;
+  pointer-events: none;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7);
+}
+
+.an-stat-best-name {
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--ink);
+  letter-spacing: -0.018em;
+  line-height: 1.2;
+  margin: 0 0 8px;
+}
+
+.an-stat-best-meta {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--ink-4);
+  margin: 0 0 24px;
+  letter-spacing: 0.02em;
+}
+
+.an-stat-best-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--hairline);
+}
+
+.an-stat-best-grid__cell {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.an-stat-best-grid__label {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+}
+
+.an-stat-best-grid__value {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--ink);
+  letter-spacing: -0.018em;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Streak — editorial moment (champagne, ≤1 / viewport) */
+.an-streak-numeral {
+  font-family: var(--font-display);
+  font-size: clamp(40px, 5vw, 72px);
+  font-weight: 900;
+  color: var(--champagne);
+  letter-spacing: -0.04em;
+  margin: 0 0 4px;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.an-streak-unit {
+  font-family: var(--font-mono);
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--ink-3);
+  margin-left: 6px;
+  text-transform: uppercase;
+}
+
+.an-streak-meta {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--ink-4);
+  margin: 0;
+  letter-spacing: 0.02em;
+}
+
+/* ── Tier progress ───────────────────────────────────────── */
 
 .an-tier-wrap {
   flex: 1;
@@ -256,7 +531,7 @@
 
 .an-tier-current {
   font-family: var(--font-display);
-  font-size: 20px;
+  font-size: 24px;
   font-weight: 800;
   letter-spacing: -0.02em;
   color: var(--ink);
@@ -299,9 +574,77 @@
 .an-tier-score strong {
   color: var(--ink);
   font-weight: 700;
+  font-family: var(--font-display);
+  letter-spacing: -0.01em;
 }
 
-/* ── Horizontal bar ─────────────────────────────────────── */
+/* ── Top performers (campaigns + locations) ──────────────── */
+
+.an-top-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.an-top-card {
+  background: var(--snow);
+  border: 1px solid var(--mist);
+  border-radius: 10px;
+  padding: 24px;
+  transition: box-shadow 200ms ease;
+}
+
+.an-top-card:hover {
+  box-shadow: var(--shadow-1);
+}
+
+.an-top-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.an-top-row {
+  display: grid;
+  grid-template-columns: 24px 1fr auto;
+  align-items: center;
+  gap: 12px;
+  padding: 4px 0;
+}
+
+.an-top-rank {
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--ink-4);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
+}
+
+.an-top-row:first-child .an-top-rank {
+  color: var(--brand-red);
+}
+
+.an-top-name {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--ink);
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.an-top-value {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--ink-4);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+/* ── Horizontal bar (locations) ──────────────────────────── */
 
 .an-hbar-list {
   display: flex;
@@ -311,7 +654,7 @@
 
 .an-hbar-row {
   display: grid;
-  grid-template-columns: 120px 1fr 48px;
+  grid-template-columns: 120px 1fr 56px;
   align-items: center;
   gap: 12px;
 }
@@ -335,9 +678,13 @@
 
 .an-hbar-fill {
   height: 100%;
-  background: var(--brand-red);
+  background: var(--ink-5);
   border-radius: 4px;
   transition: width 800ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.an-hbar-fill--lead {
+  background: var(--brand-red);
 }
 
 .an-hbar-value {
@@ -345,9 +692,10 @@
   font-size: 12px;
   color: var(--ink-4);
   text-align: right;
+  font-variant-numeric: tabular-nums;
 }
 
-/* ── Insights ───────────────────────────────────────────── */
+/* ── Insights ────────────────────────────────────────────── */
 
 .an-insights-section {
   padding: 32px 64px 64px;
@@ -361,7 +709,7 @@
   font-family: var(--font-mono);
   font-size: 12px;
   font-weight: 700;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--ink-4);
   margin: 0 0 8px;
@@ -391,12 +739,17 @@
   display: flex;
   flex-direction: column;
   gap: 12px;
-  transition: box-shadow 200ms ease, transform 160ms ease;
+  transition: box-shadow 200ms ease, transform 200ms var(--spring),
+    border-color 200ms ease;
 }
 
 .an-insight-card:hover {
   box-shadow: var(--shadow-2);
-  transform: translate(1px, 1px);
+  transform: translate(2px, 2px);
+}
+
+.an-insight-card:active {
+  transform: translate(3px, 3px) scale(0.98);
 }
 
 .an-insight-accent-bar {
@@ -406,6 +759,13 @@
   border-radius: 2px;
 }
 
+.an-insight-stat-row {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
 .an-insight-stat {
   font-family: var(--font-display);
   font-size: clamp(40px, 5vw, 56px);
@@ -413,14 +773,15 @@
   letter-spacing: -0.04em;
   line-height: 1;
   color: var(--brand-red);
-}
-
-.an-insight-stat--champagne {
-  color: var(--champagne);
+  font-variant-numeric: tabular-nums;
 }
 
 .an-insight-stat--blue {
   color: var(--accent-blue);
+}
+
+.an-insight-stat--ink {
+  color: var(--ink);
 }
 
 .an-insight-context {
@@ -452,33 +813,32 @@
   font-family: var(--font-mono);
   font-size: 12px;
   font-weight: 700;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--brand-red);
   text-decoration: none;
   display: inline-flex;
   align-items: center;
-  gap: 4px;
+  gap: 6px;
   align-self: flex-start;
-  transition: opacity 200ms ease;
+  transition: gap 200ms var(--spring), opacity 200ms ease;
 }
 
 .an-insight-cta:hover {
-  opacity: 0.7;
+  gap: 10px;
+  opacity: 0.85;
 }
 
-/* ── Page-level layout helpers ──────────────────────────── */
-
-.an-section {
-  padding: 24px 64px 0;
+.an-insight-cta:focus-visible {
+  outline: 2px solid var(--brand-red);
+  outline-offset: 4px;
+  border-radius: 2px;
 }
 
-.an-section-header {
-  padding: 32px 64px 0;
-}
+/* ── Page-level header (legacy hero — unused but preserved) */
 
 .an-page-header {
-  padding: 32px 64px 32px;
+  padding: 32px 0 32px;
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
@@ -502,47 +862,33 @@
   font-family: var(--font-mono);
   font-size: 12px;
   font-weight: 700;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
-  color: rgba(255,255,255,0.40);
+  color: rgba(255, 255, 255, 0.4);
   margin: 0 0 8px;
 }
 
-/* ── Section title ──────────────────────────────────────── */
-
-.an-section-title {
-  font-family: var(--font-display);
-  font-size: 40px;
-  font-weight: 800;
-  color: var(--ink);
-  letter-spacing: -0.02em;
-  line-height: 1.05;
-  margin: 0 0 4px;
-}
-
-.an-section-eyebrow {
-  font-family: var(--font-mono);
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--ink-4);
-  margin: 0 0 24px;
-}
-
-/* ── Responsive ─────────────────────────────────────────── */
+/* ── Responsive (iPad 8-col / mobile 4-col) ──────────────── */
 
 @media (max-width: 1024px) {
   .an-page-header,
   .an-section,
   .an-section-header,
   .an-insights-section {
-    padding-left: 48px;
-    padding-right: 48px;
+    padding-left: 0;
+    padding-right: 0;
   }
 
   .an-kpi-grid {
     grid-template-columns: repeat(2, 1fr);
+  }
+
+  .an-bottom-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .an-stat-card--column {
+    grid-column: 1 / -1;
   }
 }
 
@@ -564,6 +910,10 @@
     grid-template-columns: 1fr;
   }
 
+  .an-top-grid {
+    grid-template-columns: 1fr;
+  }
+
   .an-insights-grid {
     grid-template-columns: 1fr;
   }
@@ -581,16 +931,46 @@
   }
 
   .an-hbar-row {
-    grid-template-columns: 100px 1fr 40px;
+    grid-template-columns: 100px 1fr 48px;
   }
 
   .an-insights-title {
     font-size: 28px;
+  }
+
+  .an-section-title {
+    font-size: 28px;
+  }
+
+  .an-stat-best-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
   }
 }
 
 @media (max-width: 480px) {
   .an-kpi-grid {
     grid-template-columns: 1fr;
+  }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .an-kpi-card,
+  .an-stat-card,
+  .an-insight-card,
+  .an-period-pill,
+  .an-bar-fill,
+  .an-tier-fill,
+  .an-hbar-fill,
+  .an-insight-cta {
+    transition: none;
+  }
+
+  .an-kpi-card:hover,
+  .an-stat-card:hover,
+  .an-insight-card:hover,
+  .an-period-pill:hover {
+    transform: none;
   }
 }

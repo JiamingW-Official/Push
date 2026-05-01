@@ -56,7 +56,7 @@ v11 layers a Grain-Archive editorial register on top of the v10 N2W foundation; 
   - All buttons get bottom-right hover shift `translate(2px,2px)` → `translate(3px,3px) scale(0.98)`. **Sole exception: GA Tri-Color nav pill** (color-state only).
   - Editorial Pink is an optional 6th variant, ≤1 per page.
   - **Per-page custom buttons forbidden.** Every button on every page renders identically.
-- **Page bg `#f8f4e8` Ivory Cream / body `#61605c` warm gray / Light Mode only** (v10 lock).
+- **Page bg `#ffffff` Snow (v11.1 — was Ivory Cream) / body `#61605c` warm gray / Light Mode only.** All product UI page + card surfaces are pure white; cards defined by `--shadow-1/2/3` alone (no border). Cream tokens (`--surface` / `--surface-2` / `--surface-3`) reserved for Marketing register only.
 - **Bottom-right hover shift** is the Push interaction signature on every clickable element. **Does NOT shift:** GA Tri-Color nav pills, Ticket Panel grommets + perforation, Footer Giant Wordmark, Magvix Italic Signature Divider, static badges, body text.
 - **Modular Panel Discipline:** Marketing pages = 3-5 stacked panels, alternating warm/cool tone, ≤1 floating liquid-glass tile + ≤1 image card + ≤1 saturated editorial moment per panel.
 - **Footer:** Editorial Blue rounded-top panel + 2 floating liquid-glass tiles peeking above + 3-column parenthetical eyebrow grid + **Darky 800 giant `clamp(140,18vw,320)px` "PUSH" bottom-left** (replaces v10 Magvix Italic wordmark).

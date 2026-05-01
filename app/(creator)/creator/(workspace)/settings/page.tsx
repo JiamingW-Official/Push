@@ -2,8 +2,7 @@
 
 import { useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
-import { createClient } from "@/lib/supabase";
-import { SettingsShell, NavItem } from "@/components/settings/SettingsShell";
+import { SettingsShell, NavGroup } from "@/components/settings/SettingsShell";
 import { SettingsSection } from "@/components/settings/SettingsSection";
 import { ToggleRow, Channel } from "@/components/settings/ToggleRow";
 import { SelectRow } from "@/components/settings/SelectRow";
@@ -88,53 +87,66 @@ const DEFAULT_SETTINGS: CreatorSettings = {
 
 const STORAGE_KEY = "push-demo-creator-settings";
 
-/* ── Nav ────────────────────────────────────────────────────── */
+/* ── Nav (grouped, Instagram-style) ─────────────────────────── */
 
-const NAV_ITEMS: NavItem[] = [
-  { key: "profile", label: "Profile", icon: "◉" },
-  { key: "account", label: "Account", icon: "◈" },
-  { key: "notifications", label: "Notifications", icon: "◎" },
-  { key: "payouts", label: "Payouts", icon: "◇" },
-  { key: "privacy", label: "Privacy", icon: "◆" },
-  { key: "danger", label: "Danger Zone", icon: "⚑", danger: true },
+const NAV_GROUPS: NavGroup[] = [
+  {
+    label: "ACCOUNT",
+    items: [
+      { key: "profile", label: "Profile", icon: "◉" },
+      { key: "account", label: "Account", icon: "◈" },
+      { key: "notifications", label: "Notifications", icon: "◎" },
+    ],
+  },
+  {
+    label: "PAYOUTS",
+    items: [{ key: "payouts", label: "Payouts", icon: "◇" }],
+  },
+  {
+    label: "PRIVACY",
+    items: [{ key: "privacy", label: "Privacy", icon: "◆" }],
+  },
+  {
+    label: "ACCOUNT REMOVAL",
+    items: [
+      { key: "danger", label: "Delete or deactivate", icon: "⚑", danger: true },
+    ],
+  },
 ];
 
 const NOTIF_LABELS: Record<keyof NotifSettings, [string, string]> = {
   newCampaignMatch: [
     "New campaign match",
-    "A campaign matching your tier and niche is posted",
+    "A campaign that fits your tier and niche is posted",
   ],
   applicationAccepted: [
     "Application accepted",
-    "A merchant accepted your campaign application",
+    "A merchant accepted your application",
   ],
   applicationRejected: [
-    "Application rejected",
-    "A merchant declined your application",
+    "Application not selected",
+    "A merchant moved on with another creator",
   ],
-  paymentReceived: [
-    "Payment received",
-    "Earnings are deposited to your account",
-  ],
+  paymentReceived: ["Payout received", "Earnings have landed in your account"],
   milestoneReminder: [
     "Milestone reminder",
-    "Reminder when a campaign milestone is due",
+    "Heads up when a campaign milestone is due",
   ],
-  weeklyDigest: [
-    "Weekly digest",
-    "Weekly summary of your activity and earnings",
-  ],
+  weeklyDigest: ["Weekly digest", "A summary of your week on Push"],
   newFollowerOnPush: ["New follower", "Someone followed you on Push"],
   campaignDeadlineWarning: [
-    "Deadline warning",
-    "48h before a campaign deadline closes",
+    "Deadline approaching",
+    "48 hours before a campaign closes",
   ],
-  proofApproved: ["Proof approved", "Merchant approved your submitted proof"],
-  proofRejected: ["Proof rejected", "Merchant requested changes to your proof"],
-  tierUpgrade: ["Tier upgrade", "Your Push score has unlocked a new tier"],
+  proofApproved: ["Proof approved", "Merchant signed off on your submission"],
+  proofRejected: [
+    "Proof needs changes",
+    "Merchant requested edits before approval",
+  ],
+  tierUpgrade: ["Tier upgrade", "Your Push score unlocked a new tier"],
   marketingUpdates: [
-    "Marketing emails",
-    "Product updates, tips, and announcements from Push",
+    "Product updates",
+    "Occasional tips and announcements from Push",
   ],
 };
 
@@ -145,6 +157,7 @@ function ConfirmModal({
   description,
   confirmWord,
   confirmLabel,
+  destructive = false,
   onCancel,
   onConfirm,
 }: {
@@ -152,44 +165,68 @@ function ConfirmModal({
   description: string;
   confirmWord?: string;
   confirmLabel: string;
+  destructive?: boolean;
   onCancel: () => void;
   onConfirm: () => void;
 }) {
   const [input, setInput] = useState("");
   const ready = !confirmWord || input === confirmWord;
 
+  /* Esc to cancel — keyboard a11y */
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onCancel();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [onCancel]);
+
   return (
-    <div className="confirm-modal-backdrop">
-      <div className="confirm-modal" role="dialog" aria-modal="true">
-        <h3 className="confirm-modal__title">{title}</h3>
+    <div className="confirm-modal-backdrop" onClick={onCancel}>
+      <div
+        className="confirm-modal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="confirm-modal-title"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <h3 id="confirm-modal-title" className="confirm-modal__title">
+          {title}
+        </h3>
         <p className="confirm-modal__desc">{description}</p>
         {confirmWord && (
           <div>
-            <label className="confirm-modal__input-label">
+            <label
+              className="confirm-modal__input-label"
+              htmlFor="confirm-modal-input"
+            >
               Type <strong>{confirmWord}</strong> to confirm
             </label>
             <input
+              id="confirm-modal-input"
               className="push-input"
               value={input}
               onChange={(e) => setInput(e.target.value)}
               placeholder={confirmWord}
               autoFocus
+              autoComplete="off"
+              spellCheck={false}
             />
           </div>
         )}
         <div className="confirm-modal__actions">
-          <button className="btn-ghost" onClick={onCancel}>
+          <button
+            className="btn-ghost click-shift"
+            onClick={onCancel}
+            type="button"
+          >
             Cancel
           </button>
           <button
-            className="btn-ghost"
+            className={`${destructive ? "btn-primary" : "btn-ghost"} click-shift`}
             disabled={!ready}
             onClick={onConfirm}
-            style={{
-              opacity: ready ? 1 : 0.4,
-              color: "var(--brand-red)",
-              borderColor: "var(--brand-red)",
-            }}
+            type="button"
           >
             {confirmLabel}
           </button>
@@ -347,17 +384,23 @@ export default function CreatorSettingsPage() {
               <div className="avatar-upload">
                 <div className="avatar-upload__preview">
                   {settings.avatarUrl ? (
-                    <img src={settings.avatarUrl} alt="Avatar" />
+                    <img src={settings.avatarUrl} alt="Profile photo" />
                   ) : (
-                    <span className="avatar-upload__initials">{initials}</span>
+                    <span
+                      className="avatar-upload__initials"
+                      aria-hidden="true"
+                    >
+                      {initials}
+                    </span>
                   )}
                 </div>
                 <div className="avatar-upload__info">
                   <span className="avatar-upload__label">Profile photo</span>
                   <span className="avatar-upload__hint">
-                    JPG or PNG, max 4 MB
+                    JPG or PNG · up to 4 MB
                   </span>
                   <button
+                    type="button"
                     className="btn-ghost click-shift"
                     style={{ marginTop: 8 }}
                   >
@@ -367,21 +410,21 @@ export default function CreatorSettingsPage() {
               </div>
             </SettingsSection>
 
-            <SettingsSection title="Basic Info">
+            <SettingsSection title="Basics">
               <InputRow
                 label="Display name"
-                description="Shown to merchants on campaigns"
+                description="Shown to merchants on every campaign"
                 value={settings.displayName}
                 onChange={(v) => patch("displayName", v)}
-                placeholder="Your name"
+                placeholder="Alex Rivera"
                 maxLength={60}
               />
               <InputRow
                 label="Bio"
-                description="A short intro for your profile"
+                description="One or two lines about what you make"
                 value={settings.bio}
                 onChange={(v) => patch("bio", v)}
-                placeholder="Tell merchants who you are..."
+                placeholder="NYC-based lifestyle creator. Content that converts."
                 multiline
                 maxLength={280}
               />
@@ -390,14 +433,16 @@ export default function CreatorSettingsPage() {
                 description="City or neighborhood"
                 value={settings.location}
                 onChange={(v) => patch("location", v)}
-                placeholder="e.g. New York, NY"
+                placeholder="New York, NY"
               />
 
               <div className="input-row">
                 <div className="input-row__label-group">
-                  <label className="input-row__label">Languages</label>
+                  <label className="input-row__label" htmlFor="lang-input">
+                    Languages
+                  </label>
                   <span className="input-row__desc">
-                    Languages you create content in
+                    Languages you create in
                   </span>
                 </div>
                 <div className="input-row__field">
@@ -406,7 +451,9 @@ export default function CreatorSettingsPage() {
                       <span key={lang} className="tag-chip">
                         {lang}
                         <button
+                          type="button"
                           className="tag-chip__remove"
+                          aria-label={`Remove ${lang}`}
                           onClick={() => removeLang(lang)}
                         >
                           ×
@@ -414,6 +461,7 @@ export default function CreatorSettingsPage() {
                       </span>
                     ))}
                     <input
+                      id="lang-input"
                       className="tag-input"
                       value={langInput}
                       onChange={(e) => setLangInput(e.target.value)}
@@ -451,21 +499,26 @@ export default function CreatorSettingsPage() {
                 disabled
               />
               <div style={{ paddingTop: 12 }}>
-                <button className="btn-ghost click-shift">Change email</button>
+                <button type="button" className="btn-ghost click-shift">
+                  Change email
+                </button>
               </div>
             </SettingsSection>
             <SettingsSection title="Password">
               <p
                 style={{
-                  fontFamily: "var(--font-body)",
+                  fontFamily: "var(--font-mono)",
                   fontSize: 13,
                   color: "var(--ink-4)",
                   marginBottom: 12,
+                  lineHeight: 1.5,
                 }}
               >
-                We will send a password reset link to your email address.
+                We will email you a reset link.
               </p>
-              <button className="btn-ghost click-shift">Send reset link</button>
+              <button type="button" className="btn-ghost click-shift">
+                Send reset link
+              </button>
             </SettingsSection>
           </>
         );
@@ -476,12 +529,12 @@ export default function CreatorSettingsPage() {
             <div className="settings-page-heading">
               <h1 className="settings-page-heading__title">Notifications</h1>
               <p className="settings-page-heading__sub">
-                Choose how and when Push contacts you
+                Choose how and when Push reaches you
               </p>
             </div>
             <SettingsSection
               title="Activity"
-              description="Campaign and earnings notifications"
+              description="Campaigns, applications, and earnings"
             >
               {(
                 [
@@ -514,8 +567,8 @@ export default function CreatorSettingsPage() {
               })}
             </SettingsSection>
             <SettingsSection
-              title="Digest & Marketing"
-              description="Periodic summaries and Push communications"
+              title="Digest & updates"
+              description="Periodic summaries and product news"
             >
               {(
                 [
@@ -553,7 +606,7 @@ export default function CreatorSettingsPage() {
                 How and when you get paid
               </p>
             </div>
-            <SettingsSection title="Payout Method">
+            <SettingsSection title="Payout method">
               <SelectRow
                 label="Method"
                 description="How we send your earnings"
@@ -585,18 +638,19 @@ export default function CreatorSettingsPage() {
                 }
               />
             </SettingsSection>
-            <SettingsSection title="Bank Account">
+            <SettingsSection title="Bank account">
               <p
                 style={{
-                  fontFamily: "var(--font-body)",
+                  fontFamily: "var(--font-mono)",
                   fontSize: 13,
                   color: "var(--ink-4)",
                   padding: "12px 0",
+                  lineHeight: 1.5,
                 }}
               >
                 No bank account connected. Add one to receive ACH payouts.
               </p>
-              <button className="btn-primary click-shift">
+              <button type="button" className="btn-primary click-shift">
                 Connect bank account
               </button>
             </SettingsSection>
@@ -615,26 +669,26 @@ export default function CreatorSettingsPage() {
             <SettingsSection title="Visibility">
               <ToggleRow
                 label="Public profile"
-                description="Your profile is discoverable by merchants on Push"
+                description="Merchants can discover your profile on Push"
                 checked={settings.privacy.publicProfile}
                 onChange={(v) => patchPrivacy("publicProfile", v)}
               />
               <ToggleRow
                 label="Show total earnings"
-                description="Display your cumulative earnings badge on your public profile"
+                description="Display a cumulative earnings badge on your public profile"
                 checked={settings.privacy.showEarnings}
                 onChange={(v) => patchPrivacy("showEarnings", v)}
               />
             </SettingsSection>
-            <SettingsSection title="Data & Ads">
+            <SettingsSection title="Data & ads">
               <ToggleRow
-                label="Ad preferences"
-                description="Allow Push to use your activity data to improve campaign recommendations"
+                label="Personalized recommendations"
+                description="Use your activity to suggest more relevant campaigns"
                 checked={settings.privacy.adPreferences}
                 onChange={(v) => patchPrivacy("adPreferences", v)}
               />
               <div style={{ paddingTop: 16 }}>
-                <button className="btn-ghost click-shift">
+                <button type="button" className="btn-ghost click-shift">
                   Export my data
                 </button>
               </div>
@@ -646,23 +700,26 @@ export default function CreatorSettingsPage() {
         return (
           <>
             <div className="settings-page-heading">
-              <h1 className="settings-page-heading__title">Danger Zone</h1>
+              <h1 className="settings-page-heading__title">
+                Delete or deactivate
+              </h1>
               <p className="settings-page-heading__sub">
-                Irreversible actions — proceed carefully
+                Pause your profile, or remove your account permanently
               </p>
             </div>
-            <SettingsSection danger title="Account Actions">
+            <SettingsSection danger title="Account">
               <div className="danger-action">
                 <div className="danger-action__text">
                   <span className="danger-action__title">
                     Deactivate account
                   </span>
                   <span className="danger-action__desc">
-                    Temporarily disable your profile. Campaigns and applications
-                    are paused. You can reactivate at any time.
+                    Temporarily hides your profile and pauses applications. You
+                    can reactivate any time by signing in.
                   </span>
                 </div>
                 <button
+                  type="button"
                   className="btn-ghost click-shift"
                   onClick={() => setModal("deactivate")}
                 >
@@ -673,17 +730,13 @@ export default function CreatorSettingsPage() {
                 <div className="danger-action__text">
                   <span className="danger-action__title">Delete account</span>
                   <span className="danger-action__desc">
-                    Permanently delete your Push account, all profile data,
-                    application history, and earnings records. This cannot be
-                    undone.
+                    Removes your profile, application history, and earnings
+                    records. This action is not reversible.
                   </span>
                 </div>
                 <button
-                  className="btn-ghost click-shift"
-                  style={{
-                    color: "var(--brand-red)",
-                    borderColor: "var(--brand-red)",
-                  }}
+                  type="button"
+                  className="btn-primary click-shift"
                   onClick={() => setModal("delete")}
                 >
                   Delete
@@ -697,8 +750,8 @@ export default function CreatorSettingsPage() {
 
   return (
     <SettingsShell
-      title="Creator"
-      navItems={NAV_ITEMS}
+      title="Settings"
+      navGroups={NAV_GROUPS}
       activeSection={activeSection}
       onSectionChange={setActiveSection}
     >
@@ -706,34 +759,40 @@ export default function CreatorSettingsPage() {
 
       {/* Save bar */}
       {dirty && (
-        <div className="settings-save-bar">
+        <div
+          className="settings-save-bar"
+          role="region"
+          aria-label="Unsaved changes"
+        >
           <span className="settings-save-bar__status">
-            {saveStatus === "saving" ? "Saving…" : "You have unsaved changes"}
+            {saveStatus === "saving" ? "Saving…" : "Unsaved changes"}
           </span>
           <div className="settings-save-bar__actions">
             <button
+              type="button"
               className="btn-ghost click-shift"
               onClick={() => {
                 setSettings(DEFAULT_SETTINGS);
                 setDirty(false);
               }}
             >
-              Discard
+              Cancel
             </button>
             <button
+              type="button"
               className="btn-primary click-shift"
               onClick={save}
               disabled={saveStatus === "saving"}
             >
-              Save changes
+              Save
             </button>
           </div>
         </div>
       )}
       {saveStatus === "saved" && !dirty && (
-        <div className="settings-save-bar">
+        <div className="settings-save-bar" role="status" aria-live="polite">
           <span className="settings-save-bar__status settings-save-bar__status--saved">
-            Changes saved
+            Saved
           </span>
         </div>
       )}
@@ -742,8 +801,8 @@ export default function CreatorSettingsPage() {
       {modal === "deactivate" && (
         <ConfirmModal
           title="Deactivate your account?"
-          description="Your profile will be hidden from merchants and all pending applications paused. You can reactivate at any time by logging in."
-          confirmLabel="Deactivate account"
+          description="Your profile will be hidden from merchants and pending applications paused. You can reactivate any time by signing in."
+          confirmLabel="Deactivate"
           onCancel={() => setModal(null)}
           onConfirm={() => {
             setModal(null);
@@ -755,10 +814,11 @@ export default function CreatorSettingsPage() {
       {/* Delete modal */}
       {modal === "delete" && (
         <ConfirmModal
-          title="Delete your account permanently?"
-          description="All profile data, campaign history, and earnings records will be deleted. Any pending payouts will be forfeited. This action is irreversible."
+          title="Delete your account?"
+          description="Your profile, campaign history, and earnings records will be removed. Any pending payouts will be forfeited. This action is not reversible."
           confirmWord="DELETE"
-          confirmLabel="Permanently delete"
+          confirmLabel="Delete account"
+          destructive
           onCancel={() => setModal(null)}
           onConfirm={() => {
             setModal(null);

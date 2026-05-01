@@ -1,164 +1,147 @@
 /* ============================================================
-   Header — Push Design System v8 · iOS 26 floating glass pill
+   Header — Push Design System v11 · GA Tri-Color Nav (§ 8.1 / § 14)
+   Sticky chrome · 32×32 ink monogram · 3 GA pills · Filled Primary CTA
+   GA pills: brightness-only (no transform). All else: bottom-right shift.
    ============================================================ */
 
-/* ── Floating wrapper (full-width fixed, transparent) ─────── */
+/* ── Sticky container ───────────────────────────────────────── */
 .header {
-  position: fixed;
-  top: 12px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: calc(100% - 48px);
-  max-width: 960px;
-  z-index: 200;
-  pointer-events: none;
-
-  /* iOS 26 spring transition — pill slides up when hidden */
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  width: 100%;
+  background: rgba(248, 244, 232, 0.85);
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid transparent;
   transition:
-    top 420ms cubic-bezier(0.34, 1.56, 0.64, 1),
-    opacity 300ms ease;
-  will-change: top, opacity;
+    border-color 200ms ease,
+    transform 240ms ease,
+    opacity 240ms ease;
+  will-change: transform, opacity;
 }
 
-/* Auto-hide on fast scroll down */
-.hidden {
-  top: -80px;
+.headerScrolled {
+  border-bottom-color: rgba(10, 10, 10, 0.08);
+}
+
+.headerHidden {
+  transform: translateY(-100%);
   opacity: 0;
 }
 
-/* ── Inner pill ────────────────────────────────────────────── */
+/* ── Inner row ──────────────────────────────────────────────── */
 .inner {
-  pointer-events: all;
   display: flex;
   align-items: center;
-  height: 52px;
-  padding: 0 8px 0 22px;
-  gap: 0;
-
-  /* iOS 26 glass morphism */
-  background: rgba(251, 250, 247, 0.72);
-  backdrop-filter: blur(32px) saturate(200%) brightness(1.04);
-  -webkit-backdrop-filter: blur(32px) saturate(200%) brightness(1.04);
-  border-radius: 9999px;
-  border: 1px solid rgba(10, 10, 10, 0.07);
-  box-shadow:
-    0 4px 24px rgba(10, 10, 10, 0.08),
-    0 1px 3px rgba(10, 10, 10, 0.04),
-    inset 0 1px 0 rgba(255, 255, 255, 0.6);
-
-  transition:
-    background 350ms cubic-bezier(0.34, 1.56, 0.64, 1),
-    box-shadow 350ms cubic-bezier(0.34, 1.56, 0.64, 1),
-    border-color 350ms ease;
+  justify-content: space-between;
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 0 64px;
+  height: 64px;
+  gap: 16px;
 }
 
-/* Top of page — more transparent, lighter shadow */
-.headerAtTop .inner {
-  background: rgba(251, 250, 247, 0.48);
-  backdrop-filter: blur(20px) saturate(160%);
-  -webkit-backdrop-filter: blur(20px) saturate(160%);
-  box-shadow:
-    0 2px 12px rgba(10, 10, 10, 0.04),
-    inset 0 1px 0 rgba(255, 255, 255, 0.5);
-  border-color: rgba(10, 10, 10, 0.05);
-}
-
-/* Scrolled — full glass, deeper shadow */
-.headerScrolled .inner {
-  background: rgba(251, 250, 247, 0.9);
-  box-shadow:
-    0 8px 40px rgba(10, 10, 10, 0.10),
-    0 2px 8px rgba(10, 10, 10, 0.06),
-    inset 0 1px 0 rgba(255, 255, 255, 0.7);
-  border-color: rgba(10, 10, 10, 0.09);
-}
-
-/* ── Logo ──────────────────────────────────────────────────── */
-.logo {
-  font-family: var(--font-hero);
-  font-size: 1.35rem;
-  font-weight: normal;
-  font-style: italic;
-  letter-spacing: -0.01em;
-  color: var(--ink);
+/* ── 32×32 Ink monogram (left) — flat, no hover shift ───────── */
+.monogram {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--ink);
+  color: var(--snow);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   flex-shrink: 0;
   text-decoration: none;
-  margin-right: auto;
-  transition: opacity 200ms ease;
+  font-family: var(--font-hero);
+  font-style: italic;
+  font-size: 18px;
+  line-height: 1;
+  user-select: none;
+  transition: filter 180ms ease;
 }
 
-.logo:hover {
-  opacity: 0.7;
+.monogram:hover {
+  filter: brightness(1.08);
 }
 
-/* ── Desktop nav ────────────────────────────────────────────── */
-.nav {
+.monogram:active {
+  filter: brightness(0.92);
+}
+
+/* ── 3-pill cluster (center) ────────────────────────────────── */
+.pillCluster {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 8px;
+  flex: 1;
+  justify-content: center;
 }
 
-.navLink {
+/* ── Base pill — § 8.1: 8px 18px / pill radius / mono 14px 600 0.04em ── */
+.pill {
   font-family: var(--font-body);
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.09em;
+  font-size: 14px;
+  font-weight: 600;
   text-transform: uppercase;
-  color: var(--ink);
-  opacity: 0.52;
-  text-decoration: none;
-  padding: 6px 14px;
-  border-radius: 9999px;
-  transition:
-    opacity 200ms ease,
-    background 200ms ease;
-}
-
-.navLink:hover {
-  opacity: 0.9;
-  background: rgba(10, 10, 10, 0.05);
-}
-
-/* ── CTA group ──────────────────────────────────────────────── */
-.ctaGroup {
-  margin-left: 8px;
-}
-
-.ctaBtn {
-  font-family: var(--font-body);
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.07em;
-  text-transform: uppercase;
-  color: #fff;
-  background: var(--brand-red);
+  letter-spacing: 0.04em;
+  padding: 8px 18px;
+  border-radius: 50vh;
   border: none;
-  border-radius: 9999px;
-  padding: 9px 20px;
+  cursor: pointer;
   text-decoration: none;
   display: inline-flex;
   align-items: center;
+  line-height: 1;
   white-space: nowrap;
-
-  /* iOS 26 spring press */
-  transition:
-    transform 200ms cubic-bezier(0.34, 1.56, 0.64, 1),
-    opacity 200ms ease,
-    box-shadow 200ms ease;
-  box-shadow: 0 2px 12px rgba(193, 18, 31, 0.28);
+  /* GA Tri-Color rule: brightness-only, NO transform shift (§ 16) */
+  transition: filter 180ms ease;
 }
 
-.ctaBtn:hover {
-  transform: scale(1.03);
-  box-shadow: 0 4px 18px rgba(193, 18, 31, 0.36);
+.pill:hover {
+  filter: brightness(1.08);
 }
 
-.ctaBtn:active {
-  transform: scale(0.97);
-  box-shadow: 0 1px 6px rgba(193, 18, 31, 0.2);
+.pill:active {
+  filter: brightness(0.92);
 }
 
-/* ── Hamburger (mobile) ─────────────────────────────────────── */
+/* GA Tri-Color color states */
+.pillHome   { background: var(--ga-orange); color: #ffffff; }
+.pillActive { background: var(--ga-green);  color: var(--ink); }
+.pillLast   { background: var(--ga-sky);    color: var(--ink); }
+
+/* ── Filled Primary CTA — bottom-right shift (§ 9.1) ───────── */
+.cta {
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 10px 22px;
+  border-radius: 8px;
+  background: var(--brand-red);
+  color: #ffffff;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  line-height: 1;
+  flex-shrink: 0;
+  transition: transform 180ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.cta:hover {
+  transform: translate(1px, 1px);
+}
+
+.cta:active {
+  transform: translate(2px, 2px) scale(0.98);
+}
+
+/* ── Hamburger (mobile only) ────────────────────────────────── */
 .hamburger {
   display: none;
   flex-direction: column;
@@ -167,144 +150,148 @@
   gap: 5px;
   width: 40px;
   height: 40px;
-  padding: 0;
-  margin-left: auto;
+  background: none;
+  border: none;
   cursor: pointer;
-  background: rgba(10, 10, 10, 0.05);
-  border: 1px solid rgba(10, 10, 10, 0.06);
-  border-radius: 9999px;
-  transition:
-    background 200ms ease,
-    transform 200ms cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-
-.hamburger:hover {
-  background: rgba(10, 10, 10, 0.1);
-  transform: scale(1.05);
+  padding: 8px;
+  flex-shrink: 0;
 }
 
 .bar {
   display: block;
-  width: 16px;
-  height: 1.5px;
+  width: 22px;
+  height: 2px;
   background: var(--ink);
-  border-radius: 9999px;
+  border-radius: 1px;
   transform-origin: center;
-  transform: translateY(0) rotate(0deg);
-  opacity: 0.75;
   transition:
-    transform 300ms cubic-bezier(0.34, 1.56, 0.64, 1),
+    transform 200ms ease,
     opacity 200ms ease;
 }
 
-.barTop  { transform: translateY(6.5px) rotate(45deg); opacity: 1; }
-.barMid  { opacity: 0; transform: scaleX(0); }
-.barBot  { transform: translateY(-6.5px) rotate(-45deg); opacity: 1; }
-
-/* ── Mobile nav ─────────────────────────────────────────────── */
-.mobileNav {
-  display: none;
-  position: fixed;
-  top: 76px;     /* pill bottom + gap */
-  left: 50%;
-  transform: translateX(-50%) scaleY(0.92) translateY(-8px);
-  width: calc(100% - 48px);
-  max-width: 960px;
-  background: rgba(251, 250, 247, 0.94);
-  backdrop-filter: blur(40px) saturate(200%);
-  -webkit-backdrop-filter: blur(40px) saturate(200%);
-  border-radius: 24px;
-  border: 1px solid rgba(10, 10, 10, 0.07);
-  box-shadow: 0 16px 48px rgba(10, 10, 10, 0.12), 0 4px 12px rgba(10, 10, 10, 0.06);
-  flex-direction: column;
-  padding: 8px 8px 16px;
-  gap: 0;
-  opacity: 0;
-  pointer-events: none;
-  transform-origin: top center;
-  transition:
-    transform 320ms cubic-bezier(0.34, 1.56, 0.64, 1),
-    opacity 220ms ease;
+.barOpen0 {
+  transform: rotate(45deg) translate(5px, 5px);
 }
 
-.mobileNavOpen {
-  transform: translateX(-50%) scaleY(1) translateY(0);
+.barOpen1 {
+  transform: scaleX(0);
+  opacity: 0;
+}
+
+.barOpen2 {
+  transform: rotate(-45deg) translate(5px, -5px);
+}
+
+/* ── Mobile drawer ──────────────────────────────────────────── */
+.mobileOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 99;
+  background: rgba(248, 244, 232, 0.96);
+  -webkit-backdrop-filter: blur(24px);
+  backdrop-filter: blur(24px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 200ms ease;
+}
+
+.mobileOverlayOpen {
   opacity: 1;
   pointer-events: all;
 }
 
-.mobileNavLink {
+.mobilePill {
   font-family: var(--font-body);
-  font-size: 13px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
+  font-size: 18px;
+  font-weight: 600;
   text-transform: uppercase;
-  color: var(--ink);
-  opacity: 0.6;
+  letter-spacing: 0.04em;
+  padding: 14px 32px;
+  border-radius: 50vh;
+  border: none;
+  cursor: pointer;
   text-decoration: none;
-  padding: 14px 16px;
-  border-radius: 16px;
-  transition: opacity 150ms ease, background 150ms ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  width: 240px;
+  transition: filter 180ms ease;
 }
 
-.mobileNavLink:hover {
-  opacity: 1;
-  background: rgba(10, 10, 10, 0.04);
-}
+.mobilePill:hover  { filter: brightness(1.08); }
+.mobilePill:active { filter: brightness(0.92); }
 
 .mobileCta {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  padding: 8px 8px 0;
-  border-top: 1px solid rgba(10, 10, 10, 0.06);
-  margin-top: 8px;
-}
-
-.mobileCtaLink {
+  margin-top: 24px;
   font-family: var(--font-body);
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.06em;
+  font-size: 16px;
+  font-weight: 600;
   text-transform: uppercase;
-  color: var(--ink);
-  opacity: 0.5;
-  text-decoration: none;
-  padding: 12px 16px;
-  border-radius: 12px;
-  transition: opacity 150ms ease, background 150ms ease;
-}
-
-.mobileCtaLink:hover {
-  opacity: 0.85;
-  background: rgba(10, 10, 10, 0.04);
-}
-
-.mobileCtaBtn {
-  font-family: var(--font-body);
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: #fff;
+  letter-spacing: 0.04em;
+  padding: 14px 40px;
+  border-radius: 8px;
   background: var(--brand-red);
-  border-radius: 9999px;
-  padding: 14px 24px;
+  color: #ffffff;
+  border: none;
+  cursor: pointer;
   text-decoration: none;
-  text-align: center;
-  box-shadow: 0 2px 12px rgba(193, 18, 31, 0.28);
-  transition: opacity 200ms ease, transform 200ms cubic-bezier(0.34, 1.56, 0.64, 1);
+  display: inline-flex;
+  align-items: center;
+  line-height: 1;
+  transition: transform 180ms cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-.mobileCtaBtn:hover {
-  opacity: 0.9;
-  transform: scale(1.02);
+.mobileCta:hover  { transform: translate(1px, 1px); }
+.mobileCta:active { transform: translate(2px, 2px) scale(0.98); }
+
+/* ── Focus rings — keyboard only (a11y) ────────────────────── */
+.monogram:focus-visible,
+.pill:focus-visible,
+.cta:focus-visible,
+.hamburger:focus-visible,
+.mobilePill:focus-visible,
+.mobileCta:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 4px rgba(0, 133, 255, 0.35);
 }
 
-/* ── Responsive ──────────────────────────────────────────────── */
+/* ── Reduced-motion guard ──────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .header,
+  .monogram,
+  .pill,
+  .cta,
+  .bar,
+  .mobileOverlay,
+  .mobilePill,
+  .mobileCta {
+    transition-duration: 0ms !important;
+  }
+  .cta:hover,
+  .cta:active,
+  .mobileCta:hover,
+  .mobileCta:active {
+    transform: none;
+  }
+}
+
+/* ── Responsive: <=768px collapses to hamburger ────────────── */
 @media (max-width: 768px) {
-  .hamburger { display: flex; }
-  .nav       { display: none; }
-  .ctaGroup  { display: none; }
-  .mobileNav { display: flex; }
+  .inner {
+    padding: 0 16px;
+    height: 56px;
+  }
+  .pillCluster,
+  .cta {
+    display: none;
+  }
+  .hamburger {
+    display: flex;
+  }
 }

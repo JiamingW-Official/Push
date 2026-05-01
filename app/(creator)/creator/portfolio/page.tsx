@@ -173,6 +173,8 @@ function TierProgressBar({
   );
 }
 
+type GalleryFilter = "all" | "campaign" | "platform" | "date";
+
 function GalleryEditor({
   items,
   onChange,
@@ -182,6 +184,7 @@ function GalleryEditor({
 }) {
   const [addUrl, setAddUrl] = useState("");
   const [addCaption, setAddCaption] = useState("");
+  const [filter, setFilter] = useState<GalleryFilter>("all");
 
   function addItem() {
     if (!addUrl.trim() || items.length >= 24) return;
@@ -210,146 +213,132 @@ function GalleryEditor({
     );
   }
 
+  const FILTERS: { key: GalleryFilter; label: string }[] = [
+    { key: "all", label: "All" },
+    { key: "campaign", label: "By Campaign" },
+    { key: "platform", label: "By Platform" },
+    { key: "date", label: "By Date" },
+  ];
+
+  // Filter is decorative in this demo (no campaign/platform metadata on GalleryItem)
+  const visibleItems = items;
+
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fill, minmax(160px, 1fr))",
-          gap: 16,
-        }}
-      >
-        {items.map((item) => (
-          <div
-            key={item.id}
-            style={{
-              background: "var(--surface-2)",
-              border: "1px solid var(--hairline)",
-              borderRadius: 10,
-              overflow: "hidden",
-              opacity: item.visible ? 1 : 0.5,
-            }}
+      {/* Filter tabs — v11 btn-pill keyboard-navigable */}
+      <div className="pf-filter-row" role="group" aria-label="Filter gallery">
+        {FILTERS.map(({ key, label }) => (
+          <button
+            key={key}
+            type="button"
+            className={`btn-pill${filter === key ? " btn-pill--active" : ""}`}
+            onClick={() => setFilter(key)}
+            aria-pressed={filter === key}
           >
-            {item.type === "image" ? (
-              <img
-                src={item.url}
-                alt={item.caption}
-                style={{
-                  width: "100%",
-                  aspectRatio: "1/1",
-                  objectFit: "cover",
-                }}
-              />
-            ) : (
-              <div
-                style={{
-                  width: "100%",
-                  aspectRatio: "1/1",
-                  background: "var(--surface-3)",
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  gap: 4,
-                }}
-              >
-                <span style={{ fontSize: 24, color: "var(--ink-4)" }}>▶</span>
-                <span
-                  style={{
-                    fontFamily: "var(--font-body)",
-                    fontSize: 11,
-                    color: "var(--ink-4)",
-                  }}
-                >
-                  Video
-                </span>
-              </div>
-            )}
-            {item.caption && (
-              <p
-                style={{
-                  fontFamily: "var(--font-body)",
-                  fontSize: 11,
-                  color: "var(--ink-3)",
-                  padding: "8px 12px 4px",
-                  margin: 0,
-                }}
-              >
-                {item.caption}
-              </p>
-            )}
-            <div
-              style={{
-                display: "flex",
-                gap: 8,
-                padding: "8px 12px",
-              }}
-            >
-              <button
-                type="button"
-                className="btn-ghost click-shift"
-                onClick={() => toggleVisible(item.id)}
-                style={{ fontSize: 11, padding: "4px 10px" }}
-              >
-                {item.visible ? "Hide" : "Show"}
-              </button>
-              <button
-                type="button"
-                onClick={() => removeItem(item.id)}
-                style={{
-                  fontFamily: "var(--font-body)",
-                  fontSize: 11,
-                  color: "var(--brand-red)",
-                  background: "none",
-                  border: "none",
-                  cursor: "pointer",
-                  padding: "4px 0",
-                }}
-              >
-                Remove
-              </button>
-            </div>
-          </div>
+            {label}
+          </button>
         ))}
       </div>
 
+      {/* Photo-card grid */}
+      <div className="pf-gallery-grid">
+        {visibleItems.length === 0 ? (
+          /* Empty state */
+          <div className="pf-gallery-empty">
+            <p className="pf-gallery-empty-title">No content yet</p>
+            <p className="pf-gallery-empty-sub">
+              Add your first post below — up to 24 items
+            </p>
+            <button
+              type="button"
+              className="btn-primary click-shift"
+              onClick={() => {
+                const el = document.querySelector<HTMLInputElement>(
+                  ".pf-gallery-add input[type=url]",
+                );
+                el?.focus();
+              }}
+            >
+              Add first post
+            </button>
+          </div>
+        ) : (
+          visibleItems.map((item) => (
+            <div
+              key={item.id}
+              className={`pf-gallery-item${item.visible ? "" : " pf-gallery-item--hidden"}`}
+            >
+              {item.type === "image" ? (
+                <img
+                  src={item.url}
+                  alt={item.caption}
+                  className="pf-gallery-img"
+                />
+              ) : (
+                <div className="pf-gallery-video-placeholder">
+                  <span className="pf-gallery-video-icon">▶</span>
+                  <span className="pf-gallery-video-label">Video</span>
+                </div>
+              )}
+
+              {/* Black gradient overlay */}
+              <div className="pf-gallery-overlay" aria-hidden="true" />
+
+              {/* Stats / caption at bottom */}
+              <div className="pf-gallery-stats" aria-hidden="true">
+                {item.caption && (
+                  <p className="pf-gallery-caption">{item.caption}</p>
+                )}
+                <span className="pf-gallery-meta">
+                  {item.visible ? "Visible" : "Hidden"}
+                </span>
+              </div>
+
+              {/* Action buttons — appear on hover */}
+              <div className="pf-gallery-item-actions">
+                <button
+                  type="button"
+                  className="pf-gallery-action-btn"
+                  onClick={() => toggleVisible(item.id)}
+                  aria-label={item.visible ? "Hide post" : "Show post"}
+                >
+                  {item.visible ? "Hide" : "Show"}
+                </button>
+                <button
+                  type="button"
+                  className="pf-gallery-action-btn pf-gallery-action-btn--danger"
+                  onClick={() => removeItem(item.id)}
+                  aria-label="Remove post"
+                >
+                  Remove
+                </button>
+              </div>
+            </div>
+          ))
+        )}
+      </div>
+
+      {/* Add new item form */}
       {items.length < 24 && (
-        <div
-          style={{
-            background: "var(--surface-2)",
-            border: "1px solid var(--hairline)",
-            borderRadius: 10,
-            padding: 16,
-          }}
-        >
-          <p
-            style={{
-              fontFamily: "var(--font-body)",
-              fontSize: 12,
-              color: "var(--ink-4)",
-              margin: "0 0 12px",
-              letterSpacing: "0.04em",
-            }}
-          >
-            ADD ITEM ({items.length}/24)
-          </p>
-          <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+        <div className="pf-gallery-add">
+          <p className="pf-gallery-add-label">ADD ITEM ({items.length}/24)</p>
+          <div className="pf-gallery-add-row">
             <input
               type="url"
               placeholder="Image URL or YouTube/Vimeo link"
               value={addUrl}
               onChange={(e) => setAddUrl(e.target.value)}
               style={{
-                fontFamily: "var(--font-body)",
+                fontFamily: "var(--font-mono)",
                 fontSize: 13,
-                flex: 2,
-                minWidth: 200,
                 background: "var(--surface)",
-                border: "1px solid var(--hairline)",
+                border: "1px solid var(--mist)",
                 borderRadius: 8,
-                padding: "8px 12px",
+                padding: "12px 16px",
                 color: "var(--ink)",
                 outline: "none",
+                width: "100%",
+                boxSizing: "border-box" as const,
               }}
             />
             <input
@@ -358,16 +347,16 @@ function GalleryEditor({
               value={addCaption}
               onChange={(e) => setAddCaption(e.target.value)}
               style={{
-                fontFamily: "var(--font-body)",
+                fontFamily: "var(--font-mono)",
                 fontSize: 13,
-                flex: 1,
-                minWidth: 140,
                 background: "var(--surface)",
-                border: "1px solid var(--hairline)",
+                border: "1px solid var(--mist)",
                 borderRadius: 8,
-                padding: "8px 12px",
+                padding: "12px 16px",
                 color: "var(--ink)",
                 outline: "none",
+                width: "100%",
+                boxSizing: "border-box" as const,
               }}
             />
             <button

@@ -1,18 +1,21 @@
 /* ─────────────────────────────────────────────────────────────────────
- * Push — Creator Work · Today (v2 redesign)
+ * Push — Creator Work · Today (v3 — v11 design system)
  *
- * Replaces the 954-line bespoke today.css. Only the page-specific
- * patterns live here; everything else inherits from lumin-cards.css
- * (.cw-page, .cw-card, .cw-strip, .cw-pill, .cw-section-*, .cw-empty).
+ * Only page-specific patterns live here; shared chrome inherits from
+ * lumin-cards.css (.cw-page, .cw-card, .cw-strip, .cw-pill, etc.).
  *
  * Patterns defined here:
- *   .wt-strip       — top KPI strip (extends .cw-strip)
- *   .wt-now         — dark NOW hero (extends .cw-card--dark style)
- *   .wt-body        — 2-col grid: timeline 8 + rail 4
- *   .wt-timeline    — vertical schedule with axis + NOW indicator
- *   .wt-row         — single timeline row (time / dot / card)
- *   .wt-rail        — Up Next rail
- *   .wt-add         — bottom inline reminder add
+ *   .wt-strip         — top KPI strip (extends .cw-strip)
+ *   .wt-now           — dark NOW hero (extends .cw-card--dark style)
+ *   .wt-body          — 2-col grid: timeline 8 + rail 4
+ *   .wt-timeline      — vertical schedule with axis + NOW indicator
+ *   .wt-row           — single timeline row (time / dot / card)
+ *   .wt-rail          — Up Next rail
+ *   .wt-add           — bottom inline reminder add
+ *   .wt-progress      — liquid-glass progress tile (v11 NEW ≤1 per page)
+ *   .wt-row__priority — priority badge (high/medium/low)
+ *   .wt-row__deadline — deadline countdown (< 24h → brand-red)
+ *   .wt-row__campaign-link — campaign link (accent-blue mono 14px)
  * ───────────────────────────────────────────────────────────────────── */
 
 
@@ -247,7 +250,6 @@
   background:
     linear-gradient(180deg, rgba(255, 255, 255, 0.62) 0%, rgba(255, 255, 255, 0) 55%),
     var(--surface-2, #f5f3ee);
-  border: 1px solid var(--hairline);
   border-radius: 16px;
   backdrop-filter: blur(12px) saturate(140%);
   -webkit-backdrop-filter: blur(12px) saturate(140%);
@@ -383,7 +385,6 @@
 /* Task card on the right */
 .wt-row__card {
   background: var(--snow);
-  border: 1px solid var(--hairline);
   border-radius: 10px;
   padding: 14px 16px;
   cursor: pointer;
@@ -394,7 +395,6 @@
 }
 .wt-row--task:hover .wt-row__card {
   transform: translate(2px, 2px);
-  border-color: var(--hairline-2);
   box-shadow: 0 4px 12px rgba(10, 10, 10, 0.06);
 }
 .wt-row.is-live .wt-row__card {
@@ -788,6 +788,220 @@
 
 
 /* ════════════════════════════════════════════════════════════
+   LIQUID-GLASS PROGRESS TILE (v11 — ≤1 per page)
+   Shows tasks done / total with a progress bar
+   ════════════════════════════════════════════════════════════ */
+
+.wt-progress {
+  background: rgba(248, 244, 232, 0.85);
+  backdrop-filter: blur(20px) saturate(160%);
+  -webkit-backdrop-filter: blur(20px) saturate(160%);
+  border: 1px solid rgba(255, 255, 255, 0.60);
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.80),
+    0 4px 16px rgba(10, 10, 10, 0.06),
+    0 1px 4px rgba(10, 10, 10, 0.04);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.wt-progress__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.wt-progress__eyebrow {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+}
+
+.wt-progress__fraction {
+  font-family: var(--font-display);
+  font-size: clamp(32px, 4vw, 40px);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: var(--ink);
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.wt-progress__fraction span {
+  font-size: 0.55em;
+  color: var(--ink-4);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.wt-progress__bar-track {
+  height: 6px;
+  border-radius: 999px;
+  background: var(--surface-3);
+  overflow: hidden;
+}
+
+.wt-progress__bar-fill {
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--brand-red) 0%, rgba(193, 18, 31, 0.70) 100%);
+  transition: width 600ms cubic-bezier(0.34, 1.56, 0.64, 1);
+  min-width: 4px;
+}
+
+.wt-progress__label {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: var(--ink-3);
+  text-transform: uppercase;
+}
+
+
+/* ════════════════════════════════════════════════════════════
+   PRIORITY BADGES — 12px mono uppercase
+   high: brand-red / medium: champagne-deep / low: ink-3
+   ════════════════════════════════════════════════════════════ */
+
+.wt-row__priority {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border-radius: 999px;
+  border: 1px solid;
+  line-height: 1;
+}
+
+.wt-row__priority--high {
+  background: rgba(193, 18, 31, 0.08);
+  color: var(--brand-red);
+  border-color: rgba(193, 18, 31, 0.25);
+}
+
+.wt-row__priority--medium {
+  background: var(--champagne-tint);
+  color: var(--champagne-deep);
+  border-color: rgba(191, 161, 112, 0.35);
+}
+
+.wt-row__priority--low {
+  background: rgba(97, 96, 92, 0.07);
+  color: var(--ink-3);
+  border-color: rgba(97, 96, 92, 0.18);
+}
+
+
+/* ════════════════════════════════════════════════════════════
+   CAMPAIGN LINK — accent-blue mono 14px
+   ════════════════════════════════════════════════════════════ */
+
+.wt-row__campaign-link {
+  color: var(--accent-blue);
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-decoration: none;
+  transition: text-decoration 160ms ease;
+}
+
+.wt-row__campaign-link:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.wt-row__campaign-link:focus-visible {
+  outline: 2px solid var(--accent-blue);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+
+/* ════════════════════════════════════════════════════════════
+   DEADLINE COUNTDOWN — brand-red when < 24h remaining
+   ════════════════════════════════════════════════════════════ */
+
+.wt-row__deadline {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+  margin-top: 4px;
+}
+
+.wt-row__deadline--urgent {
+  color: var(--brand-red);
+}
+
+
+/* ════════════════════════════════════════════════════════════
+   FOCUS-VISIBLE — global pattern for this page
+   Overrides browser default, 8px-aligned
+   ════════════════════════════════════════════════════════════ */
+
+.wt-row__card:focus-visible,
+.wt-add__btn:focus-visible {
+  outline: 2px solid var(--brand-red);
+  outline-offset: 2px;
+  border-radius: 10px;
+}
+
+.wt-row__check:focus-visible {
+  outline: 2px solid var(--brand-red);
+  outline-offset: 2px;
+  border-radius: 50%;
+}
+
+.wt-now__cta:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.80);
+  outline-offset: 2px;
+}
+
+.wt-rail__item:focus-visible {
+  outline: 2px solid var(--brand-red);
+  outline-offset: 2px;
+  border-radius: 10px;
+}
+
+
+/* ════════════════════════════════════════════════════════════
+   TASK CARD v11 — pending border-left accent-blue,
+   completed: opacity 0.6 + ink-4 border
+   (these extend existing .wt-row__card rules)
+   ════════════════════════════════════════════════════════════ */
+
+/* Pending / upcoming tasks get left accent (accent-blue) */
+.wt-row--task:not(.is-done):not(.is-live) .wt-row__card {
+  border-left: 3px solid var(--accent-blue);
+}
+
+/* Active / live tasks already use brand-red glow — keep existing */
+.wt-row--task.is-live .wt-row__card {
+  border-left: 3px solid var(--brand-red);
+}
+
+/* Completed tasks: muted + ink-4 left border */
+.wt-row--task.is-done .wt-row__card {
+  opacity: 0.60;
+  border-left: 3px solid var(--ink-4);
+}
+
+
+/* ════════════════════════════════════════════════════════════
    PREFERS-REDUCED-MOTION
    ════════════════════════════════════════════════════════════ */
 
@@ -798,5 +1012,8 @@
   }
   .wt-now__pulse-dot, .wt-row__dot--active {
     animation: none !important;
+  }
+  .wt-progress__bar-fill {
+    transition: none !important;
   }
 }

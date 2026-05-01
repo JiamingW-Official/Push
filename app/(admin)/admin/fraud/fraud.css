@@ -1,7 +1,22 @@
 /* ============================================================
    Admin Fraud Queue — fraud.css
-   Authority: Design.md (sharp corners / 6 brand colors / 8px grid)
+   Authority: Design.md v11 (8px grid / 5-btn system / token colors)
    ============================================================ */
+
+/* ------------------------------------------------------------
+   v11 focus-visible — all interactive elements
+   ------------------------------------------------------------ */
+.fraud-action-btn:focus-visible,
+.fraud-bulk-btn:focus-visible,
+.fraud-page-btn:focus-visible,
+.fraud-filters__select:focus-visible,
+.fraud-filters__input:focus-visible,
+.fraud-filters__clear:focus-visible,
+.fraud-row [role="button"]:focus-visible,
+.fraud-rules-panel__header:focus-visible {
+  outline: 2px solid var(--brand-red);
+  outline-offset: 2px;
+}
 
 /* ------------------------------------------------------------
    Layout shell
@@ -60,9 +75,10 @@
 }
 
 .fraud-hero__stat-value {
+  /* v11: KPI numeral scale */
   font-family: var(--font-display);
-  font-size: 40px;
-  font-weight: 900;
+  font-size: clamp(40px, 5vw, 72px);
+  font-weight: 800;
   letter-spacing: -0.04em;
   color: var(--ink);
   line-height: 1;
@@ -129,8 +145,9 @@
   background: var(--surface);
   border: 1.5px solid var(--line);
   border-radius: var(--r-md);
-  padding: 6px 10px;
-  height: 34px;
+  /* 8px grid: 8px 12px (was 6px 10px) */
+  padding: 8px 12px;
+  height: 40px;
   outline: none;
   transition: border-color var(--t-base);
   appearance: none;
@@ -154,25 +171,29 @@
 }
 
 .fraud-filters__clear {
-  font-family: var(--font-body);
+  /* Ghost button variant */
+  font-family: var(--font-mono, var(--font-body));
   font-size: 12px;
-  font-weight: 700;
+  font-weight: 600;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  color: var(--brand-red);
-  background: none;
-  border: 1.5px solid var(--brand-red);
-  border-radius: var(--r-lg);
-  padding: 5px 12px;
-  height: 34px;
+  color: var(--ink);
+  background: transparent;
+  border: 1px solid var(--ink);
+  border-radius: 8px;
+  /* 8px grid: 8px 16px */
+  padding: 8px 16px;
+  height: 40px;
   cursor: pointer;
-  transition: background var(--t-base), color var(--t-base);
+  transition: transform 150ms ease, box-shadow 150ms ease, background 150ms ease, color 150ms ease;
   margin-left: auto;
 }
 
 .fraud-filters__clear:hover {
-  background: var(--brand-red);
-  color: #fff;
+  background: var(--ink);
+  color: var(--snow);
+  transform: translate(2px, 2px);
+  box-shadow: -1px -1px 0 rgba(0,0,0,0.12);
 }
 
 /* ------------------------------------------------------------
@@ -181,7 +202,7 @@
 .fraud-bulk-bar {
   padding: var(--space-2) var(--space-5);
   background: var(--ink);
-  color: #fff;
+  color: var(--snow);
   display: flex;
   align-items: center;
   gap: var(--space-3);
@@ -207,24 +228,28 @@
 }
 
 .fraud-bulk-btn {
-  font-family: var(--font-body);
+  /* Pill variant on dark surface */
+  font-family: var(--font-mono, var(--font-body));
   font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.05em;
+  font-weight: 600;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
-  border: 1.5px solid rgba(255, 255, 255, 0.3);
-  border-radius: var(--r-lg);
-  padding: 5px 14px;
-  height: 32px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 8px;
+  /* 8px grid: 8px 16px */
+  padding: 8px 16px;
+  height: 40px;
   cursor: pointer;
-  transition: all 200ms ease;
+  transition: transform 150ms ease, box-shadow 150ms ease, background 150ms ease;
   background: transparent;
-  color: #fff;
+  color: var(--snow);
 }
 
 .fraud-bulk-btn:hover {
   background: rgba(255, 255, 255, 0.12);
   border-color: rgba(255, 255, 255, 0.6);
+  transform: translate(2px, 2px);
+  box-shadow: -1px -1px 0 rgba(0,0,0,0.2);
 }
 
 .fraud-bulk-btn--approve {
@@ -278,12 +303,15 @@
   align-items: center;
   border-bottom: 1px solid var(--line);
   cursor: pointer;
-  transition: background var(--t-fast);
+  /* v11: bottom-right hover shift is the Push interaction signature */
+  transition: background var(--t-fast), transform 150ms ease, box-shadow 150ms ease;
   position: relative;
 }
 
 .fraud-row:hover {
   background: rgba(0, 48, 73, 0.03);
+  transform: translate(2px, 2px);
+  box-shadow: -2px -2px 0 var(--hairline);
 }
 
 .fraud-row--selected {
@@ -331,7 +359,7 @@
   top: 1px;
   width: 5px;
   height: 9px;
-  border: 2px solid #fff;
+  border: 2px solid var(--snow);
   border-top: none;
   border-left: none;
   transform: rotate(45deg);
@@ -389,46 +417,47 @@
   gap: 4px;
 }
 
+/* v11 chip spec: 6px radius / 4×8 padding / mono / 12px / 600 / uppercase / 0.04em */
 .fraud-chip {
-  font-size: 10px;
-  font-weight: 700;
+  font-family: var(--font-mono, var(--font-body));
+  font-size: 12px;
+  font-weight: 600;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  padding: 3px 7px;
-  border-radius: 50vh;
-  border: 1.5px solid;
+  padding: 4px 8px;
+  border-radius: var(--r-sm, 6px);
   white-space: nowrap;
   line-height: 1;
+  display: inline-block;
 }
 
 .fraud-chip--velocity {
-  background: rgba(193, 18, 31, 0.08);
-  border-color: rgba(193, 18, 31, 0.3);
+  /* high-severity: brand-red tint */
+  background: rgba(193, 18, 31, 0.10);
   color: var(--brand-red);
 }
 
 .fraud-chip--device {
-  background: rgba(0, 48, 73, 0.06);
-  border-color: rgba(0, 48, 73, 0.25);
-  color: var(--ink);
+  /* device rules: accent-blue tint */
+  background: var(--accent-blue-tint);
+  color: var(--accent-blue);
 }
 
 .fraud-chip--geo {
-  background: rgba(102, 155, 188, 0.1);
-  border-color: rgba(102, 155, 188, 0.4);
-  color: var(--ink);
+  /* geo rules: champagne tint */
+  background: var(--champagne-tint);
+  color: var(--champagne-deep);
 }
 
 .fraud-chip--vpn {
-  background: rgba(120, 0, 0, 0.07);
-  border-color: rgba(120, 0, 0, 0.3);
-  color: var(--accent);
+  /* VPN / low-severity: surface-3 */
+  background: var(--surface-3);
+  color: var(--ink-3);
 }
 
 .fraud-chip--default {
-  background: rgba(74, 85, 104, 0.08);
-  border-color: rgba(74, 85, 104, 0.3);
-  color: var(--graphite);
+  background: var(--surface-3);
+  color: var(--ink-4);
 }
 
 /* Device / IP */
@@ -445,50 +474,51 @@
   margin-top: 2px;
 }
 
-/* Status badge */
+/* Status badge — v11 chip spec */
 .fraud-status {
   display: inline-flex;
   align-items: center;
-  gap: 5px;
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.06em;
+  gap: 4px;
+  font-family: var(--font-mono, var(--font-body));
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
   padding: 4px 8px;
-  border-radius: var(--r-sm);
+  border-radius: var(--r-sm, 6px);
 }
 
 .fraud-status--pending {
-  background: rgba(102, 155, 188, 0.12);
-  color: var(--accent-blue);
-  border: 1px solid rgba(102, 155, 188, 0.35);
+  background: var(--surface-3);
+  color: var(--ink-3);
 }
 
 .fraud-status--approved {
-  background: rgba(34, 197, 94, 0.1);
-  color: var(--success-dark);
-  border: 1px solid rgba(34, 197, 94, 0.3);
+  /* success green: #22c55e acceptable in status chips per spec */
+  background: rgba(34, 197, 94, 0.10);
+  color: #22c55e;
 }
 
 .fraud-status--flagged {
-  background: rgba(224, 123, 0, 0.1);
-  color: var(--warning);
-  border: 1px solid rgba(224, 123, 0, 0.3);
+  background: var(--champagne-tint);
+  color: var(--champagne-deep);
 }
 
 .fraud-status--blocked {
-  background: rgba(193, 18, 31, 0.08);
+  background: rgba(193, 18, 31, 0.14);
   color: var(--brand-red);
-  border: 1px solid rgba(193, 18, 31, 0.25);
 }
 
 .fraud-status--escalated {
-  background: rgba(120, 0, 0, 0.1);
-  color: var(--accent);
-  border: 1px solid rgba(120, 0, 0, 0.3);
+  background: rgba(193, 18, 31, 0.06);
+  color: var(--brand-red);
 }
 
-/* Action buttons */
+/* Action buttons — v11 unified 5-variant system */
+/* Approve → Filled Secondary (N2W Blue) */
+/* Flag    → Ghost */
+/* Block   → Filled Primary (Brand Red) */
+/* Escalate → Ghost */
 .fraud-actions {
   display: flex;
   gap: 4px;
@@ -497,58 +527,76 @@
 }
 
 .fraud-action-btn {
-  font-family: var(--font-body);
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.05em;
+  font-family: var(--font-mono, var(--font-body));
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
   padding: 4px 8px;
-  border-radius: var(--r-lg);
-  border: 1.5px solid;
+  border-radius: 8px;
+  border: 1px solid transparent;
   cursor: pointer;
-  transition: all 150ms ease;
-  background: transparent;
+  /* v11: bottom-right hover shift */
+  transition: transform 150ms ease, box-shadow 150ms ease, background 150ms ease, color 150ms ease;
   line-height: 1.4;
 }
 
+.fraud-action-btn:hover:not(:disabled) {
+  transform: translate(2px, 2px);
+  box-shadow: -1px -1px 0 rgba(0,0,0,0.12);
+}
+
+.fraud-action-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* Approve → Filled Secondary (N2W Blue) */
 .fraud-action-btn--approve {
-  border-color: var(--success);
-  color: var(--success-dark);
+  background: var(--accent-blue);
+  color: var(--snow);
+  border-color: var(--accent-blue);
 }
 
-.fraud-action-btn--approve:hover {
-  background: var(--success);
-  color: #fff;
+.fraud-action-btn--approve:hover:not(:disabled) {
+  background: var(--accent-blue);
+  opacity: 0.9;
 }
 
+/* Flag → Ghost */
 .fraud-action-btn--flag {
-  border-color: var(--warning);
-  color: var(--warning);
+  background: transparent;
+  color: var(--ink);
+  border-color: var(--ink);
 }
 
-.fraud-action-btn--flag:hover {
-  background: var(--warning);
-  color: #fff;
+.fraud-action-btn--flag:hover:not(:disabled) {
+  background: var(--ink);
+  color: var(--snow);
 }
 
+/* Block → Filled Primary (Brand Red) */
 .fraud-action-btn--block {
-  border-color: var(--brand-red);
-  color: var(--brand-red);
-}
-
-.fraud-action-btn--block:hover {
   background: var(--brand-red);
-  color: #fff;
+  color: var(--snow);
+  border-color: var(--brand-red);
 }
 
+.fraud-action-btn--block:hover:not(:disabled) {
+  opacity: 0.9;
+}
+
+/* Escalate → Ghost */
 .fraud-action-btn--escalate {
-  border-color: var(--accent);
-  color: var(--accent);
+  background: transparent;
+  color: var(--ink-3);
+  border-color: var(--ink-4);
 }
 
-.fraud-action-btn--escalate:hover {
-  background: var(--accent);
-  color: #fff;
+.fraud-action-btn--escalate:hover:not(:disabled) {
+  background: var(--surface-3);
+  border-color: var(--ink-3);
+  color: var(--ink);
 }
 
 /* ------------------------------------------------------------
@@ -659,14 +707,15 @@
 
 /* Map placeholder */
 .fraud-map {
-  background: rgba(0, 48, 73, 0.04);
-  border: 1px solid var(--line);
-  height: 180px;
+  background: var(--surface-2);
+  border: 1px solid var(--hairline);
+  height: 100px;
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
   overflow: hidden;
+  border-radius: 8px;
 }
 
 .fraud-map__label {
@@ -691,7 +740,7 @@
 
 .fraud-map__pin--expected {
   background: var(--accent-blue);
-  box-shadow: 0 0 0 4px rgba(102, 155, 188, 0.25);
+  box-shadow: 0 0 0 4px var(--accent-blue-tint);
 }
 
 .fraud-map__legend {
@@ -785,7 +834,7 @@
   padding: var(--space-3) var(--space-4);
   border-bottom: 1px solid var(--line);
   background: var(--ink);
-  color: #fff;
+  color: var(--snow);
   cursor: pointer;
   user-select: none;
 }
@@ -802,7 +851,7 @@
   font-weight: 700;
   letter-spacing: 0.04em;
   background: var(--brand-red);
-  color: #fff;
+  color: var(--snow);
   padding: 2px 8px;
   margin-left: auto;
 }
@@ -876,14 +925,15 @@
 }
 
 .fraud-rule-threshold {
-  font-size: 10px;
-  font-weight: 700;
+  font-family: var(--font-mono, var(--font-body));
+  font-size: 12px;
+  font-weight: 600;
   letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--accent-blue);
-  background: rgba(102, 155, 188, 0.1);
-  padding: 2px 6px;
-  border: 1px solid rgba(102, 155, 188, 0.3);
+  background: var(--accent-blue-tint);
+  padding: 4px 8px;
+  border-radius: var(--r-sm, 6px);
 }
 
 .fraud-rule-triggered {
@@ -933,9 +983,9 @@
 .fraud-skeleton {
   background: linear-gradient(
     90deg,
-    rgba(0, 48, 73, 0.06) 25%,
-    rgba(0, 48, 73, 0.12) 50%,
-    rgba(0, 48, 73, 0.06) 75%
+    var(--surface-2) 25%,
+    var(--surface-3) 50%,
+    var(--surface-2) 75%
   );
   background-size: 200% 100%;
   animation: shimmer 1.5s linear infinite;
@@ -959,23 +1009,26 @@
 }
 
 .fraud-page-btn {
-  font-family: var(--font-body);
-  font-size: 13px;
-  font-weight: 700;
-  letter-spacing: 0.03em;
+  /* Pill variant */
+  font-family: var(--font-mono, var(--font-body));
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
   padding: 8px 16px;
-  border: 1.5px solid var(--line);
-  border-radius: var(--r-lg);
-  background: var(--surface-2);
+  border: 1px solid var(--hairline);
+  border-radius: 8px;
+  background: var(--surface-3);
   color: var(--ink);
   cursor: pointer;
-  transition: all var(--t-base);
+  transition: transform 150ms ease, box-shadow 150ms ease, background 150ms ease, color 150ms ease;
 }
 
 .fraud-page-btn:hover:not(:disabled) {
   border-color: var(--ink);
   background: var(--ink);
-  color: #fff;
+  color: var(--snow);
+  transform: translate(2px, 2px);
+  box-shadow: -1px -1px 0 rgba(0,0,0,0.12);
 }
 
 .fraud-page-btn:disabled {
@@ -985,7 +1038,7 @@
 
 .fraud-page-btn--active {
   background: var(--ink);
-  color: #fff;
+  color: var(--snow);
   border-color: var(--ink);
 }
 

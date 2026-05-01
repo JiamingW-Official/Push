@@ -1,6 +1,11 @@
 /* ============================================================
    Creator Profile Page — profile.css
-   Design v11: product register, 8px grid, v11 tokens
+   Design v11: Product UI register, 8px grid, v11 tokens.
+   - Photo Card identity (§ 8.7) with floating tier badge (§ 8.9.6)
+   - Floating Liquid-Glass completeness tile (§ 8.9.3)
+   - Segmented tabs (Overview / Social / Preferences)
+   - All buttons from § 9 unified system
+   - Bottom-right hover shift signature on cards
    ============================================================ */
 
 /* ── Page shell ─────────────────────────────────────────────── */
@@ -8,7 +13,7 @@
 .profile-page {
   max-width: 1140px;
   margin: 0 auto;
-  padding: 0 64px 96px;
+  padding: 0 0 96px;
 }
 
 .profile-loading {
@@ -24,63 +29,32 @@
   text-transform: uppercase;
 }
 
-/* ── Top bar ─────────────────────────────────────────────────── */
+/* ── 2-column layout ────────────────────────────────────────── */
 
-.profile-topbar {
+.pf-layout {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: 24px;
+  padding-top: 32px;
+  align-items: start;
+}
+
+.pf-identity {
   display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-  padding: 32px 0 0;
-  margin-bottom: 40px;
+  flex-direction: column;
+  gap: 16px;
+  position: sticky;
+  top: 88px;
 }
 
-.profile-back-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  font-family: var(--font-mono);
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--ink-4);
-  text-decoration: none;
-  transition: color 160ms ease, transform 160ms ease;
+.pf-main {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  min-width: 0;
 }
 
-.profile-back-link:hover {
-  color: var(--ink);
-  transform: translate(1px, 1px);
-}
-
-/* ── Save toast ──────────────────────────────────────────────── */
-
-.save-toast {
-  font-family: var(--font-mono);
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--ink-3);
-  background: var(--surface-2);
-  border: 1px solid var(--hairline);
-  border-radius: var(--r-sm);
-  padding: 6px 16px;
-  letter-spacing: 0.04em;
-  animation: toast-fade-in 200ms ease;
-}
-
-@keyframes toast-fade-in {
-  from {
-    opacity: 0;
-    transform: translateY(4px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* ── Page eyebrow ────────────────────────────────────────────── */
+/* ── Eyebrow (canonical product UI form) ────────────────────── */
 
 .pf-eyebrow {
   font-family: var(--font-mono);
@@ -90,158 +64,443 @@
   text-transform: uppercase;
   color: var(--ink-4);
   display: block;
-  margin-bottom: 8px;
+  margin-bottom: 16px;
 }
 
-/* ── Section title ───────────────────────────────────────────── */
+/* ── Photo Card — § 8.7 ─────────────────────────────────────── */
 
-.pf-section-title {
-  font-family: var(--font-display);
-  font-size: 28px;
-  font-weight: 700;
-  letter-spacing: -0.015em;
-  line-height: 1.15;
-  color: var(--ink);
-  margin-bottom: 24px;
+.pf-photo-card {
+  width: 100%;
 }
 
-/* ── Identity card (left column) ────────────────────────────── */
-
-.pf-identity-card {
-  background: var(--surface-2);
-  border: 1px solid var(--hairline);
-  border-radius: 10px;
-  padding: 24px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 16px;
-  text-align: center;
+.pf-photo-card__surface {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  width: 100%;
+  border-radius: 10px;            /* --r-md */
+  overflow: hidden;
+  background: linear-gradient(
+    160deg,
+    var(--surface-3) 0%,
+    var(--mist) 100%
+  );
+  box-shadow: var(--shadow-1);
+  transition:
+    transform 240ms cubic-bezier(0.34, 1.56, 0.64, 1),
+    box-shadow 240ms ease;
 }
 
-/* Avatar — 96x96 circle */
-.pf-avatar {
-  width: 96px;
-  height: 96px;
-  border-radius: 50%;
-  background: var(--surface-3);
+.pf-photo-card:hover .pf-photo-card__surface {
+  transform: translate(1px, 1px);
+  box-shadow: var(--shadow-2);
+}
+
+.pf-photo-card__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.pf-photo-card__initials {
+  position: absolute;
+  inset: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-shrink: 0;
-  overflow: hidden;
-}
-
-.pf-avatar-initials {
   font-family: var(--font-display);
   font-weight: 900;
-  font-size: 32px;
+  font-size: clamp(56px, 14vw, 88px);
   color: var(--ink);
+  letter-spacing: -0.04em;
   line-height: 1;
-  letter-spacing: -0.03em;
+  user-select: none;
 }
 
-.pf-name {
+/* Bottom gradient overlay (§ 8.7) */
+.pf-photo-card__overlay {
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 50%;
+  padding: 16px;
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(0, 0, 0, 0.78) 100%
+  );
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.pf-photo-card__name {
   font-family: var(--font-display);
-  font-size: 28px;
+  font-size: 20px;
   font-weight: 700;
-  letter-spacing: -0.015em;
-  line-height: 1.15;
+  line-height: 1.25;
+  letter-spacing: -0.005em;
+  color: var(--snow);
+  margin: 0;
+}
+
+.pf-photo-card__meta {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+/* Floating tier badge — Photo Card Floating Badge § 8.9.6.
+   Default: ink fill (neutral). Ceremonial variant: champagne (Partner only). */
+.pf-photo-card__badge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  padding: 6px 12px;
+  border-radius: var(--r-pill);
+  background: rgba(10, 10, 10, 0.72);
+  color: var(--snow);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  backdrop-filter: blur(12px) saturate(160%);
+  -webkit-backdrop-filter: blur(12px) saturate(160%);
+  border: 0.5px solid rgba(255, 255, 255, 0.20);
+  box-shadow:
+    0 4px 12px rgba(0, 0, 0, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.16);
+  pointer-events: none;
+}
+
+.pf-photo-card__badge--ceremonial {
+  background: var(--champagne);
   color: var(--ink);
-  margin: 0;
+  border-color: var(--champagne-deep);
 }
 
-.pf-location {
+/* ── Edit profile button (Filled Primary) ───────────────────── */
+
+.pf-edit-btn {
+  width: 100%;
+  justify-content: center;
+}
+
+/* ── Handle strip (IG / TikTok rows) ────────────────────────── */
+
+.pf-handle-strip {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.pf-handle-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  background: var(--surface-2);
+  border: 1px solid var(--hairline);
+  border-radius: 10px;
+  text-decoration: none;
+  color: var(--ink);
   font-family: var(--font-mono);
-  font-size: 12px;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+  transition:
+    transform 240ms cubic-bezier(0.34, 1.56, 0.64, 1),
+    border-color 200ms ease,
+    background 200ms ease;
+}
+
+.pf-handle-row:hover {
+  border-color: var(--hairline-2);
+  background: var(--surface);
+}
+
+/* Lucide icon tile — § 13 (40×40, --r-lg 12px) */
+.pf-handle-row__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background: var(--ink);
+  color: var(--snow);
+  flex-shrink: 0;
+}
+
+.pf-handle-row__text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.pf-handle-row__handle {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pf-handle-row__followers {
+  font-size: 11px;
   color: var(--ink-4);
-  margin: 4px 0 0;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
 }
 
-.pf-bio {
-  font-family: var(--font-mono);
-  font-size: 14px;
-  color: var(--ink-3);
-  line-height: 1.6;
-  margin: 0;
-  max-width: 280px;
-}
-
-.pf-handle {
-  font-family: var(--font-mono);
-  font-size: 12px;
+.pf-handle-row--empty .pf-handle-row__icon {
+  background: var(--surface-3);
   color: var(--ink-4);
+}
+
+.pf-handle-row--empty .pf-handle-row__handle {
+  color: var(--ink-4);
+}
+
+.pf-handle-row--empty {
+  border-style: dashed;
+  background: transparent;
 }
 
 .pf-member-since {
   font-family: var(--font-mono);
-  font-size: 12px;
-  color: var(--ink-4);
-  margin: 0;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-5);
+  margin: 8px 0 0;
+  text-align: center;
 }
 
-.pf-preview-link {
+/* ── Tabs (segmented control) ───────────────────────────────── */
+
+.pf-tabs {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px;
+  background: var(--surface-3);
+  border: 1px solid var(--hairline);
+  border-radius: var(--r-pill);
+  align-self: flex-start;
+}
+
+.pf-tab {
+  appearance: none;
+  border: none;
+  background: transparent;
+  padding: 8px 16px;
+  border-radius: var(--r-pill);
   font-family: var(--font-mono);
   font-size: 12px;
-  font-weight: 600;
-  color: var(--accent-blue);
-  text-decoration: none;
-  letter-spacing: 0.04em;
-  transition: opacity 160ms ease;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--ink-4);
+  cursor: pointer;
+  transition:
+    background 220ms cubic-bezier(0.34, 1.56, 0.64, 1),
+    color 180ms ease,
+    transform 220ms cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-.pf-preview-link:hover {
-  opacity: 0.7;
+.pf-tab:hover {
+  color: var(--ink);
 }
 
-/* ── Stats grid ──────────────────────────────────────────────── */
+.pf-tab.is-active,
+.pf-tab[aria-selected="true"] {
+  background: linear-gradient(180deg, var(--graphite) 0%, var(--ink) 100%);
+  color: var(--snow);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.10),
+    0 1px 2px rgba(10, 10, 10, 0.30);
+}
+
+.pf-tab:focus-visible {
+  outline: 3px solid var(--brand-red-focus);
+  outline-offset: 2px;
+}
+
+.pf-tabpanel {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* ── Stats card (Overview) ──────────────────────────────────── */
+
+.pf-stats-card {
+  position: relative;
+  background: var(--surface-2);
+  border-radius: 10px;
+  padding: 24px;
+  /* leave room for the floating completeness tile on desktop */
+  padding-right: 224px;
+}
 
 .pf-stats-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   gap: 16px;
 }
 
-.pf-stat-card {
-  background: var(--surface-2);
-  border: 1px solid var(--hairline);
-  border-radius: 10px;
-  padding: 24px;
+.pf-stat {
   display: flex;
   flex-direction: column;
   gap: 8px;
-  cursor: default;
-  transition: box-shadow 160ms ease, transform 160ms ease;
+  padding: 16px;
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  border-radius: 10px;
+  transition:
+    transform 240ms cubic-bezier(0.34, 1.56, 0.64, 1),
+    box-shadow 240ms ease;
 }
 
-.pf-stat-card:hover {
+.pf-stat:hover {
   box-shadow: var(--shadow-1);
   transform: translate(1px, 1px);
 }
 
-.pf-stat-value {
+.pf-stat__value {
   font-family: var(--font-display);
-  font-size: clamp(24px, 3vw, 40px);
+  font-size: clamp(24px, 3vw, 32px);
   font-weight: 700;
   color: var(--ink);
   letter-spacing: -0.02em;
   line-height: 1;
 }
 
-.pf-stat-label {
+.pf-stat__label {
   font-family: var(--font-mono);
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--ink-4);
 }
 
-/* ── Earnings card ───────────────────────────────────────────── */
+/* Floating Liquid-Glass tile (§ 8.9.3 Use Case 2 — Candy Panel Stat Tile) */
+.pf-completeness {
+  position: absolute;
+  top: 24px;
+  right: 24px;
+  width: 184px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  text-align: left;
+  z-index: 1;
+}
+
+.pf-completeness__numeral {
+  font-family: var(--font-display);
+  font-size: clamp(40px, 5vw, 48px);
+  font-weight: 700;
+  color: var(--ink);
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+
+.pf-completeness__label {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+.pf-completeness__cta {
+  appearance: none;
+  border: none;
+  background: transparent;
+  padding: 0;
+  margin-top: 4px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--brand-red);
+  cursor: pointer;
+  text-align: left;
+  transition: transform 220ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.pf-completeness__cta:hover {
+  transform: translate(1px, 1px);
+}
+
+.pf-completeness__cta:focus-visible {
+  outline: 3px solid var(--brand-red-focus);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* ── Bio card ───────────────────────────────────────────────── */
+
+.pf-bio-card {
+  background: var(--surface-2);
+  border-radius: 10px;
+  padding: 24px;
+}
+
+.pf-bio {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--ink-3);
+  margin: 0;
+  max-width: 60ch;
+}
+
+.pf-empty-link {
+  appearance: none;
+  border: none;
+  background: transparent;
+  padding: 0;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--ink-4);
+  cursor: pointer;
+  text-align: left;
+  text-decoration: underline;
+  text-decoration-color: var(--hairline-2);
+  text-underline-offset: 4px;
+  transition: color 180ms ease;
+}
+
+.pf-empty-link:hover {
+  color: var(--ink);
+}
+
+.pf-empty-link:focus-visible {
+  outline: 3px solid var(--brand-red-focus);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* ── Earnings card ──────────────────────────────────────────── */
 
 .pf-earnings-card {
   background: var(--surface-2);
-  border: 1px solid var(--hairline);
   border-radius: 10px;
   padding: 24px;
 }
@@ -250,13 +509,12 @@
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 16px;
-  margin-top: 16px;
 }
 
 .pf-earnings-item {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 8px;
 }
 
 .pf-earnings-value {
@@ -270,30 +528,176 @@
 
 .pf-earnings-label {
   font-family: var(--font-mono);
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--ink-4);
 }
 
-/* ── Tier journey card ───────────────────────────────────────── */
+/* ── Tier card ──────────────────────────────────────────────── */
 
 .pf-tier-card {
   background: var(--surface-2);
-  border: 1px solid var(--hairline);
   border-radius: 10px;
   padding: 24px;
 }
 
-/* ── Edit form card ──────────────────────────────────────────── */
+.pf-tier-card__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.pf-tier-card__caption {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+}
+
+.pf-tier-card__benefits {
+  margin-top: 24px;
+}
+
+/* ── Social tab ─────────────────────────────────────────────── */
+
+.pf-social-card {
+  background: var(--surface-2);
+  border-radius: 10px;
+  padding: 24px;
+}
+
+.pf-social-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+.pf-social-tile {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 24px;
+  background: var(--surface);
+  border-radius: 10px;
+  transition:
+    transform 240ms cubic-bezier(0.34, 1.56, 0.64, 1),
+    box-shadow 240ms ease;
+}
+
+.pf-social-tile:hover {
+  transform: translate(1px, 1px);
+  box-shadow: var(--shadow-1);
+}
+
+.pf-social-tile--empty {
+  border-style: dashed;
+  background: transparent;
+}
+
+.pf-social-tile__head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.pf-social-tile__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background: var(--ink);
+  color: var(--snow);
+  flex-shrink: 0;
+}
+
+.pf-social-tile--empty .pf-social-tile__icon {
+  background: var(--surface-3);
+  color: var(--ink-4);
+}
+
+.pf-social-tile__platform {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+.pf-social-tile__handle {
+  font-family: var(--font-mono);
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--ink);
+  letter-spacing: -0.005em;
+}
+
+.pf-social-tile__stats {
+  display: flex;
+  gap: 16px;
+  margin-top: 4px;
+}
+
+.pf-social-tile__stat {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--ink);
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+
+.pf-social-tile__stat em {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  font-style: normal;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+}
+
+/* ── Preferences tab ────────────────────────────────────────── */
+
+.pf-pref-card {
+  background: var(--surface-2);
+  border-radius: 10px;
+  padding: 24px;
+}
+
+.pf-pref-empty {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--ink-4);
+  margin: 0;
+  max-width: 60ch;
+}
+
+.pf-pref-empty strong {
+  color: var(--ink);
+  font-weight: 700;
+}
+
+/* ── Edit form card ─────────────────────────────────────────── */
 
 .pf-edit-card {
   background: var(--surface-2);
-  border: 1px solid var(--hairline);
   border-radius: 10px;
   padding: 32px;
   margin-top: 24px;
+  scroll-margin-top: 96px;
 }
 
 .pf-edit-eyebrow {
@@ -307,7 +711,7 @@
   margin-bottom: 24px;
 }
 
-/* ── Form grid ───────────────────────────────────────────────── */
+/* ── Form grid ──────────────────────────────────────────────── */
 
 .pf-form-grid {
   display: grid;
@@ -323,6 +727,7 @@
 
 .pf-form-row--full {
   grid-column: 1 / -1;
+  margin-top: 16px;
 }
 
 .pf-form-label {
@@ -353,7 +758,7 @@
   letter-spacing: 0;
 }
 
-/* ── Form inputs ─────────────────────────────────────────────── */
+/* ── Form inputs ────────────────────────────────────────────── */
 
 .pf-input {
   font-family: var(--font-mono);
@@ -468,29 +873,76 @@
   color: var(--ink-4);
 }
 
-/* ── Form actions ────────────────────────────────────────────── */
+/* ── Form actions ───────────────────────────────────────────── */
 
 .pf-form-actions {
   display: flex;
-  gap: 12px;
+  gap: 16px;
   justify-content: flex-end;
   margin-top: 24px;
 }
 
-/* ── Mobile ──────────────────────────────────────────────────── */
+/* ── Reduced motion ─────────────────────────────────────────── */
 
-@media (max-width: 1024px) {
-  .profile-page {
-    padding-left: 48px;
-    padding-right: 48px;
+@media (prefers-reduced-motion: reduce) {
+  .pf-photo-card__surface,
+  .pf-handle-row,
+  .pf-tab,
+  .pf-stat,
+  .pf-social-tile,
+  .pf-completeness__cta {
+    transition: none;
+  }
+  .pf-photo-card:hover .pf-photo-card__surface,
+  .pf-handle-row:hover,
+  .pf-stat:hover,
+  .pf-social-tile:hover,
+  .pf-completeness__cta:hover {
+    transform: none;
   }
 }
 
+/* ── Tablet ─────────────────────────────────────────────────── */
+
+@media (max-width: 1024px) {
+  .pf-layout {
+    grid-template-columns: 280px 1fr;
+    gap: 20px;
+  }
+
+  .pf-stats-card {
+    padding-right: 24px;
+  }
+
+  .pf-completeness {
+    position: static;
+    width: 100%;
+    margin-top: 16px;
+  }
+
+  .pf-completeness__numeral {
+    font-size: 40px;
+  }
+}
+
+/* ── Mobile ─────────────────────────────────────────────────── */
+
 @media (max-width: 768px) {
   .profile-page {
-    padding-left: 24px;
-    padding-right: 24px;
     padding-bottom: 56px;
+  }
+
+  .pf-layout {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  .pf-identity {
+    position: static;
+  }
+
+  .pf-photo-card__surface {
+    aspect-ratio: 4 / 5;
   }
 
   .pf-stats-grid {
@@ -502,18 +954,33 @@
     gap: 12px;
   }
 
+  .pf-social-grid {
+    grid-template-columns: 1fr;
+  }
+
   .pf-form-grid {
     grid-template-columns: 1fr;
   }
 
   .pf-form-actions {
     flex-direction: column-reverse;
+    gap: 12px;
   }
 
   .pf-form-actions .btn-primary,
   .pf-form-actions .btn-ghost {
     width: 100%;
     text-align: center;
+    justify-content: center;
+  }
+
+  .pf-tabs {
+    width: 100%;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .pf-tabs::-webkit-scrollbar {
+    display: none;
   }
 }
 

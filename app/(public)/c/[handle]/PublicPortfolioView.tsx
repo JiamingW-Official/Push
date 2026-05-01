@@ -7,7 +7,45 @@ import {
   getNextTier,
   type CreatorTier,
 } from "@/lib/tier-config";
+import { ScoreRings } from "@/components/creator/ScoreRings";
+import type { DimensionScores } from "@/components/creator/ScoreRings";
+import { TierBadge } from "@/components/creator/TierBadge";
+import type { CreatorTier as TierBadgeCreatorTier } from "@/components/creator/TierBadge";
 import "./public-portfolio.css";
+import "./creator-profile.css";
+
+// Derive approximate dimension scores from a single pushScore.
+// These are synthetic values for display purposes on the public profile —
+// the real scores live in the creator dashboard (authenticated).
+function deriveDimensionScores(pushScore: number): DimensionScores {
+  const base = Math.min(100, Math.max(0, pushScore));
+  return {
+    completion: Math.min(100, Math.round(base * 1.05)),
+    reliability: Math.min(100, Math.round(base * 0.97)),
+    quality: Math.min(100, Math.round(base * 1.02)),
+    satisfaction: Math.min(100, Math.round(base * 0.98)),
+    engagement: Math.min(100, Math.round(base * 0.9)),
+  };
+}
+
+// Map Title-case profile tier → lowercase key used by ScoreRings + TierBadge
+function tierToLowerKey(tier: string): TierBadgeCreatorTier {
+  const map: Record<string, TierBadgeCreatorTier> = {
+    Seed: "seed",
+    seed: "seed",
+    Explorer: "explorer",
+    explorer: "explorer",
+    Operator: "operator",
+    operator: "operator",
+    Proven: "proven",
+    proven: "proven",
+    Closer: "closer",
+    closer: "closer",
+    Partner: "partner",
+    partner: "partner",
+  };
+  return map[tier] ?? "seed";
+}
 
 function tierNormalized(tier: string): CreatorTier {
   const map: Record<string, CreatorTier> = {
@@ -86,6 +124,8 @@ export function PublicPortfolioView({ profile }: { profile: CreatorProfile }) {
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
   const firstName = profile.displayName.split(" ")[0];
+  const tierKey = tierToLowerKey(profile.tier);
+  const dimensionScores = deriveDimensionScores(profile.pushScore);
 
   return (
     <div className="pub-page">
@@ -136,20 +176,18 @@ export function PublicPortfolioView({ profile }: { profile: CreatorProfile }) {
             </div>
           </div>
 
-          {/* Right: stats badge */}
-          <div className="pub-hero-badge lg-surface--badge">
-            <p className="pub-badge-eyebrow eyebrow">VERIFIED</p>
-            <div className="pub-badge-stat">
-              <span className="pub-badge-num">{profile.totalCampaigns}</span>
-              <span className="pub-badge-label">Campaigns</span>
-            </div>
-            <div className="pub-badge-stat">
-              <span className="pub-badge-num">
-                {formatNumber(profile.verifiedVisits)}
-              </span>
-              <span className="pub-badge-label">Verified Visits</span>
-            </div>
-            <div className="pub-badge-tier">{tier}</div>
+          {/* Right: score glass — liquid-glass overlay with ScoreRings + TierBadge */}
+          <div className="pub-score-glass">
+            <TierBadge tier={tierKey} size="lg" />
+            <ScoreRings
+              scores={dimensionScores}
+              totalScore={profile.pushScore}
+              size={200}
+              animate
+              showLegend={false}
+              tier={tierKey}
+              variant="dashboard"
+            />
           </div>
         </div>
 
@@ -173,21 +211,21 @@ export function PublicPortfolioView({ profile }: { profile: CreatorProfile }) {
       <section className="pub-stats-section">
         <div className="pub-stats-strip">
           <div className="pub-stat">
-            <div className="pub-stat-number">
+            <div className="pub-stat-num">
               {formatNumber(profile.verifiedVisits)}
             </div>
             <div className="pub-stat-label">Total Verified Visits</div>
           </div>
           <div className="pub-stat">
-            <div className="pub-stat-number">{profile.totalCampaigns}</div>
+            <div className="pub-stat-num">{profile.totalCampaigns}</div>
             <div className="pub-stat-label">Campaigns</div>
           </div>
           <div className="pub-stat">
-            <div className="pub-stat-number">{profile.avgDeliveryTime}</div>
+            <div className="pub-stat-num">{profile.avgDeliveryTime}</div>
             <div className="pub-stat-label">Avg. Rating</div>
           </div>
           <div className="pub-stat">
-            <div className="pub-stat-number">2025</div>
+            <div className="pub-stat-num">2025</div>
             <div className="pub-stat-label">Member Since</div>
           </div>
         </div>
@@ -274,21 +312,30 @@ export function PublicPortfolioView({ profile }: { profile: CreatorProfile }) {
               <div className="pub-gallery-grid">
                 {visibleGallery.map((item) => (
                   <div key={item.id} className="pub-gallery-item">
-                    {item.type === "image" ? (
-                      <img
-                        src={item.url}
-                        alt={item.caption}
-                        className="pub-gallery-img"
-                        loading="lazy"
-                      />
-                    ) : (
-                      <div className="pub-gallery-video">
-                        <span className="pub-gallery-play">▶</span>
-                      </div>
-                    )}
-                    {item.caption && (
-                      <p className="pub-gallery-caption">{item.caption}</p>
-                    )}
+                    <div className="pub-gallery-card">
+                      {item.type === "image" ? (
+                        <img
+                          src={item.url}
+                          alt={item.caption}
+                          className="pub-gallery-img"
+                          loading="lazy"
+                        />
+                      ) : (
+                        <div className="pub-gallery-video">
+                          <span className="pub-gallery-play">▶</span>
+                        </div>
+                      )}
+                      {item.caption && (
+                        <div className="pub-gallery-overlay">
+                          <span className="pub-gallery-title">
+                            {item.caption}
+                          </span>
+                          <span className="pub-gallery-meta">
+                            Push · Verified
+                          </span>
+                        </div>
+                      )}
+                    </div>
                   </div>
                 ))}
               </div>

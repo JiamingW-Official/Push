@@ -1200,3 +1200,378 @@
     -webkit-overflow-scrolling: touch;
   }
 }
+
+/* ============================================================
+   Campaigns page-local polish (v11) — additive rules only
+   ============================================================ */
+
+/* KPI summary inline strip in page header */
+.adm-kpi-strip {
+  display: flex;
+  gap: 24px;
+  align-items: center;
+  background: var(--surface-2);
+  border-radius: 10px;
+  padding: 16px 24px;
+}
+
+.adm-kpi-strip__item {
+  text-align: center;
+  min-width: 64px;
+}
+
+.adm-kpi-strip__num {
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+}
+
+.adm-kpi-strip__num--blue {
+  color: var(--accent-blue);
+}
+
+.adm-kpi-strip__num--red {
+  color: var(--brand-red);
+}
+
+.adm-kpi-strip__num--ink {
+  color: var(--ink-3);
+}
+
+.adm-kpi-strip__label {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-5);
+  margin-top: 4px;
+}
+
+/* Campaign table (the page renders div+grid; treat as table-grid) */
+.adm-cgrid {
+  display: grid;
+  grid-template-columns:
+    minmax(180px, 2fr) 96px 80px 80px 80px 80px 72px 184px;
+  align-items: center;
+}
+
+.adm-cgrid--head {
+  padding: 12px 24px;
+  background: var(--surface-3);
+  border-bottom: 1px solid var(--hairline);
+}
+
+.adm-cgrid--row {
+  padding: 16px 24px;
+  border-bottom: 1px solid var(--hairline);
+  background: transparent;
+  transition: background 0.12s;
+  cursor: pointer;
+}
+
+.adm-cgrid--row:last-child {
+  border-bottom: none;
+}
+
+.adm-cgrid--row:hover {
+  background: var(--surface-3);
+}
+
+.adm-cgrid--row:focus-visible {
+  outline: none;
+  background: var(--surface-3);
+  box-shadow: inset 0 0 0 2px var(--accent-blue);
+}
+
+.adm-cgrid--row.is-flagged {
+  background: rgba(193, 18, 31, 0.04);
+}
+
+.adm-cgrid--row.is-flagged:hover {
+  background: rgba(193, 18, 31, 0.08);
+}
+
+.adm-cgrid__head {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-5);
+}
+
+.adm-cgrid__title {
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.adm-cgrid__merchant {
+  font-family: var(--font-body);
+  font-size: 11px;
+  color: var(--ink-5);
+  margin-top: 4px;
+}
+
+.adm-cgrid__num {
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.adm-cgrid__num--muted {
+  color: var(--ink-5);
+  font-weight: 400;
+}
+
+.adm-cgrid__date {
+  font-family: var(--font-body);
+  font-size: 12px;
+  color: var(--ink-5);
+}
+
+.adm-cgrid__actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+/* Approve action — Filled Primary Brand Red */
+.adm-row-btn--approve {
+  background: var(--brand-red);
+  color: var(--snow);
+  border: 1px solid var(--brand-red);
+}
+
+.adm-row-btn--approve:hover {
+  box-shadow: 0 4px 12px rgba(193, 18, 31, 0.24);
+}
+
+/* Focus rings for in-row buttons */
+.adm-row-btn--approve:focus-visible {
+  outline: 2px solid var(--brand-red);
+  outline-offset: 2px;
+}
+
+.adm-row-btn--view:focus-visible {
+  outline: 2px solid var(--accent-blue);
+  outline-offset: 2px;
+}
+
+.adm-row-btn--ghost:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 2px;
+}
+
+.adm-row-btn--danger:focus-visible {
+  outline: 2px solid var(--brand-red);
+  outline-offset: 2px;
+}
+
+/* Filter inputs / selects: focus halo */
+.adm-filter-bar input:focus-visible,
+.adm-filter-bar select:focus-visible {
+  outline: none;
+  border-color: var(--accent-blue);
+  box-shadow: 0 0 0 4px rgba(0, 133, 255, 0.12);
+}
+
+.adm-tab:focus-visible {
+  outline: 2px solid var(--accent-blue);
+  outline-offset: 2px;
+}
+
+/* Confirm dialog (reuse user-page CSS shape) */
+.adm-confirm-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 300;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+.adm-confirm {
+  background: var(--snow);
+  border: 1px solid var(--hairline);
+  border-radius: 10px;
+  max-width: 440px;
+  width: 100%;
+  overflow: hidden;
+  box-shadow: 0 24px 56px rgba(0, 0, 0, 0.18);
+}
+
+.adm-confirm__header {
+  padding: 16px 24px;
+  border-bottom: 1px solid var(--hairline);
+}
+
+.adm-confirm__eyebrow {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--brand-red);
+  margin-bottom: 4px;
+}
+
+.adm-confirm__eyebrow--ink {
+  color: var(--ink-5);
+}
+
+.adm-confirm__title {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--ink);
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  margin: 0;
+}
+
+.adm-confirm__body {
+  padding: 16px 24px 24px;
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: var(--ink-3);
+  line-height: 1.5;
+}
+
+.adm-confirm__target {
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.adm-confirm__footer {
+  padding: 16px 24px;
+  border-top: 1px solid var(--hairline);
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  background: var(--surface-2);
+}
+
+.adm-confirm__btn {
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  border-radius: 8px;
+  padding: 10px 20px;
+  cursor: pointer;
+  border: none;
+  transition: transform 0.12s, box-shadow 0.12s, background 0.12s;
+}
+
+.adm-confirm__btn--cancel {
+  background: transparent;
+  color: var(--ink);
+  border: 1px solid var(--hairline);
+}
+
+.adm-confirm__btn--cancel:hover {
+  background: var(--surface-3);
+  transform: translate(2px, 2px);
+}
+
+.adm-confirm__btn--cancel:active {
+  transform: translate(3px, 3px) scale(0.98);
+}
+
+.adm-confirm__btn--danger {
+  background: var(--brand-red);
+  color: var(--snow);
+}
+
+.adm-confirm__btn--danger:hover {
+  transform: translate(2px, 2px);
+  box-shadow: 0 4px 12px rgba(193, 18, 31, 0.24);
+}
+
+.adm-confirm__btn--danger:active {
+  transform: translate(3px, 3px) scale(0.98);
+}
+
+.adm-confirm__btn--primary {
+  background: var(--ink);
+  color: var(--snow);
+}
+
+.adm-confirm__btn--primary:hover {
+  transform: translate(2px, 2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.16);
+}
+
+.adm-confirm__btn--primary:active {
+  transform: translate(3px, 3px) scale(0.98);
+}
+
+.adm-confirm__btn:focus-visible {
+  outline: 2px solid var(--accent-blue);
+  outline-offset: 2px;
+}
+
+/* Empty state */
+.adm-empty {
+  padding: 56px 24px;
+  text-align: center;
+}
+
+.adm-empty__title {
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--ink);
+  letter-spacing: -0.02em;
+  margin: 0 0 8px;
+}
+
+.adm-empty__sub {
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: var(--ink-5);
+  margin: 0;
+}
+
+/* Responsive: collapse KPI strip on narrow */
+@media (max-width: 900px) {
+  .adm-kpi-strip {
+    flex-wrap: wrap;
+    gap: 16px;
+    padding: 16px;
+  }
+
+  .adm-cgrid {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .adm-cgrid--head {
+    display: none;
+  }
+
+  .adm-cgrid--row {
+    padding: 16px;
+    border: 1px solid var(--hairline);
+    border-radius: 8px;
+    margin-bottom: 8px;
+  }
+
+  .adm-cgrid__actions {
+    justify-content: flex-start;
+  }
+}

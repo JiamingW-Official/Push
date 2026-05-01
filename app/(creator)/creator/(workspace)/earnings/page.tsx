@@ -38,7 +38,7 @@ const ACTIVE_CAMPAIGNS: ActiveCampaign[] = [
     milestones: [
       { key: "scan", label: "Scan", done: true },
       { key: "verify", label: "Verify", done: true },
-      { key: "content_posted", label: "Content Posted", done: false },
+      { key: "content_posted", label: "Posted", done: false },
       { key: "paid", label: "Paid", done: false },
     ],
   },
@@ -50,15 +50,17 @@ const ACTIVE_CAMPAIGNS: ActiveCampaign[] = [
     milestones: [
       { key: "scan", label: "Scan", done: true },
       { key: "verify", label: "Verify", done: false },
-      { key: "content_posted", label: "Content Posted", done: false },
+      { key: "content_posted", label: "Posted", done: false },
       { key: "paid", label: "Paid", done: false },
     ],
   },
 ];
 
+const LIFETIME_TOTAL = 14285.0;
 const THIS_MONTH_EARNED = 2847.5;
 const LAST_MONTH_EARNED = 2310.0;
 const PENDING_NEXT = 245.0;
+const MIN_CASHOUT = 10;
 
 /* ── Helpers ─────────────────────────────────────────────── */
 
@@ -67,6 +69,10 @@ function fmt(n: number): string {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   });
+}
+
+function fmtInt(n: number): string {
+  return Math.round(n).toLocaleString("en-US");
 }
 
 function fmtDate(iso: string): string {
@@ -79,28 +85,15 @@ function fmtDate(iso: string): string {
 
 const STATUS_CONFIG: Record<
   TransactionStatus,
-  { label: string; background: string; color: string }
+  { label: string; chipClass: string }
 > = {
-  pending: {
-    label: "Pending",
-    background: "var(--champagne-tint)",
-    color: "var(--champagne-deep)",
-  },
-  cleared: {
-    label: "Cleared",
-    background: "rgba(0,133,255,0.10)",
-    color: "var(--accent-blue)",
-  },
+  pending: { label: "Pending", chipClass: "earn-status-chip--pending" },
+  cleared: { label: "Cleared", chipClass: "earn-status-chip--cleared" },
   processing: {
     label: "Processing",
-    background: "var(--accent-blue-tint)",
-    color: "var(--accent-blue)",
+    chipClass: "earn-status-chip--processing",
   },
-  paid: {
-    label: "Paid",
-    background: "var(--surface-3)",
-    color: "var(--ink-3)",
-  },
+  paid: { label: "Paid", chipClass: "earn-status-chip--paid" },
 };
 
 /* ── Status chip ─────────────────────────────────────────── */
@@ -108,10 +101,8 @@ const STATUS_CONFIG: Record<
 function StatusChip({ status }: { status: TransactionStatus }) {
   const cfg = STATUS_CONFIG[status];
   return (
-    <span
-      className="earn-status-chip"
-      style={{ background: cfg.background, color: cfg.color }}
-    >
+    <span className={`earn-status-chip ${cfg.chipClass}`}>
+      <span className="earn-status-chip__dot" aria-hidden />
       {cfg.label}
     </span>
   );
@@ -152,14 +143,24 @@ function CashoutModal({
   }
 
   return (
-    <div className="earn-modal-backdrop" onClick={onClose}>
+    <div
+      className="earn-modal-backdrop"
+      onClick={onClose}
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="earn-modal-title"
+    >
       <div className="earn-modal" onClick={(e) => e.stopPropagation()}>
         {success ? (
           <>
-            <h2 className="earn-modal-title">Cashout initiated.</h2>
+            <p className="earn-modal-eyebrow">CASHOUT INITIATED</p>
+            <h2 id="earn-modal-title" className="earn-modal-title">
+              ${fmt(amount)} on the way
+            </h2>
             <p className="earn-modal-body">
-              ${fmt(amount)} is on its way. Estimated arrival:{" "}
+              Estimated arrival:{" "}
               {method === "stripe_connect" ? "1–2 business days" : "Instant"}.
+              You will receive an email confirmation when funds settle.
             </p>
             <button className="btn-primary click-shift" onClick={onClose}>
               Done
@@ -167,26 +168,20 @@ function CashoutModal({
           </>
         ) : (
           <>
-            <h2 className="earn-modal-title">Cash out ${fmt(amount)}</h2>
+            <p className="earn-modal-eyebrow">REQUEST PAYOUT</p>
+            <h2 id="earn-modal-title" className="earn-modal-title">
+              Cash out ${fmt(amount)}
+            </h2>
 
-            <p className="earn-modal-label" style={{ marginTop: 24 }}>
-              Select payment method
-            </p>
+            <p className="earn-modal-label">Payment method</p>
 
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                gap: 8,
-                marginBottom: 24,
-              }}
-            >
+            <div className="earn-method-list">
               {(
                 [
                   {
                     id: "stripe_connect" as CashoutMethod,
-                    name: "Stripe",
-                    meta: "1–2 business days",
+                    name: "Stripe Connect",
+                    meta: "1–2 business days · USD",
                   },
                   {
                     id: "venmo" as CashoutMethod,
@@ -197,15 +192,9 @@ function CashoutModal({
               ).map((m) => (
                 <button
                   key={m.id}
+                  type="button"
                   className="earn-method-btn"
-                  style={{
-                    border:
-                      method === m.id
-                        ? "1.5px solid var(--brand-red)"
-                        : "1px solid var(--hairline)",
-                    background:
-                      method === m.id ? "var(--brand-red-tint)" : "transparent",
-                  }}
+                  aria-pressed={method === m.id}
                   onClick={() => setMethod(m.id)}
                 >
                   <span className="earn-method-name">{m.name}</span>
@@ -216,6 +205,7 @@ function CashoutModal({
 
             <div className="earn-modal-actions">
               <button
+                type="button"
                 className="btn-ghost click-shift"
                 style={{ flex: 1 }}
                 onClick={onClose}
@@ -224,10 +214,12 @@ function CashoutModal({
                 Cancel
               </button>
               <button
+                type="button"
                 className="btn-primary click-shift"
                 style={{ flex: 1, opacity: loading ? 0.7 : 1 }}
                 onClick={handleSubmit}
                 disabled={loading}
+                aria-label={`Confirm cashout of $${fmt(amount)}`}
               >
                 {loading ? "Processing…" : `Confirm $${fmt(amount)}`}
               </button>
@@ -239,6 +231,32 @@ function CashoutModal({
   );
 }
 
+/* ── Currency-formatted big amount ───────────────────────── */
+
+function BigAmount({
+  value,
+  currency = "$",
+  unit,
+  className,
+  currencyClass,
+  unitClass,
+}: {
+  value: string;
+  currency?: string;
+  unit?: string;
+  className: string;
+  currencyClass: string;
+  unitClass?: string;
+}) {
+  return (
+    <p className={className}>
+      <span className={currencyClass}>{currency}</span>
+      {value}
+      {unit ? <span className={unitClass}>{unit}</span> : null}
+    </p>
+  );
+}
+
 /* ── Main Page ───────────────────────────────────────────── */
 
 export default function CreatorEarningsPage() {
@@ -247,35 +265,37 @@ export default function CreatorEarningsPage() {
   const balances = aggregateBalances(MOCK_CREATOR_TRANSACTIONS);
   const delta = THIS_MONTH_EARNED - LAST_MONTH_EARNED;
   const deltaPositive = delta >= 0;
+  const canCashout = balances.cleared >= MIN_CASHOUT;
 
-  const BALANCE_CARDS = [
+  const BALANCE_CARDS: Array<{
+    label: string;
+    sublabel: string;
+    value: number;
+    dotClass: string;
+  }> = [
     {
       label: "Pending",
-      sublabel: "In campaign",
+      sublabel: "Campaign in flight",
       value: balances.pending,
-      dotColor: "var(--accent-blue)",
-      background: "var(--accent-blue-tint)",
+      dotClass: "earn-balance-dot--blue",
     },
     {
       label: "Cleared",
       sublabel: "Ready to cash out",
       value: balances.cleared,
-      dotColor: "var(--brand-red)",
-      background: "var(--brand-red-tint)",
+      dotClass: "earn-balance-dot--ink",
     },
     {
       label: "Processing",
       sublabel: "Transfer in flight",
       value: balances.processing,
-      dotColor: "var(--champagne)",
-      background: "var(--champagne-tint)",
+      dotClass: "earn-balance-dot--champagne",
     },
     {
       label: "Paid Out",
       sublabel: "Total disbursed",
       value: balances.paidOut,
-      dotColor: "var(--ink-3)",
-      background: "var(--surface-2)",
+      dotClass: "earn-balance-dot--paid",
     },
   ];
 
@@ -283,48 +303,63 @@ export default function CreatorEarningsPage() {
 
   return (
     <div className="cw-page earn-page">
+      {/* ── Page header ─────────────────────────────── */}
       <header className="cw-header">
         <div className="cw-header__left">
           <p className="cw-eyebrow cw-eyebrow--live">
-            EARNINGS · ${fmt(THIS_MONTH_EARNED)} THIS MONTH
+            EARNINGS · ${fmtInt(THIS_MONTH_EARNED)} THIS MONTH
           </p>
           <h1 className="cw-title">Earnings</h1>
         </div>
         <div className="cw-header__right">
           <button
             type="button"
-            className={
-              "cw-pill" + (balances.cleared >= 10 ? " cw-pill--urgent" : "")
-            }
+            className={"cw-pill" + (canCashout ? " cw-pill--urgent" : "")}
             onClick={() => setCashoutOpen(true)}
-            disabled={balances.cleared < 10}
-            style={balances.cleared < 10 ? { opacity: 0.5 } : undefined}
+            disabled={!canCashout}
+            aria-label={
+              canCashout
+                ? `Request payout of $${fmt(balances.cleared)}`
+                : `Minimum cashout $${fmt(MIN_CASHOUT)} not yet reached`
+            }
+            style={!canCashout ? { opacity: 0.5 } : undefined}
           >
             Request Payout
           </button>
         </div>
       </header>
 
-      {/* ── Hero KPI Card ─────────────────────────────── */}
-      <div className="earn-section">
-        <div className="earn-hero-card">
-          {/* Big number */}
+      <div className="earn-stack">
+        {/* ── 1. Hero KPI panel — lifetime total ─────── */}
+        <section className="earn-hero" aria-label="Lifetime earnings summary">
           <div>
-            <p className="earn-hero-eyebrow">TOTAL EARNED TO DATE</p>
-            <p className="earn-hero-amount">$14,285</p>
+            <p className="earn-hero-eyebrow">LIFETIME EARNED</p>
+            <BigAmount
+              className="earn-hero-amount"
+              currencyClass="earn-hero-amount__currency"
+              unitClass="earn-hero-amount__unit"
+              value={fmtInt(LIFETIME_TOTAL)}
+              unit="USD"
+            />
             <span
-              className={`earn-hero-delta ${deltaPositive ? "earn-hero-delta--positive" : "earn-hero-delta--negative"}`}
+              className={`earn-hero-delta ${
+                deltaPositive
+                  ? "earn-hero-delta--positive"
+                  : "earn-hero-delta--negative"
+              }`}
             >
-              {deltaPositive ? "+" : ""}${fmt(Math.abs(delta))} vs last month
+              <span className="earn-hero-delta-arrow" aria-hidden>
+                {deltaPositive ? "▲" : "▼"}
+              </span>
+              {deltaPositive ? "+" : "−"}${fmt(Math.abs(delta))} vs last month
             </span>
           </div>
 
-          {/* Sub-stats */}
           <div className="earn-hero-substats">
             {[
               { label: "THIS MONTH", value: `$${fmt(THIS_MONTH_EARNED)}` },
               { label: "LAST MONTH", value: `$${fmt(LAST_MONTH_EARNED)}` },
-              { label: "AVG PER SCAN", value: "$0.05" },
+              { label: "AVG / SCAN", value: "$0.05" },
             ].map((s) => (
               <div key={s.label} className="earn-hero-substat">
                 <span className="earn-hero-substat-label">{s.label}</span>
@@ -332,276 +367,275 @@ export default function CreatorEarningsPage() {
               </div>
             ))}
           </div>
-        </div>
-      </div>
+        </section>
 
-      {/* ── Balance Breakdown ────────────────────────── */}
-      <div className="earn-section">
-        <p
-          style={{
-            fontFamily: "var(--font-mono)",
-            fontSize: 12,
-            fontWeight: 700,
-            letterSpacing: "0.12em",
-            textTransform: "uppercase" as const,
-            color: "var(--ink-4)",
-            margin: "0 0 16px",
-          }}
+        {/* ── 2. Cashout focal row — liquid-glass tile ─ */}
+        <section
+          className="earn-cashout-row"
+          aria-label="Available to cash out"
         >
-          BALANCE
-        </p>
-        <div className="earn-balance-grid">
-          {BALANCE_CARDS.map((card) => (
-            <div
-              key={card.label}
-              className="earn-balance-card"
-              style={{ background: card.background }}
-            >
-              <span
-                className="earn-balance-dot"
-                style={{ background: card.dotColor }}
-              />
-              <p className="earn-balance-amount">${fmt(card.value)}</p>
-              <p className="earn-balance-label">{card.label}</p>
-              <p className="earn-balance-sublabel">{card.sublabel}</p>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* ── Active Campaigns / Milestone Timeline ──── */}
-      <div className="earn-section" style={{ paddingTop: 32 }}>
-        <p
-          style={{
-            fontFamily: "var(--font-mono)",
-            fontSize: 12,
-            fontWeight: 700,
-            letterSpacing: "0.12em",
-            textTransform: "uppercase" as const,
-            color: "var(--ink-4)",
-            margin: "0 0 16px",
-          }}
-        >
-          ACTIVE CAMPAIGNS
-        </p>
-        <div className="earn-campaign-list">
-          {ACTIVE_CAMPAIGNS.map((camp) => (
-            <div key={camp.id} className="earn-campaign-card">
-              <div className="earn-campaign-header">
-                <div>
-                  <span className="earn-campaign-merchant">
-                    {camp.merchant}
-                  </span>
-                  <span className="earn-campaign-name">{camp.campaign}</span>
-                </div>
-                <span className="earn-campaign-payout">
-                  ${fmt(camp.totalPayout)}
-                </span>
-              </div>
-
-              {/* Milestone steps */}
-              <div style={{ display: "flex", alignItems: "flex-start" }}>
-                {camp.milestones.map((step, i) => (
-                  <div
-                    key={step.key}
-                    style={{
-                      display: "flex",
-                      flexDirection: "column",
-                      alignItems: "center",
-                      flex: 1,
-                      gap: 8,
-                    }}
-                  >
-                    <div
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        width: "100%",
-                      }}
-                    >
-                      <div
-                        style={{
-                          width: 20,
-                          height: 20,
-                          borderRadius: "50%",
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          flexShrink: 0,
-                          background: step.done
-                            ? "var(--brand-red)"
-                            : "var(--surface-3)",
-                          border: `2px solid ${step.done ? "var(--brand-red)" : "var(--mist)"}`,
-                        }}
-                      >
-                        {step.done && (
-                          <svg
-                            width="8"
-                            height="6"
-                            viewBox="0 0 8 6"
-                            fill="none"
-                          >
-                            <path
-                              d="M1 3l2 2 4-4"
-                              stroke="#fff"
-                              strokeWidth="1.5"
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                            />
-                          </svg>
-                        )}
-                      </div>
-                      {i < camp.milestones.length - 1 && (
-                        <div
-                          style={{
-                            flex: 1,
-                            height: 2,
-                            background: step.done
-                              ? "var(--brand-red)"
-                              : "var(--mist)",
-                          }}
-                        />
-                      )}
-                    </div>
-                    <span
-                      style={{
-                        fontFamily: "var(--font-mono)",
-                        fontSize: 12,
-                        fontWeight: 600,
-                        letterSpacing: "0.04em",
-                        textTransform: "uppercase",
-                        textAlign: "center",
-                        lineHeight: 1.3,
-                        whiteSpace: "nowrap",
-                        color: step.done ? "var(--ink)" : "var(--ink-4)",
-                      }}
-                    >
-                      {step.label}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* ── Upcoming Payout ────────────────────────── */}
-      <div className="earn-section">
-        <div className="earn-upcoming-card">
           <div>
-            <p
-              style={{
-                fontFamily: "var(--font-mono)",
-                fontSize: 12,
-                fontWeight: 700,
-                letterSpacing: "0.12em",
-                textTransform: "uppercase" as const,
-                color: "var(--ink-4)",
-                margin: "0 0 8px",
-              }}
-            >
-              UPCOMING PAYOUT
+            <p className="earn-cashout-eyebrow">
+              <span className="earn-cashout-eyebrow-dot" aria-hidden />
+              AVAILABLE TO CASH OUT
             </p>
-            <p className="earn-upcoming-amount">${fmt(PENDING_NEXT)}</p>
-            <p className="earn-upcoming-meta">
-              Est. May 1, 2026 · Stripe Connect
-            </p>
-          </div>
-          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-            <span className="earn-stripe-badge">
-              <span className="earn-stripe-dot" />
-              Stripe connected
-            </span>
-            <Link
-              href="#"
-              className="btn-ghost click-shift"
-              style={{
-                fontSize: 12,
-                padding: "8px 16px",
-                textDecoration: "none",
-              }}
-            >
-              Manage
-            </Link>
-          </div>
-        </div>
-      </div>
-
-      {/* ── Transaction History ─────────────────────── */}
-      <div className="earn-section" style={{ paddingTop: 32 }}>
-        <p
-          style={{
-            fontFamily: "var(--font-mono)",
-            fontSize: 12,
-            fontWeight: 700,
-            letterSpacing: "0.12em",
-            textTransform: "uppercase" as const,
-            color: "var(--ink-4)",
-            margin: "0 0 16px",
-          }}
-        >
-          TRANSACTION HISTORY
-        </p>
-        <div className="earn-txn-table">
-          {/* Table header */}
-          <div className="earn-txn-head">
-            {["DATE", "CAMPAIGN", "STATUS", "AMOUNT", "REF"].map((h) => (
-              <span key={h} className="earn-txn-head-cell">
-                {h}
-              </span>
-            ))}
-          </div>
-          {/* Rows */}
-          {recentTxns.map((tx) => (
-            <div key={tx.id} className="earn-txn-row">
-              <span className="earn-txn-date">{fmtDate(tx.date)}</span>
-              <div style={{ display: "flex", flexDirection: "column", gap: 2 }}>
-                <span className="earn-txn-campaign">{tx.campaign}</span>
-                <span className="earn-txn-merchant">{tx.merchant}</span>
-              </div>
-              <span>
-                <StatusChip status={tx.status} />
-              </span>
-              <span
-                className={
-                  tx.status === "paid"
-                    ? "earn-txn-amount-paid"
-                    : "earn-txn-amount-pending"
-                }
-              >
-                ${fmt(tx.netAmount)}
-              </span>
-              <span className="earn-txn-ref">#{tx.id.slice(-6)}</span>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* ── Cashout CTA bar ───────────────────────── */}
-      <div
-        className="earn-section"
-        style={{ paddingTop: 32, paddingBottom: 0 }}
-      >
-        <div className="earn-cashout-bar">
-          <div>
-            <p className="earn-cashout-eyebrow">AVAILABLE TO CASH OUT</p>
-            <p className="earn-cashout-amount">${fmt(balances.cleared)}</p>
+            <BigAmount
+              className="earn-cashout-amount"
+              currencyClass="earn-cashout-amount__currency"
+              unitClass="earn-cashout-amount__unit"
+              value={fmt(balances.cleared)}
+              unit="USD"
+            />
+            {canCashout ? (
+              <p className="earn-cashout-meta">
+                Min ${fmt(MIN_CASHOUT)} · arrives 1–2 business days via Stripe
+              </p>
+            ) : (
+              <p className="earn-cashout-hint">
+                Minimum cashout is ${fmt(MIN_CASHOUT)}.00. Complete more
+                campaigns to unlock.
+              </p>
+            )}
           </div>
           <button
-            className="btn-primary click-shift"
+            type="button"
+            className="btn-primary click-shift earn-cashout-cta"
             onClick={() => setCashoutOpen(true)}
-            disabled={balances.cleared < 10}
-            style={{ whiteSpace: "nowrap" }}
+            disabled={!canCashout}
+            aria-label={`Cash out $${fmt(balances.cleared)} now`}
           >
-            Cash out ${fmt(balances.cleared)}
+            Cash Out ${fmt(balances.cleared)}
           </button>
-        </div>
-        {balances.cleared < 10 && (
-          <p className="earn-cashout-hint">
-            Minimum cashout is $10.00. Complete more campaigns to unlock.
-          </p>
-        )}
+        </section>
+
+        {/* ── 3. Balance breakdown ──────────────────── */}
+        <section aria-labelledby="earn-balance-head">
+          <header className="cw-section-head">
+            <span id="earn-balance-head" className="cw-section-eyebrow">
+              BALANCE BREAKDOWN
+            </span>
+            <span className="earn-section-meta">
+              {MOCK_CREATOR_TRANSACTIONS.length} transactions tracked
+            </span>
+          </header>
+          <div className="earn-balance-grid">
+            {BALANCE_CARDS.map((card) => (
+              <div key={card.label} className="earn-balance-card">
+                <div className="earn-balance-meta">
+                  <span
+                    className={`earn-balance-dot ${card.dotClass}`}
+                    aria-hidden
+                  />
+                  <p className="earn-balance-label">{card.label}</p>
+                </div>
+                <BigAmount
+                  className="earn-balance-amount"
+                  currencyClass="earn-balance-amount__currency"
+                  value={fmt(card.value)}
+                />
+                <p className="earn-balance-sublabel">{card.sublabel}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* ── 4. Active campaigns ────────────────────── */}
+        <section aria-labelledby="earn-campaigns-head">
+          <header className="cw-section-head">
+            <span id="earn-campaigns-head" className="cw-section-eyebrow">
+              ACTIVE CAMPAIGNS
+            </span>
+            <span className="earn-section-meta">
+              {ACTIVE_CAMPAIGNS.length} in progress
+            </span>
+          </header>
+          <div className="earn-campaign-list">
+            {ACTIVE_CAMPAIGNS.map((camp) => (
+              <article key={camp.id} className="earn-campaign-card">
+                <div className="earn-campaign-header">
+                  <div>
+                    <span className="earn-campaign-merchant">
+                      {camp.merchant}
+                    </span>
+                    <span className="earn-campaign-name">{camp.campaign}</span>
+                  </div>
+                  <span
+                    className="earn-campaign-payout"
+                    aria-label={`Payout $${fmt(camp.totalPayout)} USD`}
+                  >
+                    ${fmt(camp.totalPayout)}
+                  </span>
+                </div>
+
+                <div
+                  className="earn-milestones"
+                  role="list"
+                  aria-label="Campaign progress"
+                >
+                  {camp.milestones.map((step, i) => {
+                    const isLast = i === camp.milestones.length - 1;
+                    return (
+                      <div
+                        key={step.key}
+                        className="earn-milestone"
+                        role="listitem"
+                        aria-current={step.done ? undefined : "step"}
+                      >
+                        <div className="earn-milestone-track">
+                          <div
+                            className={`earn-milestone-dot${
+                              step.done ? " earn-milestone-dot--done" : ""
+                            }`}
+                            aria-hidden
+                          >
+                            {step.done && (
+                              <svg
+                                width="10"
+                                height="8"
+                                viewBox="0 0 8 6"
+                                fill="none"
+                              >
+                                <path
+                                  d="M1 3l2 2 4-4"
+                                  stroke="#fff"
+                                  strokeWidth="1.5"
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                />
+                              </svg>
+                            )}
+                          </div>
+                          {!isLast && (
+                            <div
+                              className={`earn-milestone-line${
+                                step.done ? " earn-milestone-line--done" : ""
+                              }`}
+                              aria-hidden
+                            />
+                          )}
+                        </div>
+                        <span
+                          className={`earn-milestone-label${
+                            step.done ? " earn-milestone-label--done" : ""
+                          }`}
+                        >
+                          {step.label}
+                        </span>
+                      </div>
+                    );
+                  })}
+                </div>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        {/* ── 5. Upcoming payout ─────────────────────── */}
+        <section aria-labelledby="earn-upcoming-head">
+          <header className="cw-section-head">
+            <span id="earn-upcoming-head" className="cw-section-eyebrow">
+              UPCOMING PAYOUT
+            </span>
+          </header>
+          <div className="earn-upcoming-card">
+            <div>
+              <BigAmount
+                className="earn-upcoming-amount"
+                currencyClass="earn-upcoming-amount__currency"
+                value={fmt(PENDING_NEXT)}
+              />
+              <p className="earn-upcoming-meta">
+                Est. May 1, 2026 · Stripe Connect · USD
+              </p>
+            </div>
+            <div className="earn-upcoming-actions">
+              <span className="earn-stripe-badge">
+                <span className="earn-stripe-dot" aria-hidden />
+                Stripe connected
+              </span>
+              <Link
+                href="#"
+                className="btn-ghost click-shift"
+                style={{
+                  fontSize: 12,
+                  padding: "8px 16px",
+                  textDecoration: "none",
+                }}
+              >
+                Manage
+              </Link>
+            </div>
+          </div>
+        </section>
+
+        {/* ── 6. Transaction history ─────────────────── */}
+        <section aria-labelledby="earn-txn-head-title">
+          <header className="cw-section-head">
+            <span id="earn-txn-head-title" className="cw-section-eyebrow">
+              TRANSACTION HISTORY
+            </span>
+            <span className="earn-section-meta">
+              Showing {recentTxns.length} of {MOCK_CREATOR_TRANSACTIONS.length}
+            </span>
+          </header>
+          <div className="earn-txn-table">
+            <div className="earn-txn-head" role="row">
+              <span className="earn-txn-head-cell" role="columnheader">
+                DATE
+              </span>
+              <span className="earn-txn-head-cell" role="columnheader">
+                CAMPAIGN
+              </span>
+              <span className="earn-txn-head-cell" role="columnheader">
+                STATUS
+              </span>
+              <span
+                className="earn-txn-head-cell earn-txn-head-cell--right"
+                role="columnheader"
+              >
+                AMOUNT
+              </span>
+              <span
+                className="earn-txn-head-cell earn-txn-head-cell--right"
+                role="columnheader"
+              >
+                REF
+              </span>
+            </div>
+
+            {recentTxns.length === 0 ? (
+              <p className="earn-txn-empty">
+                No transactions yet. Your first earnings will land here.
+              </p>
+            ) : (
+              recentTxns.map((tx) => (
+                <div key={tx.id} className="earn-txn-row" role="row">
+                  <span className="earn-txn-date">{fmtDate(tx.date)}</span>
+                  <div className="earn-txn-campaign-cell">
+                    <span className="earn-txn-campaign">{tx.campaign}</span>
+                    <span className="earn-txn-merchant">{tx.merchant}</span>
+                  </div>
+                  <span>
+                    <StatusChip status={tx.status} />
+                  </span>
+                  <span
+                    className={
+                      tx.status === "paid"
+                        ? "earn-txn-amount earn-txn-amount--paid"
+                        : "earn-txn-amount earn-txn-amount--pending"
+                    }
+                  >
+                    <span className="earn-txn-amount__currency">$</span>
+                    {fmt(tx.netAmount)}
+                  </span>
+                  <span className="earn-txn-ref">
+                    #{tx.id.slice(-6).toUpperCase()}
+                  </span>
+                </div>
+              ))
+            )}
+          </div>
+        </section>
       </div>
 
       {/* ── Cashout Modal ─────────────────────────── */}

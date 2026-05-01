@@ -1,5 +1,6 @@
 "use client";
 
+import "./dispute-detail.css";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import type { Dispute } from "@/lib/disputes/types";

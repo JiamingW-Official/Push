@@ -1,5 +1,6 @@
 "use client";
 
+import "./disputes.css";
 import { useState, useEffect } from "react";
 import type { Dispute, DisputeStatus } from "@/lib/disputes/types";
 import { DISPUTE_STATUS_LABELS } from "@/lib/disputes/types";

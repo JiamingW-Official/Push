@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import CustomCursor from "@/components/layout/CustomCursor";
 import SmoothScroll from "@/components/layout/SmoothScroll";
 import BackToTop from "@/components/layout/BackToTop";
 import { CommandKProvider } from "@/components/search/CommandKProvider";
@@ -123,7 +122,6 @@ export default function RootLayout({
         <a href="#main-content" className="skip-nav">
           Skip to main content
         </a>
-        <CustomCursor />
         <CommandKProvider>
           <SmoothScroll>
             {children}

@@ -1,200 +1,129 @@
 /* ============================================================
-   Footer v9 — OFFTRAIL Editorial Blue
-   Tiles sit INSIDE the footer content well, clear of the seam.
-   Wordmark: Magvix Italic, clamp(80px, 12vw, 200px), --snow.
+   Footer v11 — § 8.3 Darky Giant Wordmark + § 8.9.2 Tile Pair
+   Editorial Blue rounded-top panel + 2 floating liquid-glass
+   tiles peeking above + Darky 800 giant "PUSH" pressed-bottom-left.
+   No hover shift on the wordmark (§ 16 / § 0.8 exception).
    ============================================================ */
 
-.footer {
+/* ----------------- Outer container ----------------- */
+.shell {
+  position: relative;
+  margin-top: 120px; /* room for the tiles peeking above the seam */
+  padding: 0 24px;
+}
+
+/* ----------------- Editorial Blue panel ----------------- */
+.panel {
+  position: relative;
   background: var(--editorial-blue);
   color: var(--snow);
-  border-radius: var(--r-4xl) var(--r-4xl) 0 0;
-  margin-top: -40px;
-  margin-left: -16px;
-  margin-right: -16px;
-  padding-top: var(--space-12);
-  padding-bottom: calc(var(--space-12) + 40px);
-  position: relative;
-}
-
-/* ---- Tile row — inside footer, below the rounded top edge ---- */
-.tileRow {
-  display: flex;
-  gap: 16px;
-  margin-bottom: clamp(48px, 6vw, 80px);
-}
-
-/* ---- Glass tiles — now flow elements, not floated ---- */
-.floatTile {
-  flex: 1;
-  min-width: 0;
-  max-width: 400px;
-  background: rgba(20, 74, 138, 0.55);
-  backdrop-filter: blur(40px) saturate(1.4);
-  -webkit-backdrop-filter: blur(40px) saturate(1.4);
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  border-radius: var(--r-xl);
-  box-shadow: var(--shadow-2);
-  padding: var(--space-3);
-}
-
-/* Legacy — kept for selector compatibility, no longer used for positioning */
-.floatTileLeft  { }
-.floatTileRight { }
-
-.tileEyebrow {
-  font-family: var(--font-body);
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.65);
-  margin: 0 0 12px 0;
-}
-
-.tileSuccess {
-  font-family: var(--font-body);
-  font-size: 14px;
-  color: rgba(255, 255, 255, 0.9);
-  margin: 0 0 8px 0;
-  line-height: 1.5;
-}
-
-.tileForm {
-  display: flex;
-  gap: 8px;
-  margin-bottom: 10px;
-}
-
-.tileInput {
-  flex: 1;
-  height: 40px;
-  padding: 0 14px;
-  background: rgba(255, 255, 255, 0.12);
-  border: 1px solid rgba(255, 255, 255, 0.22);
-  border-radius: var(--r-md);
-  font-family: var(--font-body);
-  font-size: 13px;
-  color: var(--snow);
-  outline: none;
-  transition: border-color 180ms ease;
-}
-.tileInput::placeholder { color: rgba(255, 255, 255, 0.4); }
-.tileInput:focus { border-color: rgba(255, 255, 255, 0.6); }
-
-.tileSubmit {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  height: 40px;
-  padding: 0 16px;
-  background: var(--brand-red);
-  color: var(--snow);
-  border: none;
-  border-radius: var(--r-pill);
-  font-family: var(--font-body);
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  cursor: pointer;
-  white-space: nowrap;
-}
-.tileSubmit:hover { background: var(--brand-red-deep); }
-
-.tileMeta {
-  font-family: var(--font-body);
-  font-size: 12px;
-  color: rgba(255, 255, 255, 0.4);
-  margin: 0;
-  line-height: 1.5;
-}
-
-/* ---- Social list (inside right tile) ---- */
-.socialList {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.socialRow {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 8px 10px;
-  border-radius: var(--r-md);
-  text-decoration: none;
-  color: rgba(255, 255, 255, 0.85);
-  transition: background 180ms ease, color 180ms ease;
-}
-.socialRow:hover { background: rgba(255, 255, 255, 0.1); color: var(--snow); }
-
-.socialIconTile {
-  width: 32px;
-  height: 32px;
-  border-radius: var(--r-sm);
-  background: rgba(255, 255, 255, 0.12);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-
-.socialLabel {
-  font-family: var(--font-body);
-  font-size: 13px;
-  font-weight: 600;
-  flex: 1;
-}
-
-/* ---- Inner container ---- */
-.inner {
-  max-width: 1180px;
+  border-radius: var(--r-4xl); /* 40px all corners — § 8.3 */
+  overflow: hidden;
+  padding: 96px 80px 0; /* desktop interior — § 8.3 */
+  max-width: 1440px;
   margin: 0 auto;
-  padding: 0 clamp(24px, 5vw, 80px);
 }
 
-/* ---- Wordmark ---- */
-.wordmarkRow {
-  margin-bottom: clamp(48px, 6vw, 80px);
+/* ----------------- Tile pair peeking above ----------------- */
+.tileRow {
+  position: absolute;
+  top: -56px; /* peek 56px above the seam — § 8.9.2 */
+  left: 80px;
+  right: 80px;
+  display: flex;
+  gap: 24px;
+  pointer-events: none;
+  z-index: 2;
 }
-
-.wordmark {
-  font-family: var(--font-hero);
-  font-style: italic;
-  font-weight: normal;
-  font-size: clamp(80px, 12vw, 200px);
-  letter-spacing: -0.015em;
-  line-height: 0.88;
-  color: var(--snow);
-  text-decoration: none;
-  display: inline-block;
-  user-select: none;
-}
-.wordmark:hover { color: rgba(255, 255, 255, 0.85); }
-
-/* ---- 4-column nav grid ---- */
-.colGrid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 48px;
-  padding-bottom: 64px;
-}
-
-.col {
+.tile {
+  pointer-events: auto;
+  flex: 0 1 360px;
+  padding: 24px 32px;
   display: flex;
   flex-direction: column;
-  gap: 0;
+  gap: 8px;
 }
-
-.colLabel {
-  font-family: var(--font-body);
+.tile:last-child {
+  flex-basis: 280px;
+}
+.tileEyebrow {
+  font-family: var(--font-mono);
   font-size: 12px;
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.45);
-  margin: 0 0 20px 0;
+  color: rgba(255, 255, 255, 0.65);
+  margin: 0;
+}
+.tileTitle {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--snow);
+  margin: 0;
+}
+.tileBody {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.78);
+  margin: 0;
+}
+.tileSocialList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.tileSocialLink {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--snow);
+  text-decoration: none;
+  transition: transform 180ms cubic-bezier(0.34, 1.56, 0.64, 1),
+    opacity 180ms ease;
+}
+.tileSocialLink:hover {
+  transform: translate(1px, 1px);
+  opacity: 0.85;
+}
+.tileSocialLink:active {
+  transform: translate(2px, 2px) scale(0.98);
+}
+.tileSocialLink:focus-visible {
+  outline: 2px solid var(--snow);
+  outline-offset: 4px;
+  border-radius: 2px;
 }
 
+/* ----------------- 3-column eyebrow grid ----------------- */
+.cols {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 64px;
+  padding-top: 96px; /* clear of the tile pair */
+  padding-bottom: 64px;
+}
+.col {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.colLabel {
+  /* Mono parenthetical eyebrow — § 8.4 marketing register */
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.65);
+  margin: 0;
+}
 .colLinks {
   list-style: none;
   margin: 0;
@@ -203,112 +132,112 @@
   flex-direction: column;
   gap: 12px;
 }
-
 .colLink {
-  font-family: var(--font-body);
-  font-size: 14px;
-  font-weight: 700;
-  letter-spacing: 0.01em;
-  text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.72);
+  /* CS Genio Mono 16px snow, 0.04em letter-spacing — § 8.3 */
+  font-family: var(--font-mono);
+  font-size: 16px;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  line-height: 1.6;
+  color: var(--snow);
   text-decoration: none;
   display: inline-block;
-  transition: color 200ms ease;
+  transition: transform 180ms cubic-bezier(0.34, 1.56, 0.64, 1),
+    text-decoration-color 180ms ease;
+  text-decoration-line: underline;
+  text-decoration-color: transparent;
+  text-underline-offset: 4px;
 }
-.colLink:hover { color: var(--snow); }
-
-/* ---- Hairline ---- */
-.hairline {
-  width: 100%;
-  height: 1px;
-  background: rgba(255, 255, 255, 0.14);
-  margin-bottom: 32px;
+.colLink:hover {
+  transform: translate(1px, 1px);
+  text-decoration-color: var(--snow);
 }
-
-/* ---- Bottom bar ---- */
-.bottomBar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 24px;
-  flex-wrap: wrap;
+.colLink:active {
+  transform: translate(2px, 2px) scale(0.98);
 }
-
-.copy {
-  font-family: var(--font-body);
+.colLink:focus-visible {
+  outline: 2px solid var(--snow);
+  outline-offset: 4px;
+  border-radius: 2px;
+}
+.colCopy {
+  font-family: var(--font-mono);
   font-size: 12px;
+  font-weight: 500;
   letter-spacing: 0.04em;
-  color: rgba(255, 255, 255, 0.4);
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.65);
   margin: 0;
 }
 
-.langToggle {
-  display: flex;
-  align-items: center;
-  gap: 6px;
+/* ----------------- Giant Wordmark — § 8.3 ----------------- */
+.wordmarkRow {
+  margin-top: 96px; /* breathing space above the brand stamp */
+  padding-bottom: 24px; /* presses to bottom-left, with a hair of optical breathing room */
 }
-
-.langBtn {
-  font-family: var(--font-body);
-  font-size: 12px;
-  letter-spacing: 0.06em;
+.wordmark {
+  display: block;
+  font-family: var(--font-display);
+  font-size: clamp(140px, 18vw, 320px);
+  font-weight: 800;
+  line-height: 0.85;
+  letter-spacing: -0.045em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.35);
-  background: none;
-  border: none;
-  padding: 0;
-  cursor: pointer;
-  transition: color 200ms ease;
-}
-.langBtn:hover { color: rgba(255, 255, 255, 0.7); }
-.langActive { color: rgba(255, 255, 255, 0.75); }
-
-.langSep {
-  font-family: var(--font-body);
-  font-size: 12px;
-  color: rgba(255, 255, 255, 0.2);
+  color: var(--snow);
+  user-select: none;
+  /* Static brand stamp — no hover shift (§ 0.8 exception) */
 }
 
-/* ---- Back to top ---- */
-.backToTop {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 40px;
-  height: 40px;
-  border-radius: var(--r-full);
-  background: rgba(255, 255, 255, 0.12);
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  color: rgba(255, 255, 255, 0.7);
-  cursor: pointer;
-  transition: background 180ms ease, color 180ms ease;
-}
-.backToTop:hover { background: rgba(255, 255, 255, 0.2); color: var(--snow); }
-
-/* ---- Responsive ---- */
+/* ----------------- iPad (≤1024px) ----------------- */
 @media (max-width: 1024px) {
-  .tileRow { flex-wrap: wrap; }
-  .floatTile { max-width: none; }
+  .shell { margin-top: 96px; padding: 0 16px; }
+  .panel { padding: 80px 56px 0; }
+  .tileRow { left: 56px; right: 56px; gap: 16px; top: -48px; }
+  .tile { flex-basis: 320px; padding: 24px 28px; }
+  .tile:last-child { flex-basis: 256px; }
+  .cols { grid-template-columns: 1fr 1fr; gap: 48px; padding-top: 80px; padding-bottom: 56px; }
+  .colCopyCol { grid-column: 1 / -1; }
+  .wordmarkRow { margin-top: 72px; }
 }
 
-@media (max-width: 768px) {
-  .footer { padding-top: var(--space-8); }
-  .tileRow { flex-direction: column; gap: 12px; margin-bottom: 48px; }
-
-  .colGrid {
-    grid-template-columns: repeat(2, 1fr);
+/* ----------------- Mobile (≤767px) ----------------- */
+@media (max-width: 767px) {
+  .shell { margin-top: 72px; padding: 0 8px; }
+  .panel {
+    padding: 56px 24px 0;
+    border-radius: var(--r-3xl); /* 28px on small screens still rounded-top, but smaller scale */
+  }
+  .tileRow {
+    position: static;
+    flex-direction: column;
+    gap: 12px;
+    margin: -56px 16px 0; /* lift the stack so tiles peek above the seam */
+    padding: 0;
+  }
+  .tile,
+  .tile:last-child {
+    flex-basis: auto;
+    padding: 20px 24px;
+  }
+  .cols {
+    grid-template-columns: 1fr;
     gap: 32px;
-    padding-bottom: 48px;
+    padding-top: 56px;
+    padding-bottom: 40px;
   }
+  .wordmarkRow { margin-top: 48px; padding-bottom: 16px; }
 }
 
-@media (max-width: 480px) {
-  .footer { margin-top: -24px; border-radius: var(--r-3xl) var(--r-3xl) 0 0; }
-
-  .colGrid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 24px;
+/* ----------------- Reduced-motion fallback ----------------- */
+@media (prefers-reduced-motion: reduce) {
+  .colLink,
+  .tileSocialLink {
+    transition: none;
   }
-
-  .bottomBar { flex-direction: column; align-items: flex-start; }
+  .colLink:hover,
+  .colLink:active,
+  .tileSocialLink:hover,
+  .tileSocialLink:active {
+    transform: none;
+  }
 }

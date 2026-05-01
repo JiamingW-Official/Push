@@ -1,75 +1,75 @@
 /* ============================================================
    Creator Earnings — earnings.css
-   Design v11: product register, 8px grid, v11 tokens
+   Design v11 — product register, 8px grid, v11 tokens
+   ============================================================
+   Hierarchy:
+     1. Hero KPI panel (lifetime total, ceremonial Champagne delta)
+     2. Cleared liquid-glass tile + Filled Primary cashout CTA
+     3. Balance breakdown (4 status tiles, role-locked colors)
+     4. Active campaign milestone cards
+     5. Upcoming payout (Stripe meta)
+     6. Transaction history table
+   Color discipline:
+     - Brand Red — cashout CTA only (1 instance)
+     - Champagne — ceremonial: lifetime total + processing dot + ≤1 spare
+     - N2W Blue — informational accents (cleared dot, stripe dot)
+     - Warm-gray ladder for everything else
    ============================================================ */
 
 /* ── Page shell ──────────────────────────────────────────── */
 
 .earn-page {
-  min-height: 100vh;
+  /* lumin-cards.cw-page already supplies padding 32px 15% 96px + max-width.
+     Override surface so earnings reads as a "ledger" panel field. */
   background: var(--surface-2);
-  font-family: var(--font-body);
-  padding-bottom: 96px;
 }
 
-/* ── Page header ─────────────────────────────────────────── */
-
-.earn-page-header {
-  padding: 32px 64px 32px;
+.earn-stack {
   display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 16px;
-  background: var(--char);
-  border-bottom: 2px solid var(--ink);
+  flex-direction: column;
+  gap: 32px;
 }
 
-.earn-page-eyebrow {
+/* ── Section eyebrow + title row ─────────────────────────── */
+/* Reuses lumin-cards .cw-section-head / .cw-section-eyebrow / .cw-section-title.
+   Local tweaks only when needed. */
+
+.earn-section-meta {
   font-family: var(--font-mono);
   font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: rgba(255,255,255,0.40);
-  margin: 0 0 8px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--ink-4);
 }
 
-.earn-page-title {
-  font-family: var(--font-display);
-  font-size: clamp(40px, 5vw, 72px);
-  font-weight: 800;
-  color: var(--snow);
-  letter-spacing: -0.025em;
-  line-height: 1;
-  margin: 0 0 8px;
-}
 
-.earn-page-subtitle {
-  font-family: var(--font-mono);
-  font-size: 14px;
-  color: rgba(255,255,255,0.40);
-  margin: 0;
-}
+/* ────────────────────────────────────────────────────────────
+   1. HERO KPI PANEL — lifetime earnings, ceremonial gold delta
+   ──────────────────────────────────────────────────────────── */
 
-/* ── Section wrapper ─────────────────────────────────────── */
-
-.earn-section {
-  padding: 24px 64px 0;
-}
-
-/* ── Hero KPI card ───────────────────────────────────────── */
-
-.earn-hero-card {
+.earn-hero {
   background: var(--char);
-  border-radius: var(--r-lg);
+  border-radius: 16px;
   padding: 40px;
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 24px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: end;
+  gap: 32px;
+  position: relative;
+  overflow: hidden;
 }
+
+.earn-hero::before {
+  /* subtle radial highlight upper-left — matches iOS 26 glass spec aesthetics */
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 20% 0%, rgba(255, 255, 255, 0.08) 0%, transparent 55%);
+  pointer-events: none;
+}
+
+.earn-hero > * { position: relative; z-index: 1; }
 
 .earn-hero-eyebrow {
   font-family: var(--font-mono);
@@ -78,7 +78,7 @@
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: rgba(255, 255, 255, 0.55);
-  margin: 0 0 8px;
+  margin: 0 0 16px;
 }
 
 .earn-hero-amount {
@@ -89,39 +89,67 @@
   letter-spacing: -0.04em;
   line-height: 1;
   margin: 0 0 16px;
+  font-variant-numeric: tabular-nums;
+}
+
+.earn-hero-amount__currency {
+  font-size: 0.45em;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.55);
+  margin-right: 0.12em;
+  vertical-align: 0.25em;
+}
+
+.earn-hero-amount__unit {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.45);
+  letter-spacing: 0.08em;
+  margin-left: 12px;
+  vertical-align: middle;
 }
 
 .earn-hero-delta {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   font-family: var(--font-mono);
   font-size: 12px;
-  font-weight: 600;
-  padding: 4px 12px;
-  border-radius: var(--r-sm);
-  letter-spacing: 0.02em;
+  font-weight: 700;
+  padding: 6px 12px;
+  border-radius: 8px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
 }
 
 .earn-hero-delta--positive {
-  background: rgba(255, 255, 255, 0.12);
-  color: var(--champagne);
+  background: rgba(191, 161, 112, 0.18);   /* Champagne tint */
+  color: var(--champagne-light);
 }
 
 .earn-hero-delta--negative {
   background: rgba(193, 18, 31, 0.20);
-  color: var(--brand-red);
+  color: #f6a4a9;
+}
+
+.earn-hero-delta-arrow {
+  font-size: 10px;
+  line-height: 1;
 }
 
 .earn-hero-substats {
-  display: flex;
-  gap: 16px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
   flex-shrink: 0;
-  flex-wrap: wrap;
 }
 
 .earn-hero-substat {
-  background: rgba(255, 255, 255, 0.10);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 0.5px solid rgba(255, 255, 255, 0.10);
+  border-radius: 8px;
   padding: 16px 24px;
   min-width: 120px;
 }
@@ -139,15 +167,115 @@
 
 .earn-hero-substat-value {
   font-family: var(--font-display);
-  font-size: 24px;
+  font-size: clamp(24px, 2.4vw, 32px);
   font-weight: 800;
   color: var(--snow);
   letter-spacing: -0.02em;
   line-height: 1;
   margin: 0;
+  font-variant-numeric: tabular-nums;
 }
 
-/* ── Balance cards ───────────────────────────────────────── */
+
+/* ────────────────────────────────────────────────────────────
+   2. CASHOUT FOCAL ROW — ≤1 floating liquid-glass tile
+   "Available to cash out" reads as the page's hero action.
+   ──────────────────────────────────────────────────────────── */
+
+.earn-cashout-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 24px;
+  padding: 32px;
+  border-radius: 16px;
+  /* iOS 26 Liquid Glass — Light Variant (Design.md § 8.9.1) */
+  background:
+    radial-gradient(ellipse at 25% 0%, rgba(255, 255, 255, 0.55) 0%, rgba(255, 255, 255, 0) 55%),
+    radial-gradient(ellipse at 90% 100%, rgba(255, 255, 255, 0.18) 0%, rgba(255, 255, 255, 0) 60%),
+    rgba(255, 255, 255, 0.22);
+  -webkit-backdrop-filter: blur(32px) saturate(180%);
+  backdrop-filter: blur(32px) saturate(180%);
+  border: 0.5px solid rgba(255, 255, 255, 0.40);
+  box-shadow:
+    0 8px 24px rgba(10, 10, 10, 0.08),
+    0 2px 6px rgba(10, 10, 10, 0.05),
+    inset 0 1px 0 rgba(255, 255, 255, 0.50),
+    inset 0 -1px 0 rgba(10, 10, 10, 0.05);
+}
+
+.earn-cashout-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+  margin: 0 0 8px;
+}
+
+.earn-cashout-eyebrow-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--accent-blue);
+  box-shadow: 0 0 0 3px rgba(0, 133, 255, 0.16);
+}
+
+.earn-cashout-amount {
+  font-family: var(--font-display);
+  font-size: clamp(40px, 5vw, 72px);
+  font-weight: 900;
+  color: var(--ink);
+  letter-spacing: -0.035em;
+  line-height: 1;
+  margin: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+.earn-cashout-amount__currency {
+  font-size: 0.45em;
+  font-weight: 700;
+  color: var(--ink-4);
+  margin-right: 0.12em;
+  vertical-align: 0.25em;
+}
+
+.earn-cashout-amount__unit {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink-4);
+  letter-spacing: 0.08em;
+  margin-left: 12px;
+  vertical-align: middle;
+}
+
+.earn-cashout-meta {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--ink-4);
+  margin: 8px 0 0;
+}
+
+.earn-cashout-cta {
+  white-space: nowrap;
+}
+
+.earn-cashout-hint {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--ink-4);
+  margin: 12px 0 0;
+}
+
+
+/* ────────────────────────────────────────────────────────────
+   3. BALANCE BREAKDOWN — 4 role-locked status tiles
+   ──────────────────────────────────────────────────────────── */
 
 .earn-balance-grid {
   display: grid;
@@ -157,37 +285,65 @@
 
 .earn-balance-card {
   background: var(--snow);
-  border: 1px solid var(--mist);
   border-radius: 10px;
   padding: 24px;
   position: relative;
+  transition:
+    transform 200ms cubic-bezier(0.34, 1.56, 0.64, 1),
+    box-shadow 200ms ease;
+}
+
+.earn-balance-card:hover {
+  transform: translate(2px, 2px);
+  box-shadow: 0 4px 12px rgba(10, 10, 10, 0.06);
+}
+
+.earn-balance-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
 }
 
 .earn-balance-dot {
-  position: absolute;
-  top: 16px;
-  right: 16px;
   width: 8px;
   height: 8px;
   border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.earn-balance-dot--blue       { background: var(--accent-blue); }
+.earn-balance-dot--ink        { background: var(--ink); }
+.earn-balance-dot--champagne  { background: var(--champagne); }
+.earn-balance-dot--paid       { background: var(--ink-5); }
+
+.earn-balance-label {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin: 0;
 }
 
 .earn-balance-amount {
   font-family: var(--font-display);
-  font-size: 28px;
+  font-size: clamp(32px, 3.5vw, 40px);
   font-weight: 900;
   color: var(--ink);
   letter-spacing: -0.035em;
   line-height: 1;
-  margin: 0 0 6px;
+  margin: 0 0 8px;
+  font-variant-numeric: tabular-nums;
 }
 
-.earn-balance-label {
-  font-family: var(--font-mono);
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--ink);
-  margin: 0 0 2px;
+.earn-balance-amount__currency {
+  font-size: 0.5em;
+  font-weight: 700;
+  color: var(--ink-4);
+  margin-right: 0.1em;
+  vertical-align: 0.2em;
 }
 
 .earn-balance-sublabel {
@@ -195,49 +351,44 @@
   font-size: 12px;
   color: var(--ink-4);
   margin: 0;
+  line-height: 1.4;
 }
 
-/* ── Status chips ────────────────────────────────────────── */
 
-.earn-status-chip {
-  display: inline-block;
-  font-family: var(--font-mono);
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  padding: 4px 8px;
-  border-radius: var(--r-sm);
-}
-
-/* ── Campaign milestone cards ────────────────────────────── */
+/* ────────────────────────────────────────────────────────────
+   4. ACTIVE CAMPAIGN MILESTONE CARDS
+   ──────────────────────────────────────────────────────────── */
 
 .earn-campaign-list {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 16px;
 }
 
 .earn-campaign-card {
   background: var(--snow);
-  border: 1px solid var(--mist);
   border-radius: 10px;
   padding: 24px;
-  transition: transform 200ms ease, box-shadow 200ms ease;
+  transition:
+    transform 200ms cubic-bezier(0.34, 1.56, 0.64, 1),
+    box-shadow 200ms ease;
 }
 
 .earn-campaign-card:hover {
-  transform: translate(1px, 1px);
+  transform: translate(2px, 2px);
+  box-shadow: 0 4px 12px rgba(10, 10, 10, 0.06);
 }
 
-.earn-campaign-card:active {
-  transform: translate(2px, 2px) scale(0.98);
+.earn-campaign-card:focus-within {
+  outline: 2px solid var(--ink);
+  outline-offset: 2px;
 }
 
 .earn-campaign-header {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
+  gap: 16px;
   margin-bottom: 24px;
 }
 
@@ -267,15 +418,82 @@
   font-size: 24px;
   font-weight: 900;
   letter-spacing: -0.025em;
-  color: var(--brand-red);
+  color: var(--ink);            /* was brand-red — Brand Red reserved for cashout CTA */
   flex-shrink: 0;
+  font-variant-numeric: tabular-nums;
 }
 
-/* ── Upcoming payout bar ─────────────────────────────────── */
+.earn-milestones {
+  display: flex;
+  align-items: flex-start;
+}
+
+.earn-milestone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+  gap: 8px;
+}
+
+.earn-milestone-track {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.earn-milestone-dot {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  background: var(--surface-3);
+  border: 2px solid var(--mist);
+  transition: background 200ms ease, border-color 200ms ease;
+}
+
+.earn-milestone-dot--done {
+  background: var(--ink);
+  border-color: var(--ink);
+}
+
+.earn-milestone-line {
+  flex: 1;
+  height: 2px;
+  background: var(--mist);
+  transition: background 200ms ease;
+}
+
+.earn-milestone-line--done {
+  background: var(--ink);
+}
+
+.earn-milestone-label {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  text-align: center;
+  line-height: 1.3;
+  white-space: nowrap;
+  color: var(--ink-4);
+}
+
+.earn-milestone-label--done {
+  color: var(--ink);
+}
+
+
+/* ────────────────────────────────────────────────────────────
+   5. UPCOMING PAYOUT
+   ──────────────────────────────────────────────────────────── */
 
 .earn-upcoming-card {
   background: var(--snow);
-  border: 1px solid var(--mist);
   border-radius: 10px;
   padding: 24px;
   display: flex;
@@ -287,12 +505,21 @@
 
 .earn-upcoming-amount {
   font-family: var(--font-display);
-  font-size: 28px;
+  font-size: 32px;
   font-weight: 900;
   color: var(--ink);
   letter-spacing: -0.035em;
-  margin: 0 0 4px;
+  margin: 0 0 8px;
   line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.earn-upcoming-amount__currency {
+  font-size: 0.5em;
+  font-weight: 700;
+  color: var(--ink-4);
+  margin-right: 0.1em;
+  vertical-align: 0.2em;
 }
 
 .earn-upcoming-meta {
@@ -302,43 +529,55 @@
   margin: 0;
 }
 
+.earn-upcoming-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
 .earn-stripe-badge {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
   font-family: var(--font-mono);
   font-size: 12px;
   font-weight: 600;
   color: var(--ink-3);
   background: var(--surface-3);
   border: 1px solid var(--hairline);
-  padding: 6px 12px;
-  border-radius: var(--r-sm);
+  padding: 8px 16px;
+  border-radius: 8px;
 }
 
 .earn-stripe-dot {
-  width: 6px;
-  height: 6px;
+  width: 8px;
+  height: 8px;
   border-radius: 50%;
   background: var(--accent-blue);
+  box-shadow: 0 0 0 3px rgba(0, 133, 255, 0.16);
   flex-shrink: 0;
 }
 
-/* ── Transaction table ───────────────────────────────────── */
+
+/* ────────────────────────────────────────────────────────────
+   6. TRANSACTION HISTORY TABLE
+   ──────────────────────────────────────────────────────────── */
 
 .earn-txn-table {
   background: var(--snow);
-  border: 1px solid var(--mist);
+  border: 1px solid var(--hairline);
   border-radius: 10px;
   overflow: hidden;
 }
 
 .earn-txn-head {
   display: grid;
-  grid-template-columns: 120px 2fr 104px 104px 104px;
-  padding: 12px 24px;
+  grid-template-columns: 120px minmax(0, 2fr) 112px 112px 96px;
+  padding: 16px 24px;
   border-bottom: 1px solid var(--hairline);
   background: var(--surface-2);
+  align-items: center;
 }
 
 .earn-txn-head-cell {
@@ -350,12 +589,14 @@
   text-transform: uppercase;
 }
 
+.earn-txn-head-cell--right { text-align: right; }
+
 .earn-txn-row {
   display: grid;
-  grid-template-columns: 120px 2fr 104px 104px 104px;
+  grid-template-columns: 120px minmax(0, 2fr) 112px 112px 96px;
   padding: 0 24px;
   align-items: center;
-  height: 64px;
+  min-height: 64px;
   border-bottom: 1px solid var(--hairline);
   transition: background 150ms ease;
 }
@@ -364,7 +605,8 @@
   border-bottom: none;
 }
 
-.earn-txn-row:hover {
+.earn-txn-row:hover,
+.earn-txn-row:focus-within {
   background: var(--surface-2);
 }
 
@@ -374,83 +616,118 @@
   color: var(--ink-4);
 }
 
+.earn-txn-campaign-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
 .earn-txn-campaign {
   font-family: var(--font-mono);
   font-size: 14px;
   font-weight: 600;
   color: var(--ink);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .earn-txn-merchant {
   font-family: var(--font-mono);
   font-size: 12px;
   color: var(--ink-4);
-  margin-top: 2px;
 }
 
-.earn-txn-amount-paid {
+.earn-txn-amount {
   font-family: var(--font-display);
   font-size: 16px;
-  font-weight: 700;
-  color: var(--ink);
+  font-weight: 800;
   letter-spacing: -0.02em;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
 }
 
-.earn-txn-amount-pending {
-  font-family: var(--font-display);
-  font-size: 16px;
-  font-weight: 700;
+.earn-txn-amount--paid    { color: var(--ink); }
+.earn-txn-amount--pending { color: var(--ink-4); }
+
+.earn-txn-amount__currency {
+  font-size: 0.75em;
   color: var(--ink-4);
-  letter-spacing: -0.02em;
+  margin-right: 0.1em;
 }
 
 .earn-txn-ref {
   font-family: var(--font-mono);
   font-size: 12px;
   color: var(--ink-4);
+  text-align: right;
 }
 
-/* ── Cashout CTA bar ─────────────────────────────────────── */
+.earn-txn-empty {
+  padding: 48px 24px;
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: 14px;
+  color: var(--ink-4);
+}
 
-.earn-cashout-bar {
-  background: var(--ink);
-  border-radius: 10px;
-  padding: 32px;
-  display: flex;
+
+/* ────────────────────────────────────────────────────────────
+   STATUS CHIP — semantic, role-locked
+   ──────────────────────────────────────────────────────────── */
+
+.earn-status-chip {
+  display: inline-flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 24px;
-  flex-wrap: wrap;
-}
-
-.earn-cashout-eyebrow {
+  gap: 6px;
   font-family: var(--font-mono);
   font-size: 12px;
   font-weight: 700;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.50);
-  margin: 0 0 8px;
+  padding: 4px 8px;
+  border-radius: 8px;
 }
 
-.earn-cashout-amount {
-  font-family: var(--font-display);
-  font-size: clamp(32px, 4vw, 48px);
-  font-weight: 900;
-  color: var(--snow);
-  letter-spacing: -0.035em;
-  line-height: 1;
-  margin: 0;
+.earn-status-chip__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
 }
 
-.earn-cashout-hint {
-  font-family: var(--font-mono);
-  font-size: 12px;
-  color: rgba(255, 255, 255, 0.45);
-  margin-top: 12px;
+/* pending — campaign in flight */
+.earn-status-chip--pending {
+  background: rgba(0, 133, 255, 0.10);
+  color: var(--accent-blue-deep);
 }
+.earn-status-chip--pending .earn-status-chip__dot { background: var(--accent-blue); }
 
-/* ── Modal ───────────────────────────────────────────────── */
+/* cleared — ready to cash out */
+.earn-status-chip--cleared {
+  background: var(--surface-3);
+  color: var(--ink);
+}
+.earn-status-chip--cleared .earn-status-chip__dot { background: var(--ink); }
+
+/* processing — transfer in flight, ceremonial Champagne */
+.earn-status-chip--processing {
+  background: rgba(191, 161, 112, 0.18);
+  color: var(--champagne-deep);
+}
+.earn-status-chip--processing .earn-status-chip__dot { background: var(--champagne); }
+
+/* paid — settled */
+.earn-status-chip--paid {
+  background: var(--surface-2);
+  color: var(--ink-4);
+}
+.earn-status-chip--paid .earn-status-chip__dot { background: var(--ink-5); }
+
+
+/* ────────────────────────────────────────────────────────────
+   CASHOUT MODAL
+   ──────────────────────────────────────────────────────────── */
 
 .earn-modal-backdrop {
   position: fixed;
@@ -461,26 +738,40 @@
   justify-content: center;
   z-index: 200;
   padding: 24px;
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
 }
 
 .earn-modal {
   background: var(--snow);
-  border: 1px solid var(--hairline);
-  border-radius: var(--r-lg);
-  padding: 48px;
-  width: 440px;
+  border-radius: 16px;
+  padding: 40px;
+  width: 480px;
   max-width: 100%;
-  box-shadow: var(--shadow-3);
+  box-shadow:
+    0 24px 64px rgba(10, 10, 10, 0.20),
+    0 8px 16px rgba(10, 10, 10, 0.08);
+}
+
+.earn-modal-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+  margin: 0 0 8px;
 }
 
 .earn-modal-title {
   font-family: var(--font-display);
-  font-size: 28px;
+  font-size: 32px;
   font-weight: 800;
   color: var(--ink);
-  letter-spacing: -0.02em;
-  line-height: 1.15;
+  letter-spacing: -0.025em;
+  line-height: 1.1;
   margin: 0 0 8px;
+  font-variant-numeric: tabular-nums;
 }
 
 .earn-modal-body {
@@ -498,7 +789,14 @@
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--ink-4);
-  margin: 0 0 12px;
+  margin: 24px 0 12px;
+}
+
+.earn-method-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 24px;
 }
 
 .earn-method-btn {
@@ -506,11 +804,30 @@
   justify-content: space-between;
   align-items: center;
   padding: 16px;
-  border-radius: var(--r-sm);
+  border-radius: 8px;
   cursor: pointer;
-  transition: border-color 150ms ease, background 150ms ease;
+  transition:
+    border-color 150ms ease,
+    background 150ms ease,
+    transform 200ms cubic-bezier(0.34, 1.56, 0.64, 1);
   width: 100%;
   text-align: left;
+  border: 1px solid var(--hairline);
+  background: transparent;
+}
+
+.earn-method-btn:hover {
+  transform: translate(1px, 1px);
+}
+
+.earn-method-btn:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 2px;
+}
+
+.earn-method-btn[aria-pressed="true"] {
+  border-color: var(--ink);
+  background: var(--surface-3);
 }
 
 .earn-method-name {
@@ -529,28 +846,63 @@
 .earn-modal-actions {
   display: flex;
   gap: 12px;
-  margin-top: 0;
+  margin-top: 24px;
 }
 
-/* ── Responsive ──────────────────────────────────────────── */
+
+/* ────────────────────────────────────────────────────────────
+   ACCESSIBILITY — reduced-motion + reduced-transparency
+   ──────────────────────────────────────────────────────────── */
+
+@media (prefers-reduced-transparency: reduce) {
+  .earn-cashout-row {
+    background: var(--snow);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+  .earn-modal-backdrop {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .earn-balance-card,
+  .earn-campaign-card,
+  .earn-method-btn,
+  .earn-milestone-dot,
+  .earn-milestone-line {
+    transition: none;
+  }
+}
+
+
+/* ────────────────────────────────────────────────────────────
+   RESPONSIVE — naturally adaptive (Design.md mobile/iPad rule)
+   ──────────────────────────────────────────────────────────── */
 
 @media (max-width: 1024px) {
-  .earn-page-header,
-  .earn-section {
-    padding-left: 48px;
-    padding-right: 48px;
-  }
-
   .earn-balance-grid {
     grid-template-columns: repeat(2, 1fr);
+  }
+
+  .earn-hero {
+    grid-template-columns: 1fr;
+  }
+
+  .earn-hero-substats {
+    grid-template-columns: repeat(3, 1fr);
   }
 }
 
 @media (max-width: 768px) {
-  .earn-page-header,
-  .earn-section {
-    padding-left: 24px;
-    padding-right: 24px;
+  .earn-hero {
+    padding: 32px 24px;
+  }
+
+  .earn-cashout-row {
+    grid-template-columns: 1fr;
+    padding: 24px;
   }
 
   .earn-balance-grid {
@@ -558,18 +910,20 @@
     gap: 12px;
   }
 
+  .earn-hero-substats {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
   .earn-txn-head,
   .earn-txn-row {
-    grid-template-columns: 104px 2fr 96px 96px;
+    grid-template-columns: 96px minmax(0, 2fr) 96px 96px;
+    padding: 12px 16px;
   }
 
   .earn-txn-head-cell:last-child,
   .earn-txn-ref {
     display: none;
-  }
-
-  .earn-hero-card {
-    padding: 32px 24px;
   }
 
   .earn-modal {
@@ -580,7 +934,7 @@
 @media (max-width: 560px) {
   .earn-txn-head,
   .earn-txn-row {
-    grid-template-columns: 96px 1fr 80px;
+    grid-template-columns: 88px 1fr 88px;
   }
 
   .earn-txn-head-cell:nth-child(3),
@@ -590,5 +944,10 @@
 
   .earn-balance-grid {
     grid-template-columns: 1fr;
+  }
+
+  .earn-milestone-label {
+    font-size: 10px;
+    letter-spacing: 0.02em;
   }
 }

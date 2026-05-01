@@ -33,14 +33,15 @@ const inputStyle: React.CSSProperties = {
   letterSpacing: "-0.125em",
   padding: "12px 16px",
   height: 48,
-  border: "1px solid var(--hairline-2)",
+  border: "1px solid var(--mist)",
   borderRadius: "var(--r-sm)",
   background: "var(--surface)",
   width: "100%",
   boxSizing: "border-box",
   color: "var(--ink)",
   outline: "none",
-  transition: "border-color 180ms ease, box-shadow 180ms ease",
+  transition:
+    "border-color 180ms var(--ease-spring), box-shadow 180ms var(--ease-spring)",
 };
 
 const labelStyle: React.CSSProperties = {
@@ -347,14 +348,15 @@ export default function CreatorLoginPage() {
               Your campaigns are waiting.
             </p>
 
-            {/* Form card */}
+            {/* Form card — § 4 standard 10px radius, surface-2 fill */}
             <div
               id="login-form"
+              className="creator-login-card"
               style={{
                 background: "var(--surface-2)",
-                border: "1px solid var(--hairline)",
-                borderRadius: "var(--r-2xl)",
-                padding: "32px",
+                border: "1px solid var(--mist)",
+                borderRadius: "var(--r-md)",
+                padding: 32,
                 boxShadow: "var(--shadow-1)",
               }}
             >
@@ -362,6 +364,7 @@ export default function CreatorLoginPage() {
               {formError && (
                 <div
                   role="alert"
+                  aria-live="polite"
                   style={{
                     background: "var(--brand-red-tint)",
                     border: "1px solid var(--brand-red)",
@@ -538,21 +541,11 @@ export default function CreatorLoginPage() {
                   )}
                 </div>
 
-                {/* Forgot password link */}
+                {/* Forgot password — Ghost button per § 9 */}
                 <div style={{ textAlign: "right", marginBottom: 24 }}>
                   <Link
                     href="/creator/reset-password"
-                    style={{
-                      fontFamily: "var(--font-mono)",
-                      fontSize: 12,
-                      fontWeight: 700,
-                      letterSpacing: "0.06em",
-                      textTransform: "uppercase",
-                      color: "var(--ink-4)",
-                      textDecoration: "none",
-                      borderBottom: "1px solid var(--hairline)",
-                      paddingBottom: 1,
-                    }}
+                    className="creator-login-forgot click-shift"
                   >
                     Forgot password?
                   </Link>
@@ -597,6 +590,43 @@ export default function CreatorLoginPage() {
                     "Sign In"
                   )}
                 </button>
+
+                {/* Terms / Privacy — appears under primary CTA */}
+                <p
+                  style={{
+                    fontFamily: "var(--font-mono)",
+                    fontSize: 12,
+                    lineHeight: 1.5,
+                    letterSpacing: "0.02em",
+                    color: "var(--ink-4)",
+                    textAlign: "center",
+                    margin: "16px 0 0",
+                  }}
+                >
+                  By signing in, you agree to our{" "}
+                  <Link
+                    href="/legal/terms"
+                    style={{
+                      color: "var(--ink-3)",
+                      textDecoration: "underline",
+                      textUnderlineOffset: 2,
+                    }}
+                  >
+                    Terms
+                  </Link>{" "}
+                  and{" "}
+                  <Link
+                    href="/legal/privacy"
+                    style={{
+                      color: "var(--ink-3)",
+                      textDecoration: "underline",
+                      textUnderlineOffset: 2,
+                    }}
+                  >
+                    Privacy Policy
+                  </Link>
+                  .
+                </p>
               </form>
             </div>
 

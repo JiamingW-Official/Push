@@ -113,11 +113,12 @@ function countdown(target: string): string {
 const badgeBase: React.CSSProperties = {
   display: "inline-block",
   padding: "2px 8px",
-  borderRadius: 4,
-  fontSize: 11,
-  fontWeight: 700,
+  borderRadius: 6,
+  fontSize: 12,
+  fontWeight: 600,
   letterSpacing: "0.06em",
-  fontFamily: "var(--font-body)",
+  fontFamily: "var(--font-mono, var(--font-body))",
+  textTransform: "uppercase",
 };
 
 // ── Sub-components ────────────────────────────────────────────────────────────
@@ -130,15 +131,28 @@ function TypeBadge({ type }: { type: TransactionType }) {
     platform_fee: "Fee",
     adjustment: "Adj",
   };
+  // §3 — color-coded type badges per v11 spec
   const colors: Record<TransactionType, { bg: string; color: string }> = {
     subscription: {
-      bg: "var(--accent-blue-tint)",
+      bg: "rgba(34,197,94,0.1)",
+      color: "#22c55e",
+    },
+    payout: {
+      bg: "var(--accent-blue-tint, rgba(0,133,255,0.1))",
       color: "var(--accent-blue)",
     },
-    payout: { bg: "var(--brand-red-tint)", color: "var(--brand-red)" },
-    refund: { bg: "var(--brand-red-tint)", color: "var(--brand-red)" },
-    platform_fee: { bg: "var(--surface-3)", color: "var(--ink-3)" },
-    adjustment: { bg: "var(--champagne-tint)", color: "var(--champagne-deep)" },
+    refund: {
+      bg: "rgba(193,18,31,0.08)",
+      color: "var(--brand-red)",
+    },
+    platform_fee: {
+      bg: "var(--champagne-tint, rgba(191,161,112,0.12))",
+      color: "var(--champagne-deep, #8a6a2e)",
+    },
+    adjustment: {
+      bg: "var(--champagne-tint, rgba(191,161,112,0.12))",
+      color: "var(--champagne-deep, #8a6a2e)",
+    },
   };
   const c = colors[type];
   return (
@@ -715,8 +729,11 @@ export default function FinancePage() {
   return (
     <div className="adm-content" style={{ minHeight: "100vh" }}>
       {/* ── Page header ── */}
+      {/* §10 — Page eyebrow: (FINANCE·LEDGER) mono 12px above H1 */}
       <div className="adm-page-header">
-        <div className="adm-page-eyebrow">ADMIN · PUSH INTERNAL · FINANCE</div>
+        <div className="adm-page-eyebrow fin-eyebrow-override">
+          (FINANCE·LEDGER)
+        </div>
         <h1 className="adm-page-title">Finance</h1>
       </div>
 
@@ -1138,7 +1155,7 @@ export default function FinancePage() {
         <div
           style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}
         >
-          {/* Reconciliation */}
+          {/* §5 — Reconciliation — status colors via CSS classes */}
           <div style={cardStyle}>
             <div
               style={{
@@ -1151,56 +1168,66 @@ export default function FinancePage() {
             >
               Reconciliation
             </div>
+            {/* Status row */}
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                padding: "8px 0",
+                borderBottom: "1px solid var(--hairline)",
+              }}
+            >
+              <span
+                style={{
+                  fontFamily: "var(--font-mono, var(--font-body))",
+                  fontSize: 12,
+                  color: "var(--ink-3)",
+                }}
+              >
+                Status
+              </span>
+              <span
+                className={`fin-recon-status--${recon?.status ?? "ok"}`}
+                style={{
+                  ...badgeBase,
+                  background:
+                    recon?.status === "ok"
+                      ? "rgba(34,197,94,0.1)"
+                      : recon?.status === "minor_discrepancy"
+                        ? "var(--champagne-tint, rgba(191,161,112,0.12))"
+                        : "rgba(193,18,31,0.08)",
+                }}
+              >
+                {recon?.status === "ok"
+                  ? "Balanced"
+                  : recon?.status === "minor_discrepancy"
+                    ? "Minor discrepancy"
+                    : "Major discrepancy"}
+              </span>
+            </div>
             {[
-              {
-                label: "Status",
-                value: null,
-                badge:
-                  recon?.status === "ok"
-                    ? "Balanced"
-                    : recon?.status === "minor_discrepancy"
-                      ? "Minor discrepancy"
-                      : "Major discrepancy",
-                badgeColor:
-                  recon?.status === "ok"
-                    ? "var(--accent-blue)"
-                    : recon?.status === "minor_discrepancy"
-                      ? "var(--champagne-deep)"
-                      : "var(--brand-red)",
-                badgeBg:
-                  recon?.status === "ok"
-                    ? "var(--accent-blue-tint)"
-                    : recon?.status === "minor_discrepancy"
-                      ? "var(--champagne-tint)"
-                      : "var(--brand-red-tint)",
-              },
               {
                 label: "Expected balance",
                 value: recon ? fmt(recon.expectedBalance, 2) : "—",
-                badge: null,
-                badgeColor: "",
-                badgeBg: "",
+                valueColor: "var(--ink)",
               },
               {
                 label: "Actual bank balance",
                 value: recon ? fmt(recon.actualBankBalance, 2) : "—",
-                badge: null,
-                badgeColor: "",
-                badgeBg: "",
+                valueColor: "var(--ink)",
               },
               {
                 label: "Discrepancy",
                 value: recon
                   ? `${recon.discrepancy < 0 ? "−" : "+"}${fmt(Math.abs(recon.discrepancy), 2)}`
                   : "—",
-                badge: null,
-                badgeColor:
+                valueColor:
                   recon && recon.discrepancy < 0
                     ? "var(--brand-red)"
                     : "var(--accent-blue)",
-                badgeBg: "",
               },
-            ].map(({ label, value, badge, badgeColor, badgeBg }) => (
+            ].map(({ label, value, valueColor }) => (
               <div
                 key={label}
                 style={{
@@ -1209,38 +1236,34 @@ export default function FinancePage() {
                   alignItems: "center",
                   padding: "8px 0",
                   borderBottom: "1px solid var(--hairline)",
-                  fontSize: 13,
-                  fontFamily: "var(--font-body)",
                 }}
               >
-                <span style={{ color: "var(--ink-5)" }}>{label}</span>
-                {badge ? (
-                  <span
-                    style={{
-                      ...badgeBase,
-                      background: badgeBg,
-                      color: badgeColor,
-                    }}
-                  >
-                    {badge}
-                  </span>
-                ) : (
-                  <span
-                    style={{
-                      fontWeight: 700,
-                      color: badgeColor || "var(--ink)",
-                    }}
-                  >
-                    {value}
-                  </span>
-                )}
+                <span
+                  style={{
+                    fontFamily: "var(--font-mono, var(--font-body))",
+                    fontSize: 12,
+                    color: "var(--ink-3)",
+                  }}
+                >
+                  {label}
+                </span>
+                <span
+                  style={{
+                    fontFamily: "var(--font-display)",
+                    fontSize: 16,
+                    fontWeight: 700,
+                    color: valueColor,
+                  }}
+                >
+                  {value}
+                </span>
               </div>
             ))}
             <div
               style={{
-                fontSize: 11,
-                color: "var(--ink-5)",
-                fontFamily: "var(--font-body)",
+                fontFamily: "var(--font-mono, var(--font-body))",
+                fontSize: 12,
+                color: "var(--ink-3)",
                 marginTop: 12,
               }}
             >
@@ -1249,36 +1272,29 @@ export default function FinancePage() {
             </div>
           </div>
 
-          {/* Stripe Balance */}
-          <div style={cardStyle}>
-            <div
-              style={{
-                fontFamily: "var(--font-display)",
-                fontSize: 16,
-                fontWeight: 700,
-                color: "var(--ink)",
-                marginBottom: 16,
-              }}
-            >
-              Stripe Balance
-            </div>
+          {/* §4 — Stripe Balance — liquid-glass card */}
+          <div className="fin-stripe-panel">
+            <div className="fin-stripe-panel__title">Stripe Balance</div>
             {[
               {
                 label: "Available",
                 value: stripe ? fmt(stripe.available, 2) : "—",
-                color: "var(--accent-blue)",
+                valClass:
+                  "fin-stripe-panel__val fin-stripe-panel__val--available",
               },
               {
                 label: "Pending",
                 value: stripe ? fmt(stripe.pending, 2) : "—",
-                color: "var(--champagne-deep)",
+                valClass:
+                  "fin-stripe-panel__val fin-stripe-panel__val--pending",
               },
               {
                 label: "Reserved",
                 value: stripe ? fmt(stripe.reserved, 2) : "—",
-                color: "var(--ink)",
+                valClass:
+                  "fin-stripe-panel__val fin-stripe-panel__val--reserved",
               },
-            ].map(({ label, value, color }) => (
+            ].map(({ label, value, valClass }) => (
               <div
                 key={label}
                 style={{
@@ -1286,13 +1302,11 @@ export default function FinancePage() {
                   justifyContent: "space-between",
                   alignItems: "center",
                   padding: "8px 0",
-                  borderBottom: "1px solid var(--hairline)",
-                  fontSize: 13,
-                  fontFamily: "var(--font-body)",
+                  borderBottom: "1px solid rgba(255,255,255,0.4)",
                 }}
               >
-                <span style={{ color: "var(--ink-5)" }}>{label}</span>
-                <span style={{ fontWeight: 700, color }}>{value}</span>
+                <span className="fin-stripe-panel__key">{label}</span>
+                <span className={valClass}>{value}</span>
               </div>
             ))}
             <div
@@ -1301,29 +1315,20 @@ export default function FinancePage() {
                 justifyContent: "space-between",
                 alignItems: "center",
                 padding: "8px 0",
-                fontSize: 13,
-                fontFamily: "var(--font-body)",
               }}
             >
-              <span style={{ color: "var(--ink-5)" }}>Currency</span>
+              <span className="fin-stripe-panel__key">Currency</span>
               <span
                 style={{
                   ...badgeBase,
-                  background: "var(--accent-blue-tint)",
+                  background: "var(--accent-blue-tint, rgba(0,133,255,0.1))",
                   color: "var(--accent-blue)",
                 }}
               >
                 {stripe?.currency.toUpperCase() ?? "USD"}
               </span>
             </div>
-            <div
-              style={{
-                fontSize: 11,
-                color: "var(--ink-5)",
-                fontFamily: "var(--font-body)",
-                marginTop: 12,
-              }}
-            >
+            <div className="fin-stripe-panel__note">
               Stub — connect Stripe API key for live balance
             </div>
           </div>

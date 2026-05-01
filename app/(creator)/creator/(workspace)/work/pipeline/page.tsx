@@ -1,13 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import "./pipeline.css";
 
 /* ── Types ─────────────────────────────────────────────────── */
 
 type PipelineStatus = "applied" | "active" | "pending_review" | "completed";
-type ActiveTab = "all" | "active" | "pending" | "completed";
 type SortMode = "deadline" | "earn" | "merchant";
 
 type PipelineCampaign = {
@@ -222,110 +221,152 @@ const MOCK_CAMPAIGNS: PipelineCampaign[] = [
   },
 ];
 
+/* ── Kanban columns ───────────────────────────────────────── */
+
+type Column = {
+  status: PipelineStatus;
+  title: string;
+  caption: string;
+  emptyTitle: string;
+  emptyHint: string;
+};
+
+const COLUMNS: Column[] = [
+  {
+    status: "applied",
+    title: "Outreach",
+    caption: "Awaiting merchant",
+    emptyTitle: "No applications open",
+    emptyHint: "Browse Discover to send your next pitch.",
+  },
+  {
+    status: "active",
+    title: "Shooting",
+    caption: "In production",
+    emptyTitle: "Nothing on set",
+    emptyHint: "Active campaigns land here once approved.",
+  },
+  {
+    status: "pending_review",
+    title: "Submitted",
+    caption: "With merchant",
+    emptyTitle: "No drafts in review",
+    emptyHint: "Submit content from the Shooting column.",
+  },
+  {
+    status: "completed",
+    title: "Closed",
+    caption: "Settled",
+    emptyTitle: "No closed work yet",
+    emptyHint: "Wrapped campaigns archive here.",
+  },
+];
+
 const SORT_OPTIONS: { label: string; value: SortMode }[] = [
   { label: "Deadline", value: "deadline" },
   { label: "Earnings", value: "earn" },
   { label: "Merchant", value: "merchant" },
 ];
 
-const TAB_ORDER: ActiveTab[] = ["all", "active", "pending", "completed"];
-const TAB_LABELS: Record<ActiveTab, string> = {
-  all: "All",
-  active: "Active",
-  pending: "Pending",
-  completed: "Done",
-};
-
-/* ── Status config ────────────────────────────────────────── */
-
 const STATUS_LABEL: Record<PipelineStatus, string> = {
-  active: "ACTIVE",
-  pending_review: "PENDING APPROVAL",
-  applied: "APPLIED",
-  completed: "COMPLETED",
+  applied: "Awaiting reply",
+  active: "In production",
+  pending_review: "In review",
+  completed: "Closed",
 };
 
-/* ── Content type label ───────────────────────────────────── */
+/* ── Helpers ───────────────────────────────────────────────── */
 
-function contentTypeLabel(required: number, submitted: number): string {
-  if (submitted >= required) return "Done";
-  return `${submitted}/${required} posts`;
+function progressPct(c: PipelineCampaign): number {
+  if (c.contentRequired <= 0) return 0;
+  return Math.min(
+    100,
+    Math.round((c.contentSubmitted / c.contentRequired) * 100),
+  );
+}
+
+function timingCopy(c: PipelineCampaign): string {
+  if (c.status === "completed")
+    return `Closed ${c.completedDate ?? c.deadline}`;
+  if (c.daysLeft < 0) return `Past ${c.deadline}`;
+  if (c.daysLeft === 0) return `Due today`;
+  if (c.daysLeft === 1) return `Due tomorrow`;
+  if (c.daysLeft <= 3) return `${c.daysLeft}d left · ${c.deadline}`;
+  return `Due ${c.deadline}`;
+}
+
+function urgencyTone(c: PipelineCampaign): "calm" | "soon" | "now" | "past" {
+  if (c.status === "completed") return "calm";
+  if (c.daysLeft < 0) return "past";
+  if (c.daysLeft <= 1) return "now";
+  if (c.daysLeft <= 3) return "soon";
+  return "calm";
 }
 
 /* ── Expanded Panel ────────────────────────────────────────── */
 
 function ExpandedPanel({ campaign }: { campaign: PipelineCampaign }) {
   return (
-    <div className="pl-expand-panel">
+    <div className="pl-expand">
       {campaign.brief && (
-        <div className="pl-expand-section">
-          <p className="pl-expand-label eyebrow">CAMPAIGN BRIEF</p>
+        <div className="pl-expand-block">
+          <p className="pl-expand-label">Brief</p>
           <p className="pl-expand-text">{campaign.brief}</p>
         </div>
       )}
 
-      <div className="pl-expand-row">
-        <div className="pl-expand-section">
-          <p className="pl-expand-label eyebrow">SUBMISSION STATUS</p>
-          <p className="pl-expand-stat">
-            {campaign.contentSubmitted} of {campaign.contentRequired} posts
-            submitted
-          </p>
-          {campaign.walkinCount !== undefined && (
-            <p className="pl-expand-walkin">
-              {campaign.walkinCount} walk-ins recorded
-            </p>
+      {campaign.attributionNote && (
+        <div className="pl-expand-block">
+          <p className="pl-expand-label">Attribution</p>
+          <p className="pl-expand-text">{campaign.attributionNote}</p>
+        </div>
+      )}
+
+      {campaign.walkinCount !== undefined && (
+        <div className="pl-expand-meta">
+          <span>{campaign.walkinCount} walk-ins logged</span>
+          {campaign.appliedDate && (
+            <span>· Applied {campaign.appliedDate}</span>
           )}
         </div>
+      )}
 
-        {campaign.attributionNote && (
-          <div className="pl-expand-section">
-            <p className="pl-expand-label eyebrow">ATTRIBUTION</p>
-            <p className="pl-expand-text">{campaign.attributionNote}</p>
-          </div>
-        )}
-
-        {campaign.merchantContact && (
-          <div className="pl-expand-section">
-            <p className="pl-expand-label eyebrow">MERCHANT</p>
-            <Link
-              href={campaign.merchantContact}
-              className="pl-expand-contact"
-              onClick={(e) => e.stopPropagation()}
-            >
-              Message {campaign.merchantName} →
-            </Link>
-          </div>
-        )}
-      </div>
-
-      {/* Actions */}
       <div className="pl-expand-actions">
         {campaign.status === "active" && (
           <Link
             href={`/creator/campaigns/${campaign.id}/post`}
-            className="pl-action-btn pl-action-primary btn-primary click-shift"
+            className="pl-action btn-primary click-shift"
             onClick={(e) => e.stopPropagation()}
           >
-            Submit Content ↑
+            Submit Content
           </Link>
         )}
         <Link
           href={`/creator/campaigns/${campaign.id}`}
-          className="pl-action-btn pl-action-ghost btn-ghost click-shift"
+          className="pl-action btn-ghost click-shift"
           onClick={(e) => e.stopPropagation()}
         >
           View Details
         </Link>
-        {campaign.status === "pending_review" && (
-          <span className="pl-action-status">Under review by merchant</span>
-        )}
-        {campaign.status === "applied" && (
-          <button
+        {campaign.merchantContact && (
+          <Link
+            href={campaign.merchantContact}
             className="pl-action-link"
             onClick={(e) => e.stopPropagation()}
           >
-            Withdraw application
+            Message {campaign.merchantName}
+          </Link>
+        )}
+        {campaign.status === "pending_review" && (
+          <span className="pl-action-status">Under merchant review</span>
+        )}
+        {campaign.status === "applied" && (
+          <button
+            type="button"
+            className="pl-action-link"
+            onClick={(e) => e.stopPropagation()}
+          >
+            Withdraw
           </button>
         )}
       </div>
@@ -333,7 +374,7 @@ function ExpandedPanel({ campaign }: { campaign: PipelineCampaign }) {
   );
 }
 
-/* ── Campaign Row Card ─────────────────────────────────────── */
+/* ── Card ─────────────────────────────────────────────────── */
 
 function CampaignCard({
   campaign,
@@ -344,73 +385,73 @@ function CampaignCard({
   expanded: boolean;
   onToggle: () => void;
 }) {
-  const dateInfo =
-    campaign.status === "completed"
-      ? `Completed ${campaign.completedDate ?? ""}`
-      : campaign.daysLeft < 0
-        ? `Overdue since ${campaign.deadline}`
-        : `Due ${campaign.deadline}`;
+  const tone = urgencyTone(campaign);
+  const pct = progressPct(campaign);
 
   return (
-    <div
+    <article
       className={[
         "pl-card",
-        `pl-card-${campaign.status}`,
-        expanded ? "pl-card-expanded" : "",
+        `pl-card--${campaign.status}`,
+        `pl-card--${tone}`,
+        expanded ? "is-expanded" : "",
       ]
         .filter(Boolean)
         .join(" ")}
-      role="article"
-      onClick={onToggle}
+      role="button"
+      tabIndex={0}
       aria-expanded={expanded}
+      onClick={onToggle}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          onToggle();
+        }
+      }}
     >
-      <div className="pl-card-inner">
-        {/* Logo */}
-        <div
+      <header className="pl-card-head">
+        <span
           className="pl-card-logo"
           style={{ background: campaign.logoColor }}
           aria-hidden="true"
         >
           {campaign.logoInitials}
-        </div>
-
-        {/* Info */}
-        <div className="pl-card-info">
+        </span>
+        <div className="pl-card-id">
           <p className="pl-card-merchant">{campaign.merchantName}</p>
-          <p className="pl-card-campaign">{campaign.campaignName}</p>
-          <div className="pl-card-status-row">
-            <span className={`pl-card-status pl-status-${campaign.status}`}>
-              {STATUS_LABEL[campaign.status]}
-            </span>
-            <span className="pl-card-date">· {dateInfo}</span>
-            <span className="pl-card-type">
-              {contentTypeLabel(
-                campaign.contentRequired,
-                campaign.contentSubmitted,
-              )}
-            </span>
-          </div>
+          <p className="pl-card-name">{campaign.campaignName}</p>
         </div>
+        <span className="pl-card-earn">{campaign.earnEstimate}</span>
+      </header>
 
-        {/* Earn */}
-        <div>
-          <div className="pl-card-earn">{campaign.earnEstimate}</div>
-          {campaign.status === "active" && (
-            <span className="pl-card-earn-arrow">Submit →</span>
-          )}
-        </div>
+      <div className="pl-card-meta">
+        <span className="pl-card-timing">{timingCopy(campaign)}</span>
+        <span className="pl-card-dot" aria-hidden="true">
+          ·
+        </span>
+        <span className="pl-card-status">{STATUS_LABEL[campaign.status]}</span>
       </div>
 
-      {/* Expanded panel */}
+      <div className="pl-card-progress" aria-hidden="true">
+        <span className="pl-card-progress-track">
+          <span
+            className="pl-card-progress-fill"
+            style={{ width: `${pct}%` }}
+          />
+        </span>
+        <span className="pl-card-progress-num">
+          {campaign.contentSubmitted}/{campaign.contentRequired}
+        </span>
+      </div>
+
       {expanded && <ExpandedPanel campaign={campaign} />}
-    </div>
+    </article>
   );
 }
 
 /* ── Main Page ─────────────────────────────────────────────── */
 
 export default function WorkPipelinePage() {
-  const [activeTab, setActiveTab] = useState<ActiveTab>("all");
   const [sortMode, setSortMode] = useState<SortMode>("deadline");
   const [expandedId, setExpandedId] = useState<string | null>(null);
 
@@ -418,55 +459,50 @@ export default function WorkPipelinePage() {
     setExpandedId((prev) => (prev === id ? null : id));
   }
 
-  // Tab-based filtering
-  const tabFiltered = MOCK_CAMPAIGNS.filter((c) => {
-    if (activeTab === "active")
-      return c.status === "active" || c.status === "pending_review";
-    if (activeTab === "pending") return c.status === "applied";
-    if (activeTab === "completed") return c.status === "completed";
-    return true;
-  });
+  // Group by column status, then sort within column.
+  const grouped = useMemo(() => {
+    const map: Record<PipelineStatus, PipelineCampaign[]> = {
+      applied: [],
+      active: [],
+      pending_review: [],
+      completed: [],
+    };
+    for (const c of MOCK_CAMPAIGNS) map[c.status].push(c);
 
-  // Sort
-  const sorted = [...tabFiltered].sort((a, b) => {
-    if (sortMode === "earn") return b.earnRaw - a.earnRaw;
-    if (sortMode === "merchant")
-      return a.merchantName.localeCompare(b.merchantName);
-    // deadline: overdue first, then ascending
-    const aOver =
-      a.daysLeft < 0 && a.status !== "completed" ? -1000 + a.daysLeft : 0;
-    const bOver =
-      b.daysLeft < 0 && b.status !== "completed" ? -1000 + b.daysLeft : 0;
-    if (aOver !== bOver) return aOver - bOver;
-    return a.daysLeft - b.daysLeft;
-  });
+    const sortFn = (a: PipelineCampaign, b: PipelineCampaign) => {
+      if (sortMode === "earn") return b.earnRaw - a.earnRaw;
+      if (sortMode === "merchant")
+        return a.merchantName.localeCompare(b.merchantName);
+      const aOver =
+        a.daysLeft < 0 && a.status !== "completed" ? -1000 + a.daysLeft : 0;
+      const bOver =
+        b.daysLeft < 0 && b.status !== "completed" ? -1000 + b.daysLeft : 0;
+      if (aOver !== bOver) return aOver - bOver;
+      return a.daysLeft - b.daysLeft;
+    };
+    for (const k of Object.keys(map) as PipelineStatus[]) map[k].sort(sortFn);
+    return map;
+  }, [sortMode]);
 
-  // Summary stats
+  // Floating tile stats: focus on what needs hands today.
+  const liveCount = grouped.active.length + grouped.pending_review.length;
+  const dueSoon = MOCK_CAMPAIGNS.filter(
+    (c) => c.status !== "completed" && c.daysLeft <= 3 && c.daysLeft >= 0,
+  ).length;
+  const overdue = MOCK_CAMPAIGNS.filter(
+    (c) => c.status !== "completed" && c.daysLeft < 0,
+  ).length;
   const totalPotential = MOCK_CAMPAIGNS.filter(
     (c) => c.status !== "completed",
   ).reduce((sum, c) => sum + c.earnRaw, 0);
-
-  function tabCount(tab: ActiveTab): number {
-    if (tab === "all") return MOCK_CAMPAIGNS.length;
-    if (tab === "active")
-      return MOCK_CAMPAIGNS.filter(
-        (c) => c.status === "active" || c.status === "pending_review",
-      ).length;
-    if (tab === "pending")
-      return MOCK_CAMPAIGNS.filter((c) => c.status === "applied").length;
-    if (tab === "completed")
-      return MOCK_CAMPAIGNS.filter((c) => c.status === "completed").length;
-    return 0;
-  }
 
   return (
     <div className="cw-page pl-page">
       <header className="cw-header">
         <div className="cw-header__left">
           <p className="cw-eyebrow cw-eyebrow--live">
-            PIPELINE ·{" "}
-            {MOCK_CAMPAIGNS.filter((c) => c.status !== "completed").length}{" "}
-            CAMPAIGNS · ${totalPotential.toLocaleString()} POTENTIAL
+            LINKS · PIPELINE · {liveCount} LIVE · $
+            {totalPotential.toLocaleString()} POTENTIAL
           </p>
           <h1 className="cw-title">Pipeline</h1>
         </div>
@@ -474,89 +510,101 @@ export default function WorkPipelinePage() {
           <Link href="/creator/work/today" className="cw-pill">
             Today →
           </Link>
-          <div className="cw-chip-row" role="tablist">
-            {TAB_ORDER.map((tab) => (
+          <div className="pl-sort" role="group" aria-label="Sort cards">
+            <span className="pl-sort-label">Sort</span>
+            {SORT_OPTIONS.map((s) => (
               <button
-                key={tab}
+                key={s.value}
                 type="button"
-                role="tab"
-                className={"cw-chip" + (activeTab === tab ? " is-active" : "")}
-                onClick={() => setActiveTab(tab)}
+                className={
+                  "pl-sort-chip" + (sortMode === s.value ? " is-active" : "")
+                }
+                onClick={() => setSortMode(s.value)}
+                aria-pressed={sortMode === s.value}
               >
-                {TAB_LABELS[tab]}
-                {tabCount(tab) > 0 ? ` · ${tabCount(tab)}` : ""}
+                {s.label}
               </button>
             ))}
           </div>
         </div>
       </header>
 
-      {/* ── Sort toolbar ────────────────────────────────────── */}
-      <div className="pl-toolbar">
-        <span className="pl-sort-label eyebrow">Sort</span>
-        {SORT_OPTIONS.map((s) => (
-          <button
-            key={s.value}
-            className={`pl-chip btn-pill${sortMode === s.value ? " pl-chip-active" : ""}`}
-            onClick={() => setSortMode(s.value)}
-          >
-            {s.label}
-          </button>
-        ))}
-      </div>
+      {/* Floating focus tile — single liquid-glass moment for the page */}
+      <aside className="pl-focus" aria-label="Pipeline focus">
+        <div className="pl-focus-row">
+          <div className="pl-focus-stat">
+            <span className="pl-focus-num">{overdue}</span>
+            <span className="pl-focus-cap">Past due</span>
+          </div>
+          <span className="pl-focus-sep" aria-hidden="true" />
+          <div className="pl-focus-stat">
+            <span className="pl-focus-num">{dueSoon}</span>
+            <span className="pl-focus-cap">Due in 3d</span>
+          </div>
+          <span className="pl-focus-sep" aria-hidden="true" />
+          <div className="pl-focus-stat">
+            <span className="pl-focus-num">{liveCount}</span>
+            <span className="pl-focus-cap">In flight</span>
+          </div>
+        </div>
+        <p className="pl-focus-note">
+          Tap a card to expand the brief. Sort controls reorder every column.
+        </p>
+      </aside>
 
-      {/* ── Campaign list ────────────────────────────────────── */}
-      {sorted.length === 0 ? (
-        <div className="pl-empty">
-          <p className="pl-empty-title">
-            {activeTab === "active"
-              ? "No active campaigns"
-              : "No campaigns match"}
-          </p>
-          <p className="pl-empty-sub">
-            {activeTab === "active"
-              ? "Head to Discover to find your next campaign"
-              : "Try a different filter or discover new opportunities"}
-          </p>
-          {activeTab === "active" ? (
-            <Link
-              href="/creator/explore"
-              className="pl-empty-discover pl-empty-discover-primary btn-primary click-shift"
+      {/* Kanban board */}
+      <section
+        className="pl-board"
+        role="region"
+        aria-label="Campaign pipeline board"
+      >
+        {COLUMNS.map((col) => {
+          const items = grouped[col.status];
+          return (
+            <div
+              key={col.status}
+              className={`pl-col pl-col--${col.status}`}
+              role="group"
+              aria-label={`${col.title} column`}
             >
-              Browse Discover →
-            </Link>
-          ) : (
-            <>
-              <button
-                className="pl-empty-reset btn-ghost click-shift"
-                onClick={() => {
-                  setActiveTab("all");
-                  setSortMode("deadline");
-                }}
-              >
-                Reset filters
-              </button>
-              <Link
-                href="/creator/explore"
-                className="pl-empty-discover btn-ghost click-shift"
-              >
-                Discover campaigns →
-              </Link>
-            </>
-          )}
-        </div>
-      ) : (
-        <div className="pl-list">
-          {sorted.map((c) => (
-            <CampaignCard
-              key={c.id}
-              campaign={c}
-              expanded={expandedId === c.id}
-              onToggle={() => toggleExpand(c.id)}
-            />
-          ))}
-        </div>
-      )}
+              <header className="pl-col-head">
+                <span className="pl-col-rail" aria-hidden="true" />
+                <div className="pl-col-titles">
+                  <p className="pl-col-eyebrow">{col.title}</p>
+                  <p className="pl-col-caption">{col.caption}</p>
+                </div>
+                <span className="pl-col-count">{items.length}</span>
+              </header>
+
+              <div className="pl-col-body">
+                {items.length === 0 ? (
+                  <div className="pl-col-empty">
+                    <p className="pl-col-empty-title">{col.emptyTitle}</p>
+                    <p className="pl-col-empty-hint">{col.emptyHint}</p>
+                    {col.status === "applied" && (
+                      <Link
+                        href="/creator/explore"
+                        className="pl-col-empty-cta btn-ghost click-shift"
+                      >
+                        Browse Discover
+                      </Link>
+                    )}
+                  </div>
+                ) : (
+                  items.map((c) => (
+                    <CampaignCard
+                      key={c.id}
+                      campaign={c}
+                      expanded={expandedId === c.id}
+                      onToggle={() => toggleExpand(c.id)}
+                    />
+                  ))
+                )}
+              </div>
+            </div>
+          );
+        })}
+      </section>
     </div>
   );
 }

@@ -146,39 +146,79 @@ function KYCBadge({ status }: { status: KYCStatus }) {
 function UserAvatar({ user }: { user: AdminUser }) {
   const [imgError, setImgError] = useState(false);
   return (
-    <div
-      style={{
-        width: 32,
-        height: 32,
-        borderRadius: "50%",
-        overflow: "hidden",
-        flexShrink: 0,
-        background: "var(--surface-3)",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-      }}
-    >
+    <div className="adm-avatar">
       {user.avatar && !imgError ? (
         // eslint-disable-next-line @next/next/no-img-element
-        <img
-          src={user.avatar}
-          alt={user.name}
-          style={{ width: "100%", height: "100%", objectFit: "cover" }}
-          onError={() => setImgError(true)}
-        />
+        <img src={user.avatar} alt="" onError={() => setImgError(true)} />
       ) : (
-        <span
-          style={{
-            fontFamily: "var(--font-body)",
-            fontSize: 11,
-            fontWeight: 700,
-            color: "var(--ink-4)",
-          }}
-        >
+        <span className="adm-avatar__initials" aria-hidden="true">
           {initials(user.name)}
         </span>
       )}
+    </div>
+  );
+}
+
+/* ── Confirm Dialog (for destructive ops) ────────────── */
+function ConfirmDialog({
+  eyebrow,
+  title,
+  body,
+  confirmLabel,
+  variant,
+  onCancel,
+  onConfirm,
+}: {
+  eyebrow: string;
+  title: string;
+  body: React.ReactNode;
+  confirmLabel: string;
+  variant: "danger" | "primary";
+  onCancel: () => void;
+  onConfirm: () => void;
+}) {
+  useEffect(() => {
+    function onKey(e: KeyboardEvent) {
+      if (e.key === "Escape") onCancel();
+    }
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [onCancel]);
+
+  return (
+    <div
+      className="adm-confirm-overlay"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="adm-confirm-title"
+      onClick={onCancel}
+    >
+      <div className="adm-confirm" onClick={(e) => e.stopPropagation()}>
+        <div className="adm-confirm__header">
+          <div className="adm-confirm__eyebrow">{eyebrow}</div>
+          <h2 id="adm-confirm-title" className="adm-confirm__title">
+            {title}
+          </h2>
+        </div>
+        <div className="adm-confirm__body">{body}</div>
+        <div className="adm-confirm__footer">
+          <button
+            type="button"
+            className="adm-confirm__btn adm-confirm__btn--cancel"
+            onClick={onCancel}
+            autoFocus
+          >
+            Cancel
+          </button>
+          <button
+            type="button"
+            className={`adm-confirm__btn adm-confirm__btn--${variant}`}
+            onClick={onConfirm}
+          >
+            {confirmLabel}
+          </button>
+        </div>
+      </div>
     </div>
   );
 }
@@ -195,6 +235,7 @@ export default function AdminUsersPage() {
     id: string;
     name: string;
   } | null>(null);
+  const [pendingSuspend, setPendingSuspend] = useState<AdminUser | null>(null);
 
   const fetchUsers = useCallback(async () => {
     const params = new URLSearchParams({
@@ -246,8 +287,10 @@ export default function AdminUsersPage() {
     }
   }
 
-  async function handleSuspend(user: AdminUser, e: React.MouseEvent) {
-    e.stopPropagation();
+  async function confirmSuspend() {
+    if (!pendingSuspend) return;
+    const user = pendingSuspend;
+    setPendingSuspend(null);
     await fetch(`/api/admin/users/${user.id}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
@@ -256,6 +299,10 @@ export default function AdminUsersPage() {
       }),
     });
     fetchUsers();
+  }
+
+  function navigateToUser(id: string) {
+    window.location.href = `/admin/users/${id}`;
   }
 
   function handleExportCSV() {
@@ -335,7 +382,12 @@ export default function AdminUsersPage() {
           <div className="adm-page-eyebrow">PUSH INTERNAL</div>
           <h1 className="adm-page-title">Users</h1>
         </div>
-        <button className="btn-ghost click-shift" onClick={handleExportCSV}>
+        <button
+          type="button"
+          className="btn-ghost"
+          onClick={handleExportCSV}
+          aria-label="Export users to CSV"
+        >
           Export CSV
         </button>
       </div>
@@ -382,13 +434,16 @@ export default function AdminUsersPage() {
       </div>
 
       {/* Tabs */}
-      <div className="adm-tabs">
+      <div className="adm-tabs" role="tablist" aria-label="User segment">
         {tabs.map((t) => {
           const isActive = tab === t.key;
           const isSuspended = t.key === "suspended";
           return (
             <button
               key={t.key}
+              type="button"
+              role="tab"
+              aria-selected={isActive}
               onClick={() => setTab(t.key)}
               className={`adm-tab${isActive ? (isSuspended ? " active--danger" : " active") : ""}`}
             >
@@ -410,20 +465,23 @@ export default function AdminUsersPage() {
             fill="none"
             stroke="currentColor"
             strokeWidth="1.8"
+            aria-hidden="true"
           >
             <circle cx="6.5" cy="6.5" r="4.5" />
             <line x1="10.5" y1="10.5" x2="14" y2="14" />
           </svg>
           <input
-            type="text"
+            type="search"
             placeholder="Search name, email, handle…"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
+            aria-label="Search users"
           />
         </div>
         <select
           value={kycFilter}
           onChange={(e) => setKycFilter(e.target.value)}
+          aria-label="Filter by KYC status"
         >
           <option value="all">All KYC</option>
           <option value="verified">Verified</option>
@@ -438,6 +496,7 @@ export default function AdminUsersPage() {
             color: "var(--ink-5)",
             marginLeft: "auto",
           }}
+          aria-live="polite"
         >
           {data?.total ?? 0} users
         </span>
@@ -445,18 +504,25 @@ export default function AdminUsersPage() {
 
       {/* Bulk bar */}
       {selected.size > 0 && (
-        <div className="adm-bulk-bar">
+        <div className="adm-bulk-bar" role="region" aria-label="Bulk actions">
           <span>{selected.size} selected</span>
           <div style={{ display: "flex", gap: 8, marginLeft: 8 }}>
-            <button className="adm-bulk-btn" onClick={handleExportCSV}>
+            <button
+              type="button"
+              className="adm-bulk-btn"
+              onClick={handleExportCSV}
+            >
               Export CSV
             </button>
-            <button className="adm-bulk-btn">Send Email</button>
-            <button className="adm-bulk-btn adm-bulk-btn--danger">
+            <button type="button" className="adm-bulk-btn">
+              Send Email
+            </button>
+            <button type="button" className="adm-bulk-btn adm-bulk-btn--danger">
               Suspend All
             </button>
           </div>
           <button
+            type="button"
             className="adm-bulk-btn"
             style={{ marginLeft: "auto" }}
             onClick={() => setSelected(new Set())}
@@ -469,44 +535,13 @@ export default function AdminUsersPage() {
       {/* Table */}
       <div className="adm-table-wrap" style={{ overflowX: "auto" }}>
         {!data ? (
-          <div
-            style={{
-              padding: "48px 24px",
-              textAlign: "center",
-              fontFamily: "var(--font-body)",
-              fontSize: 14,
-              color: "var(--ink-5)",
-            }}
-          >
-            Loading…
+          <div className="adm-empty">
+            <p className="adm-empty__sub">Loading…</p>
           </div>
         ) : data.users.length === 0 ? (
-          <div
-            style={{
-              padding: "56px 24px",
-              textAlign: "center",
-            }}
-          >
-            <div
-              style={{
-                fontFamily: "var(--font-display)",
-                fontSize: 24,
-                fontWeight: 700,
-                color: "var(--ink)",
-                marginBottom: 8,
-              }}
-            >
-              No users found
-            </div>
-            <div
-              style={{
-                fontFamily: "var(--font-body)",
-                fontSize: 14,
-                color: "var(--ink-5)",
-              }}
-            >
-              Try adjusting your filters.
-            </div>
+          <div className="adm-empty">
+            <h2 className="adm-empty__title">No users found</h2>
+            <p className="adm-empty__sub">Try adjusting your filters.</p>
           </div>
         ) : (
           <table className="adm-table" style={{ minWidth: 900 }}>
@@ -521,140 +556,171 @@ export default function AdminUsersPage() {
                       data.users.length > 0
                     }
                     onChange={toggleAll}
+                    aria-label="Select all users on this page"
                   />
                 </th>
                 {TABLE_COLS.map((h) => (
-                  <th key={h}>{h}</th>
+                  <th key={h} scope="col">
+                    {h}
+                  </th>
                 ))}
               </tr>
             </thead>
             <tbody>
-              {data.users.map((user) => (
-                <tr
-                  key={user.id}
-                  style={{
-                    background: selected.has(user.id)
-                      ? "rgba(0,133,255,0.04)"
-                      : "transparent",
-                  }}
-                  onClick={() =>
-                    (window.location.href = `/admin/users/${user.id}`)
-                  }
-                >
-                  <td
-                    style={{ textAlign: "center" }}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      toggleSelect(user.id);
+              {data.users.map((user) => {
+                const isSelected = selected.has(user.id);
+                const isSuspended = user.status === "suspended";
+                return (
+                  <tr
+                    key={user.id}
+                    className={isSelected ? "is-selected" : undefined}
+                    tabIndex={0}
+                    role="link"
+                    aria-label={`Open ${user.name}`}
+                    onClick={() => navigateToUser(user.id)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" || e.key === " ") {
+                        e.preventDefault();
+                        navigateToUser(user.id);
+                      }
                     }}
                   >
-                    <input
-                      type="checkbox"
-                      style={{ width: 14, height: 14 }}
-                      checked={selected.has(user.id)}
-                      onChange={() => toggleSelect(user.id)}
-                    />
-                  </td>
-                  <td>
-                    <div
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: 10,
+                    <td
+                      style={{ textAlign: "center" }}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        toggleSelect(user.id);
                       }}
                     >
-                      <UserAvatar user={user} />
-                      <div>
-                        <div
-                          style={{
-                            fontFamily: "var(--font-body)",
-                            fontSize: 13,
-                            fontWeight: 600,
-                            color: "var(--ink)",
-                          }}
-                        >
-                          {user.name}
-                        </div>
-                        <div
-                          style={{
-                            fontFamily: "var(--font-body)",
-                            fontSize: 11,
-                            color: "var(--ink-5)",
-                          }}
-                        >
-                          {user.handle}
-                        </div>
-                      </div>
-                    </div>
-                  </td>
-                  <td>
-                    <div style={{ display: "flex", gap: 4, flexWrap: "wrap" }}>
-                      <RoleBadge role={user.role} />
-                      <TierBadge tier={user.tier} />
-                    </div>
-                  </td>
-                  <td>{formatDate(user.joined_at)}</td>
-                  <td>{timeAgo(user.last_active)}</td>
-                  <td>
-                    <StatusBadge status={user.status} />
-                  </td>
-                  <td>
-                    <KYCBadge status={user.kyc_status} />
-                  </td>
-                  <td>
-                    {user.push_score > 0 ? (
-                      <span
+                      <input
+                        type="checkbox"
+                        style={{ width: 14, height: 14 }}
+                        checked={isSelected}
+                        onChange={() => toggleSelect(user.id)}
+                        onClick={(e) => e.stopPropagation()}
+                        aria-label={`Select ${user.name}`}
+                      />
+                    </td>
+                    <td>
+                      <div
                         style={{
-                          fontFamily: "var(--font-display)",
-                          fontSize: 16,
-                          fontWeight: 900,
-                          color:
-                            user.push_score >= 80
-                              ? "var(--accent-blue)"
-                              : user.push_score >= 50
-                                ? "var(--ink)"
-                                : "var(--ink-5)",
+                          display: "flex",
+                          alignItems: "center",
+                          gap: 12,
                         }}
                       >
-                        {user.push_score}
-                      </span>
-                    ) : (
-                      <span style={{ color: "var(--ink-5)" }}>—</span>
-                    )}
-                  </td>
-                  <td
-                    style={{ textAlign: "right" }}
-                    onClick={(e) => e.stopPropagation()}
-                  >
-                    <div
-                      style={{
-                        display: "flex",
-                        gap: 6,
-                        justifyContent: "flex-end",
-                      }}
+                        <UserAvatar user={user} />
+                        <div>
+                          <div
+                            style={{
+                              fontFamily: "var(--font-body)",
+                              fontSize: 13,
+                              fontWeight: 600,
+                              color: "var(--ink)",
+                            }}
+                          >
+                            {user.name}
+                          </div>
+                          <div
+                            style={{
+                              fontFamily: "var(--font-body)",
+                              fontSize: 11,
+                              color: "var(--ink-5)",
+                            }}
+                          >
+                            {user.handle}
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                    <td>
+                      <div
+                        style={{ display: "flex", gap: 4, flexWrap: "wrap" }}
+                      >
+                        <RoleBadge role={user.role} />
+                        <TierBadge tier={user.tier} />
+                      </div>
+                    </td>
+                    <td>{formatDate(user.joined_at)}</td>
+                    <td>{timeAgo(user.last_active)}</td>
+                    <td>
+                      <StatusBadge status={user.status} />
+                    </td>
+                    <td>
+                      <KYCBadge status={user.kyc_status} />
+                    </td>
+                    <td>
+                      {user.push_score > 0 ? (
+                        <span
+                          style={{
+                            fontFamily: "var(--font-display)",
+                            fontSize: 16,
+                            fontWeight: 900,
+                            color:
+                              user.push_score >= 80
+                                ? "var(--accent-blue)"
+                                : user.push_score >= 50
+                                  ? "var(--ink)"
+                                  : "var(--ink-5)",
+                          }}
+                        >
+                          {user.push_score}
+                        </span>
+                      ) : (
+                        <span style={{ color: "var(--ink-5)" }}>—</span>
+                      )}
+                    </td>
+                    <td
+                      style={{ textAlign: "right" }}
+                      onClick={(e) => e.stopPropagation()}
                     >
-                      <Link
-                        href={`/admin/users/${user.id}`}
-                        className="adm-row-btn adm-row-btn--view"
+                      <div
+                        style={{
+                          display: "flex",
+                          gap: 8,
+                          justifyContent: "flex-end",
+                        }}
                       >
-                        View
-                      </Link>
-                      <button
-                        className="adm-row-btn adm-row-btn--ghost"
-                        onClick={(e) => handleImpersonate(user, e)}
-                      >
-                        Imp.
-                      </button>
-                      <button
-                        className="adm-row-btn adm-row-btn--danger"
-                        onClick={(e) => handleSuspend(user, e)}
-                      >
-                        {user.status === "suspended" ? "Unsuspend" : "Suspend"}
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
+                        <Link
+                          href={`/admin/users/${user.id}`}
+                          className="adm-row-btn adm-row-btn--view"
+                          aria-label={`View ${user.name} profile`}
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          View
+                        </Link>
+                        <button
+                          type="button"
+                          className="adm-row-btn adm-row-btn--ghost"
+                          onClick={(e) => handleImpersonate(user, e)}
+                          aria-label={`Impersonate ${user.name}`}
+                        >
+                          Impersonate
+                        </button>
+                        <button
+                          type="button"
+                          className={
+                            isSuspended
+                              ? "adm-row-btn adm-row-btn--ghost"
+                              : "adm-row-btn adm-row-btn--danger"
+                          }
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setPendingSuspend(user);
+                          }}
+                          aria-label={
+                            isSuspended
+                              ? `Reinstate ${user.name}`
+                              : `Suspend ${user.name}`
+                          }
+                        >
+                          {isSuspended ? "Reinstate" : "Suspend"}
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         )}
@@ -669,9 +735,11 @@ export default function AdminUsersPage() {
           </div>
           <div className="adm-pagination__controls">
             <button
+              type="button"
               className="adm-page-btn"
               disabled={page === 1}
               onClick={() => setPage((p) => p - 1)}
+              aria-label="Previous page"
             >
               ‹
             </button>
@@ -681,16 +749,21 @@ export default function AdminUsersPage() {
             ).map((p) => (
               <button
                 key={p}
+                type="button"
                 className={`adm-page-btn${p === page ? " active" : ""}`}
                 onClick={() => setPage(p)}
+                aria-label={`Page ${p}`}
+                aria-current={p === page ? "page" : undefined}
               >
                 {p}
               </button>
             ))}
             <button
+              type="button"
               className="adm-page-btn"
               disabled={page === data.pages}
               onClick={() => setPage((p) => p + 1)}
+              aria-label="Next page"
             >
               ›
             </button>
@@ -700,12 +773,13 @@ export default function AdminUsersPage() {
 
       {/* Impersonate banner */}
       {impersonating && (
-        <div className="adm-impersonate">
-          <div className="adm-impersonate__dot" />
+        <div className="adm-impersonate" role="status">
+          <div className="adm-impersonate__dot" aria-hidden="true" />
           Impersonating{" "}
           <strong style={{ margin: "0 4px" }}>{impersonating.name}</strong> —
           session active
           <button
+            type="button"
             className="adm-bulk-btn"
             style={{ marginLeft: "auto" }}
             onClick={() => {
@@ -716,6 +790,49 @@ export default function AdminUsersPage() {
             End Session
           </button>
         </div>
+      )}
+
+      {/* Suspend / Reinstate confirmation */}
+      {pendingSuspend && (
+        <ConfirmDialog
+          eyebrow={
+            pendingSuspend.status === "suspended"
+              ? "REINSTATE USER"
+              : "SUSPEND USER"
+          }
+          title={
+            pendingSuspend.status === "suspended"
+              ? `Reinstate ${pendingSuspend.name}?`
+              : `Suspend ${pendingSuspend.name}?`
+          }
+          body={
+            pendingSuspend.status === "suspended" ? (
+              <>
+                <span className="adm-confirm__target">
+                  {pendingSuspend.handle}
+                </span>{" "}
+                will regain access immediately. Active campaign holds and KYC
+                state are preserved.
+              </>
+            ) : (
+              <>
+                <span className="adm-confirm__target">
+                  {pendingSuspend.handle}
+                </span>{" "}
+                will be locked out, all live applications cancelled, and pending
+                payouts held. This action is reversible.
+              </>
+            )
+          }
+          confirmLabel={
+            pendingSuspend.status === "suspended"
+              ? "Reinstate"
+              : "Suspend account"
+          }
+          variant={pendingSuspend.status === "suspended" ? "primary" : "danger"}
+          onCancel={() => setPendingSuspend(null)}
+          onConfirm={confirmSuspend}
+        />
       )}
     </div>
   );

@@ -1116,7 +1116,6 @@
 
 .thread-celebrate__panel {
   background: var(--surface-2);
-  border: 1px solid var(--hairline);
   border-radius: var(--r-md);
   padding: 48px;
   max-width: 480px;

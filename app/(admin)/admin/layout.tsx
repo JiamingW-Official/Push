@@ -1,67 +1,32 @@
-"use client";
-
 import "./admin.css";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+import type { ReactNode } from "react";
 import { DemoBanner } from "@/components/layout/DemoBanner";
-import { ADMIN_GROUPS } from "@/lib/nav/registry";
+import { UnifiedSidebar } from "@/components/shell/UnifiedSidebar";
 
-export default function AdminLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function AdminLayout({ children }: { children: ReactNode }) {
   return (
     <>
       <DemoBanner />
       <div className="adm-shell">
-        <AdminSidebar />
-        <main className="adm-main">{children}</main>
+        <UnifiedSidebar role="admin" userInitial="A" userName="Admin" />
+        <main className="adm-main" id="adm-main" role="main">
+          <header className="adm-topbar" role="banner">
+            <span className="adm-topbar__eyebrow">(PUSH · INTERNAL)</span>
+            <span className="adm-topbar__divider" aria-hidden="true" />
+            <span className="adm-topbar__title">Operations Console</span>
+            <span className="adm-topbar__spacer" />
+            <span
+              className="adm-internal-badge"
+              role="status"
+              aria-label="Authenticated as internal staff"
+            >
+              <span className="adm-internal-badge__dot" aria-hidden="true" />
+              Authority · Staff
+            </span>
+          </header>
+          {children}
+        </main>
       </div>
     </>
-  );
-}
-
-function AdminSidebar() {
-  const pathname = usePathname();
-
-  return (
-    <aside className="adm-sidebar">
-      <Link href="/admin" className="adm-sidebar__logo">
-        <span className="adm-sidebar__wordmark">
-          Push<span>Admin</span>
-        </span>
-        <span className="adm-sidebar__badge">Operations Console</span>
-      </Link>
-
-      <nav className="adm-sidebar__nav">
-        {ADMIN_GROUPS.map((group) => (
-          <div key={group.label} className="adm-nav-section">
-            <p className="adm-nav-section__label">{group.label}</p>
-            {group.items.map((item) => {
-              const active =
-                pathname === item.href || pathname.startsWith(item.href + "/");
-              return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className={`adm-nav-item${active ? " active" : ""}`}
-                  aria-current={active ? "page" : undefined}
-                >
-                  {item.label}
-                </Link>
-              );
-            })}
-          </div>
-        ))}
-      </nav>
-
-      <div className="adm-sidebar__footer">
-        <p className="adm-sidebar__user">push-admin@internal</p>
-        <Link href="/admin/login" className="adm-signout">
-          Sign out
-        </Link>
-      </div>
-    </aside>
   );
 }

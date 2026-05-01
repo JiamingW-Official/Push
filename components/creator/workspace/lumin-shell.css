@@ -3,31 +3,43 @@
  *
  * 2-column portal: [72px icon rail] [1fr scrollable main]
  * Overrides the global 30% gutter from unified-sidebar.css so content
- * fills the full column with a sensible 40px horizontal margin instead.
+ * fills the column with editorial-but-comfortable side padding instead.
  *
- * Authority: Design.md v11 § 8.13 sidebar
+ * Sidebar visuals live in components/shell/unified-sidebar.css — this
+ * file only owns the workspace shell grid, main padding, the skip link,
+ * and the mobile bottom-dock clearance.
+ *
+ * Authority: Design.md v11
+ *   § 8.12 Floating Liquid Glass Navbar (referenced by sidebar)
+ *   § 8.13 Sidebar Standard
+ *   § 5    Column grid + responsive
+ *   § 16   Hover signature (skip-link interaction)
  * ───────────────────────────────────────────────────────────────────── */
 
 :root {
-  --rl-w-collapsed: 72px;
-  --rl-ease:   cubic-bezier(0.22, 1, 0.36, 1);
-  --rl-t-fast: 180ms;
+  --rl-w-collapsed: 72px;     /* 8px grid ✓ — matches --us-w in unified-sidebar.css */
+  --rl-dock-h:      56px;     /* mobile bottom-dock height (unified-sidebar.css line 349) */
+  --rl-dock-clear:  72px;     /* 8px grid ✓ — dock + 16px breathing safe-area-friendly */
+  --rl-ease:        cubic-bezier(0.22, 1, 0.36, 1);
+  --rl-t-fast:      180ms;
 }
 
 /* ════════════════════════════════════════════════════════════
-   SHELL — 2-column grid: icon rail + full-width main
+   SHELL — 2-column grid: 72px icon rail + 1fr main
    ════════════════════════════════════════════════════════════ */
 
 .dh-shell {
   display: grid;
   grid-template-columns: var(--rl-w-collapsed) 1fr;
-  grid-template-rows: 100svh;
   min-height: 100svh;
-  background: #ffffff;
-  overflow: hidden;
+  background: var(--surface);           /* ivory cream — eliminates white/cream contrast frame */
+  align-items: start;
 }
 
-/* Override fixed positioning: us-rail sits in column 1 of the grid. */
+/* Nav rail — sticky so it stays in view as the body scrolls. The rail
+   itself is `position: fixed` per unified-sidebar.css; we keep `sticky`
+   here as a defensive override in case a stacking-context ancestor ever
+   neuters fixed positioning. */
 .dh-shell .us-rail {
   position: sticky !important;
   top: 0 !important;
@@ -43,52 +55,32 @@
   grid-row: 1;
   margin-left: 0;
   min-width: 0;
-  height: 100svh;
-  overflow-y: auto;
+  min-height: 100svh;
   overflow-x: hidden;
-  scrollbar-width: thin;
-  scrollbar-color: var(--hairline) transparent;
 }
-.dh-main::-webkit-scrollbar { width: 4px; }
-.dh-main::-webkit-scrollbar-thumb { background: var(--hairline); border-radius: 2px; }
-.dh-main::-webkit-scrollbar-track { background: transparent; }
 
-/* ── Creator workspace: 15% L/R 编辑留白 ──────────────────
-   全局 unified-sidebar.css 默认 30%；这里覆盖为 15%，
-   让内容区更宽敞，同时保留精品居中感。
-   响应式断点按比例缩减。                                          */
+/* ── Creator workspace: 10vw L/R editorial gutter ─────────────────
+   Global unified-sidebar.css defaults to 30%. We narrow to 10vw here
+   so workspace surfaces breathe without becoming a mail-merge column.
+   Responsive scale-down handled in the breakpoints below.            */
 body:has(.dh-shell) .dh-main {
-  padding-left:  15% !important;
-  padding-right: 15% !important;
+  --main-pad: 10vw;
+  padding-left:  var(--main-pad) !important;
+  padding-right: var(--main-pad) !important;
 }
-@media (max-width: 1600px) {
-  body:has(.dh-shell) .dh-main {
-    padding-left:  11% !important;
-    padding-right: 11% !important;
-  }
-}
-@media (max-width: 1280px) {
-  body:has(.dh-shell) .dh-main {
-    padding-left:  6% !important;
-    padding-right: 6% !important;
-  }
-}
-@media (max-width: 1024px) {
-  body:has(.dh-shell) .dh-main {
-    padding-left:  3% !important;
-    padding-right: 3% !important;
-  }
-}
-@media (max-width: 768px) {
-  body:has(.dh-shell) .dh-main {
-    padding-left:  24px !important;
-    padding-right: 24px !important;
-  }
+
+/* Discover page manages its own internal gutter — zero the shell plate */
+body:has(.dh-shell) .dh-main:has(.disc) {
+  padding-left:  0 !important;
+  padding-right: 0 !important;
 }
 
 
 /* ════════════════════════════════════════════════════════════
-   SKIP LINK
+   SKIP LINK — keyboard-only escape hatch to main content
+   Visible when focused; invisible otherwise. Uses §16 hover
+   signature for the focus state (no shift on the link itself —
+   skip-link is system chrome, not a primary CTA).
    ════════════════════════════════════════════════════════════ */
 
 .dh-skip {
@@ -97,38 +89,100 @@ body:has(.dh-shell) .dh-main {
   top: -9999px;
   z-index: 1000;
 }
-.dh-skip:focus {
-  left: 12px;
-  top: 12px;
+.dh-skip:focus,
+.dh-skip:focus-visible {
+  left: 16px;
+  top: 16px;
   background: var(--ink);
   color: var(--snow);
-  padding: 8px 16px;
-  border-radius: 8px;
+  padding: 8px 16px;            /* 8px grid ✓ */
+  border-radius: 8px;            /* §9 button radius */
   font-family: var(--font-mono);
   font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
   text-decoration: none;
+  outline: 2px solid var(--brand-red, #c1121f);
+  outline-offset: 2px;
 }
 
 
 /* ════════════════════════════════════════════════════════════
    RESPONSIVE
+   Breakpoints follow Design.md §5 + §14:
+     ≤1024px  iPad  — narrower gutter
+     ≤768px   tablet portrait — collapse to single-col, sidebar
+                                becomes bottom dock (handled by
+                                unified-sidebar.css)
+     ≤640px   mobile — tightest gutter, dock-friendly clearance
    ════════════════════════════════════════════════════════════ */
 
+@media (max-width: 1024px) {
+  body:has(.dh-shell) .dh-main {
+    --main-pad: 6vw;
+    padding-left:  var(--main-pad) !important;
+    padding-right: var(--main-pad) !important;
+  }
+}
+
 @media (max-width: 768px) {
+  /* The grid collapses — icon rail moves to a fixed bottom dock
+     (unified-sidebar.css handles the dock styling). Main becomes
+     a single full-width column with bottom clearance equal to the
+     dock height + 16px breathing room. */
   .dh-shell {
     display: block;
     min-height: 100svh;
   }
   .dh-main {
-    height: auto;
-    overflow-y: auto;
-    padding-bottom: 64px;
+    /* iOS safe-area aware: clear the dock + the home-indicator inset */
+    padding-bottom: calc(var(--rl-dock-clear) + env(safe-area-inset-bottom, 0px));
   }
   .dh-shell .us-rail {
     position: fixed !important;
   }
+  body:has(.dh-shell) .dh-main {
+    --main-pad: 24px;
+    padding-left:  var(--main-pad) !important;
+    padding-right: var(--main-pad) !important;
+  }
   body:has(.dh-shell) main [class*="-page"] {
-    padding-left:  24px !important;
-    padding-right: 24px !important;
+    padding-left:  0 !important;       /* avoid double-padding */
+    padding-right: 0 !important;
+  }
+}
+
+@media (max-width: 640px) {
+  body:has(.dh-shell) .dh-main {
+    --main-pad: 16px;
+    padding-left:  var(--main-pad) !important;
+    padding-right: var(--main-pad) !important;
+  }
+}
+
+
+/* ════════════════════════════════════════════════════════════
+   ACCESSIBILITY FALLBACKS
+   ════════════════════════════════════════════════════════════ */
+
+/* Reduced motion — kill any shell-level transitions. Sidebar item
+   transitions are handled in unified-sidebar.css. */
+@media (prefers-reduced-motion: reduce) {
+  .dh-skip {
+    transition: none !important;
+  }
+}
+
+/* Reduced transparency — the bottom dock on mobile uses a frosted
+   glass background by default. Provide a solid fallback so the dock
+   stays legible when users disable transparency. */
+@media (prefers-reduced-transparency: reduce) {
+  @media (max-width: 768px) {
+    .dh-shell .us-rail {
+      background: var(--ink, #0a0a0a) !important;  /* fallback corrected: #1c1814→#0a0a0a (--ink canonical) */
+      backdrop-filter: none !important;
+      -webkit-backdrop-filter: none !important;
+    }
   }
 }

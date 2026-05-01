@@ -160,9 +160,9 @@ function MethodIcon({ type }: { type: PayoutMethodType }) {
 function StatusBadge({ status }: { status: PayoutMethod["status"] }) {
   const cls = `wallet-badge wallet-badge-${status}`;
   const labels: Record<PayoutMethod["status"], string> = {
-    verified: "Verified",
-    pending: "Pending",
-    disabled: "Disabled",
+    verified: "Linked",
+    pending: "Verifying",
+    disabled: "Inactive",
   };
   return <span className={cls}>{labels[status]}</span>;
 }
@@ -171,9 +171,9 @@ function StatusBadge({ status }: { status: PayoutMethod["status"] }) {
 
 function WithdrawStatus({ status }: { status: Withdrawal["status"] }) {
   const labels: Record<Withdrawal["status"], string> = {
-    processing: "Processing",
-    sent: "Sent",
-    failed: "Failed",
+    processing: "In transit",
+    sent: "Received",
+    failed: "Returned",
   };
   return (
     <span className={`wallet-status ${status}`}>
@@ -256,8 +256,9 @@ function WithdrawModal({
         aria-label="Withdraw funds"
       >
         <div className="wallet-modal-header">
-          <span className="wallet-modal-title">Withdraw Funds</span>
+          <span className="wallet-modal-title">Withdraw funds</span>
           <button
+            type="button"
             className="wallet-modal-close"
             onClick={onClose}
             aria-label="Close"
@@ -269,7 +270,7 @@ function WithdrawModal({
         <div className="wallet-modal-body">
           <div className="wallet-form-group">
             <label className="wallet-form-label" htmlFor="withdraw-amount">
-              Amount (USD)
+              Amount · USD
             </label>
             <input
               id="withdraw-amount"
@@ -283,21 +284,14 @@ function WithdrawModal({
               onChange={(e) => handleAmountChange(e.target.value)}
             />
             {amountError && <p className="wallet-form-error">{amountError}</p>}
-            <p
-              style={{
-                fontSize: 11,
-                color: "var(--ink-4)",
-                marginTop: 5,
-                fontFamily: "var(--font-body)",
-              }}
-            >
-              Available: {fmt(balance)}
+            <p className="wallet-form-hint">
+              Available {fmt(balance)} · withdraw any amount $1+
             </p>
           </div>
 
           <div className="wallet-form-group">
             <label className="wallet-form-label" htmlFor="withdraw-method">
-              Payout Method
+              Payout method
             </label>
             <select
               id="withdraw-method"
@@ -317,30 +311,31 @@ function WithdrawModal({
 
           {parsedAmount > 0 && selectedMethod && (
             <div className="wallet-withdraw-net">
-              <div className="wallet-withdraw-net-label">Net to receive</div>
+              <div className="wallet-withdraw-net-label">You receive</div>
               <div className="wallet-withdraw-net-amount">{fmt(net)}</div>
               <div className="wallet-withdraw-fee-note">
-                Fee: {fmt(fee)} ({selectedMethod.fee}) — arrives 1–3 business
-                days
+                After {fmt(fee)} fee ({selectedMethod.fee}) · usually 1–3
+                business days
               </div>
             </div>
           )}
         </div>
 
         <div className="wallet-modal-footer">
-          <button className="wallet-modal-btn cancel" onClick={onClose}>
+          <button
+            type="button"
+            className="wallet-modal-btn cancel"
+            onClick={onClose}
+          >
             Cancel
           </button>
           <button
+            type="button"
             className="wallet-modal-btn confirm"
             onClick={handleConfirm}
             disabled={loading || !parsedAmount || !selectedMethod}
           >
-            {loading ? (
-              <span className="wallet-spinner" />
-            ) : (
-              "Confirm Withdrawal"
-            )}
+            {loading ? <span className="wallet-spinner" /> : "Send withdrawal"}
           </button>
         </div>
       </div>
@@ -454,8 +449,9 @@ function AddMethodModal({ onClose, onAdd }: AddMethodModalProps) {
         aria-label="Add payout method"
       >
         <div className="wallet-modal-header">
-          <span className="wallet-modal-title">Add Payout Method</span>
+          <span className="wallet-modal-title">Add payout method</span>
           <button
+            type="button"
             className="wallet-modal-close"
             onClick={onClose}
             aria-label="Close"
@@ -465,19 +461,7 @@ function AddMethodModal({ onClose, onAdd }: AddMethodModalProps) {
         </div>
 
         <div className="wallet-modal-body">
-          <div
-            style={{
-              marginBottom: 8,
-              fontSize: 11,
-              fontWeight: 700,
-              letterSpacing: "0.06em",
-              textTransform: "uppercase",
-              color: "var(--ink-4)",
-              fontFamily: "var(--font-body)",
-            }}
-          >
-            Select type
-          </div>
+          <div className="wallet-form-eyebrow">Select payout type</div>
           <div className="wallet-method-type-grid">
             {METHOD_TYPES.map((m) => (
               <button
@@ -492,10 +476,7 @@ function AddMethodModal({ onClose, onAdd }: AddMethodModalProps) {
                 <span className="wallet-method-type-name">
                   {m.name}
                   {m.type === "stripe" && (
-                    <span
-                      className="wallet-badge wallet-badge-recommended"
-                      style={{ marginLeft: 6, fontSize: 9 }}
-                    >
+                    <span className="wallet-badge wallet-badge-recommended wallet-badge--inline">
                       Recommended
                     </span>
                   )}
@@ -508,31 +489,24 @@ function AddMethodModal({ onClose, onAdd }: AddMethodModalProps) {
           {selectedType === "stripe" && (
             <>
               <div className="wallet-stripe-info">
-                Stripe Connect offers the lowest fees and fastest payouts.
-                Connect your Stripe account to get paid directly.
+                Lowest fees, fastest payouts. We hand off to Stripe — your bank
+                details never touch our servers.
               </div>
               {stripeConnected ? (
-                <p
-                  style={{
-                    fontSize: 13,
-                    color: "var(--accent-blue)",
-                    fontWeight: 600,
-                    fontFamily: "var(--font-body)",
-                  }}
-                >
-                  ✓ Stripe account connected successfully
+                <p className="wallet-stripe-success">
+                  Stripe account linked. You can save below.
                 </p>
               ) : (
                 <button
-                  className="btn-secondary click-shift"
-                  style={{ width: "100%", padding: "14px", fontSize: 13 }}
+                  type="button"
+                  className="wallet-stripe-connect-btn"
                   onClick={handleStripeConnect}
                   disabled={loading}
                 >
                   {loading ? (
                     <span className="wallet-spinner" />
                   ) : (
-                    "Connect with Stripe"
+                    "Continue with Stripe"
                   )}
                 </button>
               )}
@@ -542,7 +516,7 @@ function AddMethodModal({ onClose, onAdd }: AddMethodModalProps) {
           {selectedType === "venmo" && (
             <div className="wallet-form-group">
               <label className="wallet-form-label" htmlFor="venmo-handle">
-                Venmo Handle
+                Venmo handle
               </label>
               <input
                 id="venmo-handle"
@@ -563,7 +537,7 @@ function AddMethodModal({ onClose, onAdd }: AddMethodModalProps) {
             <>
               <div className="wallet-form-group">
                 <label className="wallet-form-label" htmlFor="routing">
-                  Routing Number
+                  Routing number
                 </label>
                 <input
                   id="routing"
@@ -584,7 +558,7 @@ function AddMethodModal({ onClose, onAdd }: AddMethodModalProps) {
               </div>
               <div className="wallet-form-group">
                 <label className="wallet-form-label" htmlFor="account">
-                  Account Number
+                  Account number
                 </label>
                 <input
                   id="account"
@@ -601,15 +575,9 @@ function AddMethodModal({ onClose, onAdd }: AddMethodModalProps) {
                 {errors.account && (
                   <p className="wallet-form-error">{errors.account}</p>
                 )}
-                <p
-                  style={{
-                    fontSize: 11,
-                    color: "var(--ink-4)",
-                    marginTop: 4,
-                    fontFamily: "var(--font-body)",
-                  }}
-                >
-                  Bank accounts require 1–2 days verification
+                <p className="wallet-form-hint">
+                  We send two micro-deposits to verify ownership · 1–2 business
+                  days
                 </p>
               </div>
             </>
@@ -618,7 +586,7 @@ function AddMethodModal({ onClose, onAdd }: AddMethodModalProps) {
           {selectedType === "paypal" && (
             <div className="wallet-form-group">
               <label className="wallet-form-label" htmlFor="paypal-email">
-                PayPal Email
+                PayPal email
               </label>
               <input
                 id="paypal-email"
@@ -638,20 +606,26 @@ function AddMethodModal({ onClose, onAdd }: AddMethodModalProps) {
         </div>
 
         <div className="wallet-modal-footer">
-          <button className="wallet-modal-btn cancel" onClick={onClose}>
+          <button
+            type="button"
+            className="wallet-modal-btn cancel"
+            onClick={onClose}
+          >
             Cancel
           </button>
           {selectedType !== "stripe" && (
             <button
+              type="button"
               className="wallet-modal-btn confirm"
               onClick={handleSubmit}
               disabled={loading}
             >
-              {loading ? <span className="wallet-spinner" /> : "Add Method"}
+              {loading ? <span className="wallet-spinner" /> : "Add method"}
             </button>
           )}
           {selectedType === "stripe" && stripeConnected && (
             <button
+              type="button"
               className="wallet-modal-btn confirm"
               onClick={handleSubmit}
               disabled={loading}
@@ -710,10 +684,41 @@ function PayoutMethodsTab({
   onRemove,
   onAddClick,
 }: PayoutMethodsTabProps) {
+  const STATUS_RANK: Record<PayoutMethod["status"], number> = {
+    verified: 0,
+    pending: 1,
+    disabled: 2,
+  };
+  const sorted = [...methods].sort((a, b) => {
+    if (a.isDefault !== b.isDefault) return a.isDefault ? -1 : 1;
+    return STATUS_RANK[a.status] - STATUS_RANK[b.status];
+  });
+
+  if (sorted.length === 0) {
+    return (
+      <div>
+        <div className="wallet-empty">
+          <p className="wallet-empty-title">No payout methods linked yet</p>
+          <p className="wallet-empty-body">
+            Connect a method to start receiving payouts. Stripe is fastest; bank
+            transfer is most familiar. You can change or remove anything later.
+          </p>
+        </div>
+        <button
+          type="button"
+          className="wallet-add-method-btn"
+          onClick={onAddClick}
+        >
+          <IconPlus /> Add a payout method
+        </button>
+      </div>
+    );
+  }
+
   return (
     <div>
       <div className="wallet-methods-list">
-        {methods.map((m) => (
+        {sorted.map((m) => (
           <div
             key={m.id}
             className={`wallet-method-card ${m.status === "disabled" ? "disabled" : ""}`}
@@ -736,21 +741,25 @@ function PayoutMethodsTab({
                 )}
               </div>
               <div className="wallet-method-detail">{m.detail}</div>
-              <div className="wallet-method-fee">Fee: {m.fee}</div>
+              <div className="wallet-method-fee">Fee · {m.fee}</div>
             </div>
 
             <div className="wallet-method-actions">
               {!m.isDefault && m.status === "verified" && (
                 <button
+                  type="button"
                   className="wallet-action-btn"
                   onClick={() => onSetDefault(m.id)}
                 >
-                  Set Default
+                  Make default
                 </button>
               )}
-              <button className="wallet-action-btn">Edit</button>
+              <button type="button" className="wallet-action-btn">
+                Edit
+              </button>
               {!m.isDefault && (
                 <button
+                  type="button"
                   className="wallet-action-btn danger"
                   onClick={() => onRemove(m.id)}
                 >
@@ -762,8 +771,12 @@ function PayoutMethodsTab({
         ))}
       </div>
 
-      <button className="wallet-add-method-btn" onClick={onAddClick}>
-        <IconPlus /> Add Payout Method
+      <button
+        type="button"
+        className="wallet-add-method-btn"
+        onClick={onAddClick}
+      >
+        <IconPlus /> Add a payout method
       </button>
     </div>
   );
@@ -883,17 +896,13 @@ function HistoryTab({ withdrawals, methods }: HistoryTabProps) {
                 >
                   <td>{fmtDate(w.date)}</td>
                   <td>
-                    <span style={{ textTransform: "capitalize" }}>
-                      {w.methodType}
-                    </span>
-                    <span
-                      style={{
-                        color: "var(--ink-4)",
-                        marginLeft: 6,
-                        fontSize: 12,
-                      }}
-                    >
-                      {w.methodDetail}
+                    <span className="wallet-method-cell">
+                      <span className="wallet-method-cell__type">
+                        {w.methodType}
+                      </span>
+                      <span className="wallet-method-cell__detail">
+                        {w.methodDetail}
+                      </span>
                     </span>
                   </td>
                   <td className="amount-col">{fmt(w.amount)}</td>
@@ -909,11 +918,8 @@ function HistoryTab({ withdrawals, methods }: HistoryTabProps) {
                       <div className="wallet-failed-reason">
                         {w.failureReason}
                       </div>
-                      <button
-                        className="wallet-action-btn"
-                        style={{ fontSize: 11 }}
-                      >
-                        Retry Withdrawal
+                      <button type="button" className="wallet-action-btn">
+                        Retry withdrawal
                       </button>
                     </td>
                   </tr>
@@ -922,16 +928,8 @@ function HistoryTab({ withdrawals, methods }: HistoryTabProps) {
             ))}
             {filtered.length === 0 && (
               <tr>
-                <td
-                  colSpan={6}
-                  style={{
-                    textAlign: "center",
-                    color: "var(--ink-4)",
-                    padding: "32px",
-                    fontFamily: "var(--font-body)",
-                  }}
-                >
-                  No withdrawals match the selected filters.
+                <td colSpan={6} className="wallet-empty-cell">
+                  Nothing matches these filters yet — try widening the range.
                 </td>
               </tr>
             )}
@@ -963,29 +961,28 @@ function TaxTab() {
   return (
     <div>
       <div className="wallet-tax-hero">
-        <div className="wallet-tax-year-label">Total Earned in {tax.year}</div>
+        <div className="wallet-tax-year-label">Earned in {tax.year}</div>
         <div className="wallet-tax-big">{fmt(tax.totalEarned)}</div>
         <div className="wallet-tax-sub">
-          Platform fees: {fmt(tax.platformFees)} &nbsp;·&nbsp; Net:{" "}
-          {fmt(tax.netEarned)}
+          {fmt(tax.platformFees)} platform fees · {fmt(tax.netEarned)} net to
+          you
         </div>
       </div>
 
       <div className="wallet-tax-grid">
         {/* 1099-NEC Card */}
         <div className="wallet-tax-card">
-          <div className="wallet-tax-card-label">Tax Forms</div>
-          <div className="wallet-1099-icon" style={{ color: "var(--ink)" }}>
+          <div className="wallet-tax-card-label">Tax forms</div>
+          <div className="wallet-1099-icon">
             <IconDocument />
           </div>
-          <div className="wallet-1099-title">1099-NEC {tax.form1099Year}</div>
+          <div className="wallet-1099-title">1099-NEC · {tax.form1099Year}</div>
           <div className="wallet-1099-note">
-            Forms are issued by January 31. Available for tax year{" "}
-            {tax.form1099Year}.
+            Issued by January 31 each year. We file electronically with the IRS.
           </div>
           <button
-            className="btn-primary click-shift"
-            style={{ width: "100%", padding: "12px", fontSize: 12 }}
+            type="button"
+            className="wallet-tax-cta"
             onClick={handleDownload1099}
           >
             Download {tax.form1099Year} 1099 (PDF)
@@ -994,10 +991,10 @@ function TaxTab() {
 
         {/* W-9 Card */}
         <div className="wallet-tax-card">
-          <div className="wallet-tax-card-label">W-9 Information</div>
+          <div className="wallet-tax-card-label">W-9 on file</div>
 
           <div className="wallet-w9-row">
-            <span className="wallet-w9-key">Legal Name</span>
+            <span className="wallet-w9-key">Legal name</span>
             <span className="wallet-w9-val">{tax.w9Name}</span>
           </div>
           <div className="wallet-w9-row">
@@ -1006,17 +1003,14 @@ function TaxTab() {
           </div>
           <div className="wallet-w9-row">
             <span className="wallet-w9-key">Address</span>
-            <span
-              className="wallet-w9-val"
-              style={{ maxWidth: 180, textAlign: "right", fontSize: 12 }}
-            >
+            <span className="wallet-w9-val wallet-w9-val--address">
               {tax.w9Address}
             </span>
           </div>
 
           <button
-            className="btn-ghost click-shift"
-            style={{ marginTop: 20 }}
+            type="button"
+            className="wallet-action-btn wallet-w9-edit-btn"
             onClick={handleEdit}
           >
             Edit W-9
@@ -1026,20 +1020,20 @@ function TaxTab() {
         {/* Monthly Chart — full width */}
         <div className="wallet-tax-card wallet-tax-chart-card">
           <div className="wallet-tax-card-label">
-            Monthly Earnings — {tax.year}
+            Monthly earnings · {tax.year}
           </div>
           <MonthlyBarChart data={tax.monthlyBreakdown} />
         </div>
 
         {/* Tax Estimate Card */}
-        <div className="wallet-tax-card" style={{ gridColumn: "1 / -1" }}>
+        <div className="wallet-tax-card wallet-tax-estimate-card">
           <div className="wallet-tax-card-label">
-            Estimated Tax Liability — {tax.year}
+            Estimated set-aside · {tax.year}
           </div>
 
           <div className="wallet-estimate-row">
             <span className="wallet-estimate-label">
-              Self-employment tax (14.13%)
+              Self-employment (14.13%)
             </span>
             <span className="wallet-estimate-value">
               {fmt(selfEmploymentTax)}
@@ -1047,36 +1041,24 @@ function TaxTab() {
           </div>
           <div className="wallet-estimate-row">
             <span className="wallet-estimate-label">
-              Federal income estimate (12%)
+              Federal income (12% bracket)
             </span>
             <span className="wallet-estimate-value">
               {fmt(federalEstimate)}
             </span>
           </div>
-          <div
-            className="wallet-estimate-row"
-            style={{
-              borderTop: "2px solid var(--hairline)",
-              marginTop: 4,
-              paddingTop: 16,
-            }}
-          >
-            <span className="wallet-estimate-label" style={{ fontWeight: 700 }}>
-              Total estimate
+          <div className="wallet-estimate-row wallet-estimate-row--total">
+            <span className="wallet-estimate-label wallet-estimate-label--total">
+              Suggested set-aside
             </span>
-            <span
-              className="wallet-estimate-value"
-              style={{ color: "var(--brand-red)" }}
-            >
+            <span className="wallet-estimate-value wallet-estimate-value--total">
               {fmt(totalEstimate)}
             </span>
           </div>
 
-          {/* Rough estimate, not financial advice */}
           <p className="wallet-tax-disclaimer">
-            Rough estimate only — not financial or tax advice. Consult a
-            qualified tax professional. Rates assume single filer with no other
-            income.
+            Working estimate, not tax advice. Assumes single filer, no other
+            income — talk to a CPA before filing.
           </p>
         </div>
       </div>
@@ -1142,18 +1124,18 @@ export default function WalletPage() {
     } catch {}
 
     setShowWithdraw(false);
-    showToast(`Withdrawal of ${fmt(amount)} initiated`);
+    showToast(`${fmt(amount)} on its way`);
     setTab("history"); // switch to history so user sees processing row
   }
 
   function handleSetDefault(id: string) {
     setMethods((prev) => prev.map((m) => ({ ...m, isDefault: m.id === id })));
-    showToast("Default payout method updated");
+    showToast("Default method updated");
   }
 
   function handleRemove(id: string) {
     setMethods((prev) => prev.filter((m) => m.id !== id));
-    showToast("Payout method removed");
+    showToast("Method removed");
   }
 
   function handleAddMethod(partial: Omit<PayoutMethod, "id" | "addedAt">) {
@@ -1164,38 +1146,49 @@ export default function WalletPage() {
     };
     setMethods((prev) => [...prev, newMethod]);
     setShowAddMethod(false);
-    showToast("Payout method added");
+    showToast(
+      partial.status === "pending"
+        ? "Method added — verifying"
+        : "Method linked",
+    );
   }
 
   const TAB_LABELS: { key: Tab; label: string }[] = [
-    { key: "methods", label: "Payout Methods" },
+    { key: "methods", label: "Payout methods" },
     { key: "history", label: "History" },
     { key: "tax", label: "Tax" },
   ];
 
+  const verifiedMethods = methods.filter((m) => m.status === "verified").length;
+  const canWithdraw = balance.available > 0 && verifiedMethods > 0;
+
   return (
-    <div className="cw-page">
+    <div className="cw-page wallet">
       <header className="cw-header">
         <div className="cw-header__left">
-          <p className="cw-eyebrow cw-eyebrow--live">
-            WALLET · {fmt(balance.available)} AVAILABLE
-          </p>
+          <p className="cw-eyebrow cw-eyebrow--live">LINKS</p>
           <h1 className="cw-title">Wallet</h1>
         </div>
         <div className="cw-header__right">
           <span className="cw-date">
-            PROCESSING {fmt(balance.processing)} · YTD {fmt(balance.thisYear)}
+            {fmt(balance.processing)} in transit · {fmt(balance.thisYear)} YTD
           </span>
           <button
             type="button"
-            className={
-              "cw-pill" + (balance.available > 0 ? " cw-pill--urgent" : "")
-            }
+            className={"cw-pill" + (canWithdraw ? " cw-pill--urgent" : "")}
             onClick={() => setShowWithdraw(true)}
-            disabled={balance.available <= 0}
-            style={balance.available <= 0 ? { opacity: 0.5 } : undefined}
+            disabled={!canWithdraw}
+            aria-label={
+              canWithdraw
+                ? `Withdraw ${fmt(balance.available)}`
+                : verifiedMethods === 0
+                  ? "Add a payout method first"
+                  : "No funds available to withdraw"
+            }
           >
-            Withdraw {fmt(balance.available)}
+            {verifiedMethods === 0
+              ? "Link a method first"
+              : `Withdraw ${fmt(balance.available)}`}
           </button>
         </div>
       </header>
@@ -1216,11 +1209,7 @@ export default function WalletPage() {
       </nav>
 
       {/* Tab Content */}
-      <div
-        className="wallet-tab-content"
-        key={tab}
-        style={{ padding: "24px 32px" }}
-      >
+      <div className="wallet-tab-content" key={tab}>
         {tab === "methods" && (
           <PayoutMethodsTab
             methods={methods}

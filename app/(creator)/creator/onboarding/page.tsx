@@ -99,10 +99,11 @@ function stepStatus(id: StepId, p: Progress): ChecklistItemStatus {
    ───────────────────────────────────────────────────────────── */
 
 const inputStyle: React.CSSProperties = {
-  fontFamily: "var(--font-body)",
+  fontFamily: "var(--font-mono)",
   fontSize: 16,
+  /* 8px-grid: 12px vertical / 16px horizontal */
   padding: "12px 16px",
-  border: "1px solid var(--hairline)",
+  border: "1px solid var(--ink-4)",
   borderRadius: 8,
   background: "var(--surface)",
   width: "100%",
@@ -113,9 +114,9 @@ const inputStyle: React.CSSProperties = {
 
 const labelStyle: React.CSSProperties = {
   display: "block",
-  fontFamily: "var(--font-body)",
-  fontSize: 12,
-  fontWeight: 600,
+  fontFamily: "var(--font-mono)",
+  fontSize: 11,
+  fontWeight: 700,
   letterSpacing: "0.08em",
   textTransform: "uppercase",
   color: "var(--ink-3)",
@@ -355,14 +356,7 @@ function SocialStep({
 
   return (
     <div>
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(3, 1fr)",
-          gap: 12,
-          marginBottom: 12,
-        }}
-      >
+      <div className="ob2-social-grid">
         {(
           [
             { key: "ig", label: "Instagram", icon: "📸" },
@@ -374,45 +368,16 @@ function SocialStep({
             key={key}
             type="button"
             onClick={() => toggle(key)}
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              gap: 8,
-              padding: "16px 12px",
-              borderRadius: 10,
-              border: `2px solid ${social[key] ? "var(--brand-red)" : "var(--hairline)"}`,
-              background: social[key]
-                ? "rgba(193,18,31,0.04)"
-                : "var(--surface)",
-              cursor: "pointer",
-              transition: "all 0.15s ease",
-            }}
+            className={`ob2-social-btn${social[key] ? " ob2-social-btn--connected" : ""}`}
+            aria-pressed={social[key]}
           >
-            <span style={{ fontSize: 24 }}>{icon}</span>
-            <span
-              style={{
-                fontFamily: "var(--font-body)",
-                fontSize: 13,
-                fontWeight: 600,
-                color: social[key] ? "var(--brand-red)" : "var(--ink-3)",
-              }}
-            >
-              {label}
+            {/* 40×40 icon tile — v11 icon system */}
+            <span className="ob2-social-icon-tile" aria-hidden="true">
+              <span className="ob2-social-icon">{icon}</span>
             </span>
+            <span className="ob2-social-label">{label}</span>
             {social[key] && (
-              <span
-                style={{
-                  fontFamily: "var(--font-body)",
-                  fontSize: 11,
-                  fontWeight: 600,
-                  letterSpacing: "0.06em",
-                  textTransform: "uppercase",
-                  color: "var(--brand-red)",
-                }}
-              >
-                Connected
-              </span>
+              <span className="ob2-social-status">Connected</span>
             )}
           </button>
         ))}

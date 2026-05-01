@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useCallback, useRef } from "react";
+import { useState, useMemo, useCallback, useRef, KeyboardEvent } from "react";
 import Link from "next/link";
 import "./leaderboard.css";
 import {
@@ -105,150 +105,61 @@ interface PodiumCardProps {
 
 function PodiumCard({ entry, position }: PodiumCardProps) {
   const { text: deltaText, cls: deltaCls } = formatDelta(entry.deltaRank);
-  const isFirst = position === "first";
+  const rankLabel =
+    position === "first" ? "#1" : position === "second" ? "#2" : "#3";
   return (
-    <article
-      style={{
-        background: isFirst ? "var(--surface-2)" : "var(--surface)",
-        border: isFirst
-          ? "2px solid var(--brand-red)"
-          : "1px solid var(--hairline)",
-        borderRadius: 10,
-        padding: "24px",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        gap: 8,
-        flex: 1,
-        minWidth: 0,
-      }}
-    >
-      <span
-        className="eyebrow"
-        style={{ color: isFirst ? "var(--brand-red)" : "var(--ink-4)" }}
-      >
-        {position === "first" ? "#1" : position === "second" ? "#2" : "#3"}
-      </span>
-      <div
-        style={{
-          width: 48,
-          height: 48,
-          borderRadius: "50%",
-          background: isFirst
-            ? "var(--brand-red)"
-            : "var(--surface-3, #ece9e0)",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          fontFamily: "var(--font-display)",
-          fontWeight: 900,
-          fontSize: 20,
-          color: isFirst ? "var(--snow)" : "var(--ink)",
-        }}
-      >
-        {entry.avatarInitials}
-      </div>
-      <p
-        style={{
-          fontFamily: "var(--font-display)",
-          fontWeight: 700,
-          fontSize: 16,
-          color: "var(--ink)",
-          margin: 0,
-          textAlign: "center",
-          overflow: "hidden",
-          textOverflow: "ellipsis",
-          whiteSpace: "nowrap",
-          width: "100%",
-        }}
-        title={entry.name}
-      >
+    <article className={`lb-podium-card lb-podium-card--${position}`}>
+      {/* Rank number — v11: 64px display 800, brand-red for #1, champagne for #2/#3 */}
+      <p className="lb-podium-rank">{rankLabel}</p>
+
+      {/* Avatar */}
+      <div className="lb-podium-avatar">{entry.avatarInitials}</div>
+
+      {/* Creator name — v11: display 24px 700 */}
+      <p className="lb-podium-name" title={entry.name}>
         {entry.name}
       </p>
-      <p
-        style={{
-          fontFamily: "var(--font-body)",
-          fontSize: 12,
-          color: "var(--ink-4)",
-          margin: 0,
-        }}
-      >
-        @{entry.handle}
-      </p>
+      <p className="lb-podium-handle">@{entry.handle}</p>
+
       <TierBadge tier={entry.tier} />
+
+      {/* Push score */}
       <div style={{ textAlign: "center", marginTop: 4 }}>
-        <p
+        <p className="lb-podium-score">{entry.pushScore}</p>
+        <p className="lb-podium-score-label">PUSH SCORE</p>
+      </div>
+
+      {/* Stats row */}
+      <div className="lb-podium-stats">
+        <div className="lb-podium-stat">
+          <span className="lb-podium-stat-val">{entry.verifiedVisits}</span>
+          <span className="lb-podium-stat-lbl">VISITS</span>
+        </div>
+        <div className="lb-podium-stat">
+          <span className="lb-podium-stat-val">
+            {formatEarnings(entry.earningsWindow)}
+          </span>
+          <span className="lb-podium-stat-lbl">EARNED</span>
+        </div>
+      </div>
+
+      {/* Delta */}
+      <div style={{ marginTop: 8 }}>
+        <span className={`lb-delta ${deltaCls}`}>
+          {entry.deltaRank > 0 && <span aria-hidden="true">▲</span>}
+          {entry.deltaRank < 0 && <span aria-hidden="true">▼</span>}
+          {deltaText}
+        </span>
+        <span
           style={{
-            fontFamily: "var(--font-display)",
-            fontWeight: 900,
-            fontSize: "clamp(24px,3vw,36px)",
-            color: "var(--ink)",
-            margin: 0,
-            letterSpacing: "-0.04em",
+            marginLeft: 6,
+            fontSize: 12,
+            fontFamily: "var(--font-mono)",
+            color: "var(--ink-4)",
           }}
         >
-          {entry.pushScore}
-        </p>
-        <p className="eyebrow" style={{ color: "var(--ink-4)", margin: 0 }}>
-          PUSH SCORE
-        </p>
-      </div>
-      <div
-        style={{
-          display: "flex",
-          gap: 16,
-          marginTop: 8,
-          borderTop: "1px solid var(--hairline)",
-          paddingTop: 12,
-          width: "100%",
-          justifyContent: "center",
-        }}
-      >
-        <div style={{ textAlign: "center" }}>
-          <p
-            style={{
-              fontFamily: "var(--font-display)",
-              fontWeight: 700,
-              fontSize: 18,
-              color: "var(--ink)",
-              margin: 0,
-            }}
-          >
-            {entry.verifiedVisits}
-          </p>
-          <p className="eyebrow" style={{ color: "var(--ink-4)", margin: 0 }}>
-            VISITS
-          </p>
-        </div>
-        <div style={{ textAlign: "center" }}>
-          <p
-            style={{
-              fontFamily: "var(--font-display)",
-              fontWeight: 700,
-              fontSize: 18,
-              color: "var(--ink)",
-              margin: 0,
-            }}
-          >
-            {formatEarnings(entry.earningsWindow)}
-          </p>
-          <p className="eyebrow" style={{ color: "var(--ink-4)", margin: 0 }}>
-            EARNED
-          </p>
-        </div>
-      </div>
-      <div
-        style={{
-          fontSize: 12,
-          fontFamily: "var(--font-body)",
-          color: "var(--ink-4)",
-        }}
-      >
-        <span className={`lb-delta ${deltaCls}`} style={{ fontSize: 12 }}>
-          {entry.deltaRank > 0 && "▲"}
-          {entry.deltaRank < 0 && "▼"} {deltaText}
+          vs last period
         </span>
-        <span style={{ marginLeft: 6 }}>vs last period</span>
       </div>
     </article>
   );
@@ -263,71 +174,35 @@ function LeaderboardRow({ entry, isTop10 }: LeaderboardRowProps) {
   return (
     <div
       className={`lb-row${entry.isCurrentUser ? " lb-row--me" : ""}`}
-      style={{
-        display: "grid",
-        gridTemplateColumns: "48px 1fr 80px 64px 80px 64px",
-        alignItems: "center",
-        gap: 0,
-        padding: "12px 16px",
-        borderBottom: "1px solid var(--hairline)",
-        background: entry.isCurrentUser ? "var(--surface-2)" : "transparent",
-        borderRadius: entry.isCurrentUser ? 8 : 0,
-      }}
       aria-label={
         entry.isCurrentUser
           ? `Your rank: #${entry.rank}`
           : `Rank ${entry.rank}: ${entry.name}`
       }
     >
-      {/* Rank */}
-      <div>
+      {/* Rank — v11: display 24px 800, ink-3, min-width 40px */}
+      <div className="lb-row-rank">
         <span
-          style={{
-            fontFamily: "var(--font-display)",
-            fontWeight: isTop10 ? 900 : 700,
-            fontSize: isTop10 ? 18 : 14,
-            color: isTop10 ? "var(--ink)" : "var(--ink-4)",
-          }}
+          className={`lb-rank-num${isTop10 ? " lb-rank-num--top10" : " lb-rank-num--normal"}`}
         >
           {entry.rank}
         </span>
       </div>
 
       {/* Creator */}
-      <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+      <div className="lb-row-creator">
         <div
-          style={{
-            width: 32,
-            height: 32,
-            borderRadius: "50%",
-            background: entry.isCurrentUser
-              ? "var(--brand-red)"
-              : "var(--surface-3, #ece9e0)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            fontFamily: "var(--font-display)",
-            fontWeight: 700,
-            fontSize: 13,
-            color: entry.isCurrentUser ? "var(--snow)" : "var(--ink)",
-            flexShrink: 0,
-          }}
+          className="lb-creator-avatar"
+          style={
+            entry.isCurrentUser
+              ? { background: "var(--brand-red)", color: "var(--snow)" }
+              : undefined
+          }
         >
           {entry.avatarInitials}
         </div>
-        <div style={{ minWidth: 0 }}>
-          <p
-            style={{
-              fontFamily: "var(--font-body)",
-              fontSize: 14,
-              fontWeight: 600,
-              color: "var(--ink)",
-              margin: 0,
-              whiteSpace: "nowrap",
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-            }}
-          >
+        <div className="lb-creator-info">
+          <span className="lb-creator-name">
             {entry.name}
             {entry.isCurrentUser && (
               <span
@@ -343,61 +218,27 @@ function LeaderboardRow({ entry, isTop10 }: LeaderboardRowProps) {
                 You
               </span>
             )}
-          </p>
-          <p
-            style={{
-              fontFamily: "var(--font-body)",
-              fontSize: 11,
-              color: "var(--ink-4)",
-              margin: 0,
-            }}
-          >
-            @{entry.handle}
-          </p>
+          </span>
+          <span className="lb-creator-handle">@{entry.handle}</span>
         </div>
         <TierBadge tier={entry.tier} />
       </div>
 
-      {/* Push Score */}
-      <div style={{ textAlign: "right" }}>
-        <span
-          style={{
-            fontFamily: "var(--font-display)",
-            fontWeight: 700,
-            fontSize: 14,
-            color: "var(--ink)",
-          }}
-        >
-          {entry.pushScore}
-        </span>
+      {/* Push Score — v11: mono 14px 600 */}
+      <div className="lb-row-score">
+        <span className="lb-score-val">{entry.pushScore}</span>
       </div>
 
       {/* Verified Visits */}
-      <div
-        style={{
-          textAlign: "right",
-          fontFamily: "var(--font-body)",
-          fontSize: 13,
-          color: "var(--ink-3)",
-        }}
-      >
-        {entry.verifiedVisits}
-      </div>
+      <div className="lb-row-visits">{entry.verifiedVisits}</div>
 
-      {/* Earnings */}
-      <div
-        style={{
-          textAlign: "right",
-          fontFamily: "var(--font-body)",
-          fontSize: 13,
-          color: "var(--ink)",
-        }}
-      >
+      {/* Earnings — v11: display 16px 700 */}
+      <div className="lb-row-earnings">
         {formatEarnings(entry.earningsWindow)}
       </div>
 
-      {/* Delta */}
-      <div style={{ textAlign: "right" }}>
+      {/* Delta — v11: 12px mono */}
+      <div className="lb-row-delta">
         <DeltaCell delta={entry.deltaRank} />
       </div>
     </div>
@@ -548,30 +389,47 @@ export default function LeaderboardPage() {
           </section>
         )}
 
-        {/* Tier filter chips */}
+        {/* Tier filter chips — roving tabIndex keyboard nav */}
         <div
-          style={{
-            display: "flex",
-            gap: 8,
-            alignItems: "center",
-            marginBottom: 16,
-            flexWrap: "wrap",
-          }}
+          className="lb-tier-filters"
           role="group"
           aria-label="Filter by tier"
         >
-          <span
-            className="eyebrow"
-            style={{ color: "var(--ink-4)", marginRight: 4 }}
-          >
-            TIER
-          </span>
-          {TIER_FILTERS.map(({ key, label }) => (
+          <span className="lb-tier-filter-label">TIER</span>
+          {TIER_FILTERS.map(({ key, label }, idx) => (
             <button
               key={key}
               className={`lb-tier-chip lb-tier-chip--${key}${tierFilter === key ? " lb-tier-chip--active" : ""}`}
               onClick={() => setTierFilter(key as CreatorTier | "all")}
               aria-pressed={tierFilter === key}
+              /* Roving tabIndex: active chip gets 0, all others -1; arrow keys move focus */
+              tabIndex={
+                tierFilter === key
+                  ? 0
+                  : idx === 0 && tierFilter === "all"
+                    ? 0
+                    : -1
+              }
+              onKeyDown={(e: KeyboardEvent<HTMLButtonElement>) => {
+                // Arrow left/right moves focus within the chip group
+                const buttons = Array.from(
+                  e.currentTarget
+                    .closest("[role='group']")
+                    ?.querySelectorAll<HTMLButtonElement>(
+                      "button.lb-tier-chip",
+                    ) ?? [],
+                );
+                const currentIdx = buttons.indexOf(e.currentTarget);
+                if (e.key === "ArrowRight") {
+                  e.preventDefault();
+                  buttons[(currentIdx + 1) % buttons.length]?.focus();
+                } else if (e.key === "ArrowLeft") {
+                  e.preventDefault();
+                  buttons[
+                    (currentIdx - 1 + buttons.length) % buttons.length
+                  ]?.focus();
+                }
+              }}
             >
               {label}
             </button>
@@ -660,104 +518,30 @@ export default function LeaderboardPage() {
 
         {/* Share badge section */}
         {currentUser && (
-          <section
-            aria-label="Share your rank"
-            style={{
-              background: "var(--surface-2)",
-              border: "1px solid var(--hairline)",
-              borderRadius: 10,
-              padding: "24px",
-              display: "flex",
-              gap: 32,
-              alignItems: "center",
-              marginBottom: 32,
-            }}
-          >
-            {/* Badge preview */}
-            <div
-              aria-hidden="true"
-              style={{
-                width: 96,
-                height: 96,
-                background: "var(--ink)",
-                borderRadius: 10,
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                justifyContent: "center",
-                gap: 4,
-                flexShrink: 0,
-              }}
-            >
-              <p
-                style={{
-                  fontFamily: "var(--font-display)",
-                  fontWeight: 900,
-                  fontSize: 28,
-                  color: "var(--brand-red)",
-                  margin: 0,
-                  letterSpacing: "-0.04em",
-                }}
-              >
-                #{currentUser.rank}
-              </p>
-              <p
-                style={{
-                  fontFamily: "var(--font-body)",
-                  fontSize: 9,
-                  color: "rgba(245,242,236,0.5)",
-                  margin: 0,
-                  textTransform: "uppercase",
-                  letterSpacing: "0.08em",
-                }}
-              >
-                Push Score
-              </p>
-              <p
-                style={{
-                  fontFamily: "var(--font-display)",
-                  fontWeight: 900,
-                  fontSize: 16,
-                  color: "var(--snow)",
-                  margin: 0,
-                }}
-              >
-                {currentUser.pushScore}
-              </p>
+          <section className="lb-share-section" aria-label="Share your rank">
+            {/* Badge preview — uses CSS classes */}
+            <div className="lb-share-badge-preview" aria-hidden="true">
+              <p className="lb-share-badge-rank">#{currentUser.rank}</p>
+              <p className="lb-share-badge-label">Push Score</p>
+              <p className="lb-share-badge-score">{currentUser.pushScore}</p>
             </div>
 
-            <div style={{ flex: 1 }}>
+            <div className="lb-share-info">
               <p
                 className="eyebrow"
                 style={{ color: "var(--ink-4)", marginBottom: 8 }}
               >
                 SHARE YOUR RANK
               </p>
-              <h3
-                style={{
-                  fontFamily: "var(--font-display)",
-                  fontWeight: 700,
-                  fontSize: 20,
-                  color: "var(--ink)",
-                  margin: "0 0 8px",
-                }}
-              >
-                Share your rank.
-              </h3>
-              <p
-                style={{
-                  fontFamily: "var(--font-body)",
-                  fontSize: 13,
-                  color: "var(--ink-3)",
-                  margin: "0 0 16px",
-                }}
-              >
+              <h3 className="lb-share-title">Share your rank.</h3>
+              <p className="lb-share-desc">
                 You&apos;re #{currentUser.rank} of{" "}
                 {MOCK_BY_WINDOW[window].totalCreators.toLocaleString()} creators
                 in NYC. Download your rank badge and share it on Instagram.
               </p>
+              {/* v11: badge download uses btn-secondary (N2W Blue) */}
               <button
-                className="btn-primary click-shift"
+                className="btn-secondary click-shift"
                 onClick={handleDownloadBadge}
               >
                 Download Badge (SVG)

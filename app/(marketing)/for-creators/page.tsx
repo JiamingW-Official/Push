@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import "./creators.css";
 
@@ -93,6 +93,51 @@ const TIER_NODES = [
   },
 ];
 
+/* ── Editorial compare table — Cinema Selects style (§ 8.6) ── */
+const COMPARE_ROWS: ReadonlyArray<{
+  feature: string;
+  push: string;
+  traditional: string;
+  outcome: string;
+}> = [
+  {
+    feature: "Pay model",
+    push: "Per verified visit",
+    traditional: "Flat fee per post",
+    outcome: "Aligned with real lift",
+  },
+  {
+    feature: "Follower floor",
+    push: "None — record-based",
+    traditional: "10K+ minimum gate",
+    outcome: "Performance > vanity",
+  },
+  {
+    feature: "Payout cadence",
+    push: "Every Friday",
+    traditional: "Net-60 or chase invoice",
+    outcome: "Cash flow that compounds",
+  },
+  {
+    feature: "Exclusivity clause",
+    push: "None",
+    traditional: "Often 30–90 days",
+    outcome: "Keep your audience yours",
+  },
+  {
+    feature: "Verification",
+    push: "QR + receipt audit",
+    traditional: "Self-reported metrics",
+    outcome: "Brands re-book on proof",
+  },
+  {
+    feature: "Tier progression",
+    push: "Verified scans unlock rates",
+    traditional: "Manager negotiates",
+    outcome: "Earnings ladder you control",
+  },
+];
+
 /* ── Earnings Calculator component ───────────────────────── */
 function EarningsCalculator() {
   const [tier, setTier] = useState("operator");
@@ -117,11 +162,7 @@ function EarningsCalculator() {
       </div>
 
       {/* Tier selector — btn-pill row */}
-      <div
-        role="group"
-        aria-label="Creator tier"
-        style={{ display: "flex", flexWrap: "wrap", gap: 8 }}
-      >
+      <div role="group" aria-label="Creator tier" className="calc-pill-row">
         {TIERS.map((t) => (
           <button
             key={t.id}
@@ -182,24 +223,60 @@ function EarningsCalculator() {
         Connect
       </p>
 
-      <Link
-        href="/creator/signup"
-        className="btn-primary click-shift"
-        style={{ alignSelf: "flex-start" }}
-      >
+      <Link href="/creator/signup" className="btn-primary fc-self-start">
         Apply for the cohort →
       </Link>
     </div>
   );
 }
 
+/* ── Reveal-on-scroll hook (vanilla IO; respects reduced-motion) ─── */
+function useRevealOnScroll() {
+  const rootRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    const root = rootRef.current;
+    if (!root) return;
+
+    // Honor user motion preference — no animation if reduced.
+    const prefersReduced = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+    const targets = root.querySelectorAll<HTMLElement>("[data-reveal]");
+
+    if (prefersReduced) {
+      targets.forEach((el) => el.classList.add("is-revealed"));
+      return;
+    }
+
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("is-revealed");
+            io.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.18, rootMargin: "0px 0px -64px 0px" },
+    );
+
+    targets.forEach((el) => io.observe(el));
+    return () => io.disconnect();
+  }, []);
+
+  return rootRef;
+}
+
 /* ── Page ─────────────────────────────────────────────────── */
 export default function ForCreatorsPage() {
+  const rootRef = useRevealOnScroll();
+
   return (
-    <>
+    <div ref={rootRef}>
       {/* ════════════════════════════════════════════════════
           HERO — Full-Bleed Pattern A (border-radius: 0 allowed)
-          Dark ink with radial accent glow
+          Dark ink with radial accent glow · Magvix corner-anchored
           ════════════════════════════════════════════════════ */}
       <section className="fc-hero" aria-label="For Creators Hero">
         {/* Ghost watermark stat — architectural ghost digit */}
@@ -214,13 +291,13 @@ export default function ForCreatorsPage() {
         </div>
 
         {/* Bottom-left copy block — v11 corner-anchored */}
-        <div className="fc-hero-copy">
+        <div className="fc-hero-copy" data-reveal>
           <span className="eyebrow fc-hero-eyebrow">(FOR CREATORS)</span>
 
-          <h1 className="fc-hero-h1">
+          <h1 className="fc-hero-h1 mixed-headline">
             Perform.
             <br />
-            Get paid.
+            Get <em>paid</em>.
           </h1>
 
           <p className="fc-hero-sub">
@@ -229,15 +306,70 @@ export default function ForCreatorsPage() {
           </p>
 
           <div className="fc-hero-actions">
-            <Link href="/creator/signup" className="btn-primary click-shift">
+            <Link href="/creator/signup" className="btn-primary">
               Apply Now
             </Link>
-            <Link
-              href="/how-it-works"
-              className="btn-ghost click-shift fc-hero-ghost-btn"
-            >
+            <Link href="/how-it-works" className="btn-ghost fc-hero-ghost-btn">
               How It Works
             </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* ════════════════════════════════════════════════════
+          WHY PUSH — Editorial Table (Cinema Selects · § 8.6)
+          Surface-2 Pearl Stone (warm-neutral) · breaks the dark
+          adjacency between Hero and KPI
+          ════════════════════════════════════════════════════ */}
+      <section
+        className="fc-table-section"
+        aria-label="Why creators choose Push"
+      >
+        <div className="fc-section-inner fc-table-inner" data-reveal>
+          <span className="eyebrow fc-table-eyebrow">(WHY PUSH)</span>
+          <h2 className="fc-table-h2">
+            Push <em>vs.</em> traditional creator deals.
+          </h2>
+          <p className="fc-table-lede">
+            Same hours of work. Different math. Receipts decide who gets paid —
+            not a follower count, not a manager, not a quarterly negotiation.
+          </p>
+
+          <div className="fc-table-scroll">
+            <table className="fc-compare-table">
+              <thead>
+                <tr>
+                  <th scope="col">(WHAT MATTERS)</th>
+                  <th scope="col" className="fc-th-push">
+                    (PUSH)
+                  </th>
+                  <th scope="col">(TRADITIONAL)</th>
+                  <th scope="col" className="fc-th-outcome">
+                    (OUTCOME)
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {COMPARE_ROWS.map((row) => (
+                  <tr key={row.feature}>
+                    <td className="fc-td-feature">{row.feature}</td>
+                    <td className="fc-td-push">{row.push}</td>
+                    <td className="fc-td-other">{row.traditional}</td>
+                    <td className="fc-td-outcome">{row.outcome}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          {/* Editorial Pink stamp — single per-page CTA moment (§ 9.6) */}
+          <div className="fc-table-cta">
+            <Link href="/creator/signup" className="btn-editorial">
+              Claim a creator slot →
+            </Link>
+            <p className="fc-table-fine">
+              Reviewed weekly · 200+ active creators · NYC only for now.
+            </p>
           </div>
         </div>
       </section>
@@ -252,15 +384,15 @@ export default function ForCreatorsPage() {
           $
         </div>
 
-        <div className="fc-kpi-inner">
+        <div className="fc-kpi-inner" data-reveal>
           {/* Left 8-col: headline + KPI trio */}
           <div className="fc-kpi-left">
-            <p className="fc-kpi-eyebrow">(PARTNER TIER · MONTHLY POTENTIAL)</p>
+            <p className="fc-kpi-eyebrow">(THE NUMBERS · MONTHLY POTENTIAL)</p>
 
             <div className="fc-kpi-row">
               <div className="fc-kpi-block">
                 <p className="fc-kpi-num">$10K+</p>
-                <p className="fc-kpi-cap">per month</p>
+                <p className="fc-kpi-cap">partner tier monthly</p>
               </div>
               <div className="fc-kpi-divider" aria-hidden="true" />
               <div className="fc-kpi-block">
@@ -287,7 +419,7 @@ export default function ForCreatorsPage() {
               <p className="fc-kpi-tile-body">
                 NYC creators only. Applications reviewed weekly.
               </p>
-              <Link href="/creator/signup" className="btn-ink click-shift">
+              <Link href="/creator/signup" className="btn-ink">
                 Apply Now
               </Link>
             </div>
@@ -296,7 +428,7 @@ export default function ForCreatorsPage() {
       </section>
 
       {/* ════════════════════════════════════════════════════
-          SIGNATURE DIVIDER 1
+          SIGNATURE DIVIDER 1 (§ 8.5)
           ════════════════════════════════════════════════════ */}
       <div className="fc-sig-wrap">
         <span className="sig-divider">Posted · Scanned · Verified ·</span>
@@ -304,30 +436,21 @@ export default function ForCreatorsPage() {
 
       {/* ════════════════════════════════════════════════════
           HOW IT WORKS — Numbered editorial rows, 3-column grid
-          Warm butter candy panel
+          Warm butter candy panel · light/warm
           ════════════════════════════════════════════════════ */}
-      <section
-        className="candy-panel fc-how-section"
-        aria-label="How it works"
-        style={{ background: "var(--panel-butter)" }}
-      >
-        {/* Floating glass stat tile */}
+      <section className="candy-panel fc-how-section" aria-label="How it works">
+        {/* Floating glass stat tile (§ 8.9.3 — single tile in panel) */}
         <div className="lg-surface fc-how-tile" aria-hidden="true">
           <div className="fc-how-tile-num">3</div>
           <div className="fc-how-tile-cap">steps to first payout</div>
         </div>
 
-        <div className="fc-section-inner">
-          <span
-            className="eyebrow"
-            style={{ display: "block", marginBottom: 16 }}
-          >
-            (HOW IT WORKS)
-          </span>
+        <div className="fc-section-inner" data-reveal>
+          <span className="eyebrow fc-eyebrow-block">(HOW IT WORKS)</span>
           <h2 className="fc-h2">
             Walk in.
             <br />
-            Scan. Earn.
+            Scan. <em>Earn</em>.
           </h2>
 
           {/* Numbered editorial rows — 3-col grid */}
@@ -368,7 +491,7 @@ export default function ForCreatorsPage() {
 
       {/* ════════════════════════════════════════════════════
           TIERS PANEL — Dark Ink + numbered editorial rows
-          Cool panel (dark ink counts as cool counterweight)
+          Cool counterweight after warm butter
           ════════════════════════════════════════════════════ */}
       <section className="fc-tiers-section" aria-label="Creator tiers">
         {/* Ghost architectural numeral */}
@@ -376,17 +499,14 @@ export default function ForCreatorsPage() {
           6
         </div>
 
-        <div className="fc-section-inner fc-tiers-inner">
-          <span
-            className="eyebrow fc-eyebrow-light"
-            style={{ display: "block", marginBottom: 16 }}
-          >
-            (6 TIERS)
+        <div className="fc-section-inner fc-tiers-inner" data-reveal>
+          <span className="eyebrow fc-eyebrow-light fc-eyebrow-block">
+            (THE 6 TIERS)
           </span>
           <h2 className="fc-h2 fc-h2-light">
             Progress that
             <br />
-            compounds.
+            <em>compounds</em>.
           </h2>
 
           {/* Numbered editorial tier rows */}
@@ -427,37 +547,29 @@ export default function ForCreatorsPage() {
       </section>
 
       {/* ════════════════════════════════════════════════════
-          SIGNATURE DIVIDER 2
+          SIGNATURE DIVIDER 2 (§ 8.5 — max 2 per page)
           ════════════════════════════════════════════════════ */}
       <div className="fc-sig-wrap">
         <span className="sig-divider">Story · Scan · Pay ·</span>
       </div>
 
       {/* ════════════════════════════════════════════════════
-          EARNINGS PANEL — Warm butter, calculator + glass tile
+          EARNINGS PANEL — Warm butter candy, calculator + glass tile
           ════════════════════════════════════════════════════ */}
       <section
         className="candy-panel fc-calc-section"
         aria-label="Earnings calculator"
         id="calculator"
-        style={{ background: "var(--panel-butter)" }}
       >
-        {/* Floating glass stat tile — top right */}
+        {/* Floating glass stat tile — top right (§ 8.9.3) */}
         <div className="lg-surface fc-calc-tile" aria-hidden="true">
           <div className="fc-calc-tile-num">Up to $4,200/mo</div>
           <div className="fc-calc-tile-cap">Operator tier</div>
         </div>
 
-        <div className="fc-section-inner">
-          <span
-            className="eyebrow"
-            style={{ display: "block", marginBottom: 16 }}
-          >
-            (THE MATH)
-          </span>
-          <h2 className="fc-h2" style={{ marginBottom: 48 }}>
-            What you actually earn.
-          </h2>
+        <div className="fc-section-inner" data-reveal>
+          <span className="eyebrow fc-eyebrow-block">(THE MATH)</span>
+          <h2 className="fc-h2 fc-h2-mb-48">What you actually earn.</h2>
 
           <EarningsCalculator />
         </div>
@@ -465,6 +577,8 @@ export default function ForCreatorsPage() {
 
       {/* ════════════════════════════════════════════════════
           PULL QUOTE — Brand Red full-width editorial moment
+          (≤1 saturated moment per viewport — this panel IS the
+          viewport when in view; quote panel acts as social proof)
           ════════════════════════════════════════════════════ */}
       <section className="fc-quote-section" aria-label="Creator testimonial">
         {/* Decorative quote mark ghost */}
@@ -472,10 +586,11 @@ export default function ForCreatorsPage() {
           &ldquo;
         </div>
 
-        <div className="fc-quote-inner">
+        <div className="fc-quote-inner" data-reveal>
+          <p className="fc-quote-eyebrow">(CREATORS SAY)</p>
           <blockquote className="fc-quote-text">
-            &ldquo;I made more in my first month than four months of sponsored
-            posts combined. The QR doesn&rsquo;t lie.&rdquo;
+            <em>&ldquo;</em>I made more in my first month than four months of
+            sponsored posts combined. The QR doesn&rsquo;t lie.<em>&rdquo;</em>
           </blockquote>
           <div className="fc-quote-attr">
             <span className="fc-quote-name">Maria V.</span>
@@ -486,22 +601,13 @@ export default function ForCreatorsPage() {
       </section>
 
       {/* ════════════════════════════════════════════════════
-          PHOTO GRID PANEL — 3-up Photo Cards
-          Cool sky panel (alternates after red quote)
+          PHOTO GRID PANEL — 3-up Photo Cards (§ 8.7)
+          Surface — warm-neutral · alternates after red quote
           ════════════════════════════════════════════════════ */}
-      <section
-        className="fc-photo-section"
-        aria-label="Real campaigns"
-        style={{ background: "var(--surface)" }}
-      >
-        <div className="fc-section-inner">
-          <span
-            className="eyebrow"
-            style={{ display: "block", marginBottom: 16 }}
-          >
-            (WHAT IT LOOKS LIKE)
-          </span>
-          <h2 className="fc-h2" style={{ marginBottom: 48 }}>
+      <section className="fc-photo-section" aria-label="Real campaigns">
+        <div className="fc-section-inner" data-reveal>
+          <span className="eyebrow fc-eyebrow-block">(REAL CAMPAIGNS)</span>
+          <h2 className="fc-h2 fc-h2-mb-48">
             Real campaigns.
             <br />
             Real neighborhoods.
@@ -509,14 +615,8 @@ export default function ForCreatorsPage() {
 
           {/* 3-up Photo Card grid */}
           <div className="fc-photo-grid">
-            {/* Card 1 — warm earth tone */}
-            <div
-              className="fc-photo-card click-shift"
-              style={{
-                background:
-                  "linear-gradient(160deg, var(--char) 0%, var(--cat-food) 60%, var(--ink) 100%)",
-              }}
-            >
+            {/* Card 1 — warm dining tone */}
+            <div className="fc-photo-card click-shift fc-photo-card--dining">
               <div className="lg-surface--badge fc-photo-badge">Active</div>
               <div className="fc-photo-overlay" />
               <div className="fc-photo-copy">
@@ -525,14 +625,8 @@ export default function ForCreatorsPage() {
               </div>
             </div>
 
-            {/* Card 2 — cool blue tone */}
-            <div
-              className="fc-photo-card click-shift"
-              style={{
-                background:
-                  "linear-gradient(160deg, var(--graphite) 0%, var(--cat-travel) 60%, var(--ink) 100%)",
-              }}
-            >
+            {/* Card 2 — cool travel tone */}
+            <div className="fc-photo-card click-shift fc-photo-card--travel">
               <div className="lg-surface--badge fc-photo-badge">Verified</div>
               <div className="fc-photo-overlay" />
               <div className="fc-photo-copy">
@@ -541,14 +635,8 @@ export default function ForCreatorsPage() {
               </div>
             </div>
 
-            {/* Card 3 — warm amber tone */}
-            <div
-              className="fc-photo-card click-shift"
-              style={{
-                background:
-                  "linear-gradient(160deg, var(--char) 0%, var(--cat-food) 60%, var(--ink) 100%)",
-              }}
-            >
+            {/* Card 3 — warm entertainment tone */}
+            <div className="fc-photo-card click-shift fc-photo-card--ent">
               <div className="lg-surface--badge fc-photo-badge">Trending</div>
               <div className="fc-photo-overlay" />
               <div className="fc-photo-copy">
@@ -561,17 +649,18 @@ export default function ForCreatorsPage() {
       </section>
 
       {/* ════════════════════════════════════════════════════
-          TICKET PANEL — GA Orange final CTA
+          TICKET PANEL — GA Orange final CTA (§ 8.2)
           ════════════════════════════════════════════════════ */}
       <section className="ticket-panel fc-ticket" aria-label="Apply CTA">
-        {/* Four grommet circles — corner anchored */}
+        {/* Four grommet circles — corner anchored per § 8.2 */}
         <div className="fc-grommet fc-grommet--tl" aria-hidden="true" />
         <div className="fc-grommet fc-grommet--tr" aria-hidden="true" />
         <div className="fc-grommet fc-grommet--bl" aria-hidden="true" />
         <div className="fc-grommet fc-grommet--br" aria-hidden="true" />
 
-        {/* Centered content */}
-        <div className="fc-ticket-content">
+        {/* Centered content (Ticket exception per § 7.3) */}
+        <div className="fc-ticket-content" data-reveal>
+          <p className="fc-ticket-eyebrow">(READY?)</p>
           <h2 className="fc-ticket-h2">
             Ready to
             <br />
@@ -582,14 +671,14 @@ export default function ForCreatorsPage() {
             Applications reviewed weekly. NYC creators only.
           </p>
 
-          <Link href="/creator/signup" className="btn-ink click-shift">
+          <Link href="/creator/signup" className="btn-ink">
             Apply Now
           </Link>
         </div>
       </section>
 
       {/* Bottom spacer */}
-      <div style={{ height: 64 }} aria-hidden="true" />
-    </>
+      <div className="fc-bottom-spacer" aria-hidden="true" />
+    </div>
   );
 }

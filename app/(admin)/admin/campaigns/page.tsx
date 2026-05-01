@@ -12,6 +12,7 @@ import {
 import { TIER_LABELS, type CreatorTier } from "@/lib/demo-data";
 
 type StatusFilter = AdminCampaignStatus | "all";
+type ActionKind = "approve" | "flag" | "suspend";
 
 /* ── Badges ──────────────────────────────────────────────────── */
 const badgeBase: React.CSSProperties = {
@@ -57,6 +58,76 @@ function TierBadge({ tier }: { tier: CreatorTier }) {
   );
 }
 
+/* ── Confirm Dialog ──────────────────────────────────────────── */
+function ConfirmDialog({
+  eyebrow,
+  title,
+  body,
+  confirmLabel,
+  variant,
+  destructive,
+  onCancel,
+  onConfirm,
+}: {
+  eyebrow: string;
+  title: string;
+  body: React.ReactNode;
+  confirmLabel: string;
+  variant: "danger" | "primary";
+  destructive: boolean;
+  onCancel: () => void;
+  onConfirm: () => void;
+}) {
+  useEffect(() => {
+    function onKey(e: KeyboardEvent) {
+      if (e.key === "Escape") onCancel();
+    }
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [onCancel]);
+
+  return (
+    <div
+      className="adm-confirm-overlay"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="adm-confirm-title"
+      onClick={onCancel}
+    >
+      <div className="adm-confirm" onClick={(e) => e.stopPropagation()}>
+        <div className="adm-confirm__header">
+          <div
+            className={`adm-confirm__eyebrow${destructive ? "" : " adm-confirm__eyebrow--ink"}`}
+          >
+            {eyebrow}
+          </div>
+          <h2 id="adm-confirm-title" className="adm-confirm__title">
+            {title}
+          </h2>
+        </div>
+        <div className="adm-confirm__body">{body}</div>
+        <div className="adm-confirm__footer">
+          <button
+            type="button"
+            className="adm-confirm__btn adm-confirm__btn--cancel"
+            onClick={onCancel}
+            autoFocus
+          >
+            Cancel
+          </button>
+          <button
+            type="button"
+            className={`adm-confirm__btn adm-confirm__btn--${variant}`}
+            onClick={onConfirm}
+          >
+            {confirmLabel}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 /* ── Main page ───────────────────────────────────────────────── */
 export default function AdminCampaignsPage() {
   const [campaigns, setCampaigns] = useState<AdminCampaign[]>([]);
@@ -64,11 +135,15 @@ export default function AdminCampaignsPage() {
 
   const [activeTab, setActiveTab] = useState<StatusFilter>("all");
   const [search, setSearch] = useState("");
-  const [merchantFilter, setMerchantFilter] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("");
   const [tierFilter, setTierFilter] = useState("");
   const [budgetMin, setBudgetMin] = useState("");
   const [budgetMax, setBudgetMax] = useState("");
+
+  const [pendingAction, setPendingAction] = useState<{
+    campaign: AdminCampaign;
+    action: ActionKind;
+  } | null>(null);
 
   const [toast, setToast] = useState<{
     msg: string;
@@ -111,10 +186,6 @@ export default function AdminCampaignsPage() {
           c.description.toLowerCase().includes(q),
       );
     }
-    if (merchantFilter.trim()) {
-      const q = merchantFilter.toLowerCase();
-      list = list.filter((c) => c.business_name.toLowerCase().includes(q));
-    }
     if (categoryFilter)
       list = list.filter(
         (c) => c.category.toLowerCase() === categoryFilter.toLowerCase(),
@@ -133,7 +204,6 @@ export default function AdminCampaignsPage() {
     campaigns,
     activeTab,
     search,
-    merchantFilter,
     categoryFilter,
     tierFilter,
     budgetMin,
@@ -141,14 +211,11 @@ export default function AdminCampaignsPage() {
   ]);
 
   /* ── Actions ───────────────────────────────────────────────── */
-  async function handleAction(
-    campaignId: string,
-    action: "approve" | "flag" | "suspend",
-  ) {
-    const actionLabels = {
+  async function executeAction(campaignId: string, action: ActionKind) {
+    const actionLabels: Record<ActionKind, string> = {
       approve: "Approved",
-      flag: "Flagged",
-      suspend: "Suspended",
+      flag: "Flagged for review",
+      suspend: "Paused",
     };
     try {
       const res = await fetch(`/api/admin/campaigns/${campaignId}/decision`, {
@@ -157,7 +224,7 @@ export default function AdminCampaignsPage() {
         body: JSON.stringify({ action }),
       });
       if (!res.ok) throw new Error("Request failed");
-      const statusMap: Record<typeof action, AdminCampaignStatus> = {
+      const statusMap: Record<ActionKind, AdminCampaignStatus> = {
         approve: "active",
         flag: "flagged",
         suspend: "paused",
@@ -177,6 +244,11 @@ export default function AdminCampaignsPage() {
     } catch {
       showToast("Action failed — try again", "err");
     }
+  }
+
+  function requestAction(campaign: AdminCampaign, action: ActionKind) {
+    // Approve is intentional but non-destructive: confirm anyway for audit clarity.
+    setPendingAction({ campaign, action });
   }
 
   /* ── Tab config ────────────────────────────────────────────── */
@@ -229,6 +301,17 @@ export default function AdminCampaignsPage() {
     height: 40,
   };
 
+  const HEADERS = [
+    "Campaign / Merchant",
+    "Status",
+    "Tier",
+    "Budget",
+    "Applicants",
+    "Visits",
+    "Created",
+    "Actions",
+  ];
+
   return (
     <div style={{ fontFamily: "var(--font-body)", color: "var(--ink)" }}>
       {/* Page header */}
@@ -238,49 +321,32 @@ export default function AdminCampaignsPage() {
           <h1 className="adm-page-title">Campaigns</h1>
         </div>
 
-        {/* KPI inline summary */}
         <div
-          style={{
-            display: "flex",
-            gap: 24,
-            alignItems: "center",
-            background: "var(--surface-2)",
-            border: "1px solid var(--hairline)",
-            borderRadius: 10,
-            padding: "12px 24px",
-          }}
+          className="adm-kpi-strip"
+          role="group"
+          aria-label="Campaign totals"
         >
           {[
-            { label: "Active", val: stats.active, color: "var(--accent-blue)" },
-            { label: "Pending", val: stats.pending, color: "var(--ink-3)" },
-            { label: "Flagged", val: stats.flagged, color: "var(--brand-red)" },
-            { label: "Total", val: stats.total, color: "var(--ink)" },
-          ].map(({ label, val, color }) => (
-            <div key={label} style={{ textAlign: "center" }}>
-              <div
-                style={{
-                  fontFamily: "var(--font-display)",
-                  fontSize: 24,
-                  fontWeight: 900,
-                  color,
-                  lineHeight: 1,
-                }}
-              >
-                {val}
-              </div>
-              <div
-                style={{
-                  fontFamily: "var(--font-body)",
-                  fontSize: 12,
-                  fontWeight: 700,
-                  letterSpacing: "0.12em",
-                  textTransform: "uppercase",
-                  color: "var(--ink-5)",
-                  marginTop: 2,
-                }}
-              >
-                {label}
-              </div>
+            {
+              label: "Active",
+              val: stats.active,
+              cls: "adm-kpi-strip__num--blue",
+            },
+            {
+              label: "Pending",
+              val: stats.pending,
+              cls: "adm-kpi-strip__num--ink",
+            },
+            {
+              label: "Flagged",
+              val: stats.flagged,
+              cls: "adm-kpi-strip__num--red",
+            },
+            { label: "Total", val: stats.total, cls: "" },
+          ].map(({ label, val, cls }) => (
+            <div key={label} className="adm-kpi-strip__item">
+              <div className={`adm-kpi-strip__num ${cls}`.trim()}>{val}</div>
+              <div className="adm-kpi-strip__label">{label}</div>
             </div>
           ))}
         </div>
@@ -295,12 +361,13 @@ export default function AdminCampaignsPage() {
             fill="none"
             stroke="currentColor"
             strokeWidth="1.8"
+            aria-hidden="true"
           >
             <circle cx="6.5" cy="6.5" r="4.5" />
             <line x1="10.5" y1="10.5" x2="14" y2="14" />
           </svg>
           <input
-            type="text"
+            type="search"
             placeholder="Search title, merchant, description…"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
@@ -358,19 +425,21 @@ export default function AdminCampaignsPage() {
             color: "var(--ink-5)",
             marginLeft: "auto",
           }}
+          aria-live="polite"
         >
           {filtered.length} campaigns
         </span>
       </div>
 
       {/* Status tabs */}
-      <div className="adm-tabs" role="tablist">
+      <div className="adm-tabs" role="tablist" aria-label="Campaign status">
         {STATUS_TABS.map(({ key, label }) => {
           const isActive = activeTab === key;
           const isFlagged = key === "flagged";
           return (
             <button
               key={key}
+              type="button"
               role="tab"
               aria-selected={isActive}
               onClick={() => setActiveTab(key)}
@@ -384,242 +453,149 @@ export default function AdminCampaignsPage() {
       </div>
 
       {/* Table */}
-      <div className="adm-table-wrap" style={{ overflowX: "auto" }}>
-        {/* Header row */}
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns:
-              "minmax(180px,2fr) 96px 80px 80px 80px 80px 72px 152px",
-            padding: "10px 20px",
-            borderBottom: "1px solid var(--hairline)",
-            background: "var(--surface-3)",
-          }}
-          role="row"
-        >
-          {[
-            "Campaign / Merchant",
-            "Status",
-            "Tier",
-            "Budget",
-            "Applicants",
-            "Visits",
-            "Created",
-            "Actions",
-          ].map((h) => (
-            <span
-              key={h}
-              style={{
-                fontFamily: "var(--font-body)",
-                fontSize: 12,
-                fontWeight: 700,
-                letterSpacing: "0.12em",
-                textTransform: "uppercase",
-                color: "var(--ink-5)",
-              }}
-            >
+      <div
+        className="adm-table-wrap"
+        role="table"
+        aria-label="Campaigns"
+        style={{ overflowX: "auto" }}
+      >
+        <div className="adm-cgrid adm-cgrid--head" role="row">
+          {HEADERS.map((h) => (
+            <span key={h} className="adm-cgrid__head" role="columnheader">
               {h}
             </span>
           ))}
         </div>
 
-        {/* Rows */}
         {loading ? (
-          <div
-            style={{
-              padding: "48px 24px",
-              textAlign: "center",
-              fontFamily: "var(--font-body)",
-              fontSize: 14,
-              color: "var(--ink-5)",
-            }}
-          >
-            Loading…
+          <div className="adm-empty">
+            <p className="adm-empty__sub">Loading…</p>
           </div>
         ) : filtered.length === 0 ? (
-          <div
-            style={{
-              padding: "56px 24px",
-              textAlign: "center",
-            }}
-          >
-            <div
-              style={{
-                fontFamily: "var(--font-display)",
-                fontSize: 24,
-                fontWeight: 700,
-                color: "var(--ink)",
-                marginBottom: 8,
-              }}
-            >
-              No campaigns found
-            </div>
-            <div
-              style={{
-                fontFamily: "var(--font-body)",
-                fontSize: 14,
-                color: "var(--ink-5)",
-              }}
-            >
+          <div className="adm-empty">
+            <h2 className="adm-empty__title">No campaigns found</h2>
+            <p className="adm-empty__sub">
               Try adjusting your filters or search query.
-            </div>
+            </p>
           </div>
         ) : (
-          filtered.map((c) => (
-            <div
-              key={c.id}
-              role="row"
-              style={{
-                display: "grid",
-                gridTemplateColumns:
-                  "minmax(180px,2fr) 96px 80px 80px 80px 80px 72px 152px",
-                padding: "12px 20px",
-                borderBottom: "1px solid var(--hairline)",
-                alignItems: "center",
-                background:
-                  c.admin_status === "flagged"
-                    ? "rgba(193,18,31,0.04)"
-                    : "transparent",
-                transition: "background 0.1s",
-              }}
-              onMouseEnter={(e) => {
-                if (c.admin_status !== "flagged")
-                  e.currentTarget.style.background = "var(--surface-3)";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.background =
-                  c.admin_status === "flagged"
-                    ? "rgba(193,18,31,0.04)"
-                    : "transparent";
-              }}
-            >
-              {/* Campaign + merchant */}
-              <div>
-                <div
-                  style={{
-                    fontFamily: "var(--font-body)",
-                    fontSize: 13,
-                    fontWeight: 600,
-                    color: "var(--ink)",
-                    overflow: "hidden",
-                    textOverflow: "ellipsis",
-                    whiteSpace: "nowrap",
-                  }}
-                  title={c.title}
-                >
-                  {c.title}
-                </div>
-                <div
-                  style={{
-                    fontFamily: "var(--font-body)",
-                    fontSize: 11,
-                    color: "var(--ink-5)",
-                    marginTop: 2,
-                  }}
-                >
-                  {c.business_name}
-                </div>
-              </div>
-
-              <div>
-                <StatusBadge status={c.admin_status} />
-              </div>
-
-              <div>
-                <TierBadge tier={c.tier_required} />
-              </div>
-
-              <div
-                style={{
-                  fontFamily: "var(--font-body)",
-                  fontSize: 13,
-                  color: c.payout === 0 ? "var(--ink-5)" : "var(--ink)",
-                  fontWeight: c.payout === 0 ? 400 : 600,
-                }}
+          filtered.map((c) => {
+            const isFlagged = c.admin_status === "flagged";
+            return (
+              <Link
+                key={c.id}
+                href={`/admin/campaigns/${c.id}`}
+                className={`adm-cgrid adm-cgrid--row${isFlagged ? " is-flagged" : ""}`}
+                role="row"
+                aria-label={`Open campaign ${c.title}`}
+                style={{ textDecoration: "none", color: "inherit" }}
               >
-                {c.payout === 0 ? "Product" : `$${c.payout}`}
-              </div>
+                {/* Campaign + merchant */}
+                <div>
+                  <div className="adm-cgrid__title" title={c.title}>
+                    {c.title}
+                  </div>
+                  <div className="adm-cgrid__merchant">{c.business_name}</div>
+                </div>
 
-              <div
-                style={{
-                  fontFamily: "var(--font-body)",
-                  fontSize: 13,
-                  color:
-                    c.applicants.length > 0 ? "var(--ink)" : "var(--ink-5)",
-                  fontWeight: c.applicants.length > 0 ? 600 : 400,
-                }}
-              >
-                {c.applicants.length > 0 ? c.applicants.length : "—"}
-              </div>
+                <div>
+                  <StatusBadge status={c.admin_status} />
+                </div>
 
-              <div
-                style={{
-                  fontFamily: "var(--font-body)",
-                  fontSize: 13,
-                  color:
+                <div>
+                  <TierBadge tier={c.tier_required} />
+                </div>
+
+                <div
+                  className={
+                    c.payout === 0
+                      ? "adm-cgrid__num adm-cgrid__num--muted"
+                      : "adm-cgrid__num"
+                  }
+                >
+                  {c.payout === 0 ? "Product" : `$${c.payout}`}
+                </div>
+
+                <div
+                  className={
+                    c.applicants.length > 0
+                      ? "adm-cgrid__num"
+                      : "adm-cgrid__num adm-cgrid__num--muted"
+                  }
+                >
+                  {c.applicants.length > 0 ? c.applicants.length : "—"}
+                </div>
+
+                <div
+                  className={
                     c.verified_visits.length > 0
-                      ? "var(--ink)"
-                      : "var(--ink-5)",
-                  fontWeight: c.verified_visits.length > 0 ? 600 : 400,
-                }}
-              >
-                {c.verified_visits.length > 0 ? c.verified_visits.length : "—"}
-              </div>
-
-              <div
-                style={{
-                  fontFamily: "var(--font-body)",
-                  fontSize: 12,
-                  color: "var(--ink-5)",
-                }}
-              >
-                {formatDate(c.created_at)}
-              </div>
-
-              {/* Actions */}
-              <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
-                <Link
-                  href={`/admin/campaigns/${c.id}`}
-                  className="adm-row-btn adm-row-btn--view"
+                      ? "adm-cgrid__num"
+                      : "adm-cgrid__num adm-cgrid__num--muted"
+                  }
                 >
-                  View
-                </Link>
+                  {c.verified_visits.length > 0
+                    ? c.verified_visits.length
+                    : "—"}
+                </div>
 
-                {(c.admin_status === "pending" ||
-                  c.admin_status === "flagged") && (
-                  <button
-                    className="adm-row-btn"
-                    style={{
-                      background: "var(--accent-blue-tint)",
-                      color: "var(--accent-blue)",
-                      border: "1px solid rgba(0,133,255,0.2)",
-                    }}
-                    onClick={() => handleAction(c.id, "approve")}
-                  >
-                    Approve
-                  </button>
-                )}
+                <div className="adm-cgrid__date">
+                  {formatDate(c.created_at)}
+                </div>
 
-                {c.admin_status !== "flagged" && (
-                  <button
-                    className="adm-row-btn adm-row-btn--danger"
-                    onClick={() => handleAction(c.id, "flag")}
-                  >
-                    Flag
-                  </button>
-                )}
+                {/* Actions */}
+                <div
+                  className="adm-cgrid__actions"
+                  onClick={(e) => e.preventDefault()}
+                >
+                  {(c.admin_status === "pending" ||
+                    c.admin_status === "flagged") && (
+                    <button
+                      type="button"
+                      className="adm-row-btn adm-row-btn--approve"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        requestAction(c, "approve");
+                      }}
+                      aria-label={`Approve ${c.title}`}
+                    >
+                      Approve
+                    </button>
+                  )}
 
-                {c.admin_status === "active" && (
-                  <button
-                    className="adm-row-btn adm-row-btn--ghost"
-                    onClick={() => handleAction(c.id, "suspend")}
-                  >
-                    Pause
-                  </button>
-                )}
-              </div>
-            </div>
-          ))
+                  {c.admin_status !== "flagged" && (
+                    <button
+                      type="button"
+                      className="adm-row-btn adm-row-btn--danger"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        requestAction(c, "flag");
+                      }}
+                      aria-label={`Flag ${c.title} for review`}
+                    >
+                      Flag
+                    </button>
+                  )}
+
+                  {c.admin_status === "active" && (
+                    <button
+                      type="button"
+                      className="adm-row-btn adm-row-btn--ghost"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        requestAction(c, "suspend");
+                      }}
+                      aria-label={`Pause ${c.title}`}
+                    >
+                      Pause
+                    </button>
+                  )}
+                </div>
+              </Link>
+            );
+          })
         )}
       </div>
 
@@ -628,9 +604,74 @@ export default function AdminCampaignsPage() {
         <div
           className={`adm-toast adm-toast--${toast.type === "err" ? "err" : "ok"}`}
           role="status"
+          aria-live="polite"
         >
           {toast.msg}
         </div>
+      )}
+
+      {/* Confirmation modal */}
+      {pendingAction && (
+        <ConfirmDialog
+          eyebrow={
+            pendingAction.action === "approve"
+              ? "APPROVE CAMPAIGN"
+              : pendingAction.action === "flag"
+                ? "FLAG FOR REVIEW"
+                : "PAUSE CAMPAIGN"
+          }
+          title={
+            pendingAction.action === "approve"
+              ? `Approve ${pendingAction.campaign.title}?`
+              : pendingAction.action === "flag"
+                ? `Flag ${pendingAction.campaign.title}?`
+                : `Pause ${pendingAction.campaign.title}?`
+          }
+          body={
+            pendingAction.action === "approve" ? (
+              <>
+                <span className="adm-confirm__target">
+                  {pendingAction.campaign.business_name}
+                </span>{" "}
+                will go live and become visible to creators in the eligible
+                tier. You can pause it later if needed.
+              </>
+            ) : pendingAction.action === "flag" ? (
+              <>
+                Flagging hides the campaign from creators and pauses applicant
+                review on{" "}
+                <span className="adm-confirm__target">
+                  {pendingAction.campaign.business_name}
+                </span>
+                . The merchant is notified. Active applicants are not paid.
+              </>
+            ) : (
+              <>
+                Pausing stops new applications on{" "}
+                <span className="adm-confirm__target">
+                  {pendingAction.campaign.title}
+                </span>
+                . Existing accepted creators keep their slots. Reversible at any
+                time.
+              </>
+            )
+          }
+          confirmLabel={
+            pendingAction.action === "approve"
+              ? "Approve"
+              : pendingAction.action === "flag"
+                ? "Flag campaign"
+                : "Pause campaign"
+          }
+          variant={pendingAction.action === "flag" ? "danger" : "primary"}
+          destructive={pendingAction.action !== "approve"}
+          onCancel={() => setPendingAction(null)}
+          onConfirm={() => {
+            const a = pendingAction;
+            setPendingAction(null);
+            executeAction(a.campaign.id, a.action);
+          }}
+        />
       )}
     </div>
   );

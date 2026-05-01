@@ -1,9 +1,17 @@
 /* ============================================================
-   For Creators — v11 Design System Compliant
+   For Creators — v11 / v12 Design System Compliant
    Grain-Archive editorial register · strict 8px grid
-   Panel alternation: Hero dark → KPI dark → How butter →
-   Tiers dark → Calc butter → Quote red → Photo surface →
-   Ticket orange
+
+   Panel stack (alternating warm/cool tone, ≤5 dark-content panels):
+   1. Hero (Ink dark)                              cool-dark
+   2. Why Push — Editorial Table (Surface-2)       warm-neutral
+   3. KPI (Ink dark)                               cool-dark
+   4. How — Candy Butter                           warm
+   5. Tiers (Ink dark)                             cool-dark
+   6. Calc — Candy Butter                          warm
+   7. Pull-quote (Brand Red)                       saturated moment
+   8. Photo Grid (Surface)                         warm-neutral
+   9. Ticket (GA Orange)                           saturated moment
    ============================================================ */
 
 /* ── Section shared inner container ──────────────────────── */
@@ -18,8 +26,48 @@
   justify-content: center;
 }
 
+/* ── Bottom spacer ───────────────────────────────────────── */
+.fc-bottom-spacer {
+  height: 64px;
+}
+
+/* ── Eyebrow helpers ─────────────────────────────────────── */
+.fc-eyebrow-block {
+  display: block;
+  margin-bottom: 16px;
+}
+
+/* ── Self-align helper for inline buttons ────────────────── */
+.fc-self-start {
+  align-self: flex-start;
+}
+
+/* ── Reveal-on-scroll utility (vanilla IO + reduced-motion) */
+[data-reveal] {
+  opacity: 0;
+  transform: translate3d(0, 24px, 0);
+  transition:
+    opacity 640ms ease-out,
+    transform 720ms cubic-bezier(0.34, 1.56, 0.64, 1);
+  will-change: opacity, transform;
+}
+
+[data-reveal].is-revealed {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-reveal],
+  [data-reveal].is-revealed {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
 /* ══════════════════════════════════════════════════════════
-   HERO — Full-Bleed, border-radius: 0 (allowed for full-bleed)
+   01 — HERO  ·  Full-Bleed (border-radius: 0 allowed § 4.2)
    ══════════════════════════════════════════════════════════ */
 .fc-hero {
   position: relative;
@@ -27,9 +75,9 @@
   min-height: clamp(520px, 80vh, 840px);
   border-radius: 0;
   background:
-    linear-gradient(180deg, rgba(0,0,0,0.10) 0%, rgba(0,0,0,0.62) 100%),
-    radial-gradient(ellipse 100% 80% at 60% 20%, rgba(193,18,31,0.18) 0%, transparent 60%),
-    radial-gradient(ellipse 80% 100% at 10% 90%, rgba(30,95,173,0.18) 0%, transparent 50%),
+    linear-gradient(180deg, rgba(0, 0, 0, 0.10) 0%, rgba(0, 0, 0, 0.62) 100%),
+    radial-gradient(ellipse 100% 80% at 60% 20%, rgba(193, 18, 31, 0.18) 0%, transparent 60%),
+    radial-gradient(ellipse 80% 100% at 10% 90%, rgba(30, 95, 173, 0.18) 0%, transparent 50%),
     var(--ink);
 }
 
@@ -49,7 +97,7 @@
   z-index: 0;
 }
 
-/* Floating glass peek tile — desktop only, top-right */
+/* Floating glass peek tile — desktop only, top-right (§ 8.9.4) */
 .fc-hero-peek {
   position: absolute;
   top: 96px;
@@ -73,7 +121,7 @@
 }
 
 .fc-peek-label {
-  font-family: var(--font-body);
+  font-family: var(--font-mono);
   font-size: 12px;
   font-weight: 700;
   text-transform: uppercase;
@@ -81,7 +129,7 @@
   color: rgba(255, 255, 255, 0.72);
 }
 
-/* Bottom-left corner-anchored copy block */
+/* Bottom-left corner-anchored copy block (§ 7.1) */
 .fc-hero-copy {
   position: absolute;
   bottom: 96px;
@@ -96,7 +144,7 @@
   margin-bottom: 16px;
 }
 
-/* Darky Display hero — v11 spec: clamp(56px,8vw,128px) 900 lh 0.9 ls -0.035em */
+/* Darky Display Hero — § 3.1 Header 2 */
 .fc-hero-h1 {
   font-family: var(--font-display);
   font-weight: 900;
@@ -108,12 +156,12 @@
 }
 
 .fc-hero-sub {
-  font-family: var(--font-body);
+  font-family: var(--font-mono);
   font-size: 20px;
   line-height: 1.40;
   letter-spacing: -0.1em;
   color: rgba(255, 255, 255, 0.72);
-  margin-top: 40px;
+  margin-top: 32px;
   max-width: 42ch;
 }
 
@@ -133,7 +181,153 @@
 }
 
 /* ══════════════════════════════════════════════════════════
-   KPI SECTION — Dark ink, asymmetric 8+4 composition
+   02 — WHY PUSH · Editorial Table (Cinema Selects · § 8.6)
+   Surface-2 Pearl Stone · warm-neutral · alternates after dark hero
+   ══════════════════════════════════════════════════════════ */
+.fc-table-section {
+  background: var(--surface-2);
+  padding: 96px 64px;
+}
+
+.fc-table-inner {
+  position: relative;
+}
+
+.fc-table-eyebrow {
+  display: block;
+  margin-bottom: 16px;
+}
+
+/* H2 with magvix italic accent (§ 3.5 mixed-headline) */
+.fc-table-h2 {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(40px, 5vw, 64px);
+  letter-spacing: -0.025em;
+  line-height: 1.0;
+  color: var(--ink);
+  margin: 0 0 24px;
+  max-width: 24ch;
+}
+
+.fc-table-h2 em {
+  font-family: var(--font-hero);
+  font-style: italic;
+  font-weight: normal;
+  font-size: 1.08em;
+  letter-spacing: -0.025em;
+  vertical-align: baseline;
+}
+
+.fc-table-lede {
+  font-family: var(--font-mono);
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 1.40;
+  letter-spacing: -0.1em;
+  color: var(--ink-3);
+  margin: 0 0 56px;
+  max-width: 60ch;
+}
+
+.fc-table-scroll {
+  overflow-x: auto;
+  margin: 0 -16px;
+  padding: 0 16px;
+}
+
+.fc-compare-table {
+  width: 100%;
+  min-width: 640px;
+  border-collapse: collapse;
+  font-family: var(--font-mono);
+}
+
+/* Header row — parenthetical mono labels */
+.fc-compare-table thead th {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--ink-3);
+  text-align: left;
+  padding: 0 16px 24px 0;
+  border-bottom: 1px dotted rgba(10, 10, 10, 0.30);
+}
+
+.fc-compare-table thead th.fc-th-push {
+  color: var(--brand-red);
+}
+
+.fc-compare-table thead th.fc-th-outcome {
+  text-align: right;
+  padding-right: 0;
+}
+
+/* Row spacing (16px after header divider) */
+.fc-compare-table thead {
+  position: relative;
+}
+
+.fc-compare-table tbody tr:first-child td {
+  padding-top: 16px;
+}
+
+/* Body cells — first col Darky 20px, others mono 16px */
+.fc-compare-table tbody td {
+  padding: 20px 16px 20px 0;
+  border-bottom: 1px dotted rgba(10, 10, 10, 0.18);
+  font-size: 16px;
+  line-height: 1.40;
+  letter-spacing: -0.125em;
+  vertical-align: top;
+}
+
+.fc-compare-table .fc-td-feature {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 20px;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+}
+
+.fc-compare-table .fc-td-push {
+  color: var(--brand-red);
+  font-weight: 600;
+}
+
+.fc-compare-table .fc-td-other {
+  color: var(--ink-4);
+}
+
+.fc-compare-table .fc-td-outcome {
+  color: var(--ink-3);
+  text-align: right;
+  padding-right: 0;
+  font-style: italic;
+}
+
+/* Editorial Pink CTA stamp (§ 9.6 — ≤1 per page) */
+.fc-table-cta {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  flex-wrap: wrap;
+  margin-top: 48px;
+}
+
+.fc-table-fine {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: var(--ink-4);
+  margin: 0;
+}
+
+/* ══════════════════════════════════════════════════════════
+   03 — KPI Section · Dark Ink, asymmetric 8+4 composition
    ══════════════════════════════════════════════════════════ */
 .fc-kpi-section {
   background: var(--ink);
@@ -142,7 +336,6 @@
   overflow: hidden;
 }
 
-/* Ghost architectural dollar */
 .fc-kpi-ghost {
   position: absolute;
   right: -4vw;
@@ -157,7 +350,7 @@
   user-select: none;
 }
 
-/* 8+4 asymmetric grid */
+/* 8+4 asymmetric grid (§ 5.5) */
 .fc-kpi-inner {
   max-width: 1140px;
   margin: 0 auto;
@@ -176,7 +369,7 @@
 }
 
 .fc-kpi-eyebrow {
-  font-family: var(--font-body);
+  font-family: var(--font-mono);
   font-size: 12px;
   font-weight: 700;
   letter-spacing: 0.12em;
@@ -185,7 +378,6 @@
   margin: 0;
 }
 
-/* KPI trio row */
 .fc-kpi-row {
   display: flex;
   align-items: flex-end;
@@ -199,7 +391,7 @@
   gap: 8px;
 }
 
-/* KPI numerals — Darky clamp(80px,12vw,200px) per brief; capped at 72px per spec */
+/* KPI numerals — Darky display (§ 3.1) */
 .fc-kpi-num {
   font-family: var(--font-display);
   font-weight: 900;
@@ -211,7 +403,7 @@
 }
 
 .fc-kpi-cap {
-  font-family: var(--font-body);
+  font-family: var(--font-mono);
   font-size: 12px;
   font-weight: 700;
   letter-spacing: 0.12em;
@@ -229,7 +421,7 @@
 }
 
 .fc-kpi-fine {
-  font-family: var(--font-body);
+  font-family: var(--font-mono);
   font-size: 12px;
   font-weight: 700;
   letter-spacing: 0.10em;
@@ -238,7 +430,6 @@
   margin: 0;
 }
 
-/* Right 4-col: CTA tile */
 .fc-kpi-right {
   display: flex;
   align-items: stretch;
@@ -247,7 +438,7 @@
 .fc-kpi-tile {
   background: rgba(255, 255, 255, 0.06);
   border: 1px solid rgba(255, 255, 255, 0.10);
-  border-radius: var(--r-3xl);
+  border-radius: var(--r-2xl);
   padding: 48px 40px;
   display: flex;
   flex-direction: column;
@@ -256,7 +447,7 @@
 }
 
 .fc-kpi-tile-eyebrow {
-  font-family: var(--font-body);
+  font-family: var(--font-mono);
   font-size: 12px;
   font-weight: 700;
   letter-spacing: 0.12em;
@@ -276,7 +467,7 @@
 }
 
 .fc-kpi-tile-body {
-  font-family: var(--font-body);
+  font-family: var(--font-mono);
   font-size: 16px;
   line-height: 1.40;
   letter-spacing: -0.125em;
@@ -285,14 +476,16 @@
 }
 
 /* ══════════════════════════════════════════════════════════
-   HOW IT WORKS — Warm butter candy panel
+   04 — HOW IT WORKS · Warm butter candy panel
    Numbered editorial rows, 3-col grid
    ══════════════════════════════════════════════════════════ */
 .fc-how-section {
+  background: var(--panel-butter);
+  margin: 0 64px;
   position: relative;
 }
 
-/* Floating glass stat tile — top right corner of candy panel */
+/* Floating glass stat tile (§ 8.9.3 — single tile in panel) */
 .fc-how-tile {
   position: absolute;
   top: 32px;
@@ -303,6 +496,7 @@
   flex-direction: column;
   gap: 8px;
   min-width: 184px;
+  z-index: 2;
 }
 
 .fc-how-tile-num {
@@ -315,7 +509,7 @@
 }
 
 .fc-how-tile-cap {
-  font-family: var(--font-body);
+  font-family: var(--font-mono);
   font-size: 12px;
   font-weight: 700;
   text-transform: uppercase;
@@ -323,7 +517,7 @@
   color: var(--ink-3);
 }
 
-/* H2 and H3 shared — Darky, v11 spec */
+/* H2 / H3 shared — Darky display § 3.1 */
 .fc-h2 {
   font-family: var(--font-display);
   font-size: 40px;
@@ -331,7 +525,21 @@
   letter-spacing: -0.02em;
   line-height: 1.05;
   color: var(--ink);
-  margin: 0 0 48px;
+  margin: 0 0 32px;
+  max-width: 20ch;
+}
+
+.fc-h2 em {
+  font-family: var(--font-hero);
+  font-style: italic;
+  font-weight: normal;
+  font-size: 1.08em;
+  letter-spacing: -0.025em;
+  vertical-align: baseline;
+}
+
+.fc-h2-mb-48 {
+  margin-bottom: 48px;
 }
 
 .fc-h2-light {
@@ -340,35 +548,34 @@
 
 .fc-h3 {
   font-family: var(--font-display);
-  font-size: 28px;
+  font-size: 24px;
   font-weight: 700;
   letter-spacing: -0.015em;
-  line-height: 1.15;
+  line-height: 1.25;
   color: var(--ink);
   margin: 0 0 12px;
 }
 
-/* 3-column editorial row grid */
+/* 3-column inner card grid (§ 8.8.5 inside Candy Panel) */
 .fc-how-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 24px;
+  margin-top: 48px;
 }
 
-/* Each numbered row — number | body */
 .fc-how-row {
   display: flex;
   flex-direction: column;
   gap: 16px;
-  padding: 40px 24px;
-  background: rgba(255, 255, 255, 0.42);
-  border-radius: var(--r-sm); /* 8px — standard card per v12 spec */
-  border: 1px solid var(--hairline);
-  cursor: default;
+  padding: 32px 24px;
+  background: rgba(255, 255, 255, 0.55);
+  border-radius: var(--r-xl); /* 16px — inner card steps DOWN from 28px panel */
+  border: 1px solid rgba(255, 255, 255, 0.65);
 }
 
 .fc-how-num {
-  font-family: var(--font-body);
+  font-family: var(--font-mono);
   font-size: 12px;
   font-weight: 700;
   letter-spacing: 0.12em;
@@ -383,7 +590,7 @@
 }
 
 .fc-how-text {
-  font-family: var(--font-body);
+  font-family: var(--font-mono);
   font-size: 16px;
   line-height: 1.40;
   letter-spacing: -0.125em;
@@ -392,8 +599,7 @@
 }
 
 /* ══════════════════════════════════════════════════════════
-   TIERS SECTION — Dark ink
-   Numbered editorial rows, full-width table-like layout
+   05 — TIERS · Dark ink, full-width editorial row table
    ══════════════════════════════════════════════════════════ */
 .fc-tiers-section {
   background: var(--ink);
@@ -402,7 +608,6 @@
   overflow: hidden;
 }
 
-/* Ghost architectural 6 */
 .fc-tiers-ghost {
   position: absolute;
   right: -4vw;
@@ -426,7 +631,6 @@
   color: rgba(255, 255, 255, 0.40) !important;
 }
 
-/* Tier rows grid — stacked editorial list */
 .fc-tiers-grid {
   display: flex;
   flex-direction: column;
@@ -434,7 +638,6 @@
   margin-bottom: 32px;
 }
 
-/* Each tier row — number | body | earn */
 .fc-tier-row {
   display: grid;
   grid-template-columns: 48px 1fr auto;
@@ -442,7 +645,6 @@
   align-items: start;
   padding: 32px 16px;
   border-top: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 0; /* table-row layout — 4px was off 8px grid */
   cursor: default;
   transition: background 200ms ease;
 }
@@ -456,7 +658,7 @@
 }
 
 .fc-tier-row-num {
-  font-family: var(--font-body);
+  font-family: var(--font-mono);
   font-size: 12px;
   font-weight: 700;
   letter-spacing: 0.12em;
@@ -493,7 +695,7 @@
 }
 
 .fc-tier-row-range {
-  font-family: var(--font-body);
+  font-family: var(--font-mono);
   font-size: 12px;
   font-weight: 500;
   letter-spacing: 0.04em;
@@ -502,7 +704,7 @@
 }
 
 .fc-tier-row-detail {
-  font-family: var(--font-body);
+  font-family: var(--font-mono);
   font-size: 16px;
   line-height: 1.40;
   letter-spacing: -0.125em;
@@ -512,7 +714,7 @@
 }
 
 .fc-tier-row-unlock {
-  font-family: var(--font-body);
+  font-family: var(--font-mono);
   font-size: 12px;
   font-weight: 700;
   letter-spacing: 0.08em;
@@ -540,7 +742,7 @@
 }
 
 .fc-tiers-note {
-  font-family: var(--font-body);
+  font-family: var(--font-mono);
   font-size: 12px;
   font-weight: 500;
   letter-spacing: 0.04em;
@@ -549,13 +751,14 @@
 }
 
 /* ══════════════════════════════════════════════════════════
-   EARNINGS CALCULATOR — Warm butter candy panel
+   06 — EARNINGS CALCULATOR · Warm butter candy panel
    ══════════════════════════════════════════════════════════ */
 .fc-calc-section {
+  background: var(--panel-butter);
+  margin: 0 64px;
   position: relative;
 }
 
-/* Floating glass stat tile — top right */
 .fc-calc-tile {
   position: absolute;
   top: 32px;
@@ -566,6 +769,7 @@
   flex-direction: column;
   gap: 8px;
   min-width: 200px;
+  z-index: 2;
 }
 
 .fc-calc-tile-num {
@@ -578,7 +782,7 @@
 }
 
 .fc-calc-tile-cap {
-  font-family: var(--font-body);
+  font-family: var(--font-mono);
   font-size: 12px;
   font-weight: 700;
   text-transform: uppercase;
@@ -586,18 +790,24 @@
   color: var(--ink-3);
 }
 
-/* ── Shared calculator styles ─────────────────────────────── */
+/* ── Calculator inner ─────────────────────────────────────── */
 .calc-editorial {
   display: flex;
   flex-direction: column;
   gap: 32px;
 }
 
-/* Big payout number — the visual hero */
+.calc-pill-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* Big payout number — visual hero */
 .calc-result {
   display: flex;
   align-items: baseline;
-  gap: 8px; /* 8px grid — was 6px (off-grid) */
+  gap: 8px;
   flex-wrap: wrap;
   line-height: 1;
 }
@@ -631,7 +841,7 @@
 }
 
 .calc-result-unit {
-  font-family: var(--font-body);
+  font-family: var(--font-mono);
   font-size: 12px;
   font-weight: 700;
   letter-spacing: 0.12em;
@@ -642,7 +852,6 @@
   flex-basis: 100%;
 }
 
-/* Sliders */
 .calc-sliders {
   display: flex;
   flex-direction: column;
@@ -659,7 +868,7 @@
   display: flex;
   justify-content: space-between;
   align-items: baseline;
-  font-family: var(--font-body);
+  font-family: var(--font-mono);
   font-size: 12px;
   font-weight: 700;
   letter-spacing: 0.08em;
@@ -676,7 +885,7 @@
 }
 
 .calc-fine {
-  font-family: var(--font-body);
+  font-family: var(--font-mono);
   font-size: 12px;
   color: var(--ink-5);
   line-height: 1.6;
@@ -684,7 +893,6 @@
   margin: 0;
 }
 
-/* Range slider */
 .calc-slider {
   -webkit-appearance: none;
   appearance: none;
@@ -694,6 +902,11 @@
   outline: none;
   cursor: pointer;
   border-radius: var(--r-pill);
+}
+
+.calc-slider:focus-visible {
+  outline: 4px solid var(--brand-red-focus);
+  outline-offset: 4px;
 }
 
 .calc-slider::-webkit-slider-thumb {
@@ -706,10 +919,12 @@
   border-radius: 50%;
   border: 2px solid var(--surface);
   box-shadow: 0 1px 4px rgba(10, 10, 10, 0.15);
-  transition: transform var(--t-base);
+  transition: transform 180ms cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-.calc-slider::-webkit-slider-thumb:hover { transform: scale(1.25); }
+.calc-slider::-webkit-slider-thumb:hover {
+  transform: scale(1.25);
+}
 
 .calc-slider::-moz-range-thumb {
   width: 16px;
@@ -724,15 +939,15 @@
 .calc-slider-ticks {
   display: flex;
   justify-content: space-between;
-  font-family: var(--font-body);
+  font-family: var(--font-mono);
   font-size: 12px;
   color: var(--ink-5);
   letter-spacing: 0.04em;
 }
 
 /* ══════════════════════════════════════════════════════════
-   PULL QUOTE — Brand Red editorial moment
-   ≤1 saturated moment per page; full-width punch
+   07 — PULL QUOTE · Brand Red saturated editorial moment
+   (≤1 saturated moment per viewport)
    ══════════════════════════════════════════════════════════ */
 .fc-quote-section {
   background: var(--brand-red);
@@ -741,7 +956,6 @@
   overflow: hidden;
 }
 
-/* Ghost quotation mark */
 .fc-quote-ghost {
   position: absolute;
   left: 32px;
@@ -762,10 +976,20 @@
   z-index: 1;
   display: flex;
   flex-direction: column;
-  gap: 32px;
+  gap: 24px;
 }
 
-/* Massive pull-quote text — Darky, editorial scale */
+.fc-quote-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.72);
+  margin: 0 0 8px;
+}
+
+/* Magvix italic pull-quote (§ 3.5 — quotation marks as accent) */
 .fc-quote-text {
   font-family: var(--font-display);
   font-weight: 800;
@@ -774,6 +998,17 @@
   line-height: 1.0;
   color: var(--snow);
   margin: 0;
+  max-width: 32ch;
+}
+
+.fc-quote-text em {
+  font-family: var(--font-hero);
+  font-style: italic;
+  font-weight: normal;
+  font-size: 1.2em;
+  color: rgba(255, 255, 255, 0.56);
+  letter-spacing: -0.025em;
+  vertical-align: baseline;
 }
 
 .fc-quote-attr {
@@ -781,10 +1016,11 @@
   align-items: center;
   gap: 16px;
   flex-wrap: wrap;
+  margin-top: 16px;
 }
 
 .fc-quote-name {
-  font-family: var(--font-body);
+  font-family: var(--font-mono);
   font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.04em;
@@ -800,7 +1036,7 @@
 }
 
 .fc-quote-meta {
-  font-family: var(--font-body);
+  font-family: var(--font-mono);
   font-size: 12px;
   font-weight: 500;
   letter-spacing: 0.06em;
@@ -809,43 +1045,60 @@
 }
 
 /* ══════════════════════════════════════════════════════════
-   PHOTO GRID — Surface background, 3-up Photo Cards
+   08 — PHOTO GRID · Surface bg, 3-up Photo Cards (§ 8.7)
+   Categorical color tones from Allowed-Color List (§ 2)
    ══════════════════════════════════════════════════════════ */
 .fc-photo-section {
+  background: var(--surface);
   padding: 96px 64px;
 }
 
-/* 3-up photo grid */
 .fc-photo-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 24px;
 }
 
-/* Photo card — 4:5 ratio, full-bleed gradient bg */
 .fc-photo-card {
   position: relative;
   overflow: hidden;
-  border-radius: var(--r-sm); /* 8px — standard card per v12 spec */
-  aspect-ratio: 4/5;
+  border-radius: var(--r-md); /* 10px standard photo card § 4.3 */
+  aspect-ratio: 4 / 5;
   cursor: pointer;
 }
 
-/* Floating badge — top right */
+/* Color variants — sample from Allowed-Color List § 2 only */
+.fc-photo-card--dining {
+  background:
+    linear-gradient(160deg, var(--char) 0%, var(--cat-dining) 60%, var(--ink) 100%);
+}
+
+.fc-photo-card--travel {
+  background:
+    linear-gradient(160deg, var(--graphite) 0%, var(--cat-travel) 60%, var(--ink) 100%);
+}
+
+.fc-photo-card--ent {
+  background:
+    linear-gradient(160deg, var(--char) 0%, var(--cat-ent) 60%, var(--ink) 100%);
+}
+
 .fc-photo-badge {
   position: absolute;
   top: 16px;
   right: 16px;
   padding: 8px 16px;
+  font-family: var(--font-mono);
   font-size: 12px;
-  font-family: var(--font-body);
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   border-radius: var(--r-sm);
+  color: var(--snow);
+  z-index: 2;
 }
 
-/* 35% bottom gradient overlay per spec */
+/* 35% bottom gradient overlay per § 8.7 */
 .fc-photo-overlay {
   position: absolute;
   inset: auto 0 0 0;
@@ -853,13 +1106,13 @@
   background: linear-gradient(to bottom, transparent, rgba(0, 0, 0, 0.78));
 }
 
-/* Copy at bottom of photo card */
 .fc-photo-copy {
   position: absolute;
   bottom: 0;
   left: 0;
   right: 0;
   padding: 24px;
+  z-index: 1;
 }
 
 .fc-photo-title {
@@ -872,7 +1125,7 @@
 }
 
 .fc-photo-meta {
-  font-family: var(--font-body);
+  font-family: var(--font-mono);
   font-size: 12px;
   font-weight: 500;
   text-transform: uppercase;
@@ -882,13 +1135,13 @@
 }
 
 /* ══════════════════════════════════════════════════════════
-   TICKET PANEL — GA Orange, positioned with margin
+   09 — TICKET PANEL · GA Orange final CTA (§ 8.2)
    ══════════════════════════════════════════════════════════ */
 .fc-ticket {
   margin: 0 64px;
 }
 
-/* Grommet circles — 16px solid ink, 24px inset per § 8.2 */
+/* Grommet circles — 16px solid ink, 24px inset (§ 8.2) */
 .fc-grommet {
   position: absolute;
   width: 16px;
@@ -902,16 +1155,27 @@
 .fc-grommet--bl { bottom: 24px; left: 24px;  }
 .fc-grommet--br { bottom: 24px; right: 24px; }
 
-/* Centered ticket content */
+/* Centered ticket content (§ 7.3 exception) */
 .fc-ticket-content {
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
-  gap: 24px;
+  gap: 16px;
 }
 
-/* Magvix Italic centered headline per spec */
+.fc-ticket-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink);
+  margin: 0;
+  opacity: 0.72;
+}
+
+/* Magvix Italic centered headline (§ 8.2) */
 .fc-ticket-h2 {
   font-family: var(--font-hero);
   font-style: italic;
@@ -920,29 +1184,29 @@
   letter-spacing: -0.02em;
   line-height: 1.1;
   color: var(--ink);
-  margin: 0;
+  margin: 8px 0 8px;
 }
 
 .fc-ticket-body {
-  font-family: var(--font-body);
+  font-family: var(--font-mono);
   font-size: 16px;
   line-height: 1.40;
   letter-spacing: -0.125em;
   color: var(--ink);
   max-width: 480px;
-  margin: 0;
+  margin: 0 0 16px;
 }
 
 /* ══════════════════════════════════════════════════════════
-   RESPONSIVE — tablet + mobile
+   RESPONSIVE — iPad (≤1023px)
    ══════════════════════════════════════════════════════════ */
-
-/* Tablet: ≤ 1023px */
 @media (max-width: 1023px) {
-  /* Hero adjustments */
+  /* Hero */
   .fc-hero-copy {
     bottom: 80px;
     left: 48px;
+    right: 48px;
+    max-width: none;
   }
 
   .fc-hero-peek {
@@ -950,7 +1214,12 @@
     right: 48px;
   }
 
-  /* KPI — stack to single column */
+  /* Editorial table */
+  .fc-table-section {
+    padding: 80px 48px;
+  }
+
+  /* KPI */
   .fc-kpi-section {
     padding: 80px 48px;
   }
@@ -960,9 +1229,14 @@
     gap: 48px;
   }
 
-  /* How it works — 3 to 1 column */
+  /* How — Candy Panel internal padding § 8.8.1 */
+  .fc-how-section {
+    margin: 0 48px;
+  }
+
   .fc-how-grid {
     grid-template-columns: 1fr;
+    gap: 16px;
   }
 
   .fc-how-tile {
@@ -981,7 +1255,7 @@
     gap: 16px;
   }
 
-  /* Photo grid — 3 to 2 */
+  /* Photo grid 3 → 2 */
   .fc-photo-grid {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -995,12 +1269,12 @@
     padding: 80px 48px;
   }
 
-  /* Ticket */
-  .fc-ticket {
+  /* Ticket + Calc */
+  .fc-ticket,
+  .fc-calc-section {
     margin: 0 48px;
   }
 
-  /* Calc tile */
   .fc-calc-tile {
     position: static;
     align-self: flex-end;
@@ -1008,8 +1282,14 @@
   }
 }
 
-/* Mobile: ≤ 767px */
+/* ══════════════════════════════════════════════════════════
+   RESPONSIVE — Mobile (≤767px)
+   ══════════════════════════════════════════════════════════ */
 @media (max-width: 767px) {
+  .fc-bottom-spacer {
+    height: 40px;
+  }
+
   /* Hero */
   .fc-hero-copy {
     bottom: 56px;
@@ -1018,9 +1298,104 @@
     max-width: none;
   }
 
-  /* Hide peek tile on mobile */
   .fc-hero-peek {
     display: none;
+  }
+
+  .fc-hero-actions {
+    gap: 12px;
+  }
+
+  /* Editorial Table — § 8.6 mobile collapses to vertical card stack */
+  .fc-table-section {
+    padding: 56px 24px;
+  }
+
+  .fc-table-h2 {
+    font-size: clamp(40px, 12vw, 56px);
+  }
+
+  .fc-table-lede {
+    font-size: 16px;
+    margin-bottom: 32px;
+  }
+
+  /* Stack table cells as cards on mobile */
+  .fc-compare-table {
+    min-width: 0;
+    display: block;
+  }
+
+  .fc-compare-table thead {
+    display: none;
+  }
+
+  .fc-compare-table tbody,
+  .fc-compare-table tr {
+    display: block;
+    width: 100%;
+  }
+
+  .fc-compare-table tbody tr {
+    padding: 16px 0;
+    border-bottom: 1px dotted rgba(10, 10, 10, 0.18);
+  }
+
+  .fc-compare-table tbody tr:first-child td {
+    padding-top: 0;
+  }
+
+  .fc-compare-table tbody td {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 16px;
+    padding: 8px 0;
+    border-bottom: none;
+    text-align: right;
+  }
+
+  .fc-compare-table tbody td.fc-td-feature {
+    text-align: left;
+    font-size: 18px;
+    margin-bottom: 4px;
+  }
+
+  .fc-compare-table tbody td.fc-td-push::before {
+    content: "Push";
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--ink-4);
+    text-align: left;
+  }
+
+  .fc-compare-table tbody td.fc-td-other::before {
+    content: "Traditional";
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--ink-4);
+    text-align: left;
+  }
+
+  .fc-compare-table tbody td.fc-td-outcome::before {
+    content: "Outcome";
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--ink-4);
+    text-align: left;
+  }
+
+  .fc-compare-table tbody td.fc-td-outcome {
+    text-align: right;
   }
 
   /* KPI */
@@ -1037,6 +1412,10 @@
   }
 
   /* How */
+  .fc-how-section {
+    margin: 0 24px;
+  }
+
   .fc-how-tile {
     display: none;
   }
@@ -1057,7 +1436,7 @@
     font-size: 16px;
   }
 
-  /* Photo grid — 2 to 1 */
+  /* Photo grid */
   .fc-photo-grid {
     grid-template-columns: 1fr;
   }
@@ -1071,13 +1450,20 @@
     padding: 56px 24px;
   }
 
-  /* Ticket */
-  .fc-ticket {
+  /* Ticket + Calc */
+  .fc-ticket,
+  .fc-calc-section {
     margin: 0 24px;
   }
 
-  /* Section inner padding on mobile */
   .fc-kpi-inner {
     gap: 32px;
+  }
+
+  /* CTA stack on mobile */
+  .fc-table-cta {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
   }
 }

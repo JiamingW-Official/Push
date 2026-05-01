@@ -94,26 +94,7 @@ const NEXT_STEPS = [
 
 export default function PostSubmitPage() {
   return (
-    <Suspense
-      fallback={
-        <div
-          style={{
-            minHeight: "100svh",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            fontFamily: "var(--font-body)",
-            fontSize: 12,
-            letterSpacing: "0.08em",
-            textTransform: "uppercase",
-            color: "var(--ink-4)",
-            background: "var(--surface)",
-          }}
-        >
-          Loading…
-        </div>
-      }
-    >
+    <Suspense fallback={<div className="ps-loading">Loading…</div>}>
       <PostSubmitContent />
     </Suspense>
   );
@@ -142,50 +123,17 @@ function PostSubmitContent() {
       };
 
   return (
-    <div
-      style={{
-        background: "var(--surface-2)",
-        minHeight: "100svh",
-        paddingBottom: 96,
-      }}
-    >
+    <div className="ps-page">
       {/* Dark editorial hero */}
-      <header
-        style={{
-          background: "var(--char)",
-          borderBottom: "2px solid var(--ink)",
-          padding: "64px 40px 56px",
-        }}
-      >
-        <div style={{ maxWidth: 640, margin: "0 auto" }}>
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "flex-start",
-              gap: 16,
-            }}
-          >
+      <header className="ps-header">
+        <div className="ps-header-inner">
+          <div className="ps-header-col">
             {/* Checkmark circle */}
-            <div
-              style={{
-                width: 56,
-                height: 56,
-                borderRadius: "50%",
-                background: "var(--brand-red)",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                marginBottom: 8,
-                boxShadow: "0 8px 24px rgba(193,18,31,0.32)",
-              }}
-              aria-hidden="true"
-            >
+            <div className="ps-hero-check" aria-hidden="true">
               <svg
                 viewBox="0 0 40 40"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
-                style={{ width: 28, height: 28 }}
               >
                 <path
                   d="M10 21 L16 27 L30 13"
@@ -199,160 +147,41 @@ function PostSubmitContent() {
             </div>
 
             <div>
-              <span
-                style={{
-                  fontFamily: "var(--font-mono)",
-                  fontSize: 12,
-                  color: "rgba(255,255,255,0.38)",
-                  letterSpacing: "0.10em",
-                  textTransform: "uppercase",
-                  display: "block",
-                  marginBottom: 8,
-                }}
-              >
-                SUBMISSION RECEIVED
-              </span>
-              <h1
-                style={{
-                  fontFamily: "var(--font-display)",
-                  fontSize: "clamp(48px,6vw,72px)",
-                  fontWeight: 900,
-                  color: "var(--snow)",
-                  margin: 0,
-                  lineHeight: 1,
-                  letterSpacing: "-0.04em",
-                }}
-              >
-                Submitted!
-              </h1>
+              <span className="ps-eyebrow">SUBMISSION RECEIVED</span>
+              <h1 className="ps-hero-title">Submitted!</h1>
             </div>
           </div>
         </div>
       </header>
 
-      <div style={{ maxWidth: 640, margin: "0 auto", padding: "32px 40px 0" }}>
-        <div
-          style={{
-            paddingBottom: 24,
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "flex-start",
-            gap: 16,
-          }}
-        >
+      <div className="ps-body">
+        <div className="ps-status-row">
           <div style={{ display: "none" }}></div>
 
-          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-            <span
-              style={{
-                width: 8,
-                height: 8,
-                borderRadius: "50%",
-                background: "var(--ink-4)",
-                flexShrink: 0,
-              }}
-            />
-            <span
-              style={{
-                fontFamily: "var(--font-body)",
-                fontSize: 13,
-                color: "var(--ink-4)",
-              }}
-            >
+          <div className="ps-status-pill">
+            <span className="ps-status-dot" />
+            <span className="ps-status-text">
               Under review · Usually 24–48 hours · We&apos;ll notify you
             </span>
           </div>
         </div>
 
         {/* ── 1. Submission preview ────────────────────────── */}
-        <div
-          style={{
-            background: "var(--surface-2)",
-            border: "1px solid var(--hairline)",
-            borderRadius: 10,
-            padding: 24,
-            marginBottom: 16,
-          }}
-        >
-          <span
-            style={{
-              fontFamily: "var(--font-body)",
-              fontSize: 11,
-              color: "var(--ink-4)",
-              letterSpacing: "0.08em",
-              textTransform: "uppercase",
-              display: "block",
-              marginBottom: 16,
-            }}
-          >
-            YOUR SUBMISSION
-          </span>
+        <div className="ps-card">
+          <span className="ps-card-eyebrow">YOUR SUBMISSION</span>
 
-          <div style={{ display: "flex", gap: 16, alignItems: "flex-start" }}>
+          <div className="ps-preview-row">
             {/* Thumbnail placeholder */}
-            <div
-              style={{
-                width: 64,
-                height: 64,
-                background: "var(--surface-3)",
-                border: "1px solid var(--hairline)",
-                borderRadius: 8,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                fontSize: 20,
-                color: "var(--ink-4)",
-                flexShrink: 0,
-              }}
-              aria-hidden="true"
-            >
+            <div className="ps-thumb" aria-hidden="true">
               ▶
             </div>
 
-            <div
-              style={{
-                flex: 1,
-                display: "flex",
-                flexDirection: "column",
-                gap: 6,
-              }}
-            >
-              <p
-                style={{
-                  fontFamily: "var(--font-display)",
-                  fontSize: 16,
-                  fontWeight: 700,
-                  color: "var(--ink)",
-                  margin: 0,
-                }}
-              >
-                {data.campaign_name}
-              </p>
-              <div
-                style={{
-                  display: "flex",
-                  gap: 8,
-                  flexWrap: "wrap",
-                  alignItems: "center",
-                }}
-              >
-                <span
-                  style={{
-                    fontFamily: "var(--font-body)",
-                    fontSize: 12,
-                    color: "var(--ink-3)",
-                  }}
-                >
-                  {data.merchant}
-                </span>
-                <span style={{ color: "var(--hairline)" }}>·</span>
-                <span
-                  style={{
-                    fontFamily: "var(--font-body)",
-                    fontSize: 12,
-                    color: "var(--ink-4)",
-                  }}
-                >
+            <div className="ps-preview-info">
+              <p className="ps-preview-title">{data.campaign_name}</p>
+              <div className="ps-preview-tags">
+                <span className="ps-preview-merchant">{data.merchant}</span>
+                <span className="ps-preview-sep">·</span>
+                <span className="ps-preview-meta">
                   {data.platform} · {data.content_type}
                 </span>
               </div>
@@ -361,15 +190,7 @@ function PostSubmitContent() {
                   href={data.content_url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  style={{
-                    fontFamily: "var(--font-body)",
-                    fontSize: 12,
-                    color: "var(--accent-blue)",
-                    textDecoration: "none",
-                    overflow: "hidden",
-                    textOverflow: "ellipsis",
-                    whiteSpace: "nowrap",
-                  }}
+                  className="ps-preview-link"
                 >
                   {data.content_url}
                 </a>
@@ -377,134 +198,29 @@ function PostSubmitContent() {
             </div>
           </div>
 
-          <p
-            style={{
-              fontFamily: "var(--font-body)",
-              fontSize: 11,
-              color: "var(--ink-4)",
-              margin: "16px 0 0",
-              letterSpacing: "0.02em",
-            }}
-          >
-            Submitted {data.submitted_at}
-          </p>
+          <p className="ps-preview-timestamp">Submitted {data.submitted_at}</p>
         </div>
 
         {/* ── 2. What happens next ─────────────────────────── */}
-        <div
-          style={{
-            background: "var(--surface-2)",
-            border: "1px solid var(--hairline)",
-            borderRadius: 10,
-            padding: 24,
-            marginBottom: 16,
-          }}
-        >
-          <span
-            style={{
-              fontFamily: "var(--font-body)",
-              fontSize: 11,
-              color: "var(--ink-4)",
-              letterSpacing: "0.08em",
-              textTransform: "uppercase",
-              display: "block",
-              marginBottom: 24,
-            }}
-          >
-            WHAT HAPPENS NEXT
-          </span>
+        <div className="ps-card">
+          <span className="ps-card-next-eyebrow">WHAT HAPPENS NEXT</span>
 
-          <div style={{ display: "flex", flexDirection: "column", gap: 0 }}>
+          <div className="ps-steps">
             {NEXT_STEPS.map((step, i) => (
-              <div
-                key={step.num}
-                style={{
-                  display: "grid",
-                  gridTemplateColumns: "40px 1fr",
-                  gap: 16,
-                  paddingBottom: i < NEXT_STEPS.length - 1 ? 24 : 0,
-                  position: "relative",
-                }}
-              >
+              <div key={step.num} className="ps-step">
                 {/* Connector line */}
                 {i < NEXT_STEPS.length - 1 && (
-                  <div
-                    style={{
-                      position: "absolute",
-                      left: 19,
-                      top: 36,
-                      width: 2,
-                      height: "calc(100% - 12px)",
-                      background: "var(--hairline)",
-                    }}
-                  />
+                  <div className="ps-step-connector" />
                 )}
-                {/* Step number badge */}
-                <div
-                  style={{
-                    width: 40,
-                    height: 40,
-                    borderRadius: "50%",
-                    background:
-                      i === 0 ? "var(--brand-red)" : "var(--surface-3)",
-                    border: "1px solid var(--hairline)",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    flexShrink: 0,
-                    zIndex: 1,
-                  }}
-                >
-                  <span
-                    style={{
-                      fontFamily: "var(--font-body)",
-                      fontSize: 11,
-                      fontWeight: 700,
-                      color: i === 0 ? "var(--snow)" : "var(--ink-4)",
-                      letterSpacing: "0.04em",
-                    }}
-                  >
-                    {step.num}
-                  </span>
+                {/* Step number badge — 40×40 icon tile */}
+                <div className={`ps-step-icon-tile${i === 0 ? " active" : ""}`}>
+                  <span className="ps-step-num">{step.num}</span>
                 </div>
                 {/* Content */}
-                <div style={{ paddingTop: 8 }}>
-                  <p
-                    style={{
-                      fontFamily: "var(--font-body)",
-                      fontSize: 14,
-                      fontWeight: 600,
-                      color: "var(--ink)",
-                      margin: "0 0 4px",
-                    }}
-                  >
-                    {step.title}
-                  </p>
-                  <p
-                    style={{
-                      fontFamily: "var(--font-body)",
-                      fontSize: 13,
-                      color: "var(--ink-4)",
-                      lineHeight: 1.5,
-                      margin: "0 0 6px",
-                    }}
-                  >
-                    {step.desc}
-                  </p>
-                  <span
-                    style={{
-                      fontFamily: "var(--font-body)",
-                      fontSize: 11,
-                      color: "var(--ink-4)",
-                      background: "var(--surface-3)",
-                      border: "1px solid var(--hairline)",
-                      borderRadius: 4,
-                      padding: "2px 8px",
-                      letterSpacing: "0.02em",
-                    }}
-                  >
-                    {step.time}
-                  </span>
+                <div className="ps-step-content">
+                  <p className="ps-step-title">{step.title}</p>
+                  <p className="ps-step-desc">{step.desc}</p>
+                  <span className="ps-step-time">{step.time}</span>
                 </div>
               </div>
             ))}
@@ -512,41 +228,9 @@ function PostSubmitContent() {
         </div>
 
         {/* ── Tip ──────────────────────────────────────────── */}
-        <div
-          style={{
-            background: "var(--surface-2)",
-            border: "1px solid var(--hairline)",
-            borderRadius: 10,
-            padding: 20,
-            marginBottom: 24,
-            display: "flex",
-            gap: 12,
-            alignItems: "flex-start",
-          }}
-        >
-          <span
-            style={{
-              fontFamily: "var(--font-body)",
-              fontSize: 11,
-              fontWeight: 700,
-              color: "var(--ink-4)",
-              letterSpacing: "0.06em",
-              textTransform: "uppercase",
-              whiteSpace: "nowrap",
-              paddingTop: 2,
-            }}
-          >
-            PRO TIP
-          </span>
-          <p
-            style={{
-              fontFamily: "var(--font-body)",
-              fontSize: 13,
-              color: "var(--ink-3)",
-              lineHeight: 1.6,
-              margin: 0,
-            }}
-          >
+        <div className="ps-tip-card">
+          <span className="ps-tip-label">PRO TIP</span>
+          <p className="ps-tip-text">
             Share your content on your stories and tag {data.merchant} to
             increase walk-in conversions. Every verified visit in the 30-day
             window adds to your payout.
@@ -554,19 +238,25 @@ function PostSubmitContent() {
         </div>
 
         {/* ── 3. CTAs ──────────────────────────────────────── */}
-        <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
+        <div className="ps-cta-row">
           <Link
             href="/creator/dashboard?tab=discover"
-            className="btn-primary click-shift"
+            className="btn btn-primary"
           >
-            View My Work
+            View My Dashboard
           </Link>
-          <Link
-            href={`/creator/campaigns/${data.campaign_id}`}
-            className="btn-ghost click-shift"
+          <Link href="/creator/campaigns" className="btn btn-secondary">
+            Find More Campaigns
+          </Link>
+          <button
+            type="button"
+            className="btn btn-ghost"
+            onClick={() => {
+              navigator.clipboard?.writeText(data.campaign_id);
+            }}
           >
-            Back to Campaign
-          </Link>
+            Copy Confirmation #
+          </button>
         </div>
       </div>
     </div>

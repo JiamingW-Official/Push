@@ -1,253 +1,464 @@
-/* ============================================================
-   Push — Merchant Dashboard v11
-   Product register. Marketing-only elements (Ticket Panel,
-   Sig Divider, Parenthetical eyebrows) are forbidden here.
-   All tokens from globals.css § 2. 8px grid throughout.
-   ============================================================ */
+/* ───────────────────────────────────────────────────────────────
+   Merchant Dashboard — Push v11 Product UI register
+   Command-center surface: KPIs read at a glance, rows scan top-to-
+   bottom, primary action is unmistakable. Strict 8px grid; closed
+   color list; bottom-right hover shift signature; iOS 26 spring.
+   ─────────────────────────────────────────────────────────────── */
 
-/* ------------------------------------------------------------
-   Skeleton
-   ------------------------------------------------------------ */
-.db-skeleton-shell {
+.db-dashboard-page {
   display: flex;
   flex-direction: column;
-  min-height: 100svh;
-  background: var(--surface);
+  gap: var(--space-6); /* 48px between major sections — Product UI rhythm */
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding-bottom: var(--space-10);
+  color: var(--ink);
+  font-family: var(--font-mono);
 }
 
-.db-skeleton-nav {
-  height: 64px;
-  background: var(--snow);
+/* ─── Page header — tighten for Product UI register ───────────── */
+
+.db-dashboard-page .ms-page-header {
+  padding-bottom: var(--space-5); /* 40px */
+  margin-bottom: 0;
   border-bottom: 1px solid var(--hairline);
-  flex-shrink: 0;
 }
 
-.db-skeleton-body {
-  display: flex;
-  flex: 1;
+.db-dashboard-page .ms-page-header-eyebrow {
+  /* Canonical Product-UI eyebrow — no parenthetical (per § 8.5 register split) */
+  color: var(--ink-3);
+  letter-spacing: 0.12em;
 }
 
-.db-skeleton-sidebar {
-  width: 0;
-  flex-shrink: 0;
-}
-
-.db-skeleton-main {
-  flex: 1;
-  padding: 48px 64px;
-  display: flex;
-  flex-direction: column;
-  gap: 32px;
-}
-
-.db-skeleton-block {
-  border-radius: var(--r-md);
-}
-
-.db-skeleton-header {
-  height: 72px;
-  width: 280px;
-}
-
-.db-skeleton-stats {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 24px;
-}
-
-.db-skeleton-stat {
-  height: 136px;
-}
-
-.db-skeleton-table {
-  height: 320px;
-}
-
-/* ------------------------------------------------------------
-   Shimmer
-   ------------------------------------------------------------ */
-.skeleton {
-  background: linear-gradient(
-    90deg,
-    var(--hairline) 25%,
-    var(--hairline-2) 37%,
-    var(--hairline) 63%
-  );
-  background-size: 400px 100%;
-  animation: shimmer 1.4s ease infinite;
-}
-
-@keyframes shimmer {
-  0%   { background-position: -400px 0; }
-  100% { background-position:  400px 0; }
-}
-
-/* ------------------------------------------------------------
-   Status badges
-   ------------------------------------------------------------ */
-.db-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  font-family: var(--font-body);
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  padding: 4px 10px;
-  border-radius: var(--r-sm);
-  white-space: nowrap;
-  flex-shrink: 0;
+.db-dashboard-page .ms-page-header-title {
+  font-family: var(--font-display);
+  font-size: clamp(40px, 5vw, 64px); /* H1 — sits below KPI numerals so they read first */
+  font-weight: 800;
+  letter-spacing: -0.025em;
   line-height: 1;
 }
 
-.db-badge::before {
-  content: "";
-  width: 5px;
-  height: 5px;
-  border-radius: var(--r-full);
-  flex-shrink: 0;
+.db-dashboard-page .ms-page-header-subtitle {
+  font-family: var(--font-mono);
+  font-size: var(--text-body-sm);
+  color: var(--ink-3);
+  line-height: 1.45;
+  margin-top: var(--space-2); /* 16px — H1 → body */
 }
 
-.db-badge--active {
-  background: rgba(31, 122, 57, 0.10);
-  color: var(--success-dark);
-  border: 1px solid rgba(31, 122, 57, 0.22);
+/* Primary CTA receives a slightly heavier hover lift in dashboard
+   context; respects globals.css btn-primary spec (no override of
+   color / radius / padding — only optional micro-shadow). */
+.db-dashboard-page .ms-page-header-action .btn-primary {
+  box-shadow: 0 1px 2px rgba(193, 18, 31, 0.18);
 }
-.db-badge--active::before  { background: var(--success-dark); }
 
-.db-badge--paused {
-  background: var(--surface-3);
-  color: var(--ink-4);
-  border: 1px solid var(--hairline);
+/* ─── Major sections ──────────────────────────────────────────── */
+
+.db-major-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3); /* 24px — section title → content */
 }
-.db-badge--paused::before  { background: var(--ink-4); }
 
-.db-badge--draft {
-  background: transparent;
-  color: var(--accent-blue);
-  border: 1px solid var(--accent-blue);
+.db-section-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-2);
+  padding-bottom: var(--space-2); /* 16px above hairline */
+  border-bottom: 1px solid var(--hairline);
 }
-.db-badge--draft::before   { background: var(--accent-blue); }
 
-.db-badge--closed {
-  background: var(--brand-red-tint);
-  color: var(--brand-red);
-  border: 1px solid var(--brand-red-focus);
+.db-section-title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--text-h2); /* 40px — Darky H2 lock (Design.md § 3.1) */
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+  color: var(--ink);
 }
-.db-badge--closed::before  { background: var(--brand-red); }
 
-/* ------------------------------------------------------------
-   Milestone tags
-   ------------------------------------------------------------ */
-.milestone-tag {
-  font-family: var(--font-body);
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
+.db-section-link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1); /* 8px — text → trailing arrow */
+  font-family: var(--font-mono);
+  font-size: var(--text-small);
+  font-weight: 600;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
-  padding: 3px 9px;
-  border: 1px solid var(--hairline);
+  color: var(--ink);
+  text-decoration: none;
+  border-bottom: 2px solid var(--brand-red);
+  padding-bottom: var(--space-1);
+  transition:
+    color 180ms var(--spring),
+    transform 180ms var(--spring),
+    border-color 180ms ease;
+}
+
+.db-section-link::after {
+  content: "→";
+  font-family: var(--font-mono);
+  font-size: 14px;
+  transition: transform 180ms var(--spring);
+}
+
+.db-section-link:hover {
+  color: var(--brand-red);
+  transform: translate(1px, 1px);
+}
+
+.db-section-link:hover::after {
+  transform: translateX(2px);
+}
+
+.db-section-link:active {
+  transform: translate(2px, 2px) scale(0.98);
+}
+
+.db-section-link:focus-visible {
+  outline: 4px solid var(--brand-red-focus);
+  outline-offset: 4px;
+  border-radius: var(--r-xs);
+}
+
+/* ─── KPI Grid — 4 cards, snap to 8px ─────────────────────────── */
+
+.db-kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--space-3); /* 24px card-grid gap */
+}
+
+/* Override shared KPICard typography to v11 spec (clamp 40-72px).
+   Scoped under .db-dashboard-page so this never bleeds to other
+   surfaces still on the v10 64px ceiling. */
+.db-dashboard-page .kpi-card {
+  border-radius: var(--r-md); /* 10px — standard card per Design.md § 4 */
+  background: var(--surface-2);
+  box-shadow: var(--shadow-1);
+  padding: var(--space-3); /* 24px — standard card */
+  transition:
+    transform 220ms var(--spring),
+    box-shadow 220ms ease,
+    border-color 220ms ease;
+}
+
+.db-dashboard-page .kpi-card:hover {
+  transform: translate(1px, 1px);
+  box-shadow: var(--shadow-2);
+}
+
+.db-dashboard-page .kpi-card:focus-visible,
+.db-dashboard-page .kpi-card:focus-within {
+  outline: 4px solid var(--brand-red-focus);
+  outline-offset: 2px;
+}
+
+.db-dashboard-page .kpi-card__numeral {
+  font-size: var(--text-kpi-numeral); /* clamp(40px, 5vw, 72px) — v11 lock */
+  letter-spacing: -0.02em;
+  margin: 0 0 var(--space-2); /* 16px — stat → caption per § 6.2 */
+}
+
+.db-dashboard-page .kpi-card__eyebrow {
+  font-size: var(--text-eyebrow); /* 12px floor */
+  margin-bottom: var(--space-1);
+}
+
+.db-dashboard-page .kpi-card__delta {
+  font-size: var(--text-caption); /* 12px */
+  letter-spacing: 0.02em;
+}
+
+.db-dashboard-page .kpi-card__delta--up {
+  color: var(--success-dark);
+}
+
+.db-dashboard-page .kpi-card__delta--down {
+  color: var(--brand-red);
+}
+
+.db-dashboard-page .kpi-card__delta--flat {
   color: var(--ink-4);
+}
+
+.db-dashboard-page .kpi-card__delta-arrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 14px;
+  font-size: 10px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+/* ─── List surface (Active Campaigns + Recent Applications) ───── */
+
+.db-list-surface {
+  background: var(--surface-2);
+  border-radius: var(--r-md); /* 10px */
+  overflow: hidden;
+  box-shadow: var(--shadow-1);
+}
+
+.db-list-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3); /* 24px standard card padding */
+  border-bottom: 1px solid var(--hairline);
+  position: relative;
+  transition:
+    transform 200ms var(--spring),
+    background 180ms ease;
+  cursor: pointer;
+  outline: none;
+}
+
+.db-list-row:last-child {
+  border-bottom: 0;
+}
+
+/* Left-edge color rail — fades in on hover so the row reads as
+   actionable without crowding the resting state. Brand-red for
+   campaigns; ink for applications (neutral until reviewed). */
+.db-list-row::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 3px;
   background: transparent;
-  border-radius: var(--r-sm);
+  transition: background 180ms ease;
+}
+
+.db-campaign-row:hover::before,
+.db-campaign-row:focus-visible::before {
+  background: var(--brand-red);
+}
+
+.db-application-row:hover::before,
+.db-application-row:focus-visible::before {
+  background: var(--ink);
+}
+
+.db-list-row:hover {
+  background: var(--surface-3);
+  transform: translate(1px, 1px);
+}
+
+.db-list-row:active {
+  transform: translate(2px, 2px) scale(0.99);
+}
+
+.db-list-row:focus-visible {
+  outline: 4px solid var(--brand-red-focus);
+  outline-offset: -4px;
+  background: var(--surface-3);
+}
+
+.db-row-main {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1); /* 8px — title → meta tightened from card title→body 12px to row-density 8px */
+  min-width: 0;
+}
+
+.db-row-title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--text-h5); /* 20px */
+  font-weight: 700;
+  letter-spacing: -0.005em;
+  line-height: 1.3;
+  color: var(--ink);
+  overflow: hidden;
+  text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-.milestone-tag--action {
-  color: var(--warning);
-  border-color: var(--warning);
-  background: rgba(255, 149, 0, 0.07);
-}
-
-.milestone-tag--done {
-  color: var(--success-dark);
-  border-color: rgba(31, 122, 57, 0.28);
-  background: rgba(31, 122, 57, 0.07);
-}
-
-/* Milestone progress bar */
-.milestone-progress {
-  height: 2px;
-  background: var(--hairline);
-  width: 100%;
-  max-width: 240px;
-  border-radius: var(--r-pill);
-}
-
-.milestone-progress__bar {
-  height: 100%;
-  background: var(--brand-red);
-  transition: width 0.3s ease;
-  border-radius: var(--r-pill);
-}
-
-/* ------------------------------------------------------------
-   Application list
-   ------------------------------------------------------------ */
-.app-list {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-/* ------------------------------------------------------------
-   Empty state
-   ------------------------------------------------------------ */
-.db-empty-state {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 64px 48px;
-  background: var(--surface-2);
-  border: 1px solid var(--hairline);
-  border-radius: var(--r-md);
-  min-height: 320px;
-  gap: 16px;
-  text-align: center;
-}
-
-.db-empty-state__icon {
-  width: 56px;
-  height: 56px;
-  color: var(--ink-5);
-  margin-bottom: 8px;
-}
-
-.db-empty-state__title {
-  font-family: var(--font-display);
-  font-size: 28px;
-  font-weight: 700;
-  letter-spacing: -0.015em;
-  color: var(--ink);
-  line-height: 1.15;
+.db-row-meta {
   margin: 0;
-}
-
-.db-empty-state__sub {
-  font-family: var(--font-body);
-  font-size: 16px;
+  font-family: var(--font-mono);
+  font-size: var(--text-small);
+  line-height: 1.4;
   color: var(--ink-3);
-  max-width: 360px;
-  line-height: 1.6;
-  margin: 0 0 8px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-/* ------------------------------------------------------------
-   Responsive
-   ------------------------------------------------------------ */
+.db-row-side {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  justify-self: end;
+}
+
+.db-row-side--application {
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.db-row-metric {
+  font-family: var(--font-mono);
+  font-size: var(--text-eyebrow); /* 12px floor */
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+  white-space: nowrap;
+}
+
+/* ─── Empty state copy fallback ───────────────────────────────── */
+
+.db-empty-copy {
+  margin: 0;
+  padding: var(--space-6);
+  font-family: var(--font-mono);
+  font-size: var(--text-body-sm);
+  line-height: 1.45;
+  color: var(--ink-3);
+  text-align: left;
+}
+
+/* The shared <EmptyState> renders inside .db-list-surface; tighten
+   its border so it visually reads as a quiet tray, not a card-on-card. */
+.db-list-surface > .ms-empty-state,
+.db-list-surface > [class*="empty"] {
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+/* ─── Loading shimmer (utility, opt-in via .db-loading) ────────── */
+
+@keyframes db-shimmer {
+  0% {
+    background-position: -200px 0;
+  }
+  100% {
+    background-position: calc(200px + 100%) 0;
+  }
+}
+
+.db-loading {
+  background: linear-gradient(
+    90deg,
+    var(--surface-2) 0%,
+    var(--surface-3) 50%,
+    var(--surface-2) 100%
+  );
+  background-size: 200px 100%;
+  animation: db-shimmer 1.4s ease-in-out infinite;
+  color: transparent;
+  user-select: none;
+  pointer-events: none;
+}
+
+/* ─── Responsive — naturally adaptive (Design.md § 14) ────────── */
+
+@media (max-width: 1240px) {
+  .db-kpi-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-3);
+  }
+}
+
 @media (max-width: 900px) {
-  .db-skeleton-stats {
-    grid-template-columns: repeat(2, 1fr);
+  .db-dashboard-page {
+    gap: var(--space-5); /* 40px between sections — iPad rhythm */
   }
-  .db-skeleton-main {
-    padding: 40px 24px;
+
+  .db-dashboard-page .ms-page-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-2);
+    padding-bottom: var(--space-4); /* 32px */
+  }
+
+  .db-section-head {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: var(--space-1);
+  }
+
+  .db-list-row {
+    grid-template-columns: 1fr;
+    align-items: flex-start;
+    padding: var(--space-2) var(--space-3); /* 16px V / 24px H — denser on iPad */
+  }
+
+  .db-row-side {
+    justify-self: start;
   }
 }
 
-@media (max-width: 600px) {
-  .db-skeleton-stats {
+@media (max-width: 768px) {
+  .db-dashboard-page {
+    gap: var(--space-4); /* 32px between sections — mobile */
+    padding-bottom: var(--space-7); /* 56px */
+  }
+
+  .db-kpi-grid {
     grid-template-columns: 1fr;
+    gap: var(--space-2); /* 16px — mobile card-grid gap per § 6.6 */
+  }
+
+  .db-section-title {
+    font-size: var(--text-h3); /* 28px */
+  }
+
+  .db-row-title {
+    font-size: var(--text-body-sm); /* 16px */
+    white-space: normal;
+  }
+
+  .db-row-meta {
+    white-space: normal;
+  }
+
+  .db-list-row {
+    padding: var(--space-2);
+    gap: var(--space-1);
+  }
+
+  .db-dashboard-page .kpi-card {
+    padding: var(--space-2) var(--space-3);
+  }
+}
+
+/* ─── Accessibility — reduced-motion / reduced-transparency ───── */
+
+@media (prefers-reduced-motion: reduce) {
+  .db-section-link,
+  .db-section-link::after,
+  .db-list-row,
+  .db-list-row::before,
+  .db-dashboard-page .kpi-card,
+  .db-loading {
+    transition: none !important;
+    animation: none !important;
+  }
+  .db-section-link:hover,
+  .db-section-link:hover::after,
+  .db-list-row:hover,
+  .db-list-row:active,
+  .db-section-link:active,
+  .db-dashboard-page .kpi-card:hover {
+    transform: none !important;
+  }
+}
+
+@media (forced-colors: active) {
+  .db-list-row:focus-visible,
+  .db-section-link:focus-visible,
+  .db-dashboard-page .kpi-card:focus-visible {
+    outline: 2px solid CanvasText;
+    outline-offset: 2px;
   }
 }

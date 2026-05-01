@@ -1,154 +1,189 @@
 "use client";
 
-import { useState, useMemo } from "react";
+/* ─────────────────────────────────────────────────────────────────────
+ * Push — Creator · Work · Drafts (refinement pass 2026-04-29)
+ *
+ * Authority: Design.md v11.
+ * Register:  Product (Workspace).
+ * Visual    photo-card-style cover w/ bottom gradient overlay
+ *           (§ 8.7 adapted for product register), one liquid-glass
+ *           floating tile highlighting "ready to submit" (§ 8.9.3),
+ *           Filled Primary "Submit" CTA (§ 9.1), Ghost edit / icon
+ *           delete with two-step confirm.
+ * Status    draft / ready / review / returned — colors only from
+ *           § 2 closed list. Time uses relative values.
+ * Empty     friendly, action-led, points to /creator/discover.
+ * ─────────────────────────────────────────────────────────────────── */
+
+import { useMemo, useState } from "react";
 import Link from "next/link";
 import "./drafts.css";
 
 /* ── Types ───────────────────────────────────────────────── */
 
-type DraftStatus = "in_progress" | "ready" | "submitted" | "overdue";
+type DraftStatus = "draft" | "ready" | "review" | "returned";
 type ContentType = "post" | "story" | "reel" | "video" | "carousel";
 type Platform = "instagram" | "tiktok" | "xiaohongshu" | "youtube";
 type ViewMode = "grid" | "list";
-type SortKey = "deadline" | "campaign" | "status";
+type SortKey = "deadline" | "saved" | "campaign" | "status";
 
 interface DraftItem {
   id: string;
-  name: string;
+  title: string;
   campaignId: string;
   campaignTitle: string;
   merchantName: string;
   contentType: ContentType;
   platform: Platform;
   status: DraftStatus;
-  deadlineDate: string; // ISO date YYYY-MM-DD
+  deadlineDate: string; // ISO YYYY-MM-DD
+  lastSavedAt: string; // ISO date-time
   wordCount: number;
   wordTarget: number;
-  /** Preview background: hue degrees (for HSL) */
-  previewHue: number;
+  assetCount: number;
+  assetTarget: number;
+  /** Procedural cover hue (0-360) — used for HSL placeholder gradient */
+  coverHue: number;
   postUrl: string;
+  /** Rejection note when status === "returned" */
+  returnNote?: string;
 }
 
-/* ── Mock data ───────────────────────────────────────────── */
+/* ── Mock data (kept identical in shape; status remapped to v2 set) ── */
 
 const MOCK_DRAFTS: DraftItem[] = [
   {
     id: "dr-001",
-    name: "Morning Ritual Story Set",
+    title: "Morning Ritual story set",
     campaignId: "camp-001",
     campaignTitle: "Morning Ritual Campaign",
     merchantName: "Blank Street Coffee",
     contentType: "story",
     platform: "instagram",
-    status: "in_progress",
+    status: "draft",
     deadlineDate: "2026-04-30",
+    lastSavedAt: "2026-04-28T20:14:00",
     wordCount: 180,
     wordTarget: 300,
-    previewHue: 28,
+    assetCount: 2,
+    assetTarget: 4,
+    coverHue: 28,
     postUrl: "/creator/campaigns/camp-001/post",
   },
   {
     id: "dr-002",
-    name: "Best Burger NYC Reel",
+    title: "Best burger in NYC reel",
     campaignId: "camp-002",
     campaignTitle: "Best Burger in NYC Feature",
     merchantName: "Superiority Burger",
     contentType: "reel",
     platform: "instagram",
     status: "ready",
-    deadlineDate: "2026-04-25",
+    deadlineDate: "2026-04-30",
+    lastSavedAt: "2026-04-29T09:02:00",
     wordCount: 450,
     wordTarget: 450,
-    previewHue: 12,
+    assetCount: 5,
+    assetTarget: 5,
+    coverHue: 12,
     postUrl: "/creator/campaigns/camp-002/post",
   },
   {
     id: "dr-003",
-    name: "Brow Transformation Before & After",
+    title: "Brow transformation before & after",
     campaignId: "camp-004",
     campaignTitle: "Brow Transformation Story",
     merchantName: "Brow Theory",
     contentType: "story",
     platform: "instagram",
-    status: "overdue",
-    deadlineDate: "2026-04-20",
+    status: "returned",
+    deadlineDate: "2026-04-30",
+    lastSavedAt: "2026-04-26T15:48:00",
     wordCount: 90,
     wordTarget: 250,
-    previewHue: 335,
+    assetCount: 1,
+    assetTarget: 3,
+    coverHue: 335,
     postUrl: "/creator/campaigns/camp-004/post",
+    returnNote: "Add the verified-by-shop disclosure in the closing card.",
   },
   {
     id: "dr-004",
-    name: "Le Bec-Fin Pop-Up Review Post",
+    title: "Le Bec-Fin pop-up review",
     campaignId: "camp-006",
     campaignTitle: "Le Bec-Fin Pop-Up Review",
     merchantName: "Le Bec Fin",
     contentType: "post",
     platform: "instagram",
-    status: "submitted",
+    status: "review",
     deadlineDate: "2026-04-22",
+    lastSavedAt: "2026-04-22T18:30:00",
     wordCount: 320,
     wordTarget: 300,
-    previewHue: 210,
+    assetCount: 4,
+    assetTarget: 4,
+    coverHue: 210,
     postUrl: "/creator/campaigns/camp-006/post",
   },
   {
     id: "dr-005",
-    name: "Matcha Morning Ritual Stories",
+    title: "Matcha morning ritual stories",
     campaignId: "camp-008",
     campaignTitle: "Matcha Morning Ritual",
     merchantName: "Cha Cha Matcha",
     contentType: "story",
     platform: "instagram",
-    status: "in_progress",
+    status: "draft",
     deadlineDate: "2026-04-29",
+    lastSavedAt: "2026-04-29T07:11:00",
     wordCount: 210,
     wordTarget: 400,
-    previewHue: 155,
+    assetCount: 3,
+    assetTarget: 5,
+    coverHue: 155,
     postUrl: "/creator/campaigns/camp-008/post",
   },
   {
     id: "dr-006",
-    name: "LA Botanica Aesthetic Shoot",
+    title: "LA Botanica aesthetic shoot",
     campaignId: "camp-003",
     campaignTitle: "LA Botanica Aesthetic Shoot",
     merchantName: "Flamingo Estate",
     contentType: "post",
     platform: "instagram",
-    status: "in_progress",
+    status: "draft",
     deadlineDate: "2026-05-05",
+    lastSavedAt: "2026-04-27T11:00:00",
     wordCount: 120,
     wordTarget: 500,
-    previewHue: 290,
+    assetCount: 1,
+    assetTarget: 6,
+    coverHue: 290,
     postUrl: "/creator/campaigns/camp-003/post",
   },
 ];
 
+/* ── Pinned "today" reference for relative-time math ─────── */
+
+const TODAY = new Date("2026-04-29T10:00:00");
+
 /* ── Constants ───────────────────────────────────────────── */
 
-const STATUS_TABS: { key: "all" | DraftStatus; label: string }[] = [
-  { key: "all", label: "All" },
-  { key: "in_progress", label: "In Progress" },
-  { key: "ready", label: "Ready" },
-  { key: "submitted", label: "Submitted" },
-  { key: "overdue", label: "Overdue" },
-];
-
-const STATUS_LABELS: Record<DraftStatus, string> = {
-  in_progress: "In Progress",
+const STATUS_LABEL: Record<DraftStatus, string> = {
+  draft: "Draft",
   ready: "Ready",
-  submitted: "Submitted",
-  overdue: "Overdue",
+  review: "In review",
+  returned: "Returned",
 };
 
-const PLATFORM_LABELS: Record<Platform, string> = {
+const PLATFORM_LABEL: Record<Platform, string> = {
   instagram: "IG",
   tiktok: "TT",
   xiaohongshu: "XHS",
   youtube: "YT",
 };
 
-const CONTENT_TYPE_LABELS: Record<ContentType, string> = {
+const TYPE_LABEL: Record<ContentType, string> = {
   post: "Post",
   story: "Story",
   reel: "Reel",
@@ -156,622 +191,418 @@ const CONTENT_TYPE_LABELS: Record<ContentType, string> = {
   carousel: "Carousel",
 };
 
-/* ── Pipeline stage config ───────────────────────────────── */
-
-const PIPELINE_STAGES: {
-  key: DraftStatus;
-  label: string;
-  countClass: string;
-  dot: string;
-}[] = [
-  {
-    key: "in_progress",
-    label: "In Progress",
-    countClass: "drafts-pipeline-count--in-progress",
-    dot: "var(--ink-3)",
-  },
-  {
-    key: "ready",
-    label: "Ready to Submit",
-    countClass: "drafts-pipeline-count--ready",
-    dot: "var(--accent-blue)",
-  },
-  {
-    key: "submitted",
-    label: "Submitted",
-    countClass: "drafts-pipeline-count--submitted",
-    dot: "#bfa170",
-  },
-  {
-    key: "overdue",
-    label: "Overdue",
-    countClass: "drafts-pipeline-count--overdue",
-    dot: "var(--brand-red)",
-  },
+const STATUS_FILTERS: { key: "all" | DraftStatus; label: string }[] = [
+  { key: "all", label: "All" },
+  { key: "draft", label: "Draft" },
+  { key: "ready", label: "Ready" },
+  { key: "review", label: "In review" },
+  { key: "returned", label: "Returned" },
 ];
+
+const SORT_LABEL: Record<SortKey, string> = {
+  deadline: "Deadline",
+  saved: "Last saved",
+  campaign: "Campaign",
+  status: "Status",
+};
 
 /* ── Helpers ─────────────────────────────────────────────── */
 
-const TODAY = new Date("2026-04-18");
-
-function daysDiff(isoDate: string): number {
-  const d = new Date(isoDate + "T00:00:00");
+function daysUntil(iso: string): number {
+  const d = new Date(iso + "T00:00:00");
   return Math.round((d.getTime() - TODAY.getTime()) / 86_400_000);
 }
 
-function deadlineClass(
-  status: DraftStatus,
-  isoDate: string,
-): "ok" | "soon" | "overdue" {
-  if (status === "overdue") return "overdue";
-  const diff = daysDiff(isoDate);
-  if (diff < 0) return "overdue";
-  if (diff <= 3) return "soon";
+function isLate(d: DraftItem): boolean {
+  // overdue = deadline already passed, AND we still owe a deliverable
+  return (
+    daysUntil(d.deadlineDate) < 0 &&
+    d.status !== "review" &&
+    d.status !== "ready"
+  );
+}
+
+function deadlineTone(d: DraftItem): "ok" | "soon" | "late" {
+  if (isLate(d)) return "late";
+  const k = daysUntil(d.deadlineDate);
+  if (k <= 2) return "soon";
   return "ok";
 }
 
-function deadlineLabel(status: DraftStatus, isoDate: string): string {
-  if (status === "submitted") return "Submitted";
-  const diff = daysDiff(isoDate);
-  if (diff < 0) return `${Math.abs(diff)}d overdue`;
-  if (diff === 0) return "Due today";
-  if (diff === 1) return "Due tomorrow";
-  return `Due in ${diff}d`;
+function deadlineCopy(d: DraftItem): string {
+  const k = daysUntil(d.deadlineDate);
+  if (isLate(d)) return `${Math.abs(k)}d overdue`;
+  if (k === 0) return "Due today";
+  if (k === 1) return "Due tomorrow";
+  if (k <= 7) return `Due in ${k}d`;
+  return `Due ${new Date(d.deadlineDate + "T00:00:00").toLocaleDateString("en-US", { month: "short", day: "numeric" })}`;
 }
 
-function progressPct(wordCount: number, wordTarget: number): number {
-  return Math.min(100, Math.round((wordCount / wordTarget) * 100));
+function relativeSaved(iso: string): string {
+  const t = new Date(iso).getTime();
+  const diffMin = Math.max(0, Math.round((TODAY.getTime() - t) / 60_000));
+  if (diffMin < 1) return "just now";
+  if (diffMin < 60) return `${diffMin}m ago`;
+  const diffHr = Math.round(diffMin / 60);
+  if (diffHr < 24) return `${diffHr}h ago`;
+  const diffDay = Math.round(diffHr / 24);
+  if (diffDay <= 7) return `${diffDay}d ago`;
+  return new Date(iso).toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+  });
 }
 
-function previewBg(hue: number): string {
-  return `hsl(${hue}, 28%, 87%)`;
+/** Total completion = avg(words progress, assets progress). */
+function progressPct(d: DraftItem): number {
+  const w = Math.min(1, d.wordCount / Math.max(1, d.wordTarget));
+  const a = Math.min(1, d.assetCount / Math.max(1, d.assetTarget));
+  return Math.round(((w + a) / 2) * 100);
 }
 
-function previewAccentBg(hue: number): string {
-  return `hsl(${hue}, 44%, 58%)`;
+/** Procedural HSL cover — placeholder until real assets land. */
+function coverGradient(hue: number): string {
+  const a = `hsl(${hue}, 28%, 86%)`;
+  const b = `hsl(${(hue + 30) % 360}, 32%, 72%)`;
+  const c = `hsl(${(hue + 200) % 360}, 22%, 54%)`;
+  return `linear-gradient(135deg, ${a} 0%, ${b} 55%, ${c} 100%)`;
 }
 
-/* ── Status badge ──────────────────────────────────────────── */
+/* ── Status chip ─────────────────────────────────────────── */
 
-function StatusBadge({ status }: { status: DraftStatus }) {
-  const styles: Record<DraftStatus, { bg: string; color: string }> = {
-    in_progress: { bg: "var(--surface-2)", color: "var(--ink-3)" },
-    ready: { bg: "var(--accent-blue)", color: "var(--snow)" },
-    submitted: { bg: "#bfa170", color: "var(--snow)" },
-    overdue: { bg: "var(--brand-red)", color: "var(--snow)" },
-  };
-  const s = styles[status];
+function StatusChip({ status }: { status: DraftStatus }) {
   return (
     <span
-      style={{
-        padding: "3px 10px",
-        borderRadius: 4,
-        background: s.bg,
-        color: s.color,
-        fontFamily: "var(--font-body)",
-        fontSize: 11,
-        fontWeight: 700,
-        textTransform: "uppercase",
-        letterSpacing: "0.05em",
-        whiteSpace: "nowrap",
-      }}
+      className={`dr-status dr-status--${status}`}
+      aria-label={`Status: ${STATUS_LABEL[status]}`}
     >
-      {STATUS_LABELS[status]}
+      {STATUS_LABEL[status]}
     </span>
+  );
+}
+
+/* ── Trash icon (16px, currentColor) ─────────────────────── */
+
+function TrashIcon() {
+  return (
+    <svg
+      width="16"
+      height="16"
+      viewBox="0 0 16 16"
+      fill="none"
+      aria-hidden="true"
+    >
+      <path
+        d="M5.5 6v6m2-6v6m1.5-9V2.5a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5V3M3 4h10m-1 0v9.5a.5.5 0 0 1-.5.5h-7a.5.5 0 0 1-.5-.5V4"
+        stroke="currentColor"
+        strokeWidth="1.25"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+/* ── Empty-state icon ────────────────────────────────────── */
+
+function EmptyDocIcon() {
+  return (
+    <svg
+      width="28"
+      height="28"
+      viewBox="0 0 28 28"
+      fill="none"
+      aria-hidden="true"
+    >
+      <path
+        d="M8 4h8.5L22 9.5V23a1 1 0 0 1-1 1H8a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1Z"
+        stroke="currentColor"
+        strokeWidth="1.25"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M16 4v6h6"
+        stroke="currentColor"
+        strokeWidth="1.25"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M11 15h6m-6 3h4"
+        stroke="currentColor"
+        strokeWidth="1.25"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
+/* ── Action cluster (per-card) ───────────────────────────── */
+
+function CardActions({
+  draft,
+  onDeleteRequest,
+  pendingDelete,
+}: {
+  draft: DraftItem;
+  onDeleteRequest: (id: string) => void;
+  pendingDelete: boolean;
+}) {
+  const showSubmit =
+    draft.status === "ready" || (isLate(draft) && draft.status === "draft");
+
+  return (
+    <div className="dr-card__actions" onClick={(e) => e.stopPropagation()}>
+      {draft.status !== "review" && (
+        <Link
+          href={draft.postUrl}
+          className="dr-act"
+          aria-label={`Edit ${draft.title}`}
+        >
+          {draft.status === "returned" ? "Revise" : "Edit"}
+        </Link>
+      )}
+      {draft.status === "review" && (
+        <Link
+          href={draft.postUrl}
+          className="dr-act"
+          aria-label={`View ${draft.title}`}
+        >
+          View
+        </Link>
+      )}
+      {showSubmit && (
+        <Link
+          href={draft.postUrl}
+          className="dr-act dr-act--primary"
+          aria-label={`Submit ${draft.title}`}
+        >
+          Submit
+        </Link>
+      )}
+      {draft.status !== "review" && (
+        <button
+          type="button"
+          className="dr-act-icon"
+          aria-label={
+            pendingDelete
+              ? `Confirm delete ${draft.title}`
+              : `Delete ${draft.title}`
+          }
+          aria-pressed={pendingDelete}
+          data-confirm={pendingDelete ? "1" : undefined}
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            onDeleteRequest(draft.id);
+          }}
+          title={pendingDelete ? "Click again to confirm" : "Delete draft"}
+        >
+          <TrashIcon />
+        </button>
+      )}
+    </div>
   );
 }
 
 /* ── Draft card (grid view) ──────────────────────────────── */
 
-function DraftCard({ draft, index }: { draft: DraftItem; index: number }) {
-  const dcls = deadlineClass(draft.status, draft.deadlineDate);
-  const pct = progressPct(draft.wordCount, draft.wordTarget);
-  const isEditable = draft.status !== "submitted";
-  const deadlineColor =
-    dcls === "overdue"
-      ? "var(--brand-red)"
-      : dcls === "soon"
-        ? "#bfa170"
-        : "var(--ink-4)";
+function DraftCard({
+  draft,
+  index,
+  onDeleteRequest,
+  pendingDelete,
+}: {
+  draft: DraftItem;
+  index: number;
+  onDeleteRequest: (id: string) => void;
+  pendingDelete: boolean;
+}) {
+  const pct = progressPct(draft);
+  const tone = deadlineTone(draft);
+  const cls = [
+    "dr-card",
+    isLate(draft) ? "dr-card--late" : "",
+    draft.status === "returned" ? "dr-card--returned" : "",
+  ]
+    .filter(Boolean)
+    .join(" ");
 
   return (
-    <div
-      style={{
-        background: "var(--surface-2)",
-        border:
-          draft.status === "overdue"
-            ? "1px solid var(--brand-red)"
-            : "1px solid var(--hairline)",
-        borderRadius: 10,
-        overflow: "hidden",
-        display: "flex",
-        flexDirection: "column",
-        animationDelay: `${index * 60}ms`,
-      }}
+    <Link
+      href={draft.postUrl}
+      className={cls}
+      style={
+        {
+          "--dr-cover": coverGradient(draft.coverHue),
+          animationDelay: `${index * 60}ms`,
+        } as React.CSSProperties
+      }
     >
-      {/* Preview */}
-      <div
-        style={{
-          position: "relative",
-          height: 120,
-          background: previewBg(draft.previewHue),
-          overflow: "hidden",
-          flexShrink: 0,
-        }}
-      >
-        <div
-          style={{
-            position: "absolute",
-            top: "-20%",
-            right: "-15%",
-            width: "65%",
-            height: "120%",
-            background: previewAccentBg(draft.previewHue),
-            opacity: 0.18,
-          }}
-        />
-        <div
-          style={{
-            position: "absolute",
-            bottom: 0,
-            left: 0,
-            width: "35%",
-            height: "45%",
-            background: previewAccentBg(draft.previewHue),
-            opacity: 0.1,
-          }}
-        />
-        {/* Overlay badges */}
-        <div
-          style={{
-            position: "absolute",
-            inset: "8px",
-            display: "flex",
-            alignItems: "flex-start",
-            justifyContent: "space-between",
-          }}
-        >
-          <span
-            style={{
-              padding: "3px 8px",
-              borderRadius: 4,
-              background: "rgba(255,255,255,0.88)",
-              fontFamily: "var(--font-body)",
-              fontSize: 10,
-              fontWeight: 700,
-              color: "var(--ink)",
-              textTransform: "uppercase",
-              letterSpacing: "0.05em",
-            }}
-          >
-            {CONTENT_TYPE_LABELS[draft.contentType]}
+      <div className="dr-card__cover">
+        <div className="dr-card__cover-art" aria-hidden="true" />
+
+        <div className="dr-card__cover-meta">
+          <span className="dr-card__chip">{TYPE_LABEL[draft.contentType]}</span>
+          <span className="dr-card__chip dr-card__chip--platform">
+            {PLATFORM_LABEL[draft.platform]}
           </span>
-          <div style={{ display: "flex", gap: 4 }}>
-            <span
-              style={{
-                padding: "3px 8px",
-                borderRadius: 4,
-                background: "rgba(255,255,255,0.88)",
-                fontFamily: "var(--font-body)",
-                fontSize: 10,
-                fontWeight: 700,
-                color: "var(--ink)",
-              }}
-            >
-              {PLATFORM_LABELS[draft.platform]}
-            </span>
+        </div>
+
+        {isLate(draft) && (
+          <span className="dr-card__badge" aria-label="Past deadline">
+            Past due
+          </span>
+        )}
+
+        <div className="dr-card__cover-text">
+          <h3 className="dr-card__title">{draft.title}</h3>
+          <span className="dr-card__overlay-meta">
+            {draft.wordCount}/{draft.wordTarget} words
+            <span className="dr-card__overlay-dot" aria-hidden="true" />
+            {draft.assetCount}/{draft.assetTarget} assets
+          </span>
+        </div>
+      </div>
+
+      <div className="dr-card__body">
+        <span className="dr-card__merchant">{draft.merchantName}</span>
+        <span className="dr-card__campaign">{draft.campaignTitle}</span>
+
+        <StatusChip status={draft.status} />
+
+        <span className={`dr-deadline dr-deadline--${tone}`}>
+          {deadlineCopy(draft)}
+        </span>
+
+        <div className="dr-progress" aria-label={`Completion ${pct}%`}>
+          <div className="dr-progress__row">
+            <span>Completion</span>
+            <strong>{pct}%</strong>
+          </div>
+          <div
+            className="dr-progress__track"
+            role="progressbar"
+            aria-valuenow={pct}
+            aria-valuemin={0}
+            aria-valuemax={100}
+          >
+            <div
+              className={`dr-progress__fill dr-progress__fill--${draft.status}`}
+              style={{ "--dr-pct": pct / 100 } as React.CSSProperties}
+            />
           </div>
         </div>
-        <StatusBadge status={draft.status} />
-        {/* Bottom-left status overlay */}
-        <div style={{ position: "absolute", bottom: 8, left: 8 }}>
-          <StatusBadge status={draft.status} />
-        </div>
       </div>
 
-      {/* Body */}
-      <div
-        style={{
-          padding: "16px",
-          flex: 1,
-          display: "flex",
-          flexDirection: "column",
-          gap: 8,
-        }}
-      >
-        <div
-          style={{
-            fontFamily: "var(--font-display)",
-            fontWeight: 700,
-            fontSize: 14,
-            color: "var(--ink)",
-            lineHeight: 1.3,
-          }}
-        >
-          {draft.name}
-        </div>
-
-        <div
-          style={{
-            display: "inline-flex",
-            padding: "3px 10px",
-            borderRadius: 20,
-            background: "var(--surface-2)",
-            border: "1px solid var(--hairline)",
-            fontFamily: "var(--font-body)",
-            fontSize: 11,
-            color: "var(--ink-3)",
-            alignSelf: "flex-start",
-          }}
-        >
-          {draft.merchantName}
-        </div>
-
-        <div
-          style={{
-            fontFamily: "var(--font-body)",
-            fontSize: 12,
-            color: "var(--ink-3)",
-          }}
-        >
-          {draft.campaignTitle}
-        </div>
-
-        {/* Deadline */}
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: 6,
-            fontFamily: "var(--font-body)",
-            fontSize: 12,
-            color: deadlineColor,
-          }}
-        >
-          <span
-            style={{
-              width: 6,
-              height: 6,
-              borderRadius: "50%",
-              background: deadlineColor,
-              flexShrink: 0,
-            }}
-          />
-          {deadlineLabel(draft.status, draft.deadlineDate)}
-        </div>
-
-        {/* Progress */}
-        {draft.status !== "submitted" && (
-          <>
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                fontFamily: "var(--font-body)",
-                fontSize: 11,
-                color: "var(--ink-4)",
-              }}
-            >
-              <span>Draft progress</span>
-              <span>
-                {draft.wordCount}/{draft.wordTarget} words
-              </span>
-            </div>
-            <div
-              style={{
-                height: 4,
-                borderRadius: 2,
-                background: "var(--hairline)",
-                overflow: "hidden",
-              }}
-            >
-              <div
-                style={{
-                  height: "100%",
-                  borderRadius: 2,
-                  width: `${pct}%`,
-                  background:
-                    pct === 100 ? "var(--accent-blue)" : "var(--ink-3)",
-                }}
-              />
-            </div>
-          </>
-        )}
-      </div>
-
-      {/* Footer */}
-      <div
-        style={{
-          padding: "12px 16px",
-          borderTop: "1px solid var(--hairline)",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          gap: 8,
-        }}
-      >
-        <span
-          style={{
-            fontFamily: "var(--font-body)",
-            fontSize: 11,
-            color: "var(--ink-4)",
-            overflow: "hidden",
-            textOverflow: "ellipsis",
-            whiteSpace: "nowrap",
-          }}
-        >
-          {draft.merchantName}
+      <div className="dr-card__footer">
+        <span className="dr-saved">
+          <strong>Saved</strong> {relativeSaved(draft.lastSavedAt)}
         </span>
-        <div style={{ display: "flex", gap: 8 }}>
-          {isEditable && (
-            <Link
-              href={draft.postUrl}
-              className="btn-ghost click-shift"
-              style={{ fontSize: 12, padding: "4px 12px" }}
-            >
-              Edit
-            </Link>
-          )}
-          {draft.status === "ready" && (
-            <Link
-              href={draft.postUrl}
-              className="btn-primary click-shift"
-              style={{ fontSize: 12, padding: "4px 12px" }}
-            >
-              Submit
-            </Link>
-          )}
-          {draft.status === "submitted" && (
-            <Link
-              href={draft.postUrl}
-              className="btn-ghost click-shift"
-              style={{ fontSize: 12, padding: "4px 12px" }}
-            >
-              View →
-            </Link>
-          )}
-          {draft.status === "overdue" && (
-            <Link
-              href={draft.postUrl}
-              className="btn-primary click-shift"
-              style={{ fontSize: 12, padding: "4px 12px" }}
-            >
-              Submit now
-            </Link>
-          )}
-        </div>
+        <CardActions
+          draft={draft}
+          onDeleteRequest={onDeleteRequest}
+          pendingDelete={pendingDelete}
+        />
       </div>
-    </div>
+    </Link>
   );
 }
 
-/* ── Draft list row ──────────────────────────────────────── */
+/* ── List row ────────────────────────────────────────────── */
 
-function DraftListRow({ draft, index }: { draft: DraftItem; index: number }) {
-  const dcls = deadlineClass(draft.status, draft.deadlineDate);
-  const pct = progressPct(draft.wordCount, draft.wordTarget);
-  const deadlineColor =
-    dcls === "overdue"
-      ? "var(--brand-red)"
-      : dcls === "soon"
-        ? "#bfa170"
-        : "var(--ink-4)";
+function DraftRow({
+  draft,
+  index,
+  onDeleteRequest,
+  pendingDelete,
+}: {
+  draft: DraftItem;
+  index: number;
+  onDeleteRequest: (id: string) => void;
+  pendingDelete: boolean;
+}) {
+  const pct = progressPct(draft);
+  const tone = deadlineTone(draft);
+  const cls = [
+    "dr-list__row",
+    isLate(draft) ? "dr-list__row--late" : "",
+    draft.status === "returned" ? "dr-list__row--returned" : "",
+  ]
+    .filter(Boolean)
+    .join(" ");
 
   return (
-    <div
-      style={{
-        display: "grid",
-        gridTemplateColumns: "40px 1fr auto auto 160px auto",
-        alignItems: "center",
-        gap: 16,
-        padding: "14px 16px",
-        borderRadius: 10,
-        border:
-          draft.status === "overdue"
-            ? "1px solid var(--brand-red)"
-            : "1px solid var(--hairline)",
-        background: "var(--surface-2)",
-        marginBottom: 8,
-        animationDelay: `${index * 40}ms`,
-      }}
+    <Link
+      href={draft.postUrl}
+      className={cls}
+      style={
+        {
+          "--dr-cover": coverGradient(draft.coverHue),
+          animationDelay: `${index * 40}ms`,
+        } as React.CSSProperties
+      }
     >
-      {/* Color swatch */}
-      <div
-        style={{
-          width: 40,
-          height: 40,
-          borderRadius: 8,
-          background: previewBg(draft.previewHue),
-          position: "relative",
-          overflow: "hidden",
-          flexShrink: 0,
-        }}
-      >
-        <div
-          style={{
-            position: "absolute",
-            inset: 0,
-            background: previewAccentBg(draft.previewHue),
-            opacity: 0.25,
-          }}
-        />
-      </div>
-
-      {/* Name + merchant + campaign */}
-      <div style={{ minWidth: 0 }}>
-        <div
-          style={{
-            fontFamily: "var(--font-body)",
-            fontWeight: 700,
-            fontSize: 14,
-            color: "var(--ink)",
-            whiteSpace: "nowrap",
-            overflow: "hidden",
-            textOverflow: "ellipsis",
-          }}
-        >
-          {draft.name}
-        </div>
-        <div
-          style={{
-            fontFamily: "var(--font-body)",
-            fontSize: 12,
-            color: "var(--ink-3)",
-            whiteSpace: "nowrap",
-            overflow: "hidden",
-            textOverflow: "ellipsis",
-          }}
-        >
-          {draft.merchantName}
-        </div>
-        <div
-          style={{
-            fontFamily: "var(--font-body)",
-            fontSize: 11,
-            color: "var(--ink-4)",
-            whiteSpace: "nowrap",
-            overflow: "hidden",
-            textOverflow: "ellipsis",
-          }}
-        >
-          {draft.campaignTitle}
-        </div>
-      </div>
-
-      {/* Status */}
-      <StatusBadge status={draft.status} />
-
-      {/* Deadline */}
-      <span
-        style={{
-          fontFamily: "var(--font-body)",
-          fontSize: 12,
-          color: deadlineColor,
-          whiteSpace: "nowrap",
-          fontWeight: dcls !== "ok" ? 700 : 400,
-        }}
-      >
-        {deadlineLabel(draft.status, draft.deadlineDate)}
-      </span>
-
-      {/* Progress bar */}
-      <div>
-        <div
-          style={{
-            height: 4,
-            borderRadius: 2,
-            background: "var(--hairline)",
-            overflow: "hidden",
-            marginBottom: 4,
-          }}
-        >
-          <div
-            style={{
-              height: "100%",
-              borderRadius: 2,
-              width: `${pct}%`,
-              background: pct === 100 ? "var(--accent-blue)" : "var(--ink-3)",
-            }}
-          />
-        </div>
-        <span
-          style={{
-            fontFamily: "var(--font-body)",
-            fontSize: 11,
-            color: "var(--ink-4)",
-          }}
-        >
-          {draft.wordCount}/{draft.wordTarget} words
+      <div className="dr-list__swatch" aria-hidden="true" />
+      <div className="dr-list__name">
+        <span className="dr-list__name-title">{draft.title}</span>
+        <span className="dr-list__name-meta">
+          {draft.merchantName} · {draft.campaignTitle}
         </span>
       </div>
 
-      {/* Actions */}
-      <div style={{ display: "flex", gap: 8 }}>
-        {draft.status !== "submitted" && (
-          <Link
-            href={draft.postUrl}
-            className="btn-ghost click-shift"
-            style={{ fontSize: 12, padding: "4px 10px" }}
-          >
-            Edit
-          </Link>
-        )}
-        {(draft.status === "ready" || draft.status === "overdue") && (
-          <Link
-            href={draft.postUrl}
-            className="btn-primary click-shift"
-            style={{ fontSize: 12, padding: "4px 10px" }}
-          >
-            Submit
-          </Link>
-        )}
-        {draft.status === "submitted" && (
-          <Link
-            href={draft.postUrl}
-            className="btn-ghost click-shift"
-            style={{ fontSize: 12, padding: "4px 10px" }}
-          >
-            View →
-          </Link>
-        )}
+      <StatusChip status={draft.status} />
+
+      <span className={`dr-deadline dr-deadline--${tone}`}>
+        {deadlineCopy(draft)}
+      </span>
+
+      <div className="dr-list__progress" aria-label={`Completion ${pct}%`}>
+        <div
+          className="dr-progress__track"
+          role="progressbar"
+          aria-valuenow={pct}
+          aria-valuemin={0}
+          aria-valuemax={100}
+        >
+          <div
+            className={`dr-progress__fill dr-progress__fill--${draft.status}`}
+            style={{ "--dr-pct": pct / 100 } as React.CSSProperties}
+          />
+        </div>
+        <span className="dr-saved">
+          {pct}% · {relativeSaved(draft.lastSavedAt)}
+        </span>
       </div>
-    </div>
+
+      <div className="dr-list__actions">
+        <CardActions
+          draft={draft}
+          onDeleteRequest={onDeleteRequest}
+          pendingDelete={pendingDelete}
+        />
+      </div>
+    </Link>
   );
 }
 
 /* ── Empty state ─────────────────────────────────────────── */
 
-function EmptyState({ tabLabel }: { tabLabel: string }) {
+function EmptyState({ filterLabel }: { filterLabel: string }) {
+  const isAll = filterLabel === "All";
   return (
-    <div
-      style={{
-        padding: "64px 24px",
-        textAlign: "center",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        gap: 16,
-      }}
-    >
-      <div
-        style={{
-          width: 64,
-          height: 64,
-          borderRadius: 10,
-          background: "var(--surface-2)",
-          border: "1px solid var(--hairline)",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          fontSize: 24,
-          color: "var(--ink-4)",
-        }}
-      >
-        ◻
+    <div className="dr-empty">
+      <div className="dr-empty__art">
+        <EmptyDocIcon />
       </div>
-      <div>
-        <div
-          style={{
-            fontFamily: "var(--font-display)",
-            fontWeight: 700,
-            fontSize: 18,
-            color: "var(--ink)",
-            marginBottom: 6,
-          }}
-        >
-          No {tabLabel.toLowerCase()} drafts
-        </div>
-        <div
-          style={{
-            fontFamily: "var(--font-body)",
-            fontSize: 13,
-            color: "var(--ink-3)",
-          }}
-        >
-          Check your active campaigns to start a new one
-        </div>
-      </div>
-      <Link href="/creator/campaigns" className="btn-primary click-shift">
+      <h2 className="dr-empty__title">
+        {isAll ? "No drafts yet" : `Nothing in ${filterLabel.toLowerCase()}`}
+      </h2>
+      <p className="dr-empty__body">
+        {isAll
+          ? "Open a campaign to start a draft. Auto-saved every change — your work is safe even if you close the tab."
+          : "Try another filter, or pick up a fresh campaign brief from Discover."}
+      </p>
+      <Link href="/creator/discover" className="btn-primary dr-empty__cta">
         Browse campaigns
       </Link>
     </div>
@@ -781,417 +612,336 @@ function EmptyState({ tabLabel }: { tabLabel: string }) {
 /* ── Main page ───────────────────────────────────────────── */
 
 export default function DraftsPage() {
-  const [activeTab, setActiveTab] = useState<"all" | DraftStatus>("all");
-  const [view, setView] = useState<ViewMode>("grid");
+  const [filter, setFilter] = useState<"all" | DraftStatus>("all");
   const [sort, setSort] = useState<SortKey>("deadline");
+  const [view, setView] = useState<ViewMode>("grid");
+  /** Two-step delete confirm: first click flags id → second click would
+   *  call the (TODO) DELETE endpoint. Auto-resets after 4s. */
+  const [pendingDelete, setPendingDelete] = useState<string | null>(null);
 
-  /* Tab counts */
+  /* Counts per status (always derived from the full set) */
   const counts = useMemo(() => {
-    const c: Record<string, number> = { all: MOCK_DRAFTS.length };
+    const c: Record<string, number> = {
+      all: MOCK_DRAFTS.length,
+      draft: 0,
+      ready: 0,
+      review: 0,
+      returned: 0,
+      late: 0,
+    };
     for (const d of MOCK_DRAFTS) {
       c[d.status] = (c[d.status] ?? 0) + 1;
+      if (isLate(d)) c.late += 1;
     }
     return c;
   }, []);
 
-  /* Hero stats */
-  const totalDrafts = MOCK_DRAFTS.length;
-  const readyCount = counts["ready"] ?? 0;
-  const overdueCount = counts["overdue"] ?? 0;
-  const inProgressCount = counts["in_progress"] ?? 0;
-
-  /* Filtered + sorted */
+  /* Filter + sort */
   const drafts = useMemo(() => {
-    const filtered =
-      activeTab === "all"
+    const list =
+      filter === "all"
         ? [...MOCK_DRAFTS]
-        : MOCK_DRAFTS.filter((d) => d.status === activeTab);
+        : MOCK_DRAFTS.filter((d) => d.status === filter);
 
-    filtered.sort((a, b) => {
-      if (sort === "deadline")
-        return a.deadlineDate.localeCompare(b.deadlineDate);
-      if (sort === "campaign")
-        return a.campaignTitle.localeCompare(b.campaignTitle);
-      if (sort === "status") return a.status.localeCompare(b.status);
-      return 0;
+    list.sort((a, b) => {
+      switch (sort) {
+        case "deadline":
+          return a.deadlineDate.localeCompare(b.deadlineDate);
+        case "saved":
+          return b.lastSavedAt.localeCompare(a.lastSavedAt);
+        case "campaign":
+          return a.campaignTitle.localeCompare(b.campaignTitle);
+        case "status":
+          return a.status.localeCompare(b.status);
+      }
     });
+    return list;
+  }, [filter, sort]);
 
-    return filtered;
-  }, [activeTab, sort]);
+  const filterLabel =
+    STATUS_FILTERS.find((f) => f.key === filter)?.label ?? "All";
 
-  const tabLabel = STATUS_TABS.find((t) => t.key === activeTab)?.label ?? "All";
+  function handleDeleteRequest(id: string) {
+    if (pendingDelete === id) {
+      // Confirmed — wire to real API later. For now we just clear.
+      // In the meantime, swallow the click so two-step UX is honored.
+      setPendingDelete(null);
+      // TODO: await fetch(`/api/creator/drafts/${id}`, { method: 'DELETE' })
+      return;
+    }
+    setPendingDelete(id);
+    window.setTimeout(
+      () => setPendingDelete((cur) => (cur === id ? null : cur)),
+      4000,
+    );
+  }
 
   return (
-    <div className="cw-page">
+    <div className="cw-page dr-scope">
+      {/* ── Page chrome (canonical) ── */}
       <header className="cw-header">
         <div className="cw-header__left">
-          <p className="cw-eyebrow cw-eyebrow--live">
-            CONTENT STUDIO · {totalDrafts} TOTAL · {inProgressCount} IN PROGRESS
-            · {readyCount} READY
-            {overdueCount > 0 ? ` · ${overdueCount} OVERDUE` : ""}
+          <p className="cw-eyebrow">
+            LINKS · {counts.all} TOTAL · {counts.ready} READY
+            {counts.late > 0 ? ` · ${counts.late} LATE` : ""}
           </p>
-          <h1 className="cw-title">Drafts</h1>
+          <h1 className="cw-title">Drafts.</h1>
         </div>
         <div className="cw-header__right">
-          <Link href="/creator/campaigns" className="cw-pill cw-pill--urgent">
-            + New Draft
+          <Link href="/creator/discover" className="cw-pill cw-pill--urgent">
+            + New draft
           </Link>
         </div>
       </header>
 
-      {/* ── Status Pipeline header ─────────────────── */}
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          padding: "16px 24px",
-          gap: 8,
-          overflowX: "auto",
-          borderBottom: "1px solid var(--hairline)",
-          background: "var(--surface-2)",
-        }}
-        role="navigation"
-        aria-label="Filter by stage"
-      >
-        {PIPELINE_STAGES.map((stage, i) => {
-          const count = counts[stage.key] ?? 0;
-          const isActive = activeTab === stage.key;
-          return (
-            <div key={stage.key} style={{ display: "contents" }}>
-              {i > 0 && (
-                <span
-                  style={{ color: "var(--ink-4)", fontSize: 12, flexShrink: 0 }}
-                  aria-hidden
-                >
-                  ›
-                </span>
-              )}
-              <div
-                onClick={() => setActiveTab(stage.key)}
-                role="button"
-                tabIndex={0}
-                aria-pressed={isActive}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" || e.key === " ")
-                    setActiveTab(stage.key);
-                }}
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 8,
-                  padding: "6px 14px",
-                  borderRadius: 8,
-                  border: "1px solid var(--hairline)",
-                  background: isActive ? "var(--ink)" : "var(--surface)",
-                  cursor: "pointer",
-                  flexShrink: 0,
-                }}
-              >
-                <span
-                  style={{
-                    fontFamily: "var(--font-display)",
-                    fontWeight: 800,
-                    fontSize: 18,
-                    color: isActive ? "var(--snow)" : "var(--ink)",
-                    lineHeight: 1,
-                  }}
-                >
-                  {count}
-                </span>
-                <div>
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: 4,
-                    }}
-                  >
-                    <span
-                      style={{
-                        width: 6,
-                        height: 6,
-                        borderRadius: "50%",
-                        background: stage.dot,
-                        flexShrink: 0,
-                      }}
-                    />
-                    <span
-                      style={{
-                        fontFamily: "var(--font-body)",
-                        fontSize: 11,
-                        fontWeight: 600,
-                        color: isActive ? "var(--snow)" : "var(--ink-3)",
-                        textTransform: "uppercase",
-                        letterSpacing: "0.05em",
-                        whiteSpace: "nowrap",
-                      }}
-                    >
-                      {stage.label}
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          );
-        })}
-
-        {/* All drafts */}
-        <span
-          style={{ color: "var(--ink-4)", fontSize: 12, flexShrink: 0 }}
-          aria-hidden
-        >
-          ·
-        </span>
-        <div
-          onClick={() => setActiveTab("all")}
-          role="button"
-          tabIndex={0}
-          aria-pressed={activeTab === "all"}
-          onKeyDown={(e) => {
-            if (e.key === "Enter" || e.key === " ") setActiveTab("all");
-          }}
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: 8,
-            padding: "6px 14px",
-            borderRadius: 8,
-            border: "1px solid var(--hairline)",
-            background: activeTab === "all" ? "var(--ink)" : "var(--surface)",
-            cursor: "pointer",
-            flexShrink: 0,
-          }}
-        >
-          <span
-            style={{
-              fontFamily: "var(--font-display)",
-              fontWeight: 800,
-              fontSize: 18,
-              color: activeTab === "all" ? "var(--snow)" : "var(--ink)",
-              lineHeight: 1,
-            }}
-          >
-            {totalDrafts}
-          </span>
-          <span
-            style={{
-              fontFamily: "var(--font-body)",
-              fontSize: 11,
-              fontWeight: 600,
-              color: activeTab === "all" ? "var(--snow)" : "var(--ink-3)",
-              textTransform: "uppercase",
-              letterSpacing: "0.05em",
-            }}
-          >
-            All Drafts
-          </span>
-        </div>
-      </div>
-
-      {/* ── Status tabs ───────────────────────────── */}
-      <nav
-        style={{
-          display: "flex",
-          gap: 0,
-          padding: "0 24px",
-          borderBottom: "1px solid var(--hairline)",
-          background: "var(--snow)",
-        }}
-        aria-label="Draft status filter"
-      >
-        {STATUS_TABS.map((tab) => {
-          const count = counts[tab.key] ?? 0;
-          const isOverdue = tab.key === "overdue" && count > 0;
-          const isActive = activeTab === tab.key;
-          return (
-            <button
-              key={tab.key}
-              onClick={() => setActiveTab(tab.key)}
-              aria-pressed={isActive}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: 6,
-                padding: "12px 16px",
-                fontFamily: "var(--font-body)",
-                fontSize: 12,
-                fontWeight: isActive ? 700 : 400,
-                color: isActive ? "var(--ink)" : "var(--ink-3)",
-                background: "none",
-                border: "none",
-                borderBottom: isActive
-                  ? "2px solid var(--brand-red)"
-                  : "2px solid transparent",
-                marginBottom: -1,
-                cursor: "pointer",
-                textTransform: "uppercase",
-                letterSpacing: "0.06em",
-              }}
-            >
-              {tab.label}
-              {count > 0 && (
-                <span
-                  style={{
-                    minWidth: 18,
-                    height: 18,
-                    borderRadius: 9,
-                    background: isOverdue
-                      ? "var(--brand-red)"
-                      : "var(--surface-2)",
-                    color: isOverdue ? "var(--snow)" : "var(--ink-3)",
-                    border: isOverdue ? "none" : "1px solid var(--hairline)",
-                    fontSize: 10,
-                    fontWeight: 700,
-                    display: "inline-flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    padding: "0 5px",
-                  }}
-                >
-                  {count}
-                </span>
-              )}
-            </button>
-          );
-        })}
-      </nav>
-
-      {/* ── Toolbar ──────────────────────────────── */}
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          padding: "16px 24px",
-        }}
-      >
-        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-          <span
-            style={{
-              fontFamily: "var(--font-body)",
-              fontSize: 12,
-              color: "var(--ink-4)",
-              textTransform: "uppercase",
-              letterSpacing: "0.05em",
-            }}
-          >
-            Sort
-          </span>
-          {(["deadline", "campaign", "status"] as SortKey[]).map((s) => (
-            <button
-              key={s}
-              onClick={() => setSort(s)}
-              style={{
-                padding: "5px 12px",
-                borderRadius: 6,
-                border: "1px solid var(--hairline)",
-                background: sort === s ? "var(--ink)" : "var(--surface-2)",
-                color: sort === s ? "var(--snow)" : "var(--ink-3)",
-                fontFamily: "var(--font-body)",
-                fontSize: 11,
-                fontWeight: 600,
-                cursor: "pointer",
-                textTransform: "uppercase",
-                letterSpacing: "0.05em",
-              }}
-            >
-              {s.charAt(0).toUpperCase() + s.slice(1)}
-              {sort === s && <span aria-hidden="true"> ↑</span>}
-            </button>
-          ))}
-        </div>
-
-        <div
-          role="group"
-          aria-label="View mode"
-          style={{ display: "flex", gap: 4 }}
-        >
-          <button
-            onClick={() => setView("grid")}
-            aria-label="Grid view"
-            style={{
-              width: 32,
-              height: 32,
-              borderRadius: 6,
-              border: "1px solid var(--hairline)",
-              background: view === "grid" ? "var(--ink)" : "var(--surface-2)",
-              color: view === "grid" ? "var(--snow)" : "var(--ink-3)",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              cursor: "pointer",
-              fontSize: 14,
-            }}
-          >
-            ⊞
-          </button>
-          <button
-            onClick={() => setView("list")}
-            aria-label="List view"
-            style={{
-              width: 32,
-              height: 32,
-              borderRadius: 6,
-              border: "1px solid var(--hairline)",
-              background: view === "list" ? "var(--ink)" : "var(--surface-2)",
-              color: view === "list" ? "var(--snow)" : "var(--ink-3)",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              cursor: "pointer",
-              fontSize: 14,
-            }}
-          >
-            ☰
-          </button>
-        </div>
-      </div>
-
-      {/* ── Content ──────────────────────────────── */}
-      <div style={{ padding: "0 24px 32px" }}>
-        {drafts.length === 0 ? (
-          <EmptyState tabLabel={tabLabel} />
-        ) : view === "grid" ? (
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))",
-              gap: 16,
-            }}
-          >
-            {drafts.map((d, i) => (
-              <DraftCard key={d.id} draft={d} index={i} />
-            ))}
+      {/* ── Summary: KPI strip + liquid-glass ready tile ── */}
+      <section className="dr-summary" aria-label="Drafts summary">
+        <div className="dr-strip" role="list">
+          <div className="dr-strip__cell" role="listitem">
+            <span className="dr-strip__label">
+              <span
+                className="dr-strip__dot dr-strip__dot--draft"
+                aria-hidden="true"
+              />
+              In progress
+            </span>
+            <span className="dr-strip__value">{counts.draft ?? 0}</span>
+            <span className="dr-strip__sub">Auto-saved</span>
           </div>
-        ) : (
-          <div>
-            {/* List header */}
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "40px 1fr auto auto 160px auto",
-                gap: 16,
-                padding: "8px 16px",
-                fontFamily: "var(--font-body)",
-                fontSize: 11,
-                color: "var(--ink-4)",
-                textTransform: "uppercase",
-                letterSpacing: "0.06em",
+          <div className="dr-strip__cell" role="listitem">
+            <span className="dr-strip__label">
+              <span
+                className="dr-strip__dot dr-strip__dot--ready"
+                aria-hidden="true"
+              />
+              Ready
+            </span>
+            <span className="dr-strip__value">{counts.ready ?? 0}</span>
+            <span className="dr-strip__sub">Submit anytime</span>
+          </div>
+          <div className="dr-strip__cell" role="listitem">
+            <span className="dr-strip__label">
+              <span
+                className="dr-strip__dot dr-strip__dot--review"
+                aria-hidden="true"
+              />
+              In review
+            </span>
+            <span className="dr-strip__value">{counts.review ?? 0}</span>
+            <span className="dr-strip__sub">Awaiting merchant</span>
+          </div>
+          <div className="dr-strip__cell" role="listitem">
+            <span className="dr-strip__label">
+              <span
+                className="dr-strip__dot dr-strip__dot--late"
+                aria-hidden="true"
+              />
+              Late
+            </span>
+            <span
+              className={`dr-strip__value ${counts.late > 0 ? "dr-strip__value--late" : ""}`}
+            >
+              {counts.late ?? 0}
+            </span>
+            <span className="dr-strip__sub">
+              {counts.late > 0 ? "Needs attention" : "All on schedule"}
+            </span>
+          </div>
+        </div>
+
+        {counts.ready > 0 && (
+          <aside
+            className="dr-ready-tile"
+            aria-label={`${counts.ready} drafts ready to submit`}
+          >
+            <span className="dr-ready-tile__eyebrow">
+              <span
+                className="dr-strip__dot dr-strip__dot--ready"
+                aria-hidden="true"
+              />
+              Ready to submit
+            </span>
+            <span className="dr-ready-tile__count">{counts.ready}</span>
+            <span className="dr-ready-tile__sub">
+              Final approvals away from being scheduled.
+            </span>
+            <button
+              type="button"
+              className="btn-primary"
+              onClick={() => {
+                setFilter("ready");
+                setView("grid");
               }}
             >
-              <div />
-              <div>Draft</div>
-              <div>Status</div>
-              <div>Deadline</div>
-              <div>Progress</div>
-              <div>Actions</div>
-            </div>
-            {drafts.map((d, i) => (
-              <DraftListRow key={d.id} draft={d} index={i} />
-            ))}
-          </div>
+              Review ready
+            </button>
+          </aside>
         )}
-      </div>
+      </section>
+
+      {/* ── Filter pills + sort + view toggle ── */}
+      <section className="dr-bar" aria-label="Drafts filters">
+        <div className="dr-chips" role="tablist" aria-label="Filter by status">
+          <span className="dr-chip-eyebrow">FILTER</span>
+          {STATUS_FILTERS.map((f) => {
+            const active = filter === f.key;
+            const count =
+              f.key === "all"
+                ? counts.all
+                : (counts[f.key as DraftStatus] ?? 0);
+            const isLateChip = f.key === "returned" && counts.late > 0;
+            return (
+              <button
+                key={f.key}
+                type="button"
+                role="tab"
+                className="btn-pill"
+                aria-pressed={active}
+                aria-selected={active}
+                onClick={() => setFilter(f.key)}
+              >
+                {f.label}
+                <span
+                  className={`dr-chip-badge ${isLateChip ? "dr-chip-badge--late" : ""}`}
+                  aria-hidden="true"
+                >
+                  {count}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+
+        <div className="dr-bar__right">
+          <div className="dr-sort">
+            <label className="dr-sort__label" htmlFor="dr-sort-select">
+              Sort
+            </label>
+            <select
+              id="dr-sort-select"
+              className="dr-sort__select"
+              value={sort}
+              onChange={(e) => setSort(e.target.value as SortKey)}
+            >
+              {(Object.keys(SORT_LABEL) as SortKey[]).map((k) => (
+                <option key={k} value={k}>
+                  {SORT_LABEL[k]}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div className="dr-view" role="group" aria-label="View mode">
+            <button
+              type="button"
+              className="dr-view__btn"
+              aria-label="Grid view"
+              aria-pressed={view === "grid"}
+              onClick={() => setView("grid")}
+            >
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 14 14"
+                fill="none"
+                aria-hidden="true"
+              >
+                <rect
+                  x="1"
+                  y="1"
+                  width="5"
+                  height="5"
+                  stroke="currentColor"
+                  strokeWidth="1.2"
+                />
+                <rect
+                  x="8"
+                  y="1"
+                  width="5"
+                  height="5"
+                  stroke="currentColor"
+                  strokeWidth="1.2"
+                />
+                <rect
+                  x="1"
+                  y="8"
+                  width="5"
+                  height="5"
+                  stroke="currentColor"
+                  strokeWidth="1.2"
+                />
+                <rect
+                  x="8"
+                  y="8"
+                  width="5"
+                  height="5"
+                  stroke="currentColor"
+                  strokeWidth="1.2"
+                />
+              </svg>
+            </button>
+            <button
+              type="button"
+              className="dr-view__btn"
+              aria-label="List view"
+              aria-pressed={view === "list"}
+              onClick={() => setView("list")}
+            >
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 14 14"
+                fill="none"
+                aria-hidden="true"
+              >
+                <path
+                  d="M2 3.5h10M2 7h10M2 10.5h10"
+                  stroke="currentColor"
+                  strokeWidth="1.2"
+                  strokeLinecap="round"
+                />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      {/* ── Body ── */}
+      {drafts.length === 0 ? (
+        <EmptyState filterLabel={filterLabel} />
+      ) : view === "grid" ? (
+        <section className="dr-grid" aria-label="Drafts">
+          {drafts.map((d, i) => (
+            <DraftCard
+              key={d.id}
+              draft={d}
+              index={i}
+              onDeleteRequest={handleDeleteRequest}
+              pendingDelete={pendingDelete === d.id}
+            />
+          ))}
+        </section>
+      ) : (
+        <section className="dr-list" aria-label="Drafts">
+          <div className="dr-list__head" role="row" aria-hidden="true">
+            <span />
+            <span>Draft</span>
+            <span>Status</span>
+            <span>Deadline</span>
+            <span>Progress</span>
+            <span>Actions</span>
+          </div>
+          {drafts.map((d, i) => (
+            <DraftRow
+              key={d.id}
+              draft={d}
+              index={i}
+              onDeleteRequest={handleDeleteRequest}
+              pendingDelete={pendingDelete === d.id}
+            />
+          ))}
+        </section>
+      )}
     </div>
   );
 }

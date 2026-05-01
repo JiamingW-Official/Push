@@ -30,7 +30,7 @@
 > **What did NOT change (v10 N2W foundation preserved verbatim):**
 >
 > - Three fonts (Magvix Regular + Italic / Darky / CS Genio Mono), role-locked
-> - Page background `#f8f4e8` Ivory Cream, body text `#61605c` warm gray
+> - Page background `#ffffff` Snow (v11.1 update — was Ivory Cream), body text `#61605c` warm gray
 > - Body 18px / line-height 1.55
 > - Bottom-right hover shift `translate(1px, 1px)` (subtle) → `translate(2px, 2px) scale(0.98)` (active press) on every clickable element
 > - 4 Candy Panel fills + 6 Category colors + Brand Red CTA + N2W Blue secondary + Champagne ceremonial + Editorial Blue footer + Editorial Pink stamp
@@ -48,7 +48,7 @@ Push's design system is 3 layers stacked. **Every rule in this document carries 
 
 Cross-page invariant. Cannot be modified per-page, per-context, or per-mood. Changing a STRICT rule requires a Design.md PR with user (Jiaming) sign-off.
 
-**Examples:** the 11-stop warm-gray ladder color tokens, the 3 fonts and their roles, the 8px atomic grid, the 5 unified button variants, the GA Tri-Color nav structure, the Footer pattern (Editorial Blue panel + Darky Giant Wordmark bottom-left), the page background `#f8f4e8`, body color `#61605c`, the bottom-right hover shift, the editorial-moment palette (Editorial Blue / Pink / GA Orange), the closed Allowed-Color List rule, the 12px font floor.
+**Examples:** the 11-stop warm-gray ladder color tokens, the 3 fonts and their roles, the 8px atomic grid, the 5 unified button variants, the GA Tri-Color nav structure, the Footer pattern (Editorial Blue panel + Darky Giant Wordmark bottom-left), the page background `#ffffff` Snow, body color `#61605c`, the bottom-right hover shift, the editorial-moment palette (Editorial Blue / Pink / GA Orange), the closed Allowed-Color List rule, the 12px font floor.
 
 ### 📐 STRUCTURED — Composition (how content arranges)
 
@@ -82,7 +82,7 @@ Designer can improvise. The bounds are still set by STRICT and STRUCTURED rules 
 7. **Unified button system, 5 variants only.** § 9 spec is the single source. Every button on every page renders identically. No per-page custom buttons.
 8. **Bottom-right hover shift** is the Push interaction signature — every clickable element does `translate(1px, 1px)` on hover, `translate(2px, 2px) scale(0.98)` on active press. Forms, static badges, GA nav pills, Ticket Panel grommets, Footer giant wordmark do NOT shift.
 9. **Marketing vs Product registers must NOT mix in the same viewport.** Marketing surfaces (Home / Landing / Creator showcase / Merchant case study / About / Pricing / Blog) use v11 editorial layer (Ticket Panel, Magvix Italic Divider, Photo Card with Gradient, Editorial Table, Parenthetical Eyebrow, Corner-anchored title). Product surfaces (Dashboard / Settings / Forms / Onboarding / In-app messaging) keep v10 Candy-Panel + clean component voice.
-10. **Light mode only.** Page background `--surface` `#f8f4e8` Ivory Cream — never `#ffffff` except as `--snow` text-on-dark. Body text `--ink-3` `#61605c` warm gray. Headings `--ink` `#0a0a0a`.
+10. **Light mode only.** Page background `--snow` `#ffffff` (v11.1 update — was `--surface #f8f4e8` Ivory Cream). All product UI shells, page bodies, main content areas, and card surfaces render on `#ffffff`. Cream tokens (`--surface` / `--surface-2` / `--surface-3`) stay in the system but are reserved for Marketing register only (Candy Panels, Editorial moments, Photo Card overlays). Body text `--ink-3` `#61605c` warm gray. Headings `--ink` `#0a0a0a`.
 11. **12px minimum font floor**, with two documented exceptions: Footer Giant Wordmark up to 320px, Hero Magvix up to 160px.
 12. **Responsive is naturally adaptive, not redrawn per breakpoint.** Same composition / same hierarchy across mobile / iPad / desktop — only spacing scale + column count adjust. § 14 lists exact breakpoint behavior per container.
 
@@ -98,10 +98,10 @@ The Push warm-gray ladder runs from pure snow to absolute obsidian, all warm-lea
 
 | # | Token | Name | Hex | Role |
 |---|-------|------|-----|------|
-| 1 | `--snow` | Snow | `#ffffff` | Text on dark surfaces (Editorial Blue, Ink, Char, Obsidian, GA Orange Ticket); never page background |
-| 2 | `--surface` | Ivory Cream | `#f8f4e8` | Default page background |
-| 3 | `--surface-2` | Pearl Stone | `#f5f3ee` | Nested cards on Ivory page, alternate sections |
-| 4 | `--surface-3` | Bone | `#ece9e0` | Button hover, muted block, inactive tab background |
+| 1 | `--snow` | Snow | `#ffffff` | **Default page background** (v11.1) — page chrome, main shells, all product UI cards. Also: text on dark surfaces (Editorial Blue, Ink, Char, Obsidian, GA Orange Ticket). |
+| 2 | `--surface` | Ivory Cream | `#f8f4e8` | Marketing register only — Candy Panel fill, Editorial section bg. **NOT** for product UI page or card backgrounds. |
+| 3 | `--surface-2` | Pearl Stone | `#f5f3ee` | Marketing register — alternate Candy Panel, Photo Card frame inset, Ticket Panel inner. |
+| 4 | `--surface-3` | Bone | `#ece9e0` | Button hover, Pill button fill, muted block, inactive tab background. |
 | 5 | **`--mist` (NEW v11)** | Mist | `#d8d4c8` | Card frame border, divider band, hover state on light surface, image card backdrop |
 | 6 | `--ink-6` | Ink 6 | `#cfcfcf` | Placeholder text, disabled state, lightest chip fill |
 | 7 | `--ink-5` | Ink 5 | `#9a9a9a` | Tertiary metadata, icon-secondary |
@@ -117,9 +117,13 @@ The Push warm-gray ladder runs from pure snow to absolute obsidian, all warm-lea
 
 | Token | Value | Use |
 |-------|-------|-----|
-| `--hairline` | `rgba(10, 10, 10, 0.08)` | Standard 1px divider, card border |
+| `--hairline` | `rgba(10, 10, 10, 0.08)` | Section divider (border-top / border-bottom), Ghost button border (§ 9.4), input idle border, glass-tile bezel. **NOT used as a 4-sided card border.** |
 | `--hairline-2` | `rgba(10, 10, 10, 0.14)` | Emphasized divider, focused input border |
 | `--hairline-dotted` | `repeating-linear-gradient(to right, rgba(10,10,10,0.20) 0 4px, transparent 4px 8px)` | Editorial Table row divider, Ticket Panel perforation edge |
+
+**🔒 STRICT — All page + card backgrounds are pure white `#ffffff`.** Page chrome (body, main shell, rail, dashboard, all product UI surfaces) renders on `#ffffff`. Cards are also `#ffffff`. White-on-white surfaces are defined by `--shadow-1/2/3` elevation alone — no border, no tint, no contrast fill. This is the Apple iOS / Notion-style aesthetic: shadow does the work, the page breathes uniformly, and cards float instead of being framed.
+
+**🔒 STRICT — Card surfaces have NO border.** Standard cards (`-card`, `-panel`, `-tile`, `-surface`, `-wrap`, `-modal` containers) are defined ONLY by `--shadow-1/2/3` elevation. A 1px hairline on top reads as visual chrome and creates the "extra strip" / corner-notch artifact whenever inset elements (e.g., the OVERDUE 4px top bar) are positioned via `top:0/left:0` against the card's padding-box. Functional borders (Ghost buttons, inputs, selects, pills, glass-tile bezels) are exempt — they need the border for affordance, not for boundary definition. Cream tokens (`--surface`, `--surface-2`, `--surface-3`) remain available for Marketing register only (Candy Panels, Editorial moments) — never for Product UI page or card backgrounds.
 
 ### 2.2 Brand Signatures (3 colors, role-locked)
 
@@ -171,9 +175,28 @@ Derivative tokens (OK to use):
 
 **These three are nav-only. Forbidden as section bg, button fill, card fill, or any other surface.** They live exclusively inside `<nav>` chrome at the top of every page. CTA buttons elsewhere on the page still use Brand Red / N2W Blue / Editorial Pink — the nav and the CTA system speak different languages on purpose.
 
-### 2.5 Color Discipline Rules
+### 2.5 Status Semantics (3 tokens — system feedback ONLY) 📐 STRUCTURED
 
-1. **Allowed-Color List is closed.** Production CSS uses only the tokens in §§ 2.1-2.4. Photos and SVG visual effects exempt.
+Status colors communicate the outcome of a system event (transaction settled, form invalid, scan in review). They are functional, not editorial — semantically locked to a single role each so users learn the visual language across portals (merchant dashboard, creator earnings, applicant review, etc.).
+
+| Token | Hex | Role | Allowed surfaces |
+|-------|-----|------|------------------|
+| `--success` | `#34c759` | "Done / approved / paid" — terminal positive state | Status badge fill (with `--snow` text), bullet/dot indicator, micro-icon, progress-bar complete state |
+| `--success-dark` | `#1f7a39` | "Done / approved / paid" — text on light bg | Status text label on `--surface` / `--surface-2`, table cell value (e.g. "Settled +$240") |
+| `--warning` | `#ff9500` | "Needs attention / pending / fair" — non-blocking caution | Password-strength "fair" bar, soft warning badge, pending-review status text, low-priority alert icon |
+| `--error` | `var(--brand-red)` | "Invalid / failed / blocked" — alias of Brand Red | Form-field error message text, failed-state badge, validation icon |
+
+**Discipline:**
+1. **Status colors are NOT editorial moments.** They never count toward the "≤1 saturated editorial moment per viewport" limit, but they also never replace editorial moments — a celebratory hero stamp uses `--editorial-pink`, not `--success`.
+2. **Role-locked. Do not cross.** `--success` cannot fill a CTA button. `--warning` cannot fill a section background. `--error` is a Brand Red alias for form/validation contexts — outside forms, write `--brand-red` directly so intent is legible.
+3. **Avoid red-as-anxiety.** Use `--warning` (orange) for cautions that are not failures (e.g. "12% of QRs pending review"). Reserve `--error` / `--brand-red` for hard validation failures and rejected states.
+4. **Status badges only — never section bg.** A `--success`-filled banner spanning a full panel is forbidden. Status colors live in ≤120px-wide chips, dots, micro-icons, or single-line text labels.
+5. **Pair with neutral container.** Status badges sit on `--surface`, `--surface-2`, or a card fill — never on another saturated color.
+6. **Light Mode contrast minimums.** `--success-dark #1f7a39` on `--surface #f8f4e8` = 6.4:1 (AA pass). `--warning #ff9500` on `--surface` is below AA for body text — use it for ≥14px 600 weight or icon-only contexts; for warning **text** on light bg, use `--ink` with a `--warning` left border or icon prefix.
+
+### 2.6 Color Discipline Rules
+
+1. **Allowed-Color List is closed.** Production CSS uses only the tokens in §§ 2.1-2.5. Photos and SVG visual effects exempt.
 2. **Body / paragraph copy is always `--ink-3` warm gray.** Never colored.
 3. **Headings = `--ink` or `--graphite` (mid-strong) or `--char` (display on dark surface).**
 4. **Saturated editorial moments ≤1 per viewport.**

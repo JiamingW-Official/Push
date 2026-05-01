@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import Link from "next/link";
 import {
   useNotifications,
@@ -9,7 +9,9 @@ import {
 } from "@/lib/notifications/useNotifications";
 import "./notifications.css";
 
-type FilterTab = "All" | "Unread" | "Campaigns" | "Payments" | "System";
+/* ── Filter tabs — 4 product categories + All / Unread ─────── */
+
+type FilterTab = "All" | "Unread" | "Tasks" | "Invites" | "Payouts" | "System";
 
 /* ── SVG icon helpers (replace emoji — product register) ─── */
 
@@ -22,6 +24,7 @@ function IconPayment() {
       strokeWidth="1.5"
       strokeLinecap="round"
       strokeLinejoin="round"
+      aria-hidden="true"
     >
       <rect x="2" y="5" width="16" height="12" rx="2" />
       <path d="M2 9h16" />
@@ -30,7 +33,7 @@ function IconPayment() {
   );
 }
 
-function IconLocation() {
+function IconInvite() {
   return (
     <svg
       viewBox="0 0 20 20"
@@ -39,14 +42,15 @@ function IconLocation() {
       strokeWidth="1.5"
       strokeLinecap="round"
       strokeLinejoin="round"
+      aria-hidden="true"
     >
-      <circle cx="10" cy="8" r="3" />
-      <path d="M10 2C6.69 2 4 4.69 4 8c0 4.5 6 10 6 10s6-5.5 6-10c0-3.31-2.69-6-6-6z" />
+      <path d="M3 5h14v10H3z" />
+      <path d="M3 5l7 5 7-5" />
     </svg>
   );
 }
 
-function IconPerson() {
+function IconTask() {
   return (
     <svg
       viewBox="0 0 20 20"
@@ -55,9 +59,10 @@ function IconPerson() {
       strokeWidth="1.5"
       strokeLinecap="round"
       strokeLinejoin="round"
+      aria-hidden="true"
     >
-      <circle cx="10" cy="6" r="3" />
-      <path d="M3 17c0-3.87 3.13-7 7-7s7 3.13 7 7" />
+      <rect x="3" y="3" width="14" height="14" rx="2" />
+      <path d="M7 10l2 2 4-4" />
     </svg>
   );
 }
@@ -71,6 +76,7 @@ function IconAlert() {
       strokeWidth="1.5"
       strokeLinecap="round"
       strokeLinejoin="round"
+      aria-hidden="true"
     >
       <path d="M10 2L2 17h16L10 2z" />
       <path d="M10 9v4" />
@@ -88,6 +94,7 @@ function IconCheck() {
       strokeWidth="1.5"
       strokeLinecap="round"
       strokeLinejoin="round"
+      aria-hidden="true"
     >
       <circle cx="10" cy="10" r="8" />
       <path d="M6.5 10.5l2.5 2.5 4.5-4.5" />
@@ -95,8 +102,11 @@ function IconCheck() {
   );
 }
 
-// Derive icon component from notification title/body
-function notifIcon(title: string, body: string): React.ReactNode {
+/* ── Classification ───────────────────────────────────────── */
+
+type NotifKind = "tasks" | "invites" | "payouts" | "system";
+
+function notifKind(title: string, body: string): NotifKind {
   const t = title.toLowerCase();
   const b = body.toLowerCase();
   if (
@@ -107,60 +117,63 @@ function notifIcon(title: string, body: string): React.ReactNode {
     b.includes("paid") ||
     b.includes("pending")
   )
-    return <IconPayment />;
-  if (
-    t.includes("scan") ||
-    t.includes("visit") ||
-    b.includes("verified") ||
-    b.includes("walk-in") ||
-    b.includes("qr")
-  )
-    return <IconLocation />;
+    return "payouts";
   if (
     t.includes("accepted") ||
-    t.includes("application") ||
-    t.includes("tier") ||
-    t.includes("score") ||
-    b.includes("accepted") ||
-    b.includes("level")
+    t.includes("invite") ||
+    t.includes("invitation") ||
+    t.includes("match") ||
+    b.includes("invited") ||
+    b.includes("matches your profile")
   )
-    return <IconPerson />;
+    return "invites";
   if (
     t.includes("deadline") ||
     t.includes("ending") ||
-    t.includes("alert") ||
+    t.includes("scan") ||
+    t.includes("visit") ||
     b.includes("deadline") ||
-    b.includes("days")
+    b.includes("days") ||
+    b.includes("walk-in") ||
+    b.includes("verified") ||
+    b.includes("qr")
   )
-    return <IconAlert />;
-  return <IconCheck />;
+    return "tasks";
+  return "system";
 }
 
-// Map notification to filter category
-function notifCategory(
-  title: string,
-  body: string,
-): Omit<FilterTab, "All" | "Unread"> {
-  const t = title.toLowerCase();
-  const b = body.toLowerCase();
-  if (
-    t.includes("payout") ||
-    t.includes("payment") ||
-    t.includes("milestone") ||
-    b.includes("payment") ||
-    b.includes("paid")
-  )
-    return "Payments";
-  if (
-    t.includes("accepted") ||
-    t.includes("match") ||
-    t.includes("campaign") ||
-    t.includes("deadline") ||
-    b.includes("campaign") ||
-    b.includes("application")
-  )
-    return "Campaigns";
-  return "System";
+function kindIcon(kind: NotifKind): React.ReactNode {
+  switch (kind) {
+    case "payouts":
+      return <IconPayment />;
+    case "invites":
+      return <IconInvite />;
+    case "tasks":
+      return <IconTask />;
+    default:
+      return <IconAlert />;
+  }
+}
+
+function kindLabel(kind: NotifKind): string {
+  switch (kind) {
+    case "payouts":
+      return "Payout";
+    case "invites":
+      return "Invite";
+    case "tasks":
+      return "Task";
+    default:
+      return "System";
+  }
+}
+
+function tabMatchesKind(tab: FilterTab, kind: NotifKind): boolean {
+  if (tab === "Tasks") return kind === "tasks";
+  if (tab === "Invites") return kind === "invites";
+  if (tab === "Payouts") return kind === "payouts";
+  if (tab === "System") return kind === "system";
+  return false;
 }
 
 export default function CreatorNotificationsPage() {
@@ -169,26 +182,48 @@ export default function CreatorNotificationsPage() {
 
   const [activeTab, setActiveTab] = useState<FilterTab>("All");
 
-  // Filter notifications based on active tab
-  const filteredNotifications = notifications
-    .slice()
-    .sort(
-      (a, b) =>
-        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
-    )
-    .filter((n) => {
-      if (activeTab === "All") return true;
-      if (activeTab === "Unread") return !n.read;
-      return notifCategory(n.title, n.body) === activeTab;
-    });
+  // Sort once + filter per tab
+  const filteredNotifications = useMemo(() => {
+    return notifications
+      .slice()
+      .sort(
+        (a, b) =>
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+      )
+      .filter((n) => {
+        if (activeTab === "All") return true;
+        if (activeTab === "Unread") return !n.read;
+        return tabMatchesKind(activeTab, notifKind(n.title, n.body));
+      });
+  }, [notifications, activeTab]);
+
+  // Today summary — counts for the floating glass tile
+  const todaySummary = useMemo(() => {
+    const dayMs = 24 * 60 * 60 * 1000;
+    const now = Date.now();
+    const today = notifications.filter(
+      (n) => now - new Date(n.createdAt).getTime() < dayMs,
+    );
+    let invites = 0;
+    let payouts = 0;
+    let tasks = 0;
+    for (const n of today) {
+      const k = notifKind(n.title, n.body);
+      if (k === "invites") invites++;
+      else if (k === "payouts") payouts++;
+      else if (k === "tasks") tasks++;
+    }
+    return { total: today.length, invites, payouts, tasks };
+  }, [notifications]);
 
   const groups = groupNotifications(filteredNotifications);
 
   const tabs: FilterTab[] = [
     "All",
     "Unread",
-    "Campaigns",
-    "Payments",
+    "Tasks",
+    "Invites",
+    "Payouts",
     "System",
   ];
 
@@ -196,9 +231,10 @@ export default function CreatorNotificationsPage() {
   if (!hydrated) {
     return (
       <div className="cw-page notif-page">
-        <div className="notif-skeleton">
+        <div className="notif-skeleton" aria-busy="true" aria-live="polite">
           <div className="notif-skeleton-title" />
-          {[1, 2, 3].map((i) => (
+          <div className="notif-skeleton-summary" />
+          {[1, 2, 3, 4].map((i) => (
             <div key={i} className="notif-skeleton-item" />
           ))}
         </div>
@@ -211,17 +247,26 @@ export default function CreatorNotificationsPage() {
       <header className="cw-header">
         <div className="cw-header__left">
           <p className="cw-eyebrow cw-eyebrow--live">
-            NOTIFICATIONS{unreadCount > 0 ? ` · ${unreadCount} UNREAD` : ""}
+            LINKS{unreadCount > 0 ? ` · ${unreadCount} UNREAD` : ""}
           </p>
           <h1 className="cw-title">Notifications</h1>
         </div>
         <div className="cw-header__right">
           {unreadCount > 0 && (
-            <button type="button" className="cw-pill" onClick={markAllRead}>
+            <button
+              type="button"
+              className="cw-pill"
+              onClick={markAllRead}
+              aria-label={`Mark all ${unreadCount} unread notifications as read`}
+            >
               Mark all read
             </button>
           )}
-          <div className="cw-chip-row" role="tablist">
+          <div
+            className="cw-chip-row"
+            role="tablist"
+            aria-label="Filter notifications"
+          >
             {tabs.map((tab) => (
               <button
                 key={tab}
@@ -239,17 +284,61 @@ export default function CreatorNotificationsPage() {
         </div>
       </header>
 
+      {/* Liquid-glass Today Summary tile — ≤1 floating glass per panel (Design v11) */}
+      {todaySummary.total > 0 && activeTab === "All" && (
+        <aside
+          className="notif-summary-glass"
+          aria-label={`Today summary — ${todaySummary.total} new`}
+        >
+          <div className="notif-summary-eyebrow">
+            <span className="notif-summary-dot" aria-hidden="true" />
+            (TODAY)
+          </div>
+          <div className="notif-summary-stats">
+            <div className="notif-summary-stat">
+              <span className="notif-summary-num">{todaySummary.total}</span>
+              <span className="notif-summary-key">New</span>
+            </div>
+            {todaySummary.invites > 0 && (
+              <div className="notif-summary-stat">
+                <span className="notif-summary-num">
+                  {todaySummary.invites}
+                </span>
+                <span className="notif-summary-key">Invites</span>
+              </div>
+            )}
+            {todaySummary.payouts > 0 && (
+              <div className="notif-summary-stat">
+                <span className="notif-summary-num">
+                  {todaySummary.payouts}
+                </span>
+                <span className="notif-summary-key">Payouts</span>
+              </div>
+            )}
+            {todaySummary.tasks > 0 && (
+              <div className="notif-summary-stat">
+                <span className="notif-summary-num">{todaySummary.tasks}</span>
+                <span className="notif-summary-key">Tasks</span>
+              </div>
+            )}
+          </div>
+        </aside>
+      )}
+
       {/* Notification list */}
       <main className="notif-main">
         {groups.length === 0 ? (
-          <div className="notif-empty">
+          <div className="notif-empty" role="status">
             <div className="notif-empty-icon">
               <IconCheck />
             </div>
-            <p className="notif-empty-title">You&apos;re all caught up</p>
+            <p className="notif-empty-title">
+              {activeTab === "Unread" ? "Inbox zero" : "You're all caught up"}
+            </p>
             <p className="notif-empty-body">
-              When campaigns update, payouts arrive, or scans are verified, they
-              appear here.
+              {activeTab === "Unread"
+                ? "No unread notifications. Switch to All to revisit recent activity."
+                : "When campaigns update, payouts arrive, or scans are verified, they appear here."}
             </p>
             <Link href="/creator/discover" className="btn-ghost click-shift">
               Explore campaigns
@@ -263,43 +352,71 @@ export default function CreatorNotificationsPage() {
                 className="notif-group"
                 aria-label={group.label}
               >
-                <div className="notif-group-label">{group.label}</div>
+                <div className="notif-group-label">
+                  <span>{group.label}</span>
+                  <span className="notif-group-count">
+                    ({group.items.length})
+                  </span>
+                </div>
                 <div className="notif-list" role="list">
-                  {group.items.map((n) => (
-                    <Link
-                      key={n.id}
-                      href={n.href}
-                      role="listitem"
-                      className={`notif-item${n.read ? " notif-item--read" : " notif-item--unread"}`}
-                      onClick={() => markAsRead(n.id)}
-                    >
-                      <div className="notif-item-icon" aria-hidden="true">
-                        {notifIcon(n.title, n.body)}
-                      </div>
-                      <div className="notif-item-body">
-                        <div className="notif-item-header">
-                          <span className="notif-item-title">{n.title}</span>
-                          <span className="notif-item-time">
-                            {timeAgo(n.createdAt)}
-                          </span>
+                  {group.items.map((n) => {
+                    const kind = notifKind(n.title, n.body);
+                    return (
+                      <Link
+                        key={n.id}
+                        href={n.href}
+                        role="listitem"
+                        aria-label={`${kindLabel(kind)} — ${n.title}. ${n.body}. ${timeAgo(n.createdAt)}.${
+                          n.read ? "" : " Unread."
+                        }`}
+                        className={
+                          "notif-item" +
+                          (n.read
+                            ? " notif-item--read"
+                            : " notif-item--unread") +
+                          ` notif-item--${kind}`
+                        }
+                        onClick={() => markAsRead(n.id)}
+                      >
+                        <div className="notif-item-icon" aria-hidden="true">
+                          {kindIcon(kind)}
                         </div>
-                        <p className="notif-item-text">{n.body}</p>
-                      </div>
-                      {!n.read && (
-                        <span
-                          className="notif-unread-dot"
-                          aria-label="Unread"
-                        />
-                      )}
-                    </Link>
-                  ))}
+                        <div className="notif-item-body">
+                          <div className="notif-item-meta">
+                            <span className="notif-item-kind">
+                              {kindLabel(kind)}
+                            </span>
+                            <span
+                              className="notif-item-meta-sep"
+                              aria-hidden="true"
+                            >
+                              ·
+                            </span>
+                            <span className="notif-item-time">
+                              {timeAgo(n.createdAt)}
+                            </span>
+                          </div>
+                          <span className="notif-item-title">{n.title}</span>
+                          <p className="notif-item-text">{n.body}</p>
+                        </div>
+                        {!n.read && (
+                          <span
+                            className="notif-unread-dot"
+                            aria-label="Unread"
+                          />
+                        )}
+                      </Link>
+                    );
+                  })}
                 </div>
               </section>
             ))}
 
             {/* Load more */}
             <div className="notif-load-more-row">
-              <button className="btn-ghost click-shift">Load more</button>
+              <button type="button" className="btn-ghost click-shift">
+                Load more
+              </button>
             </div>
           </>
         )}

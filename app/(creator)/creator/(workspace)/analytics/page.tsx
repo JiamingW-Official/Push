@@ -35,9 +35,9 @@ const TIER_CONFIG = {
 const INSIGHTS = [
   {
     id: 1,
-    headline: "Food campaigns",
-    stat: "2.4×",
-    context: "conversion rate vs. lifestyle",
+    headline: "Food campaigns convert harder",
+    stat: "2.4x",
+    context: "vs lifestyle category",
     body: "Your food content consistently outperforms every other category. The audience trusts your taste.",
     cta: "Find food campaigns",
     ctaHref: "/creator/dashboard",
@@ -45,23 +45,23 @@ const INSIGHTS = [
   },
   {
     id: 2,
-    headline: "Williamsburg",
+    headline: "Williamsburg is hot",
     stat: "+31%",
-    context: "reach vs. last month",
-    body: "Your Williamsburg content is hitting. Three of your top-5 posts this month were from that neighborhood.",
+    context: "reach vs last month",
+    body: "Three of your top-five posts this month came out of Williamsburg. Lean in.",
     cta: "Browse nearby",
     ctaHref: "/creator/dashboard",
     statClass: "an-insight-stat an-insight-stat--blue",
   },
   {
     id: 3,
-    headline: "4 points",
-    stat: "75",
-    context: "to reach Proven tier",
-    body: "One strong campaign away from unlocking higher-paying spots and exclusive merchant partnerships.",
+    headline: "One push from Proven tier",
+    stat: "4 pts",
+    context: "to unlock higher-paying spots",
+    body: "One strong campaign away from exclusive merchant partnerships and a higher base rate.",
     cta: "See what unlocks",
     ctaHref: "/creator/profile",
-    statClass: "an-insight-stat an-insight-stat--champagne",
+    statClass: "an-insight-stat an-insight-stat--ink",
   },
 ];
 
@@ -71,71 +71,77 @@ const PERIOD_OPTIONS: { key: Period; label: string }[] = [
   { key: "7d", label: "7D" },
   { key: "30d", label: "30D" },
   { key: "90d", label: "90D" },
-  { key: "all", label: "All Time" },
+  { key: "all", label: "All" },
 ];
 
-/* ── CSS bar chart (no Chart.js) ────────────────────────────── */
+/* ── KPI ───────────────────────────────────────────────────────── */
+
+type DeltaDir = "up" | "down" | "neutral";
+
+const KPI_CARDS: {
+  label: string;
+  value: string;
+  unit?: string;
+  delta: string;
+  dir: DeltaDir;
+}[] = [
+  {
+    label: "Total scans",
+    value: "12,847",
+    delta: "18% vs last month",
+    dir: "up",
+  },
+  {
+    label: "Total earnings",
+    value: "$432",
+    delta: "12% vs last month",
+    dir: "up",
+  },
+  {
+    label: "Active campaigns",
+    value: "5",
+    delta: "2 ending this week",
+    dir: "neutral",
+  },
+  {
+    label: "Push score",
+    value: "71",
+    delta: "3 pts vs last month",
+    dir: "up",
+  },
+];
+
+const DELTA_GLYPH: Record<DeltaDir, string> = {
+  up: "↑",
+  down: "↓",
+  neutral: "·",
+};
+
+/* ── CSS bar chart ─────────────────────────────────────────────── */
 
 function BarChartCSS({ data }: { data: { month: string; value: number }[] }) {
   const max = Math.max(...data.map((d) => d.value));
   return (
     <div
-      style={{
-        display: "flex",
-        alignItems: "flex-end",
-        gap: 8,
-        height: 160,
-        padding: "0 0 8px",
-      }}
+      className="an-bar-chart"
+      role="img"
+      aria-label="Verified scans, last 6 months"
     >
       {data.map((d, i) => {
         const pct = (d.value / max) * 100;
         const isLast = i === data.length - 1;
         return (
-          <div
-            key={d.month}
-            style={{
-              flex: 1,
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              gap: 6,
-              height: "100%",
-            }}
-          >
-            <div
-              style={{
-                flex: 1,
-                display: "flex",
-                alignItems: "flex-end",
-                width: "100%",
-              }}
-            >
+          <div key={d.month} className="an-bar-col">
+            <div className="an-bar-track">
               <div
-                style={{
-                  width: "100%",
-                  height: `${pct}%`,
-                  background: isLast ? "var(--brand-red)" : "var(--mist)",
-                  borderRadius: "4px 4px 0 0",
-                  minHeight: 4,
-                  border: isLast
-                    ? "1px solid var(--brand-red)"
-                    : "1px solid var(--hairline)",
-                }}
+                className={
+                  "an-bar-fill" + (isLast ? " an-bar-fill--current" : "")
+                }
+                style={{ height: `${pct}%` }}
+                title={`${d.month}: ${d.value.toLocaleString()} scans`}
               />
             </div>
-            <span
-              style={{
-                fontFamily: "var(--font-mono)",
-                fontSize: 12,
-                color: "var(--ink-4)",
-                textTransform: "uppercase",
-                letterSpacing: "0.08em",
-                whiteSpace: "nowrap",
-              }}
-            >
-              {d.month}
-            </span>
+            <span className="an-bar-label">{d.month}</span>
           </div>
         );
       })}
@@ -143,7 +149,7 @@ function BarChartCSS({ data }: { data: { month: string; value: number }[] }) {
   );
 }
 
-/* ── Horizontal bar ─────────────────────────────────────────── */
+/* ── Horizontal bar (top locations) ────────────────────────────── */
 
 function HorizontalBar({ data }: { data: { name: string; value: number }[] }) {
   const max = Math.max(...data.map((d) => d.value));
@@ -154,11 +160,10 @@ function HorizontalBar({ data }: { data: { name: string; value: number }[] }) {
           <span className="an-hbar-label">{d.name}</span>
           <div className="an-hbar-track">
             <div
-              className="an-hbar-fill"
-              style={{
-                width: `${(d.value / max) * 100}%`,
-                opacity: 0.4 + 0.6 * (1 - i / data.length),
-              }}
+              className={
+                "an-hbar-fill" + (i === 0 ? " an-hbar-fill--lead" : "")
+              }
+              style={{ width: `${(d.value / max) * 100}%` }}
             />
           </div>
           <span className="an-hbar-value">
@@ -170,7 +175,7 @@ function HorizontalBar({ data }: { data: { name: string; value: number }[] }) {
   );
 }
 
-/* ── Tier progress ──────────────────────────────────────────── */
+/* ── Tier progress ─────────────────────────────────────────────── */
 
 function TierProgress() {
   const { score, prevScore, nextScore, current, nextTier } = TIER_CONFIG;
@@ -181,12 +186,19 @@ function TierProgress() {
         <span className="an-tier-current">{current}</span>
         <span className="an-tier-next">{nextTier} →</span>
       </div>
-      <div className="an-tier-track">
+      <div
+        className="an-tier-track"
+        role="progressbar"
+        aria-valuenow={pct}
+        aria-valuemin={0}
+        aria-valuemax={100}
+        aria-label={`Tier progress to ${nextTier}`}
+      >
         <div className="an-tier-fill" style={{ width: `${pct}%` }} />
       </div>
       <div className="an-tier-meta">
         <span className="an-tier-score">
-          Score: <strong>{score}</strong>
+          Score <strong>{score}</strong>
         </span>
         <span className="an-tier-gap">
           {nextScore - score} pts to {nextTier}
@@ -196,7 +208,7 @@ function TierProgress() {
   );
 }
 
-/* ── Status chip ────────────────────────────────────────────── */
+/* ── Status chip ───────────────────────────────────────────────── */
 
 type CampaignStatus = "Active" | "Ended" | "Pending";
 
@@ -227,7 +239,7 @@ function StatusChip({ status }: { status: CampaignStatus }) {
   );
 }
 
-/* ── Campaign table data ────────────────────────────────────── */
+/* ── Campaign table data ───────────────────────────────────────── */
 
 const CAMPAIGN_TABLE: {
   name: string;
@@ -240,40 +252,48 @@ const CAMPAIGN_TABLE: {
     name: "Blank Street Coffee",
     visits: 1840,
     status: "Active",
-    earnings: "$92.00",
+    earnings: "$92",
     period: "Apr 2026",
   },
   {
     name: "Superiority Burger",
     visits: 2960,
     status: "Ended",
-    earnings: "$148.00",
+    earnings: "$148",
     period: "Mar 2026",
   },
   {
     name: "Flamingo Estate",
     visits: 1120,
     status: "Ended",
-    earnings: "$56.00",
+    earnings: "$56",
     period: "Mar 2026",
   },
   {
     name: "Brow Theory",
     visits: 1740,
     status: "Active",
-    earnings: "$87.00",
+    earnings: "$87",
     period: "Apr 2026",
   },
   {
     name: "Cha Cha Matcha",
     visits: 980,
     status: "Pending",
-    earnings: "$49.00",
+    earnings: "$49",
     period: "Apr 2026",
   },
 ];
 
-/* ── Page ───────────────────────────────────────────────────── */
+const TOP_CAMPAIGNS = [
+  { name: "Superiority Burger", value: "2,960 scans" },
+  { name: "Blank Street Coffee", value: "1,840 scans" },
+  { name: "Brow Theory", value: "1,740 scans" },
+  { name: "Flamingo Estate", value: "1,120 scans" },
+  { name: "Cha Cha Matcha", value: "980 scans" },
+];
+
+/* ── Page ──────────────────────────────────────────────────────── */
 
 export default function CreatorAnalyticsPage() {
   const [period, setPeriod] = useState<Period>("30d");
@@ -286,14 +306,20 @@ export default function CreatorAnalyticsPage() {
           <h1 className="cw-title">Analytics</h1>
         </div>
         <div className="cw-header__right">
-          <Link href="#" className="cw-pill">
+          <Link
+            href="#"
+            className="cw-pill"
+            aria-label="Export analytics report"
+          >
             Export
           </Link>
-          <div className="cw-chip-row">
+          <div className="cw-chip-row" role="tablist" aria-label="Time range">
             {PERIOD_OPTIONS.map((p) => (
               <button
                 key={p.key}
                 type="button"
+                role="tab"
+                aria-selected={period === p.key}
                 onClick={() => setPeriod(p.key)}
                 className={"cw-chip" + (period === p.key ? " is-active" : "")}
               >
@@ -304,82 +330,70 @@ export default function CreatorAnalyticsPage() {
         </div>
       </header>
 
-      {/* ── KPI Strip ────────────────────────────────────── */}
+      {/* ── KPI Strip ────────────────────────────────────────────── */}
       <div className="an-section">
         <div className="an-kpi-grid">
-          {[
-            {
-              label: "TOTAL SCANS",
-              value: "12,847",
-              delta: "+18% vs last month",
-            },
-            {
-              label: "TOTAL EARNINGS",
-              value: "$432",
-              delta: "+12% vs last month",
-            },
-            {
-              label: "ACTIVE CAMPAIGNS",
-              value: "5",
-              delta: "2 ending this week",
-            },
-            {
-              label: "AVG PUSH SCORE",
-              value: "71",
-              delta: "↑ 3 pts vs last month",
-            },
-          ].map((kpi) => (
-            <div key={kpi.label} className="an-kpi-card">
+          {KPI_CARDS.map((kpi) => (
+            <div
+              key={kpi.label}
+              className="an-kpi-card"
+              tabIndex={0}
+              role="group"
+              aria-label={`${kpi.label}: ${kpi.value}, ${kpi.delta}`}
+            >
               <p className="an-kpi-eyebrow">{kpi.label}</p>
-              <p className="an-kpi-value">{kpi.value}</p>
-              <p className="an-kpi-delta">{kpi.delta}</p>
+              <p className="an-kpi-value">
+                {kpi.value}
+                {kpi.unit ? (
+                  <span className="an-kpi-unit">{kpi.unit}</span>
+                ) : null}
+              </p>
+              <p className={"an-kpi-delta an-kpi-delta--" + kpi.dir}>
+                <span className="an-kpi-delta__arrow" aria-hidden="true">
+                  {DELTA_GLYPH[kpi.dir]}
+                </span>
+                {kpi.delta}
+              </p>
             </div>
           ))}
         </div>
       </div>
 
-      {/* ── Visits Over Time Chart ────────────────────── */}
+      {/* ── Visits Over Time Chart ───────────────────────────────── */}
       <div className="an-section">
         <div className="an-chart-card">
           <div className="an-chart-header">
             <div>
               <p className="an-section-eyebrow">VERIFIED SCANS</p>
-              <h2 className="an-section-title">Scans Over Time</h2>
-              <p
-                style={{
-                  fontFamily: "var(--font-mono)",
-                  fontSize: 12,
-                  color: "var(--ink-4)",
-                  margin: 0,
-                }}
-              >
-                Last 6 months
-              </p>
+              <h2 className="an-section-title an-section-title--tight">
+                Scans over time
+              </h2>
+              <p className="an-chart-meta">Last 6 months</p>
             </div>
-            <span className="an-chart-total">12,847</span>
+            <span className="an-chart-total" aria-label="Total scans">
+              12,847
+            </span>
           </div>
           <BarChartCSS data={REACH_DATA} />
         </div>
       </div>
 
-      {/* ── Campaign Breakdown Table ──────────────────── */}
+      {/* ── Campaign Breakdown Table ─────────────────────────────── */}
       <div className="an-section">
         <p className="an-section-eyebrow">CAMPAIGN BREAKDOWN</p>
-        <h2 className="an-section-title" style={{ marginBottom: 16 }}>
-          All Campaigns
+        <h2 className="an-section-title an-section-title--tight">
+          All campaigns
         </h2>
         <div className="an-table-card">
-          {/* Table header */}
-          <div className="an-table-head">
+          <div className="an-table-head" role="row">
             {["CAMPAIGN", "SCANS", "STATUS", "EARNINGS", "PERIOD"].map((h) => (
-              <span key={h} className="an-table-head-cell">
+              <span key={h} className="an-table-head-cell" role="columnheader">
                 {h}
               </span>
             ))}
           </div>
-          {/* Table rows */}
           {CAMPAIGN_TABLE.map((row) => (
-            <div key={row.name} className="an-table-row">
+            <div key={row.name} className="an-table-row" role="row">
               <span className="an-table-campaign">{row.name}</span>
               <span className="an-table-visits">
                 {row.visits.toLocaleString()}
@@ -394,241 +408,77 @@ export default function CreatorAnalyticsPage() {
         </div>
       </div>
 
-      {/* ── Bottom Stats Row ──────────────────────────── */}
+      {/* ── Bottom Stats Row ─────────────────────────────────────── */}
       <div className="an-section">
         <div className="an-bottom-grid">
-          {/* Best campaign */}
-          <div className="an-stat-card">
+          {/* Best campaign — single liquid-glass spotlight */}
+          <div
+            className="an-stat-card an-stat-card--spotlight"
+            tabIndex={0}
+            role="group"
+            aria-label="Best performing campaign"
+          >
             <p className="an-kpi-eyebrow">BEST CAMPAIGN</p>
-            <p
-              style={{
-                fontFamily: "var(--font-display)",
-                fontSize: 20,
-                fontWeight: 800,
-                color: "var(--ink)",
-                letterSpacing: "-0.015em",
-                lineHeight: 1.3,
-                margin: "0 0 4px",
-              }}
-            >
-              Superiority Burger
-            </p>
-            <p
-              style={{
-                fontFamily: "var(--font-mono)",
-                fontSize: 12,
-                color: "var(--ink-4)",
-                margin: "0 0 16px",
-              }}
-            >
-              2,960 scans · $148 earned
-            </p>
-            <div style={{ display: "flex", gap: 24 }}>
-              <div>
-                <p
-                  style={{
-                    fontFamily: "var(--font-mono)",
-                    fontSize: 12,
-                    fontWeight: 700,
-                    letterSpacing: "0.08em",
-                    textTransform: "uppercase",
-                    color: "var(--ink-4)",
-                    margin: "0 0 4px",
-                  }}
-                >
-                  Category
-                </p>
-                <p
-                  style={{
-                    fontFamily: "var(--font-mono)",
-                    fontSize: 14,
-                    fontWeight: 600,
-                    color: "var(--ink)",
-                    margin: 0,
-                  }}
-                >
-                  Food
-                </p>
+            <p className="an-stat-best-name">Superiority Burger</p>
+            <p className="an-stat-best-meta">2,960 scans · $148 earned</p>
+            <div className="an-stat-best-grid">
+              <div className="an-stat-best-grid__cell">
+                <span className="an-stat-best-grid__label">Category</span>
+                <span className="an-stat-best-grid__value">Food</span>
               </div>
-              <div>
-                <p
-                  style={{
-                    fontFamily: "var(--font-mono)",
-                    fontSize: 12,
-                    fontWeight: 700,
-                    letterSpacing: "0.08em",
-                    textTransform: "uppercase",
-                    color: "var(--ink-4)",
-                    margin: "0 0 4px",
-                  }}
-                >
-                  Conv. Rate
-                </p>
-                <p
-                  style={{
-                    fontFamily: "var(--font-mono)",
-                    fontSize: 14,
-                    fontWeight: 600,
-                    color: "var(--ink)",
-                    margin: 0,
-                  }}
-                >
-                  4.8%
-                </p>
+              <div className="an-stat-best-grid__cell">
+                <span className="an-stat-best-grid__label">Conv. rate</span>
+                <span className="an-stat-best-grid__value">4.8%</span>
               </div>
             </div>
           </div>
 
-          {/* Streak — clean surface-2 card, NO candy panel */}
-          <div className="an-stat-card">
+          {/* Streak — editorial moment (champagne, ≤1 / page) */}
+          <div
+            className="an-stat-card"
+            tabIndex={0}
+            role="group"
+            aria-label="Active streak"
+          >
             <p className="an-kpi-eyebrow">STREAK</p>
-            <div>
-              <p
-                style={{
-                  fontFamily: "var(--font-display)",
-                  fontSize: "clamp(40px, 5vw, 72px)",
-                  fontWeight: 900,
-                  color: "var(--brand-red)",
-                  letterSpacing: "-0.04em",
-                  margin: "0 0 4px",
-                  lineHeight: 1,
-                }}
-              >
-                14
-                <span
-                  style={{
-                    fontSize: 20,
-                    fontWeight: 500,
-                    letterSpacing: 0,
-                    color: "var(--ink-3)",
-                  }}
-                >
-                  {" "}
-                  days
-                </span>
-              </p>
-              <p
-                style={{
-                  fontFamily: "var(--font-mono)",
-                  fontSize: 12,
-                  color: "var(--ink-4)",
-                  margin: 0,
-                }}
-              >
-                Active streak — keep it going
-              </p>
-            </div>
+            <p className="an-streak-numeral">
+              14<span className="an-streak-unit">days</span>
+            </p>
+            <p className="an-streak-meta">Active streak — keep it going</p>
           </div>
 
           {/* Tier progress */}
-          <div
-            className="an-stat-card"
-            style={{ display: "flex", flexDirection: "column" }}
-          >
+          <div className="an-stat-card an-stat-card--column">
             <p className="an-kpi-eyebrow">TIER PROGRESS</p>
-            <div
-              style={{
-                flex: 1,
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center",
-              }}
-            >
-              <TierProgress />
-            </div>
+            <TierProgress />
           </div>
         </div>
       </div>
 
-      {/* ── Top Performers ────────────────────────────── */}
+      {/* ── Top Performers ───────────────────────────────────────── */}
       <div className="an-section">
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "1fr 1fr",
-            gap: 16,
-          }}
-        >
-          {/* Top Campaigns */}
-          <div
-            style={{
-              background: "var(--snow)",
-              border: "1px solid var(--hairline)",
-              borderRadius: 10,
-              padding: 24,
-            }}
-          >
+        <div className="an-top-grid">
+          <div className="an-top-card">
             <p className="an-kpi-eyebrow">TOP CAMPAIGNS</p>
-            <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-              {[
-                { name: "Superiority Burger", value: "2,960 scans" },
-                { name: "Brow Theory", value: "1,740 scans" },
-                { name: "Blank Street Coffee", value: "1,840 scans" },
-                { name: "Flamingo Estate", value: "1,120 scans" },
-                { name: "Cha Cha Matcha", value: "980 scans" },
-              ].map((item, i) => (
-                <div
-                  key={item.name}
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 12,
-                  }}
-                >
-                  <span
-                    style={{
-                      fontFamily: "var(--font-display)",
-                      fontSize: 16,
-                      fontWeight: 700,
-                      color: i === 0 ? "var(--brand-red)" : "var(--ink-4)",
-                      width: 24,
-                      flexShrink: 0,
-                    }}
-                  >
-                    {i + 1}
-                  </span>
-                  <span
-                    style={{
-                      fontFamily: "var(--font-mono)",
-                      fontSize: 14,
-                      fontWeight: 500,
-                      color: "var(--ink)",
-                      flex: 1,
-                    }}
-                  >
-                    {item.name}
-                  </span>
-                  <span
-                    style={{
-                      fontFamily: "var(--font-mono)",
-                      fontSize: 12,
-                      color: "var(--ink-4)",
-                      flexShrink: 0,
-                    }}
-                  >
-                    {item.value}
-                  </span>
+            <div className="an-top-list">
+              {TOP_CAMPAIGNS.map((item, i) => (
+                <div key={item.name} className="an-top-row">
+                  <span className="an-top-rank">{i + 1}</span>
+                  <span className="an-top-name">{item.name}</span>
+                  <span className="an-top-value">{item.value}</span>
                 </div>
               ))}
             </div>
           </div>
 
-          {/* Top Locations */}
-          <div
-            style={{
-              background: "var(--snow)",
-              border: "1px solid var(--hairline)",
-              borderRadius: 10,
-              padding: 24,
-            }}
-          >
+          <div className="an-top-card">
             <p className="an-kpi-eyebrow">TOP LOCATIONS</p>
             <HorizontalBar data={NEIGHBORHOOD_DATA} />
           </div>
         </div>
       </div>
 
-      {/* ── Insights ──────────────────────────────────── */}
+      {/* ── Insights ─────────────────────────────────────────────── */}
       <div className="an-insights-section">
         <div className="an-insights-header">
           <p className="an-insights-eyebrow">GENERATED FROM YOUR DATA</p>
@@ -638,13 +488,7 @@ export default function CreatorAnalyticsPage() {
           {INSIGHTS.map((ins) => (
             <div key={ins.id} className="an-insight-card">
               <div className="an-insight-accent-bar" />
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "baseline",
-                  gap: 8,
-                }}
-              >
+              <div className="an-insight-stat-row">
                 <span className={ins.statClass}>{ins.stat}</span>
                 <span className="an-insight-context">{ins.context}</span>
               </div>

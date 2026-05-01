@@ -1,0 +1,411 @@
+/* ============================================================
+   MerchantShell — v11.2 unified shell
+   Pure-white main canvas + Liquid Glass sidebar +
+   enlarged type. Shared visual contract with creator workspace
+   rail and admin sidebar so all three product surfaces feel
+   like the same app.
+   ============================================================ */
+
+.ms-shell {
+  background: var(--snow);
+  min-height: 100svh;
+}
+
+.ms-sidebar {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 264px;
+  height: 100vh;
+  border-radius: 0;
+  /* Liquid Glass — explicit so the panel reads on a pure-white canvas. */
+  background:
+    radial-gradient(120% 60% at 20% 0%, rgba(255, 255, 255, 0.78) 0%, rgba(255, 255, 255, 0) 55%),
+    radial-gradient(80% 100% at 95% 100%, rgba(248, 244, 232, 0.55) 0%, rgba(248, 244, 232, 0) 60%),
+    rgba(248, 244, 232, 0.62);
+  -webkit-backdrop-filter: blur(36px) saturate(180%);
+  backdrop-filter: blur(36px) saturate(180%);
+  border-right: 0.5px solid rgba(10, 10, 10, 0.10);
+  border-left: 0;
+  border-top: 0;
+  border-bottom: 0;
+  box-shadow:
+    1px 0 0 rgba(10, 10, 10, 0.06),
+    inset -1px 0 0 rgba(255, 255, 255, 0.60),
+    inset 0 1px 0 rgba(255, 255, 255, 0.50);
+  display: flex;
+  flex-direction: column;
+  z-index: 200;
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+
+.ms-sidebar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Logo strip — taller, larger monogram and wordmark */
+.ms-sidebar-logo {
+  align-items: center;
+  display: flex;
+  flex-shrink: 0;
+  gap: var(--space-2);
+  height: 72px;
+  padding: 0 20px;
+}
+
+.ms-sidebar-monogram {
+  align-items: center;
+  background: var(--ink);
+  border-radius: var(--r-lg);
+  color: var(--snow);
+  display: flex;
+  flex-shrink: 0;
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 800;
+  height: 40px;
+  justify-content: center;
+  width: 40px;
+}
+
+.ms-sidebar-wordmark {
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+/* Search */
+.ms-sidebar-search {
+  align-items: center;
+  display: flex;
+  flex-shrink: 0;
+  height: 56px;
+  padding: 0 16px;
+  position: relative;
+}
+
+.ms-sidebar-search-icon {
+  color: var(--ink-4);
+  display: inline-flex;
+  height: 18px;
+  left: 28px;
+  pointer-events: none;
+  position: absolute;
+  width: 18px;
+  z-index: 1;
+}
+
+.ms-sidebar-search-icon svg {
+  height: 18px;
+  width: 18px;
+}
+
+.ms-sidebar-search-input {
+  background: rgba(255, 255, 255, 0.65);
+  border: 1px solid rgba(10, 10, 10, 0.08);
+  border-radius: var(--r-sm);
+  color: var(--ink);
+  flex: 1;
+  font-family: var(--font-mono);
+  font-size: 15px;
+  height: 40px;
+  outline: none;
+  padding: 0 12px 0 36px;
+}
+
+.ms-sidebar-search-input::placeholder {
+  color: var(--ink-4);
+}
+
+.ms-sidebar-search-input:focus {
+  background: rgba(255, 255, 255, 0.85);
+  border-color: rgba(10, 10, 10, 0.18);
+  box-shadow: 0 0 0 4px var(--brand-red-tint);
+}
+
+/* Nav */
+.ms-nav {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  padding: 0 0 16px;
+}
+
+.ms-nav-section {
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+}
+
+.ms-nav-section-label {
+  color: var(--ink-4);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  padding: 20px 20px 8px;
+  text-transform: uppercase;
+}
+
+.ms-nav-items {
+  display: flex;
+  flex-direction: column;
+}
+
+.ms-nav-item-wrap {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Nav item — bigger touch target, larger label, more breathing room */
+.ms-nav-item {
+  align-items: center;
+  border-radius: var(--r-sm);
+  color: var(--ink-3);
+  cursor: pointer;
+  display: flex;
+  font-family: var(--font-mono);
+  font-size: 16px;
+  font-weight: 500;
+  gap: 12px;
+  margin: 2px 12px;
+  padding: 12px 14px;
+  text-decoration: none;
+  transition: background 180ms ease, box-shadow 180ms ease, color 180ms ease;
+}
+
+.ms-nav-item:hover {
+  background: rgba(255, 255, 255, 0.65);
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.70);
+  color: var(--ink);
+}
+
+.ms-nav-item--active {
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow:
+    0 1px 4px rgba(0, 0, 0, 0.10),
+    0 0 1px rgba(0, 0, 0, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.80);
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.ms-nav-item-icon {
+  display: inline-flex;
+  flex-shrink: 0;
+  height: 22px;
+  opacity: 0.55;
+  transition: opacity 180ms ease;
+  width: 22px;
+}
+
+.ms-nav-item-icon svg {
+  height: 22px;
+  width: 22px;
+}
+
+.ms-nav-item:hover .ms-nav-item-icon,
+.ms-nav-item--active .ms-nav-item-icon {
+  opacity: 0.90;
+}
+
+.ms-nav-item-label {
+  flex: 1;
+  min-width: 0;
+}
+
+.ms-nav-item-badge {
+  align-items: center;
+  background: var(--brand-red);
+  border-radius: var(--r-pill);
+  color: var(--snow);
+  display: inline-flex;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  height: 20px;
+  justify-content: center;
+  min-width: 20px;
+  padding: 0 8px;
+}
+
+.ms-redeem-terminal-link {
+  align-self: flex-start;
+  color: var(--ink-4);
+  display: inline-flex;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.10em;
+  margin: 4px 0 6px 56px;
+  text-transform: uppercase;
+  transition: color 180ms ease;
+}
+
+.ms-redeem-terminal-link:hover {
+  color: var(--ink);
+}
+
+/* Footer */
+.ms-sidebar-footer {
+  border-top: 1px solid var(--hairline);
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  gap: 12px;
+  margin: 8px;
+  padding: 16px 12px 12px;
+}
+
+.ms-user-email {
+  color: var(--ink-4);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  letter-spacing: 0.02em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ms-signout-btn {
+  align-items: center;
+  background: transparent;
+  border: 1px solid var(--hairline-2);
+  border-radius: var(--r-sm);
+  color: var(--ink);
+  display: inline-flex;
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 700;
+  gap: 8px;
+  justify-content: center;
+  letter-spacing: 0.04em;
+  padding: 12px 16px;
+  text-transform: uppercase;
+  transition: transform 180ms var(--spring), background 180ms ease;
+}
+
+.ms-signout-btn:hover {
+  transform: translate(1px, 1px);
+}
+
+.ms-signout-btn:active {
+  background: var(--surface-3);
+  transform: translate(2px, 2px) scale(0.98);
+}
+
+.ms-signout-btn:disabled {
+  color: var(--ink-4);
+  opacity: 0.72;
+  transform: none;
+}
+
+.ms-signout-btn-icon {
+  display: inline-flex;
+  height: 18px;
+  width: 18px;
+}
+
+.ms-signout-btn-icon svg {
+  height: 18px;
+  width: 18px;
+}
+
+/* Main content — pure-white canvas, offset by fixed 72px sidebar */
+.ms-main-content {
+  background: var(--snow);
+  margin-left: 72px;
+  min-height: 100svh;
+  padding: 48px 15%;
+}
+
+.ms-mobile-toggle {
+  align-items: center;
+  background: var(--ink);
+  border-radius: var(--r-lg);
+  color: var(--snow);
+  display: none;
+  flex-direction: column;
+  gap: 4px;
+  height: 44px;
+  justify-content: center;
+  left: 16px;
+  position: fixed;
+  top: 16px;
+  width: 44px;
+  z-index: 210;
+}
+
+.ms-mobile-toggle span {
+  background: currentColor;
+  border-radius: var(--r-pill);
+  display: block;
+  height: 2px;
+  width: 18px;
+}
+
+.ms-sidebar-scrim {
+  background: rgba(0, 0, 0, 0.24);
+  display: none;
+  inset: 0;
+  opacity: 0;
+  position: fixed;
+  transition: opacity 180ms ease;
+  z-index: 190;
+}
+
+@media (max-width: 1024px) {
+  .ms-sidebar {
+    transform: translateX(-100%);
+    transition: transform 280ms var(--spring);
+  }
+
+  .ms-sidebar.is-open {
+    transform: translateX(0);
+  }
+
+  .ms-main-content {
+    margin-left: 0;
+    padding: 32px 15% 80px;
+  }
+
+  .ms-mobile-toggle {
+    display: inline-flex;
+  }
+
+  .ms-sidebar-scrim {
+    display: block;
+    pointer-events: none;
+  }
+
+  .ms-sidebar-scrim.is-open {
+    opacity: 1;
+    pointer-events: auto;
+  }
+}
+
+@media (max-width: 768px) {
+  .ms-main-content {
+    padding: 24px 15% 80px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ms-sidebar,
+  .ms-sidebar-scrim,
+  .ms-nav-item,
+  .ms-signout-btn {
+    transition-duration: 0.01ms !important;
+  }
+
+  .ms-signout-btn:hover,
+  .ms-signout-btn:active {
+    transform: none;
+  }
+}

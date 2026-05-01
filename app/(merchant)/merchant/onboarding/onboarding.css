@@ -1,0 +1,401 @@
+/* =============================================================
+   Push — Merchant Onboarding — page-level CSS
+   Design.md v11: closed token set, 8px grid, product register
+   Complements components/onboarding/onboarding.css (shared)
+   ============================================================= */
+
+/* ─────────────────────────────────────────
+   1. PROGRESS BAR (top of form area)
+   ─────────────────────────────────────────
+   Spec: 4px height, border-radius 2px, surface-3 bg,
+   brand-red fill.
+   ───────────────────────────────────────── */
+.mob-progress-bar {
+  width: 100%;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--surface-3);
+  overflow: hidden;
+  margin-bottom: 32px;
+}
+
+.mob-progress-bar__fill {
+  height: 100%;
+  border-radius: 2px;
+  background: var(--brand-red);
+  transition: width 600ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* ─────────────────────────────────────────
+   2. LIQUID-GLASS PROGRESS TILE
+   ─────────────────────────────────────────
+   Spec: ≤1 per page, floating tile.
+   iOS 26 glass morphism: backdrop-filter blur,
+   surface-2 base, soft shadow-2.
+   ───────────────────────────────────────── */
+.mob-glass-tile {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 20px;
+  border-radius: 24px;
+  background: rgba(248, 244, 232, 0.72);
+  backdrop-filter: blur(20px) saturate(1.4);
+  -webkit-backdrop-filter: blur(20px) saturate(1.4);
+  border: 1px solid rgba(248, 244, 232, 0.55);
+  box-shadow:
+    0 4px 16px rgba(44, 42, 38, 0.10),
+    0 1px 4px rgba(44, 42, 38, 0.06);
+  /* floating above content */
+  position: relative;
+  z-index: 2;
+}
+
+.mob-glass-tile__step {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  white-space: nowrap;
+}
+
+.mob-glass-tile__pct {
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--brand-red);
+  letter-spacing: -0.02em;
+  white-space: nowrap;
+}
+
+.mob-glass-tile__mini-bar {
+  width: 64px;
+  height: 3px;
+  border-radius: 2px;
+  background: var(--surface-3);
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.mob-glass-tile__mini-fill {
+  height: 100%;
+  border-radius: 2px;
+  background: var(--brand-red);
+  transition: width 600ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* ─────────────────────────────────────────
+   3. STEP INDICATOR ROW (top bar)
+   Wraps the glass tile + "Save & Exit" link
+   ───────────────────────────────────────── */
+.mob-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 20px 32px;
+  background: var(--surface-2);
+  border-bottom: 1px solid var(--hairline);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  flex-wrap: wrap;
+}
+
+.mob-save-exit {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+  text-decoration: none;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  transition: color 0.15s;
+}
+
+.mob-save-exit:hover {
+  color: var(--ink);
+}
+
+/* ─────────────────────────────────────────
+   4. FORM FIELD OVERRIDES (merchant spec)
+   ─────────────────────────────────────────
+   Spec: border-radius 8px, border 1px solid ink-4,
+   padding 12px 16px, font-mono 16px, surface bg.
+   ───────────────────────────────────────── */
+.mob-input,
+.mob-select {
+  border-radius: 8px;
+  border: 1px solid var(--ink-4);
+  padding: 12px 16px;
+  font-family: var(--font-body);
+  font-size: 16px;
+  width: 100%;
+  background: var(--surface);
+  color: var(--ink);
+  box-sizing: border-box;
+  outline: none;
+  transition: border-color 0.15s;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.mob-input:focus,
+.mob-select:focus {
+  border-color: var(--ink);
+}
+
+.mob-input::placeholder {
+  color: var(--ink-4);
+  font-size: 15px;
+}
+
+.mob-label {
+  display: block;
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin-bottom: 8px;
+}
+
+.mob-field {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 24px;
+}
+
+.mob-field-hint {
+  font-family: var(--font-body);
+  font-size: 12px;
+  color: var(--ink-4);
+  margin-top: 6px;
+}
+
+.mob-field-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+/* ─────────────────────────────────────────
+   5. STEP NAVIGATION BUTTONS
+   ─────────────────────────────────────────
+   Next → .btn-primary, Back → .btn-ghost,
+   Save & Exit → .btn-secondary
+   (global btn classes already defined in
+   globals.css; these override sizing only)
+   ───────────────────────────────────────── */
+.mob-step-nav {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 32px;
+  flex-wrap: wrap;
+}
+
+/* ─────────────────────────────────────────
+   6. PLAN SELECTION CARDS (Step 3)
+   ─────────────────────────────────────────
+   Smaller than pricing page, same tokens.
+   ───────────────────────────────────────── */
+.mob-plan-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.mob-plan-card {
+  border-radius: 10px;
+  padding: 24px 20px;
+  background: var(--surface-2);
+  cursor: pointer;
+  transition:
+    border-color 0.15s,
+    background 0.15s,
+    transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1);
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  position: relative;
+}
+
+.mob-plan-card:hover {
+  border-color: var(--graphite);
+  background: var(--surface-3);
+  transform: translate(2px, 2px);
+}
+
+.mob-plan-card--selected {
+  border-color: var(--brand-red);
+  border-width: 2px;
+  background: rgba(193, 18, 31, 0.03);
+}
+
+.mob-plan-card--selected:hover {
+  border-color: var(--brand-red);
+}
+
+.mob-plan-card__name {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--ink);
+  letter-spacing: -0.03em;
+}
+
+.mob-plan-card__price {
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: 900;
+  color: var(--ink);
+  letter-spacing: -0.04em;
+  line-height: 1;
+}
+
+.mob-plan-card__price-sub {
+  font-family: var(--font-body);
+  font-size: 12px;
+  color: var(--ink-4);
+  margin-top: 2px;
+}
+
+.mob-plan-card__tag {
+  display: inline-block;
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border-radius: 8px;
+  background: rgba(193, 18, 31, 0.1);
+  color: var(--brand-red);
+  border: 1px solid rgba(193, 18, 31, 0.2);
+  align-self: flex-start;
+}
+
+.mob-plan-card__features {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.mob-plan-card__feature {
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: var(--ink-3);
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  line-height: 1.4;
+}
+
+.mob-plan-card__feature::before {
+  content: "—";
+  color: var(--ink-4);
+  flex-shrink: 0;
+  font-size: 12px;
+  margin-top: 1px;
+}
+
+/* ─────────────────────────────────────────
+   7. BILLING / PAYMENT PLACEHOLDER (Step 4)
+   Stripe embed placeholder zone
+   ───────────────────────────────────────── */
+.mob-payment-zone {
+  border: 1px dashed var(--mist);
+  border-radius: 10px;
+  padding: 48px 32px;
+  text-align: center;
+  background: var(--surface-2);
+  margin-bottom: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.mob-payment-zone__icon {
+  font-size: 32px;
+  color: var(--ink-4);
+  opacity: 0.5;
+}
+
+.mob-payment-zone__label {
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ink-3);
+}
+
+.mob-payment-zone__sub {
+  font-family: var(--font-body);
+  font-size: 12px;
+  color: var(--ink-4);
+  max-width: 280px;
+  line-height: 1.5;
+}
+
+/* ─────────────────────────────────────────
+   8. FOCUS-VISIBLE (accessibility)
+   ───────────────────────────────────────── */
+.mob-input:focus-visible,
+.mob-select:focus-visible {
+  outline: 2px solid var(--brand-red);
+  outline-offset: 2px;
+}
+
+/* ─────────────────────────────────────────
+   9. RESPONSIVE
+   ───────────────────────────────────────── */
+@media (max-width: 768px) {
+  .mob-plan-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .mob-field-row {
+    grid-template-columns: 1fr;
+  }
+
+  .mob-topbar {
+    padding: 16px 24px;
+  }
+
+  .mob-step-nav {
+    gap: 12px;
+  }
+
+  .mob-glass-tile {
+    padding: 10px 16px;
+    gap: 8px;
+  }
+
+  .mob-glass-tile__mini-bar {
+    width: 48px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mob-progress-bar__fill,
+  .mob-glass-tile__mini-fill {
+    transition: none;
+  }
+
+  .mob-plan-card:hover {
+    transform: none;
+  }
+}

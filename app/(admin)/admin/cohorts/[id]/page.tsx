@@ -4,6 +4,7 @@ import { use, useState } from "react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import "../cohorts.css";
+import "./cohort-detail.css";
 import {
   getCohortById,
   mockCohorts,
@@ -191,20 +192,21 @@ function MemberList({ cohort }: { cohort: Cohort }) {
     return v >= 1000 ? `$${(v / 1000).toFixed(1)}k` : `$${v}`;
   }
 
+  // Derive initials from name for photo card style avatar
+  function initials(name: string) {
+    return name
+      .split(" ")
+      .slice(0, 2)
+      .map((w) => w[0])
+      .join("")
+      .toUpperCase();
+  }
+
   return (
     <div className="member-section">
       <h2 className="section-title">
         Members
-        <span
-          style={{
-            fontFamily: "var(--font-body)",
-            fontSize: "var(--text-caption)",
-            fontWeight: 700,
-            color: "var(--graphite)",
-          }}
-        >
-          {total} total
-        </span>
+        <span className="section-title__count">{total} total</span>
       </h2>
       <div style={{ overflowX: "auto" }}>
         <table className="member-table">
@@ -222,21 +224,21 @@ function MemberList({ cohort }: { cohort: Cohort }) {
           <tbody>
             {paged.map((m) => (
               <tr key={m.id}>
-                <td style={{ fontWeight: 600, color: "var(--ink)" }}>
-                  {m.name}
-                  {m.handle && (
-                    <span
-                      style={{
-                        display: "block",
-                        fontFamily: "var(--font-body)",
-                        fontSize: "11px",
-                        color: "var(--accent-blue)",
-                        fontWeight: 400,
-                      }}
-                    >
-                      {m.handle}
-                    </span>
-                  )}
+                {/* Photo card style: 1:1 avatar tile + mono name label */}
+                <td>
+                  <div className="member-avatar-cell">
+                    <div className="member-avatar">
+                      <span className="member-avatar__initials">
+                        {initials(m.name)}
+                      </span>
+                    </div>
+                    <div>
+                      <div className="member-name">{m.name}</div>
+                      {m.handle && (
+                        <div className="member-handle">{m.handle}</div>
+                      )}
+                    </div>
+                  </div>
                 </td>
                 <td>
                   <span
@@ -250,11 +252,20 @@ function MemberList({ cohort }: { cohort: Cohort }) {
                     {m.tier && <span className="member-tier">{m.tier}</span>}
                   </td>
                 )}
-                <td style={{ color: "var(--graphite)" }}>{m.joinedAt}</td>
+                <td
+                  style={{
+                    color: "var(--graphite)",
+                    fontSize: 12,
+                    fontFamily: "var(--font-body)",
+                  }}
+                >
+                  {m.joinedAt}
+                </td>
                 <td
                   style={{
                     textAlign: "center",
                     fontVariantNumeric: "tabular-nums",
+                    fontSize: 14,
                   }}
                 >
                   {m.campaigns}
@@ -264,18 +275,18 @@ function MemberList({ cohort }: { cohort: Cohort }) {
                     fontVariantNumeric: "tabular-nums",
                     fontWeight: 600,
                     color: "var(--ink)",
+                    fontSize: 14,
                   }}
                 >
                   {formatGmv(m.gmv)}
                 </td>
-                <td
-                  style={{
-                    fontVariantNumeric: "tabular-nums",
-                    fontWeight: 600,
-                    color: m.ltv > 3000 ? "var(--brand-red)" : "var(--ink)",
-                  }}
-                >
-                  {formatGmv(m.ltv)}
+                {/* LTV — score badge style for high performers */}
+                <td>
+                  <span
+                    className={`member-score-badge${m.ltv > 3000 ? " member-score-badge--high" : ""}`}
+                  >
+                    {formatGmv(m.ltv)}
+                  </span>
                 </td>
               </tr>
             ))}
@@ -283,22 +294,11 @@ function MemberList({ cohort }: { cohort: Cohort }) {
         </table>
       </div>
       {totalPages > 1 && (
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "var(--space-2)",
-            marginTop: "var(--space-3)",
-            fontFamily: "var(--font-body)",
-            fontSize: "var(--text-caption)",
-            color: "var(--graphite)",
-          }}
-        >
+        <div className="member-pagination">
           <button
             className="export-btn"
             onClick={() => setPage((p) => Math.max(0, p - 1))}
             disabled={page === 0}
-            style={{ opacity: page === 0 ? 0.4 : 1 }}
           >
             ← Prev
           </button>
@@ -309,7 +309,6 @@ function MemberList({ cohort }: { cohort: Cohort }) {
             className="export-btn"
             onClick={() => setPage((p) => Math.min(totalPages - 1, p + 1))}
             disabled={page === totalPages - 1}
-            style={{ opacity: page === totalPages - 1 ? 0.4 : 1 }}
           >
             Next →
           </button>
@@ -451,142 +450,112 @@ export default function CohortDetailPage({
 
   return (
     <>
-      {/* Hero */}
-      <section
-        className="cohort-hero"
-        style={{ paddingBottom: "var(--space-6)" }}
-      >
-        <div
-          style={{
-            maxWidth: "var(--content-width)",
-            margin: "0 auto",
-            padding: "0 var(--space-5)",
-          }}
-        >
-          <Link href="/admin/cohorts" className="cohort-back">
-            All Cohorts
-          </Link>
+      {/* Hero bar — cohort name H1 Darky clamp(40px,5vw,72px) + (COHORT·DETAIL) eyebrow */}
+      <section className="cohort-hero">
+        <Link href="/admin/cohorts" className="cohort-back">
+          All Cohorts
+        </Link>
 
-          <div className="cohort-detail-hero__eyebrow">
-            <span className={`cohort-badge cohort-badge--${cohort.type}`}>
-              {cohort.type}
-            </span>
-            &nbsp;&nbsp;{cohort.neighborhood} · {cohort.borough}
-          </div>
+        <div className="cohort-detail-hero__eyebrow">
+          <span className={`cohort-badge cohort-badge--${cohort.type}`}>
+            {cohort.type}
+          </span>
+          (COHORT·DETAIL) &nbsp;{cohort.neighborhood} · {cohort.borough}
+        </div>
 
-          <h1
-            className="cohort-hero__title"
-            style={{ marginTop: "var(--space-2)" }}
-          >
-            {cohort.name}
-          </h1>
+        {/* H1 — Darky clamp(40px,5vw,72px) per Design.md § 8 */}
+        <h1 className="cohort-hero__title">{cohort.name}</h1>
 
-          <p className="cohort-hero__sub">
-            <span
-              className={`status-dot status-dot--${cohort.status}`}
-              style={{ display: "inline-block", marginRight: 6 }}
-            />
-            {statusLabel} · Started {cohort.startDate} · {cohort.size} members
-          </p>
+        <p className="cohort-hero__sub">
+          <span className={`status-dot status-dot--${cohort.status}`} />
+          {statusLabel} · Started {cohort.startDate} · {cohort.size} members
+        </p>
 
-          {cohort.notes && (
-            <p
-              style={{
-                fontFamily: "var(--font-body)",
-                fontSize: "var(--text-small)",
-                color: "rgba(255,255,255,0.45)",
-                marginTop: "var(--space-2)",
-                fontStyle: "italic",
-                maxWidth: 560,
-              }}
-            >
-              &quot;{cohort.notes}&quot;
-            </p>
-          )}
+        {cohort.notes && (
+          <p className="cohort-hero__notes">&quot;{cohort.notes}&quot;</p>
+        )}
 
-          {/* KPIs */}
-          <div
-            className="cohort-hero__stats"
-            style={{
-              marginTop: "var(--space-5)",
-              paddingTop: "var(--space-4)",
-              borderTop: "1px solid rgba(255,255,255,0.1)",
-            }}
-          >
-            <div className="hero-stat">
-              <div className="hero-stat__value">
-                {(cohort.activationRate * 100).toFixed(0)}%
-              </div>
-              <div className="hero-stat__label">Activation</div>
+        {/* KPI stats grid — Darky numerals clamp(40px,5vw,72px) 800 */}
+        <div className="cohort-hero__stats">
+          {[
+            {
+              value: `${(cohort.activationRate * 100).toFixed(0)}%`,
+              label: "Activation",
+            },
+            {
+              value: `${(cohort.retentionD7 * 100).toFixed(0)}%`,
+              label: "D7 Retention",
+            },
+            {
+              value: `${(cohort.retentionD30 * 100).toFixed(0)}%`,
+              label: "D30 Retention",
+            },
+            {
+              value: `$${(cohort.gmv / 1000).toFixed(0)}k`,
+              label: "Total GMV",
+            },
+            {
+              value: `$${cohort.ltv.toLocaleString()}`,
+              label: "Avg LTV",
+            },
+          ].map(({ value, label }) => (
+            <div key={label} className="hero-stat">
+              <div className="hero-stat__value">{value}</div>
+              <div className="hero-stat__label">{label}</div>
             </div>
-            <div className="hero-stat">
-              <div className="hero-stat__value">
-                {(cohort.retentionD7 * 100).toFixed(0)}%
-              </div>
-              <div className="hero-stat__label">D7 Retention</div>
-            </div>
-            <div className="hero-stat">
-              <div className="hero-stat__value">
-                {(cohort.retentionD30 * 100).toFixed(0)}%
-              </div>
-              <div className="hero-stat__label">D30 Retention</div>
-            </div>
-            <div className="hero-stat">
-              <div className="hero-stat__value">
-                ${(cohort.gmv / 1000).toFixed(0)}k
-              </div>
-              <div className="hero-stat__label">Total GMV</div>
-            </div>
-            <div className="hero-stat">
-              <div className="hero-stat__value">
-                ${cohort.ltv.toLocaleString()}
-              </div>
-              <div className="hero-stat__label">Avg LTV</div>
-            </div>
-          </div>
+          ))}
         </div>
       </section>
 
       {/* Detail content */}
       <div className="cohort-detail">
-        {/* Export */}
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "flex-end",
-            marginBottom: "var(--space-4)",
-          }}
-        >
-          <button className="export-btn" onClick={() => exportCsv(cohort)}>
+        {/* Action buttons — Add Members → .btn-primary, Export → .btn-secondary, Delete → .btn-ghost */}
+        <div className="cohort-detail-actions">
+          <button
+            className="btn-primary"
+            onClick={() => alert("Add members — backend integration pending.")}
+          >
+            + Add Members
+          </button>
+          <button className="btn-secondary" onClick={() => exportCsv(cohort)}>
             ↓ Export CSV
           </button>
+          <button
+            className="btn-ghost"
+            onClick={() =>
+              alert("Delete cohort — backend integration pending.")
+            }
+            style={{ marginLeft: "auto" }}
+          >
+            Delete Cohort
+          </button>
+        </div>
+
+        {/* Stats grid — member count / avg score / total earnings KPI tiles */}
+        <div className="cohort-stats-grid">
+          <div className="cohort-stats-tile">
+            <div className="cohort-stats-tile__label">Members</div>
+            <div className="cohort-stats-tile__count">{cohort.size}</div>
+          </div>
+          <div className="cohort-stats-tile">
+            <div className="cohort-stats-tile__label">D30 Retention</div>
+            <div className="cohort-stats-tile__metric">
+              {(cohort.retentionD30 * 100).toFixed(0)}%
+            </div>
+          </div>
+          <div className="cohort-stats-tile">
+            <div className="cohort-stats-tile__label">Total GMV</div>
+            <div className="cohort-stats-tile__metric">
+              ${(cohort.gmv / 1000).toFixed(0)}k
+            </div>
+          </div>
         </div>
 
         {/* Experiment tags */}
         {cohort.experimentTags.length > 0 && (
-          <div
-            style={{
-              display: "flex",
-              gap: "var(--space-1)",
-              flexWrap: "wrap",
-              marginBottom: "var(--space-6)",
-            }}
-          >
+          <div className="cohort-exp-tags">
             {cohort.experimentTags.map((tag) => (
-              <span
-                key={tag}
-                style={{
-                  fontFamily: "var(--font-body)",
-                  fontSize: "10px",
-                  fontWeight: 700,
-                  letterSpacing: "0.07em",
-                  textTransform: "uppercase",
-                  padding: "3px 10px",
-                  background: "rgba(10,10,10,0.06)",
-                  border: "1px solid var(--line)",
-                  color: "var(--graphite)",
-                }}
-              >
+              <span key={tag} className="cohort-exp-tag">
                 {tag}
               </span>
             ))}

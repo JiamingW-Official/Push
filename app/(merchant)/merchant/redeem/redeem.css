@@ -1,0 +1,680 @@
+/* Merchant · Redeem
+   ------------------------------------------------------------------
+   Push v12 Product UI register. Hero uses § 8.5 Ticket Panel
+   (GA Orange + grommets + perforation) — single justified deviation
+   from the "Marketing only" spec because physical-ticket semantics
+   are the literal product surface here. Max 1 per page (preserved).
+   8px grid · canonical (no parens) eyebrow · Filled Primary CTA ·
+   bottom-right hover shift on every clickable surface.
+   ------------------------------------------------------------------ */
+
+.redeem-page {
+  color: var(--ink);
+  display: grid;
+  gap: var(--space-4);
+}
+
+/* ------------------------------------------------------------------
+   Page header — canonical Product UI eyebrow + Darky H1.
+   ------------------------------------------------------------------ */
+.redeem-page-header {
+  display: grid;
+  gap: var(--space-1);
+}
+
+.redeem-page-eyebrow {
+  color: var(--ink-3);
+  font-family: var(--font-mono);
+  font-size: var(--text-eyebrow);
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  margin: 0;
+  text-transform: uppercase;
+}
+
+.redeem-page-title {
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-size: var(--text-h1);
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  line-height: 1;
+  margin: 0;
+}
+
+.redeem-page-subtitle {
+  color: var(--ink-3);
+  font-family: var(--font-mono);
+  font-size: var(--text-body-sm);
+  line-height: 1.4;
+  margin: 0;
+  max-width: 56ch;
+}
+
+/* ------------------------------------------------------------------
+   Hero — Ticket Panel (Design.md § 8.2 / § 8.5 mention).
+   GA Orange fill · 10px radius · 4 grommets · dashed perforation.
+   Flat (no shadow). Centered headline allowed (§ 5.6 exception).
+   ------------------------------------------------------------------ */
+.redeem-hero {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.redeem-ticket {
+  background: var(--ga-orange);
+  border-radius: var(--r-md);
+  color: var(--ink);
+  display: grid;
+  gap: var(--space-2);
+  padding: 64px 96px;
+  position: relative;
+  text-align: center;
+}
+
+/* Dashed perforation top + bottom */
+.redeem-ticket::before,
+.redeem-ticket::after {
+  border-top: 2px dashed rgba(10, 10, 10, 0.55);
+  content: "";
+  height: 0;
+  left: 24px;
+  position: absolute;
+  right: 24px;
+}
+.redeem-ticket::before { top: 14px; }
+.redeem-ticket::after  { bottom: 14px; }
+
+/* 4 ink-solid grommets, 24px inset from each corner */
+.redeem-ticket > .redeem-ticket-grommet {
+  background: var(--ink);
+  border-radius: var(--r-full);
+  height: 16px;
+  position: absolute;
+  width: 16px;
+}
+.redeem-ticket-grommet--tl { left: 24px;  top: 24px; }
+.redeem-ticket-grommet--tr { right: 24px; top: 24px; }
+.redeem-ticket-grommet--bl { left: 24px;  bottom: 24px; }
+.redeem-ticket-grommet--br { right: 24px; bottom: 24px; }
+
+/* Verify-state flag, sits above the headline. */
+.redeem-ticket-flag {
+  align-items: center;
+  display: inline-flex;
+  font-family: var(--font-mono);
+  font-size: var(--text-eyebrow);
+  font-weight: 700;
+  gap: var(--space-1);
+  justify-self: center;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.redeem-verify-dot {
+  background: var(--ink);
+  border-radius: var(--r-full);
+  display: inline-block;
+  height: 8px;
+  width: 8px;
+}
+.redeem-verify-dot--match   { background: var(--ink); }
+.redeem-verify-dot--pending {
+  background: var(--ink);
+  animation: redeem-pulse 1.2s ease-in-out infinite;
+}
+.redeem-verify-dot--alert   { background: var(--brand-red-deep); }
+
+@keyframes redeem-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%      { opacity: 0.5; transform: scale(0.7); }
+}
+
+.redeem-ticket-flag-label {
+  color: var(--ink);
+}
+
+/* Headline — Magvix Italic per § 8.2 spec (clamp 40-56). */
+.redeem-ticket-title {
+  color: var(--ink);
+  font-family: var(--font-hero);
+  font-size: clamp(40px, 5vw, 56px);
+  font-weight: 400;
+  letter-spacing: -0.005em;
+  line-height: 1.05;
+  margin: 0;
+}
+.redeem-ticket-title em {
+  font-family: var(--font-hero);
+  font-style: italic;
+  font-weight: 400;
+}
+
+.redeem-ticket-subtitle {
+  color: var(--ink);
+  font-family: var(--font-mono);
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.4;
+  margin: 0 auto;
+  max-width: 480px;
+}
+.redeem-ticket-subtitle kbd {
+  background: rgba(10, 10, 10, 0.12);
+  border-radius: var(--r-xs);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  padding: 2px 6px;
+}
+
+.redeem-ticket-label {
+  color: var(--ink);
+  font-family: var(--font-mono);
+  font-size: var(--text-eyebrow);
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  margin-top: var(--space-2);
+  text-transform: uppercase;
+}
+
+/* The single input — large, mono, uppercase. Uses inverse Snow fill so
+   it reads as the operable seam against the GA Orange ticket body. */
+.redeem-ticket-input {
+  appearance: none;
+  background: var(--snow);
+  border: 1px solid var(--ink);
+  border-radius: var(--r-sm);
+  color: var(--ink);
+  font-family: var(--font-mono);
+  font-size: clamp(28px, 6vw, 48px);
+  font-weight: 700;
+  justify-self: center;
+  letter-spacing: 0.04em;
+  margin: 0 auto;
+  max-width: 480px;
+  min-height: 72px;
+  outline: none;
+  padding: 16px 24px;
+  text-align: center;
+  text-transform: uppercase;
+  transition:
+    border-color 180ms var(--ease-spring),
+    box-shadow 180ms var(--ease-spring);
+  width: 100%;
+}
+.redeem-ticket-input::placeholder {
+  color: var(--ink-4);
+  letter-spacing: 0.08em;
+}
+.redeem-ticket-input:focus,
+.redeem-ticket-input:focus-visible {
+  border-color: var(--ink);
+  box-shadow: 0 0 0 4px rgba(10, 10, 10, 0.18);
+}
+
+.redeem-ticket-status {
+  align-items: center;
+  color: var(--ink);
+  display: flex;
+  flex-wrap: wrap;
+  font-family: var(--font-mono);
+  font-size: var(--text-eyebrow);
+  font-weight: 700;
+  gap: var(--space-1);
+  justify-content: center;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.redeem-ticket-status-error {
+  color: var(--brand-red-deep);
+}
+
+/* Inline success below the ticket — Product UI safe palette. */
+.redeem-inline-success {
+  align-items: center;
+  background: var(--surface-2);
+  border: 1px solid var(--hairline);
+  border-left: 4px solid var(--champagne);
+  border-radius: var(--r-md);
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+}
+
+.redeem-inline-success-label {
+  color: var(--ink-3);
+  font-family: var(--font-mono);
+  font-size: var(--text-eyebrow);
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.redeem-inline-success-message {
+  color: var(--ink);
+  font-family: var(--font-mono);
+  font-size: var(--text-body-sm);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+/* Bonus drop — Ink ceremonial card, champagne accent. No Marketing
+   Editorial Pink (Product UI surface, § 2 closed list). */
+.redeem-inline-success--bonus {
+  align-items: start;
+  background: var(--ink);
+  border: 1px solid var(--ink);
+  border-left: 1px solid var(--ink);
+  border-radius: var(--r-md);
+  box-shadow: var(--shadow-3);
+  display: grid;
+  gap: var(--space-1);
+  padding: var(--space-3);
+}
+.redeem-inline-success--bonus .redeem-inline-success-label,
+.redeem-inline-success--bonus .redeem-inline-success-hint {
+  color: var(--snow);
+}
+.redeem-inline-success-bonus {
+  color: var(--champagne);
+  font-family: var(--font-display);
+  font-size: var(--text-h3);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+.redeem-inline-success-description {
+  color: var(--snow);
+  font-family: var(--font-display);
+  font-size: clamp(18px, 2vw, 24px);
+  line-height: 1.3;
+  margin: 0;
+  max-width: 32ch;
+}
+.redeem-inline-success-hint {
+  color: var(--ink-3);
+  font-family: var(--font-mono);
+  font-size: var(--text-eyebrow);
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+/* ------------------------------------------------------------------
+   Results list.
+   ------------------------------------------------------------------ */
+.redeem-results-section {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.redeem-results-header {
+  align-items: baseline;
+  display: flex;
+  justify-content: space-between;
+}
+
+.redeem-results-label {
+  color: var(--ink-3);
+  font-family: var(--font-mono);
+  font-size: var(--text-eyebrow);
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  margin: 0;
+  text-transform: uppercase;
+}
+
+.redeem-results-count {
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-size: var(--text-h5);
+  font-weight: 700;
+  letter-spacing: -0.005em;
+  margin: 0;
+}
+
+.redeem-results-list {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.redeem-result-card {
+  background: var(--surface-2);
+  border-radius: var(--r-md);
+  box-shadow: var(--shadow-1);
+  display: grid;
+  gap: var(--space-3);
+  grid-template-columns: minmax(0, 1fr) auto;
+  padding: var(--space-3);
+  transition: transform 180ms var(--ease-spring), box-shadow 180ms var(--ease-spring);
+}
+.redeem-result-card:hover  { transform: translate(2px, 2px); box-shadow: var(--shadow-2); }
+.redeem-result-card:active { transform: translate(3px, 3px) scale(0.98); }
+
+.redeem-result-copy {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.redeem-result-topline {
+  align-items: baseline;
+  display: flex;
+  gap: var(--space-2);
+  justify-content: space-between;
+}
+
+.redeem-result-handle {
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-size: var(--text-h5);
+  font-weight: 700;
+  letter-spacing: -0.005em;
+  line-height: 1.2;
+  margin: 0;
+}
+
+.redeem-result-time,
+.redeem-result-campaign,
+.redeem-result-meta dt,
+.redeem-result-meta dd {
+  font-family: var(--font-mono);
+}
+
+.redeem-result-time {
+  color: var(--ink-3);
+  font-size: var(--text-eyebrow);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.redeem-result-offer {
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-size: var(--text-h5);
+  font-weight: 700;
+  letter-spacing: -0.005em;
+  line-height: 1.2;
+  margin: 0;
+}
+
+.redeem-result-campaign {
+  color: var(--ink-3);
+  font-size: var(--text-small);
+  margin: 0;
+}
+
+.redeem-result-meta {
+  display: grid;
+  gap: var(--space-2);
+  grid-template-columns: repeat(3, minmax(0, max-content));
+  margin: 0;
+}
+.redeem-result-meta div {
+  display: grid;
+  gap: 4px;
+}
+.redeem-result-meta dt {
+  color: var(--ink-3);
+  font-size: var(--text-eyebrow);
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.redeem-result-meta dd {
+  color: var(--ink);
+  font-size: var(--text-small);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  margin: 0;
+  text-transform: uppercase;
+}
+
+.redeem-result-status-pill {
+  background: var(--surface-3);
+  border-radius: var(--r-pill);
+  color: var(--ink);
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: var(--text-eyebrow);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  padding: 4px 10px;
+  text-transform: uppercase;
+}
+
+.redeem-result-actions {
+  align-items: center;
+  display: flex;
+}
+
+/* ------------------------------------------------------------------
+   Buttons — § 9 unified set.
+   `.redeem-cta` = Filled Primary (Brand Red).
+   `.redeem-modal-confirm` = Filled Primary (Brand Red).
+   `.redeem-modal-ghost` = Ghost (transparent + ink border).
+   All buttons take the bottom-right hover shift signature.
+   ------------------------------------------------------------------ */
+.redeem-cta,
+.redeem-modal-confirm {
+  background: var(--brand-red);
+  border: 1px solid var(--brand-red);
+  border-radius: var(--r-sm);
+  color: var(--snow);
+  cursor: pointer;
+  font-family: var(--font-mono);
+  font-size: var(--text-body-sm);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  min-height: 56px;
+  min-width: 144px;
+  padding: 14px 28px;
+  text-transform: uppercase;
+  transition:
+    transform 180ms var(--ease-spring),
+    background 180ms var(--ease-spring);
+}
+.redeem-cta:hover:not(:disabled),
+.redeem-modal-confirm:hover:not(:disabled) {
+  transform: translate(2px, 2px);
+}
+.redeem-cta:active:not(:disabled),
+.redeem-modal-confirm:active:not(:disabled) {
+  background: var(--brand-red-deep);
+  transform: translate(3px, 3px) scale(0.98);
+}
+.redeem-cta:focus-visible,
+.redeem-modal-confirm:focus-visible {
+  box-shadow: var(--shadow-focus);
+  outline: none;
+}
+.redeem-cta:disabled,
+.redeem-modal-confirm:disabled {
+  cursor: wait;
+  opacity: 0.72;
+  transform: none;
+}
+
+.redeem-modal-ghost {
+  background: transparent;
+  border: 1px solid var(--ink);
+  border-radius: var(--r-sm);
+  color: var(--ink);
+  cursor: pointer;
+  font-family: var(--font-mono);
+  font-size: var(--text-body-sm);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  min-height: 48px;
+  min-width: 112px;
+  padding: 12px 24px;
+  text-transform: uppercase;
+  transition: transform 180ms var(--ease-spring), background 180ms var(--ease-spring);
+}
+.redeem-modal-ghost:hover:not(:disabled)  { background: var(--surface-3); transform: translate(2px, 2px); }
+.redeem-modal-ghost:active:not(:disabled) { transform: translate(3px, 3px) scale(0.98); }
+.redeem-modal-ghost:focus-visible         { box-shadow: var(--shadow-focus); outline: none; }
+.redeem-modal-ghost:disabled              { cursor: not-allowed; opacity: 0.6; transform: none; }
+
+/* ------------------------------------------------------------------
+   Confirm modal body.
+   ------------------------------------------------------------------ */
+.redeem-confirm-body {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.redeem-confirm-eyebrow {
+  color: var(--ink-3);
+  font-family: var(--font-mono);
+  font-size: var(--text-eyebrow);
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  margin: 0;
+  text-transform: uppercase;
+}
+
+.redeem-confirm-offer {
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-size: clamp(28px, 4vw, 40px);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  margin: 0;
+}
+
+.redeem-confirm-meta {
+  display: grid;
+  gap: var(--space-1);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin: 0;
+  padding: var(--space-2) 0;
+  border-top: 1px solid var(--hairline);
+  border-bottom: 1px solid var(--hairline);
+}
+.redeem-confirm-meta div { display: grid; gap: 4px; }
+.redeem-confirm-meta dt {
+  color: var(--ink-3);
+  font-family: var(--font-mono);
+  font-size: var(--text-eyebrow);
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.redeem-confirm-meta dd {
+  color: var(--ink);
+  font-family: var(--font-mono);
+  font-size: var(--text-body-sm);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  margin: 0;
+  text-transform: uppercase;
+  word-break: break-word;
+}
+
+.redeem-confirm-note {
+  color: var(--ink-3);
+  font-family: var(--font-mono);
+  font-size: var(--text-small);
+  line-height: 1.4;
+  margin: 0;
+}
+
+/* ------------------------------------------------------------------
+   Toasts.
+   ------------------------------------------------------------------ */
+.redeem-toast-stack {
+  bottom: 24px;
+  display: grid;
+  gap: var(--space-1);
+  pointer-events: none;
+  position: fixed;
+  right: 24px;
+  z-index: 50;
+}
+
+.redeem-toast {
+  background: var(--surface-2);
+  border: 1px solid var(--hairline);
+  border-radius: var(--r-md);
+  box-shadow: var(--shadow-2);
+  color: var(--ink);
+  font-family: var(--font-mono);
+  font-size: var(--text-eyebrow);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  max-width: min(360px, calc(100vw - 32px));
+  padding: var(--space-2);
+  text-transform: uppercase;
+}
+.redeem-toast--success { border-left: 4px solid var(--champagne); }
+.redeem-toast--error   { border-left: 4px solid var(--brand-red); color: var(--brand-red-deep); }
+
+/* ------------------------------------------------------------------
+   Responsive.
+   iPad ≤960 + Mobile ≤720 — same composition, only spacing scales
+   per § 16 (Ticket: 64/96 → 48/56 → 32/24).
+   ------------------------------------------------------------------ */
+@media (max-width: 960px) {
+  .redeem-ticket { padding: 48px 56px; }
+  .redeem-ticket > .redeem-ticket-grommet { height: 16px; width: 16px; }
+  .redeem-ticket-grommet--tl,
+  .redeem-ticket-grommet--tr { top: 20px; }
+  .redeem-ticket-grommet--bl,
+  .redeem-ticket-grommet--br { bottom: 20px; }
+  .redeem-ticket-grommet--tl,
+  .redeem-ticket-grommet--bl { left: 20px; }
+  .redeem-ticket-grommet--tr,
+  .redeem-ticket-grommet--br { right: 20px; }
+}
+
+@media (max-width: 720px) {
+  .redeem-page { gap: var(--space-3); }
+  .redeem-ticket { gap: var(--space-2); padding: 32px 24px; }
+  .redeem-ticket > .redeem-ticket-grommet { height: 12px; width: 12px; }
+  .redeem-ticket-grommet--tl,
+  .redeem-ticket-grommet--tr { top: 16px; }
+  .redeem-ticket-grommet--bl,
+  .redeem-ticket-grommet--br { bottom: 16px; }
+  .redeem-ticket-grommet--tl,
+  .redeem-ticket-grommet--bl { left: 16px; }
+  .redeem-ticket-grommet--tr,
+  .redeem-ticket-grommet--br { right: 16px; }
+  .redeem-ticket::before,
+  .redeem-ticket::after { left: 16px; right: 16px; }
+  .redeem-ticket-input { font-size: 24px; min-height: 56px; padding: 12px 16px; }
+  .redeem-result-card { grid-template-columns: 1fr; }
+  .redeem-result-actions { justify-content: stretch; }
+  .redeem-cta { width: 100%; }
+  .redeem-result-meta { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .redeem-confirm-meta { grid-template-columns: 1fr; }
+  .redeem-toast-stack { bottom: 16px; left: 16px; right: 16px; }
+  .redeem-toast { max-width: 100%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .redeem-result-card,
+  .redeem-cta,
+  .redeem-modal-confirm,
+  .redeem-modal-ghost,
+  .redeem-ticket-input,
+  .redeem-verify-dot--pending {
+    animation: none !important;
+    transition: none !important;
+  }
+  .redeem-result-card:hover,
+  .redeem-result-card:active,
+  .redeem-cta:hover:not(:disabled),
+  .redeem-cta:active:not(:disabled),
+  .redeem-modal-confirm:hover:not(:disabled),
+  .redeem-modal-confirm:active:not(:disabled),
+  .redeem-modal-ghost:hover:not(:disabled),
+  .redeem-modal-ghost:active:not(:disabled) {
+    transform: none !important;
+  }
+}

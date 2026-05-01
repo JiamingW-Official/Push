@@ -113,20 +113,20 @@ function sanitizeError(err: unknown): string {
   return err.message;
 }
 
-/* ── Shared input style helper ───────────────────────────── */
+/* ── Shared input style helper (uses tokens; no hard-coded colors) ── */
 function inputStyle(hasError: boolean, isValid: boolean): React.CSSProperties {
   return {
     fontFamily: "var(--font-body)",
     fontSize: 16,
     padding: "12px 16px",
-    border: `1px solid ${hasError ? "var(--brand-red)" : isValid ? "var(--accent-blue)" : "var(--hairline)"}`,
+    border: `1px solid ${hasError ? "var(--brand-red)" : isValid ? "var(--ink-5)" : "var(--mist)"}`,
     borderRadius: 8,
     background: "var(--surface)",
     color: "var(--ink)",
     width: "100%",
     boxSizing: "border-box",
     outline: "none",
-    transition: "border-color 0.15s",
+    transition: "border-color 0.15s, box-shadow 0.15s",
   };
 }
 
@@ -404,58 +404,51 @@ export default function MerchantSignupPage() {
               padding: "40px 48px",
             }}
           >
-            {/* Header */}
+            {/* Header — marketing register: parenthetical eyebrow + social proof chip */}
             <div style={{ marginBottom: 32 }}>
-              <div
-                style={{
-                  display: "inline-block",
-                  background: "var(--surface-2)",
-                  border: "1px solid var(--hairline)",
-                  borderRadius: 8,
-                  padding: "4px 12px",
-                  fontFamily: "var(--font-body)",
-                  fontSize: 11,
-                  fontWeight: 700,
-                  letterSpacing: "0.06em",
-                  color: "var(--ink-3)",
-                  marginBottom: 16,
-                }}
-              >
-                32 merchants joined this week
-              </div>
-              <span
-                className="eyebrow"
-                style={{
-                  color: "var(--ink-3)",
-                  display: "block",
-                  marginBottom: 8,
-                }}
-              >
-                Merchant Signup
-              </span>
+              <div className="fomo-badge">32 merchants joined this week</div>
+              <span className="signup-eyebrow">Get Started</span>
               <h1
                 style={{
                   fontFamily: "var(--font-display)",
-                  fontWeight: 900,
-                  fontSize: "clamp(24px,3vw,32px)",
+                  fontWeight: 800,
+                  fontSize: "clamp(28px, 3.6vw, 40px)",
+                  lineHeight: 1.05,
                   letterSpacing: "-0.02em",
-                  color: "var(--ink)",
-                  margin: "0 0 8px",
+                  color: "var(--graphite)",
+                  margin: "0 0 16px",
                 }}
               >
-                Pay Only for Customers Who Walk In
+                Pay only for customers who walk in.
               </h1>
               <p
                 style={{
                   fontFamily: "var(--font-body)",
                   fontSize: 14,
                   color: "var(--ink-3)",
+                  lineHeight: 1.6,
                   margin: 0,
                 }}
               >
                 Every creator includes a QR code. You see exactly who converts —
                 before paying commission.
               </p>
+
+              {/* Marketing KPI strip — Darky numerals, social proof */}
+              <div className="signup-kpis" aria-label="Push at a glance">
+                <div>
+                  <div className="signup-kpi-num">3.2x</div>
+                  <div className="signup-kpi-label">Avg ROI</div>
+                </div>
+                <div>
+                  <div className="signup-kpi-num">200+</div>
+                  <div className="signup-kpi-label">NYC Spots</div>
+                </div>
+                <div>
+                  <div className="signup-kpi-num">$0</div>
+                  <div className="signup-kpi-label">Until Verified</div>
+                </div>
+              </div>
             </div>
 
             {formError && (
@@ -1021,17 +1014,9 @@ export default function MerchantSignupPage() {
                   </span>
                 </div>
 
-                <p
-                  style={{
-                    fontFamily: "var(--font-body)",
-                    fontSize: 12,
-                    color: "var(--ink-4)",
-                    textAlign: "center",
-                    margin: "4px 0",
-                  }}
-                >
-                  Pay only for verified foot traffic · No contracts · 200+ NYC
-                  spots
+                {/* Magvix Italic signature divider — marketing only */}
+                <p className="signup-signature" aria-hidden="true">
+                  Verified · Tracked · Paid only when they show up
                 </p>
 
                 <button
@@ -1053,60 +1038,58 @@ export default function MerchantSignupPage() {
                       <span className="sr-only">Creating account…</span>
                     </>
                   ) : (
-                    "Verify & Launch"
+                    "Create Merchant Account"
                   )}
                 </button>
+
+                <p
+                  style={{
+                    fontFamily: "var(--font-body)",
+                    fontSize: 11,
+                    color: "var(--ink-4)",
+                    textAlign: "center",
+                    lineHeight: 1.6,
+                    margin: "0",
+                  }}
+                >
+                  By creating an account you agree to our{" "}
+                  <Link
+                    href="/terms"
+                    style={{
+                      color: "var(--ink-2)",
+                      textDecoration: "underline",
+                      textUnderlineOffset: 3,
+                    }}
+                  >
+                    Terms
+                  </Link>{" "}
+                  and{" "}
+                  <Link
+                    href="/privacy"
+                    style={{
+                      color: "var(--ink-2)",
+                      textDecoration: "underline",
+                      textUnderlineOffset: 3,
+                    }}
+                  >
+                    Privacy Policy
+                  </Link>
+                  .
+                </p>
               </div>
             </form>
 
-            <p
-              style={{
-                fontFamily: "var(--font-body)",
-                fontSize: 13,
-                color: "var(--ink-4)",
-                textAlign: "center",
-                marginTop: 24,
-                lineHeight: 1.8,
-              }}
-            >
-              Already signed up?{" "}
-              <Link
-                href="/merchant/login"
-                style={{
-                  color: "var(--accent-blue)",
-                  textDecoration: "none",
-                  fontWeight: 700,
-                }}
-              >
-                Log in
-              </Link>
+            <p className="signup-foot">
+              Already have an account?{" "}
+              <Link href="/merchant/login">Log in</Link>
               <br />
               Are you a creator?{" "}
-              <Link
-                href="/creator/signup"
-                style={{
-                  color: "var(--accent-blue)",
-                  textDecoration: "none",
-                  fontWeight: 700,
-                }}
-              >
-                Creator signup
-              </Link>
+              <Link href="/creator/signup">Creator signup</Link>
             </p>
           </div>
 
-          <p style={{ textAlign: "center", marginTop: 24 }}>
-            <Link
-              href="/"
-              style={{
-                fontFamily: "var(--font-body)",
-                fontSize: 12,
-                color: "var(--ink-4)",
-                textDecoration: "none",
-              }}
-            >
-              &larr; Back to home
-            </Link>
+          <p className="signup-foot signup-foot--meta">
+            <Link href="/">&larr; Back to home</Link>
           </p>
         </div>
       </div>

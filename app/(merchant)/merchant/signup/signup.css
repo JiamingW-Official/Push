@@ -156,20 +156,98 @@
   margin: 0;
 }
 
-/* ── FOMO badge ───────────────────────────────────────────── */
+/* ── Parenthetical eyebrow (marketing register) ──────────── */
+
+.signup-eyebrow {
+  display: block;
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin-bottom: 8px;
+}
+
+.signup-eyebrow::before { content: "("; color: var(--ink-4); margin-right: 2px; }
+.signup-eyebrow::after  { content: ")"; color: var(--ink-4); margin-left: 2px; }
+
+/* ── Social-proof chip (no shadow, mist border) ──────────── */
 
 .fomo-badge {
-  display: inline-block;
-  border: 1px solid var(--mist)
-  padding: 4px 10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid var(--mist);
+  border-radius: 8px;
+  padding: 8px 12px;
+  background: var(--surface-2);
   font-family: var(--font-body);
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 700;
-  letter-spacing: 0.07em;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: var(--ink);
-  margin-bottom: var(--space-2);
+  color: var(--ink-2);
+  margin-bottom: 16px;
 }
+
+.fomo-badge::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent-blue);
+  box-shadow: 0 0 0 3px rgba(0, 133, 255, 0.18);
+  flex-shrink: 0;
+}
+
+/* ── Marketing KPI strip (3 small numerals, Darky) ───────── */
+
+.signup-kpis {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  padding: 16px 0;
+  margin: 8px 0 24px;
+  border-top: 1px solid var(--mist);
+  border-bottom: 1px solid var(--mist);
+}
+
+.signup-kpi-num {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 28px;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: var(--graphite);
+  margin: 0 0 4px;
+}
+
+.signup-kpi-label {
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+  line-height: 1.3;
+}
+
+/* ── Magvix Italic signature divider ─────────────────────── */
+
+.signup-signature {
+  font-family: var(--font-magvix, Georgia, serif);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 18px;
+  color: var(--ink-3);
+  text-align: center;
+  margin: 16px 0 8px;
+  letter-spacing: -0.01em;
+}
+
+.signup-signature::before { content: ""; color: var(--ink-4); margin-right: 8px; }
+.signup-signature::after  { content: " ·"; color: var(--ink-4); margin-left: 8px; }
 
 /* ── Form loading state ───────────────────────────────────── */
 
@@ -217,29 +295,31 @@ form.form-loading {
 
 .form-field input {
   min-height: 44px;
+  border-radius: 8px;
   transition: border-color var(--t-base), box-shadow var(--t-base);
 }
 
-.form-field input:focus {
-  border-color: var(--brand-red);
-  box-shadow: inset 2px 0 0 var(--brand-red);
+/* Design.md § 16: 4px brand-red focus ring + 2px offset */
+.form-field input:focus-visible {
   outline: none;
-}
-
-/* Filled state: slightly stronger border */
-.form-field input:not(:placeholder-shown) {
-  border-color: rgba(0, 48, 73, 0.35);
-}
-
-.form-field input:not(:placeholder-shown):focus {
   border-color: var(--brand-red);
-  box-shadow: inset 2px 0 0 var(--brand-red);
+  box-shadow: 0 0 0 4px var(--brand-red-focus);
+}
+
+/* Filled state: slightly stronger border (warm-gray ladder, not blue) */
+.form-field input:not(:placeholder-shown) {
+  border-color: var(--ink-5);
+}
+
+.form-field input:not(:placeholder-shown):focus-visible {
+  border-color: var(--brand-red);
+  box-shadow: 0 0 0 4px var(--brand-red-focus);
 }
 
 /* Error state on input */
 .form-field:has(.error-msg) input {
   border-color: var(--brand-red);
-  box-shadow: inset 2px 0 0 var(--brand-red);
+  box-shadow: 0 0 0 4px var(--brand-red-focus);
 }
 
 /* ── Label ────────────────────────────────────────────────── */
@@ -252,7 +332,7 @@ form.form-loading {
 /* ── Field hint ───────────────────────────────────────────── */
 
 .field-hint {
-  font-size: 11px;
+  font-size: 12px; /* v11 min-font-size compliance */
   color: var(--ink-4);
   line-height: 1.4;
   margin-top: 4px;
@@ -273,13 +353,14 @@ form.form-loading {
 .input-with-action {
   display: flex;
   align-items: stretch;
-  border: 1px solid var(--mist)
+  border: 1px solid var(--mist);
+  border-radius: 8px;
   transition: border-color var(--t-base), box-shadow var(--t-base);
 }
 
 .input-with-action:focus-within {
   border-color: var(--brand-red);
-  box-shadow: inset 2px 0 0 var(--brand-red);
+  box-shadow: 0 0 0 4px var(--brand-red-focus);
 }
 
 .input-with-action input {
@@ -302,7 +383,7 @@ form.form-loading {
   color: var(--ink-4);
   background: var(--surface);
   border: none;
-  border-left: 1px solid var(--mist)
+  border-left: 1px solid var(--mist);
   cursor: pointer;
   flex-shrink: 0;
   transition: color var(--t-fast);
@@ -323,8 +404,10 @@ form.form-loading {
 .pw-bar {
   flex: 1;
   height: 3px;
-  background: var(--mist)
+  background: var(--mist);
+  border-radius: 2px;
   position: relative;
+  overflow: hidden;
 }
 
 .pw-fill {
@@ -363,17 +446,22 @@ form.form-loading {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 6px;
-  padding: var(--space-3) var(--space-2);
-  border: 1px solid var(--mist)
-  background: transparent;
+  gap: 8px;
+  padding: 16px 16px;
+  border: 1px solid var(--mist);
+  border-radius: 10px;
+  background: var(--surface);
   cursor: pointer;
   position: relative;
   text-align: left;
-  min-height: 100px;
-  transition: border-color var(--t-fast), background var(--t-fast);
+  min-height: 112px;
+  transition: border-color var(--t-fast), background var(--t-fast),
+              transform 180ms cubic-bezier(0.34, 1.56, 0.64, 1);
   overflow: hidden;
 }
+
+.goal-card:hover { transform: translate(2px, 2px); }
+.goal-card:active { transform: translate(3px, 3px) scale(0.98); }
 
 /* Ghost number */
 .goal-card::before {
@@ -403,14 +491,7 @@ form.form-loading {
   transition: transform 300ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.goal-card:hover {
-  border-color: rgba(0, 48, 73, 0.4);
-  background: repeating-linear-gradient(
-    45deg,
-    transparent, transparent 10px,
-    rgba(10,10,10,0.015) 10px, rgba(10,10,10,0.015) 20px
-  );
-}
+.goal-card:hover { border-color: var(--ink-4); }
 
 .goal-card--active {
   border: 2px solid var(--brand-red);
@@ -458,7 +539,7 @@ form.form-loading {
 }
 
 .goal-desc {
-  font-size: 11px;
+  font-size: 12px; /* v11 min-font-size compliance */
   color: var(--ink-4);
   line-height: 1.4;
 }
@@ -466,10 +547,10 @@ form.form-loading {
 /* ── Trust line ───────────────────────────────────────────── */
 
 .trust-line {
-  font-size: 11px;
+  font-size: 12px; /* v11 min-font-size compliance */
   color: var(--ink-4);
   text-align: center;
-  border-top: 1px solid var(--mist)
+  border-top: 1px solid var(--mist);
   padding-top: var(--space-2);
   letter-spacing: 0.02em;
 }
@@ -610,6 +691,39 @@ form.form-loading {
   .goal-desc { display: none; }
 
   .fomo-badge { display: none; }
+}
+
+/* ── Footer link group (after submit) ────────────────────── */
+
+.signup-foot {
+  margin-top: 24px;
+  text-align: center;
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: var(--ink-4);
+  line-height: 1.8;
+}
+
+.signup-foot a {
+  color: var(--ink-2);
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  transition: color var(--t-fast);
+}
+
+.signup-foot a:hover { color: var(--brand-red); }
+.signup-foot a:focus-visible {
+  outline: 4px solid var(--brand-red-focus);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+.signup-foot--meta {
+  margin-top: 16px;
+  font-size: 11px;
+  color: var(--ink-4);
+  letter-spacing: 0.04em;
 }
 
 /* ── Reduced motion ───────────────────────────────────────── */

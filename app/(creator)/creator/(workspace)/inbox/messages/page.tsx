@@ -1,125 +1,183 @@
 "use client";
 
-import { useEffect, useState, useCallback, useRef, useMemo } from "react";
-import { useRouter } from "next/navigation";
+import {
+  useState,
+  useCallback,
+  useRef,
+  useMemo,
+  useEffect,
+  type KeyboardEvent,
+} from "react";
 import Link from "next/link";
-import { createClient } from "@/lib/db/browser";
-import { api } from "@/lib/messaging/api-client";
-import type { Thread } from "@/lib/messaging/types";
+import { useRouter } from "next/navigation";
+import { timeAgo } from "@/lib/notifications/useNotifications";
 import "../inbox.css";
+import "./messages.css";
 
-const DEMO_USER_ID = "demo-user-001";
+/* ── Mock data (hardcoded, no API call) ──────────────────────────
+   `time` retained for back-compat fallback. `createdAt` is the
+   canonical ISO timestamp (relativized at render time). Data shape
+   additive — does not break any existing consumer.            */
 
-function checkDemoMode(): boolean {
-  if (typeof document === "undefined") return false;
-  return document.cookie.includes("push-demo-role=creator");
+type Role = "merchant" | "platform" | "payments" | "system";
+
+type MockThread = {
+  id: string;
+  sender: string;
+  initial: string;
+  preview: string;
+  campaign: string | null;
+  time: string;
+  createdAt: string;
+  unread: boolean;
+  online: boolean;
+  role: Role;
+  group: "TODAY" | "THIS WEEK" | "EARLIER";
+};
+
+const now = Date.now();
+const minutesAgo = (m: number) => new Date(now - m * 60_000).toISOString();
+const hoursAgo = (h: number) => new Date(now - h * 60 * 60_000).toISOString();
+const daysAgo = (d: number) =>
+  new Date(now - d * 24 * 60 * 60_000).toISOString();
+
+const MOCK_THREADS: MockThread[] = [
+  {
+    id: "t1",
+    sender: "Push Team",
+    initial: "P",
+    preview: "Your application to Roberta's was accepted — next steps inside.",
+    campaign: "Roberta's Spring",
+    time: "2m",
+    createdAt: minutesAgo(2),
+    unread: true,
+    online: true,
+    role: "platform",
+    group: "TODAY",
+  },
+  {
+    id: "t2",
+    sender: "Flamingo Estate",
+    initial: "F",
+    preview: "Shoot deadline reminder — 3 days left to complete your content.",
+    campaign: "Wellness Weekend",
+    time: "1h",
+    createdAt: hoursAgo(1),
+    unread: true,
+    online: true,
+    role: "merchant",
+    group: "TODAY",
+  },
+  {
+    id: "t3",
+    sender: "Push Payments",
+    initial: "$",
+    preview: "$120 has been added to your wallet — campaign verified.",
+    campaign: null,
+    time: "3h",
+    createdAt: hoursAgo(3),
+    unread: false,
+    online: false,
+    role: "payments",
+    group: "TODAY",
+  },
+  {
+    id: "t4",
+    sender: "Fort Greene Coffee",
+    initial: "G",
+    preview: "We loved your content — can you do a follow-up post?",
+    campaign: "Morning Ritual",
+    time: "Yesterday",
+    createdAt: daysAgo(1),
+    unread: false,
+    online: false,
+    role: "merchant",
+    group: "THIS WEEK",
+  },
+  {
+    id: "t5",
+    sender: "Campaign Updates",
+    initial: "C",
+    preview: "Score updated: +3 points after Brow Theory verification.",
+    campaign: null,
+    time: "2d",
+    createdAt: daysAgo(2),
+    unread: false,
+    online: false,
+    role: "system",
+    group: "EARLIER",
+  },
+];
+
+const AVATAR_COLORS: Record<string, string> = {
+  P: "var(--brand-red)",
+  F: "var(--champagne)",
+  $: "var(--success-dark)",
+  G: "var(--ink)",
+  C: "var(--accent-blue)",
+};
+
+function avatarBg(initial: string): string {
+  return AVATAR_COLORS[initial] ?? "var(--ink-3)";
 }
 
-function formatRelativeTime(iso: string): string {
-  const diff = Date.now() - new Date(iso).getTime();
-  const mins = Math.floor(diff / 60000);
-  const hours = Math.floor(mins / 60);
-  const days = Math.floor(hours / 24);
-  if (mins < 1) return "now";
-  if (mins < 60) return `${mins}m`;
-  if (hours < 24) return `${hours}h`;
-  if (days < 7) return `${days}d`;
-  return new Date(iso).toLocaleDateString("en-US", {
-    month: "short",
-    day: "numeric",
-  });
-}
+const ROLE_LABEL: Record<Role, string> = {
+  merchant: "MERCHANT",
+  platform: "PLATFORM",
+  payments: "PAYMENTS",
+  system: "SYSTEM",
+};
 
-function getOtherParticipant(thread: Thread, selfUserId: string) {
+const GROUP_ORDER: MockThread["group"][] = ["TODAY", "THIS WEEK", "EARLIER"];
+
+function SearchIcon() {
   return (
-    thread.participants.find((p) => p.userId !== selfUserId) ??
-    thread.participants[0]
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden>
+      <circle cx="6" cy="6" r="4.5" stroke="currentColor" strokeWidth="1.3" />
+      <path
+        d="M10 10L13 13"
+        stroke="currentColor"
+        strokeWidth="1.3"
+        strokeLinecap="square"
+      />
+    </svg>
   );
 }
 
-/* ── Date grouping ─────────────────────────────────────────── */
-function getDateGroup(iso: string): "Today" | "This Week" | "Earlier" {
-  const diff = Date.now() - new Date(iso).getTime();
-  const hours = diff / 3600000;
-  if (hours < 24) return "Today";
-  if (hours < 24 * 7) return "This Week";
-  return "Earlier";
+function ChevronRight() {
+  return (
+    <svg
+      width="14"
+      height="14"
+      viewBox="0 0 14 14"
+      fill="none"
+      aria-hidden
+      className="ib-thread-chev"
+    >
+      <path
+        d="M5 3L9 7L5 11"
+        stroke="currentColor"
+        strokeWidth="1.3"
+        strokeLinecap="square"
+        strokeLinejoin="miter"
+        fill="none"
+      />
+    </svg>
+  );
 }
 
-function groupThreadsByDate(
-  threads: Thread[],
-): Array<{ label: string; threads: Thread[] }> {
-  const buckets: Record<string, Thread[]> = {
-    Today: [],
-    "This Week": [],
-    Earlier: [],
-  };
-  for (const t of threads) {
-    buckets[getDateGroup(t.updatedAt)].push(t);
-  }
-  return (["Today", "This Week", "Earlier"] as const)
-    .filter((k) => buckets[k].length > 0)
-    .map((k) => ({ label: k, threads: buckets[k] }));
-}
-
-/* ── Avatar color ──────────────────────────────────────────── */
-function avatarBg(initial: string): string {
-  const map: Record<string, string> = {
-    B: "var(--brand-red)",
-    H: "var(--brand-red)",
-    N: "var(--brand-red)",
-    T: "var(--brand-red)",
-    C: "var(--accent-blue)",
-    I: "var(--accent-blue)",
-    O: "var(--accent-blue)",
-    U: "var(--accent-blue)",
-    E: "#bfa170",
-    K: "#bfa170",
-    W: "#bfa170",
-    F: "var(--ink)",
-    L: "var(--ink)",
-    R: "var(--ink)",
-  };
-  return map[initial] ?? "var(--ink-3)";
-}
+/* ── Page ─────────────────────────────────────────────────────── */
 
 export default function InboxMessagesPage() {
   const router = useRouter();
-  const [selfUserId, setSelfUserId] = useState<string | null>(null);
-  const [threads, setThreads] = useState<Thread[]>([]);
-  const [ready, setReady] = useState(false);
+  const [threads, setThreads] = useState<MockThread[]>(MOCK_THREADS);
   const [query, setQuery] = useState("");
   const [filter, setFilter] = useState<"all" | "unread" | "campaigns">("all");
+  const [focusIndex, setFocusIndex] = useState<number>(-1);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [debouncedQuery, setDebouncedQuery] = useState("");
-
-  const unreadCount = threads.reduce((s, t) => s + (t.unreadCount || 0), 0);
-
-  /* Auth + load */
-  useEffect(() => {
-    const isDemo = checkDemoMode();
-    if (isDemo) {
-      setSelfUserId(DEMO_USER_ID);
-      api.messages.listThreads("creator", DEMO_USER_ID).then((ts) => {
-        setThreads(ts);
-        setReady(true);
-      });
-      return;
-    }
-    const supabase = createClient();
-    supabase.auth.getUser().then(({ data }) => {
-      if (!data.user) {
-        router.push("/creator/login");
-        return;
-      }
-      const uid = data.user.id;
-      setSelfUserId(uid);
-      api.messages.listThreads("creator", uid).then((ts) => {
-        setThreads(ts);
-        setReady(true);
-      });
-    });
-  }, [router]);
+  const searchRef = useRef<HTMLInputElement>(null);
+  const listRef = useRef<HTMLDivElement>(null);
 
   const handleSearch = useCallback((value: string) => {
     setQuery(value);
@@ -127,516 +185,331 @@ export default function InboxMessagesPage() {
     debounceRef.current = setTimeout(() => setDebouncedQuery(value), 200);
   }, []);
 
-  useEffect(
-    () => () => {
-      if (debounceRef.current) clearTimeout(debounceRef.current);
-    },
-    [],
-  );
+  const markRead = useCallback((id: string) => {
+    setThreads((prev) =>
+      prev.map((t) => (t.id === id ? { ...t, unread: false } : t)),
+    );
+  }, []);
 
   const filtered = useMemo(() => {
     let result = threads;
-    if (filter === "unread") result = result.filter((t) => t.unreadCount > 0);
+    if (filter === "unread") result = result.filter((t) => t.unread);
     else if (filter === "campaigns")
-      result = result.filter((t) => !!t.campaignId);
+      result = result.filter((t) => t.campaign !== null);
 
-    if (debouncedQuery.trim() && selfUserId) {
+    if (debouncedQuery.trim()) {
       const q = debouncedQuery.toLowerCase();
-      result = result.filter((t) => {
-        const other = getOtherParticipant(t, selfUserId);
-        return (
-          other.name.toLowerCase().includes(q) ||
-          t.lastMessage.content.toLowerCase().includes(q) ||
-          (t.campaignTitle ?? "").toLowerCase().includes(q)
-        );
-      });
+      result = result.filter(
+        (t) =>
+          t.sender.toLowerCase().includes(q) ||
+          t.preview.toLowerCase().includes(q),
+      );
     }
     return result;
-  }, [threads, filter, debouncedQuery, selfUserId]);
+  }, [threads, filter, debouncedQuery]);
 
-  const dateGroups = groupThreadsByDate(filtered);
+  const groupedThreads = useMemo(() => {
+    return GROUP_ORDER.map((label) => ({
+      label,
+      threads: filtered.filter((t) => t.group === label),
+    })).filter((g) => g.threads.length > 0);
+  }, [filtered]);
+
+  /* Flat ordered list mirrors visual order — drives keyboard nav */
+  const flatThreads = useMemo(
+    () => groupedThreads.flatMap((g) => g.threads),
+    [groupedThreads],
+  );
+
+  const unreadCount = threads.filter((t) => t.unread).length;
+  const pinned = useMemo(
+    () => threads.find((t) => t.unread && t.online) ?? threads[0],
+    [threads],
+  );
+
+  /* Reset focus when filter / search results change */
+  useEffect(() => {
+    setFocusIndex((idx) => (idx >= flatThreads.length ? -1 : idx));
+  }, [flatThreads.length]);
+
+  /* ── Global keyboard shortcuts: J/K nav, Enter open, / focus search,
+     Esc clear / blur. Disabled while typing in inputs.            */
+  useEffect(() => {
+    const handler = (e: globalThis.KeyboardEvent) => {
+      const target = e.target as HTMLElement | null;
+      const isTyping =
+        target?.tagName === "INPUT" ||
+        target?.tagName === "TEXTAREA" ||
+        target?.isContentEditable;
+
+      if (e.key === "/" && !isTyping) {
+        e.preventDefault();
+        searchRef.current?.focus();
+        return;
+      }
+
+      if (isTyping) {
+        if (e.key === "Escape") {
+          if (query) {
+            handleSearch("");
+          } else {
+            (target as HTMLInputElement).blur();
+          }
+        }
+        return;
+      }
+
+      if (flatThreads.length === 0) return;
+
+      if (e.key === "j" || e.key === "ArrowDown") {
+        e.preventDefault();
+        setFocusIndex((i) => Math.min(flatThreads.length - 1, i + 1));
+      } else if (e.key === "k" || e.key === "ArrowUp") {
+        e.preventDefault();
+        setFocusIndex((i) => Math.max(0, i - 1));
+      } else if (e.key === "Enter" && focusIndex >= 0) {
+        e.preventDefault();
+        const t = flatThreads[focusIndex];
+        if (t) {
+          markRead(t.id);
+          router.push(`/creator/inbox/${t.id}`);
+        }
+      }
+    };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, [flatThreads, focusIndex, query, handleSearch, markRead, router]);
+
+  /* Scroll focused row into view */
+  useEffect(() => {
+    if (focusIndex < 0 || !listRef.current) return;
+    const node = listRef.current.querySelector<HTMLElement>(
+      `[data-thread-idx="${focusIndex}"]`,
+    );
+    node?.scrollIntoView({ block: "nearest", behavior: "smooth" });
+  }, [focusIndex]);
+
+  const handleRowKey = useCallback(
+    (e: KeyboardEvent<HTMLAnchorElement>, idx: number) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        const t = flatThreads[idx];
+        if (t) markRead(t.id);
+      }
+    },
+    [flatThreads, markRead],
+  );
 
   return (
-    <div
-      style={{
-        background: "var(--surface)",
-        minHeight: "100%",
-        fontFamily: "var(--font-body)",
-      }}
-    >
-      {/* Top bar */}
-      <header
-        style={{
-          display: "flex",
-          alignItems: "center",
-          gap: 12,
-          padding: "16px 24px",
-          borderBottom: "1px solid var(--hairline)",
-          background: "var(--snow)",
-        }}
-      >
-        <span
-          style={{
-            fontFamily: "var(--font-display)",
-            fontWeight: 700,
-            fontSize: 20,
-            color: "var(--ink)",
-          }}
-        >
-          Messages
-        </span>
-        {unreadCount > 0 && (
-          <span
-            style={{
-              minWidth: 20,
-              height: 20,
-              borderRadius: 10,
-              background: "var(--brand-red)",
-              color: "var(--snow)",
-              fontSize: 11,
-              fontWeight: 700,
-              display: "inline-flex",
-              alignItems: "center",
-              justifyContent: "center",
-              padding: "0 6px",
-            }}
-          >
-            {unreadCount}
-          </span>
-        )}
-      </header>
+    <div className="ib-content msg-content">
+      {/* ── (LINKS) eyebrow — product UI canonical, no parenthetical ──
+         Kept as plain LINKS to match Product register. */}
 
-      {/* Tabs */}
-      <nav
-        aria-label="Inbox sections"
-        style={{
-          display: "flex",
-          borderBottom: "1px solid var(--hairline)",
-          background: "var(--snow)",
-          padding: "0 24px",
-        }}
-      >
-        {[
-          { href: "/creator/inbox", label: "All" },
-          {
-            href: "/creator/inbox/messages",
-            label: "Messages",
-            active: true,
-            count: unreadCount,
-          },
-          { href: "/creator/inbox/invites", label: "Invites" },
-          { href: "/creator/inbox/system", label: "System" },
-        ].map(({ href, label, active, count }) => (
-          <Link
-            key={href}
-            href={href}
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 6,
-              padding: "14px 14px",
-              fontFamily: "var(--font-body)",
-              fontSize: 12,
-              fontWeight: active ? 700 : 400,
-              color: active ? "var(--ink)" : "var(--ink-3)",
-              textDecoration: "none",
-              borderBottom: active
-                ? "2px solid var(--brand-red)"
-                : "2px solid transparent",
-              marginBottom: -1,
-              textTransform: "uppercase",
-              letterSpacing: "0.06em",
-              whiteSpace: "nowrap",
-            }}
-          >
-            {label}
-            {count != null && count > 0 && (
-              <span
-                style={{
-                  minWidth: 16,
-                  height: 16,
-                  borderRadius: 8,
-                  background: "var(--brand-red)",
-                  color: "var(--snow)",
-                  fontSize: 10,
-                  fontWeight: 700,
-                  display: "inline-flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  padding: "0 4px",
-                }}
-              >
-                {count}
+      {/* Pinned active conversation — single liquid-glass tile (≤1 per viewport).
+         Surfaces highest-priority unread+online thread as a focus magnet. */}
+      {pinned && pinned.unread && (
+        <Link
+          href={`/creator/inbox/${pinned.id}`}
+          onClick={() => markRead(pinned.id)}
+          className="msg-pinned"
+          aria-label={`Open conversation with ${pinned.sender}`}
+        >
+          <span className="msg-pinned-eyebrow">
+            ACTIVE · {ROLE_LABEL[pinned.role]}
+          </span>
+          <div className="msg-pinned-row">
+            <span
+              className="msg-pinned-avatar"
+              style={{ background: avatarBg(pinned.initial) }}
+              aria-hidden
+            >
+              {pinned.initial}
+              {pinned.online && (
+                <span className="msg-pinned-online" aria-hidden />
+              )}
+            </span>
+            <div className="msg-pinned-body">
+              <span className="msg-pinned-sender">{pinned.sender}</span>
+              <span className="msg-pinned-preview">{pinned.preview}</span>
+            </div>
+            <div className="msg-pinned-meta">
+              <span className="msg-pinned-time">
+                {timeAgo(pinned.createdAt)}
               </span>
-            )}
-          </Link>
-        ))}
-      </nav>
+              <span className="msg-pinned-cta">
+                Open
+                <ChevronRight />
+              </span>
+            </div>
+          </div>
+        </Link>
+      )}
+
+      {/* Search */}
+      <div className="ib-search-wrap msg-search-wrap">
+        <span className="ib-search-icon" aria-hidden>
+          <SearchIcon />
+        </span>
+        <input
+          ref={searchRef}
+          type="search"
+          className="ib-search-input"
+          placeholder="Search conversations…"
+          value={query}
+          onChange={(e) => handleSearch(e.target.value)}
+          aria-label="Search conversations"
+        />
+        <kbd className="msg-search-kbd" aria-hidden>
+          /
+        </kbd>
+      </div>
 
       {/* Filter chips */}
-      <div
-        style={{
-          display: "flex",
-          gap: 8,
-          padding: "16px 24px 8px",
-        }}
-        role="group"
-        aria-label="Filter threads"
-      >
+      <div className="ib-filter-row" role="group" aria-label="Filter threads">
         {(["all", "unread", "campaigns"] as const).map((f) => (
           <button
             key={f}
-            onClick={() => setFilter(f)}
             type="button"
+            onClick={() => setFilter(f)}
             aria-pressed={filter === f}
-            style={{
-              padding: "6px 16px",
-              borderRadius: 20,
-              border: "1px solid var(--hairline)",
-              background: filter === f ? "var(--ink)" : "var(--surface-2)",
-              color: filter === f ? "var(--snow)" : "var(--ink-3)",
-              fontFamily: "var(--font-body)",
-              fontSize: 12,
-              fontWeight: 600,
-              textTransform: "uppercase",
-              letterSpacing: "0.06em",
-              cursor: "pointer",
-            }}
+            className={`ib-chip${filter === f ? " ib-chip--active" : ""}`}
           >
             {f === "all" ? "All" : f === "unread" ? "Unread" : "Campaigns"}
             {f === "unread" && unreadCount > 0 && (
-              <span style={{ marginLeft: 4, opacity: 0.8 }}>
-                · {unreadCount}
-              </span>
+              <span className="ib-chip-count"> · {unreadCount}</span>
             )}
           </button>
         ))}
       </div>
 
-      {/* Search */}
-      <div style={{ padding: "8px 24px 16px" }}>
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: 10,
-            border: "1px solid var(--hairline)",
-            borderRadius: 8,
-            background: "var(--snow)",
-            padding: "10px 14px",
-          }}
-        >
-          <span style={{ color: "var(--ink-4)", flexShrink: 0 }} aria-hidden>
-            <SearchIcon />
-          </span>
-          <input
-            type="search"
-            placeholder="Search conversations…"
-            value={query}
-            onChange={(e) => handleSearch(e.target.value)}
-            aria-label="Search conversations"
-            style={{
-              flex: 1,
-              border: "none",
-              outline: "none",
-              background: "transparent",
-              fontFamily: "var(--font-body)",
-              fontSize: 14,
-              color: "var(--ink)",
-            }}
-          />
-        </div>
-      </div>
-
-      {/* Section count */}
-      <div
-        style={{
-          padding: "0 24px 12px",
-          fontFamily: "var(--font-body)",
-          fontSize: 11,
-          color: "var(--ink-4)",
-          textTransform: "uppercase",
-          letterSpacing: "0.06em",
-        }}
-      >
-        {filter === "all"
-          ? "All Conversations"
-          : filter === "unread"
-            ? "Unread"
-            : "Campaigns"}
-        {ready && ` · ${filtered.length}`}
-      </div>
+      {/* Keyboard hint — subtle parenthetical caption */}
+      {flatThreads.length > 0 && (
+        <p className="msg-hint" aria-hidden>
+          (TIP) <kbd>J</kbd> <kbd>K</kbd> navigate · <kbd>Enter</kbd> open ·{" "}
+          <kbd>/</kbd> search
+        </p>
+      )}
 
       {/* Thread list */}
-      {!ready ? (
-        <div style={{ padding: "0 24px" }}>
-          {[1, 2, 3, 4, 5].map((i) => (
-            <div
-              key={i}
-              style={{
-                display: "flex",
-                gap: 12,
-                padding: "12px 0",
-                borderBottom: "1px solid var(--hairline)",
-                opacity: 0.1 + i * 0.04,
-                pointerEvents: "none",
+      {filtered.length === 0 ? (
+        <div className="ib-empty msg-empty">
+          <span className="ib-empty-icon" aria-hidden>
+            ✉
+          </span>
+          <p className="ib-empty-title">
+            {query
+              ? "No conversations found"
+              : filter === "unread"
+                ? "Inbox zero."
+                : "Quiet for now."}
+          </p>
+          <p className="ib-empty-body">
+            {query
+              ? `Nothing matches "${query}". Try a different sender or campaign.`
+              : filter === "unread"
+                ? "Every thread is up to date — new messages will appear here."
+                : "Reply to invites or wait for merchant updates — they land here."}
+          </p>
+          {(query || filter !== "all") && (
+            <button
+              type="button"
+              className="msg-empty-reset"
+              onClick={() => {
+                handleSearch("");
+                setFilter("all");
               }}
             >
-              <div
-                style={{
-                  width: 40,
-                  height: 40,
-                  borderRadius: "50%",
-                  background: "var(--hairline)",
-                  flexShrink: 0,
-                }}
-              />
-              <div style={{ flex: 1 }}>
-                <div
-                  style={{
-                    width: 60 + i * 14,
-                    height: 9,
-                    background: "var(--hairline)",
-                    borderRadius: 4,
-                  }}
-                />
-              </div>
-            </div>
-          ))}
-        </div>
-      ) : filtered.length === 0 ? (
-        <div
-          style={{
-            padding: "48px 24px",
-            textAlign: "center",
-          }}
-        >
-          <div
-            style={{
-              fontSize: 32,
-              marginBottom: 16,
-              color: "var(--ink-4)",
-            }}
-            aria-hidden
-          >
-            ✉
-          </div>
-          <p
-            style={{
-              fontFamily: "var(--font-display)",
-              fontWeight: 700,
-              fontSize: 20,
-              color: "var(--ink)",
-              margin: "0 0 8px",
-            }}
-          >
-            No conversations found
-          </p>
-          <p
-            style={{
-              fontFamily: "var(--font-body)",
-              fontSize: 14,
-              color: "var(--ink-3)",
-              margin: 0,
-            }}
-          >
-            {query
-              ? `No results for "${query}"`
-              : "Your messages will appear here."}
-          </p>
+              Reset filters
+            </button>
+          )}
         </div>
       ) : (
-        /* Date-grouped thread rows */
-        dateGroups.map((group) => (
-          <div key={group.label}>
-            {/* Date group label */}
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: 12,
-                padding: "16px 24px 8px",
-              }}
-            >
-              <span
-                style={{
-                  fontFamily: "var(--font-body)",
-                  fontSize: 11,
-                  color: "var(--ink-4)",
-                  textTransform: "uppercase",
-                  letterSpacing: "0.06em",
-                  flexShrink: 0,
-                }}
-              >
-                {group.label}
-              </span>
-              <div
-                style={{ flex: 1, height: 1, background: "var(--hairline)" }}
-              />
-            </div>
+        <div ref={listRef}>
+          {(() => {
+            let runningIdx = -1;
+            return groupedThreads.map((group) => (
+              <div key={group.label} className="ib-group">
+                <div className="ib-group-label">
+                  <span>{group.label}</span>
+                  <span className="ib-group-line" aria-hidden />
+                  <span className="msg-group-count">
+                    {group.threads.length}
+                  </span>
+                </div>
 
-            <div role="list" style={{ padding: "0 24px" }}>
-              {group.threads.map((thread) => {
-                const other = selfUserId
-                  ? getOtherParticipant(thread, selfUserId)
-                  : thread.participants[0];
-                const hasUnread = thread.unreadCount > 0;
-                const initial = other.name.charAt(0).toUpperCase();
-                return (
-                  <Link
-                    key={thread.id}
-                    href={`/creator/inbox/${thread.id}`}
-                    role="listitem"
-                    aria-label={`Thread with ${other.name}`}
-                    style={{
-                      display: "flex",
-                      alignItems: "flex-start",
-                      gap: 12,
-                      padding: "12px 0",
-                      borderBottom: "1px solid var(--hairline)",
-                      textDecoration: "none",
-                    }}
-                  >
-                    {/* Avatar */}
-                    <div
-                      style={{
-                        width: 40,
-                        height: 40,
-                        borderRadius: "50%",
-                        background: avatarBg(initial),
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        fontFamily: "var(--font-display)",
-                        fontWeight: 700,
-                        fontSize: 16,
-                        color: "var(--snow)",
-                        flexShrink: 0,
-                      }}
-                      data-initial={initial}
-                      aria-hidden
-                    >
-                      {initial}
-                    </div>
-
-                    {/* Body */}
-                    <div style={{ flex: 1, minWidth: 0 }}>
-                      <div
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                          gap: 8,
-                          marginBottom: 4,
-                        }}
+                <div role="list">
+                  {group.threads.map((thread) => {
+                    runningIdx += 1;
+                    const idx = runningIdx;
+                    const isFocused = idx === focusIndex;
+                    return (
+                      <Link
+                        key={thread.id}
+                        role="listitem"
+                        href={`/creator/inbox/${thread.id}`}
+                        aria-label={`Open conversation with ${thread.sender}${thread.unread ? " (unread)" : ""}`}
+                        onClick={() => markRead(thread.id)}
+                        onKeyDown={(e) => handleRowKey(e, idx)}
+                        onMouseEnter={() => setFocusIndex(idx)}
+                        data-thread-idx={idx}
+                        className={`ib-thread-row msg-thread-row${thread.unread ? " ib-thread-row--unread" : ""}${isFocused ? " msg-thread-row--focused" : ""}`}
                       >
+                        {/* Avatar with online dot */}
                         <span
-                          style={{
-                            fontFamily: "var(--font-body)",
-                            fontWeight: hasUnread ? 700 : 400,
-                            fontSize: 14,
-                            color: "var(--ink)",
-                            whiteSpace: "nowrap",
-                            overflow: "hidden",
-                            textOverflow: "ellipsis",
-                          }}
+                          className="ib-thread-avatar msg-thread-avatar"
+                          style={{ background: avatarBg(thread.initial) }}
+                          aria-hidden
                         >
-                          {other.name}
+                          {thread.initial}
+                          {thread.online && (
+                            <span className="msg-thread-online" aria-hidden />
+                          )}
                         </span>
-                        {thread.campaignTitle && (
-                          <span
-                            style={{
-                              padding: "2px 8px",
-                              borderRadius: 4,
-                              background: "var(--surface-2)",
-                              border: "1px solid var(--hairline)",
-                              fontFamily: "var(--font-body)",
-                              fontSize: 10,
-                              color: "var(--ink-3)",
-                              textTransform: "uppercase",
-                              letterSpacing: "0.04em",
-                              flexShrink: 0,
-                            }}
-                          >
-                            {thread.campaignTitle}
+
+                        {/* Body */}
+                        <span className="ib-thread-body msg-thread-body">
+                          <span className="msg-thread-row-top">
+                            <span className="ib-thread-sender">
+                              {thread.sender}
+                            </span>
+                            <span className="msg-thread-role">
+                              {ROLE_LABEL[thread.role]}
+                            </span>
                           </span>
-                        )}
-                      </div>
-                      <span
-                        style={{
-                          fontFamily: "var(--font-body)",
-                          fontSize: 13,
-                          color: "var(--ink-3)",
-                          display: "block",
-                          whiteSpace: "nowrap",
-                          overflow: "hidden",
-                          textOverflow: "ellipsis",
-                        }}
-                      >
-                        {thread.lastMessage.content}
-                      </span>
-                    </div>
-
-                    {/* Meta */}
-                    <div
-                      style={{
-                        display: "flex",
-                        flexDirection: "column",
-                        alignItems: "flex-end",
-                        gap: 4,
-                        flexShrink: 0,
-                      }}
-                    >
-                      <span
-                        style={{
-                          fontFamily: "var(--font-body)",
-                          fontSize: 11,
-                          color: "var(--ink-4)",
-                        }}
-                      >
-                        {formatRelativeTime(thread.updatedAt)}
-                      </span>
-                      {hasUnread && (
-                        <span
-                          aria-label={`${thread.unreadCount} unread`}
-                          style={{
-                            minWidth: 18,
-                            height: 18,
-                            borderRadius: 9,
-                            background: "var(--brand-red)",
-                            color: "var(--snow)",
-                            fontSize: 10,
-                            fontWeight: 700,
-                            display: "inline-flex",
-                            alignItems: "center",
-                            justifyContent: "center",
-                            padding: "0 5px",
-                          }}
-                        >
-                          {thread.unreadCount}
+                          <span className="ib-thread-preview msg-thread-preview">
+                            {thread.preview}
+                          </span>
+                          {thread.campaign && (
+                            <span className="ib-thread-campaign">
+                              {thread.campaign}
+                            </span>
+                          )}
                         </span>
-                      )}
-                    </div>
-                  </Link>
-                );
-              })}
-            </div>
-          </div>
-        ))
+
+                        {/* Meta */}
+                        <span className="ib-thread-meta">
+                          <span
+                            className="ib-thread-time"
+                            title={new Date(thread.createdAt).toLocaleString()}
+                          >
+                            {timeAgo(thread.createdAt)}
+                          </span>
+                          {thread.unread && (
+                            <span
+                              className="ib-thread-dot"
+                              aria-label="Unread"
+                            />
+                          )}
+                        </span>
+                      </Link>
+                    );
+                  })}
+                </div>
+              </div>
+            ));
+          })()}
+        </div>
       )}
     </div>
-  );
-}
-
-function SearchIcon() {
-  return (
-    <svg width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden>
-      <circle cx="5.5" cy="5.5" r="4" stroke="currentColor" strokeWidth="1.2" />
-      <path
-        d="M9 9L12 12"
-        stroke="currentColor"
-        strokeWidth="1.2"
-        strokeLinecap="square"
-      />
-    </svg>
   );
 }

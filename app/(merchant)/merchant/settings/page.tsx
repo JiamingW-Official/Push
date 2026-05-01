@@ -7,13 +7,8 @@ import { SettingsSection } from "@/components/settings/SettingsSection";
 import { ToggleRow, Channel } from "@/components/settings/ToggleRow";
 import { SelectRow } from "@/components/settings/SelectRow";
 import { InputRow } from "@/components/settings/InputRow";
+import { Modal, PageHeader, StatusBadge } from "@/components/merchant/shared";
 import "@/components/settings/settings.css";
-
-/* ── Demo detection ─────────────────────────────────────────── */
-function checkDemoMode(): boolean {
-  if (typeof document === "undefined") return false;
-  return document.cookie.includes("push-demo-role=merchant");
-}
 
 /* ── Types ──────────────────────────────────────────────────── */
 
@@ -61,6 +56,19 @@ interface MerchantSettings {
     adPreferences: boolean;
   };
 }
+
+type SettingsSnapshot = {
+  settings: MerchantSettings;
+  team: TeamMember[];
+  apiKeys: ApiKey[];
+};
+
+type SettingsApiResponse = {
+  profile?: Record<string, unknown>;
+  team?: { members?: unknown[] };
+  api_keys?: { active?: unknown[] };
+  notification_prefs?: Record<string, unknown>;
+};
 
 /* ── Defaults ───────────────────────────────────────────────── */
 
@@ -130,10 +138,6 @@ const DEFAULT_KEYS: ApiKey[] = [
   },
 ];
 
-const SETTINGS_KEY = "push-demo-merchant-settings";
-const TEAM_KEY = "push-demo-merchant-team";
-const KEYS_KEY = "push-demo-merchant-api-keys";
-
 /* ── Nav ────────────────────────────────────────────────────── */
 
 const NAV_ITEMS: NavItem[] = [
@@ -187,6 +191,292 @@ const ALL_SCOPES = [
   "creators:read",
 ];
 
+const SECTION_COPY: Record<string, { title: string; description: string }> = {
+  business: {
+    title: "Business Profile",
+    description: "Your legal and public business information",
+  },
+  team: {
+    title: "Team",
+    description: "Manage who has access to your Push workspace",
+  },
+  notifications: {
+    title: "Notifications",
+    description: "Choose how Push contacts you about campaign activity",
+  },
+  billing: {
+    title: "Billing",
+    description: "Manage your Push plan and invoices",
+  },
+  "api-keys": {
+    title: "API Keys",
+    description: "Programmatic access to your Push data",
+  },
+  privacy: {
+    title: "Privacy",
+    description: "Control your business data and public presence",
+  },
+  danger: {
+    title: "Danger Zone",
+    description: "Irreversible actions — proceed carefully",
+  },
+};
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
+function toBoolean(value: unknown, fallback = false): boolean {
+  return typeof value === "boolean" ? value : fallback;
+}
+
+function mapNotificationPrefs(
+  prefs: Record<string, unknown> | undefined,
+): MerchantNotifSettings {
+  if (!prefs) {
+    return DEFAULT_SETTINGS.notifications;
+  }
+
+  const nested = isRecord(prefs.notifications) ? prefs.notifications : null;
+
+  const resolveChannel = (
+    key: keyof MerchantNotifSettings,
+    fallback: NotifChannel,
+    legacyKey?: string,
+  ): NotifChannel => {
+    const fromNested = nested && isRecord(nested[key]) ? nested[key] : null;
+    if (fromNested) {
+      return {
+        email: toBoolean(fromNested.email, fallback.email),
+        push: toBoolean(fromNested.push, fallback.push),
+        sms: toBoolean(fromNested.sms, fallback.sms),
+      };
+    }
+
+    const enabled = legacyKey
+      ? toBoolean(prefs[legacyKey], fallback.email)
+      : fallback.email;
+    return { email: enabled, push: enabled, sms: fallback.sms };
+  };
+
+  return {
+    newApplication: resolveChannel(
+      "newApplication",
+      DEFAULT_SETTINGS.notifications.newApplication,
+      "new_applicant",
+    ),
+    campaignFilled: resolveChannel(
+      "campaignFilled",
+      DEFAULT_SETTINGS.notifications.campaignFilled,
+    ),
+    proofSubmitted: resolveChannel(
+      "proofSubmitted",
+      DEFAULT_SETTINGS.notifications.proofSubmitted,
+    ),
+    paymentProcessed: resolveChannel(
+      "paymentProcessed",
+      DEFAULT_SETTINGS.notifications.paymentProcessed,
+    ),
+    campaignExpiring: resolveChannel(
+      "campaignExpiring",
+      DEFAULT_SETTINGS.notifications.campaignExpiring,
+      "campaign_end",
+    ),
+    weeklyReport: resolveChannel(
+      "weeklyReport",
+      DEFAULT_SETTINGS.notifications.weeklyReport,
+    ),
+    newQrScan: resolveChannel(
+      "newQrScan",
+      DEFAULT_SETTINGS.notifications.newQrScan,
+    ),
+    creatorMilestone: resolveChannel(
+      "creatorMilestone",
+      DEFAULT_SETTINGS.notifications.creatorMilestone,
+    ),
+    marketingUpdates: resolveChannel(
+      "marketingUpdates",
+      DEFAULT_SETTINGS.notifications.marketingUpdates,
+    ),
+  };
+}
+
+function normalizeTeamMember(value: unknown, index: number): TeamMember | null {
+  if (!isRecord(value)) return null;
+
+  return {
+    id: typeof value.id === "string" ? value.id : `tm_${index + 1}`,
+    name: typeof value.name === "string" ? value.name : "Unknown member",
+    email: typeof value.email === "string" ? value.email : "",
+    role:
+      value.role === "owner" ||
+      value.role === "admin" ||
+      value.role === "viewer"
+        ? value.role
+        : "viewer",
+    lastActive:
+      typeof value.lastActive === "string"
+        ? value.lastActive
+        : typeof value.last_active === "string"
+          ? value.last_active
+          : null,
+  };
+}
+
+function normalizeApiKey(value: unknown, index: number): ApiKey | null {
+  if (!isRecord(value)) return null;
+
+  const scopes = Array.isArray(value.scopes)
+    ? value.scopes.filter((scope): scope is string => typeof scope === "string")
+    : [];
+
+  return {
+    id: typeof value.id === "string" ? value.id : `key_${index + 1}`,
+    name: typeof value.name === "string" ? value.name : "API Key",
+    prefix:
+      typeof value.prefix === "string"
+        ? value.prefix
+        : typeof value.key_preview === "string"
+          ? value.key_preview
+          : "pk_live_****",
+    scopes,
+    createdAt:
+      typeof value.createdAt === "string"
+        ? value.createdAt
+        : typeof value.created_at === "string"
+          ? value.created_at
+          : new Date().toISOString(),
+    lastUsed:
+      typeof value.lastUsed === "string"
+        ? value.lastUsed
+        : typeof value.last_used === "string"
+          ? value.last_used
+          : null,
+  };
+}
+
+function buildSnapshotFromResponse(
+  payload: SettingsApiResponse,
+): SettingsSnapshot {
+  const profile = isRecord(payload.profile) ? payload.profile : {};
+  const notificationPrefs = isRecord(payload.notification_prefs)
+    ? payload.notification_prefs
+    : undefined;
+  const teamMembers = Array.isArray(payload.team?.members)
+    ? payload.team.members
+        .map(normalizeTeamMember)
+        .filter((member): member is TeamMember => member !== null)
+    : DEFAULT_TEAM;
+  const apiKeys = Array.isArray(payload.api_keys?.active)
+    ? payload.api_keys.active
+        .map(normalizeApiKey)
+        .filter((key): key is ApiKey => key !== null)
+    : DEFAULT_KEYS;
+
+  return {
+    settings: {
+      legalName:
+        typeof profile.legal_name === "string"
+          ? profile.legal_name
+          : typeof profile.display_name === "string"
+            ? profile.display_name
+            : DEFAULT_SETTINGS.legalName,
+      dba:
+        typeof profile.dba === "string"
+          ? profile.dba
+          : typeof profile.display_name === "string"
+            ? profile.display_name
+            : DEFAULT_SETTINGS.dba,
+      industry:
+        typeof profile.industry === "string"
+          ? profile.industry
+          : DEFAULT_SETTINGS.industry,
+      website:
+        typeof profile.website === "string"
+          ? profile.website
+          : DEFAULT_SETTINGS.website,
+      logoUrl:
+        typeof profile.logo_url === "string" && profile.logo_url.length > 0
+          ? profile.logo_url
+          : DEFAULT_SETTINGS.logoUrl,
+      notifications: mapNotificationPrefs(notificationPrefs),
+      privacy: isRecord(profile.privacy)
+        ? {
+            showOnDirectory: toBoolean(
+              profile.privacy.showOnDirectory,
+              DEFAULT_SETTINGS.privacy.showOnDirectory,
+            ),
+            adPreferences: toBoolean(
+              profile.privacy.adPreferences,
+              DEFAULT_SETTINGS.privacy.adPreferences,
+            ),
+          }
+        : DEFAULT_SETTINGS.privacy,
+    },
+    team: teamMembers,
+    apiKeys,
+  };
+}
+
+function buildSectionPayload(
+  activeSection: string,
+  settings: MerchantSettings,
+  team: TeamMember[],
+  apiKeys: ApiKey[],
+) {
+  if (activeSection === "team") {
+    return {
+      section: "team" as const,
+      data: { members: team },
+    };
+  }
+
+  if (activeSection === "api-keys") {
+    return {
+      section: "api_keys" as const,
+      data: {
+        active: apiKeys.map(({ fullKey, ...key }) => key),
+      },
+    };
+  }
+
+  if (activeSection === "notifications") {
+    return {
+      section: "notification_prefs" as const,
+      data: {
+        notifications: settings.notifications,
+        email: Object.values(settings.notifications).some(
+          (channel) => channel.email,
+        ),
+        sms: Object.values(settings.notifications).some(
+          (channel) => channel.sms,
+        ),
+        new_applicant: Object.values(
+          settings.notifications.newApplication,
+        ).some(Boolean),
+        campaign_end: Object.values(
+          settings.notifications.campaignExpiring,
+        ).some(Boolean),
+      },
+    };
+  }
+
+  return {
+    section: "profile" as const,
+    data: {
+      display_name: settings.dba || settings.legalName,
+      legal_name: settings.legalName,
+      dba: settings.dba,
+      industry: settings.industry,
+      website: settings.website,
+      logo_url: settings.logoUrl ?? "",
+      privacy: settings.privacy,
+      billing_section: activeSection === "billing",
+      danger_section: activeSection === "danger",
+    },
+  };
+}
+
 /* ── Confirm modal ──────────────────────────────────────────── */
 
 function ConfirmModal({
@@ -208,48 +498,47 @@ function ConfirmModal({
   const ready = !confirmWord || input === confirmWord;
 
   return (
-    <div className="confirm-modal-backdrop">
-      <div
-        className="confirm-modal settings-modal-v11"
-        role="dialog"
-        aria-modal="true"
-      >
-        {/* H3 28px Darky 700 */}
-        <h3 className="settings-modal-v11__title">{title}</h3>
-        {/* Body 18px CS Genio Mono */}
-        <p className="settings-modal-v11__desc">{description}</p>
-        {confirmWord && (
-          <div className="settings-modal-v11__confirm-field">
-            <label className="settings-modal-v11__label">
-              Type <strong>{confirmWord}</strong> to confirm
-            </label>
-            <input
-              className="settings-modal-v11__input"
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              placeholder={confirmWord}
-              autoFocus
-            />
-          </div>
-        )}
-        <div className="settings-modal-v11__actions">
-          <button className="btn-ghost click-shift" onClick={onCancel}>
+    <Modal
+      open
+      onClose={onCancel}
+      title={title}
+      size="md"
+      footer={
+        <>
+          <button type="button" className="btn btn--ghost" onClick={onCancel}>
             Cancel
           </button>
           <button
-            className={
-              ready
-                ? "btn-primary click-shift"
-                : "settings-modal-v11__confirm-disabled"
-            }
+            type="button"
+            className="btn btn--danger"
             disabled={!ready}
             onClick={onConfirm}
+            style={{ opacity: ready ? 1 : 0.4 }}
           >
             {confirmLabel}
           </button>
+        </>
+      }
+    >
+      <p className="modal-copy">{description}</p>
+      {confirmWord && (
+        <div className="modal-field">
+          <label className="label" htmlFor="confirm-word-input">
+            Type <strong>{confirmWord}</strong> to confirm
+          </label>
+          <input
+            id="confirm-word-input"
+            className="push-input"
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            placeholder={confirmWord}
+            autoFocus
+            autoComplete="off"
+            spellCheck={false}
+          />
         </div>
-      </div>
-    </div>
+      )}
+    </Modal>
   );
 }
 
@@ -264,56 +553,72 @@ function InviteModal({
 }) {
   const [email, setEmail] = useState("");
   const [role, setRole] = useState<TeamMember["role"]>("viewer");
+  const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
 
   return (
-    <div className="confirm-modal-backdrop">
-      <div
-        className="confirm-modal settings-modal-v11"
-        role="dialog"
-        aria-modal="true"
-      >
-        <h3 className="settings-modal-v11__title">Invite team member</h3>
-        <p className="settings-modal-v11__desc">
-          They will receive an email invitation to join your Push workspace.
-        </p>
-        <div className="settings-modal-v11__fields">
-          <div className="settings-modal-v11__field">
-            <label className="settings-modal-v11__label">Email address</label>
-            <input
-              className="settings-modal-v11__input"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="colleague@company.com"
-              autoFocus
-            />
-          </div>
-          <div className="settings-modal-v11__field">
-            <label className="settings-modal-v11__label">Role</label>
-            <select
-              className="settings-modal-v11__select"
-              value={role}
-              onChange={(e) => setRole(e.target.value as TeamMember["role"])}
-            >
-              <option value="admin">Admin — full access</option>
-              <option value="viewer">Viewer — read only</option>
-            </select>
-          </div>
-        </div>
-        <div className="settings-modal-v11__actions">
-          <button className="btn-ghost click-shift" onClick={onCancel}>
+    <Modal
+      open
+      onClose={onCancel}
+      title="Invite team member"
+      size="md"
+      footer={
+        <>
+          <button type="button" className="btn btn--ghost" onClick={onCancel}>
             Cancel
           </button>
           <button
-            className="btn-primary click-shift"
-            disabled={!email.includes("@")}
-            onClick={() => onInvite(email, role)}
+            type="button"
+            className="btn btn--primary"
+            disabled={!emailValid}
+            onClick={() => onInvite(email.trim(), role)}
+            style={{ opacity: emailValid ? 1 : 0.4 }}
           >
             Send invite
           </button>
+        </>
+      }
+    >
+      <p className="modal-copy">
+        They will receive an email invitation to join your Push workspace.
+      </p>
+      <div className="modal-stack">
+        <div className="modal-field">
+          <label className="label" htmlFor="invite-email-input">
+            Email address
+          </label>
+          <input
+            id="invite-email-input"
+            className="push-input"
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="colleague@company.com"
+            autoFocus
+            autoComplete="email"
+            spellCheck={false}
+          />
+          {!emailValid && email.length > 0 && (
+            <span className="input-row__desc" style={{ marginTop: 8 }}>
+              Add a valid email address to send the invite
+            </span>
+          )}
+        </div>
+        <div className="modal-field">
+          <label className="label" htmlFor="invite-role-select">
+            Role
+          </label>
+          <select
+            id="invite-role-select"
+            className="push-select"
+            value={role}
+            onChange={(e) => setRole(e.target.value as TeamMember["role"])}
+          >
+            <option value="admin">Admin — full access</option>
+            <option value="viewer">Viewer — read only</option>
+          </select>
         </div>
       </div>
-    </div>
+    </Modal>
   );
 }
 
@@ -330,6 +635,7 @@ function NewKeyModal({
   const [selectedScopes, setSelectedScopes] = useState<string[]>([
     "campaigns:read",
   ]);
+  const ready = name.trim().length > 0 && selectedScopes.length > 0;
 
   const toggleScope = (scope: string) => {
     setSelectedScopes((prev) =>
@@ -338,62 +644,79 @@ function NewKeyModal({
   };
 
   return (
-    <div className="confirm-modal-backdrop">
-      <div
-        className="confirm-modal settings-modal-v11"
-        role="dialog"
-        aria-modal="true"
-      >
-        <h3 className="settings-modal-v11__title">Generate API key</h3>
-        <p className="settings-modal-v11__desc">
-          The full key is shown once. Store it securely — we cannot retrieve it
-          later.
-        </p>
-        <div className="settings-modal-v11__fields">
-          <div className="settings-modal-v11__field">
-            <label className="settings-modal-v11__label">Key name</label>
-            <input
-              className="settings-modal-v11__input"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder="e.g. Production, Zapier integration"
-              autoFocus
-            />
-          </div>
-          <div className="settings-modal-v11__field">
-            <label className="settings-modal-v11__label">Permissions</label>
-            <div className="settings-modal-v11__scopes">
-              {ALL_SCOPES.map((scope) => (
+    <Modal
+      open
+      onClose={onCancel}
+      title="Generate API key"
+      size="md"
+      footer={
+        <>
+          <button type="button" className="btn btn--ghost" onClick={onCancel}>
+            Cancel
+          </button>
+          <button
+            type="button"
+            className="btn btn--primary"
+            disabled={!ready}
+            onClick={() => onCreate(name.trim(), selectedScopes)}
+            style={{ opacity: ready ? 1 : 0.4 }}
+          >
+            Generate key
+          </button>
+        </>
+      }
+    >
+      <p className="modal-copy">
+        The full key is shown once. Store it securely — we cannot retrieve it
+        later.
+      </p>
+      <div className="modal-stack modal-stack--lg">
+        <div className="modal-field">
+          <label className="label" htmlFor="new-key-name-input">
+            Key name
+          </label>
+          <input
+            id="new-key-name-input"
+            className="push-input"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="e.g. Production, Zapier integration"
+            autoFocus
+            autoComplete="off"
+            spellCheck={false}
+          />
+        </div>
+        <div className="modal-field">
+          <label className="label">Permissions</label>
+          <div
+            className="scope-list"
+            role="group"
+            aria-label="API key permissions"
+          >
+            {ALL_SCOPES.map((scope) => {
+              const on = selectedScopes.includes(scope);
+              return (
                 <button
+                  type="button"
                   key={scope}
-                  className="btn-pill click-shift"
-                  aria-pressed={selectedScopes.includes(scope)}
+                  role="checkbox"
+                  aria-checked={on}
+                  className={`channel-chip${on ? " channel-chip--on" : ""}`}
                   onClick={() => toggleScope(scope)}
                 >
                   {scope}
                 </button>
-              ))}
-            </div>
+              );
+            })}
           </div>
-        </div>
-        <div className="settings-modal-v11__actions">
-          <button className="btn-ghost click-shift" onClick={onCancel}>
-            Cancel
-          </button>
-          <button
-            className={
-              name.trim() && selectedScopes.length > 0
-                ? "btn-primary click-shift"
-                : "settings-modal-v11__confirm-disabled"
-            }
-            disabled={!name.trim() || selectedScopes.length === 0}
-            onClick={() => onCreate(name.trim(), selectedScopes)}
-          >
-            Generate key
-          </button>
+          {selectedScopes.length === 0 && (
+            <span className="input-row__desc" style={{ marginTop: 8 }}>
+              Pick at least one permission for this key
+            </span>
+          )}
         </div>
       </div>
-    </div>
+    </Modal>
   );
 }
 
@@ -401,11 +724,15 @@ function NewKeyModal({
 
 export default function MerchantSettingsPage() {
   const router = useRouter();
-  const [isDemo, setIsDemo] = useState(false);
   const [activeSection, setActiveSection] = useState("business");
   const [settings, setSettings] = useState<MerchantSettings>(DEFAULT_SETTINGS);
   const [team, setTeam] = useState<TeamMember[]>(DEFAULT_TEAM);
   const [apiKeys, setApiKeys] = useState<ApiKey[]>(DEFAULT_KEYS);
+  const [savedSnapshot, setSavedSnapshot] = useState<SettingsSnapshot>({
+    settings: DEFAULT_SETTINGS,
+    team: DEFAULT_TEAM,
+    apiKeys: DEFAULT_KEYS,
+  });
   const [newKeyRevealed, setNewKeyRevealed] = useState<string | null>(null);
   const [dirty, setDirty] = useState(false);
   const [saveStatus, setSaveStatus] = useState<"idle" | "saving" | "saved">(
@@ -421,22 +748,52 @@ export default function MerchantSettingsPage() {
     | { type: "remove"; memberId: string }
   >(null);
 
+  /* ── Field validation (non-blocking, inline) ─────────────── */
+  const websiteValid =
+    settings.website.trim().length === 0 ||
+    /^https?:\/\/.+/i.test(settings.website.trim());
+  const legalNameValid = settings.legalName.trim().length > 0;
+  const dbaValid = settings.dba.trim().length > 0;
+  const hasFieldError = !websiteValid || !legalNameValid || !dbaValid;
+
+  const fieldDesc = (base: string, valid: boolean, hint: string) =>
+    valid ? base : hint;
+
   /* load */
   useEffect(() => {
-    const demo = checkDemoMode();
-    setIsDemo(demo);
-    if (demo) {
+    let cancelled = false;
+
+    const loadSettings = async () => {
       try {
-        const s = localStorage.getItem(SETTINGS_KEY);
-        if (s) setSettings(JSON.parse(s));
-        const t = localStorage.getItem(TEAM_KEY);
-        if (t) setTeam(JSON.parse(t));
-        const k = localStorage.getItem(KEYS_KEY);
-        if (k) setApiKeys(JSON.parse(k));
+        const response = await fetch("/api/merchant/settings");
+        if (!response.ok) {
+          throw new Error("Failed to load settings");
+        }
+
+        const payload = (await response.json()) as SettingsApiResponse;
+        if (cancelled) return;
+
+        const snapshot = buildSnapshotFromResponse(payload);
+        setSettings(snapshot.settings);
+        setTeam(snapshot.team);
+        setApiKeys(snapshot.apiKeys);
+        setSavedSnapshot(snapshot);
       } catch {
-        /* use defaults */
+        if (!cancelled) {
+          setSavedSnapshot({
+            settings: DEFAULT_SETTINGS,
+            team: DEFAULT_TEAM,
+            apiKeys: DEFAULT_KEYS,
+          });
+        }
       }
-    }
+    };
+
+    void loadSettings();
+
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   const patch = useCallback(
@@ -477,22 +834,23 @@ export default function MerchantSettingsPage() {
 
   const save = useCallback(async () => {
     setSaveStatus("saving");
-    if (isDemo) {
-      localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
-      localStorage.setItem(TEAM_KEY, JSON.stringify(team));
-      localStorage.setItem(KEYS_KEY, JSON.stringify(apiKeys));
-      await new Promise((r) => setTimeout(r, 500));
-    } else {
-      await fetch("/api/merchant/settings", {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(settings),
-      });
+    const payload = buildSectionPayload(activeSection, settings, team, apiKeys);
+    const response = await fetch("/api/merchant/settings", {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+
+    if (!response.ok) {
+      setSaveStatus("idle");
+      return;
     }
+
+    setSavedSnapshot({ settings, team, apiKeys });
     setSaveStatus("saved");
     setDirty(false);
     setTimeout(() => setSaveStatus("idle"), 2500);
-  }, [isDemo, settings, team, apiKeys]);
+  }, [activeSection, apiKeys, settings, team]);
 
   const notifAny = (key: keyof MerchantNotifSettings) =>
     Object.values(settings.notifications[key]).some(Boolean);
@@ -522,16 +880,16 @@ export default function MerchantSettingsPage() {
       role,
       lastActive: null,
     };
-    const updated = [...team, newMember];
-    setTeam(updated);
-    if (isDemo) localStorage.setItem(TEAM_KEY, JSON.stringify(updated));
+    setTeam((prev) => [...prev, newMember]);
+    setDirty(true);
+    setSaveStatus("idle");
     setModal(null);
   };
 
   const handleRemoveMember = (memberId: string) => {
-    const updated = team.filter((m) => m.id !== memberId);
-    setTeam(updated);
-    if (isDemo) localStorage.setItem(TEAM_KEY, JSON.stringify(updated));
+    setTeam((prev) => prev.filter((member) => member.id !== memberId));
+    setDirty(true);
+    setSaveStatus("idle");
     setModal(null);
   };
 
@@ -546,21 +904,17 @@ export default function MerchantSettingsPage() {
       lastUsed: null,
       fullKey: rawKey,
     };
-    const updated = [...apiKeys, newKey];
-    setApiKeys(updated);
+    setApiKeys((prev) => [...prev, newKey]);
     setNewKeyRevealed(rawKey);
-    if (isDemo)
-      localStorage.setItem(
-        KEYS_KEY,
-        JSON.stringify(updated.map((k) => ({ ...k, fullKey: undefined }))),
-      );
+    setDirty(true);
+    setSaveStatus("idle");
     setModal(null);
   };
 
   const handleRevokeKey = (keyId: string) => {
-    const updated = apiKeys.filter((k) => k.id !== keyId);
-    setApiKeys(updated);
-    if (isDemo) localStorage.setItem(KEYS_KEY, JSON.stringify(updated));
+    setApiKeys((prev) => prev.filter((key) => key.id !== keyId));
+    setDirty(true);
+    setSaveStatus("idle");
     setModal(null);
   };
 
@@ -580,17 +934,6 @@ export default function MerchantSettingsPage() {
     .toUpperCase()
     .slice(0, 2);
 
-  /* ── Shared section heading ─────────────────────────────── */
-  function SectionHeading({ title, sub }: { title: string; sub: string }) {
-    return (
-      <div className="settings-section-heading">
-        {/* H2 — exactly 40px Darky 800, lineHeight 1.05, letterSpacing -0.02em */}
-        <h2 className="settings-section-heading__title">{title}</h2>
-        <p className="settings-section-heading__sub">{sub}</p>
-      </div>
-    );
-  }
-
   /* ── Render sections ────────────────────────────────────── */
 
   const renderSection = () => {
@@ -598,9 +941,10 @@ export default function MerchantSettingsPage() {
       case "business":
         return (
           <>
-            <SectionHeading
-              title="Business Profile"
-              sub="Your legal and public business information"
+            <PageHeader
+              eyebrow="SETTINGS"
+              title={SECTION_COPY.business.title}
+              subtitle={SECTION_COPY.business.description}
             />
 
             <SettingsSection title="Logo">
@@ -619,7 +963,10 @@ export default function MerchantSettingsPage() {
                   <span className="avatar-upload__hint">
                     PNG or SVG, min 200×200px
                   </span>
-                  <button className="btn-ghost click-shift settings-upload-btn">
+                  <button
+                    type="button"
+                    className="btn btn--ghost btn--sm settings-upload-btn"
+                  >
                     Upload logo
                   </button>
                 </div>
@@ -629,14 +976,22 @@ export default function MerchantSettingsPage() {
             <SettingsSection title="Business Info">
               <InputRow
                 label="Legal name"
-                description="Registered legal entity name"
+                description={fieldDesc(
+                  "Registered legal entity name",
+                  legalNameValid,
+                  "Legal name is required before saving",
+                )}
                 value={settings.legalName}
                 onChange={(v) => patch("legalName", v)}
                 placeholder="LLC, Inc., etc."
               />
               <InputRow
                 label="DBA / Display name"
-                description="Name shown to creators on Push"
+                description={fieldDesc(
+                  "Name shown to creators on Push",
+                  dbaValid,
+                  "Display name is required before saving",
+                )}
                 value={settings.dba}
                 onChange={(v) => patch("dba", v)}
                 placeholder="Your brand name"
@@ -659,7 +1014,11 @@ export default function MerchantSettingsPage() {
               />
               <InputRow
                 label="Website"
-                description="Your public-facing business URL"
+                description={fieldDesc(
+                  "Your public-facing business URL",
+                  websiteValid,
+                  "Include https:// so links open correctly",
+                )}
                 value={settings.website}
                 onChange={(v) => patch("website", v)}
                 type="url"
@@ -672,9 +1031,10 @@ export default function MerchantSettingsPage() {
       case "team":
         return (
           <>
-            <SectionHeading
-              title="Team"
-              sub="Manage who has access to your Push workspace"
+            <PageHeader
+              eyebrow="SETTINGS"
+              title={SECTION_COPY.team.title}
+              subtitle={SECTION_COPY.team.description}
             />
             <SettingsSection
               title="Members"
@@ -702,11 +1062,17 @@ export default function MerchantSettingsPage() {
                           </span>
                         </td>
                         <td>
-                          <span
-                            className={`role-badge${member.role === "owner" ? " role-badge--owner" : ""}`}
+                          <StatusBadge
+                            status={
+                              member.role === "owner"
+                                ? "active"
+                                : member.role === "admin"
+                                  ? "paused"
+                                  : "draft"
+                            }
                           >
                             {member.role}
-                          </span>
+                          </StatusBadge>
                         </td>
                         <td className="settings-table__date">
                           {formatDate(member.lastActive)}
@@ -714,7 +1080,8 @@ export default function MerchantSettingsPage() {
                         <td>
                           {member.role !== "owner" && (
                             <button
-                              className="btn-ghost click-shift"
+                              type="button"
+                              className="btn btn--ghost btn--sm"
                               onClick={() =>
                                 setModal({
                                   type: "remove",
@@ -733,10 +1100,11 @@ export default function MerchantSettingsPage() {
               </div>
               <div className="settings-action-row">
                 <button
-                  className="btn-primary click-shift"
+                  type="button"
+                  className="btn btn--primary btn--sm"
                   onClick={() => setModal("invite")}
                 >
-                  + Invite member
+                  Invite member
                 </button>
               </div>
             </SettingsSection>
@@ -746,9 +1114,10 @@ export default function MerchantSettingsPage() {
       case "notifications":
         return (
           <>
-            <SectionHeading
-              title="Notifications"
-              sub="Choose how Push contacts you about campaign activity"
+            <PageHeader
+              eyebrow="SETTINGS"
+              title={SECTION_COPY.notifications.title}
+              subtitle={SECTION_COPY.notifications.description}
             />
             <SettingsSection
               title="Campaign Activity"
@@ -815,29 +1184,54 @@ export default function MerchantSettingsPage() {
       case "billing":
         return (
           <>
-            <SectionHeading
-              title="Billing"
-              sub="Manage your Push plan and invoices"
+            <PageHeader
+              eyebrow="SETTINGS"
+              title={SECTION_COPY.billing.title}
+              subtitle={SECTION_COPY.billing.description}
             />
             <SettingsSection title="Current Plan">
               <div className="settings-billing-row">
                 <div>
-                  {/* H4 24px Darky 700 */}
-                  <span className="settings-billing-plan-name">Essentials</span>
-                  <span className="settings-billing-plan-price">
-                    $99/month · renews May 1, 2026
+                  <span
+                    style={{
+                      fontFamily: "var(--font-display)",
+                      fontSize: 20,
+                      fontWeight: 700,
+                      color: "var(--ink)",
+                    }}
+                  >
+                    Growth
+                  </span>
+                  <span
+                    style={{
+                      display: "block",
+                      marginTop: 8,
+                      fontSize: "var(--text-small)",
+                      color: "var(--ink-3)",
+                    }}
+                  >
+                    $69/month · renews May 1, 2026
                   </span>
                 </div>
-                <button className="btn-ghost click-shift">Change plan</button>
+                <button type="button" className="btn btn--ghost btn--sm">
+                  Change plan
+                </button>
               </div>
             </SettingsSection>
             <SettingsSection title="Invoices">
-              <p className="settings-billing-desc">
+              <p
+                style={{
+                  fontSize: "var(--text-small)",
+                  color: "var(--ink-3)",
+                  padding: "16px 0",
+                  margin: 0,
+                }}
+              >
                 Billing history is managed through Stripe. Visit the billing
                 portal to view invoices, update payment methods, or download
                 receipts.
               </p>
-              <button className="btn-ghost click-shift">
+              <button type="button" className="btn btn--ghost btn--sm">
                 Open billing portal
               </button>
             </SettingsSection>
@@ -847,23 +1241,25 @@ export default function MerchantSettingsPage() {
       case "api-keys":
         return (
           <>
-            <SectionHeading
-              title="API Keys"
-              sub="Programmatic access to your Push data"
+            <PageHeader
+              eyebrow="SETTINGS"
+              title={SECTION_COPY["api-keys"].title}
+              subtitle={SECTION_COPY["api-keys"].description}
             />
 
             {/* Newly revealed key */}
             {newKeyRevealed && (
-              <div className="settings-key-revealed">
+              <div className="settings-key-revealed" role="status">
                 <span className="settings-key-revealed__warning">
-                  Copy this key now — it will not be shown again.
+                  Copy this key now — it will not be shown again
                 </span>
                 <code className="settings-key-revealed__code">
                   {newKeyRevealed}
                 </code>
                 <div className="settings-key-revealed__actions">
                   <button
-                    className="btn-secondary click-shift"
+                    type="button"
+                    className="btn btn--ghost btn--sm"
                     onClick={() => {
                       navigator.clipboard.writeText(newKeyRevealed);
                     }}
@@ -871,7 +1267,8 @@ export default function MerchantSettingsPage() {
                     Copy key
                   </button>
                   <button
-                    className="btn-ghost click-shift"
+                    type="button"
+                    className="btn btn--ghost btn--sm"
                     onClick={() => setNewKeyRevealed(null)}
                   >
                     Dismiss
@@ -890,7 +1287,8 @@ export default function MerchantSettingsPage() {
                     <span className="api-key-row__name">{key.name}</span>
                     <div className="api-key-actions">
                       <button
-                        className="settings-revoke-btn click-shift"
+                        type="button"
+                        className="settings-revoke-btn"
                         onClick={() =>
                           setModal({ type: "revoke", keyId: key.id })
                         }
@@ -908,16 +1306,17 @@ export default function MerchantSettingsPage() {
                       {formatDate(key.lastUsed)}
                     </span>
                     {key.scopes.map((scope) => (
-                      <span key={scope} className="scope-chip">
+                      <StatusBadge key={scope} status="draft">
                         {scope}
-                      </span>
+                      </StatusBadge>
                     ))}
                   </div>
                 </div>
               ))}
               <div className="settings-action-row">
                 <button
-                  className="btn-primary click-shift"
+                  type="button"
+                  className="btn btn--primary btn--sm"
                   onClick={() => setModal("new-key")}
                 >
                   Generate new key
@@ -930,9 +1329,10 @@ export default function MerchantSettingsPage() {
       case "privacy":
         return (
           <>
-            <SectionHeading
-              title="Privacy"
-              sub="Control your business data and public presence"
+            <PageHeader
+              eyebrow="SETTINGS"
+              title={SECTION_COPY.privacy.title}
+              subtitle={SECTION_COPY.privacy.description}
             />
             <SettingsSection title="Visibility">
               <ToggleRow
@@ -950,7 +1350,7 @@ export default function MerchantSettingsPage() {
                 onChange={(v) => patchPrivacy("adPreferences", v)}
               />
               <div className="settings-action-row">
-                <button className="btn-ghost click-shift">
+                <button type="button" className="btn btn--ghost btn--sm">
                   Export business data
                 </button>
               </div>
@@ -961,9 +1361,11 @@ export default function MerchantSettingsPage() {
       case "danger":
         return (
           <>
-            <SectionHeading
-              title="Danger Zone"
-              sub="Irreversible actions — proceed carefully"
+            <PageHeader
+              eyebrow="SETTINGS"
+              title={SECTION_COPY.danger.title}
+              subtitle={SECTION_COPY.danger.description}
+              action={<StatusBadge status="closed">closed</StatusBadge>}
             />
             <SettingsSection danger title="Account Actions">
               <div className="danger-action">
@@ -972,13 +1374,14 @@ export default function MerchantSettingsPage() {
                     Deactivate account
                   </span>
                   <span className="danger-action__desc">
-                    Pause all active campaigns and hide your business profile.
-                    Active creators in your campaigns will be notified. You can
-                    reactivate at any time.
+                    Pauses active campaigns and hides your profile. Creators in
+                    your campaigns will be notified. Reactivate at any time by
+                    signing back in.
                   </span>
                 </div>
                 <button
-                  className="btn-ghost click-shift"
+                  type="button"
+                  className="btn btn--ghost btn--sm"
                   onClick={() => setModal("deactivate")}
                 >
                   Deactivate
@@ -988,13 +1391,14 @@ export default function MerchantSettingsPage() {
                 <div className="danger-action__text">
                   <span className="danger-action__title">Delete account</span>
                   <span className="danger-action__desc">
-                    Permanently delete your Push merchant account, all campaign
-                    data, creator relationships, and API keys. Any unpaid
-                    creator payouts must be settled before deletion.
+                    Permanently removes your merchant account, campaign data,
+                    creator relationships, and API keys. Settle any unpaid
+                    creator payouts before deletion.
                   </span>
                 </div>
                 <button
-                  className="btn-primary click-shift"
+                  type="button"
+                  className="settings-revoke-btn"
                   onClick={() => setModal("delete")}
                 >
                   Delete
@@ -1012,30 +1416,41 @@ export default function MerchantSettingsPage() {
       navItems={NAV_ITEMS}
       activeSection={activeSection}
       onSectionChange={setActiveSection}
-      backHref="/merchant/dashboard"
     >
       {renderSection()}
 
       {/* Save bar */}
       {dirty && (
-        <div className="settings-save-bar">
+        <div className="settings-save-bar" role="status" aria-live="polite">
           <span className="settings-save-bar__status">
-            {saveStatus === "saving" ? "Saving…" : "You have unsaved changes"}
+            {saveStatus === "saving"
+              ? "Saving…"
+              : hasFieldError
+                ? "Fix highlighted fields to save"
+                : "You have unsaved changes"}
           </span>
           <div className="settings-save-bar__actions">
             <button
-              className="btn-ghost click-shift"
+              className="btn btn--ghost btn--sm"
+              type="button"
               onClick={() => {
-                setSettings(DEFAULT_SETTINGS);
+                setSettings(savedSnapshot.settings);
+                setTeam(savedSnapshot.team);
+                setApiKeys(savedSnapshot.apiKeys);
                 setDirty(false);
+                setSaveStatus("idle");
               }}
             >
-              Discard
+              Cancel
             </button>
             <button
-              className="btn-primary click-shift"
+              className="btn btn--primary btn--sm"
+              type="button"
               onClick={save}
-              disabled={saveStatus === "saving"}
+              disabled={saveStatus === "saving" || hasFieldError}
+              style={{
+                opacity: saveStatus === "saving" || hasFieldError ? 0.4 : 1,
+              }}
             >
               Save changes
             </button>
@@ -1043,7 +1458,7 @@ export default function MerchantSettingsPage() {
         </div>
       )}
       {saveStatus === "saved" && !dirty && (
-        <div className="settings-save-bar">
+        <div className="settings-save-bar" role="status" aria-live="polite">
           <span className="settings-save-bar__status settings-save-bar__status--saved">
             Changes saved
           </span>
@@ -1067,7 +1482,7 @@ export default function MerchantSettingsPage() {
         modal.type === "revoke" && (
           <ConfirmModal
             title="Revoke API key?"
-            description="This key will stop working immediately. Any integrations using it will break."
+            description="The key stops working immediately. Update any integrations using it before revoking."
             confirmLabel="Revoke key"
             onCancel={() => setModal(null)}
             onConfirm={() =>
@@ -1083,7 +1498,7 @@ export default function MerchantSettingsPage() {
         modal.type === "remove" && (
           <ConfirmModal
             title="Remove team member?"
-            description="They will immediately lose access to your Push workspace."
+            description="Their access ends as soon as you confirm."
             confirmLabel="Remove member"
             onCancel={() => setModal(null)}
             onConfirm={() =>
@@ -1097,7 +1512,8 @@ export default function MerchantSettingsPage() {
       {modal === "deactivate" && (
         <ConfirmModal
           title="Deactivate your account?"
-          description="All active campaigns will be paused and creators notified. You can reactivate at any time by logging in."
+          description="Active campaigns pause and creators are notified. Sign in any time to reactivate."
+          confirmWord="DEACTIVATE"
           confirmLabel="Deactivate account"
           onCancel={() => setModal(null)}
           onConfirm={() => {
@@ -1110,7 +1526,7 @@ export default function MerchantSettingsPage() {
       {modal === "delete" && (
         <ConfirmModal
           title="Delete your merchant account?"
-          description="All campaigns, creator relationships, API keys, and analytics data will be permanently deleted. Unpaid payouts must be settled first."
+          description="Campaigns, creator relationships, API keys, and analytics will be permanently deleted. Settle any unpaid payouts first."
           confirmWord="DELETE"
           confirmLabel="Permanently delete"
           onCancel={() => setModal(null)}

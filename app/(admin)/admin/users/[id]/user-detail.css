@@ -1,0 +1,772 @@
+/* ============================================================
+   Push Admin — User Detail  |  v11 Design System
+   Product UI register — no marketing elements
+   All dimensions on 8px grid.
+   ============================================================ */
+
+/* ------------------------------------------------------------
+   Back link
+   ------------------------------------------------------------ */
+.ud-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+  text-decoration: none;
+  margin-bottom: 16px;
+  transition: color 0.12s;
+}
+
+.ud-back:hover {
+  color: var(--ink);
+  transform: translateX(-2px);
+}
+
+.ud-back:focus-visible {
+  outline: 2px solid var(--accent-blue);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* ------------------------------------------------------------
+   Page-level eyebrow
+   ------------------------------------------------------------ */
+.ud-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+  margin-bottom: 16px;
+}
+
+/* ------------------------------------------------------------
+   User Hero — single-row header card
+   ------------------------------------------------------------ */
+.ud-hero {
+  background: var(--surface-2);
+  border-radius: 10px;
+  padding: 20px 24px;
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+/* 1:1 photo card avatar */
+.ud-avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  overflow: hidden;
+  position: relative;
+  flex-shrink: 0;
+  background: var(--surface-3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ud-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.ud-avatar__initials {
+  font-family: var(--font-display);
+  font-size: 32px;
+  font-weight: 800;
+  color: var(--ink);
+  line-height: 1;
+}
+
+/* Identity block */
+.ud-identity {
+  flex: 1;
+  min-width: 0;
+}
+
+.ud-name {
+  font-family: var(--font-display);
+  font-size: 32px;
+  font-weight: 800;
+  color: var(--ink);
+  letter-spacing: -0.03em;
+  line-height: 1;
+  margin: 0 0 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ud-meta {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--ink-4);
+  margin-bottom: 10px;
+}
+
+.ud-badges {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+/* Hero action buttons */
+.ud-hero-actions {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+  align-items: center;
+}
+
+/* ------------------------------------------------------------
+   KPI Stats row — 4 cards
+   ------------------------------------------------------------ */
+.ud-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.ud-stat {
+  background: var(--surface-2);
+  border: 1px solid var(--hairline);
+  border-radius: 10px;
+  padding: 16px 24px;
+}
+
+.ud-stat__num {
+  font-family: var(--font-display);
+  font-size: 40px;
+  font-weight: 800;
+  color: var(--ink);
+  letter-spacing: -0.04em;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+
+.ud-stat__label {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+}
+
+/* ------------------------------------------------------------
+   Two-column layout  4fr + 8fr
+   ------------------------------------------------------------ */
+.ud-layout {
+  display: grid;
+  grid-template-columns: 4fr 8fr;
+  gap: 24px;
+  align-items: start;
+}
+
+/* Left column: user info card */
+.ud-col-left {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Right column: activity panels + tabs */
+.ud-col-right {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+/* ------------------------------------------------------------
+   Info card (left column)
+   ------------------------------------------------------------ */
+.ud-card {
+  background: var(--surface-2);
+  border-radius: 10px;
+  padding: 20px 24px;
+}
+
+.ud-card__title {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+  margin-bottom: 16px;
+}
+
+.ud-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.ud-field {
+  padding: 10px 0;
+  border-bottom: 1px solid var(--hairline);
+}
+
+.ud-field:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.ud-field:first-child {
+  padding-top: 0;
+}
+
+.ud-field__label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+  margin-bottom: 3px;
+}
+
+.ud-field__value {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--ink);
+  word-break: break-all;
+}
+
+/* ------------------------------------------------------------
+   Detail tabs (product-register pill-style)
+   ------------------------------------------------------------ */
+.ud-tabs {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.ud-tab {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  border: 1px solid var(--hairline);
+  border-radius: 8px;
+  padding: 5px 12px;
+  cursor: pointer;
+  background: var(--surface-2);
+  color: var(--ink-3);
+  transition: transform 0.12s, background 0.12s, color 0.12s;
+}
+
+.ud-tab:hover {
+  background: var(--surface-3);
+  color: var(--ink);
+  transform: translate(2px, 2px);
+}
+
+.ud-tab.is-active {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--snow);
+}
+
+.ud-tab:focus-visible {
+  outline: 2px solid var(--accent-blue);
+  outline-offset: 2px;
+}
+
+/* ------------------------------------------------------------
+   Activity / transaction list panel
+   ------------------------------------------------------------ */
+.ud-panel {
+  background: var(--surface);
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 16px;
+}
+
+.ud-panel__header {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--hairline);
+  background: var(--surface-2);
+}
+
+.ud-panel__title {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+}
+
+/* Activity row */
+.ud-row {
+  display: flex;
+  gap: 12px;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--surface-3);
+  align-items: flex-start;
+  cursor: default;
+  transition: background 0.12s, transform 0.12s;
+}
+
+.ud-row:last-child {
+  border-bottom: none;
+}
+
+.ud-row:hover {
+  background: var(--surface-2);
+  transform: translate(2px, 2px);
+}
+
+.ud-row:focus-visible {
+  outline: 2px solid var(--accent-blue);
+  outline-offset: -2px;
+  position: relative;
+}
+
+/* Activity icon chip */
+.ud-row__icon {
+  width: 24px;
+  height: 24px;
+  border-radius: 6px;
+  background: var(--surface-3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--ink-4);
+}
+
+.ud-row__body {
+  flex: 1;
+  min-width: 0;
+}
+
+.ud-row__desc {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  color: var(--ink);
+  line-height: 1.4;
+}
+
+.ud-row__meta {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--ink-4);
+  margin-top: 2px;
+}
+
+/* ------------------------------------------------------------
+   Campaign / payment table
+   ------------------------------------------------------------ */
+.ud-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--font-mono);
+  font-size: 13px;
+}
+
+.ud-table th {
+  padding: 8px 16px;
+  text-align: left;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+  background: var(--surface-2);
+  border-bottom: 1px solid var(--hairline);
+  white-space: nowrap;
+}
+
+.ud-table td {
+  padding: 12px 16px;
+  font-size: 13px;
+  color: var(--ink);
+  border-bottom: 1px solid var(--surface-3);
+}
+
+.ud-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.ud-table tbody tr {
+  transition: background 0.12s, transform 0.12s;
+  cursor: default;
+}
+
+.ud-table tbody tr:hover {
+  background: var(--surface-2);
+  transform: translate(2px, 2px);
+}
+
+.ud-table tbody tr:focus-visible {
+  outline: 2px solid var(--accent-blue);
+  outline-offset: -2px;
+  position: relative;
+}
+
+.ud-table .col-right {
+  text-align: right;
+}
+
+/* Financial summary row inside PaymentsTab */
+.ud-fin-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.ud-fin-item__num {
+  font-family: var(--font-display);
+  font-size: 40px;
+  font-weight: 800;
+  color: var(--ink);
+  letter-spacing: -0.04em;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+
+.ud-fin-item__num--accent {
+  color: var(--accent-blue);
+}
+
+.ud-fin-item__label {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+}
+
+/* ------------------------------------------------------------
+   Badges — v11: var(--r-sm) radius, 12px mono
+   ------------------------------------------------------------ */
+.ud-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  border-radius: var(--r-sm);
+}
+
+/* Role */
+.ud-badge--creator  { background: rgba(0, 133, 255, 0.10); color: var(--accent-blue); }
+.ud-badge--merchant { background: var(--surface-3);          color: var(--ink-3); }
+.ud-badge--admin    { background: var(--surface-3);          color: var(--ink-4); }
+
+/* Status */
+.ud-badge--active    { background: rgba(74, 222, 128, 0.14); color: #15803d; }
+.ud-badge--pending   { background: rgba(234, 179, 8, 0.14);  color: #92400e; }
+.ud-badge--suspended { background: rgba(193, 18, 31, 0.10);  color: var(--brand-red); }
+.ud-badge--banned    { background: rgba(193, 18, 31, 0.16);  color: var(--brand-red); }
+
+/* KYC */
+.ud-badge--kyc-verified     { background: rgba(74, 222, 128, 0.14); color: #15803d; }
+.ud-badge--kyc-pending      { background: rgba(234, 179, 8, 0.14);  color: #92400e; }
+.ud-badge--kyc-rejected     { background: rgba(193, 18, 31, 0.10);  color: var(--brand-red); }
+.ud-badge--kyc-not-submitted { background: var(--surface-3);         color: var(--ink-4); }
+
+/* Campaign / transaction status */
+.ud-badge--completed { background: rgba(74, 222, 128, 0.14); color: #15803d; }
+.ud-badge--failed    { background: rgba(193, 18, 31, 0.10);  color: var(--brand-red); }
+
+/* Flag severity */
+.ud-badge--high   { background: rgba(193, 18, 31, 0.10);  color: var(--brand-red); }
+.ud-badge--medium { background: rgba(234, 179, 8, 0.14);  color: #92400e; }
+.ud-badge--low    { background: var(--surface-3);          color: var(--ink-4); }
+.ud-badge--open   { background: rgba(193, 18, 31, 0.10);  color: var(--brand-red); }
+.ud-badge--resolved { background: rgba(0, 133, 255, 0.10); color: var(--accent-blue); }
+
+/* Tier badge — var(--r-sm) not 0 */
+.ud-badge--tier {
+  background: var(--surface-3);
+  color: var(--ink-4);
+  border-radius: var(--r-sm);
+}
+
+/* ------------------------------------------------------------
+   Notes section
+   ------------------------------------------------------------ */
+.ud-note-composer {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 16px;
+  border-bottom: 1px solid var(--hairline);
+}
+
+.ud-note-textarea {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--ink);
+  background: var(--surface-3);
+  border: 1px solid var(--hairline);
+  border-radius: 8px;
+  padding: 10px 12px;
+  resize: vertical;
+  min-height: 80px;
+  outline: none;
+  transition: border-color 0.12s;
+}
+
+.ud-note-textarea:focus {
+  border-color: var(--accent-blue);
+}
+
+.ud-note-textarea:focus-visible {
+  outline: 2px solid var(--accent-blue);
+  outline-offset: 2px;
+  border-color: var(--accent-blue);
+}
+
+.ud-note-item {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--hairline);
+}
+
+.ud-note-item:last-child {
+  border-bottom: none;
+}
+
+.ud-note-item__author {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.ud-note-item__date {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--ink-4);
+  margin-left: 8px;
+}
+
+.ud-note-item__content {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--ink-3);
+  margin-top: 4px;
+  line-height: 1.6;
+}
+
+/* ------------------------------------------------------------
+   Flag items
+   ------------------------------------------------------------ */
+.ud-flag {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--hairline);
+  cursor: default;
+  transition: background 0.12s, transform 0.12s;
+}
+
+.ud-flag:last-child {
+  border-bottom: none;
+}
+
+.ud-flag:hover {
+  background: var(--surface-2);
+  transform: translate(2px, 2px);
+}
+
+.ud-flag:focus-visible {
+  outline: 2px solid var(--accent-blue);
+  outline-offset: -2px;
+  position: relative;
+}
+
+.ud-flag__header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+  flex-wrap: wrap;
+}
+
+.ud-flag__type {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.ud-flag__severity-label {
+  margin-left: auto;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.ud-flag__desc {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--ink-3);
+  line-height: 1.5;
+}
+
+.ud-flag__time {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--ink-4);
+  margin-top: 4px;
+}
+
+/* ------------------------------------------------------------
+   Empty state
+   ------------------------------------------------------------ */
+.ud-empty {
+  padding: 24px 16px;
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--ink-4);
+}
+
+/* ------------------------------------------------------------
+   Danger Zone
+   ------------------------------------------------------------ */
+.ud-danger-zone {
+  background: rgba(193, 18, 31, 0.04);
+  border: 1px solid rgba(193, 18, 31, 0.20);
+  border-radius: 10px;
+  padding: 20px 24px;
+  margin-top: 24px;
+}
+
+.ud-danger-zone__eyebrow {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  color: var(--brand-red);
+  margin-bottom: 16px;
+}
+
+.ud-danger-action {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid rgba(193, 18, 31, 0.10);
+}
+
+.ud-danger-action:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.ud-danger-action__title {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 2px;
+}
+
+.ud-danger-action__sub {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--ink-4);
+}
+
+/* ------------------------------------------------------------
+   Footer metadata line
+   ------------------------------------------------------------ */
+.ud-footer-meta {
+  padding: 12px 0;
+  font-family: var(--font-mono);
+  color: var(--ink-4);
+  font-size: 12px;
+  margin-top: 8px;
+}
+
+/* ------------------------------------------------------------
+   Impersonate banner
+   ------------------------------------------------------------ */
+.ud-impersonate-banner {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--ink);
+  color: var(--snow);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 24px;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 600;
+  z-index: 9999;
+}
+
+.ud-impersonate-banner__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--accent-blue);
+  flex-shrink: 0;
+}
+
+/* ------------------------------------------------------------
+   Responsive
+   ------------------------------------------------------------ */
+@media (max-width: 1024px) {
+  .ud-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .ud-stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .ud-hero {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+
+  .ud-hero-actions {
+    width: 100%;
+    flex-wrap: wrap;
+  }
+
+  .ud-stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .ud-name {
+    font-size: clamp(24px, 5vw, 32px);
+  }
+
+  .ud-fin-grid {
+    grid-template-columns: 1fr;
+  }
+}

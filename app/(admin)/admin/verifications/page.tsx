@@ -45,30 +45,14 @@ const PLATFORM_LABELS: Record<string, string> = {
 
 function Avatar({
   initials,
-  color,
   size = 36,
 }: {
   initials: string;
-  color: string;
+  color?: string; // kept for call-site compat; ignored — use CSS token
   size?: number;
 }) {
   return (
-    <div
-      style={{
-        width: size,
-        height: size,
-        borderRadius: "50%",
-        background: color,
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        fontSize: size * 0.36,
-        fontWeight: 800,
-        fontFamily: "var(--font-display)",
-        color: "var(--snow)",
-        flexShrink: 0,
-      }}
-    >
+    <div className="vq-avatar" style={{ width: size, height: size }}>
       {initials}
     </div>
   );
@@ -85,48 +69,16 @@ function ChecklistCell({
     address: "ADR",
   };
   return (
-    <div style={{ display: "flex", gap: 6 }}>
+    <div style={{ display: "flex", gap: 4 }}>
       {checklist.map((item) => {
-        const done = item.status === "complete";
-        const pending = item.status === "pending";
+        const statusClass =
+          item.status === "complete"
+            ? "complete"
+            : item.status === "pending"
+              ? "pending"
+              : "failed";
         return (
-          <span
-            key={item.stage}
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: 4,
-              padding: "2px 7px",
-              borderRadius: 4,
-              fontSize: 10,
-              fontWeight: 700,
-              fontFamily: "var(--font-body)",
-              letterSpacing: "0.05em",
-              background: done
-                ? "rgba(0,133,255,0.08)"
-                : pending
-                  ? "var(--panel-butter)"
-                  : "var(--surface-3)",
-              color: done
-                ? "var(--accent-blue)"
-                : pending
-                  ? "var(--ink-3)"
-                  : "var(--ink-4)",
-            }}
-          >
-            <span
-              style={{
-                width: 6,
-                height: 6,
-                borderRadius: "50%",
-                background: done
-                  ? "var(--accent-blue)"
-                  : pending
-                    ? "var(--ink-3)"
-                    : "var(--ink-4)",
-                display: "inline-block",
-              }}
-            />
+          <span key={item.stage} className={`vq-stage-badge ${statusClass}`}>
             {ABBR[item.stage]}
           </span>
         );
@@ -137,34 +89,12 @@ function ChecklistCell({
 
 function RiskFlags({ flags }: { flags: RiskFlag[] }) {
   if (flags.length === 0) {
-    return (
-      <span
-        style={{
-          fontSize: 12,
-          fontFamily: "var(--font-body)",
-          color: "var(--ink-4)",
-        }}
-      >
-        —
-      </span>
-    );
+    return <span className="vq-flag-none">—</span>;
   }
   return (
-    <div style={{ display: "flex", flexWrap: "wrap", gap: 4 }}>
+    <div className="vq-flags">
       {flags.map((f) => (
-        <span
-          key={f}
-          style={{
-            padding: "2px 7px",
-            borderRadius: 4,
-            fontSize: 10,
-            fontWeight: 700,
-            fontFamily: "var(--font-body)",
-            background: "rgba(193,18,31,0.07)",
-            color: "var(--brand-red)",
-            textTransform: "capitalize",
-          }}
-        >
+        <span key={f} className="vq-flag">
           {formatRiskFlag(f)}
         </span>
       ))}

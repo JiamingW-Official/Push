@@ -1,52 +1,38 @@
 /* ============================================================
-   Pricing Page — v11 Grain-Archive Editorial
-   5-panel stack:
-     1. Hero (dark Char/Ink)
-     2. KPI strip (Graphite)
-     3. Plans Candy Panel (Butter warm)
-     4. Comparison Table (Surface-2 cool)
-     5. Ticket CTA (GA Orange)
-   Design.md authority — all tokens, spacing, radii locked.
+   Pricing Page — v11 Design System Full Rebuild
+   4-panel marketing stack (Marketing register only):
+     1. Hero        — --surface Ivory Cream (warm)
+     2. Tier Cards  — --surface-2 Pearl Stone (cool-warm)
+     3. Ticket CTA  — --ga-orange (editorial moment ≤1)
+     4. Comparison  — --surface Ivory Cream (warm)
+   Signature dividers between panels 2→3 and 3→4.
+   Design.md authority — all tokens / spacing / radii locked.
    ============================================================ */
 
-/* ── Page wrapper ──────────────────────────────────────────── */
+/* ── Page wrapper ─────────────────────────────────────────────── */
 .pv11-wrapper {
   display: flex;
   flex-direction: column;
-  gap: 0;
   background: var(--surface);
-}
-
-/* ── Click-shift signature (🔒 STRICT) ────────────────────── */
-.click-shift {
-  transition:
-    transform 180ms cubic-bezier(0.34, 1.56, 0.64, 1),
-    box-shadow 200ms ease;
-}
-.click-shift:hover  { transform: translate(2px, 2px); }
-.click-shift:active { transform: translate(2px, 2px) scale(0.98); }
-
-@media (prefers-reduced-motion: reduce) {
-  .click-shift:hover,
-  .click-shift:active { transform: none; }
 }
 
 /* ============================================================
    PANEL 1 — HERO
-   Dark char/ink bg, Darky Display hero h1, bottom-left anchored
+   bg: --surface Ivory Cream (warm)
+   H1 bottom-left anchored (🔒 STRICT §7.1)
    ============================================================ */
-
 .pv11-hero {
   position: relative;
   min-height: clamp(520px, 80vh, 840px);
+  background: var(--surface);
   overflow: hidden;
+  /* subtle warm-red ambient glow from bottom-left — brand marker */
   background:
-    radial-gradient(ellipse 80% 60% at 20% 100%, rgba(193,18,31,0.18) 0%, transparent 55%),
-    radial-gradient(ellipse 60% 80% at 85% 20%, rgba(0,133,255,0.08) 0%, transparent 50%),
-    linear-gradient(160deg, var(--char) 0%, var(--ink) 100%);
+    radial-gradient(ellipse 60% 50% at 0% 100%, rgba(193, 18, 31, 0.07) 0%, transparent 60%),
+    var(--surface);
 }
 
-/* Ghost "$0" decorative numeral — top right bleeds off */
+/* Decorative ghost "$0" — top-right, bleeds off edge */
 .pv11-hero-ghost {
   position: absolute;
   top: -8%;
@@ -56,84 +42,93 @@
   font-size: clamp(200px, 32vw, 480px);
   letter-spacing: -0.08em;
   line-height: 0.85;
-  color: rgba(255, 255, 255, 0.04);
+  color: rgba(10, 10, 10, 0.04);
   pointer-events: none;
   user-select: none;
   z-index: 0;
 }
 
-/* Bottom-left anchored hero content block (🔒 STRICT — corner-anchored) */
+/* Bottom-left anchored hero content block (🔒 STRICT corner anchor) */
 .pv11-hero-inner {
   position: absolute;
   bottom: 96px;
   left: 64px;
   right: 64px;
   z-index: 2;
+  max-width: 680px;
 }
 
-/* Eyebrow (parenthetical — marketing surface) */
+/* Eyebrow — CS Genio Mono 12px 700 uppercase parenthetical (Marketing register) */
 .pv11-eyebrow {
   font-family: var(--font-mono);
   font-size: 12px;
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.65);
+  color: var(--ink-3);
   margin: 0 0 16px;
 }
 
-/* Hero H1 — Darky Display (🔒 STRICT — clamp 64-160, weight 900) */
+/* H1 — Darky 800 clamp(40,5vw,72)px, bottom-left anchored */
 .pv11-hero-h1 {
   font-family: var(--font-display);
-  font-weight: 900;
-  font-size: clamp(64px, 9vw, 160px);
-  letter-spacing: -0.035em;
-  line-height: 0.9;
-  color: var(--snow);
+  font-weight: 800;
+  font-size: clamp(40px, 5vw, 72px);
+  letter-spacing: -0.025em;
+  line-height: 1.0;
+  color: var(--ink);
+  margin: 0 0 24px;
+}
+
+/* Subtitle — CS Genio Mono 18px body */
+.pv11-hero-sub {
+  font-family: var(--font-mono);
+  font-size: 18px;
+  line-height: 1.4;
+  letter-spacing: -0.1em;
+  color: var(--ink-3);
+  max-width: 52ch;
   margin: 0 0 32px;
 }
 
-/* Hero subtitle */
-.pv11-hero-sub {
-  font-family: var(--font-mono);
-  font-size: 20px;
-  line-height: 1.40;
-  letter-spacing: -0.1em;
-  color: rgba(255, 255, 255, 0.65);
-  max-width: 52ch;
-  margin: 0;
+/* CTA row — adjacent buttons 16px gap (§6 negative-space table) */
+.pv11-hero-ctas {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  align-items: center;
 }
 
-/* Liquid-glass badge — bottom right absolute (iOS 26 spec) */
+/* Liquid-glass stat tile — bottom-right (§8.9 iOS 26 spec) */
 .pv11-hero-badge {
   position: absolute;
   right: 64px;
   bottom: 96px;
   z-index: 3;
-  background: rgba(255, 255, 255, 0.072);
-  backdrop-filter: blur(40px) saturate(2.0) brightness(1.12);
-  -webkit-backdrop-filter: blur(40px) saturate(2.0) brightness(1.12);
-  border: 0.5px solid rgba(255, 255, 255, 0.18);
-  border-radius: var(--r-xl);
+  background: rgba(248, 244, 232, 0.72);
+  backdrop-filter: blur(40px) saturate(1.8) brightness(1.06);
+  -webkit-backdrop-filter: blur(40px) saturate(1.8) brightness(1.06);
+  border: 0.5px solid var(--mist);
+  border-radius: 16px;
   padding: 32px;
   display: flex;
   flex-direction: column;
   align-items: flex-end;
   gap: 8px;
-  min-width: 176px;
+  min-width: 160px;
   box-shadow:
-    inset 0 1.5px 0 rgba(255, 255, 255, 0.20),
-    0 24px 64px rgba(0, 0, 0, 0.56),
-    0 8px 24px rgba(0, 0, 0, 0.32);
+    inset 0 1.5px 0 rgba(255, 255, 255, 0.6),
+    0 16px 48px rgba(10, 10, 10, 0.08),
+    0 4px 16px rgba(10, 10, 10, 0.06);
 }
 
 .pv11-badge-num {
   font-family: var(--font-display);
-  font-weight: 900;
+  font-weight: 800;
   font-size: clamp(40px, 5vw, 72px);
   letter-spacing: -0.04em;
   line-height: 1.0;
-  color: var(--snow);
+  color: var(--ink);
 }
 
 .pv11-badge-label {
@@ -142,102 +137,36 @@
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.65);
+  color: var(--ink-3);
   text-align: right;
 }
 
 /* ============================================================
-   SIG DIVIDER wrapper (🔒 STRICT — 64px above+below)
+   Signature Divider wrapper — background bridges panels
+   Global .sig-divider on <span> handles text styles (§8.5)
    ============================================================ */
 .pv11-sig-wrap {
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 64px 0;
   background: var(--surface);
 }
 
 /* ============================================================
-   PANEL 2 — KPI STRIP (dark graphite/char)
+   PANEL 2 — TIER CARDS
+   bg: --surface-2 Pearl Stone (📐 STRUCTURED — alternating cool-warm)
    ============================================================ */
-.pv11-kpi-strip {
-  background: var(--graphite);
-  padding: 56px 64px;
+.pv11-tiers-panel {
+  background: var(--surface-2);
+  padding: 96px 64px 80px;
 }
 
-.pv11-kpi-inner {
-  max-width: 1140px;
-  margin: 0 auto;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 24px;
-  flex-wrap: wrap;
+/* Section header — eyebrow + H2 top-left anchored (§7.1) */
+.pv11-tiers-header {
+  margin-bottom: 56px;
 }
 
-.pv11-kpi-item {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.pv11-kpi-num {
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: clamp(40px, 5vw, 72px);
-  letter-spacing: -0.02em;
-  line-height: 1.0;
-  color: var(--snow);
-}
-
-.pv11-kpi-label {
-  font-family: var(--font-mono);
-  font-size: 14px;
-  font-weight: 500;
-  letter-spacing: 0.02em;
-  color: rgba(255, 255, 255, 0.56);
-  line-height: 1.45;
-}
-
-.pv11-kpi-divider {
-  width: 1px;
-  height: 56px;
-  background: rgba(255, 255, 255, 0.12);
-  flex-shrink: 0;
-}
-
-/* ============================================================
-   PANEL 3 — PRICING PLANS (Candy Butter warm)
-   Uses global .candy-panel class (bg + radius + padding)
-   + overrides for plan-card grid
-   ============================================================ */
-
-.pv11-plans-panel {
-  /* candy-panel supplies: background, radius, padding 96px, shadow */
-  position: relative;
-}
-
-/* Ghost "02" behind panel content */
-.pv11-plans-ghost {
-  position: absolute;
-  top: -24px;
-  right: -2%;
-  font-family: var(--font-display);
-  font-weight: 900;
-  font-size: clamp(160px, 28vw, 400px);
-  letter-spacing: -0.06em;
-  line-height: 0.85;
-  color: rgba(10, 10, 10, 0.03);
-  pointer-events: none;
-  user-select: none;
-  z-index: 0;
-}
-
-.pv11-plans-header {
-  position: relative;
-  z-index: 1;
-}
-
+/* Section eyebrow — parenthetical Marketing variant */
 .pv11-section-eyebrow {
   font-family: var(--font-mono);
   font-size: 12px;
@@ -248,7 +177,7 @@
   margin: 0 0 16px;
 }
 
-/* H2 (🔒 STRICT — 40px, Darky 800, -0.02em) */
+/* H2 — Darky 800 40px (§3.1 scale — section title) */
 .pv11-section-h2 {
   font-family: var(--font-display);
   font-size: 40px;
@@ -256,107 +185,83 @@
   letter-spacing: -0.02em;
   line-height: 1.05;
   color: var(--ink);
-  margin: 0 0 56px;
+  margin: 0;
 }
 
-/* Plan cards grid */
-.pv11-plans-grid {
+/* 3-col tier grid — 12-col desktop (4+4+4) */
+.pv11-tiers-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 24px;
   align-items: stretch;
-  position: relative;
-  z-index: 1;
+  max-width: 1140px;
 }
 
-/* ── Base plan card (📐 STRUCTURED — r-2xl = 20px, 40px padding) */
-.pv11-plan-card {
-  background: rgba(255, 255, 255, 0.64);
-  backdrop-filter: blur(20px) saturate(1.6);
-  -webkit-backdrop-filter: blur(20px) saturate(1.6);
-  border: 1px solid var(--mist);
-  border-radius: var(--r-2xl); /* 20px — pricing plan card spec */
-  padding: 40px;               /* hero card spec */
+/* ── Base tier card ─────────────────────────────────────────── */
+/* border-radius: 10px per spec, bg: --surface, padding: 32px  */
+.pv11-tier-card {
+  background: var(--surface);
+  border-radius: 10px;
+  padding: 32px;
   display: flex;
   flex-direction: column;
   position: relative;
   overflow: hidden;
+  border: 1px solid var(--mist);
+  box-shadow: var(--shadow-1);
+  /* Bottom-right hover shift (🔒 STRICT §8) */
+  transition:
+    transform 180ms cubic-bezier(0.34, 1.56, 0.64, 1),
+    box-shadow 200ms ease;
+}
+.pv11-tier-card:hover {
+  transform: translate(2px, 2px);
   box-shadow: var(--shadow-2);
-  transition: transform 180ms cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 200ms ease;
 }
-.pv11-plan-card:hover {
-  transform: translate(2px, 2px);
-  box-shadow: var(--shadow-3);
+.pv11-tier-card:active {
+  transform: translate(2px, 2px) scale(0.98);
 }
 
-/* Ghost plan-name watermark behind card content */
-.pv11-plan-card::before {
-  content: attr(data-plan);
-  position: absolute;
-  bottom: -16px;
-  right: -8px;
-  font-family: var(--font-display);
-  font-weight: 900;
-  font-size: clamp(80px, 10vw, 128px);
-  letter-spacing: -0.05em;
-  line-height: 0.85;
-  color: var(--ink);
-  opacity: 0.04;
-  pointer-events: none;
-  user-select: none;
-  z-index: 0;
-  text-transform: uppercase;
-}
-
-/* ── Highlighted (Growth) card — dark ink bg */
-.pv11-plan-card--highlight {
+/* ── Growth card — dark ink bg (highlight) ─────────────────── */
+/* bg: --ink (Ink filled); color: --snow per spec             */
+.pv11-tier-card--highlight {
   background: var(--ink);
-  backdrop-filter: none;
-  -webkit-backdrop-filter: none;
-  border-color: rgba(255, 255, 255, 0.10);
+  border-color: rgba(255, 255, 255, 0.08);
   box-shadow:
-    0 24px 80px rgba(0, 0, 0, 0.32),
-    0 8px 24px rgba(0, 0, 0, 0.20);
+    0 24px 80px rgba(10, 10, 10, 0.28),
+    0 8px 24px rgba(10, 10, 10, 0.16);
 }
-.pv11-plan-card--highlight:hover {
+.pv11-tier-card--highlight:hover {
   transform: translate(2px, 2px);
   box-shadow:
-    0 32px 96px rgba(0, 0, 0, 0.40),
-    0 8px 24px rgba(0, 0, 0, 0.24);
+    0 32px 96px rgba(10, 10, 10, 0.36),
+    0 8px 24px rgba(10, 10, 10, 0.20);
 }
 
-/* Watermark on dark card */
-.pv11-plan-card--highlight::before {
-  color: var(--snow);
-  opacity: 0.06;
+/* ── Scale card — --surface-3 Bone ─────────────────────────── */
+.pv11-tier-card--scale {
+  background: var(--surface-3);
 }
 
-/* Text overrides for dark card */
-.pv11-plan-card--highlight .pv11-plan-eyebrow {
-  color: var(--brand-red) !important;
-}
-.pv11-plan-card--highlight .pv11-plan-name {
+/* RECOMMENDED pill — Champagne ceremonial (≤3/viewport per §2.2) */
+.pv11-recommended-pill {
+  display: inline-flex;
+  align-items: center;
+  background: var(--champagne);
   color: var(--snow);
-}
-.pv11-plan-card--highlight .pv11-price-main {
-  color: var(--snow);
-}
-.pv11-plan-card--highlight .pv11-price-sub {
-  color: rgba(255, 255, 255, 0.56);
-}
-.pv11-plan-card--highlight .pv11-price-note {
-  color: rgba(255, 255, 255, 0.48);
-  border-bottom-color: rgba(255, 255, 255, 0.10);
-}
-.pv11-plan-card--highlight .pv11-feature-item {
-  color: rgba(255, 255, 255, 0.72);
-}
-.pv11-plan-card--highlight .pv11-check {
-  color: var(--brand-red);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  border-radius: 100px;
+  padding: 4px 12px;
+  margin-bottom: 16px;
+  align-self: flex-start;
 }
 
-/* Plan eyebrow */
-.pv11-plan-eyebrow {
+/* Tier eyebrow */
+.pv11-tier-eyebrow {
   font-family: var(--font-mono);
   font-size: 12px;
   font-weight: 700;
@@ -364,12 +269,13 @@
   text-transform: uppercase;
   color: var(--ink-3);
   margin: 0 0 16px;
-  position: relative;
-  z-index: 1;
+}
+.pv11-tier-card--highlight .pv11-tier-eyebrow {
+  color: rgba(255, 255, 255, 0.56);
 }
 
-/* Plan name (H3 — 28px, Darky 700) */
-.pv11-plan-name {
+/* Tier name — H3 Darky 700 28px */
+.pv11-tier-name {
   font-family: var(--font-display);
   font-size: 28px;
   font-weight: 700;
@@ -377,54 +283,65 @@
   line-height: 1.15;
   color: var(--ink);
   margin: 0 0 16px;
-  position: relative;
-  z-index: 1;
+}
+.pv11-tier-card--highlight .pv11-tier-name {
+  color: var(--snow);
 }
 
-/* Price row */
+/* Price row — numeral + sub */
 .pv11-price-row {
   display: flex;
   align-items: baseline;
   gap: 8px;
   margin-bottom: 8px;
-  position: relative;
-  z-index: 1;
 }
 
-/* Big editorial price numeral (🔒 STRICT — massive) */
+/* Price numeral — Darky 800 64px per prompt spec */
 .pv11-price-main {
   font-family: var(--font-display);
-  font-weight: 900;
-  font-size: clamp(72px, 10vw, 120px);
-  letter-spacing: -0.045em;
+  font-weight: 800;
+  font-size: 64px;
+  letter-spacing: -0.04em;
   line-height: 0.9;
   color: var(--ink);
 }
+.pv11-tier-card--highlight .pv11-price-main {
+  color: var(--snow);
+}
 
+/* Price sub — CS Genio Mono 14px label */
 .pv11-price-sub {
   font-family: var(--font-mono);
   font-size: 14px;
   font-weight: 500;
+  letter-spacing: 0.01em;
   color: var(--ink-3);
   line-height: 1.45;
-  letter-spacing: 0.01em;
-  margin-bottom: 4px;
+}
+.pv11-tier-card--highlight .pv11-price-sub {
+  color: rgba(255, 255, 255, 0.48);
 }
 
+/* Price note — 12px mono, divider below */
 .pv11-price-note {
   font-family: var(--font-mono);
   font-size: 12px;
+  letter-spacing: 0.02em;
   color: var(--ink-3);
   margin: 0 0 24px;
   padding-bottom: 24px;
-  border-bottom: 1px solid var(--surface-3);
+  border-bottom: 1px solid var(--mist);
   line-height: 1.4;
-  letter-spacing: 0.02em;
-  position: relative;
-  z-index: 1;
+}
+.pv11-tier-card--highlight .pv11-price-note {
+  color: rgba(255, 255, 255, 0.40);
+  border-bottom-color: rgba(255, 255, 255, 0.10);
+}
+.pv11-tier-card--scale .pv11-price-note {
+  border-bottom-color: var(--surface-3);
 }
 
-/* Feature list */
+/* Feature list — 12px mono, brand-red checkmarks per spec */
 .pv11-feature-list {
   list-style: none;
   padding: 0;
@@ -433,62 +350,138 @@
   display: flex;
   flex-direction: column;
   gap: 12px;
-  position: relative;
-  z-index: 1;
 }
 
-/* Feature items — CS Genio Mono 16px (body small) */
 .pv11-feature-item {
   display: flex;
   align-items: flex-start;
   gap: 12px;
   font-family: var(--font-mono);
-  font-size: 16px;
-  line-height: 1.5;
+  font-size: 12px;
+  line-height: 1.4;
+  letter-spacing: 0.02em;
   color: var(--ink-3);
 }
+.pv11-tier-card--highlight .pv11-feature-item {
+  color: rgba(255, 255, 255, 0.72);
+}
 
-/* Brand red checkmark */
+/* Checkmark — brand-red per spec */
 .pv11-check {
   flex-shrink: 0;
   color: var(--brand-red);
   font-weight: 700;
-  font-size: 14px;
-  margin-top: 2px;
+  font-size: 12px;
+  margin-top: 1px;
 }
 
-/* CTA at bottom — body → CTA gap = 32px (from plan list margin) */
-.pv11-card-cta {
+/* CTA — full-width, bottom of card, margin-top auto */
+.pv11-tier-cta {
   width: 100%;
   justify-content: center;
   margin-top: auto;
-  position: relative;
-  z-index: 1;
 }
 
-.pv11-plans-fine {
+/* Fine print below grid */
+.pv11-tiers-fine {
   font-family: var(--font-mono);
   font-size: 12px;
+  letter-spacing: 0.06em;
   color: var(--ink-4);
   text-align: center;
   margin: 32px 0 0;
-  letter-spacing: 0.06em;
+}
+
+/* ============================================================
+   PANEL 3 — TICKET PANEL (GA Orange — ≤1 per page, §8.2 STRICT)
+   Global .ticket-panel provides bg + radius + padding + perf edges
+   ============================================================ */
+.pv11-ticket {
+  margin: 0 64px;
+  /* grommets need absolute children — inherited from .ticket-panel */
+}
+
+/* Four corner grommets — 16px diameter, 24px inset (§8.2 STRICT) */
+.pv11-grommet {
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--ink);
+  z-index: 2;
+  pointer-events: none;
+}
+
+/* Centered content — Ticket Panel is the §7.1 centering exception */
+.pv11-ticket-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
   position: relative;
   z-index: 1;
 }
 
-/* ============================================================
-   PANEL 4 — EDITORIAL TABLE (Cinema-Selects comparison)
-   (📐 STRUCTURED — surface-2 bg, r-md, 48/56 padding)
-   ============================================================ */
-.pv11-table-panel {
-  background: var(--surface-2);
-  border-radius: var(--r-md);
-  padding: 48px 56px;
-  margin: 0 64px;
+/* Ticket eyebrow — parenthetical */
+.pv11-ticket-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(10, 10, 10, 0.56);
+  margin: 0 0 24px;
 }
 
-/* Table title — Darky clamp(40,5vw,64)px weight 800, top-left */
+/* Magvix Italic centered headline (§8.2 + §3.1 STRICT) */
+.pv11-ticket-h2 {
+  font-family: var(--font-hero);
+  font-style: italic;
+  font-weight: normal;
+  font-size: clamp(40px, 5vw, 56px);
+  letter-spacing: -0.02em;
+  line-height: 0.95;
+  color: var(--snow);
+  margin: 0 0 16px;
+}
+
+/* Subtitle — CS Genio Mono 16px body-small */
+.pv11-ticket-sub {
+  font-family: var(--font-mono);
+  font-size: 16px;
+  font-weight: 400;
+  letter-spacing: -0.04em;
+  line-height: 1.4;
+  color: rgba(255, 255, 255, 0.72);
+  max-width: 480px;
+  margin: 0 0 32px;
+}
+
+/* CTA row — single btn-ink inside Ticket Panel */
+.pv11-ticket-ctas {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+/* ============================================================
+   PANEL 4 — COMPARISON / FAQ TABLE
+   bg: --surface Ivory Cream (warm — alternates from surface-2)
+   Editorial Table — Cinema-Selects style (§8.6)
+   ============================================================ */
+.pv11-table-panel {
+  background: var(--surface);
+  padding: 96px 0;
+}
+
+.pv11-table-inner {
+  max-width: 1140px;
+  margin: 0 auto;
+  padding: 0 64px;
+}
+
+/* Table eyebrow — parenthetical Marketing */
 .pv11-table-eyebrow {
   font-family: var(--font-mono);
   font-size: 12px;
@@ -500,6 +493,7 @@
   text-align: left;
 }
 
+/* Table title — Darky 800 top-left anchored */
 .pv11-table-h2 {
   font-family: var(--font-display);
   font-size: clamp(40px, 5vw, 64px);
@@ -526,131 +520,76 @@
   padding: 20px 0;
 }
 
-/* Header row — stronger dotted divider */
+/* Header row — stronger hairline, mono 12px 700 uppercase */
 .pv11-trow--head {
   border-bottom: 1px dotted rgba(10, 10, 10, 0.30);
-  padding: 0 0 24px;
-  margin-bottom: 0;
+  padding-bottom: 24px;
+  padding-top: 0;
 }
 
-/* All cells — base style */
+/* All cells — CS Genio Mono 16px base */
 .pv11-tcell {
   font-family: var(--font-mono);
   font-size: 16px;
   font-weight: 400;
   color: var(--ink-3);
-  padding: 0 8px 0 0;
+  letter-spacing: -0.125em;
+  line-height: 1.4;
   display: flex;
   align-items: center;
-  line-height: 1.5;
+  padding-right: 8px;
 }
 
-/* Header cells — CS Genio Mono 12px 700 uppercase parenthetical */
+/* Header cells — mono 12px 700 uppercase (§8.6 Editorial Table spec) */
 .pv11-trow--head .pv11-tcell {
   font-size: 12px;
   font-weight: 700;
   letter-spacing: 0.12em;
-  text-transform: uppercase;
   color: var(--ink-3);
   line-height: 1.3;
 }
 
-/* Feature column — Darky 20px 700 */
+/* Feature column — Darky 20px 700 (§8.6 first-column spec) */
 .pv11-tcell--feature {
   font-family: var(--font-display);
   font-size: 20px;
   font-weight: 700;
-  color: var(--ink);
   letter-spacing: -0.01em;
+  color: var(--ink);
 }
 
-/* Header feature cell — reverts to mono eyebrow */
+/* Header feature cell reverts to mono eyebrow */
 .pv11-trow--head .pv11-tcell--feature {
   font-family: var(--font-mono);
   font-size: 12px;
   font-weight: 700;
-  color: var(--ink-3);
   letter-spacing: 0.12em;
+  color: var(--ink-3);
 }
 
-/* Push column — value color set via inline style */
+/* Push column — value color via inline style */
 .pv11-tcell--push {
   font-family: var(--font-mono);
   font-size: 16px;
+  letter-spacing: -0.125em;
 }
 
-/* Last column — right-aligned */
+/* Last column — right-aligned (§8.6 spec) */
 .pv11-tcell--last {
   justify-content: flex-end;
   text-align: right;
-  padding: 0;
+  padding-right: 0;
 }
-
 .pv11-trow--head .pv11-tcell--last {
   justify-content: flex-end;
 }
 
 /* ============================================================
-   SIG DIVIDER 2 — between table and ticket
-   ============================================================ */
-
-/* Uses global .pv11-sig-wrap + .sig-divider */
-
-/* ============================================================
-   PANEL 5 — TICKET CTA (GA Orange)
-   (🔒 STRICT — ga-orange bg, r-md, grommets, perf edges, Magvix italic centered)
-   ============================================================ */
-.pv11-ticket {
-  /* ticket-panel class provides bg + radius + padding */
-  /* Override margin for page placement */
-  margin: 0 64px 96px;
-  position: relative;
-}
-
-.pv11-ticket-content {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0;
-  text-align: center;
-  padding: 0;
-  position: relative;
-  z-index: 1;
-}
-
-/* Magvix Italic centered headline (🔒 STRICT — centered is allowed in Ticket Panel) */
-.pv11-ticket-h2 {
-  font-family: var(--font-hero);
-  font-style: italic;
-  font-weight: normal;
-  font-size: clamp(40px, 5vw, 56px);
-  letter-spacing: -0.02em;
-  line-height: 0.95;
-  color: var(--ink);
-  margin: 0 0 16px;
-}
-
-/* CS Genio Mono 16px body — body-small, Ticket Panel interior */
-.pv11-ticket-sub {
-  font-family: var(--font-mono);
-  font-size: 16px;
-  font-weight: 400;
-  color: var(--ink-3);
-  max-width: 480px;
-  line-height: 1.40;
-  letter-spacing: -0.04em;
-  margin: 0 0 32px;
-}
-
-.pv11-ticket-ctas {
-  display: flex;
-  gap: 16px;
-  flex-wrap: wrap;
-  justify-content: center;
-}
-
-/* ============================================================
    RESPONSIVE
+   Design.md §14 — naturally adaptive, same composition
+   Desktop 12-col / 64px margin
+   iPad 8-col / 48px margin  (≤1023px)
+   Mobile 4-col / 24px margin (≤767px)
    ============================================================ */
 
 /* iPad (768–1023px) */
@@ -666,34 +605,24 @@
     bottom: 80px;
   }
 
-  .pv11-plans-grid {
+  .pv11-tiers-panel {
+    padding: 80px 48px 64px;
+  }
+
+  .pv11-tiers-grid {
     grid-template-columns: repeat(2, 1fr);
   }
 
-  .pv11-kpi-strip {
-    padding: 56px 48px;
-  }
-
-  .pv11-table-panel {
-    padding: 40px;
+  .pv11-ticket {
     margin: 0 48px;
   }
 
-  .pv11-ticket {
-    margin: 0 48px 80px;
+  .pv11-table-inner {
+    padding: 0 48px;
   }
 
-  .pv11-sig-wrap {
-    padding: 48px 0;
-  }
-
-  .pv11-kpi-divider {
-    display: none;
-  }
-
-  .pv11-kpi-inner {
-    gap: 32px;
-    justify-content: center;
+  .pv11-table-panel {
+    padding: 80px 0;
   }
 }
 
@@ -704,71 +633,50 @@
   }
 
   .pv11-hero-inner {
-    bottom: 48px;
-    left: 24px;
-    right: 24px;
+    position: static;
+    padding: 0 24px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    min-height: clamp(480px, 75vh, 640px);
+    padding-bottom: 48px;
+    padding-top: 48px;
   }
 
-  /* On mobile the badge becomes inline below hero content */
   .pv11-hero-badge {
     position: static;
-    align-self: flex-end;
+    align-self: flex-start;
     margin: 32px 24px 0;
     align-items: flex-start;
+    right: auto;
+    bottom: auto;
   }
 
   .pv11-hero-sub {
-    font-size: 18px;
+    font-size: 16px;
   }
 
-  .pv11-plans-grid {
+  .pv11-hero-ctas {
+    flex-direction: column;
+    width: 100%;
+    gap: 12px;
+  }
+
+  .pv11-hero-ctas .btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .pv11-tiers-panel {
+    padding: 56px 24px 48px;
+  }
+
+  .pv11-tiers-grid {
     grid-template-columns: 1fr;
   }
 
-  .pv11-kpi-strip {
-    padding: 48px 24px;
-  }
-
-  .pv11-kpi-inner {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 32px;
-  }
-
-  .pv11-kpi-divider {
-    display: none;
-  }
-
-  .pv11-table-panel {
-    padding: 32px 24px;
-    margin: 0 8px;
-    border-radius: var(--r-sm);
-  }
-
-  /* Mobile: hide comparison columns, show only feature + push */
-  .pv11-trow {
-    grid-template-columns: 2fr 1fr;
-    padding: 16px 0;
-  }
-
-  /* Hide yelp, influencer, groupon columns */
-  .pv11-tcell:nth-child(n+3) {
-    display: none;
-  }
-
-  /* But show push column (2nd child) */
-  .pv11-tcell:nth-child(2) {
-    display: flex;
-  }
-
-  .pv11-tcell--last {
-    justify-content: flex-start;
-    text-align: left;
-  }
-
   .pv11-ticket {
-    margin: 0 8px 56px;
-    border-radius: var(--r-sm) !important;
+    margin: 0 8px;
   }
 
   .pv11-ticket-ctas {
@@ -782,35 +690,66 @@
     justify-content: center;
   }
 
-  .pv11-sig-wrap {
-    padding: 32px 0;
+  .pv11-table-panel {
+    padding: 56px 0;
+  }
+
+  .pv11-table-inner {
+    padding: 0 24px;
+  }
+
+  /* Mobile: collapse to 2 cols — feature + push only */
+  .pv11-trow {
+    grid-template-columns: 2fr 1fr;
+    padding: 16px 0;
+  }
+
+  /* Hide yelp, influencer, groupon columns */
+  .pv11-tcell:nth-child(n + 3) {
+    display: none;
+  }
+
+  .pv11-tcell--last {
+    justify-content: flex-start;
+    text-align: left;
+  }
+
+  .pv11-table-h2 {
+    font-size: clamp(32px, 8vw, 48px);
+    margin-bottom: 40px;
   }
 
   .pv11-section-h2 {
     font-size: 32px;
   }
 
-  .pv11-table-h2 {
-    font-size: clamp(32px, 8vw, 48px);
-    margin: 0 0 40px;
+  .pv11-price-main {
+    font-size: 48px;
   }
 }
 
 /* Small mobile (<480px) */
 @media (max-width: 480px) {
-  .pv11-hero-h1 {
-    font-size: clamp(56px, 14vw, 96px);
-  }
-
-  .pv11-plan-card {
+  .pv11-tier-card {
     padding: 24px;
   }
 
   .pv11-price-main {
-    font-size: clamp(56px, 14vw, 96px);
+    font-size: 40px;
   }
 
-  .pv11-plans-fine {
-    font-size: 12px;
+  .pv11-tiers-fine {
+    font-size: 10px;
+  }
+}
+
+/* ============================================================
+   Reduced motion — no hover shifts
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  .pv11-tier-card,
+  .pv11-tier-card:hover,
+  .pv11-tier-card:active {
+    transform: none;
   }
 }

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import "./privacy-requests.css";
 
 /**
  * /admin/privacy-requests — DSAR intake queue for Push ops.
@@ -25,6 +26,10 @@ interface Row {
   sec_until_due: number;
 }
 
+/**
+ * Returns days remaining as a display string.
+ * Kept as pure helper — no side effects.
+ */
 function formatDueBadge(sec: number, overdue: boolean): string {
   if (overdue) {
     const daysLate = Math.ceil(Math.abs(sec) / 86400);
@@ -36,16 +41,56 @@ function formatDueBadge(sec: number, overdue: boolean): string {
   return `${daysLeft}d`;
 }
 
-function statusChip(status: string): { bg: string; color: string } {
+/** Returns numeric days remaining (negative = overdue). */
+function daysRemaining(sec: number, overdue: boolean): number {
+  if (overdue) return -Math.ceil(Math.abs(sec) / 86400);
+  return Math.ceil(sec / 86400);
+}
+
+/** Maps status string → CSS modifier class on .pr-status-chip. */
+function statusChipClass(status: string): string {
   switch (status) {
     case "resolved":
-      return { bg: "rgba(0,133,255,0.08)", color: "var(--accent-blue)" };
+      return "pr-status-chip--resolved";
     case "denied":
-      return { bg: "rgba(193,18,31,0.08)", color: "var(--brand-red)" };
+      return "pr-status-chip--denied";
     case "verifying":
-      return { bg: "var(--panel-butter)", color: "var(--ink-3)" };
+      return "pr-status-chip--verifying";
+    case "in-progress":
+    case "in_progress":
+      return "pr-status-chip--in-progress";
+    case "completed":
+      return "pr-status-chip--completed";
     default:
-      return { bg: "var(--surface-3)", color: "var(--ink-4)" };
+      return "pr-status-chip--open";
+  }
+}
+
+/** Maps request_type to readable label (uppercase). */
+function typeLabel(t: string): string {
+  switch (t.toLowerCase()) {
+    case "ccpa_deletion":
+    case "ccpa-deletion":
+      return "CCPA DEL";
+    case "ccpa_access":
+    case "ccpa-access":
+      return "CCPA ACCESS";
+    case "gdpr_deletion":
+    case "gdpr-deletion":
+      return "GDPR DEL";
+    case "gdpr_access":
+    case "gdpr-access":
+      return "GDPR ACCESS";
+    case "deletion":
+      return "DELETION";
+    case "access":
+      return "ACCESS";
+    case "ccpa":
+      return "CCPA";
+    case "gdpr":
+      return "GDPR";
+    default:
+      return t.toUpperCase();
   }
 }
 
@@ -100,304 +145,120 @@ export default function AdminPrivacyRequestsPage() {
     }
   }
 
-  const cardStyle: React.CSSProperties = {
-    background: "var(--surface-2)",
-    border: "1px solid var(--hairline)",
-    borderRadius: 10,
-    padding: "20px 24px",
-  };
-
   return (
-    <div
-      style={{
-        minHeight: "100vh",
-        background: "var(--surface)",
-        paddingBottom: 64,
-      }}
-    >
-      {/* Page header */}
-      <div style={{ padding: "40px 40px 32px" }}>
-        <div className="eyebrow" style={{ marginBottom: 8 }}>
-          ADMIN · PUSH INTERNAL · PRIVACY
-        </div>
-        <h1
-          style={{
-            fontFamily: "var(--font-display)",
-            fontSize: "clamp(32px,4vw,56px)",
-            fontWeight: 800,
-            color: "var(--ink)",
-            letterSpacing: "-0.03em",
-            lineHeight: 1,
-            marginBottom: 12,
-          }}
-        >
-          DSAR queue
-        </h1>
-        <p
-          style={{
-            fontSize: 14,
-            fontFamily: "var(--font-body)",
-            color: "var(--ink-4)",
-            lineHeight: 1.6,
-            maxWidth: 560,
-          }}
-        >
+    <div className="pr-page">
+      {/* ── Page header ── */}
+      <div className="pr-header">
+        {/* v11 product eyebrow: parenthetical mono */}
+        <div className="pr-eyebrow">(PRIVACY·REQUESTS)</div>
+        <h1 className="pr-title">DSAR queue</h1>
+        <p className="pr-desc">
           CCPA § 1798.130 deadline is 45 calendar days from receipt. Rows below
-          are sorted by{" "}
-          <code
-            style={{
-              fontFamily: "var(--font-body)",
-              fontSize: 13,
-              background: "var(--surface-3)",
-              padding: "1px 6px",
-              borderRadius: 4,
-              border: "1px solid var(--hairline)",
-            }}
-          >
-            due_at
-          </code>{" "}
-          ascending — the top row is the most urgent.
+          are sorted by <code>due_at</code> ascending — the top row is the most
+          urgent.
         </p>
       </div>
 
-      <div style={{ padding: "0 40px" }}>
-        {/* Error banner */}
-        {error && (
-          <div
-            style={{
-              padding: "12px 16px",
-              background: "rgba(193,18,31,0.05)",
-              border: "1px solid rgba(193,18,31,0.2)",
-              borderRadius: 8,
-              color: "var(--brand-red)",
-              fontSize: 13,
-              fontFamily: "var(--font-body)",
-              marginBottom: 20,
-            }}
-          >
-            {error}
-          </div>
-        )}
+      <div className="pr-content">
+        {/* ── Error banner ── */}
+        {error && <div className="pr-error">{error}</div>}
 
+        {/* ── Loading ── */}
         {rows === null ? (
-          <div
-            style={{
-              padding: "48px 0",
-              textAlign: "center",
-              fontSize: 14,
-              fontFamily: "var(--font-body)",
-              color: "var(--ink-4)",
-            }}
-          >
-            Loading…
-          </div>
+          <div className="pr-loading">Loading…</div>
         ) : rows.length === 0 ? (
-          <div style={cardStyle}>
-            <div
-              style={{
-                padding: "32px 0",
-                textAlign: "center",
-                fontSize: 14,
-                fontFamily: "var(--font-body)",
-                color: "var(--ink-4)",
-              }}
-            >
-              No open privacy requests.
-            </div>
+          /* ── Empty state ── */
+          <div className="pr-card">
+            <div className="pr-empty-msg">No open privacy requests.</div>
           </div>
         ) : (
-          <div style={cardStyle}>
+          /* ── Request card with table ── */
+          <div className="pr-card">
             {/* Table header */}
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "100px 120px 100px 100px 100px 200px",
-                gap: 12,
-                padding: "8px 0",
-                borderBottom: "2px solid var(--hairline)",
-                marginBottom: 0,
-              }}
-            >
-              {["TICKET", "TYPE", "RECEIVED", "DUE", "STATUS", "ACTIONS"].map(
+            <div className="pr-table-head">
+              {["TICKET", "TYPE", "RECEIVED", "SLA", "STATUS", "ACTIONS"].map(
                 (h) => (
-                  <div
-                    key={h}
-                    style={{
-                      fontSize: 11,
-                      fontWeight: 700,
-                      letterSpacing: "0.07em",
-                      fontFamily: "var(--font-body)",
-                      color: "var(--ink-4)",
-                      textTransform: "uppercase",
-                    }}
-                  >
+                  <div key={h} className="pr-table-head__cell">
                     {h}
                   </div>
                 ),
               )}
             </div>
 
-            {/* Rows */}
+            {/* Data rows */}
             {rows.map((r) => {
-              const sc = statusChip(r.status);
+              const days = daysRemaining(r.sec_until_due, r.overdue);
+              const slaMod = r.overdue
+                ? "pr-sla-chip--overdue"
+                : days < 7
+                  ? "pr-sla-chip--critical"
+                  : days < 14
+                    ? "pr-sla-chip--warn"
+                    : "";
+
               return (
                 <div
                   key={r.ticket_id}
-                  style={{
-                    display: "grid",
-                    gridTemplateColumns: "100px 120px 100px 100px 100px 200px",
-                    gap: 12,
-                    alignItems: "center",
-                    padding: "12px 0",
-                    borderBottom: "1px solid var(--hairline)",
-                    background: r.overdue
-                      ? "rgba(193,18,31,0.02)"
-                      : "transparent",
-                  }}
+                  className={`pr-row${r.overdue ? " pr-row--overdue" : ""}`}
                 >
                   {/* Ticket ID */}
                   <div>
-                    <code
-                      style={{
-                        fontFamily: "var(--font-body)",
-                        fontSize: 12,
-                        color: "var(--ink)",
-                        background: "var(--surface-3)",
-                        padding: "2px 6px",
-                        borderRadius: 4,
-                        border: "1px solid var(--hairline)",
-                      }}
-                    >
+                    <code className="pr-ticket-id">
                       {r.ticket_id.slice(0, 8)}
                     </code>
                   </div>
 
-                  {/* Type */}
-                  <div
-                    style={{
-                      fontSize: 13,
-                      fontFamily: "var(--font-body)",
-                      color: "var(--ink)",
-                      fontWeight: 500,
-                    }}
-                  >
-                    {r.request_type}
-                  </div>
-
-                  {/* Received */}
+                  {/* Request type badge (CCPA / GDPR / deletion / access) */}
                   <div>
-                    <code
-                      style={{
-                        fontFamily: "var(--font-body)",
-                        fontSize: 12,
-                        color: "var(--ink-4)",
-                      }}
-                    >
-                      {r.received_at.slice(0, 10)}
-                    </code>
-                  </div>
-
-                  {/* Due */}
-                  <div>
-                    <span
-                      style={{
-                        display: "inline-block",
-                        padding: "3px 8px",
-                        borderRadius: 4,
-                        fontSize: 11,
-                        fontWeight: 700,
-                        fontFamily: "var(--font-body)",
-                        background: r.overdue
-                          ? "var(--brand-red)"
-                          : "var(--surface-3)",
-                        color: r.overdue ? "var(--snow)" : "var(--ink-3)",
-                        letterSpacing: "0.04em",
-                      }}
-                    >
-                      {formatDueBadge(r.sec_until_due, r.overdue)}
+                    <span className="pr-type-badge">
+                      {typeLabel(r.request_type)}
                     </span>
                   </div>
 
-                  {/* Status */}
+                  {/* Received date — mono timestamp */}
+                  <div className="pr-date">{r.received_at.slice(0, 10)}</div>
+
+                  {/* SLA countdown — liquid-glass chip + Darky numeral */}
+                  <div>
+                    <span className={`pr-sla-chip ${slaMod}`}>
+                      <span className="pr-sla-chip__days">
+                        {formatDueBadge(r.sec_until_due, r.overdue)}
+                      </span>
+                    </span>
+                  </div>
+
+                  {/* Status chip */}
                   <div>
                     <span
-                      style={{
-                        display: "inline-block",
-                        padding: "3px 8px",
-                        borderRadius: 4,
-                        fontSize: 11,
-                        fontWeight: 700,
-                        fontFamily: "var(--font-body)",
-                        background: sc.bg,
-                        color: sc.color,
-                        textTransform: "capitalize",
-                      }}
+                      className={`pr-status-chip ${statusChipClass(r.status)}`}
                     >
                       {r.status}
                     </span>
                   </div>
 
-                  {/* Actions */}
-                  <div style={{ display: "flex", gap: 8 }}>
+                  {/* Action buttons — Process → primary, Deny → ghost */}
+                  <div className="pr-actions">
                     {r.status === "received" || r.status === "verifying" ? (
                       <>
+                        {/* "Process" = resolve → btn-primary (brand-red) */}
                         <button
-                          style={{
-                            padding: "6px 14px",
-                            border: "none",
-                            borderRadius: 6,
-                            background: "var(--ink)",
-                            color: "var(--snow)",
-                            fontFamily: "var(--font-body)",
-                            fontSize: 11,
-                            fontWeight: 700,
-                            letterSpacing: "0.04em",
-                            cursor:
-                              acting === r.ticket_id
-                                ? "not-allowed"
-                                : "pointer",
-                            opacity: acting === r.ticket_id ? 0.5 : 1,
-                          }}
+                          className="pr-btn-primary"
                           disabled={acting === r.ticket_id}
                           onClick={() => resolve(r.ticket_id, "resolved")}
-                          className="click-shift"
                         >
-                          Resolve
+                          Process
                         </button>
+                        {/* "Reject" → btn-ghost */}
                         <button
-                          style={{
-                            padding: "6px 14px",
-                            border: "1px solid rgba(193,18,31,0.25)",
-                            borderRadius: 6,
-                            background: "rgba(193,18,31,0.05)",
-                            color: "var(--brand-red)",
-                            fontFamily: "var(--font-body)",
-                            fontSize: 11,
-                            fontWeight: 700,
-                            letterSpacing: "0.04em",
-                            cursor:
-                              acting === r.ticket_id
-                                ? "not-allowed"
-                                : "pointer",
-                            opacity: acting === r.ticket_id ? 0.5 : 1,
-                          }}
+                          className="pr-btn-ghost"
                           disabled={acting === r.ticket_id}
                           onClick={() => resolve(r.ticket_id, "denied")}
-                          className="click-shift"
                         >
-                          Deny
+                          Reject
                         </button>
                       </>
                     ) : (
-                      <span
-                        style={{
-                          fontSize: 12,
-                          fontFamily: "var(--font-body)",
-                          color: "var(--ink-4)",
-                        }}
-                      >
-                        —
-                      </span>
+                      <span className="pr-actions__none">—</span>
                     )}
                   </div>
                 </div>
@@ -406,34 +267,10 @@ export default function AdminPrivacyRequestsPage() {
           </div>
         )}
 
-        {/* Info card */}
-        <div
-          style={{
-            ...cardStyle,
-            marginTop: 24,
-            background: "var(--surface-3)",
-          }}
-        >
-          <div
-            style={{
-              fontSize: 11,
-              fontWeight: 700,
-              letterSpacing: "0.07em",
-              fontFamily: "var(--font-body)",
-              color: "var(--ink-4)",
-              textTransform: "uppercase",
-              marginBottom: 10,
-            }}
-          >
-            SLA reference
-          </div>
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(3, 1fr)",
-              gap: 16,
-            }}
-          >
+        {/* ── SLA reference info card ── */}
+        <div className="pr-info-card">
+          <div className="pr-info-card__eyebrow">SLA reference</div>
+          <div className="pr-info-grid">
             {[
               { label: "CCPA deadline", value: "45 days", sub: "§ 1798.130" },
               { label: "GDPR deadline", value: "30 days", sub: "Art. 12(3)" },
@@ -444,40 +281,9 @@ export default function AdminPrivacyRequestsPage() {
               },
             ].map(({ label, value, sub }) => (
               <div key={label}>
-                <div
-                  style={{
-                    fontSize: 11,
-                    fontFamily: "var(--font-body)",
-                    color: "var(--ink-4)",
-                    marginBottom: 4,
-                    textTransform: "uppercase",
-                    letterSpacing: "0.06em",
-                    fontWeight: 700,
-                  }}
-                >
-                  {label}
-                </div>
-                <div
-                  style={{
-                    fontFamily: "var(--font-display)",
-                    fontSize: 20,
-                    fontWeight: 800,
-                    color: "var(--ink)",
-                    lineHeight: 1,
-                    marginBottom: 2,
-                  }}
-                >
-                  {value}
-                </div>
-                <div
-                  style={{
-                    fontSize: 11,
-                    fontFamily: "var(--font-body)",
-                    color: "var(--ink-4)",
-                  }}
-                >
-                  {sub}
-                </div>
+                <div className="pr-info-stat__label">{label}</div>
+                <div className="pr-info-stat__value">{value}</div>
+                <div className="pr-info-stat__sub">{sub}</div>
               </div>
             ))}
           </div>

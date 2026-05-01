@@ -1,5 +1,10 @@
 "use client";
 
+// v11 Contact Page — utility page register, 8px grid, closed color list
+// Panel 1: Hero (surface) · Panel 2: Form + Info two-column (surface-2)
+// Sig Divider · Ticket CTA
+// TypeScript logic preserved 1:1
+
 import { useState } from "react";
 import Link from "next/link";
 import "./contact.css";
@@ -148,23 +153,12 @@ function ContactForm() {
 
       {/* Error */}
       {state === "error" && errorMsg && (
-        <p
-          role="alert"
-          style={{
-            fontFamily: "var(--font-body)",
-            fontSize: 14,
-            color: "var(--brand-red)",
-            paddingLeft: 12,
-            borderLeft: "2px solid var(--brand-red)",
-            margin: 0,
-            lineHeight: 1.55,
-          }}
-        >
+        <p role="alert" className="contact-error">
           {errorMsg}
         </p>
       )}
 
-      {/* Submit */}
+      {/* Submit — btn-primary per § 9 unified button system */}
       <button
         type="submit"
         className="btn-primary click-shift"
@@ -178,25 +172,60 @@ function ContactForm() {
   );
 }
 
+/* ── Contact method cards data ─────────────────────────────── */
+const CONTACT_METHODS = [
+  {
+    icon: "✉",
+    label: "General",
+    value: "hello@pushnyc.com",
+    href: "mailto:hello@pushnyc.com",
+    sla: "Reply in 1 business day",
+  },
+  {
+    icon: "🏪",
+    label: "Merchants",
+    value: "merchants@pushnyc.com",
+    href: "mailto:merchants@pushnyc.com",
+    sla: "Same-day on weekdays",
+  },
+  {
+    icon: "✦",
+    label: "Creators",
+    value: "creators@pushnyc.com",
+    href: "mailto:creators@pushnyc.com",
+    sla: "Same-day on weekdays",
+  },
+  {
+    icon: "◎",
+    label: "Press",
+    value: "press@pushnyc.com",
+    href: "mailto:press@pushnyc.com",
+    sla: "24h with deadline noted",
+  },
+];
+
 /* ── Page ─────────────────────────────────────────────────── */
 export default function ContactPage() {
   return (
-    <main>
-      {/* ═══ 01 — HERO (dark, bottom-left anchored) ══════════ */}
+    <main className="contact-page">
+      {/* ═══════════════════════════════════════════════════════
+          PANEL 1 — Hero · background: var(--surface)
+          (CONTACT) eyebrow 12px mono · H1 "Get in touch" Darky 40px
+          Utility page: NOT full Magvix hero — H1 at 40px per brief
+          ═══════════════════════════════════════════════════════ */}
       <section aria-label="Hero" className="contact-hero">
-        {/* Decorative ghost text */}
+        {/* Decorative ghost */}
         <span aria-hidden="true" className="contact-hero-ghost">
           hi
         </span>
 
         <div className="contact-hero-inner">
-          <p
-            className="eyebrow"
-            style={{ color: "rgba(255,255,255,0.45)", marginBottom: 16 }}
-          >
-            (GET IN TOUCH)
-          </p>
-          <h1 className="contact-hero-title">{"Let's"} talk.</h1>
+          {/* (CONTACT) eyebrow 12px mono per brief */}
+          <p className="contact-eyebrow">(CONTACT)</p>
+
+          {/* H1 — "Get in touch" Darky 40px (utility page, NOT clamp hero) */}
+          <h1 className="contact-hero-title">Get in touch.</h1>
+
           <p className="contact-hero-sub">
             Push is small. Jiaming reads everything and writes back himself —
             usually within a business day, often the same hour. No bots, no
@@ -205,114 +234,21 @@ export default function ContactPage() {
         </div>
       </section>
 
-      {/* ═══ 02 — CONTACT METHODS GRID ════════════════════════ */}
-      <section
-        aria-label="Contact methods"
-        style={{
-          background: "var(--surface-2)",
-          padding: "96px 0",
-        }}
-      >
-        <div className="contact-section-inner">
-          <p
-            className="eyebrow"
-            style={{ color: "var(--ink-3)", marginBottom: 16 }}
-          >
-            (DIRECT LINES)
-          </p>
-          <h2 className="contact-section-h2">
-            Four inboxes.
-            <br />
-            One human per lane.
-          </h2>
-
-          <div className="contact-routes-grid">
-            {[
-              {
-                lane: "General",
-                email: "hello@pushnyc.com",
-                sla: "Reply in 1 business day",
-                desc: "Anything that does not fit another lane. We route it to the right person.",
-              },
-              {
-                lane: "Merchants",
-                email: "merchants@pushnyc.com",
-                sla: "Same-day on weekdays",
-                desc: "Pricing, campaign setup, block availability, platform questions.",
-              },
-              {
-                lane: "Creators",
-                email: "creators@pushnyc.com",
-                sla: "Same-day on weekdays",
-                desc: "Application status, tier questions, payout issues, verification disputes.",
-              },
-              {
-                lane: "Press",
-                email: "press@pushnyc.com",
-                sla: "24h with deadline noted",
-                desc: "Story pitches, founder interviews, data requests, embargoed releases.",
-              },
-            ].map((card) => (
-              <div key={card.lane} className="contact-route-card">
-                <p className="eyebrow" style={{ color: "var(--ink-3)" }}>
-                  {card.lane}
-                </p>
-                <a
-                  href={`mailto:${card.email}`}
-                  className="contact-route-email"
-                >
-                  {card.email}
-                </a>
-                <p className="contact-route-desc">{card.desc}</p>
-                <div className="contact-route-sla">
-                  <span className="eyebrow" style={{ color: "var(--ink-4)" }}>
-                    {card.sla}
-                  </span>
-                </div>
-                <a
-                  href={`mailto:${card.email}`}
-                  className="btn-ghost click-shift"
-                  style={{ alignSelf: "flex-start", fontSize: 14 }}
-                >
-                  Send email
-                </a>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ═══ 03 — CONTACT FORM ════════════════════════════════ */}
-      <section
-        aria-label="Contact form"
-        style={{
-          background: "var(--surface)",
-          padding: "96px 0",
-        }}
-      >
-        <div className="contact-section-inner contact-form-layout">
-          {/* Left — lead copy + promises */}
-          <div className="contact-form-lead">
-            <p
-              className="eyebrow"
-              style={{ color: "var(--ink-3)", marginBottom: 16 }}
-            >
-              (OR JUST WRITE)
-            </p>
-            <h2 className="contact-section-h2" style={{ marginBottom: 24 }}>
+      {/* ═══════════════════════════════════════════════════════
+          PANEL 2 — Form + Info · background: var(--surface-2)
+          Two-column: left = contact form · right = contact methods
+          ═══════════════════════════════════════════════════════ */}
+      <section aria-label="Contact" className="contact-panel">
+        <div className="contact-section-inner contact-two-col">
+          {/* Left column — contact form */}
+          <div className="contact-form-col">
+            <p className="contact-eyebrow-ink">(OR JUST WRITE)</p>
+            <h2 className="contact-panel-h2">
               Not sure which
               <br />
               inbox to use?
             </h2>
-            <p
-              style={{
-                fontFamily: "var(--font-body)",
-                fontSize: 18,
-                lineHeight: 1.55,
-                color: "var(--ink-3)",
-                marginBottom: 40,
-              }}
-            >
+            <p className="contact-panel-body">
               Drop a line here. It routes to the right person automatically.
               Real human on the other side, every time.
             </p>
@@ -333,6 +269,44 @@ export default function ContactPage() {
               ))}
             </div>
 
+            {/* Form */}
+            <ContactForm />
+          </div>
+
+          {/* Right column — contact methods */}
+          <div className="contact-methods-col">
+            <p className="contact-eyebrow-ink">(DIRECT LINES)</p>
+            <h2 className="contact-panel-h2">
+              Four inboxes.
+              <br />
+              One human per lane.
+            </h2>
+
+            {/* Contact method cards — r-md 10px, surface bg, 40×40 icon tile, hover shift */}
+            <div className="contact-methods-list">
+              {CONTACT_METHODS.map((method) => (
+                <a
+                  key={method.label}
+                  href={method.href}
+                  className="contact-method-card click-shift"
+                >
+                  {/* Icon 40×40 tile per § 4.3 */}
+                  <div className="contact-method-icon-tile" aria-hidden>
+                    <span className="contact-method-icon-glyph">
+                      {method.icon}
+                    </span>
+                  </div>
+
+                  {/* Text block */}
+                  <div className="contact-method-text">
+                    <p className="contact-method-label">{method.label}</p>
+                    <p className="contact-method-value">{method.value}</p>
+                    <p className="contact-method-sla">{method.sla}</p>
+                  </div>
+                </a>
+              ))}
+            </div>
+
             {/* Contact info editorial table */}
             <div className="contact-info-table">
               {[
@@ -348,20 +322,13 @@ export default function ContactPage() {
               ))}
             </div>
           </div>
-
-          {/* Right — form */}
-          <ContactForm />
         </div>
       </section>
 
-      {/* ═══ 04 — LOCATION STRIP (dark) ═══════════════════════ */}
-      <section
-        aria-label="Location"
-        style={{
-          background: "var(--char)",
-          padding: "96px 0",
-        }}
-      >
+      {/* ═══════════════════════════════════════════════════════
+          PANEL 3 — Location Strip · var(--char) dark
+          ═══════════════════════════════════════════════════════ */}
+      <section aria-label="Location" className="contact-location-section">
         <div className="contact-section-inner">
           <div className="contact-location-layout">
             <div>
@@ -371,37 +338,14 @@ export default function ContactPage() {
               >
                 (WHERE WE ARE)
               </p>
-              <h2
-                style={{
-                  fontFamily: "var(--font-display)",
-                  fontWeight: 900,
-                  fontSize: "clamp(36px, 4.5vw, 64px)",
-                  letterSpacing: "-0.025em",
-                  lineHeight: 1.0,
-                  color: "var(--snow)",
-                  margin: "0 0 24px",
-                }}
-              >
+              <h2 className="contact-location-h2">
                 No office yet.
                 <br />
-                <span
-                  style={{
-                    fontWeight: 200,
-                    color: "rgba(255,255,255,0.4)",
-                  }}
-                >
+                <span className="contact-location-h2-dim">
                   We walk the block.
                 </span>
               </h2>
-              <p
-                style={{
-                  fontFamily: "var(--font-body)",
-                  fontSize: 18,
-                  lineHeight: 1.55,
-                  color: "rgba(255,255,255,0.55)",
-                  maxWidth: 480,
-                }}
-              >
+              <p className="contact-location-body">
                 Push is based in Brooklyn. The work happens on the sidewalk, in
                 the venues, at the counter. Coffee is on us if you are in the
                 neighborhood.
@@ -428,44 +372,57 @@ export default function ContactPage() {
         </div>
       </section>
 
-      {/* ═══ SIG DIVIDER ══════════════════════════════════════ */}
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          padding: "80px 64px",
-          background: "var(--surface)",
-        }}
-      >
+      {/* ═══════════════════════════════════════════════════════
+          SIG DIVIDER
+          ═══════════════════════════════════════════════════════ */}
+      <div className="contact-sig-wrap">
         <span className="sig-divider">Story · Scan · Pay ·</span>
       </div>
 
-      {/* ═══ TICKET CTA ═══════════════════════════════════════ */}
-      <div
-        style={{
-          maxWidth: 1140,
-          margin: "0 auto",
-          padding: "0 64px 120px",
-        }}
-      >
-        <div className="ticket-panel">
+      {/* ═══════════════════════════════════════════════════════
+          TICKET CTA (§ 8.2)
+          ═══════════════════════════════════════════════════════ */}
+      <div className="contact-cta-wrap">
+        <div className="ticket-panel" style={{ position: "relative" }}>
+          {/* Grommet corners */}
+          {[
+            { top: 24, left: 24 },
+            { top: 24, right: 24 },
+            { bottom: 24, left: 24 },
+            { bottom: 24, right: 24 },
+          ].map((pos, i) => (
+            <div
+              key={i}
+              aria-hidden="true"
+              style={{
+                position: "absolute",
+                width: 16,
+                height: 16,
+                borderRadius: "var(--r-full)",
+                background: "var(--ink)",
+                ...pos,
+              }}
+            />
+          ))}
+
           <p
             className="eyebrow"
             style={{
-              color: "rgba(255,255,255,0.65)",
+              color: "rgba(10,10,10,0.55)",
               marginBottom: 24,
               textAlign: "center",
             }}
           >
             (READY TO START)
           </p>
+
           <h2
             style={{
               fontFamily: "var(--font-hero)",
               fontStyle: "italic",
               fontWeight: 400,
               fontSize: "clamp(40px, 5vw, 56px)",
-              color: "var(--snow)",
+              color: "var(--ink)",
               marginBottom: 24,
               textAlign: "center",
               letterSpacing: "-0.02em",
@@ -474,19 +431,23 @@ export default function ContactPage() {
           >
             Join the pilot.
           </h2>
+
           <p
             style={{
               fontFamily: "var(--font-body)",
               fontSize: 16,
-              color: "rgba(255,255,255,0.7)",
+              color: "rgba(10,10,10,0.65)",
               marginBottom: 32,
               textAlign: "center",
               lineHeight: 1.55,
+              maxWidth: "40ch",
+              margin: "0 auto 32px",
             }}
           >
             Merchants and creators in Brooklyn and Lower Manhattan — we are
             accepting applications now.
           </p>
+
           <div
             style={{
               display: "flex",
@@ -498,14 +459,7 @@ export default function ContactPage() {
             <Link href="/for-merchants" className="btn-ink click-shift">
               I am a Merchant
             </Link>
-            <Link
-              href="/for-creators"
-              className="btn-ghost click-shift"
-              style={{
-                borderColor: "rgba(255,255,255,0.4)",
-                color: "var(--snow)",
-              }}
-            >
+            <Link href="/for-creators" className="btn-ghost click-shift">
               I am a Creator
             </Link>
           </div>

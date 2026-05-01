@@ -4,6 +4,7 @@ import { useEffect, useState, useRef } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import dynamic from "next/dynamic";
+import "./scan.css";
 import {
   getQRCode,
   isQRExpired,
@@ -104,8 +105,14 @@ export default function ScanLandingPage() {
   /* ── Loading ── */
   if (status === "loading") {
     return (
-      <div style={st.centered}>
-        <p style={st.loadingText}>Verifying QR code…</p>
+      <div className="scan-loading-wrap">
+        <span className="scan-loading-wordmark">PUSH</span>
+        <div
+          className="scan-spinner"
+          role="status"
+          aria-label="Verifying QR code"
+        />
+        <p className="scan-loading-label">Verifying QR code…</p>
       </div>
     );
   }
@@ -113,15 +120,15 @@ export default function ScanLandingPage() {
   /* ── Not found ── */
   if (status === "not-found") {
     return (
-      <div style={st.centered}>
-        <div style={st.errorCard}>
-          <p style={st.errorEyebrow}>(INVALID CODE)</p>
-          <h1 style={st.errorTitle}>QR code not found.</h1>
-          <p style={st.errorBody}>
+      <div className="scan-error-wrap">
+        <div className="scan-error-card">
+          <p className="scan-error-eyebrow">(INVALID CODE)</p>
+          <h1 className="scan-error-title">QR code invalid.</h1>
+          <p className="scan-error-body">
             This code doesn&apos;t match any active campaign. Ask your creator
             for the correct link.
           </p>
-          <Link href="/" style={st.errorLink}>
+          <Link href="/" className="scan-error-link">
             ← Back to Push
           </Link>
         </div>
@@ -132,15 +139,15 @@ export default function ScanLandingPage() {
   /* ── Expired ── */
   if (status === "expired" && qr) {
     return (
-      <div style={st.centered}>
-        <div style={st.errorCard}>
-          <p style={st.errorEyebrow}>(CAMPAIGN ENDED)</p>
-          <h1 style={st.errorTitle}>{qr.campaignTitle}</h1>
-          <p style={st.errorBody}>
+      <div className="scan-error-wrap">
+        <div className="scan-error-card">
+          <p className="scan-error-eyebrow">(CAMPAIGN ENDED)</p>
+          <h1 className="scan-error-title">{qr.campaignTitle}</h1>
+          <p className="scan-error-body">
             This campaign ended on {formatExpiry(qr.expiresAt)}. Check{" "}
             <strong>{qr.businessName}</strong> for current offers.
           </p>
-          <Link href="/" style={st.errorLink}>
+          <Link href="/" className="scan-error-link">
             ← Back to Push
           </Link>
         </div>
@@ -194,7 +201,23 @@ export default function ScanLandingPage() {
             <span style={st.pushWordmark}>PUSH</span>
             {scanRecorded ? (
               <span style={st.verifiedBadge}>
-                <span aria-hidden="true">✓</span> Scan verified
+                {/* SVG check icon in 20×20 tile — Design.md v11 */}
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 16 16"
+                  fill="none"
+                  aria-hidden="true"
+                >
+                  <path
+                    d="M3 8.5L6.5 12L13 5"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>{" "}
+                Scan verified
               </span>
             ) : (
               <span style={st.activeBadge}>Active</span>
@@ -256,29 +279,70 @@ export default function ScanLandingPage() {
               )}
             </div>
 
-            {/* Filled Ink CTA — Design.md Ticket Panel spec */}
+            {/* Claim Reward CTA — .scan-claim-btn, full-width mobile per spec */}
             <button
-              style={st.ctaButton}
+              className="scan-claim-btn"
               onClick={() => router.push(`/scan/${qrId}/verify`)}
-              onMouseEnter={(e) => {
-                (e.currentTarget as HTMLButtonElement).style.transform =
-                  "translate(2px, 2px)";
-              }}
-              onMouseLeave={(e) => {
-                (e.currentTarget as HTMLButtonElement).style.transform = "none";
-              }}
             >
-              {scanRecorded ? "CONFIRM MY VISIT →" : "TAP TO CHECK IN →"}
+              {scanRecorded ? "Confirm My Visit →" : "Claim Reward →"}
             </button>
           </div>
         </div>
       </div>
 
-      {/* ── Campaign details ───────────────────────────────── */}
-      <section style={st.detailsSection}>
+      {/* ── Verified success banner (shown after scan recorded) ── */}
+      {scanRecorded && (
+        <div className="scan-verified-banner">
+          {/* 40×40 circle tile with SVG check — Design.md v11 */}
+          <div className="scan-verified-icon" aria-hidden="true">
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 20 20"
+              fill="none"
+              aria-hidden="true"
+            >
+              <path
+                d="M4 10.5L8.5 15L16 6"
+                stroke="rgba(34,197,94,0.9)"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          </div>
+          <div>
+            <h2 className="scan-verified-heading">Verified!</h2>
+            <p className="scan-verified-sub">
+              Your visit has been recorded for @{qr.creatorHandle}
+            </p>
+          </div>
+        </div>
+      )}
+
+      {/* ── Campaign details card ─────────────────────────────── */}
+      <section
+        style={{ ...st.detailsSection, paddingTop: 32, paddingBottom: 32 }}
+      >
         <div style={st.sectionInner}>
-          <p style={st.sectionEyebrow}>(ABOUT THIS CAMPAIGN)</p>
-          <p style={st.detailsText}>{qr.description}</p>
+          <div className="scan-details-card">
+            <h2 className="scan-campaign-name">{qr.campaignTitle}</h2>
+            <p className="scan-merchant-name">{qr.businessName}</p>
+            {/* Primary offer in brand-red Display 40px */}
+            <p className="scan-offer-value">
+              {heroExhausted ? qr.offerTier2 : qr.offerTier1}
+            </p>
+            <p className="scan-offer-label">
+              {heroExhausted
+                ? "Standard Offer"
+                : `Hero Offer · ${heroLeft} left`}
+            </p>
+          </div>
+          {/* About section below the card */}
+          <div style={{ marginTop: 24 }}>
+            <p style={st.sectionEyebrow}>(ABOUT THIS CAMPAIGN)</p>
+            <p style={st.detailsText}>{qr.description}</p>
+          </div>
         </div>
       </section>
 
@@ -359,14 +423,10 @@ export default function ScanLandingPage() {
         </div>
       </section>
 
-      {/* ── Footer ────────────────────────────────────────── */}
+      {/* ── Footer — "Powered by Push" mono 12px brand ──────── */}
       <footer style={st.footer}>
-        <p style={st.footerText}>
-          Powered by{" "}
-          <Link href="/" style={st.footerLink}>
-            Push
-          </Link>{" "}
-          — community attribution platform
+        <p className="scan-powered-by">
+          Powered by <Link href="/">Push</Link> — community attribution platform
         </p>
       </footer>
     </div>

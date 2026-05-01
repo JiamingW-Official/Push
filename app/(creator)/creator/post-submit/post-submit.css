@@ -1,43 +1,455 @@
 /* ============================================================
-   Post-Submit Confirmation — 20x Design
-   Design System: border-radius: 0, Push brand palette
-   Tone: Instant positive reinforcement, reduce user anxiety
+   Post-Submit Confirmation — Design System v11
+   Registers: Product UI (NOT marketing parenthetical)
    ============================================================ */
 
 /* ── Page shell ──────────────────────────────────────────── */
 
 .ps-page {
+  background: var(--surface-2);
   min-height: 100svh;
+  padding-bottom: 96px;
+}
+
+/* ── Fallback loading state ──────────────────────────────── */
+
+.ps-loading {
+  min-height: 100svh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-body);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-4);
   background: var(--surface);
+}
+
+/* ── Dark editorial hero ─────────────────────────────────── */
+
+.ps-header {
+  background: var(--char);
+  border-bottom: 2px solid var(--ink);
+  padding: 64px 40px 56px;
+}
+
+.ps-header-inner {
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+.ps-header-col {
   display: flex;
   flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+/* Checkmark circle in header */
+.ps-hero-check {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--brand-red);
+  display: flex;
   align-items: center;
-  font-family: "CS Genio Mono", "Courier New", monospace;
+  justify-content: center;
+  margin-bottom: 8px;
+  box-shadow: 0 8px 24px rgba(193, 18, 31, 0.32);
+  flex-shrink: 0;
 }
 
-/* ── Hero confirmation panel ─────────────────────────────── */
+.ps-hero-check svg {
+  width: 28px;
+  height: 28px;
+}
 
-.ps-hero {
-  width: 100%;
-  background: var(--ink);
-  padding: 80px 40px 64px;
+.ps-eyebrow {
+  font-family: var(--font-body);
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.38);
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  display: block;
+  margin-bottom: 8px;
+}
+
+.ps-hero-title {
+  font-family: var(--font-display);
+  font-size: clamp(48px, 6vw, 72px);
+  font-weight: 900;
+  color: var(--snow);
+  margin: 0;
+  line-height: 1;
+  letter-spacing: -0.04em;
+}
+
+/* ── Body container ──────────────────────────────────────── */
+
+.ps-body {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 32px 40px 0;
+}
+
+/* ── Status indicator row ────────────────────────────────── */
+
+.ps-status-row {
+  padding-bottom: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.ps-status-pill {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ps-status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--ink-4);
+  flex-shrink: 0;
+}
+
+.ps-status-text {
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: var(--ink-4);
+}
+
+/* ── Shared card ─────────────────────────────────────────── */
+
+.ps-card {
+  background: var(--surface-2);
+  border-radius: 10px;
+  padding: 24px;
+  margin-bottom: 16px;
+}
+
+.ps-card-eyebrow {
+  font-family: var(--font-body);
+  font-size: 12px;
+  color: var(--ink-4);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  display: block;
+  margin-bottom: 16px;
+}
+
+/* ── Confirmation tile (liquid-glass) ────────────────────── */
+
+.ps-confirm-tile {
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(16px) saturate(160%);
+  -webkit-backdrop-filter: blur(16px) saturate(160%);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 16px;
+  padding: 40px 32px;
   text-align: center;
-  position: relative;
+}
+
+.ps-confirm-icon {
+  width: 56px;
+  height: 56px;
+  background: rgba(193, 18, 31, 0.1);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 16px;
+}
+
+.ps-confirm-title {
+  font-family: var(--font-display);
+  font-size: 32px;
+  font-weight: 800;
+  color: var(--ink);
+  margin-bottom: 8px;
+}
+
+.ps-confirm-sub {
+  font-family: var(--font-body);
+  font-size: 16px;
+  color: var(--ink-3);
+}
+
+/* ── Submission preview card ─────────────────────────────── */
+
+.ps-preview-row {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+}
+
+.ps-thumb {
+  width: 64px;
+  height: 64px;
+  background: var(--surface-3);
+  border: 1px solid var(--hairline);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  color: var(--ink-4);
+  flex-shrink: 0;
+}
+
+.ps-preview-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.ps-preview-title {
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--ink);
+  margin: 0;
+}
+
+.ps-preview-tags {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.ps-preview-merchant {
+  font-family: var(--font-body);
+  font-size: 12px;
+  color: var(--ink-3);
+}
+
+.ps-preview-sep {
+  color: var(--hairline);
+}
+
+.ps-preview-meta {
+  font-family: var(--font-body);
+  font-size: 12px;
+  color: var(--ink-4);
+}
+
+.ps-preview-link {
+  font-family: var(--font-body);
+  font-size: 12px;
+  color: var(--accent-blue);
+  text-decoration: none;
   overflow: hidden;
-  border-bottom: 4px solid var(--brand-red);
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-.ps-hero::before {
-  content: "";
+.ps-preview-link:hover {
+  text-decoration: underline;
+}
+
+.ps-preview-timestamp {
+  font-family: var(--font-body);
+  font-size: 12px;
+  color: var(--ink-4);
+  margin: 16px 0 0;
+  letter-spacing: 0.02em;
+}
+
+/* ── Submission details table (Product register) ─────────── */
+
+.ps-detail-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 12px 0;
+  border-bottom: 1px dotted var(--hairline);
+}
+
+.ps-detail-row:last-child {
+  border-bottom: none;
+}
+
+.ps-detail-label {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ink-4);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.ps-detail-value {
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: var(--ink);
+}
+
+/* ── What happens next card ──────────────────────────────── */
+
+.ps-card-next-eyebrow {
+  font-family: var(--font-body);
+  font-size: 12px;
+  color: var(--ink-4);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  display: block;
+  margin-bottom: 24px;
+}
+
+.ps-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+/* ── Review timeline steps ───────────────────────────────── */
+
+.ps-step {
+  display: grid;
+  grid-template-columns: 40px 1fr;
+  gap: 16px;
+  padding-bottom: 24px;
+  position: relative;
+}
+
+.ps-step:last-child {
+  padding-bottom: 0;
+}
+
+/* Vertical connector line */
+.ps-step-connector {
   position: absolute;
-  inset: 0;
-  background:
-    radial-gradient(ellipse 60% 80% at 50% 0%, rgba(193, 18, 31, 0.14) 0%, transparent 60%),
-    radial-gradient(ellipse 40% 50% at 80% 90%, rgba(102, 155, 188, 0.06) 0%, transparent 50%);
-  pointer-events: none;
+  left: 19px;
+  top: 36px;
+  width: 2px;
+  height: calc(100% - 12px);
+  background: var(--hairline);
 }
 
-/* ── Animated checkmark ──────────────────────────────────── */
+/* 40×40 icon tile — not naked SVG */
+.ps-step-icon-tile {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: var(--surface-3);
+  border: 1px solid var(--hairline);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  z-index: 1;
+}
+
+.ps-step-icon-tile.active {
+  background: var(--brand-red);
+  color: var(--snow);
+  border-color: var(--brand-red);
+}
+
+.ps-step-num {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--ink-4);
+  letter-spacing: 0.04em;
+}
+
+.ps-step-icon-tile.active .ps-step-num {
+  color: var(--snow);
+}
+
+.ps-timeline-connector {
+  width: 1px;
+  flex: 1;
+  background: var(--hairline);
+  margin: 4px auto;
+}
+
+.ps-step-content {
+  padding-top: 8px;
+}
+
+.ps-step-title {
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink);
+  margin: 0 0 4px;
+}
+
+.ps-step-desc {
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: var(--ink-4);
+  line-height: 1.5;
+  margin: 0 0 6px;
+}
+
+.ps-step-time {
+  font-family: var(--font-body);
+  font-size: 12px;
+  color: var(--ink-4);
+  background: var(--surface-3);
+  border: 1px solid var(--hairline);
+  border-radius: 4px;
+  padding: 2px 8px;
+  letter-spacing: 0.02em;
+  display: inline-block;
+}
+
+/* ── Tip card ────────────────────────────────────────────── */
+
+.ps-tip-card {
+  background: var(--surface-2);
+  border-radius: 10px;
+  padding: 24px;
+  margin-bottom: 24px;
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.ps-tip-label {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--ink-4);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  padding-top: 2px;
+}
+
+.ps-tip-text {
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: var(--ink-3);
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* ── CTA row ─────────────────────────────────────────────── */
+
+.ps-cta-row {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+/* ── Focus-visible accessibility ─────────────────────────── */
+
+button:focus-visible,
+a:focus-visible {
+  outline: 2px solid var(--brand-red);
+  outline-offset: 2px;
+}
+
+/* ── Animated check in header (legacy) ──────────────────────*/
 
 .ps-check-wrap {
   width: 88px;
@@ -62,7 +474,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  /* outer glow ring */
   box-shadow: 0 0 0 8px rgba(193, 18, 31, 0.07), 0 0 32px rgba(193, 18, 31, 0.15);
 }
 
@@ -81,423 +492,31 @@
   to { stroke-dashoffset: 0; }
 }
 
-/* ── Hero text ───────────────────────────────────────────── */
-
-.ps-hero-eyebrow {
-  font-family: "CS Genio Mono", monospace;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--accent-blue);
-  margin-bottom: 12px;
-  position: relative;
-  z-index: 1;
-  animation: ps-fade-up 400ms ease 300ms both;
-}
-
-.ps-hero-title {
-  font-family: "Darky", serif;
-  font-weight: 900;
-  font-size: clamp(48px, 9vw, 80px);
-  color: var(--surface);
-  letter-spacing: -0.05em;
-  margin: 0 0 20px;
-  line-height: 1;
-  text-transform: uppercase;
-  position: relative;
-  z-index: 1;
-  animation: ps-fade-up 400ms ease 400ms both;
-}
-
-.ps-hero-status {
-  font-family: "CS Genio Mono", monospace;
-  font-size: 13px;
-  color: rgba(245, 242, 236, 0.55);
-  position: relative;
-  z-index: 1;
-  animation: ps-fade-up 400ms ease 500ms both;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-}
-
-.ps-hero-status-dot {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: var(--success);
-  flex-shrink: 0;
-  animation: ps-pulse-dot 2s ease-in-out infinite;
-}
-
-@keyframes ps-pulse-dot {
-  0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.4); }
-  50%       { opacity: 0.8; box-shadow: 0 0 0 4px rgba(74, 222, 128, 0); }
-}
-
-.ps-hero-time-estimate {
-  font-family: "CS Genio Mono", monospace;
-  font-size: 11px;
-  color: rgba(245, 242, 236, 0.35);
-  position: relative;
-  z-index: 1;
-  margin-top: 8px;
-  animation: ps-fade-up 400ms ease 600ms both;
-  letter-spacing: 0.04em;
-}
-
-/* ── Body container ──────────────────────────────────────── */
-
-.ps-body {
-  max-width: 600px;
-  width: 100%;
-  padding: 32px 32px 80px;
-  flex: 1;
-}
-
-/* ── Section card ────────────────────────────────────────── */
-
-.ps-section {
-  background: var(--surface-2);
-  border: 1px solid var(--surface-3);
-  padding: 28px;
-  margin-bottom: 2px;
-}
-
-.ps-section:nth-child(1) { animation: ps-fade-up 400ms ease 200ms both; }
-.ps-section:nth-child(2) { animation: ps-fade-up 400ms ease 300ms both; }
-.ps-section:nth-child(3) { animation: ps-fade-up 400ms ease 400ms both; }
-
-.ps-section-eyebrow {
-  font-family: "CS Genio Mono", monospace;
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--ink-4);
-  margin-bottom: 20px;
-}
-
-@keyframes ps-fade-up {
-  from { transform: translateY(12px); opacity: 0; }
-  to   { transform: translateY(0);    opacity: 1; }
-}
-
-/* ── Submission preview ──────────────────────────────────── */
-
-.ps-submission-row {
-  display: flex;
-  align-items: flex-start;
-  gap: 16px;
-}
-
-.ps-submission-thumb {
-  width: 64px;
-  height: 64px;
-  background: var(--surface-3);
-  border: 1px dashed var(--hairline);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-
-.ps-submission-thumb-icon {
-  font-size: 22px;
-  opacity: 0.25;
-}
-
-.ps-submission-info {
-  flex: 1;
-  min-width: 0;
-}
-
-.ps-submission-title {
-  font-family: "CS Genio Mono", monospace;
-  font-size: 14px;
-  font-weight: 700;
-  color: var(--ink);
-  margin-bottom: 4px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.ps-submission-meta {
-  font-family: "CS Genio Mono", monospace;
-  font-size: 11px;
-  color: var(--ink-4);
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-}
-
-.ps-submission-link {
-  font-family: "CS Genio Mono", monospace;
-  font-size: 11px;
-  color: var(--accent-blue);
-  text-decoration: none;
-  word-break: break-all;
-  transition: color 150ms ease;
-}
-
-.ps-submission-link:hover {
-  color: var(--ink);
-}
-
-.ps-submission-timestamp {
-  font-family: "CS Genio Mono", monospace;
-  font-size: 11px;
-  color: var(--ink-4);
-  margin-top: 12px;
-  padding-top: 12px;
-  border-top: 1px solid var(--surface-3);
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.ps-submission-timestamp::before {
-  content: "";
-  display: inline-block;
-  width: 6px;
-  height: 6px;
-  background: var(--mist);
-  flex-shrink: 0;
-}
-
-/* ── What happens next steps ─────────────────────────────── */
-
-.ps-steps {
-  display: flex;
-  flex-direction: column;
-  gap: 0;
-}
-
-.ps-step {
-  display: flex;
-  gap: 20px;
-  padding: 20px 0;
-  border-bottom: 1px solid var(--surface-3);
-  position: relative;
-}
-
-.ps-step:last-child {
-  border-bottom: none;
-  padding-bottom: 0;
-}
-
-/* vertical connector line between steps */
-.ps-step:not(:last-child)::after {
-  content: "";
-  position: absolute;
-  left: 19px;
-  top: 52px;
-  bottom: 0;
-  width: 2px;
-  background: var(--surface-3);
-}
-
-.ps-step-num-wrap {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  flex-shrink: 0;
-  gap: 4px;
-  padding-top: 2px;
-}
-
-.ps-step-dot {
-  width: 10px;
-  height: 10px;
-  background: var(--brand-red);
-  flex-shrink: 0;
-  position: relative;
-  z-index: 1;
-}
-
-.ps-step:nth-child(2) .ps-step-dot {
-  background: var(--mist);
-}
-
-.ps-step:nth-child(3) .ps-step-dot {
-  background: var(--mist);
-}
-
-.ps-step-num {
-  font-family: "Darky", serif;
-  font-size: 13px;
-  font-weight: 900;
-  color: var(--mist);
-  letter-spacing: -0.02em;
-  line-height: 1;
-}
-
-.ps-step:first-child .ps-step-num {
-  color: var(--brand-red);
-}
-
-.ps-step-content {
-  flex: 1;
-  padding-top: 0;
-}
-
-.ps-step-title {
-  font-family: "CS Genio Mono", monospace;
-  font-size: 14px;
-  font-weight: 700;
-  color: var(--ink);
-  margin-bottom: 6px;
-}
-
-.ps-step:not(:first-child) .ps-step-title {
-  color: var(--ink-3);
-}
-
-.ps-step-desc {
-  font-family: "CS Genio Mono", monospace;
-  font-size: 12px;
-  color: var(--ink-4);
-  line-height: 1.55;
-}
-
-.ps-step-time {
-  font-family: "CS Genio Mono", monospace;
-  font-size: 10px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--brand-red);
-  margin-top: 6px;
-  display: inline-block;
-  background: rgba(193, 18, 31, 0.06);
-  padding: 2px 8px;
-}
-
-.ps-step:not(:first-child) .ps-step-time {
-  color: var(--ink-4);
-  background: var(--surface-3);
-}
-
-/* ── CTAs ────────────────────────────────────────────────── */
-
-.ps-cta-section {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  margin-top: 32px;
-}
-
-.ps-primary-btn {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 18px 24px;
-  background: var(--brand-red);
-  color: var(--surface-2);
-  font-family: "CS Genio Mono", monospace;
-  font-size: 12px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  text-decoration: none;
-  border-radius: var(--r-xl);
-  border: none;
-  cursor: pointer;
-  transition: background 150ms ease;
-}
-
-.ps-primary-btn:hover {
-  background: var(--brand-red);
-}
-
-.ps-primary-btn-arrow {
-  font-size: 16px;
-  transition: transform 150ms ease;
-}
-
-.ps-primary-btn:hover .ps-primary-btn-arrow {
-  transform: translateX(4px);
-}
-
-.ps-secondary-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 16px 24px;
-  background: var(--surface-2);
-  color: var(--ink);
-  font-family: "CS Genio Mono", monospace;
-  font-size: 12px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  text-decoration: none;
-  border: 1px solid var(--hairline);
-  border-radius: var(--r-xl);
-  cursor: pointer;
-  transition: border-color 150ms ease, background 150ms ease;
-}
-
-.ps-secondary-btn:hover {
-  border-color: var(--ink-4);
-  background: var(--surface-3);
-}
-
-/* ── Helpful tip ─────────────────────────────────────────── */
-
-.ps-tip {
-  margin-top: 24px;
-  padding: 16px;
-  background: rgba(102, 155, 188, 0.08);
-  border: 1px solid rgba(102, 155, 188, 0.2);
-  border-left: 3px solid var(--accent-blue);
-}
-
-.ps-tip-label {
-  font-family: "CS Genio Mono", monospace;
-  font-size: 10px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: var(--accent-blue);
-  margin-bottom: 6px;
-}
-
-.ps-tip-text {
-  font-family: "CS Genio Mono", monospace;
-  font-size: 12px;
-  color: var(--ink-3);
-  line-height: 1.55;
-}
-
 /* ── Reduced motion ──────────────────────────────────────── */
 
 @media (prefers-reduced-motion: reduce) {
-  .ps-check-wrap,
-  .ps-hero-eyebrow,
-  .ps-hero-title,
-  .ps-hero-status,
-  .ps-hero-time-estimate,
-  .ps-section { animation: none; opacity: 1; transform: none; }
+  .ps-check-wrap { animation: none; opacity: 1; transform: none; }
   .ps-check-path { animation: none; stroke-dashoffset: 0; }
-  .ps-hero-status-dot { animation: none; }
 }
 
-/* ── Mobile ──────────────────────────────────────────────── */
+/* ── Mobile (≤640px) ─────────────────────────────────────── */
 
-@media (max-width: 600px) {
-  .ps-hero {
-    padding: 48px 20px 40px;
+@media (max-width: 640px) {
+  .ps-header {
+    padding: 48px 24px 40px;
   }
 
   .ps-body {
-    padding: 24px 16px 64px;
+    padding: 24px 24px 0;
   }
 
-  .ps-section {
-    padding: 20px;
+  .ps-cta-row {
+    flex-direction: column;
+  }
+
+  .ps-cta-row .btn {
+    width: 100%;
+    text-align: center;
+    justify-content: center;
   }
 }

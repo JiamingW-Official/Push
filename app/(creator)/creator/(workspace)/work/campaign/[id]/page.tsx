@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import "./thread.css";
+import "./campaign-detail.css";
 
 // Mock campaign data — real data loads from useApplications + campaign detail API
 interface ThreadCampaign {

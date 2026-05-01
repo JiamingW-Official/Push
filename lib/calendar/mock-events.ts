@@ -712,12 +712,35 @@ export function countDeadlinesInMonth(yearMonth: string): number {
   ).length;
 }
 
-export const EVENT_TYPE_COLORS: Record<EventType, string> = {
-  deadline: "#c1121f", // Flag Red
-  review: "#669bbc", // Steel Blue
-  payment: "#c9a96e", // Champagne Gold
-  milestone: "#8a9eb0", // muted steel
+/**
+ * Event-type CSS class names. Colors are NOT defined here — they live in
+ * `app/(creator)/creator/(workspace)/work/calendar/calendar.css` via the
+ * Design.md § 2 closed-list tokens (--brand-red / --accent-blue / --champagne
+ * / --mist). Consumers attach this class plus a base class (e.g.
+ * `cal-pill-event` or `cal-side__event`) and the CSS resolves the color.
+ *
+ * Token mapping (single source of truth, see calendar.css comment header):
+ *   deadline  -> --brand-red   (Brand Red, primary CTA role)
+ *   review    -> --accent-blue (N2W Blue, secondary)
+ *   payment   -> --champagne   (ceremonial)
+ *   milestone -> --mist        (warm-gray neutral)
+ */
+export const EVENT_TYPE_CLASSNAMES: Record<EventType, string> = {
+  deadline: "event-type--deadline",
+  review: "event-type--review",
+  payment: "event-type--payment",
+  milestone: "event-type--milestone",
 };
+
+/**
+ * @deprecated since v11 closed-color-list migration. Use
+ * `EVENT_TYPE_CLASSNAMES` instead — colors are now resolved via CSS classes
+ * against tokens declared in calendar.css. This alias is kept as a class-name
+ * map (not hex) so any pre-existing import compiles, but the value is no
+ * longer a color string.
+ */
+export const EVENT_TYPE_COLORS: Record<EventType, string> =
+  EVENT_TYPE_CLASSNAMES;
 
 export const EVENT_TYPE_LABELS: Record<EventType, string> = {
   deadline: "Deadline",

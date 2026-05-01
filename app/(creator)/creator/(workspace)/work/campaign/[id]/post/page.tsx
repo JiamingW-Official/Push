@@ -84,42 +84,12 @@ function UploadThumbnail({
   onRemove: () => void;
 }) {
   return (
-    <div
-      style={{
-        display: "flex",
-        alignItems: "center",
-        gap: 12,
-        padding: "12px 16px",
-        background: "var(--surface-2)",
-        border: "1px solid var(--hairline)",
-        borderRadius: 10,
-        position: "relative",
-      }}
-    >
+    <div className="post-thumb-item">
       {/* Thumbnail preview area */}
-      <div
-        style={{
-          width: 56,
-          height: 56,
-          borderRadius: 8,
-          overflow: "hidden",
-          flexShrink: 0,
-          background: "var(--surface-3, #ece9e0)",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
+      <div className="post-thumb-preview">
         {file.preview ? (
           file.isVideo ? (
-            <span
-              style={{
-                fontFamily: "var(--font-body)",
-                fontSize: 22,
-                color: "var(--ink-4)",
-              }}
-              aria-label="Video file"
-            >
+            <span className="post-thumb-icon" aria-label="Video file">
               ▶
             </span>
           ) : (
@@ -127,49 +97,20 @@ function UploadThumbnail({
             <img
               src={file.preview}
               alt={file.name}
-              style={{ width: "100%", height: "100%", objectFit: "cover" }}
+              className="post-thumb-preview-img"
             />
           )
         ) : (
-          <span
-            style={{
-              fontFamily: "var(--font-body)",
-              fontSize: 20,
-              color: "var(--ink-4)",
-            }}
-            aria-label="File preview"
-          >
+          <span className="post-thumb-icon" aria-label="File preview">
             {file.isVideo ? "▶" : "◼"}
           </span>
         )}
       </div>
 
       {/* File info */}
-      <div style={{ flex: 1, minWidth: 0 }}>
-        <p
-          style={{
-            fontFamily: "var(--font-body)",
-            fontSize: 13,
-            fontWeight: 600,
-            color: "var(--ink)",
-            margin: 0,
-            overflow: "hidden",
-            textOverflow: "ellipsis",
-            whiteSpace: "nowrap",
-          }}
-        >
-          {file.name}
-        </p>
-        <p
-          style={{
-            fontFamily: "var(--font-body)",
-            fontSize: 12,
-            color: "var(--ink-4)",
-            margin: "2px 0 0",
-          }}
-        >
-          {formatFileSize(file.size)}
-        </p>
+      <div className="post-thumb-file-info">
+        <p className="post-thumb-file-name">{file.name}</p>
+        <p className="post-thumb-file-size">{formatFileSize(file.size)}</p>
       </div>
 
       {/* Remove button */}
@@ -177,36 +118,7 @@ function UploadThumbnail({
         onClick={onRemove}
         aria-label={`Remove ${file.name}`}
         title="Remove file"
-        style={{
-          width: 24,
-          height: 24,
-          borderRadius: "50%",
-          border: "1px solid var(--hairline)",
-          background: "var(--surface)",
-          color: "var(--ink-4)",
-          fontFamily: "var(--font-body)",
-          fontSize: 12,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          cursor: "pointer",
-          flexShrink: 0,
-          transition: "background 0.15s, color 0.15s",
-        }}
-        onMouseEnter={(e) => {
-          (e.currentTarget as HTMLButtonElement).style.background =
-            "var(--brand-red)";
-          (e.currentTarget as HTMLButtonElement).style.color = "var(--snow)";
-          (e.currentTarget as HTMLButtonElement).style.borderColor =
-            "var(--brand-red)";
-        }}
-        onMouseLeave={(e) => {
-          (e.currentTarget as HTMLButtonElement).style.background =
-            "var(--surface)";
-          (e.currentTarget as HTMLButtonElement).style.color = "var(--ink-4)";
-          (e.currentTarget as HTMLButtonElement).style.borderColor =
-            "var(--hairline)";
-        }}
+        className="post-thumb-remove-btn"
       >
         ✕
       </button>
@@ -352,297 +264,90 @@ export default function PostWorkspacePage() {
     }, 1800);
   }
 
-  /* ── Shared card style ─────────────────────────────────────── */
-
-  const cardStyle: React.CSSProperties = {
-    background: "var(--surface-2)",
-    border: "1px solid var(--hairline)",
-    borderRadius: 10,
-    padding: "20px 24px",
-  };
-
   /* ── Render ─────────────────────────────────────────────────── */
 
   return (
-    <div
-      style={{
-        minHeight: "100vh",
-        background: "var(--surface)",
-        fontFamily: "var(--font-body)",
-      }}
-    >
+    <div className="post-page-root">
       {/* ── Breadcrumb nav ───────────────────────────────────── */}
-      <nav
-        aria-label="Breadcrumb"
-        style={{
-          display: "flex",
-          alignItems: "center",
-          gap: 8,
-          padding: "16px 32px",
-          borderBottom: "1px solid var(--hairline)",
-          background: "var(--snow)",
-        }}
-      >
-        <Link
-          href="/creator/work/today"
-          style={{
-            fontFamily: "var(--font-body)",
-            fontSize: 12,
-            fontWeight: 700,
-            letterSpacing: "0.06em",
-            textTransform: "uppercase",
-            color: "var(--ink-4)",
-            textDecoration: "none",
-          }}
-        >
+      <nav aria-label="Breadcrumb" className="post-breadcrumb-nav">
+        <Link href="/creator/work/today" className="post-breadcrumb-link">
           WORK
         </Link>
-        <span style={{ color: "var(--hairline)", fontSize: 12 }}>/</span>
-        <Link
-          href="/creator/work/pipeline"
-          style={{
-            fontFamily: "var(--font-body)",
-            fontSize: 12,
-            fontWeight: 700,
-            letterSpacing: "0.06em",
-            textTransform: "uppercase",
-            color: "var(--ink-4)",
-            textDecoration: "none",
-          }}
-        >
+        <span className="post-breadcrumb-sep">/</span>
+        <Link href="/creator/work/pipeline" className="post-breadcrumb-link">
           Pipeline
         </Link>
-        <span style={{ color: "var(--hairline)", fontSize: 12 }}>/</span>
+        <span className="post-breadcrumb-sep">/</span>
         <Link
           href={`/creator/work/campaign/${campaignId}`}
-          style={{
-            fontFamily: "var(--font-body)",
-            fontSize: 12,
-            fontWeight: 700,
-            letterSpacing: "0.06em",
-            textTransform: "uppercase",
-            color: "var(--ink-4)",
-            textDecoration: "none",
-          }}
+          className="post-breadcrumb-link"
         >
           {campaign.campaignTitle}
         </Link>
-        <span style={{ color: "var(--hairline)", fontSize: 12 }}>/</span>
-        <span
-          aria-current="page"
-          style={{
-            fontFamily: "var(--font-body)",
-            fontSize: 12,
-            fontWeight: 700,
-            letterSpacing: "0.06em",
-            textTransform: "uppercase",
-            color: "var(--ink)",
-          }}
-        >
+        <span className="post-breadcrumb-sep">/</span>
+        <span aria-current="page" className="post-breadcrumb-current">
           POST CONTENT
         </span>
       </nav>
 
       {/* ── Page header ──────────────────────────────────────── */}
-      <header
-        style={{
-          padding: "32px 32px 24px",
-          background: "var(--snow)",
-          borderBottom: "1px solid var(--hairline)",
-          display: "flex",
-          alignItems: "flex-start",
-          gap: 32,
-          flexWrap: "wrap",
-        }}
-      >
+      <header className="post-page-header">
         {/* Left: title */}
-        <div style={{ flex: "1 1 280px" }}>
-          <p
-            className="eyebrow"
-            style={{ marginBottom: 8, color: "var(--ink-4)" }}
-          >
-            CONTENT SUBMISSION
-          </p>
-          <h1
-            style={{
-              fontFamily: "var(--font-display)",
-              fontSize: 32,
-              fontWeight: 700,
-              color: "var(--ink)",
-              margin: 0,
-              lineHeight: 1.1,
-            }}
-          >
-            POST CONTENT
-          </h1>
-          <p
-            style={{
-              fontFamily: "var(--font-body)",
-              fontSize: 15,
-              color: "var(--ink-3)",
-              marginTop: 8,
-            }}
-          >
-            {campaign.campaignTitle}
-          </p>
+        <div className="post-page-header-left">
+          <p className="eyebrow post-page-eyebrow">CONTENT SUBMISSION</p>
+          <h1 className="post-page-h1">POST CONTENT</h1>
+          <p className="post-page-subtitle">{campaign.campaignTitle}</p>
         </div>
 
-        {/* Right: campaign summary card */}
-        <div
-          style={{
-            ...cardStyle,
-            display: "flex",
-            alignItems: "flex-start",
-            gap: 16,
-            flex: "0 0 auto",
-            maxWidth: 440,
-          }}
-        >
+        {/* B: Liquid-glass campaign brief tile */}
+        <div className="post-brief-tile post-header-card">
           {/* Merchant logo */}
           <div
-            style={{
-              width: 48,
-              height: 48,
-              borderRadius: 10,
-              background: campaign.logoColor,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              flexShrink: 0,
-              fontFamily: "var(--font-body)",
-              fontSize: 14,
-              fontWeight: 700,
-              color: "var(--snow)",
-              letterSpacing: "0.04em",
-            }}
+            className="post-header-logo"
+            style={{ background: campaign.logoColor }}
             aria-hidden="true"
           >
             {campaign.logoInitials}
           </div>
 
           <div>
-            <p
-              style={{
-                fontFamily: "var(--font-body)",
-                fontSize: 14,
-                fontWeight: 700,
-                color: "var(--ink)",
-                margin: 0,
-              }}
-            >
-              {campaign.merchantName}
-            </p>
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: 8,
-                marginTop: 4,
-                flexWrap: "wrap",
-              }}
-            >
+            <p className="post-header-merchant">{campaign.merchantName}</p>
+            <div className="post-header-meta">
               <span
-                style={{
-                  fontFamily: "var(--font-body)",
-                  fontSize: 12,
-                  fontWeight: 600,
-                  color: campaign.categoryColor,
-                }}
+                className="post-header-category"
+                style={{ color: campaign.categoryColor }}
               >
                 {campaign.category}
               </span>
-              <span style={{ color: "var(--hairline)" }}>·</span>
-              <span
-                style={{
-                  fontFamily: "var(--font-body)",
-                  fontSize: 12,
-                  fontWeight: 700,
-                  color: "var(--accent-blue)",
-                }}
-              >
-                {campaign.earnEstimate}
-              </span>
-              <span style={{ color: "var(--hairline)" }}>·</span>
-              <span
-                style={{
-                  fontFamily: "var(--font-body)",
-                  fontSize: 12,
-                  color: "var(--ink-4)",
-                }}
-              >
+              <span className="post-header-meta-dot">·</span>
+              {/* B: earn estimate — Darky 40px brand-red */}
+              <span className="post-brief-earn">{campaign.earnEstimate}</span>
+              <span className="post-header-meta-dot">·</span>
+              <span className="post-header-deadline">
                 Due {campaign.deadline}
               </span>
             </div>
-            <p
-              style={{
-                fontFamily: "var(--font-body)",
-                fontSize: 13,
-                color: "var(--ink-3)",
-                marginTop: 8,
-                lineHeight: 1.5,
-              }}
-            >
-              {campaign.brief}
-            </p>
+            {/* B: brief text — font-body 16px ink-3 */}
+            <p className="post-brief-text">{campaign.brief}</p>
           </div>
         </div>
       </header>
 
       {/* ── Main form ────────────────────────────────────────── */}
-      <main
-        style={{ padding: "32px 32px 64px", maxWidth: 1140, margin: "0 auto" }}
-      >
+      <main className="post-form-main">
         {/* Two-column form grid */}
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "1fr 1fr",
-            gap: 24,
-            alignItems: "start",
-          }}
-        >
+        <div className="post-two-col">
           {/* ── Left column: upload ──────────────────────────── */}
           <section aria-label="Upload content">
             {/* Section header */}
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: 12,
-                marginBottom: 16,
-              }}
-            >
-              <span
-                style={{
-                  fontFamily: "var(--font-body)",
-                  fontSize: 11,
-                  fontWeight: 700,
-                  color: "var(--snow)",
-                  background: "var(--ink)",
-                  borderRadius: 4,
-                  padding: "2px 6px",
-                  letterSpacing: "0.06em",
-                }}
-                aria-hidden="true"
-              >
+            <div className="post-step-header">
+              <span className="post-step-num" aria-hidden="true">
                 01
               </span>
-              <h2
-                style={{
-                  fontFamily: "var(--font-body)",
-                  fontSize: 13,
-                  fontWeight: 700,
-                  letterSpacing: "0.08em",
-                  textTransform: "uppercase",
-                  color: "var(--ink)",
-                  margin: 0,
-                }}
-              >
-                UPLOAD CONTENT
-              </h2>
+              <h2 className="post-step-title">UPLOAD CONTENT</h2>
             </div>
 
-            {/* Drop zone */}
+            {/* D: Drop zone */}
             <div
               onDragOver={handleDragOver}
               onDragLeave={handleDragLeave}
@@ -657,20 +362,13 @@ export default function PostWorkspacePage() {
                   fileInputRef.current?.click();
                 }
               }}
-              style={{
-                border: `2px dashed ${isDragOver ? "var(--accent-blue)" : "var(--hairline)"}`,
-                borderRadius: 10,
-                padding: uploadedFiles.length > 0 ? "16px 20px" : "40px 24px",
-                background: isDragOver
-                  ? "color-mix(in srgb, var(--accent-blue) 6%, var(--surface))"
-                  : "var(--surface-2)",
-                cursor: "pointer",
-                transition: "border-color 0.15s, background 0.15s",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                textAlign: "center",
-              }}
+              className={[
+                "post-upload-zone",
+                isDragOver ? "dragover" : "",
+                uploadedFiles.length > 0 ? "post-upload-zone-has-files" : "",
+              ]
+                .filter(Boolean)
+                .join(" ")}
             >
               <input
                 ref={fileInputRef}
@@ -685,96 +383,32 @@ export default function PostWorkspacePage() {
 
               {uploadedFiles.length === 0 ? (
                 <div>
-                  <div
-                    style={{
-                      width: 48,
-                      height: 48,
-                      borderRadius: 10,
-                      background: "var(--surface-3, #ece9e0)",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      margin: "0 auto 16px",
-                      fontFamily: "var(--font-body)",
-                      fontSize: 22,
-                      color: "var(--ink-4)",
-                    }}
-                    aria-hidden="true"
-                  >
+                  {/* D: 40×40 icon tile with surface-3 bg */}
+                  <div className="post-upload-icon-tile" aria-hidden="true">
                     ↑
                   </div>
-                  <p
-                    style={{
-                      fontFamily: "var(--font-body)",
-                      fontSize: 14,
-                      fontWeight: 600,
-                      color: "var(--ink)",
-                      margin: "0 0 8px",
-                    }}
-                  >
+                  {/* D: "Drop your content here" — font-body 16px ink-3 */}
+                  <p className="post-upload-headline">
                     Drag &amp; drop or click to upload
                   </p>
-                  <p
-                    style={{
-                      fontFamily: "var(--font-body)",
-                      fontSize: 12,
-                      color: "var(--ink-4)",
-                      margin: 0,
-                      letterSpacing: "0.04em",
-                    }}
-                  >
-                    JPG · PNG · MP4 · MOV · max 50 MB per file
+                  {/* D: format hint — font-body 12px ink-4 */}
+                  <p className="post-upload-formats">
+                    MP4 · MOV · JPG · PNG · max 200MB
                   </p>
                 </div>
               ) : (
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 8,
-                    color: "var(--ink-4)",
-                  }}
-                >
-                  <span
-                    style={{
-                      fontFamily: "var(--font-body)",
-                      fontSize: 18,
-                      fontWeight: 300,
-                    }}
-                    aria-hidden="true"
-                  >
+                <div className="post-upload-add-more">
+                  <span className="post-upload-add-plus" aria-hidden="true">
                     +
                   </span>
-                  <span
-                    style={{
-                      fontFamily: "var(--font-body)",
-                      fontSize: 13,
-                      fontWeight: 600,
-                    }}
-                  >
-                    Add more files
-                  </span>
+                  <span className="post-upload-add-text">Add more files</span>
                 </div>
               )}
             </div>
 
             {/* Error */}
             {dragError && (
-              <p
-                role="alert"
-                style={{
-                  fontFamily: "var(--font-body)",
-                  fontSize: 13,
-                  color: "var(--brand-red)",
-                  marginTop: 8,
-                  padding: "8px 12px",
-                  background:
-                    "color-mix(in srgb, var(--brand-red) 8%, var(--surface))",
-                  borderRadius: 8,
-                  border:
-                    "1px solid color-mix(in srgb, var(--brand-red) 20%, transparent)",
-                }}
-              >
+              <p role="alert" className="post-drag-error">
                 {dragError}
               </p>
             )}
@@ -784,12 +418,7 @@ export default function PostWorkspacePage() {
               <div
                 role="list"
                 aria-label="Uploaded files"
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: 8,
-                  marginTop: 16,
-                }}
+                className="post-file-list"
               >
                 {uploadedFiles.map((file, i) => (
                   <div key={`${file.name}-${i}`} role="listitem">
@@ -804,48 +433,17 @@ export default function PostWorkspacePage() {
           </section>
 
           {/* ── Right column: form ───────────────────────────── */}
-          <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
+          <div className="post-right-col">
             {/* Caption */}
             <section aria-label="Caption">
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 12,
-                  marginBottom: 16,
-                }}
-              >
-                <span
-                  style={{
-                    fontFamily: "var(--font-body)",
-                    fontSize: 11,
-                    fontWeight: 700,
-                    color: "var(--snow)",
-                    background: "var(--ink)",
-                    borderRadius: 4,
-                    padding: "2px 6px",
-                    letterSpacing: "0.06em",
-                  }}
-                  aria-hidden="true"
-                >
+              <div className="post-step-header">
+                <span className="post-step-num" aria-hidden="true">
                   02
                 </span>
-                <h2
-                  style={{
-                    fontFamily: "var(--font-body)",
-                    fontSize: 13,
-                    fontWeight: 700,
-                    letterSpacing: "0.08em",
-                    textTransform: "uppercase",
-                    color: "var(--ink)",
-                    margin: 0,
-                  }}
-                >
-                  CAPTION
-                </h2>
+                <h2 className="post-step-title">CAPTION</h2>
               </div>
 
-              <div style={{ ...cardStyle, padding: 0, overflow: "hidden" }}>
+              <div className="post-caption-card">
                 <textarea
                   placeholder="Write your caption here — keep it authentic, not marketing copy."
                   value={caption}
@@ -856,41 +454,17 @@ export default function PostWorkspacePage() {
                   rows={5}
                   aria-label="Post caption"
                   aria-describedby="caption-count"
-                  style={{
-                    width: "100%",
-                    padding: "16px 20px",
-                    fontFamily: "var(--font-body)",
-                    fontSize: 14,
-                    color: "var(--ink)",
-                    background: "transparent",
-                    border: "none",
-                    outline: "none",
-                    resize: "vertical",
-                    lineHeight: 1.6,
-                    boxSizing: "border-box",
-                  }}
+                  className="post-caption-textarea"
                 />
-                <div
-                  style={{
-                    padding: "8px 20px 12px",
-                    borderTop: "1px solid var(--hairline)",
-                    display: "flex",
-                    justifyContent: "flex-end",
-                  }}
-                >
+                <div className="post-caption-footer">
                   <p
                     id="caption-count"
                     aria-live="polite"
-                    style={{
-                      fontFamily: "var(--font-body)",
-                      fontSize: 12,
-                      color:
-                        caption.length >= CAPTION_MAX
-                          ? "var(--brand-red)"
-                          : "var(--ink-4)",
-                      margin: 0,
-                      fontWeight: caption.length >= CAPTION_MAX ? 700 : 400,
-                    }}
+                    className={
+                      caption.length >= CAPTION_MAX
+                        ? "post-caption-count-max"
+                        : "post-caption-count-normal"
+                    }
                   >
                     {caption.length} / {CAPTION_MAX}
                   </p>
@@ -900,64 +474,19 @@ export default function PostWorkspacePage() {
 
             {/* Hashtags */}
             <section aria-label="Hashtag suggestions">
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 12,
-                  marginBottom: 16,
-                }}
-              >
-                <span
-                  style={{
-                    fontFamily: "var(--font-body)",
-                    fontSize: 11,
-                    fontWeight: 700,
-                    color: "var(--snow)",
-                    background: "var(--ink)",
-                    borderRadius: 4,
-                    padding: "2px 6px",
-                    letterSpacing: "0.06em",
-                  }}
-                  aria-hidden="true"
-                >
+              <div className="post-step-header">
+                <span className="post-step-num" aria-hidden="true">
                   03
                 </span>
-                <h2
-                  style={{
-                    fontFamily: "var(--font-body)",
-                    fontSize: 13,
-                    fontWeight: 700,
-                    letterSpacing: "0.08em",
-                    textTransform: "uppercase",
-                    color: "var(--ink)",
-                    margin: 0,
-                  }}
-                >
-                  SUGGESTED HASHTAGS
-                </h2>
-                <span
-                  style={{
-                    fontFamily: "var(--font-body)",
-                    fontSize: 11,
-                    color: "var(--ink-4)",
-                    marginLeft: "auto",
-                  }}
-                >
-                  Copy to caption above
-                </span>
+                <h2 className="post-step-title">SUGGESTED HASHTAGS</h2>
+                <span className="post-step-hint">Copy to caption above</span>
               </div>
 
-              <div style={cardStyle}>
+              <div className="post-hashtag-card">
                 <div
                   role="list"
                   aria-label="Hashtag suggestions"
-                  style={{
-                    display: "flex",
-                    flexWrap: "wrap",
-                    gap: 8,
-                    marginBottom: 16,
-                  }}
+                  className="post-hashtag-chips"
                 >
                   {campaign.hashtags.map((tag) => (
                     <button
@@ -975,194 +504,92 @@ export default function PostWorkspacePage() {
                       }}
                       aria-label={`Add ${tag} to caption`}
                       title={`Click to add ${tag} to caption`}
-                      className="click-shift"
-                      style={{
-                        fontFamily: "var(--font-body)",
-                        fontSize: 12,
-                        fontWeight: 600,
-                        color: "var(--accent-blue)",
-                        background:
-                          "color-mix(in srgb, var(--accent-blue) 10%, var(--surface))",
-                        border:
-                          "1px solid color-mix(in srgb, var(--accent-blue) 25%, transparent)",
-                        borderRadius: 20,
-                        padding: "4px 12px",
-                        cursor: "pointer",
-                      }}
+                      className="post-hashtag-chip click-shift"
                     >
                       {tag}
                     </button>
                   ))}
                 </div>
 
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "flex-start",
-                    gap: 8,
-                    paddingTop: 12,
-                    borderTop: "1px solid var(--hairline)",
-                  }}
-                >
-                  <span
-                    style={{
-                      fontFamily: "var(--font-body)",
-                      fontSize: 14,
-                      color: "var(--accent-blue)",
-                      flexShrink: 0,
-                    }}
-                    aria-hidden="true"
-                  >
+                <div className="post-hashtag-note">
+                  <span className="post-hashtag-note-icon" aria-hidden="true">
                     ◎
                   </span>
-                  <p
-                    style={{
-                      fontFamily: "var(--font-body)",
-                      fontSize: 13,
-                      color: "var(--ink-3)",
-                      margin: 0,
-                      lineHeight: 1.5,
-                    }}
-                  >
+                  <p className="post-hashtag-note-text">
                     Attribution code:{" "}
-                    <strong
-                      style={{
-                        fontFamily: "var(--font-body)",
-                        fontWeight: 700,
-                        color: "var(--ink)",
-                        letterSpacing: "0.04em",
-                      }}
-                    >
+                    {/* F: Champagne-tinted attribution code pill */}
+                    <span className="post-attr-code">
                       {campaign.attributionCode}
-                    </strong>{" "}
+                    </span>{" "}
                     — show at register to log your walk-in
                   </p>
                 </div>
               </div>
             </section>
 
-            {/* Platforms */}
+            {/* C: Platforms — pill buttons with active state */}
             <section aria-label="Platform selection">
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 12,
-                  marginBottom: 16,
-                }}
-              >
-                <span
-                  style={{
-                    fontFamily: "var(--font-body)",
-                    fontSize: 11,
-                    fontWeight: 700,
-                    color: "var(--snow)",
-                    background: "var(--ink)",
-                    borderRadius: 4,
-                    padding: "2px 6px",
-                    letterSpacing: "0.06em",
-                  }}
-                  aria-hidden="true"
-                >
+              <div className="post-step-header">
+                <span className="post-step-num" aria-hidden="true">
                   04
                 </span>
-                <h2
-                  style={{
-                    fontFamily: "var(--font-body)",
-                    fontSize: 13,
-                    fontWeight: 700,
-                    letterSpacing: "0.08em",
-                    textTransform: "uppercase",
-                    color: "var(--ink)",
-                    margin: 0,
-                  }}
-                >
-                  PLATFORMS
-                </h2>
+                <h2 className="post-step-title">PLATFORMS</h2>
               </div>
 
               <div
                 role="group"
                 aria-label="Select platforms"
-                style={{ display: "flex", flexDirection: "column", gap: 8 }}
+                className="post-platform-group"
               >
                 {PLATFORMS.map((p) => {
                   const checked = platforms.has(p.id);
                   return (
                     <label
                       key={p.id}
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: 12,
-                        padding: "14px 16px",
-                        background: checked
-                          ? "color-mix(in srgb, var(--accent-blue) 8%, var(--surface))"
-                          : "var(--surface-2)",
-                        border: `1px solid ${checked ? "var(--accent-blue)" : "var(--hairline)"}`,
-                        borderRadius: 10,
-                        cursor: "pointer",
-                        transition: "border-color 0.15s, background 0.15s",
-                      }}
+                      className={[
+                        "post-platform-label",
+                        checked
+                          ? "post-platform-label-checked"
+                          : "post-platform-label-unchecked",
+                      ].join(" ")}
                     >
                       <input
                         type="checkbox"
                         checked={checked}
                         onChange={() => togglePlatform(p.id)}
-                        style={{ display: "none" }}
+                        className="post-platform-checkbox-hidden"
                         aria-checked={checked}
                       />
                       {/* Custom checkbox */}
                       <div
-                        style={{
-                          width: 18,
-                          height: 18,
-                          borderRadius: 4,
-                          border: `2px solid ${checked ? "var(--accent-blue)" : "var(--hairline)"}`,
-                          background: checked
-                            ? "var(--accent-blue)"
-                            : "transparent",
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          flexShrink: 0,
-                          transition: "border-color 0.15s, background 0.15s",
-                        }}
+                        className={[
+                          "post-custom-checkbox",
+                          checked
+                            ? "post-custom-checkbox-checked"
+                            : "post-custom-checkbox-unchecked",
+                        ].join(" ")}
                         aria-hidden="true"
                       >
                         {checked && (
-                          <span
-                            style={{
-                              color: "var(--snow)",
-                              fontSize: 11,
-                              fontWeight: 700,
-                              lineHeight: 1,
-                            }}
-                          >
-                            ✓
-                          </span>
+                          <span className="post-custom-checkbox-mark">✓</span>
                         )}
                       </div>
                       <span
-                        style={{
-                          fontFamily: "var(--font-body)",
-                          fontSize: 18,
-                          color: checked
-                            ? "var(--accent-blue)"
-                            : "var(--ink-4)",
-                        }}
+                        className={
+                          checked
+                            ? "post-platform-icon-checked"
+                            : "post-platform-icon-unchecked"
+                        }
                         aria-hidden="true"
                       >
                         {p.icon}
                       </span>
                       <span
-                        style={{
-                          fontFamily: "var(--font-body)",
-                          fontSize: 14,
-                          fontWeight: checked ? 700 : 400,
-                          color: checked ? "var(--ink)" : "var(--ink-3)",
-                          flex: 1,
-                        }}
+                        className={
+                          checked
+                            ? "post-platform-name-checked"
+                            : "post-platform-name-unchecked"
+                        }
                       >
                         {p.label}
                       </span>
@@ -1175,70 +602,22 @@ export default function PostWorkspacePage() {
         </div>
 
         {/* ── Submit section ────────────────────────────────── */}
-        <section
-          aria-label="Submit content"
-          style={{
-            marginTop: 40,
-            paddingTop: 32,
-            borderTop: "1px solid var(--hairline)",
-          }}
-        >
+        <section aria-label="Submit content" className="post-submit-wrapper">
           {submitState === "verified" ? (
-            /* Verified state */
+            /* I: Verified / success state */
             <div
               role="status"
               aria-live="polite"
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: 24,
-                padding: "24px 32px",
-                background: "var(--surface-2)",
-                border: "1px solid var(--hairline)",
-                borderRadius: 10,
-                flexWrap: "wrap",
-              }}
+              className="post-success-state"
             >
-              <div
-                style={{
-                  width: 48,
-                  height: 48,
-                  borderRadius: "50%",
-                  background: "#22c55e",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  flexShrink: 0,
-                  fontFamily: "var(--font-body)",
-                  fontSize: 22,
-                  color: "var(--snow)",
-                  fontWeight: 700,
-                }}
-                aria-hidden="true"
-              >
+              <div className="post-success-icon" aria-hidden="true">
                 ✓
               </div>
-              <div style={{ flex: 1, minWidth: 200 }}>
-                <p
-                  style={{
-                    fontFamily: "var(--font-body)",
-                    fontSize: 15,
-                    fontWeight: 700,
-                    color: "var(--ink)",
-                    margin: "0 0 4px",
-                  }}
-                >
+              <div className="post-success-body">
+                <p className="post-success-title">
                   Content submitted. Verification pending.
                 </p>
-                <p
-                  style={{
-                    fontFamily: "var(--font-body)",
-                    fontSize: 13,
-                    color: "var(--ink-3)",
-                    margin: 0,
-                    lineHeight: 1.5,
-                  }}
-                >
+                <p className="post-success-desc">
                   ConversionOracle™ is processing your walk-in verification.
                   You&apos;ll be notified within 8 seconds once confirmed.
                 </p>
@@ -1252,74 +631,25 @@ export default function PostWorkspacePage() {
               </Link>
             </div>
           ) : (
-            /* Submit form CTA */
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-                gap: 24,
-                flexWrap: "wrap",
-              }}
-            >
+            /* G: Submit form CTA */
+            <div className="post-cta-row">
               {/* Meta info */}
-              <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-                <p
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 8,
-                    fontFamily: "var(--font-body)",
-                    fontSize: 13,
-                    color: "var(--ink-3)",
-                    margin: 0,
-                  }}
-                >
-                  <span
-                    style={{
-                      width: 8,
-                      height: 8,
-                      borderRadius: "50%",
-                      background: "#22c55e",
-                      flexShrink: 0,
-                    }}
-                    aria-hidden="true"
-                  />
+              <div className="post-cta-meta">
+                <p className="post-cta-oracle">
+                  <span className="post-cta-oracle-dot" aria-hidden="true" />
                   ConversionOracle™ will verify your walk-in within{" "}
-                  <strong
-                    style={{
-                      fontFamily: "var(--font-body)",
-                      fontWeight: 700,
-                      color: "var(--ink)",
-                    }}
-                  >
-                    8 seconds
-                  </strong>
+                  <strong className="post-cta-oracle-strong">8 seconds</strong>
                 </p>
-                <p
-                  style={{
-                    fontFamily: "var(--font-body)",
-                    fontSize: 13,
-                    color: "var(--ink-3)",
-                    margin: 0,
-                  }}
-                >
+                <p className="post-cta-earn">
                   Earn{" "}
-                  <span
-                    style={{
-                      fontFamily: "var(--font-body)",
-                      fontSize: 15,
-                      fontWeight: 700,
-                      color: "var(--accent-blue)",
-                    }}
-                  >
+                  <span className="post-cta-earn-amount">
                     {campaign.earnEstimate}
                   </span>{" "}
                   upon verification
                 </p>
               </div>
 
-              {/* Submit button */}
+              {/* G: Submit button — prominent, full width on mobile */}
               <button
                 onClick={handleSubmit}
                 disabled={submitState !== "idle"}
@@ -1331,29 +661,11 @@ export default function PostWorkspacePage() {
                       : "Content submitted, verifying"
                 }
                 className={
-                  submitState === "idle" ? "btn-primary click-shift" : undefined
-                }
-                style={
-                  submitState !== "idle"
-                    ? {
-                        fontFamily: "var(--font-body)",
-                        fontSize: 14,
-                        fontWeight: 700,
-                        letterSpacing: "0.04em",
-                        textTransform: "uppercase",
-                        padding: "14px 28px",
-                        borderRadius: 8,
-                        border: "none",
-                        background:
-                          submitState === "uploading"
-                            ? "var(--ink-4)"
-                            : "var(--accent-blue)",
-                        color: "var(--snow)",
-                        cursor: "not-allowed",
-                        opacity: 0.75,
-                        minWidth: 240,
-                      }
-                    : { minWidth: 240 }
+                  submitState === "idle"
+                    ? "btn btn-primary post-submit-btn post-submit-btn-idle click-shift"
+                    : submitState === "uploading"
+                      ? "post-submit-btn post-submit-btn-loading"
+                      : "post-submit-btn post-submit-btn-pending"
                 }
               >
                 {submitState === "idle" && "SUBMIT FOR VERIFICATION →"}

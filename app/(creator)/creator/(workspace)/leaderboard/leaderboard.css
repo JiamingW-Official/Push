@@ -1,8 +1,7 @@
 /* ============================================================
-   Creator Leaderboard — v11 token pass (product register)
-   v11: var(--dark/--primary/--accent/--tertiary/--text-muted/
-        --graphite/--line/--surface-elevated/--surface-bright)
-        all replaced with closed allowed-color tokens.
+   Creator Leaderboard — v11 design system pass (product register)
+   v11: liquid-glass podium, 8px-grid rows, role-locked colors,
+        roving-tabIndex chip keyboard nav, "Your Rank" blue tint.
    ============================================================ */
 
 /* ── Animations ───────────────────────────────────────────── */
@@ -254,32 +253,46 @@
   border-bottom-color: var(--brand-red);
 }
 
-/* ── Podium — Top 3 ───────────────────────────────────────── */
+/* ── Podium — Top 3 (v11 liquid-glass) ───────────────────── */
 
 .lb-podium {
   display: grid;
   grid-template-columns: 1fr 1.15fr 1fr;
-  gap: var(--space-3);
+  gap: 16px;
   margin: var(--space-6) 0;
   align-items: end;
 }
 
+/* Base podium card — liquid glass */
 .lb-podium-card {
-  background: var(--snow);
-  border: 1px solid var(--mist);
-  border-radius: var(--r-md);
-  padding: var(--space-4) var(--space-3);
+  background: rgba(248, 244, 232, 0.72);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.50);
+  border-radius: 16px;
+  padding: 24px 16px;
   position: relative;
   transition: transform 360ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 360ms;
 }
 
 .lb-podium-card:hover {
-  transform: translate(1px, 1px);
+  transform: translate(2px, 2px);
   box-shadow: var(--shadow-2);
 }
 
 .lb-podium-card:active {
-  transform: translate(2px, 2px) scale(0.98);
+  transform: translate(3px, 3px) scale(0.98);
+}
+
+/* Rank 1 gets stronger glass + extra top padding */
+.lb-podium-card--first {
+  background: rgba(248, 244, 232, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.60);
+  border-radius: 16px;
+  padding: 24px 16px;
+  box-shadow: var(--shadow-2);
 }
 
 /* Delay stagger for podium animation */
@@ -287,41 +300,39 @@
 .lb-podium-card:nth-child(2) { animation-delay: 0ms; }
 .lb-podium-card:nth-child(3) { animation-delay: 160ms; }
 
-/* Center card (rank 1) gets extra emphasis */
-.lb-podium-card--first {
-  border-top: 2px solid var(--brand-red);
-  padding-top: var(--space-5);
-}
-
-.lb-podium-card--second {
-  border-top: 2px solid rgba(255, 255, 255, 0.30);
-}
-
-.lb-podium-card--third {
-  border-top: 2px solid rgba(255, 255, 255, 0.15);
-}
-
+/* Rank number — v11 spec */
 .lb-podium-rank {
   font-family: var(--font-display);
-  font-weight: 900;
+  font-weight: 800;
+  font-size: 64px;
   line-height: 1;
   letter-spacing: -0.06em;
   margin-bottom: var(--space-2);
-}
-
-.lb-podium-card--first .lb-podium-rank {
-  font-size: clamp(48px, 7vw, 80px);
+  /* default for #2/#3 — champagne-deep approximated via --champagne token */
   color: var(--champagne);
 }
 
-.lb-podium-card--second .lb-podium-rank {
-  font-size: clamp(36px, 5vw, 56px);
-  color: var(--accent-blue);
+.lb-podium-card--first .lb-podium-rank {
+  color: var(--brand-red);
 }
 
-.lb-podium-card--third .lb-podium-rank {
-  font-size: clamp(36px, 5vw, 56px);
-  color: var(--ink-3);
+/* Creator name — v11 spec */
+.lb-podium-name {
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  margin-bottom: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.lb-podium-handle {
+  font-size: 12px;
+  color: var(--ink-4);
+  margin-bottom: var(--space-2);
 }
 
 .lb-podium-avatar {
@@ -343,28 +354,6 @@
   width: 56px;
   height: 56px;
   font-size: 22px;
-}
-
-.lb-podium-name {
-  font-family: var(--font-display);
-  font-size: 18px;
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  color: var(--ink);
-  margin-bottom: 2px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.lb-podium-card--first .lb-podium-name {
-  font-size: 22px;
-}
-
-.lb-podium-handle {
-  font-size: 12px;
-  color: var(--ink-4);
-  margin-bottom: var(--space-2);
 }
 
 .lb-podium-score {
@@ -417,12 +406,12 @@
   color: var(--ink-4);
 }
 
-/* ── Tier Filter Chips ────────────────────────────────────── */
+/* ── Tier Filter Chips ─ v11 btn-pill + roving tabIndex ───── */
 
 .lb-tier-filters {
   display: flex;
   align-items: center;
-  gap: var(--space-1);
+  gap: 8px;
   flex-wrap: wrap;
   margin: var(--space-5) 0 var(--space-3);
 }
@@ -436,25 +425,36 @@
   margin-right: var(--space-1);
 }
 
-/* Pill chip — Design.md: filter chip uses pill radius */
+/* btn-pill style per § 9 unified button system */
 .lb-tier-chip {
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  padding: 5px 14px;
+  padding: 8px 18px;
   border-radius: var(--r-pill);
-  border: 1.5px solid var(--hairline);
-  background: transparent;
-  color: var(--graphite);
+  border: 1px solid var(--hairline);
+  background: var(--surface-3);
+  color: var(--ink);
   cursor: pointer;
-  transition: transform 0.15s, box-shadow 0.15s, background 0.15s, border-color 0.15s, color 0.15s;
+  transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1),
+              box-shadow 0.15s,
+              background 0.15s,
+              border-color 0.15s,
+              color 0.15s;
 }
 
 .lb-tier-chip:hover {
+  transform: translate(2px, 2px);
+  box-shadow: var(--shadow-1);
   border-color: var(--ink);
-  color: var(--ink);
+}
+
+/* focus-visible ring */
+.lb-tier-chip:focus-visible {
+  outline: 2px solid var(--brand-red);
+  outline-offset: 2px;
 }
 
 /* Filled Ink chip for "all" active state */
@@ -462,6 +462,8 @@
   background: var(--ink);
   border-color: var(--ink);
   color: var(--snow);
+  transform: translate(2px, 2px);
+  box-shadow: var(--shadow-1);
 }
 
 /* Tier-specific chip colors when active */
@@ -477,7 +479,7 @@
 .lb-table-wrap {
   border: 1px solid var(--mist);
   background: var(--snow);
-  border-radius: var(--r-md);
+  border-radius: 10px;
 }
 
 .lb-table-head {
@@ -501,35 +503,40 @@
   padding-left: 0;
 }
 
-/* Individual rows */
+/* ── Individual rows — rank 4+ ─────────────────────────────── */
+
 .lb-row {
   display: grid;
   grid-template-columns: 56px 1fr 100px 80px 88px 56px;
   gap: 0;
-  padding: 0 var(--space-3);
-  border-bottom: 1px solid var(--hairline);
+  padding: 12px 16px;
+  border-radius: 10px;
+  margin-bottom: 4px;
+  background: var(--surface);
   align-items: center;
   min-height: 64px;
-  transition: background 0.12s;
+  transition: background 0.12s, transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.15s;
   position: relative;
 }
 
 .lb-row:last-child {
-  border-bottom: none;
+  margin-bottom: 0;
 }
 
 .lb-row:hover {
-  background: var(--surface-3);
+  transform: translate(2px, 2px);
+  background: var(--surface-2);
+  box-shadow: var(--shadow-1);
 }
 
-/* Current user row highlight */
+/* "Your Rank" row — N2W blue tint per task spec */
 .lb-row--me {
-  border-left: 3px solid var(--brand-red);
-  background: rgba(193, 18, 31, 0.03);
+  background: rgba(0, 133, 255, 0.05);
+  border: 1px solid rgba(0, 133, 255, 0.18);
 }
 
 .lb-row--me:hover {
-  background: rgba(193, 18, 31, 0.05);
+  background: rgba(0, 133, 255, 0.08);
 }
 
 /* Stagger delays — first 10 rows */
@@ -552,22 +559,26 @@
   padding: 0 8px 0 0;
 }
 
+/* v11: rank number — Darky display, 24px, 800, ink-3, min-width 40px */
 .lb-rank-num {
   font-family: var(--font-display);
-  font-weight: 900;
+  font-weight: 800;
+  font-size: 24px;
   letter-spacing: -0.04em;
   line-height: 1;
-  color: var(--ink);
+  color: var(--ink-3);
+  min-width: 40px;
 }
 
+/* top-10 still gets extra emphasis */
 .lb-rank-num--top10 {
   font-size: 32px;
   color: var(--ink);
 }
 
 .lb-rank-num--normal {
-  font-size: 16px;
-  color: var(--graphite);
+  font-size: 24px;
+  color: var(--ink-3);
 }
 
 /* Creator cell */
@@ -575,7 +586,7 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 12px 8px;
+  padding: 0 8px;
   min-width: 0;
 }
 
@@ -643,20 +654,20 @@
   animation: obsidianPulse 2.4s ease-in-out infinite;
 }
 
-/* Score cell */
+/* Score cell — v11: mono 14px 600 */
 .lb-row-score {
   padding: 0 8px;
   text-align: right;
 }
 
 .lb-score-val {
-  font-family: var(--font-display);
-  font-size: 22px;
-  font-weight: 900;
-  letter-spacing: -0.04em;
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 600;
   color: var(--ink);
   display: block;
   line-height: 1;
+  letter-spacing: 0;
 }
 
 .lb-score-label {
@@ -671,17 +682,19 @@
 .lb-row-visits {
   padding: 0 8px;
   text-align: right;
+  font-family: var(--font-mono);
   font-size: 14px;
   font-weight: 600;
   color: var(--ink);
 }
 
-/* Earnings cell */
+/* Earnings cell — v11: display 16px 700 */
 .lb-row-earnings {
   padding: 0 8px;
   text-align: right;
-  font-size: 14px;
-  font-weight: 600;
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 700;
   color: var(--ink);
 }
 
@@ -691,19 +704,22 @@
   text-align: right;
 }
 
+/* v11: delta — 12px mono */
 .lb-delta {
-  font-size: 13px;
-  font-weight: 700;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
   display: inline-flex;
   align-items: center;
   gap: 2px;
 }
 
-.lb-delta--up   { color: var(--success); }
+/* v11 exact colors */
+.lb-delta--up   { color: #22c55e; }
 .lb-delta--down { color: var(--brand-red); }
 .lb-delta--flat { color: var(--ink-4); }
 
-/* ── Sticky "Your Rank" Card ──────────────────────────────── */
+/* ── Sticky "Your Rank" Bar ───────────────────────────────── */
 
 .lb-sticky-you {
   position: fixed;
@@ -783,19 +799,19 @@
   padding: var(--space-5) var(--space-4);
   background: var(--snow);
   border: 1px solid var(--mist);
-  border-radius: var(--r-md);
+  border-radius: 10px;
   display: flex;
   align-items: center;
   gap: var(--space-5);
 }
 
 .lb-share-badge-preview {
-  width: 120px;
-  height: 120px;
+  width: 96px;
+  height: 96px;
   flex-shrink: 0;
   background: var(--char);
   border: 1px solid var(--mist);
-  border-radius: var(--r-md);
+  border-radius: 10px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -805,10 +821,10 @@
 
 .lb-share-badge-rank {
   font-family: var(--font-display);
-  font-size: 36px;
+  font-size: 28px;
   font-weight: 900;
   letter-spacing: -0.05em;
-  color: var(--champagne);
+  color: var(--brand-red);
   line-height: 1;
 }
 
@@ -818,6 +834,13 @@
   text-transform: uppercase;
   letter-spacing: 0.1em;
   color: rgba(255, 255, 255, 0.5);
+}
+
+.lb-share-badge-score {
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 900;
+  color: var(--snow);
 }
 
 .lb-share-badge-logo {
@@ -836,43 +859,18 @@
 
 .lb-share-title {
   font-family: var(--font-display);
-  font-size: 22px;
-  font-weight: 800;
+  font-size: 20px;
+  font-weight: 700;
   letter-spacing: -0.03em;
   color: var(--ink);
-  margin-bottom: var(--space-1);
+  margin-bottom: 8px;
 }
 
 .lb-share-desc {
   font-size: 13px;
-  color: var(--graphite);
-  margin-bottom: var(--space-3);
+  color: var(--ink-3);
+  margin-bottom: 16px;
   line-height: 1.5;
-}
-
-/* Filled Ink share button */
-.lb-share-btn {
-  font-family: var(--font-body);
-  font-size: 12px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  background: var(--ink);
-  color: var(--snow);
-  border: none;
-  padding: 10px 20px;
-  cursor: pointer;
-  border-radius: var(--r-sm);
-  transition: transform 0.15s, box-shadow 0.15s;
-}
-
-.lb-share-btn:hover {
-  transform: translate(1px, 1px);
-  box-shadow: var(--shadow-2);
-}
-
-.lb-share-btn:active {
-  transform: translate(2px, 2px) scale(0.98);
 }
 
 /* ── Empty State ──────────────────────────────────────────── */
@@ -889,6 +887,14 @@
   font-weight: 700;
   color: var(--graphite);
   margin-bottom: var(--space-1);
+}
+
+/* ── Focus-visible global pass ────────────────────────────── */
+
+.lb-row:focus-visible,
+.lb-podium-card:focus-visible {
+  outline: 2px solid var(--brand-red);
+  outline-offset: 2px;
 }
 
 /* ── Responsive ───────────────────────────────────────────── */
@@ -917,7 +923,7 @@
 
   .lb-row {
     grid-template-columns: 48px 1fr 72px 56px;
-    padding: 0 var(--space-2);
+    padding: 12px 8px;
   }
 
   .lb-row-visits,
@@ -958,6 +964,10 @@
   .lb-tier-filters {
     gap: 6px;
   }
+
+  .lb-podium-rank {
+    font-size: 48px;
+  }
 }
 
 /* ── Reduced motion ───────────────────────────────────────── */
@@ -974,7 +984,13 @@
     animation: none;
   }
 
-  .lb-podium-card:hover {
+  .lb-podium-card:hover,
+  .lb-row:hover {
+    transform: none;
+  }
+
+  .lb-tier-chip:hover,
+  .lb-tier-chip--active {
     transform: none;
   }
 }

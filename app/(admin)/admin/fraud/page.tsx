@@ -29,38 +29,6 @@ function maskIp(ip: string) {
   return ip;
 }
 
-function ruleChipColor(rule: DetectionRule): { bg: string; color: string } {
-  if (rule === "Impossible velocity" || rule === "High frequency scan")
-    return { bg: "rgba(193,18,31,0.10)", color: "var(--brand-red)" };
-  if (
-    rule === "Duplicate device" ||
-    rule === "New device spike" ||
-    rule === "Blacklisted device" ||
-    rule === "Self-scan pattern"
-  )
-    return { bg: "var(--accent-blue-tint)", color: "var(--accent-blue)" };
-  if (rule === "Geo mismatch" || rule === "Spoofed GPS")
-    return { bg: "var(--champagne-tint)", color: "var(--champagne-deep)" };
-  if (rule === "VPN detected")
-    return { bg: "var(--surface-3)", color: "var(--ink-3)" };
-  return { bg: "var(--surface-3)", color: "var(--ink-4)" };
-}
-
-function statusChipStyle(status: FraudStatus): { bg: string; color: string } {
-  switch (status) {
-    case "pending":
-      return { bg: "var(--panel-butter)", color: "var(--ink-3)" };
-    case "flagged":
-      return { bg: "rgba(193,18,31,0.08)", color: "var(--brand-red)" };
-    case "blocked":
-      return { bg: "rgba(193,18,31,0.14)", color: "var(--brand-red)" };
-    case "approved":
-      return { bg: "var(--accent-blue-tint)", color: "var(--accent-blue)" };
-    case "escalated":
-      return { bg: "rgba(193,18,31,0.06)", color: "var(--brand-red)" };
-  }
-}
-
 function scoreColor(score: number): string {
   if (score >= 70) return "var(--brand-red)";
   if (score >= 55) return "var(--champagne-deep)";
@@ -118,30 +86,30 @@ function getRelated(event: FraudEvent, all: FraudEvent[]) {
 }
 
 /* ── Sub-components ──────────────────────────────────────────── */
+function ruleChipClass(rule: DetectionRule): string {
+  if (rule === "Impossible velocity" || rule === "High frequency scan")
+    return "fraud-chip fraud-chip--velocity";
+  if (
+    rule === "Duplicate device" ||
+    rule === "New device spike" ||
+    rule === "Blacklisted device" ||
+    rule === "Self-scan pattern"
+  )
+    return "fraud-chip fraud-chip--device";
+  if (rule === "Geo mismatch" || rule === "Spoofed GPS")
+    return "fraud-chip fraud-chip--geo";
+  if (rule === "VPN detected") return "fraud-chip fraud-chip--vpn";
+  return "fraud-chip fraud-chip--default";
+}
+
 function RuleChips({ rules }: { rules: DetectionRule[] }) {
   return (
     <div style={{ display: "flex", flexWrap: "wrap", gap: 4 }}>
-      {rules.map((r) => {
-        const c = ruleChipColor(r);
-        return (
-          <span
-            key={r}
-            style={{
-              padding: "2px 7px",
-              borderRadius: 4,
-              fontSize: 10,
-              fontWeight: 700,
-              letterSpacing: "0.04em",
-              fontFamily: "var(--font-body)",
-              background: c.bg,
-              color: c.color,
-              whiteSpace: "nowrap",
-            }}
-          >
-            {r}
-          </span>
-        );
-      })}
+      {rules.map((r) => (
+        <span key={r} className={ruleChipClass(r)}>
+          {r}
+        </span>
+      ))}
     </div>
   );
 }
@@ -154,23 +122,8 @@ function StatusBadge({ status }: { status: FraudStatus }) {
     blocked: "Blocked",
     escalated: "Escalated",
   };
-  const c = statusChipStyle(status);
   return (
-    <span
-      style={{
-        padding: "2px 8px",
-        borderRadius: 4,
-        fontSize: 11,
-        fontWeight: 700,
-        letterSpacing: "0.06em",
-        fontFamily: "var(--font-body)",
-        background: c.bg,
-        color: c.color,
-        textTransform: "capitalize",
-        display: "inline-block",
-        whiteSpace: "nowrap",
-      }}
-    >
+    <span className={`fraud-status fraud-status--${status}`}>
       {labels[status]}
     </span>
   );
@@ -780,46 +733,11 @@ export default function FraudQueuePage() {
     height: 40,
   };
 
-  function actionBtn(
+  // Returns CSS class string for action buttons — v11 5-variant system
+  function actionBtnClass(
     variant: "approve" | "flag" | "block" | "escalate",
-    disabled: boolean,
-  ): React.CSSProperties {
-    const colors = {
-      approve: {
-        bg: "var(--accent-blue-tint)",
-        color: "var(--accent-blue)",
-        border: "rgba(0,133,255,0.2)",
-      },
-      flag: {
-        bg: "var(--panel-butter)",
-        color: "var(--ink-3)",
-        border: "var(--hairline)",
-      },
-      block: {
-        bg: "rgba(193,18,31,0.08)",
-        color: "var(--brand-red)",
-        border: "rgba(193,18,31,0.2)",
-      },
-      escalate: {
-        bg: "var(--surface-3)",
-        color: "var(--ink-3)",
-        border: "var(--hairline)",
-      },
-    };
-    const c = colors[variant];
-    return {
-      padding: "5px 10px",
-      border: `1px solid ${c.border}`,
-      borderRadius: 6,
-      background: c.bg,
-      color: disabled ? "var(--ink-5)" : c.color,
-      fontFamily: "var(--font-body)",
-      fontSize: 11,
-      fontWeight: 700,
-      cursor: disabled ? "not-allowed" : "pointer",
-      opacity: disabled ? 0.5 : 1,
-      whiteSpace: "nowrap" as const,
-    };
+  ): string {
+    return `fraud-action-btn fraud-action-btn--${variant}`;
   }
 
   return (
@@ -1151,7 +1069,7 @@ export default function FraudQueuePage() {
                       padding: "12px 16px",
                       borderBottom: "1px solid var(--hairline)",
                       background: isSelected
-                        ? "rgba(0,133,255,0.04)"
+                        ? "var(--accent-blue-tint)"
                         : isExpanded
                           ? "var(--surface-3)"
                           : "transparent",
@@ -1318,10 +1236,7 @@ export default function FraudQueuePage() {
                       onClick={(e) => e.stopPropagation()}
                     >
                       <button
-                        style={actionBtn(
-                          "approve",
-                          deciding === event.id || event.status === "approved",
-                        )}
+                        className={actionBtnClass("approve")}
                         onClick={() => handleDecision(event.id, "approved")}
                         disabled={
                           deciding === event.id || event.status === "approved"
@@ -1331,10 +1246,7 @@ export default function FraudQueuePage() {
                         Approve
                       </button>
                       <button
-                        style={actionBtn(
-                          "flag",
-                          deciding === event.id || event.status === "flagged",
-                        )}
+                        className={actionBtnClass("flag")}
                         onClick={() => handleDecision(event.id, "flagged")}
                         disabled={
                           deciding === event.id || event.status === "flagged"
@@ -1344,10 +1256,7 @@ export default function FraudQueuePage() {
                         Flag
                       </button>
                       <button
-                        style={actionBtn(
-                          "block",
-                          deciding === event.id || event.status === "blocked",
-                        )}
+                        className={actionBtnClass("block")}
                         onClick={() => handleDecision(event.id, "blocked")}
                         disabled={
                           deciding === event.id || event.status === "blocked"
@@ -1357,10 +1266,7 @@ export default function FraudQueuePage() {
                         Block
                       </button>
                       <button
-                        style={actionBtn(
-                          "escalate",
-                          deciding === event.id || event.status === "escalated",
-                        )}
+                        className={actionBtnClass("escalate")}
                         onClick={() => handleDecision(event.id, "escalated")}
                         disabled={
                           deciding === event.id || event.status === "escalated"

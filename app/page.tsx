@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import Footer from "@/components/layout/Footer";
 import Header from "@/components/layout/Header";
@@ -18,20 +18,29 @@ function NewsletterForm() {
 
   if (submitted) {
     return (
-      <p className="hp-submit-confirm">
+      <p className="hp-submit-confirm" role="status" aria-live="polite">
         You&apos;re on the list. We&apos;ll be in touch.
       </p>
     );
   }
 
   return (
-    <form onSubmit={handleSubmit} className="hp-newsletter-form">
+    <form
+      onSubmit={handleSubmit}
+      className="hp-newsletter-form"
+      aria-label="Newsletter sign-up"
+    >
+      <label htmlFor="hp-newsletter-email" className="hp-visually-hidden">
+        Email address
+      </label>
       <input
+        id="hp-newsletter-email"
         type="email"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
         placeholder="your@email.com"
         required
+        autoComplete="email"
         className="hp-newsletter-input"
       />
       <button type="submit" className="btn-ink click-shift">
@@ -41,49 +50,74 @@ function NewsletterForm() {
   );
 }
 
+/* ── Reveal-on-scroll hook — IntersectionObserver, a11y safe ── */
+function useRevealOnScroll() {
+  const ref = useRef<HTMLDivElement | null>(null);
+  useEffect(() => {
+    const root = ref.current;
+    if (!root) return;
+    if (typeof window === "undefined") return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      root.querySelectorAll<HTMLElement>("[data-reveal]").forEach((el) => {
+        el.classList.add("is-revealed");
+      });
+      return;
+    }
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("is-revealed");
+            io.unobserve(entry.target);
+          }
+        }
+      },
+      { threshold: 0.12, rootMargin: "0px 0px -10% 0px" },
+    );
+    root
+      .querySelectorAll<HTMLElement>("[data-reveal]")
+      .forEach((el) => io.observe(el));
+    return () => io.disconnect();
+  }, []);
+  return ref;
+}
+
 /* ── Page component ─────────────────────────────────────────── */
 export default function HomePage() {
+  const rootRef = useRevealOnScroll();
+
   return (
-    <div className="hp-root" id="main-content">
+    <div className="hp-root" id="main-content" ref={rootRef}>
       <Header />
 
       <div className="hp-panels">
         {/* ═══════════════════════════════════════════════════════
-            PANEL 1 — HERO
-            Full-viewport ink panel. Title bottom-left anchored.
-            Magvix Hero clamp(64px,9vw,160px) — STRICT spec.
-            border-radius: 0 — allowed (full-bleed editorial hero).
+            PANEL 1 — HERO  ·  (WELCOME)
+            Full-bleed dark editorial hero.
+            Magvix Hero clamp(64,9vw,160) — corner-anchored bottom-left.
+            ≤1 liquid-glass tile (top-right) + dual CTA.
             ═══════════════════════════════════════════════════════ */}
-        <section className="hp-hero" aria-label="Hero">
-          {/* Film grain */}
-          <div className="hp-hero-grain" aria-hidden="true" />
-
-          {/* Bottom vignette */}
-          <div className="hp-hero-vignette" aria-hidden="true" />
-
-          {/* Ghost watermark — Darky 100, opacity 0.05 */}
+        <section className="hp-hero" aria-labelledby="hp-hero-title">
           <div className="hp-hero-watermark" aria-hidden="true">
             PUSH
           </div>
 
-          {/* Top-right: liquid-glass stat tile */}
-          <div className="hp-hero-stat-tile lg-surface--dark">
+          {/* Liquid-glass stat tile (≤1 per panel) */}
+          <div className="hp-hero-stat-tile lg-surface--dark" data-reveal>
             <span className="hp-hero-stat-num">1.4M</span>
             <span className="hp-hero-stat-label">(VERIFIED SCANS)</span>
           </div>
 
-          {/* Bottom-left: eyebrow + title + CTAs — STRICTLY bottom-left */}
-          <div className="hp-hero-content">
-            <p className="hp-hero-eyebrow">(NYC LOCAL)</p>
+          {/* Bottom-left content block — STRICT corner anchor */}
+          <div className="hp-hero-content" data-reveal>
+            <p className="hp-hero-eyebrow">(WELCOME) · NYC LOCAL</p>
 
-            {/* Magvix Hero — clamp(64px,9vw,160px), max 1 hero per page */}
-            <h1 className="hp-hero-title">
+            <h1 id="hp-hero-title" className="hp-hero-title">
               Pay per
               <br />
               walk-in.
             </h1>
 
-            {/* Subtitle in frosted glass badge */}
             <div className="hp-hero-sub-wrap">
               <p className="hp-hero-sub">
                 Push connects NYC local businesses with neighborhood creators.
@@ -92,13 +126,19 @@ export default function HomePage() {
               </p>
             </div>
 
+            {/* Dual audience CTA — For Merchants (primary) + For Creators (ghost) */}
             <div className="hp-hero-ctas">
-              <Link href="/merchant/signup" className="btn-primary click-shift">
-                Get Started Free
+              <Link
+                href="/for-merchants"
+                className="btn-primary click-shift"
+                aria-label="For merchants — get started free"
+              >
+                For Merchants
               </Link>
               <Link
                 href="/for-creators"
                 className="btn-ghost click-shift hp-hero-btn-ghost"
+                aria-label="For creators — earn per verified visit"
               >
                 For Creators
               </Link>
@@ -106,31 +146,49 @@ export default function HomePage() {
           </div>
         </section>
 
+        {/* ── Magvix Italic Signature Divider (between panels, ≤2 per page) ── */}
+        <div className="hp-divider" aria-hidden="true">
+          <span className="hp-divider-text">
+            Posted&nbsp;·&nbsp;Scanned&nbsp;·&nbsp;Verified&nbsp;·
+          </span>
+        </div>
+
         {/* ═══════════════════════════════════════════════════════
-            PANEL 2 — TWO-PATHWAY ROUTER · Candy Peach (warm)
-            Two full-height tiles: Ink tile (merchants) + glass tile (creators)
+            PANEL 2 — WHO IT'S FOR  ·  Two-pathway router (warm tone)
+            Image-first photo card (≤1 per panel) + dual tile router.
             ═══════════════════════════════════════════════════════ */}
         <section
           className="candy-panel hp-adventure"
-          aria-label="Choose your path"
+          aria-labelledby="hp-adventure-h"
         >
-          <p className="eyebrow hp-adventure-eyebrow">(TWO WAYS IN)</p>
+          <div className="hp-section-head" data-reveal>
+            <p className="eyebrow hp-adventure-eyebrow">(WHO IT&rsquo;S FOR)</p>
+            <h2 id="hp-adventure-h" className="hp-section-h">
+              Two audiences.
+              <br />
+              One physical signal.
+            </h2>
+            <p className="hp-italic-quote">
+              <em>&ldquo;The block is the algorithm.&rdquo;</em>
+            </p>
+          </div>
 
           <div className="hp-adventure-grid">
             {/* Merchants: dark ink tile */}
             <Link
               href="/for-merchants"
               className="hp-adventure-tile hp-adventure-tile--ink click-shift"
+              data-reveal
             >
               <div>
                 <p className="hp-tile-eyebrow-snow">(FOR MERCHANTS)</p>
-                <h2 className="hp-tile-h2-snow">
+                <h3 className="hp-tile-h2-snow">
                   Pay only
                   <br />
                   for the
                   <br />
                   walk-in.
-                </h2>
+                </h3>
                 <p className="hp-tile-body-snow">
                   No impressions. No reach. You pay exactly once — when a
                   verified creator scan converts to a real store visit.
@@ -139,20 +197,21 @@ export default function HomePage() {
               <span className="hp-tile-cta-snow">See merchant plans →</span>
             </Link>
 
-            {/* Creators: warm translucent tile */}
+            {/* Creators: warm tile with photo card overlay (image-first pattern) */}
             <Link
               href="/for-creators"
               className="hp-adventure-tile hp-adventure-tile--warm click-shift"
+              data-reveal
             >
               <div>
                 <p className="hp-tile-eyebrow-ink">(FOR CREATORS)</p>
-                <h2 className="hp-tile-h2-ink">
+                <h3 className="hp-tile-h2-ink">
                   Perform.
                   <br />
                   Get paid.
                   <br />
                   Repeat.
-                </h2>
+                </h3>
                 <p className="hp-tile-body-ink">
                   Post your neighborhood spots. Let your audience discover them.
                   Earn per verified visit — no sponsorship minimum.
@@ -164,27 +223,26 @@ export default function HomePage() {
         </section>
 
         {/* ═══════════════════════════════════════════════════════
-            PANEL 3 — PROOF
-            Giant KPI left (8-col) + secondary stats right (4-col)
+            PANEL 3 — WHY PUSH  ·  Proof numbers (cool / dark)
+            8+4 grid · ≤1 Champagne ceremonial accent.
             ═══════════════════════════════════════════════════════ */}
-        <section className="candy-panel hp-proof" aria-label="Proof numbers">
-          <p className="eyebrow hp-section-eyebrow">(THE NUMBERS)</p>
+        <section className="candy-panel hp-proof" aria-labelledby="hp-proof-h">
+          <p className="eyebrow hp-section-eyebrow" data-reveal>
+            (WHY PUSH)
+          </p>
 
-          {/* Asymmetric 8+4 grid */}
           <div className="hp-proof-grid">
-            {/* Left 8-col: giant KPI */}
-            <div className="hp-proof-left">
-              {/* Ghost watermark numeral behind KPI */}
-              <div className="hp-proof-ghost" aria-hidden="true">
-                1.4M
-              </div>
-              <p className="hp-kpi-num">1.4M+</p>
+            {/* Left: giant KPI with Champagne accent (≤1 ceremonial / page) */}
+            <div className="hp-proof-left" data-reveal>
+              <p className="hp-kpi-num">
+                1.4M<span className="hp-kpi-accent">+</span>
+              </p>
               <p className="hp-kpi-label">(VERIFIED WALK-INS TO DATE)</p>
             </div>
 
-            {/* Right 4-col: headline + 2 secondary stats */}
-            <div className="hp-proof-right">
-              <h2 className="hp-proof-heading">
+            {/* Right: heading + secondary stats */}
+            <div className="hp-proof-right" data-reveal>
+              <h2 id="hp-proof-h" className="hp-proof-heading">
                 Physical proof,
                 <br />
                 not digital
@@ -209,18 +267,26 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* ═══════════════════════════════════════════════════════
-            PANEL 4 — HOW IT WORKS · Surface-2
-            Numbered editorial rows — 3-column grid: number / title / body
-            ═══════════════════════════════════════════════════════ */}
-        <section className="hp-how" aria-label="How it works">
-          <p className="eyebrow hp-section-eyebrow">(HOW IT WORKS)</p>
+        {/* ── Magvix Italic Signature Divider ── */}
+        <div className="hp-divider" aria-hidden="true">
+          <span className="hp-divider-text">
+            End of campaign&nbsp;·&nbsp;Fin&nbsp;·
+          </span>
+        </div>
 
-          <h2 className="hp-how-heading">
-            Three steps
-            <br />
-            to a verified visit.
-          </h2>
+        {/* ═══════════════════════════════════════════════════════
+            PANEL 4 — HOW IT WORKS  ·  Surface-2 (warm)
+            Numbered editorial rows + ≤1 Editorial Pink moment.
+            ═══════════════════════════════════════════════════════ */}
+        <section className="hp-how" aria-labelledby="hp-how-h">
+          <div className="hp-section-head" data-reveal>
+            <p className="eyebrow hp-section-eyebrow">(GET STARTED)</p>
+            <h2 id="hp-how-h" className="hp-how-heading">
+              Three steps
+              <br />
+              to a verified visit.
+            </h2>
+          </div>
 
           <div className="hp-how-rows">
             {[
@@ -243,6 +309,7 @@ export default function HomePage() {
               <div
                 key={item.n}
                 className={`hp-how-row${i < arr.length - 1 ? " hp-how-row--border" : ""}`}
+                data-reveal
               >
                 <span className="hp-how-num">{item.n}</span>
                 <h3 className="hp-how-step-title">{item.title}</h3>
@@ -251,31 +318,38 @@ export default function HomePage() {
             ))}
           </div>
 
-          <div className="hp-how-ctas">
-            <Link href="/merchant/signup" className="btn-primary click-shift">
-              Get Started Free
+          {/* Editorial Pink stamp — single moment per panel (≤1 per page) */}
+          <p className="hp-how-stamp" aria-hidden="true">
+            <em>Posted &amp; verified.</em>
+          </p>
+
+          <div className="hp-how-ctas" data-reveal>
+            <Link href="/for-merchants" className="btn-primary click-shift">
+              For Merchants
             </Link>
-            <Link href="/pricing" className="btn-ghost click-shift">
-              See Pricing
+            <Link href="/for-creators" className="btn-ghost click-shift">
+              For Creators
             </Link>
           </div>
         </section>
 
         {/* ═══════════════════════════════════════════════════════
-            PANEL 5 — TICKET PANEL · GA Orange
-            Newsletter sign-up. ≤1 per page. Marketing-only.
-            Grommets: 16px circles, 24px inset from corners.
-            Perforation: via .ticket-panel::before/after in globals.
+            PANEL 5 — TICKET PANEL · GA Orange (≤1 per page)
+            Newsletter sign-up. Marketing-only.
             ═══════════════════════════════════════════════════════ */}
-        <div className="ticket-panel hp-ticket" role="complementary">
-          {/* 4 grommet circles — 16px diameter, 24px inset */}
+        <div
+          className="ticket-panel hp-ticket"
+          role="complementary"
+          aria-labelledby="hp-ticket-h"
+          data-reveal
+        >
           <div className="hp-grommet hp-grommet--tl" aria-hidden="true" />
           <div className="hp-grommet hp-grommet--tr" aria-hidden="true" />
           <div className="hp-grommet hp-grommet--bl" aria-hidden="true" />
           <div className="hp-grommet hp-grommet--br" aria-hidden="true" />
 
           <div className="hp-ticket-inner">
-            <h2 className="hp-ticket-title">
+            <h2 id="hp-ticket-h" className="hp-ticket-title">
               Tune into
               <br />
               the signal.

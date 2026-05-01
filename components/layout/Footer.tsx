@@ -1,142 +1,95 @@
 "use client";
 
+/**
+ * Footer — v11 § 8.3 Darky Giant Wordmark + § 8.9.2 Tile Pair
+ * Editorial Blue rounded-top panel, two floating liquid-glass tiles peeking
+ * above the seam, 3-column parenthetical eyebrow grid, and a Darky 800 giant
+ * "PUSH" anchored bottom-left. Static wordmark — no hover shift (§ 0.8).
+ */
+
 import Link from "next/link";
 import { BRAND } from "@/lib/constants/brand";
+import styles from "./Footer.module.css";
 
-/* ---- Nav data — 2 cols per Figma spec (node 1:218) ---- */
-const NAV_COLS = [
+/* ----------------- Nav data — 3-column marketing register ----------------- */
+const NAV_COLS: ReadonlyArray<{
+  label: string;
+  links: ReadonlyArray<{ label: string; href: string }>;
+}> = [
   {
     label: "(LINKS)",
     links: [
-      { label: "For Merchants", href: "/for-merchants" },
-      { label: "For Creators", href: "/for-creators" },
+      { label: "For merchants", href: "/for-merchants" },
+      { label: "For creators", href: "/for-creators" },
       { label: "Pricing", href: "/pricing" },
       { label: "Get in touch", href: "/contact" },
     ],
   },
   {
-    label: "(CONNECT)",
+    label: "(LEGAL)",
     links: [
-      { label: "About Push", href: "/about" },
-      { label: "Careers", href: "/careers" },
-      { label: "Help Center", href: "/help" },
       { label: "Privacy", href: "/legal/privacy" },
       { label: "Terms", href: "/legal/terms" },
+      { label: "Help center", href: "/help" },
     ],
   },
 ];
 
-/* ---- Component ---- */
+const SOCIAL_LINKS: ReadonlyArray<{ label: string; href: string }> = [
+  { label: "Instagram", href: "https://instagram.com/pushnyc" },
+  { label: "X / Twitter", href: "https://twitter.com/pushnyc" },
+  { label: "LinkedIn", href: "https://linkedin.com/company/pushnyc" },
+];
+
 export default function Footer() {
   return (
-    <footer
-      className="footer-root"
-      style={{
-        background: "var(--ink-2)",
-        borderRadius: "8px 8px 0 0",
-        padding: "120px 64px 32px",
-        position: "relative",
-        overflow: "hidden",
-        marginTop: 80,
-        color: "var(--snow)",
-      }}
-    >
-      {/* Main row: wordmark left + nav columns right */}
-      <div
-        className="footer-main"
-        style={{
-          maxWidth: 1140,
-          margin: "0 auto",
-          display: "flex",
-          alignItems: "flex-end",
-          gap: 80,
-        }}
-      >
-        {/* Magvix Regular wordmark — Figma spec: weight 400, NOT italic */}
-        <Link
-          href="/"
-          aria-label={`${BRAND.name} — home`}
-          style={{
-            fontFamily: "var(--font-hero)",
-            fontSize: "clamp(80px, 14vw, 200px)",
-            fontWeight: 400,
-            fontStyle: "normal",
-            lineHeight: 0.85,
-            letterSpacing: "-0.04em",
-            color: "var(--snow)",
-            flexShrink: 0,
-            textDecoration: "none",
-            display: "block",
-            userSelect: "none",
-          }}
-        >
-          {BRAND.name}
-        </Link>
+    <footer className={styles.shell} aria-labelledby="footer-wordmark">
+      <div className={styles.panel}>
+        {/* Two liquid-glass tiles peeking above the rounded-top seam — § 8.9.2 */}
+        <div className={styles.tileRow} aria-hidden={false}>
+          <section
+            className={`${styles.tile} lg-surface lg-surface--footer-tile`}
+            aria-label="Newsletter"
+          >
+            <p className={styles.tileEyebrow}>(NEWSLETTER)</p>
+            <h3 className={styles.tileTitle}>Block-by-block dispatches.</h3>
+            <p className={styles.tileBody}>
+              Two emails a month. New merchants, new creators, what verified
+              attribution actually looks like.
+            </p>
+          </section>
 
-        {/* Nav columns — pushed to the far right */}
-        <div
-          className="footer-cols"
-          style={{
-            display: "flex",
-            gap: 64,
-            alignItems: "flex-start",
-            marginLeft: "auto",
-            paddingBottom: 8,
-          }}
-        >
+          <section
+            className={`${styles.tile} lg-surface lg-surface--footer-tile`}
+            aria-label="Social"
+          >
+            <p className={styles.tileEyebrow}>(CONNECT)</p>
+            <ul className={styles.tileSocialList}>
+              {SOCIAL_LINKS.map(({ label, href }) => (
+                <li key={label}>
+                  <a
+                    className={styles.tileSocialLink}
+                    href={href}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    {label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </section>
+        </div>
+
+        {/* 3-column parenthetical eyebrow grid */}
+        <div className={styles.cols}>
           {NAV_COLS.map((col) => (
-            <div key={col.label} className="footer-col">
-              {/* Pill label — Figma spec: 10px mono, 0.4em ls, border pill */}
-              <span
-                style={{
-                  display: "inline-block",
-                  fontFamily: "var(--font-body)",
-                  fontSize: 12,
-                  fontWeight: 600,
-                  letterSpacing: "0.4em",
-                  textTransform: "uppercase",
-                  color: "var(--ink-6)",
-                  border:
-                    "1px solid color-mix(in srgb, var(--ink-6) 40%, transparent)",
-                  borderRadius: "50vh",
-                  padding: "4px 12px",
-                  marginBottom: 20,
-                }}
-              >
-                {col.label}
-              </span>
-
-              {/* Links — right-aligned, underlined, mono 16px */}
-              <ul
-                style={{
-                  listStyle: "none",
-                  padding: 0,
-                  margin: 0,
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: 12,
-                  alignItems: "flex-end",
-                }}
-              >
+            <div key={col.label} className={styles.col}>
+              <p className={styles.colLabel}>{col.label}</p>
+              <ul className={styles.colLinks}>
                 {col.links.map(({ label, href }) => (
                   <li key={label}>
-                    <Link
-                      href={href}
-                      className="footer-link click-shift"
-                      style={{
-                        fontFamily: "var(--font-body)",
-                        fontSize: 16,
-                        fontWeight: 400,
-                        lineHeight: 1.4,
-                        letterSpacing: "-0.01em",
-                        color: "var(--ink-6)",
-                        textDecoration: "underline",
-                        textUnderlineOffset: "3px",
-                        textAlign: "right",
-                        display: "block",
-                        transition: "color 0.12s",
-                      }}
-                    >
+                    <Link href={href} className={styles.colLink}>
                       {label}
                     </Link>
                   </li>
@@ -144,60 +97,34 @@ export default function Footer() {
               </ul>
             </div>
           ))}
+
+          <div className={`${styles.col} ${styles.colCopyCol || ""}`}>
+            <p className={styles.colLabel}>(PUSH, INC.)</p>
+            <p className={styles.colCopy}>
+              {BRAND.legalName}
+              <br />
+              {BRAND.billingAddress.line1}
+              <br />
+              {BRAND.billingAddress.city}, {BRAND.billingAddress.state}{" "}
+              {BRAND.billingAddress.postal}
+            </p>
+            <p className={styles.colCopy}>
+              &copy; 2026 {BRAND.legalName}. Built in NYC.
+            </p>
+          </div>
+        </div>
+
+        {/* Giant Wordmark — bottom-left, static (no hover shift) — § 8.3 */}
+        <div className={styles.wordmarkRow}>
+          <span
+            id="footer-wordmark"
+            className={styles.wordmark}
+            aria-label={`${BRAND.name} — brand mark`}
+          >
+            {BRAND.name.toUpperCase()}
+          </span>
         </div>
       </div>
-
-      {/* Bottom bar — copyright right-aligned only */}
-      <div
-        className="footer-bottom"
-        style={{
-          maxWidth: 1140,
-          margin: "80px auto 0",
-          display: "flex",
-          justifyContent: "flex-end",
-          borderTop:
-            "1px solid color-mix(in srgb, var(--snow) 8%, transparent)",
-          paddingTop: 24,
-        }}
-      >
-        <p
-          style={{
-            fontFamily: "var(--font-body)",
-            fontSize: 12,
-            color: "color-mix(in srgb, var(--ink-6) 60%, transparent)",
-            letterSpacing: "0.02em",
-            margin: 0,
-          }}
-        >
-          &copy; 2026 {BRAND.legalName} &middot; Built in NYC.
-        </p>
-      </div>
-
-      {/* Responsive */}
-      <style>{`
-        .footer-link:hover { color: var(--snow) !important; }
-
-        @media (max-width: 1023px) {
-          .footer-root { padding: 80px 48px 32px !important; }
-        }
-
-        @media (max-width: 767px) {
-          .footer-root { padding: 64px 24px 24px !important; border-radius: 0 !important; }
-          .footer-main {
-            flex-direction: column !important;
-            align-items: flex-start !important;
-            gap: 48px !important;
-          }
-          .footer-cols {
-            flex-direction: column !important;
-            gap: 40px !important;
-            margin-left: 0 !important;
-          }
-          .footer-col ul { align-items: flex-start !important; }
-          .footer-col a { text-align: left !important; }
-          .footer-bottom { margin-top: 48px !important; justify-content: flex-start !important; }
-        }
-      `}</style>
     </footer>
   );
 }

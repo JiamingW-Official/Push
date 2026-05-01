@@ -1,0 +1,264 @@
+/* ─────────────────────────────────────────────────────────────────────
+ * Push — Creator Disputes — page-level v11 overrides
+ *
+ * This file covers page-shell patterns specific to the creator workspace
+ * disputes list. Component-level styles (DisputeList, status badges, etc.)
+ * live in components/disputes/disputes.css which is already imported by
+ * those components. This file is imported by the page itself and adds:
+ *   · v11 eyebrow (MY·DISPUTES)
+ *   · 8px-grid stats grid (replacing inline styles)
+ *   · v11 tab bar (replacing inline styles)
+ *   · v11-compliant empty state
+ *   · focus-visible ring
+ * ───────────────────────────────────────────────────────────────────── */
+
+
+/* ════════════════════════════════════════════════════════════
+   STATS GRID — replaces inline style gridTemplateColumns
+   ════════════════════════════════════════════════════════════ */
+
+.cdp-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.cdp-stat-card {
+  background: var(--surface-2);
+  border-radius: 10px;
+  padding: 24px;
+  transition: transform 180ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.cdp-stat-card:hover {
+  transform: translate(2px, 2px);
+}
+
+.cdp-stat__value {
+  font-family: var(--font-display);
+  font-size: clamp(40px, 5vw, 56px);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: var(--ink);
+  line-height: 1;
+  margin-bottom: 8px;
+  font-variant-numeric: tabular-nums;
+}
+
+.cdp-stat__value--open    { color: var(--brand-red); }
+.cdp-stat__value--neutral { color: var(--ink); }
+
+.cdp-stat__label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+}
+
+
+/* ════════════════════════════════════════════════════════════
+   TAB BAR — replaces inline style buttons
+   ════════════════════════════════════════════════════════════ */
+
+.cdp-tabs {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  margin-bottom: 24px;
+  border-bottom: 1px solid var(--hairline);
+}
+
+.cdp-tab {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  padding: 8px 16px;
+  cursor: pointer;
+  transition: color 180ms ease, border-color 180ms ease;
+  margin-bottom: -1px;
+  white-space: nowrap;
+}
+
+.cdp-tab:hover {
+  color: var(--ink);
+}
+
+.cdp-tab--active {
+  color: var(--ink);
+  border-bottom-color: var(--brand-red);
+  font-weight: 700;
+}
+
+.cdp-tab:focus-visible {
+  outline: 2px solid var(--brand-red);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+
+/* ════════════════════════════════════════════════════════════
+   DISPUTE CARD — v11 left-border accent pattern
+   Used when rendering disputes outside DisputeList component
+   ════════════════════════════════════════════════════════════ */
+
+.cdp-card {
+  border-radius: 10px;
+  background: var(--surface-2);
+  padding: 16px 24px;
+  border-left: 3px solid var(--ink-4);
+  transition: transform 180ms cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 180ms ease;
+  cursor: pointer;
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+
+.cdp-card:hover {
+  transform: translate(2px, 2px);
+  box-shadow: 0 4px 12px rgba(10, 10, 10, 0.06);
+}
+
+.cdp-card:focus-visible {
+  outline: 2px solid var(--brand-red);
+  outline-offset: 2px;
+}
+
+/* Left-border accent by status */
+.cdp-card--open          { border-left-color: var(--brand-red); }
+.cdp-card--under_review  { border-left-color: var(--champagne); }
+.cdp-card--awaiting_response { border-left-color: var(--accent-blue); }
+.cdp-card--resolved      { border-left-color: var(--ink-4); }
+.cdp-card--closed        { border-left-color: var(--ink-5); }
+
+
+/* ════════════════════════════════════════════════════════════
+   STATUS CHIPS — 12px mono uppercase, per spec
+   ════════════════════════════════════════════════════════════ */
+
+.cdp-chip {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid;
+  line-height: 1;
+}
+
+.cdp-chip--open {
+  background: rgba(193, 18, 31, 0.08);
+  color: var(--brand-red);
+  border-color: rgba(193, 18, 31, 0.25);
+}
+
+.cdp-chip--pending,
+.cdp-chip--under_review,
+.cdp-chip--awaiting_response {
+  background: var(--champagne-tint);
+  color: var(--champagne-deep);
+  border-color: rgba(191, 161, 112, 0.35);
+}
+
+.cdp-chip--resolved,
+.cdp-chip--closed {
+  background: rgba(97, 96, 92, 0.08);
+  color: var(--ink-3);
+  border-color: rgba(97, 96, 92, 0.20);
+}
+
+
+/* ════════════════════════════════════════════════════════════
+   EMPTY STATE
+   ════════════════════════════════════════════════════════════ */
+
+.cdp-empty {
+  text-align: center;
+  padding: 64px 24px;
+  color: var(--ink-3);
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.cdp-empty__icon {
+  font-size: 32px;
+  margin-bottom: 16px;
+  color: var(--mist);
+  display: block;
+}
+
+.cdp-empty__title {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--ink-3);
+  letter-spacing: -0.01em;
+  margin-bottom: 8px;
+  text-transform: none;
+}
+
+.cdp-empty__sub {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--ink-4);
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  text-transform: none;
+}
+
+
+/* ════════════════════════════════════════════════════════════
+   RESPONSIVE
+   ════════════════════════════════════════════════════════════ */
+
+@container cw (max-width: 720px) {
+  .cdp-stats {
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  .cdp-tabs {
+    overflow-x: auto;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .cdp-tabs::-webkit-scrollbar { display: none; }
+}
+
+@container cw (max-width: 480px) {
+  .cdp-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .cdp-tab {
+    padding: 8px 12px;
+    font-size: 11px;
+  }
+}
+
+
+/* ════════════════════════════════════════════════════════════
+   REDUCED-MOTION
+   ════════════════════════════════════════════════════════════ */
+
+@media (prefers-reduced-motion: reduce) {
+  .cdp-stat-card,
+  .cdp-card {
+    transition: none;
+  }
+}

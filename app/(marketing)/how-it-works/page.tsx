@@ -1,5 +1,6 @@
-// v11 How It Works — editorial register, numbered rows, dark verification panel
-// Audit pass 2026-04-25: Darky Display Hero, 8px grid, token-only colors, 96px section padding
+// v11 How It Works — 4-panel Marketing register
+// Structure: Hero → Merchant Steps → Sig Divider → Creator Steps → Trust Panel
+// Spec: § 2 color tokens, § 3 type scale, § 5 grid, § 6 negative-space, § 9 buttons
 
 import type { Metadata } from "next";
 import Link from "next/link";
@@ -8,732 +9,345 @@ import "./how-it-works.css";
 export const metadata: Metadata = {
   title: "How Push Works — Pay Per Verified Visit",
   description:
-    "Four steps from creator story to verified scan. QR attribution, GPS dwell, and timestamp verification — every payout tied to a real physical visit.",
+    "Posters meet performance. QR attribution, real-time scan tracking, and verified payouts — built for creators and merchants who demand proof.",
 };
 
 /* ── Page ─────────────────────────────────────────────────── */
 export default function HowItWorksPage() {
   return (
-    <main>
-      {/* ═══ 01 — HERO (dark ink panel, bottom-left anchored) ═══
-          Title anchor: bottom 96px, left 64px (§ 7.1 + § 7.2)
-          Darky Display Hero clamp(56,8vw,128) weight 900 (§ 3.1)
+    <main className="hiw-root">
+      {/* ═══════════════════════════════════════════════════════
+          PANEL 1 — HERO
+          bg: var(--surface) warm ivory
+          H1 bottom-left anchored, Darky Display, dual CTA
           ═══════════════════════════════════════════════════════ */}
-      <section
-        aria-labelledby="hiw-hero-heading"
-        style={{
-          // Decorative gradient — SVG visual effect, exempt from closed-color list per § 2.7 rule 1
-          background: `
-            radial-gradient(ellipse 70% 60% at 80% 20%, var(--brand-red-tint) 0%, transparent 55%),
-            linear-gradient(155deg, var(--ink) 0%, var(--graphite) 60%, var(--char) 100%)
-          `,
-          minHeight: "clamp(560px, 78vh, 800px)",
-          position: "relative",
-          display: "flex",
-          alignItems: "flex-end",
-          overflow: "hidden",
-        }}
-      >
-        {/* Ghost step numeral watermark */}
-        <span
-          aria-hidden="true"
-          style={{
-            position: "absolute",
-            right: "-0.03em",
-            bottom: "-0.1em",
-            fontFamily: "var(--font-display)",
-            fontWeight: 900,
-            fontSize: "clamp(240px, 42vw, 640px)",
-            letterSpacing: "-0.08em",
-            lineHeight: 0.8,
-            color: "rgba(255,255,255,0.03)",
-            pointerEvents: "none",
-            userSelect: "none",
-          }}
-        >
-          4
+      <section className="hiw-hero" aria-labelledby="hiw-h1">
+        {/* Ghost watermark numeral */}
+        <span className="hiw-hero-watermark" aria-hidden="true">
+          1
         </span>
 
-        {/* Bottom-left anchored content: padding 0 64px 96px (§ 7.2) */}
-        <div
-          style={{
-            maxWidth: 1140,
-            margin: "0 auto",
-            width: "100%",
-            padding: "0 64px 96px",
-            position: "relative",
-            zIndex: 1,
-            display: "grid",
-            gridTemplateColumns: "1fr auto",
-            gap: 64,
-            alignItems: "flex-end",
-          }}
-        >
-          {/* Left — bottom-left anchored title block */}
-          <div>
-            <p
-              className="eyebrow"
-              style={{ color: "rgba(255,255,255,0.65)", marginBottom: 16 }}
-            >
-              (THE FLOW)
-            </p>
-            {/* Darky Display Hero — clamp(56px,8vw,128px) 900 (§ 3.1) */}
-            <h1
-              id="hiw-hero-heading"
-              style={{
-                fontFamily: "var(--font-display)",
-                fontWeight: 900,
-                fontSize: "clamp(56px, 8vw, 128px)",
-                letterSpacing: "-0.035em",
-                lineHeight: 0.9,
-                color: "var(--snow)",
-                margin: 0,
-              }}
-            >
-              Four steps
+        <div className="hiw-hero-inner">
+          {/* Bottom-left anchored content block */}
+          <div className="hiw-hero-content">
+            {/* (HOW·IT·WORKS) eyebrow — § 8.4 mono 12px parenthetical */}
+            <p className="eyebrow hiw-hero-eyebrow">(HOW·IT·WORKS)</p>
+
+            {/* H1 — Darky Display clamp(40,5vw,72) 800 bottom-left (§ 3.1 + § 7.1) */}
+            <h1 id="hiw-h1" className="hiw-hero-h1">
+              Posters meet
               <br />
-              from story
-              <br />
-              to scan.
+              performance.
             </h1>
-            <p
-              style={{
-                marginTop: 32,
-                maxWidth: 520,
-                fontFamily: "var(--font-mono)",
-                fontSize: 20,
-                lineHeight: 1.4,
-                letterSpacing: "-0.1em",
-                color: "var(--snow)",
-                opacity: 0.72,
-              }}
-            >
-              A creator posts a real recommendation. A customer scans the QR at
-              the door. We verify. The merchant pays. That is the entire loop.
+
+            {/* Subtitle — 18px body (§ 3.1) */}
+            <p className="hiw-hero-sub">
+              A creator posts a real recommendation. A customer walks in and
+              scans. Push verifies. The merchant pays only for confirmed visits.
             </p>
-            <div
-              style={{
-                marginTop: 48,
-                display: "flex",
-                gap: 16,
-                flexWrap: "wrap",
-              }}
-            >
-              <Link href="/creator/signup" className="btn-primary click-shift">
-                Apply as creator
+
+            {/* Dual CTA row — gap 16px desktop, 12px mobile (§ 6 + § 9) */}
+            <div className="hiw-hero-cta-row">
+              <Link href="/for-creators" className="btn-primary click-shift">
+                For Creators
               </Link>
-              <Link href="/merchant/signup" className="btn-ghost click-shift">
-                List your venue
+              <Link href="/for-merchants" className="btn-secondary click-shift">
+                For Merchants
               </Link>
             </div>
           </div>
 
-          {/* Right — floating glass badge */}
-          <div
-            className="lg-surface--badge"
-            style={{ flexShrink: 0, textAlign: "center" }}
-            aria-label="100% verified"
+          {/* Right — floating liquid-glass badge */}
+          <aside
+            className="lg-surface--badge hiw-hero-badge"
+            aria-label="100% verified visits"
           >
-            <div
-              style={{
-                fontFamily: "var(--font-display)",
-                fontWeight: 900,
-                fontSize: "clamp(40px, 5vw, 72px)",
-                letterSpacing: "-0.045em",
-                lineHeight: 0.85,
-                color: "var(--snow)",
-              }}
-            >
-              100%
+            <div className="hiw-hero-badge-num">100%</div>
+            <p className="eyebrow hiw-hero-badge-label">VERIFIED</p>
+          </aside>
+        </div>
+      </section>
+
+      {/* ═══════════════════════════════════════════════════════
+          PANEL 2 — MERCHANT 3-STEP FLOW
+          bg: var(--surface-2), H2 top-left, 3 step cards in row
+          Liquid-glass QR Attribution tile over step 3
+          ═══════════════════════════════════════════════════════ */}
+      <section className="hiw-merchant" aria-labelledby="hiw-merchant-h2">
+        <div className="hiw-section-inner">
+          {/* Section eyebrow */}
+          <p className="eyebrow hiw-section-eyebrow">(FOR MERCHANTS)</p>
+
+          {/* H2 top-left — Darky 40px 800 (§ 3.1) */}
+          <h2 id="hiw-merchant-h2" className="hiw-section-h2">
+            For Merchants
+          </h2>
+
+          {/* 3 step cards row */}
+          <div className="hiw-step-row">
+            {/* Step 1 */}
+            <div className="hiw-step-card click-shift" tabIndex={0}>
+              <div
+                className="hiw-step-num hiw-step-num--red"
+                aria-hidden="true"
+              >
+                01
+              </div>
+              <h3 className="hiw-step-title">List your venue.</h3>
+              <p className="hiw-step-body">
+                Set a per-visit rate, define your campaign zone, and go live in
+                minutes. No subscription, no setup fee.
+              </p>
+              <p className="eyebrow hiw-step-detail">
+                Real listing · 10 min setup · No minimum spend
+              </p>
             </div>
-            <p
-              className="eyebrow"
-              style={{ color: "rgba(255,255,255,0.65)", marginTop: 8 }}
+
+            {/* Step 2 */}
+            <div className="hiw-step-card click-shift" tabIndex={0}>
+              <div
+                className="hiw-step-num hiw-step-num--red"
+                aria-hidden="true"
+              >
+                02
+              </div>
+              <h3 className="hiw-step-title">Creators post in the wild.</h3>
+              <p className="hiw-step-body">
+                Push matches you with verified local creators who already visit
+                your neighborhood. They post, QR posters go up.
+              </p>
+              <p className="eyebrow hiw-step-detail">
+                Verified locals · No brand brief · Organic voice
+              </p>
+            </div>
+
+            {/* Step 3 — liquid-glass QR Attribution tile floats over this card */}
+            <div
+              className="hiw-step-card hiw-step-card--qr click-shift"
+              tabIndex={0}
             >
-              VERIFIED
-            </p>
+              <div
+                className="hiw-step-num hiw-step-num--red"
+                aria-hidden="true"
+              >
+                03
+              </div>
+              <h3 className="hiw-step-title">Pay for verified visits only.</h3>
+              <p className="hiw-step-body">
+                Customers scan QR at the door. GPS + timestamp verification
+                clears in 72 hours. Invoice auto-generated.
+              </p>
+              <p className="eyebrow hiw-step-detail">
+                72h oracle · GPS dwell · Stripe invoice
+              </p>
+
+              {/* ≤1 liquid-glass tile per panel (§ 8.5) — QR Attribution */}
+              <aside
+                className="lg-surface hiw-qr-glass"
+                aria-label="Real-time scan tracking"
+              >
+                <div className="hiw-qr-glass-dot" aria-hidden="true" />
+                <div className="hiw-qr-glass-content">
+                  <p className="hiw-qr-glass-label">QR Attribution</p>
+                  <p className="hiw-qr-glass-stat">Real-time scan tracking</p>
+                  <p className="hiw-qr-glass-sub">
+                    GPS · Timestamp · Venue signal
+                  </p>
+                </div>
+              </aside>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* ═══ Sig divider — approved phrase (§ 3.1) ════════════ */}
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          padding: "64px",
-          background: "var(--surface)",
-        }}
-      >
+      {/* ═══════════════════════════════════════════════════════
+          MAGVIX ITALIC SIGNATURE DIVIDER (§ 8.6)
+          Centered, ≤2 per page, 28-40px italic, no hover
+          ═══════════════════════════════════════════════════════ */}
+      <div className="hiw-sig-wrap" aria-hidden="true">
         <span className="sig-divider">Posted · Scanned · Verified ·</span>
       </div>
 
-      {/* ═══ 02 — FOUR STEPS — large editorial numbered rows ════
-          NOT card boxes — large number (Darky 80px brand-red),
-          title (H3 28px), body (18px Genio Mono)
-          Section padding: 96px top+bottom (§ 6.1)
+      {/* ═══════════════════════════════════════════════════════
+          PANEL 3 — CREATOR 3-STEP FLOW
+          bg: var(--surface) warm ivory
+          Step numbers in Champagne, photo-card placeholders 4:5
           ═══════════════════════════════════════════════════════ */}
-      <section
-        aria-label="Four steps"
-        style={{
-          background: "var(--surface)",
-          padding: "0 64px 96px",
-        }}
-      >
-        <div style={{ maxWidth: 1140, margin: "0 auto" }}>
-          <p
-            className="eyebrow"
-            style={{ color: "var(--ink-3)", marginBottom: 16 }}
-          >
-            (STEP BY STEP)
-          </p>
-          {/* H2 exactly 40px (§ 3.1) */}
-          <h2
-            style={{
-              fontFamily: "var(--font-display)",
-              fontWeight: 800,
-              fontSize: 40,
-              letterSpacing: "-0.02em",
-              lineHeight: 1.05,
-              color: "var(--ink)",
-              margin: "0 0 56px",
-            }}
-          >
-            The complete loop.
+      <section className="hiw-creator" aria-labelledby="hiw-creator-h2">
+        <div className="hiw-section-inner">
+          <p className="eyebrow hiw-section-eyebrow">(FOR CREATORS)</p>
+
+          <h2 id="hiw-creator-h2" className="hiw-section-h2">
+            For Creators
           </h2>
 
-          {/* Editorial numbered rows: large brand-red number, title, body */}
-          {[
-            {
-              num: "01",
-              bg: "var(--panel-butter)",
-              title: "Creator applies.",
-              body: "A local creator applies for a campaign. Push approves them based on verified visit history — no follower minimum required.",
-              detail:
-                "No follower minimum · Visit-history scored · 48h decision",
-            },
-            {
-              num: "02",
-              bg: "var(--panel-sky)",
-              title: "Creator posts a story.",
-              body: "The creator visits, posts in their own voice, and includes a campaign-specific QR poster. No brand brief, no script.",
-              detail: "Own voice · No brief · QR embedded in content",
-            },
-            {
-              num: "03",
-              bg: "var(--panel-blush)",
-              title: "Customer scans QR.",
-              body: "A follower sees the post, walks in, and scans the QR. GPS + timestamp are captured and cross-checked against venue signal.",
-              detail: "GPS dwell · Timestamp match · Venue signal cross-check",
-            },
-            {
-              num: "04",
-              bg: "var(--surface-2)",
-              title: "Merchant pays.",
-              body: "Verification clears inside 72 hours. Merchant pays only for confirmed walk-ins. Creator receives a Stripe payout every Friday.",
-              detail:
-                "72h oracle window · Friday Stripe payout · 0 false positives",
-            },
-          ].map((step, i, arr) => (
-            <div
-              key={step.num}
-              style={{
-                background: step.bg,
-                borderRadius: "var(--r-md)",
-                padding: "48px 48px 48px 56px",
-                marginBottom: i < arr.length - 1 ? 24 : 0,
-                display: "grid",
-                gridTemplateColumns: "96px 1fr 2fr",
-                gap: 40,
-                alignItems: "flex-start",
-              }}
-            >
-              {/* Large brand-red step number */}
+          <div className="hiw-step-row">
+            {/* Creator Step 1 — Apply */}
+            <div className="hiw-creator-card click-shift" tabIndex={0}>
+              {/* Photo card 4:5 placeholder with gradient overlay */}
               <div
-                style={{
-                  fontFamily: "var(--font-display)",
-                  fontWeight: 900,
-                  fontSize: 80,
-                  letterSpacing: "-0.05em",
-                  lineHeight: 0.9,
-                  color: "var(--brand-red)",
-                  userSelect: "none",
-                }}
+                className="hiw-photo-card"
+                role="img"
+                aria-label="Creator applying to Push — filling out neighborhood and visit history"
               >
-                {step.num}
-              </div>
-              {/* H3 exactly 28px */}
-              <h3
-                style={{
-                  fontFamily: "var(--font-display)",
-                  fontWeight: 700,
-                  fontSize: 28,
-                  letterSpacing: "-0.015em",
-                  lineHeight: 1.15,
-                  color: "var(--ink)",
-                  margin: "8px 0 0",
-                }}
-              >
-                {step.title}
-              </h3>
-              <div style={{ paddingTop: 8 }}>
-                <p
-                  style={{
-                    fontFamily: "var(--font-mono)",
-                    fontSize: 20,
-                    lineHeight: 1.4,
-                    letterSpacing: "-0.1em",
-                    color: "var(--ink-3)",
-                    margin: "0 0 16px",
-                  }}
-                >
-                  {step.body}
-                </p>
-                <p
-                  className="eyebrow"
-                  style={{ color: "var(--ink-4)", margin: 0 }}
-                >
-                  {step.detail}
-                </p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* ═══ 03 — ROLES COMPARISON — two-column editorial split ═
-          Creator flow vs Merchant flow, separated by thick hairline
-          Panel butter (warm) follows surface (warm) → ok, sig divider separates
-          ═══════════════════════════════════════════════════════ */}
-      <section
-        aria-label="Creator and merchant flow"
-        style={{
-          background: "var(--panel-butter)",
-          padding: "96px 64px",
-        }}
-      >
-        <div style={{ maxWidth: 1140, margin: "0 auto" }}>
-          <p
-            className="eyebrow"
-            style={{ color: "var(--ink-3)", marginBottom: 16 }}
-          >
-            (YOUR ROLE)
-          </p>
-          <h2
-            style={{
-              fontFamily: "var(--font-display)",
-              fontWeight: 800,
-              fontSize: 40,
-              letterSpacing: "-0.02em",
-              lineHeight: 1.05,
-              color: "var(--ink)",
-              margin: "0 0 56px",
-            }}
-          >
-            Two sides of
-            <br />
-            the same scan.
-          </h2>
-
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "1fr 1px 1fr",
-              gap: 64,
-              alignItems: "flex-start",
-            }}
-          >
-            {/* Creator column */}
-            <div>
-              <p
-                className="eyebrow"
-                style={{ color: "var(--brand-red)", marginBottom: 24 }}
-              >
-                (FOR CREATORS)
-              </p>
-              {[
-                {
-                  step: "01",
-                  text: "Apply with your visit history, not follower count.",
-                },
-                {
-                  step: "02",
-                  text: "Get matched to campaigns in your neighborhoods.",
-                },
-                {
-                  step: "03",
-                  text: "Post in your own voice — no brand brief, no script.",
-                },
-                {
-                  step: "04",
-                  text: "Collect Stripe payout every Friday. See exact scan count.",
-                },
-              ].map((row) => (
-                <div
-                  key={row.step}
-                  style={{
-                    display: "flex",
-                    gap: 24,
-                    paddingBottom: 32,
-                    marginBottom: 32,
-                    borderBottom: "1px solid var(--hairline)",
-                  }}
-                >
-                  <span
-                    style={{
-                      fontFamily: "var(--font-mono)",
-                      fontSize: 14,
-                      fontWeight: 600,
-                      letterSpacing: "0.04em",
-                      color: "var(--brand-red)",
-                      flexShrink: 0,
-                      paddingTop: 2,
-                    }}
-                  >
-                    {row.step}
-                  </span>
-                  <p
-                    style={{
-                      fontFamily: "var(--font-mono)",
-                      fontSize: 20,
-                      lineHeight: 1.4,
-                      letterSpacing: "-0.1em",
-                      color: "var(--ink-3)",
-                      margin: 0,
-                    }}
-                  >
-                    {row.text}
+                <div className="hiw-photo-placeholder hiw-photo-placeholder--apply">
+                  <span className="hiw-photo-label">Apply</span>
+                </div>
+                {/* Bottom gradient overlay (§ 8.7 Photo Card) */}
+                <div className="hiw-photo-overlay">
+                  <p className="hiw-photo-meta">
+                    Visit history · Not follower count
                   </p>
                 </div>
-              ))}
-              <Link href="/creator/signup" className="btn-primary click-shift">
-                Apply as creator
-              </Link>
+              </div>
+
+              <div className="hiw-creator-card-body">
+                <div
+                  className="hiw-step-num hiw-step-num--champagne"
+                  aria-hidden="true"
+                >
+                  01
+                </div>
+                <h3 className="hiw-step-title">Apply.</h3>
+                <p className="hiw-step-body">
+                  Apply using your visit history, not your follower count. Push
+                  scores your local credibility — 48h decision.
+                </p>
+              </div>
             </div>
 
-            {/* Hairline divider */}
-            <div
-              aria-hidden="true"
-              style={{ background: "var(--hairline-2)", alignSelf: "stretch" }}
-            />
-
-            {/* Merchant column */}
-            <div>
-              <p
-                className="eyebrow"
-                style={{ color: "var(--ink-3)", marginBottom: 24 }}
+            {/* Creator Step 2 — Post */}
+            <div className="hiw-creator-card click-shift" tabIndex={0}>
+              <div
+                className="hiw-photo-card"
+                role="img"
+                aria-label="Creator posting authentic neighborhood content to their social story"
               >
-                (FOR MERCHANTS)
-              </p>
-              {[
-                {
-                  step: "01",
-                  text: "List your venue — we match you to verified local creators.",
-                },
-                {
-                  step: "02",
-                  text: "Set your per-visit rate. No subscription, no minimum spend.",
-                },
-                {
-                  step: "03",
-                  text: "QR posters go up in your neighborhood. You track in real time.",
-                },
-                {
-                  step: "04",
-                  text: "Pay only after oracle confirms the visit. Invoice auto-generated.",
-                },
-              ].map((row) => (
+                <div className="hiw-photo-placeholder hiw-photo-placeholder--post">
+                  <span className="hiw-photo-label">Post</span>
+                </div>
+                <div className="hiw-photo-overlay">
+                  <p className="hiw-photo-meta">Your voice · No brand brief</p>
+                </div>
+              </div>
+
+              <div className="hiw-creator-card-body">
                 <div
-                  key={row.step}
-                  style={{
-                    display: "flex",
-                    gap: 24,
-                    paddingBottom: 32,
-                    marginBottom: 32,
-                    borderBottom: "1px solid var(--hairline)",
-                  }}
+                  className="hiw-step-num hiw-step-num--champagne"
+                  aria-hidden="true"
                 >
-                  <span
-                    style={{
-                      fontFamily: "var(--font-mono)",
-                      fontSize: 14,
-                      fontWeight: 600,
-                      letterSpacing: "0.04em",
-                      color: "var(--ink-4)",
-                      flexShrink: 0,
-                      paddingTop: 2,
-                    }}
-                  >
-                    {row.step}
-                  </span>
-                  <p
-                    style={{
-                      fontFamily: "var(--font-mono)",
-                      fontSize: 20,
-                      lineHeight: 1.4,
-                      letterSpacing: "-0.1em",
-                      color: "var(--ink-3)",
-                      margin: 0,
-                    }}
-                  >
-                    {row.text}
+                  02
+                </div>
+                <h3 className="hiw-step-title">Post.</h3>
+                <p className="hiw-step-body">
+                  Visit the venue, post in your own voice, and include the
+                  campaign QR. No script, no brand guidelines.
+                </p>
+              </div>
+            </div>
+
+            {/* Creator Step 3 — Earn */}
+            <div className="hiw-creator-card click-shift" tabIndex={0}>
+              <div
+                className="hiw-photo-card"
+                role="img"
+                aria-label="Creator checking Stripe payout dashboard on Friday"
+              >
+                <div className="hiw-photo-placeholder hiw-photo-placeholder--earn">
+                  <span className="hiw-photo-label">Earn</span>
+                </div>
+                <div className="hiw-photo-overlay">
+                  <p className="hiw-photo-meta">
+                    Friday Stripe payout · Per scan
                   </p>
                 </div>
-              ))}
-              <Link href="/merchant/signup" className="btn-ghost click-shift">
-                List your venue
-              </Link>
+              </div>
+
+              <div className="hiw-creator-card-body">
+                <div
+                  className="hiw-step-num hiw-step-num--champagne"
+                  aria-hidden="true"
+                >
+                  03
+                </div>
+                <h3 className="hiw-step-title">Earn.</h3>
+                <p className="hiw-step-body">
+                  Every verified scan you drive adds to your Friday Stripe
+                  payout. See exact scan count in real time.
+                </p>
+              </div>
             </div>
+          </div>
+
+          {/* Creator CTA */}
+          <div className="hiw-creator-cta">
+            <Link href="/for-creators" className="btn-primary click-shift">
+              Apply as Creator
+            </Link>
           </div>
         </div>
       </section>
 
-      {/* ═══ 04 — TECHNICAL VERIFICATION (dark ink) ═══════════
-          var(--ink) bg, snow text on dark (§ 2.7 rule 3)
+      {/* ═══════════════════════════════════════════════════════
+          PANEL 4 — TRUST + ATTRIBUTION (dark ink)
+          bg: var(--ink), H2 in Snow, 3 KPI tiles, eyebrow in ink-3
           ═══════════════════════════════════════════════════════ */}
-      <section
-        aria-label="Three-signal verification"
-        style={{
-          background: "var(--ink)",
-          padding: "96px 64px",
-        }}
-      >
-        <div style={{ maxWidth: 1140, margin: "0 auto" }}>
-          <p
-            className="eyebrow"
-            style={{ color: "rgba(255,255,255,0.65)", marginBottom: 16 }}
-          >
-            (HOW VERIFICATION WORKS)
-          </p>
-          <h2
-            style={{
-              fontFamily: "var(--font-display)",
-              fontWeight: 800,
-              fontSize: 40,
-              letterSpacing: "-0.02em",
-              lineHeight: 1.05,
-              color: "var(--snow)",
-              margin: "0 0 56px",
-            }}
-          >
-            Three-signal
-            <br />
-            verification.
+      <section className="hiw-trust" aria-labelledby="hiw-trust-h2">
+        <div className="hiw-section-inner">
+          <p className="eyebrow hiw-trust-eyebrow">(VERIFICATION ENGINE)</p>
+
+          {/* H2 top-left in Snow (§ 7.1) */}
+          <h2 id="hiw-trust-h2" className="hiw-trust-h2">
+            Push verification engine.
           </h2>
 
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(3, 1fr)",
-              gap: 2,
-            }}
-          >
-            {[
-              {
-                num: "01",
-                title: "QR Scan",
-                body: "Each creator holds a unique QR. Scanning it at the venue door logs the creator, campaign, and exact timestamp. No QR scan — no payout consideration.",
-              },
-              {
-                num: "02",
-                title: "GPS Dwell",
-                body: "The customer's phone is checked against the venue coordinates. A scan from the sidewalk outside doesn't count. Dwell time must match a real visit pattern.",
-              },
-              {
-                num: "03",
-                title: "Timestamp Match",
-                body: "Scan time is matched against venue hours and any POS signal available. Three signals must align before the oracle clears the visit for payment.",
-              },
-            ].map((col) => (
+          {/* 3 KPI stat tiles — Darky clamp(40,5vw,72) 800 Snow */}
+          <div className="hiw-kpi-row" role="list">
+            <div className="hiw-kpi-tile" role="listitem">
+              <p className="eyebrow hiw-trust-eyebrow">QR SCAN RATE</p>
               <div
-                key={col.num}
-                style={{
-                  borderTop: "2px solid rgba(255,255,255,0.12)",
-                  padding: "40px 40px 0 0",
-                }}
+                className="hiw-kpi-num"
+                aria-label="100 percent QR scan rate"
               >
-                <p
-                  className="eyebrow"
-                  style={{
-                    color: "rgba(255,255,255,0.65)",
-                    marginBottom: 24,
-                  }}
-                >
-                  {col.num}
-                </p>
-                {/* H3 exactly 28px */}
-                <h3
-                  style={{
-                    fontFamily: "var(--font-display)",
-                    fontWeight: 700,
-                    fontSize: 28,
-                    letterSpacing: "-0.015em",
-                    lineHeight: 1.15,
-                    color: "var(--snow)",
-                    margin: "0 0 16px",
-                  }}
-                >
-                  {col.title}
-                </h3>
-                <p
-                  style={{
-                    fontFamily: "var(--font-mono)",
-                    fontSize: 20,
-                    lineHeight: 1.4,
-                    letterSpacing: "-0.1em",
-                    color: "var(--snow)",
-                    opacity: 0.72,
-                    margin: 0,
-                  }}
-                >
-                  {col.body}
-                </p>
+                100%
               </div>
-            ))}
-          </div>
-
-          {/* KPI proof strip — "3 steps · 10 min setup · 30 day free trial" */}
-          <div
-            style={{
-              marginTop: 80,
-              display: "grid",
-              gridTemplateColumns: "repeat(4, 1fr)",
-              gap: 2,
-              borderTop: "1px solid rgba(255,255,255,0.1)",
-              paddingTop: 40,
-            }}
-          >
-            {[
-              { val: "72h", label: "Oracle window" },
-              { val: "Fri", label: "Stripe payout day" },
-              { val: "100%", label: "Visits QR-confirmed" },
-              { val: "0", label: "Follower minimum" },
-            ].map((kpi) => (
-              <div
-                key={kpi.val}
-                style={{
-                  padding: "0 0 0 24px",
-                  borderLeft: "1px solid rgba(255,255,255,0.1)",
-                }}
-              >
-                {/* KPI numeral — Darky clamp(40,5vw,72) 700 (§ 3.1 Stat numeral) */}
-                <div
-                  style={{
-                    fontFamily: "var(--font-display)",
-                    fontWeight: 900,
-                    fontSize: "clamp(40px, 5vw, 72px)",
-                    letterSpacing: "-0.04em",
-                    lineHeight: 1.0,
-                    color: "var(--snow)",
-                  }}
-                >
-                  {kpi.val}
-                </div>
-                <p
-                  className="eyebrow"
-                  style={{
-                    color: "rgba(255,255,255,0.65)",
-                    marginTop: 16,
-                  }}
-                >
-                  {kpi.label}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ═══ 05 — TICKET CTA ══════════════════════════════════
-          § 8.2: ga-orange bg, r-md 10px, 64px 96px padding,
-          Magvix Italic centered headline, btn-ink CTA, flat no-shadow
-          ═══════════════════════════════════════════════════════ */}
-      <section
-        aria-label="Start in minutes"
-        style={{
-          background: "var(--surface)",
-          padding: "96px 64px",
-        }}
-      >
-        <div style={{ maxWidth: 1140, margin: "0 auto" }}>
-          <div className="ticket-panel" style={{ position: "relative" }}>
-            {/* Grommet corners — 16px solid circles, 24px inset (§ 8.2) */}
-            {[
-              { top: 24, left: 24 },
-              { top: 24, right: 24 },
-              { bottom: 24, left: 24 },
-              { bottom: 24, right: 24 },
-            ].map((pos, i) => (
-              <div
-                key={i}
-                aria-hidden="true"
-                style={{
-                  position: "absolute",
-                  width: 16,
-                  height: 16,
-                  borderRadius: "var(--r-full)",
-                  background: "var(--ink)",
-                  ...pos,
-                }}
-              />
-            ))}
-
-            <p
-              className="eyebrow"
-              style={{ color: "rgba(10,10,10,0.55)", marginBottom: 24 }}
-            >
-              (READY TO START)
-            </p>
-
-            {/* Magvix Italic clamp(40,5vw,56) centered (§ 8.2) */}
-            <h2
-              style={{
-                fontFamily: "var(--font-hero)",
-                fontStyle: "italic",
-                fontWeight: 400,
-                fontSize: "clamp(40px, 5vw, 56px)",
-                letterSpacing: "-0.03em",
-                lineHeight: 0.95,
-                color: "var(--ink)",
-                margin: "0 0 16px",
-                textAlign: "center",
-              }}
-            >
-              Start in minutes.
-            </h2>
-
-            <p
-              style={{
-                fontFamily: "var(--font-mono)",
-                fontSize: 16,
-                color: "var(--ink)",
-                opacity: 0.72,
-                maxWidth: "44ch",
-                lineHeight: 1.4,
-                letterSpacing: "-0.1em",
-                margin: "0 auto 32px",
-                textAlign: "center",
-              }}
-            >
-              List your venue or apply as a creator — the oracle handles the
-              rest. No subscription, no setup fee, no follower gate.
-            </p>
-
-            <div
-              style={{
-                display: "flex",
-                gap: 16,
-                justifyContent: "center",
-                flexWrap: "wrap",
-              }}
-            >
-              <Link href="/merchant/signup" className="btn-ink click-shift">
-                List your venue
-              </Link>
-              <Link href="/creator/signup" className="btn-ghost click-shift">
-                Apply as creator
-              </Link>
+              <p className="hiw-kpi-label">
+                Every payout tied to a QR scan at the venue door. No scan, no
+                payment.
+              </p>
             </div>
+
+            <div className="hiw-kpi-tile" role="listitem">
+              <p className="eyebrow hiw-trust-eyebrow">FRAUD DETECTION</p>
+              <div className="hiw-kpi-num" aria-label="Zero false positives">
+                0
+              </div>
+              <p className="hiw-kpi-label">
+                GPS dwell + timestamp match filters out sidewalk scans and
+                replay attacks before the oracle clears any visit.
+              </p>
+            </div>
+
+            <div className="hiw-kpi-tile" role="listitem">
+              <p className="eyebrow hiw-trust-eyebrow">PAYOUT ACCURACY</p>
+              <div className="hiw-kpi-num" aria-label="72 hour oracle window">
+                72h
+              </div>
+              <p className="hiw-kpi-label">
+                Oracle window closes in 72 hours. Creator receives exact scan
+                count; merchant receives auto-generated invoice.
+              </p>
+            </div>
+          </div>
+
+          {/* Horizontal rule + merchant CTA */}
+          <div className="hiw-trust-footer">
+            <p className="hiw-trust-tagline">
+              The only pay-per-visit platform built on physical-world proof.
+            </p>
+            <Link href="/for-merchants" className="btn-ink click-shift">
+              List your venue
+            </Link>
           </div>
         </div>
       </section>

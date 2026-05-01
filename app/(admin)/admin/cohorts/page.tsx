@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useRef, KeyboardEvent } from "react";
 import Link from "next/link";
 import "./cohorts.css";
 import {
@@ -72,7 +72,7 @@ function RetentionMiniChart({ cohort }: { cohort: Cohort }) {
   );
 }
 
-// --- Cohort card ---
+// --- Cohort card (v11) ---
 function CohortCard({ cohort }: { cohort: Cohort }) {
   const statusLabel =
     cohort.status === "active"
@@ -81,180 +81,60 @@ function CohortCard({ cohort }: { cohort: Cohort }) {
         ? "Completed"
         : "Paused";
 
-  const statusColor =
-    cohort.status === "active"
-      ? { bg: "rgba(0,133,255,0.08)", color: "var(--accent-blue)" }
-      : cohort.status === "completed"
-        ? { bg: "var(--surface-3)", color: "var(--ink-4)" }
-        : { bg: "var(--panel-butter)", color: "var(--ink-3)" };
-
-  const typeColor =
-    cohort.type === "merchant"
-      ? { bg: "rgba(191,161,112,0.14)", color: "#8a6a2a" }
-      : { bg: "rgba(0,133,255,0.08)", color: "var(--accent-blue)" };
-
   return (
-    <Link
-      href={`/admin/cohorts/${cohort.id}`}
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        padding: "20px 24px",
-        background: "var(--surface-2)",
-        border: "1px solid var(--hairline)",
-        borderRadius: 10,
-        textDecoration: "none",
-        color: "inherit",
-        transition: "transform 0.15s ease, box-shadow 0.15s ease",
-      }}
-      className="click-shift"
-    >
-      {/* Top row */}
-      <div
-        style={{
-          display: "flex",
-          alignItems: "flex-start",
-          justifyContent: "space-between",
-          gap: 10,
-          marginBottom: 10,
-        }}
-      >
-        <span
-          style={{
-            fontFamily: "var(--font-display)",
-            fontSize: 16,
-            fontWeight: 700,
-            color: "var(--ink)",
-            lineHeight: 1.2,
-          }}
-        >
-          {cohort.name}
-        </span>
-        <span
-          style={{
-            padding: "2px 8px",
-            borderRadius: 4,
-            fontSize: 11,
-            fontWeight: 700,
-            fontFamily: "var(--font-body)",
-            background: typeColor.bg,
-            color: typeColor.color,
-            textTransform: "capitalize",
-            flexShrink: 0,
-          }}
-        >
+    <Link href={`/admin/cohorts/${cohort.id}`} className="cohort-card-v11">
+      {/* Header row: name + type badge */}
+      <div className="cohort-card-v11__header">
+        <span className="cohort-card-v11__name">{cohort.name}</span>
+        <span className={`cohort-type-badge cohort-type-badge--${cohort.type}`}>
           {cohort.type}
         </span>
       </div>
 
-      {/* Meta row */}
-      <div
-        style={{
-          display: "flex",
-          flexWrap: "wrap",
-          gap: 8,
-          marginBottom: 16,
-          fontSize: 11,
-          fontFamily: "var(--font-body)",
-          color: "var(--ink-4)",
-          alignItems: "center",
-        }}
-      >
+      {/* Meta row: status + neighborhood + date */}
+      <div className="cohort-card-v11__meta">
         <span
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: 5,
-            padding: "2px 8px",
-            borderRadius: 4,
-            background: statusColor.bg,
-            color: statusColor.color,
-            fontWeight: 700,
-          }}
+          className={`cohort-status-badge cohort-status-badge--${cohort.status}`}
         >
-          <span
-            style={{
-              width: 6,
-              height: 6,
-              borderRadius: "50%",
-              background: statusColor.color,
-              display: "inline-block",
-            }}
-          />
+          <span className="cohort-status-badge__dot" />
           {statusLabel}
         </span>
         <span>{cohort.neighborhood}</span>
         <span>·</span>
         <span>{cohort.startDate}</span>
-        <span>·</span>
-        <span>{cohort.size} members</span>
       </div>
 
-      {/* Metrics row */}
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(4, 1fr)",
-          gap: 8,
-          marginBottom: 0,
-        }}
-      >
-        {[
-          {
-            value: `${(cohort.activationRate * 100).toFixed(0)}%`,
-            label: "Activation",
-          },
-          {
-            value: `${(cohort.retentionD7 * 100).toFixed(0)}%`,
-            label: "D7 Ret.",
-          },
-          {
-            value: `${(cohort.retentionD30 * 100).toFixed(0)}%`,
-            label: "D30 Ret.",
-          },
-          { value: `$${(cohort.ltv / 1000).toFixed(1)}k`, label: "Avg LTV" },
-        ].map(({ value, label }) => (
-          <div key={label}>
-            <div
-              style={{
-                fontFamily: "var(--font-display)",
-                fontSize: 20,
-                fontWeight: 800,
-                color: "var(--ink)",
-                lineHeight: 1,
-                marginBottom: 2,
-              }}
-            >
-              {value}
-            </div>
-            <div
-              style={{
-                fontSize: 10,
-                fontFamily: "var(--font-body)",
-                color: "var(--ink-4)",
-                textTransform: "uppercase",
-                letterSpacing: "0.06em",
-              }}
-            >
-              {label}
-            </div>
+      {/* Metrics row — 4-col grid */}
+      <div className="cohort-card-v11__metrics">
+        {/* Member count — Darky 40px 800 */}
+        <div>
+          <div className="cohort-card-v11__member-count">{cohort.size}</div>
+          <div className="cohort-metric-label">Members</div>
+        </div>
+        {/* Performance metric (D30 retention) — Darky 24px 700 */}
+        <div>
+          <div className="cohort-card-v11__perf">
+            {(cohort.retentionD30 * 100).toFixed(0)}%
           </div>
-        ))}
+          <div className="cohort-metric-label">D30 Ret.</div>
+        </div>
+        <div>
+          <div className="cohort-metric-value">
+            {(cohort.activationRate * 100).toFixed(0)}%
+          </div>
+          <div className="cohort-metric-label">Activation</div>
+        </div>
+        <div>
+          <div className="cohort-metric-value">
+            ${(cohort.ltv / 1000).toFixed(1)}k
+          </div>
+          <div className="cohort-metric-label">Avg LTV</div>
+        </div>
       </div>
 
       <RetentionMiniChart cohort={cohort} />
 
-      <span
-        style={{
-          marginTop: 12,
-          fontSize: 12,
-          fontFamily: "var(--font-body)",
-          color: "var(--accent-blue)",
-          fontWeight: 600,
-        }}
-      >
-        View detail →
-      </span>
+      <span className="cohort-card-v11__cta">View detail →</span>
     </Link>
   );
 }
@@ -277,113 +157,30 @@ function CreateModal({ onClose }: { onClose: () => void }) {
     onClose();
   }
 
-  const inputStyle: React.CSSProperties = {
-    width: "100%",
-    padding: "10px 12px",
-    border: "1px solid var(--hairline)",
-    borderRadius: 8,
-    background: "var(--surface)",
-    color: "var(--ink)",
-    fontFamily: "var(--font-body)",
-    fontSize: 14,
-    outline: "none",
-    boxSizing: "border-box",
-  };
-
-  const labelStyle: React.CSSProperties = {
-    display: "block",
-    fontSize: 11,
-    fontWeight: 700,
-    letterSpacing: "0.07em",
-    fontFamily: "var(--font-body)",
-    color: "var(--ink-4)",
-    textTransform: "uppercase",
-    marginBottom: 6,
-  };
-
   return (
     <div
-      style={{
-        position: "fixed",
-        inset: 0,
-        background: "rgba(0,0,0,0.4)",
-        zIndex: 200,
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-      }}
+      className="modal-backdrop"
       onClick={(e) => e.target === e.currentTarget && onClose()}
     >
-      <div
-        style={{
-          background: "var(--surface-2)",
-          border: "1px solid var(--hairline)",
-          borderRadius: 10,
-          padding: "32px",
-          width: "min(480px, 90vw)",
-          maxHeight: "90vh",
-          overflowY: "auto",
-          position: "relative",
-        }}
-      >
-        <button
-          style={{
-            position: "absolute",
-            top: 16,
-            right: 16,
-            width: 32,
-            height: 32,
-            border: "1px solid var(--hairline)",
-            borderRadius: 6,
-            background: "var(--surface-3)",
-            cursor: "pointer",
-            fontSize: 16,
-            color: "var(--ink-4)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-          onClick={onClose}
-          aria-label="Close"
-        >
+      <div className="modal-box">
+        <button className="modal-close" onClick={onClose} aria-label="Close">
           ×
         </button>
 
-        <h2
-          style={{
-            fontFamily: "var(--font-display)",
-            fontSize: 22,
-            fontWeight: 800,
-            color: "var(--ink)",
-            marginBottom: 6,
-          }}
-        >
-          New Cohort
-        </h2>
-        <p
-          style={{
-            fontSize: 13,
-            fontFamily: "var(--font-body)",
-            color: "var(--ink-4)",
-            marginBottom: 24,
-            lineHeight: 1.5,
-          }}
-        >
+        <h2 className="modal-title">New Cohort</h2>
+        <p className="modal-subtitle">
           Define filter criteria to group merchants or creators into a new
           cohort.
         </p>
 
-        <form
-          style={{ display: "flex", flexDirection: "column", gap: 16 }}
-          onSubmit={handleSubmit}
-        >
-          <div>
-            <label style={labelStyle} htmlFor="cohort-name">
+        <form className="modal-form" onSubmit={handleSubmit}>
+          <div className="form-field">
+            <label className="form-label" htmlFor="cohort-name">
               Cohort Name
             </label>
             <input
               id="cohort-name"
-              style={inputStyle}
+              className="form-input"
               placeholder='e.g. "Week 5 Flatbush Food"'
               value={form.name}
               onChange={(e) => setForm({ ...form, name: e.target.value })}
@@ -391,13 +188,13 @@ function CreateModal({ onClose }: { onClose: () => void }) {
             />
           </div>
 
-          <div>
-            <label style={labelStyle} htmlFor="cohort-type">
+          <div className="form-field">
+            <label className="form-label" htmlFor="cohort-type">
               Type
             </label>
             <select
               id="cohort-type"
-              style={inputStyle}
+              className="form-select"
               value={form.type}
               onChange={(e) => setForm({ ...form, type: e.target.value })}
             >
@@ -406,13 +203,13 @@ function CreateModal({ onClose }: { onClose: () => void }) {
             </select>
           </div>
 
-          <div>
-            <label style={labelStyle} htmlFor="cohort-hood">
+          <div className="form-field">
+            <label className="form-label" htmlFor="cohort-hood">
               Neighborhood
             </label>
             <input
               id="cohort-hood"
-              style={inputStyle}
+              className="form-input"
               placeholder="e.g. Flatbush"
               value={form.neighborhood}
               onChange={(e) =>
@@ -422,13 +219,13 @@ function CreateModal({ onClose }: { onClose: () => void }) {
             />
           </div>
 
-          <div>
-            <label style={labelStyle} htmlFor="cohort-borough">
+          <div className="form-field">
+            <label className="form-label" htmlFor="cohort-borough">
               Borough
             </label>
             <select
               id="cohort-borough"
-              style={inputStyle}
+              className="form-select"
               value={form.borough}
               onChange={(e) => setForm({ ...form, borough: e.target.value })}
             >
@@ -440,52 +237,137 @@ function CreateModal({ onClose }: { onClose: () => void }) {
             </select>
           </div>
 
-          <div>
-            <label style={labelStyle} htmlFor="cohort-start">
+          <div className="form-field">
+            <label className="form-label" htmlFor="cohort-start">
               Start Date
             </label>
             <input
               id="cohort-start"
               type="date"
-              style={inputStyle}
+              className="form-input"
               value={form.startDate}
               onChange={(e) => setForm({ ...form, startDate: e.target.value })}
               required
             />
           </div>
 
-          <div>
-            <label style={labelStyle} htmlFor="cohort-notes">
+          <div className="form-field">
+            <label className="form-label" htmlFor="cohort-notes">
               Notes (optional)
             </label>
             <input
               id="cohort-notes"
-              style={inputStyle}
+              className="form-input"
               placeholder="Experiment hypothesis or context"
               value={form.notes}
               onChange={(e) => setForm({ ...form, notes: e.target.value })}
             />
           </div>
 
-          <div style={{ display: "flex", gap: 12, marginTop: 8 }}>
+          <div className="modal-actions">
             <button
               type="button"
-              className="btn-ghost click-shift"
+              className="btn-ghost"
               style={{ flex: 1 }}
               onClick={onClose}
             >
               Cancel
             </button>
-            <button
-              type="submit"
-              className="btn-primary click-shift"
-              style={{ flex: 1 }}
-            >
+            <button type="submit" className="btn-primary" style={{ flex: 1 }}>
               Create Cohort
             </button>
           </div>
         </form>
       </div>
+    </div>
+  );
+}
+
+// --- Liquid-glass Top Cohort highlight card (≤1 per page) ---
+function TopCohortCard({ cohort }: { cohort: Cohort }) {
+  return (
+    <Link
+      href={`/admin/cohorts/${cohort.id}`}
+      className="cohort-top-card click-shift"
+    >
+      <div className="cohort-top-card__body">
+        <div className="cohort-top-card__label">(TOP COHORT)</div>
+        <div className="cohort-top-card__name">{cohort.name}</div>
+        <div className="cohort-top-card__meta">
+          {cohort.neighborhood} · {cohort.borough} · Started {cohort.startDate}
+        </div>
+      </div>
+      <div className="cohort-top-card__stats">
+        {/* Member count — Darky 40px 800 */}
+        <div className="cohort-top-card__stat">
+          <div className="cohort-top-card__stat-value">{cohort.size}</div>
+          <div className="cohort-top-card__stat-label">Members</div>
+        </div>
+        {/* Performance metric (D30 retention) — Darky 24px 700 */}
+        <div className="cohort-top-card__stat">
+          <div className="cohort-top-card__stat-perf">
+            {(cohort.retentionD30 * 100).toFixed(0)}%
+          </div>
+          <div className="cohort-top-card__stat-label">D30 Ret.</div>
+        </div>
+        <div className="cohort-top-card__stat">
+          <div className="cohort-top-card__stat-perf">
+            ${(cohort.ltv / 1000).toFixed(1)}k
+          </div>
+          <div className="cohort-top-card__stat-label">Avg LTV</div>
+        </div>
+      </div>
+    </Link>
+  );
+}
+
+// --- Keyboard-navigable filter pill group ---
+function FilterPillGroup({
+  options,
+  value,
+  onChange,
+  label,
+}: {
+  options: string[];
+  value: string;
+  onChange: (v: string) => void;
+  label: string;
+}) {
+  const groupRef = useRef<HTMLDivElement>(null);
+
+  function handleKeyDown(e: KeyboardEvent<HTMLButtonElement>, idx: number) {
+    const btns =
+      groupRef.current?.querySelectorAll<HTMLButtonElement>("button");
+    if (!btns) return;
+    if (e.key === "ArrowRight" || e.key === "ArrowDown") {
+      e.preventDefault();
+      const next = btns[(idx + 1) % btns.length];
+      next.focus();
+    } else if (e.key === "ArrowLeft" || e.key === "ArrowUp") {
+      e.preventDefault();
+      const prev = btns[(idx - 1 + btns.length) % btns.length];
+      prev.focus();
+    }
+  }
+
+  return (
+    <div
+      ref={groupRef}
+      role="group"
+      aria-label={label}
+      style={{ display: "flex", gap: 6, flexWrap: "wrap" }}
+    >
+      {options.map((opt, idx) => (
+        <button
+          key={opt}
+          className="btn-pill"
+          aria-pressed={value === opt}
+          onClick={() => onChange(opt)}
+          onKeyDown={(e) => handleKeyDown(e, idx)}
+        >
+          {opt}
+        </button>
+      ))}
     </div>
   );
 }
@@ -513,65 +395,27 @@ export default function CohortsPage() {
     });
   }, [typeFilter, boroughFilter, statusFilter]);
 
-  const chipStyle = (active: boolean): React.CSSProperties => ({
-    padding: "5px 12px",
-    border: "1px solid var(--hairline)",
-    borderRadius: 6,
-    background: active ? "var(--ink)" : "var(--surface-3)",
-    color: active ? "var(--snow)" : "var(--ink-3)",
-    fontFamily: "var(--font-body)",
-    fontSize: 12,
-    fontWeight: 700,
-    cursor: "pointer",
-    transition: "background 0.15s",
-  });
+  // Top cohort — best D30 retention among active cohorts
+  const topCohort = useMemo(() => {
+    const active = mockCohorts.filter((c) => c.status === "active");
+    return active.sort((a, b) => b.retentionD30 - a.retentionD30)[0] ?? null;
+  }, []);
 
   return (
-    <div
-      style={{
-        minHeight: "100vh",
-        background: "var(--surface)",
-        paddingBottom: 64,
-      }}
-    >
+    <div className="cohorts-page">
       {/* Page header */}
-      <div style={{ padding: "40px 40px 32px" }}>
-        <div className="eyebrow" style={{ marginBottom: 8 }}>
+      <div className="cohorts-header">
+        <div className="cohorts-eyebrow">
           ADMIN · PUSH INTERNAL · NYC COLD-START GROWTH ANALYSIS
         </div>
-        <h1
-          style={{
-            fontFamily: "var(--font-display)",
-            fontSize: "clamp(32px,4vw,56px)",
-            fontWeight: 800,
-            color: "var(--ink)",
-            letterSpacing: "-0.03em",
-            lineHeight: 1,
-            marginBottom: 8,
-          }}
-        >
-          Cohort analysis
-        </h1>
-        <p
-          style={{
-            fontSize: 14,
-            fontFamily: "var(--font-body)",
-            color: "var(--ink-4)",
-            marginBottom: 32,
-          }}
-        >
+        <h1 className="cohorts-title">Cohort analysis</h1>
+        <p className="cohorts-subtitle">
           Track activation, retention, and revenue across NYC neighborhood
           cohorts.
         </p>
 
         {/* KPI strip */}
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(4, 1fr)",
-            gap: 16,
-          }}
-        >
+        <div className="cohorts-kpi-strip">
           {[
             { label: "Total Cohorts", value: stats.total },
             { label: "Active", value: stats.active },
@@ -581,151 +425,59 @@ export default function CohortsPage() {
               value: `$${(stats.totalGmv / 1000).toFixed(0)}k`,
             },
           ].map(({ label, value }) => (
-            <div
-              key={label}
-              style={{
-                background: "var(--surface-2)",
-                border: "1px solid var(--hairline)",
-                borderRadius: 10,
-                padding: "20px 24px",
-              }}
-            >
-              <div
-                style={{
-                  fontSize: 11,
-                  fontWeight: 700,
-                  letterSpacing: "0.07em",
-                  fontFamily: "var(--font-body)",
-                  color: "var(--ink-4)",
-                  textTransform: "uppercase",
-                  marginBottom: 8,
-                }}
-              >
-                {label}
-              </div>
-              <div
-                style={{
-                  fontFamily: "var(--font-display)",
-                  fontSize: "clamp(22px,2.5vw,36px)",
-                  fontWeight: 800,
-                  color: "var(--ink)",
-                  lineHeight: 1,
-                }}
-              >
-                {value}
-              </div>
+            <div key={label} className="cohort-kpi-tile">
+              <div className="cohort-kpi-tile__label">{label}</div>
+              <div className="cohort-kpi-tile__value">{value}</div>
             </div>
           ))}
         </div>
       </div>
 
+      {/* Liquid-glass Top Cohort card (≤1 per page) */}
+      {topCohort && <TopCohortCard cohort={topCohort} />}
+
       {/* Toolbar */}
-      <div
-        style={{
-          padding: "12px 40px",
-          background: "var(--surface-2)",
-          borderTop: "1px solid var(--hairline)",
-          borderBottom: "1px solid var(--hairline)",
-          display: "flex",
-          flexWrap: "wrap",
-          alignItems: "center",
-          gap: 8,
-          marginBottom: 0,
-        }}
-      >
-        <div style={{ display: "flex", flexWrap: "wrap", gap: 6, flex: 1 }}>
-          {TYPE_FILTERS.map((t) => (
-            <button
-              key={t}
-              style={chipStyle(typeFilter === t)}
-              onClick={() => setTypeFilter(t)}
-            >
-              {t}
-            </button>
-          ))}
-
-          <div
-            style={{
-              width: 1,
-              height: 20,
-              background: "var(--hairline)",
-              margin: "0 4px",
-              alignSelf: "center",
-            }}
+      <div className="cohorts-toolbar">
+        <div className="cohorts-filter-group">
+          <FilterPillGroup
+            options={TYPE_FILTERS}
+            value={typeFilter}
+            onChange={setTypeFilter}
+            label="Filter by type"
           />
-
-          {BOROUGH_FILTERS.map((b) => (
-            <button
-              key={b}
-              style={chipStyle(boroughFilter === b)}
-              onClick={() => setBoroughFilter(b)}
-            >
-              {b}
-            </button>
-          ))}
-
-          <div
-            style={{
-              width: 1,
-              height: 20,
-              background: "var(--hairline)",
-              margin: "0 4px",
-              alignSelf: "center",
-            }}
+          <div className="cohorts-filter-divider" aria-hidden />
+          <FilterPillGroup
+            options={BOROUGH_FILTERS}
+            value={boroughFilter}
+            onChange={setBoroughFilter}
+            label="Filter by borough"
           />
-
-          {STATUS_FILTERS.map((s) => (
-            <button
-              key={s}
-              style={chipStyle(statusFilter === s)}
-              onClick={() => setStatusFilter(s)}
-            >
-              {s}
-            </button>
-          ))}
+          <div className="cohorts-filter-divider" aria-hidden />
+          <FilterPillGroup
+            options={STATUS_FILTERS}
+            value={statusFilter}
+            onChange={setStatusFilter}
+            label="Filter by status"
+          />
         </div>
 
-        <button
-          className="btn-primary click-shift"
-          onClick={() => setShowModal(true)}
-        >
+        <button className="btn-primary" onClick={() => setShowModal(true)}>
           + New Cohort
         </button>
       </div>
 
       {/* Grid */}
-      <div style={{ padding: "24px 40px" }}>
-        <div
-          style={{
-            fontSize: 12,
-            fontFamily: "var(--font-body)",
-            color: "var(--ink-4)",
-            marginBottom: 16,
-          }}
-        >
+      <div className="cohorts-grid-section">
+        <div className="cohorts-grid-count">
           {filtered.length} cohort{filtered.length !== 1 ? "s" : ""}
         </div>
 
         {filtered.length === 0 ? (
-          <p
-            style={{
-              fontFamily: "var(--font-body)",
-              color: "var(--ink-4)",
-              fontSize: 14,
-              textAlign: "center",
-              padding: "48px 0",
-            }}
-          >
+          <p className="cohorts-empty">
             No cohorts match the selected filters.
           </p>
         ) : (
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))",
-              gap: 16,
-            }}
-          >
+          <div className="cohorts-grid">
             {filtered.map((c) => (
               <CohortCard key={c.id} cohort={c} />
             ))}

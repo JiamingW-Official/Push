@@ -3,6 +3,7 @@
 import { useState, useEffect, use } from "react";
 import Link from "next/link";
 import "../users.css";
+import "./user-detail.css";
 import type {
   AdminUser,
   AdminNote,
@@ -70,64 +71,10 @@ function formatMoney(n: number): string {
   return `$${n.toLocaleString("en-US", { minimumFractionDigits: 0 })}`;
 }
 
-/* ── Shared styles ──────────────────────────────────── */
-const cardStyle: React.CSSProperties = {
-  background: "var(--surface-2)",
-  border: "1px solid var(--hairline)",
-  borderRadius: 10,
-  padding: "20px 24px",
-  marginBottom: 16,
-};
-
-const sectionTitleStyle: React.CSSProperties = {
-  fontFamily: "var(--font-body)",
-  fontSize: 11,
-  fontWeight: 700,
-  letterSpacing: "0.07em",
-  textTransform: "uppercase",
-  color: "var(--ink-4)",
-  marginBottom: 16,
-};
-
-const fieldLabelStyle: React.CSSProperties = {
-  fontFamily: "var(--font-body)",
-  fontSize: 10,
-  fontWeight: 700,
-  letterSpacing: "0.07em",
-  textTransform: "uppercase",
-  color: "var(--ink-4)",
-  marginBottom: 3,
-};
-
-const fieldValueStyle: React.CSSProperties = {
-  fontFamily: "var(--font-body)",
-  fontSize: 14,
-  color: "var(--ink)",
-};
-
 /* ── Badge components ──────────────────────────────── */
 function RoleBadge({ role }: { role: UserRole }) {
-  const styles: Record<UserRole, { bg: string; color: string }> = {
-    creator: { bg: "rgba(0,133,255,0.10)", color: "var(--accent-blue)" },
-    merchant: { bg: "var(--panel-butter)", color: "var(--ink-3)" },
-    admin: { bg: "var(--surface-3)", color: "var(--ink-4)" },
-  };
-  const s = styles[role];
   return (
-    <span
-      style={{
-        fontFamily: "var(--font-body)",
-        fontSize: 10,
-        fontWeight: 700,
-        letterSpacing: "0.05em",
-        textTransform: "uppercase",
-        borderRadius: 4,
-        padding: "2px 6px",
-        background: s.bg,
-        color: s.color,
-        display: "inline-block",
-      }}
-    >
+    <span className={`ud-badge ud-badge--${role}`}>
       {role === "creator"
         ? "Creator"
         : role === "merchant"
@@ -139,52 +86,11 @@ function RoleBadge({ role }: { role: UserRole }) {
 
 function TierBadge({ tier }: { tier?: string }) {
   if (!tier) return null;
-  return (
-    <span
-      style={{
-        fontFamily: "var(--font-body)",
-        fontSize: 10,
-        fontWeight: 700,
-        letterSpacing: "0.05em",
-        textTransform: "uppercase",
-        borderRadius: 4,
-        padding: "2px 6px",
-        background: "var(--surface-3)",
-        color: "var(--ink-4)",
-        display: "inline-block",
-      }}
-    >
-      {tier}
-    </span>
-  );
+  return <span className="ud-badge ud-badge--tier">{tier}</span>;
 }
 
 function StatusBadge({ status }: { status: AdminUser["status"] }) {
-  const styles: Record<string, { bg: string; color: string }> = {
-    active: { bg: "rgba(0,133,255,0.10)", color: "var(--accent-blue)" },
-    pending: { bg: "var(--panel-butter)", color: "var(--ink-3)" },
-    suspended: { bg: "rgba(193,18,31,0.10)", color: "var(--brand-red)" },
-    banned: { bg: "rgba(193,18,31,0.15)", color: "var(--brand-red)" },
-  };
-  const s = styles[status] ?? { bg: "var(--surface-3)", color: "var(--ink-4)" };
-  return (
-    <span
-      style={{
-        fontFamily: "var(--font-body)",
-        fontSize: 10,
-        fontWeight: 700,
-        letterSpacing: "0.05em",
-        textTransform: "uppercase",
-        borderRadius: 4,
-        padding: "2px 6px",
-        background: s.bg,
-        color: s.color,
-        display: "inline-block",
-      }}
-    >
-      {status}
-    </span>
-  );
+  return <span className={`ud-badge ud-badge--${status}`}>{status}</span>;
 }
 
 function KYCBadge({ status }: { status: KYCStatus }) {
@@ -194,31 +100,11 @@ function KYCBadge({ status }: { status: KYCStatus }) {
     rejected: "KYC Rejected",
     not_submitted: "No KYC",
   };
-  const styles: Record<KYCStatus, { bg: string; color: string }> = {
-    verified: { bg: "rgba(0,133,255,0.10)", color: "var(--accent-blue)" },
-    pending: { bg: "var(--panel-butter)", color: "var(--ink-3)" },
-    rejected: { bg: "rgba(193,18,31,0.10)", color: "var(--brand-red)" },
-    not_submitted: { bg: "var(--surface-3)", color: "var(--ink-4)" },
-  };
-  const s = styles[status];
-  return (
-    <span
-      style={{
-        fontFamily: "var(--font-body)",
-        fontSize: 10,
-        fontWeight: 700,
-        letterSpacing: "0.05em",
-        textTransform: "uppercase",
-        borderRadius: 4,
-        padding: "2px 6px",
-        background: s.bg,
-        color: s.color,
-        display: "inline-block",
-      }}
-    >
-      {labels[status]}
-    </span>
-  );
+  const cls =
+    status === "not_submitted"
+      ? "ud-badge--kyc-not-submitted"
+      : `ud-badge--kyc-${status}`;
+  return <span className={`ud-badge ${cls}`}>{labels[status]}</span>;
 }
 
 /* ── Confirm Modal ──────────────────────────────────── */
@@ -335,10 +221,23 @@ function ConfirmModal({
 
 /* ── Tab Content Components ──────────────────────────── */
 function AccountTab({ user }: { user: AdminUser }) {
+  const identityFields = [
+    { label: "Full Name", val: user.name, accent: false },
+    { label: "Handle", val: user.handle, accent: true },
+    { label: "Email", val: user.email, accent: false },
+    ...(user.phone ? [{ label: "Phone", val: user.phone, accent: false }] : []),
+    ...(user.address
+      ? [{ label: "Location", val: user.address, accent: false }]
+      : []),
+    ...(user.business_name
+      ? [{ label: "Business", val: user.business_name, accent: false }]
+      : []),
+  ];
+
   return (
     <div>
-      <div style={cardStyle}>
-        <div style={sectionTitleStyle}>Identity</div>
+      <div className="ud-card" style={{ marginBottom: 16 }}>
+        <div className="ud-card__title">Identity</div>
         <div
           style={{
             display: "grid",
@@ -346,24 +245,12 @@ function AccountTab({ user }: { user: AdminUser }) {
             gap: "14px 24px",
           }}
         >
-          {[
-            { label: "Full Name", val: user.name },
-            { label: "Handle", val: user.handle },
-            { label: "Email", val: user.email },
-            ...(user.phone ? [{ label: "Phone", val: user.phone }] : []),
-            ...(user.address ? [{ label: "Location", val: user.address }] : []),
-            ...(user.business_name
-              ? [{ label: "Business", val: user.business_name }]
-              : []),
-          ].map(({ label, val }) => (
+          {identityFields.map(({ label, val, accent }) => (
             <div key={label}>
-              <div style={fieldLabelStyle}>{label}</div>
+              <div className="ud-field__label">{label}</div>
               <div
-                style={{
-                  ...fieldValueStyle,
-                  color:
-                    label === "Handle" ? "var(--accent-blue)" : "var(--ink)",
-                }}
+                className="ud-field__value"
+                style={accent ? { color: "var(--accent-blue)" } : undefined}
               >
                 {val}
               </div>
@@ -372,8 +259,8 @@ function AccountTab({ user }: { user: AdminUser }) {
         </div>
       </div>
 
-      <div style={cardStyle}>
-        <div style={sectionTitleStyle}>Verification</div>
+      <div className="ud-card">
+        <div className="ud-card__title">Verification</div>
         <div
           style={{
             display: "grid",
@@ -382,33 +269,35 @@ function AccountTab({ user }: { user: AdminUser }) {
           }}
         >
           <div>
-            <div style={fieldLabelStyle}>KYC Status</div>
+            <div className="ud-field__label">KYC Status</div>
             <KYCBadge status={user.kyc_status} />
           </div>
           <div>
-            <div style={fieldLabelStyle}>Account Status</div>
+            <div className="ud-field__label">Account Status</div>
             <StatusBadge status={user.status} />
           </div>
           <div>
-            <div style={fieldLabelStyle}>Role</div>
+            <div className="ud-field__label">Role</div>
             <div style={{ display: "flex", gap: 6 }}>
               <RoleBadge role={user.role} />
               <TierBadge tier={user.tier} />
             </div>
           </div>
           <div>
-            <div style={fieldLabelStyle}>Joined</div>
-            <div style={fieldValueStyle}>{formatDateTime(user.joined_at)}</div>
+            <div className="ud-field__label">Joined</div>
+            <div className="ud-field__value">
+              {formatDateTime(user.joined_at)}
+            </div>
           </div>
           <div>
-            <div style={fieldLabelStyle}>Last Active</div>
-            <div style={fieldValueStyle}>
+            <div className="ud-field__label">Last Active</div>
+            <div className="ud-field__value">
               {formatDateTime(user.last_active)}
             </div>
           </div>
           <div>
-            <div style={fieldLabelStyle}>Verification Docs</div>
-            <div style={{ fontFamily: "var(--font-body)", fontSize: 13 }}>
+            <div className="ud-field__label">Verification Docs</div>
+            <div className="ud-field__value">
               {user.kyc_status === "verified" ? (
                 <span style={{ color: "var(--accent-blue)" }}>
                   ✓ ID verified · Address verified
@@ -443,88 +332,31 @@ function ActivityTab({ user }: { user: AdminUser }) {
   };
 
   return (
-    <div style={cardStyle}>
-      <div style={sectionTitleStyle}>Recent Activity (last 50)</div>
+    <div className="ud-panel">
+      <div className="ud-panel__header">
+        <div className="ud-panel__title">Recent Activity (last 50)</div>
+      </div>
       {user.activity.length === 0 ? (
-        <div
-          style={{
-            fontFamily: "var(--font-body)",
-            fontSize: 13,
-            color: "var(--ink-4)",
-            textAlign: "center",
-            padding: "24px 0",
-          }}
-        >
-          No activity recorded.
-        </div>
+        <div className="ud-empty">No activity recorded.</div>
       ) : (
-        <div style={{ display: "flex", flexDirection: "column", gap: 0 }}>
-          {user.activity.map((event) => (
-            <div
-              key={event.id}
-              style={{
-                display: "flex",
-                gap: 12,
-                padding: "10px 0",
-                borderBottom: "1px solid var(--hairline)",
-                alignItems: "flex-start",
-              }}
-            >
-              <div
-                style={{
-                  width: 24,
-                  height: 24,
-                  borderRadius: 6,
-                  background: "var(--surface-3)",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  flexShrink: 0,
-                  fontFamily: "var(--font-body)",
-                  fontSize: 11,
-                  color: "var(--ink-4)",
-                }}
-              >
-                {typeIcon[event.type] || "·"}
+        user.activity.map((event) => (
+          <div key={event.id} className="ud-row">
+            <div className="ud-row__icon">{typeIcon[event.type] || "·"}</div>
+            <div className="ud-row__body">
+              <div className="ud-row__desc">{event.description}</div>
+              <div className="ud-row__meta">
+                {formatDateTime(event.timestamp)}
               </div>
-              <div style={{ flex: 1 }}>
-                <div
-                  style={{
-                    fontFamily: "var(--font-body)",
-                    fontSize: 13,
-                    color: "var(--ink)",
-                  }}
-                >
-                  {event.description}
+              {event.metadata && (
+                <div className="ud-row__meta">
+                  {Object.entries(event.metadata)
+                    .map(([k, v]) => `${k}: ${v}`)
+                    .join(" · ")}
                 </div>
-                <div
-                  style={{
-                    fontFamily: "var(--font-body)",
-                    fontSize: 11,
-                    color: "var(--ink-4)",
-                    marginTop: 2,
-                  }}
-                >
-                  {formatDateTime(event.timestamp)}
-                </div>
-                {event.metadata && (
-                  <div
-                    style={{
-                      fontFamily: "var(--font-body)",
-                      fontSize: 11,
-                      color: "var(--ink-4)",
-                      marginTop: 2,
-                    }}
-                  >
-                    {Object.entries(event.metadata)
-                      .map(([k, v]) => `${k}: ${v}`)
-                      .join(" · ")}
-                  </div>
-                )}
-              </div>
+              )}
             </div>
-          ))}
-        </div>
+          </div>
+        ))
       )}
     </div>
   );
@@ -532,51 +364,20 @@ function ActivityTab({ user }: { user: AdminUser }) {
 
 function CampaignsTab({ user }: { user: AdminUser }) {
   return (
-    <div style={cardStyle}>
-      <div style={sectionTitleStyle}>
-        Campaigns ({user.campaigns_total} total)
+    <div className="ud-panel">
+      <div className="ud-panel__header">
+        <div className="ud-panel__title">
+          Campaigns ({user.campaigns_total} total)
+        </div>
       </div>
       {user.campaigns.length === 0 ? (
-        <div
-          style={{
-            fontFamily: "var(--font-body)",
-            fontSize: 13,
-            color: "var(--ink-4)",
-            textAlign: "center",
-            padding: "24px 0",
-          }}
-        >
-          No campaigns found.
-        </div>
+        <div className="ud-empty">No campaigns found.</div>
       ) : (
-        <table
-          style={{
-            width: "100%",
-            borderCollapse: "collapse",
-            fontFamily: "var(--font-body)",
-            fontSize: 13,
-          }}
-        >
+        <table className="ud-table">
           <thead>
-            <tr
-              style={{
-                borderBottom: "1px solid var(--hairline)",
-                background: "var(--surface-3)",
-              }}
-            >
+            <tr>
               {["Campaign", "Merchant", "Status", "Payout", "Date"].map((h) => (
-                <th
-                  key={h}
-                  style={{
-                    padding: "8px 12px",
-                    textAlign: "left",
-                    fontSize: 10,
-                    fontWeight: 700,
-                    letterSpacing: "0.07em",
-                    textTransform: "uppercase",
-                    color: "var(--ink-4)",
-                  }}
-                >
+                <th key={h} className={h === "Payout" ? "col-right" : ""}>
                   {h}
                 </th>
               ))}
@@ -584,58 +385,23 @@ function CampaignsTab({ user }: { user: AdminUser }) {
           </thead>
           <tbody>
             {user.campaigns.map((c) => (
-              <tr
-                key={c.id}
-                style={{ borderBottom: "1px solid var(--hairline)" }}
-              >
-                <td
-                  style={{
-                    padding: "10px 12px",
-                    fontWeight: 600,
-                    color: "var(--ink)",
-                  }}
-                >
-                  {c.title}
-                </td>
-                <td style={{ padding: "10px 12px", color: "var(--ink-3)" }}>
-                  {c.merchant}
-                </td>
-                <td style={{ padding: "10px 12px" }}>
+              <tr key={c.id} tabIndex={0}>
+                <td style={{ fontWeight: 600 }}>{c.title}</td>
+                <td style={{ color: "var(--ink-3)" }}>{c.merchant}</td>
+                <td>
                   <span
-                    style={{
-                      fontFamily: "var(--font-body)",
-                      fontSize: 10,
-                      fontWeight: 700,
-                      letterSpacing: "0.05em",
-                      textTransform: "uppercase",
-                      borderRadius: 4,
-                      padding: "2px 6px",
-                      background:
-                        c.status === "active"
-                          ? "rgba(0,133,255,0.10)"
-                          : "var(--surface-3)",
-                      color:
-                        c.status === "active"
-                          ? "var(--accent-blue)"
-                          : "var(--ink-4)",
-                    }}
+                    className={`ud-badge ${c.status === "active" ? "ud-badge--active" : "ud-badge--pending"}`}
                   >
                     {c.status}
                   </span>
                 </td>
                 <td
-                  style={{
-                    padding: "10px 12px",
-                    textAlign: "right",
-                    fontWeight: 700,
-                    color: "var(--accent-blue)",
-                  }}
+                  className="col-right"
+                  style={{ fontWeight: 700, color: "var(--accent-blue)" }}
                 >
                   {formatMoney(c.payout)}
                 </td>
-                <td style={{ padding: "10px 12px", color: "var(--ink-4)" }}>
-                  {formatDate(c.date)}
-                </td>
+                <td style={{ color: "var(--ink-4)" }}>{formatDate(c.date)}</td>
               </tr>
             ))}
           </tbody>
@@ -646,100 +412,60 @@ function CampaignsTab({ user }: { user: AdminUser }) {
 }
 
 function PaymentsTab({ user }: { user: AdminUser }) {
+  const avgPerCampaign =
+    user.campaigns_total > 0
+      ? formatMoney(Math.round(user.earnings_total / user.campaigns_total))
+      : "—";
+
   return (
     <div>
-      <div style={cardStyle}>
-        <div style={sectionTitleStyle}>Financial Summary</div>
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(3,1fr)",
-            gap: 16,
-          }}
-        >
-          {[
-            {
-              label: "Total Earnings",
-              val: formatMoney(user.earnings_total),
-              accent: true,
-            },
-            {
-              label: "Total Campaigns",
-              val: String(user.campaigns_total),
-              accent: false,
-            },
-            {
-              label: "Avg Per Campaign",
-              val:
-                user.campaigns_total > 0
-                  ? formatMoney(
-                      Math.round(user.earnings_total / user.campaigns_total),
-                    )
-                  : "—",
-              accent: false,
-            },
-          ].map(({ label, val, accent }) => (
-            <div key={label}>
-              <div style={fieldLabelStyle}>{label}</div>
-              <div
-                style={{
-                  fontFamily: "var(--font-display)",
-                  fontSize: 22,
-                  fontWeight: 900,
-                  color: accent ? "var(--accent-blue)" : "var(--ink)",
-                }}
-              >
-                {val}
+      {/* Financial summary KPIs */}
+      <div className="ud-panel" style={{ marginBottom: 16 }}>
+        <div className="ud-panel__header">
+          <div className="ud-panel__title">Financial Summary</div>
+        </div>
+        <div style={{ padding: "16px 24px" }}>
+          <div className="ud-fin-grid">
+            {[
+              {
+                label: "Total Earnings",
+                val: formatMoney(user.earnings_total),
+                accent: true,
+              },
+              {
+                label: "Total Campaigns",
+                val: String(user.campaigns_total),
+                accent: false,
+              },
+              { label: "Avg Per Campaign", val: avgPerCampaign, accent: false },
+            ].map(({ label, val, accent }) => (
+              <div key={label}>
+                <div
+                  className={`ud-fin-item__num${accent ? " ud-fin-item__num--accent" : ""}`}
+                >
+                  {val}
+                </div>
+                <div className="ud-fin-item__label">{label}</div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </div>
 
-      <div style={cardStyle}>
-        <div style={sectionTitleStyle}>Recent Transactions</div>
+      {/* Transactions table */}
+      <div className="ud-panel">
+        <div className="ud-panel__header">
+          <div className="ud-panel__title">Recent Transactions</div>
+        </div>
         {user.transactions.length === 0 ? (
-          <div
-            style={{
-              fontFamily: "var(--font-body)",
-              fontSize: 13,
-              color: "var(--ink-4)",
-              textAlign: "center",
-              padding: "24px 0",
-            }}
-          >
-            No transactions.
-          </div>
+          <div className="ud-empty">No transactions.</div>
         ) : (
-          <table
-            style={{
-              width: "100%",
-              borderCollapse: "collapse",
-              fontFamily: "var(--font-body)",
-              fontSize: 13,
-            }}
-          >
+          <table className="ud-table">
             <thead>
-              <tr
-                style={{
-                  borderBottom: "1px solid var(--hairline)",
-                  background: "var(--surface-3)",
-                }}
-              >
+              <tr>
                 {["Description", "Type", "Status", "Amount", "Date"].map(
                   (h) => (
-                    <th
-                      key={h}
-                      style={{
-                        padding: "8px 12px",
-                        textAlign: h === "Amount" ? "right" : "left",
-                        fontSize: 10,
-                        fontWeight: 700,
-                        letterSpacing: "0.07em",
-                        textTransform: "uppercase",
-                        color: "var(--ink-4)",
-                      }}
-                    >
+                    <th key={h} className={h === "Amount" ? "col-right" : ""}>
                       {h}
                     </th>
                   ),
@@ -748,61 +474,27 @@ function PaymentsTab({ user }: { user: AdminUser }) {
             </thead>
             <tbody>
               {user.transactions.map((t) => (
-                <tr
-                  key={t.id}
-                  style={{ borderBottom: "1px solid var(--hairline)" }}
-                >
-                  <td style={{ padding: "10px 12px", color: "var(--ink)" }}>
-                    {t.description}
+                <tr key={t.id} tabIndex={0}>
+                  <td>{t.description}</td>
+                  <td>
+                    <span className="ud-badge ud-badge--pending">{t.type}</span>
                   </td>
-                  <td style={{ padding: "10px 12px" }}>
+                  <td>
                     <span
-                      style={{
-                        fontFamily: "var(--font-body)",
-                        fontSize: 10,
-                        fontWeight: 700,
-                        letterSpacing: "0.05em",
-                        textTransform: "uppercase",
-                        borderRadius: 4,
-                        padding: "2px 6px",
-                        background: "var(--surface-3)",
-                        color: "var(--ink-4)",
-                      }}
-                    >
-                      {t.type}
-                    </span>
-                  </td>
-                  <td style={{ padding: "10px 12px" }}>
-                    <span
-                      style={{
-                        fontFamily: "var(--font-body)",
-                        fontSize: 10,
-                        fontWeight: 700,
-                        letterSpacing: "0.05em",
-                        textTransform: "uppercase",
-                        borderRadius: 4,
-                        padding: "2px 6px",
-                        background:
-                          t.status === "completed"
-                            ? "rgba(0,133,255,0.10)"
-                            : t.status === "pending"
-                              ? "var(--panel-butter)"
-                              : "rgba(193,18,31,0.10)",
-                        color:
-                          t.status === "completed"
-                            ? "var(--accent-blue)"
-                            : t.status === "pending"
-                              ? "var(--ink-3)"
-                              : "var(--brand-red)",
-                      }}
+                      className={`ud-badge ${
+                        t.status === "completed"
+                          ? "ud-badge--completed"
+                          : t.status === "pending"
+                            ? "ud-badge--pending"
+                            : "ud-badge--failed"
+                      }`}
                     >
                       {t.status}
                     </span>
                   </td>
                   <td
+                    className="col-right"
                     style={{
-                      padding: "10px 12px",
-                      textAlign: "right",
                       fontWeight: 700,
                       color:
                         t.amount < 0
@@ -814,7 +506,7 @@ function PaymentsTab({ user }: { user: AdminUser }) {
                       ? `-${formatMoney(Math.abs(t.amount))}`
                       : formatMoney(t.amount)}
                   </td>
-                  <td style={{ padding: "10px 12px", color: "var(--ink-4)" }}>
+                  <td style={{ color: "var(--ink-4)" }}>
                     {formatDate(t.date)}
                   </td>
                 </tr>
@@ -843,32 +535,16 @@ function NotesTab({
   }
 
   return (
-    <div style={cardStyle}>
-      <div style={sectionTitleStyle}>Admin Notes</div>
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          gap: 8,
-          marginBottom: 20,
-        }}
-      >
+    <div className="ud-panel">
+      <div className="ud-panel__header">
+        <div className="ud-panel__title">Admin Notes</div>
+      </div>
+      <div className="ud-note-composer">
         <textarea
+          className="ud-note-textarea"
           placeholder="Add an internal note about this user…"
           value={draft}
           onChange={(e) => setDraft(e.target.value)}
-          style={{
-            fontFamily: "var(--font-body)",
-            fontSize: 13,
-            color: "var(--ink)",
-            background: "var(--surface-3)",
-            border: "1px solid var(--hairline)",
-            borderRadius: 8,
-            padding: "10px 12px",
-            resize: "vertical",
-            minHeight: 80,
-            outline: "none",
-          }}
         />
         <button
           className="btn-primary click-shift"
@@ -879,62 +555,19 @@ function NotesTab({
         </button>
       </div>
       {user.notes.length === 0 ? (
-        <div
-          style={{
-            fontFamily: "var(--font-body)",
-            fontSize: 13,
-            color: "var(--ink-4)",
-            textAlign: "center",
-            padding: "16px 0",
-          }}
-        >
-          No notes yet.
-        </div>
+        <div className="ud-empty">No notes yet.</div>
       ) : (
-        <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-          {user.notes.map((note) => (
-            <div
-              key={note.id}
-              style={{
-                background: "var(--surface-3)",
-                borderRadius: 8,
-                padding: "12px 14px",
-              }}
-            >
-              <div style={{ display: "flex", gap: 12, marginBottom: 6 }}>
-                <span
-                  style={{
-                    fontFamily: "var(--font-body)",
-                    fontSize: 12,
-                    fontWeight: 700,
-                    color: "var(--ink)",
-                  }}
-                >
-                  {note.author}
-                </span>
-                <span
-                  style={{
-                    fontFamily: "var(--font-body)",
-                    fontSize: 11,
-                    color: "var(--ink-4)",
-                  }}
-                >
-                  {formatDateTime(note.created_at)}
-                </span>
-              </div>
-              <div
-                style={{
-                  fontFamily: "var(--font-body)",
-                  fontSize: 13,
-                  color: "var(--ink-3)",
-                  lineHeight: 1.6,
-                }}
-              >
-                {note.content}
-              </div>
+        user.notes.map((note) => (
+          <div key={note.id} className="ud-note-item">
+            <div style={{ marginBottom: 6 }}>
+              <span className="ud-note-item__author">{note.author}</span>
+              <span className="ud-note-item__date">
+                {formatDateTime(note.created_at)}
+              </span>
             </div>
-          ))}
-        </div>
+            <div className="ud-note-item__content">{note.content}</div>
+          </div>
+        ))
       )}
     </div>
   );
@@ -942,121 +575,40 @@ function NotesTab({
 
 function FlagsTab({ user }: { user: AdminUser }) {
   return (
-    <div style={cardStyle}>
-      <div style={sectionTitleStyle}>Disputes / Fraud Flags / Complaints</div>
+    <div className="ud-panel">
+      <div className="ud-panel__header">
+        <div className="ud-panel__title">
+          Disputes / Fraud Flags / Complaints
+        </div>
+      </div>
       {user.flags.length === 0 ? (
-        <div
-          style={{
-            fontFamily: "var(--font-body)",
-            fontSize: 13,
-            color: "var(--ink-4)",
-            textAlign: "center",
-            padding: "24px 0",
-          }}
-        >
-          No flags on this account.
-        </div>
+        <div className="ud-empty">No flags on this account.</div>
       ) : (
-        <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-          {user.flags.map((flag) => {
-            const sevColor =
-              flag.severity === "high"
-                ? "var(--brand-red)"
-                : flag.severity === "medium"
-                  ? "#d97706"
-                  : "var(--ink-4)";
-            const sevBg =
-              flag.severity === "high"
-                ? "rgba(193,18,31,0.08)"
-                : flag.severity === "medium"
-                  ? "var(--panel-butter)"
-                  : "var(--surface-3)";
-            return (
-              <div
-                key={flag.id}
-                style={{
-                  background: sevBg,
-                  border: "1px solid var(--hairline)",
-                  borderRadius: 8,
-                  padding: "12px 16px",
-                }}
+        user.flags.map((flag) => (
+          <div key={flag.id} className="ud-flag" tabIndex={0}>
+            <div className="ud-flag__header">
+              <span className="ud-flag__type">
+                {flag.type
+                  .replace(/_/g, " ")
+                  .replace(/\b\w/g, (c) => c.toUpperCase())}
+              </span>
+              <span
+                className={`ud-badge ${flag.status === "open" ? "ud-badge--open" : "ud-badge--resolved"}`}
               >
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 8,
-                    marginBottom: 6,
-                  }}
-                >
-                  <span
-                    style={{
-                      fontFamily: "var(--font-body)",
-                      fontSize: 13,
-                      fontWeight: 700,
-                      color: "var(--ink)",
-                    }}
-                  >
-                    {flag.type
-                      .replace(/_/g, " ")
-                      .replace(/\b\w/g, (c) => c.toUpperCase())}
-                  </span>
-                  <span
-                    style={{
-                      fontFamily: "var(--font-body)",
-                      fontSize: 10,
-                      fontWeight: 700,
-                      letterSpacing: "0.05em",
-                      textTransform: "uppercase",
-                      borderRadius: 4,
-                      padding: "2px 6px",
-                      background:
-                        flag.status === "open"
-                          ? "rgba(193,18,31,0.10)"
-                          : "rgba(0,133,255,0.10)",
-                      color:
-                        flag.status === "open"
-                          ? "var(--brand-red)"
-                          : "var(--accent-blue)",
-                    }}
-                  >
-                    {flag.status}
-                  </span>
-                  <span
-                    style={{
-                      marginLeft: "auto",
-                      fontFamily: "var(--font-body)",
-                      fontSize: 10,
-                      fontWeight: 700,
-                      color: sevColor,
-                    }}
-                  >
-                    {flag.severity} severity
-                  </span>
-                </div>
-                <div
-                  style={{
-                    fontFamily: "var(--font-body)",
-                    fontSize: 13,
-                    color: "var(--ink-3)",
-                  }}
-                >
-                  {flag.description}
-                </div>
-                <div
-                  style={{
-                    fontFamily: "var(--font-body)",
-                    fontSize: 11,
-                    color: "var(--ink-4)",
-                    marginTop: 4,
-                  }}
-                >
-                  {formatDateTime(flag.created_at)}
-                </div>
-              </div>
-            );
-          })}
-        </div>
+                {flag.status}
+              </span>
+              <span
+                className={`ud-flag__severity-label ud-badge ud-badge--${flag.severity}`}
+              >
+                {flag.severity} severity
+              </span>
+            </div>
+            <div className="ud-flag__desc">{flag.description}</div>
+            <div className="ud-flag__time">
+              {formatDateTime(flag.created_at)}
+            </div>
+          </div>
+        ))
       )}
     </div>
   );
@@ -1132,15 +684,8 @@ export default function AdminUserDetailPage({
 
   if (loading || !user) {
     return (
-      <div
-        style={{
-          fontFamily: "var(--font-body)",
-          color: "var(--ink)",
-          padding: "48px 0",
-          textAlign: "center",
-        }}
-      >
-        <div style={{ color: "var(--ink-4)", fontSize: 14 }}>Loading user…</div>
+      <div className="ud-empty" style={{ padding: "48px 0" }}>
+        Loading user…
       </div>
     );
   }
@@ -1155,117 +700,47 @@ export default function AdminUserDetailPage({
   ];
 
   return (
-    <div style={{ fontFamily: "var(--font-body)", color: "var(--ink)" }}>
-      {/* Back link */}
-      <Link
-        href="/admin/users"
-        style={{
-          fontFamily: "var(--font-body)",
-          fontSize: 13,
-          color: "var(--ink-4)",
-          textDecoration: "none",
-          display: "inline-block",
-          marginBottom: 16,
-        }}
-      >
+    <div>
+      {/* Eyebrow + back */}
+      <div className="ud-eyebrow">(USER·DETAIL)</div>
+      <Link href="/admin/users" className="ud-back">
         ← Back to Users
       </Link>
 
       {/* User Hero */}
-      <div
-        style={{
-          background: "var(--surface-2)",
-          border: "1px solid var(--hairline)",
-          borderRadius: 10,
-          padding: "20px 24px",
-          marginBottom: 24,
-          display: "flex",
-          alignItems: "center",
-          gap: 20,
-        }}
-      >
-        <div
-          style={{
-            width: 64,
-            height: 64,
-            borderRadius: 12,
-            overflow: "hidden",
-            flexShrink: 0,
-            background: "var(--surface-3)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
+      <div className="ud-hero">
+        <div className="ud-avatar">
           {user.avatar ? (
             // eslint-disable-next-line @next/next/no-img-element
-            <img
-              src={user.avatar}
-              alt={user.name}
-              style={{ width: "100%", height: "100%", objectFit: "cover" }}
-            />
+            <img src={user.avatar} alt={user.name} />
           ) : (
-            <span
-              style={{
-                fontFamily: "var(--font-display)",
-                fontSize: 22,
-                fontWeight: 900,
-                color: "var(--ink-4)",
-              }}
-            >
-              {initials(user.name)}
-            </span>
+            <span className="ud-avatar__initials">{initials(user.name)}</span>
           )}
         </div>
 
-        <div style={{ flex: 1 }}>
-          <h1
-            style={{
-              fontFamily: "var(--font-display)",
-              fontSize: "clamp(22px,2.5vw,32px)",
-              fontWeight: 900,
-              letterSpacing: "-0.02em",
-              color: "var(--ink)",
-              margin: "0 0 4px",
-            }}
-          >
-            {user.name}
-          </h1>
-          <div
-            style={{
-              fontFamily: "var(--font-body)",
-              fontSize: 13,
-              color: "var(--ink-4)",
-              marginBottom: 10,
-            }}
-          >
+        <div className="ud-identity">
+          <h1 className="ud-name">{user.name}</h1>
+          <div className="ud-meta">
             {user.handle} · {user.email}
           </div>
-          <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
+          <div className="ud-badges">
             <RoleBadge role={user.role} />
             <TierBadge tier={user.tier} />
             <StatusBadge status={user.status} />
           </div>
         </div>
 
-        <div style={{ display: "flex", gap: 8, flexShrink: 0 }}>
-          <button className="btn-ghost click-shift" onClick={handleImpersonate}>
+        <div className="ud-hero-actions">
+          {/* Impersonate → btn-ink */}
+          <button className="btn-ink click-shift" onClick={handleImpersonate}>
             Impersonate
           </button>
+          {/* Suspend → btn-ghost with brand-red color */}
           <button
-            className="click-shift"
+            className="btn-ghost click-shift"
             style={{
-              fontFamily: "var(--font-body)",
-              fontSize: 13,
-              fontWeight: 700,
-              letterSpacing: "0.04em",
-              textTransform: "uppercase",
-              background: "rgba(193,18,31,0.10)",
               color: "var(--brand-red)",
-              border: "1px solid rgba(193,18,31,0.2)",
-              borderRadius: 8,
-              padding: "10px 16px",
-              cursor: "pointer",
+              borderColor: "var(--brand-red)",
             }}
             onClick={() => setModal("suspend")}
           >
@@ -1274,15 +749,8 @@ export default function AdminUserDetailPage({
         </div>
       </div>
 
-      {/* Quick Stats */}
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(4,1fr)",
-          gap: 16,
-          marginBottom: 24,
-        }}
-      >
+      {/* KPI Stats */}
+      <div className="ud-stats">
         {[
           { label: "Account Age", val: accountAge(user.joined_at) },
           { label: "Total Campaigns", val: String(user.campaigns_total) },
@@ -1292,78 +760,29 @@ export default function AdminUserDetailPage({
             val: user.push_score > 0 ? String(user.push_score) : "—",
           },
         ].map(({ label, val }) => (
-          <div
-            key={label}
-            style={{
-              background: "var(--surface-2)",
-              border: "1px solid var(--hairline)",
-              borderRadius: 10,
-              padding: "16px 20px",
-            }}
-          >
-            <div
-              style={{
-                fontFamily: "var(--font-display)",
-                fontSize: 24,
-                fontWeight: 900,
-                color: "var(--ink)",
-                lineHeight: 1,
-                marginBottom: 4,
-              }}
-            >
-              {val}
-            </div>
-            <div
-              style={{
-                fontFamily: "var(--font-body)",
-                fontSize: 10,
-                fontWeight: 700,
-                letterSpacing: "0.06em",
-                textTransform: "uppercase",
-                color: "var(--ink-4)",
-              }}
-            >
-              {label}
-            </div>
+          <div key={label} className="ud-stat">
+            <div className="ud-stat__num">{val}</div>
+            <div className="ud-stat__label">{label}</div>
           </div>
         ))}
       </div>
 
       {/* Detail Tabs */}
-      <div
-        style={{ display: "flex", gap: 4, marginBottom: 16, flexWrap: "wrap" }}
-      >
-        {detailTabs.map((t) => {
-          const isActive = activeTab === t.key;
-          return (
-            <button
-              key={t.key}
-              onClick={() => setActiveTab(t.key)}
-              className="click-shift"
-              style={{
-                fontFamily: "var(--font-body)",
-                fontSize: 12,
-                fontWeight: 700,
-                letterSpacing: "0.04em",
-                textTransform: "uppercase",
-                border: "1px solid",
-                borderRadius: 8,
-                padding: "5px 12px",
-                cursor: "pointer",
-                background: isActive ? "var(--ink)" : "var(--surface-2)",
-                borderColor: isActive ? "var(--ink)" : "var(--hairline)",
-                color: isActive ? "var(--snow)" : "var(--ink-3)",
-              }}
-            >
-              {t.label}
-              {t.count !== undefined && t.count > 0 && (
-                <span style={{ marginLeft: 6, fontSize: 10, opacity: 0.7 }}>
-                  ({t.count})
-                </span>
-              )}
-            </button>
-          );
-        })}
+      <div className="ud-tabs">
+        {detailTabs.map((t) => (
+          <button
+            key={t.key}
+            onClick={() => setActiveTab(t.key)}
+            className={`ud-tab${activeTab === t.key ? " is-active" : ""}`}
+          >
+            {t.label}
+            {t.count !== undefined && t.count > 0 && (
+              <span style={{ marginLeft: 6, fontSize: 10, opacity: 0.7 }}>
+                ({t.count})
+              </span>
+            )}
+          </button>
+        ))}
       </div>
 
       {/* Tab content */}
@@ -1377,29 +796,9 @@ export default function AdminUserDetailPage({
       {activeTab === "flags" && <FlagsTab user={user} />}
 
       {/* Danger Zone */}
-      <div
-        style={{
-          background: "rgba(193,18,31,0.04)",
-          border: "1px solid rgba(193,18,31,0.20)",
-          borderRadius: 10,
-          padding: "20px 24px",
-          marginTop: 24,
-        }}
-      >
-        <div
-          style={{
-            fontFamily: "var(--font-body)",
-            fontSize: 11,
-            fontWeight: 700,
-            letterSpacing: "0.07em",
-            textTransform: "uppercase",
-            color: "var(--brand-red)",
-            marginBottom: 16,
-          }}
-        >
-          Danger Zone
-        </div>
-        <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+      <div className="ud-danger-zone">
+        <div className="ud-danger-zone__eyebrow">Danger Zone</div>
+        <div style={{ display: "flex", flexDirection: "column", gap: 0 }}>
           {[
             {
               title:
@@ -1412,74 +811,41 @@ export default function AdminUserDetailPage({
                   : "Temporarily block this user from accessing Push.",
               action: () => setModal("suspend"),
               label: user.status === "suspended" ? "Unsuspend" : "Suspend",
-              danger: false,
+              btnClass: "btn-ghost click-shift",
+              btnStyle: {
+                color: "var(--brand-red)",
+                borderColor: "var(--brand-red)",
+              },
             },
             {
               title: "Ban Account",
               sub: "Permanently ban this user. They will not be able to create a new account.",
               action: () => setModal("ban"),
               label: "Ban User",
-              danger: true,
+              btnClass: "btn-ghost click-shift",
+              btnStyle: {
+                color: "var(--brand-red)",
+                borderColor: "var(--brand-red)",
+              },
             },
             {
               title: "Delete Account",
               sub: "Permanently delete all data associated with this account. This cannot be undone.",
               action: () => setModal("delete"),
               label: "Delete",
-              danger: true,
+              btnClass: "btn-ghost click-shift",
+              btnStyle: {
+                color: "var(--brand-red)",
+                borderColor: "var(--brand-red)",
+              },
             },
-          ].map(({ title, sub, action, label, danger }) => (
-            <div
-              key={title}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-                gap: 16,
-                paddingBottom: 14,
-                borderBottom: "1px solid rgba(193,18,31,0.10)",
-              }}
-            >
+          ].map(({ title, sub, action, label, btnClass, btnStyle }) => (
+            <div key={title} className="ud-danger-action">
               <div>
-                <div
-                  style={{
-                    fontFamily: "var(--font-body)",
-                    fontSize: 14,
-                    fontWeight: 600,
-                    color: "var(--ink)",
-                    marginBottom: 2,
-                  }}
-                >
-                  {title}
-                </div>
-                <div
-                  style={{
-                    fontFamily: "var(--font-body)",
-                    fontSize: 12,
-                    color: "var(--ink-4)",
-                  }}
-                >
-                  {sub}
-                </div>
+                <div className="ud-danger-action__title">{title}</div>
+                <div className="ud-danger-action__sub">{sub}</div>
               </div>
-              <button
-                className="click-shift"
-                onClick={action}
-                style={{
-                  fontFamily: "var(--font-body)",
-                  fontSize: 12,
-                  fontWeight: 700,
-                  letterSpacing: "0.04em",
-                  textTransform: "uppercase",
-                  background: danger ? "var(--brand-red)" : "transparent",
-                  color: danger ? "var(--snow)" : "var(--brand-red)",
-                  border: danger ? "none" : "1px solid var(--brand-red)",
-                  borderRadius: 8,
-                  padding: "8px 16px",
-                  cursor: "pointer",
-                  flexShrink: 0,
-                }}
-              >
+              <button className={btnClass} style={btnStyle} onClick={action}>
                 {label}
               </button>
             </div>
@@ -1487,63 +853,26 @@ export default function AdminUserDetailPage({
         </div>
       </div>
 
-      {/* Last active footer */}
-      <div
-        style={{
-          padding: "12px 0",
-          fontFamily: "var(--font-body)",
-          color: "var(--ink-4)",
-          fontSize: 12,
-          marginTop: 8,
-        }}
-      >
+      {/* Footer metadata */}
+      <div className="ud-footer-meta">
         Last active {timeAgo(user.last_active)} · User ID: {user.id}
       </div>
 
       {/* Impersonating banner */}
       {impersonating && (
-        <div
-          style={{
-            position: "fixed",
-            bottom: 0,
-            left: 0,
-            right: 0,
-            background: "var(--ink)",
-            color: "var(--snow)",
-            display: "flex",
-            alignItems: "center",
-            gap: 12,
-            padding: "14px 24px",
-            fontFamily: "var(--font-body)",
-            fontSize: 13,
-            fontWeight: 600,
-            zIndex: 9999,
-          }}
-        >
-          <div
-            style={{
-              width: 8,
-              height: 8,
-              borderRadius: "50%",
-              background: "var(--accent-blue)",
-              flexShrink: 0,
-            }}
-          />
-          Impersonating <strong style={{ margin: "0 4px" }}>{user.name}</strong>{" "}
+        <div className="ud-impersonate-banner">
+          <div className="ud-impersonate-banner__dot" />
+          Impersonating <strong style={{ margin: "0 4px" }}>
+            {user.name}
+          </strong>{" "}
           — session active
           <button
-            className="click-shift"
+            className="btn-ghost click-shift"
             style={{
               marginLeft: "auto",
               background: "rgba(255,255,255,0.1)",
               color: "var(--snow)",
-              border: "1px solid rgba(255,255,255,0.2)",
-              borderRadius: 6,
-              padding: "5px 12px",
-              fontFamily: "var(--font-body)",
-              fontSize: 12,
-              fontWeight: 700,
-              cursor: "pointer",
+              borderColor: "rgba(255,255,255,0.2)",
             }}
             onClick={() => {
               document.cookie = "push-impersonating=; max-age=0; path=/";

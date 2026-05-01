@@ -4,6 +4,7 @@ import { useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/db/browser";
+import "./signup.css";
 
 /* ── Types ───────────────────────────────────────────────── */
 
@@ -62,24 +63,25 @@ function sanitizeError(err: unknown): string {
   return err.message;
 }
 
-/* ── Shared input styles ─────────────────────────────────── */
+/* ── Shared input styles (v11) ───────────────────────────── */
+/* Focus styles handled via signup.css .signup-input:focus */
 
 const inputStyle: React.CSSProperties = {
-  fontFamily: "var(--font-body)",
+  fontFamily: "var(--font-mono)",
   fontSize: 16,
   padding: "12px 16px",
-  border: "1px solid var(--hairline)",
+  border: "1px solid var(--ink-4)",
   borderRadius: 8,
   background: "var(--surface)",
   width: "100%",
   boxSizing: "border-box",
   color: "var(--ink)",
-  outline: "none",
+  outline: "none", // focus ring provided by CSS class
 };
 
 const labelStyle: React.CSSProperties = {
   display: "block",
-  fontFamily: "var(--font-body)",
+  fontFamily: "var(--font-mono)",
   fontSize: 12,
   fontWeight: 600,
   letterSpacing: "0.08em",
@@ -246,14 +248,14 @@ export default function CreatorSignupPage() {
             </Link>
           </div>
 
-          {/* Success card */}
+          {/* Success card — v11: 10px radius, shadow-2 */}
           <div
             style={{
               background: "var(--surface-2)",
-              border: "1px solid var(--hairline)",
-              borderRadius: "var(--r-2xl)",
+              borderRadius: 10,
               padding: "48px 48px",
               textAlign: "center",
+              boxShadow: "var(--shadow-2)",
             }}
           >
             {/* Checkmark */}
@@ -309,7 +311,7 @@ export default function CreatorSignupPage() {
             </p>
 
             <Link
-              href="/explore"
+              href="/creator/discover"
               className="btn-primary"
               style={{
                 display: "block",
@@ -517,7 +519,7 @@ export default function CreatorSignupPage() {
               >
                 PUSH
               </Link>
-              <span style={{ color: "var(--hairline)", fontSize: 20 }}>·</span>
+              <span style={{ color: "var(--ink-4)", fontSize: 20 }}>·</span>
               <span
                 style={{
                   fontFamily: "var(--font-body)",
@@ -532,32 +534,22 @@ export default function CreatorSignupPage() {
               </span>
             </div>
 
-            {/* Form card */}
+            {/* Form card — v11: 10px radius, surface-2, shadow-2 */}
             <div
               style={{
                 background: "var(--surface-2)",
-                border: "1px solid var(--hairline)",
-                borderRadius: "var(--r-2xl)",
-                padding: "40px 48px",
+                borderRadius: 10,
+                padding: "32px",
+                boxShadow: "var(--shadow-2)",
               }}
             >
-              <h1
-                style={{
-                  fontFamily: "var(--font-display)",
-                  fontSize: 40,
-                  fontWeight: 900,
-                  color: "var(--ink)",
-                  letterSpacing: "-0.02em",
-                  marginBottom: 8,
-                  lineHeight: 1.1,
-                }}
-              >
-                Start Earning.
-              </h1>
+              {/* v11 eyebrow + H1 */}
+              <span className="signup-eyebrow">(CREATE·YOUR·ACCOUNT)</span>
+              <h1 className="signup-h1">Join Push</h1>
               <p
                 style={{
-                  fontFamily: "var(--font-body)",
-                  fontSize: 16,
+                  fontFamily: "var(--font-mono)",
+                  fontSize: 14,
                   color: "var(--ink-3)",
                   marginBottom: 32,
                   lineHeight: 1.5,
@@ -573,7 +565,7 @@ export default function CreatorSignupPage() {
                   style={{
                     background: "var(--brand-red-tint)",
                     border: "1px solid var(--brand-red)",
-                    borderRadius: "var(--r-sm)",
+                    borderRadius: 8,
                     padding: "12px 16px",
                     marginBottom: 24,
                     display: "flex",
@@ -653,7 +645,7 @@ export default function CreatorSignupPage() {
                             ? "var(--brand-red)"
                             : fieldStatus.name === "valid"
                               ? "var(--brand-red)"
-                              : "var(--hairline)",
+                              : "var(--ink-4)",
                       }}
                     />
                   </FormField>
@@ -684,7 +676,7 @@ export default function CreatorSignupPage() {
                             ? "var(--brand-red)"
                             : fieldStatus.location === "valid"
                               ? "var(--brand-red)"
-                              : "var(--hairline)",
+                              : "var(--ink-4)",
                       }}
                     />
                   </FormField>
@@ -718,7 +710,7 @@ export default function CreatorSignupPage() {
                           ? "var(--brand-red)"
                           : fieldStatus.email === "valid"
                             ? "var(--brand-red)"
-                            : "var(--hairline)",
+                            : "var(--ink-4)",
                     }}
                   />
                 </FormField>
@@ -763,7 +755,7 @@ export default function CreatorSignupPage() {
                               ? "var(--brand-red)"
                               : fieldStatus.password === "valid"
                                 ? "var(--brand-red)"
-                                : "var(--hairline)",
+                                : "var(--ink-4)",
                         }}
                       />
                       <button
@@ -797,10 +789,11 @@ export default function CreatorSignupPage() {
                         aria-live="polite"
                         style={{ marginTop: 8 }}
                       >
+                        {/* v11: 4px height, surface-3 track, #22c55e strong */}
                         <div
                           style={{
-                            height: 3,
-                            background: "var(--hairline)",
+                            height: 4,
+                            background: "var(--surface-3)",
                             borderRadius: 2,
                             overflow: "hidden",
                             marginBottom: 4,
@@ -820,22 +813,22 @@ export default function CreatorSignupPage() {
                                 pwStrength === "weak"
                                   ? "var(--brand-red)"
                                   : pwStrength === "fair"
-                                    ? "var(--warning)"
-                                    : "var(--success)",
+                                    ? "var(--champagne-deep, #bfa170)"
+                                    : "#22c55e",
                               transition: "width 0.3s ease",
                             }}
                           />
                         </div>
                         <span
                           style={{
-                            fontFamily: "var(--font-body)",
+                            fontFamily: "var(--font-mono)",
                             fontSize: 11,
                             color:
                               pwStrength === "weak"
                                 ? "var(--brand-red)"
                                 : pwStrength === "fair"
-                                  ? "var(--warning)"
-                                  : "var(--success)",
+                                  ? "var(--champagne-deep, #bfa170)"
+                                  : "#22c55e",
                           }}
                         >
                           {pwStrength === "weak"
@@ -876,7 +869,7 @@ export default function CreatorSignupPage() {
                               ? "var(--brand-red)"
                               : fieldStatus.confirm === "valid"
                                 ? "var(--brand-red)"
-                                : "var(--hairline)",
+                                : "var(--ink-4)",
                         }}
                       />
                       <button
@@ -1133,7 +1126,7 @@ export default function CreatorSignupPage() {
                   fontSize: 13,
                   color: "var(--ink-4)",
                   textDecoration: "none",
-                  borderBottom: "1px dashed var(--hairline)",
+                  borderBottom: "1px dashed var(--surface-3)",
                   paddingBottom: 2,
                 }}
               >
@@ -1160,7 +1153,7 @@ function SectionDivider({ label }: { label: string }) {
         marginTop: 8,
       }}
     >
-      <div style={{ flex: 1, height: 1, background: "var(--hairline)" }} />
+      <div style={{ flex: 1, height: 1, background: "var(--surface-3)" }} />
       <span
         style={{
           fontFamily: "var(--font-body)",
@@ -1174,7 +1167,7 @@ function SectionDivider({ label }: { label: string }) {
       >
         {label}
       </span>
-      <div style={{ flex: 1, height: 1, background: "var(--hairline)" }} />
+      <div style={{ flex: 1, height: 1, background: "var(--surface-3)" }} />
     </div>
   );
 }

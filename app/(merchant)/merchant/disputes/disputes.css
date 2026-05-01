@@ -1,0 +1,268 @@
+/* =============================================================
+   Push — Merchant Disputes LIST — page-level CSS
+   Design.md v11: closed token set, 8px grid, product register
+   Layered on top of components/disputes/disputes.css (shared)
+   ============================================================= */
+
+/* ─────────────────────────────────────────
+   1. MERCHANT DISPUTE CARDS
+   ─────────────────────────────────────────
+   Spec: border-radius 10px, surface-2 bg,
+   padding 16px 24px, border-left 3px brand-red.
+   Hover: bottom-right shift (Push signature).
+   ───────────────────────────────────────── */
+.mdisp-card {
+  border-radius: 10px;
+  background: var(--surface-2);
+  padding: 16px 24px;
+  border-left: 3px solid var(--brand-red);
+  cursor: pointer;
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  transition:
+    transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1),
+    background 0.15s,
+    box-shadow 0.15s;
+  position: relative;
+}
+
+.mdisp-card:hover {
+  background: var(--surface-3);
+  transform: translate(2px, 2px);
+  box-shadow: 0 4px 16px rgba(44, 42, 38, 0.08);
+}
+
+.mdisp-card:focus-visible {
+  outline: 2px solid var(--brand-red);
+  outline-offset: 2px;
+}
+
+/* ─────────────────────────────────────────
+   2. CREATOR AVATAR CHIP
+   ─────────────────────────────────────────
+   Spec: 32px 1:1 chip + creator name mono 14px
+   ───────────────────────────────────────── */
+.mdisp-creator {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+  min-width: 0;
+}
+
+.mdisp-creator__avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--surface-3);
+  border: 1px solid var(--hairline);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--ink);
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+.mdisp-creator__avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.mdisp-creator__name {
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 140px;
+}
+
+/* ─────────────────────────────────────────
+   3. CARD BODY COLUMNS
+   ───────────────────────────────────────── */
+.mdisp-card__main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.mdisp-card__campaign {
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--ink);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mdisp-card__meta {
+  font-family: var(--font-body);
+  font-size: 12px;
+  color: var(--ink-4);
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.mdisp-card__id {
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+}
+
+.mdisp-card__amount {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--ink);
+  letter-spacing: -0.03em;
+  flex-shrink: 0;
+}
+
+/* ─────────────────────────────────────────
+   4. STATUS CHIPS
+   ─────────────────────────────────────────
+   open: brand-red-tint / brand-red
+   pending/under_review: champagne-tint / champagne
+   resolved/closed: surface-3 / ink-3
+   ───────────────────────────────────────── */
+.mdisp-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border-radius: 8px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.mdisp-status__dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* Open */
+.mdisp-status--open {
+  background: rgba(193, 18, 31, 0.10);
+  color: var(--brand-red);
+  border: 1px solid rgba(193, 18, 31, 0.25);
+}
+
+.mdisp-status--open .mdisp-status__dot {
+  background: var(--brand-red);
+}
+
+/* Under review / awaiting_response → champagne */
+.mdisp-status--under_review,
+.mdisp-status--awaiting_response {
+  background: rgba(191, 161, 112, 0.14);
+  color: var(--champagne);
+  border: 1px solid rgba(191, 161, 112, 0.35);
+}
+
+.mdisp-status--under_review .mdisp-status__dot,
+.mdisp-status--awaiting_response .mdisp-status__dot {
+  background: var(--champagne);
+}
+
+/* Resolved / closed → surface-3 / ink-3 */
+.mdisp-status--resolved,
+.mdisp-status--closed {
+  background: var(--surface-3);
+  color: var(--ink-3);
+  border: 1px solid var(--mist);
+}
+
+.mdisp-status--resolved .mdisp-status__dot,
+.mdisp-status--closed .mdisp-status__dot {
+  background: var(--ink-3);
+}
+
+/* ─────────────────────────────────────────
+   5. CARD LIST CONTAINER
+   ───────────────────────────────────────── */
+.mdisp-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* ─────────────────────────────────────────
+   6. CARD ARROW
+   ───────────────────────────────────────── */
+.mdisp-card__arrow {
+  font-size: 16px;
+  color: var(--ink-4);
+  flex-shrink: 0;
+  transition: transform 0.15s;
+  opacity: 0;
+}
+
+.mdisp-card:hover .mdisp-card__arrow {
+  opacity: 1;
+  transform: translateX(3px);
+}
+
+/* ─────────────────────────────────────────
+   7. OPEN DISPUTE BUTTON
+   ─────────────────────────────────────────
+   Uses global .btn-primary + hover shift.
+   Extra overrides below.
+   ───────────────────────────────────────── */
+.mdisp-open-btn {
+  /* Inherits .btn-primary from globals.css */
+  white-space: nowrap;
+}
+
+/* ─────────────────────────────────────────
+   8. RESPONSIVE
+   ───────────────────────────────────────── */
+@media (max-width: 768px) {
+  .mdisp-card {
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .mdisp-creator {
+    order: -1;
+  }
+
+  .mdisp-card__amount {
+    font-size: 18px;
+  }
+
+  .mdisp-creator__name {
+    max-width: 100px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mdisp-card:hover {
+    transform: none;
+  }
+}

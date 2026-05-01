@@ -35,9 +35,20 @@ function timingSafeEqStr(a: string, b: string): boolean {
   return out === 0;
 }
 
-// Creator-protected route patterns
-const CREATOR_PROTECTED = ["/creator/dashboard", "/creator/profile"];
-const CREATOR_PROTECTED_PREFIXES = ["/creator/campaigns", "/creator/earnings"];
+// Creator public routes — everything else under /creator/* requires auth.
+// login/signup/verify/reset-password are auth flows; explore/overview/portfolio
+// are marketing-facing; public/* is the public creator profile viewer.
+const CREATOR_PUBLIC_PREFIXES = [
+  "/creator/login",
+  "/creator/signup",
+  "/creator/verify",
+  "/creator/reset-password",
+  "/creator/onboarding",
+  "/creator/explore",
+  "/creator/overview",
+  "/creator/portfolio",
+  "/creator/public",
+];
 
 // Merchant-protected route patterns
 const MERCHANT_PROTECTED = ["/merchant/dashboard"];
@@ -60,6 +71,11 @@ function isPublic(pathname: string): boolean {
   return PUBLIC_PREFIXES.some((p) => pathname.startsWith(p));
 }
 
+// All /creator/* routes are protected except the explicit public list above.
+function isCreatorPublic(pathname: string): boolean {
+  return CREATOR_PUBLIC_PREFIXES.some((p) => pathname.startsWith(p));
+}
+
 type DemoRole = "creator" | "merchant" | "admin" | "consumer";
 
 function getDemoRole(request: NextRequest): DemoRole | null {
@@ -76,10 +92,8 @@ function getDemoRole(request: NextRequest): DemoRole | null {
 }
 
 function isCreatorProtected(pathname: string): boolean {
-  return (
-    CREATOR_PROTECTED.includes(pathname) ||
-    CREATOR_PROTECTED_PREFIXES.some((p) => pathname.startsWith(p))
-  );
+  if (!pathname.startsWith("/creator/")) return false;
+  return !isCreatorPublic(pathname);
 }
 
 function isMerchantProtected(pathname: string): boolean {

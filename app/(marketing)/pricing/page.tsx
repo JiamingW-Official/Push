@@ -1,13 +1,24 @@
 import Link from "next/link";
 import "./pricing.css";
 
-/* ── Plan data ───────────────────────────────────────────────── */
-const PLANS = [
+/* ── Tier data ────────────────────────────────────────────────── */
+const TIERS: Array<{
+  id: string;
+  eyebrow: string;
+  name: string;
+  price: string;
+  priceSub: string;
+  priceNote: string;
+  features: string[];
+  ctaLabel: string;
+  ctaHref: string;
+  ctaClass: string;
+  variant: "default" | "highlight" | "scale";
+}> = [
   {
-    id: "pilot",
+    id: "starter",
     eyebrow: "(GET STARTED)",
-    eyebrowColor: "var(--ink-3)" as const,
-    name: "Pilot",
+    name: "Starter",
     price: "$0",
     priceSub: "/ month",
     priceNote: "Free to start · pay per verified visit",
@@ -17,17 +28,16 @@ const PLANS = [
       "Basic visit dashboard",
       "Up to 50 verified visits / mo",
       "Email support",
-      "No commitment, no card required",
+      "No card required",
     ],
     ctaLabel: "Start Free",
     ctaHref: "/merchant/signup",
-    ctaClass: "btn btn-ghost click-shift",
-    highlight: false,
+    ctaClass: "btn btn-ghost",
+    variant: "default",
   },
   {
     id: "growth",
-    eyebrow: "(MOST POPULAR)",
-    eyebrowColor: "var(--brand-red)" as const,
+    eyebrow: "(RECOMMENDED)",
     name: "Growth",
     price: "$49",
     priceSub: "/ month",
@@ -44,13 +54,12 @@ const PLANS = [
     ],
     ctaLabel: "Start Growth",
     ctaHref: "/merchant/signup?plan=growth",
-    ctaClass: "btn btn-primary click-shift",
-    highlight: true,
+    ctaClass: "btn btn-ink",
+    variant: "highlight",
   },
   {
     id: "scale",
     eyebrow: "(ENTERPRISE)",
-    eyebrowColor: "var(--ink-3)" as const,
     name: "Scale",
     price: "Custom",
     priceSub: "",
@@ -67,12 +76,12 @@ const PLANS = [
     ],
     ctaLabel: "Contact Sales",
     ctaHref: "/contact?inquiry=scale",
-    ctaClass: "btn btn-secondary click-shift",
-    highlight: false,
+    ctaClass: "btn btn-primary",
+    variant: "default",
   },
-] as const;
+];
 
-/* ── Comparison table rows ───────────────────────────────────── */
+/* ── Comparison table rows ────────────────────────────────────── */
 const TABLE_ROWS: {
   feature: string;
   push: string;
@@ -131,7 +140,7 @@ const TABLE_ROWS: {
   },
 ];
 
-/* ── Grommet positions (Ticket Panel spec — 4 corners) ────────── */
+/* ── Grommet corner positions (Ticket Panel spec §8.2 — 4 corners) */
 const GROMMETS: React.CSSProperties[] = [
   { top: "24px", left: "24px" },
   { top: "24px", right: "24px" },
@@ -144,125 +153,89 @@ export default function PricingPage() {
   return (
     <div className="pv11-wrapper">
       {/* ═══════════════════════════════════════════════════════════
-          PANEL 1 — HERO (dark char/ink)
+          PANEL 1 — HERO  (bg: --surface  warm ivory)
           H1 bottom-left anchored — Design.md § 7.1 STRICT
           ═══════════════════════════════════════════════════════════ */}
       <section className="pv11-hero" aria-label="Pricing hero">
-        {/* Ghost "$0" decorative numeral — top right */}
+        {/* Decorative ghost numeral — top-right bleeds off */}
         <div className="pv11-hero-ghost" aria-hidden="true">
           $0
         </div>
 
-        {/* Bottom-left anchored title block */}
+        {/* Bottom-left title block — STRICT corner anchor */}
         <div className="pv11-hero-inner">
-          <p className="pv11-eyebrow">(PRICING)</p>
+          <p className="pv11-eyebrow">(PUSH·PRICING)</p>
           <h1 className="pv11-hero-h1">
-            Pay per
+            Pricing that
             <br />
-            visit. Only.
+            scales with you.
           </h1>
           <p className="pv11-hero-sub">
-            No impressions. No estimates. You pay only when a verified creator
-            physically visits your location.
+            No impressions. No estimates. Pay only when a verified creator
+            physically walks through your door.
           </p>
+          <div className="pv11-hero-ctas">
+            <Link href="/merchant/signup" className="btn btn-primary">
+              Start Free
+            </Link>
+            <Link href="#pricing" className="btn btn-ghost">
+              See Plans
+            </Link>
+          </div>
         </div>
 
-        {/* Liquid-glass badge — bottom right */}
+        {/* Liquid-glass stat tile — bottom right (§8.9) */}
         <div className="pv11-hero-badge" aria-label="Free to start">
-          <span className="pv11-badge-num">Start free</span>
-          <span className="pv11-badge-label">No card required</span>
+          <span className="pv11-badge-num">$0</span>
+          <span className="pv11-badge-label">To get started today</span>
         </div>
       </section>
 
       {/* ═══════════════════════════════════════════════════════════
-          SIG DIVIDER 1  (Design.md § 8.5 — 64px padding)
-          ═══════════════════════════════════════════════════════════ */}
-      <div className="pv11-sig-wrap" aria-hidden="true">
-        <span className="sig-divider">
-          Story&nbsp;·&nbsp;Scan&nbsp;·&nbsp;Pay&nbsp;·
-        </span>
-      </div>
-
-      {/* ═══════════════════════════════════════════════════════════
-          PANEL 2 — KPI STRIP (dark graphite)
-          ═══════════════════════════════════════════════════════════ */}
-      <section className="pv11-kpi-strip" aria-label="Platform stats">
-        <div className="pv11-kpi-inner">
-          <div className="pv11-kpi-item">
-            <span className="pv11-kpi-num">1.4M+</span>
-            <span className="pv11-kpi-label">Verified visits tracked</span>
-          </div>
-          <div className="pv11-kpi-divider" aria-hidden="true" />
-          <div className="pv11-kpi-item">
-            <span className="pv11-kpi-num">100+</span>
-            <span className="pv11-kpi-label">Active NYC merchants</span>
-          </div>
-          <div className="pv11-kpi-divider" aria-hidden="true" />
-          <div className="pv11-kpi-item">
-            <span className="pv11-kpi-num">87%</span>
-            <span className="pv11-kpi-label">Creator retention rate</span>
-          </div>
-          <div className="pv11-kpi-divider" aria-hidden="true" />
-          <div className="pv11-kpi-item">
-            <span className="pv11-kpi-num">$0</span>
-            <span className="pv11-kpi-label">To get started today</span>
-          </div>
-        </div>
-      </section>
-
-      {/* ═══════════════════════════════════════════════════════════
-          PANEL 3 — PRICING PLANS (Candy Butter warm)
-          candy-panel class: bg panel-butter, r-3xl (28px), 96px padding
+          PANEL 2 — TIER CARDS  (bg: --surface-2  Pearl Stone)
+          3 pricing tiers — Design.md § 8.1
           ═══════════════════════════════════════════════════════════ */}
       <section
-        className="candy-panel pv11-plans-panel"
         id="pricing"
-        aria-label="Pricing plans"
-        style={{ background: "var(--panel-butter)" }}
+        className="pv11-tiers-panel"
+        aria-label="Pricing tiers"
       >
-        {/* Ghost "02" watermark */}
-        <div className="pv11-plans-ghost" aria-hidden="true">
-          02
-        </div>
-
-        <div className="pv11-plans-header">
+        <div className="pv11-tiers-header">
           <p className="pv11-section-eyebrow">(THE PLANS)</p>
-          <h2 className="pv11-section-h2">
-            Three ways
-            <br />
-            to run Push.
-          </h2>
+          <h2 className="pv11-section-h2">Three ways to run Push.</h2>
         </div>
 
-        {/* Plan cards grid */}
-        <div className="pv11-plans-grid">
-          {PLANS.map((plan) => (
+        <div className="pv11-tiers-grid">
+          {TIERS.map((tier) => (
             <article
-              key={plan.id}
-              className={`pv11-plan-card${plan.highlight ? " pv11-plan-card--highlight" : ""}`}
-              /* data-plan drives the CSS ::before ghost watermark */
-              data-plan={plan.name}
+              key={tier.id}
+              className={`pv11-tier-card${tier.variant === "highlight" ? " pv11-tier-card--highlight" : tier.id === "scale" ? " pv11-tier-card--scale" : ""}`}
             >
-              <p
-                className="pv11-plan-eyebrow"
-                style={{ color: plan.eyebrowColor }}
-              >
-                {plan.eyebrow}
-              </p>
-              <h3 className="pv11-plan-name">{plan.name}</h3>
+              {/* RECOMMENDED pill — Champagne on highlight card (≤3/vp) */}
+              {tier.variant === "highlight" && (
+                <div
+                  className="pv11-recommended-pill"
+                  aria-label="Most popular plan"
+                >
+                  RECOMMENDED
+                </div>
+              )}
 
-              {/* Massive editorial price numeral */}
+              <p className="pv11-tier-eyebrow">{tier.eyebrow}</p>
+              <h3 className="pv11-tier-name">{tier.name}</h3>
+
+              {/* Price numeral — Darky 800 64px per spec */}
               <div className="pv11-price-row">
-                <span className="pv11-price-main">{plan.price}</span>
-                {plan.priceSub && (
-                  <span className="pv11-price-sub">{plan.priceSub}</span>
+                <span className="pv11-price-main">{tier.price}</span>
+                {tier.priceSub && (
+                  <span className="pv11-price-sub">{tier.priceSub}</span>
                 )}
               </div>
-              <p className="pv11-price-note">{plan.priceNote}</p>
+              <p className="pv11-price-note">{tier.priceNote}</p>
 
-              {/* Feature list */}
+              {/* Feature list — 12px mono + brand-red checkmark */}
               <ul className="pv11-feature-list">
-                {plan.features.map((f) => (
+                {tier.features.map((f) => (
                   <li key={f} className="pv11-feature-item">
                     <span className="pv11-check" aria-hidden="true">
                       ✓
@@ -272,114 +245,73 @@ export default function PricingPage() {
                 ))}
               </ul>
 
-              {/* CTA — uses unified btn system (Design.md § 9) */}
+              {/* CTA — unified button system §9 */}
               <Link
-                href={plan.ctaHref}
-                className={`${plan.ctaClass} pv11-card-cta`}
+                href={tier.ctaHref}
+                className={`${tier.ctaClass} pv11-tier-cta`}
               >
-                {plan.ctaLabel}
+                {tier.ctaLabel}
               </Link>
             </article>
           ))}
         </div>
 
-        <p className="pv11-plans-fine">
+        <p className="pv11-tiers-fine">
           All plans&nbsp;·&nbsp;Cancel any time&nbsp;·&nbsp;No setup
           fee&nbsp;·&nbsp;Annual saves 16%
         </p>
       </section>
 
       {/* ═══════════════════════════════════════════════════════════
-          PANEL 4 — EDITORIAL TABLE (Cinema-Selects comparison)
-          Design.md § 8.6 — surface-2, r-md, 48/56 padding, top-left
+          MAGVIX ITALIC SIGNATURE DIVIDER between panel 2 + 3
+          Design.md § 8.5 — ≤2 per page
           ═══════════════════════════════════════════════════════════ */}
-      <section className="pv11-table-panel" aria-label="Feature comparison">
-        <p className="pv11-table-eyebrow">(HOW IT COMPARES)</p>
-        <h2 className="pv11-table-h2">How Push stacks up.</h2>
-
-        {/* Grid-based editorial table — no native <table> */}
-        <div
-          className="pv11-comp-table"
-          role="table"
-          aria-label="Feature comparison table"
-        >
-          {/* Header row */}
-          <div className="pv11-trow pv11-trow--head" role="row">
-            <div className="pv11-tcell pv11-tcell--feature" role="columnheader">
-              (WHAT YOU GET)
-            </div>
-            <div className="pv11-tcell pv11-tcell--push" role="columnheader">
-              (PUSH)
-            </div>
-            <div className="pv11-tcell" role="columnheader">
-              (YELP ADS)
-            </div>
-            <div className="pv11-tcell" role="columnheader">
-              (INFLUENCER)
-            </div>
-            <div className="pv11-tcell pv11-tcell--last" role="columnheader">
-              (GROUPON)
-            </div>
-          </div>
-
-          {/* Data rows */}
-          {TABLE_ROWS.map((row) => (
-            <div className="pv11-trow" role="row" key={row.feature}>
-              <div className="pv11-tcell pv11-tcell--feature" role="cell">
-                {row.feature}
-              </div>
-              <div
-                className="pv11-tcell pv11-tcell--push"
-                role="cell"
-                style={{
-                  color: row.push.startsWith("✓")
-                    ? "var(--brand-red)"
-                    : "var(--ink-3)",
-                  fontWeight: row.push.startsWith("✓") ? 700 : 400,
-                }}
-              >
-                {row.push}
-              </div>
-              <div
-                className="pv11-tcell"
-                role="cell"
-                style={{
-                  color: row.yelp.startsWith("✗")
-                    ? "var(--ink-5)"
-                    : "var(--ink-3)",
-                }}
-              >
-                {row.yelp}
-              </div>
-              <div
-                className="pv11-tcell"
-                role="cell"
-                style={{
-                  color: row.influencer.startsWith("✗")
-                    ? "var(--ink-5)"
-                    : "var(--ink-3)",
-                }}
-              >
-                {row.influencer}
-              </div>
-              <div
-                className="pv11-tcell pv11-tcell--last"
-                role="cell"
-                style={{
-                  color: row.groupon.startsWith("✗")
-                    ? "var(--ink-5)"
-                    : "var(--ink-3)",
-                }}
-              >
-                {row.groupon}
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
+      <div className="pv11-sig-wrap" aria-hidden="true">
+        <span className="sig-divider">
+          End of free tier&nbsp;·&nbsp;Fin&nbsp;·&nbsp;Start scaling now&nbsp;·
+        </span>
+      </div>
 
       {/* ═══════════════════════════════════════════════════════════
-          SIG DIVIDER 2  (Design.md § 8.5)
+          PANEL 3 — TICKET PANEL (GA Orange — ≤1 per page)
+          Annual pricing / special offer
+          Design.md § 8.2 — grommets + dashed perf + Magvix italic centered
+          ═══════════════════════════════════════════════════════════ */}
+      <div className="ticket-panel pv11-ticket" aria-label="Annual plan offer">
+        {/* Four corner grommets — 16px diameter, 24px inset (§8.2 STRICT) */}
+        {GROMMETS.map((pos, i) => (
+          <div
+            key={i}
+            className="pv11-grommet"
+            aria-hidden="true"
+            style={pos}
+          />
+        ))}
+
+        {/* Centered content — exception to corner-anchor rule per §7.1 */}
+        <div className="pv11-ticket-content">
+          <p className="pv11-ticket-eyebrow">(ANNUAL PLAN)</p>
+          <h2 className="pv11-ticket-h2">
+            Save 16% with
+            <br />
+            an annual plan.
+          </h2>
+          <p className="pv11-ticket-sub">
+            Lock in your rate and get 2 months free. Set up in under 10 minutes.
+          </p>
+          <div className="pv11-ticket-ctas">
+            <Link
+              href="/merchant/signup?billing=annual"
+              className="btn btn-ink"
+            >
+              Get Annual Plan
+            </Link>
+          </div>
+        </div>
+      </div>
+
+      {/* ═══════════════════════════════════════════════════════════
+          MAGVIX ITALIC SIGNATURE DIVIDER 2
           ═══════════════════════════════════════════════════════════ */}
       <div className="pv11-sig-wrap" aria-hidden="true">
         <span className="sig-divider">
@@ -388,48 +320,99 @@ export default function PricingPage() {
       </div>
 
       {/* ═══════════════════════════════════════════════════════════
-          PANEL 5 — TICKET CTA (GA Orange)
-          Design.md § 8.2 — ga-orange, r-md, grommets, Magvix italic centered
-          ticket-panel global class handles: bg, radius, padding, perf edges
+          PANEL 4 — FAQ / COMPARISON TABLE  (bg: --surface  Ivory)
+          Editorial Table style — Cinema-Selects
+          Design.md § 8.6 — mono 12px 700 uppercase headers + Darky 20px first col
           ═══════════════════════════════════════════════════════════ */}
-      <div className="ticket-panel pv11-ticket" aria-label="Get started CTA">
-        {/* Four corner grommets (Design.md § 8.2 — 16px diameter, 24px inset) */}
-        {GROMMETS.map((pos, i) => (
-          <div
-            key={i}
-            aria-hidden="true"
-            style={{
-              position: "absolute",
-              ...pos,
-              width: "16px",
-              height: "16px",
-              borderRadius: "50%",
-              background: "var(--ink)",
-              zIndex: 2,
-            }}
-          />
-        ))}
+      <section className="pv11-table-panel" aria-label="Feature comparison">
+        <div className="pv11-table-inner">
+          <p className="pv11-table-eyebrow">(HOW IT COMPARES)</p>
+          <h2 className="pv11-table-h2">How Push stacks up.</h2>
 
-        {/* Centered content (Ticket Panel is the ≤1 exception for centered title) */}
-        <div className="pv11-ticket-content">
-          <h2 className="pv11-ticket-h2">
-            Start counting
-            <br />
-            real visits.
-          </h2>
-          <p className="pv11-ticket-sub">
-            Set up in under 10 minutes. First 30 days free.
-          </p>
-          <div className="pv11-ticket-ctas">
-            <Link href="/merchant/signup" className="btn btn-ink click-shift">
-              Get Started Free
-            </Link>
-            <Link href="#pricing" className="btn btn-ghost click-shift">
-              See Plans
-            </Link>
+          {/* Grid-based editorial table */}
+          <div
+            className="pv11-comp-table"
+            role="table"
+            aria-label="Push vs competitors feature comparison"
+          >
+            {/* Header row */}
+            <div className="pv11-trow pv11-trow--head" role="row">
+              <div
+                className="pv11-tcell pv11-tcell--feature"
+                role="columnheader"
+              >
+                (WHAT YOU GET)
+              </div>
+              <div className="pv11-tcell pv11-tcell--push" role="columnheader">
+                (PUSH)
+              </div>
+              <div className="pv11-tcell" role="columnheader">
+                (YELP ADS)
+              </div>
+              <div className="pv11-tcell" role="columnheader">
+                (INFLUENCER)
+              </div>
+              <div className="pv11-tcell pv11-tcell--last" role="columnheader">
+                (GROUPON)
+              </div>
+            </div>
+
+            {/* Data rows */}
+            {TABLE_ROWS.map((row) => (
+              <div className="pv11-trow" role="row" key={row.feature}>
+                <div className="pv11-tcell pv11-tcell--feature" role="cell">
+                  {row.feature}
+                </div>
+                <div
+                  className="pv11-tcell pv11-tcell--push"
+                  role="cell"
+                  style={{
+                    color: row.push.startsWith("✓")
+                      ? "var(--brand-red)"
+                      : "var(--ink-3)",
+                    fontWeight: row.push.startsWith("✓") ? 700 : 400,
+                  }}
+                >
+                  {row.push}
+                </div>
+                <div
+                  className="pv11-tcell"
+                  role="cell"
+                  style={{
+                    color: row.yelp.startsWith("✗")
+                      ? "var(--ink-5)"
+                      : "var(--ink-3)",
+                  }}
+                >
+                  {row.yelp}
+                </div>
+                <div
+                  className="pv11-tcell"
+                  role="cell"
+                  style={{
+                    color: row.influencer.startsWith("✗")
+                      ? "var(--ink-5)"
+                      : "var(--ink-3)",
+                  }}
+                >
+                  {row.influencer}
+                </div>
+                <div
+                  className="pv11-tcell pv11-tcell--last"
+                  role="cell"
+                  style={{
+                    color: row.groupon.startsWith("✗")
+                      ? "var(--ink-5)"
+                      : "var(--ink-3)",
+                  }}
+                >
+                  {row.groupon}
+                </div>
+              </div>
+            ))}
           </div>
         </div>
-      </div>
+      </section>
     </div>
   );
 }

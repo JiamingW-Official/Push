@@ -86,12 +86,14 @@ export function TierBadge({
     return (
       <div
         className={`tier--${tierCssKey}${className ? ` ${className}` : ""}`}
+        role="img"
+        aria-label={`Creator tier ${config.label}`}
         style={{
           display: "inline-flex",
           flexDirection: "column",
           alignItems: "flex-start",
           gap: "8px",
-          padding: "16px 20px",
+          padding: "16px 24px",
           backgroundColor:
             variant === "filled"
               ? config.bg
@@ -99,7 +101,9 @@ export function TierBadge({
                 ? `${config.bg}cc`
                 : "transparent",
           border: `2px solid ${xlBorderColor}`,
-          borderRadius: 0,
+          // § 4.2 — tier badge uses --r-sm (8px); border-radius:0 is reserved for
+          // full-bleed Photo Card hero / Editorial Hero Tile / image-collage card only.
+          borderRadius: "var(--r-sm)",
           fontFamily: "var(--font-body)",
         }}
       >
@@ -122,7 +126,8 @@ export function TierBadge({
         )}
         <span
           style={{
-            fontSize: "11px",
+            // § 3.1 min font 12px (Caption 10px is the only documented exception)
+            fontSize: "12px",
             color: config.color,
             opacity: 0.75,
             letterSpacing: "0.06em",
@@ -159,15 +164,18 @@ export function TierBadge({
     return (
       <div
         className={`tier--${tierCssKey}${className ? ` ${className}` : ""}`}
+        role="img"
+        aria-label={`Creator tier ${config.label}`}
         style={{
           display: "inline-flex",
           flexDirection: "column",
           alignItems: "flex-start",
-          gap: "6px",
-          padding: "12px 16px",
+          gap: "8px",
+          padding: "16px 16px",
           backgroundColor: lgBg,
           border: `2px solid ${lgBorderColor}`,
-          borderRadius: 0,
+          // § 4.2 — tier badge uses --r-sm (8px), never 0.
+          borderRadius: "var(--r-sm)",
           fontFamily: "var(--font-body)",
         }}
       >
@@ -190,7 +198,8 @@ export function TierBadge({
         )}
         <span
           style={{
-            fontSize: "11px",
+            // § 3.1 min font 12px floor.
+            fontSize: "12px",
             color: config.color,
             opacity: 0.8,
             letterSpacing: "0.06em",
@@ -228,20 +237,24 @@ export function TierBadge({
   return (
     <span
       className={combinedClass}
+      role="img"
+      aria-label={`Creator tier ${config.label}`}
       style={{
-        gap: isSm ? "3px" : "5px",
-        padding: isSm ? "2px 6px" : "4px 10px",
-        fontSize: isSm ? "10px" : "11px",
+        gap: isSm ? "4px" : "8px",
+        // § 5 — 8px grid (4px half-grid allowed for chip gaps).
+        padding: isSm ? "4px 8px" : "4px 8px",
+        // § 3.1 min font 12px floor; tier-identity.css default 10px is overridden.
+        fontSize: "12px",
         letterSpacing: isSm ? "0.08em" : "0.06em",
         lineHeight: 1.2,
         whiteSpace: "nowrap",
+        // § 4.2 — tier badge uses --r-sm (8px), never 0.
+        borderRadius: "var(--r-sm)",
         ...variantStyle,
       }}
     >
       {showIcon && (
-        <span style={{ fontSize: isSm ? "10px" : "12px", lineHeight: 1 }}>
-          {config.icon}
-        </span>
+        <span style={{ fontSize: "12px", lineHeight: 1 }}>{config.icon}</span>
       )}
       {showLabel && <span>{config.label}</span>}
     </span>
