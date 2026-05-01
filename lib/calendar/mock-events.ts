@@ -526,6 +526,89 @@ const MAY: CalendarEvent[] = [
     payout: 75,
   },
 
+  // ── Day-before prep reminders (P1-2) ────────────────────────
+  // Flamingo Estate deadline May 5 → prep May 4
+  {
+    id: "ev-prep-001",
+    campaignId: "camp-003",
+    campaignTitle: "LA Botanica Aesthetic Shoot",
+    merchantName: "Flamingo Estate",
+    type: "milestone",
+    title: "Pre-post prep — LA Botanica Shoot",
+    date: "2026-05-04",
+    time: "08:00",
+    description:
+      "Final prep before tomorrow's posting deadline. Check all items before you post.",
+    done: false,
+    snoozed: false,
+    payout: 0,
+    isPrepEvent: true,
+    prepChecklist: [
+      { id: "pc-001-1", label: "Tag handles ready (@flamingoestate)" },
+      {
+        id: "pc-001-2",
+        label: "FTC disclosure in caption (#ad or 'Paid partnership')",
+      },
+      { id: "pc-001-3", label: "Hashtags researched & added" },
+      { id: "pc-001-4", label: "Content approved by brand team" },
+      { id: "pc-001-5", label: "Posting time set for peak engagement" },
+    ],
+  },
+  // Glossier deadline May 10 → prep May 9
+  {
+    id: "ev-prep-002",
+    campaignId: "camp-005",
+    campaignTitle: "Glossier NYC Store Experience",
+    merchantName: "Glossier",
+    type: "milestone",
+    title: "Pre-post prep — Glossier editorial",
+    date: "2026-05-09",
+    time: "08:00",
+    description:
+      "Final prep before tomorrow's posting deadline. All 3+ posts + video must be ready.",
+    done: false,
+    snoozed: false,
+    payout: 0,
+    isPrepEvent: true,
+    prepChecklist: [
+      { id: "pc-002-1", label: "Tag @glossier on all 3+ posts" },
+      {
+        id: "pc-002-2",
+        label: "FTC disclosure on every post (#gifted / #ad)",
+      },
+      { id: "pc-002-3", label: "Video min 3 min (YouTube/TikTok ready)" },
+      { id: "pc-002-4", label: "All captions proofread" },
+      { id: "pc-002-5", label: "Stories cross-post scheduled" },
+    ],
+  },
+  // KITH deadline May 15 → prep May 14
+  {
+    id: "ev-prep-003",
+    campaignId: "camp-007",
+    campaignTitle: "KITH x Creator Collab Series",
+    merchantName: "KITH",
+    type: "milestone",
+    title: "Pre-post prep — KITH Collab final push",
+    date: "2026-05-14",
+    time: "08:00",
+    description:
+      "All 5+ feed posts and 2 Reels must be live by tomorrow midnight.",
+    done: false,
+    snoozed: false,
+    payout: 0,
+    isPrepEvent: true,
+    prepChecklist: [
+      { id: "pc-003-1", label: "5+ feed posts scheduled and reviewed" },
+      { id: "pc-003-2", label: "2 Reels exported & captions added" },
+      {
+        id: "pc-003-3",
+        label: "FTC disclosure on every piece (#ad / #KITHpartner)",
+      },
+      { id: "pc-003-4", label: "Tag @kith on each post" },
+      { id: "pc-003-5", label: "Confirm with brand — any last feedback?" },
+    ],
+  },
+
   // ── Attribution Decay Milestones (D+30 from April deadlines) ──
   // April 22 (Le Bec Fin) + 30 = May 22
   {

@@ -304,6 +304,8 @@ interface SidePanelProps {
   noteValue: string;
   onNoteChange: (v: string) => void;
   onNoteSave: () => void;
+  checkedPrepItems: Set<string>;
+  onTogglePrepItem: (itemId: string) => void;
 }
 
 function SidePanel({
@@ -320,6 +322,8 @@ function SidePanel({
   noteValue,
   onNoteChange,
   onNoteSave,
+  checkedPrepItems,
+  onTogglePrepItem,
 }: SidePanelProps) {
   if (!selectedDate) {
     return (
@@ -367,13 +371,15 @@ function SidePanel({
           dayEvents.map((ev) => (
             <article
               key={ev.id}
-              className={`cal-side__event event-type--${ev.type}${ev.done ? " is-done" : ""}${ev.isDecayMilestone ? " is-decay" : ""}`}
+              className={`cal-side__event event-type--${ev.type}${ev.done ? " is-done" : ""}${ev.isDecayMilestone ? " is-decay" : ""}${ev.isPrepEvent ? " is-prep" : ""}`}
             >
               <header className="cal-side__event-head">
                 <span className={`cal-chip event-type--${ev.type}`}>
                   {ev.isDecayMilestone
                     ? `D+${ev.decayDayNumber} DECAY`
-                    : EVENT_TYPE_LABELS[ev.type]}
+                    : ev.isPrepEvent
+                      ? "PREP CHECKLIST"
+                      : EVENT_TYPE_LABELS[ev.type]}
                 </span>
                 {ev.time && (
                   <span className="cal-side__event-time">
@@ -425,6 +431,35 @@ function SidePanel({
                         : "0%"}{" "}
                     weight
                   </span>
+                </div>
+              )}
+
+              {/* P1-2: Prep checklist */}
+              {ev.isPrepEvent && ev.prepChecklist && (
+                <div className="cal-prep-checklist">
+                  <div className="cal-prep-checklist__header">
+                    <span className="cal-prep-checklist__title">
+                      Pre-post checklist
+                    </span>
+                    <span className="cal-prep-checklist__ftc">FTC</span>
+                  </div>
+                  <ul className="cal-prep-checklist__list">
+                    {ev.prepChecklist.map((item) => {
+                      const checked = checkedPrepItems.has(item.id);
+                      return (
+                        <li
+                          key={item.id}
+                          className={`cal-prep-checklist__item${checked ? " is-checked" : ""}`}
+                          onClick={() => onTogglePrepItem(item.id)}
+                        >
+                          <span className="cal-prep-checklist__box">
+                            <span className="cal-prep-checklist__check">✓</span>
+                          </span>
+                          {item.label}
+                        </li>
+                      );
+                    })}
+                  </ul>
                 </div>
               )}
 
@@ -762,6 +797,19 @@ export default function CreatorCalendarPage() {
 
   // P0-4: Earnings drawer toggle
   const [earningsOpen, setEarningsOpen] = useState(false);
+
+  // P1-2: Prep checklist checked items (persists within session)
+  const [checkedPrepItems, setCheckedPrepItems] = useState<Set<string>>(
+    new Set(),
+  );
+  function togglePrepItem(itemId: string) {
+    setCheckedPrepItems((prev) => {
+      const next = new Set(prev);
+      if (next.has(itemId)) next.delete(itemId);
+      else next.add(itemId);
+      return next;
+    });
+  }
 
   // P1-3: Event-type filter chips
   const [activeFilters, setActiveFilters] = useState<Set<EventType>>(new Set());
@@ -1251,13 +1299,13 @@ export default function CreatorCalendarPage() {
                         {shown.map((ev) => (
                           <div key={ev.id} className="cal-chip-wrap">
                             <span
-                              className={`cal-pill-event event-type--${ev.type}${ev.done ? " is-done" : ""}${ev.isDecayMilestone ? " is-decay" : ""}`}
+                              className={`cal-pill-event event-type--${ev.type}${ev.done ? " is-done" : ""}${ev.isDecayMilestone ? " is-decay" : ""}${ev.isPrepEvent ? " is-prep" : ""}`}
                               title={ev.title}
                             >
                               <span
                                 className="cal-pill-accent"
                                 style={
-                                  ev.isDecayMilestone
+                                  ev.isDecayMilestone || ev.isPrepEvent
                                     ? undefined
                                     : {
                                         background:
@@ -1272,10 +1320,12 @@ export default function CreatorCalendarPage() {
                                       `D+${ev.decayDayNumber} · ${ev.merchantName}`,
                                       20,
                                     )
-                                  : truncate(
-                                      `${EVENT_TYPE_LABELS[ev.type]} · ${ev.merchantName}`,
-                                      20,
-                                    )}
+                                  : ev.isPrepEvent
+                                    ? truncate(`Prep · ${ev.merchantName}`, 20)
+                                    : truncate(
+                                        `${EVENT_TYPE_LABELS[ev.type]} · ${ev.merchantName}`,
+                                        20,
+                                      )}
                               </span>
                             </span>
                             {/* Hover card */}
@@ -1334,6 +1384,8 @@ export default function CreatorCalendarPage() {
               noteValue={noteValue}
               onNoteChange={setNoteValue}
               onNoteSave={saveNote}
+              checkedPrepItems={checkedPrepItems}
+              onTogglePrepItem={togglePrepItem}
             />
           </div>
         )}

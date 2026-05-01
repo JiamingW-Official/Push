@@ -566,6 +566,17 @@ body:has(.cw-page.cal) .dh-main {
 .cal-pill-event.event-type--milestone { background: var(--etype-milestone); color: var(--ink); }
 .cal-pill-event.is-done               { opacity: 0.35; text-decoration: line-through; }
 
+/* ── Pre-post prep reminder pill (day-before) ────────────── */
+.cal-pill-event.is-prep {
+  background: rgba(0, 133, 255, 0.08);
+  border: 1px dashed rgba(0, 133, 255, 0.40);
+  color: #005db3;
+}
+.cal-pill-event.is-prep .cal-pill-accent {
+  background: var(--accent-blue) !important;
+  opacity: 0.6;
+}
+
 /* ── Attribution decay milestone pill (D+30 / D+60) ──────── */
 .cal-pill-event.is-decay {
   background: rgba(191, 161, 112, 0.14);
@@ -832,6 +843,112 @@ body:has(.cw-page.cal) .dh-main {
   font-weight: 700;
   color: #8a6f3a;
   white-space: nowrap;
+}
+
+/* ── Prep checklist block (P1-2) ─────────────────────────── */
+.cal-prep-checklist {
+  margin-top: 10px;
+  border-radius: 8px;
+  background: rgba(0, 133, 255, 0.05);
+  border: 1px solid rgba(0, 133, 255, 0.18);
+  overflow: hidden;
+}
+
+.cal-prep-checklist__header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  border-bottom: 1px solid rgba(0, 133, 255, 0.12);
+}
+
+.cal-prep-checklist__title {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  color: #005db3;
+}
+
+.cal-prep-checklist__ftc {
+  margin-left: auto;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--snow);
+  background: var(--brand-red);
+  padding: 1px 6px;
+  border-radius: 3px;
+}
+
+.cal-prep-checklist__list {
+  list-style: none;
+  margin: 0;
+  padding: 4px 0;
+}
+
+.cal-prep-checklist__item {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 6px 12px;
+  font-family: var(--font-body);
+  font-size: 12px;
+  color: var(--ink-2);
+  line-height: 1.4;
+  border-bottom: 1px solid rgba(0, 133, 255, 0.06);
+  cursor: pointer;
+  transition: background 160ms ease;
+}
+
+.cal-prep-checklist__item:last-child { border-bottom: none; }
+
+.cal-prep-checklist__item:hover { background: rgba(0, 133, 255, 0.04); }
+
+.cal-prep-checklist__item.is-checked {
+  opacity: 0.50;
+  text-decoration: line-through;
+}
+
+.cal-prep-checklist__box {
+  width: 14px;
+  height: 14px;
+  min-width: 14px;
+  border-radius: 3px;
+  border: 1.5px solid rgba(0, 133, 255, 0.45);
+  margin-top: 1px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: background 160ms ease, border-color 160ms ease;
+}
+
+.cal-prep-checklist__item.is-checked .cal-prep-checklist__box {
+  background: var(--accent-blue);
+  border-color: var(--accent-blue);
+}
+
+.cal-prep-checklist__check {
+  display: none;
+  color: var(--snow);
+  font-size: 10px;
+  line-height: 1;
+}
+
+.cal-prep-checklist__item.is-checked .cal-prep-checklist__check {
+  display: block;
+}
+
+/* Side panel prep event tint */
+.cal-side__event.is-prep {
+  background: rgba(0, 133, 255, 0.04);
+}
+.cal-side__event.is-prep::before {
+  background: var(--accent-blue);
 }
 
 .cal-side__event-head {
