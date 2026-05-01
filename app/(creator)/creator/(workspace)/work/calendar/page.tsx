@@ -2,6 +2,7 @@
 
 import { useState, useMemo, useRef, useCallback, useEffect } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import "./calendar.css";
 import {
   MOCK_EVENTS,
@@ -10,6 +11,10 @@ import {
   EVENT_TYPE_LABELS,
   countDeadlinesInMonth,
 } from "@/lib/calendar/mock-events";
+import {
+  getMockEarningsBreakdown,
+  EarningsBreakdown,
+} from "@/lib/services/earnings";
 
 /* ── Types ───────────────────────────────────────────────── */
 
@@ -27,7 +32,6 @@ const DOW_LABELS_FULL = [
   "Friday",
   "Saturday",
 ];
-
 const MONTH_NAMES = [
   "January",
   "February",
@@ -41,6 +45,30 @@ const MONTH_NAMES = [
   "October",
   "November",
   "December",
+];
+const MONTH_ABBR = [
+  "Jan",
+  "Feb",
+  "Mar",
+  "Apr",
+  "May",
+  "Jun",
+  "Jul",
+  "Aug",
+  "Sep",
+  "Oct",
+  "Nov",
+  "Dec",
+];
+
+// P0-3: Campaign accent palette — all from Design.md § 2 closed list
+const CAMPAIGN_COLORS = [
+  "#c1121f", // --brand-red
+  "#0085ff", // --accent-blue
+  "#bfa170", // --champagne
+  "#3a3835", // --char (v11)
+  "#2c2a26", // --graphite (v11)
+  "#d8d4c8", // --mist
 ];
 
 /* ── Helpers ─────────────────────────────────────────────── */
@@ -64,7 +92,6 @@ function buildMonthGrid(year: number, month: number): (Date | null)[] {
   const first = new Date(year, month, 1);
   const last = new Date(year, month + 1, 0);
   const cells: (Date | null)[] = [];
-  // Week starts Monday: offset = (getDay() + 6) % 7
   const offset = (first.getDay() + 6) % 7;
   for (let i = 0; i < offset; i++) cells.push(null);
   for (let d = 1; d <= last.getDate(); d++)
@@ -75,7 +102,6 @@ function buildMonthGrid(year: number, month: number): (Date | null)[] {
 
 function buildWeekDates(anchorDate: Date): Date[] {
   const start = new Date(anchorDate);
-  // Week starts Monday
   const offset = (anchorDate.getDay() + 6) % 7;
   start.setDate(anchorDate.getDate() - offset);
   return Array.from({ length: 7 }, (_, i) => {
@@ -107,8 +133,16 @@ function getDOW(dateStr: string): string {
   return DOW_LABELS_FULL[date.getDay()];
 }
 
-/* Locked 12-hour time format for consistency across all views.
-   Source data uses 24h "HH:MM"; UI always renders "h:mm a". */
+// P0-2: Breadcrumb label — "May 1 · TODAY" or "May 8 · Friday"
+function getSideBreadcrumb(dateStr: string, todayStr: string): string {
+  const [y, m, d] = dateStr.split("-").map(Number);
+  const date = new Date(y, m - 1, d);
+  const monthName = MONTH_ABBR[date.getMonth()];
+  const suffix =
+    dateStr === todayStr ? "TODAY" : DOW_LABELS_FULL[date.getDay()];
+  return `${monthName} ${d} · ${suffix}`;
+}
+
 function fmtTime(time?: string): string {
   if (!time) return "All day";
   const [hh, mm] = time.split(":").map(Number);
@@ -119,7 +153,6 @@ function fmtTime(time?: string): string {
   return `${h12}:${minutes} ${period}`;
 }
 
-/* Truncate event titles for tight contexts (cell pills, week chips). */
 function truncate(text: string, max: number): string {
   if (text.length <= max) return text;
   return text.slice(0, Math.max(0, max - 1)).trimEnd() + "…";
@@ -160,6 +193,101 @@ function estimateMonthEarnings(events: CalendarEvent[], ym: string): number {
     .reduce((sum, e) => sum + (e.payout ?? 0), 0);
 }
 
+/* ── P0-4: Earnings Sparkline ─────────────────────────────── */
+
+function EarningsSparkline({
+  totals,
+  target,
+}: {
+  totals: number[];
+  target: number;
+}) {
+  const W = 200,
+    H = 40;
+  const max = Math.max(target, ...totals, 1);
+  const pts = totals
+    .map(
+      (v, i, arr) =>
+        `${(i / Math.max(arr.length - 1, 1)) * W},${H - (v / max) * H}`,
+    )
+    .join(" ");
+  const targetY = H - (target / max) * H;
+  return (
+    <svg
+      width={W}
+      height={H}
+      viewBox={`0 0 ${W} ${H}`}
+      aria-hidden
+      className="cal-sparkline"
+    >
+      <line
+        x1={0}
+        y1={targetY}
+        x2={W}
+        y2={targetY}
+        stroke="var(--mist)"
+        strokeWidth={1}
+        strokeDasharray="4 2"
+      />
+      <polyline
+        points={pts}
+        fill="none"
+        stroke="var(--brand-red)"
+        strokeWidth={1.5}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <circle cx={W} cy={targetY} r={2.5} fill="var(--mist)" />
+    </svg>
+  );
+}
+
+/* ── P0-4: Earnings Drawer ────────────────────────────────── */
+
+function EarningsDrawer({ breakdown }: { breakdown: EarningsBreakdown }) {
+  return (
+    <div className="cal-earnings-drawer">
+      <div className="cal-earnings-drawer__grid">
+        <div className="cal-earnings-stat">
+          <p className="cal-earnings-stat__eyebrow">CONFIRMED</p>
+          <p className="cal-earnings-stat__num cal-earnings-stat__num--confirmed">
+            ${breakdown.confirmed}
+          </p>
+        </div>
+        <div className="cal-earnings-stat">
+          <p className="cal-earnings-stat__eyebrow">PENDING VERIFICATION</p>
+          <p className="cal-earnings-stat__num cal-earnings-stat__num--pending">
+            ${breakdown.pending}
+          </p>
+        </div>
+        <div className="cal-earnings-stat">
+          <p className="cal-earnings-stat__eyebrow">AT-RISK</p>
+          <p className="cal-earnings-stat__num cal-earnings-stat__num--risk">
+            ${breakdown.atRisk}
+          </p>
+        </div>
+        <div className="cal-earnings-stat">
+          <p className="cal-earnings-stat__eyebrow">FORECAST Δ</p>
+          <p
+            className={`cal-earnings-stat__num cal-earnings-stat__num--delta-${breakdown.forecastDelta >= 0 ? "pos" : "neg"}`}
+          >
+            {breakdown.forecastDelta >= 0 ? "+" : ""}${breakdown.forecastDelta}
+          </p>
+        </div>
+      </div>
+      <div className="cal-earnings-sparkline-wrap">
+        <p className="cal-earnings-sparkline-label">
+          CONFIRMED VS TARGET ${breakdown.monthTarget}
+        </p>
+        <EarningsSparkline
+          totals={breakdown.dailyRunningTotal}
+          target={breakdown.monthTarget}
+        />
+      </div>
+    </div>
+  );
+}
+
 /* ── Side Panel ──────────────────────────────────────────── */
 
 interface SidePanelProps {
@@ -169,6 +297,9 @@ interface SidePanelProps {
   onMarkDone: (id: string) => void;
   onSnooze: (id: string) => void;
   onAddNote: (id: string) => void;
+  onReschedule: (id: string) => void;
+  onMessageMerchant: (campaignId: string) => void;
+  onRequestExtension: (id: string) => void;
   noteTarget: string | null;
   noteValue: string;
   onNoteChange: (v: string) => void;
@@ -182,6 +313,9 @@ function SidePanel({
   onMarkDone,
   onSnooze,
   onAddNote,
+  onReschedule,
+  onMessageMerchant,
+  onRequestExtension,
   noteTarget,
   noteValue,
   onNoteChange,
@@ -208,6 +342,10 @@ function SidePanel({
       aria-label={`Events on ${formatDisplayDate(selectedDate)}`}
     >
       <header className="cal-side__head">
+        {/* P0-2: Breadcrumb */}
+        <p className="cal-side__breadcrumb">
+          {getSideBreadcrumb(selectedDate, todayStr)}
+        </p>
         <div className="cal-side__date-row">
           <span className="cal-side__date">
             {formatShortDate(selectedDate)}
@@ -258,6 +396,7 @@ function SidePanel({
                 </p>
               ) : null}
 
+              {/* P0-2: 6 Ghost action buttons */}
               <div className="cal-side__actions">
                 {ev.postUrl && !ev.done && (
                   <Link
@@ -287,6 +426,24 @@ function SidePanel({
                       onClick={() => onAddNote(ev.id)}
                     >
                       Note
+                    </button>
+                    <button
+                      className="btn-ghost click-shift cal-btn-sm"
+                      onClick={() => onReschedule(ev.id)}
+                    >
+                      Reschedule
+                    </button>
+                    <button
+                      className="btn-ghost click-shift cal-btn-sm"
+                      onClick={() => onMessageMerchant(ev.campaignId)}
+                    >
+                      Message merchant
+                    </button>
+                    <button
+                      className="btn-ghost click-shift cal-btn-sm"
+                      onClick={() => onRequestExtension(ev.id)}
+                    >
+                      Request extension
                     </button>
                   </>
                 )}
@@ -321,13 +478,16 @@ function SidePanel({
   );
 }
 
-/* ── Action buttons component ────────────────────────────── */
+/* ── Action buttons (popover + list view) ────────────────── */
 
 interface ActionButtonsProps {
   event: CalendarEvent;
   onMarkDone: (id: string) => void;
   onSnooze: (id: string) => void;
   onAddNote: (id: string) => void;
+  onReschedule: (id: string) => void;
+  onMessageMerchant: (campaignId: string) => void;
+  onRequestExtension: (id: string) => void;
 }
 
 function ActionButtons({
@@ -335,6 +495,9 @@ function ActionButtons({
   onMarkDone,
   onSnooze,
   onAddNote,
+  onReschedule,
+  onMessageMerchant,
+  onRequestExtension,
 }: ActionButtonsProps) {
   return (
     <div className="cal-actions-row">
@@ -367,6 +530,24 @@ function ActionButtons({
           >
             Note
           </button>
+          <button
+            className="btn-ghost click-shift cal-btn-sm"
+            onClick={() => onReschedule(event.id)}
+          >
+            Reschedule
+          </button>
+          <button
+            className="btn-ghost click-shift cal-btn-sm"
+            onClick={() => onMessageMerchant(event.campaignId)}
+          >
+            Message merchant
+          </button>
+          <button
+            className="btn-ghost click-shift cal-btn-sm"
+            onClick={() => onRequestExtension(event.id)}
+          >
+            Request extension
+          </button>
         </>
       )}
     </div>
@@ -383,6 +564,9 @@ interface DayPopoverProps {
   onMarkDone: (id: string) => void;
   onSnooze: (id: string) => void;
   onAddNote: (id: string) => void;
+  onReschedule: (id: string) => void;
+  onMessageMerchant: (campaignId: string) => void;
+  onRequestExtension: (id: string) => void;
   noteTarget: string | null;
   noteValue: string;
   onNoteChange: (v: string) => void;
@@ -397,6 +581,9 @@ function DayPopover({
   onMarkDone,
   onSnooze,
   onAddNote,
+  onReschedule,
+  onMessageMerchant,
+  onRequestExtension,
   noteTarget,
   noteValue,
   onNoteChange,
@@ -412,7 +599,6 @@ function DayPopover({
     return { top: Math.max(8, top), left: Math.max(8, left) };
   });
 
-  // Esc closes; trap stays light.
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
@@ -487,6 +673,9 @@ function DayPopover({
                   onMarkDone={onMarkDone}
                   onSnooze={onSnooze}
                   onAddNote={onAddNote}
+                  onReschedule={onReschedule}
+                  onMessageMerchant={onMessageMerchant}
+                  onRequestExtension={onRequestExtension}
                 />
 
                 {noteTarget === ev.id && (
@@ -522,6 +711,7 @@ function DayPopover({
 /* ── Main page ───────────────────────────────────────────── */
 
 export default function CreatorCalendarPage() {
+  const router = useRouter();
   const today = new Date();
   const todayStr = todayYMD();
 
@@ -530,21 +720,17 @@ export default function CreatorCalendarPage() {
   const [month, setMonth] = useState(today.getMonth());
   const [weekAnchor, setWeekAnchor] = useState(today);
 
-  // Selected day for side panel
   const [selectedDate, setSelectedDate] = useState<string | null>(todayStr);
-
-  // Popover for mobile (on smaller screens)
   const [popoverDate, setPopoverDate] = useState<string | null>(null);
   const popoverAnchor = useRef<HTMLElement | null>(null);
 
-  // Event state
   const [events, setEvents] = useState<CalendarEvent[]>(MOCK_EVENTS);
-
-  // Note state
   const [noteTarget, setNoteTarget] = useState<string | null>(null);
   const [noteValue, setNoteValue] = useState("");
 
-  // Grid ref for arrow-key navigation
+  // P0-4: Earnings drawer toggle
+  const [earningsOpen, setEarningsOpen] = useState(false);
+
   const gridRef = useRef<HTMLDivElement>(null);
 
   /* ── Derived ─────────────────────────────────────────── */
@@ -555,6 +741,22 @@ export default function CreatorCalendarPage() {
     () => estimateMonthEarnings(events, ym),
     [events, ym],
   );
+
+  // P0-4: Earnings breakdown
+  const earningsBreakdown = useMemo(() => getMockEarningsBreakdown(ym), [ym]);
+
+  // P0-3: Campaign color map — stable per campaign, assigned by first appearance
+  const campaignColorMap = useMemo(() => {
+    const map: Record<string, string> = {};
+    let idx = 0;
+    for (const ev of events) {
+      if (!(ev.campaignId in map)) {
+        map[ev.campaignId] = CAMPAIGN_COLORS[idx % CAMPAIGN_COLORS.length];
+        idx++;
+      }
+    }
+    return map;
+  }, [events]);
 
   const eventsByDate = useMemo(() => {
     const map: Record<string, CalendarEvent[]> = {};
@@ -578,7 +780,6 @@ export default function CreatorCalendarPage() {
     return Object.entries(grouped).sort(([a], [b]) => a.localeCompare(b));
   }, [events, ym]);
 
-  // Week-ahead spotlight: next 7 days starting today
   const weekAheadStats = useMemo(() => {
     const start = new Date();
     start.setHours(0, 0, 0, 0);
@@ -648,7 +849,6 @@ export default function CreatorCalendarPage() {
   }
 
   function handleCellClick(dateStr: string, el: HTMLElement) {
-    // Large screens: side panel toggle. Small: popover.
     if (typeof window !== "undefined" && window.innerWidth >= 1024) {
       setSelectedDate((prev) => (prev === dateStr ? null : dateStr));
     } else {
@@ -656,7 +856,6 @@ export default function CreatorCalendarPage() {
     }
   }
 
-  // Arrow-key navigation across month grid
   const handleGridKeyDown = useCallback(
     (e: React.KeyboardEvent<HTMLDivElement>) => {
       if (view !== "month") return;
@@ -687,11 +886,9 @@ export default function CreatorCalendarPage() {
       next.setDate(next.getDate() + delta);
       const nextStr = toYMD(next);
 
-      // If the next date is in another month, jump month
       if (next.getMonth() !== month || next.getFullYear() !== year) {
         setYear(next.getFullYear());
         setMonth(next.getMonth());
-        // Defer focus; cell will exist after render
         requestAnimationFrame(() => {
           gridRef.current
             ?.querySelector<HTMLElement>(`[data-date="${nextStr}"]`)
@@ -724,6 +921,32 @@ export default function CreatorCalendarPage() {
     );
   }, []);
 
+  // P0-2: Reschedule — moves event to next day with a rescheduled flag
+  const reschedule = useCallback((id: string) => {
+    setEvents((prev) =>
+      prev.map((e) => {
+        if (e.id !== id) return e;
+        const d = new Date(e.date + "T00:00:00");
+        d.setDate(d.getDate() + 1);
+        return { ...e, date: toYMD(d) };
+      }),
+    );
+  }, []);
+
+  // P0-2: Message merchant — navigate to campaign detail
+  const messageMerchant = useCallback(
+    (campaignId: string) => {
+      router.push(`/creator/campaigns/${campaignId}`);
+    },
+    [router],
+  );
+
+  // P0-2: Request extension — opens note with pre-filled text
+  const requestExtension = useCallback((id: string) => {
+    setNoteTarget(id);
+    setNoteValue("Requesting a deadline extension for this campaign.");
+  }, []);
+
   const addNote = useCallback((id: string) => {
     setNoteTarget(id);
     setNoteValue("");
@@ -752,15 +975,12 @@ export default function CreatorCalendarPage() {
         })()
       : `${MONTH_NAMES[month]} ${year}`;
 
-  /* Eyebrow content — Product canonical (no parentheticals) */
-  const eyebrowParts = [
+  // Eyebrow — canonical Product form (no parentheticals)
+  const eyebrowBase = [
     "CALENDAR",
     `${MONTH_NAMES[month].toUpperCase()} ${year}`,
     `${deadlineCount} ${deadlineCount === 1 ? "DEADLINE" : "DEADLINES"}`,
-  ];
-  if (estEarnings > 0) {
-    eyebrowParts.push(`$${estEarnings.toLocaleString()} EST.`);
-  }
+  ].join(" · ");
 
   /* ── Render ──────────────────────────────────────────── */
 
@@ -768,9 +988,28 @@ export default function CreatorCalendarPage() {
     <div className="cw-page cal">
       <header className="cw-header">
         <div className="cw-header__left">
+          {/* P0-4: Eyebrow with clickable earnings toggle */}
           <p className="cw-eyebrow cw-eyebrow--live">
-            {eyebrowParts.join(" · ")}
+            <span>{eyebrowBase}</span>
+            {estEarnings > 0 && (
+              <>
+                <span style={{ padding: "0 4px" }}> · </span>
+                <button
+                  type="button"
+                  className="cal-earnings-toggle"
+                  onClick={() => setEarningsOpen((o) => !o)}
+                  aria-expanded={earningsOpen}
+                  aria-label="Toggle earnings breakdown"
+                >
+                  ${estEarnings.toLocaleString()} EST.
+                  <span className="cal-earnings-toggle__caret" aria-hidden>
+                    {earningsOpen ? "▴" : "▾"}
+                  </span>
+                </button>
+              </>
+            )}
           </p>
+          {/* v11 §10: title anchored bottom-left */}
           <h1 className="cw-title">Calendar</h1>
         </div>
         <div className="cw-header__right">
@@ -792,7 +1031,10 @@ export default function CreatorCalendarPage() {
         </div>
       </header>
 
-      {/* ── Liquid-glass spotlight tile ──────────────── */}
+      {/* P0-4: Earnings breakdown drawer */}
+      {earningsOpen && <EarningsDrawer breakdown={earningsBreakdown} />}
+
+      {/* Liquid-glass spotlight tile */}
       <section className="cal-spotlight" aria-label="Week ahead">
         <div className="lg-surface cal-spotlight__tile">
           <p className="cal-spotlight__eyebrow">THIS WEEK</p>
@@ -837,13 +1079,12 @@ export default function CreatorCalendarPage() {
         </div>
       </section>
 
-      {/* ── Controls bar ─────────────────────────────── */}
+      {/* Controls bar */}
       <div
         className="cal-controls"
         role="toolbar"
         aria-label="Calendar navigation"
       >
-        {/* Period nav */}
         <div className="cal-nav">
           <button
             type="button"
@@ -899,7 +1140,6 @@ export default function CreatorCalendarPage() {
           </button>
         </div>
 
-        {/* Segmented view switcher (iOS 26 pill) */}
         <div className="cal-seg" role="tablist" aria-label="Calendar view">
           {(["month", "week", "list"] as CalView[]).map((v) => (
             <button
@@ -916,7 +1156,7 @@ export default function CreatorCalendarPage() {
         </div>
       </div>
 
-      {/* ── Legend ───────────────────────────────────── */}
+      {/* Legend */}
       <div className="cal-legend" aria-label="Event type legend">
         {(Object.entries(EVENT_TYPE_LABELS) as [EventType, string][]).map(
           ([type, label]) => (
@@ -928,7 +1168,7 @@ export default function CreatorCalendarPage() {
         )}
       </div>
 
-      {/* ── Month view ───────────────────────────────── */}
+      {/* ── Month view ───────────────────────────────────── */}
       {view === "month" && (
         <div className="cal-month-layout">
           <div className="cal-month">
@@ -1002,16 +1242,48 @@ export default function CreatorCalendarPage() {
                       )}
                     </div>
 
-                    {/* Event pills — desktop */}
+                    {/* P0-3: Campaign-accented event pills */}
                     <div className="cal-cell__events">
                       {shown.map((ev) => (
-                        <span
-                          key={ev.id}
-                          className={`cal-pill-event event-type--${ev.type}${ev.done ? " is-done" : ""}`}
-                          title={ev.title}
-                        >
-                          {truncate(ev.title, 22)}
-                        </span>
+                        <div key={ev.id} className="cal-chip-wrap">
+                          <span
+                            className={`cal-pill-event event-type--${ev.type}${ev.done ? " is-done" : ""}`}
+                            title={ev.title}
+                          >
+                            <span
+                              className="cal-pill-accent"
+                              style={{
+                                background: campaignColorMap[ev.campaignId],
+                              }}
+                              aria-hidden
+                            />
+                            <span className="cal-pill-text">
+                              {truncate(
+                                `${EVENT_TYPE_LABELS[ev.type]} · ${ev.merchantName}`,
+                                20,
+                              )}
+                            </span>
+                          </span>
+                          {/* Hover card */}
+                          <div className="cal-chip-hover" role="tooltip">
+                            <p className="cal-chip-hover__title">
+                              {ev.campaignTitle}
+                            </p>
+                            <p className="cal-chip-hover__meta">
+                              {ev.merchantName}
+                              {ev.payout ? ` · $${ev.payout}` : ""}
+                            </p>
+                            <Link
+                              href={
+                                ev.postUrl ??
+                                `/creator/campaigns/${ev.campaignId}/post`
+                              }
+                              className="cal-chip-hover__link"
+                            >
+                              View campaign →
+                            </Link>
+                          </div>
+                        </div>
                       ))}
                       {extra > 0 && (
                         <span className="cal-cell__more">+{extra} more</span>
@@ -1033,6 +1305,7 @@ export default function CreatorCalendarPage() {
             </div>
           </div>
 
+          {/* P0-2: Click-driven side panel */}
           <SidePanel
             selectedDate={selectedDate}
             events={events}
@@ -1040,6 +1313,9 @@ export default function CreatorCalendarPage() {
             onMarkDone={markDone}
             onSnooze={snooze}
             onAddNote={addNote}
+            onReschedule={reschedule}
+            onMessageMerchant={messageMerchant}
+            onRequestExtension={requestExtension}
             noteTarget={noteTarget}
             noteValue={noteValue}
             onNoteChange={setNoteValue}
@@ -1048,7 +1324,7 @@ export default function CreatorCalendarPage() {
         </div>
       )}
 
-      {/* ── Week view ────────────────────────────────── */}
+      {/* ── Week view ────────────────────────────────────── */}
       {view === "week" && (
         <div className="cal-week">
           <div className="cal-week__grid">
@@ -1103,7 +1379,7 @@ export default function CreatorCalendarPage() {
         </div>
       )}
 
-      {/* ── List view ────────────────────────────────── */}
+      {/* ── List view ────────────────────────────────────── */}
       {view === "list" && (
         <div className="cal-list">
           {listGroups.length === 0 ? (
@@ -1203,37 +1479,15 @@ export default function CreatorCalendarPage() {
                       </div>
 
                       <div className="cal-list__actions">
-                        {ev.postUrl && !ev.done && (
-                          <Link
-                            href={ev.postUrl}
-                            className="btn-primary click-shift cal-btn-sm"
-                          >
-                            Submit
-                          </Link>
-                        )}
-                        <button
-                          className="btn-ghost click-shift cal-btn-sm"
-                          onClick={() => markDone(ev.id)}
-                          disabled={ev.done}
-                        >
-                          {ev.done ? "Done" : "Mark done"}
-                        </button>
-                        {!ev.done && (
-                          <>
-                            <button
-                              className="btn-ghost click-shift cal-btn-sm"
-                              onClick={() => snooze(ev.id)}
-                            >
-                              Snooze
-                            </button>
-                            <button
-                              className="btn-ghost click-shift cal-btn-sm"
-                              onClick={() => addNote(ev.id)}
-                            >
-                              Note
-                            </button>
-                          </>
-                        )}
+                        <ActionButtons
+                          event={ev}
+                          onMarkDone={markDone}
+                          onSnooze={snooze}
+                          onAddNote={addNote}
+                          onReschedule={reschedule}
+                          onMessageMerchant={messageMerchant}
+                          onRequestExtension={requestExtension}
+                        />
                       </div>
                     </article>
                   ))}
@@ -1244,7 +1498,7 @@ export default function CreatorCalendarPage() {
         </div>
       )}
 
-      {/* ── Day popover (mobile / week view) ─────────── */}
+      {/* Day popover (mobile / week view) */}
       {popoverDate && (
         <DayPopover
           dateStr={popoverDate}
@@ -1257,6 +1511,9 @@ export default function CreatorCalendarPage() {
             closePopover();
           }}
           onAddNote={addNote}
+          onReschedule={reschedule}
+          onMessageMerchant={messageMerchant}
+          onRequestExtension={requestExtension}
           noteTarget={noteTarget}
           noteValue={noteValue}
           onNoteChange={setNoteValue}
