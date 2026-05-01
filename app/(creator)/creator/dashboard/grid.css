@@ -1,1426 +1,1105 @@
-/* ─────────────────────────────────────────────────────────────────────
- * Creator Home v2 — Lumin-inspired premium SaaS chrome
- *
- * Repo target: app/(creator)/creator/dashboard/grid.css
- *
- * Authority: Design.md v11 + creator_home_mockup_day0_7.html + Lumin refs
- *
- * Visual language (unified, all cards share):
- *   - 20px corner radius across the system (--r-2xl)
- *   - 28px internal padding for hero cards / 24px for KPI cards
- *   - Circle-arrow CTA (32px round button, top-right of every card)
- *   - Black hero card (BalanceCard) sets the tone; rest are surface-2
- *   - Tabular numerals everywhere
- *   - Single signature interaction: bottom-right shift on hover
- *   - First-paint stagger 40ms each card
- * ───────────────────────────────────────────────────────────────────── */
+/* ============================================================
+   Creator Dashboard — Push v11 · Product UI register
+   ────────────────────────────────────────────────────────────
+   Tokens:
+     · 11-stop warm-gray ladder (§ 2.1) — surfaces / dividers
+     · Brand Red (§ 2.2) — Filled Primary candy; Champagne — Tier
+     · Liquid Glass (§ 8.9.1) — Inbox card + Actions pill
+     · Bottom-right hover shift (§ 16) — Push interaction signature
+     · Spring `cubic-bezier(0.34, 1.56, 0.64, 1)` (§ 12)
+   Type scale (Design.md § 3 · floor 12px):
+     L1 Hero    clamp(40,3.6vw,56)px  Darky 800  — Balance amount
+     L2 Title   24px                   Darky 700  — card section title
+     L3 Body    16px                   Darky 700  — row primary name
+     L4 Meta    13px                   Mono  500  — timestamp / address
+     L5 Label   12px                   Mono  700  — uppercase eyebrow
+   Spacing: 8px atomic grid. Card padding 24px (§ 6.1 standard card).
+   Eyebrow: canonical (Product UI register) — no parens.
+   ============================================================ */
 
+/* ── Motion + a11y reset ─────────────────────────────────── */
 
-/* ════════════════════════════════════════════════════════════
-   PAGE — host for container queries
-   ════════════════════════════════════════════════════════════ */
+@media (prefers-reduced-motion: reduce) {
+  .cd-page *,
+  .cd-page *::before,
+  .cd-page *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
 
-.dh-page {
-  padding: 32px 32px 96px;
-  max-width: 1480px;
-  width: 100%;
-  margin: 0 auto;
+/* ── Page ────────────────────────────────────────────────── */
+
+.cd-page {
+  padding: 48px 0 120px;
   font-family: var(--font-mono);
-  color: var(--ink-3);
-  font-variant-numeric: tabular-nums;
-  container-type: inline-size;
-  container-name: dh;
-  scroll-behavior: smooth;
-  scrollbar-gutter: stable;
-}
-
-/* Smooth scroll on the html so anchor jumps + browser hot-keys feel premium */
-html { scroll-behavior: smooth; }
-
-/* Modern scrollbar — thin, hairline-tinted, ink on hover */
-.dh-page,
-.dh-main {
-  scrollbar-width: thin;
-  scrollbar-color: var(--hairline-2) transparent;
-}
-.dh-page::-webkit-scrollbar,
-.dh-main::-webkit-scrollbar { width: 8px; height: 8px; }
-.dh-page::-webkit-scrollbar-thumb,
-.dh-main::-webkit-scrollbar-thumb {
-  background: var(--hairline-2);
-  border-radius: 999px;
-  transition: background 180ms ease;
-}
-.dh-page::-webkit-scrollbar-thumb:hover,
-.dh-main::-webkit-scrollbar-thumb:hover { background: var(--ink-4); }
-.dh-page::-webkit-scrollbar-track,
-.dh-main::-webkit-scrollbar-track { background: transparent; }
-
-
-/* ════════════════════════════════════════════════════════════
-   HEADER — Lumin-style: tiny eyebrow → giant first-name title,
-   pulse pills sit alongside on the right
-   ════════════════════════════════════════════════════════════ */
-
-.dh-header {
-  display: grid;
-  grid-template-columns: minmax(0, auto) 1fr;
-  align-items: end;
-  gap: 48px;
-  margin-bottom: 32px;
-  padding-bottom: 24px;
-  border-bottom: 1px solid var(--hairline);
-}
-
-.dh-header__left { min-width: 0; }
-
-.dh-header__greeting {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  font-family: var(--font-mono);
-  font-size: 12px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.16em;
-  color: var(--ink-3);
-  margin-bottom: 14px;
-}
-.dh-header__greeting::before {
-  content: "";
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: #22c55e;
-  box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.18);
-  animation: dh-pulse 2.4s ease-in-out infinite;
-}
-@keyframes dh-pulse {
-  0%, 100% { box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.18); }
-  50%      { box-shadow: 0 0 0 6px rgba(34, 197, 94, 0.06); }
-}
-
-.dh-header__title {
-  font-family: var(--font-display);
-  font-size: clamp(40px, 5.2vw, 72px);
-  font-weight: 800;
-  line-height: 1.0;
-  letter-spacing: -0.03em;
   color: var(--ink);
-}
-
-.dh-header__pulse {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  justify-content: flex-end;
-  align-items: center;
-}
-
-.dh-header__date {
-  font-family: var(--font-mono);
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--ink-4);
-  align-self: flex-start;
-  width: 100%;
-  text-align: right;
-  margin-bottom: 12px;
-}
-
-
-/* ── Pulse pills ─────────────────────────────────────────────── */
-
-.dh-pulse {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 7px 14px;
-  background: var(--snow);
-  border: 1px solid var(--hairline);
-  border-radius: 999px;
-  font-family: var(--font-mono);
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 0.02em;
-  color: var(--ink);
-  text-decoration: none;
-  white-space: nowrap;
-  box-shadow: 0 1px 2px rgba(10, 10, 10, 0.04);
-  transition:
-    transform 180ms cubic-bezier(0.22, 1, 0.36, 1),
-    background 180ms ease,
-    border-color 180ms ease,
-    box-shadow 180ms ease;
-  cursor: pointer;
   font-variant-numeric: tabular-nums;
-}
-.dh-pulse:hover {
-  transform: translate(1px, 1px);
-  border-color: var(--hairline-2);
-  box-shadow: 0 2px 4px rgba(10, 10, 10, 0.06);
-}
-.dh-pulse:active { transform: translate(2px, 2px) scale(0.98); }
-.dh-pulse__icon { font-size: 13px; line-height: 1; opacity: 0.85; }
 
-.dh-pulse--urgent {
-  background: var(--brand-red);
-  border-color: var(--brand-red);
-  color: var(--snow);
-  box-shadow: 0 1px 2px rgba(193, 18, 31, 0.22);
-}
-.dh-pulse--urgent:hover { background: var(--brand-red-deep); border-color: var(--brand-red-deep); }
-.dh-pulse--success {
-  background: rgba(34, 197, 94, 0.08);
-  border-color: rgba(34, 197, 94, 0.22);
-  color: #15803d;
-}
-.dh-pulse--ceremony {
-  background: rgba(191, 161, 112, 0.10);
-  border-color: rgba(191, 161, 112, 0.30);
-  color: #6b4d1f;
+  /* Status semantics — Product UI register only.
+     Green/amber are universal a11y status convention (success / in-progress).
+     Held local to dashboard scope; never re-used as a section bg or CTA fill. */
+  --status-done:       #16a34a;
+  --status-done-tint:  rgba(22, 163, 74, 0.12);
+  --status-warn:       #d97706;
+  --status-warn-tint:  rgba(217, 119, 6, 0.12);
 }
 
+/* Universal focus ring — keyboard-only (§ 9 button discipline) */
+.cd-page a:focus-visible,
+.cd-page button:focus-visible {
+  outline: 4px solid var(--brand-red-focus);
+  outline-offset: 2px;
+  border-radius: var(--r-sm);
+}
 
-/* ════════════════════════════════════════════════════════════
-   GRID — 12 cols (Lumin uses 12, not 9). More flexibility +
-   better fit for the dark-hero / proof-stack composition.
-   ════════════════════════════════════════════════════════════ */
+/* ── 1:2:1 Grid (§ 5 — 12-col, 24px gutter on desktop) ───── */
 
-.dh-grid {
+.cd-grid {
   display: grid;
-  grid-template-columns: repeat(12, 1fr);
-  gap: 16px;
-  /* Content-aware rows: each track can grow up to content's natural height
-     but won't shrink below the floor. Avoids the "card too tall + neighbor
-     too short" problem the fixed 110px caused. Spans still control the
-     compositional weight, content controls the height within that. */
-  grid-auto-rows: minmax(120px, auto);
-  grid-auto-flow: dense;
-  align-items: stretch;
+  grid-template-columns: 1fr 2fr 1fr;
+  gap: 24px;
+  align-items: start;
 }
 
-/* Cell-span vocabulary */
-.dh-span-3-1  { grid-column: span 3;  grid-row: span 1; }
-.dh-span-3-2  { grid-column: span 3;  grid-row: span 2; }
-.dh-span-3-3  { grid-column: span 3;  grid-row: span 3; }
-.dh-span-3-5  { grid-column: span 3;  grid-row: span 5; }
-.dh-span-4-1  { grid-column: span 4;  grid-row: span 1; }
-.dh-span-4-2  { grid-column: span 4;  grid-row: span 2; }
-.dh-span-4-3  { grid-column: span 4;  grid-row: span 3; }
-.dh-span-4-5  { grid-column: span 4;  grid-row: span 5; }
-.dh-span-5-3  { grid-column: span 5;  grid-row: span 3; }
-.dh-span-6-2  { grid-column: span 6;  grid-row: span 2; }
-.dh-span-6-3  { grid-column: span 6;  grid-row: span 3; }
-.dh-span-6-5  { grid-column: span 6;  grid-row: span 5; }
-.dh-span-8-1  { grid-column: span 8;  grid-row: span 1; }
-.dh-span-8-2  { grid-column: span 8;  grid-row: span 2; }
-.dh-span-8-3  { grid-column: span 8;  grid-row: span 3; }
-.dh-span-8-5  { grid-column: span 8;  grid-row: span 5; }
-.dh-span-9-2  { grid-column: span 9;  grid-row: span 2; }
-.dh-span-12-2 { grid-column: span 12; grid-row: span 2; }
-
-/* Content-sized rows — column span fixed, row height grows to content.
-   Pair these with align-items: start so the card sits naturally rather
-   than stretching to fill an arbitrary row. */
-.dh-span-4-auto  { grid-column: span 4;  grid-row: auto; align-self: start; }
-.dh-span-6-auto  { grid-column: span 6;  grid-row: auto; align-self: start; }
-.dh-span-8-auto  { grid-column: span 8;  grid-row: auto; align-self: start; }
-.dh-span-12-auto { grid-column: span 12; grid-row: auto; align-self: start; }
-
-/* Make the map widget have a real minimum so it stays usable when
-   row-auto-sizing collapses neighbors to short heights */
-.dh-span-8-auto .dh-map-wrap,
-.dh-span-12-auto .dh-map-wrap { min-height: 320px; }
-
-
-/* ════════════════════════════════════════════════════════════
-   CARD — unified shell (light surface, 20px radius, 24px pad)
-   ════════════════════════════════════════════════════════════ */
-
-.dh-card {
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.55) 0%, rgba(255, 255, 255, 0) 60%),
-    var(--surface-2);
-  border: 1px solid var(--hairline);
-  border-radius: 16px;                    /* spec § 8.14 KPI card */
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.6),
-    0 1px 2px rgba(10, 10, 10, 0.04);
-  padding: 24px;
+.cd-col {
   display: flex;
   flex-direction: column;
-  position: relative;
-  overflow: hidden;
-  transition:
-    transform 200ms cubic-bezier(0.22, 1, 0.36, 1),
-    box-shadow 200ms ease,
-    border-color 200ms ease;
-  text-decoration: none;
-  color: inherit;
-  animation: dh-rise 380ms cubic-bezier(0.22, 1, 0.36, 1) backwards;
+  gap: 24px;      /* card-grid gap (§ 6.6) */
+  min-width: 0;
 }
-.dh-card.is-clickable,
-a.dh-card { cursor: pointer; }
-.dh-card.is-clickable:hover,
-a.dh-card:hover {
-  transform: translate(2px, 2px);
-  border-color: var(--hairline-2);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.7),
-    0 6px 18px rgba(10, 10, 10, 0.08);
+
+/* ══════════════════════════════════════════════════════════
+   GREETING — eyebrow + name, top-left anchored (§ 7.1)
+   ══════════════════════════════════════════════════════════ */
+
+.cd-greeting {
+  display: flex;
+  align-items: center;
+  gap: 12px;             /* avatar (40-56px) → text 12px (§ 6.4) */
+  padding-bottom: 8px;
 }
-.dh-card.is-clickable:hover .dh-circle-arrow,
-a.dh-card:hover .dh-circle-arrow {
+
+.cd-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--r-full);
   background: var(--ink);
   color: var(--snow);
-  border-color: var(--ink);
-}
-.dh-card.is-clickable:active,
-a.dh-card:active { transform: translate(3px, 3px) scale(0.99); }
-.dh-card:focus-visible {
-  outline: none;
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.7),
-    0 0 0 3px rgba(193, 18, 31, 0.20),
-    0 6px 18px rgba(10, 10, 10, 0.08);
-}
-
-.dh-card--snow {
-  background: var(--snow);
-  border-color: var(--hairline);
-}
-
-@keyframes dh-rise {
-  from { opacity: 0; transform: translateY(8px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-
-.dh-grid > .dh-card:nth-child(1),
-.dh-grid > .dh-balance:nth-child(1),
-.dh-grid > .dh-onboard:nth-child(1) { animation-delay: 0ms; }
-.dh-grid > .dh-card:nth-child(2),
-.dh-grid > .dh-balance:nth-child(2),
-.dh-grid > .dh-onboard:nth-child(2) { animation-delay: 40ms; }
-.dh-grid > *:nth-child(3)  { animation-delay: 80ms; }
-.dh-grid > *:nth-child(4)  { animation-delay: 120ms; }
-.dh-grid > *:nth-child(5)  { animation-delay: 160ms; }
-.dh-grid > *:nth-child(6)  { animation-delay: 200ms; }
-.dh-grid > *:nth-child(7)  { animation-delay: 240ms; }
-.dh-grid > *:nth-child(8)  { animation-delay: 280ms; }
-.dh-grid > *:nth-child(9)  { animation-delay: 320ms; }
-.dh-grid > *:nth-child(10) { animation-delay: 360ms; }
-
-.dh-card__header {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  margin-bottom: 14px;
-  gap: 12px;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: var(--shadow-2);
 }
 
-.dh-card__eyebrow {
+.cd-greeting-text {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+/* Eyebrow — Product UI canonical (no parens) (§ 8.4) */
+.cd-greeting-eyebrow {
   font-family: var(--font-mono);
   font-size: 12px;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.14em;
-  color: var(--ink-3);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  letter-spacing: 0.12em;
+  color: var(--ink-4);
+  line-height: 1;
+  margin: 0;
 }
 
+.cd-hi {
+  font-family: var(--font-display);
+  font-size: clamp(28px, 2.6vw, 36px);
+  font-weight: 800;
+  color: var(--ink);
+  letter-spacing: -0.025em;
+  margin: 0;
+  line-height: 1;
+}
 
-/* ── Circle-arrow CTA (Lumin signature) ─────────────────────── */
+/* ══════════════════════════════════════════════════════════
+   BASE CARD  —  Snow surface, r-md (10px) standard card
+   ══════════════════════════════════════════════════════════ */
 
-.dh-circle-arrow {
+.cd-card {
+  background: var(--snow);
+  border: 1px solid var(--hairline);
+  border-radius: var(--r-md);     /* 10px — standard card (§ 4.3) */
+  padding: 24px;                  /* standard card padding (§ 6.1) */
+  position: relative;
+  box-shadow: var(--shadow-1);
+  transition:
+    box-shadow 200ms ease,
+    border-color 200ms ease;
+}
+.cd-card:hover {
+  box-shadow: var(--shadow-2);
+  border-color: var(--mist);
+}
+
+/* ── Liquid Glass — Design.md § 8.9.1 exact tokens ──────── */
+
+.cd-card--glass {
+  padding: 24px;
+  background:
+    radial-gradient(ellipse at 25% 0%,  rgba(255,255,255,0.55) 0%, rgba(255,255,255,0) 55%),
+    radial-gradient(ellipse at 90% 100%, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0) 60%),
+    rgba(255,255,255,0.22);
+  -webkit-backdrop-filter: blur(32px) saturate(180%);
+          backdrop-filter: blur(32px) saturate(180%);
+  border: 0.5px solid rgba(255,255,255,0.40);
+  border-radius: var(--r-md);     /* match base card to keep modular rhythm */
+  box-shadow:
+    0 8px 24px rgba(10,10,10,0.08),
+    0 2px  6px rgba(10,10,10,0.05),
+    inset 0  1px 0 rgba(255,255,255,0.50),
+    inset 0 -1px 0 rgba(10,10,10,0.05);
+}
+.cd-card--glass:hover {
+  box-shadow:
+    0 14px 40px rgba(10,10,10,0.10),
+    0  4px 12px rgba(10,10,10,0.06),
+    inset 0  1px 0 rgba(255,255,255,0.50),
+    inset 0 -1px 0 rgba(10,10,10,0.05);
+}
+
+/* Reduced-transparency / no-backdrop fallback (§ 8.9.1) */
+@media (prefers-reduced-transparency: reduce) {
+  .cd-card--glass { background: var(--surface-2); backdrop-filter: none; -webkit-backdrop-filter: none; }
+}
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .cd-card--glass { background: rgba(255,255,255,0.85); }
+}
+
+/* ══════════════════════════════════════════════════════════
+   CARD HEADER  —  shared across all cards
+   ══════════════════════════════════════════════════════════ */
+
+.cd-card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+.cd-card-header--mt {
+  margin-top: 24px;
+  margin-bottom: 16px;
+}
+
+/* L2 Title — H4 24px Darky 700 (§ 3.1) */
+.cd-card-title {
+  font-family: var(--font-display);
+  font-size: 20px;       /* H5 — appropriate for in-card section title */
+  font-weight: 700;
+  color: var(--ink);
+  margin: 0;
+  line-height: 1.2;
+  letter-spacing: -0.015em;
+}
+
+/* L5 Eyebrow — canonical Product UI (§ 8.4 — no parens) */
+.cd-card-label {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--ink-3);
+  line-height: 1;
+}
+
+/* L4 Meta — date / supporting line under title (§ 6.6 title→body 12px) */
+.cd-today-date {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink-4);
+  margin: 8px 0 0;
+  line-height: 1.4;
+  letter-spacing: 0.02em;
+}
+
+/* ── Arrow button — Ghost variant (§ 9.4), pill shape ──── */
+
+.cd-arrow-btn {
   width: 32px;
   height: 32px;
-  border-radius: 50%;
-  border: 1px solid var(--hairline-2);
-  background: var(--snow);
-  color: var(--ink);
-  display: inline-flex;
+  border-radius: var(--r-full);
+  border: 1px solid var(--hairline);
+  background: transparent;
+  color: var(--ink-4);
+  cursor: pointer;
+  display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
   text-decoration: none;
   transition:
-    background 180ms ease,
-    color 180ms ease,
-    transform 180ms cubic-bezier(0.22, 1, 0.36, 1),
-    border-color 180ms ease;
+    transform    180ms cubic-bezier(0.34, 1.56, 0.64, 1),
+    color        180ms ease,
+    border-color 180ms ease,
+    background   180ms ease;
 }
-.dh-circle-arrow:hover {
-  background: var(--ink);
-  color: var(--snow);
-  border-color: var(--ink);
+/* Hover: transform-only, color unchanged or LIGHTER (§ 9.0) */
+.cd-arrow-btn:hover {
   transform: translate(1px, 1px);
-}
-.dh-circle-arrow:active { transform: translate(2px, 2px) scale(0.96); }
-
-/* Dark variant for the dark hero card */
-.dh-balance .dh-circle-arrow {
-  background: rgba(255, 255, 255, 0.08);
-  border-color: rgba(255, 255, 255, 0.16);
-  color: var(--snow);
-}
-.dh-balance .dh-circle-arrow:hover {
-  background: var(--snow);
   color: var(--ink);
-  border-color: var(--snow);
+  border-color: var(--mist);
+}
+.cd-arrow-btn:active {
+  transform: translate(2px, 2px) scale(0.98);
+  background: var(--surface-3);   /* press-in fill (§ 9.4) */
 }
 
+/* ══════════════════════════════════════════════════════════
+   BALANCE CARD — surface-2 cream panel (Brand Red moved to
+   Live Now Submit CTA per § 2.3 ≤1-per-viewport rule)
+   ══════════════════════════════════════════════════════════ */
 
-/* ════════════════════════════════════════════════════════════
-   BALANCE CARD — dark Lumin hero (top-left anchor)
-   ════════════════════════════════════════════════════════════ */
-
-.dh-balance {
-  background:
-    radial-gradient(140% 80% at 100% 0%, rgba(255, 255, 255, 0.08) 0%, transparent 55%),
-    radial-gradient(80% 100% at 0% 100%, rgba(193, 18, 31, 0.18) 0%, transparent 55%),
-    var(--ink-2);
-  color: var(--snow);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  border-radius: 16px;
-  padding: 22px 22px 18px;                 /* tighter than before */
-  display: flex;
-  flex-direction: column;
-  gap: 16px;                                /* was 22 */
-  position: relative;
+.cd-balance-card {
+  background: var(--surface-2);
+  border: 1px solid var(--hairline);
+  border-radius: var(--r-md);          /* match standard card scale */
+  padding: 24px;
+  color: var(--ink);
   overflow: hidden;
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.06),
-    0 8px 28px rgba(10, 10, 10, 0.20);
-  animation: dh-rise 380ms cubic-bezier(0.22, 1, 0.36, 1) backwards;
+  position: relative;
+  cursor: pointer;
+  text-decoration: none;
+  display: block;
+  box-shadow: var(--shadow-1);
+  transition:
+    transform   220ms cubic-bezier(0.34, 1.56, 0.64, 1),
+    box-shadow  220ms ease,
+    border-color 220ms ease;
+}
+.cd-balance-card:hover {
+  transform: translate(1px, 1px);
+  box-shadow: var(--shadow-2);
+  border-color: var(--mist);
+}
+.cd-balance-card:active {
+  transform: translate(2px, 2px) scale(0.98);
+  background: var(--surface-3);
 }
 
-.dh-balance__head {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-.dh-balance__eyebrow {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.18em;
-  color: rgba(255, 255, 255, 0.55);
-}
+.cd-balance-card .cd-card-header { margin-bottom: 16px; }
 
-/* Hero block — number + sparkline + delta stacked vertically */
-.dh-balance__hero {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.dh-balance__num {
+/* L1 Hero */
+.cd-balance-amount {
+  font-family: var(--font-display);
+  font-size: clamp(40px, 3.6vw, 56px);
+  font-weight: 800;
+  color: var(--ink);
+  letter-spacing: -0.04em;
+  line-height: 1;
+  margin: 0 0 8px;
   display: flex;
   align-items: baseline;
-  gap: 2px;
-  font-family: var(--font-display);
-  letter-spacing: -0.04em;
-  color: var(--snow);
-  font-variant-numeric: tabular-nums;
-  line-height: 1;
+  gap: 1px;
 }
-.dh-balance__dollar {
-  font-size: 26px;
-  font-weight: 700;
-  color: rgba(255, 255, 255, 0.65);
-  margin-right: 4px;
-}
-.dh-balance__main {
-  font-size: clamp(48px, 5.6vw, 72px);
-  font-weight: 800;
-}
-.dh-balance__cents {
-  font-size: 22px;
-  font-weight: 700;
-  color: rgba(255, 255, 255, 0.55);
-  margin-left: 2px;
-}
+.cd-balance-dollar { font-size: 0.50em; opacity: 0.55; }
+.cd-balance-cents  { font-size: 0.42em; opacity: 0.40; }
 
-.dh-balance__spark {
-  width: 100%;
-  height: 32px;
+.cd-sparkline {
   display: block;
+  width: 100%;
+  height: 28px;
+  margin: 8px 0 10px;
 }
 
-.dh-balance__delta {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  font-family: var(--font-mono);
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  padding: 3px 8px;
-  border-radius: 999px;
-  border: 1px solid;
-  align-self: flex-start;
-}
-.dh-balance__delta.is-up   { color: #4ade80; background: rgba(34, 197, 94, 0.14); border-color: rgba(34, 197, 94, 0.32); }
-.dh-balance__delta.is-down { color: #fca5a5; background: rgba(193, 18, 31, 0.18); border-color: rgba(193, 18, 31, 0.36); }
-
-/* Action quad — labeled */
-.dh-balance__quad {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 6px;
-}
-.dh-balance__action {
-  height: 56px;
+/* Pending earnings row — shows money-in-flight below sparkline */
+.cd-balance-pending {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  justify-content: center;
-  gap: 4px;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.10);
-  border-radius: 8px;
-  color: rgba(255, 255, 255, 0.85);
-  text-decoration: none;
-  font-family: var(--font-display);
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: -0.005em;
-  transition:
-    background 180ms ease,
-    color 180ms ease,
-    transform 180ms cubic-bezier(0.34, 1.56, 0.64, 1),
-    border-color 180ms ease;
-}
-.dh-balance__action:hover {
-  background: rgba(255, 255, 255, 0.14);
-  color: var(--snow);
-  border-color: rgba(255, 255, 255, 0.24);
-  transform: translate(2px, 2px);
-}
-.dh-balance__action:active { transform: translate(3px, 3px) scale(0.98); }
-
-/* 3-cell metrics split */
-.dh-balance__split {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 0;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  border-radius: 8px;
-  overflow: hidden;
-}
-.dh-balance__split-cell {
-  padding: 10px 12px;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  border-right: 1px solid rgba(255, 255, 255, 0.06);
-}
-.dh-balance__split-cell:last-child { border-right: none; }
-.dh-balance__split-label {
-  font-family: var(--font-mono);
-  font-size: 9px;
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  color: rgba(255, 255, 255, 0.50);
-  text-transform: uppercase;
-}
-.dh-balance__split-value {
-  font-family: var(--font-display);
-  font-size: 16px;
-  font-weight: 800;
-  color: var(--snow);
-  letter-spacing: -0.01em;
-  font-variant-numeric: tabular-nums;
-  line-height: 1;
+  justify-content: space-between;
+  padding: 8px 0;
+  margin-bottom: 8px;
+  border-top: 1px solid var(--hairline);
 }
 
-/* Cycle bar */
-.dh-balance__bar {
-  height: 4px;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.08);
-  overflow: hidden;
-  position: relative;
-}
-.dh-balance__bar-fill {
-  height: 100%;
-  border-radius: 999px;
-  background: linear-gradient(90deg, #4ade80, #22c55e);
-  box-shadow: 0 0 12px rgba(74, 222, 128, 0.35);
-  transition: width 800ms cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-/* Legacy classes from old BalanceCard markup — no longer used but kept
-   declared (empty) to avoid CSS errors if cached HTML still references them. */
-.dh-balance__cycle, .dh-balance__cycle-label, .dh-balance__cycle-foot,
-.dh-balance__cycle-amt, .dh-balance__cycle-target,
-.dh-balance__rows, .dh-balance__row,
-.dh-balance__row-icon, .dh-balance__row-amt, .dh-balance__row-label {
-  /* unused */
-}
-
-
-/* ════════════════════════════════════════════════════════════
-   TODAY'S WORK widget — milestone pipeline rows
-   ════════════════════════════════════════════════════════════ */
-
-.dh-work-list {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  flex: 1;
-  margin-top: 4px;
-}
-
-.dh-work-row {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  gap: 12px;
-  padding: 16px 16px 16px 18px;
-  background: var(--snow);
-  border: 1px solid var(--hairline);
-  border-left: 3px solid var(--cat, var(--ink-5));
-  border-radius: 8px;
-  text-decoration: none;
-  color: inherit;
-  position: relative;
-  box-shadow: 0 1px 1px rgba(10, 10, 10, 0.02);
-  transition:
-    transform 180ms cubic-bezier(0.22, 1, 0.36, 1),
-    border-color 180ms ease,
-    box-shadow 180ms ease;
-  align-items: center;
-}
-.dh-work-row:hover {
-  transform: translate(1px, 1px);
-  border-color: var(--hairline-2);
-  box-shadow: 0 4px 10px rgba(10, 10, 10, 0.06);
-}
-
-.dh-work-row__main { min-width: 0; display: flex; flex-direction: column; gap: 8px; }
-.dh-work-row__head { display: flex; flex-direction: column; gap: 4px; }
-.dh-work-row__title {
-  font-family: var(--font-display);
-  font-size: 19px;
-  font-weight: 700;
-  color: var(--ink);
-  line-height: 1.25;
-  letter-spacing: -0.015em;
-}
-.dh-work-row__merchant {
+.cd-balance-pending-label {
   font-family: var(--font-mono);
   font-size: 12px;
-  font-weight: 500;
-  color: var(--ink-4);
+  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.10em;
+  color: var(--ink-3);
+  line-height: 1;
 }
 
-.dh-work-row__side {
+.cd-balance-pending-val {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink-3);
+  letter-spacing: 0.02em;
+  line-height: 1;
+}
+
+/* L4 Meta */
+.cd-balance-meta {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink-3);
+  margin: 0;
+  letter-spacing: 0.03em;
+}
+
+/* ══════════════════════════════════════════════════════════
+   LIVE NOW CARD  —  corner-anchored hero, Submit CTA homes
+   the page's single Brand Red instance (§ 2.3, § 10).
+   OVERDUE state adds a 4px Brand Red alarm thread on top.
+   ══════════════════════════════════════════════════════════ */
+
+/* Icon tile — 40×40 r-lg per § 13 (kept for Today timeline). */
+.cd-cat-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--r-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--snow);
+  flex-shrink: 0;
+}
+
+.cd-live-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 48px;                /* hero title → CTA negative space (§ 6) */
+  min-height: 240px;
+  position: relative;
+  overflow: hidden;
+  padding-top: 24px;
+}
+
+.cd-live-card--overdue::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: var(--brand-red);
+  border-radius: var(--r-md) var(--r-md) 0 0;
+  pointer-events: none;
+}
+
+.cd-live-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+/* Eyebrow — canonical Mono for LIVE; Magvix Italic for OVERDUE */
+.cd-live-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--ink-3);
+  line-height: 1;
+}
+.cd-live-card--overdue .cd-live-eyebrow {
+  font-family: var(--font-hero);
+  font-style: italic;
+  font-size: clamp(28px, 3vw, 32px);
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: -0.01em;
+}
+
+/* Pill overrides — slightly denser for in-card use (§ 9.5 pill base inherited) */
+.cd-live-msg-pill {
+  font-size: 12px;
+  padding: 6px 14px;
+}
+
+.cd-live-bottom {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.cd-live-bottom-text {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;                 /* meta → hero title 8px (§ 6) */
+  min-width: 0;
+}
+
+.cd-live-biz-line {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink-3);
+  margin: 0;
+  letter-spacing: 0.02em;
+}
+
+.cd-live-hero-title {
+  font-family: var(--font-display);
+  font-size: clamp(28px, 3vw, 40px);
+  font-weight: 800;
+  color: var(--ink);
+  margin: 0;
+  letter-spacing: -0.025em;
+  line-height: 1.05;
+}
+
+.cd-live-submit {
+  flex-shrink: 0;
+}
+
+/* ══════════════════════════════════════════════════════════
+   TODAY'S TIMELINE
+   ══════════════════════════════════════════════════════════ */
+
+.cd-timeline {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 16px;
+}
+
+/* Grid: [time 44px] [dot 18px] [icon 32px] [body 1fr] [right auto] */
+.cd-slot {
+  display: grid;
+  grid-template-columns: 44px 18px 32px 1fr auto;
+  gap: 12px;
+  align-items: center;
+  padding: 16px 12px;
+  border-radius: var(--r-sm);
+  margin: 0 -12px;
+  text-decoration: none;
+  color: inherit;
+  transition:
+    background 180ms ease,
+    transform  180ms cubic-bezier(0.34, 1.56, 0.64, 1);
+  cursor: pointer;
+  min-height: 56px;          /* mobile tap target ≥44, leaves padding (§ 9.7-10) */
+}
+.cd-slot:not(:last-child) {
+  border-bottom: 1px solid var(--hairline);
+}
+.cd-slot:hover {
+  background: var(--surface-2);
+  border-bottom-color: transparent;
+  transform: translate(1px, 1px);   /* bottom-right shift — Push signature (§ 16) */
+}
+.cd-slot:hover + .cd-slot { border-top: none; }
+.cd-slot:active { transform: translate(2px, 2px) scale(0.99); }
+
+/* L4 Meta — time block, right-aligned */
+.cd-slot-time {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink);
+  line-height: 1.2;
+  text-align: right;
+  letter-spacing: 0.01em;
+}
+/* L5 Label — end time, muted */
+.cd-slot-time-end {
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--ink-4);
+  letter-spacing: 0.01em;
+}
+
+.cd-slot-radio {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 1.5px solid var(--mist);
+  background: transparent;
+  flex-shrink: 0;
+}
+/* Color radio by status — Apple Reminders visual language */
+.cd-slot[data-status="DONE"] .cd-slot-radio {
+  background: var(--status-done);
+  border-color: var(--status-done);
+}
+.cd-slot[data-status="OVERDUE"] .cd-slot-radio {
+  border-color: var(--brand-red);
+  border-width: 2px;
+}
+.cd-slot[data-status="ON GOING"] .cd-slot-radio {
+  border-color: var(--status-warn);
+  border-width: 2px;
+}
+/* Keep backward-compat class for programmatic use */
+.cd-slot-radio--done {
+  background: var(--status-done);
+  border-color: var(--status-done);
+}
+
+/* Shrink category icon inside slots — Live now card keeps 40px */
+.cd-slot .cd-cat-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+}
+
+.cd-slot-body { min-width: 0; }
+
+/* L3 Body */
+.cd-slot-title {
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--ink);
+  margin: 0 0 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+}
+
+/* L4 Meta */
+.cd-slot-biz {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink-4);
+  margin: 0 0 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  letter-spacing: 0.01em;
+}
+.cd-slot-addr {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--ink-5);
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.cd-slot-right {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
   gap: 6px;
   flex-shrink: 0;
 }
-.dh-work-row__pay {
-  font-family: var(--font-display);
-  font-size: 24px;
-  font-weight: 800;
-  color: var(--ink);
-  letter-spacing: -0.02em;
-  font-variant-numeric: tabular-nums;
+
+/* L5 Label — submission-status pill on each Today row.
+   OVERDUE rows render no pill (radio + page-level alarm-bar carry the state). */
+.cd-slot-status {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
   line-height: 1;
-}
-.dh-work-row__deadline {
-  font-family: var(--font-mono);
-  font-size: 10px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: var(--ink-5);
-}
-.dh-work-row__deadline--urgent {
-  color: var(--brand-red);
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-}
-.dh-work-row__deadline--urgent::before {
-  content: "";
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
-  background: var(--brand-red);
-  box-shadow: 0 0 0 3px rgba(193, 18, 31, 0.16);
-  animation: dh-pulse-red 1.6s ease-in-out infinite;
-}
-@keyframes dh-pulse-red {
-  0%, 100% { box-shadow: 0 0 0 3px rgba(193, 18, 31, 0.16); }
-  50%      { box-shadow: 0 0 0 5px rgba(193, 18, 31, 0.06); }
-}
-
-/* Pipeline dots */
-.dh-pipeline { display: flex; align-items: center; gap: 4px; }
-.dh-pipeline__dot {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: var(--ink-6);
-  flex-shrink: 0;
-  transition: transform 200ms ease, box-shadow 200ms ease;
-}
-.dh-pipeline__dot--done { background: var(--ink-3); }
-.dh-pipeline__dot--active {
-  background: var(--cat, var(--ink-3));
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--cat, var(--ink-3)) 20%, transparent);
-  transform: scale(1.18);
-}
-.dh-pipeline__line {
-  flex: 1 0 8px;
-  max-width: 14px;
-  height: 1px;
-  background: var(--hairline-2);
-}
-.dh-pipeline__label {
-  font-family: var(--font-mono);
-  font-size: 9px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
+  padding: 4px 8px;
+  border-radius: 4px;
   color: var(--ink-3);
-  margin-left: auto;
-  padding: 3px 8px;
-  background: var(--surface-2);
-  border-radius: 999px;
+  background: var(--surface-3);
+}
+.cd-slot-status[data-submission-status="REVIEWING"] {
+  background: var(--surface-3);
+  color: var(--ink-3);
+}
+.cd-slot-status[data-submission-status="WAITING"] {
+  background: var(--mist);
+  color: var(--ink-3);
+}
+.cd-slot-status[data-submission-status="PAID"] {
+  background: transparent;
+  color: var(--status-done);
+  padding-left: 0;
+  padding-right: 0;
 }
 
-
-/* ════════════════════════════════════════════════════════════
-   NEW MATCHES widget
-   ════════════════════════════════════════════════════════════ */
-
-.dh-match-list {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  flex: 1;
-  margin-top: 4px;
-}
-.dh-match-item {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  padding: 12px 14px 12px 16px;
-  background: var(--snow);
-  border: 1px solid var(--hairline);
-  border-left: 3px solid var(--cat, var(--ink-5));
-  border-radius: 8px;
-  text-decoration: none;
-  color: inherit;
-  box-shadow: 0 1px 1px rgba(10, 10, 10, 0.02);
-  transition:
-    transform 180ms cubic-bezier(0.22, 1, 0.36, 1),
-    border-color 180ms ease,
-    box-shadow 180ms ease;
-  flex: 1;
-  justify-content: space-between;
-}
-.dh-match-item:hover {
-  transform: translate(1px, 1px);
-  border-color: var(--hairline-2);
-  box-shadow: 0 4px 10px rgba(10, 10, 10, 0.06);
-}
-.dh-match-item__top {
-  display: flex;
-  justify-content: space-between;
-  gap: 8px;
-  align-items: flex-start;
-}
-.dh-match-item__name {
+/* L3 Body — payout (step down from hero, align with title) */
+.cd-slot-pay {
   font-family: var(--font-display);
   font-size: 17px;
   font-weight: 700;
   color: var(--ink);
-  line-height: 1.25;
-  letter-spacing: -0.01em;
-}
-.dh-match-item__pay {
-  font-family: var(--font-display);
-  font-size: 19px;
-  font-weight: 800;
-  color: var(--ink);
   letter-spacing: -0.02em;
-  font-variant-numeric: tabular-nums;
-  white-space: nowrap;
+  line-height: 1;
 }
-.dh-match-item__bottom {
+
+/* Today header "+ Add" pill — matches cd-live-msg-pill density */
+.cd-today-add-pill {
+  font-size: 12px;
+  padding: 6px 14px;
+}
+
+/* ══════════════════════════════════════════════════════════
+   INBOX
+   ══════════════════════════════════════════════════════════ */
+
+.cd-inbox-grid {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  flex-wrap: wrap;
   gap: 12px;
-}
-.dh-match-item__bar {
-  flex: 1;
-  height: 4px;
-  background: var(--surface-3);
-  border-radius: 999px;
-  overflow: hidden;
-}
-.dh-match-item__fill {
-  height: 100%;
-  background: linear-gradient(90deg, var(--cat, var(--ink-5)), color-mix(in srgb, var(--cat, var(--ink-5)) 70%, var(--ink-3)));
-  border-radius: 999px;
-  transition: width 600ms cubic-bezier(0.22, 1, 0.36, 1);
-}
-.dh-match-item__meta {
-  font-family: var(--font-mono);
-  font-size: 10px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: var(--ink-4);
-  white-space: nowrap;
+  margin-bottom: 8px;
 }
 
-
-/* ════════════════════════════════════════════════════════════
-   MAP widget
-   ════════════════════════════════════════════════════════════ */
-
-.dh-map-wrap {
-  flex: 1;
-  margin-top: 12px;
-  border-radius: 8px;
-  overflow: hidden;
-  background: var(--mist);
-  position: relative;
-  border: 1px solid var(--hairline);
-  min-height: 200px;
-}
-
-
-/* ════════════════════════════════════════════════════════════
-   EARNINGS ambient (legacy — kept for empty state only)
-   ════════════════════════════════════════════════════════════ */
-
-.dh-earn { display: flex; flex-direction: column; gap: 12px; flex: 1; }
-.dh-earn__top { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
-.dh-earn__num {
-  font-family: var(--font-display);
-  font-size: 40px;
-  font-weight: 800;
-  color: var(--ink);
-  line-height: 1;
-  letter-spacing: -0.03em;
-  font-variant-numeric: tabular-nums;
-}
-.dh-earn__num--muted { color: var(--ink-5); }
-.dh-earn__delta {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  font-family: var(--font-mono);
-  font-size: 11px;
-  font-weight: 700;
-  color: #15803d;
-  background: rgba(34, 197, 94, 0.08);
-  border: 1px solid rgba(34, 197, 94, 0.22);
-  padding: 3px 8px;
-  border-radius: 999px;
-  letter-spacing: 0.04em;
-}
-.dh-earn__sparkline { height: 56px; width: 100%; margin-top: 4px; display: block; }
-.dh-earn__sparkline--placeholder {
-  background: repeating-linear-gradient(90deg, var(--surface-3) 0 12px, transparent 12px 24px);
-  opacity: 0.6; border-radius: 4px; height: 56px;
-}
-.dh-earn__split { display: flex; gap: 24px; padding-top: 14px; margin-top: auto; border-top: 1px solid var(--hairline); }
-.dh-earn__sub { display: flex; flex-direction: column; gap: 4px; }
-.dh-earn__sub-label {
-  font-family: var(--font-mono); font-size: 10px; font-weight: 700;
-  text-transform: uppercase; letter-spacing: 0.12em; color: var(--ink-4);
-}
-.dh-earn__sub-value {
-  font-family: var(--font-display); font-size: 18px; font-weight: 700;
-  color: var(--ink); letter-spacing: -0.01em; font-variant-numeric: tabular-nums;
-}
-.dh-earn__hint {
-  font-family: var(--font-mono); font-size: 11px; font-weight: 500;
-  color: var(--ink-4); margin-top: auto;
-  padding-top: 12px; border-top: 1px dashed var(--hairline-2);
-  line-height: 1.5;
-}
-.dh-earn__hint strong { color: var(--ink); font-weight: 700; }
-.dh-earn__lead {
-  font-family: var(--font-mono); font-size: 12px; font-weight: 500;
-  color: var(--ink-4); line-height: 1.5;
-}
-
-
-/* ════════════════════════════════════════════════════════════
-   TIER RING widget
-   ════════════════════════════════════════════════════════════ */
-
-.dh-tier {
-  display: flex;
-  align-items: center;
-  gap: 18px;
-  margin-top: 4px;
-  flex: 1;
-  position: relative;
-}
-.dh-tier__svg {
-  width: 88px;
-  height: 88px;
-  flex-shrink: 0;
-  filter: drop-shadow(0 2px 6px rgba(10, 10, 10, 0.06));
-}
-.dh-tier__info {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  min-width: 0;
-}
-.dh-tier__name {
-  font-family: var(--font-display);
-  font-size: 22px;
-  font-weight: 800;
-  letter-spacing: -0.015em;
-  line-height: 1;
-}
-.dh-tier__next {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: var(--ink-4);
-}
-
-
-/* ════════════════════════════════════════════════════════════
-   PIPELINE HEALTH — segmented runway gauge
-   ════════════════════════════════════════════════════════════ */
-
-.dh-gauge {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-  margin-top: 4px;
-  flex: 1;
-}
-.dh-gauge__top { display: flex; align-items: baseline; gap: 10px; }
-.dh-gauge__num {
-  font-family: var(--font-display);
-  font-size: 40px;
-  font-weight: 800;
-  color: var(--ink);
-  line-height: 1;
-  letter-spacing: -0.03em;
-  font-variant-numeric: tabular-nums;
-}
-.dh-gauge__num em {
-  font-style: normal;
-  font-size: 14px;
-  color: var(--ink-3);
-  font-weight: 700;
-  margin-left: 6px;
-  font-family: var(--font-mono);
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-}
-.dh-gauge__chip {
-  font-family: var(--font-mono);
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  padding: 3px 8px;
-  border-radius: 999px;
-  border: 1px solid;
-}
-.dh-gauge__chip[data-health="low"]    { background: rgba(193, 18, 31, 0.08); color: var(--brand-red); border-color: rgba(193, 18, 31, 0.22); }
-.dh-gauge__chip[data-health="medium"] { background: rgba(234, 88, 12, 0.08); color: #c2410c; border-color: rgba(234, 88, 12, 0.22); }
-.dh-gauge__chip[data-health="high"]   { background: rgba(34, 197, 94, 0.08); color: #15803d; border-color: rgba(34, 197, 94, 0.22); }
-.dh-gauge__segments {
-  display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  gap: 4px;
-  margin-top: auto;
-}
-.dh-gauge__seg {
-  height: 6px;
-  border-radius: 3px;
-  background: var(--surface-3);
-  transition: background 220ms ease;
-}
-.dh-gauge__seg--low    { background: var(--brand-red); }
-.dh-gauge__seg--medium { background: #ea580c; }
-.dh-gauge__seg--high   { background: #22c55e; }
-.dh-gauge__hint {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  font-weight: 500;
-  color: var(--ink-3);
-  line-height: 1.4;
-}
-.dh-gauge__hint strong { color: var(--ink); font-weight: 700; }
-
-
-/* ════════════════════════════════════════════════════════════
-   ANALYTICS PEEK
-   ════════════════════════════════════════════════════════════ */
-
-.dh-peek {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 8px;
-  margin-top: 4px;
-  flex: 1;
-  align-items: center;
-}
-.dh-peek__cell {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  padding: 8px 0;
-  border-right: 1px solid var(--hairline);
-}
-.dh-peek__cell:last-child { border-right: none; }
-.dh-peek__label {
-  font-family: var(--font-mono);
-  font-size: 10px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
-  color: var(--ink-4);
-}
-.dh-peek__value {
-  font-family: var(--font-display);
-  font-size: 22px;
-  font-weight: 800;
-  color: var(--ink);
-  letter-spacing: -0.02em;
-  font-variant-numeric: tabular-nums;
-  line-height: 1;
-}
-
-
-/* ════════════════════════════════════════════════════════════
-   ACTIVITY TIMELINE — vertical rail
-   ════════════════════════════════════════════════════════════ */
-
-.dh-timeline {
-  display: flex;
-  flex-direction: column;
-  margin-top: 4px;
-  flex: 1;
-  overflow-y: auto;
-  position: relative;
-}
-.dh-timeline::before {
-  content: "";
-  position: absolute;
-  left: 7px;
-  top: 18px;
-  bottom: 18px;
-  width: 1px;
-  background: var(--hairline-2);
-  pointer-events: none;
-}
-.dh-timeline__item {
-  display: grid;
-  grid-template-columns: 16px 1fr;
-  gap: 14px;
-  padding: 12px 0;
-  border-bottom: 1px dashed var(--hairline);
-  position: relative;
-}
-.dh-timeline__item:last-child { border-bottom: none; }
-.dh-timeline__rail { padding-top: 6px; position: relative; z-index: 1; }
-.dh-timeline__dot {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: var(--ink-3);
-  margin-left: 3px;
-  border: 2px solid var(--surface-2);
-  box-shadow: 0 0 0 1px var(--hairline-2);
-}
-.dh-timeline__dot--success { background: #22c55e; box-shadow: 0 0 0 1px rgba(34, 197, 94, 0.30); }
-.dh-timeline__dot--pending { background: #c9a96e; box-shadow: 0 0 0 1px rgba(201, 169, 110, 0.30); }
-.dh-timeline__dot--brand   { background: var(--brand-red); box-shadow: 0 0 0 1px rgba(193, 18, 31, 0.30); }
-.dh-timeline__title {
+.cd-inbox-av {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--r-full);
+  background: var(--ink);
+  color: var(--snow);
   font-family: var(--font-mono);
   font-size: 13px;
-  font-weight: 600;
-  color: var(--ink);
-  line-height: 1.4;
-}
-.dh-timeline__meta {
-  font-family: var(--font-mono);
-  font-size: 10px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--ink-4);
-  margin-top: 4px;
-}
-
-
-/* ════════════════════════════════════════════════════════════
-   INBOX PEEK
-   ════════════════════════════════════════════════════════════ */
-
-.dh-inbox {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  margin-top: 4px;
-  flex: 1;
-}
-.dh-inbox__row {
-  display: grid;
-  grid-template-columns: 36px 1fr auto;
-  gap: 12px;
-  padding: 12px;
-  background: var(--snow);
-  border: 1px solid var(--hairline);
-  border-radius: 8px;
-  text-decoration: none;
-  color: inherit;
-  align-items: center;
-  transition:
-    transform 180ms cubic-bezier(0.22, 1, 0.36, 1),
-    border-color 180ms ease,
-    box-shadow 180ms ease;
-  position: relative;
-}
-.dh-inbox__row:hover {
-  transform: translate(1px, 1px);
-  border-color: var(--hairline-2);
-  box-shadow: 0 2px 6px rgba(10, 10, 10, 0.04);
-}
-.dh-inbox__row--unread { border-left: 3px solid var(--brand-red); padding-left: 10px; }
-.dh-inbox__row--unread .dh-inbox__top::after {
-  content: "";
-  display: inline-block;
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--brand-red);
-  margin-left: 6px;
-  vertical-align: middle;
-  box-shadow: 0 0 0 3px rgba(193, 18, 31, 0.16);
-  animation: dh-pulse-red 2s ease-in-out infinite;
-}
-.dh-inbox__avatar {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, var(--ink-2) 0%, var(--graphite) 100%);
+  font-weight: 700;
+  letter-spacing: 0.04em;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: var(--font-display);
-  font-size: 14px;
-  font-weight: 800;
+  position: relative;
+  cursor: pointer;
+  text-decoration: none;
+  box-shadow: 0 1px 4px rgba(10,10,10,0.10), 0 2px 8px rgba(10,10,10,0.06);
+  transition:
+    transform  180ms cubic-bezier(0.34,1.56,0.64,1),
+    box-shadow 180ms ease;
+}
+.cd-inbox-av:hover {
+  transform: translate(1px,1px);
+  box-shadow: 0 2px 8px rgba(10,10,10,0.14), 0 4px 16px rgba(10,10,10,0.08);
+}
+.cd-inbox-av--read {
+  background: var(--surface-3);
+  color: var(--ink-3);
+  box-shadow: none;
+}
+
+.cd-inbox-dot {
+  position: absolute;
+  top: 1px; right: 1px;
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  background: var(--brand-red);
+  border: 2px solid var(--snow);
+}
+
+/* ══════════════════════════════════════════════════════════
+   INBOX — premium message-list redesign
+   ══════════════════════════════════════════════════════════ */
+
+/* Header row: title + unread count badge */
+.cd-inbox-title-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.cd-inbox-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 6px;
+  border-radius: var(--r-pill);
+  background: var(--brand-red);
   color: var(--snow);
-  letter-spacing: 0.02em;
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.10),
-    0 1px 2px rgba(10, 10, 10, 0.10);
-}
-.dh-inbox__body { min-width: 0; }
-.dh-inbox__top {
-  font-family: var(--font-display);
-  font-size: 14px;
-  font-weight: 700;
-  color: var(--ink);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  letter-spacing: -0.005em;
-}
-.dh-inbox__preview {
   font-family: var(--font-mono);
   font-size: 11px;
-  font-weight: 500;
-  color: var(--ink-4);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  margin-top: 2px;
-}
-.dh-inbox__time {
-  font-family: var(--font-mono);
-  font-size: 10px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--ink-4);
-  white-space: nowrap;
-}
-
-
-/* ════════════════════════════════════════════════════════════
-   ONBOARDING HERO (Day 0–7 lifecycle substitute)
-   ════════════════════════════════════════════════════════════ */
-
-.dh-onboard {
-  background:
-    radial-gradient(120% 80% at 100% 0%, rgba(193, 18, 31, 0.20) 0%, transparent 55%),
-    radial-gradient(80% 100% at 0% 100%, rgba(58, 79, 216, 0.14) 0%, transparent 50%),
-    var(--char);
-  color: var(--snow);
-  padding: 32px;
-  display: flex;
-  flex-direction: column;
-  border-radius: 16px;                   /* spec § KPI card */
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.08),
-    0 8px 28px rgba(10, 10, 10, 0.18);
-  position: relative;
-  overflow: hidden;
-  animation: dh-rise 380ms cubic-bezier(0.22, 1, 0.36, 1) backwards;
-}
-.dh-onboard::after {
-  content: "PUSH";
-  position: absolute;
-  bottom: -28px;
-  right: -16px;
-  font-family: var(--font-display);
-  font-size: 220px;
-  font-weight: 800;
-  color: rgba(255, 255, 255, 0.03);
-  letter-spacing: -0.04em;
-  pointer-events: none;
+  font-weight: 700;
+  letter-spacing: 0.02em;
   line-height: 1;
 }
-.dh-onboard__eyebrow {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  font-family: var(--font-mono);
-  font-size: 11px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.14em;
-  color: rgba(255, 255, 255, 0.65);
-  margin-bottom: 14px;
-  position: relative;
-  z-index: 1;
-}
-.dh-onboard__eyebrow::before {
-  content: "";
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--brand-red);
-  box-shadow: 0 0 0 3px rgba(193, 18, 31, 0.30);
-}
-.dh-onboard__title {
-  font-family: var(--font-display);
-  font-size: clamp(28px, 3.5vw, 40px);
-  font-weight: 800;
-  line-height: 1.05;
-  letter-spacing: -0.02em;
-  color: var(--snow);
-  margin-bottom: 12px;
-  position: relative;
-  z-index: 1;
-}
-.dh-onboard__sub {
-  font-family: var(--font-mono);
-  font-size: 14px;
-  font-weight: 500;
-  color: rgba(255, 255, 255, 0.78);
-  margin-bottom: 24px;
-  max-width: 56ch;
-  line-height: 1.55;
-  position: relative;
-  z-index: 1;
-}
-.dh-onboard__steps {
+
+/* Message row — 8px-grid padding + bottom-right hover shift (§ 16) */
+.cd-inbox-row {
   display: flex;
   align-items: center;
-  gap: 8px;
-  margin-bottom: 24px;
-  position: relative;
-  z-index: 1;
+  gap: 12px;                /* avatar 40-44 → text label 12px (§ 6.4) */
+  padding: 12px 8px;
+  border-radius: var(--r-sm);
+  margin: 0 -8px;
+  text-decoration: none;
+  color: inherit;
+  transition:
+    background 180ms ease,
+    transform  180ms cubic-bezier(0.34, 1.56, 0.64, 1);
 }
-.dh-onboard__step {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
+.cd-inbox-row:not(:last-child) {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.18);
+}
+.cd-inbox-row:hover {
+  background: rgba(255, 255, 255, 0.55);
+  border-bottom-color: transparent;
+  transform: translate(1px, 1px);
+}
+.cd-inbox-row:active { transform: translate(2px, 2px) scale(0.99); }
+
+/* 44px avatar */
+.cd-inbox-av-lg {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--r-full);
+  background: var(--ink);
+  color: var(--snow);
   font-family: var(--font-mono);
-  font-size: 11px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: rgba(255, 255, 255, 0.60);
-  white-space: nowrap;
-}
-.dh-onboard__step-num {
-  width: 22px;
-  height: 22px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.18);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: var(--font-display);
-  font-size: 11px;
-  font-weight: 800;
-  color: var(--snow);
-}
-.dh-onboard__step--active .dh-onboard__step-num {
-  background: var(--brand-red);
-  border-color: var(--brand-red);
-  box-shadow: 0 0 0 3px rgba(193, 18, 31, 0.22);
-}
-.dh-onboard__step--active { color: var(--snow); }
-.dh-onboard__step-line { flex: 0 0 24px; height: 1px; background: rgba(255, 255, 255, 0.18); }
-.dh-onboard__picks {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 12px;
-  flex: 1;
   position: relative;
-  z-index: 1;
+  flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(10,10,10,0.12), 0 1px 3px rgba(10,10,10,0.08);
 }
-.dh-onboard__pick {
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.04) 100%);
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  border-left: 3px solid var(--cat, var(--brand-red));
-  border-radius: 8px;
-  padding: 16px;
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-  justify-content: space-between;
-  text-decoration: none;
-  color: inherit;
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  transition:
-    transform 180ms cubic-bezier(0.22, 1, 0.36, 1),
-    background 180ms ease,
-    border-color 180ms ease;
+.cd-inbox-av-lg--read {
+  background: rgba(255,255,255,0.35);
+  color: var(--ink-3);
+  box-shadow: none;
 }
-.dh-onboard__pick:hover {
-  transform: translate(1px, 1px);
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.14) 0%, rgba(255, 255, 255, 0.08) 100%);
-  border-color: rgba(255, 255, 255, 0.28);
+
+/* Text block */
+.cd-inbox-body {
+  flex: 1;
+  min-width: 0;
 }
-.dh-onboard__pick-name {
+
+.cd-inbox-name {
   font-family: var(--font-display);
-  font-size: 16px;
-  font-weight: 700;
-  color: var(--snow);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink-3);
+  margin: 0 0 3px;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
   line-height: 1.25;
-  letter-spacing: -0.005em;
 }
-.dh-onboard__pick-merchant {
+.cd-inbox-name--unread {
+  font-weight: 800;
+  color: var(--ink);
+}
+
+.cd-inbox-preview {
   font-family: var(--font-mono);
-  font-size: 10px;
-  font-weight: 500;
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--ink-5);
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  letter-spacing: 0.01em;
+  line-height: 1.4;
+}
+.cd-inbox-preview--unread {
+  font-weight: 600;
+  color: var(--ink-4);
+}
+
+.cd-inbox-time {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--ink-5);
+  flex-shrink: 0;
+  align-self: flex-start;
+  padding-top: 3px;
+  letter-spacing: 0.03em;
+}
+
+/* ══════════════════════════════════════════════════════════
+   DIVIDER
+   ══════════════════════════════════════════════════════════ */
+
+.cd-divider {
+  height: 1px;
+  background: var(--hairline);
+  margin: 12px 0 0;
+}
+
+/* ══════════════════════════════════════════════════════════
+   TIER PROGRESS CARD  —  consolidated this-month KPI on top
+   (replaces former Performance card; numbers consolidate here).
+   ══════════════════════════════════════════════════════════ */
+
+.cd-tier-kpi {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  flex-wrap: wrap;
+  padding-bottom: 16px;
+  margin-bottom: 16px;
+  border-bottom: 1px solid var(--hairline);
+}
+
+.cd-tier-kpi-num {
+  font-family: var(--font-display);
+  font-size: clamp(40px, 5vw, 72px);
+  font-weight: 800;
+  color: var(--ink);
+  letter-spacing: -0.04em;
+  line-height: 1;
+}
+
+.cd-tier-kpi-trend {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--status-done);
+  letter-spacing: 0.02em;
+  line-height: 1;
+}
+
+.cd-tier-kpi-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--ink-3);
+  line-height: 1;
+  margin-left: auto;
+}
+
+.cd-tier-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.cd-tier-badge {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: rgba(255, 255, 255, 0.58);
-  margin-top: 4px;
+  padding: 4px 10px;
+  border-radius: 6px;
+  line-height: 1;
 }
-.dh-onboard__pick-bottom { display: flex; justify-content: space-between; align-items: baseline; }
-.dh-onboard__pick-pay {
-  font-family: var(--font-display);
-  font-size: 24px;
-  font-weight: 800;
-  color: var(--snow);
-  letter-spacing: -0.02em;
-  font-variant-numeric: tabular-nums;
+.cd-tier-badge--current {
+  background: var(--surface-3);
+  color: var(--ink-3);
 }
-.dh-onboard__pick-cta {
+.cd-tier-badge--next {
+  background: var(--champagne-tint);
+  color: var(--champagne-deep);   /* ceremonial — § 2.2 */
+}
+
+.cd-tier-sep {
   font-family: var(--font-mono);
-  font-size: 10px;
+  font-size: 13px;
+  color: var(--ink-5);
+  flex-shrink: 0;
+}
+
+/* Right-anchored progress percent — tabular-nums for stable width */
+.cd-tier-pct {
+  margin-left: auto;
+  font-family: var(--font-mono);
+  font-size: 12px;
   font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
-  color: rgba(255, 255, 255, 0.72);
-  display: inline-flex;
+  letter-spacing: 0.04em;
+  color: var(--ink-3);
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+.cd-tier-track {
+  height: 6px;
+  background: var(--surface-3);
+  border-radius: 3px;
+  overflow: hidden;
+  margin-bottom: 10px;
+}
+
+.cd-tier-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--graphite) 0%, var(--champagne) 100%);
+  border-radius: 3px;
+  transition: width 600ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.cd-tier-note {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--ink-4);
+  margin: 0;
+  letter-spacing: 0.02em;
+}
+
+/* ══════════════════════════════════════════════════════════
+   WEEKLY EARNINGS CHART
+   ══════════════════════════════════════════════════════════ */
+
+.cd-week-chart {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  height: 80px;     /* 56px bars + 24px label row */
+  padding-bottom: 24px;
+  position: relative;
+}
+
+.cd-week-col {
+  display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 4px;
-  transition: color 180ms ease, transform 180ms ease;
-}
-.dh-onboard__pick:hover .dh-onboard__pick-cta {
-  color: var(--snow);
-  transform: translateX(2px);
+  justify-content: flex-end;
+  gap: 6px;
+  flex: 1;
+  position: relative;
 }
 
-
-/* ════════════════════════════════════════════════════════════
-   RESPONSIVE — container-query driven
-   ════════════════════════════════════════════════════════════ */
-
-@container dh (max-width: 1240px) {
-  .dh-grid {
-    grid-template-columns: repeat(8, 1fr);
-    gap: 14px;
-  }
-  .dh-span-3-1, .dh-span-3-2, .dh-span-3-3, .dh-span-3-5,
-  .dh-span-4-2, .dh-span-4-3, .dh-span-4-5  { grid-column: span 4; }
-  .dh-span-5-3, .dh-span-6-2, .dh-span-6-3, .dh-span-6-5,
-  .dh-span-8-3, .dh-span-8-5, .dh-span-9-2, .dh-span-12-2 { grid-column: span 8; }
+.cd-week-bar {
+  width: 100%;
+  background: var(--graphite);
+  border-radius: 3px 3px 0 0;
+  min-height: 4px;
+  transition: height 400ms cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-@container dh (max-width: 760px) {
-  .dh-grid {
-    grid-template-columns: 1fr;
-    grid-auto-rows: auto;
-    gap: 12px;
-  }
-  .dh-grid > * { grid-column: span 1 !important; grid-row: auto !important; }
-  .dh-card, .dh-balance, .dh-onboard { padding: 20px; }
-  .dh-onboard__picks { grid-template-columns: 1fr; }
-  .dh-onboard__title { font-size: clamp(24px, 6vw, 32px); }
-  .dh-peek { grid-template-columns: repeat(2, 1fr); }
-  .dh-peek__cell:nth-child(2) { border-right: none; }
-  .dh-balance__main { font-size: clamp(48px, 12vw, 64px); }
+/* Zero-amount bars: faint placeholder */
+.cd-week-bar[data-empty="true"] {
+  background: var(--mist);
 }
 
-@media (max-width: 1024px) { .dh-page { padding: 24px 24px 80px; } }
-@media (max-width: 768px)  {
-  .dh-page { padding: 20px 16px 80px; }
-  .dh-header { grid-template-columns: 1fr; gap: 16px; }
-  .dh-header__pulse { justify-content: flex-start; }
-  .dh-header__date { text-align: left; }
+.cd-week-col--today .cd-week-bar {
+  background: transparent;
+  border: 1.5px dashed var(--mist);
+  border-radius: 3px 3px 0 0;
 }
 
+.cd-week-day {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--ink-5);
+  line-height: 1;
+  position: absolute;
+  bottom: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+}
 
-/* ════════════════════════════════════════════════════════════
-   PREFERS-REDUCED-MOTION
-   ════════════════════════════════════════════════════════════ */
+.cd-week-col--today .cd-week-day {
+  color: var(--ink-3);
+  font-weight: 700;
+}
 
-@media (prefers-reduced-motion: reduce) {
-  .dh-card, .dh-onboard, .dh-balance, .dh-pulse,
-  .dh-work-row, .dh-match-item, .dh-inbox__row,
-  .dh-pipeline__dot, .dh-onboard__pick, .dh-circle-arrow,
-  .dh-balance__action {
-    animation: none !important;
-    transition: none !important;
-  }
-  .dh-header__greeting::before,
-  .dh-work-row__deadline--urgent::before,
-  .dh-inbox__row--unread .dh-inbox__top::after {
-    animation: none !important;
-  }
+/* ══════════════════════════════════════════════════════════
+   AVAILABLE NEARBY CARD
+   ══════════════════════════════════════════════════════════ */
+
+.cd-avail-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 8px;
+  border-radius: var(--r-sm);
+  margin: 0 -8px;
+  text-decoration: none;
+  color: inherit;
+  transition:
+    background 180ms ease,
+    transform  180ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.cd-avail-item:not(:last-child) {
+  border-bottom: 1px solid var(--hairline);
+}
+.cd-avail-item:hover {
+  background: var(--surface-2);
+  border-bottom-color: transparent;
+  transform: translate(1px, 1px);
+}
+.cd-avail-item:active { transform: translate(2px, 2px) scale(0.99); }
+
+.cd-avail-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.cd-avail-biz {
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--ink);
+  margin: 0 0 3px;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.cd-avail-meta {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--ink-4);
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  letter-spacing: 0.01em;
+}
+
+.cd-avail-pay {
+  font-family: var(--font-display);
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--ink);
+  letter-spacing: -0.02em;
+  flex-shrink: 0;
+}
+
+/* ══════════════════════════════════════════════════════════
+   RESPONSIVE
+   ══════════════════════════════════════════════════════════ */
+
+/* iPad — 8-col grid (§ 5.3): collapse 1:2:1 → 2-col with right-rail wrapping */
+@media (max-width: 1200px) {
+  .cd-grid { grid-template-columns: 1fr 1fr; gap: 20px; }
+  .cd-page { padding: 32px 0 96px; }
+  .cd-col:last-child { grid-column: 1 / -1; }
+}
+
+/* Mobile — 4-col grid (§ 5.4): full-width single column */
+@media (max-width: 768px) {
+  .cd-grid { grid-template-columns: 1fr; gap: 16px; }   /* 16px card-grid mobile (§ 6.6) */
+  .cd-col { gap: 16px; }
+  .cd-col:last-child { grid-column: auto; }
+  .cd-page { padding: 24px 0 80px; }
+  .cd-hi { font-size: 26px; }
+  .cd-balance-amount { font-size: 36px; }
+  .cd-card, .cd-balance-card, .cd-card--glass { padding: 20px; }   /* mobile std card (§ 6.1) */
+  .cd-card-header { margin-bottom: 16px; }
+  .cd-tier-kpi-num { font-size: 36px; }
+  .cd-live-card { min-height: 200px; gap: 32px; }
+  .cd-live-bottom { flex-direction: column; align-items: flex-start; gap: 16px; }
+  .cd-live-submit { align-self: flex-end; }
 }
