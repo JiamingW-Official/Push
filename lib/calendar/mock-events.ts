@@ -9,6 +9,11 @@ export type EventType =
 
 export type EventAction = "submit" | "done" | "snooze" | "note";
 
+export interface PrepChecklistItem {
+  id: string;
+  label: string;
+}
+
 export interface CalendarEvent {
   id: string;
   campaignId: string;
@@ -25,6 +30,12 @@ export interface CalendarEvent {
   note?: string;
   payout?: number;
   postUrl?: string; // /creator/campaigns/[id]/post
+  // P1-1: attribution decay milestone marker (D+30/60/90)
+  isDecayMilestone?: boolean;
+  decayDayNumber?: number;
+  // P1-2: auto-generated day-before prep reminder
+  isPrepEvent?: boolean;
+  prepChecklist?: PrepChecklistItem[];
 }
 
 // ── April 2026 events ─────────────────────────────────────
@@ -513,6 +524,93 @@ const MAY: CalendarEvent[] = [
     done: false,
     snoozed: false,
     payout: 75,
+  },
+
+  // ── Attribution Decay Milestones (D+30 from April deadlines) ──
+  // April 22 (Le Bec Fin) + 30 = May 22
+  {
+    id: "ev-decay-001",
+    campaignId: "camp-006",
+    campaignTitle: "Le Bec-Fin Pop-Up Review",
+    merchantName: "Le Bec Fin",
+    type: "milestone",
+    title: "D+30 attribution decay — Le Bec-Fin",
+    date: "2026-05-22",
+    description:
+      "Attribution weight drops to 50% after D+30. QR scans still count at half value through D+60.",
+    done: false,
+    snoozed: false,
+    payout: 0,
+    isDecayMilestone: true,
+    decayDayNumber: 30,
+  },
+  // April 25 (Superiority Burger) + 30 = May 25
+  {
+    id: "ev-decay-002",
+    campaignId: "camp-002",
+    campaignTitle: "Best Burger in NYC Feature",
+    merchantName: "Superiority Burger",
+    type: "milestone",
+    title: "D+30 attribution decay — Superiority Burger",
+    date: "2026-05-25",
+    description:
+      "Attribution weight drops to 50% after D+30. QR scans still count at half value through D+60.",
+    done: false,
+    snoozed: false,
+    payout: 0,
+    isDecayMilestone: true,
+    decayDayNumber: 30,
+  },
+  // April 28 (Brow Theory) + 30 = May 28
+  {
+    id: "ev-decay-003",
+    campaignId: "camp-004",
+    campaignTitle: "Brow Transformation Story",
+    merchantName: "Brow Theory",
+    type: "milestone",
+    title: "D+30 attribution decay — Brow Theory",
+    date: "2026-05-28",
+    description:
+      "Attribution weight drops to 50% after D+30. QR scans still count at half value through D+60.",
+    done: false,
+    snoozed: false,
+    payout: 0,
+    isDecayMilestone: true,
+    decayDayNumber: 30,
+  },
+  // April 29 (Cha Cha Matcha) + 30 = May 29
+  {
+    id: "ev-decay-004",
+    campaignId: "camp-008",
+    campaignTitle: "Matcha Morning Ritual",
+    merchantName: "Cha Cha Matcha",
+    type: "milestone",
+    title: "D+30 attribution decay — Cha Cha Matcha",
+    date: "2026-05-29",
+    description:
+      "Attribution weight drops to 50% after D+30. QR scans still count at half value through D+60.",
+    done: false,
+    snoozed: false,
+    payout: 0,
+    isDecayMilestone: true,
+    decayDayNumber: 30,
+  },
+  // April 30 (Blank Street Coffee) + 30 = May 30
+  {
+    id: "ev-decay-005",
+    campaignId: "camp-001",
+    campaignTitle: "Morning Ritual Campaign",
+    merchantName: "Blank Street Coffee",
+    type: "milestone",
+    title: "D+30 attribution decay — Blank Street Coffee",
+    date: "2026-05-30",
+    description:
+      "Attribution weight drops to 50% after D+30. QR scans still count at half value through D+60.",
+    done: false,
+    snoozed: false,
+    payout: 0,
+    isDecayMilestone: true,
+    decayDayNumber: 30,
   },
 ];
 

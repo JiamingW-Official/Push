@@ -731,6 +731,20 @@ export default function CreatorCalendarPage() {
   // P0-4: Earnings drawer toggle
   const [earningsOpen, setEarningsOpen] = useState(false);
 
+  // P1-3: Event-type filter chips
+  const [activeFilters, setActiveFilters] = useState<Set<EventType>>(new Set());
+  function toggleFilter(type: EventType) {
+    setActiveFilters((prev) => {
+      const next = new Set(prev);
+      if (next.has(type)) next.delete(type);
+      else next.add(type);
+      return next;
+    });
+  }
+  function clearFilters() {
+    setActiveFilters(new Set());
+  }
+
   const gridRef = useRef<HTMLDivElement>(null);
 
   /* ── Derived ─────────────────────────────────────────── */
@@ -758,20 +772,28 @@ export default function CreatorCalendarPage() {
     return map;
   }, [events]);
 
+  const filteredEvents = useMemo(
+    () =>
+      activeFilters.size === 0
+        ? events
+        : events.filter((ev) => activeFilters.has(ev.type)),
+    [events, activeFilters],
+  );
+
   const eventsByDate = useMemo(() => {
     const map: Record<string, CalendarEvent[]> = {};
-    for (const ev of events) {
+    for (const ev of filteredEvents) {
       if (!map[ev.date]) map[ev.date] = [];
       map[ev.date].push(ev);
     }
     return map;
-  }, [events]);
+  }, [filteredEvents]);
 
   const monthGrid = useMemo(() => buildMonthGrid(year, month), [year, month]);
   const weekDates = useMemo(() => buildWeekDates(weekAnchor), [weekAnchor]);
 
   const listGroups = useMemo(() => {
-    const monthEvents = events.filter((e) => e.date.startsWith(ym));
+    const monthEvents = filteredEvents.filter((e) => e.date.startsWith(ym));
     const grouped: Record<string, CalendarEvent[]> = {};
     for (const ev of monthEvents) {
       if (!grouped[ev.date]) grouped[ev.date] = [];
@@ -986,332 +1008,482 @@ export default function CreatorCalendarPage() {
 
   return (
     <div className="cw-page cal">
-      <header className="cw-header">
-        <div className="cw-header__left">
-          {/* P0-4: Eyebrow with clickable earnings toggle */}
-          <p className="cw-eyebrow cw-eyebrow--live">
-            <span>{eyebrowBase}</span>
+      <div className="cal-card">
+        {/* ── Compact topbar — nav + period + view switcher + export ── */}
+        <nav className="cal-topbar" aria-label="Calendar navigation">
+          <div className="cal-topbar__nav">
+            <button
+              type="button"
+              onClick={prevPeriod}
+              aria-label="Previous period"
+              className="cal-nav__btn"
+            >
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 14 14"
+                fill="none"
+                aria-hidden
+              >
+                <path
+                  d="M9 2 L4 7 L9 12"
+                  stroke="currentColor"
+                  strokeWidth="1.6"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </button>
+            <button
+              type="button"
+              onClick={goToday}
+              className="cal-topbar__period"
+            >
+              {periodLabel}
+            </button>
+            <button
+              type="button"
+              onClick={nextPeriod}
+              aria-label="Next period"
+              className="cal-nav__btn"
+            >
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 14 14"
+                fill="none"
+                aria-hidden
+              >
+                <path
+                  d="M5 2 L10 7 L5 12"
+                  stroke="currentColor"
+                  strokeWidth="1.6"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </button>
+            <button
+              type="button"
+              onClick={goToday}
+              className="cal-topbar__today"
+            >
+              Today
+            </button>
             {estEarnings > 0 && (
-              <>
-                <span style={{ padding: "0 4px" }}> · </span>
-                <button
-                  type="button"
-                  className="cal-earnings-toggle"
-                  onClick={() => setEarningsOpen((o) => !o)}
-                  aria-expanded={earningsOpen}
-                  aria-label="Toggle earnings breakdown"
-                >
-                  ${estEarnings.toLocaleString()} EST.
-                  <span className="cal-earnings-toggle__caret" aria-hidden>
-                    {earningsOpen ? "▴" : "▾"}
-                  </span>
-                </button>
-              </>
-            )}
-          </p>
-          {/* v11 §10: title anchored bottom-left */}
-          <h1 className="cw-title">Calendar</h1>
-        </div>
-        <div className="cw-header__right">
-          <button
-            type="button"
-            className="btn-ghost click-shift cal-btn-sm"
-            onClick={() => downloadICS(events)}
-            title="Export .ics calendar file"
-          >
-            Export .ics
-          </button>
-          <a
-            href="webcal://push.nyc/api/creator/calendar/feed"
-            className="btn-secondary click-shift cal-btn-sm"
-            title="Subscribe to calendar"
-          >
-            Subscribe
-          </a>
-        </div>
-      </header>
-
-      {/* P0-4: Earnings breakdown drawer */}
-      {earningsOpen && <EarningsDrawer breakdown={earningsBreakdown} />}
-
-      {/* Liquid-glass spotlight tile */}
-      <section className="cal-spotlight" aria-label="Week ahead">
-        <div className="lg-surface cal-spotlight__tile">
-          <p className="cal-spotlight__eyebrow">THIS WEEK</p>
-          <div className="cal-spotlight__row">
-            <div className="cal-spotlight__stat">
-              <span className="cal-spotlight__num">{weekAheadStats.total}</span>
-              <span className="cal-spotlight__label">
-                {weekAheadStats.total === 1 ? "EVENT" : "EVENTS"} AHEAD
+              <span className="cal-topbar__earnings">
+                ${estEarnings.toLocaleString()} EST.
               </span>
-            </div>
-            <div className="cal-spotlight__divider" aria-hidden />
-            <div className="cal-spotlight__stat">
-              <span className="cal-spotlight__num cal-spotlight__num--accent">
-                {weekAheadStats.deadlines}
-              </span>
-              <span className="cal-spotlight__label">
-                {weekAheadStats.deadlines === 1 ? "DEADLINE" : "DEADLINES"}
-              </span>
-            </div>
-            {weekAheadStats.next && (
-              <>
-                <div className="cal-spotlight__divider" aria-hidden />
-                <div className="cal-spotlight__next">
-                  <p className="cal-spotlight__next-eyebrow">NEXT DEADLINE</p>
-                  <p className="cal-spotlight__next-title">
-                    {truncate(weekAheadStats.next.title, 38)}
-                  </p>
-                  <p className="cal-spotlight__next-meta">
-                    {formatShortDate(weekAheadStats.next.date)}
-                    {weekAheadStats.next.time && (
-                      <>
-                        {" "}
-                        <span className="cal-dot-sep">&middot;</span>{" "}
-                        {fmtTime(weekAheadStats.next.time)}
-                      </>
-                    )}
-                  </p>
-                </div>
-              </>
             )}
           </div>
-        </div>
-      </section>
-
-      {/* Controls bar */}
-      <div
-        className="cal-controls"
-        role="toolbar"
-        aria-label="Calendar navigation"
-      >
-        <div className="cal-nav">
-          <button
-            type="button"
-            onClick={prevPeriod}
-            aria-label="Previous period"
-            className="cal-nav__btn"
-          >
-            <svg
-              width="14"
-              height="14"
-              viewBox="0 0 14 14"
-              fill="none"
-              aria-hidden
-            >
-              <path
-                d="M9 2 L4 7 L9 12"
-                stroke="currentColor"
-                strokeWidth="1.6"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-          </button>
-          <button
-            type="button"
-            onClick={goToday}
-            title="Jump to today"
-            className="cal-nav__label"
-          >
-            {periodLabel}
-          </button>
-          <button
-            type="button"
-            onClick={nextPeriod}
-            aria-label="Next period"
-            className="cal-nav__btn"
-          >
-            <svg
-              width="14"
-              height="14"
-              viewBox="0 0 14 14"
-              fill="none"
-              aria-hidden
-            >
-              <path
-                d="M5 2 L10 7 L5 12"
-                stroke="currentColor"
-                strokeWidth="1.6"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-          </button>
-        </div>
-
-        <div className="cal-seg" role="tablist" aria-label="Calendar view">
-          {(["month", "week", "list"] as CalView[]).map((v) => (
-            <button
-              key={v}
-              role="tab"
-              aria-selected={view === v}
-              type="button"
-              onClick={() => setView(v)}
-              className={`cal-seg__opt${view === v ? " is-active" : ""}`}
-            >
-              {v.charAt(0).toUpperCase() + v.slice(1)}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      {/* Legend */}
-      <div className="cal-legend" aria-label="Event type legend">
-        {(Object.entries(EVENT_TYPE_LABELS) as [EventType, string][]).map(
-          ([type, label]) => (
-            <span key={type} className="cal-legend__item">
-              <span className={`cal-dot event-type--${type}`} aria-hidden />
-              <span className="cal-legend__label">{label}</span>
-            </span>
-          ),
-        )}
-      </div>
-
-      {/* ── Month view ───────────────────────────────────── */}
-      {view === "month" && (
-        <div className="cal-month-layout">
-          <div className="cal-month">
-            <div className="cal-month__dow-row" aria-hidden>
-              {DOW_LABELS.map((d) => (
-                <div key={d} className="cal-month__dow">
-                  {d}
-                </div>
+          <div className="cal-topbar__right">
+            <div className="cal-seg" role="tablist" aria-label="Calendar view">
+              {(["month", "week", "list"] as CalView[]).map((v) => (
+                <button
+                  key={v}
+                  role="tab"
+                  aria-selected={view === v}
+                  type="button"
+                  onClick={() => setView(v)}
+                  className={`cal-seg__opt${view === v ? " is-active" : ""}`}
+                >
+                  {v.charAt(0).toUpperCase() + v.slice(1)}
+                </button>
               ))}
             </div>
-
-            <div
-              ref={gridRef}
-              className="cal-month__grid"
-              role="grid"
-              aria-label={`${MONTH_NAMES[month]} ${year}`}
-              onKeyDown={handleGridKeyDown}
+            <button
+              type="button"
+              className="btn-ghost click-shift cal-btn-sm"
+              onClick={() => downloadICS(events)}
+              title="Export .ics calendar file"
             >
-              {monthGrid.map((date, i) => {
-                if (!date) {
+              Export .ics
+            </button>
+          </div>
+        </nav>
+
+        {/* ── Filter rail — legend chips as type filters ── */}
+        <div className="cal-filter-rail">
+          {(Object.entries(EVENT_TYPE_LABELS) as [EventType, string][]).map(
+            ([type, label]) => (
+              <button
+                key={type}
+                type="button"
+                onClick={() => toggleFilter(type as EventType)}
+                className={`cal-legend-chip${activeFilters.has(type as EventType) ? " is-active" : ""}`}
+              >
+                <span className={`cal-dot event-type--${type}`} aria-hidden />
+                {label}
+              </button>
+            ),
+          )}
+          {activeFilters.size > 0 && (
+            <button
+              type="button"
+              className="cal-legend-chip cal-filter-clear"
+              onClick={clearFilters}
+            >
+              Clear
+            </button>
+          )}
+        </div>
+
+        {/* ── P1-4: Tier progress banner ── */}
+        <div className="cal-tier-banner">
+          <span className="cal-tier-banner__tier">BRONZE</span>
+          <span className="cal-tier-banner__sep"> · </span>
+          <span className="cal-tier-banner__progress">
+            3 of 5 campaigns to Silver
+          </span>
+          <span className="cal-tier-banner__next">
+            Next tier unlocks at 5 verified campaigns
+          </span>
+        </div>
+
+        {/* ── Month view ───────────────────────────────────── */}
+        {view === "month" && (
+          <div className="cal-month-layout">
+            <div className="cal-month">
+              <div className="cal-month__dow-row" aria-hidden>
+                {DOW_LABELS.map((d) => (
+                  <div key={d} className="cal-month__dow">
+                    {d}
+                  </div>
+                ))}
+              </div>
+
+              <div
+                ref={gridRef}
+                className="cal-month__grid"
+                role="grid"
+                aria-label={`${MONTH_NAMES[month]} ${year}`}
+                onKeyDown={handleGridKeyDown}
+              >
+                {monthGrid.map((date, i) => {
+                  if (!date) {
+                    return (
+                      <div
+                        key={`empty-${i}`}
+                        className="cal-cell cal-cell--empty"
+                        aria-hidden
+                      />
+                    );
+                  }
+
+                  const dateStr = toYMD(date);
+                  const isToday = dateStr === todayStr;
+                  const isSelected = dateStr === selectedDate;
+                  const dayEvents = eventsByDate[dateStr] ?? [];
+                  const shown = dayEvents.slice(0, 3);
+                  const extra = dayEvents.length - shown.length;
+                  const hasEvents = dayEvents.length > 0;
+                  const cellLabel = hasEvents
+                    ? `${formatDisplayDate(dateStr)}, ${dayEvents.length} ${dayEvents.length === 1 ? "event" : "events"}`
+                    : `${formatDisplayDate(dateStr)}, no events`;
+
                   return (
                     <div
-                      key={`empty-${i}`}
-                      className="cal-cell cal-cell--empty"
-                      aria-hidden
-                    />
-                  );
-                }
+                      key={dateStr}
+                      data-date={dateStr}
+                      onClick={(e) => handleCellClick(dateStr, e.currentTarget)}
+                      role="gridcell"
+                      aria-label={cellLabel}
+                      aria-selected={isSelected}
+                      tabIndex={isSelected ? 0 : -1}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter" || e.key === " ") {
+                          e.preventDefault();
+                          handleCellClick(dateStr, e.currentTarget);
+                        }
+                      }}
+                      className={[
+                        "cal-cell",
+                        isToday && "cal-cell--today",
+                        isSelected && "cal-cell--selected",
+                        hasEvents && "cal-cell--has-events",
+                      ]
+                        .filter(Boolean)
+                        .join(" ")}
+                    >
+                      <div className="cal-cell__num-row">
+                        <span className="cal-cell__num">{date.getDate()}</span>
+                        {dayEvents.length > 0 && (
+                          <span className="cal-cell__count" aria-hidden>
+                            {dayEvents.length}
+                          </span>
+                        )}
+                      </div>
 
+                      {/* P0-3: Campaign-accented event pills */}
+                      <div className="cal-cell__events">
+                        {shown.map((ev) => (
+                          <div key={ev.id} className="cal-chip-wrap">
+                            <span
+                              className={`cal-pill-event event-type--${ev.type}${ev.done ? " is-done" : ""}`}
+                              title={ev.title}
+                            >
+                              <span
+                                className="cal-pill-accent"
+                                style={{
+                                  background: campaignColorMap[ev.campaignId],
+                                }}
+                                aria-hidden
+                              />
+                              <span className="cal-pill-text">
+                                {truncate(
+                                  `${EVENT_TYPE_LABELS[ev.type]} · ${ev.merchantName}`,
+                                  20,
+                                )}
+                              </span>
+                            </span>
+                            {/* Hover card */}
+                            <div className="cal-chip-hover" role="tooltip">
+                              <p className="cal-chip-hover__title">
+                                {ev.campaignTitle}
+                              </p>
+                              <p className="cal-chip-hover__meta">
+                                {ev.merchantName}
+                                {ev.payout ? ` · $${ev.payout}` : ""}
+                              </p>
+                              <Link
+                                href={
+                                  ev.postUrl ??
+                                  `/creator/campaigns/${ev.campaignId}/post`
+                                }
+                                className="cal-chip-hover__link"
+                              >
+                                View campaign →
+                              </Link>
+                            </div>
+                          </div>
+                        ))}
+                        {extra > 0 && (
+                          <span className="cal-cell__more">+{extra} more</span>
+                        )}
+                      </div>
+
+                      {/* Dot strip — mobile fallback */}
+                      <div className="cal-cell__dots" aria-hidden>
+                        {dayEvents.slice(0, 6).map((ev) => (
+                          <span
+                            key={ev.id}
+                            className={`cal-dot event-type--${ev.type}${ev.done ? " is-done" : ""}`}
+                          />
+                        ))}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* P0-2: Click-driven side panel */}
+            <SidePanel
+              selectedDate={selectedDate}
+              events={events}
+              todayStr={todayStr}
+              onMarkDone={markDone}
+              onSnooze={snooze}
+              onAddNote={addNote}
+              onReschedule={reschedule}
+              onMessageMerchant={messageMerchant}
+              onRequestExtension={requestExtension}
+              noteTarget={noteTarget}
+              noteValue={noteValue}
+              onNoteChange={setNoteValue}
+              onNoteSave={saveNote}
+            />
+          </div>
+        )}
+
+        {/* ── Week view ────────────────────────────────────── */}
+        {view === "week" && (
+          <div className="cal-week">
+            <div className="cal-week__grid">
+              {weekDates.map((date) => {
                 const dateStr = toYMD(date);
                 const isToday = dateStr === todayStr;
-                const isSelected = dateStr === selectedDate;
                 const dayEvents = eventsByDate[dateStr] ?? [];
-                const shown = dayEvents.slice(0, 3);
-                const extra = dayEvents.length - shown.length;
-                const hasEvents = dayEvents.length > 0;
-                const cellLabel = hasEvents
-                  ? `${formatDisplayDate(dateStr)}, ${dayEvents.length} ${dayEvents.length === 1 ? "event" : "events"}`
-                  : `${formatDisplayDate(dateStr)}, no events`;
 
                 return (
                   <div
                     key={dateStr}
-                    data-date={dateStr}
-                    onClick={(e) => handleCellClick(dateStr, e.currentTarget)}
-                    role="gridcell"
-                    aria-label={cellLabel}
-                    aria-selected={isSelected}
-                    tabIndex={isSelected ? 0 : -1}
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter" || e.key === " ") {
-                        e.preventDefault();
-                        handleCellClick(dateStr, e.currentTarget);
-                      }
-                    }}
-                    className={[
-                      "cal-cell",
-                      isToday && "cal-cell--today",
-                      isSelected && "cal-cell--selected",
-                      hasEvents && "cal-cell--has-events",
-                    ]
-                      .filter(Boolean)
-                      .join(" ")}
+                    className={`cal-week__col${isToday ? " cal-week__col--today" : ""}`}
                   >
-                    <div className="cal-cell__num-row">
-                      <span className="cal-cell__num">{date.getDate()}</span>
-                      {dayEvents.length > 0 && (
-                        <span className="cal-cell__count" aria-hidden>
-                          {dayEvents.length}
-                        </span>
-                      )}
-                    </div>
+                    <header className="cal-week__col-head">
+                      <span className="cal-week__dow">
+                        {DOW_LABELS_FULL[date.getDay()]
+                          .slice(0, 3)
+                          .toUpperCase()}
+                      </span>
+                      <span className="cal-week__num">{date.getDate()}</span>
+                    </header>
 
-                    {/* P0-3: Campaign-accented event pills */}
-                    <div className="cal-cell__events">
-                      {shown.map((ev) => (
-                        <div key={ev.id} className="cal-chip-wrap">
-                          <span
-                            className={`cal-pill-event event-type--${ev.type}${ev.done ? " is-done" : ""}`}
+                    <div className="cal-week__events">
+                      {dayEvents.length === 0 ? (
+                        <span className="cal-week__empty">&mdash;</span>
+                      ) : (
+                        dayEvents.map((ev) => (
+                          <button
+                            key={ev.id}
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              openPopover(dateStr, e.currentTarget);
+                            }}
                             title={ev.title}
+                            className={`cal-week__event event-type--${ev.type}${ev.done ? " is-done" : ""}`}
                           >
-                            <span
-                              className="cal-pill-accent"
-                              style={{
-                                background: campaignColorMap[ev.campaignId],
-                              }}
-                              aria-hidden
-                            />
-                            <span className="cal-pill-text">
-                              {truncate(
-                                `${EVENT_TYPE_LABELS[ev.type]} · ${ev.merchantName}`,
-                                20,
-                              )}
+                            <span className="cal-week__event-title">
+                              {truncate(ev.title, 22)}
                             </span>
-                          </span>
-                          {/* Hover card */}
-                          <div className="cal-chip-hover" role="tooltip">
-                            <p className="cal-chip-hover__title">
-                              {ev.campaignTitle}
-                            </p>
-                            <p className="cal-chip-hover__meta">
-                              {ev.merchantName}
-                              {ev.payout ? ` · $${ev.payout}` : ""}
-                            </p>
-                            <Link
-                              href={
-                                ev.postUrl ??
-                                `/creator/campaigns/${ev.campaignId}/post`
-                              }
-                              className="cal-chip-hover__link"
-                            >
-                              View campaign →
-                            </Link>
-                          </div>
-                        </div>
-                      ))}
-                      {extra > 0 && (
-                        <span className="cal-cell__more">+{extra} more</span>
+                            {ev.time && (
+                              <span className="cal-week__event-time">
+                                {fmtTime(ev.time)}
+                              </span>
+                            )}
+                          </button>
+                        ))
                       )}
-                    </div>
-
-                    {/* Dot strip — mobile fallback */}
-                    <div className="cal-cell__dots" aria-hidden>
-                      {dayEvents.slice(0, 6).map((ev) => (
-                        <span
-                          key={ev.id}
-                          className={`cal-dot event-type--${ev.type}${ev.done ? " is-done" : ""}`}
-                        />
-                      ))}
                     </div>
                   </div>
                 );
               })}
             </div>
           </div>
+        )}
 
-          {/* P0-2: Click-driven side panel */}
-          <SidePanel
-            selectedDate={selectedDate}
-            events={events}
-            todayStr={todayStr}
-            onMarkDone={markDone}
-            onSnooze={snooze}
+        {/* ── List view ────────────────────────────────────── */}
+        {view === "list" && (
+          <div className="cal-list">
+            {listGroups.length === 0 ? (
+              <div className="cal-list__empty">
+                <p className="cal-list__empty-num">0</p>
+                <p className="cal-list__empty-msg">
+                  No events in {MONTH_NAMES[month]} {year}.
+                </p>
+                <p className="cal-list__empty-sub">
+                  Browse open campaigns in Discover &mdash; new deadlines land
+                  daily.
+                </p>
+              </div>
+            ) : (
+              listGroups.map(([dateStr, dayEvents]) => {
+                const [y, m, d] = dateStr.split("-").map(Number);
+                const date = new Date(y, m - 1, d);
+                const isToday = dateStr === todayStr;
+
+                return (
+                  <section key={dateStr} className="cal-list__group">
+                    <header className="cal-list__group-head">
+                      <h2 className="cal-list__group-date">
+                        {MONTH_NAMES[date.getMonth()]} {date.getDate()}
+                      </h2>
+                      <span className="cal-list__group-dow">
+                        {DOW_LABELS_FULL[date.getDay()]}
+                      </span>
+                      {isToday && (
+                        <span className="cal-tag cal-tag--today">Today</span>
+                      )}
+                      <span className="cal-list__group-rule" aria-hidden />
+                    </header>
+
+                    {dayEvents.map((ev) => (
+                      <article
+                        key={ev.id}
+                        className={`cal-list__row event-type--${ev.type}${ev.done ? " is-done" : ""}`}
+                      >
+                        <div className="cal-list__time">{fmtTime(ev.time)}</div>
+
+                        <div className="cal-list__content">
+                          <header className="cal-list__type-row">
+                            <span
+                              className={`cal-dot event-type--${ev.type}`}
+                              aria-hidden
+                            />
+                            <span className="cal-list__type-label">
+                              {EVENT_TYPE_LABELS[ev.type]}
+                            </span>
+                            {ev.payout ? (
+                              <span className="cal-list__payout">
+                                ${ev.payout}
+                              </span>
+                            ) : null}
+                          </header>
+
+                          <h3 className="cal-list__title">{ev.title}</h3>
+
+                          <p className="cal-list__meta">
+                            <Link
+                              href={
+                                ev.postUrl ??
+                                `/creator/campaigns/${ev.campaignId}/post`
+                              }
+                              className="cal-list__campaign"
+                            >
+                              {ev.campaignTitle}
+                            </Link>{" "}
+                            <span className="cal-dot-sep">&middot;</span>{" "}
+                            <span className="cal-list__merchant">
+                              {ev.merchantName}
+                            </span>
+                          </p>
+
+                          {noteTarget === ev.id && (
+                            <div className="cal-note-wrap">
+                              <textarea
+                                className="cal-note-input"
+                                rows={2}
+                                placeholder="Add a note..."
+                                value={noteValue}
+                                onChange={(e) => setNoteValue(e.target.value)}
+                                autoFocus
+                              />
+                              <button
+                                className="btn-secondary click-shift cal-btn-sm"
+                                onClick={saveNote}
+                              >
+                                Save note
+                              </button>
+                            </div>
+                          )}
+                          {ev.note && noteTarget !== ev.id && (
+                            <p className="cal-note-saved">Note: {ev.note}</p>
+                          )}
+                        </div>
+
+                        <div className="cal-list__actions">
+                          <ActionButtons
+                            event={ev}
+                            onMarkDone={markDone}
+                            onSnooze={snooze}
+                            onAddNote={addNote}
+                            onReschedule={reschedule}
+                            onMessageMerchant={messageMerchant}
+                            onRequestExtension={requestExtension}
+                          />
+                        </div>
+                      </article>
+                    ))}
+                  </section>
+                );
+              })
+            )}
+          </div>
+        )}
+
+        {/* Day popover (mobile / week view) */}
+        {popoverDate && (
+          <DayPopover
+            dateStr={popoverDate}
+            events={eventsByDate[popoverDate] ?? []}
+            anchorRef={popoverAnchor}
+            onClose={closePopover}
+            onMarkDone={(id) => markDone(id)}
+            onSnooze={(id) => {
+              snooze(id);
+              closePopover();
+            }}
             onAddNote={addNote}
             onReschedule={reschedule}
             onMessageMerchant={messageMerchant}
@@ -1321,205 +1493,8 @@ export default function CreatorCalendarPage() {
             onNoteChange={setNoteValue}
             onNoteSave={saveNote}
           />
-        </div>
-      )}
-
-      {/* ── Week view ────────────────────────────────────── */}
-      {view === "week" && (
-        <div className="cal-week">
-          <div className="cal-week__grid">
-            {weekDates.map((date) => {
-              const dateStr = toYMD(date);
-              const isToday = dateStr === todayStr;
-              const dayEvents = eventsByDate[dateStr] ?? [];
-
-              return (
-                <div
-                  key={dateStr}
-                  className={`cal-week__col${isToday ? " cal-week__col--today" : ""}`}
-                >
-                  <header className="cal-week__col-head">
-                    <span className="cal-week__dow">
-                      {DOW_LABELS_FULL[date.getDay()].slice(0, 3).toUpperCase()}
-                    </span>
-                    <span className="cal-week__num">{date.getDate()}</span>
-                  </header>
-
-                  <div className="cal-week__events">
-                    {dayEvents.length === 0 ? (
-                      <span className="cal-week__empty">&mdash;</span>
-                    ) : (
-                      dayEvents.map((ev) => (
-                        <button
-                          key={ev.id}
-                          type="button"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            openPopover(dateStr, e.currentTarget);
-                          }}
-                          title={ev.title}
-                          className={`cal-week__event event-type--${ev.type}${ev.done ? " is-done" : ""}`}
-                        >
-                          <span className="cal-week__event-title">
-                            {truncate(ev.title, 22)}
-                          </span>
-                          {ev.time && (
-                            <span className="cal-week__event-time">
-                              {fmtTime(ev.time)}
-                            </span>
-                          )}
-                        </button>
-                      ))
-                    )}
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      )}
-
-      {/* ── List view ────────────────────────────────────── */}
-      {view === "list" && (
-        <div className="cal-list">
-          {listGroups.length === 0 ? (
-            <div className="cal-list__empty">
-              <p className="cal-list__empty-num">0</p>
-              <p className="cal-list__empty-msg">
-                No events in {MONTH_NAMES[month]} {year}.
-              </p>
-              <p className="cal-list__empty-sub">
-                Browse open campaigns in Discover &mdash; new deadlines land
-                daily.
-              </p>
-            </div>
-          ) : (
-            listGroups.map(([dateStr, dayEvents]) => {
-              const [y, m, d] = dateStr.split("-").map(Number);
-              const date = new Date(y, m - 1, d);
-              const isToday = dateStr === todayStr;
-
-              return (
-                <section key={dateStr} className="cal-list__group">
-                  <header className="cal-list__group-head">
-                    <h2 className="cal-list__group-date">
-                      {MONTH_NAMES[date.getMonth()]} {date.getDate()}
-                    </h2>
-                    <span className="cal-list__group-dow">
-                      {DOW_LABELS_FULL[date.getDay()]}
-                    </span>
-                    {isToday && (
-                      <span className="cal-tag cal-tag--today">Today</span>
-                    )}
-                    <span className="cal-list__group-rule" aria-hidden />
-                  </header>
-
-                  {dayEvents.map((ev) => (
-                    <article
-                      key={ev.id}
-                      className={`cal-list__row event-type--${ev.type}${ev.done ? " is-done" : ""}`}
-                    >
-                      <div className="cal-list__time">{fmtTime(ev.time)}</div>
-
-                      <div className="cal-list__content">
-                        <header className="cal-list__type-row">
-                          <span
-                            className={`cal-dot event-type--${ev.type}`}
-                            aria-hidden
-                          />
-                          <span className="cal-list__type-label">
-                            {EVENT_TYPE_LABELS[ev.type]}
-                          </span>
-                          {ev.payout ? (
-                            <span className="cal-list__payout">
-                              ${ev.payout}
-                            </span>
-                          ) : null}
-                        </header>
-
-                        <h3 className="cal-list__title">{ev.title}</h3>
-
-                        <p className="cal-list__meta">
-                          <Link
-                            href={
-                              ev.postUrl ??
-                              `/creator/campaigns/${ev.campaignId}/post`
-                            }
-                            className="cal-list__campaign"
-                          >
-                            {ev.campaignTitle}
-                          </Link>{" "}
-                          <span className="cal-dot-sep">&middot;</span>{" "}
-                          <span className="cal-list__merchant">
-                            {ev.merchantName}
-                          </span>
-                        </p>
-
-                        {noteTarget === ev.id && (
-                          <div className="cal-note-wrap">
-                            <textarea
-                              className="cal-note-input"
-                              rows={2}
-                              placeholder="Add a note..."
-                              value={noteValue}
-                              onChange={(e) => setNoteValue(e.target.value)}
-                              autoFocus
-                            />
-                            <button
-                              className="btn-secondary click-shift cal-btn-sm"
-                              onClick={saveNote}
-                            >
-                              Save note
-                            </button>
-                          </div>
-                        )}
-                        {ev.note && noteTarget !== ev.id && (
-                          <p className="cal-note-saved">Note: {ev.note}</p>
-                        )}
-                      </div>
-
-                      <div className="cal-list__actions">
-                        <ActionButtons
-                          event={ev}
-                          onMarkDone={markDone}
-                          onSnooze={snooze}
-                          onAddNote={addNote}
-                          onReschedule={reschedule}
-                          onMessageMerchant={messageMerchant}
-                          onRequestExtension={requestExtension}
-                        />
-                      </div>
-                    </article>
-                  ))}
-                </section>
-              );
-            })
-          )}
-        </div>
-      )}
-
-      {/* Day popover (mobile / week view) */}
-      {popoverDate && (
-        <DayPopover
-          dateStr={popoverDate}
-          events={eventsByDate[popoverDate] ?? []}
-          anchorRef={popoverAnchor}
-          onClose={closePopover}
-          onMarkDone={(id) => markDone(id)}
-          onSnooze={(id) => {
-            snooze(id);
-            closePopover();
-          }}
-          onAddNote={addNote}
-          onReschedule={reschedule}
-          onMessageMerchant={messageMerchant}
-          onRequestExtension={requestExtension}
-          noteTarget={noteTarget}
-          noteValue={noteValue}
-          onNoteChange={setNoteValue}
-          onNoteSave={saveNote}
-        />
-      )}
+        )}
+      </div>
     </div>
   );
 }
