@@ -46,7 +46,9 @@ body:has(.us-rail) .dh-main:has(> .cd-page) {
   display: flex;
   flex-direction: column;
   gap: 24px;           /* uniform spacing: agent-bar → grid = grid inner gap */
-  overflow: hidden;
+  /* overflow:visible — flex layout contains height; visible lets shadows bleed
+     freely on all 4 sides so the Liquid Glass panel renders without clipping */
+  overflow: visible;
   font-family: var(--font-mono);
   color: var(--ink);
   font-variant-numeric: tabular-nums;
@@ -159,7 +161,9 @@ body:has(.us-rail) .dh-main:has(> .cd-page) {
   align-items: stretch;
   flex: 1;
   min-height: 0;
-  overflow: hidden;
+  /* padding-right: 16px gives right-column card shadow breathing room so the
+     Liquid Glass shadow is visible on the right edge (no overflow clipping here) */
+  padding-right: 16px;
 }
 
 .cd-col {
@@ -2411,20 +2415,31 @@ body:has(.us-rail) .dh-main:has(> .cd-page) {
    ══════════════════════════════════════════════════════════ */
 
 .cd-card--dark-glass {
-  /* iOS 26 Liquid Glass — Light Variant, high-opacity for visible frosted effect */
+  /*
+   * iOS 26 Liquid Glass — true recipe for warm-cream (--surface #f8f4e8) backdrop.
+   * Key: 10% base opacity → cream bleeds through the 48px blur → warm frosted glass.
+   * overflow:clip keeps content inside border-radius; box-shadow is NOT clipped
+   * (box-shadow is painted by the parent, which now has no overflow:hidden).
+   */
   background:
-    radial-gradient(ellipse at 20% 0%, rgba(255, 255, 255, 0.80) 0%, rgba(255, 255, 255, 0) 55%),
-    radial-gradient(ellipse at 88% 95%, rgba(255, 255, 255, 0.32) 0%, rgba(255, 255, 255, 0) 55%),
-    rgba(255, 255, 255, 0.62);
-  -webkit-backdrop-filter: blur(40px) saturate(200%);
-  backdrop-filter: blur(40px) saturate(200%);
-  border: 0.5px solid rgba(255, 255, 255, 0.80);
+    /* specular bubble — top-left, "glass catches light" signature */
+    radial-gradient(ellipse at 18% 0%, rgba(255, 255, 255, 0.70) 0%, rgba(255, 255, 255, 0) 45%),
+    /* warm glass base — 18% so it reads distinctly against #f8f4e8 cream */
+    rgba(255, 253, 248, 0.18);
+  -webkit-backdrop-filter: blur(48px) saturate(160%) brightness(1.03);
+  backdrop-filter: blur(48px) saturate(160%) brightness(1.03);
+  border: 0.5px solid rgba(255, 255, 255, 0.55);
   box-shadow:
-    0 4px 24px rgba(0, 0, 0, 0.08),
-    0 1px 4px rgba(0, 0, 0, 0.04),
-    inset 0 1.5px 0 rgba(255, 255, 255, 0.90),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.04);
-  overflow: hidden;
+    /* ambient depth — strong enough to read on cream bg */
+    0 16px 56px rgba(0, 0, 0, 0.13),
+    0 2px 8px rgba(0, 0, 0, 0.07),
+    /* iOS specular top edge */
+    inset 0 1.5px 0 rgba(255, 255, 255, 0.92),
+    /* left edge micro-shine */
+    inset 1px 0 0 rgba(255, 255, 255, 0.28),
+    /* inner bottom — physical depth */
+    inset 0 -1px 0 rgba(0, 0, 0, 0.05);
+  overflow: clip;
 }
 
 /* Inbox avatars — shared background; sizes split by context */
