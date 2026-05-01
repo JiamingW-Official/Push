@@ -26,7 +26,7 @@
 
   --cal-hover:        rgba(10, 10, 10, 0.04);
 
-  background: #f0efe9 !important;   /* overrides unified-sidebar transparent rule */
+  background: #f0efe9 !important;   /* must beat body:has(.us-rail) main [class*="-page"] { transparent !important } */
   color: var(--ink);
   padding: 16px 0;
   max-width: none;
@@ -55,9 +55,328 @@
   border: 1px solid rgba(10, 10, 10, 0.08);
 }
 
+/* Beat unified-sidebar transparent rule (specificity 0,2,2) */
+body:has(.us-rail) main .cw-page.cal {
+  background: #f0efe9 !important;
+}
+
 /* Prevent outer scroll when calendar is active */
 body:has(.cw-page.cal) .dh-main {
   overflow: hidden !important;
+}
+
+/* ── Three-panel layout ─────────────────────────────────── */
+
+.cal-three-col {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  gap: 12px;
+  padding: 0 16px 16px;
+  overflow: hidden;
+}
+
+/* iOS 26 Liquid Glass — Light Variant (Design.md § 8.9.1 STRICT) */
+.cal-panel {
+  background:
+    radial-gradient(ellipse at 25% 0%, rgba(255, 255, 255, 0.55) 0%, rgba(255, 255, 255, 0) 55%),
+    radial-gradient(ellipse at 90% 100%, rgba(255, 255, 255, 0.18) 0%, rgba(255, 255, 255, 0) 60%),
+    rgba(255, 255, 255, 0.22);
+  -webkit-backdrop-filter: blur(32px) saturate(180%);
+  backdrop-filter: blur(32px) saturate(180%);
+  border: 0.5px solid rgba(255, 255, 255, 0.40);
+  border-radius: 16px;
+  box-shadow:
+    0 8px 24px rgba(10, 10, 10, 0.08),
+    0 2px 6px rgba(10, 10, 10, 0.05),
+    inset 0 1px 0 rgba(255, 255, 255, 0.50),
+    inset 0 -1px 0 rgba(10, 10, 10, 0.05);
+  color: var(--ink);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.cal-panel-left {
+  width: 240px;
+  flex-shrink: 0;
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+
+.cal-panel-left::-webkit-scrollbar { display: none; }
+
+.cal-panel-center {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.cal-panel-right {
+  width: 272px;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+/* ── Left panel content ─────────────────────────────────── */
+
+.cal-lp {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 20px 14px;
+}
+
+.cal-lp__head {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.cal-lp__month {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: var(--ink);
+  line-height: 1.1;
+}
+
+.cal-lp__year {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+}
+
+.cal-lp__card {
+  background: rgba(255, 255, 255, 0.60);
+  border: 1px solid rgba(255, 255, 255, 0.80);
+  border-radius: 12px;
+  padding: 14px;
+  box-shadow: 0 2px 8px rgba(10, 10, 10, 0.05);
+}
+
+.cal-lp__label {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+  margin-bottom: 6px;
+}
+
+.cal-lp__big {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 30px;
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  color: var(--ink);
+  line-height: 1;
+  margin-bottom: 12px;
+}
+
+.cal-lp__breakdown {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.cal-lp__breakdown-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.cal-lp__breakdown-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.cal-lp__breakdown-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--ink-3);
+  letter-spacing: 0.02em;
+  flex: 1;
+  min-width: 0;
+}
+
+.cal-lp__breakdown-val {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--ink);
+  flex-shrink: 0;
+}
+
+.cal-lp__stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.cal-lp__stat {
+  background: rgba(255, 255, 255, 0.60);
+  border: 1px solid rgba(255, 255, 255, 0.80);
+  border-radius: 12px;
+  padding: 12px 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  box-shadow: 0 2px 8px rgba(10, 10, 10, 0.05);
+}
+
+.cal-lp__stat-num {
+  font-family: var(--font-display);
+  font-size: 26px;
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  color: var(--ink);
+  line-height: 1;
+}
+
+.cal-lp__stat-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+}
+
+.cal-lp__tier-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.cal-lp__tier-badge {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--champagne);
+  background: rgba(191, 161, 112, 0.12);
+  border-radius: 6px;
+  padding: 3px 8px;
+}
+
+.cal-lp__tier-arrow {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+}
+
+.cal-lp__tier-track {
+  height: 6px;
+  background: rgba(10, 10, 10, 0.08);
+  border-radius: 999px;
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+
+.cal-lp__tier-fill {
+  height: 100%;
+  background: var(--champagne);
+  border-radius: 999px;
+  transition: width 600ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.cal-lp__tier-note {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--ink-4);
+  letter-spacing: 0.02em;
+}
+
+.cal-lp__upcoming-label {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+  margin-bottom: 10px;
+  padding: 0 2px;
+}
+
+.cal-lp__upcoming-empty {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--ink-5);
+  text-align: center;
+  padding: 16px 0;
+  margin: 0;
+}
+
+.cal-lp__upcoming-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.cal-lp__upcoming-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px 12px;
+  background: rgba(255, 255, 255, 0.60);
+  border: 1px solid rgba(255, 255, 255, 0.80);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: transform 180ms var(--cal-spring), box-shadow 180ms ease;
+  text-align: left;
+  width: 100%;
+}
+
+.cal-lp__upcoming-item:hover {
+  transform: translate(2px, 2px);
+  box-shadow: 0 2px 8px rgba(10, 10, 10, 0.10);
+}
+
+.cal-lp__upcoming-item:active {
+  transform: translate(3px, 3px) scale(0.98);
+}
+
+.cal-lp__upcoming-content {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+  min-width: 0;
+}
+
+.cal-lp__upcoming-title {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--ink);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.cal-lp__upcoming-date {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--ink-4);
+  letter-spacing: 0.04em;
 }
 
 /* ── Compact topbar ─────────────────────────────────────── */
@@ -663,20 +982,18 @@ body:has(.cw-page.cal) .dh-main {
 /* ── Side panel — flat right column ─────────────────────── */
 
 .cal-side {
-  width: var(--cal-side-w);
-  flex-shrink: 0;
-  /* iOS 26 Liquid Glass */
-  background:
-    radial-gradient(ellipse at 22% 0%, rgba(255, 255, 255, 0.72) 0%, rgba(255, 255, 255, 0) 55%),
-    rgba(255, 255, 255, 0.52);
-  -webkit-backdrop-filter: blur(32px) saturate(180%);
-  backdrop-filter: blur(32px) saturate(180%);
-  border-left: 1px solid rgba(10, 10, 10, 0.07);
+  /* Panel provides the Liquid Glass — side panel is transparent fill */
+  background: transparent;
+  border-left: none;
   border-radius: 0;
-  box-shadow: -4px 0 24px rgba(10, 10, 10, 0.06);
+  box-shadow: none;
   overflow-y: auto;
-  height: 100%;
+  flex: 1;
+  min-height: 0;
+  scrollbar-width: none;
 }
+
+.cal-side::-webkit-scrollbar { display: none; }
 
 .cal-side--empty {
   display: flex;
@@ -699,9 +1016,7 @@ body:has(.cw-page.cal) .dh-main {
 .cal-side__head {
   padding: 20px 20px 16px;
   border-bottom: 1px solid rgba(10, 10, 10, 0.07);
-  background: rgba(255, 255, 255, 0.22);
-  -webkit-backdrop-filter: blur(8px);
-  backdrop-filter: blur(8px);
+  background: rgba(255, 255, 255, 0.45);
   position: sticky;
   top: 0;
   z-index: 1;

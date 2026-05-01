@@ -193,6 +193,139 @@ function estimateMonthEarnings(events: CalendarEvent[], ym: string): number {
     .reduce((sum, e) => sum + (e.payout ?? 0), 0);
 }
 
+/* ── Left panel component ────────────────────────────────── */
+
+interface LeftPanelProps {
+  monthName: string;
+  year: number;
+  earningsBreakdown: EarningsBreakdown;
+  deadlineCount: number;
+  estEarnings: number;
+  upcomingEvents: CalendarEvent[];
+  todayStr: string;
+  onSelectDate: (date: string) => void;
+}
+
+function LeftPanel({
+  monthName,
+  year,
+  earningsBreakdown,
+  deadlineCount,
+  estEarnings,
+  upcomingEvents,
+  todayStr,
+  onSelectDate,
+}: LeftPanelProps) {
+  const { confirmed, pending, atRisk, monthTarget } = earningsBreakdown;
+  return (
+    <div className="cal-lp">
+      <div className="cal-lp__head">
+        <span className="cal-lp__month">{monthName}</span>
+        <span className="cal-lp__year">{year}</span>
+      </div>
+
+      {/* Earnings card */}
+      <div className="cal-lp__card cal-lp__earnings">
+        <span className="cal-lp__label">Est. Earnings</span>
+        <span className="cal-lp__big">${estEarnings.toLocaleString()}</span>
+        <div className="cal-lp__breakdown">
+          <div className="cal-lp__breakdown-row">
+            <span
+              className="cal-lp__breakdown-dot"
+              style={{ background: "#22c55e" }}
+              aria-hidden
+            />
+            <span className="cal-lp__breakdown-label">Confirmed</span>
+            <span className="cal-lp__breakdown-val">
+              ${confirmed.toLocaleString()}
+            </span>
+          </div>
+          <div className="cal-lp__breakdown-row">
+            <span
+              className="cal-lp__breakdown-dot"
+              style={{ background: "#0085ff" }}
+              aria-hidden
+            />
+            <span className="cal-lp__breakdown-label">Pending</span>
+            <span className="cal-lp__breakdown-val">
+              ${pending.toLocaleString()}
+            </span>
+          </div>
+          <div className="cal-lp__breakdown-row">
+            <span
+              className="cal-lp__breakdown-dot"
+              style={{ background: "#bfa170" }}
+              aria-hidden
+            />
+            <span className="cal-lp__breakdown-label">At Risk</span>
+            <span className="cal-lp__breakdown-val">
+              ${atRisk.toLocaleString()}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      {/* Stats row */}
+      <div className="cal-lp__stats">
+        <div className="cal-lp__stat">
+          <span className="cal-lp__stat-num">{deadlineCount}</span>
+          <span className="cal-lp__stat-label">Deadlines</span>
+        </div>
+        <div className="cal-lp__stat">
+          <span className="cal-lp__stat-num">{upcomingEvents.length}</span>
+          <span className="cal-lp__stat-label">Upcoming</span>
+        </div>
+      </div>
+
+      {/* Tier progress */}
+      <div className="cal-lp__card cal-lp__tier">
+        <div className="cal-lp__tier-head">
+          <span className="cal-lp__tier-badge">Bronze</span>
+          <span className="cal-lp__tier-arrow">→ Silver</span>
+        </div>
+        <div className="cal-lp__tier-track">
+          <div className="cal-lp__tier-fill" style={{ width: "60%" }} />
+        </div>
+        <span className="cal-lp__tier-note">3 of 5 verified campaigns</span>
+      </div>
+
+      {/* Upcoming events */}
+      <div className="cal-lp__upcoming">
+        <span className="cal-lp__upcoming-label">Upcoming</span>
+        {upcomingEvents.length === 0 ? (
+          <p className="cal-lp__upcoming-empty">No upcoming events</p>
+        ) : (
+          <div className="cal-lp__upcoming-list">
+            {upcomingEvents.map((ev) => (
+              <button
+                key={ev.id}
+                type="button"
+                className="cal-lp__upcoming-item"
+                onClick={() => onSelectDate(ev.date)}
+              >
+                <span
+                  className={`cal-dot event-type--${ev.type}`}
+                  aria-hidden
+                />
+                <div className="cal-lp__upcoming-content">
+                  <span className="cal-lp__upcoming-title">
+                    {truncate(ev.title, 22)}
+                  </span>
+                  <span className="cal-lp__upcoming-date">
+                    {ev.date === todayStr
+                      ? "Today"
+                      : ev.date.slice(5).replace("-", "/")}
+                  </span>
+                </div>
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
 /* ── P0-4: Earnings Sparkline ─────────────────────────────── */
 
 function EarningsSparkline({
@@ -902,6 +1035,15 @@ export default function CreatorCalendarPage() {
     };
   }, [events]);
 
+  const upcomingEvents = useMemo(
+    () =>
+      events
+        .filter((e) => e.date >= todayStr && !e.done)
+        .sort((a, b) => a.date.localeCompare(b.date))
+        .slice(0, 4),
+    [events, todayStr],
+  );
+
   /* ── Handlers ────────────────────────────────────────── */
 
   const prevPeriod = useCallback(() => {
@@ -1088,141 +1230,143 @@ export default function CreatorCalendarPage() {
 
   return (
     <div className="cw-page cal">
-      <div className="cal-card">
-        {/* ── Compact topbar — nav + period + view switcher + export ── */}
-        <nav className="cal-topbar" aria-label="Calendar navigation">
-          <div className="cal-topbar__nav">
-            <button
-              type="button"
-              onClick={prevPeriod}
-              aria-label="Previous period"
-              className="cal-nav__btn"
-            >
-              <svg
-                width="14"
-                height="14"
-                viewBox="0 0 14 14"
-                fill="none"
-                aria-hidden
+      <div className="cal-three-col">
+        {/* ── Left panel — earnings, stats, tier, upcoming ── */}
+        <aside className="cal-panel cal-panel-left">
+          <LeftPanel
+            monthName={MONTH_NAMES[month]}
+            year={year}
+            earningsBreakdown={earningsBreakdown}
+            deadlineCount={deadlineCount}
+            estEarnings={estEarnings}
+            upcomingEvents={upcomingEvents}
+            todayStr={todayStr}
+            onSelectDate={setSelectedDate}
+          />
+        </aside>
+
+        {/* ── Center panel — topbar + filters + calendar ── */}
+        <div className="cal-panel cal-panel-center">
+          {/* ── Compact topbar — nav + period + view switcher + export ── */}
+          <nav className="cal-topbar" aria-label="Calendar navigation">
+            <div className="cal-topbar__nav">
+              <button
+                type="button"
+                onClick={prevPeriod}
+                aria-label="Previous period"
+                className="cal-nav__btn"
               >
-                <path
-                  d="M9 2 L4 7 L9 12"
-                  stroke="currentColor"
-                  strokeWidth="1.6"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-            </button>
-            <button
-              type="button"
-              onClick={goToday}
-              className="cal-topbar__period"
-            >
-              {periodLabel}
-            </button>
-            <button
-              type="button"
-              onClick={nextPeriod}
-              aria-label="Next period"
-              className="cal-nav__btn"
-            >
-              <svg
-                width="14"
-                height="14"
-                viewBox="0 0 14 14"
-                fill="none"
-                aria-hidden
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 14 14"
+                  fill="none"
+                  aria-hidden
+                >
+                  <path
+                    d="M9 2 L4 7 L9 12"
+                    stroke="currentColor"
+                    strokeWidth="1.6"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </button>
+              <button
+                type="button"
+                onClick={goToday}
+                className="cal-topbar__period"
               >
-                <path
-                  d="M5 2 L10 7 L5 12"
-                  stroke="currentColor"
-                  strokeWidth="1.6"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-            </button>
-            <button
-              type="button"
-              onClick={goToday}
-              className="cal-topbar__today"
-            >
-              Today
-            </button>
-            {estEarnings > 0 && (
-              <span className="cal-topbar__earnings">
-                ${estEarnings.toLocaleString()} EST.
-              </span>
+                {periodLabel}
+              </button>
+              <button
+                type="button"
+                onClick={nextPeriod}
+                aria-label="Next period"
+                className="cal-nav__btn"
+              >
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 14 14"
+                  fill="none"
+                  aria-hidden
+                >
+                  <path
+                    d="M5 2 L10 7 L5 12"
+                    stroke="currentColor"
+                    strokeWidth="1.6"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </button>
+              <button
+                type="button"
+                onClick={goToday}
+                className="cal-topbar__today"
+              >
+                Today
+              </button>
+            </div>
+            <div className="cal-topbar__right">
+              <div
+                className="cal-seg"
+                role="tablist"
+                aria-label="Calendar view"
+              >
+                {(["month", "week", "list"] as CalView[]).map((v) => (
+                  <button
+                    key={v}
+                    role="tab"
+                    aria-selected={view === v}
+                    type="button"
+                    onClick={() => setView(v)}
+                    className={`cal-seg__opt${view === v ? " is-active" : ""}`}
+                  >
+                    {v.charAt(0).toUpperCase() + v.slice(1)}
+                  </button>
+                ))}
+              </div>
+              <button
+                type="button"
+                className="btn-ghost click-shift cal-btn-sm"
+                onClick={() => downloadICS(events)}
+                title="Export .ics calendar file"
+              >
+                Export .ics
+              </button>
+            </div>
+          </nav>
+
+          {/* ── Filter rail — legend chips as type filters ── */}
+          <div className="cal-filter-rail">
+            {(Object.entries(EVENT_TYPE_LABELS) as [EventType, string][]).map(
+              ([type, label]) => (
+                <button
+                  key={type}
+                  type="button"
+                  onClick={() => toggleFilter(type as EventType)}
+                  className={`cal-legend-chip${activeFilters.has(type as EventType) ? " is-active" : ""}`}
+                >
+                  <span className={`cal-dot event-type--${type}`} aria-hidden />
+                  {label}
+                </button>
+              ),
+            )}
+            {activeFilters.size > 0 && (
+              <button
+                type="button"
+                className="cal-legend-chip cal-filter-clear"
+                onClick={clearFilters}
+              >
+                Clear
+              </button>
             )}
           </div>
-          <div className="cal-topbar__right">
-            <div className="cal-seg" role="tablist" aria-label="Calendar view">
-              {(["month", "week", "list"] as CalView[]).map((v) => (
-                <button
-                  key={v}
-                  role="tab"
-                  aria-selected={view === v}
-                  type="button"
-                  onClick={() => setView(v)}
-                  className={`cal-seg__opt${view === v ? " is-active" : ""}`}
-                >
-                  {v.charAt(0).toUpperCase() + v.slice(1)}
-                </button>
-              ))}
-            </div>
-            <button
-              type="button"
-              className="btn-ghost click-shift cal-btn-sm"
-              onClick={() => downloadICS(events)}
-              title="Export .ics calendar file"
-            >
-              Export .ics
-            </button>
-          </div>
-        </nav>
 
-        {/* ── Filter rail — legend chips as type filters ── */}
-        <div className="cal-filter-rail">
-          {(Object.entries(EVENT_TYPE_LABELS) as [EventType, string][]).map(
-            ([type, label]) => (
-              <button
-                key={type}
-                type="button"
-                onClick={() => toggleFilter(type as EventType)}
-                className={`cal-legend-chip${activeFilters.has(type as EventType) ? " is-active" : ""}`}
-              >
-                <span className={`cal-dot event-type--${type}`} aria-hidden />
-                {label}
-              </button>
-            ),
-          )}
-          {activeFilters.size > 0 && (
-            <button
-              type="button"
-              className="cal-legend-chip cal-filter-clear"
-              onClick={clearFilters}
-            >
-              Clear
-            </button>
-          )}
-        </div>
-
-        {/* ── P1-4: Tier progress banner ── */}
-        <div className="cal-tier-banner">
-          <span className="cal-tier-banner__tier">BRONZE</span>
-          <span className="cal-tier-banner__sep"> · </span>
-          <span className="cal-tier-banner__progress">
-            3 of 5 campaigns to Silver
-          </span>
-          <span className="cal-tier-banner__next">
-            Next tier unlocks at 5 verified campaigns
-          </span>
-        </div>
-
-        {/* ── Month view ───────────────────────────────────── */}
-        {view === "month" && (
-          <div className="cal-month-layout">
+          {/* ── Month view ───────────────────────────────────── */}
+          {view === "month" && (
             <div className="cal-month">
               <div className="cal-month__dow-row" aria-hidden>
                 {DOW_LABELS.map((d) => (
@@ -1368,14 +1512,199 @@ export default function CreatorCalendarPage() {
                 })}
               </div>
             </div>
+          )}
 
-            {/* P0-2: Click-driven side panel */}
-            <SidePanel
-              selectedDate={selectedDate}
-              events={events}
-              todayStr={todayStr}
-              onMarkDone={markDone}
-              onSnooze={snooze}
+          {/* ── Week view ────────────────────────────────────── */}
+
+          {view === "week" && (
+            <div className="cal-week">
+              <div className="cal-week__grid">
+                {weekDates.map((date) => {
+                  const dateStr = toYMD(date);
+                  const isToday = dateStr === todayStr;
+                  const dayEvents = eventsByDate[dateStr] ?? [];
+
+                  return (
+                    <div
+                      key={dateStr}
+                      className={`cal-week__col${isToday ? " cal-week__col--today" : ""}`}
+                    >
+                      <header className="cal-week__col-head">
+                        <span className="cal-week__dow">
+                          {DOW_LABELS_FULL[date.getDay()]
+                            .slice(0, 3)
+                            .toUpperCase()}
+                        </span>
+                        <span className="cal-week__num">{date.getDate()}</span>
+                      </header>
+
+                      <div className="cal-week__events">
+                        {dayEvents.length === 0 ? (
+                          <span className="cal-week__empty">&mdash;</span>
+                        ) : (
+                          dayEvents.map((ev) => (
+                            <button
+                              key={ev.id}
+                              type="button"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                openPopover(dateStr, e.currentTarget);
+                              }}
+                              title={ev.title}
+                              className={`cal-week__event event-type--${ev.type}${ev.done ? " is-done" : ""}`}
+                            >
+                              <span className="cal-week__event-title">
+                                {truncate(ev.title, 22)}
+                              </span>
+                              {ev.time && (
+                                <span className="cal-week__event-time">
+                                  {fmtTime(ev.time)}
+                                </span>
+                              )}
+                            </button>
+                          ))
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
+          {/* ── List view ────────────────────────────────────── */}
+          {view === "list" && (
+            <div className="cal-list">
+              {listGroups.length === 0 ? (
+                <div className="cal-list__empty">
+                  <p className="cal-list__empty-num">0</p>
+                  <p className="cal-list__empty-msg">
+                    No events in {MONTH_NAMES[month]} {year}.
+                  </p>
+                  <p className="cal-list__empty-sub">
+                    Browse open campaigns in Discover &mdash; new deadlines land
+                    daily.
+                  </p>
+                </div>
+              ) : (
+                listGroups.map(([dateStr, dayEvents]) => {
+                  const [y, m, d] = dateStr.split("-").map(Number);
+                  const date = new Date(y, m - 1, d);
+                  const isToday = dateStr === todayStr;
+
+                  return (
+                    <section key={dateStr} className="cal-list__group">
+                      <header className="cal-list__group-head">
+                        <h2 className="cal-list__group-date">
+                          {MONTH_NAMES[date.getMonth()]} {date.getDate()}
+                        </h2>
+                        <span className="cal-list__group-dow">
+                          {DOW_LABELS_FULL[date.getDay()]}
+                        </span>
+                        {isToday && (
+                          <span className="cal-tag cal-tag--today">Today</span>
+                        )}
+                        <span className="cal-list__group-rule" aria-hidden />
+                      </header>
+
+                      {dayEvents.map((ev) => (
+                        <article
+                          key={ev.id}
+                          className={`cal-list__row event-type--${ev.type}${ev.done ? " is-done" : ""}`}
+                        >
+                          <div className="cal-list__time">
+                            {fmtTime(ev.time)}
+                          </div>
+
+                          <div className="cal-list__content">
+                            <header className="cal-list__type-row">
+                              <span
+                                className={`cal-dot event-type--${ev.type}`}
+                                aria-hidden
+                              />
+                              <span className="cal-list__type-label">
+                                {EVENT_TYPE_LABELS[ev.type]}
+                              </span>
+                              {ev.payout ? (
+                                <span className="cal-list__payout">
+                                  ${ev.payout}
+                                </span>
+                              ) : null}
+                            </header>
+
+                            <h3 className="cal-list__title">{ev.title}</h3>
+
+                            <p className="cal-list__meta">
+                              <Link
+                                href={
+                                  ev.postUrl ??
+                                  `/creator/campaigns/${ev.campaignId}/post`
+                                }
+                                className="cal-list__campaign"
+                              >
+                                {ev.campaignTitle}
+                              </Link>{" "}
+                              <span className="cal-dot-sep">&middot;</span>{" "}
+                              <span className="cal-list__merchant">
+                                {ev.merchantName}
+                              </span>
+                            </p>
+
+                            {noteTarget === ev.id && (
+                              <div className="cal-note-wrap">
+                                <textarea
+                                  className="cal-note-input"
+                                  rows={2}
+                                  placeholder="Add a note..."
+                                  value={noteValue}
+                                  onChange={(e) => setNoteValue(e.target.value)}
+                                  autoFocus
+                                />
+                                <button
+                                  className="btn-secondary click-shift cal-btn-sm"
+                                  onClick={saveNote}
+                                >
+                                  Save note
+                                </button>
+                              </div>
+                            )}
+                            {ev.note && noteTarget !== ev.id && (
+                              <p className="cal-note-saved">Note: {ev.note}</p>
+                            )}
+                          </div>
+
+                          <div className="cal-list__actions">
+                            <ActionButtons
+                              event={ev}
+                              onMarkDone={markDone}
+                              onSnooze={snooze}
+                              onAddNote={addNote}
+                              onReschedule={reschedule}
+                              onMessageMerchant={messageMerchant}
+                              onRequestExtension={requestExtension}
+                            />
+                          </div>
+                        </article>
+                      ))}
+                    </section>
+                  );
+                })
+              )}
+            </div>
+          )}
+
+          {/* Day popover (mobile / week view) */}
+          {popoverDate && (
+            <DayPopover
+              dateStr={popoverDate}
+              events={eventsByDate[popoverDate] ?? []}
+              anchorRef={popoverAnchor}
+              onClose={closePopover}
+              onMarkDone={(id) => markDone(id)}
+              onSnooze={(id) => {
+                snooze(id);
+                closePopover();
+              }}
               onAddNote={addNote}
               onReschedule={reschedule}
               onMessageMerchant={messageMerchant}
@@ -1384,200 +1713,17 @@ export default function CreatorCalendarPage() {
               noteValue={noteValue}
               onNoteChange={setNoteValue}
               onNoteSave={saveNote}
-              checkedPrepItems={checkedPrepItems}
-              onTogglePrepItem={togglePrepItem}
             />
-          </div>
-        )}
-
-        {/* ── Week view ────────────────────────────────────── */}
-        {view === "week" && (
-          <div className="cal-week">
-            <div className="cal-week__grid">
-              {weekDates.map((date) => {
-                const dateStr = toYMD(date);
-                const isToday = dateStr === todayStr;
-                const dayEvents = eventsByDate[dateStr] ?? [];
-
-                return (
-                  <div
-                    key={dateStr}
-                    className={`cal-week__col${isToday ? " cal-week__col--today" : ""}`}
-                  >
-                    <header className="cal-week__col-head">
-                      <span className="cal-week__dow">
-                        {DOW_LABELS_FULL[date.getDay()]
-                          .slice(0, 3)
-                          .toUpperCase()}
-                      </span>
-                      <span className="cal-week__num">{date.getDate()}</span>
-                    </header>
-
-                    <div className="cal-week__events">
-                      {dayEvents.length === 0 ? (
-                        <span className="cal-week__empty">&mdash;</span>
-                      ) : (
-                        dayEvents.map((ev) => (
-                          <button
-                            key={ev.id}
-                            type="button"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              openPopover(dateStr, e.currentTarget);
-                            }}
-                            title={ev.title}
-                            className={`cal-week__event event-type--${ev.type}${ev.done ? " is-done" : ""}`}
-                          >
-                            <span className="cal-week__event-title">
-                              {truncate(ev.title, 22)}
-                            </span>
-                            {ev.time && (
-                              <span className="cal-week__event-time">
-                                {fmtTime(ev.time)}
-                              </span>
-                            )}
-                          </button>
-                        ))
-                      )}
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        )}
-
-        {/* ── List view ────────────────────────────────────── */}
-        {view === "list" && (
-          <div className="cal-list">
-            {listGroups.length === 0 ? (
-              <div className="cal-list__empty">
-                <p className="cal-list__empty-num">0</p>
-                <p className="cal-list__empty-msg">
-                  No events in {MONTH_NAMES[month]} {year}.
-                </p>
-                <p className="cal-list__empty-sub">
-                  Browse open campaigns in Discover &mdash; new deadlines land
-                  daily.
-                </p>
-              </div>
-            ) : (
-              listGroups.map(([dateStr, dayEvents]) => {
-                const [y, m, d] = dateStr.split("-").map(Number);
-                const date = new Date(y, m - 1, d);
-                const isToday = dateStr === todayStr;
-
-                return (
-                  <section key={dateStr} className="cal-list__group">
-                    <header className="cal-list__group-head">
-                      <h2 className="cal-list__group-date">
-                        {MONTH_NAMES[date.getMonth()]} {date.getDate()}
-                      </h2>
-                      <span className="cal-list__group-dow">
-                        {DOW_LABELS_FULL[date.getDay()]}
-                      </span>
-                      {isToday && (
-                        <span className="cal-tag cal-tag--today">Today</span>
-                      )}
-                      <span className="cal-list__group-rule" aria-hidden />
-                    </header>
-
-                    {dayEvents.map((ev) => (
-                      <article
-                        key={ev.id}
-                        className={`cal-list__row event-type--${ev.type}${ev.done ? " is-done" : ""}`}
-                      >
-                        <div className="cal-list__time">{fmtTime(ev.time)}</div>
-
-                        <div className="cal-list__content">
-                          <header className="cal-list__type-row">
-                            <span
-                              className={`cal-dot event-type--${ev.type}`}
-                              aria-hidden
-                            />
-                            <span className="cal-list__type-label">
-                              {EVENT_TYPE_LABELS[ev.type]}
-                            </span>
-                            {ev.payout ? (
-                              <span className="cal-list__payout">
-                                ${ev.payout}
-                              </span>
-                            ) : null}
-                          </header>
-
-                          <h3 className="cal-list__title">{ev.title}</h3>
-
-                          <p className="cal-list__meta">
-                            <Link
-                              href={
-                                ev.postUrl ??
-                                `/creator/campaigns/${ev.campaignId}/post`
-                              }
-                              className="cal-list__campaign"
-                            >
-                              {ev.campaignTitle}
-                            </Link>{" "}
-                            <span className="cal-dot-sep">&middot;</span>{" "}
-                            <span className="cal-list__merchant">
-                              {ev.merchantName}
-                            </span>
-                          </p>
-
-                          {noteTarget === ev.id && (
-                            <div className="cal-note-wrap">
-                              <textarea
-                                className="cal-note-input"
-                                rows={2}
-                                placeholder="Add a note..."
-                                value={noteValue}
-                                onChange={(e) => setNoteValue(e.target.value)}
-                                autoFocus
-                              />
-                              <button
-                                className="btn-secondary click-shift cal-btn-sm"
-                                onClick={saveNote}
-                              >
-                                Save note
-                              </button>
-                            </div>
-                          )}
-                          {ev.note && noteTarget !== ev.id && (
-                            <p className="cal-note-saved">Note: {ev.note}</p>
-                          )}
-                        </div>
-
-                        <div className="cal-list__actions">
-                          <ActionButtons
-                            event={ev}
-                            onMarkDone={markDone}
-                            onSnooze={snooze}
-                            onAddNote={addNote}
-                            onReschedule={reschedule}
-                            onMessageMerchant={messageMerchant}
-                            onRequestExtension={requestExtension}
-                          />
-                        </div>
-                      </article>
-                    ))}
-                  </section>
-                );
-              })
-            )}
-          </div>
-        )}
-
-        {/* Day popover (mobile / week view) */}
-        {popoverDate && (
-          <DayPopover
-            dateStr={popoverDate}
-            events={eventsByDate[popoverDate] ?? []}
-            anchorRef={popoverAnchor}
-            onClose={closePopover}
-            onMarkDone={(id) => markDone(id)}
-            onSnooze={(id) => {
-              snooze(id);
-              closePopover();
-            }}
+          )}
+        </div>
+        {/* ── Right panel — selected-day event detail ── */}
+        <aside className="cal-panel cal-panel-right">
+          <SidePanel
+            selectedDate={selectedDate}
+            events={events}
+            todayStr={todayStr}
+            onMarkDone={markDone}
+            onSnooze={snooze}
             onAddNote={addNote}
             onReschedule={reschedule}
             onMessageMerchant={messageMerchant}
@@ -1586,8 +1732,10 @@ export default function CreatorCalendarPage() {
             noteValue={noteValue}
             onNoteChange={setNoteValue}
             onNoteSave={saveNote}
+            checkedPrepItems={checkedPrepItems}
+            onTogglePrepItem={togglePrepItem}
           />
-        )}
+        </aside>
       </div>
     </div>
   );
