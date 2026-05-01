@@ -617,6 +617,93 @@ const MAY: CalendarEvent[] = [
 // ── June 2026 events ──────────────────────────────────────
 
 const JUNE: CalendarEvent[] = [
+  // ── Attribution Decay Milestones (D+60 from April deadlines) ──
+  // April 22 (Le Bec Fin) + 60 = June 21
+  {
+    id: "ev-decay-006",
+    campaignId: "camp-006",
+    campaignTitle: "Le Bec-Fin Pop-Up Review",
+    merchantName: "Le Bec Fin",
+    type: "milestone",
+    title: "D+60 attribution decay — Le Bec-Fin",
+    date: "2026-06-21",
+    description:
+      "Attribution weight drops to 25% after D+60. Window fully expires at D+90 (Jul 21).",
+    done: false,
+    snoozed: false,
+    payout: 0,
+    isDecayMilestone: true,
+    decayDayNumber: 60,
+  },
+  // April 25 (Superiority Burger) + 60 = June 24
+  {
+    id: "ev-decay-007",
+    campaignId: "camp-002",
+    campaignTitle: "Best Burger in NYC Feature",
+    merchantName: "Superiority Burger",
+    type: "milestone",
+    title: "D+60 attribution decay — Superiority Burger",
+    date: "2026-06-24",
+    description:
+      "Attribution weight drops to 25% after D+60. Window fully expires at D+90 (Jul 24).",
+    done: false,
+    snoozed: false,
+    payout: 0,
+    isDecayMilestone: true,
+    decayDayNumber: 60,
+  },
+  // April 28 (Brow Theory) + 60 = June 27
+  {
+    id: "ev-decay-008",
+    campaignId: "camp-004",
+    campaignTitle: "Brow Transformation Story",
+    merchantName: "Brow Theory",
+    type: "milestone",
+    title: "D+60 attribution decay — Brow Theory",
+    date: "2026-06-27",
+    description:
+      "Attribution weight drops to 25% after D+60. Window fully expires at D+90 (Jul 27).",
+    done: false,
+    snoozed: false,
+    payout: 0,
+    isDecayMilestone: true,
+    decayDayNumber: 60,
+  },
+  // April 29 (Cha Cha Matcha) + 60 = June 28
+  {
+    id: "ev-decay-009",
+    campaignId: "camp-008",
+    campaignTitle: "Matcha Morning Ritual",
+    merchantName: "Cha Cha Matcha",
+    type: "milestone",
+    title: "D+60 attribution decay — Cha Cha Matcha",
+    date: "2026-06-28",
+    description:
+      "Attribution weight drops to 25% after D+60. Window fully expires at D+90 (Jul 28).",
+    done: false,
+    snoozed: false,
+    payout: 0,
+    isDecayMilestone: true,
+    decayDayNumber: 60,
+  },
+  // April 30 (Blank Street Coffee) + 60 = June 29
+  {
+    id: "ev-decay-010",
+    campaignId: "camp-001",
+    campaignTitle: "Morning Ritual Campaign",
+    merchantName: "Blank Street Coffee",
+    type: "milestone",
+    title: "D+60 attribution decay — Blank Street Coffee",
+    date: "2026-06-29",
+    description:
+      "Attribution weight drops to 25% after D+60. Window fully expires at D+90 (Jul 29).",
+    done: false,
+    snoozed: false,
+    payout: 0,
+    isDecayMilestone: true,
+    decayDayNumber: 60,
+  },
+
   // Future campaigns (placeholder)
   {
     id: "ev-033",

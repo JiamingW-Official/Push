@@ -367,11 +367,13 @@ function SidePanel({
           dayEvents.map((ev) => (
             <article
               key={ev.id}
-              className={`cal-side__event event-type--${ev.type}${ev.done ? " is-done" : ""}`}
+              className={`cal-side__event event-type--${ev.type}${ev.done ? " is-done" : ""}${ev.isDecayMilestone ? " is-decay" : ""}`}
             >
               <header className="cal-side__event-head">
                 <span className={`cal-chip event-type--${ev.type}`}>
-                  {EVENT_TYPE_LABELS[ev.type]}
+                  {ev.isDecayMilestone
+                    ? `D+${ev.decayDayNumber} DECAY`
+                    : EVENT_TYPE_LABELS[ev.type]}
                 </span>
                 {ev.time && (
                   <span className="cal-side__event-time">
@@ -395,6 +397,36 @@ function SidePanel({
                   </span>
                 </p>
               ) : null}
+
+              {/* P1-1: Attribution decay context block */}
+              {ev.isDecayMilestone && ev.decayDayNumber != null && (
+                <div className="cal-decay-context">
+                  <span className="cal-decay-context__label">
+                    D+{ev.decayDayNumber}
+                  </span>
+                  <div className="cal-decay-context__bar">
+                    <div
+                      className="cal-decay-context__fill"
+                      style={{
+                        width:
+                          ev.decayDayNumber === 30
+                            ? "50%"
+                            : ev.decayDayNumber === 60
+                              ? "25%"
+                              : "0%",
+                      }}
+                    />
+                  </div>
+                  <span className="cal-decay-context__pct">
+                    {ev.decayDayNumber === 30
+                      ? "50%"
+                      : ev.decayDayNumber === 60
+                        ? "25%"
+                        : "0%"}{" "}
+                    weight
+                  </span>
+                </div>
+              )}
 
               {/* P0-2: 6 Ghost action buttons */}
               <div className="cal-side__actions">
@@ -1219,21 +1251,31 @@ export default function CreatorCalendarPage() {
                         {shown.map((ev) => (
                           <div key={ev.id} className="cal-chip-wrap">
                             <span
-                              className={`cal-pill-event event-type--${ev.type}${ev.done ? " is-done" : ""}`}
+                              className={`cal-pill-event event-type--${ev.type}${ev.done ? " is-done" : ""}${ev.isDecayMilestone ? " is-decay" : ""}`}
                               title={ev.title}
                             >
                               <span
                                 className="cal-pill-accent"
-                                style={{
-                                  background: campaignColorMap[ev.campaignId],
-                                }}
+                                style={
+                                  ev.isDecayMilestone
+                                    ? undefined
+                                    : {
+                                        background:
+                                          campaignColorMap[ev.campaignId],
+                                      }
+                                }
                                 aria-hidden
                               />
                               <span className="cal-pill-text">
-                                {truncate(
-                                  `${EVENT_TYPE_LABELS[ev.type]} · ${ev.merchantName}`,
-                                  20,
-                                )}
+                                {ev.isDecayMilestone
+                                  ? truncate(
+                                      `D+${ev.decayDayNumber} · ${ev.merchantName}`,
+                                      20,
+                                    )
+                                  : truncate(
+                                      `${EVENT_TYPE_LABELS[ev.type]} · ${ev.merchantName}`,
+                                      20,
+                                    )}
                               </span>
                             </span>
                             {/* Hover card */}
