@@ -2421,24 +2421,35 @@ body:has(.us-rail) .dh-main:has(> .cd-page) {
    * overflow:clip keeps content inside border-radius; box-shadow is NOT clipped
    * (box-shadow is painted by the parent, which now has no overflow:hidden).
    */
+  /*
+   * White-background Liquid Glass recipe.
+   * backdrop-filter on pure white = still white → useless for color.
+   * Depth comes from 3 sources:
+   *   1. Tint — warm taupe-gray base gives the panel its own surface color
+   *   2. Outer hairline — 0 0 0 0.5px dark (box-shadow spread) defines the edge
+   *   3. Shadow — primary depth cue on a flat white bg
+   */
   background:
-    /* specular bubble — top-left, "glass catches light" signature */
-    radial-gradient(ellipse at 18% 0%, rgba(255, 255, 255, 0.70) 0%, rgba(255, 255, 255, 0) 45%),
-    /* warm glass base — 18% so it reads distinctly against #f8f4e8 cream */
-    rgba(255, 253, 248, 0.18);
-  -webkit-backdrop-filter: blur(48px) saturate(160%) brightness(1.03);
-  backdrop-filter: blur(48px) saturate(160%) brightness(1.03);
-  border: 0.5px solid rgba(255, 255, 255, 0.55);
+    /* specular bubble top-left — "glass catches light" */
+    radial-gradient(ellipse at 18% 0%, rgba(255, 255, 255, 0.88) 0%, rgba(255, 255, 255, 0) 48%),
+    /* warm taupe-gray tint — gives panel its own color against white */
+    rgba(192, 187, 180, 0.16);
+  -webkit-backdrop-filter: blur(24px) saturate(140%);
+  backdrop-filter: blur(24px) saturate(140%);
+  /* inner white edge — specular highlight on top/left */
+  border: 0.5px solid rgba(255, 255, 255, 0.80);
   box-shadow:
-    /* ambient depth — strong enough to read on cream bg */
-    0 16px 56px rgba(0, 0, 0, 0.13),
-    0 2px 8px rgba(0, 0, 0, 0.07),
+    /* outer hairline — defines panel edge on white bg */
+    0 0 0 0.5px rgba(0, 0, 0, 0.07),
+    /* ambient depth — primary cue on flat white */
+    0 16px 48px rgba(0, 0, 0, 0.12),
+    0 4px 12px rgba(0, 0, 0, 0.07),
     /* iOS specular top edge */
-    inset 0 1.5px 0 rgba(255, 255, 255, 0.92),
+    inset 0 1.5px 0 rgba(255, 255, 255, 0.96),
     /* left edge micro-shine */
-    inset 1px 0 0 rgba(255, 255, 255, 0.28),
+    inset 1px 0 0 rgba(255, 255, 255, 0.40),
     /* inner bottom — physical depth */
-    inset 0 -1px 0 rgba(0, 0, 0, 0.05);
+    inset 0 -1px 0 rgba(0, 0, 0, 0.06);
   overflow: clip;
 }
 
