@@ -1,15 +1,18 @@
 /* ============================================================
    Creator Calendar — page-scoped (.cw-page.cal)
-   Authority: Design.md (§ 0 tier rules · § 2 colors · § 5–6 grid
-   · § 8.9 liquid glass · § 9 unified buttons)
+   Authority: Design.md § 0 (tier rules) · § 2 (closed color list)
+              § 5–6 (8px grid) · § 8.9 (liquid glass) · § 9 (buttons)
+
+   REGISTER: PRODUCT UI — Snow bg (#fff) + shadow-1/2/3 only.
+   --surface / --surface-2 / --surface-3 cream tokens BANNED here.
 
    Color discipline:
-     deadline  -> --brand-red  (Brand Red, primary CTA role)
-     review    -> --accent-blue (N2W Blue, secondary)
-     payment   -> --champagne   (ceremonial, ≤3 per viewport — payment is rare)
+     deadline  -> --brand-red   (primary CTA role)
+     review    -> --accent-blue (secondary CTA role)
+     payment   -> --champagne   (ceremonial, ≤3 per viewport)
      milestone -> --mist        (warm-gray neutral)
-   Hex source values from lib/calendar/mock-events.ts are NOT rendered;
-   pages override via these CSS classes only.
+
+   Non-current month cells use rgba(10,10,10,0.025) ink tint — NOT cream.
    ============================================================ */
 
 /* ── Page-scoped tokens ─────────────────────────────────── */
@@ -17,27 +20,31 @@
 .cw-page.cal {
   --cal-gutter:       clamp(24px, 6vw, 96px);
   --cal-cell-min:     112px;             /* 14 × 8px */
-  --cal-cell-min-sm:  72px;              /*  9 × 8px */
-  --cal-row-h:        48px;              /*  6 × 8px */
-  --cal-side-w:       320px;             /* 40 × 8px */
+  --cal-cell-min-sm:  72px;             /*  9 × 8px */
+  --cal-row-h:        48px;             /*  6 × 8px */
+  --cal-side-w:       320px;            /* 40 × 8px */
 
   /* iOS 26 spring + reading easing */
   --cal-spring:       cubic-bezier(0.34, 1.56, 0.64, 1);
   --cal-ease:         cubic-bezier(0.22, 1, 0.36, 1);
 
-  /* Event-type role tokens (page-only, derive from § 2 closed list) */
+  /* Event-type role tokens — from § 2 closed list */
   --etype-deadline:   var(--brand-red);
   --etype-review:     var(--accent-blue);
   --etype-payment:    var(--champagne);
   --etype-milestone:  var(--mist);
 
-  background: var(--surface);
+  /* Subtle hover tint (no cream) */
+  --cal-hover:        rgba(10, 10, 10, 0.04);
+  --cal-active-tint:  rgba(10, 10, 10, 0.025);
+
+  background: var(--snow);
   color: var(--ink);
   padding: 0;
   max-width: none;
 }
 
-/* ── Header (Product canonical, top-left anchored, § 8.8.3) ── */
+/* ── Header (Product canonical, corner-anchored v11 §10) ── */
 
 .cw-page.cal .cw-header {
   display: flex;
@@ -45,7 +52,7 @@
   justify-content: space-between;
   gap: 24px;
   padding: 40px var(--cal-gutter) 24px;
-  background: var(--surface);
+  background: var(--snow);
   border-bottom: 1px solid var(--hairline);
   border-radius: 0;
 }
@@ -65,11 +72,15 @@
   text-transform: uppercase;
   color: var(--ink-4);
   margin: 0;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0;
 }
 
 .cw-page.cal .cw-title {
   font-family: var(--font-display);
-  font-size: clamp(40px, 5vw, 56px);
+  font-size: clamp(40px, 5vw, 72px);  /* v11 H1 scale */
   font-weight: 800;
   line-height: 1;
   letter-spacing: -0.025em;
@@ -84,27 +95,134 @@
   flex-shrink: 0;
 }
 
-/* ── Spotlight liquid-glass tile (§ 8.9 use case 4 — sticky reading peek) ── */
+/* ── Earnings toggle in eyebrow ─────────────────────────── */
+
+.cal-earnings-toggle {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--brand-red);
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  transition: opacity 160ms ease;
+}
+
+.cal-earnings-toggle:hover { opacity: 0.75; }
+.cal-earnings-toggle:focus-visible {
+  outline: 3px solid rgba(193, 18, 31, 0.25);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+.cal-earnings-toggle__caret {
+  font-size: 10px;
+  opacity: 0.7;
+}
+
+/* ── Earnings drawer ─────────────────────────────────────── */
+
+.cal-earnings-drawer {
+  margin: 0 var(--cal-gutter);
+  padding: 16px 24px;
+  background: var(--snow);
+  border: 1px solid var(--hairline);
+  border-top: none;
+  border-radius: 0 0 12px 12px;
+  box-shadow: var(--shadow-2);
+  animation: calSlideDown 240ms var(--cal-spring);
+}
+
+.cal-earnings-drawer__grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+  align-items: start;
+}
+
+.cal-earnings-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.cal-earnings-stat__eyebrow {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+  margin: 0;
+}
+
+.cal-earnings-stat__num {
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  color: var(--ink);
+  line-height: 1;
+}
+
+.cal-earnings-stat__num--confirmed { color: var(--ink); }
+.cal-earnings-stat__num--pending   { color: var(--accent-blue); }
+.cal-earnings-stat__num--risk      { color: var(--brand-red); }
+
+.cal-earnings-stat__num--delta-pos { color: var(--accent-blue); }
+.cal-earnings-stat__num--delta-neg { color: var(--brand-red); }
+
+.cal-earnings-sparkline-wrap {
+  padding-top: 16px;
+  border-top: 1px solid var(--hairline);
+  margin-top: 16px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.cal-earnings-sparkline-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+  white-space: nowrap;
+}
+
+.cal-sparkline {
+  display: block;
+  overflow: visible;
+}
+
+/* ── Spotlight liquid-glass tile (§ 8.9 use case 4) ──────── */
 
 .cal-spotlight {
   padding: 24px var(--cal-gutter) 0;
 }
 
 .cal-spotlight__tile {
-  /* iOS 26 Liquid Glass Light variant — see Design.md § 8.9.1 */
+  /* iOS 26 Liquid Glass Light — Design.md § 8.9.1 */
   background:
-    radial-gradient(ellipse at 25% 0%, rgba(255, 255, 255, 0.55) 0%, rgba(255, 255, 255, 0) 55%),
-    radial-gradient(ellipse at 90% 100%, rgba(255, 255, 255, 0.18) 0%, rgba(255, 255, 255, 0) 60%),
-    rgba(255, 255, 255, 0.22);
+    radial-gradient(ellipse at 25% 0%, rgba(255,255,255,0.55) 0%, rgba(255,255,255,0) 55%),
+    radial-gradient(ellipse at 90% 100%, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0) 60%),
+    rgba(255,255,255,0.22);
   -webkit-backdrop-filter: blur(32px) saturate(180%);
   backdrop-filter: blur(32px) saturate(180%);
-  border: 0.5px solid rgba(255, 255, 255, 0.40);
-  border-radius: 16px;                    /* --r-xl */
+  border: 0.5px solid rgba(255,255,255,0.40);
+  border-radius: 16px;
   box-shadow:
-    0 8px 24px rgba(10, 10, 10, 0.08),
-    0 2px 6px rgba(10, 10, 10, 0.05),
-    inset 0 1px 0 rgba(255, 255, 255, 0.50),
-    inset 0 -1px 0 rgba(10, 10, 10, 0.05);
+    0 8px 24px rgba(10,10,10,0.08),
+    0 2px 6px rgba(10,10,10,0.05),
+    inset 0 1px 0 rgba(255,255,255,0.50),
+    inset 0 -1px 0 rgba(10,10,10,0.05);
   padding: 16px 24px;
   display: flex;
   flex-direction: column;
@@ -201,7 +319,7 @@
   letter-spacing: 0.04em;
 }
 
-/* ── Controls bar ─────────────────────────────────────── */
+/* ── Controls bar ─────────────────────────────────────────── */
 
 .cal-controls {
   display: flex;
@@ -213,7 +331,8 @@
   position: sticky;
   top: var(--ws-topnav-h, 56px);
   z-index: 30;
-  background: rgba(248, 244, 232, 0.86);
+  /* Snow-based frosted glass — no cream */
+  background: rgba(255, 255, 255, 0.92);
   -webkit-backdrop-filter: blur(24px) saturate(160%);
   backdrop-filter: blur(24px) saturate(160%);
   border-bottom: 1px solid var(--hairline);
@@ -250,7 +369,7 @@
 }
 
 .cal-nav__btn:focus-visible {
-  outline: 4px solid var(--brand-red-focus, rgba(193, 18, 31, 0.25));
+  outline: 4px solid rgba(193, 18, 31, 0.25);
   outline-offset: 2px;
 }
 
@@ -265,7 +384,7 @@
   font-size: 14px;
   letter-spacing: -0.01em;
   cursor: pointer;
-  min-width: 192px;                       /* 24 × 8px */
+  min-width: 192px;
   text-align: center;
   transition: transform 180ms var(--cal-spring), border-color 180ms ease;
 }
@@ -280,17 +399,18 @@
 }
 
 .cal-nav__label:focus-visible {
-  outline: 4px solid var(--brand-red-focus, rgba(193, 18, 31, 0.25));
+  outline: 4px solid rgba(193, 18, 31, 0.25);
   outline-offset: 2px;
 }
 
-/* iOS 26 segmented pill — single capsule with sliding selection */
+/* iOS 26 segmented pill — single capsule */
 .cal-seg {
   display: inline-flex;
   align-items: stretch;
   padding: 4px;
   border-radius: 999px;
-  background: var(--surface-3);
+  /* Ink tint replaces cream --surface-3 */
+  background: rgba(10, 10, 10, 0.06);
   border: 1px solid var(--hairline);
   gap: 0;
 }
@@ -312,22 +432,20 @@
   text-align: center;
 }
 
-.cal-seg__opt:hover {
-  color: var(--ink);
-}
+.cal-seg__opt:hover { color: var(--ink); }
 
 .cal-seg__opt.is-active {
   background: var(--snow);
   color: var(--ink);
-  box-shadow: 0 1px 2px rgba(10, 10, 10, 0.06), 0 4px 8px rgba(10, 10, 10, 0.04);
+  box-shadow: 0 1px 2px rgba(10,10,10,0.06), 0 4px 8px rgba(10,10,10,0.04);
 }
 
 .cal-seg__opt:focus-visible {
-  outline: 3px solid var(--brand-red-focus, rgba(193, 18, 31, 0.25));
+  outline: 3px solid rgba(193, 18, 31, 0.25);
   outline-offset: 2px;
 }
 
-/* ── Legend strip ─────────────────────────────────────── */
+/* ── Legend strip ─────────────────────────────────────────── */
 
 .cal-legend {
   display: flex;
@@ -336,7 +454,7 @@
   padding: 12px var(--cal-gutter);
   border-bottom: 1px solid var(--hairline);
   flex-wrap: wrap;
-  background: var(--surface-2);
+  background: var(--snow);
 }
 
 .cal-legend__item {
@@ -354,7 +472,7 @@
   color: var(--ink-3);
 }
 
-/* ── Event-type colour tokens (single source of truth) ─── */
+/* ── Event-type colour tokens ─────────────────────────────── */
 
 .cal-dot {
   width: 8px;
@@ -364,17 +482,13 @@
   display: inline-block;
 }
 
-.cal-dot.event-type--deadline   { background: var(--etype-deadline); }
-.cal-dot.event-type--review     { background: var(--etype-review); }
-.cal-dot.event-type--payment    { background: var(--etype-payment); }
-.cal-dot.event-type--milestone  { background: var(--etype-milestone); }
+.cal-dot.event-type--deadline  { background: var(--etype-deadline); }
+.cal-dot.event-type--review    { background: var(--etype-review); }
+.cal-dot.event-type--payment   { background: var(--etype-payment); }
+.cal-dot.event-type--milestone { background: var(--etype-milestone); }
+.cal-dot.is-done               { opacity: 0.35; }
 
-.cal-dot.is-done { opacity: 0.35; }
-
-.cal-dot-sep {
-  color: var(--ink-5);
-  margin: 0 2px;
-}
+.cal-dot-sep { color: var(--ink-5); margin: 0 2px; }
 
 /* Type chip used in side panel header */
 .cal-chip {
@@ -390,12 +504,12 @@
   color: var(--snow);
 }
 
-.cal-chip.event-type--deadline   { background: var(--etype-deadline); }
-.cal-chip.event-type--review     { background: var(--etype-review); }
-.cal-chip.event-type--payment    { background: var(--etype-payment); color: var(--ink); }
-.cal-chip.event-type--milestone  { background: var(--etype-milestone); color: var(--ink); }
+.cal-chip.event-type--deadline  { background: var(--etype-deadline); }
+.cal-chip.event-type--review    { background: var(--etype-review); }
+.cal-chip.event-type--payment   { background: var(--etype-payment); color: var(--ink); }
+.cal-chip.event-type--milestone { background: var(--etype-milestone); color: var(--ink); }
 
-/* "Today" tag (used in side panel + list groups) */
+/* Today tag */
 .cal-tag {
   display: inline-flex;
   align-items: center;
@@ -408,18 +522,15 @@
   border-radius: 999px;
 }
 
-.cal-tag--today {
-  background: var(--brand-red);
-  color: var(--snow);
-}
+.cal-tag--today { background: var(--brand-red); color: var(--snow); }
 
-/* Reusable small button compatible with shared .btn-* */
+/* Reusable small button size */
 .cal-btn-sm {
   font-size: 12px;
   padding: 8px 16px;
 }
 
-/* ── Month layout ─────────────────────────────────────── */
+/* ── Month layout ─────────────────────────────────────────── */
 
 .cal-month-layout {
   display: grid;
@@ -429,11 +540,9 @@
   align-items: start;
 }
 
-/* ── Month grid ───────────────────────────────────────── */
+/* ── Month grid ───────────────────────────────────────────── */
 
-.cal-month {
-  min-width: 0;
-}
+.cal-month { min-width: 0; }
 
 .cal-month__dow-row {
   display: grid;
@@ -443,7 +552,8 @@
   border-bottom: 0;
   border-radius: 10px 10px 0 0;
   overflow: hidden;
-  background: var(--surface-2);
+  /* Ink tint instead of cream */
+  background: rgba(10, 10, 10, 0.04);
 }
 
 .cal-month__dow {
@@ -458,9 +568,7 @@
   border-right: 1px solid var(--hairline);
 }
 
-.cal-month__dow:last-child {
-  border-right: 0;
-}
+.cal-month__dow:last-child { border-right: 0; }
 
 .cal-month__grid {
   display: grid;
@@ -472,10 +580,10 @@
   background: var(--snow);
 }
 
-/* ── Single day cell ─────────────────────────────────── */
+/* ── Single day cell ─────────────────────────────────────── */
 
 .cal-cell {
-  background: var(--surface);
+  background: var(--snow);
   min-height: var(--cal-cell-min);
   padding: 8px;
   border-right: 1px solid var(--hairline);
@@ -488,20 +596,17 @@
   transition: background 200ms var(--cal-ease), transform 180ms var(--cal-spring);
 }
 
-.cal-cell:nth-child(7n)         { border-right: 0; }
-.cal-cell:nth-last-child(-n+7)  { border-bottom: 0; }
+.cal-cell:nth-child(7n)        { border-right: 0; }
+.cal-cell:nth-last-child(-n+7) { border-bottom: 0; }
 
-.cal-cell:hover {
-  background: var(--surface-2);
-}
+.cal-cell:hover { background: var(--cal-hover); }
 
 .cal-cell--has-events {
-  background: var(--surface-2);
+  /* Very subtle ink tint signals content — no cream */
+  background: rgba(10, 10, 10, 0.015);
 }
 
-.cal-cell--has-events:hover {
-  background: var(--surface-3);
-}
+.cal-cell--has-events:hover { background: var(--cal-hover); }
 
 .cal-cell--today {
   background: rgba(193, 18, 31, 0.04);
@@ -520,9 +625,7 @@
   transform: scale(1.01);
 }
 
-.cal-cell--selected:hover {
-  background: var(--snow);
-}
+.cal-cell--selected:hover { background: var(--snow); }
 
 .cal-cell:focus-visible {
   outline: 0;
@@ -530,9 +633,10 @@
   z-index: 3;
 }
 
+/* Non-current-month cells: ink-6 tint (v11 rule — NOT cream) */
 .cal-cell--empty {
-  background: var(--surface);
-  opacity: 0.4;
+  background: rgba(10, 10, 10, 0.025);
+  opacity: 1;
   cursor: default;
 }
 
@@ -570,7 +674,7 @@
   font-weight: 700;
   letter-spacing: 0.04em;
   color: var(--ink-4);
-  background: var(--surface-3);
+  background: rgba(10, 10, 10, 0.06);
   padding: 1px 6px;
   border-radius: 999px;
   line-height: 1.4;
@@ -583,31 +687,116 @@
   min-width: 0;
 }
 
-/* Event pill inside month cell — colour by type */
+/* ── Campaign-accent event pill ───────────────────────────── */
+
+.cal-chip-wrap {
+  position: relative;
+}
+
+/* Event pill inside month cell — colour by type + campaign accent bar */
 .cal-pill-event {
-  display: block;
+  display: flex;
+  align-items: center;
   font-family: var(--font-mono);
   font-size: 10px;
   font-weight: 600;
   letter-spacing: 0.02em;
-  padding: 3px 6px;
   border-radius: 6px;
-  white-space: nowrap;
   overflow: hidden;
+  white-space: nowrap;
   text-overflow: ellipsis;
   max-width: 100%;
   line-height: 1.4;
+  cursor: pointer;
+  transition: transform 160ms var(--cal-spring), box-shadow 160ms ease;
 }
 
-.cal-pill-event.event-type--deadline   { background: var(--etype-deadline); color: var(--snow); }
-.cal-pill-event.event-type--review     { background: var(--etype-review); color: var(--snow); }
-.cal-pill-event.event-type--payment    { background: var(--etype-payment); color: var(--ink); }
-.cal-pill-event.event-type--milestone  { background: var(--etype-milestone); color: var(--ink); }
+.cal-pill-event:hover {
+  transform: translate(1px, 1px);
+  box-shadow: 0 2px 6px rgba(10,10,10,0.12);
+}
+
+/* Campaign accent left bar */
+.cal-pill-accent {
+  display: block;
+  width: 4px;
+  min-width: 4px;
+  align-self: stretch;
+  flex-shrink: 0;
+}
+
+.cal-pill-text {
+  padding: 3px 6px;
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.cal-pill-event.event-type--deadline  { background: var(--etype-deadline); color: var(--snow); }
+.cal-pill-event.event-type--review    { background: var(--etype-review); color: var(--snow); }
+.cal-pill-event.event-type--payment   { background: var(--etype-payment); color: var(--ink); }
+.cal-pill-event.event-type--milestone { background: var(--etype-milestone); color: var(--ink); }
 
 .cal-pill-event.is-done {
   opacity: 0.35;
   text-decoration: line-through;
 }
+
+/* Hover card on chip */
+.cal-chip-hover {
+  display: none;
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: 0;
+  z-index: 60;
+  width: 220px;
+  background: var(--snow);
+  border: 1px solid var(--hairline);
+  border-radius: 10px;
+  box-shadow: var(--shadow-3);
+  padding: 12px;
+  pointer-events: none;
+}
+
+.cal-chip-wrap:hover .cal-chip-hover {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  pointer-events: auto;
+}
+
+.cal-chip-hover__title {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--ink);
+  margin: 0;
+  line-height: 1.35;
+}
+
+.cal-chip-hover__meta {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--ink-3);
+  margin: 0;
+  letter-spacing: 0.04em;
+}
+
+.cal-chip-hover__link {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--accent-blue);
+  text-decoration: none;
+  margin-top: 4px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  transition: color 160ms ease;
+}
+
+.cal-chip-hover__link:hover { color: var(--ink); }
 
 .cal-cell__more {
   font-family: var(--font-mono);
@@ -625,14 +814,15 @@
   margin-top: 4px;
 }
 
-/* ── Side panel ───────────────────────────────────────── */
+/* ── Side panel ───────────────────────────────────────────── */
 
 .cal-side {
   width: var(--cal-side-w);
   flex-shrink: 0;
-  background: var(--surface-2);
+  background: var(--snow);
   border: 1px solid var(--hairline);
   border-radius: 10px;
+  box-shadow: var(--shadow-2);
   position: sticky;
   top: calc(var(--ws-topnav-h, 56px) + 88px);
   max-height: calc(100vh - var(--ws-topnav-h, 56px) - 120px);
@@ -667,6 +857,17 @@
   z-index: 1;
 }
 
+/* Breadcrumb row: "May 1 · TODAY" */
+.cal-side__breadcrumb {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+  margin: 0 0 8px;
+}
+
 .cal-side__date-row {
   display: flex;
   align-items: center;
@@ -693,9 +894,7 @@
   margin-top: 4px;
 }
 
-.cal-side__body {
-  padding: 8px 0;
-}
+.cal-side__body { padding: 8px 0; }
 
 .cal-side__empty {
   padding: 32px 20px;
@@ -725,13 +924,9 @@
   transition: background 180ms ease;
 }
 
-.cal-side__event:last-child {
-  border-bottom: 0;
-}
+.cal-side__event:last-child { border-bottom: 0; }
 
-.cal-side__event:hover {
-  background: var(--surface-3);
-}
+.cal-side__event:hover { background: rgba(10, 10, 10, 0.03); }
 
 .cal-side__event::before {
   content: "";
@@ -744,14 +939,12 @@
   background: var(--mist);
 }
 
-.cal-side__event.event-type--deadline::before   { background: var(--etype-deadline); }
-.cal-side__event.event-type--review::before     { background: var(--etype-review); }
-.cal-side__event.event-type--payment::before    { background: var(--etype-payment); }
-.cal-side__event.event-type--milestone::before  { background: var(--etype-milestone); }
+.cal-side__event.event-type--deadline::before  { background: var(--etype-deadline); }
+.cal-side__event.event-type--review::before    { background: var(--etype-review); }
+.cal-side__event.event-type--payment::before   { background: var(--etype-payment); }
+.cal-side__event.event-type--milestone::before { background: var(--etype-milestone); }
 
-.cal-side__event.is-done {
-  opacity: 0.55;
-}
+.cal-side__event.is-done { opacity: 0.55; }
 
 .cal-side__event-head {
   display: flex;
@@ -811,6 +1004,7 @@
   letter-spacing: -0.02em;
 }
 
+/* 6-button action row (Ghost variant, 8px grid) */
 .cal-side__actions {
   display: flex;
   gap: 8px;
@@ -818,7 +1012,7 @@
   margin-top: 12px;
 }
 
-/* ── Day popover ──────────────────────────────────────── */
+/* ── Day popover ──────────────────────────────────────────── */
 
 .cal-pop__backdrop {
   position: fixed;
@@ -837,7 +1031,7 @@
   background: var(--snow);
   border: 1px solid var(--hairline);
   border-radius: 12px;
-  box-shadow: 0 12px 32px rgba(10, 10, 10, 0.18), 0 4px 8px rgba(10, 10, 10, 0.06);
+  box-shadow: 0 12px 32px rgba(10,10,10,0.18), 0 4px 8px rgba(10,10,10,0.06);
   animation: calSlideUp 240ms var(--cal-spring);
 }
 
@@ -867,7 +1061,7 @@
   height: 28px;
   border-radius: 8px;
   border: 1px solid var(--hairline);
-  background: var(--surface-2);
+  background: rgba(10, 10, 10, 0.05);
   color: var(--ink);
   cursor: pointer;
   display: inline-flex;
@@ -881,18 +1075,14 @@
   transform: translate(1px, 1px);
 }
 
-.cal-pop__close:active {
-  transform: translate(2px, 2px) scale(0.98);
-}
+.cal-pop__close:active  { transform: translate(2px, 2px) scale(0.98); }
 
 .cal-pop__close:focus-visible {
-  outline: 3px solid var(--brand-red-focus, rgba(193, 18, 31, 0.25));
+  outline: 3px solid rgba(193, 18, 31, 0.25);
   outline-offset: 2px;
 }
 
-.cal-pop__body {
-  padding: 8px 0;
-}
+.cal-pop__body { padding: 8px 0; }
 
 .cal-pop__empty {
   padding: 32px 20px;
@@ -910,13 +1100,8 @@
   position: relative;
 }
 
-.cal-pop__event:last-child {
-  border-bottom: 0;
-}
-
-.cal-pop__event.is-done {
-  opacity: 0.55;
-}
+.cal-pop__event:last-child { border-bottom: 0; }
+.cal-pop__event.is-done    { opacity: 0.55; }
 
 .cal-pop__event-head {
   display: flex;
@@ -953,7 +1138,7 @@
   text-overflow: ellipsis;
 }
 
-/* ── Action button row (side panel + popover + list) ──── */
+/* ── Action button row ────────────────────────────────────── */
 
 .cal-actions-row {
   display: flex;
@@ -963,11 +1148,9 @@
   padding-left: 16px;
 }
 
-/* ── Note UI ──────────────────────────────────────────── */
+/* ── Note UI ──────────────────────────────────────────────── */
 
-.cal-note-wrap {
-  margin-top: 8px;
-}
+.cal-note-wrap { margin-top: 8px; }
 
 .cal-note-input {
   width: 100%;
@@ -985,9 +1168,7 @@
   transition: border-color 180ms ease;
 }
 
-.cal-note-input:focus {
-  border-color: var(--ink);
-}
+.cal-note-input:focus { border-color: var(--ink); }
 
 .cal-note-saved {
   font-family: var(--font-mono);
@@ -996,16 +1177,15 @@
   color: var(--ink-3);
   margin: 8px 0 0;
   padding: 8px 12px;
-  background: var(--surface);
+  /* Ink tint — no cream */
+  background: rgba(10, 10, 10, 0.03);
   border-radius: 6px;
   border: 1px solid var(--hairline);
 }
 
-/* ── Week view ────────────────────────────────────────── */
+/* ── Week view ────────────────────────────────────────────── */
 
-.cal-week {
-  padding: 24px var(--cal-gutter) 64px;
-}
+.cal-week { padding: 24px var(--cal-gutter) 64px; }
 
 .cal-week__grid {
   display: grid;
@@ -1014,17 +1194,16 @@
 }
 
 .cal-week__col {
-  background: var(--surface-2);
+  background: var(--snow);
   border: 1px solid var(--hairline);
   border-radius: 10px;
   overflow: hidden;
   min-height: 480px;
+  box-shadow: var(--shadow-1);
   transition: border-color 200ms ease;
 }
 
-.cal-week__col:hover {
-  border-color: var(--ink-5);
-}
+.cal-week__col:hover { border-color: var(--ink-5); }
 
 .cal-week__col--today {
   background: var(--snow);
@@ -1039,7 +1218,8 @@
   padding: 16px;
   border-bottom: 1px solid var(--hairline);
   text-align: center;
-  background: var(--surface);
+  /* Very light ink tint header band */
+  background: rgba(10, 10, 10, 0.03);
 }
 
 .cal-week__col--today .cal-week__col-head {
@@ -1056,9 +1236,7 @@
   color: var(--ink-4);
 }
 
-.cal-week__col--today .cal-week__dow {
-  color: var(--brand-red);
-}
+.cal-week__col--today .cal-week__dow { color: var(--brand-red); }
 
 .cal-week__num {
   font-family: var(--font-display);
@@ -1069,9 +1247,7 @@
   line-height: 1;
 }
 
-.cal-week__col--today .cal-week__num {
-  color: var(--brand-red);
-}
+.cal-week__col--today .cal-week__num { color: var(--brand-red); }
 
 .cal-week__events {
   padding: 8px;
@@ -1104,27 +1280,19 @@
   width: 100%;
 }
 
-.cal-week__event:hover {
-  transform: translate(1px, 1px);
-}
-
-.cal-week__event:active {
-  transform: translate(2px, 2px) scale(0.98);
-}
+.cal-week__event:hover  { transform: translate(1px, 1px); }
+.cal-week__event:active { transform: translate(2px, 2px) scale(0.98); }
 
 .cal-week__event:focus-visible {
-  outline: 3px solid var(--brand-red-focus, rgba(193, 18, 31, 0.25));
+  outline: 3px solid rgba(193, 18, 31, 0.25);
   outline-offset: 2px;
 }
 
-.cal-week__event.event-type--deadline   { background: var(--etype-deadline); color: var(--snow); }
-.cal-week__event.event-type--review     { background: var(--etype-review); color: var(--snow); }
-.cal-week__event.event-type--payment    { background: var(--etype-payment); color: var(--ink); }
-.cal-week__event.event-type--milestone  { background: var(--etype-milestone); color: var(--ink); }
-
-.cal-week__event.is-done {
-  opacity: 0.4;
-}
+.cal-week__event.event-type--deadline  { background: var(--etype-deadline); color: var(--snow); }
+.cal-week__event.event-type--review    { background: var(--etype-review); color: var(--snow); }
+.cal-week__event.event-type--payment   { background: var(--etype-payment); color: var(--ink); }
+.cal-week__event.event-type--milestone { background: var(--etype-milestone); color: var(--ink); }
+.cal-week__event.is-done               { opacity: 0.4; }
 
 .cal-week__event-title {
   font-size: 11px;
@@ -1145,7 +1313,7 @@
   display: block;
 }
 
-/* ── List view ────────────────────────────────────────── */
+/* ── List view ────────────────────────────────────────────── */
 
 .cal-list {
   padding: 32px var(--cal-gutter) 80px;
@@ -1182,9 +1350,7 @@
   margin: 0;
 }
 
-.cal-list__group {
-  margin-bottom: 32px;
-}
+.cal-list__group { margin-bottom: 32px; }
 
 .cal-list__group-head {
   display: flex;
@@ -1213,9 +1379,7 @@
   color: var(--ink-4);
 }
 
-.cal-list__group-rule {
-  flex: 1;
-}
+.cal-list__group-rule { flex: 1; }
 
 .cal-list__row {
   display: grid;
@@ -1225,7 +1389,8 @@
   padding: 16px;
   border-radius: 10px;
   border: 1px solid var(--hairline);
-  background: var(--surface-2);
+  background: var(--snow);
+  box-shadow: var(--shadow-1);
   margin-bottom: 8px;
   position: relative;
   transition: border-color 200ms ease, transform 200ms var(--cal-ease);
@@ -1242,19 +1407,17 @@
   background: var(--mist);
 }
 
-.cal-list__row.event-type--deadline::before   { background: var(--etype-deadline); }
-.cal-list__row.event-type--review::before     { background: var(--etype-review); }
-.cal-list__row.event-type--payment::before    { background: var(--etype-payment); }
-.cal-list__row.event-type--milestone::before  { background: var(--etype-milestone); }
+.cal-list__row.event-type--deadline::before  { background: var(--etype-deadline); }
+.cal-list__row.event-type--review::before    { background: var(--etype-review); }
+.cal-list__row.event-type--payment::before   { background: var(--etype-payment); }
+.cal-list__row.event-type--milestone::before { background: var(--etype-milestone); }
 
 .cal-list__row:hover {
   border-color: var(--ink-5);
   transform: translateY(-1px);
 }
 
-.cal-list__row.is-done {
-  opacity: 0.55;
-}
+.cal-list__row.is-done { opacity: 0.55; }
 
 .cal-list__time {
   font-family: var(--font-mono);
@@ -1321,13 +1484,8 @@
   transition: color 180ms ease;
 }
 
-.cal-list__campaign:hover {
-  color: var(--ink);
-}
-
-.cal-list__merchant {
-  color: var(--ink-3);
-}
+.cal-list__campaign:hover { color: var(--ink); }
+.cal-list__merchant       { color: var(--ink-3); }
 
 .cal-list__actions {
   display: flex;
@@ -1336,7 +1494,7 @@
   align-items: flex-end;
 }
 
-/* ── Animations ───────────────────────────────────────── */
+/* ── Animations ───────────────────────────────────────────── */
 
 @keyframes calFadeIn {
   from { opacity: 0; }
@@ -1353,29 +1511,28 @@
   to   { opacity: 1; transform: translateX(0); }
 }
 
-/* ── Responsive ───────────────────────────────────────── */
+@keyframes calSlideDown {
+  from { opacity: 0; transform: translateY(-8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Responsive ───────────────────────────────────────────── */
 
 @media (max-width: 1200px) {
   .cw-page.cal {
-    --cal-side-w: 280px;
-    --cal-cell-min: 96px;
+    --cal-side-w:    280px;
+    --cal-cell-min:  96px;
   }
 }
 
 @media (max-width: 1024px) {
-  .cal-side {
-    display: none;
-  }
+  .cal-side { display: none; }
 
-  .cal-month-layout {
-    grid-template-columns: 1fr;
-  }
+  .cal-month-layout { grid-template-columns: 1fr; }
 }
 
 @media (max-width: 900px) {
-  .cw-page.cal {
-    --cal-cell-min: var(--cal-cell-min-sm);
-  }
+  .cw-page.cal { --cal-cell-min: var(--cal-cell-min-sm); }
 
   .cw-page.cal .cw-header {
     padding: 32px 16px 20px;
@@ -1384,9 +1541,7 @@
     gap: 16px;
   }
 
-  .cw-page.cal .cw-header__right {
-    width: 100%;
-  }
+  .cw-page.cal .cw-header__right { width: 100%; }
 
   .cal-spotlight,
   .cal-controls,
@@ -1398,30 +1553,19 @@
     padding-right: 16px;
   }
 
+  .cal-earnings-drawer { margin: 0 16px; }
+
   .cal-cell {
     min-height: var(--cal-cell-min-sm);
     padding: 6px 4px 4px;
   }
 
-  .cal-cell__events {
-    display: none;
-  }
+  .cal-cell__events { display: none; }
+  .cal-cell__dots   { display: flex; }
+  .cal-cell__count  { display: none; }
 
-  .cal-cell__dots {
-    display: flex;
-  }
-
-  .cal-cell__count {
-    display: none;
-  }
-
-  .cal-week__grid {
-    grid-template-columns: 1fr;
-  }
-
-  .cal-week__col {
-    min-height: 0;
-  }
+  .cal-week__grid { grid-template-columns: 1fr; }
+  .cal-week__col  { min-height: 0; }
 
   .cal-week__col-head {
     flex-direction: row;
@@ -1436,14 +1580,8 @@
     right: 16px;
   }
 
-  .cal-list__row {
-    grid-template-columns: 1fr;
-  }
-
-  .cal-list__time {
-    text-align: left;
-    font-size: 11px;
-  }
+  .cal-list__row { grid-template-columns: 1fr; }
+  .cal-list__time { text-align: left; font-size: 11px; }
 
   .cal-list__actions {
     flex-direction: row;
@@ -1452,13 +1590,8 @@
     flex-wrap: wrap;
   }
 
-  .cal-spotlight__row {
-    gap: 16px;
-  }
-
-  .cal-spotlight__divider {
-    display: none;
-  }
+  .cal-spotlight__row { gap: 16px; }
+  .cal-spotlight__divider { display: none; }
 
   .cal-nav__label {
     min-width: 144px;
@@ -1469,6 +1602,11 @@
     padding: 6px 12px;
     min-width: 56px;
     font-size: 11px;
+  }
+
+  .cal-earnings-drawer__grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
   }
 }
 
@@ -1483,7 +1621,9 @@
   .cal-nav__btn,
   .cal-nav__label,
   .cal-pop__close,
-  .cal-seg__opt {
+  .cal-seg__opt,
+  .cal-pill-event,
+  .cal-earnings-drawer {
     animation: none !important;
     transition: none !important;
   }
@@ -1491,14 +1631,15 @@
 
 @media (prefers-reduced-transparency: reduce) {
   .cal-spotlight__tile {
-    background: var(--surface-2);
-    backdrop-filter: none;
+    background: var(--snow);
     -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    border: 1px solid var(--hairline);
   }
 
   .cal-controls {
-    background: var(--surface-2);
-    backdrop-filter: none;
+    background: var(--snow);
     -webkit-backdrop-filter: none;
+    backdrop-filter: none;
   }
 }
