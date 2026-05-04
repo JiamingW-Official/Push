@@ -56,15 +56,23 @@ const MONTH_ABBR = [
   "Dec",
 ];
 
-// P0-3: Campaign accent palette — all from Design.md § 2 closed list
+// P0-3 / P3-4: Campaign accent palette — CSS var strings (Design.md § 2 closed list)
+// Using var() strings so colors respond to any future token updates
 const CAMPAIGN_COLORS = [
-  "#c1121f", // --brand-red
-  "#0085ff", // --accent-blue
-  "#bfa170", // --champagne
-  "#3a3835", // --char (v11)
-  "#2c2a26", // --graphite (v11)
-  "#d8d4c8", // --mist
+  "var(--brand-red)",
+  "var(--accent-blue)",
+  "var(--champagne)",
+  "var(--char)",
+  "var(--graphite)",
+  "var(--mist)",
 ];
+
+// P3-4: Hash-based assignment — stable across months, independent of event order
+function hashCampaignId(id: string): number {
+  let h = 0;
+  for (let i = 0; i < id.length; i++) h = (h * 31 + id.charCodeAt(i)) | 0;
+  return Math.abs(h);
+}
 
 /* ── Helpers ─────────────────────────────────────────────── */
 
@@ -704,14 +712,15 @@ export default function CreatorCalendarPage() {
   /* ── Derived ─────────────────────────────────────────── */
 
   const ym = formatYearMonth(year, month);
-  // P0-3: Campaign color map — stable per campaign, assigned by first appearance
+  // P3-4: Campaign color map — hash-based, stable across months + reloads
   const campaignColorMap = useMemo(() => {
     const map: Record<string, string> = {};
-    let idx = 0;
     for (const ev of events) {
       if (!(ev.campaignId in map)) {
-        map[ev.campaignId] = CAMPAIGN_COLORS[idx % CAMPAIGN_COLORS.length];
-        idx++;
+        map[ev.campaignId] =
+          CAMPAIGN_COLORS[
+            hashCampaignId(ev.campaignId) % CAMPAIGN_COLORS.length
+          ];
       }
     }
     return map;
