@@ -18,7 +18,7 @@ import {
 
 /* ── Types ───────────────────────────────────────────────── */
 
-type CalView = "month" | "week" | "list";
+type CalView = "month" | "week";
 
 /* ── Constants ───────────────────────────────────────────── */
 
@@ -873,16 +873,6 @@ export default function CreatorCalendarPage() {
   const monthGrid = useMemo(() => buildMonthGrid(year, month), [year, month]);
   const weekDates = useMemo(() => buildWeekDates(weekAnchor), [weekAnchor]);
 
-  const listGroups = useMemo(() => {
-    const monthEvents = filteredEvents.filter((e) => e.date.startsWith(ym));
-    const grouped: Record<string, CalendarEvent[]> = {};
-    for (const ev of monthEvents) {
-      if (!grouped[ev.date]) grouped[ev.date] = [];
-      grouped[ev.date].push(ev);
-    }
-    return Object.entries(grouped).sort(([a], [b]) => a.localeCompare(b));
-  }, [events, ym]);
-
   const weekAheadStats = useMemo(() => {
     const start = new Date();
     start.setHours(0, 0, 0, 0);
@@ -1159,7 +1149,7 @@ export default function CreatorCalendarPage() {
                 role="tablist"
                 aria-label="Calendar view"
               >
-                {(["month", "week", "list"] as CalView[]).map((v) => (
+                {(["month", "week"] as CalView[]).map((v) => (
                   <button
                     key={v}
                     role="tab"
@@ -1401,125 +1391,6 @@ export default function CreatorCalendarPage() {
                   );
                 })}
               </div>
-            </div>
-          )}
-
-          {/* ── List view ────────────────────────────────────── */}
-          {view === "list" && (
-            <div className="cal-list">
-              {listGroups.length === 0 ? (
-                <div className="cal-list__empty">
-                  <p className="cal-list__empty-num">0</p>
-                  <p className="cal-list__empty-msg">
-                    No events in {MONTH_NAMES[month]} {year}.
-                  </p>
-                  <p className="cal-list__empty-sub">
-                    Browse open campaigns in Discover &mdash; new deadlines land
-                    daily.
-                  </p>
-                </div>
-              ) : (
-                listGroups.map(([dateStr, dayEvents]) => {
-                  const [y, m, d] = dateStr.split("-").map(Number);
-                  const date = new Date(y, m - 1, d);
-                  const isToday = dateStr === todayStr;
-
-                  return (
-                    <section key={dateStr} className="cal-list__group">
-                      <header className="cal-list__group-head">
-                        <h2 className="cal-list__group-date">
-                          {MONTH_NAMES[date.getMonth()]} {date.getDate()}
-                        </h2>
-                        <span className="cal-list__group-dow">
-                          {DOW_LABELS_FULL[date.getDay()]}
-                        </span>
-                        {isToday && (
-                          <span className="cal-tag cal-tag--today">Today</span>
-                        )}
-                        <span className="cal-list__group-rule" aria-hidden />
-                      </header>
-
-                      {dayEvents.map((ev) => (
-                        <article
-                          key={ev.id}
-                          className={`cal-list__row event-type--${ev.type}${ev.done ? " is-done" : ""}`}
-                        >
-                          <div className="cal-list__time">
-                            {fmtTime(ev.time)}
-                          </div>
-
-                          <div className="cal-list__content">
-                            <header className="cal-list__type-row">
-                              <span
-                                className={`cal-dot event-type--${ev.type}`}
-                                aria-hidden
-                              />
-                              <span className="cal-list__type-label">
-                                {EVENT_TYPE_LABELS[ev.type]}
-                              </span>
-                              {ev.payout ? (
-                                <span className="cal-list__payout">
-                                  ${ev.payout}
-                                </span>
-                              ) : null}
-                            </header>
-
-                            <h3 className="cal-list__title">{ev.title}</h3>
-
-                            <p className="cal-list__meta">
-                              <Link
-                                href={
-                                  ev.postUrl ??
-                                  `/creator/campaigns/${ev.campaignId}/post`
-                                }
-                                className="cal-list__campaign"
-                              >
-                                {ev.campaignTitle}
-                              </Link>{" "}
-                              <span className="cal-dot-sep">&middot;</span>{" "}
-                              <span className="cal-list__merchant">
-                                {ev.merchantName}
-                              </span>
-                            </p>
-
-                            {noteTarget === ev.id && (
-                              <div className="cal-note-wrap">
-                                <textarea
-                                  className="cal-note-input"
-                                  rows={2}
-                                  placeholder="Add a note..."
-                                  value={noteValue}
-                                  onChange={(e) => setNoteValue(e.target.value)}
-                                  autoFocus
-                                />
-                                <button
-                                  className="btn-secondary click-shift cal-btn-sm"
-                                  onClick={saveNote}
-                                >
-                                  Save note
-                                </button>
-                              </div>
-                            )}
-                            {ev.note && noteTarget !== ev.id && (
-                              <p className="cal-note-saved">Note: {ev.note}</p>
-                            )}
-                          </div>
-
-                          <div className="cal-list__actions">
-                            <ActionButtons
-                              event={ev}
-                              onMarkDone={markDone}
-                              onAddNote={addNote}
-                              onMessageMerchant={messageMerchant}
-                              onRequestExtension={requestExtension}
-                            />
-                          </div>
-                        </article>
-                      ))}
-                    </section>
-                  );
-                })
-              )}
             </div>
           )}
 
