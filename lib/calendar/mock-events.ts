@@ -23,9 +23,6 @@ export interface CalendarEvent {
   note?: string;
   payout?: number;
   postUrl?: string; // /creator/campaigns/[id]/post
-  // P1-1: attribution decay milestone marker (D+30/60/90)
-  isDecayMilestone?: boolean;
-  decayDayNumber?: number;
 }
 
 // ── April 2026 events ─────────────────────────────────────

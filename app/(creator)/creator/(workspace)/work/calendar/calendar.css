@@ -882,16 +882,6 @@ body:has(.cw-page.cal) .dh-main {
 .cal-pill-event.is-done               { opacity: 0.35; text-decoration: line-through; }
 
 
-/* ── Attribution decay milestone pill (D+30 / D+60) ──────── */
-.cal-pill-event.is-decay {
-  background: rgba(191, 161, 112, 0.14);
-  border: 1px dashed rgba(191, 161, 112, 0.72);
-  color: #8a6f3a;
-}
-.cal-pill-event.is-decay .cal-pill-accent {
-  background: var(--champagne) !important;
-  opacity: 0.7;
-}
 
 /* Hover card on chip */
 .cal-chip-hover {
@@ -1089,61 +1079,6 @@ body:has(.cw-page.cal) .dh-main {
 .cal-side__event.event-type--review::before    { background: var(--etype-review); }
 .cal-side__event.event-type--milestone::before { background: var(--etype-milestone); }
 .cal-side__event.is-done                       { opacity: 0.55; }
-
-/* Decay event — amber left bar + subtle tinted bg */
-.cal-side__event.is-decay {
-  background: rgba(191, 161, 112, 0.06);
-}
-.cal-side__event.is-decay::before {
-  background: var(--champagne);
-  border-style: dashed;
-  width: 3px;
-}
-
-/* Decay context block — shown inside the side panel event */
-.cal-decay-context {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-top: 10px;
-  padding: 8px 10px;
-  border-radius: 8px;
-  background: rgba(191, 161, 112, 0.10);
-  border: 1px solid rgba(191, 161, 112, 0.30);
-}
-
-.cal-decay-context__label {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: #8a6f3a;
-  white-space: nowrap;
-}
-
-.cal-decay-context__bar {
-  flex: 1;
-  height: 4px;
-  border-radius: 2px;
-  background: rgba(191, 161, 112, 0.20);
-  overflow: hidden;
-}
-
-.cal-decay-context__fill {
-  height: 100%;
-  border-radius: 2px;
-  background: var(--champagne);
-  transition: width 600ms var(--cal-ease);
-}
-
-.cal-decay-context__pct {
-  font-family: var(--font-display);
-  font-size: 13px;
-  font-weight: 700;
-  color: #8a6f3a;
-  white-space: nowrap;
-}
 
 
 .cal-side__event-head {
