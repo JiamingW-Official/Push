@@ -268,18 +268,6 @@ function LeftPanel({
         </div>
       </div>
 
-      {/* Tier progress */}
-      <div className="cal-lp__card cal-lp__tier">
-        <div className="cal-lp__tier-head">
-          <span className="cal-lp__tier-badge">Bronze</span>
-          <span className="cal-lp__tier-arrow">→ Silver</span>
-        </div>
-        <div className="cal-lp__tier-track">
-          <div className="cal-lp__tier-fill" style={{ width: "60%" }} />
-        </div>
-        <span className="cal-lp__tier-note">3 of 5 verified campaigns</span>
-      </div>
-
       {/* Upcoming events */}
       <div className="cal-lp__upcoming">
         <span className="cal-lp__upcoming-label">Upcoming</span>
