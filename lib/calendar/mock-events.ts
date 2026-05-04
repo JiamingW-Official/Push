@@ -7,7 +7,7 @@ export type EventType =
   | "payment" // Payment release — gold
   | "milestone"; // Other milestone — grey
 
-export type EventAction = "submit" | "done" | "snooze" | "note";
+export type EventAction = "submit" | "done" | "note";
 
 export interface PrepChecklistItem {
   id: string;
@@ -26,7 +26,6 @@ export interface CalendarEvent {
   dueAt?: string; // ISO datetime
   description?: string;
   done: boolean;
-  snoozed: boolean;
   note?: string;
   payout?: number;
   postUrl?: string; // /creator/campaigns/[id]/post
@@ -54,7 +53,6 @@ const APRIL: CalendarEvent[] = [
     description:
       "Peak hours visit window: 7–10am. Remember to tag @blankstreetcoffee.",
     done: false,
-    snoozed: false,
     payout: 0,
   },
   {
@@ -68,7 +66,6 @@ const APRIL: CalendarEvent[] = [
     time: "10:00",
     description: "Submit draft story for brand review before posting.",
     done: false,
-    snoozed: false,
     payout: 0,
   },
   {
@@ -83,7 +80,6 @@ const APRIL: CalendarEvent[] = [
     description:
       "Final deadline to submit Instagram story. Tag @blankstreetcoffee.",
     done: false,
-    snoozed: false,
     payout: 0,
     postUrl: "/creator/campaigns/camp-001/post",
   },
@@ -100,7 +96,6 @@ const APRIL: CalendarEvent[] = [
     time: "12:00",
     description: "Film your Reel featuring the Classic Burger. Min 30 seconds.",
     done: false,
-    snoozed: false,
     payout: 35,
   },
   {
@@ -114,7 +109,6 @@ const APRIL: CalendarEvent[] = [
     time: "14:00",
     description: "Content review call. Submit draft Reel link beforehand.",
     done: false,
-    snoozed: false,
     payout: 35,
   },
   {
@@ -129,7 +123,6 @@ const APRIL: CalendarEvent[] = [
     description:
       "Final deadline. Reel must be live and tagged @superiorityburger.",
     done: false,
-    snoozed: false,
     payout: 35,
     postUrl: "/creator/campaigns/camp-002/post",
   },
@@ -144,7 +137,6 @@ const APRIL: CalendarEvent[] = [
     time: "09:00",
     description: "Payment of $35 will be released once content is verified.",
     done: false,
-    snoozed: false,
     payout: 35,
   },
 
@@ -160,7 +152,6 @@ const APRIL: CalendarEvent[] = [
     time: "11:00",
     description: "Brow appointment at 247 Centre St. Capture before & after.",
     done: false,
-    snoozed: false,
     payout: 50,
   },
   {
@@ -174,7 +165,6 @@ const APRIL: CalendarEvent[] = [
     time: "15:00",
     description: "Submit before/after stories for quick review by brand team.",
     done: false,
-    snoozed: false,
     payout: 50,
   },
   {
@@ -188,7 +178,6 @@ const APRIL: CalendarEvent[] = [
     time: "23:59",
     description: "Post before/after stories + feed post. Tag @browtheorynyc.",
     done: false,
-    snoozed: false,
     payout: 50,
     postUrl: "/creator/campaigns/camp-004/post",
   },
@@ -206,7 +195,6 @@ const APRIL: CalendarEvent[] = [
     description:
       "Visit the pop-up at Rockefeller Plaza. Capture the experience.",
     done: true,
-    snoozed: false,
     payout: 20,
   },
   {
@@ -220,7 +208,6 @@ const APRIL: CalendarEvent[] = [
     time: "23:59",
     description: "Post review story or post. Tag location.",
     done: false,
-    snoozed: false,
     payout: 20,
     postUrl: "/creator/campaigns/camp-006/post",
   },
@@ -235,7 +222,6 @@ const APRIL: CalendarEvent[] = [
     time: "09:00",
     description: "Payment of $20 after content verification.",
     done: false,
-    snoozed: false,
     payout: 20,
   },
 
@@ -251,7 +237,6 @@ const APRIL: CalendarEvent[] = [
     time: "08:30",
     description: "Morning shoot at 373 Broadway. Aesthetic, cozy content.",
     done: false,
-    snoozed: false,
     payout: 25,
   },
   {
@@ -265,7 +250,6 @@ const APRIL: CalendarEvent[] = [
     time: "23:59",
     description: "Post 2 Instagram stories. Tag @chachamatcha.",
     done: false,
-    snoozed: false,
     payout: 25,
     postUrl: "/creator/campaigns/camp-008/post",
   },
@@ -280,7 +264,6 @@ const APRIL: CalendarEvent[] = [
     time: "10:00",
     description: "Payment of $25 after content verified.",
     done: false,
-    snoozed: false,
     payout: 25,
   },
 ];
@@ -300,7 +283,6 @@ const MAY: CalendarEvent[] = [
     time: "09:00",
     description: "Receive brand guidelines for the aesthetic shoot.",
     done: false,
-    snoozed: false,
     payout: 75,
   },
   {
@@ -315,7 +297,6 @@ const MAY: CalendarEvent[] = [
     description:
       "Submit content 48h before posting. Moody, editorial, nature-forward.",
     done: false,
-    snoozed: false,
     payout: 75,
   },
   {
@@ -329,7 +310,6 @@ const MAY: CalendarEvent[] = [
     time: "23:59",
     description: "Post 2 feed posts + 3 stories. Tag Flamingo Estate.",
     done: false,
-    snoozed: false,
     payout: 75,
     postUrl: "/creator/campaigns/camp-003/post",
   },
@@ -344,7 +324,6 @@ const MAY: CalendarEvent[] = [
     time: "09:00",
     description: "Payment of $75 + est. commission after verification.",
     done: false,
-    snoozed: false,
     payout: 75,
   },
 
@@ -361,7 +340,6 @@ const MAY: CalendarEvent[] = [
     description:
       "First editorial shoot at Glossier flagship. High production value.",
     done: false,
-    snoozed: false,
     payout: 120,
   },
   {
@@ -375,7 +353,6 @@ const MAY: CalendarEvent[] = [
     time: "14:00",
     description: "Review call for 3+ feed posts and video draft.",
     done: false,
-    snoozed: false,
     payout: 120,
   },
   {
@@ -389,7 +366,6 @@ const MAY: CalendarEvent[] = [
     time: "23:59",
     description: "Post 3+ feed posts + YouTube/TikTok video (min 3 min).",
     done: false,
-    snoozed: false,
     payout: 120,
     postUrl: "/creator/campaigns/camp-005/post",
   },
@@ -404,7 +380,6 @@ const MAY: CalendarEvent[] = [
     time: "09:00",
     description: "Payment of $120 after engagement rate verified.",
     done: false,
-    snoozed: false,
     payout: 120,
   },
 
@@ -420,7 +395,6 @@ const MAY: CalendarEvent[] = [
     time: "10:00",
     description: "Portfolio review required. Prepare best editorial work.",
     done: false,
-    snoozed: false,
     payout: 199,
   },
   {
@@ -435,7 +409,6 @@ const MAY: CalendarEvent[] = [
     description:
       "Review first batch of 5 feed posts for Spring 2026 collection.",
     done: false,
-    snoozed: false,
     payout: 199,
   },
   {
@@ -449,7 +422,6 @@ const MAY: CalendarEvent[] = [
     time: "14:00",
     description: "Review 2 Reels for KITH collab campaign.",
     done: false,
-    snoozed: false,
     payout: 199,
   },
   {
@@ -463,7 +435,6 @@ const MAY: CalendarEvent[] = [
     time: "23:59",
     description: "All 5+ posts and 2 Reels must be live.",
     done: false,
-    snoozed: false,
     payout: 199,
     postUrl: "/creator/campaigns/camp-007/post",
   },
@@ -478,7 +449,6 @@ const MAY: CalendarEvent[] = [
     time: "09:00",
     description: "Top-tier payment of $199 released after full verification.",
     done: false,
-    snoozed: false,
     payout: 199,
   },
 
@@ -494,7 +464,6 @@ const MAY: CalendarEvent[] = [
     time: "11:00",
     description: "Second editorial session at flagship for remaining posts.",
     done: false,
-    snoozed: false,
     payout: 120,
   },
   {
@@ -508,7 +477,6 @@ const MAY: CalendarEvent[] = [
     time: "09:00",
     description: "Exclusive creator access to KITH SoHo for editorial shoot.",
     done: false,
-    snoozed: false,
     payout: 199,
   },
   {
@@ -522,7 +490,6 @@ const MAY: CalendarEvent[] = [
     time: "16:00",
     description: "Capture remaining 2 stories in afternoon light.",
     done: false,
-    snoozed: false,
     payout: 75,
   },
 
@@ -540,7 +507,6 @@ const MAY: CalendarEvent[] = [
     description:
       "Final prep before tomorrow's posting deadline. Check all items before you post.",
     done: false,
-    snoozed: false,
     payout: 0,
     isPrepEvent: true,
     prepChecklist: [
@@ -567,7 +533,6 @@ const MAY: CalendarEvent[] = [
     description:
       "Final prep before tomorrow's posting deadline. All 3+ posts + video must be ready.",
     done: false,
-    snoozed: false,
     payout: 0,
     isPrepEvent: true,
     prepChecklist: [
@@ -594,7 +559,6 @@ const MAY: CalendarEvent[] = [
     description:
       "All 5+ feed posts and 2 Reels must be live by tomorrow midnight.",
     done: false,
-    snoozed: false,
     payout: 0,
     isPrepEvent: true,
     prepChecklist: [
@@ -622,7 +586,6 @@ const MAY: CalendarEvent[] = [
     description:
       "Attribution weight drops to 50% after D+30. QR scans still count at half value through D+60.",
     done: false,
-    snoozed: false,
     payout: 0,
     isDecayMilestone: true,
     decayDayNumber: 30,
@@ -639,7 +602,6 @@ const MAY: CalendarEvent[] = [
     description:
       "Attribution weight drops to 50% after D+30. QR scans still count at half value through D+60.",
     done: false,
-    snoozed: false,
     payout: 0,
     isDecayMilestone: true,
     decayDayNumber: 30,
@@ -656,7 +618,6 @@ const MAY: CalendarEvent[] = [
     description:
       "Attribution weight drops to 50% after D+30. QR scans still count at half value through D+60.",
     done: false,
-    snoozed: false,
     payout: 0,
     isDecayMilestone: true,
     decayDayNumber: 30,
@@ -673,7 +634,6 @@ const MAY: CalendarEvent[] = [
     description:
       "Attribution weight drops to 50% after D+30. QR scans still count at half value through D+60.",
     done: false,
-    snoozed: false,
     payout: 0,
     isDecayMilestone: true,
     decayDayNumber: 30,
@@ -690,7 +650,6 @@ const MAY: CalendarEvent[] = [
     description:
       "Attribution weight drops to 50% after D+30. QR scans still count at half value through D+60.",
     done: false,
-    snoozed: false,
     payout: 0,
     isDecayMilestone: true,
     decayDayNumber: 30,
@@ -713,7 +672,6 @@ const JUNE: CalendarEvent[] = [
     description:
       "Attribution weight drops to 25% after D+60. Window fully expires at D+90 (Jul 21).",
     done: false,
-    snoozed: false,
     payout: 0,
     isDecayMilestone: true,
     decayDayNumber: 60,
@@ -730,7 +688,6 @@ const JUNE: CalendarEvent[] = [
     description:
       "Attribution weight drops to 25% after D+60. Window fully expires at D+90 (Jul 24).",
     done: false,
-    snoozed: false,
     payout: 0,
     isDecayMilestone: true,
     decayDayNumber: 60,
@@ -747,7 +704,6 @@ const JUNE: CalendarEvent[] = [
     description:
       "Attribution weight drops to 25% after D+60. Window fully expires at D+90 (Jul 27).",
     done: false,
-    snoozed: false,
     payout: 0,
     isDecayMilestone: true,
     decayDayNumber: 60,
@@ -764,7 +720,6 @@ const JUNE: CalendarEvent[] = [
     description:
       "Attribution weight drops to 25% after D+60. Window fully expires at D+90 (Jul 28).",
     done: false,
-    snoozed: false,
     payout: 0,
     isDecayMilestone: true,
     decayDayNumber: 60,
@@ -781,7 +736,6 @@ const JUNE: CalendarEvent[] = [
     description:
       "Attribution weight drops to 25% after D+60. Window fully expires at D+90 (Jul 29).",
     done: false,
-    snoozed: false,
     payout: 0,
     isDecayMilestone: true,
     decayDayNumber: 60,
@@ -799,7 +753,6 @@ const JUNE: CalendarEvent[] = [
     time: "09:00",
     description: "New campaign invite for premium rooftop shoot.",
     done: false,
-    snoozed: false,
     payout: 150,
   },
   {
@@ -813,7 +766,6 @@ const JUNE: CalendarEvent[] = [
     time: "10:00",
     description: "Creative direction call with brand team.",
     done: false,
-    snoozed: false,
     payout: 150,
   },
   {
@@ -827,7 +779,6 @@ const JUNE: CalendarEvent[] = [
     time: "17:00",
     description: "Golden hour shoot on the rooftop. Bring equipment.",
     done: false,
-    snoozed: false,
     payout: 150,
   },
   {
@@ -841,7 +792,6 @@ const JUNE: CalendarEvent[] = [
     time: "14:00",
     description: "Submit edited photos and Reel draft.",
     done: false,
-    snoozed: false,
     payout: 150,
   },
   {
@@ -855,7 +805,6 @@ const JUNE: CalendarEvent[] = [
     time: "23:59",
     description: "All content must be live by midnight.",
     done: false,
-    snoozed: false,
     payout: 150,
     postUrl: "/creator/campaigns/camp-future-01/post",
   },
@@ -870,7 +819,6 @@ const JUNE: CalendarEvent[] = [
     time: "09:00",
     description: "Payment of $150 after verification.",
     done: false,
-    snoozed: false,
     payout: 150,
   },
   {
@@ -885,7 +833,6 @@ const JUNE: CalendarEvent[] = [
     description:
       "Multi-venue food walk campaign covering 5 spots in Williamsburg.",
     done: false,
-    snoozed: false,
     payout: 80,
   },
   {
@@ -899,7 +846,6 @@ const JUNE: CalendarEvent[] = [
     time: "23:59",
     description: "Post series of stories and a Reel from the food walk.",
     done: false,
-    snoozed: false,
     payout: 80,
     postUrl: "/creator/campaigns/camp-future-02/post",
   },
@@ -914,7 +860,6 @@ const JUNE: CalendarEvent[] = [
     time: "09:00",
     description: "Payment after engagement metrics verified.",
     done: false,
-    snoozed: false,
     payout: 80,
   },
   {
@@ -928,7 +873,6 @@ const JUNE: CalendarEvent[] = [
     time: "10:00",
     description: "Creator press pass for Brooklyn Art Week at Industry City.",
     done: false,
-    snoozed: false,
     payout: 200,
   },
   {
@@ -942,7 +886,6 @@ const JUNE: CalendarEvent[] = [
     time: "15:00",
     description: "Review week's content package before final post.",
     done: false,
-    snoozed: false,
     payout: 200,
   },
   {
@@ -956,7 +899,6 @@ const JUNE: CalendarEvent[] = [
     time: "23:59",
     description: "Full coverage package must be live before month end.",
     done: false,
-    snoozed: false,
     payout: 200,
     postUrl: "/creator/campaigns/camp-future-03/post",
   },

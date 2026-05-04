@@ -428,7 +428,6 @@ interface SidePanelProps {
   events: CalendarEvent[];
   todayStr: string;
   onMarkDone: (id: string) => void;
-  onSnooze: (id: string) => void;
   onAddNote: (id: string) => void;
   onReschedule: (id: string) => void;
   onMessageMerchant: (campaignId: string) => void;
@@ -446,7 +445,6 @@ function SidePanel({
   events,
   todayStr,
   onMarkDone,
-  onSnooze,
   onAddNote,
   onReschedule,
   onMessageMerchant,
@@ -617,12 +615,6 @@ function SidePanel({
                   <>
                     <button
                       className="btn-ghost click-shift cal-btn-sm"
-                      onClick={() => onSnooze(ev.id)}
-                    >
-                      Snooze
-                    </button>
-                    <button
-                      className="btn-ghost click-shift cal-btn-sm"
                       onClick={() => onAddNote(ev.id)}
                     >
                       Note
@@ -683,7 +675,6 @@ function SidePanel({
 interface ActionButtonsProps {
   event: CalendarEvent;
   onMarkDone: (id: string) => void;
-  onSnooze: (id: string) => void;
   onAddNote: (id: string) => void;
   onReschedule: (id: string) => void;
   onMessageMerchant: (campaignId: string) => void;
@@ -693,7 +684,6 @@ interface ActionButtonsProps {
 function ActionButtons({
   event,
   onMarkDone,
-  onSnooze,
   onAddNote,
   onReschedule,
   onMessageMerchant,
@@ -718,12 +708,6 @@ function ActionButtons({
       </button>
       {!event.done && (
         <>
-          <button
-            className="btn-ghost click-shift cal-btn-sm"
-            onClick={() => onSnooze(event.id)}
-          >
-            Snooze
-          </button>
           <button
             className="btn-ghost click-shift cal-btn-sm"
             onClick={() => onAddNote(event.id)}
@@ -762,7 +746,6 @@ interface DayPopoverProps {
   anchorRef: React.RefObject<HTMLElement | null>;
   onClose: () => void;
   onMarkDone: (id: string) => void;
-  onSnooze: (id: string) => void;
   onAddNote: (id: string) => void;
   onReschedule: (id: string) => void;
   onMessageMerchant: (campaignId: string) => void;
@@ -779,7 +762,6 @@ function DayPopover({
   anchorRef,
   onClose,
   onMarkDone,
-  onSnooze,
   onAddNote,
   onReschedule,
   onMessageMerchant,
@@ -871,7 +853,6 @@ function DayPopover({
                 <ActionButtons
                   event={ev}
                   onMarkDone={onMarkDone}
-                  onSnooze={onSnooze}
                   onAddNote={onAddNote}
                   onReschedule={onReschedule}
                   onMessageMerchant={onMessageMerchant}
@@ -1151,17 +1132,6 @@ export default function CreatorCalendarPage() {
   const markDone = useCallback((id: string) => {
     setEvents((prev) =>
       prev.map((e) => (e.id === id ? { ...e, done: true } : e)),
-    );
-  }, []);
-
-  const snooze = useCallback((id: string) => {
-    setEvents((prev) =>
-      prev.map((e) => {
-        if (e.id !== id) return e;
-        const d = new Date(e.date + "T00:00:00");
-        d.setDate(d.getDate() + 1);
-        return { ...e, date: toYMD(d), snoozed: true };
-      }),
     );
   }, []);
 
@@ -1677,7 +1647,6 @@ export default function CreatorCalendarPage() {
                             <ActionButtons
                               event={ev}
                               onMarkDone={markDone}
-                              onSnooze={snooze}
                               onAddNote={addNote}
                               onReschedule={reschedule}
                               onMessageMerchant={messageMerchant}
@@ -1701,10 +1670,6 @@ export default function CreatorCalendarPage() {
               anchorRef={popoverAnchor}
               onClose={closePopover}
               onMarkDone={(id) => markDone(id)}
-              onSnooze={(id) => {
-                snooze(id);
-                closePopover();
-              }}
               onAddNote={addNote}
               onReschedule={reschedule}
               onMessageMerchant={messageMerchant}
@@ -1723,7 +1688,6 @@ export default function CreatorCalendarPage() {
             events={events}
             todayStr={todayStr}
             onMarkDone={markDone}
-            onSnooze={snooze}
             onAddNote={addNote}
             onReschedule={reschedule}
             onMessageMerchant={messageMerchant}
