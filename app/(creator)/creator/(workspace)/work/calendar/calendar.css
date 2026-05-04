@@ -463,6 +463,15 @@ body:has(.cw-page.cal) .dh-main {
   outline-offset: 2px;
 }
 
+.cal-legend-chip__count {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 600;
+  color: inherit;
+  opacity: 0.65;
+  letter-spacing: 0;
+}
+
 .cal-filter-clear { margin-left: auto; }
 
 /* ── P1-4: Tier progress banner ─────────────────────────── */

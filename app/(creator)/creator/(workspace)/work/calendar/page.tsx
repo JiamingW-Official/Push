@@ -737,6 +737,19 @@ export default function CreatorCalendarPage() {
   const monthGrid = useMemo(() => buildMonthGrid(year, month), [year, month]);
   const weekDates = useMemo(() => buildWeekDates(weekAnchor), [weekAnchor]);
 
+  // P3-3: Event counts per type in the current month (unfiltered, for chip labels)
+  const typeCounts = useMemo(() => {
+    const counts: Record<EventType, number> = {
+      deadline: 0,
+      review: 0,
+      milestone: 0,
+    };
+    for (const ev of events) {
+      if (ev.date.startsWith(ym)) counts[ev.type]++;
+    }
+    return counts;
+  }, [events, ym]);
+
   // P3-1: Blocking — past-due deadlines, most-overdue first, max 3
   const blockingEvents = useMemo(
     () =>
@@ -1038,6 +1051,9 @@ export default function CreatorCalendarPage() {
                 >
                   <span className={`cal-dot event-type--${type}`} aria-hidden />
                   {label}
+                  <span className="cal-legend-chip__count">
+                    ({typeCounts[type as EventType]})
+                  </span>
                 </button>
               ),
             )}
