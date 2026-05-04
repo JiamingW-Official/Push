@@ -305,101 +305,6 @@ function LeftPanel({
   );
 }
 
-/* ── P0-4: Earnings Sparkline ─────────────────────────────── */
-
-function EarningsSparkline({
-  totals,
-  target,
-}: {
-  totals: number[];
-  target: number;
-}) {
-  const W = 200,
-    H = 40;
-  const max = Math.max(target, ...totals, 1);
-  const pts = totals
-    .map(
-      (v, i, arr) =>
-        `${(i / Math.max(arr.length - 1, 1)) * W},${H - (v / max) * H}`,
-    )
-    .join(" ");
-  const targetY = H - (target / max) * H;
-  return (
-    <svg
-      width={W}
-      height={H}
-      viewBox={`0 0 ${W} ${H}`}
-      aria-hidden
-      className="cal-sparkline"
-    >
-      <line
-        x1={0}
-        y1={targetY}
-        x2={W}
-        y2={targetY}
-        stroke="var(--mist)"
-        strokeWidth={1}
-        strokeDasharray="4 2"
-      />
-      <polyline
-        points={pts}
-        fill="none"
-        stroke="var(--brand-red)"
-        strokeWidth={1.5}
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <circle cx={W} cy={targetY} r={2.5} fill="var(--mist)" />
-    </svg>
-  );
-}
-
-/* ── P0-4: Earnings Drawer ────────────────────────────────── */
-
-function EarningsDrawer({ breakdown }: { breakdown: EarningsBreakdown }) {
-  return (
-    <div className="cal-earnings-drawer">
-      <div className="cal-earnings-drawer__grid">
-        <div className="cal-earnings-stat">
-          <p className="cal-earnings-stat__eyebrow">CONFIRMED</p>
-          <p className="cal-earnings-stat__num cal-earnings-stat__num--confirmed">
-            ${breakdown.confirmed}
-          </p>
-        </div>
-        <div className="cal-earnings-stat">
-          <p className="cal-earnings-stat__eyebrow">PENDING VERIFICATION</p>
-          <p className="cal-earnings-stat__num cal-earnings-stat__num--pending">
-            ${breakdown.pending}
-          </p>
-        </div>
-        <div className="cal-earnings-stat">
-          <p className="cal-earnings-stat__eyebrow">AT-RISK</p>
-          <p className="cal-earnings-stat__num cal-earnings-stat__num--risk">
-            ${breakdown.atRisk}
-          </p>
-        </div>
-        <div className="cal-earnings-stat">
-          <p className="cal-earnings-stat__eyebrow">FORECAST Δ</p>
-          <p
-            className={`cal-earnings-stat__num cal-earnings-stat__num--delta-${breakdown.forecastDelta >= 0 ? "pos" : "neg"}`}
-          >
-            {breakdown.forecastDelta >= 0 ? "+" : ""}${breakdown.forecastDelta}
-          </p>
-        </div>
-      </div>
-      <div className="cal-earnings-sparkline-wrap">
-        <p className="cal-earnings-sparkline-label">
-          CONFIRMED VS TARGET ${breakdown.monthTarget}
-        </p>
-        <EarningsSparkline
-          totals={breakdown.dailyRunningTotal}
-          target={breakdown.monthTarget}
-        />
-      </div>
-    </div>
-  );
-}
-
 /* ── Side Panel ──────────────────────────────────────────── */
 
 interface SidePanelProps {
@@ -801,9 +706,6 @@ export default function CreatorCalendarPage() {
   const [events, setEvents] = useState<CalendarEvent[]>(MOCK_EVENTS);
   const [noteTarget, setNoteTarget] = useState<string | null>(null);
   const [noteValue, setNoteValue] = useState("");
-
-  // P0-4: Earnings drawer toggle
-  const [earningsOpen, setEarningsOpen] = useState(false);
 
   // P1-3: Event-type filter chips
   const [activeFilters, setActiveFilters] = useState<Set<EventType>>(new Set());
