@@ -25,7 +25,7 @@
 
   --cal-hover:        rgba(10, 10, 10, 0.04);
 
-  background: #f0efe9 !important;   /* must beat body:has(.us-rail) main [class*="-page"] { transparent !important } */
+  background: var(--snow) !important;   /* must beat body:has(.us-rail) main [class*="-page"] { transparent !important } */
   color: var(--ink);
   padding: 16px 0;
   max-width: none;
@@ -56,7 +56,7 @@
 
 /* Beat unified-sidebar transparent rule (specificity 0,2,2) */
 body:has(.us-rail) main .cw-page.cal {
-  background: #f0efe9 !important;
+  background: var(--snow) !important;
 }
 
 /* Prevent outer scroll when calendar is active */
@@ -600,7 +600,7 @@ body:has(.cw-page.cal) .dh-main {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   gap: 0;
-  background: #fafafa;
+  background: var(--snow);
   border-bottom: 1px solid rgba(10,10,10,0.08);
   flex-shrink: 0;
   z-index: 5;
@@ -1377,48 +1377,6 @@ body:has(.cw-page.cal) .dh-main {
   display: block;
 }
 
-
-/* ── P1-2: Prep Checklist ─────────────────────────────────── */
-
-.cal-checklist {
-  margin-top: 10px;
-  padding-top: 10px;
-  border-top: 1px solid var(--hairline);
-}
-
-.cal-checklist__eyebrow {
-  font-family: var(--font-mono);
-  font-size: 9px;
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--ink-4);
-  margin: 0 0 6px;
-}
-
-.cal-checklist__item {
-  display: flex;
-  align-items: flex-start;
-  gap: 7px;
-  padding: 3px 0;
-  cursor: pointer;
-  font-family: var(--font-mono);
-  font-size: 10px;
-  color: var(--ink-3);
-  letter-spacing: 0.02em;
-  line-height: 1.4;
-}
-
-.cal-checklist__item input[type="checkbox"] {
-  width: 13px;
-  height: 13px;
-  flex-shrink: 0;
-  margin-top: 1px;
-  accent-color: var(--brand-red);
-  cursor: pointer;
-}
-
-.cal-checklist__item.is-checked { color: var(--ink-5); text-decoration: line-through; }
 
 /* ── Animations ─────────────────────────────────────────── */
 
