@@ -810,7 +810,7 @@ export default function CreatorCalendarPage() {
   // P0-2: Message merchant — navigate to campaign detail
   const messageMerchant = useCallback(
     (campaignId: string) => {
-      router.push(`/creator/campaigns/${campaignId}`);
+      router.push(`/creator/inbox?campaign=${encodeURIComponent(campaignId)}`);
     },
     [router],
   );
