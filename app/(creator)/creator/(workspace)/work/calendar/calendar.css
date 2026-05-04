@@ -1376,6 +1376,227 @@ body:has(.cw-page.cal) .dh-main {
   to   { opacity: 1; transform: translateX(0); }
 }
 
+/* ── 7-Day Flight Strip (Agenda view) ───────────────────── */
+
+.cal-flight-wrap {
+  padding: 24px 0 48px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.cal-flight-grid {
+  display: flex;
+  flex-direction: column;
+  min-width: 720px;
+}
+
+/* Each row (header + campaign rows) is a 9-column flex row:
+   [label 200px] [7 day cells flex-1 each] [decay 64px] */
+.cal-flight-row {
+  display: grid;
+  grid-template-columns: 200px repeat(7, 1fr) 64px;
+  border-bottom: 1px solid var(--hairline);
+}
+
+.cal-flight-row--header {
+  border-bottom: 2px solid var(--hairline);
+}
+
+/* ── Cells ─────────────────────────────── */
+.cal-flight-cell {
+  padding: 8px;
+  position: relative;
+}
+
+.cal-flight-cell--label {
+  padding: 8px 16px;
+  border-left: 3px solid transparent;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  justify-content: center;
+}
+
+.cal-flight-cell--head {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.cal-flight-cell--head.is-today {
+  background: rgba(193, 18, 31, 0.04);
+}
+
+.cal-flight-cell--day {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  transition: background 120ms;
+}
+
+.cal-flight-cell--day:hover {
+  background: rgba(10, 10, 10, 0.04);
+}
+
+.cal-flight-cell--day:focus-visible {
+  outline: 2px solid var(--brand-red);
+  outline-offset: -2px;
+}
+
+.cal-flight-cell--day.is-today {
+  background: rgba(193, 18, 31, 0.04);
+}
+
+.cal-flight-cell--decay,
+.cal-flight-cell--decay-head {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ── Header labels ─────────────────────── */
+.cal-flight-head-dow {
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--ink-4);
+  text-transform: uppercase;
+}
+
+.cal-flight-head-date {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--ink-3);
+}
+
+.cal-flight-cell--head.is-today .cal-flight-head-dow,
+.cal-flight-cell--head.is-today .cal-flight-head-date {
+  color: var(--brand-red);
+  font-weight: 700;
+}
+
+/* ── Today vertical line ───────────────── */
+.cal-flight-today-line {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 1px;
+  height: 100%;
+  background: var(--brand-red);
+  opacity: 0.3;
+  pointer-events: none;
+}
+
+/* ── Campaign label column ─────────────── */
+.cal-flight-campaign-title {
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ink);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 168px;
+}
+
+.cal-flight-campaign-merchant {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--ink-4);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 168px;
+}
+
+/* ── Event chip inside cell ────────────── */
+.cal-flight-event-chip {
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: var(--mist);
+  color: var(--ink);
+}
+
+.cal-flight-event-chip.event-type--deadline {
+  background: rgba(193, 18, 31, 0.12);
+  color: var(--brand-red);
+}
+
+.cal-flight-event-chip.event-type--review {
+  background: rgba(0, 133, 255, 0.12);
+  color: var(--accent-blue);
+}
+
+.cal-flight-event-chip.event-type--milestone {
+  background: rgba(191, 161, 112, 0.16);
+  color: var(--ink-3);
+}
+
+.cal-flight-event-chip.is-done {
+  opacity: 0.35;
+  text-decoration: line-through;
+}
+
+/* ── Decay bar ─────────────────────────── */
+.cal-flight-decay-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--ink-4);
+  text-transform: uppercase;
+}
+
+.cal-flight-decay-bar {
+  display: flex;
+  gap: 2px;
+  align-items: center;
+}
+
+.cal-flight-decay-bar--none {
+  opacity: 0;
+}
+
+.cal-flight-decay-seg {
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+  background: var(--mist);
+}
+
+.cal-flight-decay-seg.is-active {
+  background: var(--brand-red);
+}
+
+/* ── Empty state ───────────────────────── */
+.cal-flight-empty {
+  padding: 64px 24px;
+  text-align: center;
+}
+
+.cal-flight-empty__line {
+  font-family: var(--mono);
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.cal-flight-empty__sub {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--ink-4);
+  margin-top: 8px;
+}
+
 /* ── Responsive ─────────────────────────────────────────── */
 
 @media (max-width: 1200px) {

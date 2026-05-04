@@ -11,10 +11,11 @@ import {
   EVENT_TYPE_LABELS,
 } from "@/lib/calendar/mock-events";
 import { EventActions } from "@/components/creator/calendar/EventActions";
+import { FlightStrip } from "@/components/creator/calendar/FlightStrip";
 
 /* ── Types ───────────────────────────────────────────────── */
 
-type CalView = "month" | "week";
+type CalView = "month" | "week" | "agenda";
 
 /* ── Constants ───────────────────────────────────────────── */
 
@@ -956,7 +957,7 @@ export default function CreatorCalendarPage() {
                 role="tablist"
                 aria-label="Calendar view"
               >
-                {(["month", "week"] as CalView[]).map((v) => (
+                {(["month", "week", "agenda"] as CalView[]).map((v) => (
                   <button
                     key={v}
                     role="tab"
@@ -1202,6 +1203,23 @@ export default function CreatorCalendarPage() {
                 })}
               </div>
             </div>
+          )}
+
+          {/* ── Agenda / 7-Day Flight Strip ──────────────────── */}
+
+          {view === "agenda" && (
+            <FlightStrip
+              events={events}
+              todayStr={todayStr}
+              campaignColorMap={campaignColorMap}
+              onSelectDate={(d) => {
+                setSelectedDate(d);
+                setView("month");
+                setYear(Number(d.slice(0, 4)));
+                setMonth(Number(d.slice(5, 7)) - 1);
+                setWeekAnchor(new Date(d + "T00:00:00"));
+              }}
+            />
           )}
 
           {/* Day popover (mobile / week view) */}
