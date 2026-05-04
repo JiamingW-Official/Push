@@ -429,7 +429,6 @@ interface SidePanelProps {
   todayStr: string;
   onMarkDone: (id: string) => void;
   onAddNote: (id: string) => void;
-  onReschedule: (id: string) => void;
   onMessageMerchant: (campaignId: string) => void;
   onRequestExtension: (id: string) => void;
   noteTarget: string | null;
@@ -446,7 +445,6 @@ function SidePanel({
   todayStr,
   onMarkDone,
   onAddNote,
-  onReschedule,
   onMessageMerchant,
   onRequestExtension,
   noteTarget,
@@ -621,12 +619,6 @@ function SidePanel({
                     </button>
                     <button
                       className="btn-ghost click-shift cal-btn-sm"
-                      onClick={() => onReschedule(ev.id)}
-                    >
-                      Reschedule
-                    </button>
-                    <button
-                      className="btn-ghost click-shift cal-btn-sm"
                       onClick={() => onMessageMerchant(ev.campaignId)}
                     >
                       Message merchant
@@ -676,7 +668,6 @@ interface ActionButtonsProps {
   event: CalendarEvent;
   onMarkDone: (id: string) => void;
   onAddNote: (id: string) => void;
-  onReschedule: (id: string) => void;
   onMessageMerchant: (campaignId: string) => void;
   onRequestExtension: (id: string) => void;
 }
@@ -685,7 +676,6 @@ function ActionButtons({
   event,
   onMarkDone,
   onAddNote,
-  onReschedule,
   onMessageMerchant,
   onRequestExtension,
 }: ActionButtonsProps) {
@@ -716,12 +706,6 @@ function ActionButtons({
           </button>
           <button
             className="btn-ghost click-shift cal-btn-sm"
-            onClick={() => onReschedule(event.id)}
-          >
-            Reschedule
-          </button>
-          <button
-            className="btn-ghost click-shift cal-btn-sm"
             onClick={() => onMessageMerchant(event.campaignId)}
           >
             Message merchant
@@ -747,7 +731,6 @@ interface DayPopoverProps {
   onClose: () => void;
   onMarkDone: (id: string) => void;
   onAddNote: (id: string) => void;
-  onReschedule: (id: string) => void;
   onMessageMerchant: (campaignId: string) => void;
   onRequestExtension: (id: string) => void;
   noteTarget: string | null;
@@ -763,7 +746,6 @@ function DayPopover({
   onClose,
   onMarkDone,
   onAddNote,
-  onReschedule,
   onMessageMerchant,
   onRequestExtension,
   noteTarget,
@@ -854,7 +836,6 @@ function DayPopover({
                   event={ev}
                   onMarkDone={onMarkDone}
                   onAddNote={onAddNote}
-                  onReschedule={onReschedule}
                   onMessageMerchant={onMessageMerchant}
                   onRequestExtension={onRequestExtension}
                 />
@@ -1132,18 +1113,6 @@ export default function CreatorCalendarPage() {
   const markDone = useCallback((id: string) => {
     setEvents((prev) =>
       prev.map((e) => (e.id === id ? { ...e, done: true } : e)),
-    );
-  }, []);
-
-  // P0-2: Reschedule — moves event to next day with a rescheduled flag
-  const reschedule = useCallback((id: string) => {
-    setEvents((prev) =>
-      prev.map((e) => {
-        if (e.id !== id) return e;
-        const d = new Date(e.date + "T00:00:00");
-        d.setDate(d.getDate() + 1);
-        return { ...e, date: toYMD(d) };
-      }),
     );
   }, []);
 
@@ -1648,7 +1617,6 @@ export default function CreatorCalendarPage() {
                               event={ev}
                               onMarkDone={markDone}
                               onAddNote={addNote}
-                              onReschedule={reschedule}
                               onMessageMerchant={messageMerchant}
                               onRequestExtension={requestExtension}
                             />
@@ -1671,7 +1639,6 @@ export default function CreatorCalendarPage() {
               onClose={closePopover}
               onMarkDone={(id) => markDone(id)}
               onAddNote={addNote}
-              onReschedule={reschedule}
               onMessageMerchant={messageMerchant}
               onRequestExtension={requestExtension}
               noteTarget={noteTarget}
@@ -1689,7 +1656,6 @@ export default function CreatorCalendarPage() {
             todayStr={todayStr}
             onMarkDone={markDone}
             onAddNote={addNote}
-            onReschedule={reschedule}
             onMessageMerchant={messageMerchant}
             onRequestExtension={requestExtension}
             noteTarget={noteTarget}
