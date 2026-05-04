@@ -680,6 +680,9 @@ export default function CreatorCalendarPage() {
   const [popoverDate, setPopoverDate] = useState<string | null>(null);
   const popoverAnchor = useRef<HTMLElement | null>(null);
 
+  // P3-5: Hidden <input type="month"> for native month picker
+  const monthPickerRef = useRef<HTMLInputElement>(null);
+
   const [events, setEvents] = useState<CalendarEvent[]>(MOCK_EVENTS);
   const [noteTarget, setNoteTarget] = useState<string | null>(null);
   const [noteValue, setNoteValue] = useState("");
@@ -981,13 +984,33 @@ export default function CreatorCalendarPage() {
                   />
                 </svg>
               </button>
-              <button
-                type="button"
-                onClick={goToday}
-                className="cal-topbar__period"
-              >
-                {periodLabel}
-              </button>
+              <div className="cal-topbar__period-wrap">
+                <button
+                  type="button"
+                  onClick={() => monthPickerRef.current?.click()}
+                  className="cal-topbar__period"
+                  aria-haspopup="true"
+                  aria-label={`Go to month, currently ${periodLabel}`}
+                >
+                  {periodLabel}
+                </button>
+                <input
+                  ref={monthPickerRef}
+                  type="month"
+                  value={`${year}-${String(month + 1).padStart(2, "0")}`}
+                  onChange={(e) => {
+                    const [y, m] = e.target.value.split("-").map(Number);
+                    if (!Number.isNaN(y) && !Number.isNaN(m)) {
+                      setYear(y);
+                      setMonth(m - 1);
+                      setWeekAnchor(new Date(y, m - 1, 1));
+                    }
+                  }}
+                  className="cal-month-input"
+                  tabIndex={-1}
+                  aria-hidden="true"
+                />
+              </div>
               <button
                 type="button"
                 onClick={nextPeriod}

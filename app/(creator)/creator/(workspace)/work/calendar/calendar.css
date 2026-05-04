@@ -291,6 +291,22 @@ body:has(.cw-page.cal) .dh-main {
   outline-offset: 2px;
 }
 
+/* Month picker wrapper + hidden native input */
+.cal-topbar__period-wrap {
+  position: relative;
+  display: inline-flex;
+}
+
+.cal-month-input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+  top: 0;
+  left: 0;
+}
+
 .cal-topbar__today {
   font-family: var(--font-mono);
   font-size: 11px;
