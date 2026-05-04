@@ -1,8 +1,123 @@
 /* ============================================================
-   Creator Signup — Component Styles
-   Mirrors merchant signup patterns; creator-specific additions:
-   bio counter, tier preview strip, success CTA
+   Creator Signup — Component Styles  v11 2026-04-30
+   v11 additions: eyebrow (CREATE·YOUR·ACCOUNT), Darky H1,
+   10px card radius, mono inputs, brand-red focus ring,
+   pw-strength 4px / #22c55e strong
    ============================================================ */
+
+/* ── v11 Hero eyebrow + title ─────────────────────────────── */
+
+.signup-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin-bottom: 16px;
+  display: block;
+}
+
+.signup-h1 {
+  font-family: var(--font-display);
+  font-size: clamp(40px, 5vw, 72px);
+  font-weight: 900;
+  color: var(--ink);
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+  margin: 0 0 8px;
+}
+
+/* v11 Form card: 10px radius, surface-2 bg, shadow-2 */
+.signup-card {
+  border-radius: 10px;
+  background: var(--surface-2);
+  padding: 32px;
+  max-width: 480px;
+  margin: 0 auto;
+  box-shadow: var(--shadow-2);
+  border: none;
+}
+
+/* v11 Input base: mono font, ink-4 border, surface bg */
+.signup-input,
+.signup-textarea {
+  border-radius: 8px;
+  border: 1px solid var(--ink-4);
+  padding: 12px 16px;
+  font-family: var(--font-mono);
+  font-size: 16px;
+  width: 100%;
+  background: var(--surface);
+  color: var(--ink);
+  box-sizing: border-box;
+  transition: border-color var(--t-base), outline var(--t-base);
+  min-height: 44px;
+}
+
+.signup-input::placeholder,
+.signup-textarea::placeholder {
+  color: var(--ink-4);
+  font-weight: 400;
+}
+
+/* ── v11 Social OAuth button ──────────────────────────────── */
+
+.signup-social-btn {
+  border-radius: 8px;
+  border: 1px solid var(--ink-4);
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--surface);
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 600;
+  width: 100%;
+  cursor: pointer;
+  color: var(--ink);
+  transition: transform var(--t-fast), box-shadow var(--t-fast), border-color var(--t-fast);
+}
+
+.signup-social-btn:hover {
+  transform: translate(2px, 2px);
+  box-shadow: var(--shadow-1);
+  border-color: var(--ink-3);
+}
+
+.signup-social-btn:active {
+  transform: translate(3px, 3px) scale(0.98);
+}
+
+/* ── v11 Divider ──────────────────────────────────────────── */
+
+.signup-divider {
+  border: none;
+  border-top: 1px solid var(--surface-3);
+  margin: 16px 0;
+}
+
+.signup-divider-text {
+  color: var(--ink-3);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  text-align: center;
+  margin: 0;
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.signup-divider-text::before,
+.signup-divider-text::after {
+  content: "";
+  flex: 1;
+  border-top: 1px solid var(--surface-3);
+}
+
+
 
 /* ── Page load entrance animations ───────────────────────── */
 
@@ -78,7 +193,7 @@
 .error-retry-btn {
   background: none;
   border: none;
-  color: var(--primary);
+  color: var(--brand-red);
   font-size: var(--text-caption);
   font-weight: 700;
   letter-spacing: 0.05em;
@@ -92,14 +207,14 @@
 }
 
 .error-retry-btn:hover { opacity: 0.7; }
-.error-retry-btn:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
+.error-retry-btn:focus-visible { outline: 2px solid var(--brand-red); outline-offset: 2px; }
 
 /* ── Error message inline ─────────────────────────────────── */
 
 .error-msg {
   display: block;
   font-size: 12px;
-  color: var(--primary);
+  color: var(--brand-red);
   margin-top: 4px;
 }
 
@@ -115,7 +230,7 @@
   padding: var(--space-6) var(--space-4);
   background: rgba(102,155,188,0.07);
   border: 1px solid rgba(102,155,188,0.25);
-  border-left: 4px solid var(--tertiary);
+  border-left: 4px solid var(--accent-blue);
 }
 
 @keyframes scaleIn {
@@ -146,13 +261,13 @@
   font-size: var(--text-h3);
   font-weight: 700;
   letter-spacing: -0.02em;
-  color: var(--dark);
+  color: var(--ink);
   margin: 0;
 }
 
 .success-body {
   font-size: var(--text-small);
-  color: var(--dark);
+  color: var(--ink);
   line-height: 1.6;
   max-width: 380px;
   margin: 0;
@@ -194,7 +309,7 @@ form.form-loading {
   transform: translateY(-50%);
   width: 5px;
   height: 5px;
-  background: var(--tertiary);
+  background: var(--accent-blue);
   border-radius: 50%;
   pointer-events: none;
   animation: dotPop 200ms cubic-bezier(0.22,1,0.36,1) both;
@@ -209,40 +324,54 @@ form.form-loading {
 
 .form-field input::placeholder,
 .form-field textarea::placeholder {
-  color: rgba(0, 48, 73, 0.30);
+  color: var(--ink-4);
   font-weight: 400;
 }
 
 .form-field input {
   min-height: 44px;
-  transition: border-color var(--t-base), box-shadow var(--t-base);
+  transition: border-color var(--t-base), box-shadow var(--t-base), outline var(--t-base);
 }
 
-.form-field input:focus {
-  border-color: var(--primary);
-  box-shadow: inset 2px 0 0 var(--primary);
-  outline: none;
+/* v11 focus: brand-red border + soft outline ring, no browser default */
+.form-field input:focus,
+.signup-input:focus {
+  border-color: var(--brand-red);
+  outline: 2px solid rgba(193, 18, 31, 0.2);
+  outline-offset: 0;
+  box-shadow: none;
 }
 
 .form-field input:not(:placeholder-shown) {
-  border-color: rgba(0, 48, 73, 0.35);
+  border-color: var(--ink-4);
 }
 
 .form-field input:not(:placeholder-shown):focus {
-  border-color: var(--primary);
-  box-shadow: inset 2px 0 0 var(--primary);
+  border-color: var(--brand-red);
+  outline: 2px solid rgba(193, 18, 31, 0.2);
+  outline-offset: 0;
 }
 
 .form-field:has(.error-msg) input,
 .form-field:has(.error-msg) textarea {
-  border-color: var(--primary);
-  box-shadow: inset 2px 0 0 var(--primary);
+  border-color: var(--brand-red);
+  outline: 2px solid rgba(193, 18, 31, 0.15);
+  outline-offset: 0;
+}
+
+/* v11 textarea focus */
+.form-field textarea:focus,
+.signup-textarea:focus {
+  border-color: var(--brand-red);
+  outline: 2px solid rgba(193, 18, 31, 0.2);
+  outline-offset: 0;
+  box-shadow: none;
 }
 
 /* ── Label optional tag ───────────────────────────────────── */
 
 .label-optional {
-  color: var(--text-muted);
+  color: var(--ink-4);
   font-weight: 400;
 }
 
@@ -250,7 +379,7 @@ form.form-loading {
 
 .field-hint {
   font-size: 11px;
-  color: var(--text-muted);
+  color: var(--ink-4);
   line-height: 1.4;
   margin-top: 4px;
   display: block;
@@ -261,13 +390,13 @@ form.form-loading {
 .input-with-action {
   display: flex;
   align-items: stretch;
-  border: 1px solid var(--line);
+  border: 1px solid var(--mist)
   transition: border-color var(--t-base), box-shadow var(--t-base);
 }
 
 .input-with-action:focus-within {
-  border-color: var(--primary);
-  box-shadow: inset 2px 0 0 var(--primary);
+  border-color: var(--brand-red);
+  box-shadow: inset 2px 0 0 var(--brand-red);
 }
 
 .input-with-action input {
@@ -287,17 +416,17 @@ form.form-loading {
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: var(--text-muted);
+  color: var(--ink-4);
   background: var(--surface);
   border: none;
-  border-left: 1px solid var(--line);
+  border-left: 1px solid var(--mist)
   cursor: pointer;
   flex-shrink: 0;
   transition: color var(--t-fast);
 }
 
-.input-action-btn:hover { color: var(--dark); }
-.input-action-btn:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
+.input-action-btn:hover { color: var(--ink); }
+.input-action-btn:focus-visible { outline: 2px solid var(--brand-red); outline-offset: 2px; }
 
 /* ── Password strength ────────────────────────────────────── */
 
@@ -311,7 +440,7 @@ form.form-loading {
 .pw-bar {
   flex: 1;
   height: 3px;
-  background: var(--line);
+  background: var(--mist)
   position: relative;
 }
 
@@ -323,9 +452,16 @@ form.form-loading {
   transition: width 300ms ease, background 300ms ease;
 }
 
-.pw-fill--weak   { width: 33%;  background: var(--primary); }
-.pw-fill--fair   { width: 66%;  background: #e07b00; }
-.pw-fill--strong { width: 100%; background: var(--tertiary); }
+.pw-fill--weak   { width: 33%;  background: var(--brand-red); }
+.pw-fill--fair   { width: 66%;  background: var(--champagne-deep, #bfa170); }
+/* v11: strong = #22c55e per spec */
+.pw-fill--strong { width: 100%; background: #22c55e; }
+
+.pw-bar {
+  height: 4px; /* v11: 4px height */
+  border-radius: 2px;
+  background: var(--surface-3);
+}
 
 .pw-label {
   font-size: 10px;
@@ -335,9 +471,9 @@ form.form-loading {
   white-space: nowrap;
 }
 
-.pw-label--weak   { color: var(--primary); }
-.pw-label--fair   { color: #e07b00; }
-.pw-label--strong { color: var(--tertiary); }
+.pw-label--weak   { color: var(--brand-red); }
+.pw-label--fair   { color: var(--champagne-deep, #bfa170); }
+.pw-label--strong { color: #22c55e; }
 
 /* ── Bio textarea ─────────────────────────────────────────── */
 
@@ -352,17 +488,17 @@ form.form-loading {
   padding: var(--space-2);
   font-family: var(--font-body);
   font-size: var(--text-small);
-  color: var(--dark);
+  color: var(--ink);
   background: var(--surface);
-  border: 1px solid var(--line);
+  border: 1px solid var(--mist)
   transition: border-color var(--t-base), box-shadow var(--t-base);
   line-height: 1.5;
   box-sizing: border-box;
 }
 
 .bio-wrap textarea:focus {
-  border-color: var(--primary);
-  box-shadow: inset 2px 0 0 var(--primary);
+  border-color: var(--brand-red);
+  box-shadow: inset 2px 0 0 var(--brand-red);
   outline: none;
 }
 
@@ -373,22 +509,22 @@ form.form-loading {
   font-size: 10px;
   font-weight: 700;
   letter-spacing: 0.04em;
-  color: var(--text-muted);
+  color: var(--ink-4);
   pointer-events: none;
   transition: color var(--t-fast);
 }
 
 .bio-counter--warn {
-  color: var(--primary);
+  color: var(--brand-red);
 }
 
 /* ── Trust line ───────────────────────────────────────────── */
 
 .trust-line {
   font-size: 11px;
-  color: var(--text-muted);
+  color: var(--ink-4);
   text-align: center;
-  border-top: 1px solid var(--line);
+  border-top: 1px solid var(--mist)
   padding-top: var(--space-2);
   letter-spacing: 0.02em;
 }
@@ -396,7 +532,7 @@ form.form-loading {
 /* ── Terms consent ────────────────────────────────────────── */
 
 .terms-field {
-  border-top: 1px solid var(--line);
+  border-top: 1px solid var(--mist)
   padding-top: var(--space-2);
 }
 
@@ -405,7 +541,7 @@ form.form-loading {
   align-items: flex-start;
   gap: var(--space-2);
   font-size: var(--text-small);
-  color: var(--text-muted);
+  color: var(--ink-4);
   cursor: pointer;
   line-height: 1.5;
 }
@@ -415,12 +551,12 @@ form.form-loading {
   width: 16px;
   height: 16px;
   margin-top: 1px;
-  accent-color: var(--primary);
+  accent-color: var(--brand-red);
   cursor: pointer;
 }
 
 .terms-label a {
-  color: var(--dark);
+  color: var(--ink);
   text-decoration: underline;
   text-underline-offset: 2px;
 }
@@ -437,8 +573,8 @@ form.form-loading {
 }
 
 .submit-btn:hover {
-  box-shadow: 6px 6px 0 var(--dark);
-  transform: translateX(2px);
+  box-shadow: var(--shadow-3);
+  transform: translateY(-1px);
 }
 
 .submit-btn:active,
@@ -482,17 +618,17 @@ form.form-loading {
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: var(--text-muted);
+  color: var(--ink-4);
   text-decoration: none;
-  border: 1px solid var(--line);
+  border: 1px solid var(--mist)
   padding: var(--space-2) var(--space-3);
   transition: color var(--t-fast), border-color var(--t-fast), background var(--t-fast);
 }
 
 .auth-demo-link:hover {
-  color: var(--dark);
-  border-color: var(--dark);
-  background: rgba(0, 48, 73, 0.04);
+  color: var(--ink);
+  border-color: var(--ink);
+  background: var(--surface-3);
 }
 
 /* ── Tier preview (brand panel) ───────────────────────────── */
@@ -581,7 +717,7 @@ form.form-loading {
 
 /* Signup brand panel — warm red accent top border */
 .signup-brand-panel {
-  border-top: 3px solid var(--primary);
+  border-top: 3px solid var(--brand-red);
 }
 
 /* ── Tier preview teaser ──────────────────────────────────── */
@@ -589,7 +725,7 @@ form.form-loading {
 .tier-preview {
   margin-top: var(--space-6);
   padding-top: var(--space-4);
-  border-top: 1px solid var(--line);
+  border-top: 1px solid var(--mist)
 }
 
 .tier-preview-title {
@@ -598,7 +734,7 @@ form.form-loading {
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--text-muted);
+  color: var(--ink-4);
   margin-bottom: var(--space-2);
   text-align: center;
 }
@@ -632,11 +768,11 @@ form.form-loading {
 .tier-icon {
   font-size: 16px;
   line-height: 1;
-  color: var(--dark);
+  color: var(--ink);
 }
 
 .tier-item[data-index="0"] .tier-icon {
-  color: var(--primary);
+  color: var(--brand-red);
 }
 
 .tier-label {
@@ -644,7 +780,7 @@ form.form-loading {
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: var(--dark);
+  color: var(--ink);
   white-space: nowrap;
 }
 
@@ -654,8 +790,8 @@ form.form-loading {
   position: absolute;
   top: -48px;
   left: var(--space-3);
-  background: var(--primary);
-  color: #fff;
+  background: var(--brand-red);
+  color: var(--snow);
   padding: var(--space-1) var(--space-3);
   font-size: var(--text-small);
   font-weight: 700;

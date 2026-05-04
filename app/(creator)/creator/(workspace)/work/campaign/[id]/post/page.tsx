@@ -45,7 +45,7 @@ const MOCK_CAMPAIGN: PostCampaign = {
   category: "Coffee",
   categoryColor: "#c9a96e",
   logoInitials: "BS",
-  logoColor: "#003049",
+  logoColor: "#3a3835",
   hashtags: [
     "#blankstreetcoffee",
     "#morningritual",
@@ -84,32 +84,41 @@ function UploadThumbnail({
   onRemove: () => void;
 }) {
   return (
-    <div className="post-thumb">
-      {file.preview ? (
-        file.isVideo ? (
-          <div className="post-thumb-video-placeholder" aria-label="Video file">
-            <span className="post-thumb-video-icon" aria-hidden="true">
+    <div className="post-thumb-item">
+      {/* Thumbnail preview area */}
+      <div className="post-thumb-preview">
+        {file.preview ? (
+          file.isVideo ? (
+            <span className="post-thumb-icon" aria-label="Video file">
               ▶
             </span>
-          </div>
+          ) : (
+            /* eslint-disable-next-line @next/next/no-img-element */
+            <img
+              src={file.preview}
+              alt={file.name}
+              className="post-thumb-preview-img"
+            />
+          )
         ) : (
-          /* eslint-disable-next-line @next/next/no-img-element */
-          <img src={file.preview} alt={file.name} className="post-thumb-img" />
-        )
-      ) : (
-        <div className="post-thumb-fallback" aria-label="File preview">
-          <span aria-hidden="true">{file.isVideo ? "▶" : "◼"}</span>
-        </div>
-      )}
-      <div className="post-thumb-info">
-        <p className="post-thumb-name">{file.name}</p>
-        <p className="post-thumb-size">{formatFileSize(file.size)}</p>
+          <span className="post-thumb-icon" aria-label="File preview">
+            {file.isVideo ? "▶" : "◼"}
+          </span>
+        )}
       </div>
+
+      {/* File info */}
+      <div className="post-thumb-file-info">
+        <p className="post-thumb-file-name">{file.name}</p>
+        <p className="post-thumb-file-size">{formatFileSize(file.size)}</p>
+      </div>
+
+      {/* Remove button */}
       <button
-        className="post-thumb-remove"
         onClick={onRemove}
         aria-label={`Remove ${file.name}`}
         title="Remove file"
+        className="post-thumb-remove-btn"
       >
         ✕
       </button>
@@ -258,102 +267,88 @@ export default function PostWorkspacePage() {
   /* ── Render ─────────────────────────────────────────────────── */
 
   return (
-    <div className="post-page">
+    <div className="post-page-root">
       {/* ── Breadcrumb nav ───────────────────────────────────── */}
-      <nav className="post-nav" aria-label="Breadcrumb">
-        <Link href="/creator/work/today" className="post-nav-crumb">
+      <nav aria-label="Breadcrumb" className="post-breadcrumb-nav">
+        <Link href="/creator/work/today" className="post-breadcrumb-link">
           WORK
         </Link>
-        <span className="post-nav-sep" aria-hidden="true">
-          /
-        </span>
-        <Link href="/creator/work/pipeline" className="post-nav-crumb">
+        <span className="post-breadcrumb-sep">/</span>
+        <Link href="/creator/work/pipeline" className="post-breadcrumb-link">
           Pipeline
         </Link>
-        <span className="post-nav-sep" aria-hidden="true">
-          /
-        </span>
+        <span className="post-breadcrumb-sep">/</span>
         <Link
           href={`/creator/work/campaign/${campaignId}`}
-          className="post-nav-crumb"
+          className="post-breadcrumb-link"
         >
           {campaign.campaignTitle}
         </Link>
-        <span className="post-nav-sep" aria-hidden="true">
-          /
-        </span>
-        <span className="post-nav-current" aria-current="page">
+        <span className="post-breadcrumb-sep">/</span>
+        <span aria-current="page" className="post-breadcrumb-current">
           POST CONTENT
         </span>
       </nav>
 
       {/* ── Page header ──────────────────────────────────────── */}
-      <header className="post-header">
-        <div className="post-header-left">
-          <p className="post-eyebrow">CONTENT SUBMISSION</p>
-          <h1 className="post-headline">POST CONTENT</h1>
-          <p className="post-subline">{campaign.campaignTitle}</p>
+      <header className="post-page-header">
+        {/* Left: title */}
+        <div className="post-page-header-left">
+          <p className="eyebrow post-page-eyebrow">CONTENT SUBMISSION</p>
+          <h1 className="post-page-h1">POST CONTENT</h1>
+          <p className="post-page-subtitle">{campaign.campaignTitle}</p>
         </div>
 
-        <div className="post-campaign-summary">
+        {/* B: Liquid-glass campaign brief tile */}
+        <div className="post-brief-tile post-header-card">
           {/* Merchant logo */}
           <div
-            className="post-summary-logo"
+            className="post-header-logo"
             style={{ background: campaign.logoColor }}
             aria-hidden="true"
           >
             {campaign.logoInitials}
           </div>
 
-          <div className="post-summary-info">
-            <p className="post-summary-merchant">{campaign.merchantName}</p>
-            <div className="post-summary-meta">
+          <div>
+            <p className="post-header-merchant">{campaign.merchantName}</p>
+            <div className="post-header-meta">
               <span
-                className="post-summary-category"
+                className="post-header-category"
                 style={{ color: campaign.categoryColor }}
               >
                 {campaign.category}
               </span>
-              <span className="post-summary-sep" aria-hidden="true">
-                ·
-              </span>
-              <span className="post-summary-earn">{campaign.earnEstimate}</span>
-              <span className="post-summary-sep" aria-hidden="true">
-                ·
-              </span>
-              <span className="post-summary-deadline">
+              <span className="post-header-meta-dot">·</span>
+              {/* B: earn estimate — Darky 40px brand-red */}
+              <span className="post-brief-earn">{campaign.earnEstimate}</span>
+              <span className="post-header-meta-dot">·</span>
+              <span className="post-header-deadline">
                 Due {campaign.deadline}
               </span>
             </div>
-            <p className="post-summary-brief">{campaign.brief}</p>
+            {/* B: brief text — font-body 16px ink-3 */}
+            <p className="post-brief-text">{campaign.brief}</p>
           </div>
         </div>
       </header>
 
       {/* ── Main form ────────────────────────────────────────── */}
-      <main className="post-main">
-        <div className="post-form-grid">
+      <main className="post-form-main">
+        {/* Two-column form grid */}
+        <div className="post-two-col">
           {/* ── Left column: upload ──────────────────────────── */}
-          <section
-            className="post-section post-section-upload"
-            aria-label="Upload content"
-          >
-            <div className="post-section-header">
-              <span className="post-section-num" aria-hidden="true">
+          <section aria-label="Upload content">
+            {/* Section header */}
+            <div className="post-step-header">
+              <span className="post-step-num" aria-hidden="true">
                 01
               </span>
-              <h2 className="post-section-title">UPLOAD CONTENT</h2>
+              <h2 className="post-step-title">UPLOAD CONTENT</h2>
             </div>
 
-            {/* Drop zone */}
+            {/* D: Drop zone */}
             <div
-              className={[
-                "post-dropzone",
-                isDragOver ? "post-dropzone-over" : "",
-                uploadedFiles.length > 0 ? "post-dropzone-has-files" : "",
-              ]
-                .filter(Boolean)
-                .join(" ")}
               onDragOver={handleDragOver}
               onDragLeave={handleDragLeave}
               onDrop={handleDrop}
@@ -367,6 +362,13 @@ export default function PostWorkspacePage() {
                   fileInputRef.current?.click();
                 }
               }}
+              className={[
+                "post-upload-zone",
+                isDragOver ? "dragover" : "",
+                uploadedFiles.length > 0 ? "post-upload-zone-has-files" : "",
+              ]
+                .filter(Boolean)
+                .join(" ")}
             >
               <input
                 ref={fileInputRef}
@@ -374,36 +376,39 @@ export default function PostWorkspacePage() {
                 accept="image/*,video/*"
                 multiple
                 onChange={(e) => handleFiles(e.target.files)}
-                className="post-file-input"
+                style={{ display: "none" }}
                 aria-hidden="true"
                 tabIndex={-1}
               />
 
               {uploadedFiles.length === 0 ? (
-                <div className="post-dropzone-empty">
-                  <div className="post-dropzone-icon" aria-hidden="true">
+                <div>
+                  {/* D: 40×40 icon tile with surface-3 bg */}
+                  <div className="post-upload-icon-tile" aria-hidden="true">
                     ↑
                   </div>
-                  <p className="post-dropzone-headline">
-                    Drag & drop or click to upload
+                  {/* D: "Drop your content here" — font-body 16px ink-3 */}
+                  <p className="post-upload-headline">
+                    Drag &amp; drop or click to upload
                   </p>
-                  <p className="post-dropzone-formats">
-                    JPG · PNG · MP4 · MOV · max 50 MB per file
+                  {/* D: format hint — font-body 12px ink-4 */}
+                  <p className="post-upload-formats">
+                    MP4 · MOV · JPG · PNG · max 200MB
                   </p>
                 </div>
               ) : (
-                <div className="post-dropzone-add-more">
-                  <span className="post-dropzone-add-icon" aria-hidden="true">
+                <div className="post-upload-add-more">
+                  <span className="post-upload-add-plus" aria-hidden="true">
                     +
                   </span>
-                  <span>Add more files</span>
+                  <span className="post-upload-add-text">Add more files</span>
                 </div>
               )}
             </div>
 
             {/* Error */}
             {dragError && (
-              <p className="post-error" role="alert">
+              <p role="alert" className="post-drag-error">
                 {dragError}
               </p>
             )}
@@ -411,9 +416,9 @@ export default function PostWorkspacePage() {
             {/* Thumbnails */}
             {uploadedFiles.length > 0 && (
               <div
-                className="post-thumbs"
                 role="list"
                 aria-label="Uploaded files"
+                className="post-file-list"
               >
                 {uploadedFiles.map((file, i) => (
                   <div key={`${file.name}-${i}`} role="listitem">
@@ -428,19 +433,18 @@ export default function PostWorkspacePage() {
           </section>
 
           {/* ── Right column: form ───────────────────────────── */}
-          <div className="post-form-right">
+          <div className="post-right-col">
             {/* Caption */}
-            <section className="post-section" aria-label="Caption">
-              <div className="post-section-header">
-                <span className="post-section-num" aria-hidden="true">
+            <section aria-label="Caption">
+              <div className="post-step-header">
+                <span className="post-step-num" aria-hidden="true">
                   02
                 </span>
-                <h2 className="post-section-title">CAPTION</h2>
+                <h2 className="post-step-title">CAPTION</h2>
               </div>
 
-              <div className="post-caption-wrap">
+              <div className="post-caption-card">
                 <textarea
-                  className="post-caption-input"
                   placeholder="Write your caption here — keep it authentic, not marketing copy."
                   value={caption}
                   onChange={(e) => {
@@ -450,87 +454,92 @@ export default function PostWorkspacePage() {
                   rows={5}
                   aria-label="Post caption"
                   aria-describedby="caption-count"
+                  className="post-caption-textarea"
                 />
-                <p
-                  className={[
-                    "post-caption-count",
-                    caption.length >= CAPTION_MAX
-                      ? "post-caption-count-limit"
-                      : "",
-                  ]
-                    .filter(Boolean)
-                    .join(" ")}
-                  id="caption-count"
-                  aria-live="polite"
-                >
-                  {caption.length} / {CAPTION_MAX}
-                </p>
+                <div className="post-caption-footer">
+                  <p
+                    id="caption-count"
+                    aria-live="polite"
+                    className={
+                      caption.length >= CAPTION_MAX
+                        ? "post-caption-count-max"
+                        : "post-caption-count-normal"
+                    }
+                  >
+                    {caption.length} / {CAPTION_MAX}
+                  </p>
+                </div>
               </div>
             </section>
 
             {/* Hashtags */}
-            <section className="post-section" aria-label="Hashtag suggestions">
-              <div className="post-section-header">
-                <span className="post-section-num" aria-hidden="true">
+            <section aria-label="Hashtag suggestions">
+              <div className="post-step-header">
+                <span className="post-step-num" aria-hidden="true">
                   03
                 </span>
-                <h2 className="post-section-title">SUGGESTED HASHTAGS</h2>
-                <span className="post-section-hint">Copy to caption above</span>
+                <h2 className="post-step-title">SUGGESTED HASHTAGS</h2>
+                <span className="post-step-hint">Copy to caption above</span>
               </div>
 
-              <div
-                className="post-hashtags"
-                role="list"
-                aria-label="Hashtag suggestions"
-              >
-                {campaign.hashtags.map((tag) => (
-                  <button
-                    key={tag}
-                    className="post-hashtag-chip"
-                    role="listitem"
-                    onClick={() => {
-                      if (!caption.includes(tag)) {
-                        const spacer =
-                          caption.length > 0 && !caption.endsWith(" ")
-                            ? " "
-                            : "";
-                        const next = caption + spacer + tag;
-                        if (next.length <= CAPTION_MAX) setCaption(next);
-                      }
-                    }}
-                    aria-label={`Add ${tag} to caption`}
-                    title={`Click to add ${tag} to caption`}
-                  >
-                    {tag}
-                  </button>
-                ))}
-              </div>
+              <div className="post-hashtag-card">
+                <div
+                  role="list"
+                  aria-label="Hashtag suggestions"
+                  className="post-hashtag-chips"
+                >
+                  {campaign.hashtags.map((tag) => (
+                    <button
+                      key={tag}
+                      role="listitem"
+                      onClick={() => {
+                        if (!caption.includes(tag)) {
+                          const spacer =
+                            caption.length > 0 && !caption.endsWith(" ")
+                              ? " "
+                              : "";
+                          const next = caption + spacer + tag;
+                          if (next.length <= CAPTION_MAX) setCaption(next);
+                        }
+                      }}
+                      aria-label={`Add ${tag} to caption`}
+                      title={`Click to add ${tag} to caption`}
+                      className="post-hashtag-chip click-shift"
+                    >
+                      {tag}
+                    </button>
+                  ))}
+                </div>
 
-              <p className="post-attribution-note">
-                <span className="post-attribution-icon" aria-hidden="true">
-                  ◎
-                </span>
-                Attribution code:{" "}
-                <strong className="post-attribution-code">
-                  {campaign.attributionCode}
-                </strong>{" "}
-                — show at register to log your walk-in
-              </p>
+                <div className="post-hashtag-note">
+                  <span className="post-hashtag-note-icon" aria-hidden="true">
+                    ◎
+                  </span>
+                  <p className="post-hashtag-note-text">
+                    Attribution code:{" "}
+                    {/* F: Champagne-tinted attribution code pill */}
+                    <span className="post-attr-code">
+                      {campaign.attributionCode}
+                    </span>{" "}
+                    — show at register to log your walk-in
+                  </p>
+                </div>
+              </div>
             </section>
 
-            {/* Platforms */}
-            <section className="post-section" aria-label="Platform selection">
-              <div className="post-section-header">
-                <span className="post-section-num" aria-hidden="true">
+            {/* C: Platforms — pill buttons with active state */}
+            <section aria-label="Platform selection">
+              <div className="post-step-header">
+                <span className="post-step-num" aria-hidden="true">
                   04
                 </span>
-                <h2 className="post-section-title">PLATFORMS</h2>
+                <h2 className="post-step-title">PLATFORMS</h2>
               </div>
 
               <div
-                className="post-platforms"
                 role="group"
                 aria-label="Select platforms"
+                className="post-platform-group"
               >
                 {PLATFORMS.map((p) => {
                   const checked = platforms.has(p.id);
@@ -538,31 +547,52 @@ export default function PostWorkspacePage() {
                     <label
                       key={p.id}
                       className={[
-                        "post-platform-item",
-                        checked ? "post-platform-checked" : "",
-                      ]
-                        .filter(Boolean)
-                        .join(" ")}
+                        "post-platform-label",
+                        checked
+                          ? "post-platform-label-checked"
+                          : "post-platform-label-unchecked",
+                      ].join(" ")}
                     >
                       <input
                         type="checkbox"
                         checked={checked}
                         onChange={() => togglePlatform(p.id)}
-                        className="post-platform-checkbox"
+                        className="post-platform-checkbox-hidden"
                         aria-checked={checked}
                       />
-                      <span className="post-platform-icon" aria-hidden="true">
+                      {/* Custom checkbox */}
+                      <div
+                        className={[
+                          "post-custom-checkbox",
+                          checked
+                            ? "post-custom-checkbox-checked"
+                            : "post-custom-checkbox-unchecked",
+                        ].join(" ")}
+                        aria-hidden="true"
+                      >
+                        {checked && (
+                          <span className="post-custom-checkbox-mark">✓</span>
+                        )}
+                      </div>
+                      <span
+                        className={
+                          checked
+                            ? "post-platform-icon-checked"
+                            : "post-platform-icon-unchecked"
+                        }
+                        aria-hidden="true"
+                      >
                         {p.icon}
                       </span>
-                      <span className="post-platform-label">{p.label}</span>
-                      {checked && (
-                        <span
-                          className="post-platform-check"
-                          aria-hidden="true"
-                        >
-                          ✓
-                        </span>
-                      )}
+                      <span
+                        className={
+                          checked
+                            ? "post-platform-name-checked"
+                            : "post-platform-name-unchecked"
+                        }
+                      >
+                        {p.label}
+                      </span>
                     </label>
                   );
                 })}
@@ -572,80 +602,80 @@ export default function PostWorkspacePage() {
         </div>
 
         {/* ── Submit section ────────────────────────────────── */}
-        <section className="post-submit-section" aria-label="Submit content">
-          <div className="post-submit-inner">
-            {submitState === "verified" ? (
-              /* Verified state */
-              <div className="post-verified" role="status" aria-live="polite">
-                <div className="post-verified-check" aria-hidden="true">
-                  ✓
-                </div>
-                <div className="post-verified-text">
-                  <p className="post-verified-headline">
-                    Content submitted. Verification pending.
-                  </p>
-                  <p className="post-verified-sub">
-                    ConversionOracle™ is processing your walk-in verification.
-                    You&apos;ll be notified within 8 seconds once confirmed.
-                  </p>
-                </div>
-                <Link
-                  href={`/creator/work/campaign/${campaignId}`}
-                  className="post-verified-back"
-                >
-                  Back to Campaign →
-                </Link>
+        <section aria-label="Submit content" className="post-submit-wrapper">
+          {submitState === "verified" ? (
+            /* I: Verified / success state */
+            <div
+              role="status"
+              aria-live="polite"
+              className="post-success-state"
+            >
+              <div className="post-success-icon" aria-hidden="true">
+                ✓
               </div>
-            ) : (
-              /* Submit form CTA */
-              <>
-                <div className="post-submit-meta">
-                  <p className="post-submit-oracle">
-                    <span className="post-oracle-dot" aria-hidden="true" />
-                    ConversionOracle™ will verify your walk-in within{" "}
-                    <strong>8 seconds</strong>
-                  </p>
-                  <p className="post-submit-earn">
-                    Earn{" "}
-                    <span className="post-submit-earn-amount">
-                      {campaign.earnEstimate}
-                    </span>{" "}
-                    upon verification
-                  </p>
-                </div>
+              <div className="post-success-body">
+                <p className="post-success-title">
+                  Content submitted. Verification pending.
+                </p>
+                <p className="post-success-desc">
+                  ConversionOracle™ is processing your walk-in verification.
+                  You&apos;ll be notified within 8 seconds once confirmed.
+                </p>
+              </div>
+              <Link
+                href={`/creator/work/campaign/${campaignId}`}
+                className="btn-ghost click-shift"
+                style={{ flexShrink: 0 }}
+              >
+                Back to Campaign →
+              </Link>
+            </div>
+          ) : (
+            /* G: Submit form CTA */
+            <div className="post-cta-row">
+              {/* Meta info */}
+              <div className="post-cta-meta">
+                <p className="post-cta-oracle">
+                  <span className="post-cta-oracle-dot" aria-hidden="true" />
+                  ConversionOracle™ will verify your walk-in within{" "}
+                  <strong className="post-cta-oracle-strong">8 seconds</strong>
+                </p>
+                <p className="post-cta-earn">
+                  Earn{" "}
+                  <span className="post-cta-earn-amount">
+                    {campaign.earnEstimate}
+                  </span>{" "}
+                  upon verification
+                </p>
+              </div>
 
-                <button
-                  className={[
-                    "post-submit-btn",
-                    submitState === "uploading" ? "post-submit-loading" : "",
-                    submitState === "submitted" ? "post-submit-pending" : "",
-                  ]
-                    .filter(Boolean)
-                    .join(" ")}
-                  onClick={handleSubmit}
-                  disabled={submitState !== "idle"}
-                  aria-label={
-                    submitState === "idle"
-                      ? "Submit content for verification"
-                      : submitState === "uploading"
-                        ? "Uploading content, please wait"
-                        : "Content submitted, verifying"
-                  }
-                >
-                  {submitState === "idle" && "SUBMIT FOR VERIFICATION →"}
-                  {submitState === "uploading" && (
-                    <span className="post-submit-dots" aria-hidden="true">
-                      UPLOADING
-                      <span className="post-dot-1">.</span>
-                      <span className="post-dot-2">.</span>
-                      <span className="post-dot-3">.</span>
-                    </span>
-                  )}
-                  {submitState === "submitted" && "VERIFYING WALK-IN ◉"}
-                </button>
-              </>
-            )}
-          </div>
+              {/* G: Submit button — prominent, full width on mobile */}
+              <button
+                onClick={handleSubmit}
+                disabled={submitState !== "idle"}
+                aria-label={
+                  submitState === "idle"
+                    ? "Submit content for verification"
+                    : submitState === "uploading"
+                      ? "Uploading content, please wait"
+                      : "Content submitted, verifying"
+                }
+                className={
+                  submitState === "idle"
+                    ? "btn btn-primary post-submit-btn post-submit-btn-idle click-shift"
+                    : submitState === "uploading"
+                      ? "post-submit-btn post-submit-btn-loading"
+                      : "post-submit-btn post-submit-btn-pending"
+                }
+              >
+                {submitState === "idle" && "SUBMIT FOR VERIFICATION →"}
+                {submitState === "uploading" && (
+                  <span aria-hidden="true">UPLOADING...</span>
+                )}
+                {submitState === "submitted" && "VERIFYING WALK-IN ◉"}
+              </button>
+            </div>
+          )}
         </section>
       </main>
     </div>

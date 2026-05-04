@@ -4,10 +4,9 @@
 export type EventType =
   | "deadline" // Campaign submission deadline — red
   | "review" // Content review meeting — blue
-  | "payment" // Payment release — gold
   | "milestone"; // Other milestone — grey
 
-export type EventAction = "submit" | "done" | "snooze" | "note";
+export type EventAction = "submit" | "done" | "note";
 
 export interface CalendarEvent {
   id: string;
@@ -21,7 +20,6 @@ export interface CalendarEvent {
   dueAt?: string; // ISO datetime
   description?: string;
   done: boolean;
-  snoozed: boolean;
   note?: string;
   payout?: number;
   postUrl?: string; // /creator/campaigns/[id]/post
@@ -43,7 +41,6 @@ const APRIL: CalendarEvent[] = [
     description:
       "Peak hours visit window: 7–10am. Remember to tag @blankstreetcoffee.",
     done: false,
-    snoozed: false,
     payout: 0,
   },
   {
@@ -57,7 +54,6 @@ const APRIL: CalendarEvent[] = [
     time: "10:00",
     description: "Submit draft story for brand review before posting.",
     done: false,
-    snoozed: false,
     payout: 0,
   },
   {
@@ -72,7 +68,6 @@ const APRIL: CalendarEvent[] = [
     description:
       "Final deadline to submit Instagram story. Tag @blankstreetcoffee.",
     done: false,
-    snoozed: false,
     payout: 0,
     postUrl: "/creator/campaigns/camp-001/post",
   },
@@ -89,7 +84,6 @@ const APRIL: CalendarEvent[] = [
     time: "12:00",
     description: "Film your Reel featuring the Classic Burger. Min 30 seconds.",
     done: false,
-    snoozed: false,
     payout: 35,
   },
   {
@@ -103,7 +97,6 @@ const APRIL: CalendarEvent[] = [
     time: "14:00",
     description: "Content review call. Submit draft Reel link beforehand.",
     done: false,
-    snoozed: false,
     payout: 35,
   },
   {
@@ -118,25 +111,9 @@ const APRIL: CalendarEvent[] = [
     description:
       "Final deadline. Reel must be live and tagged @superiorityburger.",
     done: false,
-    snoozed: false,
     payout: 35,
     postUrl: "/creator/campaigns/camp-002/post",
   },
-  {
-    id: "ev-007",
-    campaignId: "camp-002",
-    campaignTitle: "Best Burger in NYC Feature",
-    merchantName: "Superiority Burger",
-    type: "payment",
-    title: "Payment release — $35",
-    date: "2026-04-28",
-    time: "09:00",
-    description: "Payment of $35 will be released once content is verified.",
-    done: false,
-    snoozed: false,
-    payout: 35,
-  },
-
   // Brow Theory — camp-004 deadline Apr 28
   {
     id: "ev-008",
@@ -149,7 +126,6 @@ const APRIL: CalendarEvent[] = [
     time: "11:00",
     description: "Brow appointment at 247 Centre St. Capture before & after.",
     done: false,
-    snoozed: false,
     payout: 50,
   },
   {
@@ -163,7 +139,6 @@ const APRIL: CalendarEvent[] = [
     time: "15:00",
     description: "Submit before/after stories for quick review by brand team.",
     done: false,
-    snoozed: false,
     payout: 50,
   },
   {
@@ -177,7 +152,6 @@ const APRIL: CalendarEvent[] = [
     time: "23:59",
     description: "Post before/after stories + feed post. Tag @browtheorynyc.",
     done: false,
-    snoozed: false,
     payout: 50,
     postUrl: "/creator/campaigns/camp-004/post",
   },
@@ -195,7 +169,6 @@ const APRIL: CalendarEvent[] = [
     description:
       "Visit the pop-up at Rockefeller Plaza. Capture the experience.",
     done: true,
-    snoozed: false,
     payout: 20,
   },
   {
@@ -209,25 +182,9 @@ const APRIL: CalendarEvent[] = [
     time: "23:59",
     description: "Post review story or post. Tag location.",
     done: false,
-    snoozed: false,
     payout: 20,
     postUrl: "/creator/campaigns/camp-006/post",
   },
-  {
-    id: "ev-013",
-    campaignId: "camp-006",
-    campaignTitle: "Le Bec-Fin Pop-Up Review",
-    merchantName: "Le Bec Fin",
-    type: "payment",
-    title: "Payment release — $20",
-    date: "2026-04-25",
-    time: "09:00",
-    description: "Payment of $20 after content verification.",
-    done: false,
-    snoozed: false,
-    payout: 20,
-  },
-
   // Cha Cha Matcha — camp-008 deadline Apr 29
   {
     id: "ev-014",
@@ -240,7 +197,6 @@ const APRIL: CalendarEvent[] = [
     time: "08:30",
     description: "Morning shoot at 373 Broadway. Aesthetic, cozy content.",
     done: false,
-    snoozed: false,
     payout: 25,
   },
   {
@@ -254,23 +210,8 @@ const APRIL: CalendarEvent[] = [
     time: "23:59",
     description: "Post 2 Instagram stories. Tag @chachamatcha.",
     done: false,
-    snoozed: false,
     payout: 25,
     postUrl: "/creator/campaigns/camp-008/post",
-  },
-  {
-    id: "ev-016",
-    campaignId: "camp-008",
-    campaignTitle: "Matcha Morning Ritual",
-    merchantName: "Cha Cha Matcha",
-    type: "payment",
-    title: "Payment release — $25",
-    date: "2026-04-30",
-    time: "10:00",
-    description: "Payment of $25 after content verified.",
-    done: false,
-    snoozed: false,
-    payout: 25,
   },
 ];
 
@@ -289,7 +230,6 @@ const MAY: CalendarEvent[] = [
     time: "09:00",
     description: "Receive brand guidelines for the aesthetic shoot.",
     done: false,
-    snoozed: false,
     payout: 75,
   },
   {
@@ -304,7 +244,6 @@ const MAY: CalendarEvent[] = [
     description:
       "Submit content 48h before posting. Moody, editorial, nature-forward.",
     done: false,
-    snoozed: false,
     payout: 75,
   },
   {
@@ -318,25 +257,9 @@ const MAY: CalendarEvent[] = [
     time: "23:59",
     description: "Post 2 feed posts + 3 stories. Tag Flamingo Estate.",
     done: false,
-    snoozed: false,
     payout: 75,
     postUrl: "/creator/campaigns/camp-003/post",
   },
-  {
-    id: "ev-020",
-    campaignId: "camp-003",
-    campaignTitle: "LA Botanica Aesthetic Shoot",
-    merchantName: "Flamingo Estate",
-    type: "payment",
-    title: "Payment release — $75",
-    date: "2026-05-08",
-    time: "09:00",
-    description: "Payment of $75 + est. commission after verification.",
-    done: false,
-    snoozed: false,
-    payout: 75,
-  },
-
   // Glossier — camp-005 deadline May 10
   {
     id: "ev-021",
@@ -350,7 +273,6 @@ const MAY: CalendarEvent[] = [
     description:
       "First editorial shoot at Glossier flagship. High production value.",
     done: false,
-    snoozed: false,
     payout: 120,
   },
   {
@@ -364,7 +286,6 @@ const MAY: CalendarEvent[] = [
     time: "14:00",
     description: "Review call for 3+ feed posts and video draft.",
     done: false,
-    snoozed: false,
     payout: 120,
   },
   {
@@ -378,25 +299,9 @@ const MAY: CalendarEvent[] = [
     time: "23:59",
     description: "Post 3+ feed posts + YouTube/TikTok video (min 3 min).",
     done: false,
-    snoozed: false,
     payout: 120,
     postUrl: "/creator/campaigns/camp-005/post",
   },
-  {
-    id: "ev-024",
-    campaignId: "camp-005",
-    campaignTitle: "Glossier NYC Store Experience",
-    merchantName: "Glossier",
-    type: "payment",
-    title: "Payment release — $120",
-    date: "2026-05-14",
-    time: "09:00",
-    description: "Payment of $120 after engagement rate verified.",
-    done: false,
-    snoozed: false,
-    payout: 120,
-  },
-
   // KITH — camp-007 deadline May 15
   {
     id: "ev-025",
@@ -409,7 +314,6 @@ const MAY: CalendarEvent[] = [
     time: "10:00",
     description: "Portfolio review required. Prepare best editorial work.",
     done: false,
-    snoozed: false,
     payout: 199,
   },
   {
@@ -424,7 +328,6 @@ const MAY: CalendarEvent[] = [
     description:
       "Review first batch of 5 feed posts for Spring 2026 collection.",
     done: false,
-    snoozed: false,
     payout: 199,
   },
   {
@@ -438,7 +341,6 @@ const MAY: CalendarEvent[] = [
     time: "14:00",
     description: "Review 2 Reels for KITH collab campaign.",
     done: false,
-    snoozed: false,
     payout: 199,
   },
   {
@@ -452,25 +354,9 @@ const MAY: CalendarEvent[] = [
     time: "23:59",
     description: "All 5+ posts and 2 Reels must be live.",
     done: false,
-    snoozed: false,
     payout: 199,
     postUrl: "/creator/campaigns/camp-007/post",
   },
-  {
-    id: "ev-029",
-    campaignId: "camp-007",
-    campaignTitle: "KITH x Creator Collab Series",
-    merchantName: "KITH",
-    type: "payment",
-    title: "Payment release — $199",
-    date: "2026-05-20",
-    time: "09:00",
-    description: "Top-tier payment of $199 released after full verification.",
-    done: false,
-    snoozed: false,
-    payout: 199,
-  },
-
   // General push milestones
   {
     id: "ev-030",
@@ -483,7 +369,6 @@ const MAY: CalendarEvent[] = [
     time: "11:00",
     description: "Second editorial session at flagship for remaining posts.",
     done: false,
-    snoozed: false,
     payout: 120,
   },
   {
@@ -497,7 +382,6 @@ const MAY: CalendarEvent[] = [
     time: "09:00",
     description: "Exclusive creator access to KITH SoHo for editorial shoot.",
     done: false,
-    snoozed: false,
     payout: 199,
   },
   {
@@ -511,7 +395,6 @@ const MAY: CalendarEvent[] = [
     time: "16:00",
     description: "Capture remaining 2 stories in afternoon light.",
     done: false,
-    snoozed: false,
     payout: 75,
   },
 ];
@@ -531,7 +414,6 @@ const JUNE: CalendarEvent[] = [
     time: "09:00",
     description: "New campaign invite for premium rooftop shoot.",
     done: false,
-    snoozed: false,
     payout: 150,
   },
   {
@@ -545,7 +427,6 @@ const JUNE: CalendarEvent[] = [
     time: "10:00",
     description: "Creative direction call with brand team.",
     done: false,
-    snoozed: false,
     payout: 150,
   },
   {
@@ -559,7 +440,6 @@ const JUNE: CalendarEvent[] = [
     time: "17:00",
     description: "Golden hour shoot on the rooftop. Bring equipment.",
     done: false,
-    snoozed: false,
     payout: 150,
   },
   {
@@ -573,7 +453,6 @@ const JUNE: CalendarEvent[] = [
     time: "14:00",
     description: "Submit edited photos and Reel draft.",
     done: false,
-    snoozed: false,
     payout: 150,
   },
   {
@@ -587,23 +466,8 @@ const JUNE: CalendarEvent[] = [
     time: "23:59",
     description: "All content must be live by midnight.",
     done: false,
-    snoozed: false,
     payout: 150,
     postUrl: "/creator/campaigns/camp-future-01/post",
-  },
-  {
-    id: "ev-038",
-    campaignId: "camp-future-01",
-    campaignTitle: "Summer Rooftop Series",
-    merchantName: "The William Vale",
-    type: "payment",
-    title: "Payment release — $150",
-    date: "2026-06-18",
-    time: "09:00",
-    description: "Payment of $150 after verification.",
-    done: false,
-    snoozed: false,
-    payout: 150,
   },
   {
     id: "ev-039",
@@ -617,7 +481,6 @@ const JUNE: CalendarEvent[] = [
     description:
       "Multi-venue food walk campaign covering 5 spots in Williamsburg.",
     done: false,
-    snoozed: false,
     payout: 80,
   },
   {
@@ -631,23 +494,8 @@ const JUNE: CalendarEvent[] = [
     time: "23:59",
     description: "Post series of stories and a Reel from the food walk.",
     done: false,
-    snoozed: false,
     payout: 80,
     postUrl: "/creator/campaigns/camp-future-02/post",
-  },
-  {
-    id: "ev-041",
-    campaignId: "camp-future-02",
-    campaignTitle: "Williamsburg Food Walk",
-    merchantName: "Various",
-    type: "payment",
-    title: "Payment release — $80",
-    date: "2026-06-28",
-    time: "09:00",
-    description: "Payment after engagement metrics verified.",
-    done: false,
-    snoozed: false,
-    payout: 80,
   },
   {
     id: "ev-042",
@@ -660,7 +508,6 @@ const JUNE: CalendarEvent[] = [
     time: "10:00",
     description: "Creator press pass for Brooklyn Art Week at Industry City.",
     done: false,
-    snoozed: false,
     payout: 200,
   },
   {
@@ -674,7 +521,6 @@ const JUNE: CalendarEvent[] = [
     time: "15:00",
     description: "Review week's content package before final post.",
     done: false,
-    snoozed: false,
     payout: 200,
   },
   {
@@ -688,7 +534,6 @@ const JUNE: CalendarEvent[] = [
     time: "23:59",
     description: "Full coverage package must be live before month end.",
     done: false,
-    snoozed: false,
     payout: 200,
     postUrl: "/creator/campaigns/camp-future-03/post",
   },
@@ -712,16 +557,37 @@ export function countDeadlinesInMonth(yearMonth: string): number {
   ).length;
 }
 
-export const EVENT_TYPE_COLORS: Record<EventType, string> = {
-  deadline: "#c1121f", // Flag Red
-  review: "#669bbc", // Steel Blue
-  payment: "#c9a96e", // Champagne Gold
-  milestone: "#8a9eb0", // muted steel
+/**
+ * Event-type CSS class names. Colors are NOT defined here — they live in
+ * `app/(creator)/creator/(workspace)/work/calendar/calendar.css` via the
+ * Design.md § 2 closed-list tokens (--brand-red / --accent-blue / --champagne
+ * / --mist). Consumers attach this class plus a base class (e.g.
+ * `cal-pill-event` or `cal-side__event`) and the CSS resolves the color.
+ *
+ * Token mapping (single source of truth, see calendar.css comment header):
+ *   deadline  -> --brand-red   (Brand Red, primary CTA role)
+ *   review    -> --accent-blue (N2W Blue, secondary)
+ *   payment   -> --champagne   (ceremonial)
+ *   milestone -> --mist        (warm-gray neutral)
+ */
+export const EVENT_TYPE_CLASSNAMES: Record<EventType, string> = {
+  deadline: "event-type--deadline",
+  review: "event-type--review",
+  milestone: "event-type--milestone",
 };
+
+/**
+ * @deprecated since v11 closed-color-list migration. Use
+ * `EVENT_TYPE_CLASSNAMES` instead — colors are now resolved via CSS classes
+ * against tokens declared in calendar.css. This alias is kept as a class-name
+ * map (not hex) so any pre-existing import compiles, but the value is no
+ * longer a color string.
+ */
+export const EVENT_TYPE_COLORS: Record<EventType, string> =
+  EVENT_TYPE_CLASSNAMES;
 
 export const EVENT_TYPE_LABELS: Record<EventType, string> = {
   deadline: "Deadline",
   review: "Content Review",
-  payment: "Payment",
   milestone: "Milestone",
 };

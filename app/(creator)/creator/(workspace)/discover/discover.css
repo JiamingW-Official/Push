@@ -1,223 +1,269 @@
 /* ============================================================
-   Creator Discover — Premium Campaign Discovery
-   Design: restraint as luxury | Darky + CS Genio Mono
-   Colors: #003049 / #f5f2ec / #c1121f / #c9a96e / #669bbc
+   Creator Discover — v11 refinement (Photo Grid + Sticky Glass Rail)
+   Design.md anchors:
+     § 2     Closed Allowed-Color List (warm-gray ladder + brand)
+     § 4     iOS 26 continuous radii (--r-md / --r-pill / --r-xl)
+     § 5/6   8px grid + locked negative-space tokens
+     § 8.7   Photo Card with Bottom Gradient Overlay
+     § 8.9.5 Sticky Filter / Sort Rail (liquid glass)
+     § 8.9.6 Photo Card Floating Badge (liquid glass)
+     § 9     5 unified button variants — every button comes from globals
+   Marketing/Product split: Discover lives in the workspace (Product
+   register) — no Magvix Italic divider, no Ticket Panel; instead we
+   borrow the Photo-Grid liquid-glass rail + per-card glass badge,
+   which § 8.9.9 explicitly maps to "Archive / Photo Grid" pages.
    ============================================================ */
 
-/* ── Entry animation ─────────────────────────────────────── */
-
-@keyframes feedCardIn {
-  from { opacity: 0; transform: translateY(16px); }
+@keyframes disc-card-in {
+  from { opacity: 0; transform: translateY(8px); }
   to   { opacity: 1; transform: translateY(0); }
 }
 
-@keyframes disc-shimmer {
-  0%   { background-position: -600px 0; }
-  100% { background-position: 600px 0; }
+@keyframes disc-heart-pop {
+  0%   { transform: scale(1); }
+  40%  { transform: scale(1.40); }
+  70%  { transform: scale(0.90); }
+  100% { transform: scale(1); }
+}
+
+/* Page-scoped tokens — derived from Design.md, not new colors */
+.disc {
+  --disc-gutter:        10vw;    /* matches shell --main-pad; 6vw/24px/16px on breakpoints */
+  --disc-split-pad:     24px;    /* narrower fixed pad inside the MAP split-list pane */
+  --disc-toolbar-h:     72px;                     /* 9 × 8px */
+  --disc-cat-strip-h:   64px;                     /* 8 × 8px */
+  background: var(--snow);
+  color: var(--ink);
 }
 
 /* ── Page shell ──────────────────────────────────────────── */
 
-.disc {
-  min-height: 100vh;
-  background: var(--surface);
-  color: var(--dark);
-  font-family: var(--font-body);
+.cw-page.disc {
+  padding: 0;
+  max-width: none;
+  background: var(--snow);
 }
 
-/* ── Hero header ─────────────────────────────────────────── */
+/* ── Header — corner-anchored title (§ 8.8.3 top-left) ───── */
 
-.disc-hero {
-  padding: 56px 48px 40px;
-  border-bottom: 1px solid var(--line);
+.cw-page.disc .cw-header {
+  margin: 0;
+  padding: 40px var(--disc-gutter) 24px;
+  background: var(--snow);
+  border-bottom: 1px solid var(--hairline);
+  border-radius: 0;
+  box-shadow: none;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+
+.cw-page.disc .cw-header__left {
   display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 32px;
+  flex-direction: column;
+  gap: 8px;                                        /* eyebrow → title 8px (Product) */
 }
 
-.disc-hero-title {
-  font-family: var(--font-display);
-  font-size: 56px;
-  font-weight: 900;
-  line-height: 1;
-  letter-spacing: -0.02em;
-  color: var(--dark);
-  margin: 0 0 12px;
-}
-
-.disc-hero-sub {
-  font-family: var(--font-body);
-  font-size: 13px;
-  color: var(--text-muted);
-  letter-spacing: 0.04em;
+/* Canonical Product eyebrow — no parens (Marketing uses parens) */
+.cw-page.disc .cw-eyebrow,
+.cw-page.disc .cw-eyebrow--live {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-4);
   margin: 0;
 }
 
-/* ── Toolbar: search + filter btn ───────────────────────── */
+.cw-page.disc .cw-title {
+  font-family: var(--font-display);
+  font-size: clamp(40px, 5vw, 56px);
+  font-weight: 800;
+  line-height: 1.0;
+  letter-spacing: -0.025em;
+  color: var(--ink);
+  margin: 0;
+}
+
+/* ── Toolbar — sticky liquid-glass pill rail (§ 8.9.5) ───── */
 
 .disc-toolbar {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 20px 48px;
-  border-bottom: 1px solid var(--line);
-  background: var(--surface);
   position: sticky;
   top: 0;
   z-index: 40;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 14px var(--disc-gutter);
+  background: rgba(255, 255, 255, 0.72);
+  -webkit-backdrop-filter: blur(48px) saturate(200%) brightness(1.04);
+  backdrop-filter: blur(48px) saturate(200%) brightness(1.04);
+  border-bottom: 0.5px solid rgba(0, 0, 0, 0.06);
+  /* inset top glow — lifts the bar off the page */
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.90),
+              0 1px 0 rgba(0, 0, 0, 0.04),
+              0 4px 32px rgba(0, 0, 0, 0.04);
 }
 
 .disc-search-wrap {
   flex: 1;
   position: relative;
+  max-width: 560px;
 }
 
 .disc-search-icon {
   position: absolute;
-  left: 14px;
+  left: 16px;
   top: 50%;
   transform: translateY(-50%);
   font-size: 16px;
-  color: var(--text-muted);
+  color: var(--ink-5);
   pointer-events: none;
   line-height: 1;
 }
 
 .disc-search-input {
   width: 100%;
-  height: 40px;
-  padding: 0 16px 0 40px;
-  border: 1px solid var(--line);
-  border-radius: 0;
-  background: var(--surface-elevated);
-  color: var(--dark);
-  font-family: var(--font-body);
-  font-size: 13px;
+  height: 44px;
+  padding: 0 16px 0 44px;
+  border: 0.5px solid rgba(0, 0, 0, 0.12);
+  border-radius: var(--r-pill);
+  background: rgba(255, 255, 255, 0.82);
+  color: var(--ink);
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 500;
   outline: none;
-  transition: border-color 0.15s;
+  transition: border-color 200ms ease, box-shadow 200ms ease, background 200ms ease;
+  box-shadow: inset 0 1.5px 4px rgba(0, 0, 0, 0.07),
+              0 1px 0 rgba(255, 255, 255, 0.95);
 }
 
-.disc-search-input::placeholder {
-  color: var(--text-muted);
+.disc-search-input::placeholder { color: var(--ink-5); }
+
+.disc-search-input:hover {
+  background: rgba(255, 255, 255, 0.94);
+  border-color: rgba(0, 0, 0, 0.18);
 }
 
-.disc-search-input:focus {
-  border-color: var(--dark);
+.disc-search-input:focus,
+.disc-search-input:focus-visible {
+  background: #fff;
+  border-color: rgba(0, 0, 0, 0.24);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.04),
+              0 0 0 3.5px rgba(193, 18, 31, 0.12),
+              0 1px 0 rgba(255, 255, 255, 0.95);
 }
 
-/* Single filter button */
-.disc-filter-btn {
-  height: 40px;
-  padding: 0 16px;
-  border: 1px solid var(--line);
-  border-radius: 0;
-  background: transparent;
-  color: var(--dark);
-  font-family: var(--font-body);
-  font-size: 11px;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  cursor: pointer;
-  white-space: nowrap;
+.disc-toolbar-right {
+  position: relative;
   display: flex;
   align-items: center;
-  gap: 6px;
-  transition: border-color 0.15s, background 0.15s;
+  gap: 16px;
 }
 
-.disc-filter-btn:hover {
-  border-color: var(--dark);
-  background: var(--surface-elevated);
-}
-
-.disc-filter-btn--active {
-  background: var(--dark);
-  color: #fff;
-  border-color: var(--dark);
+/* Filter trigger — uses .btn-pill from globals + a count chip */
+.disc-filter-btn {
+  position: relative;
 }
 
 .disc-filter-btn-count {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 16px;
-  height: 16px;
-  background: var(--primary);
-  color: #fff;
-  font-size: 9px;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 6px;
+  margin-left: 4px;
+  background: var(--brand-red);
+  color: var(--snow);
+  font-size: 10px;
   font-weight: 700;
+  border-radius: var(--r-pill);
+  letter-spacing: 0;
 }
 
-/* Sort row */
-.disc-sort-row {
-  display: flex;
+/* View toggle — iOS 26 segmented control */
+.disc-view-toggle {
+  display: inline-flex;
   align-items: center;
-  gap: 4px;
+  gap: 3px;
+  padding: 3px;
+  background: rgba(0, 0, 0, 0.07);
+  border: 0.5px solid rgba(0, 0, 0, 0.08);
+  border-radius: var(--r-pill);
+  flex-shrink: 0;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.10);
 }
 
-.disc-sort-label {
-  font-size: 11px;
-  color: var(--text-muted);
-  letter-spacing: 0.04em;
-  margin-right: 4px;
-}
-
-.disc-sort-btn {
-  height: 40px;
-  padding: 0 12px;
+.disc-view-btn {
+  height: 32px;
+  padding: 0 14px;
   border: none;
-  border-radius: 0;
+  border-radius: var(--r-pill);
   background: transparent;
-  color: var(--text-muted);
-  font-family: var(--font-body);
-  font-size: 11px;
+  color: var(--ink-4);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
   letter-spacing: 0.04em;
+  text-transform: uppercase;
   cursor: pointer;
-  transition: color 0.15s;
+  transition: background 180ms ease, color 180ms ease,
+              transform 180ms cubic-bezier(0.34, 1.56, 0.64, 1);
+  white-space: nowrap;
 }
 
-.disc-sort-btn:hover { color: var(--dark); }
+.disc-view-btn:hover { color: var(--ink); transform: translate(1px, 1px); }
+.disc-view-btn:active { transform: translate(2px, 2px) scale(0.98); }
+.disc-view-btn--active {
+  background: #fff;
+  color: var(--ink);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.14),
+              0 0.5px 2px rgba(0, 0, 0, 0.10);
+}
+.disc-view-btn--active:hover { color: var(--ink); transform: none; }
 
-.disc-sort-btn--active {
-  color: var(--dark);
-  font-weight: 700;
-  border-bottom: 2px solid var(--dark);
+.disc-view-btn:focus-visible {
+  outline: 4px solid var(--brand-red-focus);
+  outline-offset: 2px;
 }
 
-/* ── Filter panel (dropdown overlay) ────────────────────── */
+/* ── Filter panel — drops from Filter trigger ────────────── */
 
 .disc-filter-panel {
   position: absolute;
-  top: calc(100% + 8px);
+  top: calc(100% + 12px);
   right: 0;
-  width: 320px;
-  background: var(--surface-elevated);
-  border: 1px solid var(--line);
-  z-index: 100;
+  width: 360px;
+  background: var(--surface);
+  border-radius: var(--r-xl);                      /* 16px — floating panel */
   padding: 24px;
-  box-shadow: 0 8px 32px rgba(0, 48, 73, 0.12);
+  z-index: 100;
+  box-shadow: var(--shadow-3);
+  animation: disc-card-in 240ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .disc-filter-panel-title {
-  font-family: var(--font-body);
-  font-size: 10px;
-  letter-spacing: 0.1em;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--text-muted);
+  color: var(--ink-4);
   margin: 0 0 16px;
 }
 
-.disc-filter-group {
-  margin-bottom: 20px;
-}
+.disc-filter-group { margin-bottom: 24px; }
+.disc-filter-group:last-of-type { margin-bottom: 0; }
 
 .disc-filter-group-label {
-  font-family: var(--font-body);
-  font-size: 10px;
-  letter-spacing: 0.08em;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--text-muted);
+  color: var(--ink-4);
   margin-bottom: 8px;
   display: block;
 }
@@ -225,375 +271,1412 @@
 .disc-filter-options {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px;
+  gap: 8px;
 }
 
-.disc-filter-option {
-  height: 30px;
-  padding: 0 12px;
-  border: 1px solid var(--line);
-  border-radius: 0;
-  background: transparent;
-  color: var(--dark);
-  font-family: var(--font-body);
-  font-size: 11px;
-  cursor: pointer;
-  transition: all 0.12s;
-}
-
-.disc-filter-option:hover {
-  border-color: var(--dark);
-}
-
-.disc-filter-option--active {
-  background: var(--dark);
-  color: #fff;
-  border-color: var(--dark);
+/* Filter chips piggyback on .btn-pill (globals); only sizing override */
+.disc-filter-options .btn-pill {
+  font-size: 12px;
+  padding: 6px 14px;                               /* slimmer for dense panel */
+  letter-spacing: 0.04em;
 }
 
 .disc-filter-panel-footer {
   display: flex;
-  justify-content: flex-end;
-  gap: 8px;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
   padding-top: 16px;
-  border-top: 1px solid var(--line);
-  margin-top: 4px;
+  margin-top: 8px;
+  border-top: 1px solid var(--hairline);
 }
 
-.disc-filter-clear {
-  height: 32px;
-  padding: 0 12px;
-  border: 1px solid var(--line);
-  border-radius: 0;
-  background: transparent;
-  color: var(--text-muted);
-  font-family: var(--font-body);
-  font-size: 11px;
-  cursor: pointer;
+/* The two footer buttons reuse .btn-ghost / .btn-primary from globals;
+   we only need to compress them slightly to fit a 360px panel. */
+.disc-filter-panel-footer .btn-ghost,
+.disc-filter-panel-footer .btn-primary {
+  height: 40px;
+  padding: 10px 20px;
+  font-size: 13px;
 }
 
-.disc-filter-apply {
-  height: 32px;
-  padding: 0 16px;
-  border: none;
-  border-radius: 0;
-  background: var(--dark);
-  color: #fff;
-  font-family: var(--font-body);
-  font-size: 11px;
+/* ── Category strip — pill row, sits below toolbar ──────── */
+
+.disc-cat-strip {
+  position: sticky;
+  top: calc(var(--ws-topnav-h, 56px) + var(--disc-toolbar-h));
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px var(--disc-gutter);
+  background: rgba(255, 255, 255, 0.78);
+  -webkit-backdrop-filter: blur(32px) saturate(180%);
+  backdrop-filter: blur(32px) saturate(180%);
+  border-bottom: 0.5px solid rgba(0, 0, 0, 0.05);
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.03),
+              0 4px 16px rgba(0, 0, 0, 0.03);
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.disc-cat-strip::-webkit-scrollbar { display: none; }
+
+/* Category buttons inherit .btn-pill, override only sizing */
+.disc-cat-btn {
+  flex-shrink: 0;
+  height: 36px;
+  padding: 6px 16px;
   letter-spacing: 0.04em;
-  cursor: pointer;
 }
 
-/* ── Main content ─────────────────────────────────────────── */
+/* ── Sort / meta row ────────────────────────────────────── */
 
-.disc-content {
-  padding: 40px 48px 80px;
+.disc-grid-meta {
+  padding: 0 var(--disc-gutter);
 }
 
-/* Results meta row */
-.disc-results-meta {
+.disc-sort-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 16px;
+  padding: 24px 0;
+  border-bottom: 1px solid var(--hairline);
   margin-bottom: 32px;
 }
 
-.disc-results-count {
-  font-family: var(--font-body);
-  font-size: 13px;
-  color: var(--text-muted);
+.disc-sort-label {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--ink-4);
+  letter-spacing: 0.01em;
 }
 
-.disc-results-count strong {
-  color: var(--dark);
+.disc-sort-label strong {
   font-weight: 700;
+  color: var(--ink);
 }
 
-/* ── Campaign grid ────────────────────────────────────────── */
+.disc-sort-pills {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px;
+  background: var(--surface-3);
+  border-radius: var(--r-pill);
+}
+
+.disc-sort-btn {
+  height: 32px;
+  padding: 0 14px;
+  border: none;
+  border-radius: var(--r-pill);
+  background: transparent;
+  color: var(--ink-4);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 180ms ease, color 180ms ease,
+              transform 180ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.disc-sort-btn:hover { color: var(--ink); transform: translate(1px, 1px); }
+.disc-sort-btn:active { transform: translate(2px, 2px) scale(0.98); }
+.disc-sort-btn--active {
+  background: #fff;
+  color: var(--ink);
+  font-weight: 700;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.13),
+              0 0.5px 2px rgba(0, 0, 0, 0.09);
+}
+.disc-sort-btn:focus-visible {
+  outline: 4px solid var(--brand-red-focus);
+  outline-offset: 2px;
+}
+
+/* ── Grid — 12-col / 24px gutter / token padding ────────── */
 
 .disc-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 24px;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 40px 24px;
+  padding: 0 var(--disc-gutter) 96px;
 }
 
-/* ── Campaign card ────────────────────────────────────────── */
+@media (min-width: 1600px) {
+  .disc-grid { grid-template-columns: repeat(4, 1fr); gap: 40px 24px; }
+}
+
+@media (max-width: 1100px) {
+  .disc-grid { grid-template-columns: repeat(2, 1fr); gap: 32px 20px; }
+}
+
+/* ── Campaign Card (grid view) ──────────────────────────── */
 
 .disc-card {
-  background: var(--surface-elevated);
-  border: 1px solid rgba(0, 48, 73, 0.1);
-  border-top: 3px solid var(--dark);
-  padding: 32px 28px;
-  cursor: pointer;
-  animation: feedCardIn 0.4s ease both;
-  transition: border-top-color 0.2s, box-shadow 0.2s;
-  position: relative;
-}
-
-.disc-card:hover {
-  border-top-color: var(--primary);
-  box-shadow: 0 4px 24px rgba(0, 48, 73, 0.08);
-}
-
-/* Card inner layout */
-.disc-card-inner {
   display: flex;
   flex-direction: column;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  cursor: pointer;
+  text-decoration: none;
+  color: inherit;
+  animation: disc-card-in 350ms cubic-bezier(0.22, 1, 0.36, 1) backwards;
+  transition: transform 180ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Whole-card bottom-right shift (Push interaction signature) */
+.disc-card:hover { transform: translate(1px, 1px); }
+.disc-card:active { transform: translate(2px, 2px) scale(0.997); }
+.disc-card--active .disc-card-img-wrap { box-shadow: var(--shadow-2); }
+
+.disc-card-img-wrap {
+  position: relative;
+  aspect-ratio: 4 / 5;                             /* § 8.7 — Photo Card portrait */
+  border-radius: var(--r-md);                      /* 10px */
+  overflow: hidden;
+  background: var(--mist);
+  margin-bottom: 16px;                             /* image → text 16px */
+  box-shadow: var(--shadow-1);
+  transition: box-shadow 240ms ease;
+}
+
+.disc-card:hover .disc-card-img-wrap {
+  box-shadow: var(--shadow-2);
+}
+
+.disc-card-img {
+  width: 100%;
   height: 100%;
+  object-fit: cover;
+  display: block;
+  /* No image zoom — § 8.7 hover rule: bodily shift only */
+}
+
+/* Bottom gradient overlay — § 8.7 */
+.disc-card-img-wrap::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 38%;
+  background: linear-gradient(
+    to bottom,
+    rgba(10, 10, 10, 0)   0%,
+    rgba(10, 10, 10, 0.78) 100%
+  );
+  pointer-events: none;
+}
+
+/* Title overlay (Photo Card title) */
+.disc-card-overlay {
+  position: absolute;
+  left: 16px;
+  right: 16px;
+  bottom: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.disc-card-overlay-title {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.20;
+  letter-spacing: -0.005em;
+  color: var(--snow);
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.18);
+}
+
+.disc-card-overlay-meta {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.85);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Save button — true liquid-glass badge (§ 8.9.6) */
+.disc-card-save {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 36px;
+  height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.18);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  backdrop-filter: blur(20px) saturate(180%);
+  border: 0.5px solid rgba(255, 255, 255, 0.42);
+  border-radius: 50%;
+  font-size: 17px;
+  cursor: pointer;
+  z-index: 3;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.18),
+              inset 0 1px 0 rgba(255, 255, 255, 0.60);
+  transition: transform 180ms cubic-bezier(0.34, 1.56, 0.64, 1),
+              background 160ms ease;
+}
+
+.disc-card-save:hover { transform: translate(1px, 1px); }
+.disc-card-save:active {
+  transform: translate(2px, 2px) scale(0.98);
+  animation: disc-heart-pop 280ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.disc-card-save:focus-visible {
+  outline: 4px solid var(--brand-red-focus);
+  outline-offset: 2px;
+}
+.disc-card-save--saved { color: var(--brand-red); }
+
+/* Scarcity badge — true liquid-glass pill, top-left */
+.disc-card-badge {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  padding: 6px 12px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--snow);
+  background: rgba(10, 10, 10, 0.48);
+  -webkit-backdrop-filter: blur(16px) saturate(160%);
+  backdrop-filter: blur(16px) saturate(160%);
+  border: 0.5px solid rgba(255, 255, 255, 0.22);
+  border-radius: var(--r-pill);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.20),
+              inset 0 1px 0 rgba(255, 255, 255, 0.18);
+  z-index: 3;
+  pointer-events: none;
+}
+
+/* Carousel arrows — always visible, brighter than .lg-surface--badge default
+   so the icon reads cleanly against any photo regardless of luminance. */
+.disc-card-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 32px;
+  height: 32px;
+  border-radius: var(--r-full);
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 3;
+  opacity: 0.85;
+  transition:
+    opacity 180ms ease,
+    transform 180ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.disc-card:hover .disc-card-arrow,
+.disc-split-card:hover .disc-card-arrow {
+  opacity: 1;
+}
+.disc-card-arrow:focus-visible {
+  opacity: 1;
+  outline: 4px solid var(--brand-red-focus);
+  outline-offset: 2px;
+}
+.disc-card-arrow--prev { left: 8px; }
+.disc-card-arrow--next { right: 8px; }
+.disc-card-arrow:hover { transform: translateY(-50%) translate(1px, 1px); }
+.disc-card-arrow:active { transform: translateY(-50%) translate(2px, 2px) scale(0.94); }
+.disc-card-arrow--sm { width: 24px; height: 24px; }
+.disc-card-arrow--sm.disc-card-arrow--prev { left: 6px; }
+.disc-card-arrow--sm.disc-card-arrow--next { right: 6px; }
+
+/* ── Photo-overlay liquid-glass (uniform brightness) ─────────
+   .lg-surface--badge defaults to a dark, low-contrast fill that disappears
+   on bright photos. These rules force a brighter, ink-text glass for every
+   floating overlay on a card photo (arrows, heart, scarcity badge), so all
+   liquid-glass elements on a photo read at the same luminance. */
+.disc-card-arrow,
+.disc-card-save,
+.disc-split-card-save,
+.disc-card-badge,
+.disc-split-card-badge {
+  background:
+    radial-gradient(ellipse at 25% 0%, rgba(255, 255, 255, 0.78) 0%, rgba(255, 255, 255, 0.18) 60%),
+    rgba(255, 255, 255, 0.46);
+  -webkit-backdrop-filter: blur(28px) saturate(180%);
+  backdrop-filter: blur(28px) saturate(180%);
+  border: 0.5px solid rgba(255, 255, 255, 0.62);
+  color: var(--ink);
+  box-shadow:
+    0 6px 18px rgba(0, 0, 0, 0.18),
+    0 1px 4px rgba(0, 0, 0, 0.10),
+    inset 0 1px 0 rgba(255, 255, 255, 0.70),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.06);
+}
+/* Saved-heart override — brand red after the brighter base reset */
+.disc-card-save.disc-card-save--saved,
+.disc-split-card-save.disc-split-card-save--saved {
+  color: var(--brand-red);
+}
+
+/* Carousel dots — clickable, reflect actual photo count */
+.disc-card-dots {
+  position: absolute;
+  left: 50%;
+  bottom: 8px;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 5px;
+  z-index: 2;
+  opacity: 0;
+  transition: opacity 200ms ease;
+  padding: 4px;
+}
+.disc-card:hover .disc-card-dots,
+.disc-split-card:hover .disc-card-dots {
+  opacity: 1;
+}
+.disc-card-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.55);
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  transition: background 180ms ease, transform 180ms ease;
+}
+.disc-card-dot:hover { transform: scale(1.2); }
+.disc-card-dot:focus-visible {
+  outline: 2px solid var(--snow);
+  outline-offset: 1px;
+}
+.disc-card-dot--active { background: var(--snow); }
+.disc-card-dots--sm { bottom: 6px; gap: 4px; }
+.disc-card-dots--sm .disc-card-dot { width: 4px; height: 4px; }
+
+/* Card content (below image) — Product register */
+.disc-card-content {
+  display: flex;
+  flex-direction: column;
+  padding: 0 4px;
+  gap: 0;
+  flex: 1;
 }
 
 .disc-card-merchant {
-  font-family: var(--font-display);
-  font-size: 22px;
-  font-weight: 700;
-  color: var(--dark);
-  line-height: 1.1;
-  margin: 0 0 4px;
-}
-
-.disc-card-title {
-  font-family: var(--font-body);
-  font-size: 13px;
-  color: var(--graphite);
-  margin: 0 0 24px;
-}
-
-/* Bottom row */
-.disc-card-bottom {
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  margin-top: auto;
-}
-
-.disc-card-category {
-  font-family: var(--font-body);
-  font-size: 10px;
-  letter-spacing: 0.1em;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ink);
+  letter-spacing: 0.04em;
   text-transform: uppercase;
-  color: var(--text-muted);
+  margin-bottom: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.disc-card-neighborhood {
-  font-family: var(--font-body);
-  font-size: 10px;
-  color: var(--text-muted);
-  margin-top: 2px;
+.disc-card-earn-row {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  margin-bottom: 6px;
+  flex-wrap: wrap;
 }
 
 .disc-card-earn {
   font-family: var(--font-display);
-  font-size: 18px;
-  font-weight: 700;
-  color: var(--champagne);
-  white-space: nowrap;
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--ink);
+  letter-spacing: -0.02em;
+  line-height: 1.1;
 }
 
-.disc-card-earn-arrow {
-  color: var(--champagne);
-  margin-left: 4px;
-  font-size: 14px;
+.disc-card-pay-label {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--ink-4);
+  letter-spacing: 0.02em;
 }
 
-/* Apply button (full width at bottom) */
-.disc-card-apply {
-  display: block;
-  width: 100%;
-  margin-top: 24px;
-  height: 40px;
-  border: 1px solid var(--dark);
-  border-radius: 0;
-  background: transparent;
-  color: var(--dark);
-  font-family: var(--font-body);
+.disc-card-deadline {
+  font-family: var(--font-mono);
   font-size: 11px;
+  font-weight: 700;
+  color: var(--brand-red);
   letter-spacing: 0.08em;
   text-transform: uppercase;
+  margin-left: auto;
+}
+
+.disc-card-specs {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--ink-4);
+  margin-bottom: 16px;                             /* body → CTA 16px */
+  letter-spacing: 0.02em;
+}
+
+/* Apply button — uses Brand-Red filled (.btn-primary equivalent) */
+.disc-card-apply {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 44px;
+  padding: 12px 20px;
+  border: none;
+  border-radius: var(--r-sm);                      /* 8px */
+  background: var(--brand-red);
+  color: var(--snow);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
   cursor: pointer;
-  transition: background 0.15s, color 0.15s;
+  margin-top: auto;
+  transition: transform 180ms cubic-bezier(0.34, 1.56, 0.64, 1),
+              background 180ms ease;
 }
 
-.disc-card-apply:hover:not(:disabled) {
-  background: var(--dark);
-  color: #fff;
+.disc-card-apply:hover:not(:disabled) { transform: translate(1px, 1px); }
+.disc-card-apply:active:not(:disabled) {
+  transform: translate(2px, 2px) scale(0.98);
+  background: var(--brand-red-deep);
+}
+.disc-card-apply:focus-visible {
+  outline: 4px solid var(--brand-red-focus);
+  outline-offset: 2px;
 }
 
+/* Applied state — tonal flip to N2W Blue (informational) */
 .disc-card-apply--applied {
-  border-color: #669bbc;
-  color: #669bbc;
+  background: var(--accent-blue-tint);
+  color: var(--accent-blue-deep);
   cursor: default;
 }
-
 .disc-card-apply--pending {
-  border-color: var(--champagne);
-  color: var(--champagne);
+  background: var(--surface-3);
+  color: var(--ink-4);
   cursor: default;
 }
 
-/* ── Scarcity tag (optional, minimal) ────────────────────── */
+/* Stop hover transform on disabled states */
+.disc-card-apply:disabled { transform: none; }
 
-.disc-card-scarcity {
+/* ── Split / Map view ───────────────────────────────────── */
+
+/* Shell padding zeroed via :has(.disc) in lumin-shell.css — no escape needed */
+
+/* Prevent body/main scroll in MAP mode — page is fixed at 100dvh */
+body:has(.disc--split-mode) {
+  overflow: hidden;
+}
+body:has(.disc--split-mode) .dh-main {
+  height: 100dvh;
+  overflow: hidden;
+}
+
+.disc--split-mode {
+  display: flex;
+  flex-direction: column;
+  height: calc(100dvh - var(--ws-topnav-h, 56px));
+  overflow: hidden;
+  background: var(--snow);
+}
+
+/* catstrip top offset includes toolbar + topnav for scrolling mode;
+   in MAP mode the container starts below the topnav so only toolbar offset needed */
+.disc--split-mode .disc-cat-strip {
+  top: 0;
+}
+
+.disc-split {
+  flex: 1;
+  display: flex;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.disc-split-list {
+  flex: 0 0 50%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: var(--snow);
+  border-right: 1px solid var(--hairline);
+}
+
+/* Dedicated scroll container — avoids flex-column + overflow-y:auto scroll bugs */
+.disc-split-scroll {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--mist) transparent;
+}
+.disc-split-scroll::-webkit-scrollbar { width: 4px; }
+.disc-split-scroll::-webkit-scrollbar-track { background: transparent; }
+.disc-split-scroll::-webkit-scrollbar-thumb { background: var(--mist); border-radius: 2px; }
+
+.disc-split-meta {
+  flex-shrink: 0;
+  padding: 12px var(--disc-split-pad) 12px var(--disc-gutter);
+  background: rgba(255, 255, 255, 0.78);
+  -webkit-backdrop-filter: blur(40px) saturate(200%) brightness(1.03);
+  backdrop-filter: blur(40px) saturate(200%) brightness(1.03);
+  border-bottom: 0.5px solid rgba(0, 0, 0, 0.06);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.90),
+              0 1px 0 rgba(0, 0, 0, 0.03),
+              0 4px 16px rgba(0, 0, 0, 0.03);
+}
+
+.disc-split-meta .disc-sort-row {
+  background: none;
+  border: none;
+  margin: 0;
+  padding: 0;
+  box-shadow: none;
+}
+
+.disc-split-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 32px 20px;
+  padding: 16px var(--disc-split-pad) 64px var(--disc-gutter);
+}
+
+.disc-split-empty { padding: 48px 24px; }
+
+.disc-split-map {
+  flex: 1;
+  min-width: 0;
+  /* padding: top right bottom left — right matches 10vw editorial gutter */
+  padding: 16px var(--disc-gutter) 16px 16px;
+}
+
+/* Inner panel — rounded card with overflow clip for Leaflet tiles */
+.disc-map-panel {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 16px;
+  overflow: hidden;
+  isolation: isolate;
+  /* iOS 26 three-layer soft shadow */
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.06),
+    0 6px 24px rgba(0, 0, 0, 0.10),
+    0 24px 64px rgba(0, 0, 0, 0.08);
+}
+
+.disc-map-loading {
+  width: 100%;
+  height: 100%;
+  background: var(--surface-2);
+}
+
+/* Map expand/collapse — liquid glass button overlaid on panel */
+.disc-map-expand-btn {
   position: absolute;
   top: 12px;
   right: 12px;
-  font-family: var(--font-body);
-  font-size: 9px;
-  letter-spacing: 0.1em;
+  z-index: 500;
+  width: 40px;
+  height: 40px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.88);
+  -webkit-backdrop-filter: blur(16px) saturate(160%);
+  backdrop-filter: blur(16px) saturate(160%);
+  border: 0.5px solid rgba(255, 255, 255, 0.60);
+  border-radius: 10px;
+  color: var(--ink);
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.14),
+              0 1px 2px rgba(0, 0, 0, 0.08),
+              inset 0 1px 0 rgba(255, 255, 255, 0.80);
+  transition: transform 180ms cubic-bezier(0.34, 1.56, 0.64, 1),
+              background 160ms ease;
+}
+.disc-map-expand-btn:hover {
+  background: rgba(255, 255, 255, 0.98);
+  transform: translate(1px, 1px);
+}
+.disc-map-expand-btn:active { transform: translate(2px, 2px) scale(0.98); }
+.disc-map-expand-btn:focus-visible {
+  outline: 4px solid var(--brand-red-focus);
+  outline-offset: 2px;
+}
+
+/* Fullscreen map — hide list, balance left margin on map */
+.disc--map-fullscreen .disc-split-list { display: none; }
+.disc--map-fullscreen .disc-split-map { padding-left: var(--disc-gutter); }
+
+/* ── Split card — list-row Airbnb pattern, refined ──────── */
+
+.disc-split-card {
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+  padding: 16px 0;
+  border-bottom: 0.5px solid rgba(0, 0, 0, 0.07);
+  background: transparent;
+  cursor: pointer;
+  text-decoration: none;
+  color: inherit;
+  transition: background 200ms ease,
+              box-shadow 200ms ease,
+              transform 180ms cubic-bezier(0.34, 1.56, 0.64, 1);
+  min-height: 144px;
+  position: relative;
+}
+
+.disc-split-card:last-child { border-bottom: none; }
+.disc-split-card:hover {
+  background: rgba(0, 0, 0, 0.025);
+  transform: translate(1px, 1px);
+}
+.disc-split-card:active { transform: translate(2px, 2px) scale(0.998); }
+.disc-split-card--active {
+  background: rgba(0, 0, 0, 0.028);
+}
+
+.disc-split-card-img-wrap {
+  position: relative;
+  flex: 0 0 38%;
+  border-radius: var(--r-md);
+  overflow: hidden;
+  background: var(--mist);
+  align-self: stretch;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.10),
+              0 0.5px 2px rgba(0, 0, 0, 0.07);
+  transition: box-shadow 200ms ease;
+}
+
+.disc-split-card:hover .disc-split-card-img-wrap {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.14),
+              0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.disc-split-card-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: filter 240ms ease;
+}
+
+.disc-split-card:hover .disc-split-card-img {
+  filter: brightness(1.04) saturate(1.06);
+}
+
+/* Save button — true liquid glass */
+.disc-split-card-save {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 32px;
+  height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.20);
+  -webkit-backdrop-filter: blur(16px) saturate(160%);
+  backdrop-filter: blur(16px) saturate(160%);
+  border: 0.5px solid rgba(255, 255, 255, 0.45);
+  border-radius: 50%;
+  font-size: 14px;
+  cursor: pointer;
+  z-index: 3;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.16),
+              inset 0 1px 0 rgba(255, 255, 255, 0.55);
+  transition: transform 180ms cubic-bezier(0.34, 1.56, 0.64, 1),
+              background 160ms ease;
+}
+
+.disc-split-card-save:hover { transform: translate(1px, 1px); }
+.disc-split-card-save:active {
+  transform: translate(2px, 2px) scale(0.98);
+  animation: disc-heart-pop 280ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.disc-split-card-save:focus-visible {
+  outline: 4px solid var(--brand-red-focus);
+  outline-offset: 2px;
+}
+.disc-split-card-save--saved { color: var(--brand-red); }
+
+.disc-split-card-badge {
+  position: absolute;
+  bottom: 8px;
+  left: 8px;
+  padding: 4px 10px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--primary);
+  color: var(--snow);
+  background: rgba(10, 10, 10, 0.52);
+  -webkit-backdrop-filter: blur(12px) saturate(140%);
+  backdrop-filter: blur(12px) saturate(140%);
+  border: 0.5px solid rgba(255, 255, 255, 0.20);
+  border-radius: var(--r-pill);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.18);
+  z-index: 3;
+  pointer-events: none;
 }
 
-/* ── Loading skeletons ────────────────────────────────────── */
-
-.disc-skeleton {
-  background: linear-gradient(
-    90deg,
-    rgba(0, 48, 73, 0.04) 25%,
-    rgba(0, 48, 73, 0.08) 50%,
-    rgba(0, 48, 73, 0.04) 75%
-  );
-  background-size: 600px 100%;
-  animation: disc-shimmer 1.4s infinite linear;
-  border-radius: 0;
+/* Body */
+.disc-split-card-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  padding: 2px 0;
 }
 
-.disc-skeleton-card {
-  height: 160px;
-  border: 1px solid rgba(0, 48, 73, 0.06);
-  border-top: 3px solid rgba(0, 48, 73, 0.1);
+.disc-split-card-merchant {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink);
+  margin-bottom: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-/* ── Empty state ──────────────────────────────────────────── */
+.disc-split-card-location {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--ink-4);
+  margin-bottom: 8px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.disc-split-card-earn-row {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  margin-bottom: 6px;
+}
+
+.disc-split-card-earn {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--ink);
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+
+.disc-split-card-pay {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--ink-4);
+  letter-spacing: 0.02em;
+}
+
+.disc-split-card-dl {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--brand-red);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-left: auto;
+}
+
+.disc-split-card-title {
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  margin-bottom: 6px;
+}
+
+.disc-split-card-meta {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--ink-4);
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.disc-split-card-foot {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-top: auto;
+  padding-top: 8px;
+}
+
+/* Apply button — compact ghost variant */
+.disc-split-card-apply {
+  height: 36px;
+  padding: 0 16px;
+  border-radius: var(--r-sm);
+  background: transparent;
+  color: var(--ink);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: transform 180ms cubic-bezier(0.34, 1.56, 0.64, 1),
+              background 180ms ease, color 180ms ease,
+              border-color 180ms ease;
+}
+
+.disc-split-card-apply:hover:not(:disabled) {
+  border-color: var(--ink);
+  background: var(--ink);
+  color: var(--snow);
+  transform: translate(1px, 1px);
+}
+.disc-split-card-apply:active:not(:disabled) {
+  transform: translate(2px, 2px) scale(0.98);
+  background: var(--char);
+}
+.disc-split-card-apply:focus-visible {
+  outline: 4px solid var(--brand-red-focus);
+  outline-offset: 2px;
+}
+.disc-split-card-apply--done {
+  border-color: var(--accent-blue-tint);
+  color: var(--accent-blue-deep);
+  background: var(--accent-blue-tint);
+  cursor: default;
+}
+.disc-split-card-apply--done:hover {
+  background: var(--accent-blue-tint);
+  color: var(--accent-blue-deep);
+  border-color: var(--accent-blue-tint);
+  transform: none;
+}
+
+/* ── Empty state ────────────────────────────────────────── */
 
 .disc-empty {
   grid-column: 1 / -1;
-  padding: 80px 0;
+  padding: 96px 24px;
   text-align: center;
 }
 
 .disc-empty-title {
   font-family: var(--font-display);
-  font-size: 28px;
-  font-weight: 700;
-  color: var(--dark);
-  margin: 0 0 12px;
+  font-size: clamp(28px, 3vw, 32px);
+  font-weight: 800;
+  color: var(--ink);
+  letter-spacing: -0.02em;
+  margin: 0 0 16px;
 }
 
 .disc-empty-sub {
-  font-family: var(--font-body);
-  font-size: 13px;
-  color: var(--text-muted);
-  margin: 0 0 32px;
+  font-family: var(--font-mono);
+  font-size: 14px;
+  color: var(--ink-3);
+  margin: 0 auto 32px;
   max-width: 360px;
-  margin-inline: auto;
+  line-height: 1.55;
+  letter-spacing: 0.01em;
 }
 
 .disc-empty-actions {
   display: flex;
-  gap: 12px;
+  gap: 16px;
   justify-content: center;
+  flex-wrap: wrap;
 }
 
-.disc-empty-btn {
-  height: 40px;
-  padding: 0 20px;
-  border-radius: 0;
-  font-family: var(--font-body);
-  font-size: 12px;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  cursor: pointer;
-  text-decoration: none;
-  display: inline-flex;
-  align-items: center;
+/* The empty-state buttons reuse .btn-primary / .btn-ghost; no overrides
+   beyond a slight padding tighten if they need to fit a narrow column. */
+
+/* ── Reduced motion ─────────────────────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  .disc-card,
+  .disc-card-img-wrap,
+  .disc-split-card,
+  .disc-card-save,
+  .disc-card-apply,
+  .disc-split-card-apply,
+  .disc-view-btn,
+  .disc-sort-btn { animation: none; transition: none; }
+  .disc-card:hover,
+  .disc-split-card:hover,
+  .disc-card-save:hover,
+  .disc-card-apply:hover,
+  .disc-split-card-apply:hover { transform: none; }
 }
 
-.disc-empty-btn--primary {
-  background: var(--dark);
-  color: #fff;
-  border: none;
-}
+/* ── Filter panel — slider controls ─────────────────────── */
 
-.disc-empty-btn--outline {
-  background: transparent;
-  color: var(--dark);
-  border: 1px solid var(--dark);
-}
-
-/* ── Toolbar relative wrapper ─────────────────────────────── */
-
-.disc-toolbar-right {
-  position: relative;
+.disc-filter-group-header {
   display: flex;
   align-items: center;
-  gap: 8px;
+  justify-content: space-between;
+  margin-bottom: 12px;
 }
 
-/* ── Responsive ───────────────────────────────────────────── */
-
-@media (max-width: 900px) {
-  .disc-hero {
-    padding: 40px 24px 32px;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 16px;
-  }
-
-  .disc-hero-title { font-size: 40px; }
-
-  .disc-toolbar {
-    padding: 16px 24px;
-    flex-wrap: wrap;
-  }
-
-  .disc-content {
-    padding: 32px 24px 64px;
-  }
-
-  .disc-grid {
-    grid-template-columns: 1fr;
-    gap: 16px;
-  }
-
-  .disc-results-meta {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 12px;
-  }
-
-  .disc-sort-row { flex-wrap: wrap; }
-
-  .disc-filter-panel {
-    width: calc(100vw - 48px);
-    right: -24px;
-  }
+.disc-filter-group-value {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--brand-red);
+  letter-spacing: 0.04em;
 }
 
-@media (max-width: 480px) {
-  .disc-hero {
-    padding: 28px 16px 24px;
-    gap: 12px;
-  }
+/* Slider track container */
+.disc-slider-wrap {
+  position: relative;
+  height: 32px;
+  display: flex;
+  align-items: center;
+}
 
-  .disc-hero-title { font-size: clamp(28px, 8vw, 40px); }
+/* Shared grey track drawn via ::before */
+.disc-slider-wrap::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 4px;
+  background: var(--surface-3);
+  border-radius: 2px;
+  pointer-events: none;
+}
 
-  .disc-toolbar {
-    padding: 12px 16px;
-    gap: 8px;
-  }
+/* Filled segment (brand-red) — positioned via inline style */
+.disc-slider-track-fill {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 4px;
+  background: var(--brand-red);
+  border-radius: 2px;
+  pointer-events: none;
+  z-index: 1;
+}
 
-  .disc-content {
-    padding: 24px 16px 48px;
-  }
+/* Base <input type="range"> reset */
+.disc-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 4px;
+  background: transparent;
+  outline: none;
+  cursor: pointer;
+  position: relative;
+  z-index: 2;
+}
 
-  .disc-card {
-    padding: 24px 20px;
+/* Webkit thumb */
+.disc-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--brand-red);
+  border: 2px solid var(--surface);
+  box-shadow: var(--shadow-1);
+  cursor: grab;
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.disc-slider::-webkit-slider-thumb:active {
+  cursor: grabbing;
+  transform: scale(1.15);
+  box-shadow: var(--shadow-2);
+}
+
+/* Firefox thumb */
+.disc-slider::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--brand-red);
+  border: 2px solid var(--surface);
+  box-shadow: var(--shadow-1);
+  cursor: grab;
+}
+
+/* Dual slider — both inputs stacked */
+.disc-slider-wrap--dual {
+  position: relative;
+}
+
+.disc-slider-wrap--dual .disc-slider--min,
+.disc-slider-wrap--dual .disc-slider--max {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  width: 100%;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.disc-slider-wrap--dual .disc-slider--min::-webkit-slider-thumb,
+.disc-slider-wrap--dual .disc-slider--max::-webkit-slider-thumb {
+  pointer-events: all;
+}
+
+.disc-slider-wrap--dual .disc-slider--min::-moz-range-thumb,
+.disc-slider-wrap--dual .disc-slider--max::-moz-range-thumb {
+  pointer-events: all;
+}
+
+/* Min/max labels below the track */
+.disc-slider-labels {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 8px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--ink-4);
+  letter-spacing: 0.04em;
+}
+
+/* ── Responsive ─────────────────────────────────────────── */
+
+@media (max-width: 1024px) {
+  .disc { --disc-gutter: 6vw; }
+  .cw-page.disc .cw-header { padding: 32px var(--disc-gutter) 24px; }
+  .disc-split-list { flex: 0 0 50%; }
+  .disc-split-grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 768px) {
+  .disc {
+    --disc-gutter: 24px;
   }
+  .cw-page.disc .cw-header { padding: 24px var(--disc-gutter) 16px; }
+  .disc-toolbar { gap: 12px; padding: 12px var(--disc-gutter); }
+  .disc-cat-strip { padding: 12px var(--disc-gutter); }
+  .disc-grid { padding: 0 var(--disc-gutter) 64px; grid-template-columns: 1fr; gap: 32px 16px; }
+  .disc-card-overlay-title { font-size: 18px; }
 
   .disc-filter-panel {
     width: calc(100vw - 32px);
-    right: -16px;
-    padding: 16px;
+    right: -8px;
   }
+
+  .disc--split-mode { height: auto; overflow: visible; }
+  body:has(.disc--split-mode) { overflow: auto; }
+  body:has(.disc--split-mode) .dh-main { height: auto; overflow: auto; }
+  .disc-split { flex-direction: column; }
+  .disc-split-list {
+    flex: none;
+    max-height: 50vh;
+    border-right: none;
+    border-bottom: 1px solid var(--hairline);
+  }
+  .disc-split-map {
+    height: 360px;
+    flex: none;
+    padding: 8px 16px 16px;
+  }
+  .disc-map-panel { border-radius: 12px; }
+
+  .disc-view-toggle { display: none; }            /* mobile prefers list */
+}
+
+@media (max-width: 640px) {
+  .disc { --disc-gutter: 16px; }
+}
+
+/* ── Filter Modal — Airbnb-style full-screen overlay ────── */
+
+@keyframes disc-modal-in {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Backdrop — full-viewport dark scrim */
+.disc-filter-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 9998;
+  background: rgba(0, 0, 0, 0.48);
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+  animation: disc-modal-in 200ms ease forwards;
+}
+
+/* Modal panel — centred sheet, max 680px wide */
+.disc-filter-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  margin: auto;
+  width: min(680px, calc(100vw - 48px));
+  max-height: min(88vh, 800px);
+  height: auto;
+  background: var(--snow);
+  border-radius: var(--r-xl);                        /* 16px — floating panel */
+  box-shadow: var(--shadow-3);
+  overflow: hidden;
+  animation: disc-modal-in 260ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Header — border-bottom rule, close left, title centre */
+.disc-filter-modal-header {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--hairline);
+  flex-shrink: 0;
+}
+
+.disc-filter-modal-title {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  color: var(--ink);
+  margin: 0;
+}
+
+.disc-filter-modal-close {
+  position: absolute;
+  left: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 32px;
+  height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--hairline-2);
+  border-radius: 50%;
+  background: transparent;
+  color: var(--ink);
+  font-size: 14px;
+  cursor: pointer;
+  transition: transform 180ms cubic-bezier(0.34, 1.56, 0.64, 1),
+              background 180ms ease;
+}
+
+.disc-filter-modal-close:hover {
+  background: var(--surface-3);
+  transform: translateY(-50%) translate(1px, 1px);
+}
+
+.disc-filter-modal-close:focus-visible {
+  outline: 4px solid var(--brand-red-focus);
+  outline-offset: 2px;
+}
+
+/* Scrollable body */
+.disc-filter-modal-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 32px 32px 24px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--mist) transparent;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+/* Shared group styles already defined above (.disc-filter-group etc.)
+   only override margin so gaps come from the flex gap instead */
+.disc-filter-modal-body .disc-filter-group {
+  margin-bottom: 0;
+}
+
+.disc-filter-modal-body .disc-filter-group:last-of-type {
+  margin-bottom: 0;
+}
+
+.disc-filter-modal-body .disc-filter-group-label {
+  margin-bottom: 12px;
+  font-size: 13px;
+}
+
+/* Modal footer — sticky at bottom, two-button row */
+.disc-filter-modal-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  padding: 20px 32px;
+  border-top: 1px solid var(--hairline);
+  flex-shrink: 0;
+  background: var(--surface);
+}
+
+/* Histogram bars — decorative payout distribution */
+.disc-histogram {
+  display: flex;
+  align-items: flex-end;
+  gap: 3px;
+  height: 64px;
+  margin-bottom: 8px;
+}
+
+.disc-histogram-bar {
+  flex: 1;
+  background: var(--surface-3);
+  border-radius: 2px 2px 0 0;
+  transition: background 200ms ease;
+}
+
+.disc-histogram-bar--in-range {
+  background: var(--brand-red);
+  opacity: 0.7;
+}
+
+/* Min/Max price text inputs */
+.disc-price-inputs {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.disc-price-input-wrap {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.disc-price-input-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+}
+
+.disc-price-input-field {
+  display: flex;
+  align-items: center;
+  border: 1px solid var(--hairline-2);
+  border-radius: var(--r-sm);                        /* 8px */
+  background: var(--snow);
+  overflow: hidden;
+  transition: border-color 180ms ease;
+}
+
+.disc-price-input-field:focus-within {
+  border-color: var(--ink);
+}
+
+.disc-price-input-sym {
+  padding: 0 10px 0 14px;
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink-4);
+}
+
+.disc-price-input {
+  flex: 1;
+  height: 44px;
+  padding: 0 14px 0 0;
+  border: none;
+  background: transparent;
+  color: var(--ink);
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 600;
+  outline: none;
+  min-width: 0;
+  -moz-appearance: textfield;
+}
+
+.disc-price-input::-webkit-outer-spin-button,
+.disc-price-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.disc-price-input-divider {
+  font-family: var(--font-mono);
+  font-size: 16px;
+  color: var(--ink-4);
+  flex-shrink: 0;
+}
+
+/* Mobile: modal goes full-screen */
+@media (max-width: 600px) {
+  .disc-filter-modal {
+    width: 100%;
+    max-height: 100%;
+    height: 100%;
+    border-radius: 0;
+    margin: 0;
+    inset: 0;
+  }
+
+  .disc-filter-modal-body {
+    padding: 24px 20px 16px;
+  }
+
+  .disc-filter-modal-footer {
+    padding: 16px 20px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .disc-filter-backdrop,
+  .disc-filter-modal { animation: none; }
 }

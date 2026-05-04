@@ -1,452 +1,450 @@
+"use client";
+
+import { useEffect, useRef } from "react";
 import Link from "next/link";
-import ScrollRevealInit from "@/components/layout/ScrollRevealInit";
-import "../landing.css";
 import "./merchants.css";
 
-/* ── Creator tier data ───────────────────────────────────────── */
-const TIERS = [
+/* ── Editorial compare table — Cinema Selects style (§ 8.6) ── */
+const COMPARE_ROWS: ReadonlyArray<{
+  feature: string;
+  push: string;
+  traditional: string;
+  outcome: string;
+}> = [
   {
-    slug: "seed",
-    name: "Seed",
-    followers: "Any — 0 minimum",
-    campaignSize: "$0 — Free product",
-    color: "#b8a99a",
-    note: "Entry tier. No followers required.",
+    feature: "Pay model",
+    push: "Per verified walk-in",
+    traditional: "Flat retainer or CPM",
+    outcome: "Spend tracks real lift",
   },
   {
-    slug: "explorer",
-    name: "Explorer",
-    followers: "500 – 2K",
-    campaignSize: "$12 – $18 / visit",
-    color: "#8c6239",
-    note: "Proven consistency over 3+ campaigns.",
+    feature: "Setup fee",
+    push: "None",
+    traditional: "$2K–$8K agency onboarding",
+    outcome: "Zero risk to test",
   },
   {
-    slug: "operator",
-    name: "Operator",
-    followers: "2K – 8K",
-    campaignSize: "$20 – $35 + 3%",
-    color: "#4a5568",
-    note: "Commission unlocked. Bonus at 30 tx/mo.",
+    feature: "Attribution",
+    push: "QR + GPS oracle, signed",
+    traditional: "Modeled, self-reported",
+    outcome: "Receipts, not vibes",
   },
   {
-    slug: "proven",
-    name: "Proven",
-    followers: "8K – 25K",
-    campaignSize: "$32 – $55 + 5%",
-    color: "#c9a96e",
-    note: "Trusted track record. Higher-value campaigns.",
+    feature: "Creator selection",
+    push: "Verified local — 6 tiers",
+    traditional: "Influencer farm or agency",
+    outcome: "Neighborhood fit > reach",
   },
   {
-    slug: "closer",
-    name: "Closer",
-    followers: "25K – 100K",
-    campaignSize: "$55 – $80 + 7%",
-    color: "#9b111e",
-    note: "Top performers. Priority campaign access.",
+    feature: "Fraud prevention",
+    push: "Per-poster QR + replay check",
+    traditional: "Best-effort screening",
+    outcome: "Bots cannot scan a door",
   },
   {
-    slug: "partner",
-    name: "Partner",
-    followers: "100K+",
-    campaignSize: "$100 – $200 + 10%",
-    color: "#1a1a2e",
-    note: "Elite tier. Up to $80/mo milestone bonus.",
+    feature: "Cancel policy",
+    push: "Anytime, no penalty",
+    traditional: "30–90 day notice",
+    outcome: "Budget stays liquid",
   },
 ];
 
-/* ── Pricing plans ───────────────────────────────────────────── */
-const PLANS = [
+/* ── ROI tile data ──────────────────────────────────────── */
+const ROI_TILES: ReadonlyArray<{
+  num: string;
+  label: string;
+  caption: string;
+}> = [
   {
-    name: "Starter",
-    price: "$19.99",
-    period: "/mo",
-    desc: "One location. Two campaigns. Real attribution from day one.",
-    features: [
-      "2 active campaigns",
-      "3 creator slots per campaign",
-      "AI creator matching",
-      "QR attribution",
-      "Basic analytics",
-    ],
-    featured: false,
-    cta: "Get started",
-    roi: "Avg. $420 attributed revenue in month 1",
+    num: "$3.50",
+    label: "Avg cost per verified visit",
+    caption: "All-in. No platform fee.",
   },
   {
-    name: "Growth",
-    price: "$69",
-    period: "/mo",
-    desc: "Scale across your location. Better matching, deeper data.",
-    features: [
-      "4 active campaigns",
-      "5 creator slots",
-      "Priority creator matching",
-      "Full analytics dashboard",
-      "Campaign templates",
-    ],
-    featured: true,
-    badge: "Most Popular",
-    cta: "Get Growth",
-    roi: "Avg. 3.9× ROI on campaign spend",
+    num: "340%",
+    label: "Reported ROI lift vs paid social",
+    caption: "Williamsburg pilot · 12 weeks.",
   },
   {
-    name: "Pro",
-    price: "$199",
-    period: "/mo",
-    desc: "Multi-location operators running ongoing creator programs.",
-    features: [
-      "Unlimited campaigns",
-      "Unlimited creator slots",
-      "Dedicated account manager",
-      "Custom attribution rules",
-      "API access",
-    ],
-    featured: false,
-    cta: "Get Pro",
-    roi: "Full white-glove setup included",
+    num: "24h",
+    label: "From signup to live campaign",
+    caption: "Self-serve, oracle-verified.",
   },
 ];
 
+/* ── Reveal-on-scroll hook (vanilla IO; respects reduced-motion) ─── */
+function useRevealOnScroll() {
+  const rootRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    const root = rootRef.current;
+    if (!root) return;
+
+    const prefersReduced = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+    const targets = root.querySelectorAll<HTMLElement>("[data-reveal]");
+
+    if (prefersReduced) {
+      targets.forEach((el) => el.classList.add("is-revealed"));
+      return;
+    }
+
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("is-revealed");
+            io.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.18, rootMargin: "0px 0px -64px 0px" },
+    );
+
+    targets.forEach((el) => io.observe(el));
+    return () => io.disconnect();
+  }, []);
+
+  return rootRef;
+}
+
+/* ── Page ─────────────────────────────────────────────────── */
 export default function ForMerchantsPage() {
+  const rootRef = useRevealOnScroll();
+
   return (
-    <>
-      <ScrollRevealInit />
+    <div ref={rootRef}>
+      {/* ════════════════════════════════════════════════════
+          01 — HERO  ·  Full-Bleed Pattern A (§ 4.2 border-radius:0)
+          Dark ink + radial accents · Magvix corner-anchored
+          ════════════════════════════════════════════════════ */}
+      <section className="mn-hero" aria-label="For Merchants Hero">
+        {/* Ghost watermark — architectural numeral */}
+        <div className="mn-hero-ghost" aria-hidden="true">
+          1.4M
+        </div>
 
-      {/* ── Hero ─────────────────────────────────────────────── */}
-      <section className="fm-hero">
-        <div className="container fm-hero-inner">
-          <p className="eyebrow fm-eyebrow">Push for Merchants · NYC</p>
+        {/* Floating glass peek tile — top-right (§ 8.9) */}
+        <div className="lg-surface--dark mn-hero-peek" aria-hidden="true">
+          <div className="mn-peek-live">
+            <span className="mn-peek-dot" />
+            <span className="mn-peek-live-label">Live</span>
+          </div>
+          <div className="mn-peek-num">1.4M+</div>
+          <div className="mn-peek-label">Verified walk-ins</div>
+        </div>
 
-          <h1 className="fm-headline">
-            <span className="fm-headline-black">Find creators who</span>
-            <span className="fm-headline-ghost" aria-hidden="true">
-              Find creators who
-            </span>
-            <em className="fm-headline-em">actually</em>
-            <span className="fm-headline-light">drive foot traffic.</span>
+        {/* Bottom-left corner-anchored copy block (§ 7.1) */}
+        <div className="mn-hero-copy" data-reveal>
+          <span className="eyebrow mn-hero-eyebrow">(FOR MERCHANTS)</span>
+
+          <h1 className="mn-hero-h1 mixed-headline">
+            Pay when they
+            <br />
+            walk <em>in</em>.
           </h1>
 
-          <p className="fm-sub">
-            QR-verified attribution. Milestone payouts. No agency fees.
+          <p className="mn-hero-sub">
+            Push ties your storefront to verified local creators. Every dollar
+            moves only after a real customer scans at your door — GPS, QR
+            oracle, and signed receipts.
+          </p>
+
+          <div className="mn-hero-actions">
+            <Link href="/merchant/signup" className="btn-primary">
+              Apply for trial
+            </Link>
+            <Link href="#how-it-works" className="btn-ghost mn-hero-ghost-btn">
+              See how it works
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* ════════════════════════════════════════════════════
+          02 — VALUE PROP · Numbered editorial rows
+          Surface-2 warm-neutral · breaks dark adjacency after hero
+          ════════════════════════════════════════════════════ */}
+      <section
+        className="mn-value-section"
+        aria-label="Why merchants choose Push"
+      >
+        <div className="mn-section-inner" data-reveal>
+          <span className="eyebrow mn-eyebrow-block">(THE PUSH MODEL)</span>
+          <h2 className="mn-h2">
+            The only ad spend
             <br />
-            Know exactly which creator drove which customer — and pay only for
-            results.
-          </p>
+            tied to <em>real</em> visits.
+          </h2>
 
-          <div className="fm-ctas">
-            <Link href="/merchant/signup" className="btn btn-primary">
-              Launch a campaign
-            </Link>
-            <Link href="#pricing" className="btn fm-outline-btn">
-              See pricing
-            </Link>
-          </div>
-
-          <p className="fm-reassure">
-            No credit card to explore &nbsp;·&nbsp; Campaign live in 24h
-            &nbsp;·&nbsp; Cancel anytime
-          </p>
-        </div>
-
-        {/* Ambient light layer */}
-        <div className="fm-hero-ambient" aria-hidden="true" />
-      </section>
-
-      {/* ── Problem / Solution split ──────────────────────────── */}
-      <section className="section section-bright fm-ps-section">
-        <div className="container">
-          <div className="fm-ps-grid">
-            {/* Left: Problem */}
-            <div className="fm-ps-col reveal">
-              <p className="fm-ps-label fm-ps-label--problem">The Problem</p>
-              <p className="fm-ps-statement">
-                <strong>Paying for views</strong>
-                <span className="fm-ps-ghost" aria-hidden="true">
-                  Paying for views
-                </span>
-                <br />
-                you can&apos;t verify.
-              </p>
-              <ul className="fm-ps-list">
-                <li>
-                  <span className="fm-ps-bullet" />
-                  Agencies: $3,000+/mo + long-term contracts
-                </li>
-                <li>
-                  <span className="fm-ps-bullet" />
-                  Paid social: CPM model — no foot-traffic guarantee
-                </li>
-                <li>
-                  <span className="fm-ps-bullet" />
-                  Influencer posts: zero attribution, zero ROI tracking
-                </li>
-              </ul>
-            </div>
-
-            {/* Vertical rule */}
-            <div className="fm-ps-divider" aria-hidden="true" />
-
-            {/* Right: Solution */}
-            <div
-              className="fm-ps-col reveal"
-              style={{ transitionDelay: "120ms" }}
-            >
-              <p className="fm-ps-label fm-ps-label--solution">The Push Way</p>
-              <p className="fm-ps-statement fm-ps-statement--solution">
-                <strong>QR-verified foot traffic.</strong>
-                <span
-                  className="fm-ps-ghost fm-ps-ghost--solution"
-                  aria-hidden="true"
-                >
-                  QR-verified foot traffic.
-                </span>
-                <br />
-                Milestone payouts.
-              </p>
-              <ul className="fm-ps-list fm-ps-list--solution">
-                <li>
-                  <span className="fm-ps-bullet fm-ps-bullet--solution" />
-                  Every scan logged — transaction-level attribution
-                </li>
-                <li>
-                  <span className="fm-ps-bullet fm-ps-bullet--solution" />
-                  Pay only after verification — no disputed clicks
-                </li>
-                <li>
-                  <span className="fm-ps-bullet fm-ps-bullet--solution" />
-                  Campaign live in 24 hours, from $19.99/mo
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ── How it works ─────────────────────────────────────── */}
-      <section className="section fm-how-section">
-        <div className="container">
-          <div className="reveal">
-            <div className="section-tag">
-              <span className="section-tag-num">01</span>
-              <span className="section-tag-line" />
-              <span className="section-tag-label">How It Works</span>
-            </div>
-            <h2 className="fm-how-headline">
-              Three steps.
-              <br />
-              <span className="fm-how-headline-light">Zero guesswork.</span>
-            </h2>
-          </div>
-
-          <ol className="fm-how-list">
+          <div className="mn-value-rows">
             {[
               {
-                n: "01",
-                title: "Post a campaign brief",
-                body: "Set your goal, payout structure, and creator requirements. Takes 10 minutes. Push handles creator matching, QR generation, and attribution from there.",
+                num: "01",
+                title: "Zero upfront risk.",
+                body: "No setup fee. No retainer. No monthly minimum. Your first dollar moves only when a real customer scans at your door.",
               },
               {
-                n: "02",
-                title: "Accept applicants from verified tiers",
-                body: "Push surfaces creators ranked by performance score, proximity, and tier. You approve or auto-accept — every creator is verified before they post.",
+                num: "02",
+                title: "Local creators, verified.",
+                body: "Push surfaces your campaign to creators who actually live, eat, and shop in your neighborhood. Six tiers, ranked by record — never by follower count.",
               },
               {
-                n: "03",
-                title: "Pay on milestones, not promises",
-                body: "Payouts release automatically after QR-verified visits. No manual tracking, no invoice disputes, no agency overhead — just clean, verified results.",
+                num: "03",
+                title: "Receipts, not models.",
+                body: "GPS timestamp + QR oracle + signed scan on every walk-in. Your dashboard shows each customer in real time. No modeled lift, no impressions that might have driven traffic.",
               },
-            ].map((step, i) => (
-              <li
-                key={step.n}
-                className="fm-how-item reveal"
-                style={{ transitionDelay: `${i * 110}ms` }}
-              >
-                <span className="fm-how-num">{step.n}</span>
-                <div className="fm-how-content">
-                  <h3 className="fm-how-title">{step.title}</h3>
-                  <p className="fm-how-body">{step.body}</p>
+            ].map((row) => (
+              <div key={row.num} className="mn-value-row click-shift">
+                <span className="mn-value-num">{row.num}</span>
+                <div className="mn-value-row-body">
+                  <h3 className="mn-h3">{row.title}</h3>
+                  <p className="mn-value-row-text">{row.body}</p>
                 </div>
-              </li>
+              </div>
             ))}
-          </ol>
+          </div>
         </div>
       </section>
 
-      {/* ── Creator tier showcase ─────────────────────────────── */}
-      <section className="section section-bright fm-tiers-section">
-        <div className="container">
-          <div className="reveal">
-            <div className="section-tag">
-              <span className="section-tag-num">02</span>
-              <span className="section-tag-line" />
-              <span className="section-tag-label">Creator Tiers</span>
-            </div>
-            <h2 className="fm-tiers-headline">
-              Six tiers.
+      {/* ════════════════════════════════════════════════════
+          SIGNATURE DIVIDER 1 (§ 8.5 — max 2 per page)
+          ════════════════════════════════════════════════════ */}
+      <div className="mn-sig-wrap">
+        <span className="sig-divider">Posted · Scanned · Settled ·</span>
+      </div>
+
+      {/* ════════════════════════════════════════════════════
+          03 — ROI · Dark Ink + ROI tile trio
+          Asymmetric 8+4 composition · KPIs in Darky
+          ════════════════════════════════════════════════════ */}
+      <section className="mn-roi-section" aria-label="ROI for merchants">
+        {/* Ghost architectural dollar */}
+        <div className="mn-roi-ghost" aria-hidden="true">
+          $
+        </div>
+
+        <div className="mn-roi-inner" data-reveal>
+          {/* Left 8-col: headline + ROI trio */}
+          <div className="mn-roi-left">
+            <span className="eyebrow mn-eyebrow-light mn-eyebrow-block">
+              (ROI)
+            </span>
+            <h2 className="mn-h2 mn-h2-light">
+              Numbers a CFO
               <br />
-              <span className="fm-tiers-headline-light">
-                Every creator verified.
-              </span>
+              can <em>verify</em>.
             </h2>
-            <p className="fm-tiers-sub">
-              From zero-follower newcomers to 100K+ partners — every creator on
-              Push is ranked by verified performance, not vanity metrics.
-            </p>
-          </div>
 
-          <div
-            className="fm-tier-grid reveal"
-            style={{ transitionDelay: "80ms" }}
-          >
-            {TIERS.map((tier) => (
-              <div
-                key={tier.slug}
-                className={`fm-tier-card fm-tier-card--${tier.slug}`}
-              >
-                <span
-                  className="fm-tier-swatch"
-                  style={{ background: tier.color }}
-                  aria-hidden="true"
-                />
-                <span className="fm-tier-name">{tier.name}</span>
-                <div className="fm-tier-row">
-                  <span className="fm-tier-meta-label">Followers</span>
-                  <span className="fm-tier-meta-val">{tier.followers}</span>
+            <div className="mn-roi-row">
+              {ROI_TILES.map((tile, i) => (
+                <div key={tile.num} className="mn-roi-block">
+                  <p className="mn-roi-num">{tile.num}</p>
+                  <p className="mn-roi-label">{tile.label}</p>
+                  <p className="mn-roi-caption">{tile.caption}</p>
+                  {i < ROI_TILES.length - 1 && (
+                    <span className="mn-roi-divider" aria-hidden="true" />
+                  )}
                 </div>
-                <div className="fm-tier-row">
-                  <span className="fm-tier-meta-label">Campaign size</span>
-                  <span className="fm-tier-meta-val fm-tier-meta-val--price">
-                    {tier.campaignSize}
-                  </span>
-                </div>
-                <p className="fm-tier-note">{tier.note}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── Pricing teaser ───────────────────────────────────── */}
-      <section id="pricing" className="section fm-pricing-section">
-        <div className="container">
-          <div className="fm-pricing-header reveal">
-            <div>
-              <div
-                className="section-tag"
-                style={{ marginBottom: "var(--space-3)" }}
-              >
-                <span className="section-tag-num">03</span>
-                <span className="section-tag-line" />
-                <span className="section-tag-label">Pricing</span>
-              </div>
-              <h2 className="fm-pricing-headline">
-                Flat monthly.
-                <br />
-                <span className="fm-pricing-headline-light">
-                  No hidden fees.
-                </span>
-              </h2>
+              ))}
             </div>
-            <p className="fm-pricing-note">
-              Cancel anytime. No setup fees.
-              <br />
-              Creator payouts billed separately per campaign.
+
+            <p className="mn-roi-fine">
+              Every figure here is reconcilable with your POS. No modeled lift,
+              no opaque attribution.
             </p>
           </div>
 
-          <div className="fm-plans">
-            {PLANS.map((plan, i) => (
-              <div
-                key={plan.name}
-                className={`fm-plan reveal${plan.featured ? " fm-plan--featured" : ""}`}
-                style={{ transitionDelay: `${i * 90}ms` }}
-              >
-                {i < PLANS.length - 1 && (
-                  <div className="fm-plan-rule" aria-hidden="true" />
-                )}
-                {plan.badge && (
-                  <span className="fm-plan-badge">{plan.badge}</span>
-                )}
-                <h3 className="fm-plan-name">{plan.name}</h3>
-                <div className="fm-plan-price">
-                  <span className="fm-plan-price-int">{plan.price}</span>
-                  <span className="fm-plan-price-period">{plan.period}</span>
-                </div>
-                <p className="fm-plan-desc">{plan.desc}</p>
-                <ul className="fm-plan-features">
-                  {plan.features.map((f) => (
-                    <li key={f} className="fm-plan-feature">
-                      {f}
-                    </li>
-                  ))}
-                </ul>
-                <p className="fm-plan-roi">{plan.roi}</p>
-                <Link
-                  href="/merchant/signup"
-                  className={`btn ${plan.featured ? "btn-primary" : "btn-secondary"} fm-plan-cta`}
-                >
-                  {plan.cta}
-                </Link>
-              </div>
-            ))}
-          </div>
-
-          <p className="fm-pricing-full-link">
-            <Link href="/pricing" className="fm-link-underline">
-              Full pricing details, including per-visit rates →
-            </Link>
-          </p>
-        </div>
-      </section>
-
-      {/* ── Case study pull-quote ─────────────────────────────── */}
-      <section className="section section-bright fm-quote-section">
-        <div className="container">
-          <div className="fm-quote-wrap reveal">
-            <span className="fm-quote-rule" aria-hidden="true" />
-            <blockquote className="fm-pull-quote">
-              <p className="fm-pull-quote-text">
-                &ldquo;We got 340 verified walk-ins in 6 weeks. We never paid
-                for a single click.&rdquo;
+          {/* Right 4-col: trial CTA tile */}
+          <div className="mn-roi-right">
+            <div className="mn-roi-tile">
+              <p className="mn-roi-tile-eyebrow">(TRIAL)</p>
+              <p className="mn-roi-tile-head">First 50 visits free</p>
+              <p className="mn-roi-tile-body">
+                NYC merchants only. Onboarding within 24 hours. Apply once, run
+                as many campaigns as you want.
               </p>
-              <footer className="fm-pull-quote-footer">
-                <cite className="fm-pull-quote-cite">
-                  Owner, Roberta&apos;s Bed-Stuy &mdash; Brooklyn, NYC
-                </cite>
-                <span className="fm-pull-quote-meta">
-                  Growth plan &nbsp;·&nbsp; 6 active creators &nbsp;·&nbsp;
-                  $69/mo
-                </span>
-              </footer>
-            </blockquote>
+              <Link href="/merchant/signup" className="btn-ink">
+                Apply for trial
+              </Link>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* ── Final CTA ─────────────────────────────────────────── */}
-      <section className="fm-final-cta">
-        <div className="container">
-          <div className="fm-final-inner reveal">
-            <p className="eyebrow fm-final-eyebrow">Ready to start</p>
-            <h2 className="fm-final-headline">
-              Start getting verified
-              <br />
-              <span className="fm-final-headline-light">customers.</span>
-            </h2>
-            <p className="fm-final-sub">
-              Launch a campaign in 10 minutes. Pay only for QR-verified visits.
-              No agency fees. No long-term contracts.
-            </p>
-            <Link
-              href="/merchant/signup"
-              className="btn btn-primary fm-final-btn"
-            >
-              Create account
-            </Link>
+      {/* ════════════════════════════════════════════════════
+          04 — HOW IT WORKS · Warm butter candy panel
+          3 numbered editorial rows
+          ════════════════════════════════════════════════════ */}
+      <section
+        id="how-it-works"
+        className="candy-panel mn-how-section"
+        aria-label="How it works for merchants"
+      >
+        {/* Floating glass tile (§ 8.9 — single per panel) */}
+        <div className="lg-surface mn-how-tile" aria-hidden="true">
+          <div className="mn-how-tile-num">3</div>
+          <div className="mn-how-tile-cap">steps to first walk-in</div>
+        </div>
+
+        <div className="mn-section-inner" data-reveal>
+          <span className="eyebrow mn-eyebrow-block">(HOW IT WORKS)</span>
+          <h2 className="mn-h2">
+            Post. Match.
+            <br />
+            <em>Settle</em>.
+          </h2>
+
+          <div className="mn-how-grid">
+            {[
+              {
+                num: "01",
+                title: "Post your campaign.",
+                body: "Set the offer, daily budget cap, and block radius. Push surfaces your brief to nearby tiered creators — live inside 24 hours.",
+              },
+              {
+                num: "02",
+                title: "Creators promote.",
+                body: "A local creator runs the post on their own audience. Each gets a unique QR poster — no two scans ever look alike, every code is signed.",
+              },
+              {
+                num: "03",
+                title: "Pay per walk-in.",
+                body: "Customer scans at the door. GPS + timestamp + oracle verification. Settlement runs every Friday. Every visit is on the dashboard the moment it happens.",
+              },
+            ].map((step) => (
+              <div key={step.num} className="mn-how-row click-shift">
+                <span className="mn-how-num">{step.num}</span>
+                <div className="mn-how-body">
+                  <h3 className="mn-h3">{step.title}</h3>
+                  <p className="mn-how-text">{step.body}</p>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </section>
-    </>
+
+      {/* ════════════════════════════════════════════════════
+          05 — COMPARISON · Editorial Table (Cinema Selects · § 8.6)
+          Surface warm-neutral · Push vs traditional ad spend
+          ════════════════════════════════════════════════════ */}
+      <section
+        className="mn-table-section"
+        aria-label="Push vs traditional ad spend"
+      >
+        <div className="mn-section-inner mn-table-inner" data-reveal>
+          <span className="eyebrow mn-table-eyebrow">(THE COMPARISON)</span>
+          <h2 className="mn-table-h2">
+            Push <em>vs.</em> traditional ad spend.
+          </h2>
+          <p className="mn-table-lede">
+            Same dollar. Different math. Receipts decide who you paid for — not
+            a brand-lift study, not an agency dashboard, not a 90-day report.
+          </p>
+
+          <div className="mn-table-scroll">
+            <table className="mn-compare-table">
+              <thead>
+                <tr>
+                  <th scope="col">(WHAT MATTERS)</th>
+                  <th scope="col" className="mn-th-push">
+                    (PUSH)
+                  </th>
+                  <th scope="col">(TRADITIONAL)</th>
+                  <th scope="col" className="mn-th-outcome">
+                    (OUTCOME)
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {COMPARE_ROWS.map((row) => (
+                  <tr key={row.feature}>
+                    <td className="mn-td-feature">{row.feature}</td>
+                    <td className="mn-td-push">{row.push}</td>
+                    <td className="mn-td-other">{row.traditional}</td>
+                    <td className="mn-td-outcome">{row.outcome}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      {/* ════════════════════════════════════════════════════
+          SIGNATURE DIVIDER 2 (§ 8.5 — max 2 per page)
+          ════════════════════════════════════════════════════ */}
+      <div className="mn-sig-wrap">
+        <span className="sig-divider">Pay for visits · Not impressions ·</span>
+      </div>
+
+      {/* ════════════════════════════════════════════════════
+          06 — TESTIMONIAL · Brand-Red saturated moment (§ 9.6 ≤1)
+          Photo card with merchant case study
+          ════════════════════════════════════════════════════ */}
+      <section className="mn-quote-strip" aria-label="Merchant case study">
+        <span aria-hidden="true" className="mn-quote-ghost">
+          &ldquo;
+        </span>
+        <div className="mn-quote-inner" data-reveal>
+          <span className="eyebrow mn-quote-eyebrow">
+            (FREEHOLD BROOKLYN · WILLIAMSBURG)
+          </span>
+          <blockquote className="mn-quote-text">
+            Push gave us 340% better ROI than our paid social — and every visit
+            was verified at the door. We know exactly which creator drove which
+            customer.
+          </blockquote>
+          <div className="mn-quote-attr">
+            <div className="mn-quote-dash" aria-hidden="true" />
+            <p className="mn-quote-name">
+              Marcus Lee · General Manager, Freehold Brooklyn
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* ════════════════════════════════════════════════════
+          07 — TICKET CTA · GA Orange saturated moment
+          Single Ticket Panel (§ 8.2 — max 1 per page)
+          ════════════════════════════════════════════════════ */}
+      <section className="mn-ticket-wrap" aria-label="Apply for a Push trial">
+        <div className="mn-ticket-inner" data-reveal>
+          <div className="ticket-panel">
+            <span
+              className="ticket-grommet ticket-grommet--tl"
+              aria-hidden="true"
+            />
+            <span
+              className="ticket-grommet ticket-grommet--tr"
+              aria-hidden="true"
+            />
+            <span
+              className="ticket-grommet ticket-grommet--bl"
+              aria-hidden="true"
+            />
+            <span
+              className="ticket-grommet ticket-grommet--br"
+              aria-hidden="true"
+            />
+
+            <span className="eyebrow mn-ticket-eyebrow">
+              (YOUR FIRST CAMPAIGN)
+            </span>
+            <h2 className="mn-ticket-headline">Launch your storefront.</h2>
+            <Link href="/merchant/signup" className="btn-ink">
+              Apply for trial
+            </Link>
+            <p className="mn-ticket-fine">
+              First 50 verified visits free · NYC only · Reviewed weekly.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <div className="mn-bottom-spacer" />
+    </div>
   );
 }

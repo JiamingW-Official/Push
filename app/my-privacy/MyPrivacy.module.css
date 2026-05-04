@@ -1,15 +1,14 @@
 /* ============================================================
-   MyPrivacy — Push Design System
-   - Consumer self-serve privacy surface
-   - Surface-elevated panels on Pearl Stone backdrop
-   - Flag Red accents; Darky display; CS Genio Mono body
-   - border-radius: 0 everywhere (Design.md non-negotiable)
+   MyPrivacy — Design.md v11 · Product register
+   Consumer self-serve privacy surface
+   Surface-elevated panels on Ivory Cream backdrop
+   Brand Red accents; Darky display; CS Genio Mono body
    ============================================================ */
 
 .page {
   min-height: 100vh;
   background: var(--surface);
-  color: var(--dark);
+  color: var(--ink-3);
   font-family: var(--font-body);
 }
 
@@ -19,24 +18,24 @@
   align-items: center;
   justify-content: space-between;
   padding: 16px 24px;
-  border-bottom: 1px solid var(--line);
-  background: var(--surface-elevated);
+  border-bottom: 1px solid var(--mist);
+  background: var(--surface-2);
 }
 
 .topBarLogo {
   font-family: var(--font-display);
   font-size: 20px;
   font-weight: 900;
-  color: var(--dark);
+  color: var(--ink);
   letter-spacing: -0.04em;
 }
 
 .topBarTag {
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 700;
-  letter-spacing: 0.06em;
-  color: rgba(0, 48, 73, 0.55);
+  letter-spacing: 0.08em;
+  color: var(--ink-4);
   text-transform: uppercase;
 }
 
@@ -44,40 +43,46 @@
 .header {
   max-width: 720px;
   margin: 0 auto;
-  padding: 56px 24px 32px;
+  padding: 64px 24px 32px;
+}
+
+@media (max-width: 640px) {
+  .header {
+    padding: 40px 24px 24px;
+  }
 }
 
 .eyebrow {
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 700;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--primary);
-  margin: 0 0 12px;
+  color: var(--brand-red);
+  margin: 0 0 16px;
 }
 
 .title {
   font-family: var(--font-display);
   font-size: clamp(40px, 7vw, 64px);
   font-weight: 900;
-  letter-spacing: -0.05em;
-  color: var(--dark);
+  letter-spacing: -0.04em;
+  color: var(--ink);
   margin: 0 0 16px;
   line-height: 1.02;
 }
 
 .lede {
   font-family: var(--font-body);
-  font-size: 15px;
-  color: var(--graphite);
-  line-height: 1.6;
+  font-size: 18px;
+  color: var(--ink-3);
+  line-height: 1.55;
   margin: 0;
   max-width: 56ch;
 }
 
 .ledeLink {
-  color: var(--tertiary);
+  color: var(--n2w-blue, #0085ff);
   text-decoration: none;
   border-bottom: 1px solid transparent;
   transition:
@@ -86,25 +91,31 @@
 }
 
 .ledeLink:hover {
-  color: var(--dark);
-  border-bottom-color: var(--dark);
+  color: var(--ink);
+  border-bottom-color: var(--ink);
 }
 
 /* ── Sections ──────────────────────────────────────────────── */
 .section {
   max-width: 720px;
   margin: 0 auto;
-  padding: 32px 24px;
-  border-top: 1px solid var(--line);
+  padding: 40px 24px;
+  border-top: 1px solid var(--mist);
+}
+
+@media (max-width: 640px) {
+  .section {
+    padding: 32px 24px;
+  }
 }
 
 .sectionEyebrow {
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 700;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: rgba(0, 48, 73, 0.55);
+  color: var(--ink-5);
   margin: 0 0 8px;
 }
 
@@ -113,23 +124,25 @@
   font-size: 28px;
   font-weight: 800;
   letter-spacing: -0.03em;
-  color: var(--dark);
+  color: var(--ink);
   margin: 0 0 16px;
   line-height: 1.1;
 }
 
 .sectionBody {
   font-family: var(--font-body);
-  font-size: 14px;
-  color: var(--graphite);
-  line-height: 1.65;
+  font-size: 18px;
+  color: var(--ink-3);
+  line-height: 1.55;
   margin: 0 0 16px;
+  max-width: 72ch;
 }
 
 /* ── Current choice panel ─────────────────────────────────── */
 .choicePanel {
-  background: var(--surface-elevated);
-  border: 1px solid var(--line);
+  background: var(--surface-2);
+  border: 1px solid var(--mist);
+  border-radius: 10px;
   padding: 24px;
   display: flex;
   flex-direction: column;
@@ -138,11 +151,11 @@
 
 .choicePanelLabel {
   font-family: var(--font-body);
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 700;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: rgba(0, 48, 73, 0.55);
+  color: var(--ink-5);
   margin: 0;
 }
 
@@ -151,90 +164,102 @@
   font-size: 40px;
   font-weight: 900;
   letter-spacing: -0.04em;
-  color: var(--primary);
+  color: var(--brand-red);
   line-height: 1;
   margin: 0;
 }
 
+@media (max-width: 640px) {
+  .choicePanelTier {
+    font-size: 32px;
+  }
+}
+
 .choicePanelMeta {
   font-family: var(--font-body);
-  font-size: 13px;
-  color: var(--graphite);
+  font-size: 14px;
+  color: var(--ink-4);
   margin: 0;
 }
 
 /* ── Confirmation banner ───────────────────────────────────── */
 .confirmation {
-  background: rgba(102, 155, 188, 0.08);
-  border-left: 3px solid var(--tertiary);
+  background: rgba(0, 133, 255, 0.06);
+  border-left: 3px solid var(--n2w-blue, #0085ff);
+  border-radius: 0 8px 8px 0;
   padding: 12px 16px;
   font-family: var(--font-body);
-  font-size: 13px;
-  color: var(--dark);
+  font-size: 14px;
+  color: var(--ink);
   margin-bottom: 16px;
 }
 
-/* ── Generic action button (export / delete / submit) ──────── */
+/* ── Generic action button (export / ghost) ─────────────────── */
 .actionBtn {
-  height: 44px;
-  padding: 0 20px;
+  height: 48px;
+  padding: 0 24px;
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  border: 1px solid var(--dark);
-  background: var(--surface-elevated);
-  color: var(--dark);
-  border-radius: 0;
+  border: 1px solid var(--ink);
+  background: transparent;
+  color: var(--ink);
+  border-radius: 8px;
   cursor: pointer;
   transition:
-    background 200ms ease,
-    color 200ms ease,
-    border-color 200ms ease;
+    background 150ms ease,
+    color 150ms ease,
+    transform 150ms cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .actionBtn:hover {
-  background: var(--dark);
-  color: #ffffff;
-  border-color: var(--dark);
+  background: var(--ink);
+  color: var(--snow);
+  transform: translate(2px, 2px);
+}
+
+.actionBtn:active {
+  transform: translate(3px, 3px) scale(0.98);
 }
 
 .actionBtn:focus-visible {
-  outline: 2px solid var(--primary);
+  outline: 2px solid var(--brand-red);
   outline-offset: 2px;
 }
 
 .actionBtn:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+  transform: none;
 }
 
 /* Destructive variant — delete button */
 .dangerBtn {
   composes: actionBtn;
-  border-color: var(--primary);
-  color: var(--primary);
+  border-color: var(--brand-red);
+  color: var(--brand-red);
 }
 
 .dangerBtn:hover {
-  background: var(--primary);
-  color: #ffffff;
-  border-color: var(--primary);
+  background: var(--brand-red);
+  color: var(--snow);
+  border-color: var(--brand-red);
 }
 
 /* Primary variant — submit form button */
 .primaryBtn {
   composes: actionBtn;
-  background: var(--primary);
-  color: #ffffff;
-  border-color: var(--primary);
+  background: var(--brand-red);
+  color: var(--snow);
+  border-color: var(--brand-red);
 }
 
 .primaryBtn:hover {
-  background: var(--accent);
-  border-color: var(--accent);
-  color: #ffffff;
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--snow);
 }
 
 /* ── Form fields ──────────────────────────────────────────── */
@@ -248,37 +273,38 @@
 .field {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 8px;
 }
 
 .label {
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 700;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--dark);
+  color: var(--ink);
 }
 
 .labelHint {
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 400;
   letter-spacing: 0.02em;
   text-transform: none;
-  color: rgba(0, 48, 73, 0.55);
+  color: var(--ink-5);
 }
 
 .input,
 .select,
 .textarea {
   font-family: var(--font-body);
-  font-size: 14px;
-  color: var(--dark);
-  background: var(--surface-elevated);
-  border: 1px solid var(--line);
-  border-radius: 0;
-  padding: 10px 12px;
+  font-size: 18px;
+  color: var(--ink);
+  background: var(--surface-2);
+  border: 1px solid var(--mist);
+  border-radius: 8px;
+  padding: 12px 16px;
+  height: 48px;
   transition:
     border-color 200ms ease,
     box-shadow 200ms ease;
@@ -288,12 +314,13 @@
 .select:focus,
 .textarea:focus {
   outline: none;
-  border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(193, 18, 31, 0.15);
+  border-color: var(--brand-red);
+  box-shadow: 0 0 0 3px rgba(193, 18, 31, 0.12);
 }
 
 .textarea {
   min-height: 120px;
+  height: auto;
   resize: vertical;
   line-height: 1.55;
 }
@@ -301,107 +328,91 @@
 .checkboxRow {
   display: flex;
   align-items: flex-start;
-  gap: 10px;
+  gap: 12px;
 }
 
 .checkbox {
   width: 16px;
   height: 16px;
   margin-top: 2px;
-  border-radius: 0;
-  accent-color: var(--primary);
+  border-radius: 4px;
+  accent-color: var(--brand-red);
   flex-shrink: 0;
 }
 
 .checkboxLabel {
   font-family: var(--font-body);
-  font-size: 13px;
-  color: var(--graphite);
+  font-size: 18px;
+  color: var(--ink-3);
   line-height: 1.55;
 }
 
 /* ── Feedback banners ─────────────────────────────────────── */
 .successBanner {
-  background: rgba(102, 155, 188, 0.08);
-  border: 1px solid var(--tertiary);
-  border-left: 3px solid var(--tertiary);
+  background: rgba(0, 133, 255, 0.06);
+  border: 1px solid rgba(0, 133, 255, 0.25);
+  border-left: 3px solid var(--n2w-blue, #0085ff);
+  border-radius: 0 8px 8px 0;
   padding: 16px;
   margin-top: 16px;
 }
 
 .errorBanner {
-  background: rgba(193, 18, 31, 0.06);
-  border: 1px solid rgba(193, 18, 31, 0.35);
-  border-left: 3px solid var(--primary);
+  background: rgba(193, 18, 31, 0.05);
+  border: 1px solid rgba(193, 18, 31, 0.25);
+  border-left: 3px solid var(--brand-red);
+  border-radius: 0 8px 8px 0;
   padding: 16px;
   margin-top: 16px;
 }
 
 .bannerTitle {
   font-family: var(--font-display);
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 700;
   letter-spacing: -0.01em;
-  color: var(--dark);
+  color: var(--ink);
   margin: 0 0 6px;
 }
 
 .bannerBody {
   font-family: var(--font-body);
-  font-size: 13px;
-  color: var(--graphite);
+  font-size: 14px;
+  color: var(--ink-3);
   line-height: 1.55;
   margin: 0;
 }
 
 .bannerTicket {
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 700;
-  color: var(--dark);
+  color: var(--ink);
   letter-spacing: 0.02em;
 }
 
 /* ── Footer ───────────────────────────────────────────────── */
 .footer {
   padding: 40px 24px 56px;
-  border-top: 1px solid var(--line);
+  border-top: 1px solid var(--mist);
   text-align: center;
-  background: var(--surface-elevated);
+  background: var(--surface-2);
 }
 
 .footerText {
   font-family: var(--font-body);
   font-size: 12px;
-  color: rgba(0, 48, 73, 0.55);
+  color: var(--ink-5);
   margin: 0;
 }
 
 .footerLink {
-  color: var(--dark);
+  color: var(--ink);
   font-weight: 600;
   text-decoration: none;
+  transition: color 150ms ease;
 }
 
 .footerLink:hover {
-  color: var(--primary);
-}
-
-/* ── Responsive ───────────────────────────────────────────── */
-@media (max-width: 640px) {
-  .header {
-    padding: 40px 20px 24px;
-  }
-  .section {
-    padding: 24px 20px;
-  }
-  .title {
-    font-size: 36px;
-  }
-  .sectionTitle {
-    font-size: 22px;
-  }
-  .choicePanelTier {
-    font-size: 32px;
-  }
+  color: var(--brand-red);
 }

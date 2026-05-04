@@ -1,0 +1,42 @@
+.ms-tier-badge {
+  border: 1px solid transparent;
+  border-radius: var(--r-pill);
+  display: inline-flex;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  padding: 4px 12px;
+  text-transform: uppercase;
+}
+
+.ms-tier-badge--seed {
+  background: var(--surface-3);
+  color: var(--ink-5);
+}
+
+.ms-tier-badge--explorer {
+  background: var(--surface-3);
+  color: var(--ink-4);
+}
+
+.ms-tier-badge--operator {
+  background: var(--surface-3);
+  color: var(--graphite);
+}
+
+.ms-tier-badge--proven {
+  background: var(--champagne-tint);
+  color: var(--champagne-deep);
+}
+
+.ms-tier-badge--closer {
+  background: var(--brand-red-tint);
+  color: var(--brand-red);
+}
+
+.ms-tier-badge--partner {
+  background: var(--surface-3);
+  border-color: var(--hairline-2);
+  color: var(--ink);
+}

@@ -1,5 +1,6 @@
 "use client";
 
+import "./dispute-detail.css";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import type { Dispute } from "@/lib/disputes/types";
@@ -34,9 +35,14 @@ export default function MerchantDisputeDetailPage() {
     return (
       <div
         style={{
-          padding: "64px 32px",
+          minHeight: "100svh",
+          background: "var(--surface)",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
           fontFamily: "var(--font-body)",
-          color: "var(--text-muted)",
+          color: "var(--ink-4)",
+          fontSize: 14,
         }}
       >
         Loading…
@@ -48,22 +54,38 @@ export default function MerchantDisputeDetailPage() {
     return (
       <div
         style={{
-          padding: "64px 32px",
+          minHeight: "100svh",
+          background: "var(--surface)",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          flexDirection: "column",
+          gap: 16,
           fontFamily: "var(--font-body)",
-          color: "var(--dark)",
+          padding: "64px 32px",
         }}
       >
         <p
           style={{
             fontFamily: "var(--font-display)",
-            fontSize: "32px",
-            fontWeight: 900,
-            marginBottom: "16px",
+            fontSize: 32,
+            fontWeight: 700,
+            color: "var(--ink)",
+            margin: 0,
           }}
         >
           Dispute not found
         </p>
-        <a href="/merchant/disputes" style={{ color: "var(--tertiary)" }}>
+        <a
+          href="/merchant/disputes"
+          style={{
+            fontFamily: "var(--font-body)",
+            fontSize: 14,
+            color: "var(--accent-blue)",
+            textDecoration: "none",
+            fontWeight: 600,
+          }}
+        >
           ← Back to disputes
         </a>
       </div>

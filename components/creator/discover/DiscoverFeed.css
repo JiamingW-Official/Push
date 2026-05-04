@@ -6,14 +6,14 @@
 
 .discover-agent-banner {
   padding: 12px 24px;
-  background: rgba(0, 48, 73, 0.04);
-  border-bottom: 1px solid var(--line, rgba(0, 48, 73, 0.12));
+  background: var(--surface-3);
+  border-bottom: 1px solid var(--line, var(--hairline));
 }
 
 .discover-agent-banner__text {
   font-family: "CS Genio Mono", monospace;
   font-size: 13px;
-  color: var(--graphite, #4a5568);
+  color: var(--graphite);
 }
 
 .discover-layout {
@@ -27,7 +27,7 @@
   display: flex;
   flex-direction: column;
   overflow-y: auto;
-  border-right: 1px solid var(--line, rgba(0, 48, 73, 0.12));
+  border-right: 1px solid var(--line, var(--hairline));
 }
 
 .discover-filters {
@@ -35,7 +35,7 @@
   align-items: center;
   gap: 8px;
   padding: 12px 16px;
-  border-bottom: 1px solid var(--line, rgba(0, 48, 73, 0.12));
+  border-bottom: 1px solid var(--line, var(--hairline));
   flex-wrap: wrap;
 }
 
@@ -53,9 +53,9 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.04em;
-  color: var(--dark, #003049);
+  color: var(--ink);
   background: none;
-  border: 1px solid var(--line, rgba(0, 48, 73, 0.12));
+  border: 1px solid var(--line, var(--hairline));
   border-radius: 50vh;
   cursor: pointer;
   transition:
@@ -65,13 +65,13 @@
 }
 
 .discover-chip:hover {
-  border-color: var(--dark, #003049);
+  border-color: var(--ink);
 }
 
 .discover-chip--active {
-  background: var(--primary, #c1121f);
-  color: #fff;
-  border-color: var(--primary, #c1121f);
+  background: var(--brand-red);
+  color: var(--snow);
+  border-color: var(--brand-red);
 }
 
 .discover-sort {
@@ -79,10 +79,10 @@
   font-family: "CS Genio Mono", monospace;
   font-size: 11px;
   font-weight: 600;
-  color: var(--dark, #003049);
-  border: 1px solid var(--line, rgba(0, 48, 73, 0.12));
-  background: var(--surface-elevated, #fff);
-  border-radius: 0;
+  color: var(--ink);
+  border: 1px solid var(--line, var(--hairline));
+  background: var(--surface-2);
+  border-radius: var(--r-xl);
   cursor: pointer;
   outline: none;
 }
@@ -92,14 +92,14 @@
   display: flex;
   align-items: baseline;
   gap: 6px;
-  border-bottom: 1px solid var(--line, rgba(0, 48, 73, 0.12));
+  border-bottom: 1px solid var(--line, var(--hairline));
 }
 
 .discover-count__num {
   font-family: Darky, sans-serif;
   font-size: 20px;
   font-weight: 800;
-  color: var(--dark, #003049);
+  color: var(--ink);
 }
 
 .discover-count__label {
@@ -108,7 +108,7 @@
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  color: var(--tertiary, #669bbc);
+  color: var(--accent-blue);
 }
 
 .discover-list {
@@ -124,14 +124,14 @@
   justify-content: space-between;
   gap: 12px;
   padding: 12px 16px;
-  border-bottom: 1px solid var(--line, rgba(0, 48, 73, 0.12));
-  background: var(--surface-elevated, #fff);
+  border-bottom: 1px solid var(--line, var(--hairline));
+  background: var(--surface-2);
   transition: background 200ms ease;
   cursor: pointer;
 }
 
 .discover-row--hover {
-  background: var(--surface-bright, #fafaf8);
+  background: var(--surface-3);
 }
 
 .discover-row__body {
@@ -147,14 +147,14 @@
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  color: var(--tertiary, #669bbc);
+  color: var(--accent-blue);
 }
 
 .discover-row__title {
   font-family: Darky, sans-serif;
   font-size: 15px;
   font-weight: 700;
-  color: var(--dark, #003049);
+  color: var(--ink);
   letter-spacing: -0.02em;
   white-space: nowrap;
   overflow: hidden;
@@ -164,7 +164,7 @@
 .discover-row__meta {
   font-family: "CS Genio Mono", monospace;
   font-size: 11px;
-  color: var(--graphite, #4a5568);
+  color: var(--graphite);
 }
 
 .discover-row__right {
@@ -179,7 +179,7 @@
   font-family: Darky, sans-serif;
   font-size: 18px;
   font-weight: 800;
-  color: var(--champagne, #c9a96e);
+  color: var(--champagne);
   letter-spacing: -0.02em;
 }
 
@@ -190,18 +190,18 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.04em;
-  color: var(--dark, #003049);
-  border: 1px solid var(--dark, #003049);
+  color: var(--ink);
+  border: 1px solid var(--ink);
   text-decoration: none;
-  border-radius: 0;
+  border-radius: var(--r-xl);
   transition:
     background 200ms ease,
     color 200ms ease;
 }
 
 .discover-row__cta:hover {
-  background: var(--dark, #003049);
-  color: #fff;
+  background: var(--ink);
+  color: var(--snow);
 }
 
 .discover-map {
@@ -213,7 +213,7 @@
 .discover-map-loading {
   width: 100%;
   height: 100%;
-  background: var(--surface, #f5f2ec);
+  background: var(--surface);
 }
 
 .discover-empty {
@@ -225,14 +225,14 @@
   font-weight: 900;
   font-size: clamp(28px, 4vw, 40px);
   letter-spacing: -0.03em;
-  color: var(--dark, #003049);
+  color: var(--ink);
   margin: 0;
 }
 
 .discover-empty__body {
   font-family: "CS Genio Mono", monospace;
   font-size: 13px;
-  color: var(--graphite, #4a5568);
+  color: var(--graphite);
   margin: 8px 0 0;
 }
 

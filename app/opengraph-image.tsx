@@ -10,7 +10,7 @@ export default async function OGImage() {
 
   return new ImageResponse(
     ogTemplate({
-      title: "The NYC Creator Marketplace",
+      title: "The Attribution Rail for Local Commerce",
       eyebrow: "Pay Per Verified Visit",
       accent: true,
       bg: "dark",

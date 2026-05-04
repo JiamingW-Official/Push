@@ -50,23 +50,6 @@ const TIER_BADGE_STYLES: Record<
     border: "#c1121f",
     label: "Partner",
   },
-  // v5.1 tiers
-  clay: { bg: "#f7f5f3", color: "#b8a99a", border: "#b8a99a", label: "Clay" },
-  bronze: {
-    bg: "#fff4e5",
-    color: "#c9a96e",
-    border: "#c9a96e",
-    label: "Bronze",
-  },
-  steel: { bg: "#eef4f8", color: "#669bbc", border: "#669bbc", label: "Steel" },
-  gold: { bg: "#fff8e1", color: "#d4a017", border: "#d4a017", label: "Gold" },
-  ruby: { bg: "#fdf0f0", color: "#c1121f", border: "#c1121f", label: "Ruby" },
-  obsidian: {
-    bg: "#1a1f2e",
-    color: "#c9a96e",
-    border: "#003049",
-    label: "Obsidian",
-  },
 };
 
 // ---------------------------------------------------------------------------

@@ -124,7 +124,7 @@ function CheckSVG() {
         cx="32"
         cy="32"
         r="28"
-        stroke="#f5f2ec"
+        stroke="var(--surface)"
         strokeWidth="2"
         opacity="0.3"
       />
@@ -132,7 +132,7 @@ function CheckSVG() {
       <path
         className="pc-check-path"
         d="M20 33 L28 41 L44 25"
-        stroke="#f5f2ec"
+        stroke="var(--surface)"
         strokeWidth="2"
         strokeLinecap="square"
         strokeLinejoin="miter"
@@ -145,46 +145,67 @@ function CheckSVG() {
 /* ── Timeline ────────────────────────────────────────────── */
 
 function Timeline() {
+  const steps = [
+    {
+      done: true,
+      label: "Proof Submitted",
+      desc: "Your content has been received and logged.",
+      suffix: "✓",
+    },
+    {
+      done: false,
+      current: true,
+      label: "Merchant Review",
+      desc: "Est. 24–48 hours. We'll notify you when approved.",
+    },
+    {
+      done: false,
+      pending: true,
+      label: "Payout Released",
+      desc: "Funds released to your account after approval.",
+    },
+  ];
+
   return (
     <div className="pc-timeline">
-      {/* Step 1 — done */}
-      <div className="pc-timeline-item">
-        <div className="pc-timeline-line" />
-        <div className="pc-timeline-dot pc-timeline-dot--done" />
-        <div className="pc-timeline-content">
-          <div className="pc-timeline-label pc-timeline-label--done">
-            Proof Submitted ✓
-          </div>
-          <div className="pc-timeline-desc">
-            Your content has been received and logged.
-          </div>
-        </div>
-      </div>
+      {steps.map((step, i) => (
+        <div
+          key={step.label}
+          className={`pc-timeline-item${i < steps.length - 1 ? " pc-timeline-item--spaced" : ""}`}
+        >
+          {/* Connector line */}
+          {i < steps.length - 1 && (
+            <div
+              className={`pc-timeline-connector${step.done ? " pc-timeline-connector--done" : ""}`}
+            />
+          )}
 
-      {/* Step 2 — current */}
-      <div className="pc-timeline-item">
-        <div className="pc-timeline-line" />
-        <div className="pc-timeline-dot pc-timeline-dot--current" />
-        <div className="pc-timeline-content">
-          <div className="pc-timeline-label">Merchant Review</div>
-          <div className="pc-timeline-desc">
-            Est. 24–48 hours. We&apos;ll notify you when approved.
+          {/* Icon tile — 40×40 with surface-3 bg + 10px radius */}
+          <div
+            className={`pc-timeline-icon-tile${
+              step.done
+                ? " pc-timeline-icon-tile--done"
+                : step.current
+                  ? " pc-timeline-icon-tile--current"
+                  : " pc-timeline-icon-tile--pending"
+            }`}
+          >
+            {step.done && <span className="pc-timeline-check">✓</span>}
+            {step.current && <span className="pc-timeline-pulse" />}
           </div>
-        </div>
-      </div>
 
-      {/* Step 3 — pending */}
-      <div className="pc-timeline-item">
-        <div className="pc-timeline-dot pc-timeline-dot--pending" />
-        <div className="pc-timeline-content">
-          <div className="pc-timeline-label pc-timeline-label--pending">
-            Payout Released
-          </div>
-          <div className="pc-timeline-desc">
-            Funds released to your account after approval.
+          {/* Content */}
+          <div className="pc-timeline-content">
+            <div
+              className={`pc-timeline-label${step.pending ? " pc-timeline-label--pending" : ""}`}
+            >
+              {step.label}
+              {step.suffix && ` ${step.suffix}`}
+            </div>
+            <div className="pc-timeline-desc">{step.desc}</div>
           </div>
         </div>
-      </div>
+      ))}
     </div>
   );
 }
@@ -200,55 +221,49 @@ function ResultsSummary({
 }) {
   return (
     <div className="pc-section">
-      <div className="pc-section-eyebrow">Campaign Results</div>
+      <span className="pc-section-eyebrow">CAMPAIGN RESULTS</span>
 
-      {/* Content placeholder */}
-      <div className="pc-content-row">
-        <div
-          className="pc-content-thumb"
-          aria-label="Content image placeholder"
-        >
-          <span className="pc-content-thumb-icon">▶</span>
-        </div>
-        <div
-          className="pc-content-thumb"
-          aria-label="Content image placeholder"
-        >
-          <span className="pc-content-thumb-icon">▶</span>
-        </div>
-        <div
-          className="pc-content-thumb"
-          aria-label="Content image placeholder"
-        >
-          <span className="pc-content-thumb-icon">▶</span>
-        </div>
+      {/* Content thumbnails */}
+      <div className="pc-results-thumbs">
+        {[0, 1, 2].map((i) => (
+          <div
+            key={i}
+            className="pc-content-thumb"
+            aria-label="Content image placeholder"
+          >
+            ▶
+          </div>
+        ))}
       </div>
-      <div className="pc-content-label">
-        Content submitted for {data.merchant}
-      </div>
+
+      <p className="pc-results-meta">Content submitted for {data.merchant}</p>
 
       {/* Metrics grid */}
-      <div className="pc-results-grid">
-        <div className="pc-result-cell">
-          <span className="pc-result-cell-label">Engagement</span>
-          <span className="pc-result-cell-value">{metrics.engagement}</span>
-          <span className="pc-result-cell-sub">likes + comments</span>
-        </div>
-        <div className="pc-result-cell">
-          <span className="pc-result-cell-label">Reach</span>
-          <span className="pc-result-cell-value">{metrics.reach}</span>
-          <span className="pc-result-cell-sub">accounts reached</span>
-        </div>
-        <div className="pc-result-cell">
-          <span className="pc-result-cell-label">Conversions</span>
-          <span className="pc-result-cell-value">{metrics.conversions}</span>
-          <span className="pc-result-cell-sub">verified walk-ins</span>
-        </div>
-        <div className="pc-result-cell">
-          <span className="pc-result-cell-label">Payout Earned</span>
-          <span className="pc-result-cell-value">${data.amount}</span>
-          <span className="pc-result-cell-sub">+ 3% on walk-ins</span>
-        </div>
+      <div className="pc-metrics-grid">
+        {[
+          {
+            label: "Engagement",
+            value: metrics.engagement,
+            sub: "likes + comments",
+          },
+          { label: "Reach", value: metrics.reach, sub: "accounts reached" },
+          {
+            label: "Conversions",
+            value: metrics.conversions,
+            sub: "verified walk-ins",
+          },
+          {
+            label: "Payout Earned",
+            value: `$${data.amount}`,
+            sub: "+ 3% on walk-ins",
+          },
+        ].map((cell) => (
+          <div key={cell.label} className="pc-metric-cell">
+            <span className="pc-metric-label">{cell.label}</span>
+            <span className="pc-metric-value">{cell.value}</span>
+            <span className="pc-metric-sub">{cell.sub}</span>
+          </div>
+        ))}
       </div>
     </div>
   );
@@ -276,13 +291,13 @@ function ScoreImpact({ data }: { data: PageData }) {
 
   return (
     <div className="pc-section">
-      <div className="pc-section-eyebrow">Score Impact</div>
+      <span className="pc-section-eyebrow">SCORE IMPACT</span>
 
-      {/* +X pts impact callout */}
-      <div className="pc-score-impact">
-        <div className="pc-score-impact-number">
+      {/* +X pts impact callout — champagne accent for score delta */}
+      <div className="pc-score-impact-callout">
+        <span className="pc-score-delta-number">
           +{data.score_delta.toFixed(1)}
-        </div>
+        </span>
         <div className="pc-score-impact-info">
           <span className="pc-score-impact-label">
             Points earned this campaign
@@ -300,15 +315,17 @@ function ScoreImpact({ data }: { data: PageData }) {
         <span className="pc-score-after">{data.score.toFixed(1)} pts</span>
       </div>
 
-      {/* Progress bar */}
-      <div className="pc-score-labels">
-        <span>0</span>
-        <span>{maxScore}</span>
+      {/* Progress bar labels */}
+      <div className="pc-score-bar-labels">
+        <span className="pc-score-bar-label">0</span>
+        <span className="pc-score-bar-label">{maxScore}</span>
       </div>
-      <div className="pc-score-bar">
+
+      {/* Tier progress bar — spec I */}
+      <div className="pc-tier-bar-track">
         <div
           ref={fillRef}
-          className="pc-score-fill"
+          className="pc-tier-bar-fill"
           style={{ width: "0%" }}
           role="progressbar"
           aria-valuenow={data.score}
@@ -316,20 +333,18 @@ function ScoreImpact({ data }: { data: PageData }) {
         />
       </div>
 
-      <div className="pc-score-disclaimer">
+      <p className="pc-score-disclaimer">
         Estimated — final score updates after merchant approval
-      </div>
+      </p>
 
-      {/* Progress toward next tier */}
-      <div className="pc-tier-progress">
+      <div className="pc-score-next-info">
         {remaining > 0
           ? `${data.score.toFixed(0)} → ${nextTier.target} pts — ${remaining} more points to reach ${nextTier.label}`
           : `${nextTier.label} tier reached!`}
       </div>
 
-      {/* Urgency badge if close */}
       {isClose && (
-        <div className="pc-tier-urgency">
+        <div className="pc-score-close-alert">
           Just {remaining} points away from {nextTier.label}!
         </div>
       )}
@@ -346,7 +361,7 @@ function TierProgress({ data }: { data: PageData }) {
 
   return (
     <div className="pc-section">
-      <div className="pc-section-eyebrow">Tier Progress</div>
+      <span className="pc-section-eyebrow">TIER PROGRESS</span>
 
       {/* Mini tier journey */}
       <div
@@ -361,30 +376,31 @@ function TierProgress({ data }: { data: PageData }) {
           const isLast = i === ALL_TIERS.length - 1;
 
           return (
-            <div key={t} style={{ display: "contents" }}>
+            <div key={t} className="pc-tier-node-wrapper">
               <div
                 className="pc-tier-node"
                 role="listitem"
                 aria-label={`${t}${isCurrent ? " (current)" : ""}${isDone ? " (completed)" : ""}`}
               >
                 <div
-                  className={[
-                    "pc-tier-node-dot",
-                    isDone ? "pc-tier-node-dot--done" : "",
-                    isCurrent ? "pc-tier-node-dot--current" : "",
-                    isNext ? "pc-tier-node-dot--next" : "",
-                  ]
-                    .filter(Boolean)
-                    .join(" ")}
+                  className={`pc-tier-dot${
+                    isDone
+                      ? " pc-tier-dot--done"
+                      : isCurrent
+                        ? " pc-tier-dot--current"
+                        : ""
+                  }`}
                 />
                 <span
-                  className={[
-                    "pc-tier-node-label",
-                    isCurrent ? "pc-tier-node-label--current" : "",
-                    isNext ? "pc-tier-node-label--next" : "",
-                  ]
-                    .filter(Boolean)
-                    .join(" ")}
+                  className={`pc-tier-label${
+                    isCurrent
+                      ? " pc-tier-label--current"
+                      : isNext
+                        ? " pc-tier-label--next"
+                        : isDone
+                          ? " pc-tier-label--done"
+                          : ""
+                  }`}
                 >
                   {t.charAt(0).toUpperCase() + t.slice(1)}
                 </span>
@@ -399,10 +415,10 @@ function TierProgress({ data }: { data: PageData }) {
         })}
       </div>
 
-      {/* Next tier perk */}
+      {/* Next tier perk — tier upgrade indicator uses champagne */}
       {data.tier !== "partner" && (
-        <div className="pc-tier-progress" style={{ marginTop: 16 }}>
-          <strong>{nextTier.label}:</strong>{" "}
+        <div className="pc-tier-perk">
+          <strong className="pc-tier-upgrade-text">{nextTier.label}:</strong>{" "}
           {TIER_PERKS[ALL_TIERS[currentIdx + 1] as Tier]}
           {remaining > 0 && ` — ${remaining} pts away`}
         </div>
@@ -416,18 +432,18 @@ function TierProgress({ data }: { data: PageData }) {
 function PayoutPanel({ data }: { data: PageData }) {
   return (
     <div className="pc-section">
-      <div className="pc-section-eyebrow">Your Estimated Payout</div>
+      <span className="pc-section-eyebrow">YOUR ESTIMATED PAYOUT</span>
 
-      <div className="pc-payout-amount">${data.amount}</div>
+      <div className="pc-payout-panel-amount">${data.amount}</div>
 
-      <div className="pc-payout-commission">
+      <p className="pc-payout-commission">
         Plus 3% on every verified walk-in (30-day window)
-      </div>
+      </p>
 
-      <div className="pc-payout-badge">
+      <span className="pc-payout-speed-badge">
         {data.tier.charAt(0).toUpperCase() + data.tier.slice(1)} tier:{" "}
         {PAYOUT_SPEED[data.tier]}
-      </div>
+      </span>
     </div>
   );
 }
@@ -435,41 +451,30 @@ function PayoutPanel({ data }: { data: PageData }) {
 /* ── Merchant Feedback ───────────────────────────────────── */
 
 function MerchantFeedback({ hasFeedback }: { hasFeedback: boolean }) {
-  if (!hasFeedback) {
-    return (
-      <div className="pc-section">
-        <div className="pc-section-eyebrow">Merchant Review</div>
+  return (
+    <div className="pc-section">
+      <span className="pc-section-eyebrow">MERCHANT REVIEW</span>
+
+      {!hasFeedback ? (
         <div className="pc-feedback-waiting">
-          <div className="pc-feedback-waiting-dot" aria-hidden="true" />
+          <span className="pc-feedback-dot" />
           <span className="pc-feedback-waiting-text">
             Waiting for merchant review — typically 24–48 hours after
             submission.
           </span>
         </div>
-      </div>
-    );
-  }
-
-  /* Demo: show pre-filled feedback */
-  return (
-    <div className="pc-section">
-      <div className="pc-section-eyebrow">Merchant Review</div>
-      <div className="pc-feedback-stars" aria-label="5 out of 5 stars">
-        {[1, 2, 3, 4, 5].map((s) => (
-          <span
-            key={s}
-            className="pc-feedback-star pc-feedback-star--filled"
-            aria-hidden="true"
-          >
-            ★
-          </span>
-        ))}
-      </div>
-      <div className="pc-feedback-comment">
-        &ldquo;Great energy and authentic content. The post drove real foot
-        traffic — we noticed the spike same day. Would love to work with you
-        again.&rdquo;
-      </div>
+      ) : (
+        <>
+          <div className="pc-feedback-stars" aria-label="5 out of 5 stars">
+            ★★★★★
+          </div>
+          <blockquote className="pc-feedback-quote">
+            &ldquo;Great energy and authentic content. The post drove real foot
+            traffic — we noticed the spike same day. Would love to work with you
+            again.&rdquo;
+          </blockquote>
+        </>
+      )}
     </div>
   );
 }
@@ -494,13 +499,13 @@ function NextSteps({ data }: { data: PageData }) {
 
   return (
     <div className="pc-section">
-      <div className="pc-section-eyebrow">What&apos;s Next</div>
+      <span className="pc-section-eyebrow">WHAT&apos;S NEXT</span>
 
       <div className="pc-next-steps-grid">
-        {/* Primary CTA — full width */}
+        {/* Primary CTA — Find Next Campaign → btn btn-primary */}
         <Link
           href="/creator/dashboard?tab=discover"
-          className="pc-next-step-card pc-next-step-card--primary"
+          className="pc-next-step-card pc-next-step-card--primary click-shift"
         >
           <span className="pc-next-step-icon">+</span>
           <span className="pc-next-step-title">Find your next campaign</span>
@@ -510,9 +515,9 @@ function NextSteps({ data }: { data: PageData }) {
           </span>
         </Link>
 
-        {/* Share results */}
+        {/* Share results — Share on Instagram → btn btn-ghost */}
         <button
-          className="pc-next-step-card"
+          className="pc-next-step-card click-shift"
           onClick={handleShare}
           type="button"
         >
@@ -524,7 +529,7 @@ function NextSteps({ data }: { data: PageData }) {
         </button>
 
         {/* View profile */}
-        <Link href="/creator/profile" className="pc-next-step-card">
+        <Link href="/creator/profile" className="pc-next-step-card click-shift">
           <span className="pc-next-step-icon">◉</span>
           <span className="pc-next-step-title">View profile</span>
           <span className="pc-next-step-desc">
@@ -620,7 +625,6 @@ function PostCampaignContent() {
 
     // Check if a tier boundary was crossed
     const scoreBefore = resolved.score - resolved.score_delta;
-    const prevTierTarget = TIER_NEXT[resolved.tier]?.target ?? 999;
     const currentIdx = tierIndex(resolved.tier);
     if (currentIdx < ALL_TIERS.length - 1) {
       // Detect if score_delta pushed score past a threshold
@@ -640,18 +644,7 @@ function PostCampaignContent() {
   }, [searchParams]);
 
   if (!data) {
-    return (
-      <div
-        className="pc-page"
-        style={{ alignItems: "center", justifyContent: "center" }}
-      >
-        <span
-          style={{ fontFamily: "var(--font-body)", fontSize: 12, opacity: 0.5 }}
-        >
-          LOADING...
-        </span>
-      </div>
-    );
+    return <div className="pc-loading">LOADING...</div>;
   }
 
   const nextTier = TIER_NEXT[data.tier];
@@ -667,62 +660,73 @@ function PostCampaignContent() {
         />
       )}
 
-      <div className="pc-page">
-        {/* ── 1. Hero celebration ──────────────────────────── */}
-        <section className="pc-hero">
-          <CheckSVG />
+      <div className="pc-page-shell">
+        <div className="pc-container">
+          {/* ── 1. Hero celebration ──────────────────────── */}
+          <div className="pc-hero">
+            {/* Check icon tile */}
+            <div className="pc-check-icon-tile">
+              <CheckSVG />
+            </div>
 
-          <div className="pc-hero-eyebrow">Campaign Complete</div>
+            <div className="pc-hero-heading">
+              <span className="pc-hero-eyebrow">CAMPAIGN COMPLETE</span>
+              <h1 className="pc-hero-title">Well done.</h1>
+            </div>
 
-          <h1 className="pc-hero-title">Well done.</h1>
+            <div className="pc-hero-meta">
+              <span className="pc-merchant-name">{data.merchant}</span>
+              {data.category && (
+                <span className="pc-category-chip">{data.category}</span>
+              )}
+            </div>
 
-          <div className="pc-hero-meta">
-            <span className="pc-merchant-name">{data.merchant}</span>
-            {data.category && (
-              <span className="pc-category-chip">{data.category}</span>
-            )}
+            {/* Liquid-glass celebration payout tile */}
+            <div className="pc-payout-tile">
+              <span className="pc-payout-label">Estimated payout</span>
+              <span className="pc-payout-amount">${data.amount}</span>
+            </div>
           </div>
 
-          {/* Big celebratory payout in hero */}
-          <div className="pc-hero-payout">
-            <span className="pc-hero-payout-label">Estimated payout</span>
-            <span className="pc-hero-payout-amount pc-glow-pulse">
-              ${data.amount}
-            </span>
+          {/* Magvix Italic Signature Divider #1 */}
+          <p className="pc-divider">
+            Campaign complete · Payout processing · Verified ·
+          </p>
+
+          {/* ── Body sections ─────────────────────────────── */}
+          <div className="pc-body-sections">
+            {/* 2. Results Summary */}
+            <ResultsSummary data={data} metrics={DEMO_METRICS} />
+
+            {/* 3. What happens next */}
+            <div className="pc-section">
+              <span className="pc-section-eyebrow pc-section-eyebrow--wide-mb">
+                WHAT HAPPENS NEXT
+              </span>
+              <Timeline />
+            </div>
+
+            {/* 4. Score Impact */}
+            <ScoreImpact data={data} />
+
+            {/* 5. Tier Progress */}
+            <TierProgress data={data} />
+
+            {/* 6. Merchant Feedback */}
+            <MerchantFeedback hasFeedback={feedbackLoaded} />
+
+            {/* 7. Next Steps */}
+            <NextSteps data={data} />
           </div>
-        </section>
 
-        {/* ── Body ─────────────────────────────────────────── */}
-        <div className="pc-body">
-          {/* ── 2. Results Summary ───────────────────────── */}
-          <ResultsSummary data={data} metrics={DEMO_METRICS} />
-
-          {/* ── 3. What happens next ─────────────────────── */}
-          <div className="pc-section">
-            <div className="pc-section-eyebrow">What Happens Next</div>
-            <Timeline />
+          {/* ── Bottom motivation ──────────────────────────── */}
+          <div className="pc-motivation">
+            <div className="pc-motivation-count">
+              {DEMO_CAMPAIGNS_COMPLETED} campaigns completed.{" "}
+              {remaining.toFixed(0)} more points to {nextTier.label}.
+            </div>
+            <div className="pc-motivation-tagline">{tagline}</div>
           </div>
-
-          {/* ── 4. Score Impact ──────────────────────────── */}
-          <ScoreImpact data={data} />
-
-          {/* ── 5. Tier Progress ─────────────────────────── */}
-          <TierProgress data={data} />
-
-          {/* ── 6. Merchant Feedback ─────────────────────── */}
-          <MerchantFeedback hasFeedback={feedbackLoaded} />
-
-          {/* ── 7. Next Steps ────────────────────────────── */}
-          <NextSteps data={data} />
-        </div>
-
-        {/* ── 8. Bottom motivation ─────────────────────────── */}
-        <div className="pc-motivation">
-          <div className="pc-motivation-count">
-            {DEMO_CAMPAIGNS_COMPLETED} campaigns completed.{" "}
-            {remaining.toFixed(0)} more points to {nextTier.label}.
-          </div>
-          <div className="pc-motivation-tagline">{tagline}</div>
         </div>
       </div>
     </>

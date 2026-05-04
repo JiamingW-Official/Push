@@ -48,20 +48,20 @@
   height: 10px;
   box-shadow:
     /* Flag Red */
-    8vw   -10px 0 0 #c1121f,
-    22vw  -10px 0 0 #c1121f,
-    38vw  -10px 0 0 #c1121f,
-    53vw  -10px 0 0 #c1121f,
-    67vw  -10px 0 0 #c1121f,
-    81vw  -10px 0 0 #c1121f,
-    94vw  -10px 0 0 #c1121f,
+    8vw   -10px 0 0 var(--brand-red),
+    22vw  -10px 0 0 var(--brand-red),
+    38vw  -10px 0 0 var(--brand-red),
+    53vw  -10px 0 0 var(--brand-red),
+    67vw  -10px 0 0 var(--brand-red),
+    81vw  -10px 0 0 var(--brand-red),
+    94vw  -10px 0 0 var(--brand-red),
     /* Steel Blue */
-    14vw  -10px 0 0 #669bbc,
-    30vw  -10px 0 0 #669bbc,
-    46vw  -10px 0 0 #669bbc,
-    62vw  -10px 0 0 #669bbc,
-    75vw  -10px 0 0 #669bbc,
-    88vw  -10px 0 0 #669bbc,
+    14vw  -10px 0 0 var(--accent-blue),
+    30vw  -10px 0 0 var(--accent-blue),
+    46vw  -10px 0 0 var(--accent-blue),
+    62vw  -10px 0 0 var(--accent-blue),
+    75vw  -10px 0 0 var(--accent-blue),
+    88vw  -10px 0 0 var(--accent-blue),
     /* Papaya Whip */
     4vw   -10px 0 0 #f5f2ec,
     18vw  -10px 0 0 #f5f2ec,
@@ -80,19 +80,19 @@
   height: 6px;
   box-shadow:
     /* Flag Red */
-    11vw  -10px 0 0 #c1121f,
-    27vw  -10px 0 0 #c1121f,
-    43vw  -10px 0 0 #c1121f,
-    59vw  -10px 0 0 #c1121f,
-    77vw  -10px 0 0 #c1121f,
-    93vw  -10px 0 0 #c1121f,
+    11vw  -10px 0 0 var(--brand-red),
+    27vw  -10px 0 0 var(--brand-red),
+    43vw  -10px 0 0 var(--brand-red),
+    59vw  -10px 0 0 var(--brand-red),
+    77vw  -10px 0 0 var(--brand-red),
+    93vw  -10px 0 0 var(--brand-red),
     /* Steel Blue */
-    5vw   -10px 0 0 #669bbc,
-    20vw  -10px 0 0 #669bbc,
-    36vw  -10px 0 0 #669bbc,
-    50vw  -10px 0 0 #669bbc,
-    65vw  -10px 0 0 #669bbc,
-    84vw  -10px 0 0 #669bbc,
+    5vw   -10px 0 0 var(--accent-blue),
+    20vw  -10px 0 0 var(--accent-blue),
+    36vw  -10px 0 0 var(--accent-blue),
+    50vw  -10px 0 0 var(--accent-blue),
+    65vw  -10px 0 0 var(--accent-blue),
+    84vw  -10px 0 0 var(--accent-blue),
     /* Papaya Whip */
     16vw  -10px 0 0 #f5f2ec,
     32vw  -10px 0 0 #f5f2ec,
@@ -116,13 +116,13 @@
   width: 8px;
   height: 8px;
   box-shadow:
-    3vw   -10px 0 0 #c1121f,
+    3vw   -10px 0 0 var(--brand-red),
     25vw  -10px 0 0 #f5f2ec,
-    40vw  -10px 0 0 #669bbc,
-    55vw  -10px 0 0 #c1121f,
+    40vw  -10px 0 0 var(--accent-blue),
+    55vw  -10px 0 0 var(--brand-red),
     68vw  -10px 0 0 #f5f2ec,
-    82vw  -10px 0 0 #669bbc,
-    96vw  -10px 0 0 #c1121f;
+    82vw  -10px 0 0 var(--accent-blue),
+    96vw  -10px 0 0 var(--brand-red);
   animation: fp-fall-1 4.4s linear 0.5s infinite;
 }
 
@@ -150,12 +150,12 @@
 }
 
 .fp-headline-text {
-  font-family: "CS Genio Mono", monospace;
+  font-family: var(--font-body);
   font-size: 13px;
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: #f5f2ec;
+  color: var(--surface);
   display: block;
 }
 
@@ -169,7 +169,7 @@
 }
 
 .fp-label {
-  font-family: "CS Genio Mono", monospace;
+  font-family: var(--font-body);
   font-size: 11px;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -179,10 +179,10 @@
 }
 
 .fp-amount {
-  font-family: "Darky", serif;
+  font-family: var(--font-display);
   font-weight: 900;
   font-size: clamp(64px, 14vw, 112px);
-  color: #f5f2ec;
+  color: var(--surface);
   letter-spacing: -0.06em;
   line-height: 1;
   display: block;
@@ -220,12 +220,12 @@
 .fp-tier-badge-dot {
   width: 6px;
   height: 6px;
-  background: #c1121f;
+  background: var(--brand-red);
   flex-shrink: 0;
 }
 
 .fp-tier-badge-label {
-  font-family: "CS Genio Mono", monospace;
+  font-family: var(--font-body);
   font-size: 10px;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -233,19 +233,19 @@
 }
 
 .fp-tier-badge-tier {
-  font-family: "CS Genio Mono", monospace;
+  font-family: var(--font-body);
   font-size: 10px;
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: #f5f2ec;
+  color: var(--surface);
 }
 
 /* ---------- Motivation line ---------- */
 .fp-motivation {
   position: relative;
   z-index: 1;
-  font-family: "CS Genio Mono", monospace;
+  font-family: var(--font-body);
   font-size: 12px;
   color: rgba(245, 242, 236, 0.45);
   text-align: center;
@@ -261,8 +261,8 @@
   z-index: 1;
   max-width: 400px;
   width: 100%;
-  background: #f5f2ec;
-  border: 3px solid #003049;
+  background: var(--surface);
+  border: 3px solid var(--ink);
   padding: 32px;
   margin: 8px 0 20px;
   animation: fp-card-rise 600ms cubic-bezier(0.22, 1, 0.36, 1) both;
@@ -272,7 +272,7 @@
 .fp-card::before {
   content: "";
   display: block;
-  border-top: 4px double #003049;
+  border-top: 4px double var(--ink);
   margin-bottom: 20px;
 }
 
@@ -280,7 +280,7 @@
 .fp-card::after {
   content: "";
   display: block;
-  border-top: 4px double #003049;
+  border-top: 4px double var(--ink);
   margin-top: 20px;
 }
 
@@ -292,18 +292,18 @@
 }
 
 .fp-card-brand {
-  font-family: "Darky", serif;
+  font-family: var(--font-display);
   font-weight: 900;
   font-size: 18px;
-  color: #003049;
+  color: var(--ink);
   letter-spacing: 0.04em;
 }
 
 .fp-card-date {
-  font-family: "CS Genio Mono", monospace;
+  font-family: var(--font-body);
   font-size: 10px;
   letter-spacing: 0.08em;
-  color: #003049;
+  color: var(--ink);
   opacity: 0.6;
   text-transform: uppercase;
 }
@@ -314,46 +314,46 @@
 
 .fp-card-payto,
 .fp-card-for {
-  font-family: "CS Genio Mono", monospace;
+  font-family: var(--font-body);
   font-size: 10px;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: #003049;
+  color: var(--ink);
   opacity: 0.5;
   display: block;
   margin-bottom: 4px;
 }
 
 .fp-card-name {
-  font-family: "Darky", serif;
+  font-family: var(--font-display);
   font-weight: 700;
   font-size: 22px;
-  color: #003049;
+  color: var(--ink);
   display: block;
 }
 
 .fp-card-amount-words {
-  font-family: "CS Genio Mono", monospace;
+  font-family: var(--font-body);
   font-size: 12px;
-  color: #003049;
+  color: var(--ink);
   letter-spacing: 0.04em;
   display: block;
-  border-bottom: 1px solid rgba(0, 48, 73, 0.3);
+  border-bottom: 1px solid var(--line-strong);
   padding-bottom: 4px;
 }
 
 .fp-card-campaign {
-  font-family: "Darky", serif;
+  font-family: var(--font-display);
   font-weight: 700;
   font-size: 14px;
-  color: #003049;
+  color: var(--ink);
   display: block;
 }
 
 .fp-card-merchant {
-  font-family: "CS Genio Mono", monospace;
+  font-family: var(--font-body);
   font-size: 11px;
-  color: #003049;
+  color: var(--ink);
   opacity: 0.6;
   display: block;
   margin-top: 2px;
@@ -370,7 +370,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: "Darky", serif;
+  font-family: var(--font-display);
   font-size: 14px;
   font-weight: 900;
   transform: rotate(-15deg);
@@ -395,7 +395,7 @@
 
 .fp-timer-fill {
   height: 100%;
-  background: #c1121f;
+  background: var(--brand-red);
   /* Width animated via inline style + CSS transition */
   transition: width 5000ms linear;
 }
@@ -413,12 +413,12 @@
 
 .fp-share-btn,
 .fp-continue-btn {
-  font-family: "CS Genio Mono", monospace;
+  font-family: var(--font-body);
   font-size: 12px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   padding: 12px 20px;
-  border-radius: 0; /* strict: no rounding */
+  border-radius: var(--r-xl); /* strict: no rounding */
   cursor: pointer;
   transition: opacity 150ms ease;
 }
@@ -429,14 +429,14 @@
 }
 
 .fp-share-btn {
-  background: #c1121f;
-  color: #f5f2ec;
-  border: 2px solid #c1121f;
+  background: var(--brand-red);
+  color: var(--surface);
+  border: 2px solid var(--brand-red);
 }
 
 .fp-continue-btn {
   background: transparent;
-  color: #f5f2ec;
+  color: var(--surface);
   border: 2px solid rgba(245, 242, 236, 0.5);
 }
 

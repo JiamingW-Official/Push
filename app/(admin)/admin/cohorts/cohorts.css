@@ -1,418 +1,438 @@
 /* ============================================================
-   Push Admin — Cohort Analysis Dashboard
-   Authority: Design.md  |  6 colors / Darky+CSGenioMono / 0 radius / 8px grid
+   Push Admin — Cohort Analysis  ·  v11 Design System
+   Authority: Design.md v11 2026-04-25
+   Product UI register — no marketing elements
+   8px grid  ·  Darky display + CS Genio Mono body
    ============================================================ */
 
 /* ------------------------------------------------------------
-   Admin Shell
+   Page shell
    ------------------------------------------------------------ */
-.admin-shell {
+.cohorts-page {
   min-height: 100vh;
   background: var(--surface);
-  display: flex;
-  flex-direction: column;
-}
-
-.admin-nav {
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  background: var(--dark);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-  padding: 0 var(--space-5);
-  height: 56px;
-  display: flex;
-  align-items: center;
-  gap: var(--space-6);
-}
-
-.admin-nav__brand {
-  font-family: var(--font-display);
-  font-weight: 900;
-  font-size: 18px;
-  color: #fff;
-  text-decoration: none;
-  letter-spacing: -0.04em;
-}
-.admin-nav__brand span {
-  color: var(--primary);
-  margin-left: 2px;
-}
-
-.admin-nav__links {
-  list-style: none;
-  display: flex;
-  gap: var(--space-4);
-  margin-left: auto;
-}
-.admin-nav__links a {
-  font-family: var(--font-body);
-  font-size: var(--text-small);
-  color: rgba(255, 255, 255, 0.65);
-  text-decoration: none;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  transition: color var(--t-base);
-}
-.admin-nav__links a:hover {
-  color: #fff;
-}
-
-.admin-main {
-  flex: 1;
+  padding-bottom: 64px;
 }
 
 /* ------------------------------------------------------------
-   Hero
+   Page header
    ------------------------------------------------------------ */
-.cohort-hero {
-  background: var(--dark);
-  padding: var(--space-10) var(--space-5) var(--space-8);
-  border-bottom: 2px solid var(--primary);
+.cohorts-header {
+  padding: 40px 40px 32px;
 }
 
-.cohort-hero__inner {
-  max-width: var(--content-width);
-  margin: 0 auto;
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: var(--space-8);
-  flex-wrap: wrap;
-}
-
-.cohort-hero__eyebrow {
+.cohorts-eyebrow {
   font-family: var(--font-body);
   font-size: 11px;
   font-weight: 700;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--primary);
-  margin-bottom: var(--space-2);
+  color: var(--ink-4);
+  margin-bottom: 8px;
 }
 
-.cohort-hero__title {
+.cohorts-title {
   font-family: var(--font-display);
-  font-weight: 900;
-  font-size: clamp(48px, 6vw, 80px);
-  letter-spacing: -0.05em;
-  line-height: 0.95;
-  color: #fff;
-  margin-bottom: var(--space-3);
+  font-size: clamp(32px, 4vw, 56px);
+  font-weight: 800;
+  color: var(--ink);
+  letter-spacing: -0.03em;
+  line-height: 1;
+  margin: 0 0 8px;
 }
 
-.cohort-hero__sub {
+.cohorts-subtitle {
   font-family: var(--font-body);
-  font-size: var(--text-body);
-  color: rgba(255, 255, 255, 0.5);
-  max-width: 480px;
+  font-size: 14px;
+  color: var(--ink-4);
+  margin: 0 0 32px;
 }
 
-.cohort-hero__stats {
+/* ------------------------------------------------------------
+   KPI strip
+   ------------------------------------------------------------ */
+.cohorts-kpi-strip {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+
+.cohort-kpi-tile {
+  background: var(--surface-2);
+  border-radius: 10px;
+  padding: 20px 24px;
+}
+
+.cohort-kpi-tile__label {
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+  margin-bottom: 8px;
+}
+
+.cohort-kpi-tile__value {
+  font-family: var(--font-display);
+  font-size: clamp(22px, 2.5vw, 40px);
+  font-weight: 800;
+  color: var(--ink);
+  line-height: 1;
+}
+
+/* ------------------------------------------------------------
+   Liquid-glass "Top Cohort" highlight card (≤1 per page)
+   ------------------------------------------------------------ */
+.cohort-top-card {
+  position: relative;
+  background: var(--glass-bg-warm);
+  backdrop-filter: blur(24px) saturate(1.4);
+  -webkit-backdrop-filter: blur(24px) saturate(1.4);
+  border: var(--glass-border-warm);
+  border-radius: 10px;
+  padding: 24px;
+  box-shadow: var(--shadow-3);
+  margin: 0 40px 0;
   display: flex;
-  gap: var(--space-6);
-  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 24px;
+  overflow: hidden;
 }
 
-.hero-stat {
+/* Subtle warm gradient stripe at top */
+.cohort-top-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--brand-red) 0%, var(--champagne) 100%);
+  border-radius: 10px 10px 0 0;
+}
+
+.cohort-top-card__badge {
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--brand-red);
+  background: var(--brand-red-tint);
+  border: 1px solid rgba(193, 18, 31, 0.2);
+  border-radius: 50vh;
+  padding: 3px 10px;
+  display: inline-block;
+  margin-bottom: 8px;
+  flex-shrink: 0;
+}
+
+.cohort-top-card__body {
+  flex: 1;
+  min-width: 0;
+}
+
+.cohort-top-card__label {
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--brand-red);
+  margin-bottom: 4px;
+}
+
+.cohort-top-card__name {
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--ink);
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  margin-bottom: 8px;
+}
+
+.cohort-top-card__meta {
+  font-family: var(--font-body);
+  font-size: 12px;
+  color: var(--ink-4);
+}
+
+.cohort-top-card__stats {
+  display: flex;
+  gap: 24px;
+  flex-shrink: 0;
+}
+
+.cohort-top-card__stat {
   text-align: right;
 }
 
-.hero-stat__value {
+/* Member count — Darky numeral, 40px 800 */
+.cohort-top-card__stat-value {
   font-family: var(--font-display);
-  font-weight: 200;
-  font-size: clamp(36px, 4vw, 56px);
-  letter-spacing: -0.05em;
-  color: #fff;
+  font-size: 40px;
+  font-weight: 800;
+  color: var(--ink);
   line-height: 1;
 }
 
-.hero-stat__label {
-  font-family: var(--font-body);
-  font-size: 11px;
+/* Performance metric — Darky 24px 700 */
+.cohort-top-card__stat-perf {
+  font-family: var(--font-display);
+  font-size: 24px;
   font-weight: 700;
-  letter-spacing: 0.08em;
+  color: var(--graphite);
+  line-height: 1;
+}
+
+.cohort-top-card__stat-label {
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.07em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.45);
+  color: var(--ink-4);
   margin-top: 4px;
 }
 
 /* ------------------------------------------------------------
-   Toolbar (filters + create)
+   Toolbar (filter tabs + create button)
    ------------------------------------------------------------ */
-.cohort-toolbar {
-  background: var(--surface-elevated);
-  border-bottom: 1px solid var(--line);
-  padding: var(--space-3) var(--space-5);
-  position: sticky;
-  top: 56px;
-  z-index: 80;
-}
-
-.cohort-toolbar__inner {
-  max-width: var(--content-width);
-  margin: 0 auto;
+.cohorts-toolbar {
+  padding: 12px 40px;
+  background: var(--surface-2);
+  border-top: 1px solid var(--hairline);
+  border-bottom: 1px solid var(--hairline);
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  gap: var(--space-3);
-  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 24px;
 }
 
-.cohort-filter-group {
+.cohorts-filter-group {
   display: flex;
-  gap: var(--space-2);
   flex-wrap: wrap;
+  gap: 6px;
   flex: 1;
+  align-items: center;
 }
 
-.cohort-filter-chip {
-  font-family: var(--font-body);
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  padding: 6px 14px;
-  border: 1.5px solid var(--line);
-  background: transparent;
-  color: var(--graphite);
-  cursor: pointer;
-  border-radius: 50vh; /* pill — Design.md exception for filter chips */
-  transition:
-    background var(--t-base),
-    color var(--t-base),
-    border-color var(--t-base);
-  white-space: nowrap;
-}
-.cohort-filter-chip:hover {
-  border-color: var(--dark);
-  color: var(--dark);
-}
-.cohort-filter-chip.active {
-  background: var(--dark);
-  border-color: var(--dark);
-  color: #fff;
-}
-
-.cohort-create-btn {
-  font-family: var(--font-body);
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  padding: 8px 20px;
-  background: var(--primary);
-  color: #fff;
-  border: none;
-  cursor: pointer;
-  border-radius: 0;
-  box-shadow: var(--btn-shadow);
-  transition:
-    box-shadow var(--t-slow),
-    transform var(--t-base);
-  white-space: nowrap;
+.cohorts-filter-divider {
+  width: 1px;
+  height: 20px;
+  background: var(--hairline-2);
+  margin: 0 4px;
   flex-shrink: 0;
 }
-.cohort-create-btn:hover {
-  box-shadow: var(--btn-shadow-hover);
-}
-.cohort-create-btn:active {
-  transform: scale(0.97);
+
+/* Filter tabs use .btn-pill from globals.css — override size for toolbar density */
+.cohorts-toolbar .btn-pill {
+  padding: 5px 12px;
+  font-size: 12px;
 }
 
 /* ------------------------------------------------------------
-   Cohort Grid
+   Cohort grid
    ------------------------------------------------------------ */
-.cohort-grid-section {
-  padding: var(--space-6) var(--space-5);
+.cohorts-grid-section {
+  padding: 24px 40px;
 }
 
-.cohort-grid-inner {
-  max-width: var(--content-width);
-  margin: 0 auto;
-}
-
-.cohort-grid-meta {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: var(--space-4);
-}
-
-.cohort-grid-count {
+.cohorts-grid-count {
   font-family: var(--font-body);
-  font-size: var(--text-caption);
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--graphite);
+  font-size: 12px;
+  color: var(--ink-4);
+  margin-bottom: 16px;
 }
 
-.cohort-grid {
+.cohorts-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-  gap: var(--space-3);
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+.cohorts-empty {
+  font-family: var(--font-body);
+  color: var(--ink-4);
+  font-size: 14px;
+  text-align: center;
+  padding: 48px 0;
 }
 
 /* ------------------------------------------------------------
-   Cohort Card
+   Cohort card  (v11: 10px radius, surface-2, 24px pad, hover shift)
    ------------------------------------------------------------ */
-.cohort-card {
-  background: var(--surface-elevated);
-  border: 1px solid var(--line);
-  padding: var(--space-4);
-  cursor: pointer;
+.cohort-card-v11 {
+  display: flex;
+  flex-direction: column;
+  padding: 24px;
+  background: var(--surface-2);
+  border-radius: 10px;
   text-decoration: none;
   color: inherit;
-  display: block;
-  transition:
-    border-color var(--t-base),
-    transform var(--t-slow),
-    box-shadow var(--t-slow);
+  transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease;
+  gap: 16px;
   position: relative;
   overflow: hidden;
 }
-.cohort-card:hover {
-  border-color: var(--dark);
-  transform: translateY(-4px);
-  box-shadow: 4px 4px 0 var(--dark);
+
+/* Bottom-right hover shift — Design.md signature */
+.cohort-card-v11:hover {
+  transform: translate(2px, 2px);
+  box-shadow: var(--shadow-2);
+}
+.cohort-card-v11:active {
+  transform: translate(3px, 3px) scale(0.98);
+}
+.cohort-card-v11:focus-visible {
+  outline: 4px solid var(--brand-red-focus);
+  outline-offset: 2px;
 }
 
-.cohort-card__top {
+.cohort-card-v11__header {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  gap: var(--space-2);
-  margin-bottom: var(--space-3);
+  gap: 8px;
 }
 
-.cohort-card__name {
+/* Card name — Darky 800 product heading */
+.cohort-card-v11__name {
   font-family: var(--font-display);
-  font-weight: 700;
-  font-size: 20px;
-  letter-spacing: -0.03em;
-  line-height: 1.15;
-  color: var(--dark);
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--ink);
+  letter-spacing: -0.02em;
+  line-height: 1.2;
   flex: 1;
 }
 
-.cohort-badge {
+/* Type badge — 12px mono uppercase pill */
+.cohort-type-badge {
   font-family: var(--font-body);
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 700;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
-  padding: 3px 8px;
-  border-radius: 0;
+  padding: 3px 10px;
+  border-radius: 50vh;
+  border: 1px solid transparent;
   flex-shrink: 0;
+  white-space: nowrap;
 }
-.cohort-badge--merchant {
-  background: rgba(0, 48, 73, 0.08);
-  color: var(--dark);
-  border: 1px solid rgba(0, 48, 73, 0.18);
+.cohort-type-badge--merchant {
+  background: rgba(191, 161, 112, 0.14);
+  color: #8a6a2a;
+  border-color: rgba(191, 161, 112, 0.3);
 }
-.cohort-badge--creator {
-  background: rgba(102, 155, 188, 0.12);
-  color: var(--tertiary);
-  border: 1px solid rgba(102, 155, 188, 0.3);
+.cohort-type-badge--creator {
+  background: var(--accent-blue-tint);
+  color: var(--accent-blue);
+  border-color: rgba(0, 133, 255, 0.2);
 }
 
-.cohort-card__meta {
-  font-family: var(--font-body);
-  font-size: var(--text-caption);
-  color: var(--text-muted);
-  letter-spacing: 0.02em;
-  margin-bottom: var(--space-4);
+/* Meta row */
+.cohort-card-v11__meta {
   display: flex;
-  gap: var(--space-3);
   flex-wrap: wrap;
-}
-
-.cohort-card__meta-item {
-  display: flex;
+  gap: 6px;
   align-items: center;
-  gap: 4px;
+  font-family: var(--font-body);
+  font-size: 11px;
+  color: var(--ink-4);
 }
 
-/* Status dot */
-.status-dot {
+/* Status badge */
+.cohort-status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+}
+.cohort-status-badge__dot {
   width: 6px;
   height: 6px;
   border-radius: 50%;
+  background: currentColor;
   flex-shrink: 0;
 }
-.status-dot--active {
-  background: #22c55e;
-  box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.25);
+.cohort-status-badge--active {
+  background: rgba(0, 133, 255, 0.08);
+  color: var(--accent-blue);
 }
-.status-dot--completed {
-  background: var(--graphite);
+.cohort-status-badge--completed {
+  background: var(--surface-3);
+  color: var(--ink-4);
 }
-.status-dot--paused {
-  background: var(--champagne);
+.cohort-status-badge--paused {
+  background: rgba(191, 161, 112, 0.12);
+  color: var(--graphite);
 }
 
-/* Metrics row */
-.cohort-card__metrics {
+/* ── Metrics row — 4-col grid of KPI stats ── */
+.cohort-card-v11__metrics {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: var(--space-2);
-  margin-bottom: var(--space-4);
-  padding: var(--space-3) 0;
-  border-top: 1px solid var(--line);
-  border-bottom: 1px solid var(--line);
+  gap: 8px;
+  padding-top: 16px;
+  border-top: 1px solid var(--hairline);
 }
 
-.cohort-metric {
-  text-align: center;
-}
-
-.cohort-metric__value {
+/* Member count — Darky numeral 40px 800 */
+.cohort-card-v11__member-count {
   font-family: var(--font-display);
-  font-weight: 700;
-  font-size: 18px;
-  letter-spacing: -0.03em;
-  color: var(--dark);
+  font-size: 40px;
+  font-weight: 800;
+  color: var(--ink);
   line-height: 1;
+  margin-bottom: 2px;
 }
 
-.cohort-metric__label {
+/* Performance metric — Darky 24px 700 */
+.cohort-card-v11__perf {
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--graphite);
+  line-height: 1;
+  margin-bottom: 2px;
+}
+
+/* Regular small metric — Darky 20px 800 */
+.cohort-metric-value {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--ink);
+  line-height: 1;
+  margin-bottom: 2px;
+}
+
+.cohort-metric-label {
   font-family: var(--font-body);
   font-size: 10px;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: var(--text-muted);
-  margin-top: 4px;
-}
-
-/* Mini retention curve */
-.cohort-chart {
-  height: 48px;
-  position: relative;
-}
-
-.cohort-chart svg {
-  width: 100%;
-  height: 100%;
-  overflow: visible;
+  color: var(--ink-4);
 }
 
 /* View link */
-.cohort-card__cta {
-  position: absolute;
-  bottom: var(--space-3);
-  right: var(--space-3);
+.cohort-card-v11__cta {
   font-family: var(--font-body);
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--primary);
-  opacity: 0;
-  transition: opacity var(--t-base);
-}
-.cohort-card:hover .cohort-card__cta {
-  opacity: 1;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--accent-blue);
+  margin-top: auto;
+  padding-top: 8px;
 }
 
 /* ------------------------------------------------------------
@@ -421,63 +441,65 @@
 .modal-backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(0, 48, 73, 0.55);
+  background: rgba(0, 0, 0, 0.4);
   z-index: 200;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: var(--space-4);
   animation: fadeIn 200ms ease forwards;
 }
 
 .modal-box {
-  background: var(--surface-elevated);
-  border: 1.5px solid var(--line-strong);
-  width: 100%;
-  max-width: 520px;
-  padding: var(--space-6);
-  animation: modalSlideUp 250ms ease forwards;
-  box-shadow: 8px 8px 0 rgba(0, 48, 73, 0.15);
+  background: var(--surface-2);
+  border-radius: 10px;
+  padding: 32px;
+  width: min(480px, 90vw);
+  max-height: 90vh;
+  overflow-y: auto;
   position: relative;
-}
-
-.modal-box__title {
-  font-family: var(--font-display);
-  font-weight: 800;
-  font-size: 28px;
-  letter-spacing: -0.04em;
-  color: var(--dark);
-  margin-bottom: var(--space-1);
-}
-
-.modal-box__sub {
-  font-family: var(--font-body);
-  font-size: var(--text-small);
-  color: var(--text-muted);
-  margin-bottom: var(--space-5);
+  box-shadow: var(--shadow-3);
+  animation: modalSlideUp 240ms ease forwards;
 }
 
 .modal-close {
   position: absolute;
-  top: var(--space-4);
-  right: var(--space-4);
-  background: none;
-  border: none;
+  top: 16px;
+  right: 16px;
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--hairline);
+  border-radius: 8px;
+  background: var(--surface-3);
   cursor: pointer;
-  font-size: 20px;
-  color: var(--graphite);
-  line-height: 1;
-  padding: 4px;
-  transition: color var(--t-base);
+  font-size: 16px;
+  color: var(--ink-4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background var(--t-base), color var(--t-base);
 }
-.modal-close:hover {
-  color: var(--dark);
+.modal-close:hover { background: var(--mist); color: var(--ink); }
+
+.modal-title {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--ink);
+  margin: 0 0 6px;
+}
+
+.modal-subtitle {
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: var(--ink-4);
+  margin: 0 0 24px;
+  line-height: 1.5;
 }
 
 .modal-form {
   display: flex;
   flex-direction: column;
-  gap: var(--space-3);
+  gap: 16px;
 }
 
 .form-field {
@@ -490,547 +512,137 @@
   font-family: var(--font-body);
   font-size: 11px;
   font-weight: 700;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.07em;
   text-transform: uppercase;
-  color: var(--graphite);
+  color: var(--ink-4);
 }
 
 .form-input,
 .form-select {
-  font-family: var(--font-body);
-  font-size: var(--text-small);
-  color: var(--dark);
-  background: var(--surface);
-  border: 1.5px solid var(--line);
-  padding: 10px 14px;
-  border-radius: 0;
-  outline: none;
-  transition: border-color var(--t-base);
   width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--hairline);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 14px;
+  outline: none;
+  box-sizing: border-box;
+  transition: border-color var(--t-base), box-shadow var(--t-base);
 }
 .form-input:focus,
 .form-select:focus {
-  border-color: var(--dark);
+  border-color: var(--brand-red);
+  box-shadow: var(--shadow-focus);
 }
 
 .modal-actions {
   display: flex;
-  gap: var(--space-2);
-  justify-content: flex-end;
-  margin-top: var(--space-2);
-}
-
-.btn-secondary {
-  font-family: var(--font-body);
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  padding: 10px 20px;
-  background: transparent;
-  color: var(--graphite);
-  border: 1.5px solid var(--line);
-  cursor: pointer;
-  border-radius: 0;
-  transition:
-    border-color var(--t-base),
-    color var(--t-base);
-}
-.btn-secondary:hover {
-  border-color: var(--dark);
-  color: var(--dark);
-}
-
-.btn-primary {
-  font-family: var(--font-body);
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  padding: 10px 24px;
-  background: var(--primary);
-  color: #fff;
-  border: none;
-  cursor: pointer;
-  border-radius: 0;
-  box-shadow: var(--btn-shadow);
-  transition:
-    box-shadow var(--t-slow),
-    transform var(--t-base);
-}
-.btn-primary:hover {
-  box-shadow: var(--btn-shadow-hover);
-}
-.btn-primary:active {
-  transform: scale(0.97);
+  gap: 12px;
+  margin-top: 8px;
 }
 
 /* ------------------------------------------------------------
-   Detail Page
+   Shared classes also used by [id]/page.tsx
    ------------------------------------------------------------ */
-.cohort-detail {
-  max-width: var(--content-width);
-  margin: 0 auto;
-  padding: var(--space-6) var(--space-5);
-}
-
-/* Back link */
-.cohort-back {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
+.cohort-badge {
   font-family: var(--font-body);
-  font-size: var(--text-caption);
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--graphite);
-  text-decoration: none;
-  margin-bottom: var(--space-5);
-  transition: color var(--t-base);
-}
-.cohort-back:hover {
-  color: var(--dark);
-}
-.cohort-back::before {
-  content: "←";
-}
-
-/* Detail hero */
-.cohort-detail-hero {
-  background: var(--dark);
-  padding: var(--space-8) var(--space-6);
-  margin-bottom: var(--space-6);
-  border-left: 4px solid var(--primary);
-}
-
-.cohort-detail-hero__eyebrow {
-  font-family: var(--font-body);
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--primary);
-  margin-bottom: var(--space-2);
-}
-
-.cohort-detail-hero__title {
-  font-family: var(--font-display);
-  font-weight: 900;
-  font-size: clamp(36px, 5vw, 64px);
-  letter-spacing: -0.05em;
-  color: #fff;
-  margin-bottom: var(--space-2);
-  line-height: 1;
-}
-
-.cohort-detail-hero__sub {
-  font-family: var(--font-body);
-  font-size: var(--text-small);
-  color: rgba(255, 255, 255, 0.5);
-}
-
-.cohort-detail-hero__kpis {
-  display: flex;
-  gap: var(--space-6);
-  margin-top: var(--space-5);
-  padding-top: var(--space-5);
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-  flex-wrap: wrap;
-}
-
-.hero-kpi__value {
-  font-family: var(--font-display);
-  font-weight: 200;
-  font-size: 40px;
-  letter-spacing: -0.05em;
-  color: #fff;
-  line-height: 1;
-}
-
-.hero-kpi__label {
-  font-family: var(--font-body);
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.4);
-  margin-top: 4px;
-}
-
-/* Section title */
-.section-title {
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: 24px;
-  letter-spacing: -0.03em;
-  color: var(--dark);
-  margin-bottom: var(--space-4);
-  padding-bottom: var(--space-2);
-  border-bottom: 2px solid var(--line);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-/* Cards grid for detail sections */
-.detail-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: var(--space-4);
-  margin-bottom: var(--space-6);
-}
-
-@media (max-width: 768px) {
-  .detail-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
-.detail-card {
-  background: var(--surface-elevated);
-  border: 1px solid var(--line);
-  padding: var(--space-4);
-}
-
-/* ------------------------------------------------------------
-   Retention Heatmap Table
-   ------------------------------------------------------------ */
-.retention-section {
-  margin-bottom: var(--space-6);
-  overflow-x: auto;
-}
-
-.retention-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-family: var(--font-body);
-  font-size: var(--text-caption);
-}
-
-.retention-table th {
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--graphite);
-  padding: var(--space-2) var(--space-2);
-  border-bottom: 1.5px solid var(--line-strong);
-  text-align: center;
-  white-space: nowrap;
-}
-.retention-table th:first-child {
-  text-align: left;
-}
-
-.retention-table td {
-  padding: 10px var(--space-2);
-  text-align: center;
-  border-bottom: 1px solid var(--line);
-  font-variant-numeric: tabular-nums;
-  position: relative;
-  font-weight: 600;
-}
-.retention-table td:first-child {
-  text-align: left;
-  font-weight: 700;
-  color: var(--dark);
-  white-space: nowrap;
-  padding-right: var(--space-4);
-}
-
-/* Heatmap cell - color applied via inline style */
-.heat-cell {
-  border-radius: 0;
-  min-width: 56px;
-}
-
-/* ------------------------------------------------------------
-   Activation Funnel
-   ------------------------------------------------------------ */
-.funnel-section {
-  margin-bottom: var(--space-6);
-}
-
-.funnel-bars {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-2);
-}
-
-.funnel-step {
-  display: grid;
-  grid-template-columns: 180px 1fr 72px;
-  align-items: center;
-  gap: var(--space-3);
-}
-
-.funnel-step__label {
-  font-family: var(--font-body);
-  font-size: var(--text-small);
-  font-weight: 600;
-  color: var(--dark);
-  text-align: right;
-}
-
-.funnel-step__bar-wrap {
-  height: 32px;
-  background: var(--surface);
-  border: 1px solid var(--line);
-  position: relative;
-}
-
-.funnel-step__bar {
-  height: 100%;
-  transition: width 800ms ease-out;
-}
-
-.funnel-step__pct {
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: 18px;
-  letter-spacing: -0.03em;
-  color: var(--dark);
-}
-
-/* ------------------------------------------------------------
-   Member List
-   ------------------------------------------------------------ */
-.member-section {
-  margin-bottom: var(--space-6);
-}
-
-.member-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-family: var(--font-body);
-  font-size: var(--text-small);
-}
-
-.member-table th {
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--graphite);
-  padding: var(--space-2) var(--space-3);
-  border-bottom: 1.5px solid var(--line-strong);
-  text-align: left;
-  background: var(--surface);
-}
-
-.member-table td {
-  padding: 12px var(--space-3);
-  border-bottom: 1px solid var(--line);
-  vertical-align: middle;
-}
-
-.member-table tr:hover td {
-  background: rgba(0, 48, 73, 0.025);
-}
-
-.member-status-badge {
-  display: inline-block;
   font-size: 10px;
   font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  padding: 2px 8px;
-  border-radius: 0;
-}
-.member-status-badge--active {
-  background: rgba(34, 197, 94, 0.12);
-  color: #16a34a;
-  border: 1px solid rgba(34, 197, 94, 0.25);
-}
-.member-status-badge--churned {
-  background: rgba(193, 18, 31, 0.1);
-  color: var(--primary);
-  border: 1px solid rgba(193, 18, 31, 0.2);
-}
-.member-status-badge--paused {
-  background: var(--champagne-light);
-  color: #92650a;
-  border: 1px solid var(--champagne-border);
-}
-
-.member-tier {
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  padding: 2px 8px;
-  border-radius: 0;
-  background: rgba(0, 48, 73, 0.06);
-  color: var(--dark);
-  display: inline-block;
-}
-
-/* ------------------------------------------------------------
-   Experiment Comparison
-   ------------------------------------------------------------ */
-.compare-section {
-  margin-bottom: var(--space-6);
-}
-
-.compare-chart {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-3);
-}
-
-.compare-row {
-  display: grid;
-  grid-template-columns: 200px 1fr 80px;
-  align-items: center;
-  gap: var(--space-3);
-}
-
-.compare-row__name {
-  font-family: var(--font-body);
-  font-size: var(--text-small);
-  font-weight: 600;
-  color: var(--dark);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.compare-row__name.is-current {
-  color: var(--primary);
-}
-
-.compare-bar-wrap {
-  height: 28px;
-  background: var(--surface);
-  border: 1px solid var(--line);
-  position: relative;
-}
-
-.compare-bar {
-  height: 100%;
-  transition: width 800ms ease-out;
-}
-.compare-bar.is-current {
-  background: var(--primary);
-}
-.compare-bar.is-other {
-  background: rgba(0, 48, 73, 0.18);
-}
-
-.compare-row__val {
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: 16px;
-  letter-spacing: -0.02em;
-  color: var(--dark);
-  text-align: right;
-}
-
-/* Metric selector */
-.compare-metric-tabs {
-  display: flex;
-  gap: var(--space-2);
-  margin-bottom: var(--space-4);
-  flex-wrap: wrap;
-}
-
-.compare-tab {
-  font-family: var(--font-body);
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  padding: 6px 12px;
-  background: transparent;
-  border: 1.5px solid var(--line);
-  color: var(--graphite);
-  cursor: pointer;
-  border-radius: 0;
-  transition:
-    background var(--t-base),
-    color var(--t-base),
-    border-color var(--t-base);
-}
-.compare-tab:hover {
-  border-color: var(--dark);
-  color: var(--dark);
-}
-.compare-tab.active {
-  background: var(--dark);
-  border-color: var(--dark);
-  color: #fff;
-}
-
-/* ------------------------------------------------------------
-   Export button
-   ------------------------------------------------------------ */
-.export-btn {
-  font-family: var(--font-body);
-  font-size: 11px;
-  font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  padding: 8px 16px;
-  background: transparent;
-  color: var(--graphite);
-  border: 1.5px solid var(--line);
-  cursor: pointer;
-  border-radius: 0;
-  transition:
-    border-color var(--t-base),
-    color var(--t-base);
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
+  padding: 3px 8px;
+  border-radius: var(--r-sm);
 }
-.export-btn:hover {
-  border-color: var(--dark);
-  color: var(--dark);
+.cohort-badge--merchant {
+  background: rgba(0, 48, 73, 0.08);
+  color: var(--ink);
+  border: 1px solid rgba(0, 48, 73, 0.18);
+}
+.cohort-badge--creator {
+  background: var(--accent-blue-tint);
+  color: var(--accent-blue);
+  border: 1px solid rgba(0, 133, 255, 0.25);
+}
+
+/* Status dot for detail hero */
+.status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  display: inline-block;
+}
+.status-dot--active   { background: var(--accent-blue); box-shadow: 0 0 0 2px rgba(0,133,255,0.2); }
+.status-dot--completed { background: var(--graphite); }
+.status-dot--paused   { background: var(--champagne); }
+
+/* Experiment tags */
+.cohort-exp-tag {
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  padding: 3px 10px;
+  background: rgba(10, 10, 10, 0.06);
+  border: 1px solid var(--hairline-2);
+  border-radius: 50vh;
+  color: var(--graphite);
 }
 
 /* ------------------------------------------------------------
-   Keyframes (Design.md tokens)
+   Keyframe animations
    ------------------------------------------------------------ */
 @keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
+  from { opacity: 0; }
+  to   { opacity: 1; }
 }
 
 @keyframes modalSlideUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
 /* ------------------------------------------------------------
    Responsive
    ------------------------------------------------------------ */
 @media (max-width: 900px) {
-  .cohort-hero__inner {
+  .cohorts-header,
+  .cohorts-toolbar,
+  .cohorts-grid-section {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+
+  .cohort-top-card {
+    margin-left: 24px;
+    margin-right: 24px;
     flex-direction: column;
-    align-items: flex-start;
+    gap: 16px;
   }
-  .hero-stat {
-    text-align: left;
+
+  .cohort-top-card__stats {
+    flex-direction: row;
+    gap: 24px;
   }
-  .cohort-grid {
+
+  .cohorts-kpi-strip {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .cohorts-grid {
     grid-template-columns: 1fr;
   }
-  .funnel-step {
-    grid-template-columns: 1fr;
+
+  .cohort-card-v11__metrics {
+    grid-template-columns: repeat(2, 1fr);
   }
-  .funnel-step__label {
-    text-align: left;
-  }
-  .compare-row {
-    grid-template-columns: 1fr;
+}
+
+@media (max-width: 600px) {
+  .cohorts-kpi-strip {
+    grid-template-columns: 1fr 1fr;
   }
 }

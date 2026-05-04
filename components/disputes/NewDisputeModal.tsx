@@ -254,7 +254,7 @@ export function NewDisputeModal({
             {/* Description */}
             <div className="dispute-modal__field">
               <label htmlFor="dm-description">
-                Description <span style={{ color: "var(--primary)" }}>*</span>
+                Description <span style={{ color: "var(--brand-red)" }}>*</span>
               </label>
               <textarea
                 id="dm-description"

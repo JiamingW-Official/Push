@@ -40,14 +40,14 @@ export default function MerchantMap({ lat, lng, name }: Props) {
         )
         .addTo(map);
 
-      // Custom pin using brand color
+      // Custom pin using brand tokens (var() resolved in runtime DOM context)
       const pinIcon = L.default.divIcon({
         html: `<div style="
           width:14px;height:14px;
-          background:#c1121f;
-          border:3px solid #003049;
+          background:var(--brand-red);
+          border:3px solid var(--ink);
           border-radius:50%;
-          box-shadow:0 2px 8px rgba(0,48,73,0.3);
+          box-shadow:0 2px 8px rgba(0, 48, 73, 0.3);
         "></div>`,
         className: "",
         iconSize: [14, 14],

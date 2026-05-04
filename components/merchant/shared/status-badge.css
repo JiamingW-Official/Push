@@ -1,0 +1,117 @@
+/* StatusBadge — v11 spec aligned (2026-04-30)
+ *
+ * All colors sourced from the § 2 Closed Allowed-Color List:
+ *   - Brand Red (`--brand-red` / tints) ............ active / failed / error / unpaid
+ *   - Champagne (`--champagne-deep` / tints) ........ paused
+ *   - Surface-3 + Ink ladder ........................ draft / closed / resolved
+ *   - N2W Blue (`--accent-blue` / tints) ............ pending / online
+ *   - Success-dark (`--success-dark` + tint) ........ paid / success
+ *   - Warning (`--warning` + tint) .................. warning
+ *
+ * Min font size 12px (§ 3.1). Pill radius `--r-pill`.
+ * Static badge — no hover shift per § 16 (text-only/static badge exclusion).
+ */
+.ms-status-badge {
+  align-items: center;
+  border: 1px solid;
+  border-radius: var(--r-pill);
+  display: inline-flex;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  gap: 4px;
+  letter-spacing: 0.04em;
+  padding: 4px 12px;
+  text-transform: uppercase;
+}
+
+.ms-status-badge::before {
+  background: currentColor;
+  border-radius: var(--r-full);
+  content: "";
+  display: block;
+  height: 8px;
+  width: 8px;
+}
+
+/* ---- Lifecycle ---- */
+
+.ms-status-badge--active {
+  background: var(--brand-red-tint);
+  border-color: var(--brand-red-focus);
+  color: var(--brand-red);
+}
+
+.ms-status-badge--paused {
+  background: var(--champagne-tint);
+  border-color: var(--champagne-border);
+  color: var(--champagne-deep);
+}
+
+.ms-status-badge--draft {
+  background: var(--surface-3);
+  border-color: var(--hairline);
+  color: var(--ink-4);
+}
+
+.ms-status-badge--closed {
+  background: var(--surface-3);
+  border-color: var(--hairline);
+  color: var(--ink-5);
+}
+
+.ms-status-badge--pending {
+  background: var(--accent-blue-tint);
+  border-color: var(--accent-blue);
+  color: var(--accent-blue);
+}
+
+.ms-status-badge--resolved {
+  background: var(--surface-3);
+  border-color: var(--hairline-2);
+  color: var(--ink);
+}
+
+/* ---- Payment ---- */
+
+.ms-status-badge--paid,
+.ms-status-badge--success {
+  background: rgba(31, 122, 57, 0.10);
+  border-color: var(--success-dark);
+  color: var(--success-dark);
+}
+
+.ms-status-badge--unpaid {
+  background: var(--champagne-tint);
+  border-color: var(--champagne-border);
+  color: var(--champagne-deep);
+}
+
+.ms-status-badge--failed,
+.ms-status-badge--error {
+  background: var(--brand-red-tint);
+  border-color: var(--brand-red-focus);
+  color: var(--brand-red);
+}
+
+/* ---- Connectivity ---- */
+
+.ms-status-badge--online {
+  background: rgba(31, 122, 57, 0.10);
+  border-color: var(--success-dark);
+  color: var(--success-dark);
+}
+
+.ms-status-badge--offline {
+  background: var(--surface-3);
+  border-color: var(--hairline);
+  color: var(--ink-4);
+}
+
+/* ---- Generic ---- */
+
+.ms-status-badge--warning {
+  background: rgba(255, 149, 0, 0.12);
+  border-color: var(--warning);
+  color: var(--warning);
+}

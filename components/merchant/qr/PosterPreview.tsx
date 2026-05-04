@@ -1,6 +1,7 @@
 "use client";
 
 import type { PosterType } from "@/lib/attribution/mock-qr-codes-extended";
+import { BRAND } from "@/lib/constants/brand";
 
 // TODO: use server-side QR generation
 function QRImage({ qrId, size }: { qrId: string; size: number }) {
@@ -81,13 +82,13 @@ function A4Layout({
       style={{
         width: "100%",
         aspectRatio: "210/297",
-        background: "#f5f2ec",
+        background: "var(--surface)",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "space-between",
         padding: "40px 32px 28px",
-        border: "1px solid rgba(0,48,73,0.12)",
+        border: "1px solid rgba(10,10,10,0.12)",
         boxSizing: "border-box",
       }}
     >
@@ -95,11 +96,11 @@ function A4Layout({
       <div style={{ textAlign: "center" }}>
         <div
           style={{
-            fontFamily: "var(--font-display,'Darky',sans-serif)",
+            fontFamily: "var(--font-display)",
             fontWeight: 900,
             fontSize: "clamp(22px,6vw,40px)",
             letterSpacing: "-0.04em",
-            color: "#003049",
+            color: "var(--ink)",
             lineHeight: 1.05,
             marginBottom: 8,
           }}
@@ -111,9 +112,9 @@ function A4Layout({
       {/* QR centered */}
       <div
         style={{
-          background: "#ffffff",
+          background: "var(--surface-2)",
           padding: 16,
-          border: "1px solid rgba(0,48,73,0.12)",
+          border: "1px solid rgba(10,10,10,0.12)",
         }}
       >
         {qrId ? (
@@ -126,9 +127,9 @@ function A4Layout({
       {/* Sub text */}
       <div
         style={{
-          fontFamily: "var(--font-body,'CSGenioMono',monospace)",
+          fontFamily: "var(--font-body)",
           fontSize: 11,
-          color: "rgba(0,48,73,0.6)",
+          color: "rgba(10,10,10,0.6)",
           textAlign: "center",
           letterSpacing: "0.04em",
           lineHeight: 1.5,
@@ -144,7 +145,7 @@ function A4Layout({
           display: "flex",
           alignItems: "center",
           gap: 6,
-          borderTop: "1px solid rgba(0,48,73,0.1)",
+          borderTop: "1px solid rgba(10,10,10,0.1)",
           paddingTop: 12,
           width: "100%",
           justifyContent: "center",
@@ -152,26 +153,27 @@ function A4Layout({
       >
         <span
           style={{
-            fontFamily: "var(--font-display,'Darky',sans-serif)",
+            fontFamily: "var(--font-display)",
             fontWeight: 900,
             fontStyle: "italic",
             fontSize: 18,
-            color: "#003049",
+            color: "var(--ink)",
             letterSpacing: "-0.04em",
           }}
         >
-          Push<span style={{ color: "#c1121f" }}>.</span>
+          {BRAND.name}
+          <span style={{ color: "var(--brand-red)" }}>.</span>
         </span>
         <span
           style={{
-            fontFamily: "var(--font-body,'CSGenioMono',monospace)",
+            fontFamily: "var(--font-body)",
             fontSize: 9,
-            color: "rgba(0,48,73,0.45)",
+            color: "rgba(10,10,10,0.45)",
             letterSpacing: "0.06em",
             textTransform: "uppercase",
           }}
         >
-          Creator Marketing
+          {BRAND.posterTagline}
         </span>
       </div>
     </div>
@@ -189,23 +191,23 @@ function TableTentLayout({
       style={{
         width: "100%",
         aspectRatio: "4/6",
-        background: "#003049",
+        background: "var(--ink)",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
         padding: "24px 20px",
         gap: 16,
-        border: "1px solid rgba(0,48,73,0.12)",
+        border: "1px solid rgba(10,10,10,0.12)",
         boxSizing: "border-box",
       }}
     >
       <div
         style={{
-          fontFamily: "var(--font-display,'Darky',sans-serif)",
+          fontFamily: "var(--font-display)",
           fontWeight: 900,
           fontSize: "clamp(16px,4vw,28px)",
-          color: "#f5f2ec",
+          color: "var(--surface)",
           textAlign: "center",
           letterSpacing: "-0.04em",
           lineHeight: 1.05,
@@ -213,7 +215,7 @@ function TableTentLayout({
       >
         {heroMessage}
       </div>
-      <div style={{ background: "#ffffff", padding: 10 }}>
+      <div style={{ background: "var(--surface-2)", padding: 10 }}>
         {qrId ? (
           <QRImage qrId={qrId} size={120} />
         ) : (
@@ -222,7 +224,7 @@ function TableTentLayout({
       </div>
       <div
         style={{
-          fontFamily: "var(--font-body,'CSGenioMono',monospace)",
+          fontFamily: "var(--font-body)",
           fontSize: 9,
           color: "rgba(245,242,236,0.6)",
           textAlign: "center",
@@ -233,15 +235,16 @@ function TableTentLayout({
       </div>
       <div
         style={{
-          fontFamily: "var(--font-display,'Darky',sans-serif)",
+          fontFamily: "var(--font-display)",
           fontWeight: 900,
           fontStyle: "italic",
           fontSize: 14,
-          color: "#f5f2ec",
+          color: "var(--surface)",
           letterSpacing: "-0.04em",
         }}
       >
-        Push<span style={{ color: "#c1121f" }}>.</span>
+        {BRAND.name}
+        <span style={{ color: "var(--brand-red)" }}>.</span>
       </div>
     </div>
   );
@@ -258,23 +261,23 @@ function WindowStickerLayout({
       style={{
         width: "100%",
         aspectRatio: "1/1",
-        background: "#ffffff",
+        background: "var(--surface-2)",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
         padding: 24,
         gap: 12,
-        border: "2px solid #003049",
+        border: "2px solid var(--ink)",
         boxSizing: "border-box",
       }}
     >
       <div
         style={{
-          fontFamily: "var(--font-display,'Darky',sans-serif)",
+          fontFamily: "var(--font-display)",
           fontWeight: 900,
           fontSize: "clamp(14px,3vw,22px)",
-          color: "#003049",
+          color: "var(--ink)",
           textAlign: "center",
           letterSpacing: "-0.04em",
           lineHeight: 1.05,
@@ -284,9 +287,9 @@ function WindowStickerLayout({
       </div>
       <div
         style={{
-          background: "#f5f2ec",
+          background: "var(--surface)",
           padding: 12,
-          border: "1px solid rgba(0,48,73,0.15)",
+          border: "1px solid rgba(10,10,10,0.15)",
         }}
       >
         {qrId ? (
@@ -297,9 +300,9 @@ function WindowStickerLayout({
       </div>
       <div
         style={{
-          fontFamily: "var(--font-body,'CSGenioMono',monospace)",
+          fontFamily: "var(--font-body)",
           fontSize: 9,
-          color: "rgba(0,48,73,0.55)",
+          color: "rgba(10,10,10,0.55)",
           textAlign: "center",
           letterSpacing: "0.05em",
         }}
@@ -308,15 +311,16 @@ function WindowStickerLayout({
       </div>
       <div
         style={{
-          fontFamily: "var(--font-display,'Darky',sans-serif)",
+          fontFamily: "var(--font-display)",
           fontWeight: 900,
           fontStyle: "italic",
           fontSize: 13,
-          color: "#003049",
+          color: "var(--ink)",
           letterSpacing: "-0.04em",
         }}
       >
-        Push<span style={{ color: "#c1121f" }}>.</span>
+        {BRAND.name}
+        <span style={{ color: "var(--brand-red)" }}>.</span>
       </div>
     </div>
   );
@@ -329,24 +333,24 @@ function CashRegisterLayout({ qrId }: { qrId?: string }) {
       style={{
         width: "100%",
         aspectRatio: "1/1",
-        background: "#ffffff",
+        background: "var(--surface-2)",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
         padding: 16,
         gap: 10,
-        border: "1px solid rgba(0,48,73,0.2)",
+        border: "1px solid rgba(10,10,10,0.2)",
         boxSizing: "border-box",
       }}
     >
       {qrId ? <QRImage qrId={qrId} size={120} /> : <QRPlaceholder size={120} />}
       <div
         style={{
-          fontFamily: "var(--font-body,'CSGenioMono',monospace)",
+          fontFamily: "var(--font-body)",
           fontSize: 10,
           fontWeight: 700,
-          color: "#003049",
+          color: "var(--ink)",
           letterSpacing: "0.08em",
           textTransform: "uppercase",
         }}

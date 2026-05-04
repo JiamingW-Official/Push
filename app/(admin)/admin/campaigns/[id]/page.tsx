@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import "../campaigns.css";
+import "./campaign-detail.css";
 import {
   getAdminCampaignById,
   ADMIN_CAMPAIGN_STATUS_LABELS,
@@ -18,29 +19,27 @@ import { TIER_LABELS, type CreatorTier } from "@/lib/demo-data";
 // ---------------------------------------------------------------------------
 
 function StatusBadge({ status }: { status: AdminCampaignStatus }) {
+  // v11 token colors — maps to cd-status-badge--{status} CSS class
   return (
-    <span className={`adm-badge adm-badge--${status}`}>
+    <span className={`cd-status-badge cd-status-badge--${status}`}>
       {ADMIN_CAMPAIGN_STATUS_LABELS[status]}
     </span>
   );
 }
 
 function TierBadge({ tier }: { tier: CreatorTier }) {
-  return (
-    <span className={`adm-tier adm-tier--${tier}`}>{TIER_LABELS[tier]}</span>
-  );
+  return <span className="cd-tier-badge">{TIER_LABELS[tier]}</span>;
 }
 
 function CheckIcon({ passed }: { passed: boolean }) {
   if (passed) {
     return (
       <svg
-        className="adm-check__icon adm-check__icon--pass"
-        width="20"
-        height="20"
+        width="16"
+        height="16"
         viewBox="0 0 20 20"
         fill="none"
-        stroke="currentColor"
+        stroke="var(--accent-blue)"
         strokeWidth="2"
         strokeLinecap="round"
       >
@@ -51,12 +50,11 @@ function CheckIcon({ passed }: { passed: boolean }) {
   }
   return (
     <svg
-      className="adm-check__icon adm-check__icon--fail"
-      width="20"
-      height="20"
+      width="16"
+      height="16"
       viewBox="0 0 20 20"
       fill="none"
-      stroke="currentColor"
+      stroke="var(--brand-red)"
       strokeWidth="2"
       strokeLinecap="round"
     >
@@ -241,36 +239,33 @@ export default function AdminCampaignDetailPage() {
 
   if (loading) {
     return (
-      <div className="adm-shell">
-        <nav className="adm-nav">
-          <Link href="/" className="adm-nav__logo">
-            Push<span>.</span>
-          </Link>
-          <span className="adm-nav__badge">Admin</span>
-        </nav>
-        <div className="adm-detail-body">
-          <div className="skeleton" style={{ height: 200, marginTop: 80 }} />
-        </div>
+      <div className="cd-page">
+        <div className="cd-skeleton" style={{ height: 200, marginTop: 80 }} />
       </div>
     );
   }
 
   if (!campaign) {
     return (
-      <div className="adm-shell">
-        <nav className="adm-nav">
-          <Link href="/" className="adm-nav__logo">
-            Push<span>.</span>
-          </Link>
-          <span className="adm-nav__badge">Admin</span>
-        </nav>
-        <div className="adm-detail-body">
-          <Link href="/admin/campaigns" className="adm-back">
-            ← All Campaigns
-          </Link>
-          <div className="adm-empty" style={{ marginTop: 40 }}>
-            <div className="adm-empty__title">Campaign not found</div>
-            <div className="adm-empty__sub">No campaign matches ID: {id}</div>
+      <div className="cd-page">
+        <Link href="/admin/campaigns" className="cd-back">
+          ← All Campaigns
+        </Link>
+        <div
+          style={{ marginTop: 40, textAlign: "center", padding: "48px 20px" }}
+        >
+          <div
+            style={{
+              fontFamily: "var(--font-display)",
+              fontSize: 20,
+              fontWeight: 700,
+              color: "var(--ink)",
+            }}
+          >
+            Campaign not found
+          </div>
+          <div className="cd-empty" style={{ marginTop: 4 }}>
+            No campaign matches ID: {id}
           </div>
         </div>
       </div>
@@ -291,609 +286,529 @@ export default function AdminCampaignDetailPage() {
   // Render
   // ---------------------------------------------------------------------------
 
+  // Budget remaining % — triggers danger color below 20%
+  const budgetRemaining = campaign.budget_cap - campaign.spend_total;
+  const budgetRemainingPct =
+    campaign.budget_cap > 0
+      ? Math.round((budgetRemaining / campaign.budget_cap) * 100)
+      : 100;
+
   return (
-    <div className="adm-shell">
-      {/* Nav */}
-      <nav className="adm-nav">
-        <Link href="/" className="adm-nav__logo">
-          Push<span>.</span>
-        </Link>
-        <span className="adm-nav__badge">Admin</span>
-        <div className="adm-nav__spacer" />
-        <Link href="/admin/campaigns" className="adm-nav__link">
-          Campaigns
-        </Link>
-      </nav>
+    <div className="cd-page">
+      {/* Back link */}
+      <Link href="/admin/campaigns" className="cd-back">
+        ← All Campaigns
+      </Link>
 
-      <div className="adm-detail-body">
-        {/* Back link */}
-        <Link href="/admin/campaigns" className="adm-back">
-          ← All Campaigns
-        </Link>
+      {/* ── Campaign Header ─────────────────────────────────────── */}
+      <header className="cd-header">
+        {/* v11 product eyebrow: parenthetical mono */}
+        <p className="cd-eyebrow">(CAMPAIGN·REVIEW)</p>
 
-        {/* Detail Hero */}
-        <div className="adm-detail-hero">
-          <div className="adm-detail-hero__meta">
-            <StatusBadge status={campaign.admin_status} />
-            <TierBadge tier={campaign.tier_required} />
-            {campaign.flags.length > 0 && (
-              <span
-                style={{
-                  fontSize: 11,
-                  fontWeight: 700,
-                  letterSpacing: "0.07em",
-                  textTransform: "uppercase",
-                  color: "var(--primary)",
-                }}
-              >
-                {campaign.flags.length} flag
-                {campaign.flags.length !== 1 ? "s" : ""}
-              </span>
-            )}
+        {/* Badge row */}
+        <div className="cd-header__meta">
+          <StatusBadge status={campaign.admin_status} />
+          <TierBadge tier={campaign.tier_required} />
+          {campaign.flags.length > 0 && (
+            <span className="cd-flag-chip">
+              {campaign.flags.length} flag
+              {campaign.flags.length !== 1 ? "s" : ""}
+            </span>
+          )}
+        </div>
+
+        {/* H1 — clamp(40px,5vw,72px) Darky 800 */}
+        <h1 className="cd-title">{campaign.title}</h1>
+        <p className="cd-merchant">
+          {campaign.business_name} — {campaign.business_address}
+        </p>
+      </header>
+
+      {/* ── KPI Strip — 4 tiles ─────────────────────────────────── */}
+      <div className="cd-kpi-strip">
+        <div className="cd-kpi-tile">
+          <div className="cd-kpi-tile__label">Budget Cap</div>
+          <div className="cd-kpi-tile__num">${campaign.budget_cap}</div>
+        </div>
+        <div className="cd-kpi-tile">
+          <div className="cd-kpi-tile__label">Spent</div>
+          <div className="cd-kpi-tile__num">${campaign.spend_total}</div>
+          <div className="cd-kpi-tile__sub">{spendPct}% of cap</div>
+        </div>
+        <div className="cd-kpi-tile">
+          <div className="cd-kpi-tile__label">Creators</div>
+          <div className="cd-kpi-tile__num">{campaign.applicants.length}</div>
+          <div className="cd-kpi-tile__sub">
+            {campaign.spots_remaining} spots left
           </div>
-          <h1 className="adm-detail-hero__title">{campaign.title}</h1>
-          <div className="adm-detail-hero__merchant">
-            {campaign.business_name} — {campaign.business_address}
+        </div>
+        <div className="cd-kpi-tile">
+          <div className="cd-kpi-tile__label">Redemptions</div>
+          <div className="cd-kpi-tile__num">
+            {campaign.verified_visits.length}
+          </div>
+          <div
+            className={`cd-kpi-tile__num${budgetRemainingPct < 20 ? " cd-kpi-tile__num--danger" : ""}`}
+            style={{
+              fontSize: 14,
+              fontFamily: "var(--font-body)",
+              fontWeight: 600,
+              marginTop: 4,
+            }}
+          >
+            ${budgetRemaining} remaining
+          </div>
+        </div>
+      </div>
+
+      {/* ── Two-column grid: 4+8 ────────────────────────────────── */}
+      <div className="cd-grid">
+        {/* ── LEFT: campaign meta + review summary ── */}
+        <div className="cd-col-left">
+          {/* Campaign Spec */}
+          <div className="cd-card">
+            <h2 className="cd-card__title">Campaign Spec</h2>
+            <div className="cd-spec-grid">
+              <div className="cd-spec-item cd-spec-item--full">
+                <div className="cd-spec-label">Description</div>
+                <div className="cd-spec-value cd-spec-value--muted">
+                  {campaign.description}
+                </div>
+              </div>
+              {[
+                { label: "Category", val: campaign.category },
+                {
+                  label: "Payout",
+                  val:
+                    campaign.payout === 0
+                      ? "Product / Trade"
+                      : `$${campaign.payout}`,
+                },
+                {
+                  label: "Spots",
+                  val: `${campaign.spots_remaining} / ${campaign.spots_total}`,
+                },
+                { label: "Deadline", val: formatDate(campaign.deadline) },
+                {
+                  label: "Difficulty",
+                  val: `${campaign.difficulty} (${campaign.difficulty_multiplier}x)`,
+                },
+                {
+                  label: "Commission",
+                  val: campaign.commission_enabled ? "Enabled" : "Disabled",
+                },
+                { label: "Created", val: formatDate(campaign.created_at) },
+              ].map(({ label, val }) => (
+                <div className="cd-spec-item" key={label}>
+                  <div className="cd-spec-label">{label}</div>
+                  <div className="cd-spec-value">{val}</div>
+                </div>
+              ))}
+              {campaign.requirements.length > 0 && (
+                <div className="cd-spec-item cd-spec-item--full">
+                  <div className="cd-spec-label">Requirements</div>
+                  <ul className="cd-req-list">
+                    {campaign.requirements.map((r, i) => (
+                      <li key={i}>{r}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Review Summary */}
+          <div className="cd-card">
+            <h2 className="cd-card__title">Review Summary</h2>
+            <div className="cd-summary-list">
+              <div>
+                <div className="cd-spec-label">Current Status</div>
+                <StatusBadge status={campaign.admin_status} />
+              </div>
+              {campaign.review_submitted_at && (
+                <div>
+                  <div className="cd-spec-label">Submitted</div>
+                  <div className="cd-spec-value" style={{ fontSize: 13 }}>
+                    {formatDateTime(campaign.review_submitted_at)}
+                  </div>
+                </div>
+              )}
+              {campaign.reviewed_at && (
+                <div>
+                  <div className="cd-spec-label">Last Reviewed</div>
+                  <div className="cd-spec-value" style={{ fontSize: 13 }}>
+                    {formatDateTime(campaign.reviewed_at)}
+                  </div>
+                </div>
+              )}
+              {campaign.reviewed_by && (
+                <div>
+                  <div className="cd-spec-label">Reviewed By</div>
+                  <div className="cd-spec-value" style={{ fontSize: 13 }}>
+                    {campaign.reviewed_by}
+                  </div>
+                </div>
+              )}
+              <div>
+                <div className="cd-spec-label">Checklist</div>
+                <span
+                  className={`cd-pass-count ${allChecksPass ? "cd-pass-count--ok" : "cd-pass-count--fail"}`}
+                >
+                  {allChecksPass
+                    ? "All checks passed"
+                    : `${checksTotal - checksPass} check${checksTotal - checksPass !== 1 ? "s" : ""} failed`}
+                </span>
+              </div>
+              <div>
+                <div className="cd-spec-label">Active Flags</div>
+                <span
+                  className={`cd-pass-count ${campaign.flags.length > 0 ? "cd-pass-count--fail" : ""}`}
+                  style={
+                    campaign.flags.length === 0
+                      ? { color: "var(--ink-4)" }
+                      : undefined
+                  }
+                >
+                  {campaign.flags.length === 0
+                    ? "None"
+                    : `${campaign.flags.length} flag${campaign.flags.length !== 1 ? "s" : ""}`}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {/* Admin Actions */}
+          <div className="cd-card">
+            <h2 className="cd-card__title">Admin Actions</h2>
+            <div className="cd-actions">
+              {(campaign.admin_status === "pending" ||
+                campaign.admin_status === "flagged") && (
+                <button
+                  className="cd-btn-approve"
+                  onClick={() => sendDecision("approve", "Approved by admin.")}
+                  disabled={actionLoading}
+                >
+                  Approve Campaign
+                </button>
+              )}
+              {campaign.admin_status === "active" && (
+                <button
+                  className="cd-btn-ghost"
+                  onClick={() =>
+                    sendDecision("suspend", "Campaign suspended by admin.")
+                  }
+                  disabled={actionLoading}
+                >
+                  Pause Campaign
+                </button>
+              )}
+              {campaign.admin_status !== "flagged" && (
+                <button
+                  className="cd-btn-reject"
+                  onClick={() =>
+                    sendDecision(
+                      "flag",
+                      "Flagged by admin for review.",
+                      "Manual flag raised during admin review.",
+                    )
+                  }
+                  disabled={actionLoading}
+                >
+                  Reject / Flag
+                </button>
+              )}
+              {campaign.admin_status === "pending" && (
+                <button
+                  className="cd-btn-secondary"
+                  onClick={() =>
+                    sendDecision(
+                      "request_changes",
+                      "Admin requested changes before approval.",
+                    )
+                  }
+                  disabled={actionLoading}
+                >
+                  Request Changes
+                </button>
+              )}
+              {campaign.spend_total > 0 && (
+                <button
+                  className="cd-btn-danger"
+                  onClick={() => {
+                    if (
+                      confirm(
+                        "Force refund will zero out spend and initiate merchant refund. Continue?",
+                      )
+                    ) {
+                      sendDecision(
+                        "force_refund",
+                        "Force refund initiated by admin.",
+                      );
+                    }
+                  }}
+                  disabled={actionLoading}
+                >
+                  Force Refund
+                </button>
+              )}
+            </div>
           </div>
         </div>
 
-        {/* Main grid */}
-        <div className="adm-detail-grid">
-          {/* LEFT: main content */}
-          <div className="adm-detail-main">
-            {/* Campaign spec */}
-            <section className="adm-card">
-              <div className="adm-card__title">Campaign Spec</div>
-              <div className="adm-spec-grid">
-                <div className="adm-spec-item adm-spec-item--full">
-                  <div className="adm-spec-label">Description</div>
-                  <div className="adm-spec-value adm-spec-value--muted">
-                    {campaign.description}
-                  </div>
-                </div>
-
-                <div className="adm-spec-item">
-                  <div className="adm-spec-label">Category</div>
-                  <div className="adm-spec-value">{campaign.category}</div>
-                </div>
-
-                <div className="adm-spec-item">
-                  <div className="adm-spec-label">Payout</div>
-                  <div className="adm-spec-value">
-                    {campaign.payout === 0
-                      ? "Product / Trade"
-                      : `$${campaign.payout}`}
-                  </div>
-                </div>
-
-                <div className="adm-spec-item">
-                  <div className="adm-spec-label">Spots</div>
-                  <div className="adm-spec-value">
-                    {campaign.spots_remaining} / {campaign.spots_total}{" "}
-                    remaining
-                  </div>
-                </div>
-
-                <div className="adm-spec-item">
-                  <div className="adm-spec-label">Deadline</div>
-                  <div className="adm-spec-value">
-                    {formatDate(campaign.deadline)}
-                  </div>
-                </div>
-
-                <div className="adm-spec-item">
-                  <div className="adm-spec-label">Difficulty</div>
-                  <div
-                    className="adm-spec-value"
-                    style={{ textTransform: "capitalize" }}
-                  >
-                    {campaign.difficulty} ({campaign.difficulty_multiplier}x)
-                  </div>
-                </div>
-
-                <div className="adm-spec-item">
-                  <div className="adm-spec-label">Commission</div>
-                  <div className="adm-spec-value">
-                    {campaign.commission_enabled ? "Enabled" : "Disabled"}
-                  </div>
-                </div>
-
-                <div className="adm-spec-item">
-                  <div className="adm-spec-label">Created</div>
-                  <div className="adm-spec-value">
-                    {formatDate(campaign.created_at)}
-                  </div>
-                </div>
-
-                {campaign.requirements.length > 0 && (
-                  <div className="adm-spec-item adm-spec-item--full">
-                    <div className="adm-spec-label">Requirements</div>
-                    <ul className="adm-req-list" style={{ marginTop: 8 }}>
-                      {campaign.requirements.map((r, i) => (
-                        <li key={i}>{r}</li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
+        {/* ── RIGHT: content list + stats ── */}
+        <div className="cd-col-right">
+          {/* Liquid Glass "Performance" summary tile — ≤1 per page */}
+          <div className="cd-perf-tile">
+            <div className="cd-perf-tile__eyebrow">(PERFORMANCE)</div>
+            <div className="cd-perf-tile__grid">
+              <div className="cd-perf-metric">
+                <div className="cd-perf-metric__num">{spendPct}%</div>
+                <div className="cd-perf-metric__label">Budget Used</div>
               </div>
-            </section>
+              <div className="cd-perf-metric">
+                <div className="cd-perf-metric__num">
+                  {campaign.verified_visits.length}
+                </div>
+                <div className="cd-perf-metric__label">Verified Visits</div>
+              </div>
+              <div className="cd-perf-metric">
+                <div className="cd-perf-metric__num">
+                  {campaign.applicants.length}
+                </div>
+                <div className="cd-perf-metric__label">Applicants</div>
+              </div>
+              <div className="cd-perf-metric">
+                <div className="cd-perf-metric__num">
+                  {campaign.dispute_ids.length}
+                </div>
+                <div className="cd-perf-metric__label">Disputes</div>
+              </div>
+            </div>
+          </div>
 
-            {/* Approval checklist */}
-            <section className="adm-card">
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  marginBottom: 16,
-                }}
+          {/* Approval Checklist */}
+          <div className="cd-card">
+            <div className="cd-card__title-row">
+              <h2 className="cd-card__title">Approval Checklist</h2>
+              <span
+                className={`cd-pass-count ${allChecksPass ? "cd-pass-count--ok" : "cd-pass-count--fail"}`}
               >
-                <div className="adm-card__title" style={{ marginBottom: 0 }}>
-                  Approval Checklist
-                </div>
-                <span
-                  style={{
-                    fontSize: 12,
-                    fontWeight: 700,
-                    color: allChecksPass ? "var(--tertiary)" : "var(--primary)",
-                  }}
-                >
-                  {checksPass}/{checksTotal} passed
-                </span>
-              </div>
-              <div className="adm-checklist">
-                {campaign.approval_checklist.map((item) => (
-                  <div key={item.id} className="adm-check">
+                {checksPass}/{checksTotal} passed
+              </span>
+            </div>
+            <div className="cd-checklist">
+              {campaign.approval_checklist.map((item) => (
+                <div className="cd-check" key={item.id}>
+                  <div className="cd-check__icon">
                     <CheckIcon passed={item.passed} />
-                    <div className="adm-check__body">
-                      <div className="adm-check__label">{item.label}</div>
-                      {!item.passed && item.note && (
-                        <div className="adm-check__note">{item.note}</div>
+                  </div>
+                  <div>
+                    <div className="cd-check__label">{item.label}</div>
+                    {!item.passed && item.note && (
+                      <div className="cd-check__note">{item.note}</div>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Applicants — chip rows */}
+          <div className="cd-card">
+            <h2 className="cd-card__title">
+              Applicants ({campaign.applicants.length})
+            </h2>
+            {campaign.applicants.length === 0 ? (
+              <p className="cd-empty">No applicants yet.</p>
+            ) : (
+              <div className="cd-applicant-list">
+                {campaign.applicants.map((app) => {
+                  const isDone = DONE_MILESTONES.includes(app.milestone);
+                  const isAction = ACTION_MILESTONES.includes(app.milestone);
+                  const msClass = isDone
+                    ? "cd-milestone-tag cd-milestone-tag--done"
+                    : isAction
+                      ? "cd-milestone-tag cd-milestone-tag--action"
+                      : "cd-milestone-tag";
+                  // Initials for avatar
+                  const initials = app.creator_name
+                    .split(" ")
+                    .map((w: string) => w[0])
+                    .join("")
+                    .slice(0, 2);
+                  return (
+                    <div className="cd-applicant-row" key={app.id}>
+                      {/* Chip: avatar + name */}
+                      <div className="cd-applicant-chip">
+                        <div className="cd-avatar">{initials}</div>
+                        <div>
+                          <div className="cd-applicant-name">
+                            {app.creator_name}
+                          </div>
+                          <div className="cd-applicant-handle">
+                            {app.creator_handle}
+                          </div>
+                          <div className="cd-applicant-meta">
+                            {app.creator_followers.toLocaleString()} followers ·
+                            Score {app.creator_score}
+                          </div>
+                        </div>
+                      </div>
+                      <TierBadge tier={app.creator_tier} />
+                      <span className={msClass}>
+                        {MILESTONE_LABELS[app.milestone] ?? app.milestone}
+                      </span>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+
+          {/* Verified Visit Log */}
+          <div className="cd-card">
+            <h2 className="cd-card__title">
+              Verified Visit Log ({campaign.verified_visits.length})
+            </h2>
+            {campaign.verified_visits.length === 0 ? (
+              <p className="cd-empty">No verified visits recorded.</p>
+            ) : (
+              <div className="cd-row-list">
+                {campaign.verified_visits.map((v) => (
+                  <div className="cd-row" key={v.id}>
+                    <div>
+                      <div className="cd-row__primary">{v.creator_name}</div>
+                      <div className="cd-row__secondary">{v.qr_code}</div>
+                    </div>
+                    <div className="cd-row__right">
+                      <div className="cd-row__time">
+                        {formatDateTime(v.scanned_at)}
+                      </div>
+                      {v.verified && (
+                        <span className="cd-verified-tag">Verified</span>
                       )}
                     </div>
                   </div>
                 ))}
               </div>
-            </section>
-
-            {/* Flags */}
-            {campaign.flags.length > 0 && (
-              <section className="adm-card">
-                <div className="adm-card__title">
-                  Active Flags ({campaign.flags.length})
-                </div>
-                <div className="adm-flag-list">
-                  {campaign.flags.map((flag) => (
-                    <div
-                      key={flag.id}
-                      className={`adm-flag adm-flag--${flag.severity}`}
-                    >
-                      <div className="adm-flag__header">
-                        <span className="adm-flag__type">{flag.type}</span>
-                        <span className="adm-flag__severity">
-                          {flag.severity}
-                        </span>
-                      </div>
-                      <div className="adm-flag__desc">{flag.description}</div>
-                      <div className="adm-flag__meta">
-                        Raised by {flag.raised_by} ·{" "}
-                        {formatDateTime(flag.raised_at)}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </section>
             )}
-
-            {/* Applicants */}
-            <section className="adm-card">
-              <div className="adm-card__title">
-                Applicants ({campaign.applicants.length})
-              </div>
-              {campaign.applicants.length === 0 ? (
-                <div
-                  style={{
-                    fontSize: 13,
-                    color: "rgba(0,48,73,0.4)",
-                    padding: "16px 0",
-                  }}
-                >
-                  No applicants yet.
-                </div>
-              ) : (
-                <div className="adm-applicant-list">
-                  {campaign.applicants.map((app) => {
-                    const isDone = DONE_MILESTONES.includes(app.milestone);
-                    const isAction = ACTION_MILESTONES.includes(app.milestone);
-                    return (
-                      <div key={app.id} className="adm-applicant">
-                        <div>
-                          <div className="adm-applicant__name">
-                            {app.creator_name}
-                          </div>
-                          <div className="adm-applicant__handle">
-                            {app.creator_handle}
-                          </div>
-                          <div className="adm-applicant__meta">
-                            {app.creator_followers.toLocaleString()} followers ·
-                            Score {app.creator_score}
-                          </div>
-                        </div>
-                        <TierBadge tier={app.creator_tier} />
-                        <span
-                          className={[
-                            "adm-milestone-tag",
-                            isDone ? "adm-milestone-tag--done" : "",
-                            isAction ? "adm-milestone-tag--action" : "",
-                          ]
-                            .filter(Boolean)
-                            .join(" ")}
-                        >
-                          {MILESTONE_LABELS[app.milestone] ?? app.milestone}
-                        </span>
-                      </div>
-                    );
-                  })}
-                </div>
-              )}
-            </section>
-
-            {/* Verified visit log */}
-            <section className="adm-card">
-              <div className="adm-card__title">
-                Verified Visit Log ({campaign.verified_visits.length})
-              </div>
-              {campaign.verified_visits.length === 0 ? (
-                <div
-                  style={{
-                    fontSize: 13,
-                    color: "rgba(0,48,73,0.4)",
-                    padding: "16px 0",
-                  }}
-                >
-                  No verified visits recorded.
-                </div>
-              ) : (
-                <div className="adm-visit-list">
-                  {campaign.verified_visits.map((v) => (
-                    <div key={v.id} className="adm-visit">
-                      <div>
-                        <div className="adm-visit__creator">
-                          {v.creator_name}
-                        </div>
-                        <div className="adm-visit__code">{v.qr_code}</div>
-                      </div>
-                      <div>
-                        <div className="adm-visit__time">
-                          {formatDateTime(v.scanned_at)}
-                        </div>
-                        {v.verified && (
-                          <div className="adm-visit__verified">Verified</div>
-                        )}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </section>
-
-            {/* Spend tracking */}
-            <section className="adm-card">
-              <div className="adm-card__title">Spend vs Budget</div>
-              <div className="adm-spec-grid" style={{ marginBottom: 16 }}>
-                <div className="adm-spec-item">
-                  <div className="adm-spec-label">Spent to Date</div>
-                  <div className="adm-spec-value">${campaign.spend_total}</div>
-                </div>
-                <div className="adm-spec-item">
-                  <div className="adm-spec-label">Budget Cap</div>
-                  <div className="adm-spec-value">${campaign.budget_cap}</div>
-                </div>
-              </div>
-              <div className="adm-spend-bar-wrap">
-                <div className="adm-spend-bar">
-                  <div
-                    className={`adm-spend-bar__fill${spendPct >= 100 ? " adm-spend-bar__fill--over" : ""}`}
-                    style={{ width: `${spendPct}%` }}
-                  />
-                </div>
-                <div className="adm-spend-labels">
-                  <span>{spendPct}% used</span>
-                  <span>
-                    ${campaign.budget_cap - campaign.spend_total} remaining
-                  </span>
-                </div>
-              </div>
-            </section>
-
-            {/* Linked disputes */}
-            {campaign.dispute_ids.length > 0 && (
-              <section className="adm-card">
-                <div className="adm-card__title">Linked Disputes</div>
-                <div
-                  style={{ display: "flex", flexDirection: "column", gap: 8 }}
-                >
-                  {campaign.dispute_ids.map((d) => (
-                    <div
-                      key={d}
-                      style={{
-                        fontFamily: "CS Genio Mono, monospace",
-                        fontSize: 13,
-                        color: "var(--primary)",
-                        fontWeight: 600,
-                        padding: "8px 0",
-                        borderBottom: "1px solid rgba(0,48,73,0.07)",
-                      }}
-                    >
-                      #{d}
-                    </div>
-                  ))}
-                </div>
-              </section>
-            )}
-
-            {/* Internal notes */}
-            <section className="adm-card">
-              <div className="adm-card__title">Internal Notes</div>
-              {campaign.internal_notes.length > 0 ? (
-                <div className="adm-notes-list">
-                  {campaign.internal_notes.map((note) => (
-                    <div key={note.id} className="adm-note">
-                      <div className="adm-note__author">{note.author}</div>
-                      <div className="adm-note__body">{note.body}</div>
-                      <div className="adm-note__time">
-                        {formatDateTime(note.created_at)}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <div
-                  style={{
-                    fontSize: 13,
-                    color: "rgba(0,48,73,0.4)",
-                    padding: "8px 0 12px",
-                  }}
-                >
-                  No notes yet.
-                </div>
-              )}
-
-              {/* Add note */}
-              <div className="adm-note-form">
-                <textarea
-                  placeholder="Add internal note…"
-                  value={noteInput}
-                  onChange={(e) => setNoteInput(e.target.value)}
-                  aria-label="Internal note"
-                />
-                <button
-                  className="adm-btn adm-btn--ghost"
-                  onClick={addNote}
-                  disabled={!noteInput.trim() || actionLoading}
-                  style={{ width: "auto", alignSelf: "flex-start" }}
-                >
-                  {actionLoading ? "Saving…" : "Save Note"}
-                </button>
-              </div>
-            </section>
           </div>
 
-          {/* RIGHT: sidebar — admin actions + review summary */}
-          <div className="adm-detail-sidebar">
-            {/* Admin actions */}
-            <section className="adm-card">
-              <div className="adm-card__title">Admin Actions</div>
-              <div className="adm-actions-stack">
-                {(campaign.admin_status === "pending" ||
-                  campaign.admin_status === "flagged") && (
-                  <button
-                    className="adm-btn adm-btn--approve"
-                    onClick={() =>
-                      sendDecision("approve", "Approved by admin.")
-                    }
-                    disabled={actionLoading}
-                  >
-                    Approve Campaign
-                  </button>
-                )}
-
-                {campaign.admin_status === "pending" && (
-                  <button
-                    className="adm-btn adm-btn--ghost"
-                    onClick={() =>
-                      sendDecision(
-                        "request_changes",
-                        "Admin requested changes before approval.",
-                      )
-                    }
-                    disabled={actionLoading}
-                  >
-                    Request Changes
-                  </button>
-                )}
-
-                {campaign.admin_status !== "flagged" && (
-                  <button
-                    className="adm-btn adm-btn--flag"
-                    onClick={() =>
-                      sendDecision(
-                        "flag",
-                        "Flagged by admin for review.",
-                        "Manual flag raised during admin review.",
-                      )
-                    }
-                    disabled={actionLoading}
-                  >
-                    Flag Campaign
-                  </button>
-                )}
-
-                {campaign.admin_status === "active" && (
-                  <button
-                    className="adm-btn adm-btn--ghost"
-                    onClick={() =>
-                      sendDecision("suspend", "Campaign suspended by admin.")
-                    }
-                    disabled={actionLoading}
-                  >
-                    Suspend Campaign
-                  </button>
-                )}
-
-                {campaign.spend_total > 0 && (
-                  <button
-                    className="adm-btn adm-btn--danger"
-                    onClick={() => {
-                      if (
-                        confirm(
-                          "Force refund will zero out spend and initiate merchant refund. Continue?",
-                        )
-                      ) {
-                        sendDecision(
-                          "force_refund",
-                          "Force refund initiated by admin.",
-                        );
-                      }
-                    }}
-                    disabled={actionLoading}
-                  >
-                    Force Refund
-                  </button>
-                )}
+          {/* Spend vs Budget */}
+          <div className="cd-card">
+            <h2 className="cd-card__title">Spend vs Budget</h2>
+            <div className="cd-spend-numerals">
+              <div>
+                <div className="cd-spec-label">Spent to Date</div>
+                <div className="cd-spend-num">${campaign.spend_total}</div>
               </div>
-            </section>
-
-            {/* Review summary */}
-            <section className="adm-card">
-              <div className="adm-card__title">Review Summary</div>
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: 12,
-                }}
-              >
-                <div className="adm-spec-item">
-                  <div className="adm-spec-label">Current Status</div>
-                  <StatusBadge status={campaign.admin_status} />
-                </div>
-
-                {campaign.review_submitted_at && (
-                  <div className="adm-spec-item">
-                    <div className="adm-spec-label">Submitted</div>
-                    <div className="adm-spec-value" style={{ fontSize: 13 }}>
-                      {formatDateTime(campaign.review_submitted_at)}
-                    </div>
-                  </div>
-                )}
-
-                {campaign.reviewed_at && (
-                  <div className="adm-spec-item">
-                    <div className="adm-spec-label">Last Reviewed</div>
-                    <div className="adm-spec-value" style={{ fontSize: 13 }}>
-                      {formatDateTime(campaign.reviewed_at)}
-                    </div>
-                  </div>
-                )}
-
-                {campaign.reviewed_by && (
-                  <div className="adm-spec-item">
-                    <div className="adm-spec-label">Reviewed By</div>
-                    <div className="adm-spec-value" style={{ fontSize: 13 }}>
-                      {campaign.reviewed_by}
-                    </div>
-                  </div>
-                )}
-
-                <div className="adm-spec-item">
-                  <div className="adm-spec-label">Checklist</div>
-                  <div
-                    className="adm-spec-value"
-                    style={{
-                      fontSize: 13,
-                      color: allChecksPass
-                        ? "var(--tertiary)"
-                        : "var(--primary)",
-                    }}
-                  >
-                    {allChecksPass
-                      ? "All checks passed"
-                      : `${checksTotal - checksPass} check${checksTotal - checksPass !== 1 ? "s" : ""} failed`}
-                  </div>
-                </div>
-
-                <div className="adm-spec-item">
-                  <div className="adm-spec-label">Active Flags</div>
-                  <div
-                    className="adm-spec-value"
-                    style={{
-                      fontSize: 13,
-                      color:
-                        campaign.flags.length > 0
-                          ? "var(--primary)"
-                          : "var(--graphite)",
-                    }}
-                  >
-                    {campaign.flags.length === 0
-                      ? "None"
-                      : `${campaign.flags.length} flag${campaign.flags.length !== 1 ? "s" : ""}`}
-                  </div>
-                </div>
+              <div>
+                <div className="cd-spec-label">Budget Cap</div>
+                <div className="cd-spend-num">${campaign.budget_cap}</div>
               </div>
-            </section>
-
-            {/* Quick stats */}
-            <section className="adm-card">
-              <div className="adm-card__title">Campaign Stats</div>
-              <div
-                style={{ display: "flex", flexDirection: "column", gap: 12 }}
+            </div>
+            <div className="cd-spend-bar-wrap">
+              <div className="cd-spend-bar">
+                <div
+                  className={`cd-spend-bar__fill${spendPct >= 100 ? " cd-spend-bar__fill--over" : ""}`}
+                  style={{ width: `${spendPct}%` }}
+                />
+              </div>
+            </div>
+            <div className="cd-spend-labels">
+              <span>{spendPct}% used</span>
+              <span
+                style={
+                  budgetRemainingPct < 20
+                    ? { color: "var(--brand-red)", fontWeight: 700 }
+                    : undefined
+                }
               >
-                {[
-                  {
-                    label: "Applicants",
-                    value: campaign.applicants.length,
-                  },
-                  {
-                    label: "Verified Visits",
-                    value: campaign.verified_visits.length,
-                  },
-                  {
-                    label: "Spend",
-                    value: `$${campaign.spend_total}`,
-                  },
-                  {
-                    label: "Budget Cap",
-                    value: `$${campaign.budget_cap}`,
-                  },
-                  {
-                    label: "Disputes",
-                    value: campaign.dispute_ids.length || "None",
-                  },
-                ].map(({ label, value }) => (
+                ${budgetRemaining} remaining
+              </span>
+            </div>
+          </div>
+
+          {/* Flags */}
+          {campaign.flags.length > 0 && (
+            <div className="cd-card">
+              <h2 className="cd-card__title">
+                Active Flags ({campaign.flags.length})
+              </h2>
+              <div className="cd-flag-list">
+                {campaign.flags.map((flag) => (
                   <div
-                    key={label}
-                    style={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      alignItems: "center",
-                      fontSize: 13,
-                      paddingBottom: 10,
-                      borderBottom: "1px solid rgba(0,48,73,0.07)",
-                    }}
+                    className={`cd-flag${flag.severity === "medium" ? " cd-flag--medium" : flag.severity === "low" ? " cd-flag--low" : ""}`}
+                    key={flag.id}
                   >
-                    <span
-                      style={{ color: "rgba(0,48,73,0.5)", fontWeight: 600 }}
-                    >
-                      {label}
-                    </span>
-                    <span style={{ fontWeight: 700, color: "var(--dark)" }}>
-                      {value}
-                    </span>
+                    <div className="cd-flag__header">
+                      <span className="cd-flag__type">{flag.type}</span>
+                      <span className="cd-flag__severity">{flag.severity}</span>
+                    </div>
+                    <div className="cd-flag__desc">{flag.description}</div>
+                    <div className="cd-flag__meta">
+                      Raised by {flag.raised_by} ·{" "}
+                      {formatDateTime(flag.raised_at)}
+                    </div>
                   </div>
                 ))}
               </div>
-            </section>
+            </div>
+          )}
+
+          {/* Linked Disputes */}
+          {campaign.dispute_ids.length > 0 && (
+            <div className="cd-card">
+              <h2 className="cd-card__title">Linked Disputes</h2>
+              <div className="cd-dispute-list">
+                {campaign.dispute_ids.map((d) => (
+                  <div className="cd-dispute-item" key={d}>
+                    #{d}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Internal Notes */}
+          <div className="cd-card">
+            <h2 className="cd-card__title">Internal Notes</h2>
+            {campaign.internal_notes.length > 0 ? (
+              <div className="cd-notes-list">
+                {campaign.internal_notes.map((note) => (
+                  <div className="cd-note" key={note.id}>
+                    <div className="cd-note__author">{note.author}</div>
+                    <div className="cd-note__body">{note.body}</div>
+                    <div className="cd-note__time">
+                      {formatDateTime(note.created_at)}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="cd-empty">No notes yet.</p>
+            )}
+            <div className="cd-note-form">
+              <textarea
+                className="cd-note-textarea"
+                placeholder="Add internal note…"
+                value={noteInput}
+                onChange={(e) => setNoteInput(e.target.value)}
+                aria-label="Internal note"
+              />
+              <button
+                className="cd-btn-ghost"
+                onClick={addNote}
+                disabled={!noteInput.trim() || actionLoading}
+                style={{
+                  alignSelf: "flex-start",
+                  width: "auto",
+                  padding: "10px 20px",
+                }}
+              >
+                {actionLoading ? "Saving…" : "Save Note"}
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -901,7 +816,7 @@ export default function AdminCampaignDetailPage() {
       {/* Toast */}
       {toast && (
         <div
-          className={`adm-toast${toast.type === "err" ? " adm-toast--error" : ""}`}
+          className={`cd-toast${toast.type === "err" ? " cd-toast--err" : ""}`}
           role="status"
         >
           {toast.msg}

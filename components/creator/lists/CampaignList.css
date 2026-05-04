@@ -14,7 +14,7 @@
   gap: 16px;
   height: 72px;
   padding: 0 24px;
-  border-bottom: 1px solid var(--line, rgba(0, 48, 73, 0.12));
+  border-bottom: 1px solid var(--line, var(--hairline));
   cursor: default;
   transition: background 120ms ease;
 }
@@ -24,7 +24,7 @@
 }
 
 .cl-row:hover {
-  background: var(--surface-bright, #fafaf8);
+  background: var(--surface-3);
 }
 
 /* Left column */
@@ -39,7 +39,7 @@
   font-family: "Darky", sans-serif;
   font-size: 15px;
   font-weight: 700;
-  color: var(--dark, #003049);
+  color: var(--ink);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -48,7 +48,7 @@
 .cl-campaign-title {
   font-family: "CS Genio Mono", monospace;
   font-size: 13px;
-  color: var(--graphite, #4a5568);
+  color: var(--graphite);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -71,22 +71,22 @@
   letter-spacing: 0.1em;
   text-transform: uppercase;
   padding: 2px 8px;
-  border-radius: 0;
+  border-radius: var(--r-xl);
 }
 
 .cl-badge--accepted {
-  background: color-mix(in srgb, var(--tertiary, #669bbc) 15%, transparent);
-  color: var(--tertiary, #669bbc);
+  background: color-mix(in srgb, var(--accent-blue) 15%, transparent);
+  color: var(--accent-blue);
 }
 
 .cl-badge--active {
-  background: color-mix(in srgb, var(--dark, #003049) 10%, transparent);
-  color: var(--dark, #003049);
+  background: color-mix(in srgb, var(--ink) 10%, transparent);
+  color: var(--ink);
 }
 
 .cl-badge--settled {
-  background: color-mix(in srgb, var(--graphite, #4a5568) 10%, transparent);
-  color: var(--graphite, #4a5568);
+  background: color-mix(in srgb, var(--graphite) 10%, transparent);
+  color: var(--graphite);
 }
 
 /* Payout */
@@ -94,13 +94,13 @@
   font-family: "Darky", sans-serif;
   font-size: 16px;
   font-weight: 700;
-  color: var(--champagne, #c9a96e);
+  color: var(--champagne);
 }
 
 /* Empty state */
 .cl-empty {
   padding: 40px 24px;
-  border-left: 3px solid var(--primary, #c1121f);
+  border-left: 3px solid var(--brand-red);
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -111,7 +111,7 @@
   font-size: 1.5rem;
   font-weight: 900;
   letter-spacing: -0.04em;
-  color: var(--dark, #003049);
+  color: var(--ink);
   margin: 0;
   line-height: 1.1;
 }
@@ -120,6 +120,6 @@
   font-family: "CS Genio Mono", monospace;
   font-size: 13px;
   line-height: 1.6;
-  color: var(--graphite, #4a5568);
+  color: var(--graphite);
   margin: 0;
 }

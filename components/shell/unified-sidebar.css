@@ -1,0 +1,500 @@
+/* ─────────────────────────────────────────────────────────────────────
+ * Push — Unified Sidebar (vertical caption layout, fixed full-height rail)
+ *
+ * Replaces the per-item hover-pill flyout with iPhone-style stacked
+ * captions: each icon sits above an always-visible 11px CS Genio Mono
+ * label. No hover dependency, no horizontal flyout pill, no parking
+ * margin needed. Works identically on desktop, iPad, touch.
+ *
+ * Layout: [icon 40×40] / [4px gap] / [11px caption] inside a 64×60 hit slot.
+ * Rail width: 96px (was 72px) — gives every caption room to breathe.
+ *
+ * Authority: Design.md v11 § 9 (5-button system — Pill variant for nav),
+ *            globals.css `--ease-spring`, mono-caption pattern from § 18.
+ * ───────────────────────────────────────────────────────────────────── */
+
+:root {
+  --us-w:           96px;   /* rail width */
+  --us-tile:        40px;   /* icon tile */
+  --us-icon:        22px;   /* icon glyph */
+  --us-item-inset:  10px;   /* horizontal inset of pill from rail edge */
+  --us-item-gap:    6px;    /* between items */
+  --us-pad-x:       12px;   /* rail outer padding */
+  --us-cap-size:    11px;   /* caption font-size */
+  --us-radius:      14px;   /* iOS 26 continuous corner */
+  --us-t-fast:      180ms;
+  --us-t-medium:    260ms;
+  --us-ease-out:    cubic-bezier(0.4, 0, 0.2, 1);
+  --us-ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* ════════════════════════════════════════════════════════════
+   RAIL — fixed, full viewport height, hairline right border
+   ════════════════════════════════════════════════════════════ */
+
+.us-rail {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: var(--us-w);
+  height: 100vh;
+  z-index: 100;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 14px 0 16px;
+
+  background: #ffffff;
+  border-right: 0.5px solid rgba(40, 36, 32, 0.08);
+}
+
+/* ════════════════════════════════════════════════════════════
+   NAV / FOOT — vertical stacks, centered
+   ════════════════════════════════════════════════════════════ */
+
+.us-nav {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--us-item-gap);
+  padding-top: 8px;
+  width: 100%;
+  overflow-y: auto;
+  overflow-x: visible;
+  scrollbar-width: none;
+}
+.us-nav::-webkit-scrollbar { display: none; }
+
+.us-foot {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--us-item-gap);
+  padding-top: 12px;
+  margin-top: 8px;
+  flex-shrink: 0;
+  width: 100%;
+  position: relative;
+}
+.us-foot::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: var(--us-pad-x);
+  right: var(--us-pad-x);
+  height: 0.5px;
+  background: rgba(40, 36, 32, 0.10);
+}
+
+/* ════════════════════════════════════════════════════════════
+   ITEM — icon stacked over caption, centered hit slot
+   ════════════════════════════════════════════════════════════ */
+
+/* Pill is explicitly inset from BOTH rail edges by --us-item-inset.
+   At 10px inset on a 96px rail, pill width = 76px, leaving a clean
+   10px breathing gap on either side that never collapses. */
+.us-item {
+  position: relative;
+  width: calc(100% - 2 * var(--us-item-inset));
+  margin: 0 auto;
+  padding: 6px 0 8px;
+  border-radius: var(--us-radius);
+  text-decoration: none;
+  color: var(--ink-3, #61605c);
+  display: block;
+  /* Layered transitions — bg/border/shadow all ease in concert,
+     producing the iOS 26 "settles into glass" feel. */
+  transition:
+    background-color var(--us-t-medium) var(--us-ease-out),
+    border-color     var(--us-t-medium) var(--us-ease-out),
+    box-shadow       var(--us-t-medium) var(--us-ease-out),
+    color            var(--us-t-fast)   var(--us-ease-out);
+  /* Reserve space for border so :hover/:active doesn't shift layout.
+     Default border is transparent; hover/active fill it in. */
+  border: 0.5px solid transparent;
+  background-clip: padding-box;
+}
+
+/* HOVER — light, anticipatory glass.
+   Subtle warm gradient + 1px inner highlight on top edge (suggests
+   light catching the edge of glass) + tight shadow for slight lift.
+   Backdrop-filter is a progressive enhancement; on a flat-white rail
+   it adds nothing visually but layers correctly when content scrolls
+   behind a translucent surface (e.g., bottom dock on mobile). */
+.us-item:hover {
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.85) 0%,
+    rgba(248, 244, 232, 0.55) 100%
+  );
+  border-color: rgba(40, 36, 32, 0.07);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.95),
+    inset 0 -0.5px 0 rgba(40, 36, 32, 0.03),
+    0 1px 2px rgba(40, 36, 32, 0.04);
+  color: var(--ink, #1c1814);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  backdrop-filter:         blur(20px) saturate(180%);
+}
+
+/* PRESSED — slightly deeper, no springing scale (premium = quiet) */
+.us-item:active {
+  background: linear-gradient(
+    180deg,
+    rgba(40, 36, 32, 0.06) 0%,
+    rgba(40, 36, 32, 0.04) 100%
+  );
+  border-color: rgba(40, 36, 32, 0.10);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.6),
+    inset 0 -0.5px 0 rgba(40, 36, 32, 0.06),
+    0 1px 1px rgba(40, 36, 32, 0.04);
+}
+
+.us-item:focus-visible {
+  outline: 2px solid var(--brand-red, #c1121f);
+  outline-offset: 2px;
+}
+
+/* ────────────────────────────────────────────────────────────
+   PILL — now a flex column container (icon over caption)
+   ──────────────────────────────────────────────────────────── */
+
+.us-item__pill {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  width: 100%;
+}
+
+/* ICON — 40×40 tile, glyph centered */
+.us-item__icon {
+  position: relative;
+  width: var(--us-tile);
+  height: var(--us-tile);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: inherit;
+  opacity: 0.78;
+  transition: opacity var(--us-t-fast) var(--us-ease-out);
+}
+.us-item__icon svg {
+  width: var(--us-icon);
+  height: var(--us-icon);
+  color: inherit;
+}
+.us-item:hover .us-item__icon {
+  opacity: 1;
+}
+
+/* CAPTION — always visible, 11px CS Genio Mono uppercase */
+.us-item__label {
+  font-family: var(--font-mono, 'CS Genio Mono', ui-monospace, monospace);
+  font-size: var(--us-cap-size);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  color: inherit;
+  white-space: nowrap;
+  line-height: 1;
+  max-width: 68px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: center;
+}
+
+/* ACTIVE — current page: liquid-glass pill that "settled".
+   Two-stop warm gradient (slightly deeper than hover) + 0.5px hairline
+   border + inner highlight on top + inner shadow on bottom (depth) +
+   tight 1px shadow + softer 4-12px diffused shadow (lift).
+   This is the iOS 26 Material treatment: every layer is whispered. */
+.us-item.is-active {
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.95) 0%,
+    rgba(248, 244, 232, 0.78) 50%,
+    rgba(245, 243, 238, 0.72) 100%
+  );
+  border-color: rgba(40, 36, 32, 0.10);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 1),
+    inset 0 -0.5px 0 rgba(40, 36, 32, 0.05),
+    0 1px 1px rgba(40, 36, 32, 0.05),
+    0 4px 12px -2px rgba(40, 36, 32, 0.06),
+    0 8px 24px -8px rgba(40, 36, 32, 0.08);
+  color: var(--ink, #1c1814);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  backdrop-filter:         blur(24px) saturate(180%);
+}
+.us-item.is-active .us-item__icon { opacity: 1; }
+.us-item.is-active .us-item__label { font-weight: 700; }
+
+/* Hovering an already-active item — slight nudge in saturation, no shift */
+.us-item.is-active:hover {
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 1) 0%,
+    rgba(248, 244, 232, 0.85) 50%,
+    rgba(245, 243, 238, 0.80) 100%
+  );
+  border-color: rgba(40, 36, 32, 0.12);
+}
+
+/* Tiny accent dot under active caption — Push interaction signature.
+   Sits OUTSIDE the pill border (bottom: -3px) so it reads as a status
+   pin rather than decoration inside the glass. */
+.us-item.is-active::after {
+  content: "";
+  position: absolute;
+  bottom: -3px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--brand-red, #c1121f);
+  box-shadow: 0 0 0 1.5px #ffffff;
+}
+
+/* ════════════════════════════════════════════════════════════
+   LOGO — Darky monogram, no caption (mark itself is the label)
+   ════════════════════════════════════════════════════════════ */
+
+.us-item--logo {
+  margin-bottom: 12px;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+.us-item--logo .us-item__pill {
+  gap: 0;
+}
+.us-item--logo .us-item__icon {
+  height: 48px;
+  opacity: 1;
+}
+.us-logo__mark {
+  font-family: var(--font-display, 'Darky', sans-serif);
+  font-size: 26px;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  color: var(--ink, #1c1814);
+}
+.us-item--logo .us-item__label { display: none; }
+.us-item--logo:hover { background: transparent; }
+.us-item--logo.is-active::after { display: none; }
+
+/* ════════════════════════════════════════════════════════════
+   BADGE — notification count on bell icon
+   ════════════════════════════════════════════════════════════ */
+
+.us-badge {
+  position: absolute;
+  top: -2px;
+  right: 2px;
+  min-width: 16px;
+  height: 16px;
+  padding: 0 4px;
+  border-radius: 999px;
+  background: var(--brand-red, #c1121f);
+  color: var(--snow, #ffffff);
+  font-family: var(--font-mono, monospace);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1.5px solid #ffffff;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.18);
+  font-variant-numeric: tabular-nums;
+  pointer-events: none;
+}
+
+/* ════════════════════════════════════════════════════════════
+   AVATAR — circular monogram inside icon slot
+   ════════════════════════════════════════════════════════════ */
+
+.us-avatar-circle {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(
+    135deg,
+    rgba(40, 36, 32, 0.18) 0%,
+    rgba(40, 36, 32, 0.06) 100%
+  );
+  border: 0.5px solid rgba(40, 36, 32, 0.20);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18);
+  transition:
+    background var(--us-t-fast) var(--us-ease-out),
+    border-color var(--us-t-fast) var(--us-ease-out);
+}
+.us-item:hover .us-avatar-circle {
+  background: linear-gradient(
+    135deg,
+    rgba(40, 36, 32, 0.26) 0%,
+    rgba(40, 36, 32, 0.10) 100%
+  );
+  border-color: rgba(40, 36, 32, 0.32);
+}
+.us-avatar-circle__initial {
+  font-family: var(--font-display, 'Darky', sans-serif);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--ink, #1c1814);
+}
+.us-avatar-circle__img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+/* ════════════════════════════════════════════════════════════
+   RESPONSIVE — mobile bottom dock (caption hidden, icon-only row)
+   ════════════════════════════════════════════════════════════ */
+
+@media (max-width: 768px) {
+  .us-rail {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    top: auto;
+    width: 100%;
+    height: 56px;
+    flex-direction: row;
+    align-items: center;
+    padding: 6px 12px;
+    background: rgba(255, 255, 255, 0.92);
+    -webkit-backdrop-filter: blur(40px) saturate(180%);
+    backdrop-filter:         blur(40px) saturate(180%);
+    border-right: none;
+    border-top: 0.5px solid rgba(40, 36, 32, 0.10);
+    box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.06);
+    overflow-x: auto;
+    overflow-y: hidden;
+  }
+  .us-nav,
+  .us-foot {
+    flex-direction: row;
+    flex: 1;
+    padding: 0;
+    gap: 4px;
+    align-items: center;
+    width: auto;
+    margin-top: 0;
+  }
+  .us-foot::before { display: none; }
+  .us-item {
+    width: 56px;
+    padding: 2px 0;
+  }
+  .us-item__pill { gap: 2px; }
+  .us-item__icon { width: 32px; height: 32px; opacity: 0.86; }
+  .us-item__icon svg { width: 20px; height: 20px; }
+  .us-item__label {
+    font-size: 9px;
+    max-width: 52px;
+    letter-spacing: 0.04em;
+  }
+  .us-item--logo { display: none; }
+  .us-item.is-active::after { bottom: -1px; }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .us-item, .us-item__icon, .us-avatar-circle {
+    transition: none !important;
+  }
+}
+
+/* ════════════════════════════════════════════════════════════
+   PAGE BG + CONTENT GUTTER
+   --page-gutter: single source of truth — applied symmetrically on
+   left + right of every product page (admin / merchant / creator).
+   Rail floats inside the left gutter (rail-width 96px < gutter on
+   any viewport ≥ 960px, so the rail never overlaps content).
+   Change --page-gutter once → every page reflows together.
+   ════════════════════════════════════════════════════════════ */
+
+:root {
+  --page-gutter: 10%;     /* symmetric L/R margin, viewport-relative */
+  --page-pad-y-top: 56px;
+  --page-pad-y-bot: 96px;
+}
+
+/* Page bg = pure white #ffffff per Design.md § 14 STRICT.
+   White-on-white card surface — cards are defined by --shadow-1/2/3
+   elevation alone. No 1px border needed (those are stripped per
+   the new "no card border" rule).
+   Apple iOS / Notion-style: white surfaces, shadow does the work. */
+html:has(.us-rail),
+body:has(.us-rail) {
+  background: #ffffff !important;
+}
+body:has(.us-rail) .adm-shell,
+body:has(.us-rail) .adm-main,
+body:has(.us-rail) .ms-shell,
+body:has(.us-rail) .ms-main-content,
+body:has(.us-rail) .dh-shell,
+body:has(.us-rail) .dh-main {
+  background: #ffffff !important;
+}
+
+body:has(.us-rail) main [class*="-page"] {
+  background: transparent !important;
+}
+
+/* Symmetric 10% L/R margin on every <main>. Rail floats inside the
+   left gutter — no extra rail-width offset, no asymmetric padding. */
+body:has(.us-rail) .adm-main,
+body:has(.us-rail) .ms-main-content,
+body:has(.us-rail) .dh-main {
+  padding-left: var(--page-gutter);
+  padding-right: var(--page-gutter);
+  padding-top: var(--page-pad-y-top);
+  padding-bottom: var(--page-pad-y-bot);
+}
+
+body:has(.us-rail) main [class*="-page"] {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  max-width: none !important;
+  width: 100% !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+
+/* Narrow desktop / iPad: at <960px viewport, 10% (≤96px) would let
+   the 96px rail eat the entire left gutter. Raise the floor so
+   content always has at least 24px of breathing space past the rail. */
+@media (max-width: 960px) {
+  body:has(.us-rail) .adm-main,
+  body:has(.us-rail) .ms-main-content,
+  body:has(.us-rail) .dh-main {
+    padding-left: calc(var(--us-w) + 24px);
+    /* keep right at 10% so visual rhythm doesn't snap */
+  }
+}
+
+/* Mobile: rail moves to bottom dock — go back to flat 24px gutter
+   instead of a 10%-of-narrow-viewport which renders as ~37px. */
+@media (max-width: 768px) {
+  body:has(.us-rail) .adm-main,
+  body:has(.us-rail) .ms-main-content,
+  body:has(.us-rail) .dh-main {
+    padding-left: 24px;
+    padding-right: 24px;
+    padding-bottom: calc(56px + 32px); /* clear bottom dock */
+  }
+}

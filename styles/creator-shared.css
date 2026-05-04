@@ -10,12 +10,12 @@
    Applied as border-left or background tints via CSS custom properties.
    -------------------------------------------------------------------------- */
 
-.tier-seed     { --tier-color: #669bbc; --tier-bg: rgba(184,169,154,0.10); }
-.tier-explorer { --tier-color: #c9a96e; --tier-bg: rgba(140,98,57,0.10); }
-.tier-operator { --tier-color: #669bbc; --tier-bg: rgba(74,85,104,0.10); }
-.tier-proven   { --tier-color: #c1121f; --tier-bg: rgba(201,169,110,0.12); }
-.tier-closer   { --tier-color: #780000; --tier-bg: rgba(155,17,30,0.08); }
-.tier-partner  { --tier-color: #003049; --tier-bg: rgba(26,26,46,0.10); }
+.tier-seed     { --tier-color: var(--tertiary); --tier-bg: rgba(184,169,154,0.10); }
+.tier-explorer { --tier-color: var(--champagne); --tier-bg: rgba(140,98,57,0.10); }
+.tier-operator { --tier-color: var(--tertiary); --tier-bg: rgba(74,85,104,0.10); }
+.tier-proven   { --tier-color: var(--primary); --tier-bg: rgba(201,169,110,0.12); }
+.tier-closer   { --tier-color: var(--accent); --tier-bg: rgba(155,17,30,0.08); }
+.tier-partner  { --tier-color: var(--dark); --tier-bg: rgba(26,26,46,0.10); }
 
 
 /* --------------------------------------------------------------------------
@@ -38,8 +38,8 @@
   transition: background 300ms ease;
 }
 
-.milestone-segment--done   { background: #669bbc; }
-.milestone-segment--active { background: #c1121f; }
+.milestone-segment--done   { background: var(--tertiary); }
+.milestone-segment--active { background: var(--primary); }
 
 
 /* --------------------------------------------------------------------------
@@ -58,12 +58,12 @@
 }
 
 /* Tier colors for ring fill */
-.score-ring-fill--seed     { stroke: #669bbc; }
-.score-ring-fill--explorer { stroke: #c9a96e; }
-.score-ring-fill--operator { stroke: #669bbc; }
-.score-ring-fill--proven   { stroke: #c1121f; }
-.score-ring-fill--closer   { stroke: #780000; }
-.score-ring-fill--partner  { stroke: #003049; }
+.score-ring-fill--seed     { stroke: var(--tertiary); }
+.score-ring-fill--explorer { stroke: var(--champagne); }
+.score-ring-fill--operator { stroke: var(--tertiary); }
+.score-ring-fill--proven   { stroke: var(--primary); }
+.score-ring-fill--closer   { stroke: var(--accent); }
+.score-ring-fill--partner  { stroke: var(--dark); }
 
 
 /* --------------------------------------------------------------------------
@@ -84,13 +84,13 @@
   white-space: nowrap;
 }
 
-.status-badge--active     { background: rgba(42,157,143,0.12); color: #1a7a6e; }
-.status-badge--pending    { background: rgba(244,162,97,0.15);  color: #b06b0a; }
+.status-badge--active     { background: rgba(42,157,143,0.12); color: var(--success-dark); }
+.status-badge--pending    { background: rgba(244,162,97,0.15); color: var(--warning); }
 .status-badge--accepted   { background: rgba(102,155,188,0.15); color: #2a6a8a; }
-.status-badge--completed  { background: rgba(42,157,143,0.12);  color: #1a7a6e; }
-.status-badge--rejected   { background: rgba(193,18,31,0.10);   color: #c1121f; }
+.status-badge--completed  { background: rgba(42,157,143,0.12); color: var(--success-dark); }
+.status-badge--rejected   { background: rgba(193,18,31,0.10); color: var(--primary); }
 .status-badge--processing { background: rgba(102,155,188,0.15); color: #2a6a8a; }
-.status-badge--settled    { background: rgba(0,48,73,0.08);     color: #003049; }
+.status-badge--settled    { background: rgba(0,48,73,0.08); color: var(--dark); }
 
 
 /* --------------------------------------------------------------------------
@@ -139,8 +139,8 @@
    -------------------------------------------------------------------------- */
 
 .cr-stat-card {
-  background: white;
-  border: 1px solid rgba(0,48,73,0.08);
+  background: var(--surface-elevated);
+  border: 1px solid var(--line);
   padding: var(--space-2) var(--space-3);
 }
 
@@ -199,10 +199,10 @@
 }
 
 .payout-speed--instant  { color: #2a9d8f; }
-.payout-speed--same-day { color: #c1121f; }
+.payout-speed--same-day { color: var(--primary); }
 .payout-speed--t1,
-.payout-speed--t2       { color: #003049; }
-.payout-speed--t3       { color: #669bbc; }
+.payout-speed--t2       { color: var(--dark); }
+.payout-speed--t3       { color: var(--tertiary); }
 
 
 /* --------------------------------------------------------------------------
@@ -230,7 +230,7 @@
   background: var(--surface);
   border: 1px solid var(--line);
   border-left: 4px solid var(--tier-color, var(--tertiary));
-  border-radius: 0;
+  border-radius: var(--r-xl);
 }
 
 /* Stat display — vertical value + label stack */

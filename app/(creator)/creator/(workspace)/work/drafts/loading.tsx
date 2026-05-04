@@ -2,7 +2,7 @@ import React from "react";
 
 const skel: React.CSSProperties = {
   background:
-    "linear-gradient(90deg,rgba(0,48,73,0.05) 25%,rgba(0,48,73,0.10) 50%,rgba(0,48,73,0.05) 75%)",
+    "linear-gradient(90deg,var(--surface-3) 25%,var(--mist) 50%,var(--surface-3) 75%)",
   backgroundSize: "200% 100%",
   animation: "shimmer 1.5s infinite linear",
 };
@@ -16,7 +16,7 @@ export default function DraftsLoading() {
       <div
         style={{
           height: "48px",
-          borderBottom: "1px solid rgba(0,48,73,0.12)",
+          borderBottom: "1px solid var(--hairline)",
           display: "flex",
           alignItems: "center",
           padding: "0 24px",
@@ -57,14 +57,14 @@ export default function DraftsLoading() {
           gridTemplateColumns: "1fr 1fr 1fr 1fr",
           gap: "1px",
           margin: "20px 32px",
-          border: "1px solid rgba(0,48,73,0.12)",
+          border: "1px solid var(--hairline)",
         }}
       >
         {["IN PROGRESS", "READY", "SUBMITTED", "OVERDUE"].map((label) => (
           <div
             key={label}
             style={{
-              background: "#fff",
+              background: "var(--surface-2)",
               padding: "16px",
               display: "flex",
               flexDirection: "column",
@@ -93,7 +93,7 @@ export default function DraftsLoading() {
               ...skel,
               height: "28px",
               width: `${w}px`,
-              borderRadius: "50vh",
+              borderRadius: "var(--r-pill)",
             }}
           />
         ))}
@@ -115,8 +115,8 @@ export default function DraftsLoading() {
           <div
             key={i}
             style={{
-              background: "#fff",
-              border: "1px solid rgba(0,48,73,0.10)",
+              background: "var(--surface-2)",
+              border: "1px solid var(--mist)",
               overflow: "hidden",
             }}
           >
@@ -152,7 +152,7 @@ export default function DraftsLoading() {
               <div
                 style={{
                   height: "4px",
-                  background: "rgba(0,48,73,0.08)",
+                  background: "var(--surface-3)",
                   marginBottom: "10px",
                 }}
               >

@@ -2,64 +2,59 @@
 
 import { useState, useCallback, useMemo } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import {
   useNotifications,
   timeAgo,
   type Notification,
 } from "@/lib/notifications/useNotifications";
 import "../inbox.css";
+import "./system.css";
 
-/* ── Category config ─────────────────────────────────────────── */
+/* ── Category config — product UI canonical labels ────────────── */
 
 type Category = "all" | "payments" | "campaigns" | "platform" | "alerts";
 
-const CATEGORIES: { id: Category; label: string; icon: string }[] = [
-  { id: "all", label: "All", icon: "" },
-  { id: "payments", label: "Payments", icon: "💳" },
-  { id: "campaigns", label: "Campaign Updates", icon: "📣" },
-  { id: "platform", label: "Platform", icon: "⚡" },
-  { id: "alerts", label: "Alerts", icon: "🔔" },
+const CATEGORIES: { id: Category; label: string }[] = [
+  { id: "all", label: "All" },
+  { id: "payments", label: "Payments" },
+  { id: "campaigns", label: "Campaigns" },
+  { id: "platform", label: "Platform" },
+  { id: "alerts", label: "Alerts" },
 ];
 
 const EMPTY_MESSAGES: Record<Category, { title: string; body: string }> = {
   all: {
-    title: "Nothing here yet.",
-    body: "When campaigns update or payments arrive, they appear here.",
+    title: "No notifications.",
+    body: "Payouts, campaign updates, and platform notices land here.",
   },
   payments: {
-    title: "No payment notifications.",
-    body: "Completed campaign payouts and wallet updates show here.",
+    title: "No payment activity.",
+    body: "Wallet credits and bank transfers will appear here.",
   },
   campaigns: {
     title: "No campaign updates.",
-    body: "Application decisions, deadline reminders, and milestone updates show here.",
+    body: "Application decisions and deadline reminders will appear here.",
   },
   platform: {
     title: "No platform updates.",
-    body: "Score changes, tier upgrades, and Push news show here.",
+    body: "Score changes, tier moves, and product news will appear here.",
   },
   alerts: {
     title: "No alerts.",
-    body: "Urgent notices and action-required items show here.",
+    body: "Action-required notices and compliance flags will appear here.",
   },
 };
 
-/* ── Extended notification type with category ───────────────── */
+/* ── Extended notification type ─────────────────────────────── */
 
 type SystemNotif = Notification & {
   category: Category;
   priority?: boolean;
-  /** Legacy role field on seeded rows — ignored by render but kept so
-   *  the seed literal at line 57 remains valid. */
   role?: string;
-  /** Legacy seed-only field kept for backward compatibility with the
-   *  earlier notification shape; not consumed by the current render. */
   type?: string;
-  icon?: string;
 };
 
-/* ── Seed with categories ────────────────────────────────────── */
+/* ── Seed data ───────────────────────────────────────────────── */
 
 const EXTENDED_NOTIFICATIONS: SystemNotif[] = [
   {
@@ -168,14 +163,136 @@ const EXTENDED_NOTIFICATIONS: SystemNotif[] = [
   },
 ];
 
-/* ── Category icons for items ───────────────────────────────── */
+/* ── Category icon SVGs — single icon family, 18px stroke 1.6 ──
+   Using Lucide-style stroke icons for product UI register.   */
 
-const CATEGORY_ICONS: Record<Category, string> = {
-  all: "●",
-  payments: "💳",
-  campaigns: "📣",
-  platform: "⚡",
-  alerts: "🔔",
+type IconProps = { className?: string };
+
+const PaymentsIcon = ({ className }: IconProps) => (
+  <svg
+    className={className}
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="1.6"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    aria-hidden
+  >
+    <rect x="3" y="6" width="18" height="13" rx="2" />
+    <path d="M3 10h18" />
+    <path d="M7 15h3" />
+  </svg>
+);
+
+const CampaignsIcon = ({ className }: IconProps) => (
+  <svg
+    className={className}
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="1.6"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    aria-hidden
+  >
+    <circle cx="12" cy="12" r="8" />
+    <circle cx="12" cy="12" r="3" />
+  </svg>
+);
+
+const PlatformIcon = ({ className }: IconProps) => (
+  <svg
+    className={className}
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="1.6"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    aria-hidden
+  >
+    <path d="M12 3l2.4 5.4L20 9.5l-4 4 1 5.5-5-2.8-5 2.8 1-5.5-4-4 5.6-1.1z" />
+  </svg>
+);
+
+const AlertsIcon = ({ className }: IconProps) => (
+  <svg
+    className={className}
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="1.6"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    aria-hidden
+  >
+    <path d="M12 9v4" />
+    <path d="M12 17h.01" />
+    <path d="M10.3 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
+  </svg>
+);
+
+const DefaultIcon = ({ className }: IconProps) => (
+  <svg
+    className={className}
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="1.6"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    aria-hidden
+  >
+    <circle cx="12" cy="12" r="9" />
+    <path d="M12 8v4" />
+    <path d="M12 16h.01" />
+  </svg>
+);
+
+const ChevronIcon = ({ className }: IconProps) => (
+  <svg
+    className={className}
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="1.6"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    aria-hidden
+  >
+    <path d="M9 6l6 6-6 6" />
+  </svg>
+);
+
+const CategoryIcon = ({
+  cat,
+  className,
+}: {
+  cat: Category;
+  className?: string;
+}) => {
+  switch (cat) {
+    case "payments":
+      return <PaymentsIcon className={className} />;
+    case "campaigns":
+      return <CampaignsIcon className={className} />;
+    case "platform":
+      return <PlatformIcon className={className} />;
+    case "alerts":
+      return <AlertsIcon className={className} />;
+    default:
+      return <DefaultIcon className={className} />;
+  }
+};
+
+/* Category badge label — short product UI tag shown next to title */
+const BADGE_LABEL: Record<Category, string> = {
+  all: "Update",
+  payments: "Payment",
+  campaigns: "Campaign",
+  platform: "Platform",
+  alerts: "Alert",
 };
 
 /* ── Date grouping ───────────────────────────────────────────── */
@@ -198,16 +315,15 @@ function groupByDate(notifications: SystemNotif[]): DateGroup[] {
   }
 
   const groups: DateGroup[] = [];
-  if (today.length) groups.push({ label: "Today", items: today });
-  if (yesterday.length) groups.push({ label: "Yesterday", items: yesterday });
-  if (earlier.length) groups.push({ label: "Earlier", items: earlier });
+  if (today.length) groups.push({ label: "TODAY", items: today });
+  if (yesterday.length) groups.push({ label: "YESTERDAY", items: yesterday });
+  if (earlier.length) groups.push({ label: "EARLIER", items: earlier });
   return groups;
 }
 
 /* ── Page ─────────────────────────────────────────────────────── */
 
 export default function SystemPage() {
-  const pathname = usePathname();
   const { markAllRead } = useNotifications("creator");
 
   const [notifications, setNotifications] = useState<SystemNotif[]>(
@@ -236,7 +352,6 @@ export default function SystemPage() {
       (a, b) =>
         new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
     );
-    // Payments with priority: float to top of their date group
     return groupByDate(sorted).map((g) => ({
       ...g,
       items: [
@@ -246,7 +361,6 @@ export default function SystemPage() {
     }));
   }, [filtered]);
 
-  // Count unread per category
   const countFor = useCallback(
     (cat: Category) => {
       const src =
@@ -259,121 +373,159 @@ export default function SystemPage() {
   );
 
   const totalUnread = countFor("all");
-  const unreadMessages = 2;
-  const pendingInvites = 3;
 
   return (
-    <div className="system-page">
-      {/* Top nav */}
-      <header className="inbox-nav">
-        <Link href="/creator/dashboard" className="inbox-nav-back">
-          ← Dashboard
-        </Link>
-        <span className="inbox-nav-title">Inbox.</span>
-        <div className="inbox-live-indicator">
-          <span className="inbox-live-dot" />
-          <span className="inbox-live-label">Live</span>
-        </div>
-      </header>
+    <div className="ib-content">
+      {/* Eyebrow + action bar */}
+      <div className="ib-sys-bar">
+        <span className="ib-sys-eyebrow">
+          LINKS
+          <span className="ib-sys-eyebrow-sep" aria-hidden>
+            ·
+          </span>
+          <span className="ib-sys-eyebrow-state">
+            {totalUnread > 0 ? `${totalUnread} UNREAD` : "ALL CAUGHT UP"}
+          </span>
+        </span>
+        {totalUnread > 0 && (
+          <button
+            type="button"
+            className="ib-mark-all-btn"
+            onClick={markAllSystemRead}
+            aria-label="Mark all notifications as read"
+          >
+            Mark all as read
+          </button>
+        )}
+      </div>
 
-      {/* Section tabs */}
-      <nav className="inbox-tabs">
-        <Link
-          href="/creator/inbox"
-          className={`inbox-tab${!pathname?.endsWith("/invites") && !pathname?.endsWith("/system") ? " inbox-tab--active" : ""}`}
-        >
-          Messages
-          {unreadMessages > 0 && (
-            <span className="inbox-tab-badge">{unreadMessages}</span>
-          )}
-        </Link>
-        <Link
-          href="/creator/inbox/invites"
-          className={`inbox-tab${pathname?.endsWith("/invites") ? " inbox-tab--active" : ""}`}
-        >
-          Invites
-          {pendingInvites > 0 && (
-            <span className="inbox-tab-badge">{pendingInvites}</span>
-          )}
-        </Link>
-        <Link
-          href="/creator/inbox/system"
-          className={`inbox-tab${pathname?.endsWith("/system") ? " inbox-tab--active" : ""}`}
-        >
-          System
-          {totalUnread > 0 && (
-            <span className="inbox-tab-badge">{totalUnread}</span>
-          )}
-        </Link>
-      </nav>
-
-      {/* Category filters */}
-      <div className="system-filters">
+      {/* Category filter chips */}
+      <div
+        className="ib-filter-row"
+        role="group"
+        aria-label="Filter notifications by category"
+      >
         {CATEGORIES.map((cat) => {
           const count = countFor(cat.id);
+          const isActive = activeCategory === cat.id;
           return (
             <button
               key={cat.id}
-              className={`system-filter-chip${activeCategory === cat.id ? " system-filter-chip--active" : ""}`}
+              type="button"
               onClick={() => setActiveCategory(cat.id)}
+              aria-pressed={isActive}
+              className={`ib-chip${isActive ? " ib-chip--active" : ""}`}
             >
-              {cat.icon && <span>{cat.icon}</span>}
               {cat.label}
-              {count > 0 && (
-                <span className="system-filter-chip-count">({count})</span>
-              )}
+              {count > 0 && <span className="ib-chip-count"> · {count}</span>}
             </button>
           );
         })}
       </div>
 
-      {/* Mark all read */}
-      {totalUnread > 0 && (
-        <div className="system-mark-bar">
-          <button className="system-mark-all-btn" onClick={markAllSystemRead}>
-            Mark all read
-          </button>
-        </div>
-      )}
-
       {/* Notification list */}
-      <div className="system-list">
+      <div className="ib-sys-list">
         {groups.length === 0 ? (
-          <div className="system-empty">
-            <p className="system-empty-title">
+          <div className="ib-empty">
+            <p className="ib-empty-title">
               {EMPTY_MESSAGES[activeCategory].title}
             </p>
-            <p className="system-empty-body">
+            <p className="ib-empty-body">
               {EMPTY_MESSAGES[activeCategory].body}
             </p>
           </div>
         ) : (
           groups.map((group) => (
-            <div key={group.label}>
-              <div className="system-date-divider">{group.label}</div>
-              {group.items.map((notif, idx) => (
-                <Link
-                  key={notif.id}
-                  href={notif.href}
-                  className={`system-item${notif.category === "payments" && notif.priority ? " system-item--payment" : ""}${notif.read ? " system-item--read" : ""}`}
-                  onClick={() => markRead(notif.id)}
-                  style={{ animationDelay: `${idx * 25}ms` }}
-                >
-                  <div className="system-item-icon">
-                    {CATEGORY_ICONS[notif.category as Category]}
-                  </div>
-                  <div className="system-item-body">
-                    <div className="system-item-header">
-                      <span className="system-item-title">{notif.title}</span>
-                      <span className="system-item-time">
-                        {timeAgo(notif.createdAt)}
+            <div key={group.label} className="ib-group">
+              <div className="ib-group-label">
+                <span>{group.label}</span>
+                <span className="ib-group-line" aria-hidden />
+              </div>
+
+              {group.items.map((notif) => {
+                const cat = notif.category as Category;
+                const rowClass = [
+                  "ib-sys-row",
+                  `ib-sys-row--${cat}`,
+                  !notif.read ? "ib-sys-row--unread" : "",
+                  notif.priority && !notif.read ? "ib-sys-row--priority" : "",
+                ]
+                  .filter(Boolean)
+                  .join(" ");
+
+                const inner = (
+                  <>
+                    {/* Icon tile */}
+                    <span
+                      className={`ib-sys-icon ib-sys-icon--${cat}`}
+                      aria-hidden
+                    >
+                      <CategoryIcon cat={cat} className="ib-sys-icon-svg" />
+                    </span>
+
+                    {/* Body */}
+                    <span className="ib-sys-body">
+                      <span className="ib-sys-meta-row">
+                        <span className={`ib-sys-badge ib-sys-badge--${cat}`}>
+                          {BADGE_LABEL[cat]}
+                        </span>
+                        <span className="ib-sys-time">
+                          {timeAgo(notif.createdAt)}
+                        </span>
+                        {notif.priority && !notif.read && (
+                          <span
+                            className="ib-sys-priority-tag"
+                            aria-label="Priority notification"
+                          >
+                            Priority
+                          </span>
+                        )}
                       </span>
-                    </div>
-                    <p className="system-item-text">{notif.body}</p>
-                  </div>
-                  {!notif.read && <span className="system-item-unread-dot" />}
-                </Link>
-              ))}
+
+                      <span
+                        className={`ib-sys-title${
+                          !notif.read ? " ib-sys-title--bold" : ""
+                        }`}
+                      >
+                        {notif.title}
+                      </span>
+                      <span className="ib-sys-text">{notif.body}</span>
+                    </span>
+
+                    {/* Right: unread dot OR chevron when linkable */}
+                    <span className="ib-sys-right">
+                      {!notif.read ? (
+                        <span
+                          className="ib-sys-dot"
+                          aria-label="Unread notification"
+                        />
+                      ) : notif.href ? (
+                        <ChevronIcon className="ib-sys-chevron" />
+                      ) : null}
+                    </span>
+                  </>
+                );
+
+                return notif.href ? (
+                  <Link
+                    key={notif.id}
+                    href={notif.href}
+                    className={rowClass}
+                    onClick={() => markRead(notif.id)}
+                  >
+                    {inner}
+                  </Link>
+                ) : (
+                  <button
+                    key={notif.id}
+                    type="button"
+                    className={rowClass}
+                    onClick={() => markRead(notif.id)}
+                  >
+                    {inner}
+                  </button>
+                );
+              })}
             </div>
           ))
         )}

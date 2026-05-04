@@ -14,10 +14,10 @@ export interface CreatorTableProps {
 }
 
 const STATUS_COLORS: Record<CreatorRow["status"], string> = {
-  active: "#c1121f", // Flag Red
-  prospect: "#669bbc", // Steel Blue
-  early_operator: "#780000", // Molten Lava
-  churn: "#780000", // Molten Lava
+  active: "var(--brand-red)", // Flag Red
+  prospect: "var(--accent-blue)", // Steel Blue
+  early_operator: "var(--accent)", // Molten Lava
+  churn: "var(--accent)", // Molten Lava
 };
 
 export default function CreatorTable({ data }: CreatorTableProps) {

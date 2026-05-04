@@ -4,19 +4,19 @@
   gap: 12px;
   padding: 0 16px;
   min-height: 64px;
-  border-bottom: 1px solid var(--line, rgba(0,48,73,0.12));
+  border-bottom: 1px solid var(--line, var(--ink));
   cursor: pointer;
   position: relative;
-  background: var(--surface-elevated, #fff);
+  background: var(--surface-2);
   transition: background 200ms ease;
 }
 
 .invite-row:hover {
-  background: var(--surface-bright, #fafaf8);
+  background: var(--surface-3);
 }
 
 .invite-row:focus {
-  outline: 2px solid var(--primary, #c1121f);
+  outline: 2px solid var(--brand-red);
   outline-offset: -2px;
 }
 
@@ -26,11 +26,11 @@
   top: 0;
   bottom: 0;
   width: 3px;
-  background: var(--line, rgba(0,48,73,0.12));
+  background: var(--line, var(--ink));
 }
 
 .invite-row--unread .invite-row__status-bar {
-  background: var(--primary, #c1121f);
+  background: var(--brand-red);
 }
 
 .invite-row--urgent .invite-row__status-bar {
@@ -45,8 +45,8 @@
 .invite-row__avatar {
   width: 40px;
   height: 40px;
-  background: var(--dark, #003049);
-  color: #fff;
+  background: var(--ink);
+  color: var(--snow);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -54,7 +54,7 @@
   font-size: 18px;
   font-weight: 700;
   flex-shrink: 0;
-  border-radius: 0;
+  border-radius: var(--r-xl);
 }
 
 .invite-row__content {
@@ -69,7 +69,7 @@
   font-family: Darky, sans-serif;
   font-size: 15px;
   font-weight: 600;
-  color: var(--dark, #003049);
+  color: var(--ink);
   letter-spacing: -0.01em;
   white-space: nowrap;
   overflow: hidden;
@@ -83,7 +83,7 @@
 .invite-row__campaign {
   font-family: 'CS Genio Mono', monospace;
   font-size: 13px;
-  color: var(--graphite, #4a5568);
+  color: var(--graphite);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -101,7 +101,7 @@
   font-family: Darky, sans-serif;
   font-size: 16px;
   font-weight: 700;
-  color: var(--champagne, #c9a96e);
+  color: var(--champagne);
 }
 
 .invite-row__countdown {
@@ -110,11 +110,11 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.04em;
-  color: var(--graphite, #4a5568);
+  color: var(--graphite);
 }
 
 .invite-row__countdown--urgent {
-  color: var(--primary, #c1121f);
+  color: var(--brand-red);
   animation: inviteCountdownPulse 1.2s ease-in-out infinite;
 }
 
@@ -131,28 +131,28 @@
   text-transform: uppercase;
   letter-spacing: 0.04em;
   cursor: pointer;
-  border-radius: 0;
+  border-radius: var(--r-xl);
   transition: background 200ms ease, color 200ms ease, border-color 200ms ease;
 }
 
 .invite-row__btn--accept {
-  background: var(--primary, #c1121f);
-  color: #fff;
-  border: 1px solid var(--primary, #c1121f);
+  background: var(--brand-red);
+  color: var(--snow);
+  border: 1px solid var(--brand-red);
 }
 
 .invite-row__btn--accept:hover {
-  background: var(--accent, #780000);
-  border-color: var(--accent, #780000);
+  background: var(--accent);
+  border-color: var(--accent);
 }
 
 .invite-row__btn--decline {
   background: transparent;
-  color: var(--graphite, #4a5568);
-  border: 1px solid var(--line, rgba(0,48,73,0.12));
+  color: var(--graphite);
+  border: 1px solid var(--line, var(--ink));
 }
 
 .invite-row__btn--decline:hover {
-  border-color: var(--dark, #003049);
-  color: var(--dark, #003049);
+  border-color: var(--ink);
+  color: var(--ink);
 }

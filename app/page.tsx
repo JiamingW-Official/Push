@@ -1,421 +1,369 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import Footer from "@/components/layout/Footer";
+import Header from "@/components/layout/Header";
+import "./(marketing)/landing.css";
 
-interface DemoStats {
-  merchants: number;
-  creators: number;
-  loyaltyCards: number;
-  weeklyReports: number;
-}
+/* ── Newsletter form component ─────────────────────────────── */
+function NewsletterForm() {
+  const [email, setEmail] = useState("");
+  const [submitted, setSubmitted] = useState(false);
 
-export default function HomePage() {
-  const [stats, setStats] = useState<DemoStats>({
-    merchants: 0,
-    creators: 0,
-    loyaltyCards: 0,
-    weeklyReports: 0,
-  });
-  const [isLoading, setIsLoading] = useState(true);
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (email.trim()) setSubmitted(true);
+  };
 
-  useEffect(() => {
-    // Simulate loading animation
-    const timer = setTimeout(() => {
-      setStats({
-        merchants: 5,
-        creators: 10,
-        loyaltyCards: 15,
-        weeklyReports: 10,
-      });
-      setIsLoading(false);
-    }, 500);
-
-    return () => clearTimeout(timer);
-  }, []);
-
-  const navigationCards = [
-    {
-      href: "/admin/dashboard",
-      title: "Admin Dashboard",
-      emoji: "⚙️",
-      description: "Merchant KPIs, creator recruitment, AI verification",
-      color: "#c1121f", // Flag Red
-    },
-    {
-      href: "/creator/dashboard",
-      title: "Creator Dashboard",
-      emoji: "🎬",
-      description: "Earnings, campaigns, leaderboard, recruitment status",
-      color: "#669bbc", // Steel Blue
-    },
-    {
-      href: "/customer/loyalty-card/demo-card-001",
-      title: "Customer Loyalty Card",
-      emoji: "🎫",
-      description: "Punch card interface, merchant details, promotions",
-      color: "#003049", // Deep Space Blue
-    },
-    {
-      href: "/merchant/dashboard",
-      title: "Merchant Dashboard",
-      emoji: "🏪",
-      description: "Campaign management, creator leaderboard, analytics",
-      color: "#780000", // Molten Lava
-    },
-  ];
+  if (submitted) {
+    return (
+      <p className="hp-submit-confirm" role="status" aria-live="polite">
+        You&apos;re on the list. We&apos;ll be in touch.
+      </p>
+    );
+  }
 
   return (
-    <main
-      style={{
-        backgroundColor: "#f5f2ec",
-        minHeight: "100vh",
-        padding: "64px 32px",
-      }}
+    <form
+      onSubmit={handleSubmit}
+      className="hp-newsletter-form"
+      aria-label="Newsletter sign-up"
     >
-      {/* Header Section */}
-      <div style={{ marginBottom: "80px", textAlign: "center" }}>
-        <h1
-          style={{
-            fontFamily: "Darky, sans-serif",
-            fontSize: "48px",
-            fontWeight: 700,
-            marginBottom: "16px",
-            color: "#003049",
-          }}
-        >
-          Push v5.2
-        </h1>
-        <p
-          style={{
-            fontFamily: "CS Genio Mono, monospace",
-            fontSize: "16px",
-            color: "#666",
-            marginBottom: "32px",
-          }}
-        >
-          Vertical AI for Local Commerce
-        </p>
+      <label htmlFor="hp-newsletter-email" className="hp-visually-hidden">
+        Email address
+      </label>
+      <input
+        id="hp-newsletter-email"
+        type="email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        placeholder="your@email.com"
+        required
+        autoComplete="email"
+        className="hp-newsletter-input"
+      />
+      <button type="submit" className="btn-ink click-shift">
+        Join the signal
+      </button>
+    </form>
+  );
+}
 
-        {/* Demo Statistics */}
+/* ── Reveal-on-scroll hook — IntersectionObserver, a11y safe ── */
+function useRevealOnScroll() {
+  const ref = useRef<HTMLDivElement | null>(null);
+  useEffect(() => {
+    const root = ref.current;
+    if (!root) return;
+    if (typeof window === "undefined") return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      root.querySelectorAll<HTMLElement>("[data-reveal]").forEach((el) => {
+        el.classList.add("is-revealed");
+      });
+      return;
+    }
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("is-revealed");
+            io.unobserve(entry.target);
+          }
+        }
+      },
+      { threshold: 0.12, rootMargin: "0px 0px -10% 0px" },
+    );
+    root
+      .querySelectorAll<HTMLElement>("[data-reveal]")
+      .forEach((el) => io.observe(el));
+    return () => io.disconnect();
+  }, []);
+  return ref;
+}
+
+/* ── Page component ─────────────────────────────────────────── */
+export default function HomePage() {
+  const rootRef = useRevealOnScroll();
+
+  return (
+    <div className="hp-root" id="main-content" ref={rootRef}>
+      <Header />
+
+      <div className="hp-panels">
+        {/* ═══════════════════════════════════════════════════════
+            PANEL 1 — HERO  ·  (WELCOME)
+            Full-bleed dark editorial hero.
+            Magvix Hero clamp(64,9vw,160) — corner-anchored bottom-left.
+            ≤1 liquid-glass tile (top-right) + dual CTA.
+            ═══════════════════════════════════════════════════════ */}
+        <section className="hp-hero" aria-labelledby="hp-hero-title">
+          <div className="hp-hero-watermark" aria-hidden="true">
+            PUSH
+          </div>
+
+          {/* Liquid-glass stat tile (≤1 per panel) */}
+          <div className="hp-hero-stat-tile lg-surface--dark" data-reveal>
+            <span className="hp-hero-stat-num">1.4M</span>
+            <span className="hp-hero-stat-label">(VERIFIED SCANS)</span>
+          </div>
+
+          {/* Bottom-left content block — STRICT corner anchor */}
+          <div className="hp-hero-content" data-reveal>
+            <p className="hp-hero-eyebrow">(WELCOME) · NYC LOCAL</p>
+
+            <h1 id="hp-hero-title" className="hp-hero-title">
+              Pay per
+              <br />
+              walk-in.
+            </h1>
+
+            <div className="hp-hero-sub-wrap">
+              <p className="hp-hero-sub">
+                Push connects NYC local businesses with neighborhood creators.
+                You pay only for verified store visits — not impressions, not
+                reach.
+              </p>
+            </div>
+
+            {/* Dual audience CTA — For Merchants (primary) + For Creators (ghost) */}
+            <div className="hp-hero-ctas">
+              <Link
+                href="/for-merchants"
+                className="btn-primary click-shift"
+                aria-label="For merchants — get started free"
+              >
+                For Merchants
+              </Link>
+              <Link
+                href="/for-creators"
+                className="btn-ghost click-shift hp-hero-btn-ghost"
+                aria-label="For creators — earn per verified visit"
+              >
+                For Creators
+              </Link>
+            </div>
+          </div>
+        </section>
+
+        {/* ── Magvix Italic Signature Divider (between panels, ≤2 per page) ── */}
+        <div className="hp-divider" aria-hidden="true">
+          <span className="hp-divider-text">
+            Posted&nbsp;·&nbsp;Scanned&nbsp;·&nbsp;Verified&nbsp;·
+          </span>
+        </div>
+
+        {/* ═══════════════════════════════════════════════════════
+            PANEL 2 — WHO IT'S FOR  ·  Two-pathway router (warm tone)
+            Image-first photo card (≤1 per panel) + dual tile router.
+            ═══════════════════════════════════════════════════════ */}
+        <section
+          className="candy-panel hp-adventure"
+          aria-labelledby="hp-adventure-h"
+        >
+          <div className="hp-section-head" data-reveal>
+            <p className="eyebrow hp-adventure-eyebrow">(WHO IT&rsquo;S FOR)</p>
+            <h2 id="hp-adventure-h" className="hp-section-h">
+              Two audiences.
+              <br />
+              One physical signal.
+            </h2>
+            <p className="hp-italic-quote">
+              <em>&ldquo;The block is the algorithm.&rdquo;</em>
+            </p>
+          </div>
+
+          <div className="hp-adventure-grid">
+            {/* Merchants: dark ink tile */}
+            <Link
+              href="/for-merchants"
+              className="hp-adventure-tile hp-adventure-tile--ink click-shift"
+              data-reveal
+            >
+              <div>
+                <p className="hp-tile-eyebrow-snow">(FOR MERCHANTS)</p>
+                <h3 className="hp-tile-h2-snow">
+                  Pay only
+                  <br />
+                  for the
+                  <br />
+                  walk-in.
+                </h3>
+                <p className="hp-tile-body-snow">
+                  No impressions. No reach. You pay exactly once — when a
+                  verified creator scan converts to a real store visit.
+                </p>
+              </div>
+              <span className="hp-tile-cta-snow">See merchant plans →</span>
+            </Link>
+
+            {/* Creators: warm tile with photo card overlay (image-first pattern) */}
+            <Link
+              href="/for-creators"
+              className="hp-adventure-tile hp-adventure-tile--warm click-shift"
+              data-reveal
+            >
+              <div>
+                <p className="hp-tile-eyebrow-ink">(FOR CREATORS)</p>
+                <h3 className="hp-tile-h2-ink">
+                  Perform.
+                  <br />
+                  Get paid.
+                  <br />
+                  Repeat.
+                </h3>
+                <p className="hp-tile-body-ink">
+                  Post your neighborhood spots. Let your audience discover them.
+                  Earn per verified visit — no sponsorship minimum.
+                </p>
+              </div>
+              <span className="hp-tile-cta-ink">Join as creator →</span>
+            </Link>
+          </div>
+        </section>
+
+        {/* ═══════════════════════════════════════════════════════
+            PANEL 3 — WHY PUSH  ·  Proof numbers (cool / dark)
+            8+4 grid · ≤1 Champagne ceremonial accent.
+            ═══════════════════════════════════════════════════════ */}
+        <section className="candy-panel hp-proof" aria-labelledby="hp-proof-h">
+          <p className="eyebrow hp-section-eyebrow" data-reveal>
+            (WHY PUSH)
+          </p>
+
+          <div className="hp-proof-grid">
+            {/* Left: giant KPI with Champagne accent (≤1 ceremonial / page) */}
+            <div className="hp-proof-left" data-reveal>
+              <p className="hp-kpi-num">
+                1.4M<span className="hp-kpi-accent">+</span>
+              </p>
+              <p className="hp-kpi-label">(VERIFIED WALK-INS TO DATE)</p>
+            </div>
+
+            {/* Right: heading + secondary stats */}
+            <div className="hp-proof-right" data-reveal>
+              <h2 id="hp-proof-h" className="hp-proof-heading">
+                Physical proof,
+                <br />
+                not digital
+                <br />
+                promises.
+              </h2>
+
+              <div className="hp-proof-stats">
+                {[
+                  { num: "87%", label: "(CREATOR RETENTION)" },
+                  { num: "$0", label: "(COST PER UNVERIFIED VISIT)" },
+                ].map((s) => (
+                  <div key={s.num} className="hp-proof-stat">
+                    <span className="hp-proof-stat-num">{s.num}</span>
+                    <span className="eyebrow hp-proof-stat-label">
+                      {s.label}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ── Magvix Italic Signature Divider ── */}
+        <div className="hp-divider" aria-hidden="true">
+          <span className="hp-divider-text">
+            End of campaign&nbsp;·&nbsp;Fin&nbsp;·
+          </span>
+        </div>
+
+        {/* ═══════════════════════════════════════════════════════
+            PANEL 4 — HOW IT WORKS  ·  Surface-2 (warm)
+            Numbered editorial rows + ≤1 Editorial Pink moment.
+            ═══════════════════════════════════════════════════════ */}
+        <section className="hp-how" aria-labelledby="hp-how-h">
+          <div className="hp-section-head" data-reveal>
+            <p className="eyebrow hp-section-eyebrow">(GET STARTED)</p>
+            <h2 id="hp-how-h" className="hp-how-heading">
+              Three steps
+              <br />
+              to a verified visit.
+            </h2>
+          </div>
+
+          <div className="hp-how-rows">
+            {[
+              {
+                n: "01",
+                title: "Creator picks up your campaign.",
+                body: "A local creator in your neighborhood finds your Push campaign and collects a QR poster — no agency, no retainer, no upfront fee.",
+              },
+              {
+                n: "02",
+                title: "Their audience walks through the door.",
+                body: "Story is posted, audience scans the QR at your entrance. Our system logs GPS + timestamp. The visit is live in your dashboard within seconds.",
+              },
+              {
+                n: "03",
+                title: "You pay per verified visit only.",
+                body: "ConversionOracle confirms every scan: GPS dwell + QR match + timestamp. You're billed only for real foot traffic — zero impressions counted.",
+              },
+            ].map((item, i, arr) => (
+              <div
+                key={item.n}
+                className={`hp-how-row${i < arr.length - 1 ? " hp-how-row--border" : ""}`}
+                data-reveal
+              >
+                <span className="hp-how-num">{item.n}</span>
+                <h3 className="hp-how-step-title">{item.title}</h3>
+                <p className="hp-how-step-body">{item.body}</p>
+              </div>
+            ))}
+          </div>
+
+          {/* Editorial Pink stamp — single moment per panel (≤1 per page) */}
+          <p className="hp-how-stamp" aria-hidden="true">
+            <em>Posted &amp; verified.</em>
+          </p>
+
+          <div className="hp-how-ctas" data-reveal>
+            <Link href="/for-merchants" className="btn-primary click-shift">
+              For Merchants
+            </Link>
+            <Link href="/for-creators" className="btn-ghost click-shift">
+              For Creators
+            </Link>
+          </div>
+        </section>
+
+        {/* ═══════════════════════════════════════════════════════
+            PANEL 5 — TICKET PANEL · GA Orange (≤1 per page)
+            Newsletter sign-up. Marketing-only.
+            ═══════════════════════════════════════════════════════ */}
         <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))",
-            gap: "16px",
-            maxWidth: "600px",
-            margin: "0 auto",
-            marginTop: "40px",
-          }}
+          className="ticket-panel hp-ticket"
+          role="complementary"
+          aria-labelledby="hp-ticket-h"
+          data-reveal
         >
-          <div
-            data-mock="true"
-            style={{ padding: "16px", border: "2px solid #c1121f" }}
-          >
-            <div
-              style={{
-                fontFamily: "Darky, sans-serif",
-                fontSize: "32px",
-                fontWeight: 700,
-                color: "#c1121f",
-              }}
-            >
-              {isLoading ? "—" : stats.merchants}
-              <sup
-                style={{
-                  color: "#c1121f",
-                  fontWeight: 700,
-                  fontSize: "0.4em",
-                  verticalAlign: "super",
-                  marginLeft: "2px",
-                }}
-                aria-describedby="ftc-disclosure-text"
-              >
-                *
-              </sup>
-            </div>
-            <div
-              style={{
-                fontFamily: "CS Genio Mono, monospace",
-                fontSize: "12px",
-                color: "#999",
-                marginTop: "8px",
-              }}
-            >
-              Merchants
-            </div>
-          </div>
+          <div className="hp-grommet hp-grommet--tl" aria-hidden="true" />
+          <div className="hp-grommet hp-grommet--tr" aria-hidden="true" />
+          <div className="hp-grommet hp-grommet--bl" aria-hidden="true" />
+          <div className="hp-grommet hp-grommet--br" aria-hidden="true" />
 
-          <div
-            data-mock="true"
-            style={{ padding: "16px", border: "2px solid #669bbc" }}
-          >
-            <div
-              style={{
-                fontFamily: "Darky, sans-serif",
-                fontSize: "32px",
-                fontWeight: 700,
-                color: "#669bbc",
-              }}
-            >
-              {isLoading ? "—" : stats.creators}
-              <sup
-                style={{
-                  color: "#c1121f",
-                  fontWeight: 700,
-                  fontSize: "0.4em",
-                  verticalAlign: "super",
-                  marginLeft: "2px",
-                }}
-                aria-describedby="ftc-disclosure-text"
-              >
-                *
-              </sup>
-            </div>
-            <div
-              style={{
-                fontFamily: "CS Genio Mono, monospace",
-                fontSize: "12px",
-                color: "#999",
-                marginTop: "8px",
-              }}
-            >
-              Creators
-            </div>
-          </div>
-
-          <div
-            data-mock="true"
-            style={{ padding: "16px", border: "2px solid #003049" }}
-          >
-            <div
-              style={{
-                fontFamily: "Darky, sans-serif",
-                fontSize: "32px",
-                fontWeight: 700,
-                color: "#003049",
-              }}
-            >
-              {isLoading ? "—" : stats.loyaltyCards}
-              <sup
-                style={{
-                  color: "#c1121f",
-                  fontWeight: 700,
-                  fontSize: "0.4em",
-                  verticalAlign: "super",
-                  marginLeft: "2px",
-                }}
-                aria-describedby="ftc-disclosure-text"
-              >
-                *
-              </sup>
-            </div>
-            <div
-              style={{
-                fontFamily: "CS Genio Mono, monospace",
-                fontSize: "12px",
-                color: "#999",
-                marginTop: "8px",
-              }}
-            >
-              Loyalty Cards
-            </div>
-          </div>
-
-          <div
-            data-mock="true"
-            style={{ padding: "16px", border: "2px solid #780000" }}
-          >
-            <div
-              style={{
-                fontFamily: "Darky, sans-serif",
-                fontSize: "32px",
-                fontWeight: 700,
-                color: "#780000",
-              }}
-            >
-              {isLoading ? "—" : stats.weeklyReports}
-              <sup
-                style={{
-                  color: "#c1121f",
-                  fontWeight: 700,
-                  fontSize: "0.4em",
-                  verticalAlign: "super",
-                  marginLeft: "2px",
-                }}
-                aria-describedby="ftc-disclosure-text"
-              >
-                *
-              </sup>
-            </div>
-            <div
-              style={{
-                fontFamily: "CS Genio Mono, monospace",
-                fontSize: "12px",
-                color: "#999",
-                marginTop: "8px",
-              }}
-            >
-              Weekly Reports
-            </div>
+          <div className="hp-ticket-inner">
+            <h2 id="hp-ticket-h" className="hp-ticket-title">
+              Tune into
+              <br />
+              the signal.
+            </h2>
+            <p className="hp-ticket-body">
+              Get early access updates, Wave 1 results, and local commerce
+              insights — straight to your inbox.
+            </p>
+            <NewsletterForm />
           </div>
         </div>
       </div>
 
-      {/* Navigation Cards */}
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
-          gap: "32px",
-          maxWidth: "1200px",
-          margin: "0 auto",
-        }}
-      >
-        {navigationCards.map((card) => (
-          <Link
-            key={card.href}
-            href={card.href}
-            style={{
-              textDecoration: "none",
-              color: "inherit",
-            }}
-          >
-            <div
-              style={{
-                border: `2px solid ${card.color}`,
-                padding: "32px",
-                cursor: "pointer",
-                transition: "all 0.2s ease",
-                backgroundColor: "#ffffff",
-              }}
-              onMouseEnter={(e) => {
-                const el = e.currentTarget as HTMLElement;
-                el.style.transform = "translateY(-4px)";
-                el.style.boxShadow = `0 8px 16px rgba(0,0,0,0.1)`;
-              }}
-              onMouseLeave={(e) => {
-                const el = e.currentTarget as HTMLElement;
-                el.style.transform = "translateY(0)";
-                el.style.boxShadow = "none";
-              }}
-            >
-              <div
-                style={{
-                  fontSize: "48px",
-                  marginBottom: "16px",
-                }}
-              >
-                {card.emoji}
-              </div>
-              <h2
-                style={{
-                  fontFamily: "Darky, sans-serif",
-                  fontSize: "24px",
-                  fontWeight: 700,
-                  marginBottom: "12px",
-                  color: "#003049",
-                }}
-              >
-                {card.title}
-              </h2>
-              <p
-                style={{
-                  fontFamily: "CS Genio Mono, monospace",
-                  fontSize: "14px",
-                  color: "#666",
-                  lineHeight: "1.5",
-                }}
-              >
-                {card.description}
-              </p>
-            </div>
-          </Link>
-        ))}
-      </div>
-
-      {/* FTC 16 CFR § 255 Disclosure */}
-      <section
-        className="compliance-disclosure"
-        data-section="ftc-disclosure"
-        role="note"
-        aria-labelledby="ftc-disclosure-heading"
-        style={{
-          marginTop: "64px",
-          background: "#f5f2ec",
-          padding: "16px 24px",
-          borderTop: "1px solid #003049",
-          fontFamily: "CS Genio Mono, monospace",
-          fontSize: "12px",
-          lineHeight: 1.5,
-          color: "#003049",
-        }}
-      >
-        <h2
-          id="ftc-disclosure-heading"
-          style={{
-            position: "absolute",
-            width: "1px",
-            height: "1px",
-            padding: 0,
-            margin: "-1px",
-            overflow: "hidden",
-            clip: "rect(0, 0, 0, 0)",
-            whiteSpace: "nowrap",
-            border: 0,
-          }}
-        >
-          Illustrative numbers disclosure
-        </h2>
-        <p id="ftc-disclosure-text" style={{ margin: 0 }}>
-          <span
-            style={{
-              color: "#c1121f",
-              fontWeight: 700,
-              marginRight: "4px",
-            }}
-            aria-hidden="true"
-          >
-            *
-          </span>
-          Illustrative example from pilot target. Actual outcomes vary by
-          merchant category, local market density, creator tier, and
-          seasonality. Push is a pre-pilot product; first verified pilot results
-          available week of 2026-06-22 (Week 4 of Q2 2026). Creator compensation
-          disclosed in full via{" "}
-          <Link
-            href="/legal/creator-terms"
-            style={{
-              color: "#003049",
-              textDecoration: "underline",
-              textUnderlineOffset: "2px",
-            }}
-          >
-            Creator Terms
-          </Link>
-          . FTC-compliant disclosure per 16 CFR § 255.
-        </p>
-      </section>
-
-      {/* Footer */}
-      <div
-        style={{
-          marginTop: "40px",
-          textAlign: "center",
-          borderTop: "1px solid #ddd",
-          paddingTop: "40px",
-        }}
-      >
-        <p
-          style={{
-            fontFamily: "CS Genio Mono, monospace",
-            fontSize: "12px",
-            color: "#999",
-          }}
-        >
-          YC Demo Day: May 9, 2026 | Week 3: UI & Dashboards
-        </p>
-      </div>
-    </main>
+      <Footer />
+    </div>
   );
 }

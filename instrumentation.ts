@@ -4,6 +4,7 @@
  */
 
 export async function register() {
+  if (!process.env.SENTRY_DSN) return;
   if (process.env.NEXT_RUNTIME === "nodejs") {
     await import("./sentry.server.config");
   }
@@ -13,5 +14,18 @@ export async function register() {
 }
 
 // Hook errors from server/edge runtimes into Sentry when captured through
-// Next.js's new onRequestError API.
-export { captureRequestError as onRequestError } from "@sentry/nextjs";
+// Next.js's new onRequestError API. Lazy-loaded so dev (no DSN) skips bundling
+// the Sentry/OpenTelemetry tree entirely.
+export async function onRequestError(
+  err: unknown,
+  request: Parameters<
+    NonNullable<(typeof import("@sentry/nextjs"))["captureRequestError"]>
+  >[1],
+  context: Parameters<
+    NonNullable<(typeof import("@sentry/nextjs"))["captureRequestError"]>
+  >[2],
+) {
+  if (!process.env.SENTRY_DSN) return;
+  const { captureRequestError } = await import("@sentry/nextjs");
+  return captureRequestError(err, request, context);
+}

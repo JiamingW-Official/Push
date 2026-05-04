@@ -1,34 +1,34 @@
 /* =============================================================
    Merchant Public Page — merchant-public.css
-   Authority: Design.md (sharp corners, 6 colors, Darky+CSGenioMono)
+   Design.md v11 · Marketing-adjacent editorial register
    ============================================================= */
 
 /* ── Shared layout ─────────────────────────────────────────── */
 .mp-root {
   background: var(--surface);
-  color: var(--dark);
+  color: var(--ink-3);
 }
 
 .mp-container {
-  max-width: var(--content-width);
+  max-width: 1140px;
   margin: 0 auto;
-  padding: 0 var(--space-3);
+  padding: 0 24px;
 }
 
 @media (min-width: 768px) {
   .mp-container {
-    padding: 0 var(--space-5);
+    padding: 0 64px;
   }
 }
 
 /* ── Section skeleton ──────────────────────────────────────── */
 .mp-section {
-  padding: var(--space-12) 0;
+  padding: 64px 0;
 }
 
 @media (min-width: 768px) {
   .mp-section {
-    padding: var(--space-15) 0;
+    padding: 96px 0;
   }
 }
 
@@ -36,96 +36,54 @@
 .mp-section-label {
   display: flex;
   align-items: baseline;
-  gap: var(--space-2);
-  margin-bottom: var(--space-6);
-  border-bottom: 1px solid var(--line);
-  padding-bottom: var(--space-2);
+  gap: 12px;
+  margin-bottom: 32px;
+  border-bottom: 1px solid var(--mist);
+  padding-bottom: 8px;
 }
 
 .mp-section-num {
   font-family: var(--font-body);
-  font-size: var(--text-eyebrow);
+  font-size: 12px;
   font-weight: 700;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--primary);
-}
-
-.mp-section-title {
-  font-family: var(--font-display);
-  font-size: var(--text-h2);
-  font-weight: 700;
-  letter-spacing: -0.03em;
-  color: var(--dark);
+  color: var(--brand-red);
 }
 
 .mp-section-sub {
   font-family: var(--font-body);
-  font-size: var(--text-small);
-  color: var(--graphite);
-  margin-top: calc(-1 * var(--space-4));
-  margin-bottom: var(--space-6);
+  font-size: 18px;
+  color: var(--ink-3);
+  margin-top: -16px;
+  margin-bottom: 32px;
+  line-height: 1.55;
 }
 
 /* ── Eyebrow / small text ──────────────────────────────────── */
 .mp-eyebrow {
   font-family: var(--font-body);
-  font-size: var(--text-eyebrow);
+  font-size: 12px;
   font-weight: 700;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
+  /* text on dark hero image — snow allowed on dark bg */
   color: rgba(255, 255, 255, 0.75);
 }
 
-/* ── Buttons ───────────────────────────────────────────────── */
-.mp-btn {
-  display: inline-block;
+/* ── Category badge ────────────────────────────────────────── */
+.mp-category-badge {
   font-family: var(--font-body);
-  font-size: var(--text-small);
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  text-decoration: none;
-  border: none;
-  border-radius: 0;
-  padding: 14px 28px;
-  cursor: none;
-  transition: box-shadow var(--t-slow), transform var(--t-fast);
-}
-
-.mp-btn--primary {
-  background: var(--primary);
-  color: #fff;
-  box-shadow: var(--btn-shadow);
-  width: 100%;
-  text-align: center;
-}
-
-.mp-btn--primary:hover {
-  box-shadow: var(--btn-shadow-hover);
-  transform: translateY(-1px);
-}
-
-.mp-btn--cta {
-  background: var(--surface-elevated);
-  color: var(--dark);
-  box-shadow: 3px 3px 0 var(--primary);
-}
-
-.mp-btn--cta:hover {
-  box-shadow: 6px 6px 0 var(--accent);
-  transform: translateY(-1px);
-}
-
-/* ── Tier badge ────────────────────────────────────────────── */
-.mp-tier-badge {
-  font-family: var(--font-body);
-  font-size: var(--text-caption);
+  font-size: 12px;
   font-weight: 700;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  padding: 3px 8px;
-  border-radius: 50vh; /* pill — Design.md filter chip exception */
+  padding: 4px 12px;
+  border-radius: 40px;
+  background: var(--surface-3);
+  color: var(--ink);
+  border: 1px solid var(--mist);
+  display: inline-block;
 }
 
 /* ── 01 HERO ───────────────────────────────────────────────── */
@@ -144,63 +102,120 @@
   inset: 0;
 }
 
+/* dark overlay gradient on hero image — rgba allowed on images */
 .mp-hero-overlay {
   position: absolute;
   inset: 0;
   background: linear-gradient(
     to bottom,
-    rgba(0, 48, 73, 0.15) 0%,
-    rgba(0, 48, 73, 0.72) 100%
+    rgba(10, 10, 10, 0.15) 0%,
+    rgba(10, 10, 10, 0.72) 100%
   );
 }
 
 .mp-hero-content {
   position: relative;
   z-index: 1;
-  padding: var(--space-10) var(--space-3) var(--space-8);
-  max-width: var(--content-width);
+  padding: 64px 24px 48px;
+  max-width: 1140px;
   margin: 0 auto;
   width: 100%;
 }
 
 @media (min-width: 768px) {
   .mp-hero-content {
-    padding: var(--space-15) var(--space-5) var(--space-10);
+    padding: 96px 64px 64px;
   }
 }
 
 .mp-hero-name {
   font-family: var(--font-display);
-  font-size: clamp(52px, 9vw, 140px);
+  font-size: clamp(40px, 5vw, 72px);
   font-weight: 900;
-  letter-spacing: -0.06em;
-  line-height: 0.9;
-  color: var(--surface-elevated);
-  margin: var(--space-2) 0 var(--space-3);
+  letter-spacing: -0.04em;
+  line-height: 0.95;
+  color: var(--snow);
+  margin: 8px 0 16px;
 }
 
 .mp-hero-tagline {
   font-family: var(--font-body);
-  font-size: clamp(14px, 1.8vw, 18px);
+  font-size: 18px;
   color: rgba(255, 255, 255, 0.8);
   max-width: 560px;
+  line-height: 1.55;
+}
+
+.mp-hero-badges {
+  margin-top: 16px;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+/* Visit count badge — liquid-glass stat peek */
+.mp-hero-visit-badge {
+  position: absolute;
+  top: 40px;
+  right: 40px;
+  z-index: 2;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  backdrop-filter: blur(12px);
+  border-radius: 10px;
+  padding: 16px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  text-align: right;
+}
+
+@media (max-width: 768px) {
+  .mp-hero-visit-badge {
+    display: none;
+  }
+}
+
+.mp-visit-badge-eyebrow {
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.5);
+  margin: 0;
+}
+
+.mp-visit-badge-count {
+  font-family: var(--font-display);
+  font-size: 40px;
+  font-weight: 900;
+  color: var(--snow);
+  letter-spacing: -0.04em;
+  line-height: 1;
+}
+
+.mp-visit-badge-label {
+  font-family: var(--font-body);
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.55);
 }
 
 /* Scroll hint */
 .mp-hero-scroll-hint {
   position: absolute;
-  bottom: var(--space-5);
-  right: var(--space-5);
+  bottom: 24px;
+  right: 24px;
   z-index: 2;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: var(--space-1);
+  gap: 8px;
 }
 
 .mp-scroll-label {
   font-family: var(--font-body);
-  font-size: var(--text-caption);
+  font-size: 12px;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: rgba(255, 255, 255, 0.55);
@@ -226,27 +241,27 @@
 
 /* ── 02 STORY ──────────────────────────────────────────────── */
 .mp-story {
-  background: var(--surface-bright);
+  background: var(--surface-2);
 }
 
 .mp-story-inner {
   display: grid;
   grid-template-columns: 1fr;
-  gap: var(--space-6);
+  gap: 32px;
 }
 
 @media (min-width: 900px) {
   .mp-story-inner {
-    grid-template-columns: 280px 1fr;
-    gap: var(--space-10);
+    grid-template-columns: 240px 1fr;
+    gap: 64px;
   }
 }
 
 .mp-story-text {
   font-family: var(--font-body);
-  font-size: clamp(15px, 1.4vw, 18px);
+  font-size: 18px;
   line-height: 1.75;
-  color: var(--dark);
+  color: var(--ink);
   max-width: 680px;
 }
 
@@ -258,7 +273,7 @@
 .mp-campaigns-grid {
   display: grid;
   grid-template-columns: 1fr;
-  gap: var(--space-4);
+  gap: 24px;
 }
 
 @media (min-width: 640px) {
@@ -274,16 +289,17 @@
 }
 
 .mp-campaign-card {
-  background: var(--surface-elevated);
-  border: 1px solid var(--line);
+  background: var(--surface-2);
+  border: 1px solid var(--mist);
+  border-radius: 10px;
   display: flex;
   flex-direction: column;
-  transition: transform var(--t-reveal), box-shadow var(--t-reveal);
+  overflow: hidden;
+  transition: transform 150ms cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .mp-campaign-card:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 12px 32px rgba(0, 48, 73, 0.1);
+  transform: translate(2px, 2px);
 }
 
 .mp-campaign-img {
@@ -292,19 +308,40 @@
   overflow: hidden;
 }
 
-.mp-campaign-img img {
-  transition: transform var(--t-reveal);
+/* gradient overlay on photo card — rgba on image allowed */
+.mp-campaign-img-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    transparent 35%,
+    rgba(0, 0, 0, 0.78) 100%
+  );
 }
 
-.mp-campaign-card:hover .mp-campaign-img img {
-  transform: scale(1.06);
+.mp-campaign-img-meta {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 16px;
+  z-index: 1;
+}
+
+.mp-campaign-img-title {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--snow);
+  letter-spacing: -0.02em;
+  line-height: 1.2;
 }
 
 .mp-campaign-body {
-  padding: var(--space-3);
+  padding: 16px;
   display: flex;
   flex-direction: column;
-  gap: var(--space-2);
+  gap: 8px;
   flex: 1;
 }
 
@@ -316,29 +353,29 @@
 
 .mp-spots {
   font-family: var(--font-body);
-  font-size: var(--text-caption);
-  color: var(--graphite);
+  font-size: 12px;
+  color: var(--ink-4);
 }
 
 .mp-spots--urgent {
-  color: var(--primary);
+  color: var(--brand-red);
   font-weight: 700;
 }
 
 .mp-campaign-title {
   font-family: var(--font-display);
-  font-size: var(--text-h3);
+  font-size: 28px;
   font-weight: 700;
   letter-spacing: -0.02em;
-  color: var(--dark);
+  color: var(--ink);
   line-height: 1.2;
 }
 
 .mp-campaign-desc {
   font-family: var(--font-body);
-  font-size: var(--text-small);
-  color: var(--graphite);
-  line-height: 1.6;
+  font-size: 18px;
+  color: var(--ink-3);
+  line-height: 1.55;
   flex: 1;
 }
 
@@ -346,8 +383,8 @@
   display: flex;
   align-items: baseline;
   justify-content: space-between;
-  border-top: 1px solid var(--line);
-  padding-top: var(--space-2);
+  border-top: 1px solid var(--mist);
+  padding-top: 12px;
 }
 
 .mp-campaign-payout {
@@ -360,42 +397,48 @@
   font-family: var(--font-display);
   font-size: 28px;
   font-weight: 900;
-  color: var(--dark);
+  color: var(--ink);
   letter-spacing: -0.04em;
 }
 
 .mp-payout-label {
   font-family: var(--font-body);
-  font-size: var(--text-caption);
-  color: var(--graphite);
+  font-size: 12px;
+  color: var(--ink-4);
   text-transform: uppercase;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.06em;
 }
 
 .mp-payout-free {
   font-family: var(--font-body);
-  font-size: var(--text-small);
+  font-size: 14px;
   font-weight: 700;
-  color: var(--tertiary);
+  color: var(--n2w-blue, #0085ff);
   text-transform: uppercase;
   letter-spacing: 0.04em;
 }
 
 .mp-deadline {
   font-family: var(--font-body);
-  font-size: var(--text-caption);
-  color: var(--text-muted);
+  font-size: 12px;
+  color: var(--ink-5);
+}
+
+.mp-campaign-apply {
+  margin-top: 8px;
+  display: block;
+  text-align: center;
 }
 
 /* ── 04 CREATORS ───────────────────────────────────────────── */
 .mp-creators {
-  background: var(--surface-bright);
+  background: var(--surface-2);
 }
 
 .mp-creators-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: var(--space-2);
+  gap: 8px;
 }
 
 @media (min-width: 480px) {
@@ -414,17 +457,17 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: var(--space-1);
-  padding: var(--space-2);
-  border: 1px solid var(--line);
-  background: var(--surface-elevated);
+  gap: 8px;
+  padding: 16px 8px;
+  border: 1px solid var(--mist);
+  border-radius: 10px;
+  background: var(--surface);
   text-align: center;
-  transition: border-color var(--t-base), transform var(--t-reveal);
+  transition: transform 150ms cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .mp-creator-chip:hover {
-  border-color: var(--tertiary);
-  transform: translateY(-3px);
+  transform: translate(2px, 2px);
 }
 
 .mp-creator-avatar {
@@ -433,7 +476,7 @@
   height: 48px;
   border-radius: 50%;
   overflow: hidden;
-  border: 2px solid var(--line);
+  border: 2px solid var(--mist);
 }
 
 .mp-creator-info {
@@ -445,41 +488,42 @@
 
 .mp-creator-handle {
   font-family: var(--font-body);
-  font-size: var(--text-caption);
-  color: var(--dark);
+  font-size: 12px;
+  color: var(--ink);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   max-width: 100%;
+  font-weight: 600;
+}
+
+.mp-creator-tier {
+  font-size: 10px;
 }
 
 /* ── 05 STATS ──────────────────────────────────────────────── */
 .mp-stats {
-  background: var(--dark);
-  color: var(--surface-elevated);
+  background: var(--ink);
+  color: var(--snow);
 }
 
 .mp-stats .mp-section-label {
-  border-bottom-color: rgba(255, 255, 255, 0.15);
+  border-bottom-color: rgba(255, 255, 255, 0.12);
 }
 
 .mp-stats .mp-section-num {
   color: var(--champagne);
 }
 
-.mp-stats .mp-section-title {
-  color: var(--surface-elevated);
-}
-
-.mp-stats-inner {
-  /* container already applied by mp-container */
+.mp-stats .eyebrow {
+  color: rgba(255, 255, 255, 0.6);
 }
 
 .mp-stats-grid {
   display: flex;
   flex-direction: column;
-  gap: var(--space-6);
-  margin-top: var(--space-4);
+  gap: 32px;
+  margin-top: 16px;
 }
 
 @media (min-width: 768px) {
@@ -493,13 +537,13 @@
 .mp-stat-block {
   display: flex;
   flex-direction: column;
-  gap: var(--space-1);
+  gap: 8px;
   flex: 1;
 }
 
 @media (min-width: 768px) {
   .mp-stat-block {
-    padding: var(--space-5);
+    padding: 24px;
   }
 
   .mp-stat-block:first-child {
@@ -509,19 +553,20 @@
 
 .mp-stat-num {
   font-family: var(--font-display);
-  font-size: clamp(52px, 7vw, 96px);
-  font-weight: 200;
-  letter-spacing: -0.05em;
+  font-size: clamp(40px, 5vw, 72px);
+  font-weight: 800;
+  letter-spacing: -0.04em;
   line-height: 1;
-  color: var(--surface-elevated);
+  color: var(--snow);
 }
 
 .mp-stat-label {
   font-family: var(--font-body);
-  font-size: var(--text-small);
-  color: rgba(255, 255, 255, 0.55);
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.5);
   text-transform: uppercase;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.08em;
+  font-weight: 700;
 }
 
 .mp-stat-divider {
@@ -546,7 +591,7 @@
 .mp-reviews-grid {
   display: grid;
   grid-template-columns: 1fr;
-  gap: var(--space-4);
+  gap: 24px;
 }
 
 @media (min-width: 640px) {
@@ -562,35 +607,36 @@
 }
 
 .mp-review-card {
-  background: var(--surface-bright);
-  border: 1px solid var(--line);
-  border-left: 4px solid var(--primary);
-  padding: var(--space-5);
+  background: var(--surface-2);
+  border: 1px solid var(--mist);
+  border-left: 3px solid var(--brand-red);
+  border-radius: 10px;
+  padding: 24px;
   display: flex;
   flex-direction: column;
-  gap: var(--space-4);
+  gap: 16px;
   quotes: none;
-  transition: transform var(--t-reveal), box-shadow var(--t-reveal);
+  transition: transform 150ms cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .mp-review-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 24px rgba(0, 48, 73, 0.08);
+  transform: translate(2px, 2px);
 }
 
 .mp-review-quote {
   font-family: var(--font-body);
-  font-size: clamp(14px, 1.3vw, 16px);
-  line-height: 1.7;
-  color: var(--dark);
+  font-size: 18px;
+  line-height: 1.65;
+  color: var(--ink);
   font-style: italic;
   flex: 1;
+  margin: 0;
 }
 
 .mp-review-footer {
   display: flex;
   align-items: center;
-  gap: var(--space-2);
+  gap: 12px;
 }
 
 .mp-review-avatar {
@@ -610,122 +656,118 @@
 
 .mp-review-handle {
   font-family: var(--font-body);
-  font-size: var(--text-small);
+  font-size: 14px;
   font-weight: 700;
-  color: var(--dark);
+  color: var(--ink);
 }
 
 .mp-review-campaign {
   font-family: var(--font-body);
-  font-size: var(--text-caption);
-  color: var(--graphite);
+  font-size: 12px;
+  color: var(--ink-4);
 }
 
 /* ── 07 VISIT INFO ─────────────────────────────────────────── */
 .mp-visit {
-  background: var(--surface-bright);
-}
-
-.mp-visit-inner {
-  /* mp-container wraps */
+  background: var(--surface-2);
 }
 
 .mp-visit-grid {
   display: grid;
   grid-template-columns: 1fr;
-  gap: var(--space-6);
-  margin-top: var(--space-2);
+  gap: 32px;
+  margin-top: 8px;
 }
 
 @media (min-width: 900px) {
   .mp-visit-grid {
     grid-template-columns: 1fr 400px;
-    gap: var(--space-8);
+    gap: 48px;
   }
 }
 
 .mp-map-wrap {
   height: 360px;
-  border: 1px solid var(--line);
+  border: 1px solid var(--mist);
+  border-radius: 10px;
   overflow: hidden;
 }
 
-/* Override any Leaflet border-radius */
 .mp-map-wrap .leaflet-container {
-  border-radius: 0 !important;
+  border-radius: inherit;
 }
 
 .mp-visit-details {
   display: flex;
   flex-direction: column;
-  gap: var(--space-6);
+  gap: 32px;
 }
 
 .mp-visit-block {
   display: flex;
   flex-direction: column;
-  gap: var(--space-2);
+  gap: 8px;
 }
 
 .mp-visit-block-label {
   font-family: var(--font-body);
-  font-size: var(--text-eyebrow);
+  font-size: 12px;
   font-weight: 700;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--primary);
+  color: var(--brand-red);
 }
 
 .mp-visit-block-value {
   font-family: var(--font-body);
-  font-size: var(--text-body);
-  color: var(--dark);
-  line-height: 1.5;
+  font-size: 18px;
+  color: var(--ink);
+  line-height: 1.55;
 }
 
 .mp-hours-list {
   list-style: none;
   display: flex;
   flex-direction: column;
-  gap: var(--space-1);
+  gap: 4px;
 }
 
 .mp-hours-row {
   display: flex;
   justify-content: space-between;
   align-items: baseline;
-  gap: var(--space-3);
+  gap: 16px;
   font-family: var(--font-body);
-  font-size: var(--text-small);
-  padding-bottom: var(--space-1);
-  border-bottom: 1px solid var(--line);
+  font-size: 14px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--mist);
 }
 
 .mp-hours-day {
-  color: var(--graphite);
+  color: var(--ink-4);
 }
 
 .mp-hours-time {
-  color: var(--dark);
+  color: var(--ink);
   font-weight: 600;
 }
 
 .mp-contact-links {
   display: flex;
   flex-direction: column;
-  gap: var(--space-1);
+  gap: 8px;
 }
 
 .mp-contact-link {
   font-family: var(--font-body);
-  font-size: var(--text-small);
-  color: var(--tertiary);
+  font-size: 18px;
+  color: var(--n2w-blue, #0085ff);
   text-decoration: none;
-  transition: color var(--t-base);
+  transition: opacity 150ms ease;
 }
 
 .mp-contact-link:hover {
-  color: var(--dark);
+  opacity: 0.75;
   text-decoration: underline;
 }
 
@@ -737,7 +779,7 @@
 .mp-related-grid {
   display: grid;
   grid-template-columns: 1fr;
-  gap: var(--space-4);
+  gap: 24px;
 }
 
 @media (min-width: 640px) {
@@ -752,7 +794,13 @@
   position: relative;
   height: 280px;
   overflow: hidden;
-  border: 1px solid var(--line);
+  border: 1px solid var(--mist);
+  border-radius: 10px;
+  transition: transform 150ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.mp-related-card:hover {
+  transform: translate(2px, 2px);
 }
 
 .mp-related-img-wrap {
@@ -760,31 +808,19 @@
   inset: 0;
 }
 
+/* gradient overlay on related photo card — rgba on image allowed */
 .mp-related-overlay {
   position: absolute;
   inset: 0;
   background: linear-gradient(
     to bottom,
     transparent 30%,
-    rgba(0, 48, 73, 0.78) 100%
+    rgba(0, 0, 0, 0.78) 100%
   );
-  transition: background var(--t-slow);
-}
-
-.mp-related-card:hover .mp-related-overlay {
-  background: linear-gradient(
-    to bottom,
-    transparent 0%,
-    rgba(0, 48, 73, 0.88) 100%
-  );
-}
-
-.mp-related-card:hover img {
-  transform: scale(1.06);
+  transition: background 300ms ease;
 }
 
 .mp-related-card img {
-  transition: transform var(--t-reveal);
   object-fit: cover;
 }
 
@@ -793,68 +829,60 @@
   bottom: 0;
   left: 0;
   right: 0;
-  padding: var(--space-3);
+  padding: 16px;
   z-index: 1;
 }
 
 .mp-related-neighborhood {
   font-family: var(--font-body);
-  font-size: var(--text-caption);
+  font-size: 12px;
   color: rgba(255, 255, 255, 0.65);
   text-transform: uppercase;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.08em;
   margin-bottom: 4px;
 }
 
 .mp-related-name {
   font-family: var(--font-display);
-  font-size: var(--text-h3);
+  font-size: 28px;
   font-weight: 800;
   letter-spacing: -0.03em;
-  color: var(--surface-elevated);
+  color: var(--snow);
   line-height: 1.1;
 }
 
-/* ── 09 CTA STRIP ──────────────────────────────────────────── */
-.mp-cta-strip {
-  background: var(--primary);
-  padding: var(--space-12) 0;
+/* ── 09 TICKET CTA SECTION ─────────────────────────────────── */
+.mp-ticket-section {
+  padding: 64px 0;
+  background: var(--surface-3);
 }
 
-.mp-cta-inner {
-  text-align: center;
+.mp-ticket {
   max-width: 640px;
+  margin: 0 auto;
 }
 
-.mp-cta-eyebrow {
+.mp-ticket-eyebrow {
+  margin-bottom: 16px;
+}
+
+.mp-ticket-headline {
+  margin-bottom: 16px;
+}
+
+.mp-ticket-sub {
   font-family: var(--font-body);
-  font-size: var(--text-eyebrow);
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.65);
-  margin-bottom: var(--space-2);
+  font-size: 18px;
+  color: var(--ink-3);
+  line-height: 1.55;
+  margin-bottom: 24px;
 }
 
-.mp-cta-headline {
-  font-family: var(--font-display);
-  font-size: clamp(28px, 4vw, 52px);
-  font-weight: 900;
-  letter-spacing: -0.05em;
-  color: var(--surface-elevated);
-  line-height: 1.05;
-  margin-bottom: var(--space-3);
+.mp-ticket-btn {
+  margin-top: 8px;
 }
 
-.mp-cta-sub {
-  font-family: var(--font-body);
-  font-size: var(--text-body);
-  color: rgba(255, 255, 255, 0.75);
-  line-height: 1.6;
-  margin-bottom: var(--space-5);
-}
-
-/* ── Scroll-reveal (no JS — CSS fallback) ──────────────────── */
+/* ── Scroll-reveal ──────────────────────────────────────────── */
 @media (prefers-reduced-motion: no-preference) {
   .mp-section-label,
   .mp-story-text,

@@ -11,9 +11,7 @@ import {
   DisputeSeverity,
 } from "@/lib/disputes/mock-admin-disputes";
 
-// ---------------------------------------------------------------------------
-// Helpers
-// ---------------------------------------------------------------------------
+/* ── Helpers ─────────────────────────────────────────────────── */
 function formatAge(iso: string): string {
   const diff = Date.now() - new Date(iso).getTime();
   const hours = Math.floor(diff / 3_600_000);
@@ -44,9 +42,50 @@ const CATEGORY_LABELS: Record<string, string> = {
   arts: "Arts",
 };
 
-// ---------------------------------------------------------------------------
-// Filter state
-// ---------------------------------------------------------------------------
+/* ── Badge helpers ───────────────────────────────────────────── */
+const badgeBase: React.CSSProperties = {
+  fontFamily: "var(--font-body)",
+  fontSize: 11,
+  fontWeight: 700,
+  letterSpacing: "0.06em",
+  textTransform: "uppercase",
+  borderRadius: 4,
+  padding: "2px 8px",
+  display: "inline-block",
+  whiteSpace: "nowrap",
+};
+
+function statusChip(status: DisputeStatus): { bg: string; color: string } {
+  switch (status) {
+    case "escalated":
+      return { bg: "rgba(193,18,31,0.10)", color: "var(--brand-red)" };
+    case "open":
+      return { bg: "var(--panel-butter)", color: "var(--ink-3)" };
+    case "under_review":
+      return { bg: "var(--accent-blue-tint)", color: "var(--accent-blue)" };
+    case "awaiting_evidence":
+      return { bg: "var(--champagne-tint)", color: "var(--champagne-deep)" };
+    case "resolved":
+      return { bg: "var(--surface-3)", color: "var(--ink-4)" };
+    case "dismissed":
+      return { bg: "var(--surface-3)", color: "var(--ink-4)" };
+  }
+}
+
+function severityChip(sev: string): { bg: string; color: string } {
+  switch (sev) {
+    case "critical":
+      return { bg: "rgba(193,18,31,0.12)", color: "var(--brand-red)" };
+    case "high":
+      return { bg: "rgba(193,18,31,0.07)", color: "var(--brand-red)" };
+    case "medium":
+      return { bg: "var(--panel-butter)", color: "var(--ink-3)" };
+    default:
+      return { bg: "var(--surface-3)", color: "var(--ink-4)" };
+  }
+}
+
+/* ── Filter state ────────────────────────────────────────────── */
 type Filters = {
   search: string;
   status: string;
@@ -65,15 +104,239 @@ const DEFAULT_FILTERS: Filters = {
   category: "",
 };
 
-// ---------------------------------------------------------------------------
-// Page
-// ---------------------------------------------------------------------------
+/* ── Dispute row ─────────────────────────────────────────────── */
+function DisputeRow({ dispute: d }: { dispute: Dispute }) {
+  const breached = isSlaBreached(d.sla_deadline);
+  const isActive = !["resolved", "dismissed"].includes(d.status);
+  const sc = statusChip(d.status);
+  const sev = severityChip(d.severity);
+  const isEscalated = d.status === "escalated";
+
+  return (
+    <Link
+      href={`/admin/disputes/${d.id}`}
+      className="click-shift"
+      style={{
+        display: "grid",
+        gridTemplateColumns: "1fr auto",
+        gap: 24,
+        padding: "20px 24px",
+        background: isEscalated ? "rgba(193,18,31,0.04)" : "var(--surface-2)",
+        border: `1px solid ${isEscalated ? "rgba(193,18,31,0.25)" : "var(--hairline)"}`,
+        borderRadius: 10,
+        textDecoration: "none",
+        color: "inherit",
+        alignItems: "start",
+      }}
+    >
+      {/* Left: details */}
+      <div style={{ minWidth: 0 }}>
+        {/* Reason + ID row */}
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 10,
+            marginBottom: 8,
+            flexWrap: "wrap",
+          }}
+        >
+          <span
+            style={{
+              fontFamily: "var(--font-body)",
+              fontSize: 11,
+              color: "var(--ink-5)",
+              fontWeight: 600,
+              letterSpacing: "0.04em",
+            }}
+          >
+            {d.id}
+          </span>
+          <span
+            style={{
+              fontFamily: "var(--font-body)",
+              fontSize: 14,
+              fontWeight: 600,
+              color: "var(--ink)",
+            }}
+          >
+            {d.reason}
+          </span>
+        </div>
+
+        {/* Parties */}
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 16,
+            marginBottom: 8,
+            flexWrap: "wrap",
+          }}
+        >
+          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={d.creator_avatar}
+              alt={d.creator_name}
+              style={{
+                width: 24,
+                height: 24,
+                borderRadius: "50%",
+                objectFit: "cover",
+              }}
+            />
+            <span
+              style={{
+                fontFamily: "var(--font-body)",
+                fontSize: 13,
+                color: "var(--ink)",
+                fontWeight: 600,
+              }}
+            >
+              {d.creator_name}
+            </span>
+            <span
+              style={{
+                fontFamily: "var(--font-body)",
+                fontSize: 11,
+                color: "var(--ink-5)",
+              }}
+            >
+              {d.creator_handle}
+            </span>
+          </div>
+          <span
+            style={{
+              fontFamily: "var(--font-body)",
+              fontSize: 11,
+              color: "var(--ink-5)",
+            }}
+          >
+            vs
+          </span>
+          <span
+            style={{
+              fontFamily: "var(--font-body)",
+              fontSize: 13,
+              color: "var(--ink)",
+              fontWeight: 600,
+            }}
+          >
+            {d.merchant_business}
+          </span>
+        </div>
+
+        {/* Campaign */}
+        <div
+          style={{
+            fontFamily: "var(--font-body)",
+            fontSize: 12,
+            color: "var(--ink-5)",
+          }}
+        >
+          {d.campaign_title}
+        </div>
+      </div>
+
+      {/* Right: amount + badges + age */}
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "flex-end",
+          gap: 8,
+          flexShrink: 0,
+        }}
+      >
+        <div
+          style={{
+            fontFamily: "var(--font-display)",
+            fontSize: 24,
+            fontWeight: 800,
+            color: "var(--ink)",
+            lineHeight: 1,
+          }}
+        >
+          ${d.amount}
+        </div>
+
+        <div
+          style={{
+            display: "flex",
+            flexWrap: "wrap",
+            gap: 6,
+            justifyContent: "flex-end",
+          }}
+        >
+          <span style={{ ...badgeBase, background: sc.bg, color: sc.color }}>
+            {STATUS_LABEL[d.status]}
+          </span>
+          <span
+            style={{
+              ...badgeBase,
+              background: sev.bg,
+              color: sev.color,
+              textTransform: "capitalize",
+            }}
+          >
+            {d.severity}
+          </span>
+          {isActive && breached && (
+            <span
+              style={{
+                ...badgeBase,
+                background: "rgba(193,18,31,0.10)",
+                color: "var(--brand-red)",
+              }}
+            >
+              SLA Breached
+            </span>
+          )}
+          {d.thread_locked && (
+            <span
+              style={{
+                ...badgeBase,
+                background: "var(--surface-3)",
+                color: "var(--ink-4)",
+              }}
+            >
+              Locked
+            </span>
+          )}
+          {d.escalated_to_legal && (
+            <span
+              style={{
+                ...badgeBase,
+                background: "rgba(193,18,31,0.10)",
+                color: "var(--brand-red)",
+              }}
+            >
+              Legal
+            </span>
+          )}
+        </div>
+
+        <div
+          style={{
+            fontFamily: "var(--font-body)",
+            fontSize: 11,
+            color: "var(--ink-5)",
+          }}
+        >
+          {formatAge(d.opened_at)}
+        </div>
+      </div>
+    </Link>
+  );
+}
+
+/* ── Main page ───────────────────────────────────────────────── */
 export default function AdminDisputesPage() {
   const stats = getDisputeStats();
   const [filters, setFilters] = useState<Filters>(DEFAULT_FILTERS);
   const [disputes, setDisputes] = useState<Dispute[]>([]);
 
-  // Client-side filter (mirrors API logic for instant UX)
   const applyFilters = useCallback(() => {
     const SEVERITY_ORDER: Record<string, number> = {
       critical: 0,
@@ -91,7 +354,6 @@ export default function AdminDisputesPage() {
     };
 
     let list = [...MOCK_DISPUTES];
-
     if (filters.status) list = list.filter((d) => d.status === filters.status);
     if (filters.severity)
       list = list.filter((d) => d.severity === filters.severity);
@@ -111,7 +373,6 @@ export default function AdminDisputesPage() {
           d.reason.toLowerCase().includes(q),
       );
     }
-
     list.sort((a, b) => {
       const sd = (STATUS_ORDER[a.status] ?? 9) - (STATUS_ORDER[b.status] ?? 9);
       if (sd !== 0) return sd;
@@ -120,7 +381,6 @@ export default function AdminDisputesPage() {
       if (sevd !== 0) return sevd;
       return new Date(b.opened_at).getTime() - new Date(a.opened_at).getTime();
     });
-
     setDisputes(list);
   }, [filters]);
 
@@ -138,223 +398,259 @@ export default function AdminDisputesPage() {
 
   const hasActiveFilters = Object.values(filters).some((v) => v !== "");
 
+  const inputStyle: React.CSSProperties = {
+    fontFamily: "var(--font-body)",
+    fontSize: 13,
+    color: "var(--ink)",
+    background: "var(--surface-2)",
+    border: "1px solid var(--hairline)",
+    borderRadius: 8,
+    padding: "8px 12px",
+    outline: "none",
+    height: 40,
+  };
+
+  const criticalCount = disputes.filter(
+    (d) =>
+      d.severity === "critical" &&
+      d.status !== "resolved" &&
+      d.status !== "dismissed",
+  ).length;
+
   return (
-    <div className="adm-shell">
-      {/* Nav */}
-      <nav className="adm-nav">
-        <Link href="/" className="adm-nav__logo">
-          Push<span>.</span>
-        </Link>
-        <div className="adm-nav__sep" />
-        <span className="adm-nav__section">Admin</span>
-        <div className="adm-nav__spacer" />
-        {stats.criticalCount > 0 && (
-          <span className="adm-nav__badge">{stats.criticalCount} critical</span>
-        )}
-      </nav>
+    <div
+      style={{
+        minHeight: "100vh",
+        background: "var(--surface)",
+        paddingBottom: 64,
+      }}
+    >
+      {/* Critical alert bar */}
+      {criticalCount > 0 && (
+        <div className="adm-alert-bar">
+          <span className="adm-alert-bar__label">Critical</span>
+          <span>
+            {criticalCount} critical dispute{criticalCount !== 1 ? "s" : ""}{" "}
+            require immediate attention
+          </span>
+        </div>
+      )}
 
-      <main className="adm-main">
-        {/* Hero */}
-        <section className="adm-hero">
-          <div className="adm-hero__inner">
-            <p className="adm-hero__eyebrow">Dispute Arbitration</p>
-            <h1 className="adm-hero__title">
-              <em>{stats.openCount}</em>
-              <br />
-              open disputes
-            </h1>
-            <div className="adm-hero__stats">
-              <div className="adm-hero__stat">
-                <span className="adm-hero__stat-num">
-                  {stats.avgResolutionHours}h
-                </span>
-                <span className="adm-hero__stat-label">Avg resolution</span>
-              </div>
-              <div className="adm-hero__stat">
-                <span
-                  className={`adm-hero__stat-num${stats.slaBreachCount > 0 ? " adm-hero__stat-num--warn" : ""}`}
-                >
-                  {stats.slaBreachCount}
-                </span>
-                <span className="adm-hero__stat-label">SLA breached</span>
-              </div>
-              <div className="adm-hero__stat">
-                <span
-                  className={`adm-hero__stat-num${stats.criticalCount > 0 ? " adm-hero__stat-num--crit" : ""}`}
-                >
-                  {stats.criticalCount}
-                </span>
-                <span className="adm-hero__stat-label">Critical</span>
-              </div>
-              <div className="adm-hero__stat">
-                <span className="adm-hero__stat-num">
-                  {stats.resolvedCount}
-                </span>
-                <span className="adm-hero__stat-label">Resolved total</span>
-              </div>
+      {/* Page header */}
+      <div style={{ padding: "40px 40px 0" }}>
+        <div className="adm-page-eyebrow">PUSH INTERNAL</div>
+        <h1 className="adm-page-title" style={{ marginBottom: 32 }}>
+          Disputes
+        </h1>
+
+        {/* KPI row */}
+        <div className="adm-kpi-grid" style={{ marginBottom: 40 }}>
+          {[
+            {
+              label: "Open",
+              value: stats.openCount,
+              alert: stats.openCount > 0,
+            },
+            {
+              label: "Avg Resolution",
+              value: `${stats.avgResolutionHours}h`,
+              alert: false,
+            },
+            {
+              label: "SLA Breached",
+              value: stats.slaBreachCount,
+              alert: stats.slaBreachCount > 0,
+            },
+            {
+              label: "Resolved Total",
+              value: stats.resolvedCount,
+              alert: false,
+            },
+          ].map(({ label, value, alert }) => (
+            <div
+              key={label}
+              className={`adm-kpi-card${alert ? " adm-kpi-card--alert" : ""}`}
+            >
+              <div className="adm-kpi-card__eyebrow">{label}</div>
+              <div className="adm-kpi-card__value">{value}</div>
             </div>
-          </div>
-        </section>
+          ))}
+        </div>
+      </div>
 
+      <div
+        style={{
+          padding: "0 40px",
+          display: "flex",
+          flexDirection: "column",
+          gap: 16,
+        }}
+      >
         {/* Filter bar */}
-        <div className="adm-filters">
-          <div className="adm-filters__inner">
+        <div
+          style={{
+            background: "var(--surface-2)",
+            border: "1px solid var(--hairline)",
+            borderRadius: 10,
+            padding: "16px 20px",
+            display: "flex",
+            flexWrap: "wrap",
+            alignItems: "center",
+            gap: 8,
+          }}
+        >
+          <div className="adm-search-wrap" style={{ minWidth: 220 }}>
+            <svg
+              className="adm-search-icon"
+              viewBox="0 0 16 16"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.8"
+            >
+              <circle cx="6.5" cy="6.5" r="4.5" />
+              <line x1="10.5" y1="10.5" x2="14" y2="14" />
+            </svg>
             <input
               type="search"
-              className="adm-filters__search"
               placeholder="Search creator, merchant, campaign…"
               value={filters.search}
               onChange={(e) => setFilter("search", e.target.value)}
             />
+          </div>
 
-            <select
-              className="adm-filters__select"
-              value={filters.status}
-              onChange={(e) => setFilter("status", e.target.value)}
-            >
-              <option value="">All statuses</option>
-              {(Object.entries(STATUS_LABEL) as [DisputeStatus, string][]).map(
-                ([val, label]) => (
-                  <option key={val} value={val}>
-                    {label}
-                  </option>
-                ),
-              )}
-            </select>
-
-            <select
-              className="adm-filters__select"
-              value={filters.severity}
-              onChange={(e) => setFilter("severity", e.target.value)}
-            >
-              <option value="">All severity</option>
-              {(["critical", "high", "medium", "low"] as DisputeSeverity[]).map(
-                (s) => (
-                  <option key={s} value={s}>
-                    {s.charAt(0).toUpperCase() + s.slice(1)}
-                  </option>
-                ),
-              )}
-            </select>
-
-            <select
-              className="adm-filters__select"
-              value={filters.category}
-              onChange={(e) => setFilter("category", e.target.value)}
-            >
-              <option value="">All categories</option>
-              {Object.entries(CATEGORY_LABELS).map(([val, label]) => (
+          <select
+            style={inputStyle}
+            value={filters.status}
+            onChange={(e) => setFilter("status", e.target.value)}
+          >
+            <option value="">All Statuses</option>
+            {(Object.entries(STATUS_LABEL) as [DisputeStatus, string][]).map(
+              ([val, label]) => (
                 <option key={val} value={val}>
                   {label}
                 </option>
-              ))}
-            </select>
-
-            <div className="adm-filters__amount">
-              <span className="adm-filters__amount-label">$</span>
-              <input
-                type="number"
-                className="adm-filters__amount-input"
-                placeholder="Min"
-                value={filters.minAmount}
-                onChange={(e) => setFilter("minAmount", e.target.value)}
-                min={0}
-              />
-              <span className="adm-filters__amount-label">—</span>
-              <input
-                type="number"
-                className="adm-filters__amount-input"
-                placeholder="Max"
-                value={filters.maxAmount}
-                onChange={(e) => setFilter("maxAmount", e.target.value)}
-                min={0}
-              />
-            </div>
-
-            {hasActiveFilters && (
-              <button className="adm-filters__clear" onClick={clearFilters}>
-                Clear
-              </button>
+              ),
             )}
+          </select>
 
-            <span className="adm-filters__count">
-              {disputes.length} dispute{disputes.length !== 1 ? "s" : ""}
-            </span>
-          </div>
-        </div>
-
-        {/* List */}
-        <section className="adm-list">
-          <div className="adm-list__inner">
-            {disputes.length === 0 ? (
-              <div className="adm-list__empty">No disputes match filters.</div>
-            ) : (
-              disputes.map((d) => <DisputeRow key={d.id} dispute={d} />)
+          <select
+            style={inputStyle}
+            value={filters.severity}
+            onChange={(e) => setFilter("severity", e.target.value)}
+          >
+            <option value="">All Severity</option>
+            {(["critical", "high", "medium", "low"] as DisputeSeverity[]).map(
+              (s) => (
+                <option key={s} value={s}>
+                  {s.charAt(0).toUpperCase() + s.slice(1)}
+                </option>
+              ),
             )}
-          </div>
-        </section>
-      </main>
-    </div>
-  );
-}
+          </select>
 
-// ---------------------------------------------------------------------------
-// Dispute row component
-// ---------------------------------------------------------------------------
-function DisputeRow({ dispute: d }: { dispute: Dispute }) {
-  const breached = isSlaBreached(d.sla_deadline);
-  const isActive = !["resolved", "dismissed"].includes(d.status);
+          <select
+            style={inputStyle}
+            value={filters.category}
+            onChange={(e) => setFilter("category", e.target.value)}
+          >
+            <option value="">All Categories</option>
+            {Object.entries(CATEGORY_LABELS).map(([val, label]) => (
+              <option key={val} value={val}>
+                {label}
+              </option>
+            ))}
+          </select>
 
-  return (
-    <Link
-      href={`/admin/disputes/${d.id}`}
-      className={`dsp-row dsp-row--${d.severity}${d.status === "escalated" ? " dsp-row--escalated" : ""}`}
-    >
-      <div className="dsp-row__left">
-        <div className="dsp-row__top">
-          <span className="dsp-row__id">{d.id}</span>
-          <span className="dsp-row__reason">{d.reason}</span>
-        </div>
-
-        <div className="dsp-row__parties">
-          <div className="dsp-row__party">
-            <div className="dsp-row__avatar">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={d.creator_avatar} alt={d.creator_name} />
-            </div>
-            <span>{d.creator_name}</span>
-            <span style={{ opacity: 0.5, fontSize: "10px" }}>
-              {d.creator_handle}
+          <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+            <span
+              style={{
+                fontFamily: "var(--font-body)",
+                fontSize: 12,
+                color: "var(--ink-5)",
+              }}
+            >
+              $
             </span>
+            <input
+              type="number"
+              style={{ ...inputStyle, width: 72 }}
+              placeholder="Min"
+              value={filters.minAmount}
+              onChange={(e) => setFilter("minAmount", e.target.value)}
+              min={0}
+            />
+            <span
+              style={{
+                fontFamily: "var(--font-body)",
+                fontSize: 12,
+                color: "var(--ink-5)",
+              }}
+            >
+              —
+            </span>
+            <input
+              type="number"
+              style={{ ...inputStyle, width: 72 }}
+              placeholder="Max"
+              value={filters.maxAmount}
+              onChange={(e) => setFilter("maxAmount", e.target.value)}
+              min={0}
+            />
           </div>
-          <span className="dsp-row__vs">vs</span>
-          <div className="dsp-row__party">
-            <span>{d.merchant_business}</span>
-          </div>
-        </div>
 
-        <span className="dsp-row__campaign">{d.campaign_title}</span>
-      </div>
+          {hasActiveFilters && (
+            <button className="btn-ghost click-shift" onClick={clearFilters}>
+              Clear
+            </button>
+          )}
 
-      <div className="dsp-row__right">
-        <span className="dsp-row__amount">${d.amount}</span>
-        <div className="dsp-row__tags">
-          <span className={`badge badge--status-${d.status}`}>
-            {STATUS_LABEL[d.status]}
+          <span
+            style={{
+              marginLeft: "auto",
+              fontFamily: "var(--font-body)",
+              fontSize: 12,
+              color: "var(--ink-5)",
+            }}
+          >
+            {disputes.length} dispute{disputes.length !== 1 ? "s" : ""}
           </span>
-          <span className={`badge badge--sev-${d.severity}`}>{d.severity}</span>
-          {isActive && breached && (
-            <span className="badge badge--sla">SLA breached</span>
-          )}
-          {d.thread_locked && (
-            <span className="badge badge--locked">Locked</span>
-          )}
-          {d.escalated_to_legal && (
-            <span className="badge badge--legal">Legal</span>
+        </div>
+
+        {/* Disputes list */}
+        <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+          {disputes.length === 0 ? (
+            <div
+              style={{
+                padding: "56px 0",
+                textAlign: "center",
+              }}
+            >
+              <div
+                style={{
+                  fontFamily: "var(--font-display)",
+                  fontSize: 24,
+                  fontWeight: 700,
+                  color: "var(--ink)",
+                  marginBottom: 8,
+                }}
+              >
+                No disputes match filters
+              </div>
+              <div
+                style={{
+                  fontFamily: "var(--font-body)",
+                  fontSize: 14,
+                  color: "var(--ink-5)",
+                }}
+              >
+                Try adjusting the status or severity filter.
+              </div>
+            </div>
+          ) : (
+            disputes.map((d) => <DisputeRow key={d.id} dispute={d} />)
           )}
         </div>
-        <span className="dsp-row__age">{formatAge(d.opened_at)}</span>
       </div>
-    </Link>
+    </div>
   );
 }

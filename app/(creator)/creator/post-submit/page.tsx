@@ -55,7 +55,7 @@ function CheckmarkSVG() {
           <path
             className="ps-check-path"
             d="M10 21 L16 27 L30 13"
-            stroke="#c1121f"
+            stroke="var(--brand-red)"
             strokeWidth="2.5"
             strokeLinecap="square"
             strokeLinejoin="miter"
@@ -94,25 +94,7 @@ const NEXT_STEPS = [
 
 export default function PostSubmitPage() {
   return (
-    <Suspense
-      fallback={
-        <div
-          style={{
-            minHeight: "100svh",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            fontFamily: "CS Genio Mono, monospace",
-            fontSize: 11,
-            letterSpacing: "0.1em",
-            textTransform: "uppercase",
-            color: "rgba(0,48,73,0.4)",
-          }}
-        >
-          Loading…
-        </div>
-      }
-    >
+    <Suspense fallback={<div className="ps-loading">Loading…</div>}>
       <PostSubmitContent />
     </Suspense>
   );
@@ -142,81 +124,112 @@ function PostSubmitContent() {
 
   return (
     <div className="ps-page">
-      {/* ── Hero: instant positive feedback ─────────────── */}
-      <div className="ps-hero">
-        <CheckmarkSVG />
-
-        <p className="ps-hero-eyebrow">Submission Received</p>
-        <h1 className="ps-hero-title">SUBMISSION RECEIVED</h1>
-
-        <div className="ps-hero-status">
-          <span className="ps-hero-status-dot" />
-          Under review
-        </div>
-        <p className="ps-hero-time-estimate">
-          Usually 24–48 hours · We'll notify you
-        </p>
-      </div>
-
-      {/* ── Body ────────────────────────────────────────── */}
-      <div className="ps-body">
-        {/* ── 1. Submission preview ──────────────────── */}
-        <div className="ps-section">
-          <p className="ps-section-eyebrow">Your Submission</p>
-
-          <div className="ps-submission-row">
-            <div className="ps-submission-thumb" aria-hidden="true">
-              <span className="ps-submission-thumb-icon">▶</span>
+      {/* Dark editorial hero */}
+      <header className="ps-header">
+        <div className="ps-header-inner">
+          <div className="ps-header-col">
+            {/* Checkmark circle */}
+            <div className="ps-hero-check" aria-hidden="true">
+              <svg
+                viewBox="0 0 40 40"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M10 21 L16 27 L30 13"
+                  stroke="white"
+                  strokeWidth="2.5"
+                  strokeLinecap="square"
+                  strokeLinejoin="miter"
+                  fill="none"
+                />
+              </svg>
             </div>
-            <div className="ps-submission-info">
-              <p className="ps-submission-title">{data.campaign_name}</p>
-              <div className="ps-submission-meta">
-                <span>{data.merchant}</span>
-                <span>
+
+            <div>
+              <span className="ps-eyebrow">SUBMISSION RECEIVED</span>
+              <h1 className="ps-hero-title">Submitted!</h1>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <div className="ps-body">
+        <div className="ps-status-row">
+          <div style={{ display: "none" }}></div>
+
+          <div className="ps-status-pill">
+            <span className="ps-status-dot" />
+            <span className="ps-status-text">
+              Under review · Usually 24–48 hours · We&apos;ll notify you
+            </span>
+          </div>
+        </div>
+
+        {/* ── 1. Submission preview ────────────────────────── */}
+        <div className="ps-card">
+          <span className="ps-card-eyebrow">YOUR SUBMISSION</span>
+
+          <div className="ps-preview-row">
+            {/* Thumbnail placeholder */}
+            <div className="ps-thumb" aria-hidden="true">
+              ▶
+            </div>
+
+            <div className="ps-preview-info">
+              <p className="ps-preview-title">{data.campaign_name}</p>
+              <div className="ps-preview-tags">
+                <span className="ps-preview-merchant">{data.merchant}</span>
+                <span className="ps-preview-sep">·</span>
+                <span className="ps-preview-meta">
                   {data.platform} · {data.content_type}
                 </span>
-                {data.content_url && (
-                  <a
-                    href={data.content_url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="ps-submission-link"
-                  >
-                    {data.content_url}
-                  </a>
-                )}
               </div>
+              {data.content_url && (
+                <a
+                  href={data.content_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="ps-preview-link"
+                >
+                  {data.content_url}
+                </a>
+              )}
             </div>
           </div>
 
-          <div className="ps-submission-timestamp">
-            Submitted {data.submitted_at}
-          </div>
+          <p className="ps-preview-timestamp">Submitted {data.submitted_at}</p>
         </div>
 
-        {/* ── 2. What happens next ────────────────────── */}
-        <div className="ps-section">
-          <p className="ps-section-eyebrow">What Happens Next</p>
+        {/* ── 2. What happens next ─────────────────────────── */}
+        <div className="ps-card">
+          <span className="ps-card-next-eyebrow">WHAT HAPPENS NEXT</span>
+
           <div className="ps-steps">
-            {NEXT_STEPS.map((step) => (
+            {NEXT_STEPS.map((step, i) => (
               <div key={step.num} className="ps-step">
-                <div className="ps-step-num-wrap">
-                  <span className="ps-step-dot" />
+                {/* Connector line */}
+                {i < NEXT_STEPS.length - 1 && (
+                  <div className="ps-step-connector" />
+                )}
+                {/* Step number badge — 40×40 icon tile */}
+                <div className={`ps-step-icon-tile${i === 0 ? " active" : ""}`}>
                   <span className="ps-step-num">{step.num}</span>
                 </div>
+                {/* Content */}
                 <div className="ps-step-content">
                   <p className="ps-step-title">{step.title}</p>
                   <p className="ps-step-desc">{step.desc}</p>
-                  <p className="ps-step-time">{step.time}</p>
+                  <span className="ps-step-time">{step.time}</span>
                 </div>
               </div>
             ))}
           </div>
         </div>
 
-        {/* ── Tip ─────────────────────────────────────── */}
-        <div className="ps-tip">
-          <p className="ps-tip-label">Pro tip</p>
+        {/* ── Tip ──────────────────────────────────────────── */}
+        <div className="ps-tip-card">
+          <span className="ps-tip-label">PRO TIP</span>
           <p className="ps-tip-text">
             Share your content on your stories and tag {data.merchant} to
             increase walk-in conversions. Every verified visit in the 30-day
@@ -224,21 +237,26 @@ function PostSubmitContent() {
           </p>
         </div>
 
-        {/* ── 3. CTAs ─────────────────────────────────── */}
-        <div className="ps-cta-section">
-          <Link
-            href={`/creator/campaigns/${data.campaign_id}`}
-            className="ps-primary-btn"
-          >
-            Back to Campaign
-            <span className="ps-primary-btn-arrow">→</span>
-          </Link>
+        {/* ── 3. CTAs ──────────────────────────────────────── */}
+        <div className="ps-cta-row">
           <Link
             href="/creator/dashboard?tab=discover"
-            className="ps-secondary-btn"
+            className="btn btn-primary"
           >
+            View My Dashboard
+          </Link>
+          <Link href="/creator/campaigns" className="btn btn-secondary">
             Find More Campaigns
           </Link>
+          <button
+            type="button"
+            className="btn btn-ghost"
+            onClick={() => {
+              navigator.clipboard?.writeText(data.campaign_id);
+            }}
+          >
+            Copy Confirmation #
+          </button>
         </div>
       </div>
     </div>

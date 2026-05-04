@@ -1,38 +1,38 @@
 /* ============================================================
    Push — /status page styles
    Authority: Design.md
-   Colors: Flag Red #c1121f | Molten Lava #780000 | Pearl Stone #f5f2ec
-           Deep Space Blue #003049 | Steel Blue #669bbc | Champagne Gold #c9a96e
+   Colors: Flag Red #c1121f | Molten Lava var(--brand-red) | Pearl Stone var(--surface-2)
+           Deep Space Blue var(--editorial-blue) | Steel Blue var(--accent-blue) | Champagne Gold var(--champagne)
    Fonts: Darky (headings) | CS Genio Mono (body/UI)
    Shape: border-radius: 0 everywhere (exception: status dots 50%)
    ============================================================ */
 
 /* ── Local status color tokens ─────────────────────────────── */
 :root {
-  --status-operational: #c9a96e; /* Champagne Gold */
-  --status-degraded: #669bbc; /* Steel Blue */
-  --status-outage: #c1121f; /* Flag Red */
+  --status-operational: var(--champagne); /* Champagne Gold */
+  --status-degraded: var(--accent-blue); /* Steel Blue */
+  --status-outage: var(--brand-red); /* Flag Red */
   --status-no-data: rgba(0, 48, 73, 0.15);
 
-  --heat-operational: #c9a96e;
-  --heat-degraded: #669bbc;
-  --heat-outage: #c1121f;
+  --heat-operational: var(--champagne);
+  --heat-degraded: var(--accent-blue);
+  --heat-outage: var(--brand-red);
   --heat-no-data: rgba(0, 48, 73, 0.1);
 }
 
 /* ── Page wrapper ───────────────────────────────────────────── */
 .status-page {
-  background: var(--surface, #f5f2ec);
+  background: var(--surface, var(--surface-2));
   min-height: 100vh;
   font-family: "CSGenioMono", "SF Mono", "Fira Code", monospace;
-  color: var(--dark, #003049);
+  color: var(--dark, var(--editorial-blue));
 }
 
 /* ── Hero banner ────────────────────────────────────────────── */
 .status-hero {
-  background: var(--dark, #003049);
+  background: var(--dark, var(--editorial-blue));
   padding: 80px 0 64px;
-  border-bottom: 3px solid var(--primary, #c1121f);
+  border-bottom: 3px solid var(--brand-red);
   position: relative;
   overflow: hidden;
 }
@@ -64,7 +64,7 @@
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--tertiary, #669bbc);
+  color: var(--accent-blue);
   margin-bottom: 16px;
   display: flex;
   align-items: center;
@@ -76,7 +76,7 @@
   display: inline-block;
   width: 24px;
   height: 2px;
-  background: var(--tertiary, #669bbc);
+  background: var(--accent-blue);
 }
 
 .status-hero-headline {
@@ -169,7 +169,7 @@
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--tertiary, #669bbc);
+  color: var(--accent-blue);
   white-space: nowrap;
 }
 
@@ -178,7 +178,7 @@
   font-size: 24px;
   font-weight: 700;
   letter-spacing: -0.02em;
-  color: var(--dark, #003049);
+  color: var(--dark, var(--editorial-blue));
   margin: 0;
 }
 
@@ -212,7 +212,7 @@
 }
 
 .service-card:hover {
-  background: var(--surface-bright, #fafaf8);
+  background: var(--surface-bright, var(--surface));
 }
 
 .service-card-header {
@@ -229,7 +229,7 @@
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: var(--dark, #003049);
+  color: var(--dark, var(--editorial-blue));
 }
 
 .service-status-indicator {
@@ -282,7 +282,7 @@
   font-size: 40px;
   font-weight: 900;
   letter-spacing: -0.04em;
-  color: var(--dark, #003049);
+  color: var(--dark, var(--editorial-blue));
   line-height: 1;
   margin: 12px 0 4px;
 }
@@ -386,7 +386,7 @@
 }
 
 .incident-card.severity-critical {
-  border-left: 3px solid var(--accent, #780000);
+  border-left: 3px solid var(--accent, var(--brand-red));
 }
 
 .incident-card-header {
@@ -409,7 +409,7 @@
   font-size: 18px;
   font-weight: 700;
   letter-spacing: -0.02em;
-  color: var(--dark, #003049);
+  color: var(--dark, var(--editorial-blue));
   margin: 0 0 6px;
 }
 
@@ -445,9 +445,9 @@
   text-transform: uppercase;
   padding: 2px 8px;
   background: rgba(0, 48, 73, 0.06);
-  color: var(--dark, #003049);
+  color: var(--dark, var(--editorial-blue));
   border: 1px solid rgba(0, 48, 73, 0.12);
-  border-radius: 0; /* strict: no rounding */
+  border-radius: var(--r-sm);
 }
 
 .incident-severity-badge {
@@ -457,7 +457,7 @@
   letter-spacing: 0.08em;
   text-transform: uppercase;
   padding: 4px 10px;
-  border-radius: 0;
+  border-radius: var(--r-sm);
   flex-shrink: 0;
 }
 
@@ -475,7 +475,7 @@
 
 .incident-severity-badge.critical {
   background: rgba(120, 0, 0, 0.08);
-  color: var(--accent, #780000);
+  color: var(--accent, var(--brand-red));
   border: 1px solid rgba(120, 0, 0, 0.2);
 }
 
@@ -603,7 +603,7 @@
   font-weight: 700;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  color: var(--tertiary, #669bbc);
+  color: var(--accent-blue);
   text-decoration: none;
   display: flex;
   align-items: center;
@@ -612,7 +612,7 @@
 }
 
 .incident-postmortem-link:hover {
-  color: var(--dark, #003049);
+  color: var(--dark, var(--editorial-blue));
   text-decoration: underline;
 }
 
@@ -646,7 +646,7 @@
 }
 
 .perf-metric-card:hover {
-  background: var(--surface-bright, #fafaf8);
+  background: var(--surface-bright, var(--surface));
 }
 
 .perf-metric-label {
@@ -655,7 +655,7 @@
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--tertiary, #669bbc);
+  color: var(--accent-blue);
   margin-bottom: 12px;
 }
 
@@ -671,7 +671,7 @@
   font-size: clamp(48px, 5vw, 72px);
   font-weight: 900;
   letter-spacing: -0.05em;
-  color: var(--dark, #003049);
+  color: var(--dark, var(--editorial-blue));
   line-height: 1;
 }
 
@@ -704,7 +704,7 @@
 
 /* ── Subscribe section ──────────────────────────────────────── */
 .status-subscribe {
-  background: var(--dark, #003049);
+  background: var(--dark, var(--editorial-blue));
   padding: 64px 0;
 }
 
@@ -766,7 +766,7 @@
   border-right: none;
   color: #fff;
   outline: none;
-  border-radius: 0;
+  border-radius: var(--r-md) 0 0 var(--r-md);
   transition: border-color 300ms ease, background 300ms ease;
 }
 
@@ -775,7 +775,7 @@
 }
 
 .subscribe-input:focus {
-  border-color: var(--champagne, #c9a96e);
+  border-color: var(--champagne);
   background: rgba(255, 255, 255, 0.12);
 }
 
@@ -787,18 +787,18 @@
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  background: var(--primary, #c1121f);
+  background: var(--brand-red);
   color: #fff;
-  border: 1px solid var(--primary, #c1121f);
+  border: 1px solid var(--brand-red);
   cursor: pointer;
-  border-radius: 0;
+  border-radius: 0 var(--r-lg) var(--r-lg) 0;
   transition: background 300ms ease, box-shadow 300ms ease;
   white-space: nowrap;
 }
 
 .subscribe-btn:hover {
-  background: var(--accent, #780000);
-  box-shadow: 3px 3px 0 rgba(201, 169, 110, 0.4);
+  background: var(--accent, var(--brand-red));
+  box-shadow: var(--shadow-2);
 }
 
 /* ── Scroll reveal animations ───────────────────────────────── */

@@ -53,7 +53,7 @@ const DIMENSIONS: ScoreDimension[] = [
     nameEn: "Engagement",
     nameCn: "影响力",
     weight: 0.1,
-    color: "#4a7a99",
+    color: "#669bbc", // --tertiary Steel Blue (same family as satisfaction, lighter read)
     description: "Audience resonance (capped at 10%)",
   },
 ];
@@ -74,17 +74,20 @@ export type CreatorTier =
   | "closer"
   | "partner";
 
-// Tier metadata
+// Path A brand-palette mapping (Design.md §Tier Identity System).
+// Hex values mirror brand tokens from globals.css — kept as literals because
+// the accentColor is consumed by SVG stroke and inline style paths where CSS
+// vars don't resolve. Do not introduce hexes outside the 6-color palette.
 const TIER_META: Record<
   CreatorTier,
   { label: string; icon: string; accentColor: string }
 > = {
-  seed: { label: "Seed", icon: "", accentColor: "#b8a99a" },
-  explorer: { label: "Explorer", icon: "", accentColor: "#8c6239" },
-  operator: { label: "Operator", icon: "", accentColor: "#4a5568" },
-  proven: { label: "Proven", icon: "", accentColor: "#c9a96e" },
-  closer: { label: "Closer", icon: "", accentColor: "#9b111e" },
-  partner: { label: "Partner", icon: "", accentColor: "#1a1a2e" },
+  seed: { label: "Seed", icon: "", accentColor: "#669bbc" }, // --tertiary
+  explorer: { label: "Explorer", icon: "", accentColor: "#c9a96e" }, // --champagne
+  operator: { label: "Operator", icon: "", accentColor: "#669bbc" }, // --tertiary
+  proven: { label: "Proven", icon: "", accentColor: "#c1121f" }, // --primary
+  closer: { label: "Closer", icon: "", accentColor: "#780000" }, // --accent
+  partner: { label: "Partner", icon: "", accentColor: "#003049" }, // --dark
 };
 
 // Variant config
@@ -240,12 +243,12 @@ function RingTooltip({
         left,
         top,
         width: tipWidth,
-        background: "#003049",
-        color: "#f5f2ec",
+        background: "var(--ink)",
+        color: "var(--surface)",
         padding: "8px 10px",
         pointerEvents: "none",
         zIndex: 10,
-        boxShadow: "0 4px 16px rgba(0,0,0,0.22)",
+        boxShadow: "0 4px 16px rgba(0, 0, 0, 0.22)",
       }}
     >
       {/* Dimension name */}
@@ -267,19 +270,19 @@ function RingTooltip({
         />
         <span
           style={{
-            fontFamily: "'CS Genio Mono', monospace",
+            fontFamily: "var(--font-body)",
             fontWeight: 700,
             fontSize: 11,
-            color: "#f5f2ec",
+            color: "var(--surface)",
           }}
         >
           {dim.nameCn}
         </span>
         <span
           style={{
-            fontFamily: "'CS Genio Mono', monospace",
+            fontFamily: "var(--font-body)",
             fontSize: 9,
-            color: "rgba(245,242,236,0.55)",
+            color: "rgba(245, 242, 236, 0.55)",
           }}
         >
           {dim.nameEn}
@@ -295,7 +298,7 @@ function RingTooltip({
       >
         <span
           style={{
-            fontFamily: "'Darky', serif",
+            fontFamily: "var(--font-display)",
             fontWeight: 900,
             fontSize: 18,
             color: dim.color === "#003049" ? "#669bbc" : dim.color,
@@ -306,9 +309,9 @@ function RingTooltip({
         </span>
         <span
           style={{
-            fontFamily: "'CS Genio Mono', monospace",
+            fontFamily: "var(--font-body)",
             fontSize: 9,
-            color: "rgba(245,242,236,0.55)",
+            color: "rgba(245, 242, 236, 0.55)",
             alignSelf: "flex-end",
           }}
         >
@@ -318,9 +321,9 @@ function RingTooltip({
       {/* Description */}
       <div
         style={{
-          fontFamily: "'CS Genio Mono', monospace",
+          fontFamily: "var(--font-body)",
           fontSize: 9,
-          color: "rgba(245,242,236,0.70)",
+          color: "rgba(245, 242, 236, 0.70)",
           lineHeight: 1.4,
         }}
       >
@@ -415,7 +418,7 @@ export function ScoreRings({
         flexDirection: "column",
         alignItems: "center",
         gap: isCompact ? 0 : 24,
-        fontFamily: "'CS Genio Mono', monospace",
+        fontFamily: "var(--font-body)",
       }}
     >
       {/* SVG rings + center */}
@@ -457,7 +460,7 @@ export function ScoreRings({
                   cy={cy}
                   r={radius}
                   fill="none"
-                  stroke="rgba(0,48,73,0.08)"
+                  stroke="var(--line)"
                   strokeWidth={cfg.ringWidth}
                 />
                 {/* Invisible wider hit area for easier hover */}
@@ -511,11 +514,11 @@ export function ScoreRings({
           {/* Score number with count-up */}
           <span
             style={{
-              fontFamily: "'Darky', serif",
+              fontFamily: "var(--font-display)",
               fontWeight: 900,
               fontSize: resolvedSize * cfg.centerScaleFactor,
               lineHeight: 1,
-              color: "#003049",
+              color: "var(--ink)",
               letterSpacing: "-0.02em",
             }}
           >
@@ -546,7 +549,7 @@ export function ScoreRings({
               )}
               <span
                 style={{
-                  fontFamily: "'CS Genio Mono', monospace",
+                  fontFamily: "var(--font-body)",
                   fontSize: isCompact ? 7 : cfg.labelFontSize,
                   fontWeight: 700,
                   color: TIER_META[tier].accentColor,
@@ -560,10 +563,10 @@ export function ScoreRings({
           ) : (
             <span
               style={{
-                fontFamily: "'CS Genio Mono', monospace",
+                fontFamily: "var(--font-body)",
                 fontSize: isCompact ? 7 : cfg.labelFontSize,
                 fontWeight: 600,
-                color: "#669bbc",
+                color: "var(--accent-blue)",
                 letterSpacing: "0.12em",
                 textTransform: "uppercase",
                 marginTop: 4,
@@ -625,28 +628,28 @@ export function ScoreRings({
                   >
                     <span
                       style={{
-                        fontFamily: "'CS Genio Mono', monospace",
+                        fontFamily: "var(--font-body)",
                         fontWeight: 700,
                         fontSize: 12,
-                        color: "#003049",
+                        color: "var(--ink)",
                       }}
                     >
                       {dim.nameCn}
                     </span>
                     <span
                       style={{
-                        fontFamily: "'CS Genio Mono', monospace",
+                        fontFamily: "var(--font-body)",
                         fontSize: 10,
-                        color: "rgba(0,48,73,0.45)",
+                        color: "var(--ink-4)",
                       }}
                     >
                       {dim.nameEn}
                     </span>
                     <span
                       style={{
-                        fontFamily: "'CS Genio Mono', monospace",
+                        fontFamily: "var(--font-body)",
                         fontSize: 9,
-                        color: "rgba(0,48,73,0.30)",
+                        color: "var(--ink-4)",
                         marginLeft: "auto",
                       }}
                     >
@@ -658,7 +661,7 @@ export function ScoreRings({
                   <div
                     style={{
                       height: 3,
-                      backgroundColor: "rgba(0,48,73,0.08)",
+                      backgroundColor: "var(--line)",
                       position: "relative",
                       overflow: "hidden",
                     }}
@@ -684,10 +687,10 @@ export function ScoreRings({
                 {/* Score value */}
                 <span
                   style={{
-                    fontFamily: "'CS Genio Mono', monospace",
+                    fontFamily: "var(--font-body)",
                     fontWeight: 700,
                     fontSize: 12,
-                    color: "#003049",
+                    color: "var(--ink)",
                     whiteSpace: "nowrap",
                     minWidth: 48,
                     textAlign: "right",
@@ -709,8 +712,8 @@ export function ScoreRings({
                 style={{
                   marginTop: 4,
                   padding: "8px 10px",
-                  backgroundColor: "rgba(193,18,31,0.05)",
-                  borderLeft: `2px solid #c1121f`,
+                  backgroundColor: "rgba(193, 18, 31, 0.05)",
+                  borderLeft: "2px solid var(--brand-red)",
                   display: "flex",
                   flexDirection: "column",
                   gap: 2,
@@ -718,10 +721,10 @@ export function ScoreRings({
               >
                 <span
                   style={{
-                    fontFamily: "'CS Genio Mono', monospace",
+                    fontFamily: "var(--font-body)",
                     fontSize: 9,
                     fontWeight: 700,
-                    color: "#c1121f",
+                    color: "var(--brand-red)",
                     textTransform: "uppercase",
                     letterSpacing: "0.1em",
                   }}
@@ -730,9 +733,9 @@ export function ScoreRings({
                 </span>
                 <span
                   style={{
-                    fontFamily: "'CS Genio Mono', monospace",
+                    fontFamily: "var(--font-body)",
                     fontSize: 10,
-                    color: "rgba(0,48,73,0.65)",
+                    color: "var(--graphite)",
                   }}
                 >
                   {lowest.description}

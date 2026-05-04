@@ -1,6 +1,5 @@
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
-import SmoothScroll from "@/components/layout/SmoothScroll";
 import MobileStickyBar from "@/components/layout/MobileStickyBar";
 
 export default function MarketingLayout({
@@ -9,11 +8,11 @@ export default function MarketingLayout({
   children: React.ReactNode;
 }) {
   return (
-    <SmoothScroll>
+    <>
       <Header />
       {children}
       <Footer />
       <MobileStickyBar />
-    </SmoothScroll>
+    </>
   );
 }

@@ -7,7 +7,45 @@ import {
   getNextTier,
   type CreatorTier,
 } from "@/lib/tier-config";
+import { ScoreRings } from "@/components/creator/ScoreRings";
+import type { DimensionScores } from "@/components/creator/ScoreRings";
+import { TierBadge } from "@/components/creator/TierBadge";
+import type { CreatorTier as TierBadgeCreatorTier } from "@/components/creator/TierBadge";
 import "./public-portfolio.css";
+import "./creator-profile.css";
+
+// Derive approximate dimension scores from a single pushScore.
+// These are synthetic values for display purposes on the public profile —
+// the real scores live in the creator dashboard (authenticated).
+function deriveDimensionScores(pushScore: number): DimensionScores {
+  const base = Math.min(100, Math.max(0, pushScore));
+  return {
+    completion: Math.min(100, Math.round(base * 1.05)),
+    reliability: Math.min(100, Math.round(base * 0.97)),
+    quality: Math.min(100, Math.round(base * 1.02)),
+    satisfaction: Math.min(100, Math.round(base * 0.98)),
+    engagement: Math.min(100, Math.round(base * 0.9)),
+  };
+}
+
+// Map Title-case profile tier → lowercase key used by ScoreRings + TierBadge
+function tierToLowerKey(tier: string): TierBadgeCreatorTier {
+  const map: Record<string, TierBadgeCreatorTier> = {
+    Seed: "seed",
+    seed: "seed",
+    Explorer: "explorer",
+    explorer: "explorer",
+    Operator: "operator",
+    operator: "operator",
+    Proven: "proven",
+    proven: "proven",
+    Closer: "closer",
+    closer: "closer",
+    Partner: "partner",
+    partner: "partner",
+  };
+  return map[tier] ?? "seed";
+}
 
 function tierNormalized(tier: string): CreatorTier {
   const map: Record<string, CreatorTier> = {
@@ -85,14 +123,21 @@ export function PublicPortfolioView({ profile }: { profile: CreatorProfile }) {
     .filter((c) => c.visible)
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
+  const firstName = profile.displayName.split(" ")[0];
+  const tierKey = tierToLowerKey(profile.tier);
+  const dimensionScores = deriveDimensionScores(profile.pushScore);
+
   return (
     <div className="pub-page">
-      {/* ── Hero / Header ──────────────────────────────────────── */}
+      {/* ── 01 HERO (dark panel, corner-anchored) ──────────────── */}
       <header className="pub-hero">
         <div className="pub-hero-inner">
-          <div className="pub-hero-main">
-            {/* Avatar */}
-            <div className="pub-avatar">
+          <div className="pub-hero-left">
+            {/* Avatar initial */}
+            <div
+              className="pub-avatar"
+              aria-label={`${profile.displayName} avatar`}
+            >
               {profile.avatarUrl ? (
                 <img
                   src={profile.avatarUrl}
@@ -106,26 +151,23 @@ export function PublicPortfolioView({ profile }: { profile: CreatorProfile }) {
               )}
             </div>
 
-            {/* Identity block */}
+            {/* Identity */}
             <div className="pub-hero-identity">
-              <div className="pub-hero-eyebrow">
-                <span className="pub-tier-badge">{tier}</span>
-                <span className="pub-hero-location">
-                  NYC — {profile.neighborhood}
-                </span>
-              </div>
+              <p className="pub-hero-eyebrow eyebrow">
+                (CREATOR PROFILE) · NYC — {profile.neighborhood}
+              </p>
 
               <h1 className="pub-hero-name">{profile.displayName}</h1>
 
               <div className="pub-hero-handles">
                 {profile.instagramHandle && (
                   <span className="pub-handle-chip">
-                    @{profile.instagramHandle} on Instagram
+                    @{profile.instagramHandle}
                   </span>
                 )}
                 {profile.tiktokHandle && (
                   <span className="pub-handle-chip">
-                    @{profile.tiktokHandle} on TikTok
+                    @{profile.tiktokHandle}
                   </span>
                 )}
               </div>
@@ -134,57 +176,76 @@ export function PublicPortfolioView({ profile }: { profile: CreatorProfile }) {
             </div>
           </div>
 
-          {/* Tier progress strip */}
-          <div className="pub-hero-progress">
-            <div className="pub-progress-header">
-              <span className="pub-progress-label">Push Score</span>
-              <span className="pub-progress-score">{profile.pushScore}</span>
-            </div>
-            <div className="pub-progress-track">
-              <div
-                className="pub-progress-fill"
-                style={{ width: `${tierPct}%` }}
-              />
-            </div>
-            <TierPips tier={tier} />
+          {/* Right: score glass — liquid-glass overlay with ScoreRings + TierBadge */}
+          <div className="pub-score-glass">
+            <TierBadge tier={tierKey} size="lg" />
+            <ScoreRings
+              scores={dimensionScores}
+              totalScore={profile.pushScore}
+              size={200}
+              animate
+              showLegend={false}
+              tier={tierKey}
+              variant="dashboard"
+            />
           </div>
         </div>
+
+        {/* Progress strip (bottom of hero) */}
+        <div className="pub-hero-progress">
+          <div className="pub-progress-header">
+            <span className="pub-progress-label">Push Score</span>
+            <span className="pub-progress-score">{profile.pushScore}</span>
+          </div>
+          <div className="pub-progress-track">
+            <div
+              className="pub-progress-fill"
+              style={{ width: `${tierPct}%` }}
+            />
+          </div>
+          <TierPips tier={tier} />
+        </div>
       </header>
+
+      {/* ── 02 STATS ROW ───────────────────────────────────────── */}
+      <section className="pub-stats-section">
+        <div className="pub-stats-strip">
+          <div className="pub-stat">
+            <div className="pub-stat-num">
+              {formatNumber(profile.verifiedVisits)}
+            </div>
+            <div className="pub-stat-label">Total Verified Visits</div>
+          </div>
+          <div className="pub-stat">
+            <div className="pub-stat-num">{profile.totalCampaigns}</div>
+            <div className="pub-stat-label">Campaigns</div>
+          </div>
+          <div className="pub-stat">
+            <div className="pub-stat-num">{profile.avgDeliveryTime}</div>
+            <div className="pub-stat-label">Avg. Rating</div>
+          </div>
+          <div className="pub-stat">
+            <div className="pub-stat-num">2025</div>
+            <div className="pub-stat-label">Member Since</div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── SIG DIVIDER ────────────────────────────────────────── */}
+      <div className="sig-divider" aria-hidden="true">
+        Verified Creator · Campaigns Delivered · Results Tracked ·
+      </div>
 
       {/* ── Main layout: content + sticky sidebar ─────────────── */}
       <div className="pub-layout">
         <main className="pub-main">
-          {/* Stats strip */}
-          <section className="pub-section pub-stats-section">
-            <div className="pub-stats-strip">
-              <div className="pub-stat">
-                <div className="pub-stat-number">{profile.totalCampaigns}</div>
-                <div className="pub-stat-label">Campaigns</div>
-              </div>
-              <div className="pub-stat">
-                <div className="pub-stat-number">
-                  {formatNumber(profile.verifiedVisits)}
-                </div>
-                <div className="pub-stat-label">Verified Visits</div>
-              </div>
-              <div className="pub-stat">
-                <div className="pub-stat-number">{profile.avgDeliveryTime}</div>
-                <div className="pub-stat-label">Avg Delivery</div>
-              </div>
-              <div className="pub-stat">
-                <div className="pub-stat-number">{profile.tierScore}</div>
-                <div className="pub-stat-label">Tier Score</div>
-              </div>
-            </div>
-          </section>
-
           {/* Tier benefits */}
           <section className="pub-section">
             <div className="pub-section-header">
-              <span className="pub-section-eyebrow">02</span>
+              <p className="eyebrow pub-section-eyebrow">(CREATOR TIER)</p>
               <h2 className="pub-section-title">Creator Tier</h2>
             </div>
-            <div className="pub-tier-block">
+            <div className="pub-tier-block candy-panel">
               <div className="pub-tier-name-block">
                 <span className="pub-tier-name-large">{tier}</span>
                 <span className="pub-tier-desc">{tierCfg.description}</span>
@@ -200,46 +261,15 @@ export function PublicPortfolioView({ profile }: { profile: CreatorProfile }) {
             </div>
           </section>
 
-          {/* Content gallery */}
-          {visibleGallery.length > 0 && (
-            <section className="pub-section">
-              <div className="pub-section-header">
-                <span className="pub-section-eyebrow">03</span>
-                <h2 className="pub-section-title">Content Gallery</h2>
-              </div>
-              <div className="pub-gallery-grid">
-                {visibleGallery.map((item) => (
-                  <div key={item.id} className="pub-gallery-item">
-                    {item.type === "image" ? (
-                      <img
-                        src={item.url}
-                        alt={item.caption}
-                        className="pub-gallery-img"
-                        loading="lazy"
-                      />
-                    ) : (
-                      <div className="pub-gallery-video">
-                        <span className="pub-gallery-play">▶</span>
-                      </div>
-                    )}
-                    {item.caption && (
-                      <p className="pub-gallery-caption">{item.caption}</p>
-                    )}
-                  </div>
-                ))}
-              </div>
-            </section>
-          )}
-
-          {/* Past campaigns */}
+          {/* Featured campaigns (past campaigns shown as campaign cards) */}
           {visibleCampaigns.length > 0 && (
             <section className="pub-section">
               <div className="pub-section-header">
-                <span className="pub-section-eyebrow">04</span>
-                <h2 className="pub-section-title">Past Campaigns</h2>
+                <p className="eyebrow pub-section-eyebrow">(CAMPAIGNS)</p>
+                <h2 className="pub-section-title">Featured Campaigns</h2>
               </div>
               <div className="pub-campaigns-list">
-                {visibleCampaigns.map((c) => (
+                {visibleCampaigns.slice(0, 3).map((c) => (
                   <div key={c.id} className="pub-campaign-row">
                     <div className="pub-campaign-identity">
                       <span className="pub-campaign-brand">{c.brand}</span>
@@ -272,11 +302,51 @@ export function PublicPortfolioView({ profile }: { profile: CreatorProfile }) {
             </section>
           )}
 
+          {/* Content gallery */}
+          {visibleGallery.length > 0 && (
+            <section className="pub-section">
+              <div className="pub-section-header">
+                <p className="eyebrow pub-section-eyebrow">(CONTENT)</p>
+                <h2 className="pub-section-title">Content Gallery</h2>
+              </div>
+              <div className="pub-gallery-grid">
+                {visibleGallery.map((item) => (
+                  <div key={item.id} className="pub-gallery-item">
+                    <div className="pub-gallery-card">
+                      {item.type === "image" ? (
+                        <img
+                          src={item.url}
+                          alt={item.caption}
+                          className="pub-gallery-img"
+                          loading="lazy"
+                        />
+                      ) : (
+                        <div className="pub-gallery-video">
+                          <span className="pub-gallery-play">▶</span>
+                        </div>
+                      )}
+                      {item.caption && (
+                        <div className="pub-gallery-overlay">
+                          <span className="pub-gallery-title">
+                            {item.caption}
+                          </span>
+                          <span className="pub-gallery-meta">
+                            Push · Verified
+                          </span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </section>
+          )}
+
           {/* Testimonials */}
           {profile.testimonials.length > 0 && (
             <section className="pub-section">
               <div className="pub-section-header">
-                <span className="pub-section-eyebrow">05</span>
+                <p className="eyebrow pub-section-eyebrow">(TESTIMONIALS)</p>
                 <h2 className="pub-section-title">Merchant Testimonials</h2>
               </div>
               <div className="pub-testimonials">
@@ -303,16 +373,15 @@ export function PublicPortfolioView({ profile }: { profile: CreatorProfile }) {
         {/* ── Sticky sidebar ──────────────────────────────────── */}
         <aside className="pub-sidebar">
           <div className="pub-sidebar-inner">
-            <div className="pub-cta-card">
-              <p className="pub-cta-eyebrow">Ready to collaborate?</p>
-              <h3 className="pub-cta-heading">
-                Work with {profile.displayName.split(" ")[0]}
-              </h3>
+            {/* "This creator is on Push" CTA */}
+            <div className="pub-cta-card candy-panel">
+              <p className="eyebrow pub-cta-eyebrow">(ON PUSH)</p>
+              <h3 className="pub-cta-heading">{firstName} is on Push.</h3>
               <p className="pub-cta-body">
-                {profile.displayName.split(" ")[0]} is a verified Push {tier}{" "}
-                creator with {profile.totalCampaigns} completed campaigns and{" "}
+                {profile.displayName} is a verified Push {tier} creator with{" "}
+                {profile.totalCampaigns} completed campaigns and{" "}
                 {formatNumber(profile.verifiedVisits)} verified visits delivered
-                to NYC restaurants.
+                to NYC restaurants and businesses.
               </p>
               <div className="pub-cta-stats">
                 <div className="pub-cta-stat">
@@ -327,18 +396,18 @@ export function PublicPortfolioView({ profile }: { profile: CreatorProfile }) {
                 </div>
               </div>
               <a
-                href={`mailto:hello@push.nyc?subject=Campaign%20with%20${encodeURIComponent(profile.displayName)}`}
-                className="pub-cta-btn"
+                href="https://push.nyc/creator/signup"
+                className="btn-primary click-shift pub-cta-btn"
               >
-                Start a Campaign
+                Join Push
               </a>
               <p className="pub-cta-sub">
-                Powered by Push — NYC&apos;s creator attribution network
+                Get verified. Earn per visit. NYC only.
               </p>
             </div>
 
             <div className="pub-sidebar-profile-card">
-              <p className="pub-sidebar-card-label">Push Profile</p>
+              <p className="pub-sidebar-card-label eyebrow">Push Profile</p>
               <div className="pub-sidebar-tier-row">
                 <span className="pub-sidebar-tier-badge">{tier}</span>
                 <span className="pub-sidebar-score">
@@ -371,6 +440,22 @@ export function PublicPortfolioView({ profile }: { profile: CreatorProfile }) {
           </div>
         </aside>
       </div>
+
+      {/* ── TICKET CTA ─────────────────────────────────────────── */}
+      <section className="pub-ticket-section">
+        <div className="ticket-panel pub-ticket">
+          <p className="eyebrow pub-ticket-eyebrow">(CAMPAIGNS)</p>
+          <h2 className="pub-ticket-headline">
+            Book {firstName} for your campaign.
+          </h2>
+          <a
+            href={`mailto:hello@push.nyc?subject=Campaign%20with%20${encodeURIComponent(profile.displayName)}`}
+            className="btn-primary click-shift pub-ticket-btn"
+          >
+            Start a Campaign
+          </a>
+        </div>
+      </section>
 
       {/* ── Footer bar ─────────────────────────────────────────── */}
       <footer className="pub-footer">

@@ -110,25 +110,8 @@ function JsonLd({ merchant }: { merchant: MerchantPublic }) {
 // Sub-components
 // ---------------------------------------------------------------------------
 
-function TierBadge({ tier }: { tier: string }) {
-  const tierColors: Record<string, { bg: string; color: string }> = {
-    Seed: { bg: "rgba(0,48,73,0.06)", color: "#7a6558" },
-    Explorer: { bg: "rgba(140,98,57,0.1)", color: "#8c6239" },
-    Operator: { bg: "rgba(74,85,104,0.1)", color: "#4a5568" },
-    Proven: { bg: "rgba(201,169,110,0.15)", color: "#8a6e2e" },
-    Closer: { bg: "rgba(193,18,31,0.1)", color: "#9b111e" },
-    Partner: { bg: "rgba(0,48,73,0.12)", color: "#003049" },
-  };
-  const style = tierColors[tier] ?? tierColors.Seed;
-
-  return (
-    <span
-      className="mp-tier-badge"
-      style={{ background: style.bg, color: style.color }}
-    >
-      {tier}
-    </span>
-  );
+function CategoryBadge({ category }: { category: string }) {
+  return <span className="mp-category-badge btn-pill">{category}</span>;
 }
 
 function CampaignCard({ campaign }: { campaign: PublicCampaign }) {
@@ -152,17 +135,24 @@ function CampaignCard({ campaign }: { campaign: PublicCampaign }) {
             sizes="(max-width: 768px) 100vw, 400px"
             style={{ objectFit: "cover" }}
           />
+          {/* Bottom gradient overlay per v11 Photo Card pattern */}
+          <div className="mp-campaign-img-overlay" />
+          <div className="mp-campaign-img-meta">
+            <span className="mp-campaign-img-title">{campaign.title}</span>
+          </div>
         </div>
       )}
       <div className="mp-campaign-body">
         <div className="mp-campaign-meta">
-          <TierBadge tier={campaign.tier_required} />
-          <span className={`mp-spots ${spotsUrgent ? "mp-spots--urgent" : ""}`}>
+          <CategoryBadge category={campaign.tier_required} />
+          <span className={`mp-spots${spotsUrgent ? " mp-spots--urgent" : ""}`}>
             {campaign.spots_remaining} spot
             {campaign.spots_remaining !== 1 ? "s" : ""} left
           </span>
         </div>
-        <h3 className="mp-campaign-title">{campaign.title}</h3>
+        {!campaign.image && (
+          <h3 className="mp-campaign-title">{campaign.title}</h3>
+        )}
         <p className="mp-campaign-desc">{campaign.description}</p>
         <div className="mp-campaign-footer">
           <div className="mp-campaign-payout">
@@ -171,7 +161,7 @@ function CampaignCard({ campaign }: { campaign: PublicCampaign }) {
             ) : (
               <>
                 <span className="mp-payout-amount">${campaign.payout}</span>
-                <span className="mp-payout-label">payout</span>
+                <span className="mp-payout-label">/visit</span>
               </>
             )}
           </div>
@@ -179,9 +169,9 @@ function CampaignCard({ campaign }: { campaign: PublicCampaign }) {
         </div>
         <Link
           href={`/creator/explore?campaign=${campaign.id}`}
-          className="mp-btn mp-btn--primary"
+          className="btn-primary click-shift mp-campaign-apply"
         >
-          Apply now
+          Scan to Visit
         </Link>
       </div>
     </div>
@@ -208,7 +198,7 @@ export default async function MerchantPublicPage({
       <JsonLd merchant={merchant} />
 
       <main className="mp-root">
-        {/* ── 01 HERO ──────────────────────────────────────────────── */}
+        {/* ── 01 HERO (dark, image-first) ───────────────────────── */}
         <section className="mp-hero">
           <div className="mp-hero-img-wrap">
             <Image
@@ -223,12 +213,23 @@ export default async function MerchantPublicPage({
           </div>
 
           <div className="mp-hero-content">
-            <p className="mp-eyebrow">
-              {merchant.neighborhood} &middot; {merchant.borough} &middot;{" "}
-              {merchant.category}
+            <p className="mp-eyebrow eyebrow">
+              (MERCHANT) · {merchant.neighborhood} · {merchant.borough}
             </p>
             <h1 className="mp-hero-name">{merchant.name}</h1>
             <p className="mp-hero-tagline">{merchant.tagline}</p>
+            <div className="mp-hero-badges">
+              <CategoryBadge category={merchant.category} />
+            </div>
+          </div>
+
+          {/* Right: visit count badge */}
+          <div className="mp-hero-visit-badge lg-surface--badge">
+            <p className="eyebrow mp-visit-badge-eyebrow">VERIFIED VISITS</p>
+            <span className="mp-visit-badge-count">
+              {merchant.stats.total_visits.toLocaleString()}
+            </span>
+            <span className="mp-visit-badge-label">driven by creators</span>
           </div>
 
           <div className="mp-hero-scroll-hint" aria-hidden="true">
@@ -237,12 +238,13 @@ export default async function MerchantPublicPage({
           </div>
         </section>
 
-        {/* ── 02 STORY ─────────────────────────────────────────────── */}
+        {/* ── 02 STORY ─────────────────────────────────────────── */}
         <section className="mp-section mp-story">
           <div className="mp-container mp-story-inner">
             <div className="mp-section-label">
-              <span className="mp-section-num">01</span>
-              <span className="mp-section-title">Story</span>
+              <p className="eyebrow">
+                <span className="mp-section-num">01</span> Story
+              </p>
             </div>
             <div className="mp-story-body">
               <p className="mp-story-text">{merchant.story}</p>
@@ -250,13 +252,14 @@ export default async function MerchantPublicPage({
           </div>
         </section>
 
-        {/* ── 03 LIVE CAMPAIGNS ────────────────────────────────────── */}
+        {/* ── 03 LIVE CAMPAIGNS ────────────────────────────────── */}
         {merchant.campaigns.length > 0 && (
           <section className="mp-section mp-campaigns">
             <div className="mp-container">
               <div className="mp-section-label">
-                <span className="mp-section-num">02</span>
-                <span className="mp-section-title">Live Campaigns</span>
+                <p className="eyebrow">
+                  <span className="mp-section-num">02</span> Live Campaigns
+                </p>
               </div>
               <p className="mp-section-sub">
                 Open now &mdash; creators can apply directly through Push.
@@ -270,12 +273,14 @@ export default async function MerchantPublicPage({
           </section>
         )}
 
-        {/* ── 04 CREATORS ──────────────────────────────────────────── */}
+        {/* ── 04 CREATOR WALL ──────────────────────────────────── */}
         <section className="mp-section mp-creators">
           <div className="mp-container">
             <div className="mp-section-label">
-              <span className="mp-section-num">03</span>
-              <span className="mp-section-title">Creators Partnered With</span>
+              <p className="eyebrow">
+                <span className="mp-section-num">03</span> Creators Partnered
+                With
+              </p>
             </div>
             <div className="mp-creators-grid">
               {merchant.creators.map((creator) => (
@@ -291,7 +296,9 @@ export default async function MerchantPublicPage({
                   </div>
                   <div className="mp-creator-info">
                     <span className="mp-creator-handle">{creator.handle}</span>
-                    <TierBadge tier={creator.tier} />
+                    <span className="mp-creator-tier btn-pill">
+                      {creator.tier}
+                    </span>
                   </div>
                 </div>
               ))}
@@ -299,12 +306,13 @@ export default async function MerchantPublicPage({
           </div>
         </section>
 
-        {/* ── 05 VERIFIED STATS ────────────────────────────────────── */}
+        {/* ── 05 VERIFIED STATS ────────────────────────────────── */}
         <section className="mp-section mp-stats">
           <div className="mp-container mp-stats-inner">
             <div className="mp-section-label">
-              <span className="mp-section-num">04</span>
-              <span className="mp-section-title">Verified by Push</span>
+              <p className="eyebrow">
+                <span className="mp-section-num">04</span> Verified by Push
+              </p>
             </div>
             <div className="mp-stats-grid">
               <div className="mp-stat-block">
@@ -331,12 +339,13 @@ export default async function MerchantPublicPage({
           </div>
         </section>
 
-        {/* ── 06 REVIEWS ───────────────────────────────────────────── */}
+        {/* ── 06 REVIEWS ───────────────────────────────────────── */}
         <section className="mp-section mp-reviews">
           <div className="mp-container">
             <div className="mp-section-label">
-              <span className="mp-section-num">05</span>
-              <span className="mp-section-title">From Creators</span>
+              <p className="eyebrow">
+                <span className="mp-section-num">05</span> From Creators
+              </p>
             </div>
             <div className="mp-reviews-grid">
               {merchant.reviews.map((review) => (
@@ -369,12 +378,13 @@ export default async function MerchantPublicPage({
           </div>
         </section>
 
-        {/* ── 07 VISIT INFO ─────────────────────────────────────────── */}
+        {/* ── 07 VISIT INFO (about + hours + address) ───────────── */}
         <section className="mp-section mp-visit">
           <div className="mp-container mp-visit-inner">
             <div className="mp-section-label">
-              <span className="mp-section-num">06</span>
-              <span className="mp-section-title">Visit Info</span>
+              <p className="eyebrow">
+                <span className="mp-section-num">06</span> Visit Info
+              </p>
             </div>
 
             <div className="mp-visit-grid">
@@ -438,20 +448,21 @@ export default async function MerchantPublicPage({
           </div>
         </section>
 
-        {/* ── 08 RELATED MERCHANTS ─────────────────────────────────── */}
+        {/* ── 08 RELATED MERCHANTS ─────────────────────────────── */}
         {related.length > 0 && (
           <section className="mp-section mp-related">
             <div className="mp-container">
               <div className="mp-section-label">
-                <span className="mp-section-num">07</span>
-                <span className="mp-section-title">Also on Push</span>
+                <p className="eyebrow">
+                  <span className="mp-section-num">07</span> Also on Push
+                </p>
               </div>
               <div className="mp-related-grid">
                 {related.map((rel) => (
                   <Link
                     key={rel.slug}
                     href={`/m/${rel.slug}`}
-                    className="mp-related-card"
+                    className="mp-related-card click-shift"
                   >
                     <div className="mp-related-img-wrap">
                       <Image
@@ -464,8 +475,8 @@ export default async function MerchantPublicPage({
                       <div className="mp-related-overlay" />
                     </div>
                     <div className="mp-related-info">
-                      <p className="mp-related-neighborhood">
-                        {rel.neighborhood} &middot; {rel.category}
+                      <p className="mp-related-neighborhood eyebrow">
+                        {rel.neighborhood} · {rel.category}
                       </p>
                       <h3 className="mp-related-name">{rel.name}</h3>
                     </div>
@@ -476,18 +487,21 @@ export default async function MerchantPublicPage({
           </section>
         )}
 
-        {/* ── 09 CTA STRIP ─────────────────────────────────────────── */}
-        <section className="mp-cta-strip">
-          <div className="mp-container mp-cta-inner">
-            <p className="mp-cta-eyebrow">Creators</p>
-            <h2 className="mp-cta-headline">
-              Want to work with {merchant.name}?
+        {/* ── 09 TICKET CTA ────────────────────────────────────── */}
+        <section className="mp-ticket-section">
+          <div className="ticket-panel mp-ticket">
+            <p className="eyebrow mp-ticket-eyebrow">(CAMPAIGNS)</p>
+            <h2 className="mp-ticket-headline">
+              Create a campaign at {merchant.name}.
             </h2>
-            <p className="mp-cta-sub">
+            <p className="mp-ticket-sub">
               Browse open campaigns, apply in seconds, get paid per verified
               visit.
             </p>
-            <Link href="/creator/explore" className="mp-btn mp-btn--cta">
+            <Link
+              href="/creator/explore"
+              className="btn-primary click-shift mp-ticket-btn"
+            >
               Browse campaigns
             </Link>
           </div>

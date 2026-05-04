@@ -156,9 +156,9 @@ export default function ConsentPicker({
           style={{
             padding: "12px 16px",
             marginBottom: "24px",
-            border: "2px solid var(--primary)",
+            border: "2px solid var(--brand-red)",
             background: "rgba(193,18,31,0.06)",
-            color: "var(--primary)",
+            color: "var(--brand-red)",
             fontFamily: "var(--font-body)",
             fontSize: "13px",
             lineHeight: 1.5,

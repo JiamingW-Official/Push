@@ -3,7 +3,7 @@ import React from "react";
 // work/page.tsx redirects to work/today — mirror today's skeleton here
 const skel: React.CSSProperties = {
   background:
-    "linear-gradient(90deg,rgba(0,48,73,0.05) 25%,rgba(0,48,73,0.10) 50%,rgba(0,48,73,0.05) 75%)",
+    "linear-gradient(90deg,var(--surface-3) 25%,var(--mist) 50%,var(--surface-3) 75%)",
   backgroundSize: "200% 100%",
   animation: "shimmer 1.5s infinite linear",
 };
@@ -17,7 +17,7 @@ export default function WorkLoading() {
       <div
         style={{
           height: "48px",
-          borderBottom: "1px solid rgba(0,48,73,0.12)",
+          borderBottom: "1px solid var(--hairline)",
           display: "flex",
           alignItems: "center",
           padding: "0 24px",
@@ -87,14 +87,14 @@ export default function WorkLoading() {
           gridTemplateColumns: "1fr 1fr 1fr",
           gap: "1px",
           margin: "24px 32px",
-          border: "1px solid rgba(0,48,73,0.12)",
+          border: "1px solid var(--hairline)",
         }}
       >
         {[0, 1, 2].map((i) => (
           <div
             key={i}
             style={{
-              background: "var(--surface-elevated)",
+              background: "var(--surface-2)",
               padding: "20px 16px",
             }}
           >
@@ -138,8 +138,8 @@ export default function WorkLoading() {
               gap: "12px",
               padding: "14px 16px",
               marginBottom: "2px",
-              background: "var(--surface-elevated)",
-              border: "1px solid rgba(0,48,73,0.06)",
+              background: "var(--surface-2)",
+              border: "1px solid var(--hairline)",
             }}
           >
             <div

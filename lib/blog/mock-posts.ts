@@ -581,9 +581,9 @@ After your first campaign, your performance score becomes visible on your creato
 | Content rated "high quality" | +4 |
 | Campaign missed without notice | -8 |
 
-Operators consistently earn between $20–35 per campaign plus 3% commission. At 3–4 campaigns per month, that's $60–140 in monthly baseline earnings before commissions and bonuses.
+Operators consistently earn between $20–35 per campaign plus 3% commission. At 3–4 campaigns per month, that's $60–140 in monthly baseline earnings before per-verified-visit payouts.
 
-The Partner tier milestone bonus ($80/month) kicks in at 30 verified transactions per month — achievable for a dedicated Operator-tier creator in a dense Brooklyn neighborhood.
+Partner-tier creators earn the top per-visit rate ($35 avg) plus Studio anchor status — achievable for a dedicated Operator-tier creator in a dense Brooklyn neighborhood.
 
 ## Neighborhoods With Highest Campaign Density
 
@@ -705,20 +705,20 @@ The tier system now uses a material metaphor that maps intuitively to progressio
 
 **Ruby (Closer)** — jewel-tier. Rare, vivid, precious. Elite campaigns only.
 
-**Obsidian (Partner)** — volcanic glass, near-black. The pinnacle. Maximum earning rate, exclusive partnership opportunities, monthly milestone bonus.
+**Obsidian (Partner)** — volcanic glass, near-black. The pinnacle. Top per-visit rate and Studio anchor status — exclusive partnership opportunities.
 
 Each material has a unique color that is **spectrally distinct** from all others — no two tiers share the same hue family. From a UX standpoint, this means any creator at a glance can understand exactly where they stand without reading a label.
 
 ## The Earning Structure
 
-| Tier | Base Rate | Commission | Milestone Bonus |
-|------|-----------|------------|-----------------|
-| Seed (Clay) | Free product | — | — |
-| Explorer (Bronze) | $12 | — | — |
-| Operator (Steel) | $20 | 3% | $15 at 30 tx/mo |
-| Proven (Gold) | $32 | 5% | $30 at 30 tx/mo |
-| Closer (Ruby) | $55 | 7% | $55 at 30 tx/mo |
-| Partner (Obsidian) | $100 | 10% | $80 at 30 tx/mo |
+| Tier | Base Rate | Commission | Per-Visit Rate |
+|------|-----------|------------|----------------|
+| Seed | Free product | — | — |
+| Explorer | $12 | — | — |
+| Operator | $20 | 3% | $12 avg |
+| Proven | $32 | 5% | Studio eligibility |
+| Closer | $55 | 7% | $25 avg |
+| Partner | $100 | 10% | $35 avg + Studio anchor |
 
 Commission is calculated on verified transaction value attributed to the creator's QR code in the merchant's POS system (where available).
 
@@ -728,9 +728,9 @@ The system is designed to compound. A Partner-tier creator who drives 30 verifie
 
 - Base: $100 × 30 = $3,000
 - Commission (10% on avg $35 ticket × 30 tx): $105
-- Milestone bonus: $80
+- Per-visit rate top-up (30 visits × $35 avg = platform payout via Stripe Connect)
 
-**Monthly total: $3,185 from 30 verified visits.**
+**Monthly total: thousands of dollars from 30 verified visits.**
 
 That's not side-income. That's a profession.
 
@@ -740,7 +740,7 @@ Beyond the rebrand, v4.0 includes three substantive changes:
 
 **1. Cross-borough campaign eligibility.** Operator-tier and above creators can now accept campaigns outside their home borough, expanding campaign availability.
 
-**2. Milestone bonus reset.** Previously, the milestone bonus reset on the 1st of each calendar month regardless of when it was achieved. Now it runs on a rolling 30-day window, giving creators more flexibility.
+**2. Per-verified-visit payouts.** v6 (2026-04-24) shifted the platform-side incentive from monthly milestone bonuses to per-verified-visit payouts via Stripe Connect, paid weekly. Creators see income within days of driving a visit, not at the end of a calendar month.
 
 **3. Performance score carry.** If a creator takes a break for 30 days or less, their score doesn't decay. Decay only begins after 60 days of inactivity, and recovery is faster (1.5× the normal accumulation rate for the first 30 days back).
 
@@ -915,7 +915,7 @@ We use Stripe Connect for disbursements. Every creator creates a Stripe Connect 
 The weekly run happens every Wednesday at 2:00am ET:
 
 1. Pull all verified visits from the past 7 days (Monday 00:00 → Sunday 23:59 ET)
-2. Calculate earnings: base rate + commission + milestone bonus (if applicable)
+2. Calculate earnings: base rate + commission + per-verified-visit payout (Stripe Connect)
 3. Apply tax withholding flags (creators who've earned >$600 YTD get a 1099 flag)
 4. Queue disbursements via Stripe Transfer API
 5. Log all transfers with creator ID, campaign ID, amount, and tax period

@@ -27,6 +27,13 @@ type TierCardProps = {
 
 // ── Tier visual identity ─────────────────────────────────────────────────────
 
+// Path A (v5.2, 2026-04-20): tier visuals sourced from 6-color brand palette.
+// Design.md §Tier Identity System (Path A) documents the mapping.
+// Hex values retained here because CSS vars inside a `linear-gradient(...)`
+// literal can fail to resolve in html2canvas exports — the screenshotted card
+// must rasterize reliably. All hexes below correspond 1:1 to brand tokens in
+// globals.css (Pearl Stone / Deep Space Blue / Flag Red / Steel Blue /
+// Champagne Gold / Molten Lava).
 const TIER_CARD_STYLE: Record<
   CreatorTier,
   {
@@ -37,39 +44,37 @@ const TIER_CARD_STYLE: Record<
     name: string;
   }
 > = {
-  // Path A (v5.2, 2026-04-20): tier visuals sourced from 6-color brand palette.
-  // Design.md §Tier Identity System (Path A) documents the mapping.
   seed: {
-    bg: "#f5f2ec",
-    accent: "#669bbc",
-    textColor: "#003049",
+    bg: "#f5f2ec", // --surface Pearl Stone
+    accent: "#669bbc", // --tertiary Steel Blue
+    textColor: "#003049", // --dark Deep Space Blue
     symbol: "",
     name: "Seed",
   },
   explorer: {
-    bg: "#003049",
-    accent: "#c9a96e",
-    textColor: "#f5f2ec",
+    bg: "#003049", // --dark
+    accent: "#c9a96e", // --champagne
+    textColor: "#f5f2ec", // --surface
     symbol: "",
     name: "Explorer",
   },
   operator: {
-    bg: "#001d2e",
-    accent: "#669bbc",
+    bg: "#001d2e", // --dark deepened for card body (no new brand token introduced)
+    accent: "#669bbc", // --tertiary
     textColor: "#f5f2ec",
     symbol: "",
     name: "Operator",
   },
   proven: {
     bg: "#003049",
-    accent: "#c1121f",
+    accent: "#c1121f", // --primary Flag Red
     textColor: "#f5f2ec",
     symbol: "",
     name: "Proven",
   },
   closer: {
-    bg: "#3a0000",
-    accent: "#780000",
+    bg: "#3a0000", // deepened --accent Molten Lava for card body
+    accent: "#780000", // --accent
     textColor: "#f5f2ec",
     symbol: "",
     name: "Closer",
@@ -165,7 +170,11 @@ export default function TierCard({
   return (
     <div className="tier-card-wrapper">
       {/* ── Screenshottable card ───────────────────────────────────── */}
-      <div className="tier-card" style={cardInlineStyle} id="tier-card-capture">
+      <div
+        className={`tier-card tier--${tier}`}
+        style={cardInlineStyle}
+        id="tier-card-capture"
+      >
         {/* Header */}
         <div className="tc-header">
           <span className="tc-logo" style={{ color: style.textColor }}>

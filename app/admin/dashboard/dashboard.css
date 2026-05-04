@@ -6,14 +6,14 @@
 .admin-shell {
   min-height: 100vh;
   background: var(--surface);
-  color: var(--dark);
+  color: var(--ink);
   font-family: var(--font-body);
 }
 
 /* ── Title bar ─────────────────────────────────────────────── */
 
 .admin-titlebar {
-  background: var(--surface-elevated);
+  background: var(--surface-2);
   border-bottom: 1px solid var(--line-strong);
   padding: var(--space-4) var(--space-5);
 }
@@ -37,7 +37,7 @@
 .admin-timestamp {
   font-family: var(--font-body);
   font-size: var(--text-caption);
-  color: var(--text-muted);
+  color: var(--ink-4);
   font-variant-numeric: tabular-nums;
 }
 
@@ -47,10 +47,10 @@
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--dark);
-  background: var(--surface-elevated);
+  color: var(--ink);
+  background: var(--surface-2);
   border: 2px solid var(--line-strong);
-  border-radius: 0;
+  border-radius: var(--r-lg);
   padding: var(--space-1) var(--space-2);
   cursor: pointer;
   transition: background var(--t-fast), border-color var(--t-fast),
@@ -59,20 +59,20 @@
 
 .admin-refresh:hover:not(:disabled) {
   background: var(--surface);
-  border-color: var(--primary);
-  color: var(--primary);
+  border-color: var(--brand-red);
+  color: var(--brand-red);
 }
 
 .admin-refresh:disabled {
   background: var(--surface);
-  color: var(--text-muted);
+  color: var(--ink-4);
   cursor: not-allowed;
 }
 
 /* ── Alert banner ──────────────────────────────────────────── */
 
 .admin-alert {
-  border-left: 4px solid var(--primary);
+  border-left: 4px solid var(--brand-red);
   background: rgba(193, 18, 31, 0.06);
   padding: var(--space-2) var(--space-3);
   display: flex;
@@ -84,7 +84,7 @@
   font-family: var(--font-body);
   font-size: var(--text-small);
   font-weight: 700;
-  color: var(--primary);
+  color: var(--brand-red);
 }
 
 .admin-alert__retry {
@@ -93,10 +93,10 @@
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--primary);
+  color: var(--brand-red);
   background: transparent;
-  border: 1px solid var(--primary);
-  border-radius: 0;
+  border: 1px solid var(--brand-red);
+  border-radius: var(--r-lg);
   padding: 4px var(--space-2);
   cursor: pointer;
   align-self: flex-start;
@@ -104,8 +104,8 @@
 }
 
 .admin-alert__retry:hover {
-  background: var(--primary);
-  color: var(--surface-elevated);
+  background: var(--brand-red);
+  color: var(--surface-2);
 }
 
 .admin-title {
@@ -114,7 +114,7 @@
   font-weight: 700;
   line-height: 1;
   letter-spacing: -0.02em;
-  color: var(--dark);
+  color: var(--ink);
 }
 
 .admin-subtitle {
@@ -123,7 +123,7 @@
   font-weight: 600;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--text-muted);
+  color: var(--ink-4);
 }
 
 /* ── Main content ──────────────────────────────────────────── */
@@ -177,7 +177,7 @@
   font-size: var(--text-h3);
   font-weight: 700;
   letter-spacing: -0.01em;
-  color: var(--dark);
+  color: var(--ink);
 }
 
 .admin-section__meta {
@@ -186,5 +186,5 @@
   font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--text-muted);
+  color: var(--ink-4);
 }

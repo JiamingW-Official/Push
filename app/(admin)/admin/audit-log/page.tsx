@@ -56,6 +56,18 @@ function formatTime(iso: string): string {
   });
 }
 
+// Kept for potential future use; currently color logic lives in CSS classes.
+function sevColor(sev: AuditSeverity): { bg: string; color: string } {
+  switch (sev) {
+    case "critical":
+      return { bg: "rgba(193,18,31,0.1)", color: "var(--brand-red)" };
+    case "warning":
+      return { bg: "rgba(191,161,112,0.14)", color: "#8a6a2a" };
+    case "info":
+      return { bg: "rgba(0,133,255,0.08)", color: "var(--accent-blue)" };
+  }
+}
+
 const PRESET_OPTIONS: Array<{ value: Preset; label: string }> = [
   { value: "1h", label: "1h" },
   { value: "24h", label: "24h" },
@@ -86,8 +98,15 @@ const TARGET_OPTIONS: Array<{ value: TargetFilter; label: string }> = [
 // Sub-components
 // ---------------------------------------------------------------------------
 
+/** v11 severity badge — color coded via CSS: INFO/WARN/ERROR. */
 function SeverityBadge({ sev }: { sev: AuditSeverity }) {
-  return <span className={`al-sev al-sev--${sev}`}>{sev}</span>;
+  const modClass =
+    sev === "critical"
+      ? "al-sev--critical"
+      : sev === "warning"
+        ? "al-sev--warning"
+        : "al-sev--info";
+  return <span className={`al-sev ${modClass}`}>{sev}</span>;
 }
 
 function PinnedStrip({
@@ -130,6 +149,7 @@ function PinnedStrip({
   );
 }
 
+/** Log entry row — mono 12px, alternating surface via CSS nth-child. */
 function Row({
   entry,
   onOpen,
@@ -139,29 +159,45 @@ function Row({
 }) {
   return (
     <div
-      className={`al-row ${entry.pinned ? "pinned" : ""}`}
+      className={`al-row${entry.pinned ? " al-row--pinned" : ""}`}
       role="button"
       tabIndex={0}
       onClick={() => onOpen(entry)}
       onKeyDown={(k) => k.key === "Enter" && onOpen(entry)}
       aria-label={`Open audit entry ${entry.id}`}
     >
+      {/* Timestamp column — mono, ink-3, nowrap */}
       <div>
-        <div className="al-row__time">{formatTime(entry.timestamp)}</div>
-        <div className="al-row__ago">{timeAgo(entry.timestamp)} ago</div>
+        <div className="al-row__time-main">{formatTime(entry.timestamp)}</div>
+        <div className="al-row__time-ago">{timeAgo(entry.timestamp)} ago</div>
       </div>
+
+      {/* Severity badge */}
       <SeverityBadge sev={entry.severity} />
+
+      {/* Actor column — 600 weight ink per v11 spec */}
       <div className="al-row__actor">
         <span className="al-row__initials">{entry.actor.initials}</span>
         <span className="al-row__actor-name">{entry.actor.name}</span>
       </div>
-      <div className="al-row__desc">
+
+      {/* Event description */}
+      <div>
         <span className="al-row__action">{entry.actionLabel}</span>{" "}
-        <span className="al-row__target-type">{entry.target.type}</span>
-        <span className="al-row__target">{entry.target.label}</span>
+        <span className="al-row__target-type">{entry.target.type}</span>{" "}
+        <span className="al-row__target-label">{entry.target.label}</span>
       </div>
+
+      {/* IP column — mono */}
       <div className="al-row__ip">{entry.ip}</div>
-      <div className="al-row__pin">{entry.pinned ? "●" : ""}</div>
+
+      {/* Pin indicator */}
+      <div
+        className="al-row__pin"
+        style={{ color: entry.pinned ? "var(--brand-red)" : "transparent" }}
+      >
+        ●
+      </div>
     </div>
   );
 }
@@ -193,6 +229,7 @@ function Drawer({
         role="dialog"
         aria-label="Audit entry detail"
       >
+        {/* Header */}
         <div className="al-drawer__header">
           <div className="al-drawer__title">
             {entry.actor.name} {entry.actionLabel} {entry.target.label}
@@ -207,116 +244,124 @@ function Drawer({
           </button>
         </div>
 
+        {/* Body */}
         <div className="al-drawer__body">
-          {/* Meta */}
-          <div className="al-section">
+          {/* Event meta */}
+          <div>
             <div className="al-section__head">Event</div>
-            <div className="al-meta">
-              <div className="al-meta__key">Event ID</div>
-              <div className="al-meta__val al-meta__val--mono">{entry.id}</div>
-              <div className="al-meta__key">Timestamp</div>
-              <div className="al-meta__val">
-                {new Date(entry.timestamp).toLocaleString("en-US", {
-                  dateStyle: "medium",
-                  timeStyle: "long",
-                })}
-              </div>
-              <div className="al-meta__key">Action</div>
-              <div className="al-meta__val al-meta__val--mono">
-                {entry.action}
-              </div>
-              <div className="al-meta__key">Target</div>
-              <div className="al-meta__val">
-                {entry.target.label}{" "}
-                <span style={{ color: "var(--text-muted)", fontSize: 10 }}>
-                  ({entry.target.type} · {entry.target.id})
-                </span>
-              </div>
+            <div>
+              {[
+                { key: "Event ID", val: entry.id, mono: true },
+                {
+                  key: "Timestamp",
+                  val: new Date(entry.timestamp).toLocaleString("en-US", {
+                    dateStyle: "medium",
+                    timeStyle: "long",
+                  }),
+                  mono: false,
+                },
+                { key: "Action", val: entry.action, mono: true },
+                {
+                  key: "Target",
+                  val: `${entry.target.label} (${entry.target.type} · ${entry.target.id})`,
+                  mono: false,
+                },
+              ].map(({ key, val, mono }) => (
+                <div key={key} className="al-meta-row">
+                  <span className="al-meta-row__key">{key}</span>
+                  <span
+                    className={`al-meta-row__val${mono ? " al-meta-row__val--mono" : ""}`}
+                  >
+                    {val}
+                  </span>
+                </div>
+              ))}
             </div>
           </div>
 
           {/* Actor */}
-          <div className="al-section">
+          <div>
             <div className="al-section__head">Actor</div>
-            <div className="al-meta">
-              <div className="al-meta__key">Name</div>
-              <div className="al-meta__val">{entry.actor.name}</div>
-              <div className="al-meta__key">Email</div>
-              <div className="al-meta__val al-meta__val--mono">
-                {entry.actor.email}
-              </div>
-              <div className="al-meta__key">Admin ID</div>
-              <div className="al-meta__val al-meta__val--mono">
-                {entry.actor.id}
-              </div>
+            <div>
+              {[
+                { key: "Name", val: entry.actor.name, mono: false },
+                { key: "Email", val: entry.actor.email, mono: true },
+                { key: "Admin ID", val: entry.actor.id, mono: true },
+              ].map(({ key, val, mono }) => (
+                <div key={key} className="al-meta-row">
+                  <span className="al-meta-row__key">{key}</span>
+                  <span
+                    className={`al-meta-row__val${mono ? " al-meta-row__val--mono" : ""}`}
+                  >
+                    {val}
+                  </span>
+                </div>
+              ))}
             </div>
           </div>
 
-          {/* Diff */}
+          {/* State diff */}
           {hasDiff && (
-            <div className="al-section">
+            <div>
               <div className="al-section__head">State Change</div>
               <div className="al-diff">
-                <div className="al-diff__col al-diff__col--before">
-                  <div className="al-diff__label">Before</div>
-                  {beforeKeys.length === 0 ? (
-                    <div className="al-diff__kv">
-                      <span className="al-diff__v" style={{ opacity: 0.5 }}>
+                {(
+                  [
+                    { label: "Before", keys: beforeKeys, data: entry.before },
+                    { label: "After", keys: afterKeys, data: entry.after },
+                  ] as const
+                ).map(({ label, keys, data }) => (
+                  <div
+                    key={label}
+                    className={`al-diff__col al-diff__col--${label.toLowerCase()}`}
+                  >
+                    <div className="al-diff__label">{label}</div>
+                    {keys.length === 0 ? (
+                      <span style={{ fontSize: 12, color: "var(--ink-4)" }}>
                         —
                       </span>
-                    </div>
-                  ) : (
-                    beforeKeys.map((k) => (
-                      <div key={k} className="al-diff__kv">
-                        <span className="al-diff__k">{k}</span>
-                        <span className="al-diff__v">
-                          {String(entry.before?.[k])}
-                        </span>
-                      </div>
-                    ))
-                  )}
-                </div>
-                <div className="al-diff__col al-diff__col--after">
-                  <div className="al-diff__label">After</div>
-                  {afterKeys.length === 0 ? (
-                    <div className="al-diff__kv">
-                      <span className="al-diff__v" style={{ opacity: 0.5 }}>
-                        —
-                      </span>
-                    </div>
-                  ) : (
-                    afterKeys.map((k) => (
-                      <div key={k} className="al-diff__kv">
-                        <span className="al-diff__k">{k}</span>
-                        <span className="al-diff__v">
-                          {String(entry.after?.[k])}
-                        </span>
-                      </div>
-                    ))
-                  )}
-                </div>
+                    ) : (
+                      keys.map((k) => (
+                        <div key={k} className="al-diff__kv">
+                          <span className="al-diff__k">{k}</span>
+                          <span className="al-diff__v">
+                            {String((data as Record<string, unknown>)?.[k])}
+                          </span>
+                        </div>
+                      ))
+                    )}
+                  </div>
+                ))}
               </div>
             </div>
           )}
 
           {/* Note */}
           {entry.notes && (
-            <div className="al-section">
+            <div>
               <div className="al-section__head">Internal Note</div>
-              <div className="al-note">{entry.notes}</div>
+              <div className="al-note-box">{entry.notes}</div>
             </div>
           )}
 
           {/* Request */}
-          <div className="al-section">
+          <div>
             <div className="al-section__head">Request</div>
-            <div className="al-meta">
-              <div className="al-meta__key">IP Address</div>
-              <div className="al-meta__val al-meta__val--mono">{entry.ip}</div>
-              <div className="al-meta__key">User Agent</div>
-              <div className="al-meta__val">
-                <span className="al-ua">{entry.userAgent}</span>
-              </div>
+            <div>
+              {[
+                { key: "IP Address", val: entry.ip, mono: true },
+                { key: "User Agent", val: entry.userAgent, mono: false },
+              ].map(({ key, val, mono }) => (
+                <div key={key} className="al-meta-row">
+                  <span className="al-meta-row__key">{key}</span>
+                  <span
+                    className={`al-meta-row__val${mono ? " al-meta-row__val--mono" : ""}`}
+                    style={{ wordBreak: "break-word" }}
+                  >
+                    {val}
+                  </span>
+                </div>
+              ))}
             </div>
           </div>
         </div>
@@ -441,95 +486,125 @@ export default function AuditLogPage() {
   const filtered = data?.summary;
   const pagination = data?.pagination;
 
-  return (
-    <>
-      {/* Hero */}
-      <div className="adm-hero">
-        <div className="adm-hero__eyebrow">Compliance · Audit Trail</div>
-        <div className="adm-hero__title">Admin audit log.</div>
+  /** Builds className string for filter chip buttons. */
+  function chipClass(
+    active: boolean,
+    variant?: "critical" | "warning",
+  ): string {
+    let cls = "al-chip";
+    if (active) {
+      cls += " active";
+      if (variant === "critical") cls += " sev-critical";
+      if (variant === "warning") cls += " sev-warning";
+    }
+    return cls;
+  }
 
-        <div className="adm-hero__metrics">
-          <div className="adm-hero__metric">
-            <div className="adm-hero__metric-label">Total events</div>
-            <div className="adm-hero__metric-val">
-              {global?.total?.toLocaleString() ?? "—"}
+  return (
+    <div
+      style={{
+        minHeight: "100vh",
+        background: "var(--surface)",
+        paddingBottom: 64,
+      }}
+    >
+      {/* ── Page header ── */}
+      <div className="al-header">
+        {/* v11 product eyebrow: parenthetical mono */}
+        <div className="al-eyebrow">(AUDIT·LOG)</div>
+        <h1 className="al-title">Admin audit log</h1>
+
+        {/* KPI stat chips — 3 small chips at top of page */}
+        <div className="al-kpi-strip">
+          {[
+            {
+              label: "Total events",
+              value: global?.total?.toLocaleString() ?? "—",
+              sub: "Last 30 days",
+              mod: "",
+            },
+            {
+              label: "Critical",
+              value: global?.critical ?? "—",
+              sub: "Policy, payouts, roles",
+              mod: "al-kpi-chip__value--error",
+            },
+            {
+              label: "Warning",
+              value: global?.warning ?? "—",
+              sub: "PII, rejections, flags",
+              mod: "al-kpi-chip__value--warn",
+            },
+            {
+              label: "Pinned",
+              value: global?.pinned ?? "—",
+              sub: "High-impact events",
+              mod: "",
+            },
+          ].map(({ label, value, sub, mod }) => (
+            <div key={label} className="al-kpi-chip">
+              <div className="al-kpi-chip__label">{label}</div>
+              <div className={`al-kpi-chip__value${mod ? ` ${mod}` : ""}`}>
+                {value}
+              </div>
+              <div className="al-kpi-chip__sub">{sub}</div>
             </div>
-            <div className="adm-hero__metric-sub">Last 30 days</div>
-          </div>
-          <div className="adm-hero__metric">
-            <div className="adm-hero__metric-label">Critical</div>
-            <div className="adm-hero__metric-val adm-hero__metric-val--accent">
-              {global?.critical ?? "—"}
-            </div>
-            <div className="adm-hero__metric-sub">Policy, payouts, roles</div>
-          </div>
-          <div className="adm-hero__metric">
-            <div className="adm-hero__metric-label">Warning</div>
-            <div className="adm-hero__metric-val">{global?.warning ?? "—"}</div>
-            <div className="adm-hero__metric-sub">PII, rejections, flags</div>
-          </div>
-          <div className="adm-hero__metric">
-            <div className="adm-hero__metric-label">Pinned</div>
-            <div className="adm-hero__metric-val">{global?.pinned ?? "—"}</div>
-            <div className="adm-hero__metric-sub">High-impact events</div>
-          </div>
+          ))}
         </div>
       </div>
 
-      {/* Pinned strip */}
+      {/* ── Pinned strip ── */}
       {data?.pinnedAlerts && (
         <PinnedStrip items={data.pinnedAlerts} onOpen={setSelected} />
       )}
 
-      {/* Filters */}
+      {/* ── Filter / export bar ── */}
       <div className="al-filters">
-        <div className="al-filter-group">
-          <span className="al-filter-label">Time</span>
-          {PRESET_OPTIONS.map((opt) => (
-            <button
-              key={opt.value}
-              className={`al-chip ${preset === opt.value ? "active" : ""}`}
-              onClick={() => handlePreset(opt.value)}
-            >
-              {opt.label}
-            </button>
-          ))}
-        </div>
+        <span className="al-filter-label">Time</span>
+        {PRESET_OPTIONS.map((opt) => (
+          <button
+            key={opt.value}
+            className={chipClass(preset === opt.value)}
+            onClick={() => handlePreset(opt.value)}
+          >
+            {opt.label}
+          </button>
+        ))}
 
         <div className="al-filter-sep" />
 
-        <div className="al-filter-group">
-          <span className="al-filter-label">Severity</span>
-          {SEVERITY_OPTIONS.map((opt) => (
-            <button
-              key={opt.value}
-              className={`al-chip ${
-                severity === opt.value
-                  ? `active${opt.value === "critical" ? " sev-critical" : opt.value === "warning" ? " sev-warning" : ""}`
-                  : ""
-              }`}
-              onClick={() => handleSeverity(opt.value)}
-            >
-              {opt.label}
-            </button>
-          ))}
-        </div>
+        <span className="al-filter-label">Severity</span>
+        {SEVERITY_OPTIONS.map((opt) => (
+          <button
+            key={opt.value}
+            className={chipClass(
+              severity === opt.value,
+              opt.value === "critical"
+                ? "critical"
+                : opt.value === "warning"
+                  ? "warning"
+                  : undefined,
+            )}
+            onClick={() => handleSeverity(opt.value)}
+          >
+            {opt.label}
+          </button>
+        ))}
 
         <div className="al-filter-sep" />
 
-        <div className="al-filter-group">
-          <span className="al-filter-label">Target</span>
-          {TARGET_OPTIONS.map((opt) => (
-            <button
-              key={opt.value}
-              className={`al-chip ${targetType === opt.value ? "active" : ""}`}
-              onClick={() => handleTarget(opt.value)}
-            >
-              {opt.label}
-            </button>
-          ))}
-        </div>
+        <span className="al-filter-label">Target</span>
+        {TARGET_OPTIONS.map((opt) => (
+          <button
+            key={opt.value}
+            className={chipClass(targetType === opt.value)}
+            onClick={() => handleTarget(opt.value)}
+          >
+            {opt.label}
+          </button>
+        ))}
 
+        {/* Search — 8px radius per v11 spec */}
         <input
           className="al-search"
           type="text"
@@ -538,27 +613,41 @@ export default function AuditLogPage() {
           onChange={(e) => handleSearch(e.target.value)}
         />
 
+        {/* Export button — btn-secondary (N2W blue) */}
+        <button
+          className="al-export-btn"
+          onClick={() => {
+            // Export stub — wire to real endpoint when available
+            alert("Export triggered");
+          }}
+        >
+          Export CSV
+        </button>
+
         <span className="al-count">
           {filtered?.total?.toLocaleString() ?? 0} match
           {filtered?.total === 1 ? "" : "es"}
         </span>
       </div>
 
-      {/* Table */}
+      {/* ── Log table ── */}
       <div className="al-table">
-        <div className="al-table__head">
-          <span>Time</span>
-          <span>Severity</span>
-          <span>Actor</span>
-          <span>Event</span>
-          <span>IP</span>
-          <span></span>
+        {/* Column headers */}
+        <div className="al-table-head">
+          {["Time", "Severity", "Actor", "Event", "IP", ""].map((h) => (
+            <span key={h}>{h}</span>
+          ))}
         </div>
 
         {loading && !data ? (
+          /* Skeleton loader */
           <>
             {[...Array(8)].map((_, i) => (
-              <div key={i} className="al-skeleton" />
+              <div
+                key={i}
+                className="al-skeleton"
+                style={{ opacity: 1 - i * 0.08 }}
+              />
             ))}
           </>
         ) : !data || data.items.length === 0 ? (
@@ -575,7 +664,7 @@ export default function AuditLogPage() {
         )}
       </div>
 
-      {/* Pagination */}
+      {/* ── Pagination ── */}
       {pagination && pagination.totalPages > 1 && (
         <div className="al-pagination">
           <div className="al-pagination__info">
@@ -603,10 +692,10 @@ export default function AuditLogPage() {
         </div>
       )}
 
-      {/* Detail drawer */}
+      {/* ── Detail drawer ── */}
       {selected && (
         <Drawer entry={selected} onClose={() => setSelected(null)} />
       )}
-    </>
+    </div>
   );
 }

@@ -1,0 +1,518 @@
+/* ============================================================
+   Merchant Campaign Detail — v11 Product Register
+   Design.md: 8px grid, v11 tokens, product dashboard register.
+   Adds: Photo Card hero (§ 8.7), Liquid-Glass peek (§ 8.9.4),
+         pill segmented tabs (§ 9.5), section eyebrows.
+   ============================================================ */
+
+/* ── Page shell & loading ────────────────────────────────────── */
+
+.cd-loading {
+  align-items: center;
+  background: var(--surface);
+  display: flex;
+  font-family: var(--font-mono);
+  justify-content: center;
+  min-height: 100svh;
+}
+
+.cd-loading__text {
+  color: var(--ink-4);
+  font-family: var(--font-mono);
+  font-size: 14px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+/* ── Photo Card Hero (§ 8.7 Pattern B + § 8.10) ──────────────── */
+
+.cd-hero {
+  position: relative;
+  width: 100%;
+  height: clamp(280px, 38vh, 400px);
+  overflow: hidden;
+  border-radius: 0;
+  margin-bottom: 32px;
+  isolation: isolate;
+}
+
+.cd-hero__photo {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 28% 36%, rgba(193, 18, 31, 0.22) 0%, transparent 56%),
+    radial-gradient(circle at 78% 72%, rgba(0, 133, 255, 0.20) 0%, transparent 60%),
+    linear-gradient(135deg, var(--char) 0%, var(--graphite) 50%, var(--ink) 100%);
+  z-index: 0;
+}
+
+.cd-hero__gradient {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0.10) 0%,
+    rgba(0, 0, 0, 0.20) 45%,
+    rgba(0, 0, 0, 0.78) 100%
+  );
+  z-index: 1;
+}
+
+.cd-hero__overlay {
+  position: absolute;
+  bottom: 32px;
+  left: 64px;
+  right: 64px;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.cd-hero__eyebrow {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.85);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.cd-hero__title {
+  margin: 0;
+  color: var(--snow);
+  font-family: var(--font-display);
+  font-size: clamp(40px, 5vw, 72px);
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  line-height: 1;
+  max-width: 880px;
+  text-wrap: balance;
+}
+
+.cd-hero__meta {
+  align-items: center;
+  color: rgba(255, 255, 255, 0.85);
+  display: flex;
+  flex-wrap: wrap;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 500;
+  gap: 12px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.cd-hero__meta-divider {
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.cd-hero__meta-text {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+/* ── Liquid-glass peek (§ 8.9.4 Hero Photo Stat Peek) ────────── */
+
+.cd-hero__peek {
+  position: absolute;
+  top: 32px;
+  right: 32px;
+  z-index: 3;
+  width: 280px;
+  padding: 24px;
+  border-radius: var(--r-md);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.cd-hero__peek-eyebrow {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.85);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.cd-hero__peek-value {
+  margin: 0;
+  color: var(--snow);
+  font-family: var(--font-display);
+  font-size: clamp(32px, 4vw, 48px);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+
+.cd-hero__peek-meta {
+  margin: 8px 0 0;
+  color: rgba(255, 255, 255, 0.78);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+}
+
+/* Override the global .lg-surface inside the dark hero — go dark variant */
+.cd-hero__peek {
+  background: rgba(40, 36, 32, 0.36);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  backdrop-filter: blur(20px) saturate(180%);
+  border: 0.5px solid rgba(255, 255, 255, 0.18);
+  box-shadow:
+    0 8px 24px rgba(10, 10, 10, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.10);
+  color: var(--snow);
+}
+
+/* ── Layout: main + sticky sidebar ───────────────────────────── */
+
+.cd-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 320px;
+  gap: 32px;
+  max-width: 1140px;
+  margin: 0 auto;
+  padding: 0 64px 96px;
+}
+
+.cd-left {
+  min-width: 0;
+}
+
+.cd-right {
+  min-width: 0;
+}
+
+/* ── KPI grid spacing ────────────────────────────────────────── */
+
+.cd-kpi-grid {
+  margin-bottom: 32px;
+}
+
+/* ── Pill segmented tabs (§ 9.5) ─────────────────────────────── */
+
+.cd-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 24px;
+  padding: 8px;
+  border: 1px solid var(--hairline);
+  border-radius: var(--r-pill);
+  background: var(--surface-2);
+  width: fit-content;
+}
+
+.cd-tab {
+  text-transform: capitalize;
+  min-height: 40px;
+  min-width: 96px;
+  justify-content: center;
+}
+
+/* ── Section ─────────────────────────────────────────────────── */
+
+.cd-section {
+  background: var(--snow);
+  border-radius: var(--r-md);
+  box-shadow: var(--shadow-1);
+  padding: 24px;
+  margin-bottom: 16px;
+}
+
+.cd-section-eyebrow {
+  margin: 0 0 8px;
+  color: var(--ink-4);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.cd-section-title {
+  margin: 0 0 16px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--hairline);
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  line-height: 1.15;
+}
+
+.cd-section-body {
+  color: var(--ink-3);
+  font-family: var(--font-mono);
+  font-size: 16px;
+  line-height: 1.55;
+}
+
+.cd-section-body p {
+  margin: 0 0 16px;
+}
+
+.cd-section-body p:last-child {
+  margin-bottom: 0;
+}
+
+/* ── Meta lists (key/value rows) ─────────────────────────────── */
+
+.cd-meta-list,
+.cd-rule-grid {
+  display: grid;
+  gap: 0;
+  margin: 16px 0 0;
+}
+
+.cd-rule-grid {
+  grid-template-columns: 1fr;
+}
+
+.cd-meta-row,
+.cd-rule-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--hairline);
+  margin: 0;
+}
+
+.cd-meta-row:last-child,
+.cd-rule-row:last-child {
+  border-bottom: 0;
+}
+
+.cd-meta-row dt,
+.cd-rule-row dt {
+  color: var(--ink-4);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.cd-meta-row dd,
+.cd-rule-row dd {
+  color: var(--ink);
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 500;
+  margin: 0;
+  text-align: right;
+}
+
+/* ── Timeline ───────────────────────────────────────────────── */
+
+.cd-timeline {
+  list-style: none;
+  margin: 16px 0 0;
+  padding: 0;
+}
+
+.cd-timeline-item {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--hairline);
+}
+
+.cd-timeline-item:last-child {
+  border-bottom: 0;
+}
+
+.cd-timeline-head {
+  color: var(--ink);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.cd-timeline-item p {
+  margin: 0;
+  color: var(--ink-3);
+  font-family: var(--font-mono);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+/* ── Sticky sidebar card ─────────────────────────────────────── */
+
+.cd-sticky-card {
+  position: sticky;
+  top: 96px;
+  background: var(--snow);
+  border-radius: var(--r-md);
+  box-shadow: var(--shadow-1);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.cd-sticky-eyebrow {
+  margin: 0;
+  color: var(--ink-4);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.cd-divider {
+  border: 0;
+  border-top: 1px solid var(--hairline);
+  margin: 0;
+}
+
+.cd-sticky-meta {
+  margin: 0;
+}
+
+.cd-sticky-meta-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 8px 0;
+  margin: 0;
+}
+
+.cd-sticky-meta-row dt {
+  color: var(--ink-4);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.cd-sticky-meta-row dd {
+  color: var(--ink);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 500;
+  margin: 0;
+  text-align: right;
+}
+
+/* ── Sticky-card actions: stack vertically inside sidebar ───── */
+
+.cd-sticky-card .cd-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: stretch;
+}
+
+.cd-sticky-card .cd-actions .btn-primary,
+.cd-sticky-card .cd-actions .btn-ghost {
+  width: 100%;
+  justify-content: center;
+}
+
+/* ── Mobile bottom action bar (visible only on narrow viewports) */
+
+.cd-bottom-bar {
+  display: none;
+}
+
+/* ── Responsive ──────────────────────────────────────────────── */
+
+@media (max-width: 1024px) {
+  .cd-layout {
+    grid-template-columns: 1fr;
+    padding: 0 48px 80px;
+  }
+
+  .cd-right {
+    order: -1;
+  }
+
+  .cd-sticky-card {
+    position: static;
+  }
+
+  .cd-hero__overlay {
+    left: 48px;
+    right: 48px;
+  }
+
+  .cd-hero__peek {
+    top: 24px;
+    right: 24px;
+    width: 240px;
+  }
+}
+
+@media (max-width: 768px) {
+  .cd-hero {
+    height: clamp(240px, 32vh, 320px);
+    margin-bottom: 24px;
+  }
+
+  .cd-hero__overlay {
+    left: 24px;
+    right: 24px;
+    bottom: 24px;
+    gap: 12px;
+  }
+
+  .cd-hero__title {
+    font-size: clamp(28px, 7vw, 40px);
+  }
+
+  /* § 8.9.4: mobile drops the peek tile — photo + title carry alone */
+  .cd-hero__peek {
+    display: none;
+  }
+
+  .cd-layout {
+    padding: 0 24px 64px;
+    gap: 24px;
+  }
+
+  .cd-tabs {
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    width: 100%;
+    border-radius: var(--r-md);
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .cd-tab {
+    flex-shrink: 0;
+  }
+
+  .cd-section {
+    padding: 20px;
+  }
+
+  .cd-section-title {
+    font-size: 24px;
+  }
+
+  .cd-meta-row,
+  .cd-rule-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+
+  .cd-meta-row dd,
+  .cd-rule-row dd {
+    text-align: left;
+  }
+}

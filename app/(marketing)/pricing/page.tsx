@@ -1,563 +1,418 @@
 import Link from "next/link";
-import ScrollRevealInit from "@/components/layout/ScrollRevealInit";
-import "../landing.css";
 import "./pricing.css";
 
-/* ── Plan data ──────────────────────────────────────────────── */
-const PLANS = [
+/* ── Tier data ────────────────────────────────────────────────── */
+const TIERS: Array<{
+  id: string;
+  eyebrow: string;
+  name: string;
+  price: string;
+  priceSub: string;
+  priceNote: string;
+  features: string[];
+  ctaLabel: string;
+  ctaHref: string;
+  ctaClass: string;
+  variant: "default" | "highlight" | "scale";
+}> = [
   {
+    id: "starter",
+    eyebrow: "(GET STARTED)",
     name: "Starter",
-    price: "$19",
-    cents: ".99",
-    period: "/mo",
-    desc: "One location. Two campaigns. Real attribution from day one.",
+    price: "$0",
+    priceSub: "/ month",
+    priceNote: "Free to start · pay per verified visit",
     features: [
-      "2 active campaigns",
-      "3 creator slots per campaign",
-      "AI creator matching",
-      "QR code attribution",
-      "Basic analytics dashboard",
+      "1 active campaign",
+      "QR poster + shareable link",
+      "Basic visit dashboard",
+      "Up to 50 verified visits / mo",
       "Email support",
+      "No card required",
     ],
-    featured: false,
-    cta: "Start free trial",
-    href: "/merchant/signup?plan=starter",
-    roi: "Avg. $420 attributed revenue in month 1",
-    qrLimit: "50 QR scans/mo",
-    campaignLimit: "2 campaigns",
-    applicants: "15/mo",
-    analytics: "Basic",
-    priority: false,
-    api: false,
+    ctaLabel: "Start Free",
+    ctaHref: "/merchant/signup",
+    ctaClass: "btn btn-ghost",
+    variant: "default",
   },
   {
+    id: "growth",
+    eyebrow: "(RECOMMENDED)",
     name: "Growth",
-    price: "$69",
-    cents: "",
-    period: "/mo",
-    desc: "Scale across your location. Better matching, deeper data, stronger ROI.",
+    price: "$49",
+    priceSub: "/ month",
+    priceNote: "+ per verified visit fee",
     features: [
-      "4 active campaigns",
-      "5 creator slots per campaign",
-      "Priority creator matching",
-      "Full analytics dashboard",
-      "Campaign templates library",
+      "3 concurrent campaigns",
+      "Multi-creator outreach",
+      "Real-time scan dashboard",
+      "200 verified visits / mo included",
+      "Weekly payout reports",
       "Priority support",
+      "Creator performance metrics",
+      "Monthly strategy call",
     ],
-    featured: true,
-    badge: "Most Popular",
-    cta: "Get Growth",
-    href: "/merchant/signup?plan=growth",
-    roi: "Avg. 3.9× ROI on campaign spend",
-    qrLimit: "250 QR scans/mo",
-    campaignLimit: "4 campaigns",
-    applicants: "60/mo",
-    analytics: "Full",
-    priority: true,
-    api: false,
+    ctaLabel: "Start Growth",
+    ctaHref: "/merchant/signup?plan=growth",
+    ctaClass: "btn btn-ink",
+    variant: "highlight",
   },
   {
+    id: "scale",
+    eyebrow: "(ENTERPRISE)",
     name: "Scale",
-    price: "$199",
-    cents: "",
-    period: "/mo",
-    desc: "Multi-location operators running ongoing creator programs at full power.",
+    price: "Custom",
+    priceSub: "",
+    priceNote: "Unlimited visits · dedicated support",
     features: [
       "Unlimited campaigns",
-      "Unlimited creator slots",
-      "Dedicated account manager",
-      "Custom attribution rules",
+      "Multi-location support",
+      "Dedicated success rep",
+      "Custom analytics exports",
+      "White-label QR materials",
       "API access",
-      "White-glove onboarding",
+      "SLA uptime guarantee",
+      "Quarterly business review",
     ],
-    featured: false,
-    cta: "Get Scale",
-    href: "/merchant/signup?plan=scale",
-    roi: "Full white-glove setup included",
-    qrLimit: "Unlimited",
-    campaignLimit: "Unlimited",
-    applicants: "Unlimited",
-    analytics: "Advanced + Export",
-    priority: true,
-    api: true,
+    ctaLabel: "Contact Sales",
+    ctaHref: "/contact?inquiry=scale",
+    ctaClass: "btn btn-primary",
+    variant: "default",
   },
 ];
 
-/* ── Comparison table rows ──────────────────────────────────── */
-const COMPARE_ROWS = [
+/* ── Comparison table rows ────────────────────────────────────── */
+const TABLE_ROWS: {
+  feature: string;
+  push: string;
+  yelp: string;
+  influencer: string;
+  groupon: string;
+  pushIsGood: boolean;
+}[] = [
   {
-    feature: "QR scans / mo",
-    starter: "50",
-    growth: "250",
-    scale: "Unlimited",
+    feature: "Verified physical visits",
+    push: "✓ Yes",
+    yelp: "✗ Never",
+    influencer: "Partial",
+    groupon: "✗ Never",
+    pushIsGood: true,
   },
   {
-    feature: "Active campaigns",
-    starter: "2",
-    growth: "4",
-    scale: "Unlimited",
+    feature: "Local NYC creators",
+    push: "✓ Yes",
+    yelp: "✗ No",
+    influencer: "✗ No",
+    groupon: "✗ No",
+    pushIsGood: true,
   },
   {
-    feature: "Creator applicants / mo",
-    starter: "15",
-    growth: "60",
-    scale: "Unlimited",
+    feature: "Pay per visit model",
+    push: "✓ Yes",
+    yelp: "✗ CPM",
+    influencer: "✗ Retainer",
+    groupon: "✗ Rev share",
+    pushIsGood: true,
   },
   {
-    feature: "Analytics",
-    starter: "Basic",
-    growth: "Full dashboard",
-    scale: "Advanced + Export",
+    feature: "No upfront cost",
+    push: "✓ Yes",
+    yelp: "✗ Deposit",
+    influencer: "✗ Monthly",
+    groupon: "✗ Setup fee",
+    pushIsGood: true,
   },
   {
-    feature: "Priority support",
-    starter: false,
-    growth: true,
-    scale: true,
+    feature: "Real-time dashboard",
+    push: "✓ Yes",
+    yelp: "✓ Basic",
+    influencer: "✗ No",
+    groupon: "Partial",
+    pushIsGood: true,
   },
   {
-    feature: "API access",
-    starter: false,
-    growth: false,
-    scale: true,
-  },
-  {
-    feature: "Dedicated account manager",
-    starter: false,
-    growth: false,
-    scale: true,
-  },
-  {
-    feature: "Custom attribution rules",
-    starter: false,
-    growth: false,
-    scale: true,
-  },
-];
-
-/* ── FAQ data ───────────────────────────────────────────────── */
-const FAQS = [
-  {
-    q: "What exactly am I paying for each month?",
-    a: "Your monthly plan covers platform access, campaign management tools, AI creator matching, and QR attribution infrastructure. Creator payouts are separate — you fund a campaign escrow per campaign, and creators are paid only after verified visits.",
-  },
-  {
-    q: "Are there fees on top of the subscription?",
-    a: "No hidden fees. Creator payouts are funded by you directly (you set the rate per campaign), and Push takes no commission on those. The subscription is flat — $19.99, $69, or $199 per month.",
-  },
-  {
-    q: 'How does QR verification work and what counts as a "verified visit"?',
-    a: "Each creator gets a unique QR code linked to your campaign. When a customer they referred scans in-store, the visit is logged with timestamp, creator ID, and location. Fraud filters run within 60 seconds — only clean visits count.",
-  },
-  {
-    q: "Can I upgrade or downgrade my plan anytime?",
-    a: "Yes. Upgrades take effect immediately. Downgrades apply at the start of the next billing cycle. No contracts, no cancellation fees.",
-  },
-  {
-    q: "What happens if I exceed my QR scan or campaign limits?",
-    a: "On Starter and Growth, active campaigns pause when limits are reached. You'll receive a notification and can upgrade mid-cycle. Prorated charges apply for mid-cycle upgrades.",
-  },
-  {
-    q: "Do I need a credit card to start?",
-    a: "You can explore Push with a free trial on Starter — no card required for the first 14 days. To launch a live campaign, you'll add payment to fund creator escrow.",
-  },
-  {
-    q: "Is Push available outside New York City?",
-    a: "Push is currently invite-only in NYC. Expansion to Chicago, LA, and Miami is planned for Q3 2026. Join the waitlist if you're outside NYC.",
-  },
-  {
-    q: "What is the Enterprise plan and who is it for?",
-    a: "Enterprise is for multi-location chains (5+ locations), franchise operators, or brands running large-scale creator programs. Pricing is custom — includes volume QR allocations, dedicated CSM, SLA guarantees, and SSO/API integration.",
+    feature: "Fraud prevention",
+    push: "✓ Yes",
+    yelp: "✗ None",
+    influencer: "✗ None",
+    groupon: "✗ None",
+    pushIsGood: true,
   },
 ];
 
-/* ── Check / X icons ────────────────────────────────────────── */
-function CheckIcon() {
-  return (
-    <svg
-      width="16"
-      height="16"
-      viewBox="0 0 16 16"
-      fill="none"
-      aria-hidden="true"
-    >
-      <path
-        d="M3 8l3.5 3.5L13 5"
-        stroke="currentColor"
-        strokeWidth="1.75"
-        strokeLinecap="square"
-      />
-    </svg>
-  );
-}
+/* ── Grommet corner positions (Ticket Panel spec §8.2 — 4 corners) */
+const GROMMETS: React.CSSProperties[] = [
+  { top: "24px", left: "24px" },
+  { top: "24px", right: "24px" },
+  { bottom: "24px", left: "24px" },
+  { bottom: "24px", right: "24px" },
+];
 
-function XIcon() {
-  return (
-    <svg
-      width="16"
-      height="16"
-      viewBox="0 0 16 16"
-      fill="none"
-      aria-hidden="true"
-    >
-      <path
-        d="M5 5l6 6M11 5l-6 6"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="square"
-      />
-    </svg>
-  );
-}
-
-/* ── Page ───────────────────────────────────────────────────── */
+/* ── Page ─────────────────────────────────────────────────────── */
 export default function PricingPage() {
   return (
-    <>
-      <ScrollRevealInit />
+    <div className="pv11-wrapper">
+      {/* ═══════════════════════════════════════════════════════════
+          PANEL 1 — HERO  (bg: --surface  warm ivory)
+          H1 bottom-left anchored — Design.md § 7.1 STRICT
+          ═══════════════════════════════════════════════════════════ */}
+      <section className="pv11-hero" aria-label="Pricing hero">
+        {/* Decorative ghost numeral — top-right bleeds off */}
+        <div className="pv11-hero-ghost" aria-hidden="true">
+          $0
+        </div>
 
-      {/* ══ 1. EDITORIAL HERO ══════════════════════════════════ */}
-      <section className="pr-hero">
-        <div className="container pr-hero-inner">
-          <div className="pr-hero-label reveal">
-            <span className="eyebrow pr-hero-eyebrow">Push Pricing</span>
-            <span className="rule" />
-            <span className="pr-hero-eyebrow-sub">For Merchants · NYC</span>
-          </div>
-
-          {/* Asymmetric headline: 900 + 300 */}
-          <h1 className="pr-hero-h">
-            <span
-              className="pr-h-bold reveal"
-              style={{ transitionDelay: "60ms" }}
-            >
-              Pricing that pays
-            </span>
-            <span
-              className="pr-h-light reveal"
-              style={{ transitionDelay: "140ms" }}
-            >
-              only when it works.
-            </span>
+        {/* Bottom-left title block — STRICT corner anchor */}
+        <div className="pv11-hero-inner">
+          <p className="pv11-eyebrow">(PUSH·PRICING)</p>
+          <h1 className="pv11-hero-h1">
+            Pricing that
+            <br />
+            scales with you.
           </h1>
-
-          <div
-            className="pr-hero-bottom reveal"
-            style={{ transitionDelay: "220ms" }}
-          >
-            <p className="pr-hero-sub">
-              Flat monthly subscription. Creator payouts only on verified foot
-              traffic. No agency retainers, no mystery fees.
-            </p>
-            <div className="pr-hero-anchors">
-              <a href="#plans" className="btn btn-primary">
-                See plans
-              </a>
-              <a href="#compare" className="btn btn-secondary">
-                Compare features
-              </a>
-            </div>
+          <p className="pv11-hero-sub">
+            No impressions. No estimates. Pay only when a verified creator
+            physically walks through your door.
+          </p>
+          <div className="pv11-hero-ctas">
+            <Link href="/merchant/signup" className="btn btn-primary">
+              Start Free
+            </Link>
+            <Link href="#pricing" className="btn btn-ghost">
+              See Plans
+            </Link>
           </div>
+        </div>
 
-          {/* Ambient decorative number */}
-          <span className="pr-hero-ghost" aria-hidden="true">
-            $0
-          </span>
+        {/* Liquid-glass stat tile — bottom right (§8.9) */}
+        <div className="pv11-hero-badge" aria-label="Free to start">
+          <span className="pv11-badge-num">$0</span>
+          <span className="pv11-badge-label">To get started today</span>
         </div>
       </section>
 
-      {/* ══ 2. PRICING CARDS ═══════════════════════════════════ */}
-      <section id="plans" className="section pr-plans-section">
-        <div className="container">
-          <div className="pr-section-tag reveal">
-            <span className="section-tag-num">01</span>
-            <span className="section-tag-line" />
-            <span className="section-tag-label">Merchant Plans</span>
-          </div>
+      {/* ═══════════════════════════════════════════════════════════
+          PANEL 2 — TIER CARDS  (bg: --surface-2  Pearl Stone)
+          3 pricing tiers — Design.md § 8.1
+          ═══════════════════════════════════════════════════════════ */}
+      <section
+        id="pricing"
+        className="pv11-tiers-panel"
+        aria-label="Pricing tiers"
+      >
+        <div className="pv11-tiers-header">
+          <p className="pv11-section-eyebrow">(THE PLANS)</p>
+          <h2 className="pv11-section-h2">Three ways to run Push.</h2>
+        </div>
 
-          <div className="pr-plans-grid">
-            {PLANS.map((plan, i) => (
-              <div
-                key={plan.name}
-                className={`pr-plan reveal${plan.featured ? " pr-plan--featured" : ""}`}
-                style={{ transitionDelay: `${i * 100}ms` }}
-              >
-                {plan.badge && (
-                  <div className="pr-plan-badge">{plan.badge}</div>
+        <div className="pv11-tiers-grid">
+          {TIERS.map((tier) => (
+            <article
+              key={tier.id}
+              className={`pv11-tier-card${tier.variant === "highlight" ? " pv11-tier-card--highlight" : tier.id === "scale" ? " pv11-tier-card--scale" : ""}`}
+            >
+              {/* RECOMMENDED pill — Champagne on highlight card (≤3/vp) */}
+              {tier.variant === "highlight" && (
+                <div
+                  className="pv11-recommended-pill"
+                  aria-label="Most popular plan"
+                >
+                  RECOMMENDED
+                </div>
+              )}
+
+              <p className="pv11-tier-eyebrow">{tier.eyebrow}</p>
+              <h3 className="pv11-tier-name">{tier.name}</h3>
+
+              {/* Price numeral — Darky 800 64px per spec */}
+              <div className="pv11-price-row">
+                <span className="pv11-price-main">{tier.price}</span>
+                {tier.priceSub && (
+                  <span className="pv11-price-sub">{tier.priceSub}</span>
                 )}
-
-                <div className="pr-plan-header">
-                  <h2 className="pr-plan-name">{plan.name}</h2>
-                  <div className="pr-plan-price-row">
-                    <span className="pr-plan-price-int">{plan.price}</span>
-                    {plan.cents && (
-                      <span className="pr-plan-price-cents">{plan.cents}</span>
-                    )}
-                    <span className="pr-plan-price-period">{plan.period}</span>
-                  </div>
-                  <p className="pr-plan-desc">{plan.desc}</p>
-                </div>
-
-                <ul className="pr-plan-features">
-                  {plan.features.map((f) => (
-                    <li key={f} className="pr-plan-feature">
-                      <span className="pr-plan-check">
-                        <CheckIcon />
-                      </span>
-                      {f}
-                    </li>
-                  ))}
-                </ul>
-
-                <div className="pr-plan-footer">
-                  <p className="pr-plan-roi">{plan.roi}</p>
-                  <Link
-                    href={plan.href}
-                    className={`btn ${plan.featured ? "btn-primary" : "btn-secondary"} pr-plan-cta`}
-                  >
-                    {plan.cta}
-                  </Link>
-                </div>
               </div>
-            ))}
-          </div>
+              <p className="pv11-price-note">{tier.priceNote}</p>
 
-          <p className="pr-plans-note reveal">
-            All plans include a 14-day free trial. No credit card required to
-            explore. Creator payouts funded per-campaign, billed separately.
-          </p>
-        </div>
-      </section>
-
-      {/* ══ 3. ENTERPRISE ROW ═════════════════════════════════ */}
-      <section className="section-bright pr-enterprise-section reveal">
-        <div className="container pr-enterprise-inner">
-          <div className="pr-enterprise-left">
-            <p className="eyebrow pr-enterprise-eyebrow">Enterprise</p>
-            <h2 className="pr-enterprise-h">
-              Running 5+ locations?{" "}
-              <span className="pr-enterprise-h-light">Let&apos;s talk.</span>
-            </h2>
-            <p className="pr-enterprise-desc">
-              Custom QR allocations, dedicated Customer Success Manager, SLA
-              guarantees, SSO + API integration, and volume campaign pricing.
-              Built for franchise operators and multi-location chains.
-            </p>
-          </div>
-          <div className="pr-enterprise-right">
-            <ul className="pr-enterprise-list">
-              <li>
-                <span className="pr-enterprise-bullet" />
-                Unlimited locations &amp; campaigns
-              </li>
-              <li>
-                <span className="pr-enterprise-bullet" />
-                Dedicated CSM + white-glove onboarding
-              </li>
-              <li>
-                <span className="pr-enterprise-bullet" />
-                Custom attribution &amp; reporting SLA
-              </li>
-              <li>
-                <span className="pr-enterprise-bullet" />
-                SSO, API, and webhook integrations
-              </li>
-              <li>
-                <span className="pr-enterprise-bullet" />
-                Volume creator network access
-              </li>
-            </ul>
-            <Link href="/merchant/enterprise" className="btn btn-primary">
-              Contact sales
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* ══ 4. COMPARISON TABLE ════════════════════════════════ */}
-      <section id="compare" className="section pr-compare-section">
-        <div className="container">
-          <div className="pr-section-tag reveal">
-            <span className="section-tag-num">02</span>
-            <span className="section-tag-line" />
-            <span className="section-tag-label">Feature Comparison</span>
-          </div>
-
-          <h2 className="pr-compare-h reveal">
-            Every plan,{" "}
-            <span className="pr-compare-h-light">side by side.</span>
-          </h2>
-
-          <div className="pr-compare-wrap reveal">
-            <table className="pr-compare-table">
-              <thead>
-                <tr>
-                  <th className="pr-th-feature">Feature</th>
-                  <th className="pr-th-plan">Starter</th>
-                  <th className="pr-th-plan pr-th-featured">Growth</th>
-                  <th className="pr-th-plan">Scale</th>
-                </tr>
-              </thead>
-              <tbody>
-                {COMPARE_ROWS.map((row) => (
-                  <tr key={row.feature} className="pr-tr">
-                    <td className="pr-td-feature">{row.feature}</td>
-                    <td className="pr-td">
-                      {typeof row.starter === "boolean" ? (
-                        <span
-                          className={`pr-td-icon ${row.starter ? "pr-td-icon--yes" : "pr-td-icon--no"}`}
-                        >
-                          {row.starter ? <CheckIcon /> : <XIcon />}
-                        </span>
-                      ) : (
-                        row.starter
-                      )}
-                    </td>
-                    <td className="pr-td pr-td--featured">
-                      {typeof row.growth === "boolean" ? (
-                        <span
-                          className={`pr-td-icon ${row.growth ? "pr-td-icon--yes" : "pr-td-icon--no"}`}
-                        >
-                          {row.growth ? <CheckIcon /> : <XIcon />}
-                        </span>
-                      ) : (
-                        row.growth
-                      )}
-                    </td>
-                    <td className="pr-td">
-                      {typeof row.scale === "boolean" ? (
-                        <span
-                          className={`pr-td-icon ${row.scale ? "pr-td-icon--yes" : "pr-td-icon--no"}`}
-                        >
-                          {row.scale ? <CheckIcon /> : <XIcon />}
-                        </span>
-                      ) : (
-                        row.scale
-                      )}
-                    </td>
-                  </tr>
+              {/* Feature list — 12px mono + brand-red checkmark */}
+              <ul className="pv11-feature-list">
+                {tier.features.map((f) => (
+                  <li key={f} className="pv11-feature-item">
+                    <span className="pv11-check" aria-hidden="true">
+                      ✓
+                    </span>
+                    <span>{f}</span>
+                  </li>
                 ))}
-              </tbody>
-            </table>
-          </div>
+              </ul>
+
+              {/* CTA — unified button system §9 */}
+              <Link
+                href={tier.ctaHref}
+                className={`${tier.ctaClass} pv11-tier-cta`}
+              >
+                {tier.ctaLabel}
+              </Link>
+            </article>
+          ))}
         </div>
+
+        <p className="pv11-tiers-fine">
+          All plans&nbsp;·&nbsp;Cancel any time&nbsp;·&nbsp;No setup
+          fee&nbsp;·&nbsp;Annual saves 16%
+        </p>
       </section>
 
-      {/* ══ 5. FAQ INLINE ═════════════════════════════════════ */}
-      <section className="section-bright pr-faq-section">
-        <div className="container">
-          <div className="pr-section-tag reveal">
-            <span className="section-tag-num">03</span>
-            <span className="section-tag-line" />
-            <span className="section-tag-label">FAQ</span>
-          </div>
+      {/* ═══════════════════════════════════════════════════════════
+          MAGVIX ITALIC SIGNATURE DIVIDER between panel 2 + 3
+          Design.md § 8.5 — ≤2 per page
+          ═══════════════════════════════════════════════════════════ */}
+      <div className="pv11-sig-wrap" aria-hidden="true">
+        <span className="sig-divider">
+          End of free tier&nbsp;·&nbsp;Fin&nbsp;·&nbsp;Start scaling now&nbsp;·
+        </span>
+      </div>
 
-          <div className="pr-faq-grid">
-            {FAQS.map((item, i) => (
+      {/* ═══════════════════════════════════════════════════════════
+          PANEL 3 — TICKET PANEL (GA Orange — ≤1 per page)
+          Annual pricing / special offer
+          Design.md § 8.2 — grommets + dashed perf + Magvix italic centered
+          ═══════════════════════════════════════════════════════════ */}
+      <div className="ticket-panel pv11-ticket" aria-label="Annual plan offer">
+        {/* Four corner grommets — 16px diameter, 24px inset (§8.2 STRICT) */}
+        {GROMMETS.map((pos, i) => (
+          <div
+            key={i}
+            className="pv11-grommet"
+            aria-hidden="true"
+            style={pos}
+          />
+        ))}
+
+        {/* Centered content — exception to corner-anchor rule per §7.1 */}
+        <div className="pv11-ticket-content">
+          <p className="pv11-ticket-eyebrow">(ANNUAL PLAN)</p>
+          <h2 className="pv11-ticket-h2">
+            Save 16% with
+            <br />
+            an annual plan.
+          </h2>
+          <p className="pv11-ticket-sub">
+            Lock in your rate and get 2 months free. Set up in under 10 minutes.
+          </p>
+          <div className="pv11-ticket-ctas">
+            <Link
+              href="/merchant/signup?billing=annual"
+              className="btn btn-ink"
+            >
+              Get Annual Plan
+            </Link>
+          </div>
+        </div>
+      </div>
+
+      {/* ═══════════════════════════════════════════════════════════
+          MAGVIX ITALIC SIGNATURE DIVIDER 2
+          ═══════════════════════════════════════════════════════════ */}
+      <div className="pv11-sig-wrap" aria-hidden="true">
+        <span className="sig-divider">
+          Posted&nbsp;·&nbsp;Scanned&nbsp;·&nbsp;Verified&nbsp;·
+        </span>
+      </div>
+
+      {/* ═══════════════════════════════════════════════════════════
+          PANEL 4 — FAQ / COMPARISON TABLE  (bg: --surface  Ivory)
+          Editorial Table style — Cinema-Selects
+          Design.md § 8.6 — mono 12px 700 uppercase headers + Darky 20px first col
+          ═══════════════════════════════════════════════════════════ */}
+      <section className="pv11-table-panel" aria-label="Feature comparison">
+        <div className="pv11-table-inner">
+          <p className="pv11-table-eyebrow">(HOW IT COMPARES)</p>
+          <h2 className="pv11-table-h2">How Push stacks up.</h2>
+
+          {/* Grid-based editorial table */}
+          <div
+            className="pv11-comp-table"
+            role="table"
+            aria-label="Push vs competitors feature comparison"
+          >
+            {/* Header row */}
+            <div className="pv11-trow pv11-trow--head" role="row">
               <div
-                key={i}
-                className="pr-faq-item reveal"
-                style={{ transitionDelay: `${(i % 2) * 80}ms` }}
+                className="pv11-tcell pv11-tcell--feature"
+                role="columnheader"
               >
-                <h3 className="pr-faq-q">{item.q}</h3>
-                <p className="pr-faq-a">{item.a}</p>
+                (WHAT YOU GET)
+              </div>
+              <div className="pv11-tcell pv11-tcell--push" role="columnheader">
+                (PUSH)
+              </div>
+              <div className="pv11-tcell" role="columnheader">
+                (YELP ADS)
+              </div>
+              <div className="pv11-tcell" role="columnheader">
+                (INFLUENCER)
+              </div>
+              <div className="pv11-tcell pv11-tcell--last" role="columnheader">
+                (GROUPON)
+              </div>
+            </div>
+
+            {/* Data rows */}
+            {TABLE_ROWS.map((row) => (
+              <div className="pv11-trow" role="row" key={row.feature}>
+                <div className="pv11-tcell pv11-tcell--feature" role="cell">
+                  {row.feature}
+                </div>
+                <div
+                  className="pv11-tcell pv11-tcell--push"
+                  role="cell"
+                  style={{
+                    color: row.push.startsWith("✓")
+                      ? "var(--brand-red)"
+                      : "var(--ink-3)",
+                    fontWeight: row.push.startsWith("✓") ? 700 : 400,
+                  }}
+                >
+                  {row.push}
+                </div>
+                <div
+                  className="pv11-tcell"
+                  role="cell"
+                  style={{
+                    color: row.yelp.startsWith("✗")
+                      ? "var(--ink-5)"
+                      : "var(--ink-3)",
+                  }}
+                >
+                  {row.yelp}
+                </div>
+                <div
+                  className="pv11-tcell"
+                  role="cell"
+                  style={{
+                    color: row.influencer.startsWith("✗")
+                      ? "var(--ink-5)"
+                      : "var(--ink-3)",
+                  }}
+                >
+                  {row.influencer}
+                </div>
+                <div
+                  className="pv11-tcell pv11-tcell--last"
+                  role="cell"
+                  style={{
+                    color: row.groupon.startsWith("✗")
+                      ? "var(--ink-5)"
+                      : "var(--ink-3)",
+                  }}
+                >
+                  {row.groupon}
+                </div>
               </div>
             ))}
           </div>
         </div>
       </section>
-
-      {/* ══ 6. GUARANTEE ══════════════════════════════════════ */}
-      <section className="pr-guarantee-section">
-        <div className="container pr-guarantee-inner">
-          <p className="eyebrow pr-guarantee-eyebrow reveal">Our Promise</p>
-          <h2 className="pr-guarantee-h">
-            <span
-              className="pr-guarantee-h-bold reveal"
-              style={{ transitionDelay: "60ms" }}
-            >
-              Pay only for
-            </span>
-            <span
-              className="pr-guarantee-h-light reveal"
-              style={{ transitionDelay: "140ms" }}
-            >
-              verified visits.
-            </span>
-          </h2>
-          <p
-            className="pr-guarantee-body reveal"
-            style={{ transitionDelay: "200ms" }}
-          >
-            Every creator payout requires a QR-confirmed, fraud-filtered visit.
-            If it doesn&apos;t scan, it doesn&apos;t pay. Your budget only moves
-            when real customers walk through the door.
-          </p>
-          <div
-            className="pr-guarantee-stats reveal"
-            style={{ transitionDelay: "260ms" }}
-          >
-            <div className="pr-g-stat">
-              <span className="pr-g-stat-n">100%</span>
-              <span className="pr-g-stat-l">Scan-verified payouts</span>
-            </div>
-            <div className="pr-g-stat-div" aria-hidden="true" />
-            <div className="pr-g-stat">
-              <span className="pr-g-stat-n">&lt;60s</span>
-              <span className="pr-g-stat-l">Fraud filter latency</span>
-            </div>
-            <div className="pr-g-stat-div" aria-hidden="true" />
-            <div className="pr-g-stat">
-              <span className="pr-g-stat-n">$0</span>
-              <span className="pr-g-stat-l">Disputed visits billed</span>
-            </div>
-          </div>
-        </div>
-
-        {/* Decorative ghost text */}
-        <span className="pr-guarantee-ghost" aria-hidden="true">
-          Verified
-        </span>
-      </section>
-
-      {/* ══ 7. BOTTOM CTA ════════════════════════════════════ */}
-      <section className="pr-cta-section">
-        <div className="container pr-cta-inner">
-          <div className="pr-cta-content reveal">
-            <div className="pr-cta-label">
-              <span className="rule rule--w" />
-              <span className="eyebrow pr-cta-eyebrow">Get started today</span>
-            </div>
-            <h2 className="pr-cta-h">
-              Launch your first
-              <br />
-              <em className="pr-cta-h-em">creator campaign</em>
-              <br />
-              in 24 hours.
-            </h2>
-            <p className="pr-cta-sub">
-              No agency. No guesswork. Just verified foot traffic.
-            </p>
-          </div>
-          <div
-            className="pr-cta-actions reveal"
-            style={{ transitionDelay: "100ms" }}
-          >
-            <Link
-              href="/merchant/signup"
-              className="btn btn-primary pr-cta-btn-primary"
-            >
-              Start free — $0 today
-            </Link>
-            <Link href="/merchant/enterprise" className="btn pr-cta-btn-ghost">
-              Talk to sales
-            </Link>
-            <p className="pr-cta-fine">
-              14-day trial · No credit card · Cancel anytime
-            </p>
-          </div>
-        </div>
-      </section>
-    </>
+    </div>
   );
 }

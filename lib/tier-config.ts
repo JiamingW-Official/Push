@@ -1,13 +1,14 @@
 /**
  * tier-config.ts
- * Single source of truth for Push's 6-Tier Creator System.
+ * Single source of truth for Push's 6-tier creator scoring system.
+ *
+ * v6 (2026-04-24): milestone bonus removed. Economics are per-verified-
+ * conversion via Stripe Connect (R5). External merchant surfaces show
+ * segment (Community / Studio); creator dashboard keeps 6-tier scoring
+ * for retention/gamification — see lib/services/creator-segment.ts.
  *
  * Colors: Path A (v5.2, 2026-04-20). Tier visuals use the 6-color brand
- * palette — see Design.md §Tier Identity System. Tier differentiation is
- * carried by material name, icon, and texture, not by unique hexes.
- *
- * Economics here are v4.1 data — scheduled for migration in P0-5; until then
- * upstream callers should prefer the v5.2 SKILL docs for money quotes.
+ * palette — see Design.md §Tier Identity System.
  *
  * Import from here — do NOT hardcode tier data elsewhere.
  */
@@ -41,10 +42,6 @@ export interface TierConfig {
   baseRate: number;
   /** Commission percentage on top of base rate (0–100) */
   commissionPct: number;
-  /** Monthly milestone bonus in USD (0 = no bonus) */
-  milestoneBonus: number;
-  /** Completed transactions per month required to unlock milestone bonus (0 = N/A) */
-  milestoneTxnThreshold: number;
   /** Maximum campaigns that can run simultaneously */
   maxConcurrent: number;
   /** Short tier description (2–4 words) */
@@ -80,8 +77,6 @@ export const TIERS: Record<CreatorTier, TierConfig> = {
     maxScore: 39,
     baseRate: 0,
     commissionPct: 0,
-    milestoneBonus: 0,
-    milestoneTxnThreshold: 0,
     maxConcurrent: 1,
     description: "Just getting started",
     benefits: [
@@ -104,8 +99,6 @@ export const TIERS: Record<CreatorTier, TierConfig> = {
     maxScore: 54,
     baseRate: 12,
     commissionPct: 0,
-    milestoneBonus: 0,
-    milestoneTxnThreshold: 0,
     maxConcurrent: 2,
     description: "Building momentum",
     benefits: [
@@ -128,14 +121,12 @@ export const TIERS: Record<CreatorTier, TierConfig> = {
     maxScore: 64,
     baseRate: 20,
     commissionPct: 3,
-    milestoneBonus: 15,
-    milestoneTxnThreshold: 30,
     maxConcurrent: 3,
     description: "Consistent performer",
     benefits: [
       "$20 base rate per campaign",
       "3% commission on sales",
-      "$15 milestone bonus at 30 transactions/month",
+      "Higher per-visit rate ($12 avg)",
       "3 concurrent campaigns",
       "Priority campaign matching",
     ],
@@ -153,14 +144,12 @@ export const TIERS: Record<CreatorTier, TierConfig> = {
     maxScore: 77,
     baseRate: 32,
     commissionPct: 5,
-    milestoneBonus: 30,
-    milestoneTxnThreshold: 40,
     maxConcurrent: 4,
     description: "Track record established",
     benefits: [
       "$32 base rate per campaign",
       "5% commission on sales",
-      "$30 milestone bonus at 40 transactions/month",
+      "Studio-tier eligibility (brand-partner pool access)",
       "4 concurrent campaigns",
       "Featured creator profile",
     ],
@@ -178,14 +167,12 @@ export const TIERS: Record<CreatorTier, TierConfig> = {
     maxScore: 87,
     baseRate: 55,
     commissionPct: 7,
-    milestoneBonus: 50,
-    milestoneTxnThreshold: 60,
     maxConcurrent: 5,
     description: "Elite results maker",
     benefits: [
       "$55 base rate per campaign",
       "7% commission on sales",
-      "$50 milestone bonus at 60 transactions/month",
+      "Premium per-visit rate ($25 avg) + priority matching",
       "5 concurrent campaigns",
       "Dedicated campaign manager",
       "Early access to premium brands",
@@ -204,14 +191,12 @@ export const TIERS: Record<CreatorTier, TierConfig> = {
     maxScore: Infinity,
     baseRate: 100,
     commissionPct: 10,
-    milestoneBonus: 80,
-    milestoneTxnThreshold: 80,
     maxConcurrent: 6,
     description: "Top 1% creator",
     benefits: [
       "$100 base rate per campaign",
       "10% commission on sales",
-      "$80 milestone bonus at 80 transactions/month",
+      "Top per-visit rate ($35 avg) + Studio anchor status",
       "6 concurrent campaigns",
       "Co-branded campaign opportunities",
       "Direct merchant relationships",

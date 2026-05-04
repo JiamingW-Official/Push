@@ -33,7 +33,7 @@
 
 /* ── Hero ─────────────────────────────────────────────────── */
 .sec-hero {
-  background: var(--dark);
+  background: var(--ink);
   padding: 120px var(--space-3) var(--space-12);
   position: relative;
   overflow: hidden;
@@ -62,7 +62,7 @@
   font-weight: 700;
   letter-spacing: 0.10em;
   text-transform: uppercase;
-  color: var(--primary);
+  color: var(--brand-red);
   margin-bottom: var(--space-4);
   display: flex;
   align-items: center;
@@ -74,7 +74,7 @@
   display: inline-block;
   width: 24px;
   height: 2px;
-  background: var(--primary);
+  background: var(--brand-red);
   flex-shrink: 0;
 }
 
@@ -119,7 +119,7 @@
 
 /* ── TL;DR Strip ───────────────────────────────────────────── */
 .sec-tldr {
-  background: var(--dark);
+  background: var(--ink);
   border-top: 1px solid rgba(255, 255, 255, 0.06);
   padding: var(--space-6) var(--space-3);
 }
@@ -134,7 +134,7 @@
 }
 
 .sec-tldr-item {
-  background: var(--dark);
+  background: var(--ink);
   padding: var(--space-4) var(--space-4);
   display: flex;
   flex-direction: column;
@@ -144,7 +144,7 @@
 .sec-tldr-icon {
   width: 32px;
   height: 32px;
-  color: var(--primary);
+  color: var(--brand-red);
   flex-shrink: 0;
 }
 
@@ -180,7 +180,7 @@
   font-weight: 700;
   letter-spacing: 0.10em;
   text-transform: uppercase;
-  color: var(--tertiary);
+  color: var(--accent-blue);
   margin-bottom: var(--space-2);
 }
 
@@ -189,10 +189,10 @@
   font-size: 36px;
   font-weight: 700;
   letter-spacing: -0.03em;
-  color: var(--dark);
+  color: var(--ink);
   line-height: 1.1;
   padding-left: var(--space-3);
-  border-left: 4px solid var(--primary);
+  border-left: 4px solid var(--brand-red);
   margin-bottom: var(--space-5);
 }
 
@@ -200,7 +200,7 @@
   font-family: var(--font-body);
   font-size: 15px;
   line-height: 1.85;
-  color: var(--dark);
+  color: var(--ink);
   max-width: 680px;
   margin-bottom: var(--space-5);
 }
@@ -223,7 +223,7 @@
 }
 
 .sec-subsection {
-  background: var(--surface-elevated);
+  background: var(--surface-2);
   border: 1px solid var(--line);
   padding: var(--space-4);
   position: relative;
@@ -236,7 +236,7 @@
   left: 0;
   right: 0;
   height: 2px;
-  background: var(--primary);
+  background: var(--brand-red);
 }
 
 .sec-subsection-title {
@@ -245,7 +245,7 @@
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--dark);
+  color: var(--ink);
   margin-bottom: var(--space-2);
 }
 
@@ -271,17 +271,17 @@
   text-transform: uppercase;
   padding: 3px 8px;
   background: rgba(0, 48, 73, 0.06);
-  color: var(--dark);
+  color: var(--ink);
   border: 1px solid var(--line);
 }
 
 /* ── Infrastructure diagram ────────────────────────────────── */
 .sec-infra {
-  background: var(--surface-bright);
+  background: var(--surface-3);
 }
 
 .sec-infra-diagram {
-  background: var(--dark);
+  background: var(--ink);
   border: 1px solid var(--line-strong);
   padding: var(--space-6);
   margin: var(--space-5) 0;
@@ -298,9 +298,9 @@
 
 .sec-fraud-card {
   padding: var(--space-3) var(--space-3);
-  background: var(--surface-elevated);
+  background: var(--surface-2);
   border: 1px solid var(--line);
-  border-top: 3px solid var(--tertiary);
+  border-top: 3px solid var(--accent-blue);
 }
 
 .sec-fraud-card-label {
@@ -309,7 +309,7 @@
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--tertiary);
+  color: var(--accent-blue);
   margin-bottom: var(--space-1);
 }
 
@@ -318,7 +318,7 @@
   font-size: 20px;
   font-weight: 700;
   letter-spacing: -0.02em;
-  color: var(--dark);
+  color: var(--ink);
   margin-bottom: var(--space-1);
   line-height: 1.2;
 }
@@ -340,7 +340,7 @@
 
 .sec-compliance-item {
   padding: var(--space-3) var(--space-3);
-  background: var(--surface-elevated);
+  background: var(--surface-2);
   border: 1px solid var(--line);
   display: flex;
   flex-direction: column;
@@ -352,7 +352,7 @@
   font-size: 24px;
   font-weight: 800;
   letter-spacing: -0.04em;
-  color: var(--dark);
+  color: var(--ink);
 }
 
 .sec-compliance-desc {
@@ -373,7 +373,7 @@
 }
 
 .sec-compliance-status.active {
-  color: #10b981;
+  color: var(--accent-blue);
 }
 
 .sec-compliance-status.in-progress {
@@ -382,12 +382,12 @@
 
 /* ── Incident response timeline ────────────────────────────── */
 .sec-dark-section {
-  background: var(--dark);
+  background: var(--ink);
 }
 
 .sec-dark-section .sec-h2 {
   color: #fff;
-  border-left-color: var(--primary);
+  border-left-color: var(--brand-red);
 }
 
 .sec-dark-section .sec-lead {
@@ -399,7 +399,7 @@
 }
 
 .sec-dark-section .sec-section-label {
-  color: var(--tertiary);
+  color: var(--accent-blue);
 }
 
 .sec-timeline {
@@ -432,7 +432,7 @@
 .sec-timeline-node {
   width: 40px;
   height: 40px;
-  background: var(--primary);
+  background: var(--brand-red);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -455,7 +455,7 @@
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--primary);
+  color: var(--brand-red);
   margin-bottom: 4px;
 }
 
@@ -488,10 +488,10 @@
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--tertiary);
+  color: var(--accent-blue);
   text-align: left;
   padding: var(--space-1) var(--space-2);
-  border-bottom: 2px solid var(--dark);
+  border-bottom: 2px solid var(--ink);
 }
 
 .sec-severity-table tbody tr {
@@ -512,7 +512,7 @@
 
 .sec-severity-table td:first-child {
   font-weight: 700;
-  color: var(--dark);
+  color: var(--ink);
 }
 
 .sec-sev-badge {
@@ -524,9 +524,9 @@
   padding: 2px 8px;
 }
 
-.sec-sev-badge.critical { background: rgba(193, 18, 31, 0.1); color: var(--primary); }
+.sec-sev-badge.critical { background: rgba(193, 18, 31, 0.1); color: var(--brand-red); }
 .sec-sev-badge.high     { background: rgba(120, 0, 0, 0.08);  color: var(--accent); }
-.sec-sev-badge.medium   { background: rgba(102, 155, 188, 0.1); color: var(--tertiary); }
+.sec-sev-badge.medium   { background: rgba(102, 155, 188, 0.1); color: var(--accent-blue); }
 .sec-sev-badge.low      { background: rgba(0, 48, 73, 0.06);  color: var(--graphite); }
 
 /* ── Vendor sub-processors list ────────────────────────────── */
@@ -540,7 +540,7 @@
 }
 
 .sec-vendor-item {
-  background: var(--surface-elevated);
+  background: var(--surface-2);
   padding: var(--space-3) var(--space-3);
   display: grid;
   grid-template-columns: 1fr auto;
@@ -552,7 +552,7 @@
   font-family: var(--font-body);
   font-size: 14px;
   font-weight: 700;
-  color: var(--dark);
+  color: var(--ink);
   margin-bottom: 4px;
 }
 
@@ -569,18 +569,18 @@
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: var(--tertiary);
+  color: var(--accent-blue);
   text-align: right;
   white-space: nowrap;
 }
 
 /* ── Developer practices ───────────────────────────────────── */
 .sec-code-block {
-  background: var(--dark);
+  background: var(--ink);
   padding: var(--space-4);
   margin: var(--space-3) 0;
   overflow-x: auto;
-  border-left: 3px solid var(--primary);
+  border-left: 3px solid var(--brand-red);
 }
 
 .sec-code-block code {
@@ -620,7 +620,7 @@
   width: 18px;
   height: 18px;
   margin-top: 2px;
-  color: var(--tertiary);
+  color: var(--accent-blue);
 }
 
 /* ── Contact section ───────────────────────────────────────── */
@@ -632,7 +632,7 @@
 }
 
 .sec-contact-card {
-  background: var(--surface-elevated);
+  background: var(--surface-2);
   border: 1px solid var(--line);
   padding: var(--space-5) var(--space-4);
 }
@@ -643,7 +643,7 @@
   font-weight: 700;
   letter-spacing: 0.10em;
   text-transform: uppercase;
-  color: var(--tertiary);
+  color: var(--accent-blue);
   margin-bottom: var(--space-2);
 }
 
@@ -652,7 +652,7 @@
   font-size: 22px;
   font-weight: 700;
   letter-spacing: -0.03em;
-  color: var(--dark);
+  color: var(--ink);
   margin-bottom: var(--space-2);
 }
 
@@ -676,7 +676,7 @@
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--tertiary);
+  color: var(--accent-blue);
   margin-bottom: 6px;
 }
 
@@ -698,7 +698,7 @@
 
 .sec-trust-card {
   border: 1px solid var(--line);
-  background: var(--surface-elevated);
+  background: var(--surface-2);
   padding: var(--space-4) var(--space-3);
   display: flex;
   flex-direction: column;
@@ -707,20 +707,20 @@
 }
 
 .sec-trust-card:hover {
-  border-color: var(--dark);
+  border-color: var(--ink);
 }
 
 .sec-trust-doc-icon {
   width: 36px;
   height: 36px;
-  color: var(--primary);
+  color: var(--brand-red);
 }
 
 .sec-trust-doc-title {
   font-family: var(--font-body);
   font-size: 14px;
   font-weight: 700;
-  color: var(--dark);
+  color: var(--ink);
 }
 
 .sec-trust-doc-desc {
@@ -737,7 +737,7 @@
   font-weight: 700;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  color: var(--primary);
+  color: var(--brand-red);
   text-decoration: none;
   display: flex;
   align-items: center;
@@ -751,7 +751,7 @@
 
 /* ── CTA link style ────────────────────────────────────────── */
 .sec-link {
-  color: var(--primary);
+  color: var(--brand-red);
   text-decoration: none;
   font-weight: 700;
   border-bottom: 1px solid transparent;
@@ -759,14 +759,14 @@
 }
 
 .sec-link:hover {
-  border-color: var(--primary);
+  border-color: var(--brand-red);
 }
 
 /* ── Penetration testing attestation box ──────────────────── */
 .sec-attest-box {
   background: rgba(0, 48, 73, 0.04);
   border: 1px solid var(--line);
-  border-left: 4px solid var(--tertiary);
+  border-left: 4px solid var(--accent-blue);
   padding: var(--space-4);
   margin-top: var(--space-4);
   max-width: 680px;
@@ -778,7 +778,7 @@
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--tertiary);
+  color: var(--accent-blue);
   margin-bottom: var(--space-1);
 }
 
@@ -795,7 +795,7 @@
   font-family: var(--font-body);
   font-size: 12px;
   font-weight: 700;
-  color: var(--dark);
+  color: var(--ink);
 }
 
 /* ── Status badge ──────────────────────────────────────────── */
@@ -804,14 +804,14 @@
   width: 8px;
   height: 8px;
   border-radius: 50%; /* status indicator — allowed exception */
-  background: #10b981;
+  background: var(--accent-blue);
   margin-right: 6px;
   vertical-align: middle;
 }
 
 /* ── Alternating section bg ────────────────────────────────── */
 .sec-section.alt {
-  background: var(--surface-bright);
+  background: var(--surface-3);
 }
 
 /* ── Scroll reveal ─────────────────────────────────────────── */

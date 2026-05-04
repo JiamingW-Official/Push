@@ -7,6 +7,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { MERCHANT_PRIMARY, MERCHANT_SECONDARY } from "@/lib/nav/registry";
+import { BRAND } from "@/lib/constants/brand";
 
 function isActive(href: string, pathname: string, prefix?: boolean): boolean {
   if (prefix) return pathname.startsWith(href);
@@ -18,7 +19,8 @@ export function MerchantSideNav() {
   return (
     <aside style={S.shell} aria-label="Merchant navigation">
       <Link href="/merchant/dashboard" style={S.brand}>
-        Push<span style={S.brandTag}>Merchant</span>
+        {BRAND.name}
+        <span style={S.brandTag}>Merchant</span>
       </Link>
 
       <nav style={S.nav}>
@@ -71,11 +73,11 @@ const S = {
   shell: {
     width: "240px",
     minHeight: "100vh",
-    borderRight: "1px solid rgba(0,48,73,0.12)",
-    background: "#f5f2ec",
+    borderRight: "1px solid var(--line)",
+    background: "var(--surface)",
     display: "flex",
     flexDirection: "column" as const,
-    fontFamily: "var(--font-body, 'CS Genio Mono', monospace)",
+    fontFamily: "var(--font-body)",
     padding: "24px 0",
   } as React.CSSProperties,
   brand: {
@@ -83,23 +85,23 @@ const S = {
     alignItems: "baseline",
     gap: "6px",
     padding: "0 24px 24px",
-    fontFamily: "var(--font-display, 'Darky', sans-serif)",
+    fontFamily: "var(--font-display)",
     fontSize: "22px",
     fontWeight: 900,
     letterSpacing: "-0.04em",
     fontStyle: "italic" as const,
-    color: "#003049",
+    color: "var(--ink)",
     textDecoration: "none",
-    borderBottom: "1px solid rgba(0,48,73,0.08)",
+    borderBottom: "1px solid rgba(10,10,10,0.08)",
   } as React.CSSProperties,
   brandTag: {
-    fontFamily: "var(--font-body, 'CS Genio Mono', monospace)",
+    fontFamily: "var(--font-body)",
     fontSize: "10px",
     fontStyle: "normal" as const,
     fontWeight: 700,
     letterSpacing: "0.12em",
     textTransform: "uppercase" as const,
-    color: "#c1121f",
+    color: "var(--brand-red)",
   } as React.CSSProperties,
   nav: {
     flex: 1,
@@ -114,19 +116,19 @@ const S = {
     gap: "12px",
     padding: "10px 24px",
     borderLeft: "3px solid transparent",
-    color: "#003049",
+    color: "var(--ink)",
     fontSize: "14px",
     fontWeight: 600,
     textDecoration: "none",
   } as React.CSSProperties,
   linkActive: {
-    borderLeftColor: "#c1121f",
-    color: "#c1121f",
+    borderLeftColor: "var(--brand-red)",
+    color: "var(--brand-red)",
   } as React.CSSProperties,
   secondary: {
     display: "block",
     padding: "6px 24px",
-    color: "rgba(0,48,73,0.7)",
+    color: "rgba(10,10,10,0.7)",
     fontSize: "12px",
     textDecoration: "none",
     borderLeft: "3px solid transparent",
@@ -141,16 +143,16 @@ const S = {
   divider: {
     margin: "16px 24px",
     border: 0,
-    borderTop: "1px solid rgba(0,48,73,0.08)",
+    borderTop: "1px solid rgba(10,10,10,0.08)",
   } as React.CSSProperties,
   footer: {
     padding: "16px 24px",
-    borderTop: "1px solid rgba(0,48,73,0.08)",
+    borderTop: "1px solid rgba(10,10,10,0.08)",
   } as React.CSSProperties,
   footLink: {
-    fontFamily: "var(--font-body, 'CS Genio Mono', monospace)",
+    fontFamily: "var(--font-body)",
     fontSize: "11px",
-    color: "rgba(0,48,73,0.6)",
+    color: "var(--ink-4)",
     textDecoration: "none",
   } as React.CSSProperties,
 };

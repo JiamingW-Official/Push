@@ -10,6 +10,16 @@ export function generateStaticParams() {
     "demo-campaign-006",
     "demo-campaign-007",
     "demo-campaign-008",
+    "disc-001",
+    "disc-002",
+    "disc-003",
+    "disc-004",
+    "disc-005",
+    "disc-006",
+    "disc-007",
+    "disc-008",
+    "disc-009",
+    "disc-010",
   ].map((id) => ({ id }));
 }
 

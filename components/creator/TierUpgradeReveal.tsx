@@ -90,7 +90,6 @@ const TIER_BENEFITS: Record<
     baseRate: string;
     slots: number;
     commission?: string;
-    milestone?: string;
   }
 > = {
   seed: {
@@ -107,52 +106,48 @@ const TIER_BENEFITS: Record<
     benefits: [
       "$20 per campaign",
       "3% commission",
-      "$15 milestone bonus",
+      "Higher per-visit rate ($12 avg)",
       "3 campaigns",
     ],
     baseRate: "$20",
     slots: 3,
     commission: "3%",
-    milestone: "$15",
   },
   proven: {
     benefits: [
       "$32 per campaign",
       "5% commission",
-      "$30 milestone bonus",
+      "Studio-tier eligibility",
       "4 campaigns",
       "Content reviews",
     ],
     baseRate: "$32",
     slots: 4,
     commission: "5%",
-    milestone: "$30",
   },
   closer: {
     benefits: [
       "$55 per campaign",
       "7% commission",
-      "$50 milestone bonus",
+      "Premium per-visit rate ($25 avg)",
       "5 campaigns",
       "Account manager",
     ],
     baseRate: "$55",
     slots: 5,
     commission: "7%",
-    milestone: "$50",
   },
   partner: {
     benefits: [
       "$100 per campaign",
       "10% commission",
-      "$80 milestone bonus",
+      "Top per-visit rate ($35 avg) + Studio anchor",
       "6 campaigns",
       "Advisory access",
     ],
     baseRate: "$100",
     slots: 6,
     commission: "10%",
-    milestone: "$80",
   },
 };
 
@@ -299,7 +294,7 @@ function DeltaRow({
         style={{
           fontFamily: "'CS Genio Mono', 'Courier New', monospace",
           fontSize: 12,
-          color: "#f5f2ec",
+          color: "var(--surface)",
           fontWeight: 700,
         }}
       >
@@ -428,15 +423,6 @@ export function TierUpgradeReveal({
             label: "Commission",
             before: prevBenefits.commission ?? "None",
             after: newBenefits.commission,
-          },
-        ]
-      : []),
-    ...(newBenefits.milestone
-      ? [
-          {
-            label: "Milestone",
-            before: prevBenefits.milestone ?? "None",
-            after: newBenefits.milestone + " bonus",
           },
         ]
       : []),
@@ -761,12 +747,12 @@ export function TierUpgradeReveal({
                     "opacity 0.35s ease, transform 0.35s cubic-bezier(0.16, 1, 0.3, 1)",
                 }}
               >
-                {/* Red square bullet — zero border-radius */}
+                {/* Flag Red square bullet — zero border-radius */}
                 <div
                   style={{
                     width: 6,
                     height: 6,
-                    background: "#c1121f",
+                    background: "var(--brand-red)",
                     borderRadius: 0,
                     flexShrink: 0,
                   }}
@@ -835,11 +821,11 @@ export function TierUpgradeReveal({
             style={{
               width: "100%",
               padding: "16px 24px",
-              background: "#c1121f",
-              color: "#f5f2ec",
+              background: "var(--brand-red)",
+              color: "var(--surface)",
               border: "none",
               borderRadius: 0,
-              fontFamily: "var(--font-display, Darky, serif)",
+              fontFamily: "var(--font-display)",
               fontSize: "18px",
               fontWeight: 700,
               letterSpacing: "0.04em",
@@ -851,11 +837,11 @@ export function TierUpgradeReveal({
             }}
             onMouseEnter={(e) => {
               (e.currentTarget as HTMLButtonElement).style.background =
-                "#780000";
+                "var(--accent)";
             }}
             onMouseLeave={(e) => {
               (e.currentTarget as HTMLButtonElement).style.background =
-                "#c1121f";
+                "var(--brand-red)";
             }}
           >
             Explore New Campaigns &rarr;

@@ -1,5 +1,20 @@
 "use client";
 
+/* ─────────────────────────────────────────────────────────────────────
+ * Push — Creator Work · Today (v2 redesign)
+ *
+ * Layout (cw-* primitives, no bespoke chrome):
+ *   header            cw-header
+ *   NOW dark hero     cw-card--dark (only when an active task is in flight)
+ *   KPI strip         cw-strip · 4 cells (Due / Active / Potential / Streak)
+ *   2-col body:
+ *     left 8 cols     SCHEDULE timeline w/ refined NOW indicator
+ *     right 4 cols    UP NEXT rail · 2-3 next campaigns
+ *   reminder add      ghost row at bottom
+ *
+ * Authority: lumin-cards.css cw-* primitives + Design.md v11
+ * ───────────────────────────────────────────────────────────────────── */
+
 import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
 import "./today.css";
@@ -10,15 +25,16 @@ type TaskStatus = "upcoming" | "active" | "done" | "free";
 
 type TimelineTask = {
   id: string;
-  time: string; // "HH:MM" 24h
+  time: string;
   endTime?: string;
   status: TaskStatus;
   campaignName: string;
   merchantName: string;
   category: string;
-  earnBadge: string; // e.g. "$24"
+  earnBadge: string;
   logoInitials: string;
   logoColor: string;
+  address?: string;
 };
 
 /* ── Mock data ─────────────────────────────────────────────── */
@@ -34,7 +50,8 @@ const INITIAL_TIMELINE_TASKS: TimelineTask[] = [
     category: "Coffee",
     earnBadge: "$18",
     logoInitials: "BS",
-    logoColor: "#003049",
+    logoColor: "#3a3835",
+    address: "5 W 19th St",
   },
   {
     id: "t2",
@@ -47,6 +64,7 @@ const INITIAL_TIMELINE_TASKS: TimelineTask[] = [
     earnBadge: "$32",
     logoInitials: "SB",
     logoColor: "#c1121f",
+    address: "119 Avenue A",
   },
   {
     id: "t3",
@@ -71,6 +89,7 @@ const INITIAL_TIMELINE_TASKS: TimelineTask[] = [
     earnBadge: "$44",
     logoInitials: "FE",
     logoColor: "#c9a96e",
+    address: "La Guardia Pl",
   },
   {
     id: "t5",
@@ -82,7 +101,8 @@ const INITIAL_TIMELINE_TASKS: TimelineTask[] = [
     category: "Coffee",
     earnBadge: "$34",
     logoInitials: "CC",
-    logoColor: "#669bbc",
+    logoColor: "#0085ff",
+    address: "85 Kenmare St",
   },
 ];
 
@@ -90,12 +110,11 @@ const INITIAL_TIMELINE_TASKS: TimelineTask[] = [
 
 const STATUS_LABEL: Record<TaskStatus, string> = {
   upcoming: "UPCOMING",
-  active: "ACTIVE",
+  active: "LIVE NOW",
   done: "DONE",
   free: "FREE",
 };
 
-// Group tasks into morning / afternoon / evening
 function getTimeGroup(time: string): "MORNING" | "AFTERNOON" | "EVENING" {
   const hour = parseInt(time.split(":")[0], 10);
   if (hour < 12) return "MORNING";
@@ -103,24 +122,20 @@ function getTimeGroup(time: string): "MORNING" | "AFTERNOON" | "EVENING" {
   return "EVENING";
 }
 
-// Convert "HH:MM" to fractional hour
 function timeToFractionalHour(time: string): number {
   const [h, m] = time.split(":").map(Number);
   return h + m / 60;
 }
 
-// Parse earnBadge "$XX" to number
 function parseBadge(badge: string): number {
   return parseInt(badge.replace("$", "") || "0", 10);
 }
 
-// Generate a unique id
 let customTaskCounter = 100;
 function nextCustomId() {
   return `custom-${++customTaskCounter}`;
 }
 
-// Format current time as "H:MM AM/PM"
 function formatCurrentTime(date: Date): string {
   const h = date.getHours();
   const m = date.getMinutes();
@@ -129,17 +144,27 @@ function formatCurrentTime(date: Date): string {
   return `${h12}:${m.toString().padStart(2, "0")} ${ampm}`;
 }
 
-// Format day name
+function formatTimeRange(start: string, end?: string): string {
+  function pretty(t: string): string {
+    const [h, m] = t.split(":").map(Number);
+    const ampm = h >= 12 ? "PM" : "AM";
+    const h12 = h % 12 || 12;
+    return m === 0
+      ? `${h12} ${ampm}`
+      : `${h12}:${m.toString().padStart(2, "0")} ${ampm}`;
+  }
+  if (!end) return pretty(start);
+  return `${pretty(start)} — ${pretty(end)}`;
+}
+
 function getDayName(date: Date): string {
   return date.toLocaleDateString("en-US", { weekday: "long" });
 }
 
-// Format month + day
 function getMonthDay(date: Date): string {
   return date.toLocaleDateString("en-US", { month: "long", day: "numeric" });
 }
 
-// Determine task urgency relative to now
 function getUrgency(
   task: TimelineTask,
   nowHour: number,
@@ -154,9 +179,48 @@ function getUrgency(
   return "normal";
 }
 
-/* ── Hours for quick-add selector ────────────────────────── */
+/** Time remaining on the active task — "1h 12m left", "12m left", or "wrapping" */
+function timeLeftLabel(task: TimelineTask, now: Date): string {
+  if (!task.endTime) return "in flight";
+  const [eh, em] = task.endTime.split(":").map(Number);
+  const end = new Date(now);
+  end.setHours(eh, em, 0, 0);
+  const ms = end.getTime() - now.getTime();
+  if (ms <= 0) return "wrapping up";
+  const totalMin = Math.floor(ms / 60000);
+  const h = Math.floor(totalMin / 60);
+  const m = totalMin % 60;
+  if (h <= 0) return `${m}m left`;
+  return `${h}h ${m}m left`;
+}
+
+/**
+ * Returns a deadline label for a task card.
+ * If the task ends within 24 hours, returns the remaining time string.
+ * Otherwise returns null (no countdown shown).
+ */
+function getDeadlineLabel(
+  task: TimelineTask,
+  now: Date,
+): { label: string; urgent: boolean } | null {
+  if (!task.endTime || task.status === "done" || task.status === "free")
+    return null;
+  const [eh, em] = task.endTime.split(":").map(Number);
+  const end = new Date(now);
+  end.setHours(eh, em, 0, 0);
+  const ms = end.getTime() - now.getTime();
+  if (ms <= 0) return null; // already overdue — handled by urgency chip
+  const totalMin = Math.floor(ms / 60000);
+  const h = Math.floor(totalMin / 60);
+  const m = totalMin % 60;
+  const urgent = ms < 24 * 60 * 60 * 1000; // < 24 h
+  if (!urgent) return null; // only show when < 24h
+  const label = h > 0 ? `${h}h ${m}m until deadline` : `${m}m until deadline`;
+  return { label, urgent };
+}
+
 const HOUR_OPTIONS = Array.from({ length: 14 }, (_, i) => {
-  const h = i + 8; // 8 AM – 9 PM
+  const h = i + 8;
   const ampm = h >= 12 ? "PM" : "AM";
   const h12 = h % 12 || 12;
   return {
@@ -177,36 +241,49 @@ export default function WorkTodayPage() {
         ),
       ),
   );
-  const [selectedTask, setSelectedTask] = useState<string | null>("t2");
-
-  // Now-line
+  const [selectedTask, setSelectedTask] = useState<string | null>(null);
   const [nowTime, setNowTime] = useState<Date>(new Date());
   const timelineRef = useRef<HTMLDivElement>(null);
 
-  // Quick-add form
   const [showAddForm, setShowAddForm] = useState(false);
   const [addHour, setAddHour] = useState("09:00");
   const [addText, setAddText] = useState("");
 
-  // Update current time every minute
   useEffect(() => {
     const id = setInterval(() => setNowTime(new Date()), 60_000);
     return () => clearInterval(id);
   }, []);
 
-  /* ── Derived values ─────────────────────────────────────────── */
+  /* ── Derived ────────────────────────────────────────────── */
+
   const scheduledTasks = tasks.filter((t) => t.status !== "free");
   const totalPotential = scheduledTasks.reduce(
     (sum, t) => sum + parseBadge(t.earnBadge),
     0,
   );
-
-  const activeCampaign = tasks.find((t) => t.status === "active");
-  const upcomingCount = tasks.filter(
-    (t) => t.status === "upcoming" || t.status === "active",
+  const dueCount = tasks.filter(
+    (t) =>
+      (t.status === "upcoming" || t.status === "active") &&
+      !completedIds.has(t.id),
+  ).length;
+  const activeNowCount = tasks.filter(
+    (t) => t.status === "active" && !completedIds.has(t.id),
+  ).length;
+  const doneCount = tasks.filter(
+    (t) => t.status === "done" || completedIds.has(t.id),
   ).length;
 
-  // Now-line: fractional hour position in the 8–22 range (14h window)
+  const activeCampaign = tasks.find(
+    (t) => t.status === "active" && !completedIds.has(t.id),
+  );
+  const upcomingTasks = tasks.filter(
+    (t) =>
+      t.status === "upcoming" &&
+      !completedIds.has(t.id) &&
+      timeToFractionalHour(t.time) >
+        nowTime.getHours() + nowTime.getMinutes() / 60,
+  );
+
   const nowHour = nowTime.getHours() + nowTime.getMinutes() / 60;
   const TIMELINE_START = 8;
   const TIMELINE_END = 22;
@@ -218,7 +295,7 @@ export default function WorkTodayPage() {
     ),
   );
 
-  // Build time-grouped sections
+  /* Build time-grouped sections */
   const groups: { label: string; tasks: TimelineTask[] }[] = [];
   const seen = new Set<string>();
   for (const task of tasks) {
@@ -230,7 +307,7 @@ export default function WorkTodayPage() {
     groups[groups.length - 1].tasks.push(task);
   }
 
-  /* ── Handlers ───────────────────────────────────────────────── */
+  /* ── Handlers ───────────────────────────────────────────── */
 
   function toggleComplete(id: string) {
     setCompletedIds((prev) => {
@@ -266,103 +343,215 @@ export default function WorkTodayPage() {
       category: "Other",
       earnBadge: "$0",
       logoInitials: "+",
-      logoColor: "#669bbc",
+      logoColor: "#0085ff",
     };
-    setTasks((prev) => {
-      const next = [...prev, newTask];
-      next.sort(
-        (a, b) => timeToFractionalHour(a.time) - timeToFractionalHour(b.time),
-      );
-      return next;
-    });
+    setTasks((ts) =>
+      [...ts, newTask].sort((a, b) =>
+        timeToFractionalHour(a.time) - timeToFractionalHour(b.time) > 0
+          ? 1
+          : -1,
+      ),
+    );
     setAddText("");
     setShowAddForm(false);
   }
 
-  /* ── Render ─────────────────────────────────────────────────── */
+  /* ── Render ────────────────────────────────────────────── */
 
   return (
-    <div className="wt-page">
-      {/* ── Nav ─────────────────────────────────────────────── */}
-      <nav className="wt-nav">
-        <Link href="/creator/dashboard" className="wt-nav-back">
-          ← WORKSPACE
-        </Link>
-        <span className="wt-nav-sep">|</span>
-        <span className="wt-nav-title">TODAY</span>
-        <div className="wt-nav-right">
-          <Link href="/creator/work/pipeline" className="wt-nav-link">
+    <div className="cw-page wt-page">
+      <header className="cw-header">
+        <div className="cw-header__left">
+          <p className="cw-eyebrow cw-eyebrow--live">
+            {getDayName(nowTime).toUpperCase()} ·{" "}
+            {getMonthDay(nowTime).toUpperCase()}
+            {dueCount > 0
+              ? ` · ${dueCount} SHOOT${dueCount > 1 ? "S" : ""} · $${totalPotential}`
+              : ""}
+          </p>
+          <h1 className="cw-title">Today.</h1>
+        </div>
+        <div className="cw-header__right">
+          <Link href="/creator/work/pipeline" className="cw-pill">
             Pipeline →
           </Link>
-        </div>
-      </nav>
-
-      {/* ── Hero — editorial, clean ──────────────────────────── */}
-      <header className="wt-hero">
-        <div className="wt-hero-inner">
-          <h1 className="wt-date-day">{getDayName(nowTime)}</h1>
-          <p className="wt-date-month">{getMonthDay(nowTime)}</p>
-          <div className="wt-hero-divider" />
-          <p className="wt-hero-summary">
-            {upcomingCount > 0
-              ? `You have ${upcomingCount} shoot${upcomingCount > 1 ? "s" : ""} today. Potential: $${totalPotential}.`
-              : "No shoots scheduled. Browse campaigns to get started."}
-          </p>
+          <Link href="/creator/discover" className="cw-pill cw-pill--urgent">
+            + Browse campaigns
+          </Link>
         </div>
       </header>
 
-      {/* ── Main Layout ─────────────────────────────────────── */}
+      {/* ── KPI STRIP ──────────────────────────────────────── */}
+      <div className="cw-strip wt-strip">
+        <div className="cw-strip__cell">
+          <span className="cw-stat__label">Due today</span>
+          <span className="cw-stat__value">{dueCount}</span>
+          <span className="cw-stat__delta cw-stat__delta--flat">
+            {scheduledTasks.length - dueCount} done
+          </span>
+        </div>
+        <div className="cw-strip__cell">
+          <span className="cw-stat__label">Live now</span>
+          <span
+            className={
+              "cw-stat__value" +
+              (activeNowCount > 0
+                ? " cw-stat__value--brand"
+                : " cw-stat__value--muted")
+            }
+          >
+            {activeNowCount}
+          </span>
+          <span className="cw-stat__delta cw-stat__delta--flat">
+            {activeNowCount > 0 ? "in flight" : "no active"}
+          </span>
+        </div>
+        <div className="cw-strip__cell">
+          <span className="cw-stat__label">Potential</span>
+          <span className="cw-stat__value">${totalPotential}</span>
+          <span className="cw-stat__delta cw-stat__delta--up">
+            ▲ {scheduledTasks.length} bookings
+          </span>
+        </div>
+        <div className="cw-strip__cell">
+          <span className="cw-stat__label">Streak</span>
+          <span className="cw-stat__value">{doneCount}</span>
+          <span className="cw-stat__delta cw-stat__delta--up">
+            day {doneCount > 0 ? "🔥" : ""}
+          </span>
+        </div>
+      </div>
+
+      {/* ── NOW HERO (only when there's an active campaign) ─── */}
+      {activeCampaign && (
+        <section className="wt-now">
+          <div className="wt-now__pulse" aria-hidden="true">
+            <span className="wt-now__pulse-dot" />
+            <span className="wt-now__pulse-label">
+              LIVE NOW · {formatCurrentTime(nowTime)}
+            </span>
+          </div>
+
+          <div className="wt-now__head">
+            <div
+              className="wt-now__avatar"
+              style={{ background: activeCampaign.logoColor }}
+              aria-hidden="true"
+            >
+              {activeCampaign.logoInitials}
+            </div>
+            <div className="wt-now__head-text">
+              <p className="wt-now__merchant">{activeCampaign.merchantName}</p>
+              <h2 className="wt-now__campaign">
+                {activeCampaign.campaignName}
+              </h2>
+            </div>
+            <div className="wt-now__pay">
+              <span className="wt-now__pay-num">
+                {activeCampaign.earnBadge}
+              </span>
+              <span className="wt-now__pay-label">EST.</span>
+            </div>
+          </div>
+
+          <div className="wt-now__meta">
+            <div className="wt-now__meta-cell">
+              <span className="wt-now__meta-label">SLOT</span>
+              <span className="wt-now__meta-value">
+                {formatTimeRange(activeCampaign.time, activeCampaign.endTime)}
+              </span>
+            </div>
+            <div className="wt-now__meta-cell">
+              <span className="wt-now__meta-label">ENDS IN</span>
+              <span className="wt-now__meta-value">
+                {timeLeftLabel(activeCampaign, nowTime)}
+              </span>
+            </div>
+            <div className="wt-now__meta-cell">
+              <span className="wt-now__meta-label">LOCATION</span>
+              <span className="wt-now__meta-value">
+                {activeCampaign.address ?? activeCampaign.category}
+              </span>
+            </div>
+          </div>
+
+          <div className="wt-now__actions">
+            <Link
+              href="/creator/campaigns/demo-campaign-001/post"
+              className="wt-now__cta wt-now__cta--primary"
+            >
+              Submit content
+            </Link>
+            <button
+              type="button"
+              className="wt-now__cta wt-now__cta--ghost"
+              onClick={() => toggleComplete(activeCampaign.id)}
+            >
+              ✓ Mark done
+            </button>
+            <Link
+              href="/creator/messages"
+              className="wt-now__cta wt-now__cta--ghost"
+            >
+              Message merchant
+            </Link>
+          </div>
+        </section>
+      )}
+
+      {/* ── BODY: timeline (left) + Up next rail (right) ───── */}
       <div className="wt-body">
-        {/* ── Timeline ──────────────────────────────────────── */}
-        <section className="wt-timeline-section">
-          <div className="wt-section-header">
-            <h2 className="wt-section-title">TODAY&apos;S SCHEDULE</h2>
-            <Link href="/creator/campaigns" className="wt-section-link">
-              Browse more →
+        <section className="wt-timeline-card">
+          <div className="cw-section-head">
+            <span className="cw-section-eyebrow">Today's schedule</span>
+            <Link href="/creator/work/calendar" className="cw-section-link">
+              View calendar →
             </Link>
           </div>
 
           <div className="wt-timeline" ref={timelineRef}>
-            <div className="wt-timeline-axis" aria-hidden="true" />
+            <div className="wt-timeline__axis" aria-hidden="true" />
 
-            {/* NOW line */}
+            {/* NOW indicator */}
             <div
-              className="wt-now-line"
+              className="wt-timeline__now"
               style={{ top: `${nowPct}%` }}
               aria-label={`Current time: ${formatCurrentTime(nowTime)}`}
             >
-              <span className="wt-now-label">
+              <span className="wt-timeline__now-chip">
                 NOW · {formatCurrentTime(nowTime)}
               </span>
             </div>
 
             {groups.map(({ label, tasks: groupTasks }) => (
-              <div key={label} className="wt-time-group">
-                <div className="wt-time-group-label">
-                  <span>{label}</span>
-                </div>
+              <div key={label} className="wt-tg">
+                <div className="wt-tg__label">{label}</div>
 
                 {groupTasks.map((task) => {
-                  const urgency = getUrgency(task, nowHour);
                   const isDone = completedIds.has(task.id);
+                  const urgency = getUrgency(task, nowHour);
 
                   if (task.status === "free") {
                     return (
-                      <div
-                        key={task.id}
-                        className="wt-timeline-row wt-timeline-free"
-                      >
-                        <div className="wt-time-label">
+                      <div key={task.id} className="wt-row wt-row--free">
+                        <div className="wt-row__time">
                           <span>{task.time}</span>
-                          <span className="wt-time-end">{task.endTime}</span>
+                          {task.endTime && (
+                            <span className="wt-row__time-end">
+                              {task.endTime}
+                            </span>
+                          )}
                         </div>
-                        <div className="wt-timeline-dot wt-dot-free" />
-                        <div className="wt-free-block">
-                          <span className="wt-free-text">
-                            Free window · No commitments
+                        <div className="wt-row__dot wt-row__dot--free" />
+                        <div className="wt-row__free">
+                          <span className="wt-row__free-text">
+                            Free window — no commitments
                           </span>
-                          <Link href="/creator/explore" className="wt-free-cta">
-                            + Find campaign
+                          <Link
+                            href="/creator/discover"
+                            className="wt-row__free-cta"
+                          >
+                            + Find a slot
                           </Link>
                         </div>
                       </div>
@@ -374,43 +563,53 @@ export default function WorkTodayPage() {
                   return (
                     <div
                       key={task.id}
-                      className={[
-                        "wt-timeline-row wt-timeline-task",
-                        `wt-status-${isDone ? "done" : task.status}`,
-                        isSelected ? "wt-selected" : "",
-                        isDone ? "wt-task-completed" : "",
-                        urgency === "urgent" ? "wt-task-urgent" : "",
-                        urgency === "overdue" && !isDone
-                          ? "wt-task-overdue"
-                          : "",
-                      ]
-                        .filter(Boolean)
-                        .join(" ")}
+                      className={
+                        "wt-row wt-row--task" +
+                        (isDone ? " is-done" : "") +
+                        (task.status === "active" && !isDone
+                          ? " is-live"
+                          : "") +
+                        (urgency === "overdue" && !isDone
+                          ? " is-overdue"
+                          : "") +
+                        (isSelected ? " is-selected" : "")
+                      }
                       onClick={() =>
                         setSelectedTask(isSelected ? null : task.id)
                       }
                       role="button"
                       tabIndex={0}
                       aria-expanded={isSelected}
-                      onKeyDown={(e) =>
-                        e.key === "Enter" &&
-                        setSelectedTask(isSelected ? null : task.id)
-                      }
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter" || e.key === " ") {
+                          e.preventDefault();
+                          setSelectedTask(isSelected ? null : task.id);
+                        }
+                      }}
                     >
-                      <div className="wt-time-label">
+                      <div className="wt-row__time">
                         <span>{task.time}</span>
-                        <span className="wt-time-end">{task.endTime}</span>
+                        {task.endTime && (
+                          <span className="wt-row__time-end">
+                            {task.endTime}
+                          </span>
+                        )}
                       </div>
 
                       <div
-                        className={`wt-timeline-dot wt-dot-${isDone ? "done" : task.status}`}
+                        className={
+                          "wt-row__dot wt-row__dot--" +
+                          (isDone ? "done" : task.status)
+                        }
                       />
 
-                      <div className="wt-task-content">
-                        <div className="wt-task-main">
-                          {/* Complete toggle */}
+                      <div className="wt-row__card">
+                        <div className="wt-row__main">
                           <button
-                            className={`wt-complete-btn${isDone ? " wt-complete-btn--done" : ""}`}
+                            type="button"
+                            className={
+                              "wt-row__check" + (isDone ? " is-checked" : "")
+                            }
                             onClick={(e) => {
                               e.stopPropagation();
                               toggleComplete(task.id);
@@ -418,94 +617,111 @@ export default function WorkTodayPage() {
                             aria-label={
                               isDone ? "Mark incomplete" : "Mark complete"
                             }
-                            title={isDone ? "Undo" : "Mark done"}
                           >
-                            {isDone ? "✓" : "○"}
+                            {isDone ? "✓" : ""}
                           </button>
 
                           <div
-                            className="wt-task-logo"
+                            className="wt-row__avatar"
                             style={{ background: task.logoColor }}
                             aria-hidden="true"
                           >
                             {task.logoInitials}
                           </div>
-                          <div className="wt-task-info">
-                            <p className="wt-task-campaign">
-                              {task.campaignName}
+
+                          <div className="wt-row__body">
+                            <p className="wt-row__title">
+                              {/* Campaign name as an accessible link */}
+                              <a
+                                href="/creator/campaigns/demo-campaign-001"
+                                className="wt-row__campaign-link"
+                                onClick={(e) => e.stopPropagation()}
+                              >
+                                {task.campaignName}
+                              </a>
                             </p>
-                            <p className="wt-task-merchant">
+                            <p className="wt-row__sub">
                               {task.merchantName}
-                              {task.status === "active" && !isDone && (
-                                <span className="wt-active-indicator">
-                                  <span className="wt-active-dot" />
-                                  LIVE
-                                </span>
-                              )}
+                              {task.category && ` · ${task.category}`}
+                              {task.address && ` · ${task.address}`}
                             </p>
+                            {/* Deadline countdown — brand-red when < 24h */}
+                            {(() => {
+                              const dl = getDeadlineLabel(task, nowTime);
+                              if (!dl) return null;
+                              return (
+                                <p
+                                  className={
+                                    "wt-row__deadline" +
+                                    (dl.urgent
+                                      ? " wt-row__deadline--urgent"
+                                      : "")
+                                  }
+                                  aria-live="polite"
+                                >
+                                  {dl.label}
+                                </p>
+                              );
+                            })()}
                           </div>
-                          <div className="wt-task-meta">
-                            <span className="wt-task-category">
-                              {task.category}
-                            </span>
-                            <span className="wt-task-earn">
+
+                          <div className="wt-row__side">
+                            <span className="wt-row__pay">
                               {task.earnBadge}
                             </span>
-                          </div>
-
-                          {/* Status chip */}
-                          {urgency === "overdue" && !isDone ? (
-                            <span className="wt-status-chip wt-chip-overdue">
-                              OVERDUE
-                            </span>
-                          ) : (
                             <span
-                              className={`wt-status-chip wt-chip-${isDone ? "done" : task.status}`}
+                              className={
+                                "wt-row__chip wt-row__chip--" +
+                                (urgency === "overdue" && !isDone
+                                  ? "overdue"
+                                  : isDone
+                                    ? "done"
+                                    : task.status)
+                              }
                             >
-                              {isDone ? "DONE" : STATUS_LABEL[task.status]}
+                              {urgency === "overdue" && !isDone
+                                ? "OVERDUE"
+                                : isDone
+                                  ? "DONE"
+                                  : STATUS_LABEL[task.status]}
                             </span>
-                          )}
+                          </div>
                         </div>
 
-                        {/* Expanded actions */}
                         {isSelected && (
-                          <div className="wt-task-expanded">
-                            <div className="wt-task-actions">
-                              {!isDone && task.status === "active" && (
-                                <Link
-                                  href="/creator/campaigns/demo-campaign-001/post"
-                                  className="wt-action-btn wt-action-primary"
-                                >
-                                  Submit Content
-                                </Link>
-                              )}
-                              {!isDone && task.status === "upcoming" && (
-                                <button className="wt-action-btn wt-action-secondary">
-                                  Mark Arrived
-                                </button>
-                              )}
-                              <button
-                                className={`wt-action-btn ${isDone ? "wt-action-ghost" : "wt-action-secondary"}`}
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  toggleComplete(task.id);
-                                }}
+                          <div className="wt-row__expanded">
+                            {!isDone && task.status === "active" && (
+                              <Link
+                                href="/creator/campaigns/demo-campaign-001/post"
+                                className="cw-pill cw-pill--urgent"
                               >
-                                {isDone ? "↩ Undo Complete" : "✓ Mark Done"}
+                                Submit content
+                              </Link>
+                            )}
+                            {!isDone && task.status === "upcoming" && (
+                              <button type="button" className="cw-pill">
+                                Mark arrived
                               </button>
-                              <Link
-                                href="/creator/campaigns/demo-campaign-001"
-                                className="wt-action-btn wt-action-ghost"
-                              >
-                                View Details
-                              </Link>
-                              <Link
-                                href="/creator/messages"
-                                className="wt-action-btn wt-action-ghost"
-                              >
-                                Message Merchant
-                              </Link>
-                            </div>
+                            )}
+                            <button
+                              type="button"
+                              className="cw-pill"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                toggleComplete(task.id);
+                              }}
+                            >
+                              {isDone ? "↩ Undo" : "✓ Mark done"}
+                            </button>
+                            <Link
+                              href="/creator/campaigns/demo-campaign-001"
+                              className="cw-pill"
+                            >
+                              View details
+                            </Link>
+                            <Link href="/creator/messages" className="cw-pill">
+                              Message merchant
+                            </Link>
                           </div>
                         )}
                       </div>
@@ -515,18 +731,18 @@ export default function WorkTodayPage() {
               </div>
             ))}
 
-            {/* Quick add task */}
-            <div className="wt-quick-add-zone">
+            {/* Quick add reminder */}
+            <div className="wt-add">
               {showAddForm ? (
                 <form
-                  className="wt-quick-add-form"
+                  className="wt-add__form"
                   onSubmit={(e) => {
                     e.preventDefault();
                     handleAddTask();
                   }}
                 >
                   <select
-                    className="wt-add-time-picker"
+                    className="wt-add__time"
                     value={addHour}
                     onChange={(e) => setAddHour(e.target.value)}
                     aria-label="Select time"
@@ -538,7 +754,7 @@ export default function WorkTodayPage() {
                     ))}
                   </select>
                   <input
-                    className="wt-add-text-input"
+                    className="wt-add__text"
                     type="text"
                     placeholder="Reminder note…"
                     value={addText}
@@ -548,14 +764,14 @@ export default function WorkTodayPage() {
                   />
                   <button
                     type="submit"
-                    className="wt-add-submit-btn"
+                    className="cw-pill cw-pill--urgent"
                     disabled={!addText.trim()}
                   >
                     Add
                   </button>
                   <button
                     type="button"
-                    className="wt-add-cancel-btn"
+                    className="cw-pill"
                     onClick={() => {
                       setShowAddForm(false);
                       setAddText("");
@@ -566,61 +782,79 @@ export default function WorkTodayPage() {
                 </form>
               ) : (
                 <button
-                  className="wt-quick-add-btn"
+                  type="button"
+                  className="wt-add__btn"
                   onClick={() => setShowAddForm(true)}
-                  aria-label="Add a custom reminder"
                 >
-                  <span className="wt-quick-add-icon">+</span>
-                  Add reminder
+                  <span aria-hidden="true">+</span> Add reminder
                 </button>
               )}
             </div>
           </div>
         </section>
 
-        {/* ── Sidebar — ONE card ──────────────────────────────── */}
-        <aside className="wt-sidebar">
-          {/* Active campaign CTA — primary action */}
-          {activeCampaign && !completedIds.has(activeCampaign.id) ? (
-            <div className="wt-cta-card">
-              <p className="wt-cta-eyebrow">ACTIVE NOW</p>
-              <p className="wt-cta-title">{activeCampaign.merchantName}</p>
-              <p className="wt-cta-desc">{activeCampaign.campaignName}</p>
-              <p className="wt-cta-earn">{activeCampaign.earnBadge} est.</p>
+        {/* ── UP NEXT rail ──────────────────────────────────── */}
+        <aside className="wt-rail">
+          <div className="cw-section-head">
+            <span className="cw-section-eyebrow">Up next</span>
+            <Link href="/creator/work/pipeline" className="cw-section-link">
+              All →
+            </Link>
+          </div>
+
+          {upcomingTasks.length === 0 ? (
+            <div className="cw-empty">
+              <p className="cw-empty__title">All clear after now.</p>
+              <p className="cw-empty__body">
+                Nothing else booked today. Browse Discover for tomorrow's
+                campaigns.
+              </p>
               <Link
-                href="/creator/campaigns/demo-campaign-001/post"
-                className="wt-cta-btn"
+                href="/creator/discover"
+                className="cw-pill cw-pill--urgent"
               >
-                Submit Content →
+                + Browse campaigns
               </Link>
             </div>
           ) : (
-            /* Pipeline shortcut when no active campaign */
-            <Link
-              href="/creator/work/pipeline"
-              className="wt-pipeline-shortcut"
-            >
-              <div className="wt-pipeline-shortcut-left">
-                <p className="wt-pipeline-shortcut-label">PIPELINE</p>
-                <p className="wt-pipeline-shortcut-sub">
-                  12 campaigns · $2,100 potential
-                </p>
-              </div>
-              <span className="wt-pipeline-shortcut-arrow">→</span>
-            </Link>
+            <div className="wt-rail__list">
+              {upcomingTasks.slice(0, 3).map((task) => (
+                <Link
+                  key={task.id}
+                  href="/creator/campaigns/demo-campaign-001"
+                  className="wt-rail__item"
+                >
+                  <div
+                    className="wt-rail__avatar"
+                    style={{ background: task.logoColor }}
+                    aria-hidden="true"
+                  >
+                    {task.logoInitials}
+                  </div>
+                  <div className="wt-rail__body">
+                    <p className="wt-rail__title">{task.merchantName}</p>
+                    <p className="wt-rail__sub">
+                      {formatTimeRange(task.time, task.endTime)} ·{" "}
+                      {task.category}
+                    </p>
+                  </div>
+                  <span className="wt-rail__pay">{task.earnBadge}</span>
+                </Link>
+              ))}
+            </div>
           )}
         </aside>
       </div>
 
-      {/* ── Empty state ──────────────────────────────────────── */}
+      {/* ── Empty state ───────────────────────────────────── */}
       {tasks.length === 0 && (
-        <div className="wt-empty">
-          <p className="wt-empty-title">No commitments today</p>
-          <p className="wt-empty-sub">
-            Take a break, or find your next opportunity
+        <div className="cw-empty wt-empty-day">
+          <p className="cw-empty__title">No commitments today.</p>
+          <p className="cw-empty__body">
+            Take a break, or find your next opportunity.
           </p>
-          <Link href="/creator/explore" className="wt-empty-cta">
-            Browse campaigns →
+          <Link href="/creator/discover" className="cw-pill cw-pill--urgent">
+            + Browse campaigns
           </Link>
         </div>
       )}

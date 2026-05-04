@@ -1,0 +1,131 @@
+/* ─────────────────────────────────────────────────────────────────
+ * Push — DemoBanner (floating bottom-right chip)
+ * Compact dark-glass pill that hovers above all content. Replaces the
+ * legacy full-width red top banner.
+ * ───────────────────────────────────────────────────────────────── */
+
+.demo-chip {
+  position: fixed;
+  bottom: 18px;
+  right: 18px;
+  z-index: 9999;
+
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  height: 34px;
+  padding: 0 10px 0 14px;
+  border-radius: 999px;
+
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(255, 255, 255, 0.18) 0%, rgba(255, 255, 255, 0) 60%),
+    rgba(28, 24, 20, 0.78);
+  -webkit-backdrop-filter: blur(28px) saturate(180%);
+  backdrop-filter:         blur(28px) saturate(180%);
+  border: 0.5px solid rgba(255, 255, 255, 0.14);
+  box-shadow:
+    0 8px 24px rgba(0, 0, 0, 0.22),
+    inset 0 1px 0 rgba(255, 255, 255, 0.10);
+
+  color: var(--snow, #fff);
+  font-family: var(--font-mono, monospace);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+
+  max-width: 220px;
+  transition:
+    max-width 280ms cubic-bezier(0.34, 1.56, 0.64, 1),
+    box-shadow 200ms ease,
+    background 200ms ease;
+}
+
+.demo-chip:hover {
+  max-width: 520px;
+  box-shadow:
+    0 12px 32px rgba(0, 0, 0, 0.28),
+    inset 0 1px 0 rgba(255, 255, 255, 0.16);
+}
+
+.demo-chip__dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--brand-red, #c1121f);
+  box-shadow: 0 0 0 2px rgba(193, 18, 31, 0.18);
+  flex-shrink: 0;
+}
+
+.demo-chip__label {
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.demo-chip__tip {
+  font-family: var(--font-mono, monospace);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  text-transform: none;
+  color: rgba(255, 255, 255, 0.78);
+  white-space: nowrap;
+  overflow: hidden;
+  max-width: 0;
+  opacity: 0;
+  margin-left: -10px;
+  transition:
+    max-width 280ms cubic-bezier(0.34, 1.56, 0.64, 1),
+    opacity 200ms ease,
+    margin-left 280ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.demo-chip:hover .demo-chip__tip {
+  max-width: 320px;
+  opacity: 1;
+  margin-left: 0;
+  transition-delay: 60ms;
+}
+
+.demo-chip__action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.10);
+  border: 0;
+  color: var(--snow, #fff);
+  cursor: pointer;
+  text-decoration: none;
+  flex-shrink: 0;
+  padding: 0;
+  transition: background 180ms ease, transform 180ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.demo-chip__action:hover {
+  background: rgba(255, 255, 255, 0.20);
+  transform: scale(1.08);
+}
+.demo-chip__action:active {
+  transform: scale(0.94);
+}
+
+/* Mobile — slightly smaller, snug to bottom-right corner */
+@media (max-width: 768px) {
+  .demo-chip {
+    bottom: 70px; /* clear of mobile bottom dock */
+    right: 12px;
+    height: 30px;
+    font-size: 10px;
+    padding: 0 8px 0 12px;
+    gap: 8px;
+    max-width: 180px;
+  }
+  .demo-chip:hover { max-width: calc(100vw - 24px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .demo-chip, .demo-chip__tip, .demo-chip__action {
+    transition: none !important;
+  }
+}

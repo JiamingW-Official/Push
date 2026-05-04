@@ -51,10 +51,32 @@ function initials(name: string): string {
     .toUpperCase();
 }
 
+/* ── Shared badge style ──────────────────────────────── */
+const badgeBase: React.CSSProperties = {
+  fontFamily: "var(--font-body)",
+  fontSize: 11,
+  fontWeight: 700,
+  letterSpacing: "0.06em",
+  textTransform: "uppercase",
+  borderRadius: 4,
+  padding: "2px 8px",
+  display: "inline-block",
+  whiteSpace: "nowrap",
+};
+
 /* ── Sub-components ──────────────────────────────────── */
 function RoleBadge({ role }: { role: UserRole }) {
+  const styles: Record<UserRole, { bg: string; color: string }> = {
+    creator: {
+      bg: "var(--accent-blue-tint)",
+      color: "var(--accent-blue)",
+    },
+    merchant: { bg: "var(--panel-butter)", color: "var(--ink-3)" },
+    admin: { bg: "var(--surface-3)", color: "var(--ink-4)" },
+  };
+  const s = styles[role];
   return (
-    <span className={`badge badge-role-${role}`}>
+    <span style={{ ...badgeBase, background: s.bg, color: s.color }}>
       {role === "creator"
         ? "Creator"
         : role === "merchant"
@@ -66,86 +88,138 @@ function RoleBadge({ role }: { role: UserRole }) {
 
 function TierBadge({ tier }: { tier?: string }) {
   if (!tier) return null;
-  return <span className={`badge badge-tier-${tier}`}>{tier}</span>;
+  return (
+    <span
+      style={{
+        ...badgeBase,
+        background: "var(--surface-3)",
+        color: "var(--ink-4)",
+      }}
+    >
+      {tier}
+    </span>
+  );
 }
 
 function StatusBadge({ status }: { status: AdminUser["status"] }) {
-  return <span className={`badge badge-status-${status}`}>{status}</span>;
+  const styles: Record<string, { bg: string; color: string }> = {
+    active: { bg: "var(--accent-blue-tint)", color: "var(--accent-blue)" },
+    pending: { bg: "var(--panel-butter)", color: "var(--ink-3)" },
+    suspended: {
+      bg: "rgba(193,18,31,0.10)",
+      color: "var(--brand-red)",
+    },
+    banned: { bg: "rgba(193,18,31,0.15)", color: "var(--brand-red)" },
+  };
+  const s = styles[status] ?? {
+    bg: "var(--surface-3)",
+    color: "var(--ink-4)",
+  };
+  return (
+    <span style={{ ...badgeBase, background: s.bg, color: s.color }}>
+      {status}
+    </span>
+  );
 }
 
 function KYCBadge({ status }: { status: KYCStatus }) {
   const labels: Record<KYCStatus, string> = {
-    verified: "KYC ✓",
+    verified: "KYC Verified",
     pending: "KYC Pending",
-    rejected: "KYC Fail",
+    rejected: "KYC Failed",
     not_submitted: "No KYC",
   };
-  return <span className={`badge badge-kyc-${status}`}>{labels[status]}</span>;
+  const styles: Record<KYCStatus, { bg: string; color: string }> = {
+    verified: { bg: "var(--accent-blue-tint)", color: "var(--accent-blue)" },
+    pending: { bg: "var(--panel-butter)", color: "var(--ink-3)" },
+    rejected: { bg: "rgba(193,18,31,0.10)", color: "var(--brand-red)" },
+    not_submitted: { bg: "var(--surface-3)", color: "var(--ink-4)" },
+  };
+  const s = styles[status];
+  return (
+    <span style={{ ...badgeBase, background: s.bg, color: s.color }}>
+      {labels[status]}
+    </span>
+  );
 }
 
 function UserAvatar({ user }: { user: AdminUser }) {
   const [imgError, setImgError] = useState(false);
   return (
-    <div className="user-avatar">
+    <div className="adm-avatar">
       {user.avatar && !imgError ? (
         // eslint-disable-next-line @next/next/no-img-element
-        <img
-          src={user.avatar}
-          alt={user.name}
-          onError={() => setImgError(true)}
-        />
+        <img src={user.avatar} alt="" onError={() => setImgError(true)} />
       ) : (
-        <div className="user-avatar-fallback">{initials(user.name)}</div>
+        <span className="adm-avatar__initials" aria-hidden="true">
+          {initials(user.name)}
+        </span>
       )}
     </div>
   );
 }
 
-/* ── Admin Sidebar ──────────────────────────────────── */
-function AdminSidebar({ active }: { active: string }) {
-  const navItems = [
-    { href: "/admin", icon: "◈", label: "Dashboard" },
-    { href: "/admin/users", icon: "◉", label: "Users" },
-    { href: "/admin/campaigns", icon: "◆", label: "Campaigns" },
-    { href: "/admin/payments", icon: "◐", label: "Payments" },
-    { href: "/admin/kyc", icon: "◑", label: "KYC Review" },
-    { href: "/admin/flags", icon: "⚑", label: "Flags" },
-    { href: "/admin/settings", icon: "◈", label: "Settings" },
-  ];
+/* ── Confirm Dialog (for destructive ops) ────────────── */
+function ConfirmDialog({
+  eyebrow,
+  title,
+  body,
+  confirmLabel,
+  variant,
+  onCancel,
+  onConfirm,
+}: {
+  eyebrow: string;
+  title: string;
+  body: React.ReactNode;
+  confirmLabel: string;
+  variant: "danger" | "primary";
+  onCancel: () => void;
+  onConfirm: () => void;
+}) {
+  useEffect(() => {
+    function onKey(e: KeyboardEvent) {
+      if (e.key === "Escape") onCancel();
+    }
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [onCancel]);
 
   return (
-    <aside className="admin-sidebar">
-      <div className="admin-sidebar-logo">
-        <div className="admin-sidebar-logo-text">Push</div>
-        <div className="admin-sidebar-logo-sub">Admin Console</div>
-      </div>
-
-      <nav className="admin-nav">
-        <div className="admin-nav-section">
-          <div className="admin-nav-label">Navigation</div>
-          {navItems.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={`admin-nav-item ${active === item.href ? "active" : ""}`}
-            >
-              <span className="admin-nav-icon">{item.icon}</span>
-              {item.label}
-            </Link>
-          ))}
+    <div
+      className="adm-confirm-overlay"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="adm-confirm-title"
+      onClick={onCancel}
+    >
+      <div className="adm-confirm" onClick={(e) => e.stopPropagation()}>
+        <div className="adm-confirm__header">
+          <div className="adm-confirm__eyebrow">{eyebrow}</div>
+          <h2 id="adm-confirm-title" className="adm-confirm__title">
+            {title}
+          </h2>
         </div>
-      </nav>
-
-      <div className="admin-sidebar-footer">
-        <div className="admin-sidebar-user">
-          <div className="admin-sidebar-avatar">A</div>
-          <div>
-            <div className="admin-sidebar-user-name">Admin Alex</div>
-            <div className="admin-sidebar-user-role">Super Admin</div>
-          </div>
+        <div className="adm-confirm__body">{body}</div>
+        <div className="adm-confirm__footer">
+          <button
+            type="button"
+            className="adm-confirm__btn adm-confirm__btn--cancel"
+            onClick={onCancel}
+            autoFocus
+          >
+            Cancel
+          </button>
+          <button
+            type="button"
+            className={`adm-confirm__btn adm-confirm__btn--${variant}`}
+            onClick={onConfirm}
+          >
+            {confirmLabel}
+          </button>
         </div>
       </div>
-    </aside>
+    </div>
   );
 }
 
@@ -161,6 +235,7 @@ export default function AdminUsersPage() {
     id: string;
     name: string;
   } | null>(null);
+  const [pendingSuspend, setPendingSuspend] = useState<AdminUser | null>(null);
 
   const fetchUsers = useCallback(async () => {
     const params = new URLSearchParams({
@@ -179,7 +254,6 @@ export default function AdminUsersPage() {
     fetchUsers();
   }, [fetchUsers]);
 
-  // Reset page on filter change
   useEffect(() => {
     setPage(1);
     setSelected(new Set());
@@ -213,8 +287,10 @@ export default function AdminUsersPage() {
     }
   }
 
-  async function handleSuspend(user: AdminUser, e: React.MouseEvent) {
-    e.stopPropagation();
+  async function confirmSuspend() {
+    if (!pendingSuspend) return;
+    const user = pendingSuspend;
+    setPendingSuspend(null);
     await fetch(`/api/admin/users/${user.id}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
@@ -223,6 +299,10 @@ export default function AdminUsersPage() {
       }),
     });
     fetchUsers();
+  }
+
+  function navigateToUser(id: string) {
+    window.location.href = `/admin/users/${id}`;
   }
 
   function handleExportCSV() {
@@ -270,6 +350,7 @@ export default function AdminUsersPage() {
     a.href = url;
     a.download = `push-users-${tab}-${new Date().toISOString().slice(0, 10)}.csv`;
     a.click();
+    URL.revokeObjectURL(url);
   }
 
   const stats = data?.stats;
@@ -282,180 +363,230 @@ export default function AdminUsersPage() {
     { key: "suspended", label: "Suspended", count: stats?.suspended },
   ];
 
-  return (
-    <div className="admin-shell">
-      <AdminSidebar active="/admin/users" />
+  const TABLE_COLS = [
+    "User",
+    "Role / Tier",
+    "Joined",
+    "Last Active",
+    "Status",
+    "KYC",
+    "Score",
+    "Actions",
+  ];
 
-      <main className="admin-main">
-        {/* Topbar */}
-        <div className="admin-topbar">
-          <div className="admin-topbar-breadcrumb">
-            Admin <span>/</span> <span>Users</span>
+  return (
+    <div style={{ fontFamily: "var(--font-body)", color: "var(--ink)" }}>
+      {/* Page header */}
+      <div className="adm-page-header">
+        <div>
+          <div className="adm-page-eyebrow">PUSH INTERNAL</div>
+          <h1 className="adm-page-title">Users</h1>
+        </div>
+        <button
+          type="button"
+          className="btn-ghost"
+          onClick={handleExportCSV}
+          aria-label="Export users to CSV"
+        >
+          Export CSV
+        </button>
+      </div>
+
+      {/* KPI row */}
+      <div
+        className="adm-kpi-grid"
+        style={{ gridTemplateColumns: "repeat(5,1fr)" }}
+      >
+        {[
+          {
+            label: "Total Users",
+            val: String(stats?.total ?? "—"),
+            color: "var(--ink)",
+          },
+          {
+            label: "Joined Today",
+            val: `+${stats?.todayJoined ?? 0}`,
+            color: "var(--accent-blue)",
+          },
+          {
+            label: "Creators",
+            val: String(stats?.creators ?? "—"),
+            color: "var(--ink)",
+          },
+          {
+            label: "Merchants",
+            val: String(stats?.merchants ?? "—"),
+            color: "var(--ink)",
+          },
+          {
+            label: "Suspended",
+            val: String(stats?.suspended ?? 0),
+            color: "var(--brand-red)",
+          },
+        ].map(({ label, val, color }) => (
+          <div key={label} className="adm-kpi-card">
+            <div className="adm-kpi-card__value" style={{ color }}>
+              {val}
+            </div>
+            <div className="adm-kpi-card__eyebrow">{label}</div>
           </div>
-          <div className="admin-topbar-actions">
+        ))}
+      </div>
+
+      {/* Tabs */}
+      <div className="adm-tabs" role="tablist" aria-label="User segment">
+        {tabs.map((t) => {
+          const isActive = tab === t.key;
+          const isSuspended = t.key === "suspended";
+          return (
             <button
-              className="btn-admin btn-admin-ghost"
+              key={t.key}
+              type="button"
+              role="tab"
+              aria-selected={isActive}
+              onClick={() => setTab(t.key)}
+              className={`adm-tab${isActive ? (isSuspended ? " active--danger" : " active") : ""}`}
+            >
+              {t.label}
+              {t.count !== undefined && (
+                <span className="adm-tab__count">{t.count}</span>
+              )}
+            </button>
+          );
+        })}
+      </div>
+
+      {/* Filter bar */}
+      <div className="adm-filter-bar">
+        <div className="adm-search-wrap">
+          <svg
+            className="adm-search-icon"
+            viewBox="0 0 16 16"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.8"
+            aria-hidden="true"
+          >
+            <circle cx="6.5" cy="6.5" r="4.5" />
+            <line x1="10.5" y1="10.5" x2="14" y2="14" />
+          </svg>
+          <input
+            type="search"
+            placeholder="Search name, email, handle…"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            aria-label="Search users"
+          />
+        </div>
+        <select
+          value={kycFilter}
+          onChange={(e) => setKycFilter(e.target.value)}
+          aria-label="Filter by KYC status"
+        >
+          <option value="all">All KYC</option>
+          <option value="verified">Verified</option>
+          <option value="pending">Pending</option>
+          <option value="rejected">Rejected</option>
+          <option value="not_submitted">Not Submitted</option>
+        </select>
+        <span
+          style={{
+            fontFamily: "var(--font-body)",
+            fontSize: 12,
+            color: "var(--ink-5)",
+            marginLeft: "auto",
+          }}
+          aria-live="polite"
+        >
+          {data?.total ?? 0} users
+        </span>
+      </div>
+
+      {/* Bulk bar */}
+      {selected.size > 0 && (
+        <div className="adm-bulk-bar" role="region" aria-label="Bulk actions">
+          <span>{selected.size} selected</span>
+          <div style={{ display: "flex", gap: 8, marginLeft: 8 }}>
+            <button
+              type="button"
+              className="adm-bulk-btn"
               onClick={handleExportCSV}
             >
               Export CSV
             </button>
+            <button type="button" className="adm-bulk-btn">
+              Send Email
+            </button>
+            <button type="button" className="adm-bulk-btn adm-bulk-btn--danger">
+              Suspend All
+            </button>
           </div>
+          <button
+            type="button"
+            className="adm-bulk-btn"
+            style={{ marginLeft: "auto" }}
+            onClick={() => setSelected(new Set())}
+          >
+            Clear
+          </button>
         </div>
+      )}
 
-        {/* Hero */}
-        <div className="users-hero">
-          <div className="users-hero-eyebrow">Push Admin — User Management</div>
-          <h1 className="users-hero-title">Users.</h1>
-          <div className="users-hero-stats">
-            <div className="users-hero-stat">
-              <div className="users-hero-stat-num">{stats?.total ?? "—"}</div>
-              <div className="users-hero-stat-label">Total Users</div>
-            </div>
-            <div className="users-hero-stat-divider" />
-            <div className="users-hero-stat">
-              <div className="users-hero-stat-num">
-                +{stats?.todayJoined ?? 0}
-              </div>
-              <div className="users-hero-stat-label">Joined Today</div>
-            </div>
-            <div className="users-hero-stat-divider" />
-            <div className="users-hero-stat">
-              <div className="users-hero-stat-num">
-                {stats?.creators ?? "—"}
-              </div>
-              <div className="users-hero-stat-label">Creators</div>
-            </div>
-            <div className="users-hero-stat-divider" />
-            <div className="users-hero-stat">
-              <div className="users-hero-stat-num">
-                {stats?.merchants ?? "—"}
-              </div>
-              <div className="users-hero-stat-label">Merchants</div>
-            </div>
-            <div className="users-hero-stat-divider" />
-            <div className="users-hero-stat">
-              <div className="users-hero-stat-num" style={{ color: "#f87171" }}>
-                {stats?.suspended ?? 0}
-              </div>
-              <div className="users-hero-stat-label">Suspended</div>
-            </div>
+      {/* Table */}
+      <div className="adm-table-wrap" style={{ overflowX: "auto" }}>
+        {!data ? (
+          <div className="adm-empty">
+            <p className="adm-empty__sub">Loading…</p>
           </div>
-        </div>
-
-        {/* Controls */}
-        <div className="users-controls">
-          <div className="users-tabs">
-            {tabs.map((t) => (
-              <button
-                key={t.key}
-                className={`users-tab ${tab === t.key ? "active" : ""}`}
-                onClick={() => setTab(t.key)}
-              >
-                {t.label}
-                {t.count !== undefined && (
-                  <span className="users-tab-count">{t.count}</span>
-                )}
-              </button>
-            ))}
+        ) : data.users.length === 0 ? (
+          <div className="adm-empty">
+            <h2 className="adm-empty__title">No users found</h2>
+            <p className="adm-empty__sub">Try adjusting your filters.</p>
           </div>
-
-          <div className="users-filters">
-            <div className="users-search">
-              <span className="users-search-icon">⌕</span>
-              <input
-                type="text"
-                placeholder="Search name, email, handle…"
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-              />
-            </div>
-
-            <select
-              className="filter-select"
-              value={kycFilter}
-              onChange={(e) => setKycFilter(e.target.value)}
-            >
-              <option value="all">All KYC</option>
-              <option value="verified">Verified</option>
-              <option value="pending">Pending</option>
-              <option value="rejected">Rejected</option>
-              <option value="not_submitted">Not Submitted</option>
-            </select>
-
-            <div className="users-filters-right">
-              <span style={{ fontSize: 13, color: "var(--text-muted)" }}>
-                {data?.total ?? 0} users
-              </span>
-            </div>
-          </div>
-
-          {/* Bulk bar */}
-          <div className={`bulk-bar ${selected.size > 0 ? "visible" : ""}`}>
-            <span className="bulk-bar-count">{selected.size} selected</span>
-            <div className="bulk-bar-actions">
-              <button
-                className="btn-admin btn-admin-ghost"
-                onClick={handleExportCSV}
-              >
-                Export CSV
-              </button>
-              <button className="btn-admin btn-admin-ghost">Send Email</button>
-              <button className="btn-admin btn-admin-danger">
-                Suspend All
-              </button>
-            </div>
-          </div>
-        </div>
-
-        {/* Table */}
-        <div className="users-table-wrap">
-          {!data ? (
-            <div className="users-empty">
-              <div className="users-empty-icon">◌</div>
-              <div className="users-empty-title">Loading…</div>
-            </div>
-          ) : data.users.length === 0 ? (
-            <div className="users-empty">
-              <div className="users-empty-icon">◯</div>
-              <div className="users-empty-title">No users found</div>
-              <div className="users-empty-sub">Try adjusting your filters.</div>
-            </div>
-          ) : (
-            <table className="users-table">
-              <thead>
-                <tr>
-                  <th className="col-check">
-                    <input
-                      type="checkbox"
-                      className="table-checkbox"
-                      checked={
-                        selected.size === data.users.length &&
-                        data.users.length > 0
-                      }
-                      onChange={toggleAll}
-                    />
+        ) : (
+          <table className="adm-table" style={{ minWidth: 900 }}>
+            <thead>
+              <tr>
+                <th style={{ width: 40, textAlign: "center" }}>
+                  <input
+                    type="checkbox"
+                    style={{ width: 14, height: 14 }}
+                    checked={
+                      selected.size === data.users.length &&
+                      data.users.length > 0
+                    }
+                    onChange={toggleAll}
+                    aria-label="Select all users on this page"
+                  />
+                </th>
+                {TABLE_COLS.map((h) => (
+                  <th key={h} scope="col">
+                    {h}
                   </th>
-                  <th className="sortable">User</th>
-                  <th className="sortable">Role / Tier</th>
-                  <th className="sortable">Joined</th>
-                  <th className="sortable">Last Active</th>
-                  <th className="sortable">Status</th>
-                  <th className="sortable">KYC</th>
-                  <th className="sortable">Score</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {data.users.map((user) => (
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {data.users.map((user) => {
+                const isSelected = selected.has(user.id);
+                const isSuspended = user.status === "suspended";
+                return (
                   <tr
                     key={user.id}
-                    className={selected.has(user.id) ? "selected" : ""}
-                    onClick={() =>
-                      (window.location.href = `/admin/users/${user.id}`)
-                    }
+                    className={isSelected ? "is-selected" : undefined}
+                    tabIndex={0}
+                    role="link"
+                    aria-label={`Open ${user.name}`}
+                    onClick={() => navigateToUser(user.id)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" || e.key === " ") {
+                        e.preventDefault();
+                        navigateToUser(user.id);
+                      }
+                    }}
                   >
                     <td
-                      className="col-check"
+                      style={{ textAlign: "center" }}
                       onClick={(e) => {
                         e.stopPropagation();
                         toggleSelect(user.id);
@@ -463,17 +594,42 @@ export default function AdminUsersPage() {
                     >
                       <input
                         type="checkbox"
-                        className="table-checkbox"
-                        checked={selected.has(user.id)}
+                        style={{ width: 14, height: 14 }}
+                        checked={isSelected}
                         onChange={() => toggleSelect(user.id)}
+                        onClick={(e) => e.stopPropagation()}
+                        aria-label={`Select ${user.name}`}
                       />
                     </td>
                     <td>
-                      <div className="user-cell">
+                      <div
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: 12,
+                        }}
+                      >
                         <UserAvatar user={user} />
                         <div>
-                          <div className="user-name">{user.name}</div>
-                          <div className="user-handle">{user.handle}</div>
+                          <div
+                            style={{
+                              fontFamily: "var(--font-body)",
+                              fontSize: 13,
+                              fontWeight: 600,
+                              color: "var(--ink)",
+                            }}
+                          >
+                            {user.name}
+                          </div>
+                          <div
+                            style={{
+                              fontFamily: "var(--font-body)",
+                              fontSize: 11,
+                              color: "var(--ink-5)",
+                            }}
+                          >
+                            {user.handle}
+                          </div>
                         </div>
                       </div>
                     </td>
@@ -497,106 +653,135 @@ export default function AdminUsersPage() {
                       {user.push_score > 0 ? (
                         <span
                           style={{
-                            fontWeight: 700,
+                            fontFamily: "var(--font-display)",
+                            fontSize: 16,
+                            fontWeight: 900,
                             color:
                               user.push_score >= 80
-                                ? "#15803d"
+                                ? "var(--accent-blue)"
                                 : user.push_score >= 50
-                                  ? "var(--dark)"
-                                  : "var(--graphite)",
+                                  ? "var(--ink)"
+                                  : "var(--ink-5)",
                           }}
                         >
                           {user.push_score}
                         </span>
                       ) : (
-                        <span style={{ color: "var(--text-muted)" }}>—</span>
+                        <span style={{ color: "var(--ink-5)" }}>—</span>
                       )}
                     </td>
-                    <td onClick={(e) => e.stopPropagation()}>
-                      <div className="table-actions">
+                    <td
+                      style={{ textAlign: "right" }}
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <div
+                        style={{
+                          display: "flex",
+                          gap: 8,
+                          justifyContent: "flex-end",
+                        }}
+                      >
                         <Link
                           href={`/admin/users/${user.id}`}
-                          className="action-btn"
+                          className="adm-row-btn adm-row-btn--view"
+                          aria-label={`View ${user.name} profile`}
+                          onClick={(e) => e.stopPropagation()}
                         >
                           View
                         </Link>
                         <button
-                          className="action-btn"
+                          type="button"
+                          className="adm-row-btn adm-row-btn--ghost"
                           onClick={(e) => handleImpersonate(user, e)}
+                          aria-label={`Impersonate ${user.name}`}
                         >
                           Impersonate
                         </button>
                         <button
-                          className={`action-btn ${user.status !== "suspended" ? "danger" : ""}`}
-                          onClick={(e) => handleSuspend(user, e)}
+                          type="button"
+                          className={
+                            isSuspended
+                              ? "adm-row-btn adm-row-btn--ghost"
+                              : "adm-row-btn adm-row-btn--danger"
+                          }
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setPendingSuspend(user);
+                          }}
+                          aria-label={
+                            isSuspended
+                              ? `Reinstate ${user.name}`
+                              : `Suspend ${user.name}`
+                          }
                         >
-                          {user.status === "suspended"
-                            ? "Unsuspend"
-                            : "Suspend"}
+                          {isSuspended ? "Reinstate" : "Suspend"}
                         </button>
                       </div>
                     </td>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          )}
-        </div>
-
-        {/* Pagination */}
-        {data && data.pages > 1 && (
-          <div className="users-pagination">
-            <div className="pagination-info">
-              Showing {(page - 1) * 20 + 1}–{Math.min(page * 20, data.total)} of{" "}
-              {data.total}
-            </div>
-            <div className="pagination-controls">
-              <button
-                className="pagination-btn"
-                disabled={page === 1}
-                onClick={() => setPage((p) => p - 1)}
-              >
-                ‹
-              </button>
-              {Array.from(
-                { length: Math.min(data.pages, 7) },
-                (_, i) => i + 1,
-              ).map((p) => (
-                <button
-                  key={p}
-                  className={`pagination-btn ${p === page ? "active" : ""}`}
-                  onClick={() => setPage(p)}
-                >
-                  {p}
-                </button>
-              ))}
-              <button
-                className="pagination-btn"
-                disabled={page === data.pages}
-                onClick={() => setPage((p) => p + 1)}
-              >
-                ›
-              </button>
-            </div>
-          </div>
+                );
+              })}
+            </tbody>
+          </table>
         )}
-      </main>
+      </div>
+
+      {/* Pagination */}
+      {data && data.pages > 1 && (
+        <div className="adm-pagination">
+          <div>
+            Showing {(page - 1) * 20 + 1}–{Math.min(page * 20, data.total)} of{" "}
+            {data.total}
+          </div>
+          <div className="adm-pagination__controls">
+            <button
+              type="button"
+              className="adm-page-btn"
+              disabled={page === 1}
+              onClick={() => setPage((p) => p - 1)}
+              aria-label="Previous page"
+            >
+              ‹
+            </button>
+            {Array.from(
+              { length: Math.min(data.pages, 7) },
+              (_, i) => i + 1,
+            ).map((p) => (
+              <button
+                key={p}
+                type="button"
+                className={`adm-page-btn${p === page ? " active" : ""}`}
+                onClick={() => setPage(p)}
+                aria-label={`Page ${p}`}
+                aria-current={p === page ? "page" : undefined}
+              >
+                {p}
+              </button>
+            ))}
+            <button
+              type="button"
+              className="adm-page-btn"
+              disabled={page === data.pages}
+              onClick={() => setPage((p) => p + 1)}
+              aria-label="Next page"
+            >
+              ›
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Impersonate banner */}
       {impersonating && (
-        <div className="impersonate-banner">
-          <div className="impersonate-banner-dot" />
+        <div className="adm-impersonate" role="status">
+          <div className="adm-impersonate__dot" aria-hidden="true" />
           Impersonating{" "}
           <strong style={{ margin: "0 4px" }}>{impersonating.name}</strong> —
           session active
           <button
-            className="btn-admin btn-admin-outline"
-            style={{
-              marginLeft: "auto",
-              background: "rgba(255,255,255,0.1)",
-              color: "white",
-              border: "1px solid rgba(255,255,255,0.2)",
-            }}
+            type="button"
+            className="adm-bulk-btn"
+            style={{ marginLeft: "auto" }}
             onClick={() => {
               document.cookie = "push-impersonating=; max-age=0; path=/";
               setImpersonating(null);
@@ -605,6 +790,49 @@ export default function AdminUsersPage() {
             End Session
           </button>
         </div>
+      )}
+
+      {/* Suspend / Reinstate confirmation */}
+      {pendingSuspend && (
+        <ConfirmDialog
+          eyebrow={
+            pendingSuspend.status === "suspended"
+              ? "REINSTATE USER"
+              : "SUSPEND USER"
+          }
+          title={
+            pendingSuspend.status === "suspended"
+              ? `Reinstate ${pendingSuspend.name}?`
+              : `Suspend ${pendingSuspend.name}?`
+          }
+          body={
+            pendingSuspend.status === "suspended" ? (
+              <>
+                <span className="adm-confirm__target">
+                  {pendingSuspend.handle}
+                </span>{" "}
+                will regain access immediately. Active campaign holds and KYC
+                state are preserved.
+              </>
+            ) : (
+              <>
+                <span className="adm-confirm__target">
+                  {pendingSuspend.handle}
+                </span>{" "}
+                will be locked out, all live applications cancelled, and pending
+                payouts held. This action is reversible.
+              </>
+            )
+          }
+          confirmLabel={
+            pendingSuspend.status === "suspended"
+              ? "Reinstate"
+              : "Suspend account"
+          }
+          variant={pendingSuspend.status === "suspended" ? "primary" : "danger"}
+          onCancel={() => setPendingSuspend(null)}
+          onConfirm={confirmSuspend}
+        />
       )}
     </div>
   );

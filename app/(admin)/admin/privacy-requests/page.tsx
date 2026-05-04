@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import "./privacy-requests.css";
 
 /**
  * /admin/privacy-requests — DSAR intake queue for Push ops.
@@ -25,6 +26,10 @@ interface Row {
   sec_until_due: number;
 }
 
+/**
+ * Returns days remaining as a display string.
+ * Kept as pure helper — no side effects.
+ */
 function formatDueBadge(sec: number, overdue: boolean): string {
   if (overdue) {
     const daysLate = Math.ceil(Math.abs(sec) / 86400);
@@ -34,6 +39,59 @@ function formatDueBadge(sec: number, overdue: boolean): string {
   if (daysLeft <= 1) return "DUE TODAY";
   if (daysLeft <= 7) return `${daysLeft}d left`;
   return `${daysLeft}d`;
+}
+
+/** Returns numeric days remaining (negative = overdue). */
+function daysRemaining(sec: number, overdue: boolean): number {
+  if (overdue) return -Math.ceil(Math.abs(sec) / 86400);
+  return Math.ceil(sec / 86400);
+}
+
+/** Maps status string → CSS modifier class on .pr-status-chip. */
+function statusChipClass(status: string): string {
+  switch (status) {
+    case "resolved":
+      return "pr-status-chip--resolved";
+    case "denied":
+      return "pr-status-chip--denied";
+    case "verifying":
+      return "pr-status-chip--verifying";
+    case "in-progress":
+    case "in_progress":
+      return "pr-status-chip--in-progress";
+    case "completed":
+      return "pr-status-chip--completed";
+    default:
+      return "pr-status-chip--open";
+  }
+}
+
+/** Maps request_type to readable label (uppercase). */
+function typeLabel(t: string): string {
+  switch (t.toLowerCase()) {
+    case "ccpa_deletion":
+    case "ccpa-deletion":
+      return "CCPA DEL";
+    case "ccpa_access":
+    case "ccpa-access":
+      return "CCPA ACCESS";
+    case "gdpr_deletion":
+    case "gdpr-deletion":
+      return "GDPR DEL";
+    case "gdpr_access":
+    case "gdpr-access":
+      return "GDPR ACCESS";
+    case "deletion":
+      return "DELETION";
+    case "access":
+      return "ACCESS";
+    case "ccpa":
+      return "CCPA";
+    case "gdpr":
+      return "GDPR";
+    default:
+      return t.toUpperCase();
+  }
 }
 
 export default function AdminPrivacyRequestsPage() {
@@ -88,201 +146,149 @@ export default function AdminPrivacyRequestsPage() {
   }
 
   return (
-    <div style={S.page}>
-      <header style={S.header}>
-        <p style={S.eyebrow}>ADMIN / PRIVACY</p>
-        <h1 style={S.title}>DSAR queue</h1>
-        <p style={S.lede}>
+    <div className="pr-page">
+      {/* ── Page header ── */}
+      <div className="pr-header">
+        {/* v11 product eyebrow: parenthetical mono */}
+        <div className="pr-eyebrow">(PRIVACY·REQUESTS)</div>
+        <h1 className="pr-title">DSAR queue</h1>
+        <p className="pr-desc">
           CCPA § 1798.130 deadline is 45 calendar days from receipt. Rows below
           are sorted by <code>due_at</code> ascending — the top row is the most
           urgent.
         </p>
-      </header>
+      </div>
 
-      {error && <div style={S.err}>{error}</div>}
+      <div className="pr-content">
+        {/* ── Error banner ── */}
+        {error && <div className="pr-error">{error}</div>}
 
-      {rows === null ? (
-        <p style={S.loading}>Loading…</p>
-      ) : rows.length === 0 ? (
-        <p style={S.empty}>No open privacy requests.</p>
-      ) : (
-        <table style={S.table}>
-          <thead>
-            <tr>
-              <th style={S.th}>TICKET</th>
-              <th style={S.th}>TYPE</th>
-              <th style={S.th}>RECEIVED</th>
-              <th style={S.th}>DUE</th>
-              <th style={S.th}>STATUS</th>
-              <th style={S.th}>ACTIONS</th>
-            </tr>
-          </thead>
-          <tbody>
-            {rows.map((r) => (
-              <tr key={r.ticket_id} style={r.overdue ? S.rowOverdue : S.row}>
-                <td style={S.td}>
-                  <code style={S.mono}>{r.ticket_id.slice(0, 8)}</code>
-                </td>
-                <td style={S.td}>{r.request_type}</td>
-                <td style={S.td}>
-                  <code style={S.mono}>{r.received_at.slice(0, 10)}</code>
-                </td>
-                <td style={S.td}>
-                  <span style={r.overdue ? S.dueOverdue : S.dueOK}>
-                    {formatDueBadge(r.sec_until_due, r.overdue)}
-                  </span>
-                </td>
-                <td style={S.td}>{r.status}</td>
-                <td style={S.td}>
-                  {r.status === "received" || r.status === "verifying" ? (
-                    <>
-                      <button
-                        type="button"
-                        style={S.btnResolve}
-                        disabled={acting === r.ticket_id}
-                        onClick={() => resolve(r.ticket_id, "resolved")}
-                      >
-                        Resolve
-                      </button>
-                      <button
-                        type="button"
-                        style={S.btnDeny}
-                        disabled={acting === r.ticket_id}
-                        onClick={() => resolve(r.ticket_id, "denied")}
-                      >
-                        Deny
-                      </button>
-                    </>
-                  ) : (
-                    <span style={S.muted}>—</span>
-                  )}
-                </td>
-              </tr>
+        {/* ── Loading ── */}
+        {rows === null ? (
+          <div className="pr-loading">Loading…</div>
+        ) : rows.length === 0 ? (
+          /* ── Empty state ── */
+          <div className="pr-card">
+            <div className="pr-empty-msg">No open privacy requests.</div>
+          </div>
+        ) : (
+          /* ── Request card with table ── */
+          <div className="pr-card">
+            {/* Table header */}
+            <div className="pr-table-head">
+              {["TICKET", "TYPE", "RECEIVED", "SLA", "STATUS", "ACTIONS"].map(
+                (h) => (
+                  <div key={h} className="pr-table-head__cell">
+                    {h}
+                  </div>
+                ),
+              )}
+            </div>
+
+            {/* Data rows */}
+            {rows.map((r) => {
+              const days = daysRemaining(r.sec_until_due, r.overdue);
+              const slaMod = r.overdue
+                ? "pr-sla-chip--overdue"
+                : days < 7
+                  ? "pr-sla-chip--critical"
+                  : days < 14
+                    ? "pr-sla-chip--warn"
+                    : "";
+
+              return (
+                <div
+                  key={r.ticket_id}
+                  className={`pr-row${r.overdue ? " pr-row--overdue" : ""}`}
+                >
+                  {/* Ticket ID */}
+                  <div>
+                    <code className="pr-ticket-id">
+                      {r.ticket_id.slice(0, 8)}
+                    </code>
+                  </div>
+
+                  {/* Request type badge (CCPA / GDPR / deletion / access) */}
+                  <div>
+                    <span className="pr-type-badge">
+                      {typeLabel(r.request_type)}
+                    </span>
+                  </div>
+
+                  {/* Received date — mono timestamp */}
+                  <div className="pr-date">{r.received_at.slice(0, 10)}</div>
+
+                  {/* SLA countdown — liquid-glass chip + Darky numeral */}
+                  <div>
+                    <span className={`pr-sla-chip ${slaMod}`}>
+                      <span className="pr-sla-chip__days">
+                        {formatDueBadge(r.sec_until_due, r.overdue)}
+                      </span>
+                    </span>
+                  </div>
+
+                  {/* Status chip */}
+                  <div>
+                    <span
+                      className={`pr-status-chip ${statusChipClass(r.status)}`}
+                    >
+                      {r.status}
+                    </span>
+                  </div>
+
+                  {/* Action buttons — Process → primary, Deny → ghost */}
+                  <div className="pr-actions">
+                    {r.status === "received" || r.status === "verifying" ? (
+                      <>
+                        {/* "Process" = resolve → btn-primary (brand-red) */}
+                        <button
+                          className="pr-btn-primary"
+                          disabled={acting === r.ticket_id}
+                          onClick={() => resolve(r.ticket_id, "resolved")}
+                        >
+                          Process
+                        </button>
+                        {/* "Reject" → btn-ghost */}
+                        <button
+                          className="pr-btn-ghost"
+                          disabled={acting === r.ticket_id}
+                          onClick={() => resolve(r.ticket_id, "denied")}
+                        >
+                          Reject
+                        </button>
+                      </>
+                    ) : (
+                      <span className="pr-actions__none">—</span>
+                    )}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
+
+        {/* ── SLA reference info card ── */}
+        <div className="pr-info-card">
+          <div className="pr-info-card__eyebrow">SLA reference</div>
+          <div className="pr-info-grid">
+            {[
+              { label: "CCPA deadline", value: "45 days", sub: "§ 1798.130" },
+              { label: "GDPR deadline", value: "30 days", sub: "Art. 12(3)" },
+              {
+                label: "Extension allowed",
+                value: "+45 days",
+                sub: "With notice to user",
+              },
+            ].map(({ label, value, sub }) => (
+              <div key={label}>
+                <div className="pr-info-stat__label">{label}</div>
+                <div className="pr-info-stat__value">{value}</div>
+                <div className="pr-info-stat__sub">{sub}</div>
+              </div>
             ))}
-          </tbody>
-        </table>
-      )}
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
-
-const S = {
-  page: {
-    minHeight: "100vh",
-    background: "var(--surface)",
-    color: "var(--dark)",
-    fontFamily: "var(--font-body)",
-    padding: "40px 24px",
-    maxWidth: "1080px",
-    margin: "0 auto",
-  } as React.CSSProperties,
-  header: { marginBottom: "24px" } as React.CSSProperties,
-  eyebrow: {
-    fontSize: "11px",
-    fontWeight: 700,
-    letterSpacing: "0.08em",
-    color: "var(--primary)",
-    marginBottom: "8px",
-  } as React.CSSProperties,
-  title: {
-    fontFamily: "var(--font-display)",
-    fontSize: "32px",
-    fontWeight: 800,
-    letterSpacing: "-0.02em",
-    marginBottom: "8px",
-  } as React.CSSProperties,
-  lede: {
-    fontSize: "13px",
-    color: "var(--graphite)",
-    lineHeight: 1.6,
-  } as React.CSSProperties,
-  loading: {
-    color: "var(--text-muted)",
-    fontSize: "13px",
-  } as React.CSSProperties,
-  empty: {
-    color: "var(--text-muted)",
-    fontSize: "13px",
-  } as React.CSSProperties,
-  err: {
-    padding: "12px 16px",
-    background: "rgba(193,18,31,0.06)",
-    border: "1px solid var(--primary)",
-    color: "var(--primary)",
-    marginBottom: "16px",
-    fontSize: "13px",
-  } as React.CSSProperties,
-  table: {
-    width: "100%",
-    borderCollapse: "collapse" as const,
-    fontSize: "13px",
-    background: "var(--surface-elevated)",
-    border: "1px solid var(--line)",
-  } as React.CSSProperties,
-  th: {
-    textAlign: "left" as const,
-    padding: "12px 16px",
-    fontSize: "11px",
-    fontWeight: 700,
-    letterSpacing: "0.08em",
-    color: "var(--text-muted)",
-    borderBottom: "2px solid var(--line)",
-  } as React.CSSProperties,
-  row: {
-    borderBottom: "1px solid var(--line)",
-  } as React.CSSProperties,
-  rowOverdue: {
-    borderBottom: "1px solid var(--line)",
-    background: "rgba(193,18,31,0.04)",
-  } as React.CSSProperties,
-  td: { padding: "12px 16px" } as React.CSSProperties,
-  mono: {
-    fontFamily: "var(--font-mono, monospace)",
-    fontSize: "12px",
-    color: "var(--dark)",
-  } as React.CSSProperties,
-  dueOK: {
-    display: "inline-block",
-    padding: "2px 8px",
-    background: "var(--surface)",
-    border: "1px solid var(--line)",
-    fontSize: "11px",
-    fontWeight: 600,
-  } as React.CSSProperties,
-  dueOverdue: {
-    display: "inline-block",
-    padding: "2px 8px",
-    background: "var(--primary)",
-    color: "#ffffff",
-    fontSize: "11px",
-    fontWeight: 700,
-    letterSpacing: "0.04em",
-  } as React.CSSProperties,
-  btnResolve: {
-    padding: "6px 12px",
-    background: "var(--dark)",
-    color: "#ffffff",
-    border: "none",
-    fontFamily: "var(--font-body)",
-    fontSize: "11px",
-    fontWeight: 700,
-    letterSpacing: "0.04em",
-    cursor: "pointer",
-    marginRight: "8px",
-  } as React.CSSProperties,
-  btnDeny: {
-    padding: "6px 12px",
-    background: "var(--surface-elevated)",
-    color: "var(--primary)",
-    border: "1px solid var(--primary)",
-    fontFamily: "var(--font-body)",
-    fontSize: "11px",
-    fontWeight: 700,
-    letterSpacing: "0.04em",
-    cursor: "pointer",
-  } as React.CSSProperties,
-  muted: {
-    color: "var(--text-muted)",
-    fontSize: "12px",
-  } as React.CSSProperties,
-};

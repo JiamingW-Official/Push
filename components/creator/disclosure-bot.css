@@ -4,7 +4,7 @@
    ============================================================ */
 
 .dbot {
-  background: var(--dark, #003049);
+  background: var(--ink);
   border: 1px solid rgba(245, 242, 236, 0.12);
   padding: 32px;
   display: flex;
@@ -68,7 +68,7 @@
   font-weight: 900;
   font-style: italic;
   letter-spacing: -0.04em;
-  color: var(--surface, #f5f2ec);
+  color: var(--surface);
 }
 
 /* Badge variants */
@@ -89,7 +89,7 @@
 }
 
 .dbot-badge-scanning {
-  color: var(--champagne, #c9a96e);
+  color: var(--champagne);
   border: 1px solid rgba(201, 169, 110, 0.35);
   animation: dbotPulse 1s ease-in-out infinite;
 }
@@ -100,7 +100,7 @@
 }
 
 .dbot-badge-fail {
-  color: var(--primary, #c1121f);
+  color: var(--brand-red);
   border: 1px solid rgba(193, 18, 31, 0.4);
 }
 
@@ -135,11 +135,11 @@
   font-family: "CS Genio Mono", monospace;
   font-size: 13px;
   line-height: 1.65;
-  color: var(--surface, #f5f2ec);
+  color: var(--surface);
   resize: vertical;
   outline: none;
   transition: border-color 200ms ease, background 200ms ease;
-  border-radius: 0;
+  border-radius: var(--r-lg);
 }
 
 .dbot-textarea::placeholder {
@@ -165,7 +165,7 @@
 .dbot-scan-btn {
   background: rgba(245, 242, 236, 0.06);
   border: 1.5px solid rgba(245, 242, 236, 0.2);
-  color: var(--surface, #f5f2ec);
+  color: var(--surface);
   font-family: "CS Genio Mono", monospace;
   font-size: 12px;
   font-weight: 700;
@@ -174,14 +174,14 @@
   cursor: pointer;
   transition: background 200ms ease, border-color 200ms ease, transform 100ms ease;
   text-align: left;
-  border-radius: 0;
+  border-radius: var(--r-lg);
   position: relative;
   overflow: hidden;
 }
 
 .dbot-scan-btn:hover:not(:disabled) {
-  background: var(--primary, #c1121f);
-  border-color: var(--primary, #c1121f);
+  background: var(--brand-red);
+  border-color: var(--brand-red);
 }
 
 .dbot-scan-btn:active:not(:disabled) {
@@ -213,7 +213,7 @@
   content: "";
   position: absolute;
   inset: 0;
-  background: var(--champagne, #c9a96e);
+  background: var(--champagne);
   animation: dbotScan 1.2s ease-in-out infinite;
   transform-origin: left;
 }
@@ -259,14 +259,14 @@
 }
 
 .dbot-result--verified .dbot-status-icon { color: var(--success); }
-.dbot-result--flagged  .dbot-status-icon { color: var(--primary, #c1121f); }
-.dbot-result--error    .dbot-status-icon { color: var(--champagne, #c9a96e); }
+.dbot-result--flagged  .dbot-status-icon { color: var(--brand-red); }
+.dbot-result--error    .dbot-status-icon { color: var(--champagne); }
 
 .dbot-status-text {
   font-family: "Darky", sans-serif;
   font-size: 1.0625rem;
   font-weight: 700;
-  color: var(--surface, #f5f2ec);
+  color: var(--surface);
 }
 
 .dbot-method-badge {
@@ -277,7 +277,7 @@
   padding: 3px 8px;
   background: rgba(201, 169, 110, 0.12);
   border: 1px solid rgba(201, 169, 110, 0.25);
-  color: var(--champagne, #c9a96e);
+  color: var(--champagne);
   margin-left: auto;
 }
 
@@ -308,7 +308,7 @@
   gap: 10px;
   padding: 16px;
   background: rgba(193, 18, 31, 0.06);
-  border-left: 3px solid var(--primary, #c1121f);
+  border-left: 3px solid var(--brand-red);
 }
 
 .dbot-suggestions-label {
@@ -316,7 +316,7 @@
   font-size: 10px;
   font-weight: 700;
   letter-spacing: 0.14em;
-  color: var(--primary, #c1121f);
+  color: var(--brand-red);
   margin: 0 0 4px;
 }
 
@@ -340,7 +340,7 @@
 }
 
 .dbot-suggestion-num {
-  color: var(--primary, #c1121f);
+  color: var(--brand-red);
   font-weight: 700;
   flex-shrink: 0;
   font-size: 11px;
@@ -367,7 +367,7 @@
   transition: color 150ms ease;
 }
 
-.dbot-footer-link:hover { color: var(--surface, #f5f2ec); }
+.dbot-footer-link:hover { color: var(--surface); }
 
 /* ── Reduced motion ───────────────────────────────────────── */
 

@@ -1,192 +1,88 @@
 "use client";
 
+/**
+ * Footer — v11 § 8.3 Darky Giant Wordmark + § 8.9.2 Tile Pair
+ * Editorial Blue rounded-top panel, two floating liquid-glass tiles peeking
+ * above the seam, 3-column parenthetical eyebrow grid, and a Darky 800 giant
+ * "PUSH" anchored bottom-left. Static wordmark — no hover shift (§ 0.8).
+ */
+
 import Link from "next/link";
-import { useEffect, useRef } from "react";
+import { BRAND } from "@/lib/constants/brand";
 import styles from "./Footer.module.css";
 
-/* ---- Social Icons (outline stroke only) ---- */
-const IconInstagram = () => (
-  <svg
-    width="18"
-    height="18"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="1.5"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    aria-hidden="true"
-  >
-    <rect x="2" y="2" width="20" height="20" rx="0" ry="0" />
-    <circle cx="12" cy="12" r="4" />
-    <circle cx="17.5" cy="6.5" r="0.5" fill="currentColor" stroke="none" />
-  </svg>
-);
-
-const IconTikTok = () => (
-  <svg
-    width="18"
-    height="18"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="1.5"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    aria-hidden="true"
-  >
-    <path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5" />
-  </svg>
-);
-
-const IconX = () => (
-  <svg
-    width="18"
-    height="18"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="1.5"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    aria-hidden="true"
-  >
-    <path d="M4 4l16 16M20 4L4 20" />
-  </svg>
-);
-
-const IconLinkedIn = () => (
-  <svg
-    width="18"
-    height="18"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="1.5"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    aria-hidden="true"
-  >
-    <rect x="2" y="2" width="20" height="20" rx="0" ry="0" />
-    <path d="M7 10v7M7 7v.01M12 17v-4a2 2 0 0 1 4 0v4M12 10v7" />
-  </svg>
-);
-
-/* ---- Link data ---- */
-const NAV_COLS = [
+/* ----------------- Nav data — 3-column marketing register ----------------- */
+const NAV_COLS: ReadonlyArray<{
+  label: string;
+  links: ReadonlyArray<{ label: string; href: string }>;
+}> = [
   {
-    label: "Product",
+    label: "(LINKS)",
     links: [
-      { label: "For Creators", href: "/#for-creators" },
-      { label: "For Merchants", href: "/for-merchants" },
-      { label: "Pricing", href: "/#pricing" },
-      { label: "Attribution", href: "/#attribution" },
+      { label: "For merchants", href: "/for-merchants" },
+      { label: "For creators", href: "/for-creators" },
+      { label: "Pricing", href: "/pricing" },
+      { label: "Get in touch", href: "/contact" },
     ],
   },
   {
-    label: "Company",
-    links: [
-      { label: "About", href: "/about" },
-      { label: "Careers", href: "/careers" },
-      { label: "Press", href: "/press" },
-      { label: "Contact", href: "/contact" },
-      { label: "Changelog", href: "/changelog" },
-    ],
-  },
-  {
-    label: "Resources",
-    links: [
-      { label: "Blog", href: "/blog" },
-      { label: "Help Center", href: "/help" },
-      { label: "FAQ", href: "/faq" },
-      { label: "API Docs", href: "/api-docs" },
-      { label: "Status", href: "/status" },
-    ],
-  },
-  {
-    label: "Legal",
+    label: "(LEGAL)",
     links: [
       { label: "Privacy", href: "/legal/privacy" },
       { label: "Terms", href: "/legal/terms" },
-      { label: "Cookies", href: "/legal/cookies" },
-      {
-        label: "Do Not Sell My Personal Information",
-        href: "/legal/privacy#do-not-sell",
-      },
-      { label: "Your Privacy Rights", href: "/legal/privacy#your-rights" },
+      { label: "Help center", href: "/help" },
     ],
   },
 ];
 
-const SOCIAL = [
-  {
-    href: "https://instagram.com/pushnyc",
-    label: "Instagram",
-    Icon: IconInstagram,
-  },
-  { href: "https://tiktok.com/@pushnyc", label: "TikTok", Icon: IconTikTok },
-  { href: "https://twitter.com/pushnyc", label: "X / Twitter", Icon: IconX },
-  {
-    href: "https://linkedin.com/company/pushnyc",
-    label: "LinkedIn",
-    Icon: IconLinkedIn,
-  },
+const SOCIAL_LINKS: ReadonlyArray<{ label: string; href: string }> = [
+  { label: "Instagram", href: "https://instagram.com/pushnyc" },
+  { label: "X / Twitter", href: "https://twitter.com/pushnyc" },
+  { label: "LinkedIn", href: "https://linkedin.com/company/pushnyc" },
 ];
 
-/* ---- Component ---- */
 export default function Footer() {
-  const bigTextRef = useRef<HTMLSpanElement>(null);
-
-  useEffect(() => {
-    const el = bigTextRef.current;
-    if (!el) return;
-
-    // Split "Push." into individual letter spans for stagger animation
-    const text = el.textContent || "";
-    el.textContent = "";
-    const spans = text.split("").map((char) => {
-      const s = document.createElement("span");
-      s.textContent = char;
-      s.className = styles.letter;
-      el.appendChild(s);
-      return s;
-    });
-
-    // IntersectionObserver — trigger once when footer enters viewport
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            spans.forEach((s, i) => {
-              s.style.transitionDelay = `${i * 60}ms`;
-              s.classList.add(styles.letterVisible);
-            });
-            observer.disconnect();
-          }
-        });
-      },
-      { threshold: 0.25 },
-    );
-
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, []);
-
   return (
-    <footer className={styles.footer}>
-      {/* Full-bleed top accent line */}
-      <div className={styles.accentLine} />
+    <footer className={styles.shell} aria-labelledby="footer-wordmark">
+      <div className={styles.panel}>
+        {/* Two liquid-glass tiles peeking above the rounded-top seam — § 8.9.2 */}
+        <div className={styles.tileRow} aria-hidden={false}>
+          <section
+            className={`${styles.tile} lg-surface lg-surface--footer-tile`}
+            aria-label="Newsletter"
+          >
+            <p className={styles.tileEyebrow}>(NEWSLETTER)</p>
+            <h3 className={styles.tileTitle}>Block-by-block dispatches.</h3>
+            <p className={styles.tileBody}>
+              Two emails a month. New merchants, new creators, what verified
+              attribution actually looks like.
+            </p>
+          </section>
 
-      <div className={styles.inner}>
-        {/* ---- Big editorial brand word ---- */}
-        <div className={styles.bigBrand}>
-          <span ref={bigTextRef} className={styles.bigText} aria-label="Push.">
-            Push.
-          </span>
+          <section
+            className={`${styles.tile} lg-surface lg-surface--footer-tile`}
+            aria-label="Social"
+          >
+            <p className={styles.tileEyebrow}>(CONNECT)</p>
+            <ul className={styles.tileSocialList}>
+              {SOCIAL_LINKS.map(({ label, href }) => (
+                <li key={label}>
+                  <a
+                    className={styles.tileSocialLink}
+                    href={href}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    {label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </section>
         </div>
 
-        {/* ---- Link columns ---- */}
-        <div className={styles.colGrid}>
+        {/* 3-column parenthetical eyebrow grid */}
+        <div className={styles.cols}>
           {NAV_COLS.map((col) => (
             <div key={col.label} className={styles.col}>
               <p className={styles.colLabel}>{col.label}</p>
@@ -194,43 +90,39 @@ export default function Footer() {
                 {col.links.map(({ label, href }) => (
                   <li key={label}>
                     <Link href={href} className={styles.colLink}>
-                      <span className={styles.linkInner}>{label}</span>
+                      {label}
                     </Link>
                   </li>
                 ))}
               </ul>
             </div>
           ))}
+
+          <div className={`${styles.col} ${styles.colCopyCol || ""}`}>
+            <p className={styles.colLabel}>(PUSH, INC.)</p>
+            <p className={styles.colCopy}>
+              {BRAND.legalName}
+              <br />
+              {BRAND.billingAddress.line1}
+              <br />
+              {BRAND.billingAddress.city}, {BRAND.billingAddress.state}{" "}
+              {BRAND.billingAddress.postal}
+            </p>
+            <p className={styles.colCopy}>
+              &copy; 2026 {BRAND.legalName}. Built in NYC.
+            </p>
+          </div>
         </div>
 
-        {/* ---- Bottom bar ---- */}
-        <div className={styles.bottomBar}>
-          <p className={styles.copy}>&copy; 2026 Push Inc. Built in NYC.</p>
-
-          {/* Language toggle */}
-          <div className={styles.langToggle}>
-            <button className={`${styles.langBtn} ${styles.langActive}`}>
-              EN
-            </button>
-            <span className={styles.langSep}>/</span>
-            <button className={styles.langBtn}>中文</button>
-          </div>
-
-          {/* Social icons */}
-          <div className={styles.social}>
-            {SOCIAL.map(({ href, label, Icon }) => (
-              <a
-                key={label}
-                href={href}
-                className={styles.socialLink}
-                aria-label={label}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <Icon />
-              </a>
-            ))}
-          </div>
+        {/* Giant Wordmark — bottom-left, static (no hover shift) — § 8.3 */}
+        <div className={styles.wordmarkRow}>
+          <span
+            id="footer-wordmark"
+            className={styles.wordmark}
+            aria-label={`${BRAND.name} — brand mark`}
+          >
+            {BRAND.name.toUpperCase()}
+          </span>
         </div>
       </div>
     </footer>

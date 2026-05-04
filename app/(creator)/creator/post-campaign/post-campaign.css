@@ -1,46 +1,62 @@
 /* ============================================================
    Post-Campaign Summary — post-campaign.css
-   Design System: border-radius: 0, Push brand colors
+   Design System v11: Liquid-Glass + 8px grid + unified buttons
    ============================================================ */
+
+/* ── Loading state ───────────────────────────────────────── */
+
+.pc-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background: var(--surface);
+  font-family: var(--font-body);
+  font-size: 12px;
+  color: var(--ink-4);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
 
 /* ── Page shell ──────────────────────────────────────────── */
 
-.pc-page {
-  min-height: 100svh;
-  background: #fafaf7;
-  display: flex;
-  flex-direction: column;
-  font-family: var(--font-body, "CS Genio Mono", monospace);
+.pc-page-shell {
+  background: var(--surface);
+  min-height: 100vh;
+  padding-bottom: 96px;
 }
 
-/* ── Hero panel ──────────────────────────────────────────── */
+.pc-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 0 64px;
+}
+
+/* ── Hero section ────────────────────────────────────────── */
 
 .pc-hero {
-  background: linear-gradient(160deg, #003049 0%, #780000 100%);
-  padding: var(--space-8, 64px) var(--space-4, 32px) var(--space-6, 48px);
-  text-align: center;
-  width: 100%;
-  position: relative;
-  overflow: hidden;
+  padding-top: 56px;
+  padding-bottom: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
 }
 
-/* Warm shimmer overlay on hero */
-.pc-hero::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(
-    ellipse 80% 60% at 50% 0%,
-    rgba(245, 242, 236, 0.08) 0%,
-    transparent 70%
-  );
-  pointer-events: none;
+/* Check icon tile — 40×40 surface/icon pattern then 56px red circle for checkmark */
+.pc-check-icon-tile {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--brand-red);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .pc-check-svg {
   width: 64px;
   height: 64px;
-  margin: 0 auto var(--space-3, 24px);
   display: block;
   animation: pc-icon-drop 600ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
@@ -52,232 +68,210 @@
 }
 
 @keyframes drawCheck {
-  to {
-    stroke-dashoffset: 0;
-  }
+  to { stroke-dashoffset: 0; }
 }
 
 @keyframes pc-icon-drop {
-  from {
-    transform: translateY(-20px);
-    opacity: 0;
-  }
-  to {
-    transform: translateY(0);
-    opacity: 1;
-  }
+  from { transform: translateY(-20px); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+
+.pc-hero-heading {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
 }
 
 .pc-hero-eyebrow {
-  color: #669bbc;
-  font-size: 11px;
+  font-family: var(--font-body);
+  font-size: 12px;
+  color: var(--ink-4);
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  letter-spacing: 0.1em;
-  font-weight: 700;
+  display: block;
   margin-bottom: 8px;
-  font-family: var(--font-body, "CS Genio Mono", monospace);
-  animation: pc-fade-up 500ms ease 200ms both;
 }
 
 .pc-hero-title {
-  font-family: var(--font-display, "Darky", serif);
-  font-weight: 800;
-  font-size: clamp(32px, 7vw, 52px);
-  color: #f5f2ec;
-  letter-spacing: -0.04em;
-  margin: 0 0 12px;
-  line-height: 1.0;
-  animation: pc-fade-up 500ms ease 300ms both;
+  font-family: var(--font-display);
+  font-size: 56px;
+  font-weight: 700;
+  color: var(--ink);
+  margin: 0;
+  line-height: 1.05;
 }
 
 .pc-hero-meta {
   display: flex;
   align-items: center;
-  justify-content: center;
   gap: 8px;
-  flex-wrap: wrap;
-  margin-top: 8px;
-  animation: pc-fade-up 500ms ease 400ms both;
 }
 
 .pc-merchant-name {
-  color: #f5f2ec;
+  font-family: var(--font-body);
   font-size: 14px;
-  opacity: 0.8;
-  font-family: var(--font-body, "CS Genio Mono", monospace);
+  color: var(--ink-3);
 }
 
 .pc-category-chip {
-  background: rgba(102, 155, 188, 0.2);
-  border: 1px solid rgba(102, 155, 188, 0.4);
-  color: #669bbc;
-  font-size: 11px;
+  font-family: var(--font-body);
+  font-size: 12px;
+  color: var(--ink-4);
+  background: var(--surface-3);
+  border: 1px solid var(--hairline);
+  border-radius: 40px;
+  padding: 2px 10px;
+}
+
+/* ── Liquid-Glass Payout Tile (celebration hero) ─────────── */
+
+.pc-payout-tile {
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 16px;
+  padding: 32px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  width: 100%;
+}
+
+.pc-payout-tile:focus-visible {
+  outline: 2px solid var(--brand-red);
+  outline-offset: 2px;
+}
+
+.pc-payout-amount {
+  font-family: var(--font-display);
+  font-size: clamp(56px, 8vw, 96px);
+  font-weight: 800;
+  color: var(--brand-red);
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+.pc-payout-label {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ink-3);
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  padding: 3px 8px;
-  font-family: var(--font-body, "CS Genio Mono", monospace);
-  font-weight: 700;
-  border-radius: 0;
 }
 
-/* Hero payout callout — large celebratory number */
-.pc-hero-payout {
-  margin-top: 24px;
-  animation: pc-fade-up 500ms ease 500ms both;
+/* ── Magvix Italic Signature Divider ─────────────────────── */
+
+.pc-divider {
+  font-family: var(--font-hero);
+  font-style: italic;
+  font-size: clamp(20px, 3vw, 28px);
+  color: var(--ink-3);
+  text-align: center;
+  padding: 32px 0;
+  letter-spacing: -0.01em;
+  pointer-events: none;
+  margin: 0;
 }
 
-.pc-hero-payout-label {
-  font-family: var(--font-body, "CS Genio Mono", monospace);
-  font-size: 11px;
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
-  color: rgba(245, 242, 236, 0.55);
-  margin-bottom: 4px;
-  display: block;
+/* ── Body section container ──────────────────────────────── */
+
+.pc-body-sections {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 
-.pc-hero-payout-amount {
-  font-family: var(--font-display, "Darky", serif);
-  font-weight: 900;
-  font-size: clamp(48px, 10vw, 80px);
-  color: #f5f2ec;
-  letter-spacing: -0.06em;
-  line-height: 1;
-  display: block;
-  text-shadow: 0 0 40px rgba(245, 242, 236, 0.25);
-}
-
-/* Glow pulse on amount in hero */
-.pc-hero-payout-amount.pc-glow-pulse {
-  animation: pc-amount-glow 2.5s ease-in-out 1s infinite;
-}
-
-@keyframes pc-amount-glow {
-  0%, 100% { text-shadow: 0 0 40px rgba(245, 242, 236, 0.25); }
-  50%       { text-shadow: 0 0 60px rgba(245, 242, 236, 0.5), 0 0 20px rgba(193, 18, 31, 0.3); }
-}
-
-/* ── Stagger fade-up animation for body sections ─────────── */
-
-@keyframes pc-fade-up {
-  from {
-    transform: translateY(20px);
-    opacity: 0;
-  }
-  to {
-    transform: translateY(0);
-    opacity: 1;
-  }
-}
-
-/* ── Body container ──────────────────────────────────────── */
-
-.pc-body {
-  max-width: 600px;
-  width: 100%;
-  margin: 0 auto;
-  padding: var(--space-5, 40px) var(--space-4, 32px) var(--space-10, 80px);
-  flex: 1;
-}
-
-/* ── Section card ────────────────────────────────────────── */
+/* ── Generic card panel ──────────────────────────────────── */
 
 .pc-section {
-  margin-bottom: var(--space-5, 40px);
-  background: white;
-  border: 1px solid rgba(0, 48, 73, 0.08);
-  padding: var(--space-4, 32px);
+  background: var(--surface-2);
+  border-radius: 10px;
+  padding: 24px;
 }
-
-/* Staggered entrance for body sections */
-.pc-section:nth-child(1) { animation: pc-fade-up 500ms ease 100ms both; }
-.pc-section:nth-child(2) { animation: pc-fade-up 500ms ease 200ms both; }
-.pc-section:nth-child(3) { animation: pc-fade-up 500ms ease 300ms both; }
-.pc-section:nth-child(4) { animation: pc-fade-up 500ms ease 400ms both; }
-.pc-section:nth-child(5) { animation: pc-fade-up 500ms ease 500ms both; }
 
 .pc-section-eyebrow {
-  color: #669bbc;
-  font-size: 11px;
+  font-family: var(--font-body);
+  font-size: 12px;
+  color: var(--ink-4);
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  letter-spacing: 0.1em;
-  font-weight: 700;
+  display: block;
   margin-bottom: 16px;
-  font-family: var(--font-body, "CS Genio Mono", monospace);
 }
 
-/* ── Results grid ────────────────────────────────────────── */
-
-.pc-results-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-  margin-top: 8px;
+/* wide margin variant for timeline section */
+.pc-section-eyebrow--wide-mb {
+  margin-bottom: 24px;
 }
 
-.pc-result-cell {
-  background: rgba(0, 48, 73, 0.03);
-  border: 1px solid rgba(0, 48, 73, 0.08);
-  padding: 16px;
-}
+/* ── Results Summary ─────────────────────────────────────── */
 
-.pc-result-cell-label {
-  font-family: var(--font-body, "CS Genio Mono", monospace);
-  font-size: 10px;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: rgba(0, 48, 73, 0.45);
-  margin-bottom: 6px;
-  display: block;
-}
-
-.pc-result-cell-value {
-  font-family: var(--font-display, "Darky", serif);
-  font-weight: 800;
-  font-size: 28px;
-  color: #003049;
-  letter-spacing: -0.04em;
-  line-height: 1;
-  display: block;
-}
-
-.pc-result-cell-sub {
-  font-family: var(--font-body, "CS Genio Mono", monospace);
-  font-size: 10px;
-  color: rgba(0, 48, 73, 0.4);
-  margin-top: 4px;
-  display: block;
-}
-
-/* Content images row */
-.pc-content-row {
+.pc-results-thumbs {
   display: flex;
   gap: 8px;
-  margin-top: 8px;
-  flex-wrap: wrap;
+  margin-bottom: 12px;
 }
 
 .pc-content-thumb {
   width: 72px;
   height: 72px;
-  background: rgba(0, 48, 73, 0.06);
-  border: 1px dashed rgba(0, 48, 73, 0.2);
+  background: var(--surface-3);
+  border: 1px solid var(--hairline);
+  border-radius: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-shrink: 0;
-}
-
-.pc-content-thumb-icon {
   font-size: 20px;
-  opacity: 0.3;
+  color: var(--ink-4);
 }
 
-.pc-content-label {
-  font-family: var(--font-body, "CS Genio Mono", monospace);
-  font-size: 11px;
-  color: rgba(0, 48, 73, 0.45);
-  margin-top: 8px;
+.pc-results-meta {
+  font-family: var(--font-body);
+  font-size: 12px;
+  color: var(--ink-4);
+  margin-bottom: 16px;
+}
+
+.pc-metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+
+.pc-metric-cell {
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  border-radius: 8px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.pc-metric-label {
+  font-family: var(--font-body);
+  font-size: 12px;
+  color: var(--ink-4);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.pc-metric-value {
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1;
+}
+
+.pc-metric-sub {
+  font-family: var(--font-body);
+  font-size: 12px;
+  color: var(--ink-4);
 }
 
 /* ── Timeline ────────────────────────────────────────────── */
@@ -289,214 +283,224 @@
 }
 
 .pc-timeline-item {
-  display: flex;
+  display: grid;
+  grid-template-columns: 40px 1fr;
   gap: 16px;
   position: relative;
-  padding-bottom: 20px;
 }
 
-.pc-timeline-item:last-child {
-  padding-bottom: 0;
+.pc-timeline-item--spaced {
+  padding-bottom: 24px;
 }
 
-.pc-timeline-item:last-child .pc-timeline-line {
-  display: none;
-}
-
-.pc-timeline-dot {
-  width: 12px;
-  height: 12px;
-  border-radius: 0;
-  flex-shrink: 0;
-  margin-top: 3px;
-}
-
-.pc-timeline-dot--done {
-  background: #c1121f;
-}
-
-.pc-timeline-dot--current {
-  background: #c1121f;
-  box-shadow: 0 0 0 4px rgba(193, 18, 31, 0.15);
-  animation: pulse-dot 2s infinite;
-}
-
-.pc-timeline-dot--pending {
-  background: transparent;
-  border: 2px solid rgba(0, 48, 73, 0.2);
-}
-
-.pc-timeline-line {
+/* Timeline connector line */
+.pc-timeline-connector {
   position: absolute;
-  left: 5px;
-  top: 16px;
-  width: 2px;
+  left: 19px;
+  top: 40px;
+  width: 1px;
+  background: var(--hairline);
   height: calc(100% - 16px);
-  background: rgba(0, 48, 73, 0.1);
 }
 
-@keyframes pulse-dot {
-  0%,
-  100% {
-    box-shadow: 0 0 0 4px rgba(193, 18, 31, 0.15);
-  }
-  50% {
-    box-shadow: 0 0 0 8px rgba(193, 18, 31, 0.08);
-  }
+.pc-timeline-connector--done {
+  background: var(--brand-red);
+}
+
+/* Icon tile — 40×40 with surface-3 bg + 10px radius */
+.pc-timeline-icon-tile {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: var(--surface-3);
+  border: 2px solid var(--hairline);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  z-index: 1;
+}
+
+.pc-timeline-icon-tile--done {
+  background: var(--brand-red);
+  border-color: var(--brand-red);
+}
+
+.pc-timeline-icon-tile--current {
+  background: var(--surface);
+  border-color: var(--brand-red);
+}
+
+.pc-timeline-icon-tile--pending {
+  background: var(--surface-3);
+  border-color: var(--hairline);
+}
+
+.pc-timeline-check {
+  color: var(--snow);
+  font-size: 14px;
+}
+
+.pc-timeline-pulse {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--brand-red);
 }
 
 .pc-timeline-content {
-  flex: 1;
+  padding-top: 8px;
 }
 
 .pc-timeline-label {
+  font-family: var(--font-body);
   font-size: 14px;
-  font-weight: 700;
-  color: #003049;
-  margin-bottom: 2px;
-  font-family: var(--font-body, "CS Genio Mono", monospace);
-}
-
-.pc-timeline-label--done {
-  color: #c1121f;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 4px;
 }
 
 .pc-timeline-label--pending {
-  color: rgba(0, 48, 73, 0.4);
+  color: var(--ink-4);
 }
 
 .pc-timeline-desc {
-  font-size: 12px;
-  color: rgba(0, 48, 73, 0.5);
-  font-family: var(--font-body, "CS Genio Mono", monospace);
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: var(--ink-4);
+  line-height: 1.5;
 }
 
-/* ── Score Impact section ────────────────────────────────── */
+/* ── Score Impact ────────────────────────────────────────── */
 
-.pc-score-impact {
+.pc-score-impact-callout {
   display: flex;
   align-items: center;
   gap: 16px;
-  margin-bottom: 20px;
+  margin-bottom: 16px;
   padding: 16px;
-  background: rgba(42, 157, 143, 0.06);
-  border: 1px solid rgba(42, 157, 143, 0.2);
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  border-radius: 8px;
 }
 
-.pc-score-impact-number {
-  font-family: var(--font-display, "Darky", serif);
-  font-weight: 900;
-  font-size: 40px;
-  color: #2a9d8f;
-  letter-spacing: -0.04em;
+.pc-score-delta-number {
+  font-family: var(--font-display);
+  font-size: clamp(40px, 5vw, 72px);
+  font-weight: 800;
+  color: var(--champagne);
   line-height: 1;
-  flex-shrink: 0;
 }
 
 .pc-score-impact-info {
-  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
 }
 
 .pc-score-impact-label {
-  font-family: var(--font-body, "CS Genio Mono", monospace);
+  font-family: var(--font-body);
   font-size: 13px;
-  font-weight: 700;
-  color: #003049;
-  display: block;
-  margin-bottom: 2px;
+  color: var(--ink);
+  font-weight: 600;
 }
 
 .pc-score-impact-sub {
-  font-family: var(--font-body, "CS Genio Mono", monospace);
-  font-size: 11px;
-  color: rgba(0, 48, 73, 0.5);
+  font-family: var(--font-body);
+  font-size: 12px;
+  color: var(--ink-4);
 }
 
-/* Before → After score transition */
 .pc-score-transition {
   display: flex;
   align-items: center;
   gap: 12px;
-  margin-bottom: 16px;
-  font-family: var(--font-body, "CS Genio Mono", monospace);
-  font-size: 13px;
+  margin-bottom: 12px;
 }
 
 .pc-score-before {
-  color: rgba(0, 48, 73, 0.5);
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: var(--ink-4);
 }
 
 .pc-score-arrow {
-  color: #2a9d8f;
-  font-size: 16px;
+  color: var(--ink-4);
+  font-size: 14px;
 }
 
 .pc-score-after {
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
-  color: #003049;
-  font-size: 15px;
+  color: var(--ink);
 }
 
-/* ── Score bar ───────────────────────────────────────────── */
-
-.pc-score-bar {
-  height: 6px;
-  background: rgba(0, 48, 73, 0.1);
-  position: relative;
-  margin: 12px 0;
-}
-
-.pc-score-fill {
-  height: 100%;
-  background: linear-gradient(90deg, #c1121f, #780000);
-  transition: width 1.2s cubic-bezier(0.22, 1, 0.36, 1) 500ms;
-}
-
-.pc-score-labels {
+/* Score bar labels */
+.pc-score-bar-labels {
   display: flex;
   justify-content: space-between;
-  font-size: 11px;
-  color: rgba(0, 48, 73, 0.5);
-  font-family: var(--font-body, "CS Genio Mono", monospace);
   margin-bottom: 4px;
 }
 
-.pc-score-delta {
-  font-family: var(--font-display, "Darky", serif);
-  font-weight: 900;
-  font-size: 32px;
-  color: #2a9d8f;
-  letter-spacing: -0.04em;
-  line-height: 1;
-  margin: 4px 0 8px;
+.pc-score-bar-label {
+  font-family: var(--font-body);
+  font-size: 12px;
+  color: var(--ink-4);
+}
+
+/* Tier progress bar — spec I */
+.pc-tier-bar-track {
+  height: 8px;
+  background: var(--surface-3);
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+
+.pc-tier-bar-fill {
+  height: 100%;
+  background: var(--brand-red);
+  border-radius: 4px;
+  transition: width 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .pc-score-disclaimer {
-  font-size: 11px;
-  color: rgba(0, 48, 73, 0.45);
-  font-family: var(--font-body, "CS Genio Mono", monospace);
+  font-family: var(--font-body);
+  font-size: 12px;
+  color: var(--ink-4);
+  font-style: italic;
+  margin: 0 0 12px;
+}
+
+.pc-score-next-info {
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: var(--ink-3);
+}
+
+.pc-score-close-alert {
+  margin-top: 12px;
+  padding: 8px 16px;
+  background: rgba(193, 18, 31, 0.08);
+  border: 1px solid rgba(193, 18, 31, 0.2);
+  border-radius: 8px;
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: var(--brand-red);
+  font-weight: 600;
 }
 
 /* ── Tier Progress ───────────────────────────────────────── */
 
-.pc-tier-progress {
-  margin-top: 12px;
-  font-size: 13px;
-  color: #003049;
-  font-family: var(--font-body, "CS Genio Mono", monospace);
-  background: rgba(0, 48, 73, 0.04);
-  padding: 10px 12px;
-  border-left: 3px solid #c1121f;
+.pc-tier-node-wrapper {
+  display: contents;
 }
 
-/* Mini tier journey */
 .pc-tier-journey {
   display: flex;
   align-items: center;
   gap: 0;
-  margin-top: 16px;
-  overflow-x: auto;
-  padding-bottom: 4px;
 }
 
 .pc-tier-node {
@@ -504,104 +508,247 @@
   flex-direction: column;
   align-items: center;
   gap: 6px;
-  min-width: 56px;
-  flex-shrink: 0;
 }
 
-.pc-tier-node-dot {
+.pc-tier-dot {
   width: 12px;
   height: 12px;
-  border-radius: 0;
-  background: rgba(0, 48, 73, 0.12);
-  border: 2px solid transparent;
+  border-radius: 50%;
+  background: var(--surface-3);
+  border: 2px solid var(--hairline);
   flex-shrink: 0;
-  position: relative;
-  z-index: 1;
 }
 
-.pc-tier-node-dot--done {
-  background: #c1121f;
-  border-color: #c1121f;
+.pc-tier-dot--done {
+  background: var(--brand-red);
+  border-color: var(--brand-red);
 }
 
-.pc-tier-node-dot--current {
-  background: #003049;
-  border-color: #003049;
-  box-shadow: 0 0 0 3px rgba(0, 48, 73, 0.2);
-  animation: pulse-dot 2s infinite;
+.pc-tier-dot--current {
+  width: 16px;
+  height: 16px;
+  background: var(--brand-red);
+  border: 3px solid var(--brand-red);
 }
 
-.pc-tier-node-dot--next {
-  background: transparent;
-  border-color: #c1121f;
-  animation: pc-border-pulse 2s ease-in-out infinite;
-}
-
-@keyframes pc-border-pulse {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(193, 18, 31, 0.3); }
-  50%       { box-shadow: 0 0 0 5px rgba(193, 18, 31, 0.1); }
-}
-
-.pc-tier-node-label {
-  font-family: var(--font-body, "CS Genio Mono", monospace);
-  font-size: 9px;
+.pc-tier-label {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--ink-4);
+  letter-spacing: 0.04em;
   text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: rgba(0, 48, 73, 0.4);
-  text-align: center;
+  white-space: nowrap;
 }
 
-.pc-tier-node-label--current {
-  color: #003049;
+.pc-tier-label--current {
+  font-size: 12px;
   font-weight: 700;
+  color: var(--brand-red);
 }
 
-.pc-tier-node-label--next {
-  color: #c1121f;
-  font-weight: 700;
+.pc-tier-label--next {
+  color: var(--ink-3);
+}
+
+.pc-tier-label--done {
+  color: var(--ink-3);
 }
 
 .pc-tier-connector {
   flex: 1;
   height: 2px;
-  background: rgba(0, 48, 73, 0.1);
+  background: var(--hairline);
+  margin-bottom: 22px;
   min-width: 16px;
-  margin-bottom: 18px;
 }
 
 .pc-tier-connector--done {
-  background: #c1121f;
+  background: var(--brand-red);
 }
 
-.pc-tier-urgency {
-  margin-top: 12px;
-  font-family: var(--font-body, "CS Genio Mono", monospace);
-  font-size: 12px;
-  color: #c1121f;
+.pc-tier-perk {
+  margin-top: 16px;
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: var(--ink-3);
+}
+
+/* Tier upgrade badge text — champagne accent */
+.pc-tier-upgrade-text {
+  color: var(--champagne);
+  font-weight: 600;
+}
+
+/* ── Payout Panel ────────────────────────────────────────── */
+
+.pc-payout-panel-amount {
+  font-family: var(--font-display);
+  font-size: 48px;
   font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
+  color: var(--ink);
+  line-height: 1;
+  margin-bottom: 8px;
+}
+
+.pc-payout-commission {
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: var(--ink-4);
+  margin: 0 0 12px;
+}
+
+.pc-payout-speed-badge {
+  display: inline-block;
+  font-family: var(--font-body);
+  font-size: 12px;
+  color: var(--ink-3);
+  background: var(--surface-3);
+  border: 1px solid var(--hairline);
+  border-radius: 40px;
+  padding: 4px 12px;
+}
+
+/* ── Merchant Feedback ───────────────────────────────────── */
+
+.pc-feedback-waiting {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 12px;
 }
 
-.pc-tier-urgency::before {
-  content: "";
-  display: inline-block;
-  width: 6px;
-  height: 6px;
-  background: #c1121f;
+.pc-feedback-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--ink-4);
   flex-shrink: 0;
-  animation: pulse-dot 1.5s infinite;
+  animation: pulse 2s infinite;
 }
 
-/* Tier upgrade celebration overlay */
+.pc-feedback-waiting-text {
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: var(--ink-4);
+}
+
+.pc-feedback-stars {
+  color: var(--brand-red);
+  font-size: 18px;
+  letter-spacing: 2px;
+  margin-bottom: 12px;
+}
+
+.pc-feedback-quote {
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: var(--ink-3);
+  line-height: 1.6;
+  font-style: italic;
+  margin: 0;
+}
+
+/* ── Next Steps ──────────────────────────────────────────── */
+
+.pc-next-steps-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 12px;
+}
+
+.pc-next-step-card {
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  border-radius: 10px;
+  padding: 24px;
+  text-decoration: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  cursor: pointer;
+  text-align: left;
+}
+
+.pc-next-step-card--primary {
+  background: var(--brand-red);
+  border-color: var(--brand-red);
+}
+
+.pc-next-step-icon {
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1;
+}
+
+.pc-next-step-card--primary .pc-next-step-icon {
+  color: var(--snow);
+}
+
+.pc-next-step-title {
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.pc-next-step-card--primary .pc-next-step-title {
+  color: var(--snow);
+}
+
+.pc-next-step-desc {
+  font-family: var(--font-body);
+  font-size: 12px;
+  color: var(--ink-4);
+}
+
+.pc-next-step-card--primary .pc-next-step-desc {
+  color: rgba(255, 255, 255, 0.75);
+}
+
+/* ── Bottom motivation ───────────────────────────────────── */
+
+.pc-motivation {
+  margin-top: 40px;
+  padding-top: 24px;
+  border-top: 1px solid var(--hairline);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.pc-motivation-count {
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: var(--ink-4);
+}
+
+.pc-motivation-tagline {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+/* ── Milestone badge — champagne accent ──────────────────── */
+
+.pc-milestone-badge {
+  color: var(--champagne);
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* ── Tier Upgrade Celebration Overlay ────────────────────── */
+
 .pc-celebration {
   position: fixed;
   inset: 0;
   z-index: 9000;
-  background: rgba(0, 48, 73, 0.95);
+  background: rgba(0, 0, 0, 0.85);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -625,16 +772,16 @@
   width: 8px;
   height: 8px;
   box-shadow:
-    10vw 5vh 0 0 #c1121f,
-    20vw 8vh 0 0 #f5f2ec,
-    35vw 3vh 0 0 #669bbc,
-    50vw 12vh 0 0 #c1121f,
-    65vw 6vh 0 0 #f5f2ec,
-    80vw 10vh 0 0 #669bbc,
-    90vw 4vh 0 0 #c1121f,
-    15vw 15vh 0 0 #f5f2ec,
-    45vw 18vh 0 0 #c1121f,
-    75vw 7vh 0 0 #f5f2ec;
+    10vw 5vh 0 0 var(--brand-red),
+    20vw 8vh 0 0 var(--surface),
+    35vw 3vh 0 0 var(--n2w-blue),
+    50vw 12vh 0 0 var(--brand-red),
+    65vw 6vh 0 0 var(--surface),
+    80vw 10vh 0 0 var(--n2w-blue),
+    90vw 4vh 0 0 var(--brand-red),
+    15vw 15vh 0 0 var(--surface),
+    45vw 18vh 0 0 var(--brand-red),
+    75vw 7vh 0 0 var(--surface);
   animation: pc-cele-fall 2.5s linear infinite;
 }
 
@@ -642,49 +789,49 @@
   width: 5px;
   height: 5px;
   box-shadow:
-    5vw 10vh 0 0 #f5f2ec,
-    25vw 20vh 0 0 #c1121f,
-    55vw 5vh 0 0 #669bbc,
-    70vw 15vh 0 0 #f5f2ec,
-    85vw 9vh 0 0 #c1121f,
-    40vw 22vh 0 0 #669bbc,
-    60vw 3vh 0 0 #f5f2ec;
+    5vw 10vh 0 0 var(--surface),
+    25vw 20vh 0 0 var(--brand-red),
+    55vw 5vh 0 0 var(--n2w-blue),
+    70vw 15vh 0 0 var(--surface),
+    85vw 9vh 0 0 var(--brand-red),
+    40vw 22vh 0 0 var(--n2w-blue),
+    60vw 3vh 0 0 var(--surface);
   animation: pc-cele-fall 3.5s linear 0.8s infinite;
 }
 
 @keyframes pc-cele-fall {
-  0%   { transform: translateY(-20px) rotate(0deg);    opacity: 1; }
-  100% { transform: translateY(110vh) rotate(540deg);  opacity: 0; }
+  0%   { transform: translateY(-20px) rotate(0deg);   opacity: 1; }
+  100% { transform: translateY(110vh) rotate(540deg); opacity: 0; }
 }
 
 .pc-celebration-eyebrow {
-  font-family: var(--font-body, "CS Genio Mono", monospace);
-  font-size: 11px;
+  font-family: var(--font-body);
+  font-size: 12px;
   text-transform: uppercase;
   letter-spacing: 0.12em;
-  color: #669bbc;
+  color: var(--n2w-blue);
   margin-bottom: 16px;
   position: relative;
   z-index: 1;
 }
 
 .pc-celebration-title {
-  font-family: var(--font-display, "Darky", serif);
+  font-family: var(--font-display);
   font-weight: 900;
   font-size: clamp(36px, 8vw, 64px);
-  color: #f5f2ec;
+  color: var(--surface);
   letter-spacing: -0.04em;
-  line-height: 1.0;
+  line-height: 1;
   margin-bottom: 8px;
   position: relative;
   z-index: 1;
 }
 
 .pc-celebration-tier {
-  font-family: var(--font-display, "Darky", serif);
+  font-family: var(--font-display);
   font-weight: 900;
   font-size: clamp(28px, 6vw, 48px);
-  color: #c1121f;
+  color: var(--champagne);
   letter-spacing: -0.02em;
   margin-bottom: 24px;
   position: relative;
@@ -692,7 +839,7 @@
 }
 
 .pc-celebration-desc {
-  font-family: var(--font-body, "CS Genio Mono", monospace);
+  font-family: var(--font-body);
   font-size: 13px;
   color: rgba(245, 242, 236, 0.6);
   max-width: 360px;
@@ -703,263 +850,46 @@
 }
 
 .pc-celebration-dismiss {
-  font-family: var(--font-body, "CS Genio Mono", monospace);
+  font-family: var(--font-body);
   font-size: 12px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: #f5f2ec;
-  background: #c1121f;
+  color: var(--snow);
+  background: var(--brand-red);
   border: none;
   padding: 14px 28px;
   cursor: pointer;
-  border-radius: 0;
+  border-radius: 8px;
   position: relative;
   z-index: 1;
-  transition: background 150ms ease;
+  transition: transform 150ms ease, box-shadow 150ms ease;
 }
 
 .pc-celebration-dismiss:hover {
-  background: #780000;
+  transform: translate(2px, 2px);
 }
 
-/* ── Payout ──────────────────────────────────────────────── */
+/* ── Focus-visible ───────────────────────────────────────── */
 
-.pc-payout-amount {
-  font-family: var(--font-display, "Darky", serif);
-  font-weight: 900;
-  font-size: 48px;
-  color: #003049;
-  letter-spacing: -0.06em;
-  line-height: 1;
-  margin-bottom: 8px;
+.pc-payout-tile:focus-visible,
+button:focus-visible {
+  outline: 2px solid var(--brand-red);
+  outline-offset: 2px;
 }
 
-.pc-payout-commission {
-  font-size: 13px;
-  color: rgba(0, 48, 73, 0.6);
-  font-family: var(--font-body, "CS Genio Mono", monospace);
-  margin-bottom: 12px;
+/* ── Stagger fade-up animation ───────────────────────────── */
+
+@keyframes pc-fade-up {
+  from { transform: translateY(20px); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
 }
 
-.pc-payout-badge {
-  display: inline-block;
-  background: rgba(0, 48, 73, 0.06);
-  border: 1px solid rgba(0, 48, 73, 0.12);
-  color: #003049;
-  font-size: 11px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  padding: 4px 10px;
-  font-family: var(--font-body, "CS Genio Mono", monospace);
-  border-radius: 0;
-}
+/* ── Pulse animation (merchant feedback dot) ─────────────── */
 
-/* ── Next Steps CTA grid ─────────────────────────────────── */
-
-.pc-next-steps-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-  margin-top: 8px;
-}
-
-.pc-next-step-card {
-  background: rgba(0, 48, 73, 0.03);
-  border: 1px solid rgba(0, 48, 73, 0.1);
-  padding: 16px;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  text-decoration: none;
-  transition: background 150ms ease, border-color 150ms ease;
-  cursor: pointer;
-}
-
-.pc-next-step-card:hover {
-  background: rgba(0, 48, 73, 0.06);
-  border-color: rgba(0, 48, 73, 0.2);
-}
-
-.pc-next-step-card--primary {
-  grid-column: 1 / -1;
-  background: #003049;
-  border-color: #003049;
-}
-
-.pc-next-step-card--primary:hover {
-  background: #780000;
-  border-color: #780000;
-}
-
-.pc-next-step-icon {
-  font-size: 18px;
-  line-height: 1;
-}
-
-.pc-next-step-title {
-  font-family: var(--font-body, "CS Genio Mono", monospace);
-  font-size: 12px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: #003049;
-}
-
-.pc-next-step-card--primary .pc-next-step-title {
-  color: #f5f2ec;
-  font-size: 13px;
-}
-
-.pc-next-step-desc {
-  font-family: var(--font-body, "CS Genio Mono", monospace);
-  font-size: 10px;
-  color: rgba(0, 48, 73, 0.5);
-  line-height: 1.4;
-}
-
-.pc-next-step-card--primary .pc-next-step-desc {
-  color: rgba(245, 242, 236, 0.55);
-}
-
-/* ── Actions ─────────────────────────────────────────────── */
-
-.pc-actions {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  margin-top: var(--space-5, 40px);
-}
-
-.pc-primary-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  height: 52px;
-  background: #c1121f;
-  color: white;
-  font-family: var(--font-body, "CS Genio Mono", monospace);
-  font-weight: 700;
-  font-size: 14px;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  text-decoration: none;
-  border-radius: 0;
-  border: none;
-  cursor: pointer;
-  transition: background 150ms ease;
-}
-
-.pc-primary-btn:hover {
-  background: #780000;
-}
-
-.pc-secondary-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  height: 44px;
-  border: 2px solid rgba(0, 48, 73, 0.2);
-  background: transparent;
-  color: #003049;
-  font-family: var(--font-body, "CS Genio Mono", monospace);
-  font-weight: 700;
-  font-size: 13px;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  text-decoration: none;
-  border-radius: 0;
-  cursor: pointer;
-  transition: border-color 150ms ease, background 150ms ease;
-}
-
-.pc-secondary-btn:hover {
-  border-color: rgba(0, 48, 73, 0.4);
-  background: rgba(0, 48, 73, 0.03);
-}
-
-.pc-share-note {
-  font-size: 12px;
-  color: rgba(0, 48, 73, 0.5);
-  text-align: center;
-  font-family: var(--font-body, "CS Genio Mono", monospace);
-  padding: 4px 0;
-}
-
-/* ── Merchant Feedback ───────────────────────────────────── */
-
-.pc-feedback-waiting {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 16px;
-  background: rgba(0, 48, 73, 0.03);
-  border: 1px dashed rgba(0, 48, 73, 0.18);
-}
-
-.pc-feedback-waiting-dot {
-  width: 8px;
-  height: 8px;
-  background: #669bbc;
-  flex-shrink: 0;
-  animation: pulse-dot 2s infinite;
-}
-
-.pc-feedback-waiting-text {
-  font-family: var(--font-body, "CS Genio Mono", monospace);
-  font-size: 12px;
-  color: rgba(0, 48, 73, 0.55);
-}
-
-/* Star rating display */
-.pc-feedback-stars {
-  display: flex;
-  gap: 4px;
-  margin-bottom: 8px;
-}
-
-.pc-feedback-star {
-  font-size: 18px;
-  color: rgba(0, 48, 73, 0.15);
-}
-
-.pc-feedback-star--filled {
-  color: #c1121f;
-}
-
-.pc-feedback-comment {
-  font-family: var(--font-body, "CS Genio Mono", monospace);
-  font-size: 13px;
-  color: #003049;
-  line-height: 1.6;
-  border-left: 3px solid rgba(0, 48, 73, 0.12);
-  padding-left: 12px;
-  margin-top: 8px;
-  font-style: italic;
-}
-
-/* ── Bottom motivation ───────────────────────────────────── */
-
-.pc-motivation {
-  text-align: center;
-  font-family: var(--font-body, "CS Genio Mono", monospace);
-  font-size: 14px;
-  color: rgba(0, 48, 73, 0.6);
-  padding: var(--space-4, 32px) var(--space-4, 32px) var(--space-8, 64px);
-}
-
-.pc-motivation-count {
-  font-weight: 700;
-  color: #003049;
-  margin-bottom: 6px;
-}
-
-.pc-motivation-tagline {
-  font-style: italic;
-  color: rgba(0, 48, 73, 0.5);
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.4; }
 }
 
 /* ── Reduced motion ──────────────────────────────────────── */
@@ -969,27 +899,32 @@
     animation: none;
     stroke-dashoffset: 0;
   }
-
-  .pc-timeline-dot--current,
-  .pc-tier-node-dot--current,
-  .pc-tier-node-dot--next,
-  .pc-feedback-waiting-dot {
-    animation: none;
-  }
-
-  .pc-score-fill {
-    transition: none;
-  }
-
-  .pc-hero-payout-amount.pc-glow-pulse,
   .pc-check-svg,
-  .pc-hero-eyebrow,
-  .pc-hero-title,
-  .pc-hero-meta,
-  .pc-hero-payout,
-  .pc-section,
   .pc-celebration-confetti::before,
   .pc-celebration-confetti::after {
     animation: none;
+  }
+  .pc-tier-bar-fill {
+    transition: none;
+  }
+  .pc-feedback-dot {
+    animation: none;
+  }
+}
+
+/* ── Responsive ──────────────────────────────────────────── */
+
+@media (max-width: 768px) {
+  .pc-container {
+    padding: 0 24px;
+  }
+  .pc-metrics-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .pc-next-steps-grid {
+    grid-template-columns: 1fr;
+  }
+  .pc-hero-title {
+    font-size: clamp(40px, 8vw, 56px);
   }
 }

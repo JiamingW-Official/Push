@@ -4,7 +4,6 @@ import { useParams } from "next/navigation";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { createClient } from "@/lib/db/browser";
-import { CampaignChecklist } from "@/components/creator/CampaignChecklist";
 import { TierBadge } from "@/components/creator/TierBadge";
 import "./campaign.css";
 
@@ -40,6 +39,7 @@ type Campaign = {
   status: string;
   category: string;
   image?: string;
+  images?: string[];
   tier_required: CreatorTier;
   requirements: string[];
   lat: number;
@@ -89,15 +89,6 @@ const TIER_COMMISSION: Record<CreatorTier, number> = {
   proven: 5,
   closer: 7,
   partner: 10,
-};
-
-const CATEGORY_BG: Record<string, string> = {
-  "Food & Drink": "#003049",
-  Lifestyle: "#780000",
-  Beauty: "#c1121f",
-  Fashion: "#002035",
-  Fitness: "#003049",
-  Tech: "#002035",
 };
 
 const MILESTONES: { key: MilestoneStatus; label: string }[] = [
@@ -297,6 +288,293 @@ const DEMO_CAMPAIGNS: Campaign[] = [
     ],
     tier_required: "seed",
   },
+  /* ── Discover-feed campaigns (kept in sync with workspace/discover/page.tsx) ── */
+  {
+    id: "disc-001",
+    merchant_id: "disc-merchant-001",
+    title: "Rooftop Coffee Series",
+    description:
+      "Capture the rooftop atmosphere at Blank Street's Williamsburg location across a 4-week series. Each week, post a new angle — golden hour, the espresso pour, the regulars, the skyline. We're after a slow-build narrative, not a one-off post.",
+    payout: 32,
+    spots_total: 20,
+    spots_remaining: 6,
+    deadline: "2026-05-10T23:59:00Z",
+    status: "active",
+    lat: 40.7141,
+    lng: -73.9614,
+    category: "Coffee",
+    business_name: "Blank Street Coffee",
+    business_address: "Williamsburg Rooftop, Brooklyn, NY 11211",
+    requirements: [
+      "Post once per week for 4 weeks",
+      "Tag @blankstreetcoffee",
+      "Include rooftop ambiance footage",
+    ],
+    tier_required: "seed",
+    images: [
+      "https://images.unsplash.com/photo-1442512595331-e89e73853f31?w=1600&h=1200&fit=crop&q=85",
+      "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=1600&h=1200&fit=crop&q=85",
+      "https://images.unsplash.com/photo-1521017432531-fbd92d768814?w=1600&h=1200&fit=crop&q=85",
+    ],
+  },
+  {
+    id: "disc-002",
+    merchant_id: "disc-merchant-002",
+    title: "Chelsea Market Food Walk",
+    description:
+      "Walk Chelsea Market end-to-end across 4 vendors and one rooftop bite. Reel format: a single take if possible, or 5 cuts max. Show the textures, the pours, the lines — make it feel like the right Saturday afternoon.",
+    payout: 45,
+    spots_total: 10,
+    spots_remaining: 2,
+    deadline: "2026-05-08T23:59:00Z",
+    status: "active",
+    lat: 40.7422,
+    lng: -74.0051,
+    category: "FOOD & DRINK",
+    business_name: "Chelsea Market",
+    business_address: "75 9th Ave, New York, NY 10011",
+    requirements: [
+      "Feature at least 4 vendors",
+      "Tag @chelseamarket and each vendor",
+      "Reel format, posted within 48h",
+    ],
+    tier_required: "explorer",
+    images: [
+      "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=1600&h=1200&fit=crop&q=85",
+      "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=1600&h=1200&fit=crop&q=85",
+      "https://images.unsplash.com/photo-1544025162-d76694265947?w=1600&h=1200&fit=crop&q=85",
+      "https://images.unsplash.com/photo-1432139509613-5c4255815697?w=1600&h=1200&fit=crop&q=85",
+    ],
+  },
+  {
+    id: "disc-003",
+    merchant_id: "disc-merchant-003",
+    title: "Flatiron Brunch Story",
+    description:
+      "Eataly's Flatiron flagship is launching a weekend brunch program. Tell the story across 6 Instagram Story frames + a reel. We want the dough being stretched, the espresso being pulled, and the crowd settling in — a Sunday morning postcard.",
+    payout: 60,
+    spots_total: 8,
+    spots_remaining: 4,
+    deadline: "2026-05-12T23:59:00Z",
+    status: "active",
+    lat: 40.7412,
+    lng: -73.9897,
+    category: "FOOD & DRINK",
+    business_name: "Eataly NYC Flatiron",
+    business_address: "200 5th Ave, New York, NY 10010",
+    requirements: [
+      "6+ Story frames + 1 Reel",
+      "Tag @eatalyflatiron",
+      "Filmed on a weekend before 12pm",
+    ],
+    tier_required: "explorer",
+    images: [
+      "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1600&h=1200&fit=crop&q=85",
+      "https://images.unsplash.com/photo-1473093295043-cdd812d0e601?w=1600&h=1200&fit=crop&q=85",
+      "https://images.unsplash.com/photo-1551183053-bf91a1d81141?w=1600&h=1200&fit=crop&q=85",
+    ],
+  },
+  {
+    id: "disc-004",
+    merchant_id: "disc-merchant-004",
+    title: "Pilates Studio Grand Opening",
+    description:
+      "Forma Pilates is opening its third Manhattan studio in Chelsea. We need creators to capture a class — pre-class arrival, the equipment setup, mid-class form, and post-class glow. The studio will host a free creator session you can build the content around.",
+    payout: 40,
+    spots_total: 12,
+    spots_remaining: 7,
+    deadline: "2026-05-20T23:59:00Z",
+    status: "active",
+    lat: 40.747,
+    lng: -73.9983,
+    category: "FITNESS",
+    business_name: "Forma Pilates Chelsea",
+    business_address: "245 W 17th St, New York, NY 10011",
+    requirements: [
+      "Attend the opening-week creator class",
+      "Tag @formapilates and #FormaChelsea",
+      "Post a 30s+ Reel within 72h of class",
+    ],
+    tier_required: "operator",
+    images: [
+      "https://images.unsplash.com/photo-1518611012118-696072aa579a?w=1600&h=1200&fit=crop&q=85",
+      "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=1600&h=1200&fit=crop&q=85",
+      "https://images.unsplash.com/photo-1554284126-aa88f22d8b74?w=1600&h=1200&fit=crop&q=85",
+      "https://images.unsplash.com/photo-1599447421416-3414500d18a5?w=1600&h=1200&fit=crop&q=85",
+      "https://images.unsplash.com/photo-1591291621164-2c6367723315?w=1600&h=1200&fit=crop&q=85",
+    ],
+  },
+  {
+    id: "disc-005",
+    merchant_id: "disc-merchant-005",
+    title: "Gallery Opening Night",
+    description:
+      "Tara Downs is debuting a new exhibition with an opening night reception. Cover the room — the work, the crowd, the small overheard quotes. Three Stories + one Reel; preserve the gallery's tone (quiet, considered, not loud).",
+    payout: 75,
+    spots_total: 6,
+    spots_remaining: 3,
+    deadline: "2026-05-05T23:59:00Z",
+    status: "active",
+    lat: 40.745,
+    lng: -74.004,
+    category: "LIFESTYLE",
+    business_name: "Tara Downs Gallery",
+    business_address: "519 W 27th St, New York, NY 10001",
+    requirements: [
+      "3 Stories + 1 Reel from opening night",
+      "Tag @taradownsgallery",
+      "No flash photography",
+    ],
+    tier_required: "operator",
+    images: [
+      "https://images.unsplash.com/photo-1531058020387-3be344556be6?w=1600&h=1200&fit=crop&q=85",
+      "https://images.unsplash.com/photo-1545987796-200677ee1011?w=1600&h=1200&fit=crop&q=85",
+      "https://images.unsplash.com/photo-1577720580479-7d839d829c73?w=1600&h=1200&fit=crop&q=85",
+    ],
+  },
+  {
+    id: "disc-006",
+    merchant_id: "disc-merchant-006",
+    title: "Beauty Lab Skincare Series",
+    description:
+      "Bluemercury SoHo is launching the Beauty Lab — a hands-on skincare consultation experience. Document a 45-min consultation: intake, product trials, the recommendation reveal. 4-frame Story set + a 60s Reel.",
+    payout: 55,
+    spots_total: 8,
+    spots_remaining: 5,
+    deadline: "2026-05-15T23:59:00Z",
+    status: "active",
+    lat: 40.7239,
+    lng: -74.0019,
+    category: "BEAUTY",
+    business_name: "Bluemercury SoHo",
+    business_address: "120 Spring St, New York, NY 10012",
+    requirements: [
+      "Book a free Beauty Lab consult",
+      "Tag @bluemercury",
+      "4-frame Story + 60s Reel",
+    ],
+    tier_required: "explorer",
+    images: [
+      "https://images.unsplash.com/photo-1556228720-195a672e8a03?w=1600&h=1200&fit=crop&q=85",
+      "https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=1600&h=1200&fit=crop&q=85",
+      "https://images.unsplash.com/photo-1571781926291-c477ebfd024b?w=1600&h=1200&fit=crop&q=85",
+    ],
+  },
+  {
+    id: "disc-007",
+    merchant_id: "disc-merchant-007",
+    title: "Boutique Opening Campaign",
+    description:
+      "Madewell SoHo is reopening after a full renovation. Capture the new space — the wood, the natural light, the upgraded denim bar — with one polished Reel. Remote OK if you've shot Madewell campaigns before.",
+    payout: 28,
+    spots_total: 15,
+    spots_remaining: 10,
+    deadline: "2026-05-20T23:59:00Z",
+    status: "active",
+    lat: 40.7225,
+    lng: -73.9974,
+    category: "RETAIL",
+    business_name: "Madewell SoHo",
+    business_address: "486 Broadway, New York, NY 10013",
+    requirements: [
+      "1 polished Reel of the renovated space",
+      "Tag @madewell",
+      "Post within 5 days of filming",
+    ],
+    tier_required: "seed",
+    images: [
+      "https://images.unsplash.com/photo-1567401893414-76b7b1e5a7a5?w=1600&h=1200&fit=crop&q=85",
+      "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=1600&h=1200&fit=crop&q=85",
+      "https://images.unsplash.com/photo-1551488831-00ddcb6c6bd3?w=1600&h=1200&fit=crop&q=85",
+    ],
+  },
+  {
+    id: "disc-008",
+    merchant_id: "disc-merchant-008",
+    title: "Morning Ritual Brew",
+    description:
+      "Free entry experience: arrive before 9am at Intelligentsia West Village, capture your morning ritual (the line, the order, your first sip), and tag us. Aimed at morning-routine creators with a slow, considered cinematography style.",
+    payout: 0,
+    spots_total: 20,
+    spots_remaining: 14,
+    deadline: "2026-05-18T23:59:00Z",
+    status: "active",
+    lat: 40.734,
+    lng: -74.0054,
+    category: "Coffee",
+    business_name: "Intelligentsia Coffee",
+    business_address: "180 W 10th St, New York, NY 10014",
+    requirements: [
+      "Filmed before 9am on a weekday",
+      "Tag @intelligentsia",
+      "Slow, ambient editing style",
+    ],
+    tier_required: "seed",
+    images: [
+      "https://images.unsplash.com/photo-1497935586351-b67a49e012bf?w=1600&h=1200&fit=crop&q=85",
+      "https://images.unsplash.com/photo-1559056199-641a0ac8b55e?w=1600&h=1200&fit=crop&q=85",
+      "https://images.unsplash.com/photo-1517649763962-0c623066013b?w=1600&h=1200&fit=crop&q=85",
+    ],
+  },
+  {
+    id: "disc-009",
+    merchant_id: "disc-merchant-009",
+    title: "Wellness Studio Launch",
+    description:
+      "The Well NYC is opening a new flagship in Midtown. Cover the launch as a half-day editorial: the lobby, the breathwork class, the tea room, the rooftop. Long-form Reel + 5 Stories. Selective tier; we want a polished, magazine-quality result.",
+    payout: 85,
+    spots_total: 5,
+    spots_remaining: 1,
+    deadline: "2026-05-06T23:59:00Z",
+    status: "active",
+    lat: 40.7561,
+    lng: -73.9864,
+    category: "WELLNESS",
+    business_name: "The Well NYC",
+    business_address: "30 W 25th St, New York, NY 10010",
+    requirements: [
+      "Half-day on-site coverage",
+      "Long-form Reel + 5 Stories",
+      "Tag @the.well",
+    ],
+    tier_required: "proven",
+    images: [
+      "https://images.unsplash.com/photo-1545205597-3d9d02c29597?w=1600&h=1200&fit=crop&q=85",
+      "https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=1600&h=1200&fit=crop&q=85",
+      "https://images.unsplash.com/photo-1544161515-4ab6ce6db874?w=1600&h=1200&fit=crop&q=85",
+      "https://images.unsplash.com/photo-1591343395082-e120087004b4?w=1600&h=1200&fit=crop&q=85",
+    ],
+  },
+  {
+    id: "disc-010",
+    merchant_id: "disc-merchant-010",
+    title: "Farm-to-Table Dinner Series",
+    description:
+      "Blue Hill is running an invitation-only weekend dinner series. Document one full evening — the kitchen, the courses, the room. We'll seat you at a table for two. Closer/Partner tier campaign; high editorial bar.",
+    payout: 250,
+    spots_total: 2,
+    spots_remaining: 1,
+    deadline: "2026-05-20T23:59:00Z",
+    status: "active",
+    lat: 40.7317,
+    lng: -74.0002,
+    category: "FOOD & DRINK",
+    business_name: "Blue Hill Restaurant",
+    business_address: "75 Washington Pl, New York, NY 10011",
+    requirements: [
+      "Attend invited Saturday dinner",
+      "Course-by-course editorial coverage",
+      "Tag @bluehillfarm",
+    ],
+    tier_required: "closer",
+    images: [
+      "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=1600&h=1200&fit=crop&q=85",
+      "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=1600&h=1200&fit=crop&q=85",
+      "https://images.unsplash.com/photo-1467003909585-2f8a72700288?w=1600&h=1200&fit=crop&q=85",
+      "https://images.unsplash.com/photo-1559339352-11d035aa65de?w=1600&h=1200&fit=crop&q=85",
+      "https://images.unsplash.com/photo-1551218372-a8789b81b253?w=1600&h=1200&fit=crop&q=85",
+    ],
+  },
 ];
 
 const DEMO_CREATOR: Creator = {
@@ -314,8 +592,8 @@ const DEMO_MILESTONE_BY_CAMPAIGN: Record<string, MilestoneStatus> = {
   "demo-campaign-004": "content_published",
   "demo-campaign-005": "accepted",
   "demo-campaign-006": "scheduled",
-  "demo-campaign-007": "accepted",
-  "demo-campaign-008": "accepted",
+  "demo-campaign-007": "verified",
+  "demo-campaign-008": "settled",
 };
 
 function formatDeadline(iso: string): string {
@@ -335,11 +613,112 @@ function isEligible(creatorTier: CreatorTier, required: CreatorTier): boolean {
   return TIER_ORDER.indexOf(creatorTier) >= TIER_ORDER.indexOf(required);
 }
 
+/* ── Hero gallery (multi-image, prev/next arrows) ────────── */
+function CampaignGallery({ images, alt }: { images: string[]; alt: string }) {
+  const [idx, setIdx] = useState(0);
+  const total = images.length;
+  const prev = () => setIdx((i) => (i - 1 + total) % total);
+  const next = () => setIdx((i) => (i + 1) % total);
+
+  return (
+    <div className="cp-gallery">
+      <div className="cp-gallery-frame">
+        {images.map((src, i) => (
+          /* eslint-disable-next-line @next/next/no-img-element */
+          <img
+            key={src}
+            className={`cp-gallery-img${i === idx ? " cp-gallery-img--active" : ""}`}
+            src={src}
+            alt={i === 0 ? alt : ""}
+            loading={i === 0 ? "eager" : "lazy"}
+          />
+        ))}
+        <div className="cp-gallery-grad" aria-hidden="true" />
+
+        {total > 1 && (
+          <>
+            <button
+              type="button"
+              className="cp-gallery-arrow cp-gallery-arrow--prev"
+              onClick={prev}
+              aria-label="Previous photo"
+            >
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 18 18"
+                fill="none"
+                aria-hidden="true"
+              >
+                <path
+                  d="M11 3L5 9L11 15"
+                  stroke="currentColor"
+                  strokeWidth="1.8"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </button>
+            <button
+              type="button"
+              className="cp-gallery-arrow cp-gallery-arrow--next"
+              onClick={next}
+              aria-label="Next photo"
+            >
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 18 18"
+                fill="none"
+                aria-hidden="true"
+              >
+                <path
+                  d="M7 3L13 9L7 15"
+                  stroke="currentColor"
+                  strokeWidth="1.8"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </button>
+            <span className="cp-gallery-counter">
+              {idx + 1} / {total}
+            </span>
+          </>
+        )}
+      </div>
+
+      {total > 1 && (
+        <div className="cp-gallery-thumbs">
+          {images.map((src, i) => (
+            <button
+              key={src}
+              type="button"
+              className={`cp-gallery-thumb${i === idx ? " cp-gallery-thumb--active" : ""}`}
+              onClick={() => setIdx(i)}
+              aria-label={`View photo ${i + 1}`}
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={src} alt="" loading="lazy" />
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ── Milestone progress tracker ──────────────────────────── */
 function MilestoneTrack({ current }: { current: MilestoneStatus }) {
   const currentIdx = MILESTONE_ORDER.indexOf(current);
   return (
-    <div className="cp-milestone-track">
-      <p className="cp-milestone-header">Campaign Progress</p>
+    <div className="cp-milestone-track candy-panel">
+      <p
+        className="eyebrow"
+        style={{ marginBottom: 16, color: "var(--ink-3)" }}
+      >
+        CAMPAIGN PROGRESS
+      </p>
       <div className="cp-milestone-steps">
         {MILESTONES.map((m, i) => {
           const isDone = i < currentIdx;
@@ -384,54 +763,347 @@ function MilestoneTrack({ current }: { current: MilestoneStatus }) {
   );
 }
 
-function MilestoneActionArea({ milestone }: { milestone: MilestoneStatus }) {
-  const config: Record<
-    MilestoneStatus,
-    { label: string; cta: string; secondary?: string } | null
-  > = {
-    accepted: {
-      label: "Next Step",
-      cta: "Schedule Your Visit",
-      secondary: "View Business Info",
-    },
-    scheduled: {
-      label: "Your Visit is Scheduled",
-      cta: "Submit Visit Proof",
-      secondary: "Reschedule",
-    },
-    visited: { label: "You Visited — Submit Proof", cta: "Submit Proof" },
-    proof_submitted: {
-      label: "Proof Under Review — Publish Your Content",
-      cta: "Submit Content Link",
-    },
-    content_published: {
-      label: "Content Submitted — Awaiting Verification",
-      cta: "View Submission",
-      secondary: "Contact Support",
-    },
-    verified: {
-      label: "Verified — Payout Processing",
-      cta: "View Payout Status",
-    },
-    settled: null,
-  };
-  const step = config[milestone];
+/* ── Current Step Section ────────────────────────────────────
+   Replaces the legacy <CampaignChecklist> below the page.
+   Renders ONE state at a time, mapped to the active milestone:
+   review → preparation → confirmed → countdown → proof → verify → done.
+   Sits as the first card in the main column when applied. */
+type StepBeat = { num: string; title: string; meta: string };
+type CurrentStep = {
+  eyebrow: string; // mono uppercase, e.g. "STAGE 02 · PREPARATION"
+  hero: string; // big H2 title for the panel
+  body: string; // body description
+  meta?: string; // optional supplemental line (timing, countdown)
+  metaTone?: "info" | "success" | "warn";
+  beats?: StepBeat[]; // optional 3-4 actionable beats
+  cta: string; // primary action label
+  secondary?: string; // optional secondary action
+};
+
+function buildCurrentStep(milestone: MilestoneStatus): CurrentStep | null {
+  switch (milestone) {
+    case "accepted":
+      return {
+        eyebrow: "STAGE 02 · PREPARATION",
+        hero: "Get ready for your visit",
+        body: "Forma Pilates approved your application. Lock a date in the next 48 hours so they can plan staffing for your shoot.",
+        meta: "Most creators schedule within 24 hours",
+        metaTone: "info",
+        beats: [
+          {
+            num: "01",
+            title: "Review the brief",
+            meta: "Read what they need + tagging rules",
+          },
+          {
+            num: "02",
+            title: "Pick a visit slot",
+            meta: "Pre-class window works best",
+          },
+          {
+            num: "03",
+            title: "Confirm with Forma",
+            meta: "They'll send a calendar invite",
+          },
+        ],
+        cta: "Schedule visit",
+        secondary: "View brief",
+      };
+    case "scheduled":
+      return {
+        eyebrow: "STAGE 03 · CONFIRMED",
+        hero: "Visit confirmed for May 5, 10:00 AM",
+        body: "Your slot at Forma Pilates Chelsea is locked in. Arrive 10 minutes early, scan the Push QR at the front desk, then capture per the brief.",
+        meta: "4 days, 3 hours to go",
+        metaTone: "info",
+        beats: [
+          {
+            num: "01",
+            title: "Re-read brief the night before",
+            meta: "Visualize your shot list",
+          },
+          {
+            num: "02",
+            title: "Charge your phone, clear storage",
+            meta: "Min 2GB free for 4K reel",
+          },
+          {
+            num: "03",
+            title: "Note the @handle",
+            meta: "@formapilates · #FormaChelsea",
+          },
+        ],
+        cta: "Open day-of checklist",
+        secondary: "Reschedule",
+      };
+    case "visited":
+      return {
+        eyebrow: "STAGE 04 · PROOF",
+        hero: "Submit your visit proof",
+        body: "Confirm you visited Forma Pilates so we can attribute the walk-in. Upload one frame from class — the merchant uses this to verify before payout.",
+        meta: "Submit within 24h to keep your tier streak",
+        metaTone: "warn",
+        cta: "Upload proof",
+      };
+    case "proof_submitted":
+      return {
+        eyebrow: "STAGE 05 · PUBLISH",
+        hero: "Proof received — publish your content",
+        body: "Forma confirmed your visit. Now post your reel publicly with the required tags, then drop the link below.",
+        meta: "Required: @formapilates · #FormaChelsea",
+        metaTone: "info",
+        cta: "Submit content link",
+        secondary: "Re-read brief",
+      };
+    case "content_published":
+      return {
+        eyebrow: "STAGE 06 · VERIFICATION",
+        hero: "Awaiting verification",
+        body: "Push is checking your content meets the brief and tagging rules. Most verifications complete within 24 hours.",
+        meta: "Verification window: 24h",
+        metaTone: "info",
+        cta: "View submission",
+        secondary: "Contact support",
+      };
+    case "verified":
+      return {
+        eyebrow: "STAGE 07 · PAYOUT",
+        hero: "Verified — payout processing",
+        body: "Your campaign is verified. The base payout is on the way; commission accrues from any walk-in scans driven by your content.",
+        meta: "Funds typically arrive within 24h",
+        metaTone: "success",
+        cta: "View payout status",
+      };
+    case "settled":
+      return null;
+  }
+}
+
+function CurrentStepSection({
+  milestone,
+  onAdvance,
+  loading = false,
+}: {
+  milestone: MilestoneStatus;
+  onAdvance: (to: MilestoneStatus) => void;
+  loading?: boolean;
+}) {
+  const step = buildCurrentStep(milestone);
+  const [mode, setMode] = useState<"proof" | "link" | null>(null);
+  const [fileReady, setFileReady] = useState(false);
+  const [linkVal, setLinkVal] = useState("");
+
+  // Reset inline mode whenever milestone advances (parent changes prop)
+  useEffect(() => {
+    setMode(null);
+    setFileReady(false);
+    setLinkVal("");
+  }, [milestone]);
+
   if (!step) return null;
+
+  function handleCta() {
+    switch (milestone) {
+      case "accepted":
+        onAdvance("scheduled");
+        break;
+      case "scheduled":
+        onAdvance("visited");
+        break;
+      case "visited":
+        setMode("proof");
+        break;
+      case "proof_submitted":
+        setMode("link");
+        break;
+      case "content_published":
+        document
+          .querySelector(".campaign-gallery")
+          ?.scrollIntoView({ behavior: "smooth", block: "start" });
+        break;
+      case "verified":
+        window.location.href = "/creator/earnings";
+        break;
+    }
+  }
+
+  function handleSecondary() {
+    switch (milestone) {
+      case "accepted":
+      case "proof_submitted":
+        document
+          .querySelector(".cp-requirements")
+          ?.scrollIntoView({ behavior: "smooth" });
+        break;
+      case "scheduled":
+        onAdvance("accepted");
+        break;
+      case "content_published":
+        window.open("mailto:support@usepush.co", "_blank");
+        break;
+    }
+  }
+
+  /* ── Inline: proof upload ─────────────────────────────────── */
+  if (mode === "proof") {
+    return (
+      <section className="cp-current-step">
+        <p className="cp-current-step-eyebrow">STAGE 04 · PROOF</p>
+        <h2 className="cp-current-step-hero">Upload your visit proof</h2>
+        <p className="cp-current-step-body">
+          One clear frame from inside the studio — the merchant uses this to
+          verify your visit before processing payout.
+        </p>
+        <label
+          className={`cp-proof-upload${fileReady ? " cp-proof-upload--ready" : ""}`}
+        >
+          <input
+            type="file"
+            accept="image/*"
+            className="cp-proof-input-hidden"
+            onChange={() => setFileReady(true)}
+          />
+          {fileReady ? (
+            <>
+              <span
+                className="cp-proof-icon cp-proof-icon--ok"
+                aria-hidden="true"
+              >
+                ✓
+              </span>
+              <span className="cp-proof-label">
+                Photo selected — ready to submit
+              </span>
+            </>
+          ) : (
+            <>
+              <span className="cp-proof-icon" aria-hidden="true">
+                ↑
+              </span>
+              <span className="cp-proof-label">Tap to select a photo</span>
+            </>
+          )}
+        </label>
+        <div className="cp-current-step-actions">
+          <button
+            className="btn-primary click-shift cp-current-step-cta"
+            onClick={() => {
+              if (fileReady) onAdvance("proof_submitted");
+            }}
+            disabled={!fileReady || loading}
+          >
+            {loading ? "Submitting…" : "Submit proof"}
+          </button>
+          <button
+            className="btn-ghost click-shift"
+            onClick={() => {
+              setMode(null);
+              setFileReady(false);
+            }}
+          >
+            Cancel
+          </button>
+        </div>
+      </section>
+    );
+  }
+
+  /* ── Inline: content link ─────────────────────────────────── */
+  if (mode === "link") {
+    const valid = linkVal.startsWith("http");
+    return (
+      <section className="cp-current-step">
+        <p className="cp-current-step-eyebrow">STAGE 05 · PUBLISH</p>
+        <h2 className="cp-current-step-hero">Submit your content link</h2>
+        <p className="cp-current-step-body">
+          Paste the public URL of your reel or post. Make sure it includes{" "}
+          <strong>@formapilates</strong> and <strong>#FormaChelsea</strong>{" "}
+          before submitting.
+        </p>
+        <input
+          type="url"
+          className="cp-link-input"
+          placeholder="https://instagram.com/reel/…"
+          value={linkVal}
+          onChange={(e) => setLinkVal(e.target.value)}
+          autoFocus
+        />
+        <div className="cp-current-step-actions">
+          <button
+            className="btn-primary click-shift cp-current-step-cta"
+            onClick={() => {
+              if (valid) onAdvance("content_published");
+            }}
+            disabled={!valid || loading}
+          >
+            {loading ? "Submitting…" : "Submit link"}
+          </button>
+          <button
+            className="btn-ghost click-shift"
+            onClick={() => {
+              setMode(null);
+              setLinkVal("");
+            }}
+          >
+            Cancel
+          </button>
+        </div>
+      </section>
+    );
+  }
+
+  /* ── Default view ─────────────────────────────────────────── */
   return (
-    <div className="cp-action-area">
-      <span className="cp-action-label">{step.label}</span>
-      <button className="cp-action-btn cp-action-btn--primary">
-        {step.cta}
-      </button>
-      {step.secondary && (
-        <button className="cp-action-btn cp-action-btn--secondary">
-          {step.secondary}
-        </button>
+    <section className="cp-current-step">
+      <p className="cp-current-step-eyebrow">{step.eyebrow}</p>
+      <h2 className="cp-current-step-hero">{step.hero}</h2>
+      <p className="cp-current-step-body">{step.body}</p>
+
+      {step.meta && (
+        <p
+          className={`cp-current-step-meta cp-current-step-meta--${step.metaTone ?? "info"}`}
+        >
+          <span className="cp-current-step-meta-dot" aria-hidden="true" />
+          {step.meta}
+        </p>
       )}
-    </div>
+
+      {step.beats && step.beats.length > 0 && (
+        <ol className="cp-current-step-beats">
+          {step.beats.map((b) => (
+            <li key={b.num} className="cp-current-step-beat">
+              <span className="cp-current-step-beat-num">{b.num}</span>
+              <div className="cp-current-step-beat-text">
+                <p className="cp-current-step-beat-title">{b.title}</p>
+                <p className="cp-current-step-beat-meta">{b.meta}</p>
+              </div>
+            </li>
+          ))}
+        </ol>
+      )}
+
+      <div className="cp-current-step-actions">
+        <button
+          className="btn-primary click-shift cp-current-step-cta"
+          onClick={handleCta}
+          disabled={loading}
+        >
+          {loading ? "Please wait…" : step.cta}
+        </button>
+        {step.secondary && (
+          <button
+            className="btn-ghost click-shift cp-current-step-secondary"
+            onClick={handleSecondary}
+          >
+            {step.secondary}
+          </button>
+        )}
+      </div>
+    </section>
   );
 }
 
+/* ── Main page ────────────────────────────────────────────── */
 export default function CampaignDetailPage() {
   const params = useParams();
   const id = params?.id as string;
@@ -444,6 +1116,7 @@ export default function CampaignDetailPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [milestone, setMilestone] = useState<MilestoneStatus | null>(null);
+  const [milestoneLoading, setMilestoneLoading] = useState(false);
 
   useEffect(() => {
     async function load() {
@@ -521,22 +1194,18 @@ export default function CampaignDetailPage() {
     }
     try {
       const supabase = createClient();
-      await supabase
-        .from("campaign_applications")
-        .insert({
-          campaign_id: campaign.id,
-          creator_id: creator.id,
-          merchant_id: campaign.merchant_id,
-          status: "pending",
-          payout: campaign.payout,
-        });
-      await supabase
-        .from("creator_submissions")
-        .insert({
-          campaign_id: campaign.id,
-          creator_id: creator.id,
-          status: "pending",
-        });
+      await supabase.from("campaign_applications").insert({
+        campaign_id: campaign.id,
+        creator_id: creator.id,
+        merchant_id: campaign.merchant_id,
+        status: "pending",
+        payout: campaign.payout,
+      });
+      await supabase.from("creator_submissions").insert({
+        campaign_id: campaign.id,
+        creator_id: creator.id,
+        status: "pending",
+      });
       setApplied(true);
     } catch {
       setError("Failed to apply. Please try again.");
@@ -545,6 +1214,19 @@ export default function CampaignDetailPage() {
     }
   }
 
+  async function advanceMilestone(to: MilestoneStatus) {
+    setMilestoneLoading(true);
+    if (isDemo) {
+      await new Promise((r) => setTimeout(r, 600));
+      setMilestone(to);
+      setMilestoneLoading(false);
+      return;
+    }
+    setMilestone(to);
+    setMilestoneLoading(false);
+  }
+
+  /* ── Loading / Error states ─────────────────────────────── */
   if (loading)
     return (
       <div className="campaign-page">
@@ -561,6 +1243,7 @@ export default function CampaignDetailPage() {
       </div>
     );
 
+  /* ── Derived state ──────────────────────────────────────── */
   const eligible = creator
     ? isEligible(creator.tier, campaign.tier_required)
     : false;
@@ -570,7 +1253,6 @@ export default function CampaignDetailPage() {
     ((campaign.spots_total - campaign.spots_remaining) / campaign.spots_total) *
       100,
   );
-  const heroBg = CATEGORY_BG[campaign.category] ?? "#003049";
   const noCommission = creatorTier === "seed" || creatorTier === "explorer";
   const campaignsToOperator = Math.max(
     0,
@@ -580,138 +1262,191 @@ export default function CampaignDetailPage() {
   const isUrgent = days <= 3;
 
   let btnLabel = "Apply Now";
-  let btnClass = "apply-btn apply-btn--default";
+  let btnClass = "btn-primary click-shift cp-apply-btn";
   let btnDisabled = false;
   if (applied) {
-    btnLabel = "Applied ✓";
-    btnClass = "apply-btn apply-btn--applied";
+    btnLabel = "Applied";
+    btnClass = "cp-apply-btn cp-apply-btn--applied";
     btnDisabled = true;
   } else if (!eligible) {
-    btnLabel = `Unlock at ${TIER_LABELS[campaign.tier_required]} to apply`;
-    btnClass = "apply-btn apply-btn--locked";
+    btnLabel = `Requires ${TIER_LABELS[campaign.tier_required]}`;
+    btnClass = "cp-apply-btn cp-apply-btn--locked";
     btnDisabled = true;
   } else if (applying) {
     btnLabel = "Applying…";
     btnDisabled = true;
   }
 
+  /* ── Render ─────────────────────────────────────────────── */
   return (
     <div className="campaign-page">
-      <Link href="/creator/dashboard" className="campaign-back">
-        ← Back to Campaigns
+      {/* ── Back link ──────────────────────────────────────── */}
+      <Link href="/creator/dashboard" className="campaign-back click-shift">
+        <svg
+          width="16"
+          height="16"
+          viewBox="0 0 16 16"
+          fill="none"
+          aria-hidden="true"
+        >
+          <path
+            d="M10 3L5 8L10 13"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
+        Back to Campaigns
       </Link>
-      <div className="cp-header">
-        <div className="cp-header-inner">
-          <h1 className="cp-title">{campaign.title}</h1>
-          <p className="cp-business">
-            {campaign.business_name}
-            <span className="cp-business-addr">
-              {campaign.business_address}
+
+      {/* ── Hero gallery (multi-image with arrow nav) ──────── */}
+      {campaign.images && campaign.images.length > 0 && (
+        <CampaignGallery images={campaign.images} alt={campaign.title} />
+      )}
+
+      {/* ── Page header card ───────────────────────────────── */}
+      <div className="cp-header candy-panel">
+        {/* Status badge row */}
+        <div className="cp-header-badges">
+          <span
+            className={[
+              "cp-status-badge",
+              campaign.status === "active"
+                ? "cp-status-badge--active"
+                : "cp-status-badge--default",
+            ].join(" ")}
+          >
+            {campaign.status.toUpperCase()}
+          </span>
+          <span className="cp-category-badge">{campaign.category}</span>
+          <TierBadge
+            tier={campaign.tier_required}
+            size="sm"
+            variant="outlined"
+          />
+        </div>
+
+        {/* Title + business */}
+        <h1 className="cp-title">{campaign.title}</h1>
+        <p className="cp-business-name">{campaign.business_name}</p>
+        <p className="cp-business-addr">{campaign.business_address}</p>
+
+        {/* Stats row */}
+        <div className="cp-stats-row">
+          {/* Days remaining */}
+          <div className="cp-stat-card candy-panel">
+            <span className="eyebrow" style={{ color: "var(--ink-3)" }}>
+              DAYS REMAINING
             </span>
-          </p>
-          <div className="cp-meta">
-            <span className="cp-meta-badge cp-meta-badge--category">
-              {campaign.category}
+            <span
+              className={[
+                "cp-stat-number",
+                isUrgent ? "cp-stat-number--urgent" : "",
+              ].join(" ")}
+            >
+              {days}
             </span>
-            <TierBadge
-              tier={campaign.tier_required}
-              size="sm"
-              variant="outlined"
-            />
-            <span className="cp-meta-divider" />
-            {campaign.payout === 0 ? (
-              <span className="cp-meta-badge cp-meta-badge--free">
-                Free Product
-              </span>
-            ) : (
-              <span className="cp-meta-badge cp-meta-badge--payout">
-                ${campaign.payout} base
-                {commission > 0 && ` + ${commission}% commission`}
-              </span>
+            <span className="cp-stat-sub">
+              {formatDeadline(campaign.deadline)}
+            </span>
+          </div>
+
+          {/* Payout */}
+          <div className="cp-stat-card candy-panel">
+            <span className="eyebrow" style={{ color: "var(--ink-3)" }}>
+              {campaign.payout === 0 ? "REWARD" : "BASE PAYOUT"}
+            </span>
+            <span className="cp-stat-number cp-stat-number--payout">
+              {campaign.payout === 0 ? "Free" : `$${campaign.payout}`}
+            </span>
+            {commission > 0 && (
+              <span className="cp-stat-sub">+{commission}% commission</span>
             )}
           </div>
-          <div className="cp-header-footer">
-            <div className="cp-countdown">
-              <span
+
+          {/* Spots */}
+          <div className="cp-stat-card candy-panel">
+            <span className="eyebrow" style={{ color: "var(--ink-3)" }}>
+              SPOTS
+            </span>
+            <span className="cp-stat-number">
+              {campaign.spots_remaining}
+              <span className="cp-stat-number-denom">
+                /{campaign.spots_total}
+              </span>
+            </span>
+            <div
+              className="cp-spots-bar"
+              role="progressbar"
+              aria-valuenow={spotsFillPct}
+              aria-valuemin={0}
+              aria-valuemax={100}
+            >
+              <div
                 className={[
-                  "cp-countdown-number",
-                  isUrgent ? "cp-countdown-number--urgent" : "",
-                ]
-                  .filter(Boolean)
-                  .join(" ")}
-              >
-                {days}
-              </span>
-              <span className="cp-countdown-label">
-                {days === 1 ? "day left" : "days left"} &mdash;{" "}
-                {formatDeadline(campaign.deadline)}
-              </span>
-            </div>
-            <div className="cp-spots-indicator">
-              <div className="cp-spots-text">
-                <span>Spots Remaining</span>
-                <span>
-                  {campaign.spots_remaining} / {campaign.spots_total}
-                </span>
-              </div>
-              <div className="cp-spots-bar">
-                <div
-                  className={[
-                    "cp-spots-fill",
-                    spotsFillPct >= 70
-                      ? "cp-spots-fill--low"
-                      : "cp-spots-fill--mid",
-                  ].join(" ")}
-                  style={{ width: `${spotsFillPct}%` }}
-                />
-              </div>
+                  "cp-spots-fill",
+                  spotsFillPct >= 70
+                    ? "cp-spots-fill--low"
+                    : "cp-spots-fill--mid",
+                ].join(" ")}
+                style={{ width: `${spotsFillPct}%` }}
+              />
             </div>
           </div>
         </div>
       </div>
 
+      {/* ── Milestone tracker (if applied) ─────────────────── */}
       {applied && milestone && <MilestoneTrack current={milestone} />}
-      {!applied && (
-        <div className="campaign-hero" style={{ background: heroBg }}>
-          {campaign.image ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
-              src={campaign.image}
-              alt={campaign.title}
-              className="campaign-hero-img"
-            />
-          ) : (
-            <div className="campaign-hero-placeholder" />
-          )}
-          <div className="campaign-chips">
-            <span className="campaign-chip">{campaign.category}</span>
-            <span className="campaign-chip campaign-chip--tier">
-              {TIER_LABELS[campaign.tier_required]}+
-            </span>
-          </div>
-        </div>
-      )}
 
+      {/* ── Body grid ──────────────────────────────────────── */}
       <div className="campaign-body">
+        {/* ── Main column ──────────────────────────────────── */}
         <div className="campaign-main">
-          <div>
-            <p className="campaign-section-label">About This Campaign</p>
+          {/* Current-step state panel — replaces the legacy checklist.
+              Lives at the top of the main column when applied. */}
+          {applied && milestone && (
+            <CurrentStepSection
+              milestone={milestone}
+              onAdvance={advanceMilestone}
+              loading={milestoneLoading}
+            />
+          )}
+
+          {/* About section */}
+          <div className="cp-section candy-panel">
+            <p className="eyebrow cp-section-eyebrow">ABOUT THIS CAMPAIGN</p>
             <p className="campaign-desc">{campaign.description}</p>
           </div>
-          <div>
-            <p className="campaign-section-label">Requirements</p>
+
+          {/* Requirements section */}
+          <div className="cp-section candy-panel">
+            <p className="eyebrow cp-section-eyebrow">REQUIREMENTS</p>
             <div className="cp-requirements">
               {campaign.requirements.map((req, i) => (
                 <div key={i} className="cp-req-item">
-                  <span className="cp-req-icon cp-req-icon--check" />
+                  <span className="cp-req-check" aria-hidden="true">
+                    <svg width="12" height="10" viewBox="0 0 12 10" fill="none">
+                      <path
+                        d="M1 5L4.5 8.5L11 1"
+                        stroke="currentColor"
+                        strokeWidth="1.8"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                  </span>
                   <span className="cp-req-number">{i + 1}</span>
-                  <span>{req}</span>
+                  <span className="cp-req-text">{req}</span>
                 </div>
               ))}
             </div>
           </div>
-          <div className="campaign-biz-info">
-            <p className="campaign-section-label">Business Info</p>
+
+          {/* Business info section */}
+          <div className="cp-section candy-panel">
+            <p className="eyebrow cp-section-eyebrow">BUSINESS INFO</p>
             <dl className="campaign-biz-dl">
               <div className="campaign-biz-row">
                 <dt>Address</dt>
@@ -722,21 +1457,71 @@ export default function CampaignDetailPage() {
                 <dd>{campaign.category}</dd>
               </div>
             </dl>
-            <div className="cp-map-placeholder">
-              <span>&#9679;</span>
+            <div className="cp-map-placeholder" aria-hidden="true">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                <circle
+                  cx="8"
+                  cy="7"
+                  r="3"
+                  stroke="currentColor"
+                  strokeWidth="1.5"
+                />
+                <path
+                  d="M8 2C5.24 2 3 4.24 3 7c0 3.75 5 9 5 9s5-5.25 5-9c0-2.76-2.24-5-5-5z"
+                  stroke="currentColor"
+                  strokeWidth="1.5"
+                  fill="none"
+                />
+              </svg>
               {campaign.business_name}
             </div>
           </div>
-          {applied && milestone && (
-            <MilestoneActionArea milestone={milestone} />
-          )}
-          <div className="campaign-qr-note">
-            <span className="campaign-qr-icon" aria-hidden="true">
-              &#9632;
-            </span>
+
+          {/* QR attribution note */}
+          <div className="cp-qr-note candy-panel">
+            <div className="cp-qr-icon-wrap" aria-hidden="true">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                <rect
+                  x="2"
+                  y="2"
+                  width="7"
+                  height="7"
+                  rx="1"
+                  stroke="currentColor"
+                  strokeWidth="1.5"
+                />
+                <rect
+                  x="11"
+                  y="2"
+                  width="7"
+                  height="7"
+                  rx="1"
+                  stroke="currentColor"
+                  strokeWidth="1.5"
+                />
+                <rect
+                  x="2"
+                  y="11"
+                  width="7"
+                  height="7"
+                  rx="1"
+                  stroke="currentColor"
+                  strokeWidth="1.5"
+                />
+                <rect x="13" y="13" width="2" height="2" fill="currentColor" />
+                <rect x="11" y="11" width="2" height="2" fill="currentColor" />
+                <rect x="15" y="11" width="2" height="2" fill="currentColor" />
+                <rect x="11" y="15" width="4" height="2" fill="currentColor" />
+              </svg>
+            </div>
             <div>
-              <strong>QR Attribution</strong>
-              <p>
+              <p
+                className="eyebrow"
+                style={{ marginBottom: 4, color: "var(--accent-blue)" }}
+              >
+                QR ATTRIBUTION
+              </p>
+              <p className="cp-qr-text">
                 Push generates a unique QR code for your campaign. When
                 customers scan it after seeing your content, it attributes the
                 visit to you — that&apos;s how your commission is calculated.
@@ -745,87 +1530,89 @@ export default function CampaignDetailPage() {
           </div>
         </div>
 
-        <aside className="campaign-sidebar-card">
-          <div className="campaign-payout">
+        {/* ── Sidebar ──────────────────────────────────────── */}
+        <aside className="campaign-sidebar-card candy-panel">
+          {/* Payout display */}
+          <div className="cp-sidebar-payout">
             {campaign.payout === 0 ? (
               <>
-                <span className="campaign-payout-amount campaign-payout-amount--free">
+                <span className="cp-payout-amount cp-payout-amount--free">
                   Free
                 </span>
-                <span className="campaign-payout-label">Product (trade)</span>
+                <span className="cp-payout-label">product (trade)</span>
               </>
             ) : (
               <>
-                <span className="campaign-payout-amount">
-                  ${campaign.payout}
-                </span>
-                <span className="campaign-payout-label">per campaign</span>
+                <span className="cp-payout-amount">${campaign.payout}</span>
+                <span className="cp-payout-label">per campaign</span>
               </>
             )}
           </div>
+
           {commission > 0 && (
-            <div className="campaign-commission-row">
-              <span>+</span>
-              <span className="campaign-commission-pct">{commission}%</span>
-              <span>walk-in commission</span>
+            <div className="cp-commission-row">
+              <span className="cp-commission-plus">+</span>
+              <span className="cp-commission-pct">{commission}%</span>
+              <span className="cp-commission-label">walk-in commission</span>
             </div>
           )}
-          <div className="campaign-spots">
-            <div className="campaign-spots-meta">
-              <span>
-                {campaign.spots_remaining} of {campaign.spots_total} spots
-                remaining
-              </span>
-            </div>
-            <div className="campaign-spots-bar">
-              <div
-                className="campaign-spots-fill"
-                style={{ width: `${spotsFillPct}%` }}
-              />
-            </div>
+
+          <div className="cp-sidebar-divider" />
+
+          {/* Spots */}
+          <div className="cp-sidebar-row">
+            <span className="cp-sidebar-row-label">SPOTS</span>
+            <span className="cp-sidebar-row-value">
+              {campaign.spots_remaining} / {campaign.spots_total} remaining
+            </span>
           </div>
-          <div className="campaign-deadline">
-            <span className="campaign-deadline-label">Deadline</span>
-            <span className="campaign-deadline-value">
+
+          {/* Deadline */}
+          <div className="cp-sidebar-row">
+            <span className="cp-sidebar-row-label">DEADLINE</span>
+            <span className="cp-sidebar-row-value">
               {formatDeadline(campaign.deadline)}
             </span>
           </div>
-          <div
-            className="campaign-deadline"
-            style={{ borderTop: "none", paddingTop: 0 }}
-          >
-            <span className="campaign-deadline-label">Tier Required</span>
+
+          {/* Tier required */}
+          <div className="cp-sidebar-row cp-sidebar-row--tier">
+            <span className="cp-sidebar-row-label">TIER REQUIRED</span>
             <TierBadge
               tier={campaign.tier_required}
               size="sm"
               variant="subtle"
             />
           </div>
-          <div className="campaign-eligibility">
+
+          <div className="cp-sidebar-divider" />
+
+          {/* Eligibility indicator */}
+          <div className="cp-eligibility">
             {eligible ? (
               <>
                 <span
-                  className="campaign-elig-icon campaign-elig-icon--ok"
+                  className="cp-elig-dot cp-elig-dot--ok"
                   aria-hidden="true"
-                >
-                  ✓
-                </span>
-                <span>
-                  You qualify ({creator ? TIER_LABELS[creator.tier] : ""} tier)
+                />
+                <span className="cp-elig-text">
+                  You qualify ({creator ? TIER_LABELS[creator.tier] : ""})
                 </span>
               </>
             ) : (
               <>
                 <span
-                  className="campaign-elig-icon campaign-elig-icon--lock"
+                  className="cp-elig-dot cp-elig-dot--lock"
                   aria-hidden="true"
-                >
-                  —
+                />
+                <span className="cp-elig-text cp-elig-text--muted">
+                  Requires {TIER_LABELS[campaign.tier_required]} tier
                 </span>
-                <span>Requires {TIER_LABELS[campaign.tier_required]} tier</span>
               </>
             )}
           </div>
+
+          {/* Apply button */}
           <button
             className={btnClass}
             disabled={btnDisabled}
@@ -834,40 +1621,29 @@ export default function CampaignDetailPage() {
           >
             {btnLabel}
           </button>
+
+          {/* Commission / eligibility note */}
           {eligible && !applied && (
-            <p className="commission-note">
+            <p className="cp-commission-note">
               {noCommission ? (
                 <>
                   No commission at your tier.{" "}
                   {campaignsToOperator > 0
-                    ? `Complete ${campaignsToOperator} more campaign${campaignsToOperator !== 1 ? "s" : ""} to reach Operator and unlock 3% commission.`
+                    ? `Complete ${campaignsToOperator} more campaign${campaignsToOperator !== 1 ? "s" : ""} to reach Operator and unlock 3%.`
                     : "Reach Operator tier to unlock 3% commission."}
                 </>
               ) : (
-                <>You earn {commission}% on each walk-in you drive</>
+                <>You earn {commission}% on each walk-in you drive.</>
               )}
             </p>
           )}
           {applied && (
-            <p className="commission-note">
+            <p className="cp-commission-note">
               Application submitted. The merchant will review and confirm.
             </p>
           )}
         </aside>
       </div>
-
-      {applied && campaign && (
-        <div style={{ marginTop: 20 }}>
-          <CampaignChecklist
-            campaignTitle={campaign.title}
-            merchantName={campaign.business_name}
-            category={campaign.category}
-            requirements={campaign.requirements}
-            onComplete={() => {}}
-            isDemo={isDemo}
-          />
-        </div>
-      )}
     </div>
   );
 }

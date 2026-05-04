@@ -1,9 +1,11 @@
 "use client";
 
-// Push Creator Workspace — SideNav (Simplified)
-// Design.md: 240px width, --surface bg, 8px grid
-// Active = 3px Flag Red left border + text darkens, no bg highlight
-// Structure: 5 primary + divider + 2 secondary + footer user row
+// Push Creator Workspace — SideNav v3
+// Design.md §1: 240px width, var(--surface-2) bg, 8px grid
+// Active = 3px brand-red left border, brand-red-tint bg, no per-page custom
+// Structure: 3 labeled sections (DAILY / MONEY / COMMUNITY) + Account links + user row
+// Wallet → merged into Earnings. Portfolio → merged into Profile.
+// Notifications → TopNav bell badge only. No standalone nav entries.
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -14,104 +16,80 @@ import "./workspace.css";
 // Types
 // ---------------------------------------------------------------------------
 
-interface PrimaryNavItem {
+interface NavItem {
   label: string;
   href: string;
   icon: string;
-  /** Match by prefix or exact */
   exact?: boolean;
 }
 
-interface SecondaryNavItem {
+interface NavSection {
+  id: string;
   label: string;
-  href: string;
+  items: NavItem[];
 }
 
 // ---------------------------------------------------------------------------
-// Icon map — geometric Unicode glyphs, no external lib
+// Navigation structure — 3 sections, 7 primary entries total
 // ---------------------------------------------------------------------------
 
-const ICONS: Record<string, string> = {
-  home: "⬡",
-  work: "◈",
-  discover: "◐",
-  inbox: "▣",
-  earnings: "▲",
-  profile: "○",
-  settings: "◍",
-  logout: "◁",
-};
-
-// ---------------------------------------------------------------------------
-// Primary nav items (icon + label, full weight)
-// ---------------------------------------------------------------------------
-
-const PRIMARY_ITEMS: PrimaryNavItem[] = [
-  { label: "Home", href: "/creator/dashboard", icon: ICONS.home, exact: true },
-  { label: "Work", href: "/creator/work/today", icon: ICONS.work },
-  { label: "Discover", href: "/creator/discover", icon: ICONS.discover },
-  { label: "Inbox", href: "/creator/inbox", icon: ICONS.inbox },
+const NAV_SECTIONS: NavSection[] = [
   {
-    label: "Earnings",
-    href: "/creator/portfolio/earnings",
-    icon: ICONS.earnings,
+    id: "daily",
+    label: "DAILY",
+    items: [
+      { label: "Home",     href: "/creator/dashboard", icon: "◐", exact: true },
+      { label: "Work",     href: "/creator/work/today", icon: "◈" },
+      { label: "Discover", href: "/creator/discover",   icon: "○" },
+    ],
   },
-  // v5.3-EXEC orphan rescue: these existed as pages but had no nav entry.
-  { label: "Analytics", href: "/creator/analytics", icon: "◉" },
-  { label: "Leaderboard", href: "/creator/leaderboard", icon: "★" },
+  {
+    id: "money",
+    label: "MONEY",
+    items: [
+      { label: "Earnings",  href: "/creator/earnings",  icon: "▲" },
+      { label: "Analytics", href: "/creator/analytics", icon: "◉" },
+    ],
+  },
+  {
+    id: "community",
+    label: "COMMUNITY",
+    items: [
+      { label: "Inbox",       href: "/creator/inbox",       icon: "▣" },
+      { label: "Leaderboard", href: "/creator/leaderboard", icon: "★" },
+    ],
+  },
+];
+
+// Account links — small text below divider (no icon, lower visual weight)
+const ACCOUNT_ITEMS = [
+  { label: "Profile & Portfolio", href: "/creator/profile" },
+  { label: "Settings",            href: "/creator/settings" },
 ];
 
 // ---------------------------------------------------------------------------
-// Secondary nav items (no icon, smaller, lower visual weight)
+// Tier color map — from Design.md Tier v7 re-map
 // ---------------------------------------------------------------------------
 
-const SECONDARY_ITEMS: SecondaryNavItem[] = [
-  { label: "Profile", href: "/creator/portfolio/identity" },
-  { label: "Portfolio", href: "/creator/portfolio" },
-  { label: "Notifications", href: "/creator/notifications" },
-  { label: "Wallet", href: "/creator/wallet" },
-  { label: "Settings", href: "/creator/settings" },
-];
+const TIER_COLORS: Record<string, string> = {
+  seed:     "#b8a99a",   // Clay
+  explorer: "#669bbc",   // Steel
+  operator: "#2d6a4f",   // Forest
+  proven:   "#3a4fd8",   // Cobalt
+  closer:   "#c9a96e",   // Bronze/Champagne
+  partner:  "#c1121f",   // Brand Red
+};
 
 // ---------------------------------------------------------------------------
 // Props
 // ---------------------------------------------------------------------------
 
 export interface SideNavProps {
-  /** Dynamic badge counts — key = href */
-  badges?: Record<string, number>;
-  /** Creator display name */
-  userName?: string;
-  /** Creator tier lowercase */
-  tier?: string;
-  /** Avatar image URL */
+  badges?:    Record<string, number>;
+  userName?:  string;
+  tier?:      string;
   avatarUrl?: string;
-  /** When rendered as overlay, call this to close it */
-  onClose?: () => void;
-}
-
-// ---------------------------------------------------------------------------
-// Tier helpers
-// ---------------------------------------------------------------------------
-
-const TIER_COLORS: Record<string, string> = {
-  seed: "#b8a99a",
-  explorer: "#669bbc",
-  operator: "#2d6a4f",
-  proven: "#3a4fd8",
-  closer: "#c9a96e",
-  partner: "#c1121f",
-  // legacy aliases
-  clay: "#b8a99a",
-  bronze: "#c9a96e",
-  steel: "#669bbc",
-  gold: "#d4a017",
-  ruby: "#c1121f",
-  obsidian: "#003049",
-};
-
-function tierLabel(tier: string): string {
-  return tier.charAt(0).toUpperCase() + tier.slice(1).toLowerCase();
+  onClose?:   () => void;
 }
 
 // ---------------------------------------------------------------------------
@@ -128,93 +106,100 @@ export function SideNav({
   const pathname = usePathname();
 
   const displayName = userName ?? DEMO_CREATOR.name;
-  const displayTier = tier ?? DEMO_CREATOR.tier;
-  const tierKey = displayTier.toLowerCase();
-  const tierColor = TIER_COLORS[tierKey] ?? TIER_COLORS.seed;
-  const initial = displayName.charAt(0).toUpperCase();
+  const displayTier = tier  ?? DEMO_CREATOR.tier;
+  const tierKey     = displayTier.toLowerCase();
+  const tierColor   = TIER_COLORS[tierKey] ?? TIER_COLORS.seed;
+  const initial     = displayName.charAt(0).toUpperCase();
+  const tierLabel   = tierKey.charAt(0).toUpperCase() + tierKey.slice(1);
 
-  // Active match: exact for dashboard, prefix for everything else
-  const isActive = (href: string, exact?: boolean): boolean => {
-    if (exact) return pathname === href;
-    return pathname.startsWith(href);
-  };
+  const isActive = (href: string, exact?: boolean): boolean =>
+    exact ? pathname === href : pathname.startsWith(href);
 
   return (
     <nav className="ws-sidenav" aria-label="Main navigation">
-      {/* ── Overlay close button (only in overlay mode) ── */}
+
+      {/* ── Overlay close header (mobile only) ─────────────────── */}
       {onClose && (
         <div className="ws-sidenav__overlay-header">
           <span className="ws-sidenav__overlay-title">PUSH</span>
           <button
             className="ws-sidenav__close-btn"
             onClick={onClose}
-            aria-label="Close navigation"
             type="button"
+            aria-label="Close navigation"
           >
             ✕
           </button>
         </div>
       )}
 
-      {/* ── Primary nav items ── */}
+      {/* ── Scrollable nav area ─────────────────────────────────── */}
       <div className="ws-sidenav__scroll">
-        <div className="ws-sidenav__primary">
-          {PRIMARY_ITEMS.map((item) => {
-            const active = isActive(item.href, item.exact);
-            const badgeCount = badges[item.href];
-            const showBadge = badgeCount !== undefined && badgeCount > 0;
 
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={`ws-sidenav__item${active ? " ws-sidenav__item--active" : ""}`}
-                aria-current={active ? "page" : undefined}
-              >
-                <span className="ws-sidenav__item-icon" aria-hidden="true">
-                  {item.icon}
-                </span>
-                <span className="ws-sidenav__item-label">{item.label}</span>
-                {showBadge && (
-                  <span
-                    className="ws-sidenav__badge ws-sidenav__badge--alert"
-                    aria-label={`${badgeCount} unread`}
-                  >
-                    {badgeCount > 99 ? "99+" : badgeCount}
+        {/* ── 3 labeled sections ──────────────────────────────── */}
+        {NAV_SECTIONS.map((section) => (
+          <div key={section.id} className="ws-sidenav__section">
+            <span className="ws-sidenav__section-label" aria-hidden="true">
+              {section.label}
+            </span>
+
+            {section.items.map((item) => {
+              const active     = isActive(item.href, item.exact);
+              const badgeCount = badges[item.href];
+              const showBadge  = typeof badgeCount === "number" && badgeCount > 0;
+
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={`ws-sidenav__item${active ? " ws-sidenav__item--active" : ""}`}
+                  aria-current={active ? "page" : undefined}
+                >
+                  <span className="ws-sidenav__item-icon" aria-hidden="true">
+                    {item.icon}
                   </span>
-                )}
-              </Link>
-            );
-          })}
-        </div>
+                  <span className="ws-sidenav__item-label">{item.label}</span>
+                  {showBadge && (
+                    <span
+                      className="ws-sidenav__badge ws-sidenav__badge--alert"
+                      aria-label={`${badgeCount} unread`}
+                    >
+                      {badgeCount > 99 ? "99+" : badgeCount}
+                    </span>
+                  )}
+                </Link>
+              );
+            })}
+          </div>
+        ))}
 
-        {/* ── Divider ── */}
+        {/* ── Divider ─────────────────────────────────────────── */}
         <div className="ws-sidenav__divider" aria-hidden="true" />
 
-        {/* ── Secondary nav items (no icon) ── */}
-        <div className="ws-sidenav__secondary">
-          {SECONDARY_ITEMS.map((item) => {
-            const active = pathname.startsWith(item.href);
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={`ws-sidenav__sec-item${active ? " ws-sidenav__sec-item--active" : ""}`}
-                aria-current={active ? "page" : undefined}
-              >
-                {item.label}
-              </Link>
-            );
-          })}
+        {/* ── Account links (small, lower weight) ─────────────── */}
+        <div className="ws-sidenav__account" role="group" aria-label="Account">
+          {ACCOUNT_ITEMS.map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              className={`ws-sidenav__account-item${
+                pathname.startsWith(item.href)
+                  ? " ws-sidenav__account-item--active"
+                  : ""
+              }`}
+            >
+              {item.label}
+            </Link>
+          ))}
         </div>
       </div>
 
-      {/* ── Footer: user identity row ── */}
+      {/* ── Footer: user identity row ────────────────────────── */}
       <div className="ws-sidenav__footer">
         <Link
-          href="/creator/portfolio/identity"
+          href="/creator/profile"
           className="ws-sidenav__user"
-          aria-label={`Profile — ${displayName} (${tierLabel(tierKey)})`}
+          aria-label={`Profile — ${displayName} (${tierLabel})`}
         >
           <div className="ws-sidenav__user-avatar" aria-hidden="true">
             {avatarUrl ? (
@@ -232,30 +217,12 @@ export function SideNav({
           </div>
           <div className="ws-sidenav__user-info">
             <span className="ws-sidenav__user-name">{displayName}</span>
-            <span
-              className="ws-sidenav__user-tier"
-              style={{ color: tierColor }}
-            >
-              {tierLabel(tierKey)}
+            <span className="ws-sidenav__user-tier" style={{ color: tierColor }}>
+              {tierLabel}
             </span>
           </div>
-          <span className="ws-sidenav__user-arrow" aria-hidden="true">
-            ›
-          </span>
+          <span className="ws-sidenav__user-arrow" aria-hidden="true">›</span>
         </Link>
-
-        <div className="ws-sidenav__footer-actions">
-          <Link
-            href="/creator/login"
-            className="ws-sidenav__footer-action ws-sidenav__footer-action--logout"
-            aria-label="Sign out"
-          >
-            <span className="ws-sidenav__item-icon" aria-hidden="true">
-              {ICONS.logout}
-            </span>
-            <span>Sign out</span>
-          </Link>
-        </div>
       </div>
     </nav>
   );

@@ -1,0 +1,649 @@
+/* ============================================================
+   Push Admin — Cohort Detail Page  ·  v11 Design System
+   Authority: Design.md v11 2026-04-25
+   Product UI register — complementary to cohorts.css
+   8px grid  ·  Darky display + CS Genio Mono body
+   ============================================================ */
+
+/* ------------------------------------------------------------
+   Hero bar
+   (name as H1 Darky clamp(40px,5vw,72px) + eyebrow (COHORT·DETAIL))
+   ------------------------------------------------------------ */
+.cohort-hero {
+  background: var(--ink);
+  padding: 64px 40px 48px;
+  border-bottom: 2px solid var(--brand-red);
+}
+
+.cohort-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.5);
+  text-decoration: none;
+  margin-bottom: 32px;
+  transition: color var(--t-base);
+}
+.cohort-back:hover { color: rgba(255, 255, 255, 0.85); }
+.cohort-back::before { content: "←"; margin-right: 4px; }
+
+/* Eyebrow — parenthetical product register */
+.cohort-detail-hero__eyebrow {
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--brand-red);
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* H1 — Darky clamp(40px,5vw,72px) per spec */
+.cohort-hero__title {
+  font-family: var(--font-display);
+  font-size: clamp(40px, 5vw, 72px);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 1;
+  color: var(--snow);
+  margin: 0 0 16px;
+}
+
+.cohort-hero__sub {
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.5);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  max-width: 560px;
+}
+
+.cohort-hero__notes {
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.4);
+  margin-top: 8px;
+  font-style: italic;
+  max-width: 560px;
+}
+
+/* ── KPI stats grid in hero ── */
+.cohort-hero__stats {
+  display: flex;
+  gap: 48px;
+  flex-wrap: wrap;
+  margin-top: 40px;
+  padding-top: 32px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.hero-stat {
+  min-width: 80px;
+}
+
+/* KPI numeral — Darky 800 clamp(40px,5vw,72px) */
+.hero-stat__value {
+  font-family: var(--font-display);
+  font-size: clamp(40px, 5vw, 72px);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  color: var(--snow);
+  line-height: 1;
+}
+
+.hero-stat__label {
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.4);
+  margin-top: 6px;
+}
+
+/* ------------------------------------------------------------
+   Detail content area
+   ------------------------------------------------------------ */
+.cohort-detail {
+  max-width: 1140px;
+  margin: 0 auto;
+  padding: 48px 40px 64px;
+}
+
+/* Action buttons row */
+.cohort-detail-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 32px;
+  flex-wrap: wrap;
+}
+
+/* Experiment tags */
+.cohort-exp-tags {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-bottom: 48px;
+}
+
+/* Section wrapper */
+.cohort-section {
+  margin-bottom: 48px;
+}
+
+/* Section title — Darky 700 24px, hugs top-left */
+.section-title {
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: var(--ink);
+  margin: 0 0 16px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--hairline);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.section-title__count {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--graphite);
+  letter-spacing: 0;
+}
+
+/* ------------------------------------------------------------
+   Stats grid (member count / avg score / total earnings)
+   Three KPI tiles at top of detail
+   ------------------------------------------------------------ */
+.cohort-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-bottom: 48px;
+}
+
+.cohort-stats-tile {
+  background: var(--surface-2);
+  border-radius: 10px;
+  padding: 24px;
+}
+
+.cohort-stats-tile__label {
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+  margin-bottom: 8px;
+}
+
+/* Member count — Darky 800 40px */
+.cohort-stats-tile__count {
+  font-family: var(--font-display);
+  font-size: 40px;
+  font-weight: 800;
+  color: var(--ink);
+  line-height: 1;
+}
+
+/* Avg score / earnings — Darky 700 24px */
+.cohort-stats-tile__metric {
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--graphite);
+  line-height: 1;
+}
+
+/* ------------------------------------------------------------
+   Retention heatmap table
+   (axes labels 12px mono)
+   ------------------------------------------------------------ */
+.retention-section {
+  margin-bottom: 48px;
+  overflow-x: auto;
+}
+
+.retention-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--font-body);
+  font-size: 12px;
+}
+
+/* 12px mono axis labels */
+.retention-table th {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--graphite);
+  padding: 8px;
+  border-bottom: 2px solid var(--hairline-2);
+  text-align: center;
+  white-space: nowrap;
+}
+.retention-table th:first-child { text-align: left; }
+
+.retention-table td {
+  padding: 10px 8px;
+  text-align: center;
+  border-bottom: 1px solid var(--hairline);
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  font-size: 12px;
+}
+.retention-table td:first-child {
+  text-align: left;
+  font-weight: 700;
+  color: var(--ink);
+  white-space: nowrap;
+  padding-right: 24px;
+  font-size: 12px;
+  font-family: var(--font-body);
+}
+
+.heat-cell {
+  border-radius: var(--r-sm);
+  min-width: 56px;
+  font-size: 12px;
+}
+
+/* ------------------------------------------------------------
+   Activation funnel
+   ------------------------------------------------------------ */
+.funnel-section {
+  margin-bottom: 48px;
+}
+
+.funnel-bars {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.funnel-step {
+  display: grid;
+  grid-template-columns: 180px 1fr 72px;
+  align-items: center;
+  gap: 16px;
+}
+
+.funnel-step__label {
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink);
+  text-align: right;
+}
+
+.funnel-step__bar-wrap {
+  height: 32px;
+  background: var(--surface-3);
+  border: 1px solid var(--hairline);
+  border-radius: 4px;
+  overflow: hidden;
+  position: relative;
+}
+
+.funnel-step__bar {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 800ms ease-out;
+}
+
+.funnel-step__pct {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+
+.funnel-caption {
+  font-family: var(--font-body);
+  font-size: 12px;
+  color: var(--ink-4);
+  margin-top: 16px;
+}
+
+/* ------------------------------------------------------------
+   Member list
+   (photo card style 1:1 avatar + mono name label + score badge)
+   ------------------------------------------------------------ */
+.member-section {
+  margin-bottom: 48px;
+}
+
+.member-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--font-body);
+  font-size: 14px;
+}
+
+/* 12px mono column headers */
+.member-table th {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--graphite);
+  padding: 8px 16px;
+  border-bottom: 2px solid var(--hairline-2);
+  text-align: left;
+  background: var(--surface-2);
+  white-space: nowrap;
+}
+
+.member-table td {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--hairline);
+  vertical-align: middle;
+}
+
+.member-table tr:hover td {
+  background: rgba(10, 10, 10, 0.025);
+}
+
+/* Photo card style: 1:1 avatar container */
+.member-avatar-cell {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.member-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--r-lg);
+  background: var(--surface-3);
+  border: 1px solid var(--hairline);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+/* Initials fallback in avatar */
+.member-avatar__initials {
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--ink-4);
+  letter-spacing: -0.02em;
+}
+
+/* Mono name label */
+.member-name {
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--ink);
+  letter-spacing: 0.01em;
+}
+
+.member-handle {
+  font-family: var(--font-body);
+  font-size: 11px;
+  color: var(--accent-blue);
+  margin-top: 2px;
+  font-weight: 400;
+}
+
+/* Score badge */
+.member-score-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 32px;
+  padding: 2px 8px;
+  border-radius: 50vh;
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  background: var(--surface-3);
+  color: var(--ink);
+  border: 1px solid var(--hairline);
+}
+.member-score-badge--high {
+  background: var(--brand-red-tint);
+  color: var(--brand-red);
+  border-color: rgba(193, 18, 31, 0.2);
+}
+
+.member-status-badge {
+  display: inline-block;
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 2px 8px;
+  border-radius: 50vh;
+}
+.member-status-badge--active {
+  background: rgba(34, 197, 94, 0.12);
+  color: var(--success-dark);
+  border: 1px solid rgba(34, 197, 94, 0.25);
+}
+.member-status-badge--churned {
+  background: var(--brand-red-tint);
+  color: var(--brand-red);
+  border: 1px solid rgba(193, 18, 31, 0.2);
+}
+.member-status-badge--paused {
+  background: rgba(191, 161, 112, 0.12);
+  color: var(--graphite);
+  border: 1px solid rgba(191, 161, 112, 0.25);
+}
+
+.member-tier {
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 2px 8px;
+  border-radius: 50vh;
+  background: rgba(0, 48, 73, 0.06);
+  color: var(--ink);
+  border: 1px solid var(--hairline);
+  display: inline-block;
+}
+
+/* Pagination controls */
+.member-pagination {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 16px;
+  font-family: var(--font-body);
+  font-size: 12px;
+  color: var(--graphite);
+}
+
+/* ------------------------------------------------------------
+   Experiment comparison
+   ------------------------------------------------------------ */
+.compare-section {
+  margin-bottom: 48px;
+}
+
+.compare-metric-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+/* Reuse .btn-pill from globals — override size */
+.compare-section .btn-pill {
+  padding: 5px 12px;
+  font-size: 11px;
+}
+
+.compare-chart {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.compare-row {
+  display: grid;
+  grid-template-columns: 200px 1fr 80px;
+  align-items: center;
+  gap: 16px;
+}
+
+.compare-row__name {
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.compare-row__name.is-current { color: var(--brand-red); }
+
+.compare-bar-wrap {
+  height: 28px;
+  background: var(--surface-3);
+  border: 1px solid var(--hairline);
+  border-radius: 4px;
+  overflow: hidden;
+  position: relative;
+}
+
+.compare-bar {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 800ms ease-out;
+}
+.compare-bar.is-current  { background: var(--brand-red); }
+.compare-bar.is-other    { background: rgba(10, 10, 10, 0.14); }
+
+.compare-row__val {
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Compare tab — kept for backward compat with existing className usage */
+.compare-tab {
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 5px 12px;
+  background: transparent;
+  border: 1.5px solid var(--hairline-2);
+  color: var(--graphite);
+  cursor: pointer;
+  border-radius: 50vh;
+  transition: background var(--t-base), color var(--t-base), border-color var(--t-base);
+}
+.compare-tab:hover { border-color: var(--ink); color: var(--ink); }
+.compare-tab.active {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--snow);
+}
+.compare-tab:focus-visible {
+  outline: 4px solid var(--brand-red-focus);
+  outline-offset: 2px;
+}
+
+/* ------------------------------------------------------------
+   Export / pagination ghost button (legacy class)
+   ------------------------------------------------------------ */
+.export-btn {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 8px 16px;
+  background: transparent;
+  color: var(--graphite);
+  border: 1.5px solid var(--hairline-2);
+  cursor: pointer;
+  border-radius: var(--r-sm);
+  transition: border-color var(--t-base), color var(--t-base), transform 160ms ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.export-btn:hover  { border-color: var(--ink); color: var(--ink); transform: translate(1px,1px); }
+.export-btn:active { transform: translate(2px,2px); }
+.export-btn:focus-visible { outline: 4px solid var(--brand-red-focus); outline-offset: 2px; }
+.export-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+
+/* ------------------------------------------------------------
+   Responsive
+   ------------------------------------------------------------ */
+@media (max-width: 900px) {
+  .cohort-hero {
+    padding: 40px 24px 32px;
+  }
+
+  .cohort-detail {
+    padding: 32px 24px 48px;
+  }
+
+  .cohort-hero__stats {
+    gap: 24px;
+  }
+
+  .hero-stat__value {
+    font-size: clamp(32px, 6vw, 56px);
+  }
+
+  .cohort-stats-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .funnel-step {
+    grid-template-columns: 1fr;
+  }
+  .funnel-step__label { text-align: left; }
+
+  .compare-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .cohort-stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .cohort-detail-actions {
+    gap: 8px;
+  }
+}

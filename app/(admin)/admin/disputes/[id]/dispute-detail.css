@@ -1,0 +1,376 @@
+/* ============================================================
+   Push — Admin Dispute Detail Page — v11 design system
+   Product register: warm-gray ladder, 8px grid, mono eyebrows.
+   No marketing patterns (Magvix italic, Ticket Panel, GA Tri-Color).
+   ============================================================ */
+
+/* ------------------------------------------------------------
+   Page header — dispute ID eyebrow (DISPUTE·#) 12px mono
+   ------------------------------------------------------------ */
+.dsp-detail-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-5);
+  margin-bottom: 8px;
+}
+
+.dsp-detail-eyebrow__id {
+  color: var(--ink-4);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+}
+
+.dsp-detail-title {
+  font-family: var(--font-display);
+  font-size: clamp(24px, 3vw, 40px);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  color: var(--graphite);
+  margin: 0 0 16px;
+}
+
+.dsp-detail-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 32px;
+}
+
+.dsp-detail-amount {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: var(--ink);
+  margin-left: 8px;
+}
+
+/* Back link */
+.dsp-detail-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+  text-decoration: none;
+  margin-bottom: 20px;
+  transition: color 0.12s;
+}
+
+.dsp-detail-back:hover {
+  color: var(--ink);
+}
+
+/* ------------------------------------------------------------
+   Two-column layout (5+7 → ~left 1fr right 360px)
+   Left = detail cards; Right = timeline / sidebar
+   ------------------------------------------------------------ */
+.dsp-detail-body {
+  display: grid;
+  grid-template-columns: 1fr 360px;
+  gap: 24px;
+  align-items: start;
+  padding: 0 40px 64px;
+}
+
+@media (max-width: 900px) {
+  .dsp-detail-body {
+    grid-template-columns: 1fr;
+    padding: 0 24px 64px;
+  }
+}
+
+.dsp-detail-main {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.dsp-detail-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  position: sticky;
+  top: 24px;
+}
+
+/* ------------------------------------------------------------
+   v11 Detail cards — 10px radius, surface bg, 1px border
+   ------------------------------------------------------------ */
+.dsp-detail-card {
+  background: var(--surface-2);
+  border-radius: 10px;
+  padding: 20px 24px;
+}
+
+.dsp-detail-card__section-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+  margin-bottom: 14px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--hairline);
+}
+
+.dsp-detail-card__field-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-5);
+  margin-bottom: 4px;
+}
+
+/* ------------------------------------------------------------
+   Liquid-glass "Current Status" summary tile
+   ≤1 per panel rule; static (no hover shift); used in sidebar
+   ------------------------------------------------------------ */
+.dsp-status-glass {
+  background: rgba(248, 244, 232, 0.85);
+  -webkit-backdrop-filter: blur(20px) saturate(160%);
+  backdrop-filter: blur(20px) saturate(160%);
+  border: 1px solid rgba(255, 255, 255, 0.60);
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.72),
+    0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.dsp-status-glass__eyebrow {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  color: var(--ink-5);
+  margin-bottom: 12px;
+}
+
+.dsp-status-glass__status {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--graphite);
+  margin-bottom: 16px;
+}
+
+.dsp-status-glass__row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  font-family: var(--font-body);
+  font-size: 13px;
+}
+
+.dsp-status-glass__row:last-child {
+  border-bottom: none;
+}
+
+.dsp-status-glass__label {
+  color: var(--ink-4);
+}
+
+.dsp-status-glass__val {
+  font-weight: 600;
+  color: var(--ink);
+}
+
+/* ------------------------------------------------------------
+   Resolution action buttons (unified variants in sidebar)
+   "Rule for Creator" → .btn-primary (Brand Red)
+   "Rule for Merchant" → .btn-secondary (N2W Blue)
+   "Escalate" → .btn-ghost
+   All get bottom-right hover shift
+   ------------------------------------------------------------ */
+.dsp-resolution-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.dsp-resolution-actions .btn-primary,
+.dsp-resolution-actions .btn-secondary,
+.dsp-resolution-actions .btn-ghost {
+  width: 100%;
+  justify-content: center;
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+
+.dsp-resolution-actions .btn-primary:hover:not(:disabled),
+.dsp-resolution-actions .btn-secondary:hover:not(:disabled),
+.dsp-resolution-actions .btn-ghost:hover:not(:disabled) {
+  transform: translate(2px, 2px);
+}
+
+/* ------------------------------------------------------------
+   Evidence upload zone
+   Dashed border, 10px radius, 32px V padding, centered
+   ------------------------------------------------------------ */
+.dsp-evidence-zone {
+  border: 2px dashed var(--ink-4);
+  border-radius: 10px;
+  padding: 32px;
+  text-align: center;
+  background: var(--surface);
+  transition: border-color 0.12s, background 0.12s;
+  cursor: pointer;
+}
+
+.dsp-evidence-zone:hover {
+  border-color: var(--ink-3);
+  background: var(--surface-2);
+}
+
+.dsp-evidence-zone--dragover {
+  border-color: var(--accent-blue);
+  background: var(--accent-blue-tint);
+}
+
+.dsp-evidence-zone__icon {
+  width: 40px;
+  height: 40px;
+  margin: 0 auto 12px;
+  color: var(--ink-5);
+}
+
+.dsp-evidence-zone__label {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+  margin-bottom: 8px;
+}
+
+.dsp-evidence-zone__sub {
+  font-family: var(--font-body);
+  font-size: 12px;
+  color: var(--ink-5);
+  line-height: 1.5;
+}
+
+/* ------------------------------------------------------------
+   Internal note cards — surface-3 tiles
+   ------------------------------------------------------------ */
+.dsp-note-card {
+  padding: 12px 16px;
+  background: var(--surface-3);
+  border-radius: 8px;
+}
+
+.dsp-note-card__header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+
+.dsp-note-card__author {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.dsp-note-card__time {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--ink-5);
+}
+
+.dsp-note-card__content {
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: var(--ink);
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* ------------------------------------------------------------
+   Note textarea input
+   ------------------------------------------------------------ */
+.dsp-note-textarea {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid var(--hairline);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 13px;
+  outline: none;
+  resize: vertical;
+  box-sizing: border-box;
+  transition: border-color 0.12s;
+}
+
+.dsp-note-textarea:focus {
+  border-color: var(--ink);
+}
+
+.dsp-note-textarea::placeholder {
+  color: var(--ink-5);
+}
+
+/* ------------------------------------------------------------
+   Toast (matches admin.css pattern, reinforced with border-radius)
+   ------------------------------------------------------------ */
+.dsp-toast {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  padding: 12px 20px;
+  background: var(--ink);
+  color: var(--snow);
+  border-radius: 8px;
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 600;
+  z-index: 300;
+  box-shadow: var(--shadow-2);
+  animation: dsp-toast-in 0.18s ease;
+}
+
+@keyframes dsp-toast-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ------------------------------------------------------------
+   Responsive — mobile single-column
+   ------------------------------------------------------------ */
+@media (max-width: 640px) {
+  .dsp-detail-body {
+    padding: 0 16px 48px;
+    gap: 16px;
+  }
+
+  .dsp-detail-card {
+    padding: 16px;
+  }
+
+  .dsp-evidence-zone {
+    padding: 24px 16px;
+  }
+
+  .dsp-status-glass {
+    padding: 16px;
+  }
+}

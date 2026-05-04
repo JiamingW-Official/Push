@@ -152,42 +152,246 @@ const leaderboard: LeaderboardRow[] = [
 
 export default function CreatorOverviewPage() {
   return (
-    <div className="overview-shell">
-      <header className="overview-titlebar">
-        <div className="overview-titlebar__inner">
-          <h1 className="overview-title">Your Dashboard</h1>
-          <p className="overview-welcome">
-            Welcome back,{" "}
-            <span className="overview-welcome__name">{CREATOR_NAME}</span>
-          </p>
-        </div>
+    <div
+      style={{
+        minHeight: "100vh",
+        background: "var(--surface-2)",
+        fontFamily: "var(--font-body)",
+      }}
+    >
+      {/* Page header — dark editorial */}
+      <header
+        style={{
+          padding: "40px 40px 32px",
+          background: "var(--char)",
+          borderBottom: "2px solid var(--ink)",
+          marginBottom: 0,
+        }}
+      >
+        <p
+          className="eyebrow"
+          style={{
+            color: "rgba(255,255,255,0.38)",
+            marginBottom: 8,
+            letterSpacing: "0.10em",
+          }}
+        >
+          OVERVIEW
+        </p>
+        <h1
+          style={{
+            fontFamily: "var(--font-display)",
+            fontWeight: 900,
+            fontSize: "clamp(40px,5vw,72px)",
+            color: "var(--snow)",
+            margin: 0,
+            letterSpacing: "-0.04em",
+            lineHeight: 1,
+          }}
+        >
+          Welcome back, {CREATOR_NAME}.
+        </h1>
       </header>
 
-      <main className="overview-main">
-        <section className="overview-kpi-grid" aria-label="Key metrics">
-          <MetricsCard label="Weekly Referrals" value={24} color="#c1121f" />
-          <MetricsCard
-            label="Weekly Earnings"
-            value="$180.00"
-            color="#003049"
-          />
-          <MetricsCard label="Performance Score" value="0.92" color="#669bbc" />
+      <main
+        style={{
+          maxWidth: 1040,
+          margin: "0 auto",
+          padding: "0 32px 64px",
+          display: "flex",
+          flexDirection: "column",
+          gap: 32,
+        }}
+      >
+        {/* KPI row */}
+        <section aria-label="Key metrics">
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(3, 1fr)",
+              gap: 16,
+            }}
+          >
+            <div
+              style={{
+                background: "var(--surface-2)",
+                border: "1px solid var(--hairline)",
+                borderRadius: 10,
+                padding: "24px",
+              }}
+            >
+              <p
+                className="eyebrow"
+                style={{ color: "var(--ink-4)", marginBottom: 8 }}
+              >
+                WEEKLY REFERRALS
+              </p>
+              <p
+                style={{
+                  fontFamily: "var(--font-display)",
+                  fontWeight: 900,
+                  fontSize: "clamp(32px,4vw,56px)",
+                  color: "var(--ink)",
+                  margin: 0,
+                  letterSpacing: "-0.04em",
+                }}
+              >
+                24
+              </p>
+            </div>
+
+            <div
+              style={{
+                background: "var(--surface-2)",
+                border: "1px solid var(--hairline)",
+                borderRadius: 10,
+                padding: "24px",
+              }}
+            >
+              <p
+                className="eyebrow"
+                style={{ color: "var(--ink-4)", marginBottom: 8 }}
+              >
+                WEEKLY EARNINGS
+              </p>
+              <p
+                style={{
+                  fontFamily: "var(--font-display)",
+                  fontWeight: 900,
+                  fontSize: "clamp(32px,4vw,56px)",
+                  color: "var(--ink)",
+                  margin: 0,
+                  letterSpacing: "-0.04em",
+                }}
+              >
+                $180
+              </p>
+            </div>
+
+            <div
+              style={{
+                background: "var(--surface-2)",
+                border: "1px solid var(--hairline)",
+                borderRadius: 10,
+                padding: "24px",
+              }}
+            >
+              <p
+                className="eyebrow"
+                style={{ color: "var(--ink-4)", marginBottom: 8 }}
+              >
+                PERFORMANCE SCORE
+              </p>
+              <p
+                style={{
+                  fontFamily: "var(--font-display)",
+                  fontWeight: 900,
+                  fontSize: "clamp(32px,4vw,56px)",
+                  color: "var(--ink)",
+                  margin: 0,
+                  letterSpacing: "-0.04em",
+                }}
+              >
+                0.92
+              </p>
+            </div>
+          </div>
         </section>
 
-        <section className="overview-section" aria-label="Referral details">
-          <div className="overview-section__header">
-            <h2 className="overview-section__title">Referral Details</h2>
-            <span className="overview-section__meta">
-              {referrals.length} rows · mock data
+        {/* Referral details */}
+        <section
+          aria-label="Referral details"
+          style={{
+            background: "var(--surface-2)",
+            border: "1px solid var(--hairline)",
+            borderRadius: 10,
+            padding: "24px",
+          }}
+        >
+          <div
+            style={{
+              display: "flex",
+              alignItems: "baseline",
+              justifyContent: "space-between",
+              marginBottom: 20,
+            }}
+          >
+            <div>
+              <p
+                className="eyebrow"
+                style={{ color: "var(--ink-4)", marginBottom: 4 }}
+              >
+                REFERRAL DETAILS
+              </p>
+              <h2
+                style={{
+                  fontFamily: "var(--font-display)",
+                  fontWeight: 700,
+                  fontSize: 20,
+                  color: "var(--ink)",
+                  margin: 0,
+                }}
+              >
+                Recent Activity
+              </h2>
+            </div>
+            <span
+              style={{
+                fontFamily: "var(--font-body)",
+                fontSize: 12,
+                color: "var(--ink-4)",
+              }}
+            >
+              {referrals.length} rows
             </span>
           </div>
           <ReferralTable data={referrals} />
         </section>
 
-        <section className="overview-section" aria-label="Weekly leaderboard">
-          <div className="overview-section__header">
-            <h2 className="overview-section__title">Leaderboard — This Week</h2>
-            <span className="overview-section__meta">
+        {/* Leaderboard */}
+        <section
+          aria-label="Weekly leaderboard"
+          style={{
+            background: "var(--surface-2)",
+            border: "1px solid var(--hairline)",
+            borderRadius: 10,
+            padding: "24px",
+          }}
+        >
+          <div
+            style={{
+              display: "flex",
+              alignItems: "baseline",
+              justifyContent: "space-between",
+              marginBottom: 20,
+            }}
+          >
+            <div>
+              <p
+                className="eyebrow"
+                style={{ color: "var(--ink-4)", marginBottom: 4 }}
+              >
+                LEADERBOARD
+              </p>
+              <h2
+                style={{
+                  fontFamily: "var(--font-display)",
+                  fontWeight: 700,
+                  fontSize: 20,
+                  color: "var(--ink)",
+                  margin: 0,
+                }}
+              >
+                This Week
+              </h2>
+            </div>
+            <span
+              style={{
+                fontFamily: "var(--font-body)",
+                fontSize: 12,
+                color: "var(--ink-4)",
+              }}
+            >
               top {leaderboard.length}
             </span>
           </div>

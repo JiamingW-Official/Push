@@ -95,6 +95,55 @@ function stepStatus(id: StepId, p: Progress): ChecklistItemStatus {
 }
 
 /* ─────────────────────────────────────────────────────────────
+   Shared input styles
+   ───────────────────────────────────────────────────────────── */
+
+const inputStyle: React.CSSProperties = {
+  fontFamily: "var(--font-mono)",
+  fontSize: 16,
+  /* 8px-grid: 12px vertical / 16px horizontal */
+  padding: "12px 16px",
+  border: "1px solid var(--ink-4)",
+  borderRadius: 8,
+  background: "var(--surface)",
+  width: "100%",
+  boxSizing: "border-box",
+  color: "var(--ink)",
+  outline: "none",
+};
+
+const labelStyle: React.CSSProperties = {
+  display: "block",
+  fontFamily: "var(--font-mono)",
+  fontSize: 11,
+  fontWeight: 700,
+  letterSpacing: "0.08em",
+  textTransform: "uppercase",
+  color: "var(--ink-3)",
+  marginBottom: 8,
+};
+
+/* ─────────────────────────────────────────────────────────────
+   Step action button row
+   ───────────────────────────────────────────────────────────── */
+
+function StepActions({ children }: { children: React.ReactNode }) {
+  return (
+    <div
+      style={{
+        display: "flex",
+        alignItems: "center",
+        gap: 12,
+        marginTop: 24,
+        flexWrap: "wrap",
+      }}
+    >
+      {children}
+    </div>
+  );
+}
+
+/* ─────────────────────────────────────────────────────────────
    Step content components
    ───────────────────────────────────────────────────────────── */
 
@@ -115,29 +164,77 @@ function ProfileStep({
 
   return (
     <div>
-      {/* Avatar */}
-      <div className="ob2-avatar-row">
+      {/* Avatar upload row */}
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: 16,
+          marginBottom: 24,
+          padding: "16px",
+          background: "var(--surface)",
+          borderRadius: 10,
+          border: "1px solid var(--hairline)",
+        }}
+      >
         <button
           type="button"
-          className="ob2-avatar-btn"
           aria-label="Upload profile photo"
+          style={{
+            width: 56,
+            height: 56,
+            borderRadius: "50%",
+            background: "var(--surface-2)",
+            border: "2px dashed var(--hairline)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            cursor: "pointer",
+            flexShrink: 0,
+            fontSize: 20,
+          }}
         >
           📷
         </button>
-        <div className="ob2-avatar-info">
-          <p className="ob2-avatar-title">Add a profile photo</p>
-          <p className="ob2-avatar-sub">Helps brands recognize you</p>
+        <div>
+          <p
+            style={{
+              fontFamily: "var(--font-body)",
+              fontSize: 14,
+              fontWeight: 600,
+              color: "var(--ink)",
+              marginBottom: 4,
+            }}
+          >
+            Add a profile photo
+          </p>
+          <p
+            style={{
+              fontFamily: "var(--font-body)",
+              fontSize: 13,
+              color: "var(--ink-4)",
+            }}
+          >
+            Helps brands recognize you
+          </p>
         </div>
       </div>
 
-      <div className="ob2-field-row">
-        <div className="ob2-field">
-          <label className="ob2-label" htmlFor="cr-name">
+      {/* Name + Handle row */}
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "1fr 1fr",
+          gap: 16,
+          marginBottom: 16,
+        }}
+      >
+        <div>
+          <label htmlFor="cr-name" style={labelStyle}>
             Display name
           </label>
           <input
             id="cr-name"
-            className="ob2-input"
             type="text"
             placeholder="How brands see you"
             value={profile.name}
@@ -145,32 +242,33 @@ function ProfileStep({
               onChange({ profile: { ...profile, name: e.target.value } })
             }
             autoComplete="name"
+            style={inputStyle}
           />
         </div>
-        <div className="ob2-field">
-          <label className="ob2-label" htmlFor="cr-handle">
+        <div>
+          <label htmlFor="cr-handle" style={labelStyle}>
             Handle
           </label>
           <input
             id="cr-handle"
-            className="ob2-input"
             type="text"
             placeholder="@yourhandle"
             value={profile.handle}
             onChange={(e) =>
               onChange({ profile: { ...profile, handle: e.target.value } })
             }
+            style={inputStyle}
           />
         </div>
       </div>
 
-      <div className="ob2-field">
-        <label className="ob2-label" htmlFor="cr-neighborhood">
+      {/* Neighborhood */}
+      <div style={{ marginBottom: 16 }}>
+        <label htmlFor="cr-neighborhood" style={labelStyle}>
           NYC neighborhood
         </label>
         <input
           id="cr-neighborhood"
-          className="ob2-input"
           type="text"
           placeholder="e.g. Williamsburg, LES, Astoria"
           value={profile.neighborhood}
@@ -178,6 +276,7 @@ function ProfileStep({
           onChange={(e) =>
             onChange({ profile: { ...profile, neighborhood: e.target.value } })
           }
+          style={inputStyle}
         />
         <datalist id="cr-neighborhoods">
           {NYC_NEIGHBORHOODS.map((n) => (
@@ -186,37 +285,53 @@ function ProfileStep({
         </datalist>
       </div>
 
-      <div className="ob2-field">
-        <label className="ob2-label" htmlFor="cr-bio">
+      {/* Bio */}
+      <div style={{ marginBottom: 8 }}>
+        <label htmlFor="cr-bio" style={labelStyle}>
           Short bio
         </label>
-        <textarea
-          id="cr-bio"
-          className="ob2-textarea"
-          placeholder="What makes your content unique?"
-          value={profile.bio}
-          maxLength={BIO_MAX}
-          onChange={(e) =>
-            onChange({ profile: { ...profile, bio: e.target.value } })
-          }
-        />
-        <p
-          className={`ob2-char-count${profile.bio.length >= BIO_MAX ? " ob2-char-count--warn" : ""}`}
-        >
-          {profile.bio.length}/{BIO_MAX}
-        </p>
+        <div style={{ position: "relative" }}>
+          <textarea
+            id="cr-bio"
+            placeholder="What makes your content unique?"
+            value={profile.bio}
+            maxLength={BIO_MAX}
+            onChange={(e) =>
+              onChange({ profile: { ...profile, bio: e.target.value } })
+            }
+            style={{
+              ...inputStyle,
+              resize: "vertical",
+              minHeight: 80,
+              paddingBottom: 28,
+            }}
+          />
+          <span
+            style={{
+              position: "absolute",
+              right: 12,
+              bottom: 10,
+              fontFamily: "var(--font-body)",
+              fontSize: 11,
+              color: profile.bio.length >= BIO_MAX ? "#d97706" : "var(--ink-4)",
+            }}
+          >
+            {profile.bio.length}/{BIO_MAX}
+          </span>
+        </div>
       </div>
 
-      <div className="ob2-step-actions">
+      <StepActions>
         <button
           type="button"
-          className="ob2-btn-primary"
+          className="btn-primary click-shift"
           onClick={onComplete}
           disabled={!canProceed}
+          style={{ opacity: canProceed ? 1 : 0.5 }}
         >
           Save profile →
         </button>
-      </div>
+      </StepActions>
     </div>
   );
 }
@@ -252,34 +367,50 @@ function SocialStep({
           <button
             key={key}
             type="button"
-            className={`ob2-social-btn${social[key] ? " ob2-social-btn--connected" : ""}`}
             onClick={() => toggle(key)}
+            className={`ob2-social-btn${social[key] ? " ob2-social-btn--connected" : ""}`}
+            aria-pressed={social[key]}
           >
-            <span className="ob2-social-icon">{icon}</span>
-            <span>{label}</span>
+            {/* 40×40 icon tile — v11 icon system */}
+            <span className="ob2-social-icon-tile" aria-hidden="true">
+              <span className="ob2-social-icon">{icon}</span>
+            </span>
+            <span className="ob2-social-label">{label}</span>
             {social[key] && (
               <span className="ob2-social-status">Connected</span>
             )}
           </button>
         ))}
       </div>
-      <p className="ob2-input-hint">
+      <p
+        style={{
+          fontFamily: "var(--font-body)",
+          fontSize: 13,
+          color: "var(--ink-4)",
+          marginBottom: 0,
+        }}
+      >
         OAuth stub — connect at least one account to match with campaigns.
       </p>
 
-      <div className="ob2-step-actions">
+      <StepActions>
         <button
           type="button"
-          className="ob2-btn-primary"
+          className="btn-primary click-shift"
           onClick={onComplete}
           disabled={!anyConnected}
+          style={{ opacity: anyConnected ? 1 : 0.5 }}
         >
           Confirm →
         </button>
-        <button type="button" className="ob2-btn-ghost" onClick={onSkip}>
+        <button
+          type="button"
+          className="btn-ghost click-shift"
+          onClick={onSkip}
+        >
           Skip for now
         </button>
-      </div>
+      </StepActions>
     </div>
   );
 }
@@ -287,26 +418,71 @@ function SocialStep({
 function IdentityStep({ onSkip }: { onSkip: () => void }) {
   return (
     <div>
-      <div className="ob2-link-step">
-        <span className="ob2-link-step-icon">🪪</span>
-        <div className="ob2-link-step-info">
-          <p className="ob2-link-step-title">Identity verification</p>
-          <p className="ob2-link-step-sub">
-            Required before your first paid campaign
-          </p>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          gap: 16,
+          padding: "20px",
+          background: "var(--surface)",
+          borderRadius: 10,
+          border: "1px solid var(--hairline)",
+          marginBottom: 12,
+        }}
+      >
+        <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+          <span style={{ fontSize: 28, flexShrink: 0 }}>🪪</span>
+          <div>
+            <p
+              style={{
+                fontFamily: "var(--font-body)",
+                fontSize: 15,
+                fontWeight: 600,
+                color: "var(--ink)",
+                marginBottom: 4,
+              }}
+            >
+              Identity verification
+            </p>
+            <p
+              style={{
+                fontFamily: "var(--font-body)",
+                fontSize: 13,
+                color: "var(--ink-4)",
+              }}
+            >
+              Required before your first paid campaign
+            </p>
+          </div>
         </div>
-        <Link href="/creator/verify" className="ob2-btn-secondary">
+        <Link
+          href="/creator/verify"
+          className="btn-primary click-shift"
+          style={{ textDecoration: "none", flexShrink: 0 }}
+        >
           Verify →
         </Link>
       </div>
-      <p className="ob2-input-hint">
+      <p
+        style={{
+          fontFamily: "var(--font-body)",
+          fontSize: 13,
+          color: "var(--ink-4)",
+          marginBottom: 0,
+        }}
+      >
         Takes under 2 minutes. We use Stripe Identity to keep campaigns safe.
       </p>
-      <div className="ob2-step-actions">
-        <button type="button" className="ob2-btn-ghost" onClick={onSkip}>
+      <StepActions>
+        <button
+          type="button"
+          className="btn-ghost click-shift"
+          onClick={onSkip}
+        >
           Skip for now
         </button>
-      </div>
+      </StepActions>
     </div>
   );
 }
@@ -314,26 +490,71 @@ function IdentityStep({ onSkip }: { onSkip: () => void }) {
 function PayoutStep({ onSkip }: { onSkip: () => void }) {
   return (
     <div>
-      <div className="ob2-link-step">
-        <span className="ob2-link-step-icon">💳</span>
-        <div className="ob2-link-step-info">
-          <p className="ob2-link-step-title">Payout setup</p>
-          <p className="ob2-link-step-sub">
-            Connect a bank or debit card to receive campaign earnings
-          </p>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          gap: 16,
+          padding: "20px",
+          background: "var(--surface)",
+          borderRadius: 10,
+          border: "1px solid var(--hairline)",
+          marginBottom: 12,
+        }}
+      >
+        <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+          <span style={{ fontSize: 28, flexShrink: 0 }}>💳</span>
+          <div>
+            <p
+              style={{
+                fontFamily: "var(--font-body)",
+                fontSize: 15,
+                fontWeight: 600,
+                color: "var(--ink)",
+                marginBottom: 4,
+              }}
+            >
+              Payout setup
+            </p>
+            <p
+              style={{
+                fontFamily: "var(--font-body)",
+                fontSize: 13,
+                color: "var(--ink-4)",
+              }}
+            >
+              Connect a bank or debit card to receive campaign earnings
+            </p>
+          </div>
         </div>
-        <Link href="/creator/wallet" className="ob2-btn-secondary">
+        <Link
+          href="/creator/wallet"
+          className="btn-primary click-shift"
+          style={{ textDecoration: "none", flexShrink: 0 }}
+        >
           Set up →
         </Link>
       </div>
-      <p className="ob2-input-hint">
+      <p
+        style={{
+          fontFamily: "var(--font-body)",
+          fontSize: 13,
+          color: "var(--ink-4)",
+          marginBottom: 0,
+        }}
+      >
         Payments release within 48 hours of campaign completion.
       </p>
-      <div className="ob2-step-actions">
-        <button type="button" className="ob2-btn-ghost" onClick={onSkip}>
+      <StepActions>
+        <button
+          type="button"
+          className="btn-ghost click-shift"
+          onClick={onSkip}
+        >
           Skip for now
         </button>
-      </div>
+      </StepActions>
     </div>
   );
 }
@@ -341,23 +562,70 @@ function PayoutStep({ onSkip }: { onSkip: () => void }) {
 function DiscoveryStep({ onComplete }: { onComplete: () => void }) {
   return (
     <div>
-      <div className="ob2-tour-callout">
-        <p className="ob2-tour-eyebrow">Guided tour</p>
-        <h3 className="ob2-tour-title">Find your first campaign in NYC.</h3>
-        <p className="ob2-tour-desc">
+      <div
+        style={{
+          padding: "24px",
+          background: "var(--surface-2)",
+          borderRadius: 10,
+          border: "1px solid var(--hairline)",
+          marginBottom: 12,
+        }}
+      >
+        <p
+          style={{
+            fontFamily: "var(--font-body)",
+            fontSize: 11,
+            fontWeight: 600,
+            letterSpacing: "0.08em",
+            textTransform: "uppercase",
+            color: "var(--ink-4)",
+            marginBottom: 8,
+          }}
+        >
+          Guided tour
+        </p>
+        <h3
+          style={{
+            fontFamily: "var(--font-display)",
+            fontSize: 24,
+            fontWeight: 900,
+            color: "var(--ink)",
+            letterSpacing: "-0.02em",
+            marginBottom: 12,
+            lineHeight: 1.2,
+          }}
+        >
+          Find your first campaign in NYC.
+        </h3>
+        <p
+          style={{
+            fontFamily: "var(--font-body)",
+            fontSize: 15,
+            color: "var(--ink-3)",
+            lineHeight: 1.6,
+          }}
+        >
           Browse live campaigns by neighborhood, category, or payout. Apply in
           one tap — brands review within 24 hours.
         </p>
       </div>
 
-      <div className="ob2-step-actions">
-        <Link href="/creator/explore" className="ob2-btn-primary">
+      <StepActions>
+        <Link
+          href="/creator/explore"
+          className="btn-primary click-shift"
+          style={{ textDecoration: "none" }}
+        >
           Explore campaigns →
         </Link>
-        <button type="button" className="ob2-btn-ghost" onClick={onComplete}>
+        <button
+          type="button"
+          className="btn-ghost click-shift"
+          onClick={onComplete}
+        >
           Mark as seen
         </button>
-      </div>
+      </StepActions>
     </div>
   );
 }
@@ -399,31 +667,116 @@ function NotifsStep({
 
   return (
     <div>
-      {items.map(({ key, name, desc }) => (
-        <div key={key} className="ob2-toggle-row">
-          <div className="ob2-toggle-info">
-            <p className="ob2-toggle-name">{name}</p>
-            <p className="ob2-toggle-desc">{desc}</p>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          gap: 2,
+          marginBottom: 8,
+        }}
+      >
+        {items.map(({ key, name, desc }) => (
+          <div
+            key={key}
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              gap: 16,
+              padding: "16px",
+              borderRadius: 8,
+              background: "var(--surface)",
+              border: "1px solid var(--hairline)",
+            }}
+          >
+            <div>
+              <p
+                style={{
+                  fontFamily: "var(--font-body)",
+                  fontSize: 15,
+                  fontWeight: 600,
+                  color: "var(--ink)",
+                  marginBottom: 2,
+                }}
+              >
+                {name}
+              </p>
+              <p
+                style={{
+                  fontFamily: "var(--font-body)",
+                  fontSize: 13,
+                  color: "var(--ink-4)",
+                }}
+              >
+                {desc}
+              </p>
+            </div>
+            <label
+              style={{
+                position: "relative",
+                display: "inline-block",
+                width: 44,
+                height: 24,
+                flexShrink: 0,
+                cursor: "pointer",
+              }}
+            >
+              <input
+                type="checkbox"
+                checked={notifs[key]}
+                onChange={() => toggle(key)}
+                style={{
+                  opacity: 0,
+                  width: 0,
+                  height: 0,
+                  position: "absolute",
+                }}
+              />
+              <span
+                style={{
+                  position: "absolute",
+                  inset: 0,
+                  borderRadius: 12,
+                  background: notifs[key]
+                    ? "var(--brand-red)"
+                    : "var(--hairline)",
+                  transition: "background 0.2s ease",
+                }}
+              />
+              <span
+                style={{
+                  position: "absolute",
+                  top: 3,
+                  left: notifs[key] ? 23 : 3,
+                  width: 18,
+                  height: 18,
+                  borderRadius: "50%",
+                  background: "var(--snow)",
+                  transition: "left 0.2s ease",
+                  boxShadow: "0 1px 3px rgba(0,0,0,0.15)",
+                }}
+              />
+            </label>
           </div>
-          <label className="ob2-toggle-switch">
-            <input
-              type="checkbox"
-              checked={notifs[key]}
-              onChange={() => toggle(key)}
-            />
-            <span className="ob2-toggle-track" />
-          </label>
-        </div>
-      ))}
+        ))}
+      </div>
 
-      <div className="ob2-step-actions" style={{ marginTop: 24 }}>
-        <button type="button" className="ob2-btn-primary" onClick={onComplete}>
+      <StepActions>
+        <button
+          type="button"
+          className="btn-primary click-shift"
+          onClick={onComplete}
+        >
           Save preferences →
         </button>
-        <button type="button" className="ob2-btn-ghost" onClick={onSkip}>
+        <button
+          type="button"
+          className="btn-ghost click-shift"
+          onClick={onSkip}
+        >
           Skip
         </button>
-      </div>
+      </StepActions>
     </div>
   );
 }
@@ -440,38 +793,96 @@ function InviteStep({ onComplete }: { onComplete: () => void }) {
 
   return (
     <div>
-      <div className="ob2-invite-box">
-        <p className="ob2-invite-label">Referral bonus</p>
-        <h3 className="ob2-invite-headline">
+      <div
+        style={{
+          padding: "24px",
+          background: "var(--surface-2)",
+          borderRadius: 10,
+          border: "1px solid var(--hairline)",
+          marginBottom: 12,
+        }}
+      >
+        <p
+          style={{
+            fontFamily: "var(--font-body)",
+            fontSize: 11,
+            fontWeight: 600,
+            letterSpacing: "0.08em",
+            textTransform: "uppercase",
+            color: "var(--ink-4)",
+            marginBottom: 12,
+          }}
+        >
+          Referral bonus
+        </p>
+        <h3
+          style={{
+            fontFamily: "var(--font-display)",
+            fontSize: 32,
+            fontWeight: 900,
+            color: "var(--ink)",
+            letterSpacing: "-0.02em",
+            marginBottom: 16,
+            lineHeight: 1.1,
+          }}
+        >
           Give $25.
           <br />
           Get <em>$25</em>.
         </h3>
-        <div className="ob2-invite-link-row">
+        <div
+          style={{
+            display: "flex",
+            gap: 8,
+            alignItems: "center",
+          }}
+        >
           <input
             type="text"
-            className="ob2-invite-link-input"
             value={inviteLink}
             readOnly
             aria-label="Your invite link"
+            style={{
+              flex: 1,
+              fontFamily: "var(--font-body)",
+              fontSize: 14,
+              padding: "10px 14px",
+              border: "1px solid var(--hairline)",
+              borderRadius: 8,
+              background: "var(--surface)",
+              color: "var(--ink-3)",
+              outline: "none",
+            }}
           />
           <button
             type="button"
-            className="ob2-invite-copy-btn"
+            className="btn-primary click-shift"
             onClick={handleCopy}
+            style={{ flexShrink: 0, whiteSpace: "nowrap" }}
           >
             {copied ? "Copied!" : "Copy link"}
           </button>
         </div>
       </div>
-      <p className="ob2-input-hint">
+      <p
+        style={{
+          fontFamily: "var(--font-body)",
+          fontSize: 13,
+          color: "var(--ink-4)",
+          marginBottom: 0,
+        }}
+      >
         Both you and your friend earn $25 after their first completed campaign.
       </p>
-      <div className="ob2-step-actions">
-        <button type="button" className="ob2-btn-primary" onClick={onComplete}>
+      <StepActions>
+        <button
+          type="button"
+          className="btn-primary click-shift"
+          onClick={onComplete}
+        >
           Done →
         </button>
-      </div>
+      </StepActions>
     </div>
   );
 }

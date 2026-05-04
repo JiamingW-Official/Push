@@ -49,6 +49,74 @@ function makePillIcon(payout: number, highlight = false) {
   });
 }
 
+// Category icon system — unique color + SVG path per activity type
+const CATEGORY_ICONS: Record<string, { color: string; path: string }> = {
+  "FOOD & DRINK": {
+    color: "#f97316",
+    path: "M3 2v7c0 1.1.9 2 2 2h4c1.1 0 2-.9 2-2V2M7 2v20M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3v0z",
+  },
+  COFFEE: {
+    color: "#92400e",
+    path: "M17 8h1a4 4 0 0 1 0 8h-1M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4ZM6 2v2M10 2v2M14 2v2",
+  },
+  RETAIL: {
+    color: "#7c3aed",
+    path: "M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4ZM3 6h18M16 10a4 4 0 0 1-8 0",
+  },
+  WELLNESS: {
+    color: "#15803d",
+    path: "M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10ZM2 21c0-3 1.85-5.36 5.08-6",
+  },
+  BEAUTY: {
+    color: "#be185d",
+    path: "M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z",
+  },
+  FITNESS: {
+    color: "#1d4ed8",
+    path: "M13 2 3 14h9l-1 8 10-12h-9l1-8z",
+  },
+  LIFESTYLE: {
+    color: "#d97706",
+    path: "m12 2 3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z",
+  },
+  ENTERTAINMENT: {
+    color: "#db2777",
+    path: "m11.5 2-1.5 7H5l5.5 3.5L8 19l4-2.5 4 2.5-2.5-6.5L19 9h-5z",
+  },
+  TRAVEL: {
+    color: "#0891b2",
+    path: "M17.8 19.2 16 11l3.5-3.5C21 6 21 4 19.5 2.5S18 2 16.5 3.5L13 7 4.8 5.2C4.3 5.1 3.9 5.4 3.7 5.8l-.7 1.4c-.2.4-.1.9.2 1.2l5 4-1 2.5-2.5 1-.8.8L5.5 18l2 2 1.7-1.7 1-.8 2.5-1 4 5c.3.3.8.4 1.2.2l1.4-.7c.4-.2.7-.6.6-1.1",
+  },
+  HEALTH: {
+    color: "#059669",
+    path: "M22 12h-4l-3 9L9 3l-3 9H2",
+  },
+};
+
+const DEFAULT_CATEGORY = {
+  color: "#6b7280",
+  path: "M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm1 15h-2v-4H9l3-7 3 7h-2v4z",
+};
+
+function makeCategoryIcon(category: string | undefined, highlight = false) {
+  const key = (category ?? "").toUpperCase().trim();
+  const { color, path } = CATEGORY_ICONS[key] ?? DEFAULT_CATEGORY;
+  const activeColor = highlight ? "#fff" : color;
+  const bgColor = highlight ? color : "#fff";
+  const border = highlight ? "none" : `2px solid ${color}`;
+  return L.divIcon({
+    className: "map-cat-anchor",
+    html: `<div class="map-cat-pin${highlight ? " map-cat-pin--active" : ""}" style="background:${bgColor};border:${border};">
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="${activeColor}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="${path}"/>
+      </svg>
+    </div>`,
+    iconSize: [36, 36],
+    iconAnchor: [18, 18],
+    popupAnchor: [0, -22],
+  });
+}
+
 // Monochromatic tile layer
 const MONO_TILES =
   "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png";
@@ -65,6 +133,34 @@ function Recenter({ lat, lng }: { lat: number; lng: number }) {
   useEffect(() => {
     map.setView([lat, lng], map.getZoom(), { animate: true });
   }, [lat, lng, map]);
+  return null;
+}
+
+/* Resize observer — Leaflet calculates tile positions from container size at
+   mount, so any post-mount resize (dynamic-import settle, parent reflow,
+   container query breakpoint) leaves the tile grid offset. invalidateSize()
+   tells Leaflet to recompute. Without this, tiles render at wrong x/y and
+   the map appears empty even though tiles loaded. */
+function ResizeFix() {
+  const map = useMap();
+  useEffect(() => {
+    /* Initial fix — settle 50ms after mount when container has its real size */
+    const t1 = setTimeout(() => map.invalidateSize(), 50);
+    const t2 = setTimeout(() => map.invalidateSize(), 250);
+
+    /* Observe container resizes for container-query breakpoints */
+    const container = map.getContainer();
+    const ro = new ResizeObserver(() => {
+      map.invalidateSize();
+    });
+    ro.observe(container);
+
+    return () => {
+      clearTimeout(t1);
+      clearTimeout(t2);
+      ro.disconnect();
+    };
+  }, [map]);
   return null;
 }
 
@@ -100,7 +196,7 @@ function CampaignMarker({
   const markerRef = useRef<L.Marker>(null);
 
   const icon = showPricePills
-    ? makePillIcon(c.payout, isActive)
+    ? makeCategoryIcon(c.category, isActive)
     : makeDotIcon(isActive);
 
   const isFree = c.payout === 0;
@@ -143,7 +239,7 @@ function CampaignMarker({
               ) : (
                 <div
                   className="map-popup-img"
-                  style={{ background: "var(--dark)" }}
+                  style={{ background: "var(--ink)" }}
                 />
               )}
               <button
@@ -220,6 +316,7 @@ export default function MapView({
     >
       <Recenter lat={center[0]} lng={center[1]} />
       <ZoomControls />
+      <ResizeFix />
 
       <TileLayer attribution={tileAttr} url={tileUrl} />
 

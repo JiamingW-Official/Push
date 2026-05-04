@@ -102,23 +102,52 @@ function CampaignContextBar({
     status === "active" || status === "live" || status === "running";
 
   return (
-    <div className="inbox-thread__context-bar" aria-label="Campaign context">
-      <span className="inbox-thread__context-bar-icon" aria-hidden>
-        ◈
-      </span>
-      <span className="inbox-thread__context-bar-label">Campaign</span>
-      <span className="inbox-thread__context-bar-name">{title}</span>
+    <div
+      style={{
+        display: "flex",
+        alignItems: "center",
+        gap: 12,
+        padding: "10px 24px",
+        background: "var(--surface-2)",
+        borderBottom: "1px solid var(--hairline)",
+        fontFamily: "var(--font-body)",
+        fontSize: 12,
+      }}
+      aria-label="Campaign context"
+    >
+      <span style={{ color: "var(--ink-4)", fontSize: 10 }}>◈</span>
       <span
-        className={`inbox-thread__context-bar-status ${
-          isActive
-            ? "inbox-thread__context-bar-status--active"
-            : "inbox-thread__context-bar-status--pending"
-        }`}
+        style={{
+          color: "var(--ink-4)",
+          textTransform: "uppercase",
+          letterSpacing: "0.06em",
+        }}
+      >
+        Campaign
+      </span>
+      <span style={{ color: "var(--ink)", fontWeight: 600 }}>{title}</span>
+      <span
+        style={{
+          padding: "2px 8px",
+          borderRadius: 4,
+          fontSize: 11,
+          background: isActive
+            ? "var(--accent-blue)"
+            : "var(--surface-3, var(--surface-2))",
+          color: isActive ? "var(--snow)" : "var(--ink-3)",
+          fontWeight: 600,
+          textTransform: "uppercase",
+          letterSpacing: "0.04em",
+        }}
       >
         {isActive ? "Active" : (status ?? "Pending")}
       </span>
       {earn != null && earn > 0 && (
-        <span className="inbox-thread__context-bar-earn">${earn}</span>
+        <span
+          style={{ marginLeft: "auto", color: "var(--ink)", fontWeight: 700 }}
+        >
+          ${earn}
+        </span>
       )}
     </div>
   );
@@ -128,33 +157,95 @@ function CampaignContextBar({
 function Bubble({ message, isSelf }: { message: Message; isSelf: boolean }) {
   return (
     <div
-      className={`msg-bubble-row ${isSelf ? "msg-bubble-row--self" : "msg-bubble-row--other"}`}
+      style={{
+        display: "flex",
+        justifyContent: isSelf ? "flex-end" : "flex-start",
+        marginBottom: 8,
+      }}
     >
-      <div className="msg-bubble-wrap">
+      <div
+        style={{
+          maxWidth: "72%",
+          display: "flex",
+          flexDirection: "column",
+          gap: 4,
+        }}
+      >
         {/* Campaign reference card */}
         {message.contentType === "campaign-reference" &&
           message.campaignRef && (
-            <div className="msg-campaign-ref">
-              <span className="msg-campaign-ref__label">Campaign</span>
-              <span className="msg-campaign-ref__title">
+            <div
+              style={{
+                background: "var(--surface-2)",
+                border: "1px solid var(--hairline)",
+                borderRadius: 10,
+                padding: "12px 16px",
+                fontFamily: "var(--font-body)",
+              }}
+            >
+              <div
+                style={{
+                  fontSize: 10,
+                  color: "var(--ink-4)",
+                  textTransform: "uppercase",
+                  letterSpacing: "0.06em",
+                  marginBottom: 4,
+                }}
+              >
+                Campaign
+              </div>
+              <div
+                style={{
+                  fontSize: 14,
+                  fontWeight: 700,
+                  color: "var(--ink)",
+                  fontFamily: "var(--font-display)",
+                }}
+              >
                 {message.campaignRef.title}
-              </span>
-              <span className="msg-campaign-ref__meta">
+              </div>
+              <div
+                style={{ fontSize: 12, color: "var(--ink-3)", marginTop: 2 }}
+              >
                 {message.campaignRef.businessName}
                 {message.campaignRef.payout > 0
                   ? ` · $${message.campaignRef.payout}`
                   : " · Free product"}
-              </span>
+              </div>
             </div>
           )}
 
         {/* Text bubble */}
         {message.content && (
           <div
-            className={`msg-bubble ${isSelf ? "msg-bubble--self" : "msg-bubble--other"}`}
+            style={{
+              background: isSelf ? "var(--brand-red)" : "var(--surface-2)",
+              border: isSelf ? "none" : "1px solid var(--hairline)",
+              borderRadius: 10,
+              padding: "10px 14px",
+              color: isSelf ? "var(--snow)" : "var(--ink)",
+            }}
           >
-            <p className="msg-bubble__text">{message.content}</p>
-            <span className="msg-bubble__time">
+            <p
+              style={{
+                margin: 0,
+                fontFamily: "var(--font-body)",
+                fontSize: 14,
+                lineHeight: 1.5,
+              }}
+            >
+              {message.content}
+            </p>
+            <span
+              style={{
+                display: "block",
+                fontFamily: "var(--font-body)",
+                fontSize: 11,
+                color: isSelf ? "rgba(255,255,255,0.6)" : "var(--ink-4)",
+                marginTop: 4,
+                textAlign: "right",
+              }}
+            >
               {formatTime(message.createdAt)}
             </span>
           </div>
@@ -207,20 +298,32 @@ function Composer({
   };
 
   return (
-    <div className="inbox-composer">
+    <div
+      style={{
+        borderTop: "1px solid var(--hairline)",
+        background: "var(--surface)",
+        padding: "12px 16px 16px",
+        flexShrink: 0,
+      }}
+    >
       {/* Quick reply chips */}
       <div
-        className="inbox-composer__quickreply"
+        style={{ display: "flex", flexWrap: "wrap", gap: 8, marginBottom: 12 }}
         role="group"
         aria-label="Quick replies"
       >
         {QUICK_REPLIES.map((qr) => (
           <button
             key={qr}
-            className="inbox-composer__chip"
             onClick={() => handleChip(qr)}
             type="button"
             tabIndex={0}
+            className="btn-ghost click-shift"
+            style={{
+              fontSize: 12,
+              padding: "4px 12px",
+              fontFamily: "var(--font-body)",
+            }}
           >
             {qr}
           </button>
@@ -228,10 +331,9 @@ function Composer({
       </div>
 
       {/* Input row */}
-      <div className="inbox-composer__input-row">
+      <div style={{ display: "flex", gap: 12, alignItems: "flex-end" }}>
         <textarea
           ref={textareaRef}
-          className="inbox-composer__textarea"
           value={value}
           placeholder="Write a message…"
           rows={1}
@@ -242,20 +344,42 @@ function Composer({
           }}
           onKeyDown={handleKey}
           aria-label="Message input"
+          style={{
+            flex: 1,
+            resize: "none",
+            border: "1px solid var(--hairline)",
+            borderRadius: 8,
+            padding: "10px 14px",
+            fontFamily: "var(--font-body)",
+            fontSize: 14,
+            color: "var(--ink)",
+            background: "var(--snow)",
+            outline: "none",
+            lineHeight: 1.5,
+            overflow: "hidden",
+          }}
         />
         <button
-          className="inbox-composer__send"
+          className="btn-primary click-shift"
           onClick={submit}
           disabled={!canSend}
           type="button"
           aria-label="Send message"
+          style={{ flexShrink: 0, opacity: canSend ? 1 : 0.5 }}
         >
           Send
         </button>
       </div>
 
       {/* Hint */}
-      <p className="inbox-composer__hint">
+      <p
+        style={{
+          fontFamily: "var(--font-body)",
+          fontSize: 11,
+          color: "var(--ink-4)",
+          margin: "8px 0 0",
+        }}
+      >
         Enter to send · Shift+Enter for new line
       </p>
     </div>
@@ -363,44 +487,125 @@ export default function ThreadDetailPage() {
   const otherInitial = other ? other.name.charAt(0).toUpperCase() : "?";
 
   return (
-    <div className="inbox-thread">
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        height: "100%",
+        background: "var(--surface)",
+        overflow: "hidden",
+      }}
+    >
       {/* Header */}
-      <header className="inbox-thread__header">
+      <header
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: 12,
+          padding: "16px 24px",
+          borderBottom: "1px solid var(--hairline)",
+          background: "var(--snow)",
+          flexShrink: 0,
+        }}
+      >
         <Link
           href="/creator/inbox/messages"
-          className="inbox-thread__back"
           aria-label="Back to messages"
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            width: 32,
+            height: 32,
+            border: "1px solid var(--hairline)",
+            borderRadius: 8,
+            color: "var(--ink)",
+            background: "var(--surface-2)",
+            flexShrink: 0,
+          }}
+          className="click-shift"
         >
           <BackIcon />
         </Link>
 
-        <div className="inbox-thread__avatar-wrap">
+        {/* Avatar */}
+        <div style={{ position: "relative", flexShrink: 0 }}>
           <div
-            className="inbox-thread__avatar"
+            style={{
+              width: 40,
+              height: 40,
+              borderRadius: "50%",
+              background: avatarStyle(otherInitial).background as string,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              fontFamily: "var(--font-display)",
+              fontWeight: 700,
+              fontSize: 16,
+              color: "var(--snow)",
+            }}
             data-initial={otherInitial}
-            style={avatarStyle(otherInitial)}
           >
             {otherInitial}
           </div>
-          {/* Status dot — active for demo */}
-          <span className="inbox-thread__avatar-status" aria-label="Online" />
+          <span
+            aria-label="Online"
+            style={{
+              position: "absolute",
+              bottom: 0,
+              right: 0,
+              width: 10,
+              height: 10,
+              borderRadius: "50%",
+              background: "#22c55e",
+              border: "2px solid var(--snow)",
+            }}
+          />
         </div>
 
-        <div className="inbox-thread__info">
-          <div className="inbox-thread__name">
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <div
+            style={{
+              fontFamily: "var(--font-display)",
+              fontWeight: 700,
+              fontSize: 16,
+              color: "var(--ink)",
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+            }}
+          >
             {other ? other.name : "Loading…"}
           </div>
           {other && (
-            <div className="inbox-thread__status">
+            <div
+              style={{
+                fontFamily: "var(--font-body)",
+                fontSize: 12,
+                color: "var(--ink-4)",
+                marginTop: 2,
+              }}
+            >
               {lastSeenLabel(thread?.updatedAt ?? new Date().toISOString())}
             </div>
           )}
         </div>
 
         {thread?.campaignTitle && (
-          <div className="inbox-thread__campaign-badge">
+          <span
+            style={{
+              padding: "4px 12px",
+              borderRadius: 8,
+              background: "var(--surface-2)",
+              border: "1px solid var(--hairline)",
+              fontFamily: "var(--font-body)",
+              fontSize: 12,
+              color: "var(--ink-3)",
+              flexShrink: 0,
+            }}
+          >
             {thread.campaignTitle}
-          </div>
+          </span>
         )}
       </header>
 
@@ -414,13 +619,23 @@ export default function ThreadDetailPage() {
       )}
 
       {/* Messages area */}
-      <div className="inbox-thread__messages" ref={scrollRef}>
+      <div
+        ref={scrollRef}
+        style={{
+          flex: 1,
+          overflowY: "auto",
+          padding: "16px 24px",
+          display: "flex",
+          flexDirection: "column",
+          gap: 0,
+        }}
+      >
         {loading && (
           <p
             style={{
               fontFamily: "var(--font-body)",
-              fontSize: 11,
-              color: "rgba(0,48,73,0.28)",
+              fontSize: 12,
+              color: "var(--ink-4)",
               textAlign: "center",
               margin: "auto",
               letterSpacing: "0.04em",
@@ -445,9 +660,9 @@ export default function ThreadDetailPage() {
             <p
               style={{
                 fontFamily: "var(--font-display)",
-                fontSize: 17,
+                fontSize: 20,
                 fontWeight: 700,
-                color: "rgba(0,48,73,0.22)",
+                color: "var(--ink-4)",
                 letterSpacing: "-0.02em",
                 margin: 0,
               }}
@@ -457,8 +672,8 @@ export default function ThreadDetailPage() {
             <p
               style={{
                 fontFamily: "var(--font-body)",
-                fontSize: 12,
-                color: "rgba(0,48,73,0.18)",
+                fontSize: 13,
+                color: "var(--ink-4)",
                 margin: 0,
               }}
             >
@@ -469,12 +684,35 @@ export default function ThreadDetailPage() {
 
         {!loading &&
           groups.map((group, gi) => (
-            <div
-              key={group.date}
-              className="inbox-thread__group"
-              style={{ animationDelay: `${gi * 80}ms` }}
-            >
-              <div className="inbox-thread__date-divider">{group.date}</div>
+            <div key={group.date} style={{ animationDelay: `${gi * 80}ms` }}>
+              {/* Date divider */}
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 12,
+                  margin: "16px 0",
+                }}
+              >
+                <div
+                  style={{ flex: 1, height: 1, background: "var(--hairline)" }}
+                />
+                <span
+                  style={{
+                    fontFamily: "var(--font-body)",
+                    fontSize: 11,
+                    color: "var(--ink-4)",
+                    textTransform: "uppercase",
+                    letterSpacing: "0.06em",
+                    flexShrink: 0,
+                  }}
+                >
+                  {group.date}
+                </span>
+                <div
+                  style={{ flex: 1, height: 1, background: "var(--hairline)" }}
+                />
+              </div>
               {group.messages.map((msg) => (
                 <Bubble
                   key={msg.id}
@@ -495,22 +733,22 @@ export default function ThreadDetailPage() {
 /* ── Avatar color by initial ────────────────────────────────── */
 function avatarStyle(initial: string): React.CSSProperties {
   const map: Record<string, string> = {
-    B: "var(--primary)",
-    H: "var(--primary)",
-    N: "var(--primary)",
-    T: "var(--primary)",
-    C: "var(--tertiary)",
-    I: "var(--tertiary)",
-    O: "var(--tertiary)",
-    U: "var(--tertiary)",
-    E: "var(--champagne)",
-    K: "var(--champagne)",
-    W: "var(--champagne)",
-    F: "var(--accent)",
-    L: "var(--accent)",
-    R: "var(--accent)",
+    B: "var(--brand-red)",
+    H: "var(--brand-red)",
+    N: "var(--brand-red)",
+    T: "var(--brand-red)",
+    C: "var(--accent-blue)",
+    I: "var(--accent-blue)",
+    O: "var(--accent-blue)",
+    U: "var(--accent-blue)",
+    E: "#bfa170",
+    K: "#bfa170",
+    W: "#bfa170",
+    F: "var(--ink)",
+    L: "var(--ink)",
+    R: "var(--ink)",
   };
-  return { background: map[initial] ?? "var(--dark)" };
+  return { background: map[initial] ?? "var(--ink-3)" };
 }
 
 function BackIcon() {

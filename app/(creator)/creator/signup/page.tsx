@@ -4,7 +4,6 @@ import { useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/db/browser";
-import "@/styles/auth-split.css";
 import "./signup.css";
 
 /* ── Types ───────────────────────────────────────────────── */
@@ -30,17 +29,6 @@ const EMPTY: Field = {
   instagram: "",
   bio: "",
 };
-
-/* ── Tier progression data ───────────────────────────────── */
-
-const TIERS = [
-  { icon: "◎", label: "Spark", desc: "Just getting started" },
-  { icon: "◈", label: "Explorer", desc: "First campaigns" },
-  { icon: "◆", label: "Anchor", desc: "Regular earner" },
-  { icon: "◉", label: "Amplifier", desc: "Trusted voice" },
-  { icon: "◑", label: "Luminary", desc: "Top creator" },
-  { icon: "★", label: "Icon", desc: "Elite tier" },
-];
 
 /* ── Helpers ─────────────────────────────────────────────── */
 
@@ -74,6 +62,33 @@ function sanitizeError(err: unknown): string {
     return "Please enter a valid email address.";
   return err.message;
 }
+
+/* ── Shared input styles (v11) ───────────────────────────── */
+/* Focus styles handled via signup.css .signup-input:focus */
+
+const inputStyle: React.CSSProperties = {
+  fontFamily: "var(--font-mono)",
+  fontSize: 16,
+  padding: "12px 16px",
+  border: "1px solid var(--ink-4)",
+  borderRadius: 8,
+  background: "var(--surface)",
+  width: "100%",
+  boxSizing: "border-box",
+  color: "var(--ink)",
+  outline: "none", // focus ring provided by CSS class
+};
+
+const labelStyle: React.CSSProperties = {
+  display: "block",
+  fontFamily: "var(--font-mono)",
+  fontSize: 12,
+  fontWeight: 600,
+  letterSpacing: "0.08em",
+  textTransform: "uppercase",
+  color: "var(--ink-3)",
+  marginBottom: 8,
+};
 
 /* ── Page component ──────────────────────────────────────── */
 
@@ -186,7 +201,7 @@ export default function CreatorSignupPage() {
       if (profileError) throw profileError;
 
       if (data.session) {
-        router.push("/explore");
+        router.push("/creator/onboarding");
       } else {
         setSuccess(true);
       }
@@ -205,44 +220,126 @@ export default function CreatorSignupPage() {
 
   if (success) {
     return (
-      <div className="page">
-        <BrandPanel />
-        <div className="form-panel">
-          <div className="form-wrap">
-            <div className="form-success" role="status" aria-live="polite">
-              <div className="success-check" aria-hidden="true">
-                <svg viewBox="0 0 48 48" fill="none">
-                  <circle
-                    cx="24"
-                    cy="24"
-                    r="22"
-                    stroke="var(--tertiary)"
-                    strokeWidth="2"
-                  />
-                  <path
-                    d="M14 24L21 31L34 17"
-                    stroke="var(--tertiary)"
-                    strokeWidth="2.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    className="check-path"
-                  />
-                </svg>
-              </div>
-              <h2 className="success-heading">You&rsquo;re in!</h2>
-              <p className="success-body">
-                We sent a confirmation link to <strong>{fields.email}</strong>.
-                Verify your email to get your first campaign. Check Promotions
-                or Spam if it&apos;s not in your inbox within 2 minutes.
-              </p>
-              <Link href="/explore" className="btn btn-primary success-cta">
-                Explore campaigns →
-              </Link>
-            </div>
-            <p className="form-footer">
-              Wrong email? <Link href="/creator/signup">Start over</Link>
-            </p>
+      <div
+        style={{
+          minHeight: "100vh",
+          background: "var(--surface)",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          padding: "48px 24px",
+        }}
+      >
+        <div style={{ maxWidth: 480, width: "100%", textAlign: "center" }}>
+          {/* Brand logo */}
+          <div style={{ marginBottom: 32 }}>
+            <Link
+              href="/"
+              style={{
+                fontFamily: "var(--font-display)",
+                fontWeight: 800,
+                fontSize: 24,
+                color: "var(--ink)",
+                textDecoration: "none",
+                letterSpacing: "-0.02em",
+              }}
+            >
+              PUSH
+            </Link>
           </div>
+
+          {/* Success card — v11: 10px radius, shadow-2 */}
+          <div
+            style={{
+              background: "var(--surface-2)",
+              borderRadius: 10,
+              padding: "48px 48px",
+              textAlign: "center",
+              boxShadow: "var(--shadow-2)",
+            }}
+          >
+            {/* Checkmark */}
+            <div
+              style={{
+                width: 56,
+                height: 56,
+                borderRadius: "50%",
+                border: "2px solid var(--brand-red)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                margin: "0 auto 24px",
+              }}
+              aria-hidden="true"
+            >
+              <svg width="24" height="20" viewBox="0 0 24 20" fill="none">
+                <path
+                  d="M2 10L9 17L22 2"
+                  stroke="var(--brand-red)"
+                  strokeWidth="2.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </div>
+
+            <h2
+              style={{
+                fontFamily: "var(--font-display)",
+                fontSize: 32,
+                fontWeight: 900,
+                color: "var(--ink)",
+                marginBottom: 16,
+                letterSpacing: "-0.02em",
+              }}
+            >
+              You&rsquo;re in.
+            </h2>
+
+            <p
+              style={{
+                fontFamily: "var(--font-body)",
+                fontSize: 16,
+                color: "var(--ink-3)",
+                lineHeight: 1.6,
+                marginBottom: 32,
+              }}
+            >
+              We sent a confirmation link to{" "}
+              <strong style={{ color: "var(--ink)" }}>{fields.email}</strong>.
+              Verify your email to get your first campaign.
+            </p>
+
+            <Link
+              href="/creator/discover"
+              className="btn-primary"
+              style={{
+                display: "block",
+                textAlign: "center",
+                textDecoration: "none",
+              }}
+            >
+              Explore campaigns
+            </Link>
+          </div>
+
+          <p
+            style={{
+              fontFamily: "var(--font-body)",
+              fontSize: 14,
+              color: "var(--ink-4)",
+              marginTop: 24,
+              textAlign: "center",
+            }}
+          >
+            Wrong email?{" "}
+            <Link
+              href="/creator/signup"
+              style={{ color: "var(--brand-red)", textDecoration: "underline" }}
+            >
+              Start over
+            </Link>
+          </p>
         </div>
       </div>
     );
@@ -252,144 +349,387 @@ export default function CreatorSignupPage() {
 
   return (
     <>
-      <a href="#signup-form" className="skip-link">
+      <a
+        href="#signup-form"
+        style={{
+          position: "absolute",
+          top: -40,
+          left: 0,
+          background: "var(--brand-red)",
+          color: "var(--snow)",
+          padding: "8px 16px",
+          zIndex: 100,
+          textDecoration: "none",
+          fontFamily: "var(--font-body)",
+          fontSize: 14,
+        }}
+        onFocus={(e) => {
+          (e.target as HTMLAnchorElement).style.top = "0";
+        }}
+        onBlur={(e) => {
+          (e.target as HTMLAnchorElement).style.top = "-40px";
+        }}
+      >
         Skip to form
       </a>
-      <div className="page">
-        <BrandPanel />
-        <div className="form-panel">
-          <div className="form-wrap" id="signup-form">
-            <div className="form-header">
-              <span className="form-eyebrow">Creator Signup</span>
-              <h1 className="form-title">Start Earning.</h1>
-              <p className="form-subtitle">
-                No follower minimum. No exclusivity. Just show up and create.
-              </p>
+
+      <div
+        style={{
+          minHeight: "100vh",
+          background: "var(--surface)",
+          display: "flex",
+          padding: "48px 24px",
+        }}
+      >
+        {/* Desktop left value prop */}
+        <div
+          style={{
+            display: "none",
+            flex: "0 0 360px",
+            padding: "0 48px 0 0",
+            alignItems: "flex-start",
+            justifyContent: "center",
+            flexDirection: "column",
+          }}
+          className="signup-left-panel"
+        >
+          <Link
+            href="/"
+            style={{
+              fontFamily: "var(--font-display)",
+              fontWeight: 800,
+              fontSize: 32,
+              color: "var(--ink)",
+              textDecoration: "none",
+              letterSpacing: "-0.02em",
+              marginBottom: 48,
+              display: "block",
+            }}
+          >
+            PUSH
+          </Link>
+
+          <p
+            style={{
+              fontFamily: "var(--font-body)",
+              fontSize: 12,
+              fontWeight: 600,
+              letterSpacing: "0.08em",
+              textTransform: "uppercase",
+              color: "var(--ink-4)",
+              marginBottom: 16,
+            }}
+          >
+            (WHY JOIN)
+          </p>
+
+          <h2
+            style={{
+              fontFamily: "var(--font-display)",
+              fontSize: 40,
+              fontWeight: 900,
+              color: "var(--ink)",
+              letterSpacing: "-0.02em",
+              lineHeight: 1.1,
+              marginBottom: 24,
+            }}
+          >
+            Earn per verified visit.
+          </h2>
+
+          <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
+            {[
+              "No follower minimum",
+              "Cash paid within 48 hours",
+              "200+ local campaigns",
+            ].map((item) => (
+              <li
+                key={item}
+                style={{
+                  fontFamily: "var(--font-body)",
+                  fontSize: 16,
+                  color: "var(--ink-3)",
+                  paddingBottom: 16,
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 12,
+                }}
+              >
+                <span
+                  style={{
+                    width: 6,
+                    height: 6,
+                    borderRadius: "50%",
+                    background: "var(--brand-red)",
+                    flexShrink: 0,
+                  }}
+                />
+                {item}
+              </li>
+            ))}
+          </ul>
+
+          <Link
+            href="/"
+            style={{
+              fontFamily: "var(--font-body)",
+              fontSize: 14,
+              color: "var(--ink-4)",
+              textDecoration: "none",
+              marginTop: 48,
+              display: "flex",
+              alignItems: "center",
+              gap: 8,
+            }}
+          >
+            ← Back to home
+          </Link>
+        </div>
+
+        {/* Form column */}
+        <div
+          style={{
+            flex: 1,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "flex-start",
+          }}
+        >
+          <div style={{ maxWidth: 480, width: "100%" }} id="signup-form">
+            {/* Mobile brand header */}
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 12,
+                marginBottom: 32,
+              }}
+            >
+              <Link
+                href="/"
+                style={{
+                  fontFamily: "var(--font-display)",
+                  fontWeight: 800,
+                  fontSize: 24,
+                  color: "var(--ink)",
+                  textDecoration: "none",
+                  letterSpacing: "-0.02em",
+                }}
+              >
+                PUSH
+              </Link>
+              <span style={{ color: "var(--ink-4)", fontSize: 20 }}>·</span>
+              <span
+                style={{
+                  fontFamily: "var(--font-body)",
+                  fontSize: 12,
+                  fontWeight: 600,
+                  letterSpacing: "0.08em",
+                  textTransform: "uppercase",
+                  color: "var(--ink-4)",
+                }}
+              >
+                Creator Signup
+              </span>
             </div>
 
-            {formError && (
-              <div
-                className="form-error"
-                role="alert"
-                style={{ marginBottom: "var(--space-4)" }}
-              >
-                <span>{formError}</span>
-                <button
-                  type="button"
-                  className="error-retry-btn"
-                  onClick={handleRetry}
-                >
-                  Try again
-                </button>
-              </div>
-            )}
-
-            <form
-              onSubmit={handleSubmit}
-              noValidate
-              className={loading ? "form-loading" : ""}
+            {/* Form card — v11: 10px radius, surface-2, shadow-2 */}
+            <div
+              style={{
+                background: "var(--surface-2)",
+                borderRadius: 10,
+                padding: "32px",
+                boxShadow: "var(--shadow-2)",
+              }}
             >
-              <div className="form-grid">
-                {/* ── Profile ──────────────────────────────── */}
-                <div className="form-divider">
-                  <span className="form-divider-line" />
-                  <span className="form-divider-label">Your Profile</span>
-                  <span className="form-divider-line" />
+              {/* v11 eyebrow + H1 */}
+              <span className="signup-eyebrow">(CREATE·YOUR·ACCOUNT)</span>
+              <h1 className="signup-h1">Join Push</h1>
+              <p
+                style={{
+                  fontFamily: "var(--font-mono)",
+                  fontSize: 14,
+                  color: "var(--ink-3)",
+                  marginBottom: 32,
+                  lineHeight: 1.5,
+                }}
+              >
+                No follower minimum. No exclusivity. Just show up and create.
+              </p>
+
+              {/* Form-level error */}
+              {formError && (
+                <div
+                  role="alert"
+                  style={{
+                    background: "var(--brand-red-tint)",
+                    border: "1px solid var(--brand-red)",
+                    borderRadius: 8,
+                    padding: "12px 16px",
+                    marginBottom: 24,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    gap: 12,
+                  }}
+                >
+                  <span
+                    style={{
+                      fontFamily: "var(--font-body)",
+                      fontSize: 14,
+                      color: "var(--brand-red)",
+                    }}
+                  >
+                    {formError}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={handleRetry}
+                    style={{
+                      fontFamily: "var(--font-body)",
+                      fontSize: 12,
+                      fontWeight: 600,
+                      letterSpacing: "0.06em",
+                      textTransform: "uppercase",
+                      color: "var(--brand-red)",
+                      background: "none",
+                      border: "none",
+                      cursor: "pointer",
+                      padding: 0,
+                      flexShrink: 0,
+                    }}
+                  >
+                    Try again
+                  </button>
                 </div>
+              )}
 
-                <div className="form-row">
-                  <div className="form-field">
-                    <label htmlFor="name">Full Name</label>
-                    <div className="field-wrap">
-                      <input
-                        id="name"
-                        name="name"
-                        type="text"
-                        value={fields.name}
-                        onChange={set("name")}
-                        onBlur={() => handleBlur("name")}
-                        placeholder="Your full name"
-                        autoComplete="name"
-                        required
-                        aria-describedby={errors.name ? "err-name" : undefined}
-                      />
-                      {fieldStatus.name === "valid" && (
-                        <span className="field-dot" aria-hidden="true" />
-                      )}
-                    </div>
-                    {errors.name && touched.name && (
-                      <span className="error-msg" id="err-name">
-                        {errors.name}
-                      </span>
-                    )}
-                  </div>
+              <form
+                onSubmit={handleSubmit}
+                noValidate
+                className={loading ? "form-loading" : ""}
+              >
+                {/* ── Section: Your Profile ── */}
+                <SectionDivider label="Your Profile" />
 
-                  <div className="form-field">
-                    <label htmlFor="location">City / Neighbourhood</label>
-                    <div className="field-wrap">
-                      <input
-                        id="location"
-                        name="location"
-                        type="text"
-                        value={fields.location}
-                        onChange={set("location")}
-                        onBlur={() => handleBlur("location")}
-                        placeholder="e.g. Williamsburg, NYC"
-                        autoComplete="address-level2"
-                        required
-                        aria-describedby={
-                          errors.location ? "err-location" : undefined
-                        }
-                      />
-                      {fieldStatus.location === "valid" && (
-                        <span className="field-dot" aria-hidden="true" />
-                      )}
-                    </div>
-                    {errors.location && touched.location && (
-                      <span className="error-msg" id="err-location">
-                        {errors.location}
-                      </span>
-                    )}
-                  </div>
-                </div>
-
-                {/* ── Account ──────────────────────────────── */}
-                <div className="form-divider">
-                  <span className="form-divider-line" />
-                  <span className="form-divider-label">Create Account</span>
-                  <span className="form-divider-line" />
-                </div>
-
-                <div className="form-field">
-                  <label htmlFor="email">Email</label>
-                  <div className="field-wrap">
+                <div
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns: "1fr 1fr",
+                    gap: 16,
+                    marginBottom: 16,
+                  }}
+                >
+                  <FormField
+                    id="name"
+                    label="Full Name"
+                    error={touched.name ? errors.name : undefined}
+                    isValid={fieldStatus.name === "valid"}
+                  >
                     <input
-                      id="email"
-                      name="email"
-                      type="email"
-                      value={fields.email}
-                      onChange={set("email")}
-                      onBlur={() => handleBlur("email")}
-                      placeholder="you@example.com"
-                      autoComplete="email"
+                      id="name"
+                      name="name"
+                      type="text"
+                      value={fields.name}
+                      onChange={set("name")}
+                      onBlur={() => handleBlur("name")}
+                      placeholder="Your full name"
+                      autoComplete="name"
                       required
-                      aria-describedby={errors.email ? "err-email" : undefined}
+                      aria-describedby={errors.name ? "err-name" : undefined}
+                      style={{
+                        ...inputStyle,
+                        borderColor:
+                          touched.name && errors.name
+                            ? "var(--brand-red)"
+                            : fieldStatus.name === "valid"
+                              ? "var(--brand-red)"
+                              : "var(--ink-4)",
+                      }}
                     />
-                    {fieldStatus.email === "valid" && (
-                      <span className="field-dot" aria-hidden="true" />
-                    )}
-                  </div>
-                  {errors.email && touched.email && (
-                    <span className="error-msg" id="err-email">
-                      {errors.email}
-                    </span>
-                  )}
+                  </FormField>
+
+                  <FormField
+                    id="location"
+                    label="City / Neighbourhood"
+                    error={touched.location ? errors.location : undefined}
+                    isValid={fieldStatus.location === "valid"}
+                  >
+                    <input
+                      id="location"
+                      name="location"
+                      type="text"
+                      value={fields.location}
+                      onChange={set("location")}
+                      onBlur={() => handleBlur("location")}
+                      placeholder="e.g. Williamsburg, NYC"
+                      autoComplete="address-level2"
+                      required
+                      aria-describedby={
+                        errors.location ? "err-location" : undefined
+                      }
+                      style={{
+                        ...inputStyle,
+                        borderColor:
+                          touched.location && errors.location
+                            ? "var(--brand-red)"
+                            : fieldStatus.location === "valid"
+                              ? "var(--brand-red)"
+                              : "var(--ink-4)",
+                      }}
+                    />
+                  </FormField>
                 </div>
 
-                <div className="form-row">
-                  <div className="form-field">
-                    <label htmlFor="password">Password</label>
-                    <div className="input-with-action">
+                {/* ── Section: Create Account ── */}
+                <SectionDivider label="Create Account" />
+
+                <FormField
+                  id="email"
+                  label="Email"
+                  error={touched.email ? errors.email : undefined}
+                  isValid={fieldStatus.email === "valid"}
+                  style={{ marginBottom: 16 }}
+                >
+                  <input
+                    id="email"
+                    name="email"
+                    type="email"
+                    value={fields.email}
+                    onChange={set("email")}
+                    onBlur={() => handleBlur("email")}
+                    placeholder="you@example.com"
+                    autoComplete="email"
+                    required
+                    aria-describedby={errors.email ? "err-email" : undefined}
+                    style={{
+                      ...inputStyle,
+                      borderColor:
+                        touched.email && errors.email
+                          ? "var(--brand-red)"
+                          : fieldStatus.email === "valid"
+                            ? "var(--brand-red)"
+                            : "var(--ink-4)",
+                    }}
+                  />
+                </FormField>
+
+                <div
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns: "1fr 1fr",
+                    gap: 16,
+                    marginBottom: 16,
+                  }}
+                >
+                  <FormField
+                    id="password"
+                    label="Password"
+                    error={touched.password ? errors.password : undefined}
+                    isValid={fieldStatus.password === "valid"}
+                  >
+                    <div style={{ position: "relative" }}>
                       <input
                         id="password"
                         name="password"
@@ -407,26 +747,90 @@ export default function CreatorSignupPage() {
                               ? "pw-strength"
                               : undefined
                         }
+                        style={{
+                          ...inputStyle,
+                          paddingRight: 56,
+                          borderColor:
+                            touched.password && errors.password
+                              ? "var(--brand-red)"
+                              : fieldStatus.password === "valid"
+                                ? "var(--brand-red)"
+                                : "var(--ink-4)",
+                        }}
                       />
                       <button
                         type="button"
-                        className="input-action-btn"
                         onClick={() => setShowPw((v) => !v)}
                         aria-label={showPw ? "Hide password" : "Show password"}
+                        style={{
+                          position: "absolute",
+                          right: 12,
+                          top: "50%",
+                          transform: "translateY(-50%)",
+                          background: "none",
+                          border: "none",
+                          cursor: "pointer",
+                          fontFamily: "var(--font-body)",
+                          fontSize: 11,
+                          fontWeight: 600,
+                          letterSpacing: "0.06em",
+                          textTransform: "uppercase",
+                          color: "var(--ink-4)",
+                          padding: 0,
+                        }}
                       >
                         {showPw ? "Hide" : "Show"}
                       </button>
                     </div>
+                    {/* Password strength */}
                     {fields.password && pwStrength && (
                       <div
-                        className="pw-strength"
                         id="pw-strength"
                         aria-live="polite"
+                        style={{ marginTop: 8 }}
                       >
-                        <div className="pw-bar">
-                          <div className={`pw-fill pw-fill--${pwStrength}`} />
+                        {/* v11: 4px height, surface-3 track, #22c55e strong */}
+                        <div
+                          style={{
+                            height: 4,
+                            background: "var(--surface-3)",
+                            borderRadius: 2,
+                            overflow: "hidden",
+                            marginBottom: 4,
+                          }}
+                        >
+                          <div
+                            style={{
+                              height: "100%",
+                              borderRadius: 2,
+                              width:
+                                pwStrength === "weak"
+                                  ? "33%"
+                                  : pwStrength === "fair"
+                                    ? "66%"
+                                    : "100%",
+                              background:
+                                pwStrength === "weak"
+                                  ? "var(--brand-red)"
+                                  : pwStrength === "fair"
+                                    ? "var(--champagne-deep, #bfa170)"
+                                    : "#22c55e",
+                              transition: "width 0.3s ease",
+                            }}
+                          />
                         </div>
-                        <span className={`pw-label pw-label--${pwStrength}`}>
+                        <span
+                          style={{
+                            fontFamily: "var(--font-mono)",
+                            fontSize: 11,
+                            color:
+                              pwStrength === "weak"
+                                ? "var(--brand-red)"
+                                : pwStrength === "fair"
+                                  ? "var(--champagne-deep, #bfa170)"
+                                  : "#22c55e",
+                          }}
+                        >
                           {pwStrength === "weak"
                             ? "Weak"
                             : pwStrength === "fair"
@@ -435,16 +839,15 @@ export default function CreatorSignupPage() {
                         </span>
                       </div>
                     )}
-                    {errors.password && touched.password && (
-                      <span className="error-msg" id="err-password">
-                        {errors.password}
-                      </span>
-                    )}
-                  </div>
+                  </FormField>
 
-                  <div className="form-field">
-                    <label htmlFor="confirm">Confirm Password</label>
-                    <div className="input-with-action">
+                  <FormField
+                    id="confirm"
+                    label="Confirm Password"
+                    error={touched.confirm ? errors.confirm : undefined}
+                    isValid={fieldStatus.confirm === "valid"}
+                  >
+                    <div style={{ position: "relative" }}>
                       <input
                         id="confirm"
                         name="confirm"
@@ -458,65 +861,86 @@ export default function CreatorSignupPage() {
                         aria-describedby={
                           errors.confirm ? "err-confirm" : undefined
                         }
+                        style={{
+                          ...inputStyle,
+                          paddingRight: 56,
+                          borderColor:
+                            touched.confirm && errors.confirm
+                              ? "var(--brand-red)"
+                              : fieldStatus.confirm === "valid"
+                                ? "var(--brand-red)"
+                                : "var(--ink-4)",
+                        }}
                       />
                       <button
                         type="button"
-                        className="input-action-btn"
                         onClick={() => setShowConfirm((v) => !v)}
                         aria-label={
                           showConfirm
                             ? "Hide confirm password"
                             : "Show confirm password"
                         }
+                        style={{
+                          position: "absolute",
+                          right: 12,
+                          top: "50%",
+                          transform: "translateY(-50%)",
+                          background: "none",
+                          border: "none",
+                          cursor: "pointer",
+                          fontFamily: "var(--font-body)",
+                          fontSize: 11,
+                          fontWeight: 600,
+                          letterSpacing: "0.06em",
+                          textTransform: "uppercase",
+                          color: "var(--ink-4)",
+                          padding: 0,
+                        }}
                       >
                         {showConfirm ? "Hide" : "Show"}
                       </button>
                     </div>
-                    {errors.confirm && touched.confirm && (
-                      <span className="error-msg" id="err-confirm">
-                        {errors.confirm}
-                      </span>
-                    )}
-                  </div>
+                  </FormField>
                 </div>
 
-                {/* ── Creator details ───────────────────────── */}
-                <div className="form-divider">
-                  <span className="form-divider-line" />
-                  <span className="form-divider-label">Creator Details</span>
-                  <span className="form-divider-line" />
-                </div>
+                {/* ── Section: Creator Details ── */}
+                <SectionDivider label="Creator Details" />
 
-                <div className="form-field">
-                  <label htmlFor="instagram">
-                    Instagram Handle{" "}
-                    <span className="label-optional">(optional)</span>
-                  </label>
-                  <div className="field-wrap">
-                    <input
-                      id="instagram"
-                      name="instagram"
-                      type="text"
-                      value={fields.instagram}
-                      onChange={set("instagram")}
-                      onBlur={() => handleBlur("instagram")}
-                      placeholder="@yourhandle"
-                    />
-                    {fieldStatus.instagram === "valid" && fields.instagram && (
-                      <span className="field-dot" aria-hidden="true" />
-                    )}
-                  </div>
-                  <span className="field-hint">
-                    Helps match you with the right campaigns. Read-only — we
-                    never post or change anything.
+                <FormField
+                  id="instagram"
+                  label="Instagram Handle (optional)"
+                  style={{ marginBottom: 16 }}
+                >
+                  <input
+                    id="instagram"
+                    name="instagram"
+                    type="text"
+                    value={fields.instagram}
+                    onChange={set("instagram")}
+                    onBlur={() => handleBlur("instagram")}
+                    placeholder="@yourhandle"
+                    style={inputStyle}
+                  />
+                  <span
+                    style={{
+                      fontFamily: "var(--font-body)",
+                      fontSize: 12,
+                      color: "var(--ink-4)",
+                      marginTop: 6,
+                      display: "block",
+                    }}
+                  >
+                    Helps match you with the right campaigns. We never post or
+                    change anything.
                   </span>
-                </div>
+                </FormField>
 
-                <div className="form-field">
-                  <label htmlFor="bio">
-                    Bio <span className="label-optional">(optional)</span>
-                  </label>
-                  <div className="bio-wrap">
+                <FormField
+                  id="bio"
+                  label="Bio (optional)"
+                  style={{ marginBottom: 24 }}
+                >
+                  <div style={{ position: "relative" }}>
                     <textarea
                       id="bio"
                       rows={3}
@@ -527,24 +951,61 @@ export default function CreatorSignupPage() {
                       onBlur={() => handleBlur("bio")}
                       placeholder="Tell merchants about your content style, niche, or local area…"
                       maxLength={160}
+                      style={{
+                        ...inputStyle,
+                        resize: "vertical",
+                        minHeight: 80,
+                        paddingBottom: 28,
+                      }}
                     />
                     <span
-                      className={`bio-counter ${bioRemaining <= 20 ? "bio-counter--warn" : ""}`}
+                      style={{
+                        position: "absolute",
+                        right: 12,
+                        bottom: 10,
+                        fontFamily: "var(--font-body)",
+                        fontSize: 11,
+                        color:
+                          bioRemaining <= 20
+                            ? "var(--warning)"
+                            : "var(--ink-4)",
+                      }}
                       aria-live="polite"
                       aria-atomic="true"
                     >
                       {bioRemaining}
                     </span>
                   </div>
-                </div>
+                </FormField>
 
-                <p className="trust-line">
+                {/* Trust line */}
+                <p
+                  style={{
+                    fontFamily: "var(--font-body)",
+                    fontSize: 12,
+                    color: "var(--ink-4)",
+                    textAlign: "center",
+                    marginBottom: 24,
+                    letterSpacing: "0.04em",
+                  }}
+                >
                   Free to join · No follower minimum · 200+ local campaigns
                 </p>
 
-                {/* Terms consent — required before signup */}
-                <div className="form-field terms-field">
-                  <label className="terms-label">
+                {/* Terms consent */}
+                <div style={{ marginBottom: 24 }}>
+                  <label
+                    style={{
+                      display: "flex",
+                      alignItems: "flex-start",
+                      gap: 12,
+                      cursor: "pointer",
+                      fontFamily: "var(--font-body)",
+                      fontSize: 14,
+                      color: "var(--ink-3)",
+                      lineHeight: 1.5,
+                    }}
+                  >
                     <input
                       id="terms"
                       name="terms"
@@ -555,72 +1016,122 @@ export default function CreatorSignupPage() {
                         if (e.target.checked) setTermsError("");
                       }}
                       required
+                      style={{
+                        marginTop: 2,
+                        flexShrink: 0,
+                        accentColor: "var(--brand-red)",
+                      }}
                     />
                     <span>
                       I agree to the{" "}
-                      <Link href="/terms" target="_blank">
+                      <Link
+                        href="/terms"
+                        target="_blank"
+                        style={{
+                          color: "var(--ink)",
+                          textDecoration: "underline",
+                        }}
+                      >
                         Terms of Service
                       </Link>{" "}
                       and{" "}
-                      <Link href="/privacy" target="_blank">
+                      <Link
+                        href="/privacy"
+                        target="_blank"
+                        style={{
+                          color: "var(--ink)",
+                          textDecoration: "underline",
+                        }}
+                      >
                         Privacy Policy
                       </Link>
                     </span>
                   </label>
                   {termsError && (
-                    <span className="error-msg">{termsError}</span>
+                    <span
+                      style={{
+                        fontFamily: "var(--font-body)",
+                        fontSize: 12,
+                        color: "var(--brand-red)",
+                        marginTop: 6,
+                        display: "block",
+                      }}
+                    >
+                      {termsError}
+                    </span>
                   )}
                 </div>
 
+                {/* Submit */}
                 <button
                   ref={submitBtnRef}
                   type="submit"
-                  className="btn btn-primary submit-btn"
+                  className="btn-primary click-shift"
                   disabled={loading}
                   aria-busy={loading}
                   data-pressed={isPressed}
+                  style={{ width: "100%", justifyContent: "center" }}
                 >
                   {loading ? (
                     <>
-                      <span className="loader-dots" aria-hidden="true">
-                        <span className="dot" />
-                        <span className="dot" />
-                        <span className="dot" />
-                      </span>
+                      <LoadingDots />
                       <span className="sr-only">Creating account…</span>
                     </>
                   ) : (
                     "Join Push — Start Earning"
                   )}
                 </button>
-              </div>
-            </form>
+              </form>
+            </div>
 
-            <p className="form-footer">
+            {/* Footer links */}
+            <p
+              style={{
+                fontFamily: "var(--font-body)",
+                fontSize: 14,
+                color: "var(--ink-4)",
+                textAlign: "center",
+                marginTop: 24,
+                lineHeight: 1.8,
+              }}
+            >
               Already have an account?{" "}
-              <Link href="/creator/login">Sign in &rarr;</Link>
+              <Link
+                href="/creator/login"
+                style={{
+                  color: "var(--brand-red)",
+                  textDecoration: "underline",
+                }}
+              >
+                Sign in →
+              </Link>
               <br />
               Want to list your business?{" "}
-              <Link href="/merchant/signup">Merchant signup &rarr;</Link>
+              <Link
+                href="/merchant/signup"
+                style={{
+                  color: "var(--brand-red)",
+                  textDecoration: "underline",
+                }}
+              >
+                Merchant signup →
+              </Link>
             </p>
 
-            <Link href="/demo/creator" className="auth-demo-link">
-              Try Demo Mode &mdash; no account needed &rarr;
-            </Link>
-
-            {/* ── Tier journey strip ────────────────────────── */}
-            <div className="tier-preview">
-              <span className="tier-preview-title">YOUR JOURNEY</span>
-              <div className="tier-list">
-                {TIERS.map((t, i) => (
-                  <div key={t.label} className="tier-item" data-index={i}>
-                    <span className="tier-icon" aria-hidden="true">
-                      {t.icon}
-                    </span>
-                    <span className="tier-label">{t.label}</span>
-                  </div>
-                ))}
-              </div>
+            <div style={{ textAlign: "center", marginTop: 16 }}>
+              <Link
+                href="/demo/creator"
+                style={{
+                  fontFamily: "var(--font-body)",
+                  fontSize: 13,
+                  color: "var(--ink-4)",
+                  textDecoration: "none",
+                  borderBottom: "1px dashed var(--surface-3)",
+                  paddingBottom: 2,
+                }}
+              >
+                Try Demo Mode — no account needed →
+              </Link>
             </div>
           </div>
         </div>
@@ -629,83 +1140,106 @@ export default function CreatorSignupPage() {
   );
 }
 
-/* ── Signup brand panel tier data ────────────────────────── */
+/* ── Sub-components ──────────────────────────────────────── */
 
-const SIGNUP_TIERS = [
-  {
-    icon: "◎",
-    label: "Seed",
-    rate: "Free",
-    benefit: "Start free — zero followers needed",
-    color: "#669bbc",
-  },
-  {
-    icon: "◈",
-    label: "Explorer",
-    rate: "$12/campaign",
-    benefit: "$12/campaign — 2 active campaigns",
-    color: "#f5f2ec",
-  },
-  {
-    icon: "◆",
-    label: "Operator",
-    rate: "$20 + 3%",
-    benefit: "$20/campaign + 3% commission",
-    color: "#c1121f",
-  },
-];
-
-/* ── Brand panel ─────────────────────────────────────────── */
-
-function BrandPanel() {
+function SectionDivider({ label }: { label: string }) {
   return (
-    <div className="brand-panel signup-brand-panel">
-      <div className="brand-top">
-        <Link href="/" className="brand-logo">
-          Push
-        </Link>
-
-        <div>
-          <h2 className="brand-headline">
-            Join 40+ creators
-            <br />
-            <em>earning on Push.</em>
-          </h2>
-          <p className="brand-tagline">
-            Push connects micro-creators like you with local businesses that
-            need real foot traffic. Visit, post, earn &mdash; and build a score
-            that unlocks better campaigns.
-          </p>
-        </div>
-
-        {/* First 3 tier preview */}
-        <div className="auth-tier-preview signup-tier-preview">
-          <span className="auth-tier-preview-label">YOUR STARTING PATH</span>
-          {SIGNUP_TIERS.map((t) => (
-            <div key={t.label} className="auth-tier-item signup-tier-item">
-              <span
-                className="auth-tier-icon"
-                aria-hidden="true"
-                style={{ color: t.color }}
-              >
-                {t.icon}
-              </span>
-              <div className="auth-tier-info">
-                <span className="auth-tier-name">{t.label}</span>
-                <span className="auth-tier-benefit">{t.benefit}</span>
-              </div>
-              <span className="auth-tier-rate">{t.rate}</span>
-            </div>
-          ))}
-          <p className="auth-motivation">
-            Your Push Score starts building from day one.
-          </p>
-        </div>
-      </div>
-
-      <Link href="/" className="brand-back">
-        &larr; Back to home
-      </Link>
+    <div
+      style={{
+        display: "flex",
+        alignItems: "center",
+        gap: 12,
+        marginBottom: 16,
+        marginTop: 8,
+      }}
+    >
+      <div style={{ flex: 1, height: 1, background: "var(--surface-3)" }} />
+      <span
+        style={{
+          fontFamily: "var(--font-body)",
+          fontSize: 11,
+          fontWeight: 600,
+          letterSpacing: "0.08em",
+          textTransform: "uppercase",
+          color: "var(--ink-4)",
+          whiteSpace: "nowrap",
+        }}
+      >
+        {label}
+      </span>
+      <div style={{ flex: 1, height: 1, background: "var(--surface-3)" }} />
     </div>
+  );
+}
+
+function FormField({
+  id,
+  label,
+  error,
+  isValid,
+  style,
+  children,
+}: {
+  id: string;
+  label: string;
+  error?: string;
+  isValid?: boolean;
+  style?: React.CSSProperties;
+  children: React.ReactNode;
+}) {
+  return (
+    <div style={style}>
+      <label
+        htmlFor={id}
+        style={{
+          ...labelStyle,
+          color: isValid
+            ? "var(--brand-red)"
+            : error
+              ? "var(--brand-red)"
+              : "var(--ink-3)",
+        }}
+      >
+        {label}
+      </label>
+      {children}
+      {error && (
+        <span
+          id={`err-${id}`}
+          style={{
+            fontFamily: "var(--font-body)",
+            fontSize: 12,
+            color: "var(--brand-red)",
+            marginTop: 6,
+            display: "block",
+          }}
+        >
+          {error}
+        </span>
+      )}
+    </div>
+  );
+}
+
+function LoadingDots() {
+  return (
+    <span
+      aria-hidden="true"
+      style={{ display: "flex", gap: 4, justifyContent: "center" }}
+    >
+      {[0, 1, 2].map((i) => (
+        <span
+          key={i}
+          style={{
+            width: 6,
+            height: 6,
+            borderRadius: "50%",
+            background: "currentColor",
+            animation: `pulse 1.2s ease-in-out ${i * 0.2}s infinite`,
+            opacity: 0.6,
+          }}
+        />
+      ))}
+    </span>
   );
 }

@@ -1,8 +1,9 @@
-"use client";
-
 // Push Platform — Demo Mock Store
 // Namespaced localStorage R/W for demo data.
 // All keys are prefixed with `push-demo-` to avoid collisions.
+// SSR-safe: functions guard on `typeof window`. The React hook moved to
+// `./mock-store-hook.ts` (client-only) to keep this file importable from
+// Server Components.
 
 const NS = "push-demo-";
 
@@ -45,36 +46,3 @@ function clear(): void {
 }
 
 export const mockStore = { read, write, remove, clear };
-
-// ── React hook ────────────────────────────────────────────────────────────────
-
-import { useCallback, useEffect, useState } from "react";
-
-/**
- * useMockData<T>(key, defaultValue)
- *
- * Reads/writes a namespaced localStorage entry.
- * Returns [value, setValue] — safe for SSR (returns defaultValue on server).
- */
-export function useMockData<T>(
-  storeKey: string,
-  defaultValue: T,
-): [T, (next: T) => void] {
-  const [value, setValue] = useState<T>(defaultValue);
-
-  // Hydrate from storage after mount
-  useEffect(() => {
-    setValue(read<T>(storeKey, defaultValue));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [storeKey]);
-
-  const set = useCallback(
-    (next: T) => {
-      write(storeKey, next);
-      setValue(next);
-    },
-    [storeKey],
-  );
-
-  return [value, set];
-}

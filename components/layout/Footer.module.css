@@ -1,259 +1,243 @@
 /* ============================================================
-   Footer v8.2 — Premium Editorial
-   Background: Deep Space Blue #003049
-   Top accent: Flag Red 1px full-bleed
-   Big brand type: Darky 900 italic, clamp(80px, 15vw, 240px)
+   Footer v11 — § 8.3 Darky Giant Wordmark + § 8.9.2 Tile Pair
+   Editorial Blue rounded-top panel + 2 floating liquid-glass
+   tiles peeking above + Darky 800 giant "PUSH" pressed-bottom-left.
+   No hover shift on the wordmark (§ 16 / § 0.8 exception).
    ============================================================ */
 
-.footer {
-  background: #003049;
-  color: rgba(245, 242, 236, 0.65);
+/* ----------------- Outer container ----------------- */
+.shell {
   position: relative;
+  margin-top: 120px; /* room for the tiles peeking above the seam */
+  padding: 0 24px;
 }
 
-/* Full-bleed 1px Flag Red separator */
-.accentLine {
-  width: 100%;
-  height: 1px;
-  background: #c1121f;
-}
-
-/* Constrained inner container */
-.inner {
-  max-width: 1080px;
-  margin: 0 auto;
-  padding: 120px 40px 120px;
-}
-
-/* ---- Big editorial brand text ---- */
-.bigBrand {
-  margin-bottom: 80px;
+/* ----------------- Editorial Blue panel ----------------- */
+.panel {
+  position: relative;
+  background: var(--editorial-blue);
+  color: var(--snow);
+  border-radius: var(--r-4xl); /* 40px all corners — § 8.3 */
   overflow: hidden;
+  padding: 96px 80px 0; /* desktop interior — § 8.3 */
+  max-width: 1440px;
+  margin: 0 auto;
 }
 
-.bigText {
-  display: block;
+/* ----------------- Tile pair peeking above ----------------- */
+.tileRow {
+  position: absolute;
+  top: -56px; /* peek 56px above the seam — § 8.9.2 */
+  left: 80px;
+  right: 80px;
+  display: flex;
+  gap: 24px;
+  pointer-events: none;
+  z-index: 2;
+}
+.tile {
+  pointer-events: auto;
+  flex: 0 1 360px;
+  padding: 24px 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.tile:last-child {
+  flex-basis: 280px;
+}
+.tileEyebrow {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.65);
+  margin: 0;
+}
+.tileTitle {
   font-family: var(--font-display);
-  font-size: clamp(80px, 15vw, 240px);
-  font-weight: 900;
-  font-style: italic;
-  letter-spacing: -0.06em;
-  line-height: 0.85;
-  color: #fff;
-  /* Italic red accent via text-shadow is too heavy;
-     use a subtle mix-blend-mode trick for depth */
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--snow);
+  margin: 0;
+}
+.tileBody {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.78);
+  margin: 0;
+}
+.tileSocialList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.tileSocialLink {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--snow);
+  text-decoration: none;
+  transition: transform 180ms cubic-bezier(0.34, 1.56, 0.64, 1),
+    opacity 180ms ease;
+}
+.tileSocialLink:hover {
+  transform: translate(1px, 1px);
+  opacity: 0.85;
+}
+.tileSocialLink:active {
+  transform: translate(2px, 2px) scale(0.98);
+}
+.tileSocialLink:focus-visible {
+  outline: 2px solid var(--snow);
+  outline-offset: 4px;
+  border-radius: 2px;
 }
 
-/* Letter animation — start invisible, slide up */
-.letter {
-  display: inline-block;
-  opacity: 0;
-  transform: translateY(24px);
-  transition: opacity 400ms ease, transform 400ms ease;
-}
-
-.letterVisible {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-/* ---- 4-column link grid ---- */
-.colGrid {
+/* ----------------- 3-column eyebrow grid ----------------- */
+.cols {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 48px;
-  padding-bottom: 80px;
-  border-bottom: 1px solid rgba(245, 242, 236, 0.1);
+  grid-template-columns: repeat(3, 1fr);
+  gap: 64px;
+  padding-top: 96px; /* clear of the tile pair */
+  padding-bottom: 64px;
 }
-
 .col {
   display: flex;
   flex-direction: column;
-  gap: 0;
+  gap: 16px;
 }
-
 .colLabel {
-  font-family: var(--font-body);
-  font-size: 11px;
+  /* Mono parenthetical eyebrow — § 8.4 marketing register */
+  font-family: var(--font-mono);
+  font-size: 12px;
   font-weight: 700;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: rgba(245, 242, 236, 0.35);
-  margin: 0 0 20px 0;
+  color: rgba(255, 255, 255, 0.65);
+  margin: 0;
 }
-
 .colLinks {
   list-style: none;
   margin: 0;
   padding: 0;
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 12px;
 }
-
-/* Link with underline expand animation */
 .colLink {
-  font-family: var(--font-body);
-  font-size: 14px;
-  color: rgba(245, 242, 236, 0.72);
-  text-decoration: none;
-  letter-spacing: 0.01em;
-  display: inline-flex;
-  flex-direction: column;
-  gap: 0;
-  transition: color 200ms ease;
-}
-
-.colLink:hover {
-  color: #fff;
-}
-
-/* Underline expand: scaleX 0→1, left anchor, 200ms */
-.linkInner {
-  position: relative;
-  display: inline-block;
-}
-
-.linkInner::after {
-  content: "";
-  position: absolute;
-  bottom: -2px;
-  left: 0;
-  width: 100%;
-  height: 1px;
-  background: #c1121f;
-  transform: scaleX(0);
-  transform-origin: left center;
-  transition: transform 200ms ease;
-}
-
-.colLink:hover .linkInner::after {
-  transform: scaleX(1);
-}
-
-/* ---- Bottom bar ---- */
-.bottomBar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding-top: 40px;
-  gap: 24px;
-  flex-wrap: wrap;
-}
-
-.copy {
-  font-family: var(--font-body);
-  font-size: 12px;
+  /* CS Genio Mono 16px snow, 0.04em letter-spacing — § 8.3 */
+  font-family: var(--font-mono);
+  font-size: 16px;
+  font-weight: 400;
   letter-spacing: 0.04em;
-  color: rgba(245, 242, 236, 0.4);
-  margin: 0;
-  flex-shrink: 0;
-}
-
-/* Language toggle */
-.langToggle {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  order: 2;
-}
-
-.langBtn {
-  font-family: var(--font-body);
-  font-size: 11px;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: rgba(245, 242, 236, 0.35);
-  background: none;
-  border: none;
-  padding: 0;
-  cursor: pointer;
-  transition: color 200ms ease;
-}
-
-.langBtn:hover {
-  color: rgba(245, 242, 236, 0.7);
-}
-
-.langActive {
-  color: rgba(245, 242, 236, 0.75);
-}
-
-.langSep {
-  font-family: var(--font-body);
-  font-size: 11px;
-  color: rgba(245, 242, 236, 0.2);
-}
-
-/* Social icons */
-.social {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  order: 3;
-}
-
-.socialLink {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 36px;
-  height: 36px;
-  color: rgba(245, 242, 236, 0.4);
+  line-height: 1.6;
+  color: var(--snow);
   text-decoration: none;
-  border: 1px solid rgba(245, 242, 236, 0.12);
-  border-radius: 0;
-  transition: color 200ms ease, border-color 200ms ease;
+  display: inline-block;
+  transition: transform 180ms cubic-bezier(0.34, 1.56, 0.64, 1),
+    text-decoration-color 180ms ease;
+  text-decoration-line: underline;
+  text-decoration-color: transparent;
+  text-underline-offset: 4px;
+}
+.colLink:hover {
+  transform: translate(1px, 1px);
+  text-decoration-color: var(--snow);
+}
+.colLink:active {
+  transform: translate(2px, 2px) scale(0.98);
+}
+.colLink:focus-visible {
+  outline: 2px solid var(--snow);
+  outline-offset: 4px;
+  border-radius: 2px;
+}
+.colCopy {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.65);
+  margin: 0;
 }
 
-.socialLink:hover {
-  color: #c1121f;
-  border-color: rgba(193, 18, 31, 0.4);
+/* ----------------- Giant Wordmark — § 8.3 ----------------- */
+.wordmarkRow {
+  margin-top: 96px; /* breathing space above the brand stamp */
+  padding-bottom: 24px; /* presses to bottom-left, with a hair of optical breathing room */
+}
+.wordmark {
+  display: block;
+  font-family: var(--font-display);
+  font-size: clamp(140px, 18vw, 320px);
+  font-weight: 800;
+  line-height: 0.85;
+  letter-spacing: -0.045em;
+  text-transform: uppercase;
+  color: var(--snow);
+  user-select: none;
+  /* Static brand stamp — no hover shift (§ 0.8 exception) */
 }
 
-/* ---- Responsive ---- */
-@media (max-width: 900px) {
-  .inner {
-    padding: 80px 24px;
-  }
-
-  .colGrid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 40px;
-    padding-bottom: 56px;
-  }
-
-  .bigBrand {
-    margin-bottom: 56px;
-  }
+/* ----------------- iPad (≤1024px) ----------------- */
+@media (max-width: 1024px) {
+  .shell { margin-top: 96px; padding: 0 16px; }
+  .panel { padding: 80px 56px 0; }
+  .tileRow { left: 56px; right: 56px; gap: 16px; top: -48px; }
+  .tile { flex-basis: 320px; padding: 24px 28px; }
+  .tile:last-child { flex-basis: 256px; }
+  .cols { grid-template-columns: 1fr 1fr; gap: 48px; padding-top: 80px; padding-bottom: 56px; }
+  .colCopyCol { grid-column: 1 / -1; }
+  .wordmarkRow { margin-top: 72px; }
 }
 
-@media (max-width: 600px) {
-  .inner {
-    padding: 64px 20px;
+/* ----------------- Mobile (≤767px) ----------------- */
+@media (max-width: 767px) {
+  .shell { margin-top: 72px; padding: 0 8px; }
+  .panel {
+    padding: 56px 24px 0;
+    border-radius: var(--r-3xl); /* 28px on small screens still rounded-top, but smaller scale */
   }
-
-  .colGrid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 32px;
-    padding-bottom: 48px;
-  }
-
-  .bottomBar {
+  .tileRow {
+    position: static;
     flex-direction: column;
-    align-items: flex-start;
-    gap: 20px;
+    gap: 12px;
+    margin: -56px 16px 0; /* lift the stack so tiles peek above the seam */
+    padding: 0;
   }
-
-  .langToggle {
-    order: 1;
+  .tile,
+  .tile:last-child {
+    flex-basis: auto;
+    padding: 20px 24px;
   }
-
-  .social {
-    order: 2;
+  .cols {
+    grid-template-columns: 1fr;
+    gap: 32px;
+    padding-top: 56px;
+    padding-bottom: 40px;
   }
+  .wordmarkRow { margin-top: 48px; padding-bottom: 16px; }
+}
 
-  .copy {
-    order: 3;
+/* ----------------- Reduced-motion fallback ----------------- */
+@media (prefers-reduced-motion: reduce) {
+  .colLink,
+  .tileSocialLink {
+    transition: none;
+  }
+  .colLink:hover,
+  .colLink:active,
+  .tileSocialLink:hover,
+  .tileSocialLink:active {
+    transform: none;
   }
 }

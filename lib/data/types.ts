@@ -1,20 +1,26 @@
 // Push Platform — Global Type Definitions
 // All modules import from here; never duplicate these types elsewhere.
 
+import type { HeroOffer as HeroOfferShape } from "@/lib/offers/types";
+
+export { type HeroOffer } from "@/lib/offers/types";
+
 export type DemoRole = "creator" | "merchant";
 
 // ── Campaign ─────────────────────────────────────────────────────────────────
 
-export type CampaignStatus =
-  | "draft"
-  | "active"
-  | "paused"
-  | "completed"
-  | "cancelled";
+export enum CampaignStatus {
+  Draft = "draft",
+  Active = "active",
+  Paused = "paused",
+  Completed = "completed",
+  Cancelled = "cancelled",
+}
 
 export type Campaign = {
   id: string;
   merchant_id: string;
+  tenant_id: string;
   title: string;
   description: string;
   location: string;
@@ -26,6 +32,8 @@ export type Campaign = {
   max_creators: number;
   accepted_creators: number;
   status: CampaignStatus;
+  applicable_location_ids: string[];
+  hero_offer: HeroOfferShape;
   start_date: string; // ISO date
   end_date: string;
   image_url?: string;
@@ -35,15 +43,16 @@ export type Campaign = {
 
 // ── Creator ───────────────────────────────────────────────────────────────────
 
-export type CreatorTier =
-  | "seed"
-  | "explorer"
-  | "operator"
-  | "proven"
-  | "closer"
-  | "partner";
+export enum CreatorTier {
+  Seed = "seed",
+  Explorer = "explorer",
+  Operator = "operator",
+  Proven = "proven",
+  Closer = "closer",
+  Partner = "partner",
+}
 
-export type Creator = {
+export type CreatorProfile = {
   id: string;
   user_id: string;
   name: string;
@@ -65,11 +74,14 @@ export type Creator = {
   created_at: string;
 };
 
+export type Creator = CreatorProfile;
+
 // ── Merchant ──────────────────────────────────────────────────────────────────
 
 export type Merchant = {
   id: string;
   user_id: string;
+  tenant_id: string;
   business_name: string;
   category: string;
   location: string;
@@ -79,6 +91,30 @@ export type Merchant = {
   website?: string;
   total_spent: number;
   active_campaigns: number;
+  created_at: string;
+};
+
+export type Tenant = {
+  id: string;
+  merchant_id: string;
+  business_name: string;
+  category: string;
+  created_at: string;
+};
+
+export type Location = {
+  id: string;
+  merchant_id: string;
+  tenant_id: string;
+  name: string;
+  business_name: string;
+  neighborhood: string;
+  address: string;
+  city: string;
+  state: string;
+  zip: string;
+  lat: number;
+  lng: number;
   created_at: string;
 };
 

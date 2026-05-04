@@ -1,0 +1,273 @@
+/* ============================================================
+   Scan Landing Page — /scan/[qrId]
+   Design.md v11 · Marketing register · Public-facing
+   ============================================================ */
+
+/* ── Loading state ───────────────────────────────────────────── */
+.scan-loading-wrap {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  background: var(--surface, #f8f4e8);
+  padding: 24px;
+}
+
+.scan-loading-wordmark {
+  font-family: var(--font-display);
+  font-size: 40px;
+  font-weight: 800;
+  color: var(--ink, #0a0a0a);
+  letter-spacing: -0.04em;
+  line-height: 1;
+}
+
+/* iOS 26 spring spinner */
+.scan-spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid var(--mist, #d8d4c8);
+  border-top-color: var(--brand-red, #c1121f);
+  border-radius: 50%;
+  animation: scan-spin 700ms cubic-bezier(0.34, 1.56, 0.64, 1) infinite;
+}
+
+@keyframes scan-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.scan-loading-label {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-4, #6a6a6a);
+}
+
+/* ── Error / not-found card ──────────────────────────────────── */
+.scan-error-wrap {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--surface, #f8f4e8);
+  padding: 24px;
+}
+
+.scan-error-card {
+  background: var(--surface-2, #f5f3ee);
+  border: 1px solid var(--mist, #d8d4c8);
+  border-radius: 10px;
+  padding: 40px 32px;
+  max-width: 480px;
+  width: 100%;
+}
+
+.scan-error-eyebrow {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--brand-red, #c1121f);
+  margin: 0 0 16px;
+}
+
+/* Error title — Darky 24px per spec */
+.scan-error-title {
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--brand-red, #c1121f);
+  letter-spacing: -0.03em;
+  margin: 0 0 12px;
+}
+
+.scan-error-body {
+  font-family: var(--font-body);
+  font-size: 18px;
+  line-height: 1.55;
+  color: var(--ink-3, #61605c);
+  margin: 0 0 24px;
+}
+
+.scan-error-link {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink, #0a0a0a);
+  text-decoration: none;
+  border-bottom: 1px solid var(--ink, #0a0a0a);
+}
+
+/* ── Success banner (verified state) ────────────────────────── */
+.scan-verified-banner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 24px;
+  background: rgba(34, 197, 94, 0.08);
+  border-bottom: 1px solid rgba(34, 197, 94, 0.2);
+}
+
+/* 40×40 check icon tile */
+.scan-verified-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(34, 197, 94, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.scan-verified-icon svg {
+  display: block;
+}
+
+/* Success heading — Darky 32px */
+.scan-verified-heading {
+  font-family: var(--font-display);
+  font-size: 32px;
+  font-weight: 800;
+  color: var(--ink, #0a0a0a);
+  letter-spacing: -0.03em;
+  margin: 0;
+  line-height: 1.05;
+}
+
+.scan-verified-sub {
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: var(--ink-3, #61605c);
+  margin: 0;
+  line-height: 1.4;
+}
+
+/* ── Campaign details card ───────────────────────────────────── */
+.scan-details-card {
+  border-radius: 10px;
+  background: var(--surface-2, #f5f3ee);
+  padding: 24px;
+  margin: 0 24px;
+  border: 1px solid var(--mist, #d8d4c8);
+}
+
+/* Campaign name — Darky 24px */
+.scan-campaign-name {
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--ink, #0a0a0a);
+  letter-spacing: -0.03em;
+  margin: 0 0 8px;
+  line-height: 1.1;
+}
+
+/* Merchant — mono 14px */
+.scan-merchant-name {
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: var(--ink-3, #61605c);
+  margin: 0 0 16px;
+  letter-spacing: 0.01em;
+}
+
+/* Reward / offer — Display 40px brand-red */
+.scan-offer-value {
+  font-family: var(--font-display);
+  font-size: 40px;
+  font-weight: 800;
+  color: var(--brand-red, #c1121f);
+  letter-spacing: -0.04em;
+  line-height: 1.05;
+  margin: 0 0 4px;
+}
+
+.scan-offer-label {
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-4, #6a6a6a);
+  margin: 0;
+}
+
+/* ── "Claim Reward" primary button ───────────────────────────── */
+.scan-claim-btn {
+  display: block;
+  width: 100%;
+  padding: 14px 28px;
+  background: var(--brand-red, #c1121f);
+  color: var(--snow, #fff);
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  text-align: center;
+  transition: transform 150ms cubic-bezier(0.34, 1.56, 0.64, 1);
+  /* 8px grid: 14×28 padding */
+}
+
+.scan-claim-btn:hover {
+  transform: translate(2px, 2px);
+}
+
+.scan-claim-btn:active {
+  transform: translate(3px, 3px) scale(0.98);
+}
+
+.scan-claim-btn:focus-visible {
+  outline: 2px solid var(--brand-red, #c1121f);
+  outline-offset: 3px;
+}
+
+/* ── "Powered by Push" footer branding ───────────────────────── */
+.scan-powered-by {
+  font-family: var(--font-body);
+  font-size: 12px;
+  color: var(--ink-3, #61605c);
+  text-align: center;
+  letter-spacing: 0.04em;
+  padding: 8px 24px 0;
+}
+
+.scan-powered-by a {
+  color: var(--ink, #0a0a0a);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+/* ── Responsive: full-width button on mobile ─────────────────── */
+@media (min-width: 480px) {
+  .scan-claim-btn {
+    width: auto;
+    display: inline-block;
+  }
+}
+
+/* ── Reduced motion ──────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .scan-spinner {
+    animation-duration: 1.5s;
+  }
+  .scan-claim-btn,
+  .scan-claim-btn:hover,
+  .scan-claim-btn:active {
+    transform: none;
+    transition: none;
+  }
+}

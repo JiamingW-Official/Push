@@ -1,0 +1,907 @@
+/* ============================================================
+   Creator Campaign Detail — v11 Design System
+   Product register: 8px grid · closed color tokens · 5-button system
+   No marketing tokens (Ticket Panel / Magvix / Editorial moments)
+   ============================================================ */
+
+/* ── Page wrapper ─────────────────────────────────────────── */
+.cd-page {
+  background: var(--surface);
+  min-height: 100%;
+  font-family: var(--font-body);
+}
+
+/* ── Campaign Hero ─────────────────────────────────────────── */
+.cd-hero {
+  background: var(--surface-2);
+  border-bottom: 1px solid var(--hairline);
+  padding: 32px 24px 24px;
+}
+
+/* Eyebrow: (CAMPAIGN·DETAIL) */
+.cd-hero__eyebrow {
+  display: block;
+  font-family: var(--font-mono, 'CS Genio Mono', monospace);
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--graphite);
+  margin-bottom: 8px;
+}
+
+/* Campaign H1 — v11 display scale */
+.cd-hero__title {
+  font-family: var(--font-display, Darky, sans-serif);
+  font-size: clamp(40px, 5vw, 72px);
+  font-weight: 800;
+  color: var(--ink);
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+  margin: 0 0 24px;
+}
+
+/* Hero meta row: merchant badge + status badge */
+.cd-hero__meta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
+/* Merchant brand chip — surface-3 + mono 12px */
+.cd-merchant-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border-radius: 10px;
+  background: var(--surface-3);
+  padding: 8px 16px;
+  font-family: var(--font-mono, 'CS Genio Mono', monospace);
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--ink);
+  border: 1px solid var(--hairline);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.cd-merchant-chip:hover {
+  transform: translate(2px, 2px);
+  box-shadow: var(--shadow-1);
+}
+
+/* Merchant avatar letter */
+.cd-merchant-chip__avatar {
+  width: 24px;
+  height: 24px;
+  border-radius: 6px;
+  background: var(--char);
+  color: var(--snow);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display, Darky, sans-serif);
+  font-size: 12px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+/* Status badge — pill variant */
+.cd-status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-family: var(--font-mono, 'CS Genio Mono', monospace);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.cd-status-badge--active {
+  background: var(--accent-blue);
+  color: var(--snow);
+}
+
+.cd-status-badge--pending,
+.cd-status-badge--submitted {
+  background: var(--champagne);
+  color: var(--snow);
+}
+
+.cd-status-badge--completed,
+.cd-status-badge--verified {
+  background: var(--char);
+  color: var(--snow);
+}
+
+/* Status dot */
+.cd-status-badge__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: 0.7;
+}
+
+/* Tier pill */
+.cd-tier-pill {
+  padding: 4px 10px;
+  border: 1px solid var(--hairline);
+  border-radius: 999px;
+  font-family: var(--font-mono, 'CS Genio Mono', monospace);
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--graphite);
+  background: var(--surface-3);
+}
+
+/* Cover photo card — 4:5, gradient overlay */
+.cd-cover {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  border-radius: 10px;
+  overflow: hidden;
+  background: var(--surface-3);
+  flex-shrink: 0;
+}
+
+.cd-cover img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* 35% transparent → 78% black bottom gradient overlay */
+.cd-cover__overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    transparent 35%,
+    rgba(0, 0, 0, 0.78) 100%
+  );
+  pointer-events: none;
+}
+
+/* ── Two-column layout: 5+7 cols ──────────────────────────── */
+.cd-layout {
+  display: grid;
+  grid-template-columns: 5fr 7fr;
+  gap: 24px;
+  padding: 24px;
+  max-width: 1140px;
+  align-items: start;
+}
+
+@media (max-width: 768px) {
+  .cd-layout {
+    grid-template-columns: 1fr;
+    padding: 16px;
+    gap: 16px;
+  }
+}
+
+/* Left column */
+.cd-col-left {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Right column */
+.cd-col-right {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* ── Base card ────────────────────────────────────────────── */
+.cd-card {
+  border-radius: 10px;
+  background: var(--surface-2);
+  padding: 24px;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.cd-card:hover {
+  transform: translate(2px, 2px);
+  box-shadow: var(--shadow-2);
+}
+
+/* ── Brief card ───────────────────────────────────────────── */
+.cd-brief__instructions {
+  font-family: var(--font-mono, 'CS Genio Mono', monospace);
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--ink);
+  margin: 0 0 16px;
+}
+
+/* Section eyebrow */
+.cd-section-eyebrow {
+  display: block;
+  font-family: var(--font-mono, 'CS Genio Mono', monospace);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--accent-blue);
+  margin-bottom: 8px;
+}
+
+/* Section heading inside card */
+.cd-section-heading {
+  font-family: var(--font-display, Darky, sans-serif);
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--ink);
+  letter-spacing: -0.02em;
+  margin: 0 0 16px;
+}
+
+/* Subsection label */
+.cd-subsection-label {
+  display: block;
+  font-family: var(--font-mono, 'CS Genio Mono', monospace);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--graphite);
+  margin: 16px 0 8px;
+}
+
+/* Requirements list */
+.cd-requirements {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.cd-requirements__item {
+  font-family: var(--font-mono, 'CS Genio Mono', monospace);
+  font-size: 13px;
+  color: var(--ink);
+  padding-left: 16px;
+  position: relative;
+  line-height: 1.5;
+}
+
+.cd-requirements__item::before {
+  content: "—";
+  position: absolute;
+  left: 0;
+  color: var(--brand-red);
+}
+
+/* Hashtag chips */
+.cd-hashtags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.cd-hashtag {
+  font-family: var(--font-mono, 'CS Genio Mono', monospace);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--accent-blue);
+  background: rgba(0, 133, 255, 0.06);
+  border: 1px solid rgba(0, 133, 255, 0.2);
+  border-radius: 6px;
+  padding: 4px 10px;
+  cursor: pointer;
+  transition: background 0.15s, transform 0.15s;
+}
+
+.cd-hashtag:hover {
+  background: rgba(0, 133, 255, 0.12);
+  transform: translate(1px, 1px);
+}
+
+/* Deadline pill */
+.cd-deadline {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border: 1px solid var(--hairline);
+  border-radius: 8px;
+  background: var(--surface-3);
+  margin-top: 8px;
+}
+
+.cd-deadline__label {
+  font-family: var(--font-mono, 'CS Genio Mono', monospace);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--graphite);
+}
+
+.cd-deadline__value {
+  font-family: var(--font-display, Darky, sans-serif);
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--brand-red);
+}
+
+/* ── Milestone timeline ────────────────────────────────────── */
+.cd-milestone-card {
+  border-radius: 10px;
+  background: var(--surface-2);
+  padding: 24px;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.cd-milestone-card:hover {
+  transform: translate(2px, 2px);
+  box-shadow: var(--shadow-2);
+}
+
+/* Liquid-glass "Current Milestone" tile — ≤1 per page */
+.cd-milestone-current {
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  background: rgba(248, 244, 232, 0.55);
+  backdrop-filter: blur(20px) saturate(1.4);
+  -webkit-backdrop-filter: blur(20px) saturate(1.4);
+  box-shadow:
+    0 2px 8px rgba(0, 0, 0, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.7);
+  padding: 16px 20px;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.cd-milestone-current__label {
+  font-family: var(--font-mono, 'CS Genio Mono', monospace);
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.10em;
+  color: var(--graphite);
+  margin-bottom: 2px;
+}
+
+.cd-milestone-current__value {
+  font-family: var(--font-display, Darky, sans-serif);
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--brand-red);
+  letter-spacing: -0.02em;
+}
+
+.cd-milestone-current__icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  background: var(--brand-red);
+  color: var(--snow);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+/* Milestone rail — horizontal stepper */
+.cd-milestone-rail {
+  display: flex;
+  align-items: flex-start;
+  overflow-x: auto;
+  padding-bottom: 8px;
+  gap: 0;
+}
+
+.cd-milestone-node {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+  min-width: 56px;
+  position: relative;
+}
+
+/* Connector line between nodes */
+.cd-milestone-node:not(:first-child)::before {
+  content: "";
+  position: absolute;
+  top: 7px;
+  right: 50%;
+  width: 100%;
+  height: 2px;
+  background: var(--hairline);
+  z-index: 0;
+}
+
+.cd-milestone-node--done:not(:first-child)::before,
+.cd-milestone-node--active:not(:first-child)::before {
+  background: var(--brand-red);
+}
+
+/* Dot */
+.cd-milestone-node__dot {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 1;
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 9px;
+  font-weight: 700;
+  color: var(--snow);
+}
+
+/* Completed: brand-red fill */
+.cd-milestone-node--done .cd-milestone-node__dot {
+  background: var(--brand-red);
+  color: var(--snow);
+}
+
+/* Current: surface bg + brand-red border */
+.cd-milestone-node--active .cd-milestone-node__dot {
+  background: var(--surface);
+  border: 2px solid var(--brand-red);
+  color: var(--brand-red);
+  box-shadow: 0 0 0 3px rgba(193, 18, 31, 0.15);
+}
+
+/* Upcoming: surface-3 */
+.cd-milestone-node--upcoming .cd-milestone-node__dot {
+  background: var(--surface-3);
+  border: 1px solid var(--hairline);
+  color: transparent;
+}
+
+.cd-milestone-node__label {
+  font-family: var(--font-mono, 'CS Genio Mono', monospace);
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--graphite);
+  text-align: center;
+  white-space: nowrap;
+}
+
+.cd-milestone-node--active .cd-milestone-node__label {
+  color: var(--brand-red);
+}
+
+.cd-milestone-node--done .cd-milestone-node__label {
+  color: var(--ink-3);
+}
+
+/* ── Submission panel ─────────────────────────────────────── */
+.cd-submit-card {
+  border-radius: 10px;
+  background: var(--surface-2);
+  padding: 24px;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.cd-submit-card:hover {
+  transform: translate(2px, 2px);
+  box-shadow: var(--shadow-2);
+}
+
+/* File dropzone — v11 spec */
+.cd-dropzone {
+  border: 2px dashed var(--ink-4);
+  border-radius: 10px;
+  padding: 32px;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 0.2s ease, background 0.2s ease;
+  background: var(--surface);
+  margin-bottom: 16px;
+}
+
+.cd-dropzone:hover,
+.cd-dropzone:focus-within {
+  border-color: var(--brand-red);
+  background: rgba(193, 18, 31, 0.03);
+}
+
+.cd-dropzone__icon {
+  font-size: 28px;
+  margin-bottom: 8px;
+  display: block;
+  opacity: 0.5;
+}
+
+.cd-dropzone__text {
+  font-family: var(--font-mono, 'CS Genio Mono', monospace);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--graphite);
+  margin-bottom: 4px;
+  display: block;
+}
+
+.cd-dropzone__sub {
+  font-family: var(--font-mono, 'CS Genio Mono', monospace);
+  font-size: 11px;
+  color: var(--ink-4);
+}
+
+/* URL input */
+.cd-url-input {
+  width: 100%;
+  height: 48px;
+  padding: 0 16px;
+  font-family: var(--font-mono, 'CS Genio Mono', monospace);
+  font-size: 14px;
+  border: 1px solid var(--hairline);
+  background: var(--surface);
+  color: var(--ink);
+  border-radius: 8px;
+  outline: none;
+  box-sizing: border-box;
+  margin-bottom: 12px;
+  transition: border-color 0.2s ease;
+}
+
+.cd-url-input:focus {
+  border-color: var(--brand-red);
+}
+
+.cd-url-input:focus-visible {
+  outline: 2px solid var(--brand-red);
+  outline-offset: 2px;
+}
+
+.cd-url-input:disabled {
+  opacity: 0.5;
+  background: var(--surface-3);
+  cursor: not-allowed;
+}
+
+/* Notes textarea — mono 14px */
+.cd-notes-textarea {
+  width: 100%;
+  min-height: 96px;
+  padding: 12px;
+  font-family: var(--font-mono, 'CS Genio Mono', monospace);
+  font-size: 14px;
+  line-height: 1.5;
+  border: 1px solid var(--ink-4);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--ink);
+  outline: none;
+  resize: vertical;
+  box-sizing: border-box;
+  margin-bottom: 16px;
+  transition: border-color 0.2s ease;
+}
+
+.cd-notes-textarea:focus {
+  border-color: var(--brand-red);
+}
+
+.cd-notes-textarea:focus-visible {
+  outline: 2px solid var(--brand-red);
+  outline-offset: 2px;
+}
+
+/* Submitted note */
+.cd-submitted-note {
+  padding: 12px 16px;
+  background: rgba(191, 161, 112, 0.08);
+  border: 1px solid rgba(191, 161, 112, 0.3);
+  border-radius: 8px;
+  font-family: var(--font-mono, 'CS Genio Mono', monospace);
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--champagne);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+/* Action button row */
+.cd-action-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-top: 16px;
+}
+
+@media (max-width: 480px) {
+  .cd-action-row {
+    gap: 12px;
+  }
+}
+
+/* ── Earnings stat tile ───────────────────────────────────── */
+.cd-earnings-tile {
+  border-radius: 10px;
+  background: var(--char);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  padding: 24px;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.cd-earnings-tile:hover {
+  transform: translate(2px, 2px);
+  box-shadow: var(--shadow-2);
+}
+
+.cd-earnings-tile__eyebrow {
+  font-family: var(--font-mono, 'CS Genio Mono', monospace);
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.10em;
+  color: var(--ink-4);
+  margin-bottom: 4px;
+  display: block;
+}
+
+/* Payment earned — display 40px 800 */
+.cd-earnings-tile__amount {
+  font-family: var(--font-display, Darky, sans-serif);
+  font-size: 40px;
+  font-weight: 800;
+  color: var(--champagne);
+  letter-spacing: -0.04em;
+  line-height: 1;
+  margin-bottom: 8px;
+}
+
+.cd-earnings-tile__sub {
+  font-family: var(--font-mono, 'CS Genio Mono', monospace);
+  font-size: 12px;
+  color: var(--ink-4);
+  line-height: 1.4;
+}
+
+/* Pending label */
+.cd-earnings-tile__pending {
+  display: inline-block;
+  margin-top: 8px;
+  font-family: var(--font-mono, 'CS Genio Mono', monospace);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--champagne);
+  border: 1px solid rgba(191, 161, 112, 0.4);
+  border-radius: 4px;
+  padding: 2px 8px;
+}
+
+/* Earnings breakdown table */
+.cd-earnings-table {
+  border: 1px solid var(--hairline);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.cd-earnings-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--hairline);
+}
+
+.cd-earnings-row:last-child {
+  border-bottom: none;
+}
+
+.cd-earnings-row--total {
+  background: var(--surface-3);
+}
+
+.cd-earnings-row__label {
+  font-family: var(--font-mono, 'CS Genio Mono', monospace);
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--graphite);
+}
+
+.cd-earnings-row__meta {
+  font-family: var(--font-mono, 'CS Genio Mono', monospace);
+  font-size: 10px;
+  color: var(--graphite);
+  margin-top: 2px;
+}
+
+.cd-earnings-row__amount {
+  font-family: var(--font-display, Darky, sans-serif);
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.cd-earnings-row--total .cd-earnings-row__amount {
+  color: var(--champagne);
+  font-size: 22px;
+}
+
+/* ── Key dates grid ───────────────────────────────────────── */
+.cd-keydates {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  border: 1px solid var(--hairline);
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 16px;
+}
+
+@media (max-width: 480px) {
+  .cd-keydates {
+    grid-template-columns: 1fr;
+  }
+
+  .cd-keydate-item {
+    border-right: none !important;
+    border-bottom: 1px solid var(--hairline);
+  }
+
+  .cd-keydate-item:last-child {
+    border-bottom: none;
+  }
+}
+
+.cd-keydate-item {
+  padding: 14px 16px;
+  border-right: 1px solid var(--hairline);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.cd-keydate-item:last-child {
+  border-right: none;
+}
+
+.cd-keydate-item--accent {
+  background: rgba(191, 161, 112, 0.05);
+}
+
+.cd-keydate-item__label {
+  font-family: var(--font-mono, 'CS Genio Mono', monospace);
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--graphite);
+}
+
+.cd-keydate-item__value {
+  font-family: var(--font-display, Darky, sans-serif);
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--ink);
+  letter-spacing: -0.02em;
+}
+
+.cd-keydate-item--accent .cd-keydate-item__value {
+  color: var(--brand-red);
+}
+
+.cd-keydate-item__countdown {
+  font-family: var(--font-mono, 'CS Genio Mono', monospace);
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--brand-red);
+}
+
+/* ── Submission status bar ────────────────────────────────── */
+.cd-status-bar {
+  display: flex;
+  gap: 0;
+  margin-bottom: 16px;
+  border: 1px solid var(--hairline);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.cd-status-step {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  border-right: 1px solid var(--hairline);
+}
+
+.cd-status-step:last-child {
+  border-right: none;
+}
+
+.cd-status-step--active {
+  background: var(--accent-blue);
+}
+
+.cd-status-step__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  background: var(--hairline);
+}
+
+.cd-status-step--active .cd-status-step__dot {
+  background: var(--snow);
+}
+
+.cd-status-step--done .cd-status-step__dot {
+  background: var(--ga-green, #4ade80);
+}
+
+.cd-status-step__label {
+  font-family: var(--font-mono, 'CS Genio Mono', monospace);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--graphite);
+}
+
+.cd-status-step--active .cd-status-step__label {
+  color: var(--snow);
+}
+
+.cd-status-step--done .cd-status-step__label {
+  color: var(--ink-3);
+}
+
+/* ── Focus-visible global for all interactive elements ──────── */
+.cd-page *:focus-visible {
+  outline: 2px solid var(--brand-red);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* ── Responsive overrides ─────────────────────────────────── */
+@media (max-width: 768px) {
+  .cd-hero {
+    padding: 24px 16px 16px;
+  }
+
+  .cd-hero__title {
+    font-size: clamp(32px, 7vw, 48px);
+    margin-bottom: 16px;
+  }
+
+  .cd-card,
+  .cd-submit-card,
+  .cd-milestone-card,
+  .cd-earnings-tile {
+    padding: 16px;
+  }
+
+  .cd-action-row {
+    gap: 12px;
+  }
+}

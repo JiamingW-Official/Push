@@ -1,725 +1,543 @@
 /* ============================================================
-   About Page — Editorial brand story
-   Design.md authority: border-radius:0, 6 brand colors,
-   Darky + CS Genio Mono, 8px grid, light mode only
+   About Page — v11 Design System
+   Authority: Design.md v11 | 8px grid | Closed color list
+   Panels: Hero (surface) · Team+Values (surface-2) · Sig · Stats (surface) · CTA (surface-2)
+   Prefix: about-
    ============================================================ */
 
-/* ------------------------------------------------------------
-   Shared: section spacing rhythm
-   ------------------------------------------------------------ */
-.about-hero,
-.about-letter,
-.about-timeline,
-.about-team,
-.about-investors,
-.about-values,
-.about-press,
-.about-cta {
-  padding-top: var(--space-12);
-  padding-bottom: var(--space-12);
+/* ── Page wrapper ──────────────────────────────────────────── */
+.about-page {
+  display: flex;
+  flex-direction: column;
 }
 
-/* ------------------------------------------------------------
-   Hero
-   ------------------------------------------------------------ */
+/* ── Shared section inner container ───────────────────────── */
+.about-section-inner {
+  max-width: var(--content-width, 1140px);
+  margin: 0 auto;
+  padding: 0 64px;
+}
+
+/* ── Shared eyebrow — 12px mono, tracked, parenthetical ───── */
+/* Marketing register: (PARENTHETICAL) style per § 3.1 */
+.about-eyebrow {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  line-height: 1;
+  color: rgba(255, 255, 255, 0.45);
+  margin: 0 0 16px;
+}
+
+.about-eyebrow--ink {
+  color: var(--ink-3);
+}
+
+/* ============================================================
+   PANEL 1 — Mission Hero · background: var(--surface)
+   Bottom-left anchored H1 per § 7.1
+   ============================================================ */
 .about-hero {
-  background: var(--dark);
-  padding-top: calc(var(--space-12) + 56px); /* clear sticky nav */
-  padding-bottom: var(--space-10);
+  background: var(--surface);
   position: relative;
   overflow: hidden;
+  min-height: clamp(560px, 80vh, 880px);
+  display: flex;
+  align-items: flex-end;
+  /* Decorative warm radial — exempt per § 2.7 SVG visual effect rule */
+  background-image:
+    radial-gradient(ellipse 70% 60% at 80% 20%, rgba(193, 18, 31, 0.06) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 70% at 10% 90%, rgba(0, 133, 255, 0.04) 0%, transparent 55%);
+  background-color: var(--surface);
 }
 
-/* Subtle ambient glow — same as landing hero */
-.about-hero::after {
-  content: "";
+/* Ghost watermark — decorative, pointerEvents none */
+.about-hero-ghost {
   position: absolute;
-  inset: 0;
-  background:
-    radial-gradient(
-      ellipse 65% 50% at 85% 20%,
-      rgba(102, 155, 188, 0.06) 0%,
-      transparent 65%
-    ),
-    radial-gradient(
-      ellipse 40% 30% at 10% 90%,
-      rgba(193, 18, 31, 0.05) 0%,
-      transparent 60%
-    );
+  right: -0.02em;
+  bottom: -0.12em;
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(200px, 38vw, 560px);
+  letter-spacing: -0.08em;
+  line-height: 0.8;
+  color: rgba(10, 10, 10, 0.03);
   pointer-events: none;
+  user-select: none;
   z-index: 0;
 }
 
-.about-hero .container {
+/* Bottom-left anchor block — 96px bottom, 64px left (§ 7.1) */
+.about-hero-inner {
   position: relative;
   z-index: 1;
-}
-
-.about-eyebrow {
-  color: var(--tertiary);
-  margin-bottom: var(--space-6);
-}
-
-.about-hero-headline {
-  font-family: var(--font-display);
-  font-size: clamp(72px, 11vw, 140px);
-  letter-spacing: -0.06em;
-  line-height: 0.88;
-  margin: 0 0 var(--space-8);
-}
-
-.about-hero-line {
-  display: block;
-}
-
-.about-hero-line--black {
-  font-weight: 900;
-  color: #fff;
-}
-
-.about-hero-line--light {
-  font-weight: 200;
-  color: rgba(255, 255, 255, 0.38);
-}
-
-.about-hero-line--red {
-  font-weight: 900;
-  color: var(--primary);
-}
-
-.about-hero-rule {
-  width: 64px;
-  height: 3px;
-  background: var(--primary);
-  margin-top: var(--space-6);
-}
-
-/* ------------------------------------------------------------
-   Founder's Letter
-   ------------------------------------------------------------ */
-.about-letter {
-  background: var(--surface-bright);
-}
-
-.about-letter-inner {
-  display: grid;
-  grid-template-columns: 200px 1fr;
-  gap: var(--space-10);
-  align-items: start;
-}
-
-.about-letter-label {
+  max-width: var(--content-width, 1140px);
+  width: 100%;
+  margin: 0 auto;
+  padding: 96px 64px;
   display: flex;
   flex-direction: column;
-  gap: var(--space-2);
-  padding-top: 6px;
-}
-
-.about-letter-num {
-  font-family: var(--font-display);
-  font-size: clamp(72px, 8vw, 120px);
-  font-weight: 100;
-  color: rgba(0, 48, 73, 0.07);
-  line-height: 1;
-  letter-spacing: -0.05em;
-  display: block;
-  margin-top: var(--space-3);
-  user-select: none;
-}
-
-.about-letter-headline {
-  font-family: var(--font-display);
-  font-size: clamp(32px, 4vw, 56px);
-  letter-spacing: -0.04em;
-  line-height: 1.05;
-  margin-bottom: var(--space-7);
-  color: var(--dark);
-}
-
-.about-letter-body {
-  max-width: 680px;
-}
-
-.about-letter-body p {
-  font-family: var(--font-body);
-  font-size: 16px;
-  line-height: 1.75;
-  color: var(--graphite);
-  margin-bottom: var(--space-5);
-}
-
-.about-letter-body p:last-child {
-  margin-bottom: 0;
-}
-
-.about-letter-sign {
-  font-style: italic;
-  color: var(--dark) !important;
-  font-weight: 600;
-  margin-top: var(--space-6) !important;
-  border-top: 1px solid var(--line);
-  padding-top: var(--space-4);
-}
-
-/* ------------------------------------------------------------
-   Timeline
-   ------------------------------------------------------------ */
-.about-timeline {
-  background: var(--surface);
-}
-
-.about-timeline-rail {
-  position: relative;
-  margin-top: var(--space-8);
-  padding-left: 220px;
-}
-
-.about-timeline-line {
-  position: absolute;
-  left: 190px;
-  top: 0;
-  bottom: 0;
-  width: 1px;
-  background: var(--line);
-}
-
-.about-timeline-item {
-  display: flex;
-  gap: 0;
-  margin-bottom: var(--space-10);
-  position: relative;
-}
-
-.about-timeline-item:last-child {
-  margin-bottom: 0;
-}
-
-.about-timeline-left {
-  position: absolute;
-  left: -220px;
-  width: 200px;
-  display: flex;
   align-items: flex-start;
-  justify-content: flex-end;
-  gap: var(--space-3);
-  padding-top: 4px;
 }
 
-.about-timeline-period {
-  font-family: var(--font-body);
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--tertiary);
-  white-space: nowrap;
-}
-
-.about-timeline-dot {
-  width: 10px;
-  height: 10px;
-  background: var(--primary);
-  flex-shrink: 0;
-  margin-top: 3px;
-  position: relative;
-  right: -34px; /* sits on the line */
-}
-
-.about-timeline-right {
-  padding-left: var(--space-7);
-}
-
-.about-timeline-title {
+/* H1 — Darky Display, clamp(40,5vw,72) per § 3.1, bottom-left anchor */
+.about-hero-h1 {
   font-family: var(--font-display);
-  font-size: 24px;
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  color: var(--dark);
-  margin-bottom: var(--space-2);
+  font-weight: 800;
+  font-size: clamp(40px, 5vw, 72px);
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+  color: var(--ink);
+  margin: 0 0 24px;
 }
 
-.about-timeline-body {
+/* Mission statement — 18px CS Genio Mono per brief */
+.about-hero-mission {
   font-family: var(--font-body);
-  font-size: 15px;
-  line-height: 1.65;
-  color: var(--graphite);
-  max-width: 520px;
+  font-size: 18px;
+  line-height: 1.55;
+  color: var(--ink-3);
+  max-width: 52ch;
+  margin: 0 0 32px;
+  letter-spacing: -0.02em;
 }
 
-/* ------------------------------------------------------------
-   Team
-   ------------------------------------------------------------ */
-.about-team {
-  background: var(--surface-bright);
+/* ============================================================
+   PANEL 2 — Team / Values · background: var(--surface-2)
+   Two sub-blocks: team cards + values cards
+   ============================================================ */
+.about-team-section {
+  background: var(--surface-2);
+  padding: 96px 0;
 }
 
+/* Team sub-block */
+.about-team-block {
+  margin-bottom: 80px;
+}
+
+/* H2 — Darky 40px exactly, top-left per § 7.1 */
+.about-team-h2 {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 40px;
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+  color: var(--ink);
+  margin: 0 0 48px;
+}
+
+/* ── Team cards grid — 5 columns, 24px gap (§ 6.6) ─────────── */
 .about-team-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: var(--space-6);
-  margin-top: var(--space-8);
+  grid-template-columns: repeat(5, 1fr);
+  gap: 24px;
 }
 
+/* Team card — r-md 10px, overflow hidden, hover shift */
 .about-team-card {
-  border: 1px solid var(--line);
-  padding: var(--space-6);
-  background: var(--surface-elevated);
-  transition: transform 360ms cubic-bezier(0.22, 1, 0.36, 1),
-    box-shadow 360ms cubic-bezier(0.22, 1, 0.36, 1);
+  border-radius: 10px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  cursor: default;
+  /* Bottom-right hover shift per § 9 interaction signature */
+  transition: transform 120ms cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .about-team-card:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 12px 32px rgba(0, 48, 73, 0.08);
+  transform: translate(2px, 2px);
 }
 
+.about-team-card:active {
+  transform: translate(3px, 3px) scale(0.98);
+}
+
+/* Avatar — 1:1 photo card with gradient overlay per § 2.5 Photo Card spec */
 .about-team-avatar {
-  width: 56px;
-  height: 56px;
-  background: var(--dark);
+  aspect-ratio: 1 / 1;
+  position: relative;
+  background: var(--ink-2);
+  border-radius: 10px;
+  overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: var(--space-4);
-  border-radius: 0;
+  margin-bottom: 12px;
 }
 
-.about-team-initials {
+/* Initial letter — centered in avatar */
+.about-team-initial {
   font-family: var(--font-display);
-  font-size: 18px;
-  font-weight: 800;
-  color: #fff;
+  font-weight: 900;
+  font-size: clamp(24px, 4vw, 40px);
+  color: rgba(255, 255, 255, 0.18);
   letter-spacing: -0.03em;
+  z-index: 1;
 }
 
+/* Gradient overlay — 35% transparent → rgba(0,0,0,0.78) per § 2.5 */
+.about-team-avatar-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    transparent 35%,
+    rgba(0, 0, 0, 0.78) 100%
+  );
+  z-index: 2;
+}
+
+/* Meta — positioned at bottom of avatar, overlay on gradient */
+.about-team-avatar-meta {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 12px;
+  z-index: 3;
+}
+
+/* Name: Darky 20px per brief */
 .about-team-name {
   font-family: var(--font-display);
-  font-size: 20px;
   font-weight: 700;
+  font-size: 16px;
   letter-spacing: -0.02em;
-  color: var(--dark);
-  margin-bottom: var(--space-1);
+  line-height: 1.2;
+  color: var(--snow);
+  margin: 0 0 4px;
 }
 
+/* Role: mono 12px per brief */
 .about-team-role {
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 700;
-  letter-spacing: 0.07em;
   text-transform: uppercase;
-  color: var(--primary);
-  margin-bottom: var(--space-3);
+  letter-spacing: 0.08em;
+  color: rgba(255, 255, 255, 0.55);
+  margin: 0;
 }
 
-.about-team-bio {
+/* Bio line below avatar */
+.about-team-origin {
   font-family: var(--font-body);
   font-size: 13px;
-  line-height: 1.6;
-  color: var(--graphite);
+  color: var(--ink-3);
+  line-height: 1.45;
+  margin: 0;
+  letter-spacing: -0.02em;
 }
 
-/* ------------------------------------------------------------
-   Investors strip
-   ------------------------------------------------------------ */
-.about-investors {
-  background: var(--dark);
-  padding-top: var(--space-8);
-  padding-bottom: var(--space-8);
-  border-top: 1px solid rgba(245, 242, 236, 0.08);
+/* ── Values sub-block ───────────────────────────────────────── */
+.about-values-block {
+  /* Inherits section padding */
 }
 
-.about-investors-label {
-  color: rgba(245, 242, 236, 0.35);
-  margin-bottom: var(--space-5);
-}
-
-.about-investors-strip {
-  display: flex;
-  align-items: center;
-  gap: var(--space-8);
-  flex-wrap: wrap;
-}
-
-.about-investor-name {
-  font-family: var(--font-display);
-  font-size: 22px;
-  font-weight: 200;
-  letter-spacing: -0.03em;
-  color: rgba(245, 242, 236, 0.55);
-  transition: color 300ms ease;
-  cursor: default;
-}
-
-.about-investor-name:hover {
-  color: rgba(245, 242, 236, 0.9);
-}
-
-/* Dividers between investor names */
-.about-investor-name + .about-investor-name::before {
-  content: "·";
-  margin-right: var(--space-8);
-  color: rgba(245, 242, 236, 0.15);
-  font-weight: 100;
-}
-
-/* ------------------------------------------------------------
-   Values
-   ------------------------------------------------------------ */
-.about-values {
-  background: var(--surface);
-}
-
+/* 3-col values grid, 24px gap */
 .about-values-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 0;
-  margin-top: var(--space-8);
-  border-top: 1px solid var(--line);
-  border-left: 1px solid var(--line);
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
 }
 
-.about-value-item {
-  padding: var(--space-8);
-  border-right: 1px solid var(--line);
-  border-bottom: 1px solid var(--line);
-  position: relative;
+/* Value card — r-md 10px, surface bg, 24px padding per brief */
+.about-value-card {
+  border-radius: 10px;
+  background: var(--surface);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  /* Bottom-right hover shift */
+  transition: transform 120ms cubic-bezier(0.34, 1.56, 0.64, 1),
+    box-shadow 160ms ease;
 }
 
-.about-value-item:nth-child(even) {
-  background: var(--surface-bright);
+.about-value-card:hover {
+  transform: translate(2px, 2px);
+  box-shadow: var(--shadow-1);
 }
 
-.about-value-word {
-  font-family: var(--font-display);
-  font-size: clamp(48px, 6vw, 80px);
-  font-weight: 900;
-  letter-spacing: -0.05em;
-  color: var(--dark);
+.about-value-card:active {
+  transform: translate(3px, 3px) scale(0.98);
+}
+
+/* Icon tile — 40×40 with r-lg 12px per § 4.3 */
+.about-value-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--r-lg);
+  background: var(--surface-3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.about-value-icon-glyph {
+  font-size: 18px;
+  color: var(--ink-3);
   line-height: 1;
-  display: block;
-  margin-bottom: var(--space-4);
 }
 
+/* Value title: Darky 20px per brief */
+.about-value-title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 20px;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+  color: var(--ink);
+  margin: 0;
+}
+
+/* Description: 14px mono per brief */
 .about-value-desc {
   font-family: var(--font-body);
   font-size: 14px;
-  line-height: 1.7;
-  color: var(--graphite);
-  max-width: 380px;
-}
-
-/* Red accent line on the value word */
-.about-value-item::after {
-  content: "";
-  position: absolute;
-  left: var(--space-8);
-  bottom: 0;
-  width: 0;
-  height: 2px;
-  background: var(--primary);
-  transition: width 600ms cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-.about-value-item.visible::after {
-  width: 40px;
-}
-
-/* ------------------------------------------------------------
-   Press
-   ------------------------------------------------------------ */
-.about-press {
-  background: var(--surface-bright);
-}
-
-.about-press-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: var(--space-6);
-  margin-top: var(--space-8);
-}
-
-.about-press-card {
-  border: 1px solid var(--line);
-  padding: var(--space-6) var(--space-7);
-  border-top: 3px solid var(--dark);
-  background: var(--surface-elevated);
+  color: var(--ink-3);
+  line-height: 1.5;
   margin: 0;
-  transition: transform 360ms cubic-bezier(0.22, 1, 0.36, 1);
+  letter-spacing: -0.01em;
 }
 
-.about-press-card:hover {
-  transform: translateY(-4px);
+/* ============================================================
+   PANEL 3 — Magvix Italic Signature Divider (§ 3.1)
+   28-40px italic var(--ink-3), centered, background: var(--surface)
+   ≤2 per page · no hover · middle-dot separators
+   ============================================================ */
+.about-sig-divider-wrap {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 64px;
+  background: var(--surface);
 }
 
-/* Alternate: first card with primary accent */
-.about-press-card:first-child {
-  border-top-color: var(--primary);
+/* .sig-divider is defined globally — Magvix italic 28-40px var(--ink-3) */
+
+/* ============================================================
+   PANEL 4 — Press / Stats · background: var(--surface)
+   KPI: Darky 800 clamp(40,5vw,72) per § 3.1 KPI numeral token
+   Press logos: grayscale(1) opacity 0.5 · hover: remove filter
+   ============================================================ */
+.about-stats-section {
+  background: var(--surface);
+  padding: 96px 0;
 }
 
-.about-press-quote {
+/* H2 — Darky 40px, top-left */
+.about-stats-h2 {
   font-family: var(--font-display);
-  font-size: clamp(18px, 2vw, 24px);
-  font-weight: 300;
+  font-weight: 800;
+  font-size: 40px;
   letter-spacing: -0.02em;
-  line-height: 1.35;
-  color: var(--dark);
-  margin-bottom: var(--space-5);
+  line-height: 1.05;
+  color: var(--ink);
+  margin: 0 0 64px;
 }
 
-.about-press-footer {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--space-3);
-  border-top: 1px solid var(--line);
-  padding-top: var(--space-3);
+/* KPI grid — 4 columns, 8px grid */
+.about-kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+  border-top: 1px solid var(--hairline);
+  border-left: 1px solid var(--hairline);
+  margin-bottom: 80px;
 }
 
-.about-press-outlet {
-  font-family: var(--font-body);
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--dark);
+.about-kpi-item {
+  padding: 40px 32px;
+  border-right: 1px solid var(--hairline);
+  border-bottom: 1px solid var(--hairline);
 }
 
-.about-press-date {
-  font-family: var(--font-body);
-  font-size: 11px;
-  color: var(--text-muted);
-  letter-spacing: 0.04em;
-}
-
-/* ------------------------------------------------------------
-   Bottom CTA
-   ------------------------------------------------------------ */
-.about-cta {
-  background: var(--dark);
-  padding-top: var(--space-16);
-  padding-bottom: var(--space-16);
-  position: relative;
-  overflow: hidden;
-}
-
-/* Ambient glow */
-.about-cta::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background:
-    radial-gradient(
-      ellipse 60% 60% at 50% 100%,
-      rgba(193, 18, 31, 0.07) 0%,
-      transparent 65%
-    );
-  pointer-events: none;
-}
-
-.about-cta-inner {
-  position: relative;
-  z-index: 1;
-  max-width: 760px;
-}
-
-.about-cta-eyebrow {
-  color: var(--tertiary);
-  margin-bottom: var(--space-6);
-}
-
-.about-cta-headline {
+/* KPI numeral — Darky 800 clamp(40,5vw,72) per § 3.1 */
+.about-kpi-num {
   font-family: var(--font-display);
-  font-size: clamp(48px, 7vw, 100px);
-  letter-spacing: -0.05em;
-  line-height: 0.92;
-  color: #fff;
-  margin-bottom: var(--space-6);
+  font-weight: 800;
+  font-size: clamp(40px, 5vw, 72px);
+  letter-spacing: -0.045em;
+  line-height: 1;
+  color: var(--ink);
+  margin: 0 0 8px;
 }
 
-.about-cta-headline .wt-200 {
-  color: rgba(255, 255, 255, 0.38);
-}
-
-.about-cta-body {
+.about-kpi-label {
   font-family: var(--font-body);
-  font-size: 16px;
-  line-height: 1.65;
-  color: rgba(245, 242, 236, 0.65);
-  max-width: 480px;
-  margin-bottom: var(--space-8);
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--ink-3);
+  margin: 0;
 }
 
-.about-cta-actions {
+/* Press block */
+.about-press-block {
+  padding-top: 16px;
+}
+
+/* Press logo row — flex, gap 32px */
+.about-press-row {
   display: flex;
-  gap: var(--space-4);
   align-items: center;
+  gap: 32px;
   flex-wrap: wrap;
 }
 
-/* Ghost button override for dark CTA section */
-.about-cta-ghost {
-  color: rgba(255, 255, 255, 0.7) !important;
-  border-color: rgba(255, 255, 255, 0.18) !important;
-  box-shadow: 2px 2px 0 rgba(255, 255, 255, 0.06) !important;
-}
-
-.about-cta-ghost:hover {
-  color: #fff !important;
-  border-color: rgba(255, 255, 255, 0.45) !important;
-}
-
-/* ------------------------------------------------------------
-   Scroll reveal (shared with landing)
-   ------------------------------------------------------------ */
-.reveal {
-  opacity: 0;
-  transform: translateY(32px);
+/* Individual press logo — grayscale 1, opacity 0.5 per brief */
+.about-press-logo {
+  /* filter: grayscale(1) — applied to text placeholder logos */
+  filter: grayscale(1);
+  opacity: 0.5;
   transition:
-    opacity 600ms cubic-bezier(0.22, 1, 0.36, 1),
-    transform 600ms cubic-bezier(0.22, 1, 0.36, 1);
+    filter 200ms ease,
+    opacity 200ms ease,
+    transform 120ms cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-.reveal.visible {
+/* Hover: remove filter per brief */
+.about-press-logo:hover {
+  filter: none;
   opacity: 1;
-  transform: translateY(0);
+  transform: translate(2px, 2px);
 }
 
-/* ------------------------------------------------------------
-   Responsive
-   ------------------------------------------------------------ */
+.about-press-name {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 18px;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  white-space: nowrap;
+}
+
+/* ── CTA section spacing ─────────────────────────────────────── */
+.about-cta-section {
+  background: var(--surface-2);
+  padding: 0 0 96px;
+}
+
+/* ============================================================
+   Responsive — Tablet (max 1024px)
+   ============================================================ */
 @media (max-width: 1024px) {
-  .about-letter-inner {
-    grid-template-columns: 1fr;
-    gap: var(--space-5);
+  .about-team-grid {
+    grid-template-columns: repeat(3, 1fr);
   }
 
-  .about-letter-num {
-    display: none;
-  }
-
-  .about-timeline-rail {
-    padding-left: 140px;
-  }
-
-  .about-timeline-left {
-    left: -140px;
-    width: 120px;
-  }
-
-  .about-timeline-line {
-    left: 112px;
-  }
-
-  .about-timeline-dot {
-    right: -30px;
+  .about-kpi-grid {
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 
+/* ============================================================
+   Responsive — iPad (max 900px)
+   ============================================================ */
+@media (max-width: 900px) {
+  .about-values-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .about-section-inner {
+    padding: 0 48px;
+  }
+}
+
+/* ============================================================
+   Responsive — Mobile (max 768px)
+   ============================================================ */
 @media (max-width: 768px) {
-  .about-hero,
-  .about-letter,
-  .about-timeline,
-  .about-team,
-  .about-investors,
-  .about-values,
-  .about-press,
-  .about-cta {
-    padding-top: var(--space-10);
-    padding-bottom: var(--space-10);
+  .about-section-inner {
+    padding: 0 24px;
+  }
+
+  .about-hero-inner {
+    padding: 80px 24px 64px;
+  }
+
+  .about-hero-h1 {
+    font-size: clamp(40px, 10vw, 64px);
+  }
+
+  .about-team-section {
+    padding: 64px 0;
   }
 
   .about-team-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, 1fr);
   }
 
   .about-values-grid {
     grid-template-columns: 1fr;
   }
 
-  .about-press-grid {
+  .about-stats-section {
+    padding: 64px 0;
+  }
+
+  .about-kpi-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .about-kpi-item {
+    padding: 32px 24px;
+  }
+
+  .about-stats-h2 {
+    font-size: 32px;
+  }
+
+  .about-team-h2 {
+    font-size: 32px;
+    margin-bottom: 32px;
+  }
+
+  .about-sig-divider-wrap {
+    padding: 48px 24px;
+  }
+
+  .about-press-row {
+    gap: 24px;
+  }
+
+  .about-cta-section {
+    padding-bottom: 64px;
+  }
+}
+
+/* ============================================================
+   Responsive — Small mobile (max 480px)
+   ============================================================ */
+@media (max-width: 480px) {
+  .about-team-grid {
     grid-template-columns: 1fr;
   }
 
-  .about-timeline-rail {
-    padding-left: 0;
-    padding-top: var(--space-3);
-  }
-
-  .about-timeline-line {
-    left: 5px;
-    top: 8px;
-  }
-
-  .about-timeline-item {
-    flex-direction: column;
-    padding-left: var(--space-6);
-    margin-bottom: var(--space-8);
-  }
-
-  .about-timeline-left {
-    position: static;
-    width: auto;
-    flex-direction: row;
-    justify-content: flex-start;
-    margin-bottom: var(--space-2);
-  }
-
-  .about-timeline-dot {
-    right: auto;
-    position: absolute;
-    left: 0;
-    top: 4px;
-    width: 10px;
-    height: 10px;
-  }
-
-  .about-timeline-right {
-    padding-left: 0;
-  }
-
-  .about-investors-strip {
-    gap: var(--space-5);
-  }
-
-  .about-investor-name {
-    font-size: 18px;
-  }
-
-  .about-cta-actions {
-    flex-direction: column;
-    align-items: flex-start;
+  .about-kpi-grid {
+    grid-template-columns: 1fr;
   }
 }
 
-@media (max-width: 640px) {
-  .about-hero-headline {
-    font-size: clamp(56px, 14vw, 80px);
-  }
-
-  .about-value-word {
-    font-size: clamp(40px, 10vw, 56px);
-  }
-}
-
-/* Reduced motion */
+/* ============================================================
+   Reduced motion
+   ============================================================ */
 @media (prefers-reduced-motion: reduce) {
-  .reveal {
-    opacity: 1;
-    transform: none;
-    transition: none;
-  }
-
   .about-team-card,
-  .about-press-card {
-    transition: none;
-  }
-
-  .about-value-item::after {
-    transition: none;
-    width: 40px;
-  }
-
-  .about-investor-name {
+  .about-team-card:hover,
+  .about-team-card:active,
+  .about-value-card,
+  .about-value-card:hover,
+  .about-value-card:active,
+  .about-press-logo,
+  .about-press-logo:hover {
+    transform: none;
     transition: none;
   }
 }

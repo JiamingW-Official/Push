@@ -5,7 +5,7 @@ import "./inbox.css";
 
 const skel: React.CSSProperties = {
   background:
-    "linear-gradient(90deg,rgba(0,48,73,0.05) 25%,rgba(0,48,73,0.09) 50%,rgba(0,48,73,0.05) 75%)",
+    "linear-gradient(90deg,var(--surface-3) 25%,var(--mist) 50%,var(--surface-3) 75%)",
   backgroundSize: "600px 100%",
   animation: "shimmer 1.4s infinite linear",
 };

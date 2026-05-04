@@ -1,949 +1,755 @@
 /* ============================================================
-   Push Pricing Page — v8.2
-   Editorial hero · 3-tier cards · Comparison table · FAQ · Guarantee · CTA
-   All border-radius: 0 per Design.md
+   Pricing Page — v11 Design System Full Rebuild
+   4-panel marketing stack (Marketing register only):
+     1. Hero        — --surface Ivory Cream (warm)
+     2. Tier Cards  — --surface-2 Pearl Stone (cool-warm)
+     3. Ticket CTA  — --ga-orange (editorial moment ≤1)
+     4. Comparison  — --surface Ivory Cream (warm)
+   Signature dividers between panels 2→3 and 3→4.
+   Design.md authority — all tokens / spacing / radii locked.
    ============================================================ */
 
-/* ── Section tag (shared pattern) ──────────────────────────── */
-.pr-section-tag {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-2);
-  margin-bottom: var(--space-5);
-}
-
-.section-tag-num {
-  font-family: var(--font-body);
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  color: var(--text-muted);
-}
-
-.section-tag-line {
-  display: inline-block;
-  width: 24px;
-  height: 1px;
-  background: var(--line-strong);
-}
-
-.section-tag-label {
-  font-family: var(--font-body);
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--text-muted);
-}
-
-/* ============================================================
-   1. EDITORIAL HERO
-   ============================================================ */
-.pr-hero {
-  background: var(--dark);
-  min-height: 88svh;
+/* ── Page wrapper ─────────────────────────────────────────────── */
+.pv11-wrapper {
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
-  padding-top: 120px;
-  position: relative;
-  overflow: hidden;
-}
-
-/* Ambient glow */
-.pr-hero::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background:
-    radial-gradient(
-      ellipse 55% 40% at 15% 80%,
-      rgba(193, 18, 31, 0.1) 0%,
-      transparent 70%
-    ),
-    radial-gradient(
-      ellipse 45% 35% at 85% 15%,
-      rgba(102, 155, 188, 0.08) 0%,
-      transparent 65%
-    );
-  pointer-events: none;
-}
-
-.pr-hero-inner {
-  position: relative;
-  z-index: 1;
-  padding-bottom: var(--space-8);
-}
-
-.pr-hero-label {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-2);
-  margin-bottom: var(--space-5);
-}
-
-.pr-hero-eyebrow {
-  font-family: var(--font-body);
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: rgba(245, 242, 236, 0.4);
-}
-
-.pr-hero-eyebrow-sub {
-  font-family: var(--font-body);
-  font-size: 11px;
-  font-weight: 400;
-  letter-spacing: 0.06em;
-  color: rgba(245, 242, 236, 0.25);
-}
-
-/* Hero headline: asymmetric weight */
-.pr-hero-h {
-  display: flex;
-  flex-direction: column;
-  gap: 0;
-  margin-bottom: var(--space-7);
-  line-height: 0.9;
-}
-
-.pr-h-bold {
-  font-family: var(--font-display);
-  font-weight: 900;
-  font-size: clamp(52px, 8.5vw, 128px);
-  letter-spacing: -0.055em;
-  color: #fff;
-  display: block;
-}
-
-.pr-h-light {
-  font-family: var(--font-display);
-  font-weight: 300;
-  font-size: clamp(48px, 7.8vw, 118px);
-  letter-spacing: -0.045em;
-  color: rgba(245, 242, 236, 0.38);
-  display: block;
-}
-
-.pr-hero-bottom {
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: var(--space-6);
-  border-top: 1px solid rgba(245, 242, 236, 0.08);
-  padding-top: var(--space-5);
-}
-
-.pr-hero-sub {
-  font-family: var(--font-body);
-  font-size: 13px;
-  color: rgba(245, 242, 236, 0.45);
-  line-height: 1.7;
-  max-width: 340px;
-  letter-spacing: 0.01em;
-  -webkit-font-smoothing: antialiased;
-}
-
-.pr-hero-anchors {
-  display: flex;
-  gap: 10px;
-  align-items: center;
-  flex-shrink: 0;
-}
-
-/* Decorative ghost price */
-.pr-hero-ghost {
-  position: absolute;
-  right: -0.05em;
-  bottom: -0.15em;
-  font-family: var(--font-display);
-  font-weight: 100;
-  font-size: clamp(180px, 28vw, 400px);
-  letter-spacing: -0.06em;
-  color: rgba(245, 242, 236, 0.025);
-  line-height: 1;
-  pointer-events: none;
-  user-select: none;
-}
-
-/* ============================================================
-   2. PRICING CARDS
-   ============================================================ */
-.pr-plans-section {
   background: var(--surface);
 }
 
-.pr-plans-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 0;
-  border: 1px solid var(--line);
-  margin-bottom: var(--space-6);
+/* ============================================================
+   PANEL 1 — HERO
+   bg: --surface Ivory Cream (warm)
+   H1 bottom-left anchored (🔒 STRICT §7.1)
+   ============================================================ */
+.pv11-hero {
+  position: relative;
+  min-height: clamp(520px, 80vh, 840px);
+  background: var(--surface);
+  overflow: hidden;
+  /* subtle warm-red ambient glow from bottom-left — brand marker */
+  background:
+    radial-gradient(ellipse 60% 50% at 0% 100%, rgba(193, 18, 31, 0.07) 0%, transparent 60%),
+    var(--surface);
 }
 
-/* Individual card */
-.pr-plan {
-  padding: var(--space-6) var(--space-5);
-  border-right: 1px solid var(--line);
-  background: var(--surface-elevated);
-  position: relative;
+/* Decorative ghost "$0" — top-right, bleeds off edge */
+.pv11-hero-ghost {
+  position: absolute;
+  top: -8%;
+  right: -4%;
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(200px, 32vw, 480px);
+  letter-spacing: -0.08em;
+  line-height: 0.85;
+  color: rgba(10, 10, 10, 0.04);
+  pointer-events: none;
+  user-select: none;
+  z-index: 0;
+}
+
+/* Bottom-left anchored hero content block (🔒 STRICT corner anchor) */
+.pv11-hero-inner {
+  position: absolute;
+  bottom: 96px;
+  left: 64px;
+  right: 64px;
+  z-index: 2;
+  max-width: 680px;
+}
+
+/* Eyebrow — CS Genio Mono 12px 700 uppercase parenthetical (Marketing register) */
+.pv11-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin: 0 0 16px;
+}
+
+/* H1 — Darky 800 clamp(40,5vw,72)px, bottom-left anchored */
+.pv11-hero-h1 {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(40px, 5vw, 72px);
+  letter-spacing: -0.025em;
+  line-height: 1.0;
+  color: var(--ink);
+  margin: 0 0 24px;
+}
+
+/* Subtitle — CS Genio Mono 18px body */
+.pv11-hero-sub {
+  font-family: var(--font-mono);
+  font-size: 18px;
+  line-height: 1.4;
+  letter-spacing: -0.1em;
+  color: var(--ink-3);
+  max-width: 52ch;
+  margin: 0 0 32px;
+}
+
+/* CTA row — adjacent buttons 16px gap (§6 negative-space table) */
+.pv11-hero-ctas {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+/* Liquid-glass stat tile — bottom-right (§8.9 iOS 26 spec) */
+.pv11-hero-badge {
+  position: absolute;
+  right: 64px;
+  bottom: 96px;
+  z-index: 3;
+  background: rgba(248, 244, 232, 0.72);
+  backdrop-filter: blur(40px) saturate(1.8) brightness(1.06);
+  -webkit-backdrop-filter: blur(40px) saturate(1.8) brightness(1.06);
+  border: 0.5px solid var(--mist);
+  border-radius: 16px;
+  padding: 32px;
   display: flex;
   flex-direction: column;
-  transition: transform 360ms cubic-bezier(0.22, 1, 0.36, 1),
-    box-shadow 360ms cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-.pr-plan:last-child {
-  border-right: none;
-}
-
-.pr-plan:hover {
-  transform: translateY(-6px);
+  align-items: flex-end;
+  gap: 8px;
+  min-width: 160px;
   box-shadow:
-    0 16px 40px rgba(0, 48, 73, 0.1),
-    0 4px 8px rgba(0, 48, 73, 0.06);
-  z-index: 2;
+    inset 0 1.5px 0 rgba(255, 255, 255, 0.6),
+    0 16px 48px rgba(10, 10, 10, 0.08),
+    0 4px 16px rgba(10, 10, 10, 0.06);
 }
 
-/* Featured (Growth) */
-.pr-plan--featured {
-  background: var(--dark);
+.pv11-badge-num {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(40px, 5vw, 72px);
+  letter-spacing: -0.04em;
+  line-height: 1.0;
+  color: var(--ink);
 }
 
-.pr-plan--featured .pr-plan-name,
-.pr-plan--featured .pr-plan-price-int,
-.pr-plan--featured .pr-plan-price-cents,
-.pr-plan--featured .pr-plan-desc {
-  color: #fff;
+.pv11-badge-label {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  text-align: right;
 }
 
-.pr-plan--featured .pr-plan-feature {
-  color: rgba(245, 242, 236, 0.75);
-  border-color: rgba(245, 242, 236, 0.08);
+/* ============================================================
+   Signature Divider wrapper — background bridges panels
+   Global .sig-divider on <span> handles text styles (§8.5)
+   ============================================================ */
+.pv11-sig-wrap {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: var(--surface);
 }
 
-.pr-plan--featured .pr-plan-check {
-  color: var(--primary);
+/* ============================================================
+   PANEL 2 — TIER CARDS
+   bg: --surface-2 Pearl Stone (📐 STRUCTURED — alternating cool-warm)
+   ============================================================ */
+.pv11-tiers-panel {
+  background: var(--surface-2);
+  padding: 96px 64px 80px;
 }
 
-.pr-plan--featured .pr-plan-price-period {
-  color: rgba(245, 242, 236, 0.45);
+/* Section header — eyebrow + H2 top-left anchored (§7.1) */
+.pv11-tiers-header {
+  margin-bottom: 56px;
 }
 
-.pr-plan--featured .pr-plan-roi {
-  color: var(--champagne);
+/* Section eyebrow — parenthetical Marketing variant */
+.pv11-section-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin: 0 0 16px;
 }
 
-/* Badge */
-.pr-plan-badge {
-  position: absolute;
-  top: 0;
-  right: var(--space-5);
-  transform: translateY(-50%);
+/* H2 — Darky 800 40px (§3.1 scale — section title) */
+.pv11-section-h2 {
+  font-family: var(--font-display);
+  font-size: 40px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+  color: var(--ink);
+  margin: 0;
+}
+
+/* 3-col tier grid — 12-col desktop (4+4+4) */
+.pv11-tiers-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  align-items: stretch;
+  max-width: 1140px;
+}
+
+/* ── Base tier card ─────────────────────────────────────────── */
+/* border-radius: 10px per spec, bg: --surface, padding: 32px  */
+.pv11-tier-card {
+  background: var(--surface);
+  border-radius: 10px;
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--mist);
+  box-shadow: var(--shadow-1);
+  /* Bottom-right hover shift (🔒 STRICT §8) */
+  transition:
+    transform 180ms cubic-bezier(0.34, 1.56, 0.64, 1),
+    box-shadow 200ms ease;
+}
+.pv11-tier-card:hover {
+  transform: translate(2px, 2px);
+  box-shadow: var(--shadow-2);
+}
+.pv11-tier-card:active {
+  transform: translate(2px, 2px) scale(0.98);
+}
+
+/* ── Growth card — dark ink bg (highlight) ─────────────────── */
+/* bg: --ink (Ink filled); color: --snow per spec             */
+.pv11-tier-card--highlight {
+  background: var(--ink);
+  border-color: rgba(255, 255, 255, 0.08);
+  box-shadow:
+    0 24px 80px rgba(10, 10, 10, 0.28),
+    0 8px 24px rgba(10, 10, 10, 0.16);
+}
+.pv11-tier-card--highlight:hover {
+  transform: translate(2px, 2px);
+  box-shadow:
+    0 32px 96px rgba(10, 10, 10, 0.36),
+    0 8px 24px rgba(10, 10, 10, 0.20);
+}
+
+/* ── Scale card — --surface-3 Bone ─────────────────────────── */
+.pv11-tier-card--scale {
+  background: var(--surface-3);
+}
+
+/* RECOMMENDED pill — Champagne ceremonial (≤3/viewport per §2.2) */
+.pv11-recommended-pill {
+  display: inline-flex;
+  align-items: center;
   background: var(--champagne);
-  color: var(--dark);
-  font-family: var(--font-body);
+  color: var(--snow);
+  font-family: var(--font-mono);
   font-size: 10px;
   font-weight: 700;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
+  border-radius: 100px;
   padding: 4px 12px;
-  border-radius: 0;
+  margin-bottom: 16px;
+  align-self: flex-start;
 }
 
-/* Plan header */
-.pr-plan-header {
-  margin-bottom: var(--space-5);
-  padding-bottom: var(--space-4);
-  border-bottom: 1px solid var(--line);
-}
-
-.pr-plan--featured .pr-plan-header {
-  border-color: rgba(245, 242, 236, 0.1);
-}
-
-.pr-plan-name {
-  font-family: var(--font-display);
-  font-size: 14px;
+/* Tier eyebrow */
+.pv11-tier-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 12px;
   font-weight: 700;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--graphite);
-  margin-bottom: var(--space-3);
+  color: var(--ink-3);
+  margin: 0 0 16px;
+}
+.pv11-tier-card--highlight .pv11-tier-eyebrow {
+  color: rgba(255, 255, 255, 0.56);
 }
 
-.pr-plan--featured .pr-plan-name {
-  color: rgba(245, 242, 236, 0.55);
+/* Tier name — H3 Darky 700 28px */
+.pv11-tier-name {
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  line-height: 1.15;
+  color: var(--ink);
+  margin: 0 0 16px;
+}
+.pv11-tier-card--highlight .pv11-tier-name {
+  color: var(--snow);
 }
 
-.pr-plan-price-row {
+/* Price row — numeral + sub */
+.pv11-price-row {
   display: flex;
   align-items: baseline;
-  gap: 2px;
-  margin-bottom: var(--space-3);
+  gap: 8px;
+  margin-bottom: 8px;
 }
 
-.pr-plan-price-int {
+/* Price numeral — Darky 800 64px per prompt spec */
+.pv11-price-main {
   font-family: var(--font-display);
-  font-size: clamp(48px, 5vw, 72px);
-  font-weight: 900;
-  letter-spacing: -0.05em;
-  line-height: 1;
-  color: var(--dark);
+  font-weight: 800;
+  font-size: 64px;
+  letter-spacing: -0.04em;
+  line-height: 0.9;
+  color: var(--ink);
+}
+.pv11-tier-card--highlight .pv11-price-main {
+  color: var(--snow);
 }
 
-.pr-plan-price-cents {
-  font-family: var(--font-display);
-  font-size: 24px;
-  font-weight: 700;
-  letter-spacing: -0.03em;
-  color: var(--dark);
-  align-self: flex-start;
-  margin-top: 8px;
+/* Price sub — CS Genio Mono 14px label */
+.pv11-price-sub {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  color: var(--ink-3);
+  line-height: 1.45;
+}
+.pv11-tier-card--highlight .pv11-price-sub {
+  color: rgba(255, 255, 255, 0.48);
 }
 
-.pr-plan-price-period {
-  font-family: var(--font-body);
-  font-size: 13px;
-  font-weight: 400;
-  color: var(--text-muted);
-  margin-left: 4px;
+/* Price note — 12px mono, divider below */
+.pv11-price-note {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.02em;
+  color: var(--ink-3);
+  margin: 0 0 24px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--mist);
+  line-height: 1.4;
+}
+.pv11-tier-card--highlight .pv11-price-note {
+  color: rgba(255, 255, 255, 0.40);
+  border-bottom-color: rgba(255, 255, 255, 0.10);
+}
+.pv11-tier-card--scale .pv11-price-note {
+  border-bottom-color: var(--surface-3);
 }
 
-.pr-plan-desc {
-  font-family: var(--font-body);
-  font-size: 13px;
-  color: var(--graphite);
-  line-height: 1.6;
-}
-
-/* Features list */
-.pr-plan-features {
+/* Feature list — 12px mono, brand-red checkmarks per spec */
+.pv11-feature-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 32px;
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 0;
-  margin-bottom: var(--space-5);
+  gap: 12px;
 }
 
-.pr-plan-feature {
+.pv11-feature-item {
   display: flex;
-  align-items: center;
-  gap: var(--space-2);
-  font-family: var(--font-body);
-  font-size: 13px;
-  color: var(--dark);
-  padding: 10px 0;
-  border-bottom: 1px solid var(--line);
+  align-items: flex-start;
+  gap: 12px;
+  font-family: var(--font-mono);
+  font-size: 12px;
   line-height: 1.4;
+  letter-spacing: 0.02em;
+  color: var(--ink-3);
+}
+.pv11-tier-card--highlight .pv11-feature-item {
+  color: rgba(255, 255, 255, 0.72);
 }
 
-.pr-plan-check {
+/* Checkmark — brand-red per spec */
+.pv11-check {
   flex-shrink: 0;
-  color: var(--primary);
-  display: flex;
-  align-items: center;
+  color: var(--brand-red);
+  font-weight: 700;
+  font-size: 12px;
+  margin-top: 1px;
 }
 
-/* Footer */
-.pr-plan-footer {
+/* CTA — full-width, bottom of card, margin-top auto */
+.pv11-tier-cta {
+  width: 100%;
+  justify-content: center;
   margin-top: auto;
 }
 
-.pr-plan-roi {
-  font-family: var(--font-body);
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  color: var(--champagne);
-  text-transform: uppercase;
-  margin-bottom: var(--space-4);
-}
-
-.pr-plan--featured .pr-plan-footer .btn-primary {
-  background: var(--primary);
-  color: #fff;
-}
-
-.pr-plan-cta {
-  width: 100%;
-  justify-content: center;
-}
-
-/* Note below grid */
-.pr-plans-note {
-  font-family: var(--font-body);
+/* Fine print below grid */
+.pv11-tiers-fine {
+  font-family: var(--font-mono);
   font-size: 12px;
-  color: var(--text-muted);
+  letter-spacing: 0.06em;
+  color: var(--ink-4);
   text-align: center;
-  letter-spacing: 0.01em;
+  margin: 32px 0 0;
 }
 
 /* ============================================================
-   3. ENTERPRISE ROW
+   PANEL 3 — TICKET PANEL (GA Orange — ≤1 per page, §8.2 STRICT)
+   Global .ticket-panel provides bg + radius + padding + perf edges
    ============================================================ */
-.pr-enterprise-section {
-  border-top: 1px solid var(--line);
-  border-bottom: 1px solid var(--line);
-  padding: var(--space-10) 0;
+.pv11-ticket {
+  margin: 0 64px;
+  /* grommets need absolute children — inherited from .ticket-panel */
 }
 
-.pr-enterprise-inner {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: var(--space-10);
-  align-items: start;
+/* Four corner grommets — 16px diameter, 24px inset (§8.2 STRICT) */
+.pv11-grommet {
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--ink);
+  z-index: 2;
+  pointer-events: none;
 }
 
-.pr-enterprise-eyebrow {
-  color: var(--tertiary);
-  margin-bottom: var(--space-3);
-}
-
-.pr-enterprise-h {
-  font-family: var(--font-display);
-  font-size: clamp(32px, 4vw, 52px);
-  font-weight: 800;
-  letter-spacing: -0.04em;
-  color: var(--dark);
-  line-height: 1.05;
-  margin-bottom: var(--space-4);
-}
-
-.pr-enterprise-h-light {
-  font-weight: 300;
-  color: var(--graphite);
-}
-
-.pr-enterprise-desc {
-  font-family: var(--font-body);
-  font-size: 14px;
-  color: var(--graphite);
-  line-height: 1.65;
-  max-width: 480px;
-}
-
-.pr-enterprise-list {
+/* Centered content — Ticket Panel is the §7.1 centering exception */
+.pv11-ticket-content {
   display: flex;
   flex-direction: column;
-  gap: var(--space-3);
-  margin-bottom: var(--space-5);
-}
-
-.pr-enterprise-list li {
-  display: flex;
   align-items: center;
-  gap: var(--space-2);
-  font-family: var(--font-body);
-  font-size: 13px;
-  color: var(--dark);
+  text-align: center;
+  position: relative;
+  z-index: 1;
 }
 
-.pr-enterprise-bullet {
-  display: inline-block;
-  width: 6px;
-  height: 6px;
-  background: var(--tertiary);
-  flex-shrink: 0;
-}
-
-/* ============================================================
-   4. COMPARISON TABLE
-   ============================================================ */
-.pr-compare-section {
-  background: var(--surface);
-}
-
-.pr-compare-h {
-  font-family: var(--font-display);
-  font-size: clamp(28px, 4vw, 48px);
-  font-weight: 800;
-  letter-spacing: -0.04em;
-  color: var(--dark);
-  margin-bottom: var(--space-6);
-}
-
-.pr-compare-h-light {
-  font-weight: 300;
-  color: var(--graphite);
-}
-
-.pr-compare-wrap {
-  overflow-x: auto;
-  border: 1px solid var(--line);
-}
-
-.pr-compare-table {
-  width: 100%;
-  border-collapse: collapse;
-  background: var(--surface-elevated);
-}
-
-.pr-th-feature,
-.pr-th-plan {
-  padding: var(--space-3) var(--space-4);
-  text-align: left;
-  font-family: var(--font-body);
-  font-size: 11px;
+/* Ticket eyebrow — parenthetical */
+.pv11-ticket-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 12px;
   font-weight: 700;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--text-muted);
-  border-bottom: 2px solid var(--line);
-  background: var(--surface);
+  color: rgba(10, 10, 10, 0.56);
+  margin: 0 0 24px;
 }
 
-.pr-th-plan {
-  text-align: center;
-  min-width: 120px;
+/* Magvix Italic centered headline (§8.2 + §3.1 STRICT) */
+.pv11-ticket-h2 {
+  font-family: var(--font-hero);
+  font-style: italic;
+  font-weight: normal;
+  font-size: clamp(40px, 5vw, 56px);
+  letter-spacing: -0.02em;
+  line-height: 0.95;
+  color: var(--snow);
+  margin: 0 0 16px;
 }
 
-.pr-th-featured {
-  background: var(--dark);
-  color: rgba(245, 242, 236, 0.55);
+/* Subtitle — CS Genio Mono 16px body-small */
+.pv11-ticket-sub {
+  font-family: var(--font-mono);
+  font-size: 16px;
+  font-weight: 400;
+  letter-spacing: -0.04em;
+  line-height: 1.4;
+  color: rgba(255, 255, 255, 0.72);
+  max-width: 480px;
+  margin: 0 0 32px;
 }
 
-.pr-tr {
-  border-bottom: 1px solid var(--line);
-  transition: background var(--t-fast);
-}
-
-.pr-tr:last-child {
-  border-bottom: none;
-}
-
-.pr-tr:hover {
-  background: var(--surface-muted);
-}
-
-.pr-td-feature {
-  padding: var(--space-3) var(--space-4);
-  font-family: var(--font-body);
-  font-size: 13px;
-  color: var(--dark);
-}
-
-.pr-td {
-  padding: var(--space-3) var(--space-4);
-  text-align: center;
-  font-family: var(--font-body);
-  font-size: 13px;
-  color: var(--graphite);
-}
-
-.pr-td--featured {
-  background: rgba(0, 48, 73, 0.04);
-}
-
-.pr-td-icon {
-  display: inline-flex;
-  align-items: center;
+/* CTA row — single btn-ink inside Ticket Panel */
+.pv11-ticket-ctas {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
   justify-content: center;
 }
 
-.pr-td-icon--yes {
-  color: var(--primary);
-}
-
-.pr-td-icon--no {
-  color: var(--line-strong);
-}
-
 /* ============================================================
-   5. FAQ
+   PANEL 4 — COMPARISON / FAQ TABLE
+   bg: --surface Ivory Cream (warm — alternates from surface-2)
+   Editorial Table — Cinema-Selects style (§8.6)
    ============================================================ */
-.pr-faq-section {
-  border-top: 1px solid var(--line);
+.pv11-table-panel {
+  background: var(--surface);
+  padding: 96px 0;
 }
 
-.pr-faq-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0;
-  border: 1px solid var(--line);
+.pv11-table-inner {
+  max-width: 1140px;
+  margin: 0 auto;
+  padding: 0 64px;
 }
 
-.pr-faq-item {
-  padding: var(--space-5);
-  border-bottom: 1px solid var(--line);
-  border-right: 1px solid var(--line);
-}
-
-/* Every even item: no right border (rightmost column) */
-.pr-faq-item:nth-child(even) {
-  border-right: none;
-}
-
-/* Last two items: no bottom border */
-.pr-faq-item:nth-last-child(-n + 2) {
-  border-bottom: none;
-}
-
-.pr-faq-q {
-  font-family: var(--font-display);
-  font-size: 16px;
+/* Table eyebrow — parenthetical Marketing */
+.pv11-table-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 12px;
   font-weight: 700;
-  letter-spacing: -0.02em;
-  color: var(--dark);
-  margin-bottom: var(--space-3);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin: 0 0 16px;
+  text-align: left;
+}
+
+/* Table title — Darky 800 top-left anchored */
+.pv11-table-h2 {
+  font-family: var(--font-display);
+  font-size: clamp(40px, 5vw, 64px);
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  line-height: 1.0;
+  color: var(--ink);
+  margin: 0 0 56px;
+  text-align: left;
+}
+
+/* Grid table — 5 cols: feature 2fr + 4×1fr */
+.pv11-comp-table {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.pv11-trow {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+  gap: 0;
+  border-bottom: 1px dotted rgba(10, 10, 10, 0.18);
+  padding: 20px 0;
+}
+
+/* Header row — stronger hairline, mono 12px 700 uppercase */
+.pv11-trow--head {
+  border-bottom: 1px dotted rgba(10, 10, 10, 0.30);
+  padding-bottom: 24px;
+  padding-top: 0;
+}
+
+/* All cells — CS Genio Mono 16px base */
+.pv11-tcell {
+  font-family: var(--font-mono);
+  font-size: 16px;
+  font-weight: 400;
+  color: var(--ink-3);
+  letter-spacing: -0.125em;
+  line-height: 1.4;
+  display: flex;
+  align-items: center;
+  padding-right: 8px;
+}
+
+/* Header cells — mono 12px 700 uppercase (§8.6 Editorial Table spec) */
+.pv11-trow--head .pv11-tcell {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: var(--ink-3);
   line-height: 1.3;
 }
 
-.pr-faq-a {
-  font-family: var(--font-body);
-  font-size: 13px;
-  color: var(--graphite);
-  line-height: 1.65;
-}
-
-/* ============================================================
-   6. GUARANTEE — Editorial big text
-   ============================================================ */
-.pr-guarantee-section {
-  background: var(--surface-bright);
-  border-top: 1px solid var(--line);
-  border-bottom: 1px solid var(--line);
-  padding: var(--space-15) 0;
-  position: relative;
-  overflow: hidden;
-}
-
-.pr-guarantee-inner {
-  position: relative;
-  z-index: 2;
-}
-
-.pr-guarantee-eyebrow {
-  color: var(--primary);
-  display: block;
-  margin-bottom: var(--space-4);
-}
-
-/* Editorial headline: extreme weight contrast */
-.pr-guarantee-h {
-  display: flex;
-  flex-direction: column;
-  gap: 0;
-  line-height: 0.9;
-  margin-bottom: var(--space-7);
-}
-
-.pr-guarantee-h-bold {
+/* Feature column — Darky 20px 700 (§8.6 first-column spec) */
+.pv11-tcell--feature {
   font-family: var(--font-display);
-  font-weight: 900;
-  font-size: clamp(56px, 9vw, 140px);
-  letter-spacing: -0.055em;
-  color: var(--dark);
-  display: block;
-}
-
-.pr-guarantee-h-light {
-  font-family: var(--font-display);
-  font-weight: 200;
-  font-size: clamp(52px, 8.5vw, 130px);
-  letter-spacing: -0.05em;
-  color: rgba(0, 48, 73, 0.28);
-  display: block;
-}
-
-.pr-guarantee-body {
-  font-family: var(--font-body);
-  font-size: 15px;
-  color: var(--graphite);
-  line-height: 1.65;
-  max-width: 520px;
-  margin-bottom: var(--space-8);
-}
-
-/* Stats row */
-.pr-guarantee-stats {
-  display: flex;
-  align-items: center;
-  gap: var(--space-6);
-}
-
-.pr-g-stat {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.pr-g-stat-n {
-  font-family: var(--font-display);
-  font-weight: 800;
-  font-size: clamp(28px, 3.5vw, 44px);
-  letter-spacing: -0.04em;
-  color: var(--dark);
-  line-height: 1;
-}
-
-.pr-g-stat-l {
-  font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 20px;
   font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--text-muted);
+  letter-spacing: -0.01em;
+  color: var(--ink);
 }
 
-.pr-g-stat-div {
-  width: 1px;
-  height: 48px;
-  background: var(--line);
-}
-
-/* Decorative ghost word */
-.pr-guarantee-ghost {
-  position: absolute;
-  right: -0.04em;
-  bottom: -0.12em;
-  font-family: var(--font-display);
-  font-weight: 100;
-  font-size: clamp(160px, 25vw, 380px);
-  letter-spacing: -0.06em;
-  color: rgba(0, 48, 73, 0.025);
-  line-height: 1;
-  pointer-events: none;
-  user-select: none;
-  z-index: 1;
-}
-
-/* ============================================================
-   7. BOTTOM CTA — Dark
-   ============================================================ */
-.pr-cta-section {
-  background: var(--dark);
-  padding: var(--space-15) 0;
-  position: relative;
-  overflow: hidden;
-}
-
-.pr-cta-section::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(
-    ellipse 60% 50% at 30% 60%,
-    rgba(193, 18, 31, 0.09) 0%,
-    transparent 70%
-  );
-  pointer-events: none;
-}
-
-.pr-cta-inner {
-  position: relative;
-  z-index: 1;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: var(--space-10);
-  align-items: center;
-}
-
-.pr-cta-label {
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
-  margin-bottom: var(--space-4);
-}
-
-.pr-cta-eyebrow {
-  color: rgba(245, 242, 236, 0.4);
-  font-size: 11px;
-}
-
-.pr-cta-h {
-  font-family: var(--font-display);
-  font-weight: 800;
-  font-size: clamp(36px, 5vw, 68px);
-  letter-spacing: -0.05em;
-  line-height: 1;
-  color: #fff;
-  margin-bottom: var(--space-4);
-}
-
-.pr-cta-h-em {
-  font-style: italic;
-  font-weight: 900;
-  color: var(--primary);
-}
-
-.pr-cta-sub {
-  font-family: var(--font-body);
-  font-size: 13px;
-  color: rgba(245, 242, 236, 0.45);
-  letter-spacing: 0.01em;
-  line-height: 1.6;
-}
-
-.pr-cta-actions {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-3);
-  align-items: flex-start;
-}
-
-.pr-cta-btn-primary {
-  font-size: 14px;
-  padding: var(--space-3) var(--space-5);
-}
-
-.pr-cta-btn-ghost {
-  background: transparent;
-  color: rgba(245, 242, 236, 0.65);
-  border: 1px solid rgba(245, 242, 236, 0.16);
-  font-family: var(--font-body);
-  font-size: var(--text-small);
+/* Header feature cell reverts to mono eyebrow */
+.pv11-trow--head .pv11-tcell--feature {
+  font-family: var(--font-mono);
+  font-size: 12px;
   font-weight: 700;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  border-radius: 0;
-  padding: var(--space-2) var(--space-4);
-  display: inline-flex;
-  align-items: center;
-  transition: border-color var(--t-base), color var(--t-base);
+  letter-spacing: 0.12em;
+  color: var(--ink-3);
 }
 
-.pr-cta-btn-ghost:hover {
-  border-color: rgba(245, 242, 236, 0.45);
-  color: rgba(245, 242, 236, 0.9);
+/* Push column — value color via inline style */
+.pv11-tcell--push {
+  font-family: var(--font-mono);
+  font-size: 16px;
+  letter-spacing: -0.125em;
 }
 
-.pr-cta-fine {
-  font-family: var(--font-body);
-  font-size: 11px;
-  color: rgba(245, 242, 236, 0.3);
-  letter-spacing: 0.04em;
+/* Last column — right-aligned (§8.6 spec) */
+.pv11-tcell--last {
+  justify-content: flex-end;
+  text-align: right;
+  padding-right: 0;
+}
+.pv11-trow--head .pv11-tcell--last {
+  justify-content: flex-end;
 }
 
 /* ============================================================
-   8. RESPONSIVE
+   RESPONSIVE
+   Design.md §14 — naturally adaptive, same composition
+   Desktop 12-col / 64px margin
+   iPad 8-col / 48px margin  (≤1023px)
+   Mobile 4-col / 24px margin (≤767px)
    ============================================================ */
-@media (max-width: 900px) {
-  /* Hero */
-  .pr-hero-bottom {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: var(--space-4);
+
+/* iPad (768–1023px) */
+@media (max-width: 1023px) {
+  .pv11-hero-inner {
+    bottom: 80px;
+    left: 48px;
+    right: 48px;
   }
 
-  .pr-hero-sub {
-    max-width: 100%;
-    text-align: left;
+  .pv11-hero-badge {
+    right: 48px;
+    bottom: 80px;
   }
 
-  /* Plans */
-  .pr-plans-grid {
-    grid-template-columns: 1fr;
+  .pv11-tiers-panel {
+    padding: 80px 48px 64px;
   }
 
-  .pr-plan {
-    border-right: none;
-    border-bottom: 1px solid var(--line);
+  .pv11-tiers-grid {
+    grid-template-columns: repeat(2, 1fr);
   }
 
-  .pr-plan:last-child {
-    border-bottom: none;
+  .pv11-ticket {
+    margin: 0 48px;
   }
 
-  .pr-plan:hover {
-    transform: none;
+  .pv11-table-inner {
+    padding: 0 48px;
   }
 
-  /* Enterprise */
-  .pr-enterprise-inner {
-    grid-template-columns: 1fr;
-    gap: var(--space-6);
-  }
-
-  /* FAQ */
-  .pr-faq-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .pr-faq-item {
-    border-right: none;
-  }
-
-  .pr-faq-item:nth-last-child(-n + 2) {
-    border-bottom: 1px solid var(--line);
-  }
-
-  .pr-faq-item:last-child {
-    border-bottom: none;
-  }
-
-  /* Guarantee */
-  .pr-guarantee-stats {
-    flex-wrap: wrap;
-    gap: var(--space-4);
-  }
-
-  /* CTA */
-  .pr-cta-inner {
-    grid-template-columns: 1fr;
-    gap: var(--space-7);
+  .pv11-table-panel {
+    padding: 80px 0;
   }
 }
 
-@media (max-width: 640px) {
-  .pr-h-bold {
-    font-size: clamp(42px, 13vw, 72px);
+/* Mobile (<768px) */
+@media (max-width: 767px) {
+  .pv11-hero {
+    min-height: clamp(480px, 75vh, 640px);
   }
 
-  .pr-h-light {
-    font-size: clamp(38px, 12vw, 66px);
-  }
-
-  .pr-hero-anchors {
+  .pv11-hero-inner {
+    position: static;
+    padding: 0 24px;
+    display: flex;
     flex-direction: column;
+    justify-content: flex-end;
+    min-height: clamp(480px, 75vh, 640px);
+    padding-bottom: 48px;
+    padding-top: 48px;
+  }
+
+  .pv11-hero-badge {
+    position: static;
+    align-self: flex-start;
+    margin: 32px 24px 0;
     align-items: flex-start;
+    right: auto;
+    bottom: auto;
+  }
+
+  .pv11-hero-sub {
+    font-size: 16px;
+  }
+
+  .pv11-hero-ctas {
+    flex-direction: column;
     width: 100%;
+    gap: 12px;
   }
 
-  .pr-hero-anchors .btn {
+  .pv11-hero-ctas .btn {
     width: 100%;
     justify-content: center;
   }
 
-  .pr-guarantee-h-bold {
-    font-size: clamp(48px, 14vw, 80px);
+  .pv11-tiers-panel {
+    padding: 56px 24px 48px;
   }
 
-  .pr-guarantee-h-light {
-    font-size: clamp(44px, 13vw, 76px);
+  .pv11-tiers-grid {
+    grid-template-columns: 1fr;
   }
 
-  .pr-guarantee-stats {
+  .pv11-ticket {
+    margin: 0 8px;
+  }
+
+  .pv11-ticket-ctas {
     flex-direction: column;
-    gap: var(--space-4);
+    width: 100%;
+    gap: 12px;
   }
 
-  .pr-g-stat-div {
+  .pv11-ticket-ctas .btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .pv11-table-panel {
+    padding: 56px 0;
+  }
+
+  .pv11-table-inner {
+    padding: 0 24px;
+  }
+
+  /* Mobile: collapse to 2 cols — feature + push only */
+  .pv11-trow {
+    grid-template-columns: 2fr 1fr;
+    padding: 16px 0;
+  }
+
+  /* Hide yelp, influencer, groupon columns */
+  .pv11-tcell:nth-child(n + 3) {
     display: none;
   }
 
-  .pr-cta-actions {
-    width: 100%;
+  .pv11-tcell--last {
+    justify-content: flex-start;
+    text-align: left;
   }
 
-  .pr-cta-btn-primary,
-  .pr-cta-btn-ghost {
-    width: 100%;
-    justify-content: center;
+  .pv11-table-h2 {
+    font-size: clamp(32px, 8vw, 48px);
+    margin-bottom: 40px;
+  }
+
+  .pv11-section-h2 {
+    font-size: 32px;
+  }
+
+  .pv11-price-main {
+    font-size: 48px;
+  }
+}
+
+/* Small mobile (<480px) */
+@media (max-width: 480px) {
+  .pv11-tier-card {
+    padding: 24px;
+  }
+
+  .pv11-price-main {
+    font-size: 40px;
+  }
+
+  .pv11-tiers-fine {
+    font-size: 10px;
   }
 }
 
 /* ============================================================
-   9. REDUCED MOTION
+   Reduced motion — no hover shifts
    ============================================================ */
 @media (prefers-reduced-motion: reduce) {
-  .pr-plan {
-    transition: none;
-  }
-
-  .pr-plan:hover {
+  .pv11-tier-card,
+  .pv11-tier-card:hover,
+  .pv11-tier-card:active {
     transform: none;
-    box-shadow: none;
   }
 }

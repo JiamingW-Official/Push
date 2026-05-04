@@ -45,7 +45,7 @@ export function SectionDivider({ label, animate = true }: SectionDividerProps) {
         ref={lineRef}
         style={{
           height: 1,
-          background: "var(--primary)",
+          background: "var(--brand-red)",
           width: "100%",
         }}
       />
@@ -63,7 +63,7 @@ export function SectionDivider({ label, animate = true }: SectionDividerProps) {
             fontWeight: 700,
             letterSpacing: "0.08em",
             textTransform: "uppercase",
-            color: "var(--primary)",
+            color: "var(--brand-red)",
             lineHeight: 1,
           }}
         >

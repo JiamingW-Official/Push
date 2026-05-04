@@ -44,7 +44,9 @@ export type POSIntegration = {
 export type Location = {
   id: string;
   merchant_id: string;
+  tenant_id: string;
   name: string;
+  business_name: string;
   neighborhood: string;
   address: string;
   city: string;
@@ -87,7 +89,9 @@ export const MOCK_LOCATIONS: Location[] = [
   {
     id: "loc-bed-stuy",
     merchant_id: "demo-merchant-001",
+    tenant_id: "tenant-demo-001",
     name: "Blank Street — Bed-Stuy",
+    business_name: "Blank Street Coffee - Bed-Stuy",
     neighborhood: "Bed-Stuy",
     address: "417 Tompkins Ave",
     city: "Brooklyn",
@@ -277,7 +281,9 @@ export const MOCK_LOCATIONS: Location[] = [
   {
     id: "loc-williamsburg",
     merchant_id: "demo-merchant-001",
+    tenant_id: "tenant-demo-001",
     name: "Blank Street — Williamsburg",
+    business_name: "Blank Street Coffee - Williamsburg",
     neighborhood: "Williamsburg",
     address: "119 N 7th St",
     city: "Brooklyn",
@@ -496,7 +502,9 @@ export const MOCK_LOCATIONS: Location[] = [
   {
     id: "loc-chelsea",
     merchant_id: "demo-merchant-001",
+    tenant_id: "tenant-demo-001",
     name: "Blank Street — Chelsea",
+    business_name: "Blank Street Coffee - Chelsea",
     neighborhood: "Chelsea",
     address: "184 8th Ave",
     city: "New York",
@@ -679,7 +687,9 @@ export const MOCK_LOCATIONS: Location[] = [
   {
     id: "loc-les",
     merchant_id: "demo-merchant-001",
+    tenant_id: "tenant-demo-001",
     name: "Blank Street — Lower East Side",
+    business_name: "Blank Street Coffee - Lower East Side",
     neighborhood: "Lower East Side",
     address: "88 Orchard St",
     city: "New York",
@@ -863,7 +873,9 @@ export const MOCK_LOCATIONS: Location[] = [
   {
     id: "loc-dumbo",
     merchant_id: "demo-merchant-001",
+    tenant_id: "tenant-demo-001",
     name: "Blank Street — DUMBO",
+    business_name: "Blank Street Coffee - DUMBO",
     neighborhood: "DUMBO",
     address: "55 Water St",
     city: "Brooklyn",
@@ -1040,7 +1052,9 @@ export const MOCK_LOCATIONS: Location[] = [
   {
     id: "loc-bushwick",
     merchant_id: "demo-merchant-001",
+    tenant_id: "tenant-demo-001",
     name: "Blank Street — Bushwick",
+    business_name: "Blank Street Coffee - Bushwick",
     neighborhood: "Bushwick",
     address: "304 Wyckoff Ave",
     city: "Brooklyn",

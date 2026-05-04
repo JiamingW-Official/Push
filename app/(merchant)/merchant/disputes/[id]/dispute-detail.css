@@ -1,0 +1,444 @@
+/* =============================================================
+   Push — Merchant Dispute DETAIL — page-level CSS
+   Design.md v11: closed token set, 8px grid, product register
+   Complements components/disputes/disputes.css (shared)
+   ============================================================= */
+
+/* ─────────────────────────────────────────
+   1. TWO-COLUMN LAYOUT
+   ─────────────────────────────────────────
+   Spec: dispute info left, evidence/timeline right.
+   Desktop: 320px sidebar + 1fr main.
+   ───────────────────────────────────────── */
+.mddisp-layout {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: 32px;
+  align-items: start;
+  max-width: 1140px;
+  margin: 0 auto;
+  padding: 32px 64px 96px;
+}
+
+@media (max-width: 960px) {
+  .mddisp-layout {
+    grid-template-columns: 1fr;
+    padding: 24px 24px 64px;
+  }
+}
+
+/* ─────────────────────────────────────────
+   2. LEFT — DISPUTE INFO SIDEBAR
+   ───────────────────────────────────────── */
+.mddisp-info {
+  position: sticky;
+  top: 80px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.mddisp-info-card {
+  border-radius: 10px;
+  background: var(--surface-2);
+  padding: 24px;
+}
+
+.mddisp-info-card__section-label {
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+  margin-bottom: 16px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--hairline);
+}
+
+.mddisp-info-card__row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--hairline);
+  gap: 16px;
+}
+
+.mddisp-info-card__row:last-child {
+  border-bottom: none;
+}
+
+.mddisp-info-card__key {
+  font-family: var(--font-body);
+  font-size: 12px;
+  color: var(--ink-4);
+  flex-shrink: 0;
+}
+
+.mddisp-info-card__value {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ink);
+  text-align: right;
+  word-break: break-word;
+}
+
+.mddisp-info-card__amount {
+  font-family: var(--font-display);
+  font-size: 32px;
+  font-weight: 900;
+  color: var(--ink);
+  letter-spacing: -0.04em;
+  margin-bottom: 4px;
+}
+
+/* Creator chip in sidebar */
+.mddisp-creator-chip {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 0;
+}
+
+.mddisp-creator-chip__avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--surface-3);
+  border: 1px solid var(--hairline);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--ink);
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+.mddisp-creator-chip__avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.mddisp-creator-chip__name {
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.mddisp-creator-chip__role {
+  font-family: var(--font-body);
+  font-size: 11px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+}
+
+/* ─────────────────────────────────────────
+   3. RIGHT — EVIDENCE + TIMELINE MAIN
+   ───────────────────────────────────────── */
+.mddisp-main {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  min-width: 0;
+}
+
+/* ─────────────────────────────────────────
+   4. EVIDENCE UPLOAD ZONE
+   ─────────────────────────────────────────
+   Spec: dashed border zone.
+   ───────────────────────────────────────── */
+.mddisp-evidence-zone {
+  border: 2px dashed var(--mist);
+  border-radius: 10px;
+  padding: 40px 32px;
+  text-align: center;
+  background: var(--surface);
+  cursor: pointer;
+  transition:
+    border-color 0.15s,
+    background 0.15s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.mddisp-evidence-zone:hover,
+.mddisp-evidence-zone--dragover {
+  border-color: var(--brand-red);
+  background: rgba(193, 18, 31, 0.03);
+}
+
+.mddisp-evidence-zone:focus-visible {
+  outline: 2px solid var(--brand-red);
+  outline-offset: 2px;
+}
+
+.mddisp-evidence-zone__icon {
+  font-size: 32px;
+  color: var(--ink-4);
+  opacity: 0.6;
+  margin-bottom: 4px;
+}
+
+.mddisp-evidence-zone__title {
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.mddisp-evidence-zone__sub {
+  font-family: var(--font-body);
+  font-size: 12px;
+  color: var(--ink-4);
+  line-height: 1.5;
+  max-width: 280px;
+}
+
+.mddisp-evidence-zone__browse {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--accent-blue);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  transition: color 0.15s;
+  margin-top: 4px;
+}
+
+.mddisp-evidence-zone__browse:hover {
+  color: var(--ink);
+}
+
+/* Evidence section wrapper */
+.mddisp-evidence-section {
+  border-radius: 10px;
+  background: var(--surface-2);
+  padding: 24px;
+}
+
+.mddisp-evidence-section__label {
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+  margin-bottom: 16px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--hairline);
+}
+
+/* ─────────────────────────────────────────
+   5. ACTION BAR (Respond / Escalate)
+   ─────────────────────────────────────────
+   Respond → .btn-primary (red fill)
+   Escalate → .btn-ghost (transparent + border)
+   ───────────────────────────────────────── */
+.mddisp-action-bar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 24px;
+  background: var(--surface-2);
+  border: 1px solid var(--hairline);
+  border-radius: 10px;
+  flex-wrap: wrap;
+}
+
+.mddisp-action-bar__label {
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+  flex: 1;
+  min-width: 120px;
+}
+
+/* ─────────────────────────────────────────
+   6. RESPONSE COMPOSER
+   ───────────────────────────────────────── */
+.mddisp-composer {
+  border: 1px solid var(--hairline);
+  border-radius: 10px;
+  background: var(--surface-2);
+  padding: 24px;
+}
+
+.mddisp-composer__label {
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+  margin-bottom: 12px;
+}
+
+.mddisp-composer__textarea {
+  width: 100%;
+  min-height: 120px;
+  padding: 16px;
+  border: 1px solid var(--hairline);
+  border-radius: 8px;
+  background: var(--surface);
+  font-family: var(--font-body);
+  font-size: 16px;
+  color: var(--ink);
+  resize: vertical;
+  outline: none;
+  transition: border-color 0.15s;
+  box-sizing: border-box;
+  line-height: 1.55;
+}
+
+.mddisp-composer__textarea:focus {
+  border-color: var(--brand-red);
+}
+
+.mddisp-composer__textarea:focus-visible {
+  outline: 2px solid var(--brand-red);
+  outline-offset: 2px;
+}
+
+.mddisp-composer__textarea::placeholder {
+  color: var(--ink-4);
+}
+
+.mddisp-composer__actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 16px;
+  flex-wrap: wrap;
+}
+
+/* ─────────────────────────────────────────
+   7. PAGE HEADER
+   ───────────────────────────────────────── */
+.mddisp-header {
+  max-width: 1140px;
+  margin: 0 auto;
+  padding: 32px 64px 0;
+  border-bottom: 1px solid var(--hairline);
+  padding-bottom: 24px;
+  margin-bottom: 0;
+}
+
+@media (max-width: 960px) {
+  .mddisp-header {
+    padding: 24px 24px 24px;
+  }
+}
+
+.mddisp-header__back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+  text-decoration: none;
+  margin-bottom: 16px;
+  transition: color 0.15s;
+}
+
+.mddisp-header__back:hover {
+  color: var(--ink);
+}
+
+.mddisp-header__title {
+  font-family: var(--font-display);
+  font-size: clamp(32px, 5vw, 56px);
+  font-weight: 900;
+  letter-spacing: -0.05em;
+  color: var(--ink);
+  line-height: 1;
+  margin-bottom: 16px;
+}
+
+.mddisp-header__meta {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+/* ─────────────────────────────────────────
+   8. TIMELINE (right column)
+   Left accent border styles per role already
+   in shared disputes.css; these add merchant
+   specifics.
+   ───────────────────────────────────────── */
+.mddisp-timeline-section {
+  border-radius: 10px;
+  background: var(--surface-2);
+  padding: 24px;
+}
+
+.mddisp-timeline-section__label {
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+  margin-bottom: 16px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--hairline);
+}
+
+/* ─────────────────────────────────────────
+   9. ESCALATE WARNING CHIP
+   Shown inline when escalate btn is hovered.
+   ───────────────────────────────────────── */
+.mddisp-escalate-note {
+  font-family: var(--font-body);
+  font-size: 11px;
+  color: var(--ink-4);
+  line-height: 1.5;
+  flex: 1;
+  min-width: 160px;
+}
+
+/* ─────────────────────────────────────────
+   10. RESPONSIVE
+   ───────────────────────────────────────── */
+@media (max-width: 768px) {
+  .mddisp-action-bar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .mddisp-evidence-zone {
+    padding: 32px 16px;
+  }
+
+  .mddisp-info {
+    position: static;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mddisp-evidence-zone {
+    transition: none;
+  }
+}

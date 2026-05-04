@@ -9,7 +9,7 @@ const NeighborhoodDetailMap = dynamic(() => import("./NeighborhoodDetailMap"), {
       style={{
         width: "100%",
         height: "100%",
-        background: "var(--surface-bright)",
+        background: "var(--surface-3)",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",

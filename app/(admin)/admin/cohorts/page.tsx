@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useRef, KeyboardEvent } from "react";
 import Link from "next/link";
 import "./cohorts.css";
 import {
@@ -26,35 +26,53 @@ function RetentionMiniChart({ cohort }: { cohort: Cohort }) {
     )
     .join(" ");
 
-  // Fill area
   const fillD = `${pathD} L${xs[xs.length - 1].toFixed(1)},${(H - pad).toFixed(1)} L${xs[0].toFixed(1)},${(H - pad).toFixed(1)} Z`;
 
   return (
-    <div className="cohort-chart">
-      <svg viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="none">
+    <div style={{ width: "100%", marginTop: 12 }}>
+      <svg
+        viewBox={`0 0 ${W} ${H}`}
+        preserveAspectRatio="none"
+        style={{ width: "100%", height: H, display: "block" }}
+      >
         <defs>
           <linearGradient id={`grad-${cohort.id}`} x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#003049" stopOpacity="0.12" />
-            <stop offset="100%" stopColor="#003049" stopOpacity="0" />
+            <stop
+              offset="0%"
+              stopColor="var(--accent-blue)"
+              stopOpacity="0.12"
+            />
+            <stop
+              offset="100%"
+              stopColor="var(--accent-blue)"
+              stopOpacity="0"
+            />
           </linearGradient>
         </defs>
         <path d={fillD} fill={`url(#grad-${cohort.id})`} />
         <path
           d={pathD}
           fill="none"
-          stroke="#003049"
+          stroke="var(--accent-blue)"
           strokeWidth="1.5"
           strokeLinejoin="round"
+          opacity={0.7}
         />
         {pts.map((p, i) => (
-          <circle key={p.day} cx={xs[i]} cy={ys[i]} r="2.5" fill="#c1121f" />
+          <circle
+            key={p.day}
+            cx={xs[i]}
+            cy={ys[i]}
+            r="2.5"
+            fill="var(--brand-red)"
+          />
         ))}
       </svg>
     </div>
   );
 }
 
-// --- Cohort card ---
+// --- Cohort card (v11) ---
 function CohortCard({ cohort }: { cohort: Cohort }) {
   const statusLabel =
     cohort.status === "active"
@@ -64,54 +82,59 @@ function CohortCard({ cohort }: { cohort: Cohort }) {
         : "Paused";
 
   return (
-    <Link href={`/admin/cohorts/${cohort.id}`} className="cohort-card">
-      <div className="cohort-card__top">
-        <span className="cohort-card__name">{cohort.name}</span>
-        <span className={`cohort-badge cohort-badge--${cohort.type}`}>
+    <Link href={`/admin/cohorts/${cohort.id}`} className="cohort-card-v11">
+      {/* Header row: name + type badge */}
+      <div className="cohort-card-v11__header">
+        <span className="cohort-card-v11__name">{cohort.name}</span>
+        <span className={`cohort-type-badge cohort-type-badge--${cohort.type}`}>
           {cohort.type}
         </span>
       </div>
 
-      <div className="cohort-card__meta">
-        <span className="cohort-card__meta-item">
-          <span className={`status-dot status-dot--${cohort.status}`} />
+      {/* Meta row: status + neighborhood + date */}
+      <div className="cohort-card-v11__meta">
+        <span
+          className={`cohort-status-badge cohort-status-badge--${cohort.status}`}
+        >
+          <span className="cohort-status-badge__dot" />
           {statusLabel}
         </span>
         <span>{cohort.neighborhood}</span>
+        <span>·</span>
         <span>{cohort.startDate}</span>
-        <span>{cohort.size} members</span>
       </div>
 
-      <div className="cohort-card__metrics">
-        <div className="cohort-metric">
-          <div className="cohort-metric__value">
-            {(cohort.activationRate * 100).toFixed(0)}%
-          </div>
-          <div className="cohort-metric__label">Activation</div>
+      {/* Metrics row — 4-col grid */}
+      <div className="cohort-card-v11__metrics">
+        {/* Member count — Darky 40px 800 */}
+        <div>
+          <div className="cohort-card-v11__member-count">{cohort.size}</div>
+          <div className="cohort-metric-label">Members</div>
         </div>
-        <div className="cohort-metric">
-          <div className="cohort-metric__value">
-            {(cohort.retentionD7 * 100).toFixed(0)}%
-          </div>
-          <div className="cohort-metric__label">D7 Ret.</div>
-        </div>
-        <div className="cohort-metric">
-          <div className="cohort-metric__value">
+        {/* Performance metric (D30 retention) — Darky 24px 700 */}
+        <div>
+          <div className="cohort-card-v11__perf">
             {(cohort.retentionD30 * 100).toFixed(0)}%
           </div>
-          <div className="cohort-metric__label">D30 Ret.</div>
+          <div className="cohort-metric-label">D30 Ret.</div>
         </div>
-        <div className="cohort-metric">
-          <div className="cohort-metric__value">
+        <div>
+          <div className="cohort-metric-value">
+            {(cohort.activationRate * 100).toFixed(0)}%
+          </div>
+          <div className="cohort-metric-label">Activation</div>
+        </div>
+        <div>
+          <div className="cohort-metric-value">
             ${(cohort.ltv / 1000).toFixed(1)}k
           </div>
-          <div className="cohort-metric__label">Avg LTV</div>
+          <div className="cohort-metric-label">Avg LTV</div>
         </div>
       </div>
 
       <RetentionMiniChart cohort={cohort} />
 
-      <span className="cohort-card__cta">View detail →</span>
+      <span className="cohort-card-v11__cta">View detail →</span>
     </Link>
   );
 }
@@ -143,11 +166,13 @@ function CreateModal({ onClose }: { onClose: () => void }) {
         <button className="modal-close" onClick={onClose} aria-label="Close">
           ×
         </button>
-        <h2 className="modal-box__title">New Cohort</h2>
-        <p className="modal-box__sub">
+
+        <h2 className="modal-title">New Cohort</h2>
+        <p className="modal-subtitle">
           Define filter criteria to group merchants or creators into a new
           cohort.
         </p>
+
         <form className="modal-form" onSubmit={handleSubmit}>
           <div className="form-field">
             <label className="form-label" htmlFor="cohort-name">
@@ -162,6 +187,7 @@ function CreateModal({ onClose }: { onClose: () => void }) {
               required
             />
           </div>
+
           <div className="form-field">
             <label className="form-label" htmlFor="cohort-type">
               Type
@@ -176,6 +202,7 @@ function CreateModal({ onClose }: { onClose: () => void }) {
               <option value="creator">Creator</option>
             </select>
           </div>
+
           <div className="form-field">
             <label className="form-label" htmlFor="cohort-hood">
               Neighborhood
@@ -191,6 +218,7 @@ function CreateModal({ onClose }: { onClose: () => void }) {
               required
             />
           </div>
+
           <div className="form-field">
             <label className="form-label" htmlFor="cohort-borough">
               Borough
@@ -208,6 +236,7 @@ function CreateModal({ onClose }: { onClose: () => void }) {
               <option>Staten Island</option>
             </select>
           </div>
+
           <div className="form-field">
             <label className="form-label" htmlFor="cohort-start">
               Start Date
@@ -221,6 +250,7 @@ function CreateModal({ onClose }: { onClose: () => void }) {
               required
             />
           </div>
+
           <div className="form-field">
             <label className="form-label" htmlFor="cohort-notes">
               Notes (optional)
@@ -233,16 +263,111 @@ function CreateModal({ onClose }: { onClose: () => void }) {
               onChange={(e) => setForm({ ...form, notes: e.target.value })}
             />
           </div>
+
           <div className="modal-actions">
-            <button type="button" className="btn-secondary" onClick={onClose}>
+            <button
+              type="button"
+              className="btn-ghost"
+              style={{ flex: 1 }}
+              onClick={onClose}
+            >
               Cancel
             </button>
-            <button type="submit" className="btn-primary">
+            <button type="submit" className="btn-primary" style={{ flex: 1 }}>
               Create Cohort
             </button>
           </div>
         </form>
       </div>
+    </div>
+  );
+}
+
+// --- Liquid-glass Top Cohort highlight card (≤1 per page) ---
+function TopCohortCard({ cohort }: { cohort: Cohort }) {
+  return (
+    <Link
+      href={`/admin/cohorts/${cohort.id}`}
+      className="cohort-top-card click-shift"
+    >
+      <div className="cohort-top-card__body">
+        <div className="cohort-top-card__label">(TOP COHORT)</div>
+        <div className="cohort-top-card__name">{cohort.name}</div>
+        <div className="cohort-top-card__meta">
+          {cohort.neighborhood} · {cohort.borough} · Started {cohort.startDate}
+        </div>
+      </div>
+      <div className="cohort-top-card__stats">
+        {/* Member count — Darky 40px 800 */}
+        <div className="cohort-top-card__stat">
+          <div className="cohort-top-card__stat-value">{cohort.size}</div>
+          <div className="cohort-top-card__stat-label">Members</div>
+        </div>
+        {/* Performance metric (D30 retention) — Darky 24px 700 */}
+        <div className="cohort-top-card__stat">
+          <div className="cohort-top-card__stat-perf">
+            {(cohort.retentionD30 * 100).toFixed(0)}%
+          </div>
+          <div className="cohort-top-card__stat-label">D30 Ret.</div>
+        </div>
+        <div className="cohort-top-card__stat">
+          <div className="cohort-top-card__stat-perf">
+            ${(cohort.ltv / 1000).toFixed(1)}k
+          </div>
+          <div className="cohort-top-card__stat-label">Avg LTV</div>
+        </div>
+      </div>
+    </Link>
+  );
+}
+
+// --- Keyboard-navigable filter pill group ---
+function FilterPillGroup({
+  options,
+  value,
+  onChange,
+  label,
+}: {
+  options: string[];
+  value: string;
+  onChange: (v: string) => void;
+  label: string;
+}) {
+  const groupRef = useRef<HTMLDivElement>(null);
+
+  function handleKeyDown(e: KeyboardEvent<HTMLButtonElement>, idx: number) {
+    const btns =
+      groupRef.current?.querySelectorAll<HTMLButtonElement>("button");
+    if (!btns) return;
+    if (e.key === "ArrowRight" || e.key === "ArrowDown") {
+      e.preventDefault();
+      const next = btns[(idx + 1) % btns.length];
+      next.focus();
+    } else if (e.key === "ArrowLeft" || e.key === "ArrowUp") {
+      e.preventDefault();
+      const prev = btns[(idx - 1 + btns.length) % btns.length];
+      prev.focus();
+    }
+  }
+
+  return (
+    <div
+      ref={groupRef}
+      role="group"
+      aria-label={label}
+      style={{ display: "flex", gap: 6, flexWrap: "wrap" }}
+    >
+      {options.map((opt, idx) => (
+        <button
+          key={opt}
+          className="btn-pill"
+          aria-pressed={value === opt}
+          onClick={() => onChange(opt)}
+          onKeyDown={(e) => handleKeyDown(e, idx)}
+        >
+          {opt}
+        </button>
+      ))}
     </div>
   );
 }
@@ -270,122 +395,98 @@ export default function CohortsPage() {
     });
   }, [typeFilter, boroughFilter, statusFilter]);
 
-  return (
-    <>
-      {/* Hero */}
-      <section className="cohort-hero">
-        <div className="cohort-hero__inner">
-          <div>
-            <p className="cohort-hero__eyebrow">
-              NYC Cold-Start Growth Analysis
-            </p>
-            <h1 className="cohort-hero__title">Cohort analysis.</h1>
-            <p className="cohort-hero__sub">
-              Track activation, retention, and revenue across NYC neighborhood
-              cohorts.
-            </p>
-          </div>
-          <div className="cohort-hero__stats">
-            <div className="hero-stat">
-              <div className="hero-stat__value">{stats.total}</div>
-              <div className="hero-stat__label">Total Cohorts</div>
-            </div>
-            <div className="hero-stat">
-              <div className="hero-stat__value">{stats.active}</div>
-              <div className="hero-stat__label">Active</div>
-            </div>
-            <div className="hero-stat">
-              <div className="hero-stat__value">{stats.totalMembers}</div>
-              <div className="hero-stat__label">Total Members</div>
-            </div>
-            <div className="hero-stat">
-              <div className="hero-stat__value">
-                ${(stats.totalGmv / 1000).toFixed(0)}k
-              </div>
-              <div className="hero-stat__label">Total GMV</div>
-            </div>
-          </div>
-        </div>
-      </section>
+  // Top cohort — best D30 retention among active cohorts
+  const topCohort = useMemo(() => {
+    const active = mockCohorts.filter((c) => c.status === "active");
+    return active.sort((a, b) => b.retentionD30 - a.retentionD30)[0] ?? null;
+  }, []);
 
-      {/* Toolbar */}
-      <div className="cohort-toolbar">
-        <div className="cohort-toolbar__inner">
-          <div className="cohort-filter-group">
-            {TYPE_FILTERS.map((t) => (
-              <button
-                key={t}
-                className={`cohort-filter-chip${typeFilter === t ? " active" : ""}`}
-                onClick={() => setTypeFilter(t)}
-              >
-                {t}
-              </button>
-            ))}
-            <div
-              style={{ width: 1, background: "var(--line)", margin: "0 4px" }}
-            />
-            {BOROUGH_FILTERS.map((b) => (
-              <button
-                key={b}
-                className={`cohort-filter-chip${boroughFilter === b ? " active" : ""}`}
-                onClick={() => setBoroughFilter(b)}
-              >
-                {b}
-              </button>
-            ))}
-            <div
-              style={{ width: 1, background: "var(--line)", margin: "0 4px" }}
-            />
-            {STATUS_FILTERS.map((s) => (
-              <button
-                key={s}
-                className={`cohort-filter-chip${statusFilter === s ? " active" : ""}`}
-                onClick={() => setStatusFilter(s)}
-              >
-                {s}
-              </button>
-            ))}
-          </div>
-          <button
-            className="cohort-create-btn"
-            onClick={() => setShowModal(true)}
-          >
-            + New Cohort
-          </button>
+  return (
+    <div className="cohorts-page">
+      {/* Page header */}
+      <div className="cohorts-header">
+        <div className="cohorts-eyebrow">
+          ADMIN · PUSH INTERNAL · NYC COLD-START GROWTH ANALYSIS
+        </div>
+        <h1 className="cohorts-title">Cohort analysis</h1>
+        <p className="cohorts-subtitle">
+          Track activation, retention, and revenue across NYC neighborhood
+          cohorts.
+        </p>
+
+        {/* KPI strip */}
+        <div className="cohorts-kpi-strip">
+          {[
+            { label: "Total Cohorts", value: stats.total },
+            { label: "Active", value: stats.active },
+            { label: "Total Members", value: stats.totalMembers },
+            {
+              label: "Total GMV",
+              value: `$${(stats.totalGmv / 1000).toFixed(0)}k`,
+            },
+          ].map(({ label, value }) => (
+            <div key={label} className="cohort-kpi-tile">
+              <div className="cohort-kpi-tile__label">{label}</div>
+              <div className="cohort-kpi-tile__value">{value}</div>
+            </div>
+          ))}
         </div>
       </div>
 
+      {/* Liquid-glass Top Cohort card (≤1 per page) */}
+      {topCohort && <TopCohortCard cohort={topCohort} />}
+
+      {/* Toolbar */}
+      <div className="cohorts-toolbar">
+        <div className="cohorts-filter-group">
+          <FilterPillGroup
+            options={TYPE_FILTERS}
+            value={typeFilter}
+            onChange={setTypeFilter}
+            label="Filter by type"
+          />
+          <div className="cohorts-filter-divider" aria-hidden />
+          <FilterPillGroup
+            options={BOROUGH_FILTERS}
+            value={boroughFilter}
+            onChange={setBoroughFilter}
+            label="Filter by borough"
+          />
+          <div className="cohorts-filter-divider" aria-hidden />
+          <FilterPillGroup
+            options={STATUS_FILTERS}
+            value={statusFilter}
+            onChange={setStatusFilter}
+            label="Filter by status"
+          />
+        </div>
+
+        <button className="btn-primary" onClick={() => setShowModal(true)}>
+          + New Cohort
+        </button>
+      </div>
+
       {/* Grid */}
-      <section className="cohort-grid-section">
-        <div className="cohort-grid-inner">
-          <div className="cohort-grid-meta">
-            <span className="cohort-grid-count">
-              {filtered.length} cohort{filtered.length !== 1 ? "s" : ""}
-            </span>
-          </div>
-          <div className="cohort-grid">
+      <div className="cohorts-grid-section">
+        <div className="cohorts-grid-count">
+          {filtered.length} cohort{filtered.length !== 1 ? "s" : ""}
+        </div>
+
+        {filtered.length === 0 ? (
+          <p className="cohorts-empty">
+            No cohorts match the selected filters.
+          </p>
+        ) : (
+          <div className="cohorts-grid">
             {filtered.map((c) => (
               <CohortCard key={c.id} cohort={c} />
             ))}
           </div>
-          {filtered.length === 0 && (
-            <p
-              style={{
-                fontFamily: "var(--font-body)",
-                color: "var(--text-muted)",
-                fontSize: "var(--text-small)",
-                padding: "var(--space-8) 0",
-                textAlign: "center",
-              }}
-            >
-              No cohorts match the selected filters.
-            </p>
-          )}
-        </div>
-      </section>
+        )}
+      </div>
 
       {/* Modal */}
       {showModal && <CreateModal onClose={() => setShowModal(false)} />}
-    </>
+    </div>
   );
 }

@@ -37,13 +37,14 @@ function getEventColor(
   type: DisputeEvent["type"],
   actor: DisputeEvent["actor"],
 ): string {
-  if (type === "resolved") return "var(--tertiary)";
+  if (type === "resolved") return "var(--accent-blue)";
   if (type === "dismissed") return "var(--graphite)";
-  if (type === "escalated" || type === "thread_locked") return "var(--primary)";
+  if (type === "escalated" || type === "thread_locked")
+    return "var(--brand-red)";
   if (type === "decision_made") return "var(--champagne)";
-  if (actor === "admin" || actor === "system") return "var(--dark)";
-  if (actor === "creator") return "var(--tertiary)";
-  if (actor === "merchant") return "var(--primary)";
+  if (actor === "admin" || actor === "system") return "var(--ink)";
+  if (actor === "creator") return "var(--accent-blue)";
+  if (actor === "merchant") return "var(--brand-red)";
   return "var(--graphite)";
 }
 

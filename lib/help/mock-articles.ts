@@ -117,7 +117,7 @@ Push has two distinct account types: **Creator** and **Merchant**. You must choo
 | Creator | Instant (social connect) |
 | Merchant | 1–3 business days |
 
-> **Tip:** Merchants on the **Pro plan** ($199/mo) get priority verification — typically under 4 hours during business hours.
+> **Tip:** Merchants on the **Pro** or **Advanced** plan get priority verification — typically under 4 hours during business hours.
 
 ## After account creation
 
@@ -540,9 +540,10 @@ Push offers three merchant subscription tiers:
 
 | Plan | Price | Campaigns | Creator cap |
 |---|---|---|---|
-| Starter | $19.99/mo | 1 active campaign | 5 creators |
-| Growth | $69/mo | 5 active campaigns | 50 creators |
-| Pro | $199/mo | Unlimited | Unlimited |
+| Lite | $0/mo | 1 active campaign | 1 creator |
+| Essentials | $99/mo | 3 active campaigns | 5 creators per campaign |
+| Pro | 5% of attributed revenue (cap $179) | Unlimited | 8 per campaign |
+| Advanced | $349/mo | Unlimited | Unlimited |
 
 All plans include access to the merchant dashboard, basic analytics, and Square/Toast/Clover integration.
 

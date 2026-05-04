@@ -9,7 +9,9 @@ import "./explore.css";
 const MapView = dynamic(() => import("@/components/layout/MapView"), {
   ssr: false,
   loading: () => (
-    <div style={{ width: "100%", height: "100%", background: "#eae6e1" }} />
+    <div
+      style={{ width: "100%", height: "100%", background: "var(--surface)" }}
+    />
   ),
 });
 
@@ -43,31 +45,31 @@ const TIERS = [
 type Tier = (typeof TIERS)[number];
 
 const TIER_COLORS: Record<string, { bg: string; text: string }> = {
-  Seed: { bg: "#f5f0ea", text: "#7a6558" },
-  Explorer: { bg: "#f2ebe3", text: "#8c6239" },
-  Operator: { bg: "#eef0f2", text: "#4a5568" },
-  Proven: { bg: "#fdf6e8", text: "#9b7a3e" },
-  Closer: { bg: "#fdecea", text: "#9b111e" },
-  Partner: { bg: "#e8e8f0", text: "#1a1a2e" },
+  Seed: { bg: "var(--surface)", text: "var(--graphite)" },
+  Explorer: { bg: "rgba(201, 169, 110, 0.18)", text: "var(--champagne)" },
+  Operator: { bg: "rgba(102, 155, 188, 0.16)", text: "var(--graphite)" },
+  Proven: { bg: "rgba(201, 169, 110, 0.22)", text: "var(--champagne)" },
+  Closer: { bg: "rgba(193, 18, 31, 0.12)", text: "var(--brand-red)" },
+  Partner: { bg: "rgba(0, 48, 73, 0.12)", text: "var(--ink)" },
 };
 
 /* ── Sort options ─────────────────────────────────────────── */
 const SORT_OPTIONS = [
-  { key: "newest", label: "Newest" },
-  { key: "highest-pay", label: "Highest Pay" },
-  { key: "ending-soon", label: "Ending Soon" },
-  { key: "most-spots", label: "Most Spots" },
+  { key: "newest", label: "newest" },
+  { key: "highest-pay", label: "highest pay" },
+  { key: "ending-soon", label: "ending soon" },
+  { key: "most-spots", label: "most spots" },
 ] as const;
 type SortKey = (typeof SORT_OPTIONS)[number]["key"];
 
 /* ── Category colors ──────────────────────────────────────── */
 const CATEGORY_DOT_COLOR: Record<string, string> = {
-  Food: "var(--primary)",
-  Coffee: "#6F4E37",
-  Beauty: "var(--tertiary)",
-  Retail: "var(--dark)",
-  Lifestyle: "#669bbc",
-  Fitness: "#003049",
+  Food: "var(--brand-red)",
+  Coffee: "var(--accent)",
+  Beauty: "var(--accent-blue)",
+  Retail: "var(--ink)",
+  Lifestyle: "var(--accent-blue)",
+  Fitness: "var(--ink)",
 };
 
 const DEMO_CAMPAIGNS: Campaign[] = [
@@ -373,29 +375,29 @@ export default function ExplorePage() {
       {/* ── Nav ──────────────────────────────────────────── */}
       <nav className="explore-nav">
         <Link href="/" className="explore-logo">
-          Push
+          Push<span className="explore-logo-dot">.</span>
         </Link>
 
         <div className="explore-search-pill">
-          <span className="search-pill-location">New York City</span>
+          <span className="search-pill-location">Lower Manhattan</span>
           <span className="search-pill-sep" />
           <span className="search-pill-count">
-            {filtered.length} campaign{filtered.length !== 1 ? "s" : ""}
+            {filtered.length} open · pilot opens June 22
           </span>
-          {isDemo && <span className="search-pill-demo">Demo</span>}
+          {isDemo && <span className="search-pill-demo">demo data</span>}
         </div>
 
         <div className="explore-nav-right">
           <Link href="/demo/creator" className="nav-link nav-link--demo">
-            Try Demo
+            try demo
           </Link>
           <span className="nav-divider" />
           <Link href="/creator/login" className="nav-link">
-            Log in
+            log in
           </Link>
           <span className="nav-divider" />
           <Link href="/creator/signup" className="nav-link">
-            Sign up
+            apply
           </Link>
         </div>
       </nav>
@@ -405,17 +407,36 @@ export default function ExplorePage() {
         className={`explore-body ${mobileView === "map" ? "explore-body--map" : ""}`}
       >
         <aside className="explore-panel">
+          {/* ── Panel header — section-marker + ghost ──── */}
+          <div className="exp-panel-head">
+            <div className="exp-panel-head-row">
+              <span className="section-marker" data-num="01">
+                Walkable
+              </span>
+              <span className="exp-panel-head-meta">
+                7 blocks · SoHo / Tribeca / Chinatown
+              </span>
+            </div>
+            <h1 className="exp-panel-head-title">
+              Nearby<span className="exp-panel-head-dot">.</span>
+            </h1>
+            <p className="exp-panel-head-sub">
+              A creator posts. Someone walks in. The spot pays only when that
+              visit is real.
+            </p>
+          </div>
+
           {/* ── Stats bar ─────────────────────────────────── */}
           {!loading && (
             <div className="exp-stats-bar">
               <div className="exp-stats-item">
                 <span className="exp-stats-num">{campaigns.length}</span>
-                <span className="exp-stats-label">campaigns</span>
+                <span className="exp-stats-label">open</span>
               </div>
               <div className="exp-stats-divider" />
               <div className="exp-stats-item">
                 <span className="exp-stats-num">{stats.totalSpots}</span>
-                <span className="exp-stats-label">spots open</span>
+                <span className="exp-stats-label">spots</span>
               </div>
               <div className="exp-stats-divider" />
               <div className="exp-stats-cats">
@@ -426,7 +447,7 @@ export default function ExplorePage() {
                       <span
                         className="exp-cat-dot"
                         style={{
-                          background: CATEGORY_DOT_COLOR[cat] ?? "var(--dark)",
+                          background: CATEGORY_DOT_COLOR[cat] ?? "var(--ink)",
                         }}
                       />
                       <span className="exp-stats-cat-name">{cat}</span>
@@ -439,9 +460,7 @@ export default function ExplorePage() {
 
           {/* ── Category filter bar ───────────────────────── */}
           <div className="panel-filter-bar">
-            <span className="panel-count">
-              {filtered.length} campaign{filtered.length !== 1 ? "s" : ""}
-            </span>
+            <span className="panel-count">{filtered.length} open</span>
             {CATEGORIES.map((cat) => (
               <button
                 key={cat}
@@ -452,11 +471,11 @@ export default function ExplorePage() {
                   <span
                     className="filter-tab-dot"
                     style={{
-                      background: CATEGORY_DOT_COLOR[cat] ?? "var(--dark)",
+                      background: CATEGORY_DOT_COLOR[cat] ?? "var(--ink)",
                     }}
                   />
                 )}
-                {cat}
+                {cat === "All" ? "all" : cat.toLowerCase()}
               </button>
             ))}
           </div>
@@ -504,10 +523,10 @@ export default function ExplorePage() {
           {/* ── Sign-up nudge ─────────────────────────────── */}
           <div className="exp-signup-nudge">
             <span className="exp-nudge-text">
-              Join free to apply — no followers required
+              No follower bar. Pay on Friday via Stripe.
             </span>
             <Link href="/creator/signup" className="exp-nudge-btn">
-              Get started →
+              apply →
             </Link>
           </div>
 
@@ -532,25 +551,25 @@ export default function ExplorePage() {
                         cx="24"
                         cy="24"
                         r="20"
-                        stroke="var(--dark)"
+                        stroke="var(--ink)"
                         strokeOpacity="0.12"
                         strokeWidth="2"
                       />
                       <path
                         d="M16 24h16M24 16v16"
-                        stroke="var(--dark)"
+                        stroke="var(--ink)"
                         strokeOpacity="0.2"
                         strokeWidth="2"
                         strokeLinecap="square"
                       />
                     </svg>
                   </div>
-                  <p className="exp-empty-title">No campaigns found</p>
+                  <p className="exp-empty-title">Nothing in 4 blocks.</p>
                   <p className="exp-empty-msg">
-                    No campaigns match your filters. Try expanding your search.
+                    Tight filters. Widen the net and try again.
                   </p>
                   <button className="exp-empty-reset" onClick={resetFilters}>
-                    Reset filters
+                    reset →
                   </button>
                 </div>
               ) : (
@@ -623,7 +642,7 @@ function ExploreCard({
   const deadlineLabel = formatDeadline(c.deadline);
 
   const tierColors = c.tier_required ? TIER_COLORS[c.tier_required] : null;
-  const catDotColor = CATEGORY_DOT_COLOR[c.category ?? ""] ?? "var(--dark)";
+  const catDotColor = CATEGORY_DOT_COLOR[c.category ?? ""] ?? "var(--ink)";
 
   return (
     <div

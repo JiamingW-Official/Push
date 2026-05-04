@@ -28,8 +28,8 @@
 /* ── Card base ───────────────────────────────────────────── */
 .tbp-card {
   padding: 24px;
-  border-radius: 0;
-  border-left: 4px solid var(--tbp-accent, #003049);
+  border-radius: var(--r-lg);
+  border-left: 4px solid var(--tbp-accent, var(--ink));
   position: relative;
   overflow: hidden;
 }
@@ -37,20 +37,20 @@
 /* Current tier card: tinted background */
 .tbp-card--current {
   background-color: var(--tbp-bg, var(--surface));
-  border-color: var(--tbp-accent, #003049);
+  border-color: var(--tbp-accent, var(--ink));
 }
 
 /* Next tier card: neutral with subtle overlay */
 .tbp-card--next {
-  background-color: #fafaf7;
-  border-color: var(--tbp-next-accent, #669bbc);
+  background-color: var(--surface-3);
+  border-color: var(--tbp-next-accent, var(--accent-blue));
   opacity: 0.88;
 }
 
-/* Top tier "you've arrived" state */
+/* Top tier "you've arrived" state — Champagne Gold ceremonial surface */
 .tbp-card--top {
-  background: #fdf8ee;
-  border-color: #b8860b;
+  background: var(--champagne-light);
+  border-color: var(--champagne);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -61,12 +61,12 @@
 
 /* ── Card header ─────────────────────────────────────────── */
 .tbp-card-label {
-  font-family: "CS Genio Mono", monospace;
+  font-family: var(--font-body);
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: rgba(0, 48, 73, 0.45);
+  color: var(--ink-4);
   margin-bottom: 16px;
 }
 
@@ -85,13 +85,13 @@
 }
 
 .tbp-tier-name {
-  font-family: "Darky", sans-serif;
+  font-family: var(--font-display);
   font-weight: 700;
   font-size: 20px;
   letter-spacing: -0.02em;
   line-height: 1;
   text-transform: uppercase;
-  color: var(--tbp-color, #003049);
+  color: var(--tbp-color, var(--ink));
 }
 
 /* ── Stat rows ───────────────────────────────────────────── */
@@ -101,7 +101,7 @@
   gap: 8px;
   margin-bottom: 20px;
   padding-bottom: 20px;
-  border-bottom: 1px solid rgba(0, 48, 73, 0.10);
+  border-bottom: 1px solid var(--line);
 }
 
 .tbp-stat-row {
@@ -113,7 +113,7 @@
 
 .tbp-stat-label {
   font-size: 11px;
-  color: rgba(0, 48, 73, 0.50);
+  color: var(--ink-4);
   letter-spacing: 0.04em;
   text-transform: uppercase;
   flex-shrink: 0;
@@ -122,14 +122,14 @@
 .tbp-stat-value {
   font-size: 13px;
   font-weight: 600;
-  color: #003049;
+  color: var(--ink);
   text-align: right;
 }
 
 .tbp-stat-value--locked {
   font-size: 11px;
   font-weight: 400;
-  color: rgba(0, 48, 73, 0.35);
+  color: var(--ink-4);
   font-style: italic;
 }
 
@@ -139,7 +139,7 @@
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: rgba(0, 48, 73, 0.40);
+  color: var(--ink-4);
   margin-bottom: 10px;
 }
 
@@ -174,11 +174,11 @@
 }
 
 .tbp-benefit-item--available {
-  color: #003049;
+  color: var(--ink);
 }
 
 .tbp-benefit-item--locked {
-  color: rgba(0, 48, 73, 0.38);
+  color: var(--ink-4);
 }
 
 .tbp-benefit-marker {
@@ -190,31 +190,31 @@
 }
 
 .tbp-benefit-marker--check {
-  color: #003049;
+  color: var(--ink);
 }
 
 .tbp-benefit-marker--lock {
-  color: rgba(0, 48, 73, 0.30);
+  color: var(--ink-4);
 }
 
 /* ── CTA footer ──────────────────────────────────────────── */
 .tbp-cta {
   margin-top: 20px;
   padding-top: 16px;
-  border-top: 1px solid rgba(0, 48, 73, 0.08);
+  border-top: 1px solid var(--line);
 }
 
 .tbp-cta-points {
   font-size: 13px;
   font-weight: 600;
-  color: var(--tbp-next-accent, #669bbc);
+  color: var(--tbp-next-accent, var(--accent-blue));
   margin-bottom: 8px;
   letter-spacing: 0.01em;
 }
 
 .tbp-cta-sub {
   font-size: 11px;
-  color: rgba(0, 48, 73, 0.45);
+  color: var(--ink-4);
   letter-spacing: 0.02em;
 }
 
@@ -226,18 +226,18 @@
 }
 
 .tbp-top-title {
-  font-family: "Darky", sans-serif;
+  font-family: var(--font-display);
   font-weight: 700;
   font-size: 20px;
   letter-spacing: -0.02em;
-  color: #b8860b;
+  color: var(--champagne);
   text-transform: uppercase;
   margin-bottom: 8px;
 }
 
 .tbp-top-sub {
   font-size: 12px;
-  color: rgba(0, 48, 73, 0.50);
+  color: var(--ink-4);
   letter-spacing: 0.02em;
   line-height: 1.5;
 }
@@ -246,16 +246,16 @@
 .tbp-progress-track {
   width: 100%;
   height: 4px;
-  background: rgba(0, 48, 73, 0.10);
-  border-radius: 0;
+  background: var(--line);
+  border-radius: var(--r-lg);
   overflow: hidden;
   margin-top: 12px;
 }
 
 .tbp-progress-fill {
   height: 100%;
-  border-radius: 0;
-  background: var(--tbp-accent, #003049);
+  border-radius: var(--r-lg);
+  background: var(--tbp-accent, var(--ink));
   transition: width 600ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
@@ -265,9 +265,9 @@
   align-items: center;
   gap: 16px;
   padding: 16px;
-  background: #fafaf7;
-  border-left: 4px solid var(--tbp-accent, #003049);
-  border-radius: 0;
+  background: var(--surface-3);
+  border-left: 4px solid var(--tbp-accent, var(--ink));
+  border-radius: var(--r-lg);
 }
 
 @media (max-width: 480px) {
@@ -283,24 +283,24 @@
   align-items: center;
   gap: 6px;
   padding: 4px 10px;
-  background: var(--tbp-color, #003049);
-  color: #f5f2ec;
-  font-family: "CS Genio Mono", monospace;
+  background: var(--tbp-color, var(--ink));
+  color: var(--surface);
+  font-family: var(--font-body);
   font-size: 11px;
   font-weight: 600;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  border-radius: 0;
+  border-radius: var(--r-lg);
   white-space: nowrap;
 }
 
 .tbp-compact-score {
   flex-shrink: 0;
-  font-family: "Darky", sans-serif;
+  font-family: var(--font-display);
   font-weight: 700;
   font-size: 20px;
   letter-spacing: -0.02em;
-  color: #003049;
+  color: var(--ink);
   line-height: 1;
 }
 
@@ -317,7 +317,7 @@
 
 .tbp-compact-progress-label {
   font-size: 10px;
-  color: rgba(0, 48, 73, 0.45);
+  color: var(--ink-4);
   letter-spacing: 0.04em;
   text-transform: uppercase;
 }
@@ -328,18 +328,18 @@
 }
 
 .tbp-compact-next-name {
-  font-family: "Darky", sans-serif;
+  font-family: var(--font-display);
   font-weight: 600;
   font-size: 14px;
   letter-spacing: -0.01em;
-  color: var(--tbp-next-accent, #669bbc);
+  color: var(--tbp-next-accent, var(--accent-blue));
   text-transform: uppercase;
   white-space: nowrap;
 }
 
 .tbp-compact-next-pts {
   font-size: 10px;
-  color: rgba(0, 48, 73, 0.45);
+  color: var(--ink-4);
   letter-spacing: 0.04em;
   margin-top: 2px;
 }

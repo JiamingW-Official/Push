@@ -1,25 +1,25 @@
 /* ============================================================
    Creator Overview — KPI + referrals + leaderboard snapshot
-   Authority: Design.md (sharp corners, 8px grid, brand colors)
+   Design.md v11: closed token set, product register, 8px grid
    ============================================================ */
 
 .overview-shell {
   min-height: 100vh;
   background: var(--surface);
-  color: var(--dark);
+  color: var(--ink);
   font-family: var(--font-body);
 }
 
 /* ── Title bar ─────────────────────────────────────────────── */
 
 .overview-titlebar {
-  background: var(--surface-elevated);
-  border-bottom: 1px solid var(--line-strong);
-  padding: var(--space-4) var(--space-5);
+  background: var(--surface-2);
+  border-bottom: 1px solid var(--hairline);
+  padding: 24px 32px;
 }
 
 .overview-titlebar__inner {
-  max-width: var(--content-width);
+  max-width: 1140px;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
@@ -28,39 +28,39 @@
 
 .overview-title {
   font-family: var(--font-display);
-  font-size: clamp(32px, 4vw, 48px);
+  font-size: clamp(32px, 4vw, 40px);
   font-weight: 700;
-  line-height: 1;
+  line-height: 1.1;
   letter-spacing: -0.02em;
-  color: var(--dark);
+  color: var(--ink);
 }
 
 .overview-welcome {
   font-family: var(--font-body);
-  font-size: var(--text-small);
-  color: var(--text-muted);
+  font-size: 13px;
+  color: var(--ink-4);
 }
 
 .overview-welcome__name {
-  color: var(--primary);
+  color: var(--brand-red);
   font-weight: 700;
 }
 
 /* ── Main ──────────────────────────────────────────────────── */
 
 .overview-main {
-  max-width: var(--content-width);
+  max-width: 1140px;
   margin: 0 auto;
-  padding: var(--space-5) var(--space-5) var(--space-10);
+  padding: 32px 32px 64px;
   display: flex;
   flex-direction: column;
-  gap: var(--space-6);
+  gap: 40px;
 }
 
 .overview-kpi-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: var(--space-3);
+  gap: 24px;
 }
 
 @media (max-width: 768px) {
@@ -72,29 +72,29 @@
 .overview-section {
   display: flex;
   flex-direction: column;
-  gap: var(--space-3);
+  gap: 24px;
 }
 
 .overview-section__header {
   display: flex;
   align-items: baseline;
   justify-content: space-between;
-  gap: var(--space-2);
+  gap: 16px;
 }
 
 .overview-section__title {
   font-family: var(--font-display);
-  font-size: var(--text-h3);
+  font-size: 28px;
   font-weight: 700;
   letter-spacing: -0.01em;
-  color: var(--dark);
+  color: var(--ink);
 }
 
 .overview-section__meta {
   font-family: var(--font-body);
-  font-size: var(--text-caption);
+  font-size: 12px;
   font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--text-muted);
+  color: var(--ink-4);
 }

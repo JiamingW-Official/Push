@@ -108,6 +108,19 @@ function countdown(target: string): string {
   return `${h}h ${m}m`;
 }
 
+// ── Shared badge base ─────────────────────────────────────────────────────────
+
+const badgeBase: React.CSSProperties = {
+  display: "inline-block",
+  padding: "2px 8px",
+  borderRadius: 6,
+  fontSize: 12,
+  fontWeight: 600,
+  letterSpacing: "0.06em",
+  fontFamily: "var(--font-mono, var(--font-body))",
+  textTransform: "uppercase",
+};
+
 // ── Sub-components ────────────────────────────────────────────────────────────
 
 function TypeBadge({ type }: { type: TransactionType }) {
@@ -118,11 +131,58 @@ function TypeBadge({ type }: { type: TransactionType }) {
     platform_fee: "Fee",
     adjustment: "Adj",
   };
-  return <span className={`fin-badge fin-badge--${type}`}>{labels[type]}</span>;
+  // §3 — color-coded type badges per v11 spec
+  const colors: Record<TransactionType, { bg: string; color: string }> = {
+    subscription: {
+      bg: "rgba(34,197,94,0.1)",
+      color: "#22c55e",
+    },
+    payout: {
+      bg: "var(--accent-blue-tint, rgba(0,133,255,0.1))",
+      color: "var(--accent-blue)",
+    },
+    refund: {
+      bg: "rgba(193,18,31,0.08)",
+      color: "var(--brand-red)",
+    },
+    platform_fee: {
+      bg: "var(--champagne-tint, rgba(191,161,112,0.12))",
+      color: "var(--champagne-deep, #8a6a2e)",
+    },
+    adjustment: {
+      bg: "var(--champagne-tint, rgba(191,161,112,0.12))",
+      color: "var(--champagne-deep, #8a6a2e)",
+    },
+  };
+  const c = colors[type];
+  return (
+    <span style={{ ...badgeBase, background: c.bg, color: c.color }}>
+      {labels[type]}
+    </span>
+  );
 }
 
 function StatusBadge({ status }: { status: TransactionStatus }) {
-  return <span className={`fin-status fin-status--${status}`}>{status}</span>;
+  const map: Record<TransactionStatus, { bg: string; color: string }> = {
+    completed: { bg: "var(--accent-blue-tint)", color: "var(--accent-blue)" },
+    pending: { bg: "var(--panel-butter)", color: "var(--ink-3)" },
+    processing: { bg: "var(--panel-butter)", color: "var(--ink-3)" },
+    failed: { bg: "var(--brand-red-tint)", color: "var(--brand-red)" },
+    reversed: { bg: "var(--surface-3)", color: "var(--ink-4)" },
+  };
+  const c = map[status] ?? { bg: "var(--surface-3)", color: "var(--ink-4)" };
+  return (
+    <span
+      style={{
+        ...badgeBase,
+        background: c.bg,
+        color: c.color,
+        textTransform: "capitalize",
+      }}
+    >
+      {status}
+    </span>
+  );
 }
 
 // ── Monthly P&L SVG Chart ─────────────────────────────────────────────────────
@@ -145,12 +205,12 @@ function PnLChart({ data }: { data: MonthlyBar[] }) {
   const gap = barW * 0.3;
 
   return (
-    <div className="fin-chart">
-      <div className="fin-chart__svg-wrap">
+    <div style={{ marginTop: 16 }}>
+      <div style={{ width: "100%", overflowX: "auto" }}>
         <svg
           viewBox={`0 0 ${W} ${H}`}
           preserveAspectRatio="none"
-          className="fin-chart__svg"
+          style={{ width: "100%", height: H, display: "block" }}
         >
           {data.map((d, i) => {
             const x = PAD.left + i * barGroupW + barGroupW / 2;
@@ -165,7 +225,8 @@ function PnLChart({ data }: { data: MonthlyBar[] }) {
                   y={PAD.top + innerH - revH}
                   width={barW}
                   height={revH}
-                  className="fin-chart__bar--revenue"
+                  fill="var(--accent-blue)"
+                  opacity={0.7}
                 >
                   <title>
                     {d.label} Revenue: {fmt(d.revenue)}
@@ -177,14 +238,22 @@ function PnLChart({ data }: { data: MonthlyBar[] }) {
                   y={PAD.top + innerH - payH}
                   width={barW}
                   height={payH}
-                  className="fin-chart__bar--payout"
+                  fill="var(--brand-red)"
+                  opacity={0.6}
                 >
                   <title>
                     {d.label} Payouts: {fmt(d.payouts)}
                   </title>
                 </rect>
                 {/* Label */}
-                <text x={x} y={H - 4} className="fin-chart__label">
+                <text
+                  x={x}
+                  y={H - 4}
+                  textAnchor="middle"
+                  fontSize={8}
+                  fill="var(--ink-4)"
+                  fontFamily="var(--font-body)"
+                >
                   {d.label.split(" ")[0]}
                 </text>
               </g>
@@ -192,13 +261,47 @@ function PnLChart({ data }: { data: MonthlyBar[] }) {
           })}
         </svg>
       </div>
-      <div className="fin-chart__legend">
-        <span className="fin-chart__legend-item">
-          <span className="fin-chart__legend-dot fin-chart__legend-dot--revenue" />
+      <div style={{ display: "flex", gap: 16, marginTop: 8 }}>
+        <span
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 6,
+            fontSize: 11,
+            fontFamily: "var(--font-body)",
+            color: "var(--ink-3)",
+          }}
+        >
+          <span
+            style={{
+              width: 10,
+              height: 10,
+              borderRadius: 2,
+              background: "var(--accent-blue)",
+              display: "inline-block",
+            }}
+          />
           Revenue
         </span>
-        <span className="fin-chart__legend-item">
-          <span className="fin-chart__legend-dot fin-chart__legend-dot--payout" />
+        <span
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 6,
+            fontSize: 11,
+            fontFamily: "var(--font-body)",
+            color: "var(--ink-3)",
+          }}
+        >
+          <span
+            style={{
+              width: 10,
+              height: 10,
+              borderRadius: 2,
+              background: "var(--brand-red)",
+              display: "inline-block",
+            }}
+          />
           Payouts
         </span>
       </div>
@@ -284,21 +387,88 @@ function ActionModal({
 
   const cfg = configs[action];
 
+  const inputStyle: React.CSSProperties = {
+    width: "100%",
+    padding: "10px 12px",
+    border: "1px solid var(--hairline)",
+    borderRadius: 8,
+    background: "var(--surface)",
+    color: "var(--ink)",
+    fontFamily: "var(--font-body)",
+    fontSize: 14,
+    outline: "none",
+    boxSizing: "border-box",
+  };
+
   return (
     <div
-      className="fin-modal-backdrop"
+      style={{
+        position: "fixed",
+        inset: 0,
+        background: "rgba(0,0,0,0.4)",
+        zIndex: 200,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
     >
-      <div className="fin-modal">
-        <div className="fin-modal__title">{cfg.title}</div>
+      <div
+        style={{
+          background: "var(--surface-2)",
+          border: "1px solid var(--hairline)",
+          borderRadius: 10,
+          padding: "32px",
+          width: "min(480px, 90vw)",
+          maxHeight: "90vh",
+          overflowY: "auto",
+        }}
+      >
+        <div
+          style={{
+            fontFamily: "var(--font-display)",
+            fontSize: 20,
+            fontWeight: 700,
+            color: "var(--ink)",
+            marginBottom: 8,
+          }}
+        >
+          {cfg.title}
+        </div>
 
-        {cfg.note && <div className="fin-modal__note">{cfg.note}</div>}
+        {cfg.note && (
+          <div
+            style={{
+              padding: "10px 14px",
+              background: "var(--brand-red-tint)",
+              border: "1px solid rgba(193,18,31,0.2)",
+              borderRadius: 6,
+              fontSize: 13,
+              fontFamily: "var(--font-body)",
+              color: "var(--brand-red)",
+              marginBottom: 20,
+            }}
+          >
+            {cfg.note}
+          </div>
+        )}
 
         {cfg.fields.map((f) => (
-          <div key={f.key} className="fin-modal__field">
-            <label>
+          <div key={f.key} style={{ marginBottom: 16 }}>
+            <label
+              style={{
+                display: "block",
+                fontSize: 11,
+                fontWeight: 700,
+                letterSpacing: "0.12em",
+                fontFamily: "var(--font-body)",
+                color: "var(--ink-4)",
+                marginBottom: 6,
+                textTransform: "uppercase",
+              }}
+            >
               {f.label}
               {f.required && " *"}
             </label>
@@ -310,6 +480,7 @@ function ActionModal({
                   setFields((prev) => ({ ...prev, [f.key]: e.target.value }))
                 }
                 placeholder={`Enter ${f.label.toLowerCase()}...`}
+                style={{ ...inputStyle, resize: "vertical" }}
               />
             ) : (
               <input
@@ -319,18 +490,24 @@ function ActionModal({
                   setFields((prev) => ({ ...prev, [f.key]: e.target.value }))
                 }
                 placeholder={`Enter ${f.label.toLowerCase()}...`}
+                style={inputStyle}
               />
             )}
           </div>
         ))}
 
-        <div className="fin-modal__actions">
-          <button className="fin-btn fin-btn--ghost" onClick={onClose}>
+        <div style={{ display: "flex", gap: 12, marginTop: 24 }}>
+          <button
+            className="adm-row-btn adm-row-btn--ghost click-shift"
+            onClick={onClose}
+            style={{ flex: 1 }}
+          >
             Cancel
           </button>
           <button
-            className="fin-btn fin-btn--primary"
+            className="adm-row-btn adm-row-btn--view click-shift"
             onClick={() => onConfirm(fields)}
+            style={{ flex: 1 }}
           >
             Confirm
           </button>
@@ -339,6 +516,17 @@ function ActionModal({
     </div>
   );
 }
+
+// ── Filter label style (shared) ───────────────────────────────────────────────
+
+const filterLabelStyle: React.CSSProperties = {
+  fontSize: 11,
+  fontWeight: 700,
+  letterSpacing: "0.12em",
+  fontFamily: "var(--font-body)",
+  color: "var(--ink-5)",
+  textTransform: "uppercase",
+};
 
 // ── Main page ─────────────────────────────────────────────────────────────────
 
@@ -506,128 +694,219 @@ export default function FinancePage() {
   const pnl = meta?.monthlyPnL ?? [];
   const nextPayout = meta?.nextPayout;
 
-  const reconTag =
-    recon?.status === "ok"
-      ? "Balanced"
-      : recon?.status === "minor_discrepancy"
-        ? "Minor discrepancy"
-        : "Major discrepancy";
+  // Shared card style
+  const cardStyle: React.CSSProperties = {
+    background: "var(--surface-2)",
+    border: "1px solid var(--hairline)",
+    borderRadius: 10,
+    padding: "20px 24px",
+  };
 
-  const reconTagClass =
-    recon?.status === "ok"
-      ? "fin-panel__tag--ok"
-      : recon?.status === "minor_discrepancy"
-        ? "fin-panel__tag--warn"
-        : "fin-panel__tag--error";
+  const selectStyle: React.CSSProperties = {
+    height: 40,
+    padding: "0 12px",
+    border: "1px solid var(--hairline)",
+    borderRadius: 8,
+    background: "var(--surface)",
+    color: "var(--ink)",
+    fontFamily: "var(--font-body)",
+    fontSize: 13,
+    outline: "none",
+  };
+
+  const inputStyle: React.CSSProperties = {
+    height: 40,
+    padding: "0 12px",
+    border: "1px solid var(--hairline)",
+    borderRadius: 8,
+    background: "var(--surface)",
+    color: "var(--ink)",
+    fontFamily: "var(--font-body)",
+    fontSize: 13,
+    outline: "none",
+  };
 
   return (
-    <div className="fin-shell">
-      {/* ── Top Nav ── */}
-      <nav className="fin-nav">
-        <a href="/admin" className="fin-nav__logo">
-          Push<span>.</span>
-        </a>
-        <div className="fin-nav__sep" />
-        <span className="fin-nav__section">Admin</span>
-        <div className="fin-nav__spacer" />
-        <span className="fin-nav__badge">Finance</span>
-      </nav>
+    <div className="adm-content" style={{ minHeight: "100vh" }}>
+      {/* ── Page header ── */}
+      {/* §10 — Page eyebrow: (FINANCE·LEDGER) mono 12px above H1 */}
+      <div className="adm-page-header">
+        <div className="adm-page-eyebrow fin-eyebrow-override">
+          (FINANCE·LEDGER)
+        </div>
+        <h1 className="adm-page-title">Finance</h1>
+      </div>
 
-      <div className="fin-page">
-        {/* ── 1. Hero ── */}
-        <section className="fin-hero">
-          <div className="fin-hero__eyebrow">Push Admin / Finance</div>
-          <h1 className="fin-hero__title">Finance.</h1>
-
-          <div className="fin-hero__stats">
-            <div className="fin-stat">
-              <div className="fin-stat__label">MTD GMV</div>
-              <div className="fin-stat__value">{mtd ? fmt(mtd.gmv) : "—"}</div>
-              <div className="fin-stat__delta fin-stat__delta--pos">
-                Subscription revenue, Apr 2026
-              </div>
-            </div>
-
-            <div className="fin-stat">
-              <div className="fin-stat__label">MTD Payouts</div>
-              <div className="fin-stat__value fin-stat__value--red">
-                {mtd ? fmt(mtd.payouts) : "—"}
-              </div>
-              <div className="fin-stat__delta">Disbursed to creators</div>
-            </div>
-
-            <div className="fin-stat">
-              <div className="fin-stat__label">Platform Fee Revenue</div>
-              <div className="fin-stat__value fin-stat__value--gold">
-                {mtd ? fmt(mtd.platformFees, 2) : "—"}
-              </div>
-              <div className="fin-stat__delta fin-stat__delta--pos">
-                Net platform take, MTD
-              </div>
-            </div>
+      {/* ── MTD KPI strip ── */}
+      <div className="adm-kpi-grid" style={{ marginBottom: 40 }}>
+        {[
+          {
+            label: "MTD GMV",
+            value: mtd ? fmt(mtd.gmv) : "—",
+            sub: "Subscription revenue, Apr 2026",
+            alert: false,
+          },
+          {
+            label: "MTD Payouts",
+            value: mtd ? fmt(mtd.payouts) : "—",
+            sub: "Disbursed to creators",
+            alert: true,
+          },
+          {
+            label: "Platform Fee Revenue",
+            value: mtd ? fmt(mtd.platformFees, 2) : "—",
+            sub: "Net platform take, MTD",
+            alert: false,
+          },
+        ].map(({ label, value, sub, alert }) => (
+          <div
+            key={label}
+            className={`adm-kpi-card${alert ? " adm-kpi-card--alert" : ""}`}
+          >
+            <div className="adm-kpi-card__eyebrow">{label}</div>
+            <div className="adm-kpi-card__value">{value}</div>
+            <div className="adm-kpi-card__sub">{sub}</div>
           </div>
-        </section>
+        ))}
+      </div>
 
-        {/* ── 2. Live Ledger Stream ── */}
-        <section>
-          <div className="fin-section-head">
-            <div className="fin-section-head__title">Live Stream</div>
-            <div className="fin-section-head__sub">
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          gap: 32,
+        }}
+      >
+        {/* ── Live Ledger Stream ── */}
+        <div style={cardStyle}>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 12,
+              marginBottom: 16,
+            }}
+          >
+            {/* Live dot — accent-blue, no glow */}
+            <div
+              style={{
+                width: 8,
+                height: 8,
+                borderRadius: "50%",
+                background: "var(--accent-blue)",
+                flexShrink: 0,
+              }}
+            />
+            <div
+              style={{
+                fontFamily: "var(--font-display)",
+                fontSize: 18,
+                fontWeight: 700,
+                color: "var(--ink)",
+              }}
+            >
+              Live Stream
+            </div>
+            <div
+              style={{
+                fontSize: 12,
+                fontFamily: "var(--font-body)",
+                color: "var(--ink-5)",
+              }}
+            >
               Latest {streamEntries.length} transactions
             </div>
           </div>
-
-          <div className="fin-stream">
-            <div className="fin-stream__head">
-              <div className="fin-stream__live-dot" />
-              <div className="fin-stream__label">Live ledger</div>
-            </div>
-
-            <div className="fin-stream__list">
-              {streamEntries.length === 0 && (
-                <div className="fin-loading">Loading stream...</div>
-              )}
-              {streamEntries.map((e) => (
-                <div
-                  key={e.id}
-                  className={`fin-stream__item fin-stream__item--${e.type}`}
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: 0,
+              maxHeight: 280,
+              overflowY: "auto",
+            }}
+          >
+            {streamEntries.length === 0 && (
+              <div
+                style={{
+                  fontSize: 13,
+                  fontFamily: "var(--font-body)",
+                  color: "var(--ink-5)",
+                  padding: "16px 0",
+                }}
+              >
+                Loading stream...
+              </div>
+            )}
+            {streamEntries.map((e) => (
+              <div
+                key={e.id}
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "120px 1fr 80px auto",
+                  gap: 12,
+                  alignItems: "center",
+                  padding: "8px 0",
+                  borderBottom: "1px solid var(--hairline)",
+                  fontSize: 13,
+                  fontFamily: "var(--font-body)",
+                }}
+              >
+                <span style={{ color: "var(--ink-5)", fontSize: 11 }}>
+                  {fmtTs(e.timestamp)}
+                </span>
+                <span style={{ color: "var(--ink)", fontWeight: 500 }}>
+                  {e.counterparty}
+                </span>
+                <TypeBadge type={e.type} />
+                <span
+                  style={{
+                    fontWeight: 700,
+                    fontFamily: "var(--font-body)",
+                    color:
+                      e.amount > 0 ? "var(--accent-blue)" : "var(--brand-red)",
+                    textAlign: "right",
+                  }}
                 >
-                  <span className="fin-stream__time">{fmtTs(e.timestamp)}</span>
-                  <span className="fin-stream__party">{e.counterparty}</span>
-                  <span
-                    className={`fin-stream__type fin-stream__type--${e.type}`}
-                  >
-                    {e.type === "platform_fee" ? "Fee" : e.type}
-                  </span>
-                  <span
-                    className={`fin-stream__amount ${
-                      e.amount > 0
-                        ? "fin-stream__amount--pos"
-                        : "fin-stream__amount--neg"
-                    }`}
-                  >
-                    {e.amount > 0 ? "+" : "−"}
-                    {fmt(e.amount, 2)}
-                  </span>
-                </div>
-              ))}
-            </div>
+                  {e.amount > 0 ? "+" : "−"}
+                  {fmt(e.amount, 2)}
+                </span>
+              </div>
+            ))}
           </div>
-        </section>
+        </div>
 
-        {/* ── 3. Filters ── */}
-        <section>
-          <div className="fin-section-head">
-            <div className="fin-section-head__title">Ledger</div>
-            <div className="fin-section-head__sub">
+        {/* ── Filters + Ledger Table ── */}
+        <div style={cardStyle}>
+          <div style={{ marginBottom: 16 }}>
+            <div
+              style={{
+                fontFamily: "var(--font-display)",
+                fontSize: 18,
+                fontWeight: 700,
+                color: "var(--ink)",
+                marginBottom: 4,
+              }}
+            >
+              Ledger
+            </div>
+            <div
+              style={{
+                fontSize: 12,
+                fontFamily: "var(--font-body)",
+                color: "var(--ink-5)",
+              }}
+            >
               {pagination.total} entries
             </div>
           </div>
 
-          <div className="fin-filters">
-            <div className="fin-filter-group">
-              <label>Type</label>
+          {/* Filters */}
+          <div className="adm-filter-bar" style={{ marginBottom: 20 }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+              <label style={filterLabelStyle}>Type</label>
               <select
+                style={selectStyle}
                 value={typeFilter}
                 onChange={(e) =>
                   setTypeFilter(e.target.value as TransactionType | "")
@@ -642,9 +921,10 @@ export default function FinancePage() {
               </select>
             </div>
 
-            <div className="fin-filter-group">
-              <label>Status</label>
+            <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+              <label style={filterLabelStyle}>Status</label>
               <select
+                style={selectStyle}
                 value={statusFilter}
                 onChange={(e) =>
                   setStatusFilter(e.target.value as TransactionStatus | "")
@@ -659,101 +939,160 @@ export default function FinancePage() {
               </select>
             </div>
 
-            <div className="fin-filter-group">
-              <label>From date</label>
+            <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+              <label style={filterLabelStyle}>From</label>
               <input
                 type="date"
+                style={inputStyle}
                 value={fromDate}
                 onChange={(e) => setFromDate(e.target.value)}
               />
             </div>
 
-            <div className="fin-filter-group">
-              <label>To date</label>
+            <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+              <label style={filterLabelStyle}>To</label>
               <input
                 type="date"
+                style={inputStyle}
                 value={toDate}
                 onChange={(e) => setToDate(e.target.value)}
               />
             </div>
 
-            <div className="fin-filter-group">
-              <label>Min amount</label>
+            <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+              <label style={filterLabelStyle}>Min $</label>
               <input
                 type="number"
                 placeholder="0"
+                style={{ ...inputStyle, width: 88 }}
                 value={amountMin}
                 onChange={(e) => setAmountMin(e.target.value)}
               />
             </div>
 
-            <div className="fin-filter-group">
-              <label>Max amount</label>
+            <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+              <label style={filterLabelStyle}>Max $</label>
               <input
                 type="number"
                 placeholder="∞"
+                style={{ ...inputStyle, width: 88 }}
                 value={amountMax}
                 onChange={(e) => setAmountMax(e.target.value)}
               />
             </div>
 
-            <div className="fin-filter-group">
-              <label>Search</label>
-              <input
-                type="text"
-                placeholder="Counterparty / Stripe ref..."
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                style={{ minWidth: 200 }}
-              />
+            <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+              <label style={filterLabelStyle}>Search</label>
+              <div className="adm-search-wrap">
+                <svg
+                  className="adm-search-icon"
+                  viewBox="0 0 20 20"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth={1.5}
+                >
+                  <circle cx="9" cy="9" r="5.5" />
+                  <path d="M13.5 13.5L17 17" strokeLinecap="round" />
+                </svg>
+                <input
+                  type="text"
+                  placeholder="Counterparty / Stripe ref..."
+                  style={{ ...inputStyle, minWidth: 200, paddingLeft: 36 }}
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                />
+              </div>
             </div>
 
-            <div className="fin-filters__actions">
+            <div style={{ display: "flex", alignItems: "flex-end", gap: 8 }}>
               <button
-                className="fin-btn fin-btn--primary"
+                className="adm-row-btn adm-row-btn--view click-shift"
                 onClick={applyFilters}
               >
                 Apply
               </button>
-              <button className="fin-btn fin-btn--ghost" onClick={resetFilters}>
+              <button
+                className="adm-row-btn adm-row-btn--ghost click-shift"
+                onClick={resetFilters}
+              >
                 Reset
               </button>
             </div>
           </div>
 
-          {/* ── 4. Ledger Table ── */}
-          <div className="fin-table-wrap">
+          {/* Table */}
+          <div className="adm-table-wrap">
             {loading ? (
-              <div className="fin-loading">Loading entries...</div>
+              <div
+                style={{
+                  fontSize: 13,
+                  fontFamily: "var(--font-body)",
+                  color: "var(--ink-5)",
+                  padding: "24px 0",
+                }}
+              >
+                Loading entries...
+              </div>
             ) : entries.length === 0 ? (
-              <div className="fin-empty">No entries match your filters.</div>
+              <div
+                style={{
+                  fontSize: 13,
+                  fontFamily: "var(--font-body)",
+                  color: "var(--ink-5)",
+                  padding: "24px 0",
+                }}
+              >
+                No entries match your filters.
+              </div>
             ) : (
-              <table className="fin-table">
+              <table className="adm-table">
                 <thead>
                   <tr>
-                    <th>Timestamp</th>
-                    <th>Type</th>
-                    <th>Counterparty</th>
-                    <th style={{ textAlign: "right" }}>Amount</th>
-                    <th>Status</th>
-                    <th>Stripe Ref</th>
-                    <th>Note</th>
+                    {[
+                      { label: "Timestamp", align: "left" },
+                      { label: "Type", align: "left" },
+                      { label: "Counterparty", align: "left" },
+                      { label: "Amount", align: "right" },
+                      { label: "Status", align: "left" },
+                      { label: "Stripe Ref", align: "left" },
+                      { label: "Note", align: "left" },
+                    ].map(({ label, align }) => (
+                      <th
+                        key={label}
+                        style={{ textAlign: align as "left" | "right" }}
+                      >
+                        {label}
+                      </th>
+                    ))}
                   </tr>
                 </thead>
                 <tbody>
                   {entries.map((e) => (
                     <tr key={e.id}>
-                      <td className="fin-table__ts">{fmtTs(e.timestamp)}</td>
+                      <td
+                        style={{
+                          color: "var(--ink-5)",
+                          fontSize: 12,
+                          whiteSpace: "nowrap",
+                        }}
+                      >
+                        {fmtTs(e.timestamp)}
+                      </td>
                       <td>
                         <TypeBadge type={e.type} />
                       </td>
-                      <td className="fin-table__party">{e.counterparty}</td>
+                      <td style={{ color: "var(--ink)", fontWeight: 500 }}>
+                        {e.counterparty}
+                      </td>
                       <td
-                        className={`fin-table__amount ${
-                          e.amount >= 0
-                            ? "fin-table__amount--pos"
-                            : "fin-table__amount--neg"
-                        }`}
+                        style={{
+                          textAlign: "right",
+                          fontWeight: 700,
+                          color:
+                            e.amount >= 0
+                              ? "var(--accent-blue)"
+                              : "var(--brand-red)",
+                        }}
                       >
                         {e.amount >= 0 ? "+" : "−"}
                         {fmt(e.amount, 2)}
@@ -761,10 +1100,22 @@ export default function FinancePage() {
                       <td>
                         <StatusBadge status={e.status} />
                       </td>
-                      <td className="fin-table__ref">{e.stripe_ref}</td>
                       <td
-                        className="fin-table__ref"
-                        style={{ maxWidth: 200, whiteSpace: "normal" }}
+                        style={{
+                          color: "var(--ink-5)",
+                          fontSize: 11,
+                          fontFamily: "var(--font-body)",
+                        }}
+                      >
+                        {e.stripe_ref}
+                      </td>
+                      <td
+                        style={{
+                          color: "var(--ink-5)",
+                          fontSize: 12,
+                          maxWidth: 200,
+                          whiteSpace: "normal",
+                        }}
                       >
                         {e.note ?? "—"}
                       </td>
@@ -776,227 +1127,479 @@ export default function FinancePage() {
           </div>
 
           {/* Pagination */}
-          <div className="fin-pagination">
-            <span className="fin-pagination__info">
+          <div className="adm-pagination">
+            <span className="adm-pagination__info">
               Page {pagination.page} of {pagination.totalPages} —{" "}
               {pagination.total} entries
             </span>
-            <button
-              className="fin-pagination__btn"
-              disabled={pagination.page <= 1}
-              onClick={() => fetchLedger(pagination.page - 1, true)}
-            >
-              ← Prev
-            </button>
-            <button
-              className="fin-pagination__btn"
-              disabled={pagination.page >= pagination.totalPages}
-              onClick={() => fetchLedger(pagination.page + 1, true)}
-            >
-              Next →
-            </button>
-          </div>
-        </section>
-
-        {/* ── 5 + 6. Reconciliation + Stripe Balance ── */}
-        <div className="fin-bottom-grid">
-          {/* Reconciliation */}
-          <div className="fin-panel">
-            <div className="fin-panel__title">Reconciliation</div>
-
-            <div className="fin-panel__row">
-              <span className="fin-panel__key">Status</span>
-              <span className={`fin-panel__tag ${reconTagClass}`}>
-                {reconTag}
-              </span>
-            </div>
-
-            <div className="fin-panel__row">
-              <span className="fin-panel__key">Expected balance</span>
-              <span className="fin-panel__val">
-                {recon ? fmt(recon.expectedBalance, 2) : "—"}
-              </span>
-            </div>
-
-            <div className="fin-panel__row">
-              <span className="fin-panel__key">Actual bank balance</span>
-              <span className="fin-panel__val">
-                {recon ? fmt(recon.actualBankBalance, 2) : "—"}
-              </span>
-            </div>
-
-            <hr className="fin-panel__divider" />
-
-            <div className="fin-panel__row">
-              <span className="fin-panel__key">Discrepancy</span>
-              <span
-                className={`fin-panel__val ${
-                  recon && recon.discrepancy < 0
-                    ? "fin-panel__val--neg"
-                    : "fin-panel__val--pos"
-                }`}
+            <div className="adm-pagination__controls">
+              <button
+                className="adm-page-btn"
+                disabled={pagination.page <= 1}
+                onClick={() => fetchLedger(pagination.page - 1, true)}
               >
-                {recon
-                  ? `${recon.discrepancy < 0 ? "−" : "+"}${fmt(Math.abs(recon.discrepancy), 2)}`
-                  : "—"}
+                ← Prev
+              </button>
+              <button
+                className="adm-page-btn"
+                disabled={pagination.page >= pagination.totalPages}
+                onClick={() => fetchLedger(pagination.page + 1, true)}
+              >
+                Next →
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* ── Reconciliation + Stripe Balance ── */}
+        <div
+          style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}
+        >
+          {/* §5 — Reconciliation — status colors via CSS classes */}
+          <div style={cardStyle}>
+            <div
+              style={{
+                fontFamily: "var(--font-display)",
+                fontSize: 16,
+                fontWeight: 700,
+                color: "var(--ink)",
+                marginBottom: 16,
+              }}
+            >
+              Reconciliation
+            </div>
+            {/* Status row */}
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                padding: "8px 0",
+                borderBottom: "1px solid var(--hairline)",
+              }}
+            >
+              <span
+                style={{
+                  fontFamily: "var(--font-mono, var(--font-body))",
+                  fontSize: 12,
+                  color: "var(--ink-3)",
+                }}
+              >
+                Status
+              </span>
+              <span
+                className={`fin-recon-status--${recon?.status ?? "ok"}`}
+                style={{
+                  ...badgeBase,
+                  background:
+                    recon?.status === "ok"
+                      ? "rgba(34,197,94,0.1)"
+                      : recon?.status === "minor_discrepancy"
+                        ? "var(--champagne-tint, rgba(191,161,112,0.12))"
+                        : "rgba(193,18,31,0.08)",
+                }}
+              >
+                {recon?.status === "ok"
+                  ? "Balanced"
+                  : recon?.status === "minor_discrepancy"
+                    ? "Minor discrepancy"
+                    : "Major discrepancy"}
               </span>
             </div>
-
-            <div className="fin-panel__note">
+            {[
+              {
+                label: "Expected balance",
+                value: recon ? fmt(recon.expectedBalance, 2) : "—",
+                valueColor: "var(--ink)",
+              },
+              {
+                label: "Actual bank balance",
+                value: recon ? fmt(recon.actualBankBalance, 2) : "—",
+                valueColor: "var(--ink)",
+              },
+              {
+                label: "Discrepancy",
+                value: recon
+                  ? `${recon.discrepancy < 0 ? "−" : "+"}${fmt(Math.abs(recon.discrepancy), 2)}`
+                  : "—",
+                valueColor:
+                  recon && recon.discrepancy < 0
+                    ? "var(--brand-red)"
+                    : "var(--accent-blue)",
+              },
+            ].map(({ label, value, valueColor }) => (
+              <div
+                key={label}
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  padding: "8px 0",
+                  borderBottom: "1px solid var(--hairline)",
+                }}
+              >
+                <span
+                  style={{
+                    fontFamily: "var(--font-mono, var(--font-body))",
+                    fontSize: 12,
+                    color: "var(--ink-3)",
+                  }}
+                >
+                  {label}
+                </span>
+                <span
+                  style={{
+                    fontFamily: "var(--font-display)",
+                    fontSize: 16,
+                    fontWeight: 700,
+                    color: valueColor,
+                  }}
+                >
+                  {value}
+                </span>
+              </div>
+            ))}
+            <div
+              style={{
+                fontFamily: "var(--font-mono, var(--font-body))",
+                fontSize: 12,
+                color: "var(--ink-3)",
+                marginTop: 12,
+              }}
+            >
               Last reconciled: {recon ? fmtDate(recon.lastReconciled) : "—"} —
               stub data
             </div>
           </div>
 
-          {/* Stripe Balance */}
-          <div className="fin-panel">
-            <div className="fin-panel__title">Stripe Balance</div>
-
-            <div className="fin-panel__row">
-              <span className="fin-panel__key">Available</span>
-              <span className="fin-panel__val fin-panel__val--pos">
-                {stripe ? fmt(stripe.available, 2) : "—"}
-              </span>
-            </div>
-
-            <div className="fin-panel__row">
-              <span className="fin-panel__key">Pending</span>
-              <span className="fin-panel__val fin-panel__val--gold">
-                {stripe ? fmt(stripe.pending, 2) : "—"}
-              </span>
-            </div>
-
-            <div className="fin-panel__row">
-              <span className="fin-panel__key">Reserved</span>
-              <span className="fin-panel__val">
-                {stripe ? fmt(stripe.reserved, 2) : "—"}
-              </span>
-            </div>
-
-            <hr className="fin-panel__divider" />
-
-            <div className="fin-panel__row">
-              <span className="fin-panel__key">Currency</span>
-              <span className="fin-panel__tag fin-panel__tag--ok">
+          {/* §4 — Stripe Balance — liquid-glass card */}
+          <div className="fin-stripe-panel">
+            <div className="fin-stripe-panel__title">Stripe Balance</div>
+            {[
+              {
+                label: "Available",
+                value: stripe ? fmt(stripe.available, 2) : "—",
+                valClass:
+                  "fin-stripe-panel__val fin-stripe-panel__val--available",
+              },
+              {
+                label: "Pending",
+                value: stripe ? fmt(stripe.pending, 2) : "—",
+                valClass:
+                  "fin-stripe-panel__val fin-stripe-panel__val--pending",
+              },
+              {
+                label: "Reserved",
+                value: stripe ? fmt(stripe.reserved, 2) : "—",
+                valClass:
+                  "fin-stripe-panel__val fin-stripe-panel__val--reserved",
+              },
+            ].map(({ label, value, valClass }) => (
+              <div
+                key={label}
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  padding: "8px 0",
+                  borderBottom: "1px solid rgba(255,255,255,0.4)",
+                }}
+              >
+                <span className="fin-stripe-panel__key">{label}</span>
+                <span className={valClass}>{value}</span>
+              </div>
+            ))}
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                padding: "8px 0",
+              }}
+            >
+              <span className="fin-stripe-panel__key">Currency</span>
+              <span
+                style={{
+                  ...badgeBase,
+                  background: "var(--accent-blue-tint, rgba(0,133,255,0.1))",
+                  color: "var(--accent-blue)",
+                }}
+              >
                 {stripe?.currency.toUpperCase() ?? "USD"}
               </span>
             </div>
-
-            <div className="fin-panel__note">
+            <div className="fin-stripe-panel__note">
               Stub — connect Stripe API key for live balance
             </div>
           </div>
         </div>
 
-        {/* ── 7 + 8. P&L Chart + Payout Scheduler ── */}
-        <div className="fin-bottom-grid fin-bottom-grid--wide">
-          {/* P&L Chart */}
-          <div className="fin-panel">
-            <div className="fin-panel__title">Monthly P&L — Last 12 Months</div>
+        {/* ── P&L Chart + Payout Scheduler ── */}
+        <div
+          style={{ display: "grid", gridTemplateColumns: "2fr 1fr", gap: 16 }}
+        >
+          <div style={cardStyle}>
+            <div
+              style={{
+                fontFamily: "var(--font-display)",
+                fontSize: 16,
+                fontWeight: 700,
+                color: "var(--ink)",
+                marginBottom: 4,
+              }}
+            >
+              Monthly P&L — Last 12 Months
+            </div>
             <PnLChart data={pnl} />
           </div>
 
-          {/* Payout Scheduler */}
-          <div className="fin-panel">
-            <div className="fin-panel__title">Payouts Scheduler</div>
-
-            <div className="fin-scheduler">
-              <div>
-                <div className="fin-scheduler__countdown">
-                  {nextPayout ? countdown(nextPayout.scheduledAt) : "—"}
-                </div>
-                <div className="fin-scheduler__sub">until next batch</div>
-              </div>
-
-              <div className="fin-scheduler__meta">
-                <div className="fin-panel__row">
-                  <span className="fin-panel__key">Scheduled at</span>
-                  <span className="fin-panel__val" style={{ fontSize: 16 }}>
-                    {nextPayout ? fmtTs(nextPayout.scheduledAt) : "—"}
-                  </span>
-                </div>
-
-                <div className="fin-panel__row">
-                  <span className="fin-panel__key">Creators in batch</span>
-                  <span className="fin-panel__val" style={{ fontSize: 20 }}>
-                    {nextPayout?.creatorCount ?? "—"}
-                  </span>
-                </div>
-
-                <div className="fin-panel__row">
-                  <span className="fin-panel__key">Estimated total</span>
-                  <span className="fin-panel__val fin-panel__val--red">
-                    {nextPayout ? fmt(nextPayout.estimatedTotal, 2) : "—"}
-                  </span>
-                </div>
-              </div>
+          <div style={cardStyle}>
+            <div
+              style={{
+                fontFamily: "var(--font-display)",
+                fontSize: 16,
+                fontWeight: 700,
+                color: "var(--ink)",
+                marginBottom: 16,
+              }}
+            >
+              Payouts Scheduler
             </div>
+            <div
+              style={{
+                fontFamily: "var(--font-display)",
+                fontSize: "clamp(28px,3vw,48px)",
+                fontWeight: 800,
+                color: "var(--ink)",
+                lineHeight: 1,
+                marginBottom: 4,
+              }}
+            >
+              {nextPayout ? countdown(nextPayout.scheduledAt) : "—"}
+            </div>
+            <div
+              style={{
+                fontSize: 12,
+                fontFamily: "var(--font-body)",
+                color: "var(--ink-5)",
+                marginBottom: 20,
+              }}
+            >
+              until next batch
+            </div>
+            {[
+              {
+                label: "Scheduled at",
+                value: nextPayout ? fmtTs(nextPayout.scheduledAt) : "—",
+              },
+              {
+                label: "Creators in batch",
+                value: String(nextPayout?.creatorCount ?? "—"),
+              },
+              {
+                label: "Estimated total",
+                value: nextPayout ? fmt(nextPayout.estimatedTotal, 2) : "—",
+                red: true,
+              },
+            ].map(({ label, value, red }) => (
+              <div
+                key={label}
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  padding: "8px 0",
+                  borderBottom: "1px solid var(--hairline)",
+                  fontSize: 13,
+                  fontFamily: "var(--font-body)",
+                }}
+              >
+                <span style={{ color: "var(--ink-5)" }}>{label}</span>
+                <span
+                  style={{
+                    fontWeight: 700,
+                    color: red ? "var(--brand-red)" : "var(--ink)",
+                  }}
+                >
+                  {value}
+                </span>
+              </div>
+            ))}
           </div>
         </div>
 
-        {/* ── 9. Manual Actions ── */}
-        <section className="fin-actions">
+        {/* ── Manual Actions ── */}
+        <div style={cardStyle}>
           <div
-            className="fin-section-head"
-            style={{ borderBottom: "none", marginBottom: 0 }}
+            style={{
+              fontFamily: "var(--font-display)",
+              fontSize: 18,
+              fontWeight: 700,
+              color: "var(--ink)",
+              marginBottom: 4,
+            }}
           >
-            <div className="fin-section-head__title">Manual Actions</div>
-            <div className="fin-section-head__sub">Admin-only operations</div>
+            Manual Actions
+          </div>
+          <div
+            style={{
+              fontSize: 12,
+              fontFamily: "var(--font-body)",
+              color: "var(--ink-5)",
+              marginBottom: 20,
+            }}
+          >
+            Admin-only operations — all writes logged to oracle_audit
           </div>
 
-          <div className="fin-actions__grid">
-            <button
-              className="fin-action-card fin-action-card--danger"
-              onClick={() => setModalAction("refund")}
-            >
-              <div className="fin-action-card__icon">↩</div>
-              <div className="fin-action-card__label">Issue Refund</div>
-              <div className="fin-action-card__desc">
-                Reverse a merchant subscription charge via Stripe
-              </div>
-            </button>
-
-            <button
-              className="fin-action-card"
-              onClick={() => setModalAction("payout")}
-            >
-              <div className="fin-action-card__icon">⚡</div>
-              <div className="fin-action-card__label">Force Payout</div>
-              <div className="fin-action-card__desc">
-                Send creator payment outside of scheduled batch
-              </div>
-            </button>
-
-            <button
-              className="fin-action-card"
-              onClick={() => setModalAction("adjust")}
-            >
-              <div className="fin-action-card__icon">⚖</div>
-              <div className="fin-action-card__label">Adjust Balance</div>
-              <div className="fin-action-card__desc">
-                Credit or debit the platform balance (admin note required)
-              </div>
-            </button>
-
-            <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-              <button className="fin-action-card" onClick={exportCSV}>
-                <div className="fin-action-card__icon">↓</div>
-                <div className="fin-action-card__label">Export CSV</div>
-                <div className="fin-action-card__desc">
-                  Download current filtered view as CSV
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(4, 1fr)",
+              gap: 16,
+            }}
+          >
+            {[
+              {
+                icon: "↩",
+                label: "Issue Refund",
+                desc: "Reverse a merchant subscription charge via Stripe",
+                action: "refund" as ModalAction,
+                danger: true,
+              },
+              {
+                icon: "⚡",
+                label: "Force Payout",
+                desc: "Send creator payment outside of scheduled batch",
+                action: "payout" as ModalAction,
+                danger: false,
+              },
+              {
+                icon: "⚖",
+                label: "Adjust Balance",
+                desc: "Credit or debit the platform balance (admin note required)",
+                action: "adjust" as ModalAction,
+                danger: false,
+              },
+            ].map(({ icon, label, desc, action, danger }) => (
+              <button
+                key={label}
+                onClick={() => setModalAction(action)}
+                style={{
+                  padding: "20px",
+                  border: `1px solid ${danger ? "rgba(193,18,31,0.2)" : "var(--hairline)"}`,
+                  borderRadius: 10,
+                  background: danger
+                    ? "var(--brand-red-tint)"
+                    : "var(--surface-3)",
+                  cursor: "pointer",
+                  textAlign: "left",
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: 8,
+                  transition: "transform 0.15s ease",
+                }}
+                className="click-shift"
+              >
+                <div style={{ fontSize: 24 }}>{icon}</div>
+                <div
+                  style={{
+                    fontFamily: "var(--font-display)",
+                    fontSize: 15,
+                    fontWeight: 700,
+                    color: danger ? "var(--brand-red)" : "var(--ink)",
+                  }}
+                >
+                  {label}
+                </div>
+                <div
+                  style={{
+                    fontSize: 12,
+                    fontFamily: "var(--font-body)",
+                    color: "var(--ink-5)",
+                    lineHeight: 1.5,
+                  }}
+                >
+                  {desc}
                 </div>
               </button>
+            ))}
 
-              <button className="fin-action-card" onClick={exportOFX}>
-                <div className="fin-action-card__icon">↓</div>
-                <div className="fin-action-card__label">QuickBooks OFX</div>
-                <div className="fin-action-card__desc">
-                  Export OFX stub for accounting import
+            <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+              <button
+                onClick={exportCSV}
+                style={{
+                  padding: "16px",
+                  border: "1px solid var(--hairline)",
+                  borderRadius: 10,
+                  background: "var(--surface-3)",
+                  cursor: "pointer",
+                  textAlign: "left",
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: 6,
+                }}
+                className="click-shift"
+              >
+                <div style={{ fontSize: 20 }}>↓</div>
+                <div
+                  style={{
+                    fontFamily: "var(--font-display)",
+                    fontSize: 14,
+                    fontWeight: 700,
+                    color: "var(--ink)",
+                  }}
+                >
+                  Export CSV
+                </div>
+                <div
+                  style={{
+                    fontSize: 11,
+                    fontFamily: "var(--font-body)",
+                    color: "var(--ink-5)",
+                  }}
+                >
+                  Download current filtered view
+                </div>
+              </button>
+              <button
+                onClick={exportOFX}
+                style={{
+                  padding: "16px",
+                  border: "1px solid var(--hairline)",
+                  borderRadius: 10,
+                  background: "var(--surface-3)",
+                  cursor: "pointer",
+                  textAlign: "left",
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: 6,
+                }}
+                className="click-shift"
+              >
+                <div style={{ fontSize: 20 }}>↓</div>
+                <div
+                  style={{
+                    fontFamily: "var(--font-display)",
+                    fontSize: 14,
+                    fontWeight: 700,
+                    color: "var(--ink)",
+                  }}
+                >
+                  QuickBooks OFX
+                </div>
+                <div
+                  style={{
+                    fontSize: 11,
+                    fontFamily: "var(--font-body)",
+                    color: "var(--ink-5)",
+                  }}
+                >
+                  Export OFX stub for accounting
                 </div>
               </button>
             </div>
           </div>
-        </section>
+        </div>
       </div>
 
       {/* ── Modal ── */}
@@ -1010,7 +1613,9 @@ export default function FinancePage() {
 
       {/* ── Toast ── */}
       {toast && (
-        <div className={`fin-toast ${toast.ok ? "fin-toast--success" : ""}`}>
+        <div
+          className={`adm-toast${toast.ok ? " adm-toast--ok" : " adm-toast--err"}`}
+        >
           {toast.msg}
         </div>
       )}

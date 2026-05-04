@@ -25,16 +25,16 @@ function sanitizeError(err: unknown): string {
     msg.includes("wrong password") ||
     msg.includes("incorrect password")
   )
-    return "Invalid credentials. Check your password and try again.";
+    return "Invalid email or password.";
   if (
     msg.includes("user not found") ||
     msg.includes("no user found") ||
     msg.includes("email not confirmed") ||
     msg.includes("does not exist")
   )
-    return "No account found with that email. Sign up to get started.";
+    return "No account found with that email.";
   if (msg.includes("too many requests") || msg.includes("rate limit"))
-    return "Too many attempts. Please wait a moment and try again.";
+    return "Too many attempts. Wait a moment and try again.";
   return err.message;
 }
 
@@ -110,14 +110,85 @@ export default function MerchantLoginPage() {
       <a href="#login-form" className="skip-link">
         Skip to form
       </a>
-      <div className="page">
-        <BrandPanel />
-        <div className="form-panel">
-          <div className="form-wrap" id="login-form">
-            <div className="form-header">
-              <span className="form-eyebrow">Merchant Login</span>
-              <h1 className="form-title">Welcome back.</h1>
-              <p className="form-subtitle">
+      {/* Full-page layout */}
+      <div
+        style={{
+          minHeight: "100vh",
+          background: "var(--surface)",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          padding: "48px 24px",
+          fontFamily: "var(--font-body)",
+        }}
+      >
+        <div
+          style={{
+            width: "100%",
+            maxWidth: 480,
+          }}
+        >
+          {/* Logo */}
+          <div style={{ textAlign: "center", marginBottom: 32 }}>
+            <Link
+              href="/"
+              style={{
+                fontFamily: "var(--font-display)",
+                fontWeight: 900,
+                fontSize: 24,
+                color: "var(--ink)",
+                textDecoration: "none",
+                letterSpacing: "-0.02em",
+              }}
+            >
+              PUSH
+            </Link>
+          </div>
+
+          {/* Form card — § 4 standard 10px radius, surface-2 fill */}
+          <div
+            id="login-form"
+            className="merchant-login-card"
+            style={{
+              background: "var(--surface-2)",
+              border: "1px solid var(--mist)",
+              borderRadius: "var(--r-md)",
+              padding: "40px 48px",
+              boxShadow: "var(--shadow-1)",
+            }}
+          >
+            {/* Header */}
+            <div style={{ marginBottom: 32 }}>
+              <span
+                className="eyebrow"
+                style={{
+                  color: "var(--ink-3)",
+                  display: "block",
+                  marginBottom: 8,
+                }}
+              >
+                Merchant Login
+              </span>
+              <h1
+                style={{
+                  fontFamily: "var(--font-display)",
+                  fontWeight: 900,
+                  fontSize: "clamp(28px,4vw,36px)",
+                  letterSpacing: "-0.02em",
+                  color: "var(--ink)",
+                  margin: "0 0 8px",
+                }}
+              >
+                Welcome back.
+              </h1>
+              <p
+                style={{
+                  fontFamily: "var(--font-body)",
+                  fontSize: 14,
+                  color: "var(--ink-3)",
+                  margin: 0,
+                }}
+              >
                 Your campaigns are waiting. Log in to see who&apos;s driving
                 results.
               </p>
@@ -125,15 +196,42 @@ export default function MerchantLoginPage() {
 
             {formError && (
               <div
-                className="form-error"
                 role="alert"
-                style={{ marginBottom: "var(--space-4)" }}
+                aria-live="polite"
+                style={{
+                  background: "var(--brand-red-tint)",
+                  border: "1px solid var(--brand-red)",
+                  borderRadius: "var(--r-sm)",
+                  padding: "12px 16px",
+                  marginBottom: 24,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  gap: 12,
+                }}
               >
-                <span>{formError}</span>
+                <span
+                  style={{
+                    fontFamily: "var(--font-body)",
+                    fontSize: 13,
+                    color: "var(--brand-red)",
+                  }}
+                >
+                  {formError}
+                </span>
                 <button
                   type="button"
-                  className="error-retry-btn"
                   onClick={handleRetry}
+                  style={{
+                    fontFamily: "var(--font-body)",
+                    fontSize: 12,
+                    fontWeight: 700,
+                    color: "var(--brand-red)",
+                    background: "none",
+                    border: "none",
+                    cursor: "pointer",
+                    flexShrink: 0,
+                  }}
                 >
                   Try again
                 </button>
@@ -143,13 +241,25 @@ export default function MerchantLoginPage() {
             <form
               onSubmit={handleSubmit}
               noValidate
-              className={loading ? "form-loading" : ""}
+              style={{ opacity: loading ? 0.7 : 1, transition: "opacity 0.2s" }}
             >
-              <div className="form-grid">
-                {/* ── Email ──────────────────────────────────── */}
-                <div className="form-field">
-                  <label htmlFor="email">Email</label>
-                  <div className="field-wrap">
+              <div
+                style={{ display: "flex", flexDirection: "column", gap: 20 }}
+              >
+                {/* Email */}
+                <div>
+                  <label
+                    htmlFor="email"
+                    className="eyebrow"
+                    style={{
+                      display: "block",
+                      marginBottom: 8,
+                      color: "var(--ink-3)",
+                    }}
+                  >
+                    Email
+                  </label>
+                  <div style={{ position: "relative" }}>
                     <input
                       id="email"
                       type="email"
@@ -159,22 +269,53 @@ export default function MerchantLoginPage() {
                       placeholder="you@yourbusiness.com"
                       autoComplete="email"
                       aria-describedby={errors.email ? "err-email" : undefined}
+                      style={{
+                        fontFamily: "var(--font-body)",
+                        fontSize: 16,
+                        padding: "12px 16px",
+                        height: 48,
+                        border: `1px solid ${errors.email ? "var(--brand-red)" : fieldStatus.email === "valid" ? "var(--brand-red)" : "var(--mist)"}`,
+                        borderRadius: "var(--r-sm)",
+                        background: "var(--surface)",
+                        color: "var(--ink)",
+                        width: "100%",
+                        boxSizing: "border-box",
+                        outline: "none",
+                        transition:
+                          "border-color 180ms var(--ease-spring), box-shadow 180ms var(--ease-spring)",
+                      }}
                     />
-                    {fieldStatus.email === "valid" && (
-                      <span className="field-dot" aria-hidden="true" />
-                    )}
                   </div>
                   {errors.email && (
-                    <span className="error-msg" id="err-email">
+                    <span
+                      id="err-email"
+                      style={{
+                        fontFamily: "var(--font-body)",
+                        fontSize: 12,
+                        color: "var(--brand-red)",
+                        display: "block",
+                        marginTop: 6,
+                      }}
+                    >
                       {errors.email}
                     </span>
                   )}
                 </div>
 
-                {/* ── Password ───────────────────────────────── */}
-                <div className="form-field">
-                  <label htmlFor="password">Password</label>
-                  <div className="input-with-action">
+                {/* Password */}
+                <div>
+                  <label
+                    htmlFor="password"
+                    className="eyebrow"
+                    style={{
+                      display: "block",
+                      marginBottom: 8,
+                      color: "var(--ink-3)",
+                    }}
+                  >
+                    Password
+                  </label>
+                  <div style={{ position: "relative" }}>
                     <input
                       id="password"
                       type={showPw ? "text" : "password"}
@@ -186,35 +327,80 @@ export default function MerchantLoginPage() {
                       aria-describedby={
                         errors.password ? "err-password" : undefined
                       }
+                      style={{
+                        fontFamily: "var(--font-body)",
+                        fontSize: 16,
+                        padding: "12px 56px 12px 16px",
+                        height: 48,
+                        border: `1px solid ${errors.password ? "var(--brand-red)" : fieldStatus.password === "valid" ? "var(--brand-red)" : "var(--mist)"}`,
+                        borderRadius: "var(--r-sm)",
+                        background: "var(--surface)",
+                        color: "var(--ink)",
+                        width: "100%",
+                        boxSizing: "border-box",
+                        outline: "none",
+                        transition:
+                          "border-color 180ms var(--ease-spring), box-shadow 180ms var(--ease-spring)",
+                      }}
                     />
                     <button
                       type="button"
-                      className="input-action-btn"
                       onClick={() => setShowPw((v) => !v)}
                       aria-label={showPw ? "Hide password" : "Show password"}
+                      style={{
+                        position: "absolute",
+                        right: 12,
+                        top: "50%",
+                        transform: "translateY(-50%)",
+                        fontFamily: "var(--font-body)",
+                        fontSize: 11,
+                        fontWeight: 700,
+                        letterSpacing: "0.06em",
+                        textTransform: "uppercase",
+                        color: "var(--ink-3)",
+                        background: "none",
+                        border: "none",
+                        cursor: "pointer",
+                        padding: 4,
+                      }}
                     >
                       {showPw ? "Hide" : "Show"}
                     </button>
                   </div>
                   {errors.password && (
-                    <span className="error-msg" id="err-password">
+                    <span
+                      id="err-password"
+                      style={{
+                        fontFamily: "var(--font-body)",
+                        fontSize: 12,
+                        color: "var(--brand-red)",
+                        display: "block",
+                        marginTop: 6,
+                      }}
+                    >
                       {errors.password}
                     </span>
                   )}
                 </div>
 
-                {/* ── Forgot password ────────────────────────── */}
-                <div className="forgot-link">
-                  <Link href="/merchant/reset-password">Forgot password?</Link>
+                {/* Forgot password — Ghost button per § 9 */}
+                <div style={{ textAlign: "right" }}>
+                  <Link
+                    href="/merchant/reset-password"
+                    className="merchant-login-forgot click-shift"
+                  >
+                    Forgot password?
+                  </Link>
                 </div>
 
                 <button
                   ref={submitBtnRef}
                   type="submit"
-                  className="btn btn-primary submit-btn"
+                  className="btn-primary click-shift"
                   disabled={loading}
                   aria-busy={loading}
                   data-pressed={isPressed}
+                  style={{ width: "100%", marginTop: 4 }}
                 >
                   {loading ? (
                     <>
@@ -229,68 +415,96 @@ export default function MerchantLoginPage() {
                     "Log In"
                   )}
                 </button>
+
+                {/* Terms / Privacy */}
+                <p
+                  style={{
+                    fontFamily: "var(--font-body)",
+                    fontSize: 12,
+                    lineHeight: 1.5,
+                    color: "var(--ink-4)",
+                    textAlign: "center",
+                    margin: 0,
+                  }}
+                >
+                  By signing in, you agree to our{" "}
+                  <Link
+                    href="/legal/terms"
+                    style={{
+                      color: "var(--ink-3)",
+                      textDecoration: "underline",
+                      textUnderlineOffset: 2,
+                    }}
+                  >
+                    Terms
+                  </Link>{" "}
+                  and{" "}
+                  <Link
+                    href="/legal/privacy"
+                    style={{
+                      color: "var(--ink-3)",
+                      textDecoration: "underline",
+                      textUnderlineOffset: 2,
+                    }}
+                  >
+                    Privacy Policy
+                  </Link>
+                  .
+                </p>
               </div>
             </form>
 
-            <p className="form-footer">
+            <p
+              style={{
+                fontFamily: "var(--font-body)",
+                fontSize: 13,
+                color: "var(--ink-4)",
+                textAlign: "center",
+                marginTop: 24,
+                lineHeight: 1.8,
+              }}
+            >
               Don&apos;t have an account?{" "}
-              <Link href="/merchant/signup">Sign up &rarr;</Link>
+              <Link
+                href="/merchant/signup"
+                style={{
+                  color: "var(--accent-blue)",
+                  textDecoration: "none",
+                  fontWeight: 700,
+                }}
+              >
+                Sign up
+              </Link>
               <br />
               Are you a creator?{" "}
-              <Link href="/creator/login">Creator login &rarr;</Link>
+              <Link
+                href="/creator/login"
+                style={{
+                  color: "var(--accent-blue)",
+                  textDecoration: "none",
+                  fontWeight: 700,
+                }}
+              >
+                Creator login
+              </Link>
             </p>
           </div>
+
+          <p style={{ textAlign: "center", marginTop: 24 }}>
+            <Link
+              href="/"
+              style={{
+                fontFamily: "var(--font-body)",
+                fontSize: 12,
+                color: "var(--ink-4)",
+                textDecoration: "none",
+              }}
+            >
+              &larr; Back to home
+            </Link>
+          </p>
         </div>
       </div>
     </>
-  );
-}
-
-function BrandPanel() {
-  return (
-    <div className="brand-panel">
-      <div className="brand-top">
-        <Link href="/" className="brand-logo">
-          Push
-        </Link>
-
-        <div>
-          <h2 className="brand-headline">
-            Welcome
-            <br />
-            <em>back.</em>
-          </h2>
-          <p className="brand-tagline">
-            Your campaigns are waiting. Log in to see exactly which creators are
-            driving customers through your door — and who&apos;s worth more.
-          </p>
-          <blockquote className="brand-quote">
-            &ldquo;I check Push every morning. It&apos;s the only marketing
-            channel where I know the ROI before the day is over.&rdquo;
-            <cite> — Marcus Lee, Restaurant Owner</cite>
-          </blockquote>
-        </div>
-
-        <div className="brand-stats">
-          {[
-            { label: "Avg. cost per visit", value: "$2.40", pct: 24 },
-            { label: "Creator attribution", value: "QR per post", pct: 100 },
-            { label: "Merchants retained", value: "91% stay 6mo+", pct: 91 },
-          ].map((s) => (
-            <div key={s.label} className="stat-bar">
-              <span className="stat-bar-label">{s.label}</span>
-              <div className="stat-bar-track">
-                <div className="stat-bar-fill" style={{ width: `${s.pct}%` }} />
-              </div>
-              <span className="stat-bar-value">{s.value}</span>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      <Link href="/" className="brand-back">
-        &larr; Back to home
-      </Link>
-    </div>
   );
 }

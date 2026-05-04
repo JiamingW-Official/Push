@@ -1,33 +1,31 @@
+import "./admin.css";
+import type { ReactNode } from "react";
 import { DemoBanner } from "@/components/layout/DemoBanner";
-import { ADMIN_GROUPS } from "@/lib/nav/registry";
+import { UnifiedSidebar } from "@/components/shell/UnifiedSidebar";
 
-export default function AdminLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function AdminLayout({ children }: { children: ReactNode }) {
   return (
     <>
       <DemoBanner />
-      <div className="admin-shell">
-        <nav className="admin-nav">
-          <a href="/admin" className="admin-nav__brand">
-            Push<span>Admin</span>
-          </a>
-          {ADMIN_GROUPS.map((group) => (
-            <div key={group.label} className="admin-nav__group">
-              <p className="admin-nav__group-label">{group.label}</p>
-              <ul className="admin-nav__links">
-                {group.items.map((item) => (
-                  <li key={item.href}>
-                    <a href={item.href}>{item.label}</a>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
-        </nav>
-        <main className="admin-main">{children}</main>
+      <div className="adm-shell">
+        <UnifiedSidebar role="admin" userInitial="A" userName="Admin" />
+        <main className="adm-main" id="adm-main" role="main">
+          <header className="adm-topbar" role="banner">
+            <span className="adm-topbar__eyebrow">(PUSH · INTERNAL)</span>
+            <span className="adm-topbar__divider" aria-hidden="true" />
+            <span className="adm-topbar__title">Operations Console</span>
+            <span className="adm-topbar__spacer" />
+            <span
+              className="adm-internal-badge"
+              role="status"
+              aria-label="Authenticated as internal staff"
+            >
+              <span className="adm-internal-badge__dot" aria-hidden="true" />
+              Authority · Staff
+            </span>
+          </header>
+          {children}
+        </main>
       </div>
     </>
   );

@@ -21,7 +21,7 @@ export function StatCard({
   return (
     <div
       style={{
-        background: "var(--surface-bright)",
+        background: "var(--surface-3)",
         border: "1px solid var(--line)",
         borderRadius: 0,
         padding: "var(--space-4)",
@@ -34,7 +34,7 @@ export function StatCard({
         (e.currentTarget as HTMLDivElement).style.transform =
           "translateY(-2px)";
         (e.currentTarget as HTMLDivElement).style.boxShadow =
-          "0 4px 16px rgba(0,48,73,0.10)";
+          "0 4px 16px rgba(10,10,10,0.10)";
       }}
       onMouseLeave={(e) => {
         (e.currentTarget as HTMLDivElement).style.transform = "translateY(0)";

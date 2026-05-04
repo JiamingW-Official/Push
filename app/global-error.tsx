@@ -24,7 +24,7 @@ export default function GlobalError({
           margin: 0,
           minHeight: "100svh",
           background: "#f5f2ec",
-          color: "#003049",
+          color: "var(--ink)",
           fontFamily:
             "var(--font-body, 'CS Genio Mono', 'Courier New', monospace)",
           display: "flex",
@@ -83,7 +83,7 @@ export default function GlobalError({
                 marginTop: "12px",
                 padding: "8px 12px",
                 background: "#f5f2ec",
-                border: "1px solid rgba(0,48,73,0.12)",
+                border: "1px solid rgba(10,10,10,0.12)",
                 fontSize: "11px",
                 fontFamily: "monospace",
               }}
@@ -122,8 +122,8 @@ export default function GlobalError({
               style={{
                 padding: "10px 20px",
                 background: "transparent",
-                color: "#003049",
-                border: "1px solid #003049",
+                color: "var(--ink)",
+                border: "1px solid var(--ink)",
                 fontFamily: "inherit",
                 fontSize: "11px",
                 fontWeight: 700,
@@ -139,8 +139,8 @@ export default function GlobalError({
               style={{
                 padding: "10px 20px",
                 background: "transparent",
-                color: "#003049",
-                border: "1px solid #003049",
+                color: "var(--ink)",
+                border: "1px solid var(--ink)",
                 fontFamily: "inherit",
                 fontSize: "11px",
                 fontWeight: 700,

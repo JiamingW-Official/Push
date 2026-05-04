@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import "./fraud.css";
 import {
   MOCK_FRAUD_EVENTS,
@@ -11,8 +11,7 @@ import {
   type ActiveRule,
 } from "@/lib/admin/mock-fraud";
 
-// ─── helpers ────────────────────────────────────────────────────────────────
-
+/* ── Helpers ─────────────────────────────────────────────────── */
 function formatDate(iso: string) {
   const d = new Date(iso);
   return d.toLocaleDateString("en-US", {
@@ -26,41 +25,17 @@ function formatDate(iso: string) {
 
 function maskIp(ip: string) {
   const parts = ip.split(".");
-  if (parts.length === 4) {
-    return `${parts[0]}.${parts[1]}.***.***`;
-  }
+  if (parts.length === 4) return `${parts[0]}.${parts[1]}.***.***`;
   return ip;
 }
 
-function chipClass(rule: DetectionRule): string {
-  if (rule === "Impossible velocity" || rule === "High frequency scan")
-    return "fraud-chip--velocity";
-  if (
-    rule === "Duplicate device" ||
-    rule === "New device spike" ||
-    rule === "Blacklisted device" ||
-    rule === "Self-scan pattern"
-  )
-    return "fraud-chip--device";
-  if (rule === "Geo mismatch" || rule === "Spoofed GPS")
-    return "fraud-chip--geo";
-  if (rule === "VPN detected") return "fraud-chip--vpn";
-  return "fraud-chip--default";
+function scoreColor(score: number): string {
+  if (score >= 70) return "var(--brand-red)";
+  if (score >= 55) return "var(--champagne-deep)";
+  return "var(--ink-5)";
 }
 
-function scoreClass(score: number) {
-  if (score >= 70) return "fraud-score fraud-score--high";
-  if (score >= 55) return "fraud-score fraud-score--medium";
-  return "fraud-score";
-}
-
-function relatedScoreClass(score: number) {
-  return score >= 70
-    ? "fraud-related__score fraud-related__score--high"
-    : "fraud-related__score";
-}
-
-// Deterministic mock log entries for an event
+/* ── Mock helpers ────────────────────────────────────────────── */
 function buildLog(event: FraudEvent) {
   const base = new Date(event.detectedAt).getTime();
   return [
@@ -87,7 +62,6 @@ function buildLog(event: FraudEvent) {
   ];
 }
 
-// Mock creator/merchant history rows
 function buildHistory(event: FraudEvent) {
   return [
     { date: "Apr 12", label: "Scan — Joe Coffee Soho", score: 22 },
@@ -101,7 +75,6 @@ function buildHistory(event: FraudEvent) {
   ];
 }
 
-// Get related events (same creator or same IP, excluding self)
 function getRelated(event: FraudEvent, all: FraudEvent[]) {
   return all
     .filter(
@@ -112,13 +85,28 @@ function getRelated(event: FraudEvent, all: FraudEvent[]) {
     .slice(0, 4);
 }
 
-// ─── sub-components ─────────────────────────────────────────────────────────
+/* ── Sub-components ──────────────────────────────────────────── */
+function ruleChipClass(rule: DetectionRule): string {
+  if (rule === "Impossible velocity" || rule === "High frequency scan")
+    return "fraud-chip fraud-chip--velocity";
+  if (
+    rule === "Duplicate device" ||
+    rule === "New device spike" ||
+    rule === "Blacklisted device" ||
+    rule === "Self-scan pattern"
+  )
+    return "fraud-chip fraud-chip--device";
+  if (rule === "Geo mismatch" || rule === "Spoofed GPS")
+    return "fraud-chip fraud-chip--geo";
+  if (rule === "VPN detected") return "fraud-chip fraud-chip--vpn";
+  return "fraud-chip fraud-chip--default";
+}
 
 function RuleChips({ rules }: { rules: DetectionRule[] }) {
   return (
-    <div className="fraud-rules">
+    <div style={{ display: "flex", flexWrap: "wrap", gap: 4 }}>
       {rules.map((r) => (
-        <span key={r} className={`fraud-chip ${chipClass(r)}`}>
+        <span key={r} className={ruleChipClass(r)}>
           {r}
         </span>
       ))}
@@ -154,40 +142,111 @@ function DetailPanel({
   const history = buildHistory(event);
   const related = getRelated(event, all);
 
-  // Simple map: place pins proportionally inside box based on lat/lng offset
-  const scanPinX = 38;
-  const scanPinY = 55;
-  const expectedPinX = 62;
-  const expectedPinY = 40;
+  const sectionEyebrow: React.CSSProperties = {
+    fontFamily: "var(--font-body)",
+    fontSize: 12,
+    fontWeight: 700,
+    letterSpacing: "0.12em",
+    textTransform: "uppercase",
+    color: "var(--ink-5)",
+    marginBottom: 10,
+  };
 
   return (
-    <div className="fraud-detail">
-      <div className="fraud-detail__grid">
+    <div
+      style={{
+        padding: "24px",
+        background: "var(--surface-3)",
+        borderTop: "1px solid var(--hairline)",
+        borderBottom: "1px solid var(--hairline)",
+      }}
+    >
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "1fr 1fr 1fr 1fr",
+          gap: 24,
+        }}
+      >
         {/* Event log */}
         <div>
-          <p className="fraud-detail__section-title">Event log</p>
-          <ul className="fraud-log">
+          <p style={sectionEyebrow}>Event Log</p>
+          <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
             {log.map((entry, i) => (
-              <li key={i} className="fraud-log__entry">
-                <span className="fraud-log__time">{formatDate(entry.t)}</span>
-                <span className="fraud-log__msg">{entry.msg}</span>
-              </li>
+              <div
+                key={i}
+                style={{ display: "flex", gap: 10, alignItems: "flex-start" }}
+              >
+                <span
+                  style={{
+                    fontFamily: "var(--font-body)",
+                    fontSize: 10,
+                    color: "var(--ink-5)",
+                    whiteSpace: "nowrap",
+                    flexShrink: 0,
+                    marginTop: 2,
+                  }}
+                >
+                  {formatDate(entry.t)}
+                </span>
+                <span
+                  style={{
+                    fontFamily: "var(--font-body)",
+                    fontSize: 12,
+                    color: "var(--ink)",
+                    lineHeight: 1.5,
+                  }}
+                >
+                  {entry.msg}
+                </span>
+              </div>
             ))}
-          </ul>
+          </div>
         </div>
 
-        {/* Creator / merchant history */}
+        {/* Creator history */}
         <div>
-          <p className="fraud-detail__section-title">
-            Creator history — {event.creatorHandle}
-          </p>
-          <div className="fraud-history">
+          <p style={sectionEyebrow}>Creator History — {event.creatorHandle}</p>
+          <div style={{ display: "flex", flexDirection: "column", gap: 0 }}>
             {history.map((row, i) => (
-              <div key={i} className="fraud-history__row">
-                <span className="fraud-history__date">{row.date}</span>
-                <span className="fraud-history__label">{row.label}</span>
+              <div
+                key={i}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 10,
+                  padding: "6px 0",
+                  borderBottom: "1px solid var(--hairline)",
+                }}
+              >
                 <span
-                  className={`fraud-history__score ${row.score >= 70 ? "fraud-score--high" : ""}`}
+                  style={{
+                    fontFamily: "var(--font-body)",
+                    fontSize: 11,
+                    color: "var(--ink-5)",
+                    width: 36,
+                    flexShrink: 0,
+                  }}
+                >
+                  {row.date}
+                </span>
+                <span
+                  style={{
+                    fontFamily: "var(--font-body)",
+                    fontSize: 12,
+                    color: "var(--ink)",
+                    flex: 1,
+                  }}
+                >
+                  {row.label}
+                </span>
+                <span
+                  style={{
+                    fontFamily: "var(--font-body)",
+                    fontSize: 12,
+                    fontWeight: 700,
+                    color: scoreColor(row.score),
+                  }}
                 >
                   {row.score}
                 </span>
@@ -196,56 +255,161 @@ function DetailPanel({
           </div>
         </div>
 
-        {/* Map */}
+        {/* Map stub */}
         <div>
-          <p className="fraud-detail__section-title">
-            Scan vs. merchant location
-          </p>
-          <div className="fraud-map">
+          <p style={sectionEyebrow}>Scan vs. Merchant Location</p>
+          <div
+            style={{
+              position: "relative",
+              width: "100%",
+              height: 100,
+              background: "var(--surface-2)",
+              border: "1px solid var(--hairline)",
+              borderRadius: 8,
+              overflow: "hidden",
+              marginBottom: 8,
+            }}
+          >
             <div
-              className="fraud-map__pin fraud-map__pin--scan"
-              style={{ left: `${scanPinX}%`, top: `${scanPinY}%` }}
+              style={{
+                position: "absolute",
+                left: "38%",
+                top: "55%",
+                width: 10,
+                height: 10,
+                borderRadius: "50%",
+                background: "var(--accent-blue)",
+                transform: "translate(-50%, -50%)",
+                boxShadow: "0 0 0 3px var(--accent-blue-tint)",
+              }}
             />
             <div
-              className="fraud-map__pin fraud-map__pin--expected"
-              style={{ left: `${expectedPinX}%`, top: `${expectedPinY}%` }}
+              style={{
+                position: "absolute",
+                left: "62%",
+                top: "40%",
+                width: 10,
+                height: 10,
+                borderRadius: "50%",
+                background: "var(--brand-red)",
+                transform: "translate(-50%, -50%)",
+                boxShadow: "0 0 0 3px var(--brand-red-tint)",
+              }}
             />
-            <div className="fraud-map__legend">
-              <span className="fraud-map__legend-item">
-                <span
-                  className="fraud-map__legend-dot"
-                  style={{ background: "var(--primary)" }}
-                />
-                Scan: {event.loc.label}
-              </span>
-              <span className="fraud-map__legend-item">
-                <span
-                  className="fraud-map__legend-dot"
-                  style={{ background: "var(--tertiary)" }}
-                />
-                Merchant: {event.expectedLoc.label}
-              </span>
-            </div>
+          </div>
+          <div
+            style={{
+              display: "flex",
+              gap: 12,
+              fontSize: 11,
+              fontFamily: "var(--font-body)",
+            }}
+          >
+            <span
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 5,
+                color: "var(--ink-3)",
+              }}
+            >
+              <span
+                style={{
+                  width: 8,
+                  height: 8,
+                  borderRadius: "50%",
+                  background: "var(--accent-blue)",
+                  display: "inline-block",
+                }}
+              />
+              Scan: {event.loc.label}
+            </span>
+            <span
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 5,
+                color: "var(--ink-3)",
+              }}
+            >
+              <span
+                style={{
+                  width: 8,
+                  height: 8,
+                  borderRadius: "50%",
+                  background: "var(--brand-red)",
+                  display: "inline-block",
+                }}
+              />
+              Merchant: {event.expectedLoc.label}
+            </span>
           </div>
         </div>
 
-        {/* Related flagged events */}
+        {/* Related events */}
         <div>
-          <p className="fraud-detail__section-title">Related flagged events</p>
+          <p style={sectionEyebrow}>Related Flagged Events</p>
           {related.length === 0 ? (
-            <p style={{ fontSize: 12, color: "var(--graphite)" }}>
+            <p
+              style={{
+                fontFamily: "var(--font-body)",
+                fontSize: 12,
+                color: "var(--ink-5)",
+              }}
+            >
               No related events found.
             </p>
           ) : (
-            <div className="fraud-related">
+            <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
               {related.map((rel) => (
-                <div key={rel.id} className="fraud-related__item">
-                  <span className={relatedScoreClass(rel.riskScore)}>
+                <div
+                  key={rel.id}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 10,
+                    padding: "8px 10px",
+                    background: "var(--surface-2)",
+                    border: "1px solid var(--hairline)",
+                    borderRadius: 8,
+                  }}
+                >
+                  <span
+                    style={{
+                      fontFamily: "var(--font-display)",
+                      fontSize: 18,
+                      fontWeight: 800,
+                      color: scoreColor(rel.riskScore),
+                      lineHeight: 1,
+                      width: 32,
+                      flexShrink: 0,
+                    }}
+                  >
                     {rel.riskScore}
                   </span>
-                  <div className="fraud-related__meta">
-                    <div className="fraud-related__id">{rel.id}</div>
-                    <div className="fraud-related__rule">{rel.rules[0]}</div>
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div
+                      style={{
+                        fontFamily: "var(--font-body)",
+                        fontSize: 11,
+                        fontWeight: 700,
+                        color: "var(--ink)",
+                      }}
+                    >
+                      {rel.id}
+                    </div>
+                    <div
+                      style={{
+                        fontFamily: "var(--font-body)",
+                        fontSize: 10,
+                        color: "var(--ink-5)",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        whiteSpace: "nowrap",
+                      }}
+                    >
+                      {rel.rules[0]}
+                    </div>
                   </div>
                   <StatusBadge status={rel.status} />
                 </div>
@@ -262,46 +426,148 @@ function RulesEnginePanel({ rules }: { rules: ActiveRule[] }) {
   const [open, setOpen] = useState(true);
 
   return (
-    <div className="fraud-rules-panel">
+    <div
+      style={{
+        margin: "0 40px 40px",
+        background: "var(--surface-2)",
+        border: "1px solid var(--hairline)",
+        borderRadius: 10,
+        overflow: "hidden",
+      }}
+    >
       <div
-        className="fraud-rules-panel__header"
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: 12,
+          padding: "16px 24px",
+          cursor: "pointer",
+          borderBottom: open ? "1px solid var(--hairline)" : "none",
+        }}
         onClick={() => setOpen((o) => !o)}
         role="button"
         tabIndex={0}
         onKeyDown={(e) => e.key === "Enter" && setOpen((o) => !o)}
         aria-expanded={open}
       >
-        <span className="fraud-rules-panel__title">Rules engine</span>
-        <span className="fraud-rules-panel__count">{rules.length} active</span>
         <span
-          className={`fraud-rules-panel__toggle ${open ? "fraud-rules-panel__toggle--open" : ""}`}
+          style={{
+            fontFamily: "var(--font-body)",
+            fontSize: 12,
+            fontWeight: 700,
+            letterSpacing: "0.12em",
+            textTransform: "uppercase",
+            color: "var(--ink-5)",
+            flex: 1,
+          }}
+        >
+          Rules Engine
+        </span>
+        <span
+          style={{
+            padding: "2px 8px",
+            borderRadius: 4,
+            fontSize: 11,
+            fontWeight: 700,
+            fontFamily: "var(--font-body)",
+            background: "var(--accent-blue-tint)",
+            color: "var(--accent-blue)",
+          }}
+        >
+          {rules.length} active
+        </span>
+        <span
+          style={{
+            fontSize: 14,
+            color: "var(--ink-5)",
+            transform: open ? "rotate(0deg)" : "rotate(-90deg)",
+            transition: "transform 0.2s",
+            lineHeight: 1,
+          }}
         >
           ▾
         </span>
       </div>
       {open && (
-        <div className="fraud-rules-panel__body">
+        <div style={{ padding: "0 24px 24px" }}>
           {rules.map((rule) => (
-            <div key={rule.id} className="fraud-rule-row">
-              <div className="fraud-rule-indicator" title="Active" />
-              <div className="fraud-rule-content">
-                <div className="fraud-rule-name">{rule.name}</div>
-                <div className="fraud-rule-desc">{rule.description}</div>
-                <div className="fraud-rule-meta">
-                  <span className="fraud-rule-threshold">{rule.threshold}</span>
-                </div>
-              </div>
+            <div
+              key={rule.id}
+              style={{
+                display: "flex",
+                alignItems: "flex-start",
+                gap: 12,
+                padding: "14px 0",
+                borderBottom: "1px solid var(--hairline)",
+              }}
+            >
               <div
                 style={{
-                  textAlign: "right",
+                  width: 8,
+                  height: 8,
+                  borderRadius: "50%",
+                  background: "var(--accent-blue)",
+                  marginTop: 5,
                   flexShrink: 0,
-                  marginLeft: "var(--space-2)",
                 }}
-              >
-                <span className="fraud-rule-triggered">
+              />
+              <div style={{ flex: 1 }}>
+                <div
+                  style={{
+                    fontFamily: "var(--font-body)",
+                    fontWeight: 700,
+                    fontSize: 13,
+                    color: "var(--ink)",
+                    marginBottom: 2,
+                  }}
+                >
+                  {rule.name}
+                </div>
+                <div
+                  style={{
+                    fontFamily: "var(--font-body)",
+                    fontSize: 12,
+                    color: "var(--ink-5)",
+                    marginBottom: 4,
+                  }}
+                >
+                  {rule.description}
+                </div>
+                <div
+                  style={{
+                    fontFamily: "var(--font-body)",
+                    fontSize: 11,
+                    color: "var(--ink-3)",
+                    fontWeight: 600,
+                  }}
+                >
+                  {rule.threshold}
+                </div>
+              </div>
+              <div style={{ textAlign: "right", flexShrink: 0 }}>
+                <div
+                  style={{
+                    fontFamily: "var(--font-display)",
+                    fontSize: 20,
+                    fontWeight: 800,
+                    color: "var(--ink)",
+                    lineHeight: 1,
+                  }}
+                >
                   {rule.triggeredCount.toLocaleString()}
-                </span>
-                <span className="fraud-rule-triggered__label">triggers</span>
+                </div>
+                <div
+                  style={{
+                    fontFamily: "var(--font-body)",
+                    fontSize: 10,
+                    color: "var(--ink-5)",
+                    textTransform: "uppercase",
+                    letterSpacing: "0.08em",
+                    marginTop: 2,
+                  }}
+                >
+                  triggers
+                </div>
               </div>
             </div>
           ))}
@@ -311,8 +577,7 @@ function RulesEnginePanel({ rules }: { rules: ActiveRule[] }) {
   );
 }
 
-// ─── main page ───────────────────────────────────────────────────────────────
-
+/* ── Main page ───────────────────────────────────────────────── */
 const PAGE_SIZE = 20;
 const ALL_RULES_OPTIONS: DetectionRule[] = [
   "Impossible velocity",
@@ -328,31 +593,19 @@ const ALL_RULES_OPTIONS: DetectionRule[] = [
 ];
 
 export default function FraudQueuePage() {
-  // Filters
   const [minRisk, setMinRisk] = useState(0);
   const [maxRisk, setMaxRisk] = useState(100);
   const [filterStatus, setFilterStatus] = useState<FraudStatus | "all">("all");
   const [filterRule, setFilterRule] = useState<DetectionRule | "">("");
   const [filterWindow, setFilterWindow] = useState<number>(0);
-
-  // Pagination
   const [page, setPage] = useState(1);
-
-  // Selection
   const [selected, setSelected] = useState<Set<string>>(new Set());
-
-  // Expanded detail row
   const [expandedId, setExpandedId] = useState<string | null>(null);
-
-  // Local events (mutated by decisions)
   const [events, setEvents] = useState<FraudEvent[]>(() =>
     JSON.parse(JSON.stringify(MOCK_FRAUD_EVENTS)),
   );
-
-  // Decision loading state
   const [deciding, setDeciding] = useState<string | null>(null);
 
-  // Filtered + paginated
   const filtered = useMemo(() => {
     return events.filter((e) => {
       if (filterStatus !== "all" && e.status !== filterStatus) return false;
@@ -373,12 +626,10 @@ export default function FraudQueuePage() {
   const flaggedCount = events.filter((e) => e.status === "flagged").length;
   const blockedCount = events.filter((e) => e.status === "blocked").length;
 
-  // Reset page when filters change
   useEffect(() => {
     setPage(1);
   }, [filterStatus, minRisk, maxRisk, filterRule, filterWindow]);
 
-  // Decision handler
   const handleDecision = useCallback(
     async (id: string, decision: FraudStatus, isBulk = false) => {
       setDeciding(id);
@@ -397,7 +648,6 @@ export default function FraudQueuePage() {
           },
         );
         if (!res.ok) throw new Error("Decision failed");
-
         setEvents((prev) =>
           prev.map((e) =>
             targetIds.includes(e.id) ? { ...e, status: decision } : e,
@@ -405,7 +655,6 @@ export default function FraudQueuePage() {
         );
         if (isBulk) setSelected(new Set());
       } catch {
-        // In mock context, update locally even if fetch fails
         setEvents((prev) =>
           prev.map((e) => (e.id === id ? { ...e, status: decision } : e)),
         );
@@ -458,61 +707,127 @@ export default function FraudQueuePage() {
     setExpandedId((prev) => (prev === id ? null : id));
   };
 
-  return (
-    <div className="fraud-page">
-      {/* ── Hero ── */}
-      <section className="fraud-hero">
-        <p className="fraud-hero__eyebrow">Admin / Anti-fraud</p>
-        <h1 className="fraud-hero__title">
-          Fraud <em>queue.</em>
-        </h1>
-        <div className="fraud-hero__stats">
-          <div className="fraud-hero__stat">
-            <span className="fraud-hero__stat-value fraud-hero__stat-value--red">
-              {pendingCount}
-            </span>
-            <span className="fraud-hero__stat-label">Pending review</span>
-          </div>
-          <div className="fraud-hero__stat">
-            <span className="fraud-hero__stat-value fraud-hero__stat-value--amber">
-              {flaggedCount}
-            </span>
-            <span className="fraud-hero__stat-label">Flagged</span>
-          </div>
-          <div className="fraud-hero__stat">
-            <span className="fraud-hero__stat-value">{blockedCount}</span>
-            <span className="fraud-hero__stat-label">Blocked</span>
-          </div>
-          <div className="fraud-hero__stat">
-            <span className="fraud-hero__stat-value">{events.length}</span>
-            <span className="fraud-hero__stat-label">Total events</span>
-          </div>
-        </div>
-      </section>
+  const selectStyle: React.CSSProperties = {
+    fontFamily: "var(--font-body)",
+    fontSize: 13,
+    color: "var(--ink)",
+    background: "var(--surface-2)",
+    border: "1px solid var(--hairline)",
+    borderRadius: 8,
+    padding: "8px 12px",
+    outline: "none",
+    height: 40,
+  };
 
-      {/* ── Filter rail ── */}
+  const numInputStyle: React.CSSProperties = {
+    width: 56,
+    fontFamily: "var(--font-body)",
+    fontSize: 13,
+    color: "var(--ink)",
+    background: "var(--surface-2)",
+    border: "1px solid var(--hairline)",
+    borderRadius: 8,
+    padding: "8px 10px",
+    outline: "none",
+    textAlign: "center",
+    height: 40,
+  };
+
+  // Returns CSS class string for action buttons — v11 5-variant system
+  function actionBtnClass(
+    variant: "approve" | "flag" | "block" | "escalate",
+  ): string {
+    return `fraud-action-btn fraud-action-btn--${variant}`;
+  }
+
+  return (
+    <div
+      style={{
+        minHeight: "100vh",
+        background: "var(--surface)",
+        paddingBottom: 64,
+      }}
+    >
+      {/* Page header */}
+      <div style={{ padding: "40px 40px 0" }}>
+        <div className="adm-page-eyebrow">PUSH INTERNAL</div>
+        <h1 className="adm-page-title" style={{ marginBottom: 32 }}>
+          Fraud Queue
+        </h1>
+
+        {/* KPI row */}
+        <div className="adm-kpi-grid" style={{ marginBottom: 0 }}>
+          {[
+            {
+              label: "Pending Review",
+              value: pendingCount,
+              alert: pendingCount > 0,
+            },
+            { label: "Flagged", value: flaggedCount, alert: false },
+            { label: "Blocked", value: blockedCount, alert: false },
+            { label: "Total Events", value: events.length, alert: false },
+          ].map(({ label, value, alert }) => (
+            <div
+              key={label}
+              className={`adm-kpi-card${alert ? " adm-kpi-card--alert" : ""}`}
+            >
+              <div className="adm-kpi-card__eyebrow">{label}</div>
+              <div className="adm-kpi-card__value">{value}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Filter rail */}
       <div
-        className="fraud-filters"
+        style={{
+          padding: "12px 40px",
+          display: "flex",
+          flexWrap: "wrap",
+          alignItems: "center",
+          gap: 12,
+          background: "var(--surface-2)",
+          borderTop: "1px solid var(--hairline)",
+          borderBottom: "1px solid var(--hairline)",
+          margin: "32px 0 0",
+        }}
         role="search"
         aria-label="Filter fraud events"
       >
-        <span className="fraud-filters__label">Risk</span>
-        <div className="fraud-filters__group">
+        <span
+          style={{
+            fontFamily: "var(--font-body)",
+            fontSize: 12,
+            fontWeight: 700,
+            letterSpacing: "0.12em",
+            textTransform: "uppercase",
+            color: "var(--ink-5)",
+          }}
+        >
+          Risk
+        </span>
+        <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
           <input
             type="number"
-            className="fraud-filters__input"
-            style={{ width: 56 }}
+            style={numInputStyle}
             min={0}
             max={100}
             value={minRisk}
             onChange={(e) => setMinRisk(Number(e.target.value))}
             aria-label="Minimum risk score"
           />
-          <span className="fraud-filters__range-sep">–</span>
+          <span
+            style={{
+              fontFamily: "var(--font-body)",
+              fontSize: 12,
+              color: "var(--ink-5)",
+            }}
+          >
+            –
+          </span>
           <input
             type="number"
-            className="fraud-filters__input"
-            style={{ width: 56 }}
+            style={numInputStyle}
             min={0}
             max={100}
             value={maxRisk}
@@ -521,16 +836,27 @@ export default function FraudQueuePage() {
           />
         </div>
 
-        <span className="fraud-filters__label">Status</span>
+        <span
+          style={{
+            fontFamily: "var(--font-body)",
+            fontSize: 12,
+            fontWeight: 700,
+            letterSpacing: "0.12em",
+            textTransform: "uppercase",
+            color: "var(--ink-5)",
+          }}
+        >
+          Status
+        </span>
         <select
-          className="fraud-filters__select"
+          style={selectStyle}
           value={filterStatus}
           onChange={(e) =>
             setFilterStatus(e.target.value as FraudStatus | "all")
           }
           aria-label="Filter by status"
         >
-          <option value="all">All statuses</option>
+          <option value="all">All Statuses</option>
           <option value="pending">Pending</option>
           <option value="flagged">Flagged</option>
           <option value="blocked">Blocked</option>
@@ -538,14 +864,25 @@ export default function FraudQueuePage() {
           <option value="escalated">Escalated</option>
         </select>
 
-        <span className="fraud-filters__label">Rule</span>
+        <span
+          style={{
+            fontFamily: "var(--font-body)",
+            fontSize: 12,
+            fontWeight: 700,
+            letterSpacing: "0.12em",
+            textTransform: "uppercase",
+            color: "var(--ink-5)",
+          }}
+        >
+          Rule
+        </span>
         <select
-          className="fraud-filters__select fraud-filters__select--wide"
+          style={{ ...selectStyle, minWidth: 180 }}
           value={filterRule}
           onChange={(e) => setFilterRule(e.target.value as DetectionRule | "")}
           aria-label="Filter by detection rule"
         >
-          <option value="">All rules</option>
+          <option value="">All Rules</option>
           {ALL_RULES_OPTIONS.map((r) => (
             <option key={r} value={r}>
               {r}
@@ -553,14 +890,25 @@ export default function FraudQueuePage() {
           ))}
         </select>
 
-        <span className="fraud-filters__label">Window</span>
+        <span
+          style={{
+            fontFamily: "var(--font-body)",
+            fontSize: 12,
+            fontWeight: 700,
+            letterSpacing: "0.12em",
+            textTransform: "uppercase",
+            color: "var(--ink-5)",
+          }}
+        >
+          Window
+        </span>
         <select
-          className="fraud-filters__select"
+          style={selectStyle}
           value={filterWindow}
           onChange={(e) => setFilterWindow(Number(e.target.value))}
           aria-label="Time window"
         >
-          <option value={0}>All time</option>
+          <option value={0}>All Time</option>
           <option value={1}>Last 1h</option>
           <option value={6}>Last 6h</option>
           <option value={24}>Last 24h</option>
@@ -568,61 +916,88 @@ export default function FraudQueuePage() {
           <option value={168}>Last 7 days</option>
         </select>
 
-        <button className="fraud-filters__clear" onClick={clearFilters}>
+        <button className="btn-ghost click-shift" onClick={clearFilters}>
           Clear
         </button>
+
+        <span
+          style={{
+            marginLeft: "auto",
+            fontFamily: "var(--font-body)",
+            fontSize: 12,
+            color: "var(--ink-5)",
+          }}
+        >
+          {filtered.length} events
+        </span>
       </div>
 
-      {/* ── Bulk action bar ── */}
+      {/* Bulk action bar */}
       {selected.size > 0 && (
         <div
-          className="fraud-bulk-bar"
+          className="adm-bulk-bar"
+          style={{ margin: "0 40px", borderRadius: 0 }}
           role="toolbar"
           aria-label="Bulk actions"
         >
-          <span className="fraud-bulk-bar__count">{selected.size}</span>
-          <span>events selected</span>
-          <div className="fraud-bulk-bar__actions">
-            <button
-              className="fraud-bulk-btn fraud-bulk-btn--approve"
-              onClick={() => handleBulkDecision("approved")}
-              disabled={deciding === "bulk"}
-            >
-              Approve all
-            </button>
-            <button
-              className="fraud-bulk-btn"
-              onClick={() => handleBulkDecision("flagged")}
-              disabled={deciding === "bulk"}
-            >
-              Flag all
-            </button>
-            <button
-              className="fraud-bulk-btn fraud-bulk-btn--block"
-              onClick={() => handleBulkDecision("blocked")}
-              disabled={deciding === "bulk"}
-            >
-              Block all
-            </button>
-            <button
-              className="fraud-bulk-btn"
-              onClick={() => handleBulkDecision("escalated")}
-              disabled={deciding === "bulk"}
-            >
-              Escalate all
-            </button>
+          <span
+            style={{
+              fontFamily: "var(--font-display)",
+              fontSize: 20,
+              fontWeight: 800,
+            }}
+          >
+            {selected.size}
+          </span>
+          <span
+            style={{
+              fontFamily: "var(--font-body)",
+              fontSize: 13,
+              color: "rgba(255,255,255,0.7)",
+            }}
+          >
+            events selected
+          </span>
+          <div style={{ display: "flex", gap: 8, marginLeft: 8 }}>
+            {(
+              [
+                { label: "Approve all", decision: "approved" as FraudStatus },
+                { label: "Flag all", decision: "flagged" as FraudStatus },
+                { label: "Block all", decision: "blocked" as FraudStatus },
+                { label: "Escalate all", decision: "escalated" as FraudStatus },
+              ] as const
+            ).map(({ label, decision }) => (
+              <button
+                key={label}
+                className="adm-bulk-btn"
+                onClick={() => handleBulkDecision(decision)}
+                disabled={deciding === "bulk"}
+              >
+                {label}
+              </button>
+            ))}
           </div>
         </div>
       )}
 
-      {/* ── Queue list ── */}
-      <section className="fraud-queue">
+      {/* Queue table */}
+      <section style={{ padding: "0 40px 40px" }}>
         {/* Column headers */}
-        <div className="fraud-queue__header" aria-hidden="true">
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "36px 200px 64px 160px 1fr 140px 220px",
+            gap: 12,
+            padding: "10px 16px",
+            borderBottom: "2px solid var(--hairline)",
+            marginTop: 8,
+          }}
+          aria-hidden="true"
+        >
           <div>
             <input
               type="checkbox"
-              style={{ width: 16, height: 16, borderRadius: 0 }}
+              style={{ width: 16, height: 16 }}
               checked={
                 selected.size === pageEvents.length && pageEvents.length > 0
               }
@@ -630,23 +1005,55 @@ export default function FraudQueuePage() {
               aria-label="Select all visible events"
             />
           </div>
-          <div>Event</div>
-          <div>Risk</div>
-          <div className="fraud-col--creator">Creator / Merchant</div>
-          <div>Rules triggered</div>
-          <div className="fraud-col--device">IP / Device</div>
-          <div>Actions</div>
+          {[
+            "Event",
+            "Risk",
+            "Creator / Merchant",
+            "Rules Triggered",
+            "IP / Device",
+            "Actions",
+          ].map((h) => (
+            <div
+              key={h}
+              style={{
+                fontFamily: "var(--font-body)",
+                fontSize: 12,
+                fontWeight: 700,
+                letterSpacing: "0.12em",
+                textTransform: "uppercase",
+                color: "var(--ink-5)",
+              }}
+            >
+              {h}
+            </div>
+          ))}
         </div>
 
         {filtered.length === 0 ? (
-          <div className="fraud-empty">
-            <p className="fraud-empty__title">No events match your filters.</p>
-            <p className="fraud-empty__sub">
+          <div style={{ padding: "56px 0", textAlign: "center" }}>
+            <p
+              style={{
+                fontFamily: "var(--font-display)",
+                fontSize: 24,
+                fontWeight: 700,
+                color: "var(--ink)",
+                marginBottom: 8,
+              }}
+            >
+              No events match your filters.
+            </p>
+            <p
+              style={{
+                fontFamily: "var(--font-body)",
+                fontSize: 14,
+                color: "var(--ink-5)",
+              }}
+            >
               Try adjusting the risk range or status filter.
             </p>
           </div>
         ) : (
-          <ul className="fraud-queue__list" role="list">
+          <ul style={{ listStyle: "none", padding: 0, margin: 0 }} role="list">
             {pageEvents.map((event) => {
               const isExpanded = expandedId === event.id;
               const isSelected = selected.has(event.id);
@@ -654,13 +1061,27 @@ export default function FraudQueuePage() {
               return (
                 <li key={event.id}>
                   <div
-                    className={`fraud-row ${isSelected ? "fraud-row--selected" : ""} ${isExpanded ? "fraud-row--expanded" : ""}`}
+                    style={{
+                      display: "grid",
+                      gridTemplateColumns:
+                        "36px 200px 64px 160px 1fr 140px 220px",
+                      gap: 12,
+                      padding: "12px 16px",
+                      borderBottom: "1px solid var(--hairline)",
+                      background: isSelected
+                        ? "var(--accent-blue-tint)"
+                        : isExpanded
+                          ? "var(--surface-3)"
+                          : "transparent",
+                      alignItems: "start",
+                      transition: "background 0.1s",
+                    }}
                     role="row"
                     aria-expanded={isExpanded}
                   >
                     {/* Checkbox */}
                     <div
-                      className="fraud-row__checkbox"
+                      style={{ paddingTop: 2 }}
                       onClick={(e) => e.stopPropagation()}
                     >
                       <input
@@ -668,12 +1089,13 @@ export default function FraudQueuePage() {
                         checked={isSelected}
                         onChange={() => toggleSelect(event.id)}
                         aria-label={`Select event ${event.id}`}
+                        style={{ width: 16, height: 16 }}
                       />
                     </div>
 
-                    {/* Event ID — click to expand */}
+                    {/* Event ID */}
                     <div
-                      className="fraud-row__cell"
+                      style={{ cursor: "pointer" }}
                       onClick={() => toggleExpand(event.id)}
                       role="button"
                       tabIndex={0}
@@ -681,48 +1103,89 @@ export default function FraudQueuePage() {
                         e.key === "Enter" && toggleExpand(event.id)
                       }
                     >
-                      <div className="fraud-row__id">{event.id}</div>
-                      <div className="fraud-row__qr">{event.qrId}</div>
                       <div
                         style={{
+                          fontFamily: "var(--font-body)",
+                          fontSize: 12,
+                          fontWeight: 700,
+                          color: "var(--ink)",
+                          marginBottom: 2,
+                        }}
+                      >
+                        {event.id}
+                      </div>
+                      <div
+                        style={{
+                          fontFamily: "var(--font-body)",
                           fontSize: 11,
-                          color: "var(--graphite)",
-                          marginTop: 2,
+                          color: "var(--ink-5)",
+                          marginBottom: 4,
+                        }}
+                      >
+                        {event.qrId}
+                      </div>
+                      <div
+                        style={{
+                          fontFamily: "var(--font-body)",
+                          fontSize: 10,
+                          color: "var(--ink-5)",
+                          marginBottom: 4,
                         }}
                       >
                         {formatDate(event.detectedAt)}
                       </div>
-                      <div style={{ marginTop: 4 }}>
-                        <StatusBadge status={event.status} />
-                      </div>
+                      <StatusBadge status={event.status} />
                     </div>
 
                     {/* Risk score */}
                     <div
-                      className="fraud-row__cell"
+                      style={{ cursor: "pointer", paddingTop: 2 }}
                       onClick={() => toggleExpand(event.id)}
                     >
-                      <span className={scoreClass(event.riskScore)}>
+                      <span
+                        style={{
+                          fontFamily: "var(--font-display)",
+                          fontSize: 28,
+                          fontWeight: 800,
+                          color: scoreColor(event.riskScore),
+                          lineHeight: 1,
+                        }}
+                      >
                         {event.riskScore}
                       </span>
                     </div>
 
                     {/* Creator / Merchant */}
                     <div
-                      className="fraud-row__cell fraud-col--creator"
+                      style={{ cursor: "pointer" }}
                       onClick={() => toggleExpand(event.id)}
                     >
-                      <div className="fraud-row__creator">
+                      <div
+                        style={{
+                          fontFamily: "var(--font-body)",
+                          fontSize: 13,
+                          fontWeight: 700,
+                          color: "var(--ink)",
+                          marginBottom: 2,
+                        }}
+                      >
                         {event.creatorHandle}
                       </div>
-                      <div className="fraud-row__merchant">
+                      <div
+                        style={{
+                          fontFamily: "var(--font-body)",
+                          fontSize: 12,
+                          color: "var(--ink-5)",
+                          marginBottom: 4,
+                        }}
+                      >
                         {event.merchantName}
                       </div>
                       <div
                         style={{
+                          fontFamily: "var(--font-body)",
                           fontSize: 10,
-                          color: "var(--tertiary)",
-                          marginTop: 2,
+                          color: "var(--accent-blue)",
                           fontWeight: 700,
                           letterSpacing: "0.05em",
                           textTransform: "uppercase",
@@ -734,7 +1197,7 @@ export default function FraudQueuePage() {
 
                     {/* Rules */}
                     <div
-                      className="fraud-row__cell"
+                      style={{ cursor: "pointer" }}
                       onClick={() => toggleExpand(event.id)}
                     >
                       <RuleChips rules={event.rules} />
@@ -742,20 +1205,38 @@ export default function FraudQueuePage() {
 
                     {/* IP / Device */}
                     <div
-                      className="fraud-row__cell fraud-col--device"
+                      style={{ cursor: "pointer" }}
                       onClick={() => toggleExpand(event.id)}
                     >
-                      <div className="fraud-row__ip">{maskIp(event.ip)}</div>
-                      <div className="fraud-row__device">{event.device}</div>
+                      <div
+                        style={{
+                          fontFamily: "var(--font-body)",
+                          fontSize: 11,
+                          color: "var(--ink)",
+                          marginBottom: 2,
+                          fontWeight: 600,
+                        }}
+                      >
+                        {maskIp(event.ip)}
+                      </div>
+                      <div
+                        style={{
+                          fontFamily: "var(--font-body)",
+                          fontSize: 11,
+                          color: "var(--ink-5)",
+                        }}
+                      >
+                        {event.device}
+                      </div>
                     </div>
 
                     {/* Actions */}
                     <div
-                      className="fraud-actions"
+                      style={{ display: "flex", flexWrap: "wrap", gap: 4 }}
                       onClick={(e) => e.stopPropagation()}
                     >
                       <button
-                        className="fraud-action-btn fraud-action-btn--approve"
+                        className={actionBtnClass("approve")}
                         onClick={() => handleDecision(event.id, "approved")}
                         disabled={
                           deciding === event.id || event.status === "approved"
@@ -765,7 +1246,7 @@ export default function FraudQueuePage() {
                         Approve
                       </button>
                       <button
-                        className="fraud-action-btn fraud-action-btn--flag"
+                        className={actionBtnClass("flag")}
                         onClick={() => handleDecision(event.id, "flagged")}
                         disabled={
                           deciding === event.id || event.status === "flagged"
@@ -775,7 +1256,7 @@ export default function FraudQueuePage() {
                         Flag
                       </button>
                       <button
-                        className="fraud-action-btn fraud-action-btn--block"
+                        className={actionBtnClass("block")}
                         onClick={() => handleDecision(event.id, "blocked")}
                         disabled={
                           deciding === event.id || event.status === "blocked"
@@ -785,7 +1266,7 @@ export default function FraudQueuePage() {
                         Block
                       </button>
                       <button
-                        className="fraud-action-btn fraud-action-btn--escalate"
+                        className={actionBtnClass("escalate")}
                         onClick={() => handleDecision(event.id, "escalated")}
                         disabled={
                           deciding === event.id || event.status === "escalated"
@@ -797,7 +1278,6 @@ export default function FraudQueuePage() {
                     </div>
                   </div>
 
-                  {/* Detail slide-out */}
                   {isExpanded && (
                     <DetailPanel
                       event={event}
@@ -813,42 +1293,64 @@ export default function FraudQueuePage() {
 
         {/* Pagination */}
         {totalPages > 1 && (
-          <nav className="fraud-pagination" aria-label="Queue pagination">
-            <button
-              className="fraud-page-btn"
-              onClick={() => setPage((p) => Math.max(1, p - 1))}
-              disabled={page === 1}
+          <div
+            className="adm-pagination"
+            style={{ marginTop: 24 }}
+            aria-label="Queue pagination"
+          >
+            <div
+              style={{
+                fontFamily: "var(--font-body)",
+                fontSize: 12,
+                color: "var(--ink-5)",
+              }}
             >
-              ← Prev
-            </button>
-            {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
-              const pageNum = i + 1;
-              return (
+              {filtered.length} events · page {page} of {totalPages}
+            </div>
+            <div className="adm-pagination__controls">
+              <button
+                className="adm-page-btn"
+                onClick={() => setPage((p) => Math.max(1, p - 1))}
+                disabled={page === 1}
+              >
+                ← Prev
+              </button>
+              {Array.from(
+                { length: Math.min(5, totalPages) },
+                (_, i) => i + 1,
+              ).map((pageNum) => (
                 <button
                   key={pageNum}
-                  className={`fraud-page-btn ${page === pageNum ? "fraud-page-btn--active" : ""}`}
+                  className={`adm-page-btn${page === pageNum ? " active" : ""}`}
                   onClick={() => setPage(pageNum)}
                 >
                   {pageNum}
                 </button>
-              );
-            })}
-            {totalPages > 5 && (
-              <span className="fraud-page-info">… {totalPages} pages</span>
-            )}
-            <button
-              className="fraud-page-btn"
-              onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-              disabled={page === totalPages}
-            >
-              Next →
-            </button>
-            <span className="fraud-page-info">{filtered.length} events</span>
-          </nav>
+              ))}
+              {totalPages > 5 && (
+                <span
+                  style={{
+                    fontFamily: "var(--font-body)",
+                    fontSize: 12,
+                    color: "var(--ink-5)",
+                    padding: "0 4px",
+                  }}
+                >
+                  … {totalPages}
+                </span>
+              )}
+              <button
+                className="adm-page-btn"
+                onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+                disabled={page === totalPages}
+              >
+                Next →
+              </button>
+            </div>
+          </div>
         )}
       </section>
 
-      {/* ── Rules engine panel ── */}
       <RulesEnginePanel rules={ACTIVE_RULES} />
     </div>
   );

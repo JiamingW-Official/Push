@@ -1,66 +1,188 @@
 "use client";
 
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { useState } from "react";
-import ScrollRevealInit from "@/components/layout/ScrollRevealInit";
-import "../landing.css";
 import "./creators.css";
 
-/* ── Earnings Calculator ─────────────────────────────────── */
-const TIER_RATES: Record<string, { min: number; max: number }> = {
-  seed: { min: 2, max: 5 },
-  explorer: { min: 5, max: 12 },
-  operator: { min: 12, max: 25 },
-  proven: { min: 25, max: 45 },
-  closer: { min: 45, max: 80 },
-  partner: { min: 80, max: 150 },
+/* ── Earnings Calculator data ─────────────────────────────── */
+const TIER_CONVERSION_RATE: Record<string, { min: number; max: number }> = {
+  seed: { min: 4, max: 6 },
+  explorer: { min: 6, max: 10 },
+  operator: { min: 9, max: 15 },
+  proven: { min: 14, max: 22 },
+  closer: { min: 20, max: 30 },
+  partner: { min: 28, max: 42 },
 };
 
+const TIERS = [
+  { id: "seed", label: "Seed" },
+  { id: "explorer", label: "Explorer" },
+  { id: "operator", label: "Operator" },
+  { id: "proven", label: "Proven" },
+  { id: "closer", label: "Closer" },
+  { id: "partner", label: "Partner" },
+];
+
+/* ── Tier node data ───────────────────────────────────────── */
+const TIER_NODES = [
+  {
+    id: "seed",
+    num: "01",
+    name: "Seed",
+    range: "1K–5K",
+    earn: "$50–200/mo",
+    detail:
+      "No follower minimum. We measure engagement consistency over 90 days, not vanity numbers. Your first verified scans build the permanent record that drives every future rate.",
+    unlock: "10 verified scans → Explorer review",
+    isPartner: false,
+  },
+  {
+    id: "explorer",
+    num: "02",
+    name: "Explorer",
+    range: "5K–20K",
+    earn: "$200–600/mo",
+    detail:
+      "Your audience converts. Brands start requesting you for specific neighborhoods. Scan rate and trust score both climb as your record proves itself.",
+    unlock: "25 scans + 8% conversion rate → Operator",
+    isPartner: false,
+  },
+  {
+    id: "operator",
+    num: "03",
+    name: "Operator",
+    range: "20K–50K",
+    earn: "$600–1.5K/mo",
+    detail:
+      "You run campaigns like a business. Multiple concurrent deals, high weekly scan volume. Push's algorithm weights your reliability score heavily at this tier.",
+    unlock: "50 scans/mo for 60 consecutive days → Proven",
+    isPartner: false,
+  },
+  {
+    id: "proven",
+    num: "04",
+    name: "Proven",
+    range: "50K–150K",
+    earn: "$1.5K–4K/mo",
+    detail:
+      "Your verified conversion history speaks louder than any follower count. Brands reference your record directly when selecting creators. You skip the generic brief.",
+    unlock: "100 scans/mo + 60% merchant re-request rate → Closer",
+    isPartner: false,
+  },
+  {
+    id: "closer",
+    num: "05",
+    name: "Closer",
+    range: "150K–500K",
+    earn: "$4K–10K/mo",
+    detail:
+      "You bypass the apply queue. Merchants reach out directly. You co-create briefs, choose categories, and negotiate terms — campaign ownership shifts your way.",
+    unlock: "200 scans/mo + 3 long-term merchant partnerships → Partner",
+    isPartner: false,
+  },
+  {
+    id: "partner",
+    num: "06",
+    name: "Partner",
+    range: "500K+",
+    earn: "$10K+/mo",
+    detail:
+      "Invitation only. You sit inside the campaign strategy layer, not just the execution layer. Equity-style revenue splits on flagship campaigns. First access to every new market.",
+    unlock: "Invitation only · reviewed quarterly",
+    isPartner: true,
+  },
+];
+
+/* ── Editorial compare table — Cinema Selects style (§ 8.6) ── */
+const COMPARE_ROWS: ReadonlyArray<{
+  feature: string;
+  push: string;
+  traditional: string;
+  outcome: string;
+}> = [
+  {
+    feature: "Pay model",
+    push: "Per verified visit",
+    traditional: "Flat fee per post",
+    outcome: "Aligned with real lift",
+  },
+  {
+    feature: "Follower floor",
+    push: "None — record-based",
+    traditional: "10K+ minimum gate",
+    outcome: "Performance > vanity",
+  },
+  {
+    feature: "Payout cadence",
+    push: "Every Friday",
+    traditional: "Net-60 or chase invoice",
+    outcome: "Cash flow that compounds",
+  },
+  {
+    feature: "Exclusivity clause",
+    push: "None",
+    traditional: "Often 30–90 days",
+    outcome: "Keep your audience yours",
+  },
+  {
+    feature: "Verification",
+    push: "QR + receipt audit",
+    traditional: "Self-reported metrics",
+    outcome: "Brands re-book on proof",
+  },
+  {
+    feature: "Tier progression",
+    push: "Verified scans unlock rates",
+    traditional: "Manager negotiates",
+    outcome: "Earnings ladder you control",
+  },
+];
+
+/* ── Earnings Calculator component ───────────────────────── */
 function EarningsCalculator() {
   const [tier, setTier] = useState("operator");
-  const [campaigns, setCampaigns] = useState(4);
-  const [avgPayout, setAvgPayout] = useState(18);
+  const [campaigns, setCampaigns] = useState(2);
+  const [visitsPerWeek, setVisitsPerWeek] = useState(8);
 
-  const rate = TIER_RATES[tier];
-  const estMin = Math.round(campaigns * avgPayout * (rate.min / 100) * 30);
-  const estMax = Math.round(campaigns * avgPayout * (rate.max / 100) * 30);
-
-  const tiers = [
-    { id: "seed", label: "Seed", range: "1–5K" },
-    { id: "explorer", label: "Explorer", range: "5–20K" },
-    { id: "operator", label: "Operator", range: "20–50K" },
-    { id: "proven", label: "Proven", range: "50–150K" },
-    { id: "closer", label: "Closer", range: "150–500K" },
-    { id: "partner", label: "Partner", range: "500K+" },
-  ];
+  const rate = TIER_CONVERSION_RATE[tier];
+  const weeks = 4.33;
+  const estMin = Math.round(campaigns * visitsPerWeek * rate.min * weeks);
+  const estMax = Math.round(campaigns * visitsPerWeek * rate.max * weeks);
 
   return (
-    <div className="calc-wrap">
-      <div className="calc-controls">
-        {/* Tier selector */}
-        <div className="calc-field">
-          <label className="calc-label">Your Tier</label>
-          <div className="calc-tier-grid">
-            {tiers.map((t) => (
-              <button
-                key={t.id}
-                className={`calc-tier-btn ${tier === t.id ? "calc-tier-btn--active" : ""}`}
-                onClick={() => setTier(t.id)}
-                type="button"
-              >
-                <span className="calc-tier-name">{t.label}</span>
-                <span className="calc-tier-range">{t.range}</span>
-              </button>
-            ))}
-          </div>
-        </div>
+    <div className="calc-editorial">
+      {/* Output number — visual hero of this panel */}
+      <div className="calc-result" aria-live="polite">
+        <span className="calc-result-prefix">$</span>
+        <span className="calc-result-num">{estMin.toLocaleString()}</span>
+        <span className="calc-result-dash">–</span>
+        <span className="calc-result-prefix">$</span>
+        <span className="calc-result-num">{estMax.toLocaleString()}</span>
+        <span className="calc-result-unit">/ mo</span>
+      </div>
 
-        {/* Campaigns per month */}
-        <div className="calc-field">
-          <label className="calc-label">
-            Active campaigns / mo
-            <span className="calc-val">{campaigns}</span>
-          </label>
+      {/* Tier selector — btn-pill row */}
+      <div role="group" aria-label="Creator tier" className="calc-pill-row">
+        {TIERS.map((t) => (
+          <button
+            key={t.id}
+            type="button"
+            className="btn-pill"
+            aria-pressed={tier === t.id}
+            onClick={() => setTier(t.id)}
+          >
+            {t.label}
+          </button>
+        ))}
+      </div>
+
+      {/* Sliders */}
+      <div className="calc-sliders">
+        <div className="calc-slider-row">
+          <div className="calc-slider-label">
+            <span>Campaigns / mo</span>
+            <span className="calc-slider-val">{campaigns}</span>
+          </div>
           <input
             type="range"
             min={1}
@@ -68,516 +190,495 @@ function EarningsCalculator() {
             value={campaigns}
             onChange={(e) => setCampaigns(Number(e.target.value))}
             className="calc-slider"
+            aria-label="Active campaigns per month"
           />
           <div className="calc-slider-ticks">
             <span>1</span>
             <span>12</span>
           </div>
         </div>
-
-        {/* Avg payout per visit */}
-        <div className="calc-field">
-          <label className="calc-label">
-            Avg. payout per verified visit
-            <span className="calc-val">${avgPayout}</span>
-          </label>
+        <div className="calc-slider-row">
+          <div className="calc-slider-label">
+            <span>Visits / wk</span>
+            <span className="calc-slider-val">{visitsPerWeek}</span>
+          </div>
           <input
             type="range"
-            min={5}
-            max={60}
-            value={avgPayout}
-            onChange={(e) => setAvgPayout(Number(e.target.value))}
+            min={1}
+            max={25}
+            value={visitsPerWeek}
+            onChange={(e) => setVisitsPerWeek(Number(e.target.value))}
             className="calc-slider"
+            aria-label="Verified visits per week"
           />
           <div className="calc-slider-ticks">
-            <span>$5</span>
-            <span>$60</span>
+            <span>1</span>
+            <span>25</span>
           </div>
         </div>
       </div>
 
-      {/* Output */}
-      <div className="calc-output">
-        <p className="calc-output-label">Estimated monthly earnings</p>
-        <div className="calc-output-num">
-          <span className="calc-num-prefix">$</span>
-          <span className="calc-num-val">{estMin.toLocaleString()}</span>
-          <span className="calc-num-sep">–</span>
-          <span className="calc-num-prefix">$</span>
-          <span className="calc-num-val">{estMax.toLocaleString()}</span>
-        </div>
-        <p className="calc-output-note">
-          Based on {campaigns} campaign{campaigns !== 1 ? "s" : ""} · $
-          {avgPayout} avg payout · {TIER_RATES[tier].min}–{TIER_RATES[tier].max}
-          % commission rate
-        </p>
-        <Link href="/creator/signup" className="btn btn-primary calc-cta">
-          Apply now — it&apos;s free
-        </Link>
-      </div>
+      <p className="calc-fine">
+        ${rate.min}–${rate.max} per verified visit · paid Fridays via Stripe
+        Connect
+      </p>
+
+      <Link href="/creator/signup" className="btn-primary fc-self-start">
+        Apply for the cohort →
+      </Link>
     </div>
   );
 }
 
-/* ── 6 Tier showcase data ────────────────────────────────── */
-const TIERS = [
-  {
-    id: "seed",
-    num: "01",
-    name: "Seed",
-    material: "Clay",
-    followers: "1K–5K",
-    earning: "$50–200",
-    period: "/mo",
-    color: "var(--tier-clay)",
-    textColor: "var(--tier-clay-text)",
-    borderStyle: "dashed",
-    levelUp:
-      "Complete 3 verified visits — your score unlocks Explorer in 30 days.",
-    badge: "badge-clay",
-  },
-  {
-    id: "explorer",
-    num: "02",
-    name: "Explorer",
-    material: "Bronze",
-    followers: "5K–20K",
-    earning: "$200–600",
-    period: "/mo",
-    color: "var(--tier-bronze)",
-    textColor: "#fff",
-    borderStyle: "solid",
-    levelUp: "Hit 10 verified visits in a rolling 60-day window.",
-    badge: "badge-bronze",
-  },
-  {
-    id: "operator",
-    num: "03",
-    name: "Operator",
-    material: "Steel",
-    followers: "20K–50K",
-    earning: "$600–1,500",
-    period: "/mo",
-    color: "var(--tier-steel)",
-    textColor: "#fff",
-    borderStyle: "solid",
-    levelUp: "Maintain a 4.2+ performance score across 25+ visits.",
-    badge: "badge-steel",
-  },
-  {
-    id: "proven",
-    num: "04",
-    name: "Proven",
-    material: "Gold",
-    followers: "50K–150K",
-    earning: "$1,500–4K",
-    period: "/mo",
-    color: "var(--tier-gold)",
-    textColor: "var(--tier-gold-text)",
-    borderStyle: "solid",
-    levelUp: "50+ lifetime verified visits · 4.5 score · invited by Push team.",
-    badge: "badge-gold",
-  },
-  {
-    id: "closer",
-    num: "05",
-    name: "Closer",
-    material: "Ruby",
-    followers: "150K–500K",
-    earning: "$4K–10K",
-    period: "/mo",
-    color: "var(--tier-ruby)",
-    textColor: "#fff",
-    borderStyle: "solid",
-    levelUp: "Top 5% performer · Direct campaign access · No apply queue.",
-    badge: "badge-ruby",
-    shimmer: true,
-  },
-  {
-    id: "partner",
-    num: "06",
-    name: "Partner",
-    material: "Obsidian",
-    followers: "500K+",
-    earning: "$10K+",
-    period: "/mo",
-    color: "var(--tier-obsidian)",
-    textColor: "#fff",
-    borderStyle: "solid",
-    levelUp: "Invite-only. Revenue share. Co-creation rights.",
-    badge: "badge-obsidian",
-    shimmer: true,
-    pulse: true,
-  },
-];
+/* ── Reveal-on-scroll hook (vanilla IO; respects reduced-motion) ─── */
+function useRevealOnScroll() {
+  const rootRef = useRef<HTMLDivElement | null>(null);
 
-/* ── Pull quote ──────────────────────────────────────────── */
-const TESTIMONIAL = {
-  quote:
-    "I earned $320 last month just from my regular neighbourhood content. I was already walking past these spots — now I get paid every time someone follows through.",
-  name: "Maya R.",
-  handle: "@mayawalksnyc",
-  tier: "Operator",
-  material: "Steel",
-  badge: "badge-steel",
-  location: "Bushwick, Brooklyn",
-};
+  useEffect(() => {
+    const root = rootRef.current;
+    if (!root) return;
 
-/* ── How to start steps ──────────────────────────────────── */
-const HOW_STEPS = [
-  {
-    n: "01",
-    title: "Apply",
-    body: "Submit your creator profile. Push reviews your content, audience, and neighbourhood fit. Most creators hear back within 48 hours.",
-  },
-  {
-    n: "02",
-    title: "Get verified",
-    body: "We confirm your reach, content quality, and location coverage. You receive your tier assignment and a unique creator QR identity.",
-  },
-  {
-    n: "03",
-    title: "Start earning",
-    body: "Browse open campaigns, apply for the ones that fit. When a customer scans your QR and visits the merchant, the payout hits your dashboard instantly.",
-  },
-];
+    // Honor user motion preference — no animation if reduced.
+    const prefersReduced = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+    const targets = root.querySelectorAll<HTMLElement>("[data-reveal]");
 
-/* ── Problem/Solution data ───────────────────────────────── */
-const PAIN_POINTS = [
-  "Brands pay upfront, you prove nothing — and get ghosted",
-  "Flat-rate sponsored posts disconnect effort from income",
-  "Zero visibility into whether your content actually drove visits",
-  "Platform algorithms tank your reach the week you need it most",
-];
+    if (prefersReduced) {
+      targets.forEach((el) => el.classList.add("is-revealed"));
+      return;
+    }
 
-const PUSH_SOLUTIONS = [
-  "Every payout anchored to a real, verified customer visit",
-  "Commission rate scales with your tier — better work earns more",
-  "Your QR dashboard shows exactly which posts drove which visits",
-  "Foot traffic is algorithm-proof — QR scans don't depend on reach",
-];
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("is-revealed");
+            io.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.18, rootMargin: "0px 0px -64px 0px" },
+    );
 
-/* ── Page ────────────────────────────────────────────────── */
+    targets.forEach((el) => io.observe(el));
+    return () => io.disconnect();
+  }, []);
+
+  return rootRef;
+}
+
+/* ── Page ─────────────────────────────────────────────────── */
 export default function ForCreatorsPage() {
+  const rootRef = useRevealOnScroll();
+
   return (
-    <>
-      <ScrollRevealInit />
+    <div ref={rootRef}>
+      {/* ════════════════════════════════════════════════════
+          HERO — Full-Bleed Pattern A (border-radius: 0 allowed)
+          Dark ink with radial accent glow · Magvix corner-anchored
+          ════════════════════════════════════════════════════ */}
+      <section className="fc-hero" aria-label="For Creators Hero">
+        {/* Ghost watermark stat — architectural ghost digit */}
+        <div className="fc-hero-ghost" aria-hidden="true">
+          87%
+        </div>
 
-      {/* ── 1. Hero ──────────────────────────────────────────── */}
-      <section className="cr-hero">
-        <div className="container cr-hero-inner">
-          <div className="cr-hero-content">
-            <p className="eyebrow cr-eyebrow">Push for Creators</p>
-            <h1 className="cr-headline">
-              <span className="cr-black">Get paid for traffic</span>
-              <span className="cr-light">you already drive.</span>
-            </h1>
-            <p className="cr-sub">
-              Push connects NYC creators with local merchants. Post about the
-              spots you love. Every verified customer visit earns you a payout —
-              no fake metrics, no guesswork, no hidden fees.
-            </p>
-            <div className="cr-ctas">
-              <Link href="/creator/signup" className="btn btn-primary">
-                Apply to create
-              </Link>
-              <Link href="/demo/creator" className="btn btn-ghost cr-ghost">
-                See how it works →
-              </Link>
-            </div>
-            <p className="cr-reassure">
-              Free to join · No exclusivity required · Keep your other brand
-              deals
-            </p>
+        {/* Floating glass stat tile — top right, hidden on mobile */}
+        <div className="lg-surface--dark fc-hero-peek" aria-hidden="true">
+          <div className="fc-peek-num">200+</div>
+          <div className="fc-peek-label">Creators active</div>
+        </div>
+
+        {/* Bottom-left copy block — v11 corner-anchored */}
+        <div className="fc-hero-copy" data-reveal>
+          <span className="eyebrow fc-hero-eyebrow">(FOR CREATORS)</span>
+
+          <h1 className="fc-hero-h1 mixed-headline">
+            Perform.
+            <br />
+            Get <em>paid</em>.
+          </h1>
+
+          <p className="fc-hero-sub">
+            Your audience walks in. You get paid. No agency, no retainer — just
+            verified foot traffic turned into income.
+          </p>
+
+          <div className="fc-hero-actions">
+            <Link href="/creator/signup" className="btn-primary">
+              Apply Now
+            </Link>
+            <Link href="/how-it-works" className="btn-ghost fc-hero-ghost-btn">
+              How It Works
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* ════════════════════════════════════════════════════
+          WHY PUSH — Editorial Table (Cinema Selects · § 8.6)
+          Surface-2 Pearl Stone (warm-neutral) · breaks the dark
+          adjacency between Hero and KPI
+          ════════════════════════════════════════════════════ */}
+      <section
+        className="fc-table-section"
+        aria-label="Why creators choose Push"
+      >
+        <div className="fc-section-inner fc-table-inner" data-reveal>
+          <span className="eyebrow fc-table-eyebrow">(WHY PUSH)</span>
+          <h2 className="fc-table-h2">
+            Push <em>vs.</em> traditional creator deals.
+          </h2>
+          <p className="fc-table-lede">
+            Same hours of work. Different math. Receipts decide who gets paid —
+            not a follower count, not a manager, not a quarterly negotiation.
+          </p>
+
+          <div className="fc-table-scroll">
+            <table className="fc-compare-table">
+              <thead>
+                <tr>
+                  <th scope="col">(WHAT MATTERS)</th>
+                  <th scope="col" className="fc-th-push">
+                    (PUSH)
+                  </th>
+                  <th scope="col">(TRADITIONAL)</th>
+                  <th scope="col" className="fc-th-outcome">
+                    (OUTCOME)
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {COMPARE_ROWS.map((row) => (
+                  <tr key={row.feature}>
+                    <td className="fc-td-feature">{row.feature}</td>
+                    <td className="fc-td-push">{row.push}</td>
+                    <td className="fc-td-other">{row.traditional}</td>
+                    <td className="fc-td-outcome">{row.outcome}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
 
-          {/* Hero stats */}
-          <div className="cr-hero-stats">
-            {[
-              {
-                num: "$320",
-                label: "Avg. creator month-1 payout",
-                sub: "Operator tier",
-              },
-              {
-                num: "48h",
-                label: "Approval turnaround",
-                sub: "From apply to active",
-              },
-              { num: "6", label: "Tiers to climb", sub: "Seed → Partner" },
-              {
-                num: "100%",
-                label: "Visit-verified payouts",
-                sub: "No fake impressions",
-              },
-            ].map((s, i) => (
-              <div
-                key={s.num}
-                className="cr-stat-card reveal"
-                style={{ transitionDelay: `${i * 80}ms` }}
-              >
-                <span className="cr-stat-num">{s.num}</span>
-                <span className="cr-stat-label">{s.label}</span>
-                <span className="cr-stat-sub">{s.sub}</span>
+          {/* Editorial Pink stamp — single per-page CTA moment (§ 9.6) */}
+          <div className="fc-table-cta">
+            <Link href="/creator/signup" className="btn-editorial">
+              Claim a creator slot →
+            </Link>
+            <p className="fc-table-fine">
+              Reviewed weekly · 200+ active creators · NYC only for now.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* ════════════════════════════════════════════════════
+          EDITORIAL STATEMENT — Dark Ink, KPI trio
+          Asymmetric 8+4 composition
+          ════════════════════════════════════════════════════ */}
+      <section className="fc-kpi-section" aria-label="Earnings potential">
+        {/* Ghost architectural dollar */}
+        <div className="fc-kpi-ghost" aria-hidden="true">
+          $
+        </div>
+
+        <div className="fc-kpi-inner" data-reveal>
+          {/* Left 8-col: headline + KPI trio */}
+          <div className="fc-kpi-left">
+            <p className="fc-kpi-eyebrow">(THE NUMBERS · MONTHLY POTENTIAL)</p>
+
+            <div className="fc-kpi-row">
+              <div className="fc-kpi-block">
+                <p className="fc-kpi-num">$10K+</p>
+                <p className="fc-kpi-cap">partner tier monthly</p>
               </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── 2. Problem / Solution split ──────────────────────── */}
-      <section className="section section-bright">
-        <div className="container">
-          <div className="reveal">
-            <div className="section-tag">
-              <span className="section-tag-num">01</span>
-              <span className="section-tag-line" />
-              <span className="section-tag-label">The Problem</span>
-            </div>
-          </div>
-          <div className="cr-ps-grid">
-            {/* Left — Pain */}
-            <div className="cr-ps-col cr-ps-pain reveal">
-              <h2 className="cr-ps-headline">
-                <span className="wt-900">Traditional sponsored posts</span>
-                <span className="wt-300">don&apos;t pay you fairly.</span>
-              </h2>
-              <ul className="cr-pain-list">
-                {PAIN_POINTS.map((p) => (
-                  <li key={p} className="cr-pain-item">
-                    <span className="cr-pain-dash" />
-                    <span>{p}</span>
-                  </li>
-                ))}
-              </ul>
+              <div className="fc-kpi-divider" aria-hidden="true" />
+              <div className="fc-kpi-block">
+                <p className="fc-kpi-num">$3.50</p>
+                <p className="fc-kpi-cap">avg per visit</p>
+              </div>
+              <div className="fc-kpi-divider" aria-hidden="true" />
+              <div className="fc-kpi-block">
+                <p className="fc-kpi-num">87%</p>
+                <p className="fc-kpi-cap">creator retention</p>
+              </div>
             </div>
 
-            {/* Divider */}
-            <div className="cr-ps-divider" aria-hidden="true">
-              <div className="cr-ps-line" />
-              <span className="cr-ps-vs">vs</span>
-              <div className="cr-ps-line" />
-            </div>
-
-            {/* Right — Push */}
-            <div
-              className="cr-ps-col cr-ps-push reveal"
-              style={{ transitionDelay: "160ms" }}
-            >
-              <h2 className="cr-ps-headline cr-ps-headline--push">
-                <span className="wt-900">Push anchors</span>
-                <span className="wt-300">every payment to a real visit.</span>
-              </h2>
-              <ul className="cr-solution-list">
-                {PUSH_SOLUTIONS.map((s) => (
-                  <li key={s} className="cr-solution-item">
-                    <span className="cr-solution-check">
-                      <svg
-                        width="12"
-                        height="12"
-                        viewBox="0 0 12 12"
-                        fill="none"
-                      >
-                        <path
-                          d="M2 6L5 9L10 3.5"
-                          stroke="currentColor"
-                          strokeWidth="1.8"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                      </svg>
-                    </span>
-                    <span>{s}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ── 3. 6 Tier showcase ───────────────────────────────── */}
-      <section className="section section-warm cr-tiers-section">
-        <div className="container">
-          <div className="reveal">
-            <div className="section-tag">
-              <span className="section-tag-num">02</span>
-              <span className="section-tag-line" />
-              <span className="section-tag-label">Creator Tiers</span>
-            </div>
-            <h2 className="split-headline">
-              <span className="wt-900">Six tiers.</span>
-              <span className="wt-300">One clear path up.</span>
-            </h2>
-            <p className="split-body">
-              Every tier unlocks higher commission rates, priority campaign
-              access, and faster payouts. You advance by driving real, verified
-              foot traffic — nothing else.
+            <p className="fc-kpi-fine">
+              No agency. No retainer. Paid Fridays via Stripe Connect.
             </p>
           </div>
 
-          <div className="cr-tier-grid">
-            {TIERS.map((t, i) => (
+          {/* Right 4-col: CTA tile */}
+          <div className="fc-kpi-right">
+            <div className="fc-kpi-tile">
+              <p className="fc-kpi-tile-eyebrow">(READY?)</p>
+              <p className="fc-kpi-tile-head">Join the next cohort</p>
+              <p className="fc-kpi-tile-body">
+                NYC creators only. Applications reviewed weekly.
+              </p>
+              <Link href="/creator/signup" className="btn-ink">
+                Apply Now
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ════════════════════════════════════════════════════
+          SIGNATURE DIVIDER 1 (§ 8.5)
+          ════════════════════════════════════════════════════ */}
+      <div className="fc-sig-wrap">
+        <span className="sig-divider">Posted · Scanned · Verified ·</span>
+      </div>
+
+      {/* ════════════════════════════════════════════════════
+          HOW IT WORKS — Numbered editorial rows, 3-column grid
+          Warm butter candy panel · light/warm
+          ════════════════════════════════════════════════════ */}
+      <section className="candy-panel fc-how-section" aria-label="How it works">
+        {/* Floating glass stat tile (§ 8.9.3 — single tile in panel) */}
+        <div className="lg-surface fc-how-tile" aria-hidden="true">
+          <div className="fc-how-tile-num">3</div>
+          <div className="fc-how-tile-cap">steps to first payout</div>
+        </div>
+
+        <div className="fc-section-inner" data-reveal>
+          <span className="eyebrow fc-eyebrow-block">(HOW IT WORKS)</span>
+          <h2 className="fc-h2">
+            Walk in.
+            <br />
+            Scan. <em>Earn</em>.
+          </h2>
+
+          {/* Numbered editorial rows — 3-col grid */}
+          <div className="fc-how-grid">
+            <div className="fc-how-row click-shift">
+              <span className="fc-how-num">01</span>
+              <div className="fc-how-body">
+                <h3 className="fc-h3">Apply once</h3>
+                <p className="fc-how-text">
+                  No follower floor. We review your engagement consistency over
+                  90 days. No agency, no exclusivity clause.
+                </p>
+              </div>
+            </div>
+            <div className="fc-how-row click-shift">
+              <span className="fc-how-num">02</span>
+              <div className="fc-how-body">
+                <h3 className="fc-h3">Pick a campaign</h3>
+                <p className="fc-how-text">
+                  Browse merchant campaigns by neighborhood, category, and rate.
+                  Accept what fits your audience and schedule.
+                </p>
+              </div>
+            </div>
+            <div className="fc-how-row click-shift">
+              <span className="fc-how-num">03</span>
+              <div className="fc-how-body">
+                <h3 className="fc-h3">Drive foot traffic</h3>
+                <p className="fc-how-text">
+                  Post your content. Your audience scans the QR. Every verified
+                  visit triggers a payout — no chasing invoices.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ════════════════════════════════════════════════════
+          TIERS PANEL — Dark Ink + numbered editorial rows
+          Cool counterweight after warm butter
+          ════════════════════════════════════════════════════ */}
+      <section className="fc-tiers-section" aria-label="Creator tiers">
+        {/* Ghost architectural numeral */}
+        <div className="fc-tiers-ghost" aria-hidden="true">
+          6
+        </div>
+
+        <div className="fc-section-inner fc-tiers-inner" data-reveal>
+          <span className="eyebrow fc-eyebrow-light fc-eyebrow-block">
+            (THE 6 TIERS)
+          </span>
+          <h2 className="fc-h2 fc-h2-light">
+            Progress that
+            <br />
+            <em>compounds</em>.
+          </h2>
+
+          {/* Numbered editorial tier rows */}
+          <div className="fc-tiers-grid">
+            {TIER_NODES.map((t) => (
               <div
                 key={t.id}
-                className={`cr-tier-card reveal ${t.pulse ? "cr-tier-card--pulse" : ""}`}
-                style={{
-                  borderTopColor: t.color,
-                  borderTopStyle: t.borderStyle as "solid" | "dashed",
-                  transitionDelay: `${i * 80}ms`,
-                }}
+                className={`fc-tier-row click-shift${t.isPartner ? " fc-tier-row--partner" : ""}`}
               >
-                <div className="cr-tier-header">
-                  <span className="cr-tier-num">{t.num}</span>
-                  <span
-                    className={`cr-tier-badge ${t.badge} ${t.shimmer ? "badge-shimmer" : ""}`}
-                  >
-                    {t.material} · {t.name}
-                  </span>
-                </div>
-
-                <div className="cr-tier-body">
-                  <div className="cr-tier-reach">
-                    <span className="cr-tier-reach-label">Followers</span>
-                    <span className="cr-tier-reach-val">{t.followers}</span>
-                  </div>
-                  <div className="cr-tier-earning">
+                <span className="fc-tier-row-num">{t.num}</span>
+                <div className="fc-tier-row-body">
+                  <div className="fc-tier-row-head">
                     <span
-                      className="cr-tier-earn-num"
-                      style={{
-                        color:
-                          t.id === "partner" ? "var(--champagne)" : undefined,
-                      }}
+                      className={`fc-tier-row-name${t.isPartner ? " fc-tier-row-name--partner" : ""}`}
                     >
-                      {t.earning}
+                      {t.name}
                     </span>
-                    <span className="cr-tier-earn-period">{t.period}</span>
+                    <span className="fc-tier-row-range">
+                      {t.range} followers
+                    </span>
                   </div>
+                  <p className="fc-tier-row-detail">{t.detail}</p>
+                  <p className="fc-tier-row-unlock">{t.unlock}</p>
                 </div>
-
-                <div className="cr-tier-levelup">
-                  <span className="cr-tier-levelup-label">How to level up</span>
-                  <p className="cr-tier-levelup-body">{t.levelUp}</p>
+                <div
+                  className={`fc-tier-row-earn${t.isPartner ? " fc-tier-row-earn--partner" : ""}`}
+                >
+                  {t.earn}
                 </div>
               </div>
             ))}
           </div>
+
+          <p className="fc-tiers-note">
+            Rate rises with verified-visit record. No cap. Paid every Friday.
+          </p>
         </div>
       </section>
 
-      {/* ── 4. How to start — 3 steps ─────────────────────────── */}
-      <section className="section section-bright">
-        <div className="container">
-          <div className="reveal">
-            <div className="section-tag">
-              <span className="section-tag-num">03</span>
-              <span className="section-tag-line" />
-              <span className="section-tag-label">How to Start</span>
-            </div>
-            <h2 className="split-headline">
-              <span className="wt-900">Three steps.</span>
-              <span className="wt-300">Then you&apos;re earning.</span>
-            </h2>
-          </div>
+      {/* ════════════════════════════════════════════════════
+          SIGNATURE DIVIDER 2 (§ 8.5 — max 2 per page)
+          ════════════════════════════════════════════════════ */}
+      <div className="fc-sig-wrap">
+        <span className="sig-divider">Story · Scan · Pay ·</span>
+      </div>
 
-          <div className="cr-how-grid">
-            {HOW_STEPS.map((step, i) => (
-              <div
-                key={step.n}
-                className="cr-how-step reveal"
-                style={{ transitionDelay: `${i * 120}ms` }}
-              >
-                <span className="cr-how-n">{step.n}</span>
-                <h3 className="cr-how-title">{step.title}</h3>
-                <p className="cr-how-body">{step.body}</p>
+      {/* ════════════════════════════════════════════════════
+          EARNINGS PANEL — Warm butter candy, calculator + glass tile
+          ════════════════════════════════════════════════════ */}
+      <section
+        className="candy-panel fc-calc-section"
+        aria-label="Earnings calculator"
+        id="calculator"
+      >
+        {/* Floating glass stat tile — top right (§ 8.9.3) */}
+        <div className="lg-surface fc-calc-tile" aria-hidden="true">
+          <div className="fc-calc-tile-num">Up to $4,200/mo</div>
+          <div className="fc-calc-tile-cap">Operator tier</div>
+        </div>
+
+        <div className="fc-section-inner" data-reveal>
+          <span className="eyebrow fc-eyebrow-block">(THE MATH)</span>
+          <h2 className="fc-h2 fc-h2-mb-48">What you actually earn.</h2>
+
+          <EarningsCalculator />
+        </div>
+      </section>
+
+      {/* ════════════════════════════════════════════════════
+          PULL QUOTE — Brand Red full-width editorial moment
+          (≤1 saturated moment per viewport — this panel IS the
+          viewport when in view; quote panel acts as social proof)
+          ════════════════════════════════════════════════════ */}
+      <section className="fc-quote-section" aria-label="Creator testimonial">
+        {/* Decorative quote mark ghost */}
+        <div className="fc-quote-ghost" aria-hidden="true">
+          &ldquo;
+        </div>
+
+        <div className="fc-quote-inner" data-reveal>
+          <p className="fc-quote-eyebrow">(CREATORS SAY)</p>
+          <blockquote className="fc-quote-text">
+            <em>&ldquo;</em>I made more in my first month than four months of
+            sponsored posts combined. The QR doesn&rsquo;t lie.<em>&rdquo;</em>
+          </blockquote>
+          <div className="fc-quote-attr">
+            <span className="fc-quote-name">Maria V.</span>
+            <span className="fc-quote-sep">/</span>
+            <span className="fc-quote-meta">Operator Tier · Brooklyn</span>
+          </div>
+        </div>
+      </section>
+
+      {/* ════════════════════════════════════════════════════
+          PHOTO GRID PANEL — 3-up Photo Cards (§ 8.7)
+          Surface — warm-neutral · alternates after red quote
+          ════════════════════════════════════════════════════ */}
+      <section className="fc-photo-section" aria-label="Real campaigns">
+        <div className="fc-section-inner" data-reveal>
+          <span className="eyebrow fc-eyebrow-block">(REAL CAMPAIGNS)</span>
+          <h2 className="fc-h2 fc-h2-mb-48">
+            Real campaigns.
+            <br />
+            Real neighborhoods.
+          </h2>
+
+          {/* 3-up Photo Card grid */}
+          <div className="fc-photo-grid">
+            {/* Card 1 — warm dining tone */}
+            <div className="fc-photo-card click-shift fc-photo-card--dining">
+              <div className="lg-surface--badge fc-photo-badge">Active</div>
+              <div className="fc-photo-overlay" />
+              <div className="fc-photo-copy">
+                <div className="fc-photo-title">Williamsburg Market</div>
+                <div className="fc-photo-meta">Food &amp; Bev · 24 scans</div>
               </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── 5. Earnings calculator ───────────────────────────── */}
-      <section className="section section-warm cr-calc-section">
-        <div className="container">
-          <div className="reveal">
-            <div className="section-tag">
-              <span className="section-tag-num">04</span>
-              <span className="section-tag-line" />
-              <span className="section-tag-label">Earnings Calculator</span>
             </div>
-            <h2 className="split-headline">
-              <span className="wt-900">What could you earn</span>
-              <span className="wt-300">this month?</span>
-            </h2>
-            <p className="split-body">
-              Slide the inputs to your situation. Estimates are based on real
-              Push payout data from active NYC creators.
-            </p>
-          </div>
 
-          <div className="reveal" style={{ transitionDelay: "120ms" }}>
-            <EarningsCalculator />
-          </div>
-        </div>
-      </section>
-
-      {/* ── 6. Creator testimonial ───────────────────────────── */}
-      <section className="section section-bright cr-quote-section">
-        <div className="container">
-          <div className="cr-quote-wrap reveal">
-            <div className="cr-quote-mark">&ldquo;</div>
-            <blockquote className="cr-quote-text">
-              {TESTIMONIAL.quote}
-            </blockquote>
-            <div className="cr-quote-meta">
-              <div className="cr-quote-author">
-                <span className="cr-quote-name">{TESTIMONIAL.name}</span>
-                <span className="cr-quote-handle">{TESTIMONIAL.handle}</span>
+            {/* Card 2 — cool travel tone */}
+            <div className="fc-photo-card click-shift fc-photo-card--travel">
+              <div className="lg-surface--badge fc-photo-badge">Verified</div>
+              <div className="fc-photo-overlay" />
+              <div className="fc-photo-copy">
+                <div className="fc-photo-title">Brooklyn Coffee</div>
+                <div className="fc-photo-meta">Beauty · 18 scans</div>
               </div>
-              <div className="cr-quote-right">
-                <span className={`cr-tier-badge ${TESTIMONIAL.badge}`}>
-                  {TESTIMONIAL.material} · {TESTIMONIAL.tier}
-                </span>
-                <span className="cr-quote-loc">{TESTIMONIAL.location}</span>
+            </div>
+
+            {/* Card 3 — warm entertainment tone */}
+            <div className="fc-photo-card click-shift fc-photo-card--ent">
+              <div className="lg-surface--badge fc-photo-badge">Trending</div>
+              <div className="fc-photo-overlay" />
+              <div className="fc-photo-copy">
+                <div className="fc-photo-title">Park Slope Kitchen</div>
+                <div className="fc-photo-meta">Dining · 31 scans</div>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* ── 7. Final CTA — dark ───────────────────────────────── */}
-      <section className="cr-final-cta section-warm">
-        <div className="container">
-          <div className="cr-cta-inner reveal">
-            <p className="eyebrow" style={{ color: "var(--tertiary)" }}>
-              Applications open now
-            </p>
-            <h2 className="cr-cta-headline">
-              Join the NYC cohort.
-              <span className="cr-cta-sub">
-                Your neighbourhood. Your content. Your payout.
-              </span>
-            </h2>
-            <p className="cr-cta-body">
-              Push is live across Brooklyn, Manhattan, Queens, and the Bronx. We
-              review every application within 48 hours. No exclusivity, no
-              minimum posts — just real earnings for real visits.
-            </p>
-            <div className="cr-cta-actions">
-              <Link href="/creator/signup" className="btn btn-primary">
-                Apply to create — free
-              </Link>
-              <Link href="/for-merchants" className="btn btn-ghost cr-ghost">
-                Are you a merchant? →
-              </Link>
-            </div>
-            <p className="cr-cta-note">
-              No minimum follower count for Seed tier · Payouts weekly via
-              Stripe
-            </p>
-          </div>
+      {/* ════════════════════════════════════════════════════
+          TICKET PANEL — GA Orange final CTA (§ 8.2)
+          ════════════════════════════════════════════════════ */}
+      <section className="ticket-panel fc-ticket" aria-label="Apply CTA">
+        {/* Four grommet circles — corner anchored per § 8.2 */}
+        <div className="fc-grommet fc-grommet--tl" aria-hidden="true" />
+        <div className="fc-grommet fc-grommet--tr" aria-hidden="true" />
+        <div className="fc-grommet fc-grommet--bl" aria-hidden="true" />
+        <div className="fc-grommet fc-grommet--br" aria-hidden="true" />
+
+        {/* Centered content (Ticket exception per § 7.3) */}
+        <div className="fc-ticket-content" data-reveal>
+          <p className="fc-ticket-eyebrow">(READY?)</p>
+          <h2 className="fc-ticket-h2">
+            Ready to
+            <br />
+            start scanning?
+          </h2>
+
+          <p className="fc-ticket-body">
+            Applications reviewed weekly. NYC creators only.
+          </p>
+
+          <Link href="/creator/signup" className="btn-ink">
+            Apply Now
+          </Link>
         </div>
       </section>
-    </>
+
+      {/* Bottom spacer */}
+      <div className="fc-bottom-spacer" aria-hidden="true" />
+    </div>
   );
 }

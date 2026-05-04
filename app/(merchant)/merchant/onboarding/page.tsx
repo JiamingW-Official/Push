@@ -1,5 +1,6 @@
 "use client";
 
+import "./onboarding.css";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useState, useEffect, useCallback } from "react";
@@ -22,7 +23,7 @@ const BRAND_COLORS = [
   { name: "Flag Red", hex: "#c1121f" },
   { name: "Molten Lava", hex: "#780000" },
   { name: "Pearl Stone", hex: "#f5f2ec" },
-  { name: "Deep Space Blue", hex: "#003049" },
+  { name: "Deep Space Blue", hex: "var(--ink)" },
   { name: "Steel Blue", hex: "#669bbc" },
   { name: "Champagne Gold", hex: "#c9a96e" },
 ] as const;
@@ -113,6 +114,48 @@ function stepStatus(id: StepId, p: Progress): ChecklistItemStatus {
 }
 
 /* ─────────────────────────────────────────────────────────────
+   Shared input style
+   ───────────────────────────────────────────────────────────── */
+
+const fieldInputStyle: React.CSSProperties = {
+  fontFamily: "var(--font-body)",
+  fontSize: 15,
+  padding: "12px 16px",
+  border: "1px solid var(--hairline)",
+  borderRadius: 8,
+  background: "var(--surface)",
+  color: "var(--ink)",
+  width: "100%",
+  boxSizing: "border-box",
+  outline: "none",
+};
+
+const fieldLabelStyle: React.CSSProperties = {
+  fontFamily: "var(--font-body)",
+  fontSize: 11,
+  fontWeight: 700,
+  letterSpacing: "0.08em",
+  textTransform: "uppercase",
+  color: "var(--ink-3)",
+  display: "block",
+  marginBottom: 8,
+};
+
+const fieldStyle: React.CSSProperties = {
+  display: "flex",
+  flexDirection: "column",
+  gap: 0,
+  marginBottom: 20,
+};
+
+const hintStyle: React.CSSProperties = {
+  fontFamily: "var(--font-body)",
+  fontSize: 12,
+  color: "var(--ink-4)",
+  marginTop: 6,
+};
+
+/* ─────────────────────────────────────────────────────────────
    Step content components
    ───────────────────────────────────────────────────────────── */
 
@@ -130,13 +173,13 @@ function BizProfileStep({
 
   return (
     <div>
-      <div className="ob2-field">
-        <label className="ob2-label" htmlFor="m-legal">
+      <div style={fieldStyle}>
+        <label style={fieldLabelStyle} htmlFor="m-legal">
           Legal business name
         </label>
         <input
           id="m-legal"
-          className="ob2-input"
+          style={fieldInputStyle}
           type="text"
           placeholder="As registered with the state"
           value={biz.legalName}
@@ -146,13 +189,13 @@ function BizProfileStep({
         />
       </div>
 
-      <div className="ob2-field">
-        <label className="ob2-label" htmlFor="m-category">
+      <div style={fieldStyle}>
+        <label style={fieldLabelStyle} htmlFor="m-category">
           Category
         </label>
         <select
           id="m-category"
-          className="ob2-select"
+          style={{ ...fieldInputStyle, appearance: "auto" }}
           value={biz.category}
           onChange={(e) =>
             onChange({ biz: { ...biz, category: e.target.value } })
@@ -167,22 +210,16 @@ function BizProfileStep({
         </select>
       </div>
 
-      <div className="ob2-field">
-        <label className="ob2-label" htmlFor="m-website">
-          Website
-          <span
-            style={{
-              fontWeight: 400,
-              marginLeft: 6,
-              color: "rgba(0,48,73,0.35)",
-            }}
-          >
+      <div style={fieldStyle}>
+        <label style={fieldLabelStyle} htmlFor="m-website">
+          Website{" "}
+          <span style={{ fontWeight: 400, color: "var(--ink-4)" }}>
             (optional)
           </span>
         </label>
         <input
           id="m-website"
-          className="ob2-input"
+          style={fieldInputStyle}
           type="url"
           placeholder="https://yourbusiness.com"
           value={biz.website}
@@ -192,12 +229,13 @@ function BizProfileStep({
         />
       </div>
 
-      <div className="ob2-step-actions">
+      <div style={{ display: "flex", gap: 12, marginTop: 8 }}>
         <button
           type="button"
-          className="ob2-btn-primary"
+          className="btn-primary click-shift"
           onClick={onComplete}
           disabled={!canProceed}
+          style={{ opacity: canProceed ? 1 : 0.4 }}
         >
           Save profile →
         </button>
@@ -220,13 +258,13 @@ function LocationStep({
 
   return (
     <div>
-      <div className="ob2-field">
-        <label className="ob2-label" htmlFor="m-address">
+      <div style={fieldStyle}>
+        <label style={fieldLabelStyle} htmlFor="m-address">
           Street address
         </label>
         <input
           id="m-address"
-          className="ob2-input"
+          style={fieldInputStyle}
           type="text"
           placeholder="123 Bedford Ave"
           value={location.address}
@@ -239,14 +277,21 @@ function LocationStep({
         />
       </div>
 
-      <div className="ob2-field-row">
-        <div className="ob2-field">
-          <label className="ob2-label" htmlFor="m-neighborhood">
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "1fr 1fr",
+          gap: 16,
+          marginBottom: 20,
+        }}
+      >
+        <div>
+          <label style={fieldLabelStyle} htmlFor="m-neighborhood">
             Neighborhood
           </label>
           <input
             id="m-neighborhood"
-            className="ob2-input"
+            style={fieldInputStyle}
             type="text"
             placeholder="Williamsburg"
             value={location.neighborhood}
@@ -257,13 +302,13 @@ function LocationStep({
             }
           />
         </div>
-        <div className="ob2-field">
-          <label className="ob2-label" htmlFor="m-city">
+        <div>
+          <label style={fieldLabelStyle} htmlFor="m-city">
             City
           </label>
           <input
             id="m-city"
-            className="ob2-input"
+            style={fieldInputStyle}
             type="text"
             value={location.city}
             onChange={(e) =>
@@ -273,16 +318,17 @@ function LocationStep({
         </div>
       </div>
 
-      <p className="ob2-input-hint">
+      <p style={hintStyle}>
         Additional locations can be added from your merchant dashboard.
       </p>
 
-      <div className="ob2-step-actions">
+      <div style={{ display: "flex", gap: 12, marginTop: 16 }}>
         <button
           type="button"
-          className="ob2-btn-primary"
+          className="btn-primary click-shift"
           onClick={onComplete}
           disabled={!canProceed}
+          style={{ opacity: canProceed ? 1 : 0.4 }}
         >
           Add location →
         </button>
@@ -304,37 +350,79 @@ function PosStep({
 }) {
   return (
     <div>
-      <div className="ob2-integrations-grid">
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(3,1fr)",
+          gap: 12,
+          marginBottom: 16,
+        }}
+      >
         {POS_INTEGRATIONS.map(({ name, icon, sub }) => (
           <button
             key={name}
             type="button"
-            className={`ob2-integration-btn${progress.pos === name ? " ob2-integration-btn--selected" : ""}`}
             onClick={() => onChange({ pos: name })}
+            style={{
+              background:
+                progress.pos === name ? "var(--surface-2)" : "var(--surface)",
+              border: `1px solid ${progress.pos === name ? "var(--accent-blue)" : "var(--hairline)"}`,
+              borderRadius: 10,
+              padding: "16px 12px",
+              textAlign: "left",
+              cursor: "pointer",
+              transition: "border-color 0.15s, background 0.15s",
+              display: "flex",
+              alignItems: "center",
+              gap: 12,
+            }}
           >
-            <span className="ob2-integration-icon">{icon}</span>
-            <span className="ob2-integration-info">
-              <span className="ob2-integration-name">{name}</span>
-              <span className="ob2-integration-sub">{sub}</span>
+            <span style={{ fontSize: 20 }}>{icon}</span>
+            <span>
+              <span
+                style={{
+                  fontFamily: "var(--font-body)",
+                  fontSize: 13,
+                  fontWeight: 700,
+                  color: "var(--ink)",
+                  display: "block",
+                }}
+              >
+                {name}
+              </span>
+              <span
+                style={{
+                  fontFamily: "var(--font-body)",
+                  fontSize: 11,
+                  color: "var(--ink-4)",
+                }}
+              >
+                {sub}
+              </span>
             </span>
           </button>
         ))}
       </div>
 
-      <p className="ob2-input-hint">
+      <p style={hintStyle}>
         POS integration enables automatic attribution tracking for campaigns.
       </p>
 
-      <div className="ob2-step-actions">
+      <div style={{ display: "flex", gap: 12, marginTop: 16 }}>
         <button
           type="button"
-          className="ob2-btn-primary"
+          className="btn-primary click-shift"
           onClick={onComplete}
           disabled={!progress.pos}
+          style={{ opacity: progress.pos ? 1 : 0.4 }}
         >
           Connect →
         </button>
-        <button type="button" className="ob2-btn-ghost" onClick={onSkip}>
+        <button
+          type="button"
+          className="btn-ghost click-shift"
+          onClick={onSkip}
+        >
           Skip for now
         </button>
       </div>
@@ -358,62 +446,119 @@ function BrandStep({
   return (
     <div>
       {/* Logo upload */}
-      <div className="ob2-upload-zone">
-        <input type="file" accept="image/*" />
-        <span className="ob2-upload-icon">🏷</span>
-        <p className="ob2-upload-label">Upload your logo</p>
-        <p className="ob2-upload-hint">PNG, SVG or JPG · max 2 MB</p>
+      <div
+        style={{
+          border: "1px dashed var(--hairline)",
+          borderRadius: 10,
+          padding: "32px",
+          textAlign: "center",
+          marginBottom: 24,
+          background: "var(--surface)",
+          cursor: "pointer",
+        }}
+      >
+        <input type="file" accept="image/*" style={{ display: "none" }} />
+        <div
+          style={{
+            fontSize: 24,
+            marginBottom: 8,
+          }}
+        >
+          🏷
+        </div>
+        <p
+          style={{
+            fontFamily: "var(--font-body)",
+            fontSize: 14,
+            fontWeight: 700,
+            color: "var(--ink)",
+            margin: "0 0 4px",
+          }}
+        >
+          Upload your logo
+        </p>
+        <p style={hintStyle}>PNG, SVG or JPG · max 2 MB</p>
       </div>
 
       {/* Primary color */}
-      <div className="ob2-field">
-        <p className="ob2-label">Primary brand color</p>
-        <div className="ob2-color-grid">
+      <div style={{ marginBottom: 20 }}>
+        <p style={fieldLabelStyle}>Primary brand color</p>
+        <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
           {BRAND_COLORS.map(({ name, hex }) => (
             <button
               key={hex}
               type="button"
-              className={`ob2-color-swatch${brand.primaryColor === hex ? " ob2-color-swatch--selected" : ""}`}
-              style={{ background: hex }}
               title={name}
               aria-label={`${name} ${brand.primaryColor === hex ? "(selected)" : ""}`}
               onClick={() =>
                 onChange({ brand: { ...brand, primaryColor: hex } })
               }
+              style={{
+                width: 40,
+                height: 40,
+                borderRadius: "50%",
+                background: hex,
+                border:
+                  brand.primaryColor === hex
+                    ? "3px solid var(--ink)"
+                    : "2px solid var(--hairline)",
+                cursor: "pointer",
+                flexShrink: 0,
+                transition: "border-color 0.15s",
+              }}
             />
           ))}
         </div>
       </div>
 
       {/* Secondary color */}
-      <div className="ob2-field">
-        <p className="ob2-label">Secondary brand color</p>
-        <div className="ob2-color-grid">
+      <div style={{ marginBottom: 20 }}>
+        <p style={fieldLabelStyle}>Secondary brand color</p>
+        <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
           {BRAND_COLORS.map(({ name, hex }) => (
             <button
               key={hex}
               type="button"
-              className={`ob2-color-swatch${brand.secondaryColor === hex ? " ob2-color-swatch--selected" : ""}`}
-              style={{ background: hex }}
               title={name}
               aria-label={`${name} ${brand.secondaryColor === hex ? "(selected)" : ""}`}
               onClick={() =>
                 onChange({ brand: { ...brand, secondaryColor: hex } })
               }
+              style={{
+                width: 40,
+                height: 40,
+                borderRadius: "50%",
+                background: hex,
+                border:
+                  brand.secondaryColor === hex
+                    ? "3px solid var(--ink)"
+                    : "2px solid var(--hairline)",
+                cursor: "pointer",
+                flexShrink: 0,
+                transition: "border-color 0.15s",
+              }}
             />
           ))}
         </div>
-        <p className="ob2-input-hint">
+        <p style={hintStyle}>
           Colors are restricted to the Push brand palette for campaign
           consistency.
         </p>
       </div>
 
-      <div className="ob2-step-actions">
-        <button type="button" className="ob2-btn-primary" onClick={onComplete}>
+      <div style={{ display: "flex", gap: 12, marginTop: 8 }}>
+        <button
+          type="button"
+          className="btn-primary click-shift"
+          onClick={onComplete}
+        >
           Save assets →
         </button>
-        <button type="button" className="ob2-btn-ghost" onClick={onSkip}>
+        <button
+          type="button"
+          className="btn-ghost click-shift"
+          onClick={onSkip}
+        >
           Skip for now
         </button>
       </div>
@@ -424,20 +569,67 @@ function BrandStep({
 function CampaignStep({ onSkip }: { onSkip: () => void }) {
   return (
     <div>
-      <div className="ob2-tour-callout">
-        <p className="ob2-tour-eyebrow">Quick start</p>
-        <h3 className="ob2-tour-title">Launch your first campaign today.</h3>
-        <p className="ob2-tour-desc">
+      <div
+        style={{
+          background: "var(--panel-sky, #e8f4fd)",
+          border: "1px solid var(--hairline)",
+          borderRadius: 10,
+          padding: "24px",
+          marginBottom: 24,
+        }}
+      >
+        <span
+          style={{
+            fontFamily: "var(--font-body)",
+            fontSize: 11,
+            fontWeight: 700,
+            letterSpacing: "0.08em",
+            textTransform: "uppercase",
+            color: "var(--accent-blue)",
+            display: "block",
+            marginBottom: 8,
+          }}
+        >
+          Quick start
+        </span>
+        <h3
+          style={{
+            fontFamily: "var(--font-display)",
+            fontWeight: 900,
+            fontSize: 20,
+            color: "var(--ink)",
+            margin: "0 0 8px",
+            letterSpacing: "-0.01em",
+          }}
+        >
+          Launch your first campaign today.
+        </h3>
+        <p
+          style={{
+            fontFamily: "var(--font-body)",
+            fontSize: 14,
+            color: "var(--ink-3)",
+            lineHeight: 1.6,
+            margin: 0,
+          }}
+        >
           Set your offer, choose a neighborhood, and publish in under 5 minutes.
           NYC creators apply within hours.
         </p>
       </div>
 
-      <div className="ob2-step-actions">
-        <Link href="/merchant/campaigns/new" className="ob2-btn-primary">
+      <div style={{ display: "flex", gap: 12 }}>
+        <Link
+          href="/merchant/campaigns/new"
+          className="btn-primary click-shift"
+        >
           Create campaign →
         </Link>
-        <button type="button" className="ob2-btn-ghost" onClick={onSkip}>
+        <button
+          type="button"
+          className="btn-ghost click-shift"
+          onClick={onSkip}
+        >
           Do this later
         </button>
       </div>
@@ -480,22 +672,40 @@ function TeamStep({
 
   return (
     <div>
-      <div className="ob2-team-invites">
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          gap: 8,
+          marginBottom: 12,
+        }}
+      >
         {team.map((email, i) => (
-          <div key={i} className="ob2-team-invite-row">
+          <div key={i} style={{ display: "flex", gap: 8 }}>
             <input
               type="email"
-              className="ob2-team-invite-input"
               placeholder="teammate@email.com"
               value={email}
               onChange={(e) => updateEmail(i, e.target.value)}
               autoComplete="email"
+              style={{ ...fieldInputStyle, flex: 1 }}
             />
             <button
               type="button"
-              className="ob2-team-invite-remove"
               onClick={() => removeRow(i)}
               aria-label="Remove"
+              style={{
+                fontFamily: "var(--font-body)",
+                fontSize: 18,
+                fontWeight: 700,
+                color: "var(--ink-3)",
+                background: "var(--surface)",
+                border: "1px solid var(--hairline)",
+                borderRadius: 8,
+                width: 40,
+                cursor: "pointer",
+                flexShrink: 0,
+              }}
             >
               ×
             </button>
@@ -503,20 +713,39 @@ function TeamStep({
         ))}
       </div>
 
-      <button type="button" className="ob2-add-row-btn" onClick={addRow}>
+      <button
+        type="button"
+        onClick={addRow}
+        style={{
+          fontFamily: "var(--font-body)",
+          fontSize: 13,
+          fontWeight: 700,
+          color: "var(--accent-blue)",
+          background: "none",
+          border: "none",
+          cursor: "pointer",
+          padding: "4px 0",
+          marginBottom: 20,
+        }}
+      >
         + Add another
       </button>
 
-      <div className="ob2-step-actions" style={{ marginTop: 24 }}>
+      <div style={{ display: "flex", gap: 12 }}>
         <button
           type="button"
-          className="ob2-btn-primary"
+          className="btn-primary click-shift"
           onClick={onComplete}
           disabled={!hasAnyEmail}
+          style={{ opacity: hasAnyEmail ? 1 : 0.4 }}
         >
           Send invites →
         </button>
-        <button type="button" className="ob2-btn-ghost" onClick={onSkip}>
+        <button
+          type="button"
+          className="btn-ghost click-shift"
+          onClick={onSkip}
+        >
           Skip for now
         </button>
       </div>
@@ -527,24 +756,70 @@ function TeamStep({
 function QrStep({ onComplete }: { onComplete: () => void }) {
   return (
     <div>
-      <div className="ob2-qr-callout">
-        <div className="ob2-qr-placeholder">
-          <span className="ob2-qr-icon">▣</span>
+      <div
+        style={{
+          background: "var(--surface-2)",
+          border: "1px solid var(--hairline)",
+          borderRadius: 10,
+          padding: "24px",
+          marginBottom: 24,
+          display: "flex",
+          gap: 24,
+          alignItems: "center",
+        }}
+      >
+        <div
+          style={{
+            width: 80,
+            height: 80,
+            background: "var(--surface)",
+            border: "1px solid var(--hairline)",
+            borderRadius: 10,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            fontSize: 32,
+            flexShrink: 0,
+          }}
+        >
+          ▣
         </div>
-        <div className="ob2-qr-info">
-          <p className="ob2-qr-title">Your attribution QR code</p>
-          <p className="ob2-qr-desc">
+        <div>
+          <p
+            style={{
+              fontFamily: "var(--font-body)",
+              fontSize: 15,
+              fontWeight: 700,
+              color: "var(--ink)",
+              margin: "0 0 8px",
+            }}
+          >
+            Your attribution QR code
+          </p>
+          <p
+            style={{
+              fontFamily: "var(--font-body)",
+              fontSize: 13,
+              color: "var(--ink-3)",
+              lineHeight: 1.5,
+              margin: 0,
+            }}
+          >
             Print and place at your location. Every scan ties back to the
             creator who drove the visit.
           </p>
         </div>
       </div>
 
-      <div className="ob2-step-actions">
-        <Link href="/merchant/qr-codes" className="ob2-btn-primary">
+      <div style={{ display: "flex", gap: 12 }}>
+        <Link href="/merchant/qr-codes" className="btn-primary click-shift">
           Go to QR codes →
         </Link>
-        <button type="button" className="ob2-btn-ghost" onClick={onComplete}>
+        <button
+          type="button"
+          className="btn-ghost click-shift"
+          onClick={onComplete}
+        >
           Finish setup
         </button>
       </div>

@@ -1,0 +1,495 @@
+/* ============================================================
+   Push — Admin Privacy Requests (DSAR queue)
+   Authority: Design.md v11 · Product UI register · .pr-* namespace
+   8px grid · mono eyebrow · liquid-glass SLA chip · hover shift
+   ============================================================ */
+
+/* ------------------------------------------------------------
+   Page shell
+   ------------------------------------------------------------ */
+.pr-page {
+  min-height: 100vh;
+  background: var(--surface);
+  padding-bottom: 64px;
+  font-family: var(--font-body);
+  color: var(--ink);
+}
+
+/* ------------------------------------------------------------
+   Page header
+   ------------------------------------------------------------ */
+.pr-header {
+  padding: 40px 40px 32px;
+}
+
+/* v11 product eyebrow — parenthetical mono uppercase */
+.pr-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+  margin-bottom: 8px;
+}
+
+.pr-title {
+  font-family: var(--font-display);
+  font-size: clamp(32px, 4vw, 56px);
+  font-weight: 800;
+  color: var(--ink);
+  letter-spacing: -0.03em;
+  line-height: 1;
+  margin-bottom: 12px;
+}
+
+.pr-desc {
+  font-size: 14px;
+  font-family: var(--font-body);
+  color: var(--ink-4);
+  line-height: 1.6;
+  max-width: 560px;
+}
+
+.pr-desc code {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  background: var(--surface-3);
+  padding: 1px 6px;
+  border-radius: 4px;
+  border: 1px solid var(--hairline);
+}
+
+/* ------------------------------------------------------------
+   Content area
+   ------------------------------------------------------------ */
+.pr-content {
+  padding: 0 40px;
+}
+
+/* ------------------------------------------------------------
+   Error banner
+   ------------------------------------------------------------ */
+.pr-error {
+  padding: 12px 16px;
+  background: rgba(193, 18, 31, 0.05);
+  border: 1px solid rgba(193, 18, 31, 0.2);
+  border-radius: 8px;
+  color: var(--brand-red);
+  font-size: 13px;
+  font-family: var(--font-body);
+  margin-bottom: 20px;
+}
+
+/* ------------------------------------------------------------
+   Loading / empty states
+   ------------------------------------------------------------ */
+.pr-loading,
+.pr-empty-msg {
+  padding: 48px 0;
+  text-align: center;
+  font-size: 14px;
+  font-family: var(--font-body);
+  color: var(--ink-4);
+}
+
+/* ------------------------------------------------------------
+   DSAR request card — border-left brand-red accent
+   ------------------------------------------------------------ */
+.pr-card {
+  background: var(--surface-2);
+  border-left: 3px solid var(--brand-red);
+  border-radius: 10px;
+  padding: 16px 24px;
+  /* hover shift — v11 interaction signature */
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
+  cursor: default;
+}
+
+.pr-card:hover {
+  transform: translate(2px, 2px);
+  box-shadow: var(--shadow-1);
+}
+
+/* ---- Table header row ---- */
+.pr-table-head {
+  display: grid;
+  grid-template-columns: 100px 136px 112px 112px 112px 1fr;
+  gap: 12px;
+  padding: 8px 0;
+  border-bottom: 2px solid var(--hairline);
+}
+
+.pr-table-head__cell {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+}
+
+/* ---- Data rows ---- */
+.pr-row {
+  display: grid;
+  grid-template-columns: 100px 136px 112px 112px 112px 1fr;
+  gap: 12px;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--hairline);
+}
+
+.pr-row:last-child {
+  border-bottom: none;
+}
+
+.pr-row--overdue {
+  background: rgba(193, 18, 31, 0.02);
+}
+
+/* ---- Ticket ID ---- */
+.pr-ticket-id {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--ink);
+  background: var(--surface-3);
+  padding: 2px 6px;
+  border-radius: 4px;
+  border: 1px solid var(--hairline);
+  display: inline-block;
+}
+
+/* ---- Request type badge (CCPA / GDPR / deletion / access) ---- */
+.pr-type-badge {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink);
+  background: var(--surface-3);
+  padding: 3px 8px;
+  border-radius: 4px;
+  border: 1px solid var(--hairline);
+  white-space: nowrap;
+}
+
+/* ---- Received date ---- */
+.pr-date {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--ink-4);
+  white-space: nowrap;
+}
+
+/* ---- SLA countdown — liquid-glass chip + Darky numeral ---- */
+.pr-sla-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.55);
+  border: 1px solid rgba(0, 0, 0, 0.10);
+  -webkit-backdrop-filter: blur(16px) saturate(140%);
+  backdrop-filter: blur(16px) saturate(140%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.60), 0 1px 3px rgba(0, 0, 0, 0.08);
+  white-space: nowrap;
+}
+
+/* Darky numeral 32px for days remaining */
+.pr-sla-chip__days {
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+}
+
+.pr-sla-chip__label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+}
+
+/* Color states — < 7 days: brand-red, < 14 days: champagne-deep */
+.pr-sla-chip--critical .pr-sla-chip__days,
+.pr-sla-chip--critical .pr-sla-chip__label {
+  color: var(--brand-red);
+}
+
+.pr-sla-chip--warn .pr-sla-chip__days,
+.pr-sla-chip--warn .pr-sla-chip__label {
+  color: var(--champagne-deep, #8a6a2a);
+}
+
+/* Overdue: solid brand-red chip */
+.pr-sla-chip--overdue {
+  background: var(--brand-red);
+  border-color: var(--brand-red);
+  box-shadow: none;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+
+.pr-sla-chip--overdue .pr-sla-chip__days,
+.pr-sla-chip--overdue .pr-sla-chip__label {
+  color: var(--snow);
+}
+
+/* ---- Status chip ---- */
+.pr-status-chip {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: capitalize;
+  padding: 3px 8px;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+
+.pr-status-chip--open {
+  background: var(--surface-3);
+  color: var(--ink-4);
+}
+
+.pr-status-chip--received {
+  background: var(--surface-3);
+  color: var(--ink-4);
+}
+
+.pr-status-chip--verifying {
+  background: rgba(191, 161, 112, 0.12);
+  color: var(--champagne-deep, #8a6a2a);
+}
+
+.pr-status-chip--resolved {
+  background: rgba(0, 133, 255, 0.08);
+  color: var(--accent-blue, #0085ff);
+}
+
+.pr-status-chip--denied {
+  background: rgba(193, 18, 31, 0.08);
+  color: var(--brand-red);
+}
+
+.pr-status-chip--in-progress {
+  background: rgba(191, 161, 112, 0.12);
+  color: var(--champagne-deep, #8a6a2a);
+}
+
+.pr-status-chip--completed {
+  background: rgba(0, 133, 255, 0.08);
+  color: var(--accent-blue, #0085ff);
+}
+
+/* ---- Actions cell ---- */
+.pr-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+/* v11 unified button variants — filled primary (brand-red) */
+.pr-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 14px;
+  border: none;
+  border-radius: 8px;
+  background: var(--brand-red);
+  color: var(--snow);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+
+.pr-btn-primary:hover:not(:disabled) {
+  transform: translate(2px, 2px);
+  box-shadow: none;
+}
+
+.pr-btn-primary:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+/* filled secondary (N2W blue) */
+.pr-btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 14px;
+  border: none;
+  border-radius: 8px;
+  background: var(--accent-blue, #0085ff);
+  color: var(--snow);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: transform 0.12s ease;
+}
+
+.pr-btn-secondary:hover:not(:disabled) {
+  transform: translate(2px, 2px);
+}
+
+.pr-btn-secondary:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+/* ghost */
+.pr-btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 13px;
+  border: 1px solid var(--ink);
+  border-radius: 8px;
+  background: transparent;
+  color: var(--ink);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: transform 0.12s ease;
+}
+
+.pr-btn-ghost:hover:not(:disabled) {
+  transform: translate(2px, 2px);
+}
+
+.pr-btn-ghost:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+/* Placeholder dash when no actions available */
+.pr-actions__none {
+  font-size: 12px;
+  font-family: var(--font-body);
+  color: var(--ink-4);
+}
+
+/* ------------------------------------------------------------
+   Focus-visible (WCAG 2.4.11 — keyboard outline)
+   ------------------------------------------------------------ */
+.pr-btn-primary:focus-visible,
+.pr-btn-secondary:focus-visible,
+.pr-btn-ghost:focus-visible {
+  outline: 2px solid var(--brand-red);
+  outline-offset: 2px;
+}
+
+/* ------------------------------------------------------------
+   SLA reference card (bottom info panel)
+   ------------------------------------------------------------ */
+.pr-info-card {
+  background: var(--surface-3);
+  border-radius: 10px;
+  padding: 16px 24px;
+  margin-top: 24px;
+}
+
+.pr-info-card__eyebrow {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+  margin-bottom: 16px;
+}
+
+.pr-info-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.pr-info-stat__label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--ink-4);
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  margin-bottom: 4px;
+}
+
+.pr-info-stat__value {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--ink);
+  line-height: 1;
+  margin-bottom: 2px;
+}
+
+.pr-info-stat__sub {
+  font-size: 11px;
+  font-family: var(--font-body);
+  color: var(--ink-4);
+}
+
+/* ------------------------------------------------------------
+   Responsive
+   ------------------------------------------------------------ */
+@media (max-width: 900px) {
+  .pr-header,
+  .pr-content {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+
+  .pr-table-head,
+  .pr-row {
+    grid-template-columns: 88px 120px 96px 96px 96px 1fr;
+    gap: 8px;
+  }
+
+  .pr-info-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .pr-header,
+  .pr-content {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  /* Stack rows vertically on mobile */
+  .pr-table-head {
+    display: none;
+  }
+
+  .pr-row {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 16px 0;
+    align-items: flex-start;
+  }
+
+  .pr-info-grid {
+    grid-template-columns: 1fr;
+  }
+}

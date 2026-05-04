@@ -9,7 +9,7 @@
   position: fixed;
   inset: 0;
   z-index: 70;
-  background: rgba(0, 48, 73, 0.6);
+  background: var(--ink-3);
   opacity: 0;
   pointer-events: none;
   transition: opacity 400ms cubic-bezier(0.32, 0.72, 0, 1);
@@ -29,14 +29,14 @@
   bottom: 0;
   width: 520px;
   z-index: 80;
-  background: var(--surface-elevated, #fff);
-  border-left: 1px solid var(--line, rgba(0, 48, 73, 0.12));
+  background: var(--surface-2);
+  border-left: 1px solid var(--line);
   display: flex;
   flex-direction: column;
   transform: translateX(100%);
   transition: transform 400ms cubic-bezier(0.32, 0.72, 0, 1);
-  box-shadow: -8px 0 40px rgba(0, 48, 73, 0.14);
-  border-radius: 0;
+  box-shadow: -8px 0 40px rgba(0,0,0,0.10);
+  border-radius: var(--r-2xl);
   overflow: hidden;
 }
 
@@ -51,7 +51,7 @@
   width: 100%;
   height: 200px;
   flex-shrink: 0;
-  background: rgba(0, 48, 73, 0.06);
+  background: var(--surface-3);
   overflow: hidden;
 }
 
@@ -70,8 +70,8 @@
   justify-content: center;
   background: linear-gradient(
     135deg,
-    rgba(0, 48, 73, 0.08) 0%,
-    rgba(0, 48, 73, 0.04) 100%
+    var(--surface-3) 0%,
+    var(--surface-3) 100%
   );
 }
 
@@ -79,7 +79,7 @@
   font-family: var(--font-display, "Darky", sans-serif);
   font-size: 72px;
   font-weight: 900;
-  color: rgba(0, 48, 73, 0.15);
+  color: var(--hairline);
   letter-spacing: -0.06em;
   line-height: 1;
   user-select: none;
@@ -97,7 +97,7 @@
   justify-content: space-between;
   background: linear-gradient(
     to bottom,
-    rgba(0, 48, 73, 0.55) 0%,
+    var(--ink-4) 0%,
     transparent 100%
   );
 }
@@ -109,14 +109,14 @@
   padding: 6px 12px;
   background: rgba(255, 255, 255, 0.18);
   border: 1px solid rgba(255, 255, 255, 0.35);
-  color: #fff;
+  color: var(--surface-2);
   font-family: var(--font-body, "CS Genio Mono", monospace);
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.04em;
   text-transform: uppercase;
   cursor: pointer;
-  border-radius: 0;
+  border-radius: var(--r-2xl);
   transition:
     background 200ms ease,
     border-color 200ms ease,
@@ -134,7 +134,7 @@
 }
 
 .cdp-back-btn:focus-visible {
-  outline: 2px solid #fff;
+  outline: 2px solid var(--surface-2);
   outline-offset: 2px;
 }
 
@@ -147,8 +147,8 @@
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: #fff;
-  border-radius: 0;
+  color: var(--surface-2);
+  border-radius: var(--r-2xl);
 }
 
 /* ── Scrollable body ──────────────────────────────────────── */
@@ -165,7 +165,7 @@
 }
 
 .cdp-body::-webkit-scrollbar-thumb {
-  background: rgba(0, 48, 73, 0.15);
+  background: var(--hairline);
 }
 
 .cdp-body::-webkit-scrollbar-track {
@@ -187,13 +187,13 @@
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--text-muted, rgba(0, 48, 73, 0.55));
+  color: var(--ink-4);
 }
 
 .cdp-neighborhood {
   font-family: var(--font-body, "CS Genio Mono", monospace);
   font-size: 11px;
-  color: var(--graphite, #4a5568);
+  color: var(--graphite);
   letter-spacing: 0.02em;
 }
 
@@ -202,7 +202,7 @@
   font-size: 28px;
   font-weight: 900;
   letter-spacing: -0.04em;
-  color: var(--dark, #003049);
+  color: var(--ink);
   line-height: 1.15;
   margin: 8px 0 0;
 }
@@ -214,7 +214,7 @@
   grid-template-columns: repeat(4, 1fr);
   gap: 0;
   margin: 20px 24px;
-  border: 1px solid var(--line, rgba(0, 48, 73, 0.12));
+  border: 1px solid var(--line);
 }
 
 .cdp-stat {
@@ -222,7 +222,7 @@
   display: flex;
   flex-direction: column;
   gap: 4px;
-  border-right: 1px solid var(--line, rgba(0, 48, 73, 0.12));
+  border-right: 1px solid var(--line);
 }
 
 .cdp-stat:last-child {
@@ -234,12 +234,12 @@
   font-size: 20px;
   font-weight: 800;
   letter-spacing: -0.03em;
-  color: var(--dark, #003049);
+  color: var(--ink);
   line-height: 1;
 }
 
 .cdp-stat-value--urgent {
-  color: var(--primary, #c1121f);
+  color: var(--brand-red);
 }
 
 .cdp-stat-label {
@@ -248,7 +248,7 @@
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: var(--text-muted, rgba(0, 48, 73, 0.55));
+  color: var(--ink-4);
 }
 
 /* ── Progress bar ─────────────────────────────────────────── */
@@ -265,22 +265,22 @@
   font-weight: 700;
   letter-spacing: 0.05em;
   text-transform: uppercase;
-  color: var(--text-muted, rgba(0, 48, 73, 0.55));
+  color: var(--ink-4);
   margin-bottom: 6px;
 }
 
 .cdp-progress-bar {
   height: 4px;
-  background: rgba(0, 48, 73, 0.08);
-  border-radius: 0;
+  background: var(--surface-3);
+  border-radius: var(--r-2xl);
   overflow: hidden;
 }
 
 .cdp-progress-fill {
   height: 100%;
-  background: var(--primary, #c1121f);
+  background: var(--brand-red);
   transition: width 0.5s cubic-bezier(0.32, 0.72, 0, 1);
-  border-radius: 0;
+  border-radius: var(--r-2xl);
 }
 
 /* ── Sections ─────────────────────────────────────────────── */
@@ -290,7 +290,7 @@
   display: flex;
   flex-direction: column;
   gap: 10px;
-  border-top: 1px solid var(--line, rgba(0, 48, 73, 0.12));
+  border-top: 1px solid var(--line);
   padding-top: 20px;
   margin: 0 0 0;
 }
@@ -301,7 +301,7 @@
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--text-muted, rgba(0, 48, 73, 0.55));
+  color: var(--ink-4);
   display: block;
 }
 
@@ -309,7 +309,7 @@
   font-family: var(--font-body, "CS Genio Mono", monospace);
   font-size: 14px;
   line-height: 1.75;
-  color: var(--graphite, #4a5568);
+  color: var(--graphite);
   margin: 0;
 }
 
@@ -326,12 +326,12 @@
   align-items: flex-start;
   gap: 10px;
   padding: 10px 12px;
-  background: rgba(0, 48, 73, 0.03);
-  border-left: 2px solid var(--tertiary, #669bbc);
+  background: var(--surface-3);
+  border-left: 2px solid var(--accent-blue);
 }
 
 .cdp-check-icon {
-  color: var(--tertiary, #669bbc);
+  color: var(--accent-blue);
   flex-shrink: 0;
   margin-top: 2px;
 }
@@ -340,7 +340,7 @@
   font-family: var(--font-body, "CS Genio Mono", monospace);
   font-size: 13px;
   line-height: 1.5;
-  color: var(--dark, #003049);
+  color: var(--ink);
 }
 
 /* ── Merchant card ────────────────────────────────────────── */
@@ -350,14 +350,14 @@
   align-items: flex-start;
   gap: 14px;
   padding: 14px;
-  border: 1px solid var(--line, rgba(0, 48, 73, 0.12));
-  background: var(--surface, #f5f2ec);
+  border: 1px solid var(--line);
+  background: var(--surface);
 }
 
 .cdp-merchant-logo {
   width: 48px;
   height: 48px;
-  background: rgba(0, 48, 73, 0.08);
+  background: var(--surface-3);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -365,7 +365,7 @@
   font-family: var(--font-display, "Darky", sans-serif);
   font-size: 22px;
   font-weight: 800;
-  color: rgba(0, 48, 73, 0.35);
+  color: var(--ink-4);
   letter-spacing: -0.03em;
 }
 
@@ -381,13 +381,13 @@
   font-size: 15px;
   font-weight: 700;
   letter-spacing: -0.02em;
-  color: var(--dark, #003049);
+  color: var(--ink);
 }
 
 .cdp-merchant-addr {
   font-family: var(--font-body, "CS Genio Mono", monospace);
   font-size: 12px;
-  color: var(--graphite, #4a5568);
+  color: var(--graphite);
   line-height: 1.4;
 }
 
@@ -397,7 +397,7 @@
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: var(--text-muted, rgba(0, 48, 73, 0.55));
+  color: var(--ink-4);
   margin-top: 2px;
 }
 
@@ -406,8 +406,8 @@
 .cdp-queue-info {
   margin: 0 24px 24px;
   padding: 16px;
-  background: rgba(0, 48, 73, 0.04);
-  border-left: 3px solid var(--tertiary, #669bbc);
+  background: var(--surface-3);
+  border-left: 3px solid var(--accent-blue);
   display: flex;
   flex-direction: column;
   gap: 4px;
@@ -419,7 +419,7 @@
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: var(--text-muted, rgba(0, 48, 73, 0.55));
+  color: var(--ink-4);
 }
 
 .cdp-queue-num {
@@ -427,14 +427,14 @@
   font-size: 32px;
   font-weight: 900;
   letter-spacing: -0.04em;
-  color: var(--dark, #003049);
+  color: var(--ink);
   line-height: 1;
 }
 
 .cdp-queue-sub {
   font-family: var(--font-body, "CS Genio Mono", monospace);
   font-size: 12px;
-  color: var(--graphite, #4a5568);
+  color: var(--graphite);
   line-height: 1.5;
   margin-top: 4px;
 }
@@ -443,8 +443,8 @@
 
 .cdp-cta-bar {
   padding: 16px 24px;
-  border-top: 1px solid var(--line, rgba(0, 48, 73, 0.12));
-  background: var(--surface-elevated, #fff);
+  border-top: 1px solid var(--line);
+  background: var(--surface-2);
   flex-shrink: 0;
 }
 
@@ -467,7 +467,7 @@
   text-transform: uppercase;
   border: none;
   cursor: pointer;
-  border-radius: 0;
+  border-radius: var(--r-2xl);
   transition:
     background 200ms ease,
     color 200ms ease,
@@ -475,7 +475,7 @@
 }
 
 .cdp-btn:focus-visible {
-  outline: 2px solid var(--dark, #003049);
+  outline: 2px solid var(--ink);
   outline-offset: 2px;
 }
 
@@ -485,40 +485,40 @@
 
 /* Primary — Flag Red fill */
 .cdp-btn--primary {
-  background: var(--primary, #c1121f);
-  color: #fff;
+  background: var(--brand-red);
+  color: var(--surface-2);
 }
 
 .cdp-btn--primary:hover {
-  background: var(--accent, #780000);
+  background: var(--accent);
 }
 
 /* Outline — Save button */
 .cdp-btn--outline {
   background: transparent;
-  color: var(--dark, #003049);
-  border: 1px solid var(--line, rgba(0, 48, 73, 0.12));
+  color: var(--ink);
+  border: 1px solid var(--line);
   padding: 13px 16px;
   white-space: nowrap;
 }
 
 .cdp-btn--outline:hover {
-  background: rgba(0, 48, 73, 0.04);
-  border-color: rgba(0, 48, 73, 0.25);
+  background: var(--surface-3);
+  border-color: var(--mist);
 }
 
 /* Locked */
 .cdp-btn--locked {
-  background: rgba(0, 48, 73, 0.08);
-  color: var(--text-muted, rgba(0, 48, 73, 0.55));
+  background: var(--surface-3);
+  color: var(--ink-4);
   cursor: not-allowed;
   width: 100%;
 }
 
 /* Applied */
 .cdp-btn--applied {
-  background: var(--dark, #003049);
-  color: #fff;
+  background: var(--ink);
+  color: var(--surface-2);
   cursor: default;
   width: 100%;
 }
@@ -554,14 +554,14 @@
   transform: translateX(-50%) translateY(120%);
   z-index: 200;
   padding: 12px 24px;
-  background: var(--dark, #003049);
-  color: #fff;
+  background: var(--ink);
+  color: var(--surface-2);
   font-family: var(--font-body, "CS Genio Mono", monospace);
   font-size: 13px;
   font-weight: 600;
   letter-spacing: 0.02em;
-  border-radius: 0;
-  border-left: 3px solid var(--primary, #c1121f);
+  border-radius: var(--r-2xl);
+  border-left: 3px solid var(--brand-red);
   white-space: nowrap;
   pointer-events: none;
   opacity: 0;
@@ -599,7 +599,7 @@
 
   .cdp-stat:nth-child(1),
   .cdp-stat:nth-child(2) {
-    border-bottom: 1px solid var(--line, rgba(0, 48, 73, 0.12));
+    border-bottom: 1px solid var(--line);
   }
 
   .cdp-toast {

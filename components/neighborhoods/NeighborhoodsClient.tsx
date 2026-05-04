@@ -83,12 +83,27 @@ export default function NeighborhoodsClient({
       {/* Grid */}
       <section className="nh-grid-section">
         <div className="container">
+          <div
+            className="section-marker"
+            data-num="04"
+            style={{ marginTop: "var(--space-3)" }}
+          >
+            The wider list
+          </div>
           <div className="nh-section-header">
             <h2 className="nh-section-title">
-              {activeBorough === "All" ? "All Neighborhoods" : activeBorough}
+              {activeBorough === "All"
+                ? "Every block we've mapped."
+                : activeBorough}
+              {activeBorough === "All" && (
+                <>
+                  {" "}
+                  <span className="display-ghost">Pilot is three of them.</span>
+                </>
+              )}
             </h2>
             <span className="nh-section-count">
-              {filtered.length} neighborhood{filtered.length !== 1 ? "s" : ""}
+              {filtered.length} block{filtered.length !== 1 ? "s" : ""}
             </span>
           </div>
 
@@ -145,9 +160,7 @@ export default function NeighborhoodsClient({
 
                   <p className="nh-card-category">Top: {n.stats.topCategory}</p>
 
-                  <span className="nh-card-cta">
-                    Explore campaigns in {n.name}
-                  </span>
+                  <span className="nh-card-cta">Walk {n.name} →</span>
                 </div>
               </Link>
             ))}

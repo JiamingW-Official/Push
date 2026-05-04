@@ -10,7 +10,7 @@
 
   --ws-topnav-h:    56px;
   --ws-side-w:      240px;
-  --ws-context-w:   320px;
+  --ws-context-w:   360px;
 
   /* ─── Typography Scale ─────────────────────────────────────── */
   /* Display: page hero — max one per page, responsive via clamp */
@@ -34,23 +34,23 @@
   --ws-space-xl:  48px;
   --ws-space-2xl: 64px;
 
-  /* ─── Color Semantic ───────────────────────────────────────── */
-  /* Primary text: Deep Space Blue — headings, important content */
-  --ws-color-text-primary:   #003049;
+  /* ─── Color Semantic (workspace aliases → v11 brand tokens) ── */
+  /* Primary text: Ink */
+  --ws-color-text-primary:   var(--ink);
   /* Secondary text: muted body copy */
-  --ws-color-text-secondary: #4a5568;
+  --ws-color-text-secondary: var(--graphite);
   /* Muted: timestamps, captions, helper text */
-  --ws-color-text-muted:     #9ba3af;
+  --ws-color-text-muted:     var(--ink-4);
   /* Inverse: text on dark backgrounds */
-  --ws-color-text-inverse:   #f5f2ec;
-  /* Action: Flag Red — primary CTAs only, use sparingly */
-  --ws-color-action:         #c1121f;
-  /* Surface: Pearl Stone — default page bg */
-  --ws-color-surface:        #f5f2ec;
-  /* Surface elevated: cards, modals */
-  --ws-color-surface-elevated: #ffffff;
-  /* Border: light separator line */
-  --ws-color-border:         rgba(0, 0, 0, 0.08);
+  --ws-color-text-inverse:   var(--surface);
+  /* Action: brand-red — primary CTAs only */
+  --ws-color-action:         var(--brand-red);
+  /* Surface: Ivory Cream — default page bg */
+  --ws-color-surface:        var(--surface);
+  /* Surface elevated: cards, nav bg */
+  --ws-color-surface-elevated: var(--surface-2);
+  /* Border: hairline separator */
+  --ws-color-border:         var(--hairline);
 
   /* Density scale */
   --density-compact-row:     40px;
@@ -65,11 +65,9 @@
   --anim-fast:        150ms ease;
   --anim-base:        200ms ease;
   --anim-slide:       280ms cubic-bezier(0.4, 0, 0.2, 1);
-  --anim-spring:      320ms cubic-bezier(0.22, 1, 0.36, 1);
+  --anim-spring:      cubic-bezier(0.22, 1, 0.36, 1);
   --anim-border-grow: 220ms cubic-bezier(0.4, 0, 0.2, 1);
 
-  /* Fallback for --text-muted if not defined globally */
-  --text-muted: var(--text-muted, #6b7280);
 }
 
 /* Improve text rendering for workspace shell */
@@ -127,15 +125,15 @@
   left: 8px;
   z-index: 9999;
   padding: 8px 16px;
-  background: var(--dark, #003049);
-  color: #fff;
+  background: var(--ink);
+  color: var(--snow);
   font-family: var(--font-body);
   font-size: 12px;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
   text-decoration: none;
-  border: 2px solid var(--primary, #c1121f);
+  border: 2px solid var(--brand-red);
   outline: none;
   transition: top 150ms ease;
 }
@@ -166,15 +164,863 @@
   grid-area: main;
   overflow-y: auto;
   scrollbar-width: thin;
-  scrollbar-color: var(--line) transparent;
+  scrollbar-color: var(--hairline) transparent;
+  /* Page bg #f8f4e8 Ivory Cream per Design.md § 1. Subtle radial
+     accents preserve the v11 editorial canvas without breaking the
+     canonical base color. */
+  background:
+    radial-gradient(ellipse at 0% 0%, rgba(193,18,31,0.025) 0%, rgba(193,18,31,0) 40%),
+    radial-gradient(ellipse at 100% 100%, rgba(191,161,112,0.04) 0%, rgba(191,161,112,0) 40%),
+    var(--surface);
+  background-attachment: local;
 }
 .ws-layout__main::-webkit-scrollbar { width: 4px; }
-.ws-layout__main::-webkit-scrollbar-thumb { background: var(--line); }
+.ws-layout__main::-webkit-scrollbar-thumb { background: var(--hairline); }
 .ws-layout__context { grid-area: context; }
 
-/* Page enter animation — applied to immediate children of .ws-main */
-.ws-main > * {
+/* Page enter animation — applied to immediate children of .ws-layout__main*/
+.ws-layout__main> * {
   animation: ws-page-enter 300ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* ════════════════════════════════════════════════════════════
+   ★ UNIFIED PAGE GRAMMAR ★
+   Every workspace page MUST follow this composition:
+   ┌────────────────────────────────────────────┐
+   │ Dark editorial Hero (40px 48px 36px)       │
+   │ ← back · EYEBROW            Action ►       │
+   │ Magnificent Title (clamp 56-80px Darky)    │
+   │ Subtitle • mono 14px dim snow              │
+   ├────────────────────────────────────────────┤
+   │ KPI Strip (24px 48px) — 3-4 LG tiles      │
+   ├────────────────────────────────────────────┤
+   │ Section Header (32px 48px)                 │
+   │   EYEBROW · Title              Action ►    │
+   │ Section Content (cards / list / table)     │
+   │   padding: 0 48px 32px                     │
+   ├────────────────────────────────────────────┤
+   │ ✦ Magvix Italic divider — between blocks  │
+   ├────────────────────────────────────────────┤
+   │ Section 2 ...                              │
+   └────────────────────────────────────────────┘
+   ════════════════════════════════════════════════════════════ */
+
+:root {
+  /* SaaS-tightened rhythm — Linear / Vercel / Cal.com inspired */
+  --ws-page-x:        32px;  /* tighter horizontal padding (was 48px) */
+  --ws-page-x-mobile: 20px;
+  --ws-hero-pt:       24px;  /* hero top — compact dashboard feel */
+  --ws-hero-pb:       24px;
+  --ws-section-pt:    24px;
+  --ws-section-pb:    16px;
+  --ws-tile-gap:      16px;  /* KPI tile gap — 8px grid aligned */
+  --ws-section-gap:   24px;
+}
+
+/* ─── 1. HERO — Light SaaS-style with hairline border-bottom ─── */
+.ws-layout__main .wt-hero,
+.ws-layout__main .cal-hero,
+.ws-layout__main .pl-hero,
+.ws-layout__main .drafts-hero,
+.ws-layout__main .disc-hero,
+.ws-layout__main .inbox-nav,
+.ws-layout__main > header[style*="background: var(--char)"],
+.ws-layout__main > div[style*="background: var(--char)"] {
+  padding: var(--ws-hero-pt) var(--ws-page-x) var(--ws-hero-pb) !important;
+  /* SaaS: light surface with subtle hairline divider, NOT dark editorial */
+  background: var(--surface) !important;
+  border-bottom: 0.5px solid rgba(10, 10, 10, 0.10) !important;
+  margin: 0 !important;
+  position: relative;
+}
+
+/* Inbox nav is a sub-nav, smaller */
+.ws-layout__main .inbox-nav {
+  padding: 12px var(--ws-page-x) !important;
+}
+
+/* ── Compact hero modifier — slightly tighter vertical rhythm ── */
+.ws-layout__main .wt-hero--compact {
+  padding-top: 16px !important;
+  padding-bottom: 16px !important;
+}
+
+/* All hero titles → SaaS dashboard scale 24-40px (Linear-like). NO Magvix italic. */
+.ws-layout__main .wt-date-day,
+.ws-layout__main .wt-page-title,
+.ws-layout__main .cal-hero-title,
+.ws-layout__main .pl-headline,
+.ws-layout__main .drafts-hero-title,
+.ws-layout__main .disc-hero-title,
+.ws-layout__main .inbox-nav-title {
+  font-family: var(--font-display) !important;
+  font-style: normal !important;
+  font-size: clamp(28px, 3vw, 40px) !important;
+  font-weight: 800 !important;
+  letter-spacing: -0.025em !important;
+  line-height: 1.1 !important;
+  color: var(--ink) !important;
+  text-transform: none !important;
+  margin: 0 0 4px !important;
+}
+
+/* All hero eyebrows — Mono 11px, light surface ink-3 (NOT dim snow) */
+.ws-layout__main .wt-date-month,
+.ws-layout__main .wt-page-eyebrow,
+.ws-layout__main .cal-hero-eyebrow,
+.ws-layout__main .drafts-hero-eyebrow,
+.ws-layout__main .disc-hero-eyebrow {
+  font-family: var(--font-mono) !important;
+  font-size: 11px !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.10em !important;
+  text-transform: uppercase !important;
+  color: var(--ink-4) !important;
+  margin: 0 0 6px !important;
+}
+
+/* All hero subtitles — Mono 13px, ink-3 */
+.ws-layout__main .wt-hero-summary,
+.ws-layout__main .pl-hero-sub,
+.ws-layout__main .disc-hero-sub {
+  font-family: var(--font-mono) !important;
+  font-size: 13px !important;
+  font-weight: 400 !important;
+  letter-spacing: 0 !important;
+  color: var(--ink-3) !important;
+  margin: 0 !important;
+}
+
+/* SaaS: NO Magvix italic accents in product hero (per § 8.8.4 Product register) */
+.ws-layout__main .pl-headline em,
+.ws-layout__main .drafts-hero-title em,
+.ws-layout__main .disc-hero-title em,
+.ws-layout__main .cal-hero-title em {
+  font-family: var(--font-display) !important;
+  font-style: normal !important;
+  font-weight: 800 !important;
+  font-size: 1em !important;
+  letter-spacing: inherit !important;
+  color: var(--ink) !important;
+}
+
+/* NOTE: Duplicate dark-hero eyebrow/subtitle rules removed (v11 audit).
+   Light-surface values are canonical — see the UNIFIED PAGE GRAMMAR
+   eyebrow/subtitle rules above (var(--ink-4) and var(--ink-3)). */
+
+/* ─── 2. KPI STRIP — SaaS dashboard cards (Linear/Vercel-like) ─── */
+.ws-layout__main .wt-stats-row,
+.ws-layout__main .ws-stats-strip {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)) !important;
+  gap: var(--ws-tile-gap) !important;
+  padding: var(--ws-section-pt) var(--ws-page-x) var(--ws-section-pb) !important;
+  background: transparent !important;
+  border-bottom: none !important;
+  margin: 0 !important;
+}
+
+/* Each KPI tile — flat SaaS card, single hairline border, single shadow */
+.ws-layout__main .wt-stat-chip,
+.ws-layout__main .ws-stats-strip__tile {
+  position: relative;
+  padding: 16px !important;
+  border: 0.5px solid rgba(10, 10, 10, 0.10) !important;
+  border-right: 0.5px solid rgba(10, 10, 10, 0.10) !important;
+  border-radius: 8px !important;
+  background: var(--snow) !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+  box-shadow: 0 1px 2px rgba(10, 10, 10, 0.03) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 4px !important;
+  overflow: hidden;
+  transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease;
+}
+
+/* Hairline left accent — appears on hover (subtle SaaS detail) */
+.ws-layout__main .wt-stat-chip::before,
+.ws-layout__main .ws-stats-strip__tile::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 2px;
+  background: var(--ink);
+  opacity: 0;
+  transition: opacity 160ms ease;
+}
+
+.ws-layout__main .wt-stat-chip:hover,
+.ws-layout__main .ws-stats-strip__tile:hover {
+  border-color: rgba(10, 10, 10, 0.18) !important;
+  box-shadow: 0 4px 10px rgba(10, 10, 10, 0.06) !important;
+  transform: translate(1px, 1px);
+}
+
+.ws-layout__main .wt-stat-chip:hover::before,
+.ws-layout__main .ws-stats-strip__tile:hover::before {
+  opacity: 1;
+}
+
+/* KPI numerals — SaaS dashboard scale 24-28px, weight 700 (Linear-like) */
+.ws-layout__main .wt-stat-val,
+.ws-layout__main .ws-stats-strip__value {
+  font-family: var(--font-display) !important;
+  font-size: 26px !important;
+  font-weight: 700 !important;
+  font-style: normal !important;
+  letter-spacing: -0.02em !important;
+  line-height: 1.1 !important;
+  color: var(--ink) !important;
+  margin: 0 !important;
+  order: 2 !important;
+}
+
+/* KPI label ABOVE numeral (Linear pattern: label-then-value) */
+.ws-layout__main .wt-stat-lbl,
+.ws-layout__main .ws-stats-strip__caption {
+  font-family: var(--font-mono) !important;
+  font-size: 11px !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.04em !important;
+  text-transform: uppercase !important;
+  color: var(--ink-4) !important;
+  margin: 0 !important;
+  order: 1 !important;
+}
+
+/* ─── 3. SECTION HEADER — same composition everywhere ─── */
+.ws-layout__main .wt-section-title-row,
+.ws-layout__main .ws-section-header {
+  display: flex !important;
+  align-items: baseline !important;
+  justify-content: space-between !important;
+  padding: var(--ws-section-pt) var(--ws-page-x) 16px !important;
+  margin: 0 !important;
+}
+
+.ws-layout__main .wt-section-title,
+.ws-layout__main .ws-section-header__title {
+  font-family: var(--font-display) !important;
+  font-size: 24px !important;
+  font-weight: 900 !important;
+  letter-spacing: -0.025em !important;
+  color: var(--ink) !important;
+  margin: 0 !important;
+}
+
+/* ─── 4. CONTENT SECTIONS — same horizontal padding ─── */
+.ws-layout__main .wt-body,
+.ws-layout__main .pl-list,
+.ws-layout__main .draft-list,
+.ws-layout__main .draft-grid {
+  padding: 0 var(--ws-page-x) var(--ws-section-gap) !important;
+  max-width: none !important;
+}
+
+/* ════════════════════════════════════════════════════════════
+   ★ EDITORIAL TABLE — Cinema-Selects style (Design.md § 8.6)
+   Auto-applies to ALL <table> within workspace pages.
+   Replaces blah HTML tables with magazine-published-table feel.
+   ════════════════════════════════════════════════════════════ */
+
+.ws-layout__main table:not(.ws-no-style),
+.ws-layout__main .ws-editorial-table {
+  width: 100% !important;
+  border-collapse: collapse !important;
+  background: transparent !important;
+  font-family: var(--font-mono) !important;
+}
+
+/* Header row — mono 12px 700 uppercase parenthetical-ready */
+.ws-layout__main table:not(.ws-no-style) thead th,
+.ws-layout__main .ws-editorial-table thead th {
+  font-family: var(--font-mono) !important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.14em !important;
+  text-transform: uppercase !important;
+  color: var(--ink-3) !important;
+  text-align: left !important;
+  padding: 0 16px 24px !important;
+  background: transparent !important;
+  border-bottom: 1px dotted rgba(10, 10, 10, 0.30) !important;
+}
+
+/* Body rows */
+.ws-layout__main table:not(.ws-no-style) tbody td,
+.ws-layout__main .ws-editorial-table tbody td {
+  padding: 20px 16px !important;
+  border-bottom: 1px dotted rgba(10, 10, 10, 0.18) !important;
+  background: transparent !important;
+  vertical-align: middle !important;
+}
+
+/* First column = Darky display — magazine "lead" column */
+.ws-layout__main table:not(.ws-no-style) tbody td:first-child,
+.ws-layout__main .ws-editorial-table tbody td:first-child {
+  font-family: var(--font-display) !important;
+  font-size: 20px !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.025em !important;
+  color: var(--ink) !important;
+}
+
+/* Other columns = mono body */
+.ws-layout__main table:not(.ws-no-style) tbody td:not(:first-child),
+.ws-layout__main .ws-editorial-table tbody td:not(:first-child) {
+  font-family: var(--font-mono) !important;
+  font-size: 16px !important;
+  font-weight: 400 !important;
+  color: var(--ink-3) !important;
+}
+
+/* Last column right-aligned — "outcome" / "amount" pattern */
+.ws-layout__main table:not(.ws-no-style) tbody td:last-child,
+.ws-layout__main table:not(.ws-no-style) thead th:last-child,
+.ws-layout__main .ws-editorial-table tbody td:last-child,
+.ws-layout__main .ws-editorial-table thead th:last-child {
+  text-align: right !important;
+}
+
+/* Row hover — gentle ink darken */
+.ws-layout__main table:not(.ws-no-style) tbody tr {
+  transition: background 200ms ease;
+}
+
+.ws-layout__main table:not(.ws-no-style) tbody tr:hover {
+  background: rgba(10, 10, 10, 0.025) !important;
+}
+
+/* ─── Apply Editorial Table to existing div-based tables ─── */
+
+/* Earnings transactions */
+.ws-layout__main .earn-txn-table {
+  background: var(--surface-2) !important;
+  border-radius: var(--r-md) !important;
+  padding: 32px 40px !important;
+  border: 0.5px solid rgba(10,10,10,0.06) !important;
+}
+
+.ws-layout__main .earn-txn-head {
+  border-bottom: 1px dotted rgba(10, 10, 10, 0.30) !important;
+  padding: 0 0 24px !important;
+}
+
+.ws-layout__main .earn-txn-head-cell {
+  font-family: var(--font-mono) !important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.14em !important;
+  text-transform: uppercase !important;
+  color: var(--ink-3) !important;
+}
+
+.ws-layout__main .earn-txn-row {
+  padding: 20px 0 !important;
+  border-bottom: 1px dotted rgba(10, 10, 10, 0.18) !important;
+  transition: background 200ms ease;
+}
+
+.ws-layout__main .earn-txn-row:hover {
+  background: rgba(10, 10, 10, 0.02) !important;
+}
+
+.ws-layout__main .earn-txn-campaign {
+  font-family: var(--font-display) !important;
+  font-size: 20px !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.025em !important;
+  color: var(--ink) !important;
+}
+
+/* Analytics campaign breakdown */
+.ws-layout__main .an-table-card {
+  background: var(--surface-2) !important;
+  border-radius: var(--r-md) !important;
+  padding: 32px 40px !important;
+  border: 0.5px solid rgba(10,10,10,0.06) !important;
+  box-shadow: none !important;
+}
+
+.ws-layout__main .an-table-head {
+  border-bottom: 1px dotted rgba(10, 10, 10, 0.30) !important;
+  padding: 0 0 24px !important;
+}
+
+.ws-layout__main .an-table-head-cell {
+  font-family: var(--font-mono) !important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.14em !important;
+  text-transform: uppercase !important;
+  color: var(--ink-3) !important;
+}
+
+.ws-layout__main .an-table-row {
+  padding: 20px 0 !important;
+  border-bottom: 1px dotted rgba(10, 10, 10, 0.18) !important;
+}
+
+.ws-layout__main .an-table-campaign {
+  font-family: var(--font-display) !important;
+  font-size: 20px !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.025em !important;
+  color: var(--ink) !important;
+}
+
+/* ════════════════════════════════════════════════════════════
+   ★ MAGVIX ITALIC SIGNATURE DIVIDER (Design.md § 8.5)
+   Use between sections — `End of campaigns · Fin ·` style.
+   Injectable via .ws-divider-magvix class or inserted globally
+   between major sections of long pages.
+   ════════════════════════════════════════════════════════════ */
+
+.ws-divider-magvix {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 48px 0;
+  margin: 0;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 300;
+  font-size: clamp(24px, 3vw, 36px);
+  letter-spacing: -0.015em;
+  color: var(--ink-3);
+  user-select: none;
+  pointer-events: none;
+}
+
+.ws-divider-magvix::before,
+.ws-divider-magvix::after {
+  content: "·";
+  font-family: var(--font-mono);
+  font-style: normal;
+  font-size: 32px;
+  color: var(--champagne);
+  font-weight: 400;
+  line-height: 1;
+}
+
+/* ════════════════════════════════════════════════════════════
+   ★ HERO PEEK TILE (Design.md § 8.9.4 — Hero Photo Stat Peek)
+   A liquid-glass tile that floats in the upper-right of a dark
+   hero, carrying ONE key stat. Adds magazine-cover composition.
+   ════════════════════════════════════════════════════════════ */
+
+.ws-layout__main .wt-hero,
+.ws-layout__main .cal-hero,
+.ws-layout__main .pl-hero,
+.ws-layout__main .drafts-hero,
+.ws-layout__main .disc-hero {
+  position: relative !important;
+}
+
+.ws-hero-peek {
+  position: absolute;
+  top: 32px;
+  right: var(--ws-page-x, 48px);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 24px 32px;
+  border-radius: var(--r-xl);
+  background:
+    radial-gradient(ellipse at 25% 0%, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0) 55%),
+    radial-gradient(ellipse at 90% 100%, rgba(0,0,0,0.18) 0%, rgba(0,0,0,0) 60%),
+    rgba(40, 36, 32, 0.50);
+  -webkit-backdrop-filter: blur(28px) saturate(160%);
+  backdrop-filter: blur(28px) saturate(160%);
+  border: 0.5px solid rgba(255, 255, 255, 0.22);
+  box-shadow:
+    0 8px 24px rgba(0, 0, 0, 0.20),
+    0 2px 6px rgba(0, 0, 0, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.24);
+  min-width: 200px;
+}
+
+.ws-hero-peek__label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.ws-hero-peek__value {
+  font-family: var(--font-display);
+  font-size: clamp(32px, 3.5vw, 44px);
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  color: var(--snow);
+  line-height: 1;
+}
+
+.ws-hero-peek__caption {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.55);
+  letter-spacing: 0.04em;
+}
+
+@media (max-width: 768px) {
+  .ws-hero-peek {
+    position: static;
+    margin-top: 16px;
+    align-self: flex-start;
+  }
+}
+
+/* ════════════════════════════════════════════════════════════
+   ★ CANDY PANEL FEATURE TILE — Editorial spotlight
+   For 1 feature highlight per page. Butter / Peach / Sky tones.
+   ════════════════════════════════════════════════════════════ */
+
+.ws-feature-tile {
+  position: relative;
+  padding: 56px 64px;
+  border-radius: var(--r-3xl);
+  background:
+    radial-gradient(ellipse at 100% 0%, rgba(255,255,255,0.50) 0%, rgba(255,255,255,0) 55%),
+    var(--panel-butter);
+  border: 0.5px solid rgba(255, 255, 255, 0.50);
+  box-shadow:
+    0 12px 40px rgba(193, 18, 31, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.65);
+  overflow: hidden;
+  margin: 32px var(--ws-page-x, 48px);
+}
+
+.ws-feature-tile--peach { background: var(--panel-peach); }
+.ws-feature-tile--blush { background: var(--panel-blush); }
+.ws-feature-tile--sky   { background: var(--panel-sky); }
+
+.ws-feature-tile::before {
+  content: "&";
+  position: absolute;
+  bottom: -32px;
+  right: -16px;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 200px;
+  font-weight: 300;
+  color: rgba(193, 18, 31, 0.05);
+  line-height: 1;
+  pointer-events: none;
+  user-select: none;
+}
+
+.ws-feature-tile__eyebrow {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin: 0 0 16px;
+}
+
+.ws-feature-tile__title {
+  font-family: var(--font-display);
+  font-size: clamp(40px, 4.5vw, 56px);
+  font-weight: 900;
+  letter-spacing: -0.045em;
+  line-height: 0.95;
+  color: var(--ink);
+  margin: 0 0 24px;
+  max-width: 70%;
+}
+
+.ws-feature-tile__title em {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 300;
+  font-size: 1.06em;
+  color: var(--brand-red);
+}
+
+.ws-feature-tile__body {
+  font-family: var(--font-mono);
+  font-size: 16px;
+  line-height: 1.55;
+  color: var(--ink-3);
+  margin: 0 0 32px;
+  max-width: 56ch;
+}
+
+/* ════════════════════════════════════════════════════════════
+   END UNIFIED PAGE GRAMMAR
+   ════════════════════════════════════════════════════════════ */
+
+/* ============================================================
+   UNIVERSAL CONTENT UPGRADES  (.ws-layout__maindescendants)
+   Apply Liquid Glass + soft elevation to all standard card
+   patterns across all workspace pages. Replaces hairline-border
+   "analog" style with iOS 26 glass material.
+   ============================================================ */
+
+/* All major content cards across pages */
+.ws-layout__main .wt-task-card,
+.ws-layout__main .wt-event-card,
+.ws-layout__main .disc-card,
+.ws-layout__main .pl-card,
+.ws-layout__main .draft-card,
+.ws-layout__main .cal-cell--has-events,
+.ws-layout__main .inbox-thread,
+.ws-layout__main .inbox-msg-row {
+  background:
+    radial-gradient(ellipse at 20% -10%, rgba(255,255,255,0.65) 0%, rgba(255,255,255,0) 50%),
+    rgba(255, 255, 255, 0.55) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  backdrop-filter: blur(20px) saturate(180%);
+  border: 0.5px solid rgba(255, 255, 255, 0.65) !important;
+  box-shadow:
+    0 4px 16px rgba(10, 10, 10, 0.05),
+    0 1px 3px rgba(10, 10, 10, 0.04),
+    inset 0 1px 0 rgba(255, 255, 255, 0.70),
+    inset 0 -1px 0 rgba(10, 10, 10, 0.03);
+}
+
+/* Universal liquid-glass table frame — wraps any table grid container */
+.ws-layout__main .ws-glass-frame,
+.ws-layout__main .pl-list,
+.ws-layout__main .draft-list,
+.ws-layout__main .disc-grid {
+  border-radius: var(--r-xl);
+}
+
+/* Universal page stats strip pattern — Darky giant numerals */
+.ws-stats-strip {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;
+  padding: 0 0 32px;
+}
+
+.ws-stats-strip__tile {
+  position: relative;
+  padding: 28px 28px 24px;
+  border-radius: var(--r-xl);
+  background:
+    radial-gradient(ellipse at 20% -10%, rgba(255,255,255,0.70) 0%, rgba(255,255,255,0) 50%),
+    radial-gradient(ellipse at 100% 100%, rgba(255,255,255,0.20) 0%, rgba(255,255,255,0) 60%),
+    rgba(255, 255, 255, 0.55);
+  -webkit-backdrop-filter: blur(28px) saturate(180%);
+  backdrop-filter: blur(28px) saturate(180%);
+  border: 0.5px solid rgba(255, 255, 255, 0.70);
+  box-shadow:
+    0 8px 24px rgba(10, 10, 10, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.80);
+  overflow: hidden;
+  transition: transform 200ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.ws-stats-strip__tile::before {
+  content: "";
+  position: absolute;
+  top: 16px;
+  left: 0;
+  width: 3px;
+  height: 32px;
+  background: linear-gradient(180deg, var(--champagne) 0%, rgba(191,161,112,0.20) 100%);
+  border-radius: 0 3px 3px 0;
+}
+
+.ws-stats-strip__tile:hover {
+  transform: translate(1px, 1px);
+}
+
+.ws-stats-strip__eyebrow {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+  margin: 0 0 12px;
+}
+
+.ws-stats-strip__value {
+  display: block;
+  font-family: var(--font-display);
+  font-size: clamp(40px, 5vw, 64px);
+  font-weight: 900;
+  letter-spacing: -0.045em;
+  color: var(--ink);
+  line-height: 0.95;
+  margin: 0;
+}
+
+.ws-stats-strip__value--accent { color: var(--brand-red); }
+.ws-stats-strip__value--gold   { color: var(--champagne); }
+
+.ws-stats-strip__caption {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ink-4);
+  letter-spacing: 0.04em;
+  margin: 8px 0 0;
+}
+
+/* Magvix Italic Signature Divider — between sections */
+.ws-divider-signature {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 32px 0;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: clamp(20px, 2.5vw, 28px);
+  font-weight: 300;
+  color: var(--ink-4);
+  letter-spacing: -0.01em;
+  user-select: none;
+}
+
+.ws-divider-signature::before,
+.ws-divider-signature::after {
+  content: "·";
+  font-family: var(--font-mono);
+  font-style: normal;
+  font-size: 24px;
+  color: var(--champagne);
+  font-weight: 400;
+}
+
+/* Section header pattern */
+.ws-section-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin: 0 0 24px;
+  padding: 0 0 16px;
+  border-bottom: 0.5px solid rgba(10, 10, 10, 0.08);
+}
+
+.ws-section-header__title {
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  margin: 0;
+}
+
+.ws-section-header__eyebrow {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+}
+
+/* ──────── Existing per-page patterns: upgrade to Liquid Glass ──────── */
+
+/* Today page stats row + each stat */
+.ws-layout__main .wt-stats-row {
+  background: transparent !important;
+  border-bottom: none !important;
+  display: grid !important;
+  grid-template-columns: repeat(3, 1fr) !important;
+  gap: 16px !important;
+  padding: 0 48px 32px !important;
+}
+
+.ws-layout__main .wt-stat-chip {
+  position: relative;
+  padding: 28px 28px 24px !important;
+  border-right: none !important;
+  border-radius: var(--r-xl) !important;
+  background:
+    radial-gradient(ellipse at 20% -10%, rgba(255,255,255,0.70) 0%, rgba(255,255,255,0) 50%),
+    rgba(255, 255, 255, 0.55) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(180%);
+  backdrop-filter: blur(28px) saturate(180%);
+  border: 0.5px solid rgba(255, 255, 255, 0.70) !important;
+  box-shadow:
+    0 8px 24px rgba(10, 10, 10, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.80) !important;
+  overflow: hidden;
+  transition: transform 200ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.ws-layout__main .wt-stat-chip::before {
+  content: "";
+  position: absolute;
+  top: 16px;
+  left: 0;
+  width: 3px;
+  height: 32px;
+  background: linear-gradient(180deg, var(--champagne) 0%, rgba(191,161,112,0.20) 100%);
+  border-radius: 0 3px 3px 0;
+}
+
+.ws-layout__main .wt-stat-chip:hover {
+  transform: translate(1px, 1px);
+}
+
+.ws-layout__main .wt-stat-val {
+  font-size: clamp(40px, 5vw, 64px) !important;
+  font-weight: 900 !important;
+  letter-spacing: -0.045em !important;
+  line-height: 0.95 !important;
+}
+
+/* Pipeline + drafts list containers */
+.ws-layout__main .pl-list,
+.ws-layout__main .draft-list {
+  padding: 24px 32px !important;
+  border-radius: var(--r-xl);
+}
+
+/* Drafts pipeline stages bar */
+.ws-layout__main .drafts-pipeline {
+  background:
+    radial-gradient(ellipse at 20% -10%, rgba(255,255,255,0.50) 0%, rgba(255,255,255,0) 60%),
+    rgba(255, 255, 255, 0.40) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  backdrop-filter: blur(20px) saturate(180%);
+  border: 0.5px solid rgba(255, 255, 255, 0.55) !important;
+  border-radius: var(--r-xl) !important;
+  box-shadow:
+    0 4px 12px rgba(10, 10, 10, 0.04),
+    inset 0 1px 0 rgba(255, 255, 255, 0.70) !important;
+}
+
+/* Discover hero + grid card uplift */
+.ws-layout__main .disc-top-match {
+  background:
+    radial-gradient(ellipse at 20% -10%, rgba(255,255,255,0.65) 0%, rgba(255,255,255,0) 50%),
+    rgba(255, 255, 255, 0.55) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  backdrop-filter: blur(24px) saturate(180%);
+  border: 0.5px solid rgba(255, 255, 255, 0.70) !important;
+  box-shadow:
+    0 12px 32px rgba(10, 10, 10, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.80) !important;
+  border-radius: var(--r-xl) !important;
+}
+
+/* Inbox tab strip */
+.ws-layout__main .inbox-tabs {
+  background:
+    radial-gradient(ellipse at 20% -10%, rgba(255,255,255,0.50) 0%, rgba(255,255,255,0) 60%),
+    rgba(255, 255, 255, 0.40) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  backdrop-filter: blur(20px) saturate(180%);
 }
 
 
@@ -186,15 +1032,24 @@
   /* Full grid-area fill — layout wrapper handles positioning */
   height: var(--ws-topnav-h);
   z-index: 100;
-  background: var(--surface-elevated);
-  border-bottom: 1px solid var(--line);
+  /* iOS 26 Liquid Glass — Light Variant */
+  background:
+    radial-gradient(ellipse at 20% 0%, rgba(255,255,255,0.80) 0%, rgba(255,255,255,0) 52%),
+    radial-gradient(ellipse at 85% 110%, rgba(255,255,255,0.40) 0%, rgba(255,255,255,0) 55%),
+    rgba(248,244,232,0.82);
+  -webkit-backdrop-filter: blur(32px) saturate(180%);
+  backdrop-filter: blur(32px) saturate(180%);
+  border-bottom: 0.5px solid rgba(255,255,255,0.70);
+  box-shadow:
+    0 4px 16px rgba(10,10,10,0.06),
+    0 1px 3px rgba(10,10,10,0.04),
+    inset 0 1px 0 rgba(255,255,255,0.90),
+    inset 0 -1px 0 rgba(10,10,10,0.03);
   display: flex;
   align-items: center;
-  padding: 0 var(--ws-space-md); /* 24px left/right — unified horizontal rhythm */
+  padding: 0 var(--ws-space-md);
   gap: 12px;
   flex-shrink: 0;
-  /* Subtle bottom shadow for elevation */
-  box-shadow: 0 1px 0 var(--line), 0 2px 8px rgba(0, 48, 73, 0.04);
   animation: ws-fadeIn 300ms var(--anim-spring) both;
 }
 
@@ -215,7 +1070,7 @@
   font-weight: 900;
   font-style: italic;
   letter-spacing: -0.07em;
-  color: var(--dark);
+  color: var(--ink);
   text-decoration: none;
   line-height: 1;
   flex-shrink: 0;
@@ -231,17 +1086,17 @@
   left: 0;
   width: 100%;
   height: 2px;
-  background: var(--primary);
+  background: var(--brand-red);
   transform: scaleX(1);
   transform-origin: left;
   transition: transform var(--anim-base);
 }
 
-.ws-topnav__logo:hover { color: var(--primary); }
+.ws-topnav__logo:hover { color: var(--brand-red); }
 .ws-topnav__logo:hover::after { transform: scaleX(1.15); }
 
 .ws-topnav__logo:focus-visible {
-  outline: 2px solid var(--primary);
+  outline: 2px solid var(--brand-red);
   outline-offset: 2px;
 }
 
@@ -249,7 +1104,7 @@
 .ws-topnav__sep {
   font-family: var(--font-body);
   font-size: 13px;
-  color: var(--line-strong);
+  color: var(--mist);
   font-weight: 400;
   user-select: none;
   margin: 0 10px;
@@ -294,29 +1149,29 @@
 }
 
 .ws-topnav__bc-section:hover {
-  color: var(--dark);
+  color: var(--ink);
 }
 
 .ws-topnav__bc-section:focus-visible {
-  outline: 2px solid var(--primary);
+  outline: 2px solid var(--brand-red);
   outline-offset: 2px;
 }
 
 /* Active section (leaf page) — highlighted with primary */
 .ws-topnav__bc-section--active {
-  color: var(--primary);
+  color: var(--brand-red);
   font-weight: 700;
 }
 
 .ws-topnav__bc-section--active:hover {
-  color: var(--primary);
+  color: var(--brand-red);
 }
 
 /* Breadcrumb separator */
 .ws-topnav__bc-sep {
   font-family: var(--font-body);
   font-size: 12px;
-  color: var(--line);
+  color: var(--hairline);
   font-weight: 400;
   user-select: none;
   margin: 0 7px;
@@ -329,7 +1184,7 @@
   font-size: 13px;
   font-weight: 700;
   letter-spacing: 0.04em;
-  color: var(--dark);
+  color: var(--ink);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -353,8 +1208,8 @@
   height: 32px;
   padding: 0 10px;
   background: var(--surface);
-  border: 1px solid var(--line);
-  border-radius: 0;
+  border: 1px solid var(--hairline);
+  border-radius: var(--r-md);
   cursor: pointer;
   max-width: 400px; /* capped width — search stays compact and centered */
   width: 100%;
@@ -366,18 +1221,18 @@
 }
 
 .ws-topnav__search:hover {
-  border-color: rgba(0, 48, 73, 0.28);
-  background: var(--surface-bright);
-  box-shadow: 0 1px 4px rgba(0, 48, 73, 0.06);
+  border-color: var(--mist);
+  background: var(--surface-2);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.05);
 }
 
 .ws-topnav__search:focus-visible {
-  outline: 2px solid var(--primary);
+  outline: 2px solid var(--brand-red);
   outline-offset: 2px;
 }
 
 .ws-topnav__search-icon {
-  color: var(--text-muted);
+  color: var(--ink-4);
   flex-shrink: 0;
   display: flex;
   align-items: center;
@@ -387,7 +1242,7 @@
   flex: 1;
   font-family: var(--font-body);
   font-size: 11px;
-  color: var(--text-muted);
+  color: var(--ink-4);
   text-align: left;
   letter-spacing: 0.02em;
 }
@@ -403,11 +1258,11 @@
   font-family: var(--font-body);
   font-size: 10px;
   font-weight: 700;
-  color: var(--text-muted);
-  background: var(--surface-elevated);
-  border: 1px solid var(--line);
-  border-radius: 0;
-  padding: 1px 5px;
+  color: var(--ink-4);
+  background: var(--surface-2);
+  border: 1px solid var(--hairline);
+  border-radius: var(--r-sm);
+  padding: 0 4px; /* 4px half-grid for chip/hairline — Design.md exception */
   line-height: 1.5;
   letter-spacing: 0;
 }
@@ -420,14 +1275,14 @@
   gap: 12px; /* unified 12px spacing between tier badge / bell / avatar */
   flex-shrink: 0;
   padding-left: 12px;
-  border-left: 1px solid var(--line);
+  border-left: 1px solid var(--hairline);
 }
 
 /* Tier badge — left accent border variant */
 .ws-topnav__tier {
   display: inline-flex;
   align-items: center;
-  height: 22px;
+  height: 24px;
   padding: 0 8px;
   font-family: var(--font-body);
   font-size: 9px;
@@ -436,7 +1291,7 @@
   text-transform: uppercase;
   border: 1px solid currentColor;
   border-left-width: 3px;
-  border-radius: 0;
+  border-radius: var(--r-sm);
   white-space: nowrap;
   user-select: none;
   opacity: 0.9;
@@ -462,17 +1317,17 @@
     border-color var(--anim-base),
     color var(--anim-base);
   flex-shrink: 0;
-  border-radius: 0;
+  border-radius: var(--r-lg);
 }
 
 .ws-topnav__icon-btn:hover {
-  background: rgba(0, 48, 73, 0.05);
-  border-color: var(--line);
-  color: var(--dark);
+  background: rgba(0,0,0,0.04);
+  border-color: var(--hairline);
+  color: var(--ink);
 }
 
 .ws-topnav__icon-btn:focus-visible {
-  outline: 2px solid var(--primary);
+  outline: 2px solid var(--brand-red);
   outline-offset: 2px;
 }
 
@@ -483,13 +1338,13 @@
   right: 3px;
   min-width: 14px;
   height: 14px;
-  background: var(--primary);
-  border-radius: 50%;
-  border: 1.5px solid var(--surface-elevated);
+  background: var(--brand-red);
+  border-radius: var(--r-full);
+  border: 1.5px solid var(--surface-2);
   font-family: var(--font-body);
   font-size: 8px;
   font-weight: 700;
-  color: #fff;
+  color: var(--snow);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -503,8 +1358,8 @@
 .ws-topnav__avatar {
   width: 28px;
   height: 28px;
-  border-radius: 50%;
-  background: var(--dark);
+  border-radius: var(--r-full);
+  background: var(--ink);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -518,12 +1373,12 @@
 }
 
 .ws-topnav__avatar:hover {
-  border-color: var(--primary);
+  border-color: var(--brand-red);
   box-shadow: 0 0 0 2px rgba(193, 18, 31, 0.2);
 }
 
 .ws-topnav__avatar:focus-visible {
-  outline: 2px solid var(--primary);
+  outline: 2px solid var(--brand-red);
   outline-offset: 2px;
 }
 
@@ -538,7 +1393,7 @@
   font-family: var(--font-display);
   font-size: 12px;
   font-weight: 700;
-  color: #fff;
+  color: var(--snow);
   line-height: 1;
   user-select: none;
 }
@@ -550,8 +1405,18 @@
 .ws-sidenav {
   width: var(--ws-side-w);
   height: 100%;
-  background: var(--surface);
-  border-right: 1px solid var(--line);
+  /* iOS 26 Liquid Glass — Dark Variant */
+  background:
+    radial-gradient(ellipse at 30% 8%, rgba(255,255,255,0.16) 0%, rgba(255,255,255,0) 55%),
+    radial-gradient(ellipse at 80% 92%, rgba(0,0,0,0.22) 0%, rgba(0,0,0,0) 60%),
+    rgba(40,36,32,0.90);
+  -webkit-backdrop-filter: blur(36px) saturate(160%);
+  backdrop-filter: blur(36px) saturate(160%);
+  border-right: 0.5px solid rgba(255,255,255,0.10);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.16),
+    inset 0 -1px 0 rgba(0,0,0,0.22),
+    4px 0 24px rgba(0,0,0,0.14);
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -566,11 +1431,11 @@
   overflow-x: hidden;
   padding: 8px 0 16px;
   scrollbar-width: thin;
-  scrollbar-color: var(--line) transparent;
+  scrollbar-color: rgba(255,255,255,0.14) transparent;
 }
 
 .ws-sidenav__scroll::-webkit-scrollbar { width: 2px; }
-.ws-sidenav__scroll::-webkit-scrollbar-thumb { background: var(--line); }
+.ws-sidenav__scroll::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.14); }
 .ws-sidenav__scroll::-webkit-scrollbar-track { background: transparent; }
 
 /* Section groupings */
@@ -585,7 +1450,7 @@
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--text-muted);
+  color: rgba(255,255,255,0.30);
   padding: 18px 16px 6px;
   user-select: none;
   transition: color var(--anim-base);
@@ -593,7 +1458,7 @@
 
 /* Section header active — when any child is active */
 .ws-sidenav__section-header--active {
-  color: var(--primary);
+  color: var(--brand-red);
 }
 
 /* Section header as button (collapsible) */
@@ -611,18 +1476,18 @@
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--text-muted);
+  color: rgba(255,255,255,0.30);
   user-select: none;
   transition: color var(--anim-base);
   text-align: left;
 }
 
 .ws-sidenav__section-header--btn:hover {
-  color: var(--dark);
+  color: rgba(255,255,255,0.70);
 }
 
 .ws-sidenav__section-header--btn:focus-visible {
-  outline: 2px solid var(--primary);
+  outline: 2px solid var(--brand-red);
   outline-offset: -2px;
 }
 
@@ -663,53 +1528,55 @@
 /* Top separator for second+ sections */
 .ws-sidenav__section + .ws-sidenav__section .ws-sidenav__section-header,
 .ws-sidenav__section + .ws-sidenav__section .ws-sidenav__section-header--btn {
-  border-top: 1px solid var(--line);
+  border-top: 0.5px solid rgba(255,255,255,0.08);
 }
 
 /* Nav item */
 .ws-sidenav__item {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   height: var(--density-compact-row); /* 40px */
-  padding: 0 14px 0 13px; /* 13px = 16px - 3px (border offset) */
-  color: var(--graphite);
+  padding: 0 16px 0 13px; /* 13px = 16px - 3px border-left optical compensation */
+  color: rgba(255,255,255,0.58);
   text-decoration: none;
   font-family: var(--font-body);
   font-size: 12px;
   font-weight: 500;
   letter-spacing: 0.015em;
-  /* 3px left border — transparent base, animates on active */
   border-left: 3px solid transparent;
   transition:
     background var(--anim-base),
     color var(--anim-base),
-    border-color var(--anim-border-grow);
+    border-color var(--anim-border-grow),
+    transform 0.4s cubic-bezier(0.34,1.56,0.64,1);
   position: relative;
   white-space: nowrap;
   overflow: hidden;
 }
 
 .ws-sidenav__item:hover {
-  background: rgba(0, 48, 73, 0.05);
-  color: var(--dark);
+  background: rgba(255,255,255,0.07);
+  color: var(--snow);
+  transform: translate(1px, 1px);
 }
 
 .ws-sidenav__item:focus-visible {
-  outline: 2px solid var(--primary);
+  outline: 2px solid var(--brand-red);
   outline-offset: -2px;
 }
 
-/* Active state: 3px Flag Red left border only — no background tint */
+/* Active state */
 .ws-sidenav__item--active {
-  border-left-color: var(--primary);
-  background: transparent;
-  color: var(--dark);
+  border-left-color: var(--brand-red);
+  background: rgba(193,18,31,0.16);
+  color: var(--snow);
   font-weight: 700;
 }
 
 .ws-sidenav__item--active:hover {
-  background: rgba(0, 48, 73, 0.05);
+  background: rgba(193,18,31,0.22);
+  transform: none;
 }
 
 /* Item icon */
@@ -728,7 +1595,7 @@
 }
 
 .ws-sidenav__item--active .ws-sidenav__item-icon {
-  color: var(--primary);
+  color: var(--brand-red);
   opacity: 1;
 }
 
@@ -748,13 +1615,13 @@
   min-width: 17px;
   height: 17px;
   padding: 0 4px;
-  background: rgba(0, 48, 73, 0.08);
-  color: var(--dark);
+  background: rgba(255,255,255,0.14);
+  color: rgba(255,255,255,0.70);
   font-family: var(--font-body);
   font-size: 9px;
   font-weight: 700;
   letter-spacing: 0.02em;
-  border-radius: 0;
+  border-radius: var(--r-sm);
   flex-shrink: 0;
   line-height: 1;
   animation: ws-badgePop 300ms var(--anim-spring) both;
@@ -762,8 +1629,61 @@
 
 /* Alert badge (Flag Red) */
 .ws-sidenav__badge--alert {
-  background: var(--primary);
-  color: #fff;
+  background: var(--brand-red);
+  color: var(--snow);
+}
+
+/* ── Section label (DAILY / MONEY / COMMUNITY eyebrow) ── */
+/* Used by the new flat 3-section SideNav (non-collapsible) */
+.ws-sidenav__section-label {
+  display: block;
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.28);
+  padding: 18px 16px 6px;
+  user-select: none;
+}
+
+/* ── Account link group (Profile & Portfolio, Settings) ── */
+.ws-sidenav__account {
+  padding: 4px 0 8px;
+}
+
+.ws-sidenav__account-item {
+  display: flex;
+  align-items: center;
+  height: 36px;
+  padding: 0 14px 0 19px;
+  color: rgba(255,255,255,0.38);
+  text-decoration: none;
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.03em;
+  border-left: 3px solid transparent;
+  transition:
+    color var(--anim-base),
+    border-color var(--anim-border-grow);
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.ws-sidenav__account-item:hover {
+  color: rgba(255,255,255,0.70);
+}
+
+.ws-sidenav__account-item:focus-visible {
+  outline: 2px solid var(--brand-red);
+  outline-offset: -2px;
+}
+
+.ws-sidenav__account-item--active {
+  border-left-color: var(--brand-red);
+  color: rgba(255,255,255,0.85);
+  font-weight: 600;
 }
 
 /* ── Primary nav group ── */
@@ -773,8 +1693,8 @@
 
 /* ── Divider between primary and secondary ── */
 .ws-sidenav__divider {
-  height: 1px;
-  background: var(--line);
+  height: 0.5px;
+  background: rgba(255,255,255,0.10);
   margin: 8px 16px;
 }
 
@@ -787,8 +1707,8 @@
   display: flex;
   align-items: center;
   height: 36px;
-  padding: 0 14px 0 19px; /* 19px = 16px + 3px (no visible border space) */
-  color: var(--text-muted);
+  padding: 0 14px 0 19px;
+  color: rgba(255,255,255,0.40);
   text-decoration: none;
   font-family: var(--font-body);
   font-size: 11px;
@@ -803,32 +1723,32 @@
 }
 
 .ws-sidenav__sec-item:hover {
-  color: var(--dark);
+  color: var(--snow);
 }
 
 .ws-sidenav__sec-item:focus-visible {
-  outline: 2px solid var(--primary);
+  outline: 2px solid var(--brand-red);
   outline-offset: -2px;
 }
 
 .ws-sidenav__sec-item--active {
-  border-left-color: var(--primary);
-  color: var(--dark);
+  border-left-color: var(--brand-red);
+  color: var(--snow);
   font-weight: 600;
 }
 
 /* ── Footer: user identity + actions ── */
 
 .ws-sidenav__footer {
-  border-top: 1px solid var(--line);
+  border-top: 0.5px solid rgba(255,255,255,0.10);
   flex-shrink: 0;
-  background: var(--surface);
+  background: rgba(20,18,16,0.20);
 }
 
 /* Footer quick-action row (Settings + Sign out) */
 .ws-sidenav__footer-actions {
   display: flex;
-  border-top: 1px solid var(--line);
+  border-top: 0.5px solid rgba(255,255,255,0.08);
 }
 
 .ws-sidenav__footer-action {
@@ -844,7 +1764,7 @@
   font-weight: 600;
   letter-spacing: 0.07em;
   text-transform: uppercase;
-  color: var(--graphite);
+  color: rgba(255,255,255,0.42);
   text-decoration: none;
   border-left: 2px solid transparent;
   transition:
@@ -854,29 +1774,29 @@
 }
 
 .ws-sidenav__footer-action:hover {
-  background: rgba(0, 48, 73, 0.04);
-  color: var(--dark);
+  background: rgba(255,255,255,0.07);
+  color: var(--snow);
 }
 
 .ws-sidenav__footer-action:focus-visible {
-  outline: 2px solid var(--primary);
+  outline: 2px solid var(--brand-red);
   outline-offset: -2px;
 }
 
 /* Active Settings link */
 .ws-sidenav__footer-action--active {
-  border-left-color: var(--primary);
-  color: var(--dark);
-  background: rgba(193, 18, 31, 0.05);
+  border-left-color: var(--brand-red);
+  color: var(--snow);
+  background: rgba(193, 18, 31, 0.16);
 }
 
 /* Sign out — subtle muted treatment */
 .ws-sidenav__footer-action--logout {
-  border-left: 1px solid var(--line);
+  border-left: 0.5px solid rgba(255,255,255,0.08);
 }
 
 .ws-sidenav__footer-action--logout:hover {
-  color: var(--primary);
+  color: var(--brand-red);
   background: rgba(193, 18, 31, 0.04);
 }
 
@@ -886,18 +1806,18 @@
   gap: 10px;
   padding: 11px 14px;
   text-decoration: none;
-  color: var(--dark);
+  color: var(--snow);
   transition: background var(--anim-base);
   min-width: 0;
   position: relative;
 }
 
 .ws-sidenav__user:hover {
-  background: rgba(0, 48, 73, 0.04);
+  background: rgba(255,255,255,0.06);
 }
 
 .ws-sidenav__user:focus-visible {
-  outline: 2px solid var(--primary);
+  outline: 2px solid var(--brand-red);
   outline-offset: -2px;
 }
 
@@ -909,16 +1829,16 @@
   left: 34px;
   width: 7px;
   height: 7px;
-  background: #2d9148;
-  border-radius: 50%;
-  border: 1.5px solid var(--surface);
+  background: var(--success);
+  border-radius: var(--r-full);
+  border: 1.5px solid rgba(40,36,32,0.90);
 }
 
 .ws-sidenav__user-avatar {
   width: 28px;
   height: 28px;
-  border-radius: 50%;
-  background: var(--dark);
+  border-radius: var(--r-full);
+  background: var(--ink);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -937,7 +1857,7 @@
   font-family: var(--font-display);
   font-size: 12px;
   font-weight: 700;
-  color: #fff;
+  color: var(--snow);
   user-select: none;
 }
 
@@ -953,7 +1873,7 @@
   font-family: var(--font-body);
   font-size: 11px;
   font-weight: 700;
-  color: var(--dark);
+  color: var(--snow);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -971,7 +1891,7 @@
 
 .ws-sidenav__user-arrow {
   font-size: 14px;
-  color: var(--text-muted);
+  color: rgba(255,255,255,0.28);
   flex-shrink: 0;
   line-height: 1;
   opacity: 0;
@@ -986,13 +1906,20 @@
 
 /* ============================================================
    CONTEXT PANEL  (.ws-context)
+   v11 — Liquid Glass Editorial Rail
+   Stack: Dark LG hero tile → Light LG stat tiles → Deadlines →
+          Candy Panel CTA. Same shape every page, different content.
    ============================================================ */
 
 .ws-context {
   width: var(--ws-context-w);
   height: 100%;
-  background: var(--surface-bright);
-  border-left: 1px solid var(--line);
+  /* Warm cream + faint specular sheen (subtle, doesn't compete with tiles) */
+  background:
+    radial-gradient(ellipse at 100% 0%, rgba(255,255,255,0.45) 0%, rgba(255,255,255,0) 50%),
+    radial-gradient(ellipse at 0% 100%, rgba(193,18,31,0.04) 0%, rgba(193,18,31,0) 50%),
+    var(--surface);
+  border-left: 1px solid var(--hairline);
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -1018,19 +1945,19 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 48px;
-  padding: 0 16px;
-  border-bottom: 1px solid var(--line);
+  height: 56px;
+  padding: 0 24px;
+  border-bottom: 1px solid var(--hairline);
   flex-shrink: 0;
 }
 
 .ws-context__title {
-  font-family: var(--font-body);
-  font-size: 10px;
+  font-family: var(--font-mono);
+  font-size: 11px;
   font-weight: 700;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--text-muted);
+  color: var(--ink-4);
   user-select: none;
   white-space: nowrap;
   overflow: hidden;
@@ -1038,7 +1965,7 @@
 }
 
 .ws-context__collapse-btn {
-  display: none; /* shown via media query on tablet */
+  display: none;
   background: transparent;
   border: none;
   cursor: pointer;
@@ -1047,13 +1974,13 @@
   line-height: 1;
   transition: color var(--anim-base);
   flex-shrink: 0;
-  border-radius: 0;
+  border-radius: var(--r-md);
 }
 
-.ws-context__collapse-btn:hover { color: var(--dark); }
+.ws-context__collapse-btn:hover { color: var(--ink); }
 
 .ws-context__collapse-btn:focus-visible {
-  outline: 2px solid var(--primary);
+  outline: 2px solid var(--brand-red);
   outline-offset: 2px;
 }
 
@@ -1062,118 +1989,265 @@
   flex: 1;
   overflow-y: auto;
   scrollbar-width: thin;
-  scrollbar-color: var(--line) transparent;
+  scrollbar-color: var(--hairline) transparent;
   transition: opacity var(--anim-slide);
+  padding: 24px 24px 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
 }
 
 .ws-context__body::-webkit-scrollbar { width: 2px; }
-.ws-context__body::-webkit-scrollbar-thumb { background: var(--line); }
+.ws-context__body::-webkit-scrollbar-thumb { background: var(--hairline); }
 
-/* Section */
+/* Sections — flat (the tiles themselves carry the visual weight) */
 .ws-context__section {
-  padding: 20px; /* unified card/panel inner padding */
+  padding: 0;
 }
 
 .ws-context__section-label {
-  font-family: var(--font-body);
-  font-size: 9px;
+  position: relative;
+  font-family: var(--font-mono);
+  font-size: 11px;
   font-weight: 700;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: var(--text-muted);
-  margin-bottom: 12px;
+  color: var(--ink-4);
+  margin: 0 0 14px;
+  padding-left: 14px;
 }
 
-/* ── Quick stats — card grid ── */
+/* Champagne gold accent bar — subtle editorial mark */
+.ws-context__section-label::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 6px;
+  height: 1px;
+  background: var(--champagne);
+}
+
+/* ────────────────────────────────────────────────────────────
+   ① Earnings hero — SaaS dark card (Linear-like dashboard tile)
+   ──────────────────────────────────────────────────────────── */
+.ws-context__earnings {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 16px 18px;
+  border-radius: 10px;
+  background: var(--ink);
+  border: 0.5px solid rgba(255, 255, 255, 0.06);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.10);
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  margin: 0;
+  overflow: hidden;
+}
+
+/* No more decoration: SaaS = flat */
+.ws-context__earnings::before,
+.ws-context__earnings::after {
+  display: none;
+}
+
+.ws-context__earnings-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.50);
+}
+
+.ws-context__earnings-value {
+  position: relative;
+  font-family: var(--font-display);
+  font-size: 32px;
+  font-weight: 700;
+  font-style: normal;
+  letter-spacing: -0.02em;
+  color: var(--snow);
+  line-height: 1.1;
+  text-shadow: none;
+}
+
+.ws-context__earnings-delta {
+  display: inline-flex;
+  align-items: center;
+  align-self: flex-start;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.65);
+  letter-spacing: 0.04em;
+  padding: 4px 10px;
+  border-radius: var(--r-pill);
+  background: rgba(255, 255, 255, 0.10);
+}
+
+.ws-context__earnings-delta--up {
+  /* Use --ga-green token; rgba opacity for background tint */
+  color: var(--ga-green);
+  background: rgba(74, 222, 128, 0.16);
+}
+
+/* ────────────────────────────────────────────────────────────
+   ② Stats — Light Liquid Glass tile grid
+   Each stat is its own glass card, big Darky numeral on top.
+   ──────────────────────────────────────────────────────────── */
 .ws-context__stats {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 8px;
 }
 
 .ws-context__stat {
+  position: relative;
   display: grid;
   grid-template-columns: 1fr auto;
   grid-template-rows: auto auto;
-  gap: 2px 8px;
-  padding: 10px 12px;
-  background: var(--surface-elevated);
-  border: 1px solid var(--line);
-  border-left: 3px solid var(--line);
-  transition: border-left-color var(--anim-base), box-shadow var(--anim-base);
+  gap: 4px 10px;
+  padding: 12px 14px;
+  border-radius: 8px;
+  background: var(--snow);
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  border: 0.5px solid rgba(10, 10, 10, 0.10);
+  box-shadow: 0 1px 2px rgba(10, 10, 10, 0.03);
+  transition: transform var(--anim-base), border-color var(--anim-base), box-shadow var(--anim-base);
+  overflow: hidden;
+}
+
+/* Hairline ink accent on left edge — appears on hover (SaaS detail) */
+.ws-context__stat::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 2px;
+  background: var(--ink);
+  opacity: 0;
+  transition: opacity var(--anim-base);
 }
 
 .ws-context__stat:hover {
-  border-left-color: var(--tertiary);
-  box-shadow: 0 1px 4px rgba(0, 48, 73, 0.06);
+  transform: translate(1px, 1px);
+  border-color: rgba(10, 10, 10, 0.18);
+  box-shadow: 0 4px 8px rgba(10, 10, 10, 0.05);
+}
+
+.ws-context__stat:hover::before {
+  opacity: 1;
 }
 
 .ws-context__stat-value {
   grid-column: 1;
-  grid-row: 1;
+  grid-row: 2;
   font-family: var(--font-display);
   font-size: 22px;
   font-weight: 700;
-  font-style: italic;
-  letter-spacing: -0.04em;
-  color: var(--dark);
-  line-height: 1;
+  font-style: normal;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  line-height: 1.1;
 }
 
 .ws-context__stat-label {
   grid-column: 1;
-  grid-row: 2;
-  font-family: var(--font-body);
+  grid-row: 1;
+  font-family: var(--font-mono);
   font-size: 10px;
-  font-weight: 500;
-  color: var(--text-muted);
+  font-weight: 600;
+  color: var(--ink-4);
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  margin-top: 2px;
+  margin: 0;
 }
 
 .ws-context__stat-delta {
   grid-column: 2;
   grid-row: 1 / 3;
   align-self: center;
-  font-family: var(--font-body);
-  font-size: 10px;
+  font-family: var(--font-mono);
+  font-size: 11px;
   font-weight: 700;
-  color: var(--text-muted);
+  color: var(--ink-4);
   letter-spacing: 0.04em;
   white-space: nowrap;
+  padding: 4px 10px;
+  border-radius: var(--r-pill);
+  background: rgba(10, 10, 10, 0.04);
 }
 
 .ws-context__stat-delta--up {
-  color: #2d9148;
+  /* v11 audit: #15803d (unlisted dark green) → var(--ink-3) for accessible
+     positive-delta text; background tint kept as visual-effect rgba */
+  color: var(--ink-3);
+  background: rgba(74, 222, 128, 0.14);
 }
 
-/* Divider */
+/* Section divider — invisible (gap handles spacing) */
 .ws-context__divider {
-  height: 1px;
-  background: var(--line);
+  display: none;
 }
 
-/* ── Deadlines ── */
+/* ────────────────────────────────────────────────────────────
+   ③ Deadlines — clean rows on glass tile
+   ──────────────────────────────────────────────────────────── */
 .ws-context__deadlines {
   list-style: none;
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: 6px;
+  padding: 0;
+  margin: 0;
+}
+
+.ws-context__deadline {
+  list-style: none;
 }
 
 .ws-context__deadline-inner {
+  position: relative;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 8px;
-  padding: 8px 10px;
-  border-left: 2px solid var(--line);
-  background: var(--surface-elevated);
+  gap: 12px;
+  padding: 14px 18px;
+  border-radius: var(--r-md);
+  background: rgba(255, 255, 255, 0.55);
+  border: 0.5px solid rgba(255, 255, 255, 0.65);
+  -webkit-backdrop-filter: blur(16px) saturate(160%);
+  backdrop-filter: blur(16px) saturate(160%);
   transition:
     background var(--anim-base),
-    border-left-color var(--anim-base),
     transform var(--anim-base);
+  /* Subtle inset highlight for depth */
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.50);
+}
+
+/* Tiny ink dot — magazine bullet, marks each row as a typed list */
+.ws-context__deadline-inner::before {
+  content: "";
+  position: absolute;
+  left: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: var(--ink-4);
+  opacity: 0.40;
+}
+
+.ws-context__deadline-inner--urgent::before {
+  background: var(--brand-red);
+  opacity: 1;
 }
 
 .ws-context__deadline-inner--link {
@@ -1182,26 +2256,33 @@
 }
 
 .ws-context__deadline-inner--link:hover {
-  background: rgba(0, 48, 73, 0.03);
-  border-left-color: var(--tertiary);
-  transform: translateX(1px);
+  background: rgba(255, 255, 255, 0.75);
+  transform: translate(1px, 1px);
+}
+
+.ws-context__deadline-inner--link:active {
+  transform: translate(2px, 2px) scale(0.98);
 }
 
 .ws-context__deadline-inner--link:focus-visible {
-  outline: 2px solid var(--primary);
+  outline: 2px solid var(--brand-red);
   outline-offset: 2px;
 }
 
 .ws-context__deadline-inner--urgent {
-  border-left-color: var(--primary);
-  background: rgba(193, 18, 31, 0.03);
+  background: rgba(193, 18, 31, 0.08);
+  border-color: rgba(193, 18, 31, 0.20);
+}
+
+.ws-context__deadline-inner--urgent.ws-context__deadline-inner--link:hover {
+  background: rgba(193, 18, 31, 0.14);
 }
 
 .ws-context__deadline-label {
-  font-family: var(--font-body);
-  font-size: 11px;
-  font-weight: 500;
-  color: var(--dark);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink);
   flex: 1;
   min-width: 0;
   overflow: hidden;
@@ -1211,111 +2292,88 @@
 }
 
 .ws-context__deadline-date {
-  font-family: var(--font-body);
-  font-size: 9px;
+  font-family: var(--font-mono);
+  font-size: 11px;
   font-weight: 700;
-  color: var(--text-muted);
+  color: var(--ink-4);
   letter-spacing: 0.08em;
   text-transform: uppercase;
   flex-shrink: 0;
 }
 
 .ws-context__deadline-inner--urgent .ws-context__deadline-date {
-  color: var(--primary);
+  color: var(--brand-red);
 }
 
-/* ── Quick actions ── */
+/* ────────────────────────────────────────────────────────────
+   ④ Quick actions — Candy Panel CTA block
+   The primary action gets the brand-red Filled Primary treatment
+   inside a subtle butter candy panel for editorial weight.
+   ──────────────────────────────────────────────────────────── */
 .ws-context__section--actions {
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: 6px;
+  padding: 0;
+  border-radius: 0;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  overflow: visible;
+}
+
+.ws-context__section--actions::before,
+.ws-context__section--actions::after {
+  display: none;
 }
 
 .ws-context__action {
-  display: block;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: 100%;
-  padding: 9px 12px;
+  padding: 8px 14px;
   font-family: var(--font-body);
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0;
+  text-transform: none;
   text-align: center;
   text-decoration: none;
-  border: 1px solid var(--line);
-  background: var(--surface-elevated);
-  color: var(--dark);
+  border: 0.5px solid rgba(10, 10, 10, 0.18);
+  background: var(--snow);
+  color: var(--ink);
   cursor: pointer;
-  border-radius: 0;
-  transition:
-    background var(--anim-base),
-    border-color var(--anim-base),
-    color var(--anim-base),
-    box-shadow var(--anim-base);
+  border-radius: 8px;
+  height: 32px;
+  transition: transform var(--anim-base), background var(--anim-base);
 }
 
 .ws-context__action:hover {
-  background: rgba(0, 48, 73, 0.05);
-  border-color: rgba(0, 48, 73, 0.3);
-  box-shadow: 0 1px 3px rgba(0, 48, 73, 0.07);
+  background: rgba(10, 10, 10, 0.06);
+  transform: translate(1px, 1px);
+}
+
+.ws-context__action:active {
+  transform: translate(2px, 2px) scale(0.98);
 }
 
 .ws-context__action:focus-visible {
-  outline: 2px solid var(--primary);
+  outline: 2px solid var(--brand-red);
   outline-offset: 2px;
 }
 
 .ws-context__action--primary {
-  background: var(--dark);
-  color: #fff;
-  border-color: var(--dark);
+  background: var(--brand-red);
+  color: var(--snow);
+  border-color: var(--brand-red);
 }
 
 .ws-context__action--primary:hover {
-  background: var(--primary);
-  border-color: var(--primary);
-  box-shadow: none;
-}
-
-/* ── Weekly summary earnings block ── */
-.ws-context__earnings {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  padding: 12px;
-  background: var(--dark);
-  margin: 0 16px 0;
-}
-
-.ws-context__earnings-label {
-  font-family: var(--font-body);
-  font-size: 9px;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: rgba(245, 242, 236, 0.55);
-}
-
-.ws-context__earnings-value {
-  font-family: var(--font-display);
-  font-size: 28px;
-  font-weight: 700;
-  font-style: italic;
-  letter-spacing: -0.05em;
-  color: var(--champagne);
-  line-height: 1;
-}
-
-.ws-context__earnings-delta {
-  font-family: var(--font-body);
-  font-size: 10px;
-  font-weight: 700;
-  color: rgba(245, 242, 236, 0.65);
-  letter-spacing: 0.04em;
-}
-
-.ws-context__earnings-delta--up {
-  color: #4ade80;
+  background: var(--brand-red);
+  transform: translate(1px, 1px);
+  box-shadow: 0 4px 12px rgba(193, 18, 31, 0.24);
 }
 
 /* ============================================================
@@ -1336,18 +2394,18 @@
   border: 1px solid transparent;
   cursor: pointer;
   flex-shrink: 0;
-  border-radius: 0;
+  border-radius: var(--r-lg);
   margin-right: 8px;
   transition: border-color var(--anim-base), background var(--anim-base);
 }
 
 .ws-topnav__hamburger:hover {
-  background: rgba(0, 48, 73, 0.05);
-  border-color: var(--line);
+  background: rgba(0,0,0,0.04);
+  border-color: var(--hairline);
 }
 
 .ws-topnav__hamburger:focus-visible {
-  outline: 2px solid var(--primary);
+  outline: 2px solid var(--brand-red);
   outline-offset: 2px;
 }
 
@@ -1355,13 +2413,13 @@
   display: block;
   width: 16px;
   height: 1.5px;
-  background: var(--dark);
-  border-radius: 0;
+  background: var(--ink);
+  border-radius: var(--r-lg);
   transition: background var(--anim-base);
 }
 
 .ws-topnav__hamburger:hover .ws-topnav__hamburger-bar {
-  background: var(--dark);
+  background: var(--ink);
 }
 
 /* ============================================================
@@ -1381,7 +2439,7 @@
 .ws-sidebar-backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(0, 48, 73, 0.4);
+  background: rgba(0,0,0,0.4);
   z-index: 200;
   cursor: pointer;
   animation: ws-backdropIn 280ms cubic-bezier(0.22, 1, 0.36, 1) both;
@@ -1413,9 +2471,9 @@
   justify-content: space-between;
   height: var(--ws-topnav-h);
   padding: 0 16px;
-  border-bottom: 1px solid var(--line);
+  border-bottom: 0.5px solid rgba(255,255,255,0.10);
   flex-shrink: 0;
-  background: var(--surface-elevated);
+  background: rgba(30,26,22,0.25);
 }
 
 .ws-sidenav__overlay-title {
@@ -1424,7 +2482,7 @@
   font-weight: 900;
   font-style: italic;
   letter-spacing: -0.07em;
-  color: var(--dark);
+  color: var(--snow);
   user-select: none;
 }
 
@@ -1435,23 +2493,23 @@
   width: 28px;
   height: 28px;
   background: transparent;
-  border: 1px solid transparent;
+  border: 0.5px solid rgba(255,255,255,0.16);
   cursor: pointer;
   font-family: var(--font-body);
   font-size: 12px;
-  color: var(--graphite);
-  border-radius: 0;
+  color: rgba(255,255,255,0.55);
+  border-radius: var(--r-lg);
   transition: background var(--anim-base), border-color var(--anim-base), color var(--anim-base);
 }
 
 .ws-sidenav__close-btn:hover {
-  background: rgba(0, 48, 73, 0.06);
-  border-color: var(--line);
-  color: var(--dark);
+  background: rgba(255,255,255,0.08);
+  border-color: rgba(255,255,255,0.30);
+  color: var(--snow);
 }
 
 .ws-sidenav__close-btn:focus-visible {
-  outline: 2px solid var(--primary);
+  outline: 2px solid var(--brand-red);
   outline-offset: 2px;
 }
 
@@ -1472,14 +2530,14 @@
   left: 0;
   right: 0;
   height: 56px;
-  background: var(--surface-elevated);
-  border-top: 1px solid var(--line);
+  background: var(--surface-2);
+  border-top: 1px solid var(--hairline);
   z-index: 150;
   flex-direction: row;
   align-items: stretch;
   /* safe-area inset for notch/home-indicator */
   padding-bottom: env(safe-area-inset-bottom, 0px);
-  box-shadow: 0 -1px 0 var(--line), 0 -2px 8px rgba(0, 48, 73, 0.06);
+  box-shadow: 0 -1px 0 var(--hairline), 0 -2px 8px rgba(0,0,0,0.04);
   animation: ws-mobileNavIn 300ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
@@ -1499,16 +2557,16 @@
 }
 
 .ws-mobile-nav__tab:active {
-  background: rgba(0, 48, 73, 0.04);
+  background: rgba(0,0,0,0.04);
 }
 
 .ws-mobile-nav__tab:focus-visible {
-  outline: 2px solid var(--primary);
+  outline: 2px solid var(--brand-red);
   outline-offset: -2px;
 }
 
 .ws-mobile-nav__tab--active {
-  color: var(--primary);
+  color: var(--brand-red);
 }
 
 /* Top accent line on active tab */
@@ -1519,8 +2577,8 @@
   left: 16%;
   right: 16%;
   height: 2px;
-  background: var(--primary);
-  border-radius: 0 0 2px 2px;
+  background: var(--brand-red);
+  border-radius: var(--r-lg);
 }
 
 .ws-mobile-nav__icon {
@@ -1538,9 +2596,9 @@
   right: -5px;
   width: 7px;
   height: 7px;
-  background: var(--primary);
-  border-radius: 50%;
-  border: 1.5px solid var(--surface-elevated);
+  background: var(--brand-red);
+  border-radius: var(--r-full);
+  border: 1.5px solid var(--surface-2);
 }
 
 .ws-mobile-nav__label {
@@ -1676,7 +2734,7 @@
   .ws-sidebar-overlay,
   .ws-mobile-nav,
   .ws-mobile-nav__tab,
-  .ws-main > * {
+  .ws-layout__main> * {
     animation: none !important;
     transition: none !important;
   }

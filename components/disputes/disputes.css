@@ -1,50 +1,44 @@
 /* =============================================================
    Push — Dispute Resolution System — disputes.css
-   Authority: Design.md
-   border-radius: 0 everywhere
-   Colors: var(--primary) / var(--accent) / var(--dark) / var(--tertiary)
-           var(--champagne) / var(--surface) / var(--surface-elevated)
-   Fonts: var(--font-display) Darky | var(--font-body) CS Genio Mono
-   Grid: 8px base (--space-1 … --space-10)
+   Design.md v11: closed token set, 8px grid, product register
    ============================================================= */
 
 /* ─────────────────────────────────────────
-   STATUS COLORS (within 6-color system)
+   STATUS COLORS
    ─────────────────────────────────────────
-   Open              → var(--primary)   #c1121f Flag Red
-   Under Review      → var(--champagne) #c9a96e Champagne Gold
-   Awaiting Response → var(--tertiary)  #669bbc Steel Blue
-   Resolved (creator wins) → var(--tertiary) Steel Blue
-   Resolved (merchant wins)→ var(--dark)     Deep Space Blue
-   Closed            → var(--graphite)  #4a5568
+   Open              → var(--brand-red)
+   Under Review      → var(--champagne)
+   Awaiting Response → var(--accent-blue)
+   Resolved          → var(--accent-blue)
+   Closed            → var(--graphite)
    ─────────────────────────────────────────────── */
 
 /* ─────────────────────────────────────────
    1. PAGE SHELL
    ───────────────────────────────────────── */
 .disputes-page {
-  max-width: 1200px;
+  max-width: 1140px;
   margin: 0 auto;
-  padding: var(--space-4) var(--space-4) var(--space-10);
+  padding: 24px 64px 96px;
 }
 
 /* ─────────────────────────────────────────
    2. EDITORIAL HERO
    ───────────────────────────────────────── */
 .disputes-hero {
-  border-bottom: 1px solid var(--line);
-  padding-bottom: var(--space-5);
-  margin-bottom: var(--space-5);
+  border-bottom: 1px solid var(--hairline);
+  padding-bottom: 32px;
+  margin-bottom: 32px;
 }
 
 .disputes-hero__eyebrow {
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 700;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--text-muted);
-  margin-bottom: var(--space-2);
+  color: var(--ink-4);
+  margin-bottom: 16px;
 }
 
 .disputes-hero__title {
@@ -52,14 +46,14 @@
   font-size: clamp(40px, 6vw, 80px);
   font-weight: 900;
   letter-spacing: -0.05em;
-  color: var(--dark);
+  color: var(--ink);
   line-height: 1;
-  margin-bottom: var(--space-4);
+  margin-bottom: 24px;
 }
 
 .disputes-hero__stats {
   display: flex;
-  gap: var(--space-6);
+  gap: 40px;
   align-items: flex-end;
 }
 
@@ -75,15 +69,15 @@
   font-weight: 900;
   letter-spacing: -0.04em;
   line-height: 1;
-  color: var(--dark);
+  color: var(--ink);
 }
 
 .disputes-stat__number--open {
-  color: var(--primary);
+  color: var(--brand-red);
 }
 
 .disputes-stat__number--resolved {
-  color: var(--tertiary);
+  color: var(--accent-blue);
 }
 
 .disputes-stat__label {
@@ -92,7 +86,7 @@
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--text-muted);
+  color: var(--ink-4);
 }
 
 /* ─────────────────────────────────────────
@@ -102,15 +96,17 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: var(--space-3);
-  margin-bottom: var(--space-4);
+  gap: 24px;
+  margin-bottom: 24px;
   flex-wrap: wrap;
 }
 
 .disputes-tabs {
   display: flex;
   gap: 0;
-  border: 1px solid var(--line);
+  border: 1px solid var(--hairline);
+  border-radius: 8px;
+  overflow: hidden;
 }
 
 .disputes-tab {
@@ -119,14 +115,13 @@
   font-weight: 700;
   letter-spacing: 0.05em;
   text-transform: uppercase;
-  color: var(--text-muted);
+  color: var(--ink-4);
   background: var(--surface);
   border: none;
-  border-right: 1px solid var(--line);
-  padding: var(--space-1) var(--space-3);
+  border-right: 1px solid var(--hairline);
+  padding: 8px 16px;
   cursor: pointer;
-  transition: background var(--t-base), color var(--t-base);
-  border-radius: 0;
+  transition: background 0.15s, color 0.15s;
   white-space: nowrap;
 }
 
@@ -135,17 +130,17 @@
 }
 
 .disputes-tab:hover {
-  background: var(--surface-elevated);
-  color: var(--dark);
+  background: var(--surface-3);
+  color: var(--ink);
 }
 
 .disputes-tab--active {
-  background: var(--dark);
+  background: var(--ink);
   color: var(--surface);
 }
 
 .disputes-tab--active:hover {
-  background: var(--dark);
+  background: var(--ink);
   color: var(--surface);
 }
 
@@ -155,38 +150,37 @@
   font-weight: 700;
   letter-spacing: 0.05em;
   text-transform: uppercase;
-  color: #fff;
-  background: var(--primary);
-  border: 1px solid var(--primary);
-  padding: var(--space-1) var(--space-3);
+  color: var(--snow);
+  background: var(--brand-red);
+  border: 1px solid var(--brand-red);
+  padding: 8px 16px;
   cursor: pointer;
-  transition: background var(--t-slow), box-shadow var(--t-slow);
-  border-radius: 0;
-  box-shadow: var(--btn-shadow);
+  transition: transform 0.15s;
+  border-radius: 8px;
   white-space: nowrap;
 }
 
 .disputes-file-btn:hover {
-  background: var(--accent);
-  border-color: var(--accent);
-  box-shadow: var(--btn-shadow-hover);
+  transform: translate(2px, 2px);
 }
 
 /* ─────────────────────────────────────────
    4. DISPUTE LIST TABLE
    ───────────────────────────────────────── */
 .disputes-list {
-  border: 1px solid var(--line);
-  background: var(--surface-elevated);
+  border: 1px solid var(--hairline);
+  background: var(--surface-2);
+  border-radius: 10px;
+  overflow: hidden;
 }
 
 .disputes-list__header {
   display: grid;
   grid-template-columns: 120px 1fr 100px 120px 120px 80px 24px;
-  gap: var(--space-2);
-  padding: var(--space-2) var(--space-3);
+  gap: 16px;
+  padding: 16px 24px;
   background: var(--surface);
-  border-bottom: 1px solid var(--line);
+  border-bottom: 1px solid var(--hairline);
 }
 
 .disputes-list__col-label {
@@ -195,17 +189,17 @@
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--text-muted);
+  color: var(--ink-4);
 }
 
 .disputes-list__row {
   display: grid;
   grid-template-columns: 120px 1fr 100px 120px 120px 80px 24px;
-  gap: var(--space-2);
-  padding: var(--space-3);
-  border-bottom: 1px solid var(--line);
+  gap: 16px;
+  padding: 16px 24px;
+  border-bottom: 1px solid var(--hairline);
   cursor: pointer;
-  transition: background var(--t-fast);
+  transition: background 0.15s;
   align-items: center;
   text-decoration: none;
   color: inherit;
@@ -216,7 +210,7 @@
 }
 
 .disputes-list__row:hover {
-  background: var(--surface);
+  background: var(--surface-3);
 }
 
 .disputes-list__row:hover .disputes-row__arrow {
@@ -228,7 +222,7 @@
   font-family: var(--font-display);
   font-size: 14px;
   font-weight: 700;
-  color: var(--dark);
+  color: var(--ink);
   letter-spacing: -0.01em;
 }
 
@@ -242,20 +236,20 @@
   font-family: var(--font-body);
   font-size: 14px;
   font-weight: 600;
-  color: var(--dark);
+  color: var(--ink);
 }
 
 .disputes-row__party {
   font-family: var(--font-body);
   font-size: 12px;
-  color: var(--text-muted);
+  color: var(--ink-4);
 }
 
 .disputes-row__amount {
   font-family: var(--font-display);
   font-size: 16px;
   font-weight: 800;
-  color: var(--dark);
+  color: var(--ink);
   letter-spacing: -0.02em;
 }
 
@@ -268,7 +262,7 @@
 .disputes-row__filed-name {
   font-family: var(--font-body);
   font-size: 12px;
-  color: var(--dark);
+  color: var(--ink);
 }
 
 .disputes-row__filed-role {
@@ -276,20 +270,20 @@
   font-size: 11px;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  color: var(--text-muted);
+  color: var(--ink-4);
 }
 
 .disputes-row__age {
   font-family: var(--font-body);
   font-size: 12px;
-  color: var(--text-muted);
+  color: var(--ink-4);
 }
 
 .disputes-row__arrow {
   font-size: 16px;
-  color: var(--text-muted);
+  color: var(--ink-4);
   opacity: 0;
-  transition: opacity var(--t-fast), transform var(--t-fast);
+  transition: opacity 0.15s, transform 0.15s;
 }
 
 /* ─────────────────────────────────────────
@@ -303,71 +297,73 @@
   letter-spacing: 0.07em;
   text-transform: uppercase;
   padding: 3px 8px;
-  border-radius: 0;
+  border-radius: 8px;
   white-space: nowrap;
 }
 
 .dispute-badge--open {
   background: rgba(193, 18, 31, 0.1);
-  color: var(--primary);
+  color: var(--brand-red);
   border: 1px solid rgba(193, 18, 31, 0.25);
 }
 
 .dispute-badge--under_review {
-  background: rgba(201, 169, 110, 0.15);
-  color: #8a6a1a;
-  border: 1px solid rgba(201, 169, 110, 0.4);
+  background: rgba(191, 161, 112, 0.15);
+  color: var(--champagne);
+  border: 1px solid rgba(191, 161, 112, 0.4);
 }
 
 .dispute-badge--awaiting_response {
-  background: rgba(102, 155, 188, 0.12);
-  color: var(--tertiary);
-  border: 1px solid rgba(102, 155, 188, 0.3);
+  background: rgba(0, 133, 255, 0.1);
+  color: var(--accent-blue);
+  border: 1px solid rgba(0, 133, 255, 0.25);
 }
 
 .dispute-badge--resolved {
-  background: rgba(102, 155, 188, 0.12);
-  color: #2a6a8a;
-  border: 1px solid rgba(102, 155, 188, 0.3);
+  background: rgba(0, 133, 255, 0.08);
+  color: var(--accent-blue);
+  border: 1px solid rgba(0, 133, 255, 0.2);
 }
 
 .dispute-badge--closed {
-  background: rgba(74, 85, 104, 0.08);
+  background: rgba(97, 96, 92, 0.08);
   color: var(--graphite);
-  border: 1px solid rgba(74, 85, 104, 0.2);
+  border: 1px solid rgba(97, 96, 92, 0.2);
 }
 
 /* ─────────────────────────────────────────
    6. EMPTY STATE
    ───────────────────────────────────────── */
 .disputes-empty {
-  padding: var(--space-10) var(--space-4);
+  padding: 64px 24px;
   text-align: center;
-  border: 1px solid var(--line);
-  background: var(--surface-elevated);
+  border: 1px solid var(--hairline);
+  background: var(--surface-2);
+  border-radius: 10px;
 }
 
 .disputes-empty__title {
   font-family: var(--font-display);
-  font-size: 24px;
+  font-size: 28px;
   font-weight: 700;
-  color: var(--dark);
-  margin-bottom: var(--space-2);
+  color: var(--ink);
+  margin-bottom: 16px;
 }
 
 .disputes-empty__body {
   font-family: var(--font-body);
-  font-size: 14px;
-  color: var(--text-muted);
+  font-size: 18px;
+  color: var(--ink-4);
+  line-height: 1.55;
 }
 
 /* ─────────────────────────────────────────
    7. DETAIL PAGE SHELL
    ───────────────────────────────────────── */
 .dispute-detail-page {
-  max-width: 1200px;
+  max-width: 1140px;
   margin: 0 auto;
-  padding: var(--space-4) var(--space-4) var(--space-10);
+  padding: 24px 64px 96px;
 }
 
 .dispute-detail-back {
@@ -379,30 +375,30 @@
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: var(--text-muted);
+  color: var(--ink-4);
   text-decoration: none;
-  margin-bottom: var(--space-4);
-  transition: color var(--t-fast);
+  margin-bottom: 24px;
+  transition: color 0.15s;
 }
 
 .dispute-detail-back:hover {
-  color: var(--dark);
+  color: var(--ink);
 }
 
 /* ─────────────────────────────────────────
    8. DETAIL HEADER
    ───────────────────────────────────────── */
 .dispute-detail-header {
-  border-bottom: 1px solid var(--line);
-  padding-bottom: var(--space-4);
-  margin-bottom: var(--space-5);
+  border-bottom: 1px solid var(--hairline);
+  padding-bottom: 24px;
+  margin-bottom: 32px;
 }
 
 .dispute-detail-header__eyebrow {
   display: flex;
   align-items: center;
-  gap: var(--space-2);
-  margin-bottom: var(--space-2);
+  gap: 16px;
+  margin-bottom: 16px;
 }
 
 .dispute-detail-header__id-label {
@@ -411,7 +407,7 @@
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--text-muted);
+  color: var(--ink-4);
 }
 
 .dispute-detail-header__title {
@@ -419,15 +415,15 @@
   font-size: clamp(32px, 5vw, 64px);
   font-weight: 900;
   letter-spacing: -0.05em;
-  color: var(--dark);
+  color: var(--ink);
   line-height: 1;
-  margin-bottom: var(--space-3);
+  margin-bottom: 24px;
 }
 
 .dispute-detail-header__meta {
   display: flex;
   align-items: center;
-  gap: var(--space-4);
+  gap: 24px;
   flex-wrap: wrap;
 }
 
@@ -443,13 +439,13 @@
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--text-muted);
+  color: var(--ink-4);
 }
 
 .dispute-detail-header__meta-value {
   font-family: var(--font-body);
   font-size: 14px;
-  color: var(--dark);
+  color: var(--ink);
 }
 
 /* ─────────────────────────────────────────
@@ -458,7 +454,7 @@
 .dispute-detail-layout {
   display: grid;
   grid-template-columns: 300px 1fr;
-  gap: var(--space-5);
+  gap: 32px;
   align-items: start;
 }
 
@@ -476,13 +472,13 @@
   top: 80px;
   display: flex;
   flex-direction: column;
-  gap: var(--space-3);
+  gap: 24px;
 }
 
 .dispute-sidebar-card {
-  border: 1px solid var(--line);
-  background: var(--surface-elevated);
-  padding: var(--space-3);
+  background: var(--surface-2);
+  padding: 24px;
+  border-radius: 10px;
 }
 
 .dispute-sidebar-card__label {
@@ -491,10 +487,10 @@
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--text-muted);
-  margin-bottom: var(--space-2);
-  padding-bottom: var(--space-1);
-  border-bottom: 1px solid var(--line);
+  color: var(--ink-4);
+  margin-bottom: 16px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--hairline);
 }
 
 .dispute-sidebar-card__row {
@@ -502,7 +498,7 @@
   justify-content: space-between;
   align-items: baseline;
   padding: 6px 0;
-  border-bottom: 1px solid rgba(0, 48, 73, 0.06);
+  border-bottom: 1px solid var(--hairline);
 }
 
 .dispute-sidebar-card__row:last-child {
@@ -512,14 +508,14 @@
 .dispute-sidebar-card__key {
   font-family: var(--font-body);
   font-size: 12px;
-  color: var(--text-muted);
+  color: var(--ink-4);
 }
 
 .dispute-sidebar-card__value {
   font-family: var(--font-body);
   font-size: 12px;
   font-weight: 600;
-  color: var(--dark);
+  color: var(--ink);
   text-align: right;
 }
 
@@ -528,7 +524,7 @@
   font-size: 28px;
   font-weight: 900;
   letter-spacing: -0.03em;
-  color: var(--dark);
+  color: var(--ink);
 }
 
 .dispute-sidebar-card__link {
@@ -538,41 +534,42 @@
   font-family: var(--font-body);
   font-size: 12px;
   font-weight: 600;
-  color: var(--tertiary);
+  color: var(--accent-blue);
   text-decoration: none;
-  margin-top: var(--space-1);
-  transition: color var(--t-fast);
+  margin-top: 8px;
+  transition: color 0.15s;
 }
 
 .dispute-sidebar-card__link:hover {
-  color: var(--dark);
+  color: var(--ink);
 }
 
 /* Participants */
 .dispute-participants {
   display: flex;
   flex-direction: column;
-  gap: var(--space-2);
+  gap: 16px;
 }
 
 .dispute-participant {
   display: flex;
   align-items: center;
-  gap: var(--space-2);
+  gap: 16px;
 }
 
 .dispute-participant__avatar {
   width: 36px;
   height: 36px;
-  background: var(--surface);
-  border: 1px solid var(--line);
+  background: var(--surface-3);
+  border: 1px solid var(--hairline);
+  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   font-family: var(--font-display);
   font-size: 14px;
   font-weight: 800;
-  color: var(--dark);
+  color: var(--ink);
   flex-shrink: 0;
 }
 
@@ -585,7 +582,7 @@
   font-family: var(--font-body);
   font-size: 13px;
   font-weight: 600;
-  color: var(--dark);
+  color: var(--ink);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -596,13 +593,13 @@
   font-size: 11px;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  color: var(--text-muted);
+  color: var(--ink-4);
 }
 
 .dispute-participant__filer-dot {
   width: 6px;
   height: 6px;
-  background: var(--primary);
+  background: var(--brand-red);
   border-radius: 50%;
   flex-shrink: 0;
 }
@@ -618,47 +615,48 @@
   font-family: var(--font-body);
   font-size: 13px;
   font-weight: 600;
-  color: var(--dark);
+  color: var(--ink);
 }
 
 .dispute-campaign-mini__merchant {
   font-family: var(--font-body);
   font-size: 12px;
-  color: var(--text-muted);
+  color: var(--ink-4);
 }
 
 /* ─────────────────────────────────────────
    11. OUTCOME BANNER
    ───────────────────────────────────────── */
 .dispute-outcome-banner {
-  padding: var(--space-3) var(--space-4);
-  margin-bottom: var(--space-4);
+  padding: 24px;
+  margin-bottom: 24px;
   border: 1px solid;
+  border-radius: 10px;
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  gap: var(--space-3);
+  gap: 24px;
   flex-wrap: wrap;
 }
 
 .dispute-outcome-banner--refund_creator {
-  background: rgba(102, 155, 188, 0.08);
-  border-color: rgba(102, 155, 188, 0.35);
+  background: rgba(0, 133, 255, 0.06);
+  border-color: rgba(0, 133, 255, 0.25);
 }
 
 .dispute-outcome-banner--refund_merchant {
-  background: rgba(0, 48, 73, 0.05);
-  border-color: rgba(0, 48, 73, 0.2);
+  background: rgba(58, 56, 53, 0.04);
+  border-color: rgba(58, 56, 53, 0.15);
 }
 
 .dispute-outcome-banner--split {
-  background: rgba(201, 169, 110, 0.08);
-  border-color: rgba(201, 169, 110, 0.35);
+  background: rgba(191, 161, 112, 0.08);
+  border-color: rgba(191, 161, 112, 0.3);
 }
 
 .dispute-outcome-banner--dismissed {
-  background: rgba(74, 85, 104, 0.06);
-  border-color: rgba(74, 85, 104, 0.2);
+  background: rgba(97, 96, 92, 0.06);
+  border-color: rgba(97, 96, 92, 0.15);
 }
 
 .dispute-outcome-banner__label {
@@ -667,7 +665,7 @@
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--text-muted);
+  color: var(--ink-4);
   margin-bottom: 4px;
 }
 
@@ -675,7 +673,7 @@
   font-family: var(--font-display);
   font-size: 20px;
   font-weight: 800;
-  color: var(--dark);
+  color: var(--ink);
   letter-spacing: -0.02em;
 }
 
@@ -692,19 +690,19 @@
   font-weight: 700;
   letter-spacing: 0.05em;
   text-transform: uppercase;
-  color: var(--dark);
+  color: var(--ink);
   background: transparent;
-  border: 1px solid var(--dark);
-  padding: var(--space-1) var(--space-3);
+  border: 1px solid var(--ink);
+  padding: 8px 16px;
   cursor: pointer;
-  border-radius: 0;
-  transition: background var(--t-slow), color var(--t-slow);
+  border-radius: 8px;
+  transition: background 0.15s, color 0.15s;
   white-space: nowrap;
   align-self: center;
 }
 
 .dispute-outcome-banner__reopen:hover {
-  background: var(--dark);
+  background: var(--ink);
   color: var(--surface);
 }
 
@@ -714,14 +712,15 @@
 .dispute-timeline {
   display: flex;
   flex-direction: column;
-  gap: var(--space-3);
+  gap: 24px;
 }
 
 .dispute-timeline-event {
-  border: 1px solid var(--line);
-  background: var(--surface-elevated);
-  padding: var(--space-3);
+  border: 1px solid var(--hairline);
+  background: var(--surface-2);
+  padding: 24px;
   position: relative;
+  border-radius: 10px;
   opacity: 0;
   transform: translateY(24px);
   transition:
@@ -736,11 +735,11 @@
 
 /* Role-based left border accent */
 .dispute-timeline-event--creator {
-  border-left: 3px solid var(--primary);
+  border-left: 3px solid var(--brand-red);
 }
 
 .dispute-timeline-event--merchant {
-  border-left: 3px solid var(--dark);
+  border-left: 3px solid var(--char);
 }
 
 .dispute-timeline-event--admin {
@@ -748,23 +747,23 @@
 }
 
 .dispute-timeline-event--decision {
-  border-left: 3px solid var(--tertiary);
-  background: rgba(102, 155, 188, 0.04);
+  border-left: 3px solid var(--accent-blue);
+  background: rgba(0, 133, 255, 0.03);
 }
 
 .dispute-timeline-event__header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: var(--space-2);
-  margin-bottom: var(--space-2);
+  gap: 16px;
+  margin-bottom: 16px;
   flex-wrap: wrap;
 }
 
 .dispute-timeline-event__author {
   display: flex;
   align-items: center;
-  gap: var(--space-1);
+  gap: 8px;
 }
 
 .dispute-timeline-event__role-pill {
@@ -774,42 +773,42 @@
   letter-spacing: 0.07em;
   text-transform: uppercase;
   padding: 2px 8px;
-  border-radius: 0;
+  border-radius: 8px;
 }
 
 .dispute-timeline-event__role-pill--creator {
   background: rgba(193, 18, 31, 0.1);
-  color: var(--primary);
+  color: var(--brand-red);
 }
 
 .dispute-timeline-event__role-pill--merchant {
-  background: rgba(0, 48, 73, 0.08);
-  color: var(--dark);
+  background: rgba(58, 56, 53, 0.08);
+  color: var(--char);
 }
 
 .dispute-timeline-event__role-pill--admin {
-  background: rgba(201, 169, 110, 0.15);
-  color: #8a6a1a;
+  background: rgba(191, 161, 112, 0.15);
+  color: var(--champagne);
 }
 
 .dispute-timeline-event__author-name {
   font-family: var(--font-body);
   font-size: 13px;
   font-weight: 700;
-  color: var(--dark);
+  color: var(--ink);
 }
 
 .dispute-timeline-event__time {
   font-family: var(--font-body);
   font-size: 11px;
-  color: var(--text-muted);
+  color: var(--ink-4);
 }
 
 .dispute-timeline-event__message {
   font-family: var(--font-body);
-  font-size: 14px;
+  font-size: 18px;
   color: var(--graphite);
-  line-height: 1.6;
+  line-height: 1.55;
 }
 
 .dispute-timeline-event__type-label {
@@ -818,49 +817,50 @@
   font-weight: 700;
   letter-spacing: 0.07em;
   text-transform: uppercase;
-  color: var(--text-muted);
-  margin-bottom: var(--space-1);
+  color: var(--ink-4);
+  margin-bottom: 8px;
 }
 
 /* Evidence thumbnails */
 .dispute-timeline-evidence {
   display: flex;
-  gap: var(--space-2);
+  gap: 16px;
   flex-wrap: wrap;
-  margin-top: var(--space-2);
-  padding-top: var(--space-2);
-  border-top: 1px solid var(--line);
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--hairline);
 }
 
 .dispute-evidence-thumb {
   display: flex;
   align-items: center;
   gap: 6px;
-  border: 1px solid var(--line);
+  border: 1px solid var(--hairline);
   background: var(--surface);
-  padding: 6px var(--space-1);
+  padding: 6px 8px;
   text-decoration: none;
-  transition: border-color var(--t-fast), background var(--t-fast);
+  transition: border-color 0.15s, background 0.15s;
   cursor: pointer;
+  border-radius: 8px;
 }
 
 .dispute-evidence-thumb:hover {
-  border-color: var(--dark);
-  background: var(--surface-elevated);
+  border-color: var(--ink);
+  background: var(--surface-3);
 }
 
 .dispute-evidence-thumb__img {
   width: 40px;
   height: 40px;
   object-fit: cover;
-  border-radius: 0;
+  border-radius: 8px;
   flex-shrink: 0;
 }
 
 .dispute-evidence-thumb__label {
   font-family: var(--font-body);
   font-size: 11px;
-  color: var(--dark);
+  color: var(--ink);
   max-width: 120px;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -871,10 +871,11 @@
    13. COMPOSER (add response)
    ───────────────────────────────────────── */
 .dispute-composer {
-  border: 1px solid var(--line);
-  background: var(--surface-elevated);
-  padding: var(--space-3);
-  margin-top: var(--space-4);
+  border: 1px solid var(--hairline);
+  background: var(--surface-2);
+  padding: 24px;
+  margin-top: 24px;
+  border-radius: 10px;
 }
 
 .dispute-composer__label {
@@ -883,35 +884,37 @@
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--text-muted);
-  margin-bottom: var(--space-2);
+  color: var(--ink-4);
+  margin-bottom: 16px;
 }
 
 .dispute-composer__textarea {
   width: 100%;
   min-height: 100px;
-  padding: var(--space-2);
-  border: 1px solid var(--line);
+  padding: 16px;
+  border: 1px solid var(--hairline);
   background: var(--surface);
   font-family: var(--font-body);
-  font-size: 14px;
-  color: var(--dark);
+  font-size: 18px;
+  color: var(--ink);
   resize: vertical;
-  border-radius: 0;
+  border-radius: 8px;
   outline: none;
-  transition: border-color var(--t-base);
+  transition: border-color 0.15s;
+  box-sizing: border-box;
+  line-height: 1.55;
 }
 
 .dispute-composer__textarea:focus {
-  border-color: var(--primary);
+  border-color: var(--brand-red);
 }
 
 .dispute-composer__actions {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: var(--space-2);
-  margin-top: var(--space-2);
+  gap: 16px;
+  margin-top: 16px;
   flex-wrap: wrap;
 }
 
@@ -919,21 +922,21 @@
   font-family: var(--font-body);
   font-size: 12px;
   font-weight: 600;
-  color: var(--text-muted);
+  color: var(--ink-4);
   background: transparent;
-  border: 1px dashed var(--line);
-  padding: 6px var(--space-2);
+  border: 1px dashed var(--mist);
+  padding: 6px 16px;
   cursor: pointer;
-  border-radius: 0;
-  transition: border-color var(--t-fast), color var(--t-fast);
+  border-radius: 8px;
+  transition: border-color 0.15s, color 0.15s;
   display: flex;
   align-items: center;
   gap: 6px;
 }
 
 .dispute-composer__attach:hover {
-  border-color: var(--dark);
-  color: var(--dark);
+  border-color: var(--ink);
+  color: var(--ink);
 }
 
 .dispute-composer__submit {
@@ -942,103 +945,102 @@
   font-weight: 700;
   letter-spacing: 0.05em;
   text-transform: uppercase;
-  color: #fff;
-  background: var(--primary);
-  border: 1px solid var(--primary);
-  padding: var(--space-1) var(--space-4);
+  color: var(--snow);
+  background: var(--brand-red);
+  border: 1px solid var(--brand-red);
+  padding: 8px 24px;
   cursor: pointer;
-  border-radius: 0;
-  box-shadow: var(--btn-shadow);
-  transition: background var(--t-slow), box-shadow var(--t-slow);
+  border-radius: 8px;
+  transition: transform 0.15s;
 }
 
 .dispute-composer__submit:hover {
-  background: var(--accent);
-  border-color: var(--accent);
-  box-shadow: var(--btn-shadow-hover);
+  transform: translate(2px, 2px);
 }
 
 .dispute-composer__submit:disabled {
   opacity: 0.45;
   cursor: not-allowed;
-  box-shadow: none;
+  transform: none;
 }
 
 /* ─────────────────────────────────────────
    14. EVIDENCE UPLOADER (drop zone)
    ───────────────────────────────────────── */
 .evidence-uploader {
-  border: 1px dashed var(--line);
-  padding: var(--space-4);
+  border: 1px dashed var(--mist);
+  padding: 24px;
   text-align: center;
-  transition: border-color var(--t-fast), background var(--t-fast);
+  transition: border-color 0.15s, background 0.15s;
   cursor: pointer;
   background: var(--surface);
+  border-radius: 10px;
 }
 
 .evidence-uploader:hover,
 .evidence-uploader--dragover {
-  border-color: var(--primary);
+  border-color: var(--brand-red);
   background: rgba(193, 18, 31, 0.03);
 }
 
 .evidence-uploader__icon {
   font-size: 32px;
-  margin-bottom: var(--space-1);
-  color: var(--text-muted);
+  margin-bottom: 8px;
+  color: var(--ink-4);
 }
 
 .evidence-uploader__title {
   font-family: var(--font-body);
   font-size: 13px;
   font-weight: 700;
-  color: var(--dark);
+  color: var(--ink);
   margin-bottom: 4px;
 }
 
 .evidence-uploader__sub {
   font-family: var(--font-body);
   font-size: 11px;
-  color: var(--text-muted);
+  color: var(--ink-4);
 }
 
 .evidence-uploader__or {
   font-family: var(--font-body);
   font-size: 11px;
-  color: var(--text-muted);
-  margin: var(--space-2) 0;
+  color: var(--ink-4);
+  margin: 16px 0;
 }
 
 .evidence-uploader__link-input {
   width: 100%;
   max-width: 360px;
-  padding: var(--space-1) var(--space-2);
-  border: 1px solid var(--line);
-  background: var(--surface-elevated);
+  padding: 8px 12px;
+  border: 1px solid var(--hairline);
+  background: var(--surface-2);
   font-family: var(--font-body);
   font-size: 13px;
-  color: var(--dark);
-  border-radius: 0;
+  color: var(--ink);
+  border-radius: 8px;
   outline: none;
-  transition: border-color var(--t-base);
+  transition: border-color 0.15s;
+  box-sizing: border-box;
 }
 
 .evidence-uploader__link-input:focus {
-  border-color: var(--primary);
+  border-color: var(--brand-red);
 }
 
 .evidence-uploader__previews {
   display: flex;
-  gap: var(--space-2);
+  gap: 16px;
   flex-wrap: wrap;
-  margin-top: var(--space-2);
+  margin-top: 16px;
   justify-content: center;
 }
 
 .evidence-uploader__preview {
   width: 64px;
   height: 64px;
-  border: 1px solid var(--line);
+  border: 1px solid var(--hairline);
   background: var(--surface);
   display: flex;
   align-items: center;
@@ -1046,14 +1048,14 @@
   font-size: 24px;
   position: relative;
   overflow: hidden;
-  border-radius: 0;
+  border-radius: 8px;
 }
 
 .evidence-uploader__preview img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  border-radius: 0;
+  border-radius: 8px;
 }
 
 .evidence-uploader__preview-remove {
@@ -1062,10 +1064,10 @@
   right: 2px;
   width: 16px;
   height: 16px;
-  background: var(--primary);
-  color: #fff;
+  background: var(--brand-red);
+  color: var(--snow);
   border: none;
-  border-radius: 0;
+  border-radius: 8px;
   font-size: 10px;
   cursor: pointer;
   display: flex;
@@ -1080,20 +1082,19 @@
 .dispute-modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 48, 73, 0.55);
+  background: rgba(44, 42, 38, 0.55);
   z-index: 1000;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: var(--space-4);
+  padding: 24px;
 }
 
 .dispute-modal {
   width: 100%;
   max-width: 600px;
-  background: var(--surface-elevated);
-  border: 1px solid var(--line);
-  border-radius: 0;
+  background: var(--surface-2);
+  border-radius: 10px;
   max-height: 90vh;
   overflow-y: auto;
   animation: disputeModalIn 250ms ease forwards;
@@ -1114,9 +1115,9 @@
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  padding: var(--space-4);
-  border-bottom: 1px solid var(--line);
-  gap: var(--space-3);
+  padding: 24px;
+  border-bottom: 1px solid var(--hairline);
+  gap: 24px;
 }
 
 .dispute-modal__title {
@@ -1124,12 +1125,11 @@
   font-size: 28px;
   font-weight: 900;
   letter-spacing: -0.04em;
-  color: var(--dark);
+  color: var(--ink);
 }
 
 .dispute-modal__close {
   background: transparent;
-  border: 1px solid var(--line);
   width: 32px;
   height: 32px;
   display: flex;
@@ -1138,21 +1138,21 @@
   cursor: pointer;
   font-size: 16px;
   color: var(--graphite);
-  border-radius: 0;
+  border-radius: 8px;
   flex-shrink: 0;
-  transition: background var(--t-fast), color var(--t-fast);
+  transition: background 0.15s, color 0.15s;
 }
 
 .dispute-modal__close:hover {
-  background: var(--dark);
+  background: var(--ink);
   color: var(--surface);
 }
 
 .dispute-modal__body {
-  padding: var(--space-4);
+  padding: 24px;
   display: flex;
   flex-direction: column;
-  gap: var(--space-3);
+  gap: 24px;
 }
 
 .dispute-modal__field {
@@ -1167,28 +1167,29 @@
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--text-muted);
+  color: var(--ink-4);
 }
 
 .dispute-modal__field input,
 .dispute-modal__field select,
 .dispute-modal__field textarea {
   width: 100%;
-  padding: var(--space-2);
-  border: 1px solid var(--line);
+  padding: 10px 12px;
+  border: 1px solid var(--hairline);
   background: var(--surface);
   font-family: var(--font-body);
   font-size: 14px;
-  color: var(--dark);
-  border-radius: 0;
+  color: var(--ink);
+  border-radius: 8px;
   outline: none;
-  transition: border-color var(--t-base);
+  transition: border-color 0.15s;
   appearance: none;
   -webkit-appearance: none;
+  box-sizing: border-box;
 }
 
 .dispute-modal__field select {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23003049' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%2361605c' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right 12px center;
   padding-right: 36px;
@@ -1197,7 +1198,7 @@
 .dispute-modal__field input:focus,
 .dispute-modal__field select:focus,
 .dispute-modal__field textarea:focus {
-  border-color: var(--primary);
+  border-color: var(--brand-red);
 }
 
 .dispute-modal__field textarea {
@@ -1209,9 +1210,9 @@
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  gap: var(--space-2);
-  padding: var(--space-3) var(--space-4);
-  border-top: 1px solid var(--line);
+  gap: 16px;
+  padding: 16px 24px;
+  border-top: 1px solid var(--hairline);
   background: var(--surface);
 }
 
@@ -1221,18 +1222,17 @@
   font-weight: 700;
   letter-spacing: 0.05em;
   text-transform: uppercase;
-  color: var(--dark);
+  color: var(--ink);
   background: transparent;
-  border: 1px solid var(--line);
-  padding: var(--space-1) var(--space-3);
+  padding: 8px 16px;
   cursor: pointer;
-  border-radius: 0;
-  transition: border-color var(--t-fast), background var(--t-fast);
+  border-radius: 8px;
+  transition: border-color 0.15s, background 0.15s;
 }
 
 .dispute-modal__cancel:hover {
-  border-color: var(--dark);
-  background: var(--surface-elevated);
+  border-color: var(--ink);
+  background: var(--surface-3);
 }
 
 .dispute-modal__submit {
@@ -1241,26 +1241,23 @@
   font-weight: 700;
   letter-spacing: 0.05em;
   text-transform: uppercase;
-  color: #fff;
-  background: var(--primary);
-  border: 1px solid var(--primary);
-  padding: var(--space-1) var(--space-4);
+  color: var(--snow);
+  background: var(--brand-red);
+  border: 1px solid var(--brand-red);
+  padding: 8px 24px;
   cursor: pointer;
-  border-radius: 0;
-  box-shadow: var(--btn-shadow);
-  transition: background var(--t-slow), box-shadow var(--t-slow);
+  border-radius: 8px;
+  transition: transform 0.15s;
 }
 
 .dispute-modal__submit:hover {
-  background: var(--accent);
-  border-color: var(--accent);
-  box-shadow: var(--btn-shadow-hover);
+  transform: translate(2px, 2px);
 }
 
 .dispute-modal__submit:disabled {
   opacity: 0.45;
   cursor: not-allowed;
-  box-shadow: none;
+  transform: none;
 }
 
 /* ─────────────────────────────────────────
@@ -1268,7 +1265,7 @@
    ───────────────────────────────────────── */
 @media (max-width: 768px) {
   .disputes-hero__stats {
-    gap: var(--space-4);
+    gap: 24px;
     flex-wrap: wrap;
   }
 
@@ -1282,7 +1279,7 @@
 
   .disputes-list__row {
     grid-template-columns: 1fr;
-    gap: var(--space-1);
+    gap: 8px;
   }
 
   .disputes-row__arrow {
@@ -1297,22 +1294,20 @@
   .disputes-tabs {
     overflow-x: auto;
   }
+
+  .disputes-page,
+  .dispute-detail-page {
+    padding: 24px 24px 64px;
+  }
 }
 
 @media (max-width: 480px) {
-  .disputes-page {
-    padding: var(--space-3) var(--space-2) var(--space-8);
-  }
-
-  .dispute-detail-page {
-    padding: var(--space-3) var(--space-2) var(--space-8);
-  }
-
   .dispute-modal {
     max-height: 100vh;
     border-left: none;
     border-right: none;
     border-bottom: none;
+    border-radius: 10px 10px 0 0;
   }
 
   .dispute-modal-overlay {

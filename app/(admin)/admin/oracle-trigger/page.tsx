@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import "./oracle-trigger.css";
 
 /**
  * /admin/oracle-trigger — v5.3-EXEC P1-4 admin control panel.
@@ -40,6 +41,13 @@ interface TriggerRunning {
 
 type TriggerState = TriggerIdle | TriggerRunning | TriggerOk | TriggerErr;
 
+// Signal score bar fill color — token-only, no hardcoded hex
+function scoreBarColor(value: number): string {
+  if (value >= 0.7) return "var(--brand-red)";
+  if (value >= 0.5) return "var(--champagne-deep)";
+  return "var(--accent-blue)";
+}
+
 export default function AdminOracleTriggerPage() {
   const [txId, setTxId] = useState("");
   const [state, setState] = useState<TriggerState>({ kind: "idle" });
@@ -75,181 +83,128 @@ export default function AdminOracleTriggerPage() {
   }
 
   return (
-    <div style={S.page}>
-      <header style={S.header}>
-        <p style={S.eyebrow}>ADMIN / CONVERSION ORACLE</p>
-        <h1 style={S.title}>Manual trigger</h1>
-        <p style={S.lede}>
+    <div className="adm-content oracle-page">
+      {/* Page header */}
+      <div className="adm-page-header">
+        {/* (ORACLE·TRIGGER) eyebrow — product register: no parentheses, canonical mono */}
+        <span className="oracle-eyebrow">ORACLE · TRIGGER</span>
+        <h1 className="adm-page-title">Manual Trigger</h1>
+        <p className="oracle-subtitle">
           Re-run the 5-signal ConversionOracle against a specific transaction.
-          Every run writes a fresh row to <code>oracle_audit</code>.
+          Every run writes a fresh row to{" "}
+          <code className="oracle-code-chip">oracle_audit</code>.
         </p>
-      </header>
+      </div>
 
-      <form onSubmit={run} style={S.form}>
-        <label style={S.label}>
-          TRANSACTION ID (UUID)
-          <input
-            value={txId}
-            onChange={(e) => setTxId(e.target.value)}
-            placeholder="00000000-0000-0000-0000-000000000000"
-            minLength={36}
-            maxLength={36}
-            required
-            style={S.input}
-          />
-        </label>
+      <div className="oracle-stack">
+        {/* ── Trigger form ── */}
+        <form onSubmit={run} className="oracle-form-card">
+          <div className="oracle-card-heading">Transaction lookup</div>
 
-        <button
-          type="submit"
-          disabled={state.kind === "running"}
-          style={S.submit}
-        >
-          {state.kind === "running" ? "Running…" : "RUN ORACLE →"}
-        </button>
-      </form>
+          <div className="oracle-field">
+            <label className="oracle-field-label">Transaction ID (UUID)</label>
+            <input
+              className="oracle-input"
+              value={txId}
+              onChange={(e) => setTxId(e.target.value)}
+              placeholder="00000000-0000-0000-0000-000000000000"
+              minLength={36}
+              maxLength={36}
+              required
+            />
+          </div>
 
-      {state.kind === "ok" && (
-        <section style={S.result}>
-          <p style={S.resultHead}>DECISION: {state.decision.toUpperCase()}</p>
-          <p style={S.line}>
-            Confidence:{" "}
-            <strong>{(state.confidence_score * 100).toFixed(1)}%</strong>
-          </p>
-          <p style={S.line}>
-            <strong>Signals:</strong>
-          </p>
-          <ul style={S.sigList}>
-            {Object.entries(state.signal_scores).map(([name, value]) => (
-              <li key={name} style={S.sigItem}>
-                {name}: {(value * 100).toFixed(0)}%
-              </li>
+          {/* Unified btn-primary: Brand Red fill — no per-page custom button */}
+          <button
+            type="submit"
+            className="btn-primary oracle-run-btn"
+            disabled={state.kind === "running"}
+          >
+            {state.kind === "running" ? "RUNNING..." : "RUN ORACLE →"}
+          </button>
+        </form>
+
+        {/* ── Result panel ── */}
+        {state.kind === "ok" && (
+          <div className="oracle-result-card">
+            {/* Decision header */}
+            <div className="oracle-decision-row">
+              <div className="oracle-decision-label">
+                DECISION:{" "}
+                <span className="oracle-decision-value">
+                  {state.decision.toUpperCase()}
+                </span>
+              </div>
+              {/* Confidence badge — static, no hover shift */}
+              <span className="oracle-confidence-badge">
+                {(state.confidence_score * 100).toFixed(1)}% confidence
+              </span>
+            </div>
+
+            {/* Signal scores section */}
+            <div className="oracle-section-eyebrow">Signal Scores</div>
+            <div className="oracle-signals">
+              {Object.entries(state.signal_scores).map(([name, value]) => (
+                <div key={name} className="oracle-signal-row">
+                  <span className="oracle-signal-name">{name}</span>
+                  {/* Score bar track — v11: 8px height, 4px radius */}
+                  <div className="oracle-bar-track">
+                    <div
+                      className="oracle-bar-fill"
+                      style={{
+                        width: `${value * 100}%`,
+                        background: scoreBarColor(value),
+                      }}
+                    />
+                  </div>
+                  <span className="oracle-signal-pct">
+                    {(value * 100).toFixed(0)}%
+                  </span>
+                </div>
+              ))}
+            </div>
+
+            {/* Reasoning block */}
+            <div className="oracle-reasoning-eyebrow">Reasoning</div>
+            <div className="oracle-reasoning-body">{state.reasoning}</div>
+
+            {/* Audit log link */}
+            <div className="oracle-audit-footer">
+              <span>Result written to</span>
+              <code className="oracle-code-chip">oracle_audit</code>
+              <span>·</span>
+              <a href="/admin/audit-log" className="oracle-audit-link">
+                View audit log →
+              </a>
+            </div>
+          </div>
+        )}
+
+        {/* ── Error panel ── */}
+        {state.kind === "err" && (
+          <div className="oracle-error-card" role="alert">
+            <div className="oracle-error-title">ERROR</div>
+            <p className="oracle-error-message">{state.message}</p>
+          </div>
+        )}
+
+        {/* ── Info card ── */}
+        <div className="oracle-info-card">
+          <div className="oracle-section-eyebrow">Use Cases</div>
+          <div className="oracle-use-cases">
+            {[
+              "Transaction landed in manual_review_required — rerun after a fraud ticket closes.",
+              "Spot-check a specific row after a model change.",
+              "Reproduce a disputed decision for a creator appeal.",
+            ].map((text, i) => (
+              <div key={i} className="oracle-use-case-item">
+                <span className="oracle-use-case-num">{i + 1}.</span>
+                <span>{text}</span>
+              </div>
             ))}
-          </ul>
-          <p style={S.line}>
-            <small>{state.reasoning}</small>
-          </p>
-        </section>
-      )}
-
-      {state.kind === "err" && (
-        <section style={S.err} role="alert">
-          <p style={S.errHead}>ERROR</p>
-          <p style={S.line}>{state.message}</p>
-        </section>
-      )}
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
-
-const S = {
-  page: {
-    minHeight: "100vh",
-    background: "var(--surface)",
-    color: "var(--dark)",
-    fontFamily: "var(--font-body)",
-    padding: "48px 24px",
-    maxWidth: "720px",
-    margin: "0 auto",
-  } as React.CSSProperties,
-  header: { marginBottom: "32px" } as React.CSSProperties,
-  eyebrow: {
-    fontSize: "11px",
-    fontWeight: 700,
-    letterSpacing: "0.08em",
-    color: "var(--primary)",
-    marginBottom: "8px",
-  } as React.CSSProperties,
-  title: {
-    fontFamily: "var(--font-display)",
-    fontSize: "clamp(28px, 5vw, 40px)",
-    fontWeight: 800,
-    letterSpacing: "-0.03em",
-    marginBottom: "8px",
-  } as React.CSSProperties,
-  lede: {
-    fontSize: "14px",
-    color: "var(--graphite)",
-    lineHeight: 1.6,
-  } as React.CSSProperties,
-  form: {
-    display: "flex",
-    flexDirection: "column",
-    gap: "16px",
-    padding: "24px",
-    border: "1px solid var(--line)",
-    background: "var(--surface-elevated)",
-  } as React.CSSProperties,
-  label: {
-    display: "flex",
-    flexDirection: "column",
-    fontSize: "11px",
-    fontWeight: 700,
-    letterSpacing: "0.08em",
-    gap: "8px",
-    color: "var(--text-muted)",
-  } as React.CSSProperties,
-  input: {
-    padding: "12px 16px",
-    border: "1px solid var(--line)",
-    background: "var(--surface)",
-    color: "var(--dark)",
-    fontFamily: "var(--font-body)",
-    fontSize: "15px",
-    fontFamilyName: "monospace",
-    borderRadius: 0,
-  } as React.CSSProperties,
-  submit: {
-    padding: "16px",
-    background: "var(--primary)",
-    color: "#ffffff",
-    fontFamily: "var(--font-body)",
-    fontSize: "14px",
-    fontWeight: 700,
-    letterSpacing: "0.08em",
-    border: "none",
-    borderRadius: 0,
-    cursor: "pointer",
-  } as React.CSSProperties,
-  result: {
-    marginTop: "24px",
-    padding: "20px",
-    border: "2px solid var(--dark)",
-    background: "var(--surface-elevated)",
-  } as React.CSSProperties,
-  resultHead: {
-    fontFamily: "var(--font-display)",
-    fontSize: "18px",
-    fontWeight: 800,
-    letterSpacing: "-0.02em",
-    marginBottom: "12px",
-  } as React.CSSProperties,
-  line: {
-    fontSize: "13px",
-    color: "var(--dark)",
-    marginTop: "8px",
-  } as React.CSSProperties,
-  sigList: {
-    listStyle: "none",
-    padding: 0,
-    marginTop: "8px",
-  } as React.CSSProperties,
-  sigItem: {
-    fontFamily: "var(--font-body)",
-    fontSize: "13px",
-    padding: "4px 0",
-    borderBottom: "1px dashed var(--line)",
-  } as React.CSSProperties,
-  err: {
-    marginTop: "24px",
-    padding: "20px",
-    border: "2px solid var(--primary)",
-    background: "rgba(193,18,31,0.06)",
-  } as React.CSSProperties,
-  errHead: {
-    fontFamily: "var(--font-display)",
-    fontSize: "16px",
-    fontWeight: 800,
-    color: "var(--primary)",
-    marginBottom: "8px",
-  } as React.CSSProperties,
-};

@@ -1,0 +1,53 @@
+.ms-progress {
+  appearance: none;
+  background: var(--surface-3);
+  border: 0;
+  border-radius: var(--r-pill);
+  display: block;
+  height: 8px;
+  overflow: hidden;
+  width: 100%;
+}
+
+.ms-progress::-webkit-progress-bar {
+  background: var(--surface-3);
+  border-radius: var(--r-pill);
+}
+
+.ms-progress::-webkit-progress-value {
+  background: var(--brand-red);
+  border-radius: var(--r-pill);
+  transition: width 320ms ease;
+}
+
+.ms-progress::-moz-progress-bar {
+  background: var(--brand-red);
+  border-radius: var(--r-pill);
+  transition: width 320ms ease;
+}
+
+.ms-progress--h-2,
+.ms-progress--h-4,
+.ms-progress--h-6 {
+  height: 8px;
+}
+
+.ms-progress--primary::-webkit-progress-value,
+.ms-progress--primary::-moz-progress-bar,
+.ms-progress--champagne::-webkit-progress-value,
+.ms-progress--champagne::-moz-progress-bar,
+.ms-progress--tertiary::-webkit-progress-value,
+.ms-progress--tertiary::-moz-progress-bar {
+  background: var(--brand-red);
+}
+
+.ms-progress-label {
+  color: var(--ink-3);
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+}

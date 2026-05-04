@@ -192,7 +192,7 @@ function SidebarInfo({ integration }: { integration: Integration }) {
             rel="noopener noreferrer"
             style={{
               fontSize: "var(--text-caption)",
-              color: "var(--tertiary)",
+              color: "var(--accent-blue)",
               textDecoration: "none",
             }}
           >
@@ -434,7 +434,7 @@ function RelatedIntegrations({ current }: { current: Integration }) {
     <section
       style={{
         borderTop: "1px solid var(--line)",
-        background: "var(--surface-bright)",
+        background: "var(--surface-3)",
         padding: "var(--space-10) var(--space-3)",
       }}
     >
@@ -445,7 +445,7 @@ function RelatedIntegrations({ current }: { current: Integration }) {
             fontWeight: 700,
             letterSpacing: "0.1em",
             textTransform: "uppercase",
-            color: "var(--primary)",
+            color: "var(--brand-red)",
             marginBottom: "var(--space-2)",
           }}
         >
@@ -457,7 +457,7 @@ function RelatedIntegrations({ current }: { current: Integration }) {
             fontSize: "var(--text-h3)",
             fontWeight: 700,
             letterSpacing: "-0.02em",
-            color: "var(--dark)",
+            color: "var(--ink)",
             margin: "0 0 var(--space-5)",
           }}
         >
@@ -481,7 +481,7 @@ function RelatedIntegrations({ current }: { current: Integration }) {
             const card = (
               <article
                 style={{
-                  background: "var(--surface-elevated)",
+                  background: "var(--surface-2)",
                   border: "1px solid var(--line)",
                   padding: "var(--space-3)",
                   display: "flex",
@@ -518,7 +518,7 @@ function RelatedIntegrations({ current }: { current: Integration }) {
                       fontSize: "var(--text-h4)",
                       fontWeight: 700,
                       letterSpacing: "-0.02em",
-                      color: "var(--dark)",
+                      color: "var(--ink)",
                       margin: "0 0 4px",
                     }}
                   >

@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+import { TIERS } from "@/lib/tier-config";
 
 export type CreatorTier =
   | "seed"
@@ -21,13 +22,18 @@ export type PushScoreProps = {
   showTierInfo?: boolean;
 };
 
+// Path A brand-palette mapping per Design.md §Tier Identity System.
+// These hex values correspond 1:1 to brand tokens in globals.css — they are
+// kept as literals here because the values are consumed by SVG stroke +
+// inline style paths (not CSS-resolved). Change these only by editing the
+// brand tokens they mirror.
 const TIER_COLORS: Record<CreatorTier, string> = {
-  seed: "#b8a99a",
-  explorer: "#8c6239",
-  operator: "#4a5568",
-  proven: "#c9a96e",
-  closer: "#9b111e",
-  partner: "#1a1a2e",
+  seed: "#669bbc", // --tertiary Steel Blue
+  explorer: "#c9a96e", // --champagne Champagne Gold
+  operator: "#669bbc", // --tertiary Steel Blue
+  proven: "#c1121f", // --primary Flag Red
+  closer: "#780000", // --accent Molten Lava
+  partner: "#003049", // --dark Deep Space Blue
 };
 
 const TIER_LABELS: Record<CreatorTier, string> = {
@@ -39,14 +45,16 @@ const TIER_LABELS: Record<CreatorTier, string> = {
   partner: "Partner",
 };
 
-// Points required to reach each tier (lower bound of next tier)
+// Sourced from lib/tier-config.ts. Pre-v6 had drift of 2–5 points on
+// upper tiers vs the canonical scoring engine. Partner.maxScore is capped
+// at 100 here for the progress-bar UI; tier-config declares Infinity.
 const TIER_THRESHOLDS: Record<CreatorTier, { min: number; max: number }> = {
-  seed: { min: 0, max: 39 },
-  explorer: { min: 40, max: 54 },
-  operator: { min: 55, max: 69 },
-  proven: { min: 70, max: 79 },
-  closer: { min: 80, max: 89 },
-  partner: { min: 90, max: 100 },
+  seed: { min: TIERS.Seed.minScore, max: TIERS.Seed.maxScore },
+  explorer: { min: TIERS.Explorer.minScore, max: TIERS.Explorer.maxScore },
+  operator: { min: TIERS.Operator.minScore, max: TIERS.Operator.maxScore },
+  proven: { min: TIERS.Proven.minScore, max: TIERS.Proven.maxScore },
+  closer: { min: TIERS.Closer.minScore, max: TIERS.Closer.maxScore },
+  partner: { min: TIERS.Partner.minScore, max: 100 },
 };
 
 const TIER_ORDER: CreatorTier[] = [
@@ -174,11 +182,11 @@ export function PushScore({
   };
 
   const labelStyle: React.CSSProperties = {
-    fontFamily: '"CS Genio Mono", monospace',
+    fontFamily: "var(--font-body)",
     fontSize: 10,
     fontWeight: 600,
     letterSpacing: "0.12em",
-    color: "#003049",
+    color: "var(--ink)",
     textTransform: "uppercase",
     lineHeight: 1,
   };
@@ -190,7 +198,7 @@ export function PushScore({
 
   const trackStyle: React.CSSProperties = {
     fill: "none",
-    stroke: "rgba(0,48,73,0.12)",
+    stroke: "var(--line)",
     strokeWidth,
   };
 
@@ -209,7 +217,7 @@ export function PushScore({
   };
 
   const scoreTextStyle: React.CSSProperties = {
-    fontFamily: '"Darky", serif',
+    fontFamily: "var(--font-display)",
     fontWeight: 700,
     // Use tier color for the score number
     fontSize: size * 0.26,
@@ -220,7 +228,7 @@ export function PushScore({
   };
 
   const tierTextStyle: React.CSSProperties = {
-    fontFamily: '"CS Genio Mono", monospace',
+    fontFamily: "var(--font-body)",
     fontWeight: 600,
     fontSize: size * 0.09,
     fill: color,
@@ -278,18 +286,20 @@ export function PushScore({
         >
           {/* Tier badge */}
           <div
+            className={`tier-badge tier-badge--${tier}`}
             style={{
               display: "inline-flex",
               alignItems: "center",
               gap: 5,
               padding: "3px 8px",
               backgroundColor: color,
-              color: "#f5f2ec",
+              color: "var(--surface)",
+              borderLeft: "none",
             }}
           >
             <span
               style={{
-                fontFamily: '"CS Genio Mono", monospace',
+                fontFamily: "var(--font-body)",
                 fontWeight: 700,
                 fontSize: 10,
                 letterSpacing: "0.12em",
@@ -312,7 +322,7 @@ export function PushScore({
             <div
               style={{
                 height: 3,
-                backgroundColor: "rgba(0,48,73,0.10)",
+                backgroundColor: "var(--line)",
                 position: "relative",
                 overflow: "hidden",
                 width: "100%",
@@ -344,16 +354,16 @@ export function PushScore({
               >
                 <span
                   style={{
-                    fontFamily: '"CS Genio Mono", monospace',
+                    fontFamily: "var(--font-body)",
                     fontSize: 9,
-                    color: "rgba(0,48,73,0.45)",
+                    color: "var(--ink-4)",
                   }}
                 >
                   {TIER_LABELS[tier]}
                 </span>
                 <span
                   style={{
-                    fontFamily: '"CS Genio Mono", monospace',
+                    fontFamily: "var(--font-body)",
                     fontSize: 9,
                     fontWeight: 700,
                     color: color,
@@ -368,7 +378,7 @@ export function PushScore({
               <div style={{ textAlign: "center" }}>
                 <span
                   style={{
-                    fontFamily: '"CS Genio Mono", monospace',
+                    fontFamily: "var(--font-body)",
                     fontSize: 9,
                     fontWeight: 700,
                     color: color,
@@ -387,15 +397,15 @@ export function PushScore({
             style={{
               width: "100%",
               padding: "6px 8px",
-              backgroundColor: "rgba(193,18,31,0.05)",
-              borderLeft: "2px solid #c1121f",
+              backgroundColor: "rgba(193, 18, 31, 0.05)",
+              borderLeft: "2px solid var(--brand-red)",
             }}
           >
             <span
               style={{
-                fontFamily: '"CS Genio Mono", monospace',
+                fontFamily: "var(--font-body)",
                 fontSize: 9,
-                color: "rgba(0,48,73,0.65)",
+                color: "var(--graphite)",
                 lineHeight: 1.4,
                 display: "block",
               }}

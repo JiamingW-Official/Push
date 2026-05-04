@@ -2,6 +2,7 @@
 
 import "./tier-benefits.css";
 import type { CreatorTier } from "./TierBadge";
+import { TIERS } from "@/lib/tier-config";
 
 // ── Tier ordering ────────────────────────────────────────────
 const TIER_ORDER: CreatorTier[] = [
@@ -13,28 +14,44 @@ const TIER_ORDER: CreatorTier[] = [
   "partner",
 ];
 
-// ── Score thresholds (min score to reach each tier) ──────────
+// Convert lowercase wire-format tier ("seed") to the PascalCase key the
+// lib/tier-config.ts TIERS record is indexed by ("Seed").
+function toConfigKey(
+  tier: CreatorTier,
+): "Seed" | "Explorer" | "Operator" | "Proven" | "Closer" | "Partner" {
+  return (tier.charAt(0).toUpperCase() + tier.slice(1)) as
+    | "Seed"
+    | "Explorer"
+    | "Operator"
+    | "Proven"
+    | "Closer"
+    | "Partner";
+}
+
+// ── Score thresholds ─ SOURCED FROM lib/tier-config.ts ───────
+// Pulled from the single source of truth so the "N points to next tier"
+// math matches what the scoring engine actually uses. Pre-v6 this file
+// hardcoded 200/500/1000/2000/4000 — a 5–25× mismatch against the real
+// 0/40/55/65/78/88 Push Score scale that silently miscalculated progress.
 const TIER_THRESHOLDS: Record<CreatorTier, number> = {
-  seed: 0,
-  explorer: 200,
-  operator: 500,
-  proven: 1000,
-  closer: 2000,
-  partner: 4000,
+  seed: TIERS.Seed.minScore,
+  explorer: TIERS.Explorer.minScore,
+  operator: TIERS.Operator.minScore,
+  proven: TIERS.Proven.minScore,
+  closer: TIERS.Closer.minScore,
+  partner: TIERS.Partner.minScore,
 };
 
-// ── Tier colors ──────────────────────────────────────────────
+// ── Tier colors ─ SOURCED FROM lib/tier-config.ts ────────────
 const TIER_COLORS: Record<
   CreatorTier,
   { color: string; bg: string; accent: string }
-> = {
-  seed: { color: "#669bbc", bg: "#f7f7f7", accent: "#718096" },
-  explorer: { color: "#c9a96e", bg: "#eef5fb", accent: "#5a3e22" },
-  operator: { color: "#669bbc", bg: "#f2f4f5", accent: "#2d3748" },
-  proven: { color: "#c1121f", bg: "#f5f2ec", accent: "#9b7a3e" },
-  closer: { color: "#780000", bg: "#f5f2ec", accent: "#6b0a14" },
-  partner: { color: "#003049", bg: "#fdf8ee", accent: "#0a0a1a" },
-};
+> = Object.fromEntries(
+  TIER_ORDER.map((t) => {
+    const cfg = TIERS[toConfigKey(t)];
+    return [t, { color: cfg.color, bg: cfg.bg, accent: cfg.accent }];
+  }),
+) as Record<CreatorTier, { color: string; bg: string; accent: string }>;
 
 // ── Tier icons & names ───────────────────────────────────────
 const TIER_META: Record<CreatorTier, { icon: string; label: string }> = {
@@ -56,27 +73,27 @@ const TIER_BENEFITS: Record<CreatorTier, string[]> = {
   ],
   operator: [
     "$20 base + 3% commission",
-    "$15 milestone bonus",
+    "Higher per-visit rate ($12 avg)",
     "3 active campaigns",
     "Campaign feedback form",
   ],
   proven: [
     "$32 base + 5% commission",
-    "$30 milestone bonus",
+    "Studio-tier eligibility (brand-partner pool)",
     "4 active campaigns",
     "Merchant preference setting",
     "Content review sessions",
   ],
   closer: [
     "$55 base + 7% commission",
-    "$50 milestone bonus",
+    "Premium per-visit rate ($25 avg)",
     "5 active campaigns",
     "Dedicated account manager",
     "Premium brand access",
   ],
   partner: [
     "$100 base + 10% commission",
-    "$80 milestone bonus",
+    "Top per-visit rate ($35 avg) + Studio anchor",
     "6 active campaigns",
     "Advisory access",
     "Custom campaign terms",
@@ -87,7 +104,6 @@ const TIER_BENEFITS: Record<CreatorTier, string[]> = {
 type TierStats = {
   baseRate: string;
   commission: string | null; // null = locked
-  milestoneBonus: string | null; // null = locked
   maxCampaigns: number;
 };
 
@@ -95,37 +111,31 @@ const TIER_STATS: Record<CreatorTier, TierStats> = {
   seed: {
     baseRate: "Free product",
     commission: null,
-    milestoneBonus: null,
     maxCampaigns: 1,
   },
   explorer: {
     baseRate: "$12/campaign",
     commission: null,
-    milestoneBonus: null,
     maxCampaigns: 2,
   },
   operator: {
     baseRate: "$20/campaign",
     commission: "3% per verified sale",
-    milestoneBonus: "$15 at 30 txns/mo",
     maxCampaigns: 3,
   },
   proven: {
     baseRate: "$32/campaign",
     commission: "5% per verified sale",
-    milestoneBonus: "$30 at 30 txns/mo",
     maxCampaigns: 4,
   },
   closer: {
     baseRate: "$55/campaign",
     commission: "7% per verified sale",
-    milestoneBonus: "$50 at 30 txns/mo",
     maxCampaigns: 5,
   },
   partner: {
     baseRate: "$100/campaign",
     commission: "10% per verified sale",
-    milestoneBonus: "$80 at 30 txns/mo",
     maxCampaigns: 6,
   },
 };
@@ -274,9 +284,8 @@ function TierColumn({ tier, role, currentScore }: TierColumnProps) {
   const lockedLabelForTier = (unlockTier: CreatorTier) =>
     `Unlocked at ${TIER_META[unlockTier].label}`;
 
-  // Commission and milestone bonus unlock at Operator+
+  // Commission unlocks at Operator+
   const commissionUnlockLabel = lockedLabelForTier("operator");
-  const bonusUnlockLabel = lockedLabelForTier("operator");
 
   return (
     <div className={cardClass} style={cssVars}>
@@ -293,11 +302,6 @@ function TierColumn({ tier, role, currentScore }: TierColumnProps) {
           label="Commission"
           value={stats.commission}
           lockedLabel={commissionUnlockLabel}
-        />
-        <StatRow
-          label="Milestone Bonus"
-          value={stats.milestoneBonus}
-          lockedLabel={bonusUnlockLabel}
         />
         <StatRow label="Max Campaigns" value={String(stats.maxCampaigns)} />
       </div>
@@ -406,7 +410,7 @@ export function TierBenefitsPanel({
 
   return (
     <div
-      className={`tbp-panel${className ? ` ${className}` : ""}`}
+      className={`tbp-panel tier--${currentTier}${className ? ` ${className}` : ""}`}
       style={panelVars}
     >
       <div className="tbp-grid">

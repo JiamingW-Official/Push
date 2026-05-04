@@ -14,7 +14,9 @@ export async function POST(request: Request) {
     const newLocation: Location = {
       id: `loc-${Date.now()}`,
       merchant_id: "demo-merchant-001",
+      tenant_id: "tenant-demo-001",
       name: body.name ?? "New Location",
+      business_name: body.business_name ?? body.name ?? "New Location",
       neighborhood: body.neighborhood ?? "",
       address: body.address ?? "",
       city: body.city ?? "New York",

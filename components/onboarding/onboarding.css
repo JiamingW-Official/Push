@@ -1,16 +1,15 @@
 /* ─────────────────────────────────────────────────────────────
    Push Onboarding v2 — shared CSS
-   Design system: Design.md
-   Fonts: Darky (headings) + CS Genio Mono (body/UI)
-   Colors: 6-token palette only
-   Shape: border-radius 0 everywhere (filter chips exception: 50vh)
+   Authority: Design.md + app/globals.css. Tokens only.
+   border-radius: 0 everywhere (filter chip / map / back-to-top
+   are documented exceptions).
    ───────────────────────────────────────────────────────────── */
 
 /* ── Page wrapper ─────────────────────────────────────────── */
 
 .ob2-page {
   min-height: 100svh;
-  background: var(--surface, #f5f2ec);
+  background: var(--surface);
   display: flex;
   align-items: stretch;
 }
@@ -27,8 +26,8 @@
 /* ── Sidebar ─────────────────────────────────────────────── */
 
 .ob2-sidebar {
-  background: #003049;
-  padding: 48px 32px;
+  background: var(--ink);
+  padding: var(--space-6) var(--space-4);
   display: flex;
   flex-direction: column;
   position: sticky;
@@ -41,39 +40,39 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  margin-bottom: 40px;
+  margin-bottom: var(--space-5);
 }
 
 .ob2-sidebar-brand-dot {
   display: block;
   width: 8px;
   height: 8px;
-  background: #c1121f;
+  background: var(--brand-red);
   flex-shrink: 0;
 }
 
 .ob2-sidebar-brand-name {
-  font-family: "Darky", sans-serif;
+  font-family: var(--font-display);
   font-weight: 900;
   font-size: 20px;
-  color: #f5f2ec;
+  color: var(--surface);
   letter-spacing: -0.04em;
 }
 
 .ob2-sidebar-role {
-  font-family: "CS Genio Mono", "SF Mono", monospace;
+  font-family: var(--font-body);
   font-size: 11px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.1em;
   color: rgba(245, 242, 236, 0.45);
-  margin-bottom: 32px;
+  margin-bottom: var(--space-4);
 }
 
 /* Sidebar progress bar */
 
 .ob2-sidebar-progress {
-  margin-bottom: 32px;
+  margin-bottom: var(--space-4);
 }
 
 .ob2-sidebar-progress-track {
@@ -86,12 +85,12 @@
 
 .ob2-sidebar-progress-fill {
   height: 100%;
-  background: #c1121f;
+  background: var(--brand-red);
   transition: width 600ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .ob2-sidebar-progress-label {
-  font-family: "CS Genio Mono", "SF Mono", monospace;
+  font-family: var(--font-body);
   font-size: 11px;
   font-weight: 600;
   color: rgba(245, 242, 236, 0.4);
@@ -106,7 +105,7 @@
 }
 
 .ob2-sidebar-num {
-  font-family: "Darky", sans-serif;
+  font-family: var(--font-display);
   font-weight: 200;
   font-size: clamp(80px, 10vw, 120px);
   color: rgba(245, 242, 236, 0.08);
@@ -115,7 +114,7 @@
 }
 
 .ob2-sidebar-denom {
-  font-family: "Darky", sans-serif;
+  font-family: var(--font-display);
   font-weight: 200;
   font-size: clamp(40px, 5vw, 64px);
   color: rgba(245, 242, 236, 0.06);
@@ -128,7 +127,7 @@
   padding: 0;
   display: flex;
   flex-direction: column;
-  background: var(--surface, #f5f2ec);
+  background: var(--surface);
 }
 
 /* ── Top bar ─────────────────────────────────────────────── */
@@ -137,9 +136,9 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 20px 48px;
-  border-bottom: 1px solid rgba(0, 48, 73, 0.08);
-  background: #ffffff;
+  padding: 20px var(--space-6);
+  border-bottom: 1px solid var(--line);
+  background: var(--surface-2);
   position: sticky;
   top: 0;
   z-index: 10;
@@ -149,19 +148,19 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  font-family: "CS Genio Mono", "SF Mono", monospace;
+  font-family: var(--font-body);
   font-size: 11px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  color: rgba(0, 48, 73, 0.4);
+  color: var(--ink-4);
 }
 
 .ob2-topbar-dot {
   display: block;
   width: 6px;
   height: 6px;
-  background: #c1121f;
+  background: var(--brand-red);
   flex-shrink: 0;
 }
 
@@ -174,10 +173,10 @@
 }
 
 .ob2-progress-text {
-  font-family: "CS Genio Mono", "SF Mono", monospace;
+  font-family: var(--font-mono);
   font-size: 11px;
   font-weight: 700;
-  color: rgba(0, 48, 73, 0.4);
+  color: var(--ink-4);
   letter-spacing: 0.04em;
   text-transform: uppercase;
   white-space: nowrap;
@@ -186,51 +185,60 @@
 .ob2-dots {
   display: flex;
   gap: 6px;
+  align-items: center;
 }
+
+/* v11 step-dot spec:
+   default → 8×8 circle, surface-3
+   active  → brand-red, 24px wide pill (4px radius)
+   done    → ink-3, 8×8 circle */
 
 .ob2-dot {
   width: 8px;
   height: 8px;
-  border: 2px solid rgba(0, 48, 73, 0.2);
-  background: transparent;
+  border-radius: 50%;
+  background: var(--surface-3);
+  border: none;
+  flex-shrink: 0;
   transition:
     background 250ms ease,
-    border-color 250ms ease;
+    width 250ms cubic-bezier(0.34, 1.56, 0.64, 1),
+    border-radius 250ms ease;
 }
 
 .ob2-dot--active {
-  border-color: #003049;
-  background: #003049;
+  width: 24px;
+  border-radius: 4px;
+  background: var(--brand-red);
 }
 
 .ob2-dot--done {
-  border-color: #c1121f;
-  background: #c1121f;
+  background: var(--ink-3);
 }
 
 /* ── Steps list ─────────────────────────────────────────── */
 
 .ob2-steps {
   flex: 1;
-  padding: 0 48px 64px;
+  padding: 0 var(--space-6) var(--space-8);
   max-width: 760px;
 }
 
 /* ── Checklist item ─────────────────────────────────────── */
 
 .chk-item {
-  border-bottom: 1px solid rgba(0, 48, 73, 0.08);
+  border-bottom: 1px solid var(--line);
   transition: background 200ms ease;
 }
 
 .chk-item:first-child {
   border-top: none;
-  margin-top: 32px;
+  margin-top: var(--space-4);
 }
 
 .chk-item--active {
-  background: #ffffff;
-  border-bottom-color: rgba(0, 48, 73, 0.08);
+  background: var(--surface-2);
+  border-bottom-color: var(--line);
 }
 
 .chk-item--done {
@@ -251,7 +259,7 @@
   align-items: center;
   gap: 16px;
   width: 100%;
-  padding: 20px 24px;
+  padding: 20px var(--space-3);
   background: none;
   border: none;
   cursor: pointer;
@@ -260,7 +268,7 @@
 }
 
 .chk-header:hover:not([disabled]) {
-  background: rgba(0, 48, 73, 0.03);
+  background: var(--surface-muted);
 }
 
 .chk-header[disabled],
@@ -273,7 +281,7 @@
 .chk-marker {
   width: 40px;
   height: 40px;
-  border: 1.5px solid rgba(0, 48, 73, 0.15);
+  border: 1.5px solid var(--line);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -284,32 +292,32 @@
 }
 
 .chk-item--active .chk-marker {
-  border-color: #003049;
-  background: #003049;
+  border-color: var(--ink);
+  background: var(--ink);
 }
 
 .chk-item--done .chk-marker {
-  border-color: #c1121f;
-  background: #c1121f;
+  border-color: var(--brand-red);
+  background: var(--brand-red);
 }
 
 .chk-num {
-  font-family: "Darky", sans-serif;
+  font-family: var(--font-display);
   font-weight: 700;
   font-size: 14px;
-  color: rgba(0, 48, 73, 0.4);
+  color: var(--ink-4);
   letter-spacing: -0.02em;
 }
 
 .chk-item--active .chk-num {
-  color: #f5f2ec;
+  color: var(--surface);
 }
 
 .chk-check {
-  font-family: "CS Genio Mono", "SF Mono", monospace;
+  font-family: var(--font-body);
   font-size: 14px;
   font-weight: 700;
-  color: #f5f2ec;
+  color: var(--surface);
 }
 
 /* Title block */
@@ -322,7 +330,7 @@
 }
 
 .chk-step-label {
-  font-family: "CS Genio Mono", "SF Mono", monospace;
+  font-family: var(--font-body);
   font-size: 10px;
   font-weight: 700;
   text-transform: uppercase;
@@ -331,22 +339,22 @@
 }
 
 .chk-item--active .chk-step-label {
-  color: #669bbc;
+  color: var(--accent-blue);
 }
 
 .chk-title {
-  font-family: "Darky", sans-serif;
+  font-family: var(--font-display);
   font-weight: 900;
   font-size: clamp(18px, 2.5vw, 24px);
-  color: #003049;
+  color: var(--ink);
   letter-spacing: -0.04em;
   line-height: 1.1;
 }
 
 .chk-description {
-  font-family: "CS Genio Mono", "SF Mono", monospace;
+  font-family: var(--font-body);
   font-size: 12px;
-  color: rgba(0, 48, 73, 0.5);
+  color: var(--ink-4);
   line-height: 1.5;
   margin-top: 4px;
 }
@@ -354,7 +362,7 @@
 /* Badge */
 
 .chk-badge {
-  font-family: "CS Genio Mono", "SF Mono", monospace;
+  font-family: var(--font-body);
   font-size: 10px;
   font-weight: 700;
   text-transform: uppercase;
@@ -365,12 +373,12 @@
 }
 
 .chk-badge--active {
-  color: #003049;
+  color: var(--ink);
   background: rgba(0, 48, 73, 0.08);
 }
 
 .chk-badge--done {
-  color: #c1121f;
+  color: var(--brand-red);
   background: rgba(193, 18, 31, 0.08);
 }
 
@@ -387,7 +395,7 @@
 /* Chevron */
 
 .chk-chevron {
-  font-family: "CS Genio Mono", "SF Mono", monospace;
+  font-family: var(--font-body);
   font-size: 18px;
   font-weight: 400;
   color: rgba(0, 48, 73, 0.3);
@@ -399,13 +407,13 @@
 }
 
 .chk-header:hover .chk-chevron {
-  color: #003049;
+  color: var(--ink);
 }
 
 /* ── Expanded body ──────────────────────────────────────── */
 
 .chk-body {
-  padding: 0 24px 24px 88px; /* 48px marker + 24px gap + 16px indent */
+  padding: 0 var(--space-3) var(--space-3) 88px; /* 48px marker + 24px gap + 16px indent */
   animation: ob2-body-in 200ms ease forwards;
 }
 
@@ -428,12 +436,12 @@
 
 .ob2-label {
   display: block;
-  font-family: "CS Genio Mono", "SF Mono", monospace;
+  font-family: var(--font-mono);
   font-size: 11px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: rgba(0, 48, 73, 0.45);
+  color: var(--ink-3);
   margin-bottom: 6px;
 }
 
@@ -441,15 +449,16 @@
 .ob2-textarea,
 .ob2-select {
   width: 100%;
-  padding: 10px 12px;
-  border: 1.5px solid rgba(0, 48, 73, 0.15);
-  border-radius: 0;
-  font-family: "CS Genio Mono", "SF Mono", monospace;
-  font-size: 14px;
-  color: #003049;
-  background: #ffffff;
+  /* 8px-grid: 12px vertical (≈ 8+4) / 16px horizontal (= 2×8) */
+  padding: 12px 16px;
+  border: 1px solid var(--ink-4);
+  border-radius: 8px;
+  font-family: var(--font-mono);
+  font-size: 16px;
+  color: var(--ink);
+  background: var(--surface-2);
   outline: none;
-  transition: border-color 150ms;
+  transition: border-color 150ms, box-shadow 150ms;
   box-sizing: border-box;
   appearance: none;
 }
@@ -457,7 +466,15 @@
 .ob2-input:focus,
 .ob2-textarea:focus,
 .ob2-select:focus {
-  border-color: #003049;
+  border-color: var(--ink);
+}
+
+/* focus-visible for keyboard users */
+.ob2-input:focus-visible,
+.ob2-textarea:focus-visible,
+.ob2-select:focus-visible {
+  border-color: var(--brand-red);
+  box-shadow: 0 0 0 3px rgba(193, 18, 31, 0.15);
 }
 
 .ob2-textarea {
@@ -467,9 +484,9 @@
 }
 
 .ob2-input-hint {
-  font-family: "CS Genio Mono", "SF Mono", monospace;
+  font-family: var(--font-body);
   font-size: 11px;
-  color: rgba(0, 48, 73, 0.4);
+  color: var(--ink-4);
   margin-top: 4px;
 }
 
@@ -500,16 +517,16 @@
 }
 
 .ob2-toggle-name {
-  font-family: "CS Genio Mono", "SF Mono", monospace;
+  font-family: var(--font-body);
   font-size: 13px;
   font-weight: 600;
-  color: #003049;
+  color: var(--ink);
 }
 
 .ob2-toggle-desc {
-  font-family: "CS Genio Mono", "SF Mono", monospace;
+  font-family: var(--font-body);
   font-size: 11px;
-  color: rgba(0, 48, 73, 0.5);
+  color: var(--ink-4);
 }
 
 /* Apple-spring toggle switch */
@@ -531,13 +548,13 @@
 .ob2-toggle-track {
   position: absolute;
   inset: 0;
-  background: rgba(0, 48, 73, 0.15);
+  background: var(--line);
   cursor: pointer;
   transition: background 300ms cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .ob2-toggle-switch input:checked + .ob2-toggle-track {
-  background: #003049;
+  background: var(--ink);
 }
 
 .ob2-toggle-track::after {
@@ -547,7 +564,7 @@
   height: 20px;
   left: 3px;
   top: 3px;
-  background: #ffffff;
+  background: var(--surface-2);
   transition: transform 300ms cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
@@ -561,16 +578,16 @@
   display: flex;
   align-items: center;
   gap: 16px;
-  margin-top: 24px;
+  margin-top: var(--space-3);
 }
 
 .ob2-btn-primary {
   padding: 11px 28px;
-  background: #c1121f;
+  background: var(--brand-red);
   color: #ffffff;
   border: none;
-  border-radius: 0;
-  font-family: "CS Genio Mono", "SF Mono", monospace;
+  border-radius: var(--r-lg);
+  font-family: var(--font-body);
   font-size: 13px;
   font-weight: 700;
   letter-spacing: 0.02em;
@@ -583,21 +600,26 @@
 }
 
 .ob2-btn-primary:hover {
-  background: #780000;
+  background: var(--accent);
+}
+
+.ob2-btn-primary:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(193, 18, 31, 0.3);
 }
 
 .ob2-btn-primary:disabled {
-  background: rgba(0, 48, 73, 0.15);
+  background: var(--line);
   cursor: not-allowed;
 }
 
 .ob2-btn-secondary {
   padding: 11px 28px;
   background: transparent;
-  color: #003049;
-  border: 1.5px solid rgba(0, 48, 73, 0.2);
-  border-radius: 0;
-  font-family: "CS Genio Mono", "SF Mono", monospace;
+  color: var(--ink);
+  border: 1.5px solid var(--line-strong);
+  border-radius: var(--r-lg);
+  font-family: var(--font-body);
   font-size: 13px;
   font-weight: 600;
   cursor: pointer;
@@ -611,24 +633,29 @@
 }
 
 .ob2-btn-secondary:hover {
-  border-color: #003049;
+  border-color: var(--ink);
+}
+
+.ob2-btn-secondary:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.12);
 }
 
 .ob2-btn-ghost {
   background: none;
   border: none;
   padding: 0;
-  font-family: "CS Genio Mono", "SF Mono", monospace;
+  font-family: var(--font-body);
   font-size: 12px;
   font-weight: 600;
-  color: rgba(0, 48, 73, 0.4);
+  color: var(--ink-4);
   cursor: pointer;
   transition: color 150ms;
   text-decoration: none;
 }
 
 .ob2-btn-ghost:hover {
-  color: #003049;
+  color: var(--ink);
 }
 
 /* ── Social connect buttons ─────────────────────────────── */
@@ -646,31 +673,54 @@
   align-items: center;
   gap: 8px;
   padding: 16px 8px;
-  border: 1.5px solid rgba(0, 48, 73, 0.15);
-  border-radius: 0;
-  background: #ffffff;
+  border: 1.5px solid var(--line);
+  border-radius: 10px;
+  background: var(--surface-2);
   cursor: pointer;
-  font-family: "CS Genio Mono", "SF Mono", monospace;
+  font-family: var(--font-mono);
   font-size: 11px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  color: #003049;
+  color: var(--ink);
   transition:
     border-color 150ms,
-    background 150ms;
-  min-height: 72px;
+    background 150ms,
+    transform 0.1s;
+  min-height: 88px;
 }
 
 .ob2-social-btn:hover {
-  border-color: #003049;
-  background: rgba(0, 48, 73, 0.03);
+  border-color: var(--ink);
+  background: var(--surface-muted);
+  transform: translate(2px, 2px);
+}
+
+.ob2-social-btn:focus-visible {
+  outline: none;
+  border-color: var(--brand-red);
+  box-shadow: 0 0 0 3px rgba(193, 18, 31, 0.15);
 }
 
 .ob2-social-btn--connected {
-  border-color: #c1121f;
-  border-left-width: 3px;
-  background: rgba(193, 18, 31, 0.03);
+  border: 2px solid var(--brand-red);
+  background: rgba(193, 18, 31, 0.04);
+}
+
+/* 40×40 icon tile (v11 icon system) */
+.ob2-social-icon-tile {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background: var(--surface-3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.ob2-social-btn--connected .ob2-social-icon-tile {
+  background: rgba(193, 18, 31, 0.08);
 }
 
 .ob2-social-icon {
@@ -678,11 +728,22 @@
   line-height: 1;
 }
 
+/* platform name in mono 14px */
+.ob2-social-label {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ink);
+  letter-spacing: 0.04em;
+}
+
 .ob2-social-status {
-  font-size: 9px;
-  color: #c1121f;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--brand-red);
   font-weight: 700;
   letter-spacing: 0.06em;
+  text-transform: uppercase;
 }
 
 /* ── Color picker (merchant brand assets) ────────────────── */
@@ -710,7 +771,7 @@
 }
 
 .ob2-color-swatch--selected {
-  border-color: #003049;
+  border-color: var(--ink);
 }
 
 .ob2-color-swatch--selected::after {
@@ -728,13 +789,13 @@
 /* ── Invite link box ─────────────────────────────────────── */
 
 .ob2-invite-box {
-  background: #003049;
-  padding: 24px;
+  background: var(--ink);
+  padding: var(--space-3);
   margin-bottom: 20px;
 }
 
 .ob2-invite-label {
-  font-family: "CS Genio Mono", "SF Mono", monospace;
+  font-family: var(--font-body);
   font-size: 10px;
   font-weight: 700;
   text-transform: uppercase;
@@ -744,17 +805,17 @@
 }
 
 .ob2-invite-headline {
-  font-family: "Darky", sans-serif;
+  font-family: var(--font-display);
   font-weight: 900;
   font-size: clamp(28px, 4vw, 40px);
-  color: #f5f2ec;
+  color: var(--surface);
   letter-spacing: -0.05em;
   line-height: 1.05;
   margin-bottom: 16px;
 }
 
 .ob2-invite-headline em {
-  color: #c9a96e;
+  color: var(--champagne);
   font-style: normal;
 }
 
@@ -766,10 +827,10 @@
 .ob2-invite-link-input {
   flex: 1;
   padding: 10px 14px;
-  font-family: "CS Genio Mono", "SF Mono", monospace;
+  font-family: var(--font-body);
   font-size: 13px;
-  color: #003049;
-  background: #f5f2ec;
+  color: var(--ink);
+  background: var(--surface);
   border: none;
   outline: none;
   min-width: 0;
@@ -777,10 +838,10 @@
 
 .ob2-invite-copy-btn {
   padding: 10px 20px;
-  background: #c1121f;
+  background: var(--brand-red);
   color: #ffffff;
   border: none;
-  font-family: "CS Genio Mono", "SF Mono", monospace;
+  font-family: var(--font-body);
   font-size: 12px;
   font-weight: 700;
   letter-spacing: 0.04em;
@@ -791,7 +852,7 @@
 }
 
 .ob2-invite-copy-btn:hover {
-  background: #780000;
+  background: var(--accent);
 }
 
 /* ── Team invite row ─────────────────────────────────────── */
@@ -811,53 +872,53 @@
 .ob2-team-invite-input {
   flex: 1;
   padding: 10px 12px;
-  border: 1.5px solid rgba(0, 48, 73, 0.15);
+  border: 1.5px solid var(--line);
   border-right: none;
-  border-radius: 0;
-  font-family: "CS Genio Mono", "SF Mono", monospace;
+  border-radius: var(--r-lg);
+  font-family: var(--font-body);
   font-size: 13px;
-  color: #003049;
-  background: #ffffff;
+  color: var(--ink);
+  background: var(--surface-2);
   outline: none;
   transition: border-color 150ms;
 }
 
 .ob2-team-invite-input:focus {
-  border-color: #003049;
+  border-color: var(--ink);
 }
 
 .ob2-team-invite-remove {
   padding: 0 14px;
   background: rgba(0, 48, 73, 0.06);
-  border: 1.5px solid rgba(0, 48, 73, 0.15);
-  border-radius: 0;
-  font-family: "CS Genio Mono", "SF Mono", monospace;
+  border: 1.5px solid var(--line);
+  border-radius: var(--r-lg);
+  font-family: var(--font-body);
   font-size: 16px;
-  color: rgba(0, 48, 73, 0.4);
+  color: var(--ink-4);
   cursor: pointer;
   transition: background 150ms;
 }
 
 .ob2-team-invite-remove:hover {
   background: rgba(0, 48, 73, 0.12);
-  color: #003049;
+  color: var(--ink);
 }
 
 .ob2-add-row-btn {
   background: none;
   border: none;
   padding: 0;
-  font-family: "CS Genio Mono", "SF Mono", monospace;
+  font-family: var(--font-body);
   font-size: 12px;
   font-weight: 700;
-  color: #669bbc;
+  color: var(--accent-blue);
   cursor: pointer;
   letter-spacing: 0.04em;
   transition: color 150ms;
 }
 
 .ob2-add-row-btn:hover {
-  color: #003049;
+  color: var(--ink);
 }
 
 /* ── Integration picker ──────────────────────────────────── */
@@ -875,8 +936,8 @@
   gap: 12px;
   padding: 14px 16px;
   border: 1.5px solid rgba(0, 48, 73, 0.12);
-  border-radius: 0;
-  background: #ffffff;
+  border-radius: var(--r-lg);
+  background: var(--surface-2);
   cursor: pointer;
   transition:
     border-color 150ms,
@@ -885,12 +946,12 @@
 }
 
 .ob2-integration-btn:hover {
-  border-color: rgba(0, 48, 73, 0.3);
+  border-color: var(--line-strong);
   background: rgba(0, 48, 73, 0.02);
 }
 
 .ob2-integration-btn--selected {
-  border-color: #003049;
+  border-color: var(--ink);
   border-left-width: 3px;
 }
 
@@ -907,24 +968,24 @@
 }
 
 .ob2-integration-name {
-  font-family: "CS Genio Mono", "SF Mono", monospace;
+  font-family: var(--font-body);
   font-size: 12px;
   font-weight: 700;
-  color: #003049;
+  color: var(--ink);
   letter-spacing: 0.02em;
 }
 
 .ob2-integration-sub {
-  font-family: "CS Genio Mono", "SF Mono", monospace;
+  font-family: var(--font-body);
   font-size: 10px;
-  color: rgba(0, 48, 73, 0.4);
+  color: var(--ink-4);
 }
 
 /* ── Tour callout (campaign discovery) ──────────────────── */
 
 .ob2-tour-callout {
-  background: #003049;
-  padding: 24px;
+  background: var(--ink);
+  padding: var(--space-3);
   margin-bottom: 20px;
   position: relative;
   overflow: hidden;
@@ -939,24 +1000,24 @@
   height: 120px;
   background: rgba(193, 18, 31, 0.12);
   transform: translate(40%, -40%);
-  border-radius: 0;
+  border-radius: var(--r-lg);
 }
 
 .ob2-tour-eyebrow {
-  font-family: "CS Genio Mono", "SF Mono", monospace;
+  font-family: var(--font-body);
   font-size: 10px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.12em;
-  color: #c1121f;
+  color: var(--brand-red);
   margin-bottom: 8px;
 }
 
 .ob2-tour-title {
-  font-family: "Darky", sans-serif;
+  font-family: var(--font-display);
   font-weight: 900;
   font-size: clamp(22px, 3.5vw, 32px);
-  color: #f5f2ec;
+  color: var(--surface);
   letter-spacing: -0.04em;
   line-height: 1.1;
   margin-bottom: 12px;
@@ -964,7 +1025,7 @@
 }
 
 .ob2-tour-desc {
-  font-family: "CS Genio Mono", "SF Mono", monospace;
+  font-family: var(--font-body);
   font-size: 13px;
   color: rgba(245, 242, 236, 0.65);
   line-height: 1.6;
@@ -975,10 +1036,10 @@
 
 .ob2-qr-callout {
   display: flex;
-  gap: 24px;
+  gap: var(--space-3);
   align-items: center;
-  padding: 24px;
-  background: #ffffff;
+  padding: var(--space-3);
+  background: var(--surface-2);
   border: 1.5px solid rgba(0, 48, 73, 0.1);
   margin-bottom: 20px;
 }
@@ -986,8 +1047,8 @@
 .ob2-qr-placeholder {
   width: 80px;
   height: 80px;
-  background: rgba(0, 48, 73, 0.06);
-  border: 1.5px dashed rgba(0, 48, 73, 0.2);
+  background: var(--surface-muted);
+  border: 1.5px dashed var(--line-strong);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1006,17 +1067,17 @@
 }
 
 .ob2-qr-title {
-  font-family: "Darky", sans-serif;
+  font-family: var(--font-display);
   font-weight: 700;
   font-size: 18px;
-  color: #003049;
+  color: var(--ink);
   letter-spacing: -0.03em;
 }
 
 .ob2-qr-desc {
-  font-family: "CS Genio Mono", "SF Mono", monospace;
+  font-family: var(--font-body);
   font-size: 12px;
-  color: rgba(0, 48, 73, 0.5);
+  color: var(--ink-4);
   line-height: 1.5;
 }
 
@@ -1027,7 +1088,7 @@
   align-items: center;
   gap: 16px;
   padding: 16px 20px;
-  background: #ffffff;
+  background: var(--surface-2);
   border: 1.5px solid rgba(0, 48, 73, 0.1);
   margin-bottom: 16px;
 }
@@ -1045,14 +1106,14 @@
 }
 
 .ob2-link-step-title {
-  font-family: "CS Genio Mono", "SF Mono", monospace;
+  font-family: var(--font-body);
   font-size: 13px;
   font-weight: 700;
-  color: #003049;
+  color: var(--ink);
 }
 
 .ob2-link-step-sub {
-  font-family: "CS Genio Mono", "SF Mono", monospace;
+  font-family: var(--font-body);
   font-size: 11px;
   color: rgba(0, 48, 73, 0.45);
 }
@@ -1060,8 +1121,8 @@
 /* ── Upload zone ─────────────────────────────────────────── */
 
 .ob2-upload-zone {
-  border: 2px dashed rgba(0, 48, 73, 0.2);
-  padding: 32px;
+  border: 2px dashed var(--line-strong);
+  padding: var(--space-4);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -1089,15 +1150,15 @@
 }
 
 .ob2-upload-label {
-  font-family: "CS Genio Mono", "SF Mono", monospace;
+  font-family: var(--font-body);
   font-size: 12px;
   font-weight: 700;
-  color: rgba(0, 48, 73, 0.5);
+  color: var(--ink-4);
   text-align: center;
 }
 
 .ob2-upload-hint {
-  font-family: "CS Genio Mono", "SF Mono", monospace;
+  font-family: var(--font-body);
   font-size: 10px;
   color: rgba(0, 48, 73, 0.35);
   text-align: center;
@@ -1109,14 +1170,14 @@
   display: flex;
   align-items: center;
   gap: 16px;
-  margin-bottom: 24px;
+  margin-bottom: var(--space-3);
 }
 
 .ob2-avatar-btn {
   width: 72px;
   height: 72px;
-  background: rgba(0, 48, 73, 0.05);
-  border: 2px dashed rgba(0, 48, 73, 0.2);
+  background: var(--surface-muted);
+  border: 2px dashed var(--line-strong);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1140,14 +1201,14 @@
 }
 
 .ob2-avatar-title {
-  font-family: "CS Genio Mono", "SF Mono", monospace;
+  font-family: var(--font-body);
   font-size: 13px;
   font-weight: 700;
-  color: #003049;
+  color: var(--ink);
 }
 
 .ob2-avatar-sub {
-  font-family: "CS Genio Mono", "SF Mono", monospace;
+  font-family: var(--font-body);
   font-size: 11px;
   color: rgba(0, 48, 73, 0.45);
 }
@@ -1157,7 +1218,7 @@
 .ob2-celebrate {
   max-width: 640px;
   margin: 0 auto;
-  padding: 80px 48px;
+  padding: var(--space-10) var(--space-6);
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -1178,52 +1239,52 @@
 .ob2-celebrate-rule {
   width: 48px;
   height: 3px;
-  background: #c1121f;
-  margin-bottom: 32px;
+  background: var(--brand-red);
+  margin-bottom: var(--space-4);
 }
 
 .ob2-celebrate-eyebrow {
-  font-family: "CS Genio Mono", "SF Mono", monospace;
+  font-family: var(--font-body);
   font-size: 11px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.12em;
-  color: rgba(0, 48, 73, 0.4);
+  color: var(--ink-4);
   margin-bottom: 16px;
 }
 
 .ob2-celebrate-hero {
-  font-family: "Darky", sans-serif;
+  font-family: var(--font-display);
   font-weight: 900;
   font-size: clamp(72px, 12vw, 128px);
-  color: #003049;
+  color: var(--ink);
   letter-spacing: -0.06em;
   line-height: 0.9;
-  margin-bottom: 24px;
+  margin-bottom: var(--space-3);
 }
 
 .ob2-celebrate-arrow {
-  margin-bottom: 32px;
+  margin-bottom: var(--space-4);
   transform: rotate(8deg);
   transform-origin: left center;
 }
 
 .ob2-celebrate-sub {
-  font-family: "CS Genio Mono", "SF Mono", monospace;
+  font-family: var(--font-body);
   font-size: 16px;
-  color: rgba(0, 48, 73, 0.6);
+  color: var(--ink-4);
   line-height: 1.7;
   max-width: 420px;
-  margin-bottom: 40px;
+  margin-bottom: var(--space-5);
 }
 
 .ob2-celebrate-cta {
   padding: 14px 36px;
-  background: #c1121f;
+  background: var(--brand-red);
   color: #ffffff;
   border: none;
-  border-radius: 0;
-  font-family: "CS Genio Mono", "SF Mono", monospace;
+  border-radius: var(--r-lg);
+  font-family: var(--font-body);
   font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.03em;
@@ -1233,13 +1294,13 @@
 }
 
 .ob2-celebrate-cta:hover {
-  background: #780000;
+  background: var(--accent);
 }
 
 /* ── Char count ─────────────────────────────────────────── */
 
 .ob2-char-count {
-  font-family: "CS Genio Mono", "SF Mono", monospace;
+  font-family: var(--font-body);
   font-size: 11px;
   color: rgba(0, 48, 73, 0.35);
   text-align: right;
@@ -1247,7 +1308,7 @@
 }
 
 .ob2-char-count--warn {
-  color: #c1121f;
+  color: var(--brand-red);
 }
 
 /* ── Reduced motion ──────────────────────────────────────── */
@@ -1271,7 +1332,7 @@
   .ob2-sidebar {
     position: static;
     height: auto;
-    padding: 24px 24px 20px;
+    padding: var(--space-3) var(--space-3) 20px;
     flex-direction: row;
     flex-wrap: wrap;
     align-items: center;
@@ -1298,15 +1359,15 @@
   }
 
   .ob2-topbar {
-    padding: 16px 24px;
+    padding: 16px var(--space-3);
   }
 
   .ob2-steps {
-    padding: 0 24px 48px;
+    padding: 0 var(--space-3) var(--space-6);
   }
 
   .ob2-steps .chk-item:first-child {
-    margin-top: 24px;
+    margin-top: var(--space-3);
   }
 
   .chk-header {
@@ -1336,7 +1397,7 @@
   }
 
   .ob2-celebrate {
-    padding: 48px 24px;
+    padding: var(--space-6) var(--space-3);
   }
 
   .ob2-celebrate-hero {

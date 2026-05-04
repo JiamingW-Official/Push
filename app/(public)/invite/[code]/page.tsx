@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { cookies } from "next/headers";
 import Link from "next/link";
 import { resolveInvite } from "@/lib/referrals/mock-invites";
 import InviteReveal from "./InviteReveal";
@@ -55,8 +54,8 @@ export default async function InvitePage({ params }: PageProps) {
       <InviteReveal refCode={invite.code} />
 
       <main className="invite-page">
-        {/* ── 1. Hero ─────────────────────────────────────── */}
-        <section className="invite-hero">
+        {/* ── 1. Hero (warm candy-panel) ───────────────────── */}
+        <section className="invite-hero candy-panel">
           <div className="invite-hero-inner">
             {/* Inviter identity */}
             <div className="invite-inviter-row invite-reveal">
@@ -73,11 +72,11 @@ export default async function InvitePage({ params }: PageProps) {
               </div>
             </div>
 
-            {/* Headline */}
+            {/* Headline — corner-anchored, Magvix italic hero treatment */}
             <h1 className="invite-hero-headline invite-reveal">
               {invite.inviterName.split(" ")[0]} invited you
               <br />
-              to <span className="invite-red">Push.</span>
+              to <em className="invite-hero-push">Push.</em>
             </h1>
 
             <p className="invite-hero-subline invite-reveal">
@@ -100,7 +99,9 @@ export default async function InvitePage({ params }: PageProps) {
         {/* ── 2. What's Push ──────────────────────────────── */}
         <section className="invite-whats-push">
           <div className="invite-container">
-            <p className="invite-eyebrow invite-reveal">What is Push</p>
+            <p className="eyebrow invite-eyebrow invite-reveal">
+              (WHAT IS PUSH)
+            </p>
 
             <h2 className="invite-pitch invite-reveal">
               The attribution layer between NYC creators and local businesses.
@@ -123,11 +124,28 @@ export default async function InvitePage({ params }: PageProps) {
           </div>
         </section>
 
-        {/* ── 3. Bonus Reveal ─────────────────────────────── */}
+        {/* ── 3. Referral code block ──────────────────────── */}
+        <section className="invite-code-section">
+          <div className="invite-container">
+            <div className="invite-code-block invite-reveal">
+              <p className="eyebrow invite-code-eyebrow">
+                (YOUR REFERRAL CODE)
+              </p>
+              <p className="invite-code-value">{invite.code}</p>
+              <p className="invite-code-note">
+                Applied automatically when you sign up via the links below.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* ── 4. Bonus Reveal ─────────────────────────────── */}
         <section className="invite-bonus">
           <div className="invite-container">
-            <div className="invite-bonus-card invite-reveal">
-              <p className="invite-bonus-label">Your exclusive bonus</p>
+            <div className="invite-bonus-card invite-reveal candy-panel">
+              <p className="eyebrow invite-bonus-eyebrow">
+                (YOUR EXCLUSIVE BONUS)
+              </p>
 
               {isCreator ? (
                 <>
@@ -148,10 +166,10 @@ export default async function InvitePage({ params }: PageProps) {
           </div>
         </section>
 
-        {/* ── 4. How it works ─────────────────────────────── */}
+        {/* ── 5. How it works ─────────────────────────────── */}
         <section className="invite-how">
           <div className="invite-container">
-            <p className="invite-eyebrow">How it works</p>
+            <p className="eyebrow invite-eyebrow">(HOW IT WORKS)</p>
 
             <div className="invite-steps">
               <div className="invite-step invite-reveal">
@@ -196,7 +214,7 @@ export default async function InvitePage({ params }: PageProps) {
           </div>
         </section>
 
-        {/* ── 5. Role Selector ────────────────────────────── */}
+        {/* ── 6. Role Selector ────────────────────────────── */}
         <section className="invite-roles">
           <div className="invite-container">
             <h2 className="invite-section-title invite-reveal">
@@ -210,41 +228,43 @@ export default async function InvitePage({ params }: PageProps) {
               {/* Creator card */}
               <a
                 href={creatorSignupHref}
-                className="invite-role-card invite-role-card--creator invite-reveal"
+                className="invite-role-card invite-role-card--creator invite-reveal click-shift"
               >
-                <span className="invite-role-tag">Creator</span>
+                <span className="eyebrow invite-role-tag">(CREATOR)</span>
                 <span className="invite-role-name">I&apos;m a creator</span>
                 <p className="invite-role-desc">
                   You create content, have a following, and want to earn money
                   by driving real local visits.
                 </p>
                 <div className="invite-role-cta">
-                  <span>Join as creator</span>
-                  <span className="invite-role-arrow">→</span>
+                  <span className="btn-primary invite-role-btn">
+                    Join as creator
+                  </span>
                 </div>
               </a>
 
               {/* Business card */}
               <a
                 href={merchantSignupHref}
-                className="invite-role-card invite-role-card--merchant invite-reveal"
+                className="invite-role-card invite-role-card--merchant invite-reveal click-shift"
               >
-                <span className="invite-role-tag">Business</span>
+                <span className="eyebrow invite-role-tag">(BUSINESS)</span>
                 <span className="invite-role-name">I&apos;m a business</span>
                 <p className="invite-role-desc">
                   You own or operate a local business and want creators to drive
                   measurable foot traffic.
                 </p>
                 <div className="invite-role-cta">
-                  <span>Join as business</span>
-                  <span className="invite-role-arrow">→</span>
+                  <span className="btn-ghost invite-role-btn">
+                    Join as business
+                  </span>
                 </div>
               </a>
             </div>
           </div>
         </section>
 
-        {/* ── 6. Social Proof ─────────────────────────────── */}
+        {/* ── 7. Social Proof ─────────────────────────────── */}
         <section className="invite-social-proof">
           <div className="invite-container">
             <p className="invite-social-proof-text">
@@ -254,14 +274,14 @@ export default async function InvitePage({ params }: PageProps) {
           </div>
         </section>
 
-        {/* ── 7. Inviter Profile Preview ───────────────────── */}
+        {/* ── 8. Inviter Profile Preview ───────────────────── */}
         <section className="invite-profile-preview">
           <div className="invite-container">
             <p
-              className="invite-eyebrow"
+              className="eyebrow invite-eyebrow"
               style={{ marginBottom: "var(--space-3)" }}
             >
-              Your inviter
+              (YOUR INVITER)
             </p>
 
             <div className="invite-profile-card invite-reveal">
@@ -273,10 +293,10 @@ export default async function InvitePage({ params }: PageProps) {
                 <p className="invite-profile-name">{invite.inviterName}</p>
                 <p className="invite-profile-handle">{invite.inviterHandle}</p>
                 <div className="invite-profile-badges">
-                  <span className="invite-badge invite-badge--tier">
+                  <span className="btn-pill invite-badge-tier">
                     {invite.inviterTier}
                   </span>
-                  <span className="invite-badge invite-badge--location">
+                  <span className="btn-pill invite-badge-location">
                     NYC · {invite.inviterNeighborhood}
                   </span>
                 </div>
@@ -285,7 +305,7 @@ export default async function InvitePage({ params }: PageProps) {
           </div>
         </section>
 
-        {/* ── 8. Expiry Notice ────────────────────────────── */}
+        {/* ── 9. Expiry Notice ────────────────────────────── */}
         <section className="invite-expiry">
           <div className="invite-container">
             <div className="invite-expiry-inner">
@@ -301,7 +321,23 @@ export default async function InvitePage({ params }: PageProps) {
           </div>
         </section>
 
-        {/* ── 9. Bottom ───────────────────────────────────── */}
+        {/* ── 10. Ticket CTA ──────────────────────────────── */}
+        <section className="invite-ticket-section">
+          <div className="ticket-panel invite-ticket">
+            <p className="eyebrow invite-ticket-eyebrow">(JOIN PUSH)</p>
+            <h2 className="invite-ticket-headline">
+              Join and earn your first $50.
+            </h2>
+            <a
+              href={isCreator ? creatorSignupHref : merchantSignupHref}
+              className="btn-primary click-shift invite-ticket-btn"
+            >
+              Claim your invite
+            </a>
+          </div>
+        </section>
+
+        {/* ── 11. Bottom ───────────────────────────────────── */}
         <section className="invite-bottom">
           <div className="invite-bottom-inner">
             <p className="invite-bottom-brand">

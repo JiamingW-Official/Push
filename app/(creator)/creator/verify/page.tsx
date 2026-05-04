@@ -8,7 +8,6 @@ import StepIdentity from "@/components/creator/verify/StepIdentity";
 import StepSocial from "@/components/creator/verify/StepSocial";
 import StepAddress from "@/components/creator/verify/StepAddress";
 import ReviewSummary from "@/components/creator/verify/ReviewSummary";
-import "./verify.css";
 
 // ── Types ────────────────────────────────────────────────────
 type WizardStep = 1 | 2 | 3 | 4;
@@ -63,13 +62,44 @@ const STATUS_LABEL: Record<KycStatus, string> = {
   rejected: "Rejected",
 };
 
+const STATUS_COLORS: Record<
+  KycStatus,
+  { bg: string; color: string; border: string }
+> = {
+  unverified: {
+    bg: "var(--surface-2)",
+    color: "var(--ink-4)",
+    border: "var(--hairline)",
+  },
+  in_review: { bg: "#fef3c7", color: "#92400e", border: "#fcd34d" },
+  verified: { bg: "#f0fdf4", color: "#166534", border: "#86efac" },
+  rejected: { bg: "#fff0f0", color: "#991b1b", border: "#fca5a5" },
+};
+
 function StatusBadge({ status }: { status: KycStatus }) {
+  const colors = STATUS_COLORS[status];
   return (
-    <span className={`kv-status-badge kv-status-badge--${status}`}>
+    <span
+      style={{
+        display: "inline-flex",
+        alignItems: "center",
+        gap: 6,
+        padding: "4px 12px",
+        borderRadius: 20,
+        background: colors.bg,
+        border: `1px solid ${colors.border}`,
+        fontFamily: "var(--font-body)",
+        fontSize: 12,
+        fontWeight: 600,
+        letterSpacing: "0.06em",
+        textTransform: "uppercase",
+        color: colors.color,
+      }}
+    >
       {status === "verified" && (
         <svg
-          width="11"
-          height="9"
+          width="10"
+          height="8"
           viewBox="0 0 11 9"
           fill="none"
           aria-hidden="true"
@@ -91,48 +121,116 @@ function StatusBadge({ status }: { status: KycStatus }) {
 // ── Progress rail ─────────────────────────────────────────────
 function ProgressRail({ current }: { current: WizardStep }) {
   return (
-    <nav className="kv-progress" aria-label="Verification steps">
+    <nav
+      aria-label="Verification steps"
+      style={{
+        display: "flex",
+        alignItems: "center",
+        marginBottom: 32,
+      }}
+    >
       {([1, 2, 3, 4] as WizardStep[]).map((n) => {
         const done = n < current;
         const active = n === current;
         return (
           <div
             key={n}
-            className={[
-              "kv-progress__step",
-              active && "kv-progress__step--active",
-              done && "kv-progress__step--done",
-            ]
-              .filter(Boolean)
-              .join(" ")}
+            style={{
+              display: "flex",
+              alignItems: "center",
+              flex: n < 4 ? 1 : undefined,
+            }}
             aria-current={active ? "step" : undefined}
           >
-            <div className="kv-progress__indicator">
-              <span className="kv-progress__num" aria-hidden="true">
+            {/* Step circle */}
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                gap: 6,
+                flexShrink: 0,
+              }}
+            >
+              <div
+                style={{
+                  width: 32,
+                  height: 32,
+                  borderRadius: "50%",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  background: done
+                    ? "var(--brand-red)"
+                    : active
+                      ? "var(--ink)"
+                      : "var(--surface-2)",
+                  border: `2px solid ${done ? "var(--brand-red)" : active ? "var(--ink)" : "var(--hairline)"}`,
+                  transition: "all 0.2s ease",
+                }}
+              >
                 {done ? (
                   <svg
-                    width="10"
-                    height="8"
+                    width="12"
+                    height="10"
                     viewBox="0 0 11 9"
                     fill="none"
                     aria-hidden="true"
                   >
                     <path
                       d="M1 4L4 7.5L10 1"
-                      stroke="currentColor"
-                      strokeWidth="1.8"
+                      stroke="var(--snow)"
+                      strokeWidth="2"
                       strokeLinecap="round"
                       strokeLinejoin="round"
                     />
                   </svg>
                 ) : (
-                  n
+                  <span
+                    style={{
+                      fontFamily: "var(--font-body)",
+                      fontSize: 13,
+                      fontWeight: 700,
+                      color: active ? "var(--snow)" : "var(--ink-4)",
+                    }}
+                    aria-hidden="true"
+                  >
+                    {n}
+                  </span>
                 )}
+              </div>
+              <span
+                style={{
+                  fontFamily: "var(--font-body)",
+                  fontSize: 11,
+                  fontWeight: 600,
+                  letterSpacing: "0.06em",
+                  textTransform: "uppercase",
+                  color: active
+                    ? "var(--ink)"
+                    : done
+                      ? "var(--brand-red)"
+                      : "var(--ink-4)",
+                  whiteSpace: "nowrap",
+                }}
+              >
+                {STEP_LABELS[n]}
               </span>
             </div>
-            <span className="kv-progress__label">{STEP_LABELS[n]}</span>
+
+            {/* Connector line */}
             {n < 4 && (
-              <div className="kv-progress__connector" aria-hidden="true" />
+              <div
+                aria-hidden="true"
+                style={{
+                  flex: 1,
+                  height: 2,
+                  background: done ? "var(--brand-red)" : "var(--hairline)",
+                  margin: "0 8px",
+                  marginBottom: 20,
+                  transition: "background 0.2s ease",
+                }}
+              />
             )}
           </div>
         );
@@ -144,30 +242,104 @@ function ProgressRail({ current }: { current: WizardStep }) {
 // ── Verified celebration ─────────────────────────────────────
 function VerifiedState({ onReset }: { onReset: () => void }) {
   return (
-    <div className="kv-verified">
-      <div className="kv-verified__mark" aria-hidden="true">
-        <svg width="32" height="26" viewBox="0 0 11 9" fill="none">
+    <div style={{ textAlign: "center", padding: "16px 0" }}>
+      <div
+        style={{
+          width: 64,
+          height: 64,
+          borderRadius: "50%",
+          background: "var(--brand-red)",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          margin: "0 auto 24px",
+        }}
+        aria-hidden="true"
+      >
+        <svg width="28" height="22" viewBox="0 0 11 9" fill="none">
           <path
             d="M1 4L4 7.5L10 1"
-            stroke="#c9a96e"
-            strokeWidth="1.8"
+            stroke="var(--snow)"
+            strokeWidth="2"
             strokeLinecap="round"
             strokeLinejoin="round"
           />
         </svg>
       </div>
-      <h2 className="kv-verified__headline">Verified.</h2>
-      <p className="kv-verified__sub">
-        You're now eligible for Operator-tier campaigns — the highest payout
-        bracket on Push.
+      <h2
+        style={{
+          fontFamily: "var(--font-display)",
+          fontSize: 40,
+          fontWeight: 900,
+          color: "var(--ink)",
+          letterSpacing: "-0.02em",
+          marginBottom: 12,
+        }}
+      >
+        Verified.
+      </h2>
+      <p
+        style={{
+          fontFamily: "var(--font-body)",
+          fontSize: 16,
+          color: "var(--ink-3)",
+          lineHeight: 1.6,
+          marginBottom: 24,
+        }}
+      >
+        You&apos;re now eligible for Operator-tier campaigns — the highest
+        payout bracket on Push.
       </p>
-      <div className="kv-verified__badge">Operator Tier Unlocked</div>
-      <Link href="/creator/campaigns" className="kv-verified__cta">
-        Browse Operator Campaigns →
-      </Link>
-      <button type="button" className="kv-verified__reset" onClick={onReset}>
-        Reset demo
-      </button>
+      <div
+        style={{
+          display: "inline-block",
+          background: "var(--surface-2)",
+          border: "1px solid var(--hairline)",
+          borderRadius: 8,
+          padding: "8px 16px",
+          fontFamily: "var(--font-body)",
+          fontSize: 12,
+          fontWeight: 600,
+          letterSpacing: "0.08em",
+          textTransform: "uppercase",
+          color: "var(--ink-3)",
+          marginBottom: 32,
+        }}
+      >
+        Operator Tier Unlocked
+      </div>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          gap: 12,
+          alignItems: "center",
+        }}
+      >
+        <Link
+          href="/creator/campaigns"
+          className="btn-primary click-shift"
+          style={{ textDecoration: "none" }}
+        >
+          Browse Operator Campaigns
+        </Link>
+        <button
+          type="button"
+          onClick={onReset}
+          style={{
+            fontFamily: "var(--font-body)",
+            fontSize: 13,
+            color: "var(--ink-4)",
+            background: "none",
+            border: "none",
+            cursor: "pointer",
+            textDecoration: "underline",
+            padding: 0,
+          }}
+        >
+          Reset demo
+        </button>
+      </div>
     </div>
   );
 }
@@ -181,21 +353,61 @@ function RejectedState({
   onResubmit: () => void;
 }) {
   return (
-    <div className="kv-rejected">
-      <div className="kv-rejected__icon" aria-hidden="true">
+    <div style={{ textAlign: "center", padding: "16px 0" }}>
+      <div
+        style={{
+          width: 64,
+          height: 64,
+          borderRadius: "50%",
+          background: "#fff0f0",
+          border: "2px solid #fca5a5",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          margin: "0 auto 24px",
+        }}
+        aria-hidden="true"
+      >
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
           <path
             d="M12 9v4m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"
-            stroke="#c1121f"
+            stroke="var(--brand-red)"
             strokeWidth="1.6"
             strokeLinecap="round"
             strokeLinejoin="round"
           />
         </svg>
       </div>
-      <h2 className="kv-rejected__headline">Verification Rejected</h2>
-      {reason && <p className="kv-rejected__reason">{reason}</p>}
-      <button type="button" className="kv-submit-btn" onClick={onResubmit}>
+      <h2
+        style={{
+          fontFamily: "var(--font-display)",
+          fontSize: 32,
+          fontWeight: 900,
+          color: "var(--ink)",
+          letterSpacing: "-0.02em",
+          marginBottom: 12,
+        }}
+      >
+        Verification Rejected
+      </h2>
+      {reason && (
+        <p
+          style={{
+            fontFamily: "var(--font-body)",
+            fontSize: 16,
+            color: "var(--ink-3)",
+            marginBottom: 24,
+            lineHeight: 1.6,
+          }}
+        >
+          {reason}
+        </p>
+      )}
+      <button
+        type="button"
+        className="btn-primary click-shift"
+        onClick={onResubmit}
+      >
         Resubmit Application
       </button>
     </div>
@@ -205,13 +417,62 @@ function RejectedState({
 // ── In-Review state ───────────────────────────────────────────
 function InReviewState() {
   return (
-    <div className="kv-in-review">
-      <div className="kv-in-review__pulse" aria-hidden="true" />
-      <h2 className="kv-in-review__headline">Under Review</h2>
-      <p className="kv-in-review__sub">
+    <div style={{ textAlign: "center", padding: "16px 0" }}>
+      {/* Pulse indicator */}
+      <div
+        aria-hidden="true"
+        style={{
+          width: 64,
+          height: 64,
+          borderRadius: "50%",
+          background: "#fef3c7",
+          border: "2px solid #fcd34d",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          margin: "0 auto 24px",
+          position: "relative",
+        }}
+      >
+        <div
+          style={{
+            width: 16,
+            height: 16,
+            borderRadius: "50%",
+            background: "#f59e0b",
+          }}
+        />
+      </div>
+      <h2
+        style={{
+          fontFamily: "var(--font-display)",
+          fontSize: 32,
+          fontWeight: 900,
+          color: "var(--ink)",
+          letterSpacing: "-0.02em",
+          marginBottom: 12,
+        }}
+      >
+        Under Review
+      </h2>
+      <p
+        style={{
+          fontFamily: "var(--font-body)",
+          fontSize: 16,
+          color: "var(--ink-3)",
+          lineHeight: 1.6,
+        }}
+      >
         Your application is being reviewed. This usually takes 24–48 hours.
         <br />
-        <span className="kv-in-review__demo-note">
+        <span
+          style={{
+            fontSize: 13,
+            color: "var(--ink-4)",
+            display: "block",
+            marginTop: 8,
+          }}
+        >
           Demo: auto-verifying in 3 seconds…
         </span>
       </p>
@@ -260,44 +521,38 @@ export default function VerifyPage() {
   // ── State-based renders ──────────────────────────────────
   if (kycState.status === "verified") {
     return (
-      <div className="kv-page">
-        <div className="kv-inner">
-          <VerifiedState
-            onReset={() => {
-              resetKyc();
-              setKycState(loadKyc());
-              setStep(1);
-            }}
-          />
-        </div>
-      </div>
+      <PageShell>
+        <VerifiedState
+          onReset={() => {
+            resetKyc();
+            setKycState(loadKyc());
+            setStep(1);
+          }}
+        />
+      </PageShell>
     );
   }
 
   if (kycState.status === "rejected") {
     return (
-      <div className="kv-page">
-        <div className="kv-inner">
-          <RejectedState
-            reason={kycState.rejectionReason}
-            onResubmit={() => {
-              saveKyc({ status: "unverified", rejectionReason: undefined });
-              setKycState(loadKyc());
-              setStep(1);
-            }}
-          />
-        </div>
-      </div>
+      <PageShell>
+        <RejectedState
+          reason={kycState.rejectionReason}
+          onResubmit={() => {
+            saveKyc({ status: "unverified", rejectionReason: undefined });
+            setKycState(loadKyc());
+            setStep(1);
+          }}
+        />
+      </PageShell>
     );
   }
 
   if (kycState.status === "in_review") {
     return (
-      <div className="kv-page">
-        <div className="kv-inner">
-          <InReviewState />
-        </div>
-      </div>
+      <PageShell>
+        <InReviewState />
+      </PageShell>
     );
   }
 
@@ -339,96 +594,221 @@ export default function VerifyPage() {
   const nextEnabled = canProceed(step, kycState);
 
   return (
-    <div className="kv-page">
-      <div className="kv-inner">
-        {/* Back link */}
-        <Link href="/creator/dashboard" className="kv-back">
-          ← Dashboard
-        </Link>
+    <PageShell>
+      {/* Back link */}
+      <Link
+        href="/creator/dashboard"
+        style={{
+          display: "inline-flex",
+          alignItems: "center",
+          gap: 8,
+          fontFamily: "var(--font-body)",
+          fontSize: 14,
+          color: "var(--ink-4)",
+          textDecoration: "none",
+          marginBottom: 32,
+        }}
+      >
+        ← Dashboard
+      </Link>
 
-        {/* Editorial hero */}
-        <div className="kv-hero">
-          <div className="kv-hero__text">
-            <h1 className="kv-hero__headline">Get verified.</h1>
-            <p className="kv-hero__sub">
-              Three steps to unlock Operator-tier campaigns and higher payouts.
-            </p>
-          </div>
-          <StatusBadge status={kycState.status} />
+      {/* Page heading + status */}
+      <div
+        style={{
+          display: "flex",
+          alignItems: "flex-start",
+          justifyContent: "space-between",
+          gap: 16,
+          marginBottom: 8,
+          flexWrap: "wrap",
+        }}
+      >
+        <div>
+          <p
+            style={{
+              fontFamily: "var(--font-body)",
+              fontSize: 12,
+              fontWeight: 600,
+              letterSpacing: "0.08em",
+              textTransform: "uppercase",
+              color: "var(--ink-4)",
+              marginBottom: 8,
+            }}
+          >
+            (VERIFICATION)
+          </p>
+          <h1
+            style={{
+              fontFamily: "var(--font-display)",
+              fontSize: 40,
+              fontWeight: 900,
+              color: "var(--ink)",
+              letterSpacing: "-0.02em",
+              marginBottom: 8,
+              lineHeight: 1.1,
+            }}
+          >
+            Get verified.
+          </h1>
+          <p
+            style={{
+              fontFamily: "var(--font-body)",
+              fontSize: 16,
+              color: "var(--ink-3)",
+              marginBottom: 0,
+            }}
+          >
+            Three steps to unlock Operator-tier campaigns and higher payouts.
+          </p>
         </div>
+        <StatusBadge status={kycState.status} />
+      </div>
 
-        {/* Progress rail */}
-        <ProgressRail current={step} />
+      {/* Divider */}
+      <div
+        style={{
+          height: 1,
+          background: "var(--hairline)",
+          margin: "24px 0 32px",
+        }}
+      />
 
-        {/* Step container */}
+      {/* Progress rail */}
+      <ProgressRail current={step} />
+
+      {/* Step content panel */}
+      <div
+        style={{
+          background: "var(--snow)",
+          border: "1px solid var(--hairline)",
+          borderRadius: 12,
+          padding: "32px 40px",
+          marginBottom: 24,
+          opacity: animating ? 0 : 1,
+          transform: animating
+            ? `translateX(${slideDir === "right" ? "16px" : "-16px"})`
+            : "translateX(0)",
+          transition: "opacity 0.3s ease, transform 0.3s ease",
+        }}
+        ref={containerRef}
+        aria-live="polite"
+        aria-atomic="true"
+      >
+        {step === 1 && (
+          <StepIdentity
+            identity={kycState.identity}
+            onChange={(identity) => updateState({ identity })}
+          />
+        )}
+        {step === 2 && (
+          <StepSocial
+            socials={kycState.socials}
+            onChange={(socials) => updateState({ socials })}
+          />
+        )}
+        {step === 3 && (
+          <StepAddress
+            address={kycState.address}
+            onChange={(address) => updateState({ address })}
+          />
+        )}
+        {step === 4 && (
+          <ReviewSummary
+            state={kycState}
+            onEdit={(s) => navigate(s)}
+            onSubmit={handleSubmit}
+            submitting={submitting}
+          />
+        )}
+      </div>
+
+      {/* Navigation footer */}
+      {step < 4 && (
         <div
-          className={["kv-panel", animating && `kv-panel--exit-${slideDir}`]
-            .filter(Boolean)
-            .join(" ")}
-          ref={containerRef}
-          aria-live="polite"
-          aria-atomic="true"
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            gap: 16,
+          }}
         >
-          {step === 1 && (
-            <StepIdentity
-              identity={kycState.identity}
-              onChange={(identity) => updateState({ identity })}
-            />
-          )}
-          {step === 2 && (
-            <StepSocial
-              socials={kycState.socials}
-              onChange={(socials) => updateState({ socials })}
-            />
-          )}
-          {step === 3 && (
-            <StepAddress
-              address={kycState.address}
-              onChange={(address) => updateState({ address })}
-            />
-          )}
-          {step === 4 && (
-            <ReviewSummary
-              state={kycState}
-              onEdit={(s) => navigate(s)}
-              onSubmit={handleSubmit}
-              submitting={submitting}
-            />
-          )}
-        </div>
-
-        {/* Navigation footer */}
-        {step < 4 && (
-          <div className="kv-nav">
-            {step > 1 ? (
-              <button
-                type="button"
-                className="kv-btn kv-btn--ghost"
-                onClick={handleBack}
-                disabled={animating}
-              >
-                ← Back
-              </button>
-            ) : (
-              <span />
-            )}
+          {step > 1 ? (
             <button
               type="button"
-              className={[
-                "kv-btn",
-                "kv-btn--primary",
-                !nextEnabled && "kv-btn--disabled",
-              ]
-                .filter(Boolean)
-                .join(" ")}
-              onClick={handleNext}
-              disabled={!nextEnabled || animating}
-              aria-disabled={!nextEnabled}
+              className="btn-ghost click-shift"
+              onClick={handleBack}
+              disabled={animating}
             >
-              {step === 3 ? "Review →" : "Next →"}
+              ← Back
             </button>
-          </div>
-        )}
+          ) : (
+            <span />
+          )}
+          <button
+            type="button"
+            className="btn-primary click-shift"
+            onClick={handleNext}
+            disabled={!nextEnabled || animating}
+            aria-disabled={!nextEnabled}
+            style={{ opacity: nextEnabled ? 1 : 0.5 }}
+          >
+            {step === 3 ? "Review →" : "Next →"}
+          </button>
+        </div>
+      )}
+    </PageShell>
+  );
+}
+
+// ── Layout shell ─────────────────────────────────────────────
+function PageShell({ children }: { children: React.ReactNode }) {
+  return (
+    <div
+      style={{
+        minHeight: "100vh",
+        background: "var(--surface)",
+        padding: "48px 24px",
+      }}
+    >
+      <div style={{ maxWidth: 680, margin: "0 auto" }}>
+        {/* Brand header */}
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 12,
+            marginBottom: 48,
+          }}
+        >
+          <Link
+            href="/"
+            style={{
+              fontFamily: "var(--font-display)",
+              fontWeight: 800,
+              fontSize: 24,
+              color: "var(--ink)",
+              textDecoration: "none",
+              letterSpacing: "-0.02em",
+            }}
+          >
+            PUSH
+          </Link>
+          <span style={{ color: "var(--hairline)", fontSize: 20 }}>·</span>
+          <span
+            style={{
+              fontFamily: "var(--font-body)",
+              fontSize: 12,
+              fontWeight: 600,
+              letterSpacing: "0.08em",
+              textTransform: "uppercase",
+              color: "var(--ink-4)",
+            }}
+          >
+            Identity Verification
+          </span>
+        </div>
+
+        {children}
       </div>
     </div>
   );
