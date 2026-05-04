@@ -11,10 +11,6 @@ import {
   EVENT_TYPE_LABELS,
   countDeadlinesInMonth,
 } from "@/lib/calendar/mock-events";
-import {
-  getMockEarningsBreakdown,
-  EarningsBreakdown,
-} from "@/lib/services/earnings";
 
 /* ── Types ───────────────────────────────────────────────── */
 
@@ -192,7 +188,6 @@ function downloadICS(events: CalendarEvent[]) {
 interface LeftPanelProps {
   monthName: string;
   year: number;
-  earningsBreakdown: EarningsBreakdown;
   deadlineCount: number;
   upcomingEvents: CalendarEvent[];
   todayStr: string;
@@ -202,58 +197,16 @@ interface LeftPanelProps {
 function LeftPanel({
   monthName,
   year,
-  earningsBreakdown,
   deadlineCount,
   upcomingEvents,
   todayStr,
   onSelectDate,
 }: LeftPanelProps) {
-  const { confirmed, pending, atRisk, monthTarget } = earningsBreakdown;
   return (
     <div className="cal-lp">
       <div className="cal-lp__head">
         <span className="cal-lp__month">{monthName}</span>
         <span className="cal-lp__year">{year}</span>
-      </div>
-
-      {/* Earnings card */}
-      <div className="cal-lp__card cal-lp__earnings">
-        <span className="cal-lp__label">Est. Earnings</span>
-        <div className="cal-lp__breakdown">
-          <div className="cal-lp__breakdown-row">
-            <span
-              className="cal-lp__breakdown-dot"
-              style={{ background: "#22c55e" }}
-              aria-hidden
-            />
-            <span className="cal-lp__breakdown-label">Confirmed</span>
-            <span className="cal-lp__breakdown-val">
-              ${confirmed.toLocaleString()}
-            </span>
-          </div>
-          <div className="cal-lp__breakdown-row">
-            <span
-              className="cal-lp__breakdown-dot"
-              style={{ background: "#0085ff" }}
-              aria-hidden
-            />
-            <span className="cal-lp__breakdown-label">Pending</span>
-            <span className="cal-lp__breakdown-val">
-              ${pending.toLocaleString()}
-            </span>
-          </div>
-          <div className="cal-lp__breakdown-row">
-            <span
-              className="cal-lp__breakdown-dot"
-              style={{ background: "#bfa170" }}
-              aria-hidden
-            />
-            <span className="cal-lp__breakdown-label">At Risk</span>
-            <span className="cal-lp__breakdown-val">
-              ${atRisk.toLocaleString()}
-            </span>
-          </div>
-        </div>
       </div>
 
       {/* Stats row */}
@@ -727,9 +680,6 @@ export default function CreatorCalendarPage() {
 
   const ym = formatYearMonth(year, month);
   const deadlineCount = useMemo(() => countDeadlinesInMonth(ym), [ym]);
-  // P0-4: Earnings breakdown
-  const earningsBreakdown = useMemo(() => getMockEarningsBreakdown(ym), [ym]);
-
   // P0-3: Campaign color map — stable per campaign, assigned by first appearance
   const campaignColorMap = useMemo(() => {
     const map: Record<string, string> = {};
@@ -961,7 +911,6 @@ export default function CreatorCalendarPage() {
           <LeftPanel
             monthName={MONTH_NAMES[month]}
             year={year}
-            earningsBreakdown={earningsBreakdown}
             deadlineCount={deadlineCount}
             upcomingEvents={upcomingEvents}
             todayStr={todayStr}
