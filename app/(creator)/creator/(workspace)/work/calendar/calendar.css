@@ -134,7 +134,7 @@ body:has(.cw-page.cal) .dh-main {
 
 .cal-lp__month {
   font-family: var(--font-display);
-  font-size: 22px;
+  font-size: 24px;
   font-weight: 700;
   letter-spacing: -0.03em;
   color: var(--ink);
@@ -143,118 +143,91 @@ body:has(.cw-page.cal) .dh-main {
 
 .cal-lp__year {
   font-family: var(--font-mono);
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--ink-4);
 }
 
-.cal-lp__card {
-  background: rgba(255, 255, 255, 0.60);
-  border: 1px solid rgba(255, 255, 255, 0.80);
-  border-radius: 12px;
-  padding: 16px;
-  box-shadow: 0 2px 8px rgba(10, 10, 10, 0.05);
-}
+/* ── Left panel sections: Blocking + Next Actions ─────────── */
 
-
-.cal-lp__stats {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px;
-}
-
-.cal-lp__stat {
-  background: rgba(255, 255, 255, 0.60);
-  border: 1px solid rgba(255, 255, 255, 0.80);
-  border-radius: 12px;
-  padding: 8px;
+.cal-lp__section {
   display: flex;
   flex-direction: column;
-  align-items: center;
   gap: 4px;
-  box-shadow: 0 2px 8px rgba(10, 10, 10, 0.05);
+  border-top: 1px solid rgba(10, 10, 10, 0.07);
+  padding-top: 16px;
 }
 
-.cal-lp__stat-num {
-  font-family: var(--font-display);
-  font-size: 26px;
-  font-weight: 700;
-  letter-spacing: -0.04em;
-  color: var(--ink);
-  line-height: 1;
-}
-
-.cal-lp__stat-label {
+.cal-lp__section-eyebrow {
   font-family: var(--font-mono);
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 700;
-  letter-spacing: 0.07em;
+  letter-spacing: 0.10em;
   text-transform: uppercase;
   color: var(--ink-4);
-}
-
-
-.cal-lp__upcoming-label {
-  display: block;
-  font-family: var(--font-mono);
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.09em;
-  text-transform: uppercase;
-  color: var(--ink-4);
-  margin-bottom: 8px;
+  margin: 0 0 4px;
   padding: 0 2px;
 }
 
-.cal-lp__upcoming-empty {
+.cal-lp__section-empty {
   font-family: var(--font-mono);
-  font-size: 11px;
+  font-size: 12px;
   color: var(--ink-5);
-  text-align: center;
-  padding: 16px 0;
   margin: 0;
+  padding: 4px 2px;
 }
 
-.cal-lp__upcoming-list {
+.cal-lp__item-list {
   display: flex;
   flex-direction: column;
   gap: 4px;
 }
 
-.cal-lp__upcoming-item {
+.cal-lp__item {
   display: flex;
-  align-items: flex-start;
-  gap: 8px;
+  flex-direction: column;
+  gap: 2px;
   padding: 8px;
   background: rgba(255, 255, 255, 0.60);
   border: 1px solid rgba(255, 255, 255, 0.80);
   border-radius: 10px;
   cursor: pointer;
-  transition: transform 180ms var(--cal-spring), box-shadow 180ms ease;
   text-align: left;
   width: 100%;
+  transition: transform 180ms var(--cal-spring), box-shadow 180ms ease;
 }
 
-.cal-lp__upcoming-item:hover {
+.cal-lp__item:hover {
   transform: translate(2px, 2px);
   box-shadow: 0 2px 8px rgba(10, 10, 10, 0.10);
 }
 
-.cal-lp__upcoming-item:active {
+.cal-lp__item:active {
   transform: translate(3px, 3px) scale(0.98);
 }
 
-.cal-lp__upcoming-content {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  flex: 1;
-  min-width: 0;
+.cal-lp__item:focus-visible {
+  outline: 3px solid rgba(193, 18, 31, 0.25);
+  outline-offset: 2px;
 }
 
-.cal-lp__upcoming-title {
+.cal-lp__item--blocking {
+  background: rgba(193, 18, 31, 0.05);
+  border-color: rgba(193, 18, 31, 0.18);
+}
+
+.cal-lp__item-date {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--brand-red);
+}
+
+.cal-lp__item-title {
   font-family: var(--font-mono);
   font-size: 12px;
   font-weight: 700;
@@ -264,11 +237,12 @@ body:has(.cw-page.cal) .dh-main {
   text-overflow: ellipsis;
 }
 
-.cal-lp__upcoming-date {
+.cal-lp__item-sub {
   font-family: var(--font-mono);
-  font-size: 10px;
+  font-size: 12px;
+  font-weight: 500;
   color: var(--ink-4);
-  letter-spacing: 0.04em;
+  letter-spacing: 0.02em;
 }
 
 /* ── Compact topbar ─────────────────────────────────────── */

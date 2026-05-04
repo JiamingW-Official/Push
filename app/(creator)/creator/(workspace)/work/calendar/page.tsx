@@ -9,7 +9,6 @@ import {
   CalendarEvent,
   EventType,
   EVENT_TYPE_LABELS,
-  countDeadlinesInMonth,
 } from "@/lib/calendar/mock-events";
 
 /* ── Types ───────────────────────────────────────────────── */
@@ -188,8 +187,10 @@ function downloadICS(events: CalendarEvent[]) {
 interface LeftPanelProps {
   monthName: string;
   year: number;
-  deadlineCount: number;
-  upcomingEvents: CalendarEvent[];
+  /** Past-due deadlines, sorted most-overdue first, max 3 */
+  blockingEvents: CalendarEvent[];
+  /** Upcoming deadlines + reviews, sorted by date asc, max 3 */
+  nextActions: CalendarEvent[];
   todayStr: string;
   onSelectDate: (date: string) => void;
 }
@@ -197,58 +198,84 @@ interface LeftPanelProps {
 function LeftPanel({
   monthName,
   year,
-  deadlineCount,
-  upcomingEvents,
+  blockingEvents,
+  nextActions,
   todayStr,
   onSelectDate,
 }: LeftPanelProps) {
   return (
     <div className="cal-lp">
+      {/* Month / year header */}
       <div className="cal-lp__head">
         <span className="cal-lp__month">{monthName}</span>
         <span className="cal-lp__year">{year}</span>
       </div>
 
-      {/* Stats row */}
-      <div className="cal-lp__stats">
-        <div className="cal-lp__stat">
-          <span className="cal-lp__stat-num">{deadlineCount}</span>
-          <span className="cal-lp__stat-label">Deadlines</span>
-        </div>
-        <div className="cal-lp__stat">
-          <span className="cal-lp__stat-num">{upcomingEvents.length}</span>
-          <span className="cal-lp__stat-label">Upcoming</span>
-        </div>
+      {/* Blocking — past-due deadlines */}
+      <div className="cal-lp__section">
+        <span className="cal-lp__section-eyebrow">
+          Blocking
+          {blockingEvents.length > 0 ? ` (${blockingEvents.length})` : ""}
+        </span>
+        {blockingEvents.length === 0 ? (
+          <p className="cal-lp__section-empty">None — on track</p>
+        ) : (
+          <div className="cal-lp__item-list">
+            {blockingEvents.map((ev) => {
+              const [ey, em, ed] = ev.date.split("-").map(Number);
+              const [ty, tm, td] = todayStr.split("-").map(Number);
+              const ms =
+                new Date(ty, tm - 1, td).getTime() -
+                new Date(ey, em - 1, ed).getTime();
+              const daysLate = Math.round(ms / 86400000);
+              return (
+                <button
+                  key={ev.id}
+                  type="button"
+                  className="cal-lp__item cal-lp__item--blocking"
+                  onClick={() => onSelectDate(ev.date)}
+                >
+                  <span className="cal-lp__item-title">
+                    {truncate(
+                      `${ev.merchantName} – ${EVENT_TYPE_LABELS[ev.type]}`,
+                      24,
+                    )}
+                  </span>
+                  <span className="cal-lp__item-sub">
+                    {daysLate} {daysLate === 1 ? "day" : "days"} late
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+        )}
       </div>
 
-      {/* Upcoming events */}
-      <div className="cal-lp__upcoming">
-        <span className="cal-lp__upcoming-label">Upcoming</span>
-        {upcomingEvents.length === 0 ? (
-          <p className="cal-lp__upcoming-empty">No upcoming events</p>
+      {/* Next actions — upcoming deadlines + reviews */}
+      <div className="cal-lp__section">
+        <span className="cal-lp__section-eyebrow">
+          Next actions{nextActions.length > 0 ? ` (${nextActions.length})` : ""}
+        </span>
+        {nextActions.length === 0 ? (
+          <p className="cal-lp__section-empty">Nothing due soon</p>
         ) : (
-          <div className="cal-lp__upcoming-list">
-            {upcomingEvents.map((ev) => (
+          <div className="cal-lp__item-list">
+            {nextActions.map((ev) => (
               <button
                 key={ev.id}
                 type="button"
-                className="cal-lp__upcoming-item"
+                className="cal-lp__item"
                 onClick={() => onSelectDate(ev.date)}
               >
-                <span
-                  className={`cal-dot event-type--${ev.type}`}
-                  aria-hidden
-                />
-                <div className="cal-lp__upcoming-content">
-                  <span className="cal-lp__upcoming-title">
-                    {truncate(ev.title, 22)}
-                  </span>
-                  <span className="cal-lp__upcoming-date">
-                    {ev.date === todayStr
-                      ? "Today"
-                      : ev.date.slice(5).replace("-", "/")}
-                  </span>
-                </div>
+                <span className="cal-lp__item-date">
+                  {ev.date === todayStr
+                    ? "Today"
+                    : ev.date.slice(5).replace("-", "/")}
+                </span>
+                <span className="cal-lp__item-title">
+                  {truncate(ev.title, 22)}
+                </span>
+                <span className="cal-lp__item-sub">{ev.merchantName}</span>
               </button>
             ))}
           </div>
@@ -679,7 +706,6 @@ export default function CreatorCalendarPage() {
   /* ── Derived ─────────────────────────────────────────── */
 
   const ym = formatYearMonth(year, month);
-  const deadlineCount = useMemo(() => countDeadlinesInMonth(ym), [ym]);
   // P0-3: Campaign color map — stable per campaign, assigned by first appearance
   const campaignColorMap = useMemo(() => {
     const map: Record<string, string> = {};
@@ -713,32 +739,28 @@ export default function CreatorCalendarPage() {
   const monthGrid = useMemo(() => buildMonthGrid(year, month), [year, month]);
   const weekDates = useMemo(() => buildWeekDates(weekAnchor), [weekAnchor]);
 
-  const weekAheadStats = useMemo(() => {
-    const start = new Date();
-    start.setHours(0, 0, 0, 0);
-    const end = new Date(start);
-    end.setDate(end.getDate() + 6);
-    const range = events.filter((e) => {
-      const d = new Date(e.date + "T00:00:00");
-      return d >= start && d <= end && !e.done;
-    });
-    return {
-      total: range.length,
-      deadlines: range.filter((e) => e.type === "deadline").length,
-      next:
-        range
-          .slice()
-          .sort((a, b) => a.date.localeCompare(b.date))
-          .find((e) => e.type === "deadline") ?? null,
-    };
-  }, [events]);
-
-  const upcomingEvents = useMemo(
+  // P3-1: Blocking — past-due deadlines, most-overdue first, max 3
+  const blockingEvents = useMemo(
     () =>
       events
-        .filter((e) => e.date >= todayStr && !e.done)
+        .filter((e) => e.date < todayStr && e.type === "deadline" && !e.done)
         .sort((a, b) => a.date.localeCompare(b.date))
-        .slice(0, 4),
+        .slice(0, 3),
+    [events, todayStr],
+  );
+
+  // P3-1: Next actions — upcoming deadlines + reviews, date asc, max 3
+  const nextActions = useMemo(
+    () =>
+      events
+        .filter(
+          (e) =>
+            e.date >= todayStr &&
+            (e.type === "deadline" || e.type === "review") &&
+            !e.done,
+        )
+        .sort((a, b) => a.date.localeCompare(b.date))
+        .slice(0, 3),
     [events, todayStr],
   );
 
@@ -894,25 +916,18 @@ export default function CreatorCalendarPage() {
         })()
       : `${MONTH_NAMES[month]} ${year}`;
 
-  // Eyebrow — canonical Product form (no parentheticals)
-  const eyebrowBase = [
-    "CALENDAR",
-    `${MONTH_NAMES[month].toUpperCase()} ${year}`,
-    `${deadlineCount} ${deadlineCount === 1 ? "DEADLINE" : "DEADLINES"}`,
-  ].join(" · ");
-
   /* ── Render ──────────────────────────────────────────── */
 
   return (
     <div className="cw-page cal">
       <div className="cal-three-col">
-        {/* ── Left panel — earnings, stats, tier, upcoming ── */}
+        {/* ── Left panel — blocking + next actions ── */}
         <aside className="cal-panel cal-panel-left">
           <LeftPanel
             monthName={MONTH_NAMES[month]}
             year={year}
-            deadlineCount={deadlineCount}
-            upcomingEvents={upcomingEvents}
+            blockingEvents={blockingEvents}
+            nextActions={nextActions}
             todayStr={todayStr}
             onSelectDate={setSelectedDate}
           />
