@@ -10,6 +10,7 @@ import {
   EventType,
   EVENT_TYPE_LABELS,
 } from "@/lib/calendar/mock-events";
+import { EventActions } from "@/components/creator/calendar/EventActions";
 
 /* ── Types ───────────────────────────────────────────────── */
 
@@ -386,45 +387,13 @@ function SidePanel({
               ) : null}
 
               {/* action buttons */}
-              <div className="cal-side__actions">
-                {ev.postUrl && !ev.done && (
-                  <Link
-                    href={ev.postUrl}
-                    className="btn-primary click-shift cal-btn-sm"
-                  >
-                    Submit
-                  </Link>
-                )}
-                <button
-                  className="btn-ghost click-shift cal-btn-sm"
-                  onClick={() => onMarkDone(ev.id)}
-                  disabled={ev.done}
-                >
-                  {ev.done ? "Done" : "Mark done"}
-                </button>
-                {!ev.done && (
-                  <>
-                    <button
-                      className="btn-ghost click-shift cal-btn-sm"
-                      onClick={() => onAddNote(ev.id)}
-                    >
-                      Note
-                    </button>
-                    <button
-                      className="btn-ghost click-shift cal-btn-sm"
-                      onClick={() => onMessageMerchant(ev.campaignId)}
-                    >
-                      Message merchant
-                    </button>
-                    <button
-                      className="btn-ghost click-shift cal-btn-sm"
-                      onClick={() => onRequestExtension(ev.id)}
-                    >
-                      Request extension
-                    </button>
-                  </>
-                )}
-              </div>
+              <EventActions
+                event={ev}
+                onMarkDone={onMarkDone}
+                onAddNote={onAddNote}
+                onMessageMerchant={onMessageMerchant}
+                onRequestExtension={onRequestExtension}
+              />
 
               {noteTarget === ev.id && (
                 <div className="cal-note-wrap">
@@ -452,66 +421,6 @@ function SidePanel({
         )}
       </div>
     </aside>
-  );
-}
-
-/* ── Action buttons (popover + list view) ────────────────── */
-
-interface ActionButtonsProps {
-  event: CalendarEvent;
-  onMarkDone: (id: string) => void;
-  onAddNote: (id: string) => void;
-  onMessageMerchant: (campaignId: string) => void;
-  onRequestExtension: (id: string) => void;
-}
-
-function ActionButtons({
-  event,
-  onMarkDone,
-  onAddNote,
-  onMessageMerchant,
-  onRequestExtension,
-}: ActionButtonsProps) {
-  return (
-    <div className="cal-actions-row">
-      {event.postUrl && !event.done && (
-        <Link
-          href={event.postUrl}
-          className="btn-primary click-shift cal-btn-sm"
-        >
-          Submit
-        </Link>
-      )}
-      <button
-        className="btn-ghost click-shift cal-btn-sm"
-        onClick={() => onMarkDone(event.id)}
-        disabled={event.done}
-      >
-        {event.done ? "Done" : "Mark done"}
-      </button>
-      {!event.done && (
-        <>
-          <button
-            className="btn-ghost click-shift cal-btn-sm"
-            onClick={() => onAddNote(event.id)}
-          >
-            Note
-          </button>
-          <button
-            className="btn-ghost click-shift cal-btn-sm"
-            onClick={() => onMessageMerchant(event.campaignId)}
-          >
-            Message merchant
-          </button>
-          <button
-            className="btn-ghost click-shift cal-btn-sm"
-            onClick={() => onRequestExtension(event.id)}
-          >
-            Request extension
-          </button>
-        </>
-      )}
-    </div>
   );
 }
 
@@ -625,7 +534,7 @@ function DayPopover({
                   {ev.campaignTitle}
                 </p>
 
-                <ActionButtons
+                <EventActions
                   event={ev}
                   onMarkDone={onMarkDone}
                   onAddNote={onAddNote}
