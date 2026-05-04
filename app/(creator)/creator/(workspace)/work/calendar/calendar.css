@@ -838,24 +838,6 @@ body:has(.cw-page.cal) .dh-main {
 
 .cal-side::-webkit-scrollbar { display: none; }
 
-.cal-side--empty {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 240px;
-}
-
-.cal-side__hint {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  letter-spacing: 0.06em;
-  color: var(--ink-5);
-  text-align: center;
-  text-transform: uppercase;
-  margin: 0;
-  line-height: 1.7;
-}
-
 .cal-side__head {
   padding: 20px 20px 16px;
   border-bottom: 1px solid rgba(10, 10, 10, 0.07);
@@ -1377,7 +1359,6 @@ body:has(.cw-page.cal) .dh-main {
 
 @media (max-width: 1024px) {
   .cal-side { display: none; }
-  .cal-month-layout { grid-template-columns: 1fr; }
 }
 
 @media (max-width: 900px) {

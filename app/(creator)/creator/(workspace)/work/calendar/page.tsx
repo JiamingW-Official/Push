@@ -288,7 +288,7 @@ function LeftPanel({
 /* ── Side Panel ──────────────────────────────────────────── */
 
 interface SidePanelProps {
-  selectedDate: string | null;
+  selectedDate: string;
   events: CalendarEvent[];
   todayStr: string;
   onMarkDone: (id: string) => void;
@@ -314,18 +314,6 @@ function SidePanel({
   onNoteChange,
   onNoteSave,
 }: SidePanelProps) {
-  if (!selectedDate) {
-    return (
-      <aside className="cal-side cal-side--empty">
-        <p className="cal-side__hint">
-          Select any day
-          <br />
-          to view events
-        </p>
-      </aside>
-    );
-  }
-
   const dayEvents = events.filter((e) => e.date === selectedDate);
   const isToday = selectedDate === todayStr;
 
@@ -679,7 +667,8 @@ export default function CreatorCalendarPage() {
   const [month, setMonth] = useState(today.getMonth());
   const [weekAnchor, setWeekAnchor] = useState(today);
 
-  const [selectedDate, setSelectedDate] = useState<string | null>(todayStr);
+  // P3-2: SidePanel is always anchored — never null
+  const [selectedDate, setSelectedDate] = useState<string>(todayStr);
   const [popoverDate, setPopoverDate] = useState<string | null>(null);
   const popoverAnchor = useRef<HTMLElement | null>(null);
 
@@ -702,6 +691,15 @@ export default function CreatorCalendarPage() {
   }
 
   const gridRef = useRef<HTMLDivElement>(null);
+
+  // P3-2: Auto-return to today 5 s after last date selection
+  useEffect(() => {
+    if (selectedDate === todayStr) return;
+    const timer = setTimeout(() => {
+      setSelectedDate(todayStr);
+    }, 5000);
+    return () => clearTimeout(timer);
+  }, [selectedDate, todayStr]);
 
   /* ── Derived ─────────────────────────────────────────── */
 
@@ -812,9 +810,10 @@ export default function CreatorCalendarPage() {
     setNoteValue("");
   }
 
+  // P3-2: Always select — no toggle-to-null
   function handleCellClick(dateStr: string, el: HTMLElement) {
     if (typeof window !== "undefined" && window.innerWidth >= 1024) {
-      setSelectedDate((prev) => (prev === dateStr ? null : dateStr));
+      setSelectedDate(dateStr);
     } else {
       openPopover(dateStr, el);
     }
