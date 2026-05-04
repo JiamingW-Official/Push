@@ -21,7 +21,6 @@
 
   --etype-deadline:   var(--brand-red);
   --etype-review:     var(--accent-blue);
-  --etype-payment:    var(--champagne);
   --etype-milestone:  var(--mist);
 
   --cal-hover:        rgba(10, 10, 10, 0.04);
@@ -645,7 +644,6 @@ body:has(.cw-page.cal) .dh-main {
 
 .cal-dot.event-type--deadline  { background: var(--etype-deadline); }
 .cal-dot.event-type--review    { background: var(--etype-review); }
-.cal-dot.event-type--payment   { background: var(--etype-payment); }
 .cal-dot.event-type--milestone { background: var(--etype-milestone); }
 .cal-dot.is-done               { opacity: 0.35; }
 
@@ -667,7 +665,6 @@ body:has(.cw-page.cal) .dh-main {
 
 .cal-chip.event-type--deadline  { background: var(--etype-deadline); }
 .cal-chip.event-type--review    { background: var(--etype-review); }
-.cal-chip.event-type--payment   { background: var(--etype-payment); color: var(--ink); }
 .cal-chip.event-type--milestone { background: var(--etype-milestone); color: var(--ink); }
 
 /* Today tag */
@@ -881,7 +878,6 @@ body:has(.cw-page.cal) .dh-main {
 
 .cal-pill-event.event-type--deadline  { background: var(--etype-deadline); color: var(--snow); }
 .cal-pill-event.event-type--review    { background: var(--etype-review); color: var(--snow); }
-.cal-pill-event.event-type--payment   { background: var(--etype-payment); color: var(--ink); }
 .cal-pill-event.event-type--milestone { background: var(--etype-milestone); color: var(--ink); }
 .cal-pill-event.is-done               { opacity: 0.35; text-decoration: line-through; }
 
@@ -1091,7 +1087,6 @@ body:has(.cw-page.cal) .dh-main {
 
 .cal-side__event.event-type--deadline::before  { background: var(--etype-deadline); }
 .cal-side__event.event-type--review::before    { background: var(--etype-review); }
-.cal-side__event.event-type--payment::before   { background: var(--etype-payment); }
 .cal-side__event.event-type--milestone::before { background: var(--etype-milestone); }
 .cal-side__event.is-done                       { opacity: 0.55; }
 
@@ -1532,7 +1527,6 @@ body:has(.cw-page.cal) .dh-main {
 
 .cal-week__event.event-type--deadline  { background: var(--etype-deadline); color: var(--snow); }
 .cal-week__event.event-type--review    { background: var(--etype-review); color: var(--snow); }
-.cal-week__event.event-type--payment   { background: var(--etype-payment); color: var(--ink); }
 .cal-week__event.event-type--milestone { background: var(--etype-milestone); color: var(--ink); }
 .cal-week__event.is-done               { opacity: 0.4; }
 
@@ -1648,7 +1642,6 @@ body:has(.cw-page.cal) .dh-main {
 
 .cal-list__row.event-type--deadline::before  { background: var(--etype-deadline); }
 .cal-list__row.event-type--review::before    { background: var(--etype-review); }
-.cal-list__row.event-type--payment::before   { background: var(--etype-payment); }
 .cal-list__row.event-type--milestone::before { background: var(--etype-milestone); }
 
 .cal-list__row:hover { border-color: var(--ink-5); transform: translateY(-1px); }

@@ -187,12 +187,6 @@ function downloadICS(events: CalendarEvent[]) {
   URL.revokeObjectURL(url);
 }
 
-function estimateMonthEarnings(events: CalendarEvent[], ym: string): number {
-  return events
-    .filter((e) => e.date.startsWith(ym) && e.type === "payment" && e.payout)
-    .reduce((sum, e) => sum + (e.payout ?? 0), 0);
-}
-
 /* ── Left panel component ────────────────────────────────── */
 
 interface LeftPanelProps {
@@ -200,7 +194,6 @@ interface LeftPanelProps {
   year: number;
   earningsBreakdown: EarningsBreakdown;
   deadlineCount: number;
-  estEarnings: number;
   upcomingEvents: CalendarEvent[];
   todayStr: string;
   onSelectDate: (date: string) => void;
@@ -211,7 +204,6 @@ function LeftPanel({
   year,
   earningsBreakdown,
   deadlineCount,
-  estEarnings,
   upcomingEvents,
   todayStr,
   onSelectDate,
@@ -227,7 +219,6 @@ function LeftPanel({
       {/* Earnings card */}
       <div className="cal-lp__card cal-lp__earnings">
         <span className="cal-lp__label">Est. Earnings</span>
-        <span className="cal-lp__big">${estEarnings.toLocaleString()}</span>
         <div className="cal-lp__breakdown">
           <div className="cal-lp__breakdown-row">
             <span
@@ -878,11 +869,6 @@ export default function CreatorCalendarPage() {
 
   const ym = formatYearMonth(year, month);
   const deadlineCount = useMemo(() => countDeadlinesInMonth(ym), [ym]);
-  const estEarnings = useMemo(
-    () => estimateMonthEarnings(events, ym),
-    [events, ym],
-  );
-
   // P0-4: Earnings breakdown
   const earningsBreakdown = useMemo(() => getMockEarningsBreakdown(ym), [ym]);
 
@@ -1129,7 +1115,6 @@ export default function CreatorCalendarPage() {
             year={year}
             earningsBreakdown={earningsBreakdown}
             deadlineCount={deadlineCount}
-            estEarnings={estEarnings}
             upcomingEvents={upcomingEvents}
             todayStr={todayStr}
             onSelectDate={setSelectedDate}

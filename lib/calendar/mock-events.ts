@@ -4,7 +4,6 @@
 export type EventType =
   | "deadline" // Campaign submission deadline — red
   | "review" // Content review meeting — blue
-  | "payment" // Payment release — gold
   | "milestone"; // Other milestone — grey
 
 export type EventAction = "submit" | "done" | "note";
@@ -118,20 +117,6 @@ const APRIL: CalendarEvent[] = [
     payout: 35,
     postUrl: "/creator/campaigns/camp-002/post",
   },
-  {
-    id: "ev-007",
-    campaignId: "camp-002",
-    campaignTitle: "Best Burger in NYC Feature",
-    merchantName: "Superiority Burger",
-    type: "payment",
-    title: "Payment release — $35",
-    date: "2026-04-28",
-    time: "09:00",
-    description: "Payment of $35 will be released once content is verified.",
-    done: false,
-    payout: 35,
-  },
-
   // Brow Theory — camp-004 deadline Apr 28
   {
     id: "ev-008",
@@ -203,20 +188,6 @@ const APRIL: CalendarEvent[] = [
     payout: 20,
     postUrl: "/creator/campaigns/camp-006/post",
   },
-  {
-    id: "ev-013",
-    campaignId: "camp-006",
-    campaignTitle: "Le Bec-Fin Pop-Up Review",
-    merchantName: "Le Bec Fin",
-    type: "payment",
-    title: "Payment release — $20",
-    date: "2026-04-25",
-    time: "09:00",
-    description: "Payment of $20 after content verification.",
-    done: false,
-    payout: 20,
-  },
-
   // Cha Cha Matcha — camp-008 deadline Apr 29
   {
     id: "ev-014",
@@ -244,19 +215,6 @@ const APRIL: CalendarEvent[] = [
     done: false,
     payout: 25,
     postUrl: "/creator/campaigns/camp-008/post",
-  },
-  {
-    id: "ev-016",
-    campaignId: "camp-008",
-    campaignTitle: "Matcha Morning Ritual",
-    merchantName: "Cha Cha Matcha",
-    type: "payment",
-    title: "Payment release — $25",
-    date: "2026-04-30",
-    time: "10:00",
-    description: "Payment of $25 after content verified.",
-    done: false,
-    payout: 25,
   },
 ];
 
@@ -305,20 +263,6 @@ const MAY: CalendarEvent[] = [
     payout: 75,
     postUrl: "/creator/campaigns/camp-003/post",
   },
-  {
-    id: "ev-020",
-    campaignId: "camp-003",
-    campaignTitle: "LA Botanica Aesthetic Shoot",
-    merchantName: "Flamingo Estate",
-    type: "payment",
-    title: "Payment release — $75",
-    date: "2026-05-08",
-    time: "09:00",
-    description: "Payment of $75 + est. commission after verification.",
-    done: false,
-    payout: 75,
-  },
-
   // Glossier — camp-005 deadline May 10
   {
     id: "ev-021",
@@ -361,20 +305,6 @@ const MAY: CalendarEvent[] = [
     payout: 120,
     postUrl: "/creator/campaigns/camp-005/post",
   },
-  {
-    id: "ev-024",
-    campaignId: "camp-005",
-    campaignTitle: "Glossier NYC Store Experience",
-    merchantName: "Glossier",
-    type: "payment",
-    title: "Payment release — $120",
-    date: "2026-05-14",
-    time: "09:00",
-    description: "Payment of $120 after engagement rate verified.",
-    done: false,
-    payout: 120,
-  },
-
   // KITH — camp-007 deadline May 15
   {
     id: "ev-025",
@@ -430,20 +360,6 @@ const MAY: CalendarEvent[] = [
     payout: 199,
     postUrl: "/creator/campaigns/camp-007/post",
   },
-  {
-    id: "ev-029",
-    campaignId: "camp-007",
-    campaignTitle: "KITH x Creator Collab Series",
-    merchantName: "KITH",
-    type: "payment",
-    title: "Payment release — $199",
-    date: "2026-05-20",
-    time: "09:00",
-    description: "Top-tier payment of $199 released after full verification.",
-    done: false,
-    payout: 199,
-  },
-
   // General push milestones
   {
     id: "ev-030",
@@ -721,19 +637,6 @@ const JUNE: CalendarEvent[] = [
     postUrl: "/creator/campaigns/camp-future-01/post",
   },
   {
-    id: "ev-038",
-    campaignId: "camp-future-01",
-    campaignTitle: "Summer Rooftop Series",
-    merchantName: "The William Vale",
-    type: "payment",
-    title: "Payment release — $150",
-    date: "2026-06-18",
-    time: "09:00",
-    description: "Payment of $150 after verification.",
-    done: false,
-    payout: 150,
-  },
-  {
     id: "ev-039",
     campaignId: "camp-future-02",
     campaignTitle: "Williamsburg Food Walk",
@@ -760,19 +663,6 @@ const JUNE: CalendarEvent[] = [
     done: false,
     payout: 80,
     postUrl: "/creator/campaigns/camp-future-02/post",
-  },
-  {
-    id: "ev-041",
-    campaignId: "camp-future-02",
-    campaignTitle: "Williamsburg Food Walk",
-    merchantName: "Various",
-    type: "payment",
-    title: "Payment release — $80",
-    date: "2026-06-28",
-    time: "09:00",
-    description: "Payment after engagement metrics verified.",
-    done: false,
-    payout: 80,
   },
   {
     id: "ev-042",
@@ -850,7 +740,6 @@ export function countDeadlinesInMonth(yearMonth: string): number {
 export const EVENT_TYPE_CLASSNAMES: Record<EventType, string> = {
   deadline: "event-type--deadline",
   review: "event-type--review",
-  payment: "event-type--payment",
   milestone: "event-type--milestone",
 };
 
@@ -867,6 +756,5 @@ export const EVENT_TYPE_COLORS: Record<EventType, string> =
 export const EVENT_TYPE_LABELS: Record<EventType, string> = {
   deadline: "Deadline",
   review: "Content Review",
-  payment: "Payment",
   milestone: "Milestone",
 };
